@@ -1543,6 +1543,7 @@
     <string name="stats_insights_views_percent">%1$s%% of views</string>
     <string name="stats_insights_most_popular_time">Most popular time</string>
     <string name="stats_insights_tags_and_categories">Tags and Categories</string>
+    <string name="stats_insights_tags_empty">No tags or categories found</string>
     <string name="stats_tag_type_category">Category</string>
     <string name="stats_tag_type_tag">Tag</string>
     <string name="stats_expand_group">Expand</string>

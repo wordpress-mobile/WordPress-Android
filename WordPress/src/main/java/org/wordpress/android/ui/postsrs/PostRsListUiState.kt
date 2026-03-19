@@ -209,5 +209,4 @@ internal fun PostStatus?.toLabel(): Int = when (this) {
     is PostStatus.Any -> 0
     is PostStatus.Custom -> 0
     null -> 0
-    else -> 0
 }

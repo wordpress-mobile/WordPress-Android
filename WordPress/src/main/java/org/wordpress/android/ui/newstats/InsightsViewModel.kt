@@ -3,6 +3,7 @@ package org.wordpress.android.ui.newstats
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,8 +18,10 @@ import org.wordpress.android.ui.newstats.repository.InsightsResult
 import org.wordpress.android.ui.newstats.repository.StatsSummaryResult
 import org.wordpress.android.ui.newstats.repository.StatsSummaryUseCase
 import org.wordpress.android.ui.newstats.repository.StatsInsightsUseCase
+import org.wordpress.android.ui.newstats.repository.StatsTagsUseCase
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.NetworkUtilsWrapper
+import java.util.concurrent.atomic.AtomicBoolean
 import kotlin.coroutines.cancellation.CancellationException
 import javax.inject.Inject
 
@@ -30,7 +33,8 @@ class InsightsViewModel @Inject constructor(
         InsightsCardsConfigurationRepository,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     private val statsSummaryUseCase: StatsSummaryUseCase,
-    private val statsInsightsUseCase: StatsInsightsUseCase
+    private val statsInsightsUseCase: StatsInsightsUseCase,
+    private val statsTagsUseCase: StatsTagsUseCase
 ) : ViewModel() {
     private val _visibleCards =
         MutableStateFlow<List<InsightsCardType>>(
@@ -68,13 +72,20 @@ class InsightsViewModel @Inject constructor(
     val isDataRefreshing: StateFlow<Boolean> =
         _isDataRefreshing.asStateFlow()
 
-    @Volatile
-    private var isDataLoaded = false
-
-    @Volatile
-    private var isDataLoading = false
+    private val isDataLoaded = AtomicBoolean(false)
+    private val isDataLoading = AtomicBoolean(false)
+    private val summaryFetched = AtomicBoolean(false)
+    private val insightsFetched = AtomicBoolean(false)
+    // Main-thread-confined: only accessed from
+    // viewModelScope (Dispatchers.Main).
+    private var fetchJob: Job? = null
 
     init {
+        viewModelScope.launch {
+            statsSummaryUseCase.clearCache()
+            statsInsightsUseCase.clearCache()
+            statsTagsUseCase.clearCache()
+        }
         checkNetworkStatus()
         loadConfiguration()
         observeConfigurationChanges()
@@ -90,30 +101,45 @@ class InsightsViewModel @Inject constructor(
     // region Data fetching
 
     fun loadDataIfNeeded() {
-        if (isDataLoaded || isDataLoading) return
-        isDataLoading = true
+        if (isDataLoaded.get() ||
+            !isDataLoading.compareAndSet(false, true)
+        ) return
         fetchData()
     }
 
     fun fetchData(forceRefresh: Boolean = false) {
         val siteId = resolvedSiteId() ?: run {
-            isDataLoading = false
+            isDataLoading.set(false)
             _isDataRefreshing.value = false
             return
         }
-        viewModelScope.launch {
+        val cards = _cardsToLoad.value
+        val shouldFetchSummary = cards.needsSummary()
+        val shouldFetchInsights = cards.needsInsights()
+        if (!shouldFetchSummary && !shouldFetchInsights) {
+            isDataLoading.set(false)
+            _isDataRefreshing.value = false
+            return
+        }
+        fetchJob = viewModelScope.launch {
             try {
                 coroutineScope {
-                    launch {
-                        fetchSummary(siteId, forceRefresh)
+                    if (shouldFetchSummary) {
+                        launch {
+                            fetchSummary(siteId, forceRefresh)
+                        }
                     }
-                    launch {
-                        fetchInsights(siteId, forceRefresh)
+                    if (shouldFetchInsights) {
+                        launch {
+                            fetchInsights(
+                                siteId, forceRefresh
+                            )
+                        }
                     }
                 }
-                isDataLoaded = true
+                isDataLoaded.set(true)
             } finally {
-                isDataLoading = false
+                isDataLoading.set(false)
                 _isDataRefreshing.value = false
             }
         }
@@ -131,6 +157,9 @@ class InsightsViewModel @Inject constructor(
             val result = statsSummaryUseCase(
                 siteId, forceRefresh
             )
+            if (result is StatsSummaryResult.Success) {
+                summaryFetched.set(true)
+            }
             _summaryResult.emit(result)
         } catch (e: Exception) {
             if (e is CancellationException) throw e
@@ -160,6 +189,9 @@ class InsightsViewModel @Inject constructor(
             val result = statsInsightsUseCase(
                 siteId, forceRefresh
             )
+            if (result is InsightsResult.Success) {
+                insightsFetched.set(true)
+            }
             _insightsResult.emit(result)
         } catch (e: Exception) {
             if (e is CancellationException) throw e
@@ -178,8 +210,11 @@ class InsightsViewModel @Inject constructor(
     }
 
     fun refreshData() {
-        isDataLoaded = false
-        isDataLoading = true
+        fetchJob?.cancel()
+        isDataLoaded.set(false)
+        summaryFetched.set(false)
+        insightsFetched.set(false)
+        isDataLoading.set(true)
         _isDataRefreshing.value = true
         fetchData(forceRefresh = true)
     }
@@ -224,7 +259,17 @@ class InsightsViewModel @Inject constructor(
     ) {
         _visibleCards.value = config.visibleCards
         _hiddenCards.value = config.computeHiddenCards()
+        val cards = config.visibleCards
+        val needsNewFetch =
+            (cards.needsSummary() &&
+                !summaryFetched.get()) ||
+                (cards.needsInsights() &&
+                    !insightsFetched.get())
         _cardsToLoad.value = config.visibleCards
+        if (needsNewFetch) {
+            isDataLoaded.set(false)
+            loadDataIfNeeded()
+        }
     }
 
     fun removeCard(cardType: InsightsCardType) {
@@ -285,6 +330,24 @@ class InsightsViewModel @Inject constructor(
                 "No site selected for card operation"
             )
             null
+        }
+    }
+
+    companion object {
+        // TAGS_AND_CATEGORIES is intentionally absent
+        // from both checks: it has its own dedicated
+        // fetch path via StatsTagsUseCase in
+        // TagsAndCategoriesViewModel.
+        private fun List<InsightsCardType>.needsSummary():
+            Boolean = any {
+            it == InsightsCardType.ALL_TIME_STATS ||
+                it == InsightsCardType.MOST_POPULAR_DAY
+        }
+
+        private fun List<InsightsCardType>.needsInsights():
+            Boolean = any {
+            it == InsightsCardType.YEAR_IN_REVIEW ||
+                it == InsightsCardType.MOST_POPULAR_TIME
         }
     }
 }

@@ -44,4 +44,8 @@ class StatsSummaryUseCase @Inject constructor(
             result
         }
     }
+
+    suspend fun clearCache() {
+        mutex.withLock { cachedSummary = null }
+    }
 }

@@ -202,6 +202,27 @@ class StatsInsightsUseCaseTest : BaseUnitTest() {
             assertThat(success.data.years).hasSize(1)
         }
 
+    @Test
+    fun `when clearCache called, then next call fetches again`() =
+        test {
+            whenever(
+                statsRepository.fetchInsights(
+                    TEST_SITE_ID
+                )
+            ).thenReturn(
+                InsightsResult.Success(
+                    createTestInsightsData()
+                )
+            )
+
+            useCase(TEST_SITE_ID)
+            useCase.clearCache()
+            useCase(TEST_SITE_ID)
+
+            verify(statsRepository, times(2))
+                .fetchInsights(TEST_SITE_ID)
+        }
+
     private fun createTestInsightsData() =
         StatsInsightsData(
             highestHour = TEST_HIGHEST_HOUR,

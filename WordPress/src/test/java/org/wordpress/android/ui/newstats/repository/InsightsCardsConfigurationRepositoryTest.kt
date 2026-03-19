@@ -439,6 +439,132 @@ class InsightsCardsConfigurationRepositoryTest : BaseUnitTest() {
             )
         }
 
+    @Test
+    fun `when moveCardUp on middle card, then card swaps with previous`() =
+        test {
+            whenever(
+                appPrefsWrapper
+                    .getStatsInsightsCardsConfigurationJson(
+                        TEST_SITE_ID
+                    )
+            ).thenReturn(ALL_CARDS_JSON)
+
+            repository.moveCardUp(
+                TEST_SITE_ID,
+                InsightsCardType.ALL_TIME_STATS
+            )
+
+            val jsonCaptor = argumentCaptor<String>()
+            verify(appPrefsWrapper)
+                .setStatsInsightsCardsConfigurationJson(
+                    eq(TEST_SITE_ID), jsonCaptor.capture()
+                )
+            val saved = com.google.gson.Gson()
+                .fromJson(
+                    jsonCaptor.firstValue,
+                    InsightsCardsConfiguration::class.java
+                )
+            assertThat(saved.visibleCards[0])
+                .isEqualTo(InsightsCardType.ALL_TIME_STATS)
+            assertThat(saved.visibleCards[1])
+                .isEqualTo(InsightsCardType.YEAR_IN_REVIEW)
+        }
+
+    @Test
+    fun `when moveCardDown on middle card, then card swaps with next`() =
+        test {
+            whenever(
+                appPrefsWrapper
+                    .getStatsInsightsCardsConfigurationJson(
+                        TEST_SITE_ID
+                    )
+            ).thenReturn(ALL_CARDS_JSON)
+
+            repository.moveCardDown(
+                TEST_SITE_ID,
+                InsightsCardType.ALL_TIME_STATS
+            )
+
+            val jsonCaptor = argumentCaptor<String>()
+            verify(appPrefsWrapper)
+                .setStatsInsightsCardsConfigurationJson(
+                    eq(TEST_SITE_ID), jsonCaptor.capture()
+                )
+            val saved = com.google.gson.Gson()
+                .fromJson(
+                    jsonCaptor.firstValue,
+                    InsightsCardsConfiguration::class.java
+                )
+            assertThat(saved.visibleCards[1])
+                .isEqualTo(
+                    InsightsCardType.MOST_POPULAR_DAY
+                )
+            assertThat(saved.visibleCards[2])
+                .isEqualTo(InsightsCardType.ALL_TIME_STATS)
+        }
+
+    @Test
+    fun `when moveCardToTop on middle card, then card becomes first`() =
+        test {
+            whenever(
+                appPrefsWrapper
+                    .getStatsInsightsCardsConfigurationJson(
+                        TEST_SITE_ID
+                    )
+            ).thenReturn(ALL_CARDS_JSON)
+
+            repository.moveCardToTop(
+                TEST_SITE_ID,
+                InsightsCardType.MOST_POPULAR_DAY
+            )
+
+            val jsonCaptor = argumentCaptor<String>()
+            verify(appPrefsWrapper)
+                .setStatsInsightsCardsConfigurationJson(
+                    eq(TEST_SITE_ID), jsonCaptor.capture()
+                )
+            val saved = com.google.gson.Gson()
+                .fromJson(
+                    jsonCaptor.firstValue,
+                    InsightsCardsConfiguration::class.java
+                )
+            assertThat(saved.visibleCards[0])
+                .isEqualTo(
+                    InsightsCardType.MOST_POPULAR_DAY
+                )
+        }
+
+    @Test
+    fun `when moveCardToBottom on middle card, then card becomes last`() =
+        test {
+            whenever(
+                appPrefsWrapper
+                    .getStatsInsightsCardsConfigurationJson(
+                        TEST_SITE_ID
+                    )
+            ).thenReturn(ALL_CARDS_JSON)
+
+            repository.moveCardToBottom(
+                TEST_SITE_ID,
+                InsightsCardType.MOST_POPULAR_DAY
+            )
+
+            val jsonCaptor = argumentCaptor<String>()
+            verify(appPrefsWrapper)
+                .setStatsInsightsCardsConfigurationJson(
+                    eq(TEST_SITE_ID), jsonCaptor.capture()
+                )
+            val saved = com.google.gson.Gson()
+                .fromJson(
+                    jsonCaptor.firstValue,
+                    InsightsCardsConfiguration::class.java
+                )
+            assertThat(saved.visibleCards.last())
+                .isEqualTo(
+                    InsightsCardType.MOST_POPULAR_DAY
+                )
+        }
+
     companion object {
         private const val TEST_SITE_ID = 123L
         private val ALL_CARDS_JSON = """

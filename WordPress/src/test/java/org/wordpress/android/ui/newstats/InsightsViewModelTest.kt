@@ -13,6 +13,7 @@ import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.any
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.never
+import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
@@ -25,8 +26,10 @@ import org.wordpress.android.ui.newstats.repository.InsightsResult
 import org.wordpress.android.ui.newstats.repository.StatsSummaryResult
 import org.wordpress.android.ui.newstats.repository.StatsSummaryUseCase
 import org.wordpress.android.ui.newstats.repository.StatsInsightsUseCase
+import org.wordpress.android.ui.newstats.repository.StatsTagsUseCase
 import org.wordpress.android.util.NetworkUtilsWrapper
 
+@Suppress("LargeClass")
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner.Silent::class)
 class InsightsViewModelTest :
@@ -50,6 +53,10 @@ class InsightsViewModelTest :
     @Mock
     private lateinit var statsInsightsUseCase:
         StatsInsightsUseCase
+
+    @Mock
+    private lateinit var statsTagsUseCase:
+        StatsTagsUseCase
 
     private lateinit var viewModel: InsightsViewModel
 
@@ -90,7 +97,8 @@ class InsightsViewModelTest :
             cardConfigurationRepository,
             networkUtilsWrapper,
             statsSummaryUseCase,
-            statsInsightsUseCase
+            statsInsightsUseCase,
+            statsTagsUseCase
         )
     }
 
@@ -238,7 +246,8 @@ class InsightsViewModelTest :
                 cardConfigurationRepository,
                 networkUtilsWrapper,
                 statsSummaryUseCase,
-                statsInsightsUseCase
+                statsInsightsUseCase,
+                statsTagsUseCase
             )
             advanceUntilIdle()
 
@@ -353,7 +362,8 @@ class InsightsViewModelTest :
                 cardConfigurationRepository,
                 networkUtilsWrapper,
                 statsSummaryUseCase,
-                statsInsightsUseCase
+                statsInsightsUseCase,
+                statsTagsUseCase
             )
 
             assertThat(viewModel.cardsToLoad.value)
@@ -490,10 +500,10 @@ class InsightsViewModelTest :
             advanceUntilIdle()
 
             verify(statsSummaryUseCase,
-                org.mockito.Mockito.times(1))
+                times(1))
                 .invoke(any(), any())
             verify(statsInsightsUseCase,
-                org.mockito.Mockito.times(1))
+                times(1))
                 .invoke(any(), any())
         }
 
@@ -625,18 +635,246 @@ class InsightsViewModelTest :
     @Test
     fun `when no site selected, then fetchData is no-op`() =
         test {
-            initViewModel()
-            advanceUntilIdle()
-
             whenever(
                 selectedSiteRepository.getSelectedSite()
             ).thenReturn(null)
+
+            val config = InsightsCardsConfiguration(
+                visibleCards = emptyList()
+            )
+            initViewModel(config)
+            advanceUntilIdle()
 
             viewModel.fetchData()
             advanceUntilIdle()
 
             verify(statsSummaryUseCase, never())
                 .invoke(any(), any())
+        }
+
+    @Test
+    fun `when all cards hidden, then no endpoints are called`() =
+        test {
+            val config = InsightsCardsConfiguration(
+                visibleCards = emptyList()
+            )
+            initViewModel(config)
+            advanceUntilIdle()
+
+            viewModel.loadDataIfNeeded()
+            advanceUntilIdle()
+
+            verify(statsSummaryUseCase, never())
+                .invoke(any(), any())
+            verify(statsInsightsUseCase, never())
+                .invoke(any(), any())
+        }
+
+    @Test
+    fun `when only summary cards visible, then only summary is fetched`() =
+        test {
+            whenever(
+                statsSummaryUseCase(any(), any())
+            ).thenReturn(
+                StatsSummaryResult.Success(
+                    createTestSummaryData()
+                )
+            )
+
+            val config = InsightsCardsConfiguration(
+                visibleCards = listOf(
+                    InsightsCardType.ALL_TIME_STATS,
+                    InsightsCardType.MOST_POPULAR_DAY
+                )
+            )
+            initViewModel(config)
+            advanceUntilIdle()
+
+            viewModel.loadDataIfNeeded()
+            advanceUntilIdle()
+
+            verify(statsSummaryUseCase)
+                .invoke(eq(TEST_SITE_ID), eq(false))
+            verify(statsInsightsUseCase, never())
+                .invoke(any(), any())
+        }
+
+    @Test
+    fun `when only insights cards visible, then only insights is fetched`() =
+        test {
+            whenever(
+                statsInsightsUseCase(any(), any())
+            ).thenReturn(
+                InsightsResult.Success(
+                    createTestInsightsData()
+                )
+            )
+
+            val config = InsightsCardsConfiguration(
+                visibleCards = listOf(
+                    InsightsCardType.YEAR_IN_REVIEW,
+                    InsightsCardType.MOST_POPULAR_TIME
+                )
+            )
+            initViewModel(config)
+            advanceUntilIdle()
+
+            viewModel.loadDataIfNeeded()
+            advanceUntilIdle()
+
+            verify(statsInsightsUseCase)
+                .invoke(eq(TEST_SITE_ID), eq(false))
+            verify(statsSummaryUseCase, never())
+                .invoke(any(), any())
+        }
+
+    @Test
+    fun `when hidden card re-added, then its endpoint is fetched`() =
+        test {
+            whenever(
+                statsInsightsUseCase(any(), any())
+            ).thenReturn(
+                InsightsResult.Success(
+                    createTestInsightsData()
+                )
+            )
+            whenever(
+                statsSummaryUseCase(any(), any())
+            ).thenReturn(
+                StatsSummaryResult.Success(
+                    createTestSummaryData()
+                )
+            )
+
+            // Start with only insights cards
+            val config = InsightsCardsConfiguration(
+                visibleCards = listOf(
+                    InsightsCardType.YEAR_IN_REVIEW
+                )
+            )
+            initViewModel(config)
+            advanceUntilIdle()
+
+            viewModel.loadDataIfNeeded()
+            advanceUntilIdle()
+
+            verify(statsInsightsUseCase,
+                times(1))
+                .invoke(any(), any())
+            verify(statsSummaryUseCase, never())
+                .invoke(any(), any())
+
+            // Now add a summary card via config change
+            val newConfig = InsightsCardsConfiguration(
+                visibleCards = listOf(
+                    InsightsCardType.YEAR_IN_REVIEW,
+                    InsightsCardType.ALL_TIME_STATS
+                )
+            )
+            configurationFlow.value =
+                TEST_SITE_ID to newConfig
+            advanceUntilIdle()
+
+            // loadDataIfNeeded should now fetch
+            viewModel.loadDataIfNeeded()
+            advanceUntilIdle()
+
+            verify(statsSummaryUseCase,
+                times(1))
+                .invoke(eq(TEST_SITE_ID), eq(false))
+        }
+
+    @Test
+    fun `when refresh called, then all visible endpoints are re-fetched`() =
+        test {
+            whenever(
+                statsSummaryUseCase(any(), any())
+            ).thenReturn(
+                StatsSummaryResult.Success(
+                    createTestSummaryData()
+                )
+            )
+            whenever(
+                statsInsightsUseCase(any(), any())
+            ).thenReturn(
+                InsightsResult.Success(
+                    createTestInsightsData()
+                )
+            )
+
+            initViewModel()
+            advanceUntilIdle()
+
+            viewModel.loadDataIfNeeded()
+            advanceUntilIdle()
+
+            viewModel.refreshData()
+            advanceUntilIdle()
+
+            verify(statsSummaryUseCase,
+                times(1))
+                .invoke(eq(TEST_SITE_ID), eq(false))
+            verify(statsSummaryUseCase,
+                times(1))
+                .invoke(eq(TEST_SITE_ID), eq(true))
+            verify(statsInsightsUseCase,
+                times(1))
+                .invoke(eq(TEST_SITE_ID), eq(false))
+            verify(statsInsightsUseCase,
+                times(1))
+                .invoke(eq(TEST_SITE_ID), eq(true))
+        }
+
+    @Test
+    fun `when refresh called twice rapidly, then second refresh replaces first`() =
+        test {
+            whenever(
+                statsSummaryUseCase(any(), any())
+            ).thenReturn(
+                StatsSummaryResult.Success(
+                    createTestSummaryData()
+                )
+            )
+            whenever(
+                statsInsightsUseCase(any(), any())
+            ).thenReturn(
+                InsightsResult.Success(
+                    createTestInsightsData()
+                )
+            )
+
+            initViewModel()
+            advanceUntilIdle()
+
+            viewModel.loadDataIfNeeded()
+            advanceUntilIdle()
+
+            // Two rapid refreshes — second should
+            // cancel the first via fetchJob?.cancel().
+            viewModel.refreshData()
+            viewModel.refreshData()
+            advanceUntilIdle()
+
+            // The second refreshData() cancels the
+            // first job before it executes, so only
+            // one forceRefresh=true call completes.
+            assertThat(
+                viewModel.isDataRefreshing.value
+            ).isFalse()
+
+            verify(statsSummaryUseCase, times(1))
+                .invoke(eq(TEST_SITE_ID), eq(true))
+        }
+
+    @Test
+    fun `when initialized, then all caches are cleared`() =
+        test {
+            initViewModel()
+            advanceUntilIdle()
+
+            verify(statsSummaryUseCase).clearCache()
+            verify(statsInsightsUseCase).clearCache()
+            verify(statsTagsUseCase).clearCache()
         }
 
     // endregion

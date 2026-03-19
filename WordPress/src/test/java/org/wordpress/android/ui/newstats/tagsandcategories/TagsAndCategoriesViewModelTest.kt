@@ -13,12 +13,11 @@ import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.newstats.datasource.StatsTagsData
 import org.wordpress.android.ui.newstats.datasource.TagData
 import org.wordpress.android.ui.newstats.datasource.TagGroupData
-import org.wordpress.android.ui.newstats.repository.StatsRepository
+import org.wordpress.android.ui.newstats.repository.StatsTagsUseCase
 import org.wordpress.android.ui.newstats.repository.TagsResult
 import org.wordpress.android.viewmodel.ResourceProvider
 
@@ -29,13 +28,12 @@ class TagsAndCategoriesViewModelTest : BaseUnitTest() {
         SelectedSiteRepository
 
     @Mock
-    private lateinit var accountStore: AccountStore
-
-    @Mock
-    private lateinit var statsRepository: StatsRepository
+    private lateinit var statsTagsUseCase: StatsTagsUseCase
 
     @Mock
     private lateinit var resourceProvider: ResourceProvider
+
+    private val mapper = TagsAndCategoriesMapper()
 
     private lateinit var viewModel:
         TagsAndCategoriesViewModel
@@ -51,8 +49,6 @@ class TagsAndCategoriesViewModelTest : BaseUnitTest() {
         whenever(
             selectedSiteRepository.getSelectedSite()
         ).thenReturn(testSite)
-        whenever(accountStore.accessToken)
-            .thenReturn(TEST_ACCESS_TOKEN)
     }
 
     private fun stubNoSiteError() {
@@ -71,12 +67,20 @@ class TagsAndCategoriesViewModelTest : BaseUnitTest() {
         ).thenReturn(API_ERROR)
     }
 
+    private fun stubUnknownError() {
+        whenever(
+            resourceProvider.getString(
+                R.string.stats_error_unknown
+            )
+        ).thenReturn(UNKNOWN_ERROR)
+    }
+
     private fun initViewModel() {
         viewModel = TagsAndCategoriesViewModel(
             selectedSiteRepository,
-            accountStore,
-            statsRepository,
-            resourceProvider
+            statsTagsUseCase,
+            resourceProvider,
+            mapper
         )
     }
 
@@ -118,55 +122,11 @@ class TagsAndCategoriesViewModelTest : BaseUnitTest() {
         }
 
     @Test
-    fun `when access token is null, then error state`() =
-        test {
-            stubApiError()
-            whenever(accountStore.accessToken)
-                .thenReturn(null)
-
-            initViewModel()
-            viewModel.loadData()
-            advanceUntilIdle()
-
-            val state = viewModel.uiState.value
-            assertThat(state).isInstanceOf(
-                TagsAndCategoriesCardUiState
-                    .Error::class.java
-            )
-            assertThat(
-                (state as TagsAndCategoriesCardUiState
-                    .Error).message
-            ).isEqualTo(API_ERROR)
-        }
-
-    @Test
-    fun `when access token is empty, then error state`() =
-        test {
-            stubApiError()
-            whenever(accountStore.accessToken)
-                .thenReturn("")
-
-            initViewModel()
-            viewModel.loadData()
-            advanceUntilIdle()
-
-            val state = viewModel.uiState.value
-            assertThat(state).isInstanceOf(
-                TagsAndCategoriesCardUiState
-                    .Error::class.java
-            )
-            assertThat(
-                (state as TagsAndCategoriesCardUiState
-                    .Error).message
-            ).isEqualTo(API_ERROR)
-        }
-
-    @Test
     fun `when fetch returns error, then error state`() =
         test {
             stubApiError()
             whenever(
-                statsRepository.fetchTags(any(), any())
+                statsTagsUseCase(any(), any(), any())
             ).thenReturn(
                 TagsResult.Error("Network error")
             )
@@ -183,10 +143,11 @@ class TagsAndCategoriesViewModelTest : BaseUnitTest() {
         }
 
     @Test
-    fun `when exception is thrown, then error state with message`() =
+    fun `when exception is thrown, then error state with localized message`() =
         test {
+            stubUnknownError()
             whenever(
-                statsRepository.fetchTags(any(), any())
+                statsTagsUseCase(any(), any(), any())
             ).thenThrow(
                 RuntimeException("Test exception")
             )
@@ -203,7 +164,7 @@ class TagsAndCategoriesViewModelTest : BaseUnitTest() {
             assertThat(
                 (state as TagsAndCategoriesCardUiState
                     .Error).message
-            ).isEqualTo("Test exception")
+            ).isEqualTo(UNKNOWN_ERROR)
         }
     // endregion
 
@@ -212,7 +173,7 @@ class TagsAndCategoriesViewModelTest : BaseUnitTest() {
     fun `when fetch succeeds, then loaded state`() =
         test {
             whenever(
-                statsRepository.fetchTags(any(), any())
+                statsTagsUseCase(any(), any(), any())
             ).thenReturn(createSuccessResult())
 
             initViewModel()
@@ -230,7 +191,7 @@ class TagsAndCategoriesViewModelTest : BaseUnitTest() {
     fun `when fetch succeeds, then items are mapped correctly`() =
         test {
             whenever(
-                statsRepository.fetchTags(any(), any())
+                statsTagsUseCase(any(), any(), any())
             ).thenReturn(createSuccessResult())
 
             initViewModel()
@@ -254,7 +215,7 @@ class TagsAndCategoriesViewModelTest : BaseUnitTest() {
     fun `when fetch succeeds, then maxViewsForBar is first item views`() =
         test {
             whenever(
-                statsRepository.fetchTags(any(), any())
+                statsTagsUseCase(any(), any(), any())
             ).thenReturn(createSuccessResult())
 
             initViewModel()
@@ -265,37 +226,6 @@ class TagsAndCategoriesViewModelTest : BaseUnitTest() {
                 as TagsAndCategoriesCardUiState.Loaded
             assertThat(state.maxViewsForBar)
                 .isEqualTo(TEST_CATEGORY_VIEWS)
-        }
-
-    @Test
-    fun `when more than 7 items, then card shows only 7`() =
-        test {
-            val manyGroups = (1..10).map { i ->
-                TagGroupData(
-                    tags = listOf(
-                        TagData(
-                            tagType = "tag",
-                            name = "Tag $i"
-                        )
-                    ),
-                    views = (100 - i).toLong()
-                )
-            }
-            whenever(
-                statsRepository.fetchTags(any(), any())
-            ).thenReturn(
-                TagsResult.Success(
-                    StatsTagsData(tagGroups = manyGroups)
-                )
-            )
-
-            initViewModel()
-            viewModel.loadData()
-            advanceUntilIdle()
-
-            val state = viewModel.uiState.value
-                as TagsAndCategoriesCardUiState.Loaded
-            assertThat(state.items).hasSize(CARD_MAX_ITEMS)
         }
 
     @Test
@@ -315,7 +245,7 @@ class TagsAndCategoriesViewModelTest : BaseUnitTest() {
                 views = 50
             )
             whenever(
-                statsRepository.fetchTags(any(), any())
+                statsTagsUseCase(any(), any(), any())
             ).thenReturn(
                 TagsResult.Success(
                     StatsTagsData(
@@ -352,7 +282,7 @@ class TagsAndCategoriesViewModelTest : BaseUnitTest() {
                 views = 50
             )
             whenever(
-                statsRepository.fetchTags(any(), any())
+                statsTagsUseCase(any(), any(), any())
             ).thenReturn(
                 TagsResult.Success(
                     StatsTagsData(
@@ -384,7 +314,7 @@ class TagsAndCategoriesViewModelTest : BaseUnitTest() {
                 views = 50
             )
             whenever(
-                statsRepository.fetchTags(any(), any())
+                statsTagsUseCase(any(), any(), any())
             ).thenReturn(
                 TagsResult.Success(
                     StatsTagsData(
@@ -420,7 +350,7 @@ class TagsAndCategoriesViewModelTest : BaseUnitTest() {
                 views = 50
             )
             whenever(
-                statsRepository.fetchTags(any(), any())
+                statsTagsUseCase(any(), any(), any())
             ).thenReturn(
                 TagsResult.Success(
                     StatsTagsData(
@@ -443,7 +373,7 @@ class TagsAndCategoriesViewModelTest : BaseUnitTest() {
     fun `when empty result, then loaded with empty list`() =
         test {
             whenever(
-                statsRepository.fetchTags(any(), any())
+                statsTagsUseCase(any(), any(), any())
             ).thenReturn(
                 TagsResult.Success(
                     StatsTagsData(
@@ -459,7 +389,8 @@ class TagsAndCategoriesViewModelTest : BaseUnitTest() {
             val state = viewModel.uiState.value
                 as TagsAndCategoriesCardUiState.Loaded
             assertThat(state.items).isEmpty()
-            assertThat(state.maxViewsForBar).isEqualTo(1L)
+            assertThat(state.maxViewsForBar)
+                .isEqualTo(1L)
         }
     // endregion
 
@@ -468,7 +399,7 @@ class TagsAndCategoriesViewModelTest : BaseUnitTest() {
     fun `when loadData called twice, then fetch only once`() =
         test {
             whenever(
-                statsRepository.fetchTags(any(), any())
+                statsTagsUseCase(any(), any(), any())
             ).thenReturn(createSuccessResult())
 
             initViewModel()
@@ -477,8 +408,8 @@ class TagsAndCategoriesViewModelTest : BaseUnitTest() {
             viewModel.loadData()
             advanceUntilIdle()
 
-            verify(statsRepository, times(1))
-                .fetchTags(eq(TEST_SITE_ID), any())
+            verify(statsTagsUseCase, times(1))
+                .invoke(eq(TEST_SITE_ID), any(), any())
         }
     // endregion
 
@@ -487,7 +418,7 @@ class TagsAndCategoriesViewModelTest : BaseUnitTest() {
     fun `when refresh, then data is re-fetched`() =
         test {
             whenever(
-                statsRepository.fetchTags(any(), any())
+                statsTagsUseCase(any(), any(), any())
             ).thenReturn(createSuccessResult())
 
             initViewModel()
@@ -496,8 +427,8 @@ class TagsAndCategoriesViewModelTest : BaseUnitTest() {
             viewModel.refresh()
             advanceUntilIdle()
 
-            verify(statsRepository, times(2))
-                .fetchTags(eq(TEST_SITE_ID), any())
+            verify(statsTagsUseCase, times(2))
+                .invoke(eq(TEST_SITE_ID), any(), any())
         }
 
     @Test
@@ -505,7 +436,7 @@ class TagsAndCategoriesViewModelTest : BaseUnitTest() {
         test {
             stubApiError()
             whenever(
-                statsRepository.fetchTags(any(), any())
+                statsTagsUseCase(any(), any(), any())
             ).thenReturn(
                 TagsResult.Error("Network error")
             )
@@ -521,7 +452,7 @@ class TagsAndCategoriesViewModelTest : BaseUnitTest() {
                 )
 
             whenever(
-                statsRepository.fetchTags(any(), any())
+                statsTagsUseCase(any(), any(), any())
             ).thenReturn(createSuccessResult())
 
             viewModel.refresh()
@@ -537,11 +468,11 @@ class TagsAndCategoriesViewModelTest : BaseUnitTest() {
 
     // region refresh sets loading
     @Test
-    fun `when refresh with no site, then loading then error`() =
+    fun `when refresh with no site, then error`() =
         test {
             stubNoSiteError()
             whenever(
-                statsRepository.fetchTags(any(), any())
+                statsTagsUseCase(any(), any(), any())
             ).thenReturn(createSuccessResult())
 
             initViewModel()
@@ -568,7 +499,7 @@ class TagsAndCategoriesViewModelTest : BaseUnitTest() {
         test {
             stubApiError()
             whenever(
-                statsRepository.fetchTags(any(), any())
+                statsTagsUseCase(any(), any(), any())
             ).thenReturn(
                 TagsResult.Error("Network error")
             )
@@ -584,7 +515,7 @@ class TagsAndCategoriesViewModelTest : BaseUnitTest() {
                 )
 
             whenever(
-                statsRepository.fetchTags(any(), any())
+                statsTagsUseCase(any(), any(), any())
             ).thenReturn(createSuccessResult())
 
             viewModel.loadData()
@@ -595,65 +526,6 @@ class TagsAndCategoriesViewModelTest : BaseUnitTest() {
                     TagsAndCategoriesCardUiState
                         .Loaded::class.java
                 )
-        }
-    // endregion
-
-    // region getDetailData
-    @Test
-    fun `when getDetailData, then returns all items`() =
-        test {
-            val manyGroups = (1..10).map { i ->
-                TagGroupData(
-                    tags = listOf(
-                        TagData(
-                            tagType = "tag",
-                            name = "Tag $i"
-                        )
-                    ),
-                    views = (100 - i).toLong()
-                )
-            }
-            whenever(
-                statsRepository.fetchTags(any(), any())
-            ).thenReturn(
-                TagsResult.Success(
-                    StatsTagsData(tagGroups = manyGroups)
-                )
-            )
-
-            initViewModel()
-            viewModel.loadData()
-            advanceUntilIdle()
-
-            val detailData = viewModel.getDetailData()
-            assertThat(detailData).hasSize(10)
-        }
-
-    @Test
-    fun `when getDetailData before load, then empty list`() {
-        initViewModel()
-
-        val detailData = viewModel.getDetailData()
-        assertThat(detailData).isEmpty()
-    }
-    // endregion
-
-    // region Repository interaction
-    @Test
-    fun `when loadData, then init and fetchTags called`() =
-        test {
-            whenever(
-                statsRepository.fetchTags(any(), any())
-            ).thenReturn(createSuccessResult())
-
-            initViewModel()
-            viewModel.loadData()
-            advanceUntilIdle()
-
-            verify(statsRepository)
-                .init(TEST_ACCESS_TOKEN)
-            verify(statsRepository)
-                .fetchTags(eq(TEST_SITE_ID), any())
         }
     // endregion
 
@@ -685,19 +557,17 @@ class TagsAndCategoriesViewModelTest : BaseUnitTest() {
 
     companion object {
         private const val TEST_SITE_ID = 123L
-        private const val TEST_ACCESS_TOKEN =
-            "test_access_token"
         private const val NO_SITE_ERROR =
             "No site selected"
         private const val API_ERROR =
             "Failed to load stats"
+        private const val UNKNOWN_ERROR =
+            "An unknown error occurred"
 
         private const val TEST_CATEGORY_NAME =
             "Uncategorized"
         private const val TEST_CATEGORY_VIEWS = 83L
         private const val TEST_TAG_NAME = "snaps"
         private const val TEST_TAG_VIEWS = 15L
-
-        private const val CARD_MAX_ITEMS = 7
     }
 }

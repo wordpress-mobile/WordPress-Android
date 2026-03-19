@@ -7,7 +7,7 @@ import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
 
 @HiltViewModel
-class TagsAndCategoriesViewModel @Inject constructor(
+class TagsAndCategoriesDetailViewModel @Inject constructor(
     selectedSiteRepository: SelectedSiteRepository,
     statsTagsUseCase: StatsTagsUseCase,
     resourceProvider: ResourceProvider,
@@ -18,14 +18,9 @@ class TagsAndCategoriesViewModel @Inject constructor(
     resourceProvider,
     mapper
 ) {
-    override val maxItems: Int = CARD_MAX_ITEMS
-
-    fun refresh() {
-        resetForRefresh()
-        fetchData(forceRefresh = true)
-    }
+    override val maxItems: Int = DETAIL_MAX_ITEMS
 
     companion object {
-        private const val CARD_MAX_ITEMS = 7
+        private const val DETAIL_MAX_ITEMS = 100
     }
 }

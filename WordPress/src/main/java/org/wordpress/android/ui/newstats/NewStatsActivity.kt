@@ -279,7 +279,6 @@ private fun StatsTabContent(
         )
         StatsTab.INSIGHTS -> InsightsTabContent()
         StatsTab.SUBSCRIBERS -> SubscribersTabContent()
-        else -> PlaceholderTabContent(tab)
     }
 }
 
@@ -1227,14 +1226,8 @@ private fun InsightsTabContent(
                             uiState =
                                 tagsAndCategoriesUiState,
                             onShowAllClick = {
-                                val items =
-                                    tagsAndCategoriesViewModel
-                                        .getDetailData()
                                 TagsAndCategoriesDetailActivity
-                                    .start(
-                                        context,
-                                        items
-                                    )
+                                    .start(context)
                             },
                             onRemoveCard = {
                                 insightsViewModel
@@ -1354,65 +1347,6 @@ private fun AddInsightsCardBottomSheet(
                 }
             }
         }
-    }
-}
-
-@Composable
-private fun NoConnectionContent(
-    onRetry: () -> Unit
-) {
-    Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 60.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
-        ) {
-            Icon(
-                painter = painterResource(R.drawable.ic_wifi_off_24px),
-                contentDescription = null,
-                modifier = Modifier
-                    .size(48.dp)
-                    .background(
-                        color = MaterialTheme.colorScheme.surfaceVariant,
-                        shape = CircleShape
-                    )
-                    .padding(12.dp),
-                tint = MaterialTheme.colorScheme.onSurfaceVariant
-            )
-            Spacer(modifier = Modifier.height(24.dp))
-            Text(
-                text = stringResource(R.string.no_connection_error_title),
-                style = MaterialTheme.typography.titleMedium,
-                color = MaterialTheme.colorScheme.onSurface,
-                textAlign = TextAlign.Center
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(
-                text = stringResource(R.string.no_connection_error_description),
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                textAlign = TextAlign.Center
-            )
-            Spacer(modifier = Modifier.height(24.dp))
-            Button(onClick = onRetry) {
-                Text(stringResource(R.string.retry))
-            }
-        }
-    }
-}
-
-@Composable
-private fun PlaceholderTabContent(tab: StatsTab) {
-    Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
-    ) {
-        Text(text = "${stringResource(id = tab.titleResId)} - Coming Soon")
     }
 }
 

@@ -12,23 +12,23 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.store.AccountStore
-import org.wordpress.android.ui.newstats.datasource.StatsSummaryData
+import org.wordpress.android.ui.newstats.datasource.StatsTagsData
 
 @ExperimentalCoroutinesApi
-class StatsSummaryUseCaseTest : BaseUnitTest() {
+class StatsTagsUseCaseTest : BaseUnitTest() {
     @Mock
     private lateinit var statsRepository: StatsRepository
 
     @Mock
     private lateinit var accountStore: AccountStore
 
-    private lateinit var useCase: StatsSummaryUseCase
+    private lateinit var useCase: StatsTagsUseCase
 
     @Before
     fun setUp() {
         whenever(accountStore.accessToken)
             .thenReturn(TEST_ACCESS_TOKEN)
-        useCase = StatsSummaryUseCase(
+        useCase = StatsTagsUseCase(
             statsRepository,
             accountStore
         )
@@ -38,39 +38,40 @@ class StatsSummaryUseCaseTest : BaseUnitTest() {
     fun `when called, then returns cached on second call`() =
         test {
             whenever(
-                statsRepository.fetchStatsSummary(
-                    TEST_SITE_ID
+                statsRepository.fetchTags(
+                    siteId = TEST_SITE_ID,
+                    max = DEFAULT_MAX
                 )
             ).thenReturn(
-                StatsSummaryResult.Success(
-                    createTestSummary()
-                )
+                TagsResult.Success(createTestTagsData())
             )
 
             val first = useCase(TEST_SITE_ID)
             val second = useCase(TEST_SITE_ID)
 
             assertThat(first).isInstanceOf(
-                StatsSummaryResult.Success::class.java
+                TagsResult.Success::class.java
             )
             assertThat(second).isInstanceOf(
-                StatsSummaryResult.Success::class.java
+                TagsResult.Success::class.java
             )
             verify(statsRepository, times(1))
-                .fetchStatsSummary(TEST_SITE_ID)
+                .fetchTags(
+                    siteId = TEST_SITE_ID,
+                    max = DEFAULT_MAX
+                )
         }
 
     @Test
     fun `when called with forceRefresh, then fetches again`() =
         test {
             whenever(
-                statsRepository.fetchStatsSummary(
-                    TEST_SITE_ID
+                statsRepository.fetchTags(
+                    siteId = TEST_SITE_ID,
+                    max = DEFAULT_MAX
                 )
             ).thenReturn(
-                StatsSummaryResult.Success(
-                    createTestSummary()
-                )
+                TagsResult.Success(createTestTagsData())
             )
 
             useCase(TEST_SITE_ID)
@@ -80,7 +81,10 @@ class StatsSummaryUseCaseTest : BaseUnitTest() {
             )
 
             verify(statsRepository, times(2))
-                .fetchStatsSummary(TEST_SITE_ID)
+                .fetchTags(
+                    siteId = TEST_SITE_ID,
+                    max = DEFAULT_MAX
+                )
         }
 
     @Test
@@ -88,7 +92,7 @@ class StatsSummaryUseCaseTest : BaseUnitTest() {
         test {
             whenever(accountStore.accessToken)
                 .thenReturn(null)
-            useCase = StatsSummaryUseCase(
+            useCase = StatsTagsUseCase(
                 statsRepository,
                 accountStore
             )
@@ -96,57 +100,25 @@ class StatsSummaryUseCaseTest : BaseUnitTest() {
             val result = useCase(TEST_SITE_ID)
 
             assertThat(result).isInstanceOf(
-                StatsSummaryResult.Error::class.java
+                TagsResult.Error::class.java
             )
             verify(statsRepository, never())
-                .fetchStatsSummary(any())
-        }
-
-    @Test
-    fun `when errors, then cache is not populated`() =
-        test {
-            whenever(
-                statsRepository.fetchStatsSummary(
-                    TEST_SITE_ID
+                .fetchTags(
+                    siteId = any(),
+                    max = any()
                 )
-            ).thenReturn(
-                StatsSummaryResult.Error("Network error")
-            )
-
-            val first = useCase(TEST_SITE_ID)
-            assertThat(first).isInstanceOf(
-                StatsSummaryResult.Error::class.java
-            )
-
-            whenever(
-                statsRepository.fetchStatsSummary(
-                    TEST_SITE_ID
-                )
-            ).thenReturn(
-                StatsSummaryResult.Success(
-                    createTestSummary()
-                )
-            )
-
-            val second = useCase(TEST_SITE_ID)
-            assertThat(second).isInstanceOf(
-                StatsSummaryResult.Success::class.java
-            )
-            verify(statsRepository, times(2))
-                .fetchStatsSummary(TEST_SITE_ID)
         }
 
     @Test
     fun `when clearCache called, then next call fetches again`() =
         test {
             whenever(
-                statsRepository.fetchStatsSummary(
-                    TEST_SITE_ID
+                statsRepository.fetchTags(
+                    siteId = TEST_SITE_ID,
+                    max = DEFAULT_MAX
                 )
             ).thenReturn(
-                StatsSummaryResult.Success(
-                    createTestSummary()
-                )
+                TagsResult.Success(createTestTagsData())
             )
 
             useCase(TEST_SITE_ID)
@@ -154,21 +126,57 @@ class StatsSummaryUseCaseTest : BaseUnitTest() {
             useCase(TEST_SITE_ID)
 
             verify(statsRepository, times(2))
-                .fetchStatsSummary(TEST_SITE_ID)
+                .fetchTags(
+                    siteId = TEST_SITE_ID,
+                    max = DEFAULT_MAX
+                )
         }
 
-    private fun createTestSummary() = StatsSummaryData(
-        views = 100L,
-        visitors = 50L,
-        posts = 10L,
-        comments = 5L,
-        viewsBestDay = "2022-02-22",
-        viewsBestDayTotal = 20L
+    @Test
+    fun `when errors, then cache is not populated`() =
+        test {
+            whenever(
+                statsRepository.fetchTags(
+                    siteId = TEST_SITE_ID,
+                    max = DEFAULT_MAX
+                )
+            ).thenReturn(
+                TagsResult.Error("Network error")
+            )
+
+            val first = useCase(TEST_SITE_ID)
+            assertThat(first).isInstanceOf(
+                TagsResult.Error::class.java
+            )
+
+            whenever(
+                statsRepository.fetchTags(
+                    siteId = TEST_SITE_ID,
+                    max = DEFAULT_MAX
+                )
+            ).thenReturn(
+                TagsResult.Success(createTestTagsData())
+            )
+
+            val second = useCase(TEST_SITE_ID)
+            assertThat(second).isInstanceOf(
+                TagsResult.Success::class.java
+            )
+            verify(statsRepository, times(2))
+                .fetchTags(
+                    siteId = TEST_SITE_ID,
+                    max = DEFAULT_MAX
+                )
+        }
+
+    private fun createTestTagsData() = StatsTagsData(
+        tagGroups = emptyList()
     )
 
     companion object {
         private const val TEST_SITE_ID = 123L
         private const val TEST_ACCESS_TOKEN =
             "test_access_token"
+        private const val DEFAULT_MAX = 10
     }
 }
