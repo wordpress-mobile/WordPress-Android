@@ -421,18 +421,18 @@ fun ReaderTagsFeedPostListItemPreview() {
                             postTitle = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer " +
                                     "pellentesque sapien sed urna fermentum posuere. Vivamus in pretium nisl.",
                             postExcerpt = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer " +
-                                    "pellentesque sapien sed urna fermentum posuere. Vivamus in pretium nisl." +
-                                    "Lorem ipsum dolor sit amet consectetur adipiscing elit. Integer" +
-                                    "pellentesque sapien sed urna fermentum posuere. Vivamus in pretium nisl." +
-                                    "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer pellentesque" +
+                                    "pellentesque sapien sed urna fermentum posuere. Vivamus in pretium nisl. " +
+                                    "Lorem ipsum dolor sit amet consectetur adipiscing elit. Integer " +
+                                    "pellentesque sapien sed urna fermentum posuere. Vivamus in pretium nisl. " +
+                                    "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer pellentesque " +
                                     "sapien sed urna fermentum posuere. Vivamus in pretium nisl. Lorem ipsum dolor " +
-                                    "sit amet, consectetur adipiscing elit. Integer pellentesque sapien sed urna" +
-                                    "fermentum posuere. Vivamus in pretium nisl. Lorem ipsum dolor sit" +
-                                    "amet, consectetur adipiscing elit. Integer pellentesque sapien sed urna" +
-                                    "fermentum posuere. Vivamus in pretium nisl. Lorem ipsum dolor sit amet," +
-                                    "consectetur adipiscing elit. Integer pellentesque sapien sed urna fermentum" +
-                                    "posuere. Vivamus in pretium nisl. Lorem ipsum dolor sit amet, consectetur" +
-                                    "adipiscing elit. Integer pellentesque sapien sed urna fermentum posuere." +
+                                    "sit amet, consectetur adipiscing elit. Integer pellentesque sapien sed urna " +
+                                    "fermentum posuere. Vivamus in pretium nisl. Lorem ipsum dolor sit " +
+                                    "amet, consectetur adipiscing elit. Integer pellentesque sapien sed urna " +
+                                    "fermentum posuere. Vivamus in pretium nisl. Lorem ipsum dolor sit amet, " +
+                                    "consectetur adipiscing elit. Integer pellentesque sapien sed urna fermentum " +
+                                    "posuere. Vivamus in pretium nisl. Lorem ipsum dolor sit amet, consectetur " +
+                                    "adipiscing elit. Integer pellentesque sapien sed urna fermentum posuere. " +
                                     "Vivamus in pretium nisl.",
                             postImageUrl = "https://picsum.photos/200/300",
                             postNumberOfLikesText = "15 likes",
@@ -451,24 +451,24 @@ fun ReaderTagsFeedPostListItemPreview() {
                 item {
                     ReaderTagsFeedPostListItem(
                         item = TagsFeedPostItem(
-                            siteName = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer pellentesque" +
+                            siteName = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer pellentesque " +
                                     "sapien sed urna fermentum posuere. Vivamus in pretium nisl.",
                             postDateLine = "1h",
-                            postTitle = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer" +
+                            postTitle = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer " +
                                     "pellentesque sapien sed urna fermentum posuere. Vivamus in pretium nisl.",
-                            postExcerpt = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer" +
-                                    "pellentesque sapien sed urna fermentum posuere. Vivamus in pretium nisl. Lorem" +
+                            postExcerpt = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer " +
+                                    "pellentesque sapien sed urna fermentum posuere. Vivamus in pretium nisl. Lorem " +
                                     "ipsum dolor sit amet, " +
-                                    "consectetur adipiscing elit. Integer pellentesque sapien sed urna" +
-                                    "fermentum posuere. Vivamus in pretium nisl. Lorem ipsum dolor sit amet," +
-                                    "consectetur adipiscing elit. Integer pellentesque sapien sed urna fermentum" +
-                                    "posuere. Vivamus in pretium nisl. Lorem ipsum dolor sit amet, consectetur" +
-                                    "adipiscing elit. Integer pellentesque sapien sed urna fermentum posuere." +
-                                    "Vivamus in pretium nisl. Lorem ipsum dolor sit amet, consectetur adipiscing" +
-                                    "elit. Integer pellentesque sapien sed urna fermentum posuere. Vivamus in" +
-                                    "pretium nisl. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer" +
-                                    "pellentesque sapien sed urna fermentum posuere. Vivamus in pretium nisl. Lorem" +
-                                    "ipsum dolor sit amet, consectetur adipiscing elit. Integer pellentesque sapien" +
+                                    "consectetur adipiscing elit. Integer pellentesque sapien sed urna " +
+                                    "fermentum posuere. Vivamus in pretium nisl. Lorem ipsum dolor sit amet, " +
+                                    "consectetur adipiscing elit. Integer pellentesque sapien sed urna fermentum " +
+                                    "posuere. Vivamus in pretium nisl. Lorem ipsum dolor sit amet, consectetur " +
+                                    "adipiscing elit. Integer pellentesque sapien sed urna fermentum posuere. " +
+                                    "Vivamus in pretium nisl. Lorem ipsum dolor sit amet, consectetur adipiscing " +
+                                    "elit. Integer pellentesque sapien sed urna fermentum posuere. Vivamus in " +
+                                    "pretium nisl. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer " +
+                                    "pellentesque sapien sed urna fermentum posuere. Vivamus in pretium nisl. Lorem " +
+                                    "ipsum dolor sit amet, consectetur adipiscing elit. Integer pellentesque sapien " +
                                     "sed urna fermentum posuere. Vivamus in pretium nisl.",
                             postImageUrl = "",
                             postNumberOfLikesText = "15 likes",
@@ -487,7 +487,7 @@ fun ReaderTagsFeedPostListItemPreview() {
                 item {
                     ReaderTagsFeedPostListItem(
                         item = TagsFeedPostItem(
-                            siteName = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer pellentesque" +
+                            siteName = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer pellentesque " +
                                     "sapien sed urna fermentum posuere. Vivamus in pretium nisl.",
                             postDateLine = "1h",
                             postTitle = "Lorem ipsum dolor sit amet.",
@@ -509,7 +509,7 @@ fun ReaderTagsFeedPostListItemPreview() {
                 item {
                     ReaderTagsFeedPostListItem(
                         item = TagsFeedPostItem(
-                            siteName = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer pellentesque" +
+                            siteName = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer pellentesque " +
                                     "sapien sed urna fermentum posuere. Vivamus in pretium nisl.",
                             postDateLine = "1h",
                             postTitle = "Lorem ipsum dolor sit amet.",
@@ -531,10 +531,10 @@ fun ReaderTagsFeedPostListItemPreview() {
                 item {
                     ReaderTagsFeedPostListItem(
                         item = TagsFeedPostItem(
-                            siteName = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer pellentesque" +
+                            siteName = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer pellentesque " +
                                     "sapien sed urna fermentum posuere. Vivamus in pretium nisl.",
                             postDateLine = "1h",
-                            postTitle = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer" +
+                            postTitle = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer " +
                                     "pellentesque sapien sed urna fermentum posuere. Vivamus in pretium nisl.",
                             postExcerpt = "Lorem ipsum dolor sit amet.",
                             postImageUrl = "https://picsum.photos/200/300",
@@ -554,10 +554,10 @@ fun ReaderTagsFeedPostListItemPreview() {
                 item {
                     ReaderTagsFeedPostListItem(
                         item = TagsFeedPostItem(
-                            siteName = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer" +
+                            siteName = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer " +
                                     "pellentesque sapien sed urna fermentum posuere. Vivamus in pretium nisl.",
                             postDateLine = "1h",
-                            postTitle = "Lorem ipsum dolor sit amet, consectetur adipiscing elit." +
+                            postTitle = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. " +
                                     "Integer pellentesque sapien sed urna fermentum posuere. Vivamus in pretium nisl.",
                             postExcerpt = "Lorem ipsum dolor sit amet.",
                             postImageUrl = "",
@@ -577,23 +577,23 @@ fun ReaderTagsFeedPostListItemPreview() {
                 item {
                     ReaderTagsFeedPostListItem(
                         item = TagsFeedPostItem(
-                            siteName = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer pellentesque" +
+                            siteName = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer pellentesque " +
                                     "sapien sed urna fermentum posuere. Vivamus in pretium nisl.",
                             postDateLine = "1h",
                             postTitle = "Lorem ipsum dolor sit amet.",
-                            postExcerpt = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer" +
-                                    "pellentesque sapien sed urna fermentum posuere. Vivamus in pretium nisl." +
-                                    "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer pellentesque" +
-                                    "sapien sed urna fermentum posuere. Vivamus in pretium nisl. Lorem ipsum dolor" +
-                                    "sit amet, consectetur adipiscing elit. Integer pellentesque sapien sed urna" +
-                                    "fermentum posuere. Vivamus in pretium nisl. Lorem ipsum dolor sit amet," +
-                                    "consectetur adipiscing elit. Integer pellentesque sapien sed urna fermentum" +
-                                    "posuere. Vivamus in pretium nisl. Lorem ipsum dolor sit amet, consectetur" +
-                                    "adipiscing elit. Integer pellentesque sapien sed urna fermentum posuere." +
-                                    "Vivamus in pretium nisl. Lorem ipsum dolor sit amet, consectetur adipiscing" +
-                                    "elit. Integer pellentesque sapien sed urna fermentum posuere. Vivamus in" +
-                                    "pretium nisl. Lorem ipsum dolor sit amet, consectetur adipiscing elit." +
-                                    "Integer pellentesque sapien sed urna fermentum" +
+                            postExcerpt = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer " +
+                                    "pellentesque sapien sed urna fermentum posuere. Vivamus in pretium nisl. " +
+                                    "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer pellentesque " +
+                                    "sapien sed urna fermentum posuere. Vivamus in pretium nisl. Lorem ipsum dolor " +
+                                    "sit amet, consectetur adipiscing elit. Integer pellentesque sapien sed urna " +
+                                    "fermentum posuere. Vivamus in pretium nisl. Lorem ipsum dolor sit amet, " +
+                                    "consectetur adipiscing elit. Integer pellentesque sapien sed urna fermentum " +
+                                    "posuere. Vivamus in pretium nisl. Lorem ipsum dolor sit amet, consectetur " +
+                                    "adipiscing elit. Integer pellentesque sapien sed urna fermentum posuere. " +
+                                    "Vivamus in pretium nisl. Lorem ipsum dolor sit amet, consectetur adipiscing " +
+                                    "elit. Integer pellentesque sapien sed urna fermentum posuere. Vivamus in " +
+                                    "pretium nisl. Lorem ipsum dolor sit amet, consectetur adipiscing elit. " +
+                                    "Integer pellentesque sapien sed urna fermentum " +
                                     "posuere. Vivamus in pretium nisl.",
                             postImageUrl = "https://picsum.photos/200/300",
                             postNumberOfLikesText = "15 likes",
@@ -612,21 +612,21 @@ fun ReaderTagsFeedPostListItemPreview() {
                 item {
                     ReaderTagsFeedPostListItem(
                         item = TagsFeedPostItem(
-                            siteName = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer pellentesque" +
+                            siteName = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer pellentesque " +
                                     "sapien sed urna fermentum posuere. Vivamus in pretium nisl.",
                             postDateLine = "1h",
                             postTitle = "Lorem ipsum dolor sit amet.",
-                            postExcerpt = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer" +
-                                    "pellentesque sapien sed urna fermentum posuere. Vivamus in pretium nisl." +
-                                    "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer pellentesque" +
-                                    "sapien sed urna fermentum posuere. Vivamus in pretium nisl. Lorem ipsum dolor" +
-                                    "sit amet, consectetur adipiscing elit. Integer pellentesque sapien sed urna" +
-                                    "fermentum posuere. Vivamus in pretium nisl. Lorem ipsum dolor sit amet," +
-                                    "consectetur adipiscing elit. Integer pellentesque sapien sed urna fermentum" +
-                                    "posuere. Vivamus in pretium nisl. Lorem ipsum dolor sit amet, consectetur" +
-                                    "adipiscing elit. Integer pellentesque sapien sed urna fermentum posuere." +
-                                    "Vivamus in pretium nisl. Lorem ipsum dolor sit amet, consectetur adipiscing" +
-                                    "elit. Integer pellentesque sapien sed urna fermentum posuere. Vivamus in" +
+                            postExcerpt = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer " +
+                                    "pellentesque sapien sed urna fermentum posuere. Vivamus in pretium nisl. " +
+                                    "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer pellentesque " +
+                                    "sapien sed urna fermentum posuere. Vivamus in pretium nisl. Lorem ipsum dolor " +
+                                    "sit amet, consectetur adipiscing elit. Integer pellentesque sapien sed urna " +
+                                    "fermentum posuere. Vivamus in pretium nisl. Lorem ipsum dolor sit amet, " +
+                                    "consectetur adipiscing elit. Integer pellentesque sapien sed urna fermentum " +
+                                    "posuere. Vivamus in pretium nisl. Lorem ipsum dolor sit amet, consectetur " +
+                                    "adipiscing elit. Integer pellentesque sapien sed urna fermentum posuere. " +
+                                    "Vivamus in pretium nisl. Lorem ipsum dolor sit amet, consectetur adipiscing " +
+                                    "elit. Integer pellentesque sapien sed urna fermentum posuere. Vivamus in " +
                                     "pretium nisl. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer" +
                                     " pellentesque sapien sed urna fermentum posuere. Vivamus in pretium nisl.",
                             postImageUrl = "",

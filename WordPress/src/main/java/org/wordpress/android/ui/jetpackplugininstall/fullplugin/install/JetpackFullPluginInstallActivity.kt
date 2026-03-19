@@ -3,6 +3,7 @@ package org.wordpress.android.ui.jetpackplugininstall.fullplugin.install
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -44,14 +45,14 @@ class JetpackFullPluginInstallActivity : BaseAppCompatActivity() {
                 )
             }
         }
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                if (viewModel.uiState.value.showCloseButton) {
+                    viewModel.onBackPressed()
+                }
+            }
+        })
         observeActionEvents()
-    }
-
-    @Suppress("OVERRIDE_DEPRECATION","MissingSuperCall")
-    override fun onBackPressed() {
-        if (!viewModel.uiState.value.showCloseButton) return
-
-        viewModel.onBackPressed()
     }
 
     private fun observeActionEvents() {
