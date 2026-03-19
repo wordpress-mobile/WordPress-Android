@@ -258,6 +258,11 @@ class PostRsSettingsViewModel @Inject constructor(
     }
 
     fun onFormatClicked() {
+        if (_uiState.value.sitePostFormats ==
+            PostRsRestClient.DEFAULT_POST_FORMATS
+        ) {
+            resolveSitePostFormats()
+        }
         _uiState.update {
             it.copy(dialogState = DialogState.FormatDialog)
         }
@@ -943,7 +948,6 @@ class PostRsSettingsViewModel @Inject constructor(
         ) { names ->
             _uiState.update { it.copy(tagNames = names) }
         }
-        resolveSitePostFormats()
     }
 
     @Suppress("ComplexCondition", "CyclomaticComplexMethod")
