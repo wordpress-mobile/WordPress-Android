@@ -93,9 +93,6 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
     @Suppress("TooGenericExceptionCaught")
     private suspend fun storeCredentials(urlLogin: UriLogin): Boolean = withContext(ioDispatcher) {
         try {
-            // TODO: Remove this line before merging — used to force
-            //  the error path for testing Sentry/analytics reporting
-            // throw RuntimeException("Forced error for Sentry testing")
             applicationPasswordLoginHelper.storeApplicationPasswordCredentialsFrom(urlLogin)
         } catch (e: Exception) {
             appLogWrapper.e(
