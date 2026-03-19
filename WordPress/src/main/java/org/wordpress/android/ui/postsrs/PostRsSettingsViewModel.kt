@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.postsrs
 
+import android.net.Uri
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -24,6 +25,7 @@ import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
 import rs.wordpress.api.kotlin.WpRequestResult
 import uniffi.wp_api.AnyPostWithEditContext
+import uniffi.wp_api.MediaCreateParams
 import uniffi.wp_api.PostEndpointType
 import uniffi.wp_api.PostFormat
 import uniffi.wp_api.PostRetrieveParams
@@ -31,6 +33,7 @@ import uniffi.wp_api.PostStatus
 import uniffi.wp_api.PostUpdateParams
 import uniffi.wp_api.TermEndpointType
 import uniffi.wp_api.UserListParams
+import java.io.File
 import java.text.DateFormat
 import java.util.Calendar
 import java.util.Date
@@ -45,6 +48,7 @@ class PostRsSettingsViewModel @Inject constructor(
     private val restClient: PostRsRestClient,
     private val resourceProvider: ResourceProvider,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
+    private val uriToFileMapper: UriToFileMapper,
 ) : ViewModel() {
     private val postId: Long = requireNotNull(savedStateHandle[EXTRA_POST_ID]) {
         "Missing $EXTRA_POST_ID in SavedStateHandle"
@@ -444,8 +448,16 @@ class PostRsSettingsViewModel @Inject constructor(
         }
     }
 
-    fun onFeaturedImageClicked() {
-        _events.trySend(PostRsSettingsEvent.LaunchMediaPicker)
+    fun onChooseFromWpMedia() {
+        _events.trySend(
+            PostRsSettingsEvent.LaunchWpMediaPicker
+        )
+    }
+
+    fun onChooseFromDevice() {
+        _events.trySend(
+            PostRsSettingsEvent.LaunchDeviceMediaPicker
+        )
     }
 
     fun onFeaturedImageSelected(mediaId: Long) {
@@ -472,6 +484,97 @@ class PostRsSettingsViewModel @Inject constructor(
             it.copy(
                 editedFeaturedImageId = edited,
                 featuredImage = FieldState.Empty
+            )
+        }
+    }
+
+    @Suppress("TooGenericExceptionCaught")
+    fun onFeaturedImagePickedFromDevice(uri: Uri) {
+        _uiState.update {
+            it.copy(featuredImage = FieldState.Loading)
+        }
+        viewModelScope.launch {
+            var tempFile: File? = null
+            try {
+                val mediaId = withContext(Dispatchers.IO) {
+                    val displayName = uriToFileMapper
+                        .getDisplayName(uri)
+                    val file = uriToFileMapper
+                        .copyUriToTempFile(uri)
+                    tempFile = file
+                    uploadMediaAndGetId(
+                        file.absolutePath,
+                        displayName
+                    )
+                }
+                onFeaturedImageSelected(mediaId)
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                AppLog.e(
+                    AppLog.T.POSTS,
+                    "Failed to upload featured image",
+                    e
+                )
+                _uiState.update {
+                    it.copy(
+                        featuredImage = FieldState.Error(
+                            fieldError
+                        )
+                    )
+                }
+                _snackbarMessages.trySend(
+                    SnackbarMessage(
+                        message = resourceProvider.getString(
+                            R.string.error_media_upload
+                        ),
+                        actionLabel = resourceProvider
+                            .getString(R.string.retry),
+                        onAction = {
+                            onFeaturedImagePickedFromDevice(
+                                uri
+                            )
+                        }
+                    )
+                )
+            } finally {
+                if (tempFile?.delete() == false) {
+                    AppLog.w(
+                        AppLog.T.MEDIA,
+                        "Failed to delete temp file"
+                    )
+                }
+            }
+        }
+    }
+
+    private suspend fun uploadMediaAndGetId(
+        filePath: String,
+        displayName: String?,
+    ): Long {
+        val title = displayName
+            ?.substringBeforeLast(".")
+            ?: File(filePath).nameWithoutExtension
+        val client = apiClient
+            ?: throw PostApiRequestException(
+                ERROR_NO_SITE
+            )
+        val response = client.request { requestBuilder ->
+            requestBuilder.media().create(
+                params = MediaCreateParams(
+                    title = title,
+                    filePath = filePath,
+                )
+            )
+        }
+        return when (response) {
+            is WpRequestResult.Success ->
+                response.response.data.id
+            else -> throw PostApiRequestException(
+                (response
+                    as? WpRequestResult.WpError<*>)
+                    ?.errorMessage
+                    ?: "Failed to upload media"
             )
         }
     }
@@ -619,7 +722,7 @@ class PostRsSettingsViewModel @Inject constructor(
                 withContext(Dispatchers.IO) {
                     val client = apiClient
                         ?: throw PostApiRequestException(
-                            "No site selected"
+                            ERROR_NO_SITE
                         )
                     val response = client.request {
                         it.posts().update(
@@ -718,7 +821,7 @@ class PostRsSettingsViewModel @Inject constructor(
     private suspend fun fetchPost():
         AnyPostWithEditContext = withContext(Dispatchers.IO) {
         val client = apiClient
-            ?: throw PostApiRequestException("No API client")
+            ?: throw PostApiRequestException(ERROR_NO_SITE)
         val response = client.request {
             it.posts().retrieveWithEditContext(
                 PostEndpointType.Posts,
@@ -952,5 +1055,7 @@ class PostRsSettingsViewModel @Inject constructor(
 
     companion object {
         const val EXTRA_POST_ID = "extra_post_id"
+        private const val ERROR_NO_SITE =
+            "No site selected"
     }
 }

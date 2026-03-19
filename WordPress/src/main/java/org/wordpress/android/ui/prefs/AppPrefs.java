@@ -109,9 +109,6 @@ public class AppPrefs {
         // Used to flag whether the app should strip geolocation from images
         STRIP_IMAGE_LOCATION,
 
-        // Used to flag the account created stat needs to be bumped after account information is synced.
-        SHOULD_TRACK_MAGIC_LINK_SIGNUP,
-
         // Support email address and name that's independent of any account or site
         SUPPORT_EMAIL,
         SUPPORT_NAME,
@@ -198,6 +195,11 @@ public class AppPrefs {
         STATS_CARDS_CONFIGURATION_JSON,
         STATS_INSIGHTS_CARDS_CONFIGURATION_JSON,
         SUBSCRIBERS_CARDS_CONFIGURATION_JSON,
+
+        // Login flow preserved across OAuth Custom Tabs redirect
+        PENDING_LOGIN_FLOW,
+        // Whether a share flow is pending (for self-hosted login)
+        IS_SHARE_FLOW_PENDING,
     }
 
     /**
@@ -256,9 +258,6 @@ public class AppPrefs {
 
         // indicates whether the system notifications are enabled for the app
         SYSTEM_NOTIFICATIONS_ENABLED,
-
-        // Used to indicate whether or not the the post-signup interstitial must be shown
-        SHOULD_SHOW_POST_SIGNUP_INTERSTITIAL,
 
         // used to indicate that we do not need to show the main FAB tooltip
         IS_MAIN_FAB_TOOLTIP_DISABLED,
@@ -989,18 +988,6 @@ public class AppPrefs {
         setLong(UndeletablePrefKey.LAST_WP_COM_THEMES_SYNC, time);
     }
 
-    public static void setShouldTrackMagicLinkSignup(Boolean shouldTrack) {
-        setBoolean(DeletablePrefKey.SHOULD_TRACK_MAGIC_LINK_SIGNUP, shouldTrack);
-    }
-
-    public static boolean getShouldTrackMagicLinkSignup() {
-        return getBoolean(DeletablePrefKey.SHOULD_TRACK_MAGIC_LINK_SIGNUP, false);
-    }
-
-    public static void removeShouldTrackMagicLinkSignup() {
-        remove(DeletablePrefKey.SHOULD_TRACK_MAGIC_LINK_SIGNUP);
-    }
-
     public static void setMainFabTooltipDisabled(Boolean disable) {
         setBoolean(UndeletablePrefKey.IS_MAIN_FAB_TOOLTIP_DISABLED, disable);
     }
@@ -1113,14 +1100,6 @@ public class AppPrefs {
 
     public static boolean getSystemNotificationsEnabled() {
         return getBoolean(UndeletablePrefKey.SYSTEM_NOTIFICATIONS_ENABLED, true);
-    }
-
-    public static void setShouldShowPostSignupInterstitial(boolean shouldShow) {
-        setBoolean(UndeletablePrefKey.SHOULD_SHOW_POST_SIGNUP_INTERSTITIAL, shouldShow);
-    }
-
-    public static boolean shouldShowPostSignupInterstitial() {
-        return getBoolean(UndeletablePrefKey.SHOULD_SHOW_POST_SIGNUP_INTERSTITIAL, true);
     }
 
     private static List<String> getPostWithHWAccelerationOff() {
@@ -1864,5 +1843,27 @@ public class AppPrefs {
 
     public static void setTrackNetworkRequestsRetentionPeriod(int period) {
         setInt(UndeletablePrefKey.TRACK_NETWORK_REQUESTS_RETENTION_PERIOD, period);
+    }
+
+    @Nullable
+    public static String getPendingLoginFlow() {
+        String value = getString(DeletablePrefKey.PENDING_LOGIN_FLOW);
+        return value.isEmpty() ? null : value;
+    }
+
+    public static void setPendingLoginFlow(@Nullable String flowName) {
+        setString(DeletablePrefKey.PENDING_LOGIN_FLOW, flowName);
+    }
+
+    public static boolean consumeShareFlowPending() {
+        boolean result = getBoolean(
+                DeletablePrefKey.IS_SHARE_FLOW_PENDING, false
+        );
+        setBoolean(DeletablePrefKey.IS_SHARE_FLOW_PENDING, false);
+        return result;
+    }
+
+    public static void setShareFlowPending(boolean pending) {
+        setBoolean(DeletablePrefKey.IS_SHARE_FLOW_PENDING, pending);
     }
 }

@@ -232,30 +232,6 @@ public class AnalyticsTrackerNosara extends Tracker {
             case COMMENT_QUICK_ACTION_APPROVED:
                 predefinedEventProperties.put("is_quick_action", true);
                 break;
-            case SIGNUP_EMAIL_EPILOGUE_UNCHANGED:
-            case SIGNUP_EMAIL_EPILOGUE_UPDATE_DISPLAY_NAME_FAILED:
-            case SIGNUP_EMAIL_EPILOGUE_UPDATE_DISPLAY_NAME_SUCCEEDED:
-            case SIGNUP_EMAIL_EPILOGUE_UPDATE_USERNAME_FAILED:
-            case SIGNUP_EMAIL_EPILOGUE_UPDATE_USERNAME_SUCCEEDED:
-            case SIGNUP_EMAIL_EPILOGUE_USERNAME_SUGGESTIONS_FAILED:
-            case SIGNUP_EMAIL_EPILOGUE_USERNAME_TAPPED:
-            case SIGNUP_EMAIL_EPILOGUE_VIEWED:
-                predefinedEventProperties.put("source", "email");
-                break;
-            case SIGNUP_SOCIAL_EPILOGUE_UNCHANGED:
-            case SIGNUP_SOCIAL_BUTTON_FAILURE:
-            case SIGNUP_SOCIAL_EPILOGUE_UPDATE_DISPLAY_NAME_FAILED:
-            case SIGNUP_SOCIAL_EPILOGUE_UPDATE_DISPLAY_NAME_SUCCEEDED:
-            case SIGNUP_SOCIAL_EPILOGUE_UPDATE_USERNAME_FAILED:
-            case SIGNUP_SOCIAL_EPILOGUE_UPDATE_USERNAME_SUCCEEDED:
-            case SIGNUP_SOCIAL_EPILOGUE_USERNAME_SUGGESTIONS_FAILED:
-            case SIGNUP_SOCIAL_EPILOGUE_USERNAME_TAPPED:
-            case SIGNUP_SOCIAL_EPILOGUE_VIEWED:
-                predefinedEventProperties.put("source", "social");
-                break;
-            case SIGNUP_SOCIAL_BUTTON_TAPPED:
-                predefinedEventProperties.put("source", "google");
-                break;
             case READER_POST_SAVED_FROM_OTHER_POST_LIST:
                 predefinedEventProperties.put("source", "other_post_list");
                 break;

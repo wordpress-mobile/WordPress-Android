@@ -1,5 +1,7 @@
 package org.wordpress.android.ui.accounts.login
 
+import android.content.Context
+import com.automattic.android.tracks.crashlogging.CrashLogging
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
@@ -40,6 +42,9 @@ private const val TEST_URL_AUTH_SUFFIX = "?app_name=android-jetpack-client&succe
 class ApplicationPasswordLoginHelperTest : BaseUnitTest() {
     val testUriLogin = UriLogin(TEST_URL, TEST_USER, TEST_PASSWORD, TEST_API_ROOT_URL)
      @Mock
+     lateinit var context: Context
+
+     @Mock
      lateinit var dispatcherWrapper: ApplicationPasswordLoginHelper.DispatcherWrapper
 
      @Mock
@@ -63,6 +68,9 @@ class ApplicationPasswordLoginHelperTest : BaseUnitTest() {
     @Mock
     lateinit var apiRootUrlCache: ApiRootUrlCache
 
+    @Mock
+    lateinit var crashLogging: CrashLogging
+
     private lateinit var applicationPasswordLoginHelper: ApplicationPasswordLoginHelper
 
     @Before
@@ -77,7 +85,8 @@ class ApplicationPasswordLoginHelperTest : BaseUnitTest() {
             wpLoginClient,
             appLogWrapper,
             apiRootUrlCache,
-            discoverSuccessWrapper
+            discoverSuccessWrapper,
+            crashLogging
         )
     }
 
@@ -150,21 +159,21 @@ class ApplicationPasswordLoginHelperTest : BaseUnitTest() {
             val result = applicationPasswordLoginHelper.storeApplicationPasswordCredentialsFrom(testUriLogin)
 
             assertFalse(result)
-            verify(siteStore).sites
+            verify(siteStore, times(2)).sites
             verify(dispatcherWrapper, times(0)).updateApplicationPassword(any())
             verify(dispatcherWrapper, times(0)).removeApplicationPassword(any())
         }
 
     @Test
     fun `appendParamsToRestAuthorizationUrl with null authorizationUrl returns empty string`() {
-        val result = ApplicationPasswordLoginHelper.UriLoginWrapper(apiRootUrlCache, buildConfigWrapper)
+        val result = ApplicationPasswordLoginHelper.UriLoginWrapper(context, apiRootUrlCache, buildConfigWrapper)
             .appendParamsToRestAuthorizationUrl(null)
         assertEquals("", result)
     }
 
     @Test
     fun `appendParamsToRestAuthorizationUrl with empty authorizationUrl returns empty string`() {
-        val result = ApplicationPasswordLoginHelper.UriLoginWrapper(apiRootUrlCache, buildConfigWrapper)
+        val result = ApplicationPasswordLoginHelper.UriLoginWrapper(context, apiRootUrlCache, buildConfigWrapper)
             .appendParamsToRestAuthorizationUrl("")
         assertEquals("", result)
     }

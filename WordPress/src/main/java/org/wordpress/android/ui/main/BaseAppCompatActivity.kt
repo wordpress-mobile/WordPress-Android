@@ -1,8 +1,3 @@
-/**
- * This suppression is so we can include deprecated activities (CommentsDetailActivity)
- */
-@file:Suppress("DEPRECATION")
-
 package org.wordpress.android.ui.main
 
 import android.os.Build
@@ -11,11 +6,9 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import org.wordpress.android.support.SupportWebViewActivity
 import org.wordpress.android.ui.accounts.applicationpassword.ApplicationPasswordsListActivity
 import org.wordpress.android.ui.blaze.blazecampaigns.BlazeCampaignParentActivity
 import org.wordpress.android.ui.bloggingprompts.promptslist.BloggingPromptsListActivity
-import org.wordpress.android.ui.comments.CommentsDetailActivity
 import org.wordpress.android.ui.debug.preferences.DebugSharedPreferenceFlagsActivity
 import org.wordpress.android.ui.domains.management.DomainManagementActivity
 import org.wordpress.android.ui.domains.management.newdomainsearch.NewDomainSearchActivity
@@ -27,20 +20,18 @@ import org.wordpress.android.ui.media.MediaSettingsActivity
 import org.wordpress.android.ui.mysite.menu.MenuActivity
 import org.wordpress.android.ui.mysite.personalization.PersonalizationActivity
 import org.wordpress.android.ui.navmenus.NavMenusActivity
-import org.wordpress.android.ui.notifications.NotificationsDetailActivity
-import org.wordpress.android.ui.posts.EditPostActivity
 import org.wordpress.android.ui.posts.GutenbergKitActivity
 import org.wordpress.android.ui.postsrs.PostRsListActivity
 import org.wordpress.android.ui.postsrs.PostRsSettingsActivity
 import org.wordpress.android.ui.postsrs.terms.TermSelectionActivity
 import org.wordpress.android.ui.posts.sharemessage.EditJetpackSocialShareMessageActivity
 import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeaturesActivity
-import org.wordpress.android.ui.reader.ReaderCommentListActivity
 import org.wordpress.android.ui.reader.ReaderPostPagerActivity
-import org.wordpress.android.ui.reader.ReaderSubsActivity
 import org.wordpress.android.ui.selfhostedusers.SelfHostedUsersActivity
 import org.wordpress.android.ui.sitemonitor.SiteMonitorParentActivity
 import org.wordpress.android.ui.subscribers.SubscribersActivity
+import org.wordpress.android.ui.accounts.LoginActivity
+import org.wordpress.android.ui.accounts.applicationpassword.ApplicationPasswordLoginActivity
 import org.wordpress.android.ui.taxonomies.TermsDataViewActivity
 
 /**
@@ -65,6 +56,7 @@ open class BaseAppCompatActivity : AppCompatActivity() {
             val innerPadding = insets.getInsets(
                 WindowInsetsCompat.Type.systemBars()
                         or WindowInsetsCompat.Type.displayCutout()
+                        or WindowInsetsCompat.Type.ime()
             )
 
             view.setPadding(
@@ -110,19 +102,12 @@ private val excludedActivities = listOf(
     SubscribersActivity::class.java.name,
     TermsDataViewActivity::class.java.name,
     ApplicationPasswordsListActivity::class.java.name,
-    SupportWebViewActivity::class.java.name,
 
     // these are excluded because they explicitly enable edge-to-edge
+    ApplicationPasswordLoginActivity::class.java.name,
+    LoginActivity::class.java.name,
     MediaSettingsActivity::class.java.name,
     ReaderPostPagerActivity::class.java.name,
-
-    // these are excluded and use the NoEdgeToEdge style to avoid the keyboard overlapping
-    // their editors
-    CommentsDetailActivity::class.java.name,
-    EditPostActivity::class.java.name,
-    NotificationsDetailActivity::class.java.name,
-    ReaderCommentListActivity::class.java.name,
-    ReaderSubsActivity::class.java.name,
 
     // these are excluded because they implement custom IME inset handling for proper
     // keyboard management with edge-to-edge support

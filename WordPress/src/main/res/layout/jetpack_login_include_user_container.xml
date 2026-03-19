@@ -16,7 +16,7 @@
         android:layout_height="@dimen/login_empty_view_avatar_height"
         android:layout_marginBottom="@dimen/login_empty_view_avatar_margin_bottom"
         android:contentDescription="@string/login_empty_view_avatar_content_description"
-        tools:srcCompat="@drawable/ic_user_circle_no_padding_grey_24dp" />
+        tools:srcCompat="@drawable/ic_user_placeholder_primary_24" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/text_display_name"

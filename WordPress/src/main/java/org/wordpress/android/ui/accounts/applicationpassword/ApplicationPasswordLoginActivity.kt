@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.core.view.WindowCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
@@ -14,6 +15,7 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import org.wordpress.android.R
 import org.wordpress.android.ui.ActivityLauncher
+import org.wordpress.android.ui.accounts.LoginActivity
 import org.wordpress.android.ui.accounts.UnifiedLoginTracker
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.main.BaseAppCompatActivity
@@ -34,6 +36,7 @@ class ApplicationPasswordLoginActivity: BaseAppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        WindowCompat.setDecorFitsSystemWindows(window, false)
         initViewModel()
         setContent {
             AppThemeM3 {
@@ -73,11 +76,16 @@ class ApplicationPasswordLoginActivity: BaseAppCompatActivity() {
             )
         }
 
+        // Check if we're in a share flow - if so, just finish and return to LoginActivity
+        val isShareFlow = LoginActivity.consumeShareFlowPending()
+        if (isShareFlow && !navigationActionData.isError) {
+            setResult(RESULT_OK)
+            finish()
+            return
+        }
+
         if (navigationActionData.isError) {
             ActivityLauncher.showMainActivity(this)
-        } else if (navigationActionData.showPostSignupInterstitial) {
-            unifiedLoginTracker.setFlow(UnifiedLoginTracker.Flow.APPLICATION_PASSWORD.value)
-            ActivityLauncher.showPostSignupInterstitial(this)
         } else {
             unifiedLoginTracker.setFlow(UnifiedLoginTracker.Flow.APPLICATION_PASSWORD.value)
             val mainActivityIntent = Intent(this, WPMainActivity::class.java)

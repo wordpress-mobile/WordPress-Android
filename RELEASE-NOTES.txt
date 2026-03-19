@@ -10,7 +10,7 @@
 
 26.6
 -----
-
+* [**] Improved the login experience – it now works edge-to-edge and should be easier to read.
 
 26.5
 -----

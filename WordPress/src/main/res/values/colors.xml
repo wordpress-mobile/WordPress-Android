@@ -18,21 +18,6 @@
 
     <color name="post_history_underlying_background">@color/neutral_0</color>
 
-    <!-- Login Prologue -->
-    <color name="promo_indicator_color_default" tools:ignore="UnusedResources">@color/black_translucent_20</color>
-    <color name="login_prologue_background_circle_purple">@color/purple_20</color>
-    <color name="login_prologue_background_circle_light_purple">@color/purple_10</color>
-    <color name="login_prologue_background_circle_blue">@color/blue_20</color>
-    <color name="login_prologue_background_circle_light_blue">@color/blue_5</color>
-    <color name="login_prologue_background_circle_green">@color/green_5</color>
-    <color name="login_prologue_background_circle_yellow">@color/yellow_10</color>
-    <color name="login_prologue_background_circle_orange">@color/orange_10</color>
-    <color name="login_prologue_background_circle_pink">@color/pink_10</color>
-
-    <!-- Login Prologue Revamped -->
-    <color name="login_prologue_revamped_background" tools:ignore="UnusedResources">@color/gray_0</color>
-    <color name="login_prologue_revamped_icon" tools:ignore="UnusedResources">@color/gray_80</color>
-
     <!-- Prepublishing Nudges -->
     <color name="prepublishing_toolbar_icon_color">@color/gray_50</color>
     <color name="prepublishing_action_type_enabled_color">@color/black</color>

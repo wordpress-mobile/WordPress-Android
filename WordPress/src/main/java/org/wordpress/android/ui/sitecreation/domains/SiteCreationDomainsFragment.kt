@@ -113,6 +113,7 @@ class SiteCreationDomainsFragment : SiteCreationBaseFormFragment() {
         (recyclerView.adapter as SiteCreationDomainsAdapter).update(contentState.items)
 
         if (contentState.items.isNotEmpty()) {
+            @Suppress("DEPRECATION")
             view?.announceForAccessibility(getString(R.string.suggestions_updated_content_description))
         }
     }

@@ -129,6 +129,7 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
         }
         if (isFirstContent) {
             animateContentTransition()
+            @Suppress("DEPRECATION")
             view?.announceForAccessibility(getString(R.string.new_site_creation_site_preview_content_description))
         }
     }

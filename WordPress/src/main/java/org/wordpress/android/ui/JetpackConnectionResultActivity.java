@@ -18,7 +18,7 @@ import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
-import org.wordpress.android.login.LoginMode;
+import org.wordpress.android.ui.accounts.LoginFlow;
 import org.wordpress.android.ui.accounts.LoginActivity;
 import org.wordpress.android.ui.main.BaseAppCompatActivity;
 import org.wordpress.android.ui.stats.refresh.utils.StatsLaunchedFrom;
@@ -103,7 +103,7 @@ public class JetpackConnectionResultActivity extends BaseAppCompatActivity {
             } else {
                 // An edgecase when the user is logged out in the app but logged in in webview
                 Intent loginIntent = new Intent(this, LoginActivity.class);
-                LoginMode.JETPACK_STATS.putInto(loginIntent);
+                LoginFlow.JETPACK_STATS.putInto(loginIntent);
                 this.startActivityForResult(loginIntent, JETPACK_LOGIN);
             }
         } else {

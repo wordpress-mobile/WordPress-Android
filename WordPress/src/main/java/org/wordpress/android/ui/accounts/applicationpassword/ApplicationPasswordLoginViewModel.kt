@@ -11,17 +11,19 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.SiteActionBuilder
+import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.discovery.SelfHostedEndpointFinder
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged
 import org.wordpress.android.fluxc.utils.AppLogWrapper
-import org.wordpress.android.login.util.SiteUtils
+import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.ui.accounts.login.ApplicationPasswordLoginHelper
 import org.wordpress.android.ui.accounts.login.ApplicationPasswordLoginHelper.UriLogin
-import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.UrlUtils
+import com.automattic.android.tracks.crashlogging.CrashLogging
+import org.wordpress.android.util.crashlogging.sendReportWithTag
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -32,8 +34,8 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
     private val applicationPasswordLoginHelper: ApplicationPasswordLoginHelper,
     private val selfHostedEndpointFinder: SelfHostedEndpointFinder,
     private val siteStore: SiteStore,
-    private val appPrefsWrapper: AppPrefsWrapper,
     private val appLogWrapper: AppLogWrapper,
+    private val crashLogging: CrashLogging,
 ) : ViewModel() {
     private val _onFinishedEvent = MutableSharedFlow<NavigationActionData>()
     /**
@@ -62,16 +64,12 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
     fun setupSite(rawData: String) {
         viewModelScope.launch {
             if (rawData.isEmpty()) {
-                appLogWrapper.e(AppLog.T.MAIN, "Cannot store credentials: rawData is empty")
-                _onFinishedEvent.emit(
-                    NavigationActionData(
-                        showSiteSelector = false,
-                        showPostSignupInterstitial = false,
-                        siteUrl = "",
-                        oldSitesIDs = oldSitesIDs,
-                        isError = true
-                    )
+                appLogWrapper.e(
+                    AppLog.T.MAIN,
+                    "A_P: Cannot store credentials: rawData is empty"
                 )
+                applicationPasswordLoginHelper.trackStoringFailed("", "empty_raw_data")
+                emitError(siteUrl = "", errorMessage = "empty_raw_data")
                 return@launch
             }
             val urlLogin = applicationPasswordLoginHelper.getSiteUrlLoginFromRawData(rawData)
@@ -95,7 +93,14 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
         try {
             applicationPasswordLoginHelper.storeApplicationPasswordCredentialsFrom(urlLogin)
         } catch (e: Exception) {
-            appLogWrapper.e(AppLog.T.DB, "Error storing credentials: ${e.stackTraceToString()}")
+            appLogWrapper.e(
+                AppLog.T.DB,
+                "A_P: Error storing credentials: ${e.stackTraceToString()}"
+            )
+            applicationPasswordLoginHelper.trackStoringFailed(
+                urlLogin.siteUrl, "store_credentials_exception"
+            )
+            crashLogging.sendReportWithTag(e, AppLog.T.DB)
             false
         }
     }
@@ -109,10 +114,21 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
         ) = withContext(ioDispatcher) {
         try {
             if (username.isEmpty() || password.isEmpty() || siteUrl.isEmpty() || apiRootUrl.isEmpty()) {
-                appLogWrapper.e(AppLog.T.MAIN, "Cannot fetch sites for credential storing: " +
-                        "Username: $username, Password: ${password.isEmpty()}, SiteUrl: $siteUrl, " +
-                        "API Root URL: $apiRootUrl")
-                emitErrorFetching(siteUrl)
+                appLogWrapper.e(
+                    AppLog.T.MAIN,
+                    "A_P: Cannot fetch sites for credential storing" +
+                        " - username isEmpty=${username.isEmpty()}" +
+                        ", password isEmpty=${password.isEmpty()}" +
+                        ", siteUrl isEmpty=${siteUrl.isEmpty()}" +
+                        ", apiRootUrl isEmpty=${apiRootUrl.isEmpty()}"
+                )
+                applicationPasswordLoginHelper.trackStoringFailed(
+                    siteUrl, "empty_fetch_params"
+                )
+                emitError(
+                    siteUrl = siteUrl,
+                    errorMessage = "empty_fetch_params"
+                )
             } else {
                 val xmlRpcEndpoint =
                     selfHostedEndpointFinder.verifyOrDiscoverXMLRPCEndpoint(siteUrl)
@@ -128,61 +144,157 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
                 )
             }
         } catch (e: Exception) {
-            appLogWrapper.e(AppLog.T.API, "Error fetching sites: ${e.stackTraceToString()}")
-            emitErrorFetching(siteUrl)
+            appLogWrapper.e(
+                AppLog.T.API,
+                "A_P: Error fetching sites: ${e.stackTraceToString()}"
+            )
+            applicationPasswordLoginHelper.trackStoringFailed(
+                siteUrl, "fetch_sites_exception"
+            )
+            emitError(siteUrl = siteUrl, errorMessage = e.message, cause = e)
         }
     }
 
-    private suspend fun emitErrorFetching(siteUrl: String) =  _onFinishedEvent.emit(
-        NavigationActionData(
-            showSiteSelector = false,
-            showPostSignupInterstitial = false,
-            siteUrl = siteUrl,
-            oldSitesIDs = oldSitesIDs,
-            isError = true
+    private suspend fun emitError(
+        siteUrl: String,
+        errorMessage: String? = null,
+        cause: Throwable? = null
+    ) {
+        val exception = cause
+            ?: Exception("Application password login failed: $errorMessage")
+        crashLogging.sendReportWithTag(exception, AppLog.T.MAIN)
+        _onFinishedEvent.emit(
+            NavigationActionData(
+                showSiteSelector = false,
+                siteUrl = siteUrl,
+                oldSitesIDs = oldSitesIDs,
+                isError = true,
+                errorMessage = errorMessage
+            )
         )
-    )
+    }
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
     fun onSiteChanged(event: OnSiteChanged) {
         viewModelScope.launch {
-            val currentNormalizedUrl = UrlUtils.normalizeUrl(currentUrlLogin?.siteUrl)
-            val site = siteStore.sites.firstOrNull { UrlUtils.normalizeUrl(it.url) == currentNormalizedUrl }
-            if (event.rowsAffected < 1 || site == null || applicationPasswordLoginHelper.siteHasBadCredentials(site)) {
-                appLogWrapper.e(AppLog.T.MAIN, "Site not found or credentials are empty.")
-                _onFinishedEvent.emit(
-                    NavigationActionData(
-                        showSiteSelector = false,
-                        showPostSignupInterstitial = false,
-                        siteUrl = currentUrlLogin?.siteUrl,
-                        oldSitesIDs = oldSitesIDs,
-                        isError = true
-                    )
-                )
+            if (event.isError) {
+                handleSiteChangedError(event)
             } else {
-                _onFinishedEvent.emit(
-                    NavigationActionData(
-                        showSiteSelector = siteStore.hasSite() &&
-                                oldSitesIDs?.contains(site.id) != true, // null or false
-                        showPostSignupInterstitial = !siteStore.hasSite()
-                                && appPrefsWrapper.shouldShowPostSignupInterstitial,
-                        siteUrl = currentUrlLogin?.siteUrl,
-                        oldSitesIDs = oldSitesIDs,
-                        isError = false,
-                        newSiteLocalId = site.id
-                    )
-                )
+                handleSiteChangedSuccess(event)
             }
         }
     }
 
+    private suspend fun handleSiteChangedError(event: OnSiteChanged) {
+        val error = event.error
+        appLogWrapper.e(
+            AppLog.T.MAIN,
+            "A_P: onSiteChanged failed: " +
+                "SiteStore error ${error?.type}: ${error?.message}"
+        )
+        applicationPasswordLoginHelper.trackStoringFailed(
+            currentUrlLogin?.siteUrl,
+            "site_changed_failed"
+        )
+        emitError(
+            siteUrl = currentUrlLogin?.siteUrl.orEmpty(),
+            errorMessage = "site_store_error"
+        )
+    }
+
+    @Suppress("TooGenericExceptionCaught")
+    private suspend fun handleSiteChangedSuccess(event: OnSiteChanged) {
+        val normalizedUrl =
+            UrlUtils.normalizeUrl(currentUrlLogin?.siteUrl)
+
+        val site = try {
+            siteStore.sites.firstOrNull {
+                UrlUtils.normalizeUrl(it.url) == normalizedUrl
+            }
+        } catch (e: Exception) {
+            logAndEmitSiteChangedError(
+                logMessage = "exception reading sites from DB: " +
+                    e.stackTraceToString(),
+                errorCode = "db_read_exception",
+                cause = e
+            )
+            return
+        }
+
+        val validationError = validateSiteChanged(event, site)
+        if (validationError != null) {
+            logAndEmitSiteChangedError(
+                logMessage = validationError.logMessage,
+                errorCode = validationError.errorCode
+            )
+        } else {
+            val resolvedSite = site ?: return
+            _onFinishedEvent.emit(
+                NavigationActionData(
+                    showSiteSelector = siteStore.hasSite() &&
+                        oldSitesIDs?.contains(resolvedSite.id) != true,
+                    siteUrl = currentUrlLogin?.siteUrl,
+                    oldSitesIDs = oldSitesIDs,
+                    isError = false,
+                    newSiteLocalId = resolvedSite.id
+                )
+            )
+        }
+    }
+
+    private fun validateSiteChanged(
+        event: OnSiteChanged,
+        site: SiteModel?
+    ): SiteChangedValidationError? = when {
+        event.rowsAffected < 1 -> SiteChangedValidationError(
+            logMessage = "No rows affected " +
+                "(rowsAffected=${event.rowsAffected})",
+            errorCode = "no_rows_affected"
+        )
+        site == null -> SiteChangedValidationError(
+            logMessage = "Site not found after update",
+            errorCode = "site_not_found"
+        )
+        applicationPasswordLoginHelper
+            .siteHasBadCredentials(site) -> SiteChangedValidationError(
+            logMessage = "Credentials are empty after store",
+            errorCode = "empty_credentials"
+        )
+        else -> null
+    }
+
+    private data class SiteChangedValidationError(
+        val logMessage: String,
+        val errorCode: String
+    )
+
+    private suspend fun logAndEmitSiteChangedError(
+        logMessage: String,
+        errorCode: String,
+        cause: Throwable? = null
+    ) {
+        appLogWrapper.e(
+            AppLog.T.MAIN,
+            "A_P: onSiteChanged failed: $logMessage"
+        )
+        applicationPasswordLoginHelper.trackStoringFailed(
+            currentUrlLogin?.siteUrl,
+            "site_changed_failed"
+        )
+        emitError(
+            siteUrl = currentUrlLogin?.siteUrl.orEmpty(),
+            errorMessage = errorCode,
+            cause = cause
+        )
+    }
+
     data class NavigationActionData(
         val showSiteSelector: Boolean,
-        val showPostSignupInterstitial: Boolean,
         val siteUrl: String?,
         val oldSitesIDs: ArrayList<Int>?,
         val isError: Boolean,
-        val newSiteLocalId: Int? = null
+        val newSiteLocalId: Int? = null,
+        val errorMessage: String? = null
     )
 }

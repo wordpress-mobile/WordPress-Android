@@ -4,7 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import org.wordpress.android.databinding.ModalLayoutPickerCategoryBinding
-import org.wordpress.android.login.util.getColorStateListFromAttribute
+import org.wordpress.android.util.extensions.getColorStateListFromAttribute
 import org.wordpress.android.util.extensions.getColorFromAttribute
 import org.wordpress.android.util.extensions.setVisible
 

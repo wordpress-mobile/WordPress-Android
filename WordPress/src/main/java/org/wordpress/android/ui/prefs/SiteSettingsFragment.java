@@ -2099,8 +2099,13 @@ public class SiteSettingsFragment extends PreferenceFragment
     }
 
     private void removeNonSelfHostedPreferences() {
-        mUsernamePref.setEnabled(true);
-        mPasswordPref.setEnabled(true);
+        // Hide username/password preferences for sites using application passwords
+        if (mSite.isUsingSelfHostedRestApi()) {
+            WPPrefUtils.removePreference(this, R.string.pref_key_site_screen, R.string.pref_key_site_account);
+        } else {
+            mUsernamePref.setEnabled(true);
+            mPasswordPref.setEnabled(true);
+        }
         PreferenceGroup group = (PreferenceGroup) findPreference(getString(R.string.pref_key_site_general));
         if (group != null) {
             group.removeAll();
