@@ -15,6 +15,7 @@ import uniffi.wp_api.PostFormat
 import uniffi.wp_api.TermCreateParams
 import uniffi.wp_api.TermEndpointType
 import uniffi.wp_api.TermListParams
+import uniffi.wp_api.SparseThemeFieldWithViewContext
 import uniffi.wp_api.ThemeListParams
 import uniffi.wp_api.ThemeStatus
 import uniffi.wp_api.ThemeSupports
@@ -350,9 +351,13 @@ class PostRsRestClient @Inject constructor(
     ): List<PostFormat> {
         val client = wpApiClientProvider.getWpApiClient(site)
         val response = client.request {
-            it.themes().listWithViewContext(
+            it.themes().filterListWithViewContext(
                 ThemeListParams(
                     status = ThemeStatus.Active
+                ),
+                listOf(
+                    SparseThemeFieldWithViewContext
+                        .THEME_SUPPORTS
                 )
             )
         }

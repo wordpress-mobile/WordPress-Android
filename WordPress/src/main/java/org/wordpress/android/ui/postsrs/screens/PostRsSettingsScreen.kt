@@ -1361,6 +1361,12 @@ private fun FormatDialog(
         mutableIntStateOf(currentIndex)
     }
 
+    LaunchedEffect(formats) {
+        selectedIndex.intValue = formats.indexOfFirst {
+            it == currentFormat
+        }.coerceAtLeast(0)
+    }
+
     SingleChoiceAlertDialog(
         title = stringResource(
             R.string.post_rs_settings_format_dialog_title
