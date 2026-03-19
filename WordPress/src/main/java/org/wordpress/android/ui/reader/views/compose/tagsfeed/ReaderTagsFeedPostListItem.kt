@@ -451,8 +451,8 @@ fun ReaderTagsFeedPostListItemPreview() {
                 item {
                     ReaderTagsFeedPostListItem(
                         item = TagsFeedPostItem(
-                            siteName = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer pellentesque " +
-                                    "sapien sed urna fermentum posuere. Vivamus in pretium nisl.",
+                            siteName = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. " +
+                                    "Integer pellentesque sapien sed urna fermentum posuere. Vivamus in pretium nisl.",
                             postDateLine = "1h",
                             postTitle = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer " +
                                     "pellentesque sapien sed urna fermentum posuere. Vivamus in pretium nisl.",
@@ -487,8 +487,8 @@ fun ReaderTagsFeedPostListItemPreview() {
                 item {
                     ReaderTagsFeedPostListItem(
                         item = TagsFeedPostItem(
-                            siteName = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer pellentesque " +
-                                    "sapien sed urna fermentum posuere. Vivamus in pretium nisl.",
+                            siteName = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. " +
+                                    "Integer pellentesque sapien sed urna fermentum posuere. Vivamus in pretium nisl.",
                             postDateLine = "1h",
                             postTitle = "Lorem ipsum dolor sit amet.",
                             postExcerpt = "Lorem ipsum dolor sit amet.",
@@ -509,8 +509,8 @@ fun ReaderTagsFeedPostListItemPreview() {
                 item {
                     ReaderTagsFeedPostListItem(
                         item = TagsFeedPostItem(
-                            siteName = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer pellentesque " +
-                                    "sapien sed urna fermentum posuere. Vivamus in pretium nisl.",
+                            siteName = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. " +
+                                    "Integer pellentesque sapien sed urna fermentum posuere. Vivamus in pretium nisl.",
                             postDateLine = "1h",
                             postTitle = "Lorem ipsum dolor sit amet.",
                             postExcerpt = "Lorem ipsum dolor sit amet.",
@@ -531,8 +531,8 @@ fun ReaderTagsFeedPostListItemPreview() {
                 item {
                     ReaderTagsFeedPostListItem(
                         item = TagsFeedPostItem(
-                            siteName = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer pellentesque " +
-                                    "sapien sed urna fermentum posuere. Vivamus in pretium nisl.",
+                            siteName = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. " +
+                                    "Integer pellentesque sapien sed urna fermentum posuere. Vivamus in pretium nisl.",
                             postDateLine = "1h",
                             postTitle = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer " +
                                     "pellentesque sapien sed urna fermentum posuere. Vivamus in pretium nisl.",
@@ -577,8 +577,8 @@ fun ReaderTagsFeedPostListItemPreview() {
                 item {
                     ReaderTagsFeedPostListItem(
                         item = TagsFeedPostItem(
-                            siteName = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer pellentesque " +
-                                    "sapien sed urna fermentum posuere. Vivamus in pretium nisl.",
+                            siteName = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. " +
+                                    "Integer pellentesque sapien sed urna fermentum posuere. Vivamus in pretium nisl.",
                             postDateLine = "1h",
                             postTitle = "Lorem ipsum dolor sit amet.",
                             postExcerpt = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer " +
@@ -612,8 +612,8 @@ fun ReaderTagsFeedPostListItemPreview() {
                 item {
                     ReaderTagsFeedPostListItem(
                         item = TagsFeedPostItem(
-                            siteName = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer pellentesque " +
-                                    "sapien sed urna fermentum posuere. Vivamus in pretium nisl.",
+                            siteName = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. " +
+                                    "Integer pellentesque sapien sed urna fermentum posuere. Vivamus in pretium nisl.",
                             postDateLine = "1h",
                             postTitle = "Lorem ipsum dolor sit amet.",
                             postExcerpt = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer " +
