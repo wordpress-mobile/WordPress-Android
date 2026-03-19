@@ -16,6 +16,7 @@ class StatsSummaryUseCase @Inject constructor(
     private var cachedSummary:
         Pair<Long, StatsSummaryData>? = null
 
+    @Suppress("ReturnCount")
     suspend operator fun invoke(
         siteId: Long,
         forceRefresh: Boolean = false
