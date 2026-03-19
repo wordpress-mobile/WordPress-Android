@@ -16,6 +16,7 @@ import uniffi.wp_api.TermCreateParams
 import uniffi.wp_api.TermEndpointType
 import uniffi.wp_api.TermListParams
 import uniffi.wp_api.SparseThemeFieldWithViewContext
+import uniffi.wp_api.SparseThemeWithViewContext
 import uniffi.wp_api.ThemeListParams
 import uniffi.wp_api.ThemeStatus
 import uniffi.wp_api.ThemeSupports
@@ -363,23 +364,8 @@ class PostRsRestClient @Inject constructor(
         }
         return when (response) {
             is WpRequestResult.Success -> {
-                val theme =
-                    response.response.data.firstOrNull()
-                        ?: return DEFAULT_POST_FORMATS
-                val supports = theme.themeSupports
-                    ?: return DEFAULT_POST_FORMATS
-                val data = supports[ThemeSupports.Formats]
-                    ?: return DEFAULT_POST_FORMATS
-                val slugs =
-                    (data as? ThemeSupportsData.VecString)
-                        ?.v1
-                        ?: return DEFAULT_POST_FORMATS
-                if (slugs.isEmpty()) {
-                    return DEFAULT_POST_FORMATS
-                }
-                (listOf(PostFormat.Standard) +
-                    slugs.map { slugToPostFormat(it) })
-                    .distinct()
+                parsePostFormats(response.response.data)
+                    ?: DEFAULT_POST_FORMATS
             }
             else -> {
                 val msg =
@@ -393,6 +379,22 @@ class PostRsRestClient @Inject constructor(
                 DEFAULT_POST_FORMATS
             }
         }
+    }
+
+    private fun parsePostFormats(
+        themes: List<SparseThemeWithViewContext>,
+    ): List<PostFormat>? {
+        val slugs =
+            themes.firstOrNull()
+                ?.themeSupports
+                ?.get(ThemeSupports.Formats)
+                ?.let { it as? ThemeSupportsData.VecString }
+                ?.v1
+                ?.takeIf { it.isNotEmpty() }
+                ?: return null
+        return (listOf(PostFormat.Standard) +
+            slugs.map { slugToPostFormat(it) })
+            .distinct()
     }
 
     private fun slugToPostFormat(slug: String): PostFormat =
