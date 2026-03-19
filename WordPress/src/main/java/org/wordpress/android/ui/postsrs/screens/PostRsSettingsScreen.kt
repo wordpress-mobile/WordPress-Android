@@ -26,7 +26,7 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.selection.selectable
@@ -35,6 +35,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
@@ -76,6 +77,7 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -149,6 +151,7 @@ fun PostRsSettingsScreen(
     onChooseFromDevice: () -> Unit = {},
     onFeaturedImageRemoved: () -> Unit = {},
     onLoadMoreAuthors: () -> Unit = {},
+    onAuthorSearchQueryChanged: (String) -> Unit = {},
     onSaveClicked: () -> Unit = {},
     onDismissDialog: () -> Unit = {},
     onDiscardConfirmed: () -> Unit = {},
@@ -244,6 +247,8 @@ fun PostRsSettingsScreen(
         onTimeSelected = onTimeSelected,
         onAuthorSelected = onAuthorSelected,
         onLoadMoreAuthors = onLoadMoreAuthors,
+        onAuthorSearchQueryChanged =
+            onAuthorSearchQueryChanged,
         onDismissDialog = onDismissDialog,
         onDiscardConfirmed = onDiscardConfirmed,
     )
@@ -995,6 +1000,7 @@ private fun StickyRow(
 
 // region Dialogs
 
+@Suppress("LongParameterList")
 @Composable
 private fun SettingsDialogs(
     uiState: PostRsSettingsUiState,
@@ -1007,6 +1013,7 @@ private fun SettingsDialogs(
     onTimeSelected: (Int, Int) -> Unit,
     onAuthorSelected: (Long) -> Unit,
     onLoadMoreAuthors: () -> Unit,
+    onAuthorSearchQueryChanged: (String) -> Unit,
     onDismissDialog: () -> Unit,
     onDiscardConfirmed: () -> Unit,
 ) {
@@ -1054,8 +1061,12 @@ private fun SettingsDialogs(
             currentAuthorId = uiState.effectiveAuthorId,
             isLoadingMore = uiState.isLoadingMoreAuthors,
             canLoadMore = uiState.canLoadMoreAuthors,
+            searchQuery = uiState.authorSearchQuery,
+            isSearching = uiState.isSearchingAuthors,
             onAuthorSelected = onAuthorSelected,
             onLoadMore = onLoadMoreAuthors,
+            onSearchQueryChanged =
+                onAuthorSearchQueryChanged,
             onDismiss = onDismissDialog,
         )
         is DialogState.DiscardDialog -> DiscardDialog(
@@ -1476,17 +1487,25 @@ private fun TimeDialog(
     }
 }
 
+@Suppress("LongMethod")
 @Composable
 private fun AuthorDialog(
     authors: List<AuthorInfo>,
     currentAuthorId: Long,
     isLoadingMore: Boolean,
     canLoadMore: Boolean,
+    searchQuery: String,
+    isSearching: Boolean,
     onAuthorSelected: (Long) -> Unit,
     onLoadMore: () -> Unit,
+    onSearchQueryChanged: (String) -> Unit,
     onDismiss: () -> Unit,
 ) {
-    if (authors.isEmpty()) {
+    if (
+        authors.isEmpty() &&
+        searchQuery.isEmpty() &&
+        !isSearching
+    ) {
         AlertDialog(
             onDismissRequest = onDismiss,
             title = {
@@ -1518,12 +1537,8 @@ private fun AuthorDialog(
         return
     }
 
-    val currentIndex = authors.indexOfFirst {
-        it.id == currentAuthorId
-    }.coerceAtLeast(0)
-
-    val selectedIndex = rememberSaveable {
-        mutableIntStateOf(currentIndex)
+    val selectedAuthorId = remember {
+        mutableLongStateOf(currentAuthorId)
     }
 
     val listState = rememberLazyListState()
@@ -1553,52 +1568,36 @@ private fun AuthorDialog(
             )
         },
         text = {
-            LazyColumn(
-                state = listState,
-                modifier = Modifier
-                    .selectableGroup()
-                    .heightIn(max = 400.dp)
+            Column(
+                modifier = Modifier.heightIn(max = 400.dp)
             ) {
-                itemsIndexed(
-                    items = authors,
-                    key = { _, author -> author.id }
-                ) { index, author ->
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .selectable(
-                                selected = index ==
-                                    selectedIndex.intValue,
-                                onClick = {
-                                    selectedIndex.intValue =
-                                        index
-                                },
-                                role = Role.RadioButton
-                            )
-                            .padding(vertical = 8.dp),
-                        verticalAlignment =
-                            Alignment.CenterVertically
-                    ) {
-                        RadioButton(
-                            selected = index ==
-                                selectedIndex.intValue,
-                            onClick = null
-                        )
+                OutlinedTextField(
+                    value = searchQuery,
+                    onValueChange = onSearchQueryChanged,
+                    label = {
                         Text(
-                            text = author.name,
-                            style = MaterialTheme
-                                .typography.bodyLarge,
-                            modifier = Modifier
-                                .padding(start = 8.dp)
+                            stringResource(
+                                R.string
+                                    .post_rs_settings_search_authors
+                            )
                         )
-                    }
-                }
-                if (isLoadingMore) {
-                    item(key = "loading_more_authors") {
+                    },
+                    leadingIcon = {
+                        Icon(
+                            Icons.Default.Search,
+                            contentDescription = null
+                        )
+                    },
+                    singleLine = true,
+                    modifier = Modifier.fillMaxWidth()
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                when {
+                    isSearching -> {
                         Box(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(16.dp),
+                                .weight(1f),
                             contentAlignment =
                                 Alignment.Center
                         ) {
@@ -1609,6 +1608,76 @@ private fun AuthorDialog(
                             )
                         }
                     }
+                    authors.isEmpty() &&
+                        searchQuery.isNotEmpty() -> {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .weight(1f),
+                            contentAlignment =
+                                Alignment.Center
+                        ) {
+                            Text(
+                                stringResource(
+                                    R.string
+                                        .post_rs_settings_search_no_results
+                                ),
+                                style = MaterialTheme
+                                    .typography.bodyMedium,
+                                color = MaterialTheme
+                                    .colorScheme
+                                    .onSurfaceVariant,
+                            )
+                        }
+                    }
+                    else -> {
+                        LazyColumn(
+                            state = listState,
+                            modifier = Modifier
+                                .selectableGroup()
+                                .weight(1f)
+                        ) {
+                            items(
+                                items = authors,
+                                key = { it.id }
+                            ) { author ->
+                                AuthorRow(
+                                    author = author,
+                                    isSelected =
+                                        author.id ==
+                                            selectedAuthorId
+                                                .longValue,
+                                    onSelect = {
+                                        selectedAuthorId
+                                            .longValue =
+                                            author.id
+                                    },
+                                )
+                            }
+                            if (isLoadingMore) {
+                                item(
+                                    key =
+                                        "loading_more_authors"
+                                ) {
+                                    Box(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .padding(16.dp),
+                                        contentAlignment =
+                                            Alignment.Center
+                                    ) {
+                                        CircularProgressIndicator(
+                                            modifier =
+                                                Modifier
+                                                    .size(24.dp),
+                                            strokeWidth =
+                                                2.dp
+                                        )
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
         },
@@ -1616,9 +1685,10 @@ private fun AuthorDialog(
             TextButton(
                 onClick = {
                     onAuthorSelected(
-                        authors[selectedIndex.intValue].id
+                        selectedAuthorId.longValue
                     )
-                }
+                },
+                enabled = authors.isNotEmpty()
             ) {
                 Text(stringResource(R.string.ok))
             }
@@ -1629,6 +1699,35 @@ private fun AuthorDialog(
             }
         }
     )
+}
+
+@Composable
+private fun AuthorRow(
+    author: AuthorInfo,
+    isSelected: Boolean,
+    onSelect: () -> Unit,
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .selectable(
+                selected = isSelected,
+                onClick = onSelect,
+                role = Role.RadioButton
+            )
+            .padding(vertical = 8.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        RadioButton(
+            selected = isSelected,
+            onClick = null
+        )
+        Text(
+            text = author.name,
+            style = MaterialTheme.typography.bodyLarge,
+            modifier = Modifier.padding(start = 8.dp)
+        )
+    }
 }
 
 private const val AUTHOR_LOAD_THRESHOLD = 3

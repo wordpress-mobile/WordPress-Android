@@ -27,6 +27,8 @@ data class PostRsSettingsUiState(
     val siteAuthors: List<AuthorInfo> = emptyList(),
     val isLoadingMoreAuthors: Boolean = false,
     val canLoadMoreAuthors: Boolean = false,
+    val authorSearchQuery: String = "",
+    val isSearchingAuthors: Boolean = false,
     val canEditAuthor: Boolean = false,
     val password: String? = null,
     val authorName: FieldState = FieldState.Empty,
