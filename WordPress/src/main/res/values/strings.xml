@@ -1253,6 +1253,9 @@
 
     <!-- activity log -->
     <string name="activity_log">Activity Log</string>
+    <!-- Shows the MCP client used for an activity log entry. %1$s is the client name (e.g. Claude). -->
+    <string name="activity_log_mcp_agent_label">via %1$s</string>
+    <string name="activity_log_metadata_separator" translatable="false">\u00B7</string>
     <string name="activity_log_icon">Activity icon</string>
     <string name="activity_log_event">Event</string>
     <string name="activity_log_button">Activity Log action button</string>
