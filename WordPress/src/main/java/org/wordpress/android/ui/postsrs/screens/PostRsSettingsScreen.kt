@@ -73,6 +73,7 @@ import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.key
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
@@ -1357,29 +1358,31 @@ private fun FormatDialog(
         it == currentFormat
     }.coerceAtLeast(0)
 
-    val selectedIndex = rememberSaveable {
-        mutableIntStateOf(currentIndex)
-    }
+    key(formats) {
+        val selectedIndex = rememberSaveable {
+            mutableIntStateOf(currentIndex)
+        }
 
-    LaunchedEffect(formats) {
-        selectedIndex.intValue = formats.indexOfFirst {
-            it == currentFormat
-        }.coerceAtLeast(0)
+        SingleChoiceAlertDialog(
+            title = stringResource(
+                R.string.post_rs_settings_format_dialog_title
+            ),
+            options = labels,
+            selectedIndex = selectedIndex.intValue,
+            onOptionSelected = {
+                selectedIndex.intValue = it
+            },
+            onConfirm = {
+                onFormatSelected(
+                    formats[selectedIndex.intValue]
+                )
+            },
+            onDismiss = onDismiss,
+            confirmButtonText = stringResource(
+                R.string.ok
+            ),
+        )
     }
-
-    SingleChoiceAlertDialog(
-        title = stringResource(
-            R.string.post_rs_settings_format_dialog_title
-        ),
-        options = labels,
-        selectedIndex = selectedIndex.intValue,
-        onOptionSelected = { selectedIndex.intValue = it },
-        onConfirm = {
-            onFormatSelected(formats[selectedIndex.intValue])
-        },
-        onDismiss = onDismiss,
-        confirmButtonText = stringResource(R.string.ok),
-    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)

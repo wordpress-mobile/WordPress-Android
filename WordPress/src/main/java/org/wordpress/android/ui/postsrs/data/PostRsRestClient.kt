@@ -398,19 +398,7 @@ class PostRsRestClient @Inject constructor(
     }
 
     private fun slugToPostFormat(slug: String): PostFormat =
-        when (slug) {
-            "standard" -> PostFormat.Standard
-            "aside" -> PostFormat.Aside
-            "audio" -> PostFormat.Audio
-            "chat" -> PostFormat.Chat
-            "gallery" -> PostFormat.Gallery
-            "image" -> PostFormat.Image
-            "link" -> PostFormat.Link
-            "quote" -> PostFormat.Quote
-            "status" -> PostFormat.Status
-            "video" -> PostFormat.Video
-            else -> PostFormat.Custom(slug)
-        }
+        SLUG_TO_FORMAT[slug] ?: PostFormat.Custom(slug)
 
     private fun toPhotonUrl(
         site: SiteModel,
@@ -441,17 +429,20 @@ class PostRsRestClient @Inject constructor(
         internal const val AUTHORS_PER_PAGE: UInt = 20u
         private const val PER_PAGE = 100u
 
-        val DEFAULT_POST_FORMATS = listOf(
-            PostFormat.Standard,
-            PostFormat.Aside,
-            PostFormat.Audio,
-            PostFormat.Chat,
-            PostFormat.Gallery,
-            PostFormat.Image,
-            PostFormat.Link,
-            PostFormat.Quote,
-            PostFormat.Status,
-            PostFormat.Video,
+        private val SLUG_TO_FORMAT = mapOf(
+            "standard" to PostFormat.Standard,
+            "aside" to PostFormat.Aside,
+            "audio" to PostFormat.Audio,
+            "chat" to PostFormat.Chat,
+            "gallery" to PostFormat.Gallery,
+            "image" to PostFormat.Image,
+            "link" to PostFormat.Link,
+            "quote" to PostFormat.Quote,
+            "status" to PostFormat.Status,
+            "video" to PostFormat.Video,
         )
+
+        val DEFAULT_POST_FORMATS =
+            SLUG_TO_FORMAT.values.toList()
     }
 }
