@@ -1041,6 +1041,7 @@
     <string name="post_rs_settings_parent_category">Parent Category</string>
     <string name="post_rs_settings_no_parent">None</string>
     <string name="post_rs_settings_search_terms">Search</string>
+    <string name="post_rs_settings_search_authors">Search authors</string>
     <string name="post_rs_settings_term_create_error">Failed to create term</string>
     <string name="post_rs_settings_load_more">Load more\u2026</string>
     <string name="post_rs_settings_search_no_results">No results found</string>
@@ -1253,6 +1254,9 @@
 
     <!-- activity log -->
     <string name="activity_log">Activity Log</string>
+    <!-- Shows the MCP client used for an activity log entry. %1$s is the client name (e.g. Claude). -->
+    <string name="activity_log_mcp_agent_label">via %1$s</string>
+    <string name="activity_log_metadata_separator" translatable="false">\u00B7</string>
     <string name="activity_log_icon">Activity icon</string>
     <string name="activity_log_event">Event</string>
     <string name="activity_log_button">Activity Log action button</string>

@@ -52,16 +52,7 @@ class PostRsSettingsActivity : BaseAppCompatActivity() {
         super.onCreate(savedInstanceState)
         registerMediaPickerLauncher()
         registerTermSelectionLaunchers()
-
-        WindowInsetsControllerCompat(
-            window, window.decorView
-        ).apply {
-            hide(WindowInsetsCompat.Type.statusBars())
-            systemBarsBehavior =
-                WindowInsetsControllerCompat
-                    .BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
-        }
-
+        hideStatusBar()
         observeEvents()
 
         setContent {
@@ -101,11 +92,24 @@ class PostRsSettingsActivity : BaseAppCompatActivity() {
                     onFeaturedImageRemoved =
                         viewModel::onFeaturedImageRemoved,
                     onLoadMoreAuthors = viewModel::loadMoreAuthors,
+                    onAuthorSearchQueryChanged =
+                        viewModel::onAuthorSearchQueryChanged,
                     onSaveClicked = viewModel::onSaveClicked,
                     onDismissDialog = viewModel::onDismissDialog,
                     onDiscardConfirmed = viewModel::onDiscardConfirmed,
                 )
             }
+        }
+    }
+
+    private fun hideStatusBar() {
+        WindowInsetsControllerCompat(
+            window, window.decorView
+        ).apply {
+            hide(WindowInsetsCompat.Type.statusBars())
+            systemBarsBehavior =
+                WindowInsetsControllerCompat
+                    .BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
         }
     }
 

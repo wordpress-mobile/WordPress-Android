@@ -49,22 +49,25 @@ import org.wordpress.android.R
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginSiteApplicationPasswordScreen(
-    isLoading: Boolean,
     errorMessage: String?,
     onBackClick: () -> Unit,
     onHelpClick: (cleanedAddress: String) -> Unit,
     onContinueClick: (cleanedAddress: String) -> Unit,
     onErrorDismissed: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onCancelLoading: (() -> Unit)? = null
 ) {
     var siteAddress by rememberSaveable { mutableStateOf("") }
     val focusRequester = remember { FocusRequester() }
+    val isLoading = onCancelLoading != null
 
     val cleanedAddress = siteAddress.trim().replace(Regex("[\r\n]"), "")
-    val isValid = cleanedAddress.isNotEmpty() && Patterns.WEB_URL.matcher(cleanedAddress).matches()
+    val isValid = cleanedAddress.isNotEmpty()
+        && cleanedAddress.contains(".")
+        && Patterns.WEB_URL.matcher(cleanedAddress).matches()
 
-    if (isLoading) {
-        LoadingDialog()
+    if (onCancelLoading != null) {
+        LoadingDialog(onDismiss = onCancelLoading)
     }
 
     Scaffold(
@@ -157,8 +160,8 @@ fun LoginSiteApplicationPasswordScreen(
 }
 
 @Composable
-private fun LoadingDialog() {
-    Dialog(onDismissRequest = { }) {
+private fun LoadingDialog(onDismiss: () -> Unit) {
+    Dialog(onDismissRequest = onDismiss) {
         Surface(
             shape = MaterialTheme.shapes.medium,
             tonalElevation = 8.dp

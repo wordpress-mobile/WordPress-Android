@@ -37,10 +37,9 @@
 
             <LinearLayout
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="2dp"
                 android:layout_weight="1"
-                android:gravity="center_vertical"
                 android:orientation="vertical">
 
                 <org.wordpress.android.widgets.WPTextView
@@ -60,6 +59,17 @@
                     android:lines="1"
                     android:textAppearance="?attr/textAppearanceCaption"
                     tools:text="Administrator" />
+
+                <org.wordpress.android.widgets.WPTextView
+                    android:id="@+id/activityActorMetadata"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:lines="1"
+                    android:textAppearance="?attr/textAppearanceCaption"
+                    android:visibility="gone"
+                    tools:text="via Claude"
+                    tools:visibility="visible" />
 
             </LinearLayout>
 

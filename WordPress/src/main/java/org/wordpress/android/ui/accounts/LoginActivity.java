@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -88,6 +89,7 @@ public class LoginActivity extends BaseAppCompatActivity implements
     private static final String KEY_SHARE_FLOW_LOGIN_LAUNCHED = "KEY_SHARE_FLOW_LOGIN_LAUNCHED";
 
     private int mFragmentContainerId;
+    private View mLoadingOverlay;
 
     /**
      * Check if there's a pending share flow. Used by
@@ -156,15 +158,27 @@ public class LoginActivity extends BaseAppCompatActivity implements
 
         LoginFlowThemeHelper.injectMissingCustomAttributes(getTheme());
 
+        ViewGroup.LayoutParams matchParent = new ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT
+        );
+
+        FrameLayout rootContainer = new FrameLayout(this);
+        rootContainer.setLayoutParams(matchParent);
+
         FrameLayout fragmentContainer = new FrameLayout(this);
         mFragmentContainerId = R.id.fragment_container;
         fragmentContainer.setId(mFragmentContainerId);
         fragmentContainer.setFitsSystemWindows(false);
-        fragmentContainer.setLayoutParams(new ViewGroup.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.MATCH_PARENT
-        ));
-        setContentView(fragmentContainer);
+        fragmentContainer.setLayoutParams(matchParent);
+        rootContainer.addView(fragmentContainer);
+
+        mLoadingOverlay = LayoutInflater.from(this)
+                .inflate(R.layout.login_loading, rootContainer, false);
+        mLoadingOverlay.setVisibility(View.GONE);
+        rootContainer.addView(mLoadingOverlay);
+
+        setContentView(rootContainer);
 
         if (savedInstanceState == null) {
             mLoginAnalyticsListener.trackLoginAccessed();
@@ -179,7 +193,10 @@ public class LoginActivity extends BaseAppCompatActivity implements
                     showWPcomLoginScreen(this);
                     break;
                 case SELF_HOSTED:
-                    showFragment(new LoginSiteApplicationPasswordFragment(), LoginSiteApplicationPasswordFragment.TAG);
+                    showFragment(
+                            new LoginSiteApplicationPasswordFragment(),
+                            LoginSiteApplicationPasswordFragment.TAG
+                    );
                     break;
             }
         } else {
@@ -194,9 +211,9 @@ public class LoginActivity extends BaseAppCompatActivity implements
         }
 
         // If we're waiting for sites (e.g. after config change during post-OAuth fetch),
-        // show the loading screen instead of the fragment container
+        // show the loading overlay instead of the fragment container
         if (mIsWaitingForSitesToLoad) {
-            setContentView(R.layout.login_loading);
+            showLoadingOverlay();
         }
 
         initViewModel();
@@ -233,12 +250,17 @@ public class LoginActivity extends BaseAppCompatActivity implements
     protected void onNewIntent(@NonNull Intent intent) {
         super.onNewIntent(intent);
         setIntent(intent);
+        mLoginFlow = null;
 
         // Handle OAuth callback when activity is reused (singleTop)
         String dataString = intent.getDataString();
         if (mLoginHelper.hasOAuthCallback(dataString)) {
             intent.setData(null);
-            setContentView(R.layout.login_loading);
+            if (mLoadingOverlay != null) {
+                showLoadingOverlay();
+            } else {
+                setContentView(R.layout.login_loading);
+            }
             mLoginHelper.tryLoginWithDataString(
                     dataString,
                     () -> loggedInAndFinish(new ArrayList<>(), true),
@@ -348,6 +370,26 @@ public class LoginActivity extends BaseAppCompatActivity implements
                 new LoginPrologueRevampedFragment(),
                 LoginPrologueRevampedFragment.TAG
         );
+    }
+
+    private void showLoadingOverlay() {
+        if (mLoadingOverlay != null) {
+            mLoadingOverlay.setVisibility(View.VISIBLE);
+        }
+        View fragmentContainer = findViewById(mFragmentContainerId);
+        if (fragmentContainer != null) {
+            fragmentContainer.setVisibility(View.GONE);
+        }
+    }
+
+    private void hideLoadingOverlay() {
+        if (mLoadingOverlay != null) {
+            mLoadingOverlay.setVisibility(View.GONE);
+        }
+        View fragmentContainer = findViewById(mFragmentContainerId);
+        if (fragmentContainer != null) {
+            fragmentContainer.setVisibility(View.VISIBLE);
+        }
     }
 
     private void showLoginError(@NonNull Exception error) {

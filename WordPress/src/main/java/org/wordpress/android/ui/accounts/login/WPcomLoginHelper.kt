@@ -139,7 +139,11 @@ class ServiceConnection(
     }
 
     fun unbind() {
-        boundContext?.unbindService(this)
+        try {
+            boundContext?.unbindService(this)
+        } catch (_: IllegalArgumentException) {
+            // Already unbound or never bound
+        }
         boundContext = null
         client = null
         session = null

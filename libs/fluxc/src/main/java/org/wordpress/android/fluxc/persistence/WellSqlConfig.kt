@@ -41,7 +41,7 @@ open class WellSqlConfig : DefaultWellConfig {
     annotation class AddOn
 
     override fun getDbVersion(): Int {
-        return 211
+        return 212
     }
 
     override fun getDbName(): String {
@@ -2088,6 +2088,11 @@ open class WellSqlConfig : DefaultWellConfig {
 
                 210 -> {
                     db.execSQL("ALTER TABLE TermModel ADD IS_HIERARCHICAL BOOLEAN")
+                }
+
+                211 -> {
+                    db.execSQL("ALTER TABLE ActivityLog ADD MCP_AGENT BOOLEAN")
+                    db.execSQL("ALTER TABLE ActivityLog ADD MCP_CLIENT TEXT")
                 }
             }
         }

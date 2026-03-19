@@ -185,6 +185,7 @@ class ActivityLogDetailFragment : Fragment(R.layout.activity_log_item_detail) {
         setActorIcon(activityLogModel?.actorIconUrl, activityLogModel?.showJetpackIcon)
         uiHelpers.setTextOrHide(activityActorName, activityLogModel?.actorName)
         uiHelpers.setTextOrHide(activityActorRole, activityLogModel?.actorRole)
+        uiHelpers.setTextOrHide(activityActorMetadata, activityLogModel?.actorMetadata)
 
         val spannable = activityLogModel?.content?.let {
             notificationsUtilsWrapper.getSpannableContentForRanges(
