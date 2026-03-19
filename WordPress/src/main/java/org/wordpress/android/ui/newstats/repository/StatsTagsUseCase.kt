@@ -83,11 +83,7 @@ class StatsTagsUseCase @Inject constructor(
                 deferred.complete(result)
             } catch (e: CancellationException) {
                 mutex.withLock { inFlight = null }
-                deferred.complete(
-                    TagsResult.Error(
-                        "Request cancelled"
-                    )
-                )
+                deferred.cancel(e)
                 throw e
             } catch (e: Exception) {
                 mutex.withLock { inFlight = null }

@@ -129,6 +129,11 @@ private fun TagsAndCategoriesDetailScreen(
                     modifier = Modifier
                         .padding(contentPadding)
                 )
+            is TagsAndCategoriesCardUiState.NoData ->
+                DetailEmptyContent(
+                    modifier = Modifier
+                        .padding(contentPadding)
+                )
             is TagsAndCategoriesCardUiState.Loaded ->
                 DetailLoadedContent(
                     items = uiState.items,
@@ -173,6 +178,30 @@ private fun DetailLoadingContent(
                     .height(20.dp)
             )
         }
+    }
+}
+
+@Composable
+private fun DetailEmptyContent(
+    modifier: Modifier = Modifier
+) {
+    Box(
+        modifier = modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = stringResource(
+                R.string
+                    .stats_insights_tags_empty
+            ),
+            style = MaterialTheme.typography
+                .bodyMedium,
+            color = MaterialTheme.colorScheme
+                .onSurfaceVariant,
+            textAlign = TextAlign.Center
+        )
     }
 }
 

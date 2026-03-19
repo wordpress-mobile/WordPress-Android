@@ -174,7 +174,7 @@ private fun NewStatsScreen(
                 },
                 actions = {
                     val currentTab = tabs[pagerState.currentPage]
-                    if (currentTab != StatsTab.SUBSCRIBERS) {
+                    if (currentTab == StatsTab.TRAFFIC) {
                         Box {
                             Row(
                                 verticalAlignment =

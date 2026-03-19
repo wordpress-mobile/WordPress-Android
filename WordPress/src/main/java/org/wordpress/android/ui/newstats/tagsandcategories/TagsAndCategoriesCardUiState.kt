@@ -6,6 +6,8 @@ package org.wordpress.android.ui.newstats.tagsandcategories
 sealed class TagsAndCategoriesCardUiState {
     data object Loading : TagsAndCategoriesCardUiState()
 
+    data object NoData : TagsAndCategoriesCardUiState()
+
     data class Loaded(
         val items: List<TagGroupUiItem>,
         val maxViewsForBar: Long

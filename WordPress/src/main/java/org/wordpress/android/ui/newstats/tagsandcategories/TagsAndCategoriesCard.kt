@@ -53,6 +53,15 @@ fun TagsAndCategoriesCard(
         when (uiState) {
             is TagsAndCategoriesCardUiState.Loading ->
                 LoadingContent()
+            is TagsAndCategoriesCardUiState.NoData ->
+                NoDataContent(
+                    onRemoveCard,
+                    cardPosition,
+                    onMoveUp,
+                    onMoveToTop,
+                    onMoveDown,
+                    onMoveToBottom
+                )
             is TagsAndCategoriesCardUiState.Loaded ->
                 LoadedContent(
                     uiState,
@@ -139,6 +148,37 @@ private fun LoadingContent() {
 
 @Composable
 @Suppress("LongParameterList")
+private fun NoDataContent(
+    onRemoveCard: () -> Unit,
+    cardPosition: CardPosition?,
+    onMoveUp: (() -> Unit)?,
+    onMoveToTop: (() -> Unit)?,
+    onMoveDown: (() -> Unit)?,
+    onMoveToBottom: (() -> Unit)?
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(CardPadding)
+    ) {
+        StatsCardHeader(
+            titleResId =
+                R.string
+                    .stats_insights_tags_and_categories,
+            onRemoveCard = onRemoveCard,
+            cardPosition = cardPosition,
+            onMoveUp = onMoveUp,
+            onMoveToTop = onMoveToTop,
+            onMoveDown = onMoveDown,
+            onMoveToBottom = onMoveToBottom
+        )
+        Spacer(modifier = Modifier.height(12.dp))
+        StatsCardEmptyContent()
+    }
+}
+
+@Composable
+@Suppress("LongParameterList")
 private fun LoadedContent(
     state: TagsAndCategoriesCardUiState.Loaded,
     onShowAllClick: () -> Unit,
@@ -170,64 +210,60 @@ private fun LoadedContent(
             onMoveToBottom = onMoveToBottom
         )
         Spacer(modifier = Modifier.height(12.dp))
-        if (state.items.isEmpty()) {
-            StatsCardEmptyContent()
-        } else {
-            StatsListHeader(
-                leftHeaderResId =
-                    R.string
-                        .stats_insights_tags_and_categories,
-                rightHeaderResId =
-                    R.string.stats_views
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            state.items.forEachIndexed { index, item ->
-                val percentage =
-                    if (state.maxViewsForBar > 0) {
-                        item.views.toFloat() /
-                            state.maxViewsForBar
-                                .toFloat()
-                    } else {
-                        0f
-                    }
-                val isExpanded =
-                    expandedGroups[index] == true
-
-                TagGroupRow(
-                    item = item,
-                    percentage = percentage,
-                    isExpandable = item.isExpandable,
-                    isExpanded = isExpanded,
-                    onClick = if (item.isExpandable) {
-                        {
-                            expandedGroups[index] =
-                                !isExpanded
-                        }
-                    } else {
-                        null
-                    }
-                )
-                if (item.isExpandable) {
-                    AnimatedVisibility(
-                        visible = isExpanded,
-                        enter = expandVertically(),
-                        exit = shrinkVertically()
-                    ) {
-                        ExpandedTagsSection(
-                            tags = item.tags
-                        )
-                    }
+        StatsListHeader(
+            leftHeaderResId =
+                R.string
+                    .stats_insights_tags_and_categories,
+            rightHeaderResId =
+                R.string.stats_views
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        state.items.forEachIndexed { index, item ->
+            val percentage =
+                if (state.maxViewsForBar > 0) {
+                    item.views.toFloat() /
+                        state.maxViewsForBar
+                            .toFloat()
+                } else {
+                    0f
                 }
-                if (index < state.items.lastIndex) {
-                    Spacer(
-                        modifier =
-                            Modifier.height(4.dp)
+            val isExpanded =
+                expandedGroups[index] == true
+
+            TagGroupRow(
+                item = item,
+                percentage = percentage,
+                isExpandable = item.isExpandable,
+                isExpanded = isExpanded,
+                onClick = if (item.isExpandable) {
+                    {
+                        expandedGroups[index] =
+                            !isExpanded
+                    }
+                } else {
+                    null
+                }
+            )
+            if (item.isExpandable) {
+                AnimatedVisibility(
+                    visible = isExpanded,
+                    enter = expandVertically(),
+                    exit = shrinkVertically()
+                ) {
+                    ExpandedTagsSection(
+                        tags = item.tags
                     )
                 }
             }
-            Spacer(modifier = Modifier.height(12.dp))
-            ShowAllFooter(onClick = onShowAllClick)
+            if (index < state.items.lastIndex) {
+                Spacer(
+                    modifier =
+                        Modifier.height(4.dp)
+                )
+            }
         }
+        Spacer(modifier = Modifier.height(12.dp))
+        ShowAllFooter(onClick = onShowAllClick)
     }
 }
 

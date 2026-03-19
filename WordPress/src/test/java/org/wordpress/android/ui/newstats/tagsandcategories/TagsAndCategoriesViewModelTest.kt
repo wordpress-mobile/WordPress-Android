@@ -370,7 +370,7 @@ class TagsAndCategoriesViewModelTest : BaseUnitTest() {
         }
 
     @Test
-    fun `when empty result, then loaded with empty list`() =
+    fun `when empty result, then NoData state`() =
         test {
             whenever(
                 statsTagsUseCase(any(), any(), any())
@@ -386,11 +386,11 @@ class TagsAndCategoriesViewModelTest : BaseUnitTest() {
             viewModel.loadData()
             advanceUntilIdle()
 
-            val state = viewModel.uiState.value
-                as TagsAndCategoriesCardUiState.Loaded
-            assertThat(state.items).isEmpty()
-            assertThat(state.maxViewsForBar)
-                .isEqualTo(1L)
+            assertThat(viewModel.uiState.value)
+                .isInstanceOf(
+                    TagsAndCategoriesCardUiState
+                        .NoData::class.java
+                )
         }
     // endregion
 

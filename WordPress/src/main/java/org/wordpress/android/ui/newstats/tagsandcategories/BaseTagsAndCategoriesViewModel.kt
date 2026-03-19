@@ -109,13 +109,15 @@ abstract class BaseTagsAndCategoriesViewModel(
                 val items = mapper.mapToUiItems(
                     result.data.tagGroups
                 )
-                _uiState.value =
+                _uiState.value = if (items.isEmpty()) {
+                    TagsAndCategoriesCardUiState.NoData
+                } else {
                     TagsAndCategoriesCardUiState.Loaded(
                         items = items,
                         maxViewsForBar =
-                            items.firstOrNull()
-                                ?.views ?: 1L
+                            items.first().views
                     )
+                }
             }
             is TagsResult.Error -> {
                 _uiState.value =

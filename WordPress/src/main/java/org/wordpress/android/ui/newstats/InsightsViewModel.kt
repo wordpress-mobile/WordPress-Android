@@ -274,6 +274,8 @@ class InsightsViewModel @Inject constructor(
         _cardsToLoad.value = config.visibleCards
         if (needsNewFetch) {
             isDataLoaded.set(false)
+            isDataLoading.set(false)
+            fetchJob?.cancel()
             loadDataIfNeeded()
         }
     }

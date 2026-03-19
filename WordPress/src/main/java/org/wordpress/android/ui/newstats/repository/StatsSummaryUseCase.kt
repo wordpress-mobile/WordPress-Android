@@ -27,22 +27,24 @@ class StatsSummaryUseCase @Inject constructor(
             )
         }
         statsRepository.init(token)
-        return mutex.withLock {
+        mutex.withLock {
             val cached = cachedSummary
             if (!forceRefresh &&
                 cached != null &&
                 cached.first == siteId
             ) {
-                return@withLock StatsSummaryResult
+                return StatsSummaryResult
                     .Success(cached.second)
             }
-            val result =
-                statsRepository.fetchStatsSummary(siteId)
+        }
+        val result =
+            statsRepository.fetchStatsSummary(siteId)
+        mutex.withLock {
             if (result is StatsSummaryResult.Success) {
                 cachedSummary = siteId to result.data
             }
-            result
         }
+        return result
     }
 
     suspend fun clearCache() {
