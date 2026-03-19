@@ -345,65 +345,48 @@ class PostRsRestClient @Inject constructor(
      * theme. Returns [DEFAULT_POST_FORMATS] on failure or when
      * the theme does not declare format support.
      */
-    @Suppress("TooGenericExceptionCaught")
     suspend fun fetchSitePostFormats(
         site: SiteModel,
     ): List<PostFormat> {
-        return try {
-            val client = wpApiClientProvider.getWpApiClient(site)
-            val response = client.request {
-                it.themes().listWithViewContext(
-                    ThemeListParams(
-                        status = ThemeStatus.Active
-                    )
+        val client = wpApiClientProvider.getWpApiClient(site)
+        val response = client.request {
+            it.themes().listWithViewContext(
+                ThemeListParams(
+                    status = ThemeStatus.Active
                 )
-            }
-            when (response) {
-                is WpRequestResult.Success -> {
-                    val theme =
-                        response.response.data.firstOrNull()
-                            ?: return DEFAULT_POST_FORMATS
-                    val supports = theme.themeSupports
-                        ?: return DEFAULT_POST_FORMATS
-                    val data = supports[ThemeSupports.Formats]
-                        ?: return DEFAULT_POST_FORMATS
-                    val slugs =
-                        (data as? ThemeSupportsData.VecString)
-                            ?.v1
-                            ?: return DEFAULT_POST_FORMATS
-                    if (slugs.isEmpty()) {
-                        return DEFAULT_POST_FORMATS
-                    }
-                    val formats = slugs
-                        .map { slugToPostFormat(it) }
-                        .toMutableList()
-                    if (formats.none {
-                            it is PostFormat.Standard
-                        }
-                    ) {
-                        formats.add(0, PostFormat.Standard)
-                    }
-                    formats
-                }
-                else -> {
-                    val msg =
-                        (response
-                            as? WpRequestResult.WpError<*>)
-                            ?.errorMessage
-                    AppLog.w(
-                        AppLog.T.POSTS,
-                        "fetchSitePostFormats failed: $msg"
-                    )
-                    DEFAULT_POST_FORMATS
-                }
-            }
-        } catch (e: Exception) {
-            AppLog.w(
-                AppLog.T.POSTS,
-                "fetchSitePostFormats exception: " +
-                    "${e.message}"
             )
-            DEFAULT_POST_FORMATS
+        }
+        return when (response) {
+            is WpRequestResult.Success -> {
+                val theme =
+                    response.response.data.firstOrNull()
+                        ?: return DEFAULT_POST_FORMATS
+                val supports = theme.themeSupports
+                    ?: return DEFAULT_POST_FORMATS
+                val data = supports[ThemeSupports.Formats]
+                    ?: return DEFAULT_POST_FORMATS
+                val slugs =
+                    (data as? ThemeSupportsData.VecString)
+                        ?.v1
+                        ?: return DEFAULT_POST_FORMATS
+                if (slugs.isEmpty()) {
+                    return DEFAULT_POST_FORMATS
+                }
+                (listOf(PostFormat.Standard) +
+                    slugs.map { slugToPostFormat(it) })
+                    .distinct()
+            }
+            else -> {
+                val msg =
+                    (response
+                        as? WpRequestResult.WpError<*>)
+                        ?.errorMessage
+                AppLog.w(
+                    AppLog.T.POSTS,
+                    "fetchSitePostFormats failed: $msg"
+                )
+                DEFAULT_POST_FORMATS
+            }
         }
     }
 
