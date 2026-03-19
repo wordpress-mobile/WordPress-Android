@@ -51,7 +51,7 @@ class PostRsRestClient @Inject constructor(
     /**
      * Fetches media source URLs for the given [mediaIds] in a single
      * network call using the `include` parameter, returning a map of
-     * media ID to Photon-optimised URL. IDs already in the local cache
+     * media ID to Photon-optimized URL. IDs already in the local cache
      * are returned immediately without a network round-trip.
      *
      * @param widthDp target display width in dp for Photon resizing.
