@@ -1056,10 +1056,10 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
     }
 
     /**
-     * Tells the ViewPager2 adapter to destroy and recreate the current fragment.
-     * Used after reading preferences change so the fragment is re-inflated with the new theme.
+     * Tells the ViewPager2 adapter to destroy and recreate all fragments.
+     * Used after reading preferences change so fragments are re-inflated with the new theme.
      */
-    fun recreateCurrentPage() {
+    fun recreatePages() {
         pagerAdapter?.recreateFragments()
     }
 

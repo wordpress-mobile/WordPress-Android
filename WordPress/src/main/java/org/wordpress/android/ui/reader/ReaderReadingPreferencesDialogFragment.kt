@@ -80,7 +80,7 @@ class ReaderReadingPreferencesDialogFragment : DialogFragment() {
                 is ActionEvent.Close -> dismiss()
                 is ActionEvent.SaveAndClose -> {
                     (activity as? ReaderPostPagerActivity)
-                        ?.recreateCurrentPage()
+                        ?.recreatePages()
                     dismiss()
                 }
             }
