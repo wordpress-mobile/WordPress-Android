@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
@@ -52,7 +51,6 @@ import org.wordpress.android.ui.reader.utils.toSp
 private const val TITLE_BASE_FONT_SIZE_SP = 24
 private const val TITLE_LINE_HEIGHT_MULTIPLIER = 1.2f
 private const val TEXT_LINE_HEIGHT_MULTIPLIER = 1.6f
-private const val PREVIEW_MAX_HEIGHT_DP = 200
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
@@ -91,7 +89,8 @@ fun ReadingPreferencesScreen(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .background(MaterialTheme.colorScheme.surface),
+            .background(MaterialTheme.colorScheme.surface)
+            .verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
@@ -120,8 +119,6 @@ fun ReadingPreferencesScreen(
             modifier = Modifier
                 .background(backgroundColor)
                 .fillMaxWidth()
-                .heightIn(max = PREVIEW_MAX_HEIGHT_DP.dp)
-                .verticalScroll(rememberScrollState())
                 .padding(
                     bottom = Margin.ExtraLarge.value,
                     start = Margin.ExtraLarge.value,
