@@ -102,7 +102,6 @@ Language: bg
     <string name="term_description_label">Описание:</string>
     <string name="term_slug_label">Кратко име:</string>
     <string name="term_name_label">Име:</string>
-    <string name="application_password_experimental_feature_note">\n\nЗабележка: Удостоверяването чрез парола за приложението на устройства с Android е експериментална функционалност.</string>
     <string name="application_password_required_block_editor">Блоков редактор</string>
     <string name="application_password_required_description">Паролите за приложения са по-сигурен начин за свързване към вашия хостнат сайт и позволяват поддръжката на функции като %1$s.</string>
     <string name="application_password_required">Изисква се парола на приложението</string>
@@ -135,7 +134,6 @@ Language: bg
     <string name="application_password_info_description_2">Когато добавяте сайтове в приложението, паролите за приложения ще бъдат създавани автоматично при необходимост.</string>
     <string name="application_password_info_description_1">Паролите за приложения са сигурен начин приложенията да имат достъп до вашия сайт, без да използват паролата на профила.</string>
     <string name="application_password_info_title">Пароли на приложения</string>
-    <string name="application_password_disable_feature_description">Деактивирането на паролите за приложения ще премахне входа за %1$s от вашите сайтове. Може да се наложи да добавите отново засегнатите сайтове, за да влезете пак.</string>
     <string name="application_password_invalid_description">Паролата за приложението не е активна. Моля, влезте отново и създайте нова парола за приложението.</string>
     <string name="subscribers_delete_failed">Неуспешно изтриване на абонат</string>
     <string name="subscribers_delete_success_message">Абонатът беше изтрит, но може да отнеме няколко минути, за да влезе в сила изтриването</string>
@@ -157,7 +155,6 @@ Language: bg
     <string name="start">Начало</string>
     <string name="descending">Низходящ ред</string>
     <string name="ascending">Възходящ ред</string>
-    <string name="application_password_disable_feature_title">Изключване на паролата на приложението?</string>
     <string name="application_password_invalid">Невалидна парола на приложението</string>
     <string name="change_password_dialog_message">Смяна на парола…</string>
     <string name="change_password">Промяна на паролата</string>

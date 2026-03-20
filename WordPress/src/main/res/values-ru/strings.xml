@@ -102,7 +102,6 @@ Language: ru
     <string name="term_description_label">Описание:</string>
     <string name="term_slug_label">Слаг:</string>
     <string name="term_name_label">Имя:</string>
-    <string name="application_password_experimental_feature_note">\n\nПримечание: аутентификация по паролю приложения на устройствах Android является экспериментальной функцией.</string>
     <string name="application_password_required_block_editor">Редактор блоков</string>
     <string name="application_password_required_description">Пароли приложений — это более надёжный способ подключения к автономным сайтам, дающий возможность поддержки таких функций, как %1$s.</string>
     <string name="application_password_required">Требуется пароль приложения</string>
@@ -135,7 +134,6 @@ Language: ru
     <string name="application_password_info_description_2">При добавлении сайтов в приложение пароли приложения будут создаваться автоматически по мере необходимости.</string>
     <string name="application_password_info_description_1">Пароли приложения — способ, при помощи которого приложение получает доступ к контенту вашего сайта. Это безопаснее, чем пользоваться паролем учётной записи.</string>
     <string name="application_password_info_title">Пароли приложений</string>
-    <string name="application_password_disable_feature_description">При отключении пароля приложения будут удалены данные для входа на сайты: %1$s. Для повторного входа вам может потребоваться вновь ввести эти сайты в приложение.</string>
     <string name="application_password_invalid_description">Пароля приложения больше нет. Войдите заново, чтобы создать новый пароль приложения.</string>
     <string name="subscribers_delete_failed">Не удалось удалить подписчика</string>
     <string name="subscribers_delete_success_message">Подписчик удалён, но требуется некоторое время, чтобы удаление вступило в силу.</string>
@@ -157,7 +155,6 @@ Language: ru
     <string name="start">Начало</string>
     <string name="descending">По убыванию</string>
     <string name="ascending">По возрастанию</string>
-    <string name="application_password_disable_feature_title">Отключить пароль приложения?</string>
     <string name="application_password_invalid">Неверный пароль приложения</string>
     <string name="application_password_credentials_storing_error">Произошла ошибка при сохранении учётных данных пароля приложения %1$s</string>
     <string name="subscribers_add_failed">Не удалось добавить подписчиков</string>
@@ -203,8 +200,6 @@ Language: ru
     <string name="qrcode_auth_flow_timeout_subtitle">Обнаружение кода заняло слишком много времени. Повторите попытку или отсканируйте код в приложении камеры.</string>
     <string name="qrcode_auth_flow_timeout_title">Время ожидания сканирования истекло</string>
     <string name="invite_users">Пригласить пользователей</string>
-    <string name="experimental_application_password_feature_description">Активируйте пароль приложения, чтобы входить на автономные сайты</string>
-    <string name="experimental_application_password_feature">Вход с паролем приложения</string>
     <string name="cant_share_no_blog">Вы не можете делать публикации на WordPress без блога</string>
     <string name="me_email_verification_generic_error">Не удалось отправить ссылку для подтверждения</string>
     <string name="me_email_verification_resend">Повторно отправить ссылку для подтверждения</string>

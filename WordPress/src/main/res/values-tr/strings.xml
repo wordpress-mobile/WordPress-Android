@@ -102,7 +102,6 @@ Language: tr
     <string name="term_description_label">Açıklama:</string>
     <string name="term_slug_label">Kısaltma:</string>
     <string name="term_name_label">Ad:</string>
-    <string name="application_password_experimental_feature_note">\n\nNot: Android cihazlarda Uygulama Şifresi doğrulaması Deneysel bir özelliktir.</string>
     <string name="application_password_required_block_editor">Blok Düzenleyici</string>
     <string name="application_password_required_description">Uygulama şifreleri, kullanıcı tarafından barındırılan sitelerinizi bağlamanız ve %1$s gibi özellikler için destek sağlamanın daha güvenli bir yoludur.</string>
     <string name="application_password_required">Uygulama Şifreleri Gerekli</string>
@@ -135,7 +134,6 @@ Language: tr
     <string name="application_password_info_description_2">Uygulamaya site eklediğinizde, uygulama şifreleri gerektiğinde otomatik olarak oluşturulur.</string>
     <string name="application_password_info_description_1">Uygulama şifreleri, uygulamaların hesap şifrenizi kullanmadan sitenize erişmesinin güvenli bir yoludur.</string>
     <string name="application_password_info_title">Uygulama Şifreleri</string>
-    <string name="application_password_disable_feature_description">Uygulama Şifresini devre dışı bırakırsanız oturum açma bilgileri %1$s sitenizden kaldırılır. Tekrar oturum açmak için etkilenen siteleri yeniden eklemeniz gerekebilir.</string>
     <string name="application_password_invalid_description">Uygulama şifreniz artık yok. Yeni bir uygulama şifresi oluşturmak için lütfen tekrar oturum açın.</string>
     <string name="subscribers_delete_failed">Abone silinemedi</string>
     <string name="subscribers_delete_success_message">Abone silindi, ancak silmenin geçerli olması bir dakika sürebilir</string>
@@ -157,7 +155,6 @@ Language: tr
     <string name="start">Başlat</string>
     <string name="descending">Azalan</string>
     <string name="ascending">Artan</string>
-    <string name="application_password_disable_feature_title">Uygulama Şifresini Devre Dışı Bırak</string>
     <string name="application_password_invalid">Geçersiz Uygulama Şifresi</string>
     <string name="application_password_credentials_storing_error">%1$s Uygulama şifresi kimlik bilgileri saklanırken bir hata oluştu</string>
     <string name="subscribers_add_failed">Aboneler eklenemedi</string>
@@ -203,8 +200,6 @@ Language: tr
     <string name="qrcode_auth_flow_timeout_subtitle">Bir kod bulmak çok uzun sürdü. Lütfen tekrar deneyin veya kodu taramak için kamera uygulamanızı kullanın.</string>
     <string name="qrcode_auth_flow_timeout_title">Tarama zaman aşımına uğradı</string>
     <string name="invite_users">Kullanıcıları davet et</string>
-    <string name="experimental_application_password_feature_description">Kullanıcı tarafından barındırılan sitelerde oturum açmak için Uygulama Şifresini etkinleştirin</string>
-    <string name="experimental_application_password_feature">Uygulama Şifresiyle oturum açma</string>
     <string name="cant_share_no_blog">Blogunuz olmadan WordPress ile paylaşamazsınız</string>
     <string name="me_email_verification_generic_error">Doğrulama bağlantısı gönderilemiyor</string>
     <string name="me_email_verification_resend">Doğrulama bağlantısını yeniden gönder</string>

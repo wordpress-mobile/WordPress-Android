@@ -101,7 +101,6 @@ Language: he_IL
     <string name="term_description_label">תיאור:</string>
     <string name="term_slug_label">מזהה לכתובת:</string>
     <string name="term_name_label">שם:</string>
-    <string name="application_password_experimental_feature_note">\n\nלתשומת ליבך: אימות באמצעות סיסמת אפליקציה במכשירי Android הוא תכונה ניסיונית.</string>
     <string name="application_password_required_block_editor">עורך הבלוקים</string>
     <string name="application_password_required_description">סיסמאות אפליקציה הן דרך מאובטחת יותר להתחבר לאתר באחסון עצמי, והן מאפשרות תמיכה באפשרויות כמו ⁦%1$s⁩.</string>
     <string name="application_password_required">נדרשת סיסמת אפליקציה</string>
@@ -134,7 +133,6 @@ Language: he_IL
     <string name="application_password_info_description_2">בעת הוספה של אתרים לאפליקציה, סיסמאות של אפליקציות ייווצרו אוטומטית לפי הצורך.</string>
     <string name="application_password_info_description_1">סיסמאות של אפליקציות הן דרך מאובטחת המאפשרת לאפליקציות לגשת לאתר שלך ללא שימוש בסיסמת החשבון.</string>
     <string name="application_password_info_title">סיסמאות אפליקציה</string>
-    <string name="application_password_disable_feature_description">השבתה של סיסמת אפליקציה תסיר את פרטי הכניסה שלך מ-⁦%1$s⁩ אתרים. ייתכן שיהיה צורך להוסיף את האתרים שהוסרו מחדש כדי להתחבר אליהם שוב.</string>
     <string name="application_password_invalid_description">סיסמת האפליקציה שלך כבר לא קיימת. יש להתחבר שוב כדי ליצור סיסמת אפליקציה חדשה.</string>
     <string name="subscribers_delete_failed">מחיקת המנוי נכשלה</string>
     <string name="subscribers_delete_success_message">המנוי נמחק, ייתכן שתידרש דקה אחת עד שהמחיקה תיכנס לתוקף</string>
@@ -156,7 +154,6 @@ Language: he_IL
     <string name="start">התחלה</string>
     <string name="descending">סדר יורד</string>
     <string name="ascending">סדר עולה</string>
-    <string name="application_password_disable_feature_title">האם להשבית את \'סיסמת אפליקציה\'?</string>
     <string name="application_password_invalid">סיסמת האפליקציה לא תקפה</string>
     <string name="application_password_credentials_storing_error">אירעה שגיאה בשמירה של פרטי הכניסה עבור סיסמת האפליקציה ל-⁦%1$s⁩</string>
     <string name="subscribers_add_failed">ההוספה של המנויים נכשלה</string>
@@ -201,8 +198,6 @@ Language: he_IL
     <string name="qrcode_auth_flow_timeout_subtitle">הזמן שנדרש לזיהוי הקוד היה ארוך מדי. יש לנסות שוב או להשתמש באפליקציית המצלמה כדי לסרוק את הקוד.</string>
     <string name="qrcode_auth_flow_timeout_title">הזמן הקצוב לסריקה הסתיים</string>
     <string name="invite_users">להזמין משתמשים</string>
-    <string name="experimental_application_password_feature_description">יש להפעיל את סיסמת האפליקציה כדי להתחבר לאתרים באחסון עצמי</string>
-    <string name="experimental_application_password_feature">התחברות באמצעות סיסמאות אפליקציה</string>
     <string name="cant_share_no_blog">אין לך אפשרות לשתף ב-WordPress בלי בלוג</string>
     <string name="me_email_verification_generic_error">לא ניתן לשלוח את הקישור לאימות</string>
     <string name="me_email_verification_resend">לשלוח מחדש את הקישור לאימות</string>
