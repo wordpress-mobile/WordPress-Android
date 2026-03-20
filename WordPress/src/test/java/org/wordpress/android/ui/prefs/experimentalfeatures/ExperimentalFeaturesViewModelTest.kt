@@ -2,6 +2,7 @@ package org.wordpress.android.ui.prefs.experimentalfeatures
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
+import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
@@ -19,6 +20,7 @@ import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures.Feature
 import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeaturesViewModel.ApplicationPasswordDialogState
 import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.config.GutenbergKitFeature
 
 @ExperimentalCoroutinesApi
@@ -37,6 +39,9 @@ class ExperimentalFeaturesViewModelTest : BaseUnitTest() {
 
     @Mock
     private lateinit var appPrefsWrapper: AppPrefsWrapper
+
+    @Mock
+    private lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
 
     private lateinit var viewModel: ExperimentalFeaturesViewModel
 
@@ -224,13 +229,44 @@ class ExperimentalFeaturesViewModelTest : BaseUnitTest() {
         assertThat(viewModel.applicationPasswordDialogState.value).isEqualTo(ApplicationPasswordDialogState.None)
     }
 
+    @Test
+    fun `toggling feature on tracks event with enabled true`() = test {
+        createViewModel()
+
+        viewModel.onFeatureToggled(Feature.EXPERIMENTAL_BLOCK_EDITOR, true)
+
+        verify(analyticsTrackerWrapper).track(
+            Stat.EXPERIMENTAL_FEATURE_TOGGLED,
+            mapOf(
+                "feature" to Feature.EXPERIMENTAL_BLOCK_EDITOR.prefKey,
+                "enabled" to true
+            )
+        )
+    }
+
+    @Test
+    fun `toggling feature off tracks event with enabled false`() = test {
+        createViewModel()
+
+        viewModel.onFeatureToggled(Feature.EXPERIMENTAL_BLOCK_EDITOR, false)
+
+        verify(analyticsTrackerWrapper).track(
+            Stat.EXPERIMENTAL_FEATURE_TOGGLED,
+            mapOf(
+                "feature" to Feature.EXPERIMENTAL_BLOCK_EDITOR.prefKey,
+                "enabled" to false
+            )
+        )
+    }
+
     private fun createViewModel() {
         viewModel = ExperimentalFeaturesViewModel(
             experimentalFeatures = experimentalFeatures,
             gutenbergKitFeature = gutenbergKitFeature,
             applicationPasswordLoginHelper = applicationPasswordLoginHelper,
             appLogWrapper = appLogWrapper,
-            appPrefsWrapper = appPrefsWrapper
+            appPrefsWrapper = appPrefsWrapper,
+            analyticsTrackerWrapper = analyticsTrackerWrapper
         )
     }
 }
