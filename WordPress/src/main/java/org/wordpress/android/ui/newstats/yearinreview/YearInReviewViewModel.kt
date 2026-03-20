@@ -16,12 +16,10 @@ import javax.inject.Inject
 class YearInReviewViewModel @Inject constructor(
     private val resourceProvider: ResourceProvider
 ) : ViewModel() {
-    private val _uiState =
-        MutableStateFlow<YearInReviewCardUiState>(
-            YearInReviewCardUiState.Loading
-        )
-    val uiState: StateFlow<YearInReviewCardUiState> =
-        _uiState.asStateFlow()
+    private val _uiState = MutableStateFlow<YearInReviewCardUiState>(
+        YearInReviewCardUiState.Loading
+    )
+    val uiState: StateFlow<YearInReviewCardUiState> = _uiState.asStateFlow()
 
     fun handleResult(result: InsightsResult) {
         _uiState.value = when (result) {
@@ -29,20 +27,12 @@ class YearInReviewViewModel @Inject constructor(
                 val years = result.data.years
                     .map { it.toUiModel() }
                     .ensureCurrentYear()
-                    .sortedByDescending {
-                        it.year
-                    }
-                YearInReviewCardUiState.Loaded(
-                    years = years
-                )
+                    .sortedByDescending { it.year }
+                YearInReviewCardUiState.Loaded(years = years)
             }
-            is InsightsResult.Error ->
-                YearInReviewCardUiState.Error(
-                    message = resourceProvider
-                        .getString(
-                            R.string.stats_error_api
-                        )
-                )
+            is InsightsResult.Error -> YearInReviewCardUiState.Error(
+                message = resourceProvider.getString(R.string.stats_error_api)
+            )
         }
     }
 
@@ -51,22 +41,19 @@ class YearInReviewViewModel @Inject constructor(
     }
 
     companion object {
-        private fun YearInsightsData.toUiModel() =
-            YearSummary(
-                year = year,
-                totalPosts = totalPosts,
-                totalWords = totalWords,
-                avgWords = avgWords,
-                totalLikes = totalLikes,
-                avgLikes = avgLikes,
-                totalComments = totalComments,
-                avgComments = avgComments
-            )
+        private fun YearInsightsData.toUiModel() = YearSummary(
+            year = year,
+            totalPosts = totalPosts,
+            totalWords = totalWords,
+            avgWords = avgWords,
+            totalLikes = totalLikes,
+            avgLikes = avgLikes,
+            totalComments = totalComments,
+            avgComments = avgComments
+        )
 
-        private fun List<YearSummary>.ensureCurrentYear():
-            List<YearSummary> {
-            val currentYear =
-                Year.now().value.toString()
+        private fun List<YearSummary>.ensureCurrentYear(): List<YearSummary> {
+            val currentYear = Year.now().value.toString()
             return if (any { it.year == currentYear }) {
                 this
             } else {

@@ -19,24 +19,17 @@ import javax.inject.Inject
 class MostPopularDayViewModel @Inject constructor(
     private val resourceProvider: ResourceProvider
 ) : ViewModel() {
-    private val _uiState =
-        MutableStateFlow<MostPopularDayCardUiState>(
-            MostPopularDayCardUiState.Loading
-        )
-    val uiState: StateFlow<MostPopularDayCardUiState> =
-        _uiState.asStateFlow()
+    private val _uiState = MutableStateFlow<MostPopularDayCardUiState>(
+        MostPopularDayCardUiState.Loading
+    )
+    val uiState: StateFlow<MostPopularDayCardUiState> = _uiState.asStateFlow()
 
     fun handleResult(result: StatsSummaryResult) {
         _uiState.value = when (result) {
-            is StatsSummaryResult.Success ->
-                mapToUiState(result.data)
-            is StatsSummaryResult.Error ->
-                MostPopularDayCardUiState.Error(
-                    message = resourceProvider
-                        .getString(
-                            R.string.stats_error_api
-                        )
-                )
+            is StatsSummaryResult.Success -> mapToUiState(result.data)
+            is StatsSummaryResult.Error -> MostPopularDayCardUiState.Error(
+                message = resourceProvider.getString(R.string.stats_error_api)
+            )
         }
     }
 
@@ -45,30 +38,20 @@ class MostPopularDayViewModel @Inject constructor(
     }
 
     companion object {
-        private val INPUT_FORMAT =
-            DateTimeFormatter.ISO_LOCAL_DATE
+        private val INPUT_FORMAT = DateTimeFormatter.ISO_LOCAL_DATE
         private const val DISPLAY_PATTERN = "MMMM d"
         private const val PERCENTAGE_MULTIPLIER = 100.0
 
-        internal fun mapToUiState(
-            data: StatsSummaryData
-        ): MostPopularDayCardUiState {
+        internal fun mapToUiState(data: StatsSummaryData): MostPopularDayCardUiState {
             val bestDay = data.viewsBestDay
-            if (bestDay.isBlank()) {
-                return MostPopularDayCardUiState.NoData
-            }
+            if (bestDay.isBlank()) return MostPopularDayCardUiState.NoData
+
             val parsed = parseBestDay(bestDay)
             val totalViews = data.views
             val bestDayViews = data.viewsBestDayTotal
             val percentage = if (totalViews > 0) {
-                val pct = bestDayViews.toDouble() /
-                    totalViews.toDouble() *
-                    PERCENTAGE_MULTIPLIER
-                String.format(
-                    Locale.getDefault(),
-                    "%.1f",
-                    pct
-                )
+                val pct = bestDayViews.toDouble() / totalViews.toDouble() * PERCENTAGE_MULTIPLIER
+                String.format(Locale.getDefault(), "%.1f", pct)
             } else {
                 "0"
             }
@@ -80,31 +63,21 @@ class MostPopularDayViewModel @Inject constructor(
             )
         }
 
-        private fun parseBestDay(
-            bestDay: String
-        ): Pair<String, String> {
+        private fun parseBestDay(bestDay: String): Pair<String, String> {
             return try {
-                val date = LocalDate.parse(
-                    bestDay,
-                    INPUT_FORMAT
+                val date = LocalDate.parse(bestDay, INPUT_FORMAT)
+                val displayFormat = DateTimeFormatter.ofPattern(
+                    DISPLAY_PATTERN, Locale.getDefault()
                 )
-                val displayFormat =
-                    DateTimeFormatter.ofPattern(
-                        DISPLAY_PATTERN,
-                        Locale.getDefault()
-                    )
-                val dayMonth = date.format(displayFormat)
-                    .replaceFirstChar { it.uppercase() }
-                val year = date.year.toString()
-                dayMonth to year
+                val dayMonth = date.format(displayFormat).replaceFirstChar { it.uppercase() }
+                dayMonth to date.year.toString()
             } catch (
                 @Suppress("TooGenericExceptionCaught")
                 e: Exception
             ) {
                 AppLog.w(
                     AppLog.T.STATS,
-                    "Failed to parse bestDay" +
-                        " '$bestDay': ${e.message}"
+                    "Failed to parse bestDay '$bestDay': ${e.message}"
                 )
                 bestDay to ""
             }

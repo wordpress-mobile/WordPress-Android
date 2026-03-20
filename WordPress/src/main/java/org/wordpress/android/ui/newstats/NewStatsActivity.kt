@@ -13,10 +13,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.clickable
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -105,6 +105,7 @@ import org.wordpress.android.ui.newstats.tagsandcategories.TagsAndCategoriesDeta
 import org.wordpress.android.ui.newstats.tagsandcategories.TagsAndCategoriesViewModel
 import org.wordpress.android.ui.newstats.yearinreview.YearInReviewDetailActivity
 import org.wordpress.android.ui.newstats.yearinreview.YearInReviewViewModel
+import org.wordpress.android.ui.newstats.util.ProvideShimmerBrush
 import org.wordpress.android.util.AppLog
 
 @AndroidEntryPoint
@@ -895,59 +896,37 @@ private fun List<StatsCardType>.dispatchToVisibleCards(
 @Composable
 @Suppress("LongMethod", "LongParameterList")
 private fun InsightsTabContent(
-    yearInReviewViewModel: YearInReviewViewModel =
-        viewModel(),
-    allTimeStatsViewModel: AllTimeStatsViewModel =
-        viewModel(),
-    mostPopularDayViewModel: MostPopularDayViewModel =
-        viewModel(),
-    mostPopularTimeViewModel: MostPopularTimeViewModel =
-        viewModel(),
-    tagsAndCategoriesViewModel:
-        TagsAndCategoriesViewModel = viewModel(),
+    yearInReviewViewModel: YearInReviewViewModel = viewModel(),
+    allTimeStatsViewModel: AllTimeStatsViewModel = viewModel(),
+    mostPopularDayViewModel: MostPopularDayViewModel = viewModel(),
+    mostPopularTimeViewModel: MostPopularTimeViewModel = viewModel(),
+    tagsAndCategoriesViewModel: TagsAndCategoriesViewModel = viewModel(),
     insightsViewModel: InsightsViewModel = viewModel()
 ) {
     val context = LocalContext.current
-    val yearInReviewUiState by yearInReviewViewModel
-        .uiState.collectAsState()
-    val allTimeStatsUiState by allTimeStatsViewModel
-        .uiState.collectAsState()
-    val mostPopularDayUiState by
-        mostPopularDayViewModel
-            .uiState.collectAsState()
-    val mostPopularTimeUiState by
-        mostPopularTimeViewModel
-            .uiState.collectAsState()
-    val tagsAndCategoriesUiState by
-        tagsAndCategoriesViewModel
-            .uiState.collectAsState()
-    val isRefreshing by insightsViewModel
-        .isDataRefreshing.collectAsState()
+    val yearInReviewUiState by yearInReviewViewModel.uiState.collectAsState()
+    val allTimeStatsUiState by allTimeStatsViewModel.uiState.collectAsState()
+    val mostPopularDayUiState by mostPopularDayViewModel.uiState.collectAsState()
+    val mostPopularTimeUiState by mostPopularTimeViewModel.uiState.collectAsState()
+    val tagsAndCategoriesUiState by tagsAndCategoriesViewModel.uiState.collectAsState()
+    val isRefreshing by insightsViewModel.isDataRefreshing.collectAsState()
     val pullToRefreshState = rememberPullToRefreshState()
 
-    val visibleCards by insightsViewModel
-        .visibleCards.collectAsState()
-    val hiddenCards by insightsViewModel
-        .hiddenCards.collectAsState()
-    val isNetworkAvailable by insightsViewModel
-        .isNetworkAvailable.collectAsState()
-    val cardsToLoad by insightsViewModel
-        .cardsToLoad.collectAsState()
+    val visibleCards by insightsViewModel.visibleCards.collectAsState()
+    val hiddenCards by insightsViewModel.hiddenCards.collectAsState()
+    val isNetworkAvailable by insightsViewModel.isNetworkAvailable.collectAsState()
+    val cardsToLoad by insightsViewModel.cardsToLoad.collectAsState()
     var showAddCardSheet by remember { mutableStateOf(false) }
     val addCardSheetState = rememberModalBottomSheetState()
 
     LaunchedEffect(cardsToLoad) {
         insightsViewModel.loadDataIfNeeded()
-        if (InsightsCardType.TAGS_AND_CATEGORIES
-            in cardsToLoad
-        ) {
+        if (InsightsCardType.TAGS_AND_CATEGORIES in cardsToLoad) {
             tagsAndCategoriesViewModel.loadData()
         }
     }
 
-    val onRetryData = remember {
-        { insightsViewModel.fetchData() }
-    }
+    val onRetryData = remember { { insightsViewModel.fetchData() } }
 
     LaunchedEffect(Unit) {
         insightsViewModel.summaryResult.collect { result ->
@@ -1028,246 +1007,99 @@ private fun InsightsTabContent(
             )
         }
     ) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState())
-        ) {
-            if (visibleCards.isEmpty()) {
-                val emptyStateMessage = stringResource(
-                    R.string.stats_no_cards_message
-                )
-                Text(
-                    text = emptyStateMessage,
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = MaterialTheme.colorScheme
-                        .onSurfaceVariant,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(32.dp)
-                        .semantics {
-                            contentDescription =
-                                emptyStateMessage
-                        },
-                    textAlign = TextAlign.Center
-                )
+        val cardPositions = remember(visibleCards) {
+            visibleCards.mapIndexed { index, _ ->
+                CardPosition(index = index, totalCards = visibleCards.size)
             }
+        }
 
-            val cardPositions = remember(visibleCards) {
-                visibleCards.mapIndexed { index, _ ->
-                    CardPosition(
-                        index = index,
-                        totalCards = visibleCards.size
+        ProvideShimmerBrush {
+            LazyColumn(modifier = Modifier.fillMaxSize()) {
+                if (visibleCards.isEmpty()) {
+                    item {
+                        val emptyStateMessage = stringResource(
+                            R.string.stats_no_cards_message
+                        )
+                        Text(
+                            text = emptyStateMessage,
+                            style = MaterialTheme.typography.bodyLarge,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(32.dp)
+                                .semantics {
+                                    contentDescription = emptyStateMessage
+                                },
+                            textAlign = TextAlign.Center
+                        )
+                    }
+                }
+
+                itemsIndexed(visibleCards) { index, cardType ->
+                    val pos = cardPositions.getOrNull(index)
+                    when (cardType) {
+                        InsightsCardType.ALL_TIME_STATS -> AllTimeStatsCard(
+                            uiState = allTimeStatsUiState,
+                            onRemoveCard = { insightsViewModel.removeCard(cardType) },
+                            onRetry = { allTimeStatsViewModel.showLoading(); onRetryData() },
+                            cardPosition = pos,
+                            onMoveUp = { insightsViewModel.moveCardUp(cardType) },
+                            onMoveToTop = { insightsViewModel.moveCardToTop(cardType) },
+                            onMoveDown = { insightsViewModel.moveCardDown(cardType) },
+                            onMoveToBottom = { insightsViewModel.moveCardToBottom(cardType) }
+                        )
+                        InsightsCardType.MOST_POPULAR_DAY -> MostPopularDayCard(
+                            uiState = mostPopularDayUiState,
+                            onRemoveCard = { insightsViewModel.removeCard(cardType) },
+                            onRetry = { mostPopularDayViewModel.showLoading(); onRetryData() },
+                            cardPosition = pos,
+                            onMoveUp = { insightsViewModel.moveCardUp(cardType) },
+                            onMoveToTop = { insightsViewModel.moveCardToTop(cardType) },
+                            onMoveDown = { insightsViewModel.moveCardDown(cardType) },
+                            onMoveToBottom = { insightsViewModel.moveCardToBottom(cardType) }
+                        )
+                        InsightsCardType.MOST_POPULAR_TIME -> MostPopularTimeCard(
+                            uiState = mostPopularTimeUiState,
+                            onRemoveCard = { insightsViewModel.removeCard(cardType) },
+                            onRetry = { mostPopularTimeViewModel.showLoading(); onRetryData() },
+                            cardPosition = pos,
+                            onMoveUp = { insightsViewModel.moveCardUp(cardType) },
+                            onMoveToTop = { insightsViewModel.moveCardToTop(cardType) },
+                            onMoveDown = { insightsViewModel.moveCardDown(cardType) },
+                            onMoveToBottom = { insightsViewModel.moveCardToBottom(cardType) }
+                        )
+                        InsightsCardType.YEAR_IN_REVIEW -> YearInReviewCard(
+                            uiState = yearInReviewUiState,
+                            onRemoveCard = { insightsViewModel.removeCard(cardType) },
+                            onShowAllClick = { YearInReviewDetailActivity.start(context) },
+                            onRetry = { yearInReviewViewModel.showLoading(); onRetryData() },
+                            cardPosition = pos,
+                            onMoveUp = { insightsViewModel.moveCardUp(cardType) },
+                            onMoveToTop = { insightsViewModel.moveCardToTop(cardType) },
+                            onMoveDown = { insightsViewModel.moveCardDown(cardType) },
+                            onMoveToBottom = { insightsViewModel.moveCardToBottom(cardType) }
+                        )
+                        InsightsCardType.TAGS_AND_CATEGORIES -> TagsAndCategoriesCard(
+                            uiState = tagsAndCategoriesUiState,
+                            onShowAllClick = { TagsAndCategoriesDetailActivity.start(context) },
+                            onRemoveCard = { insightsViewModel.removeCard(cardType) },
+                            onRetry = { tagsAndCategoriesViewModel.refresh() },
+                            cardPosition = pos,
+                            onMoveUp = { insightsViewModel.moveCardUp(cardType) },
+                            onMoveToTop = { insightsViewModel.moveCardToTop(cardType) },
+                            onMoveDown = { insightsViewModel.moveCardDown(cardType) },
+                            onMoveToBottom = { insightsViewModel.moveCardToBottom(cardType) }
+                        )
+                    }
+                }
+
+                item {
+                    AddCardButton(
+                        onClick = { showAddCardSheet = true },
+                        modifier = Modifier.padding(16.dp)
                     )
                 }
             }
-
-            visibleCards.forEachIndexed { index, cardType ->
-                val cardPosition = cardPositions[index]
-                when (cardType) {
-                    InsightsCardType.ALL_TIME_STATS ->
-                        AllTimeStatsCard(
-                            uiState = allTimeStatsUiState,
-                            onRemoveCard = {
-                                insightsViewModel
-                                    .removeCard(cardType)
-                            },
-                            onRetry = {
-                                allTimeStatsViewModel
-                                    .showLoading()
-                                onRetryData()
-                            },
-                            cardPosition = cardPosition,
-                            onMoveUp = {
-                                insightsViewModel
-                                    .moveCardUp(cardType)
-                            },
-                            onMoveToTop = {
-                                insightsViewModel
-                                    .moveCardToTop(cardType)
-                            },
-                            onMoveDown = {
-                                insightsViewModel
-                                    .moveCardDown(cardType)
-                            },
-                            onMoveToBottom = {
-                                insightsViewModel
-                                    .moveCardToBottom(
-                                        cardType
-                                    )
-                            }
-                        )
-                    InsightsCardType.MOST_POPULAR_DAY ->
-                        MostPopularDayCard(
-                            uiState =
-                                mostPopularDayUiState,
-                            onRemoveCard = {
-                                insightsViewModel
-                                    .removeCard(
-                                        cardType
-                                    )
-                            },
-                            onRetry = {
-                                mostPopularDayViewModel
-                                    .showLoading()
-                                onRetryData()
-                            },
-                            cardPosition =
-                                cardPosition,
-                            onMoveUp = {
-                                insightsViewModel
-                                    .moveCardUp(
-                                        cardType
-                                    )
-                            },
-                            onMoveToTop = {
-                                insightsViewModel
-                                    .moveCardToTop(
-                                        cardType
-                                    )
-                            },
-                            onMoveDown = {
-                                insightsViewModel
-                                    .moveCardDown(
-                                        cardType
-                                    )
-                            },
-                            onMoveToBottom = {
-                                insightsViewModel
-                                    .moveCardToBottom(
-                                        cardType
-                                    )
-                            }
-                        )
-                    InsightsCardType.MOST_POPULAR_TIME ->
-                        MostPopularTimeCard(
-                            uiState =
-                                mostPopularTimeUiState,
-                            onRemoveCard = {
-                                insightsViewModel
-                                    .removeCard(
-                                        cardType
-                                    )
-                            },
-                            onRetry = {
-                                mostPopularTimeViewModel
-                                    .showLoading()
-                                onRetryData()
-                            },
-                            cardPosition =
-                                cardPosition,
-                            onMoveUp = {
-                                insightsViewModel
-                                    .moveCardUp(
-                                        cardType
-                                    )
-                            },
-                            onMoveToTop = {
-                                insightsViewModel
-                                    .moveCardToTop(
-                                        cardType
-                                    )
-                            },
-                            onMoveDown = {
-                                insightsViewModel
-                                    .moveCardDown(
-                                        cardType
-                                    )
-                            },
-                            onMoveToBottom = {
-                                insightsViewModel
-                                    .moveCardToBottom(
-                                        cardType
-                                    )
-                            }
-                        )
-                    InsightsCardType.YEAR_IN_REVIEW ->
-                        YearInReviewCard(
-                            uiState = yearInReviewUiState,
-                            onRemoveCard = {
-                                insightsViewModel
-                                    .removeCard(cardType)
-                            },
-                            onShowAllClick = {
-                                YearInReviewDetailActivity
-                                    .start(context)
-                            },
-                            onRetry = {
-                                yearInReviewViewModel
-                                    .showLoading()
-                                onRetryData()
-                            },
-                            cardPosition = cardPosition,
-                            onMoveUp = {
-                                insightsViewModel
-                                    .moveCardUp(cardType)
-                            },
-                            onMoveToTop = {
-                                insightsViewModel
-                                    .moveCardToTop(cardType)
-                            },
-                            onMoveDown = {
-                                insightsViewModel
-                                    .moveCardDown(cardType)
-                            },
-                            onMoveToBottom = {
-                                insightsViewModel
-                                    .moveCardToBottom(cardType)
-                            }
-                        )
-                    InsightsCardType
-                        .TAGS_AND_CATEGORIES ->
-                        TagsAndCategoriesCard(
-                            uiState =
-                                tagsAndCategoriesUiState,
-                            onShowAllClick = {
-                                TagsAndCategoriesDetailActivity
-                                    .start(context)
-                            },
-                            onRemoveCard = {
-                                insightsViewModel
-                                    .removeCard(
-                                        cardType
-                                    )
-                            },
-                            onRetry = {
-                                tagsAndCategoriesViewModel
-                                    .refresh()
-                            },
-                            cardPosition =
-                                cardPosition,
-                            onMoveUp = {
-                                insightsViewModel
-                                    .moveCardUp(
-                                        cardType
-                                    )
-                            },
-                            onMoveToTop = {
-                                insightsViewModel
-                                    .moveCardToTop(
-                                        cardType
-                                    )
-                            },
-                            onMoveDown = {
-                                insightsViewModel
-                                    .moveCardDown(
-                                        cardType
-                                    )
-                            },
-                            onMoveToBottom = {
-                                insightsViewModel
-                                    .moveCardToBottom(
-                                        cardType
-                                    )
-                            }
-                        )
-                }
-            }
-
-            AddCardButton(
-                onClick = { showAddCardSheet = true },
-                modifier = Modifier.padding(16.dp)
-            )
         }
     }
 }
