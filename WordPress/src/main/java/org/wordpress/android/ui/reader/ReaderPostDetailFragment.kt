@@ -146,7 +146,6 @@ import org.wordpress.android.util.extensions.getColorFromAttribute
 import org.wordpress.android.util.extensions.getParcelableCompat
 import org.wordpress.android.util.extensions.getSerializableCompat
 import org.wordpress.android.util.extensions.setVisible
-import org.wordpress.android.util.extensions.setWindowNavigationBarColor
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType.PHOTO
@@ -369,7 +368,6 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             .also { binding = it }
         val view = viewBinding.root
 
-        initNavigationBar()
         initSwipeRefreshLayout(view)
         initAppBar(view)
         initScrollView(view)
@@ -514,12 +512,6 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         if (postSlugsResolutionUnderway) {
             progress.visibility = View.VISIBLE
         }
-    }
-
-    private fun initNavigationBar() {
-        val readingPreferences = getReadingPreferences()
-        val themeValues = ReaderReadingPreferences.ThemeValues.from(requireContext(), readingPreferences.theme)
-        activity?.window?.setWindowNavigationBarColor(themeValues.intBackgroundColor)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

@@ -49,10 +49,14 @@ class ReaderPostDetailHeaderView @JvmOverloads constructor(
         uiState: ReaderPostDetailsHeaderUiState,
         readingPreferences: ReaderReadingPreferences? = null,
     ) = with(binding) {
+        val themeValues = readingPreferences?.let {
+            ReaderReadingPreferences.ThemeValues.from(root.context, it.theme)
+        }
+
         expandableTagsView.setVisible(uiState.tagItemsVisibility)
         expandableTagsView.updateUi(uiState.tagItems, readingPreferences)
 
-        updateTitle(uiState.title, readingPreferences)
+        updateTitle(uiState.title, readingPreferences, themeValues)
 
         setAuthorAndDate(uiState.authorName, uiState.dateLine)
 
@@ -63,24 +67,21 @@ class ReaderPostDetailHeaderView @JvmOverloads constructor(
         updateAvatars(uiState.blogSectionUiState)
         updateBlogSectionClick(uiState.blogSectionUiState)
 
-        updateInteractionSection(uiState.interactionSectionUiState, readingPreferences)
+        updateInteractionSection(uiState.interactionSectionUiState, readingPreferences, themeValues)
     }
 
     private fun ReaderPostDetailHeaderViewBinding.updateTitle(
         title: UiString?,
-        readingPreferences: ReaderReadingPreferences?
+        readingPreferences: ReaderReadingPreferences?,
+        themeValues: ReaderReadingPreferences.ThemeValues?,
     ) {
         uiHelpers.setTextOrHide(textTitle, title)
 
         readingPreferences?.let { prefs ->
-            // Using the base font from the Improved header Theme for now
             val fontSize = resources.getDimension(R.dimen.text_sz_double_extra_large) * prefs.fontSize.multiplier
             textTitle.setTextSize(TypedValue.COMPLEX_UNIT_PX, fontSize)
             textTitle.typeface = prefs.fontFamily.toTypeface()
-            val themeValues = ReaderReadingPreferences.ThemeValues.from(
-                root.context, prefs.theme
-            )
-            textTitle.setTextColor(themeValues.intTextColor)
+            themeValues?.let { textTitle.setTextColor(it.intTextColor) }
         }
     }
 
@@ -139,7 +140,8 @@ class ReaderPostDetailHeaderView @JvmOverloads constructor(
 
     private fun updateInteractionSection(
         state: InteractionSectionUiState,
-        readingPreferences: ReaderReadingPreferences?
+        readingPreferences: ReaderReadingPreferences?,
+        themeValues: ReaderReadingPreferences.ThemeValues?,
     ) {
         with(binding) {
             val viewContext = root.context
@@ -160,7 +162,6 @@ class ReaderPostDetailHeaderView @JvmOverloads constructor(
             headerCommentCount.setOnClickListener { state.onCommentsClicked() }
 
             readingPreferences?.let { prefs ->
-                // Ideally we should get from the view theme directly, but let's hardcode it for now
                 val baseFontSize = viewContext.resources.getDimension(R.dimen.text_sz_medium)
                 val fontSize = baseFontSize * prefs.fontSize.multiplier
                 headerLikeCount.setTextSize(TypedValue.COMPLEX_UNIT_PX, fontSize)
@@ -171,12 +172,11 @@ class ReaderPostDetailHeaderView @JvmOverloads constructor(
                 headerCommentCount.typeface = prefs.fontFamily.toTypeface()
                 headerDotSeparator.typeface = prefs.fontFamily.toTypeface()
 
-                val themeValues = ReaderReadingPreferences.ThemeValues.from(
-                    viewContext, prefs.theme
-                )
-                headerLikeCount.setTextColor(themeValues.intTextColor)
-                headerCommentCount.setTextColor(themeValues.intTextColor)
-                headerDotSeparator.setTextColor(themeValues.intTextColor)
+                themeValues?.let {
+                    headerLikeCount.setTextColor(it.intTextColor)
+                    headerCommentCount.setTextColor(it.intTextColor)
+                    headerDotSeparator.setTextColor(it.intTextColor)
+                }
             }
         }
     }

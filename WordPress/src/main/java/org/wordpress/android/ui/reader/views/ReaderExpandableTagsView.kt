@@ -36,7 +36,6 @@ class ReaderExpandableTagsView @JvmOverloads constructor(
     lateinit var readerTracker: ReaderTracker
 
     private var tagsUiState: List<TagUiState>? = null
-    private var lastReadingPreferences: ReaderReadingPreferences? = null
 
     private val tagChips
         get() = (0 until childCount - 1).map { getChildAt(it) as Chip }
@@ -67,14 +66,10 @@ class ReaderExpandableTagsView @JvmOverloads constructor(
         tagsUiState: List<TagUiState>,
         readingPreferences: ReaderReadingPreferences? = null
     ) {
-        val prefsChanged = readingPreferences != lastReadingPreferences
-        if (this.tagsUiState != null && this.tagsUiState == tagsUiState
-            && !prefsChanged
-        ) {
+        if (this.tagsUiState != null && this.tagsUiState == tagsUiState) {
             return
         }
         this.tagsUiState = tagsUiState
-        this.lastReadingPreferences = readingPreferences
         removeAllViews()
         addOverflowIndicatorChip(readingPreferences)
         addTagChips(tagsUiState, readingPreferences)

@@ -31,7 +31,7 @@ import org.wordpress.android.ui.reader.viewmodels.ReaderReadingPreferencesViewMo
 import org.wordpress.android.ui.reader.views.compose.readingpreferences.ReadingPreferencesScreen
 import org.wordpress.android.util.extensions.fillScreen
 import org.wordpress.android.util.extensions.getSerializableCompat
-import org.wordpress.android.util.extensions.setWindowStatusBarColor
+import org.wordpress.android.util.extensions.setDialogWindowStatusBarColor
 
 @AndroidEntryPoint
 class ReaderReadingPreferencesDialogFragment : BottomSheetDialogFragment() {
@@ -62,7 +62,7 @@ class ReaderReadingPreferencesDialogFragment : BottomSheetDialogFragment() {
                     onThemeClick = viewModel::onThemeClick,
                     onFontFamilyClick = viewModel::onFontFamilyClick,
                     onFontSizeClick = viewModel::onFontSizeClick,
-                    onBackgroundColorUpdate = { dialog?.window?.setWindowStatusBarColor(it) },
+                    onBackgroundColorUpdate = { dialog?.window?.setDialogWindowStatusBarColor(it) },
                 )
             }
         }
@@ -88,7 +88,7 @@ class ReaderReadingPreferencesDialogFragment : BottomSheetDialogFragment() {
                             handleUpdateStatusBarColor(currentTheme)
                         } else if (newState != BottomSheetBehavior.STATE_EXPANDED && !isStatusBarTransparent) {
                             isStatusBarTransparent = true
-                            dialog?.window?.setWindowStatusBarColor(Color.TRANSPARENT)
+                            dialog?.window?.setDialogWindowStatusBarColor(Color.TRANSPARENT)
                         }
 
                         if (newState == BottomSheetBehavior.STATE_HIDDEN) {
@@ -129,7 +129,7 @@ class ReaderReadingPreferencesDialogFragment : BottomSheetDialogFragment() {
     private fun handleUpdateStatusBarColor(theme: ReaderReadingPreferences.Theme) {
         val context = requireContext()
         val themeValues = ReaderReadingPreferences.ThemeValues.from(context, theme)
-        dialog?.window?.setWindowStatusBarColor(themeValues.intBackgroundColor)
+        dialog?.window?.setDialogWindowStatusBarColor(themeValues.intBackgroundColor)
     }
 
     private fun handleOpenWebView(url: String) {
