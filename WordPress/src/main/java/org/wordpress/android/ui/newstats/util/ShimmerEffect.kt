@@ -12,6 +12,8 @@ import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -26,14 +28,27 @@ private const val SHIMMER_ALPHA_LOW = 0.3f
 private const val SHIMMER_ALPHA_HIGH = 0.6f
 
 /**
+ * CompositionLocal for sharing a single shimmer brush across multiple cards.
+ * When provided, all ShimmerBox and rememberShimmerBrush calls will use the
+ * same animation, keeping shimmer effects synchronized.
+ */
+val LocalShimmerBrush = compositionLocalOf<Brush?> { null }
+
+/**
+ * Provides a shared shimmer brush to all composables in [content].
+ * Cards rendered inside this provider will have synchronized shimmer animations.
+ */
+@Composable
+fun ProvideShimmerBrush(content: @Composable () -> Unit) {
+    val brush = createShimmerBrush()
+    CompositionLocalProvider(LocalShimmerBrush provides brush, content = content)
+}
+
+/**
  * A reusable shimmer effect composable that provides a shimmer brush for loading states.
  *
- * The shimmer animation is automatically paused when this composable leaves the composition,
- * making it lifecycle-aware and efficient.
- *
- * @param modifier The modifier to apply to the shimmer box
- * @param content Optional content to display inside the shimmer box. If null, displays a simple
- *                shimmer placeholder.
+ * Uses a shared shimmer brush from [LocalShimmerBrush] when available,
+ * otherwise creates its own animation.
  */
 @Composable
 fun ShimmerBox(
@@ -41,7 +56,6 @@ fun ShimmerBox(
     content: @Composable (BoxScope.() -> Unit)? = null
 ) {
     val shimmerBrush = rememberShimmerBrush()
-
     Box(
         modifier = modifier
             .clip(RoundedCornerShape(4.dp))
@@ -52,31 +66,32 @@ fun ShimmerBox(
 }
 
 /**
- * Creates and remembers a shimmer brush that can be used for custom shimmer implementations.
- *
- * The animation is automatically disposed when the composable leaves the composition.
- *
- * @return A [Brush] that creates a shimmer effect
+ * Returns a shimmer brush. Uses the shared [LocalShimmerBrush] when available,
+ * otherwise creates a local animation.
  */
 @Composable
-fun rememberShimmerBrush(): Brush {
+fun rememberShimmerBrush(): Brush = LocalShimmerBrush.current ?: createShimmerBrush()
+
+@Composable
+private fun createShimmerBrush(): Brush {
     val shimmerColors = listOf(
         MaterialTheme.colorScheme.surfaceVariant.copy(alpha = SHIMMER_ALPHA_LOW),
         MaterialTheme.colorScheme.surfaceVariant.copy(alpha = SHIMMER_ALPHA_HIGH),
         MaterialTheme.colorScheme.surfaceVariant.copy(alpha = SHIMMER_ALPHA_LOW)
     )
-
     val transition = rememberInfiniteTransition(label = "shimmer")
     val translateAnimation by transition.animateFloat(
         initialValue = 0f,
         targetValue = SHIMMER_TARGET_VALUE,
         animationSpec = infiniteRepeatable(
-            animation = tween(durationMillis = SHIMMER_ANIMATION_DURATION_MS, easing = LinearEasing),
+            animation = tween(
+                durationMillis = SHIMMER_ANIMATION_DURATION_MS,
+                easing = LinearEasing
+            ),
             repeatMode = RepeatMode.Restart
         ),
         label = "shimmer_translate"
     )
-
     return Brush.linearGradient(
         colors = shimmerColors,
         start = Offset(translateAnimation - SHIMMER_OFFSET, 0f),

@@ -1455,6 +1455,72 @@ class ActivityLogViewModelTest : BaseUnitTest() {
         assertEquals(snackbarMessages.firstOrNull(), BACKED_UP_NO_DATE)
     }
 
+    /* MCP METADATA */
+
+    @Test
+    fun `given mcp agent activity, when events loaded, then event has metadata`() = test {
+        val mcpLabel = "via Claude"
+        val mcpActivity = activity().copy(
+            actor = ActivityLogModel.ActivityActor(
+                displayName = "Bot",
+                type = "Application",
+                wpcomUserID = null,
+                avatarURL = null,
+                role = "admin",
+                isMCPAgent = true,
+                mcpClient = "Claude"
+            )
+        )
+        whenever(store.getActivityLogForSite(site, false, rewindableOnly))
+            .thenReturn(listOf(mcpActivity))
+        whenever(
+            resourceProvider.getString(
+                eq(R.string.activity_log_mcp_agent_label), any()
+            )
+        ).thenReturn(mcpLabel)
+
+        viewModel.reloadEvents(done = true)
+
+        val eventItems = viewModel.events.value
+            ?.filterIsInstance<ActivityLogListItem.Event>()
+        assertNotNull(eventItems)
+        assertEquals(mcpLabel, eventItems?.first()?.actorMetadata)
+    }
+
+    @Test
+    fun `given non-mcp activity, when events loaded, then event has no metadata`() = test {
+        viewModel.reloadEvents(done = true)
+
+        val eventItems = viewModel.events.value
+            ?.filterIsInstance<ActivityLogListItem.Event>()
+        assertNotNull(eventItems)
+        assertNull(eventItems?.first()?.actorMetadata)
+    }
+
+    @Test
+    fun `given mcp agent with empty client, when events loaded, then event has no metadata`() = test {
+        val mcpActivity = activity().copy(
+            actor = ActivityLogModel.ActivityActor(
+                displayName = "Bot",
+                type = "Application",
+                wpcomUserID = null,
+                avatarURL = null,
+                role = "admin",
+                isMCPAgent = true,
+                mcpClient = ""
+            )
+        )
+        whenever(store.getActivityLogForSite(site, false, rewindableOnly))
+            .thenReturn(listOf(mcpActivity))
+
+        viewModel.reloadEvents(done = true)
+
+        val eventItems = viewModel.events.value
+            ?.filterIsInstance<ActivityLogListItem.Event>()
+        assertNotNull(eventItems)
+        assertNull(eventItems?.first()?.actorMetadata)
+    }
+
     /* PRIVATE */
 
     private fun firstActivity() = activity()

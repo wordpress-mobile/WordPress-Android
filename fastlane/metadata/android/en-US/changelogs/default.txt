@@ -1,4 +1,2 @@
-- Navigation Menus available to users with application password and theme edit capability.
-- Assorted text and visual fixes to Stats and Media library.
-- Image and authentication fixes for self-hosted sites.
-- My Site visual updates and TalkBack accessibility.
+- Button colors are now consistent across different areas of the app.
+- We fixed an infinite loop that sometimes appeared when opening certain types of links.

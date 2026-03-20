@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.accounts.login.jetpack
 
-import android.content.Context
 import android.os.Bundle
 import android.view.View
 import androidx.activity.addCallback
@@ -9,7 +8,6 @@ import androidx.fragment.app.viewModels
 import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
 import org.wordpress.android.databinding.JetpackLoginEmptyViewBinding
-import org.wordpress.android.login.LoginListener
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.accounts.LoginNavigationEvents.ShowInstructions
 import org.wordpress.android.ui.accounts.LoginNavigationEvents.ShowSignInForResultJetpackOnly
@@ -39,7 +37,6 @@ class LoginSiteCheckErrorFragment : Fragment(R.layout.jetpack_login_empty_view) 
 
     @Inject
     lateinit var htmlMessageUtils: HtmlMessageUtils
-    private var loginListener: LoginListener? = null
     private var siteAddress: String? = null
     private val viewModel: LoginSiteCheckErrorViewModel by viewModels()
 
@@ -96,18 +93,6 @@ class LoginSiteCheckErrorFragment : Fragment(R.layout.jetpack_login_empty_view) 
 
     private fun showInstructions(url: String) {
         ActivityLauncher.openUrlExternal(requireContext(), url)
-    }
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-
-        // this will throw if parent activity doesn't implement the login listener interface
-        loginListener = context as? LoginListener
-    }
-
-    override fun onDetach() {
-        loginListener = null
-        super.onDetach()
     }
 
     override fun onResume() {

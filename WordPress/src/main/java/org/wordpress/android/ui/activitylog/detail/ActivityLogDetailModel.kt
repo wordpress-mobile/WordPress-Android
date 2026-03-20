@@ -10,6 +10,7 @@ data class ActivityLogDetailModel(
     val isRewindButtonVisible: Boolean,
     val actorName: String? = null,
     val actorRole: String? = null,
+    val actorMetadata: String? = null,
     val content: FormattableContent? = null,
     val summary: String? = null,
     val createdDate: String = "",

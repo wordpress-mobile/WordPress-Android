@@ -246,12 +246,13 @@ fun StatsListHeader(
 @Composable
 fun StatsListRowContainer(
     percentage: Float,
+    modifier: Modifier = Modifier,
     content: @Composable () -> Unit
 ) {
     val barColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.08f)
 
     Box(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .height(IntrinsicSize.Min)
             .clip(RoundedCornerShape(8.dp))

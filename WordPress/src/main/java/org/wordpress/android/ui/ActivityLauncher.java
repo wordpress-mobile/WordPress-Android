@@ -16,7 +16,6 @@ import androidx.annotation.StringRes;
 import androidx.core.app.TaskStackBuilder;
 import androidx.fragment.app.Fragment;
 
-import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -30,7 +29,7 @@ import org.wordpress.android.fluxc.model.page.PageModel;
 import org.wordpress.android.fluxc.network.utils.StatsGranularity;
 import org.wordpress.android.imageeditor.EditImageActivity;
 import org.wordpress.android.imageeditor.preview.PreviewImageFragment.Companion.EditImageData;
-import org.wordpress.android.login.LoginMode;
+import org.wordpress.android.ui.accounts.LoginFlow;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.networking.SSLCertsViewActivity;
 import org.wordpress.android.push.NotificationType;
@@ -38,8 +37,6 @@ import org.wordpress.android.support.main.ui.SupportActivity;
 import org.wordpress.android.ui.accounts.HelpActivity;
 import org.wordpress.android.ui.accounts.HelpActivity.Origin;
 import org.wordpress.android.ui.accounts.LoginActivity;
-import org.wordpress.android.ui.accounts.PostSignupInterstitialActivity;
-import org.wordpress.android.ui.accounts.SignupEpilogueActivity;
 import org.wordpress.android.ui.accounts.applicationpassword.ApplicationPasswordsListActivity;
 import org.wordpress.android.ui.activitylog.detail.ActivityLogDetailActivity;
 import org.wordpress.android.ui.activitylog.list.ActivityLogListActivity;
@@ -155,9 +152,9 @@ import static org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_ARTIC
 import static org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_ARTICLE_REBLOGGED;
 import static org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_ACCESS_ERROR;
 import static org.wordpress.android.imageeditor.preview.PreviewImageFragment.ARG_EDIT_IMAGE_DATA;
-import static org.wordpress.android.login.LoginMode.JETPACK_LOGIN_ONLY;
-import static org.wordpress.android.login.LoginMode.JETPACK_REST_CONNECT;
-import static org.wordpress.android.login.LoginMode.WPCOM_LOGIN_ONLY;
+import static org.wordpress.android.ui.accounts.LoginFlow.PROLOGUE;
+import static org.wordpress.android.ui.accounts.LoginFlow.JETPACK_REST_CONNECT;
+import static org.wordpress.android.ui.accounts.LoginFlow.WPCOM_LOGIN;
 import static org.wordpress.android.push.NotificationsProcessingService.ARG_NOTIFICATION_TYPE;
 import static org.wordpress.android.ui.WPWebViewActivity.ENCODING_UTF8;
 import static org.wordpress.android.ui.blaze.blazepromote.BlazePromoteParentActivityKt.ARG_BLAZE_FLOW_SOURCE;
@@ -183,25 +180,20 @@ public class ActivityLauncher {
     public static final String CATEGORY_DETAIL_ID = "category_detail_key";
 
     public static void showMainActivity(Context context) {
-        showMainActivity(context, false);
+        showMainActivity(context, false, false);
     }
 
     public static void showMainActivity(Context context, boolean bypassMigration) {
-        Intent intent = getMainActivityInNewStack(context);
-        intent.putExtra(ARG_BYPASS_MIGRATION, bypassMigration);
-        context.startActivity(intent);
+        showMainActivity(context, bypassMigration, false);
     }
 
-    public static void showMainActivityAndSignupEpilogue(Activity activity, String name, String email, String photoUrl,
-                                                         String username) {
-        Intent intent = new Intent(activity, WPMainActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        intent.putExtra(WPMainActivity.ARG_SHOW_SIGNUP_EPILOGUE, true);
-        intent.putExtra(SignupEpilogueActivity.EXTRA_SIGNUP_DISPLAY_NAME, name);
-        intent.putExtra(SignupEpilogueActivity.EXTRA_SIGNUP_EMAIL_ADDRESS, email);
-        intent.putExtra(SignupEpilogueActivity.EXTRA_SIGNUP_PHOTO_URL, photoUrl);
-        intent.putExtra(SignupEpilogueActivity.EXTRA_SIGNUP_USERNAME, username);
-        activity.startActivity(intent);
+    public static void showMainActivity(Context context, boolean bypassMigration, boolean selectPrimarySite) {
+        Intent intent = getMainActivityInNewStack(context);
+        intent.putExtra(ARG_BYPASS_MIGRATION, bypassMigration);
+        if (selectPrimarySite) {
+            intent.putExtra(WPMainActivity.ARG_SELECT_PRIMARY_SITE, true);
+        }
+        context.startActivity(intent);
     }
 
     /**
@@ -1516,7 +1508,7 @@ public class ActivityLauncher {
 
     public static void showSignInForResultWpComOnly(Activity activity) {
         Intent intent = new Intent(activity, LoginActivity.class);
-        WPCOM_LOGIN_ONLY.putInto(intent);
+        WPCOM_LOGIN.putInto(intent);
         activity.startActivityForResult(intent, RequestCodes.ADD_ACCOUNT);
     }
 
@@ -1538,38 +1530,8 @@ public class ActivityLauncher {
         Intent intent = new Intent(activity, LoginActivity.class);
         intent.setFlags(
                 Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        JETPACK_LOGIN_ONLY.putInto(intent);
+        PROLOGUE.putInto(intent);
         activity.startActivityForResult(intent, RequestCodes.ADD_ACCOUNT);
-    }
-
-    public static void showSignupEpilogue(Activity activity, String name, String email, String photoUrl,
-                                          String username, boolean isEmail) {
-        Intent intent = new Intent(activity, SignupEpilogueActivity.class);
-        intent.putExtra(SignupEpilogueActivity.EXTRA_SIGNUP_DISPLAY_NAME, name);
-        intent.putExtra(SignupEpilogueActivity.EXTRA_SIGNUP_EMAIL_ADDRESS, email);
-        intent.putExtra(SignupEpilogueActivity.EXTRA_SIGNUP_PHOTO_URL, photoUrl);
-        intent.putExtra(SignupEpilogueActivity.EXTRA_SIGNUP_USERNAME, username);
-        intent.putExtra(SignupEpilogueActivity.EXTRA_SIGNUP_IS_EMAIL, isEmail);
-        activity.startActivity(intent);
-    }
-
-    public static void showSignupEpilogueForResult(Activity activity, String name, String email, String photoUrl,
-                                                   String username, boolean isEmail) {
-        Intent intent = new Intent(activity, SignupEpilogueActivity.class);
-        intent.putExtra(SignupEpilogueActivity.EXTRA_SIGNUP_DISPLAY_NAME, name);
-        intent.putExtra(SignupEpilogueActivity.EXTRA_SIGNUP_EMAIL_ADDRESS, email);
-        intent.putExtra(SignupEpilogueActivity.EXTRA_SIGNUP_PHOTO_URL, photoUrl);
-        intent.putExtra(SignupEpilogueActivity.EXTRA_SIGNUP_USERNAME, username);
-        intent.putExtra(SignupEpilogueActivity.EXTRA_SIGNUP_IS_EMAIL, isEmail);
-        activity.startActivityForResult(intent, RequestCodes.SHOW_SIGNUP_EPILOGUE_AND_RETURN);
-    }
-
-    public static void showPostSignupInterstitial(Context context) {
-        final Intent parentIntent = new Intent(context, WPMainActivity.class);
-        parentIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        parentIntent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-        final Intent intent = new Intent(context, PostSignupInterstitialActivity.class);
-        TaskStackBuilder.create(context).addNextIntent(parentIntent).addNextIntent(intent).startActivities();
     }
 
     public static void viewStatsSinglePostDetails(Context context, SiteModel site, PostModel post) {
@@ -1644,34 +1606,33 @@ public class ActivityLauncher {
     public static void addSelfHostedSiteForResult(Activity activity) {
         Intent intent;
         intent = new Intent(activity, LoginActivity.class);
-        LoginMode mode = BuildConfig.IS_JETPACK_APP ? LoginMode.JETPACK_SELFHOSTED : LoginMode.SELFHOSTED_ONLY;
-        mode.putInto(intent);
+        LoginFlow.SELFHOSTED_ONLY.putInto(intent);
         activity.startActivityForResult(intent, RequestCodes.ADD_ACCOUNT);
     }
 
     public static void loginForDeeplink(Activity activity) {
         Intent intent;
         intent = new Intent(activity, LoginActivity.class);
-        LoginMode.WPCOM_LOGIN_DEEPLINK.putInto(intent);
+        LoginFlow.WPCOM_LOGIN_DEEPLINK.putInto(intent);
         activity.startActivityForResult(intent, RequestCodes.DO_LOGIN);
     }
 
     public static void loginForShareIntent(Activity activity) {
         Intent intent = new Intent(activity, LoginActivity.class);
-        LoginMode.SHARE_INTENT.putInto(intent);
+        LoginFlow.SHARE_INTENT.putInto(intent);
         activity.startActivityForResult(intent, RequestCodes.DO_LOGIN);
     }
 
     public static void loginWithoutMagicLink(Activity activity) {
         Intent intent;
         intent = new Intent(activity, LoginActivity.class);
-        LoginMode.WPCOM_LOGIN_DEEPLINK.putInto(intent);
+        LoginFlow.WPCOM_LOGIN_DEEPLINK.putInto(intent);
         activity.startActivityForResult(intent, RequestCodes.DO_LOGIN);
     }
 
     public static void loginForJetpackStats(Fragment fragment) {
         Intent intent = new Intent(fragment.getActivity(), LoginActivity.class);
-        LoginMode.JETPACK_STATS.putInto(intent);
+        LoginFlow.JETPACK_STATS.putInto(intent);
         fragment.startActivityForResult(intent, RequestCodes.DO_LOGIN);
     }
 

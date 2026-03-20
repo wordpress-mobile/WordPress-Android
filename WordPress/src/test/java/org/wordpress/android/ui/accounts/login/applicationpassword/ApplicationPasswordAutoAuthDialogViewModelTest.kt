@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.accounts.login.applicationpassword
 
+import android.content.Context
 import app.cash.turbine.test
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
@@ -29,6 +30,9 @@ import kotlin.test.assertTrue
 @ExperimentalCoroutinesApi
 class ApplicationPasswordAutoAuthDialogViewModelTest : BaseUnitTest() {
     @Mock
+    lateinit var context: Context
+
+    @Mock
     lateinit var wpApiClientProvider: WpApiClientProvider
 
     @Mock
@@ -57,6 +61,7 @@ class ApplicationPasswordAutoAuthDialogViewModelTest : BaseUnitTest() {
     fun setUp() {
         MockitoAnnotations.openMocks(this)
         viewModel = ApplicationPasswordAutoAuthDialogViewModel(
+            context,
             wpApiClientProvider,
             applicationPasswordLoginHelper,
             buildConfigWrapper,

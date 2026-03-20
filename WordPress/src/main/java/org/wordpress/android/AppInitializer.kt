@@ -20,7 +20,6 @@ import android.net.ConnectivityManager
 import android.net.http.HttpResponseCache
 import android.os.Build
 import android.os.Build.VERSION_CODES
-import android.os.Bundle
 import android.os.SystemClock
 import android.text.TextUtils
 import android.util.Log
@@ -34,8 +33,6 @@ import androidx.preference.PreferenceManager
 import androidx.work.WorkManager
 import com.android.volley.RequestQueue
 import com.automattic.android.tracks.crashlogging.CrashLogging
-import com.google.android.gms.auth.api.Auth
-import com.google.android.gms.common.api.GoogleApiClient
 import com.google.firebase.iid.FirebaseInstanceId
 import com.wordpress.rest.RestClient
 import kotlinx.coroutines.CoroutineScope
@@ -244,8 +241,6 @@ class AppInitializer @Inject constructor(
 
     private lateinit var applicationLifecycleMonitor: ApplicationLifecycleMonitor
 
-    @Suppress("DEPRECATION")
-    private lateinit var credentialsClient: GoogleApiClient
 
     private var startDate: Long
 
@@ -362,8 +357,6 @@ class AppInitializer @Inject constructor(
         // remove expired lists
         dispatcher.dispatch(ListActionBuilder.newRemoveExpiredListsAction(RemoveExpiredListsPayload()))
 
-        // setup the Credentials Client so we can clean it up on wpcom logout
-        setupCredentialsClient()
 
         if (!initialized) {
             initWorkManager()
@@ -451,22 +444,6 @@ class AppInitializer @Inject constructor(
         }
     }
 
-    @Suppress("DEPRECATION")
-    private fun setupCredentialsClient() {
-        credentialsClient = GoogleApiClient.Builder(application)
-            .addConnectionCallbacks(object : GoogleApiClient.ConnectionCallbacks {
-                override fun onConnected(bundle: Bundle?) {
-                    // Do nothing
-                }
-
-                override fun onConnectionSuspended(i: Int) {
-                    // Do nothing
-                }
-            })
-            .addApi(Auth.CREDENTIALS_API)
-            .build()
-        credentialsClient.connect()
-    }
 
     private fun createNotificationChannelsOnSdk26(
         normal: Boolean = true,
@@ -613,10 +590,6 @@ class AppInitializer @Inject constructor(
         AnalyticsTracker.track(Stat.ACCOUNT_LOGOUT)
 
         removeWpComUserRelatedData(application.applicationContext)
-
-        if (credentialsClient.isConnected) {
-            Auth.CredentialsApi.disableAutoSignIn(credentialsClient)
-        }
 
         // Once fully logged out refresh the metadata so the user information doesn't persist for logged out events
         AnalyticsUtils.refreshMetadata(accountStore, siteStore)

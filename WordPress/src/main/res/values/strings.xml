@@ -8,7 +8,6 @@
     <string name="notification_disable_broadcast_permission_desc">Allows the app to disable WordPress notifications.</string>
 
     <!-- login prologue strings (used by WordPress variant) -->
-    <string name="login_prologue_screen_title" translatable="false">@string/app_name</string>
     <string name="login_prologue_revamped_tagline">Write, edit, and publish from anywhere.</string>
     <string name="login_prologue_revamped_content_description_wordpress_icon">WordPress icon</string>
 
@@ -1042,6 +1041,7 @@
     <string name="post_rs_settings_parent_category">Parent Category</string>
     <string name="post_rs_settings_no_parent">None</string>
     <string name="post_rs_settings_search_terms">Search</string>
+    <string name="post_rs_settings_search_authors">Search authors</string>
     <string name="post_rs_settings_term_create_error">Failed to create term</string>
     <string name="post_rs_settings_load_more">Load more\u2026</string>
     <string name="post_rs_settings_search_no_results">No results found</string>
@@ -1254,6 +1254,9 @@
 
     <!-- activity log -->
     <string name="activity_log">Activity Log</string>
+    <!-- Shows the MCP client used for an activity log entry. %1$s is the client name (e.g. Claude). -->
+    <string name="activity_log_mcp_agent_label">via %1$s</string>
+    <string name="activity_log_metadata_separator" translatable="false">\u00B7</string>
     <string name="activity_log_icon">Activity icon</string>
     <string name="activity_log_event">Event</string>
     <string name="activity_log_button">Activity Log action button</string>
@@ -1522,15 +1525,33 @@
     <string name="stats_insights_total_stats_seven_days_negative">%1$s lower than the previous 7-days</string>
     <string name="stats_insights_average_likes">Avg likes/post</string>
     <string name="stats_insights_total_words">Total words</string>
+    <string name="stats_insights_words">Words</string>
+    <string name="stats_insights_likes">Likes</string>
+    <string name="stats_insights_total_posts">Total posts</string>
+    <string name="stats_insights_avg_comments_per_post">Avg comments per post</string>
+    <string name="stats_insights_avg_likes_per_post">Avg likes per post</string>
+    <string name="stats_insights_avg_words_per_post">Avg words per post</string>
     <string name="stats_insights_average_words">Avg words/post</string>
     <string name="stats_insights_best_day">Best Day</string>
     <string name="stats_insights_best_hour">Best Hour</string>
     <string name="stats_insights_best_ever">Best Views Ever</string>
     <string name="stats_insights_today_stats">Today</string>
+    <string name="stats_insights_year_in_review">Year in Review</string>
+    <string name="stats_insights_year_in_review_title">%s in review</string>
 
     <!-- Stats refreshed insights -->
     <string name="stats_insights_all_time_stats">All-time</string>
+    <string name="stats_insights_all_time_stats_title">All-time stats</string>
+    <string name="stats_insights_most_popular_day">Most popular day</string>
+    <string name="stats_insights_most_popular_day_label">Day</string>
+    <string name="stats_insights_views_percent">%1$s%% of views</string>
+    <string name="stats_insights_most_popular_time">Most popular time</string>
     <string name="stats_insights_tags_and_categories">Tags and Categories</string>
+    <string name="stats_insights_tags_empty">No tags or categories found</string>
+    <string name="stats_tag_type_category">Category</string>
+    <string name="stats_tag_type_tag">Tag</string>
+    <string name="stats_expand_group">Expand</string>
+    <string name="stats_collapse_group">Collapse</string>
     <string name="stats_insights_latest_post_empty">Check back when you\'ve published your first post!</string>
     <string name="stats_insights_latest_post_with_no_engagement">It\'s been %1$s since %2$s was published. Get the ball rolling and increase your post views by sharing your post:</string>
     <string name="stats_insights_latest_post_message">It’s been %1$s since %2$s was published. Here’s how the post performed so far:</string>
@@ -3302,29 +3323,6 @@
     <!-- If any of these appear unused, be sure to check the same string in the login library -
     it may be used there and keeping it here is required for translation. -->
     <string name="log_in" a8c-src-lib="module:login">Log In</string>
-    <string name="login_prologue_title_first">Welcome to the world\’s most popular website builder.</string>
-    <string name="login_prologue_title_second">With the powerful editor you can post on the go.</string>
-    <string name="login_prologue_title_third">See comments and notifications in real time.</string>
-    <string name="login_prologue_title_fourth">Watch your audience grow with in-depth analytics.</string>
-    <string name="login_prologue_title_fifth">Follow your favorite sites and discover new blogs.</string>
-    <string name="login_prologue_second_subtitle_one">Getting Inspired</string>
-    <string name="login_prologue_second_subtitle_two">I am so inspired by photographer Cameron Karsten\’s work. I will be trying these techniques on my next</string>
-    <string name="login_prologue_third_subtitle_one">&lt;b&gt;Madison Ruiz&lt;/b&gt; liked your post</string>
-    <string name="login_prologue_third_subtitle_two">You received &lt;b&gt;50 likes&lt;/b&gt; on your site today</string>
-    <string name="login_prologue_third_subtitle_three">&lt;b&gt;Johan Brandt&lt;/b&gt; responded to your post</string>
-    <string name="login_prologue_fifth_subtitle_one">Pamela Nguyen</string>
-    <string name="login_prologue_fifth_subtitle_two">Web News</string>
-    <string name="login_prologue_fifth_subtitle_three">Rock n\' Roll Weekly</string>
-    <string name="login_prologue_fifth_tag_one">Art</string>
-    <string name="login_prologue_fifth_tag_two">Cooking</string>
-    <string name="login_prologue_fifth_tag_three">Football</string>
-    <string name="login_prologue_fifth_tag_four">Gardening</string>
-    <string name="login_prologue_fifth_tag_five">Music</string>
-    <string name="login_prologue_fifth_tag_six">Politics</string>
-    <string name="login_prologue_fifth_caption_one">My Top Ten Cafes</string>
-    <string name="login_prologue_fifth_caption_two">The World\'s Best Fans</string>
-    <string name="login_prologue_fifth_caption_three">Museums in London</string>
-
     <string name="invalid_verification_code" a8c-src-lib="module:login">Invalid verification code</string>
     <string name="send_link_by_email" a8c-src-lib="module:login">Send link by email</string>
     <string name="create_account" a8c-src-lib="module:login">Create account</string>
@@ -4617,6 +4615,9 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="application_password_name_sort">Name</string>
     <string name="application_password_created_sort">Created</string>
     <string name="application_password_last_used_sort">Last used</string>
+    <string name="application_password_app_name_jetpack">Jetpack Android App on %s</string>
+    <string name="application_password_app_name_wordpress">WordPress Android App on %s</string>
+    <string name="application_password_reauthentication_banner">Your site credentials are invalid. Tap to reauthenticate.</string>
 
     <!-- DataView -->
     <string name="dataview_default_empty_message">There\'s nothing here</string>

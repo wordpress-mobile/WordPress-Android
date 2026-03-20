@@ -28,6 +28,7 @@ import java.util.Locale
 import rs.wordpress.api.kotlin.WpApiClient
 import rs.wordpress.api.kotlin.WpRequestResult
 import uniffi.wp_api.ApplicationPasswordWithViewContext
+import uniffi.wp_api.RequestExecutionErrorReason
 import uniffi.wp_api.WpApiParamOrder
 import javax.inject.Inject
 import javax.inject.Named
@@ -204,8 +205,43 @@ class ApplicationPasswordsViewModel @Inject constructor(
                 userIdResponse.response.data.id
             }
 
+            is WpRequestResult.WpError -> {
+                val error = "Error getting current user Id: WpError - ${userIdResponse.errorMessage}"
+                appLogWrapper.e(AppLog.T.API, "$error (response: ${userIdResponse.response})")
+                onError(error)
+                null
+            }
+
+            is WpRequestResult.UnknownError -> {
+                val error = "Error getting current user Id: UnknownError - " +
+                    "statusCode=${userIdResponse.statusCode}, response=${userIdResponse.response}"
+                appLogWrapper.e(AppLog.T.API, error)
+                onError(error)
+                null
+            }
+
+            is WpRequestResult.ResponseParsingError<*> -> {
+                val error = "Error getting current user Id: ResponseParsingError - $userIdResponse"
+                appLogWrapper.e(AppLog.T.API, error)
+                onError(error)
+                null
+            }
+
+            is WpRequestResult.RequestExecutionFailed -> {
+                val isTimeout = userIdResponse.reason is RequestExecutionErrorReason.HttpTimeoutError
+                val error = if (isTimeout) {
+                    "Error getting current user Id: Request timed out"
+                } else {
+                    "Error getting current user Id: RequestExecutionFailed - " +
+                        "reason=${userIdResponse.reason}, statusCode=${userIdResponse.statusCode}"
+                }
+                appLogWrapper.e(AppLog.T.API, error)
+                onError(error)
+                null
+            }
+
             else -> {
-                val error = "Error getting current user Id"
+                val error = "Error getting current user Id: ${userIdResponse::class.simpleName} - $userIdResponse"
                 appLogWrapper.e(AppLog.T.API, error)
                 onError(error)
                 null
@@ -226,8 +262,53 @@ class ApplicationPasswordsViewModel @Inject constructor(
                 currentApplicationPasswordResponse.response.data
             }
 
+            is WpRequestResult.WpError -> {
+                val error = "Error getting Application Password list: WpError - " +
+                    currentApplicationPasswordResponse.errorMessage
+                appLogWrapper.e(
+                    AppLog.T.API,
+                    "$error (response: ${currentApplicationPasswordResponse.response})"
+                )
+                onError(error)
+                emptyList()
+            }
+
+            is WpRequestResult.UnknownError -> {
+                val error = "Error getting Application Password list: UnknownError - " +
+                    "statusCode=${currentApplicationPasswordResponse.statusCode}, " +
+                    "response=${currentApplicationPasswordResponse.response}"
+                appLogWrapper.e(AppLog.T.API, error)
+                onError(error)
+                emptyList()
+            }
+
+            is WpRequestResult.ResponseParsingError<*> -> {
+                val error = "Error getting Application Password list: ResponseParsingError - " +
+                    "$currentApplicationPasswordResponse"
+                appLogWrapper.e(AppLog.T.API, error)
+                onError(error)
+                emptyList()
+            }
+
+            is WpRequestResult.RequestExecutionFailed -> {
+                val isTimeout =
+                    currentApplicationPasswordResponse.reason is RequestExecutionErrorReason.HttpTimeoutError
+                val error = if (isTimeout) {
+                    "Error getting Application Password list: Request timed out"
+                } else {
+                    "Error getting Application Password list: RequestExecutionFailed - " +
+                        "reason=${currentApplicationPasswordResponse.reason}, " +
+                        "statusCode=${currentApplicationPasswordResponse.statusCode}"
+                }
+                appLogWrapper.e(AppLog.T.API, error)
+                onError(error)
+                emptyList()
+            }
+
             else -> {
-                val error = "Error getting Application Password list"
+                val error = "Error getting Application Password list: " +
+                    "${currentApplicationPasswordResponse::class.simpleName} - " +
+                    "$currentApplicationPasswordResponse"
                 appLogWrapper.e(AppLog.T.API, error)
                 onError(error)
                 emptyList()

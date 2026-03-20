@@ -70,7 +70,6 @@ google-mlkit-barcode-scanning-main = '17.3.0'
 google-mlkit-text-recognition = '16.0.1'
 google-play-app-update = '2.1.0'
 google-play-review = '2.0.2'
-google-play-services-auth = '20.4.1'
 google-services = '4.4.4'
 gravatar = '2.5.0'
 greenrobot-eventbus = '3.3.1'
@@ -89,11 +88,11 @@ kotlinx-coroutines = '1.10.2'
 kotlinx-kover = '0.9.7'
 ksp = '2.3.6'
 mockito-android = '5.23.0'
-mockito-kotlin = '6.2.3'
+mockito-kotlin = '6.3.0'
 mpandroidchart = 'v3.1.0'
 photoview = '2.3.0'
 robolectric = '4.16.1'
-sentry = '6.1.0'
+sentry = '6.2.0'
 squareup-java-poet = '1.13.0'
 squareup-kotlin-poet = '1.18.1'
 squareup-okhttp3 = '5.3.2'
@@ -102,7 +101,7 @@ wellsql = '2.0.0'
 wordpress-aztec = 'v2.1.4'
 wordpress-lint = '2.2.0'
 wordpress-persistent-edittext = '1.0.2'
-wordpress-rs = 'trunk-502e9561f2a68294f0065867bab9214cc9a6b78c'
+wordpress-rs = 'trunk-262a778ead5f163f3450d62adfac21fb32048714'
 wordpress-utils = '3.14.0'
 automattic-ucrop = '2.2.11'
 zendesk = '5.5.3'
@@ -227,7 +226,6 @@ google-mlkit-barcode-scanning-main = { group = "com.google.mlkit", name = "barco
 google-mlkit-text-recognition = { group = "com.google.mlkit", name = "text-recognition", version.ref = "google-mlkit-text-recognition" }
 google-play-app-update = { group = "com.google.android.play", name = "app-update", version.ref = "google-play-app-update" }
 google-play-review = { group = "com.google.android.play", name = "review", version.ref = "google-play-review" }
-google-play-services-auth = { group = "com.google.android.gms", name = "play-services-auth", version.ref = "google-play-services-auth" }
 gravatar = { module = "com.gravatar:gravatar", version.ref = "gravatar" }
 greenrobot-eventbus-java = { group = "org.greenrobot", name = "eventbus-java", version.ref = "greenrobot-eventbus" }
 greenrobot-eventbus-main = { group = "org.greenrobot", name = "eventbus", version.ref = "greenrobot-eventbus" }

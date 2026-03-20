@@ -117,9 +117,9 @@ fun TrainOfIconsPreview() {
     AppThemeM3 {
         TrainOfIcons(
             iconModels = listOf(
-                R.drawable.login_prologue_second_asset_three,
-                R.drawable.login_prologue_second_asset_two,
-                R.drawable.login_prologue_third_asset_one,
+                R.mipmap.app_icon,
+                R.mipmap.app_icon,
+                R.mipmap.app_icon,
                 R.mipmap.app_icon
             ).map { TrainOfIconsModel(it) },
             contentDescription = "Train of icons",

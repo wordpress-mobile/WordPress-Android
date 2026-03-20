@@ -13,6 +13,12 @@ import org.wordpress.android.ui.newstats.datasource.ReferrersDataResult
 import org.wordpress.android.ui.newstats.datasource.RegionViewsDataResult
 import org.wordpress.android.ui.newstats.datasource.SearchTermsDataResult
 import org.wordpress.android.ui.newstats.datasource.StatsDataSource
+import org.wordpress.android.ui.newstats.datasource.StatsInsightsData
+import org.wordpress.android.ui.newstats.datasource.StatsInsightsDataResult
+import org.wordpress.android.ui.newstats.datasource.StatsTagsData
+import org.wordpress.android.ui.newstats.datasource.StatsTagsDataResult
+import org.wordpress.android.ui.newstats.datasource.StatsSummaryDataResult
+import org.wordpress.android.ui.newstats.datasource.StatsSummaryData
 import org.wordpress.android.ui.newstats.datasource.StatsDateRange
 import org.wordpress.android.ui.newstats.datasource.StatsUnit
 import org.wordpress.android.ui.newstats.datasource.StatsVisitsData
@@ -84,7 +90,6 @@ class StatsRepository @Inject constructor(
     @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher,
 ) {
     private val dateFormatter = DateTimeFormatter.ISO_LOCAL_DATE
-
     fun init(accessToken: String) {
         statsDataSource.init(accessToken)
     }
@@ -1327,6 +1332,82 @@ class StatsRepository @Inject constructor(
         }
     }
 
+    suspend fun fetchInsights(
+        siteId: Long
+    ): InsightsResult = withContext(ioDispatcher) {
+        val result = statsDataSource.fetchStatsInsights(
+            siteId = siteId
+        )
+        when (result) {
+            is StatsInsightsDataResult.Success ->
+                InsightsResult.Success(
+                    data = result.data
+                )
+            is StatsInsightsDataResult.Error -> {
+                appLogWrapper.e(
+                    AppLog.T.STATS,
+                    "Error fetching insights: " +
+                        "${result.errorType}"
+                )
+                InsightsResult.Error(
+                    result.errorType.name
+                )
+            }
+        }
+    }
+
+    suspend fun fetchStatsSummary(
+        siteId: Long
+    ): StatsSummaryResult = withContext(ioDispatcher) {
+        val result =
+            statsDataSource.fetchStatsSummary(
+                siteId = siteId
+            )
+        when (result) {
+            is StatsSummaryDataResult.Success ->
+                StatsSummaryResult.Success(
+                    data = result.data
+                )
+            is StatsSummaryDataResult.Error -> {
+                appLogWrapper.e(
+                    AppLog.T.STATS,
+                    "Error fetching stats " +
+                        "summary: " +
+                        "${result.errorType}"
+                )
+                StatsSummaryResult.Error(
+                    result.errorType.name
+                )
+            }
+        }
+    }
+
+    suspend fun fetchTags(
+        siteId: Long,
+        max: Int = DEFAULT_TAGS_MAX
+    ): TagsResult = withContext(ioDispatcher) {
+        val result = statsDataSource.fetchStatsTags(
+            siteId = siteId,
+            max = max
+        )
+        when (result) {
+            is StatsTagsDataResult.Success ->
+                TagsResult.Success(
+                    data = result.data
+                )
+            is StatsTagsDataResult.Error -> {
+                appLogWrapper.e(
+                    AppLog.T.STATS,
+                    "Error fetching tags: " +
+                        "${result.errorType}"
+                )
+                TagsResult.Error(
+                    result.errorType.name
+                )
+            }
+        }
+    }
+
     /**
      * Fetches all-time subscriber counts: current, 30d ago,
      * 60d ago, 90d ago. Makes 4 parallel API calls.
@@ -1551,6 +1632,10 @@ class StatsRepository @Inject constructor(
                 messageResId = R.string.stats_error_api
             )
         }
+    }
+
+    companion object {
+        private const val DEFAULT_TAGS_MAX = 10
     }
 }
 
@@ -1934,6 +2019,42 @@ data class DeviceItemData(
     val name: String,
     val views: Double
 )
+
+/**
+ * Result of fetching insights data from the repository.
+ */
+sealed class InsightsResult {
+    data class Success(
+        val data: StatsInsightsData
+    ) : InsightsResult()
+    data class Error(
+        val message: String
+    ) : InsightsResult()
+}
+
+/**
+ * Result of fetching stats summary data from the repository.
+ */
+sealed class StatsSummaryResult {
+    data class Success(
+        val data: StatsSummaryData
+    ) : StatsSummaryResult()
+    data class Error(
+        val message: String
+    ) : StatsSummaryResult()
+}
+
+/**
+ * Result of fetching tags data from the repository.
+ */
+sealed class TagsResult {
+    data class Success(
+        val data: StatsTagsData
+    ) : TagsResult()
+    data class Error(
+        val message: String
+    ) : TagsResult()
+}
 
 /**
  * Result wrapper for subscribers all-time stats fetch operation.
