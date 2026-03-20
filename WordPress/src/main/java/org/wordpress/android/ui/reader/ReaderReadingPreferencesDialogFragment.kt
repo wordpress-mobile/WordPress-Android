@@ -112,6 +112,10 @@ class ReaderReadingPreferencesDialogFragment : BottomSheetDialogFragment() {
         }
 
     override fun onDismiss(dialog: DialogInterface) {
+        if (viewModel.hasUnsavedChanges) {
+            viewModel.syncCachedPreferences()
+            postDetailViewModel.onReadingPreferencesThemeChanged()
+        }
         viewModel.onScreenClosed()
         super.onDismiss(dialog)
     }
@@ -120,7 +124,6 @@ class ReaderReadingPreferencesDialogFragment : BottomSheetDialogFragment() {
         viewModel.actionEvents.onEach {
             when (it) {
                 is ActionEvent.Close -> dismiss()
-                is ActionEvent.UpdatePostDetails -> postDetailViewModel.onReadingPreferencesThemeChanged()
                 is ActionEvent.UpdateStatusBarColor -> handleUpdateStatusBarColor(it.theme)
                 is ActionEvent.OpenWebView -> handleOpenWebView(it.url)
             }

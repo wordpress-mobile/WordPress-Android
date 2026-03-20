@@ -1057,6 +1057,10 @@ class ReaderPostDetailViewModel @Inject constructor(
     }
 
     fun onReadingPreferencesThemeChanged() {
+        post?.let {
+            _navigationEvents.postValue(Event(ShowPostInWebView(it)))
+            _uiState.value = convertPostToUiState(it)
+        }
         _reloadFragment.value = Event(Unit)
     }
 

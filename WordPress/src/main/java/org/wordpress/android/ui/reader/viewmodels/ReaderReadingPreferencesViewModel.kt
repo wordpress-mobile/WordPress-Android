@@ -40,13 +40,16 @@ class ReaderReadingPreferencesViewModel @Inject constructor(
         readingPreferencesTracker.trackScreenOpened(source)
     }
 
-    fun onScreenClosed() {
+    val hasUnsavedChanges: Boolean
+        get() = isDirty()
+
+    fun syncCachedPreferences() {
         if (isDirty()) {
-            // here we assume the code for saving preferences has been called before reaching this point
-            launch {
-                _actionEvents.emit(ActionEvent.UpdatePostDetails)
-            }
+            saveReadingPreferences.updateCache(currentReadingPreferences.value)
         }
+    }
+
+    fun onScreenClosed() {
         readingPreferencesTracker.trackScreenClosed()
     }
 
@@ -98,7 +101,6 @@ class ReaderReadingPreferencesViewModel @Inject constructor(
 
     sealed interface ActionEvent {
         data object Close : ActionEvent
-        data object UpdatePostDetails : ActionEvent
         data class UpdateStatusBarColor(val theme: ReaderReadingPreferences.Theme) : ActionEvent
         data class OpenWebView(val url: String) : ActionEvent
     }

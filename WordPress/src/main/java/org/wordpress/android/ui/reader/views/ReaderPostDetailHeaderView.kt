@@ -77,6 +77,10 @@ class ReaderPostDetailHeaderView @JvmOverloads constructor(
             val fontSize = resources.getDimension(R.dimen.text_sz_double_extra_large) * prefs.fontSize.multiplier
             textTitle.setTextSize(TypedValue.COMPLEX_UNIT_PX, fontSize)
             textTitle.typeface = prefs.fontFamily.toTypeface()
+            val themeValues = ReaderReadingPreferences.ThemeValues.from(
+                root.context, prefs.theme
+            )
+            textTitle.setTextColor(themeValues.intTextColor)
         }
     }
 
@@ -166,6 +170,13 @@ class ReaderPostDetailHeaderView @JvmOverloads constructor(
                 headerLikeCount.typeface = prefs.fontFamily.toTypeface()
                 headerCommentCount.typeface = prefs.fontFamily.toTypeface()
                 headerDotSeparator.typeface = prefs.fontFamily.toTypeface()
+
+                val themeValues = ReaderReadingPreferences.ThemeValues.from(
+                    viewContext, prefs.theme
+                )
+                headerLikeCount.setTextColor(themeValues.intTextColor)
+                headerCommentCount.setTextColor(themeValues.intTextColor)
+                headerDotSeparator.setTextColor(themeValues.intTextColor)
             }
         }
     }

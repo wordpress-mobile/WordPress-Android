@@ -179,31 +179,40 @@ class ReaderReadingPreferencesViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `when onScreenClosed is called with original preferences then it doesn't emit UpdatePostDetail`() = test {
-        // Given
-        viewModel.onExitActionClick()
-
-        // When
-        viewModel.onScreenClosed()
-
+    fun `hasUnsavedChanges returns false with original preferences`() = test {
         // Then
-        val updateEvent = collectedEvents.last()
-        assertThat(updateEvent).isNotEqualTo(ActionEvent.UpdatePostDetails)
+        assertThat(viewModel.hasUnsavedChanges).isFalse()
     }
 
     @Test
-    fun `when onScreenClosed is called with updated preferences then it emits UpdatePostDetail`() = test {
+    fun `hasUnsavedChanges returns true after changing preferences`() = test {
+        // Given
+        viewModel.onThemeClick(ReaderReadingPreferences.Theme.SOFT)
+
+        // Then
+        assertThat(viewModel.hasUnsavedChanges).isTrue()
+    }
+
+    @Test
+    fun `syncCachedPreferences calls updateCache when dirty`() = test {
         // Given
         val newTheme = ReaderReadingPreferences.Theme.SOFT
         viewModel.onThemeClick(newTheme)
-        viewModel.onExitActionClick()
 
         // When
-        viewModel.onScreenClosed()
+        viewModel.syncCachedPreferences()
 
         // Then
-        val updateEvent = collectedEvents.last()
-        assertThat(updateEvent).isEqualTo(ActionEvent.UpdatePostDetails)
+        verify(saveReadingPreferences).updateCache(argThat { theme == newTheme })
+    }
+
+    @Test
+    fun `syncCachedPreferences does nothing when not dirty`() = test {
+        // When
+        viewModel.syncCachedPreferences()
+
+        // Then
+        verifyNoInteractions(saveReadingPreferences)
     }
 
     // analytics tests

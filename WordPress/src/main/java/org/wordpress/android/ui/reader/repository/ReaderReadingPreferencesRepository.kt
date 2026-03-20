@@ -23,6 +23,7 @@ class ReaderReadingPreferencesRepository @Inject constructor(
         .create()
 
     // the preferences never change during the app lifecycle, so we can cache them safely for better performance
+    @Volatile
     private var readingPreferences: ReaderReadingPreferences? = null
 
     suspend fun getReadingPreferences(): ReaderReadingPreferences = withContext(ioDispatcher) {
@@ -37,6 +38,10 @@ class ReaderReadingPreferencesRepository @Inject constructor(
         return readingPreferences ?: loadReadingPreferences().also {
             readingPreferences = it
         }
+    }
+
+    fun updateCachedPreferences(preferences: ReaderReadingPreferences) {
+        readingPreferences = preferences
     }
 
     suspend fun saveReadingPreferences(preferences: ReaderReadingPreferences): Unit = withContext(ioDispatcher) {
