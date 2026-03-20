@@ -147,7 +147,6 @@ import org.wordpress.android.util.extensions.getParcelableCompat
 import org.wordpress.android.util.extensions.getSerializableCompat
 import org.wordpress.android.util.extensions.setVisible
 import org.wordpress.android.util.extensions.setWindowNavigationBarColor
-import org.wordpress.android.util.extensions.setWindowStatusBarColor
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType.PHOTO
@@ -670,7 +669,9 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                 appBar.setBackgroundColor(themeValues.intBackgroundColor)
                 appBar.findViewById<CollapsingToolbarLayout>(R.id.collapsing_toolbar)
                     ?.setContentScrimColor(themeValues.intBackgroundColor)
-                activity?.window?.setWindowStatusBarColor(themeValues.intBackgroundColor)
+                layoutFooterBinding.root.setBackgroundColor(
+                    themeValues.intBackgroundColor
+                )
                 initNavigationBar()
             }
         }

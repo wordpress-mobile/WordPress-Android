@@ -41,10 +41,10 @@ class ReaderReadingPreferencesViewModel @Inject constructor(
     }
 
     val hasUnsavedChanges: Boolean
-        get() = isDirty()
+        get() = currentReadingPreferences.value != originalReadingPreferences
 
     fun syncCachedPreferences() {
-        if (isDirty()) {
+        if (hasUnsavedChanges) {
             saveReadingPreferences.updateCache(currentReadingPreferences.value)
         }
     }
@@ -91,13 +91,11 @@ class ReaderReadingPreferencesViewModel @Inject constructor(
 
     private suspend fun saveReadingPreferencesInternal() {
         val currentPreferences = currentReadingPreferences.value
-        if (isDirty()) {
+        if (hasUnsavedChanges) {
             saveReadingPreferences(currentPreferences)
             readingPreferencesTracker.trackSaved(currentPreferences)
         }
     }
-
-    private fun isDirty(): Boolean = currentReadingPreferences.value != originalReadingPreferences
 
     sealed interface ActionEvent {
         data object Close : ActionEvent
