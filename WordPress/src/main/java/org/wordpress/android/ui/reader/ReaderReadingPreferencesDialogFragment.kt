@@ -16,7 +16,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import org.wordpress.android.R
-import org.wordpress.android.ui.WPWebViewActivity
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.reader.tracker.ReaderReadingPreferencesTracker
 import org.wordpress.android.ui.reader.viewmodels.ReaderReadingPreferencesViewModel
@@ -84,15 +83,8 @@ class ReaderReadingPreferencesDialogFragment : DialogFragment() {
                         ?.recreateCurrentPage()
                     dismiss()
                 }
-                is ActionEvent.OpenWebView -> handleOpenWebView(it.url)
             }
         }.launchIn(viewLifecycleOwner.lifecycleScope)
-    }
-
-    private fun handleOpenWebView(url: String) {
-        context?.let { context ->
-            WPWebViewActivity.openURL(context, url)
-        }
     }
 
     companion object {

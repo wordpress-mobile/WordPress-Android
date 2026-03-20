@@ -91,6 +91,5 @@ class ReaderReadingPreferencesViewModel @Inject constructor(
     sealed interface ActionEvent {
         data object Close : ActionEvent
         data object SaveAndClose : ActionEvent
-        data class OpenWebView(val url: String) : ActionEvent
     }
 }
