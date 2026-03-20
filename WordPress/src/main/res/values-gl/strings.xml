@@ -27,7 +27,6 @@ Language: gl_ES
     <string name="term_description_label">Descrición:</string>
     <string name="term_slug_label">Slug:</string>
     <string name="term_name_label">Nome:</string>
-    <string name="application_password_experimental_feature_note">\n\nNota: A autenticación por contrasinal de aplicación en dispositivos Android é unha característica experimental.</string>
     <string name="application_password_required_block_editor">Editor de bloques</string>
     <string name="application_password_required_description">Os contrasinais de aplicación son unha forma máis segura de conectar co teu sitio autoaloxado e permitir o uso de funcións como %1$s.</string>
     <string name="application_password_required">Contrasinal de aplicación necesaria</string>

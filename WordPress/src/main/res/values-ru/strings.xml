@@ -102,7 +102,6 @@ Language: ru
     <string name="term_description_label">Описание:</string>
     <string name="term_slug_label">Слаг:</string>
     <string name="term_name_label">Имя:</string>
-    <string name="application_password_experimental_feature_note">\n\nПримечание: аутентификация по паролю приложения на устройствах Android является экспериментальной функцией.</string>
     <string name="application_password_required_block_editor">Редактор блоков</string>
     <string name="application_password_required_description">Пароли приложений — это более надёжный способ подключения к автономным сайтам, дающий возможность поддержки таких функций, как %1$s.</string>
     <string name="application_password_required">Требуется пароль приложения</string>

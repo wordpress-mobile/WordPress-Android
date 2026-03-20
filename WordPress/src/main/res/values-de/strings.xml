@@ -102,7 +102,6 @@ Language: de
     <string name="term_description_label">Beschreibung:</string>
     <string name="term_slug_label">Titelform:</string>
     <string name="term_name_label">Name:</string>
-    <string name="application_password_experimental_feature_note">\n\nHinweis: Die Authentifizierung mittels Anwendungspasswörtern auf Android-Geräten ist eine experimentelle Funktion.</string>
     <string name="application_password_required_block_editor">Block-Editor</string>
     <string name="application_password_required_description">Anwendungspasswörter bieten eine sichere Möglichkeit, eine Verbindung zu deiner selbst gehosteten Website herzustellen, und aktivieren die Unterstützung von Funktionen wie %1$s.</string>
     <string name="application_password_required">Anwendungspasswort ist erforderlich</string>

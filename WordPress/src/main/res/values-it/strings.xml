@@ -102,7 +102,6 @@ Language: it
     <string name="term_description_label">Descrizione:</string>
     <string name="term_slug_label">Abbreviazione:</string>
     <string name="term_name_label">Nome:</string>
-    <string name="application_password_experimental_feature_note">\n\nNota: l\'autenticazione tramite password per applicazioni sui dispositivi Android è una funzione sperimentale.</string>
     <string name="application_password_required_block_editor">Editor a blocchi</string>
     <string name="application_password_required_description">Le password per applicazioni sono un modo più sicuro di connettersi al tuo sito ospitato personalmente e supportano funzioni quali %1$s.</string>
     <string name="application_password_required">Password per applicazioni richiesta</string>

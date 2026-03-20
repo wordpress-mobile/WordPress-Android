@@ -117,11 +117,9 @@ fun ApplicationPasswordRequiredDialog(
     onConfirm: () -> Unit,
 ) {
     val description = if (featureName != null) {
-        stringResource(R.string.application_password_required_description, featureName) +
-            stringResource(R.string.application_password_experimental_feature_note)
+        stringResource(R.string.application_password_required_description, featureName)
     } else {
-        stringResource(R.string.application_password_info_description_1) +
-            stringResource(R.string.application_password_experimental_feature_note)
+        stringResource(R.string.application_password_info_description_1)
     }
 
     AlertDialog(

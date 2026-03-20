@@ -19,7 +19,6 @@ Language: zh_TW
     <string name="term_description_label">說明：</string>
     <string name="term_slug_label">代稱：</string>
     <string name="term_name_label">名稱：</string>
-    <string name="application_password_experimental_feature_note">\n\n注意：Android 裝置上的應用程式密碼驗證為測試版功能。</string>
     <string name="application_password_required_block_editor">區塊編輯器</string>
     <string name="application_password_required_description">應用程式密碼可提供更安全的自助託管網站連結方式，還支援「%1$s」等功能。</string>
     <string name="application_password_required">需要應用程式密碼</string>

@@ -102,7 +102,6 @@ Language: es
     <string name="term_description_label">Descripción:</string>
     <string name="term_slug_label">Slug:</string>
     <string name="term_name_label">Nombre:</string>
-    <string name="application_password_experimental_feature_note">\n\nNota: La autenticación por contraseña de aplicación en dispositivos Android es una característica experimental.</string>
     <string name="application_password_required_block_editor">Editor de bloques</string>
     <string name="application_password_required_description">Las contraseñas de aplicaciones son una forma más segura de conectar con tu sitio autoalojado y permitir el uso de funciones como %1$s.</string>
     <string name="application_password_required">Contraseña de aplicación necesaria</string>

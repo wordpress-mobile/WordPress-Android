@@ -102,7 +102,6 @@ Language: tr
     <string name="term_description_label">Açıklama:</string>
     <string name="term_slug_label">Kısaltma:</string>
     <string name="term_name_label">Ad:</string>
-    <string name="application_password_experimental_feature_note">\n\nNot: Android cihazlarda Uygulama Şifresi doğrulaması Deneysel bir özelliktir.</string>
     <string name="application_password_required_block_editor">Blok Düzenleyici</string>
     <string name="application_password_required_description">Uygulama şifreleri, kullanıcı tarafından barındırılan sitelerinizi bağlamanız ve %1$s gibi özellikler için destek sağlamanın daha güvenli bir yoludur.</string>
     <string name="application_password_required">Uygulama Şifreleri Gerekli</string>

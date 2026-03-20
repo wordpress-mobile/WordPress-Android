@@ -101,7 +101,6 @@ Language: zh_CN
     <string name="term_description_label">描述：</string>
     <string name="term_slug_label">别名：</string>
     <string name="term_name_label">名称：</string>
-    <string name="application_password_experimental_feature_note">\n\n注意：Android 设备上的应用程序密码验证功能是一项实验性功能。</string>
     <string name="application_password_required_block_editor">区块编辑器</string>
     <string name="application_password_required_description">应用程序密码能让您更安全地连接到您的自托管站点，并且支持 %1$s 等功能。</string>
     <string name="application_password_required">必须提供应用程序密码</string>

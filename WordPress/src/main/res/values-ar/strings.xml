@@ -95,7 +95,6 @@ Language: ar
     <string name="term_delete_confirmation_title">حذف مصطلح</string>
     <string name="term_parent_label">الأصل</string>
     <string name="term_count">العدد: ⁦%1$d⁩</string>
-    <string name="application_password_experimental_feature_note">\n\nملاحظة: تعد مصادقة كلمة مرور التطبيق على أجهزة Android ميزة تجريبية.</string>
     <string name="application_password_required_block_editor">محرر المكوِّنات</string>
     <string name="application_password_required_description">كلمات مرور التطبيقات هي طريقة أكثر أمانًا للاتصال بموقعك المستضاف ذاتيًا، وتمكين الدعم لميزات، مثل: ⁦%1$s⁩.</string>
     <string name="taxonomies_title">الفئات</string>

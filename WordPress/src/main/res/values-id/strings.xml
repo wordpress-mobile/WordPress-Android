@@ -100,7 +100,6 @@ Language: id
     <string name="term_count">Jumlah: %1$d</string>
     <string name="term_description_label">Deskripsi:</string>
     <string name="term_name_label">Nama:</string>
-    <string name="application_password_experimental_feature_note">\n\nCatatan: Autentikasi Kata Sandi Aplikasi pada perangkat Android adalah Fitur Eksperimental.</string>
     <string name="application_password_required_block_editor">Editor Blok</string>
     <string name="application_password_required_description">Agar lebih aman, gunakan kata sandi aplikasi untuk terhubung dengan situs Anda yang dihosting sendiri dan mendapatkan dukungan untuk fitur seperti %1$s.</string>
     <string name="application_password_required">Kata Sandi Aplikasi Diperlukan</string>

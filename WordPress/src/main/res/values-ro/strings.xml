@@ -102,7 +102,6 @@ Language: ro
     <string name="term_description_label">Descriere:</string>
     <string name="term_slug_label">Descriptor:</string>
     <string name="term_name_label">Nume:</string>
-    <string name="application_password_experimental_feature_note">\n\nNotă: autentificarea cu parola aplicației pe dispozitivele Android este o funcționalitate experimentală.</string>
     <string name="application_password_required_block_editor">Editor de blocuri</string>
     <string name="application_password_required_description">Parolele aplicației sunt o modalitate mai sigură de a-ți conecta site-ul auto-găzduit și de a activa suportul pentru funcționalități, cum ar fi %1$s.</string>
     <string name="application_password_required">Parola aplicației este obligatorie</string>

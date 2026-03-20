@@ -102,7 +102,6 @@ Language: sq_AL
     <string name="term_description_label">Përshkrim:</string>
     <string name="term_slug_label">Identifikues:</string>
     <string name="term_name_label">Emër:</string>
-    <string name="application_password_experimental_feature_note">\n\nShënim: Mirëfilltësimi me Fjalëkalim Aplikacioni në pajisje Android është një Veçori Eksperimentale.</string>
     <string name="application_password_required_block_editor">Përpunues Me Blloqe</string>
     <string name="application_password_required_description">Fjalëkalimet e aplikacioneve janë një rrugë më e sigurt për t’u lidhur me sajtin tuaj të vetëstrehuar dhe lejojnë mbulim veçorish të tilla si %1$s.</string>
     <string name="application_password_required">Lypset Fjalëkalim Aplikacioni</string>

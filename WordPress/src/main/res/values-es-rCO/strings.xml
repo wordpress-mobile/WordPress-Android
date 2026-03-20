@@ -20,7 +20,6 @@ Language: es_CO
     <string name="term_delete_confirmation_message">¿Estás seguro de que quieres eliminar \"%1$s\"?</string>
     <string name="term_delete_confirmation_title">Eliminar término</string>
     <string name="term_count">Conteo: %1$d</string>
-    <string name="application_password_experimental_feature_note">\n\nNota: La autenticación de contraseña de la aplicación en dispositivos Android es una función experimental.</string>
     <string name="application_password_required_description">Las contraseñas de aplicación son una forma más segura de conectarte a tu sitio autohospedado y habilitan soporte para funciones como %1$s.</string>
     <string name="application_password_required">Se requiere contraseña de la aplicación</string>
     <string name="menu_html_mode">Editor de código</string>

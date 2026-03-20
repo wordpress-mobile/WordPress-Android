@@ -19,7 +19,6 @@ Language: pl
     <string name="term_description_label">Opis:</string>
     <string name="term_slug_label">Uproszczona nazwa:</string>
     <string name="term_name_label">Nazwa:</string>
-    <string name="application_password_experimental_feature_note">\n\nUwaga: uwierzytelnianie hasłem aplikacji na urządzeniach z systemem Android jest funkcją eksperymentalną.</string>
     <string name="application_password_required_block_editor">Edytor blokowy</string>
     <string name="application_password_required_description">Hasła aplikacji są bezpieczniejszym sposobem łączenia się z samodzielnie hostowaną witryną i umożliwiają obsługę funkcji takich jak %1$s.</string>
     <string name="application_password_required">Wymagane hasło aplikacji</string>

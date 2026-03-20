@@ -101,7 +101,6 @@ Language: he_IL
     <string name="term_description_label">תיאור:</string>
     <string name="term_slug_label">מזהה לכתובת:</string>
     <string name="term_name_label">שם:</string>
-    <string name="application_password_experimental_feature_note">\n\nלתשומת ליבך: אימות באמצעות סיסמת אפליקציה במכשירי Android הוא תכונה ניסיונית.</string>
     <string name="application_password_required_block_editor">עורך הבלוקים</string>
     <string name="application_password_required_description">סיסמאות אפליקציה הן דרך מאובטחת יותר להתחבר לאתר באחסון עצמי, והן מאפשרות תמיכה באפשרויות כמו ⁦%1$s⁩.</string>
     <string name="application_password_required">נדרשת סיסמת אפליקציה</string>

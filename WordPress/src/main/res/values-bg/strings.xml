@@ -102,7 +102,6 @@ Language: bg
     <string name="term_description_label">Описание:</string>
     <string name="term_slug_label">Кратко име:</string>
     <string name="term_name_label">Име:</string>
-    <string name="application_password_experimental_feature_note">\n\nЗабележка: Удостоверяването чрез парола за приложението на устройства с Android е експериментална функционалност.</string>
     <string name="application_password_required_block_editor">Блоков редактор</string>
     <string name="application_password_required_description">Паролите за приложения са по-сигурен начин за свързване към вашия хостнат сайт и позволяват поддръжката на функции като %1$s.</string>
     <string name="application_password_required">Изисква се парола на приложението</string>
