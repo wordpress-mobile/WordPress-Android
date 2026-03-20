@@ -1,22 +1,17 @@
 package org.wordpress.android.ui.reader
 
-import android.app.Dialog
 import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.ComponentDialog
-import androidx.activity.addCallback
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
+import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -30,7 +25,7 @@ import org.wordpress.android.ui.reader.views.compose.readingpreferences.ReadingP
 import org.wordpress.android.util.extensions.getSerializableCompat
 
 @AndroidEntryPoint
-class ReaderReadingPreferencesDialogFragment : BottomSheetDialogFragment() {
+class ReaderReadingPreferencesDialogFragment : DialogFragment() {
     private val viewModel: ReaderReadingPreferencesViewModel by viewModels()
 
     override fun getTheme(): Int {
@@ -74,22 +69,6 @@ class ReaderReadingPreferencesDialogFragment : BottomSheetDialogFragment() {
         super.onViewCreated(view, savedInstanceState)
         observeActionEvents()
     }
-
-    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
-        super.onCreateDialog(savedInstanceState).apply {
-            setOnShowListener {
-                (this as? BottomSheetDialog)?.behavior?.apply {
-                    state = BottomSheetBehavior.STATE_EXPANDED
-                    skipCollapsed = true
-                }
-            }
-
-            (this as ComponentDialog).onBackPressedDispatcher.addCallback(
-                this@ReaderReadingPreferencesDialogFragment
-            ) {
-                viewModel.onCloseClick()
-            }
-        }
 
     override fun onDismiss(dialog: DialogInterface) {
         viewModel.onScreenClosed()

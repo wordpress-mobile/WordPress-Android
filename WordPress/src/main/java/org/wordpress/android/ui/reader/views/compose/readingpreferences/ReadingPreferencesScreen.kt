@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
@@ -29,6 +30,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalContext
@@ -53,6 +55,7 @@ private const val TITLE_BASE_FONT_SIZE_SP = 24
 private const val TITLE_LINE_HEIGHT_MULTIPLIER = 1.2f
 private const val TEXT_LINE_HEIGHT_MULTIPLIER = 1.6f
 private const val PREVIEW_MAX_HEIGHT_DP = 200
+private const val DIALOG_CORNER_RADIUS_DP = 28
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
@@ -88,9 +91,13 @@ fun ReadingPreferencesScreen(
 
     val haptics = LocalHapticFeedback.current
 
+    val dialogShape = RoundedCornerShape(DIALOG_CORNER_RADIUS_DP.dp)
+
     Column(
         modifier = Modifier
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .clip(dialogShape)
+            .background(MaterialTheme.colorScheme.surface),
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
