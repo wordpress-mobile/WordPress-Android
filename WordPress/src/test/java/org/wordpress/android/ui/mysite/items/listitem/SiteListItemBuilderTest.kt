@@ -413,8 +413,7 @@ class SiteListItemBuilderTest {
     }
 
     @Test
-    fun `application password when feature is enabled`() {
-        whenever(experimentalFeatures.isEnabled(any())).thenReturn(true)
+    fun `application password item built when site uses self-hosted rest api`() {
         whenever(siteModel.isUsingSelfHostedRestApi).thenReturn(true)
 
         val item = siteListItemBuilder.buildApplicationPasswordsItemIfAvailable(siteModel, SITE_ITEM_ACTION)
@@ -423,17 +422,7 @@ class SiteListItemBuilderTest {
     }
 
     @Test
-    fun `application password null when feature is not enabled`() {
-        whenever(experimentalFeatures.isEnabled(any())).thenReturn(false)
-
-        val item = siteListItemBuilder.buildApplicationPasswordsItemIfAvailable(siteModel, SITE_ITEM_ACTION)
-
-        assertThat(item).isNull()
-    }
-
-    @Test
-    fun `application password null when not set`() {
-        whenever(experimentalFeatures.isEnabled(any())).thenReturn(true)
+    fun `application password null when not using self-hosted rest api`() {
         whenever(siteModel.isUsingSelfHostedRestApi).thenReturn(false)
 
         val item = siteListItemBuilder.buildApplicationPasswordsItemIfAvailable(siteModel, SITE_ITEM_ACTION)
