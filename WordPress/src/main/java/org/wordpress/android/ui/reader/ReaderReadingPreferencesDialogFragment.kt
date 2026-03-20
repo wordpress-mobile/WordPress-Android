@@ -11,7 +11,6 @@ import androidx.activity.addCallback
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
-import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.fragment.app.FragmentManager
@@ -81,7 +80,6 @@ class ReaderReadingPreferencesDialogFragment : BottomSheetDialogFragment() {
 
                 // Hide system bars to match the post detail screen
                 window?.let { win ->
-                    WindowCompat.setDecorFitsSystemWindows(win, false)
                     WindowInsetsControllerCompat(win, win.decorView).apply {
                         hide(
                             WindowInsetsCompat.Type.statusBars()
