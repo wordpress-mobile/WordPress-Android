@@ -6,10 +6,9 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import org.wordpress.android.R
-import org.wordpress.android.ui.newstats.datasource.YearInsightsData
 import org.wordpress.android.ui.newstats.repository.InsightsResult
+import org.wordpress.android.ui.newstats.yearinreview.YearSummary.Companion.ensureCurrentYear
 import org.wordpress.android.viewmodel.ResourceProvider
-import java.time.Year
 import javax.inject.Inject
 
 @HiltViewModel
@@ -25,7 +24,7 @@ class YearInReviewViewModel @Inject constructor(
         _uiState.value = when (result) {
             is InsightsResult.Success -> {
                 val years = result.data.years
-                    .map { it.toUiModel() }
+                    .map { YearSummary.fromInsightsData(it) }
                     .ensureCurrentYear()
                     .sortedByDescending { it.year }
                 YearInReviewCardUiState.Loaded(years = years)
@@ -38,36 +37,5 @@ class YearInReviewViewModel @Inject constructor(
 
     fun showLoading() {
         _uiState.value = YearInReviewCardUiState.Loading
-    }
-
-    companion object {
-        private fun YearInsightsData.toUiModel() = YearSummary(
-            year = year,
-            totalPosts = totalPosts,
-            totalWords = totalWords,
-            avgWords = avgWords,
-            totalLikes = totalLikes,
-            avgLikes = avgLikes,
-            totalComments = totalComments,
-            avgComments = avgComments
-        )
-
-        private fun List<YearSummary>.ensureCurrentYear(): List<YearSummary> {
-            val currentYear = Year.now().value.toString()
-            return if (any { it.year == currentYear }) {
-                this
-            } else {
-                this + YearSummary(
-                    year = currentYear,
-                    totalPosts = 0L,
-                    totalWords = 0L,
-                    avgWords = 0.0,
-                    totalLikes = 0L,
-                    avgLikes = 0.0,
-                    totalComments = 0L,
-                    avgComments = 0.0
-                )
-            }
-        }
     }
 }

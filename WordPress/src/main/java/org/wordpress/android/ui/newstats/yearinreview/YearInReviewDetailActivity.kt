@@ -46,6 +46,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.main.BaseAppCompatActivity
+import org.wordpress.android.ui.newstats.util.ProvideShimmerBrush
 import org.wordpress.android.ui.newstats.util.ShimmerBox
 import org.wordpress.android.ui.newstats.util.formatStatValue
 
@@ -126,10 +127,12 @@ private fun YearInReviewDetailScreen(
     ) { contentPadding ->
         when (uiState) {
             is YearInReviewDetailUiState.Loading ->
-                DetailLoadingContent(
-                    modifier = Modifier
-                        .padding(contentPadding)
-                )
+                ProvideShimmerBrush {
+                    DetailLoadingContent(
+                        modifier = Modifier
+                            .padding(contentPadding)
+                    )
+                }
             is YearInReviewDetailUiState.Loaded ->
                 DetailLoadedContent(
                     years = uiState.years,
