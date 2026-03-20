@@ -102,7 +102,6 @@ Language: de
     <string name="term_description_label">Beschreibung:</string>
     <string name="term_slug_label">Titelform:</string>
     <string name="term_name_label">Name:</string>
-    <string name="application_password_experimental_feature_note">\n\nHinweis: Die Authentifizierung mittels Anwendungspasswörtern auf Android-Geräten ist eine experimentelle Funktion.</string>
     <string name="application_password_required_block_editor">Block-Editor</string>
     <string name="application_password_required_description">Anwendungspasswörter bieten eine sichere Möglichkeit, eine Verbindung zu deiner selbst gehosteten Website herzustellen, und aktivieren die Unterstützung von Funktionen wie %1$s.</string>
     <string name="application_password_required">Anwendungspasswort ist erforderlich</string>
@@ -135,7 +134,6 @@ Language: de
     <string name="application_password_info_description_2">Wenn du Websites zur App hinzufügst, werden bei Bedarf automatisch Anwendungspasswörter erstellt.</string>
     <string name="application_password_info_description_1">Anwendungspasswörter sind eine sichere Möglichkeit für Apps, um auf deine Website zuzugreifen, ohne dein Kontopasswort zu verwenden.</string>
     <string name="application_password_info_title">Anwendungspasswörter</string>
-    <string name="application_password_disable_feature_description">Wenn du das Anwendungspasswort deaktivierst, werden deine Anmeldedaten für %1$s deiner Websites entfernt. Möglicherweise musst du betroffene Websites erneut hinzufügen, um dich erneut anzumelden.</string>
     <string name="application_password_invalid_description">Dein Anwendungspasswort existiert nicht mehr. Bitte melde dich erneut an, um ein neues Anwendungspasswort zu erstellen.</string>
     <string name="subscribers_delete_failed">Abonnent konnte nicht gelöscht werden</string>
     <string name="subscribers_delete_success_message">Der Abonnent wurde gelöscht, aber es kann eine Minute dauern, bis die Löschung wirksam wird</string>
@@ -157,7 +155,6 @@ Language: de
     <string name="start">Starten</string>
     <string name="descending">Absteigend</string>
     <string name="ascending">Aufsteigend</string>
-    <string name="application_password_disable_feature_title">Anwendungspasswort deaktivieren?</string>
     <string name="application_password_invalid">Ungültiges Anwendungspasswort</string>
     <string name="application_password_credentials_storing_error">Beim Speichern der Anmeldedaten für %1$s ist ein Fehler aufgetreten</string>
     <string name="subscribers_add_failed">Das Hinzufügen der Abonnenten ist fehlgeschlagen</string>
@@ -203,8 +200,6 @@ Language: de
     <string name="qrcode_auth_flow_timeout_subtitle">Es dauerte zu lange, einen Code zu erkennen. Bitte versuche es erneut oder verwende deine Kamera-App, um den Code zu scannen.</string>
     <string name="qrcode_auth_flow_timeout_title">Zeitüberschreitung beim Scan</string>
     <string name="invite_users">Benutzer einladen</string>
-    <string name="experimental_application_password_feature_description">Anwendungspasswort zur Anmeldung bei selbst gehosteten Websites aktivieren</string>
-    <string name="experimental_application_password_feature">Anmeldung per Anwendungspasswort</string>
     <string name="cant_share_no_blog">Du kannst nicht auf WordPress teilen ohne ein Blog</string>
     <string name="me_email_verification_generic_error">Verifizierungslink kann nicht gesendet werden</string>
     <string name="me_email_verification_resend">Verifizierungslink erneut senden</string>

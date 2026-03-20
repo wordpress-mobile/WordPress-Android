@@ -19,7 +19,6 @@ Language: en_GB
     <string name="term_description_label">Description:</string>
     <string name="term_slug_label">Slug:</string>
     <string name="term_name_label">Name:</string>
-    <string name="application_password_experimental_feature_note">\n\nNote: Application Password authentication on Android devices is an Experimental Feature.</string>
     <string name="application_password_required_block_editor">Block Editor</string>
     <string name="application_password_required_description">Application passwords are a more secure way to connect to your self-hosted site, and enable support for features like %1$s.</string>
     <string name="application_password_required">Application Password Required</string>
@@ -52,7 +51,6 @@ Language: en_GB
     <string name="application_password_info_description_2">When you add sites to the app, application passwords will be created automatically as needed.</string>
     <string name="application_password_info_description_1">Application passwords are a secure way for apps to access your site without using your account password.</string>
     <string name="application_password_info_title">Application Passwords</string>
-    <string name="application_password_disable_feature_description">Disabling Application Password will remove the login for %1$s of your sites. You may need to re-add affected sites to log in again.</string>
     <string name="application_password_invalid_description">Your application password no longer exists. Please sign in again to create a new application password.</string>
     <string name="subscribers_delete_failed">Failed to delete subscriber</string>
     <string name="subscribers_delete_success_message">The subscriber has been deleted, but it may take a minute for the deletion to take effect</string>
@@ -74,7 +72,6 @@ Language: en_GB
     <string name="start">Start</string>
     <string name="descending">Descending</string>
     <string name="ascending">Ascending</string>
-    <string name="application_password_disable_feature_title">Disable Application Password?</string>
     <string name="application_password_invalid">Invalid Application Password</string>
     <string name="application_password_credentials_storing_error">There was an error storing Application password credentials for %1$s</string>
     <string name="subscribers_add_failed">Failed to add subscribers</string>
@@ -120,8 +117,6 @@ Language: en_GB
     <string name="qrcode_auth_flow_timeout_subtitle">It took too long to detect a code. Please try again or use your camera app to scan the code.</string>
     <string name="qrcode_auth_flow_timeout_title">Scan timed out</string>
     <string name="invite_users">Invite users</string>
-    <string name="experimental_application_password_feature_description">Enable Application Password to log into self-hosted sites</string>
-    <string name="experimental_application_password_feature">Application Password login</string>
     <string name="cant_share_no_blog">You can\'t share to WordPress without a blog</string>
     <string name="me_email_verification_generic_error">Unable to send verification link</string>
     <string name="me_email_verification_resend">Resend verification link</string>

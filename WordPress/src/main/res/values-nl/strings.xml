@@ -102,7 +102,6 @@ Language: nl
     <string name="term_description_label">Beschrijving:</string>
     <string name="term_slug_label">Slug:</string>
     <string name="term_name_label">Naam:</string>
-    <string name="application_password_experimental_feature_note">\n\nLet op: authenticatie met applicatie wachtwoord op Android apparaten is een experimentele functie.</string>
     <string name="application_password_required_block_editor">Blok-editor</string>
     <string name="application_password_required_description">Applicatie wachtwoorden zijn een veiligere manier om verbinding te maken met je zelf-gehoste site en bieden ondersteuning voor functies zoals %1$s.</string>
     <string name="application_password_required">Applicatie wachtwoord vereist</string>
@@ -135,7 +134,6 @@ Language: nl
     <string name="application_password_info_description_2">Wanneer je sites toevoegt aan de app, worden applicatie wachtwoorden automatisch aangemaakt indien nodig.</string>
     <string name="application_password_info_description_1">Applicatie wachtwoorden zijn een veilige manier voor apps om toegang te krijgen tot je site zonder je account wachtwoord te gebruiken.</string>
     <string name="application_password_info_title">Applicatie wachtwoorden</string>
-    <string name="application_password_disable_feature_description">Het uitschakelen van Applicatie wachtwoord zal de login voor %1$s van je sites verwijderen. Mogelijk moet je de getroffen sites opnieuw toevoegen om weer in te loggen.</string>
     <string name="application_password_invalid_description">Je applicatie wachtwoord bestaat niet meer. Meld je opnieuw aan om een nieuw applicatie wachtwoord aan te maken.</string>
     <string name="subscribers_delete_failed">Verwijderen van abonnee mislukt</string>
     <string name="subscribers_delete_success_message">De abonnee is verwijderd, maar het kan een minuut duren voordat de verwijdering van kracht is</string>
@@ -157,7 +155,6 @@ Language: nl
     <string name="start">Starten</string>
     <string name="descending">Aflopend</string>
     <string name="ascending">Oplopend</string>
-    <string name="application_password_disable_feature_title">Applicatie wachtwoord uitschakelen?</string>
     <string name="application_password_invalid">Ongeldig applicatie wachtwoord</string>
     <string name="application_password_credentials_storing_error">Er is een fout opgetreden bij het opslaan van wachtwoord referenties voor %1$s</string>
     <string name="subscribers_add_failed">Het is niet gelukt om abonnees toe te voegen</string>
@@ -203,8 +200,6 @@ Language: nl
     <string name="qrcode_auth_flow_timeout_subtitle">Het duurde te lang om een code te detecteren. Probeer het opnieuw of gebruik je camera-app om de code te scannen.</string>
     <string name="qrcode_auth_flow_timeout_title">Scan is verlopen</string>
     <string name="invite_users">Gebruikers uitnodigen</string>
-    <string name="experimental_application_password_feature_description">Applicatie wachtwoord inschakelen om in te loggen op zelf-gehoste sites.</string>
-    <string name="experimental_application_password_feature">Applicatie wachtwoord login</string>
     <string name="cant_share_no_blog">Je kunt niet delen naar WordPress zonder een blog</string>
     <string name="me_email_verification_generic_error">Kan geen verificatie link verzenden</string>
     <string name="me_email_verification_resend">Verificatielink opnieuw verzenden</string>

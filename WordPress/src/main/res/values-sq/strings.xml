@@ -102,7 +102,6 @@ Language: sq_AL
     <string name="term_description_label">Përshkrim:</string>
     <string name="term_slug_label">Identifikues:</string>
     <string name="term_name_label">Emër:</string>
-    <string name="application_password_experimental_feature_note">\n\nShënim: Mirëfilltësimi me Fjalëkalim Aplikacioni në pajisje Android është një Veçori Eksperimentale.</string>
     <string name="application_password_required_block_editor">Përpunues Me Blloqe</string>
     <string name="application_password_required_description">Fjalëkalimet e aplikacioneve janë një rrugë më e sigurt për t’u lidhur me sajtin tuaj të vetëstrehuar dhe lejojnë mbulim veçorish të tilla si %1$s.</string>
     <string name="application_password_required">Lypset Fjalëkalim Aplikacioni</string>
@@ -135,7 +134,6 @@ Language: sq_AL
     <string name="application_password_info_description_2">Kur shtoni sajte te aplikacioni, fjalëkalimet e aplikacionit do të krijohen automatikisht, sipas nevojës.</string>
     <string name="application_password_info_description_1">Fjalëkalimet e aplikacionit janë një rrugë e siguruar që aplikacionet të hyjnë në sajtin tuaj pa përdorur fjalëkalimin e llogarisë tuaj.</string>
     <string name="application_password_info_title">Fjalëkalime Aplikacionesh</string>
-    <string name="application_password_disable_feature_description">Çaktivizimi i Fjalëkalimit të Aplikacionit do të heqë kredenciale hyrjeje për %1$s e sajteve tuaj. Mund t’ju duhet të rishtoni sajtet e prekur, që të ribëni hyrje.</string>
     <string name="application_password_invalid_description">Fjalëkalimi juaj i aplikacionit s’ekziston më. Ju lutemi, ribëni hyrjen që të krijoni një fjalëkalim të ri aplikacioni.</string>
     <string name="subscribers_delete_failed">S’u arrit të fshihej pajtimtar</string>
     <string name="subscribers_delete_success_message">Pajtimtari është fshirë, por mund të duhet deri një minutë që fshirja të ketë efekt</string>
@@ -157,7 +155,6 @@ Language: sq_AL
     <string name="start">Fillo</string>
     <string name="descending">Zbritës</string>
     <string name="ascending">Rritës</string>
-    <string name="application_password_disable_feature_title">Të Çaktivizohet Fjalëkalim Aplikacioni?</string>
     <string name="application_password_invalid">Fjalëkalim i Pavlefshëm Aplikacioni</string>
     <string name="application_password_credentials_storing_error">Pati një gabim me depozitimin e kredencialeve të fjalëkalimit të aplikacionit për %1$s</string>
     <string name="subscribers_add_failed">S’u arrit të shtohen pajtimtarë</string>
@@ -203,8 +200,6 @@ Language: sq_AL
     <string name="qrcode_auth_flow_timeout_subtitle">U zgjat shumë pikasja e një kodi. Ju lutemi, riprovoni, ose përdorni kamerën tuaj që të skanoni kodin.</string>
     <string name="qrcode_auth_flow_timeout_title">Skanimit i mbaroi koha</string>
     <string name="invite_users">Ftoni përdorues</string>
-    <string name="experimental_application_password_feature_description">Që të hyhet në sajte të vetëstrehuar, aktivizoni Fjalëkalim Aplikacionesh</string>
-    <string name="experimental_application_password_feature">Hyrje me Fjalëkalim Aplikacioni</string>
     <string name="cant_share_no_blog">S’mund të ndani me të tjerët në WordPress pa një blog</string>
     <string name="me_email_verification_generic_error">S’arrihet të dërgohet lidhje verifikimi</string>
     <string name="me_email_verification_resend">Ridërgo lidhje verifikimi</string>
