@@ -258,13 +258,12 @@ class PostRsSettingsViewModel @Inject constructor(
     }
 
     fun onFormatClicked() {
-        if (_uiState.value.sitePostFormats ==
-            PostRsRestClient.DEFAULT_POST_FORMATS
-        ) {
+        if (!hasFetchedFormats) {
             resolveSitePostFormats()
-        }
-        _uiState.update {
-            it.copy(dialogState = DialogState.FormatDialog)
+        } else {
+            _uiState.update {
+                it.copy(dialogState = DialogState.FormatDialog)
+            }
         }
     }
 
@@ -1116,6 +1115,8 @@ class PostRsSettingsViewModel @Inject constructor(
         }
     }
 
+    private var hasFetchedFormats = false
+
     private fun resolveSitePostFormats() {
         val site = site ?: return
         viewModelScope.launch {
@@ -1134,6 +1135,12 @@ class PostRsSettingsViewModel @Inject constructor(
                 AppLog.w(
                     AppLog.T.POSTS,
                     "resolveSitePostFormats failed: ${e.message}"
+                )
+            }
+            hasFetchedFormats = true
+            _uiState.update {
+                it.copy(
+                    dialogState = DialogState.FormatDialog
                 )
             }
         }
