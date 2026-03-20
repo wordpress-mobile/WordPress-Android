@@ -1231,7 +1231,11 @@ public class AppPrefs {
     }
 
     public static boolean getExperimentalFeatureConfig(@NonNull String featureKey) {
-        return prefs().getBoolean(getExperimentalFeatureConfigKey(featureKey), false);
+        return getExperimentalFeatureConfig(featureKey, false);
+    }
+
+    public static boolean getExperimentalFeatureConfig(@NonNull String featureKey, boolean defaultValue) {
+        return prefs().getBoolean(getExperimentalFeatureConfigKey(featureKey), defaultValue);
     }
 
     @NonNull private static String getExperimentalFeatureConfigKey(@NonNull String featureKey) {
