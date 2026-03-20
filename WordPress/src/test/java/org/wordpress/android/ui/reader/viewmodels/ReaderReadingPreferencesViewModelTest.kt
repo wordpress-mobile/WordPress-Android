@@ -168,6 +168,38 @@ class ReaderReadingPreferencesViewModelTest : BaseUnitTest() {
         verifyNoInteractions(saveReadingPreferences)
     }
 
+    @Test
+    fun `hasUnsavedChanges is false initially`() = test {
+        // When
+        val result = viewModel.hasUnsavedChanges.first()
+
+        // Then
+        assertThat(result).isFalse()
+    }
+
+    @Test
+    fun `hasUnsavedChanges is true after changing theme`() = test {
+        // When
+        viewModel.onThemeClick(ReaderReadingPreferences.Theme.OLED)
+
+        // Then
+        val result = viewModel.hasUnsavedChanges.first()
+        assertThat(result).isTrue()
+    }
+
+    @Test
+    fun `hasUnsavedChanges is false after reverting to original`() = test {
+        // Given
+        viewModel.onThemeClick(ReaderReadingPreferences.Theme.OLED)
+
+        // When
+        viewModel.onThemeClick(DEFAULT_READING_PREFERENCES.theme)
+
+        // Then
+        val result = viewModel.hasUnsavedChanges.first()
+        assertThat(result).isFalse()
+    }
+
     // analytics tests
     @Test
     fun `when onScreenOpened is called then it should track the screen opened event`() = test {

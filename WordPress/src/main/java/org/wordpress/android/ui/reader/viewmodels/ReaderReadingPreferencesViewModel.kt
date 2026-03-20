@@ -1,11 +1,15 @@
 package org.wordpress.android.ui.reader.viewmodels
 
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.reader.models.ReaderReadingPreferences
@@ -26,6 +30,10 @@ class ReaderReadingPreferencesViewModel @Inject constructor(
     private val originalReadingPreferences = getReadingPreferences()
     private val _currentReadingPreferences = MutableStateFlow(originalReadingPreferences)
     val currentReadingPreferences: StateFlow<ReaderReadingPreferences> = _currentReadingPreferences
+
+    val hasUnsavedChanges: StateFlow<Boolean> = _currentReadingPreferences.map {
+        it != originalReadingPreferences
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(), false)
 
     private val _actionEvents = MutableSharedFlow<ActionEvent>()
     val actionEvents: SharedFlow<ActionEvent> = _actionEvents

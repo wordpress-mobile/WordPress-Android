@@ -58,6 +58,7 @@ private const val PREVIEW_MAX_HEIGHT_DP = 200
 @Composable
 fun ReadingPreferencesScreen(
     currentReadingPreferences: ReaderReadingPreferences,
+    showSaveAction: Boolean,
     onCloseClick: () -> Unit,
     onSaveClick: () -> Unit,
     onThemeClick: (ReaderReadingPreferences.Theme) -> Unit,
@@ -100,11 +101,15 @@ fun ReadingPreferencesScreen(
             backgroundColor = backgroundColor,
             contentColor = baseTextColor,
             actions = {
-                IconButton(onClick = onSaveClick) {
-                    Icon(
-                        Icons.Default.Check,
-                        contentDescription = stringResource(R.string.save),
-                    )
+                if (showSaveAction) {
+                    IconButton(onClick = onSaveClick) {
+                        Icon(
+                            Icons.Default.Check,
+                            contentDescription = stringResource(
+                                R.string.save
+                            ),
+                        )
+                    }
                 }
             },
         )
@@ -297,6 +302,7 @@ private fun ReadingPreferencesScreenPreview() {
 
         ReadingPreferencesScreen(
             currentReadingPreferences = readingPreferences,
+            showSaveAction = true,
             onCloseClick = {},
             onSaveClick = {},
             onThemeClick = {

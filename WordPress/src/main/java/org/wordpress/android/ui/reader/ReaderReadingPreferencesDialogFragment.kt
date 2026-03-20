@@ -55,8 +55,11 @@ class ReaderReadingPreferencesDialogFragment : BottomSheetDialogFragment() {
             AppThemeM3 {
                 val readerPreferences by viewModel
                     .currentReadingPreferences.collectAsState()
+                val showSaveAction by viewModel
+                    .hasUnsavedChanges.collectAsState()
                 ReadingPreferencesScreen(
                     currentReadingPreferences = readerPreferences,
+                    showSaveAction = showSaveAction,
                     onCloseClick = viewModel::onCloseClick,
                     onSaveClick = viewModel::onSaveClick,
                     onThemeClick = viewModel::onThemeClick,
@@ -74,9 +77,11 @@ class ReaderReadingPreferencesDialogFragment : BottomSheetDialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
         super.onCreateDialog(savedInstanceState).apply {
-            (this as? BottomSheetDialog)?.behavior?.apply {
-                state = BottomSheetBehavior.STATE_EXPANDED
-                skipCollapsed = true
+            setOnShowListener {
+                (this as? BottomSheetDialog)?.behavior?.apply {
+                    state = BottomSheetBehavior.STATE_EXPANDED
+                    skipCollapsed = true
+                }
             }
 
             (this as ComponentDialog).onBackPressedDispatcher.addCallback(
