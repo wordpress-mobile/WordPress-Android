@@ -16,6 +16,7 @@ import org.wordpress.android.ui.accounts.login.ApplicationPasswordLoginHelper
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures.Feature
 import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.config.GutenbergKitFeature
 import javax.inject.Inject
@@ -144,6 +145,7 @@ internal class ExperimentalFeaturesViewModel @Inject constructor(
                 experimentalFeatures.setEnabled(feature, enabled)
             }
         }
+        appLogWrapper.d(T.SETTINGS, "Experimental feature ${feature.prefKey} set to $enabled")
         analyticsTrackerWrapper.track(
             Stat.EXPERIMENTAL_FEATURE_TOGGLED,
             mapOf(
