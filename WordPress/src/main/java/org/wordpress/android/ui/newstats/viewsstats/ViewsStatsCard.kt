@@ -501,12 +501,7 @@ private fun ViewsStatsChart(
                 }
                 ChartType.BAR -> modelProducer.runTransaction {
                     columnSeries {
-                        // Current period first (primary color)
                         series(chartData.currentPeriod.map { it.views.toInt() })
-                        // Previous period second (grey)
-                        if (hasPreviousPeriod) {
-                            series(chartData.previousPeriod.map { it.views.toInt() })
-                        }
                     }
                 }
             }
@@ -622,20 +617,12 @@ private fun ViewsStatsChart(
                 chart = rememberCartesianChart(
                     rememberColumnCartesianLayer(
                         columnProvider = ColumnCartesianLayer.ColumnProvider.series(
-                            // Current period (primary color)
                             LineComponent(
                                 fill = fill(primaryColor),
-                                thicknessDp = 8f,
-                                shape = CorneredShape.rounded(allPercent = 40)
-                            ),
-                            // Previous period (grey)
-                            LineComponent(
-                                fill = fill(secondaryColor),
-                                thicknessDp = 8f,
+                                thicknessDp = 16f,
                                 shape = CorneredShape.rounded(allPercent = 40)
                             )
-                        ),
-                        mergeMode = { ColumnCartesianLayer.MergeMode.Grouped(4f) }
+                        )
                     ),
                     startAxis = VerticalAxis.rememberStart(line = null),
                     bottomAxis = HorizontalAxis.rememberBottom(valueFormatter = bottomAxisValueFormatter),
