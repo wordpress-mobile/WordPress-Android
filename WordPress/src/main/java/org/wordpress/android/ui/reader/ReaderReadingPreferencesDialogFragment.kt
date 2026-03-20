@@ -11,6 +11,7 @@ import androidx.activity.addCallback
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
+import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.fragment.app.FragmentManager
@@ -78,8 +79,9 @@ class ReaderReadingPreferencesDialogFragment : BottomSheetDialogFragment() {
             (this as? BottomSheetDialog)?.apply {
                 fillScreen(isDraggable = true)
 
-                // Hide system bars to match the post detail screen
+                // Hide system bars to match the post detail screen.
                 window?.let { win ->
+                    WindowCompat.setDecorFitsSystemWindows(win, false)
                     WindowInsetsControllerCompat(win, win.decorView).apply {
                         hide(
                             WindowInsetsCompat.Type.statusBars()
@@ -117,6 +119,26 @@ class ReaderReadingPreferencesDialogFragment : BottomSheetDialogFragment() {
                 viewModel.onExitActionClick()
             }
         }
+
+    override fun onStart() {
+        super.onStart()
+        // The BottomSheetDialog's internal container, coordinator, and
+        // bottom sheet views all have fitsSystemWindows="true", which
+        // adds top padding for the status bar. Clear that so the
+        // dialog content fills the entire screen.
+        (dialog as? BottomSheetDialog)?.let { bsd ->
+            listOf(
+                com.google.android.material.R.id.container,
+                com.google.android.material.R.id.coordinator,
+                com.google.android.material.R.id.design_bottom_sheet,
+            ).forEach { id ->
+                bsd.findViewById<View>(id)?.apply {
+                    fitsSystemWindows = false
+                    setPadding(0, 0, 0, 0)
+                }
+            }
+        }
+    }
 
     override fun onDismiss(dialog: DialogInterface) {
         if (viewModel.hasUnsavedChanges) {
