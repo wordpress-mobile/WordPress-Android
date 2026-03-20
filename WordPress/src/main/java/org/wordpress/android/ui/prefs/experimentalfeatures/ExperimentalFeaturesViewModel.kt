@@ -15,7 +15,6 @@ import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.ui.accounts.login.ApplicationPasswordLoginHelper
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures.Feature
-import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.config.GutenbergKitFeature
@@ -118,7 +117,7 @@ internal class ExperimentalFeaturesViewModel @Inject constructor(
                 }
             } catch (exception: Throwable) {
                 appLogWrapper.e(
-                    AppLog.T.DB,
+                    T.DB,
                     "Error when trying to remove Application Password credentials: ${exception.stackTrace}"
                 )
             }
