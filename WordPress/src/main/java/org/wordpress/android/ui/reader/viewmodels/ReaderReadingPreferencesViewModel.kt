@@ -30,23 +30,8 @@ class ReaderReadingPreferencesViewModel @Inject constructor(
     private val _actionEvents = MutableSharedFlow<ActionEvent>()
     val actionEvents: SharedFlow<ActionEvent> = _actionEvents
 
-    fun init() {
-        launch {
-            _actionEvents.emit(ActionEvent.UpdateStatusBarColor(originalReadingPreferences.theme))
-        }
-    }
-
     fun onScreenOpened(source: ReaderReadingPreferencesTracker.Source) {
         readingPreferencesTracker.trackScreenOpened(source)
-    }
-
-    val hasUnsavedChanges: Boolean
-        get() = currentReadingPreferences.value != originalReadingPreferences
-
-    fun syncCachedPreferences() {
-        if (hasUnsavedChanges) {
-            saveReadingPreferences.updateCache(currentReadingPreferences.value)
-        }
     }
 
     fun onScreenClosed() {
@@ -69,29 +54,27 @@ class ReaderReadingPreferencesViewModel @Inject constructor(
     }
 
     /**
-     * An exit action has been triggered by the user. This means that we need to save the current preferences and emit
-     * the close event, so the dialog is dismissed.
+     * Save the current preferences and dismiss the dialog.
      */
-    fun onExitActionClick() {
+    fun onSaveClick() {
         launch {
             saveReadingPreferencesInternal()
-            _actionEvents.emit(ActionEvent.Close)
+            _actionEvents.emit(ActionEvent.SaveAndClose)
         }
     }
 
     /**
-     * The bottom sheet has been hidden by the user, which means the dismiss process is already on its way. All we need
-     * to do is save the current preferences.
+     * Discard changes and dismiss the dialog.
      */
-    fun onBottomSheetHidden() {
+    fun onCloseClick() {
         launch {
-            saveReadingPreferencesInternal()
+            _actionEvents.emit(ActionEvent.Close)
         }
     }
 
     private suspend fun saveReadingPreferencesInternal() {
         val currentPreferences = currentReadingPreferences.value
-        if (hasUnsavedChanges) {
+        if (currentPreferences != originalReadingPreferences) {
             saveReadingPreferences(currentPreferences)
             readingPreferencesTracker.trackSaved(currentPreferences)
         }
@@ -99,7 +82,7 @@ class ReaderReadingPreferencesViewModel @Inject constructor(
 
     sealed interface ActionEvent {
         data object Close : ActionEvent
-        data class UpdateStatusBarColor(val theme: ReaderReadingPreferences.Theme) : ActionEvent
+        data object SaveAndClose : ActionEvent
         data class OpenWebView(val url: String) : ActionEvent
     }
 }
