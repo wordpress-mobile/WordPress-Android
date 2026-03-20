@@ -105,23 +105,6 @@ class ReaderReadingPreferencesRepositoryTest : BaseUnitTest() {
         verify(appPrefsWrapper).readerReadingPreferencesJson = READER_PREFERENCES_JSON
     }
 
-    @Test
-    fun `updateCachedPreferences makes next sync read return updated value`() {
-        // Given
-        whenever(readingPreferencesFeatureConfig.isEnabled()).thenReturn(true)
-        val updatedPreferences = ReaderReadingPreferences(
-            Theme.OLED, FontFamily.SERIF, FontSize.EXTRA_LARGE
-        )
-
-        // When
-        repository.updateCachedPreferences(updatedPreferences)
-        val result = repository.getReadingPreferencesSync()
-
-        // Then
-        verifyNoInteractions(appPrefsWrapper)
-        assertThat(result).isEqualTo(updatedPreferences)
-    }
-
     companion object {
         private val READER_PREFERENCES = ReaderReadingPreferences(Theme.SEPIA, FontFamily.MONO, FontSize.SMALL)
         private const val READER_PREFERENCES_JSON = """{"theme":"SEPIA","fontFamily":"MONO","fontSize":"SMALL"}"""

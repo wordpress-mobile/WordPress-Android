@@ -40,10 +40,6 @@ class ReaderReadingPreferencesRepository @Inject constructor(
         }
     }
 
-    fun updateCachedPreferences(preferences: ReaderReadingPreferences) {
-        readingPreferences = preferences
-    }
-
     suspend fun saveReadingPreferences(preferences: ReaderReadingPreferences): Unit = withContext(ioDispatcher) {
         appPrefsWrapper.readerReadingPreferencesJson = gson.toJson(preferences)
         readingPreferences = preferences

@@ -10,8 +10,4 @@ class ReaderSaveReadingPreferencesUseCase @Inject constructor(
     suspend operator fun invoke(preferences: ReaderReadingPreferences) {
         repository.saveReadingPreferences(preferences)
     }
-
-    fun updateCache(preferences: ReaderReadingPreferences) {
-        repository.updateCachedPreferences(preferences)
-    }
 }
