@@ -50,15 +50,6 @@ class YearInReviewViewModel @Inject constructor(
         _uiState.value = YearInReviewCardUiState.Loading
     }
 
-    fun getDetailData(): List<YearSummary> {
-        val state = _uiState.value
-        return if (state is YearInReviewCardUiState.Loaded) {
-            state.years
-        } else {
-            emptyList()
-        }
-    }
-
     companion object {
         private fun YearInsightsData.toUiModel() =
             YearSummary(

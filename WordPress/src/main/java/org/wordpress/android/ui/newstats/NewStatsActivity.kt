@@ -1189,11 +1189,8 @@ private fun InsightsTabContent(
                                     .removeCard(cardType)
                             },
                             onShowAllClick = {
-                                val years =
-                                    yearInReviewViewModel
-                                        .getDetailData()
                                 YearInReviewDetailActivity
-                                    .start(context, years)
+                                    .start(context)
                             },
                             onRetry = {
                                 yearInReviewViewModel

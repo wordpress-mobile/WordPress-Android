@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -25,6 +24,7 @@ import org.wordpress.android.R
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.newstats.components.CardPosition
 import org.wordpress.android.ui.newstats.components.StatsCardContainer
+import org.wordpress.android.ui.newstats.components.StatsCardErrorContent
 import org.wordpress.android.ui.newstats.components.StatsCardMenu
 import org.wordpress.android.ui.newstats.util.formatStatValue
 import org.wordpress.android.ui.newstats.util.rememberShimmerBrush
@@ -68,15 +68,18 @@ fun MostPopularDayCard(
                     onMoveToBottom
                 )
             is MostPopularDayCardUiState.Error ->
-                ErrorContent(
-                    uiState,
-                    onRemoveCard,
-                    onRetry,
-                    cardPosition,
-                    onMoveUp,
-                    onMoveToTop,
-                    onMoveDown,
-                    onMoveToBottom
+                StatsCardErrorContent(
+                    titleResId = R.string
+                        .stats_insights_most_popular_day,
+                    errorMessageResId =
+                        R.string.stats_error_api,
+                    onRetry = onRetry,
+                    onRemoveCard = onRemoveCard,
+                    cardPosition = cardPosition,
+                    onMoveUp = onMoveUp,
+                    onMoveToTop = onMoveToTop,
+                    onMoveDown = onMoveDown,
+                    onMoveToBottom = onMoveToBottom
                 )
         }
     }
@@ -297,71 +300,6 @@ private fun LoadedContent(
             color = MaterialTheme.colorScheme
                 .onSurfaceVariant
         )
-    }
-}
-
-@Suppress("LongParameterList")
-@Composable
-private fun ErrorContent(
-    state: MostPopularDayCardUiState.Error,
-    onRemoveCard: () -> Unit,
-    onRetry: () -> Unit,
-    cardPosition: CardPosition?,
-    onMoveUp: (() -> Unit)?,
-    onMoveToTop: (() -> Unit)?,
-    onMoveDown: (() -> Unit)?,
-    onMoveToBottom: (() -> Unit)?
-) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(CardPadding)
-    ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            verticalAlignment =
-                Alignment.CenterVertically
-        ) {
-            Text(
-                text = stringResource(
-                    R.string
-                        .stats_insights_most_popular_day
-                ),
-                style = MaterialTheme.typography
-                    .titleMedium,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.weight(1f)
-            )
-            StatsCardMenu(
-                onRemoveClick = onRemoveCard,
-                cardPosition = cardPosition,
-                onMoveUp = onMoveUp,
-                onMoveToTop = onMoveToTop,
-                onMoveDown = onMoveDown,
-                onMoveToBottom = onMoveToBottom
-            )
-        }
-        Spacer(modifier = Modifier.height(16.dp))
-        Column(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalAlignment =
-                Alignment.CenterHorizontally
-        ) {
-            Text(
-                text = state.message,
-                style = MaterialTheme.typography
-                    .bodyMedium,
-                color = MaterialTheme.colorScheme.error
-            )
-            Spacer(modifier = Modifier.height(16.dp))
-            Button(onClick = onRetry) {
-                Text(
-                    text = stringResource(
-                        R.string.retry
-                    )
-                )
-            }
-        }
     }
 }
 

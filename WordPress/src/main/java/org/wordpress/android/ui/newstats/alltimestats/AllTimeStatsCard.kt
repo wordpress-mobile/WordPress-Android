@@ -17,7 +17,6 @@ import androidx.compose.material.icons.automirrored.outlined.Article
 import androidx.compose.material.icons.automirrored.outlined.Chat
 import androidx.compose.material.icons.outlined.People
 import androidx.compose.material.icons.outlined.Visibility
-import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -34,6 +33,7 @@ import org.wordpress.android.R
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.newstats.components.CardPosition
 import org.wordpress.android.ui.newstats.components.StatsCardContainer
+import org.wordpress.android.ui.newstats.components.StatsCardErrorContent
 import org.wordpress.android.ui.newstats.components.StatsCardMenu
 import org.wordpress.android.ui.newstats.util.formatStatValue
 import org.wordpress.android.ui.newstats.util.rememberShimmerBrush
@@ -68,15 +68,18 @@ fun AllTimeStatsCard(
                     onMoveToBottom
                 )
             is AllTimeStatsCardUiState.Error ->
-                ErrorContent(
-                    uiState,
-                    onRemoveCard,
-                    onRetry,
-                    cardPosition,
-                    onMoveUp,
-                    onMoveToTop,
-                    onMoveDown,
-                    onMoveToBottom
+                StatsCardErrorContent(
+                    titleResId = R.string
+                        .stats_insights_all_time_stats_title,
+                    errorMessageResId =
+                        R.string.stats_error_api,
+                    onRetry = onRetry,
+                    onRemoveCard = onRemoveCard,
+                    cardPosition = cardPosition,
+                    onMoveUp = onMoveUp,
+                    onMoveToTop = onMoveToTop,
+                    onMoveDown = onMoveDown,
+                    onMoveToBottom = onMoveToBottom
                 )
         }
     }
@@ -237,68 +240,6 @@ private fun StatRow(
             fontWeight = FontWeight.SemiBold,
             color = MaterialTheme.colorScheme.onSurface
         )
-    }
-}
-
-@Suppress("LongParameterList")
-@Composable
-private fun ErrorContent(
-    state: AllTimeStatsCardUiState.Error,
-    onRemoveCard: () -> Unit,
-    onRetry: () -> Unit,
-    cardPosition: CardPosition?,
-    onMoveUp: (() -> Unit)?,
-    onMoveToTop: (() -> Unit)?,
-    onMoveDown: (() -> Unit)?,
-    onMoveToBottom: (() -> Unit)?
-) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(CardPadding)
-    ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                text = stringResource(
-                    R.string
-                        .stats_insights_all_time_stats_title
-                ),
-                style =
-                    MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.weight(1f)
-            )
-            StatsCardMenu(
-                onRemoveClick = onRemoveCard,
-                cardPosition = cardPosition,
-                onMoveUp = onMoveUp,
-                onMoveToTop = onMoveToTop,
-                onMoveDown = onMoveDown,
-                onMoveToBottom = onMoveToBottom
-            )
-        }
-        Spacer(modifier = Modifier.height(16.dp))
-        Column(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalAlignment =
-                Alignment.CenterHorizontally
-        ) {
-            Text(
-                text = state.message,
-                style =
-                    MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.error
-            )
-            Spacer(modifier = Modifier.height(16.dp))
-            Button(onClick = onRetry) {
-                Text(
-                    text = stringResource(R.string.retry)
-                )
-            }
-        }
     }
 }
 

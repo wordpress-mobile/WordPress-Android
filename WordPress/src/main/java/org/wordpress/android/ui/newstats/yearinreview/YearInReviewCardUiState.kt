@@ -1,8 +1,5 @@
 package org.wordpress.android.ui.newstats.yearinreview
 
-import android.os.Parcelable
-import kotlinx.parcelize.Parcelize
-
 sealed class YearInReviewCardUiState {
     data object Loading : YearInReviewCardUiState()
 
@@ -15,7 +12,6 @@ sealed class YearInReviewCardUiState {
     ) : YearInReviewCardUiState()
 }
 
-@Parcelize
 data class YearSummary(
     val year: String,
     val totalPosts: Long,
@@ -25,4 +21,4 @@ data class YearSummary(
     val avgLikes: Double,
     val totalComments: Long,
     val avgComments: Double
-) : Parcelable
+)

@@ -1,16 +1,14 @@
 package org.wordpress.android.ui.newstats.mostpopulartime
 
-import android.content.Context
-import android.text.format.DateFormat
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import org.wordpress.android.R
 import org.wordpress.android.ui.newstats.datasource.StatsInsightsData
 import org.wordpress.android.ui.newstats.repository.InsightsResult
+import org.wordpress.android.util.DateFormatWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
 import java.time.DayOfWeek
 import java.time.LocalTime
@@ -22,7 +20,7 @@ import kotlin.math.round
 
 @HiltViewModel
 class MostPopularTimeViewModel @Inject constructor(
-    @ApplicationContext private val context: Context,
+    private val dateFormatWrapper: DateFormatWrapper,
     private val resourceProvider: ResourceProvider
 ) : ViewModel() {
     private val _uiState =
@@ -34,7 +32,7 @@ class MostPopularTimeViewModel @Inject constructor(
 
     fun handleResult(result: InsightsResult) {
         val use24Hour =
-            DateFormat.is24HourFormat(context)
+            dateFormatWrapper.is24HourFormat()
         _uiState.value = when (result) {
             is InsightsResult.Success ->
                 mapToUiState(result.data, use24Hour)

@@ -8,6 +8,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import org.wordpress.android.R
 import org.wordpress.android.ui.newstats.datasource.StatsSummaryData
 import org.wordpress.android.ui.newstats.repository.StatsSummaryResult
+import org.wordpress.android.util.AppLog
 import org.wordpress.android.viewmodel.ResourceProvider
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -97,12 +98,14 @@ class MostPopularDayViewModel @Inject constructor(
                 val year = date.year.toString()
                 dayMonth to year
             } catch (
-                @Suppress(
-                    "SwallowedException",
-                    "TooGenericExceptionCaught"
-                )
+                @Suppress("TooGenericExceptionCaught")
                 e: Exception
             ) {
+                AppLog.w(
+                    AppLog.T.STATS,
+                    "Failed to parse bestDay" +
+                        " '$bestDay': ${e.message}"
+                )
                 bestDay to ""
             }
         }

@@ -152,45 +152,6 @@ class YearInReviewViewModelTest : BaseUnitTest() {
             .isEqualTo(TEST_TOTAL_POSTS)
     }
 
-    @Test
-    fun `when state is loaded, then getDetailData returns years`() {
-        viewModel.handleResult(
-            createSuccessResult(),
-        )
-
-        val detailData = viewModel.getDetailData()
-        assertThat(detailData).hasSize(3)
-        assertThat(detailData[0].year)
-            .isEqualTo(CURRENT_YEAR)
-        assertThat(detailData[1].year)
-            .isEqualTo("2025")
-        assertThat(detailData[1].totalPosts)
-            .isEqualTo(TEST_TOTAL_POSTS)
-        assertThat(detailData[2].year)
-            .isEqualTo("2024")
-    }
-
-    @Test
-    fun `when state is loading, then getDetailData returns empty list`() {
-        val detailData = viewModel.getDetailData()
-        assertThat(detailData).isEmpty()
-    }
-
-    @Test
-    fun `when state is error, then getDetailData returns empty list`() {
-        viewModel.handleResult(
-            InsightsResult.Error("error"),
-        )
-
-        assertThat(viewModel.uiState.value)
-            .isInstanceOf(
-                YearInReviewCardUiState
-                    .Error::class.java
-            )
-        val detailData = viewModel.getDetailData()
-        assertThat(detailData).isEmpty()
-    }
-
     private fun createSuccessResult() =
         InsightsResult.Success(
             data = createTestInsightsData(

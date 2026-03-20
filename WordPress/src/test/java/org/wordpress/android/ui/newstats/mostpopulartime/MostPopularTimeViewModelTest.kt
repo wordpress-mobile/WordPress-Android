@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.newstats.mostpopulartime
 
-import android.content.Context
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -11,6 +10,7 @@ import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.ui.newstats.datasource.StatsInsightsData
 import org.wordpress.android.ui.newstats.repository.InsightsResult
+import org.wordpress.android.util.DateFormatWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
 
 @ExperimentalCoroutinesApi
@@ -20,7 +20,8 @@ class MostPopularTimeViewModelTest : BaseUnitTest() {
         ResourceProvider
 
     @Mock
-    private lateinit var context: Context
+    private lateinit var dateFormatWrapper:
+        DateFormatWrapper
 
     private lateinit var viewModel:
         MostPopularTimeViewModel
@@ -33,7 +34,7 @@ class MostPopularTimeViewModelTest : BaseUnitTest() {
             )
         ).thenReturn(FAILED_TO_LOAD_ERROR)
         viewModel = MostPopularTimeViewModel(
-            context, resourceProvider
+            dateFormatWrapper, resourceProvider
         )
     }
 
