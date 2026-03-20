@@ -37,6 +37,7 @@ private val MONTHLY_FORMAT_REGEX = Regex("""\d{4}-\d{2}""")
 private const val KEY_PERIOD_TYPE = "period_type"
 private const val KEY_CUSTOM_START_DATE = "custom_start_date"
 private const val KEY_CUSTOM_END_DATE = "custom_end_date"
+private const val KEY_CHART_TYPE = "chart_type"
 
 private const val PERIOD_TODAY = "today"
 private const val PERIOD_LAST_7_DAYS = "last_7_days"
@@ -44,6 +45,9 @@ private const val PERIOD_LAST_30_DAYS = "last_30_days"
 private const val PERIOD_LAST_6_MONTHS = "last_6_months"
 private const val PERIOD_LAST_12_MONTHS = "last_12_months"
 private const val PERIOD_CUSTOM = "custom"
+
+private const val CHART_TYPE_LINE = "line"
+private const val CHART_TYPE_BAR = "bar"
 
 @HiltViewModel
 class ViewsStatsViewModel @Inject constructor(
@@ -63,7 +67,7 @@ class ViewsStatsViewModel @Inject constructor(
     private val _selectedPeriod = MutableStateFlow(restorePeriodFromSavedState())
     val selectedPeriod: StateFlow<StatsPeriod> = _selectedPeriod.asStateFlow()
 
-    private var currentChartType: ChartType = ChartType.LINE
+    private var currentChartType: ChartType = restoreChartTypeFromSavedState()
     private var currentPeriod: StatsPeriod = _selectedPeriod.value
     private var loadingPeriod: StatsPeriod? = null
     private var loadedPeriod: StatsPeriod? = null
@@ -89,6 +93,13 @@ class ViewsStatsViewModel @Inject constructor(
                 if (restoredPeriod != null) {
                     currentPeriod = restoredPeriod
                     _selectedPeriod.value = restoredPeriod
+                }
+            }
+            val savedChartType = savedStateHandle.get<String>(KEY_CHART_TYPE)
+            if (savedChartType == null) {
+                val restoredChartType = restoreChartTypeFromPreferences()
+                if (restoredChartType != null) {
+                    currentChartType = restoredChartType
                 }
             }
             _isPeriodInitialized.value = true
@@ -211,8 +222,46 @@ class ViewsStatsViewModel @Inject constructor(
         }
     }
 
+    private fun restoreChartTypeFromSavedState(): ChartType {
+        return when (savedStateHandle.get<String>(KEY_CHART_TYPE)) {
+            CHART_TYPE_BAR -> ChartType.BAR
+            else -> ChartType.LINE
+        }
+    }
+
+    private suspend fun restoreChartTypeFromPreferences(): ChartType? {
+        val siteId = selectedSiteRepository.getSelectedSite()?.siteId
+            ?: return null
+        val config = cardsConfigurationRepository.getConfiguration(siteId)
+        return when (config.selectedChartType) {
+            CHART_TYPE_BAR -> ChartType.BAR
+            CHART_TYPE_LINE -> ChartType.LINE
+            else -> null
+        }
+    }
+
+    private fun saveChartType(chartType: ChartType) {
+        val chartTypeString = when (chartType) {
+            ChartType.LINE -> CHART_TYPE_LINE
+            ChartType.BAR -> CHART_TYPE_BAR
+        }
+        savedStateHandle[KEY_CHART_TYPE] = chartTypeString
+
+        val siteId = selectedSiteRepository.getSelectedSite()?.siteId
+            ?: return
+        viewModelScope.launch {
+            val config =
+                cardsConfigurationRepository.getConfiguration(siteId)
+            cardsConfigurationRepository.saveConfiguration(
+                siteId,
+                config.copy(selectedChartType = chartTypeString)
+            )
+        }
+    }
+
     fun onChartTypeChanged(chartType: ChartType) {
         currentChartType = chartType
+        saveChartType(chartType)
         val currentState = _uiState.value
         if (currentState is ViewsStatsCardUiState.Loaded) {
             _uiState.value = currentState.copy(chartType = chartType)
