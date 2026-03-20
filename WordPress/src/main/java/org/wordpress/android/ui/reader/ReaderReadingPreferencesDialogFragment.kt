@@ -2,7 +2,6 @@ package org.wordpress.android.ui.reader
 
 import android.app.Dialog
 import android.content.DialogInterface
-import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -13,6 +12,8 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
 import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -25,14 +26,12 @@ import kotlinx.coroutines.flow.onEach
 import org.wordpress.android.R
 import org.wordpress.android.ui.WPWebViewActivity
 import org.wordpress.android.ui.compose.theme.AppThemeM3
-import org.wordpress.android.ui.reader.models.ReaderReadingPreferences
 import org.wordpress.android.ui.reader.tracker.ReaderReadingPreferencesTracker
 import org.wordpress.android.ui.reader.viewmodels.ReaderReadingPreferencesViewModel
 import org.wordpress.android.ui.reader.viewmodels.ReaderReadingPreferencesViewModel.ActionEvent
 import org.wordpress.android.ui.reader.views.compose.readingpreferences.ReadingPreferencesScreen
 import org.wordpress.android.util.extensions.fillScreen
 import org.wordpress.android.util.extensions.getSerializableCompat
-import org.wordpress.android.util.extensions.setDialogWindowStatusBarColor
 
 @AndroidEntryPoint
 class ReaderReadingPreferencesDialogFragment : BottomSheetDialogFragment() {
@@ -63,7 +62,7 @@ class ReaderReadingPreferencesDialogFragment : BottomSheetDialogFragment() {
                     onThemeClick = viewModel::onThemeClick,
                     onFontFamilyClick = viewModel::onFontFamilyClick,
                     onFontSizeClick = viewModel::onFontSizeClick,
-                    onBackgroundColorUpdate = { dialog?.window?.setDialogWindowStatusBarColor(it) },
+                    onBackgroundColorUpdate = {},
                 )
             }
         }
@@ -79,36 +78,44 @@ class ReaderReadingPreferencesDialogFragment : BottomSheetDialogFragment() {
         super.onCreateDialog(savedInstanceState).apply {
             (this as? BottomSheetDialog)?.apply {
                 fillScreen(isDraggable = true)
-                // Draw content behind the status bar so the TopAppBar's
-                // background color is visible through the transparent
-                // status bar (required on SDK 35+ where statusBarColor
-                // is ignored).
-                window?.let { WindowCompat.setDecorFitsSystemWindows(it, false) }
 
-                behavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
-                    private var isStatusBarTransparent = false
-                    override fun onStateChanged(bottomSheet: View, newState: Int) {
-                        if (newState == BottomSheetBehavior.STATE_EXPANDED && isStatusBarTransparent) {
-                            isStatusBarTransparent = false
-                            val currentTheme = viewModel.currentReadingPreferences.value.theme
-                            handleUpdateStatusBarColor(currentTheme)
-                        } else if (newState != BottomSheetBehavior.STATE_EXPANDED && !isStatusBarTransparent) {
-                            isStatusBarTransparent = true
-                            dialog?.window?.setDialogWindowStatusBarColor(Color.TRANSPARENT)
-                        }
+                // Hide system bars to match the post detail screen
+                window?.let { win ->
+                    WindowCompat.setDecorFitsSystemWindows(win, false)
+                    WindowInsetsControllerCompat(win, win.decorView).apply {
+                        hide(
+                            WindowInsetsCompat.Type.statusBars()
+                                    or WindowInsetsCompat.Type.navigationBars()
+                        )
+                        systemBarsBehavior =
+                            WindowInsetsControllerCompat
+                                .BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+                    }
+                }
 
+                behavior.addBottomSheetCallback(object :
+                    BottomSheetBehavior.BottomSheetCallback() {
+                    override fun onStateChanged(
+                        bottomSheet: View,
+                        newState: Int
+                    ) {
                         if (newState == BottomSheetBehavior.STATE_HIDDEN) {
                             viewModel.onBottomSheetHidden()
                         }
                     }
 
-                    override fun onSlide(bottomSheet: View, slideOffset: Float) {
+                    override fun onSlide(
+                        bottomSheet: View,
+                        slideOffset: Float
+                    ) {
                         // no-op
                     }
                 })
             }
 
-            (this as ComponentDialog).onBackPressedDispatcher.addCallback(this@ReaderReadingPreferencesDialogFragment) {
+            (this as ComponentDialog).onBackPressedDispatcher.addCallback(
+                this@ReaderReadingPreferencesDialogFragment
+            ) {
                 viewModel.onExitActionClick()
             }
         }
@@ -126,16 +133,10 @@ class ReaderReadingPreferencesDialogFragment : BottomSheetDialogFragment() {
         viewModel.actionEvents.onEach {
             when (it) {
                 is ActionEvent.Close -> dismiss()
-                is ActionEvent.UpdateStatusBarColor -> handleUpdateStatusBarColor(it.theme)
+                is ActionEvent.UpdateStatusBarColor -> Unit
                 is ActionEvent.OpenWebView -> handleOpenWebView(it.url)
             }
         }.launchIn(viewLifecycleOwner.lifecycleScope)
-    }
-
-    private fun handleUpdateStatusBarColor(theme: ReaderReadingPreferences.Theme) {
-        val context = requireContext()
-        val themeValues = ReaderReadingPreferences.ThemeValues.from(context, theme)
-        dialog?.window?.setDialogWindowStatusBarColor(themeValues.intBackgroundColor)
     }
 
     private fun handleOpenWebView(url: String) {
