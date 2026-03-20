@@ -102,7 +102,6 @@ Language: es
     <string name="term_description_label">Descripción:</string>
     <string name="term_slug_label">Slug:</string>
     <string name="term_name_label">Nombre:</string>
-    <string name="application_password_experimental_feature_note">\n\nNota: La autenticación por contraseña de aplicación en dispositivos Android es una característica experimental.</string>
     <string name="application_password_required_block_editor">Editor de bloques</string>
     <string name="application_password_required_description">Las contraseñas de aplicaciones son una forma más segura de conectar con tu sitio autoalojado y permitir el uso de funciones como %1$s.</string>
     <string name="application_password_required">Contraseña de aplicación necesaria</string>
@@ -135,7 +134,6 @@ Language: es
     <string name="application_password_info_description_2">Cuando añadas sitios a la aplicación, las contraseñas de aplicación se crearán automáticamente a medida que se necesiten.</string>
     <string name="application_password_info_description_1">Las contraseñas de aplicación son un modo seguro para que las aplicaciones accedan a tu sitio sin usar la contraseña de tu cuenta.</string>
     <string name="application_password_info_title">Contraseñas de aplicación</string>
-    <string name="application_password_disable_feature_description">Al desactivar la contraseña de aplicación se eliminará el acceso de %1$s a tus sitios. Puede que tengas que volver a añadir los sitios afectados para acceder de nuevo.</string>
     <string name="application_password_invalid_description">Tu contraseña de aplicación ya no existe. Accede de nuevo para crear una nueva contraseña de aplicación.</string>
     <string name="subscribers_delete_failed">Fallo al borrar el suscriptor</string>
     <string name="subscribers_delete_success_message">Se ha borrado el suscriptor, pero puede tardar un minuto en tener efecto el borrado</string>
@@ -157,7 +155,6 @@ Language: es
     <string name="start">Empezar</string>
     <string name="descending">Descendente</string>
     <string name="ascending">Ascendente</string>
-    <string name="application_password_disable_feature_title">¿Desactivar contraseña de aplicación?</string>
     <string name="application_password_invalid">Contraseña de aplicación no válida</string>
     <string name="application_password_credentials_storing_error">Ha ocurrido un error al almacenar las credenciales de aplicación para %1$s</string>
     <string name="subscribers_add_failed">Fallo al añadir suscriptores</string>
@@ -203,8 +200,6 @@ Language: es
     <string name="qrcode_auth_flow_timeout_subtitle">Se h tardado demasiado en detectar un código. Inténtalo de nuevo o usa tu aplicación de cámara para explorar el código.</string>
     <string name="qrcode_auth_flow_timeout_title">Tiempo de exploración agotado</string>
     <string name="invite_users">Invitar a usuarios</string>
-    <string name="experimental_application_password_feature_description">Activa las contraseñas de aplicación para acceder a sitios auto-alojados</string>
-    <string name="experimental_application_password_feature">Acceso con contraseña de aplicación</string>
     <string name="cant_share_no_blog">No puedes compartir WordPress sin un blog</string>
     <string name="me_email_verification_generic_error">No se ha podido enviar el enlace de verificación</string>
     <string name="me_email_verification_resend">Reenviar el enlace de verificación</string>

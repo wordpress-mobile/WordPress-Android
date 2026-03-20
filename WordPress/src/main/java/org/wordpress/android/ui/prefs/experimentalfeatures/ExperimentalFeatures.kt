@@ -30,11 +30,6 @@ class ExperimentalFeatures @Inject constructor(
             R.string.experimental_block_editor,
             R.string.experimental_block_editor_description
         ),
-        EXPERIMENTAL_APPLICATION_PASSWORD_FEATURE(
-            "experimental_application_password_feature",
-            R.string.experimental_application_password_feature,
-            R.string.experimental_application_password_feature_description
-        ),
         MODERN_SUPPORT(
             "modern_support",
             R.string.modern_support,

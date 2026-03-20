@@ -12,7 +12,6 @@ Language: lv
     <string name="qrcode_auth_flow_timeout_subtitle">Koda noteikšanai bija nepieciešams pārāk ilgs laiks. Lūdzu, mēģiniet vēlreiz vai izmantojiet kameras lietotni, lai skenētu kodu.</string>
     <string name="qrcode_auth_flow_timeout_title">Skenēšanas taimauts</string>
     <string name="invite_users">Uzaicināt lietotājus</string>
-    <string name="experimental_application_password_feature">Pieteikšanās ar lietojumprogrammas paroli</string>
     <string name="cant_share_no_blog">Jūs nevarat kopīgot pakalpojumā WordPress bez emuāra</string>
     <string name="me_email_verification_generic_error">Nevar nosūtīt verifikācijas saiti</string>
     <string name="me_email_verification_resend">Atkārtoti nosūtīt verifikācijas saiti</string>

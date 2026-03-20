@@ -27,7 +27,6 @@ Language: gl_ES
     <string name="term_description_label">Descrición:</string>
     <string name="term_slug_label">Slug:</string>
     <string name="term_name_label">Nome:</string>
-    <string name="application_password_experimental_feature_note">\n\nNota: A autenticación por contrasinal de aplicación en dispositivos Android é unha característica experimental.</string>
     <string name="application_password_required_block_editor">Editor de bloques</string>
     <string name="application_password_required_description">Os contrasinais de aplicación son unha forma máis segura de conectar co teu sitio autoaloxado e permitir o uso de funcións como %1$s.</string>
     <string name="application_password_required">Contrasinal de aplicación necesaria</string>
@@ -60,7 +59,6 @@ Language: gl_ES
     <string name="application_password_info_description_2">Cando engadas sitios á aplicación, os contrasinais de aplicación crearanse automaticamente a medida que se necesiten.</string>
     <string name="application_password_info_description_1">Os contrasinais de aplicación son un modo seguro para que as aplicacións accedan ao teu sitio sen usar o contrasinal da túa conta.</string>
     <string name="application_password_info_title">Contrasinais de aplicación</string>
-    <string name="application_password_disable_feature_description">Ao desactivar o contrasinal de aplicación eliminarase o acceso de %1$s aos teus sitios. Pode que teñas que volver a engadir os sitios afectados para acceder de novo.</string>
     <string name="application_password_invalid_description">O teu contrasinal de aplicación xa non existe. Accede de novo para crear un novo contrasinal de aplicación.</string>
     <string name="subscribers_delete_failed">Fallou ao borrar o subscritor</string>
     <string name="subscribers_delete_success_message">O subscritor borrouse, pero o borrado pode tardar un minuto en ter efecto</string>
@@ -82,7 +80,6 @@ Language: gl_ES
     <string name="start">Empezar</string>
     <string name="descending">Descendente</string>
     <string name="ascending">Ascendente</string>
-    <string name="application_password_disable_feature_title">Desactivar contrasinal de aplicación?</string>
     <string name="application_password_invalid">Contrasinal de aplicación non válida</string>
     <string name="application_password_credentials_storing_error">Ocorreu un erro ao almacenar as credenciais de aplicación para %1$s</string>
     <string name="subscribers_add_failed">Fallou ao engadir subscritores</string>
@@ -128,8 +125,6 @@ Language: gl_ES
     <string name="qrcode_auth_flow_timeout_subtitle">Tardouse demasiado en detectar un código. Inténtao de novo ou usa a túa aplicación de cámara para explorar o código.</string>
     <string name="qrcode_auth_flow_timeout_title">Tempo de exploración agotado</string>
     <string name="invite_users">Invitar a usuarios</string>
-    <string name="experimental_application_password_feature_description">Activa os contrasinais de aplicación para acceder a sitios autoaloxados</string>
-    <string name="experimental_application_password_feature">Acceso con contrasinal de aplicación</string>
     <string name="cant_share_no_blog">Non podes compartir a WordPress sen un blog</string>
     <string name="me_email_verification_generic_error">Non se puido enviar a ligazón de verificación</string>
     <string name="me_email_verification_resend">Reenviar a ligazón de verificación</string>

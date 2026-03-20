@@ -101,7 +101,6 @@ Language: zh_CN
     <string name="term_description_label">描述：</string>
     <string name="term_slug_label">别名：</string>
     <string name="term_name_label">名称：</string>
-    <string name="application_password_experimental_feature_note">\n\n注意：Android 设备上的应用程序密码验证功能是一项实验性功能。</string>
     <string name="application_password_required_block_editor">区块编辑器</string>
     <string name="application_password_required_description">应用程序密码能让您更安全地连接到您的自托管站点，并且支持 %1$s 等功能。</string>
     <string name="application_password_required">必须提供应用程序密码</string>
@@ -134,7 +133,6 @@ Language: zh_CN
     <string name="application_password_info_description_2">在您将站点添加到应用程序后，系统将根据需要自动创建应用程序密码。</string>
     <string name="application_password_info_description_1">应用程序密码是一种安全验证方式，允许应用程序在不使用您账户密码的情况下访问您的站点。</string>
     <string name="application_password_info_title">应用程序密码</string>
-    <string name="application_password_disable_feature_description">禁用应用程序密码将移除您 %1$s 个站点的登录信息。 您可能需要重新添加受影响的站点才能再次登录。</string>
     <string name="application_password_invalid_description">您的应用程序密码已不存在。 请重新登录，以创建新的应用程序密码。</string>
     <string name="subscribers_delete_failed">订阅者删除失败</string>
     <string name="subscribers_delete_success_message">订阅者已被删除，但删除操作可能需要一分钟才能生效</string>
@@ -156,7 +154,6 @@ Language: zh_CN
     <string name="start">开始</string>
     <string name="descending">降序</string>
     <string name="ascending">升序</string>
-    <string name="application_password_disable_feature_title">禁用应用程序密码？</string>
     <string name="application_password_invalid">应用程序密码无效</string>
     <string name="application_password_credentials_storing_error">保存 %1$s 的应用程序密码凭据时出现错误</string>
     <string name="subscribers_add_failed">订阅者添加失败</string>
@@ -202,8 +199,6 @@ Language: zh_CN
     <string name="qrcode_auth_flow_timeout_subtitle">检测代码用时过长。 请重试或使用相机应用程序扫描代码。</string>
     <string name="qrcode_auth_flow_timeout_title">扫描超时</string>
     <string name="invite_users">邀请用户</string>
-    <string name="experimental_application_password_feature_description">启用应用程序密码，以登录自托管站点</string>
-    <string name="experimental_application_password_feature">应用程序密码登录</string>
     <string name="cant_share_no_blog">没有博客，您就不能分享到 WordPress</string>
     <string name="me_email_verification_generic_error">无法发送验证链接</string>
     <string name="me_email_verification_resend">重新发送验证链接</string>
