@@ -12,6 +12,7 @@ import androidx.activity.addCallback
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
+import androidx.core.view.WindowCompat
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -78,6 +79,11 @@ class ReaderReadingPreferencesDialogFragment : BottomSheetDialogFragment() {
         super.onCreateDialog(savedInstanceState).apply {
             (this as? BottomSheetDialog)?.apply {
                 fillScreen(isDraggable = true)
+                // Draw content behind the status bar so the TopAppBar's
+                // background color is visible through the transparent
+                // status bar (required on SDK 35+ where statusBarColor
+                // is ignored).
+                window?.let { WindowCompat.setDecorFitsSystemWindows(it, false) }
 
                 behavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
                     private var isStatusBarTransparent = false
