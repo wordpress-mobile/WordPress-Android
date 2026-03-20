@@ -18,6 +18,8 @@ import uniffi.wp_api.StatsRegionViewsParams
 import uniffi.wp_api.StatsRegionViewsPeriod
 import uniffi.wp_api.StatsDevicesParams
 import uniffi.wp_api.StatsDevicesPeriod
+import uniffi.wp_api.StatsInsightsParams
+import uniffi.wp_api.StatsTagsParams
 import uniffi.wp_api.StatsSearchTermsParams
 import uniffi.wp_api.StatsSearchTermsPeriod
 import uniffi.wp_api.StatsTopAuthorsParams
@@ -991,6 +993,191 @@ class StatsDataSourceImpl @Inject constructor(
             "StatsDataSourceImpl: $methodName " +
                 "unexpected result - $result" to
                 StatsErrorType.UNKNOWN
+        }
+    }
+
+    @Suppress("LongMethod")
+    override suspend fun fetchStatsInsights(
+        siteId: Long
+    ): StatsInsightsDataResult {
+        val result = getOrCreateClient()
+            .request { requestBuilder ->
+                requestBuilder.statsInsights()
+                    .getStatsInsights(
+                        wpComSiteId = siteId.toULong(),
+                        params = StatsInsightsParams(
+                            locale = wpComLanguage
+                        )
+                    )
+            }
+
+        logResultType("fetchStatsInsights", result)
+
+        return when (result) {
+            is WpRequestResult.Success -> {
+                val data = result.response.data
+                val years = data.years
+                AppLog.d(
+                    T.STATS,
+                    "StatsDataSourceImpl: " +
+                        "fetchStatsInsights success " +
+                        "- ${years.size} years"
+                )
+                StatsInsightsDataResult.Success(
+                    StatsInsightsData(
+                        highestHour =
+                            data.highestHour.toInt(),
+                        highestHourPercent =
+                            data.highestHourPercent,
+                        highestDayOfWeek =
+                            data.highestDayOfWeek
+                                .toInt(),
+                        highestDayPercent =
+                            data.highestDayPercent,
+                        years = years.map { yearData ->
+                            YearInsightsData(
+                                year = yearData.year,
+                                totalPosts =
+                                    yearData.totalPosts
+                                        .toLong(),
+                                totalWords =
+                                    yearData.totalWords
+                                        .toLong(),
+                                avgWords =
+                                    yearData.avgWords,
+                                totalLikes =
+                                    yearData.totalLikes
+                                        .toLong(),
+                                avgLikes =
+                                    yearData.avgLikes,
+                                totalComments =
+                                    yearData.totalComments
+                                        .toLong(),
+                                avgComments =
+                                    yearData.avgComments
+                            )
+                        }
+                    )
+                )
+            }
+            else -> logErrorAndReturn(
+                "fetchStatsInsights",
+                result
+            ) {
+                StatsInsightsDataResult.Error(it)
+            }
+        }
+    }
+
+    override suspend fun fetchStatsSummary(
+        siteId: Long
+    ): StatsSummaryDataResult {
+        val params = uniffi.wp_api.StatsSummaryParams(
+            locale = wpComLanguage
+        )
+        val result = getOrCreateClient()
+            .request { requestBuilder ->
+                requestBuilder.statsSummary()
+                    .getStatsSummary(
+                        wpComSiteId = siteId.toULong(),
+                        params = params
+                    )
+            }
+
+        logResultType("fetchStatsSummary", result)
+
+        return when (result) {
+            is WpRequestResult.Success -> {
+                val stats = result.response.data.stats
+                AppLog.d(
+                    T.STATS,
+                    "StatsDataSourceImpl: " +
+                        "fetchStatsSummary success"
+                )
+                StatsSummaryDataResult.Success(
+                    StatsSummaryData(
+                        views = stats.views.toLong(),
+                        visitors =
+                            stats.visitors.toLong(),
+                        posts = stats.posts.toLong(),
+                        comments =
+                            stats.comments.toLong(),
+                        viewsBestDay =
+                            stats.viewsBestDay
+                                .orEmpty(),
+                        viewsBestDayTotal =
+                            stats.viewsBestDayTotal
+                                .toLong()
+                    )
+                )
+            }
+            else -> logErrorAndReturn(
+                "fetchStatsSummary",
+                result
+            ) {
+                StatsSummaryDataResult.Error(it)
+            }
+        }
+    }
+
+    private fun mapToStatsTagsData(
+        tagGroups: List<uniffi.wp_api.StatsTagGroup>
+    ): StatsTagsData {
+        return StatsTagsData(
+            tagGroups = tagGroups.map { group ->
+                TagGroupData(
+                    tags = group.tags.map { tag ->
+                        TagData(
+                            tagType = tag.tagType,
+                            name = tag.name
+                        )
+                    },
+                    views = group.views.toLong()
+                )
+            }
+        )
+    }
+
+    override suspend fun fetchStatsTags(
+        siteId: Long,
+        max: Int
+    ): StatsTagsDataResult {
+        val params = StatsTagsParams(
+            max = if (max > 0) max.toUInt() else null,
+            locale = wpComLanguage
+        )
+        val result = getOrCreateClient()
+            .request { requestBuilder ->
+                requestBuilder.statsTags()
+                    .getStatsTags(
+                        wpComSiteId = siteId.toULong(),
+                        params = params
+                    )
+            }
+
+        logResultType("fetchStatsTags", result)
+
+        return when (result) {
+            is WpRequestResult.Success -> {
+                val tagGroups =
+                    result.response.data.tags
+                AppLog.d(
+                    T.STATS,
+                    "StatsDataSourceImpl: " +
+                        "fetchStatsTags success " +
+                        "- ${tagGroups.size} " +
+                        "tag groups"
+                )
+                StatsTagsDataResult.Success(
+                    mapToStatsTagsData(tagGroups)
+                )
+            }
+            else -> logErrorAndReturn(
+                "fetchStatsTags",
+                result
+            ) {
+                StatsTagsDataResult.Error(it)
+            }
         }
     }
 

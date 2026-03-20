@@ -3,9 +3,6 @@ package org.wordpress.android.ui.postsrs
 import uniffi.wp_api.PostFormat
 import uniffi.wp_api.PostStatus
 import java.util.Date
-import java.util.TimeZone
-
-internal val UTC: TimeZone = TimeZone.getTimeZone("UTC")
 
 data class AuthorInfo(val id: Long, val name: String)
 

@@ -40,6 +40,7 @@ import java.io.File
 import java.text.DateFormat
 import java.util.Calendar
 import java.util.Date
+import java.util.TimeZone
 import javax.inject.Inject
 
 @HiltViewModel
@@ -296,7 +297,7 @@ class PostRsSettingsViewModel @Inject constructor(
     fun onDateSelected(year: Int, month: Int, dayOfMonth: Int) {
         val current = _uiState.value
         val base = current.effectiveDate ?: Date()
-        val cal = Calendar.getInstance(UTC).apply {
+        val cal = Calendar.getInstance().apply {
             time = base
             this[Calendar.YEAR] = year
             this[Calendar.MONTH] = month
@@ -317,7 +318,7 @@ class PostRsSettingsViewModel @Inject constructor(
     fun onTimeSelected(hour: Int, minute: Int) {
         val current = _uiState.value
         val base = current.effectiveDate ?: Date()
-        val cal = Calendar.getInstance(UTC).apply {
+        val cal = Calendar.getInstance().apply {
             time = base
             this[Calendar.HOUR_OF_DAY] = hour
             this[Calendar.MINUTE] = minute
@@ -1115,8 +1116,12 @@ class PostRsSettingsViewModel @Inject constructor(
             DateFormat.MEDIUM,
             DateFormat.SHORT
         )
-        fmt.timeZone = UTC
-        return fmt.format(dateGmt)
+        val tz = TimeZone.getDefault()
+        val tzLabel = tz.getDisplayName(
+            tz.inDaylightTime(dateGmt),
+            TimeZone.SHORT
+        )
+        return "${fmt.format(dateGmt)} $tzLabel"
     }
 
     private fun PostRsSettingsUiState.preserveEdits(
