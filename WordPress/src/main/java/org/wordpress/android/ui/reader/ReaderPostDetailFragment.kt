@@ -667,6 +667,9 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                     requireContext(), readingPreferences.theme
                 )
                 binding.root.setBackgroundColor(themeValues.intBackgroundColor)
+                appBar.setBackgroundColor(themeValues.intBackgroundColor)
+                appBar.findViewById<CollapsingToolbarLayout>(R.id.collapsing_toolbar)
+                    ?.setContentScrimColor(themeValues.intBackgroundColor)
                 activity?.window?.setWindowStatusBarColor(themeValues.intBackgroundColor)
                 initNavigationBar()
             }
