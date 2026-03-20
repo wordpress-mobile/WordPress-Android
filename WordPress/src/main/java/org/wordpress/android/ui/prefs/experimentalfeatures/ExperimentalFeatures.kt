@@ -7,8 +7,8 @@ import javax.inject.Inject
 class ExperimentalFeatures @Inject constructor(
     private val appPrefsWrapper: AppPrefsWrapper
 ) {
-    fun isEnabled(feature: Feature): Boolean {
-        return appPrefsWrapper.getExperimentalFeatureConfig(feature.prefKey, feature.defaultEnabled)
+    fun isEnabled(feature: Feature) : Boolean {
+        return appPrefsWrapper.getExperimentalFeatureConfig(feature.prefKey)
     }
 
     fun setEnabled(feature: Feature, isEnabled: Boolean) {
@@ -18,8 +18,7 @@ class ExperimentalFeatures @Inject constructor(
     enum class Feature(
         val prefKey: String,
         val labelResId: Int,
-        val descriptionResId: Int,
-        val defaultEnabled: Boolean = false
+        val descriptionResId: Int
     ) {
         DISABLE_EXPERIMENTAL_BLOCK_EDITOR(
             "disable_experimental_block_editor",
@@ -54,8 +53,7 @@ class ExperimentalFeatures @Inject constructor(
         NEW_STATS(
             "new_stats",
             R.string.experimental_new_stats,
-            R.string.experimental_new_stats_description,
-            defaultEnabled = true
+            R.string.experimental_new_stats_description
         ),
         RS_POST_LIST(
             "rs_post_list",

@@ -208,8 +208,8 @@ class AppPrefsWrapper @Inject constructor(val buildConfigWrapper: BuildConfigWra
         return AppPrefs.getManualFeatureConfig(featureKey)
     }
 
-    fun getExperimentalFeatureConfig(featureKey: String, defaultValue: Boolean = false): Boolean {
-        return AppPrefs.getExperimentalFeatureConfig(featureKey, defaultValue)
+    fun getExperimentalFeatureConfig(featureKey: String): Boolean {
+        return AppPrefs.getExperimentalFeatureConfig(featureKey)
     }
 
     fun setExperimentalFeatureConfig(isEnabled: Boolean, featureKey: String) {
