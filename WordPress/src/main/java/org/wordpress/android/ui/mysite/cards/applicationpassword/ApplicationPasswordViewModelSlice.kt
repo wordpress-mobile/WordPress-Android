@@ -52,12 +52,7 @@ class ApplicationPasswordViewModelSlice @Inject constructor(
             return
         }
 
-        if (shouldBuildCard()) {
-            buildApplicationPasswordDiscovery(siteModel)
-        } else {
-            // Hide the card when feature flag is disabled to prevent stale UI state
-            uiModelMutable.postValue(null)
-        }
+        buildApplicationPasswordDiscovery(siteModel)
     }
 
     @Suppress("TooGenericExceptionCaught", "LongMethod")
@@ -135,8 +130,6 @@ class ApplicationPasswordViewModelSlice @Inject constructor(
             }
         }
     }
-
-    private fun shouldBuildCard(): Boolean = true
 
     private fun buildReauthenticationBanner(site: SiteModel) {
         scope.launch {
