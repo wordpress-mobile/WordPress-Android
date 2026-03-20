@@ -3,6 +3,7 @@ package org.wordpress.android.ui.reader.views
 import android.content.Context
 import android.content.res.ColorStateList
 import android.content.res.Resources
+import androidx.core.content.res.ResourcesCompat
 import android.util.AttributeSet
 import android.util.TypedValue
 import android.view.LayoutInflater
@@ -126,10 +127,10 @@ class ReaderExpandableTagsView @JvmOverloads constructor(
         // Must use ColorStateList overload — Chip overrides setTextColor(ColorStateList)
         // to update ChipDrawable, but TextView.setTextColor(int) bypasses that override.
         chip.setTextColor(ColorStateList.valueOf(themeValues.intTextColor))
-        val strokeAlpha = resources.getFloat(R.dimen.expandable_chips_chip_stroke_alpha)
+        val strokeAlpha = ResourcesCompat.getFloat(resources, R.dimen.expandable_chips_chip_stroke_alpha)
         val strokeColor = androidx.core.graphics.ColorUtils.setAlphaComponent(
             themeValues.intTextColor,
-            (strokeAlpha * 255).toInt()
+            (strokeAlpha * MAX_ALPHA).toInt()
         )
         chip.chipStrokeColor = ColorStateList.valueOf(strokeColor)
     }
@@ -196,6 +197,10 @@ class ReaderExpandableTagsView @JvmOverloads constructor(
                 return true
             }
         })
+    }
+
+    private companion object {
+        const val MAX_ALPHA = 255
     }
 
     private class ChipStyle {

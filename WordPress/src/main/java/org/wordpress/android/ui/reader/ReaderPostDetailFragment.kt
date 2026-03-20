@@ -103,7 +103,6 @@ import org.wordpress.android.ui.reader.discover.ReaderPostCardAction
 import org.wordpress.android.ui.reader.discover.ReaderPostCardAction.PrimaryAction
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostId
-import org.wordpress.android.ui.reader.models.ReaderReadingPreferences
 import org.wordpress.android.ui.reader.tracker.ReaderReadingPreferencesTracker
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.tracker.ReaderTracker.Companion.SOURCE_POST_DETAIL_TOOLBAR
@@ -650,7 +649,6 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                 .newInstance()
                 .show(childFragmentManager, JetpackPoweredBottomSheetFragment.TAG)
         }
-
     }
 
     private fun manageFollowConversationUiState(
