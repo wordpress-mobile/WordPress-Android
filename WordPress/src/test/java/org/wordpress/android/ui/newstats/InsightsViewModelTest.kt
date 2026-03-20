@@ -17,6 +17,7 @@ import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
+import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.newstats.datasource.StatsInsightsData
@@ -84,6 +85,11 @@ class InsightsViewModelTest :
         whenever(
             cardConfigurationRepository.configurationFlow
         ).thenReturn(configurationFlow)
+        whenever(
+            resourceProvider.getString(
+                R.string.stats_error_unknown
+            )
+        ).thenReturn("An unexpected error occurred")
         whenever(
             networkUtilsWrapper.isNetworkAvailable()
         ).thenReturn(true)
@@ -253,7 +259,8 @@ class InsightsViewModelTest :
                 networkUtilsWrapper,
                 statsSummaryUseCase,
                 statsInsightsUseCase,
-                statsTagsUseCase
+                statsTagsUseCase,
+                resourceProvider
             )
             advanceUntilIdle()
 
@@ -369,7 +376,8 @@ class InsightsViewModelTest :
                 networkUtilsWrapper,
                 statsSummaryUseCase,
                 statsInsightsUseCase,
-                statsTagsUseCase
+                statsTagsUseCase,
+                resourceProvider
             )
 
             assertThat(viewModel.cardsToLoad.value)
