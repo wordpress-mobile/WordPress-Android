@@ -6,23 +6,12 @@ import androidx.core.view.WindowInsetsControllerCompat
 import org.wordpress.android.util.ColorUtils
 
 /**
- * Note these are skipped on SDK 35+ because they conflict with edge-to-edge insets.
- * For dialog windows (which are not subject to edge-to-edge enforcement),
- * use [setDialogWindowStatusBarColor] instead.
+ * Note these are skipped on SDK 35+ because they conflict with API 15's edge-to-edge insets
  */
 fun Window.setWindowStatusBarColor(color: Int) {
     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.VANILLA_ICE_CREAM) {
         setWindowBarColor(color, InsetsType.STATUS_BAR)
     }
-}
-
-/**
- * Sets the status bar color on a dialog window. Unlike [setWindowStatusBarColor],
- * this is not skipped on SDK 35+ because dialog windows are not subject to
- * the edge-to-edge enforcement that applies to activity windows.
- */
-fun Window.setDialogWindowStatusBarColor(color: Int) {
-    setWindowBarColor(color, InsetsType.STATUS_BAR)
 }
 
 fun Window.setWindowNavigationBarColor(color: Int) {

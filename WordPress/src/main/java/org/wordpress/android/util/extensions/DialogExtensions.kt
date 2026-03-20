@@ -24,7 +24,7 @@ fun Dialog.getPreferenceDialogContainerView(): View? {
 
 fun Dialog.setStatusBarAsSurfaceColor() {
     val statusBarColor = context.getColorFromAttribute(MaterialR.attr.colorSurface)
-    window?.setDialogWindowStatusBarColor(statusBarColor)
+    window?.setWindowStatusBarColor(statusBarColor)
 }
 
 fun BottomSheetDialog.fillScreen(isDraggable: Boolean = false) {
