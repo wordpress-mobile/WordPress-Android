@@ -54,6 +54,7 @@ data class PostRsSettingsUiState(
     val editedAuthor: Long? = null,
     val sitePostFormats: List<PostFormat> =
         PostRsRestClient.DEFAULT_POST_FORMATS,
+    val isLoadingFormats: Boolean = false,
     val isSaving: Boolean = false,
     val dialogState: DialogState = DialogState.None,
 ) {

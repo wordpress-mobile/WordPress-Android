@@ -1045,6 +1045,7 @@ private fun SettingsDialogs(
             currentFormat = uiState.editedFormat
                 ?: uiState.postFormat,
             formats = uiState.sitePostFormats,
+            isLoading = uiState.isLoadingFormats,
             onFormatSelected = onFormatSelected,
             onDismiss = onDismissDialog,
         )
@@ -1350,9 +1351,34 @@ private fun ExcerptDialog(
 private fun FormatDialog(
     currentFormat: PostFormat?,
     formats: List<PostFormat>,
+    isLoading: Boolean,
     onFormatSelected: (PostFormat) -> Unit,
     onDismiss: () -> Unit,
 ) {
+    if (isLoading) {
+        AlertDialog(
+            onDismissRequest = onDismiss,
+            title = {
+                Text(
+                    stringResource(
+                        R.string
+                            .post_rs_settings_format_dialog_title
+                    )
+                )
+            },
+            text = {
+                Box(
+                    modifier = Modifier.fillMaxWidth(),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    CircularProgressIndicator()
+                }
+            },
+            confirmButton = {},
+        )
+        return
+    }
+
     val labels = formats.map { postFormatLabel(it) }
     val currentIndex = formats.indexOfFirst {
         it == currentFormat

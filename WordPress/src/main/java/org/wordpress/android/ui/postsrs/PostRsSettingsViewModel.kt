@@ -260,10 +260,9 @@ class PostRsSettingsViewModel @Inject constructor(
     fun onFormatClicked() {
         if (!hasFetchedFormats) {
             resolveSitePostFormats()
-        } else {
-            _uiState.update {
-                it.copy(dialogState = DialogState.FormatDialog)
-            }
+        }
+        _uiState.update {
+            it.copy(dialogState = DialogState.FormatDialog)
         }
     }
 
@@ -1120,6 +1119,9 @@ class PostRsSettingsViewModel @Inject constructor(
     private fun resolveSitePostFormats() {
         val site = site ?: return
         viewModelScope.launch {
+            _uiState.update {
+                it.copy(isLoadingFormats = true)
+            }
             @Suppress("TooGenericExceptionCaught")
             try {
                 val formats =
@@ -1139,9 +1141,7 @@ class PostRsSettingsViewModel @Inject constructor(
             }
             hasFetchedFormats = true
             _uiState.update {
-                it.copy(
-                    dialogState = DialogState.FormatDialog
-                )
+                it.copy(isLoadingFormats = false)
             }
         }
     }
