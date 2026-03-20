@@ -83,6 +83,7 @@ abstract class BaseTagsAndCategoriesViewModel(
                     "Error fetching tags: ${e.message}",
                     e
                 )
+                isLoaded.set(false)
                 _uiState.value =
                     TagsAndCategoriesCardUiState.Error(
                         resourceProvider.getString(

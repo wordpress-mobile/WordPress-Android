@@ -13,6 +13,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import org.wordpress.android.R
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.newstats.repository.InsightsCardsConfigurationRepository
 import org.wordpress.android.ui.newstats.repository.InsightsResult
@@ -22,6 +23,7 @@ import org.wordpress.android.ui.newstats.repository.StatsInsightsUseCase
 import org.wordpress.android.ui.newstats.repository.StatsTagsUseCase
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.NetworkUtilsWrapper
+import org.wordpress.android.viewmodel.ResourceProvider
 import java.util.concurrent.atomic.AtomicBoolean
 import kotlin.coroutines.cancellation.CancellationException
 import javax.inject.Inject
@@ -35,7 +37,8 @@ class InsightsViewModel @Inject constructor(
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     private val statsSummaryUseCase: StatsSummaryUseCase,
     private val statsInsightsUseCase: StatsInsightsUseCase,
-    private val statsTagsUseCase: StatsTagsUseCase
+    private val statsTagsUseCase: StatsTagsUseCase,
+    private val resourceProvider: ResourceProvider
 ) : ViewModel() {
     private val _visibleCards =
         MutableStateFlow<List<InsightsCardType>>(
@@ -175,7 +178,9 @@ class InsightsViewModel @Inject constructor(
             )
             _summaryResult.emit(
                 StatsSummaryResult.Error(
-                    e.message ?: "Unknown error"
+                    resourceProvider.getString(
+                        R.string.stats_error_unknown
+                    )
                 )
             )
         }
@@ -207,7 +212,9 @@ class InsightsViewModel @Inject constructor(
             )
             _insightsResult.emit(
                 InsightsResult.Error(
-                    e.message ?: "Unknown error"
+                    resourceProvider.getString(
+                        R.string.stats_error_unknown
+                    )
                 )
             )
         }
@@ -273,10 +280,10 @@ class InsightsViewModel @Inject constructor(
                     !insightsFetched.get())
         _cardsToLoad.value = config.visibleCards
         if (needsNewFetch) {
-            isDataLoaded.set(false)
-            isDataLoading.set(false)
             fetchJob?.cancel()
-            loadDataIfNeeded()
+            isDataLoaded.set(false)
+            isDataLoading.set(true)
+            fetchData()
         }
     }
 

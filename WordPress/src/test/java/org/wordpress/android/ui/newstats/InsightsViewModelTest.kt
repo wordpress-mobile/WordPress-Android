@@ -28,6 +28,7 @@ import org.wordpress.android.ui.newstats.repository.StatsSummaryUseCase
 import org.wordpress.android.ui.newstats.repository.StatsInsightsUseCase
 import org.wordpress.android.ui.newstats.repository.StatsTagsUseCase
 import org.wordpress.android.util.NetworkUtilsWrapper
+import org.wordpress.android.viewmodel.ResourceProvider
 
 @Suppress("LargeClass")
 @ExperimentalCoroutinesApi
@@ -57,6 +58,10 @@ class InsightsViewModelTest :
     @Mock
     private lateinit var statsTagsUseCase:
         StatsTagsUseCase
+
+    @Mock
+    private lateinit var resourceProvider:
+        ResourceProvider
 
     private lateinit var viewModel: InsightsViewModel
 
@@ -98,7 +103,8 @@ class InsightsViewModelTest :
             networkUtilsWrapper,
             statsSummaryUseCase,
             statsInsightsUseCase,
-            statsTagsUseCase
+            statsTagsUseCase,
+            resourceProvider
         )
     }
 

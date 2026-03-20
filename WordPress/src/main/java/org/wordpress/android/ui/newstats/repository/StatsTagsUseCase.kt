@@ -87,7 +87,11 @@ class StatsTagsUseCase @Inject constructor(
                 throw e
             } catch (e: Exception) {
                 mutex.withLock { inFlight = null }
-                deferred.completeExceptionally(e)
+                deferred.complete(
+                    TagsResult.Error(
+                        e.message ?: "Unknown error"
+                    )
+                )
                 throw e
             }
         }
