@@ -142,42 +142,43 @@ class ReaderPostDetailHeaderView @JvmOverloads constructor(
         state: InteractionSectionUiState,
         readingPreferences: ReaderReadingPreferences?,
         themeValues: ReaderReadingPreferences.ThemeValues?,
+    ) = with(binding) {
+        val viewContext = root.context
+
+        val likeCount = state.likeCount
+        val commentCount = state.commentCount
+
+        val likeLabel = ReaderUtils.getShortLikeLabelText(viewContext, likeCount)
+            .takeIf { likeCount > 0 }
+        val commentLabel = ReaderUtils.getShortCommentLabelText(viewContext, commentCount)
+            .takeIf { commentCount > 0 }
+
+        uiHelpers.setTextOrHide(headerLikeCount, likeLabel)
+        uiHelpers.setTextOrHide(headerCommentCount, commentLabel)
+        headerDotSeparator.isVisible = likeLabel != null && commentLabel != null
+
+        headerLikeCount.setOnClickListener { state.onLikesClicked() }
+        headerCommentCount.setOnClickListener { state.onCommentsClicked() }
+
+        applyInteractionSectionTheme(readingPreferences, themeValues)
+    }
+
+    private fun applyInteractionSectionTheme(
+        readingPreferences: ReaderReadingPreferences?,
+        themeValues: ReaderReadingPreferences.ThemeValues?,
     ) {
-        with(binding) {
-            val viewContext = root.context
+        readingPreferences ?: return
 
-            val likeCount = state.likeCount
-            val commentCount = state.commentCount
+        val baseFontSize = resources.getDimension(R.dimen.text_sz_medium)
+        val fontSize = baseFontSize * readingPreferences.fontSize.multiplier
+        val typeface = readingPreferences.fontFamily.toTypeface()
+        val textColor = themeValues?.intTextColor
 
-            val likeLabel = ReaderUtils.getShortLikeLabelText(viewContext, likeCount)
-                .takeIf { likeCount > 0 }
-            val commentLabel = ReaderUtils.getShortCommentLabelText(viewContext, commentCount)
-                .takeIf { commentCount > 0 }
-
-            uiHelpers.setTextOrHide(headerLikeCount, likeLabel)
-            uiHelpers.setTextOrHide(headerCommentCount, commentLabel)
-            headerDotSeparator.isVisible = likeLabel != null && commentLabel != null
-
-            headerLikeCount.setOnClickListener { state.onLikesClicked() }
-            headerCommentCount.setOnClickListener { state.onCommentsClicked() }
-
-            readingPreferences?.let { prefs ->
-                val baseFontSize = viewContext.resources.getDimension(R.dimen.text_sz_medium)
-                val fontSize = baseFontSize * prefs.fontSize.multiplier
-                headerLikeCount.setTextSize(TypedValue.COMPLEX_UNIT_PX, fontSize)
-                headerCommentCount.setTextSize(TypedValue.COMPLEX_UNIT_PX, fontSize)
-                headerDotSeparator.setTextSize(TypedValue.COMPLEX_UNIT_PX, fontSize)
-
-                headerLikeCount.typeface = prefs.fontFamily.toTypeface()
-                headerCommentCount.typeface = prefs.fontFamily.toTypeface()
-                headerDotSeparator.typeface = prefs.fontFamily.toTypeface()
-
-                themeValues?.let {
-                    headerLikeCount.setTextColor(it.intTextColor)
-                    headerCommentCount.setTextColor(it.intTextColor)
-                    headerDotSeparator.setTextColor(it.intTextColor)
-                }
+        listOf(binding.headerLikeCount, binding.headerCommentCount, binding.headerDotSeparator)
+            .forEach { view ->
+                view.setTextSize(TypedValue.COMPLEX_UNIT_PX, fontSize)
+                view.typeface = typeface
+                textColor?.let { view.setTextColor(it) }
             }
-        }
     }
 }

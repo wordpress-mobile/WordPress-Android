@@ -42,7 +42,6 @@ object NavigationIcons {
         )
     }
 
-    @Suppress("unused")
     val CloseIcon: NavigationIcon = {
         Icon(
             Icons.Default.Close,

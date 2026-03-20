@@ -88,26 +88,18 @@ class ReaderReadingPreferencesDialogFragment : DialogFragment() {
     }
 
     companion object {
-        private const val TAG =
-            "READER_READING_PREFERENCES_FRAGMENT"
+        private const val TAG = "READER_READING_PREFERENCES_FRAGMENT"
         private const val ARG_SOURCE = "source"
 
-        @JvmStatic
-        fun newInstance(
+        fun show(
+            fm: FragmentManager,
             source: ReaderReadingPreferencesTracker.Source,
         ): ReaderReadingPreferencesDialogFragment =
             ReaderReadingPreferencesDialogFragment().apply {
                 arguments = Bundle().apply {
                     putSerializable(ARG_SOURCE, source)
                 }
-            }
-
-        @JvmStatic
-        fun show(
-            fm: FragmentManager,
-            source: ReaderReadingPreferencesTracker.Source,
-        ): ReaderReadingPreferencesDialogFragment =
-            newInstance(source).also {
+            }.also {
                 it.show(fm, TAG)
             }
     }
