@@ -659,22 +659,6 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                 .show(childFragmentManager, JetpackPoweredBottomSheetFragment.TAG)
         }
 
-        viewModel.reloadFragment.observeEvent(viewLifecycleOwner) {
-            if (isAdded) {
-                val readingPreferences = getReadingPreferences()
-                val themeValues = ReaderReadingPreferences.ThemeValues.from(
-                    requireContext(), readingPreferences.theme
-                )
-                binding.root.setBackgroundColor(themeValues.intBackgroundColor)
-                appBar.setBackgroundColor(themeValues.intBackgroundColor)
-                appBar.findViewById<CollapsingToolbarLayout>(R.id.collapsing_toolbar)
-                    ?.setContentScrimColor(themeValues.intBackgroundColor)
-                layoutFooterBinding.root.setBackgroundColor(
-                    themeValues.intBackgroundColor
-                )
-                initNavigationBar()
-            }
-        }
     }
 
     private fun manageFollowConversationUiState(

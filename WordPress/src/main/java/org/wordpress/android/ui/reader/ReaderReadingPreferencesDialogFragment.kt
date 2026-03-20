@@ -26,7 +26,6 @@ import org.wordpress.android.ui.WPWebViewActivity
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.reader.models.ReaderReadingPreferences
 import org.wordpress.android.ui.reader.tracker.ReaderReadingPreferencesTracker
-import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel
 import org.wordpress.android.ui.reader.viewmodels.ReaderReadingPreferencesViewModel
 import org.wordpress.android.ui.reader.viewmodels.ReaderReadingPreferencesViewModel.ActionEvent
 import org.wordpress.android.ui.reader.views.compose.readingpreferences.ReadingPreferencesScreen
@@ -37,9 +36,6 @@ import org.wordpress.android.util.extensions.setWindowStatusBarColor
 @AndroidEntryPoint
 class ReaderReadingPreferencesDialogFragment : BottomSheetDialogFragment() {
     private val viewModel: ReaderReadingPreferencesViewModel by viewModels()
-    private val postDetailViewModel: ReaderPostDetailViewModel by viewModels(
-        ownerProducer = { requireParentFragment() }
-    )
 
     override fun getTheme(): Int {
         return R.style.ReaderReadingPreferencesDialogFragment
@@ -114,7 +110,7 @@ class ReaderReadingPreferencesDialogFragment : BottomSheetDialogFragment() {
     override fun onDismiss(dialog: DialogInterface) {
         if (viewModel.hasUnsavedChanges) {
             viewModel.syncCachedPreferences()
-            postDetailViewModel.onReadingPreferencesThemeChanged()
+            (activity as? ReaderPostPagerActivity)?.recreateCurrentPage()
         }
         viewModel.onScreenClosed()
         super.onDismiss(dialog)

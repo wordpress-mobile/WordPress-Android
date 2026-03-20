@@ -131,8 +131,6 @@
     <string name="me">Me</string>
     <string name="everyone">Everyone</string>
 
-    <string name="experimental_badge">&lt;Experimental&gt;</string>
-
     <string name="no_connection_error_title">Unable to load this content right now</string>
     <string name="no_connection_error_description">Check your network connection and try again.</string>
 

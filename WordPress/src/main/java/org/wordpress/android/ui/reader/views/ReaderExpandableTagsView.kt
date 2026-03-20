@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.reader.views
 
 import android.content.Context
+import android.content.res.ColorStateList
 import android.content.res.Resources
 import android.util.AttributeSet
 import android.util.TypedValue
@@ -35,6 +36,7 @@ class ReaderExpandableTagsView @JvmOverloads constructor(
     lateinit var readerTracker: ReaderTracker
 
     private var tagsUiState: List<TagUiState>? = null
+    private var lastReadingPreferences: ReaderReadingPreferences? = null
 
     private val tagChips
         get() = (0 until childCount - 1).map { getChildAt(it) as Chip }
@@ -65,10 +67,14 @@ class ReaderExpandableTagsView @JvmOverloads constructor(
         tagsUiState: List<TagUiState>,
         readingPreferences: ReaderReadingPreferences? = null
     ) {
-        if (this.tagsUiState != null && this.tagsUiState == tagsUiState) {
+        val prefsChanged = readingPreferences != lastReadingPreferences
+        if (this.tagsUiState != null && this.tagsUiState == tagsUiState
+            && !prefsChanged
+        ) {
             return
         }
         this.tagsUiState = tagsUiState
+        this.lastReadingPreferences = readingPreferences
         removeAllViews()
         addOverflowIndicatorChip(readingPreferences)
         addTagChips(tagsUiState, readingPreferences)
@@ -86,6 +92,7 @@ class ReaderExpandableTagsView @JvmOverloads constructor(
         readingPreferences?.let {
             chip.setTextSize(TypedValue.COMPLEX_UNIT_PX, chip.textSize * it.fontSize.multiplier)
             chip.typeface = it.fontFamily.toTypeface()
+            applyChipColors(chip, it)
         }
 
         addView(chip)
@@ -107,10 +114,29 @@ class ReaderExpandableTagsView @JvmOverloads constructor(
             readingPreferences?.let { prefs ->
                 chip.setTextSize(TypedValue.COMPLEX_UNIT_PX, chip.textSize * prefs.fontSize.multiplier)
                 chip.typeface = prefs.fontFamily.toTypeface()
+                applyChipColors(chip, prefs)
             }
 
             addView(chip, index)
         }
+    }
+
+    private fun applyChipColors(
+        chip: Chip,
+        prefs: ReaderReadingPreferences
+    ) {
+        val themeValues = ReaderReadingPreferences.ThemeValues.from(
+            context, prefs.theme
+        )
+        // Must use ColorStateList overload — Chip overrides setTextColor(ColorStateList)
+        // to update ChipDrawable, but TextView.setTextColor(int) bypasses that override.
+        chip.setTextColor(ColorStateList.valueOf(themeValues.intTextColor))
+        val strokeAlpha = resources.getFloat(R.dimen.expandable_chips_chip_stroke_alpha)
+        val strokeColor = androidx.core.graphics.ColorUtils.setAlphaComponent(
+            themeValues.intTextColor,
+            (strokeAlpha * 255).toInt()
+        )
+        chip.chipStrokeColor = ColorStateList.valueOf(strokeColor)
     }
 
     private fun expandLayout(isChecked: Boolean) {

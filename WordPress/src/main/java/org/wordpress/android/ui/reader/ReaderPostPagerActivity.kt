@@ -1056,12 +1056,39 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
     }
 
     /**
+     * Tells the ViewPager2 adapter to destroy and recreate the current fragment.
+     * Used after reading preferences change so the fragment is re-inflated with the new theme.
+     */
+    fun recreateCurrentPage() {
+        pagerAdapter?.recreateFragments()
+    }
+
+    /**
      * ViewPager2 adapter containing post detail fragments
      */
     private inner class PostPagerAdapter(
         private val idList: ReaderBlogIdPostIdList,
     ) : FragmentStateAdapter(this@ReaderPostPagerActivity) {
         var allPostsLoaded: Boolean = false
+        private var generation = 0L
+
+        /**
+         * Increments the generation counter so [getItemId] returns new IDs,
+         * causing [FragmentStateAdapter] to destroy old fragments and create fresh ones.
+         */
+        fun recreateFragments() {
+            generation++
+            notifyDataSetChanged()
+        }
+
+        override fun getItemId(position: Int): Long =
+            position.toLong() + generation * GENERATION_OFFSET
+
+        override fun containsItem(itemId: Long): Boolean {
+            val pos = (itemId % GENERATION_OFFSET).toInt()
+            return itemId / GENERATION_OFFSET == generation &&
+                isValidPosition(pos)
+        }
 
         fun canRequestMostPosts(): Boolean {
             return !allPostsLoaded &&
@@ -1104,16 +1131,16 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
         }
 
         /**
-         * In ViewPager2 the FragmentManager by default have assigned tags to fragments like this:
-         *  Fragment in 1st position has a tag of "f0"
-         *  Fragment in 2nd position has a tag of "f1"
-         *  etc.
+         * FragmentStateAdapter tags fragments as "f${getItemId(position)}".
          */
         fun getFragmentAtPosition(position: Int) =
-                supportFragmentManager.findFragmentByTag("f$position") as? ReaderPostDetailFragment
+            supportFragmentManager.findFragmentByTag(
+                "f${getItemId(position)}"
+            ) as? ReaderPostDetailFragment
     }
 
     companion object {
         private const val OFFSCREEN_PAGE_LIMIT = 2
+        private const val GENERATION_OFFSET = 100_000L
     }
 }
