@@ -1076,6 +1076,7 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
          * Increments the generation counter so [getItemId] returns new IDs,
          * causing [FragmentStateAdapter] to destroy old fragments and create fresh ones.
          */
+        @SuppressLint("NotifyDataSetChanged")
         fun recreateFragments() {
             generation++
             notifyDataSetChanged()
