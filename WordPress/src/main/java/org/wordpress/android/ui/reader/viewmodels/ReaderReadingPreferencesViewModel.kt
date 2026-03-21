@@ -66,7 +66,11 @@ class ReaderReadingPreferencesViewModel @Inject constructor(
      */
     fun onSaveClick() {
         launch {
-            saveReadingPreferencesInternal()
+            val currentPreferences = currentReadingPreferences.value
+            if (currentPreferences != originalReadingPreferences) {
+                saveReadingPreferences(currentPreferences)
+                readingPreferencesTracker.trackSaved(currentPreferences)
+            }
             _actionEvents.emit(ActionEvent.SaveAndClose)
         }
     }
@@ -77,14 +81,6 @@ class ReaderReadingPreferencesViewModel @Inject constructor(
     fun onCloseClick() {
         launch {
             _actionEvents.emit(ActionEvent.Close)
-        }
-    }
-
-    private suspend fun saveReadingPreferencesInternal() {
-        val currentPreferences = currentReadingPreferences.value
-        if (currentPreferences != originalReadingPreferences) {
-            saveReadingPreferences(currentPreferences)
-            readingPreferencesTracker.trackSaved(currentPreferences)
         }
     }
 

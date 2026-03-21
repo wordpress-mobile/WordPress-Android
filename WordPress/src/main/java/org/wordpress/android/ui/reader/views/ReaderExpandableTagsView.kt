@@ -84,13 +84,7 @@ class ReaderExpandableTagsView @JvmOverloads constructor(
             readerTracker.track(Stat.READER_CHIPS_MORE_TOGGLED)
             expandLayout(isChecked)
         }
-
-        readingPreferences?.let {
-            chip.setTextSize(TypedValue.COMPLEX_UNIT_PX, chip.textSize * it.fontSize.multiplier)
-            chip.typeface = it.fontFamily.toTypeface()
-            applyChipColors(chip, it)
-        }
-
+        chip.applyReadingPreferences(readingPreferences)
         addView(chip)
     }
 
@@ -106,14 +100,16 @@ class ReaderExpandableTagsView @JvmOverloads constructor(
                     onClick.invoke(tagUiState.slug)
                 }
             }
-
-            readingPreferences?.let { prefs ->
-                chip.setTextSize(TypedValue.COMPLEX_UNIT_PX, chip.textSize * prefs.fontSize.multiplier)
-                chip.typeface = prefs.fontFamily.toTypeface()
-                applyChipColors(chip, prefs)
-            }
-
+            chip.applyReadingPreferences(readingPreferences)
             addView(chip, index)
+        }
+    }
+
+    private fun Chip.applyReadingPreferences(readingPreferences: ReaderReadingPreferences?) {
+        readingPreferences?.let { prefs ->
+            setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize * prefs.fontSize.multiplier)
+            typeface = prefs.fontFamily.toTypeface()
+            applyChipColors(this, prefs)
         }
     }
 
