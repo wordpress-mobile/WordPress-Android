@@ -265,6 +265,16 @@ class ReaderPostRenderer(
         }
         content = removeInlineStyles(content)
 
+        // strip videopress-iframe.js which can permanently hide iframes on error
+        content = content.replace(
+            Regex(
+                "<script[^>]*videopress-iframe\\.js[^>]*>"
+                    + "\\s*</script>",
+                RegexOption.IGNORE_CASE
+            ),
+            ""
+        )
+
         // some content (such as Vimeo embeds) don't have "http:" before links
         content = content.replace("src=\"//", "src=\"http://")
 
@@ -525,7 +535,7 @@ class ReaderPostRenderer(
             .append(" font-family: sans-serif;")
             .append(" }")
             // horizontally center iframes
-            .append(" iframe { display: block; margin: 0 auto; }")
+            .append(" iframe { display: block; margin: 0 auto; max-width: 100%; }")
             // hide forms, form-related elements, legacy RSS sharing links and other ad-related content
             // http://bit.ly/2FUTvsP
             .append(" form, input, select, button textarea { display: none; }")
