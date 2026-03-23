@@ -28,7 +28,7 @@ import javax.inject.Inject
 import kotlin.math.abs
 
 private const val PERCENTAGE_BASE = 100.0
-private const val DAYS_THRESHOLD_FOR_MONTHLY_DISPLAY = 30
+private const val DAYS_THRESHOLD_FOR_MONTHLY_DISPLAY = 31
 
 private val HOURLY_FORMAT_REGEX = Regex("""\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}""")
 private val DAILY_FORMAT_REGEX = Regex("""\d{4}-\d{2}-\d{2}""")

@@ -54,6 +54,7 @@ private const val DAYS_IN_6_MONTHS = 182
 private const val DAYS_IN_12_MONTHS = 365
 private const val MONTHS_IN_6_MONTHS = 6
 private const val MONTHS_IN_12_MONTHS = 12
+private const val MAX_DAYS_IN_MONTH = 31
 private const val PERCENTAGE_MULTIPLIER = 100.0
 private const val PERCENTAGE_NO_CHANGE = 0.0
 
@@ -512,12 +513,28 @@ class StatsRepository @Inject constructor(
     private fun calculateCustomPeriodDates(startDate: LocalDate, endDate: LocalDate): PeriodDateRange {
         val daysBetween = ChronoUnit.DAYS.between(startDate, endDate).toInt() + 1
 
+        // Single day → hourly granularity (like Today)
+        if (daysBetween == 1) {
+            val previousDate = startDate.minusDays(1)
+            return PeriodDateRange(
+                currentStart = startDate,
+                currentEnd = startDate.plusDays(1),
+                previousStart = previousDate,
+                previousEnd = startDate,
+                quantity = HOURLY_QUANTITY,
+                unit = StatsUnit.HOUR,
+                currentDisplayDate = startDate,
+                previousDisplayDate = previousDate
+            )
+        }
+
         val previousEnd = startDate.minusDays(1)
         val previousStart = previousEnd.minusDays(daysBetween.toLong() - 1)
 
-        // Determine unit based on range
+        // Determine unit based on range — use daily for up to a full
+        // month (31 days), monthly beyond that
         val unit = when {
-            daysBetween <= DAYS_IN_30_DAYS -> StatsUnit.DAY
+            daysBetween <= MAX_DAYS_IN_MONTH -> StatsUnit.DAY
             else -> StatsUnit.MONTH
         }
 
