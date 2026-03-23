@@ -133,7 +133,7 @@ class ApplicationPasswordLoginHelper @Inject constructor(
 
     fun trackStoringFailed(siteUrl: String?, reason: String) {
         val properties: MutableMap<String, String?> = HashMap()
-        properties[URL_TAG] = siteUrl
+        properties[URL_TAG] = maskUrl(siteUrl.orEmpty())
         properties[REASON_TAG] = reason
         AnalyticsTracker.track(
             Stat.APPLICATION_PASSWORD_STORING_FAILED,
@@ -192,7 +192,7 @@ class ApplicationPasswordLoginHelper @Inject constructor(
 
     private fun trackSuccessful(siteUrl: String) {
         val properties: MutableMap<String, String?> = HashMap()
-        properties[URL_TAG] = siteUrl
+        properties[URL_TAG] = maskUrl(siteUrl)
         properties[SUCCESS_TAG] = "true"
         AnalyticsTracker.track(
             if (buildConfigWrapper.isJetpackApp) {
