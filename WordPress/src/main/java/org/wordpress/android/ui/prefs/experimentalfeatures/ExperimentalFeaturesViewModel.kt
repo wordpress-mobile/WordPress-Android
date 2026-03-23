@@ -7,8 +7,12 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import org.wordpress.android.BuildConfig
+import org.wordpress.android.analytics.AnalyticsTracker.Stat
+import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures.Feature
+import org.wordpress.android.util.AppLog.T
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.config.GutenbergKitFeature
 import javax.inject.Inject
 
@@ -16,7 +20,9 @@ import javax.inject.Inject
 internal class ExperimentalFeaturesViewModel @Inject constructor(
     private val experimentalFeatures: ExperimentalFeatures,
     private val gutenbergKitFeature: GutenbergKitFeature,
+    private val appLogWrapper: AppLogWrapper,
     private val appPrefsWrapper: AppPrefsWrapper,
+    private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
 ) : ViewModel() {
     private val _switchStates = MutableStateFlow<Map<Feature, Boolean>>(emptyMap())
     val switchStates: StateFlow<Map<Feature, Boolean>> = _switchStates.asStateFlow()
@@ -73,5 +79,13 @@ internal class ExperimentalFeaturesViewModel @Inject constructor(
                 experimentalFeatures.setEnabled(feature, enabled)
             }
         }
+        appLogWrapper.d(T.SETTINGS, "Experimental feature ${feature.prefKey} set to $enabled")
+        analyticsTrackerWrapper.track(
+            Stat.EXPERIMENTAL_FEATURE_TOGGLED,
+            mapOf(
+                "feature" to feature.prefKey,
+                "enabled" to enabled
+            )
+        )
     }
 }
