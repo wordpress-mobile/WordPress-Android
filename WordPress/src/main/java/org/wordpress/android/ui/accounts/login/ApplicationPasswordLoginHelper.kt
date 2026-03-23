@@ -173,15 +173,19 @@ class ApplicationPasswordLoginHelper @Inject constructor(
         sites: List<SiteModel>
     ) {
         val availableSiteUrls = sites.joinToString { it.url }
-        val detail = "$siteUrl (normalized: $normalizedUrl)" +
+        val logDetail = "$siteUrl (normalized: $normalizedUrl)" +
             " — ${sites.size} sites available: [$availableSiteUrls]"
         appLogWrapper.e(
             AppLog.T.DB,
             "A_P: Cannot save credentials" +
-                " - site not found: $detail"
+                " - site not found: $logDetail"
         )
         trackStoringFailed(siteUrl, "site_not_found")
-        reportStoringFailedToSentry("site_not_found", detail)
+        val maskedSiteUrls = sites.joinToString { maskUrl(it.url) }
+        val sentryDetail =
+            "${maskUrl(siteUrl.orEmpty())} (normalized: ${maskUrl(normalizedUrl.orEmpty())})" +
+                " — ${sites.size} sites available: [$maskedSiteUrls]"
+        reportStoringFailedToSentry("site_not_found", sentryDetail)
     }
 
     private fun trackSuccessful(siteUrl: String) {
@@ -257,6 +261,14 @@ class ApplicationPasswordLoginHelper @Inject constructor(
             .removePrefix("www.")
     }
 
+    private fun maskUrl(url: String): String {
+        val dotIndex = url.lastIndexOf('.')
+        if (dotIndex < MASK_LENGTH) return url
+        return url.replaceRange(
+            dotIndex - MASK_LENGTH, dotIndex, "X".repeat(MASK_LENGTH)
+        )
+    }
+
     private fun SiteModel.hasRegularCredentials(): Boolean {
         return !username.isNullOrEmpty() && !password.isNullOrEmpty()
     }
@@ -315,6 +327,7 @@ class ApplicationPasswordLoginHelper @Inject constructor(
     companion object {
         private const val JETPACK_SUCCESS_URL = "jetpack://app-pass-authorize"
         private const val WORDPRESS_SUCCESS_URL = "wordpress://app-pass-authorize"
+        private const val MASK_LENGTH = 3
     }
 
     data class UriLogin(
