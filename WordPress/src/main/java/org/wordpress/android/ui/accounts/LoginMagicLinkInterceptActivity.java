@@ -6,7 +6,7 @@ import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 
-import org.wordpress.android.login.LoginAnalyticsListener;
+import org.wordpress.android.ui.accounts.login.LoginAnalyticsListener;
 import org.wordpress.android.ui.JetpackConnectionSource;
 import org.wordpress.android.ui.main.BaseAppCompatActivity;
 import org.wordpress.android.ui.main.WPMainActivity;
@@ -17,7 +17,7 @@ import dagger.hilt.android.AndroidEntryPoint;
 
 /**
  * Deep link receiver for magic links. Starts {@link WPMainActivity} where flow is routed to login
- * or signup based on deep link scheme, host, and parameters.
+ * based on deep link scheme, host, and parameters.
  */
 @AndroidEntryPoint
 public class LoginMagicLinkInterceptActivity extends BaseAppCompatActivity {
@@ -43,14 +43,7 @@ public class LoginMagicLinkInterceptActivity extends BaseAppCompatActivity {
 
         if (hasMagicLinkLoginIntent()) {
             intent.putExtra(WPMainActivity.ARG_IS_MAGIC_LINK_LOGIN, true);
-
-            if (hasMagicLinkSignupIntent()) {
-                mLoginAnalyticsListener.trackSignupMagicLinkOpened();
-                intent.putExtra(WPMainActivity.ARG_IS_MAGIC_LINK_SIGNUP, true);
-            } else {
-                mLoginAnalyticsListener.trackLoginMagicLinkOpened();
-                intent.putExtra(WPMainActivity.ARG_IS_MAGIC_LINK_SIGNUP, false);
-            }
+            mLoginAnalyticsListener.trackLoginMagicLinkOpened();
         }
 
         if (isJetpackConnectFlow()) {
@@ -66,18 +59,6 @@ public class LoginMagicLinkInterceptActivity extends BaseAppCompatActivity {
     private boolean hasMagicLinkLoginIntent() {
         String host = (mUri != null && mUri.getHost() != null) ? mUri.getHost() : "";
         return Intent.ACTION_VIEW.equals(mAction) && host.contains(LoginActivity.MAGIC_LOGIN);
-    }
-
-    private boolean hasMagicLinkSignupIntent() {
-        if (mUri != null) {
-            String parameter = SignupEpilogueActivity.MAGIC_SIGNUP_PARAMETER;
-            String value = (mUri.getQueryParameterNames() != null && mUri.getQueryParameter(parameter) != null)
-                    ? mUri.getQueryParameter(parameter) : "";
-            return Intent.ACTION_VIEW.equals(mAction)
-                   && value.equalsIgnoreCase(SignupEpilogueActivity.MAGIC_SIGNUP_VALUE);
-        } else {
-            return false;
-        }
     }
 
     private boolean isJetpackConnectFlow() {

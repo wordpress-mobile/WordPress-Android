@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.accounts.login.jetpack
 
-import android.content.Context
 import android.os.Bundle
 import android.view.View
 import androidx.activity.addCallback
@@ -10,9 +9,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.JetpackLoginEmptyViewBinding
-import org.wordpress.android.login.LoginListener
-import org.wordpress.android.login.util.AvatarHelper
-import org.wordpress.android.login.util.AvatarHelper.AvatarRequestListener
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.accounts.LoginNavigationEvents.ShowInstructions
 import org.wordpress.android.ui.accounts.LoginNavigationEvents.ShowSignInForResultJetpackOnly
@@ -20,6 +16,8 @@ import org.wordpress.android.ui.accounts.login.jetpack.LoginNoSitesViewModel.Sta
 import org.wordpress.android.ui.accounts.login.jetpack.LoginNoSitesViewModel.State.ShowUser
 import org.wordpress.android.ui.main.utils.MeGravatarLoader
 import org.wordpress.android.ui.utils.UiHelpers
+import org.wordpress.android.util.image.ImageManager
+import org.wordpress.android.util.image.ImageType
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -36,8 +34,10 @@ class LoginNoSitesFragment : Fragment(R.layout.jetpack_login_empty_view) {
     lateinit var meGravatarLoader: MeGravatarLoader
 
     @Inject
+    lateinit var imageManager: ImageManager
+
+    @Inject
     lateinit var uiHelpers: UiHelpers
-    private var loginListener: LoginListener? = null
     private val viewModel: LoginNoSitesViewModel by viewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -97,15 +97,11 @@ class LoginNoSitesFragment : Fragment(R.layout.jetpack_login_empty_view) {
     }
 
     private fun JetpackLoginEmptyViewBinding.loadGravatar(avatarUrl: String) {
-        AvatarHelper.loadAvatarFromUrl(
-            this@LoginNoSitesFragment,
-            meGravatarLoader.constructGravatarUrl(avatarUrl),
+        imageManager.loadIntoCircle(
             userContainer.imageAvatar,
-            object : AvatarRequestListener {
-                override fun onRequestFinished() {
-                    // no op
-                }
-            })
+            ImageType.AVATAR_WITHOUT_BACKGROUND,
+            meGravatarLoader.constructGravatarUrl(avatarUrl)
+        )
     }
 
     private fun JetpackLoginEmptyViewBinding.setUserName(value: String) =
@@ -125,18 +121,6 @@ class LoginNoSitesFragment : Fragment(R.layout.jetpack_login_empty_view) {
     override fun onSaveInstanceState(outState: Bundle) {
         viewModel.writeToBundle(outState)
         super.onSaveInstanceState(outState)
-    }
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-
-        // this will throw if parent activity doesn't implement the login listener interface
-        loginListener = context as? LoginListener
-    }
-
-    override fun onDetach() {
-        loginListener = null
-        super.onDetach()
     }
 
     override fun onResume() {

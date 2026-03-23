@@ -46,6 +46,8 @@ import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.models.JetpackPoweredScreen
 import org.wordpress.android.ui.ActivityLauncher
+import org.wordpress.android.ui.ActivityNavigator
+import org.wordpress.android.ui.accounts.login.WPcomLoginHelper
 import org.wordpress.android.ui.about.UnifiedAboutActivity
 import org.wordpress.android.ui.accounts.HelpActivity.Origin.ME_SCREEN_HELP
 import org.wordpress.android.ui.debug.DebugSettingsActivity
@@ -139,6 +141,12 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
     @Inject
     lateinit var appLogWrapper: AppLogWrapper
 
+    @Inject
+    lateinit var activityNavigator: ActivityNavigator
+
+    @Inject
+    lateinit var wpcomLoginHelper: WPcomLoginHelper
+
     private val viewModel: MeViewModel by viewModels()
     private val emailVerificationViewModel: EmailVerificationViewModel by viewModels()
 
@@ -222,10 +230,8 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
             if (accountStore.hasAccessToken()) {
                 signOutWordPressComWithConfirmation()
             } else {
-                if (BuildConfig.IS_JETPACK_APP) {
-                    ActivityLauncher.showSignInForResultJetpackOnly(activity)
-                } else {
-                    ActivityLauncher.showSignInForResultWpComOnly(activity)
+                activity?.let {
+                    activityNavigator.openInCustomTab(it, wpcomLoginHelper.wpcomLoginUri.toString())
                 }
             }
         }

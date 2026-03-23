@@ -1,8 +1,10 @@
 package org.wordpress.android.ui.accounts.login.applicationpassword
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -10,19 +12,18 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpApiClientProvider
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.ui.accounts.login.ApplicationPasswordLoginHelper
-import org.wordpress.android.ui.accounts.login.ApplicationPasswordLoginHelper.Companion.ANDROID_JETPACK_CLIENT
-import org.wordpress.android.ui.accounts.login.ApplicationPasswordLoginHelper.Companion.ANDROID_WORDPRESS_CLIENT
 import org.wordpress.android.ui.accounts.login.ApplicationPasswordLoginHelper.UriLogin
-import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures
-import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures.Feature
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.BuildConfigWrapper
+import org.wordpress.android.util.DeviceUtils
 import rs.wordpress.api.kotlin.WpRequestResult
 import uniffi.wp_api.ApplicationPasswordCreateParams
+import uniffi.wp_api.RequestExecutionErrorReason
 import uniffi.wp_api.WpUuid
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -31,11 +32,11 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ApplicationPasswordAutoAuthDialogViewModel @Inject constructor(
+    @ApplicationContext private val context: Context,
     private val wpApiClientProvider: WpApiClientProvider,
     private val applicationPasswordLoginHelper: ApplicationPasswordLoginHelper,
     private val buildConfigWrapper: BuildConfigWrapper,
     private val appLogWrapper: AppLogWrapper,
-    private val experimentalFeatures: ExperimentalFeatures,
 ) : ViewModel() {
     private val _navigationEvent = MutableSharedFlow<NavigationEvent>()
     val navigationEvent: SharedFlow<NavigationEvent> = _navigationEvent.asSharedFlow()
@@ -43,13 +44,10 @@ class ApplicationPasswordAutoAuthDialogViewModel @Inject constructor(
     private val _isLoading = MutableStateFlow(false)
     val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
 
-    @Suppress("TooGenericExceptionCaught")
+    @Suppress("TooGenericExceptionCaught", "LongMethod")
     fun createApplicationPassword(site: SiteModel) {
         viewModelScope.launch {
             try {
-                // Assume that the Application Password experimental feature can be enabled
-                enableApplicationPasswordIfNecessary()
-
                 require(site.username.isNotBlank()) { "Site username is required for cookie authentication" }
                 require(site.password.isNotBlank()) { "Site password is required for cookie authentication" }
 
@@ -57,10 +55,11 @@ class ApplicationPasswordAutoAuthDialogViewModel @Inject constructor(
                 val client = wpApiClientProvider.getWpApiClientCookiesNonceAuthentication(
                     site = site,
                 )
+                val deviceName = DeviceUtils.getInstance().getDeviceName(context)
                 val appName = if (buildConfigWrapper.isJetpackApp) {
-                    ANDROID_JETPACK_CLIENT
+                    context.getString(R.string.application_password_app_name_jetpack, deviceName)
                 } else {
-                    ANDROID_WORDPRESS_CLIENT
+                    context.getString(R.string.application_password_app_name_wordpress, deviceName)
                 }
                 val appId = WpUuid()
                 val response = client.request { requestBuilder ->
@@ -88,8 +87,33 @@ class ApplicationPasswordAutoAuthDialogViewModel @Inject constructor(
                         _navigationEvent.emit(NavigationEvent.Success)
                     }
 
+                    is WpRequestResult.WpError -> {
+                        appLogWrapper.e(
+                            AppLog.T.API,
+                            "Error creating application password: WpError - ${response.errorMessage}"
+                        )
+                        fallbackToManualLogin(site.url)
+                    }
+
+                    is WpRequestResult.RequestExecutionFailed -> {
+                        val isTimeout = response.reason is RequestExecutionErrorReason.HttpTimeoutError
+                        if (isTimeout) {
+                            appLogWrapper.e(AppLog.T.API, "Error creating application password: Request timed out")
+                        } else {
+                            appLogWrapper.e(
+                                AppLog.T.API,
+                                "Error creating application password: RequestExecutionFailed - " +
+                                    "reason=${response.reason}, statusCode=${response.statusCode}"
+                            )
+                        }
+                        fallbackToManualLogin(site.url)
+                    }
+
                     else -> {
-                        logCreationError(site.url, "response type: ${response::class.simpleName}")
+                        logCreationError(
+                            site.url,
+                            "${response::class.simpleName} - $response"
+                        )
                         fallbackToManualLogin(site.url)
                     }
                 }
@@ -107,13 +131,6 @@ class ApplicationPasswordAutoAuthDialogViewModel @Inject constructor(
             AppLog.T.API,
             "A_P: Error creating application password for: $siteUrl - $detail"
         )
-    }
-
-    @Suppress("TooGenericExceptionCaught")
-    private fun enableApplicationPasswordIfNecessary() {
-        if (!experimentalFeatures.isEnabled(Feature.EXPERIMENTAL_APPLICATION_PASSWORD_FEATURE)) {
-            experimentalFeatures.setEnabled(Feature.EXPERIMENTAL_APPLICATION_PASSWORD_FEATURE, true)
-        }
     }
 
     @Suppress("TooGenericExceptionCaught")

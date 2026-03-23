@@ -280,7 +280,9 @@ fun ActivitiesResponse.toActivityCardModel(): ActivityCardModel {
                             act.type,
                             act.wpcom_user_id,
                             act.icon?.url,
-                            act.role
+                            act.role,
+                            act.is_mcp_agent ?: false,
+                            act.mcp_client
                         )
                     }
                 )

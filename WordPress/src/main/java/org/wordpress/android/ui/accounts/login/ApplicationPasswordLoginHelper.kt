@@ -1,6 +1,10 @@
 package org.wordpress.android.ui.accounts.login
 
+import android.content.Context
 import androidx.core.net.toUri
+import com.automattic.android.tracks.crashlogging.CrashLogging
+import org.wordpress.android.R
+import org.wordpress.android.util.DeviceUtils
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import org.wordpress.android.analytics.AnalyticsTracker
@@ -14,6 +18,7 @@ import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.UrlUtils
+import org.wordpress.android.util.crashlogging.sendReportWithTag
 import rs.wordpress.api.kotlin.ApiDiscoveryResult
 import rs.wordpress.api.kotlin.WpLoginClient
 import uniffi.wp_api.applicationPasswordsUrl
@@ -22,6 +27,7 @@ import javax.inject.Named
 
 private const val URL_TAG = "url"
 private const val SUCCESS_TAG = "success"
+private const val REASON_TAG = "reason"
 
 class ApplicationPasswordLoginHelper @Inject constructor(
     @param:Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
@@ -32,7 +38,8 @@ class ApplicationPasswordLoginHelper @Inject constructor(
     private val wpLoginClient: WpLoginClient,
     private val appLogWrapper: AppLogWrapper,
     private val apiRootUrlCache: ApiRootUrlCache,
-    private val discoverSuccessWrapper: DiscoverSuccessWrapper
+    private val discoverSuccessWrapper: DiscoverSuccessWrapper,
+    private val crashLogging: CrashLogging
 ) {
     private var processedAppPasswordData: String? = null
 
@@ -82,24 +89,16 @@ class ApplicationPasswordLoginHelper @Inject constructor(
     }
 
     @Suppress("ComplexCondition")
-    suspend fun storeApplicationPasswordCredentialsFrom(urlLogin: UriLogin): Boolean {
+    suspend fun storeApplicationPasswordCredentialsFrom(
+        urlLogin: UriLogin
+    ): Boolean {
         if (urlLogin.apiRootUrl == null ||
             urlLogin.user.isNullOrEmpty() ||
             urlLogin.password.isNullOrEmpty() ||
             urlLogin.siteUrl == null ||
             urlLogin.siteUrl == processedAppPasswordData
-            ) {
-            appLogWrapper.e(
-                AppLog.T.DB,
-                "A_P: Cannot save application password credentials" +
-                    " for: ${urlLogin.siteUrl}" +
-                    " - apiRootUrl isNull=${urlLogin.apiRootUrl == null}" +
-                    ", user isEmpty=${urlLogin.user.isNullOrEmpty()}" +
-                    ", password isEmpty=${urlLogin.password.isNullOrEmpty()}" +
-                    ", siteUrl isNull=${urlLogin.siteUrl == null}" +
-                    ", alreadyProcessed=" +
-                    "${urlLogin.siteUrl == processedAppPasswordData}"
-            )
+        ) {
+            logAndReportBadData(urlLogin)
             return false
         }
 
@@ -121,17 +120,65 @@ class ApplicationPasswordLoginHelper @Inject constructor(
                 processedAppPasswordData = urlLogin.siteUrl // Save locally to avoid duplicated calls
                 true
             } else {
-                appLogWrapper.e(
-                    AppLog.T.DB,
-                    "A_P: Cannot save application password" +
-                        " credentials for: ${urlLogin.siteUrl}" +
-                        " (normalized: $normalizedUrl)" +
-                        " - site not found in store" +
-                        " (${siteStore.sites.size} sites available)"
+                logAndReportSiteNotFound(
+                    urlLogin.siteUrl, normalizedUrl
                 )
                 false
             }
         }
+    }
+
+    fun trackStoringFailed(siteUrl: String?, reason: String) {
+        val properties: MutableMap<String, String?> = HashMap()
+        properties[URL_TAG] = siteUrl
+        properties[REASON_TAG] = reason
+        AnalyticsTracker.track(
+            Stat.APPLICATION_PASSWORD_STORING_FAILED,
+            properties
+        )
+    }
+
+    private fun reportStoringFailedToSentry(
+        reason: String,
+        detail: String
+    ) {
+        crashLogging.sendReportWithTag(
+            Exception("A_P: $reason — $detail"),
+            AppLog.T.DB
+        )
+    }
+
+    private fun logAndReportBadData(urlLogin: UriLogin) {
+        val detail =
+            "apiRootUrl isNull=${urlLogin.apiRootUrl == null}" +
+                ", user isEmpty=${urlLogin.user.isNullOrEmpty()}" +
+                ", password isEmpty=" +
+                "${urlLogin.password.isNullOrEmpty()}" +
+                ", siteUrl isNull=${urlLogin.siteUrl == null}" +
+                ", alreadyProcessed=" +
+                "${urlLogin.siteUrl == processedAppPasswordData}"
+        appLogWrapper.e(
+            AppLog.T.DB,
+            "A_P: Cannot save credentials" +
+                " for: ${urlLogin.siteUrl} - $detail"
+        )
+        trackStoringFailed(urlLogin.siteUrl, "bad_data")
+        reportStoringFailedToSentry("bad_data", detail)
+    }
+
+    private fun logAndReportSiteNotFound(
+        siteUrl: String?,
+        normalizedUrl: String?
+    ) {
+        val detail = "$siteUrl (normalized: $normalizedUrl)" +
+            " — ${siteStore.sites.size} sites available"
+        appLogWrapper.e(
+            AppLog.T.DB,
+            "A_P: Cannot save credentials" +
+                " - site not found: $detail"
+        )
+        trackStoringFailed(siteUrl, "site_not_found")
+        reportStoringFailedToSentry("site_not_found", detail)
     }
 
     private fun trackSuccessful(siteUrl: String) {
@@ -206,9 +253,10 @@ class ApplicationPasswordLoginHelper @Inject constructor(
      * This class is created to wrap the Uri calls and let us unit test the login helper
      */
     class UriLoginWrapper @Inject constructor(
+        private val context: Context,
         private val apiRootUrlCache: ApiRootUrlCache,
         private val buildConfigWrapper: BuildConfigWrapper,
-        ) {
+    ) {
         fun parseUriLogin(url: String): UriLogin {
             val uri = url.toUri()
             val siteUrl = UrlUtils.normalizeUrl(uri.getQueryParameter("site_url"))
@@ -222,15 +270,15 @@ class ApplicationPasswordLoginHelper @Inject constructor(
             return if (authorizationUrl.isNullOrEmpty()) {
                 authorizationUrl.orEmpty()
             } else {
-                val appName: String
-                val successUrl: String
-                if (buildConfigWrapper.isJetpackApp) {
-                    appName = ANDROID_JETPACK_CLIENT
-                    successUrl = JETPACK_SUCCESS_URL
+                val userDeviceName = DeviceUtils.getInstance().getDeviceName(context)
+                val (appName, successUrl) = if (buildConfigWrapper.isJetpackApp) {
+                    context.getString(R.string.application_password_app_name_jetpack, userDeviceName) to
+                        JETPACK_SUCCESS_URL
                 } else {
-                    appName = ANDROID_WORDPRESS_CLIENT
-                    successUrl = WORDPRESS_SUCCESS_URL
+                    context.getString(R.string.application_password_app_name_wordpress, userDeviceName) to
+                        WORDPRESS_SUCCESS_URL
                 }
+
                 authorizationUrl.toUri().buildUpon().apply {
                     appendQueryParameter("app_name", appName)
                     appendQueryParameter("success_url", successUrl)
@@ -240,8 +288,6 @@ class ApplicationPasswordLoginHelper @Inject constructor(
     }
 
     companion object {
-        const val ANDROID_JETPACK_CLIENT = "android-jetpack-client"
-        const val ANDROID_WORDPRESS_CLIENT = "android-wordpress-client"
         private const val JETPACK_SUCCESS_URL = "jetpack://app-pass-authorize"
         private const val WORDPRESS_SUCCESS_URL = "wordpress://app-pass-authorize"
     }

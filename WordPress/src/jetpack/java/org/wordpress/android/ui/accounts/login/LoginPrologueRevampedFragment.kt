@@ -6,7 +6,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -28,6 +32,7 @@ import androidx.fragment.app.viewModels
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.isActive
 import org.wordpress.android.R
+import org.wordpress.android.ui.accounts.LoginActivity
 import org.wordpress.android.ui.accounts.login.components.LoopingTextWithBackground
 import org.wordpress.android.ui.accounts.login.components.PrimaryButton
 import org.wordpress.android.ui.accounts.login.components.SecondaryButton
@@ -41,7 +46,7 @@ val LocalPosition = compositionLocalOf { 0f }
 
 @AndroidEntryPoint
 class LoginPrologueRevampedFragment : Fragment() {
-    private lateinit var loginPrologueListener: LoginPrologueListener
+    private lateinit var loginActivity: LoginActivity
     private val viewModel by viewModels<LoginPrologueRevampedViewModel>()
 
     override fun onCreateView(
@@ -55,11 +60,11 @@ class LoginPrologueRevampedFragment : Fragment() {
                     LoginScreenRevamped(
                         onWpComLoginClicked = {
                             viewModel.onWpComLoginClicked()
-                            loginPrologueListener.showWPcomLoginScreen(this.context)
+                            loginActivity.showWPcomLoginScreen(this.context)
                         },
                         onSiteAddressLoginClicked = {
                             viewModel.onSiteAddressLoginClicked()
-                            loginPrologueListener.loginViaSiteAddress()
+                            loginActivity.loginViaSiteAddress()
                         },
                     )
                 }
@@ -69,8 +74,8 @@ class LoginPrologueRevampedFragment : Fragment() {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        check(context is LoginPrologueListener) { "$context must implement LoginPrologueListener" }
-        loginPrologueListener = context
+        check(context is LoginActivity) { "$context must be LoginActivity" }
+        loginActivity = context
     }
 
     companion object {
@@ -112,11 +117,12 @@ private fun LoginScreenRevamped(
     onWpComLoginClicked: () -> Unit,
     onSiteAddressLoginClicked: () -> Unit,
 ) {
-    Box {
+    Box(modifier = Modifier.fillMaxSize()) {
         LoopingTextWithBackground()
         TopLinearGradient()
         WordpressJetpackLogo(
             modifier = Modifier
+                .statusBarsPadding()
                 .padding(top = dimensionResource(id = R.dimen.login_prologue_logo_top_padding))
                 .width(132.dp)
                 .align(Alignment.TopCenter)
@@ -131,6 +137,7 @@ private fun LoginScreenRevamped(
                 onClick = onWpComLoginClicked,
                 modifier = Modifier.testTag(TestTags.BUTTON_WPCOM_AUTH)
             )
+            Spacer(modifier = Modifier.height(16.dp))
             SecondaryButton(onClick = onSiteAddressLoginClicked)
         }
     }

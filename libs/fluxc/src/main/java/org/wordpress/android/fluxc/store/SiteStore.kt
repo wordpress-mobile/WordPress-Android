@@ -1480,18 +1480,25 @@ open class SiteStore @Inject constructor(
         }
     }
 
+    @Suppress("TooGenericExceptionCaught")
     suspend fun fetchSitesXmlRpcFromApplicationPassword(
         payload: RefreshSitesXMLRPCApplicationPasswordCredentialsPayload
     ): OnSiteChanged {
         return coroutineEngine.withDefaultContext(T.API, this, "Fetch sites") {
-            updateSites(
-                siteXMLRPCClient.fetchSitesFromApplicationPassword(
-                    payload.url,
-                    payload.apiRootUrl,
-                    payload.username,
-                    payload.password
+            try {
+                updateSites(
+                    siteXMLRPCClient.fetchSitesFromApplicationPassword(
+                        payload.url,
+                        payload.apiRootUrl,
+                        payload.username,
+                        payload.password
+                    )
                 )
-            )
+            } catch (e: Exception) {
+                val errorMsg = e.message ?: e.javaClass.simpleName
+                AppLog.e(T.API, "Failed to fetch/store sites: $errorMsg", e)
+                OnSiteChanged(SiteError(SiteErrorType.GENERIC_ERROR, errorMsg))
+            }
         }
     }
 
@@ -1547,7 +1554,7 @@ open class SiteStore @Inject constructor(
         }
     }
 
-    @Suppress("SwallowedException")
+    @Suppress("SwallowedException", "TooGenericExceptionCaught")
     private fun updateApplicationPassword(siteModel: SiteModel): OnSiteChanged {
         return try {
             val siteFromDB = getSiteByLocalId(siteModel.id)
@@ -1569,6 +1576,14 @@ open class SiteStore @Inject constructor(
             OnSiteChanged(siteSqlUtils.insertOrUpdateSite(siteToStore))
         } catch (e: DuplicateSiteException) {
             OnSiteChanged(SiteError(DUPLICATE_SITE))
+        } catch (e: Exception) {
+            val errorMsg = e.message ?: e.javaClass.simpleName
+            AppLog.e(
+                T.DB,
+                "Failed to update application password: $errorMsg",
+                e
+            )
+            OnSiteChanged(SiteError(SiteErrorType.GENERIC_ERROR, errorMsg))
         }
     }
 

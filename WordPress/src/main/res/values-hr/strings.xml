@@ -56,14 +56,6 @@ Language: hr
     <string name="prepublishing_nudges_toolbar_title_categories">Kategorije</string>
     <string name="prepublishing_nudges_home_categories_not_set">Nije postavljeno</string>
     <string name="prepublishing_nudges_categories_action">Kategorije</string>
-    <string name="login_prologue_fifth_caption_three">Muzeji u Londonu</string>
-    <string name="login_prologue_fifth_tag_six">Politika</string>
-    <string name="login_prologue_fifth_tag_five">Glazba</string>
-    <string name="login_prologue_fifth_tag_four">Vrtlarstvo</string>
-    <string name="login_prologue_fifth_tag_three">Nogomet</string>
-    <string name="login_prologue_fifth_tag_two">Kuhanje</string>
-    <string name="login_prologue_fifth_tag_one">Umjetnost</string>
-    <string name="login_prologue_fifth_subtitle_one">Pamela Nguyen</string>
     <string name="media_loading_failed">Učitavanje sadržaja nije uspjelo</string>
     <string name="mlp_notice_blank_page_created">Izrađena je prazna stranica</string>
     <string name="mlp_notice_page_created">Stranica kreirana</string>
