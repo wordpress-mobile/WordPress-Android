@@ -509,20 +509,20 @@ class ApplicationPasswordLoginHelperTest : BaseUnitTest() {
     @Test
     fun `maskUrl with standard domain masks characters before TLD`() {
         val result = applicationPasswordLoginHelper.maskUrl("https://example.com")
-        assertEquals("https://examXXX.com", result)
+        assertEquals("https://exxxxxe.com", result)
     }
 
     @Test
     fun `maskUrl with port preserves port`() {
         val result = applicationPasswordLoginHelper.maskUrl("https://test.com:8080")
-        assertEquals("https://tXXX.com:8080", result)
+        assertEquals("https://txxt.com:8080", result)
     }
 
     @Test
     fun `maskUrl with dot in path masks only host`() {
         val result = applicationPasswordLoginHelper
             .maskUrl("https://example.com/wp-content/image.jpg")
-        assertEquals("https://examXXX.com/wp-content/image.jpg", result)
+        assertEquals("https://exxxxxe.com/wp-content/image.jpg", result)
     }
 
     @Test

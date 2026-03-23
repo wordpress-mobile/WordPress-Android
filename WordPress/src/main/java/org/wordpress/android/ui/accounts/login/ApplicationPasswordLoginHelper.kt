@@ -268,13 +268,15 @@ class ApplicationPasswordLoginHelper @Inject constructor(
             URI(url).host
         } catch (_: Exception) {
             null
-        } ?: url
+        } ?: return url
         val dotIndex = host.lastIndexOf('.')
-        if (dotIndex < MASK_LENGTH) return url
-        val maskedHost = host.replaceRange(
-            dotIndex - MASK_LENGTH, dotIndex, "X".repeat(MASK_LENGTH)
-        )
-        return url.replaceFirst(host, maskedHost)
+        if (dotIndex < MIN_MASK_LENGTH) return url
+        val domain = host.substring(0, dotIndex)
+        val tld = host.substring(dotIndex)
+        val maskedDomain = domain.first() +
+            "x".repeat(domain.length - 2) +
+            domain.last()
+        return url.replaceFirst(host, maskedDomain + tld)
     }
 
     private fun SiteModel.hasRegularCredentials(): Boolean {
@@ -335,7 +337,7 @@ class ApplicationPasswordLoginHelper @Inject constructor(
     companion object {
         private const val JETPACK_SUCCESS_URL = "jetpack://app-pass-authorize"
         private const val WORDPRESS_SUCCESS_URL = "wordpress://app-pass-authorize"
-        private const val MASK_LENGTH = 3
+        private const val MIN_MASK_LENGTH = 3
     }
 
     data class UriLogin(
