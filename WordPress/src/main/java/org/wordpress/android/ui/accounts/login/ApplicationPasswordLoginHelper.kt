@@ -104,7 +104,7 @@ class ApplicationPasswordLoginHelper @Inject constructor(
 
         return withContext(bgDispatcher) {
             val normalizedUrl = UrlUtils.normalizeUrl(urlLogin.siteUrl)
-            val site = siteStore.sites.firstOrNull { UrlUtils.normalizeUrl(it.url) ==  normalizedUrl}
+            val site = findSiteByUrl(normalizedUrl)
             if (site != null) {
                 site.apply {
                     apiRestUsernameEncrypted = ""
@@ -231,6 +231,25 @@ class ApplicationPasswordLoginHelper @Inject constructor(
             )
             sitesToReset.size
         }
+    }
+
+    private fun findSiteByUrl(normalizedUrl: String?): SiteModel? {
+        // Exact match first
+        siteStore.sites.firstOrNull {
+            UrlUtils.normalizeUrl(it.url) == normalizedUrl
+        }?.let { return it }
+
+        // Fallback: compare ignoring scheme and www prefix
+        val strippedUrl = normalizedUrl?.stripSchemeAndWww()
+        return siteStore.sites.firstOrNull {
+            UrlUtils.normalizeUrl(it.url)?.stripSchemeAndWww() == strippedUrl
+        }
+    }
+
+    private fun String.stripSchemeAndWww(): String {
+        return removePrefix("https://")
+            .removePrefix("http://")
+            .removePrefix("www.")
     }
 
     private fun SiteModel.hasRegularCredentials(): Boolean {
