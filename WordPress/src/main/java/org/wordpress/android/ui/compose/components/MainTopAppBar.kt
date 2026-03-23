@@ -42,7 +42,6 @@ object NavigationIcons {
         )
     }
 
-    @Suppress("unused")
     val CloseIcon: NavigationIcon = {
         Icon(
             Icons.Default.Close,
@@ -87,6 +86,8 @@ fun MainTopAppBar(
         colors = TopAppBarDefaults.topAppBarColors(
             containerColor = backgroundColor,
             titleContentColor = contentColor,
+            navigationIconContentColor = contentColor,
+            actionIconContentColor = contentColor,
         ),
         title = { Text(text = title ?: "") },
         navigationIcon = {

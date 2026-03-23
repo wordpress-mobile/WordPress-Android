@@ -158,9 +158,6 @@ class ReaderPostDetailViewModel @Inject constructor(
     private val _showJetpackPoweredBottomSheet = MutableLiveData<Event<Boolean>>()
     val showJetpackPoweredBottomSheet: LiveData<Event<Boolean>> = _showJetpackPoweredBottomSheet
 
-    private val _reloadFragment = MutableLiveData<Event<Unit>>()
-    val reloadFragment: LiveData<Event<Unit>> = _reloadFragment
-
     private val _postBlocked = MutableLiveData<Boolean>(false)
     val postBlocked: LiveData<Boolean> = _postBlocked
 
@@ -1054,10 +1051,6 @@ class ReaderPostDetailViewModel @Inject constructor(
                 }
             }
         }
-    }
-
-    fun onReadingPreferencesThemeChanged() {
-        _reloadFragment.value = Event(Unit)
     }
 
     override fun onCleared() {
