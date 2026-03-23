@@ -230,16 +230,6 @@ Language: nb_NO
     <string name="prepublishing_nudges_toolbar_title_categories">Kategorier</string>
     <string name="prepublishing_nudges_home_categories_not_set">Ikke angitt</string>
     <string name="prepublishing_nudges_categories_action">Kategorier</string>
-    <string name="login_prologue_fifth_caption_three">Museer i London</string>
-    <string name="login_prologue_fifth_tag_six">Politikk</string>
-    <string name="login_prologue_fifth_tag_five">Musikk</string>
-    <string name="login_prologue_fifth_tag_four">Hagestell</string>
-    <string name="login_prologue_fifth_tag_three">Fotball</string>
-    <string name="login_prologue_fifth_tag_two">Matlaging</string>
-    <string name="login_prologue_fifth_tag_one">Kunst</string>
-    <string name="login_prologue_fifth_subtitle_one">Pamela Nguyen</string>
-    <string name="login_prologue_second_subtitle_one">Å bli inspirert</string>
-    <string name="login_prologue_title_fifth">Følg dine favorittnettsteder og oppdag nye blogger.</string>
     <string name="mlp_notice_page_created">Side opprettet</string>
     <string name="reader_label_toolbar_back">Tilbake</string>
     <string name="reader_discover_empty_button_text">Kom i gang</string>

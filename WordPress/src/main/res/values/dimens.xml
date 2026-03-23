@@ -102,6 +102,7 @@
     <dimen name="margin_extra_medium_large">24dp</dimen>
     <dimen name="margin_extra_extra_medium_large">32dp</dimen>
     <dimen name="margin_extra_extra_large">48dp</dimen>
+    <dimen name="margin_extra_extra_extra_large">92dp</dimen>
     <dimen name="margin_64dp">64dp</dimen>
     <dimen name="margin_68dp">68dp</dimen>
     <dimen name="margin_114dp">114dp</dimen>
@@ -402,16 +403,7 @@
     <dimen name="tags_list_row_height">40dp</dimen>
     <dimen name="post_settings_retry_image_size">60dp</dimen>
 
-    <!-- login -->
-    <dimen name="promo_indicator_bullet_size">4dp</dimen>
-
     <dimen name="button_container_shadow_height">5dp</dimen>
-
-    <dimen name="prologue_intro_content_max_width">0dp</dimen>
-
-    <dimen name="prologue_promo_title_size">24sp</dimen>
-
-    <dimen name="prologue_promo_illustration_margin_bottom">88dp</dimen>
 
     <!-- signup -->
     <dimen name="progress_spinner_small">24dp</dimen>
@@ -639,9 +631,6 @@
     <dimen name="siq_header_scroll_snap_threshold">-96dp</dimen>
 
     <!-- Login Prologue -->
-    <dimen name="login_prologue_content_area">320dp</dimen>
-    <dimen name="login_prologue_background_circle_size">140dp</dimen>
-    <dimen name="login_prologue_background_circle_size_large">160dp</dimen>
     <dimen name="login_prologue_revamped_buttons_padding">20dp</dimen>
 
     <!-- edit text with chips view -->

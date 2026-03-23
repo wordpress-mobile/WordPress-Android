@@ -3,9 +3,6 @@ package org.wordpress.android.ui.postsrs
 import uniffi.wp_api.PostFormat
 import uniffi.wp_api.PostStatus
 import java.util.Date
-import java.util.TimeZone
-
-internal val UTC: TimeZone = TimeZone.getTimeZone("UTC")
 
 data class AuthorInfo(val id: Long, val name: String)
 
@@ -27,6 +24,8 @@ data class PostRsSettingsUiState(
     val siteAuthors: List<AuthorInfo> = emptyList(),
     val isLoadingMoreAuthors: Boolean = false,
     val canLoadMoreAuthors: Boolean = false,
+    val authorSearchQuery: String = "",
+    val isSearchingAuthors: Boolean = false,
     val canEditAuthor: Boolean = false,
     val password: String? = null,
     val authorName: FieldState = FieldState.Empty,

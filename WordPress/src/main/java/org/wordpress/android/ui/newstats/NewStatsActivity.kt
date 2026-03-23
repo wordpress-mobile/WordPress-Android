@@ -13,6 +13,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
@@ -59,11 +61,11 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.main.BaseAppCompatActivity
+import org.wordpress.android.ui.newstats.components.AddCardBottomSheet
 import org.wordpress.android.ui.newstats.components.AddStatsCardBottomSheet
 import org.wordpress.android.ui.newstats.components.CardPosition
 import org.wordpress.android.ui.newstats.components.NoConnectionContent
@@ -92,6 +94,19 @@ import org.wordpress.android.ui.newstats.viewsstats.ViewsStatsCard
 import org.wordpress.android.ui.newstats.viewsstats.ViewsStatsViewModel
 import org.wordpress.android.ui.newstats.subscribers.SubscribersTabContent
 import android.widget.Toast
+import org.wordpress.android.ui.newstats.alltimestats.AllTimeStatsCard
+import org.wordpress.android.ui.newstats.alltimestats.AllTimeStatsViewModel
+import org.wordpress.android.ui.newstats.mostpopularday.MostPopularDayCard
+import org.wordpress.android.ui.newstats.mostpopularday.MostPopularDayViewModel
+import org.wordpress.android.ui.newstats.mostpopulartime.MostPopularTimeCard
+import org.wordpress.android.ui.newstats.mostpopulartime.MostPopularTimeViewModel
+import org.wordpress.android.ui.newstats.yearinreview.YearInReviewCard
+import org.wordpress.android.ui.newstats.tagsandcategories.TagsAndCategoriesCard
+import org.wordpress.android.ui.newstats.tagsandcategories.TagsAndCategoriesDetailActivity
+import org.wordpress.android.ui.newstats.tagsandcategories.TagsAndCategoriesViewModel
+import org.wordpress.android.ui.newstats.yearinreview.YearInReviewDetailActivity
+import org.wordpress.android.ui.newstats.yearinreview.YearInReviewViewModel
+import org.wordpress.android.ui.newstats.util.ProvideShimmerBrush
 import org.wordpress.android.util.AppLog
 
 @AndroidEntryPoint
@@ -128,8 +143,7 @@ private fun NewStatsScreen(
     val viewsStatsViewModel: ViewsStatsViewModel = viewModel()
     val selectedPeriod by viewsStatsViewModel.selectedPeriod.collectAsState()
 
-    val showTabs = BuildConfig.DEBUG
-    val tabs = if (showTabs) StatsTab.entries else listOf(StatsTab.TRAFFIC)
+    val tabs = StatsTab.entries
     val pagerState = rememberPagerState(pageCount = { tabs.size })
     val coroutineScope = rememberCoroutineScope()
     var showPeriodMenu by remember { mutableStateOf(false) }
@@ -161,7 +175,7 @@ private fun NewStatsScreen(
                 },
                 actions = {
                     val currentTab = tabs[pagerState.currentPage]
-                    if (currentTab != StatsTab.SUBSCRIBERS) {
+                    if (currentTab == StatsTab.TRAFFIC) {
                         Box {
                             Row(
                                 verticalAlignment =
@@ -254,11 +268,16 @@ private fun NewStatsScreen(
 }
 
 @Composable
-private fun StatsTabContent(tab: StatsTab, viewsStatsViewModel: ViewsStatsViewModel) {
+private fun StatsTabContent(
+    tab: StatsTab,
+    viewsStatsViewModel: ViewsStatsViewModel
+) {
     when (tab) {
-        StatsTab.TRAFFIC -> TrafficTabContent(viewsStatsViewModel = viewsStatsViewModel)
+        StatsTab.TRAFFIC -> TrafficTabContent(
+            viewsStatsViewModel = viewsStatsViewModel
+        )
+        StatsTab.INSIGHTS -> InsightsTabContent()
         StatsTab.SUBSCRIBERS -> SubscribersTabContent()
-        else -> PlaceholderTabContent(tab)
     }
 }
 
@@ -873,14 +892,215 @@ private fun List<StatsCardType>.dispatchToVisibleCards(
     if (StatsCardType.DEVICES in this) onDevices()
 }
 
-
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun PlaceholderTabContent(tab: StatsTab) {
-    Box(
+@Suppress("LongMethod", "LongParameterList")
+private fun InsightsTabContent(
+    yearInReviewViewModel: YearInReviewViewModel = viewModel(),
+    allTimeStatsViewModel: AllTimeStatsViewModel = viewModel(),
+    mostPopularDayViewModel: MostPopularDayViewModel = viewModel(),
+    mostPopularTimeViewModel: MostPopularTimeViewModel = viewModel(),
+    tagsAndCategoriesViewModel: TagsAndCategoriesViewModel = viewModel(),
+    insightsViewModel: InsightsViewModel = viewModel()
+) {
+    val context = LocalContext.current
+    val yearInReviewUiState by yearInReviewViewModel.uiState.collectAsState()
+    val allTimeStatsUiState by allTimeStatsViewModel.uiState.collectAsState()
+    val mostPopularDayUiState by mostPopularDayViewModel.uiState.collectAsState()
+    val mostPopularTimeUiState by mostPopularTimeViewModel.uiState.collectAsState()
+    val tagsAndCategoriesUiState by tagsAndCategoriesViewModel.uiState.collectAsState()
+    val isRefreshing by insightsViewModel.isDataRefreshing.collectAsState()
+    val pullToRefreshState = rememberPullToRefreshState()
+
+    val visibleCards by insightsViewModel.visibleCards.collectAsState()
+    val hiddenCards by insightsViewModel.hiddenCards.collectAsState()
+    val isNetworkAvailable by insightsViewModel.isNetworkAvailable.collectAsState()
+    val cardsToLoad by insightsViewModel.cardsToLoad.collectAsState()
+    var showAddCardSheet by remember { mutableStateOf(false) }
+    val addCardSheetState = rememberModalBottomSheetState()
+
+    LaunchedEffect(cardsToLoad) {
+        insightsViewModel.loadDataIfNeeded()
+        if (InsightsCardType.TAGS_AND_CATEGORIES in cardsToLoad) {
+            tagsAndCategoriesViewModel.loadData()
+        }
+    }
+
+    val onRetryData = remember { { insightsViewModel.fetchData() } }
+
+    LaunchedEffect(Unit) {
+        insightsViewModel.summaryResult.collect { result ->
+            allTimeStatsViewModel.handleResult(result)
+            mostPopularDayViewModel.handleResult(result)
+        }
+    }
+
+    LaunchedEffect(Unit) {
+        insightsViewModel.insightsResult.collect { result ->
+            yearInReviewViewModel.handleResult(result)
+            mostPopularTimeViewModel.handleResult(result)
+        }
+    }
+
+    if (showAddCardSheet) {
+        AddCardBottomSheet(
+            sheetState = addCardSheetState,
+            availableCards = hiddenCards,
+            getDisplayNameResId = {
+                it.displayNameResId
+            },
+            onDismiss = { showAddCardSheet = false },
+            onCardSelected = { cardType ->
+                insightsViewModel.addCard(cardType)
+            }
+        )
+    }
+
+    var showNoConnectionScreen by remember {
+        mutableStateOf(!isNetworkAvailable)
+    }
+
+    LaunchedEffect(isNetworkAvailable) {
+        if (isNetworkAvailable && showNoConnectionScreen) {
+            showNoConnectionScreen = false
+            insightsViewModel.fetchData()
+        } else if (!isNetworkAvailable &&
+            !showNoConnectionScreen
+        ) {
+            showNoConnectionScreen = true
+        }
+    }
+
+    if (showNoConnectionScreen) {
+        NoConnectionContent(
+            onRetry = {
+                val isAvailable =
+                    insightsViewModel.checkNetworkStatus()
+                if (isAvailable) {
+                    showNoConnectionScreen = false
+                    insightsViewModel.fetchData()
+                }
+            }
+        )
+        return
+    }
+
+    PullToRefreshBox(
         modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
+        isRefreshing = isRefreshing,
+        state = pullToRefreshState,
+        onRefresh = {
+            insightsViewModel.checkNetworkStatus()
+            insightsViewModel.refreshData()
+            if (InsightsCardType.TAGS_AND_CATEGORIES
+                in visibleCards
+            ) {
+                tagsAndCategoriesViewModel.refresh()
+            }
+        },
+        indicator = {
+            PullToRefreshDefaults.Indicator(
+                state = pullToRefreshState,
+                isRefreshing = isRefreshing,
+                color = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.align(Alignment.TopCenter)
+            )
+        }
     ) {
-        Text(text = "${stringResource(id = tab.titleResId)} - Coming Soon")
+        val cardPositions = remember(visibleCards) {
+            visibleCards.mapIndexed { index, _ ->
+                CardPosition(index = index, totalCards = visibleCards.size)
+            }
+        }
+
+        ProvideShimmerBrush {
+            LazyColumn(modifier = Modifier.fillMaxSize()) {
+                if (visibleCards.isEmpty()) {
+                    item {
+                        val emptyStateMessage = stringResource(
+                            R.string.stats_no_cards_message
+                        )
+                        Text(
+                            text = emptyStateMessage,
+                            style = MaterialTheme.typography.bodyLarge,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(32.dp)
+                                .semantics {
+                                    contentDescription = emptyStateMessage
+                                },
+                            textAlign = TextAlign.Center
+                        )
+                    }
+                }
+
+                itemsIndexed(visibleCards) { index, cardType ->
+                    val pos = cardPositions.getOrNull(index)
+                    when (cardType) {
+                        InsightsCardType.ALL_TIME_STATS -> AllTimeStatsCard(
+                            uiState = allTimeStatsUiState,
+                            onRemoveCard = { insightsViewModel.removeCard(cardType) },
+                            onRetry = { allTimeStatsViewModel.showLoading(); onRetryData() },
+                            cardPosition = pos,
+                            onMoveUp = { insightsViewModel.moveCardUp(cardType) },
+                            onMoveToTop = { insightsViewModel.moveCardToTop(cardType) },
+                            onMoveDown = { insightsViewModel.moveCardDown(cardType) },
+                            onMoveToBottom = { insightsViewModel.moveCardToBottom(cardType) }
+                        )
+                        InsightsCardType.MOST_POPULAR_DAY -> MostPopularDayCard(
+                            uiState = mostPopularDayUiState,
+                            onRemoveCard = { insightsViewModel.removeCard(cardType) },
+                            onRetry = { mostPopularDayViewModel.showLoading(); onRetryData() },
+                            cardPosition = pos,
+                            onMoveUp = { insightsViewModel.moveCardUp(cardType) },
+                            onMoveToTop = { insightsViewModel.moveCardToTop(cardType) },
+                            onMoveDown = { insightsViewModel.moveCardDown(cardType) },
+                            onMoveToBottom = { insightsViewModel.moveCardToBottom(cardType) }
+                        )
+                        InsightsCardType.MOST_POPULAR_TIME -> MostPopularTimeCard(
+                            uiState = mostPopularTimeUiState,
+                            onRemoveCard = { insightsViewModel.removeCard(cardType) },
+                            onRetry = { mostPopularTimeViewModel.showLoading(); onRetryData() },
+                            cardPosition = pos,
+                            onMoveUp = { insightsViewModel.moveCardUp(cardType) },
+                            onMoveToTop = { insightsViewModel.moveCardToTop(cardType) },
+                            onMoveDown = { insightsViewModel.moveCardDown(cardType) },
+                            onMoveToBottom = { insightsViewModel.moveCardToBottom(cardType) }
+                        )
+                        InsightsCardType.YEAR_IN_REVIEW -> YearInReviewCard(
+                            uiState = yearInReviewUiState,
+                            onRemoveCard = { insightsViewModel.removeCard(cardType) },
+                            onShowAllClick = { YearInReviewDetailActivity.start(context) },
+                            onRetry = { yearInReviewViewModel.showLoading(); onRetryData() },
+                            cardPosition = pos,
+                            onMoveUp = { insightsViewModel.moveCardUp(cardType) },
+                            onMoveToTop = { insightsViewModel.moveCardToTop(cardType) },
+                            onMoveDown = { insightsViewModel.moveCardDown(cardType) },
+                            onMoveToBottom = { insightsViewModel.moveCardToBottom(cardType) }
+                        )
+                        InsightsCardType.TAGS_AND_CATEGORIES -> TagsAndCategoriesCard(
+                            uiState = tagsAndCategoriesUiState,
+                            onShowAllClick = { TagsAndCategoriesDetailActivity.start(context) },
+                            onRemoveCard = { insightsViewModel.removeCard(cardType) },
+                            onRetry = { tagsAndCategoriesViewModel.refresh() },
+                            cardPosition = pos,
+                            onMoveUp = { insightsViewModel.moveCardUp(cardType) },
+                            onMoveToTop = { insightsViewModel.moveCardToTop(cardType) },
+                            onMoveDown = { insightsViewModel.moveCardDown(cardType) },
+                            onMoveToBottom = { insightsViewModel.moveCardToBottom(cardType) }
+                        )
+                    }
+                }
+
+                item {
+                    AddCardButton(
+                        onClick = { showAddCardSheet = true },
+                        modifier = Modifier.padding(16.dp)
+                    )
+                }
+            }
+        }
     }
 }
 

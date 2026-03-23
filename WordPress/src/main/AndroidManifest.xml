@@ -128,6 +128,16 @@
             android:exported="false" />
 
         <activity
+            android:name=".ui.newstats.yearinreview.YearInReviewDetailActivity"
+            android:theme="@style/WordPress.NoActionBar"
+            android:exported="false" />
+
+        <activity
+            android:name=".ui.newstats.tagsandcategories.TagsAndCategoriesDetailActivity"
+            android:theme="@style/WordPress.NoActionBar"
+            android:exported="false" />
+
+        <activity
             android:name=".ui.newstats.subscribers.subscriberslist.SubscribersListDetailActivity"
             android:theme="@style/WordPress.NoActionBar"
             android:exported="false" />
@@ -144,7 +154,8 @@
             android:label="@string/me_section_screen_title" />
         <activity
             android:name=".ui.accounts.LoginActivity"
-            android:theme="@style/LoginTheme.TransparentSystemBars"
+            android:launchMode="singleTop"
+            android:theme="@style/LoginTheme"
             android:windowSoftInputMode="adjustResize"
             android:exported="true">
 
@@ -160,7 +171,7 @@
 
         <activity
             android:name=".ui.accounts.applicationpassword.ApplicationPasswordLoginActivity"
-            android:theme="@style/LoginTheme.TransparentSystemBars"
+            android:theme="@style/LoginTheme"
             android:windowSoftInputMode="adjustResize"
             android:exported="true">
 
@@ -201,17 +212,6 @@
                     android:scheme="${magicLinkScheme}" />
             </intent-filter>
         </activity>
-
-        <activity
-            android:name=".ui.accounts.SignupEpilogueActivity"
-            android:label="@string/signup_epilogue_screen_title"
-            android:theme="@style/LoginTheme" />
-
-        <activity
-            android:name=".ui.accounts.PostSignupInterstitialActivity"
-            android:label="@string/post_signup_interstitial_title"
-            android:theme="@style/LoginTheme"
-            />
 
         <activity
             android:name=".ui.sitecreation.SiteCreationActivity"
@@ -1198,12 +1198,6 @@
             android:permission="android.permission.BIND_JOB_SERVICE"
             android:exported="false"
             android:label="Installation Referrer Service" />
-
-        <service
-            android:name=".login.LoginWpcomService"
-            android:exported="false"
-            android:label="Login to WPCOM Service"
-            android:foregroundServiceType="shortService" />
 
         <service
             android:name=".ui.sitecreation.services.SiteCreationService"

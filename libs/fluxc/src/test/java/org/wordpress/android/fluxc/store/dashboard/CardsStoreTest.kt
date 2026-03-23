@@ -183,7 +183,9 @@ private val ACTIVITY_RESPONSE_ACTOR = ActivitiesResponse.Actor(
     ACTIVITY_ACTOR_EXTERNAL_USER_ID,
     ACTIVITY_ACTOR_WPCOM_USER_ID,
     ACTIVITY_RESPONSE_ICON,
-    ACTIVITY_ACTOR_ROLE
+    ACTIVITY_ACTOR_ROLE,
+    null,
+    null
 )
 private val ACTIVITY_RESPONSE_GENERATOR = ActivitiesResponse.Generator(10.3f, 123)
 private val ACTIVITY_RESPONSE_PAGE = ActivitiesResponse.ActivityResponse(
