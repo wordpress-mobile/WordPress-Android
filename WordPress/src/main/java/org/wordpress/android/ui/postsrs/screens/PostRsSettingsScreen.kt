@@ -73,6 +73,7 @@ import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.key
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
@@ -118,7 +119,7 @@ import uniffi.wp_api.PostFormat
 import uniffi.wp_api.PostStatus
 import java.util.Calendar
 import java.util.Date
-import org.wordpress.android.ui.postsrs.UTC
+import java.util.TimeZone
 
 @Composable
 @Suppress("LongParameterList")
@@ -1043,6 +1044,8 @@ private fun SettingsDialogs(
         is DialogState.FormatDialog -> FormatDialog(
             currentFormat = uiState.editedFormat
                 ?: uiState.postFormat,
+            formats = uiState.sitePostFormats,
+            isLoading = uiState.isLoadingFormats,
             onFormatSelected = onFormatSelected,
             onDismiss = onDismissDialog,
         )
@@ -1344,49 +1347,68 @@ private fun ExcerptDialog(
     )
 }
 
-@Suppress("ForbiddenComment")
 @Composable
 private fun FormatDialog(
     currentFormat: PostFormat?,
+    formats: List<PostFormat>,
+    isLoading: Boolean,
     onFormatSelected: (PostFormat) -> Unit,
     onDismiss: () -> Unit,
 ) {
-    // TODO: Replace hardcoded formats with site-supported
-    //  formats once wordpress-rs exposes that API
-    val formats = listOf(
-        PostFormat.Standard,
-        PostFormat.Aside,
-        PostFormat.Audio,
-        PostFormat.Chat,
-        PostFormat.Gallery,
-        PostFormat.Image,
-        PostFormat.Link,
-        PostFormat.Quote,
-        PostFormat.Status,
-        PostFormat.Video,
-    )
+    if (isLoading) {
+        AlertDialog(
+            onDismissRequest = onDismiss,
+            title = {
+                Text(
+                    stringResource(
+                        R.string
+                            .post_rs_settings_format_dialog_title
+                    )
+                )
+            },
+            text = {
+                Box(
+                    modifier = Modifier.fillMaxWidth(),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    CircularProgressIndicator()
+                }
+            },
+            confirmButton = {},
+        )
+        return
+    }
+
     val labels = formats.map { postFormatLabel(it) }
     val currentIndex = formats.indexOfFirst {
         it == currentFormat
     }.coerceAtLeast(0)
 
-    val selectedIndex = rememberSaveable {
-        mutableIntStateOf(currentIndex)
-    }
+    key(formats) {
+        val selectedIndex = rememberSaveable {
+            mutableIntStateOf(currentIndex)
+        }
 
-    SingleChoiceAlertDialog(
-        title = stringResource(
-            R.string.post_rs_settings_format_dialog_title
-        ),
-        options = labels,
-        selectedIndex = selectedIndex.intValue,
-        onOptionSelected = { selectedIndex.intValue = it },
-        onConfirm = {
-            onFormatSelected(formats[selectedIndex.intValue])
-        },
-        onDismiss = onDismiss,
-        confirmButtonText = stringResource(R.string.ok),
-    )
+        SingleChoiceAlertDialog(
+            title = stringResource(
+                R.string.post_rs_settings_format_dialog_title
+            ),
+            options = labels,
+            selectedIndex = selectedIndex.intValue,
+            onOptionSelected = {
+                selectedIndex.intValue = it
+            },
+            onConfirm = {
+                onFormatSelected(
+                    formats[selectedIndex.intValue]
+                )
+            },
+            onDismiss = onDismiss,
+            confirmButtonText = stringResource(
+                R.string.ok
+            ),
+        )
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -1396,15 +1418,18 @@ private fun DateDialog(
     onDateSelected: (Int, Int, Int) -> Unit,
     onDismiss: () -> Unit,
 ) {
-    // Normalize to UTC midnight for DatePickerState
+    // Extract the local date, then normalize to UTC midnight
+    // for DatePickerState (which operates in UTC millis)
     val initialMillis = currentDate?.let { date ->
-        val cal = Calendar.getInstance(UTC)
-        cal.time = date
-        cal[Calendar.HOUR_OF_DAY] = 0
-        cal[Calendar.MINUTE] = 0
-        cal[Calendar.SECOND] = 0
-        cal[Calendar.MILLISECOND] = 0
-        cal.timeInMillis
+        val localCal = Calendar.getInstance()
+        localCal.time = date
+        val utcCal = Calendar.getInstance(UTC)
+        utcCal.clear()
+        utcCal[Calendar.YEAR] = localCal[Calendar.YEAR]
+        utcCal[Calendar.MONTH] = localCal[Calendar.MONTH]
+        utcCal[Calendar.DAY_OF_MONTH] =
+            localCal[Calendar.DAY_OF_MONTH]
+        utcCal.timeInMillis
     } ?: System.currentTimeMillis()
     val datePickerState = rememberDatePickerState(
         initialSelectedDateMillis = initialMillis
@@ -1447,7 +1472,7 @@ private fun TimeDialog(
     onDismiss: () -> Unit,
 ) {
     val cal = remember(currentDate) {
-        Calendar.getInstance(UTC).apply {
+        Calendar.getInstance().apply {
             time = currentDate ?: Date()
         }
     }
@@ -1731,6 +1756,7 @@ private fun AuthorRow(
 }
 
 private const val AUTHOR_LOAD_THRESHOLD = 3
+private val UTC: TimeZone = TimeZone.getTimeZone("UTC")
 
 @Composable
 private fun DiscardDialog(

@@ -972,8 +972,6 @@
     <string name="experimental_features_feedback_dialog_title">Share feedback</string>
     <string name="experimental_features_feedback_dialog_message">Are you willing to share feedback on the experimental editor?</string>
     <string name="experimental_features_feedback_dialog_decline">Not now</string>
-    <string name="experimental_application_password_feature">Application Password log in</string>
-    <string name="experimental_application_password_feature_description">Enable Application Password for existing self-hosted sites. New sites use it by default.</string>
     <string name="modern_support">Modern Support</string>
     <string name="modern_support_description">Enable the new modern support experience</string>
     <string name="experimental_network_debugging">Network Debugging</string>
@@ -1525,15 +1523,33 @@
     <string name="stats_insights_total_stats_seven_days_negative">%1$s lower than the previous 7-days</string>
     <string name="stats_insights_average_likes">Avg likes/post</string>
     <string name="stats_insights_total_words">Total words</string>
+    <string name="stats_insights_words">Words</string>
+    <string name="stats_insights_likes">Likes</string>
+    <string name="stats_insights_total_posts">Total posts</string>
+    <string name="stats_insights_avg_comments_per_post">Avg comments per post</string>
+    <string name="stats_insights_avg_likes_per_post">Avg likes per post</string>
+    <string name="stats_insights_avg_words_per_post">Avg words per post</string>
     <string name="stats_insights_average_words">Avg words/post</string>
     <string name="stats_insights_best_day">Best Day</string>
     <string name="stats_insights_best_hour">Best Hour</string>
     <string name="stats_insights_best_ever">Best Views Ever</string>
     <string name="stats_insights_today_stats">Today</string>
+    <string name="stats_insights_year_in_review">Year in Review</string>
+    <string name="stats_insights_year_in_review_title">%s in review</string>
 
     <!-- Stats refreshed insights -->
     <string name="stats_insights_all_time_stats">All-time</string>
+    <string name="stats_insights_all_time_stats_title">All-time stats</string>
+    <string name="stats_insights_most_popular_day">Most popular day</string>
+    <string name="stats_insights_most_popular_day_label">Day</string>
+    <string name="stats_insights_views_percent">%1$s%% of views</string>
+    <string name="stats_insights_most_popular_time">Most popular time</string>
     <string name="stats_insights_tags_and_categories">Tags and Categories</string>
+    <string name="stats_insights_tags_empty">No tags or categories found</string>
+    <string name="stats_tag_type_category">Category</string>
+    <string name="stats_tag_type_tag">Tag</string>
+    <string name="stats_expand_group">Expand</string>
+    <string name="stats_collapse_group">Collapse</string>
     <string name="stats_insights_latest_post_empty">Check back when you\'ve published your first post!</string>
     <string name="stats_insights_latest_post_with_no_engagement">It\'s been %1$s since %2$s was published. Get the ball rolling and increase your post views by sharing your post:</string>
     <string name="stats_insights_latest_post_message">It’s been %1$s since %2$s was published. Here’s how the post performed so far:</string>
@@ -4578,12 +4594,9 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="application_password_required">Application Password Required</string>
     <string name="application_password_required_description">Application passwords are a more secure way to connect to your self-hosted site, and enable support for features like %1$s.</string>
     <string name="application_password_required_block_editor">Block Editor</string>
-    <string name="application_password_experimental_feature_note">\n\nNote: Application Password authentication on Android devices is an Experimental Feature.</string>
-    <string name="application_password_disable_feature_title">Disable Application Password?</string>
-    <string name="application_password_disable_feature_description">Disabling Application Password will remove the login for %1$s of your sites. You may need to re-add affected sites to login again.</string>
     <string name="application_password_info_title">Application Passwords</string>
     <string name="application_password_info_description_1">Application passwords are a secure way for apps to access your site without using your account password.</string>
-    <string name="application_password_info_description_2">New self-hosted sites added to the app are already using application passwords. Enabling this feature will also apply it to your existing sites.</string>
+    <string name="application_password_info_description_2">When you add sites to the app, application passwords will be created automatically as needed.</string>
     <string name="application_password_info_description_3">You can view and manage these passwords in your user profile within your WordPress site\'s admin panel.</string>
     <string name="application_password_info_description_4">Please note that revoking application passwords used by the app will terminate the app\'s access to your site. Be cautious when revoking application passwords created by the app.</string>
     <string name="enable">Enable</string>

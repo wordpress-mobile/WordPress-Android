@@ -40,6 +40,7 @@ import java.io.File
 import java.text.DateFormat
 import java.util.Calendar
 import java.util.Date
+import java.util.TimeZone
 import javax.inject.Inject
 
 @HiltViewModel
@@ -257,6 +258,11 @@ class PostRsSettingsViewModel @Inject constructor(
     }
 
     fun onFormatClicked() {
+        if (!hasFetchedFormats &&
+            !_uiState.value.isLoadingFormats
+        ) {
+            resolveSitePostFormats()
+        }
         _uiState.update {
             it.copy(dialogState = DialogState.FormatDialog)
         }
@@ -296,7 +302,7 @@ class PostRsSettingsViewModel @Inject constructor(
     fun onDateSelected(year: Int, month: Int, dayOfMonth: Int) {
         val current = _uiState.value
         val base = current.effectiveDate ?: Date()
-        val cal = Calendar.getInstance(UTC).apply {
+        val cal = Calendar.getInstance().apply {
             time = base
             this[Calendar.YEAR] = year
             this[Calendar.MONTH] = month
@@ -317,7 +323,7 @@ class PostRsSettingsViewModel @Inject constructor(
     fun onTimeSelected(hour: Int, minute: Int) {
         val current = _uiState.value
         val base = current.effectiveDate ?: Date()
-        val cal = Calendar.getInstance(UTC).apply {
+        val cal = Calendar.getInstance().apply {
             time = base
             this[Calendar.HOUR_OF_DAY] = hour
             this[Calendar.MINUTE] = minute
@@ -1110,13 +1116,49 @@ class PostRsSettingsViewModel @Inject constructor(
         }
     }
 
+    private var hasFetchedFormats = false
+
+    private fun resolveSitePostFormats() {
+        val site = site ?: return
+        viewModelScope.launch {
+            _uiState.update {
+                it.copy(isLoadingFormats = true)
+            }
+            @Suppress("TooGenericExceptionCaught")
+            try {
+                val formats =
+                    withContext(Dispatchers.IO) {
+                        restClient.fetchSitePostFormats(site)
+                    }
+                _uiState.update {
+                    it.copy(sitePostFormats = formats)
+                }
+                hasFetchedFormats = true
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                AppLog.w(
+                    AppLog.T.POSTS,
+                    "resolveSitePostFormats failed: ${e.message}"
+                )
+            }
+            _uiState.update {
+                it.copy(isLoadingFormats = false)
+            }
+        }
+    }
+
     private fun formatDate(dateGmt: Date): String {
         val fmt = DateFormat.getDateTimeInstance(
             DateFormat.MEDIUM,
             DateFormat.SHORT
         )
-        fmt.timeZone = UTC
-        return fmt.format(dateGmt)
+        val tz = TimeZone.getDefault()
+        val tzLabel = tz.getDisplayName(
+            tz.inDaylightTime(dateGmt),
+            TimeZone.SHORT
+        )
+        return "${fmt.format(dateGmt)} $tzLabel"
     }
 
     private fun PostRsSettingsUiState.preserveEdits(
@@ -1133,6 +1175,7 @@ class PostRsSettingsViewModel @Inject constructor(
         editedFeaturedImageId = from.editedFeaturedImageId,
         editedCategoryIds = from.editedCategoryIds,
         editedTagIds = from.editedTagIds,
+        sitePostFormats = from.sitePostFormats,
     )
 
     private class PostApiRequestException(message: String) :

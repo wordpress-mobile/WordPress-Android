@@ -19,7 +19,6 @@ Language: pl
     <string name="term_description_label">Opis:</string>
     <string name="term_slug_label">Uproszczona nazwa:</string>
     <string name="term_name_label">Nazwa:</string>
-    <string name="application_password_experimental_feature_note">\n\nUwaga: uwierzytelnianie hasłem aplikacji na urządzeniach z systemem Android jest funkcją eksperymentalną.</string>
     <string name="application_password_required_block_editor">Edytor blokowy</string>
     <string name="application_password_required_description">Hasła aplikacji są bezpieczniejszym sposobem łączenia się z samodzielnie hostowaną witryną i umożliwiają obsługę funkcji takich jak %1$s.</string>
     <string name="application_password_required">Wymagane hasło aplikacji</string>
@@ -52,7 +51,6 @@ Language: pl
     <string name="application_password_info_description_2">Po dodaniu witryn do aplikacji hasła aplikacji zostaną utworzone automatycznie, gdy zajdzie taka potrzeba.</string>
     <string name="application_password_info_description_1">Hasła aplikacji stanowią bezpieczny sposób uzyskiwania dostępu do Twojej witryny bez konieczności podawania hasła do konta.</string>
     <string name="application_password_info_title">Hasła aplikacji</string>
-    <string name="application_password_disable_feature_description">Wyłączenie hasła aplikacji spowoduje usunięcie logowania dla %1$s z Twoich witryn. Może być konieczne ponowne dodanie witryn, których dotyczy problem, aby ponownie się zalogować.</string>
     <string name="application_password_invalid_description">Twoje hasło aplikacji już nie istnieje. Zaloguj się ponownie, aby utworzyć nowe hasło aplikacji.</string>
     <string name="subscribers_delete_failed">Nie udało się usunąć subskrybenta</string>
     <string name="subscribers_delete_success_message">Subskrybent został usunięty, ale może minąć minuta, zanim usunięcie zacznie obowiązywać</string>
@@ -74,7 +72,6 @@ Language: pl
     <string name="start">Rozpocznij</string>
     <string name="descending">Malejąco</string>
     <string name="ascending">Rosnąco</string>
-    <string name="application_password_disable_feature_title">Wyłączyć hasło aplikacji?</string>
     <string name="application_password_invalid">Nieprawidłowe hasło aplikacji</string>
     <string name="application_password_credentials_storing_error">Wystąpił błąd podczas zapisywania danych uwierzytelniających hasła aplikacji dla %1$s</string>
     <string name="subscribers_add_failed">Nie udało się dodać subskrybentów</string>
@@ -120,8 +117,6 @@ Language: pl
     <string name="qrcode_auth_flow_timeout_subtitle">Wykrycie kodu trwało zbyt długo. Spróbuj ponownie lub użyj aparatu i zeskanuj kod.</string>
     <string name="qrcode_auth_flow_timeout_title">Przekroczono limit czasu skanowania</string>
     <string name="invite_users">Zaproś użytkowników</string>
-    <string name="experimental_application_password_feature_description">Włącz hasło aplikacji, aby logować się do samodzielnie hostowanych witryn</string>
-    <string name="experimental_application_password_feature">Hasło logowania do aplikacji</string>
     <string name="cant_share_no_blog">Nie możesz udostępniać na WordPressa bez bloga</string>
     <string name="me_email_verification_generic_error">Nie można było wysłać odnośnika weryfikacyjnego</string>
     <string name="me_email_verification_resend">Wyślij ponownie odnośnik weryfikacyjny</string>

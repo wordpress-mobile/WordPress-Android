@@ -14,8 +14,6 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickLinksItem.QuickLinkItem
 import org.wordpress.android.ui.mysite.SiteNavigationAction
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
-import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures
-import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures.Feature
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.AppLog
@@ -27,7 +25,6 @@ import javax.inject.Inject
 class ApplicationPasswordViewModelSlice @Inject constructor(
     private val applicationPasswordLoginHelper: ApplicationPasswordLoginHelper,
     private val siteStore: SiteStore,
-    private val experimentalFeatures: ExperimentalFeatures,
     private val appLogWrapper: AppLogWrapper,
     private val wpApiClientProvider: WpApiClientProvider,
 ) {
@@ -55,12 +52,7 @@ class ApplicationPasswordViewModelSlice @Inject constructor(
             return
         }
 
-        if (shouldBuildCard()) {
-            buildApplicationPasswordDiscovery(siteModel)
-        } else {
-            // Hide the card when feature flag is disabled to prevent stale UI state
-            uiModelMutable.postValue(null)
-        }
+        buildApplicationPasswordDiscovery(siteModel)
     }
 
     @Suppress("TooGenericExceptionCaught", "LongMethod")
@@ -138,9 +130,6 @@ class ApplicationPasswordViewModelSlice @Inject constructor(
             }
         }
     }
-
-    private fun shouldBuildCard(): Boolean =
-        experimentalFeatures.isEnabled(Feature.EXPERIMENTAL_APPLICATION_PASSWORD_FEATURE)
 
     private fun buildReauthenticationBanner(site: SiteModel) {
         scope.launch {

@@ -95,7 +95,6 @@ Language: ar
     <string name="term_delete_confirmation_title">حذف مصطلح</string>
     <string name="term_parent_label">الأصل</string>
     <string name="term_count">العدد: ⁦%1$d⁩</string>
-    <string name="application_password_experimental_feature_note">\n\nملاحظة: تعد مصادقة كلمة مرور التطبيق على أجهزة Android ميزة تجريبية.</string>
     <string name="application_password_required_block_editor">محرر المكوِّنات</string>
     <string name="application_password_required_description">كلمات مرور التطبيقات هي طريقة أكثر أمانًا للاتصال بموقعك المستضاف ذاتيًا، وتمكين الدعم لميزات، مثل: ⁦%1$s⁩.</string>
     <string name="taxonomies_title">الفئات</string>
@@ -123,7 +122,6 @@ Language: ar
     <string name="application_password_info_description_2">عندما تضيف مواقع إلى التطبيق، سيتم إنشاء كلمات مرور التطبيق تلقائيا حسب الحاجة.</string>
     <string name="application_password_info_description_1">كلمات مرور التطبيقات هي طريقة آمنة للتطبيقات للوصول إلى موقعك بدون استخدام كلمة مرور حسابك.</string>
     <string name="application_password_info_title">كلمات مرور التطبيقات</string>
-    <string name="application_password_disable_feature_description">سيؤدي تعطيل كلمة مرور التطبيق إلى إزالة معلومات تسجيل الدخول في ⁦%1$s⁩ من مواقعك. قد تحتاج إلى إعادة إضافة المواقع المتأثرة لإعادة تسجيل الدخول.</string>
     <string name="application_password_invalid_description">لم تعد كلمة مرور تطبيقك موجودة. يُرجى تسجيل الدخول مرة أخرى لإنشاء كلمة مرور جديدة للتطبيق.</string>
     <string name="subscribers_delete_success_message">حُذِف المشترك، لكن قد يستغرق الأمر دقيقة حتى يصبح الحذف ساري المفعول</string>
     <string name="subscribers_delete_success_title">حُذِف المشترك</string>
@@ -137,7 +135,6 @@ Language: ar
     <string name="jetpack_rest_connection_step_install_jetpack">تثبيت إضافة Jetpack.</string>
     <string name="jetpack_rest_connection_step_login_wpcom">تسجيل الدخول إلى WordPress.com</string>
     <string name="start">بداية</string>
-    <string name="application_password_disable_feature_title">هل تريد تعطيل كلمة مرور التطبيق؟</string>
     <string name="application_password_invalid">كلمة مرور التطبيق غير صالحة</string>
     <string name="application_password_credentials_storing_error">حدث خطأ أثناء حفظ بيانات اعتماد كلمة مرور تطبيق ⁦%1$s⁩</string>
     <string name="subscribers_add_failed">فشل في إضافة المشتركين</string>
@@ -182,8 +179,6 @@ Language: ar
     <string name="qrcode_auth_flow_timeout_subtitle">استغرق الأمر وقتًا طويلًا للغاية لرصد الكود. يُرجى المحاولة مرة أخرى أو استخدام تطبيق الكاميرا الخاص بك لفحص الكود.</string>
     <string name="qrcode_auth_flow_timeout_title">انتهت مهلة المسح</string>
     <string name="invite_users">دعوة مستخدمين</string>
-    <string name="experimental_application_password_feature_description">تمكين كلمة مرور التطبيق لتسجيل الدخول إلى المواقع المستضافة ذاتيًا</string>
-    <string name="experimental_application_password_feature">كلمات مرور التطبيقات</string>
     <string name="cant_share_no_blog">لا تستطيع مشاركتها في ووردبريس دون مدونة</string>
     <string name="me_email_verification_generic_error">يتعذر إرسال رابط التحقق</string>
     <string name="me_email_verification_resend">إعادة إرسال رابط التحقق</string>

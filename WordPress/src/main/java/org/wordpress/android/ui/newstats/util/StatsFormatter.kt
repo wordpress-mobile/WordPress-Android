@@ -23,6 +23,16 @@ fun formatStatValue(value: Long): String {
     }
 }
 
+private const val FORMAT_DECIMAL = "%.1f"
+
+fun formatStatValue(value: Double): String {
+    return if (value == value.toLong().toDouble()) {
+        value.toLong().toString()
+    } else {
+        String.format(Locale.getDefault(), FORMAT_DECIMAL, value)
+    }
+}
+
 /**
  * Formats an email stat value for display, showing "-" for zero values.
  */

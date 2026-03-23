@@ -102,7 +102,6 @@ Language: it
     <string name="term_description_label">Descrizione:</string>
     <string name="term_slug_label">Abbreviazione:</string>
     <string name="term_name_label">Nome:</string>
-    <string name="application_password_experimental_feature_note">\n\nNota: l\'autenticazione tramite password per applicazioni sui dispositivi Android è una funzione sperimentale.</string>
     <string name="application_password_required_block_editor">Editor a blocchi</string>
     <string name="application_password_required_description">Le password per applicazioni sono un modo più sicuro di connettersi al tuo sito ospitato personalmente e supportano funzioni quali %1$s.</string>
     <string name="application_password_required">Password per applicazioni richiesta</string>
@@ -135,7 +134,6 @@ Language: it
     <string name="application_password_info_description_2">Quando aggiungi siti all\'app, le password per le applicazioni vengono create automaticamente in base alle necessità.</string>
     <string name="application_password_info_description_1">Le password per le applicazioni sono un modo sicuro per consentire alle app di accedere al tuo sito senza utilizzare la password del tuo account.</string>
     <string name="application_password_info_title">Password per applicazioni</string>
-    <string name="application_password_disable_feature_description">La disattivazione delle password per le applicazioni rimuoverà l\'accesso per %1$s dei tuoi siti. Potrebbe essere necessario aggiungere nuovamente i siti interessati per effettuare di nuovo l\'accesso.</string>
     <string name="application_password_invalid_description">La password dell\'applicazione non esiste più. Accedi di nuovo per creare una nuova password dell\'applicazione.</string>
     <string name="subscribers_delete_failed">Impossibile eliminare abbonato</string>
     <string name="subscribers_delete_success_message">L\'abbonato è stato eliminato, ma potrebbe volerci un minuto perché l\'eliminazione abbia effetto</string>
@@ -157,7 +155,6 @@ Language: it
     <string name="start">Inizio</string>
     <string name="descending">Decrescente</string>
     <string name="ascending">Crescente</string>
-    <string name="application_password_disable_feature_title">Disabilitare la password dell\'applicazione?</string>
     <string name="application_password_invalid">Password dell\'applicazione non valida</string>
     <string name="application_password_credentials_storing_error">Si è verificato un errore durante la memorizzazione delle credenziali di accesso dell\'applicazione per %1$s</string>
     <string name="subscribers_add_failed">Impossibile aggiungere abbonati</string>
@@ -203,8 +200,6 @@ Language: it
     <string name="qrcode_auth_flow_timeout_subtitle">Il rilevamento del codice ha richiesto troppo tempo. Riprova o usa l\'app fotocamera per scansionare il codice.</string>
     <string name="qrcode_auth_flow_timeout_title">Timeout scansione</string>
     <string name="invite_users">Invita gli utenti</string>
-    <string name="experimental_application_password_feature_description">Abilita la password dell\'applicazione per accedere ai siti ospitati personalmente</string>
-    <string name="experimental_application_password_feature">Accesso con la password dell\'applicazione</string>
     <string name="cant_share_no_blog">Non è possibile condividere su WordPress senza un blog</string>
     <string name="me_email_verification_generic_error">Impossibile inviare il link di verifica</string>
     <string name="me_email_verification_resend">Invia nuovamente il link di verifica</string>

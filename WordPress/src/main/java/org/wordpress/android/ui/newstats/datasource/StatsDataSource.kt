@@ -209,6 +209,38 @@ interface StatsDataSource {
     ): DevicesDataResult
 
     /**
+     * Fetches stats insights for a specific site.
+     *
+     * @param siteId The WordPress.com site ID
+     * @return Result containing the insights data or an error
+     */
+    suspend fun fetchStatsInsights(
+        siteId: Long
+    ): StatsInsightsDataResult
+
+    /**
+     * Fetches stats summary for a specific site.
+     *
+     * @param siteId The WordPress.com site ID
+     * @return Result containing the summary data or an error
+     */
+    suspend fun fetchStatsSummary(
+        siteId: Long
+    ): StatsSummaryDataResult
+
+    /**
+     * Fetches tags and categories stats for a specific site.
+     *
+     * @param siteId The WordPress.com site ID
+     * @param max Maximum number of tag groups to return
+     * @return Result containing the tags data or an error
+     */
+    suspend fun fetchStatsTags(
+        siteId: Long,
+        max: Int = 10
+    ): StatsTagsDataResult
+
+    /**
      * Fetches subscriber count stats for a specific site.
      *
      * @param siteId The WordPress.com site ID
@@ -571,6 +603,102 @@ sealed class DevicesDataResult {
  * (percentage for screen size, view count for browser/platform).
  */
 data class DevicesData(val items: Map<String, Double>)
+
+/**
+ * Result wrapper for stats insights fetch operation.
+ */
+sealed class StatsInsightsDataResult {
+    data class Success(
+        val data: StatsInsightsData
+    ) : StatsInsightsDataResult()
+    data class Error(
+        val errorType: StatsErrorType
+    ) : StatsInsightsDataResult()
+}
+
+/**
+ * Stats insights data from the API.
+ */
+data class StatsInsightsData(
+    val highestHour: Int,
+    val highestHourPercent: Double,
+    val highestDayOfWeek: Int,
+    val highestDayPercent: Double,
+    val years: List<YearInsightsData>
+)
+
+/**
+ * A single year's insights summary.
+ */
+data class YearInsightsData(
+    val year: String,
+    val totalPosts: Long,
+    val totalWords: Long,
+    val avgWords: Double,
+    val totalLikes: Long,
+    val avgLikes: Double,
+    val totalComments: Long,
+    val avgComments: Double
+)
+
+/**
+ * Result wrapper for stats summary fetch operation.
+ */
+sealed class StatsSummaryDataResult {
+    data class Success(
+        val data: StatsSummaryData
+    ) : StatsSummaryDataResult()
+    data class Error(
+        val errorType: StatsErrorType
+    ) : StatsSummaryDataResult()
+}
+
+/**
+ * All-time stats summary data from the API.
+ */
+data class StatsSummaryData(
+    val views: Long,
+    val visitors: Long,
+    val posts: Long,
+    val comments: Long,
+    val viewsBestDay: String,
+    val viewsBestDayTotal: Long
+)
+
+/**
+ * Result wrapper for stats tags fetch operation.
+ */
+sealed class StatsTagsDataResult {
+    data class Success(
+        val data: StatsTagsData
+    ) : StatsTagsDataResult()
+    data class Error(
+        val errorType: StatsErrorType
+    ) : StatsTagsDataResult()
+}
+
+/**
+ * Tags and categories data from the API.
+ */
+data class StatsTagsData(
+    val tagGroups: List<TagGroupData>
+)
+
+/**
+ * A group of tags associated with views.
+ */
+data class TagGroupData(
+    val tags: List<TagData>,
+    val views: Long
+)
+
+/**
+ * A single tag or category item.
+ */
+data class TagData(
+    val tagType: String,
+    val name: String
+)
 
 /**
  * Result wrapper for stats subscribers fetch operation.
