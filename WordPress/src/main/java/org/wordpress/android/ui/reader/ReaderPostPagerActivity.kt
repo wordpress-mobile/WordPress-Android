@@ -148,6 +148,7 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
     private var backFromLogin = false
 
     private val trackedPositions = HashSet<Int>()
+    private var pagerGeneration = 0L
 
     @Inject
     lateinit var siteStore: SiteStore
@@ -272,6 +273,8 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
                     trackedPositions.addAll(positions as HashSet<Int>)
                 }
             }
+            pagerGeneration =
+                savedInstanceState.getLong(KEY_PAGER_GENERATION)
         } else {
             isFeed = intent.getBooleanExtra(ReaderConstants.ARG_IS_FEED, false)
             blogId = intent.getLongExtra(ReaderConstants.ARG_BLOG_ID, 0)
@@ -781,6 +784,8 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
             outState.putSerializable(ReaderConstants.KEY_TRACKED_POSITIONS, trackedPositions)
         }
 
+        outState.putLong(KEY_PAGER_GENERATION, pagerGeneration)
+
         super.onSaveInstanceState(outState)
     }
 
@@ -1070,7 +1075,6 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
         private val idList: ReaderBlogIdPostIdList,
     ) : FragmentStateAdapter(this@ReaderPostPagerActivity) {
         var allPostsLoaded: Boolean = false
-        private var generation = 0L
 
         /**
          * Increments the generation counter so [getItemId] returns new IDs,
@@ -1078,16 +1082,16 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
          */
         @SuppressLint("NotifyDataSetChanged")
         fun recreateFragments() {
-            generation++
+            pagerGeneration++
             notifyDataSetChanged()
         }
 
         override fun getItemId(position: Int): Long =
-            position.toLong() + generation * GENERATION_OFFSET
+            position.toLong() + pagerGeneration * GENERATION_OFFSET
 
         override fun containsItem(itemId: Long): Boolean {
             val pos = (itemId % GENERATION_OFFSET).toInt()
-            return itemId / GENERATION_OFFSET == generation &&
+            return itemId / GENERATION_OFFSET == pagerGeneration &&
                 isValidPosition(pos)
         }
 
@@ -1143,5 +1147,6 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
     companion object {
         private const val OFFSCREEN_PAGE_LIMIT = 2
         private const val GENERATION_OFFSET = 100_000L
+        private const val KEY_PAGER_GENERATION = "pager_generation"
     }
 }
