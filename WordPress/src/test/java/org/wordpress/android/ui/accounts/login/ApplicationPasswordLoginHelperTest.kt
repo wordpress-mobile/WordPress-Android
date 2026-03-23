@@ -483,6 +483,37 @@ class ApplicationPasswordLoginHelperTest : BaseUnitTest() {
     }
 
     @Test
+    fun `maskUrl with no dot returns url unmasked`() {
+        val result = applicationPasswordLoginHelper.maskUrl("https://localhost")
+        assertEquals("https://localhost", result)
+    }
+
+    @Test
+    fun `maskUrl with standard domain masks characters before TLD`() {
+        val result = applicationPasswordLoginHelper.maskUrl("https://example.com")
+        assertEquals("https://examXXX.com", result)
+    }
+
+    @Test
+    fun `maskUrl with port preserves port`() {
+        val result = applicationPasswordLoginHelper.maskUrl("https://test.com:8080")
+        assertEquals("https://tXXX.com:8080", result)
+    }
+
+    @Test
+    fun `maskUrl with dot in path masks only host`() {
+        val result = applicationPasswordLoginHelper
+            .maskUrl("https://example.com/wp-content/image.jpg")
+        assertEquals("https://examXXX.com/wp-content/image.jpg", result)
+    }
+
+    @Test
+    fun `maskUrl with short host returns url unmasked`() {
+        val result = applicationPasswordLoginHelper.maskUrl("https://ab.com")
+        assertEquals("https://ab.com", result)
+    }
+
+    @Test
     fun `getResettableApplicationPasswordSitesCount returns count of sites with regular credentials`() {
         val siteWithRegularCredentials = SiteModel().apply {
             id = 1

@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.accounts.login
 
 import android.content.Context
+import androidx.annotation.VisibleForTesting
 import androidx.core.net.toUri
 import com.automattic.android.tracks.crashlogging.CrashLogging
 import org.wordpress.android.R
@@ -243,13 +244,15 @@ class ApplicationPasswordLoginHelper @Inject constructor(
         normalizedUrl: String?,
         sites: List<SiteModel>
     ): SiteModel? {
+        if (normalizedUrl.isNullOrEmpty()) return null
+
         // Exact match first
         sites.firstOrNull {
             UrlUtils.normalizeUrl(it.url) == normalizedUrl
         }?.let { return it }
 
         // Fallback: compare ignoring scheme and www prefix
-        val strippedUrl = normalizedUrl?.stripSchemeAndWww()
+        val strippedUrl = normalizedUrl.stripSchemeAndWww()
         return sites.firstOrNull {
             UrlUtils.normalizeUrl(it.url)?.stripSchemeAndWww() == strippedUrl
         }
@@ -261,12 +264,19 @@ class ApplicationPasswordLoginHelper @Inject constructor(
             .removePrefix("www.")
     }
 
-    private fun maskUrl(url: String): String {
-        val dotIndex = url.lastIndexOf('.')
+    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+    internal fun maskUrl(url: String): String {
+        val host = try {
+            java.net.URI(url).host
+        } catch (_: Exception) {
+            null
+        } ?: url
+        val dotIndex = host.lastIndexOf('.')
         if (dotIndex < MASK_LENGTH) return url
-        return url.replaceRange(
+        val maskedHost = host.replaceRange(
             dotIndex - MASK_LENGTH, dotIndex, "X".repeat(MASK_LENGTH)
         )
+        return url.replace(host, maskedHost)
     }
 
     private fun SiteModel.hasRegularCredentials(): Boolean {
