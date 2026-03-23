@@ -258,6 +258,11 @@ class PostRsSettingsViewModel @Inject constructor(
     }
 
     fun onFormatClicked() {
+        if (!hasFetchedFormats &&
+            !_uiState.value.isLoadingFormats
+        ) {
+            resolveSitePostFormats()
+        }
         _uiState.update {
             it.copy(dialogState = DialogState.FormatDialog)
         }
@@ -1111,6 +1116,38 @@ class PostRsSettingsViewModel @Inject constructor(
         }
     }
 
+    private var hasFetchedFormats = false
+
+    private fun resolveSitePostFormats() {
+        val site = site ?: return
+        viewModelScope.launch {
+            _uiState.update {
+                it.copy(isLoadingFormats = true)
+            }
+            @Suppress("TooGenericExceptionCaught")
+            try {
+                val formats =
+                    withContext(Dispatchers.IO) {
+                        restClient.fetchSitePostFormats(site)
+                    }
+                _uiState.update {
+                    it.copy(sitePostFormats = formats)
+                }
+                hasFetchedFormats = true
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                AppLog.w(
+                    AppLog.T.POSTS,
+                    "resolveSitePostFormats failed: ${e.message}"
+                )
+            }
+            _uiState.update {
+                it.copy(isLoadingFormats = false)
+            }
+        }
+    }
+
     private fun formatDate(dateGmt: Date): String {
         val fmt = DateFormat.getDateTimeInstance(
             DateFormat.MEDIUM,
@@ -1138,6 +1175,7 @@ class PostRsSettingsViewModel @Inject constructor(
         editedFeaturedImageId = from.editedFeaturedImageId,
         editedCategoryIds = from.editedCategoryIds,
         editedTagIds = from.editedTagIds,
+        sitePostFormats = from.sitePostFormats,
     )
 
     private class PostApiRequestException(message: String) :

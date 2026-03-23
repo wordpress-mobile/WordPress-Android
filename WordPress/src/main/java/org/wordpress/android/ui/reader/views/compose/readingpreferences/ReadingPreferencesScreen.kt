@@ -9,17 +9,18 @@ import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -27,12 +28,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
-import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
-import androidx.compose.ui.platform.rememberNestedScrollInteropConnection
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
@@ -56,22 +54,29 @@ private const val TEXT_LINE_HEIGHT_MULTIPLIER = 1.6f
 @Composable
 fun ReadingPreferencesScreen(
     currentReadingPreferences: ReaderReadingPreferences,
+    showSaveAction: Boolean,
     onCloseClick: () -> Unit,
+    onSaveClick: () -> Unit,
     onThemeClick: (ReaderReadingPreferences.Theme) -> Unit,
     onFontFamilyClick: (ReaderReadingPreferences.FontFamily) -> Unit,
     onFontSizeClick: (ReaderReadingPreferences.FontSize) -> Unit,
-    onBackgroundColorUpdate: (Int) -> Unit,
 ) {
-    val themeValues = ReaderReadingPreferences.ThemeValues.from(LocalContext.current, currentReadingPreferences.theme)
-    val backgroundColor by animateColorAsState(Color(themeValues.intBackgroundColor), label = "backgroundColor")
-    val baseTextColor by animateColorAsState(Color(themeValues.intBaseTextColor), label = "baseTextColor")
-    val textColor by animateColorAsState(Color(themeValues.intTextColor), label = "textColor")
-
-    SideEffect {
-        // update background color based on value animation and notify the parent
-        // this provides a way of updating the status bar color smoothly
-        onBackgroundColorUpdate(backgroundColor.toArgb())
-    }
+    val themeValues = ReaderReadingPreferences.ThemeValues.from(
+        LocalContext.current,
+        currentReadingPreferences.theme,
+    )
+    val backgroundColor by animateColorAsState(
+        Color(themeValues.intBackgroundColor),
+        label = "backgroundColor",
+    )
+    val baseTextColor by animateColorAsState(
+        Color(themeValues.intBaseTextColor),
+        label = "baseTextColor",
+    )
+    val textColor by animateColorAsState(
+        Color(themeValues.intTextColor),
+        label = "textColor",
+    )
 
     val fontFamily = currentReadingPreferences.fontFamily.toComposeFontFamily()
     val fontSize = currentReadingPreferences.fontSize.toSp()
@@ -81,24 +86,30 @@ fun ReadingPreferencesScreen(
 
     Column(
         modifier = Modifier
-            .fillMaxSize()
-            .nestedScroll(rememberNestedScrollInteropConnection()),
+            .fillMaxWidth()
+            .background(MaterialTheme.colorScheme.surface)
+            .verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         MainTopAppBar(
             title = null,
-            navigationIcon = NavigationIcons.BackIcon,
+            navigationIcon = NavigationIcons.CloseIcon,
             onNavigationIconClick = onCloseClick,
             backgroundColor = backgroundColor,
             contentColor = baseTextColor,
             actions = {
-                ExperimentalBadge(
-                    contentColor = textColor,
-                    fontFamily = fontFamily,
-                    modifier = Modifier.padding(end = Margin.Large.value),
-                )
-            }
+                if (showSaveAction) {
+                    IconButton(onClick = onSaveClick) {
+                        Icon(
+                            Icons.Default.Check,
+                            contentDescription = stringResource(
+                                R.string.save
+                            ),
+                        )
+                    }
+                }
+            },
         )
 
         // Preview section
@@ -106,19 +117,24 @@ fun ReadingPreferencesScreen(
             modifier = Modifier
                 .background(backgroundColor)
                 .fillMaxWidth()
-                .weight(1f)
-                .verticalScroll(rememberScrollState())
                 .padding(
                     bottom = Margin.ExtraLarge.value,
                     start = Margin.ExtraLarge.value,
                     end = Margin.ExtraLarge.value
                 ),
-            verticalArrangement = Arrangement.spacedBy(Margin.ExtraLarge.value, Alignment.CenterVertically),
+            verticalArrangement = Arrangement.spacedBy(
+                Margin.ExtraLarge.value,
+                Alignment.CenterVertically,
+            ),
         ) {
             // Title
             Text(
-                text = stringResource(R.string.reader_preferences_screen_preview_title),
-                style = getTitleTextStyle(fontFamily, fontSizeMultiplier, baseTextColor),
+                text = stringResource(
+                    R.string.reader_preferences_screen_preview_title
+                ),
+                style = getTitleTextStyle(
+                    fontFamily, fontSizeMultiplier, baseTextColor
+                ),
             )
 
             // Content
@@ -131,17 +147,25 @@ fun ReadingPreferencesScreen(
             )
 
             Text(
-                text = stringResource(R.string.reader_preferences_screen_preview_text),
+                text = stringResource(
+                    R.string.reader_preferences_screen_preview_text
+                ),
                 style = contentStyle,
             )
 
             // Tags
             FlowRow(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(Margin.Medium.value),
-                verticalArrangement = Arrangement.spacedBy(Margin.Medium.value),
+                horizontalArrangement = Arrangement.spacedBy(
+                    Margin.Medium.value
+                ),
+                verticalArrangement = Arrangement.spacedBy(
+                    Margin.Medium.value
+                ),
             ) {
-                stringResource(R.string.reader_preferences_screen_preview_tags)
+                stringResource(
+                    R.string.reader_preferences_screen_preview_tags
+                )
                     .split(",")
                     .forEach { tag ->
                         ReadingPreferencesPreviewTag(
@@ -158,32 +182,41 @@ fun ReadingPreferencesScreen(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .wrapContentHeight()
-                .background(MaterialTheme.colorScheme.surface)
                 .padding(vertical = Margin.ExtraMediumLarge.value),
-            verticalArrangement = Arrangement.spacedBy(Margin.ExtraMediumLarge.value, Alignment.CenterVertically),
+            verticalArrangement = Arrangement.spacedBy(
+                Margin.ExtraMediumLarge.value,
+                Alignment.CenterVertically,
+            ),
         ) {
             // Theme
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .horizontalScroll(rememberScrollState()),
-                horizontalArrangement = Arrangement.spacedBy(Margin.Small.value),
+                horizontalArrangement = Arrangement.spacedBy(
+                    Margin.Small.value
+                ),
             ) {
-                Spacer(modifier = Modifier.width(Margin.ExtraLarge.value))
+                Spacer(
+                    modifier = Modifier.width(Margin.ExtraLarge.value)
+                )
 
                 ReaderReadingPreferences.Theme.entries.forEach { theme ->
                     ReadingPreferencesThemeButton(
                         theme = theme,
                         isSelected = theme == currentReadingPreferences.theme,
                         onClick = {
-                            haptics.performHapticFeedback(HapticFeedbackType.LongPress)
+                            haptics.performHapticFeedback(
+                                HapticFeedbackType.LongPress
+                            )
                             onThemeClick(theme)
                         },
                     )
                 }
 
-                Spacer(modifier = Modifier.width(Margin.ExtraLarge.value))
+                Spacer(
+                    modifier = Modifier.width(Margin.ExtraLarge.value)
+                )
             }
 
             // Font family
@@ -191,22 +224,32 @@ fun ReadingPreferencesScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .horizontalScroll(rememberScrollState()),
-                horizontalArrangement = Arrangement.spacedBy(Margin.Small.value),
+                horizontalArrangement = Arrangement.spacedBy(
+                    Margin.Small.value
+                ),
             ) {
-                Spacer(modifier = Modifier.width(Margin.ExtraLarge.value))
+                Spacer(
+                    modifier = Modifier.width(Margin.ExtraLarge.value)
+                )
 
-                ReaderReadingPreferences.FontFamily.entries.forEach { fontFamily ->
+                ReaderReadingPreferences.FontFamily.entries.forEach {
+                    fontFamilyEntry ->
                     ReadingPreferencesFontFamilyButton(
-                        fontFamily = fontFamily,
-                        isSelected = fontFamily == currentReadingPreferences.fontFamily,
+                        fontFamily = fontFamilyEntry,
+                        isSelected = fontFamilyEntry ==
+                            currentReadingPreferences.fontFamily,
                         onClick = {
-                            haptics.performHapticFeedback(HapticFeedbackType.LongPress)
-                            onFontFamilyClick(fontFamily)
+                            haptics.performHapticFeedback(
+                                HapticFeedbackType.LongPress
+                            )
+                            onFontFamilyClick(fontFamilyEntry)
                         },
                     )
                 }
 
-                Spacer(modifier = Modifier.width(Margin.ExtraLarge.value))
+                Spacer(
+                    modifier = Modifier.width(Margin.ExtraLarge.value)
+                )
             }
 
             // Font size
@@ -217,31 +260,15 @@ fun ReadingPreferencesScreen(
                 previewFontFamily = fontFamily,
                 selectedFontSize = currentReadingPreferences.fontSize,
                 onFontSizeSelected = {
-                    haptics.performHapticFeedback(HapticFeedbackType.LongPress)
+                    haptics.performHapticFeedback(
+                        HapticFeedbackType.LongPress
+                    )
                     onFontSizeClick(it)
                 },
             )
         }
     }
 }
-
-@Composable
-private fun ExperimentalBadge(
-    contentColor: Color,
-    fontFamily: FontFamily,
-    modifier: Modifier = Modifier,
-) {
-    Text(
-        text = stringResource(R.string.experimental_badge),
-        modifier = modifier,
-        style = TextStyle(
-            color = contentColor.copy(alpha = 0.6f),
-            fontWeight = FontWeight.Medium,
-            fontFamily = fontFamily,
-        ),
-    )
-}
-
 
 private fun getTitleTextStyle(
     fontFamily: FontFamily,
@@ -263,15 +290,24 @@ private fun getTitleTextStyle(
 @Composable
 private fun ReadingPreferencesScreenPreview() {
     AppThemeM3 {
-        var readingPreferences by remember { mutableStateOf(ReaderReadingPreferences()) }
+        var readingPreferences by remember {
+            mutableStateOf(ReaderReadingPreferences())
+        }
 
         ReadingPreferencesScreen(
             currentReadingPreferences = readingPreferences,
+            showSaveAction = true,
             onCloseClick = {},
-            onThemeClick = { readingPreferences = readingPreferences.copy(theme = it) },
-            onFontFamilyClick = { readingPreferences = readingPreferences.copy(fontFamily = it) },
-            onFontSizeClick = { readingPreferences = readingPreferences.copy(fontSize = it) },
-            onBackgroundColorUpdate = {},
+            onSaveClick = {},
+            onThemeClick = {
+                readingPreferences = readingPreferences.copy(theme = it)
+            },
+            onFontFamilyClick = {
+                readingPreferences = readingPreferences.copy(fontFamily = it)
+            },
+            onFontSizeClick = {
+                readingPreferences = readingPreferences.copy(fontSize = it)
+            },
         )
     }
 }

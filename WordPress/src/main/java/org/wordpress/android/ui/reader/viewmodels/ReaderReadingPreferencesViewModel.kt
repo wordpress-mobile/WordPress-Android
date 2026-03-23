@@ -1,11 +1,15 @@
 package org.wordpress.android.ui.reader.viewmodels
 
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.reader.models.ReaderReadingPreferences
@@ -27,26 +31,18 @@ class ReaderReadingPreferencesViewModel @Inject constructor(
     private val _currentReadingPreferences = MutableStateFlow(originalReadingPreferences)
     val currentReadingPreferences: StateFlow<ReaderReadingPreferences> = _currentReadingPreferences
 
+    val hasUnsavedChanges: StateFlow<Boolean> = _currentReadingPreferences.map {
+        it != originalReadingPreferences
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(), false)
+
     private val _actionEvents = MutableSharedFlow<ActionEvent>()
     val actionEvents: SharedFlow<ActionEvent> = _actionEvents
-
-    fun init() {
-        launch {
-            _actionEvents.emit(ActionEvent.UpdateStatusBarColor(originalReadingPreferences.theme))
-        }
-    }
 
     fun onScreenOpened(source: ReaderReadingPreferencesTracker.Source) {
         readingPreferencesTracker.trackScreenOpened(source)
     }
 
     fun onScreenClosed() {
-        if (isDirty()) {
-            // here we assume the code for saving preferences has been called before reaching this point
-            launch {
-                _actionEvents.emit(ActionEvent.UpdatePostDetails)
-            }
-        }
         readingPreferencesTracker.trackScreenClosed()
     }
 
@@ -66,40 +62,30 @@ class ReaderReadingPreferencesViewModel @Inject constructor(
     }
 
     /**
-     * An exit action has been triggered by the user. This means that we need to save the current preferences and emit
-     * the close event, so the dialog is dismissed.
+     * Save the current preferences and dismiss the dialog.
      */
-    fun onExitActionClick() {
+    fun onSaveClick() {
         launch {
-            saveReadingPreferencesInternal()
-            _actionEvents.emit(ActionEvent.Close)
+            val currentPreferences = currentReadingPreferences.value
+            if (currentPreferences != originalReadingPreferences) {
+                saveReadingPreferences(currentPreferences)
+                readingPreferencesTracker.trackSaved(currentPreferences)
+            }
+            _actionEvents.emit(ActionEvent.SaveAndClose)
         }
     }
 
     /**
-     * The bottom sheet has been hidden by the user, which means the dismiss process is already on its way. All we need
-     * to do is save the current preferences.
+     * Discard changes and dismiss the dialog.
      */
-    fun onBottomSheetHidden() {
+    fun onCloseClick() {
         launch {
-            saveReadingPreferencesInternal()
+            _actionEvents.emit(ActionEvent.Close)
         }
     }
-
-    private suspend fun saveReadingPreferencesInternal() {
-        val currentPreferences = currentReadingPreferences.value
-        if (isDirty()) {
-            saveReadingPreferences(currentPreferences)
-            readingPreferencesTracker.trackSaved(currentPreferences)
-        }
-    }
-
-    private fun isDirty(): Boolean = currentReadingPreferences.value != originalReadingPreferences
 
     sealed interface ActionEvent {
         data object Close : ActionEvent
-        data object UpdatePostDetails : ActionEvent
-        data class UpdateStatusBarColor(val theme: ReaderReadingPreferences.Theme) : ActionEvent
-        data class OpenWebView(val url: String) : ActionEvent
+        data object SaveAndClose : ActionEvent
     }
 }
