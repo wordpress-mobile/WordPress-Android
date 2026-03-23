@@ -246,14 +246,11 @@ class ApplicationPasswordLoginHelper @Inject constructor(
     ): SiteModel? {
         if (normalizedUrl.isNullOrEmpty()) return null
 
-        // Exact match first
-        sites.firstOrNull {
-            UrlUtils.normalizeUrl(it.url) == normalizedUrl
-        }?.let { return it }
-
-        // Fallback: compare ignoring scheme and www prefix
+        // Exact match first, fallback: compare ignoring scheme and www prefix
         val strippedUrl = normalizedUrl.stripSchemeAndWww()
         return sites.firstOrNull {
+            UrlUtils.normalizeUrl(it.url) == normalizedUrl
+        } ?: sites.firstOrNull {
             UrlUtils.normalizeUrl(it.url)?.stripSchemeAndWww() == strippedUrl
         }
     }
