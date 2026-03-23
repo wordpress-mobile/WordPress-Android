@@ -20,7 +20,10 @@ import android.net.ConnectivityManager
 import android.net.http.HttpResponseCache
 import android.os.Build
 import android.os.Build.VERSION_CODES
+import android.os.Handler
+import android.os.Looper
 import android.os.SystemClock
+import android.os.Trace
 import android.text.TextUtils
 import android.util.Log
 import android.webkit.WebView
@@ -35,7 +38,9 @@ import com.android.volley.RequestQueue
 import com.automattic.android.tracks.crashlogging.CrashLogging
 import com.google.firebase.iid.FirebaseInstanceId
 import com.wordpress.rest.RestClient
+import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.runBlocking
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -241,7 +246,8 @@ class AppInitializer @Inject constructor(
 
     private lateinit var applicationLifecycleMonitor: ApplicationLifecycleMonitor
 
-
+    private val wellSqlReady = CompletableDeferred<Unit>()
+    private var postFirstFrameInitDone = false
     private var startDate: Long
 
     /**
@@ -281,37 +287,49 @@ class AppInitializer @Inject constructor(
         startDate = SystemClock.elapsedRealtime()
 
         if (!initialized) {
-            // This call needs be made before accessing any methods in android.webkit package
+            // This call needs be made before accessing any methods
+            // in android.webkit package
             setWebViewDataDirectorySuffixOnAndroidP()
         }
 
-        wellSqlInitializer.init()
+        // Start WellSql init on a background thread so main thread
+        // can proceed with non-DB initialization work in parallel.
+        Thread {
+            @Suppress("TooGenericExceptionCaught")
+            try {
+                Trace.beginSection("WellSqlInitializer.init")
+                wellSqlInitializer.init()
+                Trace.endSection()
+                wellSqlReady.complete(Unit)
+            } catch (e: Exception) {
+                wellSqlReady.completeExceptionally(e)
+            }
+        }.apply { name = "WellSql-init" }.start()
     }
 
     fun init() {
-        crashLogging.initialize()
-        dispatcher.register(this)
-        appConfig.init(appScope)
-        // Upload any encrypted logs that were queued but not yet uploaded
-        encryptedLogging.start()
+        ProfilingUtils.start("App Startup")
 
-        // Init static fields from dagger injected singletons, for legacy Actions and Utilities
+        ProfilingUtils.split("CrashLogging.initialize")
+        crashLogging.initialize()
+
+        ProfilingUtils.split("Dispatcher.register")
+        dispatcher.register(this)
+
+        ProfilingUtils.split("AppConfig.init")
+        appConfig.init(appScope)
+
+        // Init static fields from dagger injected singletons
         WordPress.requestQueue = requestQueue
         WordPress.imageLoader = imageLoader
         sOAuthAuthenticator = oAuthAuthenticator
 
-        ProfilingUtils.start("App Startup")
-
+        ProfilingUtils.split("enableLogRecording")
         enableLogRecording()
         AppLog.i(T.UTILS, "AppInitializer.init")
 
-        WordPress.versionName = PackageUtils.getVersionName(application)
-        initWpDb()
-        context?.let { enableHttpResponseCache(it) }
-
-        AppReviewManager.init(application)
-
         if (!initialized) {
+            ProfilingUtils.split("EventBus.install")
             // EventBus setup
             EventBus.TAG = "WordPress-EVENT"
             EventBus.builder()
@@ -321,60 +339,48 @@ class AppInitializer @Inject constructor(
                 .installDefaultEventBus()
         }
 
+        ProfilingUtils.split("RestClientUtils.setUserAgent")
         RestClientUtils.setUserAgent(userAgent.apiUserAgent)
 
-        if (!initialized) {
-            zendeskHelper.setupZendesk(
-                application,
-                BuildConfig.ZENDESK_DOMAIN,
-                BuildConfig.ZENDESK_APP_ID,
-                BuildConfig.ZENDESK_OAUTH_CLIENT_ID
-            )
-        }
-
+        ProfilingUtils.split("LifecycleMonitor.setup")
         val memoryAndConfigChangeMonitor = MemoryAndConfigChangeMonitor()
         application.registerComponentCallbacks(memoryAndConfigChangeMonitor)
 
-        // initialize our ApplicationLifecycleMonitor, which is the App's LifecycleObserver implementation
+        // Initialize our ApplicationLifecycleMonitor
         applicationLifecycleMonitor = ApplicationLifecycleMonitor()
         ProcessLifecycleOwner.get().lifecycle.addObserver(this)
 
-        // Make the UploadStarter observe the app process so it can auto-start uploads
-        uploadStarter.activateAutoUploading(ProcessLifecycleOwner.get() as ProcessLifecycleOwner)
+        ProfilingUtils.split("UploadStarter.activate")
+        uploadStarter.activateAutoUploading(
+            ProcessLifecycleOwner.get() as ProcessLifecycleOwner
+        )
 
+        ProfilingUtils.split("initAnalytics")
         initAnalytics(SystemClock.elapsedRealtime() - startDate)
 
-        updateNotificationSettings()
-        // Allows vector drawable from resources (in selectors for instance) on Android < 21 (can cause issues with
-        // memory usage and the use of Configuration). More information: http://bit.ly/2H1KTQo
-        // Note: if removed, this will cause crashes on Android < 21
+        // Needed for vector drawables on Android < 21
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
+
+        ProfilingUtils.split("AppThemeUtils.setAppTheme")
         AppThemeUtils.setAppTheme(application)
 
-        // verify media is sanitized
+        // --- Await background DB initialization ---
+        ProfilingUtils.split("awaitWellSql")
+        runBlocking { wellSqlReady.await() }
+
+        ProfilingUtils.split("initWpDb")
+        WordPress.versionName = PackageUtils.getVersionName(application)
+        initWpDb()
+
+        ProfilingUtils.split("sanitizeMediaUploadState")
         sanitizeMediaUploadStateForSite()
 
-        // remove expired lists
-        dispatcher.dispatch(ListActionBuilder.newRemoveExpiredListsAction(RemoveExpiredListsPayload()))
-
-
         if (!initialized) {
+            ProfilingUtils.split("initWorkManager")
             initWorkManager()
         }
 
-        // Enqueue our periodic upload work request. The UploadWorkRequest will be called even if the app is closed.
-        // It will upload local draft or published posts with local changes to the server.
-        enqueuePeriodicUploadWorkRequestForAllSites()
-
-        systemNotificationsTracker.checkSystemNotificationsState()
-        ImageEditorInitializer.init(imageManager, imageEditorTracker, imageEditorFileUtils, appScope)
-
-        initDebugCookieManager()
-
-        if (!initialized && BuildConfig.DEBUG && Build.VERSION.SDK_INT >= VERSION_CODES.R) {
-            initAppOpsManager()
-        }
-
+        ProfilingUtils.split("init complete")
         initialized = true
     }
 
@@ -540,23 +546,103 @@ class AppInitializer @Inject constructor(
     }
 
     /**
-     * Application.onCreate is called before any activity, service, or receiver - it can be called while the app
-     * is in background by a sticky service or a receiver, so we don't want Application.onCreate to make network request
-     * or other heavy tasks.
+     * Application.onCreate is called before any activity, service,
+     * or receiver - it can be called while the app is in background
+     * by a sticky service or a receiver, so we don't want
+     * Application.onCreate to make network requests or do heavy
+     * tasks.
      *
-     *
-     * This deferredInit method is called when a user starts an activity for the first time, ie. when he sees a
-     * screen for the first time. This allows us to have heavy calls on first activity startup instead of app startup.
+     * This deferredInit method is called when a user starts an
+     * activity for the first time, ie. when he sees a screen for
+     * the first time. This allows us to have heavy calls on first
+     * activity startup instead of app startup.
      */
     fun deferredInit() {
         AppLog.i(T.UTILS, "Deferred Initialisation")
 
         // Refresh account informations
         if (accountStore.hasAccessToken()) {
-            dispatcher.dispatch(AccountActionBuilder.newFetchAccountAction())
-            dispatcher.dispatch(AccountActionBuilder.newFetchSettingsAction())
+            dispatcher.dispatch(
+                AccountActionBuilder.newFetchAccountAction()
+            )
+            dispatcher.dispatch(
+                AccountActionBuilder.newFetchSettingsAction()
+            )
             NotificationsUpdateServiceStarter.startService(context)
         }
+
+        // Schedule non-critical init after pending draw/layout
+        // passes so the first frame renders without delay.
+        Handler(Looper.getMainLooper()).post {
+            postFirstFrameInit()
+        }
+    }
+
+    /**
+     * Non-critical initialization that runs after the first frame
+     * has been drawn. These items are not needed for the initial
+     * UI and can safely be deferred to reduce cold-start time.
+     */
+    private fun postFirstFrameInit() {
+        if (postFirstFrameInitDone) return
+        postFirstFrameInitDone = true
+
+        ProfilingUtils.start("Post-First-Frame Init")
+
+        ProfilingUtils.split("EncryptedLogging.start")
+        encryptedLogging.start()
+
+        ProfilingUtils.split("enableHttpResponseCache")
+        context?.let { enableHttpResponseCache(it) }
+
+        ProfilingUtils.split("AppReviewManager.init")
+        AppReviewManager.init(application)
+
+        ProfilingUtils.split("Zendesk.setup")
+        zendeskHelper.setupZendesk(
+            application,
+            BuildConfig.ZENDESK_DOMAIN,
+            BuildConfig.ZENDESK_APP_ID,
+            BuildConfig.ZENDESK_OAUTH_CLIENT_ID
+        )
+
+        ProfilingUtils.split("updateNotificationSettings")
+        updateNotificationSettings()
+
+        ProfilingUtils.split("removeExpiredLists")
+        dispatcher.dispatch(
+            ListActionBuilder.newRemoveExpiredListsAction(
+                RemoveExpiredListsPayload()
+            )
+        )
+
+        ProfilingUtils.split("enqueuePeriodicUploadWork")
+        enqueuePeriodicUploadWorkRequestForAllSites()
+
+        ProfilingUtils.split("SystemNotificationsTracker")
+        systemNotificationsTracker.checkSystemNotificationsState()
+
+        ProfilingUtils.split("ImageEditorInitializer")
+        ImageEditorInitializer.init(
+            imageManager,
+            imageEditorTracker,
+            imageEditorFileUtils,
+            appScope
+        )
+
+        ProfilingUtils.split("DebugCookieManager")
+        initDebugCookieManager()
+
+        if (BuildConfig.DEBUG
+            && Build.VERSION.SDK_INT >= VERSION_CODES.R
+        ) {
+            ProfilingUtils.split("AppOpsManager")
+            initAppOpsManager()
+        }
+
+        ProfilingUtils.split("postFirstFrameInit complete")
+        ProfilingUtils.dump()
+        ProfilingUtils.stop()
     }
 
     private fun initWpDb() {
