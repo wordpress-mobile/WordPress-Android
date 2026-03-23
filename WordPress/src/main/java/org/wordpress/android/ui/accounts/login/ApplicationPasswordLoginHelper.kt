@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.accounts.login
 
 import android.content.Context
+import androidx.annotation.VisibleForTesting
 import androidx.core.net.toUri
 import com.automattic.android.tracks.crashlogging.CrashLogging
 import org.wordpress.android.R
@@ -22,6 +23,7 @@ import org.wordpress.android.util.crashlogging.sendReportWithTag
 import rs.wordpress.api.kotlin.ApiDiscoveryResult
 import rs.wordpress.api.kotlin.WpLoginClient
 import uniffi.wp_api.applicationPasswordsUrl
+import java.net.URI
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -104,7 +106,8 @@ class ApplicationPasswordLoginHelper @Inject constructor(
 
         return withContext(bgDispatcher) {
             val normalizedUrl = UrlUtils.normalizeUrl(urlLogin.siteUrl)
-            val site = siteStore.sites.firstOrNull { UrlUtils.normalizeUrl(it.url) ==  normalizedUrl}
+            val sites = siteStore.sites
+            val site = findSiteByUrl(normalizedUrl, sites)
             if (site != null) {
                 site.apply {
                     apiRestUsernameEncrypted = ""
@@ -121,7 +124,7 @@ class ApplicationPasswordLoginHelper @Inject constructor(
                 true
             } else {
                 logAndReportSiteNotFound(
-                    urlLogin.siteUrl, normalizedUrl
+                    urlLogin.siteUrl, normalizedUrl, sites
                 )
                 false
             }
@@ -130,7 +133,7 @@ class ApplicationPasswordLoginHelper @Inject constructor(
 
     fun trackStoringFailed(siteUrl: String?, reason: String) {
         val properties: MutableMap<String, String?> = HashMap()
-        properties[URL_TAG] = siteUrl
+        properties[URL_TAG] = maskUrl(siteUrl.orEmpty())
         properties[REASON_TAG] = reason
         AnalyticsTracker.track(
             Stat.APPLICATION_PASSWORD_STORING_FAILED,
@@ -168,22 +171,28 @@ class ApplicationPasswordLoginHelper @Inject constructor(
 
     private fun logAndReportSiteNotFound(
         siteUrl: String?,
-        normalizedUrl: String?
+        normalizedUrl: String?,
+        sites: List<SiteModel>
     ) {
-        val detail = "$siteUrl (normalized: $normalizedUrl)" +
-            " — ${siteStore.sites.size} sites available"
+        val availableSiteUrls = sites.joinToString { it.url }
+        val logDetail = "$siteUrl (normalized: $normalizedUrl)" +
+            " — ${sites.size} sites available: [$availableSiteUrls]"
         appLogWrapper.e(
             AppLog.T.DB,
             "A_P: Cannot save credentials" +
-                " - site not found: $detail"
+                " - site not found: $logDetail"
         )
         trackStoringFailed(siteUrl, "site_not_found")
-        reportStoringFailedToSentry("site_not_found", detail)
+        val maskedSiteUrls = sites.joinToString { maskUrl(it.url) }
+        val sentryDetail =
+            "${maskUrl(siteUrl.orEmpty())} (normalized: ${maskUrl(normalizedUrl.orEmpty())})" +
+                " — ${sites.size} sites available: [$maskedSiteUrls]"
+        reportStoringFailedToSentry("site_not_found", sentryDetail)
     }
 
     private fun trackSuccessful(siteUrl: String) {
         val properties: MutableMap<String, String?> = HashMap()
-        properties[URL_TAG] = siteUrl
+        properties[URL_TAG] = maskUrl(siteUrl)
         properties[SUCCESS_TAG] = "true"
         AnalyticsTracker.track(
             if (buildConfigWrapper.isJetpackApp) {
@@ -230,6 +239,48 @@ class ApplicationPasswordLoginHelper @Inject constructor(
             )
             sitesToReset.size
         }
+    }
+
+    private fun findSiteByUrl(
+        normalizedUrl: String?,
+        sites: List<SiteModel>
+    ): SiteModel? {
+        if (normalizedUrl.isNullOrEmpty()) return null
+
+        // Exact match first, fallback: compare ignoring scheme and www prefix
+        val strippedUrl = normalizedUrl.stripSchemeAndWww()
+        return sites.firstOrNull {
+            UrlUtils.normalizeUrl(it.url) == normalizedUrl
+        } ?: sites.firstOrNull {
+            UrlUtils.normalizeUrl(it.url)?.stripSchemeAndWww() == strippedUrl
+        }
+    }
+
+    private fun String.stripSchemeAndWww(): String {
+        return removePrefix("https://")
+            .removePrefix("http://")
+            .removePrefix("www.")
+    }
+
+    @Suppress("ReturnCount")
+    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+    internal fun maskUrl(url: String): String {
+        val host = try {
+            URI(url).host
+        } catch (_: Exception) {
+            null
+        } ?: return url
+        val dotIndex = host.lastIndexOf('.')
+        if (dotIndex <= 0) return url
+        val domain = host.substring(0, dotIndex)
+        val tld = host.substring(dotIndex)
+        val maskedDomain = when {
+            domain.length <= 2 -> "x".repeat(domain.length)
+            else -> domain.first() +
+                "x".repeat(domain.length - 2) +
+                domain.last()
+        }
+        return url.replaceFirst(host, maskedDomain + tld)
     }
 
     private fun SiteModel.hasRegularCredentials(): Boolean {
