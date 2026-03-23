@@ -258,7 +258,9 @@ class PostRsSettingsViewModel @Inject constructor(
     }
 
     fun onFormatClicked() {
-        if (!hasFetchedFormats) {
+        if (!hasFetchedFormats &&
+            !_uiState.value.isLoadingFormats
+        ) {
             resolveSitePostFormats()
         }
         _uiState.update {
@@ -1131,6 +1133,7 @@ class PostRsSettingsViewModel @Inject constructor(
                 _uiState.update {
                     it.copy(sitePostFormats = formats)
                 }
+                hasFetchedFormats = true
             } catch (e: CancellationException) {
                 throw e
             } catch (e: Exception) {
@@ -1139,7 +1142,6 @@ class PostRsSettingsViewModel @Inject constructor(
                     "resolveSitePostFormats failed: ${e.message}"
                 )
             }
-            hasFetchedFormats = true
             _uiState.update {
                 it.copy(isLoadingFormats = false)
             }
