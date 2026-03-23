@@ -70,6 +70,7 @@ import com.patrykandpatrick.vico.core.cartesian.decoration.HorizontalLine
 import com.patrykandpatrick.vico.core.cartesian.layer.ColumnCartesianLayer
 import com.patrykandpatrick.vico.core.cartesian.layer.LineCartesianLayer
 import com.patrykandpatrick.vico.core.cartesian.marker.CartesianMarker
+import com.patrykandpatrick.vico.core.cartesian.marker.CartesianMarkerVisibilityListener
 import com.patrykandpatrick.vico.core.cartesian.marker.DefaultCartesianMarker
 import com.patrykandpatrick.vico.compose.cartesian.layer.rememberColumnCartesianLayer
 import com.patrykandpatrick.vico.compose.cartesian.layer.rememberLineCartesianLayer
@@ -111,6 +112,7 @@ private val SAMPLE_PREVIOUS_PERIOD_DATA = listOf(1000L, 1400L, 1150L, 1200L, 135
 fun ViewsStatsCard(
     uiState: ViewsStatsCardUiState,
     onChartTypeChanged: (ChartType) -> Unit,
+    onBarTapped: (Int) -> Unit,
     onRetry: () -> Unit,
     onRemoveCard: () -> Unit,
     modifier: Modifier = Modifier,
@@ -137,7 +139,7 @@ fun ViewsStatsCard(
         when (uiState) {
             is ViewsStatsCardUiState.Loading -> LoadingContent()
             is ViewsStatsCardUiState.Loaded -> LoadedContent(
-                uiState, onChartTypeChanged, onRemoveCard,
+                uiState, onChartTypeChanged, onBarTapped, onRemoveCard,
                 cardPosition, onMoveUp, onMoveToTop, onMoveDown, onMoveToBottom
             )
             is ViewsStatsCardUiState.Error -> ErrorContent(
@@ -256,6 +258,7 @@ private fun LoadingContent() {
 private fun LoadedContent(
     state: ViewsStatsCardUiState.Loaded,
     onChartTypeChanged: (ChartType) -> Unit,
+    onBarTapped: (Int) -> Unit,
     onRemoveCard: () -> Unit,
     cardPosition: CardPosition?,
     onMoveUp: (() -> Unit)?,
@@ -284,7 +287,8 @@ private fun LoadedContent(
         ViewsStatsChart(
             chartData = state.chartData,
             periodAverage = state.periodAverage,
-            chartType = state.chartType
+            chartType = state.chartType,
+            onBarTapped = onBarTapped
         )
         Spacer(modifier = Modifier.height(16.dp))
         // Bottom Stats Row
@@ -480,7 +484,8 @@ private fun AverageRow(average: Long) {
 private fun ViewsStatsChart(
     chartData: ViewsStatsChartData,
     periodAverage: Long,
-    chartType: ChartType
+    chartType: ChartType,
+    onBarTapped: (Int) -> Unit = {}
 ) {
     // Key the model producer on chartType so it gets recreated when chart type changes
     val modelProducer = remember(chartType) { CartesianChartModelProducer() }
@@ -613,24 +618,46 @@ private fun ViewsStatsChart(
             )
         }
         ChartType.BAR -> {
+            val barTapListener = remember(onBarTapped) {
+                object : CartesianMarkerVisibilityListener {
+                    override fun onShown(
+                        marker: CartesianMarker,
+                        targets: List<CartesianMarker.Target>
+                    ) {
+                        val index = targets.firstOrNull()
+                            ?.x?.toInt() ?: return
+                        onBarTapped(index)
+                    }
+                }
+            }
             CartesianChartHost(
                 chart = rememberCartesianChart(
                     rememberColumnCartesianLayer(
-                        columnProvider = ColumnCartesianLayer.ColumnProvider.series(
-                            LineComponent(
-                                fill = fill(primaryColor),
-                                thicknessDp = 16f,
-                                shape = CorneredShape.rounded(allPercent = 40)
+                        columnProvider = ColumnCartesianLayer
+                            .ColumnProvider.series(
+                                LineComponent(
+                                    fill = fill(primaryColor),
+                                    thicknessDp = 16f,
+                                    shape = CorneredShape.rounded(
+                                        allPercent = 40
+                                    )
+                                )
                             )
-                        )
                     ),
-                    startAxis = VerticalAxis.rememberStart(line = null),
-                    bottomAxis = HorizontalAxis.rememberBottom(valueFormatter = bottomAxisValueFormatter),
+                    startAxis = VerticalAxis.rememberStart(
+                        line = null
+                    ),
+                    bottomAxis = HorizontalAxis.rememberBottom(
+                        valueFormatter = bottomAxisValueFormatter
+                    ),
                     marker = marker,
+                    markerVisibilityListener = barTapListener,
                     decorations = listOf(averageLine)
                 ),
                 modelProducer = modelProducer,
-                scrollState = rememberVicoScrollState(scrollEnabled = false),
+                scrollState = rememberVicoScrollState(
+                    scrollEnabled = false
+                ),
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(ChartHeight)
@@ -808,6 +835,7 @@ private fun ViewsStatsCardLoadingPreview() {
         ViewsStatsCard(
             uiState = ViewsStatsCardUiState.Loading,
             onChartTypeChanged = {},
+            onBarTapped = {},
             onRetry = {},
             onRemoveCard = {}
         )
@@ -851,6 +879,7 @@ private fun ViewsStatsCardLoadedPreview() {
         ViewsStatsCard(
             uiState = sampleLoadedState(),
             onChartTypeChanged = {},
+            onBarTapped = {},
             onRetry = {},
             onRemoveCard = {}
         )
@@ -866,6 +895,7 @@ private fun ViewsStatsCardErrorPreview() {
                 message = stringResource(R.string.stats_error_api)
             ),
             onChartTypeChanged = {},
+            onBarTapped = {},
             onRetry = {},
             onRemoveCard = {}
         )
@@ -879,6 +909,7 @@ private fun ViewsStatsCardLoadedDarkPreview() {
         ViewsStatsCard(
             uiState = sampleLoadedState(),
             onChartTypeChanged = {},
+            onBarTapped = {},
             onRetry = {},
             onRemoveCard = {}
         )

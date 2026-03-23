@@ -45,7 +45,8 @@ data class ViewsStatsChartData(
  */
 data class ChartDataPoint(
     val label: String,
-    val views: Long
+    val views: Long,
+    val rawPeriod: String = ""
 )
 
 /**

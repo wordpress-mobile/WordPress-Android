@@ -268,6 +268,45 @@ class ViewsStatsViewModel @Inject constructor(
         }
     }
 
+    fun onBarTapped(index: Int) {
+        val state = _uiState.value as? ViewsStatsCardUiState.Loaded
+            ?: return
+        val dataPoint = state.chartData.currentPeriod.getOrNull(index)
+            ?: return
+        val rawPeriod = dataPoint.rawPeriod
+        val newPeriod = rawPeriodToStatsPeriod(rawPeriod) ?: return
+        onPeriodChanged(newPeriod)
+        loadData()
+    }
+
+    @Suppress("ReturnCount")
+    private fun rawPeriodToStatsPeriod(rawPeriod: String): StatsPeriod? {
+        // Hourly format (e.g. "2026-03-20 14:00:00") — no smaller period
+        if (rawPeriod.matches(HOURLY_FORMAT_REGEX)) return null
+
+        // Daily format (e.g. "2026-03-20") — drill down to that day
+        if (rawPeriod.matches(DAILY_FORMAT_REGEX)) {
+            val date = LocalDate.parse(
+                rawPeriod, DateTimeFormatter.ISO_LOCAL_DATE
+            )
+            return StatsPeriod.Custom(date, date)
+        }
+
+        // Monthly format (e.g. "2026-03") — drill down to that month
+        if (rawPeriod.matches(MONTHLY_FORMAT_REGEX)) {
+            val parts = rawPeriod.split("-")
+            val firstDay = LocalDate.of(
+                parts[0].toInt(), parts[1].toInt(), 1
+            )
+            val lastDay = firstDay.withDayOfMonth(
+                firstDay.lengthOfMonth()
+            )
+            return StatsPeriod.Custom(firstDay, lastDay)
+        }
+
+        return null
+    }
+
     fun refresh() {
         val site = selectedSiteRepository.getSelectedSite() ?: return
         viewModelScope.launch {
@@ -347,9 +386,21 @@ class ViewsStatsViewModel @Inject constructor(
         val currentStats = result.currentAggregates
         val previousStats = result.previousAggregates
         val currentDataPoints = result.currentPeriodData
-            .map { ChartDataPoint(formatDataPointLabel(it.period, currentPeriod), it.views) }
+            .map {
+                ChartDataPoint(
+                    formatDataPointLabel(it.period, currentPeriod),
+                    it.views,
+                    it.period
+                )
+            }
         val previousDataPoints = result.previousPeriodData
-            .map { ChartDataPoint(formatDataPointLabel(it.period, currentPeriod), it.views) }
+            .map {
+                ChartDataPoint(
+                    formatDataPointLabel(it.period, currentPeriod),
+                    it.views,
+                    it.period
+                )
+            }
 
         val average = if (currentDataPoints.isNotEmpty()) {
             currentStats.views / currentDataPoints.size
