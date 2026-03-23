@@ -507,7 +507,7 @@ class ApplicationPasswordLoginHelperTest : BaseUnitTest() {
     }
 
     @Test
-    fun `maskUrl with standard domain masks characters before TLD`() {
+    fun `maskUrl with standard domain masks middle characters`() {
         val result = applicationPasswordLoginHelper.maskUrl("https://example.com")
         assertEquals("https://exxxxxe.com", result)
     }
@@ -526,9 +526,21 @@ class ApplicationPasswordLoginHelperTest : BaseUnitTest() {
     }
 
     @Test
-    fun `maskUrl with short host returns url unmasked`() {
+    fun `maskUrl with three char domain masks middle character`() {
+        val result = applicationPasswordLoginHelper.maskUrl("https://abc.com")
+        assertEquals("https://axc.com", result)
+    }
+
+    @Test
+    fun `maskUrl with single char domain replaces it with x`() {
+        val result = applicationPasswordLoginHelper.maskUrl("https://a.com")
+        assertEquals("https://x.com", result)
+    }
+
+    @Test
+    fun `maskUrl with two char domain replaces both with x`() {
         val result = applicationPasswordLoginHelper.maskUrl("https://ab.com")
-        assertEquals("https://ab.com", result)
+        assertEquals("https://xx.com", result)
     }
 
     @Test

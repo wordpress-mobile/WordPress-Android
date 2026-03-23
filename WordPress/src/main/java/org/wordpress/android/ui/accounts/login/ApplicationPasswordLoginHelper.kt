@@ -3,7 +3,6 @@ package org.wordpress.android.ui.accounts.login
 import android.content.Context
 import androidx.annotation.VisibleForTesting
 import androidx.core.net.toUri
-import java.net.URI
 import com.automattic.android.tracks.crashlogging.CrashLogging
 import org.wordpress.android.R
 import org.wordpress.android.util.DeviceUtils
@@ -24,6 +23,7 @@ import org.wordpress.android.util.crashlogging.sendReportWithTag
 import rs.wordpress.api.kotlin.ApiDiscoveryResult
 import rs.wordpress.api.kotlin.WpLoginClient
 import uniffi.wp_api.applicationPasswordsUrl
+import java.net.URI
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -270,12 +270,15 @@ class ApplicationPasswordLoginHelper @Inject constructor(
             null
         } ?: return url
         val dotIndex = host.lastIndexOf('.')
-        if (dotIndex < MIN_MASK_LENGTH) return url
+        if (dotIndex <= 0) return url
         val domain = host.substring(0, dotIndex)
         val tld = host.substring(dotIndex)
-        val maskedDomain = domain.first() +
-            "x".repeat(domain.length - 2) +
-            domain.last()
+        val maskedDomain = when {
+            domain.length <= 2 -> "x".repeat(domain.length)
+            else -> domain.first() +
+                "x".repeat(domain.length - 2) +
+                domain.last()
+        }
         return url.replaceFirst(host, maskedDomain + tld)
     }
 
@@ -337,7 +340,6 @@ class ApplicationPasswordLoginHelper @Inject constructor(
     companion object {
         private const val JETPACK_SUCCESS_URL = "jetpack://app-pass-authorize"
         private const val WORDPRESS_SUCCESS_URL = "wordpress://app-pass-authorize"
-        private const val MIN_MASK_LENGTH = 3
     }
 
     data class UriLogin(
