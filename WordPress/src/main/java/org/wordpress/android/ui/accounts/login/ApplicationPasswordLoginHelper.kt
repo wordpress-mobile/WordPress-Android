@@ -104,7 +104,8 @@ class ApplicationPasswordLoginHelper @Inject constructor(
 
         return withContext(bgDispatcher) {
             val normalizedUrl = UrlUtils.normalizeUrl(urlLogin.siteUrl)
-            val site = findSiteByUrl(normalizedUrl)
+            val sites = siteStore.sites
+            val site = findSiteByUrl(normalizedUrl, sites)
             if (site != null) {
                 site.apply {
                     apiRestUsernameEncrypted = ""
@@ -121,7 +122,7 @@ class ApplicationPasswordLoginHelper @Inject constructor(
                 true
             } else {
                 logAndReportSiteNotFound(
-                    urlLogin.siteUrl, normalizedUrl
+                    urlLogin.siteUrl, normalizedUrl, sites
                 )
                 false
             }
@@ -168,11 +169,12 @@ class ApplicationPasswordLoginHelper @Inject constructor(
 
     private fun logAndReportSiteNotFound(
         siteUrl: String?,
-        normalizedUrl: String?
+        normalizedUrl: String?,
+        sites: List<SiteModel>
     ) {
-        val availableSiteUrls = siteStore.sites.joinToString { it.url }
+        val availableSiteUrls = sites.joinToString { it.url }
         val detail = "$siteUrl (normalized: $normalizedUrl)" +
-            " — ${siteStore.sites.size} sites available: [$availableSiteUrls]"
+            " — ${sites.size} sites available: [$availableSiteUrls]"
         appLogWrapper.e(
             AppLog.T.DB,
             "A_P: Cannot save credentials" +
@@ -233,15 +235,18 @@ class ApplicationPasswordLoginHelper @Inject constructor(
         }
     }
 
-    private fun findSiteByUrl(normalizedUrl: String?): SiteModel? {
+    private fun findSiteByUrl(
+        normalizedUrl: String?,
+        sites: List<SiteModel>
+    ): SiteModel? {
         // Exact match first
-        siteStore.sites.firstOrNull {
+        sites.firstOrNull {
             UrlUtils.normalizeUrl(it.url) == normalizedUrl
         }?.let { return it }
 
         // Fallback: compare ignoring scheme and www prefix
         val strippedUrl = normalizedUrl?.stripSchemeAndWww()
-        return siteStore.sites.firstOrNull {
+        return sites.firstOrNull {
             UrlUtils.normalizeUrl(it.url)?.stripSchemeAndWww() == strippedUrl
         }
     }
