@@ -11,9 +11,16 @@ import org.wordpress.android.util.SiteUtils
 import rs.wordpress.api.kotlin.WpRequestResult
 import uniffi.wp_api.AnyTermWithViewContext
 import uniffi.wp_api.MediaListParams
+import uniffi.wp_api.PostFormat
 import uniffi.wp_api.TermCreateParams
 import uniffi.wp_api.TermEndpointType
 import uniffi.wp_api.TermListParams
+import uniffi.wp_api.SparseThemeFieldWithViewContext
+import uniffi.wp_api.SparseThemeWithViewContext
+import uniffi.wp_api.ThemeListParams
+import uniffi.wp_api.ThemeStatus
+import uniffi.wp_api.ThemeSupports
+import uniffi.wp_api.ThemeSupportsData
 import uniffi.wp_api.UserListParams
 import java.util.concurrent.ConcurrentHashMap
 import javax.inject.Inject
@@ -44,7 +51,7 @@ class PostRsRestClient @Inject constructor(
     /**
      * Fetches media source URLs for the given [mediaIds] in a single
      * network call using the `include` parameter, returning a map of
-     * media ID to Photon-optimised URL. IDs already in the local cache
+     * media ID to Photon-optimized URL. IDs already in the local cache
      * are returned immediately without a network round-trip.
      *
      * @param widthDp target display width in dp for Photon resizing.
@@ -335,6 +342,64 @@ class PostRsRestClient @Inject constructor(
         }
     }
 
+    /**
+     * Fetches the post formats supported by the site's active
+     * theme. Returns [DEFAULT_POST_FORMATS] on failure or when
+     * the theme does not declare format support.
+     */
+    suspend fun fetchSitePostFormats(
+        site: SiteModel,
+    ): List<PostFormat> {
+        val client = wpApiClientProvider.getWpApiClient(site)
+        val response = client.request {
+            it.themes().filterListWithViewContext(
+                ThemeListParams(
+                    status = ThemeStatus.Active
+                ),
+                listOf(
+                    SparseThemeFieldWithViewContext
+                        .THEME_SUPPORTS
+                )
+            )
+        }
+        return when (response) {
+            is WpRequestResult.Success -> {
+                parsePostFormats(response.response.data)
+                    ?: DEFAULT_POST_FORMATS
+            }
+            else -> {
+                val msg =
+                    (response
+                        as? WpRequestResult.WpError<*>)
+                        ?.errorMessage
+                AppLog.w(
+                    AppLog.T.POSTS,
+                    "fetchSitePostFormats failed: $msg"
+                )
+                DEFAULT_POST_FORMATS
+            }
+        }
+    }
+
+    private fun parsePostFormats(
+        themes: List<SparseThemeWithViewContext>,
+    ): List<PostFormat>? {
+        val slugs =
+            themes.firstOrNull()
+                ?.themeSupports
+                ?.get(ThemeSupports.Formats)
+                ?.let { it as? ThemeSupportsData.VecString }
+                ?.v1
+                ?.takeIf { it.isNotEmpty() }
+                ?: return null
+        return (listOf(PostFormat.Standard) +
+            slugs.map { slugToPostFormat(it) })
+            .distinct()
+    }
+
+    private fun slugToPostFormat(slug: String): PostFormat =
+        SLUG_TO_FORMAT[slug] ?: PostFormat.Custom(slug)
+
     private fun toPhotonUrl(
         site: SiteModel,
         sourceUrl: String,
@@ -363,5 +428,21 @@ class PostRsRestClient @Inject constructor(
     companion object {
         internal const val AUTHORS_PER_PAGE: UInt = 20u
         private const val PER_PAGE = 100u
+
+        private val SLUG_TO_FORMAT = mapOf(
+            "standard" to PostFormat.Standard,
+            "aside" to PostFormat.Aside,
+            "audio" to PostFormat.Audio,
+            "chat" to PostFormat.Chat,
+            "gallery" to PostFormat.Gallery,
+            "image" to PostFormat.Image,
+            "link" to PostFormat.Link,
+            "quote" to PostFormat.Quote,
+            "status" to PostFormat.Status,
+            "video" to PostFormat.Video,
+        )
+
+        val DEFAULT_POST_FORMATS =
+            SLUG_TO_FORMAT.values.toList()
     }
 }
