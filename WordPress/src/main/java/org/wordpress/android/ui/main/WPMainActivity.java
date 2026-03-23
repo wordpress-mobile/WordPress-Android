@@ -241,32 +241,32 @@ public class WPMainActivity extends BaseAppCompatActivity implements
     @Inject PostStore mPostStore;
     @Inject Dispatcher mDispatcher;
     @Inject protected LoginAnalyticsListener mLoginAnalyticsListener;
-    @Inject ShortcutsNavigator mShortcutsNavigator;
-    @Inject ShortcutUtils mShortcutUtils;
+    @Inject dagger.Lazy<ShortcutsNavigator> mShortcutsNavigator;
+    @Inject dagger.Lazy<ShortcutUtils> mShortcutUtils;
     // Injected to ensure the store responds to dispatched actions
     @Inject EditorSettingsStore mEditorSettingsStore;
-    @Inject UploadActionUseCase mUploadActionUseCase;
+    @Inject dagger.Lazy<UploadActionUseCase> mUploadActionUseCase;
     @Inject SystemNotificationsTracker mSystemNotificationsTracker;
     @Inject GCMMessageHandler mGCMMessageHandler;
-    @Inject UploadUtilsWrapper mUploadUtilsWrapper;
+    @Inject dagger.Lazy<UploadUtilsWrapper> mUploadUtilsWrapper;
     @Inject ViewModelProvider.Factory mViewModelFactory;
     @Inject PrivateAtomicCookie mPrivateAtomicCookie;
     @Inject ReaderTracker mReaderTracker;
-    @Inject MediaPickerLauncher mMediaPickerLauncher;
+    @Inject dagger.Lazy<MediaPickerLauncher> mMediaPickerLauncher;
     @Inject SelectedSiteRepository mSelectedSiteRepository;
     @Inject AnalyticsTrackerWrapper mAnalyticsTrackerWrapper;
-    @Inject CreateSiteNotificationScheduler mCreateSiteNotificationScheduler;
-    @Inject WeeklyRoundupScheduler mWeeklyRoundupScheduler;
+    @Inject dagger.Lazy<CreateSiteNotificationScheduler> mCreateSiteNotificationScheduler;
+    @Inject dagger.Lazy<WeeklyRoundupScheduler> mWeeklyRoundupScheduler;
     @Inject JetpackAppMigrationFlowUtils mJetpackAppMigrationFlowUtils;
     @Inject DeepLinkOpenWebLinksWithJetpackHelper mDeepLinkOpenWebLinksWithJetpackHelper;
     @Inject OpenWebLinksWithJetpackFlowFeatureConfig mOpenWebLinksWithJetpackFlowFeatureConfig;
     @Inject QRCodeAuthFlowFeatureConfig mQrCodeAuthFlowFeatureConfig;
-    @Inject JetpackFeatureRemovalOverlayUtil mJetpackFeatureRemovalOverlayUtil;
+    @Inject dagger.Lazy<JetpackFeatureRemovalOverlayUtil> mJetpackFeatureRemovalOverlayUtil;
     @Inject JetpackFeatureRemovalPhaseHelper mJetpackFeatureRemovalPhaseHelper;
 
     @Inject BuildConfigWrapper mBuildConfigWrapper;
 
-    @Inject IInAppUpdateManager mInAppUpdateManager;
+    @Inject dagger.Lazy<IInAppUpdateManager> mInAppUpdateManager;
 
     @Inject GCMRegistrationScheduler mGCMRegistrationScheduler;
 
@@ -357,7 +357,7 @@ public class WPMainActivity extends BaseAppCompatActivity implements
                     }
                 } else if (openedFromShortcut) {
                     initSelectedSite();
-                    mShortcutsNavigator.showTargetScreen(getIntent().getStringExtra(
+                    mShortcutsNavigator.get().showTargetScreen(getIntent().getStringExtra(
                             ShortcutsNavigator.ACTION_OPEN_SHORTCUT), this, getSelectedSite());
                     showJetpackOverlayIfNeeded(getIntent().getStringExtra(
                             ShortcutsNavigator.ACTION_OPEN_SHORTCUT));
@@ -403,12 +403,6 @@ public class WPMainActivity extends BaseAppCompatActivity implements
             checkTrackAnalyticsEvent();
         }
 
-        // Ensure deep linking activities are enabled.They may have been disabled elsewhere and failed to get re-enabled
-        enableDeepLinkingComponentsIfNeeded();
-
-        // monitor whether we're not the default app
-        trackDefaultApp();
-
         // We need to register the dispatcher here otherwise it won't trigger if for example Site Picker is present
         mDispatcher.register(this);
         EventBus.getDefault().register(this);
@@ -427,12 +421,6 @@ public class WPMainActivity extends BaseAppCompatActivity implements
             showBloggingPromptsOnboarding();
         }
 
-        if (isGooglePlayServicesAvailable(this)) {
-            // Register for Cloud messaging
-            mGCMRegistrationScheduler.scheduleRegistration();
-        }
-
-        scheduleLocalNotifications();
         initViewModel();
 
         if (getIntent().getBooleanExtra(ARG_OPEN_BLOGGING_REMINDERS, false)) {
@@ -457,11 +445,30 @@ public class WPMainActivity extends BaseAppCompatActivity implements
             initSelectedSite();
         }
 
-        displayJetpackFeatureCollectionOverlayIfNeeded();
-
         if (savedInstanceState != null) {
             mIsChangingConfiguration = savedInstanceState.getBoolean(ARG_IS_CHANGING_CONFIGURATION, false);
         }
+
+        // Defer non-essential work to after the first frame renders
+        new Handler(Looper.getMainLooper()).post(this::postFirstFrameWork);
+    }
+
+    private boolean mPostFirstFrameWorkDone = false;
+
+    /**
+     * Work that doesn't need to complete before the first frame is drawn.
+     * Running it here keeps the critical startup path shorter.
+     */
+    private void postFirstFrameWork() {
+        if (mPostFirstFrameWorkDone) return;
+        mPostFirstFrameWorkDone = true;
+
+        if (isGooglePlayServicesAvailable(this)) {
+            mGCMRegistrationScheduler.scheduleRegistration();
+        }
+        scheduleLocalNotifications();
+        trackDefaultApp();
+        displayJetpackFeatureCollectionOverlayIfNeeded();
     }
 
     private void initBackPressHandler() {
@@ -489,7 +496,7 @@ public class WPMainActivity extends BaseAppCompatActivity implements
     }
 
     private void showJetpackOverlayIfNeeded(String action) {
-        if (!mJetpackFeatureRemovalOverlayUtil.shouldHideJetpackFeatures()) {
+        if (!mJetpackFeatureRemovalOverlayUtil.get().shouldHideJetpackFeatures()) {
             return;
         }
         Shortcut shortcut = Shortcut.fromActionString(action);
@@ -525,7 +532,7 @@ public class WPMainActivity extends BaseAppCompatActivity implements
     }
 
     private void setUpMainView() {
-        if (!mJetpackFeatureRemovalOverlayUtil.shouldHideJetpackFeatures()) {
+        if (!mJetpackFeatureRemovalOverlayUtil.get().shouldHideJetpackFeatures()) {
             if (mBottomNav != null) {
                 mBottomNav.setVisibility(View.VISIBLE);
             }
@@ -570,7 +577,7 @@ public class WPMainActivity extends BaseAppCompatActivity implements
     }
 
     private void displayJetpackFeatureCollectionOverlayIfNeeded() {
-        if (mJetpackFeatureRemovalOverlayUtil.shouldShowFeatureCollectionJetpackOverlayForFirstTime()) {
+        if (mJetpackFeatureRemovalOverlayUtil.get().shouldShowFeatureCollectionJetpackOverlayForFirstTime()) {
             JetpackFeatureFullScreenOverlayFragment.newInstance(
                     null,
                     false,
@@ -605,8 +612,8 @@ public class WPMainActivity extends BaseAppCompatActivity implements
     }
 
     private void scheduleLocalNotifications() {
-        mCreateSiteNotificationScheduler.scheduleCreateSiteNotificationIfNeeded();
-        mWeeklyRoundupScheduler.scheduleIfNeeded();
+        mCreateSiteNotificationScheduler.get().scheduleCreateSiteNotificationIfNeeded();
+        mWeeklyRoundupScheduler.get().scheduleIfNeeded();
     }
 
     @Override
@@ -1116,7 +1123,7 @@ public class WPMainActivity extends BaseAppCompatActivity implements
     }
 
     private void checkForInAppUpdate() {
-        mInAppUpdateManager.checkForAppUpdate(this, mInAppUpdateListener);
+        mInAppUpdateManager.get().checkForAppUpdate(this, mInAppUpdateListener);
     }
 
     @NonNull final InAppUpdateListener mInAppUpdateListener = new InAppUpdateListener() {
@@ -1128,7 +1135,7 @@ public class WPMainActivity extends BaseAppCompatActivity implements
     private void popupSnackbarForCompleteUpdate() {
         WPSnackbar.make(findViewById(R.id.coordinator), R.string.in_app_update_available, Snackbar.LENGTH_INDEFINITE)
                   .setAction(R.string.in_app_update_restart, v -> {
-                      mInAppUpdateManager.completeAppUpdate();
+                      mInAppUpdateManager.get().completeAppUpdate();
                   })
                   .show();
     }
@@ -1285,13 +1292,13 @@ public class WPMainActivity extends BaseAppCompatActivity implements
 
                 View snackbarAttachView = findViewById(R.id.coordinator);
                 if (site != null && post != null && snackbarAttachView != null) {
-                    mUploadUtilsWrapper.handleEditPostResultSnackbars(
+                    mUploadUtilsWrapper.get().handleEditPostResultSnackbars(
                             this,
                             snackbarAttachView,
                             data,
                             post,
                             site,
-                            mUploadActionUseCase.getUploadAction(post),
+                            mUploadActionUseCase.get().getUploadAction(post),
                             v -> UploadUtils.publishPost(WPMainActivity.this, post, site, mDispatcher),
                             isFirstTimePublishing -> {
                                 mBloggingRemindersViewModel.onPublishingPost(site.getId(), isFirstTimePublishing);
@@ -1377,10 +1384,10 @@ public class WPMainActivity extends BaseAppCompatActivity implements
     private void handleUpdateResult(int resultCode, int updateType) {
         if (resultCode == RESULT_OK) {
             // The user accepted the update
-            mInAppUpdateManager.onUserAcceptedAppUpdate(updateType);
+            mInAppUpdateManager.get().onUserAcceptedAppUpdate(updateType);
         } else if (resultCode == RESULT_CANCELED) {
             // The user denied the update
-            mInAppUpdateManager.cancelAppUpdate(updateType);
+            mInAppUpdateManager.get().cancelAppUpdate(updateType);
         }
     }
 
@@ -1594,7 +1601,7 @@ public class WPMainActivity extends BaseAppCompatActivity implements
 
                 View snackbarAttachView = findViewById(R.id.coordinator);
                 if (snackbarAttachView != null) {
-                    mUploadUtilsWrapper.onPostUploadedSnackbarHandler(
+                    mUploadUtilsWrapper.get().onPostUploadedSnackbarHandler(
                             this,
                             snackbarAttachView,
                             event.isError(),

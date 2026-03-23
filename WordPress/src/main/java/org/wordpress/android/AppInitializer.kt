@@ -104,7 +104,6 @@ import org.wordpress.android.util.EncryptedLogging
 import org.wordpress.android.util.FluxCUtils
 import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.PackageUtils
-import org.wordpress.android.util.PerAppLocaleManager
 import org.wordpress.android.util.ProfilingUtils
 import org.wordpress.android.util.RateLimitedTask
 import org.wordpress.android.util.SiteUtils
@@ -146,58 +145,58 @@ class AppInitializer @Inject constructor(
     lateinit var mediaStore: MediaStore
 
     @Inject
-    lateinit var zendeskHelper: ZendeskHelper
+    lateinit var zendeskHelper: dagger.Lazy<ZendeskHelper>
 
     @Inject
     lateinit var uploadStarter: UploadStarter
 
     @Inject
-    lateinit var statsWidgetUpdaters: StatsWidgetUpdaters
+    lateinit var statsWidgetUpdaters: dagger.Lazy<StatsWidgetUpdaters>
 
     @Inject
-    lateinit var statsStore: StatsStore
+    lateinit var statsStore: dagger.Lazy<StatsStore>
 
     @Inject
-    lateinit var systemNotificationsTracker: SystemNotificationsTracker
+    lateinit var systemNotificationsTracker: dagger.Lazy<SystemNotificationsTracker>
 
     @Inject
-    lateinit var readerTracker: ReaderTracker
+    lateinit var readerTracker: dagger.Lazy<ReaderTracker>
 
     @Inject
-    lateinit var imageManager: ImageManager
+    lateinit var imageManager: dagger.Lazy<ImageManager>
 
     @Inject
-    lateinit var privateAtomicCookie: PrivateAtomicCookie
+    lateinit var privateAtomicCookie: dagger.Lazy<PrivateAtomicCookie>
 
     @Inject
-    lateinit var wordPressCookieAuthenticator: WordPressCookieAuthenticator
+    lateinit var wordPressCookieAuthenticator: dagger.Lazy<WordPressCookieAuthenticator>
 
     @Inject
-    lateinit var imageEditorTracker: ImageEditorTracker
+    lateinit var imageEditorTracker: dagger.Lazy<ImageEditorTracker>
 
     @Inject
-    lateinit var crashLogging: CrashLogging
+    lateinit var crashLogging: dagger.Lazy<CrashLogging>
 
     @Inject
-    lateinit var encryptedLogging: EncryptedLogging
+    lateinit var encryptedLogging: dagger.Lazy<EncryptedLogging>
 
     @Inject
-    lateinit var appConfig: AppConfig
+    lateinit var appConfig: dagger.Lazy<AppConfig>
 
     @Inject
-    lateinit var imageEditorFileUtils: ImageEditorFileUtils
+    lateinit var imageEditorFileUtils: dagger.Lazy<ImageEditorFileUtils>
 
     @Inject
     lateinit var wordPressWorkerFactory: WordPressWorkersFactory
 
     @Inject
-    lateinit var gcmRegistrationScheduler: GCMRegistrationScheduler
+    lateinit var gcmRegistrationScheduler: dagger.Lazy<GCMRegistrationScheduler>
 
     @Inject
-    lateinit var cookieManager: CookieManager
+    lateinit var cookieManager: dagger.Lazy<CookieManager>
 
     @Inject
-    lateinit var buildConfig: BuildConfigWrapper
+    lateinit var buildConfig: dagger.Lazy<BuildConfigWrapper>
 
     private lateinit var debugCookieManager: DebugCookieManager
 
@@ -224,25 +223,26 @@ class AppInitializer @Inject constructor(
 
     // For jetpack focus
     @Inject
-    lateinit var openWebLinksWithJetpackFlowFeatureConfig: OpenWebLinksWithJetpackFlowFeatureConfig
+    lateinit var openWebLinksWithJetpackFlowFeatureConfig:
+        dagger.Lazy<OpenWebLinksWithJetpackFlowFeatureConfig>
 
     @Inject
-    lateinit var wpServiceProvider: WpServiceProvider
+    lateinit var wpServiceProvider: dagger.Lazy<WpServiceProvider>
 
     @Inject
-    lateinit var wpApiClientProvider: WpApiClientProvider
+    lateinit var wpApiClientProvider: dagger.Lazy<WpApiClientProvider>
 
     @Inject
-    lateinit var openWebLinksWithJetpackHelper: DeepLinkOpenWebLinksWithJetpackHelper
+    lateinit var openWebLinksWithJetpackHelper:
+        dagger.Lazy<DeepLinkOpenWebLinksWithJetpackHelper>
 
     @Inject
-    lateinit var jetpackFeatureRemovalWidgetHelper: JetpackFeatureRemovalWidgetHelper
+    lateinit var jetpackFeatureRemovalWidgetHelper:
+        dagger.Lazy<JetpackFeatureRemovalWidgetHelper>
 
     @Inject
-    lateinit var jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper
-
-    @Inject
-    lateinit var perAppLocaleManager: PerAppLocaleManager
+    lateinit var jetpackFeatureRemovalPhaseHelper:
+        dagger.Lazy<JetpackFeatureRemovalPhaseHelper>
 
     private lateinit var applicationLifecycleMonitor: ApplicationLifecycleMonitor
 
@@ -310,19 +310,15 @@ class AppInitializer @Inject constructor(
     fun init() {
         ProfilingUtils.start("App Startup")
 
-        ProfilingUtils.split("CrashLogging.initialize")
-        crashLogging.initialize()
-
-        ProfilingUtils.split("Dispatcher.register")
-        dispatcher.register(this)
-
-        ProfilingUtils.split("AppConfig.init")
-        appConfig.init(appScope)
-
-        // Init static fields from dagger injected singletons
+        // Init static fields from dagger injected singletons.
+        // Must happen before deferredInit() dispatches network
+        // requests that depend on WordPress.requestQueue.
         WordPress.requestQueue = requestQueue
         WordPress.imageLoader = imageLoader
         sOAuthAuthenticator = oAuthAuthenticator
+
+        ProfilingUtils.split("Dispatcher.register")
+        dispatcher.register(this)
 
         ProfilingUtils.split("enableLogRecording")
         enableLogRecording()
@@ -355,9 +351,6 @@ class AppInitializer @Inject constructor(
             ProcessLifecycleOwner.get() as ProcessLifecycleOwner
         )
 
-        ProfilingUtils.split("initAnalytics")
-        initAnalytics(SystemClock.elapsedRealtime() - startDate)
-
         // Needed for vector drawables on Android < 21
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
 
@@ -375,9 +368,11 @@ class AppInitializer @Inject constructor(
         ProfilingUtils.split("sanitizeMediaUploadState")
         sanitizeMediaUploadStateForSite()
 
+        // WorkManager init is independent of DB and UI — run on a
+        // background thread to keep it off the main-thread startup path.
         if (!initialized) {
-            ProfilingUtils.split("initWorkManager")
-            initWorkManager()
+            Thread { initWorkManager() }
+                .apply { name = "WorkManager-init" }.start()
         }
 
         ProfilingUtils.split("init complete")
@@ -385,8 +380,10 @@ class AppInitializer @Inject constructor(
     }
 
     private fun initDebugCookieManager() {
-        if (buildConfig.isDebugSettingsEnabled()) {
-            debugCookieManager = DebugCookieManager(application, cookieManager, buildConfig)
+        if (buildConfig.get().isDebugSettingsEnabled()) {
+            debugCookieManager = DebugCookieManager(
+                application, cookieManager.get(), buildConfig.get()
+            )
             debugCookieManager.sync()
         }
     }
@@ -589,8 +586,17 @@ class AppInitializer @Inject constructor(
 
         ProfilingUtils.start("Post-First-Frame Init")
 
+        ProfilingUtils.split("CrashLogging.initialize")
+        crashLogging.get().initialize()
+
+        ProfilingUtils.split("AppConfig.init")
+        appConfig.get().init(appScope)
+
+        ProfilingUtils.split("initAnalytics")
+        initAnalytics(SystemClock.elapsedRealtime() - startDate)
+
         ProfilingUtils.split("EncryptedLogging.start")
-        encryptedLogging.start()
+        encryptedLogging.get().start()
 
         ProfilingUtils.split("enableHttpResponseCache")
         context?.let { enableHttpResponseCache(it) }
@@ -599,7 +605,7 @@ class AppInitializer @Inject constructor(
         AppReviewManager.init(application)
 
         ProfilingUtils.split("Zendesk.setup")
-        zendeskHelper.setupZendesk(
+        zendeskHelper.get().setupZendesk(
             application,
             BuildConfig.ZENDESK_DOMAIN,
             BuildConfig.ZENDESK_APP_ID,
@@ -620,13 +626,13 @@ class AppInitializer @Inject constructor(
         enqueuePeriodicUploadWorkRequestForAllSites()
 
         ProfilingUtils.split("SystemNotificationsTracker")
-        systemNotificationsTracker.checkSystemNotificationsState()
+        systemNotificationsTracker.get().checkSystemNotificationsState()
 
         ProfilingUtils.split("ImageEditorInitializer")
         ImageEditorInitializer.init(
-            imageManager,
-            imageEditorTracker,
-            imageEditorFileUtils,
+            imageManager.get(),
+            imageEditorTracker.get(),
+            imageEditorFileUtils.get(),
             appScope
         )
 
@@ -684,7 +690,7 @@ class AppInitializer @Inject constructor(
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onAccountChanged(event: OnAccountChanged) {
         if (!FluxCUtils.isSignedInWPComOrHasWPOrgSite(accountStore, siteStore)) {
-            appConfig.refresh(appScope)
+            appConfig.get().refresh(appScope)
             flushHttpCache()
 
             // Analytics resets
@@ -718,11 +724,11 @@ class AppInitializer @Inject constructor(
     @Suppress("unused", "UNUSED_PARAMETER")
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onAuthenticationChanged(event: OnAuthenticationChanged) {
-        appConfig.refresh(appScope)
+        appConfig.get().refresh(appScope)
 
         if (accountStore.hasAccessToken()) {
             // Make sure the Push Notification token is sent to our servers after a successful login
-            gcmRegistrationScheduler.scheduleRegistration()
+            gcmRegistrationScheduler.get().scheduleRegistration()
         }
     }
 
@@ -737,7 +743,7 @@ class AppInitializer @Inject constructor(
         VolleyUtils.cancelAllRequests(requestQueue)
 
         NotificationsUtils.unregisterDevicePushNotifications(context)
-        zendeskHelper.reset()
+        zendeskHelper.get().reset()
         try {
             FirebaseInstanceId.getInstance().deleteInstanceId()
         } catch (e: IOException) {
@@ -768,24 +774,24 @@ class AppInitializer @Inject constructor(
         ReaderDatabase.reset(true)
 
         // Reset Stats Data
-        statsStore.deleteAllData()
-        statsWidgetUpdaters.update(context)
+        statsStore.get().deleteAllData()
+        statsWidgetUpdaters.get().update(context)
 
         // Reset Notifications Data
         NotificationsTable.reset()
 
         // clear App config data
-        appConfig.clear()
+        appConfig.get().clear()
 
         // Remove private Atomic cookie
-        privateAtomicCookie.clearCookie()
+        privateAtomicCookie.get().clearCookie()
 
         // Clear WordPress.com account cookie cache
-        wordPressCookieAuthenticator.clearAllCachedCookies()
+        wordPressCookieAuthenticator.get().clearAllCachedCookies()
 
         // Clear cached wordpress-rs services and API clients
-        wpServiceProvider.clearAll()
-        wpApiClientProvider.clearWpComClients()
+        wpServiceProvider.get().clearAll()
+        wpApiClientProvider.get().clearWpComClients()
     }
 
     /*
@@ -831,17 +837,17 @@ class AppInitializer @Inject constructor(
     }
 
     private fun enableDeepLinkingComponentsIfNeeded() {
-        if (openWebLinksWithJetpackFlowFeatureConfig.isEnabled()) {
+        if (openWebLinksWithJetpackFlowFeatureConfig.get().isEnabled()) {
             if (!AppPrefs.getIsOpenWebLinksWithJetpack()) {
-                openWebLinksWithJetpackHelper.enableDeepLinks()
+                openWebLinksWithJetpackHelper.get().enableDeepLinks()
             }
         } else {
-            openWebLinksWithJetpackHelper.enableDeepLinks()
+            openWebLinksWithJetpackHelper.get().enableDeepLinks()
         }
     }
 
     private fun disableWidgetReceiversIfNeeded() {
-        jetpackFeatureRemovalWidgetHelper.disableWidgetReceiversIfNeeded()
+        jetpackFeatureRemovalWidgetHelper.get().disableWidgetReceiversIfNeeded()
     }
 
     private fun flushHttpCache() {
@@ -851,7 +857,7 @@ class AppInitializer @Inject constructor(
 
     override fun onStart(owner: LifecycleOwner) {
         applicationLifecycleMonitor.onAppComesFromBackground()
-        appConfig.refresh(appScope)
+        appConfig.get().refresh(appScope)
     }
 
     override fun onStop(owner: LifecycleOwner) {
@@ -886,7 +892,7 @@ class AppInitializer @Inject constructor(
             // Sync Push Notifications settings
             if (isPushNotificationPingNeeded && accountStore.hasAccessToken()) {
                 // Register for Cloud messaging
-                gcmRegistrationScheduler.scheduleRegistration()
+                gcmRegistrationScheduler.get().scheduleRegistration()
             }
         }
 
@@ -905,9 +911,9 @@ class AppInitializer @Inject constructor(
                 properties["time_in_app"] = DateTimeUtils.secondsBetween(now, applicationOpenedDate)
                 applicationOpenedDate = null
             }
-            properties.putAll(readerTracker.getAnalyticsData())
+            properties.putAll(readerTracker.get().getAnalyticsData())
 
-            readerTracker.onAppGoesToBackground()
+            readerTracker.get().onAppGoesToBackground()
 
             // Ensure that the deeplinking activity is are re-enabled if needed
             enableDeepLinkingComponentsIfNeeded()
@@ -938,7 +944,7 @@ class AppInitializer @Inject constructor(
          */
         @Suppress("DEPRECATION")
         fun onAppComesFromBackground() {
-            readerTracker.setupTrackers()
+            readerTracker.get().setupTrackers()
             AppLog.i(T.UTILS, "App comes from background")
             if (!WordPress.appIsInTheBackground) {
                 return
@@ -1032,7 +1038,7 @@ class AppInitializer @Inject constructor(
     }
 
     private fun updateNotificationSettings() {
-        if (!jetpackFeatureRemovalPhaseHelper.shouldShowNotifications()) {
+        if (!jetpackFeatureRemovalPhaseHelper.get().shouldShowNotifications()) {
             NotificationsUtils.cancelAllNotifications(application)
             // Only create the transient notification channel to handle upload notifications
             createNotificationChannelsOnSdk26(

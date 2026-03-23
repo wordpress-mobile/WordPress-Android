@@ -9,6 +9,7 @@ import com.android.volley.toolbox.DiskBasedCache;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import org.wordpress.android.fluxc.network.LazyStartRequestQueue;
 import org.wordpress.android.fluxc.network.MemorizingTrustManager;
 import org.wordpress.android.fluxc.network.OkHttpStack;
 import org.wordpress.android.fluxc.network.OpenJdkCookieManager;
@@ -50,9 +51,11 @@ public class ReleaseNetworkModule {
 
     private RequestQueue createRequestQueue(Network network, Context appContext) {
         File cacheDir = new File(appContext.getCacheDir(), DEFAULT_CACHE_DIR);
-        RequestQueue queue = new RequestQueue(new DiskBasedCache(cacheDir), network, NETWORK_THREAD_POOL_SIZE);
-        queue.start();
-        return queue;
+        // LazyStartRequestQueue defers start() to the first add() call,
+        // avoiding 10 thread creations per queue during app startup.
+        return new LazyStartRequestQueue(
+                new DiskBasedCache(cacheDir), network, NETWORK_THREAD_POOL_SIZE
+        );
     }
 
     @Singleton
