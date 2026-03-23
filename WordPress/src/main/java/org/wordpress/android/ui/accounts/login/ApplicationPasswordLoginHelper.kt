@@ -170,8 +170,9 @@ class ApplicationPasswordLoginHelper @Inject constructor(
         siteUrl: String?,
         normalizedUrl: String?
     ) {
+        val availableSiteUrls = siteStore.sites.joinToString { it.url }
         val detail = "$siteUrl (normalized: $normalizedUrl)" +
-            " — ${siteStore.sites.size} sites available"
+            " — ${siteStore.sites.size} sites available: [$availableSiteUrls]"
         appLogWrapper.e(
             AppLog.T.DB,
             "A_P: Cannot save credentials" +
