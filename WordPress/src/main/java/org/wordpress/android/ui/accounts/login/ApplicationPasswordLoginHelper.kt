@@ -262,6 +262,7 @@ class ApplicationPasswordLoginHelper @Inject constructor(
             .removePrefix("www.")
     }
 
+    @Suppress("ReturnCount")
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
     internal fun maskUrl(url: String): String {
         val host = try {
