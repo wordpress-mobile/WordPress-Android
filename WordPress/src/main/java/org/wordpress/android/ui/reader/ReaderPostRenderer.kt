@@ -436,6 +436,8 @@ class ReaderPostRenderer(
             .append(" display: block; margin-left: auto; margin-right: auto;")
             .append(" background-color: var(--color-neutral-0);")
             .append(" margin-bottom: ").append(resourceVars.marginMediumPx).append("px; }")
+            // make sure videos aren't wider than the display
+            .append(" video { display: block; max-width: 100%; height: auto; }")
 
         if (renderAsTiledGallery) {
             // tiled-gallery related styles
