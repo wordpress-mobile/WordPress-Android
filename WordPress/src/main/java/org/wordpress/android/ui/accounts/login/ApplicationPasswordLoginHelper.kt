@@ -3,6 +3,7 @@ package org.wordpress.android.ui.accounts.login
 import android.content.Context
 import androidx.annotation.VisibleForTesting
 import androidx.core.net.toUri
+import java.net.URI
 import com.automattic.android.tracks.crashlogging.CrashLogging
 import org.wordpress.android.R
 import org.wordpress.android.util.DeviceUtils
@@ -264,7 +265,7 @@ class ApplicationPasswordLoginHelper @Inject constructor(
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
     internal fun maskUrl(url: String): String {
         val host = try {
-            java.net.URI(url).host
+            URI(url).host
         } catch (_: Exception) {
             null
         } ?: url
@@ -273,7 +274,7 @@ class ApplicationPasswordLoginHelper @Inject constructor(
         val maskedHost = host.replaceRange(
             dotIndex - MASK_LENGTH, dotIndex, "X".repeat(MASK_LENGTH)
         )
-        return url.replace(host, maskedHost)
+        return url.replaceFirst(host, maskedHost)
     }
 
     private fun SiteModel.hasRegularCredentials(): Boolean {

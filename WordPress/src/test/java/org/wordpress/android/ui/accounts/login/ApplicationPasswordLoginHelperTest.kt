@@ -165,6 +165,24 @@ class ApplicationPasswordLoginHelperTest : BaseUnitTest() {
         }
 
     @Test
+    fun `storeApplicationPasswordCredentialsFrom with empty url does not match site with empty url`() =
+        runTest {
+            val siteWithEmptyUrl = SiteModel().apply {
+                url = ""
+            }
+            whenever(siteStore.sites).thenReturn(listOf(siteWithEmptyUrl))
+            val emptyUrlLogin = UriLogin(
+                "", TEST_USER, TEST_PASSWORD, TEST_API_ROOT_URL
+            )
+
+            val result = applicationPasswordLoginHelper
+                .storeApplicationPasswordCredentialsFrom(emptyUrlLogin)
+
+            assertFalse(result)
+            verify(dispatcherWrapper, times(0)).updateApplicationPassword(any())
+        }
+
+    @Test
     fun `storeApplicationPasswordCredentialsFrom matches site with different scheme`() =
         runTest {
             val siteModel = SiteModel().apply {
