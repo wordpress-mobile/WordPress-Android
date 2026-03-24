@@ -2,12 +2,17 @@ package org.wordpress.android.ui.stats.refresh
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.MotionEvent
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Lifecycle
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.MarginPageTransformer
@@ -25,7 +30,10 @@ import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureFullScreenOverlayFr
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil.JetpackFeatureOverlayScreenType
 import org.wordpress.android.ui.main.WPMainNavigationView.PageType.MY_SITE
 import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredBottomSheetFragment
+import org.wordpress.android.ui.newstats.NewStatsActivity
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
+import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures
+import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures.Feature
 import org.wordpress.android.ui.stats.refresh.StatsViewModel.StatsModuleUiModel
 import org.wordpress.android.ui.stats.refresh.lists.StatsListFragment
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection
@@ -67,6 +75,9 @@ class StatsFragment : Fragment(R.layout.stats_fragment), ScrollableViewInitializ
     lateinit var jetpackBrandingUtils: JetpackBrandingUtils
 
     @Inject
+    lateinit var experimentalFeatures: ExperimentalFeatures
+
+    @Inject
     lateinit var mStatsTrafficSubscribersTabsFeatureConfig: StatsTrafficSubscribersTabsFeatureConfig
 
     private val viewModel: StatsViewModel by activityViewModels()
@@ -101,7 +112,32 @@ class StatsFragment : Fragment(R.layout.stats_fragment), ScrollableViewInitializ
             }
             initializeViewModels(nonNullActivity, savedInstanceState == null, savedInstanceState)
             initializeViews()
+            setupMenu()
         }
+    }
+
+    private fun setupMenu() {
+        requireActivity().addMenuProvider(
+            object : MenuProvider {
+                override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                    menuInflater.inflate(R.menu.stats_toolbar_menu, menu)
+                }
+
+                override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                    return when (menuItem.itemId) {
+                        R.id.menu_try_new_stats -> {
+                            experimentalFeatures.setEnabled(Feature.NEW_STATS, true)
+                            NewStatsActivity.start(requireContext())
+                            requireActivity().finish()
+                            true
+                        }
+                        else -> false
+                    }
+                }
+            },
+            viewLifecycleOwner,
+            Lifecycle.State.RESUMED
+        )
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

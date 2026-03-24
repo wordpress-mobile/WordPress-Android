@@ -25,6 +25,7 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.DateRange
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -111,15 +112,41 @@ import org.wordpress.android.util.AppLog
 
 @AndroidEntryPoint
 class NewStatsActivity : BaseAppCompatActivity() {
+    @javax.inject.Inject
+    lateinit var experimentalFeatures:
+        org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures
+
+    @javax.inject.Inject
+    lateinit var selectedSiteRepository:
+        org.wordpress.android.ui.mysite.SelectedSiteRepository
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             AppThemeM3 {
                 NewStatsScreen(
-                    onBackPressed = onBackPressedDispatcher::onBackPressed
+                    onBackPressed = onBackPressedDispatcher::onBackPressed,
+                    onSwitchToOldStats = ::switchToOldStats
                 )
             }
         }
+    }
+
+    private fun switchToOldStats() {
+        experimentalFeatures.setEnabled(
+            org.wordpress.android.ui.prefs.experimentalfeatures
+                .ExperimentalFeatures.Feature.NEW_STATS,
+            false
+        )
+        selectedSiteRepository.getSelectedSite()?.let { site ->
+            org.wordpress.android.ui.stats.refresh.StatsActivity.start(
+                this,
+                site,
+                launchedFrom = org.wordpress.android.ui.stats.refresh
+                    .utils.StatsLaunchedFrom.LINK
+            )
+        }
+        finish()
     }
 
     companion object {
@@ -135,10 +162,46 @@ private enum class StatsTab(val titleResId: Int) {
     SUBSCRIBERS(R.string.subscribers)
 }
 
+@Composable
+private fun StatsOverflowMenu(
+    onSwitchToOldStats: () -> Unit
+) {
+    var expanded by remember { mutableStateOf(false) }
+    Box {
+        IconButton(onClick = { expanded = true }) {
+            Icon(
+                imageVector = Icons.Default.MoreVert,
+                contentDescription = stringResource(
+                    R.string.more
+                )
+            )
+        }
+        DropdownMenu(
+            expanded = expanded,
+            onDismissRequest = { expanded = false }
+        ) {
+            DropdownMenuItem(
+                text = {
+                    Text(
+                        stringResource(
+                            R.string.stats_switch_to_old_stats
+                        )
+                    )
+                },
+                onClick = {
+                    expanded = false
+                    onSwitchToOldStats()
+                }
+            )
+        }
+    }
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun NewStatsScreen(
-    onBackPressed: () -> Unit
+    onBackPressed: () -> Unit,
+    onSwitchToOldStats: () -> Unit = {}
 ) {
     val viewsStatsViewModel: ViewsStatsViewModel = viewModel()
     val selectedPeriod by viewsStatsViewModel.selectedPeriod.collectAsState()
@@ -224,6 +287,9 @@ private fun NewStatsScreen(
                             )
                         }
                     }
+                    StatsOverflowMenu(
+                        onSwitchToOldStats = onSwitchToOldStats
+                    )
                 }
             )
         }
