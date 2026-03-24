@@ -120,13 +120,25 @@ class NewStatsActivity : BaseAppCompatActivity() {
     lateinit var selectedSiteRepository:
         org.wordpress.android.ui.mysite.SelectedSiteRepository
 
+    @javax.inject.Inject
+    lateinit var appPrefsWrapper:
+        org.wordpress.android.ui.prefs.AppPrefsWrapper
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val shouldShowIntro =
+            !appPrefsWrapper.getNewStatsIntroShown()
         setContent {
             AppThemeM3 {
                 NewStatsScreen(
-                    onBackPressed = onBackPressedDispatcher::onBackPressed,
-                    onSwitchToOldStats = ::switchToOldStats
+                    onBackPressed =
+                        onBackPressedDispatcher::onBackPressed,
+                    onSwitchToOldStats = ::switchToOldStats,
+                    showIntroBottomSheet = shouldShowIntro,
+                    onIntroDismissed = {
+                        appPrefsWrapper
+                            .setNewStatsIntroShown(true)
+                    }
                 )
             }
         }
@@ -201,7 +213,9 @@ private fun StatsOverflowMenu(
 @Composable
 private fun NewStatsScreen(
     onBackPressed: () -> Unit,
-    onSwitchToOldStats: () -> Unit = {}
+    onSwitchToOldStats: () -> Unit = {},
+    showIntroBottomSheet: Boolean = false,
+    onIntroDismissed: () -> Unit = {}
 ) {
     val viewsStatsViewModel: ViewsStatsViewModel = viewModel()
     val selectedPeriod by viewsStatsViewModel.selectedPeriod.collectAsState()
@@ -210,6 +224,21 @@ private fun NewStatsScreen(
     val pagerState = rememberPagerState(pageCount = { tabs.size })
     val coroutineScope = rememberCoroutineScope()
     var showPeriodMenu by remember { mutableStateOf(false) }
+    var showIntro by remember { mutableStateOf(showIntroBottomSheet) }
+    val introSheetState = rememberModalBottomSheetState(
+        skipPartiallyExpanded = true
+    )
+
+    if (showIntro) {
+        org.wordpress.android.ui.newstats.components
+            .NewStatsIntroBottomSheet(
+                sheetState = introSheetState,
+                onDismiss = {
+                    showIntro = false
+                    onIntroDismissed()
+                }
+            )
+    }
     var showDateRangePicker by remember { mutableStateOf(false) }
 
     if (showDateRangePicker) {
