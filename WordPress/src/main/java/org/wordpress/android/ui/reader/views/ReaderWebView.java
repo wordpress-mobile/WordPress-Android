@@ -236,6 +236,23 @@ public class ReaderWebView extends WPWebView {
         return url.startsWith("https://videos.files.wordpress.com");
     }
 
+    /**
+     * For SRC_IMAGE_ANCHOR_TYPE hits, returns the parent anchor's href
+     * if it contains a fragment identifier (#). Returns null otherwise.
+     * Used to detect footnote back-reference arrows (↩︎) which are
+     * rendered as images inside anchors.
+     */
+    private String getAnchorFragmentUrl(HitTestResult hr) {
+        if (hr.getType() != WebView.HitTestResult.SRC_IMAGE_ANCHOR_TYPE) {
+            return null;
+        }
+        Handler handler = new Handler();
+        Message message = handler.obtainMessage();
+        this.requestFocusNodeHref(message);
+        String url = message.getData().getString("url");
+        return (url != null && url.contains("#")) ? url : null;
+    }
+
     /*
      * detect when a link is tapped
      */
@@ -249,13 +266,18 @@ public class ReaderWebView extends WPWebView {
                 if (UrlUtils.isImageUrl(url)) {
                     if (isValidEmbeddedImageClick(hr) || isVideoPressPreview(url)) {
                         return super.onTouchEvent(event);
-                    } else {
-                        return mUrlClickListener.onImageUrlClick(
-                            url,
-                            this,
-                            (int) event.getX(),
-                            (int) event.getY());
                     }
+                    // Route images inside anchors with fragment URLs
+                    // through onUrlClick (e.g., footnote back-references)
+                    String anchorUrl = getAnchorFragmentUrl(hr);
+                    if (anchorUrl != null) {
+                        return mUrlClickListener.onUrlClick(anchorUrl);
+                    }
+                    return mUrlClickListener.onImageUrlClick(
+                        url,
+                        this,
+                        (int) event.getX(),
+                        (int) event.getY());
                 } else {
                     return mUrlClickListener.onUrlClick(url);
                 }
