@@ -78,18 +78,18 @@ allprojects {
         debug = false
     }
 
-    tasks.withType(KotlinCompile).all {
-        kotlinOptions {
-            jvmTarget = JvmTarget.fromTarget(libs.versions.java.get()).target
+    tasks.withType(KotlinCompile).configureEach {
+        compilerOptions {
+            jvmTarget = JvmTarget.fromTarget(libs.versions.java.get())
             allWarningsAsErrors = true
-            freeCompilerArgs += [
+            freeCompilerArgs.addAll(
                     "-opt-in=kotlin.RequiresOptIn",
                     "-jvm-default=no-compatibility",
                     "-Xannotation-default-target=param-property",
                     // Suppress Glide KSP codegen visibility warning (bumptech/glide#5601)
                     "-Xwarning-level=" +
                         "EXPOSED_PACKAGE_PRIVATE_TYPE_FROM_INTERNAL_WARNING:disabled"
-            ]
+            )
         }
     }
 }
