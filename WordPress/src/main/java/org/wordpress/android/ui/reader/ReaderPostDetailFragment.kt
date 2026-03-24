@@ -1741,19 +1741,17 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         readerTracker.track(AnalyticsTracker.Stat.READER_ARTICLE_LINK_TAPPED)
 
         // Handle same-page fragment links (e.g., footnotes).
-        // Footnote hrefs resolve to the post's own URL with a
-        // fragment (e.g., "https://example.com/post/#fn-id").
+        // Footnote hrefs resolve to the post's own URL with
+        // a fragment (e.g., "https://example.com/post/#fn-id").
+        val postUrl = viewModel.post?.url?.trimEnd('/')
         val fragmentIndex = url.indexOf('#')
-        if (fragmentIndex >= 0 && fragmentIndex < url.length - 1) {
-            val clickedBase = url.substring(0, fragmentIndex)
-                .trimEnd('/')
-            val postUrl = viewModel.post?.url?.trimEnd('/')
-            if (!postUrl.isNullOrEmpty()
-                && clickedBase == postUrl
-            ) {
-                val fragment = url.substring(fragmentIndex + 1)
-                return onPageJumpClick(fragment)
-            }
+        if (!postUrl.isNullOrEmpty()
+            && fragmentIndex >= 0
+            && fragmentIndex < url.length - 1
+            && url.substring(0, fragmentIndex).trimEnd('/') == postUrl
+        ) {
+            scrollToFragmentOrOpenUrl(url.substring(fragmentIndex + 1), url)
+            return true
         }
 
         when {
@@ -1785,31 +1783,42 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         }
     }
 
-    @SuppressLint("SetJavaScriptEnabled")
     override fun onPageJumpClick(pageJump: String?): Boolean {
         readerTracker.track(AnalyticsTracker.Stat.READER_ARTICLE_PAGE_JUMP_TAPPED)
-        val wasJsEnabled = readerWebView.settings.javaScriptEnabled
-
-        readerWebView.settings.javaScriptEnabled = true
-
         readerWebView.evaluateJavascript("document.getElementById('$pageJump').offsetTop") { result ->
-            appBar.setExpanded(false, true)
-            // Note that 'result' can be the string 'null' in case the page jump identifier is not found on page
+            // 'result' can be the string 'null' when the page jump identifier is not found
             val offsetTop = StringUtils.stringToInt(result, -1)
             if (offsetTop >= 0) {
+                appBar.setExpanded(false, true)
                 val yOffset = (resources.displayMetrics.density * offsetTop).toInt()
                 scrollView.smoothScrollTo(0, yOffset)
             } else {
-                // Element not found — scroll to bottom as a fallback since footnotes are typically there.
-                scrollView.smoothScrollTo(
-                    0,
-                    scrollView.getChildAt(0).bottom
-                )
+                ToastUtils.showToast(activity, R.string.reader_toast_err_page_jump_not_found)
             }
         }
-
-        readerWebView.settings.javaScriptEnabled = wasJsEnabled
         return true
+    }
+
+    /**
+     * Attempts to scroll to the element with the given fragment ID.
+     * If the element isn't found in the page (e.g., the footnote
+     * block wasn't rendered), falls back to opening the full URL
+     * in the browser.
+     */
+    private fun scrollToFragmentOrOpenUrl(fragment: String, fullUrl: String) {
+        readerWebView.evaluateJavascript(
+            "document.getElementById('$fragment').offsetTop"
+        ) { result ->
+            val offsetTop = StringUtils.stringToInt(result, -1)
+            if (offsetTop >= 0) {
+                appBar.setExpanded(false, true)
+                val yOffset = (resources.displayMetrics.density * offsetTop).toInt()
+                scrollView.smoothScrollTo(0, yOffset)
+            } else {
+                val openUrlType = if (shouldOpenExternal(fullUrl)) OpenUrlType.EXTERNAL else OpenUrlType.INTERNAL
+                ReaderActivityLauncher.openUrl(requireActivity(), fullUrl, openUrlType)
+            }
+        }
     }
 
     /*
