@@ -84,7 +84,6 @@ public class ReaderWebView extends WPWebView {
     private static boolean mBlogSchemeIsHttps;
 
     private boolean mIsDestroyed;
-    private String mLoadedBaseUrl;
 
     @Inject UserAgent mUserAgent;
     @Inject AccountStore mAccountStore;
@@ -140,15 +139,6 @@ public class ReaderWebView extends WPWebView {
     }
 
 
-    @Override
-    public void loadDataWithBaseURL(
-            String baseUrl, String data, String mimeType,
-            String encoding, String historyUrl) {
-        mLoadedBaseUrl = baseUrl;
-        super.loadDataWithBaseURL(
-                baseUrl, data, mimeType, encoding, historyUrl);
-    }
-
     public void clearContent() {
         loadUrl("about:blank");
     }
@@ -199,15 +189,7 @@ public class ReaderWebView extends WPWebView {
 
     private static boolean isValidClickedUrl(String url) {
         // only return true for http(s) urls so we avoid file: and data: clicks
-        return (url != null
-                && (url.startsWith("http")
-                    || url.startsWith("wordpress:")));
-    }
-
-    private boolean isSamePageFragmentUrl(String url) {
-        if (url == null || mLoadedBaseUrl == null) return false;
-        return url.startsWith(mLoadedBaseUrl + "#")
-                && url.length() > mLoadedBaseUrl.length() + 1;
+        return (url != null && (url.startsWith("http") || url.startsWith("wordpress:")));
     }
 
     public boolean isCustomViewShowing() {
@@ -264,17 +246,8 @@ public class ReaderWebView extends WPWebView {
             HitTestResult hr = getHitTestResult();
             String url = hr.getExtra();
             if (isValidClickedUrl(url)) {
-                if (isSamePageFragmentUrl(url)) {
-                    String pageJump =
-                            UrlUtils.getPageJumpOrNull(url);
-                    if (pageJump != null) {
-                        return mUrlClickListener
-                                .onPageJumpClick(pageJump);
-                    }
-                }
                 if (UrlUtils.isImageUrl(url)) {
-                    if (isValidEmbeddedImageClick(hr)
-                            || isVideoPressPreview(url)) {
+                    if (isValidEmbeddedImageClick(hr) || isVideoPressPreview(url)) {
                         return super.onTouchEvent(event);
                     } else {
                         return mUrlClickListener.onImageUrlClick(
@@ -320,28 +293,15 @@ public class ReaderWebView extends WPWebView {
         }
 
         @Override
-        public boolean shouldOverrideUrlLoading(
-                WebView view, String url) {
-            // Handle same-page fragment links (e.g., footnotes)
-            if (view.getVisibility() == View.VISIBLE
-                    && mReaderWebView.hasUrlClickListener()
-                    && mReaderWebView.isSamePageFragmentUrl(url)) {
-                String pageJump =
-                        UrlUtils.getPageJumpOrNull(url);
-                if (pageJump != null) {
-                    return mReaderWebView.getUrlClickListener()
-                            .onPageJumpClick(pageJump);
-                }
-            }
-            // fire the url click listener, but only do this when
-            // webView has loaded (is visible) - have seen some posts
-            // containing iframes automatically try to open urls
-            // (without being clicked) before the page has loaded
+        public boolean shouldOverrideUrlLoading(WebView view, String url) {
+            // fire the url click listener, but only do this when webView has
+            // loaded (is visible) - have seen some posts containing iframes
+            // automatically try to open urls (without being clicked)
+            // before the page has loaded
             return view.getVisibility() == View.VISIBLE
                    && mReaderWebView.hasUrlClickListener()
                    && isValidClickedUrl(url)
-                   && mReaderWebView.getUrlClickListener()
-                           .onUrlClick(url);
+                   && mReaderWebView.getUrlClickListener().onUrlClick(url);
         }
 
         @SuppressWarnings("deprecation")
