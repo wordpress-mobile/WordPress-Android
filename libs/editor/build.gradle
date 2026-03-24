@@ -74,6 +74,7 @@ dependencies {
 
     // This dependency will be substituted if the `local-builds.gradle` file contains
     // `localGutenbergKitPath`. Details for this can be found in the `settings.gradle` file.
+    //noinspection UseTomlInstead - path is dynamic for local/remote substitution
     implementation("$rootProject.gradle.ext.gutenbergKitBinaryPath:${libs.versions.gutenberg.kit.get()}")
 
     implementation(libs.wordpress.utils)
