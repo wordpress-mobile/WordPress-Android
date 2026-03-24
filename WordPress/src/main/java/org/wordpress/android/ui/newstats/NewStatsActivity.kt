@@ -150,6 +150,7 @@ class NewStatsActivity : BaseAppCompatActivity() {
                 .ExperimentalFeatures.Feature.NEW_STATS,
             false
         )
+        appPrefsWrapper.setNewStatsIntroShown(false)
         selectedSiteRepository.getSelectedSite()?.let { site ->
             org.wordpress.android.ui.stats.refresh.StatsActivity.start(
                 this,

@@ -1006,7 +1006,7 @@
     <string name="new_stats_intro_any_period_title">Any Period, Any Range</string>
     <string name="new_stats_intro_any_period_desc">Pick from common presets or set a custom date range with a comparison period, all in one tap.</string>
     <string name="new_stats_intro_on_par_title">On Par with the Web</string>
-    <string name="new_stats_intro_on_par_desc">Devices, UTM, locations, WordAds — the same data you get on WordPress.com.</string>
+    <string name="new_stats_intro_on_par_desc">Devices, UTM, locations, WordAds (coming) — the same data you get on WordPress.com.</string>
     <string name="new_stats_intro_trends_title">Trends at a Glance</string>
     <string name="new_stats_intro_trends_desc">Every metric shows how it\'s trending compared to the previous period, so you always know if you\'re growing.</string>
     <string name="new_stats_intro_footer">You can turn off New Stats from the overflow menu in the Stats screen.</string>
