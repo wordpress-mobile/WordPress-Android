@@ -7,7 +7,6 @@ import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -33,6 +32,7 @@ import androidx.compose.material.icons.filled.PersonOutline
 import androidx.compose.material.icons.outlined.BarChart
 import androidx.compose.material.icons.outlined.Visibility
 import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -553,11 +553,17 @@ private fun ViewsStatsChart(
     val primaryColor = MaterialTheme.colorScheme.primary
     val secondaryColor = MaterialTheme.colorScheme.outline.copy(alpha = 0.5f)
 
-    // X-axis formatter to show date labels from current period data
-    val dateLabels = chartData.currentPeriod.map { it.label }
+    // X-axis labels from both series so the formatter covers the
+    // full range even when the previous period has more data points
+    val currentLabels = chartData.currentPeriod.map { it.label }
+    val previousLabels = chartData.previousPeriod.map { it.label }
+    val dateLabels = if (previousLabels.size > currentLabels.size) {
+        currentLabels + previousLabels.drop(currentLabels.size)
+    } else {
+        currentLabels
+    }
     val bottomAxisValueFormatter = CartesianValueFormatter { _, value, _ ->
-        val index = value.toInt()
-        if (index in dateLabels.indices) dateLabels[index] else " "
+        dateLabels.getOrElse(value.toInt()) { value.toInt().toString() }
     }
 
     // Marker value formatter to show date and views on touch

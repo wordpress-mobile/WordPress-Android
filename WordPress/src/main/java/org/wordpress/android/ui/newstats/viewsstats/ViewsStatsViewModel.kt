@@ -47,7 +47,6 @@ private const val PERIOD_LAST_6_MONTHS = "last_6_months"
 private const val PERIOD_LAST_12_MONTHS = "last_12_months"
 private const val PERIOD_CUSTOM = "custom"
 
-
 @HiltViewModel
 class ViewsStatsViewModel @Inject constructor(
     private val selectedSiteRepository: SelectedSiteRepository,
@@ -286,32 +285,42 @@ class ViewsStatsViewModel @Inject constructor(
         // Hourly data — no smaller period available
         if (rawPeriod.matches(HOURLY_FORMAT_REGEX)) return null
 
-        // Monthly granularity — drill down to the full month
-        if (isMonthlyGranularity) {
-            val firstDay = if (rawPeriod.matches(MONTHLY_FORMAT_REGEX)) {
-                val parts = rawPeriod.split("-")
-                LocalDate.of(parts[0].toInt(), parts[1].toInt(), 1)
-            } else {
-                LocalDate.parse(
-                    rawPeriod.take(DATE_PREFIX_LENGTH),
-                    DateTimeFormatter.ISO_LOCAL_DATE
-                ).withDayOfMonth(1)
+        return try {
+            when {
+                isMonthlyGranularity -> drillDownMonth(rawPeriod)
+                rawPeriod.matches(DAILY_FORMAT_REGEX) -> {
+                    val date = LocalDate.parse(
+                        rawPeriod,
+                        DateTimeFormatter.ISO_LOCAL_DATE
+                    )
+                    StatsPeriod.Custom(date, date)
+                }
+                else -> null
             }
-            val lastDay = firstDay.withDayOfMonth(
-                firstDay.lengthOfMonth()
+        } catch (e: java.time.format.DateTimeParseException) {
+            AppLog.e(
+                AppLog.T.STATS,
+                "Failed to parse period for drill-down: $rawPeriod",
+                e
             )
-            return StatsPeriod.Custom(firstDay, lastDay)
+            null
         }
+    }
 
-        // Daily granularity — drill down to that single day
-        if (rawPeriod.matches(DAILY_FORMAT_REGEX)) {
-            val date = LocalDate.parse(
-                rawPeriod, DateTimeFormatter.ISO_LOCAL_DATE
-            )
-            return StatsPeriod.Custom(date, date)
+    private fun drillDownMonth(rawPeriod: String): StatsPeriod {
+        val firstDay = if (rawPeriod.matches(MONTHLY_FORMAT_REGEX)) {
+            val parts = rawPeriod.split("-")
+            LocalDate.of(parts[0].toInt(), parts[1].toInt(), 1)
+        } else {
+            LocalDate.parse(
+                rawPeriod.take(DATE_PREFIX_LENGTH),
+                DateTimeFormatter.ISO_LOCAL_DATE
+            ).withDayOfMonth(1)
         }
-
-        return null
+        val lastDay = firstDay.withDayOfMonth(
+            firstDay.lengthOfMonth()
+        )
+        return StatsPeriod.Custom(firstDay, lastDay)
     }
 
     fun refresh() {

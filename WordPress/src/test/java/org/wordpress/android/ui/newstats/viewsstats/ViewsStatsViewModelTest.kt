@@ -608,14 +608,7 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
         whenever(statsRepository.fetchStatsForPeriod(any(), any()))
             .thenAnswer {
                 fetchCount++
-                if (fetchCount == 1) {
-                    // First call (init) returns normally
-                    createPeriodStatsResult()
-                } else {
-                    // Subsequent calls: throw to make it obvious
-                    // if called more than expected
-                    createPeriodStatsResult()
-                }
+                createPeriodStatsResult()
             }
 
         initViewModel()
