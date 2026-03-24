@@ -29,6 +29,7 @@ import kotlin.math.abs
 
 private const val PERCENTAGE_BASE = 100.0
 private const val DAYS_THRESHOLD_FOR_MONTHLY_DISPLAY = 31
+private const val DATE_PREFIX_LENGTH = 10 // "YYYY-MM-DD".length
 
 private val HOURLY_FORMAT_REGEX = Regex("""\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}""")
 private val DAILY_FORMAT_REGEX = Regex("""\d{4}-\d{2}-\d{2}""")
@@ -274,34 +275,38 @@ class ViewsStatsViewModel @Inject constructor(
         val dataPoint = state.chartData.currentPeriod.getOrNull(index)
             ?: return
         val rawPeriod = dataPoint.rawPeriod
-        val newPeriod = rawPeriodToStatsPeriod(rawPeriod) ?: return
+        val newPeriod = drillDownPeriod(rawPeriod) ?: return
         onPeriodChanged(newPeriod)
         loadData()
     }
 
     @Suppress("ReturnCount")
-    private fun rawPeriodToStatsPeriod(rawPeriod: String): StatsPeriod? {
-        // Hourly format (e.g. "2026-03-20 14:00:00") — no smaller period
+    private fun drillDownPeriod(rawPeriod: String): StatsPeriod? {
+        val isMonthlyGranularity = currentPeriod is StatsPeriod.Last6Months ||
+            currentPeriod is StatsPeriod.Last12Months
+
+        // Hourly data — no smaller period available
         if (rawPeriod.matches(HOURLY_FORMAT_REGEX)) return null
 
-        // Daily format (e.g. "2026-03-20") — drill down to that day
+        // Monthly granularity — drill down to the full month
+        if (isMonthlyGranularity) {
+            val date = LocalDate.parse(
+                rawPeriod.take(DATE_PREFIX_LENGTH),
+                DateTimeFormatter.ISO_LOCAL_DATE
+            )
+            val firstDay = date.withDayOfMonth(1)
+            val lastDay = firstDay.withDayOfMonth(
+                firstDay.lengthOfMonth()
+            )
+            return StatsPeriod.Custom(firstDay, lastDay)
+        }
+
+        // Daily granularity — drill down to that single day
         if (rawPeriod.matches(DAILY_FORMAT_REGEX)) {
             val date = LocalDate.parse(
                 rawPeriod, DateTimeFormatter.ISO_LOCAL_DATE
             )
             return StatsPeriod.Custom(date, date)
-        }
-
-        // Monthly format (e.g. "2026-03") — drill down to that month
-        if (rawPeriod.matches(MONTHLY_FORMAT_REGEX)) {
-            val parts = rawPeriod.split("-")
-            val firstDay = LocalDate.of(
-                parts[0].toInt(), parts[1].toInt(), 1
-            )
-            val lastDay = firstDay.withDayOfMonth(
-                firstDay.lengthOfMonth()
-            )
-            return StatsPeriod.Custom(firstDay, lastDay)
         }
 
         return null
