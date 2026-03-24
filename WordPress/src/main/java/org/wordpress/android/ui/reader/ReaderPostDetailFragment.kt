@@ -1780,7 +1780,8 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
     override fun onPageJumpClick(pageJump: String?): Boolean {
         readerTracker.track(AnalyticsTracker.Stat.READER_ARTICLE_PAGE_JUMP_TAPPED)
-        readerWebView.evaluateJavascript("document.getElementById('$pageJump').offsetTop") { result ->
+        val safeId = pageJump?.replace("\\", "\\\\")?.replace("'", "\\'")
+        readerWebView.evaluateJavascript("document.getElementById('$safeId').offsetTop") { result ->
             // 'result' can be the string 'null' when the page jump identifier is not found
             val offsetTop = StringUtils.stringToInt(result, -1)
             if (offsetTop >= 0) {
@@ -1815,8 +1816,9 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
      * in the browser.
      */
     private fun scrollToFragmentOrOpenUrl(fragment: String, fullUrl: String) {
+        val safeId = fragment.replace("\\", "\\\\").replace("'", "\\'")
         readerWebView.evaluateJavascript(
-            "document.getElementById('$fragment').offsetTop"
+            "document.getElementById('$safeId').offsetTop"
         ) { result ->
             val offsetTop = StringUtils.stringToInt(result, -1)
             if (offsetTop >= 0) {
