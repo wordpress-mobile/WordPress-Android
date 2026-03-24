@@ -101,7 +101,6 @@ Language: sv_SE
     <string name="term_description_label">Beskrivning:</string>
     <string name="term_slug_label">Slug:</string>
     <string name="term_name_label">Namn:</string>
-    <string name="application_password_experimental_feature_note">\n\nObs: Autentisering av applikationslösenord på Android-enheter är en experimentell funktion.</string>
     <string name="application_password_required_block_editor">Blockredigerare</string>
     <string name="application_password_required_description">Applikationslösenord är ett säkrare sätt att ansluta till din webbplats som drivs på egen server och möjliggör stöd för funktioner som %1$s.</string>
     <string name="application_password_required">Applikationslösenord krävs</string>
@@ -134,7 +133,6 @@ Language: sv_SE
     <string name="application_password_info_description_2">När du lägger till webbplatser i appen skapas applikationslösenord automatiskt efter behov.</string>
     <string name="application_password_info_description_1">Applikationslösenord är ett säkert sätt för appar att komma åt din webbplats utan att använda ditt kontolösenord.</string>
     <string name="application_password_info_title">Applikationslösenord</string>
-    <string name="application_password_disable_feature_description">Om du inaktiverar applikationslösenordet tas dina inloggningsuppgifter bort från %1$s av dina webbplatser. Du kan behöva lägga till påverkade webbplatser igen för att logga in igen.</string>
     <string name="application_password_invalid_description">Ditt applikationslösenord finns inte längre. Logga in igen för att skapa ett nytt applikationslösenord.</string>
     <string name="subscribers_delete_failed">Det gick inte att ta bort prenumeranten</string>
     <string name="subscribers_delete_success_message">Prenumeranten har tagits bort, men det kan ta en minut innan borttagningen träder i kraft</string>
@@ -156,7 +154,6 @@ Language: sv_SE
     <string name="start">Starta</string>
     <string name="descending">Fallande</string>
     <string name="ascending">Stigande</string>
-    <string name="application_password_disable_feature_title">Inaktivera applikationslösenord?</string>
     <string name="application_password_invalid">Ogiltigt applikationslösenord</string>
     <string name="application_password_credentials_storing_error">Det uppstod ett fel vid lagring av autentiseringsuppgifter för applikationslösenord för %1$s</string>
     <string name="subscribers_add_failed">Misslyckades att lägga till prenumeranter</string>
@@ -202,8 +199,6 @@ Language: sv_SE
     <string name="qrcode_auth_flow_timeout_subtitle">Det tog för lång tid att identifiera en kod. Försök igen eller använd din kameraapp för att skanna koden.</string>
     <string name="qrcode_auth_flow_timeout_title">Tidsgränsen gick ut för skanningen</string>
     <string name="invite_users">Bjud in användare</string>
-    <string name="experimental_application_password_feature_description">Aktivera applikationslösenord för att logga in på webbplatser som drivs på egen server</string>
-    <string name="experimental_application_password_feature">Inloggning med applösenord</string>
     <string name="cant_share_no_blog">Du kan inte dela till WordPress utan att ha en blogg</string>
     <string name="me_email_verification_generic_error">Det gick inte att skicka verifieringslänken</string>
     <string name="me_email_verification_resend">Skicka verifieringslänken igen</string>

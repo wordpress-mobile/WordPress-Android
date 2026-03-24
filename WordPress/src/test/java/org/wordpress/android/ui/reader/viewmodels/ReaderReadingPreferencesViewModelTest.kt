@@ -65,23 +65,14 @@ class ReaderReadingPreferencesViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `when ViewModel is initialized then it should emit UpdateStatusBarColor action event`() = test {
-        // When
-        viewModel.init()
+    fun `when collecting currentReadingPreferences then it should have the initial reading preferences`() =
+        test {
+            // When
+            val currentReadingPreferences = viewModel.currentReadingPreferences.first()
 
-        // Then
-        val updateStatusBarColorEvent = collectedEvents.last() as ActionEvent.UpdateStatusBarColor
-        assertThat(updateStatusBarColorEvent.theme).isEqualTo(DEFAULT_READING_PREFERENCES.theme)
-    }
-
-    @Test
-    fun `when collecting currentReadingPreferences then it should have the initial reading preferences`() = test {
-        // When
-        val currentReadingPreferences = viewModel.currentReadingPreferences.first()
-
-        // Then
-        assertThat(currentReadingPreferences).isEqualTo(DEFAULT_READING_PREFERENCES)
-    }
+            // Then
+            assertThat(currentReadingPreferences).isEqualTo(DEFAULT_READING_PREFERENCES)
+        }
 
     @Test
     fun `when onThemeClick is called then it should update the theme`() = test {
@@ -123,87 +114,90 @@ class ReaderReadingPreferencesViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `when onExitActionClick is called then it emits Close action event`() = test {
+    fun `when onSaveClick is called then it emits SaveAndClose action event`() = test {
         // When
-        viewModel.onExitActionClick()
+        viewModel.onSaveClick()
 
         // Then
-        val closeEvent = collectedEvents.last()
-        assertThat(closeEvent).isEqualTo(ActionEvent.Close)
+        val event = collectedEvents.last()
+        assertThat(event).isEqualTo(ActionEvent.SaveAndClose)
     }
 
     @Test
-    fun `when onExitActionClick is called with original preferences then it doesn't save them`() =
+    fun `when onSaveClick is called with original preferences then it doesn't save them`() =
         test {
             // When
-            viewModel.onExitActionClick()
+            viewModel.onSaveClick()
 
             // Then
             verifyNoInteractions(saveReadingPreferences)
         }
 
     @Test
-    fun `when onExitActionClick is called with updated preferences then it saves them`() = test {
+    fun `when onSaveClick is called with updated preferences then it saves them`() = test {
         // Given
         val newTheme = ReaderReadingPreferences.Theme.SOFT
         viewModel.onThemeClick(newTheme)
 
         // When
-        viewModel.onExitActionClick()
+        viewModel.onSaveClick()
 
         // Then
         verify(saveReadingPreferences).invoke(argThat { theme == newTheme })
     }
 
     @Test
-    fun `when onBottomSheetHidden is called with original preferences then it doesn't save them`() =
-        test {
-            // When
-            viewModel.onBottomSheetHidden()
-
-            // Then
-            verifyNoInteractions(saveReadingPreferences)
-        }
-
-    @Test
-    fun `when onBottomSheetHidden is called with updated preferences then it saves them`() = test {
-        // Given
-        val newTheme = ReaderReadingPreferences.Theme.SOFT
-        viewModel.onThemeClick(newTheme)
-
+    fun `when onCloseClick is called then it emits Close action event`() = test {
         // When
-        viewModel.onBottomSheetHidden()
+        viewModel.onCloseClick()
 
         // Then
-        verify(saveReadingPreferences).invoke(argThat { theme == newTheme })
+        val event = collectedEvents.last()
+        assertThat(event).isEqualTo(ActionEvent.Close)
     }
 
     @Test
-    fun `when onScreenClosed is called with original preferences then it doesn't emit UpdatePostDetail`() = test {
+    fun `when onCloseClick is called then it does not save preferences`() = test {
         // Given
-        viewModel.onExitActionClick()
+        viewModel.onThemeClick(ReaderReadingPreferences.Theme.SOFT)
 
         // When
-        viewModel.onScreenClosed()
+        viewModel.onCloseClick()
 
         // Then
-        val updateEvent = collectedEvents.last()
-        assertThat(updateEvent).isNotEqualTo(ActionEvent.UpdatePostDetails)
+        verifyNoInteractions(saveReadingPreferences)
     }
 
     @Test
-    fun `when onScreenClosed is called with updated preferences then it emits UpdatePostDetail`() = test {
-        // Given
-        val newTheme = ReaderReadingPreferences.Theme.SOFT
-        viewModel.onThemeClick(newTheme)
-        viewModel.onExitActionClick()
-
+    fun `hasUnsavedChanges is false initially`() = test {
         // When
-        viewModel.onScreenClosed()
+        val result = viewModel.hasUnsavedChanges.first()
 
         // Then
-        val updateEvent = collectedEvents.last()
-        assertThat(updateEvent).isEqualTo(ActionEvent.UpdatePostDetails)
+        assertThat(result).isFalse()
+    }
+
+    @Test
+    fun `hasUnsavedChanges is true after changing theme`() = test {
+        // When
+        viewModel.onThemeClick(ReaderReadingPreferences.Theme.OLED)
+
+        // Then
+        val result = viewModel.hasUnsavedChanges.first()
+        assertThat(result).isTrue()
+    }
+
+    @Test
+    fun `hasUnsavedChanges is false after reverting to original`() = test {
+        // Given
+        viewModel.onThemeClick(ReaderReadingPreferences.Theme.OLED)
+
+        // When
+        viewModel.onThemeClick(DEFAULT_READING_PREFERENCES.theme)
+
+        // Then
+        val result = viewModel.hasUnsavedChanges.first()
+        assertThat(result).isFalse()
     }
 
     // analytics tests
@@ -239,39 +233,44 @@ class ReaderReadingPreferencesViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `when onFontFamilyClick is called then it should track the font family tapped event`() = test {
-        ReaderReadingPreferences.FontFamily.entries.forEach { fontFamily ->
-            // When
-            viewModel.onFontFamilyClick(fontFamily)
+    fun `when onFontFamilyClick is called then it should track the font family tapped event`() =
+        test {
+            ReaderReadingPreferences.FontFamily.entries.forEach { fontFamily ->
+                // When
+                viewModel.onFontFamilyClick(fontFamily)
 
-            // Then
-            verify(readingPreferencesTracker).trackItemTapped(fontFamily)
+                // Then
+                verify(readingPreferencesTracker).trackItemTapped(fontFamily)
+            }
         }
-    }
 
     @Test
-    fun `when onFontSizeClick is called then it should track the font size tapped event`() = test {
-        ReaderReadingPreferences.FontSize.entries.forEach { fontSize ->
-            // When
-            viewModel.onFontSizeClick(fontSize)
+    fun `when onFontSizeClick is called then it should track the font size tapped event`() =
+        test {
+            ReaderReadingPreferences.FontSize.entries.forEach { fontSize ->
+                // When
+                viewModel.onFontSizeClick(fontSize)
 
-            // Then
-            verify(readingPreferencesTracker).trackItemTapped(fontSize)
+                // Then
+                verify(readingPreferencesTracker).trackItemTapped(fontSize)
+            }
         }
-    }
 
     @Test
-    fun `when saveReadingPreferencesAndClose is called then it should track the saved event`() = test {
-        // Given
-        val newTheme = ReaderReadingPreferences.Theme.SOFT
-        viewModel.onThemeClick(newTheme)
+    fun `when onSaveClick is called with changes then it should track the saved event`() =
+        test {
+            // Given
+            val newTheme = ReaderReadingPreferences.Theme.SOFT
+            viewModel.onThemeClick(newTheme)
 
-        // When
-        viewModel.onExitActionClick()
+            // When
+            viewModel.onSaveClick()
 
-        // Then
-        verify(readingPreferencesTracker).trackSaved(argThat { theme == newTheme })
-    }
+            // Then
+            verify(readingPreferencesTracker).trackSaved(
+                argThat { theme == newTheme }
+            )
+        }
 
     companion object {
         private val DEFAULT_READING_PREFERENCES = ReaderReadingPreferences()

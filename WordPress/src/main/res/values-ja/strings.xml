@@ -113,7 +113,6 @@ Language: ja_JP
     <string name="application_password_info_description_2">サイトをアプリに追加すると、必要に応じてアプリケーションパスワードが自動的に作成されます。</string>
     <string name="application_password_info_description_1">アプリケーションパスワードは、アカウントパスワードを使用せずにアプリがサイトに安全にアクセスするための仕組みです。</string>
     <string name="application_password_info_title">アプリケーションパスワード</string>
-    <string name="application_password_disable_feature_description">アプリケーションパスワードを無効にすると、サイトの %1$s のログインが削除されます。 再度ログインするには、影響を受けるサイトの再追加が必要になる場合があります。</string>
     <string name="subscribers_delete_failed">購読者の削除に失敗しました</string>
     <string name="subscribers_delete_success_message">購読者は削除されましたが、削除が有効になるまでには数分かかる場合があります</string>
     <string name="subscribers_delete_success_title">購読者が削除されました</string>
@@ -134,7 +133,6 @@ Language: ja_JP
     <string name="start">開始</string>
     <string name="descending">降順</string>
     <string name="ascending">昇順</string>
-    <string name="application_password_disable_feature_title">アプリケーションパスワードを無効にしますか ?</string>
     <string name="application_password_invalid">アプリケーションパスワードが無効です</string>
     <string name="application_password_credentials_storing_error">%1$s のアプリケーションパスワードのログイン情報を保存する際にエラーが発生しました</string>
     <string name="subscribers_add_failed">購読者の追加に失敗しました</string>
@@ -179,8 +177,6 @@ Language: ja_JP
     <string name="qrcode_auth_flow_timeout_subtitle">コードの検出に時間がかかりすぎました。 もう一度お試しいただくか、カメラアプリを使用してコードをスキャンしてください。</string>
     <string name="qrcode_auth_flow_timeout_title">スキャンがタイムアウトしました</string>
     <string name="invite_users">ユーザーを招待</string>
-    <string name="experimental_application_password_feature_description">インストール型のサイトにログインするには、アプリケーションパスワードを有効にします</string>
-    <string name="experimental_application_password_feature">アプリケーションパスワードによるログイン</string>
     <string name="cant_share_no_blog">ブログがないため WordPress で共有できません</string>
     <string name="me_email_verification_generic_error">認証リンクを送信できません</string>
     <string name="me_email_verification_resend">認証リンクを再送</string>

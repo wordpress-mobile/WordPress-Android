@@ -102,7 +102,6 @@ Language: ro
     <string name="term_description_label">Descriere:</string>
     <string name="term_slug_label">Descriptor:</string>
     <string name="term_name_label">Nume:</string>
-    <string name="application_password_experimental_feature_note">\n\nNotă: autentificarea cu parola aplicației pe dispozitivele Android este o funcționalitate experimentală.</string>
     <string name="application_password_required_block_editor">Editor de blocuri</string>
     <string name="application_password_required_description">Parolele aplicației sunt o modalitate mai sigură de a-ți conecta site-ul auto-găzduit și de a activa suportul pentru funcționalități, cum ar fi %1$s.</string>
     <string name="application_password_required">Parola aplicației este obligatorie</string>
@@ -135,7 +134,6 @@ Language: ro
     <string name="application_password_info_description_2">Când adaugi site-uri în aplicație, parolele pentru aplicații vor fi create automat, în funcție de nevoie.</string>
     <string name="application_password_info_description_1">Parolele pentru aplicații sunt o modalitate sigură prin care aplicațiile pot să îți acceseze site-ul fără să folosească parola contului.</string>
     <string name="application_password_info_title">Parole pentru aplicații</string>
-    <string name="application_password_disable_feature_description">Dezactivarea parolelor pentru aplicații va înlătura autentificarea pentru %1$s pentru site-urile tale. S-ar putea să fie nevoie să adaugi din nou autentificarea pentru site-urile afectate.</string>
     <string name="application_password_invalid_description">Parola pentru aplicație nu mai există. Te rog să te autentifici din nou pentru a crea o parolă nouă pentru aplicație.</string>
     <string name="subscribers_delete_failed">Ștergerea abonatului a eșuat</string>
     <string name="subscribers_delete_success_message">Abonatul a fost șters, dar s-ar putea să dureze un minut până când ștergerea va avea efect</string>
@@ -157,7 +155,6 @@ Language: ro
     <string name="start">Începe</string>
     <string name="descending">Descrescător</string>
     <string name="ascending">Crescător</string>
-    <string name="application_password_disable_feature_title">Dezactivezi parolele pentru aplicații?</string>
     <string name="application_password_invalid">Parola pentru aplicația nu este validă</string>
     <string name="application_password_credentials_storing_error">A fost o eroare la stocarea datelor de conectare pentru parola aplicației pentru %1$s</string>
     <string name="subscribers_add_failed">Adăugarea abonaților a eșuat</string>
@@ -203,8 +200,6 @@ Language: ro
     <string name="qrcode_auth_flow_timeout_subtitle">A durat prea mult până la detectarea unui cod. Te rog să încerci din nou sau folosește camera pentru a scana codul.</string>
     <string name="qrcode_auth_flow_timeout_title">Scanarea a expirat</string>
     <string name="invite_users">Invită utilizatori</string>
-    <string name="experimental_application_password_feature_description">Activează parola aplicației pentru a te autentifica pe site-urile auto-găzduite</string>
-    <string name="experimental_application_password_feature">Autentificare cu parola aplicației</string>
     <string name="cant_share_no_blog">Nu poți să partajezi pe WordPress fără un blog</string>
     <string name="me_email_verification_generic_error">Nu pot să trimit legătura de verificare</string>
     <string name="me_email_verification_resend">Retrimite legătura de verificare</string>

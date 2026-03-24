@@ -18,8 +18,6 @@ import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpApiClientProvider
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.ui.accounts.login.ApplicationPasswordLoginHelper
 import org.wordpress.android.ui.accounts.login.ApplicationPasswordLoginHelper.UriLogin
-import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures
-import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures.Feature
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.DeviceUtils
@@ -39,7 +37,6 @@ class ApplicationPasswordAutoAuthDialogViewModel @Inject constructor(
     private val applicationPasswordLoginHelper: ApplicationPasswordLoginHelper,
     private val buildConfigWrapper: BuildConfigWrapper,
     private val appLogWrapper: AppLogWrapper,
-    private val experimentalFeatures: ExperimentalFeatures,
 ) : ViewModel() {
     private val _navigationEvent = MutableSharedFlow<NavigationEvent>()
     val navigationEvent: SharedFlow<NavigationEvent> = _navigationEvent.asSharedFlow()
@@ -51,9 +48,6 @@ class ApplicationPasswordAutoAuthDialogViewModel @Inject constructor(
     fun createApplicationPassword(site: SiteModel) {
         viewModelScope.launch {
             try {
-                // Assume that the Application Password experimental feature can be enabled
-                enableApplicationPasswordIfNecessary()
-
                 require(site.username.isNotBlank()) { "Site username is required for cookie authentication" }
                 require(site.password.isNotBlank()) { "Site password is required for cookie authentication" }
 
@@ -137,13 +131,6 @@ class ApplicationPasswordAutoAuthDialogViewModel @Inject constructor(
             AppLog.T.API,
             "A_P: Error creating application password for: $siteUrl - $detail"
         )
-    }
-
-    @Suppress("TooGenericExceptionCaught")
-    private fun enableApplicationPasswordIfNecessary() {
-        if (!experimentalFeatures.isEnabled(Feature.EXPERIMENTAL_APPLICATION_PASSWORD_FEATURE)) {
-            experimentalFeatures.setEnabled(Feature.EXPERIMENTAL_APPLICATION_PASSWORD_FEATURE, true)
-        }
     }
 
     @Suppress("TooGenericExceptionCaught")

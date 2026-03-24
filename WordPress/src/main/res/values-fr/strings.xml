@@ -97,7 +97,6 @@ Language: fr
     <string name="term_description_label">Description :</string>
     <string name="term_slug_label">Slug :</string>
     <string name="term_name_label">Nom :</string>
-    <string name="application_password_experimental_feature_note">\n\nRemarque : l’authentification par mot de passe d’application sur les appareils Android est une fonctionnalité expérimentale.</string>
     <string name="application_password_required_block_editor">Éditeur de blocs</string>
     <string name="application_password_required_description">Les mots de passe d’application sont un moyen plus sûr de vous connecter à votre site auto-hébergé et activer des fonctionnalités telles que %1$s.</string>
     <string name="application_password_required">Mot de passe d’application requis</string>
@@ -118,7 +117,6 @@ Language: fr
     <string name="application_password_info_description_2">Lorsque vous ajoutez des sites à l’application, les mots de passe d’application sont créés automatiquement si nécessaire.</string>
     <string name="application_password_info_description_1">Les mots de passe d’application sont un moyen sécurisé pour les applications d’accéder à votre site sans utiliser le mot de passe de votre compte.</string>
     <string name="application_password_info_title">Mots de passe d’applications</string>
-    <string name="application_password_disable_feature_description">La désactivation du mot de passe d’application supprimera vos informations de connexion pour %1$s de vos sites. Vous devrez peut-être rajouter les sites affectés pour vous connecter à nouveau.</string>
     <string name="application_password_invalid_description">Votre mot de passe d’application n’existe plus. Veuillez vous connecter à nouveau pour créer un nouveau mot de passe d’application.</string>
     <string name="subscribers_delete_failed">Échec de la suppression de l’abonné</string>
     <string name="subscribers_delete_success_message">L’abonné a été supprimé, mais la suppression peut prendre une minute pour être effective</string>
@@ -139,7 +137,6 @@ Language: fr
     <string name="start">Démarrer</string>
     <string name="descending">Décroissant</string>
     <string name="ascending">Croissant</string>
-    <string name="application_password_disable_feature_title">Désactiver le mot de passe d’application ?</string>
     <string name="application_password_invalid">Mot de passe d’application non valide</string>
     <string name="application_password_credentials_storing_error">Une erreur est survenue lors du stockage des identifiants de connexion du mot de passe d’application pour %1$s</string>
     <string name="subscribers_add_failed">Échec de l’ajout d’abonnés</string>
@@ -183,8 +180,6 @@ Language: fr
     <string name="qrcode_auth_flow_timeout_subtitle">Détecter un code a pris trop de temps. Veuillez réessayer ou utiliser votre application Appareil photo pour scanner le code.</string>
     <string name="qrcode_auth_flow_timeout_title">L’analyse a expiré</string>
     <string name="invite_users">Inviter des utilisateurs</string>
-    <string name="experimental_application_password_feature_description">Activer le mot de passe d’application pour vous connecter aux sites auto-hébergés</string>
-    <string name="experimental_application_password_feature">Connexion par mot de passe d’applications</string>
     <string name="cant_share_no_blog">Vous ne pouvez pas partager vers WordPress si vous n’avez pas au moins un blog</string>
     <string name="me_email_verification_generic_error">Impossible d’envoyer le lien de vérification</string>
     <string name="me_email_verification_resend">Renvoyer le lien de vérification</string>

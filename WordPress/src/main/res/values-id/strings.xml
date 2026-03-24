@@ -100,7 +100,6 @@ Language: id
     <string name="term_count">Jumlah: %1$d</string>
     <string name="term_description_label">Deskripsi:</string>
     <string name="term_name_label">Nama:</string>
-    <string name="application_password_experimental_feature_note">\n\nCatatan: Autentikasi Kata Sandi Aplikasi pada perangkat Android adalah Fitur Eksperimental.</string>
     <string name="application_password_required_block_editor">Editor Blok</string>
     <string name="application_password_required_description">Agar lebih aman, gunakan kata sandi aplikasi untuk terhubung dengan situs Anda yang dihosting sendiri dan mendapatkan dukungan untuk fitur seperti %1$s.</string>
     <string name="application_password_required">Kata Sandi Aplikasi Diperlukan</string>
@@ -133,7 +132,6 @@ Language: id
     <string name="application_password_info_description_2">Saat Anda menambahkan situs ke aplikasi, kata sandi aplikasi akan dibuat secara otomatis sesuai kebutuhan.</string>
     <string name="application_password_info_description_1">Kata sandi aplikasi adalah cara yang aman bagi aplikasi untuk mengakses situs tanpa menggunakan kata sandi akun Anda.</string>
     <string name="application_password_info_title">Kata Sandi Aplikasi</string>
-    <string name="application_password_disable_feature_description">Menonaktifkan Kata Sandi Aplikasi akan menghapus login untuk %1$s situs Anda. Anda mungkin perlu menambahkan kembali situs yang terpengaruh untuk login lagi.</string>
     <string name="application_password_invalid_description">Kata sandi aplikasi Anda sudah tidak ada lagi. Silakan login kembali untuk membuat kata sandi aplikasi baru.</string>
     <string name="subscribers_delete_failed">Gagal menghapus pelanggan</string>
     <string name="subscribers_delete_success_message">Pelanggan sudah dihapus, tetapi mungkin perlu beberapa menit hingga penghapusan berfungsi dengan sempurna</string>
@@ -155,7 +153,6 @@ Language: id
     <string name="start">Mulai</string>
     <string name="descending">Menurun</string>
     <string name="ascending">Meningkat</string>
-    <string name="application_password_disable_feature_title">Nonaktifkan Kata Sandi Aplikasi?</string>
     <string name="application_password_invalid">Kata Sandi Aplikasi Tidak Valid</string>
     <string name="application_password_credentials_storing_error">Terjadi error saat menyimpan kredensial kata sandi Aplikasi untuk %1$s</string>
     <string name="subscribers_add_failed">Gagal menambahkan pelanggan</string>
@@ -199,8 +196,6 @@ Language: id
     <string name="qrcode_auth_flow_timeout_subtitle">Terlalu lama untuk mendeteksi kode. Harap coba lagi atau gunakan kamera untuk memindai kode.</string>
     <string name="qrcode_auth_flow_timeout_title">Waktu pemindaian habis</string>
     <string name="invite_users">Undang pengguna</string>
-    <string name="experimental_application_password_feature_description">Aktifkan Kata Sandi Aplikasi untuk login ke situs yang di-hosting sendiri.</string>
-    <string name="experimental_application_password_feature">Login dengan Kata Sandi Aplikasi</string>
     <string name="cant_share_no_blog">Anda tidak bisa berbagi ke WordPress tanpa memiliki blog</string>
     <string name="me_email_verification_generic_error">Tidak dapat mengirim tautan verifikasi</string>
     <string name="me_email_verification_resend">Kirim ulang tautan verifikasi</string>

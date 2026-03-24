@@ -159,9 +159,102 @@ class ApplicationPasswordLoginHelperTest : BaseUnitTest() {
             val result = applicationPasswordLoginHelper.storeApplicationPasswordCredentialsFrom(testUriLogin)
 
             assertFalse(result)
-            verify(siteStore, times(2)).sites
+            verify(siteStore).sites
             verify(dispatcherWrapper, times(0)).updateApplicationPassword(any())
             verify(dispatcherWrapper, times(0)).removeApplicationPassword(any())
+        }
+
+    @Test
+    fun `storeApplicationPasswordCredentialsFrom with empty url does not match site with empty url`() =
+        runTest {
+            val siteWithEmptyUrl = SiteModel().apply {
+                url = ""
+            }
+            whenever(siteStore.sites).thenReturn(listOf(siteWithEmptyUrl))
+            val emptyUrlLogin = UriLogin(
+                "", TEST_USER, TEST_PASSWORD, TEST_API_ROOT_URL
+            )
+
+            val result = applicationPasswordLoginHelper
+                .storeApplicationPasswordCredentialsFrom(emptyUrlLogin)
+
+            assertFalse(result)
+            verify(dispatcherWrapper, times(0)).updateApplicationPassword(any())
+        }
+
+    @Test
+    fun `storeApplicationPasswordCredentialsFrom matches site with different scheme`() =
+        runTest {
+            val siteModel = SiteModel().apply {
+                url = "http://test.com"
+            }
+            whenever(siteStore.sites).thenReturn(listOf(siteModel))
+            val httpsLogin = UriLogin(
+                "https://test.com", TEST_USER, TEST_PASSWORD, TEST_API_ROOT_URL
+            )
+
+            val result = applicationPasswordLoginHelper
+                .storeApplicationPasswordCredentialsFrom(httpsLogin)
+
+            assertTrue(result)
+            verify(dispatcherWrapper).updateApplicationPassword(eq(siteModel))
+        }
+
+    @Test
+    fun `storeApplicationPasswordCredentialsFrom matches site with www mismatch`() =
+        runTest {
+            val siteModel = SiteModel().apply {
+                url = "https://www.test.com"
+            }
+            whenever(siteStore.sites).thenReturn(listOf(siteModel))
+            val noWwwLogin = UriLogin(
+                "https://test.com", TEST_USER, TEST_PASSWORD, TEST_API_ROOT_URL
+            )
+
+            val result = applicationPasswordLoginHelper
+                .storeApplicationPasswordCredentialsFrom(noWwwLogin)
+
+            assertTrue(result)
+            verify(dispatcherWrapper).updateApplicationPassword(eq(siteModel))
+        }
+
+    @Test
+    fun `storeApplicationPasswordCredentialsFrom matches site with scheme and www mismatch`() =
+        runTest {
+            val siteModel = SiteModel().apply {
+                url = "http://www.test.com"
+            }
+            whenever(siteStore.sites).thenReturn(listOf(siteModel))
+            val httpsNoWwwLogin = UriLogin(
+                "https://test.com", TEST_USER, TEST_PASSWORD, TEST_API_ROOT_URL
+            )
+
+            val result = applicationPasswordLoginHelper
+                .storeApplicationPasswordCredentialsFrom(httpsNoWwwLogin)
+
+            assertTrue(result)
+            verify(dispatcherWrapper).updateApplicationPassword(eq(siteModel))
+        }
+
+    @Test
+    fun `storeApplicationPasswordCredentialsFrom prefers exact match over fallback`() =
+        runTest {
+            val exactSite = SiteModel().apply {
+                url = TEST_URL
+                id = 1
+            }
+            val fallbackSite = SiteModel().apply {
+                url = "https://test.com"
+                id = 2
+            }
+            whenever(siteStore.sites)
+                .thenReturn(listOf(fallbackSite, exactSite))
+
+            val result = applicationPasswordLoginHelper
+                .storeApplicationPasswordCredentialsFrom(testUriLogin)
+
+            assertTrue(result)
+            verify(dispatcherWrapper).updateApplicationPassword(eq(exactSite))
         }
 
     @Test
@@ -405,6 +498,49 @@ class ApplicationPasswordLoginHelperTest : BaseUnitTest() {
 
         verify(dispatcherWrapper, times(0)).removeApplicationPassword(any())
         assertEquals("encrypted_user", site.apiRestUsernameEncrypted)
+    }
+
+    @Test
+    fun `maskUrl with no dot returns url unmasked`() {
+        val result = applicationPasswordLoginHelper.maskUrl("https://localhost")
+        assertEquals("https://localhost", result)
+    }
+
+    @Test
+    fun `maskUrl with standard domain masks middle characters`() {
+        val result = applicationPasswordLoginHelper.maskUrl("https://example.com")
+        assertEquals("https://exxxxxe.com", result)
+    }
+
+    @Test
+    fun `maskUrl with port preserves port`() {
+        val result = applicationPasswordLoginHelper.maskUrl("https://test.com:8080")
+        assertEquals("https://txxt.com:8080", result)
+    }
+
+    @Test
+    fun `maskUrl with dot in path masks only host`() {
+        val result = applicationPasswordLoginHelper
+            .maskUrl("https://example.com/wp-content/image.jpg")
+        assertEquals("https://exxxxxe.com/wp-content/image.jpg", result)
+    }
+
+    @Test
+    fun `maskUrl with three char domain masks middle character`() {
+        val result = applicationPasswordLoginHelper.maskUrl("https://abc.com")
+        assertEquals("https://axc.com", result)
+    }
+
+    @Test
+    fun `maskUrl with single char domain replaces it with x`() {
+        val result = applicationPasswordLoginHelper.maskUrl("https://a.com")
+        assertEquals("https://x.com", result)
+    }
+
+    @Test
+    fun `maskUrl with two char domain replaces both with x`() {
+        val result = applicationPasswordLoginHelper.maskUrl("https://ab.com")
+        assertEquals("https://xx.com", result)
     }
 
     @Test

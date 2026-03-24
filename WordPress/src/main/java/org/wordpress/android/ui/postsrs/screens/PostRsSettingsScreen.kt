@@ -73,6 +73,7 @@ import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.key
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
@@ -1043,6 +1044,8 @@ private fun SettingsDialogs(
         is DialogState.FormatDialog -> FormatDialog(
             currentFormat = uiState.editedFormat
                 ?: uiState.postFormat,
+            formats = uiState.sitePostFormats,
+            isLoading = uiState.isLoadingFormats,
             onFormatSelected = onFormatSelected,
             onDismiss = onDismissDialog,
         )
@@ -1344,49 +1347,68 @@ private fun ExcerptDialog(
     )
 }
 
-@Suppress("ForbiddenComment")
 @Composable
 private fun FormatDialog(
     currentFormat: PostFormat?,
+    formats: List<PostFormat>,
+    isLoading: Boolean,
     onFormatSelected: (PostFormat) -> Unit,
     onDismiss: () -> Unit,
 ) {
-    // TODO: Replace hardcoded formats with site-supported
-    //  formats once wordpress-rs exposes that API
-    val formats = listOf(
-        PostFormat.Standard,
-        PostFormat.Aside,
-        PostFormat.Audio,
-        PostFormat.Chat,
-        PostFormat.Gallery,
-        PostFormat.Image,
-        PostFormat.Link,
-        PostFormat.Quote,
-        PostFormat.Status,
-        PostFormat.Video,
-    )
+    if (isLoading) {
+        AlertDialog(
+            onDismissRequest = onDismiss,
+            title = {
+                Text(
+                    stringResource(
+                        R.string
+                            .post_rs_settings_format_dialog_title
+                    )
+                )
+            },
+            text = {
+                Box(
+                    modifier = Modifier.fillMaxWidth(),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    CircularProgressIndicator()
+                }
+            },
+            confirmButton = {},
+        )
+        return
+    }
+
     val labels = formats.map { postFormatLabel(it) }
     val currentIndex = formats.indexOfFirst {
         it == currentFormat
     }.coerceAtLeast(0)
 
-    val selectedIndex = rememberSaveable {
-        mutableIntStateOf(currentIndex)
-    }
+    key(formats) {
+        val selectedIndex = rememberSaveable {
+            mutableIntStateOf(currentIndex)
+        }
 
-    SingleChoiceAlertDialog(
-        title = stringResource(
-            R.string.post_rs_settings_format_dialog_title
-        ),
-        options = labels,
-        selectedIndex = selectedIndex.intValue,
-        onOptionSelected = { selectedIndex.intValue = it },
-        onConfirm = {
-            onFormatSelected(formats[selectedIndex.intValue])
-        },
-        onDismiss = onDismiss,
-        confirmButtonText = stringResource(R.string.ok),
-    )
+        SingleChoiceAlertDialog(
+            title = stringResource(
+                R.string.post_rs_settings_format_dialog_title
+            ),
+            options = labels,
+            selectedIndex = selectedIndex.intValue,
+            onOptionSelected = {
+                selectedIndex.intValue = it
+            },
+            onConfirm = {
+                onFormatSelected(
+                    formats[selectedIndex.intValue]
+                )
+            },
+            onDismiss = onDismiss,
+            confirmButtonText = stringResource(
+                R.string.ok
+            ),
+        )
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)

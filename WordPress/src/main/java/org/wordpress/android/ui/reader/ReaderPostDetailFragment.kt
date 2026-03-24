@@ -40,7 +40,6 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
 import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.commit
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.Factory
@@ -104,7 +103,6 @@ import org.wordpress.android.ui.reader.discover.ReaderPostCardAction
 import org.wordpress.android.ui.reader.discover.ReaderPostCardAction.PrimaryAction
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostId
-import org.wordpress.android.ui.reader.models.ReaderReadingPreferences
 import org.wordpress.android.ui.reader.tracker.ReaderReadingPreferencesTracker
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.tracker.ReaderTracker.Companion.SOURCE_POST_DETAIL_TOOLBAR
@@ -147,7 +145,6 @@ import org.wordpress.android.util.extensions.getColorFromAttribute
 import org.wordpress.android.util.extensions.getParcelableCompat
 import org.wordpress.android.util.extensions.getSerializableCompat
 import org.wordpress.android.util.extensions.setVisible
-import org.wordpress.android.util.extensions.setWindowNavigationBarColor
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType.PHOTO
@@ -370,7 +367,6 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             .also { binding = it }
         val view = viewBinding.root
 
-        initNavigationBar()
         initSwipeRefreshLayout(view)
         initAppBar(view)
         initScrollView(view)
@@ -517,12 +513,6 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         }
     }
 
-    private fun initNavigationBar() {
-        val readingPreferences = getReadingPreferences()
-        val themeValues = ReaderReadingPreferences.ThemeValues.from(requireContext(), readingPreferences.theme)
-        activity?.window?.setWindowNavigationBarColor(themeValues.intBackgroundColor)
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -658,19 +648,6 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             JetpackPoweredBottomSheetFragment
                 .newInstance()
                 .show(childFragmentManager, JetpackPoweredBottomSheetFragment.TAG)
-        }
-
-        viewModel.reloadFragment.observeEvent(viewLifecycleOwner) {
-            if (isAdded) {
-                //  Based on my research some people did that in a single transaction and it worked in the past,
-                //  but I tested on SDK 34 and I had to do it in two transactions for getting it to work properly.
-                parentFragmentManager.commit(allowStateLoss = true) {
-                    detach(this@ReaderPostDetailFragment)
-                }
-                parentFragmentManager.commit {
-                    attach(this@ReaderPostDetailFragment)
-                }
-            }
         }
     }
 
