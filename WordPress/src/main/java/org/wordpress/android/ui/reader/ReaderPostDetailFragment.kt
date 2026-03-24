@@ -1740,6 +1740,22 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     override fun onUrlClick(url: String): Boolean {
         readerTracker.track(AnalyticsTracker.Stat.READER_ARTICLE_LINK_TAPPED)
 
+        // Handle same-page fragment links (e.g., footnotes).
+        // Footnote hrefs resolve to the post's own URL with a
+        // fragment (e.g., "https://example.com/post/#fn-id").
+        val fragmentIndex = url.indexOf('#')
+        if (fragmentIndex >= 0 && fragmentIndex < url.length - 1) {
+            val clickedBase = url.substring(0, fragmentIndex)
+                .trimEnd('/')
+            val postUrl = viewModel.post?.url?.trimEnd('/')
+            if (!postUrl.isNullOrEmpty()
+                && clickedBase == postUrl
+            ) {
+                val fragment = url.substring(fragmentIndex + 1)
+                return onPageJumpClick(fragment)
+            }
+        }
+
         when {
             ReaderUtils.isBlogPreviewUrl(url) -> onBlogPreviewUrlClick(url)
             ReaderUtils.isTagUrl(url) -> viewModel.onTagItemClicked(ReaderUtils.getTagFromTagUrl(url))
@@ -1780,6 +1796,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             // Note that 'result' can be the string 'null' in case the page jump identifier is not found on page
             val offsetTop = StringUtils.stringToInt(result, -1)
             if (offsetTop >= 0) {
+                appBar.setExpanded(false, true)
                 val yOffset = (resources.displayMetrics.density * offsetTop).toInt()
                 scrollView.smoothScrollTo(0, yOffset)
             } else {

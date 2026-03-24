@@ -167,7 +167,7 @@ class ReaderPostRenderer(
         // https://developers.google.com/youtube/terms/required-minimum-functionality#set-the-referer
         // https://stackoverflow.com/questions/79761743/youtube-video-in-webview-gives-error-code-153-on-android/79809094#79809094
         webView.loadDataWithBaseURL(
-            "https://wordpress.com/reader",
+            READER_CONTENT_BASE_URL,
             htmlContent,
             "text/html",
             "UTF-8",
@@ -715,6 +715,12 @@ class ReaderPostRenderer(
     }
 
     companion object {
+        /**
+         * Base URL used when loading post content into the WebView.
+         * Fragment links (e.g., footnotes) resolve against this URL.
+         */
+        const val READER_CONTENT_BASE_URL =
+            "https://wordpress.com/reader"
         private const val JAVASCRIPT_MESSAGE_HANDLER = "wvHandler"
         private const val JS_OBJECT_ADDED_TAG = "jsObjectAdded"
         private const val RANDOM_BOUND = 1000
