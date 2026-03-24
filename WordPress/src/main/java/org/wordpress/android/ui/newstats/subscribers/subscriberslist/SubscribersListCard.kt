@@ -220,7 +220,7 @@ private fun SubscriberItemRow(
     ) {
         Text(
             text = item.displayName,
-            style = MaterialTheme.typography.bodyMedium,
+            style = MaterialTheme.typography.bodyLarge,
             color = MaterialTheme
                 .colorScheme.onSurface,
             maxLines = 1,

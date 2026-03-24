@@ -248,7 +248,7 @@ private fun EmailItemRow(item: EmailListItem) {
     ) {
         Text(
             text = item.title,
-            style = MaterialTheme.typography.bodyMedium,
+            style = MaterialTheme.typography.bodyLarge,
             color = MaterialTheme
                 .colorScheme.onSurface,
             maxLines = 2,
@@ -258,7 +258,7 @@ private fun EmailItemRow(item: EmailListItem) {
         Spacer(modifier = Modifier.width(8.dp))
         Text(
             text = formatEmailStat(item.opens),
-            style = MaterialTheme.typography.bodyMedium,
+            style = MaterialTheme.typography.bodyLarge,
             fontWeight = FontWeight.SemiBold,
             color = if (item.opens == 0L) {
                 MaterialTheme
@@ -273,7 +273,7 @@ private fun EmailItemRow(item: EmailListItem) {
         Spacer(modifier = Modifier.width(12.dp))
         Text(
             text = formatEmailStat(item.clicks),
-            style = MaterialTheme.typography.bodyMedium,
+            style = MaterialTheme.typography.bodyLarge,
             fontWeight = FontWeight.SemiBold,
             color = if (item.clicks == 0L) {
                 MaterialTheme
