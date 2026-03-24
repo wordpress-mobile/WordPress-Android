@@ -632,7 +632,6 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
         // Second bar tap on same loaded state should also work
         // (loading completed, isLoadingNewPeriod reset to false)
         // Verify loadingPeriod guard prevents composable double-load
-        val periodAfterTap = viewModel.selectedPeriod.value
         viewModel.loadDataIfNeeded()
         advanceUntilIdle()
 

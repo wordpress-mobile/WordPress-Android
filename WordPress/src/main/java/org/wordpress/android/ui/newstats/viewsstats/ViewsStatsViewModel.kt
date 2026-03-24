@@ -260,6 +260,7 @@ class ViewsStatsViewModel @Inject constructor(
         }
     }
 
+    @Suppress("ReturnCount")
     fun onBarTapped(index: Int) {
         val state = _uiState.value as? ViewsStatsCardUiState.Loaded
             ?: return
