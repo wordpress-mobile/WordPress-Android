@@ -8,8 +8,6 @@ import org.json.JSONObject;
 import org.wordpress.android.ui.Organization;
 import org.wordpress.android.ui.reader.ReaderConstants;
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostId;
-import org.wordpress.android.ui.reader.utils.ReaderIframeScanner;
-import org.wordpress.android.ui.reader.utils.ReaderImageScanner;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.DateTimeUtilsWrapper;
 import org.wordpress.android.util.HtmlUtils;
@@ -202,21 +200,6 @@ public class ReaderPost {
                     post.mFeaturedImage = JSONUtils.getString(jsonMedia, "uri");
                 }
             }
-        }
-
-        // if the post doesn't have a featured image but it contains an IMG tag, check whether
-        // we can find a suitable image from the content
-        if (!post.hasFeaturedImage() && post.hasImages()) {
-            post.mFeaturedImage = new ReaderImageScanner(post.mText, post.isPrivate)
-                    .getLargestImage(ReaderConstants.MIN_FEATURED_IMAGE_WIDTH);
-        }
-
-        // if there's no featured image or featured video and the post contains an iframe, scan
-        // the content for a suitable featured video
-        if (!post.hasFeaturedImage()
-            && !post.hasFeaturedVideo()
-            && post.getText().contains("<iframe")) {
-            post.setFeaturedVideo(new ReaderIframeScanner(post.getText()).getFirstUsableVideo());
         }
 
         // "railcar" data - currently used in search streams, used by TrainTracks
