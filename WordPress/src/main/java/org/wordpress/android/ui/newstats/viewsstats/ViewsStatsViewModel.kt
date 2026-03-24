@@ -274,7 +274,7 @@ class ViewsStatsViewModel @Inject constructor(
         loadData()
     }
 
-    @Suppress("ReturnCount")
+    @Suppress("ReturnCount", "TooGenericExceptionCaught")
     private fun drillDownPeriod(rawPeriod: String): StatsPeriod? {
         val period = currentPeriod
         val isMonthlyGranularity = period is StatsPeriod.Last6Months ||
@@ -297,7 +297,7 @@ class ViewsStatsViewModel @Inject constructor(
                 }
                 else -> null
             }
-        } catch (@Suppress("TooGenericExceptionCaught") e: Exception) {
+        } catch (e: Exception) {
             AppLog.e(
                 AppLog.T.STATS,
                 "Failed to parse period for drill-down: $rawPeriod",
