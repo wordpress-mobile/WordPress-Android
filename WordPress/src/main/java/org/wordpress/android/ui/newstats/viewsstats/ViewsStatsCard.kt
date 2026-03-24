@@ -557,7 +557,7 @@ private fun ViewsStatsChart(
     val dateLabels = chartData.currentPeriod.map { it.label }
     val bottomAxisValueFormatter = CartesianValueFormatter { _, value, _ ->
         val index = value.toInt()
-        if (index in dateLabels.indices) dateLabels[index] else ""
+        if (index in dateLabels.indices) dateLabels[index] else " "
     }
 
     // Marker value formatter to show date and views on touch
