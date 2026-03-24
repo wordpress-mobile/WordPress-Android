@@ -164,8 +164,8 @@ class NewStatsActivity : BaseAppCompatActivity() {
                 site,
                 launchedFrom = StatsLaunchedFrom.LINK
             )
+            finish()
         }
-        finish()
     }
 
     companion object {
