@@ -39,7 +39,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -643,15 +646,25 @@ private fun ViewsStatsChart(
             )
         }
         ChartType.BAR -> {
+            var lastShownIndex by remember { mutableIntStateOf(-1) }
             val barTapListener = remember(onBarTapped) {
                 object : CartesianMarkerVisibilityListener {
                     override fun onShown(
                         marker: CartesianMarker,
                         targets: List<CartesianMarker.Target>
                     ) {
-                        val index = targets.firstOrNull()
-                            ?.x?.toInt() ?: return
-                        onBarTapped(index)
+                        lastShownIndex = targets.firstOrNull()
+                            ?.x?.toInt() ?: -1
+                    }
+
+                    override fun onHidden(
+                        marker: CartesianMarker
+                    ) {
+                        val index = lastShownIndex
+                        if (index >= 0) {
+                            lastShownIndex = -1
+                            onBarTapped(index)
+                        }
                     }
                 }
             }
