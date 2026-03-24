@@ -297,7 +297,7 @@ class ViewsStatsViewModel @Inject constructor(
                 }
                 else -> null
             }
-        } catch (e: java.time.format.DateTimeParseException) {
+        } catch (e: Exception) {
             AppLog.e(
                 AppLog.T.STATS,
                 "Failed to parse period for drill-down: $rawPeriod",
