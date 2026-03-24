@@ -651,6 +651,10 @@ androidComponents {
             finalizedBy(deleteTask)
         }
 
+        // TODO: Replace afterEvaluate with AGP artifacts API when a suitable
+        //  hook for post-merge asset tasks becomes available. afterEvaluate is
+        //  needed here because the mergeXxxAssets task doesn't exist yet when
+        //  onVariants runs, and there's no artifact transform for this use case.
         afterEvaluate {
             tasks.named("merge${capitalizedName}Assets").configure {
                 finalizedBy(copyTask)
