@@ -1793,14 +1793,18 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         readerWebView.settings.javaScriptEnabled = true
 
         readerWebView.evaluateJavascript("document.getElementById('$pageJump').offsetTop") { result ->
+            appBar.setExpanded(false, true)
             // Note that 'result' can be the string 'null' in case the page jump identifier is not found on page
             val offsetTop = StringUtils.stringToInt(result, -1)
             if (offsetTop >= 0) {
-                appBar.setExpanded(false, true)
                 val yOffset = (resources.displayMetrics.density * offsetTop).toInt()
                 scrollView.smoothScrollTo(0, yOffset)
             } else {
-                ToastUtils.showToast(activity, R.string.reader_toast_err_page_jump_not_found)
+                // Element not found — scroll to bottom as a fallback since footnotes are typically there.
+                scrollView.smoothScrollTo(
+                    0,
+                    scrollView.getChildAt(0).bottom
+                )
             }
         }
 
