@@ -1743,14 +1743,9 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         // Handle same-page fragment links (e.g., footnotes).
         // Footnote hrefs resolve to the post's own URL with
         // a fragment (e.g., "https://example.com/post/#fn-id").
-        val postUrl = viewModel.post?.url?.trimEnd('/')
-        val fragmentIndex = url.indexOf('#')
-        if (!postUrl.isNullOrEmpty()
-            && fragmentIndex >= 0
-            && fragmentIndex < url.length - 1
-            && url.substring(0, fragmentIndex).trimEnd('/') == postUrl
-        ) {
-            scrollToFragmentOrOpenUrl(url.substring(fragmentIndex + 1), url)
+        val fragment = getPostUrlFragment(url)
+        if (fragment != null) {
+            scrollToFragmentOrOpenUrl(fragment, url)
             return true
         }
 
@@ -1797,6 +1792,20 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             }
         }
         return true
+    }
+
+    /**
+     * If the URL is a same-page fragment link for the current post
+     * (e.g., a footnote), returns the fragment identifier.
+     * Returns null otherwise.
+     */
+    private fun getPostUrlFragment(url: String): String? {
+        val postUrl = viewModel.post?.url?.trimEnd('/')
+        val fragmentIndex = url.indexOf('#')
+        val hasFragment = !postUrl.isNullOrEmpty()
+            && fragmentIndex in 0 until url.length - 1
+            && url.substring(0, fragmentIndex).trimEnd('/') == postUrl
+        return if (hasFragment) url.substring(fragmentIndex + 1) else null
     }
 
     /**
