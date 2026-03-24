@@ -273,13 +273,7 @@ private fun LoadedContent(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(CardPadding)
-                .then(
-                    if (state.isLoadingNewPeriod) {
-                        Modifier.alpha(0.5f)
-                    } else {
-                        Modifier
-                    }
-                )
+                .alpha(if (state.isLoadingNewPeriod) 0.5f else 1f)
         ) {
             // Header Section
             HeaderSection(

@@ -30,7 +30,6 @@ import kotlin.math.abs
 private const val PERCENTAGE_BASE = 100.0
 private const val DAYS_THRESHOLD_FOR_MONTHLY_DISPLAY = 31
 private const val DATE_PREFIX_LENGTH = 10 // "YYYY-MM-DD".length
-private const val MAX_DAYS_IN_MONTH = 31
 
 private val HOURLY_FORMAT_REGEX = Regex("""\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}""")
 private val DAILY_FORMAT_REGEX = Regex("""\d{4}-\d{2}-\d{2}""")
@@ -288,9 +287,7 @@ class ViewsStatsViewModel @Inject constructor(
         val isMonthlyGranularity = period is StatsPeriod.Last6Months ||
             period is StatsPeriod.Last12Months ||
             (period is StatsPeriod.Custom &&
-                ChronoUnit.DAYS.between(
-                    period.startDate, period.endDate
-                ).toInt() + 1 > MAX_DAYS_IN_MONTH)
+                isCustomPeriodMonthly(period))
 
         // Hourly data — no smaller period available
         if (rawPeriod.matches(HOURLY_FORMAT_REGEX)) return null
