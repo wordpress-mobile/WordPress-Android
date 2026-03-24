@@ -270,6 +270,7 @@ class ViewsStatsViewModel @Inject constructor(
         val newPeriod = drillDownPeriod(rawPeriod) ?: return
         _uiState.value = state.copy(isLoadingNewPeriod = true)
         onPeriodChanged(newPeriod)
+        loadingPeriod = newPeriod
         loadData()
     }
 
@@ -286,11 +287,15 @@ class ViewsStatsViewModel @Inject constructor(
 
         // Monthly granularity — drill down to the full month
         if (isMonthlyGranularity) {
-            val date = LocalDate.parse(
-                rawPeriod.take(DATE_PREFIX_LENGTH),
-                DateTimeFormatter.ISO_LOCAL_DATE
-            )
-            val firstDay = date.withDayOfMonth(1)
+            val firstDay = if (rawPeriod.matches(MONTHLY_FORMAT_REGEX)) {
+                val parts = rawPeriod.split("-")
+                LocalDate.of(parts[0].toInt(), parts[1].toInt(), 1)
+            } else {
+                LocalDate.parse(
+                    rawPeriod.take(DATE_PREFIX_LENGTH),
+                    DateTimeFormatter.ISO_LOCAL_DATE
+                ).withDayOfMonth(1)
+            }
             val lastDay = firstDay.withDayOfMonth(
                 firstDay.lengthOfMonth()
             )
