@@ -28,7 +28,8 @@ import javax.inject.Inject
 import kotlin.math.abs
 
 private const val PERCENTAGE_BASE = 100.0
-private const val DAYS_THRESHOLD_FOR_MONTHLY_DISPLAY = 30
+private const val DAYS_THRESHOLD_FOR_MONTHLY_DISPLAY = 31
+private const val DATE_PREFIX_LENGTH = 10 // "YYYY-MM-DD".length
 
 private val HOURLY_FORMAT_REGEX = Regex("""\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}""")
 private val DAILY_FORMAT_REGEX = Regex("""\d{4}-\d{2}-\d{2}""")
@@ -37,6 +38,7 @@ private val MONTHLY_FORMAT_REGEX = Regex("""\d{4}-\d{2}""")
 private const val KEY_PERIOD_TYPE = "period_type"
 private const val KEY_CUSTOM_START_DATE = "custom_start_date"
 private const val KEY_CUSTOM_END_DATE = "custom_end_date"
+private const val KEY_CHART_TYPE = "chart_type"
 
 private const val PERIOD_TODAY = "today"
 private const val PERIOD_LAST_7_DAYS = "last_7_days"
@@ -63,7 +65,7 @@ class ViewsStatsViewModel @Inject constructor(
     private val _selectedPeriod = MutableStateFlow(restorePeriodFromSavedState())
     val selectedPeriod: StateFlow<StatsPeriod> = _selectedPeriod.asStateFlow()
 
-    private var currentChartType: ChartType = ChartType.LINE
+    private var currentChartType: ChartType = restoreChartTypeFromSavedState()
     private var currentPeriod: StatsPeriod = _selectedPeriod.value
     private var loadingPeriod: StatsPeriod? = null
     private var loadedPeriod: StatsPeriod? = null
@@ -89,6 +91,13 @@ class ViewsStatsViewModel @Inject constructor(
                 if (restoredPeriod != null) {
                     currentPeriod = restoredPeriod
                     _selectedPeriod.value = restoredPeriod
+                }
+            }
+            val savedChartType = savedStateHandle.get<String>(KEY_CHART_TYPE)
+            if (savedChartType == null) {
+                val restoredChartType = restoreChartTypeFromPreferences()
+                if (restoredChartType != null) {
+                    currentChartType = restoredChartType
                 }
             }
             _isPeriodInitialized.value = true
@@ -211,12 +220,107 @@ class ViewsStatsViewModel @Inject constructor(
         }
     }
 
+    private fun restoreChartTypeFromSavedState(): ChartType {
+        return ChartType.fromStorageKey(
+            savedStateHandle.get<String>(KEY_CHART_TYPE)
+        ) ?: ChartType.LINE
+    }
+
+    private suspend fun restoreChartTypeFromPreferences(): ChartType? {
+        val siteId = selectedSiteRepository.getSelectedSite()?.siteId
+            ?: return null
+        val config = cardsConfigurationRepository.getConfiguration(siteId)
+        return ChartType.fromStorageKey(config.selectedChartType)
+    }
+
+    private fun saveChartType(chartType: ChartType) {
+        savedStateHandle[KEY_CHART_TYPE] = chartType.storageKey
+
+        val siteId = selectedSiteRepository.getSelectedSite()?.siteId
+            ?: return
+        viewModelScope.launch {
+            val config =
+                cardsConfigurationRepository.getConfiguration(siteId)
+            cardsConfigurationRepository.saveConfiguration(
+                siteId,
+                config.copy(
+                    selectedChartType = chartType.storageKey
+                )
+            )
+        }
+    }
+
     fun onChartTypeChanged(chartType: ChartType) {
         currentChartType = chartType
+        saveChartType(chartType)
         val currentState = _uiState.value
         if (currentState is ViewsStatsCardUiState.Loaded) {
             _uiState.value = currentState.copy(chartType = chartType)
         }
+    }
+
+    @Suppress("ReturnCount")
+    fun onBarTapped(index: Int) {
+        val state = _uiState.value as? ViewsStatsCardUiState.Loaded
+            ?: return
+        if (state.isLoadingNewPeriod) return
+        val dataPoint = state.chartData.currentPeriod.getOrNull(index)
+            ?: return
+        val rawPeriod = dataPoint.rawPeriod
+        val newPeriod = drillDownPeriod(rawPeriod) ?: return
+        _uiState.value = state.copy(isLoadingNewPeriod = true)
+        onPeriodChanged(newPeriod)
+        loadingPeriod = newPeriod
+        loadData()
+    }
+
+    @Suppress("ReturnCount", "TooGenericExceptionCaught")
+    private fun drillDownPeriod(rawPeriod: String): StatsPeriod? {
+        val period = currentPeriod
+        val isMonthlyGranularity = period is StatsPeriod.Last6Months ||
+            period is StatsPeriod.Last12Months ||
+            (period is StatsPeriod.Custom &&
+                isCustomPeriodMonthly(period))
+
+        // Hourly data — no smaller period available
+        if (rawPeriod.matches(HOURLY_FORMAT_REGEX)) return null
+
+        return try {
+            when {
+                isMonthlyGranularity -> drillDownMonth(rawPeriod)
+                rawPeriod.matches(DAILY_FORMAT_REGEX) -> {
+                    val date = LocalDate.parse(
+                        rawPeriod,
+                        DateTimeFormatter.ISO_LOCAL_DATE
+                    )
+                    StatsPeriod.Custom(date, date)
+                }
+                else -> null
+            }
+        } catch (e: Exception) {
+            AppLog.e(
+                AppLog.T.STATS,
+                "Failed to parse period for drill-down: $rawPeriod",
+                e
+            )
+            null
+        }
+    }
+
+    private fun drillDownMonth(rawPeriod: String): StatsPeriod {
+        val firstDay = if (rawPeriod.matches(MONTHLY_FORMAT_REGEX)) {
+            val parts = rawPeriod.split("-")
+            LocalDate.of(parts[0].toInt(), parts[1].toInt(), 1)
+        } else {
+            LocalDate.parse(
+                rawPeriod.take(DATE_PREFIX_LENGTH),
+                DateTimeFormatter.ISO_LOCAL_DATE
+            ).withDayOfMonth(1)
+        }
+        val lastDay = firstDay.withDayOfMonth(
+            firstDay.lengthOfMonth()
+        )
+        return StatsPeriod.Custom(firstDay, lastDay)
     }
 
     fun refresh() {
@@ -255,7 +359,12 @@ class ViewsStatsViewModel @Inject constructor(
         }
 
         statsRepository.init(accessToken)
-        _uiState.value = ViewsStatsCardUiState.Loading
+        val current = _uiState.value
+        if (current !is ViewsStatsCardUiState.Loaded ||
+            !current.isLoadingNewPeriod
+        ) {
+            _uiState.value = ViewsStatsCardUiState.Loading
+        }
 
         viewModelScope.launch {
             loadDataInternal(site)
@@ -298,9 +407,21 @@ class ViewsStatsViewModel @Inject constructor(
         val currentStats = result.currentAggregates
         val previousStats = result.previousAggregates
         val currentDataPoints = result.currentPeriodData
-            .map { ChartDataPoint(formatDataPointLabel(it.period, currentPeriod), it.views) }
+            .map {
+                ChartDataPoint(
+                    formatDataPointLabel(it.period, currentPeriod),
+                    it.views,
+                    it.period
+                )
+            }
         val previousDataPoints = result.previousPeriodData
-            .map { ChartDataPoint(formatDataPointLabel(it.period, currentPeriod), it.views) }
+            .map {
+                ChartDataPoint(
+                    formatDataPointLabel(it.period, currentPeriod),
+                    it.views,
+                    it.period
+                )
+            }
 
         val average = if (currentDataPoints.isNotEmpty()) {
             currentStats.views / currentDataPoints.size
