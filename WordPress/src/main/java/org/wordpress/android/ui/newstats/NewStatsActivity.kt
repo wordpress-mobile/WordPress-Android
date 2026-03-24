@@ -115,7 +115,9 @@ import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures
 import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures.Feature
 import org.wordpress.android.ui.stats.refresh.StatsActivity
 import org.wordpress.android.ui.stats.refresh.utils.StatsLaunchedFrom
+import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -128,6 +130,9 @@ class NewStatsActivity : BaseAppCompatActivity() {
 
     @Inject
     lateinit var appPrefsWrapper: AppPrefsWrapper
+
+    @Inject
+    lateinit var analyticsTracker: AnalyticsTrackerWrapper
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -150,6 +155,7 @@ class NewStatsActivity : BaseAppCompatActivity() {
     }
 
     private fun switchToOldStats() {
+        analyticsTracker.track(Stat.STATS_NEW_STATS_DISABLED)
         experimentalFeatures.setEnabled(Feature.NEW_STATS, false)
         appPrefsWrapper.setNewStatsIntroShown(false)
         selectedSiteRepository.getSelectedSite()?.let { site ->

@@ -999,7 +999,7 @@
     <string name="stats_switch_to_old_stats">Disable new stats</string>
     <!-- New Stats intro bottom sheet -->
     <string name="new_stats_intro_title">New Stats</string>
-    <string name="new_stats_intro_subtitle">A better way to understand your site\'s performance — now on by default.</string>
+    <string name="new_stats_intro_subtitle">A better way to understand your site\'s performance.</string>
     <string name="new_stats_intro_any_period_title">Any Period, Any Range</string>
     <string name="new_stats_intro_any_period_desc">Pick from common presets or set a custom date range with a comparison period, all in one tap.</string>
     <string name="new_stats_intro_on_par_title">On Par with the Web</string>
