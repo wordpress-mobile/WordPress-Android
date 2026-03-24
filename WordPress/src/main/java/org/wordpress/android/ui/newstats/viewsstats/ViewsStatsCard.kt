@@ -602,12 +602,12 @@ private fun ViewsStatsChart(
                             LineCartesianLayer.Line(
                                 fill = LineCartesianLayer.LineFill.single(fill(primaryColor)),
                                 areaFill = LineCartesianLayer.AreaFill.single(fill(areaGradient)),
-                                pointConnector = LineCartesianLayer.PointConnector.cubic()
+                                pointConnector = LineCartesianLayer.PointConnector.Sharp
                             ),
                             LineCartesianLayer.Line(
                                 fill = LineCartesianLayer.LineFill.single(fill(secondaryColor)),
                                 stroke = LineCartesianLayer.LineStroke.Dashed(),
-                                pointConnector = LineCartesianLayer.PointConnector.cubic()
+                                pointConnector = LineCartesianLayer.PointConnector.Sharp
                             )
                         )
                     ),
@@ -660,9 +660,11 @@ private fun ViewsStatsChart(
                                         .LineFill.single(
                                             fill(secondaryColor)
                                         ),
+                                    stroke = LineCartesianLayer
+                                        .LineStroke.Dashed(),
                                     pointConnector =
                                         LineCartesianLayer
-                                            .PointConnector.cubic()
+                                            .PointConnector.Sharp
                                 )
                             )
                     ),
