@@ -3,6 +3,7 @@ package org.wordpress.android.util
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import org.wordpress.android.ui.reader.utils.ReaderHtmlUtils
+
 class ReaderHtmlUtilsTest {
     @Test
     fun `getOriginalHeightAttrValue extracts original height data correctly`() {
@@ -61,5 +62,4 @@ class ReaderHtmlUtilsTest {
         val result = ReaderHtmlUtils.getWidthAttrValue(testTag)
         assertEquals(0, result)
     }
-
 }
