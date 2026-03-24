@@ -19,7 +19,7 @@ internal data class ApplicationPasswordsConfiguration @Inject constructor(
         get() = applicationNameOptional.orElseThrow {
             NoSuchElementException(
                 "Please make sure to inject a String instance with " +
-                    "the annotation @${ApplicationPasswordsClientId::class.simpleName} to the Dagger graph" +
+                    "the annotation @${ApplicationPasswordsClientId::class.simpleName} to the Dagger graph " +
                     "to be able to use the Application Passwords feature"
             )
         }
