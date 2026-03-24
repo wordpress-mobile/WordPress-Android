@@ -23,7 +23,7 @@ import android.os.Build.VERSION_CODES
 import android.os.Handler
 import android.os.Looper
 import android.os.SystemClock
-import android.os.Trace
+
 import android.text.TextUtils
 import android.util.Log
 import android.webkit.WebView
@@ -104,7 +104,7 @@ import org.wordpress.android.util.EncryptedLogging
 import org.wordpress.android.util.FluxCUtils
 import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.PackageUtils
-import org.wordpress.android.util.ProfilingUtils
+
 import org.wordpress.android.util.RateLimitedTask
 import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.VolleyUtils
@@ -297,9 +297,7 @@ class AppInitializer @Inject constructor(
         Thread {
             @Suppress("TooGenericExceptionCaught")
             try {
-                Trace.beginSection("WellSqlInitializer.init")
                 wellSqlInitializer.init()
-                Trace.endSection()
                 wellSqlReady.complete(Unit)
             } catch (e: Exception) {
                 wellSqlReady.completeExceptionally(e)
@@ -308,8 +306,6 @@ class AppInitializer @Inject constructor(
     }
 
     fun init() {
-        ProfilingUtils.start("App Startup")
-
         // Init static fields from dagger injected singletons.
         // Must happen before deferredInit() dispatches network
         // requests that depend on WordPress.requestQueue.
@@ -317,15 +313,12 @@ class AppInitializer @Inject constructor(
         WordPress.imageLoader = imageLoader
         sOAuthAuthenticator = oAuthAuthenticator
 
-        ProfilingUtils.split("Dispatcher.register")
         dispatcher.register(this)
 
-        ProfilingUtils.split("enableLogRecording")
         enableLogRecording()
         AppLog.i(T.UTILS, "AppInitializer.init")
 
         if (!initialized) {
-            ProfilingUtils.split("EventBus.install")
             // EventBus setup
             EventBus.TAG = "WordPress-EVENT"
             EventBus.builder()
@@ -335,10 +328,8 @@ class AppInitializer @Inject constructor(
                 .installDefaultEventBus()
         }
 
-        ProfilingUtils.split("RestClientUtils.setUserAgent")
         RestClientUtils.setUserAgent(userAgent.apiUserAgent)
 
-        ProfilingUtils.split("LifecycleMonitor.setup")
         val memoryAndConfigChangeMonitor = MemoryAndConfigChangeMonitor()
         application.registerComponentCallbacks(memoryAndConfigChangeMonitor)
 
@@ -346,7 +337,6 @@ class AppInitializer @Inject constructor(
         applicationLifecycleMonitor = ApplicationLifecycleMonitor()
         ProcessLifecycleOwner.get().lifecycle.addObserver(this)
 
-        ProfilingUtils.split("UploadStarter.activate")
         uploadStarter.activateAutoUploading(
             ProcessLifecycleOwner.get() as ProcessLifecycleOwner
         )
@@ -354,18 +344,14 @@ class AppInitializer @Inject constructor(
         // Needed for vector drawables on Android < 21
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
 
-        ProfilingUtils.split("AppThemeUtils.setAppTheme")
         AppThemeUtils.setAppTheme(application)
 
         // --- Await background DB initialization ---
-        ProfilingUtils.split("awaitWellSql")
         runBlocking { wellSqlReady.await() }
 
-        ProfilingUtils.split("initWpDb")
         WordPress.versionName = PackageUtils.getVersionName(application)
         initWpDb()
 
-        ProfilingUtils.split("sanitizeMediaUploadState")
         sanitizeMediaUploadStateForSite()
 
         // WorkManager init is independent of DB and UI — run on a
@@ -375,7 +361,6 @@ class AppInitializer @Inject constructor(
                 .apply { name = "WorkManager-init" }.start()
         }
 
-        ProfilingUtils.split("init complete")
         initialized = true
     }
 
@@ -584,27 +569,18 @@ class AppInitializer @Inject constructor(
         if (postFirstFrameInitDone) return
         postFirstFrameInitDone = true
 
-        ProfilingUtils.start("Post-First-Frame Init")
-
-        ProfilingUtils.split("CrashLogging.initialize")
         crashLogging.get().initialize()
 
-        ProfilingUtils.split("AppConfig.init")
         appConfig.get().init(appScope)
 
-        ProfilingUtils.split("initAnalytics")
         initAnalytics(SystemClock.elapsedRealtime() - startDate)
 
-        ProfilingUtils.split("EncryptedLogging.start")
         encryptedLogging.get().start()
 
-        ProfilingUtils.split("enableHttpResponseCache")
         context?.let { enableHttpResponseCache(it) }
 
-        ProfilingUtils.split("AppReviewManager.init")
         AppReviewManager.init(application)
 
-        ProfilingUtils.split("Zendesk.setup")
         zendeskHelper.get().setupZendesk(
             application,
             BuildConfig.ZENDESK_DOMAIN,
@@ -612,23 +588,18 @@ class AppInitializer @Inject constructor(
             BuildConfig.ZENDESK_OAUTH_CLIENT_ID
         )
 
-        ProfilingUtils.split("updateNotificationSettings")
         updateNotificationSettings()
 
-        ProfilingUtils.split("removeExpiredLists")
         dispatcher.dispatch(
             ListActionBuilder.newRemoveExpiredListsAction(
                 RemoveExpiredListsPayload()
             )
         )
 
-        ProfilingUtils.split("enqueuePeriodicUploadWork")
         enqueuePeriodicUploadWorkRequestForAllSites()
 
-        ProfilingUtils.split("SystemNotificationsTracker")
         systemNotificationsTracker.get().checkSystemNotificationsState()
 
-        ProfilingUtils.split("ImageEditorInitializer")
         ImageEditorInitializer.init(
             imageManager.get(),
             imageEditorTracker.get(),
@@ -636,19 +607,13 @@ class AppInitializer @Inject constructor(
             appScope
         )
 
-        ProfilingUtils.split("DebugCookieManager")
         initDebugCookieManager()
 
         if (BuildConfig.DEBUG
             && Build.VERSION.SDK_INT >= VERSION_CODES.R
         ) {
-            ProfilingUtils.split("AppOpsManager")
             initAppOpsManager()
         }
-
-        ProfilingUtils.split("postFirstFrameInit complete")
-        ProfilingUtils.dump()
-        ProfilingUtils.stop()
     }
 
     private fun initWpDb() {

@@ -138,7 +138,7 @@ import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.FluxCUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.PerAppLocaleManager;
-import org.wordpress.android.util.ProfilingUtils;
+
 import org.wordpress.android.util.ShortcutUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.SnackbarItem;
@@ -297,7 +297,6 @@ public class WPMainActivity extends BaseAppCompatActivity implements
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
-        ProfilingUtils.split("WPMainActivity.onCreate");
         ((WordPress) getApplication()).component().inject(this);
 
         super.onCreate(savedInstanceState);
@@ -1105,10 +1104,6 @@ public class WPMainActivity extends BaseAppCompatActivity implements
                 mDispatcher.dispatch(AccountActionBuilder.newFetchSettingsAction());
             }
         }
-
-        ProfilingUtils.split("WPMainActivity.onResume");
-        ProfilingUtils.dump();
-        ProfilingUtils.stop();
 
         mViewModel.onResume(
                 getSelectedSite(),
