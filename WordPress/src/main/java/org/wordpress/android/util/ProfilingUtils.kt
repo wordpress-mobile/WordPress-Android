@@ -5,9 +5,11 @@ package org.wordpress.android.util
  * and WPLaunchActivity continue to compile.
  */
 object ProfilingUtils {
+    @Suppress("UnusedParameter")
     @JvmStatic
     fun start(label: String) = Unit
 
+    @Suppress("UnusedParameter")
     @JvmStatic
     fun split(label: String) = Unit
 

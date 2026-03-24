@@ -23,7 +23,6 @@ import android.os.Build.VERSION_CODES
 import android.os.Handler
 import android.os.Looper
 import android.os.SystemClock
-
 import android.text.TextUtils
 import android.util.Log
 import android.webkit.WebView
@@ -104,7 +103,6 @@ import org.wordpress.android.util.EncryptedLogging
 import org.wordpress.android.util.FluxCUtils
 import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.PackageUtils
-
 import org.wordpress.android.util.RateLimitedTask
 import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.VolleyUtils
