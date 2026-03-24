@@ -26,9 +26,14 @@ sealed class ViewsStatsCardUiState {
 /**
  * Supported chart types for the views stats chart.
  */
-enum class ChartType {
-    LINE,
-    BAR
+enum class ChartType(val storageKey: String) {
+    LINE("line"),
+    BAR("bar");
+
+    companion object {
+        fun fromStorageKey(key: String?): ChartType? =
+            entries.firstOrNull { it.storageKey == key }
+    }
 }
 
 /**

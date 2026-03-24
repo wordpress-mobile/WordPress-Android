@@ -47,8 +47,6 @@ private const val PERIOD_LAST_6_MONTHS = "last_6_months"
 private const val PERIOD_LAST_12_MONTHS = "last_12_months"
 private const val PERIOD_CUSTOM = "custom"
 
-private const val CHART_TYPE_LINE = "line"
-private const val CHART_TYPE_BAR = "bar"
 
 @HiltViewModel
 class ViewsStatsViewModel @Inject constructor(
@@ -224,29 +222,20 @@ class ViewsStatsViewModel @Inject constructor(
     }
 
     private fun restoreChartTypeFromSavedState(): ChartType {
-        return when (savedStateHandle.get<String>(KEY_CHART_TYPE)) {
-            CHART_TYPE_BAR -> ChartType.BAR
-            else -> ChartType.LINE
-        }
+        return ChartType.fromStorageKey(
+            savedStateHandle.get<String>(KEY_CHART_TYPE)
+        ) ?: ChartType.LINE
     }
 
     private suspend fun restoreChartTypeFromPreferences(): ChartType? {
         val siteId = selectedSiteRepository.getSelectedSite()?.siteId
             ?: return null
         val config = cardsConfigurationRepository.getConfiguration(siteId)
-        return when (config.selectedChartType) {
-            CHART_TYPE_BAR -> ChartType.BAR
-            CHART_TYPE_LINE -> ChartType.LINE
-            else -> null
-        }
+        return ChartType.fromStorageKey(config.selectedChartType)
     }
 
     private fun saveChartType(chartType: ChartType) {
-        val chartTypeString = when (chartType) {
-            ChartType.LINE -> CHART_TYPE_LINE
-            ChartType.BAR -> CHART_TYPE_BAR
-        }
-        savedStateHandle[KEY_CHART_TYPE] = chartTypeString
+        savedStateHandle[KEY_CHART_TYPE] = chartType.storageKey
 
         val siteId = selectedSiteRepository.getSelectedSite()?.siteId
             ?: return
@@ -255,7 +244,9 @@ class ViewsStatsViewModel @Inject constructor(
                 cardsConfigurationRepository.getConfiguration(siteId)
             cardsConfigurationRepository.saveConfiguration(
                 siteId,
-                config.copy(selectedChartType = chartTypeString)
+                config.copy(
+                    selectedChartType = chartType.storageKey
+                )
             )
         }
     }
@@ -272,6 +263,7 @@ class ViewsStatsViewModel @Inject constructor(
     fun onBarTapped(index: Int) {
         val state = _uiState.value as? ViewsStatsCardUiState.Loaded
             ?: return
+        if (state.isLoadingNewPeriod) return
         val dataPoint = state.chartData.currentPeriod.getOrNull(index)
             ?: return
         val rawPeriod = dataPoint.rawPeriod
