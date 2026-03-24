@@ -187,8 +187,7 @@ android {
         manifestPlaceholders = [magicLinkScheme:"wordpress"]
     }
 
-    // Gutenberg's dependency - react-native-video is using
-    // Java API 1.8
+    // Java source/target compatibility (version defined in libs.versions.toml)
     compileOptions {
         // Enables Java 8+ API desugaring support
         coreLibraryDesugaringEnabled true
