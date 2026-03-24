@@ -508,6 +508,14 @@ private fun ViewsStatsChart(
                     columnSeries {
                         series(chartData.currentPeriod.map { it.views.toInt() })
                     }
+                    if (hasPreviousPeriod) {
+                        lineSeries {
+                            series(
+                                chartData.previousPeriod
+                                    .map { it.views.toInt() }
+                            )
+                        }
+                    }
                 }
             }
         }
@@ -641,6 +649,20 @@ private fun ViewsStatsChart(
                                     shape = CorneredShape.rounded(
                                         allPercent = 40
                                     )
+                                )
+                            )
+                    ),
+                    rememberLineCartesianLayer(
+                        lineProvider = LineCartesianLayer
+                            .LineProvider.series(
+                                LineCartesianLayer.Line(
+                                    fill = LineCartesianLayer
+                                        .LineFill.single(
+                                            fill(secondaryColor)
+                                        ),
+                                    pointConnector =
+                                        LineCartesianLayer
+                                            .PointConnector.cubic()
                                 )
                             )
                     ),
