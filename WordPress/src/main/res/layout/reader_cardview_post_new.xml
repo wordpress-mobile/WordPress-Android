@@ -36,7 +36,7 @@
             android:layout_marginTop="@dimen/margin_medium"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/layout_blog_section"
+            app:layout_constraintTop_toBottomOf="@id/image_featured"
             app:layout_constraintBottom_toTopOf="@+id/text_excerpt"
             tools:text="This the tile of this post - Lorem ipsum dolor sit amet, consectetur adipiscing elit" />
 
@@ -63,7 +63,7 @@
             app:layout_constraintDimensionRatio="16:9"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/text_excerpt"
+            app:layout_constraintTop_toBottomOf="@id/layout_blog_section"
             tools:src="@color/blue_light" />
 
         <ImageView
@@ -99,7 +99,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:barrierDirection="bottom"
-            app:constraint_referenced_ids="thumbnail_strip,image_featured" />
+            app:constraint_referenced_ids="thumbnail_strip,text_excerpt" />
 
         <!-- like and comment counts start -->
         <com.google.android.material.textview.MaterialTextView
