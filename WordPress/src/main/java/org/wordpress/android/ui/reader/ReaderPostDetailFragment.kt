@@ -1780,17 +1780,8 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
     override fun onPageJumpClick(pageJump: String?): Boolean {
         readerTracker.track(AnalyticsTracker.Stat.READER_ARTICLE_PAGE_JUMP_TAPPED)
-        val safeId = pageJump?.replace("\\", "\\\\")?.replace("'", "\\'")
-        readerWebView.evaluateJavascript("document.getElementById('$safeId').offsetTop") { result ->
-            // 'result' can be the string 'null' when the page jump identifier is not found
-            val offsetTop = StringUtils.stringToInt(result, -1)
-            if (offsetTop >= 0) {
-                appBar.setExpanded(false, true)
-                val yOffset = (resources.displayMetrics.density * offsetTop).toInt()
-                scrollView.smoothScrollTo(0, yOffset)
-            } else {
-                ToastUtils.showToast(activity, R.string.reader_toast_err_page_jump_not_found)
-            }
+        scrollToElement(pageJump ?: "") {
+            ToastUtils.showToast(activity, R.string.reader_toast_err_page_jump_not_found)
         }
         return true
     }
@@ -1816,7 +1807,18 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
      * in the browser.
      */
     private fun scrollToFragmentOrOpenUrl(fragment: String, fullUrl: String) {
-        val safeId = fragment.replace("\\", "\\\\").replace("'", "\\'")
+        scrollToElement(fragment) {
+            val openUrlType = if (shouldOpenExternal(fullUrl)) {
+                OpenUrlType.EXTERNAL
+            } else {
+                OpenUrlType.INTERNAL
+            }
+            ReaderActivityLauncher.openUrl(requireActivity(), fullUrl, openUrlType)
+        }
+    }
+
+    private fun scrollToElement(elementId: String, onNotFound: () -> Unit) {
+        val safeId = elementId.replace("\\", "\\\\").replace("'", "\\'")
         readerWebView.evaluateJavascript(
             "document.getElementById('$safeId').offsetTop"
         ) { result ->
@@ -1826,8 +1828,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                 val yOffset = (resources.displayMetrics.density * offsetTop).toInt()
                 scrollView.smoothScrollTo(0, yOffset)
             } else {
-                val openUrlType = if (shouldOpenExternal(fullUrl)) OpenUrlType.EXTERNAL else OpenUrlType.INTERNAL
-                ReaderActivityLauncher.openUrl(requireActivity(), fullUrl, openUrlType)
+                onNotFound()
             }
         }
     }
