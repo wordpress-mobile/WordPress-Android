@@ -32,15 +32,20 @@ import androidx.compose.material.icons.filled.PersonOutline
 import androidx.compose.material.icons.outlined.BarChart
 import androidx.compose.material.icons.outlined.Visibility
 import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
@@ -70,6 +75,7 @@ import com.patrykandpatrick.vico.core.cartesian.decoration.HorizontalLine
 import com.patrykandpatrick.vico.core.cartesian.layer.ColumnCartesianLayer
 import com.patrykandpatrick.vico.core.cartesian.layer.LineCartesianLayer
 import com.patrykandpatrick.vico.core.cartesian.marker.CartesianMarker
+import com.patrykandpatrick.vico.core.cartesian.marker.CartesianMarkerVisibilityListener
 import com.patrykandpatrick.vico.core.cartesian.marker.DefaultCartesianMarker
 import com.patrykandpatrick.vico.compose.cartesian.layer.rememberColumnCartesianLayer
 import com.patrykandpatrick.vico.compose.cartesian.layer.rememberLineCartesianLayer
@@ -111,6 +117,7 @@ private val SAMPLE_PREVIOUS_PERIOD_DATA = listOf(1000L, 1400L, 1150L, 1200L, 135
 fun ViewsStatsCard(
     uiState: ViewsStatsCardUiState,
     onChartTypeChanged: (ChartType) -> Unit,
+    onBarTapped: (Int) -> Unit,
     onRetry: () -> Unit,
     onRemoveCard: () -> Unit,
     modifier: Modifier = Modifier,
@@ -137,7 +144,7 @@ fun ViewsStatsCard(
         when (uiState) {
             is ViewsStatsCardUiState.Loading -> LoadingContent()
             is ViewsStatsCardUiState.Loaded -> LoadedContent(
-                uiState, onChartTypeChanged, onRemoveCard,
+                uiState, onChartTypeChanged, onBarTapped, onRemoveCard,
                 cardPosition, onMoveUp, onMoveToTop, onMoveDown, onMoveToBottom
             )
             is ViewsStatsCardUiState.Error -> ErrorContent(
@@ -256,6 +263,7 @@ private fun LoadingContent() {
 private fun LoadedContent(
     state: ViewsStatsCardUiState.Loaded,
     onChartTypeChanged: (ChartType) -> Unit,
+    onBarTapped: (Int) -> Unit,
     onRemoveCard: () -> Unit,
     cardPosition: CardPosition?,
     onMoveUp: (() -> Unit)?,
@@ -263,32 +271,42 @@ private fun LoadedContent(
     onMoveDown: (() -> Unit)?,
     onMoveToBottom: (() -> Unit)?
 ) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(CardPadding)
-    ) {
-        // Header Section
-        HeaderSection(
-            state = state,
-            onChartTypeChanged = onChartTypeChanged,
-            onRemoveCard = onRemoveCard,
-            cardPosition = cardPosition,
-            onMoveUp = onMoveUp,
-            onMoveToTop = onMoveToTop,
-            onMoveDown = onMoveDown,
-            onMoveToBottom = onMoveToBottom
-        )
-        Spacer(modifier = Modifier.height(8.dp))
-        // Chart Section
-        ViewsStatsChart(
-            chartData = state.chartData,
-            periodAverage = state.periodAverage,
-            chartType = state.chartType
-        )
-        Spacer(modifier = Modifier.height(16.dp))
-        // Bottom Stats Row
-        BottomStatsRow(stats = state.bottomStats)
+    Box(modifier = Modifier.fillMaxWidth()) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(CardPadding)
+                .alpha(if (state.isLoadingNewPeriod) 0.5f else 1f)
+        ) {
+            // Header Section
+            HeaderSection(
+                state = state,
+                onChartTypeChanged = onChartTypeChanged,
+                onRemoveCard = onRemoveCard,
+                cardPosition = cardPosition,
+                onMoveUp = onMoveUp,
+                onMoveToTop = onMoveToTop,
+                onMoveDown = onMoveDown,
+                onMoveToBottom = onMoveToBottom
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            // Chart Section
+            ViewsStatsChart(
+                chartData = state.chartData,
+                periodAverage = state.periodAverage,
+                chartType = state.chartType,
+                onBarTapped = onBarTapped
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+            // Bottom Stats Row
+            BottomStatsRow(stats = state.bottomStats)
+        }
+        if (state.isLoadingNewPeriod) {
+            CircularProgressIndicator(
+                modifier = Modifier.align(Alignment.Center),
+                color = MaterialTheme.colorScheme.primary
+            )
+        }
     }
 }
 
@@ -480,7 +498,8 @@ private fun AverageRow(average: Long) {
 private fun ViewsStatsChart(
     chartData: ViewsStatsChartData,
     periodAverage: Long,
-    chartType: ChartType
+    chartType: ChartType,
+    onBarTapped: (Int) -> Unit = {}
 ) {
     // Key the model producer on chartType so it gets recreated when chart type changes
     val modelProducer = remember(chartType) { CartesianChartModelProducer() }
@@ -501,11 +520,14 @@ private fun ViewsStatsChart(
                 }
                 ChartType.BAR -> modelProducer.runTransaction {
                     columnSeries {
-                        // Current period first (primary color)
                         series(chartData.currentPeriod.map { it.views.toInt() })
-                        // Previous period second (grey)
-                        if (hasPreviousPeriod) {
-                            series(chartData.previousPeriod.map { it.views.toInt() })
+                    }
+                    if (hasPreviousPeriod) {
+                        lineSeries {
+                            series(
+                                chartData.previousPeriod
+                                    .map { it.views.toInt() }
+                            )
                         }
                     }
                 }
@@ -534,11 +556,17 @@ private fun ViewsStatsChart(
     val primaryColor = MaterialTheme.colorScheme.primary
     val secondaryColor = MaterialTheme.colorScheme.outline.copy(alpha = 0.5f)
 
-    // X-axis formatter to show date labels from current period data
-    val dateLabels = chartData.currentPeriod.map { it.label }
+    // X-axis labels from both series so the formatter covers the
+    // full range even when the previous period has more data points
+    val currentLabels = chartData.currentPeriod.map { it.label }
+    val previousLabels = chartData.previousPeriod.map { it.label }
+    val dateLabels = if (previousLabels.size > currentLabels.size) {
+        currentLabels + previousLabels.drop(currentLabels.size)
+    } else {
+        currentLabels
+    }
     val bottomAxisValueFormatter = CartesianValueFormatter { _, value, _ ->
-        val index = value.toInt()
-        if (index in dateLabels.indices) dateLabels[index] else ""
+        dateLabels.getOrElse(value.toInt()) { value.toInt().toString() }
     }
 
     // Marker value formatter to show date and views on touch
@@ -594,12 +622,12 @@ private fun ViewsStatsChart(
                             LineCartesianLayer.Line(
                                 fill = LineCartesianLayer.LineFill.single(fill(primaryColor)),
                                 areaFill = LineCartesianLayer.AreaFill.single(fill(areaGradient)),
-                                pointConnector = LineCartesianLayer.PointConnector.cubic()
+                                pointConnector = LineCartesianLayer.PointConnector.Sharp
                             ),
                             LineCartesianLayer.Line(
                                 fill = LineCartesianLayer.LineFill.single(fill(secondaryColor)),
                                 stroke = LineCartesianLayer.LineStroke.Dashed(),
-                                pointConnector = LineCartesianLayer.PointConnector.cubic()
+                                pointConnector = LineCartesianLayer.PointConnector.Sharp
                             )
                         )
                     ),
@@ -618,32 +646,72 @@ private fun ViewsStatsChart(
             )
         }
         ChartType.BAR -> {
+            var lastShownIndex by remember { mutableIntStateOf(-1) }
+            val barTapListener = remember(onBarTapped) {
+                object : CartesianMarkerVisibilityListener {
+                    override fun onShown(
+                        marker: CartesianMarker,
+                        targets: List<CartesianMarker.Target>
+                    ) {
+                        lastShownIndex = targets.firstOrNull()
+                            ?.x?.toInt() ?: -1
+                    }
+
+                    override fun onHidden(
+                        marker: CartesianMarker
+                    ) {
+                        val index = lastShownIndex
+                        if (index >= 0) {
+                            lastShownIndex = -1
+                            onBarTapped(index)
+                        }
+                    }
+                }
+            }
             CartesianChartHost(
                 chart = rememberCartesianChart(
                     rememberColumnCartesianLayer(
-                        columnProvider = ColumnCartesianLayer.ColumnProvider.series(
-                            // Current period (primary color)
-                            LineComponent(
-                                fill = fill(primaryColor),
-                                thicknessDp = 8f,
-                                shape = CorneredShape.rounded(allPercent = 40)
-                            ),
-                            // Previous period (grey)
-                            LineComponent(
-                                fill = fill(secondaryColor),
-                                thicknessDp = 8f,
-                                shape = CorneredShape.rounded(allPercent = 40)
+                        columnProvider = ColumnCartesianLayer
+                            .ColumnProvider.series(
+                                LineComponent(
+                                    fill = fill(primaryColor),
+                                    thicknessDp = 16f,
+                                    shape = CorneredShape.rounded(
+                                        allPercent = 40
+                                    )
+                                )
                             )
-                        ),
-                        mergeMode = { ColumnCartesianLayer.MergeMode.Grouped(4f) }
                     ),
-                    startAxis = VerticalAxis.rememberStart(line = null),
-                    bottomAxis = HorizontalAxis.rememberBottom(valueFormatter = bottomAxisValueFormatter),
+                    rememberLineCartesianLayer(
+                        lineProvider = LineCartesianLayer
+                            .LineProvider.series(
+                                LineCartesianLayer.Line(
+                                    fill = LineCartesianLayer
+                                        .LineFill.single(
+                                            fill(secondaryColor)
+                                        ),
+                                    stroke = LineCartesianLayer
+                                        .LineStroke.Dashed(),
+                                    pointConnector =
+                                        LineCartesianLayer
+                                            .PointConnector.Sharp
+                                )
+                            )
+                    ),
+                    startAxis = VerticalAxis.rememberStart(
+                        line = null
+                    ),
+                    bottomAxis = HorizontalAxis.rememberBottom(
+                        valueFormatter = bottomAxisValueFormatter
+                    ),
                     marker = marker,
+                    markerVisibilityListener = barTapListener,
                     decorations = listOf(averageLine)
                 ),
                 modelProducer = modelProducer,
-                scrollState = rememberVicoScrollState(scrollEnabled = false),
+                scrollState = rememberVicoScrollState(
+                    scrollEnabled = false
+                ),
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(ChartHeight)
@@ -821,6 +889,7 @@ private fun ViewsStatsCardLoadingPreview() {
         ViewsStatsCard(
             uiState = ViewsStatsCardUiState.Loading,
             onChartTypeChanged = {},
+            onBarTapped = {},
             onRetry = {},
             onRemoveCard = {}
         )
@@ -864,6 +933,7 @@ private fun ViewsStatsCardLoadedPreview() {
         ViewsStatsCard(
             uiState = sampleLoadedState(),
             onChartTypeChanged = {},
+            onBarTapped = {},
             onRetry = {},
             onRemoveCard = {}
         )
@@ -879,6 +949,7 @@ private fun ViewsStatsCardErrorPreview() {
                 message = stringResource(R.string.stats_error_api)
             ),
             onChartTypeChanged = {},
+            onBarTapped = {},
             onRetry = {},
             onRemoveCard = {}
         )
@@ -892,6 +963,7 @@ private fun ViewsStatsCardLoadedDarkPreview() {
         ViewsStatsCard(
             uiState = sampleLoadedState(),
             onChartTypeChanged = {},
+            onBarTapped = {},
             onRetry = {},
             onRemoveCard = {}
         )
