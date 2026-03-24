@@ -229,6 +229,42 @@ class InsightsCardsConfigurationRepositoryTest : BaseUnitTest() {
         }
 
     @Test
+    fun `when card is removed, then it stays removed on next getConfiguration`() =
+        test {
+            whenever(
+                appPrefsWrapper
+                    .getStatsInsightsCardsConfigurationJson(
+                        TEST_SITE_ID
+                    )
+            ).thenReturn(ALL_CARDS_JSON)
+
+            repository.removeCard(
+                TEST_SITE_ID,
+                InsightsCardType.YEAR_IN_REVIEW
+            )
+
+            val jsonCaptor = argumentCaptor<String>()
+            verify(appPrefsWrapper)
+                .setStatsInsightsCardsConfigurationJson(
+                    eq(TEST_SITE_ID), jsonCaptor.capture()
+                )
+            whenever(
+                appPrefsWrapper
+                    .getStatsInsightsCardsConfigurationJson(
+                        TEST_SITE_ID
+                    )
+            ).thenReturn(jsonCaptor.firstValue)
+
+            val config =
+                repository.getConfiguration(TEST_SITE_ID)
+
+            assertThat(config.visibleCards)
+                .doesNotContain(
+                    InsightsCardType.YEAR_IN_REVIEW
+                )
+        }
+
+    @Test
     fun `when addCard is called, then card is added to visible cards`() =
         test {
             val initialJson = """
