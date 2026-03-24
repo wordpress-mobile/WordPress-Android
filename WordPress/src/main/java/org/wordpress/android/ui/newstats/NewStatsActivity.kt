@@ -108,21 +108,26 @@ import org.wordpress.android.ui.newstats.tagsandcategories.TagsAndCategoriesView
 import org.wordpress.android.ui.newstats.yearinreview.YearInReviewDetailActivity
 import org.wordpress.android.ui.newstats.yearinreview.YearInReviewViewModel
 import org.wordpress.android.ui.newstats.util.ProvideShimmerBrush
+import org.wordpress.android.ui.mysite.SelectedSiteRepository
+import org.wordpress.android.ui.newstats.components.NewStatsIntroBottomSheet
+import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures
+import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures.Feature
+import org.wordpress.android.ui.stats.refresh.StatsActivity
+import org.wordpress.android.ui.stats.refresh.utils.StatsLaunchedFrom
 import org.wordpress.android.util.AppLog
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class NewStatsActivity : BaseAppCompatActivity() {
-    @javax.inject.Inject
-    lateinit var experimentalFeatures:
-        org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures
+    @Inject
+    lateinit var experimentalFeatures: ExperimentalFeatures
 
-    @javax.inject.Inject
-    lateinit var selectedSiteRepository:
-        org.wordpress.android.ui.mysite.SelectedSiteRepository
+    @Inject
+    lateinit var selectedSiteRepository: SelectedSiteRepository
 
-    @javax.inject.Inject
-    lateinit var appPrefsWrapper:
-        org.wordpress.android.ui.prefs.AppPrefsWrapper
+    @Inject
+    lateinit var appPrefsWrapper: AppPrefsWrapper
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -145,18 +150,13 @@ class NewStatsActivity : BaseAppCompatActivity() {
     }
 
     private fun switchToOldStats() {
-        experimentalFeatures.setEnabled(
-            org.wordpress.android.ui.prefs.experimentalfeatures
-                .ExperimentalFeatures.Feature.NEW_STATS,
-            false
-        )
+        experimentalFeatures.setEnabled(Feature.NEW_STATS, false)
         appPrefsWrapper.setNewStatsIntroShown(false)
         selectedSiteRepository.getSelectedSite()?.let { site ->
-            org.wordpress.android.ui.stats.refresh.StatsActivity.start(
+            StatsActivity.start(
                 this,
                 site,
-                launchedFrom = org.wordpress.android.ui.stats.refresh
-                    .utils.StatsLaunchedFrom.LINK
+                launchedFrom = StatsLaunchedFrom.LINK
             )
         }
         finish()
@@ -231,14 +231,13 @@ private fun NewStatsScreen(
     )
 
     if (showIntro) {
-        org.wordpress.android.ui.newstats.components
-            .NewStatsIntroBottomSheet(
-                sheetState = introSheetState,
-                onDismiss = {
-                    showIntro = false
-                    onIntroDismissed()
-                }
-            )
+        NewStatsIntroBottomSheet(
+            sheetState = introSheetState,
+            onDismiss = {
+                showIntro = false
+                onIntroDismissed()
+            }
+        )
     }
     var showDateRangePicker by remember { mutableStateOf(false) }
 
