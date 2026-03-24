@@ -175,7 +175,7 @@ private fun SubscribersListDetailScreen(
                 }
 
                 itemsIndexed(items) { index, item ->
-                    DetailSubscriberRow(item = item)
+                    SubscriberItemRow(item = item)
                     if (index < items.lastIndex) {
                         Spacer(
                             modifier =
@@ -240,37 +240,6 @@ private fun DetailColumnHeaders(itemCount: Int) {
     }
 }
 
-@Composable
-private fun DetailSubscriberRow(
-    item: SubscriberListItem
-) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 8.dp),
-        horizontalArrangement =
-            Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Text(
-            text = item.displayName,
-            style = MaterialTheme.typography.bodyLarge,
-            color = MaterialTheme
-                .colorScheme.onSurface,
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis,
-            modifier = Modifier.weight(1f)
-        )
-        Spacer(modifier = Modifier.width(12.dp))
-        Text(
-            text = item.formattedDate,
-            style = MaterialTheme
-                .typography.bodySmall,
-            color = MaterialTheme
-                .colorScheme.onSurfaceVariant
-        )
-    }
-}
 
 @Composable
 private fun ErrorContent(

@@ -206,37 +206,6 @@ private fun LoadedContent(
     }
 }
 
-@Composable
-private fun SubscriberItemRow(
-    item: SubscriberListItem
-) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 8.dp),
-        horizontalArrangement =
-            Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Text(
-            text = item.displayName,
-            style = MaterialTheme.typography.bodyLarge,
-            color = MaterialTheme
-                .colorScheme.onSurface,
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis,
-            modifier = Modifier.weight(1f)
-        )
-        Spacer(modifier = Modifier.width(12.dp))
-        Text(
-            text = item.formattedDate,
-            style = MaterialTheme
-                .typography.bodySmall,
-            color = MaterialTheme
-                .colorScheme.onSurfaceVariant
-        )
-    }
-}
 
 @Suppress("TooGenericExceptionCaught", "SwallowedException")
 internal fun formatSubscriberDate(
