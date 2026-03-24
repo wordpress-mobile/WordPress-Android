@@ -14,13 +14,12 @@ plugins {
     alias(libs.plugins.android.library).apply(false)
     alias(libs.plugins.google.services).apply(false)
     alias(libs.plugins.kotlin.allopen).apply(false)
-    alias(libs.plugins.kotlin.android).apply(false)
     alias(libs.plugins.kotlin.compose).apply(false)
     alias(libs.plugins.kotlin.jvm).apply(false)
     alias(libs.plugins.kotlin.parcelize).apply(false)
     alias(libs.plugins.kotlin.serialization).apply(false)
     alias(libs.plugins.ksp).apply(false)
-    alias(libs.plugins.kapt).apply(false)
+    alias(libs.plugins.legacy.kapt).apply(false)
     alias(libs.plugins.room).apply(false)
 }
 
@@ -79,18 +78,18 @@ allprojects {
         debug = false
     }
 
-    tasks.withType(KotlinCompile).all {
-        kotlinOptions {
-            jvmTarget = JvmTarget.fromTarget(libs.versions.java.get()).target
+    tasks.withType(KotlinCompile).configureEach {
+        compilerOptions {
+            jvmTarget = JvmTarget.fromTarget(libs.versions.java.get())
             allWarningsAsErrors = true
-            freeCompilerArgs += [
+            freeCompilerArgs.addAll(
                     "-opt-in=kotlin.RequiresOptIn",
                     "-jvm-default=no-compatibility",
                     "-Xannotation-default-target=param-property",
                     // Suppress Glide KSP codegen visibility warning (bumptech/glide#5601)
                     "-Xwarning-level=" +
                         "EXPOSED_PACKAGE_PRIVATE_TYPE_FROM_INTERNAL_WARNING:disabled"
-            ]
+            )
         }
     }
 }
@@ -98,7 +97,7 @@ allprojects {
 subprojects {
     plugins.withType(com.android.build.gradle.AppPlugin) {
         android {
-            lintOptions {
+            lint {
                 warningsAsErrors = true
                 checkDependencies true
                 checkGeneratedSources = true
@@ -114,7 +113,7 @@ subprojects {
     }
     plugins.withType(com.android.build.gradle.LibraryPlugin) {
         android {
-            lintOptions {
+            lint {
                 checkDependencies false
                 lintConfig file("${project.rootDir}/config/lint/lint.xml")
             }

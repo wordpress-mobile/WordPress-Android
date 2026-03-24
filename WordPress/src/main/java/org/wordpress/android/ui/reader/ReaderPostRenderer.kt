@@ -265,6 +265,16 @@ class ReaderPostRenderer(
         }
         content = removeInlineStyles(content)
 
+        // strip videopress-iframe.js which can permanently hide iframes on error
+        content = content.replace(
+            Regex(
+                "<script[^>]*videopress-iframe\\.js[^>]*>"
+                    + "\\s*</script>",
+                RegexOption.IGNORE_CASE
+            ),
+            ""
+        )
+
         // some content (such as Vimeo embeds) don't have "http:" before links
         content = content.replace("src=\"//", "src=\"http://")
 
@@ -436,6 +446,8 @@ class ReaderPostRenderer(
             .append(" display: block; margin-left: auto; margin-right: auto;")
             .append(" background-color: var(--color-neutral-0);")
             .append(" margin-bottom: ").append(resourceVars.marginMediumPx).append("px; }")
+            // make sure videos aren't wider than the display
+            .append(" video { display: block; max-width: 100%; height: auto; }")
 
         if (renderAsTiledGallery) {
             // tiled-gallery related styles
@@ -523,7 +535,7 @@ class ReaderPostRenderer(
             .append(" font-family: sans-serif;")
             .append(" }")
             // horizontally center iframes
-            .append(" iframe { display: block; margin: 0 auto; }")
+            .append(" iframe { display: block; margin: 0 auto; max-width: 100%; }")
             // hide forms, form-related elements, legacy RSS sharing links and other ad-related content
             // http://bit.ly/2FUTvsP
             .append(" form, input, select, button textarea { display: none; }")
