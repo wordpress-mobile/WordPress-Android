@@ -28,29 +28,6 @@ object ReaderHtmlUtils {
         Pattern.DOTALL or Pattern.CASE_INSENSITIVE
     )
 
-    // regex for matching class attributes in tags
-    private val CLASS_ATTR_PATTERN: Pattern = Pattern.compile(
-        "class\\s*=\\s*['\"](.*?)['\"]",
-        Pattern.DOTALL or Pattern.CASE_INSENSITIVE
-    )
-
-    val SRCSET_ATTR_PATTERN: Pattern = Pattern.compile(
-        "srcset\\s*=\\s*['\"](.*?)['\"]",
-        Pattern.DOTALL or Pattern.CASE_INSENSITIVE
-    )
-
-    // Matches pairs of URLs and widths inside a srcset tag, e.g.:
-    // <URL1> 600w, <URL2> 800w -> (<URL1>, 600) and (<URL2>, 800)
-    val SRCSET_INNER_PATTERN: Pattern = Pattern.compile(
-        "(\\S*?)\\s+(\\d*)w,?\\s*?",
-        Pattern.DOTALL or Pattern.CASE_INSENSITIVE
-    )
-
-    private val DATA_LARGE_FILE_PATTERN: Pattern = Pattern.compile(
-        "data-large-file\\s*=\\s*['\"](.*?)['\"]",
-        Pattern.DOTALL or Pattern.CASE_INSENSITIVE
-    )
-
     /*
      * returns the integer value from the data-orig-size attribute in the passed html tag
      */
@@ -90,12 +67,6 @@ object ReaderHtmlUtils {
     }
 
     /*
-     * returns the value from class src attribute in the passed html tag
-     */ fun getClassAttrValue(tag: String): String? {
-        return matchTagAttrPattern(CLASS_ATTR_PATTERN, tag)
-    }
-
-    /*
      * returns the integer value of the passed query param in the passed url - returns zero
      * if the url is invalid, or the param doesn't exist, or the param value could not be
      * converted to an int
@@ -110,39 +81,6 @@ object ReaderHtmlUtils {
             return 0
         }
         return StringUtils.stringToInt(url.toUri().getQueryParameter(param))
-    }
-
-    /*
-     * Extracts the srcset attribute from the given [tag], and returns the largest image.
-     * Returns null if the srcset attribute is not present.
-     */
-    fun getLargestSrcsetImageForTag(tag: String): SrcsetImage? {
-        val matcher = SRCSET_ATTR_PATTERN.matcher(tag)
-        if (matcher.find()) {
-            val srcsetBody = checkNotNull(matcher.group(1))
-            val innerMatcher = SRCSET_INNER_PATTERN.matcher(srcsetBody)
-            var largestWidth = 0
-            var largestImageUrl: String? = null
-            while (innerMatcher.find()) {
-                val currentWidth = StringUtils.stringToInt(innerMatcher.group(2))
-                if (currentWidth > largestWidth) {
-                    largestWidth = currentWidth
-                    largestImageUrl = innerMatcher.group(1)
-                }
-            }
-            if (largestImageUrl != null) {
-                return SrcsetImage(largestWidth, largestImageUrl)
-            }
-        }
-        return null
-    }
-
-    /*
-     * Returns the value from the data-large-file attribute in the passed html tag,
-     * or null if the attribute is not present.
-     */
-    fun getLargeFileAttr(tag: String): String? {
-        return matchTagAttrPattern(DATA_LARGE_FILE_PATTERN, tag)
     }
 
     private fun matchTagAttrPattern(pattern: Pattern, tag: String): String? {

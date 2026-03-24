@@ -21,16 +21,6 @@ public class ReaderVideoUtils {
         throw new AssertionError();
     }
 
-    /*
-     * determine whether we can show a thumbnail image for the passed video - currently
-     * we support YouTube, Vimeo & standard images
-     */
-    public static boolean canShowVideoThumbnail(String videoUrl) {
-        return isVimeoLink(videoUrl)
-               || isYouTubeVideoLink(videoUrl)
-               || MediaUtils.isValidImage(videoUrl);
-    }
-
     public static void retrieveVideoThumbnailUrl(final String videoUrl, final VideoThumbnailUrlListener listener) {
         // if this is a YouTube video we can determine the thumbnail url from the passed url,
         // otherwise check if we've already cached the thumbnail url for this video
