@@ -516,8 +516,6 @@
             android:name=".URISchemeDeepLinkingIntentReceiverActivity"
             android:label="@string/deep_linking_urilinks_alias_label"
             android:targetActivity="org.wordpress.android.ui.deeplinks.DeepLinkingIntentReceiverActivity"
-            android:theme="@style/WordPress.NoActionBar"
-            android:excludeFromRecents="true"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -541,8 +539,6 @@
             android:name=".WebLinksDeepLinkingIntentReceiverActivity"
             android:label="@string/deep_linking_weblinks_alias_label"
             android:targetActivity="org.wordpress.android.ui.deeplinks.DeepLinkingIntentReceiverActivity"
-            android:theme="@style/WordPress.NoActionBar"
-            android:excludeFromRecents="true"
             android:exported="true">
             <intent-filter android:autoVerify="true">
                 <action android:name="android.intent.action.VIEW" />

@@ -1,9 +1,7 @@
 import io.sentry.android.gradle.extensions.InstrumentationFeature
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     alias(libs.plugins.android.application)
-    alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.kotlin.parcelize)
     alias(libs.plugins.kotlin.allopen)
@@ -90,6 +88,10 @@ allOpen {
     annotation 'org.wordpress.android.testing.OpenClassAnnotation'
 }
 
+base {
+    archivesName = "org.wordpress.android"
+}
+
 android {
     useLibrary 'android.test.runner'
 
@@ -100,16 +102,16 @@ android {
 
     def versionProperties = loadPropertiesFromFile(file("${rootDir}/version.properties"))
 
+    compileSdk rootProject.compileSdkVersion
+
     defaultConfig {
         applicationId "org.wordpress.android"
-        archivesBaseName = "$applicationId"
 
         versionName project.findProperty("prototypeBuildVersionName") ?: versionProperties.getProperty("versionName")
         versionCode versionProperties.getProperty("versionCode").toInteger()
 
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.targetSdkVersion
-        compileSdk rootProject.compileSdkVersion
 
         testInstrumentationRunner 'org.wordpress.android.WordPressTestRunner'
 
@@ -185,13 +187,12 @@ android {
         manifestPlaceholders = [magicLinkScheme:"wordpress"]
     }
 
-    // Gutenberg's dependency - react-native-video is using
-    // Java API 1.8
+    // Java source/target compatibility (version defined in libs.versions.toml)
     compileOptions {
         // Enables Java 8+ API desugaring support
         coreLibraryDesugaringEnabled true
-        sourceCompatibility JvmTarget.fromTarget(libs.versions.java.get()).target
-        targetCompatibility JvmTarget.fromTarget(libs.versions.java.get()).target
+        sourceCompatibility JavaVersion.toVersion(libs.versions.java.get())
+        targetCompatibility JavaVersion.toVersion(libs.versions.java.get())
     }
 
     flavorDimensions = ['app']
@@ -250,7 +251,7 @@ android {
             // Proguard is used to shrink our apk, and reduce the number of methods in our final apk,
             // but we don't obfuscate the bytecode.
             minifyEnabled true
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard.cfg'
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard.cfg'
             buildConfigField "boolean", "ENABLE_DEBUG_SETTINGS", "false"
         }
 
@@ -292,23 +293,16 @@ android {
         }
     }
 
-    packagingOptions {
-        // MPAndroidChart uses androidX - remove this line when we migrate everything to androidX
-        exclude 'META-INF/proguard/androidx-annotations.pro'
-
-        // Exclude React Native's JSC and Fabric JNI
-        exclude '**/libjscexecutor.so'
-        exclude '**/libfabricjni.so'
-
-        // Avoid React Native's JNI duplicated classes
-        pickFirst '**/libc++_shared.so'
-        pickFirst '**/libfbjni.so'
-
-        pickFirst 'META-INF/-no-jdk.kotlin_module'
-
-        // OkHttp 5.x: Pick first OSGI manifest from multi-release JARs
-        pickFirst 'META-INF/versions/9/OSGI-INF/MANIFEST.MF'
-
+    packaging {
+        resources {
+            excludes += 'META-INF/proguard/androidx-annotations.pro'
+            excludes += '**/libjscexecutor.so'
+            excludes += '**/libfabricjni.so'
+            pickFirsts += '**/libc++_shared.so'
+            pickFirsts += '**/libfbjni.so'
+            pickFirsts += 'META-INF/-no-jdk.kotlin_module'
+            pickFirsts += 'META-INF/versions/9/OSGI-INF/MANIFEST.MF'
+        }
     }
 
     bundle {
@@ -591,14 +585,24 @@ tasks.register("printVersionName") {
     }
 }
 
-tasks.register("printAllVersions") {
-    def versions = android.applicationVariants.collect {
-        [it.name, it.versionName, it.versionCode]
-    }
+def allVariantVersions = []
 
+androidComponents {
+    onVariants(selector().all()) { variant ->
+        variant.outputs.each { output ->
+            allVariantVersions.add([
+                name: variant.name,
+                versionName: output.versionName,
+                versionCode: output.versionCode
+            ])
+        }
+    }
+}
+
+tasks.register("printAllVersions") {
     doLast {
-        versions.each { name, versionName, versionCode ->
-            println "$name: $versionName ($versionCode)"
+        allVariantVersions.each { data ->
+            println "${data.name}: ${data.versionName.get()} (${data.versionCode.get()})"
         }
     }
 }
@@ -621,25 +625,40 @@ android {
     androidResources {
         generateLocaleConfig = true
     }
+}
 
-    // Copy React Native JavaScript bundle and source map so they can be upload it to the Crash logging
-    // service during the build process.
-    applicationVariants.configureEach { variant ->
-        def variantAssets = variant.mergeAssetsProvider.get().outputDir.get()
+// Copy React Native JavaScript bundle and source map so they can be uploaded to the Crash logging
+// service during the build process.
+androidComponents {
+    onVariants(selector().all()) { variant ->
+        def capitalizedName = variant.name.capitalize()
+        def assetsDir = variant.artifacts.get(
+            com.android.build.api.artifact.SingleArtifact.ASSETS.INSTANCE
+        )
 
-        tasks.register("delete${variant.name.capitalize()}ReactNativeBundleSourceMap", Delete) {
-            delete(fileTree(dir: variantAssets, includes: ['**/*.bundle.map']))
+        def deleteTask = tasks.register(
+            "delete${capitalizedName}ReactNativeBundleSourceMap", Delete
+        ) {
+            delete(fileTree(dir: assetsDir, includes: ['**/*.bundle.map']))
         }
 
-        tasks.register("copy${variant.name.capitalize()}ReactNativeBundleSourceMap", Copy) {
-            from(variantAssets)
-            into("${buildDir}/react-native-bundle-source-map")
+        def copyTask = tasks.register(
+            "copy${capitalizedName}ReactNativeBundleSourceMap", Copy
+        ) {
+            from(assetsDir)
+            into(layout.buildDirectory.dir("react-native-bundle-source-map"))
             include("*.bundle", "*.bundle.map")
-            finalizedBy("delete${variant.name.capitalize()}ReactNativeBundleSourceMap")
+            finalizedBy(deleteTask)
         }
 
-        variant.mergeAssetsProvider.configure {
-            finalizedBy("copy${variant.name.capitalize()}ReactNativeBundleSourceMap")
+        // TODO: Replace afterEvaluate with AGP artifacts API when a suitable
+        //  hook for post-merge asset tasks becomes available. afterEvaluate is
+        //  needed here because the mergeXxxAssets task doesn't exist yet when
+        //  onVariants runs, and there's no artifact transform for this use case.
+        afterEvaluate {
+            tasks.named("merge${capitalizedName}Assets").configure {
+                finalizedBy(copyTask)
+            }
         }
     }
 }

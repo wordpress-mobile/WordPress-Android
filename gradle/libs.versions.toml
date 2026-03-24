@@ -1,5 +1,5 @@
 [versions]
-agp = '8.10.1'
+agp = '9.0.1'
 airbnb-lottie = '6.7.1'
 android-desugar = '2.1.5'
 android-installreferrer = '2.2'
@@ -56,9 +56,9 @@ dependency-analysis = '3.6.1'
 facebook-react = '0.73.3'
 facebook-shimmer = '0.5.0'
 fastlane-screengrab = '2.1.1'
-fladle = '0.19.0'
+fladle = '0.21.0'
 google-autoservice = '1.1.1'
-google-dagger = '2.58'
+google-dagger = '2.59.2'
 google-exoplayer = '2.13.3'
 google-firebase-bom = '34.11.0'
 google-firebase-iid = '21.1.0'
@@ -279,10 +279,9 @@ detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
 fladle = { id = "com.osacky.fladle", version.ref = "fladle" }
 google-dagger-hilt = { id = "com.google.dagger.hilt.android", version.ref = "google-dagger" }
 google-services = { id = "com.google.gms.google-services", version.ref = "google-services" }
-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin-main" }
 kotlin-allopen = { id = "org.jetbrains.kotlin.plugin.allopen", version.ref = "kotlin-main" }
-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin-main" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin-main" }
+legacy-kapt = { id = "com.android.legacy-kapt", version.ref = "agp" }
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin-main" }
 kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlin-main" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin-main" }

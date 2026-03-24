@@ -179,7 +179,7 @@ public class GutenbergContainerFragment extends Fragment {
                 } else {
                     if (isEnabled()) {
                         setEnabled(false); // Disable this callback
-                        requireActivity().onBackPressed(); // Bubble up the onBackPressed event
+                        requireActivity().getOnBackPressedDispatcher().onBackPressed();
                         setEnabled(true); // Re-enable this callback
                     }
                 }

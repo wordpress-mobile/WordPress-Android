@@ -344,7 +344,7 @@ public class AnalyticsTrackerNosara extends Tracker {
                         if (propertiesToJSON.has(key)) {
                             AppLog.w(AppLog.T.STATS,
                                     "The user has defined a property named: '" + key + "' that will override"
-                                    + "the same property pre-defined at event level. This may generate unexpected "
+                                    + " the same property pre-defined at event level. This may generate unexpected "
                                     + "behavior!!");
                             AppLog.w(AppLog.T.STATS,
                                     "User value: " + propertiesToJSON.get(key)
