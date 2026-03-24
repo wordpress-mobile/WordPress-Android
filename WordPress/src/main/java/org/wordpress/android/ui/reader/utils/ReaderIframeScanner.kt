@@ -30,7 +30,7 @@ class ReaderIframeScanner(private val content: String) {
 
     companion object {
         private val IFRAME_TAG_PATTERN: Pattern = Pattern.compile(
-            "<iframe[^>]* src=\\\'([^\\\']*)\\\'[^>]*>",
+            "<iframe[^>]* src=['\"]([^'\"]*)['\"][^>]*>",
             Pattern.CASE_INSENSITIVE
         )
     }
