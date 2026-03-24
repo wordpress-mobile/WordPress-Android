@@ -7,6 +7,7 @@ import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -41,6 +42,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
@@ -266,33 +268,48 @@ private fun LoadedContent(
     onMoveDown: (() -> Unit)?,
     onMoveToBottom: (() -> Unit)?
 ) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(CardPadding)
-    ) {
-        // Header Section
-        HeaderSection(
-            state = state,
-            onChartTypeChanged = onChartTypeChanged,
-            onRemoveCard = onRemoveCard,
-            cardPosition = cardPosition,
-            onMoveUp = onMoveUp,
-            onMoveToTop = onMoveToTop,
-            onMoveDown = onMoveDown,
-            onMoveToBottom = onMoveToBottom
-        )
-        Spacer(modifier = Modifier.height(8.dp))
-        // Chart Section
-        ViewsStatsChart(
-            chartData = state.chartData,
-            periodAverage = state.periodAverage,
-            chartType = state.chartType,
-            onBarTapped = onBarTapped
-        )
-        Spacer(modifier = Modifier.height(16.dp))
-        // Bottom Stats Row
-        BottomStatsRow(stats = state.bottomStats)
+    Box(modifier = Modifier.fillMaxWidth()) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(CardPadding)
+                .then(
+                    if (state.isLoadingNewPeriod) {
+                        Modifier.alpha(0.5f)
+                    } else {
+                        Modifier
+                    }
+                )
+        ) {
+            // Header Section
+            HeaderSection(
+                state = state,
+                onChartTypeChanged = onChartTypeChanged,
+                onRemoveCard = onRemoveCard,
+                cardPosition = cardPosition,
+                onMoveUp = onMoveUp,
+                onMoveToTop = onMoveToTop,
+                onMoveDown = onMoveDown,
+                onMoveToBottom = onMoveToBottom
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            // Chart Section
+            ViewsStatsChart(
+                chartData = state.chartData,
+                periodAverage = state.periodAverage,
+                chartType = state.chartType,
+                onBarTapped = onBarTapped
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+            // Bottom Stats Row
+            BottomStatsRow(stats = state.bottomStats)
+        }
+        if (state.isLoadingNewPeriod) {
+            CircularProgressIndicator(
+                modifier = Modifier.align(Alignment.Center),
+                color = MaterialTheme.colorScheme.primary
+            )
+        }
     }
 }
 

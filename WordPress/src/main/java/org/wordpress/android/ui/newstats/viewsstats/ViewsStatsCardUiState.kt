@@ -16,7 +16,8 @@ sealed class ViewsStatsCardUiState {
         val chartData: ViewsStatsChartData,
         val periodAverage: Long,
         val bottomStats: List<StatItem>,
-        val chartType: ChartType = ChartType.LINE
+        val chartType: ChartType = ChartType.LINE,
+        val isLoadingNewPeriod: Boolean = false
     ) : ViewsStatsCardUiState()
 
     data class Error(val message: String) : ViewsStatsCardUiState()

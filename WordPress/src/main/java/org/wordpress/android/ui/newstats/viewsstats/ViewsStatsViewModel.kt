@@ -30,6 +30,7 @@ import kotlin.math.abs
 private const val PERCENTAGE_BASE = 100.0
 private const val DAYS_THRESHOLD_FOR_MONTHLY_DISPLAY = 31
 private const val DATE_PREFIX_LENGTH = 10 // "YYYY-MM-DD".length
+private const val MAX_DAYS_IN_MONTH = 31
 
 private val HOURLY_FORMAT_REGEX = Regex("""\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}""")
 private val DAILY_FORMAT_REGEX = Regex("""\d{4}-\d{2}-\d{2}""")
@@ -276,14 +277,20 @@ class ViewsStatsViewModel @Inject constructor(
             ?: return
         val rawPeriod = dataPoint.rawPeriod
         val newPeriod = drillDownPeriod(rawPeriod) ?: return
+        _uiState.value = state.copy(isLoadingNewPeriod = true)
         onPeriodChanged(newPeriod)
         loadData()
     }
 
     @Suppress("ReturnCount")
     private fun drillDownPeriod(rawPeriod: String): StatsPeriod? {
-        val isMonthlyGranularity = currentPeriod is StatsPeriod.Last6Months ||
-            currentPeriod is StatsPeriod.Last12Months
+        val period = currentPeriod
+        val isMonthlyGranularity = period is StatsPeriod.Last6Months ||
+            period is StatsPeriod.Last12Months ||
+            (period is StatsPeriod.Custom &&
+                ChronoUnit.DAYS.between(
+                    period.startDate, period.endDate
+                ).toInt() + 1 > MAX_DAYS_IN_MONTH)
 
         // Hourly data — no smaller period available
         if (rawPeriod.matches(HOURLY_FORMAT_REGEX)) return null
@@ -348,7 +355,12 @@ class ViewsStatsViewModel @Inject constructor(
         }
 
         statsRepository.init(accessToken)
-        _uiState.value = ViewsStatsCardUiState.Loading
+        val current = _uiState.value
+        if (current !is ViewsStatsCardUiState.Loaded ||
+            !current.isLoadingNewPeriod
+        ) {
+            _uiState.value = ViewsStatsCardUiState.Loading
+        }
 
         viewModelScope.launch {
             loadDataInternal(site)
