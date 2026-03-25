@@ -6,7 +6,7 @@ updates:
     schedule:
       interval: "daily"
     labels:
-      - "bot: dependencies update"
+      - "dependencies update"
     groups:
       kotlin-ksp:
         applies-to: version-updates
