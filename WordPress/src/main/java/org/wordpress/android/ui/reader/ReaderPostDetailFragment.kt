@@ -133,7 +133,7 @@ import org.wordpress.android.util.JetpackBrandingUtils
 import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.PermissionUtils
 import org.wordpress.android.util.RtlUtils
-import org.wordpress.android.util.StringUtils
+
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.UrlUtils
 import org.wordpress.android.util.WPPermissionUtils.READER_FILE_DOWNLOAD_PERMISSION_REQUEST_CODE
@@ -1817,15 +1817,28 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         }
     }
 
+    private fun getTopWithinAncestor(descendant: View, ancestor: View): Int {
+        var top = 0
+        var current: View? = descendant
+        while (current != null && current != ancestor) {
+            top += current.top
+            current = current.parent as? View
+        }
+        return top
+    }
+
     private fun scrollToElement(elementId: String, onNotFound: () -> Unit) {
         val safeId = elementId.replace("\\", "\\\\").replace("'", "\\'")
         readerWebView.evaluateJavascript(
-            "document.getElementById('$safeId').offsetTop"
+            "(function(){var e=document.getElementById('$safeId');" +
+                "return e?e.getBoundingClientRect().top+window.pageYOffset:-1})()"
         ) { result ->
-            val offsetTop = StringUtils.stringToInt(result, -1)
+            val offsetTop = result?.toDoubleOrNull()?.toInt() ?: -1
             if (offsetTop >= 0) {
                 appBar.setExpanded(false, true)
-                val yOffset = (resources.displayMetrics.density * offsetTop).toInt()
+                val webViewTop = getTopWithinAncestor(readerWebView, scrollView)
+                val yOffset = webViewTop +
+                    (resources.displayMetrics.density * offsetTop).toInt()
                 scrollView.smoothScrollTo(0, yOffset)
             } else {
                 onNotFound()
