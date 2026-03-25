@@ -555,7 +555,7 @@ class ReaderPostRenderer(
             .append(" display: block; border: none !important;")
             .append(" }")
             .append(" a.wp-block-button__link {")
-            .append(" display: block;")
+            .append(" display: inline-block;")
             .append(" background-color: var(--main-link-color) !important;")
             .append(" color: var(--color-background) !important;")
             .append(" padding: 12px 24px;")
