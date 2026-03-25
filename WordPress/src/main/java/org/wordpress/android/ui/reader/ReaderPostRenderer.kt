@@ -545,7 +545,7 @@ class ReaderPostRenderer(
             .append(" figure { display: block; margin-inline-start: 0px; margin-inline-end: 0px; }")
             // button block styles
             .append(" .wp-block-buttons {")
-            .append(" display: flex; flex-wrap: wrap;")
+            .append(" display: flex; flex-wrap: wrap; align-items: flex-start;")
             .append(" gap: ").append(resourceVars.marginMediumPx).append("px;")
             .append(" margin-top: ").append(resourceVars.marginMediumPx).append("px;")
             .append(" margin-bottom: ").append(resourceVars.marginMediumPx).append("px;")
