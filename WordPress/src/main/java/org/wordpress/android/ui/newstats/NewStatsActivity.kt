@@ -162,7 +162,7 @@ class NewStatsActivity : BaseAppCompatActivity() {
             StatsActivity.start(
                 this,
                 site,
-                launchedFrom = StatsLaunchedFrom.LINK
+                launchedFrom = StatsLaunchedFrom.STATS_TOGGLE
             )
             finish()
         }

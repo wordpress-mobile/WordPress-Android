@@ -23,6 +23,7 @@ import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.databinding.StatsFragmentBinding
 import org.wordpress.android.models.JetpackPoweredScreen
 import org.wordpress.android.ui.ScrollableViewInitializedListener
@@ -30,12 +31,10 @@ import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureFullScreenOverlayFr
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil.JetpackFeatureOverlayScreenType
 import org.wordpress.android.ui.main.WPMainNavigationView.PageType.MY_SITE
 import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredBottomSheetFragment
-import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.ui.newstats.NewStatsActivity
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures
 import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures.Feature
-import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.ui.stats.refresh.StatsViewModel.StatsModuleUiModel
 import org.wordpress.android.ui.stats.refresh.lists.StatsListFragment
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection
@@ -56,6 +55,7 @@ import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider.SiteUpdate
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.JetpackBrandingUtils
 import org.wordpress.android.util.WPSwipeToRefreshHelper
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.config.StatsTrafficSubscribersTabsFeatureConfig
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 import org.wordpress.android.viewmodel.observeEvent
