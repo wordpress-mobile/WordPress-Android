@@ -140,9 +140,14 @@ public class ReaderPost {
             // freshly-pressed posts show the date they were chosen rather than the day published
             post.mDatePublished = JSONUtils.getString(jsonEditorial, "displayed_on");
         } else {
-            post.mFeaturedImage = JSONUtils.getString(json, "featured_image");
             post.mBlogName = JSONUtils.getStringDecoded(json, "site_name");
             post.mDatePublished = JSONUtils.getString(json, "date");
+        }
+
+        // featured image priority: editorial.image > featured_image > featured_media.uri
+        // (matching iOS behavior)
+        if (!post.hasFeaturedImage()) {
+            post.mFeaturedImage = JSONUtils.getString(json, "featured_image");
         }
 
         post.mDateLiked = JSONUtils.getString(json, "date_liked");
