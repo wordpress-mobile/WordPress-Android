@@ -538,7 +538,7 @@ class ReaderPostRenderer(
             .append(" iframe { display: block; margin: 0 auto; max-width: 100%; }")
             // hide forms, form-related elements, legacy RSS sharing links and other ad-related content
             // http://bit.ly/2FUTvsP
-            .append(" form, input, select, button textarea { display: none; }")
+            .append(" form, input, select, button, textarea { display: none; }")
             .append(" div.feedflare { display: none; }")
             .append(" .sharedaddy, .jp-relatedposts, .mc4wp-form, .wpcnt, ")
             .append(" .OUTBRAIN, .adsbygoogle { display: none; }")
