@@ -545,7 +545,8 @@ class ReaderPostRenderer(
             .append(" figure { display: block; margin-inline-start: 0px; margin-inline-end: 0px; }")
             // button block styles
             .append(" .wp-block-buttons {")
-            .append(" display: flex; flex-wrap: wrap; gap: 8px;")
+            .append(" display: flex; flex-wrap: wrap;")
+            .append(" gap: ").append(resourceVars.marginMediumPx).append("px;")
             .append(" margin-top: ").append(resourceVars.marginMediumPx).append("px;")
             .append(" margin-bottom: ").append(resourceVars.marginMediumPx).append("px;")
             .append(" border: none !important;")
@@ -567,7 +568,7 @@ class ReaderPostRenderer(
             // outline button variant
             .append(" .is-style-outline a.wp-block-button__link {")
             .append(" background-color: transparent !important;")
-            .append(" border: 2px solid var(--main-link-color);")
+            .append(" border: 2px solid var(--main-link-color) !important;")
             .append(" color: var(--main-link-color) !important;")
             .append(" }")
             .append("</style>")
