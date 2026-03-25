@@ -543,6 +543,33 @@ class ReaderPostRenderer(
             .append(" .sharedaddy, .jp-relatedposts, .mc4wp-form, .wpcnt, ")
             .append(" .OUTBRAIN, .adsbygoogle { display: none; }")
             .append(" figure { display: block; margin-inline-start: 0px; margin-inline-end: 0px; }")
+            // button block styles
+            .append(" .wp-block-buttons {")
+            .append(" display: flex; flex-wrap: wrap; gap: 8px;")
+            .append(" margin-top: ").append(resourceVars.marginMediumPx).append("px;")
+            .append(" margin-bottom: ").append(resourceVars.marginMediumPx).append("px;")
+            .append(" border: none !important;")
+            .append(" }")
+            .append(" .wp-block-button {")
+            .append(" display: block; border: none !important;")
+            .append(" }")
+            .append(" a.wp-block-button__link {")
+            .append(" display: block;")
+            .append(" background-color: var(--main-link-color) !important;")
+            .append(" color: var(--color-background) !important;")
+            .append(" padding: 12px 24px;")
+            .append(" border-radius: 4px;")
+            .append(" text-decoration: none !important;")
+            .append(" font-size: inherit;")
+            .append(" line-height: 1.2em;")
+            .append(" text-align: center;")
+            .append(" }")
+            // outline button variant
+            .append(" .is-style-outline a.wp-block-button__link {")
+            .append(" background-color: transparent !important;")
+            .append(" border: 2px solid var(--main-link-color);")
+            .append(" color: var(--main-link-color) !important;")
+            .append(" }")
             .append("</style>")
 
         // add a custom CSS class to (any) tiled gallery elements to make them easier selectable for various rules
@@ -588,6 +615,7 @@ class ReaderPostRenderer(
             .append("--color-neutral-50: ").append(readingPreferencesTheme.cssTextLightColor).append("; ")
             .append("--color-neutral-70: ").append(readingPreferencesTheme.cssTextColor).append("; ")
             .append("--main-link-color: ").append(readingPreferencesTheme.cssLinkColor).append("; ")
+            .append("--color-background: ").append(readingPreferencesTheme.cssBackgroundColor).append("; ")
             .append("} ")
     }
 
