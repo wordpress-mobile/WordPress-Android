@@ -200,7 +200,7 @@ private fun HighlightedStatItem(
     ) {
         Text(
             text = label.uppercase(),
-            style = MaterialTheme.typography.labelSmall,
+            style = MaterialTheme.typography.labelMedium,
             fontWeight = FontWeight.Medium,
             color = MaterialTheme.colorScheme.primary
         )
@@ -234,7 +234,7 @@ private fun StatItem(
     ) {
         Text(
             text = label.uppercase(),
-            style = MaterialTheme.typography.labelSmall,
+            style = MaterialTheme.typography.labelMedium,
             color =
                 MaterialTheme.colorScheme.onSurfaceVariant
         )

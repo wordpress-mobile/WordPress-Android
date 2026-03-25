@@ -56,10 +56,14 @@ constructor(
         siteId: Long,
         configuration: InsightsCardsConfiguration
     ) {
+        val persisted = PersistedConfig(
+            visibleCards = configuration.visibleCards,
+            storedHiddenCards = configuration.hiddenCards
+        )
         appPrefsWrapper
             .setStatsInsightsCardsConfigurationJson(
                 siteId,
-                gson.toJson(configuration)
+                gson.toJson(persisted)
             )
         _configurationFlow.value =
             siteId to configuration

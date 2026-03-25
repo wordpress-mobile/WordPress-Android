@@ -16,7 +16,8 @@ sealed class ViewsStatsCardUiState {
         val chartData: ViewsStatsChartData,
         val periodAverage: Long,
         val bottomStats: List<StatItem>,
-        val chartType: ChartType = ChartType.LINE
+        val chartType: ChartType = ChartType.LINE,
+        val isLoadingNewPeriod: Boolean = false
     ) : ViewsStatsCardUiState()
 
     data class Error(val message: String) : ViewsStatsCardUiState()
@@ -25,9 +26,14 @@ sealed class ViewsStatsCardUiState {
 /**
  * Supported chart types for the views stats chart.
  */
-enum class ChartType {
-    LINE,
-    BAR
+enum class ChartType(val storageKey: String) {
+    LINE("line"),
+    BAR("bar");
+
+    companion object {
+        fun fromStorageKey(key: String?): ChartType? =
+            entries.firstOrNull { it.storageKey == key }
+    }
 }
 
 /**
@@ -45,7 +51,8 @@ data class ViewsStatsChartData(
  */
 data class ChartDataPoint(
     val label: String,
-    val views: Long
+    val views: Long,
+    val rawPeriod: String = ""
 )
 
 /**
