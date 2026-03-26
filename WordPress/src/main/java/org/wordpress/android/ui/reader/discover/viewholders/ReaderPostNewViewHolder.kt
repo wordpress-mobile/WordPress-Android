@@ -2,6 +2,7 @@ package org.wordpress.android.ui.reader.discover.viewholders
 
 import android.view.Gravity
 import android.view.View
+import androidx.core.content.ContextCompat
 import android.view.ViewGroup
 import androidx.appcompat.widget.ListPopupWindow
 import androidx.core.view.isVisible
@@ -154,11 +155,18 @@ class ReaderPostNewViewHolder(
         if (state.featuredImageUrl == null) {
             imageManager.cancelRequestAndClearImageView(imageFeatured)
         } else {
-            imageManager.loadImageWithCorners(
+            imageManager.loadImageWithCornersPortraitAware(
                 imageFeatured,
                 PHOTO_ROUNDED_CORNERS,
                 state.featuredImageUrl,
-                uiHelpers.getPxOfUiDimen(WordPress.getContext(), state.featuredImageCornerRadius)
+                uiHelpers.getPxOfUiDimen(
+                    WordPress.getContext(),
+                    state.featuredImageCornerRadius
+                ),
+                ContextCompat.getColor(
+                    imageFeatured.context,
+                    R.color.reader_featured_image_background
+                )
             )
         }
     }
@@ -183,11 +191,18 @@ class ReaderPostNewViewHolder(
         state.fullVideoUrl?.let { videoUrl ->
             ReaderVideoUtils.retrieveVideoThumbnailUrl(videoUrl, object : VideoThumbnailUrlListener {
                 override fun showThumbnail(thumbnailUrl: String) {
-                    imageManager.loadImageWithCorners(
+                    imageManager.loadImageWithCornersPortraitAware(
                         imageFeatured,
                         PHOTO_ROUNDED_CORNERS,
                         thumbnailUrl,
-                        uiHelpers.getPxOfUiDimen(WordPress.getContext(), state.featuredImageCornerRadius)
+                        uiHelpers.getPxOfUiDimen(
+                            WordPress.getContext(),
+                            state.featuredImageCornerRadius
+                        ),
+                        ContextCompat.getColor(
+                            imageFeatured.context,
+                            R.color.reader_featured_image_background
+                        )
                     )
                 }
 

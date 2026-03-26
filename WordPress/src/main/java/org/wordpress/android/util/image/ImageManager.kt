@@ -13,6 +13,7 @@ import android.text.TextUtils
 import android.util.Base64
 import android.widget.ImageView
 import android.widget.ImageView.ScaleType
+import androidx.annotation.ColorInt
 import android.widget.ImageView.ScaleType.CENTER
 import android.widget.ImageView.ScaleType.FIT_CENTER
 import android.widget.ImageView.ScaleType.FIT_END
@@ -267,6 +268,37 @@ class ImageManager @Inject constructor(
         Glide.with(context)
             .load(imgUrl)
             .transform(CenterCrop(), RoundedCorners(cornerRadius))
+            .addFallback(imageType)
+            .addPlaceholder(imageType)
+            .attachRequestListener(requestListener)
+            .into(imageView)
+            .clearOnDetach()
+    }
+
+    /**
+     * Loads an image from the "imgUrl" into the ImageView with a corner radius.
+     * For portrait images (height > width), fits the full image height and centers
+     * horizontally with a background color fill. For landscape/square images,
+     * applies standard CenterCrop.
+     */
+    @JvmOverloads
+    fun loadImageWithCornersPortraitAware(
+        imageView: ImageView,
+        imageType: ImageType,
+        imgUrl: String,
+        cornerRadius: Int,
+        @ColorInt backgroundColor: Int,
+        requestListener: RequestListener<Drawable>? = null
+    ) {
+        val context = imageView.context
+        if (!context.isAvailable()) return
+
+        Glide.with(context)
+            .load(imgUrl)
+            .transform(
+                PortraitAwareCropTransformation(backgroundColor),
+                RoundedCorners(cornerRadius)
+            )
             .addFallback(imageType)
             .addPlaceholder(imageType)
             .attachRequestListener(requestListener)

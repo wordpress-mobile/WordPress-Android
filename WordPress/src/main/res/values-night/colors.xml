@@ -23,6 +23,7 @@
 
     <!-- Reader Post Card -->
     <color name="reader_post_list_background">@color/background_dark</color>
+    <color name="reader_featured_image_background">@color/gray_80</color>
 
     <!-- Prepublishing Nudges -->
     <color name="prepublishing_toolbar_icon_color">@color/gray_10</color>

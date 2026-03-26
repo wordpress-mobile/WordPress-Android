@@ -37,6 +37,7 @@
 
     <!--Reader Post Card -->
     <color name="reader_post_list_background">@color/white</color>
+    <color name="reader_featured_image_background">@color/neutral_5</color>
 
     <!-- Modal Layout Picker -->
     <color name="mlp_categories_button_background">#ffededed</color>
