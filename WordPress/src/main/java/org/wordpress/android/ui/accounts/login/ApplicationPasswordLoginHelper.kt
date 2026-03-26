@@ -120,8 +120,8 @@ class ApplicationPasswordLoginHelper @Inject constructor(
                     apiRestPasswordPlain = urlLogin.password
                     wpApiRestUrl = urlLogin.apiRootUrl
                 }
-                dispatcherWrapper.updateApplicationPassword(site)
                 wpApiClientProvider.clearSelfHostedClient(site.id)
+                dispatcherWrapper.updateApplicationPassword(site)
                 trackSuccessful(urlLogin.siteUrl)
                 processedAppPasswordData = urlLogin.siteUrl // Save locally to avoid duplicated calls
                 true
