@@ -92,11 +92,17 @@ class ApplicationPasswordLoginHelper @Inject constructor(
         return ""
     }
 
+    sealed class StoreCredentialsResult {
+        object Success : StoreCredentialsResult()
+        object SiteNotFound : StoreCredentialsResult()
+        object BadData : StoreCredentialsResult()
+    }
+
     @Suppress("ComplexCondition")
     suspend fun storeApplicationPasswordCredentialsFrom(
         urlLogin: UriLogin,
         creationSource: String = ""
-    ): Boolean {
+    ): StoreCredentialsResult {
         if (urlLogin.apiRootUrl == null ||
             urlLogin.user.isNullOrEmpty() ||
             urlLogin.password.isNullOrEmpty() ||
@@ -104,7 +110,7 @@ class ApplicationPasswordLoginHelper @Inject constructor(
             urlLogin.siteUrl == processedAppPasswordData
         ) {
             logAndReportBadData(urlLogin, creationSource)
-            return false
+            return StoreCredentialsResult.BadData
         }
 
         return withContext(bgDispatcher) {
@@ -124,13 +130,11 @@ class ApplicationPasswordLoginHelper @Inject constructor(
                 dispatcherWrapper.updateApplicationPassword(site)
                 trackSuccessful(urlLogin.siteUrl)
                 trackCreated(creationSource, success = true)
-                processedAppPasswordData = urlLogin.siteUrl // Save locally to avoid duplicated calls
-                true
+                processedAppPasswordData = urlLogin.siteUrl
+                StoreCredentialsResult.Success
             } else {
-                logAndReportSiteNotFound(
-                    urlLogin.siteUrl, normalizedUrl, sites, creationSource
-                )
-                false
+                logSiteNotFound(urlLogin.siteUrl, normalizedUrl, sites)
+                StoreCredentialsResult.SiteNotFound
             }
         }
     }
@@ -200,26 +204,19 @@ class ApplicationPasswordLoginHelper @Inject constructor(
         reportStoringFailedToSentry("bad_data", detail)
     }
 
-    private fun logAndReportSiteNotFound(
+    private fun logSiteNotFound(
         siteUrl: String?,
         normalizedUrl: String?,
-        sites: List<SiteModel>,
-        creationSource: String
+        sites: List<SiteModel>
     ) {
         val availableSiteUrls = sites.joinToString { it.url }
         val logDetail = "$siteUrl (normalized: $normalizedUrl)" +
             " — ${sites.size} sites available: [$availableSiteUrls]"
-        appLogWrapper.e(
+        appLogWrapper.d(
             AppLog.T.DB,
-            "A_P: Cannot save credentials" +
-                " - site not found: $logDetail"
+            "A_P: Site not found locally, will fetch:" +
+                " $logDetail"
         )
-        trackStoringFailed(siteUrl, "site_not_found", creationSource)
-        val maskedSiteUrls = sites.joinToString { maskUrl(it.url) }
-        val sentryDetail =
-            "${maskUrl(siteUrl.orEmpty())} (normalized: ${maskUrl(normalizedUrl.orEmpty())})" +
-                " — ${sites.size} sites available: [$maskedSiteUrls]"
-        reportStoringFailedToSentry("site_not_found", sentryDetail)
     }
 
     private fun trackSuccessful(siteUrl: String) {

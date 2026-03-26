@@ -21,6 +21,7 @@ import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.ui.accounts.login.ApplicationPasswordLoginHelper
+import org.wordpress.android.ui.accounts.login.ApplicationPasswordLoginHelper.StoreCredentialsResult
 import org.wordpress.android.ui.accounts.login.ApplicationPasswordLoginHelper.UriLogin
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.UrlUtils
@@ -80,38 +81,55 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
             val urlLogin = applicationPasswordLoginHelper.getSiteUrlLoginFromRawData(rawData)
             currentUrlLogin = urlLogin
             // Store credentials if the site already exists
-            val credentialsStored = storeCredentials(urlLogin)
-            if (credentialsStored) {
-                AnalyticsTracker.track(
-                    Stat.APPLICATION_PASSWORD_CREATED,
-                    mapOf("source" to creationSource, "success" to "true")
-                )
-            } else {
-                // Site not found locally, fetch it first
-                fetchSites(
-                    urlLogin.user.orEmpty(),
-                    urlLogin.password.orEmpty(),
-                    urlLogin.siteUrl.orEmpty(),
-                    urlLogin.apiRootUrl.orEmpty()
-                )
+            when (storeCredentials(urlLogin)) {
+                is StoreCredentialsResult.Success -> {
+                    AnalyticsTracker.track(
+                        Stat.APPLICATION_PASSWORD_CREATED,
+                        mapOf(
+                            "source" to creationSource,
+                            "success" to "true"
+                        )
+                    )
+                }
+                is StoreCredentialsResult.SiteNotFound -> {
+                    // Expected for new sites — fetch first
+                    fetchSites(
+                        urlLogin.user.orEmpty(),
+                        urlLogin.password.orEmpty(),
+                        urlLogin.siteUrl.orEmpty(),
+                        urlLogin.apiRootUrl.orEmpty()
+                    )
+                }
+                is StoreCredentialsResult.BadData -> {
+                    // Already tracked inside the helper
+                    emitError(
+                        siteUrl = urlLogin.siteUrl.orEmpty(),
+                        errorMessage = "bad_data"
+                    )
+                }
             }
         }
     }
 
     @Suppress("TooGenericExceptionCaught")
-    private suspend fun storeCredentials(urlLogin: UriLogin): Boolean = withContext(ioDispatcher) {
+    private suspend fun storeCredentials(
+        urlLogin: UriLogin
+    ): StoreCredentialsResult = withContext(ioDispatcher) {
         try {
-            applicationPasswordLoginHelper.storeApplicationPasswordCredentialsFrom(urlLogin)
+            applicationPasswordLoginHelper
+                .storeApplicationPasswordCredentialsFrom(urlLogin)
         } catch (e: Exception) {
             appLogWrapper.e(
                 AppLog.T.DB,
-                "A_P: Error storing credentials: ${e.stackTraceToString()}"
+                "A_P: Error storing credentials:" +
+                    " ${e.stackTraceToString()}"
             )
             applicationPasswordLoginHelper.trackStoringFailed(
-                urlLogin.siteUrl, "store_credentials_exception"
+                urlLogin.siteUrl,
+                "store_credentials_exception"
             )
             crashLogging.sendReportWithTag(e, AppLog.T.DB)
-            false
+            StoreCredentialsResult.BadData
         }
     }
 
