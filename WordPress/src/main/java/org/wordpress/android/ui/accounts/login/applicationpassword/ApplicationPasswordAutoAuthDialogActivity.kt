@@ -77,7 +77,7 @@ class ApplicationPasswordAutoAuthDialogActivity : ComponentActivity() {
                         finish()
                     }
                     is ApplicationPasswordAutoAuthDialogViewModel.NavigationEvent.FallbackToManualLogin -> {
-                        ApplicationPasswordCreationTracker.setPendingCreationSource("auto_migration")
+                        ApplicationPasswordCreationTracker.setPendingCreationSource("migration")
                         activityNavigator.openApplicationPasswordLogin(
                             this@ApplicationPasswordAutoAuthDialogActivity,
                             event.authUrl
