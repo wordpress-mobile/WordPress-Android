@@ -47,9 +47,11 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
      */
     val onFinishedEvent = _onFinishedEvent.asSharedFlow()
 
-    private val creationSource = ApplicationPasswordCreationTracker.consumePendingCreationSource()
+    private val creationSource =
+        ApplicationPasswordCreationTracker.consumePendingCreationSource()
     private var currentUrlLogin: UriLogin? = null
     private var oldSitesIDs: ArrayList<Int>? = null
+    private var credentialsAlreadyStored = false
 
     fun onStart() {
         dispatcher.register(this)
@@ -83,13 +85,7 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
             // Store credentials if the site already exists
             when (storeCredentials(urlLogin)) {
                 is StoreCredentialsResult.Success -> {
-                    AnalyticsTracker.track(
-                        Stat.APPLICATION_PASSWORD_CREATED,
-                        mapOf(
-                            "source" to creationSource,
-                            "success" to "true"
-                        )
-                    )
+                    credentialsAlreadyStored = true
                 }
                 is StoreCredentialsResult.SiteNotFound -> {
                     // Expected for new sites — fetch first
@@ -117,7 +113,9 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
     ): StoreCredentialsResult = withContext(ioDispatcher) {
         try {
             applicationPasswordLoginHelper
-                .storeApplicationPasswordCredentialsFrom(urlLogin)
+                .storeApplicationPasswordCredentialsFrom(
+                    urlLogin, creationSource
+                )
         } catch (e: Exception) {
             appLogWrapper.e(
                 AppLog.T.DB,
@@ -205,6 +203,7 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
     fun onSiteChanged(event: OnSiteChanged) {
+        if (credentialsAlreadyStored) return
         viewModelScope.launch {
             if (event.isError) {
                 handleSiteChangedError(event)
