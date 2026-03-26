@@ -212,38 +212,6 @@ class ApplicationPasswordLoginHelper @Inject constructor(
         return uriLoginWrapper.parseUriLogin(url)
     }
 
-    /**
-     * Removes Application Password credentials for sites that have regular credentials as fallback.
-     * Sites without regular credentials (username/password) are excluded since they can only
-     * authenticate using Application Password.
-     * @return the number of sites that were affected
-     */
-    suspend fun removeAllApplicationPasswordCredentials(): Int {
-        return withContext(bgDispatcher) {
-            val sites = siteStore.sites
-            // Only reset sites that have regular credentials to fall back to
-            val sitesToReset = sites.filter {
-                !it.apiRestUsernameEncrypted.isNullOrEmpty() && it.hasRegularCredentials()
-            }
-            sitesToReset.forEach { site ->
-                site.apply {
-                    apiRestUsernamePlain = ""
-                    apiRestPasswordPlain = ""
-                    apiRestUsernameEncrypted = ""
-                    apiRestPasswordEncrypted = ""
-                    apiRestUsernameIV = ""
-                    apiRestPasswordIV = ""
-                }
-                dispatcherWrapper.removeApplicationPassword(site)
-            }
-            appLogWrapper.d(
-                AppLog.T.DB,
-                "A_P: Removed application password credentials for: ${sitesToReset.size} sites"
-            )
-            sitesToReset.size
-        }
-    }
-
     private fun findSiteByUrl(
         normalizedUrl: String?,
         sites: List<SiteModel>
@@ -286,19 +254,6 @@ class ApplicationPasswordLoginHelper @Inject constructor(
         return url.replaceFirst(host, maskedDomain + tld)
     }
 
-    private fun SiteModel.hasRegularCredentials(): Boolean {
-        return !username.isNullOrEmpty() && !password.isNullOrEmpty()
-    }
-
-    /**
-     * Returns the count of sites with Application Password credentials that can be reset
-     * because of having regular credentials
-     */
-    fun getResettableApplicationPasswordSitesCount(): Int {
-        return siteStore.sites.count {
-            !it.apiRestUsernameEncrypted.isNullOrEmpty() && it.hasRegularCredentials()
-        }
-    }
 
     fun siteHasBadCredentials(site: SiteModel) =
         site.apiRestUsernamePlain.isNullOrEmpty() || site.apiRestPasswordPlain.isNullOrEmpty()
