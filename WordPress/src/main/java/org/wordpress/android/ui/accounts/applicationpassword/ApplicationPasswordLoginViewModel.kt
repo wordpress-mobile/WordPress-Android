@@ -86,7 +86,14 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
             // Store credentials if the site already exists
             when (storeCredentials(urlLogin)) {
                 is StoreCredentialsResult.Success -> {
-                    // Tracked inside the helper
+                    _onFinishedEvent.emit(
+                        NavigationActionData(
+                            showSiteSelector = false,
+                            siteUrl = urlLogin.siteUrl,
+                            oldSitesIDs = oldSitesIDs,
+                            isError = false,
+                        )
+                    )
                 }
                 is StoreCredentialsResult.SiteNotFound -> {
                     waitingForFetchedSite = true
