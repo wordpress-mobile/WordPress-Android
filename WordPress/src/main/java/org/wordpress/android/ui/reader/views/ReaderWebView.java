@@ -237,20 +237,35 @@ public class ReaderWebView extends WPWebView {
     }
 
     /**
-     * For SRC_IMAGE_ANCHOR_TYPE hits, returns the parent anchor's href
-     * if it contains a fragment identifier (#). Returns null otherwise.
-     * Used to detect footnote back-reference arrows (↩︎) which are
-     * rendered as images inside anchors.
+     * For SRC_IMAGE_ANCHOR_TYPE hits, uses JavaScript to find the
+     * parent anchor's href at the tap coordinates. If the anchor has a
+     * fragment identifier, routes through onUrlClick; otherwise falls
+     * back to onImageUrlClick.
      */
-    private String getAnchorFragmentUrl(HitTestResult hr) {
-        if (hr.getType() != WebView.HitTestResult.SRC_IMAGE_ANCHOR_TYPE) {
-            return null;
-        }
-        Handler handler = new Handler();
-        Message message = handler.obtainMessage();
-        this.requestFocusNodeHref(message);
-        String url = message.getData().getString("url");
-        return (url != null && url.contains("#")) ? url : null;
+    private void resolveAnchorFragmentUrl(
+        String imageUrl, int touchX, int touchY
+    ) {
+        float density = getResources().getDisplayMetrics().density;
+        float cssX = touchX / density;
+        float cssY = touchY / density;
+        evaluateJavascript(
+            "(function(){var e=document.elementFromPoint("
+                + cssX + "," + cssY + ");"
+                + "while(e&&e.tagName!=='A')e=e.parentElement;"
+                + "return e&&e.href&&e.href.indexOf('#')!==-1"
+                + "?e.href:'';})()",
+            value -> {
+                if (mUrlClickListener == null) return;
+                String href = value != null
+                    ? value.replaceAll("^\"|\"$", "") : "";
+                if (!href.isEmpty()) {
+                    mUrlClickListener.onUrlClick(href);
+                } else {
+                    mUrlClickListener.onImageUrlClick(
+                        imageUrl, this, touchX, touchY);
+                }
+            }
+        );
     }
 
     /*
@@ -267,11 +282,16 @@ public class ReaderWebView extends WPWebView {
                     if (isValidEmbeddedImageClick(hr) || isVideoPressPreview(url)) {
                         return super.onTouchEvent(event);
                     }
-                    // Route images inside anchors with fragment URLs
-                    // through onUrlClick (e.g., footnote back-references)
-                    String anchorUrl = getAnchorFragmentUrl(hr);
-                    if (anchorUrl != null) {
-                        return mUrlClickListener.onUrlClick(anchorUrl);
+                    // For images inside anchors (e.g. footnote
+                    // back-reference arrows rendered as emoji), resolve
+                    // the anchor href via JS and route accordingly
+                    if (hr.getType()
+                        == HitTestResult.SRC_IMAGE_ANCHOR_TYPE) {
+                        resolveAnchorFragmentUrl(
+                            url,
+                            (int) event.getX(),
+                            (int) event.getY());
+                        return true;
                     }
                     return mUrlClickListener.onImageUrlClick(
                         url,
