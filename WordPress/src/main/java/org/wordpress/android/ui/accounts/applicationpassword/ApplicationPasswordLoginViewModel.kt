@@ -51,7 +51,8 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
         ApplicationPasswordCreationTracker.consumePendingCreationSource()
     private var currentUrlLogin: UriLogin? = null
     private var oldSitesIDs: ArrayList<Int>? = null
-    private var credentialsAlreadyStored = false
+    @Volatile
+    private var waitingForFetchedSite = false
 
     fun onStart() {
         dispatcher.register(this)
@@ -85,10 +86,10 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
             // Store credentials if the site already exists
             when (storeCredentials(urlLogin)) {
                 is StoreCredentialsResult.Success -> {
-                    credentialsAlreadyStored = true
+                    // Tracked inside the helper
                 }
                 is StoreCredentialsResult.SiteNotFound -> {
-                    // Expected for new sites — fetch first
+                    waitingForFetchedSite = true
                     fetchSites(
                         urlLogin.user.orEmpty(),
                         urlLogin.password.orEmpty(),
@@ -203,7 +204,7 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
     fun onSiteChanged(event: OnSiteChanged) {
-        if (credentialsAlreadyStored) return
+        if (!waitingForFetchedSite) return
         viewModelScope.launch {
             if (event.isError) {
                 handleSiteChangedError(event)
