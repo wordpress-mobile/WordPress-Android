@@ -22,6 +22,7 @@ import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.ui.accounts.login.ApplicationPasswordLoginHelper
 import org.wordpress.android.ui.accounts.login.ApplicationPasswordLoginHelper.StoreCredentialsResult
 import kotlin.test.assertEquals
+import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
 @ExperimentalCoroutinesApi
@@ -432,6 +433,68 @@ class ApplicationPasswordLoginViewModelTest : BaseUnitTest() {
             cancelAndIgnoreRemainingEvents()
         }
     }
+
+    @Test
+    fun `given existing site, when store credentials succeeds, then emit success without site selector`() =
+        runTest {
+            // Given
+            val expectedResult =
+                ApplicationPasswordLoginViewModel.NavigationActionData(
+                    showSiteSelector = false,
+                    siteUrl = urlLogin.siteUrl,
+                    oldSitesIDs = null,
+                    isError = false,
+                )
+            whenever(
+                applicationPasswordLoginHelper
+                    .storeApplicationPasswordCredentialsFrom(
+                        eq(urlLogin), any()
+                    )
+            ).thenReturn(StoreCredentialsResult.Success)
+
+            // When
+            viewModel.onFinishedEvent.test {
+                viewModel.setupSite(rawData)
+
+                // Then
+                val finishedEvent = awaitItem()
+                assertEquals(expectedResult, finishedEvent)
+                verify(selfHostedEndpointFinder, times(0))
+                    .verifyOrDiscoverXMLRPCEndpoint(any())
+                cancelAndIgnoreRemainingEvents()
+            }
+        }
+
+    @Test
+    fun `given existing site, when store credentials succeeds, then onSiteChanged is ignored`() =
+        runTest {
+            // Given
+            whenever(
+                applicationPasswordLoginHelper
+                    .storeApplicationPasswordCredentialsFrom(
+                        eq(urlLogin), any()
+                    )
+            ).thenReturn(StoreCredentialsResult.Success)
+
+            // When
+            viewModel.onFinishedEvent.test {
+                viewModel.setupSite(rawData)
+                val successEvent = awaitItem()
+                assertFalse(successEvent.isError)
+
+                // Simulate onSiteChanged from updateApplicationPassword
+                viewModel.onSiteChanged(
+                    SiteStore.OnSiteChanged(
+                        rowsAffected = 1,
+                        updatedSites = listOf(testSite)
+                    )
+                )
+
+                // No second event should be emitted
+                expectNoEvents()
+                cancelAndIgnoreRemainingEvents()
+            }
+        }
 
     private suspend fun setupFetchSitesFlow() {
         val xmlRpcEndpoint = "https://example.com/xmlrpc.php"
