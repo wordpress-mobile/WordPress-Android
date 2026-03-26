@@ -99,8 +99,10 @@ public class ReaderPost {
             post.mPseudoId = JSONUtils.getString(json, "global_ID"); // sites/ endpoint
         }
 
-        // remove HTML from the excerpt
-        post.mExcerpt = HtmlUtils.fastStripHtml(JSONUtils.getString(json, "excerpt")).trim();
+        // remove HTML from the excerpt, replacing newlines with spaces so that
+        // <br> and <p> tags don't render as blank lines in the post list
+        post.mExcerpt = HtmlUtils.fastStripHtml(JSONUtils.getString(json, "excerpt"))
+                .replaceAll("\\n+", " ").trim();
 
         post.mText = JSONUtils.getString(json, "content");
         post.mTitle = JSONUtils.getStringDecoded(json, "title");

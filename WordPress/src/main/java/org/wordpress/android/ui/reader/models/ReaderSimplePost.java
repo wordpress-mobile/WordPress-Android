@@ -48,7 +48,8 @@ public class ReaderSimplePost {
         }
 
         post.mTitle = JSONUtils.getStringDecoded(json, "title");
-        post.mExcerpt = HtmlUtils.fastStripHtml(JSONUtils.getString(json, "excerpt")).trim();
+        post.mExcerpt = HtmlUtils.fastStripHtml(JSONUtils.getString(json, "excerpt"))
+                .replaceAll("\\n+", " ").trim();
         post.mSiteName = JSONUtils.getStringDecoded(json, "site_name");
         post.mFeaturedImageUrl = JSONUtils.getString(json, "featured_image");
 
