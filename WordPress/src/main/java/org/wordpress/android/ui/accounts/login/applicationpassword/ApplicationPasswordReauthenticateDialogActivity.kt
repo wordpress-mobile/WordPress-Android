@@ -15,6 +15,8 @@ class ApplicationPasswordReauthenticateDialogActivity : ApplicationPasswordDialo
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        AnalyticsTracker.track(Stat.APPLICATION_PASSWORD_REAUTH_PROMPTED)
+        if (savedInstanceState == null) {
+            AnalyticsTracker.track(Stat.APPLICATION_PASSWORD_REAUTH_PROMPTED)
+        }
     }
 }

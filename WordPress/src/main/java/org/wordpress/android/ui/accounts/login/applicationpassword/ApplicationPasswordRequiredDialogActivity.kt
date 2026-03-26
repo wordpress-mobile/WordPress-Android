@@ -60,10 +60,12 @@ class ApplicationPasswordRequiredDialogActivity : ComponentActivity() {
 
         val featureName = intent.getStringExtra(EXTRA_FEATURE_NAME)
 
-        AnalyticsTracker.track(
-            Stat.APPLICATION_PASSWORD_MIGRATION_PROMPTED,
-            mapOf("source" to featureName.orEmpty())
-        )
+        if (savedInstanceState == null) {
+            AnalyticsTracker.track(
+                Stat.APPLICATION_PASSWORD_MIGRATION_PROMPTED,
+                mapOf("source" to featureName.orEmpty())
+            )
+        }
 
         lifecycleScope.launch {
             viewModel.navigationEvent.collect { event ->
