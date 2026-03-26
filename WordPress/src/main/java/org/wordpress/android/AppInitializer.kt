@@ -699,7 +699,7 @@ class AppInitializer @Inject constructor(
 
         // Clear cached wordpress-rs services and API clients
         wpServiceProvider.clearAll()
-        wpApiClientProvider.clearWpComClients()
+        wpApiClientProvider.clearAllClients()
     }
 
     /*
