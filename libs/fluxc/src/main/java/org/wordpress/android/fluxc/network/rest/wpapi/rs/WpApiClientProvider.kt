@@ -41,6 +41,16 @@ class WpApiClientProvider @Inject constructor(
         selfHostedClients.clear()
     }
 
+    /**
+     * Removes the cached self-hosted client for a specific site so that the
+     * next call to [getWpApiClient] creates a fresh client with up-to-date
+     * credentials from the database.
+     */
+    @Synchronized
+    fun clearSelfHostedClient(siteId: Int) {
+        selfHostedClients.remove(siteId)
+    }
+
     @Synchronized
     fun getWpApiClient(
         site: SiteModel,

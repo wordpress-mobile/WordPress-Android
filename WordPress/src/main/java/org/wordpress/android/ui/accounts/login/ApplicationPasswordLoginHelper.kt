@@ -13,6 +13,7 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.SiteActionBuilder
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpApiClientProvider
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.modules.BG_THREAD
@@ -41,7 +42,8 @@ class ApplicationPasswordLoginHelper @Inject constructor(
     private val appLogWrapper: AppLogWrapper,
     private val apiRootUrlCache: ApiRootUrlCache,
     private val discoverSuccessWrapper: DiscoverSuccessWrapper,
-    private val crashLogging: CrashLogging
+    private val crashLogging: CrashLogging,
+    private val wpApiClientProvider: WpApiClientProvider,
 ) {
     private var processedAppPasswordData: String? = null
 
@@ -119,6 +121,7 @@ class ApplicationPasswordLoginHelper @Inject constructor(
                     wpApiRestUrl = urlLogin.apiRootUrl
                 }
                 dispatcherWrapper.updateApplicationPassword(site)
+                wpApiClientProvider.clearSelfHostedClient(site.id)
                 trackSuccessful(urlLogin.siteUrl)
                 processedAppPasswordData = urlLogin.siteUrl // Save locally to avoid duplicated calls
                 true
