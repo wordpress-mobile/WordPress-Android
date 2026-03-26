@@ -132,7 +132,8 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
             )
             applicationPasswordLoginHelper.trackStoringFailed(
                 urlLogin.siteUrl,
-                "store_credentials_exception"
+                "store_credentials_exception",
+                creationSource
             )
             crashLogging.sendReportWithTag(e, AppLog.T.DB)
             StoreCredentialsResult.BadData

@@ -10,6 +10,7 @@ package org.wordpress.android.ui.accounts.applicationpassword
 object ApplicationPasswordCreationTracker {
     private const val DEFAULT_SOURCE = "login"
 
+    @Volatile
     var pendingCreationSource: String = DEFAULT_SOURCE
         private set
 
