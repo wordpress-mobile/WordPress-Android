@@ -2,9 +2,9 @@ package org.wordpress.android.ui.reader.discover.viewholders
 
 import android.view.Gravity
 import android.view.View
-import androidx.core.content.ContextCompat
 import android.view.ViewGroup
 import androidx.appcompat.widget.ListPopupWindow
+import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
