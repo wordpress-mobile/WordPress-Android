@@ -101,6 +101,7 @@ class ApplicationPasswordLoginHelperTest : BaseUnitTest() {
             UriLogin("", "", "", "")
         )
         assertFalse(result)
+        verify(wpApiClientProvider, times(0)).clearSelfHostedClient(any())
     }
 
     @Test
@@ -168,6 +169,7 @@ class ApplicationPasswordLoginHelperTest : BaseUnitTest() {
             verify(siteStore).sites
             verify(dispatcherWrapper, times(0)).updateApplicationPassword(any())
             verify(dispatcherWrapper, times(0)).removeApplicationPassword(any())
+            verify(wpApiClientProvider, times(0)).clearSelfHostedClient(any())
         }
 
     @Test
