@@ -1702,21 +1702,33 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     }
 
     /**
-     * Injects a JS click interceptor that catches taps on anchor
-     * elements with fragment hrefs (e.g. footnote back-references)
-     * and routes them through the wvHandler message bridge instead
-     * of letting the WebView navigate internally.
+     * Injects a JS click interceptor that catches taps on
+     * same-page fragment links (e.g. footnote back-references)
+     * and routes them through the wvHandler message bridge so
+     * native scroll-to-element handling is used instead of
+     * WebView-internal navigation.
      */
     private fun injectFragmentLinkInterceptor(view: WebView) {
+        val postUrl = viewModel.post?.url
+            ?.trimEnd('/') ?: return
+        val safePostUrl = postUrl
+            .replace("\\", "\\\\")
+            .replace("'", "\\'")
         view.evaluateJavascript(
             "(function(){" +
                 "if(window._fragInterceptorAdded)return;" +
                 "window._fragInterceptorAdded=true;" +
+                "var base='$safePostUrl'.toLowerCase();" +
                 "document.addEventListener('click',function(e){" +
                 "var el=e.target;" +
                 "while(el&&el.tagName!=='A')el=el.parentElement;" +
-                "if(el&&el.href&&el.href.indexOf('#')!==-1){" +
-                "e.preventDefault();e.stopPropagation();" +
+                "if(!el||!el.href)return;" +
+                "var i=el.href.indexOf('#');" +
+                "if(i===-1)return;" +
+                "var u=el.href.substring(0,i)" +
+                ".replace(/\\/$/,'').toLowerCase();" +
+                "if(u===base||u===''){" +
+                "e.preventDefault();" +
                 "wvHandler.postMessage('fragmentLink:'+el.href);" +
                 "}" +
                 "},true);" +
