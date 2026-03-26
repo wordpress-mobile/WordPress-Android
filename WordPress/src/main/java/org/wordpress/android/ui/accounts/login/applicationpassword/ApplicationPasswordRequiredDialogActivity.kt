@@ -30,6 +30,7 @@ import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.ui.accounts.applicationpassword.ApplicationPasswordCreationTracker
 import org.wordpress.android.ui.ActivityNavigator
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.util.ToastUtils
@@ -72,6 +73,7 @@ class ApplicationPasswordRequiredDialogActivity : ComponentActivity() {
                         finish()
                     }
                     is ApplicationPasswordAutoAuthDialogViewModel.NavigationEvent.FallbackToManualLogin -> {
+                        ApplicationPasswordCreationTracker.setPendingCreationSource("migration")
                         activityNavigator.openApplicationPasswordLogin(
                             this@ApplicationPasswordRequiredDialogActivity,
                             event.authUrl

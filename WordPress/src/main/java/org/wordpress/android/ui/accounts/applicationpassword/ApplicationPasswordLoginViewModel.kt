@@ -46,6 +46,7 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
      */
     val onFinishedEvent = _onFinishedEvent.asSharedFlow()
 
+    private val creationSource = ApplicationPasswordCreationTracker.consumePendingCreationSource()
     private var currentUrlLogin: UriLogin? = null
     private var oldSitesIDs: ArrayList<Int>? = null
 
@@ -71,7 +72,7 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
                     "A_P: Cannot store credentials: rawData is empty"
                 )
                 applicationPasswordLoginHelper.trackStoringFailed(
-                    "", "empty_raw_data", "reauth"
+                    "", "empty_raw_data", creationSource
                 )
                 emitError(siteUrl = "", errorMessage = "empty_raw_data")
                 return@launch
@@ -80,8 +81,13 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
             currentUrlLogin = urlLogin
             // Store credentials if the site already exists
             val credentialsStored = storeCredentials(urlLogin)
-            // If the site already exists, we can skip fetching it again
-            if (!credentialsStored) {
+            if (credentialsStored) {
+                AnalyticsTracker.track(
+                    Stat.APPLICATION_PASSWORD_CREATED,
+                    mapOf("source" to creationSource, "success" to "true")
+                )
+            } else {
+                // Site not found locally, fetch it first
                 fetchSites(
                     urlLogin.user.orEmpty(),
                     urlLogin.password.orEmpty(),
@@ -95,17 +101,14 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
     @Suppress("TooGenericExceptionCaught")
     private suspend fun storeCredentials(urlLogin: UriLogin): Boolean = withContext(ioDispatcher) {
         try {
-            applicationPasswordLoginHelper.storeApplicationPasswordCredentialsFrom(
-                urlLogin,
-                creationSource = "reauth"
-            )
+            applicationPasswordLoginHelper.storeApplicationPasswordCredentialsFrom(urlLogin)
         } catch (e: Exception) {
             appLogWrapper.e(
                 AppLog.T.DB,
                 "A_P: Error storing credentials: ${e.stackTraceToString()}"
             )
             applicationPasswordLoginHelper.trackStoringFailed(
-                urlLogin.siteUrl, "store_credentials_exception", "reauth"
+                urlLogin.siteUrl, "store_credentials_exception"
             )
             crashLogging.sendReportWithTag(e, AppLog.T.DB)
             false
@@ -130,7 +133,7 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
                         ", apiRootUrl isEmpty=${apiRootUrl.isEmpty()}"
                 )
                 applicationPasswordLoginHelper.trackStoringFailed(
-                    siteUrl, "empty_fetch_params", "reauth"
+                    siteUrl, "empty_fetch_params", creationSource
                 )
                 emitError(
                     siteUrl = siteUrl,
@@ -156,7 +159,7 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
                 "A_P: Error fetching sites: ${e.stackTraceToString()}"
             )
             applicationPasswordLoginHelper.trackStoringFailed(
-                siteUrl, "fetch_sites_exception", "reauth"
+                siteUrl, "fetch_sites_exception", creationSource
             )
             emitError(siteUrl = siteUrl, errorMessage = e.message, cause = e)
         }
@@ -203,7 +206,7 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
         applicationPasswordLoginHelper.trackStoringFailed(
             currentUrlLogin?.siteUrl,
             "site_changed_failed",
-            "reauth"
+            creationSource
         )
         emitError(
             siteUrl = currentUrlLogin?.siteUrl.orEmpty(),
@@ -240,7 +243,7 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
             val resolvedSite = site ?: return
             AnalyticsTracker.track(
                 Stat.APPLICATION_PASSWORD_CREATED,
-                mapOf("source" to "reauth", "success" to "true")
+                mapOf("source" to creationSource, "success" to "true")
             )
             _onFinishedEvent.emit(
                 NavigationActionData(
@@ -293,7 +296,7 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
         applicationPasswordLoginHelper.trackStoringFailed(
             currentUrlLogin?.siteUrl,
             "site_changed_failed",
-            "reauth"
+            creationSource
         )
         emitError(
             siteUrl = currentUrlLogin?.siteUrl.orEmpty(),

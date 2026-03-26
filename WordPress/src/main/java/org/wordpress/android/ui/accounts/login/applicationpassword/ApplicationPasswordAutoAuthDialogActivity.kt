@@ -38,6 +38,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.ui.accounts.applicationpassword.ApplicationPasswordCreationTracker
 import org.wordpress.android.ui.ActivityNavigator
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.compose.unit.Margin
@@ -76,6 +77,7 @@ class ApplicationPasswordAutoAuthDialogActivity : ComponentActivity() {
                         finish()
                     }
                     is ApplicationPasswordAutoAuthDialogViewModel.NavigationEvent.FallbackToManualLogin -> {
+                        ApplicationPasswordCreationTracker.setPendingCreationSource("auto_migration")
                         activityNavigator.openApplicationPasswordLogin(
                             this@ApplicationPasswordAutoAuthDialogActivity,
                             event.authUrl

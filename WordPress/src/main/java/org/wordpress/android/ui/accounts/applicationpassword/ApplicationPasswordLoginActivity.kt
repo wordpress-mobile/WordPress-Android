@@ -110,4 +110,5 @@ class ApplicationPasswordLoginActivity: BaseAppCompatActivity() {
         super.onStop()
         viewModel?.onStop()
     }
+
 }
