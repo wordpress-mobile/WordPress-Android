@@ -102,12 +102,12 @@ fun TagGroupRow(
                     Text(
                         text = "$position",
                         style = MaterialTheme.typography
-                            .bodyMedium,
+                            .bodyLarge,
                         color = MaterialTheme
                             .colorScheme
                             .onSurfaceVariant,
                         modifier =
-                            Modifier.width(28.dp)
+                            Modifier.width(32.dp)
                     )
                 }
                 TagTypeIcon(
@@ -215,7 +215,7 @@ fun ExpandedTagsSection(
                 Text(
                     text = tag.name,
                     style = MaterialTheme.typography
-                        .bodyMedium,
+                        .bodyLarge,
                     color = MaterialTheme.colorScheme
                         .onSurface
                 )

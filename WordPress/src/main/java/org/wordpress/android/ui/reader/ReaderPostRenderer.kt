@@ -538,11 +538,39 @@ class ReaderPostRenderer(
             .append(" iframe { display: block; margin: 0 auto; max-width: 100%; }")
             // hide forms, form-related elements, legacy RSS sharing links and other ad-related content
             // http://bit.ly/2FUTvsP
-            .append(" form, input, select, button textarea { display: none; }")
+            .append(" form, input, select, button, textarea { display: none; }")
             .append(" div.feedflare { display: none; }")
             .append(" .sharedaddy, .jp-relatedposts, .mc4wp-form, .wpcnt, ")
             .append(" .OUTBRAIN, .adsbygoogle { display: none; }")
             .append(" figure { display: block; margin-inline-start: 0px; margin-inline-end: 0px; }")
+            // button block styles
+            .append(" .wp-block-buttons {")
+            .append(" display: flex; flex-wrap: wrap; align-items: flex-start;")
+            .append(" gap: ").append(resourceVars.marginMediumPx).append("px;")
+            .append(" margin-top: ").append(resourceVars.marginMediumPx).append("px;")
+            .append(" margin-bottom: ").append(resourceVars.marginMediumPx).append("px;")
+            .append(" border: none !important;")
+            .append(" }")
+            .append(" .wp-block-button {")
+            .append(" display: block; border: none !important;")
+            .append(" }")
+            .append(" a.wp-block-button__link {")
+            .append(" display: inline-block;")
+            .append(" background-color: var(--main-link-color) !important;")
+            .append(" color: var(--color-background) !important;")
+            .append(" padding: 12px 24px;")
+            .append(" border-radius: 4px;")
+            .append(" text-decoration: none !important;")
+            .append(" font-size: inherit;")
+            .append(" line-height: 1.2em;")
+            .append(" text-align: center;")
+            .append(" }")
+            // outline button variant
+            .append(" .is-style-outline a.wp-block-button__link {")
+            .append(" background-color: transparent !important;")
+            .append(" border: 2px solid var(--main-link-color) !important;")
+            .append(" color: var(--main-link-color) !important;")
+            .append(" }")
             .append("</style>")
 
         // add a custom CSS class to (any) tiled gallery elements to make them easier selectable for various rules
@@ -588,6 +616,7 @@ class ReaderPostRenderer(
             .append("--color-neutral-50: ").append(readingPreferencesTheme.cssTextLightColor).append("; ")
             .append("--color-neutral-70: ").append(readingPreferencesTheme.cssTextColor).append("; ")
             .append("--main-link-color: ").append(readingPreferencesTheme.cssLinkColor).append("; ")
+            .append("--color-background: ").append(readingPreferencesTheme.cssBackgroundColor).append("; ")
             .append("} ")
     }
 
@@ -688,11 +717,19 @@ class ReaderPostRenderer(
             if (postMessageListener == null) {
                 return@createJsObject
             }
-            when (message) {
-                ReaderPostMessageListener.MSG_ARTICLE_TEXT_COPIED ->
+            when {
+                message == ReaderPostMessageListener.MSG_ARTICLE_TEXT_COPIED ->
                     postMessageListener!!.onArticleTextCopied()
-                ReaderPostMessageListener.MSG_ARTICLE_TEXT_HIGHLIGHTED ->
+                message == ReaderPostMessageListener.MSG_ARTICLE_TEXT_HIGHLIGHTED ->
                     postMessageListener!!.onArticleTextHighlighted()
+                message != null && message.startsWith(
+                    ReaderPostMessageListener.MSG_FRAGMENT_LINK_PREFIX
+                ) -> {
+                    val url = message.removePrefix(
+                        ReaderPostMessageListener.MSG_FRAGMENT_LINK_PREFIX
+                    )
+                    postMessageListener!!.onFragmentLinkClicked(url)
+                }
             }
         }
 
@@ -707,10 +744,13 @@ class ReaderPostRenderer(
     interface ReaderPostMessageListener {
         fun onArticleTextCopied()
         fun onArticleTextHighlighted()
+        fun onFragmentLinkClicked(url: String)
 
         companion object {
             const val MSG_ARTICLE_TEXT_COPIED: String = "articleTextCopied"
-            const val MSG_ARTICLE_TEXT_HIGHLIGHTED: String = "articleTextHighlighted"
+            const val MSG_ARTICLE_TEXT_HIGHLIGHTED: String =
+                "articleTextHighlighted"
+            const val MSG_FRAGMENT_LINK_PREFIX: String = "fragmentLink:"
         }
     }
 

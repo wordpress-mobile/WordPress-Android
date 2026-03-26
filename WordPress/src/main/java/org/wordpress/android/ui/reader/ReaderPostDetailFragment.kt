@@ -133,7 +133,6 @@ import org.wordpress.android.util.JetpackBrandingUtils
 import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.PermissionUtils
 import org.wordpress.android.util.RtlUtils
-import org.wordpress.android.util.StringUtils
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.UrlUtils
 import org.wordpress.android.util.WPPermissionUtils.READER_FILE_DOWNLOAD_PERMISSION_REQUEST_CODE
@@ -1635,6 +1634,10 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                 override fun onArticleTextHighlighted() {
                     viewModel.onArticleTextHighlighted()
                 }
+
+                override fun onFragmentLinkClicked(url: String) {
+                    onUrlClick(url)
+                }
             })
         }
 
@@ -1671,6 +1674,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         }
 
         readerProgressBar.visibility = View.GONE
+        injectFragmentLinkInterceptor(view)
 
         if (url != null && url == "about:blank") {
             // brief delay before showing related posts to give page time to render
@@ -1695,6 +1699,42 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         } else {
             url?.let { AppLog.w(T.READER, "reader post detail > page finished - $it") }
         }
+    }
+
+    /**
+     * Injects a JS click interceptor that catches taps on
+     * same-page fragment links (e.g. footnote back-references)
+     * and routes them through the wvHandler message bridge so
+     * native scroll-to-element handling is used instead of
+     * WebView-internal navigation.
+     */
+    private fun injectFragmentLinkInterceptor(view: WebView) {
+        val postUrl = viewModel.post?.url
+            ?.trimEnd('/') ?: return
+        val safePostUrl = postUrl
+            .replace("\\", "\\\\")
+            .replace("'", "\\'")
+        view.evaluateJavascript(
+            "(function(){" +
+                "if(window._fragInterceptorAdded)return;" +
+                "window._fragInterceptorAdded=true;" +
+                "var base='$safePostUrl'.toLowerCase();" +
+                "document.addEventListener('click',function(e){" +
+                "var el=e.target;" +
+                "while(el&&el.tagName!=='A')el=el.parentElement;" +
+                "if(!el||!el.href)return;" +
+                "var i=el.href.indexOf('#');" +
+                "if(i===-1)return;" +
+                "var u=el.href.substring(0,i)" +
+                ".replace(/\\/$/,'').toLowerCase();" +
+                "if(u===base||u===''){" +
+                "e.preventDefault();" +
+                "wvHandler.postMessage('fragmentLink:'+el.href);" +
+                "}" +
+                "},true);" +
+                "})()",
+            null
+        )
     }
 
     /*
@@ -1740,6 +1780,24 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     override fun onUrlClick(url: String): Boolean {
         readerTracker.track(AnalyticsTracker.Stat.READER_ARTICLE_LINK_TAPPED)
 
+        // Handle same-page fragment links (e.g., footnotes).
+        // Footnote hrefs resolve to the post's own URL with
+        // a fragment (e.g., "https://example.com/post/#fn-id").
+        val fragment = getPostUrlFragment(url)
+        if (fragment != null) {
+            scrollToElement(fragment) {
+                val openUrlType = if (shouldOpenExternal(url)) {
+                    OpenUrlType.EXTERNAL
+                } else {
+                    OpenUrlType.INTERNAL
+                }
+                ReaderActivityLauncher.openUrl(
+                    requireActivity(), url, openUrlType
+                )
+            }
+            return true
+        }
+
         when {
             ReaderUtils.isBlogPreviewUrl(url) -> onBlogPreviewUrlClick(url)
             ReaderUtils.isTagUrl(url) -> viewModel.onTagItemClicked(ReaderUtils.getTagFromTagUrl(url))
@@ -1769,26 +1827,50 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         }
     }
 
-    @SuppressLint("SetJavaScriptEnabled")
     override fun onPageJumpClick(pageJump: String?): Boolean {
         readerTracker.track(AnalyticsTracker.Stat.READER_ARTICLE_PAGE_JUMP_TAPPED)
-        val wasJsEnabled = readerWebView.settings.javaScriptEnabled
+        scrollToElement(pageJump ?: "") {
+            ToastUtils.showToast(activity, R.string.reader_toast_err_page_jump_not_found)
+        }
+        return true
+    }
 
-        readerWebView.settings.javaScriptEnabled = true
+    /**
+     * If the URL is a same-page fragment link for the current post
+     * (e.g., a footnote), returns the fragment identifier.
+     * Returns null otherwise.
+     */
+    private fun getPostUrlFragment(url: String): String? {
+        val postUrl = viewModel.post?.url?.trimEnd('/')
+        val fragmentIndex = url.indexOf('#')
+        val hasFragment = !postUrl.isNullOrEmpty()
+            && fragmentIndex in 0 until url.length - 1
+            && url.substring(0, fragmentIndex).trimEnd('/') == postUrl
+        return if (hasFragment) url.substring(fragmentIndex + 1) else null
+    }
 
-        readerWebView.evaluateJavascript("document.getElementById('$pageJump').offsetTop") { result ->
-            // Note that 'result' can be the string 'null' in case the page jump identifier is not found on page
-            val offsetTop = StringUtils.stringToInt(result, -1)
+    private fun scrollToElement(elementId: String, onNotFound: () -> Unit) {
+        val safeId = elementId.replace("\\", "\\\\").replace("'", "\\'")
+        readerWebView.evaluateJavascript(
+            "(function(){var e=document.getElementById('$safeId');" +
+                "return e?e.getBoundingClientRect().top+window.pageYOffset:-1})()"
+        ) { result ->
+            val offsetTop = result?.toDoubleOrNull()?.toInt() ?: -1
             if (offsetTop >= 0) {
-                val yOffset = (resources.displayMetrics.density * offsetTop).toInt()
+                appBar.setExpanded(false, true)
+                var webViewTop = 0
+                var v: View? = readerWebView
+                while (v != null && v != scrollView) {
+                    webViewTop += v.top
+                    v = v.parent as? View
+                }
+                val yOffset = webViewTop +
+                    (resources.displayMetrics.density * offsetTop).toInt()
                 scrollView.smoothScrollTo(0, yOffset)
             } else {
-                ToastUtils.showToast(activity, R.string.reader_toast_err_page_jump_not_found)
+                onNotFound()
             }
         }
-
-        readerWebView.settings.javaScriptEnabled = wasJsEnabled
-        return true
     }
 
     /*
