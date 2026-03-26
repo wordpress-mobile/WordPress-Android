@@ -133,7 +133,6 @@ import org.wordpress.android.util.JetpackBrandingUtils
 import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.PermissionUtils
 import org.wordpress.android.util.RtlUtils
-
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.UrlUtils
 import org.wordpress.android.util.WPPermissionUtils.READER_FILE_DOWNLOAD_PERMISSION_REQUEST_CODE
@@ -1774,7 +1773,16 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         // a fragment (e.g., "https://example.com/post/#fn-id").
         val fragment = getPostUrlFragment(url)
         if (fragment != null) {
-            scrollToFragmentOrOpenUrl(fragment, url)
+            scrollToElement(fragment) {
+                val openUrlType = if (shouldOpenExternal(url)) {
+                    OpenUrlType.EXTERNAL
+                } else {
+                    OpenUrlType.INTERNAL
+                }
+                ReaderActivityLauncher.openUrl(
+                    requireActivity(), url, openUrlType
+                )
+            }
             return true
         }
 
@@ -1829,33 +1837,6 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         return if (hasFragment) url.substring(fragmentIndex + 1) else null
     }
 
-    /**
-     * Attempts to scroll to the element with the given fragment ID.
-     * If the element isn't found in the page (e.g., the footnote
-     * block wasn't rendered), falls back to opening the full URL
-     * in the browser.
-     */
-    private fun scrollToFragmentOrOpenUrl(fragment: String, fullUrl: String) {
-        scrollToElement(fragment) {
-            val openUrlType = if (shouldOpenExternal(fullUrl)) {
-                OpenUrlType.EXTERNAL
-            } else {
-                OpenUrlType.INTERNAL
-            }
-            ReaderActivityLauncher.openUrl(requireActivity(), fullUrl, openUrlType)
-        }
-    }
-
-    private fun getTopWithinAncestor(descendant: View, ancestor: View): Int {
-        var top = 0
-        var current: View? = descendant
-        while (current != null && current != ancestor) {
-            top += current.top
-            current = current.parent as? View
-        }
-        return top
-    }
-
     private fun scrollToElement(elementId: String, onNotFound: () -> Unit) {
         val safeId = elementId.replace("\\", "\\\\").replace("'", "\\'")
         readerWebView.evaluateJavascript(
@@ -1865,7 +1846,12 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             val offsetTop = result?.toDoubleOrNull()?.toInt() ?: -1
             if (offsetTop >= 0) {
                 appBar.setExpanded(false, true)
-                val webViewTop = getTopWithinAncestor(readerWebView, scrollView)
+                var webViewTop = 0
+                var v: View? = readerWebView
+                while (v != null && v != scrollView) {
+                    webViewTop += v.top
+                    v = v.parent as? View
+                }
                 val yOffset = webViewTop +
                     (resources.displayMetrics.density * offsetTop).toInt()
                 scrollView.smoothScrollTo(0, yOffset)
