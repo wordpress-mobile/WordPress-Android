@@ -62,7 +62,7 @@ class ReaderImageScanner(private val content: String, private val isPrivate: Boo
     }
 
     /*
-     * returns true if there at least `minImageCount` images in the post content that are at
+     * returns true if there is at least `minImageCount` images in the post content that are at
      * least `minImageWidth` in size
      */
     fun hasUsableImageCount(minImageCount: Int, minImageWidth: Int): Boolean {
