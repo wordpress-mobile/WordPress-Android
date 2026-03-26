@@ -380,5 +380,4 @@ class ApplicationPasswordLoginHelperTest : BaseUnitTest() {
         val result = applicationPasswordLoginHelper.maskUrl("https://ab.com")
         assertEquals("https://xx.com", result)
     }
-
 }
