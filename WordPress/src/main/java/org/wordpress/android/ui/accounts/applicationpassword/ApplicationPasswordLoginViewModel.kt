@@ -9,6 +9,8 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import org.wordpress.android.analytics.AnalyticsTracker
+import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.SiteActionBuilder
 import org.wordpress.android.fluxc.model.SiteModel
@@ -68,7 +70,9 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
                     AppLog.T.MAIN,
                     "A_P: Cannot store credentials: rawData is empty"
                 )
-                applicationPasswordLoginHelper.trackStoringFailed("", "empty_raw_data")
+                applicationPasswordLoginHelper.trackStoringFailed(
+                    "", "empty_raw_data", "reauth"
+                )
                 emitError(siteUrl = "", errorMessage = "empty_raw_data")
                 return@launch
             }
@@ -91,14 +95,17 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
     @Suppress("TooGenericExceptionCaught")
     private suspend fun storeCredentials(urlLogin: UriLogin): Boolean = withContext(ioDispatcher) {
         try {
-            applicationPasswordLoginHelper.storeApplicationPasswordCredentialsFrom(urlLogin)
+            applicationPasswordLoginHelper.storeApplicationPasswordCredentialsFrom(
+                urlLogin,
+                creationSource = "reauth"
+            )
         } catch (e: Exception) {
             appLogWrapper.e(
                 AppLog.T.DB,
                 "A_P: Error storing credentials: ${e.stackTraceToString()}"
             )
             applicationPasswordLoginHelper.trackStoringFailed(
-                urlLogin.siteUrl, "store_credentials_exception"
+                urlLogin.siteUrl, "store_credentials_exception", "reauth"
             )
             crashLogging.sendReportWithTag(e, AppLog.T.DB)
             false
@@ -123,7 +130,7 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
                         ", apiRootUrl isEmpty=${apiRootUrl.isEmpty()}"
                 )
                 applicationPasswordLoginHelper.trackStoringFailed(
-                    siteUrl, "empty_fetch_params"
+                    siteUrl, "empty_fetch_params", "reauth"
                 )
                 emitError(
                     siteUrl = siteUrl,
@@ -149,7 +156,7 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
                 "A_P: Error fetching sites: ${e.stackTraceToString()}"
             )
             applicationPasswordLoginHelper.trackStoringFailed(
-                siteUrl, "fetch_sites_exception"
+                siteUrl, "fetch_sites_exception", "reauth"
             )
             emitError(siteUrl = siteUrl, errorMessage = e.message, cause = e)
         }
@@ -195,7 +202,8 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
         )
         applicationPasswordLoginHelper.trackStoringFailed(
             currentUrlLogin?.siteUrl,
-            "site_changed_failed"
+            "site_changed_failed",
+            "reauth"
         )
         emitError(
             siteUrl = currentUrlLogin?.siteUrl.orEmpty(),
@@ -230,6 +238,10 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
             )
         } else {
             val resolvedSite = site ?: return
+            AnalyticsTracker.track(
+                Stat.APPLICATION_PASSWORD_CREATED,
+                mapOf("source" to "reauth", "success" to "true")
+            )
             _onFinishedEvent.emit(
                 NavigationActionData(
                     showSiteSelector = siteStore.hasSite() &&
@@ -280,7 +292,8 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
         )
         applicationPasswordLoginHelper.trackStoringFailed(
             currentUrlLogin?.siteUrl,
-            "site_changed_failed"
+            "site_changed_failed",
+            "reauth"
         )
         emitError(
             siteUrl = currentUrlLogin?.siteUrl.orEmpty(),

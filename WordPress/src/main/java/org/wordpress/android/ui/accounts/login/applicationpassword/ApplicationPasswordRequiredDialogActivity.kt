@@ -27,6 +27,8 @@ import androidx.lifecycle.lifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
+import org.wordpress.android.analytics.AnalyticsTracker
+import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.ActivityNavigator
 import org.wordpress.android.ui.compose.theme.AppThemeM3
@@ -56,6 +58,11 @@ class ApplicationPasswordRequiredDialogActivity : ComponentActivity() {
         }
 
         val featureName = intent.getStringExtra(EXTRA_FEATURE_NAME)
+
+        AnalyticsTracker.track(
+            Stat.APPLICATION_PASSWORD_MIGRATION_PROMPTED,
+            mapOf("source" to featureName.orEmpty())
+        )
 
         lifecycleScope.launch {
             viewModel.navigationEvent.collect { event ->
@@ -90,7 +97,7 @@ class ApplicationPasswordRequiredDialogActivity : ComponentActivity() {
                     featureName = featureName,
                     isLoading = isLoading.value,
                     onDismiss = { finish() },
-                    onConfirm = { viewModel.createApplicationPassword(site) }
+                    onConfirm = { viewModel.createApplicationPassword(site, "migration") }
                 )
             }
         }

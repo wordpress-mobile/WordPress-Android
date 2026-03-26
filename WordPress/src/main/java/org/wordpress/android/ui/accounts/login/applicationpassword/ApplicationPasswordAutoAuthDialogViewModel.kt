@@ -45,7 +45,7 @@ class ApplicationPasswordAutoAuthDialogViewModel @Inject constructor(
     val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
 
     @Suppress("TooGenericExceptionCaught", "LongMethod")
-    fun createApplicationPassword(site: SiteModel) {
+    fun createApplicationPassword(site: SiteModel, creationSource: String) {
         viewModelScope.launch {
             try {
                 require(site.username.isNotBlank()) { "Site username is required for cookie authentication" }
@@ -77,12 +77,13 @@ class ApplicationPasswordAutoAuthDialogViewModel @Inject constructor(
                         val password = response.response.data.password
                         val apiRootUrl = wpApiClientProvider.getApiRootUrlFrom(site)
                         applicationPasswordLoginHelper.storeApplicationPasswordCredentialsFrom(
-                            UriLogin(
+                            urlLogin = UriLogin(
                                 siteUrl = site.url,
                                 user = name,
                                 password = password,
                                 apiRootUrl = apiRootUrl
-                            )
+                            ),
+                            creationSource = creationSource
                         )
                         _navigationEvent.emit(NavigationEvent.Success)
                     }

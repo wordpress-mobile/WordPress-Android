@@ -30,6 +30,8 @@ import javax.inject.Named
 private const val URL_TAG = "url"
 private const val SUCCESS_TAG = "success"
 private const val REASON_TAG = "reason"
+private const val SOURCE_TAG = "source"
+private const val ERROR_TAG = "error"
 
 class ApplicationPasswordLoginHelper @Inject constructor(
     @param:Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
@@ -92,7 +94,8 @@ class ApplicationPasswordLoginHelper @Inject constructor(
 
     @Suppress("ComplexCondition")
     suspend fun storeApplicationPasswordCredentialsFrom(
-        urlLogin: UriLogin
+        urlLogin: UriLogin,
+        creationSource: String = ""
     ): Boolean {
         if (urlLogin.apiRootUrl == null ||
             urlLogin.user.isNullOrEmpty() ||
@@ -100,7 +103,7 @@ class ApplicationPasswordLoginHelper @Inject constructor(
             urlLogin.siteUrl == null ||
             urlLogin.siteUrl == processedAppPasswordData
         ) {
-            logAndReportBadData(urlLogin)
+            logAndReportBadData(urlLogin, creationSource)
             return false
         }
 
@@ -120,23 +123,48 @@ class ApplicationPasswordLoginHelper @Inject constructor(
                 }
                 dispatcherWrapper.updateApplicationPassword(site)
                 trackSuccessful(urlLogin.siteUrl)
+                trackCreated(creationSource, success = true)
                 processedAppPasswordData = urlLogin.siteUrl // Save locally to avoid duplicated calls
                 true
             } else {
                 logAndReportSiteNotFound(
-                    urlLogin.siteUrl, normalizedUrl, sites
+                    urlLogin.siteUrl, normalizedUrl, sites, creationSource
                 )
                 false
             }
         }
     }
 
-    fun trackStoringFailed(siteUrl: String?, reason: String) {
+    fun trackStoringFailed(
+        siteUrl: String?,
+        reason: String,
+        creationSource: String = ""
+    ) {
         val properties: MutableMap<String, String?> = HashMap()
         properties[URL_TAG] = maskUrl(siteUrl.orEmpty())
         properties[REASON_TAG] = reason
         AnalyticsTracker.track(
             Stat.APPLICATION_PASSWORD_STORING_FAILED,
+            properties
+        )
+        trackCreated(creationSource, success = false, error = reason)
+    }
+
+    private fun trackCreated(
+        creationSource: String,
+        success: Boolean,
+        error: String? = null
+    ) {
+        if (creationSource.isEmpty()) return
+        val properties = mutableMapOf<String, String>(
+            SOURCE_TAG to creationSource,
+            SUCCESS_TAG to success.toString()
+        )
+        if (!success && !error.isNullOrEmpty()) {
+            properties[ERROR_TAG] = error
+        }
+        AnalyticsTracker.track(
+            Stat.APPLICATION_PASSWORD_CREATED,
             properties
         )
     }
@@ -151,7 +179,10 @@ class ApplicationPasswordLoginHelper @Inject constructor(
         )
     }
 
-    private fun logAndReportBadData(urlLogin: UriLogin) {
+    private fun logAndReportBadData(
+        urlLogin: UriLogin,
+        creationSource: String
+    ) {
         val detail =
             "apiRootUrl isNull=${urlLogin.apiRootUrl == null}" +
                 ", user isEmpty=${urlLogin.user.isNullOrEmpty()}" +
@@ -165,14 +196,15 @@ class ApplicationPasswordLoginHelper @Inject constructor(
             "A_P: Cannot save credentials" +
                 " for: ${urlLogin.siteUrl} - $detail"
         )
-        trackStoringFailed(urlLogin.siteUrl, "bad_data")
+        trackStoringFailed(urlLogin.siteUrl, "bad_data", creationSource)
         reportStoringFailedToSentry("bad_data", detail)
     }
 
     private fun logAndReportSiteNotFound(
         siteUrl: String?,
         normalizedUrl: String?,
-        sites: List<SiteModel>
+        sites: List<SiteModel>,
+        creationSource: String
     ) {
         val availableSiteUrls = sites.joinToString { it.url }
         val logDetail = "$siteUrl (normalized: $normalizedUrl)" +
@@ -182,7 +214,7 @@ class ApplicationPasswordLoginHelper @Inject constructor(
             "A_P: Cannot save credentials" +
                 " - site not found: $logDetail"
         )
-        trackStoringFailed(siteUrl, "site_not_found")
+        trackStoringFailed(siteUrl, "site_not_found", creationSource)
         val maskedSiteUrls = sites.joinToString { maskUrl(it.url) }
         val sentryDetail =
             "${maskUrl(siteUrl.orEmpty())} (normalized: ${maskUrl(normalizedUrl.orEmpty())})" +

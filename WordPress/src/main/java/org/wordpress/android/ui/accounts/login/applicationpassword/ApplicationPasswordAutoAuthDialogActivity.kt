@@ -103,7 +103,7 @@ class ApplicationPasswordAutoAuthDialogActivity : ComponentActivity() {
                         setResult(RESULT_CANCELED)
                         finish()
                     },
-                    onConfirm = { viewModel.createApplicationPassword(site) }
+                    onConfirm = { viewModel.createApplicationPassword(site, "auto_migration") }
                 )
             }
         }

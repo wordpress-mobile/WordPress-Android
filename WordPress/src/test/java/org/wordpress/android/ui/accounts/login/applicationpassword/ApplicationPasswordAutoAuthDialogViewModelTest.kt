@@ -76,7 +76,7 @@ class ApplicationPasswordAutoAuthDialogViewModelTest : BaseUnitTest() {
             viewModel.isLoading.test {
                 assertFalse(awaitItem())
 
-                viewModel.createApplicationPassword(testSite)
+                viewModel.createApplicationPassword(testSite, "auto_migration")
 
                 assertTrue(awaitItem())
                 assertFalse(awaitItem())
@@ -91,7 +91,8 @@ class ApplicationPasswordAutoAuthDialogViewModelTest : BaseUnitTest() {
             )
 
             verify(appLogWrapper, times(1)).e(any(), any())
-            verify(applicationPasswordLoginHelper, never()).storeApplicationPasswordCredentialsFrom(any())
+            verify(applicationPasswordLoginHelper, never())
+                .storeApplicationPasswordCredentialsFrom(any(), any())
 
             cancelAndIgnoreRemainingEvents()
         }
@@ -108,7 +109,7 @@ class ApplicationPasswordAutoAuthDialogViewModelTest : BaseUnitTest() {
             .thenReturn(testAuthUrl)
 
         viewModel.navigationEvent.test {
-            viewModel.createApplicationPassword(invalidSite)
+            viewModel.createApplicationPassword(invalidSite, "auto_migration")
 
             val navigationEvent = awaitItem()
             assertEquals(
@@ -134,7 +135,7 @@ class ApplicationPasswordAutoAuthDialogViewModelTest : BaseUnitTest() {
             .thenReturn(testAuthUrl)
 
         viewModel.navigationEvent.test {
-            viewModel.createApplicationPassword(invalidSite)
+            viewModel.createApplicationPassword(invalidSite, "auto_migration")
 
             val navigationEvent = awaitItem()
             assertEquals(
@@ -160,7 +161,7 @@ class ApplicationPasswordAutoAuthDialogViewModelTest : BaseUnitTest() {
             .doThrow(RuntimeException("Failed to get auth URL"))
 
         viewModel.navigationEvent.test {
-            viewModel.createApplicationPassword(invalidSite)
+            viewModel.createApplicationPassword(invalidSite, "auto_migration")
 
             val navigationEvent = awaitItem()
             assertEquals(
