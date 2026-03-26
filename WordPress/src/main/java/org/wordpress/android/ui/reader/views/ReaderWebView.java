@@ -236,38 +236,6 @@ public class ReaderWebView extends WPWebView {
         return url.startsWith("https://videos.files.wordpress.com");
     }
 
-    /**
-     * For SRC_IMAGE_ANCHOR_TYPE hits, uses JavaScript to find the
-     * parent anchor's href at the tap coordinates. If the anchor has a
-     * fragment identifier, routes through onUrlClick; otherwise falls
-     * back to onImageUrlClick.
-     */
-    private void resolveAnchorFragmentUrl(
-        String imageUrl, int touchX, int touchY
-    ) {
-        float density = getResources().getDisplayMetrics().density;
-        float cssX = touchX / density;
-        float cssY = touchY / density;
-        evaluateJavascript(
-            "(function(){var e=document.elementFromPoint("
-                + cssX + "," + cssY + ");"
-                + "while(e&&e.tagName!=='A')e=e.parentElement;"
-                + "return e&&e.href&&e.href.indexOf('#')!==-1"
-                + "?e.href:'';})()",
-            value -> {
-                if (mUrlClickListener == null) return;
-                String href = value != null
-                    ? value.replaceAll("^\"|\"$", "") : "";
-                if (!href.isEmpty()) {
-                    mUrlClickListener.onUrlClick(href);
-                } else {
-                    mUrlClickListener.onImageUrlClick(
-                        imageUrl, this, touchX, touchY);
-                }
-            }
-        );
-    }
-
     /*
      * detect when a link is tapped
      */
@@ -283,15 +251,12 @@ public class ReaderWebView extends WPWebView {
                         return super.onTouchEvent(event);
                     }
                     // For images inside anchors (e.g. footnote
-                    // back-reference arrows rendered as emoji), resolve
-                    // the anchor href via JS and route accordingly
+                    // back-reference arrows rendered as emoji),
+                    // let the WebView handle the click so the
+                    // JS fragment-link interceptor can catch it
                     if (hr.getType()
                         == HitTestResult.SRC_IMAGE_ANCHOR_TYPE) {
-                        resolveAnchorFragmentUrl(
-                            url,
-                            (int) event.getX(),
-                            (int) event.getY());
-                        return true;
+                        return super.onTouchEvent(event);
                     }
                     return mUrlClickListener.onImageUrlClick(
                         url,

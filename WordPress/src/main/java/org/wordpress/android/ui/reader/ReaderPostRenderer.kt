@@ -688,11 +688,19 @@ class ReaderPostRenderer(
             if (postMessageListener == null) {
                 return@createJsObject
             }
-            when (message) {
-                ReaderPostMessageListener.MSG_ARTICLE_TEXT_COPIED ->
+            when {
+                message == ReaderPostMessageListener.MSG_ARTICLE_TEXT_COPIED ->
                     postMessageListener!!.onArticleTextCopied()
-                ReaderPostMessageListener.MSG_ARTICLE_TEXT_HIGHLIGHTED ->
+                message == ReaderPostMessageListener.MSG_ARTICLE_TEXT_HIGHLIGHTED ->
                     postMessageListener!!.onArticleTextHighlighted()
+                message != null && message.startsWith(
+                    ReaderPostMessageListener.MSG_FRAGMENT_LINK_PREFIX
+                ) -> {
+                    val url = message.removePrefix(
+                        ReaderPostMessageListener.MSG_FRAGMENT_LINK_PREFIX
+                    )
+                    postMessageListener!!.onFragmentLinkClicked(url)
+                }
             }
         }
 
@@ -707,10 +715,13 @@ class ReaderPostRenderer(
     interface ReaderPostMessageListener {
         fun onArticleTextCopied()
         fun onArticleTextHighlighted()
+        fun onFragmentLinkClicked(url: String)
 
         companion object {
             const val MSG_ARTICLE_TEXT_COPIED: String = "articleTextCopied"
-            const val MSG_ARTICLE_TEXT_HIGHLIGHTED: String = "articleTextHighlighted"
+            const val MSG_ARTICLE_TEXT_HIGHLIGHTED: String =
+                "articleTextHighlighted"
+            const val MSG_FRAGMENT_LINK_PREFIX: String = "fragmentLink:"
         }
     }
 

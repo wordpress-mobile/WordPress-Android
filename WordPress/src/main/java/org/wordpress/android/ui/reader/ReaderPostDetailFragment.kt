@@ -1635,6 +1635,10 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                 override fun onArticleTextHighlighted() {
                     viewModel.onArticleTextHighlighted()
                 }
+
+                override fun onFragmentLinkClicked(url: String) {
+                    onUrlClick(url)
+                }
             })
         }
 
@@ -1671,6 +1675,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         }
 
         readerProgressBar.visibility = View.GONE
+        injectFragmentLinkInterceptor(view)
 
         if (url != null && url == "about:blank") {
             // brief delay before showing related posts to give page time to render
@@ -1695,6 +1700,30 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         } else {
             url?.let { AppLog.w(T.READER, "reader post detail > page finished - $it") }
         }
+    }
+
+    /**
+     * Injects a JS click interceptor that catches taps on anchor
+     * elements with fragment hrefs (e.g. footnote back-references)
+     * and routes them through the wvHandler message bridge instead
+     * of letting the WebView navigate internally.
+     */
+    private fun injectFragmentLinkInterceptor(view: WebView) {
+        view.evaluateJavascript(
+            "(function(){" +
+                "if(window._fragInterceptorAdded)return;" +
+                "window._fragInterceptorAdded=true;" +
+                "document.addEventListener('click',function(e){" +
+                "var el=e.target;" +
+                "while(el&&el.tagName!=='A')el=el.parentElement;" +
+                "if(el&&el.href&&el.href.indexOf('#')!==-1){" +
+                "e.preventDefault();e.stopPropagation();" +
+                "wvHandler.postMessage('fragmentLink:'+el.href);" +
+                "}" +
+                "},true);" +
+                "})()",
+            null
+        )
     }
 
     /*
