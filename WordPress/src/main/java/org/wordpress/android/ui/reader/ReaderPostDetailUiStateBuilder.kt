@@ -68,7 +68,7 @@ class ReaderPostDetailUiStateBuilder @Inject constructor(
     ) = ReaderPostDetailsUiState(
         postId = post.postId,
         blogId = post.blogId,
-        headerUiState = buildPostDetailsHeaderUiState(
+        headerUiState = postDetailsHeaderViewUiStateBuilder.mapPostToUiState(
             post,
             onHeaderAction,
         ),
@@ -198,14 +198,6 @@ class ReaderPostDetailUiStateBuilder @Inject constructor(
         featuredImageVisibility = post.featuredImageUrl?.isNotEmpty() == true,
         featuredImageCornerRadius = UIDimenRes(R.dimen.reader_featured_image_corner_radius),
         onItemClicked = onItemClicked
-    )
-
-    private fun buildPostDetailsHeaderUiState(
-        post: ReaderPost,
-        onHeaderAction: (ReaderPostDetailsHeaderAction) -> Unit,
-    ) = postDetailsHeaderViewUiStateBuilder.mapPostToUiState(
-        post,
-        onHeaderAction,
     )
 
     private fun buildExcerptFooterUiState(post: ReaderPost): ExcerptFooterUiState? =

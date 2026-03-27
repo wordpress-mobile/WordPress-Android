@@ -116,7 +116,6 @@ import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.UiSt
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.UiState.LoadingUiState
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.UiState.ReaderPostDetailsUiState
 import org.wordpress.android.ui.reader.views.ReaderIconCountView
-import org.wordpress.android.ui.reader.views.ReaderPostDetailsHeaderViewUiStateBuilder
 import org.wordpress.android.ui.reader.views.ReaderSimplePostContainerView
 import org.wordpress.android.ui.reader.views.ReaderWebView
 import org.wordpress.android.ui.reader.views.ReaderWebView.ReaderCustomViewListener
@@ -249,9 +248,6 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     internal lateinit var imageManager: ImageManager
 
     @Inject
-    lateinit var postDetailsHeaderViewUiStateBuilder: ReaderPostDetailsHeaderViewUiStateBuilder
-
-    @Inject
     lateinit var readerUtilsWrapper: ReaderUtilsWrapper
 
     @Inject
@@ -288,29 +284,6 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
     val isCustomViewShowing: Boolean
         get() = view != null && readerWebView.isCustomViewShowing
-
-    private val appBarLayoutOffsetChangedListener =
-        AppBarLayout.OnOffsetChangedListener { appBarLayout, _ ->
-            val toolbar = appBarLayout.findViewById<Toolbar>(R.id.toolbar_main)
-
-            view?.context?.let { context ->
-                val menu: Menu = toolbar.menu
-                val color = context.getColorFromAttribute(
-                    MaterialR.attr.colorOnSurface
-                )
-                val colorFilter = BlendModeColorFilterCompat
-                    .createBlendModeColorFilterCompat(
-                        color, BlendModeCompat.SRC_ATOP
-                    )
-
-                toolbar.setTitleTextColor(color)
-                toolbar.navigationIcon?.colorFilter = colorFilter
-
-                menu.forEach {
-                    it.icon?.colorFilter = colorFilter
-                }
-            }
-        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -394,8 +367,6 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         appBar = view.findViewById(R.id.appbar_with_collapsing_toolbar_layout)
         toolBar = appBar.findViewById(R.id.toolbar_main)
 
-        appBar.addOnOffsetChangedListener(appBarLayoutOffsetChangedListener)
-
         // Fixes collapsing toolbar layout being obscured by the status bar when drawn behind it
         ViewCompat.setOnApplyWindowInsetsListener(appBar) { _: View, insets: WindowInsetsCompat ->
             val insetTop = insets.getInsets(WindowInsetsCompat. Type. systemBars()).top
@@ -420,6 +391,21 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             toolBar.setNavigationIcon(R.drawable.ic_arrow_left_white_24dp)
             toolBar.setNavigationOnClickListener { requireActivity().onBackPressedDispatcher.onBackPressed() }
         }
+
+        applyToolbarIconColors(view.context)
+    }
+
+    private fun applyToolbarIconColors(context: Context) {
+        val color = context.getColorFromAttribute(
+            MaterialR.attr.colorOnSurface
+        )
+        val colorFilter = BlendModeColorFilterCompat
+            .createBlendModeColorFilterCompat(
+                color, BlendModeCompat.SRC_ATOP
+            )
+        toolBar.setTitleTextColor(color)
+        toolBar.navigationIcon?.colorFilter = colorFilter
+        toolBar.menu.forEach { it.icon?.colorFilter = colorFilter }
     }
 
     private fun initScrollView(view: View) {

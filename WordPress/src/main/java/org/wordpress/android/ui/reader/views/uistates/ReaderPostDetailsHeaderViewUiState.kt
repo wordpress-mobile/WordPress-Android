@@ -20,7 +20,7 @@ sealed class ReaderPostDetailsHeaderViewUiState {
 
     data class ReaderFeaturedImageUiState(
         val blogId: Long,
-        val url: String? = null,
-        val onFeaturedImageClicked: ((Long, String) -> Unit)? = null,
+        val url: String?,
+        val onFeaturedImageClicked: ((Long, String) -> Unit)?,
     )
 }
