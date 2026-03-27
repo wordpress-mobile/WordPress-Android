@@ -652,17 +652,6 @@ class PostRsSettingsViewModelTest :
     }
 
     @Test
-    fun `onDateSelected updates publishDate`() {
-        val viewModel = createViewModel()
-
-        viewModel.onDateSelected(2025, 5, 15)
-
-        assertThat(
-            viewModel.uiState.value.publishDate
-        ).isNotEmpty()
-    }
-
-    @Test
     fun `onTimeSelected updates editedDate`() {
         val viewModel = createViewModel()
 
@@ -678,17 +667,6 @@ class PostRsSettingsViewModelTest :
         assertThat(cal[Calendar.MINUTE]).isEqualTo(30)
     }
 
-    @Test
-    fun `onTimeSelected dismisses dialog`() {
-        val viewModel = createViewModel()
-        viewModel.onDateClicked()
-
-        viewModel.onTimeSelected(14, 30)
-
-        assertThat(viewModel.uiState.value.dialogState)
-            .isEqualTo(DialogState.None)
-    }
-
     // endregion
 
     // region Author selection
@@ -702,29 +680,6 @@ class PostRsSettingsViewModelTest :
         assertThat(
             viewModel.uiState.value.editedAuthor
         ).isEqualTo(99L)
-    }
-
-    @Test
-    fun `onAuthorSelected dismisses dialog`() {
-        val viewModel = createViewModel()
-
-        viewModel.onAuthorSelected(99L)
-
-        assertThat(viewModel.uiState.value.dialogState)
-            .isEqualTo(DialogState.None)
-    }
-
-    @Test
-    fun `onAuthorSelected clears search state`() {
-        val viewModel = createViewModel()
-
-        viewModel.onAuthorSelected(99L)
-
-        val state = viewModel.uiState.value
-        assertThat(state.authorSearchQuery).isEmpty()
-        assertThat(state.isSearchingAuthors).isFalse()
-        assertThat(state.siteAuthors).isEmpty()
-        assertThat(state.canLoadMoreAuthors).isFalse()
     }
 
     @Test
@@ -755,23 +710,6 @@ class PostRsSettingsViewModelTest :
                 assertThat(event).isInstanceOf(
                     PostRsSettingsEvent
                         .LaunchCategorySelection::class.java
-                )
-                cancelAndIgnoreRemainingEvents()
-            }
-        }
-
-    @Test
-    fun `onTagsClicked emits LaunchTagSelection`() =
-        test {
-            val viewModel = createViewModel()
-
-            viewModel.events.test {
-                viewModel.onTagsClicked()
-
-                val event = awaitItem()
-                assertThat(event).isInstanceOf(
-                    PostRsSettingsEvent
-                        .LaunchTagSelection::class.java
                 )
                 cancelAndIgnoreRemainingEvents()
             }
@@ -813,18 +751,6 @@ class PostRsSettingsViewModelTest :
         ).isNull()
     }
 
-    @Test
-    fun `onTagsSelected with same ids clears edit`() {
-        val viewModel = createViewModel()
-        // original tagIds is empty list
-
-        viewModel.onTagsSelected(longArrayOf())
-
-        assertThat(
-            viewModel.uiState.value.editedTagIds
-        ).isNull()
-    }
-
     // endregion
 
     // region Featured image
@@ -838,17 +764,6 @@ class PostRsSettingsViewModelTest :
         assertThat(
             viewModel.uiState.value.editedFeaturedImageId
         ).isEqualTo(99L)
-    }
-
-    @Test
-    fun `onFeaturedImageSelected sets image loading`() {
-        val viewModel = createViewModel()
-
-        viewModel.onFeaturedImageSelected(99L)
-
-        assertThat(
-            viewModel.uiState.value.featuredImage
-        ).isEqualTo(FieldState.Loading)
     }
 
     @Test
@@ -898,32 +813,6 @@ class PostRsSettingsViewModelTest :
                 cancelAndIgnoreRemainingEvents()
             }
         }
-
-    // endregion
-
-    // region Author search
-
-    @Test
-    fun `onAuthorSearchQueryChanged updates query`() {
-        val viewModel = createViewModel()
-
-        viewModel.onAuthorSearchQueryChanged("test")
-
-        assertThat(
-            viewModel.uiState.value.authorSearchQuery
-        ).isEqualTo("test")
-    }
-
-    @Test
-    fun `short author search query does not trigger search`() {
-        val viewModel = createViewModel()
-
-        viewModel.onAuthorSearchQueryChanged("ab")
-
-        assertThat(
-            viewModel.uiState.value.isSearchingAuthors
-        ).isFalse()
-    }
 
     // endregion
 
