@@ -21,6 +21,8 @@ import java.security.MessageDigest
 class PortraitAwareCropTransformation(
     @ColorInt private val backgroundColor: Int
 ) : BitmapTransformation() {
+    private val paint = Paint(Paint.ANTI_ALIAS_FLAG or Paint.FILTER_BITMAP_FLAG)
+
     override fun transform(
         pool: BitmapPool,
         toTransform: Bitmap,
@@ -45,7 +47,6 @@ class PortraitAwareCropTransformation(
         val scaledWidth = toTransform.width * scale
         val left = (outWidth - scaledWidth) / 2f
         val destRect = RectF(left, 0f, left + scaledWidth, outHeight.toFloat())
-        val paint = Paint(Paint.ANTI_ALIAS_FLAG or Paint.FILTER_BITMAP_FLAG)
         canvas.drawBitmap(toTransform, null, destRect, paint)
 
         return result

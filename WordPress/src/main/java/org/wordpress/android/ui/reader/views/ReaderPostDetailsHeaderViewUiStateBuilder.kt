@@ -127,10 +127,9 @@ class ReaderPostDetailsHeaderViewUiStateBuilder @Inject constructor(
 
     private fun buildDateLine(post: ReaderPost): String {
         val date = post.getDisplayDate(dateTimeUtilsWrapper) ?: return ""
-        val format = SimpleDateFormat(
-            "MMM d, yyyy 'at' h:mm a", Locale.getDefault()
-        )
-        return format.format(date)
+        return SimpleDateFormat(
+            DATE_FORMAT_PATTERN, Locale.getDefault()
+        ).format(date)
     }
 
     private fun buildReadingTime(post: ReaderPost): UiString? {
@@ -139,12 +138,12 @@ class ReaderPostDetailsHeaderViewUiStateBuilder @Inject constructor(
         if (content.isNullOrBlank()) return null
 
         val text = HtmlCompat.fromHtml(
-            content.replace(Regex("<img[^>]*>"), ""),
+            content.replace(IMG_TAG_REGEX, ""),
             HtmlCompat.FROM_HTML_MODE_LEGACY
         ).toString().trim()
 
         if (text.isBlank()) return null
-        val wordCount = text.split("\\s+".toRegex()).size
+        val wordCount = text.split(WHITESPACE_REGEX).size
         val minutes = ceil(wordCount.toDouble() / WORDS_PER_MINUTE)
             .toInt()
             .coerceAtLeast(1)
@@ -188,4 +187,11 @@ class ReaderPostDetailsHeaderViewUiStateBuilder @Inject constructor(
         onLikesClicked = onLikesClicked,
         onCommentsClicked = onCommentsClicked,
     )
+
+    companion object {
+        private val IMG_TAG_REGEX = Regex("<img[^>]*>")
+        private val WHITESPACE_REGEX = "\\s+".toRegex()
+        private const val DATE_FORMAT_PATTERN =
+            "MMM d, yyyy 'at' h:mm a"
+    }
 }

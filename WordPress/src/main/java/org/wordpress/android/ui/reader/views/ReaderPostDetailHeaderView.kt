@@ -6,6 +6,7 @@ import android.util.TypedValue
 import android.view.LayoutInflater
 import android.widget.ImageView.ScaleType.FIT_CENTER
 import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.core.view.isVisible
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
@@ -181,13 +182,7 @@ class ReaderPostDetailHeaderView @JvmOverloads constructor(
     private fun ReaderPostDetailHeaderViewBinding.updateReadingTime(
         readingTime: UiString?
     ) {
-        if (readingTime != null) {
-            textReadingTime.text =
-                uiHelpers.getTextOfUiString(root.context, readingTime)
-            textReadingTime.setVisible(true)
-        } else {
-            textReadingTime.setVisible(false)
-        }
+        uiHelpers.setTextOrHide(textReadingTime, readingTime)
     }
 
     private fun ReaderPostDetailHeaderViewBinding.updateFeaturedImage(
@@ -209,13 +204,7 @@ class ReaderPostDetailHeaderView @JvmOverloads constructor(
     private fun ReaderPostDetailHeaderViewBinding.updateExcerpt(
         excerpt: UiString?
     ) {
-        if (excerpt != null) {
-            textExcerpt.text =
-                uiHelpers.getTextOfUiString(root.context, excerpt)
-            textExcerpt.setVisible(true)
-        } else {
-            textExcerpt.setVisible(false)
-        }
+        uiHelpers.setTextOrHide(textExcerpt, excerpt)
     }
 
     private fun updateInteractionSection(
@@ -257,14 +246,14 @@ class ReaderPostDetailHeaderView @JvmOverloads constructor(
         val typeface = readingPreferences.fontFamily.toTypeface()
         val textColor = themeValues?.intTextColor
 
-        listOf(
-            binding.headerLikeCount,
-            binding.headerCommentCount,
-            binding.headerDotSeparator
-        ).forEach { view ->
+        fun applyTheme(view: TextView) {
             view.setTextSize(TypedValue.COMPLEX_UNIT_PX, fontSize)
             view.typeface = typeface
             textColor?.let { view.setTextColor(it) }
         }
+
+        applyTheme(binding.headerLikeCount)
+        applyTheme(binding.headerCommentCount)
+        applyTheme(binding.headerDotSeparator)
     }
 }
