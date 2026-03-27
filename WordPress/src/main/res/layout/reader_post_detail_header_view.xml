@@ -45,6 +45,13 @@
 
     </FrameLayout>
 
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/blog_name_barrier"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:barrierDirection="bottom"
+        app:constraint_referenced_ids="text_blog_name,header_follow_button_container" />
+
     <!-- Post title -->
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/text_title"
@@ -54,7 +61,7 @@
         android:layout_marginTop="@dimen/margin_extra_large"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/text_blog_name"
+        app:layout_constraintTop_toBottomOf="@id/blog_name_barrier"
         tools:text="Post Title: This could be a quite big title" />
 
     <!-- Blog section (avatar + author + date) -->
