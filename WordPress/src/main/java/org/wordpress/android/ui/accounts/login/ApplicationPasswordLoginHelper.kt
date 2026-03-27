@@ -315,7 +315,6 @@ class ApplicationPasswordLoginHelper @Inject constructor(
                 SiteActionBuilder.newUpdateApplicationPasswordAction(site)
             )
         }
-
     }
 
     class DiscoverSuccessWrapper @Inject constructor() {
