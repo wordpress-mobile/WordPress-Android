@@ -79,6 +79,7 @@ import com.patrykandpatrick.vico.core.cartesian.marker.CartesianMarkerVisibility
 import com.patrykandpatrick.vico.core.cartesian.marker.DefaultCartesianMarker
 import com.patrykandpatrick.vico.compose.cartesian.layer.rememberColumnCartesianLayer
 import com.patrykandpatrick.vico.compose.cartesian.layer.rememberLineCartesianLayer
+import com.patrykandpatrick.vico.compose.cartesian.layer.stacked
 import com.patrykandpatrick.vico.compose.cartesian.rememberCartesianChart
 import com.patrykandpatrick.vico.compose.cartesian.rememberVicoScrollState
 import com.patrykandpatrick.vico.core.common.Insets
@@ -520,13 +521,21 @@ private fun ViewsStatsChart(
                 }
                 ChartType.BAR -> modelProducer.runTransaction {
                     columnSeries {
-                        series(chartData.currentPeriod.map { it.views.toInt() })
-                    }
-                    if (hasPreviousPeriod) {
-                        lineSeries {
+                        series(
+                            chartData.currentPeriod.map {
+                                it.views.toInt()
+                            }
+                        )
+                        if (hasPreviousPeriod) {
                             series(
-                                chartData.previousPeriod
-                                    .map { it.views.toInt() }
+                                chartData.currentPeriod.zip(
+                                    chartData.previousPeriod
+                                ) { current, previous ->
+                                    maxOf(
+                                        0L,
+                                        previous.views - current.views
+                                    ).toInt()
+                                }
                             )
                         }
                     }
@@ -679,24 +688,18 @@ private fun ViewsStatsChart(
                                     shape = CorneredShape.rounded(
                                         allPercent = 40
                                     )
+                                ),
+                                LineComponent(
+                                    fill = fill(secondaryColor),
+                                    thicknessDp = 16f,
+                                    shape = CorneredShape.rounded(
+                                        allPercent = 40
+                                    )
                                 )
-                            )
-                    ),
-                    rememberLineCartesianLayer(
-                        lineProvider = LineCartesianLayer
-                            .LineProvider.series(
-                                LineCartesianLayer.Line(
-                                    fill = LineCartesianLayer
-                                        .LineFill.single(
-                                            fill(secondaryColor)
-                                        ),
-                                    stroke = LineCartesianLayer
-                                        .LineStroke.Dashed(),
-                                    pointConnector =
-                                        LineCartesianLayer
-                                            .PointConnector.Sharp
-                                )
-                            )
+                            ),
+                        mergeMode = {
+                            ColumnCartesianLayer.MergeMode.stacked()
+                        }
                     ),
                     startAxis = VerticalAxis.rememberStart(
                         line = null
