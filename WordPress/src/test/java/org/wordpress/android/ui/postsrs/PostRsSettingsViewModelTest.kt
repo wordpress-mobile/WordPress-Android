@@ -140,6 +140,18 @@ class PostRsSettingsViewModelTest :
             .isNotNull()
     }
 
+    @Test
+    fun `retry while offline shows error`() {
+        val viewModel = createViewModel()
+
+        viewModel.retry()
+
+        assertThat(viewModel.uiState.value.isLoading)
+            .isFalse()
+        assertThat(viewModel.uiState.value.error)
+            .isNotNull()
+    }
+
     // endregion
 
     // region Edit methods
@@ -361,6 +373,19 @@ class PostRsSettingsViewModelTest :
             .isEqualTo(DialogState.None)
     }
 
+    @Test
+    fun `onDismissDialog clears author search state`() {
+        val viewModel = createViewModel()
+
+        viewModel.onDismissDialog()
+
+        val state = viewModel.uiState.value
+        assertThat(state.authorSearchQuery).isEmpty()
+        assertThat(state.isSearchingAuthors).isFalse()
+        assertThat(state.siteAuthors).isEmpty()
+        assertThat(state.canLoadMoreAuthors).isFalse()
+    }
+
     // endregion
 
     // region hasChanges
@@ -452,6 +477,21 @@ class PostRsSettingsViewModelTest :
         val viewModel = createViewModel()
         viewModel.onStatusSelected(PostStatus.Draft)
 
+        viewModel.onSaveClicked()
+
+        assertThat(viewModel.uiState.value.isSaving)
+            .isTrue()
+    }
+
+    @Test
+    fun `onSaveClicked while already saving is no-op`() {
+        val viewModel = createViewModel()
+        viewModel.onStatusSelected(PostStatus.Draft)
+        viewModel.onSaveClicked()
+        assertThat(viewModel.uiState.value.isSaving)
+            .isTrue()
+
+        // Second save attempt should be no-op
         viewModel.onSaveClicked()
 
         assertThat(viewModel.uiState.value.isSaving)
@@ -637,16 +677,6 @@ class PostRsSettingsViewModelTest :
             .isEqualTo(DialogState.None)
     }
 
-    @Test
-    fun `hasChanges is true after date edit`() {
-        val viewModel = createViewModel()
-
-        viewModel.onDateSelected(2025, 5, 15)
-
-        assertThat(viewModel.uiState.value.hasChanges)
-            .isTrue()
-    }
-
     // endregion
 
     // region Author selection
@@ -695,16 +725,6 @@ class PostRsSettingsViewModelTest :
         assertThat(
             viewModel.uiState.value.editedAuthor
         ).isNull()
-    }
-
-    @Test
-    fun `hasChanges is true after author edit`() {
-        val viewModel = createViewModel()
-
-        viewModel.onAuthorSelected(99L)
-
-        assertThat(viewModel.uiState.value.hasChanges)
-            .isTrue()
     }
 
     // endregion
@@ -793,26 +813,6 @@ class PostRsSettingsViewModelTest :
         ).isNull()
     }
 
-    @Test
-    fun `hasChanges is true after category edit`() {
-        val viewModel = createViewModel()
-
-        viewModel.onCategoriesSelected(longArrayOf(1L))
-
-        assertThat(viewModel.uiState.value.hasChanges)
-            .isTrue()
-    }
-
-    @Test
-    fun `hasChanges is true after tag edit`() {
-        val viewModel = createViewModel()
-
-        viewModel.onTagsSelected(longArrayOf(1L))
-
-        assertThat(viewModel.uiState.value.hasChanges)
-            .isTrue()
-    }
-
     // endregion
 
     // region Featured image
@@ -883,68 +883,6 @@ class PostRsSettingsViewModelTest :
                 cancelAndIgnoreRemainingEvents()
             }
         }
-
-    @Test
-    fun `hasChanges is true after featured image edit`() {
-        val viewModel = createViewModel()
-
-        viewModel.onFeaturedImageSelected(99L)
-
-        assertThat(viewModel.uiState.value.hasChanges)
-            .isTrue()
-    }
-
-    // endregion
-
-    // region Dismiss dialog behavior
-
-    @Test
-    fun `onDismissDialog clears author search state`() {
-        val viewModel = createViewModel()
-
-        viewModel.onDismissDialog()
-
-        val state = viewModel.uiState.value
-        assertThat(state.authorSearchQuery).isEmpty()
-        assertThat(state.isSearchingAuthors).isFalse()
-        assertThat(state.siteAuthors).isEmpty()
-        assertThat(state.canLoadMoreAuthors).isFalse()
-    }
-
-    // endregion
-
-    // region Additional save behavior
-
-    @Test
-    fun `onSaveClicked while already saving is no-op`() {
-        val viewModel = createViewModel()
-        viewModel.onStatusSelected(PostStatus.Draft)
-        viewModel.onSaveClicked()
-        assertThat(viewModel.uiState.value.isSaving)
-            .isTrue()
-
-        // Second save attempt should be no-op
-        viewModel.onSaveClicked()
-
-        assertThat(viewModel.uiState.value.isSaving)
-            .isTrue()
-    }
-
-    // endregion
-
-    // region Retry
-
-    @Test
-    fun `retry while offline shows error`() {
-        val viewModel = createViewModel()
-
-        viewModel.retry()
-
-        assertThat(viewModel.uiState.value.isLoading)
-            .isFalse()
-        assertThat(viewModel.uiState.value.error)
-            .isNotNull()
-    }
 
     // endregion
 
