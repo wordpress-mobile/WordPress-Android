@@ -67,34 +67,7 @@ class ApplicationPasswordRequiredDialogActivity : ComponentActivity() {
             )
         }
 
-        lifecycleScope.launch {
-            viewModel.navigationEvent.collect { event ->
-                when (event) {
-                    is ApplicationPasswordAutoAuthDialogViewModel.NavigationEvent.Success -> {
-                        setResult(RESULT_OK)
-                        finish()
-                    }
-                    is ApplicationPasswordAutoAuthDialogViewModel.NavigationEvent.FallbackToManualLogin -> {
-                        ApplicationPasswordCreationTracker.setPendingCreationSource(
-                            ApplicationPasswordCreationTracker.SOURCE_MIGRATION
-                        )
-                        activityNavigator.openApplicationPasswordLogin(
-                            this@ApplicationPasswordRequiredDialogActivity,
-                            event.authUrl
-                        )
-                        finish()
-                    }
-                    is ApplicationPasswordAutoAuthDialogViewModel.NavigationEvent.Error -> {
-                        ToastUtils.showToast(
-                            this@ApplicationPasswordRequiredDialogActivity,
-                            R.string.error_generic
-                        )
-                        setResult(RESULT_CANCELED)
-                        finish()
-                    }
-                }
-            }
-        }
+        observeNavigationEvents()
 
         setContent {
             AppThemeM3 {
@@ -110,6 +83,43 @@ class ApplicationPasswordRequiredDialogActivity : ComponentActivity() {
                         )
                     }
                 )
+            }
+        }
+    }
+
+    private fun observeNavigationEvents() {
+        lifecycleScope.launch {
+            viewModel.navigationEvent.collect { event ->
+                when (event) {
+                    is ApplicationPasswordAutoAuthDialogViewModel
+                        .NavigationEvent.Success -> {
+                        setResult(RESULT_OK)
+                        finish()
+                    }
+                    is ApplicationPasswordAutoAuthDialogViewModel
+                        .NavigationEvent.FallbackToManualLogin -> {
+                        ApplicationPasswordCreationTracker
+                            .setPendingCreationSource(
+                                ApplicationPasswordCreationTracker
+                                    .SOURCE_MIGRATION
+                            )
+                        activityNavigator
+                            .openApplicationPasswordLogin(
+                                this@ApplicationPasswordRequiredDialogActivity,
+                                event.authUrl
+                            )
+                        finish()
+                    }
+                    is ApplicationPasswordAutoAuthDialogViewModel
+                        .NavigationEvent.Error -> {
+                        ToastUtils.showToast(
+                            this@ApplicationPasswordRequiredDialogActivity,
+                            R.string.error_generic
+                        )
+                        setResult(RESULT_CANCELED)
+                        finish()
+                    }
+                }
             }
         }
     }
