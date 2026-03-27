@@ -41,6 +41,7 @@ enum class StatsLaunchedFrom(val value: String) {
     LINK("link"),
     SHORTCUT("shortcut"),
     ACTIVITY_LOG("activity_log"),
+    STATS_TOGGLE("stats_toggle"),
 }
 
 fun AnalyticsTrackerWrapper.trackStatsAccessed(site: SiteModel, tapSource: String) =

@@ -523,6 +523,11 @@ class AppPrefsWrapper @Inject constructor(val buildConfigWrapper: BuildConfigWra
         get() = AppPrefs.getTrackNetworkRequestsRetentionPeriod()
         set(value) = AppPrefs.setTrackNetworkRequestsRetentionPeriod(value)
 
+    fun getNewStatsIntroShown(): Boolean = AppPrefs.getNewStatsIntroShown()
+
+    fun setNewStatsIntroShown(shown: Boolean) =
+        AppPrefs.setNewStatsIntroShown(shown)
+
     companion object {
         private const val LIGHT_MODE_ID = 0
         private const val DARK_MODE_ID = 1

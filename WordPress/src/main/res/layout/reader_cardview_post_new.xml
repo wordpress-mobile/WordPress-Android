@@ -36,7 +36,7 @@
             android:layout_marginTop="@dimen/margin_medium"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/layout_blog_section"
+            app:layout_constraintTop_toBottomOf="@id/reader_card_images_bottom_barrier"
             app:layout_constraintBottom_toTopOf="@+id/text_excerpt"
             tools:text="This the tile of this post - Lorem ipsum dolor sit amet, consectetur adipiscing elit" />
 
@@ -63,7 +63,7 @@
             app:layout_constraintDimensionRatio="16:9"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/text_excerpt"
+            app:layout_constraintTop_toBottomOf="@id/layout_blog_section"
             tools:src="@color/blue_light" />
 
         <ImageView
@@ -90,7 +90,7 @@
             android:layout_marginTop="@dimen/margin_medium"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/text_excerpt"
+            app:layout_constraintTop_toBottomOf="@id/layout_blog_section"
             tools:visibility="visible"
             tools:layout_height="150dp" />
 
@@ -112,7 +112,7 @@
             app:layout_constraintHorizontal_bias="0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@id/reader_card_dot_separator"
-            app:layout_constraintTop_toBottomOf="@id/reader_card_images_bottom_barrier"
+            app:layout_constraintTop_toBottomOf="@id/text_excerpt"
             app:layout_constrainedWidth="true"
             tools:text="15 likes" />
 
@@ -127,7 +127,7 @@
             android:importantForAccessibility="no"
             app:layout_constraintStart_toEndOf="@id/reader_card_like_count"
             app:layout_constraintEnd_toStartOf="@id/reader_card_comment_count"
-            app:layout_constraintTop_toBottomOf="@id/reader_card_images_bottom_barrier"
+            app:layout_constraintTop_toBottomOf="@id/text_excerpt"
             app:layout_constrainedWidth="true" />
 
         <com.google.android.material.textview.MaterialTextView
@@ -138,7 +138,7 @@
             android:layout_marginTop="@dimen/margin_medium"
             app:layout_constraintStart_toEndOf="@id/reader_card_dot_separator"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/reader_card_images_bottom_barrier"
+            app:layout_constraintTop_toBottomOf="@id/text_excerpt"
             app:layout_constrainedWidth="true"
             tools:text="4 comments" />
 

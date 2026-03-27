@@ -13,6 +13,7 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.SiteActionBuilder
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpApiClientProvider
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.modules.BG_THREAD
@@ -43,7 +44,8 @@ class ApplicationPasswordLoginHelper @Inject constructor(
     private val appLogWrapper: AppLogWrapper,
     private val apiRootUrlCache: ApiRootUrlCache,
     private val discoverSuccessWrapper: DiscoverSuccessWrapper,
-    private val crashLogging: CrashLogging
+    private val crashLogging: CrashLogging,
+    private val wpApiClientProvider: WpApiClientProvider,
 ) {
     private var processedAppPasswordData: String? = null
 
@@ -127,6 +129,7 @@ class ApplicationPasswordLoginHelper @Inject constructor(
                     apiRestPasswordPlain = urlLogin.password
                     wpApiRestUrl = urlLogin.apiRootUrl
                 }
+                wpApiClientProvider.clearSelfHostedClient(site.id)
                 dispatcherWrapper.updateApplicationPassword(site)
                 trackSuccessful(urlLogin.siteUrl)
                 trackCreated(creationSource, success = true)
@@ -238,38 +241,6 @@ class ApplicationPasswordLoginHelper @Inject constructor(
         return uriLoginWrapper.parseUriLogin(url)
     }
 
-    /**
-     * Removes Application Password credentials for sites that have regular credentials as fallback.
-     * Sites without regular credentials (username/password) are excluded since they can only
-     * authenticate using Application Password.
-     * @return the number of sites that were affected
-     */
-    suspend fun removeAllApplicationPasswordCredentials(): Int {
-        return withContext(bgDispatcher) {
-            val sites = siteStore.sites
-            // Only reset sites that have regular credentials to fall back to
-            val sitesToReset = sites.filter {
-                !it.apiRestUsernameEncrypted.isNullOrEmpty() && it.hasRegularCredentials()
-            }
-            sitesToReset.forEach { site ->
-                site.apply {
-                    apiRestUsernamePlain = ""
-                    apiRestPasswordPlain = ""
-                    apiRestUsernameEncrypted = ""
-                    apiRestPasswordEncrypted = ""
-                    apiRestUsernameIV = ""
-                    apiRestPasswordIV = ""
-                }
-                dispatcherWrapper.removeApplicationPassword(site)
-            }
-            appLogWrapper.d(
-                AppLog.T.DB,
-                "A_P: Removed application password credentials for: ${sitesToReset.size} sites"
-            )
-            sitesToReset.size
-        }
-    }
-
     private fun findSiteByUrl(
         normalizedUrl: String?,
         sites: List<SiteModel>
@@ -310,20 +281,6 @@ class ApplicationPasswordLoginHelper @Inject constructor(
                 domain.last()
         }
         return url.replaceFirst(host, maskedDomain + tld)
-    }
-
-    private fun SiteModel.hasRegularCredentials(): Boolean {
-        return !username.isNullOrEmpty() && !password.isNullOrEmpty()
-    }
-
-    /**
-     * Returns the count of sites with Application Password credentials that can be reset
-     * because of having regular credentials
-     */
-    fun getResettableApplicationPasswordSitesCount(): Int {
-        return siteStore.sites.count {
-            !it.apiRestUsernameEncrypted.isNullOrEmpty() && it.hasRegularCredentials()
-        }
     }
 
     fun siteHasBadCredentials(site: SiteModel) =
@@ -385,12 +342,6 @@ class ApplicationPasswordLoginHelper @Inject constructor(
         fun updateApplicationPassword(site: SiteModel) {
             dispatcher.dispatch(
                 SiteActionBuilder.newUpdateApplicationPasswordAction(site)
-            )
-        }
-
-        fun removeApplicationPassword(site: SiteModel) {
-            dispatcher.dispatch(
-                SiteActionBuilder.newRemoveApplicationPasswordAction(site)
             )
         }
     }
