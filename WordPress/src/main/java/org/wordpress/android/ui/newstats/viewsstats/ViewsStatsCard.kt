@@ -710,8 +710,8 @@ private fun ViewsStatsChart(
                                     fill = fill(primaryColor),
                                     thicknessDp = 16f,
                                     shape = CorneredShape.rounded(
-                                        topLeftPercent = 40,
-                                        topRightPercent = 40,
+                                        topLeftPercent = 20,
+                                        topRightPercent = 20,
                                     )
                                 ),
                                 LineComponent(
@@ -722,8 +722,8 @@ private fun ViewsStatsChart(
                                     fill = fill(secondaryColor),
                                     thicknessDp = 16f,
                                     shape = CorneredShape.rounded(
-                                        topLeftPercent = 40,
-                                        topRightPercent = 40,
+                                        topLeftPercent = 20,
+                                        topRightPercent = 20,
                                     )
                                 )
                             ),
