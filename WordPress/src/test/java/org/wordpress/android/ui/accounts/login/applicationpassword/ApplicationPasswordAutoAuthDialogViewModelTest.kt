@@ -19,6 +19,7 @@ import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpApiClientProvider
 import org.wordpress.android.fluxc.utils.AppLogWrapper
+import org.wordpress.android.ui.accounts.applicationpassword.ApplicationPasswordCreationTracker
 import org.wordpress.android.ui.accounts.login.ApplicationPasswordLoginHelper
 import org.wordpress.android.util.BuildConfigWrapper
 import kotlin.test.assertEquals
@@ -76,7 +77,7 @@ class ApplicationPasswordAutoAuthDialogViewModelTest : BaseUnitTest() {
             viewModel.isLoading.test {
                 assertFalse(awaitItem())
 
-                viewModel.createApplicationPassword(testSite)
+                viewModel.createApplicationPassword(testSite, ApplicationPasswordCreationTracker.SOURCE_AUTO_MIGRATION)
 
                 assertTrue(awaitItem())
                 assertFalse(awaitItem())
@@ -91,7 +92,8 @@ class ApplicationPasswordAutoAuthDialogViewModelTest : BaseUnitTest() {
             )
 
             verify(appLogWrapper, times(1)).e(any(), any())
-            verify(applicationPasswordLoginHelper, never()).storeApplicationPasswordCredentialsFrom(any())
+            verify(applicationPasswordLoginHelper, never())
+                .storeApplicationPasswordCredentialsFrom(any(), any())
 
             cancelAndIgnoreRemainingEvents()
         }
@@ -108,7 +110,7 @@ class ApplicationPasswordAutoAuthDialogViewModelTest : BaseUnitTest() {
             .thenReturn(testAuthUrl)
 
         viewModel.navigationEvent.test {
-            viewModel.createApplicationPassword(invalidSite)
+            viewModel.createApplicationPassword(invalidSite, ApplicationPasswordCreationTracker.SOURCE_AUTO_MIGRATION)
 
             val navigationEvent = awaitItem()
             assertEquals(
@@ -134,7 +136,7 @@ class ApplicationPasswordAutoAuthDialogViewModelTest : BaseUnitTest() {
             .thenReturn(testAuthUrl)
 
         viewModel.navigationEvent.test {
-            viewModel.createApplicationPassword(invalidSite)
+            viewModel.createApplicationPassword(invalidSite, ApplicationPasswordCreationTracker.SOURCE_AUTO_MIGRATION)
 
             val navigationEvent = awaitItem()
             assertEquals(
@@ -160,7 +162,7 @@ class ApplicationPasswordAutoAuthDialogViewModelTest : BaseUnitTest() {
             .doThrow(RuntimeException("Failed to get auth URL"))
 
         viewModel.navigationEvent.test {
-            viewModel.createApplicationPassword(invalidSite)
+            viewModel.createApplicationPassword(invalidSite, ApplicationPasswordCreationTracker.SOURCE_AUTO_MIGRATION)
 
             val navigationEvent = awaitItem()
             assertEquals(

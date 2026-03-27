@@ -17,6 +17,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpApiClientProvider
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.ui.accounts.login.ApplicationPasswordLoginHelper
+import org.wordpress.android.ui.accounts.login.ApplicationPasswordLoginHelper.StoreCredentialsResult
 import org.wordpress.android.ui.accounts.login.ApplicationPasswordLoginHelper.UriLogin
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.BuildConfigWrapper
@@ -45,7 +46,7 @@ class ApplicationPasswordAutoAuthDialogViewModel @Inject constructor(
     val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
 
     @Suppress("TooGenericExceptionCaught", "LongMethod")
-    fun createApplicationPassword(site: SiteModel) {
+    fun createApplicationPassword(site: SiteModel, creationSource: String) {
         viewModelScope.launch {
             try {
                 require(site.username.isNotBlank()) { "Site username is required for cookie authentication" }
@@ -75,16 +76,28 @@ class ApplicationPasswordAutoAuthDialogViewModel @Inject constructor(
                     is WpRequestResult.Success -> {
                         val name = site.username
                         val password = response.response.data.password
-                        val apiRootUrl = wpApiClientProvider.getApiRootUrlFrom(site)
-                        applicationPasswordLoginHelper.storeApplicationPasswordCredentialsFrom(
-                            UriLogin(
-                                siteUrl = site.url,
-                                user = name,
-                                password = password,
-                                apiRootUrl = apiRootUrl
+                        val apiRootUrl =
+                            wpApiClientProvider.getApiRootUrlFrom(site)
+                        val result = applicationPasswordLoginHelper
+                            .storeApplicationPasswordCredentialsFrom(
+                                urlLogin = UriLogin(
+                                    siteUrl = site.url,
+                                    user = name,
+                                    password = password,
+                                    apiRootUrl = apiRootUrl
+                                ),
+                                creationSource = creationSource
                             )
-                        )
-                        _navigationEvent.emit(NavigationEvent.Success)
+                        when (result) {
+                            is StoreCredentialsResult.Success ->
+                                _navigationEvent.emit(
+                                    NavigationEvent.Success
+                                )
+                            else ->
+                                _navigationEvent.emit(
+                                    NavigationEvent.Error
+                                )
+                        }
                     }
 
                     is WpRequestResult.WpError -> {

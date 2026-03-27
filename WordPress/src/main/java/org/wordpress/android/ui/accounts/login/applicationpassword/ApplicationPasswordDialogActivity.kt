@@ -26,6 +26,7 @@ import androidx.lifecycle.lifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
+import org.wordpress.android.ui.accounts.applicationpassword.ApplicationPasswordCreationTracker
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.ui.ActivityNavigator
 import org.wordpress.android.ui.compose.theme.AppThemeM3
@@ -49,6 +50,9 @@ abstract class ApplicationPasswordDialogActivity : ComponentActivity() {
             viewModel.navigationEvent.collect { event ->
                 when (event) {
                     is ApplicationPasswordDialogViewModel.NavigationEvent.NavigateToLogin -> {
+                        ApplicationPasswordCreationTracker.setPendingCreationSource(
+                            ApplicationPasswordCreationTracker.SOURCE_REAUTH
+                        )
                         activityNavigator.openApplicationPasswordLogin(
                             this@ApplicationPasswordDialogActivity,
                             event.authenticationUrl

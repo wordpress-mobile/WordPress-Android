@@ -20,6 +20,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpApiClientProvider
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.utils.AppLogWrapper
+import org.wordpress.android.ui.accounts.login.ApplicationPasswordLoginHelper.StoreCredentialsResult
 import org.wordpress.android.ui.accounts.login.ApplicationPasswordLoginHelper.UriLogin
 import org.wordpress.android.util.BuildConfigWrapper
 import rs.wordpress.api.kotlin.ApiDiscoveryResult
@@ -28,8 +29,7 @@ import uniffi.wp_api.AutoDiscoveryAttemptSuccess
 import uniffi.wp_api.DiscoveredAuthenticationMechanism
 import uniffi.wp_api.ParseUrlException
 import kotlin.test.assertEquals
-import kotlin.test.assertFalse
-import kotlin.test.assertTrue
+import kotlin.test.assertIs
 
 private const val TEST_URL = "http://test.com"
 private const val TEST_USER = "testuser"
@@ -96,49 +96,62 @@ class ApplicationPasswordLoginHelperTest : BaseUnitTest() {
     }
 
     @Test
-    fun `storeApplicationPasswordCredentialsFrom with empty data returns false`() = runTest {
+    fun `storeApplicationPasswordCredentialsFrom with empty data returns BadData`() = runTest {
         val result = applicationPasswordLoginHelper.storeApplicationPasswordCredentialsFrom(
             UriLogin("", "", "", "")
         )
-        assertFalse(result)
+        assertIs<StoreCredentialsResult.BadData>(result)
         verify(wpApiClientProvider, times(0)).clearSelfHostedClient(any())
     }
 
     @Test
-    fun `storeApplicationPasswordCredentialsFrom with same data returns false`() = runTest {
+    fun `storeApplicationPasswordCredentialsFrom with same data returns BadData`() = runTest {
+        whenever(siteStore.sites).thenReturn(listOf(
+            SiteModel().apply { url = TEST_URL }
+        ))
         applicationPasswordLoginHelper.storeApplicationPasswordCredentialsFrom(testUriLogin)
         val result = applicationPasswordLoginHelper.storeApplicationPasswordCredentialsFrom(testUriLogin)
-        assertFalse(result)
+        assertIs<StoreCredentialsResult.BadData>(result)
     }
 
     @Test
-    fun `storeApplicationPasswordCredentialsFrom with null user name returns false`() = runTest {
-        val result = applicationPasswordLoginHelper.storeApplicationPasswordCredentialsFrom(testUriLogin)
-        assertFalse(result)
+    fun `storeApplicationPasswordCredentialsFrom with null user name returns BadData`() = runTest {
+        val result = applicationPasswordLoginHelper.storeApplicationPasswordCredentialsFrom(
+            UriLogin(TEST_URL, null, TEST_PASSWORD, TEST_API_ROOT_URL)
+        )
+        assertIs<StoreCredentialsResult.BadData>(result)
     }
 
     @Test
-    fun `storeApplicationPasswordCredentialsFrom with missing user name returns false`() = runTest {
-        val result = applicationPasswordLoginHelper.storeApplicationPasswordCredentialsFrom(testUriLogin)
-        assertFalse(result)
+    fun `storeApplicationPasswordCredentialsFrom with missing user name returns BadData`() = runTest {
+        val result = applicationPasswordLoginHelper.storeApplicationPasswordCredentialsFrom(
+            UriLogin(TEST_URL, "", TEST_PASSWORD, TEST_API_ROOT_URL)
+        )
+        assertIs<StoreCredentialsResult.BadData>(result)
     }
 
     @Test
-    fun `storeApplicationPasswordCredentialsFrom with null password returns false`() = runTest {
-        val result = applicationPasswordLoginHelper.storeApplicationPasswordCredentialsFrom(testUriLogin)
-        assertFalse(result)
+    fun `storeApplicationPasswordCredentialsFrom with null password returns BadData`() = runTest {
+        val result = applicationPasswordLoginHelper.storeApplicationPasswordCredentialsFrom(
+            UriLogin(TEST_URL, TEST_USER, null, TEST_API_ROOT_URL)
+        )
+        assertIs<StoreCredentialsResult.BadData>(result)
     }
 
     @Test
-    fun `storeApplicationPasswordCredentialsFrom with missing password returns false`() = runTest {
-        val result = applicationPasswordLoginHelper.storeApplicationPasswordCredentialsFrom(testUriLogin)
-        assertFalse(result)
+    fun `storeApplicationPasswordCredentialsFrom with missing password returns BadData`() = runTest {
+        val result = applicationPasswordLoginHelper.storeApplicationPasswordCredentialsFrom(
+            UriLogin(TEST_URL, TEST_USER, "", TEST_API_ROOT_URL)
+        )
+        assertIs<StoreCredentialsResult.BadData>(result)
     }
 
     @Test
-    fun `storeApplicationPasswordCredentialsFrom with empty api root url returns false`() = runTest {
-        val result = applicationPasswordLoginHelper.storeApplicationPasswordCredentialsFrom(testUriLogin)
-        assertFalse(result)
+    fun `storeApplicationPasswordCredentialsFrom with empty api root url returns BadData`() = runTest {
+        val result = applicationPasswordLoginHelper.storeApplicationPasswordCredentialsFrom(
+            UriLogin(TEST_URL, TEST_USER, TEST_PASSWORD, null)
+        )
+        assertIs<StoreCredentialsResult.BadData>(result)
     }
 
     @Test
@@ -152,20 +165,20 @@ class ApplicationPasswordLoginHelperTest : BaseUnitTest() {
 
         val result = applicationPasswordLoginHelper.storeApplicationPasswordCredentialsFrom(testUriLogin)
 
-        assertTrue(result)
+        assertIs<StoreCredentialsResult.Success>(result)
         verify(siteStore).sites
         verify(dispatcherWrapper).updateApplicationPassword(eq(siteModel))
         verify(wpApiClientProvider).clearSelfHostedClient(eq(siteModel.id))
     }
 
     @Test
-    fun `storeApplicationPasswordCredentialsFrom with valid data but not matching site does not store credentials`() =
+    fun `storeApplicationPasswordCredentialsFrom with valid data but not matching site returns SiteNotFound`() =
         runTest {
             whenever(siteStore.sites).thenReturn(listOf())
 
             val result = applicationPasswordLoginHelper.storeApplicationPasswordCredentialsFrom(testUriLogin)
 
-            assertFalse(result)
+            assertIs<StoreCredentialsResult.SiteNotFound>(result)
             verify(siteStore).sites
             verify(dispatcherWrapper, times(0)).updateApplicationPassword(any())
             verify(wpApiClientProvider, times(0)).clearSelfHostedClient(any())
@@ -185,7 +198,7 @@ class ApplicationPasswordLoginHelperTest : BaseUnitTest() {
             val result = applicationPasswordLoginHelper
                 .storeApplicationPasswordCredentialsFrom(emptyUrlLogin)
 
-            assertFalse(result)
+            assertIs<StoreCredentialsResult.SiteNotFound>(result)
             verify(dispatcherWrapper, times(0)).updateApplicationPassword(any())
         }
 
@@ -203,7 +216,7 @@ class ApplicationPasswordLoginHelperTest : BaseUnitTest() {
             val result = applicationPasswordLoginHelper
                 .storeApplicationPasswordCredentialsFrom(httpsLogin)
 
-            assertTrue(result)
+            assertIs<StoreCredentialsResult.Success>(result)
             verify(dispatcherWrapper).updateApplicationPassword(eq(siteModel))
         }
 
@@ -221,7 +234,7 @@ class ApplicationPasswordLoginHelperTest : BaseUnitTest() {
             val result = applicationPasswordLoginHelper
                 .storeApplicationPasswordCredentialsFrom(noWwwLogin)
 
-            assertTrue(result)
+            assertIs<StoreCredentialsResult.Success>(result)
             verify(dispatcherWrapper).updateApplicationPassword(eq(siteModel))
         }
 
@@ -239,7 +252,7 @@ class ApplicationPasswordLoginHelperTest : BaseUnitTest() {
             val result = applicationPasswordLoginHelper
                 .storeApplicationPasswordCredentialsFrom(httpsNoWwwLogin)
 
-            assertTrue(result)
+            assertIs<StoreCredentialsResult.Success>(result)
             verify(dispatcherWrapper).updateApplicationPassword(eq(siteModel))
         }
 
@@ -260,7 +273,7 @@ class ApplicationPasswordLoginHelperTest : BaseUnitTest() {
             val result = applicationPasswordLoginHelper
                 .storeApplicationPasswordCredentialsFrom(testUriLogin)
 
-            assertTrue(result)
+            assertIs<StoreCredentialsResult.Success>(result)
             verify(dispatcherWrapper).updateApplicationPassword(eq(exactSite))
         }
 
