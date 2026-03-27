@@ -45,7 +45,10 @@ class ReaderPostDetailsHeaderViewUiStateBuilder @Inject constructor(
 
         return ReaderPostDetailsHeaderUiState(
             title = textTitle,
-            authorName = post.authorName,
+            authorName = post.authorName?.takeIf {
+                it.isNotBlank() &&
+                    !it.equals(post.blogName, ignoreCase = true)
+            },
             tagItems = buildTagItems(
                 post,
                 onClicked = {
