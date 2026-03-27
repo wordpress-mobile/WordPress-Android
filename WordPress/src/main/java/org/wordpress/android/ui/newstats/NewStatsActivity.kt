@@ -25,6 +25,7 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.DateRange
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -107,18 +108,63 @@ import org.wordpress.android.ui.newstats.tagsandcategories.TagsAndCategoriesView
 import org.wordpress.android.ui.newstats.yearinreview.YearInReviewDetailActivity
 import org.wordpress.android.ui.newstats.yearinreview.YearInReviewViewModel
 import org.wordpress.android.ui.newstats.util.ProvideShimmerBrush
+import org.wordpress.android.ui.mysite.SelectedSiteRepository
+import org.wordpress.android.ui.newstats.components.NewStatsIntroBottomSheet
+import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures
+import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures.Feature
+import org.wordpress.android.ui.stats.refresh.StatsActivity
+import org.wordpress.android.ui.stats.refresh.utils.StatsLaunchedFrom
+import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class NewStatsActivity : BaseAppCompatActivity() {
+    @Inject
+    lateinit var experimentalFeatures: ExperimentalFeatures
+
+    @Inject
+    lateinit var selectedSiteRepository: SelectedSiteRepository
+
+    @Inject
+    lateinit var appPrefsWrapper: AppPrefsWrapper
+
+    @Inject
+    lateinit var analyticsTracker: AnalyticsTrackerWrapper
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val shouldShowIntro =
+            !appPrefsWrapper.getNewStatsIntroShown()
         setContent {
             AppThemeM3 {
                 NewStatsScreen(
-                    onBackPressed = onBackPressedDispatcher::onBackPressed
+                    onBackPressed =
+                        onBackPressedDispatcher::onBackPressed,
+                    onSwitchToOldStats = ::switchToOldStats,
+                    showIntroBottomSheet = shouldShowIntro,
+                    onIntroDismissed = {
+                        appPrefsWrapper
+                            .setNewStatsIntroShown(true)
+                    }
                 )
             }
+        }
+    }
+
+    private fun switchToOldStats() {
+        analyticsTracker.track(Stat.STATS_NEW_STATS_DISABLED)
+        experimentalFeatures.setEnabled(Feature.NEW_STATS, false)
+        appPrefsWrapper.setNewStatsIntroShown(false)
+        selectedSiteRepository.getSelectedSite()?.let { site ->
+            StatsActivity.start(
+                this,
+                site,
+                launchedFrom = StatsLaunchedFrom.STATS_TOGGLE
+            )
+            finish()
         }
     }
 
@@ -135,10 +181,48 @@ private enum class StatsTab(val titleResId: Int) {
     SUBSCRIBERS(R.string.subscribers)
 }
 
+@Composable
+private fun StatsOverflowMenu(
+    onSwitchToOldStats: () -> Unit
+) {
+    var expanded by remember { mutableStateOf(false) }
+    Box {
+        IconButton(onClick = { expanded = true }) {
+            Icon(
+                imageVector = Icons.Default.MoreVert,
+                contentDescription = stringResource(
+                    R.string.more
+                )
+            )
+        }
+        DropdownMenu(
+            expanded = expanded,
+            onDismissRequest = { expanded = false }
+        ) {
+            DropdownMenuItem(
+                text = {
+                    Text(
+                        stringResource(
+                            R.string.stats_switch_to_old_stats
+                        )
+                    )
+                },
+                onClick = {
+                    expanded = false
+                    onSwitchToOldStats()
+                }
+            )
+        }
+    }
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun NewStatsScreen(
-    onBackPressed: () -> Unit
+    onBackPressed: () -> Unit,
+    onSwitchToOldStats: () -> Unit = {},
+    showIntroBottomSheet: Boolean = false,
+    onIntroDismissed: () -> Unit = {}
 ) {
     val viewsStatsViewModel: ViewsStatsViewModel = viewModel()
     val selectedPeriod by viewsStatsViewModel.selectedPeriod.collectAsState()
@@ -147,6 +231,20 @@ private fun NewStatsScreen(
     val pagerState = rememberPagerState(pageCount = { tabs.size })
     val coroutineScope = rememberCoroutineScope()
     var showPeriodMenu by remember { mutableStateOf(false) }
+    var showIntro by remember { mutableStateOf(showIntroBottomSheet) }
+    val introSheetState = rememberModalBottomSheetState(
+        skipPartiallyExpanded = true
+    )
+
+    if (showIntro) {
+        NewStatsIntroBottomSheet(
+            sheetState = introSheetState,
+            onDismiss = {
+                showIntro = false
+                onIntroDismissed()
+            }
+        )
+    }
     var showDateRangePicker by remember { mutableStateOf(false) }
 
     if (showDateRangePicker) {
@@ -224,6 +322,9 @@ private fun NewStatsScreen(
                             )
                         }
                     }
+                    StatsOverflowMenu(
+                        onSwitchToOldStats = onSwitchToOldStats
+                    )
                 }
             )
         }

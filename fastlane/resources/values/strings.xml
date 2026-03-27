@@ -998,6 +998,18 @@
     <string name="experimental_post_types_description">Enable experimental post types screen</string>
     <string name="experimental_new_stats">New Stats</string>
     <string name="experimental_new_stats_description">Show stats in a more modern and advanced UI</string>
+    <string name="stats_try_new_stats">Try new stats</string>
+    <string name="stats_switch_to_old_stats">Disable new stats</string>
+    <!-- New Stats intro bottom sheet -->
+    <string name="new_stats_intro_title">New Stats</string>
+    <string name="new_stats_intro_subtitle">A better way to understand your site\'s performance.</string>
+    <string name="new_stats_intro_any_period_title">Any Period, Any Range</string>
+    <string name="new_stats_intro_any_period_desc">Pick from common presets or set a custom date range with a comparison period, all in one tap.</string>
+    <string name="new_stats_intro_on_par_title">On Par with the Web</string>
+    <string name="new_stats_intro_on_par_desc">Devices, UTM, locations, WordAds (coming) — the same data you get on WordPress.com.</string>
+    <string name="new_stats_intro_trends_title">Trends at a Glance</string>
+    <string name="new_stats_intro_trends_desc">Every metric shows how it\'s trending compared to the previous period, so you always know if you\'re growing.</string>
+    <string name="new_stats_intro_footer">You can turn off New Stats from the More menu in the Stats screen.</string>
     <string name="experimental_rs_post_list">New Post List</string>
     <string name="experimental_rs_post_list_description">Show post list in a more modern UI for WordPress.com and self-hosted sites with application passwords</string>
     <string name="post_rs_failed_to_load">Failed to load post</string>

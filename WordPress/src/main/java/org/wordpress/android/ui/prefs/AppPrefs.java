@@ -61,6 +61,8 @@ public class AppPrefs {
         // name of last shown activity
         LAST_ACTIVITY_STR,
 
+        NEW_STATS_INTRO_SHOWN,
+
         READER_TAGS_UPDATE_TIMESTAMP,
         // last selected tag in the reader
         READER_TAG_NAME,
@@ -1865,5 +1867,13 @@ public class AppPrefs {
 
     public static void setShareFlowPending(boolean pending) {
         setBoolean(DeletablePrefKey.IS_SHARE_FLOW_PENDING, pending);
+    }
+
+    public static boolean getNewStatsIntroShown() {
+        return getBoolean(DeletablePrefKey.NEW_STATS_INTRO_SHOWN, false);
+    }
+
+    public static void setNewStatsIntroShown(boolean shown) {
+        setBoolean(DeletablePrefKey.NEW_STATS_INTRO_SHOWN, shown);
     }
 }
