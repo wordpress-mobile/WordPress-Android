@@ -13,7 +13,6 @@ import android.text.TextUtils
 import android.util.Base64
 import android.widget.ImageView
 import android.widget.ImageView.ScaleType
-import androidx.annotation.ColorInt
 import android.widget.ImageView.ScaleType.CENTER
 import android.widget.ImageView.ScaleType.FIT_CENTER
 import android.widget.ImageView.ScaleType.FIT_END
@@ -21,6 +20,7 @@ import android.widget.ImageView.ScaleType.FIT_START
 import android.widget.ImageView.ScaleType.FIT_XY
 import android.widget.ImageView.ScaleType.MATRIX
 import android.widget.TextView
+import androidx.annotation.ColorInt
 import androidx.annotation.DrawableRes
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toDrawable
@@ -281,7 +281,6 @@ class ImageManager @Inject constructor(
      * horizontally with a background color fill. For landscape/square images,
      * applies standard CenterCrop.
      */
-    @JvmOverloads
     fun loadImageWithCornersPortraitAware(
         imageView: ImageView,
         imageType: ImageType,
