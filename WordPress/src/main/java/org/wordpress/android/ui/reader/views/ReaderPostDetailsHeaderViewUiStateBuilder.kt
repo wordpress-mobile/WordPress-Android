@@ -2,6 +2,7 @@ package org.wordpress.android.ui.reader.views
 
 import dagger.Reusable
 import org.wordpress.android.R
+import org.wordpress.android.datasets.ReaderBlogTableWrapper
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.ui.reader.discover.ReaderPostTagsUiStateBuilder
 import org.wordpress.android.ui.reader.discover.ReaderPostUiStateBuilder
@@ -34,6 +35,7 @@ class ReaderPostDetailsHeaderViewUiStateBuilder @Inject constructor(
     private val featuredImageUtils: FeaturedImageUtils,
     private val readerUtilsWrapper: ReaderUtilsWrapper,
     private val displayUtilsWrapper: DisplayUtilsWrapper,
+    private val readerBlogTableWrapper: ReaderBlogTableWrapper,
 ) {
     fun mapPostToUiState(
         post: ReaderPost,
@@ -163,8 +165,12 @@ class ReaderPostDetailsHeaderViewUiStateBuilder @Inject constructor(
     }
 
     private fun buildExcerpt(post: ReaderPost): UiString? {
-        if (!post.hasExcerpt()) return null
-        return UiStringText(post.excerpt)
+        val description = readerBlogTableWrapper
+            .getBlogInfo(post.blogId)
+            ?.description
+            ?.takeIf { it.isNotBlank() }
+            ?: return null
+        return UiStringText(description)
     }
 
     private fun buildFeaturedImageUiState(
