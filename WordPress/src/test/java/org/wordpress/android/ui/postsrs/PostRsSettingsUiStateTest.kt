@@ -42,9 +42,15 @@ class PostRsSettingsUiStateTest {
     }
 
     @Test
-    fun `effectiveSticky returns original when no edit`() {
+    fun `effectiveSticky returns true original when no edit`() {
         val state = PostRsSettingsUiState(sticky = true)
         assertThat(state.effectiveSticky).isTrue()
+    }
+
+    @Test
+    fun `effectiveSticky returns false original when no edit`() {
+        val state = PostRsSettingsUiState(sticky = false)
+        assertThat(state.effectiveSticky).isFalse()
     }
 
     // endregion

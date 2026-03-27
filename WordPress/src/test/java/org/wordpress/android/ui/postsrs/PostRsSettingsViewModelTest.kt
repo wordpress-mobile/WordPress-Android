@@ -23,6 +23,7 @@ import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
 import uniffi.wp_api.PostFormat
 import uniffi.wp_api.PostStatus
+import java.util.Calendar
 
 @ExperimentalCoroutinesApi
 @Suppress("LargeClass")
@@ -629,9 +630,15 @@ class PostRsSettingsViewModelTest :
 
         viewModel.onDateSelected(2025, 5, 15)
 
-        assertThat(
-            viewModel.uiState.value.editedDate
-        ).isNotNull()
+        val date = viewModel.uiState.value.editedDate
+        assertThat(date).isNotNull()
+        val cal = Calendar.getInstance().apply {
+            time = date!!
+        }
+        assertThat(cal[Calendar.YEAR]).isEqualTo(2025)
+        assertThat(cal[Calendar.MONTH]).isEqualTo(5)
+        assertThat(cal[Calendar.DAY_OF_MONTH])
+            .isEqualTo(15)
     }
 
     @Test
@@ -661,9 +668,14 @@ class PostRsSettingsViewModelTest :
 
         viewModel.onTimeSelected(14, 30)
 
-        assertThat(
-            viewModel.uiState.value.editedDate
-        ).isNotNull()
+        val date = viewModel.uiState.value.editedDate
+        assertThat(date).isNotNull()
+        val cal = Calendar.getInstance().apply {
+            time = date!!
+        }
+        assertThat(cal[Calendar.HOUR_OF_DAY])
+            .isEqualTo(14)
+        assertThat(cal[Calendar.MINUTE]).isEqualTo(30)
     }
 
     @Test
@@ -849,6 +861,9 @@ class PostRsSettingsViewModelTest :
         assertThat(
             viewModel.uiState.value.editedFeaturedImageId
         ).isNull()
+        assertThat(
+            viewModel.uiState.value.featuredImage
+        ).isEqualTo(FieldState.Empty)
     }
 
     @Test
