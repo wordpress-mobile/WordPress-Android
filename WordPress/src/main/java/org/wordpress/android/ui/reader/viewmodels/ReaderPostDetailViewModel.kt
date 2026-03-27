@@ -931,7 +931,6 @@ class ReaderPostDetailViewModel @Inject constructor(
             val localRelatedPosts: RelatedPostsUiState? = null,
             val globalRelatedPosts: RelatedPostsUiState? = null
         ) : UiState() {
-
             data class ExcerptFooterUiState(val visitPostExcerptFooterLinkText: UiString? = null, val postLink: String?)
 
             data class RelatedPostsUiState(

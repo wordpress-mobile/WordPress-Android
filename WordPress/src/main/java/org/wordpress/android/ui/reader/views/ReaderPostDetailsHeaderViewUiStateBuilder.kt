@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.reader.views
 
-import androidx.core.text.HtmlCompat
 import dagger.Reusable
 import org.wordpress.android.R
 import org.wordpress.android.models.ReaderPost
@@ -19,6 +18,7 @@ import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.DateTimeUtilsWrapper
 import org.wordpress.android.util.DisplayUtilsWrapper
+import org.wordpress.android.util.HtmlUtils
 import java.text.SimpleDateFormat
 import java.util.Locale
 import javax.inject.Inject
@@ -132,17 +132,23 @@ class ReaderPostDetailsHeaderViewUiStateBuilder @Inject constructor(
         ).format(date)
     }
 
+    /**
+     * Estimates reading time by stripping HTML tags and img elements
+     * from the post content, counting words, and dividing by
+     * [WORDS_PER_MINUTE] (rounded up, minimum 1 minute).
+     * Returns null for excerpt-only posts or empty content.
+     */
     private fun buildReadingTime(post: ReaderPost): UiString? {
-        if (post.shouldShowExcerpt()) return null
-        val content = post.text
-        if (content.isNullOrBlank()) return null
-
-        val text = HtmlCompat.fromHtml(
-            content.replace(IMG_TAG_REGEX, ""),
-            HtmlCompat.FROM_HTML_MODE_LEGACY
-        ).toString().trim()
-
-        if (text.isBlank()) return null
+        val text = post.takeUnless { it.shouldShowExcerpt() }
+            ?.text
+            ?.takeIf { it.isNotBlank() }
+            ?.let {
+                HtmlUtils.fastStripHtml(
+                    it.replace(IMG_TAG_REGEX, "")
+                ).trim()
+            }
+            ?.takeIf { it.isNotBlank() }
+            ?: return null
         val wordCount = text.split(WHITESPACE_REGEX).size
         val minutes = ceil(wordCount.toDouble() / WORDS_PER_MINUTE)
             .toInt()
