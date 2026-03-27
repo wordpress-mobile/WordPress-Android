@@ -1292,13 +1292,12 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
         return ReaderPostDetailsUiState(
             postId = post.postId,
             blogId = post.blogId,
-            featuredImageUiState = mock(),
             headerUiState = ReaderPostDetailsHeaderUiState(
-                UiStringText(post.title),
-                post.authorName,
-                listOf(TagUiState("", "", false, mock())),
-                true,
-                ReaderBlogSectionUiState(
+                title = UiStringText(post.title),
+                authorName = post.authorName,
+                tagItems = listOf(TagUiState("", "", false, mock())),
+                tagItemsVisibility = true,
+                blogSectionUiState = ReaderBlogSectionUiState(
                     postId = post.postId,
                     blogId = post.blogId,
                     dateLine = "",
@@ -1310,13 +1309,13 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
                     blavatarType = BLAVATAR_CIRCULAR,
                     blogSectionClickData = ReaderBlogSectionClickData(mock(), 0)
                 ),
-                FollowButtonUiState(
+                followButtonUiState = FollowButtonUiState(
                     onFollowButtonClicked = mock(),
                     isFollowed = false,
                     isVisible = true
                 ),
-                "",
-                InteractionSectionUiState(
+                dateLine = "",
+                interactionSectionUiState = InteractionSectionUiState(
                     likeCount = 42,
                     commentCount = 13,
                     onLikesClicked = mock(),

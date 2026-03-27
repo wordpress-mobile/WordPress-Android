@@ -24,7 +24,6 @@ import android.view.ViewGroup
 import android.view.ViewStub
 import android.webkit.CookieManager
 import android.webkit.WebView
-import android.widget.ImageView.ScaleType.CENTER_CROP
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
@@ -48,7 +47,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.facebook.shimmer.ShimmerFrameLayout
 import com.google.android.material.appbar.AppBarLayout
-import com.google.android.material.appbar.CollapsingToolbarLayout
 import com.google.android.material.behavior.HideBottomViewOnScrollBehavior
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
@@ -146,7 +144,6 @@ import org.wordpress.android.util.extensions.getSerializableCompat
 import org.wordpress.android.util.extensions.setVisible
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 import org.wordpress.android.util.image.ImageManager
-import org.wordpress.android.util.image.ImageType.PHOTO
 import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout
 import org.wordpress.android.viewmodel.ContextProvider
 import org.wordpress.android.viewmodel.observeEvent
@@ -293,25 +290,18 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         get() = view != null && readerWebView.isCustomViewShowing
 
     private val appBarLayoutOffsetChangedListener =
-        AppBarLayout.OnOffsetChangedListener { appBarLayout, verticalOffset ->
-            val collapsingToolbarLayout = appBarLayout
-                .findViewById<CollapsingToolbarLayout>(R.id.collapsing_toolbar)
+        AppBarLayout.OnOffsetChangedListener { appBarLayout, _ ->
             val toolbar = appBarLayout.findViewById<Toolbar>(R.id.toolbar_main)
 
             view?.context?.let { context ->
                 val menu: Menu = toolbar.menu
-
-                val collapsingToolbarHeight = collapsingToolbarLayout.height
-                val isCollapsed = (collapsingToolbarHeight + verticalOffset) <=
-                        collapsingToolbarLayout.scrimVisibleHeightTrigger
-
-                val color = if (isCollapsed) {
-                    context.getColorFromAttribute(MaterialR.attr.colorOnSurface)
-                } else {
-                    ContextCompat.getColor(context, R.color.white)
-                }
+                val color = context.getColorFromAttribute(
+                    MaterialR.attr.colorOnSurface
+                )
                 val colorFilter = BlendModeColorFilterCompat
-                    .createBlendModeColorFilterCompat(color, BlendModeCompat.SRC_ATOP)
+                    .createBlendModeColorFilterCompat(
+                        color, BlendModeCompat.SRC_ATOP
+                    )
 
                 toolbar.setTitleTextColor(color)
                 toolbar.navigationIcon?.colorFilter = colorFilter
@@ -801,7 +791,6 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         binding.headerView.updatePost(state.headerUiState, getReadingPreferences())
         showOrHideMoreMenu(state)
 
-        updateFeaturedImage(state.featuredImageUiState, binding)
         updateExcerptFooter(state.excerptFooterUiState)
 
         with(layoutFooterBinding) {
@@ -931,23 +920,6 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     private fun showLoginRequiredBottomSheet() {
         ReaderLoginRequiredBottomSheetFragment.newInstance()
             .show(childFragmentManager, ReaderLoginRequiredBottomSheetFragment.TAG)
-    }
-
-    private fun updateFeaturedImage(
-        state: ReaderPostDetailsUiState.ReaderPostFeaturedImageUiState?,
-        binding: ReaderFragmentPostDetailBinding
-    ) {
-        val featuredImageView = binding.appbarWithCollapsingToolbarLayout.featuredImage
-        featuredImageView.setVisible(state != null)
-        state?.let {
-            featuredImageView.layoutParams.height = it.height
-            it.url?.let { url ->
-                imageManager.load(featuredImageView, PHOTO, url, CENTER_CROP)
-                featuredImageView.setOnClickListener {
-                    viewModel.onFeaturedImageClicked(blogId = state.blogId, featuredImageUrl = url)
-                }
-            }
-        }
     }
 
     private fun updateExcerptFooter(state: ReaderPostDetailsUiState.ExcerptFooterUiState?) {

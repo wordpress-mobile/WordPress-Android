@@ -6,4 +6,8 @@ sealed interface ReaderPostDetailsHeaderAction {
     data class TagItemClicked(val tagSlug: String) : ReaderPostDetailsHeaderAction
     data object LikesClicked : ReaderPostDetailsHeaderAction
     data object CommentsClicked : ReaderPostDetailsHeaderAction
+    data class FeaturedImageClicked(
+        val blogId: Long,
+        val featuredImageUrl: String
+    ) : ReaderPostDetailsHeaderAction
 }

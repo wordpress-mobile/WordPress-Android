@@ -12,6 +12,15 @@ sealed class ReaderPostDetailsHeaderViewUiState {
         val blogSectionUiState: ReaderBlogSectionUiState,
         val followButtonUiState: FollowButtonUiState,
         val dateLine: String,
+        val readingTime: UiString? = null,
+        val excerpt: UiString? = null,
+        val featuredImageUiState: ReaderFeaturedImageUiState? = null,
         val interactionSectionUiState: InteractionSectionUiState,
     ) : ReaderPostDetailsHeaderViewUiState()
+
+    data class ReaderFeaturedImageUiState(
+        val blogId: Long,
+        val url: String? = null,
+        val onFeaturedImageClicked: ((Long, String) -> Unit)? = null,
+    )
 }

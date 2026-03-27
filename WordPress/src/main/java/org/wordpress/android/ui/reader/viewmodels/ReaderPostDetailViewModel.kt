@@ -571,6 +571,8 @@ class ReaderPostDetailViewModel @Inject constructor(
             is ReaderPostDetailsHeaderAction.LikesClicked -> onLikesClicked()
             is ReaderPostDetailsHeaderAction.CommentsClicked -> onCommentsClicked()
             is ReaderPostDetailsHeaderAction.TagItemClicked -> onTagItemClicked(action.tagSlug)
+            is ReaderPostDetailsHeaderAction.FeaturedImageClicked ->
+                onFeaturedImageClicked(action.blogId, action.featuredImageUrl)
         }
     }
 
@@ -922,7 +924,6 @@ class ReaderPostDetailViewModel @Inject constructor(
         data class ReaderPostDetailsUiState(
             val postId: Long,
             val blogId: Long,
-            val featuredImageUiState: ReaderPostFeaturedImageUiState? = null,
             val headerUiState: ReaderPostDetailsHeaderUiState,
             val excerptFooterUiState: ExcerptFooterUiState?,
             val moreMenuItems: List<ReaderPostCardAction>? = null,
@@ -930,7 +931,6 @@ class ReaderPostDetailViewModel @Inject constructor(
             val localRelatedPosts: RelatedPostsUiState? = null,
             val globalRelatedPosts: RelatedPostsUiState? = null
         ) : UiState() {
-            data class ReaderPostFeaturedImageUiState(val blogId: Long, val url: String? = null, val height: Int)
 
             data class ExcerptFooterUiState(val visitPostExcerptFooterLinkText: UiString? = null, val postLink: String?)
 
