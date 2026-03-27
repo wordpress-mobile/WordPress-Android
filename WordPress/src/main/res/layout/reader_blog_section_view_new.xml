@@ -46,15 +46,17 @@
         style="@style/ReaderTextView.PostDetail.BlogSection.Subtitle.Primary"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_small"
+        android:layout_marginStart="@dimen/margin_large"
         android:includeFontPadding="false"
         android:maxLines="1"
         android:ellipsize="end"
         android:textAlignment="viewStart"
-        app:layout_constraintStart_toStartOf="@id/blog_section_text_blog_name"
+        app:layout_goneMarginStart="0dp"
+        app:layout_constraintStart_toEndOf="@id/blog_section_image_blog_avatar"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/blog_section_text_blog_name"
-        app:layout_constraintBottom_toBottomOf="@id/blog_section_image_blog_avatar"
+        app:layout_constraintTop_toTopOf="@id/blog_section_image_blog_avatar"
+        app:layout_constraintBottom_toTopOf="@id/blog_section_text_dateline"
+        app:layout_constraintVertical_chainStyle="packed"
         tools:text="Author Name" />
 
     <com.google.android.material.textview.MaterialTextView
@@ -66,8 +68,9 @@
         android:layout_marginEnd="@dimen/margin_medium"
         android:includeFontPadding="false"
         android:maxLines="1"
-        app:layout_constraintStart_toStartOf="@id/blog_section_text_blog_name"
+        app:layout_constraintStart_toStartOf="@id/blog_section_text_author"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/blog_section_text_author"
+        app:layout_constraintBottom_toBottomOf="@id/blog_section_image_blog_avatar"
         tools:text="Dec 18, 2025 at 3:30 PM" />
 </androidx.constraintlayout.widget.ConstraintLayout>

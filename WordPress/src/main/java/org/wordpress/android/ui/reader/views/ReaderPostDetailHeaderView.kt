@@ -64,12 +64,15 @@ class ReaderPostDetailHeaderView @JvmOverloads constructor(
 
         updateTitle(uiState.title, readingPreferences, themeValues)
 
-        setAuthorAndDate(uiState.authorName, uiState.dateLine)
-
         uiHelpers.setTextOrHide(
-            layoutBlogSection.blogSectionTextBlogName,
+            textBlogName,
             uiState.blogSectionUiState.blogName
         )
+
+        setAuthorAndDate(uiState.authorName, uiState.dateLine)
+
+        // Blog name is shown at the top; hide it in the blog section
+        layoutBlogSection.blogSectionTextBlogName.isVisible = false
 
         updateFollowButton(uiState.followButtonUiState)
 
