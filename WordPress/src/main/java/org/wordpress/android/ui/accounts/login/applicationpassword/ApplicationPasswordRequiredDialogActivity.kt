@@ -27,7 +27,10 @@ import androidx.lifecycle.lifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
+import org.wordpress.android.analytics.AnalyticsTracker
+import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.ui.accounts.applicationpassword.ApplicationPasswordCreationTracker
 import org.wordpress.android.ui.ActivityNavigator
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.util.ToastUtils
@@ -57,31 +60,14 @@ class ApplicationPasswordRequiredDialogActivity : ComponentActivity() {
 
         val featureName = intent.getStringExtra(EXTRA_FEATURE_NAME)
 
-        lifecycleScope.launch {
-            viewModel.navigationEvent.collect { event ->
-                when (event) {
-                    is ApplicationPasswordAutoAuthDialogViewModel.NavigationEvent.Success -> {
-                        setResult(RESULT_OK)
-                        finish()
-                    }
-                    is ApplicationPasswordAutoAuthDialogViewModel.NavigationEvent.FallbackToManualLogin -> {
-                        activityNavigator.openApplicationPasswordLogin(
-                            this@ApplicationPasswordRequiredDialogActivity,
-                            event.authUrl
-                        )
-                        finish()
-                    }
-                    is ApplicationPasswordAutoAuthDialogViewModel.NavigationEvent.Error -> {
-                        ToastUtils.showToast(
-                            this@ApplicationPasswordRequiredDialogActivity,
-                            R.string.error_generic
-                        )
-                        setResult(RESULT_CANCELED)
-                        finish()
-                    }
-                }
-            }
+        if (savedInstanceState == null) {
+            AnalyticsTracker.track(
+                Stat.APPLICATION_PASSWORD_MIGRATION_PROMPTED,
+                mapOf("feature_name" to featureName.orEmpty())
+            )
         }
+
+        observeNavigationEvents()
 
         setContent {
             AppThemeM3 {
@@ -90,8 +76,50 @@ class ApplicationPasswordRequiredDialogActivity : ComponentActivity() {
                     featureName = featureName,
                     isLoading = isLoading.value,
                     onDismiss = { finish() },
-                    onConfirm = { viewModel.createApplicationPassword(site) }
+                    onConfirm = {
+                        viewModel.createApplicationPassword(
+                            site,
+                            ApplicationPasswordCreationTracker.SOURCE_MIGRATION
+                        )
+                    }
                 )
+            }
+        }
+    }
+
+    private fun observeNavigationEvents() {
+        lifecycleScope.launch {
+            viewModel.navigationEvent.collect { event ->
+                when (event) {
+                    is ApplicationPasswordAutoAuthDialogViewModel
+                        .NavigationEvent.Success -> {
+                        setResult(RESULT_OK)
+                        finish()
+                    }
+                    is ApplicationPasswordAutoAuthDialogViewModel
+                        .NavigationEvent.FallbackToManualLogin -> {
+                        ApplicationPasswordCreationTracker
+                            .setPendingCreationSource(
+                                ApplicationPasswordCreationTracker
+                                    .SOURCE_MIGRATION
+                            )
+                        activityNavigator
+                            .openApplicationPasswordLogin(
+                                this@ApplicationPasswordRequiredDialogActivity,
+                                event.authUrl
+                            )
+                        finish()
+                    }
+                    is ApplicationPasswordAutoAuthDialogViewModel
+                        .NavigationEvent.Error -> {
+                        ToastUtils.showToast(
+                            this@ApplicationPasswordRequiredDialogActivity,
+                            R.string.error_generic
+                        )
+                        setResult(RESULT_CANCELED)
+                        finish()
+                    }
+                }
             }
         }
     }

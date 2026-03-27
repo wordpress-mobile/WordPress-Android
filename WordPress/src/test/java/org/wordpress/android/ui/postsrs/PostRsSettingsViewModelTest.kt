@@ -23,6 +23,7 @@ import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
 import uniffi.wp_api.PostFormat
 import uniffi.wp_api.PostStatus
+import java.util.Calendar
 
 @ExperimentalCoroutinesApi
 @Suppress("LargeClass")
@@ -134,6 +135,18 @@ class PostRsSettingsViewModelTest :
     @Test
     fun `when site exists and offline, shows error`() {
         val viewModel = createViewModel()
+        assertThat(viewModel.uiState.value.isLoading)
+            .isFalse()
+        assertThat(viewModel.uiState.value.error)
+            .isNotNull()
+    }
+
+    @Test
+    fun `retry while offline shows error`() {
+        val viewModel = createViewModel()
+
+        viewModel.retry()
+
         assertThat(viewModel.uiState.value.isLoading)
             .isFalse()
         assertThat(viewModel.uiState.value.error)
@@ -361,6 +374,19 @@ class PostRsSettingsViewModelTest :
             .isEqualTo(DialogState.None)
     }
 
+    @Test
+    fun `onDismissDialog clears author search state`() {
+        val viewModel = createViewModel()
+
+        viewModel.onDismissDialog()
+
+        val state = viewModel.uiState.value
+        assertThat(state.authorSearchQuery).isEmpty()
+        assertThat(state.isSearchingAuthors).isFalse()
+        assertThat(state.siteAuthors).isEmpty()
+        assertThat(state.canLoadMoreAuthors).isFalse()
+    }
+
     // endregion
 
     // region hasChanges
@@ -452,6 +478,21 @@ class PostRsSettingsViewModelTest :
         val viewModel = createViewModel()
         viewModel.onStatusSelected(PostStatus.Draft)
 
+        viewModel.onSaveClicked()
+
+        assertThat(viewModel.uiState.value.isSaving)
+            .isTrue()
+    }
+
+    @Test
+    fun `onSaveClicked while already saving is no-op`() {
+        val viewModel = createViewModel()
+        viewModel.onStatusSelected(PostStatus.Draft)
+        viewModel.onSaveClicked()
+        assertThat(viewModel.uiState.value.isSaving)
+            .isTrue()
+
+        // Second save attempt should be no-op
         viewModel.onSaveClicked()
 
         assertThat(viewModel.uiState.value.isSaving)
@@ -578,6 +619,200 @@ class PostRsSettingsViewModelTest :
         assertThat(viewModel.uiState.value.dialogState)
             .isEqualTo(DialogState.None)
     }
+
+    // endregion
+
+    // region Date and Time selection
+
+    @Test
+    fun `onDateSelected updates editedDate`() {
+        val viewModel = createViewModel()
+
+        viewModel.onDateSelected(2025, 5, 15)
+
+        val date = viewModel.uiState.value.editedDate
+        assertThat(date).isNotNull()
+        val cal = Calendar.getInstance().apply {
+            time = date!!
+        }
+        assertThat(cal[Calendar.YEAR]).isEqualTo(2025)
+        assertThat(cal[Calendar.MONTH]).isEqualTo(5)
+        assertThat(cal[Calendar.DAY_OF_MONTH])
+            .isEqualTo(15)
+    }
+
+    @Test
+    fun `onDateSelected transitions to TimeDialog`() {
+        val viewModel = createViewModel()
+
+        viewModel.onDateSelected(2025, 5, 15)
+
+        assertThat(viewModel.uiState.value.dialogState)
+            .isEqualTo(DialogState.TimeDialog)
+    }
+
+    @Test
+    fun `onTimeSelected updates editedDate`() {
+        val viewModel = createViewModel()
+
+        viewModel.onTimeSelected(14, 30)
+
+        val date = viewModel.uiState.value.editedDate
+        assertThat(date).isNotNull()
+        val cal = Calendar.getInstance().apply {
+            time = date!!
+        }
+        assertThat(cal[Calendar.HOUR_OF_DAY])
+            .isEqualTo(14)
+        assertThat(cal[Calendar.MINUTE]).isEqualTo(30)
+    }
+
+    // endregion
+
+    // region Author selection
+
+    @Test
+    fun `onAuthorSelected updates editedAuthor`() {
+        val viewModel = createViewModel()
+
+        viewModel.onAuthorSelected(99L)
+
+        assertThat(
+            viewModel.uiState.value.editedAuthor
+        ).isEqualTo(99L)
+    }
+
+    @Test
+    fun `onAuthorSelected with same as original clears edit`() {
+        val viewModel = createViewModel()
+        // authorId defaults to 0
+
+        viewModel.onAuthorSelected(0L)
+
+        assertThat(
+            viewModel.uiState.value.editedAuthor
+        ).isNull()
+    }
+
+    // endregion
+
+    // region Categories and Tags
+
+    @Test
+    fun `onCategoriesClicked emits LaunchCategorySelection`() =
+        test {
+            val viewModel = createViewModel()
+
+            viewModel.events.test {
+                viewModel.onCategoriesClicked()
+
+                val event = awaitItem()
+                assertThat(event).isInstanceOf(
+                    PostRsSettingsEvent
+                        .LaunchCategorySelection::class.java
+                )
+                cancelAndIgnoreRemainingEvents()
+            }
+        }
+
+    @Test
+    fun `onCategoriesSelected with new ids updates edit`() {
+        val viewModel = createViewModel()
+
+        viewModel.onCategoriesSelected(
+            longArrayOf(1L, 2L)
+        )
+
+        assertThat(
+            viewModel.uiState.value.editedCategoryIds
+        ).containsExactly(1L, 2L)
+    }
+
+    @Test
+    fun `onTagsSelected with new ids updates edit`() {
+        val viewModel = createViewModel()
+
+        viewModel.onTagsSelected(longArrayOf(3L, 4L))
+
+        assertThat(
+            viewModel.uiState.value.editedTagIds
+        ).containsExactly(3L, 4L)
+    }
+
+    @Test
+    fun `onCategoriesSelected with same ids clears edit`() {
+        val viewModel = createViewModel()
+        // original categoryIds is empty list
+
+        viewModel.onCategoriesSelected(longArrayOf())
+
+        assertThat(
+            viewModel.uiState.value.editedCategoryIds
+        ).isNull()
+    }
+
+    // endregion
+
+    // region Featured image
+
+    @Test
+    fun `onFeaturedImageSelected updates editedId`() {
+        val viewModel = createViewModel()
+
+        viewModel.onFeaturedImageSelected(99L)
+
+        assertThat(
+            viewModel.uiState.value.editedFeaturedImageId
+        ).isEqualTo(99L)
+    }
+
+    @Test
+    fun `onFeaturedImageSelected with same id is no-op`() {
+        val viewModel = createViewModel()
+        // effectiveFeaturedImageId defaults to 0
+
+        viewModel.onFeaturedImageSelected(0L)
+
+        assertThat(
+            viewModel.uiState.value.editedFeaturedImageId
+        ).isNull()
+        assertThat(
+            viewModel.uiState.value.featuredImage
+        ).isEqualTo(FieldState.Empty)
+    }
+
+    @Test
+    fun `onChooseFromWpMedia emits LaunchWpMediaPicker`() =
+        test {
+            val viewModel = createViewModel()
+
+            viewModel.events.test {
+                viewModel.onChooseFromWpMedia()
+
+                val event = awaitItem()
+                assertThat(event).isEqualTo(
+                    PostRsSettingsEvent.LaunchWpMediaPicker
+                )
+                cancelAndIgnoreRemainingEvents()
+            }
+        }
+
+    @Test
+    fun `onChooseFromDevice emits LaunchDeviceMediaPicker`() =
+        test {
+            val viewModel = createViewModel()
+
+            viewModel.events.test {
+                viewModel.onChooseFromDevice()
+
+                val event = awaitItem()
+                assertThat(event).isEqualTo(
+                    PostRsSettingsEvent
+                        .LaunchDeviceMediaPicker
+                )
+                cancelAndIgnoreRemainingEvents()
+            }
+        }
 
     // endregion
 
