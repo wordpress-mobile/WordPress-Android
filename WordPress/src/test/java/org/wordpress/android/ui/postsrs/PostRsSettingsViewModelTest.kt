@@ -581,6 +581,399 @@ class PostRsSettingsViewModelTest :
 
     // endregion
 
+    // region Date and Time selection
+
+    @Test
+    fun `onDateSelected updates editedDate`() {
+        val viewModel = createViewModel()
+
+        viewModel.onDateSelected(2025, 5, 15)
+
+        assertThat(
+            viewModel.uiState.value.editedDate
+        ).isNotNull()
+    }
+
+    @Test
+    fun `onDateSelected transitions to TimeDialog`() {
+        val viewModel = createViewModel()
+
+        viewModel.onDateSelected(2025, 5, 15)
+
+        assertThat(viewModel.uiState.value.dialogState)
+            .isEqualTo(DialogState.TimeDialog)
+    }
+
+    @Test
+    fun `onDateSelected updates publishDate`() {
+        val viewModel = createViewModel()
+
+        viewModel.onDateSelected(2025, 5, 15)
+
+        assertThat(
+            viewModel.uiState.value.publishDate
+        ).isNotEmpty()
+    }
+
+    @Test
+    fun `onTimeSelected updates editedDate`() {
+        val viewModel = createViewModel()
+
+        viewModel.onTimeSelected(14, 30)
+
+        assertThat(
+            viewModel.uiState.value.editedDate
+        ).isNotNull()
+    }
+
+    @Test
+    fun `onTimeSelected dismisses dialog`() {
+        val viewModel = createViewModel()
+        viewModel.onDateClicked()
+
+        viewModel.onTimeSelected(14, 30)
+
+        assertThat(viewModel.uiState.value.dialogState)
+            .isEqualTo(DialogState.None)
+    }
+
+    @Test
+    fun `hasChanges is true after date edit`() {
+        val viewModel = createViewModel()
+
+        viewModel.onDateSelected(2025, 5, 15)
+
+        assertThat(viewModel.uiState.value.hasChanges)
+            .isTrue()
+    }
+
+    // endregion
+
+    // region Author selection
+
+    @Test
+    fun `onAuthorSelected updates editedAuthor`() {
+        val viewModel = createViewModel()
+
+        viewModel.onAuthorSelected(99L)
+
+        assertThat(
+            viewModel.uiState.value.editedAuthor
+        ).isEqualTo(99L)
+    }
+
+    @Test
+    fun `onAuthorSelected dismisses dialog`() {
+        val viewModel = createViewModel()
+
+        viewModel.onAuthorSelected(99L)
+
+        assertThat(viewModel.uiState.value.dialogState)
+            .isEqualTo(DialogState.None)
+    }
+
+    @Test
+    fun `onAuthorSelected clears search state`() {
+        val viewModel = createViewModel()
+
+        viewModel.onAuthorSelected(99L)
+
+        val state = viewModel.uiState.value
+        assertThat(state.authorSearchQuery).isEmpty()
+        assertThat(state.isSearchingAuthors).isFalse()
+        assertThat(state.siteAuthors).isEmpty()
+        assertThat(state.canLoadMoreAuthors).isFalse()
+    }
+
+    @Test
+    fun `onAuthorSelected with same as original clears edit`() {
+        val viewModel = createViewModel()
+        // authorId defaults to 0
+
+        viewModel.onAuthorSelected(0L)
+
+        assertThat(
+            viewModel.uiState.value.editedAuthor
+        ).isNull()
+    }
+
+    @Test
+    fun `hasChanges is true after author edit`() {
+        val viewModel = createViewModel()
+
+        viewModel.onAuthorSelected(99L)
+
+        assertThat(viewModel.uiState.value.hasChanges)
+            .isTrue()
+    }
+
+    // endregion
+
+    // region Categories and Tags
+
+    @Test
+    fun `onCategoriesClicked emits LaunchCategorySelection`() =
+        test {
+            val viewModel = createViewModel()
+
+            viewModel.events.test {
+                viewModel.onCategoriesClicked()
+
+                val event = awaitItem()
+                assertThat(event).isInstanceOf(
+                    PostRsSettingsEvent
+                        .LaunchCategorySelection::class.java
+                )
+                cancelAndIgnoreRemainingEvents()
+            }
+        }
+
+    @Test
+    fun `onTagsClicked emits LaunchTagSelection`() =
+        test {
+            val viewModel = createViewModel()
+
+            viewModel.events.test {
+                viewModel.onTagsClicked()
+
+                val event = awaitItem()
+                assertThat(event).isInstanceOf(
+                    PostRsSettingsEvent
+                        .LaunchTagSelection::class.java
+                )
+                cancelAndIgnoreRemainingEvents()
+            }
+        }
+
+    @Test
+    fun `onCategoriesSelected with new ids updates edit`() {
+        val viewModel = createViewModel()
+
+        viewModel.onCategoriesSelected(
+            longArrayOf(1L, 2L)
+        )
+
+        assertThat(
+            viewModel.uiState.value.editedCategoryIds
+        ).containsExactly(1L, 2L)
+    }
+
+    @Test
+    fun `onTagsSelected with new ids updates edit`() {
+        val viewModel = createViewModel()
+
+        viewModel.onTagsSelected(longArrayOf(3L, 4L))
+
+        assertThat(
+            viewModel.uiState.value.editedTagIds
+        ).containsExactly(3L, 4L)
+    }
+
+    @Test
+    fun `onCategoriesSelected with same ids clears edit`() {
+        val viewModel = createViewModel()
+        // original categoryIds is empty list
+
+        viewModel.onCategoriesSelected(longArrayOf())
+
+        assertThat(
+            viewModel.uiState.value.editedCategoryIds
+        ).isNull()
+    }
+
+    @Test
+    fun `onTagsSelected with same ids clears edit`() {
+        val viewModel = createViewModel()
+        // original tagIds is empty list
+
+        viewModel.onTagsSelected(longArrayOf())
+
+        assertThat(
+            viewModel.uiState.value.editedTagIds
+        ).isNull()
+    }
+
+    @Test
+    fun `hasChanges is true after category edit`() {
+        val viewModel = createViewModel()
+
+        viewModel.onCategoriesSelected(longArrayOf(1L))
+
+        assertThat(viewModel.uiState.value.hasChanges)
+            .isTrue()
+    }
+
+    @Test
+    fun `hasChanges is true after tag edit`() {
+        val viewModel = createViewModel()
+
+        viewModel.onTagsSelected(longArrayOf(1L))
+
+        assertThat(viewModel.uiState.value.hasChanges)
+            .isTrue()
+    }
+
+    // endregion
+
+    // region Featured image
+
+    @Test
+    fun `onFeaturedImageSelected updates editedId`() {
+        val viewModel = createViewModel()
+
+        viewModel.onFeaturedImageSelected(99L)
+
+        assertThat(
+            viewModel.uiState.value.editedFeaturedImageId
+        ).isEqualTo(99L)
+    }
+
+    @Test
+    fun `onFeaturedImageSelected sets image loading`() {
+        val viewModel = createViewModel()
+
+        viewModel.onFeaturedImageSelected(99L)
+
+        assertThat(
+            viewModel.uiState.value.featuredImage
+        ).isEqualTo(FieldState.Loading)
+    }
+
+    @Test
+    fun `onFeaturedImageSelected with same id is no-op`() {
+        val viewModel = createViewModel()
+        // effectiveFeaturedImageId defaults to 0
+
+        viewModel.onFeaturedImageSelected(0L)
+
+        assertThat(
+            viewModel.uiState.value.editedFeaturedImageId
+        ).isNull()
+    }
+
+    @Test
+    fun `onChooseFromWpMedia emits LaunchWpMediaPicker`() =
+        test {
+            val viewModel = createViewModel()
+
+            viewModel.events.test {
+                viewModel.onChooseFromWpMedia()
+
+                val event = awaitItem()
+                assertThat(event).isEqualTo(
+                    PostRsSettingsEvent.LaunchWpMediaPicker
+                )
+                cancelAndIgnoreRemainingEvents()
+            }
+        }
+
+    @Test
+    fun `onChooseFromDevice emits LaunchDeviceMediaPicker`() =
+        test {
+            val viewModel = createViewModel()
+
+            viewModel.events.test {
+                viewModel.onChooseFromDevice()
+
+                val event = awaitItem()
+                assertThat(event).isEqualTo(
+                    PostRsSettingsEvent
+                        .LaunchDeviceMediaPicker
+                )
+                cancelAndIgnoreRemainingEvents()
+            }
+        }
+
+    @Test
+    fun `hasChanges is true after featured image edit`() {
+        val viewModel = createViewModel()
+
+        viewModel.onFeaturedImageSelected(99L)
+
+        assertThat(viewModel.uiState.value.hasChanges)
+            .isTrue()
+    }
+
+    // endregion
+
+    // region Dismiss dialog behavior
+
+    @Test
+    fun `onDismissDialog clears author search state`() {
+        val viewModel = createViewModel()
+
+        viewModel.onDismissDialog()
+
+        val state = viewModel.uiState.value
+        assertThat(state.authorSearchQuery).isEmpty()
+        assertThat(state.isSearchingAuthors).isFalse()
+        assertThat(state.siteAuthors).isEmpty()
+        assertThat(state.canLoadMoreAuthors).isFalse()
+    }
+
+    // endregion
+
+    // region Additional save behavior
+
+    @Test
+    fun `onSaveClicked while already saving is no-op`() {
+        val viewModel = createViewModel()
+        viewModel.onStatusSelected(PostStatus.Draft)
+        viewModel.onSaveClicked()
+        assertThat(viewModel.uiState.value.isSaving)
+            .isTrue()
+
+        // Second save attempt should be no-op
+        viewModel.onSaveClicked()
+
+        assertThat(viewModel.uiState.value.isSaving)
+            .isTrue()
+    }
+
+    // endregion
+
+    // region Retry
+
+    @Test
+    fun `retry while offline shows error`() {
+        val viewModel = createViewModel()
+
+        viewModel.retry()
+
+        assertThat(viewModel.uiState.value.isLoading)
+            .isFalse()
+        assertThat(viewModel.uiState.value.error)
+            .isNotNull()
+    }
+
+    // endregion
+
+    // region Author search
+
+    @Test
+    fun `onAuthorSearchQueryChanged updates query`() {
+        val viewModel = createViewModel()
+
+        viewModel.onAuthorSearchQueryChanged("test")
+
+        assertThat(
+            viewModel.uiState.value.authorSearchQuery
+        ).isEqualTo("test")
+    }
+
+    @Test
+    fun `short author search query does not trigger search`() {
+        val viewModel = createViewModel()
+
+        viewModel.onAuthorSearchQueryChanged("ab")
+
+        assertThat(
+            viewModel.uiState.value.isSearchingAuthors
+        ).isFalse()
+    }
+
+    // endregion
+
     companion object {
         private const val TEST_POST_ID = 42L
     }
