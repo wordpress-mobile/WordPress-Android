@@ -254,7 +254,6 @@ class ApplicationPasswordLoginHelper @Inject constructor(
         return url.replaceFirst(host, maskedDomain + tld)
     }
 
-
     fun siteHasBadCredentials(site: SiteModel) =
         site.apiRestUsernamePlain.isNullOrEmpty() || site.apiRestPasswordPlain.isNullOrEmpty()
 
@@ -317,11 +316,6 @@ class ApplicationPasswordLoginHelper @Inject constructor(
             )
         }
 
-        fun removeApplicationPassword(site: SiteModel) {
-            dispatcher.dispatch(
-                SiteActionBuilder.newRemoveApplicationPasswordAction(site)
-            )
-        }
     }
 
     class DiscoverSuccessWrapper @Inject constructor() {
