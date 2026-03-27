@@ -521,12 +521,30 @@ private fun ViewsStatsChart(
                 }
                 ChartType.BAR -> modelProducer.runTransaction {
                     columnSeries {
-                        series(
-                            chartData.currentPeriod.map {
-                                it.views.toInt()
-                            }
-                        )
                         if (hasPreviousPeriod) {
+                            // Series 1: current value when no
+                            // delta (rounded top)
+                            series(
+                                chartData.currentPeriod.zip(
+                                    chartData.previousPeriod
+                                ) { current, previous ->
+                                    if (previous.views <= current.views)
+                                        current.views.toInt()
+                                    else 0
+                                }
+                            )
+                            // Series 2: current value when there
+                            // is a delta (flat top)
+                            series(
+                                chartData.currentPeriod.zip(
+                                    chartData.previousPeriod
+                                ) { current, previous ->
+                                    if (previous.views > current.views)
+                                        current.views.toInt()
+                                    else 0
+                                }
+                            )
+                            // Series 3: delta (rounded top)
                             series(
                                 chartData.currentPeriod.zip(
                                     chartData.previousPeriod
@@ -535,6 +553,12 @@ private fun ViewsStatsChart(
                                         0L,
                                         previous.views - current.views
                                     ).toInt()
+                                }
+                            )
+                        } else {
+                            series(
+                                chartData.currentPeriod.map {
+                                    it.views.toInt()
                                 }
                             )
                         }
@@ -686,14 +710,20 @@ private fun ViewsStatsChart(
                                     fill = fill(primaryColor),
                                     thicknessDp = 16f,
                                     shape = CorneredShape.rounded(
-                                        allPercent = 40
+                                        topLeftPercent = 40,
+                                        topRightPercent = 40,
                                     )
+                                ),
+                                LineComponent(
+                                    fill = fill(primaryColor),
+                                    thicknessDp = 16f,
                                 ),
                                 LineComponent(
                                     fill = fill(secondaryColor),
                                     thicknessDp = 16f,
                                     shape = CorneredShape.rounded(
-                                        allPercent = 40
+                                        topLeftPercent = 40,
+                                        topRightPercent = 40,
                                     )
                                 )
                             ),
