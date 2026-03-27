@@ -63,7 +63,7 @@ class ApplicationPasswordRequiredDialogActivity : ComponentActivity() {
         if (savedInstanceState == null) {
             AnalyticsTracker.track(
                 Stat.APPLICATION_PASSWORD_MIGRATION_PROMPTED,
-                mapOf("source" to featureName.orEmpty())
+                mapOf("feature_name" to featureName.orEmpty())
             )
         }
 
@@ -75,7 +75,9 @@ class ApplicationPasswordRequiredDialogActivity : ComponentActivity() {
                         finish()
                     }
                     is ApplicationPasswordAutoAuthDialogViewModel.NavigationEvent.FallbackToManualLogin -> {
-                        ApplicationPasswordCreationTracker.setPendingCreationSource("migration")
+                        ApplicationPasswordCreationTracker.setPendingCreationSource(
+                            ApplicationPasswordCreationTracker.SOURCE_MIGRATION
+                        )
                         activityNavigator.openApplicationPasswordLogin(
                             this@ApplicationPasswordRequiredDialogActivity,
                             event.authUrl
@@ -101,7 +103,12 @@ class ApplicationPasswordRequiredDialogActivity : ComponentActivity() {
                     featureName = featureName,
                     isLoading = isLoading.value,
                     onDismiss = { finish() },
-                    onConfirm = { viewModel.createApplicationPassword(site, "migration") }
+                    onConfirm = {
+                        viewModel.createApplicationPassword(
+                            site,
+                            ApplicationPasswordCreationTracker.SOURCE_MIGRATION
+                        )
+                    }
                 )
             }
         }

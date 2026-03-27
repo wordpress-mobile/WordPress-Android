@@ -50,7 +50,9 @@ abstract class ApplicationPasswordDialogActivity : ComponentActivity() {
             viewModel.navigationEvent.collect { event ->
                 when (event) {
                     is ApplicationPasswordDialogViewModel.NavigationEvent.NavigateToLogin -> {
-                        ApplicationPasswordCreationTracker.setPendingCreationSource("reauth")
+                        ApplicationPasswordCreationTracker.setPendingCreationSource(
+                            ApplicationPasswordCreationTracker.SOURCE_REAUTH
+                        )
                         activityNavigator.openApplicationPasswordLogin(
                             this@ApplicationPasswordDialogActivity,
                             event.authenticationUrl
