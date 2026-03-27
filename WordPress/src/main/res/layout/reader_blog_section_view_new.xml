@@ -10,7 +10,6 @@
     <ImageView
         android:id="@+id/blog_section_image_blog_avatar"
         style="@style/ReaderImageView.Avatar.OvalSurfaceBackground"
-        android:layout_marginEnd="@dimen/margin_medium"
         android:importantForAccessibility="no"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -31,12 +30,15 @@
         style="@style/ReaderTextView.PostDetail.BlogSection.Title"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_large"
         android:layout_marginEnd="@dimen/margin_medium"
         android:includeFontPadding="false"
+        app:layout_goneMarginStart="0dp"
         app:layout_constraintStart_toEndOf="@id/blog_section_image_blog_avatar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/blog_section_image_blog_avatar"
-        app:layout_constraintBottom_toBottomOf="@id/blog_section_image_blog_avatar"
+        app:layout_constraintBottom_toTopOf="@id/blog_section_text_author"
+        app:layout_constraintVertical_chainStyle="packed"
         tools:text="My Blog Name" />
 
     <com.google.android.material.textview.MaterialTextView
@@ -51,7 +53,8 @@
         android:textAlignment="viewStart"
         app:layout_constraintStart_toStartOf="@id/blog_section_text_blog_name"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/blog_section_image_blog_avatar"
+        app:layout_constraintTop_toBottomOf="@id/blog_section_text_blog_name"
+        app:layout_constraintBottom_toBottomOf="@id/blog_section_image_blog_avatar"
         tools:text="Author Name" />
 
     <com.google.android.material.textview.MaterialTextView
