@@ -985,10 +985,15 @@ class ReaderPostDetailViewModel @Inject constructor(
     }
 
     fun onUserNavigateFromComments() {
-        // reload post from DB and update UI state
+        // reload post from DB (including text column for featured image
+        // deduplication) and update UI state
         val currentUiState: ReaderPostDetailsUiState? = (_uiState.value as? ReaderPostDetailsUiState)
         currentUiState?.let {
-            findPost(currentUiState.postId, currentUiState.blogId)?.let { post ->
+            readerPostTableWrapper.getBlogPost(
+                it.blogId,
+                it.postId,
+                false
+            )?.let { post ->
                 this.post = post
                 onUpdatePost(post)
             }
