@@ -10,10 +10,9 @@ import org.wordpress.android.ui.reader.utils.FeaturedImageUtils
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import org.wordpress.android.ui.reader.views.uistates.FollowButtonUiState
 import org.wordpress.android.ui.reader.views.uistates.InteractionSectionUiState
-import org.wordpress.android.ui.reader.views.uistates.ReaderBlogSectionUiState
 import org.wordpress.android.ui.reader.views.uistates.ReaderPostDetailsHeaderAction
-import org.wordpress.android.ui.reader.views.uistates.ReaderPostDetailsHeaderViewUiState.ReaderFeaturedImageUiState
-import org.wordpress.android.ui.reader.views.uistates.ReaderPostDetailsHeaderViewUiState.ReaderPostDetailsHeaderUiState
+import org.wordpress.android.ui.reader.views.uistates.ReaderFeaturedImageUiState
+import org.wordpress.android.ui.reader.views.uistates.ReaderPostDetailsHeaderUiState
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
 import org.wordpress.android.ui.utils.UiString.UiStringText
@@ -51,28 +50,27 @@ class ReaderPostDetailsHeaderViewUiStateBuilder @Inject constructor(
                 it.isNotBlank() &&
                     !it.equals(post.blogName, ignoreCase = true)
             },
-            tagItems = buildTagItems(
-                post,
-                onClicked = {
+            tagItems = readerPostTagsUiStateBuilder
+                .mapPostTagsToTagUiStates(post) {
                     onHeaderAction(
                         ReaderPostDetailsHeaderAction.TagItemClicked(it)
                     )
-                }
-            ),
-            tagItemsVisibility = buildTagItemsVisibility(post),
-            blogSectionUiState = buildBlogSectionUiState(
-                post,
-                onBlogSectionClicked = {
+                },
+            tagItemsVisibility = post.tags.isNotEmpty(),
+            blogSectionUiState = postUiStateBuilder
+                .mapPostToBlogSectionUiState(post) {
                     onHeaderAction(
                         ReaderPostDetailsHeaderAction.BlogSectionClicked
                     )
-                }
-            ),
-            followButtonUiState = buildFollowButtonUiState(
-                post,
-                onFollowClicked = {
-                    onHeaderAction(ReaderPostDetailsHeaderAction.FollowClicked)
-                }
+                },
+            followButtonUiState = FollowButtonUiState(
+                onFollowButtonClicked = {
+                    onHeaderAction(
+                        ReaderPostDetailsHeaderAction.FollowClicked
+                    )
+                },
+                isFollowed = post.isFollowedByCurrentUser,
+                isVisible = true
             ),
             dateLine = buildDateLine(post),
             readingTime = buildReadingTime(post),
@@ -87,10 +85,13 @@ class ReaderPostDetailsHeaderViewUiStateBuilder @Inject constructor(
                     )
                 }
             ),
-            interactionSectionUiState = buildInteractionSection(
-                post,
+            interactionSectionUiState = InteractionSectionUiState(
+                likeCount = post.numLikes,
+                commentCount = post.numReplies,
                 onLikesClicked = {
-                    onHeaderAction(ReaderPostDetailsHeaderAction.LikesClicked)
+                    onHeaderAction(
+                        ReaderPostDetailsHeaderAction.LikesClicked
+                    )
                 },
                 onCommentsClicked = {
                     onHeaderAction(
@@ -100,35 +101,6 @@ class ReaderPostDetailsHeaderViewUiStateBuilder @Inject constructor(
             )
         )
     }
-
-    private fun buildBlogSectionUiState(
-        post: ReaderPost,
-        onBlogSectionClicked: () -> Unit
-    ): ReaderBlogSectionUiState {
-        return postUiStateBuilder.mapPostToBlogSectionUiState(
-            post,
-            onBlogSectionClicked
-        )
-    }
-
-    private fun buildFollowButtonUiState(
-        post: ReaderPost,
-        onFollowClicked: () -> Unit
-    ): FollowButtonUiState {
-        return FollowButtonUiState(
-            onFollowButtonClicked = onFollowClicked,
-            isFollowed = post.isFollowedByCurrentUser,
-            isVisible = true
-        )
-    }
-
-    private fun buildTagItems(
-        post: ReaderPost,
-        onClicked: (String) -> Unit
-    ) = readerPostTagsUiStateBuilder.mapPostTagsToTagUiStates(post, onClicked)
-
-    private fun buildTagItemsVisibility(post: ReaderPost) =
-        post.tags.isNotEmpty()
 
     private fun buildDateLine(post: ReaderPost): String {
         val date = post.getDisplayDate(dateTimeUtilsWrapper) ?: return ""
@@ -191,17 +163,6 @@ class ReaderPostDetailsHeaderViewUiStateBuilder @Inject constructor(
             onFeaturedImageClicked = onFeaturedImageClicked,
         )
     }
-
-    private fun buildInteractionSection(
-        post: ReaderPost,
-        onLikesClicked: () -> Unit,
-        onCommentsClicked: () -> Unit,
-    ) = InteractionSectionUiState(
-        likeCount = post.numLikes,
-        commentCount = post.numReplies,
-        onLikesClicked = onLikesClicked,
-        onCommentsClicked = onCommentsClicked,
-    )
 
     companion object {
         private val IMG_TAG_REGEX = Regex("<img[^>]*>")

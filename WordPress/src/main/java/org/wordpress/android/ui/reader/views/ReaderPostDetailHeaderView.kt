@@ -17,8 +17,8 @@ import org.wordpress.android.ui.reader.utils.toTypeface
 import org.wordpress.android.ui.reader.views.uistates.FollowButtonUiState
 import org.wordpress.android.ui.reader.views.uistates.InteractionSectionUiState
 import org.wordpress.android.ui.reader.views.uistates.ReaderBlogSectionUiState
-import org.wordpress.android.ui.reader.views.uistates.ReaderPostDetailsHeaderViewUiState.ReaderFeaturedImageUiState
-import org.wordpress.android.ui.reader.views.uistates.ReaderPostDetailsHeaderViewUiState.ReaderPostDetailsHeaderUiState
+import org.wordpress.android.ui.reader.views.uistates.ReaderFeaturedImageUiState
+import org.wordpress.android.ui.reader.views.uistates.ReaderPostDetailsHeaderUiState
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.util.extensions.getDrawableResIdFromAttribute
@@ -79,9 +79,9 @@ class ReaderPostDetailHeaderView @JvmOverloads constructor(
         updateAvatars(uiState.blogSectionUiState)
         updateBlogSectionClick(uiState.blogSectionUiState)
 
-        updateReadingTime(uiState.readingTime)
+        uiHelpers.setTextOrHide(textReadingTime, uiState.readingTime)
         updateFeaturedImage(uiState.featuredImageUiState)
-        updateExcerpt(uiState.excerpt)
+        uiHelpers.setTextOrHide(textExcerpt, uiState.excerpt)
 
         updateInteractionSection(
             uiState.interactionSectionUiState,
@@ -182,12 +182,6 @@ class ReaderPostDetailHeaderView @JvmOverloads constructor(
         uiHelpers.setTextOrHide(blogSectionTextDateline, dateLine)
     }
 
-    private fun ReaderPostDetailHeaderViewBinding.updateReadingTime(
-        readingTime: UiString?
-    ) {
-        uiHelpers.setTextOrHide(textReadingTime, readingTime)
-    }
-
     private fun ReaderPostDetailHeaderViewBinding.updateFeaturedImage(
         state: ReaderFeaturedImageUiState?
     ) {
@@ -202,12 +196,6 @@ class ReaderPostDetailHeaderView @JvmOverloads constructor(
         } ?: imageManager.cancelRequestAndClearImageView(
             headerFeaturedImage
         )
-    }
-
-    private fun ReaderPostDetailHeaderViewBinding.updateExcerpt(
-        excerpt: UiString?
-    ) {
-        uiHelpers.setTextOrHide(textExcerpt, excerpt)
     }
 
     private fun updateInteractionSection(
