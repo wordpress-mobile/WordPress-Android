@@ -52,22 +52,16 @@ class ReaderPostDetailsHeaderViewUiStateBuilder @Inject constructor(
             },
             tagItems = readerPostTagsUiStateBuilder
                 .mapPostTagsToTagUiStates(post) {
-                    onHeaderAction(
-                        ReaderPostDetailsHeaderAction.TagItemClicked(it)
-                    )
+                    onHeaderAction(ReaderPostDetailsHeaderAction.TagItemClicked(it))
                 },
             tagItemsVisibility = post.tags.isNotEmpty(),
             blogSectionUiState = postUiStateBuilder
                 .mapPostToBlogSectionUiState(post) {
-                    onHeaderAction(
-                        ReaderPostDetailsHeaderAction.BlogSectionClicked
-                    )
+                    onHeaderAction(ReaderPostDetailsHeaderAction.BlogSectionClicked)
                 },
             followButtonUiState = FollowButtonUiState(
                 onFollowButtonClicked = {
-                    onHeaderAction(
-                        ReaderPostDetailsHeaderAction.FollowClicked
-                    )
+                    onHeaderAction(ReaderPostDetailsHeaderAction.FollowClicked)
                 },
                 isFollowed = post.isFollowedByCurrentUser,
                 isVisible = true
@@ -79,9 +73,7 @@ class ReaderPostDetailsHeaderViewUiStateBuilder @Inject constructor(
                 post,
                 onFeaturedImageClicked = { blogId, url ->
                     onHeaderAction(
-                        ReaderPostDetailsHeaderAction.FeaturedImageClicked(
-                            blogId, url
-                        )
+                        ReaderPostDetailsHeaderAction.FeaturedImageClicked(blogId, url)
                     )
                 }
             ),
@@ -89,14 +81,10 @@ class ReaderPostDetailsHeaderViewUiStateBuilder @Inject constructor(
                 likeCount = post.numLikes,
                 commentCount = post.numReplies,
                 onLikesClicked = {
-                    onHeaderAction(
-                        ReaderPostDetailsHeaderAction.LikesClicked
-                    )
+                    onHeaderAction(ReaderPostDetailsHeaderAction.LikesClicked)
                 },
                 onCommentsClicked = {
-                    onHeaderAction(
-                        ReaderPostDetailsHeaderAction.CommentsClicked
-                    )
+                    onHeaderAction(ReaderPostDetailsHeaderAction.CommentsClicked)
                 }
             )
         )
