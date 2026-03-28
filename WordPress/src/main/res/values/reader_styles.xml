@@ -221,6 +221,15 @@
         <item name="android:minHeight">@dimen/reader_follow_button_min_height</item>
     </style>
 
+    <style name="Reader.Follow.Button.New.Compact" parent="Reader.Follow.Button.New">
+        <item name="android:textAppearance">?attr/textAppearanceCaption</item>
+        <item name="android:paddingStart">@dimen/margin_large</item>
+        <item name="android:paddingEnd">@dimen/margin_large</item>
+        <item name="android:paddingTop">@dimen/margin_small</item>
+        <item name="android:paddingBottom">@dimen/margin_small</item>
+        <item name="android:minHeight">0dp</item>
+    </style>
+
     <style name="Reader.Follow.Button.Icon" parent="Reader.Follow.Button">
         <item name="iconTint">@color/secondary_on_surface_medium_selector</item>
         <item name="android:minHeight">@dimen/min_touch_target_sz</item>
