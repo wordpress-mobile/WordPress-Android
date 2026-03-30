@@ -1296,7 +1296,6 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
                 title = UiStringText(post.title),
                 authorName = post.authorName,
                 tagItems = listOf(TagUiState("", "", false, mock())),
-                tagItemsVisibility = true,
                 blogSectionUiState = ReaderBlogSectionUiState(
                     postId = post.postId,
                     blogId = post.blogId,

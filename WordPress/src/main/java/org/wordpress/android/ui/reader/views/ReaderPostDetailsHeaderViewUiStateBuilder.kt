@@ -63,7 +63,6 @@ class ReaderPostDetailsHeaderViewUiStateBuilder @Inject constructor(
                 .mapPostTagsToTagUiStates(post) {
                     onHeaderAction(ReaderPostDetailsHeaderAction.TagItemClicked(it))
                 },
-            tagItemsVisibility = post.tags.isNotEmpty(),
             blogSectionUiState = postUiStateBuilder
                 .mapPostToBlogSectionUiState(post) {
                     onHeaderAction(ReaderPostDetailsHeaderAction.BlogSectionClicked)
@@ -79,7 +78,7 @@ class ReaderPostDetailsHeaderViewUiStateBuilder @Inject constructor(
             readingTime = buildReadingTime(post),
             blogDescription = buildBlogDescription(post),
             featuredImageUiState = featuredImage,
-            onFeaturedImageClicked = featuredImage?.let { state ->
+            onFeaturedImageClicked = featuredImage?.let {
                 { blogId: Long, url: String ->
                     onHeaderAction(
                         ReaderPostDetailsHeaderAction.FeaturedImageClicked(
@@ -98,7 +97,6 @@ class ReaderPostDetailsHeaderViewUiStateBuilder @Inject constructor(
                     onHeaderAction(ReaderPostDetailsHeaderAction.CommentsClicked)
                 }
             ),
-            showViewOriginal = post.hasUrl(),
             onViewOriginalClicked = if (post.hasUrl()) {
                 {
                     onHeaderAction(

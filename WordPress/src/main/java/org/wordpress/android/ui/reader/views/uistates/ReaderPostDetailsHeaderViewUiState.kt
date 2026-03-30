@@ -7,7 +7,6 @@ data class ReaderPostDetailsHeaderUiState(
     val title: UiString?,
     val authorName: String?,
     val tagItems: List<TagUiState>,
-    val tagItemsVisibility: Boolean,
     val blogSectionUiState: ReaderBlogSectionUiState,
     val followButtonUiState: FollowButtonUiState,
     val dateLine: String,
@@ -16,7 +15,6 @@ data class ReaderPostDetailsHeaderUiState(
     val featuredImageUiState: ReaderFeaturedImageUiState? = null,
     val onFeaturedImageClicked: ((Long, String) -> Unit)? = null,
     val interactionSectionUiState: InteractionSectionUiState,
-    val showViewOriginal: Boolean = false,
     val onViewOriginalClicked: (() -> Unit)? = null,
 )
 

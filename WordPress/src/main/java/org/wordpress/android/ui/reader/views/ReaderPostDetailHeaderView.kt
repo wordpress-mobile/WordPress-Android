@@ -70,7 +70,7 @@ class ReaderPostDetailHeaderView @JvmOverloads constructor(
         updateBlogSectionClick(uiState.blogSectionUiState)
 
         uiHelpers.setTextOrHide(textReadingTime, uiState.readingTime)
-        textViewOriginal.setVisible(uiState.showViewOriginal)
+        textViewOriginal.setVisible(uiState.onViewOriginalClicked != null)
         uiState.onViewOriginalClicked?.let { onClick ->
             textViewOriginal.setOnClickListener { onClick() }
         }
@@ -193,5 +193,4 @@ class ReaderPostDetailHeaderView @JvmOverloads constructor(
             )
         }
     }
-
 }
