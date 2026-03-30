@@ -24,7 +24,6 @@ import android.view.ViewGroup
 import android.view.ViewStub
 import android.webkit.CookieManager
 import android.webkit.WebView
-import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
@@ -80,7 +79,6 @@ import org.wordpress.android.ui.avatars.AVATAR_LEFT_OFFSET_DIMEN
 import org.wordpress.android.ui.avatars.AvatarItemDecorator
 import org.wordpress.android.ui.avatars.TrainOfAvatarsAdapter
 import org.wordpress.android.ui.avatars.TrainOfAvatarsItem
-import org.wordpress.android.ui.avatars.TrainOfAvatarsItem.AvatarItem
 import org.wordpress.android.ui.engagement.EngagementNavigationSource
 import org.wordpress.android.ui.main.ChooseSiteActivity
 import org.wordpress.android.ui.main.WPMainActivity
@@ -137,7 +135,6 @@ import org.wordpress.android.util.RtlUtils
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.UrlUtils
 import org.wordpress.android.util.WPPermissionUtils.READER_FILE_DOWNLOAD_PERMISSION_REQUEST_CODE
-import org.wordpress.android.util.WPAvatarUtils
 import org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefreshHelper
 import org.wordpress.android.util.config.CommentsSnippetFeatureConfig
 import org.wordpress.android.util.config.LikesEnhancementsFeatureConfig
@@ -148,7 +145,6 @@ import org.wordpress.android.util.extensions.getSerializableCompat
 import org.wordpress.android.util.extensions.setVisible
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 import org.wordpress.android.util.image.ImageManager
-import org.wordpress.android.util.image.ImageType
 import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout
 import org.wordpress.android.viewmodel.ContextProvider
 import org.wordpress.android.viewmodel.observeEvent
@@ -568,10 +564,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         }
 
         viewModel.likesUiState.observe(viewLifecycleOwner) { state ->
-            updateLikeAvatars(state.engageItemsList)
-            if (likesEnhancementsFeatureConfig.isEnabled()) {
-                manageLikesUiState(state)
-            }
+            manageLikesUiState(state)
         }
 
         viewModel.refreshPost.observeEvent(viewLifecycleOwner) {
@@ -724,41 +717,6 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         }
     }
 
-    private fun updateLikeAvatars(
-        items: List<TrainOfAvatarsItem>
-    ) {
-        val binding = binding ?: return
-        val avatarViews = listOf(
-            binding.likeAvatar1,
-            binding.likeAvatar2,
-            binding.likeAvatar3,
-            binding.likeAvatar4,
-            binding.likeAvatar5
-        )
-        val avatarItems = items.filterIsInstance<AvatarItem>().take(
-            avatarViews.size
-        )
-        val avatarSize = resources.getDimensionPixelSize(
-            R.dimen.avatar_sz_extra_small
-        )
-        avatarViews.forEachIndexed { index, imageView ->
-            if (index < avatarItems.size) {
-                val url = WPAvatarUtils.rewriteAvatarUrl(
-                    avatarItems[index].userAvatarUrl,
-                    avatarSize
-                )
-                imageView.visibility = View.VISIBLE
-                imageManager.loadIntoCircle(
-                    imageView,
-                    ImageType.AVATAR_WITH_BACKGROUND,
-                    url
-                )
-            } else {
-                imageView.visibility = View.GONE
-            }
-        }
-    }
-
     private fun manageCommentSnippetUiState(state: CommentSnippetUiState) {
         if (!isAdded) return
 
@@ -864,9 +822,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             .takeIf { state.likeCount > 0 }
 
         uiHelpers.setTextOrHide(binding.headerLikeCount, likeLabel)
-        binding.likeCountWithAvatars.visibility =
-            if (likeLabel != null) View.VISIBLE else View.GONE
-        binding.likeCountWithAvatars.setOnClickListener {
+        binding.headerLikeCount.setOnClickListener {
             state.onLikesClicked()
         }
     }
