@@ -108,6 +108,7 @@ import org.wordpress.android.ui.reader.tracker.ReaderTracker.Companion.SOURCE_PO
 import org.wordpress.android.ui.reader.usecases.ReaderGetReadingPreferencesSyncUseCase
 import org.wordpress.android.ui.reader.utils.ReaderUtils
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
+import org.wordpress.android.ui.reader.views.uistates.InteractionSectionUiState
 import org.wordpress.android.ui.reader.utils.ReaderVideoUtils
 import org.wordpress.android.ui.reader.viewmodels.ConversationNotificationsViewModel
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel
@@ -781,6 +782,10 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             state.headerUiState.tagItems, getReadingPreferences()
         )
 
+        updateInteractionSection(
+            binding, state.headerUiState.interactionSectionUiState
+        )
+
         showOrHideMoreMenu(state)
 
         updateExcerptFooter(state.excerptFooterUiState)
@@ -794,6 +799,35 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
         state.localRelatedPosts?.let { showRelatedPosts(it) }
         state.globalRelatedPosts?.let { showRelatedPosts(it) }
+    }
+
+    private fun updateInteractionSection(
+        binding: ReaderFragmentPostDetailBinding,
+        state: InteractionSectionUiState,
+    ) {
+        val ctx = requireContext()
+        val likeLabel = ReaderUtils
+            .getShortLikeLabelText(ctx, state.likeCount)
+            .takeIf { state.likeCount > 0 }
+        val commentLabel = ReaderUtils
+            .getShortCommentLabelText(ctx, state.commentCount)
+            .takeIf { state.commentCount > 0 }
+
+        uiHelpers.setTextOrHide(binding.headerLikeCount, likeLabel)
+        uiHelpers.setTextOrHide(
+            binding.headerCommentCount, commentLabel
+        )
+        binding.headerDotSeparator.isVisible =
+            likeLabel != null && commentLabel != null
+        binding.interactionSection.isVisible =
+            likeLabel != null || commentLabel != null
+
+        binding.headerLikeCount.setOnClickListener {
+            state.onLikesClicked()
+        }
+        binding.headerCommentCount.setOnClickListener {
+            state.onCommentsClicked()
+        }
     }
 
     // TODO: Update using UiState/ NavigationEvent

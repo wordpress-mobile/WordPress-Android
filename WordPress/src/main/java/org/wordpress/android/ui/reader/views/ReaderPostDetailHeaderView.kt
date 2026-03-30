@@ -6,16 +6,12 @@ import android.util.TypedValue
 import android.view.LayoutInflater
 import android.widget.ImageView.ScaleType.FIT_CENTER
 import android.widget.LinearLayout
-import android.widget.TextView
-import androidx.core.view.isVisible
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.ReaderPostDetailHeaderViewBinding
 import org.wordpress.android.ui.reader.models.ReaderReadingPreferences
-import org.wordpress.android.ui.reader.utils.ReaderUtils
 import org.wordpress.android.ui.reader.utils.toTypeface
 import org.wordpress.android.ui.reader.views.uistates.FollowButtonUiState
-import org.wordpress.android.ui.reader.views.uistates.InteractionSectionUiState
 import org.wordpress.android.ui.reader.views.uistates.ReaderBlogSectionUiState
 import org.wordpress.android.ui.reader.views.uistates.ReaderFeaturedImageUiState
 import org.wordpress.android.ui.reader.views.uistates.ReaderPostDetailsHeaderUiState
@@ -83,12 +79,6 @@ class ReaderPostDetailHeaderView @JvmOverloads constructor(
             uiState.onFeaturedImageClicked
         )
         uiHelpers.setTextOrHide(textBlogDescription, uiState.blogDescription)
-
-        updateInteractionSection(
-            uiState.interactionSectionUiState,
-            readingPreferences,
-            themeValues
-        )
     }
 
     private fun ReaderPostDetailHeaderViewBinding.updateTitle(
@@ -204,50 +194,4 @@ class ReaderPostDetailHeaderView @JvmOverloads constructor(
         }
     }
 
-    private fun updateInteractionSection(
-        state: InteractionSectionUiState,
-        readingPreferences: ReaderReadingPreferences?,
-        themeValues: ReaderReadingPreferences.ThemeValues?,
-    ) = with(binding) {
-        val viewContext = root.context
-
-        val likeLabel = ReaderUtils
-            .getShortLikeLabelText(viewContext, state.likeCount)
-            .takeIf { state.likeCount > 0 }
-        val commentLabel = ReaderUtils
-            .getShortCommentLabelText(viewContext, state.commentCount)
-            .takeIf { state.commentCount > 0 }
-
-        uiHelpers.setTextOrHide(headerLikeCount, likeLabel)
-        uiHelpers.setTextOrHide(headerCommentCount, commentLabel)
-        headerDotSeparator.isVisible =
-            likeLabel != null && commentLabel != null
-
-        headerLikeCount.setOnClickListener { state.onLikesClicked() }
-        headerCommentCount.setOnClickListener { state.onCommentsClicked() }
-
-        applyInteractionSectionTheme(readingPreferences, themeValues)
-    }
-
-    private fun applyInteractionSectionTheme(
-        readingPreferences: ReaderReadingPreferences?,
-        themeValues: ReaderReadingPreferences.ThemeValues?,
-    ) {
-        readingPreferences ?: return
-
-        val baseFontSize = resources.getDimension(R.dimen.text_sz_medium)
-        val fontSize = baseFontSize * readingPreferences.fontSize.multiplier
-        val typeface = readingPreferences.fontFamily.toTypeface()
-        val textColor = themeValues?.intTextColor
-
-        fun applyTheme(view: TextView) {
-            view.setTextSize(TypedValue.COMPLEX_UNIT_PX, fontSize)
-            view.typeface = typeface
-            textColor?.let { view.setTextColor(it) }
-        }
-
-        applyTheme(binding.headerLikeCount)
-        applyTheme(binding.headerCommentCount)
-        applyTheme(binding.headerDotSeparator)
-    }
 }

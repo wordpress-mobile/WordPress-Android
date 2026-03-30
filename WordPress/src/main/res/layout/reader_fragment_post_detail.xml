@@ -62,11 +62,49 @@
                         android:visibility="gone"
                         tools:ignore="UnknownIdInLayout" />
 
+                    <!-- like and comment counts -->
+                    <LinearLayout
+                        android:id="@+id/interaction_section"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/expandable_tags_view"
+                        android:layout_alignStart="@+id/layout_post_detail_content"
+                        android:layout_alignEnd="@+id/layout_post_detail_content"
+                        android:layout_marginTop="@dimen/margin_medium"
+                        android:orientation="horizontal"
+                        android:visibility="gone"
+                        tools:ignore="UnknownIdInLayout">
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/header_like_count"
+                            style="@style/ReaderTextView.Post.New.Interactions"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            tools:text="15 likes" />
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/header_dot_separator"
+                            style="@style/ReaderTextView.Post.New.Interactions"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/reader_dot_separator"
+                            android:textAlignment="viewStart"
+                            android:importantForAccessibility="no" />
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/header_comment_count"
+                            style="@style/ReaderTextView.Post.New.Interactions"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            tools:text="4 comments" />
+
+                    </LinearLayout>
+
                     <include
                         layout="@layout/reader_post_likers_faces_list"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_below="@+id/expandable_tags_view" />
+                        android:layout_below="@+id/interaction_section" />
 
                     <include
                         android:id="@+id/comments_snippet"
