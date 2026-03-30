@@ -19,6 +19,6 @@ data class ReaderPostDetailsHeaderUiState(
 
 data class ReaderFeaturedImageUiState(
     val blogId: Long,
-    val url: String?,
-    val onFeaturedImageClicked: ((Long, String) -> Unit)?,
+    val url: String,
+    val onFeaturedImageClicked: (Long, String) -> Unit,
 )

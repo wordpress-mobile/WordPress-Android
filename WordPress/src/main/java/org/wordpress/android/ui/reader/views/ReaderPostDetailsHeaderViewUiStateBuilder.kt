@@ -109,20 +109,17 @@ class ReaderPostDetailsHeaderViewUiStateBuilder @Inject constructor(
      * Returns null for excerpt-only posts or empty content.
      */
     private fun buildReadingTime(post: ReaderPost): UiString? {
-        val text = post.takeUnless { it.shouldShowExcerpt() }
-            ?.text
-            ?.takeIf { it.isNotBlank() }
-            ?.let {
-                HtmlUtils.fastStripHtml(
-                    it.replace(IMG_TAG_REGEX, "")
-                ).trim()
-            }
-            ?.takeIf { it.isNotBlank() }
+        if (post.shouldShowExcerpt()) return null
+        val rawText = post.text?.takeIf { it.isNotBlank() }
             ?: return null
-        val wordCount = text.split(WHITESPACE_REGEX).size
-        val minutes = ceil(wordCount.toDouble() / WORDS_PER_MINUTE)
-            .toInt()
-            .coerceAtLeast(1)
+        val stripped = HtmlUtils.fastStripHtml(
+            rawText.replace(IMG_TAG_REGEX, "")
+        ).trim()
+        if (stripped.isBlank()) return null
+        val minutes = ceil(
+            stripped.split(WHITESPACE_REGEX).size.toDouble()
+                / WORDS_PER_MINUTE
+        ).toInt().coerceAtLeast(1)
         return UiStringResWithParams(
             R.string.reader_reading_time,
             listOf(UiStringText(minutes.toString()))

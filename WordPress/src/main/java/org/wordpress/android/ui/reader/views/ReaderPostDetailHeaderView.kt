@@ -185,17 +185,19 @@ class ReaderPostDetailHeaderView @JvmOverloads constructor(
     private fun ReaderPostDetailHeaderViewBinding.updateFeaturedImage(
         state: ReaderFeaturedImageUiState?
     ) {
-        headerFeaturedImage.setVisible(state?.url != null)
-        state?.url?.let { url ->
-            imageManager.load(headerFeaturedImage, PHOTO, url, FIT_CENTER)
-            state.onFeaturedImageClicked?.let { onClick ->
-                headerFeaturedImage.setOnClickListener {
-                    onClick(state.blogId, url)
-                }
+        headerFeaturedImage.setVisible(state != null)
+        if (state != null) {
+            imageManager.load(
+                headerFeaturedImage, PHOTO, state.url, FIT_CENTER
+            )
+            headerFeaturedImage.setOnClickListener {
+                state.onFeaturedImageClicked(state.blogId, state.url)
             }
-        } ?: imageManager.cancelRequestAndClearImageView(
-            headerFeaturedImage
-        )
+        } else {
+            imageManager.cancelRequestAndClearImageView(
+                headerFeaturedImage
+            )
+        }
     }
 
     private fun updateInteractionSection(
@@ -205,15 +207,12 @@ class ReaderPostDetailHeaderView @JvmOverloads constructor(
     ) = with(binding) {
         val viewContext = root.context
 
-        val likeCount = state.likeCount
-        val commentCount = state.commentCount
-
-        val likeLabel =
-            ReaderUtils.getShortLikeLabelText(viewContext, likeCount)
-                .takeIf { likeCount > 0 }
-        val commentLabel =
-            ReaderUtils.getShortCommentLabelText(viewContext, commentCount)
-                .takeIf { commentCount > 0 }
+        val likeLabel = ReaderUtils
+            .getShortLikeLabelText(viewContext, state.likeCount)
+            .takeIf { state.likeCount > 0 }
+        val commentLabel = ReaderUtils
+            .getShortCommentLabelText(viewContext, state.commentCount)
+            .takeIf { state.commentCount > 0 }
 
         uiHelpers.setTextOrHide(headerLikeCount, likeLabel)
         uiHelpers.setTextOrHide(headerCommentCount, commentLabel)
