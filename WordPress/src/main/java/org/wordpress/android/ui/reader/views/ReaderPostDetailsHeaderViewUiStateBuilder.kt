@@ -110,20 +110,21 @@ class ReaderPostDetailsHeaderViewUiStateBuilder @Inject constructor(
      */
     private fun buildReadingTime(post: ReaderPost): UiString? {
         if (post.shouldShowExcerpt()) return null
-        val rawText = post.text?.takeIf { it.isNotBlank() }
-            ?: return null
-        val stripped = HtmlUtils.fastStripHtml(
-            rawText.replace(IMG_TAG_REGEX, "")
-        ).trim()
-        if (stripped.isBlank()) return null
-        val minutes = ceil(
-            stripped.split(WHITESPACE_REGEX).size.toDouble()
-                / WORDS_PER_MINUTE
-        ).toInt().coerceAtLeast(1)
-        return UiStringResWithParams(
-            R.string.reader_reading_time,
-            listOf(UiStringText(minutes.toString()))
-        )
+        return post.text
+            ?.takeIf { it.isNotBlank() }
+            ?.let { HtmlUtils.fastStripHtml(it.replace(IMG_TAG_REGEX, "")) }
+            ?.trim()
+            ?.takeIf { it.isNotBlank() }
+            ?.let { stripped ->
+                val minutes = ceil(
+                    stripped.split(WHITESPACE_REGEX).size.toDouble()
+                        / WORDS_PER_MINUTE
+                ).toInt().coerceAtLeast(1)
+                UiStringResWithParams(
+                    R.string.reader_reading_time,
+                    listOf(UiStringText(minutes.toString()))
+                )
+            }
     }
 
     private suspend fun buildBlogDescription(
