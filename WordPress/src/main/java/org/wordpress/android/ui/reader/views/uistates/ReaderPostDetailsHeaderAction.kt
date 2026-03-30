@@ -10,4 +10,5 @@ sealed interface ReaderPostDetailsHeaderAction {
         val blogId: Long,
         val featuredImageUrl: String
     ) : ReaderPostDetailsHeaderAction
+    data object ViewOriginalClicked : ReaderPostDetailsHeaderAction
 }

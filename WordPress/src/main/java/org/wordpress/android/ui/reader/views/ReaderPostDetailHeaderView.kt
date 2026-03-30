@@ -77,6 +77,10 @@ class ReaderPostDetailHeaderView @JvmOverloads constructor(
         updateBlogSectionClick(uiState.blogSectionUiState)
 
         uiHelpers.setTextOrHide(textReadingTime, uiState.readingTime)
+        textViewOriginal.setVisible(uiState.showViewOriginal)
+        uiState.onViewOriginalClicked?.let { onClick ->
+            textViewOriginal.setOnClickListener { onClick() }
+        }
         updateFeaturedImage(
             uiState.featuredImageUiState,
             uiState.onFeaturedImageClicked

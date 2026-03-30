@@ -573,6 +573,8 @@ class ReaderPostDetailViewModel @Inject constructor(
             is ReaderPostDetailsHeaderAction.TagItemClicked -> onTagItemClicked(action.tagSlug)
             is ReaderPostDetailsHeaderAction.FeaturedImageClicked ->
                 onFeaturedImageClicked(action.blogId, action.featuredImageUrl)
+            is ReaderPostDetailsHeaderAction.ViewOriginalClicked ->
+                onViewOriginalClicked(post)
         }
     }
 
@@ -585,6 +587,15 @@ class ReaderPostDetailViewModel @Inject constructor(
                     it.isFollowedByCurrentUser
                 )
             }
+        }
+    }
+
+    private fun onViewOriginalClicked(post: ReaderPost) {
+        val url = post.url
+        if (!url.isNullOrBlank()) {
+            _navigationEvents.value = Event(
+                ReaderNavigationEvents.OpenUrl(url = url)
+            )
         }
     }
 

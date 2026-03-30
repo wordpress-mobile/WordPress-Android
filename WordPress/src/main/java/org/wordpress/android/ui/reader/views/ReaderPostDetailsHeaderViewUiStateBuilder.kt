@@ -97,7 +97,17 @@ class ReaderPostDetailsHeaderViewUiStateBuilder @Inject constructor(
                 onCommentsClicked = {
                     onHeaderAction(ReaderPostDetailsHeaderAction.CommentsClicked)
                 }
-            )
+            ),
+            showViewOriginal = post.hasUrl(),
+            onViewOriginalClicked = if (post.hasUrl()) {
+                {
+                    onHeaderAction(
+                        ReaderPostDetailsHeaderAction.ViewOriginalClicked
+                    )
+                }
+            } else {
+                null
+            }
         )
     }
 

@@ -2458,6 +2458,7 @@
     <string name="reader_label_local_related_posts">More from %s</string>
     <string name="reader_label_global_related_posts">More on WordPress.com</string>
     <string name="reader_reading_time">%s min read</string>
+    <string name="reader_view_original">View original</string>
     <string name="reader_label_visit">Visit site</string>
     <string name="reader_label_choose_interests">Choose your interests</string>
     <string name="reader_view_comments">View comments</string>

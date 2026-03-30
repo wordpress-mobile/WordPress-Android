@@ -138,12 +138,30 @@
         tools:text="5 min read"
         tools:visibility="visible" />
 
+    <!-- View original button -->
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/text_view_original"
+        style="@style/ReaderTextView.PostDetail.BlogSection.Subtitle.MediumEmphasis"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_medium"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:drawablePadding="@dimen/margin_extra_small"
+        android:gravity="center_vertical"
+        android:text="@string/reader_view_original"
+        android:visibility="gone"
+        app:drawableStartCompat="@drawable/ic_outbound_16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/blog_description_barrier"
+        app:layout_constraintBaseline_toBaselineOf="@id/text_reading_time"
+        tools:visibility="visible" />
+
     <androidx.constraintlayout.widget.Barrier
         android:id="@+id/reading_time_barrier"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:barrierDirection="bottom"
-        app:constraint_referenced_ids="text_blog_description,text_reading_time" />
+        app:constraint_referenced_ids="text_blog_description,text_reading_time,text_view_original" />
 
     <!-- like and comment counts start -->
     <com.google.android.material.textview.MaterialTextView
