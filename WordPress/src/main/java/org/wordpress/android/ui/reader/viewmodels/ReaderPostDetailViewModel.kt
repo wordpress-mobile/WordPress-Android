@@ -700,6 +700,7 @@ class ReaderPostDetailViewModel @Inject constructor(
             viewModelScope.launch {
                 _uiState.value = convertPostToUiState(it)
             }
+            onRefreshLikersData(it)
             if (commentsSnippetFeatureConfig.isEnabled()) {
                 onRefreshCommentsData(it.blogId, it.postId)
             }
