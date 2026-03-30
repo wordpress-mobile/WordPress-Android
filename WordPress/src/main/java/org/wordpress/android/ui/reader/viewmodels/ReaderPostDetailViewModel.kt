@@ -158,7 +158,7 @@ class ReaderPostDetailViewModel @Inject constructor(
     private val _showJetpackPoweredBottomSheet = MutableLiveData<Event<Boolean>>()
     val showJetpackPoweredBottomSheet: LiveData<Event<Boolean>> = _showJetpackPoweredBottomSheet
 
-    private val _postBlocked = MutableLiveData<Boolean>(false)
+    private val _postBlocked = MutableLiveData(false)
     val postBlocked: LiveData<Boolean> = _postBlocked
 
     /**
@@ -405,7 +405,7 @@ class ReaderPostDetailViewModel @Inject constructor(
         when (readerFetchPostUseCase.fetchPost(blogId = blogId, postId = postId, isFeed = isFeed)) {
             FetchReaderPostState.Success -> {
                 getReaderPostFromDb(blogId, postId)
-                // Update UI if content changed or we didn't have cached content
+                // Update UI if content changed, or we didn't have cached content
                 if (!hasCachedPost || post?.text != oldPostText) {
                     updatePostDetailsUi()
                 }
@@ -772,7 +772,7 @@ class ReaderPostDetailViewModel @Inject constructor(
         var showEmptyState = false
         var emptyStateTitle: UiString? = null
 
-        if (updateLikesState is Failure && !showLoading) {
+        if (updateLikesState is Failure) {
             updateLikesState.emptyStateData.let {
                 showEmptyState = it.showEmptyState
                 emptyStateTitle = it.title
