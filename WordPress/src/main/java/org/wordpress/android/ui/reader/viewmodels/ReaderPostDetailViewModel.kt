@@ -651,23 +651,39 @@ class ReaderPostDetailViewModel @Inject constructor(
             onButtonClicked = this@ReaderPostDetailViewModel::onButtonClicked,
             onHeaderAction = { action -> onHeaderAction(post, action) },
         )
-        return preserveFollowActionRunningState(newUiState)
+        return preserveTransientState(newUiState)
     }
 
-    private fun preserveFollowActionRunningState(
+    private fun preserveTransientState(
         newUiState: ReaderPostDetailsUiState
     ): ReaderPostDetailsUiState {
-        val currentUiState = _uiState.value as? ReaderPostDetailsUiState ?: return newUiState
-        val currentFollowButtonState = currentUiState.headerUiState.followButtonUiState
+        val currentUiState = _uiState.value as? ReaderPostDetailsUiState
+            ?: return newUiState
 
-        return if (currentFollowButtonState.isFollowActionRunning) {
-            val updatedFollowButtonUiState = newUiState.headerUiState.followButtonUiState.copy(
-                isFollowActionRunning = true
+        var headerUiState = newUiState.headerUiState
+
+        // Keep the follow-action-running flag across re-renders
+        if (currentUiState.headerUiState.followButtonUiState.isFollowActionRunning) {
+            headerUiState = headerUiState.copy(
+                followButtonUiState = headerUiState.followButtonUiState.copy(
+                    isFollowActionRunning = true
+                )
             )
-            val updatedHeaderUiState = newUiState.headerUiState.copy(
-                followButtonUiState = updatedFollowButtonUiState
+        }
+
+        // Once the featured image is shown, keep it visible across
+        // re-renders so it doesn't flicker when fresh post text causes
+        // the deduplication heuristic to change its mind.
+        if (currentUiState.headerUiState.featuredImageUiState != null &&
+            headerUiState.featuredImageUiState == null
+        ) {
+            headerUiState = headerUiState.copy(
+                featuredImageUiState = currentUiState.headerUiState.featuredImageUiState
             )
-            newUiState.copy(headerUiState = updatedHeaderUiState)
+        }
+
+        return if (headerUiState !== newUiState.headerUiState) {
+            newUiState.copy(headerUiState = headerUiState)
         } else {
             newUiState
         }
