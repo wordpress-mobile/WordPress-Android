@@ -87,26 +87,32 @@ class ReaderPostDetailsHeaderViewUiStateBuilder @Inject constructor(
                     )
                 }
             },
-            interactionSectionUiState = InteractionSectionUiState(
-                likeCount = post.numLikes,
-                commentCount = post.numReplies,
-                onLikesClicked = {
-                    onHeaderAction(ReaderPostDetailsHeaderAction.LikesClicked)
-                },
-                onCommentsClicked = {
-                    onHeaderAction(ReaderPostDetailsHeaderAction.CommentsClicked)
-                }
-            ),
-            onViewOriginalClicked = if (post.hasUrl()) {
-                {
-                    onHeaderAction(
-                        ReaderPostDetailsHeaderAction.ViewOriginalClicked
-                    )
-                }
-            } else {
-                null
-            }
+            interactionSectionUiState = buildInteractionSection(post, onHeaderAction),
+            onViewOriginalClicked = buildViewOriginalClicked(post, onHeaderAction)
         )
+    }
+
+    private fun buildInteractionSection(
+        post: ReaderPost,
+        onHeaderAction: (ReaderPostDetailsHeaderAction) -> Unit,
+    ) = InteractionSectionUiState(
+        likeCount = post.numLikes,
+        commentCount = post.numReplies,
+        onLikesClicked = {
+            onHeaderAction(ReaderPostDetailsHeaderAction.LikesClicked)
+        },
+        onCommentsClicked = {
+            onHeaderAction(ReaderPostDetailsHeaderAction.CommentsClicked)
+        }
+    )
+
+    private fun buildViewOriginalClicked(
+        post: ReaderPost,
+        onHeaderAction: (ReaderPostDetailsHeaderAction) -> Unit,
+    ): (() -> Unit)? = if (post.hasUrl()) {
+        { onHeaderAction(ReaderPostDetailsHeaderAction.ViewOriginalClicked) }
+    } else {
+        null
     }
 
     private fun buildDateLine(post: ReaderPost): String {
