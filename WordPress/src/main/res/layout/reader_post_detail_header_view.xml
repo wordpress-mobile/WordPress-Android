@@ -11,11 +11,13 @@
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/text_blog_name"
         style="@style/ReaderTextView.PostDetail.BlogSection.Title"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        app:layout_constrainedWidth="true"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toStartOf="@id/header_follow_button_container"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="@id/header_follow_button_container"
         app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintHorizontal_bias="0"
         tools:text="My Blog Name" />
@@ -28,8 +30,7 @@
         android:visibility="gone"
         app:layout_constraintStart_toEndOf="@id/text_blog_name"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/text_blog_name"
-        app:layout_constraintBottom_toBottomOf="@id/text_blog_name"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintHorizontal_bias="0"
         tools:visibility="visible">
 
