@@ -49,11 +49,24 @@
                         android:layout_marginEnd="@dimen/reader_detail_margin"
                         android:layout_marginStart="@dimen/reader_detail_margin" />
 
+                    <org.wordpress.android.ui.reader.views.ReaderExpandableTagsView
+                        android:id="@+id/expandable_tags_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/layout_post_detail_content"
+                        android:layout_alignStart="@+id/layout_post_detail_content"
+                        android:layout_alignEnd="@+id/layout_post_detail_content"
+                        android:layout_marginTop="@dimen/margin_extra_large"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:visibility="gone"
+                        tools:ignore="UnknownIdInLayout" />
+
                     <include
                         layout="@layout/reader_post_likers_faces_list"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_below="@+id/layout_post_detail_content" />
+                        android:layout_below="@+id/expandable_tags_view" />
 
                     <include
                         android:id="@+id/comments_snippet"

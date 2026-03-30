@@ -213,19 +213,4 @@
 
     <!-- like and comment counts end -->
 
-    <org.wordpress.android.ui.reader.views.ReaderExpandableTagsView
-        android:id="@+id/expandable_tags_view"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_extra_large"
-        android:visibility="gone"
-        android:clickable="true"
-        android:focusable="true"
-        app:chipSpacingHorizontal="@dimen/margin_medium"
-        app:chipSpacingVertical="@dimen/margin_medium"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/reader_card_interactions_bottom_barrier"
-        tools:visibility="visible"/>
-
 </androidx.constraintlayout.widget.ConstraintLayout>

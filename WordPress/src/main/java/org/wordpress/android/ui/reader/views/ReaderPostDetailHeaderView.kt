@@ -59,9 +59,6 @@ class ReaderPostDetailHeaderView @JvmOverloads constructor(
             ReaderReadingPreferences.ThemeValues.from(root.context, it.theme)
         }
 
-        expandableTagsView.setVisible(uiState.tagItemsVisibility)
-        expandableTagsView.updateUi(uiState.tagItems, readingPreferences)
-
         updateTitle(uiState.title, readingPreferences, themeValues)
 
         uiHelpers.setTextOrHide(

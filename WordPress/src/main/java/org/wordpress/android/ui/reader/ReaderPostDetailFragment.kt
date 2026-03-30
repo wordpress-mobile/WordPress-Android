@@ -775,6 +775,12 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         }
 
         binding.headerView.updatePost(state.headerUiState, getReadingPreferences())
+
+        binding.expandableTagsView.setVisible(state.headerUiState.tagItemsVisibility)
+        binding.expandableTagsView.updateUi(
+            state.headerUiState.tagItems, getReadingPreferences()
+        )
+
         showOrHideMoreMenu(state)
 
         updateExcerptFooter(state.excerptFooterUiState)
