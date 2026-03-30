@@ -62,25 +62,85 @@
                         android:visibility="gone"
                         tools:ignore="UnknownIdInLayout" />
 
-                    <!-- like count -->
-                    <com.google.android.material.textview.MaterialTextView
-                        android:id="@+id/header_like_count"
-                        style="@style/ReaderTextView.Post.New.Interactions"
+                    <!-- like count with avatars -->
+                    <LinearLayout
+                        android:id="@+id/like_count_with_avatars"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/expandable_tags_view"
                         android:layout_alignStart="@+id/layout_post_detail_content"
                         android:layout_alignEnd="@+id/layout_post_detail_content"
                         android:layout_marginTop="@dimen/margin_medium"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
                         android:visibility="gone"
-                        tools:ignore="UnknownIdInLayout"
-                        tools:text="15 likes" />
+                        tools:ignore="UnknownIdInLayout">
+
+                        <ImageView
+                            android:id="@+id/like_avatar_1"
+                            android:layout_width="@dimen/avatar_sz_extra_small"
+                            android:layout_height="@dimen/avatar_sz_extra_small"
+                            android:background="@drawable/bg_oval_stroke_liker_2dp"
+                            android:importantForAccessibility="no"
+                            android:padding="@dimen/reader_like_faces_padding"
+                            android:visibility="gone"
+                            tools:src="@drawable/ic_user_placeholder_primary_24" />
+
+                        <ImageView
+                            android:id="@+id/like_avatar_2"
+                            android:layout_width="@dimen/avatar_sz_extra_small"
+                            android:layout_height="@dimen/avatar_sz_extra_small"
+                            android:background="@drawable/bg_oval_stroke_liker_2dp"
+                            android:importantForAccessibility="no"
+                            android:padding="@dimen/reader_like_faces_padding"
+                            android:visibility="gone"
+                            tools:src="@drawable/ic_user_placeholder_primary_24" />
+
+                        <ImageView
+                            android:id="@+id/like_avatar_3"
+                            android:layout_width="@dimen/avatar_sz_extra_small"
+                            android:layout_height="@dimen/avatar_sz_extra_small"
+                            android:background="@drawable/bg_oval_stroke_liker_2dp"
+                            android:importantForAccessibility="no"
+                            android:padding="@dimen/reader_like_faces_padding"
+                            android:visibility="gone"
+                            tools:src="@drawable/ic_user_placeholder_primary_24" />
+
+                        <ImageView
+                            android:id="@+id/like_avatar_4"
+                            android:layout_width="@dimen/avatar_sz_extra_small"
+                            android:layout_height="@dimen/avatar_sz_extra_small"
+                            android:background="@drawable/bg_oval_stroke_liker_2dp"
+                            android:importantForAccessibility="no"
+                            android:padding="@dimen/reader_like_faces_padding"
+                            android:visibility="gone"
+                            tools:src="@drawable/ic_user_placeholder_primary_24" />
+
+                        <ImageView
+                            android:id="@+id/like_avatar_5"
+                            android:layout_width="@dimen/avatar_sz_extra_small"
+                            android:layout_height="@dimen/avatar_sz_extra_small"
+                            android:background="@drawable/bg_oval_stroke_liker_2dp"
+                            android:importantForAccessibility="no"
+                            android:padding="@dimen/reader_like_faces_padding"
+                            android:visibility="gone"
+                            tools:src="@drawable/ic_user_placeholder_primary_24" />
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/header_like_count"
+                            style="@style/ReaderTextView.Post.New.Interactions"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            tools:text="15 likes" />
+
+                    </LinearLayout>
 
                     <include
                         layout="@layout/reader_post_likers_faces_list"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_below="@+id/header_like_count" />
+                        android:layout_below="@+id/like_count_with_avatars" />
 
                     <include
                         android:id="@+id/comments_snippet"

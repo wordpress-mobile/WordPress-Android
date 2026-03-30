@@ -24,6 +24,7 @@ import android.view.ViewGroup
 import android.view.ViewStub
 import android.webkit.CookieManager
 import android.webkit.WebView
+import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
@@ -79,6 +80,7 @@ import org.wordpress.android.ui.avatars.AVATAR_LEFT_OFFSET_DIMEN
 import org.wordpress.android.ui.avatars.AvatarItemDecorator
 import org.wordpress.android.ui.avatars.TrainOfAvatarsAdapter
 import org.wordpress.android.ui.avatars.TrainOfAvatarsItem
+import org.wordpress.android.ui.avatars.TrainOfAvatarsItem.AvatarItem
 import org.wordpress.android.ui.engagement.EngagementNavigationSource
 import org.wordpress.android.ui.main.ChooseSiteActivity
 import org.wordpress.android.ui.main.WPMainActivity
@@ -135,6 +137,7 @@ import org.wordpress.android.util.RtlUtils
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.UrlUtils
 import org.wordpress.android.util.WPPermissionUtils.READER_FILE_DOWNLOAD_PERMISSION_REQUEST_CODE
+import org.wordpress.android.util.WPAvatarUtils
 import org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefreshHelper
 import org.wordpress.android.util.config.CommentsSnippetFeatureConfig
 import org.wordpress.android.util.config.LikesEnhancementsFeatureConfig
@@ -145,6 +148,7 @@ import org.wordpress.android.util.extensions.getSerializableCompat
 import org.wordpress.android.util.extensions.setVisible
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 import org.wordpress.android.util.image.ImageManager
+import org.wordpress.android.util.image.ImageType
 import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout
 import org.wordpress.android.viewmodel.ContextProvider
 import org.wordpress.android.viewmodel.observeEvent
@@ -563,8 +567,9 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             }
         }
 
-        if (likesEnhancementsFeatureConfig.isEnabled()) {
-            viewModel.likesUiState.observe(viewLifecycleOwner) { state ->
+        viewModel.likesUiState.observe(viewLifecycleOwner) { state ->
+            updateLikeAvatars(state.engageItemsList)
+            if (likesEnhancementsFeatureConfig.isEnabled()) {
                 manageLikesUiState(state)
             }
         }
@@ -672,7 +677,8 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         with(requireActivity()) {
             if (this.isFinishing) return@with
 
-            val shouldSkipAnimation = likeFacesTrain.isGone && state.goingToShowFaces
+            val shouldSkipAnimation =
+                likeFacesTrain.isGone && state.goingToShowFaces
 
             setupLikeFacesTrain(
                 state.engageItemsList,
@@ -680,27 +686,75 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                 shouldSkipAnimation
             )
 
-            likeProgressBar.visibility = if (state.showLoading) View.VISIBLE else View.GONE
-            likeFacesTrain.visibility = if (state.showLikeFacesTrainContainer) View.VISIBLE else View.GONE
+            likeProgressBar.visibility =
+                if (state.showLoading) View.VISIBLE else View.GONE
+            likeFacesTrain.visibility =
+                if (state.showLikeFacesTrainContainer) {
+                    View.VISIBLE
+                } else {
+                    View.GONE
+                }
 
             if (state.showEmptyState) {
-                uiHelpers.setTextOrHide(likeEmptyStateText, state.emptyStateTitle?.let {
-                    getString(R.string.like_faces_error_loading_message, uiHelpers.getTextOfUiString(this, it))
-                })
+                uiHelpers.setTextOrHide(
+                    likeEmptyStateText,
+                    state.emptyStateTitle?.let {
+                        getString(
+                            R.string.like_faces_error_loading_message,
+                            uiHelpers.getTextOfUiString(this, it)
+                        )
+                    }
+                )
                 likeEmptyStateText.visibility = View.VISIBLE
             } else {
                 likeEmptyStateText.visibility = View.GONE
             }
 
-            likeFacesTrain.contentDescription = uiHelpers.getTextOfUiString(
-                contextProvider.getContext(),
-                state.contentDescription
-            )
+            likeFacesTrain.contentDescription =
+                uiHelpers.getTextOfUiString(
+                    contextProvider.getContext(),
+                    state.contentDescription
+                )
 
             likeFacesTrain.setOnClickListener {
                 if (!isAdded) return@setOnClickListener
 
                 viewModel.onLikesClicked()
+            }
+        }
+    }
+
+    private fun updateLikeAvatars(
+        items: List<TrainOfAvatarsItem>
+    ) {
+        val binding = binding ?: return
+        val avatarViews = listOf(
+            binding.likeAvatar1,
+            binding.likeAvatar2,
+            binding.likeAvatar3,
+            binding.likeAvatar4,
+            binding.likeAvatar5
+        )
+        val avatarItems = items.filterIsInstance<AvatarItem>().take(
+            avatarViews.size
+        )
+        val avatarSize = resources.getDimensionPixelSize(
+            R.dimen.avatar_sz_extra_small
+        )
+        avatarViews.forEachIndexed { index, imageView ->
+            if (index < avatarItems.size) {
+                val url = WPAvatarUtils.rewriteAvatarUrl(
+                    avatarItems[index].userAvatarUrl,
+                    avatarSize
+                )
+                imageView.visibility = View.VISIBLE
+                imageManager.loadIntoCircle(
+                    imageView,
+                    ImageType.AVATAR_WITH_BACKGROUND,
+                    url
+                )
+            } else {
+                imageView.visibility = View.GONE
             }
         }
     }
@@ -810,7 +864,9 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             .takeIf { state.likeCount > 0 }
 
         uiHelpers.setTextOrHide(binding.headerLikeCount, likeLabel)
-        binding.headerLikeCount.setOnClickListener {
+        binding.likeCountWithAvatars.visibility =
+            if (likeLabel != null) View.VISIBLE else View.GONE
+        binding.likeCountWithAvatars.setOnClickListener {
             state.onLikesClicked()
         }
     }
@@ -1349,9 +1405,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                     val newPost = ReaderPostTable.getBlogPost(post.blogId, post.postId, false)
                     newPost?.let {
                         viewModel.post = it
-                        if (likesEnhancementsFeatureConfig.isEnabled()) {
-                            viewModel.onRefreshLikersData(it)
-                        }
+                        viewModel.onRefreshLikersData(it)
                         viewModel.onUpdatePost(it)
                         // Re-render the WebView with updated content
                         showPostInWebView(it)
@@ -1672,9 +1726,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                     updatePost()
                 }
                 viewModel.post?.let {
-                    if (likesEnhancementsFeatureConfig.isEnabled()) {
-                        viewModel.onRefreshLikersData(it)
-                    }
+                    viewModel.onRefreshLikersData(it)
                     if (commentsSnippetFeatureConfig.isEnabled()) {
                         viewModel.onRefreshCommentsData(it.blogId, it.postId)
                     }
