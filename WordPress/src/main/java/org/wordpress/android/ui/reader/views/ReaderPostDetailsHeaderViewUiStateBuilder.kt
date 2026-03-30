@@ -21,7 +21,8 @@ import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.DateTimeUtilsWrapper
 import org.wordpress.android.util.DisplayUtilsWrapper
 import org.wordpress.android.util.HtmlUtils
-import java.text.SimpleDateFormat
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 import java.util.Locale
 import javax.inject.Inject
 import kotlin.math.ceil
@@ -38,7 +39,7 @@ class ReaderPostDetailsHeaderViewUiStateBuilder @Inject constructor(
     private val displayUtilsWrapper: DisplayUtilsWrapper,
     private val readerBlogTableWrapper: ReaderBlogTableWrapper,
 ) {
-    private val dateFormat = SimpleDateFormat(
+    private val dateFormatter = DateTimeFormatter.ofPattern(
         DATE_FORMAT_PATTERN, Locale.getDefault()
     )
 
@@ -49,6 +50,8 @@ class ReaderPostDetailsHeaderViewUiStateBuilder @Inject constructor(
         val textTitle = post
             .takeIf { post.hasTitle() }
             ?.title?.let { UiStringText(it) }
+
+        val featuredImage = buildFeaturedImageUiState(post)
 
         return ReaderPostDetailsHeaderUiState(
             title = textTitle,
@@ -75,14 +78,16 @@ class ReaderPostDetailsHeaderViewUiStateBuilder @Inject constructor(
             dateLine = buildDateLine(post),
             readingTime = buildReadingTime(post),
             blogDescription = buildBlogDescription(post),
-            featuredImageUiState = buildFeaturedImageUiState(
-                post,
-                onFeaturedImageClicked = { blogId, url ->
+            featuredImageUiState = featuredImage,
+            onFeaturedImageClicked = featuredImage?.let { state ->
+                { blogId: Long, url: String ->
                     onHeaderAction(
-                        ReaderPostDetailsHeaderAction.FeaturedImageClicked(blogId, url)
+                        ReaderPostDetailsHeaderAction.FeaturedImageClicked(
+                            blogId, url
+                        )
                     )
                 }
-            ),
+            },
             interactionSectionUiState = InteractionSectionUiState(
                 likeCount = post.numLikes,
                 commentCount = post.numReplies,
@@ -99,7 +104,10 @@ class ReaderPostDetailsHeaderViewUiStateBuilder @Inject constructor(
     private fun buildDateLine(post: ReaderPost): String {
         val date = post.getDisplayDate(dateTimeUtilsWrapper)
             ?: return ""
-        return dateFormat.format(date)
+        val localDateTime = date.toInstant()
+            .atZone(ZoneId.systemDefault())
+            .toLocalDateTime()
+        return dateFormatter.format(localDateTime)
     }
 
     /**
@@ -116,9 +124,11 @@ class ReaderPostDetailsHeaderViewUiStateBuilder @Inject constructor(
             ?.trim()
             ?.takeIf { it.isNotBlank() }
             ?.let { stripped ->
+                val wordCount = stripped.split(WHITESPACE_REGEX)
+                    .count { it.isNotEmpty() }
+                if (wordCount == 0) return null
                 val minutes = ceil(
-                    stripped.split(WHITESPACE_REGEX).size.toDouble()
-                        / WORDS_PER_MINUTE
+                    wordCount.toDouble() / WORDS_PER_MINUTE
                 ).toInt().coerceAtLeast(1)
                 UiStringResWithParams(
                     R.string.reader_reading_time,
@@ -139,8 +149,7 @@ class ReaderPostDetailsHeaderViewUiStateBuilder @Inject constructor(
     }
 
     private fun buildFeaturedImageUiState(
-        post: ReaderPost,
-        onFeaturedImageClicked: (Long, String) -> Unit,
+        post: ReaderPost
     ): ReaderFeaturedImageUiState? {
         if (!featuredImageUtils.shouldAddFeaturedImage(post)) return null
         val url = readerUtilsWrapper.getResizedImageUrl(
@@ -153,7 +162,6 @@ class ReaderPostDetailsHeaderViewUiStateBuilder @Inject constructor(
         return ReaderFeaturedImageUiState(
             blogId = post.blogId,
             url = url,
-            onFeaturedImageClicked = onFeaturedImageClicked,
         )
     }
 

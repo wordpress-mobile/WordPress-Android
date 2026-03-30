@@ -991,13 +991,18 @@ class ReaderPostDetailViewModel @Inject constructor(
         // deduplication) and update UI state
         val currentUiState: ReaderPostDetailsUiState? = (_uiState.value as? ReaderPostDetailsUiState)
         currentUiState?.let {
-            readerPostTableWrapper.getBlogPost(
-                it.blogId,
-                it.postId,
-                false
-            )?.let { post ->
-                this.post = post
-                onUpdatePost(post)
+            launch(mainDispatcher) {
+                val reloadedPost = withContext(bgDispatcher) {
+                    readerPostTableWrapper.getBlogPost(
+                        it.blogId,
+                        it.postId,
+                        false
+                    )
+                }
+                reloadedPost?.let { post ->
+                    this@ReaderPostDetailViewModel.post = post
+                    onUpdatePost(post)
+                }
             }
         }
 

@@ -71,16 +71,16 @@ class ReaderPostDetailHeaderView @JvmOverloads constructor(
 
         setAuthorAndDate(uiState.authorName, uiState.dateLine)
 
-        // Blog name is shown at the top; hide it in the blog section
-        layoutBlogSection.blogSectionTextBlogName.isVisible = false
-
         updateFollowButton(uiState.followButtonUiState)
 
         updateAvatars(uiState.blogSectionUiState)
         updateBlogSectionClick(uiState.blogSectionUiState)
 
         uiHelpers.setTextOrHide(textReadingTime, uiState.readingTime)
-        updateFeaturedImage(uiState.featuredImageUiState)
+        updateFeaturedImage(
+            uiState.featuredImageUiState,
+            uiState.onFeaturedImageClicked
+        )
         uiHelpers.setTextOrHide(textBlogDescription, uiState.blogDescription)
 
         updateInteractionSection(
@@ -183,7 +183,8 @@ class ReaderPostDetailHeaderView @JvmOverloads constructor(
     }
 
     private fun ReaderPostDetailHeaderViewBinding.updateFeaturedImage(
-        state: ReaderFeaturedImageUiState?
+        state: ReaderFeaturedImageUiState?,
+        onFeaturedImageClicked: ((Long, String) -> Unit)?
     ) {
         headerFeaturedImage.setVisible(state != null)
         if (state != null) {
@@ -191,7 +192,9 @@ class ReaderPostDetailHeaderView @JvmOverloads constructor(
                 headerFeaturedImage, PHOTO, state.url, FIT_CENTER
             )
             headerFeaturedImage.setOnClickListener {
-                state.onFeaturedImageClicked(state.blogId, state.url)
+                onFeaturedImageClicked?.invoke(
+                    state.blogId, state.url
+                )
             }
         } else {
             imageManager.cancelRequestAndClearImageView(

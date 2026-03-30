@@ -25,6 +25,7 @@
         tools:ignore="RtlSymmetry"
         tools:src="@drawable/login_prologue_third_asset_three" />
 
+    <!-- Blog name is shown at the top of the header; hidden here -->
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/blog_section_text_blog_name"
         style="@style/ReaderTextView.PostDetail.BlogSection.Title"
@@ -33,6 +34,7 @@
         android:layout_marginStart="@dimen/margin_large"
         android:layout_marginEnd="@dimen/margin_medium"
         android:includeFontPadding="false"
+        android:visibility="gone"
         app:layout_goneMarginStart="0dp"
         app:layout_constraintStart_toEndOf="@id/blog_section_image_blog_avatar"
         app:layout_constraintEnd_toEndOf="parent"

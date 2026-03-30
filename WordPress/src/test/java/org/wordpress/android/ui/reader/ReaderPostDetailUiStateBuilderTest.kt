@@ -89,17 +89,13 @@ class ReaderPostDetailUiStateBuilderTest : BaseUnitTest() {
         this.feedId = 2L
         this.blogName = "blog name"
     }
-    private val dummyOnRelatedPostItemClicked: (Long, Long, Boolean) -> Unit =
-        { _, _, _ -> }
-    private val dummyonCommentSnippetClicked: (Long, Long) -> Unit =
-        { _, _ -> }
+    private val dummyOnRelatedPostItemClicked: (Long, Long, Boolean) -> Unit = { _, _, _ -> }
+    private val dummyonCommentSnippetClicked: (Long, Long) -> Unit = { _, _ -> }
     private val dummyVisitPostLinkText = "visit post"
 
     @Before
     fun setUp() = test {
-        dummyRelatedPosts = ReaderSimplePostList().apply {
-            add(readerSimplePost)
-        }
+        dummyRelatedPosts = ReaderSimplePostList().apply { add(readerSimplePost) }
 
         builder = ReaderPostDetailUiStateBuilder(
             headerViewUiStateBuilder,
@@ -116,93 +112,78 @@ class ReaderPostDetailUiStateBuilderTest : BaseUnitTest() {
 
     /* EXCERPT FOOTER */
     @Test
-    fun `given excerpt is shown, when post ui is built, then excerpt footer exists`() =
-        test {
-            val readerPost = mock<ReaderPost>()
-            whenever(readerPost.blogName).thenReturn("blog name")
-            whenever(readerPost.url).thenReturn("url")
-            whenever(readerPost.shouldShowExcerpt()).thenReturn(true)
+    fun `given excerpt is shown, when post ui is built, then excerpt footer exists`() = test {
+        val readerPost = mock<ReaderPost>()
+        whenever(readerPost.blogName).thenReturn("blog name")
+        whenever(readerPost.url).thenReturn("url")
+        whenever(readerPost.shouldShowExcerpt()).thenReturn(true)
 
-            val postUiState = buildPostUiState(readerPost = readerPost)
+        val postUiState = buildPostUiState(readerPost = readerPost)
 
-            assertThat(postUiState.excerptFooterUiState).isEqualTo(
-                ExcerptFooterUiState(
-                    visitPostExcerptFooterLinkText =
-                        UiStringText(dummyVisitPostLinkText),
-                    postLink = readerPost.url
-                )
+        assertThat(postUiState.excerptFooterUiState).isEqualTo(
+            ExcerptFooterUiState(
+                visitPostExcerptFooterLinkText = UiStringText(dummyVisitPostLinkText),
+                postLink = readerPost.url
             )
-        }
+        )
+    }
 
     @Test
-    fun `given excerpt is not shown, when post ui is built, then excerpt footer does not exists`() =
-        test {
-            val readerPost = mock<ReaderPost>()
-            whenever(readerPost.shouldShowExcerpt()).thenReturn(false)
+    fun `given excerpt is not shown, when post ui is built, then excerpt footer does not exists`() = test {
+        val readerPost = mock<ReaderPost>()
+        whenever(readerPost.shouldShowExcerpt()).thenReturn(false)
 
-            val postUiState = buildPostUiState(readerPost = readerPost)
+        val postUiState = buildPostUiState(readerPost = readerPost)
 
-            assertThat(postUiState.excerptFooterUiState).isNull()
-        }
+        assertThat(postUiState.excerptFooterUiState).isNull()
+    }
 
     /* RELATED POSTS */
     @Test
-    fun `when local related posts ui is built, then source post site name exists in header label`() =
-        test {
-            val relatedPostsUiState =
-                buildRelatedPostsUiState(isGlobal = false)
+    fun `when local related posts ui is built, then source post site name exists in header label`() = test {
+        val relatedPostsUiState = buildRelatedPostsUiState(isGlobal = false)
 
-            assertThat(relatedPostsUiState.headerLabel).isEqualTo(
-                UiStringResWithParams(
-                    R.string.reader_label_local_related_posts,
-                    listOf(
-                        UiStringText(dummySourceReaderPost.blogName)
-                    )
-                )
+        assertThat(relatedPostsUiState.headerLabel).isEqualTo(
+            UiStringResWithParams(
+                R.string.reader_label_local_related_posts,
+                listOf(UiStringText(dummySourceReaderPost.blogName))
             )
-        }
+        )
+    }
 
     @Test
-    fun `when global related posts ui is built, then global related posts header label exists`() =
-        test {
-            val relatedPostsUiState =
-                buildRelatedPostsUiState(isGlobal = true)
+    fun `when global related posts ui is built, then global related posts header label exists`() = test {
+        val relatedPostsUiState = buildRelatedPostsUiState(isGlobal = true)
 
-            assertThat(relatedPostsUiState.headerLabel).isEqualTo(
-                UiStringRes(R.string.reader_label_global_related_posts)
-            )
-        }
+        assertThat(relatedPostsUiState.headerLabel).isEqualTo(
+            UiStringRes(R.string.reader_label_global_related_posts)
+        )
+    }
 
     @Test
-    fun `given empty related posts, when related posts ui is built, then related post cards are empty`() =
-        test {
-            val relatedPostsUiState = buildRelatedPostsUiState(
-                relatedPosts = ReaderSimplePostList()
-            )
+    fun `given empty related posts, when related posts ui is built, then related post cards are empty`() = test {
+        val relatedPostsUiState = buildRelatedPostsUiState(relatedPosts = ReaderSimplePostList())
 
-            assertThat(relatedPostsUiState.cards).isEmpty()
-        }
+        assertThat(relatedPostsUiState.cards).isEmpty()
+    }
 
     @Test
-    fun `given related posts, when related posts ui is built, then related post cards exist`() =
-        test {
-            val relatedPostsUiState = buildRelatedPostsUiState()
+    fun `given related posts, when related posts ui is built, then related post cards exist`() = test {
+        val relatedPostsUiState = buildRelatedPostsUiState()
 
-            assertThat(relatedPostsUiState.cards).isNotEmpty
-        }
+        assertThat(relatedPostsUiState.cards).isNotEmpty
+    }
 
     @Test
-    fun `given related post with title, when related posts ui is built, then related post title exists`() =
-        test {
-            val title = "title"
-            whenever(readerSimplePost.hasTitle()).thenReturn(true)
-            whenever(readerSimplePost.title).thenReturn(title)
+    fun `given related post with title, when related posts ui is built, then related post title exists`() = test {
+        val title = "title"
+        whenever(readerSimplePost.hasTitle()).thenReturn(true)
+        whenever(readerSimplePost.title).thenReturn(title)
 
-            val relatedPostsUiState = buildRelatedPostsUiState()
+        val relatedPostsUiState = buildRelatedPostsUiState()
 
-            assertThat(relatedPostsUiState.cards?.first()?.title)
-                .isEqualTo(UiStringText(title))
-        }
+        assertThat(relatedPostsUiState.cards?.first()?.title).isEqualTo(UiStringText(title))
+    }
 
     @Test
     fun `given related post without title, when related posts ui is built, then related post title does not exists`() =
@@ -215,17 +196,15 @@ class ReaderPostDetailUiStateBuilderTest : BaseUnitTest() {
         }
 
     @Test
-    fun `given related post with excerpt, when related posts ui is built, then excerpt exists`() =
-        test {
-            val excerpt = "excerpt"
-            whenever(readerSimplePost.hasExcerpt()).thenReturn(true)
-            whenever(readerSimplePost.excerpt).thenReturn(excerpt)
+    fun `given related post with excerpt, when related posts ui is built, then excerpt exists`() = test {
+        val excerpt = "excerpt"
+        whenever(readerSimplePost.hasExcerpt()).thenReturn(true)
+        whenever(readerSimplePost.excerpt).thenReturn(excerpt)
 
-            val relatedPostsUiState = buildRelatedPostsUiState()
+        val relatedPostsUiState = buildRelatedPostsUiState()
 
-            assertThat(relatedPostsUiState.cards?.first()?.excerpt)
-                .isEqualTo(UiStringText(excerpt))
-        }
+        assertThat(relatedPostsUiState.cards?.first()?.excerpt).isEqualTo(UiStringText(excerpt))
+    }
 
     @Test
     fun `given related post without excerpt, when related posts ui is built, then excerpt does not exists`() =
@@ -241,29 +220,21 @@ class ReaderPostDetailUiStateBuilderTest : BaseUnitTest() {
     fun `given related post with featured image url, when related posts ui is built, then featured image exists`() =
         test {
             val url = "/featured/image/url"
-            whenever(
-                readerSimplePost.getFeaturedImageForDisplay(any(), any())
-            ).thenReturn(url)
+            whenever(readerSimplePost.getFeaturedImageForDisplay(any(), any())).thenReturn(url)
 
             val relatedPostsUiState = buildRelatedPostsUiState()
 
-            assertThat(
-                relatedPostsUiState.cards?.first()?.featuredImageUrl
-            ).isEqualTo(url)
+            assertThat(relatedPostsUiState.cards?.first()?.featuredImageUrl).isEqualTo(url)
         }
 
     @Test
     fun `given related post without featured image url, when related posts ui is built, then featured image exists`() =
         test {
-            whenever(
-                readerSimplePost.getFeaturedImageForDisplay(any(), any())
-            ).thenReturn(null)
+            whenever(readerSimplePost.getFeaturedImageForDisplay(any(), any())).thenReturn(null)
 
             val relatedPostsUiState = buildRelatedPostsUiState()
 
-            assertThat(
-                relatedPostsUiState.cards?.first()?.featuredImageUrl
-            ).isNull()
+            assertThat(relatedPostsUiState.cards?.first()?.featuredImageUrl).isNull()
         }
 
     @Test
@@ -293,16 +264,10 @@ class ReaderPostDetailUiStateBuilderTest : BaseUnitTest() {
         whenever(context.resources).thenReturn(resources)
         whenever(resources.getDimensionPixelSize(anyInt())).thenReturn(10)
 
-        whenever(
-            dateTimeUtilsWrapper.dateFromIso8601(anyString())
-        ).thenReturn(Date())
-        whenever(
-            dateTimeUtilsWrapper.javaDateToTimeSpan(anyOrNull())
-        ).thenReturn("")
+        whenever(dateTimeUtilsWrapper.dateFromIso8601(anyString())).thenReturn(Date())
+        whenever(dateTimeUtilsWrapper.javaDateToTimeSpan(anyOrNull())).thenReturn("")
 
-        whenever(
-            avatarUtilsWrapper.rewriteAvatarUrl(anyString(), anyInt())
-        ).thenReturn("")
+        whenever(avatarUtilsWrapper.rewriteAvatarUrl(anyString(), anyInt())).thenReturn("")
 
         val comment = ReaderComment().apply {
             authorName = ""
@@ -321,8 +286,7 @@ class ReaderPostDetailUiStateBuilderTest : BaseUnitTest() {
             dummyonCommentSnippetClicked
         )
 
-        assertThat(snippetUiState.snippetItems.first().type)
-            .isEqualTo(COMMENT)
+        assertThat(snippetUiState.snippetItems.first().type).isEqualTo(COMMENT)
         assertThat(snippetUiState.snippetItems[1].type).isEqualTo(BUTTON)
     }
 
@@ -343,24 +307,17 @@ class ReaderPostDetailUiStateBuilderTest : BaseUnitTest() {
 
         if (post.shouldShowExcerpt()) {
             val dummyLinkHexColor = "#FFFFFF"
-            whenever(
-                htmlUtilsWrapper.colorResToHtmlColor(anyOrNull(), any())
-            ).thenReturn(dummyLinkHexColor)
+            whenever(htmlUtilsWrapper.colorResToHtmlColor(anyOrNull(), any())).thenReturn(dummyLinkHexColor)
             whenever(
                 htmlMessageUtils.getHtmlMessageFromStringFormatResId(
                     R.string.reader_excerpt_link,
-                    "<font color='" + dummyLinkHexColor + "'>" +
-                        post.blogName + "</font>"
+                    "<font color='" + dummyLinkHexColor + "'>" + post.blogName + "</font>"
                 )
             ).thenReturn(dummyVisitPostLinkText)
         }
 
-        whenever(
-            headerViewUiStateBuilder.mapPostToUiState(any(), any())
-        ).thenReturn(mock())
-        whenever(
-            postUiStateBuilder.mapPostToActions(any(), any())
-        ).thenReturn(mock())
+        whenever(headerViewUiStateBuilder.mapPostToUiState(any(), any())).thenReturn(mock())
+        whenever(postUiStateBuilder.mapPostToActions(any(), any())).thenReturn(mock())
 
         return builder.mapPostToUiState(
             post = post,

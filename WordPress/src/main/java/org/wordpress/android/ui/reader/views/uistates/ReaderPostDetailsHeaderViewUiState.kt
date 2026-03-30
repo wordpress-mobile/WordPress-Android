@@ -14,11 +14,11 @@ data class ReaderPostDetailsHeaderUiState(
     val readingTime: UiString? = null,
     val blogDescription: UiString? = null,
     val featuredImageUiState: ReaderFeaturedImageUiState? = null,
+    val onFeaturedImageClicked: ((Long, String) -> Unit)? = null,
     val interactionSectionUiState: InteractionSectionUiState,
 )
 
 data class ReaderFeaturedImageUiState(
     val blogId: Long,
     val url: String,
-    val onFeaturedImageClicked: (Long, String) -> Unit,
 )

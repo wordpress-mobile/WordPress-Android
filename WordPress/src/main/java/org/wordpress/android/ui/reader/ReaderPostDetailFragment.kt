@@ -1038,6 +1038,8 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         // show more menu
         val menuMore = menu.findItem(R.id.menu_more)
         menuMore?.isVisible = true
+
+        applyToolbarIconColors(toolBar.context)
     }
 
     private fun hideMenu(menu: Menu) {
