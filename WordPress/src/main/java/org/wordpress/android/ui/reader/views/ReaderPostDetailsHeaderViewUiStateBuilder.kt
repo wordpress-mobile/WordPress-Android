@@ -1,6 +1,8 @@
 package org.wordpress.android.ui.reader.views
 
 import dagger.Reusable
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import org.wordpress.android.R
 import org.wordpress.android.datasets.ReaderBlogTableWrapper
 import org.wordpress.android.models.ReaderPost
@@ -10,8 +12,8 @@ import org.wordpress.android.ui.reader.utils.FeaturedImageUtils
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import org.wordpress.android.ui.reader.views.uistates.FollowButtonUiState
 import org.wordpress.android.ui.reader.views.uistates.InteractionSectionUiState
-import org.wordpress.android.ui.reader.views.uistates.ReaderPostDetailsHeaderAction
 import org.wordpress.android.ui.reader.views.uistates.ReaderFeaturedImageUiState
+import org.wordpress.android.ui.reader.views.uistates.ReaderPostDetailsHeaderAction
 import org.wordpress.android.ui.reader.views.uistates.ReaderPostDetailsHeaderUiState
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
@@ -36,7 +38,11 @@ class ReaderPostDetailsHeaderViewUiStateBuilder @Inject constructor(
     private val displayUtilsWrapper: DisplayUtilsWrapper,
     private val readerBlogTableWrapper: ReaderBlogTableWrapper,
 ) {
-    fun mapPostToUiState(
+    private val dateFormat = SimpleDateFormat(
+        DATE_FORMAT_PATTERN, Locale.getDefault()
+    )
+
+    suspend fun mapPostToUiState(
         post: ReaderPost,
         onHeaderAction: (ReaderPostDetailsHeaderAction) -> Unit,
     ): ReaderPostDetailsHeaderUiState {
@@ -68,7 +74,7 @@ class ReaderPostDetailsHeaderViewUiStateBuilder @Inject constructor(
             ),
             dateLine = buildDateLine(post),
             readingTime = buildReadingTime(post),
-            excerpt = buildExcerpt(post),
+            blogDescription = buildBlogDescription(post),
             featuredImageUiState = buildFeaturedImageUiState(
                 post,
                 onFeaturedImageClicked = { blogId, url ->
@@ -91,10 +97,9 @@ class ReaderPostDetailsHeaderViewUiStateBuilder @Inject constructor(
     }
 
     private fun buildDateLine(post: ReaderPost): String {
-        val date = post.getDisplayDate(dateTimeUtilsWrapper) ?: return ""
-        return SimpleDateFormat(
-            DATE_FORMAT_PATTERN, Locale.getDefault()
-        ).format(date)
+        val date = post.getDisplayDate(dateTimeUtilsWrapper)
+            ?: return ""
+        return dateFormat.format(date)
     }
 
     /**
@@ -124,10 +129,12 @@ class ReaderPostDetailsHeaderViewUiStateBuilder @Inject constructor(
         )
     }
 
-    private fun buildExcerpt(post: ReaderPost): UiString? {
-        val description = readerBlogTableWrapper
-            .getBlogInfo(post.blogId)
-            ?.description
+    private suspend fun buildBlogDescription(
+        post: ReaderPost
+    ): UiString? {
+        val description = withContext(Dispatchers.IO) {
+            readerBlogTableWrapper.getBlogInfo(post.blogId)
+        }?.description
             ?.takeIf { it.isNotBlank() }
             ?: return null
         return UiStringText(description)

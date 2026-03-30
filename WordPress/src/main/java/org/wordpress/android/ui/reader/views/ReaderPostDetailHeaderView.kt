@@ -81,7 +81,7 @@ class ReaderPostDetailHeaderView @JvmOverloads constructor(
 
         uiHelpers.setTextOrHide(textReadingTime, uiState.readingTime)
         updateFeaturedImage(uiState.featuredImageUiState)
-        uiHelpers.setTextOrHide(textExcerpt, uiState.excerpt)
+        uiHelpers.setTextOrHide(textBlogDescription, uiState.blogDescription)
 
         updateInteractionSection(
             uiState.interactionSectionUiState,

@@ -60,7 +60,7 @@ class ReaderPostDetailUiStateBuilder @Inject constructor(
     private val relatedPostFeaturedImageHeight: Int = (relatedPostFeaturedImageWidth
             * RELATED_POST_IMAGE_HEIGHT_WIDTH_RATION).toInt()
 
-    fun mapPostToUiState(
+    suspend fun mapPostToUiState(
         post: ReaderPost,
         moreMenuItems: List<SecondaryAction>? = null,
         onButtonClicked: (Long, Long, ReaderPostCardActionType) -> Unit,

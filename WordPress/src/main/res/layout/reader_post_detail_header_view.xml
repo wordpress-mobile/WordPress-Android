@@ -99,9 +99,9 @@
         app:shapeAppearanceOverlay="@style/ReaderFeaturedImageShape"
         tools:visibility="visible" />
 
-    <!-- Blog description excerpt -->
+    <!-- Blog description -->
     <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/text_excerpt"
+        android:id="@+id/text_blog_description"
         style="@style/ReaderTextView.PostDetail.BlogSection.Subtitle.MediumEmphasis"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -116,11 +116,11 @@
         tools:visibility="visible" />
 
     <androidx.constraintlayout.widget.Barrier
-        android:id="@+id/excerpt_barrier"
+        android:id="@+id/blog_description_barrier"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:barrierDirection="bottom"
-        app:constraint_referenced_ids="header_featured_image,text_excerpt" />
+        app:constraint_referenced_ids="header_featured_image,text_blog_description" />
 
     <!-- Reading time -->
     <com.google.android.material.textview.MaterialTextView
@@ -134,7 +134,7 @@
         android:visibility="gone"
         app:drawableStartCompat="@drawable/ic_clock_16dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/excerpt_barrier"
+        app:layout_constraintTop_toBottomOf="@id/blog_description_barrier"
         tools:text="5 min read"
         tools:visibility="visible" />
 
@@ -143,7 +143,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:barrierDirection="bottom"
-        app:constraint_referenced_ids="text_excerpt,text_reading_time" />
+        app:constraint_referenced_ids="text_blog_description,text_reading_time" />
 
     <!-- like and comment counts start -->
     <com.google.android.material.textview.MaterialTextView

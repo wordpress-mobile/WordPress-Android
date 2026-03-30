@@ -632,7 +632,7 @@ class ReaderPostDetailViewModel @Inject constructor(
         )
     }
 
-    private fun convertPostToUiState(
+    private suspend fun convertPostToUiState(
         post: ReaderPost
     ): ReaderPostDetailsUiState {
         val newUiState = postDetailUiStateBuilder.mapPostToUiState(
@@ -677,7 +677,9 @@ class ReaderPostDetailViewModel @Inject constructor(
         post?.let {
             readerTracker.trackPost(Stat.READER_ARTICLE_RENDERED, it)
             _navigationEvents.postValue(Event(ShowPostInWebView(it)))
-            _uiState.value = convertPostToUiState(it)
+            viewModelScope.launch {
+                _uiState.value = convertPostToUiState(it)
+            }
             if (commentsSnippetFeatureConfig.isEnabled()) {
                 onRefreshCommentsData(it.blogId, it.postId)
             }

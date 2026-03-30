@@ -336,7 +336,7 @@ class ReaderPostDetailUiStateBuilderTest : BaseUnitTest() {
         onItemClicked = dummyOnRelatedPostItemClicked
     )
 
-    private fun buildPostUiState(
+    private suspend fun buildPostUiState(
         readerPost: ReaderPost? = null,
     ): ReaderPostDetailsUiState {
         val post = readerPost ?: dummySourceReaderPost
