@@ -62,25 +62,11 @@
                         android:visibility="gone"
                         tools:ignore="UnknownIdInLayout" />
 
-                    <!-- like count -->
-                    <com.google.android.material.textview.MaterialTextView
-                        android:id="@+id/header_like_count"
-                        style="@style/ReaderTextView.Post.New.Interactions"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/expandable_tags_view"
-                        android:layout_alignStart="@+id/layout_post_detail_content"
-                        android:layout_alignEnd="@+id/layout_post_detail_content"
-                        android:layout_marginTop="@dimen/margin_medium"
-                        android:visibility="gone"
-                        tools:ignore="UnknownIdInLayout"
-                        tools:text="15 likes" />
-
                     <include
                         layout="@layout/reader_post_likers_faces_list"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_below="@+id/header_like_count" />
+                        android:layout_below="@+id/expandable_tags_view" />
 
                     <include
                         android:id="@+id/comments_snippet"

@@ -180,7 +180,6 @@ class ReaderPostDetailsHeaderViewUiStateBuilder @Inject constructor(
     companion object {
         private val IMG_TAG_REGEX = Regex("<img[^>]*>")
         private val WHITESPACE_REGEX = "\\s+".toRegex()
-        private const val DATE_FORMAT_PATTERN =
-            "MMM d, yyyy"
+        private const val DATE_FORMAT_PATTERN = "MMM d, yyyy"
     }
 }

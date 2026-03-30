@@ -108,7 +108,6 @@ import org.wordpress.android.ui.reader.tracker.ReaderTracker.Companion.SOURCE_PO
 import org.wordpress.android.ui.reader.usecases.ReaderGetReadingPreferencesSyncUseCase
 import org.wordpress.android.ui.reader.utils.ReaderUtils
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
-import org.wordpress.android.ui.reader.views.uistates.InteractionSectionUiState
 import org.wordpress.android.ui.reader.utils.ReaderVideoUtils
 import org.wordpress.android.ui.reader.viewmodels.ConversationNotificationsViewModel
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel
@@ -794,10 +793,6 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             state.headerUiState.tagItems, getReadingPreferences()
         )
 
-        updateInteractionSection(
-            binding, state.headerUiState.interactionSectionUiState
-        )
-
         showOrHideMoreMenu(state)
 
         updateExcerptFooter(state.excerptFooterUiState)
@@ -811,20 +806,6 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
         state.localRelatedPosts?.let { showRelatedPosts(it) }
         state.globalRelatedPosts?.let { showRelatedPosts(it) }
-    }
-
-    private fun updateInteractionSection(
-        binding: ReaderFragmentPostDetailBinding,
-        state: InteractionSectionUiState,
-    ) {
-        val likeLabel = ReaderUtils
-            .getShortLikeLabelText(requireContext(), state.likeCount)
-            .takeIf { state.likeCount > 0 }
-
-        uiHelpers.setTextOrHide(binding.headerLikeCount, likeLabel)
-        binding.headerLikeCount.setOnClickListener {
-            state.onLikesClicked()
-        }
     }
 
     // TODO: Update using UiState/ NavigationEvent
