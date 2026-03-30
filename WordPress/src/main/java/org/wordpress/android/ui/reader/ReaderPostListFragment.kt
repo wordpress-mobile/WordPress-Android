@@ -2760,7 +2760,14 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
 
             ReaderPostCardActionType.VISIT_SITE -> {
                 readerTracker.track(AnalyticsTracker.Stat.READER_ARTICLE_VISITED)
-                ReaderActivityLauncher.openPost(requireActivity(), post)
+                ReaderActivityLauncher.showReaderBlogOrFeedPreview(
+                    requireActivity(),
+                    post.blogId,
+                    post.feedId,
+                    post.isFollowedByCurrentUser,
+                    source,
+                    readerTracker
+                )
             }
 
             ReaderPostCardActionType.LIKE -> postListViewModel.onLikeButtonClicked(

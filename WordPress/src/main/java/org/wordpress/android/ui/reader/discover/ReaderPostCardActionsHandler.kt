@@ -418,7 +418,9 @@ class ReaderPostCardActionsHandler @Inject constructor(
 
     private fun handleVisitSiteClicked(post: ReaderPost) {
         readerTracker.track(AnalyticsTracker.Stat.READER_ARTICLE_VISITED)
-        _navigationEvents.postValue(Event(OpenPost(post)))
+        _navigationEvents.postValue(
+            Event(ShowBlogPreview(post.blogId, post.feedId, post.isFollowedByCurrentUser))
+        )
     }
 
     private fun handleReadingPreferencesClicked() {
