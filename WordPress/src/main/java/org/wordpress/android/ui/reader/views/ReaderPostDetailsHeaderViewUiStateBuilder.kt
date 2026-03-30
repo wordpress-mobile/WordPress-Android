@@ -124,9 +124,11 @@ class ReaderPostDetailsHeaderViewUiStateBuilder @Inject constructor(
             ?.trim()
             ?.takeIf { it.isNotBlank() }
             ?.let { stripped ->
-                val wordCount = stripped.split(WHITESPACE_REGEX)
+                stripped.split(WHITESPACE_REGEX)
                     .count { it.isNotEmpty() }
-                if (wordCount == 0) return null
+            }
+            ?.takeIf { it > 0 }
+            ?.let { wordCount ->
                 val minutes = ceil(
                     wordCount.toDouble() / WORDS_PER_MINUTE
                 ).toInt().coerceAtLeast(1)
