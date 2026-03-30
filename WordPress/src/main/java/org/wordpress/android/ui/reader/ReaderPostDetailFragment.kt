@@ -805,28 +805,13 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         binding: ReaderFragmentPostDetailBinding,
         state: InteractionSectionUiState,
     ) {
-        val ctx = requireContext()
         val likeLabel = ReaderUtils
-            .getShortLikeLabelText(ctx, state.likeCount)
+            .getShortLikeLabelText(requireContext(), state.likeCount)
             .takeIf { state.likeCount > 0 }
-        val commentLabel = ReaderUtils
-            .getShortCommentLabelText(ctx, state.commentCount)
-            .takeIf { state.commentCount > 0 }
 
         uiHelpers.setTextOrHide(binding.headerLikeCount, likeLabel)
-        uiHelpers.setTextOrHide(
-            binding.headerCommentCount, commentLabel
-        )
-        binding.headerDotSeparator.isVisible =
-            likeLabel != null && commentLabel != null
-        binding.interactionSection.isVisible =
-            likeLabel != null || commentLabel != null
-
         binding.headerLikeCount.setOnClickListener {
             state.onLikesClicked()
-        }
-        binding.headerCommentCount.setOnClickListener {
-            state.onCommentsClicked()
         }
     }
 
