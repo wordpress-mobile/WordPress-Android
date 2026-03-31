@@ -106,6 +106,7 @@ import org.wordpress.android.ui.reader.tracker.ReaderReadingPreferencesTracker
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.tracker.ReaderTracker.Companion.SOURCE_POST_DETAIL_TOOLBAR
 import org.wordpress.android.ui.reader.usecases.ReaderGetReadingPreferencesSyncUseCase
+import org.wordpress.android.ui.reader.utils.ReaderGalleryScanner
 import org.wordpress.android.ui.reader.utils.ReaderUtils
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import org.wordpress.android.ui.reader.utils.ReaderVideoUtils
@@ -220,6 +221,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     private var errorMessage: String? = null
 
     private var fileForDownload: String? = null
+    private var postGalleries: List<List<String>> = emptyList()
 
     private val viewModel: ReaderPostDetailViewModel by viewModels()
     private lateinit var conversationViewModel: ConversationNotificationsViewModel
@@ -1420,8 +1422,27 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             return false
         }
 
-        val postContent = viewModel.post?.text.orEmpty()
         val isPrivatePost = viewModel.post?.isPrivate == true
+
+        // check if the tapped image belongs to a gallery
+        val galleryMatch = ReaderGalleryScanner.findGalleryContaining(
+            postGalleries, imageUrl
+        )
+        if (galleryMatch != null) {
+            ReaderActivityLauncher.showReaderPhotoViewerForGallery(
+                requireActivity(),
+                imageUrl,
+                galleryMatch.imageUrls.toTypedArray(),
+                sourceView,
+                isPrivatePost,
+                startX,
+                startY
+            )
+            return true
+        }
+
+        // not in a gallery - show all post images (existing behavior)
+        val postContent = viewModel.post?.text.orEmpty()
         val options = EnumSet.noneOf(PhotoViewerOption::class.java)
         if (isPrivatePost) {
             options.add(PhotoViewerOption.IS_PRIVATE_IMAGE)
@@ -1585,6 +1606,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     }
 
     private fun showPostInWebView(post: ReaderPost) {
+        postGalleries = ReaderGalleryScanner.parseGalleries(post.text)
         readerWebView.setIsPrivatePost(post.isPrivate)
         readerWebView.setBlogSchemeIsHttps(UrlUtils.isHttps(post.blogUrl))
         readerProgressBar.visibility = View.VISIBLE

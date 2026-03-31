@@ -39,6 +39,7 @@ public class ReaderPhotoViewerActivity extends BaseAppCompatActivity
     private boolean mIsPrivate;
     private boolean mIsGallery;
     private String mContent;
+    private String[] mGalleryImageUrls;
     private WPViewPager mViewPager;
     private PhotoPagerAdapter mAdapter;
     private TextView mTxtTitle;
@@ -63,11 +64,17 @@ public class ReaderPhotoViewerActivity extends BaseAppCompatActivity
             mIsPrivate = savedInstanceState.getBoolean(ReaderConstants.ARG_IS_PRIVATE);
             mIsGallery = savedInstanceState.getBoolean(ReaderConstants.ARG_IS_GALLERY);
             mContent = savedInstanceState.getString(ReaderConstants.ARG_CONTENT);
+            mGalleryImageUrls = savedInstanceState.getStringArray(
+                    ReaderConstants.ARG_GALLERY_IMAGE_URLS
+            );
         } else if (getIntent() != null) {
             mInitialImageUrl = getIntent().getStringExtra(ReaderConstants.ARG_IMAGE_URL);
             mIsPrivate = getIntent().getBooleanExtra(ReaderConstants.ARG_IS_PRIVATE, false);
             mIsGallery = getIntent().getBooleanExtra(ReaderConstants.ARG_IS_GALLERY, false);
             mContent = getIntent().getStringExtra(ReaderConstants.ARG_CONTENT);
+            mGalleryImageUrls = getIntent().getStringArrayExtra(
+                    ReaderConstants.ARG_GALLERY_IMAGE_URLS
+            );
         }
 
         mToolbar = findViewById(R.id.toolbar);
@@ -93,18 +100,27 @@ public class ReaderPhotoViewerActivity extends BaseAppCompatActivity
     }
 
     private void loadImageList() {
-        // content will be empty when viewing a single image, otherwise content is HTML
-        // so parse images from it
         final ReaderImageList imageList;
-        if (TextUtils.isEmpty(mContent)) {
+        if (mGalleryImageUrls != null && mGalleryImageUrls.length > 0) {
+            // gallery-specific image URLs were provided, use them directly
+            imageList = new ReaderImageList(mIsPrivate);
+            for (String url : mGalleryImageUrls) {
+                imageList.addImageUrl(url);
+            }
+        } else if (TextUtils.isEmpty(mContent)) {
+            // content will be empty when viewing a single image
             imageList = new ReaderImageList(mIsPrivate);
         } else {
-            int minImageWidth = mIsGallery ? ReaderConstants.MIN_GALLERY_IMAGE_WIDTH : 0;
-            imageList = new ReaderImageScanner(mContent, mIsPrivate).getImageList(0, minImageWidth);
+            // content is HTML so parse images from it
+            int minImageWidth = mIsGallery
+                    ? ReaderConstants.MIN_GALLERY_IMAGE_WIDTH : 0;
+            imageList = new ReaderImageScanner(mContent, mIsPrivate)
+                    .getImageList(0, minImageWidth);
         }
 
         // make sure initial image is in the list
-        if (!TextUtils.isEmpty(mInitialImageUrl) && !imageList.hasImageUrl(mInitialImageUrl)) {
+        if (!TextUtils.isEmpty(mInitialImageUrl)
+                && !imageList.hasImageUrl(mInitialImageUrl)) {
             imageList.addImageUrl(0, mInitialImageUrl);
         }
 
@@ -191,6 +207,11 @@ public class ReaderPhotoViewerActivity extends BaseAppCompatActivity
         outState.putBoolean(ReaderConstants.ARG_IS_PRIVATE, mIsPrivate);
         outState.putBoolean(ReaderConstants.ARG_IS_GALLERY, mIsGallery);
         outState.putString(ReaderConstants.ARG_CONTENT, mContent);
+        if (mGalleryImageUrls != null) {
+            outState.putStringArray(
+                    ReaderConstants.ARG_GALLERY_IMAGE_URLS, mGalleryImageUrls
+            );
+        }
 
         super.onSaveInstanceState(outState);
     }

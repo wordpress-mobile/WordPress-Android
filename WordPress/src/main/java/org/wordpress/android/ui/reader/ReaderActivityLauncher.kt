@@ -477,6 +477,40 @@ object ReaderActivityLauncher {
         }
     }
 
+    @JvmStatic
+    @Suppress("LongParameterList")
+    fun showReaderPhotoViewerForGallery(
+        context: Context,
+        imageUrl: String,
+        galleryImageUrls: Array<String>,
+        sourceView: View?,
+        isPrivate: Boolean,
+        startX: Int,
+        startY: Int
+    ) {
+        if (TextUtils.isEmpty(imageUrl)) {
+            return
+        }
+
+        val intent = Intent(context, ReaderPhotoViewerActivity::class.java)
+        intent.putExtra(ReaderConstants.ARG_IMAGE_URL, imageUrl)
+        intent.putExtra(ReaderConstants.ARG_IS_PRIVATE, isPrivate)
+        intent.putExtra(
+            ReaderConstants.ARG_GALLERY_IMAGE_URLS, galleryImageUrls
+        )
+
+        if (context is Activity && sourceView != null) {
+            val options =
+                ActivityOptionsCompat.makeScaleUpAnimation(
+                    sourceView, startX, startY, 0, 0
+                )
+            @Suppress("DEPRECATION")
+            ActivityCompat.startActivity(context, intent, options.toBundle())
+        } else {
+            context.startActivity(intent)
+        }
+    }
+
     fun openPost(context: Context, post: ReaderPost) {
         val url = post.url
         if (WPUrlUtils.isWordPressCom(url) || (post.isWP && !post.isJetpack)) {
