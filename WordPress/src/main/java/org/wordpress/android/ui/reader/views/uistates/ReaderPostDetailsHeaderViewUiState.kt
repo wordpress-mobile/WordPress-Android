@@ -14,6 +14,7 @@ data class ReaderPostDetailsHeaderUiState(
     val featuredImageUiState: ReaderFeaturedImageUiState? = null,
     val onFeaturedImageClicked: ((Long, String) -> Unit)? = null,
     val onViewOriginalClicked: (() -> Unit)? = null,
+    val onAuthorClicked: (() -> Unit)? = null,
 )
 
 data class ReaderFeaturedImageUiState(

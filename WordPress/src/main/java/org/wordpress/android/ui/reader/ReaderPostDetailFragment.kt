@@ -79,7 +79,11 @@ import org.wordpress.android.ui.avatars.AVATAR_LEFT_OFFSET_DIMEN
 import org.wordpress.android.ui.avatars.AvatarItemDecorator
 import org.wordpress.android.ui.avatars.TrainOfAvatarsAdapter
 import org.wordpress.android.ui.avatars.TrainOfAvatarsItem
+import org.wordpress.android.ui.engagement.BottomSheetAction
+import org.wordpress.android.ui.engagement.EngagedListNavigationEvent.OpenUserProfileBottomSheet.UserProfile
 import org.wordpress.android.ui.engagement.EngagementNavigationSource
+import org.wordpress.android.ui.engagement.UserProfileBottomSheetFragment
+import org.wordpress.android.ui.engagement.UserProfileViewModel
 import org.wordpress.android.ui.main.ChooseSiteActivity
 import org.wordpress.android.ui.main.WPMainActivity
 import org.wordpress.android.ui.media.MediaPreviewActivity
@@ -223,6 +227,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
     private val viewModel: ReaderPostDetailViewModel by viewModels()
     private lateinit var conversationViewModel: ConversationNotificationsViewModel
+    private lateinit var userProfileViewModel: UserProfileViewModel
 
     private var binding: ReaderFragmentPostDetailBinding? = null
 
@@ -531,6 +536,12 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     private fun initViewModel(binding: ReaderFragmentPostDetailBinding, savedInstanceState: Bundle?) {
         conversationViewModel =
             ViewModelProvider(this, viewModelFactory)[ConversationNotificationsViewModel::class.java]
+        userProfileViewModel = ViewModelProvider(
+            this, viewModelFactory
+        ).get(
+            UserProfileViewModel.USER_PROFILE_VM_KEY,
+            UserProfileViewModel::class.java
+        )
 
         initObservers(binding)
 
@@ -577,6 +588,24 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         viewModel.snackbarEvents.observeEvent(viewLifecycleOwner) { it.showSnackbar(binding) }
 
         viewModel.navigationEvents.observeEvent(viewLifecycleOwner) { it.handleNavigationEvent() }
+
+        userProfileViewModel.onBottomSheetAction.observeEvent(viewLifecycleOwner) { action ->
+            if (!isAdded) return@observeEvent
+            val fm = childFragmentManager
+            var bottomSheet = fm.findFragmentByTag(USER_PROFILE_BOTTOM_SHEET_TAG)
+                as? UserProfileBottomSheetFragment
+            when (action) {
+                BottomSheetAction.ShowBottomSheet -> {
+                    if (bottomSheet == null) {
+                        bottomSheet = UserProfileBottomSheetFragment.newInstance(
+                            UserProfileViewModel.USER_PROFILE_VM_KEY
+                        )
+                        bottomSheet.show(fm, USER_PROFILE_BOTTOM_SHEET_TAG)
+                    }
+                }
+                BottomSheetAction.HideBottomSheet -> bottomSheet?.dismiss()
+            }
+        }
 
         if (commentsSnippetFeatureConfig.isEnabled()) {
             conversationViewModel.snackbarEvents.observe(viewLifecycleOwner) { event ->
@@ -914,11 +943,39 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                     ReaderReadingPreferencesTracker.Source.POST_DETAIL_MORE_MENU,
                 )
 
+            is ReaderNavigationEvents.ShowAuthorProfile -> showAuthorProfile(this)
+
             is ReaderNavigationEvents.ShowPostDetail,
             is ReaderNavigationEvents.ShowVideoViewer,
             is ReaderNavigationEvents.ShowReaderSubs -> Unit // Do Nothing
             is ReaderNavigationEvents.ShowLoginRequiredBottomSheet -> showLoginRequiredBottomSheet()
         }
+    }
+
+    private fun showAuthorProfile(event: ReaderNavigationEvents.ShowAuthorProfile) {
+        userProfileViewModel.onBottomSheetOpen(
+            userProfile = UserProfile(
+                userAvatarUrl = event.authorAvatar,
+                blavatarUrl = event.authorAvatar,
+                userName = event.authorName,
+                userLogin = "",
+                userBio = "",
+                siteTitle = event.blogName,
+                siteUrl = event.blogUrl,
+                siteId = event.siteId,
+            ),
+            onClick = { siteId, _, source ->
+                ReaderActivityLauncher.showReaderBlogOrFeedPreview(
+                    requireContext(),
+                    siteId,
+                    0L,
+                    false,
+                    source,
+                    readerTracker
+                )
+            },
+            source = EngagementNavigationSource.LIKE_READER_LIST,
+        )
     }
 
     private fun showLoginRequiredBottomSheet() {
@@ -1973,6 +2030,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         private const val KEY_LIKERS_LIST_STATE = "likers_list_state"
         private const val KEY_COMMENTS_SNIPPET_LIST_STATE = "comments_snippet_list_state"
         private const val NOTIFICATIONS_BOTTOM_SHEET_TAG = "NOTIFICATIONS_BOTTOM_SHEET_TAG"
+        private const val USER_PROFILE_BOTTOM_SHEET_TAG = "USER_PROFILE_BOTTOM_SHEET_TAG"
 
         fun newInstance(blogId: Long, postId: Long): ReaderPostDetailFragment {
             return newInstance(false, blogId, postId, null, 0, false, null, null, false)

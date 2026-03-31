@@ -61,10 +61,18 @@ class ReaderPostDetailHeaderView @JvmOverloads constructor(
             textBlogName,
             uiState.blogSectionUiState.blogName
         )
+        uiState.blogSectionUiState.blogSectionClickData
+            ?.onBlogSectionClicked?.let { onClick ->
+                textBlogName.setOnClickListener { onClick.invoke() }
+            } ?: run {
+            textBlogName.setOnClickListener(null)
+            textBlogName.isClickable = false
+        }
 
         setAuthorAndDate(
             uiState.authorName,
-            uiState.blogSectionUiState.dateLine
+            uiState.blogSectionUiState.dateLine,
+            uiState.onAuthorClicked
         )
 
         updateFollowButton(uiState.followButtonUiState)
@@ -186,10 +194,17 @@ class ReaderPostDetailHeaderView @JvmOverloads constructor(
 
     private fun setAuthorAndDate(
         authorName: String?,
-        dateLine: String
+        dateLine: String,
+        onAuthorClicked: (() -> Unit)?
     ) = with(binding.layoutBlogSection) {
         uiHelpers.setTextOrHide(blogSectionTextAuthor, authorName)
         uiHelpers.setTextOrHide(blogSectionTextDateline, dateLine)
+        onAuthorClicked?.let { onClick ->
+            blogSectionTextAuthor.setOnClickListener { onClick() }
+        } ?: run {
+            blogSectionTextAuthor.setOnClickListener(null)
+            blogSectionTextAuthor.isClickable = false
+        }
     }
 
     private fun ReaderPostDetailHeaderViewBinding.updateFeaturedImage(

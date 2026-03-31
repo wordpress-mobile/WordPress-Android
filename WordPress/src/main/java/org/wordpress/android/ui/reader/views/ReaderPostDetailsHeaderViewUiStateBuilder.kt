@@ -73,8 +73,20 @@ class ReaderPostDetailsHeaderViewUiStateBuilder @Inject constructor(
                     )
                 }
             },
-            onViewOriginalClicked = buildViewOriginalClicked(post, onHeaderAction)
+            onViewOriginalClicked = buildViewOriginalClicked(post, onHeaderAction),
+            onAuthorClicked = buildAuthorClicked(post, onHeaderAction)
         )
+    }
+
+    private fun buildAuthorClicked(
+        post: ReaderPost,
+        onHeaderAction: (ReaderPostDetailsHeaderAction) -> Unit,
+    ): (() -> Unit)? {
+        val authorName = post.authorName?.takeIf { it.isNotBlank() }
+            ?: return null
+        val blogName = post.blogName?.takeIf { it.isNotBlank() }
+        if (authorName.equals(blogName, ignoreCase = true)) return null
+        return { onHeaderAction(ReaderPostDetailsHeaderAction.AuthorClicked) }
     }
 
     private fun buildViewOriginalClicked(

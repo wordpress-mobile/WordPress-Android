@@ -553,6 +553,8 @@ class ReaderPostDetailViewModel @Inject constructor(
                 onFeaturedImageClicked(action.blogId, action.featuredImageUrl)
             is ReaderPostDetailsHeaderAction.ViewOriginalClicked ->
                 onViewOriginalClicked(post)
+            is ReaderPostDetailsHeaderAction.AuthorClicked ->
+                onAuthorClicked(post)
         }
     }
 
@@ -566,6 +568,20 @@ class ReaderPostDetailViewModel @Inject constructor(
                 )
             }
         }
+    }
+
+    private fun onAuthorClicked(post: ReaderPost) {
+        val authorName = post.authorName?.takeIf { it.isNotBlank() }
+            ?: return
+        _navigationEvents.value = Event(
+            ReaderNavigationEvents.ShowAuthorProfile(
+                authorName = authorName,
+                authorAvatar = post.postAvatar.orEmpty(),
+                blogName = post.blogName.orEmpty(),
+                blogUrl = post.blogUrl.orEmpty(),
+                siteId = post.blogId,
+            )
+        )
     }
 
     private fun onViewOriginalClicked(post: ReaderPost) {

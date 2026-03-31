@@ -68,6 +68,14 @@ sealed class ReaderNavigationEvents {
         val headerData: HeaderData
     ) : ReaderNavigationEvents()
 
+    data class ShowAuthorProfile(
+        val authorName: String,
+        val authorAvatar: String,
+        val blogName: String,
+        val blogUrl: String,
+        val siteId: Long,
+    ) : ReaderNavigationEvents()
+
     data object ShowReadingPreferences : ReaderNavigationEvents()
     data object ShowLoginRequiredBottomSheet : ReaderNavigationEvents()
 }

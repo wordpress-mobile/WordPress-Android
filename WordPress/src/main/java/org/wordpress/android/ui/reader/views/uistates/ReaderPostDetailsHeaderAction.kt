@@ -9,4 +9,5 @@ sealed interface ReaderPostDetailsHeaderAction {
         val featuredImageUrl: String
     ) : ReaderPostDetailsHeaderAction
     data object ViewOriginalClicked : ReaderPostDetailsHeaderAction
+    data object AuthorClicked : ReaderPostDetailsHeaderAction
 }
