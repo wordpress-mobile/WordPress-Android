@@ -999,7 +999,7 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
             isLikedByCurrentUser = true
         }
         viewModel.post = post
-        init()
+        init(showPost = false)
 
         viewModel.onRefreshLikersData(post, true)
 
