@@ -9,14 +9,9 @@ import org.wordpress.android.util.UrlUtils
  * when a user taps an image that belongs to a gallery.
  */
 object ReaderGalleryScanner {
-    private val GALLERY_SELECTORS = listOf(
-        "figure.wp-block-gallery",
-        "div.wp-block-gallery",
-        "figure.wp-block-jetpack-tiled-gallery",
-        "div.wp-block-jetpack-tiled-gallery",
-        "div.tiled-gallery",
-        "div.gallery",
-    )
+    private const val GALLERY_SELECTOR =
+        ".wp-block-gallery, .wp-block-jetpack-tiled-gallery, " +
+            ".tiled-gallery, div.gallery"
 
     /**
      * Parses galleries from the given post HTML content.
@@ -28,19 +23,17 @@ object ReaderGalleryScanner {
         val document = Jsoup.parse(html)
         val galleries = mutableListOf<List<String>>()
 
-        for (selector in GALLERY_SELECTORS) {
-            val elements = document.select(selector)
-            for (element in elements) {
-                val imageUrls = element.select("img")
-                    .mapNotNull { img ->
-                        img.attr("src").takeIf { it.startsWith("http") }
-                    }
-                if (imageUrls.isNotEmpty()) {
-                    galleries.add(imageUrls)
+        for (element in document.select(GALLERY_SELECTOR)) {
+            // Skip elements nested inside an already-removed gallery
+            if (element.root() !== document) continue
+            val imageUrls = element.select("img")
+                .mapNotNull { img ->
+                    img.attr("src").takeIf { it.startsWith("http") }
                 }
-                // Remove from DOM to avoid nested matches
-                element.remove()
+            if (imageUrls.isNotEmpty()) {
+                galleries.add(imageUrls)
             }
+            element.remove()
         }
 
         return galleries
@@ -54,13 +47,10 @@ object ReaderGalleryScanner {
         galleries: List<List<String>>,
         imageUrl: String
     ): List<String>? {
-        val normalizedTapped = normalizeImageUrl(imageUrl)
-        for (gallery in galleries) {
-            if (gallery.any { normalizeImageUrl(it) == normalizedTapped }) {
-                return gallery
-            }
+        val normalized = normalizeImageUrl(imageUrl)
+        return galleries.firstOrNull { gallery ->
+            gallery.any { normalizeImageUrl(it) == normalized }
         }
-        return null
     }
 
     private fun normalizeImageUrl(url: String): String {
