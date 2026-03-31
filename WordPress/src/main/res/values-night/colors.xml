@@ -18,6 +18,8 @@
     <color name="jetpack_powered_bottom_sheet_background">@color/jetpack_green_100</color>
 
     <!-- Reader -->
+    <!-- Matches iOS UIColor.separator: rgba(84,84,88,0.6) -->
+    <color name="reader_separator">#99545458</color>
 
     <!-- Reader Following empty view -->
 

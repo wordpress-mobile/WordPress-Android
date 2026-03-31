@@ -135,7 +135,7 @@
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
         android:layout_marginTop="@dimen/margin_medium"
-        android:background="?android:attr/listDivider"
+        android:background="@color/reader_separator"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/text_excerpt_view_more"
