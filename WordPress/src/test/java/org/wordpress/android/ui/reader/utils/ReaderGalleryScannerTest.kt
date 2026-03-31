@@ -233,8 +233,7 @@ class ReaderGalleryScannerTest {
         )
 
         assertThat(match).isNotNull
-        assertThat(match!!.imageUrls).hasSize(3)
-        assertThat(match.tappedIndex).isEqualTo(1)
+        assertThat(match).hasSize(3)
     }
 
     @Test
@@ -276,7 +275,7 @@ class ReaderGalleryScannerTest {
         )
 
         assertThat(match).isNotNull
-        assertThat(match!!.tappedIndex).isEqualTo(0)
+        assertThat(match).hasSize(2)
     }
 
     @Test

@@ -1425,14 +1425,14 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         val isPrivatePost = viewModel.post?.isPrivate == true
 
         // check if the tapped image belongs to a gallery
-        val galleryMatch = ReaderGalleryScanner.findGalleryContaining(
+        val galleryImageUrls = ReaderGalleryScanner.findGalleryContaining(
             postGalleries, imageUrl
         )
-        if (galleryMatch != null) {
+        if (galleryImageUrls != null) {
             ReaderActivityLauncher.showReaderPhotoViewerForGallery(
                 requireActivity(),
                 imageUrl,
-                galleryMatch.imageUrls.toTypedArray(),
+                galleryImageUrls.toTypedArray(),
                 sourceView,
                 isPrivatePost,
                 startX,

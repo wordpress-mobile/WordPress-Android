@@ -48,19 +48,16 @@ object ReaderGalleryScanner {
 
     /**
      * Finds the gallery containing the given image URL.
-     * Returns a [GalleryMatch] with the gallery's image URLs and
-     * the index of the tapped image, or null if no gallery contains it.
+     * Returns the gallery's image URLs, or null if no gallery contains it.
      */
     fun findGalleryContaining(
         galleries: List<List<String>>,
         imageUrl: String
-    ): GalleryMatch? {
+    ): List<String>? {
         val normalizedTapped = normalizeImageUrl(imageUrl)
         for (gallery in galleries) {
-            val normalizedGallery = gallery.map { normalizeImageUrl(it) }
-            val index = normalizedGallery.indexOf(normalizedTapped)
-            if (index >= 0) {
-                return GalleryMatch(gallery, index)
+            if (gallery.any { normalizeImageUrl(it) == normalizedTapped }) {
+                return gallery
             }
         }
         return null
@@ -69,9 +66,4 @@ object ReaderGalleryScanner {
     private fun normalizeImageUrl(url: String): String {
         return UrlUtils.normalizeUrl(UrlUtils.removeQuery(url))
     }
-
-    data class GalleryMatch(
-        val imageUrls: List<String>,
-        val tappedIndex: Int,
-    )
 }

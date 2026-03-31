@@ -461,20 +461,7 @@ object ReaderActivityLauncher {
             intent.putExtra(ReaderConstants.ARG_CONTENT, content)
         }
 
-        if (context is Activity && sourceView != null) {
-            val options =
-                ActivityOptionsCompat.makeScaleUpAnimation(
-                    sourceView,
-                    startX,
-                    startY,
-                    0,
-                    0
-                )
-            @Suppress("DEPRECATION")
-            ActivityCompat.startActivity(context, intent, options.toBundle())
-        } else {
-            context.startActivity(intent)
-        }
+        launchPhotoViewer(context, intent, sourceView, startX, startY)
     }
 
     @JvmStatic
@@ -499,6 +486,16 @@ object ReaderActivityLauncher {
             ReaderConstants.ARG_GALLERY_IMAGE_URLS, galleryImageUrls
         )
 
+        launchPhotoViewer(context, intent, sourceView, startX, startY)
+    }
+
+    private fun launchPhotoViewer(
+        context: Context,
+        intent: Intent,
+        sourceView: View?,
+        startX: Int,
+        startY: Int
+    ) {
         if (context is Activity && sourceView != null) {
             val options =
                 ActivityOptionsCompat.makeScaleUpAnimation(
