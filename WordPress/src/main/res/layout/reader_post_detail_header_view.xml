@@ -78,7 +78,6 @@
         android:importantForAccessibility="no"
         android:layout_marginTop="@dimen/margin_medium"
         android:background="?android:selectableItemBackground"
-        android:visibility="visible"
         android:clickable="true"
         android:focusable="true"
         app:layout_constraintStart_toStartOf="parent"

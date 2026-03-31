@@ -501,19 +501,6 @@ class ReaderPostDetailViewModel @Inject constructor(
         )
     }
 
-    private fun onCommentsClicked() {
-        post?.let {
-            launch {
-                readerPostCardActionsHandler.onAction(
-                    post = it,
-                    type = COMMENTS,
-                    isBookmarkList = false,
-                    source = ReaderTracker.SOURCE_POST_DETAIL,
-                )
-            }
-        }
-    }
-
     fun onButtonClicked(postId: Long, blogId: Long, type: ReaderPostCardActionType) {
         onActionClicked(postId, blogId, type, ReaderTracker.SOURCE_POST_DETAIL)
     }
@@ -561,8 +548,6 @@ class ReaderPostDetailViewModel @Inject constructor(
         when (action) {
             is ReaderPostDetailsHeaderAction.BlogSectionClicked -> onBlogSectionClicked(post.postId, post.blogId)
             is ReaderPostDetailsHeaderAction.FollowClicked -> onButtonClicked(post.postId, post.blogId, FOLLOW)
-            is ReaderPostDetailsHeaderAction.LikesClicked -> onLikesClicked()
-            is ReaderPostDetailsHeaderAction.CommentsClicked -> onCommentsClicked()
             is ReaderPostDetailsHeaderAction.TagItemClicked -> onTagItemClicked(action.tagSlug)
             is ReaderPostDetailsHeaderAction.FeaturedImageClicked ->
                 onFeaturedImageClicked(action.blogId, action.featuredImageUrl)
