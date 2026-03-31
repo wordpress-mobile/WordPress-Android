@@ -227,6 +227,23 @@ class ReaderGalleryScannerTest {
     }
 
     @Test
+    fun `findGalleryContaining matches sized variant to full-size URL`() {
+        val galleries = listOf(
+            listOf(
+                "https://example.com/portrait2-819x1024.jpg",
+                "https://example.com/landscape-1024x768.jpg"
+            )
+        )
+
+        val match = ReaderGalleryScanner.findGalleryContaining(
+            galleries, "https://example.com/portrait2.jpg"
+        )
+
+        assertThat(match).isNotNull
+        assertThat(match).hasSize(2)
+    }
+
+    @Test
     fun `nested galleries are not double-counted`() {
         val html = """
             <figure class="wp-block-gallery">
