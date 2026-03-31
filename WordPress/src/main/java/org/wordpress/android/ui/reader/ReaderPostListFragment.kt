@@ -1382,7 +1382,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
         }
 
         // remember this query for future suggestions
-        val trimQuery = query.trim { it <= ' ' }
+        val trimQuery = query.trim()
         ReaderSearchTable.addOrUpdateQueryString(trimQuery)
 
         // remove cached results for this search - search results are ephemeral so each search

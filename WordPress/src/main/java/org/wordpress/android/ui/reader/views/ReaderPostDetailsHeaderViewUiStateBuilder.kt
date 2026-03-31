@@ -139,8 +139,7 @@ class ReaderPostDetailsHeaderViewUiStateBuilder @Inject constructor(
             .removeSuffix("[…]")
             .removeSuffix("…")
             .trim()
-        if (trimmedExcerpt.isBlank()) return false
-        return strippedContent.startsWith(trimmedExcerpt)
+        return trimmedExcerpt.isNotBlank() && strippedContent.startsWith(trimmedExcerpt)
     }
 
     /**
