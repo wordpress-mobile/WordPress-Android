@@ -33,14 +33,10 @@ class ReaderPostDetailsHeaderViewUiStateBuilder @Inject constructor(
         post: ReaderPost,
         onHeaderAction: (ReaderPostDetailsHeaderAction) -> Unit,
     ): ReaderPostDetailsHeaderUiState {
-        val textTitle = post
-            .takeIf { post.hasTitle() }
-            ?.title?.let { UiStringText(it) }
-
         val featuredImage = buildFeaturedImageUiState(post)
 
         return ReaderPostDetailsHeaderUiState(
-            title = textTitle,
+            title = post.title?.takeIf { it.isNotEmpty() }?.let(::UiStringText),
             authorName = post.authorName?.takeIf {
                 it.isNotBlank() &&
                     !it.equals(post.blogName, ignoreCase = true)

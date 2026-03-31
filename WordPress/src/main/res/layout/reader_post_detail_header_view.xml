@@ -134,7 +134,6 @@
         android:layout_height="0.5dp"
         android:layout_marginTop="@dimen/margin_medium"
         android:background="?android:textColorSecondary"
-        android:visibility="gone"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/text_excerpt_view_more"
