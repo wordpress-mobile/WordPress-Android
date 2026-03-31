@@ -100,20 +100,33 @@
         app:shapeAppearanceOverlay="@style/ReaderFeaturedImageShape"
         tools:visibility="visible" />
 
-    <!-- Blog description -->
+    <!-- Post excerpt -->
     <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/text_blog_description"
+        android:id="@+id/text_excerpt"
         style="@style/ReaderTextView.PostDetail.BlogSection.Subtitle.MediumEmphasis"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_medium"
-        android:maxLines="3"
+        android:maxLines="5"
         android:ellipsize="end"
         android:visibility="gone"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/header_featured_image"
-        tools:text="This is the blog description text."
+        tools:text="This is the post excerpt text."
+        tools:visibility="visible" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/text_excerpt_view_more"
+        style="@style/ReaderTextView.PostDetail.BlogSection.Subtitle.MediumEmphasis"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/reader_excerpt_view_more"
+        android:textColor="?attr/colorPrimary"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/text_excerpt"
         tools:visibility="visible" />
 
     <androidx.constraintlayout.widget.Barrier
@@ -121,7 +134,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:barrierDirection="bottom"
-        app:constraint_referenced_ids="header_featured_image,text_blog_description" />
+        app:constraint_referenced_ids="header_featured_image,text_excerpt,text_excerpt_view_more" />
 
     <!-- Reading time -->
     <com.google.android.material.textview.MaterialTextView
@@ -162,6 +175,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:barrierDirection="bottom"
-        app:constraint_referenced_ids="text_blog_description,text_reading_time,text_view_original" />
+        app:constraint_referenced_ids="text_excerpt,text_excerpt_view_more,text_reading_time,text_view_original" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

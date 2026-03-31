@@ -78,7 +78,23 @@ class ReaderPostDetailHeaderView @JvmOverloads constructor(
             uiState.featuredImageUiState,
             uiState.onFeaturedImageClicked
         )
-        uiHelpers.setTextOrHide(textBlogDescription, uiState.blogDescription)
+        uiHelpers.setTextOrHide(textExcerpt, uiState.excerpt)
+        if (uiState.excerpt != null) {
+            textExcerpt.post {
+                val isTruncated = textExcerpt.lineCount > 0
+                    && textExcerpt.layout != null
+                    && textExcerpt.layout.getEllipsisCount(
+                        textExcerpt.lineCount - 1
+                    ) > 0
+                textExcerptViewMore.setVisible(isTruncated)
+            }
+            textExcerptViewMore.setOnClickListener {
+                textExcerpt.maxLines = Int.MAX_VALUE
+                textExcerptViewMore.setVisible(false)
+            }
+        } else {
+            textExcerptViewMore.setVisible(false)
+        }
     }
 
     private fun ReaderPostDetailHeaderViewBinding.updateTitle(

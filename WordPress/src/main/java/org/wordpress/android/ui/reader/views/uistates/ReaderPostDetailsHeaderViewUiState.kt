@@ -11,7 +11,7 @@ data class ReaderPostDetailsHeaderUiState(
     val followButtonUiState: FollowButtonUiState,
     val dateLine: String,
     val readingTime: UiString? = null,
-    val blogDescription: UiString? = null,
+    val excerpt: UiString? = null,
     val featuredImageUiState: ReaderFeaturedImageUiState? = null,
     val onFeaturedImageClicked: ((Long, String) -> Unit)? = null,
     val interactionSectionUiState: InteractionSectionUiState,
