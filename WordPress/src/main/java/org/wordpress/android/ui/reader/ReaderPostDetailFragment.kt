@@ -1429,9 +1429,14 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             postGalleries, imageUrl
         )
         if (galleryImageUrls != null) {
+            // Use the matching gallery URL (not the WebView URL) so
+            // the photo viewer can find the correct initial position
+            val initialUrl = ReaderGalleryScanner.findMatchingUrl(
+                galleryImageUrls, imageUrl
+            )
             ReaderActivityLauncher.showReaderPhotoViewerForGallery(
                 requireActivity(),
-                imageUrl,
+                initialUrl,
                 galleryImageUrls.toTypedArray(),
                 sourceView,
                 isPrivatePost,

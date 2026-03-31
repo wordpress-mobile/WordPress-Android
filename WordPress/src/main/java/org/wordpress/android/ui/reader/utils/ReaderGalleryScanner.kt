@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.reader.utils
 
 import org.jsoup.Jsoup
+import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.UrlUtils
 
 /**
@@ -24,18 +25,37 @@ object ReaderGalleryScanner {
         val galleries = mutableListOf<List<String>>()
 
         for (element in document.select(GALLERY_SELECTOR)) {
-            // Skip elements nested inside an already-removed gallery
-            if (element.root() !== document) continue
+            val tag = element.tagName()
+            val classes = element.className()
+            if (element.root() !== document) {
+                AppLog.d(
+                    AppLog.T.READER,
+                    "GalleryScanner: skipping nested <$tag class='$classes'>"
+                )
+                continue
+            }
             val imageUrls = element.select("img")
                 .mapNotNull { img ->
                     img.attr("src").takeIf { it.startsWith("http") }
                 }
+            AppLog.d(
+                AppLog.T.READER,
+                "GalleryScanner: <$tag class='$classes'> " +
+                    "has ${imageUrls.size} images"
+            )
             if (imageUrls.isNotEmpty()) {
                 galleries.add(imageUrls)
+                imageUrls.forEach { url ->
+                    AppLog.d(AppLog.T.READER, "  -> $url")
+                }
             }
             element.remove()
         }
 
+        AppLog.d(
+            AppLog.T.READER,
+            "GalleryScanner: parsed ${galleries.size} galleries"
+        )
         return galleries
     }
 
@@ -48,15 +68,60 @@ object ReaderGalleryScanner {
         imageUrl: String
     ): List<String>? {
         val normalized = normalizeImageUrl(imageUrl)
-        return galleries.firstOrNull { gallery ->
-            gallery.any { normalizeImageUrl(it) == normalized }
+        AppLog.d(
+            AppLog.T.READER,
+            "GalleryScanner: findGalleryContaining tapped=$imageUrl"
+        )
+        AppLog.d(
+            AppLog.T.READER,
+            "GalleryScanner: normalized tapped=$normalized"
+        )
+        for ((i, gallery) in galleries.withIndex()) {
+            val normalizedGallery = gallery.map { normalizeImageUrl(it) }
+            AppLog.d(
+                AppLog.T.READER,
+                "GalleryScanner: gallery[$i] normalized=$normalizedGallery"
+            )
+            val matchIndex = normalizedGallery.indexOf(normalized)
+            if (matchIndex >= 0) {
+                AppLog.d(
+                    AppLog.T.READER,
+                    "GalleryScanner: matched gallery[$i] at index $matchIndex"
+                )
+                return gallery
+            }
         }
+        AppLog.d(AppLog.T.READER, "GalleryScanner: no gallery match")
+        return null
+    }
+
+    /**
+     * Returns the gallery URL that matches the given image URL after
+     * normalization, or the original imageUrl if no match is found.
+     */
+    fun findMatchingUrl(gallery: List<String>, imageUrl: String): String {
+        val normalized = normalizeImageUrl(imageUrl)
+        return gallery.firstOrNull {
+            normalizeImageUrl(it) == normalized
+        } ?: imageUrl
     }
 
     private val PHOTON_HOST_REGEX = Regex("^https?://i\\d\\.wp\\.com/(.+)")
+    private val WP_SIZE_SUFFIX_REGEX = Regex("-\\d+x\\d+(?=\\.\\w+$)")
 
     private fun normalizeImageUrl(url: String): String {
-        return UrlUtils.normalizeUrl(UrlUtils.removeQuery(stripPhotonHost(url)))
+        val stripped = stripWpSizeSuffix(
+            UrlUtils.removeQuery(stripPhotonHost(url))
+        )
+        return UrlUtils.normalizeUrl(stripped)
+    }
+
+    /**
+     * Strips the WordPress image size suffix (e.g., "-819x1024") that
+     * appears before the file extension in resized image URLs.
+     */
+    private fun stripWpSizeSuffix(url: String): String {
+        return url.replace(WP_SIZE_SUFFIX_REGEX, "")
     }
 
     /**
