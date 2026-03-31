@@ -79,6 +79,7 @@ class ReaderPostDetailHeaderView @JvmOverloads constructor(
             uiState.onFeaturedImageClicked
         )
         uiHelpers.setTextOrHide(textExcerpt, uiState.excerpt)
+        excerptDivider.setVisible(uiState.excerpt != null)
         if (uiState.excerpt != null) {
             textExcerpt.post {
                 val isTruncated = textExcerpt.lineCount > 0

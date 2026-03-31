@@ -129,12 +129,24 @@
         app:layout_constraintTop_toBottomOf="@id/text_excerpt"
         tools:visibility="visible" />
 
+    <View
+        android:id="@+id/excerpt_divider"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_marginTop="@dimen/margin_medium"
+        android:background="?android:attr/listDivider"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/text_excerpt_view_more"
+        tools:visibility="visible" />
+
     <androidx.constraintlayout.widget.Barrier
         android:id="@+id/blog_description_barrier"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:barrierDirection="bottom"
-        app:constraint_referenced_ids="header_featured_image,text_excerpt,text_excerpt_view_more" />
+        app:constraint_referenced_ids="header_featured_image,text_excerpt,text_excerpt_view_more,excerpt_divider" />
 
     <!-- Reading time -->
     <com.google.android.material.textview.MaterialTextView
@@ -175,6 +187,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:barrierDirection="bottom"
-        app:constraint_referenced_ids="text_excerpt,text_excerpt_view_more,text_reading_time,text_view_original" />
+        app:constraint_referenced_ids="text_excerpt,text_excerpt_view_more,excerpt_divider,text_reading_time,text_view_original" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
