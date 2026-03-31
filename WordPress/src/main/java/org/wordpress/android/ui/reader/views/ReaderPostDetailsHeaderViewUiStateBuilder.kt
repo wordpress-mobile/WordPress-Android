@@ -82,10 +82,10 @@ class ReaderPostDetailsHeaderViewUiStateBuilder @Inject constructor(
         post: ReaderPost,
         onHeaderAction: (ReaderPostDetailsHeaderAction) -> Unit,
     ): (() -> Unit)? {
-        val authorName = post.authorName?.takeIf { it.isNotBlank() }
+        post.authorName
+            ?.takeIf { it.isNotBlank() }
+            ?.takeUnless { it.equals(post.blogName, ignoreCase = true) }
             ?: return null
-        val blogName = post.blogName?.takeIf { it.isNotBlank() }
-        if (authorName.equals(blogName, ignoreCase = true)) return null
         return { onHeaderAction(ReaderPostDetailsHeaderAction.AuthorClicked) }
     }
 
