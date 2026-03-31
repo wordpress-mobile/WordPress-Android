@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.reader.utils
 
 import org.jsoup.Jsoup
-import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.UrlUtils
 
 /**
@@ -25,37 +24,18 @@ object ReaderGalleryScanner {
         val galleries = mutableListOf<List<String>>()
 
         for (element in document.select(GALLERY_SELECTOR)) {
-            val tag = element.tagName()
-            val classes = element.className()
-            if (element.root() !== document) {
-                AppLog.d(
-                    AppLog.T.READER,
-                    "GalleryScanner: skipping nested <$tag class='$classes'>"
-                )
-                continue
-            }
+            // Skip elements nested inside an already-removed gallery
+            if (element.root() !== document) continue
             val imageUrls = element.select("img")
                 .mapNotNull { img ->
                     img.attr("src").takeIf { it.startsWith("http") }
                 }
-            AppLog.d(
-                AppLog.T.READER,
-                "GalleryScanner: <$tag class='$classes'> " +
-                    "has ${imageUrls.size} images"
-            )
             if (imageUrls.isNotEmpty()) {
                 galleries.add(imageUrls)
-                imageUrls.forEach { url ->
-                    AppLog.d(AppLog.T.READER, "  -> $url")
-                }
             }
             element.remove()
         }
 
-        AppLog.d(
-            AppLog.T.READER,
-            "GalleryScanner: parsed ${galleries.size} galleries"
-        )
         return galleries
     }
 
@@ -68,31 +48,9 @@ object ReaderGalleryScanner {
         imageUrl: String
     ): List<String>? {
         val normalized = normalizeImageUrl(imageUrl)
-        AppLog.d(
-            AppLog.T.READER,
-            "GalleryScanner: findGalleryContaining tapped=$imageUrl"
-        )
-        AppLog.d(
-            AppLog.T.READER,
-            "GalleryScanner: normalized tapped=$normalized"
-        )
-        for ((i, gallery) in galleries.withIndex()) {
-            val normalizedGallery = gallery.map { normalizeImageUrl(it) }
-            AppLog.d(
-                AppLog.T.READER,
-                "GalleryScanner: gallery[$i] normalized=$normalizedGallery"
-            )
-            val matchIndex = normalizedGallery.indexOf(normalized)
-            if (matchIndex >= 0) {
-                AppLog.d(
-                    AppLog.T.READER,
-                    "GalleryScanner: matched gallery[$i] at index $matchIndex"
-                )
-                return gallery
-            }
+        return galleries.firstOrNull { gallery ->
+            gallery.any { normalizeImageUrl(it) == normalized }
         }
-        AppLog.d(AppLog.T.READER, "GalleryScanner: no gallery match")
-        return null
     }
 
     /**
