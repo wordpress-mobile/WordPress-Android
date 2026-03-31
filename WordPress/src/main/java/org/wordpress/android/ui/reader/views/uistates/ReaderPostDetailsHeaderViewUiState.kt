@@ -9,12 +9,10 @@ data class ReaderPostDetailsHeaderUiState(
     val tagItems: List<TagUiState>,
     val blogSectionUiState: ReaderBlogSectionUiState,
     val followButtonUiState: FollowButtonUiState,
-    val dateLine: String,
     val readingTime: UiString? = null,
     val excerpt: UiString? = null,
     val featuredImageUiState: ReaderFeaturedImageUiState? = null,
     val onFeaturedImageClicked: ((Long, String) -> Unit)? = null,
-    val interactionSectionUiState: InteractionSectionUiState,
     val onViewOriginalClicked: (() -> Unit)? = null,
 )
 

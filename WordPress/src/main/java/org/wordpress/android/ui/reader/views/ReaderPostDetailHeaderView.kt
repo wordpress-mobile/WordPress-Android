@@ -62,7 +62,10 @@ class ReaderPostDetailHeaderView @JvmOverloads constructor(
             uiState.blogSectionUiState.blogName
         )
 
-        setAuthorAndDate(uiState.authorName, uiState.dateLine)
+        setAuthorAndDate(
+            uiState.authorName,
+            uiState.blogSectionUiState.dateLine
+        )
 
         updateFollowButton(uiState.followButtonUiState)
 

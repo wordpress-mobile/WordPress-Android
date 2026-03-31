@@ -969,16 +969,8 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         }
     }
 
-    private fun modifyMoreMenu(
-        postBlocked: Boolean
-    ){
-        val moreMenu:MenuItem? = toolBar.menu.findItem(R.id.menu_more)
-        if (postBlocked){
-            moreMenu?.setVisible(false)
-        }
-        else{
-            moreMenu?.setVisible(true)
-        }
+    private fun modifyMoreMenu(postBlocked: Boolean) {
+        toolBar.menu.findItem(R.id.menu_more)?.isVisible = !postBlocked
     }
 
     private fun showOrHideMoreMenu(

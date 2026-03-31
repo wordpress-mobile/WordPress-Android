@@ -96,7 +96,6 @@ import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.UiSt
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.UiState.ReaderPostDetailsUiState.RelatedPostsUiState
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.UiState.ReaderPostDetailsUiState.RelatedPostsUiState.ReaderRelatedPostUiState
 import org.wordpress.android.ui.reader.views.uistates.FollowButtonUiState
-import org.wordpress.android.ui.reader.views.uistates.InteractionSectionUiState
 import org.wordpress.android.ui.reader.views.uistates.ReaderBlogSectionUiState
 import org.wordpress.android.ui.reader.views.uistates.ReaderBlogSectionUiState.ReaderBlogSectionClickData
 import org.wordpress.android.ui.reader.views.uistates.ReaderPostDetailsHeaderAction
@@ -1313,13 +1312,6 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
                     isFollowed = false,
                     isVisible = true
                 ),
-                dateLine = "",
-                interactionSectionUiState = InteractionSectionUiState(
-                    likeCount = 42,
-                    commentCount = 13,
-                    onLikesClicked = mock(),
-                    onCommentsClicked = mock(),
-                )
             ),
             excerptFooterUiState = mock(),
             moreMenuItems = mock(),

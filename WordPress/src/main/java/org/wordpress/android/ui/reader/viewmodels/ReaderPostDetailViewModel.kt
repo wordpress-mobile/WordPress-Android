@@ -636,7 +636,7 @@ class ReaderPostDetailViewModel @Inject constructor(
         )
     }
 
-    private suspend fun convertPostToUiState(
+    private fun convertPostToUiState(
         post: ReaderPost
     ): ReaderPostDetailsUiState {
         val newUiState = postDetailUiStateBuilder.mapPostToUiState(
