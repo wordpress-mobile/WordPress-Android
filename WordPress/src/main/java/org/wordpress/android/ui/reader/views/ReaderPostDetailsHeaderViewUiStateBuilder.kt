@@ -140,14 +140,13 @@ class ReaderPostDetailsHeaderViewUiStateBuilder @Inject constructor(
         content: String?
     ): Boolean {
         if (excerpt.endsWith("[…]") || excerpt.endsWith("…")) return true
-        val strippedContent = content
+        return content
             ?.takeIf { it.isNotBlank() }
             ?.let { HtmlUtils.fastStripHtml(it) }
             ?.trim()
-            ?: return false
-        val normalizedContent = strippedContent.replace(WHITESPACE_REGEX, " ")
-        val normalizedExcerpt = excerpt.trim().replace(WHITESPACE_REGEX, " ")
-        return normalizedContent.startsWith(normalizedExcerpt)
+            ?.replace(WHITESPACE_REGEX, " ")
+            ?.startsWith(excerpt.trim().replace(WHITESPACE_REGEX, " "))
+            ?: false
     }
 
     /**
