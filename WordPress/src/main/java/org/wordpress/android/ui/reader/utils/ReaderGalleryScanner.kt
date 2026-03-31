@@ -53,7 +53,19 @@ object ReaderGalleryScanner {
         }
     }
 
+    private val PHOTON_HOST_REGEX = Regex("^https?://i\\d\\.wp\\.com/(.+)")
+
     private fun normalizeImageUrl(url: String): String {
-        return UrlUtils.normalizeUrl(UrlUtils.removeQuery(url))
+        return UrlUtils.normalizeUrl(UrlUtils.removeQuery(stripPhotonHost(url)))
+    }
+
+    /**
+     * Strips the Photon CDN wrapper from a URL so that the original host
+     * and path can be compared directly.
+     * Example: https://i0.wp.com/example.com/photo.jpg?w=600 → https://example.com/photo.jpg?w=600
+     */
+    private fun stripPhotonHost(url: String): String {
+        val match = PHOTON_HOST_REGEX.find(url) ?: return url
+        return "https://${match.groupValues[1]}"
     }
 }

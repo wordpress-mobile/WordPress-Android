@@ -209,6 +209,24 @@ class ReaderGalleryScannerTest {
     }
 
     @Test
+    fun `findGalleryContaining matches Photon CDN URL to original URL`() {
+        val galleries = listOf(
+            listOf(
+                "https://example.com/img1.jpg",
+                "https://example.com/img2.jpg"
+            )
+        )
+
+        val match = ReaderGalleryScanner.findGalleryContaining(
+            galleries,
+            "https://i0.wp.com/example.com/img1.jpg?w=600&h=400"
+        )
+
+        assertThat(match).isNotNull
+        assertThat(match).hasSize(2)
+    }
+
+    @Test
     fun `nested galleries are not double-counted`() {
         val html = """
             <figure class="wp-block-gallery">
