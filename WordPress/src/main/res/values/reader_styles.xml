@@ -383,7 +383,7 @@
     <style name="ReaderTextView.PostDetail.BlogSection.Title">
         <item name="android:textAppearance">@style/TextAppearance.Material3.LabelLarge</item>
         <item name="android:alpha">@dimen/material_emphasis_high_type</item>
-        <item name="android:lineSpacingMultiplier">1.0</item>
+        <item name="android:lineHeight">16sp</item>
     </style>
     <style name="ReaderTextView.PostDetail.BlogSection.Subtitle">
         <item name="android:textAppearance">@style/TextAppearance.Material3.BodySmall</item>

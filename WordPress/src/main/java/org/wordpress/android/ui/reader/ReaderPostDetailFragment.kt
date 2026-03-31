@@ -24,6 +24,8 @@ import android.view.ViewGroup
 import android.view.ViewStub
 import android.webkit.CookieManager
 import android.webkit.WebView
+import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
@@ -49,6 +51,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.facebook.shimmer.ShimmerFrameLayout
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.behavior.HideBottomViewOnScrollBehavior
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
@@ -79,11 +82,8 @@ import org.wordpress.android.ui.avatars.AVATAR_LEFT_OFFSET_DIMEN
 import org.wordpress.android.ui.avatars.AvatarItemDecorator
 import org.wordpress.android.ui.avatars.TrainOfAvatarsAdapter
 import org.wordpress.android.ui.avatars.TrainOfAvatarsItem
-import org.wordpress.android.ui.engagement.BottomSheetAction
-import org.wordpress.android.ui.engagement.EngagedListNavigationEvent.OpenUserProfileBottomSheet.UserProfile
 import org.wordpress.android.ui.engagement.EngagementNavigationSource
-import org.wordpress.android.ui.engagement.UserProfileBottomSheetFragment
-import org.wordpress.android.ui.engagement.UserProfileViewModel
+import org.wordpress.android.util.WPAvatarUtils
 import org.wordpress.android.ui.main.ChooseSiteActivity
 import org.wordpress.android.ui.main.WPMainActivity
 import org.wordpress.android.ui.media.MediaPreviewActivity
@@ -143,6 +143,7 @@ import org.wordpress.android.util.config.CommentsSnippetFeatureConfig
 import org.wordpress.android.util.config.LikesEnhancementsFeatureConfig
 import org.wordpress.android.util.config.ReaderReadingPreferencesFeatureConfig
 import org.wordpress.android.util.extensions.getColorFromAttribute
+import org.wordpress.android.util.extensions.getDrawableResIdFromAttribute
 import org.wordpress.android.util.extensions.getParcelableCompat
 import org.wordpress.android.util.extensions.getSerializableCompat
 import org.wordpress.android.util.extensions.setVisible
@@ -227,7 +228,6 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
     private val viewModel: ReaderPostDetailViewModel by viewModels()
     private lateinit var conversationViewModel: ConversationNotificationsViewModel
-    private lateinit var userProfileViewModel: UserProfileViewModel
 
     private var binding: ReaderFragmentPostDetailBinding? = null
 
@@ -536,12 +536,6 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     private fun initViewModel(binding: ReaderFragmentPostDetailBinding, savedInstanceState: Bundle?) {
         conversationViewModel =
             ViewModelProvider(this, viewModelFactory)[ConversationNotificationsViewModel::class.java]
-        userProfileViewModel = ViewModelProvider(
-            this, viewModelFactory
-        ).get(
-            UserProfileViewModel.USER_PROFILE_VM_KEY,
-            UserProfileViewModel::class.java
-        )
 
         initObservers(binding)
 
@@ -588,24 +582,6 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         viewModel.snackbarEvents.observeEvent(viewLifecycleOwner) { it.showSnackbar(binding) }
 
         viewModel.navigationEvents.observeEvent(viewLifecycleOwner) { it.handleNavigationEvent() }
-
-        userProfileViewModel.onBottomSheetAction.observeEvent(viewLifecycleOwner) { action ->
-            if (!isAdded) return@observeEvent
-            val fm = childFragmentManager
-            var bottomSheet = fm.findFragmentByTag(USER_PROFILE_BOTTOM_SHEET_TAG)
-                as? UserProfileBottomSheetFragment
-            when (action) {
-                BottomSheetAction.ShowBottomSheet -> {
-                    if (bottomSheet == null) {
-                        bottomSheet = UserProfileBottomSheetFragment.newInstance(
-                            UserProfileViewModel.USER_PROFILE_VM_KEY
-                        )
-                        bottomSheet.show(fm, USER_PROFILE_BOTTOM_SHEET_TAG)
-                    }
-                }
-                BottomSheetAction.HideBottomSheet -> bottomSheet?.dismiss()
-            }
-        }
 
         if (commentsSnippetFeatureConfig.isEnabled()) {
             conversationViewModel.snackbarEvents.observe(viewLifecycleOwner) { event ->
@@ -952,30 +928,84 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         }
     }
 
+    @Suppress("LongMethod")
     private fun showAuthorProfile(event: ReaderNavigationEvents.ShowAuthorProfile) {
-        userProfileViewModel.onBottomSheetOpen(
-            userProfile = UserProfile(
-                userAvatarUrl = event.authorAvatar,
-                blavatarUrl = event.authorAvatar,
-                userName = event.authorName,
-                userLogin = "",
-                userBio = "",
-                siteTitle = event.blogName,
-                siteUrl = event.blogUrl,
-                siteId = event.siteId,
-            ),
-            onClick = { siteId, _, source ->
-                ReaderActivityLauncher.showReaderBlogOrFeedPreview(
-                    requireContext(),
-                    siteId,
-                    0L,
-                    false,
-                    source,
-                    readerTracker
-                )
-            },
-            source = EngagementNavigationSource.LIKE_READER_LIST,
+        val ctx = requireContext()
+        val dialog = BottomSheetDialog(ctx)
+
+        val avatarSz = resources.getDimensionPixelSize(
+            R.dimen.user_profile_bottom_sheet_avatar_sz
         )
+        val paddingLarge = resources.getDimensionPixelSize(R.dimen.margin_extra_large)
+        val paddingMedium = resources.getDimensionPixelSize(R.dimen.margin_medium)
+
+        val container = LinearLayout(ctx).apply {
+            orientation = LinearLayout.VERTICAL
+            setPadding(paddingLarge, paddingMedium, paddingLarge, paddingLarge)
+        }
+
+        // Avatar
+        val avatarView = ImageView(ctx).apply {
+            layoutParams = LinearLayout.LayoutParams(avatarSz, avatarSz).apply {
+                gravity = Gravity.CENTER_HORIZONTAL
+            }
+        }
+        imageManager.loadIntoCircle(
+            avatarView,
+            org.wordpress.android.util.image.ImageType.AVATAR_WITH_BACKGROUND,
+            WPAvatarUtils.rewriteAvatarUrl(event.authorAvatar, avatarSz)
+        )
+        container.addView(avatarView)
+
+        // Author name
+        val nameView = TextView(ctx).apply {
+            text = event.authorName
+            setTextAppearance(
+                com.google.android.material.R.style.TextAppearance_Material3_TitleMedium
+            )
+            gravity = Gravity.CENTER
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            ).apply { topMargin = paddingMedium }
+        }
+        container.addView(nameView)
+
+        // Blog name (clickable — opens in external browser)
+        if (event.blogUrl.isNotBlank()) {
+            val blogLabel = event.blogName.ifBlank {
+                UrlUtils.getHost(event.blogUrl)
+            }
+            val blogView = TextView(ctx).apply {
+                text = blogLabel
+                setTextAppearance(
+                    com.google.android.material.R.style.TextAppearance_Material3_BodyMedium
+                )
+                setTextColor(
+                    ctx.getColorFromAttribute(
+                        com.google.android.material.R.attr.colorPrimary
+                    )
+                )
+                gravity = Gravity.CENTER
+                setBackgroundResource(
+                    ctx.getDrawableResIdFromAttribute(
+                        android.R.attr.selectableItemBackground
+                    )
+                )
+                layoutParams = LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+                ).apply { topMargin = paddingMedium / 2 }
+                setOnClickListener {
+                    ReaderActivityLauncher.openUrl(ctx, event.blogUrl)
+                    dialog.dismiss()
+                }
+            }
+            container.addView(blogView)
+        }
+
+        dialog.setContentView(container)
+        dialog.show()
     }
 
     private fun showLoginRequiredBottomSheet() {
@@ -2030,7 +2060,6 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         private const val KEY_LIKERS_LIST_STATE = "likers_list_state"
         private const val KEY_COMMENTS_SNIPPET_LIST_STATE = "comments_snippet_list_state"
         private const val NOTIFICATIONS_BOTTOM_SHEET_TAG = "NOTIFICATIONS_BOTTOM_SHEET_TAG"
-        private const val USER_PROFILE_BOTTOM_SHEET_TAG = "USER_PROFILE_BOTTOM_SHEET_TAG"
 
         fun newInstance(blogId: Long, postId: Long): ReaderPostDetailFragment {
             return newInstance(false, blogId, postId, null, 0, false, null, null, false)
