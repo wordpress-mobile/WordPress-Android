@@ -157,6 +157,7 @@
         android:layout_marginTop="@dimen/margin_medium"
         android:drawablePadding="@dimen/margin_extra_small"
         android:gravity="center_vertical"
+        android:includeFontPadding="false"
         android:visibility="gone"
         app:drawableStartCompat="@drawable/ic_clock_16dp"
         app:drawableTint="?android:textColorSecondary"
@@ -175,13 +176,14 @@
         android:background="?attr/selectableItemBackgroundBorderless"
         android:drawablePadding="@dimen/margin_extra_small"
         android:gravity="center_vertical"
+        android:includeFontPadding="false"
         android:text="@string/reader_view_original"
         android:visibility="gone"
         app:drawableStartCompat="@drawable/ic_outbound_16dp"
         app:drawableTint="?android:textColorSecondary"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/blog_description_barrier"
-        app:layout_constraintBaseline_toBaselineOf="@id/text_reading_time"
+        app:layout_constraintTop_toTopOf="@id/text_reading_time"
+        app:layout_constraintBottom_toBottomOf="@id/text_reading_time"
         tools:visibility="visible" />
 
     <androidx.constraintlayout.widget.Barrier
