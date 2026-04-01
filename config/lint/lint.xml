@@ -24,18 +24,10 @@
     </issue>
     <issue id="AndroidGradlePluginVersion" severity="ignore" /> <!-- The AGP update is done manually -->
     <issue id="GradleDependency" severity="ignore" /> <!-- Dependabot will take care of this -->
-    <issue id="MissingNullAnnotationOnField">
-        <ignore path="**/generated/**" />
-    </issue>
-    <issue id="MissingNullAnnotationOnConstructorParameter">
-        <ignore path="**/generated/**" />
-    </issue>
-    <issue id="MissingNullAnnotationOnMethodParameter">
-        <ignore path="**/generated/**" />
-    </issue>
-    <issue id="MissingNullAnnotationOnMethodReturnType">
-        <ignore path="**/generated/**" />
-    </issue>
+    <issue id="MissingNullAnnotationOnField" severity="ignore" />
+    <issue id="MissingNullAnnotationOnConstructorParameter" severity="ignore" />
+    <issue id="MissingNullAnnotationOnMethodParameter" severity="ignore" />
+    <issue id="MissingNullAnnotationOnMethodReturnType" severity="ignore" />
     <issue id="Aligned16KB" severity="ignore" /> <!-- Will be addressed by removing Gutenberg Mobile -->
     <issue id="VectorRaster" severity="warning" /> <!--    fluxc-->
     <!-- SECURITY -->
