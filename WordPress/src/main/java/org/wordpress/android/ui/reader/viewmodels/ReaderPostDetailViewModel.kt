@@ -588,8 +588,7 @@ class ReaderPostDetailViewModel @Inject constructor(
     }
 
     private fun onViewOriginalClicked(post: ReaderPost) {
-        val url = post.url
-        if (!url.isNullOrBlank()) {
+        post.url?.takeIf { it.isNotBlank() }?.let { url ->
             _navigationEvents.value = Event(
                 ReaderNavigationEvents.OpenUrl(url = url)
             )
@@ -1014,14 +1013,11 @@ class ReaderPostDetailViewModel @Inject constructor(
     fun onUserNavigateFromComments() {
         // reload post from DB (including text column for featured image
         // deduplication) and update UI state
-        val currentUiState: ReaderPostDetailsUiState? = (_uiState.value as? ReaderPostDetailsUiState)
-        currentUiState?.let {
+        (_uiState.value as? ReaderPostDetailsUiState)?.let { state ->
             launch(mainDispatcher) {
                 val reloadedPost = withContext(bgDispatcher) {
                     readerPostTableWrapper.getBlogPost(
-                        it.blogId,
-                        it.postId,
-                        false
+                        state.blogId, state.postId, false
                     )
                 }
                 reloadedPost?.let { post ->

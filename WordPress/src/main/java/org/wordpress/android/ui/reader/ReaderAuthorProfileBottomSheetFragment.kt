@@ -8,6 +8,7 @@ import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
+import org.wordpress.android.R
 import org.wordpress.android.databinding.ReaderAuthorProfileBottomSheetBinding
 import org.wordpress.android.util.UrlUtils
 import org.wordpress.android.util.WPAvatarUtils
@@ -44,7 +45,7 @@ class ReaderAuthorProfileBottomSheetFragment : BottomSheetDialogFragment() {
         val blogUrl = args.getString(ARG_BLOG_URL).orEmpty()
 
         val avatarSz = resources.getDimensionPixelSize(
-            org.wordpress.android.R.dimen.user_profile_bottom_sheet_avatar_sz
+            R.dimen.user_profile_bottom_sheet_avatar_sz
         )
         imageManager.loadIntoCircle(
             binding.authorAvatar,
