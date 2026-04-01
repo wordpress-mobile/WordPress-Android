@@ -786,7 +786,11 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             }
         }
 
-        binding.headerView.updatePost(state.headerUiState, getReadingPreferences())
+        binding.headerView.updatePost(
+            state.headerUiState,
+            getReadingPreferences(),
+            viewModel::handleHeaderAction
+        )
 
         binding.expandableTagsView.setVisible(state.headerUiState.tagItems.isNotEmpty())
         binding.expandableTagsView.updateUi(

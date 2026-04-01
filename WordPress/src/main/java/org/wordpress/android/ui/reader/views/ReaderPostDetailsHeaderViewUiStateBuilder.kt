@@ -64,38 +64,8 @@ class ReaderPostDetailsHeaderViewUiStateBuilder @Inject constructor(
             readingTime = buildReadingTime(post),
             excerpt = buildExcerpt(post),
             featuredImageUiState = featuredImage,
-            onFeaturedImageClicked = featuredImage?.let {
-                { blogId: Long, url: String ->
-                    onHeaderAction(
-                        ReaderPostDetailsHeaderAction.FeaturedImageClicked(
-                            blogId, url
-                        )
-                    )
-                }
-            },
-            onViewOriginalClicked = buildViewOriginalClicked(post, onHeaderAction),
-            onAuthorClicked = buildAuthorClicked(post, onHeaderAction)
+            showViewOriginal = post.hasUrl(),
         )
-    }
-
-    private fun buildAuthorClicked(
-        post: ReaderPost,
-        onHeaderAction: (ReaderPostDetailsHeaderAction) -> Unit,
-    ): (() -> Unit)? {
-        post.authorName
-            ?.takeIf { it.isNotBlank() }
-            ?.takeUnless { it.equals(post.blogName, ignoreCase = true) }
-            ?: return null
-        return { onHeaderAction(ReaderPostDetailsHeaderAction.AuthorClicked) }
-    }
-
-    private fun buildViewOriginalClicked(
-        post: ReaderPost,
-        onHeaderAction: (ReaderPostDetailsHeaderAction) -> Unit,
-    ): (() -> Unit)? = if (post.hasUrl()) {
-        { onHeaderAction(ReaderPostDetailsHeaderAction.ViewOriginalClicked) }
-    } else {
-        null
     }
 
     /**

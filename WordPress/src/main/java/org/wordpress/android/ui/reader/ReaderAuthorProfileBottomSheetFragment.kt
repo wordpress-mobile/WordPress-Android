@@ -4,13 +4,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
-import org.wordpress.android.R
+import org.wordpress.android.databinding.ReaderAuthorProfileBottomSheetBinding
 import org.wordpress.android.util.UrlUtils
 import org.wordpress.android.util.WPAvatarUtils
 import org.wordpress.android.util.image.ImageManager
@@ -22,13 +20,19 @@ class ReaderAuthorProfileBottomSheetFragment : BottomSheetDialogFragment() {
     @Inject
     lateinit var imageManager: ImageManager
 
+    private var _binding: ReaderAuthorProfileBottomSheetBinding? = null
+    private val binding get() = _binding!!
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? = inflater.inflate(
-        R.layout.reader_author_profile_bottom_sheet, container, false
-    )
+    ): View {
+        _binding = ReaderAuthorProfileBottomSheetBinding.inflate(
+            inflater, container, false
+        )
+        return binding.root
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -39,27 +43,31 @@ class ReaderAuthorProfileBottomSheetFragment : BottomSheetDialogFragment() {
         val blogName = args.getString(ARG_BLOG_NAME).orEmpty()
         val blogUrl = args.getString(ARG_BLOG_URL).orEmpty()
 
-        val avatarView = view.findViewById<ImageView>(R.id.author_avatar)
         val avatarSz = resources.getDimensionPixelSize(
-            R.dimen.user_profile_bottom_sheet_avatar_sz
+            org.wordpress.android.R.dimen.user_profile_bottom_sheet_avatar_sz
         )
         imageManager.loadIntoCircle(
-            avatarView,
+            binding.authorAvatar,
             ImageType.AVATAR_WITH_BACKGROUND,
             WPAvatarUtils.rewriteAvatarUrl(authorAvatar, avatarSz)
         )
 
-        view.findViewById<TextView>(R.id.author_name).text = authorName
+        binding.authorName.text = authorName
 
-        val blogView = view.findViewById<TextView>(R.id.author_blog_name)
         if (blogUrl.isNotBlank()) {
-            blogView.isVisible = true
-            blogView.text = blogName.ifBlank { UrlUtils.getHost(blogUrl) }
-            blogView.setOnClickListener {
+            binding.authorBlogName.isVisible = true
+            binding.authorBlogName.text =
+                blogName.ifBlank { UrlUtils.getHost(blogUrl) }
+            binding.authorBlogName.setOnClickListener {
                 ReaderActivityLauncher.openUrl(requireContext(), blogUrl)
                 dismiss()
             }
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     companion object {

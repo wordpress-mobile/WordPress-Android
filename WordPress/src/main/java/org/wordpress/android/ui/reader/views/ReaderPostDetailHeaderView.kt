@@ -14,6 +14,7 @@ import org.wordpress.android.ui.reader.utils.toTypeface
 import org.wordpress.android.ui.reader.views.uistates.FollowButtonUiState
 import org.wordpress.android.ui.reader.views.uistates.ReaderBlogSectionUiState
 import org.wordpress.android.ui.reader.views.uistates.ReaderFeaturedImageUiState
+import org.wordpress.android.ui.reader.views.uistates.ReaderPostDetailsHeaderAction
 import org.wordpress.android.ui.reader.views.uistates.ReaderPostDetailsHeaderUiState
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.ui.utils.UiString
@@ -51,6 +52,7 @@ class ReaderPostDetailHeaderView @JvmOverloads constructor(
     fun updatePost(
         uiState: ReaderPostDetailsHeaderUiState,
         readingPreferences: ReaderReadingPreferences? = null,
+        onHeaderAction: ((ReaderPostDetailsHeaderAction) -> Unit)? = null,
     ) = with(binding) {
         val themeValues = readingPreferences?.let {
             ReaderReadingPreferences.ThemeValues.from(root.context, it.theme)
@@ -73,7 +75,7 @@ class ReaderPostDetailHeaderView @JvmOverloads constructor(
         setAuthorAndDate(
             uiState.authorName,
             uiState.blogSectionUiState.dateLine,
-            uiState.onAuthorClicked
+            onHeaderAction
         )
 
         updateFollowButton(uiState.followButtonUiState)
@@ -82,14 +84,15 @@ class ReaderPostDetailHeaderView @JvmOverloads constructor(
         updateBlogSectionClick(uiState.blogSectionUiState)
 
         uiHelpers.setTextOrHide(textReadingTime, uiState.readingTime)
-        textViewOriginal.setVisible(uiState.onViewOriginalClicked != null)
-        uiState.onViewOriginalClicked?.let { onClick ->
-            textViewOriginal.setOnClickListener { onClick() }
+        textViewOriginal.setVisible(uiState.showViewOriginal)
+        if (uiState.showViewOriginal) {
+            textViewOriginal.setOnClickListener {
+                onHeaderAction?.invoke(
+                    ReaderPostDetailsHeaderAction.ViewOriginalClicked
+                )
+            }
         }
-        updateFeaturedImage(
-            uiState.featuredImageUiState,
-            uiState.onFeaturedImageClicked
-        )
+        updateFeaturedImage(uiState.featuredImageUiState, onHeaderAction)
         uiHelpers.setTextOrHide(textExcerpt, uiState.excerpt)
         excerptTruncationCheck?.let { textExcerpt.removeCallbacks(it) }
         if (uiState.excerpt != null) {
@@ -200,13 +203,17 @@ class ReaderPostDetailHeaderView @JvmOverloads constructor(
     private fun setAuthorAndDate(
         authorName: String?,
         dateLine: String,
-        onAuthorClicked: (() -> Unit)?
+        onHeaderAction: ((ReaderPostDetailsHeaderAction) -> Unit)?
     ) = with(binding.layoutBlogSection) {
         uiHelpers.setTextOrHide(blogSectionTextAuthor, authorName)
         uiHelpers.setTextOrHide(blogSectionTextDateline, dateLine)
-        onAuthorClicked?.let { onClick ->
-            blogSectionTextAuthor.setOnClickListener { onClick() }
-        } ?: run {
+        if (authorName != null) {
+            blogSectionTextAuthor.setOnClickListener {
+                onHeaderAction?.invoke(
+                    ReaderPostDetailsHeaderAction.AuthorClicked
+                )
+            }
+        } else {
             blogSectionTextAuthor.setOnClickListener(null)
             blogSectionTextAuthor.isClickable = false
         }
@@ -214,7 +221,7 @@ class ReaderPostDetailHeaderView @JvmOverloads constructor(
 
     private fun ReaderPostDetailHeaderViewBinding.updateFeaturedImage(
         state: ReaderFeaturedImageUiState?,
-        onFeaturedImageClicked: ((Long, String) -> Unit)?
+        onHeaderAction: ((ReaderPostDetailsHeaderAction) -> Unit)?
     ) {
         headerFeaturedImage.setVisible(state != null)
         if (state != null) {
@@ -222,8 +229,10 @@ class ReaderPostDetailHeaderView @JvmOverloads constructor(
                 headerFeaturedImage, PHOTO, state.url, FIT_CENTER
             )
             headerFeaturedImage.setOnClickListener {
-                onFeaturedImageClicked?.invoke(
-                    state.blogId, state.url
+                onHeaderAction?.invoke(
+                    ReaderPostDetailsHeaderAction.FeaturedImageClicked(
+                        state.blogId, state.url
+                    )
                 )
             }
         } else {

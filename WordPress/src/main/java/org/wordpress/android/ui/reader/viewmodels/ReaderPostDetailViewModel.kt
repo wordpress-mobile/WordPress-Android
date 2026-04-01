@@ -544,6 +544,10 @@ class ReaderPostDetailViewModel @Inject constructor(
         }
     }
 
+    fun handleHeaderAction(action: ReaderPostDetailsHeaderAction) {
+        post?.let { onHeaderAction(it, action) }
+    }
+
     private fun onHeaderAction(post: ReaderPost, action: ReaderPostDetailsHeaderAction) {
         when (action) {
             is ReaderPostDetailsHeaderAction.BlogSectionClicked -> onBlogSectionClicked(post.postId, post.blogId)
