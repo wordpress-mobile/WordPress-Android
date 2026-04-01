@@ -1,94 +1,159 @@
 package org.wordpress.android.ui.reader.views
 
 import dagger.Reusable
+import org.wordpress.android.R
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.ui.reader.discover.ReaderPostTagsUiStateBuilder
 import org.wordpress.android.ui.reader.discover.ReaderPostUiStateBuilder
+import org.wordpress.android.ui.reader.utils.FeaturedImageUtils
+import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import org.wordpress.android.ui.reader.views.uistates.FollowButtonUiState
-import org.wordpress.android.ui.reader.views.uistates.InteractionSectionUiState
-import org.wordpress.android.ui.reader.views.uistates.ReaderBlogSectionUiState
+import org.wordpress.android.ui.reader.views.uistates.ReaderFeaturedImageUiState
 import org.wordpress.android.ui.reader.views.uistates.ReaderPostDetailsHeaderAction
-import org.wordpress.android.ui.reader.views.uistates.ReaderPostDetailsHeaderViewUiState.ReaderPostDetailsHeaderUiState
+import org.wordpress.android.ui.reader.views.uistates.ReaderPostDetailsHeaderUiState
+import org.wordpress.android.ui.utils.UiString
+import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
 import org.wordpress.android.ui.utils.UiString.UiStringText
-import org.wordpress.android.util.DateTimeUtilsWrapper
+import org.wordpress.android.util.DisplayUtilsWrapper
+import org.wordpress.android.util.HtmlUtils
 import javax.inject.Inject
+import kotlin.math.ceil
+
+private const val WORDS_PER_MINUTE = 200
 
 @Reusable
 class ReaderPostDetailsHeaderViewUiStateBuilder @Inject constructor(
     private val postUiStateBuilder: ReaderPostUiStateBuilder,
     private val readerPostTagsUiStateBuilder: ReaderPostTagsUiStateBuilder,
-    private val dateTimeUtilsWrapper: DateTimeUtilsWrapper,
+    private val featuredImageUtils: FeaturedImageUtils,
+    private val readerUtilsWrapper: ReaderUtilsWrapper,
+    private val displayUtilsWrapper: DisplayUtilsWrapper,
 ) {
+    /**
+     * Maps a [ReaderPost] to the UI state for the post detail header,
+     * including title, author, blog section, tags, follow button,
+     * reading time, excerpt, featured image, and view-original action.
+     */
     fun mapPostToUiState(
         post: ReaderPost,
         onHeaderAction: (ReaderPostDetailsHeaderAction) -> Unit,
     ): ReaderPostDetailsHeaderUiState {
-        val textTitle = post
-            .takeIf { post.hasTitle() }
-            ?.title?.let { UiStringText(it) }
+        val featuredImage = buildFeaturedImageUiState(post)
 
         return ReaderPostDetailsHeaderUiState(
-            title = textTitle,
-            authorName = post.authorName,
-            tagItems = buildTagItems(
-                post,
-                onClicked = { onHeaderAction(ReaderPostDetailsHeaderAction.TagItemClicked(it)) }
+            title = post.title?.takeIf { it.isNotEmpty() }?.let(::UiStringText),
+            authorName = post.authorName?.takeIf {
+                it.isNotBlank() &&
+                    !it.equals(post.blogName, ignoreCase = true)
+            },
+            tagItems = readerPostTagsUiStateBuilder
+                .mapPostTagsToTagUiStates(post) {
+                    onHeaderAction(ReaderPostDetailsHeaderAction.TagItemClicked(it))
+                },
+            blogSectionUiState = postUiStateBuilder
+                .mapPostToBlogSectionUiState(post) {
+                    onHeaderAction(ReaderPostDetailsHeaderAction.BlogSectionClicked)
+                },
+            followButtonUiState = FollowButtonUiState(
+                onFollowButtonClicked = {
+                    onHeaderAction(ReaderPostDetailsHeaderAction.FollowClicked)
+                },
+                isFollowed = post.isFollowedByCurrentUser,
+                isVisible = true
             ),
-            tagItemsVisibility = buildTagItemsVisibility(post),
-            blogSectionUiState = buildBlogSectionUiState(
-                post,
-                onBlogSectionClicked = { onHeaderAction(ReaderPostDetailsHeaderAction.BlogSectionClicked) }
-            ),
-            followButtonUiState = buildFollowButtonUiState(
-                post,
-                onFollowClicked = { onHeaderAction(ReaderPostDetailsHeaderAction.FollowClicked) }
-            ),
-            dateLine = buildDateLine(post),
-            interactionSectionUiState = buildInteractionSection(
-                post,
-                onLikesClicked = { onHeaderAction(ReaderPostDetailsHeaderAction.LikesClicked) },
-                onCommentsClicked = { onHeaderAction(ReaderPostDetailsHeaderAction.CommentsClicked) }
-            )
+            readingTime = buildReadingTime(post),
+            excerpt = buildExcerpt(post),
+            featuredImageUiState = featuredImage,
+            showViewOriginal = !post.url.isNullOrBlank(),
         )
     }
 
-    private fun buildBlogSectionUiState(
-        post: ReaderPost,
-        onBlogSectionClicked: () -> Unit
-    ): ReaderBlogSectionUiState {
-        return postUiStateBuilder.mapPostToBlogSectionUiState(
-            post,
-            onBlogSectionClicked
+    /**
+     * Estimates reading time by stripping HTML tags and img elements
+     * from the post content, counting words, and dividing by
+     * [WORDS_PER_MINUTE] (rounded up, minimum 1 minute).
+     * Returns null for excerpt-only posts or empty content.
+     */
+    private fun buildReadingTime(post: ReaderPost): UiString? {
+        if (post.shouldShowExcerpt()) return null
+        return post.text
+            ?.takeIf { it.isNotBlank() }
+            ?.let { HtmlUtils.fastStripHtml(it.replace(IMG_TAG_REGEX, "")) }
+            ?.trim()
+            ?.takeIf { it.isNotBlank() }
+            ?.let { stripped ->
+                stripped.split(WHITESPACE_REGEX)
+                    .count { it.isNotEmpty() }
+            }
+            ?.takeIf { it > 0 }
+            ?.let { wordCount ->
+                val minutes = ceil(
+                    wordCount.toDouble() / WORDS_PER_MINUTE
+                ).toInt().coerceAtLeast(1)
+                UiStringResWithParams(
+                    R.string.reader_reading_time,
+                    listOf(UiStringText(minutes.toString()))
+                )
+            }
+    }
+
+    /**
+     * Returns the post excerpt as a [UiString], or null if the
+     * excerpt is blank or was auto-generated rather than written
+     * by the author.
+     */
+    private fun buildExcerpt(post: ReaderPost): UiString? {
+        val excerpt = post.excerpt?.takeIf { it.isNotBlank() } ?: return null
+        return if (isAutoGeneratedExcerpt(excerpt, post.text)) null
+            else UiStringText(excerpt)
+    }
+
+    /**
+     * Detects excerpts that were not intentionally written by the
+     * author. Returns true when the excerpt ends with a WordPress
+     * truncation suffix (`[…]` or `…`), or when the plain-text
+     * content starts with the excerpt text — meaning the excerpt
+     * just repeats the opening of the post. Whitespace is
+     * normalized before comparing so differences in spacing
+     * (e.g. double vs single spaces) are ignored.
+     */
+    private fun isAutoGeneratedExcerpt(
+        excerpt: String,
+        content: String?
+    ): Boolean {
+        if (excerpt.endsWith("[…]") || excerpt.endsWith("…")) return true
+        return content
+            ?.takeIf { it.isNotBlank() }
+            ?.let { HtmlUtils.fastStripHtml(it) }
+            ?.trim()
+            ?.replace(WHITESPACE_REGEX, " ")
+            ?.startsWith(excerpt.trim().replace(WHITESPACE_REGEX, " "))
+            ?: false
+    }
+
+    /**
+     * Builds the featured image UI state for the post detail header,
+     * returning null when the post has no suitable featured image.
+     */
+    private fun buildFeaturedImageUiState(
+        post: ReaderPost
+    ): ReaderFeaturedImageUiState? {
+        if (!featuredImageUtils.shouldAddFeaturedImage(post)) return null
+        val url = readerUtilsWrapper.getResizedImageUrl(
+            post.featuredImage,
+            displayUtilsWrapper.getDisplayPixelWidth(),
+            0,
+            post.isPrivate,
+            post.isPrivateAtomic
+        )
+        return ReaderFeaturedImageUiState(
+            blogId = post.blogId,
+            url = url,
         )
     }
 
-    private fun buildFollowButtonUiState(
-        post: ReaderPost,
-        onFollowClicked: () -> Unit
-    ): FollowButtonUiState {
-        return FollowButtonUiState(
-            onFollowButtonClicked = onFollowClicked,
-            isFollowed = post.isFollowedByCurrentUser,
-            isVisible = true
-        )
+    companion object {
+        private val IMG_TAG_REGEX = Regex("<img[^>]*>")
+        private val WHITESPACE_REGEX = "\\s+".toRegex()
     }
-
-    private fun buildTagItems(post: ReaderPost, onClicked: (String) -> Unit) =
-        readerPostTagsUiStateBuilder.mapPostTagsToTagUiStates(post, onClicked)
-
-    private fun buildTagItemsVisibility(post: ReaderPost) = post.tags.isNotEmpty()
-
-    private fun buildDateLine(post: ReaderPost) =
-        dateTimeUtilsWrapper.javaDateToTimeSpan(post.getDisplayDate(dateTimeUtilsWrapper))
-
-    private fun buildInteractionSection(
-        post: ReaderPost,
-        onLikesClicked: () -> Unit,
-        onCommentsClicked: () -> Unit,
-    ) = InteractionSectionUiState(
-        likeCount = post.numLikes,
-        commentCount = post.numReplies,
-        onLikesClicked = onLikesClicked,
-        onCommentsClicked = onCommentsClicked,
-    )
 }

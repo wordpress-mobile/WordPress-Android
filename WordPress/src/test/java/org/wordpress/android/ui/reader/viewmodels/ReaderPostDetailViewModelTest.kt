@@ -96,11 +96,10 @@ import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.UiSt
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.UiState.ReaderPostDetailsUiState.RelatedPostsUiState
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.UiState.ReaderPostDetailsUiState.RelatedPostsUiState.ReaderRelatedPostUiState
 import org.wordpress.android.ui.reader.views.uistates.FollowButtonUiState
-import org.wordpress.android.ui.reader.views.uistates.InteractionSectionUiState
 import org.wordpress.android.ui.reader.views.uistates.ReaderBlogSectionUiState
 import org.wordpress.android.ui.reader.views.uistates.ReaderBlogSectionUiState.ReaderBlogSectionClickData
 import org.wordpress.android.ui.reader.views.uistates.ReaderPostDetailsHeaderAction
-import org.wordpress.android.ui.reader.views.uistates.ReaderPostDetailsHeaderViewUiState.ReaderPostDetailsHeaderUiState
+import org.wordpress.android.ui.reader.views.uistates.ReaderPostDetailsHeaderUiState
 import org.wordpress.android.ui.utils.HtmlMessageUtils
 import org.wordpress.android.ui.utils.UiDimen.UIDimenRes
 import org.wordpress.android.ui.utils.UiString.UiStringRes
@@ -728,32 +727,6 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
         )
     }
 
-    @Test
-    fun `when header likes count is clicked, then like action is invoked`() = test {
-        val observers = init()
-        // trigger mapping and header action callback capture
-        (observers.uiStates.last() as ReaderPostDetailsUiState)
-
-        capturedOnHeaderAction.invoke(ReaderPostDetailsHeaderAction.LikesClicked)
-
-        assertThat(observers.navigation.last().peekContent()).isInstanceOf(ShowEngagedPeopleList::class.java)
-    }
-
-    @Test
-    fun `when header comments count is clicked, then comments action is invoked`() = test {
-        // trigger mapping and header action callback capture
-        (init().uiStates.last() as ReaderPostDetailsUiState)
-
-        capturedOnHeaderAction.invoke(ReaderPostDetailsHeaderAction.CommentsClicked)
-
-        verify(readerPostCardActionsHandler).onAction(
-            eq(readerPost),
-            eq(COMMENTS),
-            eq(false),
-            anyString()
-        )
-    }
-
     /* EXCERPT FOOTER */
     @Test
     fun `when visit excerpt link is clicked, then post blog url is opened`() = test {
@@ -1026,7 +999,7 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
             isLikedByCurrentUser = true
         }
         viewModel.post = post
-        init()
+        init(showPost = false)
 
         viewModel.onRefreshLikersData(post, true)
 
@@ -1292,13 +1265,11 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
         return ReaderPostDetailsUiState(
             postId = post.postId,
             blogId = post.blogId,
-            featuredImageUiState = mock(),
             headerUiState = ReaderPostDetailsHeaderUiState(
-                UiStringText(post.title),
-                post.authorName,
-                listOf(TagUiState("", "", false, mock())),
-                true,
-                ReaderBlogSectionUiState(
+                title = UiStringText(post.title),
+                authorName = post.authorName,
+                tagItems = listOf(TagUiState("", "", false, mock())),
+                blogSectionUiState = ReaderBlogSectionUiState(
                     postId = post.postId,
                     blogId = post.blogId,
                     dateLine = "",
@@ -1310,18 +1281,11 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
                     blavatarType = BLAVATAR_CIRCULAR,
                     blogSectionClickData = ReaderBlogSectionClickData(mock(), 0)
                 ),
-                FollowButtonUiState(
+                followButtonUiState = FollowButtonUiState(
                     onFollowButtonClicked = mock(),
                     isFollowed = false,
                     isVisible = true
                 ),
-                "",
-                InteractionSectionUiState(
-                    likeCount = 42,
-                    commentCount = 13,
-                    onLikesClicked = mock(),
-                    onCommentsClicked = mock(),
-                )
             ),
             excerptFooterUiState = mock(),
             moreMenuItems = mock(),

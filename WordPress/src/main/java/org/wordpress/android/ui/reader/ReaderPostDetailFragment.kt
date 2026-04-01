@@ -24,7 +24,6 @@ import android.view.ViewGroup
 import android.view.ViewStub
 import android.webkit.CookieManager
 import android.webkit.WebView
-import android.widget.ImageView.ScaleType.CENTER_CROP
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
@@ -37,6 +36,7 @@ import androidx.core.graphics.BlendModeColorFilterCompat
 import androidx.core.graphics.BlendModeCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.isGone
 import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
 import androidx.fragment.app.FragmentManager
@@ -48,7 +48,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.facebook.shimmer.ShimmerFrameLayout
 import com.google.android.material.appbar.AppBarLayout
-import com.google.android.material.appbar.CollapsingToolbarLayout
 import com.google.android.material.behavior.HideBottomViewOnScrollBehavior
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
@@ -118,7 +117,6 @@ import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.UiSt
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.UiState.LoadingUiState
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.UiState.ReaderPostDetailsUiState
 import org.wordpress.android.ui.reader.views.ReaderIconCountView
-import org.wordpress.android.ui.reader.views.ReaderPostDetailsHeaderViewUiStateBuilder
 import org.wordpress.android.ui.reader.views.ReaderSimplePostContainerView
 import org.wordpress.android.ui.reader.views.ReaderWebView
 import org.wordpress.android.ui.reader.views.ReaderWebView.ReaderCustomViewListener
@@ -146,7 +144,6 @@ import org.wordpress.android.util.extensions.getSerializableCompat
 import org.wordpress.android.util.extensions.setVisible
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 import org.wordpress.android.util.image.ImageManager
-import org.wordpress.android.util.image.ImageType.PHOTO
 import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout
 import org.wordpress.android.viewmodel.ContextProvider
 import org.wordpress.android.viewmodel.observeEvent
@@ -158,7 +155,6 @@ import java.net.HttpURLConnection
 import java.util.EnumSet
 import javax.inject.Inject
 import com.google.android.material.R as MaterialR
-import androidx.core.view.isGone
 import androidx.core.net.toUri
 import androidx.core.view.forEach
 
@@ -252,9 +248,6 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     internal lateinit var imageManager: ImageManager
 
     @Inject
-    lateinit var postDetailsHeaderViewUiStateBuilder: ReaderPostDetailsHeaderViewUiStateBuilder
-
-    @Inject
     lateinit var readerUtilsWrapper: ReaderUtilsWrapper
 
     @Inject
@@ -291,36 +284,6 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
     val isCustomViewShowing: Boolean
         get() = view != null && readerWebView.isCustomViewShowing
-
-    private val appBarLayoutOffsetChangedListener =
-        AppBarLayout.OnOffsetChangedListener { appBarLayout, verticalOffset ->
-            val collapsingToolbarLayout = appBarLayout
-                .findViewById<CollapsingToolbarLayout>(R.id.collapsing_toolbar)
-            val toolbar = appBarLayout.findViewById<Toolbar>(R.id.toolbar_main)
-
-            view?.context?.let { context ->
-                val menu: Menu = toolbar.menu
-
-                val collapsingToolbarHeight = collapsingToolbarLayout.height
-                val isCollapsed = (collapsingToolbarHeight + verticalOffset) <=
-                        collapsingToolbarLayout.scrimVisibleHeightTrigger
-
-                val color = if (isCollapsed) {
-                    context.getColorFromAttribute(MaterialR.attr.colorOnSurface)
-                } else {
-                    ContextCompat.getColor(context, R.color.white)
-                }
-                val colorFilter = BlendModeColorFilterCompat
-                    .createBlendModeColorFilterCompat(color, BlendModeCompat.SRC_ATOP)
-
-                toolbar.setTitleTextColor(color)
-                toolbar.navigationIcon?.colorFilter = colorFilter
-
-                menu.forEach {
-                    it.icon?.colorFilter = colorFilter
-                }
-            }
-        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -404,8 +367,6 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         appBar = view.findViewById(R.id.appbar_with_collapsing_toolbar_layout)
         toolBar = appBar.findViewById(R.id.toolbar_main)
 
-        appBar.addOnOffsetChangedListener(appBarLayoutOffsetChangedListener)
-
         // Fixes collapsing toolbar layout being obscured by the status bar when drawn behind it
         ViewCompat.setOnApplyWindowInsetsListener(appBar) { _: View, insets: WindowInsetsCompat ->
             val insetTop = insets.getInsets(WindowInsetsCompat. Type. systemBars()).top
@@ -430,6 +391,21 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             toolBar.setNavigationIcon(R.drawable.ic_arrow_left_white_24dp)
             toolBar.setNavigationOnClickListener { requireActivity().onBackPressedDispatcher.onBackPressed() }
         }
+
+        applyToolbarIconColors(view.context)
+    }
+
+    private fun applyToolbarIconColors(context: Context) {
+        val color = context.getColorFromAttribute(
+            MaterialR.attr.colorOnSurface
+        )
+        val colorFilter = BlendModeColorFilterCompat
+            .createBlendModeColorFilterCompat(
+                color, BlendModeCompat.SRC_ATOP
+            )
+        toolBar.setTitleTextColor(color)
+        toolBar.navigationIcon?.colorFilter = colorFilter
+        toolBar.menu.forEach { it.icon?.colorFilter = colorFilter }
     }
 
     private fun initScrollView(view: View) {
@@ -695,7 +671,8 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         with(requireActivity()) {
             if (this.isFinishing) return@with
 
-            val shouldSkipAnimation = likeFacesTrain.isGone && state.goingToShowFaces
+            val shouldSkipAnimation =
+                likeFacesTrain.isGone && state.goingToShowFaces
 
             setupLikeFacesTrain(
                 state.engageItemsList,
@@ -703,22 +680,35 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                 shouldSkipAnimation
             )
 
-            likeProgressBar.visibility = if (state.showLoading) View.VISIBLE else View.GONE
-            likeFacesTrain.visibility = if (state.showLikeFacesTrainContainer) View.VISIBLE else View.GONE
+            likeProgressBar.visibility =
+                if (state.showLoading) View.VISIBLE else View.GONE
+            likeFacesTrain.visibility =
+                if (state.showLikeFacesTrainContainer) {
+                    View.VISIBLE
+                } else {
+                    View.GONE
+                }
 
             if (state.showEmptyState) {
-                uiHelpers.setTextOrHide(likeEmptyStateText, state.emptyStateTitle?.let {
-                    getString(R.string.like_faces_error_loading_message, uiHelpers.getTextOfUiString(this, it))
-                })
+                uiHelpers.setTextOrHide(
+                    likeEmptyStateText,
+                    state.emptyStateTitle?.let {
+                        getString(
+                            R.string.like_faces_error_loading_message,
+                            uiHelpers.getTextOfUiString(this, it)
+                        )
+                    }
+                )
                 likeEmptyStateText.visibility = View.VISIBLE
             } else {
                 likeEmptyStateText.visibility = View.GONE
             }
 
-            likeFacesTrain.contentDescription = uiHelpers.getTextOfUiString(
-                contextProvider.getContext(),
-                state.contentDescription
-            )
+            likeFacesTrain.contentDescription =
+                uiHelpers.getTextOfUiString(
+                    contextProvider.getContext(),
+                    state.contentDescription
+                )
 
             likeFacesTrain.setOnClickListener {
                 if (!isAdded) return@setOnClickListener
@@ -798,10 +788,19 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             }
         }
 
-        binding.headerView.updatePost(state.headerUiState, getReadingPreferences())
+        binding.headerView.updatePost(
+            state.headerUiState,
+            getReadingPreferences(),
+            viewModel::handleHeaderAction
+        )
+
+        binding.expandableTagsView.setVisible(state.headerUiState.tagItems.isNotEmpty())
+        binding.expandableTagsView.updateUi(
+            state.headerUiState.tagItems, getReadingPreferences()
+        )
+
         showOrHideMoreMenu(state)
 
-        updateFeaturedImage(state.featuredImageUiState, binding)
         updateExcerptFooter(state.excerptFooterUiState)
 
         with(layoutFooterBinding) {
@@ -921,6 +920,8 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                     ReaderReadingPreferencesTracker.Source.POST_DETAIL_MORE_MENU,
                 )
 
+            is ReaderNavigationEvents.ShowAuthorProfile -> showAuthorProfile(this)
+
             is ReaderNavigationEvents.ShowPostDetail,
             is ReaderNavigationEvents.ShowVideoViewer,
             is ReaderNavigationEvents.ShowReaderSubs -> Unit // Do Nothing
@@ -928,26 +929,18 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         }
     }
 
+    private fun showAuthorProfile(event: ReaderNavigationEvents.ShowAuthorProfile) {
+        ReaderAuthorProfileBottomSheetFragment.newInstance(
+            authorName = event.authorName,
+            authorAvatar = event.authorAvatar,
+            blogName = event.blogName,
+            blogUrl = event.blogUrl,
+        ).show(childFragmentManager, ReaderAuthorProfileBottomSheetFragment.TAG)
+    }
+
     private fun showLoginRequiredBottomSheet() {
         ReaderLoginRequiredBottomSheetFragment.newInstance()
             .show(childFragmentManager, ReaderLoginRequiredBottomSheetFragment.TAG)
-    }
-
-    private fun updateFeaturedImage(
-        state: ReaderPostDetailsUiState.ReaderPostFeaturedImageUiState?,
-        binding: ReaderFragmentPostDetailBinding
-    ) {
-        val featuredImageView = binding.appbarWithCollapsingToolbarLayout.featuredImage
-        featuredImageView.setVisible(state != null)
-        state?.let {
-            featuredImageView.layoutParams.height = it.height
-            it.url?.let { url ->
-                imageManager.load(featuredImageView, PHOTO, url, CENTER_CROP)
-                featuredImageView.setOnClickListener {
-                    viewModel.onFeaturedImageClicked(blogId = state.blogId, featuredImageUrl = url)
-                }
-            }
-        }
     }
 
     private fun updateExcerptFooter(state: ReaderPostDetailsUiState.ExcerptFooterUiState?) {
@@ -993,16 +986,8 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         }
     }
 
-    private fun modifyMoreMenu(
-        postBlocked: Boolean
-    ){
-        val moreMenu:MenuItem? = toolBar.menu.findItem(R.id.menu_more)
-        if (postBlocked){
-            moreMenu?.setVisible(false)
-        }
-        else{
-            moreMenu?.setVisible(true)
-        }
+    private fun modifyMoreMenu(postBlocked: Boolean) {
+        toolBar.menu.findItem(R.id.menu_more)?.isVisible = !postBlocked
     }
 
     private fun showOrHideMoreMenu(
@@ -1080,6 +1065,8 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         // show more menu
         val menuMore = menu.findItem(R.id.menu_more)
         menuMore?.isVisible = true
+
+        applyToolbarIconColors(toolBar.context)
     }
 
     private fun hideMenu(menu: Menu) {

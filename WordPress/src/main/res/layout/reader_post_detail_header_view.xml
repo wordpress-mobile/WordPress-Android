@@ -7,33 +7,38 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <include layout="@layout/reader_blog_section_view_new"
-        android:id="@+id/layout_blog_section"
-        android:layout_width="0dp"
-        android:layout_height="@dimen/reader_post_header_height"
-        android:importantForAccessibility="no"
-        android:layout_marginEnd="@dimen/margin_medium"
-        android:background="?android:selectableItemBackground"
-        android:visibility="visible"
-        android:clickable="true"
-        android:focusable="true"
+    <!-- Blog name -->
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/text_blog_name"
+        style="@style/ReaderTextView.PostDetail.BlogSection.Title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="?attr/selectableItemBackground"
+        android:includeFontPadding="false"
+        app:layout_constrainedWidth="true"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toStartOf="@id/header_follow_button_container"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="@id/header_follow_button_container"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintHorizontal_bias="0"
+        tools:text="My Blog Name" />
 
     <FrameLayout
         android:id="@+id/header_follow_button_container"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_medium"
         android:visibility="gone"
+        app:layout_constraintStart_toEndOf="@id/text_blog_name"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/layout_blog_section"
-        app:layout_constraintBottom_toBottomOf="@id/layout_blog_section"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintHorizontal_bias="0"
         tools:visibility="visible">
 
         <org.wordpress.android.ui.reader.views.ReaderFollowButton
             android:id="@+id/header_follow_button"
-            style="@style/Reader.Follow.Button.New"
+            style="@style/Reader.Follow.Button.New.Compact"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center" />
@@ -48,6 +53,14 @@
 
     </FrameLayout>
 
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/blog_name_barrier"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:barrierDirection="bottom"
+        app:constraint_referenced_ids="text_blog_name,header_follow_button_container" />
+
+    <!-- Post title -->
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/text_title"
         android:layout_width="match_parent"
@@ -56,72 +69,127 @@
         android:layout_marginTop="@dimen/margin_extra_large"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/layout_blog_section"
-        tools:text="Post Title: This could be a quite big title for this nice post" />
+        app:layout_constraintTop_toBottomOf="@id/blog_name_barrier"
+        tools:text="Post Title: This could be a quite big title" />
 
-    <!-- like and comment counts start -->
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/header_like_count"
-        style="@style/ReaderTextView.Post.New.Interactions"
-        android:layout_width="wrap_content"
+    <!-- Blog section (avatar + author + date) -->
+    <include layout="@layout/reader_blog_section_view_new"
+        android:id="@+id/layout_blog_section"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_medium"
-        app:layout_constraintHorizontal_chainStyle="packed"
-        app:layout_constraintHorizontal_bias="0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/header_dot_separator"
-        app:layout_constraintTop_toBottomOf="@id/text_title"
-        app:layout_constrainedWidth="true"
-        tools:text="15 likes" />
-
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/header_dot_separator"
-        style="@style/ReaderTextView.Post.New.Interactions"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_medium"
-        android:text="@string/reader_dot_separator"
-        android:textAlignment="viewStart"
         android:importantForAccessibility="no"
-        app:layout_constraintStart_toEndOf="@id/header_like_count"
-        app:layout_constraintEnd_toStartOf="@id/header_comment_count"
-        app:layout_constraintTop_toBottomOf="@id/text_title"
-        app:layout_constrainedWidth="true" />
+        android:layout_marginTop="@dimen/margin_medium"
+        android:background="?android:selectableItemBackground"
+        android:clickable="true"
+        android:focusable="true"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/text_title" />
 
+    <!-- Featured image (adaptive aspect ratio) -->
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/header_featured_image"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="true"
+        android:layout_marginTop="@dimen/margin_medium"
+        android:scaleType="fitCenter"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/layout_blog_section"
+        app:shapeAppearanceOverlay="@style/ReaderFeaturedImageShape"
+        tools:visibility="visible" />
+
+    <!-- Post excerpt -->
     <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/header_comment_count"
-        style="@style/ReaderTextView.Post.New.Interactions"
-        android:layout_width="wrap_content"
+        android:id="@+id/text_excerpt"
+        style="@style/ReaderTextView.PostDetail.BlogSection.Subtitle.MediumEmphasis"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_medium"
-        app:layout_constraintStart_toEndOf="@id/header_dot_separator"
+        android:maxLines="5"
+        android:ellipsize="end"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/text_title"
-        app:layout_constrainedWidth="true"
-        tools:text="4 comments" />
+        app:layout_constraintTop_toBottomOf="@id/header_featured_image"
+        tools:text="This is the post excerpt text."
+        tools:visibility="visible" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/text_excerpt_view_more"
+        style="@style/ReaderTextView.PostDetail.BlogSection.Subtitle.MediumEmphasis"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/reader_excerpt_view_more"
+        android:textColor="?attr/colorPrimary"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/text_excerpt"
+        tools:visibility="visible" />
+
+    <View
+        android:id="@+id/excerpt_divider"
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_marginTop="@dimen/margin_medium"
+        android:background="@color/reader_separator"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/text_excerpt_view_more"
+        tools:visibility="visible" />
 
     <androidx.constraintlayout.widget.Barrier
-        android:id="@+id/reader_card_interactions_bottom_barrier"
+        android:id="@+id/blog_description_barrier"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:barrierDirection="bottom"
-        app:constraint_referenced_ids="header_comment_count,header_like_count" />
+        app:constraint_referenced_ids="header_featured_image,text_excerpt,text_excerpt_view_more,excerpt_divider" />
 
-    <!-- like and comment counts end -->
-
-    <org.wordpress.android.ui.reader.views.ReaderExpandableTagsView
-        android:id="@+id/expandable_tags_view"
-        android:layout_width="0dp"
+    <!-- Reading time -->
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/text_reading_time"
+        style="@style/ReaderTextView.PostDetail.BlogSection.Subtitle.MediumEmphasis"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_extra_large"
+        android:layout_marginTop="@dimen/margin_medium"
+        android:drawablePadding="@dimen/margin_extra_small"
+        android:gravity="center_vertical"
+        android:includeFontPadding="false"
         android:visibility="gone"
-        android:clickable="true"
-        android:focusable="true"
-        app:chipSpacingHorizontal="@dimen/margin_medium"
-        app:chipSpacingVertical="@dimen/margin_medium"
+        app:drawableStartCompat="@drawable/ic_clock_16dp"
+        app:drawableTint="?android:textColorSecondary"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/blog_description_barrier"
+        tools:text="5 min read"
+        tools:visibility="visible" />
+
+    <!-- View original button -->
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/text_view_original"
+        style="@style/ReaderTextView.PostDetail.BlogSection.Subtitle.MediumEmphasis"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:drawablePadding="@dimen/margin_extra_small"
+        android:gravity="center_vertical"
+        android:includeFontPadding="false"
+        android:text="@string/reader_label_view_original"
+        android:visibility="gone"
+        app:drawableStartCompat="@drawable/ic_outbound_16dp"
+        app:drawableTint="?android:textColorSecondary"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/reader_card_interactions_bottom_barrier"
-        tools:visibility="visible"/>
+        app:layout_constraintTop_toTopOf="@id/text_reading_time"
+        app:layout_constraintBottom_toBottomOf="@id/text_reading_time"
+        tools:visibility="visible" />
+
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/reading_time_barrier"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:barrierDirection="bottom"
+        app:constraint_referenced_ids="text_excerpt,text_excerpt_view_more,excerpt_divider,text_reading_time,text_view_original" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

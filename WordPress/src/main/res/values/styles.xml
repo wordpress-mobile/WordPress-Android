@@ -1664,4 +1664,9 @@
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">@dimen/blavatar_sz_radius</item>
     </style>
+
+    <style name="ReaderFeaturedImageShape">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">@dimen/reader_featured_image_corner_radius_new</item>
+    </style>
 </resources>

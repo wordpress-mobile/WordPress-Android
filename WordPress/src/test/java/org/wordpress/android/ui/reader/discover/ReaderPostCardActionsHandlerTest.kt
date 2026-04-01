@@ -27,7 +27,6 @@ import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.OpenEditorForReblog
-import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.OpenPost
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.SharePost
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowBlogPreview
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowBookmarkedSavedOnlyLocallyDialog
@@ -704,9 +703,9 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
     }
     /** SHARE ACTION end **/
 
-    /** VISIT SITE ACTION end **/
+    /** VISIT SITE ACTION begin **/
     @Test
-    fun `Visit Site button opens browser`() = test {
+    fun `View Site button shows blog preview`() = test {
         // Arrange
         val observedValues = startObserving(backgroundScope)
         // Act
@@ -718,7 +717,7 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
         )
 
         // Assert
-        assertThat(observedValues.navigation[0]).isInstanceOf(OpenPost::class.java)
+        assertThat(observedValues.navigation[0]).isInstanceOf(ShowBlogPreview::class.java)
     }
     /** VISIT SITE ACTION end **/
 

@@ -24,7 +24,6 @@ import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.reader.comments.ThreadedCommentsActionSource
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderRecommendedBlogsCardUiState.ReaderRecommendedBlogUiState
-import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.OpenPost
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.SharePost
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowBlogPreview
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowBookmarkedSavedOnlyLocallyDialog
@@ -418,7 +417,9 @@ class ReaderPostCardActionsHandler @Inject constructor(
 
     private fun handleVisitSiteClicked(post: ReaderPost) {
         readerTracker.track(AnalyticsTracker.Stat.READER_ARTICLE_VISITED)
-        _navigationEvents.postValue(Event(OpenPost(post)))
+        _navigationEvents.postValue(
+            Event(ShowBlogPreview(post.blogId, post.feedId, post.isFollowedByCurrentUser))
+        )
     }
 
     private fun handleReadingPreferencesClicked() {

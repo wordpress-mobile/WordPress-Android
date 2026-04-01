@@ -79,7 +79,7 @@ import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.UiSt
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.UiState.ReaderPostDetailsUiState
 import org.wordpress.android.ui.reader.views.uistates.CommentSnippetItemState
 import org.wordpress.android.ui.reader.views.uistates.ReaderPostDetailsHeaderAction
-import org.wordpress.android.ui.reader.views.uistates.ReaderPostDetailsHeaderViewUiState.ReaderPostDetailsHeaderUiState
+import org.wordpress.android.ui.reader.views.uistates.ReaderPostDetailsHeaderUiState
 import org.wordpress.android.ui.utils.HtmlMessageUtils
 import org.wordpress.android.ui.utils.UiDimen
 import org.wordpress.android.ui.utils.UiString
@@ -158,7 +158,7 @@ class ReaderPostDetailViewModel @Inject constructor(
     private val _showJetpackPoweredBottomSheet = MutableLiveData<Event<Boolean>>()
     val showJetpackPoweredBottomSheet: LiveData<Event<Boolean>> = _showJetpackPoweredBottomSheet
 
-    private val _postBlocked = MutableLiveData<Boolean>(false)
+    private val _postBlocked = MutableLiveData(false)
     val postBlocked: LiveData<Boolean> = _postBlocked
 
     /**
@@ -405,7 +405,7 @@ class ReaderPostDetailViewModel @Inject constructor(
         when (readerFetchPostUseCase.fetchPost(blogId = blogId, postId = postId, isFeed = isFeed)) {
             FetchReaderPostState.Success -> {
                 getReaderPostFromDb(blogId, postId)
-                // Update UI if content changed or we didn't have cached content
+                // Update UI if content changed, or we didn't have cached content
                 if (!hasCachedPost || post?.text != oldPostText) {
                     updatePostDetailsUi()
                 }
@@ -508,19 +508,6 @@ class ReaderPostDetailViewModel @Inject constructor(
         )
     }
 
-    private fun onCommentsClicked() {
-        post?.let {
-            launch {
-                readerPostCardActionsHandler.onAction(
-                    post = it,
-                    type = COMMENTS,
-                    isBookmarkList = false,
-                    source = ReaderTracker.SOURCE_POST_DETAIL,
-                )
-            }
-        }
-    }
-
     fun onButtonClicked(postId: Long, blogId: Long, type: ReaderPostCardActionType) {
         onActionClicked(postId, blogId, type, ReaderTracker.SOURCE_POST_DETAIL)
     }
@@ -564,13 +551,21 @@ class ReaderPostDetailViewModel @Inject constructor(
         }
     }
 
+    fun handleHeaderAction(action: ReaderPostDetailsHeaderAction) {
+        post?.let { onHeaderAction(it, action) }
+    }
+
     private fun onHeaderAction(post: ReaderPost, action: ReaderPostDetailsHeaderAction) {
         when (action) {
             is ReaderPostDetailsHeaderAction.BlogSectionClicked -> onBlogSectionClicked(post.postId, post.blogId)
             is ReaderPostDetailsHeaderAction.FollowClicked -> onButtonClicked(post.postId, post.blogId, FOLLOW)
-            is ReaderPostDetailsHeaderAction.LikesClicked -> onLikesClicked()
-            is ReaderPostDetailsHeaderAction.CommentsClicked -> onCommentsClicked()
             is ReaderPostDetailsHeaderAction.TagItemClicked -> onTagItemClicked(action.tagSlug)
+            is ReaderPostDetailsHeaderAction.FeaturedImageClicked ->
+                onFeaturedImageClicked(action.blogId, action.featuredImageUrl)
+            is ReaderPostDetailsHeaderAction.ViewOriginalClicked ->
+                onViewOriginalClicked(post)
+            is ReaderPostDetailsHeaderAction.AuthorClicked ->
+                onAuthorClicked(post)
         }
     }
 
@@ -583,6 +578,29 @@ class ReaderPostDetailViewModel @Inject constructor(
                     it.isFollowedByCurrentUser
                 )
             }
+        }
+    }
+
+    private fun onAuthorClicked(post: ReaderPost) {
+        val authorName = post.authorName?.takeIf { it.isNotBlank() }
+            ?: return
+        val blogUrl = post.blogUrl.orEmpty()
+            .ifBlank { post.url.orEmpty() }
+        _navigationEvents.value = Event(
+            ReaderNavigationEvents.ShowAuthorProfile(
+                authorName = authorName,
+                authorAvatar = post.postAvatar.orEmpty(),
+                blogName = post.blogName.orEmpty(),
+                blogUrl = blogUrl,
+            )
+        )
+    }
+
+    private fun onViewOriginalClicked(post: ReaderPost) {
+        post.url?.takeIf { it.isNotBlank() }?.let { url ->
+            _navigationEvents.value = Event(
+                ReaderNavigationEvents.OpenUrl(url = url)
+            )
         }
     }
 
@@ -638,23 +656,39 @@ class ReaderPostDetailViewModel @Inject constructor(
             onButtonClicked = this@ReaderPostDetailViewModel::onButtonClicked,
             onHeaderAction = { action -> onHeaderAction(post, action) },
         )
-        return preserveFollowActionRunningState(newUiState)
+        return preserveTransientState(newUiState)
     }
 
-    private fun preserveFollowActionRunningState(
+    private fun preserveTransientState(
         newUiState: ReaderPostDetailsUiState
     ): ReaderPostDetailsUiState {
-        val currentUiState = _uiState.value as? ReaderPostDetailsUiState ?: return newUiState
-        val currentFollowButtonState = currentUiState.headerUiState.followButtonUiState
+        val currentUiState = _uiState.value as? ReaderPostDetailsUiState
+            ?: return newUiState
 
-        return if (currentFollowButtonState.isFollowActionRunning) {
-            val updatedFollowButtonUiState = newUiState.headerUiState.followButtonUiState.copy(
-                isFollowActionRunning = true
+        var headerUiState = newUiState.headerUiState
+
+        // Keep the follow-action-running flag across re-renders
+        if (currentUiState.headerUiState.followButtonUiState.isFollowActionRunning) {
+            headerUiState = headerUiState.copy(
+                followButtonUiState = headerUiState.followButtonUiState.copy(
+                    isFollowActionRunning = true
+                )
             )
-            val updatedHeaderUiState = newUiState.headerUiState.copy(
-                followButtonUiState = updatedFollowButtonUiState
+        }
+
+        // Once the featured image is shown, keep it visible across
+        // re-renders so it doesn't flicker when fresh post text causes
+        // the deduplication heuristic to change its mind.
+        if (currentUiState.headerUiState.featuredImageUiState != null &&
+            headerUiState.featuredImageUiState == null
+        ) {
+            headerUiState = headerUiState.copy(
+                featuredImageUiState = currentUiState.headerUiState.featuredImageUiState
             )
-            newUiState.copy(headerUiState = updatedHeaderUiState)
+        }
+
+        return if (headerUiState !== newUiState.headerUiState) {
+            newUiState.copy(headerUiState = headerUiState)
         } else {
             newUiState
         }
@@ -675,7 +709,10 @@ class ReaderPostDetailViewModel @Inject constructor(
         post?.let {
             readerTracker.trackPost(Stat.READER_ARTICLE_RENDERED, it)
             _navigationEvents.postValue(Event(ShowPostInWebView(it)))
-            _uiState.value = convertPostToUiState(it)
+            viewModelScope.launch {
+                _uiState.value = convertPostToUiState(it)
+            }
+            onRefreshLikersData(it)
             if (commentsSnippetFeatureConfig.isEnabled()) {
                 onRefreshCommentsData(it.blogId, it.postId)
             }
@@ -768,7 +805,7 @@ class ReaderPostDetailViewModel @Inject constructor(
         var showEmptyState = false
         var emptyStateTitle: UiString? = null
 
-        if (updateLikesState is Failure && !showLoading) {
+        if (updateLikesState is Failure) {
             updateLikesState.emptyStateData.let {
                 showEmptyState = it.showEmptyState
                 emptyStateTitle = it.title
@@ -922,7 +959,6 @@ class ReaderPostDetailViewModel @Inject constructor(
         data class ReaderPostDetailsUiState(
             val postId: Long,
             val blogId: Long,
-            val featuredImageUiState: ReaderPostFeaturedImageUiState? = null,
             val headerUiState: ReaderPostDetailsHeaderUiState,
             val excerptFooterUiState: ExcerptFooterUiState?,
             val moreMenuItems: List<ReaderPostCardAction>? = null,
@@ -930,8 +966,6 @@ class ReaderPostDetailViewModel @Inject constructor(
             val localRelatedPosts: RelatedPostsUiState? = null,
             val globalRelatedPosts: RelatedPostsUiState? = null
         ) : UiState() {
-            data class ReaderPostFeaturedImageUiState(val blogId: Long, val url: String? = null, val height: Int)
-
             data class ExcerptFooterUiState(val visitPostExcerptFooterLinkText: UiString? = null, val postLink: String?)
 
             data class RelatedPostsUiState(
@@ -986,12 +1020,19 @@ class ReaderPostDetailViewModel @Inject constructor(
     }
 
     fun onUserNavigateFromComments() {
-        // reload post from DB and update UI state
-        val currentUiState: ReaderPostDetailsUiState? = (_uiState.value as? ReaderPostDetailsUiState)
-        currentUiState?.let {
-            findPost(currentUiState.postId, currentUiState.blogId)?.let { post ->
-                this.post = post
-                onUpdatePost(post)
+        // reload post from DB (including text column for featured image
+        // deduplication) and update UI state
+        (_uiState.value as? ReaderPostDetailsUiState)?.let { state ->
+            launch(mainDispatcher) {
+                val reloadedPost = withContext(bgDispatcher) {
+                    readerPostTableWrapper.getBlogPost(
+                        state.blogId, state.postId, false
+                    )
+                }
+                reloadedPost?.let { post ->
+                    this@ReaderPostDetailViewModel.post = post
+                    onUpdatePost(post)
+                }
             }
         }
 
