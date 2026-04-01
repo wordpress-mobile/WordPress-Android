@@ -24,8 +24,6 @@ import android.view.ViewGroup
 import android.view.ViewStub
 import android.webkit.CookieManager
 import android.webkit.WebView
-import android.widget.ImageView
-import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
@@ -51,7 +49,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.facebook.shimmer.ShimmerFrameLayout
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.behavior.HideBottomViewOnScrollBehavior
-import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
@@ -83,7 +80,6 @@ import org.wordpress.android.ui.avatars.AvatarItemDecorator
 import org.wordpress.android.ui.avatars.TrainOfAvatarsAdapter
 import org.wordpress.android.ui.avatars.TrainOfAvatarsItem
 import org.wordpress.android.ui.engagement.EngagementNavigationSource
-import org.wordpress.android.util.WPAvatarUtils
 import org.wordpress.android.ui.main.ChooseSiteActivity
 import org.wordpress.android.ui.main.WPMainActivity
 import org.wordpress.android.ui.media.MediaPreviewActivity
@@ -143,7 +139,6 @@ import org.wordpress.android.util.config.CommentsSnippetFeatureConfig
 import org.wordpress.android.util.config.LikesEnhancementsFeatureConfig
 import org.wordpress.android.util.config.ReaderReadingPreferencesFeatureConfig
 import org.wordpress.android.util.extensions.getColorFromAttribute
-import org.wordpress.android.util.extensions.getDrawableResIdFromAttribute
 import org.wordpress.android.util.extensions.getParcelableCompat
 import org.wordpress.android.util.extensions.getSerializableCompat
 import org.wordpress.android.util.extensions.setVisible
@@ -928,84 +923,13 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         }
     }
 
-    @Suppress("LongMethod")
     private fun showAuthorProfile(event: ReaderNavigationEvents.ShowAuthorProfile) {
-        val ctx = requireContext()
-        val dialog = BottomSheetDialog(ctx)
-
-        val avatarSz = resources.getDimensionPixelSize(
-            R.dimen.user_profile_bottom_sheet_avatar_sz
-        )
-        val paddingLarge = resources.getDimensionPixelSize(R.dimen.margin_extra_large)
-        val paddingMedium = resources.getDimensionPixelSize(R.dimen.margin_medium)
-
-        val container = LinearLayout(ctx).apply {
-            orientation = LinearLayout.VERTICAL
-            setPadding(paddingLarge, paddingMedium, paddingLarge, paddingLarge)
-        }
-
-        // Avatar
-        val avatarView = ImageView(ctx).apply {
-            layoutParams = LinearLayout.LayoutParams(avatarSz, avatarSz).apply {
-                gravity = Gravity.CENTER_HORIZONTAL
-            }
-        }
-        imageManager.loadIntoCircle(
-            avatarView,
-            org.wordpress.android.util.image.ImageType.AVATAR_WITH_BACKGROUND,
-            WPAvatarUtils.rewriteAvatarUrl(event.authorAvatar, avatarSz)
-        )
-        container.addView(avatarView)
-
-        // Author name
-        val nameView = TextView(ctx).apply {
-            text = event.authorName
-            setTextAppearance(
-                com.google.android.material.R.style.TextAppearance_Material3_TitleMedium
-            )
-            gravity = Gravity.CENTER
-            layoutParams = LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-            ).apply { topMargin = paddingMedium }
-        }
-        container.addView(nameView)
-
-        // Blog name (clickable — opens in external browser)
-        if (event.blogUrl.isNotBlank()) {
-            val blogLabel = event.blogName.ifBlank {
-                UrlUtils.getHost(event.blogUrl)
-            }
-            val blogView = TextView(ctx).apply {
-                text = blogLabel
-                setTextAppearance(
-                    com.google.android.material.R.style.TextAppearance_Material3_BodyMedium
-                )
-                setTextColor(
-                    ctx.getColorFromAttribute(
-                        com.google.android.material.R.attr.colorPrimary
-                    )
-                )
-                gravity = Gravity.CENTER
-                setBackgroundResource(
-                    ctx.getDrawableResIdFromAttribute(
-                        android.R.attr.selectableItemBackground
-                    )
-                )
-                layoutParams = LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT,
-                    LinearLayout.LayoutParams.WRAP_CONTENT
-                ).apply { topMargin = paddingMedium / 2 }
-                setOnClickListener {
-                    ReaderActivityLauncher.openUrl(ctx, event.blogUrl)
-                    dialog.dismiss()
-                }
-            }
-            container.addView(blogView)
-        }
-
-        dialog.setContentView(container)
-        dialog.show()
+        ReaderAuthorProfileBottomSheetFragment.newInstance(
+            authorName = event.authorName,
+            authorAvatar = event.authorAvatar,
+            blogName = event.blogName,
+            blogUrl = event.blogUrl,
+        ).show(childFragmentManager, ReaderAuthorProfileBottomSheetFragment.TAG)
     }
 
     private fun showLoginRequiredBottomSheet() {

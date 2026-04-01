@@ -73,7 +73,6 @@ sealed class ReaderNavigationEvents {
         val authorAvatar: String,
         val blogName: String,
         val blogUrl: String,
-        val siteId: Long,
     ) : ReaderNavigationEvents()
 
     data object ShowReadingPreferences : ReaderNavigationEvents()

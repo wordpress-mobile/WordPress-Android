@@ -579,7 +579,6 @@ class ReaderPostDetailViewModel @Inject constructor(
                 authorAvatar = post.postAvatar.orEmpty(),
                 blogName = post.blogName.orEmpty(),
                 blogUrl = post.blogUrl.orEmpty(),
-                siteId = post.blogId,
             )
         )
     }
