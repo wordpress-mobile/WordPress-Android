@@ -86,15 +86,15 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/text_title" />
 
-    <!-- Featured image (fixed 16:9 aspect ratio to prevent resize flash) -->
+    <!-- Featured image (adaptive aspect ratio) -->
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/header_featured_image"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="true"
         android:layout_marginTop="@dimen/margin_medium"
-        android:scaleType="centerCrop"
+        android:scaleType="fitCenter"
         android:visibility="gone"
-        app:layout_constraintDimensionRatio="16:9"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/layout_blog_section"

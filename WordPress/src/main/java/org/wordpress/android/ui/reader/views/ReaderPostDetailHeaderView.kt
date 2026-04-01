@@ -4,7 +4,7 @@ import android.content.Context
 import android.util.AttributeSet
 import android.util.TypedValue
 import android.view.LayoutInflater
-import android.widget.ImageView.ScaleType.CENTER_CROP
+import android.widget.ImageView.ScaleType.FIT_CENTER
 import android.widget.LinearLayout
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
@@ -219,7 +219,7 @@ class ReaderPostDetailHeaderView @JvmOverloads constructor(
         headerFeaturedImage.setVisible(state != null)
         if (state != null) {
             imageManager.load(
-                headerFeaturedImage, PHOTO, state.url, CENTER_CROP
+                headerFeaturedImage, PHOTO, state.url, FIT_CENTER
             )
             headerFeaturedImage.setOnClickListener {
                 onHeaderAction?.invoke(
