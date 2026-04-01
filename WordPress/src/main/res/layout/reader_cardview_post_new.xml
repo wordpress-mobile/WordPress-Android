@@ -13,8 +13,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingBottom="@dimen/margin_medium"
-        android:paddingEnd="@dimen/margin_extra_large"
-        android:paddingStart="@dimen/margin_extra_large"
+        android:paddingEnd="@dimen/reader_detail_margin_normal"
+        android:paddingStart="@dimen/reader_detail_margin_normal"
         android:paddingTop="@dimen/margin_extra_large">
 
         <include layout="@layout/reader_blog_section_compact"
