@@ -584,12 +584,14 @@ class ReaderPostDetailViewModel @Inject constructor(
     private fun onAuthorClicked(post: ReaderPost) {
         val authorName = post.authorName?.takeIf { it.isNotBlank() }
             ?: return
+        val blogUrl = post.blogUrl.orEmpty()
+            .ifBlank { post.url.orEmpty() }
         _navigationEvents.value = Event(
             ReaderNavigationEvents.ShowAuthorProfile(
                 authorName = authorName,
                 authorAvatar = post.postAvatar.orEmpty(),
                 blogName = post.blogName.orEmpty(),
-                blogUrl = post.blogUrl.orEmpty(),
+                blogUrl = blogUrl,
             )
         )
     }
