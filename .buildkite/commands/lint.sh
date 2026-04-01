@@ -9,17 +9,17 @@ fi
 echo "--- :microscope: Linting"
 
 if [ "$1" = "wordpress" ]; then
-  ./gradlew lintWordpressDebug
+  ./gradlew lintWordpressRelease
   exit 0
 fi
 
 if [ "$1" = "jetpack" ]; then
   set +e
-  ./gradlew lintJetpackDebug
+  ./gradlew lintJetpackRelease
   lint_exit_code=$?
   set -e
 
-  upload_sarif_to_github "WordPress/build/reports/lint-results-jetpackDebug.sarif"
+  upload_sarif_to_github "WordPress/build/reports/lint-results-jetpackRelease.sarif"
   exit $lint_exit_code
 fi
 
