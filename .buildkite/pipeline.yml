@@ -92,16 +92,6 @@ steps:
           ./gradlew :libs:editor:lint
         plugins: [$CI_TOOLKIT]
 
-      - label: "🕵️ Lint libs:login"
-        command: |
-          if .buildkite/commands/should-skip-job.sh --job-type lint; then
-            exit 0
-          fi
-
-          .buildkite/commands/restore-cache.sh
-          ./gradlew :libs:login:lint
-        plugins: [$CI_TOOLKIT]
-
       - label: "🕵️ Lint libs:image-editor"
         command: |
           if .buildkite/commands/should-skip-job.sh --job-type lint; then
