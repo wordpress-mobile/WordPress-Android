@@ -33,6 +33,7 @@ class ReaderPostDetailHeaderView @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : LinearLayout(context, attrs, defStyleAttr) {
     private val binding: ReaderPostDetailHeaderViewBinding
+    private var excerptTruncationCheck: Runnable? = null
 
     @Inject
     lateinit var imageManager: ImageManager
@@ -90,8 +91,9 @@ class ReaderPostDetailHeaderView @JvmOverloads constructor(
             uiState.onFeaturedImageClicked
         )
         uiHelpers.setTextOrHide(textExcerpt, uiState.excerpt)
+        excerptTruncationCheck?.let { textExcerpt.removeCallbacks(it) }
         if (uiState.excerpt != null) {
-            textExcerpt.post {
+            val check = Runnable {
                 val isTruncated = textExcerpt.lineCount > 0
                     && textExcerpt.layout != null
                     && textExcerpt.layout.getEllipsisCount(
@@ -99,11 +101,14 @@ class ReaderPostDetailHeaderView @JvmOverloads constructor(
                     ) > 0
                 textExcerptViewMore.setVisible(isTruncated)
             }
+            excerptTruncationCheck = check
+            textExcerpt.post(check)
             textExcerptViewMore.setOnClickListener {
                 textExcerpt.maxLines = Int.MAX_VALUE
                 textExcerptViewMore.setVisible(false)
             }
         } else {
+            excerptTruncationCheck = null
             textExcerptViewMore.setVisible(false)
         }
     }
