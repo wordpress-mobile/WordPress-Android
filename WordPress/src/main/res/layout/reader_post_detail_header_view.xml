@@ -177,7 +177,7 @@
         android:drawablePadding="@dimen/margin_extra_small"
         android:gravity="center_vertical"
         android:includeFontPadding="false"
-        android:text="@string/reader_view_original"
+        android:text="@string/reader_label_view"
         android:visibility="gone"
         app:drawableStartCompat="@drawable/ic_outbound_16dp"
         app:drawableTint="?android:textColorSecondary"
