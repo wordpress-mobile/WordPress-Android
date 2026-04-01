@@ -136,6 +136,9 @@ public class ReaderPost {
             post.blogId = jsonEditorial.optLong("blog_id");
             post.mBlogName = JSONUtils.getStringDecoded(jsonEditorial, "blog_name");
             post.mFeaturedImage = getEditorialImage(JSONUtils.getString(jsonEditorial, "image"));
+            if (post.mFeaturedImage == null) {
+                post.mFeaturedImage = JSONUtils.getString(json, "featured_image");
+            }
             post.setPrimaryTag(JSONUtils.getString(jsonEditorial, "highlight_topic_title"));
             // freshly-pressed posts show the date they were chosen rather than the day published
             post.mDatePublished = JSONUtils.getString(jsonEditorial, "displayed_on");
