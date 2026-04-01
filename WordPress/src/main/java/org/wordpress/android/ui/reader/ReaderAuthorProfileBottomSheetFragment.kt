@@ -60,7 +60,8 @@ class ReaderAuthorProfileBottomSheetFragment : BottomSheetDialogFragment() {
             binding.authorBlogName.text =
                 blogName.ifBlank { UrlUtils.getHost(blogUrl) }
             binding.authorBlogName.setOnClickListener {
-                ReaderActivityLauncher.openUrl(requireContext(), blogUrl)
+                val ctx = context ?: return@setOnClickListener
+                ReaderActivityLauncher.openUrl(ctx, blogUrl)
                 dismiss()
             }
         }

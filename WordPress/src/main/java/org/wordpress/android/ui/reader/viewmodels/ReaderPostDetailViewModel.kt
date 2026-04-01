@@ -263,10 +263,12 @@ class ReaderPostDetailViewModel @Inject constructor(
             val currentUiState: ReaderPostDetailsUiState? = (_uiState.value as? ReaderPostDetailsUiState)
             currentUiState?.let {
                 findPost(currentUiState.postId, currentUiState.blogId)?.let { post ->
-                    onRefreshLikersData(
-                        post,
-                        true
-                    )
+                    if (likesEnhancementsFeatureConfig.isEnabled()) {
+                        onRefreshLikersData(
+                            post,
+                            true
+                        )
+                    }
                     if (commentsSnippetFeatureConfig.isEnabled()) {
                         onRefreshCommentsData(post.blogId, post.postId)
                     }
@@ -293,8 +295,10 @@ class ReaderPostDetailViewModel @Inject constructor(
             _navigationEvents.value = event
         }
 
-        _updateLikesState.addSource(getLikesHandler.likesStatusUpdate) { state ->
-            _updateLikesState.value = state
+        if (likesEnhancementsFeatureConfig.isEnabled()) {
+            _updateLikesState.addSource(getLikesHandler.likesStatusUpdate) { state ->
+                _updateLikesState.value = state
+            }
         }
 
         readerPostCardActionsHandler.initUpdateBlockedStateFunction { state ->
@@ -330,7 +334,10 @@ class ReaderPostDetailViewModel @Inject constructor(
     }
 
     fun onRefreshLikersData(post: ReaderPost, isLikingAction: Boolean = false) {
-        if (readerUtilsWrapper.isExternalFeed(post.blogId, post.feedId)) {
+        if (
+            !likesEnhancementsFeatureConfig.isEnabled() ||
+            readerUtilsWrapper.isExternalFeed(post.blogId, post.feedId)
+        ) {
             return
         }
 

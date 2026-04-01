@@ -562,8 +562,10 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             }
         }
 
-        viewModel.likesUiState.observe(viewLifecycleOwner) { state ->
-            manageLikesUiState(state)
+        if (likesEnhancementsFeatureConfig.isEnabled()) {
+            viewModel.likesUiState.observe(viewLifecycleOwner) { state ->
+                manageLikesUiState(state)
+            }
         }
 
         viewModel.refreshPost.observeEvent(viewLifecycleOwner) {
@@ -1349,7 +1351,9 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                     val newPost = ReaderPostTable.getBlogPost(post.blogId, post.postId, false)
                     newPost?.let {
                         viewModel.post = it
-                        viewModel.onRefreshLikersData(it)
+                        if (likesEnhancementsFeatureConfig.isEnabled()) {
+                            viewModel.onRefreshLikersData(it)
+                        }
                         viewModel.onUpdatePost(it)
                         // Re-render the WebView with updated content
                         showPostInWebView(it)
@@ -1670,7 +1674,9 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                     updatePost()
                 }
                 viewModel.post?.let {
-                    viewModel.onRefreshLikersData(it)
+                    if (likesEnhancementsFeatureConfig.isEnabled()) {
+                        viewModel.onRefreshLikersData(it)
+                    }
                     if (commentsSnippetFeatureConfig.isEnabled()) {
                         viewModel.onRefreshCommentsData(it.blogId, it.postId)
                     }

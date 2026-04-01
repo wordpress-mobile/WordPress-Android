@@ -64,7 +64,7 @@ class ReaderPostDetailsHeaderViewUiStateBuilder @Inject constructor(
             readingTime = buildReadingTime(post),
             excerpt = buildExcerpt(post),
             featuredImageUiState = featuredImage,
-            showViewOriginal = post.hasUrl(),
+            showViewOriginal = !post.url.isNullOrBlank(),
         )
     }
 
