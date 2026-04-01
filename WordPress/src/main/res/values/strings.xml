@@ -8,7 +8,6 @@
     <string name="notification_disable_broadcast_permission_desc">Allows the app to disable WordPress notifications.</string>
 
     <!-- login prologue strings (used by WordPress variant) -->
-    <string name="login_prologue_screen_title" translatable="false">@string/app_name</string>
     <string name="login_prologue_revamped_tagline">Write, edit, and publish from anywhere.</string>
     <string name="login_prologue_revamped_content_description_wordpress_icon">WordPress icon</string>
 
@@ -973,8 +972,6 @@
     <string name="experimental_features_feedback_dialog_title">Share feedback</string>
     <string name="experimental_features_feedback_dialog_message">Are you willing to share feedback on the experimental editor?</string>
     <string name="experimental_features_feedback_dialog_decline">Not now</string>
-    <string name="experimental_application_password_feature">Application Password log in</string>
-    <string name="experimental_application_password_feature_description">Enable Application Password for existing self-hosted sites. New sites use it by default.</string>
     <string name="modern_support">Modern Support</string>
     <string name="modern_support_description">Enable the new modern support experience</string>
     <string name="experimental_network_debugging">Network Debugging</string>
@@ -998,6 +995,18 @@
     <string name="experimental_post_types_description">Enable experimental post types screen</string>
     <string name="experimental_new_stats">New Stats</string>
     <string name="experimental_new_stats_description">Show stats in a more modern and advanced UI</string>
+    <string name="stats_try_new_stats">Try new stats</string>
+    <string name="stats_switch_to_old_stats">Disable new stats</string>
+    <!-- New Stats intro bottom sheet -->
+    <string name="new_stats_intro_title">New Stats</string>
+    <string name="new_stats_intro_subtitle">A better way to understand your site\'s performance.</string>
+    <string name="new_stats_intro_any_period_title">Any Period, Any Range</string>
+    <string name="new_stats_intro_any_period_desc">Pick from common presets or set a custom date range with a comparison period, all in one tap.</string>
+    <string name="new_stats_intro_on_par_title">On Par with the Web</string>
+    <string name="new_stats_intro_on_par_desc">Devices, UTM, locations, WordAds (coming) — the same data you get on WordPress.com.</string>
+    <string name="new_stats_intro_trends_title">Trends at a Glance</string>
+    <string name="new_stats_intro_trends_desc">Every metric shows how it\'s trending compared to the previous period, so you always know if you\'re growing.</string>
+    <string name="new_stats_intro_footer">You can turn off New Stats from the overflow menu in the Stats screen.</string>
     <string name="experimental_rs_post_list">New Post List</string>
     <string name="experimental_rs_post_list_description">Show post list in a more modern UI for WordPress.com and self-hosted sites with application passwords</string>
     <string name="post_rs_failed_to_load">Failed to load post</string>
@@ -1012,6 +1021,44 @@
     <string name="post_rs_error_update_status">Failed to update post status</string>
     <string name="post_rs_error_load_more">Couldn\'t load more posts</string>
     <string name="post_rs_error_auth">Your authentication has expired. Please sign in again.</string>
+    <string name="post_rs_sync_failed">Sync failed</string>
+    <string name="post_rs_settings_protected">Protected</string>
+    <string name="post_rs_settings_field_error">Couldn\'t load</string>
+    <string name="post_rs_settings_tap_to_retry">Tap to retry</string>
+    <string name="post_rs_settings_loading">%s: Loading</string>
+    <string name="post_rs_settings_featured_image_not_set">Featured image not set.</string>
+    <string name="post_rs_settings_featured_image_error">Couldn\'t load featured image.</string>
+    <string name="post_rs_settings_edit_featured_image">Edit featured image</string>
+    <string name="post_rs_settings_choose_from_wp_media">Choose from WP Media</string>
+    <string name="post_rs_settings_choose_from_device">Choose from device</string>
+    <string name="post_rs_settings_remove_featured_image">Remove</string>
+    <string name="post_rs_settings_password_dialog_title">Post Password</string>
+    <string name="post_rs_settings_password_hint">Enter password</string>
+    <string name="post_rs_settings_remove_password">Remove password</string>
+    <string name="post_rs_settings_save_error">Couldn\'t update post</string>
+    <string name="post_rs_settings_status_dialog_title">Post Status</string>
+    <string name="post_rs_settings_discard_title">Discard changes</string>
+    <string name="post_rs_settings_discard_message">You have unsaved changes. Discard them?</string>
+    <string name="post_rs_settings_slug_dialog_title">Slug</string>
+    <string name="post_rs_settings_excerpt_dialog_title">Excerpt</string>
+    <string name="post_rs_settings_format_dialog_title">Post Format</string>
+    <string name="post_rs_settings_clear_excerpt">Clear excerpt</string>
+    <string name="post_rs_settings_select_time">Select Time</string>
+    <string name="post_rs_settings_author_dialog_title">Author</string>
+    <string name="post_rs_settings_author_no_permission">You don\'t have permission to change the author</string>
+    <string name="post_rs_settings_add_term">Add New</string>
+    <string name="post_rs_settings_term_name_hint">Name</string>
+    <string name="post_rs_settings_parent_category">Parent Category</string>
+    <string name="post_rs_settings_no_parent">None</string>
+    <string name="post_rs_settings_search_terms">Search</string>
+    <string name="post_rs_settings_search_authors">Search authors</string>
+    <string name="post_rs_settings_term_create_error">Failed to create term</string>
+    <string name="post_rs_settings_load_more">Load more\u2026</string>
+    <string name="post_rs_settings_search_no_results">No results found</string>
+    <string name="post_rs_settings_saving">Saving\u2026</string>
+    <string name="post_rs_settings_hide_password">Hide password</string>
+    <string name="post_rs_settings_show_password">Show password</string>
+    <string name="show_less">Show less</string>
     <string name="post_types_screen_title">Post Types</string>
 
     <!-- Debug settings -->
@@ -1217,6 +1264,9 @@
 
     <!-- activity log -->
     <string name="activity_log">Activity Log</string>
+    <!-- Shows the MCP client used for an activity log entry. %1$s is the client name (e.g. Claude). -->
+    <string name="activity_log_mcp_agent_label">via %1$s</string>
+    <string name="activity_log_metadata_separator" translatable="false">\u00B7</string>
     <string name="activity_log_icon">Activity icon</string>
     <string name="activity_log_event">Event</string>
     <string name="activity_log_button">Activity Log action button</string>
@@ -1485,15 +1535,33 @@
     <string name="stats_insights_total_stats_seven_days_negative">%1$s lower than the previous 7-days</string>
     <string name="stats_insights_average_likes">Avg likes/post</string>
     <string name="stats_insights_total_words">Total words</string>
+    <string name="stats_insights_words">Words</string>
+    <string name="stats_insights_likes">Likes</string>
+    <string name="stats_insights_total_posts">Total posts</string>
+    <string name="stats_insights_avg_comments_per_post">Avg comments per post</string>
+    <string name="stats_insights_avg_likes_per_post">Avg likes per post</string>
+    <string name="stats_insights_avg_words_per_post">Avg words per post</string>
     <string name="stats_insights_average_words">Avg words/post</string>
     <string name="stats_insights_best_day">Best Day</string>
     <string name="stats_insights_best_hour">Best Hour</string>
     <string name="stats_insights_best_ever">Best Views Ever</string>
     <string name="stats_insights_today_stats">Today</string>
+    <string name="stats_insights_year_in_review">Year in Review</string>
+    <string name="stats_insights_year_in_review_title">%s in review</string>
 
     <!-- Stats refreshed insights -->
     <string name="stats_insights_all_time_stats">All-time</string>
+    <string name="stats_insights_all_time_stats_title">All-time stats</string>
+    <string name="stats_insights_most_popular_day">Most popular day</string>
+    <string name="stats_insights_most_popular_day_label">Day</string>
+    <string name="stats_insights_views_percent">%1$s%% of views</string>
+    <string name="stats_insights_most_popular_time">Most popular time</string>
     <string name="stats_insights_tags_and_categories">Tags and Categories</string>
+    <string name="stats_insights_tags_empty">No tags or categories found</string>
+    <string name="stats_tag_type_category">Category</string>
+    <string name="stats_tag_type_tag">Tag</string>
+    <string name="stats_expand_group">Expand</string>
+    <string name="stats_collapse_group">Collapse</string>
     <string name="stats_insights_latest_post_empty">Check back when you\'ve published your first post!</string>
     <string name="stats_insights_latest_post_with_no_engagement">It\'s been %1$s since %2$s was published. Get the ball rolling and increase your post views by sharing your post:</string>
     <string name="stats_insights_latest_post_message">It’s been %1$s since %2$s was published. Here’s how the post performed so far:</string>
@@ -1575,6 +1643,7 @@
     <string name="stats_error_api">Failed to load stats</string>
     <string name="stats_error_unknown">An unexpected error occurred</string>
     <string name="stats_error_auth">You don\'t have permission to view these stats</string>
+    <string name="stats_error_not_authenticated">Not authenticated</string>
     <string name="stats_error_network">Network error. Please check your connection and try again</string>
     <string name="stats_error_parsing">There was a problem loading the data. Please try again</string>
     <string name="stats_error_admin_url_unavailable">Unable to open WP Admin for this site</string>
@@ -1619,6 +1688,27 @@
     <string name="stats_devices_platform">Platform</string>
     <string name="stats_devices_device_header">Device</string>
     <string name="stats_devices_percentage_header">Percentage</string>
+
+    <!-- Subscribers Stats Cards -->
+    <string name="stats_subscribers_all_time">All-time Subscribers</string>
+    <string name="stats_subscribers_graph">Subscribers Graph</string>
+    <string name="stats_subscribers_list">Subscribers</string>
+    <string name="stats_subscribers_emails">Emails</string>
+    <string name="stats_subscribers_current">Current</string>
+    <string name="stats_subscribers_30_days_ago">30 days ago</string>
+    <string name="stats_subscribers_60_days_ago">60 days ago</string>
+    <string name="stats_subscribers_90_days_ago">90 days ago</string>
+    <string name="stats_subscribers_subscriber_header">Subscriber</string>
+    <string name="stats_subscribers_since_header">Since</string>
+    <string name="stats_emails_latest_header">Latest emails</string>
+    <string name="stats_emails_opens_header">Opens</string>
+    <string name="stats_emails_clicks_header">Clicks</string>
+    <string name="stats_subscribers_graph_days">Days</string>
+    <string name="stats_subscribers_graph_weeks">Weeks</string>
+    <string name="stats_subscribers_graph_months">Months</string>
+    <string name="stats_subscribers_graph_years">Years</string>
+    <string name="stats_subscriber_since_today">today</string>
+    <string name="stats_subscriber_years_and_days">%1$s, %2$s</string>
 
     <!-- Stats Card Configuration -->
     <string name="stats_card_remove">Remove Card</string>
@@ -1952,7 +2042,7 @@
     <string name="post_settings_slug_dialog_hint">The slug is the URL-friendly version of the post title.</string>
     <string name="post_settings_excerpt_dialog_hint">Excerpts are optional hand-crafted summaries of your content.</string>
     <string name="post_settings_password_dialog_hint">Only those with this password can view this post</string>
-    <string name="post_settings_time_and_date">Date and Time</string>
+    <string name="post_settings_time_and_date">Date &amp; Time</string>
     <string name="post_settings_notification">Notification</string>
     <string name="post_settings_add_to_calendar">Add to calendar</string>
     <string name="post_settings_no_calendar_app_exists">No app found to handle the request to add to calendar</string>
@@ -2360,14 +2450,17 @@
     <string name="reader_label_added_tag">Added %s</string>
     <string name="reader_label_blog_subscribed">Blog subscribed</string>
     <string name="reader_label_comments_closed">Comments are closed</string>
-    <string name="reader_label_view_original">View original article</string>
+    <string name="reader_label_view_original">View original</string>
     <string name="reader_label_subscribers_count">%s subscribers</string>
     <string name="reader_label_subscribers_count_single">1 subscriber</string>
     <string name="reader_label_gap_marker">Load more posts</string>
     <string name="reader_label_post_search_explainer">What would you like to find?</string>
     <string name="reader_label_local_related_posts">More from %s</string>
     <string name="reader_label_global_related_posts">More on WordPress.com</string>
+    <string name="reader_reading_time">%s min read</string>
+    <string name="reader_excerpt_view_more">View more</string>
     <string name="reader_label_visit">Visit site</string>
+    <string name="reader_label_view">View site</string>
     <string name="reader_label_choose_interests">Choose your interests</string>
     <string name="reader_view_comments">View comments</string>
     <string name="reader_label_toolbar_back">Back</string>
@@ -3243,29 +3336,6 @@
     <!-- If any of these appear unused, be sure to check the same string in the login library -
     it may be used there and keeping it here is required for translation. -->
     <string name="log_in" a8c-src-lib="module:login">Log In</string>
-    <string name="login_prologue_title_first">Welcome to the world\’s most popular website builder.</string>
-    <string name="login_prologue_title_second">With the powerful editor you can post on the go.</string>
-    <string name="login_prologue_title_third">See comments and notifications in real time.</string>
-    <string name="login_prologue_title_fourth">Watch your audience grow with in-depth analytics.</string>
-    <string name="login_prologue_title_fifth">Follow your favorite sites and discover new blogs.</string>
-    <string name="login_prologue_second_subtitle_one">Getting Inspired</string>
-    <string name="login_prologue_second_subtitle_two">I am so inspired by photographer Cameron Karsten\’s work. I will be trying these techniques on my next</string>
-    <string name="login_prologue_third_subtitle_one">&lt;b&gt;Madison Ruiz&lt;/b&gt; liked your post</string>
-    <string name="login_prologue_third_subtitle_two">You received &lt;b&gt;50 likes&lt;/b&gt; on your site today</string>
-    <string name="login_prologue_third_subtitle_three">&lt;b&gt;Johan Brandt&lt;/b&gt; responded to your post</string>
-    <string name="login_prologue_fifth_subtitle_one">Pamela Nguyen</string>
-    <string name="login_prologue_fifth_subtitle_two">Web News</string>
-    <string name="login_prologue_fifth_subtitle_three">Rock n\' Roll Weekly</string>
-    <string name="login_prologue_fifth_tag_one">Art</string>
-    <string name="login_prologue_fifth_tag_two">Cooking</string>
-    <string name="login_prologue_fifth_tag_three">Football</string>
-    <string name="login_prologue_fifth_tag_four">Gardening</string>
-    <string name="login_prologue_fifth_tag_five">Music</string>
-    <string name="login_prologue_fifth_tag_six">Politics</string>
-    <string name="login_prologue_fifth_caption_one">My Top Ten Cafes</string>
-    <string name="login_prologue_fifth_caption_two">The World\'s Best Fans</string>
-    <string name="login_prologue_fifth_caption_three">Museums in London</string>
-
     <string name="invalid_verification_code" a8c-src-lib="module:login">Invalid verification code</string>
     <string name="send_link_by_email" a8c-src-lib="module:login">Send link by email</string>
     <string name="create_account" a8c-src-lib="module:login">Create account</string>
@@ -4539,12 +4609,9 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="application_password_required">Application Password Required</string>
     <string name="application_password_required_description">Application passwords are a more secure way to connect to your self-hosted site, and enable support for features like %1$s.</string>
     <string name="application_password_required_block_editor">Block Editor</string>
-    <string name="application_password_experimental_feature_note">\n\nNote: Application Password authentication on Android devices is an Experimental Feature.</string>
-    <string name="application_password_disable_feature_title">Disable Application Password?</string>
-    <string name="application_password_disable_feature_description">Disabling Application Password will remove the login for %1$s of your sites. You may need to re-add affected sites to login again.</string>
     <string name="application_password_info_title">Application Passwords</string>
     <string name="application_password_info_description_1">Application passwords are a secure way for apps to access your site without using your account password.</string>
-    <string name="application_password_info_description_2">New self-hosted sites added to the app are already using application passwords. Enabling this feature will also apply it to your existing sites.</string>
+    <string name="application_password_info_description_2">When you add sites to the app, application passwords will be created automatically as needed.</string>
     <string name="application_password_info_description_3">You can view and manage these passwords in your user profile within your WordPress site\'s admin panel.</string>
     <string name="application_password_info_description_4">Please note that revoking application passwords used by the app will terminate the app\'s access to your site. Be cautious when revoking application passwords created by the app.</string>
     <string name="enable">Enable</string>
@@ -4558,6 +4625,9 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="application_password_name_sort">Name</string>
     <string name="application_password_created_sort">Created</string>
     <string name="application_password_last_used_sort">Last used</string>
+    <string name="application_password_app_name_jetpack">Jetpack Android App on %s</string>
+    <string name="application_password_app_name_wordpress">WordPress Android App on %s</string>
+    <string name="application_password_reauthentication_banner">Your site credentials are invalid. Tap to reauthenticate.</string>
 
     <!-- DataView -->
     <string name="dataview_default_empty_message">There\'s nothing here</string>

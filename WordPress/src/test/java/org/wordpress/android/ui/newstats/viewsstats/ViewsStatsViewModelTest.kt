@@ -454,6 +454,257 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
         assertThat(state.chartType).isEqualTo(ChartType.BAR)
     }
 
+    // region Chart type persistence
+
+    @Test
+    fun `when chart type is saved, then it persists in SavedStateHandle`() = test {
+        val result = createPeriodStatsResult()
+        whenever(statsRepository.fetchStatsForPeriod(any(), any()))
+            .thenReturn(result)
+
+        initViewModel()
+        advanceUntilIdle()
+
+        viewModel.onChartTypeChanged(ChartType.BAR)
+        advanceUntilIdle()
+
+        verify(cardsConfigurationRepository).saveConfiguration(
+            any(), any()
+        )
+    }
+
+    @Test
+    fun `when SavedStateHandle has bar chart type, then it is restored`() = test {
+        val savedState = SavedStateHandle(
+            mapOf("chart_type" to "bar")
+        )
+        whenever(cardsConfigurationRepository.getConfiguration(any()))
+            .thenReturn(StatsCardsConfiguration())
+        val result = createPeriodStatsResult()
+        whenever(statsRepository.fetchStatsForPeriod(any(), any()))
+            .thenReturn(result)
+
+        viewModel = ViewsStatsViewModel(
+            selectedSiteRepository, accountStore, statsRepository,
+            resourceProvider, savedState, cardsConfigurationRepository
+        )
+        viewModel.loadDataIfNeeded()
+        advanceUntilIdle()
+
+        val state = viewModel.uiState.value as ViewsStatsCardUiState.Loaded
+        assertThat(state.chartType).isEqualTo(ChartType.BAR)
+    }
+
+    @Test
+    fun `when preferences has bar chart type, then it is restored`() = test {
+        whenever(cardsConfigurationRepository.getConfiguration(any()))
+            .thenReturn(
+                StatsCardsConfiguration(selectedChartType = "bar")
+            )
+        val result = createPeriodStatsResult()
+        whenever(statsRepository.fetchStatsForPeriod(any(), any()))
+            .thenReturn(result)
+
+        viewModel = ViewsStatsViewModel(
+            selectedSiteRepository, accountStore, statsRepository,
+            resourceProvider, SavedStateHandle(),
+            cardsConfigurationRepository
+        )
+        viewModel.loadDataIfNeeded()
+        advanceUntilIdle()
+
+        val state = viewModel.uiState.value as ViewsStatsCardUiState.Loaded
+        assertThat(state.chartType).isEqualTo(ChartType.BAR)
+    }
+
+    // endregion
+
+    // region Bar tap drill-down
+
+    @Test
+    fun `when bar tapped on daily data, then period drills to that day`() = test {
+        val result = createPeriodStatsResult()
+        whenever(statsRepository.fetchStatsForPeriod(any(), any()))
+            .thenReturn(result)
+
+        initViewModel()
+        advanceUntilIdle()
+
+        viewModel.onChartTypeChanged(ChartType.BAR)
+        viewModel.onBarTapped(0)
+        advanceUntilIdle()
+
+        val period = viewModel.selectedPeriod.value
+        assertThat(period).isInstanceOf(StatsPeriod.Custom::class.java)
+        with(period as StatsPeriod.Custom) {
+            assertThat(startDate).isEqualTo(LocalDate.of(2024, 1, 14))
+            assertThat(endDate).isEqualTo(LocalDate.of(2024, 1, 14))
+        }
+    }
+
+    @Test
+    fun `when bar tapped on monthly data, then period drills to full month`() = test {
+        val monthlyData = listOf(
+            ViewsDataPoint(period = "2024-01-01", views = 5000L),
+            ViewsDataPoint(period = "2024-02-01", views = 6000L)
+        )
+        val result = createPeriodStatsResult(
+            currentPeriodData = monthlyData,
+            previousPeriodData = monthlyData
+        )
+        whenever(statsRepository.fetchStatsForPeriod(any(), any()))
+            .thenReturn(result)
+
+        initViewModel()
+        advanceUntilIdle()
+
+        viewModel.onPeriodChanged(StatsPeriod.Last6Months)
+        viewModel.loadData()
+        advanceUntilIdle()
+
+        viewModel.onChartTypeChanged(ChartType.BAR)
+        viewModel.onBarTapped(0)
+        advanceUntilIdle()
+
+        val period = viewModel.selectedPeriod.value
+        assertThat(period).isInstanceOf(StatsPeriod.Custom::class.java)
+        with(period as StatsPeriod.Custom) {
+            assertThat(startDate).isEqualTo(LocalDate.of(2024, 1, 1))
+            assertThat(endDate).isEqualTo(LocalDate.of(2024, 1, 31))
+        }
+    }
+
+    @Test
+    fun `when bar tapped on hourly data, then period does not change`() = test {
+        val hourlyData = listOf(
+            ViewsDataPoint(period = "2024-01-14 10:00:00", views = 100L),
+            ViewsDataPoint(period = "2024-01-14 11:00:00", views = 150L)
+        )
+        val result = createPeriodStatsResult(
+            currentPeriodData = hourlyData,
+            previousPeriodData = hourlyData
+        )
+        whenever(statsRepository.fetchStatsForPeriod(any(), any()))
+            .thenReturn(result)
+
+        initViewModel()
+        advanceUntilIdle()
+
+        viewModel.onPeriodChanged(StatsPeriod.Today)
+        viewModel.loadData()
+        advanceUntilIdle()
+
+        val periodBefore = viewModel.selectedPeriod.value
+        viewModel.onChartTypeChanged(ChartType.BAR)
+        viewModel.onBarTapped(0)
+        advanceUntilIdle()
+
+        assertThat(viewModel.selectedPeriod.value).isEqualTo(periodBefore)
+    }
+
+    @Test
+    fun `when bar tapped while loading, then tap is ignored`() = test {
+        var fetchCount = 0
+        whenever(statsRepository.fetchStatsForPeriod(any(), any()))
+            .thenAnswer {
+                fetchCount++
+                createPeriodStatsResult()
+            }
+
+        initViewModel()
+        advanceUntilIdle()
+        assertThat(fetchCount).isEqualTo(1)
+
+        viewModel.onChartTypeChanged(ChartType.BAR)
+
+        // First bar tap triggers a load
+        viewModel.onBarTapped(0)
+        advanceUntilIdle()
+        assertThat(fetchCount).isEqualTo(2)
+
+        // Second bar tap on same loaded state should also work
+        // (loading completed, isLoadingNewPeriod reset to false)
+        // Verify loadingPeriod guard prevents composable double-load
+        viewModel.loadDataIfNeeded()
+        advanceUntilIdle()
+
+        // loadDataIfNeeded should NOT trigger a third fetch because
+        // loadingPeriod was set in onBarTapped
+        assertThat(fetchCount).isEqualTo(2)
+    }
+
+    @Test
+    fun `when bar tapped with invalid index, then period does not change`() = test {
+        val result = createPeriodStatsResult()
+        whenever(statsRepository.fetchStatsForPeriod(any(), any()))
+            .thenReturn(result)
+
+        initViewModel()
+        advanceUntilIdle()
+
+        val periodBefore = viewModel.selectedPeriod.value
+        viewModel.onChartTypeChanged(ChartType.BAR)
+        viewModel.onBarTapped(999)
+        advanceUntilIdle()
+
+        assertThat(viewModel.selectedPeriod.value)
+            .isEqualTo(periodBefore)
+    }
+
+    @Test
+    fun `when bar tapped on custom monthly period, then drills to full month`() = test {
+        val monthlyData = listOf(
+            ViewsDataPoint(period = "2024-03-01", views = 3000L),
+            ViewsDataPoint(period = "2024-04-01", views = 4000L)
+        )
+        val result = createPeriodStatsResult(
+            currentPeriodData = monthlyData,
+            previousPeriodData = monthlyData
+        )
+        whenever(statsRepository.fetchStatsForPeriod(any(), any()))
+            .thenReturn(result)
+
+        initViewModel()
+        advanceUntilIdle()
+
+        // Custom period spanning >31 days = monthly granularity
+        viewModel.onPeriodChanged(
+            StatsPeriod.Custom(
+                LocalDate.of(2024, 3, 1),
+                LocalDate.of(2024, 6, 30)
+            )
+        )
+        viewModel.loadData()
+        advanceUntilIdle()
+
+        viewModel.onChartTypeChanged(ChartType.BAR)
+        viewModel.onBarTapped(0)
+        advanceUntilIdle()
+
+        val period = viewModel.selectedPeriod.value
+        assertThat(period).isInstanceOf(StatsPeriod.Custom::class.java)
+        with(period as StatsPeriod.Custom) {
+            assertThat(startDate).isEqualTo(LocalDate.of(2024, 3, 1))
+            assertThat(endDate).isEqualTo(LocalDate.of(2024, 3, 31))
+        }
+    }
+
+    // endregion
+
+    // region ChartType storage key
+
+    @Test
+    fun `ChartType fromStorageKey returns correct types`() {
+        assertThat(ChartType.fromStorageKey("line"))
+            .isEqualTo(ChartType.LINE)
+        assertThat(ChartType.fromStorageKey("bar"))
+            .isEqualTo(ChartType.BAR)
+        assertThat(ChartType.fromStorageKey("unknown")).isNull()
+        assertThat(ChartType.fromStorageKey(null)).isNull()
+    }
+
+    // endregion
+
     private fun createPeriodStatsResult(
         currentViews: Long = TEST_CURRENT_PERIOD_VIEWS,
         currentVisitors: Long = TEST_CURRENT_PERIOD_VISITORS,

@@ -1480,10 +1480,11 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
                     .OnNoteCommentLikeChanged(mNote, actionBinding.btnLike.isActivated()));
         }
 
-        actionBinding.btnLike.announceForAccessibility(
-                getText(actionBinding.btnLike.isActivated() ? R.string.comment_liked_talkback
-                        : R.string.comment_unliked_talkback)
-        );
+        @SuppressWarnings("deprecation")
+        CharSequence announcement = getText(actionBinding.btnLike.isActivated()
+                ? R.string.comment_liked_talkback
+                : R.string.comment_unliked_talkback);
+        actionBinding.btnLike.announceForAccessibility(announcement);
     }
 
     private void toggleLikeButton(
@@ -1667,6 +1668,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
         }
     }
 
+    @SuppressWarnings("deprecation")
     private void announceCommentStatusChangeForAccessibility(CommentStatus newStatus) {
         int resId = -1;
         switch (newStatus) {

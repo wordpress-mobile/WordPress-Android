@@ -24,27 +24,33 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ShowChart
-import androidx.compose.material.icons.filled.BarChart
+import androidx.compose.material.icons.automirrored.outlined.ShowChart
 import androidx.compose.material.icons.filled.ChatBubbleOutline
-import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.FavoriteBorder
-import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.outlined.ModeEditOutline
+import androidx.compose.material.icons.filled.PersonOutline
+import androidx.compose.material.icons.outlined.BarChart
+import androidx.compose.material.icons.outlined.Visibility
 import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import org.wordpress.android.ui.newstats.StatsColors
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -69,9 +75,11 @@ import com.patrykandpatrick.vico.core.cartesian.decoration.HorizontalLine
 import com.patrykandpatrick.vico.core.cartesian.layer.ColumnCartesianLayer
 import com.patrykandpatrick.vico.core.cartesian.layer.LineCartesianLayer
 import com.patrykandpatrick.vico.core.cartesian.marker.CartesianMarker
+import com.patrykandpatrick.vico.core.cartesian.marker.CartesianMarkerVisibilityListener
 import com.patrykandpatrick.vico.core.cartesian.marker.DefaultCartesianMarker
 import com.patrykandpatrick.vico.compose.cartesian.layer.rememberColumnCartesianLayer
 import com.patrykandpatrick.vico.compose.cartesian.layer.rememberLineCartesianLayer
+import com.patrykandpatrick.vico.compose.cartesian.layer.stacked
 import com.patrykandpatrick.vico.compose.cartesian.rememberCartesianChart
 import com.patrykandpatrick.vico.compose.cartesian.rememberVicoScrollState
 import com.patrykandpatrick.vico.core.common.Insets
@@ -89,11 +97,9 @@ import kotlin.math.abs
 private val CardCornerRadius = 10.dp
 private val CardPadding = 16.dp
 private val CardMargin = 16.dp
-private val ChartHeight = 120.dp
+private val ChartHeight = 180.dp
 private val StatItemWidth = 100.dp
 private val BadgeCornerRadius = 4.dp
-private val ChangeBadgePositiveColor = Color(0xFF4CAF50)
-private val ChangeBadgeNegativeColor = Color(0xFFE91E63)
 
 // Preview sample data constants
 private const val SAMPLE_CURRENT_VIEWS = 7467L
@@ -112,6 +118,7 @@ private val SAMPLE_PREVIOUS_PERIOD_DATA = listOf(1000L, 1400L, 1150L, 1200L, 135
 fun ViewsStatsCard(
     uiState: ViewsStatsCardUiState,
     onChartTypeChanged: (ChartType) -> Unit,
+    onBarTapped: (Int) -> Unit,
     onRetry: () -> Unit,
     onRemoveCard: () -> Unit,
     modifier: Modifier = Modifier,
@@ -138,7 +145,7 @@ fun ViewsStatsCard(
         when (uiState) {
             is ViewsStatsCardUiState.Loading -> LoadingContent()
             is ViewsStatsCardUiState.Loaded -> LoadedContent(
-                uiState, onChartTypeChanged, onRemoveCard,
+                uiState, onChartTypeChanged, onBarTapped, onRemoveCard,
                 cardPosition, onMoveUp, onMoveToTop, onMoveDown, onMoveToBottom
             )
             is ViewsStatsCardUiState.Error -> ErrorContent(
@@ -257,6 +264,7 @@ private fun LoadingContent() {
 private fun LoadedContent(
     state: ViewsStatsCardUiState.Loaded,
     onChartTypeChanged: (ChartType) -> Unit,
+    onBarTapped: (Int) -> Unit,
     onRemoveCard: () -> Unit,
     cardPosition: CardPosition?,
     onMoveUp: (() -> Unit)?,
@@ -264,32 +272,42 @@ private fun LoadedContent(
     onMoveDown: (() -> Unit)?,
     onMoveToBottom: (() -> Unit)?
 ) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(CardPadding)
-    ) {
-        // Header Section
-        HeaderSection(
-            state = state,
-            onChartTypeChanged = onChartTypeChanged,
-            onRemoveCard = onRemoveCard,
-            cardPosition = cardPosition,
-            onMoveUp = onMoveUp,
-            onMoveToTop = onMoveToTop,
-            onMoveDown = onMoveDown,
-            onMoveToBottom = onMoveToBottom
-        )
-        Spacer(modifier = Modifier.height(16.dp))
-        // Chart Section
-        ViewsStatsChart(
-            chartData = state.chartData,
-            periodAverage = state.periodAverage,
-            chartType = state.chartType
-        )
-        Spacer(modifier = Modifier.height(16.dp))
-        // Bottom Stats Row
-        BottomStatsRow(stats = state.bottomStats)
+    Box(modifier = Modifier.fillMaxWidth()) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(CardPadding)
+                .alpha(if (state.isLoadingNewPeriod) 0.5f else 1f)
+        ) {
+            // Header Section
+            HeaderSection(
+                state = state,
+                onChartTypeChanged = onChartTypeChanged,
+                onRemoveCard = onRemoveCard,
+                cardPosition = cardPosition,
+                onMoveUp = onMoveUp,
+                onMoveToTop = onMoveToTop,
+                onMoveDown = onMoveDown,
+                onMoveToBottom = onMoveToBottom
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            // Chart Section
+            ViewsStatsChart(
+                chartData = state.chartData,
+                periodAverage = state.periodAverage,
+                chartType = state.chartType,
+                onBarTapped = onBarTapped
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+            // Bottom Stats Row
+            BottomStatsRow(stats = state.bottomStats)
+        }
+        if (state.isLoadingNewPeriod) {
+            CircularProgressIndicator(
+                modifier = Modifier.align(Alignment.Center),
+                color = MaterialTheme.colorScheme.primary
+            )
+        }
     }
 }
 
@@ -330,7 +348,7 @@ private fun HeaderSection(
                 }
             )
         }
-        Spacer(modifier = Modifier.height(8.dp))
+        Spacer(modifier = Modifier.height(4.dp))
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -338,18 +356,20 @@ private fun HeaderSection(
         ) {
             // Left: Current and previous period totals with difference
             Column {
-                Row(verticalAlignment = Alignment.Bottom) {
+                Row {
                     Text(
                         text = formatStatValue(state.currentPeriodViews),
                         style = MaterialTheme.typography.headlineLarge,
                         fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.onSurface
+                        color = MaterialTheme.colorScheme.onSurface,
+                        modifier = Modifier.alignByBaseline()
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
                         text = formatStatValue(state.previousPeriodViews),
                         style = MaterialTheme.typography.titleMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        modifier = Modifier.alignByBaseline()
                     )
                 }
                 Spacer(modifier = Modifier.height(4.dp))
@@ -362,14 +382,12 @@ private fun HeaderSection(
             Column(horizontalAlignment = Alignment.End) {
                 DateRangeWithDot(
                     dateRange = state.currentPeriodDateRange,
-                    dotColor = MaterialTheme.colorScheme.primary,
-                    isFilled = true
+                    dotColor = MaterialTheme.colorScheme.primary
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 DateRangeWithDot(
                     dateRange = state.previousPeriodDateRange,
-                    dotColor = MaterialTheme.colorScheme.outline,
-                    isFilled = true
+                    dotColor = MaterialTheme.colorScheme.outline
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 AverageRow(average = state.periodAverage)
@@ -392,7 +410,7 @@ private fun ChartTypeMenuItems(
         enabled = currentChartType != ChartType.LINE,
         leadingIcon = {
             Icon(
-                imageVector = Icons.AutoMirrored.Filled.ShowChart,
+                imageVector = Icons.AutoMirrored.Outlined.ShowChart,
                 contentDescription = null
             )
         }
@@ -403,7 +421,7 @@ private fun ChartTypeMenuItems(
         enabled = currentChartType != ChartType.BAR,
         leadingIcon = {
             Icon(
-                imageVector = Icons.Default.BarChart,
+                imageVector = Icons.Outlined.BarChart,
                 contentDescription = null
             )
         }
@@ -416,8 +434,8 @@ private fun DifferenceRow(difference: Long, percentageChange: Double) {
     val arrowText = if (isNegative) "↘" else if (difference > 0) "↗" else "↔"
     val color = when {
         difference < 0 -> MaterialTheme.colorScheme.error
-        difference > 0 -> ChangeBadgePositiveColor
-        else -> MaterialTheme.colorScheme.onSurfaceVariant
+        difference > 0 -> StatsColors.ChangeBadgePositive
+        else -> MaterialTheme.colorScheme.outline
     }
 
     Row(verticalAlignment = Alignment.CenterVertically) {
@@ -442,28 +460,19 @@ private fun DifferenceRow(difference: Long, percentageChange: Double) {
 }
 
 @Composable
-private fun DateRangeWithDot(dateRange: String, dotColor: Color, isFilled: Boolean) {
+private fun DateRangeWithDot(dateRange: String, dotColor: Color) {
     Row(verticalAlignment = Alignment.CenterVertically) {
         Text(
             text = dateRange,
             style = MaterialTheme.typography.bodySmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
+            color = MaterialTheme.colorScheme.outline
         )
         Spacer(modifier = Modifier.width(6.dp))
         Box(
             modifier = Modifier
                 .size(8.dp)
-                .then(
-                    if (isFilled) {
-                        Modifier
-                            .clip(CircleShape)
-                            .background(dotColor)
-                    } else {
-                        Modifier
-                            .clip(CircleShape)
-                            .border(1.5.dp, dotColor, CircleShape)
-                    }
-                )
+                .clip(CircleShape)
+                .background(dotColor)
         )
     }
 }
@@ -474,7 +483,7 @@ private fun AverageRow(average: Long) {
         Text(
             text = stringResource(R.string.stats_weekly_average, formatStatValue(average)),
             style = MaterialTheme.typography.bodySmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
+            color = MaterialTheme.colorScheme.outline
         )
         Spacer(modifier = Modifier.width(6.dp))
         Box(
@@ -490,7 +499,8 @@ private fun AverageRow(average: Long) {
 private fun ViewsStatsChart(
     chartData: ViewsStatsChartData,
     periodAverage: Long,
-    chartType: ChartType
+    chartType: ChartType,
+    onBarTapped: (Int) -> Unit = {}
 ) {
     // Key the model producer on chartType so it gets recreated when chart type changes
     val modelProducer = remember(chartType) { CartesianChartModelProducer() }
@@ -511,11 +521,46 @@ private fun ViewsStatsChart(
                 }
                 ChartType.BAR -> modelProducer.runTransaction {
                     columnSeries {
-                        // Current period first (primary color)
-                        series(chartData.currentPeriod.map { it.views.toInt() })
-                        // Previous period second (grey)
                         if (hasPreviousPeriod) {
-                            series(chartData.previousPeriod.map { it.views.toInt() })
+                            // Series 1: current value when no
+                            // delta (rounded top)
+                            series(
+                                chartData.currentPeriod.zip(
+                                    chartData.previousPeriod
+                                ) { current, previous ->
+                                    if (previous.views <= current.views)
+                                        current.views.toInt()
+                                    else 0
+                                }
+                            )
+                            // Series 2: current value when there
+                            // is a delta (flat top)
+                            series(
+                                chartData.currentPeriod.zip(
+                                    chartData.previousPeriod
+                                ) { current, previous ->
+                                    if (previous.views > current.views)
+                                        current.views.toInt()
+                                    else 0
+                                }
+                            )
+                            // Series 3: delta (rounded top)
+                            series(
+                                chartData.currentPeriod.zip(
+                                    chartData.previousPeriod
+                                ) { current, previous ->
+                                    maxOf(
+                                        0L,
+                                        previous.views - current.views
+                                    ).toInt()
+                                }
+                            )
+                        } else {
+                            series(
+                                chartData.currentPeriod.map {
+                                    it.views.toInt()
+                                }
+                            )
                         }
                     }
                 }
@@ -544,11 +589,17 @@ private fun ViewsStatsChart(
     val primaryColor = MaterialTheme.colorScheme.primary
     val secondaryColor = MaterialTheme.colorScheme.outline.copy(alpha = 0.5f)
 
-    // X-axis formatter to show date labels from current period data
-    val dateLabels = chartData.currentPeriod.map { it.label }
+    // X-axis labels from both series so the formatter covers the
+    // full range even when the previous period has more data points
+    val currentLabels = chartData.currentPeriod.map { it.label }
+    val previousLabels = chartData.previousPeriod.map { it.label }
+    val dateLabels = if (previousLabels.size > currentLabels.size) {
+        currentLabels + previousLabels.drop(currentLabels.size)
+    } else {
+        currentLabels
+    }
     val bottomAxisValueFormatter = CartesianValueFormatter { _, value, _ ->
-        val index = value.toInt()
-        if (index in dateLabels.indices) dateLabels[index] else ""
+        dateLabels.getOrElse(value.toInt()) { value.toInt().toString() }
     }
 
     // Marker value formatter to show date and views on touch
@@ -571,6 +622,7 @@ private fun ViewsStatsChart(
                 shape = CorneredShape.rounded(allPercent = 25)
             )
         ),
+        labelPosition = DefaultCartesianMarker.LabelPosition.AroundPoint,
         guideline = LineComponent(
             fill = fill(MaterialTheme.colorScheme.outline.copy(alpha = 0.5f)),
             thicknessDp = 1f
@@ -591,7 +643,7 @@ private fun ViewsStatsChart(
         ChartType.LINE -> {
             val areaGradient = ShaderProvider.verticalGradient(
                 colors = arrayOf(
-                    primaryColor.copy(alpha = 0.8f),
+                    primaryColor.copy(alpha = 0.3f),
                     primaryColor.copy(alpha = 0f)
                 )
             )
@@ -603,17 +655,19 @@ private fun ViewsStatsChart(
                             LineCartesianLayer.Line(
                                 fill = LineCartesianLayer.LineFill.single(fill(primaryColor)),
                                 areaFill = LineCartesianLayer.AreaFill.single(fill(areaGradient)),
-                                pointConnector = LineCartesianLayer.PointConnector.cubic()
+                                pointConnector = LineCartesianLayer.PointConnector.Sharp
                             ),
                             LineCartesianLayer.Line(
                                 fill = LineCartesianLayer.LineFill.single(fill(secondaryColor)),
                                 stroke = LineCartesianLayer.LineStroke.Dashed(),
-                                pointConnector = LineCartesianLayer.PointConnector.cubic()
+                                pointConnector = LineCartesianLayer.PointConnector.Sharp
                             )
                         )
                     ),
                     startAxis = VerticalAxis.rememberStart(line = null),
-                    bottomAxis = HorizontalAxis.rememberBottom(valueFormatter = bottomAxisValueFormatter),
+                    bottomAxis = HorizontalAxis.rememberBottom(
+                        valueFormatter = bottomAxisValueFormatter
+                    ),
                     marker = marker,
                     decorations = listOf(averageLine)
                 ),
@@ -625,32 +679,72 @@ private fun ViewsStatsChart(
             )
         }
         ChartType.BAR -> {
+            var lastShownIndex by remember { mutableIntStateOf(-1) }
+            val barTapListener = remember(onBarTapped) {
+                object : CartesianMarkerVisibilityListener {
+                    override fun onShown(
+                        marker: CartesianMarker,
+                        targets: List<CartesianMarker.Target>
+                    ) {
+                        lastShownIndex = targets.firstOrNull()
+                            ?.x?.toInt() ?: -1
+                    }
+
+                    override fun onHidden(
+                        marker: CartesianMarker
+                    ) {
+                        val index = lastShownIndex
+                        if (index >= 0) {
+                            lastShownIndex = -1
+                            onBarTapped(index)
+                        }
+                    }
+                }
+            }
             CartesianChartHost(
                 chart = rememberCartesianChart(
                     rememberColumnCartesianLayer(
-                        columnProvider = ColumnCartesianLayer.ColumnProvider.series(
-                            // Current period (primary color)
-                            LineComponent(
-                                fill = fill(primaryColor),
-                                thicknessDp = 8f,
-                                shape = CorneredShape.rounded(allPercent = 40)
+                        columnProvider = ColumnCartesianLayer
+                            .ColumnProvider.series(
+                                LineComponent(
+                                    fill = fill(primaryColor),
+                                    thicknessDp = 16f,
+                                    shape = CorneredShape.rounded(
+                                        topLeftPercent = 20,
+                                        topRightPercent = 20,
+                                    )
+                                ),
+                                LineComponent(
+                                    fill = fill(primaryColor),
+                                    thicknessDp = 16f,
+                                ),
+                                LineComponent(
+                                    fill = fill(secondaryColor),
+                                    thicknessDp = 16f,
+                                    shape = CorneredShape.rounded(
+                                        topLeftPercent = 20,
+                                        topRightPercent = 20,
+                                    )
+                                )
                             ),
-                            // Previous period (grey)
-                            LineComponent(
-                                fill = fill(secondaryColor),
-                                thicknessDp = 8f,
-                                shape = CorneredShape.rounded(allPercent = 40)
-                            )
-                        ),
-                        mergeMode = { ColumnCartesianLayer.MergeMode.Grouped(4f) }
+                        mergeMode = {
+                            ColumnCartesianLayer.MergeMode.stacked()
+                        }
                     ),
-                    startAxis = VerticalAxis.rememberStart(line = null),
-                    bottomAxis = HorizontalAxis.rememberBottom(valueFormatter = bottomAxisValueFormatter),
+                    startAxis = VerticalAxis.rememberStart(
+                        line = null
+                    ),
+                    bottomAxis = HorizontalAxis.rememberBottom(
+                        valueFormatter = bottomAxisValueFormatter
+                    ),
                     marker = marker,
+                    markerVisibilityListener = barTapListener,
                     decorations = listOf(averageLine)
                 ),
                 modelProducer = modelProducer,
-                scrollState = rememberVicoScrollState(scrollEnabled = false),
+                scrollState = rememberVicoScrollState(
+                    scrollEnabled = false
+                ),
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(ChartHeight)
@@ -675,12 +769,12 @@ private fun BottomStatsRow(stats: List<StatItem>) {
 @Composable
 private fun StatItemCard(stat: StatItem) {
     val icon = when (stat.label) {
-        stringResource(R.string.stats_views) -> Icons.Default.Visibility
-        stringResource(R.string.stats_visitors) -> Icons.Default.Person
+        stringResource(R.string.stats_views) -> Icons.Outlined.Visibility
+        stringResource(R.string.stats_visitors) -> Icons.Default.PersonOutline
         stringResource(R.string.stats_likes) -> Icons.Default.FavoriteBorder
         stringResource(R.string.stats_comments) -> Icons.Default.ChatBubbleOutline
-        stringResource(R.string.posts) -> Icons.Default.Edit
-        else -> Icons.Default.Visibility
+        stringResource(R.string.posts) -> Icons.Outlined.ModeEditOutline
+        else -> Icons.Outlined.Visibility
     }
 
     Column(
@@ -718,13 +812,13 @@ private fun ChangeBadge(change: StatChange) {
     val (text, backgroundColor, textColor) = when (change) {
         is StatChange.Positive -> Triple(
             "↗ ${String.format(Locale.getDefault(), "%.1f%%", change.percentage)}",
-            ChangeBadgePositiveColor.copy(alpha = 0.15f),
-            ChangeBadgePositiveColor
+            StatsColors.ChangeBadgePositive.copy(alpha = 0.15f),
+            StatsColors.ChangeBadgePositive
         )
         is StatChange.Negative -> Triple(
             "↘ ${String.format(Locale.getDefault(), "%.1f%%", change.percentage)}",
-            ChangeBadgeNegativeColor.copy(alpha = 0.15f),
-            ChangeBadgeNegativeColor
+            StatsColors.ChangeBadgeNegative.copy(alpha = 0.15f),
+            StatsColors.ChangeBadgeNegative
         )
         is StatChange.NoChange -> Triple(
             "↔ 0%",
@@ -741,7 +835,7 @@ private fun ChangeBadge(change: StatChange) {
     ) {
         Text(
             text = text,
-            style = MaterialTheme.typography.labelSmall,
+            style = MaterialTheme.typography.labelMedium,
             color = textColor,
             fontWeight = FontWeight.Medium
         )
@@ -828,6 +922,7 @@ private fun ViewsStatsCardLoadingPreview() {
         ViewsStatsCard(
             uiState = ViewsStatsCardUiState.Loading,
             onChartTypeChanged = {},
+            onBarTapped = {},
             onRetry = {},
             onRemoveCard = {}
         )
@@ -871,6 +966,7 @@ private fun ViewsStatsCardLoadedPreview() {
         ViewsStatsCard(
             uiState = sampleLoadedState(),
             onChartTypeChanged = {},
+            onBarTapped = {},
             onRetry = {},
             onRemoveCard = {}
         )
@@ -886,6 +982,7 @@ private fun ViewsStatsCardErrorPreview() {
                 message = stringResource(R.string.stats_error_api)
             ),
             onChartTypeChanged = {},
+            onBarTapped = {},
             onRetry = {},
             onRemoveCard = {}
         )
@@ -899,6 +996,7 @@ private fun ViewsStatsCardLoadedDarkPreview() {
         ViewsStatsCard(
             uiState = sampleLoadedState(),
             onChartTypeChanged = {},
+            onBarTapped = {},
             onRetry = {},
             onRemoveCard = {}
         )

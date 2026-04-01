@@ -279,8 +279,7 @@ platform :android do
   JETPACK_FROZEN_STRINGS_DIR_PATH = File.join(FASTLANE_FOLDER, 'jetpack_resources', 'values').freeze
   LOCAL_LIBRARIES_STRINGS_PATHS = [
     { library: 'Image Editor', strings_path: './libs/image-editor/src/main/res/values/strings.xml', source_id: 'module:image-editor', add_ignore_attr: true },
-    { library: 'Editor', strings_path: './libs/editor/src/main/res/values/strings.xml', source_id: 'module:editor', add_ignore_attr: true },
-    { library: 'Login Library', strings_path: './libs/login/src/main/res/values/strings.xml', source_id: 'module:login', add_ignore_attr: true }
+    { library: 'Editor', strings_path: './libs/editor/src/main/res/values/strings.xml', source_id: 'module:editor', add_ignore_attr: true }
   ].freeze
   REMOTE_LIBRARIES_STRINGS_PATHS = [
     {

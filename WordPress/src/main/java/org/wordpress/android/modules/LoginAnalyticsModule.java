@@ -2,9 +2,11 @@ package org.wordpress.android.modules;
 
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
-import org.wordpress.android.login.LoginAnalyticsListener;
+import org.wordpress.android.ui.accounts.login.LoginAnalyticsListener;
 import org.wordpress.android.ui.accounts.UnifiedLoginTracker;
 import org.wordpress.android.ui.accounts.login.LoginAnalyticsTracker;
+
+import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
@@ -14,6 +16,7 @@ import dagger.hilt.components.SingletonComponent;
 @InstallIn(SingletonComponent.class)
 @Module
 public class LoginAnalyticsModule {
+    @Singleton
     @Provides
     public LoginAnalyticsListener provideAnalyticsListener(AccountStore accountStore, SiteStore siteStore,
                                                            UnifiedLoginTracker unifiedLoginTracker) {

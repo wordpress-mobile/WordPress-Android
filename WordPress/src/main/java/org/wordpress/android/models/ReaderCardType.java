@@ -47,7 +47,7 @@ public enum ReaderCardType {
     }
 
     /*
-     * returns true if the post's content is 100 characters or less
+     * returns true if the post's content is 100 characters or fewer
      */
     private static boolean hasMinContent(@NonNull ReaderPost post) {
         if (post.getExcerpt().length() > MIN_CONTENT_CHARS) {

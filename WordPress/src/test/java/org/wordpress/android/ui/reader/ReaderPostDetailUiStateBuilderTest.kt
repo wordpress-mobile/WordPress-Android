@@ -23,14 +23,11 @@ import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.ui.reader.discover.ReaderPostUiStateBuilder
 import org.wordpress.android.ui.reader.models.ReaderSimplePost
 import org.wordpress.android.ui.reader.models.ReaderSimplePostList
-import org.wordpress.android.ui.reader.utils.FeaturedImageUtils
-import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import org.wordpress.android.ui.reader.utils.ThreadedCommentsUtils
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.CommentSnippetState.CommentSnippetData
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.CommentSnippetState.Loading
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.UiState.ReaderPostDetailsUiState
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.UiState.ReaderPostDetailsUiState.ExcerptFooterUiState
-import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.UiState.ReaderPostDetailsUiState.ReaderPostFeaturedImageUiState
 import org.wordpress.android.ui.reader.views.ReaderPostDetailsHeaderViewUiStateBuilder
 import org.wordpress.android.ui.reader.views.uistates.CommentItemType.BUTTON
 import org.wordpress.android.ui.reader.views.uistates.CommentItemType.COMMENT
@@ -40,7 +37,6 @@ import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.DateTimeUtilsWrapper
-import org.wordpress.android.util.DisplayUtilsWrapper
 import org.wordpress.android.util.WPAvatarUtilsWrapper
 import org.wordpress.android.viewmodel.ContextProvider
 import org.wordpress.android.viewmodel.ResourceProvider
@@ -56,15 +52,6 @@ class ReaderPostDetailUiStateBuilderTest : BaseUnitTest() {
 
     @Mock
     lateinit var headerViewUiStateBuilder: ReaderPostDetailsHeaderViewUiStateBuilder
-
-    @Mock
-    lateinit var featuredImageUtils: FeaturedImageUtils
-
-    @Mock
-    lateinit var readerUtilsWrapper: ReaderUtilsWrapper
-
-    @Mock
-    lateinit var displayUtilsWrapper: DisplayUtilsWrapper
 
     @Mock
     lateinit var resourceProvider: ResourceProvider
@@ -104,9 +91,7 @@ class ReaderPostDetailUiStateBuilderTest : BaseUnitTest() {
     }
     private val dummyOnRelatedPostItemClicked: (Long, Long, Boolean) -> Unit = { _, _, _ -> }
     private val dummyonCommentSnippetClicked: (Long, Long) -> Unit = { _, _ -> }
-    private val dummyFeaturedImageUrl = "/image/url"
     private val dummyVisitPostLinkText = "visit post"
-    private val dummyDisplayPixelHeight = 100
 
     @Before
     fun setUp() = test {
@@ -115,9 +100,6 @@ class ReaderPostDetailUiStateBuilderTest : BaseUnitTest() {
         builder = ReaderPostDetailUiStateBuilder(
             headerViewUiStateBuilder,
             postUiStateBuilder,
-            featuredImageUtils,
-            readerUtilsWrapper,
-            displayUtilsWrapper,
             contextProvider,
             htmlUtilsWrapper,
             htmlMessageUtils,
@@ -127,28 +109,6 @@ class ReaderPostDetailUiStateBuilderTest : BaseUnitTest() {
             resourceProvider
         )
     }
-
-    /* READER POST FEATURED IMAGE */
-    @Test
-    fun `given featured image should be shown, when post ui is built, then featured image exists`() = test {
-        val postUiState = buildPostUiState(shouldShowFeaturedImage = true)
-
-        assertThat(postUiState.featuredImageUiState).isEqualTo(
-            ReaderPostFeaturedImageUiState(
-                blogId = dummySourceReaderPost.blogId,
-                url = dummyFeaturedImageUrl,
-                height = (dummyDisplayPixelHeight * READER_POST_FEATURED_IMAGE_HEIGHT_PERCENT).toInt()
-            )
-        )
-    }
-
-    @Test
-    fun `given featured image should not be shown, when post ui is built, then featured image does not exists`() =
-        test {
-            val postUiState = buildPostUiState(shouldShowFeaturedImage = false)
-
-            assertThat(postUiState.featuredImageUiState).isNull()
-        }
 
     /* EXCERPT FOOTER */
     @Test
@@ -195,7 +155,9 @@ class ReaderPostDetailUiStateBuilderTest : BaseUnitTest() {
     fun `when global related posts ui is built, then global related posts header label exists`() = test {
         val relatedPostsUiState = buildRelatedPostsUiState(isGlobal = true)
 
-        assertThat(relatedPostsUiState.headerLabel).isEqualTo(UiStringRes(R.string.reader_label_global_related_posts))
+        assertThat(relatedPostsUiState.headerLabel).isEqualTo(
+            UiStringRes(R.string.reader_label_global_related_posts)
+        )
     }
 
     @Test
@@ -338,9 +300,8 @@ class ReaderPostDetailUiStateBuilderTest : BaseUnitTest() {
         onItemClicked = dummyOnRelatedPostItemClicked
     )
 
-    private fun buildPostUiState(
+    private suspend fun buildPostUiState(
         readerPost: ReaderPost? = null,
-        shouldShowFeaturedImage: Boolean = false
     ): ReaderPostDetailsUiState {
         val post = readerPost ?: dummySourceReaderPost
 
@@ -354,11 +315,6 @@ class ReaderPostDetailUiStateBuilderTest : BaseUnitTest() {
                 )
             ).thenReturn(dummyVisitPostLinkText)
         }
-
-        whenever(featuredImageUtils.shouldAddFeaturedImage(any())).thenReturn(shouldShowFeaturedImage)
-        whenever(displayUtilsWrapper.getWindowPixelHeight()).thenReturn(dummyDisplayPixelHeight)
-        whenever(readerUtilsWrapper.getResizedImageUrl(any(), any(), any(), any(), any()))
-            .thenReturn(dummyFeaturedImageUrl)
 
         whenever(headerViewUiStateBuilder.mapPostToUiState(any(), any())).thenReturn(mock())
         whenever(postUiStateBuilder.mapPostToActions(any(), any())).thenReturn(mock())

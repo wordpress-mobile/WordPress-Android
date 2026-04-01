@@ -21,6 +21,7 @@ import org.wordpress.android.fluxc.model.TermModel
 import org.wordpress.android.fluxc.model.TermsModel
 import org.wordpress.android.fluxc.network.TrackNetworkRequestsInterceptor
 import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpApiClientProvider
+import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpNetworkAvailabilityProvider
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.TaxonomyStore
 import org.wordpress.android.fluxc.store.TaxonomyStore.DEFAULT_TAXONOMY_CATEGORY
@@ -89,6 +90,7 @@ class TermsViewModel @Inject constructor(
     networkUtilsWrapper: NetworkUtilsWrapper,
     @Named(IO_THREAD) ioDispatcher: CoroutineDispatcher,
     trackNetworkRequestsInterceptor: TrackNetworkRequestsInterceptor,
+    networkAvailabilityProvider: WpNetworkAvailabilityProvider,
 ) : DataViewViewModel(
     mainDispatcher = mainDispatcher,
     appLogWrapper = appLogWrapper,
@@ -97,7 +99,8 @@ class TermsViewModel @Inject constructor(
     selectedSiteRepository = selectedSiteRepository,
     accountStore = accountStore,
     ioDispatcher = ioDispatcher,
-    trackNetworkRequestsInterceptor = trackNetworkRequestsInterceptor
+    trackNetworkRequestsInterceptor = trackNetworkRequestsInterceptor,
+    networkAvailabilityProvider = networkAvailabilityProvider
 ) {
     private var taxonomySlug: String = ""
     private var isHierarchical: Boolean = false

@@ -246,12 +246,13 @@ fun StatsListHeader(
 @Composable
 fun StatsListRowContainer(
     percentage: Float,
+    modifier: Modifier = Modifier,
     content: @Composable () -> Unit
 ) {
     val barColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.08f)
 
     Box(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .height(IntrinsicSize.Min)
             .clip(RoundedCornerShape(8.dp))
@@ -280,7 +281,7 @@ fun StatsViewsColumn(
     Column(horizontalAlignment = Alignment.End) {
         Text(
             text = formatStatValue(views),
-            style = MaterialTheme.typography.bodyMedium,
+            style = MaterialTheme.typography.bodyLarge,
             fontWeight = FontWeight.SemiBold,
             color = MaterialTheme.colorScheme.onSurface
         )
@@ -298,7 +299,7 @@ fun StatsItemName(
 ) {
     Text(
         text = name,
-        style = MaterialTheme.typography.bodyMedium,
+        style = MaterialTheme.typography.bodyLarge,
         color = MaterialTheme.colorScheme.onSurface,
         maxLines = 1,
         overflow = TextOverflow.Ellipsis,
@@ -313,7 +314,7 @@ fun StatsItemName(
 fun StatsPositionNumber(position: Int) {
     Text(
         text = position.toString(),
-        style = MaterialTheme.typography.bodyMedium,
+        style = MaterialTheme.typography.bodyLarge,
         fontWeight = FontWeight.SemiBold,
         color = MaterialTheme.colorScheme.onSurfaceVariant,
         modifier = Modifier.width(32.dp)
@@ -342,7 +343,7 @@ fun StatsListItem(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(vertical = 12.dp, horizontal = 8.dp),
+                .padding(vertical = 12.dp, horizontal = 16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             icon()
@@ -378,7 +379,7 @@ fun StatsDetailListItem(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(vertical = 12.dp, horizontal = 8.dp),
+                .padding(vertical = 12.dp, horizontal = 16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             StatsPositionNumber(position = position)

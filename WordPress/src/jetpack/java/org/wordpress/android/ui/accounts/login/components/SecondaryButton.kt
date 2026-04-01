@@ -34,7 +34,7 @@ fun SecondaryButton(
         ),
         modifier = modifier
             .padding(horizontal = dimensionResource(R.dimen.login_prologue_revamped_buttons_padding))
-            .padding(bottom = 60.dp)
+            .padding(bottom = 16.dp)
             .fillMaxWidth(),
     ) {
         Text(

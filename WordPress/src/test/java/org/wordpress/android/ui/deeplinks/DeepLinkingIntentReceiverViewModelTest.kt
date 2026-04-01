@@ -137,26 +137,37 @@ class DeepLinkingIntentReceiverViewModelTest : BaseUnitTest() {
         val startUrl = mock<UriWrapper>()
         val wpLoginUri = initWpLoginUri(startUrl)
         val uri = initTrackingUri(wpLoginUri)
-        val barUri = buildUri("public-api.wordpress.com")
 
         whenever(deepLinkHandlers.buildNavigateAction(startUrl)).thenReturn(null)
-        whenever(uri.copy("bar")).thenReturn(barUri)
 
         viewModel.start(null, uri, DEFAULT, null)
 
-        assertUriHandled(OpenInBrowser(barUri))
+        assertUriHandled(OpenInBrowser(wpLoginUri))
+        verify(serverTrackingHandler).request(uri)
+    }
+
+    @Test
+    fun `tracking URL with unhandled direct redirect opens redirect URL in browser`() {
+        val redirectUri = buildUri("wordpress.com")
+        val uri = initTrackingUri(redirectUri)
+
+        whenever(deepLinkHandlers.buildNavigateAction(redirectUri)).thenReturn(null)
+
+        viewModel.start(null, uri, DEFAULT, null)
+
+        assertUriHandled(OpenInBrowser(redirectUri))
+        verify(serverTrackingHandler).request(uri)
     }
 
     @Test
     fun `wp-login mbar URL redirects user to browser with missing second redirect`() {
         val wpLoginUri = initWpLoginUri()
         val uri = initTrackingUri(wpLoginUri)
-        val barUri = buildUri("public-api.wordpress.com")
-        whenever(uri.copy("bar")).thenReturn(barUri)
 
         viewModel.start(null, uri, DEFAULT, null)
 
-        assertUriHandled(OpenInBrowser(barUri))
+        assertUriHandled(OpenInBrowser(wpLoginUri))
+        verify(serverTrackingHandler).request(uri)
     }
 
     @Test

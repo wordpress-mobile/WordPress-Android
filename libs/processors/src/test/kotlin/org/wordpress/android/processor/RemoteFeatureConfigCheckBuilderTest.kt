@@ -36,12 +36,10 @@ class RemoteFeatureConfigCheckBuilderTest {
 
                 public fun checkRemoteFields() {
                     if ($classA.remoteField == null) {
-                        throw IllegalArgumentException(""${'"'}org.wordpress.$classA needs to define
-                            remoteField""${'"'})
+                        throw IllegalArgumentException(""${'"'}org.wordpress.$classA needs to define remoteField""${'"'})
                     }
                     if ($classB.remoteField == null) {
-                        throw IllegalArgumentException(""${'"'}org.wordpress.$classB needs to define
-                            remoteField""${'"'})
+                        throw IllegalArgumentException(""${'"'}org.wordpress.$classB needs to define remoteField""${'"'})
                     }
                 }
             }

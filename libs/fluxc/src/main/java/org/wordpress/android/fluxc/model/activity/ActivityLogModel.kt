@@ -21,6 +21,8 @@ data class ActivityLogModel(
         val type: String?,
         val wpcomUserID: Long?,
         val avatarURL: String?,
-        val role: String?
+        val role: String?,
+        val isMCPAgent: Boolean = false,
+        val mcpClient: String? = null
     )
 }

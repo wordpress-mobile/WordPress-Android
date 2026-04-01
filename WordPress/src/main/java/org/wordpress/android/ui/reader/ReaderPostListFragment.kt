@@ -1382,7 +1382,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
         }
 
         // remember this query for future suggestions
-        val trimQuery = query.trim { it <= ' ' }
+        val trimQuery = query.trim()
         ReaderSearchTable.addOrUpdateQueryString(trimQuery)
 
         // remove cached results for this search - search results are ephemeral so each search
@@ -1972,6 +1972,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
 
     private fun announceListStateForAccessibility() {
         if (view != null) {
+            @Suppress("DEPRECATION")
             requireView().announceForAccessibility(
                 getString(
                     R.string.reader_acessibility_list_loaded,
@@ -2759,7 +2760,14 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
 
             ReaderPostCardActionType.VISIT_SITE -> {
                 readerTracker.track(AnalyticsTracker.Stat.READER_ARTICLE_VISITED)
-                ReaderActivityLauncher.openPost(requireActivity(), post)
+                ReaderActivityLauncher.showReaderBlogOrFeedPreview(
+                    requireActivity(),
+                    post.blogId,
+                    post.feedId,
+                    post.isFollowedByCurrentUser,
+                    source,
+                    readerTracker
+                )
             }
 
             ReaderPostCardActionType.LIKE -> postListViewModel.onLikeButtonClicked(

@@ -8,7 +8,8 @@ data class StatsCardsConfiguration(
     val visibleCards: List<StatsCardType> = StatsCardType.defaultCards(),
     val selectedPeriodType: String? = null,
     val customPeriodStartDate: Long? = null,
-    val customPeriodEndDate: Long? = null
+    val customPeriodEndDate: Long? = null,
+    val selectedChartType: String? = null
 ) {
     /**
      * Returns card types that are not currently visible (available to add).

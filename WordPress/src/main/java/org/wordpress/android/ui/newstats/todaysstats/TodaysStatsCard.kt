@@ -23,7 +23,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ChatBubbleOutline
 import androidx.compose.material.icons.filled.FavoriteBorder
-import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.PersonOutline
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -64,7 +64,7 @@ import java.util.Locale
 private val CardCornerRadius = 10.dp
 private val CardPadding = 16.dp
 private val CardMargin = 16.dp
-private val ChartHeight = 80.dp
+private val ChartHeight = 50.dp
 private val MetricIconSize = 16.dp
 private val MetricSpacing = 4.dp
 
@@ -135,13 +135,13 @@ private fun LoadingContent() {
             .fillMaxWidth()
             .padding(CardPadding)
     ) {
-        // Top section: Title + Chart placeholder
+        // Top section: Title + Chart placeholder in single row
         Row(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
+            verticalAlignment = Alignment.CenterVertically
         ) {
             // Left: Title and date placeholder
-            Column(modifier = Modifier.weight(0.4f)) {
+            Column {
                 Box(
                     modifier = Modifier
                         .width(80.dp)
@@ -158,10 +158,11 @@ private fun LoadingContent() {
                         .background(shimmerBrush)
                 )
             }
-            // Right: Chart placeholder
+            Spacer(modifier = Modifier.width(16.dp))
+            // Chart placeholder (fills remaining space)
             Box(
                 modifier = Modifier
-                    .weight(0.6f)
+                    .weight(1f)
                     .height(ChartHeight)
                     .clip(RoundedCornerShape(8.dp))
                     .background(shimmerBrush)
@@ -223,13 +224,16 @@ private fun LoadedContent(
             .clickable(onClick = state.onCardClick)
             .padding(CardPadding)
     ) {
-        // Header with menu
+        // Header: Title on left, sparkline in middle, menu on right
         Row(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
             TitleSection()
+            Spacer(modifier = Modifier.width(16.dp))
+            Box(modifier = Modifier.weight(1f)) {
+                StatsChart(chartData = state.chartData)
+            }
             StatsCardMenu(
                 onRemoveClick = onRemoveCard,
                 cardPosition = cardPosition,
@@ -239,9 +243,6 @@ private fun LoadedContent(
                 onMoveToBottom = onMoveToBottom
             )
         }
-        Spacer(modifier = Modifier.height(8.dp))
-        // Chart
-        StatsChart(chartData = state.chartData)
         Spacer(modifier = Modifier.height(12.dp))
         // Bottom section: Metrics
         MetricsRow(
@@ -268,13 +269,31 @@ private fun ErrorContent(
             .fillMaxWidth()
             .padding(CardPadding)
     ) {
-        // Header with menu
+        // Header: Title on left, empty chart in middle, menu on right
         Row(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
             TitleSection()
+            Spacer(modifier = Modifier.width(16.dp))
+            Box(
+                modifier = Modifier
+                    .weight(1f)
+                    .height(ChartHeight)
+                    .clip(RoundedCornerShape(8.dp))
+                    .background(
+                        MaterialTheme.colorScheme.surfaceVariant
+                            .copy(alpha = 0.3f)
+                    ),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = stringResource(R.string.stats_no_data_yet),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme
+                        .onSurfaceVariant
+                )
+            }
             StatsCardMenu(
                 onRemoveClick = onRemoveCard,
                 cardPosition = cardPosition,
@@ -282,22 +301,6 @@ private fun ErrorContent(
                 onMoveToTop = onMoveToTop,
                 onMoveDown = onMoveDown,
                 onMoveToBottom = onMoveToBottom
-            )
-        }
-        Spacer(modifier = Modifier.height(8.dp))
-        // Empty chart placeholder
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(ChartHeight)
-                .clip(RoundedCornerShape(8.dp))
-                .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f)),
-            contentAlignment = Alignment.Center
-        ) {
-            Text(
-                text = stringResource(R.string.stats_no_data_yet),
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
         Spacer(modifier = Modifier.height(16.dp))
@@ -387,7 +390,7 @@ private fun StatsChart(chartData: ChartData) {
     // Create gradient shader for area fill (primary color fading to transparent)
     val areaGradient = ShaderProvider.verticalGradient(
         colors = arrayOf(
-            primaryColor.copy(alpha = 0.8f),
+            primaryColor.copy(alpha = 0.3f),
             primaryColor.copy(alpha = 0f)
         )
     )
@@ -442,7 +445,7 @@ private fun MetricsRow(
             verticalAlignment = Alignment.CenterVertically
         ) {
             SecondaryMetricItem(
-                icon = Icons.Default.Person,
+                icon = Icons.Default.PersonOutline,
                 value = formatStatValue(visitors)
             )
             SecondaryMetricItem(

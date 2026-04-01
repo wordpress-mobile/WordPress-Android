@@ -204,7 +204,14 @@ class ActivityLogViewModel @Inject constructor(
                 model = model,
                 rewindDisabled = withRestoreProgressItem || withBackupDownloadProgressItem,
                 isRestoreHidden = restoreEvent.isRestoreHidden
-            )
+            ).let { event ->
+                val metadata = model.actor?.formattedMcpMetadata(resourceProvider)
+                if (metadata != null) {
+                    event.copy(actorMetadata = metadata)
+                } else {
+                    event
+                }
+            }
             val lastItem = items.lastOrNull() as? ActivityLogListItem.Event
             if (lastItem == null || lastItem.formattedDate != currentItem.formattedDate) {
                 items.add(ActivityLogListItem.Header(currentItem.formattedDate))

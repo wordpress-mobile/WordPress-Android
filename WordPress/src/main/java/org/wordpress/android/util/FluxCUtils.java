@@ -144,6 +144,26 @@ public class FluxCUtils {
             filename += "." + fileExtension;
         }
 
+        // Path resolution can drop the file extension when the filename contains
+        // spaces (e.g. "screenshot_one ui home123.jpg" resolves to a path ending
+        // in "screenshot_one ui home123."). Rename the on-disk file so the path
+        // includes the correct extension, allowing upload consumers to detect the
+        // MIME type from the filename.
+        if (fileExtension != null && !path.endsWith("." + fileExtension)) {
+            String correctedPath = path;
+            while (correctedPath.endsWith(".")) {
+                correctedPath = correctedPath.substring(0, correctedPath.length() - 1);
+            }
+            correctedPath = correctedPath + "." + fileExtension;
+            File renamed = new File(correctedPath);
+            if (file.renameTo(renamed)) {
+                path = correctedPath;
+            } else {
+                AppLog.w(T.UTILS,
+                    "Failed to rename cached file to include extension: " + path);
+            }
+        }
+
         MediaModel media = new MediaModel(
                 localSiteId,
                 DateTimeUtils.iso8601UTCFromTimestamp(System.currentTimeMillis() / 1000),

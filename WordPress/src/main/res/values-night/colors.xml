@@ -7,21 +7,6 @@
     <color name="p2_author_bg_stroke">#1E1E1E</color>
     <color name="bottom_bar_notification_badge">@color/background_dark_elevated</color>
 
-    <!-- Login Prologue -->
-    <color name="promo_indicator_color_default" tools:ignore="UnusedResources">@color/white_translucent_20</color>
-    <color name="login_prologue_background_circle_purple">@color/green_60</color>
-    <color name="login_prologue_background_circle_light_purple">@color/purple_60</color>
-    <color name="login_prologue_background_circle_blue">@color/blue_60</color>
-    <color name="login_prologue_background_circle_light_blue">@color/blue_60</color>
-    <color name="login_prologue_background_circle_green">@color/green_60</color>
-    <color name="login_prologue_background_circle_yellow">@color/yellow_60</color>
-    <color name="login_prologue_background_circle_orange">@color/red_60</color>
-    <color name="login_prologue_background_circle_pink">@color/purple_60</color>
-
-    <!-- Login Prologue Revamped -->
-    <color name="login_prologue_revamped_background" tools:ignore="UnusedResources">@color/gray_80</color>
-    <color name="login_prologue_revamped_icon" tools:ignore="UnusedResources">@color/white</color>
-
     <!-- Post History -->
 
     <color name="post_history_underlying_background">@color/gray_100</color>
@@ -33,11 +18,14 @@
     <color name="jetpack_powered_bottom_sheet_background">@color/jetpack_green_100</color>
 
     <!-- Reader -->
+    <!-- Matches iOS UIColor.separator: rgba(84,84,88,0.6) -->
+    <color name="reader_separator">#99545458</color>
 
     <!-- Reader Following empty view -->
 
     <!-- Reader Post Card -->
     <color name="reader_post_list_background">@color/background_dark</color>
+    <color name="reader_featured_image_background">@color/gray_80</color>
 
     <!-- Prepublishing Nudges -->
     <color name="prepublishing_toolbar_icon_color">@color/gray_10</color>

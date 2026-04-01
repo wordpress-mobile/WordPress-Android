@@ -19,6 +19,7 @@ data class SnackbarMessage(
 sealed interface PendingConfirmation {
     data class Trash(val postId: Long) : PendingConfirmation
     data class Delete(val postId: Long) : PendingConfirmation
+    data class MoveToDraft(val postId: Long) : PendingConfirmation
 }
 
 data class ConfirmationDialogState(
@@ -37,6 +38,14 @@ data class PostTabUiState(
     val isAuthError: Boolean = false
 )
 
+enum class PostDisplayState {
+    NORMAL,
+    FETCHING_WITH_DATA,
+    FAILED_WITH_DATA,
+    PLACEHOLDER,
+    ERROR
+}
+
 data class PostRsUiModel(
     val remotePostId: Long,
     val title: String,
@@ -52,8 +61,9 @@ data class PostRsUiModel(
     val featuredImageId: Long = 0L,
     val featuredImageUrl: String? = null,
     val actions: List<PostRsMenuAction> = emptyList(),
-    val isPlaceholder: Boolean = false,
-    val isError: Boolean = false
+    val badges: List<Int> = emptyList(),
+    val displayState: PostDisplayState =
+        PostDisplayState.NORMAL
 )
 
 enum class PostRsMenuAction(
@@ -61,6 +71,10 @@ enum class PostRsMenuAction(
     @DrawableRes val iconResId: Int,
     val isDestructive: Boolean = false
 ) {
+    SETTINGS(
+        R.string.post_settings,
+        R.drawable.ic_settings_white_24dp
+    ),
     VIEW(R.string.button_view, R.drawable.gb_ic_external),
     READ(
         R.string.button_read,
@@ -107,29 +121,36 @@ fun PostItemState.toUiModel(
         is PostItemState.Stale ->
             data.toUiModel(showStatus)
         is PostItemState.FetchingWithData ->
-            data.toUiModel(showStatus)
+            data.toUiModel(
+                showStatus,
+                PostDisplayState.FETCHING_WITH_DATA
+            )
         is PostItemState.FailedWithData ->
-            data.toUiModel(showStatus)
+            data.toUiModel(
+                showStatus,
+                PostDisplayState.FAILED_WITH_DATA
+            )
         is PostItemState.Missing,
         is PostItemState.Fetching -> PostRsUiModel(
             remotePostId = postId,
             title = "",
             excerpt = "",
             date = "",
-            isPlaceholder = true
+            displayState = PostDisplayState.PLACEHOLDER
         )
         is PostItemState.Failed -> PostRsUiModel(
             remotePostId = postId,
             title = "",
             excerpt = "",
             date = "",
-            isError = true
+            displayState = PostDisplayState.ERROR
         )
     }
 }
 
 private fun FullEntityAnyPostWithEditContext.toUiModel(
-    showStatus: Boolean
+    showStatus: Boolean,
+    displayState: PostDisplayState = PostDisplayState.NORMAL
 ): PostRsUiModel {
     val post: AnyPostWithEditContext = data
     return PostRsUiModel(
@@ -156,12 +177,24 @@ private fun FullEntityAnyPostWithEditContext.toUiModel(
             post.status.toLabel()
         } else {
             0
-        }
+        },
+        badges = buildList {
+            if (post.status is PostStatus.Private) {
+                add(R.string.post_status_post_private)
+            }
+            if (post.status is PostStatus.Pending) {
+                add(R.string.post_status_pending_review)
+            }
+            if (post.sticky == true) {
+                add(R.string.post_status_sticky)
+            }
+        },
+        displayState = displayState
     )
 }
 
 @StringRes
-private fun PostStatus?.toLabel(): Int = when (this) {
+internal fun PostStatus?.toLabel(): Int = when (this) {
     is PostStatus.Publish ->
         R.string.post_status_post_published
     is PostStatus.Draft -> R.string.post_status_draft
@@ -173,6 +206,7 @@ private fun PostStatus?.toLabel(): Int = when (this) {
         R.string.post_status_post_scheduled
     is PostStatus.Trash ->
         R.string.post_status_post_trashed
+    is PostStatus.Any -> 0
     is PostStatus.Custom -> 0
     null -> 0
 }

@@ -14,6 +14,7 @@ import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.TrackNetworkRequestsInterceptor
+import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpNetworkAvailabilityProvider
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.ui.dataview.DataViewViewModel.Companion.PAGE_SIZE
@@ -44,6 +45,9 @@ class DataViewViewModelTest : BaseUnitTest() {
     @Mock
     private lateinit var trackNetworkRequestsInterceptor: TrackNetworkRequestsInterceptor
 
+    @Mock
+    private lateinit var networkAvailabilityProvider: WpNetworkAvailabilityProvider
+
     private val testSite = SiteModel().apply {
         id = 1
         siteId = TEST_SITE_SITE_ID
@@ -73,7 +77,8 @@ class DataViewViewModelTest : BaseUnitTest() {
             selectedSiteRepository = selectedSiteRepository,
             accountStore = accountStore,
             ioDispatcher = testDispatcher(),
-            trackNetworkRequestsInterceptor = trackNetworkRequestsInterceptor
+            trackNetworkRequestsInterceptor = trackNetworkRequestsInterceptor,
+            networkAvailabilityProvider = networkAvailabilityProvider
         )
     }
 
@@ -232,7 +237,8 @@ class DataViewViewModelTest : BaseUnitTest() {
                 selectedSiteRepository = selectedSiteRepository,
                 accountStore = accountStore,
                 ioDispatcher = testDispatcher(),
-                trackNetworkRequestsInterceptor = trackNetworkRequestsInterceptor
+                trackNetworkRequestsInterceptor = trackNetworkRequestsInterceptor,
+                networkAvailabilityProvider = networkAvailabilityProvider
             )
             // Access the wpComApiClient property to trigger the lazy initialization
             viewModel.testAccessWpComApiClient()
@@ -500,7 +506,8 @@ class DataViewViewModelTest : BaseUnitTest() {
         selectedSiteRepository: SelectedSiteRepository,
         accountStore: AccountStore,
         ioDispatcher: kotlinx.coroutines.CoroutineDispatcher,
-        trackNetworkRequestsInterceptor: TrackNetworkRequestsInterceptor
+        trackNetworkRequestsInterceptor: TrackNetworkRequestsInterceptor,
+        networkAvailabilityProvider: WpNetworkAvailabilityProvider
     ) : DataViewViewModel(
         mainDispatcher,
         appLogWrapper,
@@ -509,7 +516,8 @@ class DataViewViewModelTest : BaseUnitTest() {
         selectedSiteRepository,
         accountStore,
         ioDispatcher,
-        trackNetworkRequestsInterceptor
+        trackNetworkRequestsInterceptor,
+        networkAvailabilityProvider
     ) {
         init {
             initialize()

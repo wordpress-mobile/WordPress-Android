@@ -249,13 +249,20 @@ public class ReaderWebView extends WPWebView {
                 if (UrlUtils.isImageUrl(url)) {
                     if (isValidEmbeddedImageClick(hr) || isVideoPressPreview(url)) {
                         return super.onTouchEvent(event);
-                    } else {
-                        return mUrlClickListener.onImageUrlClick(
-                            url,
-                            this,
-                            (int) event.getX(),
-                            (int) event.getY());
                     }
+                    // For images inside anchors (e.g. footnote
+                    // back-reference arrows rendered as emoji),
+                    // let the WebView handle the click so the
+                    // JS fragment-link interceptor can catch it
+                    if (hr.getType()
+                        == HitTestResult.SRC_IMAGE_ANCHOR_TYPE) {
+                        return super.onTouchEvent(event);
+                    }
+                    return mUrlClickListener.onImageUrlClick(
+                        url,
+                        this,
+                        (int) event.getX(),
+                        (int) event.getY());
                 } else {
                     return mUrlClickListener.onUrlClick(url);
                 }

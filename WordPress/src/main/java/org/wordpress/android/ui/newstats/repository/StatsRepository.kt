@@ -3,6 +3,7 @@ package org.wordpress.android.ui.newstats.repository
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
+import org.wordpress.android.R
 import org.wordpress.android.ui.newstats.datasource.CityViewsDataResult
 import org.wordpress.android.ui.newstats.datasource.ClicksDataResult
 import org.wordpress.android.ui.newstats.datasource.CountryViewsDataResult
@@ -12,6 +13,12 @@ import org.wordpress.android.ui.newstats.datasource.ReferrersDataResult
 import org.wordpress.android.ui.newstats.datasource.RegionViewsDataResult
 import org.wordpress.android.ui.newstats.datasource.SearchTermsDataResult
 import org.wordpress.android.ui.newstats.datasource.StatsDataSource
+import org.wordpress.android.ui.newstats.datasource.StatsInsightsData
+import org.wordpress.android.ui.newstats.datasource.StatsInsightsDataResult
+import org.wordpress.android.ui.newstats.datasource.StatsTagsData
+import org.wordpress.android.ui.newstats.datasource.StatsTagsDataResult
+import org.wordpress.android.ui.newstats.datasource.StatsSummaryDataResult
+import org.wordpress.android.ui.newstats.datasource.StatsSummaryData
 import org.wordpress.android.ui.newstats.datasource.StatsDateRange
 import org.wordpress.android.ui.newstats.datasource.StatsUnit
 import org.wordpress.android.ui.newstats.datasource.StatsVisitsData
@@ -19,6 +26,9 @@ import org.wordpress.android.ui.newstats.datasource.StatsVisitsDataResult
 import org.wordpress.android.ui.newstats.datasource.TopAuthorsDataResult
 import org.wordpress.android.ui.newstats.datasource.TopPostsDataResult
 import org.wordpress.android.ui.newstats.datasource.VideoPlaysDataResult
+import org.wordpress.android.ui.newstats.datasource.StatsSubscribersDataResult
+import org.wordpress.android.ui.newstats.datasource.SubscribersByUserTypeDataResult
+import org.wordpress.android.ui.newstats.datasource.StatsEmailsSummaryDataResult
 import org.wordpress.android.ui.newstats.mostviewed.MostViewedDataSource
 import kotlinx.coroutines.withContext
 import org.wordpress.android.fluxc.utils.AppLogWrapper
@@ -32,6 +42,7 @@ import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
 import javax.inject.Inject
 import javax.inject.Named
+import kotlin.coroutines.cancellation.CancellationException
 
 private const val HOURLY_QUANTITY = 24
 private const val DAILY_QUANTITY = 1
@@ -43,6 +54,7 @@ private const val DAYS_IN_6_MONTHS = 182
 private const val DAYS_IN_12_MONTHS = 365
 private const val MONTHS_IN_6_MONTHS = 6
 private const val MONTHS_IN_12_MONTHS = 12
+private const val MAX_DAYS_IN_MONTH = 31
 private const val PERCENTAGE_MULTIPLIER = 100.0
 private const val PERCENTAGE_NO_CHANGE = 0.0
 
@@ -66,6 +78,7 @@ internal fun calculateItemChangePercent(
     }
 }
 private const val NUM_DAYS_TODAY = 1
+private const val SUBSCRIBERS_DEFAULT_MAX = 10
 
 /**
  * Repository for fetching stats data using the wordpress-rs API.
@@ -78,7 +91,6 @@ class StatsRepository @Inject constructor(
     @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher,
 ) {
     private val dateFormatter = DateTimeFormatter.ISO_LOCAL_DATE
-
     fun init(accessToken: String) {
         statsDataSource.init(accessToken)
     }
@@ -501,12 +513,28 @@ class StatsRepository @Inject constructor(
     private fun calculateCustomPeriodDates(startDate: LocalDate, endDate: LocalDate): PeriodDateRange {
         val daysBetween = ChronoUnit.DAYS.between(startDate, endDate).toInt() + 1
 
+        // Single day → hourly granularity (like Today)
+        if (daysBetween == 1) {
+            val previousDate = startDate.minusDays(1)
+            return PeriodDateRange(
+                currentStart = startDate,
+                currentEnd = startDate.plusDays(1),
+                previousStart = previousDate,
+                previousEnd = startDate,
+                quantity = HOURLY_QUANTITY,
+                unit = StatsUnit.HOUR,
+                currentDisplayDate = startDate,
+                previousDisplayDate = previousDate
+            )
+        }
+
         val previousEnd = startDate.minusDays(1)
         val previousStart = previousEnd.minusDays(daysBetween.toLong() - 1)
 
-        // Determine unit based on range
+        // Determine unit based on range — use daily for up to a full
+        // month (31 days), monthly beyond that
         val unit = when {
-            daysBetween <= DAYS_IN_30_DAYS -> StatsUnit.DAY
+            daysBetween <= MAX_DAYS_IN_MONTH -> StatsUnit.DAY
             else -> StatsUnit.MONTH
         }
 
@@ -1320,6 +1348,312 @@ class StatsRepository @Inject constructor(
             }
         }
     }
+
+    suspend fun fetchInsights(
+        siteId: Long
+    ): InsightsResult = withContext(ioDispatcher) {
+        val result = statsDataSource.fetchStatsInsights(
+            siteId = siteId
+        )
+        when (result) {
+            is StatsInsightsDataResult.Success ->
+                InsightsResult.Success(
+                    data = result.data
+                )
+            is StatsInsightsDataResult.Error -> {
+                appLogWrapper.e(
+                    AppLog.T.STATS,
+                    "Error fetching insights: " +
+                        "${result.errorType}"
+                )
+                InsightsResult.Error(
+                    result.errorType.name
+                )
+            }
+        }
+    }
+
+    suspend fun fetchStatsSummary(
+        siteId: Long
+    ): StatsSummaryResult = withContext(ioDispatcher) {
+        val result =
+            statsDataSource.fetchStatsSummary(
+                siteId = siteId
+            )
+        when (result) {
+            is StatsSummaryDataResult.Success ->
+                StatsSummaryResult.Success(
+                    data = result.data
+                )
+            is StatsSummaryDataResult.Error -> {
+                appLogWrapper.e(
+                    AppLog.T.STATS,
+                    "Error fetching stats " +
+                        "summary: " +
+                        "${result.errorType}"
+                )
+                StatsSummaryResult.Error(
+                    result.errorType.name
+                )
+            }
+        }
+    }
+
+    suspend fun fetchTags(
+        siteId: Long,
+        max: Int = DEFAULT_TAGS_MAX
+    ): TagsResult = withContext(ioDispatcher) {
+        val result = statsDataSource.fetchStatsTags(
+            siteId = siteId,
+            max = max
+        )
+        when (result) {
+            is StatsTagsDataResult.Success ->
+                TagsResult.Success(
+                    data = result.data
+                )
+            is StatsTagsDataResult.Error -> {
+                appLogWrapper.e(
+                    AppLog.T.STATS,
+                    "Error fetching tags: " +
+                        "${result.errorType}"
+                )
+                TagsResult.Error(
+                    result.errorType.name
+                )
+            }
+        }
+    }
+
+    /**
+     * Fetches all-time subscriber counts: current, 30d ago,
+     * 60d ago, 90d ago. Makes 4 parallel API calls.
+     */
+    @Suppress("MagicNumber")
+    suspend fun fetchSubscribersAllTime(
+        siteId: Long
+    ): SubscribersAllTimeResult = withContext(ioDispatcher) {
+        val results = fetchAllTimeResults(siteId)
+
+        val firstError = results.filterIsInstance<
+            StatsSubscribersDataResult.Error>().firstOrNull()
+        if (firstError != null) {
+            return@withContext SubscribersAllTimeResult.Error(
+                messageResId =
+                    firstError.errorType.messageResId,
+                isAuthError = firstError.errorType ==
+                    StatsErrorType.AUTH_ERROR
+            )
+        }
+
+        val current = results[0]
+        val d30 = results[1]
+        val d60 = results[2]
+        val d90 = results[3]
+        SubscribersAllTimeResult.Success(
+            currentCount = extractSubscriberCount(current),
+            count30DaysAgo = extractSubscriberCount(d30),
+            count60DaysAgo = extractSubscriberCount(d60),
+            count90DaysAgo = extractSubscriberCount(d90)
+        )
+    }
+
+    @Suppress("MagicNumber")
+    private suspend fun fetchAllTimeResults(
+        siteId: Long
+    ): List<StatsSubscribersDataResult> {
+        val today = java.time.LocalDate.now()
+        val dateFormat =
+            java.time.format.DateTimeFormatter
+                .ISO_LOCAL_DATE
+        val dates = listOf(0L, 30L, 60L, 90L).map {
+            today.minusDays(it).format(dateFormat)
+        }
+        return coroutineScope {
+            dates.map { date ->
+                async {
+                    statsDataSource.fetchStatsSubscribers(
+                        siteId,
+                        quantity = 1,
+                        date = date
+                    )
+                }
+            }.map { it.await() }
+        }
+    }
+
+    private fun extractSubscriberCount(
+        result: StatsSubscribersDataResult
+    ): Long {
+        val data = (result as?
+            StatsSubscribersDataResult.Success)?.data
+            ?: return 0L
+        return data.subscribersData
+            .firstOrNull()?.count ?: 0L
+    }
+
+    /**
+     * Fetches subscriber graph data for a given time unit.
+     */
+    @Suppress("TooGenericExceptionCaught")
+    suspend fun fetchSubscribersGraph(
+        siteId: Long,
+        unit: String,
+        quantity: Int,
+        date: String
+    ): SubscribersGraphResult = withContext(ioDispatcher) {
+        try {
+            when (
+                val result = statsDataSource
+                    .fetchStatsSubscribers(
+                        siteId,
+                        quantity = quantity,
+                        unit = unit,
+                        date = date
+                    )
+            ) {
+                is StatsSubscribersDataResult.Success -> {
+                    SubscribersGraphResult.Success(
+                        dataPoints =
+                            result.data.subscribersData.map {
+                                SubscribersGraphDataPoint(
+                                    date = it.date,
+                                    count = it.count
+                                )
+                            }
+                    )
+                }
+                is StatsSubscribersDataResult.Error -> {
+                    SubscribersGraphResult.Error(
+                        messageResId =
+                            result.errorType.messageResId,
+                        isAuthError = result.errorType ==
+                            StatsErrorType.AUTH_ERROR
+                    )
+                }
+            }
+        } catch (e: Exception) {
+            AppLog.e(
+                AppLog.T.STATS,
+                "Error fetching subscribers graph",
+                e
+            )
+            SubscribersGraphResult.Error(
+                messageResId = R.string.stats_error_api
+            )
+        }
+    }
+
+    /**
+     * Fetches a list of subscribers for the given site.
+     */
+    @Suppress("TooGenericExceptionCaught")
+    suspend fun fetchSubscribersList(
+        siteId: Long,
+        perPage: Int = SUBSCRIBERS_DEFAULT_MAX,
+        page: Int = 1
+    ): SubscribersListResult = withContext(ioDispatcher) {
+        try {
+            when (
+                val result = statsDataSource
+                    .fetchSubscribersByUserType(
+                        siteId, perPage, page
+                    )
+            ) {
+                is SubscribersByUserTypeDataResult
+                    .Success -> {
+                    SubscribersListResult.Success(
+                        subscribers =
+                            result.items.map {
+                                SubscriberItemData(
+                                    displayName =
+                                        it.displayName,
+                                    subscribedSince =
+                                        it.subscribedSince
+                                )
+                            }
+                    )
+                }
+                is SubscribersByUserTypeDataResult
+                    .Error -> {
+                    SubscribersListResult.Error(
+                        messageResId =
+                            result.errorType.messageResId,
+                        isAuthError =
+                            result.errorType ==
+                                StatsErrorType.AUTH_ERROR
+                    )
+                }
+            }
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            AppLog.e(
+                AppLog.T.STATS,
+                "Error fetching subscribers list",
+                e
+            )
+            SubscribersListResult.Error(
+                messageResId = R.string.stats_error_api
+            )
+        }
+    }
+
+    /**
+     * Fetches email stats summary for the given site.
+     */
+    @Suppress("TooGenericExceptionCaught")
+    suspend fun fetchEmailsSummary(
+        siteId: Long,
+        quantity: Int = SUBSCRIBERS_DEFAULT_MAX
+    ): EmailsStatsResult = withContext(ioDispatcher) {
+        try {
+            when (
+                val result = statsDataSource
+                    .fetchStatsEmailsSummary(
+                        siteId, quantity
+                    )
+            ) {
+                is StatsEmailsSummaryDataResult
+                    .Success -> {
+                    EmailsStatsResult.Success(
+                        items = result.items.map {
+                            EmailItemData(
+                                title = it.title,
+                                opens = it.opens,
+                                clicks = it.clicks
+                            )
+                        }
+                    )
+                }
+                is StatsEmailsSummaryDataResult
+                    .Error -> {
+                    EmailsStatsResult.Error(
+                        messageResId =
+                            result.errorType.messageResId,
+                        isAuthError =
+                            result.errorType ==
+                                StatsErrorType.AUTH_ERROR
+                    )
+                }
+            }
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            AppLog.e(
+                AppLog.T.STATS,
+                "Error fetching emails summary",
+                e
+            )
+            EmailsStatsResult.Error(
+                messageResId = R.string.stats_error_api
+            )
+        }
+    }
+
+    companion object {
+        private const val DEFAULT_TAGS_MAX = 10
+    }
 }
 
 /**
@@ -1701,4 +2035,120 @@ sealed class DevicesResult {
 data class DeviceItemData(
     val name: String,
     val views: Double
+)
+
+/**
+ * Result of fetching insights data from the repository.
+ */
+sealed class InsightsResult {
+    data class Success(
+        val data: StatsInsightsData
+    ) : InsightsResult()
+    data class Error(
+        val message: String
+    ) : InsightsResult()
+}
+
+/**
+ * Result of fetching stats summary data from the repository.
+ */
+sealed class StatsSummaryResult {
+    data class Success(
+        val data: StatsSummaryData
+    ) : StatsSummaryResult()
+    data class Error(
+        val message: String
+    ) : StatsSummaryResult()
+}
+
+/**
+ * Result of fetching tags data from the repository.
+ */
+sealed class TagsResult {
+    data class Success(
+        val data: StatsTagsData
+    ) : TagsResult()
+    data class Error(
+        val message: String
+    ) : TagsResult()
+}
+
+/**
+ * Result wrapper for subscribers all-time stats fetch operation.
+ */
+sealed class SubscribersAllTimeResult {
+    data class Success(
+        val currentCount: Long,
+        val count30DaysAgo: Long,
+        val count60DaysAgo: Long,
+        val count90DaysAgo: Long
+    ) : SubscribersAllTimeResult()
+    data class Error(
+        @StringRes val messageResId: Int,
+        val isAuthError: Boolean = false
+    ) : SubscribersAllTimeResult()
+}
+
+/**
+ * Result wrapper for subscribers list fetch operation.
+ */
+sealed class SubscribersListResult {
+    data class Success(
+        val subscribers: List<SubscriberItemData>
+    ) : SubscribersListResult()
+    data class Error(
+        @StringRes val messageResId: Int,
+        val isAuthError: Boolean = false
+    ) : SubscribersListResult()
+}
+
+/**
+ * Data for a single subscriber item from the repository layer.
+ */
+data class SubscriberItemData(
+    val displayName: String,
+    val subscribedSince: String
+)
+
+/**
+ * Result wrapper for emails stats fetch operation.
+ */
+sealed class EmailsStatsResult {
+    data class Success(
+        val items: List<EmailItemData>
+    ) : EmailsStatsResult()
+    data class Error(
+        @StringRes val messageResId: Int,
+        val isAuthError: Boolean = false
+    ) : EmailsStatsResult()
+}
+
+/**
+ * Data for a single email item from the repository layer.
+ */
+data class EmailItemData(
+    val title: String,
+    val opens: Long,
+    val clicks: Long
+)
+
+/**
+ * Result wrapper for subscribers graph fetch operation.
+ */
+sealed class SubscribersGraphResult {
+    data class Success(
+        val dataPoints: List<SubscribersGraphDataPoint>
+    ) : SubscribersGraphResult()
+    data class Error(
+        @StringRes val messageResId: Int,
+        val isAuthError: Boolean = false
+    ) : SubscribersGraphResult()
+}
+
+/**
+ * A single data point for the subscribers graph.
+ */
+data class SubscribersGraphDataPoint(
+    val date: String,
+    val count: Long
 )

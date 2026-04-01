@@ -10,16 +10,14 @@ fi
 echo "+++ 🧪 Testing"
 set +e
 ./gradlew \
-  testWordpressWasabiDebugUnitTest \
+  testWordpressDebugUnitTest \
   :libs:processors:test \
   :libs:image-editor:testDebugUnitTest \
   :libs:fluxc:testDebugUnitTest \
-  :libs:login:testDebugUnitTest \
-  koverXmlReportWordpressWasabiDebug \
+  koverXmlReportWordpressDebug \
   :libs:processors:koverXmlReportJvm \
   :libs:image-editor:koverXmlReportDebug \
-  :libs:fluxc:koverXmlReportDebug \
-  :libs:login:koverXmlReportDebug
+  :libs:fluxc:koverXmlReportDebug
 TESTS_EXIT_STATUS=$?
 set -e
 echo ""
@@ -45,11 +43,10 @@ echo "--- 🚦 Collecting Test Results"
 
 # Define test result directories for each module
 declare -A TEST_RESULT_DIRS=(
-  ["WordPress:wordpress"]="WordPress/build/test-results/testWordpressWasabiDebugUnitTest"
+  ["WordPress:wordpress"]="WordPress/build/test-results/testWordpressDebugUnitTest"
   ["processors"]="libs/processors/build/test-results/test"
   ["image-editor"]="libs/image-editor/build/test-results/testDebugUnitTest"
   ["fluxc"]="libs/fluxc/build/test-results/testDebugUnitTest"
-  ["login"]="libs/login/build/test-results/testDebugUnitTest"
 )
 
 # Create temporary directory for collecting all test results

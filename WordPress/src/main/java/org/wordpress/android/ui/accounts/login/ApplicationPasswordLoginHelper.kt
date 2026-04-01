@@ -1,6 +1,11 @@
 package org.wordpress.android.ui.accounts.login
 
+import android.content.Context
+import androidx.annotation.VisibleForTesting
 import androidx.core.net.toUri
+import com.automattic.android.tracks.crashlogging.CrashLogging
+import org.wordpress.android.R
+import org.wordpress.android.util.DeviceUtils
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import org.wordpress.android.analytics.AnalyticsTracker
@@ -8,19 +13,26 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.SiteActionBuilder
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpApiClientProvider
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.UrlUtils
+import org.wordpress.android.util.crashlogging.sendReportWithTag
 import rs.wordpress.api.kotlin.ApiDiscoveryResult
 import rs.wordpress.api.kotlin.WpLoginClient
+import uniffi.wp_api.applicationPasswordsUrl
+import java.net.URI
 import javax.inject.Inject
 import javax.inject.Named
 
 private const val URL_TAG = "url"
 private const val SUCCESS_TAG = "success"
+private const val REASON_TAG = "reason"
+private const val SOURCE_TAG = "source"
+private const val ERROR_TAG = "error"
 
 class ApplicationPasswordLoginHelper @Inject constructor(
     @param:Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
@@ -31,7 +43,9 @@ class ApplicationPasswordLoginHelper @Inject constructor(
     private val wpLoginClient: WpLoginClient,
     private val appLogWrapper: AppLogWrapper,
     private val apiRootUrlCache: ApiRootUrlCache,
-    private val discoverSuccessWrapper: DiscoverSuccessWrapper
+    private val discoverSuccessWrapper: DiscoverSuccessWrapper,
+    private val crashLogging: CrashLogging,
+    private val wpApiClientProvider: WpApiClientProvider,
 ) {
     private var processedAppPasswordData: String? = null
 
@@ -80,24 +94,31 @@ class ApplicationPasswordLoginHelper @Inject constructor(
         return ""
     }
 
+    sealed class StoreCredentialsResult {
+        object Success : StoreCredentialsResult()
+        object SiteNotFound : StoreCredentialsResult()
+        object BadData : StoreCredentialsResult()
+    }
+
     @Suppress("ComplexCondition")
-    suspend fun storeApplicationPasswordCredentialsFrom(urlLogin: UriLogin): Boolean {
+    suspend fun storeApplicationPasswordCredentialsFrom(
+        urlLogin: UriLogin,
+        creationSource: String = ""
+    ): StoreCredentialsResult {
         if (urlLogin.apiRootUrl == null ||
             urlLogin.user.isNullOrEmpty() ||
             urlLogin.password.isNullOrEmpty() ||
             urlLogin.siteUrl == null ||
             urlLogin.siteUrl == processedAppPasswordData
-            ) {
-            appLogWrapper.e(
-                AppLog.T.DB,
-                "A_P: Cannot save application password credentials for: ${urlLogin.siteUrl} - bad data"
-            )
-            return false
+        ) {
+            logAndReportBadData(urlLogin, creationSource)
+            return StoreCredentialsResult.BadData
         }
 
         return withContext(bgDispatcher) {
             val normalizedUrl = UrlUtils.normalizeUrl(urlLogin.siteUrl)
-            val site = siteStore.sites.firstOrNull { UrlUtils.normalizeUrl(it.url) ==  normalizedUrl}
+            val sites = siteStore.sites
+            val site = findSiteByUrl(normalizedUrl, sites)
             if (site != null) {
                 site.apply {
                     apiRestUsernameEncrypted = ""
@@ -108,23 +129,102 @@ class ApplicationPasswordLoginHelper @Inject constructor(
                     apiRestPasswordPlain = urlLogin.password
                     wpApiRestUrl = urlLogin.apiRootUrl
                 }
+                wpApiClientProvider.clearSelfHostedClient(site.id)
                 dispatcherWrapper.updateApplicationPassword(site)
                 trackSuccessful(urlLogin.siteUrl)
-                processedAppPasswordData = urlLogin.siteUrl // Save locally to avoid duplicated calls
-                true
+                trackCreated(creationSource, success = true)
+                processedAppPasswordData = urlLogin.siteUrl
+                StoreCredentialsResult.Success
             } else {
-                appLogWrapper.e(
-                    AppLog.T.DB,
-                    "A_P: Cannot save application password credentials for: ${urlLogin.siteUrl} - null site"
-                )
-                false
+                logSiteNotFound(urlLogin.siteUrl, normalizedUrl, sites)
+                StoreCredentialsResult.SiteNotFound
             }
         }
     }
 
+    fun trackStoringFailed(
+        siteUrl: String?,
+        reason: String,
+        creationSource: String = ""
+    ) {
+        val properties: MutableMap<String, String?> = HashMap()
+        properties[URL_TAG] = maskUrl(siteUrl.orEmpty())
+        properties[REASON_TAG] = reason
+        AnalyticsTracker.track(
+            Stat.APPLICATION_PASSWORD_STORING_FAILED,
+            properties
+        )
+        trackCreated(creationSource, success = false, error = reason)
+    }
+
+    private fun trackCreated(
+        creationSource: String,
+        success: Boolean,
+        error: String? = null
+    ) {
+        if (creationSource.isEmpty()) return
+        val properties = mutableMapOf<String, String>(
+            SOURCE_TAG to creationSource,
+            SUCCESS_TAG to success.toString()
+        )
+        if (!success && !error.isNullOrEmpty()) {
+            properties[ERROR_TAG] = error
+        }
+        AnalyticsTracker.track(
+            Stat.APPLICATION_PASSWORD_CREATED,
+            properties
+        )
+    }
+
+    private fun reportStoringFailedToSentry(
+        reason: String,
+        detail: String
+    ) {
+        crashLogging.sendReportWithTag(
+            Exception("A_P: $reason — $detail"),
+            AppLog.T.DB
+        )
+    }
+
+    private fun logAndReportBadData(
+        urlLogin: UriLogin,
+        creationSource: String
+    ) {
+        val detail =
+            "apiRootUrl isNull=${urlLogin.apiRootUrl == null}" +
+                ", user isEmpty=${urlLogin.user.isNullOrEmpty()}" +
+                ", password isEmpty=" +
+                "${urlLogin.password.isNullOrEmpty()}" +
+                ", siteUrl isNull=${urlLogin.siteUrl == null}" +
+                ", alreadyProcessed=" +
+                "${urlLogin.siteUrl == processedAppPasswordData}"
+        appLogWrapper.e(
+            AppLog.T.DB,
+            "A_P: Cannot save credentials" +
+                " for: ${urlLogin.siteUrl} - $detail"
+        )
+        trackStoringFailed(urlLogin.siteUrl, "bad_data", creationSource)
+        reportStoringFailedToSentry("bad_data", detail)
+    }
+
+    private fun logSiteNotFound(
+        siteUrl: String?,
+        normalizedUrl: String?,
+        sites: List<SiteModel>
+    ) {
+        val availableSiteUrls = sites.joinToString { it.url }
+        val logDetail = "$siteUrl (normalized: $normalizedUrl)" +
+            " — ${sites.size} sites available: [$availableSiteUrls]"
+        appLogWrapper.d(
+            AppLog.T.DB,
+            "A_P: Site not found locally, will fetch:" +
+                " $logDetail"
+        )
+    }
+
     private fun trackSuccessful(siteUrl: String) {
         val properties: MutableMap<String, String?> = HashMap()
-        properties[URL_TAG] = siteUrl
+        properties[URL_TAG] = maskUrl(siteUrl)
         properties[SUCCESS_TAG] = "true"
         AnalyticsTracker.track(
             if (buildConfigWrapper.isJetpackApp) {
@@ -141,50 +241,46 @@ class ApplicationPasswordLoginHelper @Inject constructor(
         return uriLoginWrapper.parseUriLogin(url)
     }
 
-    /**
-     * Removes Application Password credentials for sites that have regular credentials as fallback.
-     * Sites without regular credentials (username/password) are excluded since they can only
-     * authenticate using Application Password.
-     * @return the number of sites that were affected
-     */
-    suspend fun removeAllApplicationPasswordCredentials(): Int {
-        return withContext(bgDispatcher) {
-            val sites = siteStore.sites
-            // Only reset sites that have regular credentials to fall back to
-            val sitesToReset = sites.filter {
-                !it.apiRestUsernameEncrypted.isNullOrEmpty() && it.hasRegularCredentials()
-            }
-            sitesToReset.forEach { site ->
-                site.apply {
-                    apiRestUsernamePlain = ""
-                    apiRestPasswordPlain = ""
-                    apiRestUsernameEncrypted = ""
-                    apiRestPasswordEncrypted = ""
-                    apiRestUsernameIV = ""
-                    apiRestPasswordIV = ""
-                }
-                dispatcherWrapper.removeApplicationPassword(site)
-            }
-            appLogWrapper.d(
-                AppLog.T.DB,
-                "A_P: Removed application password credentials for: ${sitesToReset.size} sites"
-            )
-            sitesToReset.size
+    private fun findSiteByUrl(
+        normalizedUrl: String?,
+        sites: List<SiteModel>
+    ): SiteModel? {
+        if (normalizedUrl.isNullOrEmpty()) return null
+
+        // Exact match first, fallback: compare ignoring scheme and www prefix
+        val strippedUrl = normalizedUrl.stripSchemeAndWww()
+        return sites.firstOrNull {
+            UrlUtils.normalizeUrl(it.url) == normalizedUrl
+        } ?: sites.firstOrNull {
+            UrlUtils.normalizeUrl(it.url)?.stripSchemeAndWww() == strippedUrl
         }
     }
 
-    private fun SiteModel.hasRegularCredentials(): Boolean {
-        return !username.isNullOrEmpty() && !password.isNullOrEmpty()
+    private fun String.stripSchemeAndWww(): String {
+        return removePrefix("https://")
+            .removePrefix("http://")
+            .removePrefix("www.")
     }
 
-    /**
-     * Returns the count of sites with Application Password credentials that can be reset
-     * because of having regular credentials
-     */
-    fun getResettableApplicationPasswordSitesCount(): Int {
-        return siteStore.sites.count {
-            !it.apiRestUsernameEncrypted.isNullOrEmpty() && it.hasRegularCredentials()
+    @Suppress("ReturnCount")
+    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+    internal fun maskUrl(url: String): String {
+        val host = try {
+            URI(url).host
+        } catch (_: Exception) {
+            null
+        } ?: return url
+        val dotIndex = host.lastIndexOf('.')
+        if (dotIndex <= 0) return url
+        val domain = host.substring(0, dotIndex)
+        val tld = host.substring(dotIndex)
+        val maskedDomain = when {
+            domain.length <= 2 -> "x".repeat(domain.length)
+            else -> domain.first() +
+                "x".repeat(domain.length - 2) +
+                domain.last()
         }
+        return url.replaceFirst(host, maskedDomain + tld)
     }
 
     fun siteHasBadCredentials(site: SiteModel) =
@@ -194,9 +290,10 @@ class ApplicationPasswordLoginHelper @Inject constructor(
      * This class is created to wrap the Uri calls and let us unit test the login helper
      */
     class UriLoginWrapper @Inject constructor(
+        private val context: Context,
         private val apiRootUrlCache: ApiRootUrlCache,
         private val buildConfigWrapper: BuildConfigWrapper,
-        ) {
+    ) {
         fun parseUriLogin(url: String): UriLogin {
             val uri = url.toUri()
             val siteUrl = UrlUtils.normalizeUrl(uri.getQueryParameter("site_url"))
@@ -210,15 +307,15 @@ class ApplicationPasswordLoginHelper @Inject constructor(
             return if (authorizationUrl.isNullOrEmpty()) {
                 authorizationUrl.orEmpty()
             } else {
-                val appName: String
-                val successUrl: String
-                if (buildConfigWrapper.isJetpackApp) {
-                    appName = ANDROID_JETPACK_CLIENT
-                    successUrl = JETPACK_SUCCESS_URL
+                val userDeviceName = DeviceUtils.getInstance().getDeviceName(context)
+                val (appName, successUrl) = if (buildConfigWrapper.isJetpackApp) {
+                    context.getString(R.string.application_password_app_name_jetpack, userDeviceName) to
+                        JETPACK_SUCCESS_URL
                 } else {
-                    appName = ANDROID_WORDPRESS_CLIENT
-                    successUrl = WORDPRESS_SUCCESS_URL
+                    context.getString(R.string.application_password_app_name_wordpress, userDeviceName) to
+                        WORDPRESS_SUCCESS_URL
                 }
+
                 authorizationUrl.toUri().buildUpon().apply {
                     appendQueryParameter("app_name", appName)
                     appendQueryParameter("success_url", successUrl)
@@ -228,8 +325,6 @@ class ApplicationPasswordLoginHelper @Inject constructor(
     }
 
     companion object {
-        const val ANDROID_JETPACK_CLIENT = "android-jetpack-client"
-        const val ANDROID_WORDPRESS_CLIENT = "android-wordpress-client"
         private const val JETPACK_SUCCESS_URL = "jetpack://app-pass-authorize"
         private const val WORDPRESS_SUCCESS_URL = "wordpress://app-pass-authorize"
     }
@@ -249,18 +344,17 @@ class ApplicationPasswordLoginHelper @Inject constructor(
                 SiteActionBuilder.newUpdateApplicationPasswordAction(site)
             )
         }
-
-        fun removeApplicationPassword(site: SiteModel) {
-            dispatcher.dispatch(
-                SiteActionBuilder.newRemoveApplicationPasswordAction(site)
-            )
-        }
     }
 
     class DiscoverSuccessWrapper @Inject constructor() {
         fun getApiRootUrl(successObject: ApiDiscoveryResult.Success) = successObject.success.apiRootUrl.url()
 
-        fun getApplicationPasswordsAuthenticationUrl(successObject: ApiDiscoveryResult.Success) =
-            successObject.success.applicationPasswordsAuthenticationUrl.url()
+        fun getApplicationPasswordsAuthenticationUrl(
+            successObject: ApiDiscoveryResult.Success
+        ): String = requireNotNull(
+            applicationPasswordsUrl(successObject.success.authentication)?.url()
+        ) {
+            "Application passwords authentication URL is required"
+        }
     }
 }

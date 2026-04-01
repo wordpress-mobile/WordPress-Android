@@ -1,5 +1,2 @@
-- Search media by title and see library space as a progress bar.
-- Authenticate with your app password to add new sites.
-- Log in without seeing the site picker and Quick Start guide.
-- See the My Site screen without the Plans menu.
-- Enjoy other new features, updates, and fixes.
+- Button colors are now consistent across different areas of the app.
+- We fixed an infinite loop that sometimes appeared when opening certain types of links.
