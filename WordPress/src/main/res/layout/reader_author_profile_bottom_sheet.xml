@@ -22,7 +22,9 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_medium"
         android:gravity="center"
-        android:textAppearance="?attr/textAppearanceTitleMedium"
+        android:textAppearance="?attr/textAppearanceHeadline6"
+        android:textSize="@dimen/text_sz_extra_large"
+        android:textStyle="bold"
         tools:text="Author Name" />
 
     <com.google.android.material.textview.MaterialTextView
@@ -32,7 +34,8 @@
         android:layout_marginTop="@dimen/margin_small"
         android:background="?attr/selectableItemBackground"
         android:gravity="center"
-        android:textAppearance="?attr/textAppearanceBodyMedium"
+        android:textAppearance="?attr/textAppearanceBody1"
+        android:textSize="@dimen/text_sz_large"
         android:textColor="?attr/colorPrimary"
         android:visibility="gone"
         tools:text="My Blog"
