@@ -75,13 +75,12 @@ class ReaderPostDetailHeaderView @JvmOverloads constructor(
         setAuthorAndDate(
             uiState.authorName,
             uiState.blogSectionUiState.dateLine,
-            onHeaderAction
         )
 
         updateFollowButton(uiState.followButtonUiState)
 
         updateAvatars(uiState.blogSectionUiState)
-        updateBlogSectionClick(uiState.blogSectionUiState)
+        updateBlogSectionClick(uiState.blogSectionUiState, onHeaderAction)
 
         uiHelpers.setTextOrHide(textReadingTime, uiState.readingTime)
         textViewOriginal.setVisible(uiState.showViewOriginal)
@@ -134,7 +133,8 @@ class ReaderPostDetailHeaderView @JvmOverloads constructor(
     }
 
     private fun ReaderPostDetailHeaderViewBinding.updateBlogSectionClick(
-        state: ReaderBlogSectionUiState
+        state: ReaderBlogSectionUiState,
+        onHeaderAction: ((ReaderPostDetailsHeaderAction) -> Unit)?
     ) {
         layoutBlogSection.root.apply {
             setBackgroundResource(
@@ -142,9 +142,13 @@ class ReaderPostDetailHeaderView @JvmOverloads constructor(
                     state.blogSectionClickData?.background ?: 0
                 )
             )
-            state.blogSectionClickData?.onBlogSectionClicked?.let { onClick ->
-                setOnClickListener { onClick.invoke() }
-            } ?: run {
+            if (onHeaderAction != null) {
+                setOnClickListener {
+                    onHeaderAction(
+                        ReaderPostDetailsHeaderAction.AuthorClicked
+                    )
+                }
+            } else {
                 setOnClickListener(null)
                 isClickable = false
             }
@@ -203,20 +207,9 @@ class ReaderPostDetailHeaderView @JvmOverloads constructor(
     private fun setAuthorAndDate(
         authorName: String?,
         dateLine: String,
-        onHeaderAction: ((ReaderPostDetailsHeaderAction) -> Unit)?
     ) = with(binding.layoutBlogSection) {
         uiHelpers.setTextOrHide(blogSectionTextAuthor, authorName)
         uiHelpers.setTextOrHide(blogSectionTextDateline, dateLine)
-        if (authorName != null) {
-            blogSectionTextAuthor.setOnClickListener {
-                onHeaderAction?.invoke(
-                    ReaderPostDetailsHeaderAction.AuthorClicked
-                )
-            }
-        } else {
-            blogSectionTextAuthor.setOnClickListener(null)
-            blogSectionTextAuthor.isClickable = false
-        }
     }
 
     private fun ReaderPostDetailHeaderViewBinding.updateFeaturedImage(

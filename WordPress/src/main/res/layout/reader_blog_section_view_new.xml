@@ -49,7 +49,6 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/margin_large"
-        android:background="?attr/selectableItemBackground"
         android:includeFontPadding="false"
         android:maxLines="1"
         android:ellipsize="end"

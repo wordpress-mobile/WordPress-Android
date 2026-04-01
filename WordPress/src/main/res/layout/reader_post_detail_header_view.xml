@@ -172,7 +172,6 @@
         style="@style/ReaderTextView.PostDetail.BlogSection.Subtitle.MediumEmphasis"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_medium"
         android:background="?attr/selectableItemBackgroundBorderless"
         android:drawablePadding="@dimen/margin_extra_small"
         android:gravity="center_vertical"
