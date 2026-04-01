@@ -129,7 +129,7 @@ class ReaderPostDetailUiStateBuilderTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given excerpt is shown with blank blog name, when post ui is built, then excerpt footer uses author name`() = test {
+    fun `given excerpt is shown with blank blog name, when post ui is built, then use author name`() = test {
         val readerPost = mock<ReaderPost>()
         whenever(readerPost.blogName).thenReturn("")
         whenever(readerPost.authorName).thenReturn("author name")
