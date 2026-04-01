@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingHorizontal="@dimen/margin_extra_large"
+    android:paddingTop="@dimen/margin_medium"
+    android:paddingBottom="@dimen/margin_extra_large">
+
+    <ImageView
+        android:id="@+id/author_avatar"
+        android:layout_width="@dimen/user_profile_bottom_sheet_avatar_sz"
+        android:layout_height="@dimen/user_profile_bottom_sheet_avatar_sz"
+        android:layout_gravity="center_horizontal"
+        android:importantForAccessibility="no"
+        tools:src="@drawable/ic_blaze_overlay_image" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/author_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_medium"
+        android:gravity="center"
+        android:textAppearance="?attr/textAppearanceHeadline6"
+        android:textSize="@dimen/text_sz_extra_large"
+        android:textStyle="bold"
+        tools:text="Author Name" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/author_blog_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_small"
+        android:background="?attr/selectableItemBackground"
+        android:gravity="center"
+        android:textAppearance="?attr/textAppearanceBody1"
+        android:textSize="@dimen/text_sz_large"
+        android:textColor="?attr/colorPrimary"
+        android:visibility="gone"
+        tools:text="My Blog"
+        tools:visibility="visible" />
+
+</LinearLayout>

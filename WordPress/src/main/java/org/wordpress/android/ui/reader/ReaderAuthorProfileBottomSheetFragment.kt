@@ -4,56 +4,71 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.platform.ComposeView
-import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.core.os.bundleOf
-import coil.compose.AsyncImage
+import androidx.core.view.isVisible
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import org.wordpress.android.ui.compose.theme.AppThemeM3
+import dagger.hilt.android.AndroidEntryPoint
+import org.wordpress.android.R
+import org.wordpress.android.databinding.ReaderAuthorProfileBottomSheetBinding
 import org.wordpress.android.util.UrlUtils
 import org.wordpress.android.util.WPAvatarUtils
+import org.wordpress.android.util.image.ImageManager
+import org.wordpress.android.util.image.ImageType
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class ReaderAuthorProfileBottomSheetFragment : BottomSheetDialogFragment() {
+    @Inject
+    lateinit var imageManager: ImageManager
+
+    private var _binding: ReaderAuthorProfileBottomSheetBinding? = null
+    private val binding get() = _binding!!
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        return ComposeView(requireContext()).apply {
-            setContent {
-                AppThemeM3 {
-                    val args = requireArguments()
-                    ReaderAuthorProfileBottomSheetScreen(
-                        authorName = args.getString(ARG_AUTHOR_NAME).orEmpty(),
-                        authorAvatar = args.getString(ARG_AUTHOR_AVATAR).orEmpty(),
-                        blogName = args.getString(ARG_BLOG_NAME).orEmpty(),
-                        blogUrl = args.getString(ARG_BLOG_URL).orEmpty(),
-                        onBlogClick = { url ->
-                            ReaderActivityLauncher.openUrl(
-                                requireContext(), url
-                            )
-                            dismiss()
-                        }
-                    )
-                }
+        _binding = ReaderAuthorProfileBottomSheetBinding.inflate(
+            inflater, container, false
+        )
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        val args = requireArguments()
+
+        val authorName = args.getString(ARG_AUTHOR_NAME).orEmpty()
+        val authorAvatar = args.getString(ARG_AUTHOR_AVATAR).orEmpty()
+        val blogName = args.getString(ARG_BLOG_NAME).orEmpty()
+        val blogUrl = args.getString(ARG_BLOG_URL).orEmpty()
+
+        val avatarSz = resources.getDimensionPixelSize(
+            R.dimen.user_profile_bottom_sheet_avatar_sz
+        )
+        imageManager.loadIntoCircle(
+            binding.authorAvatar,
+            ImageType.AVATAR_WITH_BACKGROUND,
+            WPAvatarUtils.rewriteAvatarUrl(authorAvatar, avatarSz)
+        )
+
+        binding.authorName.text = authorName
+
+        if (blogUrl.isNotBlank()) {
+            binding.authorBlogName.isVisible = true
+            binding.authorBlogName.text =
+                blogName.ifBlank { UrlUtils.getHost(blogUrl) }
+            binding.authorBlogName.setOnClickListener {
+                ReaderActivityLauncher.openUrl(requireContext(), blogUrl)
+                dismiss()
             }
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     companion object {
@@ -76,72 +91,5 @@ class ReaderAuthorProfileBottomSheetFragment : BottomSheetDialogFragment() {
                 ARG_BLOG_URL to blogUrl,
             )
         }
-    }
-}
-
-@Composable
-private fun ReaderAuthorProfileBottomSheetScreen(
-    authorName: String,
-    authorAvatar: String,
-    blogName: String,
-    blogUrl: String,
-    onBlogClick: (String) -> Unit = {},
-) {
-    val avatarSizeDp = 56.dp
-    val avatarSizePx = with(LocalDensity.current) {
-        avatarSizeDp.roundToPx()
-    }
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp)
-            .padding(top = 8.dp, bottom = 16.dp)
-    ) {
-        AsyncImage(
-            model = WPAvatarUtils.rewriteAvatarUrl(
-                authorAvatar, avatarSizePx
-            ),
-            contentDescription = null,
-            modifier = Modifier
-                .size(avatarSizeDp)
-                .clip(CircleShape)
-        )
-        Text(
-            text = authorName,
-            style = MaterialTheme.typography.titleMedium,
-            fontWeight = FontWeight.Bold,
-            textAlign = TextAlign.Center,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 8.dp)
-        )
-        if (blogUrl.isNotBlank()) {
-            Text(
-                text = blogName.ifBlank {
-                    UrlUtils.getHost(blogUrl)
-                },
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.primary,
-                textAlign = TextAlign.Center,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clickable { onBlogClick(blogUrl) }
-                    .padding(top = 4.dp)
-            )
-        }
-    }
-}
-
-@Preview
-@Composable
-private fun PreviewAuthorProfileBottomSheet() {
-    AppThemeM3 {
-        ReaderAuthorProfileBottomSheetScreen(
-            authorName = "Jane Doe",
-            authorAvatar = "",
-            blogName = "My Awesome Blog",
-            blogUrl = "https://example.com",
-        )
     }
 }
