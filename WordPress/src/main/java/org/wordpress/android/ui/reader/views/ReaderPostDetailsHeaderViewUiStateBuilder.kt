@@ -44,7 +44,8 @@ class ReaderPostDetailsHeaderViewUiStateBuilder @Inject constructor(
             title = post.title?.takeIf { it.isNotEmpty() }?.let(::UiStringText),
             authorName = post.authorName?.takeIf {
                 it.isNotBlank() &&
-                    !it.equals(post.blogName, ignoreCase = true)
+                    !it.equals(post.blogName, ignoreCase = true) &&
+                    (post.hasBlogName() || post.hasBlogUrl())
             },
             tagItems = readerPostTagsUiStateBuilder
                 .mapPostTagsToTagUiStates(post) {

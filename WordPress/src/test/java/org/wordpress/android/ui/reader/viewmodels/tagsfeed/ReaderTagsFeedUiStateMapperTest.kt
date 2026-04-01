@@ -214,6 +214,98 @@ class ReaderTagsFeedUiStateMapperTest : BaseUnitTest() {
         assertEquals(expected, actual)
     }
 
+    @Suppress("LongMethod")
+    @Test
+    fun `Should map loaded TagFeedItem correctly with blank blog name and url`() {
+        // Given
+        val readerPost = ReaderPost().apply {
+            blogName = ""
+            blogUrl = ""
+            authorName = "Author Name"
+            title = "Title"
+            excerpt = "Excerpt"
+            featuredImage = "url"
+            numLikes = 5
+            numReplies = 10
+            isLikedByCurrentUser = true
+            datePublished = ""
+        }
+        val postList = ReaderPostList().apply {
+            add(readerPost)
+        }
+        val readerTag = ReaderTag(
+            "tag",
+            "tag",
+            "tag",
+            "endpoint",
+            ReaderTagType.FOLLOWED,
+        )
+        val onTagChipClick = { _: ReaderTag -> }
+        val onMoreFromTagClick = { _: ReaderTag -> }
+        val onSiteClick: (TagsFeedPostItem) -> Unit = {}
+        val onPostCardClick: (TagsFeedPostItem) -> Unit = {}
+        val onPostLikeClick: (TagsFeedPostItem) -> Unit = {}
+        val onPostMoreMenuClick: (TagsFeedPostItem) -> Unit = {}
+        val onItemEnteredView: (ReaderTagsFeedViewModel.TagFeedItem) -> Unit = {}
+
+        val dateLine = "dateLine"
+        val numberLikesText = "numberLikesText"
+        val numberCommentsText = "numberCommentsText"
+
+        // When
+        whenever(dateTimeUtilsWrapper.dateFromIso8601(any()))
+            .thenReturn(Date(0))
+        whenever(dateTimeUtilsWrapper.javaDateToTimeSpan(any()))
+            .thenReturn(dateLine)
+        whenever(readerUtilsWrapper.getShortLikeLabelText(readerPost.numLikes))
+            .thenReturn(numberLikesText)
+        whenever(readerUtilsWrapper.getShortCommentLabelText(readerPost.numReplies))
+            .thenReturn(numberCommentsText)
+
+        val actual = classToTest.mapLoadedTagFeedItem(
+            tag = readerTag,
+            posts = postList,
+            onTagChipClick = onTagChipClick,
+            onMoreFromTagClick = onMoreFromTagClick,
+            onSiteClick = onSiteClick,
+            onPostCardClick = onPostCardClick,
+            onPostLikeClick = onPostLikeClick,
+            onPostMoreMenuClick = onPostMoreMenuClick,
+            onItemEnteredView = onItemEnteredView,
+        )
+        // Then
+        val expected = ReaderTagsFeedViewModel.TagFeedItem(
+            tagChip = ReaderTagsFeedViewModel.TagChip(
+                tag = readerTag,
+                onTagChipClick = onTagChipClick,
+                onMoreFromTagClick = onMoreFromTagClick,
+            ),
+            postList = ReaderTagsFeedViewModel.PostList.Loaded(
+                listOf(
+                    TagsFeedPostItem(
+                        siteName = "Author Name",
+                        postDateLine = dateLine,
+                        postTitle = readerPost.title,
+                        postExcerpt = readerPost.excerpt,
+                        postImageUrl = readerPost.featuredImage,
+                        postNumberOfLikesText = numberLikesText,
+                        postNumberOfCommentsText = numberCommentsText,
+                        isPostLiked = readerPost.isLikedByCurrentUser,
+                        isLikeButtonEnabled = true,
+                        postId = 0L,
+                        blogId = 0L,
+                        onSiteClick = onSiteClick,
+                        onPostLikeClick = onPostLikeClick,
+                        onPostCardClick = onPostCardClick,
+                        onPostMoreMenuClick = onPostMoreMenuClick,
+                    )
+                )
+            ),
+            onItemEnteredView = onItemEnteredView,
+        )
+        assertEquals(expected, actual)
+    }
+
     @Test
     fun `Should map error TagFeedItem correctly`() {
         // Given
