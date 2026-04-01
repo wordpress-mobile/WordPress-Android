@@ -100,6 +100,7 @@ subprojects {
             lint {
                 warningsAsErrors = true
                 checkDependencies false
+                checkTestSources = false
                 checkGeneratedSources = true
                 lintConfig file("${project.rootDir}/config/lint/lint.xml")
                 baseline file("${project.rootDir}/config/lint/baseline.xml")
