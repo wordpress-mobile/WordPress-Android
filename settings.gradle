@@ -107,6 +107,7 @@ include ':libs:fluxc', ':libs:fluxc-annotations', ':libs:fluxc-processor'
 include ':libs:posttypes'
 include ':libs:core-ui'
 include ':libs:utils'
+include ':libs:core-test'
 
 apply from: './config/gradle/included_builds.gradle'
 apply from: './config/gradle/gradle_build_scan.gradle'

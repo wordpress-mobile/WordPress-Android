@@ -454,6 +454,7 @@ dependencies {
 
     implementation(libs.wordpress.rs.android)
 
+    testImplementation project(":libs:core-test")
     testImplementation(libs.androidx.arch.core.testing) {
         exclude group: 'com.android.support', module: 'support-compat'
         exclude group: 'com.android.support', module: 'support-annotations'

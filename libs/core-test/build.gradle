@@ -1,0 +1,30 @@
+plugins {
+    alias(libs.plugins.android.library)
+}
+
+android {
+    namespace "org.wordpress.android.coretest"
+
+    defaultConfig {
+        compileSdk rootProject.compileSdkVersion
+        minSdkVersion rootProject.minSdkVersion
+        targetSdkVersion rootProject.targetSdkVersion
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.toVersion(
+            libs.versions.java.get()
+        )
+        targetCompatibility JavaVersion.toVersion(
+            libs.versions.java.get()
+        )
+    }
+}
+
+dependencies {
+    implementation libs.junit
+    implementation libs.mockito.core
+    implementation libs.mockito.kotlin
+    implementation libs.androidx.arch.core.testing
+    implementation libs.kotlinx.coroutines.test
+}
