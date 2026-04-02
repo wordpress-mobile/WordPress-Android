@@ -5,6 +5,7 @@ import androidx.collection.forEach
 import androidx.collection.isNotEmpty
 import androidx.collection.set
 import org.wordpress.android.R
+import org.wordpress.android.reader.R as ReaderR
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.ReaderTagList
 import org.wordpress.android.models.ReaderTagType
@@ -85,7 +86,7 @@ class ReaderTopBarMenuHelper @Inject constructor(
     private fun createDiscoverItem(id: String): JetpackMenuElementData.Item.Single {
         return JetpackMenuElementData.Item.Single(
             id = id,
-            text = UiString.UiStringRes(R.string.reader_dropdown_menu_discover),
+            text = UiString.UiStringRes(ReaderR.string.reader_dropdown_menu_discover),
             leadingIcon = R.drawable.ic_reader_discover_24dp,
         )
     }
@@ -93,7 +94,7 @@ class ReaderTopBarMenuHelper @Inject constructor(
     private fun createFreshlyPressedItem(id: String): JetpackMenuElementData.Item.Single {
         return JetpackMenuElementData.Item.Single(
             id = id,
-            text = UiString.UiStringRes(R.string.reader_dropdown_menu_freshly_pressed),
+            text = UiString.UiStringRes(ReaderR.string.reader_dropdown_menu_freshly_pressed),
             leadingIcon = R.drawable.ic_star_white_24dp,
         )
     }
@@ -101,7 +102,7 @@ class ReaderTopBarMenuHelper @Inject constructor(
     private fun createSubscriptionsItem(id: String): JetpackMenuElementData.Item.Single {
         return JetpackMenuElementData.Item.Single(
             id = id,
-            text = UiString.UiStringRes(R.string.reader_dropdown_menu_subscriptions),
+            text = UiString.UiStringRes(ReaderR.string.reader_dropdown_menu_subscriptions),
             leadingIcon = R.drawable.ic_reader_subscriptions_24dp,
         )
     }
@@ -109,7 +110,7 @@ class ReaderTopBarMenuHelper @Inject constructor(
     private fun createSavedItem(id: String): JetpackMenuElementData.Item.Single {
         return JetpackMenuElementData.Item.Single(
             id = id,
-            text = UiString.UiStringRes(R.string.reader_dropdown_menu_saved),
+            text = UiString.UiStringRes(ReaderR.string.reader_dropdown_menu_saved),
             leadingIcon = R.drawable.ic_reader_saved_24dp,
         )
     }
@@ -117,7 +118,7 @@ class ReaderTopBarMenuHelper @Inject constructor(
     private fun createLikedItem(id: String): JetpackMenuElementData.Item.Single {
         return JetpackMenuElementData.Item.Single(
             id = id,
-            text = UiString.UiStringRes(R.string.reader_dropdown_menu_liked),
+            text = UiString.UiStringRes(ReaderR.string.reader_dropdown_menu_liked),
             leadingIcon = R.drawable.ic_reader_liked_24dp,
         )
     }
@@ -125,7 +126,7 @@ class ReaderTopBarMenuHelper @Inject constructor(
     private fun createAutomatticItem(id: String): JetpackMenuElementData.Item.Single {
         return JetpackMenuElementData.Item.Single(
             id = id,
-            text = UiString.UiStringRes(R.string.reader_dropdown_menu_automattic),
+            text = UiString.UiStringRes(ReaderR.string.reader_dropdown_menu_automattic),
         )
     }
 
@@ -139,7 +140,7 @@ class ReaderTopBarMenuHelper @Inject constructor(
     private fun createTagsItem(id: String): JetpackMenuElementData.Item.Single {
         return JetpackMenuElementData.Item.Single(
             id = id,
-            text = UiString.UiStringRes(R.string.reader_dropdown_menu_tags),
+            text = UiString.UiStringRes(ReaderR.string.reader_dropdown_menu_tags),
             leadingIcon = R.drawable.ic_reader_tags_24dp,
         )
     }
@@ -158,7 +159,7 @@ class ReaderTopBarMenuHelper @Inject constructor(
             // We don't need this ID since this menu item just opens the sub-menu. It doesn't
             // change the content that is currently being displayed.
             id = "custom-lists",
-            text = UiString.UiStringRes(R.string.reader_dropdown_menu_lists),
+            text = UiString.UiStringRes(ReaderR.string.reader_dropdown_menu_lists),
             children = customListsMenuItems,
         )
     }

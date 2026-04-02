@@ -25,6 +25,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
+import org.wordpress.android.reader.R as ReaderR
 import org.wordpress.android.ui.compose.theme.AppColor
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.compose.unit.Margin
@@ -44,7 +45,7 @@ fun ReaderAnnouncementCard(
     ) {
         // Title
         Text(
-            text = stringResource(R.string.reader_announcement_card_title),
+            text = stringResource(ReaderR.string.reader_announcement_card_title),
             style = MaterialTheme.typography.labelLarge,
             color = primaryColor,
         )
@@ -69,7 +70,7 @@ fun ReaderAnnouncementCard(
             ),
         ) {
             Text(
-                text = stringResource(id = R.string.reader_btn_done),
+                text = stringResource(id = ReaderR.string.reader_btn_done),
                 color = secondaryColor,
                 style = MaterialTheme.typography.labelLarge,
             )
@@ -147,18 +148,18 @@ fun ReaderTagsFeedPostListItemPreview() {
                 items = listOf(
                     ReaderAnnouncementCardItemData(
                         iconRes = R.drawable.ic_wifi_off_24px,
-                        titleRes = R.string.reader_tags_display_name,
-                        descriptionRes = R.string.reader_tags_feed_loading_error_description,
+                        titleRes = ReaderR.string.reader_tags_display_name,
+                        descriptionRes = ReaderR.string.reader_tags_feed_loading_error_description,
                     ),
                     ReaderAnnouncementCardItemData(
                         iconRes = R.drawable.ic_wifi_off_24px,
-                        titleRes = R.string.reader_tags_display_name,
-                        descriptionRes = R.string.reader_tags_feed_loading_error_description,
+                        titleRes = ReaderR.string.reader_tags_display_name,
+                        descriptionRes = ReaderR.string.reader_tags_feed_loading_error_description,
                     ),
                     ReaderAnnouncementCardItemData(
                         iconRes = R.drawable.ic_wifi_off_24px,
-                        titleRes = R.string.reader_tags_display_name,
-                        descriptionRes = R.string.reader_tags_feed_loading_error_description,
+                        titleRes = ReaderR.string.reader_tags_display_name,
+                        descriptionRes = ReaderR.string.reader_tags_feed_loading_error_description,
                     ),
                 ),
                 onAnnouncementCardDoneClick = {},

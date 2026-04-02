@@ -92,7 +92,9 @@ public class ReaderBlogFragment extends Fragment
 
         if (hasBlogAdapter() && getBlogAdapter().isEmpty()) {
             actionableEmptyView.setVisibility(View.VISIBLE);
-            actionableEmptyView.subtitle.setText(R.string.reader_no_followed_blogs_description_subs);
+            actionableEmptyView.subtitle.setText(
+                    org.wordpress.android.reader.R.string
+                            .reader_no_followed_blogs_description_subs);
             actionableEmptyView.image.setVisibility(View.GONE);
             actionableEmptyView.button.setVisibility(View.GONE);
 
@@ -100,11 +102,15 @@ public class ReaderBlogFragment extends Fragment
                 case FOLLOWED:
                     if (getBlogAdapter().hasSearchFilter()) {
                         actionableEmptyView.updateLayoutForSearch(true, 0);
-                        actionableEmptyView.title.setText(R.string.reader_no_followed_blogs_search_title);
+                        actionableEmptyView.title.setText(
+                                org.wordpress.android.reader.R.string
+                                        .reader_no_followed_blogs_search_title);
                         actionableEmptyView.subtitle.setVisibility(View.GONE);
                     } else {
                         actionableEmptyView.updateLayoutForSearch(false, 0);
-                        actionableEmptyView.title.setText(R.string.reader_no_followed_blogs_title);
+                        actionableEmptyView.title.setText(
+                                org.wordpress.android.reader.R.string
+                                        .reader_no_followed_blogs_title);
                         actionableEmptyView.subtitle.setVisibility(View.VISIBLE);
                     }
                     break;
@@ -158,7 +164,8 @@ public class ReaderBlogFragment extends Fragment
         MenuItem searchMenu = menu.findItem(R.id.menu_search);
         SearchView searchView = (SearchView) searchMenu.getActionView();
         searchView.setMaxWidth(Integer.MAX_VALUE);
-        searchView.setQueryHint(getString(R.string.reader_hint_search_subscribed_blogs));
+        searchView.setQueryHint(getString(
+                org.wordpress.android.reader.R.string.reader_hint_search_subscribed_blogs));
 
         searchMenu.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
             @Override

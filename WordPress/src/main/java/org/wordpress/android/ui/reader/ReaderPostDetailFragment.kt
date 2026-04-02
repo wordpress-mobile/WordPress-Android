@@ -56,6 +56,7 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.R
+import org.wordpress.android.reader.R as ReaderR
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.databinding.ReaderFragmentPostDetailBinding
@@ -386,7 +387,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         if (isRelatedPost) {
             toolBar.setNavigationIcon(R.drawable.ic_cross_white_24dp)
             toolBar.setNavigationOnClickListener { requireActivity().finish() }
-            toolBar.setTitle(R.string.reader_title_related_post_detail)
+            toolBar.setTitle(ReaderR.string.reader_title_related_post_detail)
         } else {
             toolBar.setNavigationIcon(R.drawable.ic_arrow_left_white_24dp)
             toolBar.setNavigationOnClickListener { requireActivity().onBackPressedDispatcher.onBackPressed() }
@@ -1380,7 +1381,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
         if (!accountStore.hasAccessToken()) {
             WPSnackbar.make(
-                requireView(), R.string.reader_snackbar_err_cannot_like_post_logged_out,
+                requireView(), ReaderR.string.reader_snackbar_err_cannot_like_post_logged_out,
                 Snackbar.LENGTH_INDEFINITE
             ).setAction(R.string.sign_in, mSignInClickListener).show()
             return
@@ -1388,7 +1389,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
         viewModel.post?.let {
             if (!it.canLikePost()) {
-                ToastUtils.showToast(activity, R.string.reader_toast_err_cannot_like_post)
+                ToastUtils.showToast(activity, ReaderR.string.reader_toast_err_cannot_like_post)
                 return
             }
 
@@ -1490,8 +1491,8 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                 HttpURLConnection.HTTP_UNAUTHORIZED, HttpURLConnection.HTTP_FORBIDDEN ->
                     viewModel.onNotAuthorisedRequestFailure()
 
-                HttpURLConnection.HTTP_NOT_FOUND -> showError(getString(R.string.reader_err_get_post_not_found))
-                else -> showError(getString(R.string.reader_err_get_post_generic))
+                HttpURLConnection.HTTP_NOT_FOUND -> showError(getString(ReaderR.string.reader_err_get_post_not_found))
+                else -> showError(getString(ReaderR.string.reader_err_get_post_generic))
             }
         }
     }
@@ -1819,7 +1820,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     override fun onPageJumpClick(pageJump: String?): Boolean {
         readerTracker.track(AnalyticsTracker.Stat.READER_ARTICLE_PAGE_JUMP_TAPPED)
         scrollToElement(pageJump ?: "") {
-            ToastUtils.showToast(activity, R.string.reader_toast_err_page_jump_not_found)
+            ToastUtils.showToast(activity, ReaderR.string.reader_toast_err_page_jump_not_found)
         }
         return true
     }

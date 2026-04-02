@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
+import org.wordpress.android.reader.R as ReaderR
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.ReaderTagList
@@ -120,7 +121,7 @@ class ReaderInterestsViewModel @Inject constructor(
                         EntryPoint.SETTINGS -> ContentUiState(
                             interestsUiState = transformToInterestsUiState(distinctTags),
                             interests = distinctTags,
-                            doneButtonUiState = DoneButtonDisabledUiState(R.string.reader_btn_done),
+                            doneButtonUiState = DoneButtonDisabledUiState(ReaderR.string.reader_btn_done),
                             titleVisible = false
                         )
                     }
@@ -176,7 +177,7 @@ class ReaderInterestsViewModel @Inject constructor(
         updateUiState(
             contentUiState.copy(
                 progressBarVisible = true,
-                doneButtonUiState = DoneButtonDisabledUiState(R.string.reader_btn_done)
+                doneButtonUiState = DoneButtonDisabledUiState(ReaderR.string.reader_btn_done)
             )
         )
 
@@ -198,13 +199,13 @@ class ReaderInterestsViewModel @Inject constructor(
                         )
                     } else if (result is ReaderRepositoryCommunication.Error.RemoteRequestFailure) {
                         _snackbarEvents.postValue(
-                            Event(SnackbarMessageHolder(UiStringRes(R.string.reader_error_request_failed_title)))
+                            Event(SnackbarMessageHolder(UiStringRes(ReaderR.string.reader_error_request_failed_title)))
                         )
                     }
                     updateUiState(
                         contentUiState.copy(
                             progressBarVisible = false,
-                            doneButtonUiState = DoneButtonEnabledUiState(R.string.reader_btn_done)
+                            doneButtonUiState = DoneButtonEnabledUiState(ReaderR.string.reader_btn_done)
                         )
                     )
                 }
@@ -290,7 +291,7 @@ class ReaderInterestsViewModel @Inject constructor(
         ) {
             object ConnectionErrorUiState : ErrorUiState(R.string.no_network_message)
 
-            object RequestFailedErrorUiState : ErrorUiState(R.string.reader_error_request_failed_title)
+            object RequestFailedErrorUiState : ErrorUiState(ReaderR.string.reader_error_request_failed_title)
         }
 
         private fun getCheckedInterestsUiState(): List<TagUiState> {
@@ -323,7 +324,7 @@ class ReaderInterestsViewModel @Inject constructor(
                 if (disableDoneButton) {
                     when (entryPoint) {
                         EntryPoint.DISCOVER -> DoneButtonDisabledUiState()
-                        EntryPoint.SETTINGS -> DoneButtonDisabledUiState(R.string.reader_btn_done)
+                        EntryPoint.SETTINGS -> DoneButtonDisabledUiState(ReaderR.string.reader_btn_done)
                     }
                 } else {
                     DoneButtonEnabledUiState()
@@ -335,18 +336,18 @@ class ReaderInterestsViewModel @Inject constructor(
     }
 
     sealed class DoneButtonUiState(
-        @StringRes open val titleRes: Int = R.string.reader_btn_done,
+        @StringRes open val titleRes: Int = ReaderR.string.reader_btn_done,
         val enabled: Boolean = false,
         val visible: Boolean = true
     ) {
         data class DoneButtonEnabledUiState(
-            @StringRes override val titleRes: Int = R.string.reader_btn_done
+            @StringRes override val titleRes: Int = ReaderR.string.reader_btn_done
         ) : DoneButtonUiState(
             enabled = true
         )
 
         data class DoneButtonDisabledUiState(
-            @StringRes override val titleRes: Int = R.string.reader_btn_select_few_interests
+            @StringRes override val titleRes: Int = ReaderR.string.reader_btn_select_few_interests
         ) : DoneButtonUiState(
             enabled = false
         )

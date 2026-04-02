@@ -9,6 +9,7 @@ import org.junit.Test
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 import org.wordpress.android.R
+import org.wordpress.android.reader.R as ReaderR
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.ReaderTagList
 import org.wordpress.android.models.ReaderTagType
@@ -31,7 +32,7 @@ class LoadReaderItemsUseCaseTest {
             stringProvider = stringProvider
         )
 
-        whenever(stringProvider.getString(R.string.reader_tags_display_name)).thenReturn("Tags")
+        whenever(stringProvider.getString(ReaderR.string.reader_tags_display_name)).thenReturn("Tags")
     }
 
     @Test

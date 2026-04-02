@@ -131,7 +131,8 @@ public class ReaderSiteHeaderView extends LinearLayout {
         mFeedId = feedId;
 
         if (blogId == 0 && feedId == 0) {
-            ToastUtils.showToast(getContext(), R.string.reader_toast_err_show_blog);
+            ToastUtils.showToast(getContext(),
+                    org.wordpress.android.reader.R.string.reader_toast_err_show_blog);
             OnBlogInfoFailedListener failedListener =
                     mBlogInfoFailedListenerRef != null ? mBlogInfoFailedListenerRef.get() : null;
             if (failedListener != null) {
@@ -204,7 +205,8 @@ public class ReaderSiteHeaderView extends LinearLayout {
             if (blogInfo.getUrl() != null) {
                 txtBlogName.setText(UrlUtils.getHost(blogInfo.getUrl()));
             } else {
-                txtBlogName.setText(R.string.reader_untitled_post);
+                txtBlogName.setText(
+                        org.wordpress.android.reader.R.string.reader_untitled_post);
             }
         }
 
@@ -270,9 +272,11 @@ public class ReaderSiteHeaderView extends LinearLayout {
 
         final int followersStringRes;
         if (blogInfo.numSubscribers == 1) {
-            followersStringRes = R.string.reader_label_subscribers_count_single;
+            followersStringRes =
+                    org.wordpress.android.reader.R.string.reader_label_subscribers_count_single;
         } else {
-            followersStringRes = R.string.reader_label_subscribers_count;
+            followersStringRes =
+                    org.wordpress.android.reader.R.string.reader_label_subscribers_count;
         }
 
         final String formattedNumberSubscribers;
@@ -348,8 +352,9 @@ public class ReaderSiteHeaderView extends LinearLayout {
                     updateSubscriptionSettingsButtonVisibility(mBlogInfo);
                 }
             } else {
-                int errResId = isAskingToFollow ? R.string.reader_toast_err_unable_to_follow_blog
-                        : R.string.reader_toast_err_unable_to_unfollow_blog;
+                int errResId = isAskingToFollow
+                        ? org.wordpress.android.reader.R.string.reader_toast_err_unable_to_follow_blog
+                        : org.wordpress.android.reader.R.string.reader_toast_err_unable_to_unfollow_blog;
                 ToastUtils.showToast(getContext(), errResId);
                 mFollowButton.setIsFollowed(!isAskingToFollow);
                 // Re-enable subscription settings button if unsubscribe failed

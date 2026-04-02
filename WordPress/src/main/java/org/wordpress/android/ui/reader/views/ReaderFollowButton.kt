@@ -12,6 +12,7 @@ import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
 import com.google.android.material.button.MaterialButton
 import org.wordpress.android.R
+import org.wordpress.android.reader.R as ReaderR
 import android.R as AndroidR
 
 /**
@@ -46,7 +47,7 @@ class ReaderFollowButton @JvmOverloads constructor(
 
     private fun updateFollowText() {
         if (showCaption) {
-            setText(if (isFollowed) R.string.reader_btn_subscribed else R.string.reader_btn_subscribe)
+            setText(if (isFollowed) ReaderR.string.reader_btn_subscribed else ReaderR.string.reader_btn_subscribe)
         }
         isSelected = isFollowed
     }

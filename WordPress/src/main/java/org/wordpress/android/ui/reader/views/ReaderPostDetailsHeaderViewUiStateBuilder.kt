@@ -2,6 +2,7 @@ package org.wordpress.android.ui.reader.views
 
 import dagger.Reusable
 import org.wordpress.android.R
+import org.wordpress.android.reader.R as ReaderR
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.ui.reader.discover.ReaderPostTagsUiStateBuilder
 import org.wordpress.android.ui.reader.discover.ReaderPostUiStateBuilder
@@ -91,7 +92,7 @@ class ReaderPostDetailsHeaderViewUiStateBuilder @Inject constructor(
                     wordCount.toDouble() / WORDS_PER_MINUTE
                 ).toInt().coerceAtLeast(1)
                 UiStringResWithParams(
-                    R.string.reader_reading_time,
+                    ReaderR.string.reader_reading_time,
                     listOf(UiStringText(minutes.toString()))
                 )
             }

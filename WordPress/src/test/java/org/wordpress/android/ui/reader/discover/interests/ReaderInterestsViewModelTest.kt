@@ -18,6 +18,7 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
+import org.wordpress.android.reader.R as ReaderR
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.ReaderTagList
 import org.wordpress.android.models.ReaderTagType
@@ -252,7 +253,7 @@ class ReaderInterestsViewModelTest : BaseUnitTest() {
             assertThat(requireNotNull(viewModel.uiState.value).doneButtonUiState)
                 .isInstanceOf(DoneButtonDisabledUiState::class.java)
             assertThat(requireNotNull(viewModel.uiState.value).doneButtonUiState.titleRes)
-                .isEqualTo(R.string.reader_btn_select_few_interests)
+                .isEqualTo(ReaderR.string.reader_btn_select_few_interests)
         }
 
     @Test
@@ -276,7 +277,7 @@ class ReaderInterestsViewModelTest : BaseUnitTest() {
             assertThat(requireNotNull(viewModel.uiState.value).doneButtonUiState)
                 .isInstanceOf(DoneButtonDisabledUiState::class.java)
             assertThat(requireNotNull(viewModel.uiState.value).doneButtonUiState.titleRes)
-                .isEqualTo(R.string.reader_btn_done)
+                .isEqualTo(ReaderR.string.reader_btn_done)
         }
 
     @Test
@@ -335,7 +336,7 @@ class ReaderInterestsViewModelTest : BaseUnitTest() {
             assertThat(requireNotNull(viewModel.uiState.value).doneButtonUiState)
                 .isInstanceOf(DoneButtonEnabledUiState::class.java)
             assertThat(requireNotNull(viewModel.uiState.value).doneButtonUiState.titleRes)
-                .isEqualTo(R.string.reader_btn_done)
+                .isEqualTo(ReaderR.string.reader_btn_done)
             assertThat(requireNotNull(viewModel.uiState.value).doneButtonUiState.enabled)
                 .isEqualTo(true)
         }
@@ -354,7 +355,7 @@ class ReaderInterestsViewModelTest : BaseUnitTest() {
             assertThat(requireNotNull(viewModel.uiState.value).doneButtonUiState)
                 .isInstanceOf(DoneButtonDisabledUiState::class.java)
             assertThat(requireNotNull(viewModel.uiState.value).doneButtonUiState.titleRes)
-                .isEqualTo(R.string.reader_btn_select_few_interests)
+                .isEqualTo(ReaderR.string.reader_btn_select_few_interests)
         }
 
     @Test
@@ -371,7 +372,7 @@ class ReaderInterestsViewModelTest : BaseUnitTest() {
             assertThat(requireNotNull(viewModel.uiState.value).doneButtonUiState)
                 .isInstanceOf(DoneButtonDisabledUiState::class.java)
             assertThat(requireNotNull(viewModel.uiState.value).doneButtonUiState.titleRes)
-                .isEqualTo(R.string.reader_btn_done)
+                .isEqualTo(ReaderR.string.reader_btn_done)
         }
 
     @Test
@@ -498,7 +499,7 @@ class ReaderInterestsViewModelTest : BaseUnitTest() {
             // Then
             assertThat(viewModel.uiState.value).isInstanceOf(RequestFailedErrorUiState::class.java)
             val errorUiState = requireNotNull(viewModel.uiState.value) as RequestFailedErrorUiState
-            assertThat(errorUiState.titleRes).isEqualTo(R.string.reader_error_request_failed_title)
+            assertThat(errorUiState.titleRes).isEqualTo(ReaderR.string.reader_error_request_failed_title)
         }
 
     @Test
@@ -564,7 +565,7 @@ class ReaderInterestsViewModelTest : BaseUnitTest() {
 
             // Then
             assertThat(requireNotNull(viewModel.snackbarEvents.value).peekContent())
-                .isEqualTo(SnackbarMessageHolder(UiStringRes(R.string.reader_error_request_failed_title)))
+                .isEqualTo(SnackbarMessageHolder(UiStringRes(ReaderR.string.reader_error_request_failed_title)))
         }
 
     @Test

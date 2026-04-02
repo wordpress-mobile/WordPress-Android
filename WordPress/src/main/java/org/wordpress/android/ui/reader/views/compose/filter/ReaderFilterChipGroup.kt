@@ -36,6 +36,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import kotlinx.parcelize.Parcelize
 import org.wordpress.android.R
+import org.wordpress.android.reader.R as ReaderR
 import org.wordpress.android.ui.compose.theme.AppThemeM3WithoutBackground
 import org.wordpress.android.ui.compose.unit.Margin
 import org.wordpress.android.ui.compose.utils.uiStringText
@@ -71,9 +72,9 @@ fun ReaderFilterChipGroup(
                 selectedItem.text
             } else {
                 UiString.UiStringPluralRes(
-                    zeroRes = R.string.reader_filter_chip_tag_zero,
-                    oneRes = R.string.reader_filter_chip_tag_one,
-                    otherRes = R.string.reader_filter_chip_tag_other,
+                    zeroRes = ReaderR.string.reader_filter_chip_tag_zero,
+                    oneRes = ReaderR.string.reader_filter_chip_tag_one,
+                    otherRes = ReaderR.string.reader_filter_chip_tag_other,
                     count = tagsFilterCount,
                 )
             }
@@ -84,9 +85,9 @@ fun ReaderFilterChipGroup(
                 selectedItem.text
             } else {
                 UiString.UiStringPluralRes(
-                    zeroRes = R.string.reader_filter_chip_blog_zero,
-                    oneRes = R.string.reader_filter_chip_blog_one,
-                    otherRes = R.string.reader_filter_chip_blog_other,
+                    zeroRes = ReaderR.string.reader_filter_chip_blog_zero,
+                    oneRes = ReaderR.string.reader_filter_chip_blog_one,
+                    otherRes = ReaderR.string.reader_filter_chip_blog_other,
                     count = blogsFilterCount,
                 )
             }

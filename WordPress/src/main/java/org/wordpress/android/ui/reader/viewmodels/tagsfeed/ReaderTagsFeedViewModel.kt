@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import org.wordpress.android.R
+import org.wordpress.android.reader.R as ReaderR
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.datasets.wrappers.ReaderPostTableWrapper
 import org.wordpress.android.models.ReaderPost
@@ -486,7 +487,7 @@ class ReaderTagsFeedViewModel @Inject constructor(
                                 isPostLikedUpdated = !isPostLikedUpdated,
                                 isLikeButtonEnabled = true,
                             )
-                            _errorMessageEvents.postValue(Event(R.string.reader_error_request_failed_title))
+                            _errorMessageEvents.postValue(Event(ReaderR.string.reader_error_request_failed_title))
                         }
 
                         else -> {

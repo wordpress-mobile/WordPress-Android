@@ -43,6 +43,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.wordpress.android.R
+import org.wordpress.android.reader.R as ReaderR
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.compose.unit.Margin
 import org.wordpress.android.ui.reader.models.ReaderReadingPreferences
@@ -125,7 +126,7 @@ fun ReadingPreferencesThemeButton(
     ReadingPreferenceButton(
         label = stringResource(theme.displayNameRes),
         isSelected = isSelected,
-        buttonTypeContentDescription = stringResource(R.string.reader_preferences_screen_theme_label),
+        buttonTypeContentDescription = stringResource(ReaderR.string.reader_preferences_screen_theme_label),
         onClick = onClick,
     ) {
         Column(
@@ -161,11 +162,11 @@ fun ReadingPreferencesFontFamilyButton(
         label = stringResource(fontFamily.displayNameRes),
         isSelected = isSelected,
         verticalSpacing = 0.dp,
-        buttonTypeContentDescription = stringResource(R.string.reader_preferences_screen_font_family_label),
+        buttonTypeContentDescription = stringResource(ReaderR.string.reader_preferences_screen_font_family_label),
         onClick = onClick,
     ) {
         Text(
-            text = stringResource(R.string.reader_preferences_screen_font_family_preview),
+            text = stringResource(ReaderR.string.reader_preferences_screen_font_family_preview),
             style = TextStyle(
                 fontFamily = fontFamily.toComposeFontFamily(),
                 fontSize = fontFamilyButtonPreviewSize,

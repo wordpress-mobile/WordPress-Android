@@ -377,8 +377,9 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
                     ReaderActions.ActionListener listener = succeeded -> {
                         if (!succeeded) {
-                            int errResId = isAskingToFollow ? R.string.reader_toast_err_adding_tag
-                                    : R.string.reader_toast_err_removing_tag;
+                            int errResId = isAskingToFollow
+                                    ? org.wordpress.android.reader.R.string.reader_toast_err_adding_tag
+                                    : org.wordpress.android.reader.R.string.reader_toast_err_removing_tag;
                             ToastUtils.showToast(context, errResId);
                         } else {
                             if (isAskingToFollow) {

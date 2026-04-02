@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.reader.subfilter
 
 import org.wordpress.android.R
+import org.wordpress.android.reader.R as ReaderR
 import org.wordpress.android.models.ReaderBlog
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.ItemType.DIVIDER
@@ -57,7 +58,7 @@ sealed class SubfilterListItem(val type: ItemType, val isTrackedItem: Boolean = 
         override var isClearingFilter: Boolean = false,
         override val onClickAction: (filter: SubfilterListItem) -> Unit
     ) : SubfilterListItem(SITE_ALL) {
-        override val label: UiString = UiStringRes(R.string.reader_filter_cta)
+        override val label: UiString = UiStringRes(ReaderR.string.reader_filter_cta)
     }
 
     @Suppress("DataClassShouldBeImmutable")
@@ -70,7 +71,7 @@ sealed class SubfilterListItem(val type: ItemType, val isTrackedItem: Boolean = 
             UiStringText(blog.name)
         } else {
             if (blog.url.isNotEmpty()) UiStringText(UrlUtils.getHost(blog.url))
-            else UiStringRes(R.string.reader_untitled_post)
+            else UiStringRes(ReaderR.string.reader_untitled_post)
         }
         val showUnseenCount: Boolean = blog.numUnseenPosts > 0
         val unseenCount: Int = blog.numUnseenPosts

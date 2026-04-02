@@ -145,7 +145,8 @@ public class ReaderTagAdapter extends RecyclerView.Adapter<ReaderTagAdapter.TagV
             mTagSlugIsFollowedMap.put(tag.getTagSlug(), isFollowingNew);
             readerFollowButton.setEnabled(true);
             if (!succeeded && hasContext()) {
-                ToastUtils.showToast(getContext(), R.string.reader_toast_err_removing_tag);
+                ToastUtils.showToast(getContext(),
+                        org.wordpress.android.reader.R.string.reader_toast_err_removing_tag);
                 refresh();
             }
         };

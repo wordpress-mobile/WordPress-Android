@@ -19,6 +19,7 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
+import org.wordpress.android.reader.R as ReaderR
 import org.wordpress.android.models.ReaderBlog
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.models.ReaderTag
@@ -411,7 +412,7 @@ class ReaderDiscoverViewModelTest : BaseUnitTest() {
         // Act
         fakeCommunicationChannel.postValue(Event(NetworkUnavailable(mock())))
         // Assert
-        assertThat(msgs[0].peekContent().message).isEqualTo(UiStringRes(R.string.reader_error_request_failed_title))
+        assertThat(msgs[0].peekContent().message).isEqualTo(UiStringRes(ReaderR.string.reader_error_request_failed_title))
     }
 
     @Test

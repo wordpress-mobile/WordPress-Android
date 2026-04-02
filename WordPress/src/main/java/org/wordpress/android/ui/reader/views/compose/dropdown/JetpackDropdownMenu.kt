@@ -44,6 +44,7 @@ import androidx.compose.ui.unit.dp
 import me.saket.cascade.CascadeColumnScope
 import me.saket.cascade.CascadeDropdownMenu
 import org.wordpress.android.R
+import org.wordpress.android.reader.R as ReaderR
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.compose.utils.uiStringText
 import org.wordpress.android.ui.utils.UiString.UiStringText
@@ -178,7 +179,7 @@ private fun CascadeColumnScope.SubMenuHeader(
                 }
                 Image(
                     painter = painterResource(backIconResource),
-                    contentDescription = stringResource(R.string.reader_label_toolbar_back),
+                    contentDescription = stringResource(ReaderR.string.reader_label_toolbar_back),
                     colorFilter = ColorFilter.tint(JetpackDropdownMenuColors.itemContentColor()),
                 )
             }

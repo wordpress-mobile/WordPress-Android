@@ -9,6 +9,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.jsoup.Jsoup
 import org.wordpress.android.R
+import org.wordpress.android.reader.R as ReaderR
 import org.wordpress.android.WordPress.Companion.getContext
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.support.createJsObject
@@ -284,7 +285,7 @@ class ReaderPostRenderer(
             if (discoverData != null && discoverData.blogId != 0L && discoverData.hasBlogName()) {
                 val label = String.format(
                     getContext()
-                        .getString(R.string.reader_discover_visit_blog),
+                        .getString(ReaderR.string.reader_discover_visit_blog),
                     discoverData.blogName
                 )
                 val url =

@@ -9,6 +9,7 @@ import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.R
+import org.wordpress.android.reader.R as ReaderR
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
@@ -95,10 +96,10 @@ class ReaderAnnouncementHelperTest {
         val readerPreferencesItem = items[0]
         assertThat(readerPreferencesItem.iconRes).isEqualTo(R.drawable.ic_reader_preferences)
         assertThat(readerPreferencesItem.titleRes).isEqualTo(
-            R.string.reader_announcement_card_reading_preferences_title
+            ReaderR.string.reader_announcement_card_reading_preferences_title
         )
         assertThat(readerPreferencesItem.descriptionRes).isEqualTo(
-            R.string.reader_announcement_card_reading_preferences_description
+            ReaderR.string.reader_announcement_card_reading_preferences_description
         )
     }
 
@@ -117,16 +118,16 @@ class ReaderAnnouncementHelperTest {
 
         val tagsFeedItem = items[0]
         assertThat(tagsFeedItem.iconRes).isEqualTo(R.drawable.ic_reader_tag)
-        assertThat(tagsFeedItem.titleRes).isEqualTo(R.string.reader_announcement_card_tags_stream_title)
-        assertThat(tagsFeedItem.descriptionRes).isEqualTo(R.string.reader_announcement_card_tags_stream_description)
+        assertThat(tagsFeedItem.titleRes).isEqualTo(ReaderR.string.reader_announcement_card_tags_stream_title)
+        assertThat(tagsFeedItem.descriptionRes).isEqualTo(ReaderR.string.reader_announcement_card_tags_stream_description)
 
         val readerPreferencesItem = items[1]
         assertThat(readerPreferencesItem.iconRes).isEqualTo(R.drawable.ic_reader_preferences)
         assertThat(readerPreferencesItem.titleRes).isEqualTo(
-            R.string.reader_announcement_card_reading_preferences_title
+            ReaderR.string.reader_announcement_card_reading_preferences_title
         )
         assertThat(readerPreferencesItem.descriptionRes).isEqualTo(
-            R.string.reader_announcement_card_reading_preferences_description
+            ReaderR.string.reader_announcement_card_reading_preferences_description
         )
     }
 

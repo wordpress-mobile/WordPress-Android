@@ -356,30 +356,40 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
 
                 ArrayList<ReaderCommentMenuItem> actions = new ArrayList<>();
                 actions.add(new PrimaryItemMenu(ReaderCommentMenuActionType.UNAPPROVE,
-                        new UiStringRes(R.string.reader_comment_menu_unapprove),
-                        new UiStringRes(R.string.reader_comment_menu_unapprove),
+                        new UiStringRes(
+                                org.wordpress.android.reader.R.string.reader_comment_menu_unapprove),
+                        new UiStringRes(
+                                org.wordpress.android.reader.R.string.reader_comment_menu_unapprove),
                         R.drawable.ic_cross_in_circle_white_24dp));
 
                 actions.add(new PrimaryItemMenu(ReaderCommentMenuActionType.SPAM,
-                        new UiStringRes(R.string.reader_comment_menu_spam),
-                        new UiStringRes(R.string.reader_comment_menu_spam),
+                        new UiStringRes(
+                                org.wordpress.android.reader.R.string.reader_comment_menu_spam),
+                        new UiStringRes(
+                                org.wordpress.android.reader.R.string.reader_comment_menu_spam),
                         R.drawable.ic_spam_white_24dp));
 
                 actions.add(new PrimaryItemMenu(ReaderCommentMenuActionType.TRASH,
-                        new UiStringRes(R.string.reader_comment_menu_trash),
-                        new UiStringRes(R.string.reader_comment_menu_trash),
+                        new UiStringRes(
+                                org.wordpress.android.reader.R.string.reader_comment_menu_trash),
+                        new UiStringRes(
+                                org.wordpress.android.reader.R.string.reader_comment_menu_trash),
                         R.drawable.ic_trash_white_24dp));
 
                 actions.add(new Divider());
 
                 actions.add(new PrimaryItemMenu(ReaderCommentMenuActionType.EDIT,
-                        new UiStringRes(R.string.reader_comment_menu_edit),
-                        new UiStringRes(R.string.reader_comment_menu_edit),
+                        new UiStringRes(
+                                org.wordpress.android.reader.R.string.reader_comment_menu_edit),
+                        new UiStringRes(
+                                org.wordpress.android.reader.R.string.reader_comment_menu_edit),
                         R.drawable.ic_pencil_white_24dp));
 
                 actions.add(new PrimaryItemMenu(ReaderCommentMenuActionType.SHARE,
-                        new UiStringRes(R.string.reader_comment_menu_share),
-                        new UiStringRes(R.string.reader_comment_menu_share),
+                        new UiStringRes(
+                                org.wordpress.android.reader.R.string.reader_comment_menu_share),
+                        new UiStringRes(
+                                org.wordpress.android.reader.R.string.reader_comment_menu_share),
                         R.drawable.ic_share_white_24dp));
 
                 menuPopup.setWidth(context.getResources().getDimensionPixelSize(R.dimen.menu_item_width));
@@ -565,7 +575,8 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
 
         ReaderComment comment = getItem(position);
         if (comment == null) {
-            ToastUtils.showToast(context, R.string.reader_toast_err_generic);
+            ToastUtils.showToast(context,
+                    org.wordpress.android.reader.R.string.reader_toast_err_generic);
             return;
         }
 
@@ -573,7 +584,8 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
         ReaderAnim.animateLikeButton(holder.mCountLikes.getImageView(), isAskingToLike);
 
         if (!ReaderCommentActions.performLikeAction(comment, isAskingToLike, mAccountStore.getAccount().getUserId())) {
-            ToastUtils.showToast(context, R.string.reader_toast_err_generic);
+            ToastUtils.showToast(context,
+                    org.wordpress.android.reader.R.string.reader_toast_err_generic);
             return;
         }
 

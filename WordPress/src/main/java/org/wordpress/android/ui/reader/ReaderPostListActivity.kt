@@ -15,6 +15,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.R
+import org.wordpress.android.reader.R as ReaderR
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.databinding.ReaderActivityPostListBinding
@@ -102,7 +103,7 @@ class ReaderPostListActivity : BaseAppCompatActivity(), OnBlogInfoFailedListener
         }
 
         if (postListType == ReaderPostListType.BLOG_PREVIEW) {
-            setTitle(R.string.reader_activity_title_blog_preview)
+            setTitle(ReaderR.string.reader_activity_title_blog_preview)
             if (savedInstanceState == null) {
                 val feedId = intent.getLongExtra(ReaderConstants.ARG_FEED_ID, 0)
                 if (feedId != 0L) {
@@ -117,7 +118,7 @@ class ReaderPostListActivity : BaseAppCompatActivity(), OnBlogInfoFailedListener
                 siteId = savedInstanceState.getLong(ReaderConstants.KEY_SITE_ID)
             }
         } else if (postListType == ReaderPostListType.TAG_PREVIEW) {
-            setTitle(R.string.reader_activity_title_tag_preview)
+            setTitle(ReaderR.string.reader_activity_title_tag_preview)
             if (intent.hasExtra(ReaderConstants.ARG_TAG)) {
                 val tag =
                     BundleCompat.getSerializable(
@@ -324,7 +325,7 @@ class ReaderPostListActivity : BaseAppCompatActivity(), OnBlogInfoFailedListener
 
         var title = ReaderBlogTable.getFeedName(feedId)
         if (title.isEmpty()) {
-            title = getString(R.string.reader_activity_title_blog_preview)
+            title = getString(ReaderR.string.reader_activity_title_blog_preview)
         }
         setTitle(title)
     }
@@ -342,7 +343,7 @@ class ReaderPostListActivity : BaseAppCompatActivity(), OnBlogInfoFailedListener
 
     override fun onBlogInfoFailed() {
         appLogWrapper.d(AppLog.T.READER, "Blog or feed not found for siteId: $siteId")
-        ToastUtils.showToast(this, R.string.reader_toast_err_blog_not_found)
+        ToastUtils.showToast(this, ReaderR.string.reader_toast_err_blog_not_found)
         finish()
     }
 

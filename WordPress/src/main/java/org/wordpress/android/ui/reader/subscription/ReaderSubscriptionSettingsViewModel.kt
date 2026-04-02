@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
+import org.wordpress.android.reader.R as ReaderR
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
@@ -120,7 +121,7 @@ class ReaderSubscriptionSettingsViewModel @Inject constructor(
                 // Revert to previous value on failure
                 _uiState.value = updateState(currentState, previousValue).copy(isLoading = false)
                 _snackbarEvents.postValue(
-                    Event(SnackbarMessageHolder(UiStringRes(R.string.reader_subscription_settings_update_error)))
+                    Event(SnackbarMessageHolder(UiStringRes(ReaderR.string.reader_subscription_settings_update_error)))
                 )
             }
         }

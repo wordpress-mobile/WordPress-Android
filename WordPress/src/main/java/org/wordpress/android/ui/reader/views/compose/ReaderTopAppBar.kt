@@ -35,6 +35,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.delay
 import org.wordpress.android.R
+import org.wordpress.android.reader.R as ReaderR
 import org.wordpress.android.ui.reader.views.compose.dropdown.JetpackDropdownMenu
 import org.wordpress.android.ui.reader.views.compose.dropdown.JetpackMenuElementData
 import org.wordpress.android.ui.compose.theme.AppThemeM3
@@ -134,7 +135,7 @@ fun ReaderTopAppBar(
                 Icon(
                     painter = painterResource(R.drawable.ic_magnifying_glass_16dp),
                     contentDescription = stringResource(
-                        R.string.reader_search_content_description
+                        ReaderR.string.reader_search_content_description
                     ),
                     tint = MaterialTheme.colorScheme.onSurface,
                 )
@@ -171,22 +172,22 @@ fun ReaderTopAppBarPreview() {
     val menuItems = mutableListOf<JetpackMenuElementData>(
         JetpackMenuElementData.Item.Single(
             id = "discover",
-            text = UiString.UiStringRes(R.string.reader_dropdown_menu_discover),
+            text = UiString.UiStringRes(ReaderR.string.reader_dropdown_menu_discover),
             leadingIcon = R.drawable.ic_reader_discover_24dp,
         ),
         JetpackMenuElementData.Item.Single(
             id = "subscriptions",
-            text = UiString.UiStringRes(R.string.reader_dropdown_menu_subscriptions),
+            text = UiString.UiStringRes(ReaderR.string.reader_dropdown_menu_subscriptions),
             leadingIcon = R.drawable.ic_reader_subscriptions_24dp,
         ),
         JetpackMenuElementData.Item.Single(
             id = "saved",
-            text = UiString.UiStringRes(R.string.reader_dropdown_menu_saved),
+            text = UiString.UiStringRes(ReaderR.string.reader_dropdown_menu_saved),
             leadingIcon = R.drawable.ic_reader_saved_24dp,
         ),
         JetpackMenuElementData.Item.Single(
             id = "liked",
-            text = UiString.UiStringRes(R.string.reader_dropdown_menu_liked),
+            text = UiString.UiStringRes(ReaderR.string.reader_dropdown_menu_liked),
             leadingIcon = R.drawable.ic_reader_liked_24dp,
         ),
         JetpackMenuElementData.Item.SubMenu(

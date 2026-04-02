@@ -12,6 +12,7 @@ import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
+import org.wordpress.android.reader.R as ReaderR
 import org.wordpress.android.datasets.ReaderBlogTableWrapper
 import org.wordpress.android.datasets.wrappers.ReaderPostTableWrapper
 import org.wordpress.android.models.ReaderPost
@@ -61,7 +62,7 @@ class ReaderPostMoreButtonUiStateBuilderTest : BaseUnitTest() {
         // Assert
         assertThat(menuItems.find {
             it.type == ReaderPostCardActionType.FOLLOW &&
-                    (it as SecondaryAction).label == UiStringRes(R.string.reader_btn_subscribe)
+                    (it as SecondaryAction).label == UiStringRes(ReaderR.string.reader_btn_subscribe)
         }).isNotNull
     }
 
@@ -74,7 +75,7 @@ class ReaderPostMoreButtonUiStateBuilderTest : BaseUnitTest() {
         // Assert
         assertThat(menuItems.find {
             it.type == ReaderPostCardActionType.FOLLOW &&
-                    (it as SecondaryAction).label == UiStringRes(R.string.reader_btn_subscribed)
+                    (it as SecondaryAction).label == UiStringRes(ReaderR.string.reader_btn_subscribed)
         }).isNotNull
     }
 
@@ -125,7 +126,7 @@ class ReaderPostMoreButtonUiStateBuilderTest : BaseUnitTest() {
         // Assert
         assertThat(menuItems.find {
             it.type == ReaderPostCardActionType.SITE_NOTIFICATIONS &&
-                    (it as SecondaryAction).label == UiStringRes(R.string.reader_btn_blog_notifications_on)
+                    (it as SecondaryAction).label == UiStringRes(ReaderR.string.reader_btn_blog_notifications_on)
         }).isNotNull
     }
 
@@ -138,7 +139,7 @@ class ReaderPostMoreButtonUiStateBuilderTest : BaseUnitTest() {
         // Assert
         assertThat(menuItems.find {
             it.type == ReaderPostCardActionType.SITE_NOTIFICATIONS &&
-                    (it as SecondaryAction).label == UiStringRes(R.string.reader_btn_blog_notifications_off)
+                    (it as SecondaryAction).label == UiStringRes(ReaderR.string.reader_btn_blog_notifications_off)
         }).isNotNull
     }
 
@@ -277,7 +278,7 @@ class ReaderPostMoreButtonUiStateBuilderTest : BaseUnitTest() {
         // Assert
         assertThat(menuItems.find {
             it.type == ReaderPostCardActionType.TOGGLE_SEEN_STATUS &&
-                    (it as SecondaryAction).label == UiStringRes(R.string.reader_menu_mark_as_seen)
+                    (it as SecondaryAction).label == UiStringRes(ReaderR.string.reader_menu_mark_as_seen)
         }).isNotNull
     }
 
@@ -290,7 +291,7 @@ class ReaderPostMoreButtonUiStateBuilderTest : BaseUnitTest() {
         // Assert
         assertThat(menuItems.find {
             it.type == ReaderPostCardActionType.TOGGLE_SEEN_STATUS &&
-                    (it as SecondaryAction).label == UiStringRes(R.string.reader_menu_mark_as_unseen)
+                    (it as SecondaryAction).label == UiStringRes(ReaderR.string.reader_menu_mark_as_unseen)
         }).isNotNull
     }
 
@@ -343,7 +344,7 @@ class ReaderPostMoreButtonUiStateBuilderTest : BaseUnitTest() {
         // Assert
         assertThat(menuItems.find {
             it.type == ReaderPostCardActionType.BOOKMARK &&
-                    (it as SecondaryAction).label == UiStringRes(R.string.reader_secondary_bookmark)
+                    (it as SecondaryAction).label == UiStringRes(ReaderR.string.reader_secondary_bookmark)
         }).isNotNull
     }
 
@@ -356,7 +357,7 @@ class ReaderPostMoreButtonUiStateBuilderTest : BaseUnitTest() {
         // Assert
         assertThat(menuItems.find {
             it.type == ReaderPostCardActionType.BOOKMARK &&
-                    (it as SecondaryAction).label == UiStringRes(R.string.reader_secondary_bookmarked)
+                    (it as SecondaryAction).label == UiStringRes(ReaderR.string.reader_secondary_bookmarked)
         }).isNotNull
     }
 

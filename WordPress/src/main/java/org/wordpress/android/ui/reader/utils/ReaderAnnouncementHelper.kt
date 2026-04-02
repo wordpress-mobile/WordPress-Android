@@ -2,6 +2,7 @@ package org.wordpress.android.ui.reader.utils
 
 import dagger.Reusable
 import org.wordpress.android.R
+import org.wordpress.android.reader.R as ReaderR
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
@@ -32,8 +33,8 @@ class ReaderAnnouncementHelper @Inject constructor(
             items.add(
                 ReaderAnnouncementCardItemData(
                     iconRes = R.drawable.ic_reader_tag,
-                    titleRes = R.string.reader_announcement_card_tags_stream_title,
-                    descriptionRes = R.string.reader_announcement_card_tags_stream_description,
+                    titleRes = ReaderR.string.reader_announcement_card_tags_stream_title,
+                    descriptionRes = ReaderR.string.reader_announcement_card_tags_stream_description,
                 )
             )
         }
@@ -41,8 +42,8 @@ class ReaderAnnouncementHelper @Inject constructor(
         items.add(
             ReaderAnnouncementCardItemData(
                 iconRes = R.drawable.ic_reader_preferences,
-                titleRes = R.string.reader_announcement_card_reading_preferences_title,
-                descriptionRes = R.string.reader_announcement_card_reading_preferences_description,
+                titleRes = ReaderR.string.reader_announcement_card_reading_preferences_title,
+                descriptionRes = ReaderR.string.reader_announcement_card_reading_preferences_description,
             )
         )
 

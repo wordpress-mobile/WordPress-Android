@@ -13,6 +13,7 @@ import org.mockito.kotlin.eq
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
+import org.wordpress.android.reader.R as ReaderR
 import org.wordpress.android.datasets.wrappers.ReaderPostTableWrapper
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.ui.reader.comments.ThreadedCommentsActionSource.READER_THREADED_COMMENTS
@@ -159,7 +160,7 @@ class ReaderCommentsFollowUseCaseTest : BaseUnitTest() {
                     true,
                     false,
                     false,
-                    UiStringRes(R.string.reader_follow_comments_subscribe_success_enable_push),
+                    UiStringRes(ReaderR.string.reader_follow_comments_subscribe_success_enable_push),
                     false
                 )
             )
@@ -219,7 +220,7 @@ class ReaderCommentsFollowUseCaseTest : BaseUnitTest() {
                     true,
                     true,
                     false,
-                    UiStringRes(R.string.reader_follow_comments_subscribe_to_push_success),
+                    UiStringRes(ReaderR.string.reader_follow_comments_subscribe_to_push_success),
                     false
                 )
             )
@@ -243,7 +244,7 @@ class ReaderCommentsFollowUseCaseTest : BaseUnitTest() {
                     isFollowing = true,
                     isReceivingNotifications = false,
                     false,
-                    userMessage = UiStringRes(R.string.reader_follow_comments_could_not_subscribe_to_push_error),
+                    userMessage = UiStringRes(ReaderR.string.reader_follow_comments_could_not_subscribe_to_push_error),
                     true
                 )
             )

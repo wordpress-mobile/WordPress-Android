@@ -4,6 +4,7 @@ import dagger.Reusable
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
+import org.wordpress.android.reader.R as ReaderR
 import org.wordpress.android.datasets.ReaderTagTable
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.ReaderTagList
@@ -38,8 +39,8 @@ class LoadReaderItemsUseCase @Inject constructor(
             // Add "Tags" item manually
             tagList.add(ReaderTag(
                 "",
-                stringProvider.getString(R.string.reader_tags_display_name),
-                stringProvider.getString(R.string.reader_tags_display_name),
+                stringProvider.getString(ReaderR.string.reader_tags_display_name),
+                stringProvider.getString(ReaderR.string.reader_tags_display_name),
                 "",
                 ReaderTagType.TAGS
             ))

@@ -208,7 +208,8 @@ public class ReaderPhotoViewerActivity extends BaseAppCompatActivity
             return;
         }
 
-        String titlePhotoViewer = getString(R.string.reader_title_photo_viewer);
+        String titlePhotoViewer = getString(
+                org.wordpress.android.reader.R.string.reader_title_photo_viewer);
         String title = String.format(titlePhotoViewer, position + 1, getImageCount());
         if (title.equals(mTxtTitle.getText())) {
             return;

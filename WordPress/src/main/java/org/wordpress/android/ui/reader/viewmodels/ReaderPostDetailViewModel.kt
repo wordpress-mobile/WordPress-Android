@@ -14,6 +14,7 @@ import kotlinx.coroutines.withContext
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode.MAIN
 import org.wordpress.android.R
+import org.wordpress.android.reader.R as ReaderR
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.datasets.wrappers.ReaderCommentTableWrapper
 import org.wordpress.android.datasets.wrappers.ReaderPostTableWrapper
@@ -426,7 +427,7 @@ class ReaderPostDetailViewModel @Inject constructor(
 
             FetchReaderPostState.Failed.RequestFailed -> {
                 if (!hasCachedPost) {
-                    _uiState.value = ErrorUiState(UiStringRes(R.string.reader_err_get_post_generic))
+                    _uiState.value = ErrorUiState(UiStringRes(ReaderR.string.reader_err_get_post_generic))
                 }
             }
 
@@ -438,7 +439,7 @@ class ReaderPostDetailViewModel @Inject constructor(
 
             FetchReaderPostState.Failed.PostNotFound -> {
                 if (!hasCachedPost) {
-                    _uiState.value = ErrorUiState(UiStringRes(R.string.reader_err_get_post_not_found))
+                    _uiState.value = ErrorUiState(UiStringRes(ReaderR.string.reader_err_get_post_not_found))
                 }
             }
         }
@@ -532,7 +533,7 @@ class ReaderPostDetailViewModel @Inject constructor(
             if (navigationTarget != null) {
                 _navigationEvents.value = Event(navigationTarget)
             } else {
-                _snackbarEvents.value = Event(SnackbarMessageHolder(UiStringRes(R.string.reader_reblog_error)))
+                _snackbarEvents.value = Event(SnackbarMessageHolder(UiStringRes(ReaderR.string.reader_reblog_error)))
             }
             pendingReblogPost = null
         }
@@ -786,15 +787,15 @@ class ReaderPostDetailViewModel @Inject constructor(
 
     private fun getNotAuthorisedErrorMessageRes() = if (!shouldOfferSignIn) {
         if (interceptedUri == null) {
-            R.string.reader_err_get_post_not_authorized
+            ReaderR.string.reader_err_get_post_not_authorized
         } else {
-            R.string.reader_err_get_post_not_authorized_fallback
+            ReaderR.string.reader_err_get_post_not_authorized_fallback
         }
     } else {
         if (interceptedUri == null) {
-            R.string.reader_err_get_post_not_authorized_signin
+            ReaderR.string.reader_err_get_post_not_authorized_signin
         } else {
-            R.string.reader_err_get_post_not_authorized_signin_fallback
+            ReaderR.string.reader_err_get_post_not_authorized_signin_fallback
         }
     }
 
@@ -1058,7 +1059,7 @@ class ReaderPostDetailViewModel @Inject constructor(
     private fun getUpdatedSnippetState(comments: ReaderCommentList?, result: UpdateResult): CommentSnippetState {
         return if (comments == null) {
             lastRenderedRepliesData = null
-            CommentSnippetState.Failure(UiStringRes(R.string.reader_comments_post_fetch_failure))
+            CommentSnippetState.Failure(UiStringRes(ReaderR.string.reader_comments_post_fetch_failure))
         } else {
             when (result) {
                 HAS_NEW, CHANGED, UNCHANGED -> {
@@ -1074,9 +1075,9 @@ class ReaderPostDetailViewModel @Inject constructor(
                         CommentSnippetState.Empty(
                             UiStringRes(
                                 if (post?.isCommentsOpen != false) {
-                                    R.string.reader_empty_comments
+                                    ReaderR.string.reader_empty_comments
                                 } else {
-                                    R.string.reader_label_comments_closed
+                                    ReaderR.string.reader_label_comments_closed
                                 }
                             )
                         )
@@ -1087,7 +1088,7 @@ class ReaderPostDetailViewModel @Inject constructor(
                     if (!networkUtilsWrapper.isNetworkAvailable()) {
                         CommentSnippetState.Failure(UiStringRes(R.string.no_network_message))
                     } else {
-                        CommentSnippetState.Failure(UiStringRes(R.string.reader_comments_fetch_failure))
+                        CommentSnippetState.Failure(UiStringRes(ReaderR.string.reader_comments_fetch_failure))
                     }
                 }
             }

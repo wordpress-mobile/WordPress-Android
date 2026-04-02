@@ -43,6 +43,7 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.R
+import org.wordpress.android.reader.R as ReaderR
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.datasets.ReaderBlogTable
@@ -1214,7 +1215,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
         searchMenuItem = menu.findItem(R.id.menu_reader_search)
 
         searchView = searchMenuItem.actionView as SearchView?
-        searchView!!.queryHint = getString(R.string.reader_hint_post_search)
+        searchView!!.queryHint = getString(ReaderR.string.reader_hint_post_search)
         searchView!!.isSubmitButtonEnabled = false
         searchView!!.setIconifiedByDefault(true)
         searchView!!.isIconified = true
@@ -1744,15 +1745,15 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
             return
         } else if (!NetworkUtils.isNetworkAvailable(activity)) {
             clearCurrentUpdateActions()
-            title = getString(R.string.reader_empty_posts_no_connection)
+            title = getString(ReaderR.string.reader_empty_posts_no_connection)
         } else if (requestFailed) {
             title = if (isSearching) {
-                getString(R.string.reader_empty_search_request_failed)
+                getString(ReaderR.string.reader_empty_search_request_failed)
             } else {
-                getString(R.string.reader_empty_posts_request_failed)
+                getString(ReaderR.string.reader_empty_posts_request_failed)
             }
         } else if (isUpdating && getPostListType() != ReaderPostListType.SEARCH_RESULTS) {
-            title = getString(R.string.reader_empty_posts_in_tag_updating)
+            title = getString(ReaderR.string.reader_empty_posts_in_tag_updating)
         } else {
             when (getPostListType()) {
                 ReaderPostListType.TAG_FOLLOWED -> {
@@ -1761,44 +1762,44 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
 
                         if (ReaderBlogTable.hasFollowedBlogs()) {
                             title =
-                                getString(R.string.reader_empty_followed_blogs_no_recent_posts_title)
+                                getString(ReaderR.string.reader_empty_followed_blogs_no_recent_posts_title)
                             description = getString(
-                                R.string.reader_empty_followed_blogs_subscribed_no_recent_posts_description
+                                ReaderR.string.reader_empty_followed_blogs_subscribed_no_recent_posts_description
                             )
                         } else {
-                            title = getString(R.string.reader_no_followed_blogs_title)
-                            description = getString(R.string.reader_no_followed_blogs_description)
+                            title = getString(ReaderR.string.reader_no_followed_blogs_title)
+                            description = getString(ReaderR.string.reader_no_followed_blogs_description)
                         }
 
                         button = ActionableEmptyViewButtonType.DISCOVER
                     } else if (currentTag!!.isPostsILike) {
-                        title = getString(R.string.reader_empty_posts_liked_title)
-                        description = getString(R.string.reader_empty_posts_liked_description)
+                        title = getString(ReaderR.string.reader_empty_posts_liked_title)
+                        description = getString(ReaderR.string.reader_empty_posts_liked_description)
                         button = ActionableEmptyViewButtonType.FOLLOWED
                     } else if (currentTag!!.isListTopic) {
-                        title = getString(R.string.reader_empty_blogs_posts_in_custom_list)
+                        title = getString(ReaderR.string.reader_empty_blogs_posts_in_custom_list)
                     } else {
-                        title = getString(R.string.reader_no_posts_with_this_tag)
+                        title = getString(ReaderR.string.reader_no_posts_with_this_tag)
                     }
                 }
 
                 ReaderPostListType.BLOG_PREVIEW -> title =
-                    getString(R.string.reader_no_posts_in_blog)
+                    getString(ReaderR.string.reader_no_posts_in_blog)
 
                 ReaderPostListType.SEARCH_RESULTS -> {
                     isImageHidden = true
 
                     if (isSearchViewEmpty || TextUtils.isEmpty(currentSearchQuery)) {
-                        title = getString(R.string.reader_label_post_search_explainer)
+                        title = getString(ReaderR.string.reader_label_post_search_explainer)
                         actionableEmptyView!!.updateLayoutForSearch(true, heightToolbar)
                     } else if (isUpdating) {
                         title = ""
                         actionableEmptyView!!.updateLayoutForSearch(true, heightToolbar)
                     } else {
-                        title = getString(R.string.reader_empty_search_title)
+                        title = getString(ReaderR.string.reader_empty_search_title)
                         val formattedQuery = "<em>$currentSearchQuery</em>"
                         description = String.format(
-                            getString(R.string.reader_empty_search_description),
+                            getString(ReaderR.string.reader_empty_search_description),
                             formattedQuery
                         )
                         actionableEmptyView!!.updateLayoutForSearch(
@@ -1809,9 +1810,9 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
                 }
 
                 ReaderPostListType.TAG_PREVIEW -> title =
-                    getString(R.string.reader_no_posts_with_this_tag)
+                    getString(ReaderR.string.reader_no_posts_with_this_tag)
 
-                else -> title = getString(R.string.reader_no_posts_with_this_tag)
+                else -> title = getString(ReaderR.string.reader_no_posts_with_this_tag)
             }
         }
 
@@ -1823,17 +1824,17 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
      */
     private fun setEmptyTitleAndDescriptionForBookmarksList() {
         // replace %s placeholder with bookmark outline icon
-        val description = getString(R.string.reader_empty_saved_posts_description)
+        val description = getString(ReaderR.string.reader_empty_saved_posts_description)
         val ssb = SpannableStringBuilder(description)
         val imagePlaceholderPosition = description.indexOf("%s")
         addBookmarkImageSpan(ssb, imagePlaceholderPosition)
         actionableEmptyView!!.image.visibility = View.VISIBLE
-        actionableEmptyView!!.title.setText(R.string.reader_empty_saved_posts_title)
+        actionableEmptyView!!.title.setText(ReaderR.string.reader_empty_saved_posts_title)
         actionableEmptyView!!.subtitle.text = ssb
         actionableEmptyView!!.subtitle.contentDescription =
-            getString(R.string.reader_empty_saved_posts_content_description)
+            getString(ReaderR.string.reader_empty_saved_posts_content_description)
         actionableEmptyView!!.subtitle.visibility = View.VISIBLE
-        actionableEmptyView!!.button.setText(R.string.reader_no_followed_blogs_button_discover)
+        actionableEmptyView!!.button.setText(ReaderR.string.reader_no_followed_blogs_button_discover)
         actionableEmptyView!!.button.visibility = View.VISIBLE
         actionableEmptyView!!.button.setOnClickListener {
             setCurrentTagFromEmptyViewButton(
@@ -1855,10 +1856,10 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
 
         actionableEmptyView!!.image.visibility = View.VISIBLE
         actionableEmptyView!!.title.text =
-            getString(R.string.reader_empty_subscriptions)
+            getString(ReaderR.string.reader_empty_subscriptions)
         actionableEmptyView!!.subtitle.visibility = View.GONE
         actionableEmptyView!!.button.setText(
-            R.string.reader_no_followed_blogs_button_discover
+            ReaderR.string.reader_no_followed_blogs_button_discover
         )
         actionableEmptyView!!.button.setOnClickListener {
             setCurrentTagFromEmptyViewButton(
@@ -1925,12 +1926,12 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
             when (button) {
                 ActionableEmptyViewButtonType.DISCOVER -> {
                     actionableEmptyView!!.button.setText(
-                        R.string.reader_no_followed_blogs_button_discover
+                        ReaderR.string.reader_no_followed_blogs_button_discover
                     )
                 }
 
                 ActionableEmptyViewButtonType.FOLLOWED -> {
-                    actionableEmptyView!!.button.setText(R.string.reader_empty_followed_blogs_button_subscriptions)
+                    actionableEmptyView!!.button.setText(ReaderR.string.reader_empty_followed_blogs_button_subscriptions)
                 }
             }
 
@@ -1974,7 +1975,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
             @Suppress("DEPRECATION")
             requireView().announceForAccessibility(
                 getString(
-                    R.string.reader_acessibility_list_loaded,
+                    ReaderR.string.reader_acessibility_list_loaded,
                     getPostAdapter().itemCount
                 )
             )
@@ -2409,7 +2410,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
                             showEmptyView()
                         } else if ((currentTag?.isListTopic() == true) && isPostAdapterEmpty() && isAdded) {
                             actionableEmptyView!!.title.text =
-                                getString(R.string.reader_empty_blogs_posts_in_custom_list)
+                                getString(ReaderR.string.reader_empty_blogs_posts_in_custom_list)
                             actionableEmptyView!!.image.visibility = View.VISIBLE
                             actionableEmptyView!!.title.visibility = View.VISIBLE
                             actionableEmptyView!!.button.visibility = View.GONE
@@ -2836,7 +2837,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
         dispatcher.dispatch(AccountActionBuilder.newFetchSubscriptionsAction())
 
         val blog = if (TextUtils.isEmpty(blogName))
-            getString(R.string.reader_followed_blog_notifications_this)
+            getString(ReaderR.string.reader_followed_blog_notifications_this)
         else
             blogName
 
@@ -2844,12 +2845,12 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
             make(
                 view = getSnackbarParent()!!,
                 text = HtmlCompat.fromHtml(
-                    getString(R.string.reader_followed_blog_notifications, "<b>", blog, "</b>"),
+                    getString(ReaderR.string.reader_followed_blog_notifications, "<b>", blog, "</b>"),
                     HtmlCompat.FROM_HTML_MODE_LEGACY
                 ),
                 duration = Snackbar.LENGTH_LONG
             ).setAction(
-                getString(R.string.reader_followed_blog_notifications_action)
+                getString(ReaderR.string.reader_followed_blog_notifications_action)
             ) {
                 readerTracker.trackBlog(
                     AnalyticsTracker.Stat.FOLLOWED_BLOG_NOTIFICATIONS_READER_ENABLED,

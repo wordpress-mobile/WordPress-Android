@@ -55,6 +55,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.wordpress.android.R
+import org.wordpress.android.reader.R as ReaderR
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.ReaderTagType
 import org.wordpress.android.ui.compose.theme.AppColor
@@ -233,7 +234,7 @@ private fun Empty(uiState: UiState.Empty) {
                     end = Margin.ExtraExtraMediumLarge.value,
                     bottom = Margin.Medium.value,
                 ),
-            text = stringResource(id = R.string.reader_discover_empty_title),
+            text = stringResource(id = ReaderR.string.reader_discover_empty_title),
             textAlign = TextAlign.Center,
             fontSize = 20.sp,
             style = MaterialTheme.typography.titleMedium,
@@ -247,7 +248,7 @@ private fun Empty(uiState: UiState.Empty) {
                     end = Margin.ExtraExtraMediumLarge.value,
                     bottom = Margin.Large.value,
                 ),
-            text = stringResource(id = R.string.reader_discover_empty_subtitle_follow),
+            text = stringResource(id = ReaderR.string.reader_discover_empty_subtitle_follow),
             textAlign = TextAlign.Center,
             style = MaterialTheme.typography.titleMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant
@@ -277,7 +278,7 @@ private fun Empty(uiState: UiState.Empty) {
                 modifier = Modifier
                     .align(Alignment.CenterVertically),
                 style = MaterialTheme.typography.titleMedium,
-                text = stringResource(id = R.string.reader_discover_empty_button_text),
+                text = stringResource(id = ReaderR.string.reader_discover_empty_button_text),
                 overflow = TextOverflow.Ellipsis,
                 maxLines = 1,
             )
@@ -301,7 +302,7 @@ fun NoConnection(uiState: UiState.NoConnection) {
             backgroundColor = backgroundColor,
             titleText = stringResource(R.string.no_connection_error_title),
             descriptionText = stringResource(R.string.no_connection_error_description),
-            actionText = stringResource(R.string.reader_tags_feed_error_retry),
+            actionText = stringResource(ReaderR.string.reader_tags_feed_error_retry),
             onActionClick = uiState.onRetryClick,
         )
     }
@@ -394,7 +395,7 @@ private fun PostListLoaded(
                         modifier = Modifier.fillMaxWidth(),
                         textAlign = TextAlign.Center,
                         text = stringResource(
-                            id = R.string.reader_tags_feed_see_more_from_tag,
+                            id = ReaderR.string.reader_tags_feed_see_more_from_tag,
                             tagChip.tag.tagDisplayName
                         ),
                         style = MaterialTheme.typography.labelLarge,
@@ -416,8 +417,8 @@ private fun PostListError(
 ) {
     val tagName = tagChip.tag.tagDisplayName
     val errorMessage = when (postList.type) {
-        is ErrorType.Default -> stringResource(R.string.reader_tags_feed_loading_error_description)
-        is ErrorType.NoContent -> stringResource(R.string.reader_tags_feed_no_content_error_description, tagName)
+        is ErrorType.Default -> stringResource(ReaderR.string.reader_tags_feed_loading_error_description)
+        is ErrorType.NoContent -> stringResource(ReaderR.string.reader_tags_feed_no_content_error_description, tagName)
     }
 
     ErrorMessage(
@@ -425,9 +426,9 @@ private fun PostListError(
             .heightIn(min = ReaderTagsFeedComposeUtils.PostItemHeight)
             .fillMaxWidth(),
         backgroundColor = backgroundColor,
-        titleText = stringResource(id = R.string.reader_tags_feed_error_title, tagName),
+        titleText = stringResource(id = ReaderR.string.reader_tags_feed_error_title, tagName),
         descriptionText = errorMessage,
-        actionText = stringResource(R.string.reader_tags_feed_error_retry),
+        actionText = stringResource(ReaderR.string.reader_tags_feed_error_retry),
         onActionClick = { postList.onRetryClick(tagChip.tag) }
     )
 }

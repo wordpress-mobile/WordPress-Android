@@ -27,6 +27,7 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
+import org.wordpress.android.reader.R as ReaderR
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.datasets.wrappers.ReaderCommentTableWrapper
 import org.wordpress.android.datasets.wrappers.ReaderPostTableWrapper
@@ -450,7 +451,7 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
 
         viewModel.onShowPost(blogId = readerPost.blogId, postId = readerPost.postId)
 
-        assertThat(observers.uiStates.last()).isEqualTo(ErrorUiState(UiStringRes(R.string.reader_err_get_post_generic)))
+        assertThat(observers.uiStates.last()).isEqualTo(ErrorUiState(UiStringRes(ReaderR.string.reader_err_get_post_generic)))
     }
 
     @Test
@@ -478,7 +479,7 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
         viewModel.onShowPost(blogId = readerPost.blogId, postId = readerPost.postId)
 
         assertThat(observers.uiStates.last())
-            .isEqualTo(ErrorUiState(UiStringRes(R.string.reader_err_get_post_not_found)))
+            .isEqualTo(ErrorUiState(UiStringRes(ReaderR.string.reader_err_get_post_not_found)))
     }
 
     @Test
@@ -534,7 +535,7 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
             viewModel.onShowPost(blogId = readerPost.blogId, postId = readerPost.postId)
 
             assertThat((observers.uiStates.last() as ErrorUiState).message)
-                .isEqualTo(UiStringRes(R.string.reader_err_get_post_not_authorized))
+                .isEqualTo(UiStringRes(ReaderR.string.reader_err_get_post_not_authorized))
         }
 
     @Test
@@ -549,7 +550,7 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
             viewModel.onShowPost(blogId = readerPost.blogId, postId = readerPost.postId)
 
             assertThat((observers.uiStates.last() as ErrorUiState).message)
-                .isEqualTo(UiStringRes(R.string.reader_err_get_post_not_authorized_fallback))
+                .isEqualTo(UiStringRes(ReaderR.string.reader_err_get_post_not_authorized_fallback))
         }
 
     @Test
@@ -564,7 +565,7 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
             viewModel.onShowPost(blogId = readerPost.blogId, postId = readerPost.postId)
 
             assertThat((observers.uiStates.last() as ErrorUiState).message)
-                .isEqualTo(UiStringRes(R.string.reader_err_get_post_not_authorized_signin))
+                .isEqualTo(UiStringRes(ReaderR.string.reader_err_get_post_not_authorized_signin))
         }
 
     @Test
@@ -579,7 +580,7 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
             viewModel.onShowPost(blogId = readerPost.blogId, postId = readerPost.postId)
 
             assertThat((observers.uiStates.last() as ErrorUiState).message)
-                .isEqualTo(UiStringRes(R.string.reader_err_get_post_not_authorized_signin_fallback))
+                .isEqualTo(UiStringRes(ReaderR.string.reader_err_get_post_not_authorized_signin_fallback))
         }
 
     @Test

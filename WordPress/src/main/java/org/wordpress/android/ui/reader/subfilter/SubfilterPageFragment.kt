@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
+import org.wordpress.android.reader.R as ReaderR
 import org.wordpress.android.ui.reader.subfilter.SubfilterBottomSheetEmptyUiState.HiddenEmptyUiState
 import org.wordpress.android.ui.reader.subfilter.SubfilterBottomSheetEmptyUiState.VisibleEmptyUiState
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.ItemType
@@ -216,6 +217,6 @@ class SubfilterPagerAdapter(
 }
 
 enum class SubfilterCategory(@StringRes val titleRes: Int, val type: ItemType) {
-    SITES(R.string.reader_filter_by_blog_title, SITE),
-    TAGS(R.string.reader_filter_by_tag_title, TAG);
+    SITES(ReaderR.string.reader_filter_by_blog_title, SITE),
+    TAGS(ReaderR.string.reader_filter_by_tag_title, TAG);
 }

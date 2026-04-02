@@ -13,6 +13,7 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
+import org.wordpress.android.reader.R as ReaderR
 import org.wordpress.android.fluxc.model.SubscriptionModel
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.reader.subscription.ReaderBlogSubscriptionUseCase.UpdateResult
@@ -139,7 +140,7 @@ class ReaderSubscriptionSettingsViewModelTest : BaseUnitTest() {
 
         assertThat(snackbarEvents).hasSize(1)
         val message = snackbarEvents.first().peekContent().message
-        assertThat(message).isEqualTo(UiStringRes(R.string.reader_subscription_settings_update_error))
+        assertThat(message).isEqualTo(UiStringRes(ReaderR.string.reader_subscription_settings_update_error))
     }
 
     @Test
@@ -211,7 +212,7 @@ class ReaderSubscriptionSettingsViewModelTest : BaseUnitTest() {
 
         assertThat(snackbarEvents).hasSize(1)
         val message = snackbarEvents.first().peekContent().message
-        assertThat(message).isEqualTo(UiStringRes(R.string.reader_subscription_settings_update_error))
+        assertThat(message).isEqualTo(UiStringRes(ReaderR.string.reader_subscription_settings_update_error))
     }
 
     @Test
@@ -283,7 +284,7 @@ class ReaderSubscriptionSettingsViewModelTest : BaseUnitTest() {
 
         assertThat(snackbarEvents).hasSize(1)
         val message = snackbarEvents.first().peekContent().message
-        assertThat(message).isEqualTo(UiStringRes(R.string.reader_subscription_settings_update_error))
+        assertThat(message).isEqualTo(UiStringRes(ReaderR.string.reader_subscription_settings_update_error))
     }
 
     @Test

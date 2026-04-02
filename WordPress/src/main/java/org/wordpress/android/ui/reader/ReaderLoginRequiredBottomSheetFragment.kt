@@ -9,6 +9,7 @@ import android.widget.LinearLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import org.wordpress.android.R
+import org.wordpress.android.reader.R as ReaderR
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.widgets.WPTextView
 
@@ -52,13 +53,13 @@ class ReaderLoginRequiredBottomSheetFragment : BottomSheetDialogFragment() {
 
         // Set the text for logged-out users
         view.findViewById<WPTextView>(R.id.text).setText(
-            R.string.reader_filter_self_hosted_empty_blogs_list
+            ReaderR.string.reader_filter_self_hosted_empty_blogs_list
         )
 
         // Configure primary button for login
         val primaryButton = view.findViewById<Button>(R.id.action_button_primary)
         primaryButton.visibility = View.VISIBLE
-        primaryButton.setText(R.string.reader_filter_self_hosted_empty_sites_tags_action)
+        primaryButton.setText(ReaderR.string.reader_filter_self_hosted_empty_sites_tags_action)
         primaryButton.setOnClickListener {
             dismiss()
             ActivityLauncher.showMainActivityAndMeScreen(requireContext())

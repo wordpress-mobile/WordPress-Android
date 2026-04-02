@@ -4,6 +4,7 @@ import dagger.Reusable
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
+import org.wordpress.android.reader.R as ReaderR
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.models.ReaderBlog
 import org.wordpress.android.models.ReaderCardType.GALLERY
@@ -320,7 +321,7 @@ class ReaderPostUiStateBuilder @Inject constructor(
             UiStringText(post.authorName)
         }
 
-        return UiStringResWithParams(R.string.reader_author_with_blog_name, listOf(authorName, blogName))
+        return UiStringResWithParams(ReaderR.string.reader_author_with_blog_name, listOf(authorName, blogName))
     }
 
     private fun buildAvatarOrBlavatarUrl(post: ReaderPost) =
@@ -344,9 +345,9 @@ class ReaderPostUiStateBuilder @Inject constructor(
     ): PrimaryAction {
         val contentDescription = UiStringRes(
             if (post.isBookmarked) {
-                R.string.reader_remove_bookmark
+                ReaderR.string.reader_remove_bookmark
             } else {
-                R.string.reader_add_bookmark
+                ReaderR.string.reader_add_bookmark
             }
         )
         return if (post.postId != 0L && post.blogId != 0L) {
@@ -392,7 +393,7 @@ class ReaderPostUiStateBuilder @Inject constructor(
         val canReblog = !post.isPrivate && accountStore.hasAccessToken()
         return PrimaryAction(
             isEnabled = canReblog,
-            contentDescription = UiStringRes(R.string.reader_view_reblog),
+            contentDescription = UiStringRes(ReaderR.string.reader_view_reblog),
             onClicked = if (canReblog) onReblogClicked else null,
             type = REBLOG
         )

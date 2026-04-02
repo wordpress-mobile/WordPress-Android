@@ -5,6 +5,7 @@ import com.wordpress.rest.RestRequest.ErrorListener
 import com.wordpress.rest.RestRequest.Listener
 import org.json.JSONObject
 import org.wordpress.android.R
+import org.wordpress.android.reader.R as ReaderR
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.reader.utils.PostSubscribersApiCallsProvider.PostSubscribersCallResult.Failure
 import org.wordpress.android.ui.reader.utils.PostSubscribersApiCallsProvider.PostSubscribersCallResult.Success
@@ -169,7 +170,7 @@ class PostSubscribersApiCallsProvider @Inject constructor(
                 "$functionName > Failed with empty string " +
                         "[blogId=$blogId - postId=$postId - volleyError = $volleyError]"
             )
-            contextProvider.getContext().getString(R.string.reader_follow_comments_get_status_error)
+            contextProvider.getContext().getString(ReaderR.string.reader_follow_comments_get_status_error)
         } else {
             AppLog.d(
                 T.READER,
@@ -189,9 +190,9 @@ class PostSubscribersApiCallsProvider @Inject constructor(
                     isReceivingNotifications = it.optBoolean(KEY_RECEIVES_NOTIFICATIONS, false)
                 )
             } else {
-                Failure(contextProvider.getContext().getString(R.string.reader_follow_comments_bad_format_response))
+                Failure(contextProvider.getContext().getString(ReaderR.string.reader_follow_comments_bad_format_response))
             }
-        } ?: Failure(contextProvider.getContext().getString(R.string.reader_follow_comments_null_response))
+        } ?: Failure(contextProvider.getContext().getString(ReaderR.string.reader_follow_comments_null_response))
     }
 
     private fun canFollowComments(blogId: Long, json: JSONObject?): PostSubscribersCallResult {
@@ -199,9 +200,9 @@ class PostSubscribersApiCallsProvider @Inject constructor(
             if (it.has("ID") && it.optLong("ID", -1) == blogId) {
                 Success(isFollowing = false, isReceivingNotifications = false)
             } else {
-                Failure(contextProvider.getContext().getString(R.string.reader_follow_comments_bad_format_response))
+                Failure(contextProvider.getContext().getString(ReaderR.string.reader_follow_comments_bad_format_response))
             }
-        } ?: Failure(contextProvider.getContext().getString(R.string.reader_follow_comments_null_response))
+        } ?: Failure(contextProvider.getContext().getString(ReaderR.string.reader_follow_comments_null_response))
     }
 
     private fun wasSubscribed(json: JSONObject?): PostSubscribersCallResult {
@@ -216,14 +217,14 @@ class PostSubscribersApiCallsProvider @Inject constructor(
                 } else {
                     Failure(
                         contextProvider.getContext().getString(
-                            R.string.reader_follow_comments_could_not_subscribe_error
+                            ReaderR.string.reader_follow_comments_could_not_subscribe_error
                         )
                     )
                 }
             } else {
-                Failure(contextProvider.getContext().getString(R.string.reader_follow_comments_bad_format_response))
+                Failure(contextProvider.getContext().getString(ReaderR.string.reader_follow_comments_bad_format_response))
             }
-        } ?: Failure(contextProvider.getContext().getString(R.string.reader_follow_comments_null_response))
+        } ?: Failure(contextProvider.getContext().getString(ReaderR.string.reader_follow_comments_null_response))
     }
 
     private fun wasUnsubscribed(json: JSONObject?): PostSubscribersCallResult {
@@ -238,14 +239,14 @@ class PostSubscribersApiCallsProvider @Inject constructor(
                 } else {
                     Failure(
                         contextProvider.getContext().getString(
-                            R.string.reader_follow_comments_could_not_unsubscribe_error
+                            ReaderR.string.reader_follow_comments_could_not_unsubscribe_error
                         )
                     )
                 }
             } else {
-                Failure(contextProvider.getContext().getString(R.string.reader_follow_comments_bad_format_response))
+                Failure(contextProvider.getContext().getString(ReaderR.string.reader_follow_comments_bad_format_response))
             }
-        } ?: Failure(contextProvider.getContext().getString(R.string.reader_follow_comments_null_response))
+        } ?: Failure(contextProvider.getContext().getString(ReaderR.string.reader_follow_comments_null_response))
     }
 
     private fun wasSubscribedForPushNotifications(json: JSONObject?): PostSubscribersCallResult {
@@ -259,14 +260,14 @@ class PostSubscribersApiCallsProvider @Inject constructor(
                 } else {
                     Failure(
                         contextProvider.getContext().getString(
-                            R.string.reader_follow_comments_could_not_unsubscribe_error
+                            ReaderR.string.reader_follow_comments_could_not_unsubscribe_error
                         )
                     )
                 }
             } else {
-                Failure(contextProvider.getContext().getString(R.string.reader_follow_comments_bad_format_response))
+                Failure(contextProvider.getContext().getString(ReaderR.string.reader_follow_comments_bad_format_response))
             }
-        } ?: Failure(contextProvider.getContext().getString(R.string.reader_follow_comments_null_response))
+        } ?: Failure(contextProvider.getContext().getString(ReaderR.string.reader_follow_comments_null_response))
     }
 
     private fun wasUnsubscribedFromPushNotifications(json: JSONObject?): PostSubscribersCallResult {
@@ -280,14 +281,14 @@ class PostSubscribersApiCallsProvider @Inject constructor(
                 } else {
                     Failure(
                         contextProvider.getContext().getString(
-                            R.string.reader_follow_comments_could_not_unsubscribe_error
+                            ReaderR.string.reader_follow_comments_could_not_unsubscribe_error
                         )
                     )
                 }
             } else {
-                Failure(contextProvider.getContext().getString(R.string.reader_follow_comments_bad_format_response))
+                Failure(contextProvider.getContext().getString(ReaderR.string.reader_follow_comments_bad_format_response))
             }
-        } ?: Failure(contextProvider.getContext().getString(R.string.reader_follow_comments_null_response))
+        } ?: Failure(contextProvider.getContext().getString(ReaderR.string.reader_follow_comments_null_response))
     }
 
     sealed class PostSubscribersCallResult {

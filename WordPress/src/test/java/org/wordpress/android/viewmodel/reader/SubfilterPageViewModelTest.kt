@@ -10,6 +10,7 @@ import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
+import org.wordpress.android.reader.R as ReaderR
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.ui.reader.ReaderSubsActivity
 import org.wordpress.android.ui.reader.subfilter.ActionType
@@ -50,12 +51,12 @@ class SubfilterPageViewModelTest : BaseUnitTest() {
         viewModel.onSubFiltersChanged(true)
 
         with(viewModel.emptyState.value as VisibleEmptyUiState) {
-            assertThat(title).isEqualTo(UiStringRes(R.string.reader_filter_empty_blogs_list_title))
-            assertThat(text).isEqualTo(UiStringRes(R.string.reader_filter_empty_blogs_list_text))
+            assertThat(title).isEqualTo(UiStringRes(ReaderR.string.reader_filter_empty_blogs_list_title))
+            assertThat(text).isEqualTo(UiStringRes(ReaderR.string.reader_filter_empty_blogs_list_text))
             assertThat(primaryButton).isNull()
             assertThat(secondaryButton).isEqualTo(
                 VisibleEmptyUiState.Button(
-                    text = UiStringRes(R.string.reader_filter_empty_blogs_action_search),
+                    text = UiStringRes(ReaderR.string.reader_filter_empty_blogs_action_search),
                     action = ActionType.OpenSearchPage
                 )
             )
@@ -70,17 +71,17 @@ class SubfilterPageViewModelTest : BaseUnitTest() {
         viewModel.onSubFiltersChanged(true)
 
         with(viewModel.emptyState.value as VisibleEmptyUiState) {
-            assertThat(title).isEqualTo(UiStringRes(R.string.reader_filter_empty_tags_list_title))
-            assertThat(text).isEqualTo(UiStringRes(R.string.reader_filter_empty_tags_list_follow_text))
+            assertThat(title).isEqualTo(UiStringRes(ReaderR.string.reader_filter_empty_tags_list_title))
+            assertThat(text).isEqualTo(UiStringRes(ReaderR.string.reader_filter_empty_tags_list_follow_text))
             assertThat(primaryButton).isEqualTo(
                 VisibleEmptyUiState.Button(
-                    text = UiStringRes(R.string.reader_filter_empty_tags_action_suggested),
+                    text = UiStringRes(ReaderR.string.reader_filter_empty_tags_action_suggested),
                     action = ActionType.OpenSuggestedTagsPage
                 )
             )
             assertThat(secondaryButton).isEqualTo(
                 VisibleEmptyUiState.Button(
-                    text = UiStringRes(R.string.reader_filter_empty_tags_action_follow),
+                    text = UiStringRes(ReaderR.string.reader_filter_empty_tags_action_follow),
                     action = ActionType.OpenSubsAtPage(ReaderSubsActivity.TAB_IDX_FOLLOWED_TAGS)
                 )
             )
@@ -96,10 +97,10 @@ class SubfilterPageViewModelTest : BaseUnitTest() {
 
         with(viewModel.emptyState.value as VisibleEmptyUiState) {
             assertThat(title).isNull()
-            assertThat(text).isEqualTo(UiStringRes(R.string.reader_filter_self_hosted_empty_blogs_list))
+            assertThat(text).isEqualTo(UiStringRes(ReaderR.string.reader_filter_self_hosted_empty_blogs_list))
             assertThat(primaryButton).isEqualTo(
                 VisibleEmptyUiState.Button(
-                    text = UiStringRes(R.string.reader_filter_self_hosted_empty_sites_tags_action),
+                    text = UiStringRes(ReaderR.string.reader_filter_self_hosted_empty_sites_tags_action),
                     action = ActionType.OpenLoginPage
                 )
             )
@@ -116,10 +117,10 @@ class SubfilterPageViewModelTest : BaseUnitTest() {
 
         with(viewModel.emptyState.value as VisibleEmptyUiState) {
             assertThat(title).isNull()
-            assertThat(text).isEqualTo(UiStringRes(R.string.reader_filter_self_hosted_empty_tags_list))
+            assertThat(text).isEqualTo(UiStringRes(ReaderR.string.reader_filter_self_hosted_empty_tags_list))
             assertThat(primaryButton).isEqualTo(
                 VisibleEmptyUiState.Button(
-                    text = UiStringRes(R.string.reader_filter_self_hosted_empty_sites_tags_action),
+                    text = UiStringRes(ReaderR.string.reader_filter_self_hosted_empty_sites_tags_action),
                     action = ActionType.OpenLoginPage
                 )
             )

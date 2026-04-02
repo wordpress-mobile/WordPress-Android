@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
+import org.wordpress.android.reader.R as ReaderR
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.datasets.ReaderBlogTableWrapper
 import org.wordpress.android.fluxc.Dispatcher
@@ -181,7 +182,7 @@ class ReaderPostCardActionsHandler @Inject constructor(
             }
             FetchSiteState.Failed.RequestFailed -> {
                 _snackbarEvents.postValue(
-                    Event(SnackbarMessageHolder((UiStringRes(R.string.reader_error_request_failed_title))))
+                    Event(SnackbarMessageHolder((UiStringRes(ReaderR.string.reader_error_request_failed_title))))
                 )
             }
         }
@@ -355,7 +356,7 @@ class ReaderPostCardActionsHandler @Inject constructor(
                 }
                 is FollowSiteState.Failed.RequestFailed -> {
                     _snackbarEvents.postValue(
-                        Event(SnackbarMessageHolder((UiStringRes(R.string.reader_error_request_failed_title))))
+                        Event(SnackbarMessageHolder((UiStringRes(ReaderR.string.reader_error_request_failed_title))))
                     )
                 }
                 is FollowSiteState.AlreadyRunning, FollowSiteState.Success -> Unit // Do nothing
@@ -390,7 +391,7 @@ class ReaderPostCardActionsHandler @Inject constructor(
             }
             is SiteNotificationState.Failed.RequestFailed -> {
                 _snackbarEvents.postValue(
-                    Event(SnackbarMessageHolder((UiStringRes(R.string.reader_error_request_failed_title))))
+                    Event(SnackbarMessageHolder((UiStringRes(ReaderR.string.reader_error_request_failed_title))))
                 )
             }
         }
@@ -443,7 +444,7 @@ class ReaderPostCardActionsHandler @Inject constructor(
                     _snackbarEvents.postValue(
                         Event(
                             SnackbarMessageHolder(
-                                UiStringRes(R.string.reader_toast_posts_from_this_blog_blocked),
+                                UiStringRes(ReaderR.string.reader_toast_posts_from_this_blog_blocked),
                                 UiStringRes(R.string.undo),
                                 {
                                     coroutineScope.launch {
@@ -454,7 +455,7 @@ class ReaderPostCardActionsHandler @Inject constructor(
                                         _snackbarEvents.postValue(
                                             Event(
                                                 SnackbarMessageHolder(
-                                                    UiStringRes(R.string.reader_toast_success_undo)
+                                                    UiStringRes(ReaderR.string.reader_toast_success_undo)
                                                 )
                                             )
                                         )
@@ -467,14 +468,14 @@ class ReaderPostCardActionsHandler @Inject constructor(
                 BlockSiteState.Success, BlockSiteState.Failed.AlreadyRunning -> Unit // do nothing
                 BlockSiteState.Failed.NoNetwork -> {
                     _snackbarEvents.postValue(
-                        Event(SnackbarMessageHolder(UiStringRes(R.string.reader_toast_err_unable_to_block_blog)))
+                        Event(SnackbarMessageHolder(UiStringRes(ReaderR.string.reader_toast_err_unable_to_block_blog)))
                     )
                     updateBlockedStateFunction?.let { func -> func(false) }
                 }
                 BlockSiteState.Failed.RequestFailed -> {
                     _refreshPosts.postValue(Event(Unit))
                     _snackbarEvents.postValue(
-                        Event(SnackbarMessageHolder(UiStringRes(R.string.reader_toast_err_unable_to_block_blog)))
+                        Event(SnackbarMessageHolder(UiStringRes(ReaderR.string.reader_toast_err_unable_to_block_blog)))
                     )
                     updateBlockedStateFunction?.let { func -> func(false) }
                 }
@@ -493,7 +494,7 @@ class ReaderPostCardActionsHandler @Inject constructor(
                     _snackbarEvents.postValue(
                         Event(
                             SnackbarMessageHolder(
-                                UiStringRes(R.string.reader_toast_user_blocked),
+                                UiStringRes(ReaderR.string.reader_toast_user_blocked),
                                 UiStringRes(R.string.undo),
                                 {
                                     coroutineScope.launch {
@@ -523,7 +524,7 @@ class ReaderPostCardActionsHandler @Inject constructor(
                 is PostLikeState.Failed.RequestFailed -> {
                     _refreshPosts.postValue(Event(Unit))
                     _snackbarEvents.postValue(
-                        Event(SnackbarMessageHolder(UiStringRes(R.string.reader_error_request_failed_title)))
+                        Event(SnackbarMessageHolder(UiStringRes(ReaderR.string.reader_error_request_failed_title)))
                     )
                 }
             }
@@ -549,8 +550,8 @@ class ReaderPostCardActionsHandler @Inject constructor(
                         _snackbarEvents.postValue(
                             Event(
                                 SnackbarMessageHolder(
-                                    UiStringRes(R.string.reader_bookmark_snack_title),
-                                    UiStringRes(R.string.reader_bookmark_snack_btn),
+                                    UiStringRes(ReaderR.string.reader_bookmark_snack_title),
+                                    UiStringRes(ReaderR.string.reader_bookmark_snack_btn),
                                     buttonAction = {
                                         readerTracker.track(
                                             AnalyticsTracker.Stat.READER_SAVED_LIST_SHOWN,
@@ -587,7 +588,7 @@ class ReaderPostCardActionsHandler @Inject constructor(
         if (navigationTarget != null) {
             _navigationEvents.postValue(Event(navigationTarget))
         } else {
-            _snackbarEvents.postValue(Event(SnackbarMessageHolder(UiStringRes(R.string.reader_reblog_error))))
+            _snackbarEvents.postValue(Event(SnackbarMessageHolder(UiStringRes(ReaderR.string.reader_reblog_error))))
         }
     }
 
@@ -609,11 +610,11 @@ class ReaderPostCardActionsHandler @Inject constructor(
         feedId: Long
     ): () -> Unit {
         return {
-            val thisSite = resourceProvider.getString(R.string.reader_followed_blog_notifications_this)
+            val thisSite = resourceProvider.getString(ReaderR.string.reader_followed_blog_notifications_this)
             val blog = if (blogName?.isEmpty() == true) thisSite else blogName
             val notificationMessage = htmlMessageUtils
                 .getHtmlMessageFromStringFormatResId(
-                    R.string.reader_followed_blog_notifications,
+                    ReaderR.string.reader_followed_blog_notifications,
                     "<b>",
                     blog,
                     "</b>"
@@ -622,7 +623,7 @@ class ReaderPostCardActionsHandler @Inject constructor(
                 Event(
                     SnackbarMessageHolder(
                         UiStringText(notificationMessage),
-                        UiStringRes(R.string.reader_followed_blog_notifications_action),
+                        UiStringRes(ReaderR.string.reader_followed_blog_notifications_action),
                         buttonAction = {
                             coroutineScope.launch(bgDispatcher) {
                                 readerTracker.trackBlog(

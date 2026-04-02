@@ -56,6 +56,7 @@ import androidx.core.content.ContextCompat
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import org.wordpress.android.R
+import org.wordpress.android.reader.R as ReaderR
 import org.wordpress.android.ui.compose.theme.AppColor
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.compose.unit.Margin
@@ -269,17 +270,17 @@ fun ReaderTagsFeedPostListItem(
 }
 
 private fun Modifier.itemSemanticsModifier(item: TagsFeedPostItem): Modifier = composed {
-    val openPostActionLabel = stringResource(R.string.reader_tags_feed_action_label_open_post)
-    val openBlogActionLabel = stringResource(R.string.reader_tags_feed_action_label_open_blog)
+    val openPostActionLabel = stringResource(ReaderR.string.reader_tags_feed_action_label_open_post)
+    val openBlogActionLabel = stringResource(ReaderR.string.reader_tags_feed_action_label_open_blog)
 
     val likeStateDescription = if (item.isPostLiked) stringResource(R.string.mnu_comment_liked) else null
     val likeActionLabel = if (item.isPostLiked) {
-        stringResource(R.string.reader_tags_feed_action_label_unlike_post)
+        stringResource(ReaderR.string.reader_tags_feed_action_label_unlike_post)
     } else {
-        stringResource(R.string.reader_tags_feed_action_label_like_post)
+        stringResource(ReaderR.string.reader_tags_feed_action_label_like_post)
     }
 
-    val openMenuActionLabel = stringResource(R.string.reader_tags_feed_action_label_open_menu)
+    val openMenuActionLabel = stringResource(ReaderR.string.reader_tags_feed_action_label_open_menu)
 
     clearAndSetSemantics {
         contentDescription = "${item.siteName}, ${item.postDateLine}, ${item.postTitle}"

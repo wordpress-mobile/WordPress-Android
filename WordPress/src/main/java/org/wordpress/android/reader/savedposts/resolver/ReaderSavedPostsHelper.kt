@@ -1,6 +1,7 @@
 package org.wordpress.android.reader.savedposts.resolver
 
 import org.wordpress.android.R
+import org.wordpress.android.reader.R as ReaderR
 import org.wordpress.android.datasets.wrappers.ReaderDatabaseWrapper
 import org.wordpress.android.datasets.wrappers.ReaderPostTableWrapper
 import org.wordpress.android.datasets.wrappers.ReaderTagTableWrapper
@@ -48,8 +49,8 @@ class ReaderSavedPostsHelper @Inject constructor(
             readerTagTableWrapper.addOrUpdateTag(
                 ReaderTag(
                     "",
-                    contextProvider.getContext().getString(R.string.reader_save_for_later_display_name),
-                    contextProvider.getContext().getString(R.string.reader_save_for_later_title),
+                    contextProvider.getContext().getString(ReaderR.string.reader_save_for_later_display_name),
+                    contextProvider.getContext().getString(ReaderR.string.reader_save_for_later_title),
                     "",
                     BOOKMARKED
                 )

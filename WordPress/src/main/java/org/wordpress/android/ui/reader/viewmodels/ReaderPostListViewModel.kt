@@ -5,6 +5,7 @@ import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.R
+import org.wordpress.android.reader.R as ReaderR
 import org.wordpress.android.datasets.ReaderPostTable
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.models.ReaderTag
@@ -290,7 +291,7 @@ class ReaderPostListViewModel @Inject constructor(
             if (navigationTarget != null) {
                 _navigationEvents.postValue(Event(navigationTarget))
             } else {
-                _snackbarEvents.postValue(Event(SnackbarMessageHolder(UiStringRes(R.string.reader_reblog_error))))
+                _snackbarEvents.postValue(Event(SnackbarMessageHolder(UiStringRes(ReaderR.string.reader_reblog_error))))
             }
             pendingReblogPost = null
         }

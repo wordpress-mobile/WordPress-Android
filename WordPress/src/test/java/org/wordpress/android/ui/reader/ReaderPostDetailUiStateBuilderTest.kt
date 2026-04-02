@@ -17,6 +17,7 @@ import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
+import org.wordpress.android.reader.R as ReaderR
 import org.wordpress.android.models.ReaderComment
 import org.wordpress.android.models.ReaderCommentList
 import org.wordpress.android.models.ReaderPost
@@ -145,7 +146,7 @@ class ReaderPostDetailUiStateBuilderTest : BaseUnitTest() {
 
         assertThat(relatedPostsUiState.headerLabel).isEqualTo(
             UiStringResWithParams(
-                R.string.reader_label_local_related_posts,
+                ReaderR.string.reader_label_local_related_posts,
                 listOf(UiStringText(dummySourceReaderPost.blogName))
             )
         )
@@ -156,7 +157,7 @@ class ReaderPostDetailUiStateBuilderTest : BaseUnitTest() {
         val relatedPostsUiState = buildRelatedPostsUiState(isGlobal = true)
 
         assertThat(relatedPostsUiState.headerLabel).isEqualTo(
-            UiStringRes(R.string.reader_label_global_related_posts)
+            UiStringRes(ReaderR.string.reader_label_global_related_posts)
         )
     }
 
@@ -310,7 +311,7 @@ class ReaderPostDetailUiStateBuilderTest : BaseUnitTest() {
             whenever(htmlUtilsWrapper.colorResToHtmlColor(anyOrNull(), any())).thenReturn(dummyLinkHexColor)
             whenever(
                 htmlMessageUtils.getHtmlMessageFromStringFormatResId(
-                    R.string.reader_excerpt_link,
+                    ReaderR.string.reader_excerpt_link,
                     "<font color='" + dummyLinkHexColor + "'>" + post.blogName + "</font>"
                 )
             ).thenReturn(dummyVisitPostLinkText)

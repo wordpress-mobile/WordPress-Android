@@ -295,12 +295,14 @@ public class ReaderSubsActivity extends BaseAppCompatActivity
         }
 
         if (!ReaderTag.isValidTagName(entry)) {
-            showInfoSnackbar(getString(R.string.reader_toast_err_tag_not_valid));
+            showInfoSnackbar(getString(
+                    org.wordpress.android.reader.R.string.reader_toast_err_tag_not_valid));
             return;
         }
 
         if (ReaderTagTable.isFollowedTagName(entry)) {
-            showInfoSnackbar(getString(R.string.reader_toast_err_tag_already_following));
+            showInfoSnackbar(getString(
+                    org.wordpress.android.reader.R.string.reader_toast_err_tag_already_following));
             return;
         }
 
@@ -334,7 +336,9 @@ public class ReaderSubsActivity extends BaseAppCompatActivity
 
         // make sure it isn't already followed
         if (ReaderBlogTable.isFollowedBlogUrl(normUrl) || ReaderBlogTable.isFollowedFeedUrl(normUrl)) {
-            showInfoSnackbar(getString(R.string.reader_toast_err_already_follow_this_blog));
+            showInfoSnackbar(getString(
+                    org.wordpress.android.reader.R.string
+                            .reader_toast_err_already_follow_this_blog));
             return;
         }
 
@@ -362,7 +366,9 @@ public class ReaderSubsActivity extends BaseAppCompatActivity
             getPageAdapter().refreshFollowedTagFragment();
 
             if (succeeded) {
-                showInfoSnackbar(getString(R.string.reader_label_added_tag, tag.getLabel()));
+                showInfoSnackbar(getString(
+                        org.wordpress.android.reader.R.string.reader_label_added_tag,
+                        tag.getLabel()));
                 mLastAddedTagName = tag.getTagSlug();
                 mReaderTracker.trackTag(
                         AnalyticsTracker.Stat.READER_TAG_FOLLOWED,
@@ -370,7 +376,8 @@ public class ReaderSubsActivity extends BaseAppCompatActivity
                         ReaderTracker.SOURCE_SETTINGS
                 );
             } else {
-                showInfoSnackbar(getString(R.string.reader_toast_err_adding_tag));
+                showInfoSnackbar(getString(
+                        org.wordpress.android.reader.R.string.reader_toast_err_adding_tag));
                 mLastAddedTagName = null;
             }
         };
@@ -406,15 +413,21 @@ public class ReaderSubsActivity extends BaseAppCompatActivity
                     String errMsg;
                     switch (statusCode) {
                         case 401:
-                            errMsg = getString(R.string.reader_toast_err_follow_not_authorized_to_access_blog);
+                            errMsg = getString(
+                                    org.wordpress.android.reader.R.string
+                                            .reader_toast_err_follow_not_authorized_to_access_blog);
                             break;
                         case 0: // can happen when host name not found
                         case 404:
-                            errMsg = getString(R.string.reader_toast_err_follow_blog_could_not_be_found);
+                            errMsg = getString(
+                                    org.wordpress.android.reader.R.string
+                                            .reader_toast_err_follow_blog_could_not_be_found);
                             break;
                         default:
-                            errMsg = getString(R.string.reader_toast_err_unable_to_follow_blog) + " (" + statusCode
-                                     + ")";
+                            errMsg = getString(
+                                    org.wordpress.android.reader.R.string
+                                            .reader_toast_err_unable_to_follow_blog)
+                                     + " (" + statusCode + ")";
                             break;
                     }
                     showInfoSnackbar(errMsg);
@@ -434,14 +447,17 @@ public class ReaderSubsActivity extends BaseAppCompatActivity
                 // clear the edit text and hide the soft keyboard
                 mEditAdd.setText(null);
                 EditTextUtils.hideSoftInput(mEditAdd);
-                showInfoSnackbar(getString(R.string.reader_label_blog_subscribed));
+                showInfoSnackbar(getString(
+                        org.wordpress.android.reader.R.string.reader_label_blog_subscribed));
                 getPageAdapter().refreshBlogFragments(ReaderBlogType.FOLLOWED);
                 // update tags if the site we added belongs to a tag we don't yet have
                 // also update followed blogs so lists are ready in case we need to present them
                 // in bottom sheet reader filtering
                 performUpdate(EnumSet.of(UpdateTask.TAGS, UpdateTask.FOLLOWED_BLOGS));
             } else {
-                showInfoSnackbar(getString(R.string.reader_toast_err_unable_to_follow_blog));
+                showInfoSnackbar(getString(
+                        org.wordpress.android.reader.R.string
+                                .reader_toast_err_unable_to_follow_blog));
             }
         };
         // note that this uses the endpoint to follow as a feed since typed URLs are more
@@ -561,9 +577,13 @@ public class ReaderSubsActivity extends BaseAppCompatActivity
         public CharSequence getPageTitle(int position) {
             switch (position) {
                 case TAB_IDX_FOLLOWED_TAGS:
-                    return getString(R.string.reader_page_followed_tags_text_title);
+                    return getString(
+                            org.wordpress.android.reader.R.string
+                                    .reader_page_followed_tags_text_title);
                 case TAB_IDX_FOLLOWED_BLOGS:
-                    return getString(R.string.reader_page_followed_blogs_title);
+                    return getString(
+                            org.wordpress.android.reader.R.string
+                                    .reader_page_followed_blogs_title);
                 default:
                     return super.getPageTitle(position);
             }

@@ -26,6 +26,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
+import org.wordpress.android.reader.R as ReaderR
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 
 private val HANDLE_HEIGHT = 4.dp
@@ -59,7 +60,7 @@ fun ReaderSubscriptionSettingsScreen(
 
             // Title
             Text(
-                text = stringResource(R.string.reader_subscription_settings_title),
+                text = stringResource(ReaderR.string.reader_subscription_settings_title),
                 style = MaterialTheme.typography.titleLarge,
                 color = MaterialTheme.colorScheme.onSurface,
                 modifier = Modifier.padding(top = TITLE_MARGIN_TOP)
@@ -80,7 +81,7 @@ fun ReaderSubscriptionSettingsScreen(
 
             // Notify me of new posts
             SubscriptionSettingsSwitch(
-                text = stringResource(R.string.reader_subscription_settings_notify_posts),
+                text = stringResource(ReaderR.string.reader_subscription_settings_notify_posts),
                 checked = uiState.notifyPostsEnabled,
                 onCheckedChange = onNotifyPostsToggled,
                 enabled = !uiState.isLoading
@@ -90,7 +91,7 @@ fun ReaderSubscriptionSettingsScreen(
 
             // Email me new posts
             SubscriptionSettingsSwitch(
-                text = stringResource(R.string.reader_subscription_settings_email_posts),
+                text = stringResource(ReaderR.string.reader_subscription_settings_email_posts),
                 checked = uiState.emailPostsEnabled,
                 onCheckedChange = onEmailPostsToggled,
                 enabled = !uiState.isLoading
@@ -100,7 +101,7 @@ fun ReaderSubscriptionSettingsScreen(
 
             // Email me new comments
             SubscriptionSettingsSwitch(
-                text = stringResource(R.string.reader_subscription_settings_email_comments),
+                text = stringResource(ReaderR.string.reader_subscription_settings_email_comments),
                 checked = uiState.emailCommentsEnabled,
                 onCheckedChange = onEmailCommentsToggled,
                 enabled = !uiState.isLoading

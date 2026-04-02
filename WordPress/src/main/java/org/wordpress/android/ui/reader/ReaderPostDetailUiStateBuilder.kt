@@ -2,6 +2,7 @@ package org.wordpress.android.ui.reader
 
 import dagger.Reusable
 import org.wordpress.android.R
+import org.wordpress.android.reader.R as ReaderR
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.ui.reader.discover.ReaderPostCardAction.SecondaryAction
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType
@@ -146,7 +147,7 @@ class ReaderPostDetailUiStateBuilder @Inject constructor(
                     commentId = readerComment.commentId
                 )
             } + ButtonState(
-                buttonText = UiStringRes(R.string.reader_comments_view_all),
+                buttonText = UiStringRes(ReaderR.string.reader_comments_view_all),
                 postId = readerPost.postId,
                 blogId = readerPost.blogId,
                 onCommentSnippetClicked = onCommentSnippetClicked
@@ -157,7 +158,7 @@ class ReaderPostDetailUiStateBuilder @Inject constructor(
                 ) + if (readerPost.isCommentsOpen) {
                     listOf<CommentSnippetItemState>(
                         ButtonState(
-                            buttonText = UiStringRes(R.string.reader_comments_be_first_to_comment),
+                            buttonText = UiStringRes(ReaderR.string.reader_comments_be_first_to_comment),
                             postId = readerPost.postId,
                             blogId = readerPost.blogId,
                             onCommentSnippetClicked = onCommentSnippetClicked
@@ -170,7 +171,7 @@ class ReaderPostDetailUiStateBuilder @Inject constructor(
             is Failure -> listOf(
                 TextMessage(commentSnippetState.message),
                 ButtonState(
-                    buttonText = UiStringRes(R.string.reader_comments_view_all),
+                    buttonText = UiStringRes(ReaderR.string.reader_comments_view_all),
                     postId = readerPost.postId,
                     blogId = readerPost.blogId,
                     onCommentSnippetClicked = onCommentSnippetClicked
@@ -210,7 +211,7 @@ class ReaderPostDetailUiStateBuilder @Inject constructor(
 
     private fun buildPostExcerptFooterLinkText(post: ReaderPost) = UiStringText(
         htmlMessageUtils.getHtmlMessageFromStringFormatResId(
-            R.string.reader_excerpt_link,
+            ReaderR.string.reader_excerpt_link,
             "<font color='" +
                     htmlUtilsWrapper
                         .colorResToHtmlColor(contextProvider.getContext(), R.color.link_reader) + "'>" +
@@ -225,9 +226,9 @@ class ReaderPostDetailUiStateBuilder @Inject constructor(
 
     private fun buildRelatedPostsHeaderLabel(blogName: String, isGlobal: Boolean): UiString {
         return if (isGlobal) {
-            UiStringRes(R.string.reader_label_global_related_posts)
+            UiStringRes(ReaderR.string.reader_label_global_related_posts)
         } else {
-            UiStringResWithParams(R.string.reader_label_local_related_posts, listOf(UiStringText(blogName)))
+            UiStringResWithParams(ReaderR.string.reader_label_local_related_posts, listOf(UiStringText(blogName)))
         }
     }
 

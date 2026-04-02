@@ -39,6 +39,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.max
 import androidx.compose.ui.unit.sp
 import org.wordpress.android.R
+import org.wordpress.android.reader.R as ReaderR
 import org.wordpress.android.ui.reader.models.ReaderReadingPreferences
 
 private val thumbSize = 12.dp
@@ -84,7 +85,7 @@ fun ReadingPreferencesFontSizeSlider(
                 thumbColor = MaterialTheme.colorScheme.onSurface,
             )
 
-            val contentDescriptionLabel = stringResource(R.string.reader_preferences_screen_font_size_label)
+            val contentDescriptionLabel = stringResource(ReaderR.string.reader_preferences_screen_font_size_label)
             val selectedFontSizeLabel = stringResource(selectedFontSize.displayNameRes)
 
             Slider(
@@ -137,7 +138,7 @@ private fun FontSizePreviewLabels(
                 val isSelected = fontSize == selectedFontSize
 
                 Text(
-                    text = stringResource(R.string.reader_preferences_screen_font_size_preview),
+                    text = stringResource(ReaderR.string.reader_preferences_screen_font_size_preview),
                     style = TextStyle(
                         fontFamily = previewFontFamily,
                         fontSize = fontSize.value.sp,

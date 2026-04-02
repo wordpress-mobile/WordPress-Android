@@ -28,6 +28,7 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.R
+import org.wordpress.android.reader.R as ReaderR
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.databinding.ReaderActivityCommentListBinding
 import org.wordpress.android.databinding.ReaderIncludeCommentBoxBinding
@@ -175,7 +176,7 @@ class ReaderCommentListActivity : BaseAppCompatActivity(),
         }
 
         if (!loadPost()) {
-            ToastUtils.showToast(this, R.string.reader_toast_err_get_post)
+            ToastUtils.showToast(this, ReaderR.string.reader_toast_err_get_post)
             finish()
             return
         }
@@ -890,7 +891,7 @@ class ReaderCommentListActivity : BaseAppCompatActivity(),
                 if (!accountStore.hasAccessToken()) {
                     make(
                         binding.coordinatorLayout,
-                        R.string.reader_snackbar_err_cannot_like_post_logged_out,
+                        ReaderR.string.reader_snackbar_err_cannot_like_post_logged_out,
                         Snackbar.LENGTH_INDEFINITE
                     )
                         .setAction(R.string.sign_in, mSignInClickListener)
@@ -904,12 +905,12 @@ class ReaderCommentListActivity : BaseAppCompatActivity(),
                     if (comment == null) {
                         ToastUtils.showToast(
                             this@ReaderCommentListActivity,
-                            R.string.reader_toast_err_comment_not_found
+                            ReaderR.string.reader_toast_err_comment_not_found
                         )
                     } else if (comment.isLikedByCurrentUser) {
                         ToastUtils.showToast(
                             this@ReaderCommentListActivity,
-                            R.string.reader_toast_err_already_liked
+                            ReaderR.string.reader_toast_err_already_liked
                         )
                     } else {
                         likeComment(comment)
@@ -951,7 +952,7 @@ class ReaderCommentListActivity : BaseAppCompatActivity(),
         } else {
             ToastUtils.showToast(
                 this@ReaderCommentListActivity,
-                R.string.reader_toast_err_generic
+                ReaderR.string.reader_toast_err_generic
             )
         }
     }
@@ -1024,7 +1025,7 @@ class ReaderCommentListActivity : BaseAppCompatActivity(),
             binding.textEmpty.setText(R.string.no_network_message)
             binding.textEmpty.visibility = View.VISIBLE
         } else if (isEmpty && hasUpdatedComments) {
-            binding.textEmpty.setText(R.string.reader_empty_comments)
+            binding.textEmpty.setText(ReaderR.string.reader_empty_comments)
             binding.textEmpty.visibility = View.VISIBLE
         } else {
             binding.textEmpty.visibility = View.GONE
@@ -1141,7 +1142,7 @@ class ReaderCommentListActivity : BaseAppCompatActivity(),
                 getCommentAdapter().removeComment(fakeCommentId)
                 ToastUtils.showToast(
                     this,
-                    R.string.reader_toast_err_comment_failed,
+                    ReaderR.string.reader_toast_err_comment_failed,
                     ToastUtils.Duration.LONG
                 )
             }

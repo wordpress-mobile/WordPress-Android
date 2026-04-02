@@ -132,11 +132,14 @@ public class ReaderUpdateLogic {
     private void updateDisplayNamesIfNeeded(@NonNull ReaderTagList serverTopics) {
         for (ReaderTag tag : serverTopics) {
             if (tag.isFollowedSites()) {
-                tag.setTagDisplayName(mContext.getString(R.string.reader_subscribed_display_name));
+                tag.setTagDisplayName(mContext.getString(
+                        org.wordpress.android.reader.R.string.reader_subscribed_display_name));
             } else if (tag.isDiscover()) {
-                tag.setTagDisplayName(mContext.getString(R.string.reader_discover_display_name));
+                tag.setTagDisplayName(mContext.getString(
+                        org.wordpress.android.reader.R.string.reader_discover_display_name));
             } else if (tag.isPostsILike()) {
-                tag.setTagDisplayName(mContext.getString(R.string.reader_my_likes_display_name));
+                tag.setTagDisplayName(mContext.getString(
+                        org.wordpress.android.reader.R.string.reader_my_likes_display_name));
             }
         }
     }
@@ -159,8 +162,12 @@ public class ReaderUpdateLogic {
                 serverTopics.add(
                         new ReaderTag(
                                 "",
-                                mContext.getString(R.string.reader_save_for_later_display_name),
-                                mContext.getString(R.string.reader_save_for_later_title),
+                                mContext.getString(
+                                org.wordpress.android.reader.R.string
+                                        .reader_save_for_later_display_name),
+                                mContext.getString(
+                                        org.wordpress.android.reader.R.string
+                                                .reader_save_for_later_title),
                                 "",
                                 ReaderTagType.BOOKMARKED
                         )

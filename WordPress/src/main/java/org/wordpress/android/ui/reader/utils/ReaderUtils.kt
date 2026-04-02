@@ -3,6 +3,7 @@ package org.wordpress.android.ui.reader.utils
 import android.content.Context
 import org.apache.commons.text.StringEscapeUtils
 import org.wordpress.android.R
+import org.wordpress.android.reader.R as ReaderR
 import org.wordpress.android.datasets.ReaderCommentTable
 import org.wordpress.android.datasets.ReaderPostTable
 import org.wordpress.android.datasets.ReaderTagTable
@@ -132,17 +133,17 @@ object ReaderUtils {
     ): String {
         return if (isLikedByCurrentUser) {
             when (numLikes) {
-                1 -> context.getString(R.string.reader_likes_only_you)
-                2 -> context.getString(R.string.reader_likes_you_and_one)
+                1 -> context.getString(ReaderR.string.reader_likes_only_you)
+                2 -> context.getString(ReaderR.string.reader_likes_you_and_one)
                 else -> {
-                    val youAndMultiLikes = context.getString(R.string.reader_likes_you_and_multi)
+                    val youAndMultiLikes = context.getString(ReaderR.string.reader_likes_you_and_multi)
                     String.format(youAndMultiLikes, numLikes - 1)
                 }
             }
         } else if (numLikes == 1) {
-            context.getString(R.string.reader_likes_one)
+            context.getString(ReaderR.string.reader_likes_one)
         } else {
-            val likes = context.getString(R.string.reader_likes_multi)
+            val likes = context.getString(ReaderR.string.reader_likes_multi)
             String.format(likes, numLikes)
         }
     }
@@ -153,12 +154,12 @@ object ReaderUtils {
     @JvmStatic
     fun getShortLikeLabelText(context: Context, numLikes: Int): String {
         return when (numLikes) {
-            0 -> context.getString(R.string.reader_short_like_count_none)
-            1 -> context.getString(R.string.reader_short_like_count_one)
+            0 -> context.getString(ReaderR.string.reader_short_like_count_none)
+            1 -> context.getString(ReaderR.string.reader_short_like_count_one)
             else -> {
                 val count = FormatUtils.formatInt(numLikes)
                 String.format(
-                    context.getString(R.string.reader_short_like_count_multi),
+                    context.getString(ReaderR.string.reader_short_like_count_multi),
                     count
                 )
             }
@@ -167,21 +168,21 @@ object ReaderUtils {
 
     fun getShortCommentLabelText(context: Context, numComments: Int): String {
         return if (numComments == 1) {
-            context.getString(R.string.reader_short_comment_count_one)
+            context.getString(ReaderR.string.reader_short_comment_count_one)
         } else {
             val count = FormatUtils.formatInt(numComments)
-            String.format(context.getString(R.string.reader_short_comment_count_multi), count)
+            String.format(context.getString(ReaderR.string.reader_short_comment_count_multi), count)
         }
     }
 
     fun getTextForCommentSnippet(context: Context, numComments: Int): String {
         return when (numComments) {
             0 -> context.getString(R.string.comments)
-            1 -> context.getString(R.string.reader_short_comment_count_one)
+            1 -> context.getString(ReaderR.string.reader_short_comment_count_one)
             else -> {
                 val count = FormatUtils.formatInt(numComments)
                 String.format(
-                    context.getString(R.string.reader_short_comment_count_multi),
+                    context.getString(ReaderR.string.reader_short_comment_count_multi),
                     count
                 )
             }
@@ -294,9 +295,9 @@ object ReaderUtils {
             // if the tag was created in memory from createTagFromTagName
             // we need to set some fields as below before to use it
             tag.tagTitle =
-                context.getString(R.string.reader_subscribed_display_name)
+                context.getString(ReaderR.string.reader_subscribed_display_name)
             tag.tagDisplayName =
-                context.getString(R.string.reader_subscribed_display_name)
+                context.getString(ReaderR.string.reader_subscribed_display_name)
 
             var baseUrl = clientUtilsProvider.getTagUpdateEndpointURL()
 

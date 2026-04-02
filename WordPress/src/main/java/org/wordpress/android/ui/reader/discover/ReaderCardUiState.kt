@@ -4,6 +4,7 @@ import androidx.annotation.AttrRes
 import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
 import org.wordpress.android.R
+import org.wordpress.android.reader.R as ReaderR
 import org.wordpress.android.ui.reader.discover.ReaderPostCardAction.PrimaryAction
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.SPACER_NO_ACTION
 import org.wordpress.android.ui.reader.models.ReaderImageList
@@ -128,8 +129,8 @@ sealed class ReaderCardUiState {
         ) {
             val followContentDescription: UiStringRes by lazy {
                 when (isFollowed) {
-                    true -> R.string.reader_btn_subscribed
-                    false -> R.string.reader_btn_subscribe
+                    true -> ReaderR.string.reader_btn_subscribed
+                    false -> ReaderR.string.reader_btn_subscribe
                 }.let(::UiStringRes)
             }
         }

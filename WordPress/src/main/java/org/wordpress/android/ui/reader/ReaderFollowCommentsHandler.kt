@@ -5,6 +5,7 @@ import androidx.lifecycle.MediatorLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.flowOn
 import org.wordpress.android.R
+import org.wordpress.android.reader.R as ReaderR
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.reader.comments.ThreadedCommentsActionSource
@@ -75,7 +76,7 @@ class ReaderFollowCommentsHandler @Inject constructor(
                             if (state.isReceivingNotifications) {
                                 UiStringRes(R.string.undo)
                             } else {
-                                UiStringRes(R.string.reader_followed_blog_notifications_action)
+                                UiStringRes(ReaderR.string.reader_followed_blog_notifications_action)
                             }
                         },
                         buttonAction = onSuccessSnackbarAction ?: {}

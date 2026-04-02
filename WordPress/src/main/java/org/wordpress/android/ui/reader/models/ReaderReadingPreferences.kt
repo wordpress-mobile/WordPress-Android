@@ -8,6 +8,7 @@ import androidx.annotation.StringRes
 import androidx.annotation.StyleRes
 import androidx.core.content.res.ResourcesCompat
 import org.wordpress.android.R
+import org.wordpress.android.reader.R as ReaderR
 import org.wordpress.android.util.FallbackValue
 import org.wordpress.android.util.extensions.getColorFromAttributeOrRes
 import java.util.Locale
@@ -27,49 +28,49 @@ data class ReaderReadingPreferences @JvmOverloads constructor(
     ) {
         @FallbackValue
         SYSTEM(
-            displayNameRes = R.string.reader_preferences_theme_system,
+            displayNameRes = ReaderR.string.reader_preferences_theme_system,
             style = R.style.ReaderTheme_System,
             backgroundColorRes = MaterialR.attr.colorSurface,
             baseTextColorRes = MaterialR.attr.colorOnSurface,
             linkColorRes = R.color.reader_post_body_link,
         ),
         SOFT(
-            displayNameRes = R.string.reader_preferences_theme_soft,
+            displayNameRes = ReaderR.string.reader_preferences_theme_soft,
             style = R.style.ReaderTheme_Soft,
             backgroundColorRes = R.color.reader_theme_soft_background,
             baseTextColorRes = R.color.reader_theme_soft_text,
             linkColorRes = R.color.reader_theme_soft_text,
         ),
         SEPIA(
-            displayNameRes = R.string.reader_preferences_theme_sepia,
+            displayNameRes = ReaderR.string.reader_preferences_theme_sepia,
             style = R.style.ReaderTheme_Sepia,
             backgroundColorRes = R.color.reader_theme_sepia_background,
             baseTextColorRes = R.color.reader_theme_sepia_text,
             linkColorRes = R.color.reader_theme_sepia_text,
         ),
         EVENING(
-            displayNameRes = R.string.reader_preferences_theme_evening,
+            displayNameRes = ReaderR.string.reader_preferences_theme_evening,
             style = R.style.ReaderTheme_Evening,
             backgroundColorRes = R.color.reader_theme_evening_background,
             baseTextColorRes = R.color.reader_theme_evening_text,
             linkColorRes = R.color.reader_theme_evening_text,
         ),
         OLED(
-            displayNameRes = R.string.reader_preferences_theme_oled,
+            displayNameRes = ReaderR.string.reader_preferences_theme_oled,
             style = R.style.ReaderTheme_OLED,
             backgroundColorRes = R.color.reader_theme_oled_background,
             baseTextColorRes = R.color.reader_theme_oled_text,
             linkColorRes = R.color.reader_theme_oled_text,
         ),
         H4X0R(
-            displayNameRes = R.string.reader_preferences_theme_h4x0r,
+            displayNameRes = ReaderR.string.reader_preferences_theme_h4x0r,
             style = R.style.ReaderTheme_h4x0r,
             backgroundColorRes = R.color.reader_theme_h4x0r_background,
             baseTextColorRes = R.color.reader_theme_h4x0r_text,
             linkColorRes = R.color.reader_theme_h4x0r_text,
         ),
         CANDY(
-            displayNameRes = R.string.reader_preferences_theme_candy,
+            displayNameRes = ReaderR.string.reader_preferences_theme_candy,
             style = R.style.ReaderTheme_Candy,
             backgroundColorRes = R.color.reader_theme_candy_background,
             baseTextColorRes = R.color.reader_theme_candy_text,
@@ -159,15 +160,15 @@ data class ReaderReadingPreferences @JvmOverloads constructor(
     ) {
         @FallbackValue
         SANS(
-            displayNameRes = R.string.reader_preferences_font_family_sans,
+            displayNameRes = ReaderR.string.reader_preferences_font_family_sans,
             value = "sans-serif",
         ),
         SERIF(
-            displayNameRes = R.string.reader_preferences_font_family_serif,
+            displayNameRes = ReaderR.string.reader_preferences_font_family_serif,
             value = "serif",
         ),
         MONO(
-            displayNameRes = R.string.reader_preferences_font_family_mono,
+            displayNameRes = ReaderR.string.reader_preferences_font_family_mono,
             value = "monospace",
         );
 
@@ -181,25 +182,25 @@ data class ReaderReadingPreferences @JvmOverloads constructor(
         val value: Int,
     ) {
         EXTRA_SMALL(
-            displayNameRes = R.string.reader_preferences_font_size_extra_small,
+            displayNameRes = ReaderR.string.reader_preferences_font_size_extra_small,
             value = 10,
         ),
         SMALL(
-            displayNameRes = R.string.reader_preferences_font_size_small,
+            displayNameRes = ReaderR.string.reader_preferences_font_size_small,
             value = 12,
         ),
 
         @FallbackValue
         NORMAL(
-            displayNameRes = R.string.reader_preferences_font_size_normal,
+            displayNameRes = ReaderR.string.reader_preferences_font_size_normal,
             value = 16,
         ),
         LARGE(
-            displayNameRes = R.string.reader_preferences_font_size_large,
+            displayNameRes = ReaderR.string.reader_preferences_font_size_large,
             value = 20,
         ),
         EXTRA_LARGE(
-            displayNameRes = R.string.reader_preferences_font_size_extra_large,
+            displayNameRes = ReaderR.string.reader_preferences_font_size_extra_large,
             value = 24,
         );
 

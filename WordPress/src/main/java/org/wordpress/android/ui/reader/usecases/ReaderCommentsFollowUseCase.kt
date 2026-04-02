@@ -3,6 +3,7 @@ package org.wordpress.android.ui.reader.usecases
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import org.wordpress.android.R
+import org.wordpress.android.reader.R as ReaderR
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.datasets.wrappers.ReaderPostTableWrapper
 import org.wordpress.android.fluxc.store.AccountStore
@@ -104,9 +105,9 @@ class ReaderCommentsFollowUseCase @Inject constructor(
                             false,
                             userMessage = UiStringRes(
                                 if (status.isFollowing) {
-                                    R.string.reader_follow_comments_subscribe_success_enable_push
+                                    ReaderR.string.reader_follow_comments_subscribe_success_enable_push
                                 } else {
-                                    R.string.reader_follow_comments_unsubscribe_from_all_success
+                                    ReaderR.string.reader_follow_comments_unsubscribe_from_all_success
                                 }
                             )
                         )
@@ -166,9 +167,9 @@ class ReaderCommentsFollowUseCase @Inject constructor(
                             false,
                             userMessage = UiStringRes(
                                 if (enable) {
-                                    R.string.reader_follow_comments_subscribe_to_push_success
+                                    ReaderR.string.reader_follow_comments_subscribe_to_push_success
                                 } else {
-                                    R.string.reader_follow_comments_unsubscribe_from_push_success
+                                    ReaderR.string.reader_follow_comments_unsubscribe_from_push_success
                                 }
                             ),
                             false
@@ -186,9 +187,9 @@ class ReaderCommentsFollowUseCase @Inject constructor(
                             false,
                             userMessage = UiStringRes(
                                 if (enable) {
-                                    R.string.reader_follow_comments_could_not_subscribe_to_push_error
+                                    ReaderR.string.reader_follow_comments_could_not_subscribe_to_push_error
                                 } else {
-                                    R.string.reader_follow_comments_could_not_unsubscribe_from_push_error
+                                    ReaderR.string.reader_follow_comments_could_not_unsubscribe_from_push_error
                                 }
                             ),
                             true

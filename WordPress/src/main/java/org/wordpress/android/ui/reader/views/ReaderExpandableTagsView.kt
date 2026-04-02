@@ -15,6 +15,7 @@ import androidx.core.view.isVisible
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import org.wordpress.android.R
+import org.wordpress.android.reader.R as ReaderR
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.ui.reader.discover.interests.TagUiState
@@ -177,7 +178,7 @@ class ReaderExpandableTagsView @JvmOverloads constructor(
         overflowIndicatorChip.text = if (isSingleLine) {
             chipStyle.overflowChipText(resources, hiddenTagChipsCount)
         } else {
-            resources.getString(R.string.reader_expandable_tags_view_overflow_indicator_collapse_title)
+            resources.getString(ReaderR.string.reader_expandable_tags_view_overflow_indicator_collapse_title)
         }
 
         chipStyle.overflowStrokeColorRes(isSingleLine).let { chipStrokeColorRes ->
@@ -208,7 +209,7 @@ class ReaderExpandableTagsView @JvmOverloads constructor(
 
         fun overflowChipText(resources: Resources, hiddenChipsCount: Int): String =
             String.format(
-                resources.getString(R.string.reader_expandable_tags_view_overflow_indicator_expand_title_new),
+                resources.getString(ReaderR.string.reader_expandable_tags_view_overflow_indicator_expand_title_new),
                 hiddenChipsCount.toString()
             )
 

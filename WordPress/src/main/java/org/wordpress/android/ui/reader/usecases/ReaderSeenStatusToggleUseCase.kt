@@ -2,6 +2,7 @@ package org.wordpress.android.ui.reader.usecases
 
 import kotlinx.coroutines.flow.flow
 import org.wordpress.android.R
+import org.wordpress.android.reader.R as ReaderR
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.datasets.ReaderBlogTableWrapper
 import org.wordpress.android.datasets.wrappers.ReaderPostTableWrapper
@@ -44,7 +45,7 @@ class ReaderSeenStatusToggleUseCase @Inject constructor(
         }
 
         if (!post.isSeenSupported) {
-            emit(Error(UiStringRes(R.string.reader_error_changing_seen_status_of_unsupported_post)))
+            emit(Error(UiStringRes(ReaderR.string.reader_error_changing_seen_status_of_unsupported_post)))
             return@flow
         }
 
@@ -84,7 +85,7 @@ class ReaderSeenStatusToggleUseCase @Inject constructor(
                         actionSource.toString()
                     )
                 }
-                PostSeenStateChanged(true, UiStringRes(R.string.reader_marked_post_as_seen))
+                PostSeenStateChanged(true, UiStringRes(ReaderR.string.reader_marked_post_as_seen))
             }
             is Failure -> {
                 Error(UiStringText(status.error))
@@ -102,7 +103,7 @@ class ReaderSeenStatusToggleUseCase @Inject constructor(
                     post,
                     actionSource.toString()
                 )
-                PostSeenStateChanged(false, UiStringRes(R.string.reader_marked_post_as_unseen))
+                PostSeenStateChanged(false, UiStringRes(ReaderR.string.reader_marked_post_as_unseen))
             }
             is Failure -> {
                 Error(UiStringText(status.error))

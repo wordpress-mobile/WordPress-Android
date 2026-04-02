@@ -7,6 +7,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.R
+import org.wordpress.android.reader.R as ReaderR
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.models.ReaderTagType.FOLLOWED
@@ -335,7 +336,7 @@ class ReaderDiscoverViewModel @Inject constructor(
                     _snackbarEvents.postValue(
                         Event(
                             SnackbarMessageHolder(
-                                UiStringRes(R.string.reader_error_request_failed_title)
+                                UiStringRes(ReaderR.string.reader_error_request_failed_title)
                             )
                         )
                     )
@@ -490,7 +491,7 @@ class ReaderDiscoverViewModel @Inject constructor(
             if (navigationTarget != null) {
                 _navigationEvents.value = Event(navigationTarget)
             } else {
-                _snackbarEvents.value = Event(SnackbarMessageHolder(UiStringRes(R.string.reader_reblog_error)))
+                _snackbarEvents.value = Event(SnackbarMessageHolder(UiStringRes(ReaderR.string.reader_reblog_error)))
             }
             pendingReblogPost = null
         }
@@ -542,20 +543,20 @@ class ReaderDiscoverViewModel @Inject constructor(
 
             data class RequestFailedUiState(override val action: () -> Unit) : EmptyUiState() {
                 override val titleResId = R.string.connection_error
-                override val subTitleRes = R.string.reader_error_request_failed_title
+                override val subTitleRes = ReaderR.string.reader_error_request_failed_title
                 override val buttonResId = R.string.retry
             }
 
             data class ShowNoFollowedTagsUiState(override val action: () -> Unit) : EmptyUiState() {
-                override val titleResId = R.string.reader_discover_empty_title
-                override val subTitleRes = R.string.reader_discover_empty_subtitle_follow
-                override val buttonResId = R.string.reader_discover_empty_button_text
+                override val titleResId = ReaderR.string.reader_discover_empty_title
+                override val subTitleRes = ReaderR.string.reader_discover_empty_subtitle_follow
+                override val buttonResId = ReaderR.string.reader_discover_empty_button_text
             }
 
             data class ShowNoPostsUiState(override val action: () -> Unit) : EmptyUiState() {
-                override val titleResId = R.string.reader_discover_no_posts_title
-                override val buttonResId = R.string.reader_discover_no_posts_button_tags_text_follow
-                override val subTitleRes = R.string.reader_discover_no_posts_follow_subtitle
+                override val titleResId = ReaderR.string.reader_discover_no_posts_title
+                override val buttonResId = ReaderR.string.reader_discover_no_posts_button_tags_text_follow
+                override val subTitleRes = ReaderR.string.reader_discover_no_posts_follow_subtitle
             }
         }
     }

@@ -3,6 +3,7 @@ package org.wordpress.android.ui.reader.discover.interests
 import android.os.Bundle
 import android.view.MenuItem
 import org.wordpress.android.R
+import org.wordpress.android.reader.R as ReaderR
 import org.wordpress.android.databinding.ReaderInterestsActivityBinding
 import org.wordpress.android.ui.main.BaseAppCompatActivity
 import android.R as AndroidR
@@ -18,7 +19,7 @@ class ReaderInterestsActivity : BaseAppCompatActivity() {
         supportActionBar?.let {
             it.setHomeButtonEnabled(true)
             it.setDisplayHomeAsUpEnabled(true)
-            it.title = getString(R.string.reader_title_tags)
+            it.title = getString(ReaderR.string.reader_title_tags)
         }
     }
 

@@ -38,6 +38,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import org.wordpress.android.R
+import org.wordpress.android.reader.R as ReaderR
 import org.wordpress.android.ui.compose.components.MainTopAppBar
 import org.wordpress.android.ui.compose.components.NavigationIcons
 import org.wordpress.android.ui.compose.theme.AppThemeM3
@@ -130,7 +131,7 @@ fun ReadingPreferencesScreen(
             // Title
             Text(
                 text = stringResource(
-                    R.string.reader_preferences_screen_preview_title
+                    ReaderR.string.reader_preferences_screen_preview_title
                 ),
                 style = getTitleTextStyle(
                     fontFamily, fontSizeMultiplier, baseTextColor
@@ -148,7 +149,7 @@ fun ReadingPreferencesScreen(
 
             Text(
                 text = stringResource(
-                    R.string.reader_preferences_screen_preview_text
+                    ReaderR.string.reader_preferences_screen_preview_text
                 ),
                 style = contentStyle,
             )
@@ -164,7 +165,7 @@ fun ReadingPreferencesScreen(
                 ),
             ) {
                 stringResource(
-                    R.string.reader_preferences_screen_preview_tags
+                    ReaderR.string.reader_preferences_screen_preview_tags
                 )
                     .split(",")
                     .forEach { tag ->
