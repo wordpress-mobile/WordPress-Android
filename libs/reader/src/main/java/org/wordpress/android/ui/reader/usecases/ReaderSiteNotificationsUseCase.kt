@@ -18,7 +18,7 @@ import org.wordpress.android.ui.reader.usecases.ReaderSiteNotificationsUseCase.S
 import org.wordpress.android.ui.reader.usecases.ReaderSiteNotificationsUseCase.SiteNotificationState.Success
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.API
-import org.wordpress.android.util.NetworkUtilsWrapper
+import org.wordpress.android.util.NetworkAvailability
 import javax.inject.Inject
 import kotlin.coroutines.Continuation
 import kotlin.coroutines.resume
@@ -31,7 +31,7 @@ class ReaderSiteNotificationsUseCase @Inject constructor(
     private val dispatcher: Dispatcher,
     private val readerTracker: ReaderTracker,
     private val readerBlogTableWrapper: ReaderBlogTableWrapper,
-    private val networkUtilsWrapper: NetworkUtilsWrapper
+    private val networkAvailability: NetworkAvailability
 ) {
     private var continuation: Continuation<Boolean>? = null
 
@@ -42,7 +42,7 @@ class ReaderSiteNotificationsUseCase @Inject constructor(
         if (continuation != null) {
             return AlreadyRunning
         }
-        if (!networkUtilsWrapper.isNetworkAvailable()) {
+        if (!networkAvailability.isNetworkAvailable()) {
             return NoNetwork
         }
 

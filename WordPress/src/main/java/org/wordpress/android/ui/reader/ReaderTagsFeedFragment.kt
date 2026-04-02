@@ -297,8 +297,9 @@ class ReaderTagsFeedFragment : Fragment(R.layout.reader_tag_feed_fragment_layout
                         uiHelpers.getTextOfUiString(requireContext(), message),
                         Snackbar.LENGTH_LONG
                     )
-                    if (buttonTitle != null) {
-                        snackbar.setAction(uiHelpers.getTextOfUiString(requireContext(), buttonTitle)) {
+                    val localButtonTitle = buttonTitle
+                    if (localButtonTitle != null) {
+                        snackbar.setAction(uiHelpers.getTextOfUiString(requireContext(), localButtonTitle)) {
                             buttonAction.invoke()
                         }
                     }

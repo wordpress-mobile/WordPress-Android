@@ -257,8 +257,9 @@ class ReaderDiscoverFragment : ViewPagerFragment(R.layout.reader_discover_fragme
                 uiHelpers.getTextOfUiString(requireContext(), this.message),
                 Snackbar.LENGTH_LONG
             )
-            if (this.buttonTitle != null) {
-                snackbar.setAction(uiHelpers.getTextOfUiString(requireContext(), this.buttonTitle)) {
+            val buttonTitle = this.buttonTitle
+            if (buttonTitle != null) {
+                snackbar.setAction(uiHelpers.getTextOfUiString(requireContext(), buttonTitle)) {
                     this.buttonAction.invoke()
                 }
             }

@@ -7,20 +7,20 @@ import org.wordpress.android.ui.reader.usecases.ReaderFetchSiteUseCase.FetchSite
 import org.wordpress.android.ui.reader.usecases.ReaderFetchSiteUseCase.FetchSiteState.Failed.NoNetwork
 import org.wordpress.android.ui.reader.usecases.ReaderFetchSiteUseCase.FetchSiteState.Failed.RequestFailed
 import org.wordpress.android.ui.reader.usecases.ReaderFetchSiteUseCase.FetchSiteState.Success
-import org.wordpress.android.util.NetworkUtilsWrapper
+import org.wordpress.android.util.NetworkAvailability
 import javax.inject.Inject
 import kotlin.coroutines.Continuation
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
 class ReaderFetchSiteUseCase @Inject constructor(
-    private val networkUtilsWrapper: NetworkUtilsWrapper,
+    private val networkAvailability: NetworkAvailability,
     private val readerBlogActionsWrapper: ReaderBlogActionsWrapper
 ) {
     private val continuations: MutableMap<FetchSiteRequestParams, Continuation<ReaderBlog?>?> = mutableMapOf()
 
     suspend fun fetchSite(blogId: Long, feedId: Long, blogUrl: String? = null): FetchSiteState {
-        return if (!networkUtilsWrapper.isNetworkAvailable()) {
+        return if (!networkAvailability.isNetworkAvailable()) {
             NoNetwork
         } else {
             val requestParams = FetchSiteRequestParams(blogId, feedId, blogUrl)

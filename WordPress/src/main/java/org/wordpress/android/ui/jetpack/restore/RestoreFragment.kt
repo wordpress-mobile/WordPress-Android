@@ -146,11 +146,12 @@ class RestoreFragment : Fragment(R.layout.jetpack_backup_restore_fragment) {
                 uiHelpers.getTextOfUiString(requireContext(), this.message),
                 Snackbar.LENGTH_LONG
             )
-            if (this.buttonTitle != null) {
+            val buttonTitle = this.buttonTitle
+            if (buttonTitle != null) {
                 snackbar.setAction(
                     uiHelpers.getTextOfUiString(
                         requireContext(),
-                        this.buttonTitle
+                        buttonTitle
                     )
                 ) {
                     this.buttonAction.invoke()

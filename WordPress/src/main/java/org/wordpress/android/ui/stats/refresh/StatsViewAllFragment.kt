@@ -261,7 +261,8 @@ class StatsViewAllFragment : Fragment(R.layout.stats_view_all_fragment) {
     ) {
         val parent = activity.findViewById<View>(R.id.coordinatorLayout)
         if (parent != null) {
-            if (holder.buttonTitle == null) {
+            val buttonTitle = holder.buttonTitle
+            if (buttonTitle == null) {
                 WPSnackbar.make(
                     parent,
                     uiHelpers.getTextOfUiString(requireContext(), holder.message),
@@ -274,7 +275,7 @@ class StatsViewAllFragment : Fragment(R.layout.stats_view_all_fragment) {
                     Snackbar.LENGTH_LONG
                 )
                 snackbar.setAction(
-                    uiHelpers.getTextOfUiString(requireContext(), holder.buttonTitle)
+                    uiHelpers.getTextOfUiString(requireContext(), buttonTitle)
                 ) { holder.buttonAction() }
                 snackbar.show()
             }

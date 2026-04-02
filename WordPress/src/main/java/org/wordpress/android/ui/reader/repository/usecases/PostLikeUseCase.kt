@@ -14,7 +14,7 @@ import org.wordpress.android.ui.reader.repository.usecases.PostLikeUseCase.PostL
 import org.wordpress.android.ui.reader.repository.usecases.PostLikeUseCase.PostLikeState.Success
 import org.wordpress.android.ui.reader.repository.usecases.PostLikeUseCase.PostLikeState.Unchanged
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
-import org.wordpress.android.util.NetworkUtilsWrapper
+import org.wordpress.android.util.NetworkAvailability
 import javax.inject.Inject
 import kotlin.coroutines.Continuation
 import kotlin.coroutines.resume
@@ -23,7 +23,7 @@ class PostLikeUseCase @Inject constructor(
     private val readerPostActionsWrapper: ReaderPostActionsWrapper,
     private val readerTracker: ReaderTracker,
     private val accountStore: AccountStore,
-    private val networkUtilsWrapper: NetworkUtilsWrapper
+    private val networkAvailability: NetworkAvailability
 ) {
     private val continuations:
             MutableMap<PostLikeRequest, Continuation<PostLikeState>?> = mutableMapOf()
@@ -36,7 +36,7 @@ class PostLikeUseCase @Inject constructor(
         val wpComUserId = accountStore.account.userId
         val request = PostLikeRequest(post.postId, post.blogId, isAskingToLike, wpComUserId)
 
-        if (!networkUtilsWrapper.isNetworkAvailable()) {
+        if (!networkAvailability.isNetworkAvailable()) {
             emit(Failed.NoNetwork)
             return@flow
         }

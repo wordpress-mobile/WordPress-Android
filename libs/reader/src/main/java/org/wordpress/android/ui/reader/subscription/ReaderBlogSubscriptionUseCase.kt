@@ -13,14 +13,14 @@ import org.wordpress.android.fluxc.store.AccountStore.AddOrDeleteSubscriptionPay
 import org.wordpress.android.fluxc.store.AccountStore.AddOrDeleteSubscriptionPayload.SubscriptionAction
 import org.wordpress.android.fluxc.store.AccountStore.OnSubscriptionUpdated
 import org.wordpress.android.modules.BG_THREAD
-import org.wordpress.android.util.NetworkUtilsWrapper
+import org.wordpress.android.util.NetworkAvailability
 import javax.inject.Inject
 import javax.inject.Named
 
 class ReaderBlogSubscriptionUseCase @Inject constructor(
     private val dispatcher: Dispatcher,
     private val accountStore: AccountStore,
-    private val networkUtilsWrapper: NetworkUtilsWrapper,
+    private val networkAvailability: NetworkAvailability,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) {
     private val updateResultChannel = Channel<UpdateResult>(Channel.CONFLATED)
@@ -38,7 +38,7 @@ class ReaderBlogSubscriptionUseCase @Inject constructor(
     }
 
     suspend fun updateNotifyPosts(blogId: Long, enable: Boolean): UpdateResult {
-        if (!networkUtilsWrapper.isNetworkAvailable()) {
+        if (!networkAvailability.isNetworkAvailable()) {
             return UpdateResult.NoNetwork
         }
         val action = if (enable) SubscriptionAction.NEW else SubscriptionAction.DELETE
@@ -48,7 +48,7 @@ class ReaderBlogSubscriptionUseCase @Inject constructor(
     }
 
     suspend fun updateEmailPosts(blogId: Long, enable: Boolean): UpdateResult {
-        if (!networkUtilsWrapper.isNetworkAvailable()) {
+        if (!networkAvailability.isNetworkAvailable()) {
             return UpdateResult.NoNetwork
         }
         val action = if (enable) SubscriptionAction.NEW else SubscriptionAction.DELETE
@@ -58,7 +58,7 @@ class ReaderBlogSubscriptionUseCase @Inject constructor(
     }
 
     suspend fun updateEmailComments(blogId: Long, enable: Boolean): UpdateResult {
-        if (!networkUtilsWrapper.isNetworkAvailable()) {
+        if (!networkAvailability.isNetworkAvailable()) {
             return UpdateResult.NoNetwork
         }
         val action = if (enable) SubscriptionAction.NEW else SubscriptionAction.DELETE

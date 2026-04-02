@@ -5,9 +5,10 @@ import org.wordpress.android.WordPress
 import javax.inject.Inject
 
 @Reusable
-class NetworkUtilsWrapper @Inject constructor() {
+class NetworkUtilsWrapper @Inject constructor() : NetworkAvailability {
     /**
      * Returns true if a network connection is available.
      */
-    fun isNetworkAvailable() = NetworkUtils.isNetworkAvailable(WordPress.getContext())
+    override fun isNetworkAvailable() =
+        NetworkUtils.isNetworkAvailable(WordPress.getContext())
 }

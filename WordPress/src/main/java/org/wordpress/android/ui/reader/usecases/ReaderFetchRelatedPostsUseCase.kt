@@ -11,13 +11,13 @@ import org.wordpress.android.ui.reader.usecases.ReaderFetchRelatedPostsUseCase.F
 import org.wordpress.android.ui.reader.usecases.ReaderFetchRelatedPostsUseCase.FetchRelatedPostsState.Failed.NoNetwork
 import org.wordpress.android.ui.reader.usecases.ReaderFetchRelatedPostsUseCase.FetchRelatedPostsState.Failed.RequestFailed
 import org.wordpress.android.ui.reader.usecases.ReaderFetchRelatedPostsUseCase.FetchRelatedPostsState.Success
-import org.wordpress.android.util.NetworkUtilsWrapper
+import org.wordpress.android.util.NetworkAvailability
 import javax.inject.Inject
 import kotlin.coroutines.Continuation
 import kotlin.coroutines.resume
 
 class ReaderFetchRelatedPostsUseCase @Inject constructor(
-    private val networkUtilsWrapper: NetworkUtilsWrapper,
+    private val networkAvailability: NetworkAvailability,
     private val readerPostActionsWrapper: ReaderPostActionsWrapper
 ) {
     private val continuations: MutableMap<RelatedPostsRequest, Continuation<FetchRelatedPostsState>?> = mutableMapOf()
@@ -28,7 +28,7 @@ class ReaderFetchRelatedPostsUseCase @Inject constructor(
         return when {
             continuations[request] != null -> AlreadyRunning
 
-            !networkUtilsWrapper.isNetworkAvailable() -> NoNetwork
+            !networkAvailability.isNetworkAvailable() -> NoNetwork
 
             else -> {
                 suspendCancellableCoroutine { cont ->

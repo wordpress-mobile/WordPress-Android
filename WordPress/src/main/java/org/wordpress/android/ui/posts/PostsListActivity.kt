@@ -398,9 +398,9 @@ class PostsListActivity : BaseAppCompatActivity(),
                         textRes = holder.message,
                         duration = Snackbar.LENGTH_LONG
                     ),
-                    holder.buttonTitle?.let {
+                    holder.buttonTitle?.let { buttonTitle ->
                         SnackbarItem.Action(
-                            textRes = holder.buttonTitle,
+                            textRes = buttonTitle,
                             clickListener = { holder.buttonAction() }
                         )
                     },

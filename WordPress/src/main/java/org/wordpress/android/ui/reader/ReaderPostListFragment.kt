@@ -624,12 +624,11 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
                         duration = holder.duration,
                         isImportant = holder.isImportant
                     ),
-                    if (holder.buttonTitle != null)
+                    holder.buttonTitle?.let { buttonTitle ->
                         SnackbarItem.Action(
-                            holder.buttonTitle
+                            buttonTitle
                         ) { holder.buttonAction.invoke() }
-                    else
-                        null
+                    }
                 )
             )
         }

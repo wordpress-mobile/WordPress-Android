@@ -12,14 +12,14 @@ import org.wordpress.android.ui.reader.repository.usecases.BlockSiteState.Failed
 import org.wordpress.android.ui.reader.repository.usecases.BlockSiteState.SiteBlockedInLocalDb
 import org.wordpress.android.ui.reader.repository.usecases.BlockSiteState.Success
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
-import org.wordpress.android.util.NetworkUtilsWrapper
+import org.wordpress.android.util.NetworkAvailability
 import javax.inject.Inject
 import kotlin.coroutines.Continuation
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
 class BlockBlogUseCase @Inject constructor(
-    private val networkUtilsWrapper: NetworkUtilsWrapper,
+    private val networkAvailability: NetworkAvailability,
     private val readerTracker: ReaderTracker,
     private val readerBlogActionsWrapper: ReaderBlogActionsWrapper
 ) {
@@ -32,7 +32,7 @@ class BlockBlogUseCase @Inject constructor(
     ) = flow {
         // Blocking multiple sites in parallel isn't supported as the user would lose the ability to undo the action
         if (continuation == null) {
-            if (!networkUtilsWrapper.isNetworkAvailable()) {
+            if (!networkAvailability.isNetworkAvailable()) {
                 emit(NoNetwork)
             } else {
                 performAction(blogId, feedId)

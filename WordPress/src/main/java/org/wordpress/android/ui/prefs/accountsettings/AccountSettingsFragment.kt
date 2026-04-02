@@ -311,9 +311,9 @@ class AccountSettingsFragment : PreferenceFragmentLifeCycleOwner(),
                     uiHelpers.getTextOfUiString(context, snackBarMessage.message),
                     BaseTransientBottomBar.LENGTH_INDEFINITE
                 )
-                snackBarMessage.buttonTitle?.let {
+                snackBarMessage.buttonTitle?.let { buttonTitle ->
                     emailSnackbar?.setAction(
-                        uiHelpers.getTextOfUiString(context, snackBarMessage.buttonTitle)
+                        uiHelpers.getTextOfUiString(context, buttonTitle)
                     ) { snackBarMessage.buttonAction }
                 }
                 val textView = emailSnackbar?.view

@@ -590,9 +590,9 @@ class MediaPickerFragment : Fragment(), MenuProvider {
                     textRes = holder.message,
                     duration = Snackbar.LENGTH_LONG
                 ),
-                holder.buttonTitle?.let {
+                holder.buttonTitle?.let { buttonTitle ->
                     Action(
-                        textRes = holder.buttonTitle,
+                        textRes = buttonTitle,
                         clickListener = { holder.buttonAction() }
                     )
                 },

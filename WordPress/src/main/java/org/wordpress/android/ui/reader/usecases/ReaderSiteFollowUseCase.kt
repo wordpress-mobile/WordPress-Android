@@ -12,7 +12,7 @@ import org.wordpress.android.ui.reader.usecases.ReaderSiteFollowUseCase.FollowSi
 import org.wordpress.android.ui.reader.usecases.ReaderSiteFollowUseCase.FollowSiteState.FollowStatusChanged
 import org.wordpress.android.ui.reader.usecases.ReaderSiteFollowUseCase.FollowSiteState.Success
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
-import org.wordpress.android.util.NetworkUtilsWrapper
+import org.wordpress.android.util.NetworkAvailability
 import javax.inject.Inject
 import kotlin.coroutines.Continuation
 import kotlin.coroutines.resume
@@ -22,7 +22,7 @@ import kotlin.coroutines.suspendCoroutine
  * This class handles reader blog follow click events.
  */
 class ReaderSiteFollowUseCase @Inject constructor(
-    private val networkUtilsWrapper: NetworkUtilsWrapper,
+    private val networkAvailability: NetworkAvailability,
     private val readerBlogActionsWrapper: ReaderBlogActionsWrapper,
     private val readerBlogTableWrapper: ReaderBlogTableWrapper,
     private val readerUtilsWrapper: ReaderUtilsWrapper,
@@ -35,7 +35,7 @@ class ReaderSiteFollowUseCase @Inject constructor(
         source: String
     ) = flow {
         val (blogId, feedId) = param
-        if (!networkUtilsWrapper.isNetworkAvailable()) {
+        if (!networkAvailability.isNetworkAvailable()) {
             emit(NoNetwork)
         } else {
             // There is already an action running for this request

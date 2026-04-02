@@ -9,7 +9,7 @@ import org.wordpress.android.ui.reader.actions.ReaderPostActionsWrapper
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.usecases.BookmarkPostState.PreLoadPostContent
 import org.wordpress.android.ui.reader.usecases.BookmarkPostState.Success
-import org.wordpress.android.util.NetworkUtilsWrapper
+import org.wordpress.android.util.NetworkAvailability
 import javax.inject.Inject
 
 /**
@@ -18,7 +18,7 @@ import javax.inject.Inject
  */
 class ReaderPostBookmarkUseCase @Inject constructor(
     private val readerTracker: ReaderTracker,
-    private val networkUtilsWrapper: NetworkUtilsWrapper,
+    private val networkAvailability: NetworkAvailability,
     private val readerPostActionsWrapper: ReaderPostActionsWrapper,
     private val readerPostTableWrapper: ReaderPostTableWrapper
 ) {
@@ -39,7 +39,7 @@ class ReaderPostBookmarkUseCase @Inject constructor(
         blogId: Long,
         postId: Long
     ) {
-        val cachePostContent = bookmarked && networkUtilsWrapper.isNetworkAvailable() && !isBookmarkList
+        val cachePostContent = bookmarked && networkAvailability.isNetworkAvailable() && !isBookmarkList
         if (cachePostContent) {
             emit(PreLoadPostContent(blogId, postId))
         }

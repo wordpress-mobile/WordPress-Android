@@ -437,9 +437,9 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
                         duration = holder.duration,
                         isImportant = holder.isImportant
                     ),
-                    action = holder.buttonTitle?.let {
+                    action = holder.buttonTitle?.let { buttonTitle ->
                         SnackbarItem.Action(
-                            textRes = holder.buttonTitle,
+                            textRes = buttonTitle,
                             clickListener = { holder.buttonAction() }
                         )
                     },

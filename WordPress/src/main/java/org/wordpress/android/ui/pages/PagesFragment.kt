@@ -448,7 +448,8 @@ class PagesFragment : Fragment(R.layout.pages_fragment), ScrollableViewInitializ
     ) {
         val parent = activity.findViewById<View>(R.id.coordinatorLayout)
         if (holder != null && parent != null) {
-            if (holder.buttonTitle == null) {
+            val buttonTitle = holder.buttonTitle
+            if (buttonTitle == null) {
                 WPSnackbar.make(
                     parent,
                     uiHelpers.getTextOfUiString(requireContext(), holder.message),
@@ -463,7 +464,7 @@ class PagesFragment : Fragment(R.layout.pages_fragment), ScrollableViewInitializ
                 snackbar.setAction(
                     uiHelpers.getTextOfUiString(
                         requireContext(),
-                        holder.buttonTitle
+                        buttonTitle
                     )
                 ) {
                     holder.buttonAction()

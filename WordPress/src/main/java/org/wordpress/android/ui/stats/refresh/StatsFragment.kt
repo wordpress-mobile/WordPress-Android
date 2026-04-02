@@ -331,7 +331,8 @@ class StatsFragment : Fragment(R.layout.stats_fragment), ScrollableViewInitializ
     ) {
         val parent = activity.findViewById<View>(R.id.coordinatorLayout)
         if (holder != null && parent != null) {
-            if (holder.buttonTitle == null) {
+            val buttonTitle = holder.buttonTitle
+            if (buttonTitle == null) {
                 WPSnackbar.make(
                     parent,
                     uiHelpers.getTextOfUiString(requireContext(), holder.message),
@@ -343,7 +344,7 @@ class StatsFragment : Fragment(R.layout.stats_fragment), ScrollableViewInitializ
                     uiHelpers.getTextOfUiString(requireContext(), holder.message),
                     Snackbar.LENGTH_LONG
                 )
-                snackbar.setAction(uiHelpers.getTextOfUiString(requireContext(), holder.buttonTitle)) {
+                snackbar.setAction(uiHelpers.getTextOfUiString(requireContext(), buttonTitle)) {
                     holder.buttonAction()
                 }
                 snackbar.show()

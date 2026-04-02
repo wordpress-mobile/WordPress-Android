@@ -137,9 +137,9 @@ class UnifiedCommentListFragment : Fragment(R.layout.unified_comment_list_fragme
                             textRes = snackbarMessage.message,
                             duration = Snackbar.LENGTH_LONG
                         ),
-                        snackbarMessage.buttonTitle?.let {
+                        snackbarMessage.buttonTitle?.let { buttonTitle ->
                             Action(
-                                textRes = snackbarMessage.buttonTitle,
+                                textRes = buttonTitle,
                                 clickListener = { snackbarMessage.buttonAction() }
                             )
                         },
