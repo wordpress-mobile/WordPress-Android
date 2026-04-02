@@ -12,6 +12,10 @@ android {
         targetSdkVersion rootProject.targetSdkVersion
     }
 
+    testOptions {
+        unitTests.returnDefaultValues = true
+    }
+
     compileOptions {
         sourceCompatibility JavaVersion.toVersion(
             libs.versions.java.get()
@@ -77,4 +81,11 @@ dependencies {
 
     // Dagger (for javax.inject annotations)
     implementation libs.google.dagger
+
+    // Testing
+    testImplementation libs.junit
+    testImplementation libs.kotlin.test.junit
+    testImplementation libs.assertj.core
+    testImplementation libs.mockito.core
+    testImplementation libs.mockito.kotlin
 }
