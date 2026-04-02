@@ -1,23 +1,10 @@
 package org.wordpress.android.util;
 
-import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
-
-import dagger.hilt.android.testing.HiltAndroidRule;
-import dagger.hilt.android.testing.HiltAndroidTest;
 
 import static junit.framework.TestCase.assertEquals;
 
-@HiltAndroidTest
 public class AutolinkUtilsTest {
-    @Rule
-    public HiltAndroidRule hiltRule = new HiltAndroidRule(this);
-
-    @Before
-    public void setUp() {
-        hiltRule.inject();
-    }
 
     @Test
     public void testNullString() {
