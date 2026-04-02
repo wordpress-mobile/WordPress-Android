@@ -28,4 +28,4 @@ sealed interface JetpackMenuElementData {
     }
 }
 
-internal const val NO_ICON = -1
+const val NO_ICON = -1

@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.reader.subfilter
 
-import org.wordpress.android.R
 import org.wordpress.android.reader.R as ReaderR
 import org.wordpress.android.models.ReaderBlog
 import org.wordpress.android.models.ReaderTag

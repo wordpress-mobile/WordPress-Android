@@ -9,7 +9,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.LinearLayout
-import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
@@ -18,12 +17,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
-import org.wordpress.android.reader.R as ReaderR
 import org.wordpress.android.ui.reader.subfilter.SubfilterBottomSheetEmptyUiState.HiddenEmptyUiState
 import org.wordpress.android.ui.reader.subfilter.SubfilterBottomSheetEmptyUiState.VisibleEmptyUiState
-import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.ItemType
-import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.ItemType.SITE
-import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.ItemType.TAG
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.Site
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.Tag
 import org.wordpress.android.ui.reader.subfilter.adapters.SubfilterListAdapter
@@ -214,9 +209,4 @@ class SubfilterPagerAdapter(
         }
         container.requestLayout()
     }
-}
-
-enum class SubfilterCategory(@StringRes val titleRes: Int, val type: ItemType) {
-    SITES(ReaderR.string.reader_filter_by_blog_title, SITE),
-    TAGS(ReaderR.string.reader_filter_by_tag_title, TAG);
 }
