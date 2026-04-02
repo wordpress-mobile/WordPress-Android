@@ -305,9 +305,10 @@ class ReaderPostUiStateBuilder @Inject constructor(
 
     private fun buildBlogName(post: ReaderPost, isP2Post: Boolean = false): UiString {
         val blogName = post.takeIf { it.hasBlogName() }?.blogName?.let { UiStringText(it) }
-            ?:post.takeIf { it.hasBlogUrl() }
-            ?.blogUrl
-            ?.let { UiStringText(urlUtilsWrapper.removeScheme(it)) }
+            ?: post.takeIf { it.hasBlogUrl() }
+                ?.blogUrl
+                ?.let { UiStringText(urlUtilsWrapper.removeScheme(it)) }
+            ?: post.authorName.takeIf { it.isNotEmpty() }?.let { UiStringText(it) }
             ?: UiStringRes(R.string.untitled_in_parentheses)
 
         if (!isP2Post) {

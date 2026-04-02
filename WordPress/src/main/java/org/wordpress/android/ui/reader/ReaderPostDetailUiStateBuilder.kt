@@ -91,7 +91,10 @@ class ReaderPostDetailUiStateBuilder @Inject constructor(
             )
         },
         isGlobal = isGlobal,
-        headerLabel = buildRelatedPostsHeaderLabel(blogName = sourcePost.blogName, isGlobal = isGlobal),
+        headerLabel = buildRelatedPostsHeaderLabel(
+            blogName = sourcePost.blogName.ifEmpty { sourcePost.authorName },
+            isGlobal = isGlobal
+        ),
         railcarJsonStrings = relatedPosts.map { it.railcarJson }
     )
 
@@ -214,7 +217,7 @@ class ReaderPostDetailUiStateBuilder @Inject constructor(
             "<font color='" +
                     htmlUtilsWrapper
                         .colorResToHtmlColor(contextProvider.getContext(), R.color.link_reader) + "'>" +
-                    post.blogName + "</font>"
+                    post.blogName.ifEmpty { post.authorName } + "</font>"
         )
     )
 

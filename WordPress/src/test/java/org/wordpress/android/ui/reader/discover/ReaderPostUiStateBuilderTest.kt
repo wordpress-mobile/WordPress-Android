@@ -515,6 +515,34 @@ class ReaderPostUiStateBuilderTest : BaseUnitTest() {
     }
 
     @Test
+    fun `author name is displayed when the post has no blog name or url`() = test {
+        // Arrange
+        val post = createPost(
+            hasBlogName = false,
+            authorName = "Author Name"
+        )
+        // Act
+        val uiState = mapPostToUiState(post)
+        // Assert
+        assertThat((uiState.blogSection.blogName as UiStringText).text).isEqualTo("Author Name")
+    }
+
+    @Test
+    fun `blog url is displayed before author name when the post has no blog name`() = test {
+        // Arrange
+        val post = createPost(
+            hasBlogName = false,
+            blogUrl = "https://author.wordpress.com",
+            authorName = "Author Name"
+        )
+        whenever(urlUtilsWrapper.removeScheme("https://author.wordpress.com")).thenReturn("author.wordpress.com")
+        // Act
+        val uiState = mapPostToUiState(post)
+        // Assert
+        assertThat((uiState.blogSection.blogName as UiStringText).text).isEqualTo("author.wordpress.com")
+    }
+
+    @Test
     fun `p2 posts in the feed show author's first name (or full name) alongside the blog name`() = test {
         // Arrange
         val postWithFirstName = createPost(
