@@ -5155,4 +5155,11 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="about_automattic_logo_description" tools:ignore="UnusedResources" a8c-src-lib="about">Automattic logo</string>
     <string name="about_automattic_back_icon_description" tools:ignore="UnusedResources" a8c-src-lib="about">Back icon</string>
     <string name="about_automattic_app_icon_description" tools:ignore="UnusedResources" a8c-src-lib="about">App icon</string>
+
+    <!-- Shared UI strings (canonical in core-ui, re-declared for AGP non-transitive R) -->
+    <string name="close" a8c-src-lib="module:core-ui">Close</string>
+    <string name="navigate_up_desc" a8c-src-lib="module:core-ui">navigate up</string>
+    <string name="close_desc" a8c-src-lib="module:core-ui">close</string>
+    <string name="cancel" a8c-src-lib="module:core-ui">Cancel</string>
+    <string name="uploading" a8c-src-lib="module:core-ui">Uploading…</string>
 </resources>

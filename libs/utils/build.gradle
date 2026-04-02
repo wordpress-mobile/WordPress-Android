@@ -1,0 +1,80 @@
+plugins {
+    alias(libs.plugins.android.library)
+    alias(libs.plugins.dependency.analysis)
+}
+
+android {
+    namespace "org.wordpress.android.utils"
+
+    defaultConfig {
+        compileSdk rootProject.compileSdkVersion
+        minSdkVersion rootProject.minSdkVersion
+        targetSdkVersion rootProject.targetSdkVersion
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.toVersion(
+            libs.versions.java.get()
+        )
+        targetCompatibility JavaVersion.toVersion(
+            libs.versions.java.get()
+        )
+    }
+}
+
+dependencies {
+    // Internal modules
+    implementation project(":libs:core-ui")
+    implementation project(":libs:fluxc")
+
+    // WordPress utils (AppLog, PhotonUtils, etc.)
+    implementation("$gradle.ext.wputilsBinaryPath") {
+        version {
+            strictly libs.wordpress.utils.get().version
+        }
+    }
+
+    // AndroidX
+    implementation libs.androidx.appcompat.main
+    implementation libs.androidx.core.main
+    implementation libs.androidx.core.ktx
+    implementation libs.androidx.fragment.main
+    implementation libs.androidx.preference
+    implementation libs.androidx.webkit
+
+    // Lifecycle
+    implementation libs.androidx.lifecycle.common
+    implementation libs.androidx.lifecycle.livedata.core
+    implementation libs.androidx.lifecycle.livedata.main
+    implementation libs.androidx.lifecycle.viewmodel.main
+    implementation libs.androidx.lifecycle.runtime
+    implementation libs.androidx.lifecycle.process
+
+    // Coroutines
+    implementation libs.kotlinx.coroutines.core
+    implementation libs.kotlinx.coroutines.android
+
+    // EventBus
+    implementation libs.greenrobot.eventbus.main
+
+    // Volley
+    implementation libs.android.volley
+
+    // Glide
+    implementation libs.bumptech.glide.main
+
+    // Google Material
+    implementation libs.google.material
+
+    // Gson
+    implementation libs.google.gson
+
+    // Google Play (for InAppReviewExtensions)
+    implementation libs.google.play.review
+
+    // Tracks crashlogging
+    implementation libs.automattic.tracks.crashlogging
+
+    // Dagger (for javax.inject annotations)
+    implementation libs.google.dagger
+}
