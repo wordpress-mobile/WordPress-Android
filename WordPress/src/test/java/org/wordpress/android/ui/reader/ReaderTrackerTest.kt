@@ -17,7 +17,7 @@ import org.wordpress.android.models.ReaderTagType
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.reader.models.ReaderReadingPreferences
 import org.wordpress.android.ui.reader.tracker.ReaderReadingPreferencesTracker
-import org.wordpress.android.ui.reader.tracker.ReaderTracker
+import org.wordpress.android.ui.reader.tracker.ReaderTrackerImpl
 import org.wordpress.android.ui.reader.tracker.ReaderTrackerType
 import org.wordpress.android.ui.reader.utils.DateProvider
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
@@ -42,11 +42,11 @@ class ReaderTrackerTest {
     @Mock
     lateinit var readingPreferencesTracker: ReaderReadingPreferencesTracker
 
-    private lateinit var tracker: ReaderTracker
+    private lateinit var tracker: ReaderTrackerImpl
 
     @Before
     fun setup() {
-        tracker = ReaderTracker(
+        tracker = ReaderTrackerImpl(
             dateProvider,
             appPrefsWrapper,
             analyticsTrackerWrapper,

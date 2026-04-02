@@ -66,6 +66,7 @@ import org.wordpress.android.ui.reader.models.ReaderBlogIdPostId
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostIdList
 import org.wordpress.android.ui.reader.services.post.ReaderPostServiceStarter
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
+import org.wordpress.android.ui.reader.tracker.ReaderTrackerImpl
 import org.wordpress.android.ui.reader.tracker.ReaderTrackerType
 import org.wordpress.android.ui.reader.usecases.ReaderGetReadingPreferencesSyncUseCase
 import org.wordpress.android.ui.reader.utils.ReaderPostSeenStatusWrapper
@@ -154,7 +155,7 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
     lateinit var siteStore: SiteStore
 
     @Inject
-    lateinit var readerTracker: ReaderTracker
+    lateinit var readerTracker: ReaderTrackerImpl
 
     @Inject
     lateinit var analyticsUtilsWrapper: AnalyticsUtilsWrapper

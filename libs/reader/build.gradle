@@ -29,6 +29,7 @@ dependencies {
     implementation project(":libs:utils")
     implementation project(":libs:reader-models")
     implementation project(":libs:fluxc")
+    implementation project(":libs:analytics")
 
     // WordPress utils (AppLog, PhotonUtils, etc.)
     implementation("$gradle.ext.wputilsBinaryPath") {
