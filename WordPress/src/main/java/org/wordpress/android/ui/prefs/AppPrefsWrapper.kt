@@ -8,6 +8,7 @@ import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase
 import org.wordpress.android.ui.posts.AuthorFilterSelection
 import org.wordpress.android.ui.prefs.AppPrefs.PrefKey
 import org.wordpress.android.ui.prefs.AppPrefs.getBoolean
+import org.wordpress.android.ui.reader.preferences.ReaderPreferences
 import org.wordpress.android.ui.reader.tracker.ReaderTab
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsColorSelectionViewModel.Color
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsColorSelectionViewModel.Color.DARK
@@ -31,7 +32,9 @@ import javax.inject.Singleton
  *
  */
 @Singleton
-class AppPrefsWrapper @Inject constructor(val buildConfigWrapper: BuildConfigWrapper) {
+class AppPrefsWrapper @Inject constructor(
+    val buildConfigWrapper: BuildConfigWrapper
+) : ReaderPreferences {
     var featureAnnouncementShownVersion: Int
         get() = AppPrefs.getFeatureAnnouncementShownVersion()
         set(version) = AppPrefs.setFeatureAnnouncementShownVersion(version)
@@ -56,23 +59,23 @@ class AppPrefsWrapper @Inject constructor(val buildConfigWrapper: BuildConfigWra
         get() = AppPrefs.getSystemNotificationsEnabled()
         set(value) = AppPrefs.setSystemNotificationsEnabled(value)
 
-    var readerTagsUpdatedTimestamp: Long
+    override var readerTagsUpdatedTimestamp: Long
         get() = AppPrefs.getReaderTagsUpdatedTimestamp()
         set(timestamp) = AppPrefs.setReaderTagsUpdatedTimestamp(timestamp)
 
-    var readerAnalyticsCountTagsTimestamp: Long
+    override var readerAnalyticsCountTagsTimestamp: Long
         get() = AppPrefs.getReaderAnalyticsCountTagsTimestamp()
         set(timestamp) = AppPrefs.setReaderAnalyticsCountTagsTimestamp(timestamp)
 
-    var readerCssUpdatedTimestamp: Long
+    override var readerCssUpdatedTimestamp: Long
         get() = AppPrefs.getReaderCssUpdatedTimestamp()
         set(timestamp) = AppPrefs.setReaderCssUpdatedTimestamp(timestamp)
 
-    var readerCardsPageHandle: String?
+    override var readerCardsPageHandle: String?
         get() = AppPrefs.getReaderCardsPageHandle()
         set(pageHandle) = AppPrefs.setReaderCardsPageHandle(pageHandle)
 
-    var readerTopBarSelectedFeedItemId: String?
+    override var readerTopBarSelectedFeedItemId: String?
         get() = AppPrefs.getReaderTopBarSelectedFeedItemId()
         set(selectedFeedItemId) = AppPrefs.setReaderTopBarSelectedFeedItemId(selectedFeedItemId)
 
@@ -91,7 +94,7 @@ class AppPrefsWrapper @Inject constructor(val buildConfigWrapper: BuildConfigWra
         get() = AppPrefs.getNotificationsPermissionsWarningDismissed()
         set(dismissed) = AppPrefs.setNotificationsPermissionWarningDismissed(dismissed)
 
-    var readerReadingPreferencesJson: String?
+    override var readerReadingPreferencesJson: String?
         get() = AppPrefs.getReaderReadingPreferencesJson()
         set(json) = AppPrefs.setReaderReadingPreferencesJson(json)
 
@@ -119,8 +122,8 @@ class AppPrefsWrapper @Inject constructor(val buildConfigWrapper: BuildConfigWra
     fun setAppWidgetSiteId(siteId: Long, appWidgetId: Int) = AppPrefs.setStatsWidgetSelectedSiteId(siteId, appWidgetId)
     fun removeAppWidgetSiteId(appWidgetId: Int) = AppPrefs.removeStatsWidgetSelectedSiteId(appWidgetId)
     fun isGutenbergEditorEnabled() = AppPrefs.isGutenbergEditorEnabled()
-    fun getReaderCardsRefreshCounter() = AppPrefs.getReaderCardsRefreshCounter()
-    fun incrementReaderCardsRefreshCounter() = AppPrefs.incrementReaderCardsRefreshCounter()
+    override fun getReaderCardsRefreshCounter() = AppPrefs.getReaderCardsRefreshCounter()
+    override fun incrementReaderCardsRefreshCounter() = AppPrefs.incrementReaderCardsRefreshCounter()
 
     fun getAppWidgetColor(appWidgetId: Int): Color? {
         return when (AppPrefs.getStatsWidgetColorModeId(appWidgetId)) {
@@ -175,23 +178,31 @@ class AppPrefsWrapper @Inject constructor(val buildConfigWrapper: BuildConfigWra
     fun isMainFabTooltipDisabled() = AppPrefs.isMainFabTooltipDisabled()
     fun setMainFabTooltipDisabled(disable: Boolean) = AppPrefs.setMainFabTooltipDisabled(disable)
 
-    fun getLastReaderKnownAccessTokenStatus() = AppPrefs.getLastReaderKnownAccessTokenStatus()
-    fun setLastReaderKnownAccessTokenStatus(lastKnownAccessTokenStatus: Boolean) =
-        AppPrefs.setLastReaderKnownAccessTokenStatus(lastKnownAccessTokenStatus)
+    override fun getLastReaderKnownAccessTokenStatus() =
+        AppPrefs.getLastReaderKnownAccessTokenStatus()
+    override fun setLastReaderKnownAccessTokenStatus(
+        lastKnownAccessTokenStatus: Boolean
+    ) = AppPrefs.setLastReaderKnownAccessTokenStatus(lastKnownAccessTokenStatus)
 
-    fun getLastReaderKnownUserId() = AppPrefs.getLastReaderKnownUserId()
-    fun setLastReaderKnownUserId(userId: Long) = AppPrefs.setLastReaderKnownUserId(userId)
+    override fun getLastReaderKnownUserId() = AppPrefs.getLastReaderKnownUserId()
+    override fun setLastReaderKnownUserId(userId: Long) =
+        AppPrefs.setLastReaderKnownUserId(userId)
 
     fun getLastAppVersionCode() = AppPrefs.getLastAppVersionCode()
 
-    fun setReaderTag(selectedTag: ReaderTag?) = AppPrefs.setReaderTag(selectedTag)
-    fun getReaderTag(): ReaderTag? = AppPrefs.getReaderTag()
+    override fun setReaderTag(selectedTag: ReaderTag?) =
+        AppPrefs.setReaderTag(selectedTag)
+    override fun getReaderTag(): ReaderTag? = AppPrefs.getReaderTag()
 
-    fun setReaderActiveTab(selectedTab: ReaderTab?) = AppPrefs.setReaderActiveTab(selectedTab)
-    fun getReaderActiveTab(): ReaderTab? = AppPrefs.getReaderActiveTab()
+    override fun setReaderActiveTab(selectedTab: ReaderTab?) =
+        AppPrefs.setReaderActiveTab(selectedTab)
+    override fun getReaderActiveTab(): ReaderTab? =
+        AppPrefs.getReaderActiveTab()
 
-    fun shouldShowBookmarksSavedLocallyDialog(): Boolean = AppPrefs.shouldShowBookmarksSavedLocallyDialog()
-    fun setBookmarksSavedLocallyDialogShown() = AppPrefs.setBookmarksSavedLocallyDialogShown()
+    override fun shouldShowBookmarksSavedLocallyDialog(): Boolean =
+        AppPrefs.shouldShowBookmarksSavedLocallyDialog()
+    override fun setBookmarksSavedLocallyDialogShown() =
+        AppPrefs.setBookmarksSavedLocallyDialogShown()
 
     fun isPostListFabTooltipDisabled() = AppPrefs.isPostListFabTooltipDisabled()
     fun setPostListFabTooltipDisabled(disable: Boolean) = AppPrefs.setPostListFabTooltipDisabled(disable)
@@ -456,14 +467,19 @@ class AppPrefsWrapper @Inject constructor(val buildConfigWrapper: BuildConfigWra
     fun getShouldHideDynamicCard(id: String): Boolean =
         AppPrefs.getShouldHideDynamicCard(id)
 
-    fun shouldUpdateBookmarkPostsPseudoIds(tag: ReaderTag?): Boolean = AppPrefs.shouldUpdateBookmarkPostsPseudoIds(tag)
+    override fun shouldUpdateBookmarkPostsPseudoIds(
+        tag: ReaderTag?
+    ): Boolean = AppPrefs.shouldUpdateBookmarkPostsPseudoIds(tag)
 
-    fun setBookmarkPostsPseudoIdsUpdated() = AppPrefs.setBookmarkPostsPseudoIdsUpdated()
+    override fun setBookmarkPostsPseudoIdsUpdated() =
+        AppPrefs.setBookmarkPostsPseudoIdsUpdated()
 
-    fun shouldShowReaderAnnouncementCard(): Boolean = AppPrefs.getShouldShowReaderAnnouncementCard()
+    override fun shouldShowReaderAnnouncementCard(): Boolean =
+        AppPrefs.getShouldShowReaderAnnouncementCard()
 
-    fun setShouldShowReaderAnnouncementCard(shouldShow: Boolean) =
-        AppPrefs.setShouldShowReaderAnnouncementCard(shouldShow)
+    override fun setShouldShowReaderAnnouncementCard(
+        shouldShow: Boolean
+    ) = AppPrefs.setShouldShowReaderAnnouncementCard(shouldShow)
 
     fun getAllPrefs(): Map<String, Any?> = AppPrefs.getAllPrefs()
 
