@@ -1459,6 +1459,139 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         return true
     }
 
+    @Suppress("LongMethod")
+    private fun showPhotoViewerWithGalleryCheck(
+        imageUrl: String,
+        sourceView: View,
+        startX: Int,
+        startY: Int
+    ) {
+        if (!isAdded || imageUrl.isEmpty() || !imageUrl.startsWith("http")) {
+            return
+        }
+
+        val js = buildGalleryDetectionJs(imageUrl)
+        readerWebView.evaluateJavascript(js) { result ->
+            if (!isAdded) return@evaluateJavascript
+            val galleryUrls = parseGalleryUrlsResult(result)
+            if (galleryUrls != null) {
+                showPhotoViewerForGallery(imageUrl, sourceView, startX, startY, galleryUrls)
+            } else {
+                showPhotoViewer(imageUrl, sourceView, startX, startY)
+            }
+        }
+    }
+
+    private fun buildGalleryDetectionJs(imageUrl: String): String {
+        val safeUrl = imageUrl
+            .replace("\\", "\\\\")
+            .replace("'", "\\'")
+            .replace("\n", "")
+            .replace("\r", "")
+        return """
+            (function() {
+                try {
+                    var targetPath = '';
+                    try {
+                        targetPath = new URL('$safeUrl').pathname;
+                    } catch(e) {
+                        return null;
+                    }
+                    var allImgs = document.querySelectorAll('img');
+                    var targetImg = null;
+                    for (var i = 0; i < allImgs.length; i++) {
+                        try {
+                            var imgPath = new URL(allImgs[i].src).pathname;
+                            if (imgPath === targetPath) {
+                                targetImg = allImgs[i];
+                                break;
+                            }
+                        } catch(e) {}
+                    }
+                    if (!targetImg) return null;
+                    var selectors = [
+                        '.wp-block-gallery',
+                        '.tiled-gallery',
+                        '.gallery',
+                        '.blocks-gallery-grid'
+                    ];
+                    var gallery = null;
+                    var el = targetImg.parentElement;
+                    while (el) {
+                        for (var s = 0; s < selectors.length; s++) {
+                            if (el.matches && el.matches(selectors[s])) {
+                                gallery = el;
+                                break;
+                            }
+                        }
+                        if (gallery) break;
+                        el = el.parentElement;
+                    }
+                    if (!gallery) return null;
+                    var imgs = gallery.querySelectorAll('img');
+                    var urls = [];
+                    for (var j = 0; j < imgs.length; j++) {
+                        if (imgs[j].src && imgs[j].src.startsWith('http')) {
+                            urls.push(imgs[j].src);
+                        }
+                    }
+                    return JSON.stringify(urls);
+                } catch(e) {
+                    return null;
+                }
+            })();
+        """.trimIndent()
+    }
+
+    private fun parseGalleryUrlsResult(result: String?): ArrayList<String>? {
+        if (result.isNullOrEmpty() || result == "null") return null
+        return try {
+            val json = if (result.startsWith("\"") && result.endsWith("\"")) {
+                result
+                    .substring(1, result.length - 1)
+                    .replace("\\\"", "\"")
+                    .replace("\\\\", "\\")
+            } else {
+                result
+            }
+            val array = org.json.JSONArray(json)
+            if (array.length() <= 1) return null
+            val urls = ArrayList<String>(array.length())
+            for (i in 0 until array.length()) {
+                urls.add(array.getString(i))
+            }
+            urls
+        } catch (e: org.json.JSONException) {
+            AppLog.e(T.READER, "Failed to parse gallery URLs: $e")
+            null
+        }
+    }
+
+    private fun showPhotoViewerForGallery(
+        imageUrl: String,
+        sourceView: View,
+        startX: Int,
+        startY: Int,
+        galleryUrls: ArrayList<String>
+    ) {
+        val isPrivatePost = viewModel.post?.isPrivate == true
+        val options = EnumSet.noneOf(PhotoViewerOption::class.java)
+        if (isPrivatePost) {
+            options.add(PhotoViewerOption.IS_PRIVATE_IMAGE)
+        }
+
+        ReaderActivityLauncher.showReaderPhotoViewer(
+            requireActivity(),
+            imageUrl,
+            null,
+            sourceView,
+            options,
+            startX,
+            startY,
+            galleryUrls
+        )
+    }
+
     /*
      * post slugs resolution to IDs has completed
      */
@@ -1890,7 +2023,8 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
     override fun onImageUrlClick(imageUrl: String, view: View, x: Int, y: Int): Boolean {
         readerTracker.track(AnalyticsTracker.Stat.READER_ARTICLE_IMAGE_TAPPED)
-        return showPhotoViewer(imageUrl, view, x, y)
+        showPhotoViewerWithGalleryCheck(imageUrl, view, x, y)
+        return true
     }
 
     override fun onFileDownloadClick(fileUrl: String?): Boolean {

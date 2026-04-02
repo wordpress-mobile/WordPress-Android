@@ -477,6 +477,55 @@ object ReaderActivityLauncher {
         }
     }
 
+    @JvmStatic
+    @Suppress("LongParameterList")
+    fun showReaderPhotoViewer(
+        context: Context,
+        imageUrl: String,
+        content: String?,
+        sourceView: View?,
+        imageOptions: EnumSet<PhotoViewerOption>,
+        startX: Int,
+        startY: Int,
+        galleryImageUrls: ArrayList<String>?
+    ) {
+        if (TextUtils.isEmpty(imageUrl)) {
+            return
+        }
+
+        val isPrivate = imageOptions.contains(PhotoViewerOption.IS_PRIVATE_IMAGE)
+        val isGallery = imageOptions.contains(PhotoViewerOption.IS_GALLERY_IMAGE)
+
+        val intent = Intent(context, ReaderPhotoViewerActivity::class.java)
+        intent.putExtra(ReaderConstants.ARG_IMAGE_URL, imageUrl)
+        intent.putExtra(ReaderConstants.ARG_IS_PRIVATE, isPrivate)
+        intent.putExtra(ReaderConstants.ARG_IS_GALLERY, isGallery)
+        if (!TextUtils.isEmpty(content)) {
+            intent.putExtra(ReaderConstants.ARG_CONTENT, content)
+        }
+        if (!galleryImageUrls.isNullOrEmpty()) {
+            intent.putStringArrayListExtra(
+                ReaderConstants.ARG_GALLERY_IMAGE_URLS,
+                galleryImageUrls
+            )
+        }
+
+        if (context is Activity && sourceView != null) {
+            val options =
+                ActivityOptionsCompat.makeScaleUpAnimation(
+                    sourceView,
+                    startX,
+                    startY,
+                    0,
+                    0
+                )
+            @Suppress("DEPRECATION")
+            ActivityCompat.startActivity(context, intent, options.toBundle())
+        } else {
+            context.startActivity(intent)
+        }
+    }
+
     fun openPost(context: Context, post: ReaderPost) {
         val url = post.url
         if (WPUrlUtils.isWordPressCom(url) || (post.isWP && !post.isJetpack)) {
