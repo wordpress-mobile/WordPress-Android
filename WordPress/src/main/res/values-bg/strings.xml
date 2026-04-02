@@ -947,7 +947,6 @@ Language: bg
     <string name="ok">ОК</string>
     <string name="done">готово</string>
     <string name="link_enter_url">URL</string>
-    <string name="uploading" a8c-src-lib="module:editor">Качва се…</string>
     <string name="image_alignment">Подравняване</string>
     <string name="refresh">Презареждане</string>
     <string name="untitled">Неозаглавен</string>
@@ -966,7 +965,6 @@ Language: bg
     <string name="none">Няма</string>
     <string name="no">Не</string>
     <string name="error">Грешка</string>
-    <string name="cancel">Отказ</string>
     <string name="clear">Изчистване</string>
     <string name="yes">Да</string>
     <string name="on">на</string>

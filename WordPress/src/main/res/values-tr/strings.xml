@@ -264,7 +264,6 @@ Language: tr
     <string name="feedback_form_message_hint">Geribildirimlerinize minnettarız!</string>
     <string name="feedback_form_title">Geri bildirim</string>
     <string name="submit">Gönder</string>
-    <string name="close">Kapat</string>
     <string name="sending">Gönderiliyor</string>
     <string name="voice_to_content_generic_error">Sesten gönderi oluşturma şu anda kullanılamıyor, lütfen daha sonra yeniden deneyin.</string>
     <string name="voice_to_content_done_label">Tamam</string>
@@ -804,7 +803,6 @@ Language: tr
     <string name="blogging_prompts_list_number_of_answers_zero">0 yanıt</string>
     <string name="blogging_prompts_list_answered_prompt">✓ Yanıtlandı</string>
     <string name="blogging_prompts_list_title">İstemler</string>
-    <string name="close_desc">kapat</string>
     <string name="dlg_confirm_delete_category">\"%s\" Kategorisi kalıcı olarak silinsin mi?</string>
     <string name="deleting_cat_success">Kategori silindi</string>
     <string name="deleting_cat_failed">Kategori silinemedi</string>
@@ -2281,7 +2279,6 @@ Language: tr
     <string name="site_settings_quota_space_unlimited">%1$s / sınırsız</string>
     <string name="add_count">Ekle %d</string>
     <string name="fab_add_tag_desc">Etiket oluşturun</string>
-    <string name="navigate_up_desc">yukarı gidin</string>
     <string name="notification_settings_switch_desc">Bildirimler</string>
     <string name="open_external_link_desc">Dış bağlantıyı açın</string>
     <string name="show_more_desc">daha fazlası</string>
@@ -3365,7 +3362,6 @@ Language: tr
     <string name="done">bitti</string>
     <string name="ok">Tamam</string>
     <string name="link_enter_url">Adres</string>
-    <string name="uploading" a8c-src-lib="module:editor">Yükleniyor…</string>
     <string name="image_alignment">Hizalama</string>
     <string name="refresh">Yenile</string>
     <string name="untitled">Başlıksız</string>
@@ -3397,7 +3393,6 @@ Language: tr
     <string name="clear">Temizle</string>
     <string name="add">Ekle</string>
     <string name="save">Kaydet</string>
-    <string name="cancel">İptal</string>
     <string-array name="blogging_reminders_count">
         <item>Bir kez</item>
         <item>İki kez</item>

@@ -264,7 +264,6 @@ Language: nl
     <string name="feedback_form_message_hint">Je feedback wordt zeer gewaardeerd!</string>
     <string name="feedback_form_title">Feedback</string>
     <string name="submit">Indienen</string>
-    <string name="close">Sluiten</string>
     <string name="sending">Aan het verzenden</string>
     <string name="voice_to_content_generic_error">Bericht vanaf audio is momenteel niet beschikbaar, probeer het later opnieuw.</string>
     <string name="voice_to_content_done_label">Klaar</string>
@@ -804,7 +803,6 @@ Language: nl
     <string name="blogging_prompts_list_number_of_answers_zero">0 antwoorden</string>
     <string name="blogging_prompts_list_answered_prompt">✓ Beantwoord</string>
     <string name="blogging_prompts_list_title">Prompts</string>
-    <string name="close_desc">sluiten</string>
     <string name="dlg_confirm_delete_category">Categorie \'%s\' permanent verwijderen?</string>
     <string name="deleting_cat_success">Categorie is verwijderd</string>
     <string name="deleting_cat_failed">Verwijderen van categorie mislukt</string>
@@ -2281,7 +2279,6 @@ Language: nl
     <string name="site_settings_quota_space_unlimited">%1$s van onbeperkt</string>
     <string name="add_count">%d toevoegen</string>
     <string name="fab_add_tag_desc">Tag aanmaken</string>
-    <string name="navigate_up_desc">omhoog navigeren</string>
     <string name="notification_settings_switch_desc">Meldingen</string>
     <string name="open_external_link_desc">Externe link openen</string>
     <string name="show_more_desc">meer tonen</string>
@@ -3365,7 +3362,6 @@ Language: nl
     <string name="done">klaar</string>
     <string name="ok">OK</string>
     <string name="link_enter_url">URL</string>
-    <string name="uploading" a8c-src-lib="module:editor">Uploaden …</string>
     <string name="image_alignment">Uitlijning</string>
     <string name="refresh">Verversen</string>
     <string name="untitled">Zonder titel</string>
@@ -3397,7 +3393,6 @@ Language: nl
     <string name="clear">Maak leeg</string>
     <string name="add">Toevoegen</string>
     <string name="save">Opslaan</string>
-    <string name="cancel">Annuleren</string>
     <string-array name="blogging_reminders_count">
         <item>Eenmaal</item>
         <item>Twee keer</item>

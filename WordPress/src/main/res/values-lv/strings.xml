@@ -76,7 +76,6 @@ Language: lv
     <string name="feedback_form_message_hint">Jūsu atsauksmes ir novērtētas!</string>
     <string name="feedback_form_title">Atsauksmes</string>
     <string name="submit">Iesniegt</string>
-    <string name="close">Aizvērt</string>
     <string name="sending">Sūtīšana</string>
     <string name="voice_to_content_generic_error">Ieraksts no audio pašlaik nav pieejams. Lūdzu, mēģiniet vēlreiz vēlāk.</string>
     <string name="voice_to_content_done_label">Pabeigts</string>
@@ -616,7 +615,6 @@ Language: lv
     <string name="blogging_prompts_list_number_of_answers_zero">0 atbildes</string>
     <string name="blogging_prompts_list_answered_prompt">✓ Atbildēts</string>
     <string name="blogging_prompts_list_title">Uzvednes</string>
-    <string name="close_desc">aizvērt</string>
     <string name="dlg_confirm_delete_category">Vai neatgriezeniski dzēst kategoriju \"%s\"?</string>
     <string name="deleting_cat_success">Kategorija veiksmīgi izdzēsta</string>
     <string name="deleting_cat_failed">Neizdevās dzēst kategoriju</string>
@@ -2091,7 +2089,6 @@ Language: lv
     <string name="site_settings_quota_space_unlimited">%1$s no neierobežota</string>
     <string name="add_count">Pievienot %d</string>
     <string name="fab_add_tag_desc">Izveidot birku</string>
-    <string name="navigate_up_desc">virzīties uz augšu</string>
     <string name="notification_settings_switch_desc">Paziņojumi</string>
     <string name="open_external_link_desc">Atvērt ārējo saiti</string>
     <string name="show_more_desc">parādīt vairāk</string>
@@ -3173,7 +3170,6 @@ Language: lv
     <string name="done">Darīts</string>
     <string name="ok">Labi</string>
     <string name="link_enter_url">URL</string>
-    <string name="uploading" a8c-src-lib="module:editor">Notiek augšupielāde…</string>
     <string name="image_alignment">Līdzināšana</string>
     <string name="refresh">Atjaunot</string>
     <string name="untitled">Bez nosaukuma</string>
@@ -3204,7 +3200,6 @@ Language: lv
     <string name="notification_settings">Paziņojumu iestatījumi</string>
     <string name="add">Pievienot</string>
     <string name="save">Saglabāt</string>
-    <string name="cancel">Atcelt</string>
     <string-array name="blogging_reminders_count">
         <item>Vienreiz</item>
         <item>Divas reizes</item>

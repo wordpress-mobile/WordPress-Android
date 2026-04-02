@@ -264,7 +264,6 @@ Language: ko_KR
     <string name="feedback_form_message_hint">여러분의 피드백을 기다립니다!</string>
     <string name="feedback_form_title">피드백</string>
     <string name="submit">전송</string>
-    <string name="close">닫기</string>
     <string name="sending">전송중</string>
     <string name="voice_to_content_generic_error">현재 오디오에서 글을 작성할 수 없습니다. 나중에 다시 시도해 주세요.</string>
     <string name="voice_to_content_done_label">완료</string>
@@ -804,7 +803,6 @@ Language: ko_KR
     <string name="blogging_prompts_list_number_of_answers_zero">답변 0개</string>
     <string name="blogging_prompts_list_answered_prompt">✓ 답변됨</string>
     <string name="blogging_prompts_list_title">프롬프트</string>
-    <string name="close_desc">닫기</string>
     <string name="dlg_confirm_delete_category">\'%s\'을(를) 영구적으로 삭제하시겠어요?</string>
     <string name="deleting_cat_success">카테고리 삭제 성공</string>
     <string name="deleting_cat_failed">카테고리 삭제 실패</string>
@@ -2281,7 +2279,6 @@ Language: ko_KR
     <string name="site_settings_quota_space_unlimited">%1$s 무제한</string>
     <string name="add_count">%d 추가</string>
     <string name="fab_add_tag_desc">태그 작성</string>
-    <string name="navigate_up_desc">위로 탐색</string>
     <string name="notification_settings_switch_desc">알림</string>
     <string name="open_external_link_desc">외부 링크 열기</string>
     <string name="show_more_desc">더 보기</string>
@@ -3365,7 +3362,6 @@ Language: ko_KR
     <string name="done">완료</string>
     <string name="ok">확인</string>
     <string name="link_enter_url">URL</string>
-    <string name="uploading" a8c-src-lib="module:editor">업로드 중…</string>
     <string name="image_alignment">배치</string>
     <string name="refresh">다시 로드</string>
     <string name="untitled">제목 미설정</string>
@@ -3397,7 +3393,6 @@ Language: ko_KR
     <string name="clear">삭제</string>
     <string name="add">추가</string>
     <string name="save">저장</string>
-    <string name="cancel">취소</string>
     <string-array name="blogging_reminders_count">
         <item>한 번</item>
         <item>두 번</item>

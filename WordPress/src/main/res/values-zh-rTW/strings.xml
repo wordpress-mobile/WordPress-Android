@@ -179,7 +179,6 @@ Language: zh_TW
     <string name="feedback_form_message_hint">感謝你的寶貴意見！</string>
     <string name="feedback_form_title">意見回饋</string>
     <string name="submit">提交</string>
-    <string name="close">關閉</string>
     <string name="sending">正在傳送</string>
     <string name="voice_to_content_generic_error">從音訊張貼功能目前無法使用，請稍後再試一次。</string>
     <string name="voice_to_content_done_label">完成</string>
@@ -714,7 +713,6 @@ Language: zh_TW
     <string name="blogging_prompts_list_number_of_answers_zero">0 個答案</string>
     <string name="blogging_prompts_list_answered_prompt">✓ 已回答</string>
     <string name="blogging_prompts_list_title">提示</string>
-    <string name="close_desc">關閉</string>
     <string name="dlg_confirm_delete_category">是否要永久刪除「%s」分類？</string>
     <string name="deleting_cat_success">分類已成功刪除</string>
     <string name="deleting_cat_failed">刪除分類失敗</string>
@@ -2190,7 +2188,6 @@ Language: zh_TW
     <string name="site_settings_quota_space_unlimited">%1$s 的配額空間不受限制</string>
     <string name="add_count">新增 %d</string>
     <string name="fab_add_tag_desc">建立標籤</string>
-    <string name="navigate_up_desc">瀏覽</string>
     <string name="notification_settings_switch_desc">通知</string>
     <string name="open_external_link_desc">開啟外部連結</string>
     <string name="show_more_desc">顯示更多</string>
@@ -3270,7 +3267,6 @@ Language: zh_TW
     <string name="done">完成</string>
     <string name="ok">OK</string>
     <string name="link_enter_url">URL</string>
-    <string name="uploading" a8c-src-lib="module:editor">上傳中…</string>
     <string name="image_alignment">對齊</string>
     <string name="refresh">更新</string>
     <string name="untitled">無標題</string>
@@ -3302,7 +3298,6 @@ Language: zh_TW
     <string name="clear">清除</string>
     <string name="add">新增</string>
     <string name="save">儲存</string>
-    <string name="cancel">取消</string>
     <string-array name="blogging_reminders_count">
         <item>一次</item>
         <item>兩次</item>

@@ -181,7 +181,6 @@ Language: pl
     <string name="feedback_form_message_hint">Twoja informacja zwrotna jest bardzo cenna!</string>
     <string name="feedback_form_title">Uwagi</string>
     <string name="submit">Prześlij</string>
-    <string name="close">Zamknij</string>
     <string name="sending">Wysyłanie</string>
     <string name="voice_to_content_generic_error">Wpis z pliku dźwiękowego nie jest w tym momencie dostępny, spróbuj ponownie później.</string>
     <string name="voice_to_content_done_label">Gotowe</string>
@@ -721,7 +720,6 @@ Language: pl
     <string name="blogging_prompts_list_number_of_answers_zero">Brak odpowiedzi</string>
     <string name="blogging_prompts_list_answered_prompt">✓ Odpowiedziano</string>
     <string name="blogging_prompts_list_title">Monity</string>
-    <string name="close_desc">zamknij</string>
     <string name="dlg_confirm_delete_category">Trwale usunąć kategorię \'%s\'?</string>
     <string name="deleting_cat_success">Kategoria została pomyślnie usunięta</string>
     <string name="deleting_cat_failed">Nie udało się usunąć kategorii</string>
@@ -2198,7 +2196,6 @@ Language: pl
     <string name="site_settings_quota_space_unlimited">%1$s z bez limitu</string>
     <string name="add_count">Dodaj %d</string>
     <string name="fab_add_tag_desc">Utwórz tag</string>
-    <string name="navigate_up_desc">nawiguj w górę</string>
     <string name="notification_settings_switch_desc">Powiadomienia</string>
     <string name="open_external_link_desc">Otwórz zewnętrzny odnośnik</string>
     <string name="show_more_desc">pokaż więcej</string>
@@ -3282,7 +3279,6 @@ Language: pl
     <string name="done">gotowe</string>
     <string name="ok">OK</string>
     <string name="link_enter_url">Adres URL</string>
-    <string name="uploading" a8c-src-lib="module:editor">Przesyłanie…</string>
     <string name="image_alignment">Wyrównanie</string>
     <string name="refresh">Odśwież</string>
     <string name="untitled">Nienazwane</string>
@@ -3314,7 +3310,6 @@ Language: pl
     <string name="clear">Wyczyść</string>
     <string name="add">Dodaj</string>
     <string name="save">Zapisz</string>
-    <string name="cancel">Anuluj</string>
     <string-array name="blogging_reminders_count">
         <item>Jednorazowo</item>
         <item>Dwukrotnie</item>

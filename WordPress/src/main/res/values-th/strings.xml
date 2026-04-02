@@ -333,7 +333,6 @@ Language: th
     <string name="no_network_title">ไม่มีเครือข่ายใช้งานได้</string>
     <string name="ok">ตกลง</string>
     <string name="link_enter_url">URL</string>
-    <string name="uploading" a8c-src-lib="module:editor">กำลังอัปโหลด…</string>
     <string name="image_alignment">จัดหน้า</string>
     <string name="refresh">รีเฟรช</string>
     <string name="untitled">ไม่มีหัวข้อ</string>
@@ -352,7 +351,6 @@ Language: th
     <string name="error">ผิดพลาด</string>
     <string name="yes">ใช่</string>
     <string name="no">ไม่ใช่</string>
-    <string name="cancel">ยกเลิก</string>
     <string name="save">บันทึก</string>
     <string name="add">เพิ่ม</string>
     <string name="clear">ล้างค่า</string>

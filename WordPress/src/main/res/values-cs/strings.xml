@@ -148,7 +148,6 @@ Language: cs_CZ
     <string name="blogging_prompts_list_number_of_answers_zero">0 odpovědí</string>
     <string name="blogging_prompts_list_answered_prompt">✓ Odpovězeno</string>
     <string name="blogging_prompts_list_title">Výzvy</string>
-    <string name="close_desc">zavřít</string>
     <string name="dlg_confirm_delete_category">Trvale smazat rubriku \'%s\'?</string>
     <string name="deleting_cat_success">Rubrika byla úspěšně odstraněna</string>
     <string name="deleting_cat_failed">Mazání rubriky se nepodařilo.</string>
@@ -1617,7 +1616,6 @@ Language: cs_CZ
     <string name="media_settings_play">přehrát</string>
     <string name="media_settings_image_preview_desc">náhled obrázku</string>
     <string name="media_preview_desc">náhled</string>
-    <string name="navigate_up_desc">přejít nahoru</string>
     <string name="notification_settings_switch_desc">Upozornění</string>
     <string name="show_more_desc">ukázat více</string>
     <string name="media_preview_audio_desc">audio</string>
@@ -2676,7 +2674,6 @@ Language: cs_CZ
     <string name="ok">OK</string>
     <string name="done">hotovo</string>
     <string name="link_enter_url">URL</string>
-    <string name="uploading" a8c-src-lib="module:editor">Nahrávám…</string>
     <string name="image_alignment">Zarovnání</string>
     <string name="refresh">Obnovit</string>
     <string name="untitled">Bez názvu</string>
@@ -2699,7 +2696,6 @@ Language: cs_CZ
     <string name="reply">Odpovědět</string>
     <string name="preview">Náhled</string>
     <string name="on">na</string>
-    <string name="cancel">Zrušit</string>
     <string name="save">Uložit</string>
     <string name="add">Přidat</string>
     <string name="clear">Vymazat</string>

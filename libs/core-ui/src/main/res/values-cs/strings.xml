@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="close_desc">zavřít</string>
+    <string name="navigate_up_desc">přejít nahoru</string>
+    <string name="uploading">Nahrávám…</string>
+    <string name="cancel">Zrušit</string>
+</resources>

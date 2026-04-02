@@ -281,7 +281,8 @@ platform :android do
     # NOTE: for those we don't set `add_ignore_attr` to true because we currently use `checkDependencies true` in `WordPress/build.gradle`
     # Which will correctly detect strings from the app's `strings.xml` being used by one of the module.
     { library: 'Image Editor', strings_path: './libs/image-editor/src/main/res/values/strings.xml', source_id: 'module:image-editor' },
-    { library: 'Editor', strings_path: './libs/editor/src/main/res/values/strings.xml', source_id: 'module:editor' }
+    { library: 'Editor', strings_path: './libs/editor/src/main/res/values/strings.xml', source_id: 'module:editor' },
+    { library: 'Core UI', strings_path: './libs/core-ui/src/main/res/values/strings.xml', source_id: 'module:core-ui' }
   ].freeze
   REMOTE_LIBRARIES_STRINGS_PATHS = [
     {

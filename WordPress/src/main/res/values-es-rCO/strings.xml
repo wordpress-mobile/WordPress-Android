@@ -180,7 +180,6 @@ Language: es_CO
     <string name="feedback_form_message_hint">¡Agradecemos tus comentarios!</string>
     <string name="feedback_form_title">Comentarios</string>
     <string name="submit">Enviar</string>
-    <string name="close">Cerrar</string>
     <string name="sending">Enviando</string>
     <string name="send_feedback">Enviar comentarios</string>
     <string name="voice_to_content_generic_error">La entrada de audio no está disponible en este momento. Inténtalo más tarde.</string>
@@ -721,7 +720,6 @@ Language: es_CO
     <string name="blogging_prompts_list_number_of_answers_zero">0 respuestas</string>
     <string name="blogging_prompts_list_answered_prompt">✓ Respondido</string>
     <string name="blogging_prompts_list_title">Peticiones</string>
-    <string name="close_desc">cerrar</string>
     <string name="dlg_confirm_delete_category">¿Borrar permanentemente la categoría \'%s\'?</string>
     <string name="deleting_cat_success">Categoría borrada correctamente</string>
     <string name="deleting_cat_failed">Borrando la categoría que ha fallado</string>
@@ -2198,7 +2196,6 @@ Language: es_CO
     <string name="add_count">Añadir %d</string>
     <string name="stock_media_picker_search_hint">Búsqueda en la biblioteca de fotos gratuitas</string>
     <string name="fab_add_tag_desc">Crear etiqueta</string>
-    <string name="navigate_up_desc">navegar hacia arriba</string>
     <string name="notification_settings_switch_desc">Avisos</string>
     <string name="open_external_link_desc">Abrir enlace externo</string>
     <string name="show_more_desc">mostrar más</string>
@@ -3282,7 +3279,6 @@ Language: es_CO
     <string name="ok">OK</string>
     <string name="done">hecho</string>
     <string name="link_enter_url">URL</string>
-    <string name="uploading" a8c-src-lib="module:editor">Subiendo…</string>
     <string name="image_alignment">Alineación</string>
     <string name="refresh">Refrescar</string>
     <string name="untitled">Sin Título</string>
@@ -3303,7 +3299,6 @@ Language: es_CO
     <string name="none">Ninguno</string>
     <string name="updating_cat_failed">Actualizando la categoría que falló</string>
     <string name="error">Error</string>
-    <string name="cancel">Cancelar</string>
     <string name="no">No</string>
     <string name="save">Guardar</string>
     <string name="preview">Vista previa</string>

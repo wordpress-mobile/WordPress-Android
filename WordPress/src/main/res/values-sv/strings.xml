@@ -263,7 +263,6 @@ Language: sv_SE
     <string name="feedback_form_message_hint">Din feedback är uppskattad.</string>
     <string name="feedback_form_title">Feedback</string>
     <string name="submit">Skicka</string>
-    <string name="close">Stäng</string>
     <string name="sending">Skickar</string>
     <string name="voice_to_content_generic_error">Inlägg via ljud är inte tillgängligt för tillfället, försök igen senare.</string>
     <string name="voice_to_content_done_label">Klar</string>
@@ -803,7 +802,6 @@ Language: sv_SE
     <string name="blogging_prompts_list_number_of_answers_zero">0 svar</string>
     <string name="blogging_prompts_list_answered_prompt">✓ Besvarat</string>
     <string name="blogging_prompts_list_title">Förslag</string>
-    <string name="close_desc">stäng</string>
     <string name="dlg_confirm_delete_category">Ta bort kategori \'%s\' permanent?</string>
     <string name="deleting_cat_success">Kategori borttagen</string>
     <string name="deleting_cat_failed">Misslyckades att ta bort kategori</string>
@@ -2280,7 +2278,6 @@ Language: sv_SE
     <string name="site_settings_quota_space_unlimited">%1$s av obegränsat</string>
     <string name="add_count">Lägg till %d</string>
     <string name="fab_add_tag_desc">Skapa etikett</string>
-    <string name="navigate_up_desc">uppåt</string>
     <string name="notification_settings_switch_desc">Aviseringar</string>
     <string name="open_external_link_desc">Öppna extern länk</string>
     <string name="show_more_desc">visa mer</string>
@@ -3363,7 +3360,6 @@ Language: sv_SE
     <string name="done">klart</string>
     <string name="ok">OK</string>
     <string name="link_enter_url">URL</string>
-    <string name="uploading" a8c-src-lib="module:editor">Laddar upp…</string>
     <string name="image_alignment">Justering</string>
     <string name="refresh">Uppdatera</string>
     <string name="untitled">Utan titel</string>
@@ -3395,7 +3391,6 @@ Language: sv_SE
     <string name="clear">Rensa</string>
     <string name="add">Lägg till</string>
     <string name="save">Spara</string>
-    <string name="cancel">Avbryt</string>
     <string-array name="blogging_reminders_count">
         <item>En gång</item>
         <item>Två gånger</item>

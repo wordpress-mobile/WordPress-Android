@@ -189,7 +189,6 @@ Language: gl_ES
     <string name="feedback_form_message_hint">Agradecemos os teus comentarios!</string>
     <string name="feedback_form_title">Comentarios</string>
     <string name="submit">Enviar</string>
-    <string name="close">Cerrar</string>
     <string name="sending">Enviando</string>
     <string name="voice_to_content_generic_error">A publicación do audio non está dispoñible neste momento. Téntao de novo máis tarde.</string>
     <string name="voice_to_content_done_label">Feito</string>
@@ -729,7 +728,6 @@ Language: gl_ES
     <string name="blogging_prompts_list_number_of_answers_zero">0 respostas</string>
     <string name="blogging_prompts_list_answered_prompt">✓ Respondido</string>
     <string name="blogging_prompts_list_title">Peticións</string>
-    <string name="close_desc">pechar</string>
     <string name="dlg_confirm_delete_category">Borrar permanentemente a categoría «%s»?</string>
     <string name="deleting_cat_success">Categoría borrada correctamente</string>
     <string name="deleting_cat_failed">Borrando a categoría que fallou</string>
@@ -2206,7 +2204,6 @@ Language: gl_ES
     <string name="site_settings_quota_space_unlimited">%1$s de ilimitado</string>
     <string name="add_count">Engadir %d</string>
     <string name="fab_add_tag_desc">Crear etiqueta</string>
-    <string name="navigate_up_desc">navegar cara arriba</string>
     <string name="notification_settings_switch_desc">Notificacións</string>
     <string name="open_external_link_desc">Abrir enlace externo</string>
     <string name="show_more_desc">amosar máis</string>
@@ -3290,7 +3287,6 @@ Language: gl_ES
     <string name="done">feito</string>
     <string name="ok">Vale</string>
     <string name="link_enter_url">URL</string>
-    <string name="uploading" a8c-src-lib="module:editor">Cargando…</string>
     <string name="image_alignment">Aliñación</string>
     <string name="refresh">Actualizar</string>
     <string name="untitled">Sen título</string>
@@ -3322,7 +3318,6 @@ Language: gl_ES
     <string name="clear">Borrar</string>
     <string name="add">Engadir</string>
     <string name="save">Gardar</string>
-    <string name="cancel">Cancelar</string>
     <string-array name="blogging_reminders_count">
         <item>Unha vez</item>
         <item>Dúas veces</item>

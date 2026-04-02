@@ -56,7 +56,7 @@ import dagger.hilt.components.SingletonComponent;
 import kotlinx.coroutines.CoroutineScope;
 import rs.wordpress.api.kotlin.WpLoginClient;
 
-import static org.wordpress.android.modules.ThreadModuleKt.APPLICATION_SCOPE;
+import static org.wordpress.android.modules.CoroutineDispatchersKt.APPLICATION_SCOPE;
 
 @InstallIn(SingletonComponent.class)
 @Module(includes = AndroidInjectionModule.class)

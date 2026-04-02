@@ -9,7 +9,6 @@ Language: es_MX
     <string name="feedback_form_add_attachments">Añadir adjuntos</string>
     <string name="feedback_form_attachment_already_added">Adjunto ya añadido</string>
     <string name="feedback_form_title">Retroalimentación</string>
-    <string name="close">Cerrar</string>
     <string name="submit">Enviar</string>
     <string name="sending">Enviando</string>
     <string name="voice_to_content_done_label">Hecho</string>
@@ -894,7 +893,6 @@ Language: es_MX
     <string name="site_settings_quota_space_unlimited">%1$s de ilimitado</string>
     <string name="add_count">Añadir %d</string>
     <string name="fab_add_tag_desc">Crear etiqueta</string>
-    <string name="navigate_up_desc">navegar hacia arriba</string>
     <string name="notification_settings_switch_desc">Notificaciones</string>
     <string name="show_more_desc">mostrar más</string>
     <string name="reader_photo_view_desc">foto</string>
@@ -1949,7 +1947,6 @@ Language: es_MX
     <string name="ok">OK</string>
     <string name="done">hecho</string>
     <string name="link_enter_url">URL</string>
-    <string name="uploading" a8c-src-lib="module:editor">Subiendo…</string>
     <string name="image_alignment">Alineamiento</string>
     <string name="refresh">Refrescar</string>
     <string name="untitled">Sin Título</string>
@@ -1968,7 +1965,6 @@ Language: es_MX
     <string name="delete">Eliminar</string>
     <string name="none">Ninguno</string>
     <string name="add">Añadir</string>
-    <string name="cancel">Cancelar</string>
     <string name="category_refresh_error">Error de actualización de categorías</string>
     <string name="error">Error</string>
     <string name="no">No</string>

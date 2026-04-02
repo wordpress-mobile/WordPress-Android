@@ -24,7 +24,7 @@ import com.google.android.material.radiobutton.MaterialRadioButton;
 import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.ui.ActivityLauncher;
-import org.wordpress.android.ui.utils.UiHelpers;
+import org.wordpress.android.ui.utils.UiHelpersExtKt;
 import org.wordpress.android.util.EditTextUtils;
 
 /**
@@ -178,7 +178,7 @@ public class SiteSettingsFormatDialog extends DialogFragment implements DialogIn
     @Override
     public void onResume() {
         super.onResume();
-        UiHelpers.Companion.adjustDialogSize(getDialog());
+        UiHelpersExtKt.adjustDialogSize(getDialog());
     }
 
     @Override

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="close">Mbylle</string>
+    <string name="close_desc">mbylle</string>
+    <string name="navigate_up_desc">lëvizni</string>
+    <string name="uploading">Po ngarkohet…</string>
+    <string name="cancel">Anuloje</string>
+</resources>

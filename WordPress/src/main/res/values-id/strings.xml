@@ -260,7 +260,6 @@ Language: id
     <string name="feedback_form_message_hint">Kami mengapresiasi feedback Anda.</string>
     <string name="feedback_form_title">Masukan</string>
     <string name="submit">Kirim</string>
-    <string name="close">Tutup</string>
     <string name="sending">Mengirim</string>
     <string name="voice_to_content_generic_error">Pos dari audio tidak tersedia saat ini, coba lagi nanti.</string>
     <string name="voice_to_content_done_label">Selesai</string>
@@ -800,7 +799,6 @@ Language: id
     <string name="blogging_prompts_list_number_of_answers_zero">0 jawaban</string>
     <string name="blogging_prompts_list_answered_prompt">✓ Terjawab</string>
     <string name="blogging_prompts_list_title">Prompt</string>
-    <string name="close_desc">tutup</string>
     <string name="dlg_confirm_delete_category">Hapus Kategori \'%s\' secara permanen?</string>
     <string name="deleting_cat_success">Kategori berhasil dihapus</string>
     <string name="deleting_cat_failed">Gagal menghapus kategori</string>
@@ -2277,7 +2275,6 @@ Language: id
     <string name="site_settings_quota_space_unlimited">%1$s dari tidak terbatas</string>
     <string name="add_count">Tambahkan %d</string>
     <string name="fab_add_tag_desc">Buat Tag</string>
-    <string name="navigate_up_desc">arahkan ke atas</string>
     <string name="notification_settings_switch_desc">Pemberitahuan</string>
     <string name="open_external_link_desc">Buka tautan eksternal</string>
     <string name="show_more_desc">tampilkan lebih banyak</string>
@@ -3360,7 +3357,6 @@ Language: id
     <string name="done">selesai</string>
     <string name="ok">OK</string>
     <string name="link_enter_url">URL</string>
-    <string name="uploading" a8c-src-lib="module:editor">Mengunggah…</string>
     <string name="image_alignment">Penjajaran</string>
     <string name="refresh">Segarkan</string>
     <string name="untitled">Tanpa judul</string>
@@ -3392,7 +3388,6 @@ Language: id
     <string name="clear">Kosongkan</string>
     <string name="add">Tambah</string>
     <string name="save">Simpan</string>
-    <string name="cancel">Batal</string>
     <string-array name="blogging_reminders_count">
         <item>Satu kali</item>
         <item>Dua kali</item>

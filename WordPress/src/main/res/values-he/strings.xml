@@ -261,7 +261,6 @@ Language: he_IL
     <string name="feedback_form_message_hint">אנחנו מעריכים את המשוב ששלחת!</string>
     <string name="feedback_form_title">משוב</string>
     <string name="submit">לשלוח</string>
-    <string name="close">לסגור</string>
     <string name="sending">שולח</string>
     <string name="voice_to_content_generic_error">האפשרות לפרסם פוסטים מאודיו לא זמינה כעת. כדאי לנסות שוב מאוחר יותר.</string>
     <string name="voice_to_content_done_label">בוצע</string>
@@ -797,7 +796,6 @@ Language: he_IL
     <string name="blogging_prompts_list_number_of_answers_zero">אין תשובות</string>
     <string name="blogging_prompts_list_answered_prompt">✓ תשובה התקבלה</string>
     <string name="blogging_prompts_list_title">הצעות</string>
-    <string name="close_desc">לסגור</string>
     <string name="dlg_confirm_delete_category">למחוק לצמיתות את הקטגוריה \'%s\'?</string>
     <string name="deleting_cat_success">מחקת את הקטגוריה בהצלחה</string>
     <string name="deleting_cat_failed">מחיקת הקטגוריה נכשלה</string>
@@ -2273,7 +2271,6 @@ Language: he_IL
     <string name="site_settings_quota_space_unlimited">%1$s ללא הגבלה</string>
     <string name="add_count">הוספה של %d</string>
     <string name="fab_add_tag_desc">יצירת תגית</string>
-    <string name="navigate_up_desc">ניווט למעלה</string>
     <string name="notification_settings_switch_desc">הודעות</string>
     <string name="open_external_link_desc">פתיחת קישור חיצוני</string>
     <string name="show_more_desc">להציג עוד</string>
@@ -3356,7 +3353,6 @@ Language: he_IL
     <string name="done">בוצע</string>
     <string name="ok">אוקיי</string>
     <string name="link_enter_url">URL</string>
-    <string name="uploading" a8c-src-lib="module:editor">מעלה…</string>
     <string name="image_alignment">יישור</string>
     <string name="refresh">רענון</string>
     <string name="untitled">ללא כותרת</string>
@@ -3388,7 +3384,6 @@ Language: he_IL
     <string name="clear">נקה</string>
     <string name="add">הוסף</string>
     <string name="save">שמור</string>
-    <string name="cancel">בטל</string>
     <string-array name="blogging_reminders_count">
         <item>פעם אחת</item>
         <item>פעמיים</item>

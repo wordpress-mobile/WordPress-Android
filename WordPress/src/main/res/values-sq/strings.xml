@@ -263,7 +263,6 @@ Language: sq_AL
     <string name="feedback_form_message_hint">Përshtypjet tuaja çmohen!</string>
     <string name="feedback_form_title">Përshtypje</string>
     <string name="submit">Parashtrojeni</string>
-    <string name="close">Mbylle</string>
     <string name="sending">Po dërgohet</string>
     <string name="voice_to_content_generic_error">Postimi që nga audio hëpërhë është i pamundur, ju lutemi, riprovoni më vonë.</string>
     <string name="voice_to_content_done_label">U bë</string>
@@ -802,7 +801,6 @@ Language: sq_AL
     <string name="blogging_prompts_list_number_of_answers_zero">0 përgjigje</string>
     <string name="blogging_prompts_list_answered_prompt">✓ Me Përgjigje</string>
     <string name="blogging_prompts_list_title">Cytje</string>
-    <string name="close_desc">mbylle</string>
     <string name="dlg_confirm_delete_category">Të fshihet përgjithmonë Kategoria \'%s\'?</string>
     <string name="deleting_cat_success">Kategoria u fshi me sukses</string>
     <string name="deleting_cat_failed">Fshirja e kategorisëdështoi</string>
@@ -2276,7 +2274,6 @@ Language: sq_AL
     <string name="site_settings_quota_space_unlimited">%1$s e pakufizuar</string>
     <string name="add_count">Shtoni %d</string>
     <string name="fab_add_tag_desc">Krijoje Etiketën</string>
-    <string name="navigate_up_desc">lëvizni</string>
     <string name="notification_settings_switch_desc">Njoftime</string>
     <string name="open_external_link_desc">Hap lidhje të jashtme</string>
     <string name="show_more_desc">shfaq më tepër</string>
@@ -3360,7 +3357,6 @@ Language: sq_AL
     <string name="done">u bë</string>
     <string name="ok">OK</string>
     <string name="link_enter_url">URL</string>
-    <string name="uploading" a8c-src-lib="module:editor">Po ngarkohet…</string>
     <string name="image_alignment">Drejtim</string>
     <string name="refresh">Rifresko</string>
     <string name="untitled">Pa titull</string>
@@ -3392,7 +3388,6 @@ Language: sq_AL
     <string name="clear">Spastroje</string>
     <string name="add">Shtoni</string>
     <string name="save">Ruaje</string>
-    <string name="cancel">Anuloje</string>
     <string-array name="blogging_reminders_count">
         <item>Një herë</item>
         <item>Dy herë</item>

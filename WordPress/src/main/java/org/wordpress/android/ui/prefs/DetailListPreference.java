@@ -23,7 +23,7 @@ import androidx.appcompat.app.AlertDialog;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import org.wordpress.android.R;
-import org.wordpress.android.ui.utils.UiHelpers;
+import org.wordpress.android.ui.utils.UiHelpersExtKt;
 import org.wordpress.android.util.ArrayUtils;
 
 import java.util.ArrayList;
@@ -141,7 +141,7 @@ public class DetailListPreference extends ListPreference
             listView.setPadding(0, 0, 0, res.getDimensionPixelSize(R.dimen.site_settings_divider_height));
         }
 
-        UiHelpers.Companion.adjustDialogSize(mDialog);
+        UiHelpersExtKt.adjustDialogSize(mDialog);
     }
 
     @Override

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="close">Sluiten</string>
+    <string name="close_desc">sluiten</string>
+    <string name="navigate_up_desc">omhoog navigeren</string>
+    <string name="uploading">Uploaden …</string>
+    <string name="cancel">Annuleren</string>
+</resources>

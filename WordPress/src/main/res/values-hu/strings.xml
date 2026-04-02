@@ -101,7 +101,6 @@ Language: hu
     <string name="ok">OK</string>
     <string name="done">kész</string>
     <string name="link_enter_url">URL</string>
-    <string name="uploading" a8c-src-lib="module:editor">Feltöltés…</string>
     <string name="image_alignment">Kép igazítás</string>
     <string name="refresh">Frissítés</string>
     <string name="untitled">Cím nélküli</string>
@@ -118,7 +117,6 @@ Language: hu
     <string name="approve">Elfogadás</string>
     <string name="none">Egyik sem</string>
     <string name="error">Hiba</string>
-    <string name="cancel">Megszakítás</string>
     <string name="save">Mentés</string>
     <string name="add">Hozzáad</string>
     <string name="clear">Kiürítés</string>

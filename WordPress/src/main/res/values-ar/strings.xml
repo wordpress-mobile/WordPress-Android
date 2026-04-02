@@ -240,7 +240,6 @@ Language: ar
     <string name="feedback_form_message_hint">ملاحظاتك محل تقدير!</string>
     <string name="feedback_form_title">ملاحظات</string>
     <string name="submit">إرسال</string>
-    <string name="close">إغلاق</string>
     <string name="sending">إرسال</string>
     <string name="voice_to_content_generic_error">لا تتوفر تدوينة من ملف صوتي في الوقت الحالي، يرجى المحاولة مجددًا في وقت لاحق.</string>
     <string name="voice_to_content_done_label">تم</string>
@@ -780,7 +779,6 @@ Language: ar
     <string name="blogging_prompts_list_number_of_answers_zero">0 من الإجابات</string>
     <string name="blogging_prompts_list_answered_prompt">✓ تم الرد</string>
     <string name="blogging_prompts_list_title">المطالبات</string>
-    <string name="close_desc">إغلاق</string>
     <string name="dlg_confirm_delete_category">هل تريد حذف تصنيف \"%s\" بشكل دائم؟</string>
     <string name="deleting_cat_success">نجح حذف التصنيف</string>
     <string name="deleting_cat_failed">فشل حذف التصنيف</string>
@@ -2257,7 +2255,6 @@ Language: ar
     <string name="site_settings_quota_space_unlimited">%1$s من غير المحدود</string>
     <string name="add_count">إضافة %d</string>
     <string name="fab_add_tag_desc">إنشاء وسم</string>
-    <string name="navigate_up_desc">الانتقال إلى أعلى</string>
     <string name="notification_settings_switch_desc">الإشعارات</string>
     <string name="open_external_link_desc">فتح الرابط الخارجي</string>
     <string name="show_more_desc">إظهار المزيد</string>
@@ -3340,7 +3337,6 @@ Language: ar
     <string name="done">تم</string>
     <string name="ok">موافق</string>
     <string name="link_enter_url">الرابط URL</string>
-    <string name="uploading" a8c-src-lib="module:editor">جاري الرفع…</string>
     <string name="image_alignment">المحاذاة</string>
     <string name="refresh">تجديد</string>
     <string name="untitled">بدون عنوان</string>
@@ -3372,7 +3368,6 @@ Language: ar
     <string name="clear">مسح</string>
     <string name="add">أضف</string>
     <string name="save">حفظ </string>
-    <string name="cancel">إلغاء</string>
     <string-array name="blogging_reminders_count">
         <item>مرة واحدة</item>
         <item>مرتان</item>

@@ -1101,7 +1101,6 @@ Language: el_GR
     <string name="ok">ΟΚ</string>
     <string name="done">Ολοκληρώθηκε</string>
     <string name="link_enter_url">URL</string>
-    <string name="uploading" a8c-src-lib="module:editor">Γίνεται μεταφόρτωση</string>
     <string name="image_alignment">Στοίχιση</string>
     <string name="refresh">Ανανέωση</string>
     <string name="untitled">Χωρίς τίτλο</string>
@@ -1126,7 +1125,6 @@ Language: el_GR
     <string name="no">Όχι</string>
     <string name="preview">Προεπισκόπηση</string>
     <string name="error">Σφάλμα</string>
-    <string name="cancel">Ακύρωση</string>
     <string name="save">Αποθήκευση</string>
     <string name="add">Πρόσθεση</string>
     <string name="category_refresh_error">Σφάλμα ανανέωσης κατηγοριών</string>

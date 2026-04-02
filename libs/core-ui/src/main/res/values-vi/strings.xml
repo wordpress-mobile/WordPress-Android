@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="navigate_up_desc">điều hướng lên</string>
+    <string name="uploading">Đang tải lên…</string>
+    <string name="cancel">Hủy bỏ</string>
+</resources>

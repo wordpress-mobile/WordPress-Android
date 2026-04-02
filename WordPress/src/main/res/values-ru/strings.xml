@@ -264,7 +264,6 @@ Language: ru
     <string name="feedback_form_message_hint">Мы будем очень признательны за ваш отзыв.</string>
     <string name="feedback_form_title">Отзыв</string>
     <string name="submit">Отправить</string>
-    <string name="close">Закрыть</string>
     <string name="sending">Отправка</string>
     <string name="voice_to_content_generic_error">В данный момент нет возможности сделать публикацию из аудио, повторите попытку позднее.</string>
     <string name="voice_to_content_done_label">Готово</string>
@@ -804,7 +803,6 @@ Language: ru
     <string name="blogging_prompts_list_number_of_answers_zero">Нет ответов</string>
     <string name="blogging_prompts_list_answered_prompt">✓ Ответ дан</string>
     <string name="blogging_prompts_list_title">Подсказки</string>
-    <string name="close_desc">закрыть</string>
     <string name="dlg_confirm_delete_category">Навсегда удалить рубрику \'%s\'?</string>
     <string name="deleting_cat_success">Рубрика удалена</string>
     <string name="deleting_cat_failed">Не удалось удалить рубрику</string>
@@ -2281,7 +2279,6 @@ Language: ru
     <string name="site_settings_quota_space_unlimited">%1$s / неограничено</string>
     <string name="add_count">Добавить %d</string>
     <string name="fab_add_tag_desc">Создать метку</string>
-    <string name="navigate_up_desc">перейти наверх</string>
     <string name="notification_settings_switch_desc">Уведомления</string>
     <string name="open_external_link_desc">Открыть внешнюю ссылку</string>
     <string name="show_more_desc">показать больше</string>
@@ -3365,7 +3362,6 @@ Language: ru
     <string name="done">Готово</string>
     <string name="ok">OK</string>
     <string name="link_enter_url">URL</string>
-    <string name="uploading" a8c-src-lib="module:editor">Загрузка</string>
     <string name="image_alignment">Выравнивание</string>
     <string name="refresh">Обновить</string>
     <string name="untitled">Без заголовка</string>
@@ -3397,7 +3393,6 @@ Language: ru
     <string name="clear">Очистить</string>
     <string name="add">Добавить</string>
     <string name="save">Сохранить</string>
-    <string name="cancel">Отмена</string>
     <string-array name="blogging_reminders_count">
         <item>Однократно</item>
         <item>Дважды</item>

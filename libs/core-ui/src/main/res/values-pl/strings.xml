@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="close">Zamknij</string>
+    <string name="close_desc">zamknij</string>
+    <string name="navigate_up_desc">nawiguj w górę</string>
+    <string name="uploading">Przesyłanie…</string>
+    <string name="cancel">Anuluj</string>
+</resources>

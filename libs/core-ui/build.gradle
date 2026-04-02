@@ -1,0 +1,86 @@
+plugins {
+    alias(libs.plugins.android.library)
+    alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.kotlin.parcelize)
+    alias(libs.plugins.google.dagger.hilt)
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.dependency.analysis)
+}
+
+android {
+    namespace "org.wordpress.android.coreui"
+
+    defaultConfig {
+        compileSdk rootProject.compileSdkVersion
+        minSdkVersion rootProject.minSdkVersion
+        targetSdkVersion rootProject.targetSdkVersion
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.toVersion(
+            libs.versions.java.get()
+        )
+        targetCompatibility JavaVersion.toVersion(
+            libs.versions.java.get()
+        )
+    }
+
+    buildFeatures {
+        compose true
+    }
+}
+
+dependencies {
+    // AndroidX
+    implementation libs.androidx.appcompat.main
+    implementation libs.androidx.recyclerview
+
+    // Lifecycle
+    implementation libs.androidx.lifecycle.common
+    implementation libs.androidx.lifecycle.livedata.core
+    implementation libs.androidx.lifecycle.viewmodel.main
+    implementation libs.androidx.lifecycle.runtime
+    implementation libs.androidx.lifecycle.viewmodel.compose
+
+    // Compose
+    implementation platform(libs.androidx.compose.bom)
+    implementation libs.androidx.compose.ui.main
+    implementation libs.androidx.compose.ui.graphics
+    implementation libs.androidx.compose.ui.text
+    implementation libs.androidx.compose.ui.unit
+    implementation libs.androidx.compose.ui.tooling.preview
+    implementation libs.androidx.compose.foundation.main
+    implementation libs.androidx.compose.material
+    implementation libs.androidx.compose.material3
+    implementation libs.androidx.compose.material.icons.extended
+    implementation libs.androidx.compose.runtime.main
+    implementation libs.androidx.activity.compose
+    implementation libs.androidx.constraintlayout.compose
+
+    // Google Material (for WPSwitch color resources)
+    implementation libs.google.material
+
+    // Coil (for AsyncImage in TrainOfIcons)
+    implementation libs.coil.compose
+
+    // CommonMark (for MarkdownUtils)
+    implementation libs.commonmark
+
+    // Coroutines
+    implementation libs.kotlinx.coroutines.core
+    implementation libs.kotlinx.coroutines.android
+
+    // WordPress utils (StringUtils, DisplayUtils)
+    implementation("$gradle.ext.wputilsBinaryPath") {
+        version {
+            strictly libs.wordpress.utils.get().version
+        }
+    }
+
+    // Dagger / Hilt
+    implementation libs.google.dagger.hilt.android.main
+    ksp libs.google.dagger.hilt.compiler
+
+    // Debug
+    debugImplementation libs.androidx.compose.ui.tooling.main
+}
