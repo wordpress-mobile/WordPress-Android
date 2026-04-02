@@ -20,6 +20,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.content.res.ResourcesCompat
 import org.wordpress.android.R
+import org.wordpress.android.reader.R as ReaderR
 import org.wordpress.android.ui.compose.unit.Margin
 
 /**
@@ -33,14 +34,14 @@ fun ReadingPreferencesPreviewTag(
     fontSizeMultiplier: Float = 1f,
     fontFamily: FontFamily = FontFamily.Default,
 ) {
-    val minHeight = dimensionResource(R.dimen.reader_expandable_tags_view_chip_new_height)
+    val minHeight = dimensionResource(ReaderR.dimen.reader_expandable_tags_view_chip_new_height)
     val horizontalPadding = Margin.ExtraLarge.value
-    val cornerRadius = dimensionResource(R.dimen.reader_expandable_tags_view_chip_new_radius)
+    val cornerRadius = dimensionResource(ReaderR.dimen.reader_expandable_tags_view_chip_new_radius)
     val strokeAlpha = with(LocalContext.current) {
         ResourcesCompat.getFloat(resources, R.dimen.expandable_chips_chip_stroke_alpha)
     }
     val strokeColor = baseTextColor.copy(alpha = strokeAlpha)
-    val strokeWidth = dimensionResource(R.dimen.reader_expandable_tags_view_chip_new_border)
+    val strokeWidth = dimensionResource(ReaderR.dimen.reader_expandable_tags_view_chip_new_border)
 
     Box(
         modifier = Modifier

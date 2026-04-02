@@ -2,6 +2,7 @@ package org.wordpress.android.ui.reader.discover
 
 import dagger.Reusable
 import org.wordpress.android.R
+import org.wordpress.android.reader.R as ReaderR
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.ui.reader.discover.interests.TagUiState
 import org.wordpress.android.util.DisplayUtils
@@ -17,7 +18,7 @@ class ReaderPostTagsUiStateBuilder @Inject constructor(
     private val maxWidthForChip: Int
         get() {
             val width = DisplayUtils.getWindowPixelWidth(contextProvider.getContext()) -
-                    resourceProvider.getDimensionPixelSize(R.dimen.reader_card_margin) * 2
+                    resourceProvider.getDimensionPixelSize(ReaderR.dimen.reader_card_margin) * 2
             return (width * MAX_WIDTH_FACTOR).toInt()
         }
 

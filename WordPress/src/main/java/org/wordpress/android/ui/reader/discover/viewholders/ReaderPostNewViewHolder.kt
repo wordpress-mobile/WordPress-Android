@@ -40,7 +40,7 @@ class ReaderPostNewViewHolder(
 ) : ReaderViewHolder<ReaderCardviewPostNewBinding>(parentView.viewBinding(ReaderCardviewPostNewBinding::inflate)) {
     init {
         with(binding) {
-            moreMenu.expandTouchTargetArea(R.dimen.reader_more_image_extra_padding, false)
+            moreMenu.expandTouchTargetArea(ReaderR.dimen.reader_more_image_extra_padding, false)
         }
     }
 

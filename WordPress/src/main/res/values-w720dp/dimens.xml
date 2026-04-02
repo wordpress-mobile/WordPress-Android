@@ -4,8 +4,6 @@
 
     <dimen name="content_margin">@dimen/content_margin_tablet_big</dimen>
     <dimen name="content_margin_bottom_sheet_row_start">@dimen/content_margin_bottom_sheet_row_start_tablet_big</dimen>
-    <dimen name="reader_card_margin">@dimen/reader_card_margin_tablet_big</dimen>
-    <dimen name="reader_detail_margin">@dimen/reader_detail_margin_tablet_big</dimen>
     <dimen name="notifications_content_margin">@dimen/content_margin_tablet_big</dimen>
     <dimen name="site_creation_content_margin">@dimen/content_margin_tablet_big</dimen>
     <dimen name="post_list_content_margin_standard">@dimen/content_margin_tablet_big</dimen>

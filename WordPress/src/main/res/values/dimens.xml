@@ -85,9 +85,6 @@
     <dimen name="post_list_content_margin_standard">@dimen/content_margin_none</dimen>
     <dimen name="page_list_content_margin">@dimen/content_margin_none</dimen>
 
-    <!--
-        native reader dimens
-    -->
     <dimen name="margin_none">0dp</dimen>
     <dimen name="margin_dialog">24dp</dimen>
     <dimen name="margin_extra_extra_small">1dp</dimen>
@@ -109,46 +106,6 @@
     <dimen name="margin_theme_browser_top">160dp</dimen>
     <dimen name="negative_margin_medium">-8dp</dimen>
 
-    <!-- left/right margin for reader interests content -->
-    <dimen name="interests_content_margin">@dimen/margin_medium_large</dimen>
-    <dimen name="interests_done_button_margin">@dimen/margin_medium_large</dimen>
-
-    <!-- left/right margin for reader cards -->
-    <dimen name="reader_card_margin_normal">0dp</dimen>
-    <dimen name="reader_card_margin_tablet">48dp</dimen>
-    <dimen name="reader_card_margin_tablet_big">96dp</dimen>
-    <dimen name="reader_card_margin">@dimen/reader_card_margin_normal</dimen>
-
-    <!-- left/right margin for reader detail -->
-    <dimen name="reader_detail_margin_normal">24dp</dimen>
-    <dimen name="reader_detail_margin_tablet">48dp</dimen>
-    <dimen name="reader_detail_margin_tablet_landscape">96dp</dimen>
-    <dimen name="reader_detail_margin_tablet_big">96dp</dimen>
-    <dimen name="reader_detail_margin_tablet_big_landscape">160dp</dimen>
-    <dimen name="reader_detail_margin">@dimen/reader_detail_margin_normal</dimen>
-
-    <dimen name="reader_thumbnail_strip_image_height">96dp</dimen>
-    <dimen name="reader_a8c_avatar_margin_start_new">18dp</dimen>
-
-    <dimen name="reader_card_gutters">0dp</dimen>
-    <dimen name="reader_card_elevation">0dp</dimen>
-    <dimen name="reader_card_elevation_new">0dp</dimen>
-
-    <dimen name="reader_video_overlay_size">56dp</dimen>
-
-    <dimen name="reader_footer_progress_bar_size">48dp</dimen>
-
-    <!-- padding inside the card (space between card border and card content) -->
-    <dimen name="reader_card_content_padding">16dp</dimen>
-
-    <!-- reader follow unfollow comments dimensions -->
-    <dimen name="reader_follow_sheet_message_margin_top">20dp</dimen>
-    <dimen name="reader_follow_sheet_switch_margin_top">4dp</dimen>
-    <dimen name="reader_follow_sheet_button_margin_top">6dp</dimen>
-    <dimen name="reader_follow_sheet_margin_bottom">20dp</dimen>
-
-    <!-- reader more menu spacer height -->
-    <dimen name="reader_more_menu_spacer_height">16dp</dimen>
     <!-- collapsing toolbar scrim visible height trigger -->
     <dimen name="scrim_visible_height_trigger">130dp</dimen>
 
@@ -186,57 +143,6 @@
     <dimen name="blavatar_sz_extra_large">72dp</dimen>
     <dimen name="my_site_blavatar_sz">56dp</dimen>
 
-    <dimen name="reader_post_header_height">40dp</dimen>
-    <dimen name="reader_button_icon">24dp</dimen>
-    <dimen name="reader_button_minimum_height">44dp</dimen>
-    <dimen name="reader_count_icon">18dp</dimen>
-    <dimen name="reader_more_icon">36dp</dimen>
-    <dimen name="reader_follow_icon">24dp</dimen>
-    <dimen name="reader_follow_button_min_height">36dp</dimen>
-    <dimen name="reader_follow_button_progress_size">24dp</dimen>
-
-    <dimen name="reader_post_card_new_more_icon">24dp</dimen>
-
-    <dimen name="reader_featured_image_height_default">220dp</dimen>
-    <dimen name="reader_featured_image_height_tablet">280dp</dimen>
-    <dimen name="reader_featured_image_height_tablet_large">340dp</dimen>
-    <dimen name="reader_featured_image_height">@dimen/reader_featured_image_height_default</dimen>
-    <dimen name="reader_image_avatar_or_blavatar_border_width">1dp</dimen>
-    <dimen name="reader_featured_image_corner_radius">4dp</dimen>
-    <dimen name="reader_featured_image_corner_radius_new">5dp</dimen>
-    <dimen name="reader_image_featured_border_width">1dp</dimen>
-
-    <dimen name="reader_related_post_image_width">150dp</dimen>
-
-    <dimen name="reader_subfilter_url_margin_bottom">14dp</dimen>
-
-    <dimen name="reader_subfilter_unseen_count_height">30dp</dimen>
-
-    <dimen name="reader_subfilter_empty_content_max_width">440dp</dimen>
-
-    <item name="reader_photo_title_shadow_offset" format="float" type="dimen">3.0</item>
-    <item name="reader_photo_title_shadow_radius" format="float" type="dimen">1.5</item>
-
-    <!-- margin to use when indenting comment replies under their parents -->
-    <dimen name="reader_comment_indent_per_level">24dp</dimen>
-
-    <dimen name="reader_comments_actions_height">24dp</dimen>
-    <dimen name="reader_comments_content_line_height">24dp</dimen>
-    <dimen name="reader_comments_selected_indicator_width">6dp</dimen>
-
-    <!-- Increased touch targets to make views more accessible -->
-    <dimen name="reader_more_image_extra_padding">12dp</dimen>
-
-    <dimen name="reader_chip_radius">8dp</dimen>
-    <dimen name="reader_site_header_avatar_padding">1dp</dimen>
-
-    <dimen name="reader_expandable_tags_view_chip_new_radius">5dp</dimen>
-    <dimen name="reader_expandable_tags_view_chip_new_border">1dp</dimen>
-    <dimen name="reader_expandable_tags_view_chip_new_height">36dp</dimen>
-
-    <dimen name="reader_interest_filter_chip_radius">5dp</dimen>
-    <dimen name="reader_interest_filter_chip_border">1dp</dimen>
-    <dimen name="reader_interest_filter_chip_height">36dp</dimen>
 
     <dimen name="empty_list_title_side_margin">32dp</dimen>
     <dimen name="empty_list_title_bottom_margin">8dp</dimen>
@@ -652,7 +558,6 @@
     </dimen>
 
     <!-- likes list and user profile bottom sheet -->
-    <dimen name="reader_like_faces_padding">2dp</dimen>
     <dimen name="liker_faces_section_min_height">80dp</dimen>
     <dimen name="user_profile_bottom_sheet_avatar_sz">56dp</dimen>
     <dimen name="user_profile_bottom_sheet_user_name_text_size">20sp</dimen>
@@ -727,11 +632,4 @@
     <dimen name="switch_vertical_padding">4dp</dimen>
     <dimen name="post_list_more_button_extra_padding">24dp</dimen>
     <dimen name="navbar_me_icon_padding">4dp</dimen>
-
-    <!-- Reader Follow Button -->
-    <dimen name="reader_follow_button_stroke_alpha_light" format="float">0.12</dimen>
-    <dimen name="reader_follow_button_stroke_alpha_dark" format="float">0.25</dimen>
-
-    <dimen name="reader_follow_button_stroke_alpha" format="float">@dimen/reader_follow_button_stroke_alpha_light</dimen>
-    <dimen name="reader_follow_button_text_alpha" format="float">0.6</dimen>
 </resources>

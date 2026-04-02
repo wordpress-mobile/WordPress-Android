@@ -188,15 +188,15 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
         mPost = post;
         mIsPrivatePost = mThreadedCommentsUtils.isPrivatePost(post);
 
-        mIndentPerLevel = context.getResources().getDimensionPixelSize(R.dimen.reader_comment_indent_per_level);
+        mIndentPerLevel = context.getResources().getDimensionPixelSize(org.wordpress.android.reader.R.dimen.reader_comment_indent_per_level);
         mAvatarSz = context.getResources().getDimensionPixelSize(R.dimen.avatar_sz_extra_small);
 
         mPostsSite = mSiteStore.getSiteBySiteId(post.blogId);
 
         // calculate the max width of comment content
         int displayWidth = DisplayUtils.getWindowPixelWidth(context);
-        int cardMargin = context.getResources().getDimensionPixelSize(R.dimen.reader_card_margin);
-        int contentPadding = context.getResources().getDimensionPixelSize(R.dimen.reader_card_content_padding);
+        int cardMargin = context.getResources().getDimensionPixelSize(org.wordpress.android.reader.R.dimen.reader_card_margin);
+        int contentPadding = context.getResources().getDimensionPixelSize(org.wordpress.android.reader.R.dimen.reader_card_content_padding);
         int mediumMargin = context.getResources().getDimensionPixelSize(R.dimen.margin_medium);
         mContentWidth = displayWidth - (cardMargin * 2) - (contentPadding * 2) - (mediumMargin * 2);
 

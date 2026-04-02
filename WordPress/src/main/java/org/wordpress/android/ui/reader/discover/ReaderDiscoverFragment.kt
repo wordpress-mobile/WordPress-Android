@@ -106,8 +106,8 @@ class ReaderDiscoverFragment : ViewPagerFragment(R.layout.reader_discover_fragme
             val backgroundColor = ReaderR.color.reader_post_list_background
             recyclerView.setBackgroundColor(ContextCompat.getColor(requireContext(), backgroundColor))
 
-            val spacingVerticalRes = R.dimen.reader_card_gutters
-            val spacingHorizontal = resources.getDimensionPixelSize(R.dimen.reader_card_margin)
+            val spacingVerticalRes = ReaderR.dimen.reader_card_gutters
+            val spacingHorizontal = resources.getDimensionPixelSize(ReaderR.dimen.reader_card_margin)
             val spacingVertical = resources.getDimensionPixelSize(spacingVerticalRes)
             recyclerView.addItemDecoration(RecyclerItemDecoration(spacingHorizontal, spacingVertical, false))
 

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <dimen name="reader_card_elevation">1dp</dimen>
+    <dimen name="reader_card_elevation_new">0dp</dimen>
+    <dimen name="reader_follow_button_stroke_alpha" format="float">@dimen/reader_follow_button_stroke_alpha_dark</dimen>
+</resources>

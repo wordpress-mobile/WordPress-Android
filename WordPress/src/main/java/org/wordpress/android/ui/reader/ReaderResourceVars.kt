@@ -2,6 +2,7 @@ package org.wordpress.android.ui.reader
 
 import android.content.Context
 import org.wordpress.android.R
+import org.wordpress.android.reader.R as ReaderR
 import org.wordpress.android.util.DisplayUtils
 
 /*
@@ -20,7 +21,7 @@ internal class ReaderResourceVars(context: Context) {
         val resources = context.resources
         val displayWidthPx = DisplayUtils.getWindowPixelWidth(context)
         val marginLargePx = resources.getDimensionPixelSize(R.dimen.margin_large)
-        val detailMarginWidthPx = resources.getDimensionPixelOffset(R.dimen.reader_detail_margin)
+        val detailMarginWidthPx = resources.getDimensionPixelOffset(ReaderR.dimen.reader_detail_margin)
 
         isWideDisplay = DisplayUtils.pxToDp(context, displayWidthPx) >= MIN_WIDE_DISPLAY_WIDTH_DP
         marginMediumPx = resources.getDimensionPixelSize(R.dimen.margin_medium)

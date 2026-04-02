@@ -12,6 +12,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import org.wordpress.android.R
+import org.wordpress.android.reader.R as ReaderR
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.ActionableEmptyView
@@ -122,7 +123,7 @@ class PostListFragment : ViewPagerFragment() {
             postListViewModelConnector,
             mainViewModel.authorSelectionUpdated.value!!,
             photonWidth = displayWidth - contentSpacing * 2,
-            photonHeight = nonNullActivity.resources.getDimensionPixelSize(R.dimen.reader_featured_image_height)
+            photonHeight = nonNullActivity.resources.getDimensionPixelSize(ReaderR.dimen.reader_featured_image_height)
         )
 
         initObservers()

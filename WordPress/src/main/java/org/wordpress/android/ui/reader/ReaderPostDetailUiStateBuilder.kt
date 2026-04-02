@@ -57,7 +57,7 @@ class ReaderPostDetailUiStateBuilder @Inject constructor(
     resourceProvider: ResourceProvider
 ) {
     private val relatedPostFeaturedImageWidth: Int = resourceProvider
-        .getDimensionPixelSize(R.dimen.reader_related_post_image_width)
+        .getDimensionPixelSize(ReaderR.dimen.reader_related_post_image_width)
     private val relatedPostFeaturedImageHeight: Int = (relatedPostFeaturedImageWidth
             * RELATED_POST_IMAGE_HEIGHT_WIDTH_RATION).toInt()
 
@@ -197,7 +197,7 @@ class ReaderPostDetailUiStateBuilder @Inject constructor(
             relatedPostFeaturedImageHeight
         ),
         featuredImageVisibility = post.featuredImageUrl?.isNotEmpty() == true,
-        featuredImageCornerRadius = UIDimenRes(R.dimen.reader_featured_image_corner_radius),
+        featuredImageCornerRadius = UIDimenRes(ReaderR.dimen.reader_featured_image_corner_radius),
         onItemClicked = onItemClicked
     )
 

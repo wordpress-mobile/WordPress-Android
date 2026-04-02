@@ -244,8 +244,8 @@ fun ReaderTagsFeedPostListItem(
                 factory = { context ->
                     ImageView(context).apply {
                         layoutParams = ViewGroup.LayoutParams(
-                            context.resources.getDimensionPixelSize(R.dimen.reader_post_card_new_more_icon),
-                            context.resources.getDimensionPixelSize(R.dimen.reader_post_card_new_more_icon)
+                            context.resources.getDimensionPixelSize(ReaderR.dimen.reader_post_card_new_more_icon),
+                            context.resources.getDimensionPixelSize(ReaderR.dimen.reader_post_card_new_more_icon)
                         )
                         setImageResource(R.drawable.ic_more_ellipsis_horizontal_squares)
                         contentDescription = context.resources.getString(R.string.show_more_desc)

@@ -1108,8 +1108,8 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
         // add the item decoration (dividers) to the recycler, skipping the first item if the first
         // item is the tag toolbar (shown when viewing posts in followed tags) - this is to avoid
         // having the tag toolbar take up more vertical space than necessary
-        val spacingVerticalRes = R.dimen.reader_card_gutters
-        val spacingHorizontal = resources.getDimensionPixelSize(R.dimen.reader_card_margin)
+        val spacingVerticalRes = ReaderR.dimen.reader_card_gutters
+        val spacingHorizontal = resources.getDimensionPixelSize(ReaderR.dimen.reader_card_margin)
         val spacingVertical = resources.getDimensionPixelSize(spacingVerticalRes)
         recyclerView.addItemDecoration(
             RecyclerItemDecoration(

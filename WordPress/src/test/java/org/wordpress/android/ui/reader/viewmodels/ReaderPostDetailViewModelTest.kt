@@ -1312,7 +1312,7 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
                 excerpt = UiStringText(""),
                 featuredImageUrl = "",
                 featuredImageVisibility = false,
-                featuredImageCornerRadius = UIDimenRes(R.dimen.reader_featured_image_corner_radius),
+                featuredImageCornerRadius = UIDimenRes(ReaderR.dimen.reader_featured_image_corner_radius),
                 onItemClicked = onRelatedPostItemClicked ?: mock()
             )
         },

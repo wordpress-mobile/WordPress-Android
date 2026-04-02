@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <dimen name="reader_detail_margin">@dimen/reader_detail_margin_tablet_landscape</dimen>
+</resources>

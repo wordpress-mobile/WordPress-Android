@@ -125,7 +125,7 @@ class ReaderPostUiStateBuilder @Inject constructor(
             title = buildTitle(post),
             excerpt = buildExcerpt(post),
             featuredImageUrl = buildFeaturedImageUrl(post, photonWidth, photonHeight),
-            featuredImageCornerRadius = UIDimenRes(R.dimen.reader_featured_image_corner_radius_new),
+            featuredImageCornerRadius = UIDimenRes(ReaderR.dimen.reader_featured_image_corner_radius_new),
             fullVideoUrl = buildFullVideoUrl(post),
             thumbnailStripSection = buildThumbnailStripUrls(post),
             videoOverlayVisibility = buildVideoOverlayVisibility(post),

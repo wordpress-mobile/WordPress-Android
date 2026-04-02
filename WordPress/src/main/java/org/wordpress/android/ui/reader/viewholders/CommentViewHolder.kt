@@ -4,6 +4,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.ViewGroup.MarginLayoutParams
 import org.wordpress.android.R
+import org.wordpress.android.reader.R as ReaderR
 import org.wordpress.android.databinding.ReaderListitemCommentBinding
 import org.wordpress.android.ui.comments.CommentUtils
 import org.wordpress.android.ui.reader.utils.ThreadedCommentsUtils
@@ -26,7 +27,7 @@ class CommentViewHolder(
         actionsContainer.visibility = View.GONE
         divider.visibility = View.GONE
 
-        val readerSpacing = itemView.resources.getDimensionPixelSize(R.dimen.reader_detail_margin)
+        val readerSpacing = itemView.resources.getDimensionPixelSize(ReaderR.dimen.reader_detail_margin)
 
         val params = commentBodyContainer.layoutParams as MarginLayoutParams
         params.marginStart = readerSpacing

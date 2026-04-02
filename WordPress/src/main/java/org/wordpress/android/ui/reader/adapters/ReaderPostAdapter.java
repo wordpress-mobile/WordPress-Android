@@ -591,7 +591,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         mScope = scope;
 
         int displayWidth = DisplayUtils.getWindowPixelWidth(context);
-        int cardMargin = context.getResources().getDimensionPixelSize(R.dimen.reader_card_margin);
+        int cardMargin = context.getResources().getDimensionPixelSize(org.wordpress.android.reader.R.dimen.reader_card_margin);
         mPhotonWidth = displayWidth - (cardMargin * 2);
         mPhotonHeight = (int) (mPhotonWidth / READER_FEATURED_IMAGE_ASPECT_RATIO);
 

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <dimen name="interests_content_margin">10dp</dimen>
+    <dimen name="interests_done_button_margin">10dp</dimen>
+    <dimen name="reader_a8c_avatar_margin_start_new">18dp</dimen>
+    <dimen name="reader_button_icon">24dp</dimen>
+    <dimen name="reader_button_minimum_height">44dp</dimen>
+    <dimen name="reader_card_content_padding">16dp</dimen>
+    <dimen name="reader_card_elevation">0dp</dimen>
+    <dimen name="reader_card_elevation_new">0dp</dimen>
+    <dimen name="reader_card_gutters">0dp</dimen>
+    <dimen name="reader_card_margin">@dimen/reader_card_margin_normal</dimen>
+    <dimen name="reader_card_margin_normal">0dp</dimen>
+    <dimen name="reader_card_margin_tablet">48dp</dimen>
+    <dimen name="reader_card_margin_tablet_big">96dp</dimen>
+    <dimen name="reader_chip_radius">8dp</dimen>
+    <dimen name="reader_comment_indent_per_level">24dp</dimen>
+    <dimen name="reader_comments_actions_height">24dp</dimen>
+    <dimen name="reader_comments_content_line_height">24dp</dimen>
+    <dimen name="reader_comments_selected_indicator_width">6dp</dimen>
+    <dimen name="reader_count_icon">18dp</dimen>
+    <dimen name="reader_detail_margin">@dimen/reader_detail_margin_normal</dimen>
+    <dimen name="reader_detail_margin_normal">24dp</dimen>
+    <dimen name="reader_detail_margin_tablet">48dp</dimen>
+    <dimen name="reader_detail_margin_tablet_big">96dp</dimen>
+    <dimen name="reader_detail_margin_tablet_big_landscape">160dp</dimen>
+    <dimen name="reader_detail_margin_tablet_landscape">96dp</dimen>
+    <dimen name="reader_expandable_tags_view_chip_new_border">1dp</dimen>
+    <dimen name="reader_expandable_tags_view_chip_new_height">36dp</dimen>
+    <dimen name="reader_expandable_tags_view_chip_new_radius">5dp</dimen>
+    <dimen name="reader_featured_image_corner_radius">4dp</dimen>
+    <dimen name="reader_featured_image_corner_radius_new">5dp</dimen>
+    <dimen name="reader_featured_image_height">@dimen/reader_featured_image_height_default</dimen>
+    <dimen name="reader_featured_image_height_default">220dp</dimen>
+    <dimen name="reader_featured_image_height_tablet">280dp</dimen>
+    <dimen name="reader_featured_image_height_tablet_large">340dp</dimen>
+    <dimen name="reader_follow_button_min_height">36dp</dimen>
+    <dimen name="reader_follow_button_progress_size">24dp</dimen>
+    <dimen name="reader_follow_button_stroke_alpha" format="float">@dimen/reader_follow_button_stroke_alpha_light</dimen>
+    <dimen name="reader_follow_button_stroke_alpha_dark" format="float">0.25</dimen>
+    <dimen name="reader_follow_button_stroke_alpha_light" format="float">0.12</dimen>
+    <dimen name="reader_follow_button_text_alpha" format="float">0.6</dimen>
+    <dimen name="reader_follow_icon">24dp</dimen>
+    <dimen name="reader_follow_sheet_button_margin_top">6dp</dimen>
+    <dimen name="reader_follow_sheet_margin_bottom">20dp</dimen>
+    <dimen name="reader_follow_sheet_message_margin_top">20dp</dimen>
+    <dimen name="reader_follow_sheet_switch_margin_top">4dp</dimen>
+    <dimen name="reader_footer_progress_bar_size">48dp</dimen>
+    <dimen name="reader_image_avatar_or_blavatar_border_width">1dp</dimen>
+    <dimen name="reader_image_featured_border_width">1dp</dimen>
+    <dimen name="reader_interest_filter_chip_border">1dp</dimen>
+    <dimen name="reader_interest_filter_chip_height">36dp</dimen>
+    <dimen name="reader_interest_filter_chip_radius">5dp</dimen>
+    <dimen name="reader_like_faces_padding">2dp</dimen>
+    <dimen name="reader_more_icon">36dp</dimen>
+    <dimen name="reader_more_image_extra_padding">12dp</dimen>
+    <dimen name="reader_more_menu_spacer_height">16dp</dimen>
+    <item name="reader_photo_title_shadow_offset" format="float" type="dimen">3.0</item>
+    <item name="reader_photo_title_shadow_radius" format="float" type="dimen">1.5</item>
+    <dimen name="reader_post_card_new_more_icon">24dp</dimen>
+    <dimen name="reader_post_header_height">40dp</dimen>
+    <dimen name="reader_related_post_image_width">150dp</dimen>
+    <dimen name="reader_site_header_avatar_padding">1dp</dimen>
+    <dimen name="reader_subfilter_empty_content_max_width">440dp</dimen>
+    <dimen name="reader_subfilter_unseen_count_height">30dp</dimen>
+    <dimen name="reader_subfilter_url_margin_bottom">14dp</dimen>
+    <dimen name="reader_thumbnail_strip_image_height">96dp</dimen>
+    <dimen name="reader_video_overlay_size">56dp</dimen>
+</resources>
