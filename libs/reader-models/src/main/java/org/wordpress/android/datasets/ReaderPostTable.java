@@ -11,8 +11,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import org.greenrobot.eventbus.EventBus;
-import org.wordpress.android.R;
-import org.wordpress.android.WordPress;
 import org.wordpress.android.models.ReaderCardType;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderPostList;
@@ -24,7 +22,7 @@ import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostId;
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostIdList;
 import org.wordpress.android.ui.reader.repository.ReaderRepositoryEvent.ReaderPostTableActionEnded;
-import org.wordpress.android.ui.reader.utils.ReaderUtils;
+import org.wordpress.android.ui.reader.utils.ReaderSlugUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.SqlUtils;
 
@@ -841,10 +839,12 @@ public class ReaderPostTable {
         // with a link to the full article
         if (post.hasExcerpt()) {
             AppLog.w(AppLog.T.READER, "reader post table > max text exceeded, storing excerpt");
+            // Hardcoded because this HTML is stored in the database, not
+            // displayed directly in UI, and this is a rare fallback path.
             return "<p>" + post.getExcerpt() + "</p>"
                    + String.format("<p style='text-align:center'><a href='%s'>%s</a></p>",
                     post.getUrl(),
-                    WordPress.getContext().getString(R.string.reader_label_view_original));
+                    "View original");
         } else {
             AppLog.w(AppLog.T.READER, "reader post table > max text exceeded, storing truncated text");
             return post.getText().substring(0, MAX_TEXT_LEN);
@@ -928,7 +928,7 @@ public class ReaderPostTable {
                 stmtPosts.bindLong(45, SqlUtils.boolToSql(post.useExcerpt));
                 stmtPosts.bindLong(46, SqlUtils.boolToSql(post.isBookmarked));
                 stmtPosts.bindLong(47, SqlUtils.boolToSql(post.isPrivateAtomic));
-                stmtPosts.bindString(48, ReaderUtils.getCommaSeparatedTagSlugs(post.getTags()));
+                stmtPosts.bindString(48, ReaderSlugUtils.getCommaSeparatedTagSlugs(post.getTags()));
                 stmtPosts.bindLong(49, post.organizationId);
                 stmtPosts.bindLong(50, SqlUtils.boolToSql(post.isSeen));
                 stmtPosts.bindLong(51, SqlUtils.boolToSql(post.isSeenSupported));
@@ -1200,7 +1200,7 @@ public class ReaderPostTable {
 
         String commaSeparatedTags = (c.getString(c.getColumnIndexOrThrow("tags")));
         if (commaSeparatedTags != null) {
-            post.setTags(ReaderUtils.getTagsFromCommaSeparatedSlugs(commaSeparatedTags));
+            post.setTags(ReaderSlugUtils.getTagsFromCommaSeparatedSlugs(commaSeparatedTags));
         }
 
         post.organizationId = c.getInt(c.getColumnIndexOrThrow("organization_id"));

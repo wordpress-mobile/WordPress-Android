@@ -9,8 +9,7 @@ import androidx.core.text.HtmlCompat;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.wordpress.android.R;
-import org.wordpress.android.WordPress;
+import org.wordpress.android.readermodels.R;
 import org.wordpress.android.util.JSONUtils;
 import org.wordpress.android.util.StringUtils;
 
@@ -131,12 +130,11 @@ public class ReaderPostDiscoverData {
     private transient Spanned mAttributionHtml;
 
     @NonNull
-    public Spanned getAttributionHtml() {
+    public Spanned getAttributionHtml(Context context) {
         if (mAttributionHtml == null) {
             String html;
             String author = "<strong>" + getAuthorName() + "</strong>";
             String blog = "<strong>" + getBlogName() + "</strong>";
-            Context context = WordPress.getContext();
 
             switch (getDiscoverType()) {
                 case EDITOR_PICK:

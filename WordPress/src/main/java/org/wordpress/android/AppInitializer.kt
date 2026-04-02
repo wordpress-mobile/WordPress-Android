@@ -307,6 +307,7 @@ class AppInitializer @Inject constructor(
 
         WordPress.versionName = PackageUtils.getVersionName(application)
         initWpDb()
+        ReaderDatabase.init(application)
         context?.let { enableHttpResponseCache(it) }
 
         AppReviewManager.init(application)

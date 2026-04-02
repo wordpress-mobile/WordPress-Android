@@ -4,7 +4,7 @@ import android.text.TextUtils;
 
 import org.wordpress.android.ui.Organization;
 import org.wordpress.android.ui.reader.ReaderConstants;
-import org.wordpress.android.ui.reader.utils.ReaderUtils;
+import org.wordpress.android.ui.reader.utils.ReaderSlugUtils;
 import org.wordpress.android.util.StringUtils;
 
 import java.io.Serializable;
@@ -55,7 +55,7 @@ public class ReaderTag implements Serializable, FilterCriteria {
             if (tagType == ReaderTagType.BOOKMARKED) {
                 setTagSlug(TAG_SLUG_BOOKMARKED);
             } else if (!TextUtils.isEmpty(title)) {
-                setTagSlug(ReaderUtils.sanitizeWithDashes(title));
+                setTagSlug(ReaderSlugUtils.sanitizeWithDashes(title));
             } else {
                 setTagSlug(getTagSlugFromEndpoint(endpoint));
             }

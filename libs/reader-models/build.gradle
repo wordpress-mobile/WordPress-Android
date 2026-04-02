@@ -1,0 +1,50 @@
+plugins {
+    alias(libs.plugins.android.library)
+    alias(libs.plugins.dependency.analysis)
+}
+
+android {
+    namespace "org.wordpress.android.readermodels"
+
+    defaultConfig {
+        compileSdk rootProject.compileSdkVersion
+        minSdkVersion rootProject.minSdkVersion
+        targetSdkVersion rootProject.targetSdkVersion
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.toVersion(
+            libs.versions.java.get()
+        )
+        targetCompatibility JavaVersion.toVersion(
+            libs.versions.java.get()
+        )
+    }
+}
+
+dependencies {
+    // Internal modules
+    implementation project(":libs:core-ui")
+    implementation project(":libs:utils")
+    implementation project(":libs:fluxc")
+
+    // WordPress utils (AppLog, UrlUtils, StringUtils, etc.)
+    implementation("$gradle.ext.wputilsBinaryPath") {
+        version {
+            strictly libs.wordpress.utils.get().version
+        }
+    }
+
+    // AndroidX
+    implementation libs.androidx.annotation
+    implementation libs.androidx.core.ktx
+
+    // EventBus (used by ReaderDatabase for post-table events)
+    implementation libs.greenrobot.eventbus.main
+
+    // Apache commons-text (for StringEscapeUtils in image URL handling)
+    implementation libs.apache.commons.text
+
+    // Dagger (for @Inject and @Reusable on wrapper classes)
+    implementation libs.google.dagger
+}

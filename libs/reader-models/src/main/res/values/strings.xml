@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="reader_label_view_original">View original</string>
+    <string name="reader_discover_attribution_author_and_blog">Originally posted by %1$s on %2$s</string>
+    <string name="reader_discover_attribution_author">Originally posted by %s</string>
+    <string name="reader_discover_attribution_blog">Originally posted on %s</string>
+    <string name="reader_discover_visit_blog">Visit %s</string>
+</resources>

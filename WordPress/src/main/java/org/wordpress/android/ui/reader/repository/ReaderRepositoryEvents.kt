@@ -2,10 +2,6 @@ package org.wordpress.android.ui.reader.repository
 
 import org.wordpress.android.ui.reader.services.discover.ReaderDiscoverLogic.DiscoverTasks
 
-sealed class ReaderRepositoryEvent {
-    object ReaderPostTableActionEnded : ReaderRepositoryEvent()
-}
-
 sealed class ReaderRepositoryCommunication {
     object Started : ReaderRepositoryCommunication()
     object Success : ReaderRepositoryCommunication()

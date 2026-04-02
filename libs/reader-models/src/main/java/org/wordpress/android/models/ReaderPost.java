@@ -8,7 +8,7 @@ import org.json.JSONObject;
 import org.wordpress.android.ui.Organization;
 import org.wordpress.android.ui.reader.ReaderConstants;
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostId;
-import org.wordpress.android.ui.reader.utils.ReaderUtils;
+import org.wordpress.android.ui.reader.utils.ReaderSlugUtils;
 import org.wordpress.android.util.DateTimeUtilsWrapper;
 import org.wordpress.android.util.HtmlUtils;
 import org.wordpress.android.util.JSONUtils;
@@ -313,7 +313,7 @@ public class ReaderPost {
             JSONObject jsonThisTag = jsonTags.optJSONObject(it.next());
             String thisTagName = UrlUtils.urlDecode(JSONUtils.getString(jsonThisTag, "slug"));
 
-            ReaderTag tag = ReaderUtils.getTagFromTagName(thisTagName, ReaderTagType.DEFAULT);
+            ReaderTag tag = ReaderSlugUtils.getTagFromTagName(thisTagName, ReaderTagType.DEFAULT);
             tags.add(tag);
 
             // if the number of posts on this blog that use this tag is higher than previous,
@@ -728,7 +728,7 @@ public class ReaderPost {
             if (!hasFeaturedImage()) {
                 mFeaturedImageForDisplay = "";
             } else {
-                mFeaturedImageForDisplay = ReaderUtils.getResizedImageUrl(
+                mFeaturedImageForDisplay = ReaderSlugUtils.getResizedImageUrl(
                         mFeaturedImage, width, height, isPrivate, isPrivateAtomic);
             }
         }

@@ -5,13 +5,12 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import org.greenrobot.eventbus.EventBus;
-import org.wordpress.android.WordPress;
 import org.wordpress.android.models.ReaderPostList;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagList;
 import org.wordpress.android.models.ReaderTagType;
 import org.wordpress.android.ui.reader.repository.ReaderRepositoryEvent.ReaderPostTableActionEnded;
-import org.wordpress.android.ui.reader.utils.ReaderUtils;
+import org.wordpress.android.ui.reader.utils.ReaderSlugUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
@@ -126,16 +125,31 @@ public class ReaderDatabase extends SQLiteOpenHelper {
     private static ReaderDatabase mReaderDb;
     private static final Object DB_LOCK = new Object();
 
-    public static ReaderDatabase getDatabase() {
+    /**
+     * Initialize the ReaderDatabase singleton with an application context.
+     * Must be called once at app startup (e.g. in Application.onCreate()).
+     */
+    public static void init(Context context) {
         if (mReaderDb == null) {
             synchronized (DB_LOCK) {
                 if (mReaderDb == null) {
-                    mReaderDb = new ReaderDatabase(WordPress.getContext());
+                    mReaderDb = new ReaderDatabase(
+                        context.getApplicationContext()
+                    );
                     // this ensures that onOpen() is called with a writable database
                     // (open will fail if app calls getReadableDb() first)
                     mReaderDb.getWritableDatabase();
                 }
             }
+        }
+    }
+
+    public static ReaderDatabase getDatabase() {
+        if (mReaderDb == null) {
+            throw new IllegalStateException(
+                "ReaderDatabase not initialized — "
+                    + "call ReaderDatabase.init(context) first"
+            );
         }
         return mReaderDb;
     }
@@ -250,7 +264,7 @@ public class ReaderDatabase extends SQLiteOpenHelper {
                 db.execSQL("ALTER TABLE tbl_posts ADD author_blog_url TEXT;");
                 currentVersion++;
             case 150:
-                String followedSitesTagSlug = ReaderUtils.sanitizeWithDashes(ReaderTag.TAG_TITLE_FOLLOWED_SITES);
+                String followedSitesTagSlug = ReaderSlugUtils.sanitizeWithDashes(ReaderTag.TAG_TITLE_FOLLOWED_SITES);
                 db.execSQL("DELETE FROM tbl_posts WHERE tag_name=?", new String[]{followedSitesTagSlug});
                 db.execSQL("DELETE FROM tbl_posts WHERE tag_name='' AND tag_type=0");
                 db.execSQL("UPDATE tbl_tags SET date_updated=? WHERE tag_slug=? AND tag_type=?",
@@ -385,7 +399,7 @@ public class ReaderDatabase extends SQLiteOpenHelper {
      */
     private void copyDatabase(SQLiteDatabase db) {
         String copyFrom = db.getPath();
-        String copyTo = WordPress.getContext().getExternalFilesDir(null).getAbsolutePath() + "/" + DB_NAME;
+        String copyTo = db.getPath().replace(DB_NAME, "copy_" + DB_NAME);
 
         try {
             InputStream input = new FileInputStream(copyFrom);

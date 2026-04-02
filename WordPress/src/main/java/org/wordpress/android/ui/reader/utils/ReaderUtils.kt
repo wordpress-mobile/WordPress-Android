@@ -27,16 +27,9 @@ object ReaderUtils {
         height: Int,
         isPrivate: Boolean,
         isPrivateAtomic: Boolean
-    ): String {
-        return getResizedImageUrl(
-            imageUrl = imageUrl,
-            width = width,
-            height = height,
-            isPrivate = isPrivate,
-            isPrivateAtomic = isPrivateAtomic,
-            quality = PhotonUtils.Quality.MEDIUM
-        )
-    }
+    ): String = ReaderSlugUtils.getResizedImageUrl(
+        imageUrl, width, height, isPrivate, isPrivateAtomic
+    )
 
     @JvmStatic
     @Suppress("LongParameterList")
@@ -47,25 +40,10 @@ object ReaderUtils {
         isPrivate: Boolean,
         isPrivateAtomic: Boolean,
         quality: PhotonUtils.Quality
-    ): String {
-        val unescapedUrl = StringEscapeUtils.unescapeHtml4(imageUrl)
-        return if (isPrivate && !isPrivateAtomic) {
-            getImageForDisplayWithoutPhoton(
-                imageUrl = unescapedUrl,
-                width = width,
-                height = height,
-                forceHttps = true
-            )
-        } else {
-            PhotonUtils.getPhotonImageUrl(
-                unescapedUrl,
-                width,
-                height,
-                quality,
-                isPrivateAtomic
-            )
-        }
-    }
+    ): String = ReaderSlugUtils.getResizedImageUrl(
+        imageUrl, width, height,
+        isPrivate, isPrivateAtomic, quality
+    )
 
     fun getResizedImageUrl(
         imageUrl: String,
@@ -109,20 +87,13 @@ object ReaderUtils {
         }
     }
 
-    /*
-     * use this to request a reduced size image from not photon capable sites
-     * (i.e. a private post - images in private posts can't use photon
-     * but these are usually wp images so they support the h= and w= query params)
-     */
     private fun getImageForDisplayWithoutPhoton(
         imageUrl: String,
         width: Int,
         height: Int,
         forceHttps: Boolean
     ): String {
-        if (imageUrl.isEmpty()) {
-            return ""
-        }
+        if (imageUrl.isEmpty()) return ""
         val query = if (width > 0 && height > 0) {
             "?w=$width&h=$height"
         } else if (width > 0) {
@@ -132,12 +103,11 @@ object ReaderUtils {
         } else {
             ""
         }
-
         return if (forceHttps) {
-            // remove the existing query string, add the new one, and make sure the url is https:
-            UrlUtils.removeQuery(UrlUtils.makeHttps(imageUrl)) + query
+            UrlUtils.removeQuery(
+                UrlUtils.makeHttps(imageUrl)
+            ) + query
         } else {
-            // remove the existing query string, add the new one
             UrlUtils.removeQuery(imageUrl) + query
         }
     }
@@ -148,32 +118,8 @@ object ReaderUtils {
      * http://stackoverflow.com/a/1612015/1673548
      */
     @JvmStatic
-    fun sanitizeWithDashes(title: String): String {
-        val trimmedTitle = title.trim()
-        return if (isValidUrlEncodedString(trimmedTitle)
-        ) {
-            trimmedTitle
-        } else {
-            trimmedTitle
-                .replace("&[^\\s]*;".toRegex(), "") // remove html entities
-                .replace("[\\.\\s]+".toRegex(), "-") // replace periods and whitespace with a dash
-                .replace(
-                    "[^\\p{L}\\p{Nd}\\-]+".toRegex(),
-                    ""
-                ) // remove remaining non-alphanumeric/non-dash chars (Unicode aware)
-                .replace("--".toRegex(), "-") // reduce double dashes potentially added above
-        }
-    }
-
-    @Suppress("SwallowedException")
-    private fun isValidUrlEncodedString(title: String): Boolean {
-        try {
-            URI.create(title)
-            return true
-        } catch (e: IllegalArgumentException) {
-            return false
-        }
-    }
+    fun sanitizeWithDashes(title: String): String =
+        ReaderSlugUtils.sanitizeWithDashes(title)
 
     /*
      * returns the long text to use for a like label ("Liked by 3 people", etc.)
@@ -298,28 +244,16 @@ object ReaderUtils {
     fun getTagFromTagName(
         tagName: String,
         tagType: ReaderTagType
-    ): ReaderTag {
-        return getTagFromTagName(
-            tagName = tagName,
-            tagType = tagType,
-            markDefaultIfInMemory = false
-        )
-    }
+    ): ReaderTag = ReaderSlugUtils.getTagFromTagName(tagName, tagType)
 
     @JvmStatic
     fun getTagFromTagName(
         tagName: String,
         tagType: ReaderTagType,
         markDefaultIfInMemory: Boolean
-    ): ReaderTag {
-        val tag = ReaderTagTable.getTag(tagName, tagType)
-        return tag
-            ?: createTagFromTagName(
-                tagName = tagName,
-                tagType = tagType,
-                isDefaultInMemoryTag = markDefaultIfInMemory
-            )
-    }
+    ): ReaderTag = ReaderSlugUtils.getTagFromTagName(
+        tagName, tagType, markDefaultIfInMemory
+    )
 
     @JvmOverloads
     @JvmStatic
@@ -327,18 +261,9 @@ object ReaderUtils {
         tagName: String,
         tagType: ReaderTagType,
         isDefaultInMemoryTag: Boolean = false
-    ): ReaderTag {
-        val tagSlug = sanitizeWithDashes(tagName).lowercase()
-        val tagDisplayName = if (tagType == ReaderTagType.DEFAULT) tagName else tagSlug
-        return ReaderTag(
-            tagSlug,
-            tagDisplayName,
-            tagName,
-            null,
-            tagType,
-            isDefaultInMemoryTag
-        )
-    }
+    ): ReaderTag = ReaderSlugUtils.createTagFromTagName(
+        tagName, tagType, isDefaultInMemoryTag
+    )
 
     /*
      * returns the default tag, which is the one selected by default in the reader when
@@ -543,30 +468,14 @@ object ReaderUtils {
     }
 
     @JvmStatic
-    fun getCommaSeparatedTagSlugs(tags: ReaderTagList): String {
-        val slugs = StringBuilder()
-        tags.forEach { tag ->
-            if (slugs.isNotEmpty()) {
-                slugs.append(",")
-            }
-            val tagNameForApi = sanitizeWithDashes(tag.tagSlug)
-            slugs.append(tagNameForApi)
-        }
-        return slugs.toString()
-    }
+    fun getCommaSeparatedTagSlugs(tags: ReaderTagList): String =
+        ReaderSlugUtils.getCommaSeparatedTagSlugs(tags)
 
     @JvmStatic
-    fun getTagsFromCommaSeparatedSlugs(commaSeparatedTagSlugs: String): ReaderTagList {
-        val tags = ReaderTagList()
-        if (commaSeparatedTagSlugs.trim().isNotEmpty()) {
-            val slugs = commaSeparatedTagSlugs.split(",".toRegex())
-            slugs.forEach { slug ->
-                val tag = getTagFromTagName(slug, ReaderTagType.DEFAULT)
-                tags.add(tag)
-            }
-        }
-        return tags
-    }
+    fun getTagsFromCommaSeparatedSlugs(
+        commaSeparatedTagSlugs: String
+    ): ReaderTagList = ReaderSlugUtils
+        .getTagsFromCommaSeparatedSlugs(commaSeparatedTagSlugs)
 
     /**
      * isExternalFeed identifies an external RSS feed
