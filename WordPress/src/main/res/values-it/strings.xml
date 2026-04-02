@@ -260,7 +260,6 @@ Language: it
     <string name="feedback_form_discard">Elimina feedback?</string>
     <string name="feedback_form_message_hint">Il tuo feedback è apprezzato!</string>
     <string name="submit">Invia</string>
-    <string name="close">Chiudi</string>
     <string name="sending">Invio in corso</string>
     <string name="voice_to_content_generic_error">Articolo dall\'audio non è al momento disponibile, riprova più tardi.</string>
     <string name="voice_to_content_done_label">Fatto</string>
@@ -796,7 +795,6 @@ Language: it
     <string name="blogging_prompts_list_number_of_answers_zero">0 risposte</string>
     <string name="blogging_prompts_list_answered_prompt">✓ Risposta</string>
     <string name="blogging_prompts_list_title">Richieste</string>
-    <string name="close_desc">chiudi</string>
     <string name="dlg_confirm_delete_category">Eliminare definitivamente la Categoria \'%s\'?</string>
     <string name="deleting_cat_success">Categoria eliminata correttamente</string>
     <string name="deleting_cat_failed">Impossibile eliminare la categoria</string>
@@ -2272,7 +2270,6 @@ Language: it
     <string name="site_settings_quota_space_unlimited">%1$s di illimitato</string>
     <string name="add_count">Aggiungi %d</string>
     <string name="fab_add_tag_desc">Crea tag</string>
-    <string name="navigate_up_desc">naviga su</string>
     <string name="notification_settings_switch_desc">Notifiche</string>
     <string name="open_external_link_desc">Apri link esterno</string>
     <string name="show_more_desc">mostra altro</string>
@@ -3352,7 +3349,6 @@ Language: it
     <string name="done">fatto</string>
     <string name="ok">OK</string>
     <string name="link_enter_url">URL</string>
-    <string name="uploading" a8c-src-lib="module:editor">Caricamento…</string>
     <string name="image_alignment">Allineamento</string>
     <string name="refresh">Aggiorna</string>
     <string name="untitled">Senza titolo</string>
@@ -3384,7 +3380,6 @@ Language: it
     <string name="clear">Reimposta</string>
     <string name="add">Aggiungi</string>
     <string name="save">Salva</string>
-    <string name="cancel">Annulla</string>
     <string-array name="blogging_reminders_count">
         <item>Una volta</item>
         <item>Due volte</item>

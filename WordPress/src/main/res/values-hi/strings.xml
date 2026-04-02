@@ -346,7 +346,6 @@ Language: hi_IN
     <string name="featured_in_post" a8c-src-lib="module:editor">पोस्ट सामग्री में छवि को शामिल करे</string>
     <string name="ok">ओके</string>
     <string name="link_enter_url">यूआरएल</string>
-    <string name="uploading" a8c-src-lib="module:editor">अपलोड किया जा रहा</string>
     <string name="image_alignment">संरेखण</string>
     <string name="refresh">रिफ्रेश</string>
     <string name="untitled">बिना शीर्षक का</string>
@@ -364,7 +363,6 @@ Language: hi_IN
     <string name="delete">हटाये</string>
     <string name="none">कुछ भी नहीं</string>
     <string name="add"> जोड़े</string>
-    <string name="cancel">रद्द करें</string>
     <string name="error">त्रुटि</string>
     <string name="no">नहीं</string>
     <string name="on">ऑन</string>

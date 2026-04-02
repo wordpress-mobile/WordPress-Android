@@ -969,7 +969,6 @@ Language: nb_NO
     <string name="photo_picker_thumbnail_desc">Spill video</string>
     <string name="reader_cardview_post_play_video_desc">spill fremhevet video</string>
     <string name="show_more_desc">vis mer</string>
-    <string name="navigate_up_desc">naviger opp</string>
     <string name="plugin_detail_logo_desc">logo for utvidelse</string>
     <string name="plugin_detail_banner_desc">toppbilde for utvidelse</string>
     <string name="photo_picker_wpmedia_desc">velg fra media i WordPress</string>
@@ -2004,7 +2003,6 @@ Language: nb_NO
     <string name="ok">OK</string>
     <string name="done">fullført</string>
     <string name="link_enter_url">URL</string>
-    <string name="uploading" a8c-src-lib="module:editor">Laster opp …</string>
     <string name="image_alignment">Justering</string>
     <string name="refresh">Oppdater</string>
     <string name="untitled">Uten tittel</string>
@@ -2026,7 +2024,6 @@ Language: nb_NO
     <string name="reply">Svar</string>
     <string name="on">på</string>
     <string name="preview">Forhåndsvisning</string>
-    <string name="cancel">Avbryt</string>
     <string name="save">Lagre</string>
     <string name="add">Legg til</string>
     <string name="clear">Tøm</string>

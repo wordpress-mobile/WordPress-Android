@@ -71,7 +71,6 @@ Language: uz
     <string name="caption" a8c-src-lib="module:editor">Titr (ixtiyoriy)</string>
     <string name="ok">OK</string>
     <string name="link_enter_url">URL</string>
-    <string name="uploading" a8c-src-lib="module:editor">Yuklanmoqda</string>
     <string name="image_alignment">Tekislash</string>
     <string name="refresh">Yangila</string>
     <string name="untitled">Nomsiz</string>
@@ -91,7 +90,6 @@ Language: uz
     <string name="no">Yo‘q</string>
     <string name="yes">Ha</string>
     <string name="reply">Javob</string>
-    <string name="cancel">Bekor qilish</string>
     <string name="add">Qo‘shish</string>
     <string name="preview">Oldindan ko‘rish</string>
     <string name="category_refresh_error">Bo‘limlarni yangilashda xatolik</string>

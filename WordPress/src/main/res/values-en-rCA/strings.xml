@@ -161,7 +161,6 @@ Language: en_CA
     <string name="feedback_form_message_hint">Your feedback is appreciated!</string>
     <string name="feedback_form_title">Feedback</string>
     <string name="submit">Submit</string>
-    <string name="close">Close</string>
     <string name="sending">Sending</string>
     <string name="voice_to_content_generic_error">Post from audio is unavailable at the moment, please try again later.</string>
     <string name="voice_to_content_done_label">Done</string>
@@ -701,7 +700,6 @@ Language: en_CA
     <string name="blogging_prompts_list_number_of_answers_zero">0 answers</string>
     <string name="blogging_prompts_list_answered_prompt">✓ Answered</string>
     <string name="blogging_prompts_list_title">Prompts</string>
-    <string name="close_desc">close</string>
     <string name="dlg_confirm_delete_category">Permanently delete \'%s\' Category?</string>
     <string name="deleting_cat_success">Category deleted successfully</string>
     <string name="deleting_cat_failed">Deleting category failed</string>
@@ -2176,7 +2174,6 @@ Language: en_CA
     <string name="site_settings_quota_space_unlimited">%1$s of unlimited</string>
     <string name="add_count">Add %d</string>
     <string name="fab_add_tag_desc">Create Tag</string>
-    <string name="navigate_up_desc">navigate up</string>
     <string name="notification_settings_switch_desc">Notifications</string>
     <string name="open_external_link_desc">Open external link</string>
     <string name="show_more_desc">show more</string>
@@ -3258,7 +3255,6 @@ Language: en_CA
     <string name="done">done</string>
     <string name="ok">OK</string>
     <string name="link_enter_url">URL</string>
-    <string name="uploading" a8c-src-lib="module:editor">Uploading…</string>
     <string name="image_alignment">Alignment</string>
     <string name="refresh">Refresh</string>
     <string name="untitled">Untitled</string>
@@ -3290,7 +3286,6 @@ Language: en_CA
     <string name="clear">Clear</string>
     <string name="add">Add</string>
     <string name="save">Save</string>
-    <string name="cancel">Cancel</string>
     <string-array name="blogging_reminders_count">
         <item>Once</item>
         <item>Twice</item>

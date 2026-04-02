@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="close">Tutup</string>
+    <string name="close_desc">tutup</string>
+    <string name="navigate_up_desc">arahkan ke atas</string>
+    <string name="uploading">Mengunggah…</string>
+    <string name="cancel">Batal</string>
+</resources>

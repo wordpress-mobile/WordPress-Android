@@ -241,7 +241,6 @@ Language: fr
     <string name="feedback_form_message_hint">Vos commentaires sont appréciés !</string>
     <string name="feedback_form_title">Commentaires</string>
     <string name="submit">Envoyer</string>
-    <string name="close">Fermer</string>
     <string name="sending">Envoi en cours</string>
     <string name="voice_to_content_generic_error">La fonctionnalité Publier à partir d’un contenu audio n’est pas disponible pour le moment, veuillez réessayer plus tard.</string>
     <string name="voice_to_content_done_label">Terminé</string>
@@ -778,7 +777,6 @@ Language: fr
     <string name="blogging_prompts_list_number_of_answers_zero">0 réponse</string>
     <string name="blogging_prompts_list_answered_prompt">✓ Vous avez répondu</string>
     <string name="blogging_prompts_list_title">Incitations</string>
-    <string name="close_desc">fermer</string>
     <string name="dlg_confirm_delete_category">Supprimer définitivement la catégorie « %s » ?</string>
     <string name="deleting_cat_success">Suppression de la catégorie réussie</string>
     <string name="deleting_cat_failed">Échec de la suppression de la catégorie</string>
@@ -2255,7 +2253,6 @@ Language: fr
     <string name="site_settings_quota_space_unlimited">%1$s (illimité)</string>
     <string name="add_count">Ajouter %d</string>
     <string name="fab_add_tag_desc">Créer une étiquette</string>
-    <string name="navigate_up_desc">faire défiler vers le haut</string>
     <string name="notification_settings_switch_desc">Notifications</string>
     <string name="open_external_link_desc">Ouvrir le lien externe</string>
     <string name="show_more_desc">voir plus</string>
@@ -3339,7 +3336,6 @@ Language: fr
     <string name="done">Terminé</string>
     <string name="ok">OK</string>
     <string name="link_enter_url">URL</string>
-    <string name="uploading" a8c-src-lib="module:editor">Téléversement…</string>
     <string name="image_alignment">Alignement</string>
     <string name="refresh">Actualiser</string>
     <string name="untitled">Sans titre</string>
@@ -3371,7 +3367,6 @@ Language: fr
     <string name="clear">Effacer</string>
     <string name="add">Ajouter</string>
     <string name="save">Enregistrer</string>
-    <string name="cancel">Annuler</string>
     <string-array name="blogging_reminders_count">
         <item>Une fois</item>
         <item>Deux fois</item>

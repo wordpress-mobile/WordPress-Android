@@ -264,7 +264,6 @@ Language: de
     <string name="feedback_form_message_hint">Wir wissen dein Feedback zu schätzen!</string>
     <string name="feedback_form_title">Feedback</string>
     <string name="submit">Absenden</string>
-    <string name="close">Schließen</string>
     <string name="sending">Wird gesendet</string>
     <string name="voice_to_content_generic_error">Es ist derzeit nicht möglich, Beiträge aus Audio zu erstellen. Bitte versuche es später noch einmal.</string>
     <string name="voice_to_content_done_label">Fertig</string>
@@ -804,7 +803,6 @@ Language: de
     <string name="blogging_prompts_list_number_of_answers_zero">0 Antworten</string>
     <string name="blogging_prompts_list_answered_prompt">✓ Geantwortet</string>
     <string name="blogging_prompts_list_title">Schreibanregungen</string>
-    <string name="close_desc">Tag schließen</string>
     <string name="dlg_confirm_delete_category">Kategorie „%s“ dauerhaft löschen?</string>
     <string name="deleting_cat_success">Kategorie erfolgreich gelöscht</string>
     <string name="deleting_cat_failed">Löschen der Kategorie fehlgeschlagen</string>
@@ -2281,7 +2279,6 @@ Language: de
     <string name="site_settings_quota_space_unlimited">%1$s von unbegrenzt</string>
     <string name="add_count">%d hinzufügen</string>
     <string name="fab_add_tag_desc">Schlagwort erstellen</string>
-    <string name="navigate_up_desc">nach oben</string>
     <string name="notification_settings_switch_desc">Benachrichtigungen</string>
     <string name="open_external_link_desc">Externen Link öffnen</string>
     <string name="show_more_desc">weitere anzeigen</string>
@@ -3365,7 +3362,6 @@ Language: de
     <string name="done">erledigt</string>
     <string name="ok">OK</string>
     <string name="link_enter_url">URL</string>
-    <string name="uploading" a8c-src-lib="module:editor">Lädt hoch…</string>
     <string name="image_alignment">Ausrichtung</string>
     <string name="refresh">Aktualisieren</string>
     <string name="untitled">Ohne Titel</string>
@@ -3397,7 +3393,6 @@ Language: de
     <string name="clear">Leeren</string>
     <string name="add">Hinzufügen</string>
     <string name="save">Speichern</string>
-    <string name="cancel">Abbrechen</string>
     <string-array name="blogging_reminders_count">
         <item>Einmalig</item>
         <item>Zweimal</item>

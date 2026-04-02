@@ -532,7 +532,6 @@ Language: cy_GB
     <string name="anonymous">Di-enw</string>
     <string name="ok">Iawn</string>
     <string name="link_enter_url">URL</string>
-    <string name="uploading" a8c-src-lib="module:editor">Llwytho…</string>
     <string name="image_alignment">Alinio</string>
     <string name="refresh">Adnewyddu</string>
     <string name="untitled">Dideitl</string>
@@ -549,7 +548,6 @@ Language: cy_GB
     <string name="approve">Cymeradwyo</string>
     <string name="none">Dim</string>
     <string name="error">Gwall</string>
-    <string name="cancel">Diddymu</string>
     <string name="save">Cadw</string>
     <string name="add">Ychwanegu</string>
     <string name="category_refresh_error">Gwall adnewyddu categori</string>

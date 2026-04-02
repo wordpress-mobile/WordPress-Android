@@ -264,7 +264,6 @@ Language: pt_BR
     <string name="feedback_form_message_hint">Seu comentário ou sugestão é muito valioso!</string>
     <string name="feedback_form_title">Sugestões e comentários</string>
     <string name="submit">Enviar</string>
-    <string name="close">Fechar</string>
     <string name="sending">Enviando</string>
     <string name="voice_to_content_generic_error">A postagem de áudio não está disponível no momento. Tente novamente mais tarde.</string>
     <string name="voice_to_content_done_label">Concluído</string>
@@ -804,7 +803,6 @@ Language: pt_BR
     <string name="blogging_prompts_list_number_of_answers_zero">0 respostas</string>
     <string name="blogging_prompts_list_answered_prompt">✓ Respondida</string>
     <string name="blogging_prompts_list_title">Sugestões</string>
-    <string name="close_desc">fechar</string>
     <string name="dlg_confirm_delete_category">Excluir permanentemente a categoria \'%s\'?</string>
     <string name="deleting_cat_success">Categoria excluída com sucesso</string>
     <string name="deleting_cat_failed">Falha ao excluir categoria</string>
@@ -2281,7 +2279,6 @@ Language: pt_BR
     <string name="site_settings_quota_space_unlimited">%1$s de ilimitado</string>
     <string name="add_count">Adicionar %d</string>
     <string name="fab_add_tag_desc">Criar tag</string>
-    <string name="navigate_up_desc">navegar acima</string>
     <string name="notification_settings_switch_desc">Notificações</string>
     <string name="open_external_link_desc">Abrir link externo</string>
     <string name="show_more_desc">mostrar mais</string>
@@ -3365,7 +3362,6 @@ Language: pt_BR
     <string name="done">concluído</string>
     <string name="ok">OK</string>
     <string name="link_enter_url">URL</string>
-    <string name="uploading" a8c-src-lib="module:editor">Enviando…</string>
     <string name="image_alignment">Alinhamento</string>
     <string name="refresh">Atualizar</string>
     <string name="untitled">Sem Título</string>
@@ -3397,7 +3393,6 @@ Language: pt_BR
     <string name="clear">Limpar</string>
     <string name="add">Adicionar</string>
     <string name="save">Salvar</string>
-    <string name="cancel">Cancelar</string>
     <string-array name="blogging_reminders_count">
         <item>Uma vez</item>
         <item>Duas vezes</item>

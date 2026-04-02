@@ -298,7 +298,6 @@ Language: sk
     <string name="photo_picker_camera_desc">otvoriť fotoaparát</string>
     <string name="photo_picker_device_desc">vybrať zo zariadenia</string>
     <string name="signup_with_google_progress" a8c-src-lib="module:login">Prebieha prihlasovanie cez Google…</string>
-    <string name="navigate_up_desc">navigovať hore</string>
     <string name="reader_cardview_post_play_video_desc">prehrať odporúčané video</string>
     <string name="plugin_detail_banner_desc">banner pluginu</string>
     <string name="photo_picker_wpmedia_desc">vybrať z WordPress súborov</string>
@@ -1364,7 +1363,6 @@ Language: sk
     <string name="featured" a8c-src-lib="module:editor">Použiť ilustračný obrázok</string>
     <string name="ok">OK</string>
     <string name="link_enter_url">URL adresa</string>
-    <string name="uploading" a8c-src-lib="module:editor">Nahrávanie…</string>
     <string name="image_alignment">Zarovnanie</string>
     <string name="refresh">Obnoviť</string>
     <string name="untitled">Bez názvu</string>
@@ -1387,7 +1385,6 @@ Language: sk
     <string name="reply">Odpovedať</string>
     <string name="preview">Preview</string>
     <string name="on">na</string>
-    <string name="cancel">Zrušiť</string>
     <string name="save">Uložiť</string>
     <string name="add">Pridať</string>
     <string name="clear">Vymazať</string>

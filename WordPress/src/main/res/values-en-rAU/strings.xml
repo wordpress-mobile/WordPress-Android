@@ -529,7 +529,6 @@ Language: en_AU
     <string name="site_settings_quota_space_unlimited">%1$s of unlimited</string>
     <string name="media_preview_title">%1$d of %2$d</string>
     <string name="fab_add_tag_desc">Create Tag</string>
-    <string name="navigate_up_desc">navigate up</string>
     <string name="notification_settings_switch_desc">Notifications</string>
     <string name="show_more_desc">show more</string>
     <string name="reader_photo_view_desc">photo</string>
@@ -1571,7 +1570,6 @@ Language: en_AU
     <string name="anonymous">Anonymous</string>
     <string name="ok">OK</string>
     <string name="link_enter_url">URL</string>
-    <string name="uploading">Uploading…</string>
     <string name="image_alignment">Alignment</string>
     <string name="refresh">Refresh</string>
     <string name="untitled">Untitled</string>
@@ -1590,7 +1588,6 @@ Language: en_AU
     <string name="approve">Approve</string>
     <string name="none">None</string>
     <string name="error">Error</string>
-    <string name="cancel">Cancel</string>
     <string name="save">Save</string>
     <string name="add">Add</string>
     <string name="category_refresh_error">Category refresh error</string>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="navigate_up_desc">navegar hacia arriba</string>
+    <string name="uploading">Subiendo…</string>
+    <string name="cancel">Cancelar</string>
+</resources>

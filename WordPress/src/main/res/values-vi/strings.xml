@@ -1361,7 +1361,6 @@ Language: vi_VN
     <string name="fab_add_tag_desc">Tạo Thẻ</string>
     <string name="notification_settings_switch_desc">Thông báo</string>
     <string name="comment_checkmark_desc">dấu tick</string>
-    <string name="navigate_up_desc">điều hướng lên</string>
     <string name="open_external_link_desc">Mở liên kết ngoài</string>
     <string name="show_more_desc">hiện thêm</string>
     <string name="reader_photo_view_desc">ảnh</string>
@@ -2422,7 +2421,6 @@ Language: vi_VN
     <string name="ok">OK</string>
     <string name="done">xong</string>
     <string name="link_enter_url">URL</string>
-    <string name="uploading" a8c-src-lib="module:editor">Đang tải lên…</string>
     <string name="image_alignment">Canh lề</string>
     <string name="refresh">Làm mới</string>
     <string name="untitled">Chưa có tựa đề</string>
@@ -2441,7 +2439,6 @@ Language: vi_VN
     <string name="approve">Đồng ý</string>
     <string name="none">Không</string>
     <string name="error">Lỗi</string>
-    <string name="cancel">Hủy bỏ</string>
     <string name="save">Lưu</string>
     <string name="add">Thêm</string>
     <string name="preview">Xem trước</string>

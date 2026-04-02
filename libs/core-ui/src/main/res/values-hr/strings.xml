@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="close">Zatvoriti</string>
+    <string name="uploading">Prijenos…</string>
+    <string name="cancel">Odustani</string>
+</resources>

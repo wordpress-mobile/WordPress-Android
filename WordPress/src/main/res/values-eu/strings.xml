@@ -526,7 +526,6 @@ Language: eu_ES
     <string name="ok">Ados</string>
     <string name="done">egina</string>
     <string name="link_enter_url">URL</string>
-    <string name="uploading" a8c-src-lib="module:editor">Igotzen…</string>
     <string name="image_alignment">Lerrokatzea</string>
     <string name="refresh">Freskatu</string>
     <string name="untitled">Izenbururik gabe</string>
@@ -545,7 +544,6 @@ Language: eu_ES
     <string name="approve">Onartu</string>
     <string name="none">Bat ere ez</string>
     <string name="error">Errorea</string>
-    <string name="cancel">Ezeztatu</string>
     <string name="save">Gorde</string>
     <string name="add">Gehitu</string>
     <string name="clear">Garbitu</string>

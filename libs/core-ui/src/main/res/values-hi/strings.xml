@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="uploading">अपलोड किया जा रहा</string>
+    <string name="cancel">रद्द करें</string>
+</resources>

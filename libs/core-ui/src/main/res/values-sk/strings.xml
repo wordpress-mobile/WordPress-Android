@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="navigate_up_desc">navigovať hore</string>
+    <string name="uploading">Nahrávanie…</string>
+    <string name="cancel">Zrušiť</string>
+</resources>

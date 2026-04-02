@@ -805,7 +805,6 @@ Language: ms
     <string name="anonymous">Tak bernama</string>
     <string name="ok">OK</string>
     <string name="link_enter_url">URL</string>
-    <string name="uploading" a8c-src-lib="module:editor">Memuat naik…</string>
     <string name="image_alignment">Penjajaran</string>
     <string name="refresh">Segar semula</string>
     <string name="untitled">Tiada tajuk</string>
@@ -823,7 +822,6 @@ Language: ms
     <string name="approve">Lulus</string>
     <string name="none">Tiada</string>
     <string name="error">Ralat</string>
-    <string name="cancel">Batal</string>
     <string name="save">Simpan</string>
     <string name="add">Tambah</string>
     <string name="category_refresh_error">Ralat segar semula kategori</string>

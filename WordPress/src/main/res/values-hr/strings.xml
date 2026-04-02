@@ -18,7 +18,6 @@ Language: hr
     <string name="send_feedback">Pošaljite povratne informacije</string>
     <string name="feedback_form_title">Povratne informacije</string>
     <string name="submit">Pošalji</string>
-    <string name="close">Zatvoriti</string>
     <string name="sending">Šaljem</string>
     <string name="voice_to_content_done_label">Završeno</string>
     <string name="voice_to_content_recording_label">Snimanje</string>
@@ -605,7 +604,6 @@ Language: hr
     <string name="ok">OK</string>
     <string name="done">Gotovo</string>
     <string name="link_enter_url">URL</string>
-    <string name="uploading" a8c-src-lib="module:editor">Prijenos…</string>
     <string name="image_alignment">Poravnanje</string>
     <string name="refresh">Osvježi</string>
     <string name="untitled">Nenaslovljeno</string>
@@ -628,7 +626,6 @@ Language: hr
     <string name="reply">Odgovori</string>
     <string name="yes">Da</string>
     <string name="no">Ne</string>
-    <string name="cancel">Odustani</string>
     <string name="clear">Obriši</string>
     <string name="on">u</string>
     <string name="save">Snimi</string>

@@ -1657,7 +1657,6 @@ Language: sr_RS
     <string name="ok">У реду</string>
     <string name="done">обављено</string>
     <string name="link_enter_url">URL</string>
-    <string name="uploading" a8c-src-lib="module:editor">Отпремање…</string>
     <string name="image_alignment">Поравнање</string>
     <string name="refresh">Освежи</string>
     <string name="untitled">Без имена</string>
@@ -1676,7 +1675,6 @@ Language: sr_RS
     <string name="approve">Одобри</string>
     <string name="none">Ниједан</string>
     <string name="error">Грешка</string>
-    <string name="cancel">Откажи</string>
     <string name="save">Сачувај</string>
     <string name="add">Додај</string>
     <string name="category_refresh_error">Грешка приликом освежавања категорије</string>

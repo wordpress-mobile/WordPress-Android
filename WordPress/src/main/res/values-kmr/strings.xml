@@ -856,7 +856,6 @@ Language: ku_TR
     <string name="media_settings_image_preview_desc">pêşdîtina wêneyê</string>
     <string name="media_preview_desc">pêşdîtin</string>
     <string name="media_grid_item_play_video_desc">vîdyoyê bilîzîne</string>
-    <string name="navigate_up_desc">here jorê</string>
     <string name="open_external_link_desc">Girêdana derveyî veke</string>
     <string name="show_more_desc">zêdetir nîşan bide</string>
     <string name="photo_picker_device_desc">ji cîhazê hilbijêre</string>
@@ -1880,7 +1879,6 @@ Language: ku_TR
     <string name="ok">BAŞ e</string>
     <string name="done">qediya</string>
     <string name="link_enter_url">URL</string>
-    <string name="uploading" a8c-src-lib="module:editor">Tê Hilbarkirin…</string>
     <string name="image_alignment">Bicîkirin</string>
     <string name="refresh">Nû bike</string>
     <string name="untitled">Bêsernav</string>
@@ -1908,7 +1906,6 @@ Language: ku_TR
     <string name="publish_now">Aniha Biweşîne</string>
     <string name="category_refresh_error">Çewtiya nûkirina kategoriyê</string>
     <string name="save">Tomar bike</string>
-    <string name="cancel">Betal bike</string>
     <string name="add">Tevlî bike</string>
     <string-array name="blogging_reminders_count">
         <item>Carekê</item>

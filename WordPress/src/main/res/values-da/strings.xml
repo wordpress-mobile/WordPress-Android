@@ -274,7 +274,6 @@ Language: da_DK
     <string name="featured_in_post" a8c-src-lib="module:editor">Inkluder billede i indhold</string>
     <string name="ok">OK</string>
     <string name="link_enter_url">URL</string>
-    <string name="uploading" a8c-src-lib="module:editor">Uploader</string>
     <string name="image_alignment">Justering</string>
     <string name="refresh">Genindlæs</string>
     <string name="untitled">Ikke-navngivet</string>
@@ -298,7 +297,6 @@ Language: da_DK
     <string name="save">Gem</string>
     <string name="add">Tilføj</string>
     <string name="clear">Ryd</string>
-    <string name="cancel">Annuller</string>
     <string name="category_refresh_error">Kategori opdateringsfejl</string>
     <string name="yes">Ja</string>
     <string name="no">Nej</string>

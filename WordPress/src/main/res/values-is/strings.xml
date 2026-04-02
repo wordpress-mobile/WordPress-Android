@@ -560,7 +560,6 @@ Language: is
     <string name="featured" a8c-src-lib="module:editor">Nota sem einkennismynd</string>
     <string name="ok">Í lagi</string>
     <string name="link_enter_url">Slóð</string>
-    <string name="uploading" a8c-src-lib="module:editor">Hleð upp…</string>
     <string name="image_alignment">Jöfnun</string>
     <string name="refresh">Endurhlaða</string>
     <string name="untitled">Án titils</string>
@@ -576,7 +575,6 @@ Language: is
     <string name="delete">Eyða</string>
     <string name="approve">Samþykkja</string>
     <string name="none">Ekkert</string>
-    <string name="cancel">Hætta við</string>
     <string name="add">Bæta við</string>
     <string name="category_refresh_error">Villa við að endurfríska flokka</string>
     <string name="error">Villa</string>

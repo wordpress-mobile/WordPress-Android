@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="close">關閉</string>
+    <string name="close_desc">關閉</string>
+    <string name="navigate_up_desc">瀏覽</string>
+    <string name="uploading">上傳中…</string>
+    <string name="cancel">取消</string>
+</resources>

@@ -1388,7 +1388,6 @@ Language: es_VE
     <string name="site_settings_quota_space_unlimited">%1$s de ilimitado</string>
     <string name="add_count">Añadir %d</string>
     <string name="fab_add_tag_desc">Crear etiqueta</string>
-    <string name="navigate_up_desc">navegar hacia arriba</string>
     <string name="notification_settings_switch_desc">Avisos</string>
     <string name="open_external_link_desc">Abrir enlace externo</string>
     <string name="show_more_desc">mostrar más</string>
@@ -2451,7 +2450,6 @@ Language: es_VE
     <string name="done">hecho</string>
     <string name="ok">OK</string>
     <string name="link_enter_url">URL</string>
-    <string name="uploading" a8c-src-lib="module:editor">Subiendo…</string>
     <string name="image_alignment">Alineación</string>
     <string name="refresh">Refrescar</string>
     <string name="untitled">Sin Título</string>
@@ -2480,7 +2478,6 @@ Language: es_VE
     <string name="notification_settings">Ajustes de avisos</string>
     <string name="add">Añadir</string>
     <string name="save">Guardar</string>
-    <string name="cancel">Cancelar</string>
     <string-array name="blogging_reminders_count">
         <item>Una vez</item>
         <item>Dos veces</item>
