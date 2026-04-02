@@ -139,32 +139,39 @@ class SubfilterPageFragment : Fragment() {
         emptyStateContainer.visibility = View.VISIBLE
         subFilterViewModel.setTitleContainerVisibility(isVisible = false)
 
-        if (uiState.title == null) {
+        val uiTitle = uiState.title
+        if (uiTitle == null) {
             title.visibility = View.GONE
         } else {
             title.visibility = View.VISIBLE
-            title.text = uiHelpers.getTextOfUiString(requireContext(), uiState.title)
+            title.text = uiHelpers.getTextOfUiString(requireContext(), uiTitle)
         }
 
         text.text = uiHelpers.getTextOfUiString(requireContext(), uiState.text)
 
-        if (uiState.primaryButton == null) {
+        val uiPrimaryBtn = uiState.primaryButton
+        if (uiPrimaryBtn == null) {
             primaryButton.visibility = View.GONE
         } else {
             primaryButton.visibility = View.VISIBLE
-            primaryButton.text = uiHelpers.getTextOfUiString(requireContext(), uiState.primaryButton.text)
+            primaryButton.text = uiHelpers.getTextOfUiString(
+                requireContext(), uiPrimaryBtn.text
+            )
             primaryButton.setOnClickListener {
-                subFilterViewModel.onBottomSheetActionClicked(uiState.primaryButton.action)
+                subFilterViewModel.onBottomSheetActionClicked(uiPrimaryBtn.action)
             }
         }
 
-        if (uiState.secondaryButton == null) {
+        val uiSecondaryBtn = uiState.secondaryButton
+        if (uiSecondaryBtn == null) {
             secondaryButton.visibility = View.GONE
         } else {
             secondaryButton.visibility = View.VISIBLE
-            secondaryButton.text = uiHelpers.getTextOfUiString(requireContext(), uiState.secondaryButton.text)
+            secondaryButton.text = uiHelpers.getTextOfUiString(
+                requireContext(), uiSecondaryBtn.text
+            )
             secondaryButton.setOnClickListener {
-                subFilterViewModel.onBottomSheetActionClicked(uiState.secondaryButton.action)
+                subFilterViewModel.onBottomSheetActionClicked(uiSecondaryBtn.action)
             }
         }
     }

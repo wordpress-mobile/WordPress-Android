@@ -369,6 +369,7 @@ dependencies {
     implementation project(":libs:core-ui")
     implementation project(":libs:utils")
     implementation project(":libs:reader-models")
+    implementation project(":libs:reader")
     implementation("$gradle.ext.aboutAutomatticBinaryPath:${libs.versions.automattic.about.get()}")
 
     implementation("$gradle.ext.gutenbergKitBinaryPath:${libs.versions.gutenberg.kit.get()}")

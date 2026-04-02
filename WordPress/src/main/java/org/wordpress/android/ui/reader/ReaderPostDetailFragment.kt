@@ -638,9 +638,10 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
             val shimmerView: ShimmerFrameLayout = commentsSnippet.shimmerViewContainer
             val followText = commentsSnippet.followConversation
+            val onFollow = uiState.onFollowTapped
             followText.setOnClickListener(
-                if (uiState.onFollowTapped != null) {
-                    View.OnClickListener { uiState.onFollowTapped.invoke() }
+                if (onFollow != null) {
+                    View.OnClickListener { onFollow.invoke() }
                 } else {
                     null
                 }

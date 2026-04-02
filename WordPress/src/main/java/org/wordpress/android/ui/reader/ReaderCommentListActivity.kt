@@ -510,9 +510,10 @@ class ReaderCommentListActivity : BaseAppCompatActivity(),
                 val followText =
                     followItem.actionView!!.findViewById<TextView>(R.id.follow_button)
 
+                val onFollow = uiState.onFollowTapped
                 followItem.actionView!!.setOnClickListener(
-                    if (uiState.onFollowTapped != null)
-                        View.OnClickListener { uiState.onFollowTapped.invoke() }
+                    if (onFollow != null)
+                        View.OnClickListener { onFollow.invoke() }
                     else
                         null
                 )

@@ -1,0 +1,49 @@
+plugins {
+    alias(libs.plugins.android.library)
+    alias(libs.plugins.kotlin.parcelize)
+    alias(libs.plugins.dependency.analysis)
+}
+
+android {
+    namespace "org.wordpress.android.reader"
+
+    defaultConfig {
+        compileSdk rootProject.compileSdkVersion
+        minSdkVersion rootProject.minSdkVersion
+        targetSdkVersion rootProject.targetSdkVersion
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.toVersion(
+            libs.versions.java.get()
+        )
+        targetCompatibility JavaVersion.toVersion(
+            libs.versions.java.get()
+        )
+    }
+}
+
+dependencies {
+    // Internal modules
+    implementation project(":libs:core-ui")
+    implementation project(":libs:utils")
+    implementation project(":libs:reader-models")
+    implementation project(":libs:fluxc")
+
+    // WordPress utils (AppLog, PhotonUtils, etc.)
+    implementation("$gradle.ext.wputilsBinaryPath") {
+        version {
+            strictly libs.wordpress.utils.get().version
+        }
+    }
+
+    // AndroidX
+    implementation libs.androidx.annotation
+    implementation libs.androidx.core.ktx
+
+    // EventBus
+    implementation libs.greenrobot.eventbus.main
+
+    // Dagger (for @Reusable, @Inject)
+    implementation libs.google.dagger
+}

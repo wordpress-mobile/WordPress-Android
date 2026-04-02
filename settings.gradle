@@ -108,6 +108,7 @@ include ':libs:posttypes'
 include ':libs:core-ui'
 include ':libs:utils'
 include ':libs:reader-models'
+include ':libs:reader'
 include ':libs:core-test'
 
 apply from: './config/gradle/included_builds.gradle'
