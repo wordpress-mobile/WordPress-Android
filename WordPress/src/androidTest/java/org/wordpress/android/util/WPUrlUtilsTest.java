@@ -7,12 +7,9 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 
-import dagger.hilt.android.testing.HiltAndroidTest;
-
 import static junit.framework.TestCase.assertFalse;
 import static junit.framework.TestCase.assertTrue;
 
-@HiltAndroidTest
 public class WPUrlUtilsTest {
     private static final String WPCOM_ADDRESS_1 = "http://wordpress.com/xmlrpc.php";
     private static final String WPCOM_ADDRESS_2 = "http://wordpress.com#.b.com/test";
