@@ -162,19 +162,21 @@ class ReaderPostDetailHeaderView @JvmOverloads constructor(
         uiHelpers.updateVisibility(
             blogAvatarImage, state.avatarOrBlavatarUrl != null
         )
-        if (state.avatarOrBlavatarUrl == null) {
+        val blavatarUrl = state.avatarOrBlavatarUrl
+        if (blavatarUrl == null) {
             imageManager.cancelRequestAndClearImageView(blogAvatarImage)
         } else {
             imageManager.loadIntoCircle(
                 blogAvatarImage,
                 state.blavatarType,
-                state.avatarOrBlavatarUrl
+                blavatarUrl
             )
         }
 
         val authorAvatarImage = layoutBlogSection.blogSectionImageAuthorAvatar
+        val authorUrl = state.authorAvatarUrl
         val showAuthorsAvatar =
-            state.authorAvatarUrl != null && state.isAuthorAvatarVisible
+            authorUrl != null && state.isAuthorAvatarVisible
         uiHelpers.updateVisibility(authorAvatarImage, showAuthorsAvatar)
         if (!showAuthorsAvatar) {
             imageManager.cancelRequestAndClearImageView(authorAvatarImage)
@@ -182,7 +184,7 @@ class ReaderPostDetailHeaderView @JvmOverloads constructor(
             imageManager.loadIntoCircle(
                 authorAvatarImage,
                 ImageType.BLAVATAR_CIRCULAR,
-                state.authorAvatarUrl
+                authorUrl
             )
         }
     }
