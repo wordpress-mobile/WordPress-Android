@@ -21,7 +21,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import org.wordpress.android.R
+import org.wordpress.android.coreui.R
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 
 private const val DEFAULT_ICON_SIZE = 32
@@ -117,10 +117,10 @@ fun TrainOfIconsPreview() {
     AppThemeM3 {
         TrainOfIcons(
             iconModels = listOf(
-                R.mipmap.app_icon,
-                R.mipmap.app_icon,
-                R.mipmap.app_icon,
-                R.mipmap.app_icon
+                R.color.placeholder,
+                R.color.placeholder,
+                R.color.placeholder,
+                R.color.placeholder
             ).map { TrainOfIconsModel(it) },
             contentDescription = "Train of icons",
         )

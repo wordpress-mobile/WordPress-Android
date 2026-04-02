@@ -24,7 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import kotlinx.coroutines.flow.Flow
-import org.wordpress.android.R
+import org.wordpress.android.coreui.R
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 
 @Composable

@@ -17,7 +17,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import org.wordpress.android.R
+import org.wordpress.android.coreui.R
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 
 /**

@@ -1,7 +1,9 @@
 package org.wordpress.android.ui.compose.utils
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.res.Configuration
+import android.view.View
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -9,9 +11,13 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.LayoutDirection
-import org.wordpress.android.util.extensions.isRtl
-import org.wordpress.android.util.extensions.primaryLocale
 import java.util.Locale
+
+private val Context.primaryLocale: Locale
+    get() = resources.configuration.locales[0]
+
+private fun Configuration.isRtl(): Boolean =
+    layoutDirection == View.LAYOUT_DIRECTION_RTL
 
 /**
  * Utility function that wraps the [content] inside a [CompositionLocalProvider] overriding the [LocalContext]

@@ -10,12 +10,6 @@ import kotlinx.coroutines.Dispatchers
 import org.wordpress.android.util.helpers.Debouncer
 import javax.inject.Named
 
-const val APPLICATION_SCOPE = "APPLICATION_SCOPE"
-
-const val UI_THREAD = "UI_THREAD"
-const val BG_THREAD = "BG_THREAD"
-const val IO_THREAD = "IO_THREAD"
-
 @InstallIn(SingletonComponent::class)
 @Module
 class ThreadModule {

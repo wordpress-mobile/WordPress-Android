@@ -12,14 +12,21 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
-import org.wordpress.android.BuildConfig
 
-private val localColors = staticCompositionLocalOf { extraPaletteJPLight }
+private val localColors =
+    staticCompositionLocalOf { extraPaletteJPLight }
+
+/**
+ * Composition local for the Jetpack app flag. Defaults to false
+ * (WordPress). The app module should provide
+ * `BuildConfig.IS_JETPACK_APP` at the root of the composition.
+ */
+val LocalIsJetpackApp = staticCompositionLocalOf { false }
 
 @Composable
 fun AppThemeM3(
     isDarkTheme: Boolean = isSystemInDarkTheme(),
-    isJetpackApp: Boolean = BuildConfig.IS_JETPACK_APP,
+    isJetpackApp: Boolean = LocalIsJetpackApp.current,
     content: @Composable () -> Unit
 ) {
     AppThemeM3WithoutBackground(isDarkTheme, isJetpackApp) {
@@ -30,7 +37,7 @@ fun AppThemeM3(
 @Composable
 fun AppThemeM3WithoutBackground(
     isDarkTheme: Boolean = isSystemInDarkTheme(),
-    isJetpackApp: Boolean = BuildConfig.IS_JETPACK_APP,
+    isJetpackApp: Boolean = LocalIsJetpackApp.current,
     content: @Composable () -> Unit
 ) {
     val extraColors = getExtraColors(
@@ -55,7 +62,7 @@ fun AppThemeM3WithoutBackground(
 @Composable
 fun AppThemeM3Editor(
     isDarkTheme: Boolean = isSystemInDarkTheme(),
-    isJetpackApp: Boolean = BuildConfig.IS_JETPACK_APP,
+    isJetpackApp: Boolean = LocalIsJetpackApp.current,
     content: @Composable () -> Unit
 ) {
     androidx.compose.material3.MaterialTheme(

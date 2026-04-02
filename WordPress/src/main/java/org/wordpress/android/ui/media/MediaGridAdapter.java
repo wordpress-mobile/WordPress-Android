@@ -55,7 +55,7 @@ import javax.inject.Named;
 
 import kotlinx.coroutines.CoroutineScope;
 
-import static org.wordpress.android.modules.ThreadModuleKt.APPLICATION_SCOPE;
+import static org.wordpress.android.modules.CoroutineDispatchersKt.APPLICATION_SCOPE;
 
 /**
  * An adapter for the media gallery grid.

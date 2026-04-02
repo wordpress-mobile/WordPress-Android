@@ -14,6 +14,7 @@ import org.wordpress.android.R
 import org.wordpress.android.databinding.SiteCreationIntentsFragmentBinding
 import org.wordpress.android.ui.sitecreation.verticals.SiteCreationIntentsViewModel.IntentsUiState
 import org.wordpress.android.ui.utils.UiHelpers
+import org.wordpress.android.ui.utils.fadeInfadeOutViews
 import org.wordpress.android.util.DisplayUtilsWrapper
 import javax.inject.Inject
 

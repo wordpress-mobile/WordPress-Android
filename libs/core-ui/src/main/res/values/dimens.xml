@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="jp_migration_buttons_padding_horizontal">20dp</dimen>
+</resources>
