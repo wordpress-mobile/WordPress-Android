@@ -1,12 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="placeholder">#1A000000</color>
-    <color name="gray_10">#c3c4c7</color>
-    <color name="gray_50">#646970</color>
-    <color name="jetpack_green_70">#005b18</color>
-    <color name="blue_5">#bbe0fa</color>
-    <color name="blue_10">#91caf2</color>
-    <color name="blue_20">#68b3e8</color>
-    <color name="blue_30">#399ce3</color>
-    <color name="blue_50">#0675c4</color>
 </resources>
