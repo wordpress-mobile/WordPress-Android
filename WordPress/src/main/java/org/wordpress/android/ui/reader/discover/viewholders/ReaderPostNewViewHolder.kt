@@ -7,6 +7,7 @@ import androidx.appcompat.widget.ListPopupWindow
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import org.wordpress.android.R
+import org.wordpress.android.reader.R as ReaderR
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.databinding.ReaderCardviewPostNewBinding
@@ -165,7 +166,7 @@ class ReaderPostNewViewHolder(
                 ),
                 ContextCompat.getColor(
                     imageFeatured.context,
-                    R.color.reader_featured_image_background
+                    ReaderR.color.reader_featured_image_background
                 )
             )
         }
@@ -201,7 +202,7 @@ class ReaderPostNewViewHolder(
                         ),
                         ContextCompat.getColor(
                             imageFeatured.context,
-                            R.color.reader_featured_image_background
+                            ReaderR.color.reader_featured_image_background
                         )
                     )
                 }

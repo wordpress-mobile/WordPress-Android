@@ -32,7 +32,7 @@ data class ReaderReadingPreferences @JvmOverloads constructor(
             style = R.style.ReaderTheme_System,
             backgroundColorRes = MaterialR.attr.colorSurface,
             baseTextColorRes = MaterialR.attr.colorOnSurface,
-            linkColorRes = R.color.reader_post_body_link,
+            linkColorRes = ReaderR.color.reader_post_body_link,
         ),
         SOFT(
             displayNameRes = ReaderR.string.reader_preferences_theme_soft,

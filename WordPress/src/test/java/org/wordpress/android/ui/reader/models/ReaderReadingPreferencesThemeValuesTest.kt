@@ -19,6 +19,7 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.whenever
 import org.wordpress.android.R
+import org.wordpress.android.reader.R as ReaderR
 import com.google.android.material.R as MaterialR
 
 @RunWith(MockitoJUnitRunner::class)
@@ -52,7 +53,7 @@ class ReaderReadingPreferencesThemeValuesTest {
             } doReturn SEPIA_BASE_TEXT_COLOR
 
             `when`<Int> {
-                ContextCompat.getColor(context, R.color.reader_post_body_link)
+                ContextCompat.getColor(context, ReaderR.color.reader_post_body_link)
             } doReturn SEPIA_LINK_COLOR
         }
 

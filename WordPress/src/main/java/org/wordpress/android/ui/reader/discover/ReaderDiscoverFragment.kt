@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import org.wordpress.android.R
+import org.wordpress.android.reader.R as ReaderR
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.ReaderDiscoverFragmentLayoutBinding
 import org.wordpress.android.ui.ActivityLauncher
@@ -102,7 +103,7 @@ class ReaderDiscoverFragment : ViewPagerFragment(R.layout.reader_discover_fragme
 
             // set the background color as we have different colors for the new and legacy designs that are not easy to
             // change via styles, because of the FeatureConfig logic
-            val backgroundColor = R.color.reader_post_list_background
+            val backgroundColor = ReaderR.color.reader_post_list_background
             recyclerView.setBackgroundColor(ContextCompat.getColor(requireContext(), backgroundColor))
 
             val spacingVerticalRes = R.dimen.reader_card_gutters

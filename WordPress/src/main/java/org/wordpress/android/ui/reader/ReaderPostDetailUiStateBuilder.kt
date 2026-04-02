@@ -214,7 +214,7 @@ class ReaderPostDetailUiStateBuilder @Inject constructor(
             ReaderR.string.reader_excerpt_link,
             "<font color='" +
                     htmlUtilsWrapper
-                        .colorResToHtmlColor(contextProvider.getContext(), R.color.link_reader) + "'>" +
+                        .colorResToHtmlColor(contextProvider.getContext(), ReaderR.color.link_reader) + "'>" +
                     post.blogName + "</font>"
         )
     )

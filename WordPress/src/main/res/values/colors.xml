@@ -7,7 +7,6 @@
     <color name="background_dark_elevated">#2e2e2e</color>
     <color name="background_default">@color/neutral_0</color>
     <color name="background_snackbar">@color/neutral_80</color>
-    <color name="link_reader">@color/primary</color>
     <color name="bottom_bar_notification_badge">@android:color/white</color>
 
     <color name="p2_author_bg_stroke">#FFF</color>
@@ -29,16 +28,6 @@
     <color name="jetpack_badge_background">@color/jetpack_green</color>
     <color name="jetpack_powered_bottom_sheet_background">@color/white</color>
 
-    <!-- Reader -->
-    <!-- Matches iOS UIColor.separator: rgba(60,60,67,0.29) -->
-    <color name="reader_separator">#4A3C3C43</color>
-
-    <!--Reader Following empty view -->
-
-    <!--Reader Post Card -->
-    <color name="reader_post_list_background">@color/white</color>
-    <color name="reader_featured_image_background">@color/neutral_5</color>
-
     <!-- Modal Layout Picker -->
     <color name="mlp_categories_button_background">#ffededed</color>
     <color name="mlp_categories_button_background_dark">#ff464646</color>
@@ -46,46 +35,18 @@
     <color name="mlp_divider_dark">#ff303030</color>
     <color name="mlp_categories_background_dark">#ff2d2d2d</color>
 
-    <!--Reader Welcome Card -->
-
     <!-- Collapsing Toolbar Custom Scrim Color -->
     <color name="collapsing_toolbar_custom_scrim_color">@color/white_translucent_50</color>
 
     <!-- Scan Threat Context Line Custom Colors -->
     <color name="context_line_highlighted_row_background">@color/red_5</color>
 
-    <!-- Reader Topics You Might Like Chips -->
-    <color name="reader_topics_you_might_like_chip_green_stroke">@color/green_5</color>
-    <color name="reader_topics_you_might_like_chip_green_font">@color/green_50</color>
-    <color name="reader_topics_you_might_like_chip_green_fill">@color/green_0</color>
-    <color name="reader_topics_you_might_like_chip_purple_stroke">@color/purple_5</color>
-    <color name="reader_topics_you_might_like_chip_purple_font">@color/purple_50</color>
-    <color name="reader_topics_you_might_like_chip_purple_fill">@color/purple_0</color>
-    <color name="reader_topics_you_might_like_chip_yellow_stroke">@color/yellow_5</color>
-    <color name="reader_topics_you_might_like_chip_yellow_font">@color/yellow_50</color>
-    <color name="reader_topics_you_might_like_chip_yellow_fill">@color/yellow_0</color>
-    <color name="reader_topics_you_might_like_chip_orange_stroke">@color/orange_5</color>
-    <color name="reader_topics_you_might_like_chip_orange_font">@color/orange_50</color>
-    <color name="reader_topics_you_might_like_chip_orange_fill">@color/orange_0</color>
-
-    <!-- Reader Improvements -->
-    <color name="reader_improvements_recommended_section_text">#99000000</color>
-    <color name="reader_you_might_like_background">@color/neutral_0</color>
+    <!-- Reader (shared with non-reader code) -->
     <color name="reader_follow_button">@color/black</color>
     <color name="reader_follow_button_foreground">@color/white</color>
     <color name="reader_following_button_foreground">@color/black</color>
-    <color name="reader_follow_button_ripple">@color/reader_follow_button_ripple_selector_light</color>
-    <color name="reader_blog_section_avatar_internal_border">@color/black_translucent_20</color>
-    <color name="reader_post_body_link">@color/blue_50</color>
-    <color name="reader_footer_progress_background">@color/white</color>
-    <color name="reader_button_primary_background">@color/black</color>
     <color name="reader_button_primary_text">@color/white</color>
-
-    <!-- Reader Interest Chips -->
-    <color name="reader_interest_filter_chip_text">@color/material_on_surface_emphasis_high_type</color>
-    <color name="reader_interest_filter_chip_text_checked">@color/white</color>
-    <color name="reader_interest_filter_chip_background">@color/transparent</color>
-    <color name="reader_interest_filter_chip_background_checked">@color/black</color>
+    <color name="reader_blog_section_avatar_internal_border">@color/black_translucent_20</color>
 
     <!-- These colors were removed from the login library and moved here as they are still being
     used by some old layouts. They should be replaced here as well, whenever possible. -->

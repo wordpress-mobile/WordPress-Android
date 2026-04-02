@@ -1101,7 +1101,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
 
         recyclerView.setBackgroundColor(
             ContextCompat.getColor(
-                requireContext(), R.color.reader_post_list_background
+                requireContext(), ReaderR.color.reader_post_list_background
             )
         )
 
