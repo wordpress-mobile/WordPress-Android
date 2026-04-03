@@ -1497,12 +1497,20 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                     } catch(e) {
                         return null;
                     }
+                    function stripSizeSuffix(p) {
+                        return p.replace(/-\d+x\d+(\.[^.]+)${'$'}/, '${'$'}1');
+                    }
+                    var basePath = stripSizeSuffix(targetPath);
                     var allImgs = document.querySelectorAll('img');
                     var targetImg = null;
                     for (var i = 0; i < allImgs.length; i++) {
                         try {
-                            var imgPath = new URL(allImgs[i].src).pathname;
-                            if (imgPath === targetPath) {
+                            var imgPath = new URL(
+                                allImgs[i].src
+                            ).pathname;
+                            if (imgPath === targetPath
+                                || stripSizeSuffix(imgPath)
+                                    === basePath) {
                                 targetImg = allImgs[i];
                                 break;
                             }
@@ -1519,7 +1527,8 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                     var el = targetImg.parentElement;
                     while (el) {
                         for (var s = 0; s < selectors.length; s++) {
-                            if (el.matches && el.matches(selectors[s])) {
+                            if (el.matches
+                                && el.matches(selectors[s])) {
                                 gallery = el;
                                 break;
                             }
@@ -1531,7 +1540,8 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                     var imgs = gallery.querySelectorAll('img');
                     var urls = [];
                     for (var j = 0; j < imgs.length; j++) {
-                        if (imgs[j].src && imgs[j].src.startsWith('http')) {
+                        if (imgs[j].src
+                            && imgs[j].src.startsWith('http')) {
                             urls.push(imgs[j].src);
                         }
                     }
