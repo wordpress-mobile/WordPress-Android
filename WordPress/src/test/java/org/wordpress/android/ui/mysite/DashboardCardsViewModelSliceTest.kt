@@ -23,7 +23,6 @@ import org.wordpress.android.ui.mysite.cards.dashboard.bloganuary.BloganuaryNudg
 import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptCardViewModelSlice
 import org.wordpress.android.ui.mysite.cards.domainregistration.DomainRegistrationCardViewModelSlice
 import org.wordpress.android.ui.mysite.cards.jpfullplugininstall.JetpackInstallFullPluginCardViewModelSlice
-import org.wordpress.android.ui.mysite.cards.migration.JpMigrationSuccessCardViewModelSlice
 import org.wordpress.android.ui.mysite.cards.nocards.NoCardsMessageViewModelSlice
 import org.wordpress.android.ui.mysite.cards.personalize.PersonalizeCardViewModelSlice
 import org.wordpress.android.ui.mysite.cards.plans.PlansCardViewModelSlice
@@ -32,8 +31,6 @@ import org.wordpress.android.ui.mysite.cards.quicklinksitem.QuickLinksItemViewMo
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class DashboardCardsViewModelSliceTest: BaseUnitTest() {
-    @Mock
-    lateinit var jpMigrationSuccessCardViewModelSlice: JpMigrationSuccessCardViewModelSlice
     @Mock
     lateinit var jetpackInstallFullPluginCardViewModelSlice: JetpackInstallFullPluginCardViewModelSlice
     @Mock
@@ -61,7 +58,6 @@ class DashboardCardsViewModelSliceTest: BaseUnitTest() {
 
     @Before
     fun setup() {
-        whenever(jpMigrationSuccessCardViewModelSlice.uiModel).thenReturn(MutableLiveData())
         whenever(jetpackInstallFullPluginCardViewModelSlice.uiModel).thenReturn(MutableLiveData())
         whenever(domainRegistrationCardViewModelSlice.uiModel).thenReturn(MutableLiveData())
         whenever(blazeCardViewModelSlice.uiModel).thenReturn(MutableLiveData())
@@ -74,7 +70,6 @@ class DashboardCardsViewModelSliceTest: BaseUnitTest() {
 
         dashboardCardsViewModelSlice = DashboardCardsViewModelSlice(
             testDispatcher(),
-            jpMigrationSuccessCardViewModelSlice,
             jetpackInstallFullPluginCardViewModelSlice,
             domainRegistrationCardViewModelSlice,
             blazeCardViewModelSlice,
@@ -110,7 +105,6 @@ class DashboardCardsViewModelSliceTest: BaseUnitTest() {
         dashboardCardsViewModelSlice.initialize(testScope())
         dashboardCardsViewModelSlice.buildCards(mockSite)
 
-        verify(jpMigrationSuccessCardViewModelSlice, atMost(1)).buildCard()
         verify(jetpackInstallFullPluginCardViewModelSlice, atMost(1)).buildCard(mockSite)
         verify(blazeCardViewModelSlice, atMost(1)).buildCard(mockSite)
         verify(bloggingPromptCardViewModelSlice, atMost(1)).fetchBloggingPrompt(mockSite)
@@ -126,7 +120,6 @@ class DashboardCardsViewModelSliceTest: BaseUnitTest() {
         dashboardCardsViewModelSlice.initialize(testScope())
         dashboardCardsViewModelSlice.clearValue()
 
-        verify(jpMigrationSuccessCardViewModelSlice).clearValue()
         verify(jetpackInstallFullPluginCardViewModelSlice).clearValue()
         verify(domainRegistrationCardViewModelSlice).clearValue()
         verify(blazeCardViewModelSlice).clearValue()

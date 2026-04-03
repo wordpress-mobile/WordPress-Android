@@ -644,11 +644,7 @@ Language: id
     <string name="new_site_creation_preview_caption_paid">Diperlukan 30 menit agar domain khusus Anda dapat berfungsi.</string>
     <string name="new_site_creation_preview_subtitle_paid">Kami telah mengirim e-mail resi Anda. %s</string>
     <string name="notifications_disabled_permission_dialog">Pemberitahuan aplikasi telah dinonaktifkan. Ketuk di sini untuk mengaktifkannya.</string>
-    <string name="jp_migration_delete_message">Kami sarankan untuk &lt;b&gt;menghapus instalan aplikasi WordPress&lt;/b&gt; di perangkat Anda guna mencegah terjadinya konflik data.</string>
-    <string name="jp_migration_delete_subtitle">Aplikasi WordPress sepertinya masih terinstal.</string>
-    <string name="jp_migration_delete_title">Anda tidak lagi membutuhkan aplikasi WordPress di perangkat Anda</string>
     <string name="jp_migration_done_delete_wp_message">Kami sarankan untuk &lt;b&gt;menghapus instalan aplikasi WordPress&lt;/b&gt; di perangkat Anda guna mencegah terjadinya konflik data.</string>
-    <string name="jp_migration_success_card_message">Selamat datang di aplikasi Jetpack. Anda dapat menghapus instalan aplikasi WordPress.</string>
     <string name="dashboard_pages_card_create_another_page_description">Mulai dengan bespoke, tampilan ramah perangkat seluler</string>
     <string name="dashboard_pages_card_create_another_page_button">Buat Halaman Lain</string>
     <string name="dashboard_pages_card_no_pages_create_page_button">Tambahkan Halaman ke situs Anda</string>
@@ -825,8 +821,6 @@ Language: id
     <string name="preference_open_links_in_jetpack_setting_change_disable_error">Tidak dapat menonaktifkan fitur buka tautan di Jetpack</string>
     <string name="preference_open_links_in_jetpack_setting_change_enable_error">Tidak dapat mengaktifkan fitur buka tautan di Jetpack</string>
     <string name="preference_open_links_in_jetpack">Buka tautan di Jetpack</string>
-    <string name="jp_migration_need_help_button">Butuh bantuan?</string>
-    <string name="jp_migration_got_it_button">Saya mengerti</string>
     <string name="jp_migration_network_error_message">Tanpa koneksi internet, kami tidak dapat mentransfer data dan pengaturan.</string>
     <string name="jp_migration_network_error_subtitle">Pastikan koneksi internet berfungsi lalu coba kembali.</string>
     <string name="jp_migration_network_error_title">Tidak dapat menyambung ke internet.</string>

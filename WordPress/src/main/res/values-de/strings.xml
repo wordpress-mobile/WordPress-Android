@@ -648,11 +648,7 @@ Language: de
     <string name="new_site_creation_preview_caption_paid">Es kann bis zu 30 Minuten dauern, bis deine individuelle Domain funktioniert.</string>
     <string name="new_site_creation_preview_subtitle_paid">Wir haben dir deinen Beleg per E-Mail gesendet. %s</string>
     <string name="notifications_disabled_permission_dialog">Anwendungsbenachrichtigungen wurden deaktiviert. Tippe hier, um sie zu aktivieren.</string>
-    <string name="jp_migration_delete_message">Wir empfehlen dir, &lt;b&gt;die WordPress-App auf deinem Gerät zu deinstallieren&lt;/b&gt;, um Datenkonflikte zu vermeiden.</string>
-    <string name="jp_migration_delete_subtitle">Offenbar hast du die WordPress-App noch installiert.</string>
-    <string name="jp_migration_delete_title">Du brauchst die WordPress-App nicht mehr auf deinem Gerät</string>
     <string name="jp_migration_done_delete_wp_message">Wir empfehlen dir, &lt;b&gt;die WordPress-App auf deinem Gerät zu deinstallieren&lt;/b&gt;, um Datenkonflikte zu vermeiden.</string>
-    <string name="jp_migration_success_card_message">Willkommen bei der Jetpack-App. Du kannst die WordPress-App deinstallieren.</string>
     <string name="dashboard_pages_card_create_another_page_description">Beginne mit maßgeschneiderten, für Mobilgeräte geeigneten Layouts</string>
     <string name="dashboard_pages_card_create_another_page_button">Weitere Seite erstellen</string>
     <string name="dashboard_pages_card_no_pages_create_page_button">Seiten zu deiner Website hinzufügen</string>
@@ -829,8 +825,6 @@ Language: de
     <string name="preference_open_links_in_jetpack_setting_change_disable_error">„Open links“ (Links öffnen) kann in Jetpack nicht deaktiviert werden</string>
     <string name="preference_open_links_in_jetpack_setting_change_enable_error">„Open links“ (Links öffnen) kann in Jetpack nicht aktiviert werden</string>
     <string name="preference_open_links_in_jetpack">Links in Jetpack öffnen</string>
-    <string name="jp_migration_need_help_button">Brauchst du Hilfe?</string>
-    <string name="jp_migration_got_it_button">Verstanden</string>
     <string name="jp_migration_network_error_message">Wir können deine Daten und Einstellungen ohne Netzwerkverbindung nicht übertragen.</string>
     <string name="jp_migration_network_error_subtitle">Bitte vergewissere dich, dass eine Netzwerkverbindung besteht, und versuch es erneut.</string>
     <string name="jp_migration_network_error_title">Es kann keine Internetverbindung hergestellt werden.</string>

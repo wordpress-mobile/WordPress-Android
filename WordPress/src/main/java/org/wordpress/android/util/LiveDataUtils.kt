@@ -351,6 +351,102 @@ fun <S, T, U, V, W, X, Y> merge(
     }
 }
 
+@Suppress(
+    "DestructuringDeclarationWithTooManyEntries",
+    "LongParameterList",
+    "CyclomaticComplexMethod",
+    "LongMethod"
+)
+fun <A, B, C, D, E, F, G, H, I, Z> merge(
+    sourceA: LiveData<A>,
+    sourceB: LiveData<B>,
+    sourceC: LiveData<C>,
+    sourceD: LiveData<D>,
+    sourceE: LiveData<E>,
+    sourceF: LiveData<F>,
+    sourceG: LiveData<G>,
+    sourceH: LiveData<H>,
+    sourceI: LiveData<I>,
+    distinct: Boolean = false,
+    merger: (A?, B?, C?, D?, E?, F?, G?, H?, I?) -> Z?
+): LiveData<Z> {
+    data class NineItemContainer(
+        val first: A? = null,
+        val second: B? = null,
+        val third: C? = null,
+        val fourth: D? = null,
+        val fifth: E? = null,
+        val sixth: F? = null,
+        val seventh: G? = null,
+        val eighth: H? = null,
+        val ninth: I? = null
+    )
+
+    val mediator = MediatorLiveData<NineItemContainer>()
+    mediator.value = NineItemContainer()
+    mediator.addSource(sourceA) {
+        val container = mediator.value
+        if (container?.first != it || !distinct) {
+            mediator.value = container?.copy(first = it)
+        }
+    }
+    mediator.addSource(sourceB) {
+        val container = mediator.value
+        if (container?.second != it || !distinct) {
+            mediator.value = container?.copy(second = it)
+        }
+    }
+    mediator.addSource(sourceC) {
+        val container = mediator.value
+        if (container?.third != it || !distinct) {
+            mediator.value = container?.copy(third = it)
+        }
+    }
+    mediator.addSource(sourceD) {
+        val container = mediator.value
+        if (container?.fourth != it || !distinct) {
+            mediator.value = container?.copy(fourth = it)
+        }
+    }
+    mediator.addSource(sourceE) {
+        val container = mediator.value
+        if (container?.fifth != it || !distinct) {
+            mediator.value = container?.copy(fifth = it)
+        }
+    }
+    mediator.addSource(sourceF) {
+        val container = mediator.value
+        if (container?.sixth != it || !distinct) {
+            mediator.value = container?.copy(sixth = it)
+        }
+    }
+    mediator.addSource(sourceG) {
+        val container = mediator.value
+        if (container?.seventh != it || !distinct) {
+            mediator.value = container?.copy(seventh = it)
+        }
+    }
+    mediator.addSource(sourceH) {
+        val container = mediator.value
+        if (container?.eighth != it || !distinct) {
+            mediator.value = container?.copy(eighth = it)
+        }
+    }
+    mediator.addSource(sourceI) {
+        val container = mediator.value
+        if (container?.ninth != it || !distinct) {
+            mediator.value = container?.copy(ninth = it)
+        }
+    }
+    return mediator.mapSafe {
+        (first, second, third, fourth, fifth, sixth, seventh, eighth, ninth) ->
+        merger(
+            first, second, third, fourth, fifth,
+            sixth, seventh, eighth, ninth
+        )
+    }
+}
+
 /**
  * Merges ten LiveData sources using a given function. The function returns an object of a new type.
  * @param sourceA first source

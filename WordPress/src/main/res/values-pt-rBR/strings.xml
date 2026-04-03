@@ -648,11 +648,7 @@ Language: pt_BR
     <string name="new_site_creation_preview_caption_paid">Pode levar até 30 minutos para o domínio personalizado começar a funcionar.</string>
     <string name="new_site_creation_preview_subtitle_paid">Enviamos o recibo por e-mail. %s</string>
     <string name="notifications_disabled_permission_dialog">As notificações do aplicativo foram desativadas. Toque aqui para ativá-las.</string>
-    <string name="jp_migration_delete_message">Recomendamos que você &lt;b&gt;desinstale o aplicativo WordPress&lt;/b&gt; de seu dispositivo para evitar conflitos de dados.</string>
-    <string name="jp_migration_delete_subtitle">Parece que você ainda tem o aplicativo WordPress instalado.</string>
-    <string name="jp_migration_delete_title">Você não precisa mais do aplicativo WordPress em seu dispositivo</string>
     <string name="jp_migration_done_delete_wp_message">Recomendamos que você &lt;b&gt;desinstale o aplicativo WordPress&lt;/b&gt; de seu dispositivo para evitar conflitos de dados.</string>
-    <string name="jp_migration_success_card_message">Boas-vindas ao aplicativo Jetpack. Agora você pode desinstalar o aplicativo WordPress.</string>
     <string name="dashboard_pages_card_create_another_page_description">Comece com layouts personalizados e compatíveis com dispositivos móveis</string>
     <string name="dashboard_pages_card_create_another_page_button">Criar outra página</string>
     <string name="dashboard_pages_card_no_pages_create_page_button">Adicionar páginas ao seu site</string>
@@ -829,8 +825,6 @@ Language: pt_BR
     <string name="preference_open_links_in_jetpack_setting_change_disable_error">Não é possível desabilitar links abertos no Jetpack</string>
     <string name="preference_open_links_in_jetpack_setting_change_enable_error">Não é possível habilitar links abertos no Jetpack</string>
     <string name="preference_open_links_in_jetpack">Abrir links no Jetpack</string>
-    <string name="jp_migration_need_help_button">Precisa de ajuda?</string>
-    <string name="jp_migration_got_it_button">Entendi</string>
     <string name="jp_migration_network_error_message">Não é possível transferir seus dados e configurações sem uma conexão de rede.</string>
     <string name="jp_migration_network_error_subtitle">Confira se sua conexão de rede está funcionando e tente novamente.</string>
     <string name="jp_migration_network_error_title">Não é possível se conectar à internet.</string>
