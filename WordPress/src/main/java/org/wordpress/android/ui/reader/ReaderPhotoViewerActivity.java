@@ -4,8 +4,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Parcelable;
 import android.text.TextUtils;
-
-import java.util.ArrayList;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
@@ -13,6 +11,8 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
+import java.util.ArrayList;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
@@ -166,6 +166,11 @@ public class ReaderPhotoViewerActivity extends BaseAppCompatActivity
         return null;
     }
 
+    /**
+     * Strips WordPress size suffixes (e.g. -800x600) from a URL.
+     * Keep in sync with the JS counterpart in
+     * {@code ReaderPostDetailFragment.buildGalleryDetectionJs}.
+     */
     @NonNull
     private static String stripSizeSuffix(@NonNull String url) {
         return url.replaceAll("-\\d+x\\d+(\\.[^.]+)$", "$1");

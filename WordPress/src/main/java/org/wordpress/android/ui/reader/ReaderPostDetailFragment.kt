@@ -1564,6 +1564,8 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                 result
             }
             val array = org.json.JSONArray(json)
+            // Single-image galleries fall back to all-images behavior
+            // so the viewer shows more context rather than a lone image.
             if (array.length() <= 1) return null
             val urls = ArrayList<String>(array.length())
             for (i in 0 until array.length()) {
