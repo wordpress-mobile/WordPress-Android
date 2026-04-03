@@ -27,6 +27,7 @@ import org.wordpress.android.ui.postsrs.data.PostRsRestClient
 import org.wordpress.android.ui.postsrs.data.WpServiceProvider
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
 
 @ExperimentalCoroutinesApi
@@ -41,6 +42,7 @@ class PostRsListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
     @Mock lateinit var networkUtilsWrapper: NetworkUtilsWrapper
     @Mock lateinit var accountStore: AccountStore
     @Mock lateinit var appPrefsWrapper: AppPrefsWrapper
+    @Mock lateinit var analyticsTracker: AnalyticsTrackerWrapper
 
     private lateinit var site: SiteModel
     private var activeViewModel: PostRsListViewModel? = null
@@ -74,6 +76,7 @@ class PostRsListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
         networkUtilsWrapper = networkUtilsWrapper,
         accountStore = accountStore,
         appPrefsWrapper = appPrefsWrapper,
+        analyticsTracker = analyticsTracker,
     ).also { activeViewModel = it }
 
     @Test
