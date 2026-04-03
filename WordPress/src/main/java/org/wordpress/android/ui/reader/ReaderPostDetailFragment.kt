@@ -1459,7 +1459,6 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         return true
     }
 
-    @Suppress("LongMethod")
     private fun showPhotoViewerWithGalleryCheck(
         imageUrl: String,
         sourceView: View,

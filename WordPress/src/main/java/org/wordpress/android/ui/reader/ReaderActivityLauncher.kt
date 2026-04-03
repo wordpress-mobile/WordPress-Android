@@ -436,48 +436,7 @@ object ReaderActivityLauncher {
     }
 
     @JvmStatic
-    @Suppress("LongParameterList")
-    fun showReaderPhotoViewer(
-        context: Context,
-        imageUrl: String,
-        content: String,
-        sourceView: View?,
-        imageOptions: EnumSet<PhotoViewerOption>,
-        startX: Int,
-        startY: Int
-    ) {
-        if (TextUtils.isEmpty(imageUrl)) {
-            return
-        }
-
-        val isPrivate = imageOptions.contains(PhotoViewerOption.IS_PRIVATE_IMAGE)
-        val isGallery = imageOptions.contains(PhotoViewerOption.IS_GALLERY_IMAGE)
-
-        val intent = Intent(context, ReaderPhotoViewerActivity::class.java)
-        intent.putExtra(ReaderConstants.ARG_IMAGE_URL, imageUrl)
-        intent.putExtra(ReaderConstants.ARG_IS_PRIVATE, isPrivate)
-        intent.putExtra(ReaderConstants.ARG_IS_GALLERY, isGallery)
-        if (!TextUtils.isEmpty(content)) {
-            intent.putExtra(ReaderConstants.ARG_CONTENT, content)
-        }
-
-        if (context is Activity && sourceView != null) {
-            val options =
-                ActivityOptionsCompat.makeScaleUpAnimation(
-                    sourceView,
-                    startX,
-                    startY,
-                    0,
-                    0
-                )
-            @Suppress("DEPRECATION")
-            ActivityCompat.startActivity(context, intent, options.toBundle())
-        } else {
-            context.startActivity(intent)
-        }
-    }
-
-    @JvmStatic
+    @JvmOverloads
     @Suppress("LongParameterList")
     fun showReaderPhotoViewer(
         context: Context,
@@ -487,7 +446,7 @@ object ReaderActivityLauncher {
         imageOptions: EnumSet<PhotoViewerOption>,
         startX: Int,
         startY: Int,
-        galleryImageUrls: ArrayList<String>?
+        galleryImageUrls: ArrayList<String>? = null
     ) {
         if (TextUtils.isEmpty(imageUrl)) {
             return
