@@ -233,10 +233,10 @@ public class ReaderWebView extends WPWebView {
     }
 
     /**
-     * Returns true if the anchor wrapping the tapped image links to
-     * an image URL (e.g. a gallery image linked to the media file).
+     * Returns true if the anchor wrapping the tapped image is a
+     * fragment link (e.g. footnote back-references like #fn-1).
      */
-    private boolean isImageAnchorClick(HitTestResult hr) {
+    private boolean isFragmentAnchorClick(HitTestResult hr) {
         if (hr.getType()
             != WebView.HitTestResult.SRC_IMAGE_ANCHOR_TYPE) {
             return false;
@@ -245,7 +245,7 @@ public class ReaderWebView extends WPWebView {
         Message message = handler.obtainMessage();
         this.requestFocusNodeHref(message);
         String anchorUrl = message.getData().getString("url");
-        return anchorUrl != null && UrlUtils.isImageUrl(anchorUrl);
+        return anchorUrl != null && anchorUrl.contains("#");
     }
 
     private boolean isVideoPressPreview(@NonNull String url) {
@@ -262,18 +262,25 @@ public class ReaderWebView extends WPWebView {
             HitTestResult hr = getHitTestResult();
             String url = hr.getExtra();
             if (isValidClickedUrl(url)) {
-                if (UrlUtils.isImageUrl(url)) {
-                    if (isValidEmbeddedImageClick(hr) || isVideoPressPreview(url)) {
+                // Trust the HitTestResult type for image detection
+                // so formats not covered by isImageUrl (e.g. .bmp,
+                // .webp) are still handled as image clicks.
+                int hitType = hr.getType();
+                boolean isImage = hitType == HitTestResult.IMAGE_TYPE
+                    || hitType == HitTestResult.SRC_IMAGE_ANCHOR_TYPE
+                    || UrlUtils.isImageUrl(url);
+                if (isImage) {
+                    if (isValidEmbeddedImageClick(hr)
+                        || isVideoPressPreview(url)) {
                         return super.onTouchEvent(event);
                     }
-                    // Images inside anchors: if the anchor links to
-                    // an image (e.g. gallery linked to media file),
-                    // treat as an image click. Otherwise defer to
-                    // WebView so the JS fragment-link interceptor
-                    // can handle it (e.g. footnote back-references).
-                    if (hr.getType()
-                        == HitTestResult.SRC_IMAGE_ANCHOR_TYPE
-                        && !isImageAnchorClick(hr)) {
+                    // For images inside anchors, defer to WebView
+                    // only when the anchor is a fragment link (e.g.
+                    // footnote back-references) so the JS interceptor
+                    // can handle it. Otherwise treat as image click
+                    // (e.g. gallery images linked to media files).
+                    if (hitType == HitTestResult.SRC_IMAGE_ANCHOR_TYPE
+                        && isFragmentAnchorClick(hr)) {
                         return super.onTouchEvent(event);
                     }
                     return mUrlClickListener.onImageUrlClick(
