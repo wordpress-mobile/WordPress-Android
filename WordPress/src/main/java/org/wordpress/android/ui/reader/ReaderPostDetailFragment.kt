@@ -1459,6 +1459,8 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         return true
     }
 
+    private val galleryDetector = ReaderGalleryDetector()
+
     private fun showPhotoViewerWithGalleryCheck(
         imageUrl: String,
         sourceView: View,
@@ -1468,84 +1470,13 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         if (!isAdded || imageUrl.isEmpty() || !imageUrl.startsWith("http")) {
             return
         }
-
-        val js = buildGalleryDetectionJs(imageUrl)
-        readerWebView.evaluateJavascript(js) { result ->
-            if (!isAdded) return@evaluateJavascript
-            val galleryUrls = parseGalleryUrlsResult(result)
+        galleryDetector.detectGallery(readerWebView, imageUrl) { galleryUrls ->
+            if (!isAdded) return@detectGallery
             if (galleryUrls != null) {
                 showPhotoViewerForGallery(imageUrl, sourceView, startX, startY, galleryUrls)
             } else {
                 showPhotoViewer(imageUrl, sourceView, startX, startY)
             }
-        }
-    }
-
-    private fun buildGalleryDetectionJs(imageUrl: String): String {
-        val safeUrl = imageUrl
-            .replace("\\", "\\\\")
-            .replace("'", "\\'")
-            .replace("\n", "")
-            .replace("\r", "")
-        return """
-            (function() {
-                try {
-                    var tp = new URL('$safeUrl').pathname;
-                    var strip = function(p) {
-                        return p.replace(/-\d+x\d+(\.[^.]+)${'$'}/, '${'$'}1');
-                    };
-                    var sel = '.wp-block-gallery,.tiled-gallery,'
-                        + '.gallery,.blocks-gallery-grid';
-                    var imgs = document.querySelectorAll('img');
-                    for (var i = 0; i < imgs.length; i++) {
-                        try {
-                            var p = new URL(imgs[i].src).pathname;
-                            if (p === tp || strip(p) === strip(tp)) {
-                                var g = imgs[i].closest(sel);
-                                if (!g) return null;
-                                var urls = [];
-                                var gi = g.querySelectorAll('img');
-                                for (var j = 0; j < gi.length; j++) {
-                                    if (gi[j].src
-                                        && gi[j].src.startsWith('http'))
-                                        urls.push(gi[j].src);
-                                }
-                                return JSON.stringify(urls);
-                            }
-                        } catch(e) {}
-                    }
-                    return null;
-                } catch(e) { return null; }
-            })()
-        """.trimIndent()
-    }
-
-    private fun parseGalleryUrlsResult(result: String?): ArrayList<String>? {
-        if (result.isNullOrEmpty() || result == "null") return null
-        return try {
-            val json = if (result.startsWith("\"") && result.endsWith("\"")) {
-                result
-                    .substring(1, result.length - 1)
-                    .replace("\\\"", "\"")
-                    .replace("\\\\", "\\")
-            } else {
-                result
-            }
-            val array = org.json.JSONArray(json)
-            // Single-image galleries fall back to all-images behavior
-            // so the viewer shows more context rather than a lone image.
-            if (array.length() <= 1) {
-                null
-            } else {
-                val urls = ArrayList<String>(array.length())
-                for (i in 0 until array.length()) {
-                    urls.add(array.getString(i))
-                }
-                urls
-            }
-        } catch (e: org.json.JSONException) {
-            AppLog.e(T.READER, "Failed to parse gallery URLs: $e")
-            null
         }
     }
 
