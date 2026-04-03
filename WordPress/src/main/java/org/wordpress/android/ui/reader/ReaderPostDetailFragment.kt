@@ -1516,39 +1516,49 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                         } catch(e) {}
                     }
                     if (!targetImg) return null;
-                    var selectors = [
-                        '.wp-block-gallery',
-                        '.tiled-gallery',
-                        '.gallery',
-                        '.blocks-gallery-grid'
-                    ];
-                    var gallery = null;
-                    var el = targetImg.parentElement;
-                    while (el) {
-                        for (var s = 0; s < selectors.length; s++) {
-                            if (el.matches
-                                && el.matches(selectors[s])) {
-                                gallery = el;
-                                break;
-                            }
-                        }
-                        if (gallery) break;
-                        el = el.parentElement;
-                    }
-                    if (!gallery) return null;
-                    var imgs = gallery.querySelectorAll('img');
-                    var urls = [];
-                    for (var j = 0; j < imgs.length; j++) {
-                        if (imgs[j].src
-                            && imgs[j].src.startsWith('http')) {
-                            urls.push(imgs[j].src);
-                        }
-                    }
-                    return JSON.stringify(urls);
+                    ${buildGalleryCollectionJs()}
                 } catch(e) {
                     return null;
                 }
             })();
+        """.trimIndent()
+    }
+
+    /**
+     * Returns JS that walks up from `targetImg` to find a gallery
+     * ancestor, then collects all image URLs from that gallery.
+     */
+    private fun buildGalleryCollectionJs(): String {
+        return """
+            var selectors = [
+                '.wp-block-gallery',
+                '.tiled-gallery',
+                '.gallery',
+                '.blocks-gallery-grid'
+            ];
+            var gallery = null;
+            var el = targetImg.parentElement;
+            while (el) {
+                for (var s = 0; s < selectors.length; s++) {
+                    if (el.matches
+                        && el.matches(selectors[s])) {
+                        gallery = el;
+                        break;
+                    }
+                }
+                if (gallery) break;
+                el = el.parentElement;
+            }
+            if (!gallery) return null;
+            var imgs = gallery.querySelectorAll('img');
+            var urls = [];
+            for (var j = 0; j < imgs.length; j++) {
+                if (imgs[j].src
+                    && imgs[j].src.startsWith('http')) {
+                    urls.push(imgs[j].src);
+                }
+            }
+            return JSON.stringify(urls);
         """.trimIndent()
     }
 
@@ -1566,12 +1576,15 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             val array = org.json.JSONArray(json)
             // Single-image galleries fall back to all-images behavior
             // so the viewer shows more context rather than a lone image.
-            if (array.length() <= 1) return null
-            val urls = ArrayList<String>(array.length())
-            for (i in 0 until array.length()) {
-                urls.add(array.getString(i))
+            if (array.length() <= 1) {
+                null
+            } else {
+                val urls = ArrayList<String>(array.length())
+                for (i in 0 until array.length()) {
+                    urls.add(array.getString(i))
+                }
+                urls
             }
-            urls
         } catch (e: org.json.JSONException) {
             AppLog.e(T.READER, "Failed to parse gallery URLs: $e")
             null
