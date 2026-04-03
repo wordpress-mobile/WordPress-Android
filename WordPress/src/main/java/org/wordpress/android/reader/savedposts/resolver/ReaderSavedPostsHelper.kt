@@ -1,6 +1,5 @@
 package org.wordpress.android.reader.savedposts.resolver
 
-import org.wordpress.android.R
 import org.wordpress.android.reader.R as ReaderR
 import org.wordpress.android.datasets.wrappers.ReaderDatabaseWrapper
 import org.wordpress.android.datasets.wrappers.ReaderPostTableWrapper

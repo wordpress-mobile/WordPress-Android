@@ -16,7 +16,6 @@ import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
-import org.wordpress.android.R
 import org.wordpress.android.reader.R as ReaderR
 import org.wordpress.android.models.ReaderComment
 import org.wordpress.android.models.ReaderCommentList

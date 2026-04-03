@@ -119,7 +119,9 @@ class ReaderAnnouncementHelperTest {
         val tagsFeedItem = items[0]
         assertThat(tagsFeedItem.iconRes).isEqualTo(R.drawable.ic_reader_tag)
         assertThat(tagsFeedItem.titleRes).isEqualTo(ReaderR.string.reader_announcement_card_tags_stream_title)
-        assertThat(tagsFeedItem.descriptionRes).isEqualTo(ReaderR.string.reader_announcement_card_tags_stream_description)
+        assertThat(tagsFeedItem.descriptionRes).isEqualTo(
+            ReaderR.string.reader_announcement_card_tags_stream_description
+        )
 
         val readerPreferencesItem = items[1]
         assertThat(readerPreferencesItem.iconRes).isEqualTo(R.drawable.ic_reader_preferences)

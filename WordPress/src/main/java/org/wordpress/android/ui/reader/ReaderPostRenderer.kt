@@ -8,7 +8,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.jsoup.Jsoup
-import org.wordpress.android.R
 import org.wordpress.android.reader.R as ReaderR
 import org.wordpress.android.WordPress.Companion.getContext
 import org.wordpress.android.models.ReaderPost

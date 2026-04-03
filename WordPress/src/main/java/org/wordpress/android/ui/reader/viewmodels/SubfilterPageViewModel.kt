@@ -3,7 +3,6 @@ package org.wordpress.android.ui.reader.viewmodels
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import org.wordpress.android.R
 import org.wordpress.android.reader.R as ReaderR
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.ui.reader.ReaderSubsActivity

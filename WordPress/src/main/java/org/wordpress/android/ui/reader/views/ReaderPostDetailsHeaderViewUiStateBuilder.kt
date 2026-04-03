@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.reader.views
 
 import dagger.Reusable
-import org.wordpress.android.R
 import org.wordpress.android.reader.R as ReaderR
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.ui.reader.discover.ReaderPostTagsUiStateBuilder

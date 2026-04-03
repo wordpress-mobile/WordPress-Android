@@ -17,7 +17,6 @@ import org.wordpress.android.util.FormatUtils
 import org.wordpress.android.util.PhotonUtils
 import org.wordpress.android.util.StringUtils
 import org.wordpress.android.util.UrlUtils
-import java.net.URI
 import androidx.core.net.toUri
 
 object ReaderUtils {

@@ -5,7 +5,6 @@ import org.junit.Test;
 import static junit.framework.TestCase.assertEquals;
 
 public class AutolinkUtilsTest {
-
     @Test
     public void testNullString() {
         AutolinkUtils.autoCreateLinks(null);

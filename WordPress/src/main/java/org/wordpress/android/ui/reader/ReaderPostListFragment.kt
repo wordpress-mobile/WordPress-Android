@@ -1931,7 +1931,9 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
                 }
 
                 ActionableEmptyViewButtonType.FOLLOWED -> {
-                    actionableEmptyView!!.button.setText(ReaderR.string.reader_empty_followed_blogs_button_subscriptions)
+                    actionableEmptyView!!.button.setText(
+                        ReaderR.string.reader_empty_followed_blogs_button_subscriptions
+                    )
                 }
             }
 

@@ -26,7 +26,7 @@ enum class ReaderTab(
                 P2.id -> P2
                 CUSTOM.id -> CUSTOM
                 TAGS_FEED.id -> TAGS_FEED
-                else -> throw RuntimeException(
+                else -> @Suppress("TooGenericExceptionThrown") throw RuntimeException(
                     "Unexpected ReaderTab id"
                 )
             }

@@ -7,6 +7,7 @@
     <color name="background_dark_elevated">#2e2e2e</color>
     <color name="background_default">@color/neutral_0</color>
     <color name="background_snackbar">@color/neutral_80</color>
+    <color name="placeholder">#1A000000</color>
     <color name="bottom_bar_notification_badge">@android:color/white</color>
 
     <color name="p2_author_bg_stroke">#FFF</color>

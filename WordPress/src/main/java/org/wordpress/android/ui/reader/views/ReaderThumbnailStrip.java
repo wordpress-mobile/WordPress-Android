@@ -57,10 +57,12 @@ public class ReaderThumbnailStrip extends LinearLayout {
 
     private void initView(Context context) {
         mView = (ViewGroup) inflate(context, R.layout.reader_thumbnail_strip, this);
-        mThumbnailHeight = context.getResources().getDimensionPixelSize(org.wordpress.android.reader.R.dimen.reader_thumbnail_strip_image_height);
+        mThumbnailHeight = context.getResources().getDimensionPixelSize(
+                org.wordpress.android.reader.R.dimen.reader_thumbnail_strip_image_height);
 
         int displayWidth = DisplayUtils.getWindowPixelWidth(context);
-        int margins = context.getResources().getDimensionPixelSize(org.wordpress.android.reader.R.dimen.reader_card_content_padding) * 2;
+        int margins = context.getResources().getDimensionPixelSize(
+                org.wordpress.android.reader.R.dimen.reader_card_content_padding) * 2;
         mThumbnailWidth = (displayWidth - margins) / THUMBNAIL_STRIP_IMG_COUNT;
     }
 

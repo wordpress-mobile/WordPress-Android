@@ -65,7 +65,6 @@ import org.wordpress.android.ui.reader.actions.ReaderPostActions
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostId
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostIdList
 import org.wordpress.android.ui.reader.services.post.ReaderPostServiceStarter
-import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.tracker.ReaderTrackerImpl
 import org.wordpress.android.ui.reader.tracker.ReaderTrackerType
 import org.wordpress.android.ui.reader.usecases.ReaderGetReadingPreferencesSyncUseCase

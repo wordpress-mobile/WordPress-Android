@@ -3,7 +3,6 @@ package org.wordpress.android.ui.reader.usecases
 import dagger.Reusable
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
-import org.wordpress.android.R
 import org.wordpress.android.reader.R as ReaderR
 import org.wordpress.android.datasets.ReaderTagTable
 import org.wordpress.android.models.ReaderTag

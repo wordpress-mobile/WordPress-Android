@@ -4,7 +4,6 @@ import com.wordpress.rest.RestRequest.ErrorListener
 import com.wordpress.rest.RestRequest.Listener
 import org.json.JSONArray
 import org.json.JSONObject
-import org.wordpress.android.R
 import org.wordpress.android.reader.R as ReaderR
 import org.wordpress.android.WordPress
 import org.wordpress.android.models.ReaderPost
@@ -53,9 +52,17 @@ class PostSeenStatusApiCallsProvider @Inject constructor(
             if (success) {
                 Success(askedToMarkAsSeen)
             } else {
-                Failure(contextProvider.getContext().getString(ReaderR.string.reader_follow_comments_bad_format_response))
+                Failure(
+                    contextProvider.getContext().getString(
+                        ReaderR.string.reader_follow_comments_bad_format_response
+                    )
+                )
             }
-        } ?: Failure(contextProvider.getContext().getString(ReaderR.string.reader_follow_comments_null_response))
+        } ?: Failure(
+            contextProvider.getContext().getString(
+                ReaderR.string.reader_follow_comments_null_response
+            )
+        )
     }
 
     sealed class SeenStatusToggleCallResult {

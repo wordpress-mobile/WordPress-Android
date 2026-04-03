@@ -451,7 +451,9 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
 
         viewModel.onShowPost(blogId = readerPost.blogId, postId = readerPost.postId)
 
-        assertThat(observers.uiStates.last()).isEqualTo(ErrorUiState(UiStringRes(ReaderR.string.reader_err_get_post_generic)))
+        assertThat(observers.uiStates.last()).isEqualTo(
+            ErrorUiState(UiStringRes(ReaderR.string.reader_err_get_post_generic))
+        )
     }
 
     @Test

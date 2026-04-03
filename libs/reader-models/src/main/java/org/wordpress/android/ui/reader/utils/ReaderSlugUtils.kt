@@ -109,6 +109,7 @@ object ReaderSlugUtils {
     }
 
     @JvmStatic
+    @Suppress("LongParameterList")
     fun getResizedImageUrl(
         imageUrl: String,
         width: Int,

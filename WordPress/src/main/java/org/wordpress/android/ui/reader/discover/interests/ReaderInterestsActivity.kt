@@ -2,7 +2,6 @@ package org.wordpress.android.ui.reader.discover.interests
 
 import android.os.Bundle
 import android.view.MenuItem
-import org.wordpress.android.R
 import org.wordpress.android.reader.R as ReaderR
 import org.wordpress.android.databinding.ReaderInterestsActivityBinding
 import org.wordpress.android.ui.main.BaseAppCompatActivity
