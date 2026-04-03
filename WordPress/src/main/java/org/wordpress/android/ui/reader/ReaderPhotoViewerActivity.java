@@ -27,6 +27,7 @@ import org.wordpress.android.ui.reader.utils.ReaderImageScanner;
 import org.wordpress.android.ui.reader.views.ReaderPhotoView.PhotoViewListener;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.widgets.WPViewPager;
 import org.wordpress.android.widgets.WPViewPagerTransformer;
 import org.wordpress.android.widgets.WPViewPagerTransformer.TransformType;
@@ -109,6 +110,19 @@ public class ReaderPhotoViewerActivity extends BaseAppCompatActivity
             for (String url : mGalleryImageUrls) {
                 imageList.addImageUrl(url);
             }
+            // The initial URL may be the full-size variant while the
+            // gallery contains a resized version (e.g. image.jpg vs
+            // image-800x600.jpg). Find the matching gallery URL so the
+            // pager starts on the right image without adding a duplicate.
+            if (!TextUtils.isEmpty(mInitialImageUrl)
+                    && !imageList.hasImageUrl(mInitialImageUrl)) {
+                String match = findSizeSuffixMatch(
+                        mInitialImageUrl, mGalleryImageUrls
+                );
+                if (match != null) {
+                    mInitialImageUrl = match;
+                }
+            }
         } else if (TextUtils.isEmpty(mContent)) {
             // content will be empty when viewing a single image
             imageList = new ReaderImageList(mIsPrivate);
@@ -127,6 +141,34 @@ public class ReaderPhotoViewerActivity extends BaseAppCompatActivity
         }
 
         getAdapter().setImageList(imageList, mInitialImageUrl);
+    }
+
+    /**
+     * Finds a gallery URL that matches the given URL after stripping
+     * WordPress size suffixes (e.g. -800x600) from pathnames.
+     */
+    @Nullable
+    private static String findSizeSuffixMatch(
+            @NonNull String targetUrl,
+            @NonNull ArrayList<String> galleryUrls
+    ) {
+        String basePath = stripSizeSuffix(
+                UrlUtils.removeQuery(targetUrl)
+        );
+        for (String galleryUrl : galleryUrls) {
+            String galleryBase = stripSizeSuffix(
+                    UrlUtils.removeQuery(galleryUrl)
+            );
+            if (basePath.equals(galleryBase)) {
+                return galleryUrl;
+            }
+        }
+        return null;
+    }
+
+    @NonNull
+    private static String stripSizeSuffix(@NonNull String url) {
+        return url.replaceAll("-\\d+x\\d+(\\.[^.]+)$", "$1");
     }
 
     private void showToolbar() {

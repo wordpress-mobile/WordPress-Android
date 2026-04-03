@@ -232,6 +232,22 @@ public class ReaderWebView extends WPWebView {
         }
     }
 
+    /**
+     * Returns true if the anchor wrapping the tapped image links to
+     * an image URL (e.g. a gallery image linked to the media file).
+     */
+    private boolean isImageAnchorClick(HitTestResult hr) {
+        if (hr.getType()
+            != WebView.HitTestResult.SRC_IMAGE_ANCHOR_TYPE) {
+            return false;
+        }
+        Handler handler = new Handler();
+        Message message = handler.obtainMessage();
+        this.requestFocusNodeHref(message);
+        String anchorUrl = message.getData().getString("url");
+        return anchorUrl != null && UrlUtils.isImageUrl(anchorUrl);
+    }
+
     private boolean isVideoPressPreview(@NonNull String url) {
         return url.startsWith("https://videos.files.wordpress.com");
     }
@@ -250,12 +266,14 @@ public class ReaderWebView extends WPWebView {
                     if (isValidEmbeddedImageClick(hr) || isVideoPressPreview(url)) {
                         return super.onTouchEvent(event);
                     }
-                    // For images inside anchors (e.g. footnote
-                    // back-reference arrows rendered as emoji),
-                    // let the WebView handle the click so the
-                    // JS fragment-link interceptor can catch it
+                    // Images inside anchors: if the anchor links to
+                    // an image (e.g. gallery linked to media file),
+                    // treat as an image click. Otherwise defer to
+                    // WebView so the JS fragment-link interceptor
+                    // can handle it (e.g. footnote back-references).
                     if (hr.getType()
-                        == HitTestResult.SRC_IMAGE_ANCHOR_TYPE) {
+                        == HitTestResult.SRC_IMAGE_ANCHOR_TYPE
+                        && !isImageAnchorClick(hr)) {
                         return super.onTouchEvent(event);
                     }
                     return mUrlClickListener.onImageUrlClick(
