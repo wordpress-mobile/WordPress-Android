@@ -1490,75 +1490,33 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         return """
             (function() {
                 try {
-                    var targetPath = '';
-                    try {
-                        targetPath = new URL('$safeUrl').pathname;
-                    } catch(e) {
-                        return null;
-                    }
-                    function stripSizeSuffix(p) {
+                    var tp = new URL('$safeUrl').pathname;
+                    var strip = function(p) {
                         return p.replace(/-\d+x\d+(\.[^.]+)${'$'}/, '${'$'}1');
-                    }
-                    var basePath = stripSizeSuffix(targetPath);
-                    var allImgs = document.querySelectorAll('img');
-                    var targetImg = null;
-                    for (var i = 0; i < allImgs.length; i++) {
+                    };
+                    var sel = '.wp-block-gallery,.tiled-gallery,'
+                        + '.gallery,.blocks-gallery-grid';
+                    var imgs = document.querySelectorAll('img');
+                    for (var i = 0; i < imgs.length; i++) {
                         try {
-                            var imgPath = new URL(
-                                allImgs[i].src
-                            ).pathname;
-                            if (imgPath === targetPath
-                                || stripSizeSuffix(imgPath)
-                                    === basePath) {
-                                targetImg = allImgs[i];
-                                break;
+                            var p = new URL(imgs[i].src).pathname;
+                            if (p === tp || strip(p) === strip(tp)) {
+                                var g = imgs[i].closest(sel);
+                                if (!g) return null;
+                                var urls = [];
+                                var gi = g.querySelectorAll('img');
+                                for (var j = 0; j < gi.length; j++) {
+                                    if (gi[j].src
+                                        && gi[j].src.startsWith('http'))
+                                        urls.push(gi[j].src);
+                                }
+                                return JSON.stringify(urls);
                             }
                         } catch(e) {}
                     }
-                    if (!targetImg) return null;
-                    ${buildGalleryCollectionJs()}
-                } catch(e) {
                     return null;
-                }
-            })();
-        """.trimIndent()
-    }
-
-    /**
-     * Returns JS that walks up from `targetImg` to find a gallery
-     * ancestor, then collects all image URLs from that gallery.
-     */
-    private fun buildGalleryCollectionJs(): String {
-        return """
-            var selectors = [
-                '.wp-block-gallery',
-                '.tiled-gallery',
-                '.gallery',
-                '.blocks-gallery-grid'
-            ];
-            var gallery = null;
-            var el = targetImg.parentElement;
-            while (el) {
-                for (var s = 0; s < selectors.length; s++) {
-                    if (el.matches
-                        && el.matches(selectors[s])) {
-                        gallery = el;
-                        break;
-                    }
-                }
-                if (gallery) break;
-                el = el.parentElement;
-            }
-            if (!gallery) return null;
-            var imgs = gallery.querySelectorAll('img');
-            var urls = [];
-            for (var j = 0; j < imgs.length; j++) {
-                if (imgs[j].src
-                    && imgs[j].src.startsWith('http')) {
-                    urls.push(imgs[j].src);
-                }
-            }
-            return JSON.stringify(urls);
+                } catch(e) { return null; }
+            })()
         """.trimIndent()
     }
 
