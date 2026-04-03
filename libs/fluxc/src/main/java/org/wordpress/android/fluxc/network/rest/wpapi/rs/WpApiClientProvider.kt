@@ -58,7 +58,8 @@ class WpApiClientProvider @Inject constructor(
         site: SiteModel,
         uploadListener: WpRequestExecutor.UploadListener? = null
     ): WpApiClient = when {
-        site.isWPCom -> getWpComApiClient(site)
+        site.isWPCom || site.isUsingWpComRestApi ->
+            getWpComApiClient(site)
         // Skip caching when an upload listener is provided —
         // upload flows need a dedicated client with progress
         // callbacks.
@@ -73,23 +74,14 @@ class WpApiClientProvider @Inject constructor(
         site: SiteModel,
         uploadListener: WpRequestExecutor.UploadListener?,
     ): WpApiClient {
-        val authProvider = if (site.isWPComSimpleSite) {
-            createWpComAuthProvider(accountStore)
-        } else {
+        val authProvider =
             WpAuthenticationProvider.staticWithUsernameAndPassword(
                 username = site.apiRestUsernamePlain,
                 password = site.apiRestPasswordPlain,
             )
-        }
 
-        val urlResolver = if (site.isWPComSimpleSite) {
-            WpComUrlResolver(
-                siteId = site.siteId.toString(),
-                baseUrl = WpComBaseUrl.Production
-            )
-        } else {
+        val urlResolver =
             WpOrgSiteApiUrlResolver(ParsedUrl.parse(site.buildUrl()))
-        }
 
         return WpApiClient(
             apiUrlResolver = urlResolver,
