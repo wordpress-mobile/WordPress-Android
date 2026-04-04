@@ -27,6 +27,13 @@ class ReaderGalleryDetector {
         }
     }
 
+    /**
+     * Builds a JavaScript snippet that finds the tapped image in the
+     * DOM by matching its URL pathname, walks up to the nearest
+     * gallery container, and returns a JSON array of all image URLs
+     * in that gallery. The [imageUrl] is escaped to prevent
+     * injection before being interpolated into the script.
+     */
     private fun buildDetectionJs(imageUrl: String): String {
         val safeUrl = imageUrl
             .replace("\\", "\\\\")
@@ -66,6 +73,12 @@ class ReaderGalleryDetector {
         """.trimIndent()
     }
 
+    /**
+     * Parses the JSON string [result] returned by the gallery
+     * detection JavaScript. Returns the list of image URLs when
+     * the gallery contains more than one image, or null if the
+     * result is empty, not valid JSON, or a single-image gallery.
+     */
     private fun parseResult(result: String?): ArrayList<String>? {
         if (result.isNullOrEmpty() || result == "null") return null
         return try {
