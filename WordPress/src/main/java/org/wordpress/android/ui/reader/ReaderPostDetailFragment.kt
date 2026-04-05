@@ -775,6 +775,13 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         likeFacesRecycler.layoutManager?.onRestoreInstanceState(recyclerViewState)
     }
 
+    /**
+     * Registers an [View.OnLayoutChangeListener] on [readerWebView] that waits for
+     * the WebView to obtain a positive height after rendering HTML content. Once
+     * detected, the listener removes itself and calls [showDeferredContent] so that
+     * tags and comments appear only after the WebView has laid out, preventing them
+     * from briefly showing near the top then jumping below the fold.
+     */
     private fun registerWebViewLayoutListener() {
         removeWebViewLayoutListener()
         webViewLayoutListener = View.OnLayoutChangeListener {
@@ -795,6 +802,11 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         webViewLayoutListener = null
     }
 
+    /**
+     * Makes tags and comments snippet visible once the WebView has rendered its
+     * content. Called by the layout listener registered in
+     * [registerWebViewLayoutListener].
+     */
     private fun showDeferredContent() {
         binding?.expandableTagsView?.let { tagsView ->
             val uiState = viewModel.uiState.value
