@@ -211,6 +211,8 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     private var postSlugsResolutionUnderway: Boolean = false
     private var hasAlreadyUpdatedPost: Boolean = false
     private var isWebViewPaused: Boolean = false
+    private var hasWebViewContent: Boolean = false
+    private var webViewLayoutListener: View.OnLayoutChangeListener? = null
 
     private var isRelatedPost: Boolean = false
 
@@ -724,7 +726,10 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         with(requireActivity()) {
             if (this.isFinishing) return@with
 
-            uiHelpers.updateVisibility(commentsSnippetContainer, commentsSnippetFeatureConfig.isEnabled())
+            uiHelpers.updateVisibility(
+                commentsSnippetContainer,
+                hasWebViewContent && commentsSnippetFeatureConfig.isEnabled()
+            )
             uiHelpers.updateVisibility(followConversationContainer, state.showFollowConversation)
             commentsNumTitle.text = readerUtilsWrapper.getTextForCommentSnippet(state.commentsNumber)
 
@@ -770,6 +775,40 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         likeFacesRecycler.layoutManager?.onRestoreInstanceState(recyclerViewState)
     }
 
+    private fun registerWebViewLayoutListener() {
+        removeWebViewLayoutListener()
+        webViewLayoutListener = View.OnLayoutChangeListener {
+                _, _, _, _, _, _, _, _, _ ->
+            if (readerWebView.height > 0 && !hasWebViewContent) {
+                hasWebViewContent = true
+                removeWebViewLayoutListener()
+                showDeferredContent()
+            }
+        }
+        readerWebView.addOnLayoutChangeListener(webViewLayoutListener)
+    }
+
+    private fun removeWebViewLayoutListener() {
+        webViewLayoutListener?.let {
+            readerWebView.removeOnLayoutChangeListener(it)
+        }
+        webViewLayoutListener = null
+    }
+
+    private fun showDeferredContent() {
+        binding?.expandableTagsView?.let { tagsView ->
+            val uiState = viewModel.uiState.value
+            if (uiState is ReaderPostDetailsUiState &&
+                uiState.headerUiState.tagItems.isNotEmpty()
+            ) {
+                tagsView.setVisible(true)
+            }
+        }
+        if (commentsSnippetFeatureConfig.isEnabled()) {
+            commentsSnippetContainer.visibility = View.VISIBLE
+        }
+    }
+
     private fun renderUiState(state: ReaderPostDetailsUiState, binding: ReaderFragmentPostDetailBinding) {
         onPostExecuteShowPost()
 
@@ -794,7 +833,9 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             viewModel::handleHeaderAction
         )
 
-        binding.expandableTagsView.setVisible(state.headerUiState.tagItems.isNotEmpty())
+        binding.expandableTagsView.setVisible(
+            hasWebViewContent && state.headerUiState.tagItems.isNotEmpty()
+        )
         binding.expandableTagsView.updateUi(
             state.headerUiState.tagItems, getReadingPreferences()
         )
@@ -1039,6 +1080,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
     override fun onDestroyView() {
         super.onDestroyView()
+        removeWebViewLayoutListener()
         binding = null
     }
 
@@ -1242,6 +1284,10 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         if (commentsSnippetFeatureConfig.isEnabled()) {
             commentsSnippetContainer.visibility = View.GONE
         }
+
+        hasWebViewContent = false
+        removeWebViewLayoutListener()
+        binding?.expandableTagsView?.setVisible(false)
 
         // clear the webView - otherwise it will remain scrolled to where the user scrolled to
         readerWebView.clearContent()
@@ -1708,6 +1754,10 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
         readerProgressBar.visibility = View.GONE
         injectFragmentLinkInterceptor(view)
+
+        if (!hasWebViewContent) {
+            registerWebViewLayoutListener()
+        }
 
         if (url != null && url == "about:blank") {
             // brief delay before showing related posts to give page time to render
