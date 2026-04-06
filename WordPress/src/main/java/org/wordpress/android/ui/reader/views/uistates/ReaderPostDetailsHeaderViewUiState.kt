@@ -12,7 +12,6 @@ data class ReaderPostDetailsHeaderUiState(
     val readingTime: UiString? = null,
     val excerpt: UiString? = null,
     val featuredImageUiState: ReaderFeaturedImageUiState? = null,
-    val showViewOriginal: Boolean = false,
 )
 
 data class ReaderFeaturedImageUiState(

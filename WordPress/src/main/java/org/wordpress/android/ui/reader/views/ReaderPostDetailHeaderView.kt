@@ -83,14 +83,6 @@ class ReaderPostDetailHeaderView @JvmOverloads constructor(
         updateBlogSectionClick(uiState.blogSectionUiState, onHeaderAction)
 
         uiHelpers.setTextOrHide(textReadingTime, uiState.readingTime)
-        textViewOriginal.setVisible(uiState.showViewOriginal)
-        if (uiState.showViewOriginal) {
-            textViewOriginal.setOnClickListener {
-                onHeaderAction?.invoke(
-                    ReaderPostDetailsHeaderAction.ViewOriginalClicked
-                )
-            }
-        }
         updateFeaturedImage(uiState.featuredImageUiState, onHeaderAction)
         uiHelpers.setTextOrHide(textExcerpt, uiState.excerpt)
         excerptTruncationCheck?.let { textExcerpt.removeCallbacks(it) }

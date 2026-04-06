@@ -562,8 +562,6 @@ class ReaderPostDetailViewModel @Inject constructor(
             is ReaderPostDetailsHeaderAction.TagItemClicked -> onTagItemClicked(action.tagSlug)
             is ReaderPostDetailsHeaderAction.FeaturedImageClicked ->
                 onFeaturedImageClicked(action.blogId, action.featuredImageUrl)
-            is ReaderPostDetailsHeaderAction.ViewOriginalClicked ->
-                onViewOriginalClicked(post)
             is ReaderPostDetailsHeaderAction.AuthorClicked ->
                 onAuthorClicked(post)
         }
@@ -594,14 +592,6 @@ class ReaderPostDetailViewModel @Inject constructor(
                 blogUrl = blogUrl,
             )
         )
-    }
-
-    private fun onViewOriginalClicked(post: ReaderPost) {
-        post.url?.takeIf { it.isNotBlank() }?.let { url ->
-            _navigationEvents.value = Event(
-                ReaderNavigationEvents.OpenUrl(url = url)
-            )
-        }
     }
 
     fun onVisitPostExcerptFooterClicked(postLink: String) {

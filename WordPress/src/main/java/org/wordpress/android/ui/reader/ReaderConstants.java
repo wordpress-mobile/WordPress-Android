@@ -49,6 +49,7 @@ public class ReaderConstants {
     static final String ARG_IS_GALLERY = "is_gallery";
     static final String ARG_POST_LIST_TYPE = "post_list_type";
     static final String ARG_CONTENT = "content";
+    static final String ARG_GALLERY_IMAGE_URLS = "gallery_image_urls";
     static final String ARG_IS_SINGLE_POST = "is_single_post";
     static final String ARG_IS_RELATED_POST = "is_related_post";
     static final String ARG_SEARCH_QUERY = "search_query";
