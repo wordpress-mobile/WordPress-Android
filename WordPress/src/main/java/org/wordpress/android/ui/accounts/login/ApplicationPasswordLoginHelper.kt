@@ -105,18 +105,30 @@ class ApplicationPasswordLoginHelper @Inject constructor(
         urlLogin: UriLogin,
         creationSource: String = ""
     ): StoreCredentialsResult {
-        if (urlLogin.apiRootUrl == null ||
-            urlLogin.user.isNullOrEmpty() ||
-            urlLogin.password.isNullOrEmpty() ||
-            urlLogin.siteUrl == null ||
-            urlLogin.siteUrl == processedAppPasswordData
+        // The apiRootUrl is normally populated from the in-memory ApiRootUrlCache during the
+        // initial discovery step. It can be missing here if the process was killed between
+        // discovery and the auth callback, or if discovery never ran for this exact URL.
+        // In that case, fall back to running discovery again from the callback siteUrl so a
+        // recoverable cache miss doesn't fail the login.
+        val effectiveUrlLogin = if (urlLogin.apiRootUrl.isNullOrEmpty() && !urlLogin.siteUrl.isNullOrEmpty()) {
+            val recovered = recoverApiRootUrl(urlLogin.siteUrl)
+            if (recovered != null) urlLogin.copy(apiRootUrl = recovered) else urlLogin
+        } else {
+            urlLogin
+        }
+
+        if (effectiveUrlLogin.apiRootUrl.isNullOrEmpty() ||
+            effectiveUrlLogin.user.isNullOrEmpty() ||
+            effectiveUrlLogin.password.isNullOrEmpty() ||
+            effectiveUrlLogin.siteUrl == null ||
+            effectiveUrlLogin.siteUrl == processedAppPasswordData
         ) {
-            logAndReportBadData(urlLogin, creationSource)
+            logAndReportBadData(effectiveUrlLogin, creationSource)
             return StoreCredentialsResult.BadData
         }
 
         return withContext(bgDispatcher) {
-            val normalizedUrl = UrlUtils.normalizeUrl(urlLogin.siteUrl)
+            val normalizedUrl = UrlUtils.normalizeUrl(effectiveUrlLogin.siteUrl)
             val sites = siteStore.sites
             val site = findSiteByUrl(normalizedUrl, sites)
             if (site != null) {
@@ -125,20 +137,48 @@ class ApplicationPasswordLoginHelper @Inject constructor(
                     apiRestPasswordEncrypted = ""
                     apiRestUsernameIV = ""
                     apiRestPasswordIV = ""
-                    apiRestUsernamePlain = urlLogin.user
-                    apiRestPasswordPlain = urlLogin.password
-                    wpApiRestUrl = urlLogin.apiRootUrl
+                    apiRestUsernamePlain = effectiveUrlLogin.user
+                    apiRestPasswordPlain = effectiveUrlLogin.password
+                    wpApiRestUrl = effectiveUrlLogin.apiRootUrl
                 }
                 wpApiClientProvider.clearSelfHostedClient(site.id)
                 dispatcherWrapper.updateApplicationPassword(site)
-                trackSuccessful(urlLogin.siteUrl)
+                trackSuccessful(effectiveUrlLogin.siteUrl)
                 trackCreated(creationSource, success = true)
-                processedAppPasswordData = urlLogin.siteUrl
+                processedAppPasswordData = effectiveUrlLogin.siteUrl
                 StoreCredentialsResult.Success
             } else {
-                logSiteNotFound(urlLogin.siteUrl, normalizedUrl, sites)
+                logSiteNotFound(effectiveUrlLogin.siteUrl, normalizedUrl, sites)
                 StoreCredentialsResult.SiteNotFound
             }
+        }
+    }
+
+    @Suppress("TooGenericExceptionCaught")
+    private suspend fun recoverApiRootUrl(siteUrl: String): String? = withContext(bgDispatcher) {
+        try {
+            val result = wpLoginClient.apiDiscovery(siteUrl)
+            if (result is ApiDiscoveryResult.Success) {
+                val apiRootUrl = discoverSuccessWrapper.getApiRootUrl(result)
+                if (apiRootUrl.isNotEmpty()) {
+                    apiRootUrlCache.put(UrlUtils.normalizeUrl(siteUrl).orEmpty(), apiRootUrl)
+                    appLogWrapper.d(
+                        AppLog.T.API,
+                        "A_P: Recovered apiRootUrl via fallback discovery for $siteUrl"
+                    )
+                    apiRootUrl
+                } else {
+                    null
+                }
+            } else {
+                null
+            }
+        } catch (throwable: Throwable) {
+            appLogWrapper.e(
+                AppLog.T.API,
+                "A_P: Fallback discovery failed for $siteUrl - ${throwable.message}"
+            )
+            null
         }
     }
 
