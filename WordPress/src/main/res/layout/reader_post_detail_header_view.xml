@@ -133,10 +133,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/margin_medium"
+        android:layout_marginTop="@dimen/margin_medium"
         android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/text_reading_time"
-        app:layout_constraintBottom_toBottomOf="@id/text_reading_time"
+        app:layout_constraintTop_toBottomOf="@id/blog_description_barrier"
         tools:visibility="visible">
 
         <org.wordpress.android.ui.reader.views.ReaderFollowButton
