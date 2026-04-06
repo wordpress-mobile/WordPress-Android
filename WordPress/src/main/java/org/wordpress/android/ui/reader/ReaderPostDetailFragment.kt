@@ -778,9 +778,10 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     /**
      * Registers an [View.OnLayoutChangeListener] on [readerWebView] that waits for
      * the WebView to obtain a positive height after rendering HTML content. Once
-     * detected, the listener removes itself and calls [showDeferredContent] so that
-     * tags and comments appear only after the WebView has laid out, preventing them
-     * from briefly showing near the top then jumping below the fold.
+     * detected, the listener sets [hasWebViewContent] to true, removes itself, and
+     * re-invokes [renderUiState] and [manageCommentSnippetUiState] so that tags and
+     * comments appear only after the WebView has laid out, preventing them from
+     * briefly showing near the top then jumping below the fold.
      */
     private fun registerWebViewLayoutListener() {
         removeWebViewLayoutListener()
@@ -789,7 +790,13 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             if (readerWebView.height > 0 && !hasWebViewContent) {
                 hasWebViewContent = true
                 removeWebViewLayoutListener()
-                showDeferredContent()
+                (viewModel.uiState.value as? ReaderPostDetailsUiState)
+                    ?.let { state ->
+                        binding?.let { renderUiState(state, it) }
+                    }
+                viewModel.commentSnippetState.value?.let {
+                    manageCommentSnippetUiState(it)
+                }
             }
         }
         readerWebView.addOnLayoutChangeListener(webViewLayoutListener)
@@ -800,25 +807,6 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             readerWebView.removeOnLayoutChangeListener(it)
         }
         webViewLayoutListener = null
-    }
-
-    /**
-     * Makes tags and comments snippet visible once the WebView has rendered its
-     * content. Called by the layout listener registered in
-     * [registerWebViewLayoutListener].
-     */
-    private fun showDeferredContent() {
-        binding?.expandableTagsView?.let { tagsView ->
-            val uiState = viewModel.uiState.value
-            if (uiState is ReaderPostDetailsUiState &&
-                uiState.headerUiState.tagItems.isNotEmpty()
-            ) {
-                tagsView.setVisible(true)
-            }
-        }
-        if (commentsSnippetFeatureConfig.isEnabled()) {
-            commentsSnippetContainer.visibility = View.VISIBLE
-        }
     }
 
     private fun renderUiState(state: ReaderPostDetailsUiState, binding: ReaderFragmentPostDetailBinding) {
