@@ -75,6 +75,7 @@ class PostRsListViewModel @Inject constructor(
     private val userRefreshingTabs = mutableSetOf<PostRsListTab>()
     private val resolveImageJobs = mutableMapOf<PostRsListTab, Job>()
     private val resolveAuthorJobs = mutableMapOf<PostRsListTab, Job>()
+    private var lastTrackedTab: PostRsListTab? = null
 
     private val _events = Channel<PostRsListEvent>(Channel.BUFFERED)
     val events = _events.receiveAsFlow()
@@ -136,6 +137,19 @@ class PostRsListViewModel @Inject constructor(
      */
     @MainThread
     fun openPost(remotePostId: Long, tab: PostRsListTab) {
+        if (tab == PostRsListTab.TRASHED) {
+            analyticsTracker.track(
+                Stat.POST_LIST_ITEM_SELECTED,
+                site,
+                mapOf(
+                    TRACKS_ACTION to "move_to_draft",
+                    TRACKS_POST_ID to remotePostId
+                )
+            )
+            _pendingConfirmation.value =
+                PendingConfirmation.MoveToDraft(remotePostId)
+            return
+        }
         analyticsTracker.track(
             Stat.POST_LIST_ITEM_SELECTED,
             site,
@@ -144,11 +158,6 @@ class PostRsListViewModel @Inject constructor(
                 TRACKS_POST_ID to remotePostId
             )
         )
-        if (tab == PostRsListTab.TRASHED) {
-            _pendingConfirmation.value =
-                PendingConfirmation.MoveToDraft(remotePostId)
-            return
-        }
         val post = getFluxCPost(remotePostId) ?: return
         _events.trySend(PostRsListEvent.EditPost(site, post))
     }
@@ -168,6 +177,8 @@ class PostRsListViewModel @Inject constructor(
     /** Tracks a tab change event when the user swipes or taps a tab. */
     @MainThread
     fun onTabChanged(tab: PostRsListTab) {
+        if (tab == lastTrackedTab) return
+        lastTrackedTab = tab
         analyticsTracker.track(
             Stat.POST_LIST_TAB_CHANGED,
             site,
@@ -180,6 +191,7 @@ class PostRsListViewModel @Inject constructor(
     fun createNewPost() {
         analyticsTracker.track(
             Stat.POST_LIST_CREATE_POST_TAPPED,
+            site,
             mapOf(TRACKS_ACTION to TRACKS_CREATE_NEW_POST)
         )
         _events.trySend(PostRsListEvent.CreatePost(site))
