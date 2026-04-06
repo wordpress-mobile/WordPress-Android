@@ -1459,6 +1459,52 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         return true
     }
 
+    private val galleryDetector = ReaderGalleryDetector()
+
+    private fun showPhotoViewerWithGalleryCheck(
+        imageUrl: String,
+        sourceView: View,
+        startX: Int,
+        startY: Int
+    ) {
+        if (!isAdded || imageUrl.isEmpty() || !imageUrl.startsWith("http")) {
+            return
+        }
+        galleryDetector.detectGallery(readerWebView, imageUrl) { galleryUrls ->
+            if (!isAdded) return@detectGallery
+            if (galleryUrls != null) {
+                showPhotoViewerForGallery(imageUrl, sourceView, startX, startY, galleryUrls)
+            } else {
+                showPhotoViewer(imageUrl, sourceView, startX, startY)
+            }
+        }
+    }
+
+    private fun showPhotoViewerForGallery(
+        imageUrl: String,
+        sourceView: View,
+        startX: Int,
+        startY: Int,
+        galleryUrls: ArrayList<String>
+    ) {
+        val isPrivatePost = viewModel.post?.isPrivate == true
+        val options = EnumSet.noneOf(PhotoViewerOption::class.java)
+        if (isPrivatePost) {
+            options.add(PhotoViewerOption.IS_PRIVATE_IMAGE)
+        }
+
+        ReaderActivityLauncher.showReaderPhotoViewer(
+            requireActivity(),
+            imageUrl,
+            null,
+            sourceView,
+            options,
+            startX,
+            startY,
+            galleryUrls
+        )
+    }
+
     /*
      * post slugs resolution to IDs has completed
      */
@@ -1890,7 +1936,8 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
     override fun onImageUrlClick(imageUrl: String, view: View, x: Int, y: Int): Boolean {
         readerTracker.track(AnalyticsTracker.Stat.READER_ARTICLE_IMAGE_TAPPED)
-        return showPhotoViewer(imageUrl, view, x, y)
+        showPhotoViewerWithGalleryCheck(imageUrl, view, x, y)
+        return true
     }
 
     override fun onFileDownloadClick(fileUrl: String?): Boolean {

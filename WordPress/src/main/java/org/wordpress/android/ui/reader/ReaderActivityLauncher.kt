@@ -436,15 +436,17 @@ object ReaderActivityLauncher {
     }
 
     @JvmStatic
+    @JvmOverloads
     @Suppress("LongParameterList")
     fun showReaderPhotoViewer(
         context: Context,
         imageUrl: String,
-        content: String,
+        content: String?,
         sourceView: View?,
         imageOptions: EnumSet<PhotoViewerOption>,
         startX: Int,
-        startY: Int
+        startY: Int,
+        galleryImageUrls: ArrayList<String>? = null
     ) {
         if (TextUtils.isEmpty(imageUrl)) {
             return
@@ -459,6 +461,12 @@ object ReaderActivityLauncher {
         intent.putExtra(ReaderConstants.ARG_IS_GALLERY, isGallery)
         if (!TextUtils.isEmpty(content)) {
             intent.putExtra(ReaderConstants.ARG_CONTENT, content)
+        }
+        if (!galleryImageUrls.isNullOrEmpty()) {
+            intent.putStringArrayListExtra(
+                ReaderConstants.ARG_GALLERY_IMAGE_URLS,
+                galleryImageUrls
+            )
         }
 
         if (context is Activity && sourceView != null) {
