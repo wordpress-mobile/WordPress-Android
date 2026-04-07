@@ -284,12 +284,28 @@ class UtmViewModel @Inject constructor(
             else -> StatsViewChange.NoChange
         }
         return UtmUiItem(
-            title = name,
+            title = formatUtmName(name),
             views = views,
             change = change,
             topPosts = topPosts.map {
                 UtmPostUiItem(it.title, it.views)
             }
         )
+    }
+
+    /**
+     * Formats a raw UTM name from the API
+     * (e.g. `["impact","affiliate"]`) into a
+     * readable slash-separated string
+     * (e.g. `impact / affiliate`).
+     */
+    private fun formatUtmName(raw: String): String {
+        if (!raw.startsWith("[")) return raw
+        return raw
+            .removeSurrounding("[", "]")
+            .split(",")
+            .joinToString(" / ") {
+                it.trim().removeSurrounding("\"")
+            }
     }
 }
