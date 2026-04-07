@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.newstats.utm
 
 import androidx.annotation.StringRes
+import com.google.gson.JsonParser
 import org.wordpress.android.R
 
 /**
@@ -98,10 +99,11 @@ sealed class UtmDetailUiState {
  */
 internal fun formatUtmName(raw: String): String {
     if (!raw.startsWith("[")) return raw
-    return raw
-        .removeSurrounding("[", "]")
-        .split(",")
-        .joinToString(" / ") {
-            it.trim().removeSurrounding("\"")
-        }
+    return try {
+        val arr = JsonParser.parseString(raw)
+            .asJsonArray
+        arr.joinToString(" / ") { it.asString }
+    } catch (_: Exception) {
+        raw
+    }
 }

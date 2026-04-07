@@ -53,6 +53,7 @@ import org.wordpress.android.ui.newstats.components.StatsListRowContainer
 import org.wordpress.android.ui.newstats.components.StatsSummaryCard
 import org.wordpress.android.ui.newstats.util.ShimmerBox
 import org.wordpress.android.ui.newstats.util.formatStatValue
+import org.wordpress.android.ui.ActivityLauncher
 
 @AndroidEntryPoint
 class UtmDetailActivity : BaseAppCompatActivity() {
@@ -65,11 +66,20 @@ class UtmDetailActivity : BaseAppCompatActivity() {
 
         setContent {
             AppThemeM3 {
+                val context = this@UtmDetailActivity
                 val uiState by viewModel.uiState
                     .collectAsState()
                 UtmDetailScreen(
                     uiState = uiState,
                     onRetry = viewModel::retry,
+                    onOpenWpAdmin = {
+                        viewModel.getAdminUrl()?.let {
+                            ActivityLauncher
+                                .openUrlExternal(
+                                    context, it
+                                )
+                        }
+                    },
                     onBackPressed =
                         onBackPressedDispatcher
                             ::onBackPressed
@@ -123,6 +133,7 @@ private const val LOADING_ITEM_COUNT = 8
 private fun UtmDetailScreen(
     uiState: UtmDetailUiState,
     onRetry: () -> Unit,
+    onOpenWpAdmin: () -> Unit,
     onBackPressed: () -> Unit
 ) {
     Scaffold(
@@ -172,7 +183,13 @@ private fun UtmDetailScreen(
                     onMoveUp = null,
                     onMoveToTop = null,
                     onMoveDown = null,
-                    onMoveToBottom = null
+                    onMoveToBottom = null,
+                    onOpenWpAdmin =
+                        if (uiState.isAuthError) {
+                            onOpenWpAdmin
+                        } else {
+                            null
+                        }
                 )
             is UtmDetailUiState.Loaded ->
                 DetailLoadedContent(

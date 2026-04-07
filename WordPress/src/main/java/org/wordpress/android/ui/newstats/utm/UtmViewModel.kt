@@ -3,10 +3,11 @@ package org.wordpress.android.ui.newstats.utm
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.launch
@@ -43,21 +44,18 @@ class UtmViewModel @Inject constructor(
             )
         }
 
-    @Suppress("SpreadOperator")
-    val uiState: StateFlow<UtmCardUiState> = combine(
-        _selectedCategory,
-        *_categoryStates.values.toTypedArray()
-    ) { values ->
-        val cat = values[0] as UtmCategory
-        @Suppress("UNCHECKED_CAST")
-        val states =
-            values.drop(1) as List<UtmCardUiState>
-        states[cat.ordinal]
-    }.stateIn(
-        viewModelScope,
-        SharingStarted.Eagerly,
-        UtmCardUiState.Loading
-    )
+    @OptIn(ExperimentalCoroutinesApi::class)
+    val uiState: StateFlow<UtmCardUiState> =
+        _selectedCategory.flatMapLatest { cat ->
+            _categoryStates[cat]
+                ?: MutableStateFlow(
+                    UtmCardUiState.Loading
+                )
+        }.stateIn(
+            viewModelScope,
+            SharingStarted.Eagerly,
+            UtmCardUiState.Loading
+        )
 
     private val _isRefreshing = MutableStateFlow(false)
     val isRefreshing: StateFlow<Boolean> =
