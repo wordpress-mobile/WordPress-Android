@@ -135,10 +135,6 @@ class UtmDetailViewModel @Inject constructor(
             items = items,
             maxViewsForBar = maxViews,
             totalViews = result.totalViews,
-            totalViewsChange =
-                result.totalViewsChange,
-            totalViewsChangePercent =
-                result.totalViewsChangePercent,
             dateRange = period.toDateRangeString(
                 resourceProvider
             ),

@@ -234,11 +234,7 @@ private fun DetailLoadedContent(
             )
             StatsSummaryCard(
                 totalViews = state.totalViews,
-                dateRange = state.dateRange,
-                totalViewsChange =
-                    state.totalViewsChange,
-                totalViewsChangePercent =
-                    state.totalViewsChangePercent
+                dateRange = state.dateRange
             )
             Spacer(
                 modifier = Modifier.height(16.dp)
@@ -272,6 +268,8 @@ private fun DetailLoadedContent(
                 UtmExpandableRow(
                     item = item,
                     percentage = percentage,
+                    maxViewsForBar =
+                        state.maxViewsForBar,
                     position = index + 1
                 )
                 if (index < state.items.lastIndex) {

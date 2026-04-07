@@ -247,7 +247,6 @@ class UtmViewModelTest : BaseUnitTest() {
     ) = UtmItemData(
         name = name,
         views = views,
-        previousViews = 0L,
         topPosts = topPosts
     )
 
@@ -255,9 +254,7 @@ class UtmViewModelTest : BaseUnitTest() {
         items: List<UtmItemData>
     ) = UtmResult.Success(
         items = items,
-        totalViews = items.sumOf { it.views },
-        totalViewsChange = 0L,
-        totalViewsChangePercent = 0.0
+        totalViews = items.sumOf { it.views }
     )
 
     companion object {

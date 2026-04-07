@@ -211,7 +211,9 @@ private fun LoadedContent(
                     }
                 UtmExpandableRow(
                     item = item,
-                    percentage = percentage
+                    percentage = percentage,
+                    maxViewsForBar =
+                        state.maxViewsForBar
                 )
                 if (index < state.items.lastIndex) {
                     Spacer(

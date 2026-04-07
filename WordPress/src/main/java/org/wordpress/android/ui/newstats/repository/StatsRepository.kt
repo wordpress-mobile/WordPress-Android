@@ -1273,8 +1273,7 @@ class StatsRepository @Inject constructor(
     }
 
     /**
-     * Fetches UTM stats for a specific site and period
-     * with comparison data.
+     * Fetches UTM stats for a specific site and period.
      */
     @Suppress("TooGenericExceptionCaught")
     suspend fun fetchUtm(
@@ -1282,30 +1281,41 @@ class StatsRepository @Inject constructor(
         keys: List<String>,
         period: StatsPeriod
     ): UtmResult = withContext(ioDispatcher) {
-        val (curRange, prevRange) =
+        val (curRange, _) =
             calculateComparisonDateRanges(period)
-        val (curResult, prevResult) = coroutineScope {
-            val c = async {
-                statsDataSource.fetchUtm(
-                    siteId, keys,
-                    curRange.dateString(),
-                    curRange.daysCount()
-                )
-            }
-            val p = async {
-                statsDataSource.fetchUtm(
-                    siteId, keys,
-                    prevRange.dateString(),
-                    prevRange.daysCount()
-                )
-            }
-            c.await() to p.await()
-        }
+        val curResult = statsDataSource.fetchUtm(
+            siteId, keys,
+            curRange.dateString(),
+            curRange.daysCount()
+        )
         when (curResult) {
-            is UtmDataResult.Success ->
-                buildUtmSuccess(
-                    curResult, prevResult
+            is UtmDataResult.Success -> {
+                val curValues =
+                    curResult.data.topUtmValues
+                val total = curValues.values.sum()
+                UtmResult.Success(
+                    items = curValues.entries
+                        .sortedByDescending {
+                            it.value
+                        }
+                        .map { (name, views) ->
+                            val posts = curResult
+                                .data.topPosts[name]
+                                .orEmpty()
+                            UtmItemData(
+                                name = name,
+                                views = views,
+                                topPosts = posts.map {
+                                    UtmPostItemData(
+                                        it.title,
+                                        it.views
+                                    )
+                                }
+                            )
+                        },
+                    totalViews = total
                 )
+            }
             is UtmDataResult.Error -> {
                 appLogWrapper.e(
                     AppLog.T.STATS,
@@ -1319,47 +1329,6 @@ class StatsRepository @Inject constructor(
                 )
             }
         }
-    }
-
-    private fun buildUtmSuccess(
-        curResult: UtmDataResult.Success,
-        prevResult: UtmDataResult
-    ): UtmResult.Success {
-        val prevMap =
-            if (prevResult is UtmDataResult.Success) {
-                prevResult.data.topUtmValues
-            } else {
-                emptyMap()
-            }
-        val curValues = curResult.data.topUtmValues
-        val total = curValues.values.sum()
-        val prevTotal = prevMap.values.sum()
-        val change = total - prevTotal
-        val changePct = calculateChangePercent(
-            total, prevTotal, change
-        )
-        return UtmResult.Success(
-            items = curValues.entries
-                .sortedByDescending { it.value }
-                .map { (name, views) ->
-                    val prev = prevMap[name] ?: 0L
-                    val posts = curResult.data
-                        .topPosts[name].orEmpty()
-                    UtmItemData(
-                        name = name,
-                        views = views,
-                        previousViews = prev,
-                        topPosts = posts.map {
-                            UtmPostItemData(
-                                it.title, it.views
-                            )
-                        }
-                    )
-                },
-            totalViews = total,
-            totalViewsChange = change,
-            totalViewsChangePercent = changePct
-        )
     }
 
     private fun StatsDateRange.dateString(): String =
@@ -2272,9 +2241,7 @@ data class SubscribersGraphDataPoint(
 sealed class UtmResult {
     data class Success(
         val items: List<UtmItemData>,
-        val totalViews: Long,
-        val totalViewsChange: Long,
-        val totalViewsChangePercent: Double
+        val totalViews: Long
     ) : UtmResult()
     data class Error(
         @StringRes val messageResId: Int,
@@ -2288,7 +2255,6 @@ sealed class UtmResult {
 data class UtmItemData(
     val name: String,
     val views: Long,
-    val previousViews: Long,
     val topPosts: List<UtmPostItemData>
 )
 

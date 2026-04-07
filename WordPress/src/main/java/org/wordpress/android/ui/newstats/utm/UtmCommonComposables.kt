@@ -33,6 +33,8 @@ import org.wordpress.android.ui.newstats.util.formatStatValue
  *
  * @param item The UTM item to display
  * @param percentage Bar fill percentage (0f..1f)
+ * @param maxViewsForBar The max views value used to
+ *     compute bar widths for child post rows
  * @param position Optional 1-based position number shown
  *     in the detail screen
  */
@@ -40,6 +42,7 @@ import org.wordpress.android.ui.newstats.util.formatStatValue
 fun UtmExpandableRow(
     item: UtmUiItem,
     percentage: Float,
+    maxViewsForBar: Long,
     position: Int? = null
 ) {
     var expanded by remember { mutableStateOf(false) }
@@ -121,7 +124,18 @@ fun UtmExpandableRow(
                 )
             ) {
                 item.topPosts.forEach { post ->
-                    UtmPostRow(post = post)
+                    val postPct =
+                        if (maxViewsForBar > 0) {
+                            post.views.toFloat() /
+                                maxViewsForBar
+                                    .toFloat()
+                        } else {
+                            0f
+                        }
+                    UtmPostRow(
+                        post = post,
+                        percentage = postPct
+                    )
                 }
             }
         }
@@ -129,8 +143,11 @@ fun UtmExpandableRow(
 }
 
 @Composable
-fun UtmPostRow(post: UtmPostUiItem) {
-    StatsListRowContainer(percentage = 0f) {
+fun UtmPostRow(
+    post: UtmPostUiItem,
+    percentage: Float = 0f
+) {
+    StatsListRowContainer(percentage = percentage) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()

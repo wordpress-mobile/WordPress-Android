@@ -79,8 +79,6 @@ sealed class UtmDetailUiState {
         val items: List<UtmUiItem>,
         val maxViewsForBar: Long,
         val totalViews: Long,
-        val totalViewsChange: Long,
-        val totalViewsChangePercent: Double,
         val dateRange: String,
         @StringRes val categoryLabelResId: Int
     ) : UtmDetailUiState()

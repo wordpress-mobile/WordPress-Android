@@ -216,9 +216,7 @@ class UtmDetailViewModelTest : BaseUnitTest() {
         ).thenReturn(
             UtmResult.Success(
                 items = items,
-                totalViews = 150L,
-                totalViewsChange = 30L,
-                totalViewsChangePercent = 25.0
+                totalViews = 150L
             )
         )
 
@@ -229,10 +227,6 @@ class UtmDetailViewModelTest : BaseUnitTest() {
         val state = vm.uiState.value
             as UtmDetailUiState.Loaded
         assertThat(state.totalViews).isEqualTo(150L)
-        assertThat(state.totalViewsChange)
-            .isEqualTo(30L)
-        assertThat(state.totalViewsChangePercent)
-            .isEqualTo(25.0)
         assertThat(state.maxViewsForBar)
             .isEqualTo(100L)
     }
@@ -399,7 +393,6 @@ class UtmDetailViewModelTest : BaseUnitTest() {
     ) = UtmItemData(
         name = name,
         views = views,
-        previousViews = 0L,
         topPosts = topPosts
     )
 
@@ -407,9 +400,7 @@ class UtmDetailViewModelTest : BaseUnitTest() {
         items: List<UtmItemData>
     ) = UtmResult.Success(
         items = items,
-        totalViews = items.sumOf { it.views },
-        totalViewsChange = 0L,
-        totalViewsChangePercent = 0.0
+        totalViews = items.sumOf { it.views }
     )
 
     companion object {
