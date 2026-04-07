@@ -40,7 +40,6 @@ import org.wordpress.android.ui.newstats.components.StatsCardHeader
 import org.wordpress.android.ui.newstats.components.StatsListHeader
 import org.wordpress.android.ui.newstats.components.StatsListRowContainer
 import org.wordpress.android.ui.newstats.components.StatsItemName
-import org.wordpress.android.ui.newstats.components.StatsChangeIndicator
 import org.wordpress.android.ui.newstats.util.ShimmerBox
 import org.wordpress.android.ui.newstats.util.formatStatValue
 
@@ -301,12 +300,6 @@ private fun UtmItemRow(
                         .bodyMedium,
                     color = MaterialTheme.colorScheme
                         .onSurface
-                )
-                Spacer(
-                    modifier = Modifier.width(4.dp)
-                )
-                StatsChangeIndicator(
-                    change = item.change
                 )
             }
         }

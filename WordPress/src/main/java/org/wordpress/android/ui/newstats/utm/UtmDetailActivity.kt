@@ -31,7 +31,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.main.BaseAppCompatActivity
-import org.wordpress.android.ui.newstats.components.StatsChangeIndicator
 import org.wordpress.android.ui.newstats.components.StatsItemName
 import org.wordpress.android.ui.newstats.components.StatsListHeader
 import org.wordpress.android.ui.newstats.components.StatsListRowContainer
@@ -258,17 +257,6 @@ private fun DetailUtmRow(
     item: UtmDetailItem,
     percentage: Float
 ) {
-    val change = when {
-        item.changeValue > 0 && item.isPositive ->
-            StatsViewChange.Positive(
-                item.changeValue, item.changePercent
-            )
-        item.changeValue > 0 && !item.isPositive ->
-            StatsViewChange.Negative(
-                item.changeValue, item.changePercent
-            )
-        else -> StatsViewChange.NoChange
-    }
     StatsListRowContainer(percentage = percentage) {
         Row(
             modifier = Modifier
@@ -300,8 +288,6 @@ private fun DetailUtmRow(
                 color = MaterialTheme.colorScheme
                     .onSurface
             )
-            Spacer(modifier = Modifier.width(4.dp))
-            StatsChangeIndicator(change = change)
         }
     }
 }
