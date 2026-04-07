@@ -14,7 +14,6 @@ import org.wordpress.android.R
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.newstats.StatsPeriod
-import org.wordpress.android.ui.newstats.components.StatsViewChange
 import org.wordpress.android.ui.newstats.repository.StatsRepository
 import org.wordpress.android.ui.newstats.repository.UtmItemData
 import org.wordpress.android.ui.newstats.repository.UtmResult
@@ -23,7 +22,6 @@ import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
-import kotlin.math.abs
 
 private const val CARD_MAX_ITEMS = 10
 
@@ -66,7 +64,8 @@ class UtmViewModel @Inject constructor(
         _isRefreshing.asStateFlow()
 
     private var currentPeriod: StatsPeriod = StatsPeriod.Last7Days
-    private var loadingPeriod: StatsPeriod? = null
+    private var loadingPeriods =
+        mutableMapOf<UtmCategory, StatsPeriod?>()
     private var loadedPeriods =
         mutableMapOf<UtmCategory, StatsPeriod?>()
 
@@ -119,7 +118,8 @@ class UtmViewModel @Inject constructor(
             return
         }
         statsRepository.init(accessToken)
-        loadingPeriod = currentPeriod
+        val cat = _selectedCategory.value
+        loadingPeriods[cat] = currentPeriod
         setCurrentCategoryState(UtmCardUiState.Loading)
         viewModelScope.launch {
             fetchForCurrentCategory(site.siteId)
@@ -151,14 +151,14 @@ class UtmViewModel @Inject constructor(
         selectedSiteRepository.getSelectedSite()?.adminUrl
 
     fun onPeriodChanged(period: StatsPeriod) {
-        if (currentPeriod == period &&
-            loadingPeriod == period
-        ) return
         val cat = _selectedCategory.value
+        if (currentPeriod == period &&
+            loadingPeriods[cat] == period
+        ) return
         if (loadedPeriods[cat] == period) return
         currentPeriod = period
-        // Reset all category loaded periods
         loadedPeriods.clear()
+        loadingPeriods.clear()
         loadData()
     }
 
@@ -228,7 +228,7 @@ class UtmViewModel @Inject constructor(
             when (result) {
                 is UtmResult.Success -> {
                     loadedPeriods[category] = currentPeriod
-                    loadingPeriod = null
+                    loadingPeriods[category] = null
                     val items = result.items
                         .map { it.toUiItem() }
                     allItemsCache[category] = items
@@ -251,7 +251,7 @@ class UtmViewModel @Inject constructor(
                         )
                 }
                 is UtmResult.Error -> {
-                    loadingPeriod = null
+                    loadingPeriods[category] = null
                     _categoryStates[category]?.value =
                         UtmCardUiState.Error(
                             result.messageResId,
@@ -260,7 +260,7 @@ class UtmViewModel @Inject constructor(
                 }
             }
         } catch (e: Exception) {
-            loadingPeriod = null
+            loadingPeriods[category] = null
             AppLog.e(
                 AppLog.T.STATS,
                 "Error fetching UTM data", e
@@ -273,20 +273,9 @@ class UtmViewModel @Inject constructor(
     }
 
     private fun UtmItemData.toUiItem(): UtmUiItem {
-        val change = when {
-            viewsChange > 0 -> StatsViewChange.Positive(
-                viewsChange, abs(viewsChangePercent)
-            )
-            viewsChange < 0 -> StatsViewChange.Negative(
-                abs(viewsChange),
-                abs(viewsChangePercent)
-            )
-            else -> StatsViewChange.NoChange
-        }
         return UtmUiItem(
             title = formatUtmName(name),
             views = views,
-            change = change,
             topPosts = topPosts.map {
                 UtmPostUiItem(it.title, it.views)
             }

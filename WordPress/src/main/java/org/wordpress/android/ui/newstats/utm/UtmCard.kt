@@ -139,7 +139,8 @@ private fun LoadingContent(
         )
         Spacer(modifier = Modifier.height(12.dp))
         StatsListHeader(
-            leftHeaderResId = R.string.stats_utm_title
+            leftHeaderResId =
+                selectedCategory.labelResId
         )
         Spacer(modifier = Modifier.height(8.dp))
         repeat(LOADING_ITEM_COUNT) { index ->
@@ -205,12 +206,9 @@ private fun LoadedContent(
         if (state.items.isEmpty()) {
             StatsCardEmptyContent()
         } else {
-            val categoryLabel = stringResource(
-                selectedCategory.labelResId
-            )
             StatsListHeader(
                 leftHeaderResId =
-                    R.string.stats_utm_title
+                    selectedCategory.labelResId
             )
             Spacer(modifier = Modifier.height(8.dp))
 

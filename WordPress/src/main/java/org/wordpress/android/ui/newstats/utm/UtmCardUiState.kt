@@ -4,7 +4,6 @@ import android.os.Parcelable
 import androidx.annotation.StringRes
 import kotlinx.parcelize.Parcelize
 import org.wordpress.android.R
-import org.wordpress.android.ui.newstats.components.StatsViewChange
 
 /**
  * Represents the available UTM category combinations
@@ -60,7 +59,6 @@ sealed class UtmCardUiState {
 data class UtmUiItem(
     val title: String,
     val views: Long,
-    val change: StatsViewChange,
     val topPosts: List<UtmPostUiItem>
 )
 
@@ -92,9 +90,6 @@ data class UtmDetailData(
 data class UtmDetailItem(
     val title: String,
     val views: Long,
-    val changeValue: Long,
-    val changePercent: Double,
-    val isPositive: Boolean,
     val topPosts: List<UtmDetailPostItem>
 ) : Parcelable
 

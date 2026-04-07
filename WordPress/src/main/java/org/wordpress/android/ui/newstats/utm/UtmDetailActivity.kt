@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.compose.setContent
+import androidx.annotation.StringRes
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -46,7 +47,6 @@ import org.wordpress.android.ui.newstats.components.StatsItemName
 import org.wordpress.android.ui.newstats.components.StatsListHeader
 import org.wordpress.android.ui.newstats.components.StatsListRowContainer
 import org.wordpress.android.ui.newstats.components.StatsSummaryCard
-import org.wordpress.android.ui.newstats.components.StatsViewChange
 import org.wordpress.android.ui.newstats.util.formatStatValue
 import org.wordpress.android.util.extensions.getParcelableArrayListCompat
 
@@ -57,6 +57,8 @@ private const val EXTRA_TOTAL_VIEWS_CHANGE =
 private const val EXTRA_TOTAL_VIEWS_CHANGE_PERCENT =
     "extra_total_views_change_percent"
 private const val EXTRA_DATE_RANGE = "extra_date_range"
+private const val EXTRA_CATEGORY_LABEL_RES_ID =
+    "extra_category_label_res_id"
 
 @AndroidEntryPoint
 class UtmDetailActivity : BaseAppCompatActivity() {
@@ -80,6 +82,10 @@ class UtmDetailActivity : BaseAppCompatActivity() {
         val dateRange = intent.getStringExtra(
             EXTRA_DATE_RANGE
         ) ?: ""
+        val categoryLabelResId = intent.getIntExtra(
+            EXTRA_CATEGORY_LABEL_RES_ID,
+            R.string.stats_utm_title
+        )
         val maxViewsForBar =
             items.firstOrNull()?.views ?: 0L
 
@@ -93,6 +99,8 @@ class UtmDetailActivity : BaseAppCompatActivity() {
                     totalViewsChangePercent =
                         totalViewsChangePercent,
                     dateRange = dateRange,
+                    categoryLabelResId =
+                        categoryLabelResId,
                     onBackPressed =
                         onBackPressedDispatcher::onBackPressed
                 )
@@ -108,28 +116,9 @@ class UtmDetailActivity : BaseAppCompatActivity() {
         ) {
             val parcelableItems = ArrayList(
                 detailData.items.map { item ->
-                    val change = item.change
                     UtmDetailItem(
                         title = item.title,
                         views = item.views,
-                        changeValue = when (change) {
-                            is StatsViewChange.Positive ->
-                                change.value
-                            is StatsViewChange.Negative ->
-                                change.value
-                            is StatsViewChange.NoChange ->
-                                0L
-                        },
-                        changePercent = when (change) {
-                            is StatsViewChange.Positive ->
-                                change.percentage
-                            is StatsViewChange.Negative ->
-                                change.percentage
-                            is StatsViewChange.NoChange ->
-                                0.0
-                        },
-                        isPositive = change is
-                            StatsViewChange.Positive,
                         topPosts = item.topPosts.map {
                             UtmDetailPostItem(
                                 it.title, it.views
@@ -160,6 +149,11 @@ class UtmDetailActivity : BaseAppCompatActivity() {
                     EXTRA_DATE_RANGE,
                     detailData.dateRange
                 )
+                putExtra(
+                    EXTRA_CATEGORY_LABEL_RES_ID,
+                    detailData.selectedCategory
+                        .labelResId
+                )
             }
             context.startActivity(intent)
         }
@@ -175,6 +169,7 @@ private fun UtmDetailScreen(
     totalViewsChange: Long,
     totalViewsChangePercent: Double,
     dateRange: String,
+    @StringRes categoryLabelResId: Int,
     onBackPressed: () -> Unit
 ) {
     Scaffold(
@@ -226,7 +221,7 @@ private fun UtmDetailScreen(
             item {
                 StatsListHeader(
                     leftHeaderResId =
-                        R.string.stats_utm_title
+                        categoryLabelResId
                 )
                 Spacer(
                     modifier = Modifier.height(8.dp)
