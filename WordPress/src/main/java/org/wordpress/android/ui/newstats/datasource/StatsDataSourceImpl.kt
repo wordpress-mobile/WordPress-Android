@@ -40,6 +40,10 @@ import uniffi.wp_api.SubscribersByUserTypeSortField
 import uniffi.wp_api.StatsEmailsSummaryParams
 import uniffi.wp_api.StatsEmailsSummaryPeriod
 import uniffi.wp_api.StatsEmailsSummarySortField
+// TODO: Import UTM types when wordpress-rs adds UTM support
+// import uniffi.wp_api.StatsUtmKey
+// import uniffi.wp_api.StatsUtmKeys
+// import uniffi.wp_api.StatsUtmParams
 import uniffi.wp_api.WpApiParamOrder
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
@@ -1345,6 +1349,27 @@ class StatsDataSourceImpl @Inject constructor(
                 StatsEmailsSummaryDataResult.Error(it)
             }
         }
+    }
+
+    // TODO: Implement via wordpress-rs UniFFI bindings when
+    // StatsUtmKey, StatsUtmKeys, StatsUtmParams types are
+    // available in the wordpress-rs library.
+    override suspend fun fetchUtm(
+        siteId: Long,
+        keys: List<String>,
+        date: String,
+        days: Int,
+        max: Int,
+        queryTopPosts: Boolean
+    ): UtmDataResult {
+        AppLog.d(
+            T.STATS,
+            "fetchUtm - siteId=$siteId, " +
+                "keys=$keys, date=$date, days=$days"
+        )
+        return UtmDataResult.Error(
+            StatsErrorType.API_ERROR
+        )
     }
 
     companion object {

@@ -29,6 +29,7 @@ import org.wordpress.android.ui.newstats.datasource.VideoPlaysDataResult
 import org.wordpress.android.ui.newstats.datasource.StatsSubscribersDataResult
 import org.wordpress.android.ui.newstats.datasource.SubscribersByUserTypeDataResult
 import org.wordpress.android.ui.newstats.datasource.StatsEmailsSummaryDataResult
+import org.wordpress.android.ui.newstats.datasource.UtmDataResult
 import org.wordpress.android.ui.newstats.mostviewed.MostViewedDataSource
 import kotlinx.coroutines.withContext
 import org.wordpress.android.fluxc.utils.AppLogWrapper
@@ -1271,6 +1272,110 @@ class StatsRepository @Inject constructor(
         }
     }
 
+    /**
+     * Fetches UTM stats for a specific site and period
+     * with comparison data.
+     */
+    @Suppress("TooGenericExceptionCaught")
+    suspend fun fetchUtm(
+        siteId: Long,
+        keys: List<String>,
+        period: StatsPeriod
+    ): UtmResult = withContext(ioDispatcher) {
+        val (curRange, prevRange) =
+            calculateComparisonDateRanges(period)
+        val (curResult, prevResult) = coroutineScope {
+            val c = async {
+                statsDataSource.fetchUtm(
+                    siteId, keys,
+                    curRange.dateString(),
+                    curRange.daysCount()
+                )
+            }
+            val p = async {
+                statsDataSource.fetchUtm(
+                    siteId, keys,
+                    prevRange.dateString(),
+                    prevRange.daysCount()
+                )
+            }
+            c.await() to p.await()
+        }
+        when (curResult) {
+            is UtmDataResult.Success -> {
+                val prevMap =
+                    if (prevResult is UtmDataResult.Success) {
+                        prevResult.data.topUtmValues
+                    } else {
+                        emptyMap()
+                    }
+                val curValues = curResult.data.topUtmValues
+                val total = curValues.values.sum()
+                val prevTotal = prevMap.values.sum()
+                val change = total - prevTotal
+                val changePct = calculateChangePercent(
+                    total, prevTotal, change
+                )
+                UtmResult.Success(
+                    items = curValues.entries
+                        .sortedByDescending { it.value }
+                        .map { (name, views) ->
+                            val prev = prevMap[name] ?: 0L
+                            val posts = curResult.data
+                                .topPosts[name].orEmpty()
+                            UtmItemData(
+                                name = name,
+                                views = views,
+                                previousViews = prev,
+                                topPosts = posts.map {
+                                    UtmPostItemData(
+                                        it.title, it.views
+                                    )
+                                }
+                            )
+                        },
+                    totalViews = total,
+                    totalViewsChange = change,
+                    totalViewsChangePercent = changePct
+                )
+            }
+            is UtmDataResult.Error -> {
+                appLogWrapper.e(
+                    AppLog.T.STATS,
+                    "Error fetching UTM: " +
+                        "${curResult.errorType}"
+                )
+                UtmResult.Error(
+                    curResult.errorType.messageResId,
+                    curResult.errorType ==
+                        StatsErrorType.AUTH_ERROR
+                )
+            }
+        }
+    }
+
+    private fun StatsDateRange.dateString(): String =
+        when (this) {
+            is StatsDateRange.Preset -> date
+            is StatsDateRange.Custom -> date
+        }
+
+    private fun StatsDateRange.daysCount(): Int =
+        when (this) {
+            is StatsDateRange.Preset -> num
+            is StatsDateRange.Custom -> {
+                val start = LocalDate.parse(
+                    startDate, dateFormatter
+                )
+                val end = LocalDate.parse(
+                    date, dateFormatter
+                )
+                ChronoUnit.DAYS.between(start, end)
+                    .toInt()
+                    .coerceAtLeast(1)
+            }
+        }
+
     private fun calculateChangePercent(
         totalViews: Long,
         previousTotalViews: Long,
@@ -2151,4 +2256,44 @@ sealed class SubscribersGraphResult {
 data class SubscribersGraphDataPoint(
     val date: String,
     val count: Long
+)
+
+/**
+ * Result wrapper for UTM stats fetch operation.
+ */
+sealed class UtmResult {
+    data class Success(
+        val items: List<UtmItemData>,
+        val totalViews: Long,
+        val totalViewsChange: Long,
+        val totalViewsChangePercent: Double
+    ) : UtmResult()
+    data class Error(
+        @StringRes val messageResId: Int,
+        val isAuthError: Boolean = false
+    ) : UtmResult()
+}
+
+/**
+ * Data for a single UTM item from the repository layer.
+ */
+data class UtmItemData(
+    val name: String,
+    val views: Long,
+    val previousViews: Long,
+    val topPosts: List<UtmPostItemData>
+) {
+    val viewsChange: Long get() = views - previousViews
+    val viewsChangePercent: Double
+        get() = calculateItemChangePercent(
+            views, previousViews
+        )
+}
+
+/**
+ * Data for a single post within a UTM item.
+ */
+data class UtmPostItemData(
+    val title: String,
+    val views: Long
 )
