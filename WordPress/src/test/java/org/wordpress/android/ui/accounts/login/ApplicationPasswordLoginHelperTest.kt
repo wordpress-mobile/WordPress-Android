@@ -147,7 +147,7 @@ class ApplicationPasswordLoginHelperTest : BaseUnitTest() {
     }
 
     @Test
-    fun `storeApplicationPasswordCredentialsFrom when apiRootUrl is null and fallback discovery also fails returns BadData`() =
+    fun `storeApplicationPasswordCredentialsFrom when apiRootUrl null and fallback discovery fails returns BadData`() =
         runTest {
             whenever(wpLoginClient.apiDiscovery(any())).thenReturn(
                 ApiDiscoveryResult.FailureParseSiteUrl(ParseUrlException.Generic(""))
