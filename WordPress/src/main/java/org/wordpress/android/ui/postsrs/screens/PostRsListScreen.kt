@@ -87,6 +87,7 @@ fun PostRsListScreen(
     onSearchClose: (PostRsListTab) -> Unit,
     onAuthorFilterChanged: (AuthorFilterSelection, PostRsListTab) -> Unit,
     onInitTab: (PostRsListTab) -> Unit,
+    onTabChanged: (PostRsListTab) -> Unit,
     onRefreshTab: (PostRsListTab) -> Unit,
     onLoadMore: (PostRsListTab) -> Unit,
     onNavigateBack: () -> Unit,
@@ -219,7 +220,15 @@ fun PostRsListScreen(
             }
 
             LaunchedEffect(pagerState) {
-                snapshotFlow { pagerState.settledPage }.collect { page -> onInitTab(tabs[page]) }
+                var isFirstEmission = true
+                snapshotFlow { pagerState.settledPage }.collect { page ->
+                    onInitTab(tabs[page])
+                    if (isFirstEmission) {
+                        isFirstEmission = false
+                    } else {
+                        onTabChanged(tabs[page])
+                    }
+                }
             }
 
             HorizontalPager(

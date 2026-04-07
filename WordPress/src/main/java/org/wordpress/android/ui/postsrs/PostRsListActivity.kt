@@ -68,6 +68,7 @@ class PostRsListActivity : BaseAppCompatActivity() {
                     onSearchClose = viewModel::onSearchClose,
                     onAuthorFilterChanged = viewModel::onAuthorFilterChanged,
                     onInitTab = viewModel::initTab,
+                    onTabChanged = viewModel::onTabChanged,
                     onRefreshTab = { tab -> viewModel.refreshTab(tab, isUserRefresh = true) },
                     onLoadMore = viewModel::loadMorePosts,
                     onNavigateBack = { onBackPressedDispatcher.onBackPressed() },
