@@ -18,6 +18,7 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
+import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.post.PostStatus as FluxCPostStatus
@@ -32,6 +33,7 @@ import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.SiteUtils
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
 import rs.wordpress.cache.kotlin.ObservableMetadataCollection
 import rs.wordpress.cache.kotlin.getObservablePostMetadataCollectionWithEditContext
@@ -56,6 +58,7 @@ class PostRsListViewModel @Inject constructor(
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     private val accountStore: AccountStore,
     private val appPrefsWrapper: AppPrefsWrapper,
+    private val analyticsTracker: AnalyticsTrackerWrapper,
 ) : ViewModel() {
     private val _tabStates = MutableStateFlow<Map<PostRsListTab, PostTabUiState>>(emptyMap())
     val tabStates: StateFlow<Map<PostRsListTab, PostTabUiState>> = _tabStates.asStateFlow()
@@ -72,6 +75,7 @@ class PostRsListViewModel @Inject constructor(
     private val userRefreshingTabs = mutableSetOf<PostRsListTab>()
     private val resolveImageJobs = mutableMapOf<PostRsListTab, Job>()
     private val resolveAuthorJobs = mutableMapOf<PostRsListTab, Job>()
+    private var lastTrackedTab: PostRsListTab? = null
 
     private val _events = Channel<PostRsListEvent>(Channel.BUFFERED)
     val events = _events.receiveAsFlow()
@@ -134,10 +138,26 @@ class PostRsListViewModel @Inject constructor(
     @MainThread
     fun openPost(remotePostId: Long, tab: PostRsListTab) {
         if (tab == PostRsListTab.TRASHED) {
+            analyticsTracker.track(
+                Stat.POST_LIST_ITEM_SELECTED,
+                site,
+                mapOf(
+                    TRACKS_ACTION to "move_to_draft",
+                    TRACKS_POST_ID to remotePostId
+                )
+            )
             _pendingConfirmation.value =
                 PendingConfirmation.MoveToDraft(remotePostId)
             return
         }
+        analyticsTracker.track(
+            Stat.POST_LIST_ITEM_SELECTED,
+            site,
+            mapOf(
+                TRACKS_ACTION to "edit",
+                TRACKS_POST_ID to remotePostId
+            )
+        )
         val post = getFluxCPost(remotePostId) ?: return
         _events.trySend(PostRsListEvent.EditPost(site, post))
     }
@@ -154,9 +174,26 @@ class PostRsListViewModel @Inject constructor(
         }
     }
 
+    /** Tracks a tab change event when the user swipes or taps a tab. */
+    @MainThread
+    fun onTabChanged(tab: PostRsListTab) {
+        if (tab == lastTrackedTab) return
+        lastTrackedTab = tab
+        analyticsTracker.track(
+            Stat.POST_LIST_TAB_CHANGED,
+            site,
+            mapOf(TRACKS_SELECTED_TAB to tab.name.lowercase())
+        )
+    }
+
     /** Emits a [PostRsListEvent.CreatePost] for the selected site. */
     @MainThread
     fun createNewPost() {
+        analyticsTracker.track(
+            Stat.POST_LIST_CREATE_POST_TAPPED,
+            site,
+            mapOf(TRACKS_ACTION to TRACKS_CREATE_NEW_POST)
+        )
         _events.trySend(PostRsListEvent.CreatePost(site))
     }
 
@@ -166,6 +203,7 @@ class PostRsListViewModel @Inject constructor(
      */
     @MainThread
     fun onSearchOpen() {
+        analyticsTracker.track(Stat.POST_LIST_SEARCH_ACCESSED, site)
         _isSearchActive.value = true
         clearCollections()
     }
@@ -200,6 +238,11 @@ class PostRsListViewModel @Inject constructor(
     @MainThread
     fun onAuthorFilterChanged(selection: AuthorFilterSelection, activeTab: PostRsListTab) {
         if (selection == _authorFilter.value) return
+        analyticsTracker.track(
+            Stat.POST_LIST_AUTHOR_FILTER_CHANGED,
+            site,
+            mapOf(TRACKS_SELECTED_AUTHOR_FILTER to selection.toString())
+        )
         appPrefsWrapper.postListAuthorSelection = selection
         _authorFilter.value = selection
         clearCollections()
@@ -210,6 +253,14 @@ class PostRsListViewModel @Inject constructor(
     @MainThread
     @Suppress("LongMethod", "ReturnCount")
     fun onPostMenuAction(remotePostId: Long, action: PostRsMenuAction) {
+        analyticsTracker.track(
+            Stat.POST_LIST_BUTTON_PRESSED,
+            site,
+            mapOf(
+                TRACKS_ACTION to action.toAnalyticsAction(),
+                TRACKS_POST_ID to remotePostId
+            )
+        )
         val post = findPost(remotePostId)
 
         when (action) {
@@ -853,5 +904,26 @@ class PostRsListViewModel @Inject constructor(
         internal const val MIN_SEARCH_QUERY_LENGTH = 3
         private const val THUMBNAIL_SIZE_DP = 64
         private val ALL_STATUSES = PostRsListTab.entries.flatMap { it.statuses }.distinct()
+
+        private const val TRACKS_SELECTED_TAB = "selected_tab"
+        private const val TRACKS_SELECTED_AUTHOR_FILTER = "author_filter_selection"
+        private const val TRACKS_ACTION = "action"
+        private const val TRACKS_POST_ID = "post_id"
+        private const val TRACKS_CREATE_NEW_POST = "create_new_post"
     }
+}
+
+private fun PostRsMenuAction.toAnalyticsAction(): String = when (this) {
+    PostRsMenuAction.SETTINGS -> "settings"
+    PostRsMenuAction.VIEW -> "view"
+    PostRsMenuAction.READ -> "read"
+    PostRsMenuAction.PUBLISH -> "publish"
+    PostRsMenuAction.MOVE_TO_DRAFT -> "move_to_draft"
+    PostRsMenuAction.DUPLICATE -> "copy"
+    PostRsMenuAction.SHARE -> "share"
+    PostRsMenuAction.BLAZE -> "promote_with_blaze"
+    PostRsMenuAction.STATS -> "stats"
+    PostRsMenuAction.COMMENTS -> "comments"
+    PostRsMenuAction.TRASH -> "trash"
+    PostRsMenuAction.DELETE_PERMANENTLY -> "delete"
 }

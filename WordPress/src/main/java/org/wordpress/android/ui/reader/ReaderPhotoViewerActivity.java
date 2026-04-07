@@ -25,9 +25,12 @@ import org.wordpress.android.ui.reader.utils.ReaderImageScanner;
 import org.wordpress.android.ui.reader.views.ReaderPhotoView.PhotoViewListener;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.widgets.WPViewPager;
 import org.wordpress.android.widgets.WPViewPagerTransformer;
 import org.wordpress.android.widgets.WPViewPagerTransformer.TransformType;
+
+import java.util.ArrayList;
 
 /**
  * Full-screen photo viewer - uses a ViewPager to enable scrolling between images in a blog
@@ -39,6 +42,7 @@ public class ReaderPhotoViewerActivity extends BaseAppCompatActivity
     private boolean mIsPrivate;
     private boolean mIsGallery;
     private String mContent;
+    private ArrayList<String> mGalleryImageUrls;
     private WPViewPager mViewPager;
     private PhotoPagerAdapter mAdapter;
     private TextView mTxtTitle;
@@ -63,11 +67,17 @@ public class ReaderPhotoViewerActivity extends BaseAppCompatActivity
             mIsPrivate = savedInstanceState.getBoolean(ReaderConstants.ARG_IS_PRIVATE);
             mIsGallery = savedInstanceState.getBoolean(ReaderConstants.ARG_IS_GALLERY);
             mContent = savedInstanceState.getString(ReaderConstants.ARG_CONTENT);
+            mGalleryImageUrls = savedInstanceState.getStringArrayList(
+                    ReaderConstants.ARG_GALLERY_IMAGE_URLS
+            );
         } else if (getIntent() != null) {
             mInitialImageUrl = getIntent().getStringExtra(ReaderConstants.ARG_IMAGE_URL);
             mIsPrivate = getIntent().getBooleanExtra(ReaderConstants.ARG_IS_PRIVATE, false);
             mIsGallery = getIntent().getBooleanExtra(ReaderConstants.ARG_IS_GALLERY, false);
             mContent = getIntent().getStringExtra(ReaderConstants.ARG_CONTENT);
+            mGalleryImageUrls = getIntent().getStringArrayListExtra(
+                    ReaderConstants.ARG_GALLERY_IMAGE_URLS
+            );
         }
 
         mToolbar = findViewById(R.id.toolbar);
@@ -93,22 +103,77 @@ public class ReaderPhotoViewerActivity extends BaseAppCompatActivity
     }
 
     private void loadImageList() {
-        // content will be empty when viewing a single image, otherwise content is HTML
-        // so parse images from it
         final ReaderImageList imageList;
-        if (TextUtils.isEmpty(mContent)) {
+        if (mGalleryImageUrls != null && !mGalleryImageUrls.isEmpty()) {
+            // gallery-scoped: only show images from the tapped gallery
+            imageList = new ReaderImageList(mIsPrivate);
+            for (String url : mGalleryImageUrls) {
+                imageList.addImageUrl(url);
+            }
+            // The initial URL may be the full-size variant while the
+            // gallery contains a resized version (e.g. image.jpg vs
+            // image-800x600.jpg). Find the matching gallery URL so the
+            // pager starts on the right image without adding a duplicate.
+            if (!TextUtils.isEmpty(mInitialImageUrl)
+                    && !imageList.hasImageUrl(mInitialImageUrl)) {
+                String match = findSizeSuffixMatch(
+                        mInitialImageUrl, mGalleryImageUrls
+                );
+                if (match != null) {
+                    mInitialImageUrl = match;
+                }
+            }
+        } else if (TextUtils.isEmpty(mContent)) {
+            // content will be empty when viewing a single image
             imageList = new ReaderImageList(mIsPrivate);
         } else {
-            int minImageWidth = mIsGallery ? ReaderConstants.MIN_GALLERY_IMAGE_WIDTH : 0;
-            imageList = new ReaderImageScanner(mContent, mIsPrivate).getImageList(0, minImageWidth);
+            // parse all images from post HTML
+            int minImageWidth = mIsGallery
+                    ? ReaderConstants.MIN_GALLERY_IMAGE_WIDTH : 0;
+            imageList = new ReaderImageScanner(mContent, mIsPrivate)
+                    .getImageList(0, minImageWidth);
         }
 
         // make sure initial image is in the list
-        if (!TextUtils.isEmpty(mInitialImageUrl) && !imageList.hasImageUrl(mInitialImageUrl)) {
+        if (!TextUtils.isEmpty(mInitialImageUrl)
+                && !imageList.hasImageUrl(mInitialImageUrl)) {
             imageList.addImageUrl(0, mInitialImageUrl);
         }
 
         getAdapter().setImageList(imageList, mInitialImageUrl);
+    }
+
+    /**
+     * Finds a gallery URL that matches the given URL after stripping
+     * WordPress size suffixes (e.g. -800x600) from pathnames.
+     */
+    @Nullable
+    private static String findSizeSuffixMatch(
+            @NonNull String targetUrl,
+            @NonNull ArrayList<String> galleryUrls
+    ) {
+        String basePath = stripSizeSuffix(
+                UrlUtils.removeQuery(targetUrl)
+        );
+        for (String galleryUrl : galleryUrls) {
+            String galleryBase = stripSizeSuffix(
+                    UrlUtils.removeQuery(galleryUrl)
+            );
+            if (basePath.equals(galleryBase)) {
+                return galleryUrl;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Strips WordPress size suffixes (e.g. -800x600) from a URL.
+     * Keep in sync with the JS counterpart in
+     * {@code ReaderPostDetailFragment.buildGalleryDetectionJs}.
+     */
+    @NonNull
+    private static String stripSizeSuffix(@NonNull String url) {
+        return url.replaceAll("-\\d+x\\d+(\\.[^.]+)$", "$1");
     }
 
     private void showToolbar() {
@@ -191,6 +256,12 @@ public class ReaderPhotoViewerActivity extends BaseAppCompatActivity
         outState.putBoolean(ReaderConstants.ARG_IS_PRIVATE, mIsPrivate);
         outState.putBoolean(ReaderConstants.ARG_IS_GALLERY, mIsGallery);
         outState.putString(ReaderConstants.ARG_CONTENT, mContent);
+        if (mGalleryImageUrls != null) {
+            outState.putStringArrayList(
+                    ReaderConstants.ARG_GALLERY_IMAGE_URLS,
+                    mGalleryImageUrls
+            );
+        }
 
         super.onSaveInstanceState(outState);
     }
