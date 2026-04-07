@@ -89,12 +89,15 @@ abstract class BaseStatsCardViewModel(
         }
 
         statsRepository.init(accessToken)
-        loadingPeriod = currentPeriod
         _uiState.value = MostViewedCardUiState.Loading
 
         fetchJob?.cancel()
         fetchJob = viewModelScope.launch {
-            fetchAndProcess(site)
+            try {
+                fetchAndProcess(site)
+            } finally {
+                loadingPeriod = null
+            }
         }
     }
 
@@ -113,6 +116,7 @@ abstract class BaseStatsCardViewModel(
                 fetchAndProcess(site)
             } finally {
                 _isRefreshing.value = false
+                loadingPeriod = null
             }
         }
     }

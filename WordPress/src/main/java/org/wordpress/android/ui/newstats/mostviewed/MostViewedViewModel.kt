@@ -194,13 +194,16 @@ class MostViewedViewModel @Inject constructor(
         }
 
         statsRepository.init(accessToken)
-        setLoadingPeriod(dataSource, currentPeriod)
         setUiState(dataSource, MostViewedCardUiState.Loading)
 
         viewModelScope.launch {
-            loadDataForSourceInternal(site.siteId, dataSource)
-            if (!hasErrorStateForSource(dataSource)) {
-                setLoadedPeriod(dataSource, currentPeriod)
+            try {
+                loadDataForSourceInternal(site.siteId, dataSource)
+                if (!hasErrorStateForSource(dataSource)) {
+                    setLoadedPeriod(dataSource, currentPeriod)
+                }
+            } finally {
+                clearLoadingPeriod(dataSource)
             }
         }
     }
@@ -296,18 +299,6 @@ class MostViewedViewModel @Inject constructor(
             dataSource,
             MostViewedCardUiState.Error(message = message)
         )
-    }
-
-    private fun setLoadingPeriod(
-        dataSource: MostViewedDataSource,
-        period: StatsPeriod
-    ) {
-        when (dataSource) {
-            MostViewedDataSource.POSTS_AND_PAGES ->
-                postsLoadingPeriod = period
-            MostViewedDataSource.REFERRERS ->
-                referrersLoadingPeriod = period
-        }
     }
 
     private fun clearLoadingPeriod(dataSource: MostViewedDataSource) {

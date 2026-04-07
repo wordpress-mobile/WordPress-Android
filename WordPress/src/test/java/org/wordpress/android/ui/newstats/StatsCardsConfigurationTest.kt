@@ -28,7 +28,8 @@ class StatsCardsConfigurationTest {
             StatsCardType.SEARCH_TERMS,
             StatsCardType.VIDEO_PLAYS,
             StatsCardType.FILE_DOWNLOADS,
-            StatsCardType.DEVICES
+            StatsCardType.DEVICES,
+            StatsCardType.UTM
         )
     }
 

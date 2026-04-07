@@ -66,11 +66,14 @@ class AuthorsViewModel @Inject constructor(
         }
 
         statsRepository.init(accessToken)
-        loadingPeriod = currentPeriod
         _uiState.value = AuthorsCardUiState.Loading
 
         viewModelScope.launch {
-            fetchTopAuthors(site)
+            try {
+                fetchTopAuthors(site)
+            } finally {
+                loadingPeriod = null
+            }
         }
     }
 
