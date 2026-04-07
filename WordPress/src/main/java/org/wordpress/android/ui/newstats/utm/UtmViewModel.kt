@@ -119,6 +119,7 @@ class UtmViewModel @Inject constructor(
             return
         }
         statsRepository.init(accessToken)
+        loadingPeriod = currentPeriod
         setCurrentCategoryState(UtmCardUiState.Loading)
         viewModelScope.launch {
             fetchForCurrentCategory(site.siteId)
@@ -150,11 +151,11 @@ class UtmViewModel @Inject constructor(
         selectedSiteRepository.getSelectedSite()?.adminUrl
 
     fun onPeriodChanged(period: StatsPeriod) {
-        val cat = _selectedCategory.value
-        if (loadedPeriods[cat] == period ||
+        if (currentPeriod == period &&
             loadingPeriod == period
         ) return
-        loadingPeriod = period
+        val cat = _selectedCategory.value
+        if (loadedPeriods[cat] == period) return
         currentPeriod = period
         // Reset all category loaded periods
         loadedPeriods.clear()
