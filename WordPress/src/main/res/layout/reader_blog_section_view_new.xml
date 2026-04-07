@@ -56,7 +56,9 @@
         app:layout_goneMarginStart="0dp"
         app:layout_constraintStart_toEndOf="@id/blog_section_image_blog_avatar"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toTopOf="@id/blog_section_image_blog_avatar"
+        app:layout_constraintBottom_toTopOf="@id/blog_section_text_dateline"
+        app:layout_constraintVertical_chainStyle="packed"
         tools:text="Author Name" />
 
     <com.google.android.material.textview.MaterialTextView
@@ -73,5 +75,6 @@
         app:layout_constraintStart_toEndOf="@id/blog_section_image_blog_avatar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/blog_section_text_author"
+        app:layout_constraintBottom_toBottomOf="@id/blog_section_image_blog_avatar"
         tools:text="Dec 18, 2025 · 5 min read" />
 </androidx.constraintlayout.widget.ConstraintLayout>
