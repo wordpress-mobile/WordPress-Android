@@ -82,7 +82,10 @@ class ReaderPostDetailHeaderView @JvmOverloads constructor(
         updateAvatars(uiState.blogSectionUiState)
         updateBlogSectionClick(uiState.blogSectionUiState, onHeaderAction)
 
-        uiHelpers.setTextOrHide(textReadingTime, uiState.readingTime)
+        uiHelpers.setTextOrHide(
+            layoutBlogSection.blogSectionTextReadingTime,
+            uiState.readingTime
+        )
         updateFeaturedImage(uiState.featuredImageUiState, onHeaderAction)
         uiHelpers.setTextOrHide(textExcerpt, uiState.excerpt)
         excerptTruncationCheck?.let { textExcerpt.removeCallbacks(it) }
