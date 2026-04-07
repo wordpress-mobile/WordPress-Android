@@ -132,18 +132,4 @@
         app:layout_constraintTop_toBottomOf="@id/text_excerpt_view_more"
         tools:visibility="visible" />
 
-    <androidx.constraintlayout.widget.Barrier
-        android:id="@+id/blog_description_barrier"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:barrierDirection="bottom"
-        app:constraint_referenced_ids="header_featured_image,text_excerpt,text_excerpt_view_more,excerpt_divider" />
-
-    <androidx.constraintlayout.widget.Barrier
-        android:id="@+id/reading_time_barrier"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:barrierDirection="bottom"
-        app:constraint_referenced_ids="text_excerpt,text_excerpt_view_more,excerpt_divider" />
-
 </androidx.constraintlayout.widget.ConstraintLayout>
