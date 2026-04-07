@@ -19,7 +19,6 @@ import org.wordpress.android.ui.newstats.repository.UtmItemData
 import org.wordpress.android.ui.newstats.repository.UtmPostItemData
 import org.wordpress.android.ui.newstats.repository.UtmResult
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
-import org.wordpress.android.viewmodel.ResourceProvider
 
 @ExperimentalCoroutinesApi
 class UtmViewModelTest : BaseUnitTest() {
@@ -34,9 +33,6 @@ class UtmViewModelTest : BaseUnitTest() {
 
     @Mock
     private lateinit var appPrefsWrapper: AppPrefsWrapper
-
-    @Mock
-    private lateinit var resourceProvider: ResourceProvider
 
     private lateinit var viewModel: UtmViewModel
 
@@ -62,8 +58,7 @@ class UtmViewModelTest : BaseUnitTest() {
             selectedSiteRepository,
             accountStore,
             statsRepository,
-            appPrefsWrapper,
-            resourceProvider
+            appPrefsWrapper
         )
         viewModel.onPeriodChanged(StatsPeriod.Last7Days)
     }

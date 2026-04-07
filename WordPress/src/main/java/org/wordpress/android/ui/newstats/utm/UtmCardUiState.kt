@@ -1,8 +1,6 @@
 package org.wordpress.android.ui.newstats.utm
 
-import android.os.Parcelable
 import androidx.annotation.StringRes
-import kotlinx.parcelize.Parcelize
 import org.wordpress.android.R
 
 /**
@@ -71,33 +69,39 @@ data class UtmPostUiItem(
 )
 
 /**
- * Data passed to the UTM detail screen.
+ * UI State for the UTM detail screen.
  */
-data class UtmDetailData(
-    val items: List<UtmUiItem>,
-    val totalViews: Long,
-    val totalViewsChange: Long,
-    val totalViewsChangePercent: Double,
-    val dateRange: String,
-    val selectedCategory: UtmCategory
-)
+sealed class UtmDetailUiState {
+    data object Loading : UtmDetailUiState()
+
+    data class Loaded(
+        val items: List<UtmUiItem>,
+        val maxViewsForBar: Long,
+        val totalViews: Long,
+        val totalViewsChange: Long,
+        val totalViewsChangePercent: Double,
+        val dateRange: String,
+        @StringRes val categoryLabelResId: Int
+    ) : UtmDetailUiState()
+
+    data class Error(
+        @StringRes val messageResId: Int,
+        val isAuthError: Boolean = false
+    ) : UtmDetailUiState()
+}
 
 /**
- * Parcelable UTM item for passing to the detail
- * activity via Intent extras.
+ * Formats a raw UTM name from the API
+ * (e.g. `["impact","affiliate"]`) into a
+ * readable slash-separated string
+ * (e.g. `impact / affiliate`).
  */
-@Parcelize
-data class UtmDetailItem(
-    val title: String,
-    val views: Long,
-    val topPosts: List<UtmDetailPostItem>
-) : Parcelable
-
-/**
- * Parcelable UTM post item for the detail activity.
- */
-@Parcelize
-data class UtmDetailPostItem(
-    val title: String,
-    val views: Long
-) : Parcelable
+internal fun formatUtmName(raw: String): String {
+    if (!raw.startsWith("[")) return raw
+    return raw
+        .removeSurrounding("[", "]")
+        .split(",")
+        .joinToString(" / ") {
+            it.trim().removeSurrounding("\"")
+        }
+}

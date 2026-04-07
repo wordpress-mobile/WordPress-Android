@@ -4,7 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.compose.setContent
-import androidx.annotation.StringRes
+import androidx.activity.viewModels
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -30,6 +30,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -43,133 +44,85 @@ import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.main.BaseAppCompatActivity
+import org.wordpress.android.ui.newstats.StatsPeriod
+import org.wordpress.android.ui.newstats.components.StatsCardEmptyContent
+import org.wordpress.android.ui.newstats.components.StatsCardErrorContent
 import org.wordpress.android.ui.newstats.components.StatsItemName
 import org.wordpress.android.ui.newstats.components.StatsListHeader
 import org.wordpress.android.ui.newstats.components.StatsListRowContainer
 import org.wordpress.android.ui.newstats.components.StatsSummaryCard
+import org.wordpress.android.ui.newstats.util.ShimmerBox
 import org.wordpress.android.ui.newstats.util.formatStatValue
-import org.wordpress.android.util.extensions.getParcelableArrayListCompat
-
-private const val EXTRA_ITEMS = "extra_items"
-private const val EXTRA_TOTAL_VIEWS = "extra_total_views"
-private const val EXTRA_TOTAL_VIEWS_CHANGE =
-    "extra_total_views_change"
-private const val EXTRA_TOTAL_VIEWS_CHANGE_PERCENT =
-    "extra_total_views_change_percent"
-private const val EXTRA_DATE_RANGE = "extra_date_range"
-private const val EXTRA_CATEGORY_LABEL_RES_ID =
-    "extra_category_label_res_id"
 
 @AndroidEntryPoint
 class UtmDetailActivity : BaseAppCompatActivity() {
+    private val viewModel: UtmDetailViewModel
+        by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        val items = intent.extras
-            ?.getParcelableArrayListCompat<UtmDetailItem>(
-                EXTRA_ITEMS
-            ) ?: arrayListOf()
-        val totalViews = intent.getLongExtra(
-            EXTRA_TOTAL_VIEWS, 0L
-        )
-        val totalViewsChange = intent.getLongExtra(
-            EXTRA_TOTAL_VIEWS_CHANGE, 0L
-        )
-        val totalViewsChangePercent =
-            intent.getDoubleExtra(
-                EXTRA_TOTAL_VIEWS_CHANGE_PERCENT, 0.0
-            )
-        val dateRange = intent.getStringExtra(
-            EXTRA_DATE_RANGE
-        ) ?: ""
-        val categoryLabelResId = intent.getIntExtra(
-            EXTRA_CATEGORY_LABEL_RES_ID,
-            R.string.stats_utm_title
-        )
-        val maxViewsForBar =
-            items.firstOrNull()?.views ?: 0L
+        viewModel.loadData()
 
         setContent {
             AppThemeM3 {
+                val uiState by viewModel.uiState
+                    .collectAsState()
                 UtmDetailScreen(
-                    items = items,
-                    maxViewsForBar = maxViewsForBar,
-                    totalViews = totalViews,
-                    totalViewsChange = totalViewsChange,
-                    totalViewsChangePercent =
-                        totalViewsChangePercent,
-                    dateRange = dateRange,
-                    categoryLabelResId =
-                        categoryLabelResId,
+                    uiState = uiState,
+                    onRetry = viewModel::retry,
                     onBackPressed =
-                        onBackPressedDispatcher::onBackPressed
+                        onBackPressedDispatcher
+                            ::onBackPressed
                 )
             }
         }
     }
 
     companion object {
-        @Suppress("LongParameterList")
         fun start(
             context: Context,
-            detailData: UtmDetailData
+            category: UtmCategory,
+            period: StatsPeriod
         ) {
-            val parcelableItems = ArrayList(
-                detailData.items.map { item ->
-                    UtmDetailItem(
-                        title = item.title,
-                        views = item.views,
-                        topPosts = item.topPosts.map {
-                            UtmDetailPostItem(
-                                it.title, it.views
-                            )
-                        }
-                    )
-                }
-            )
             val intent = Intent(
-                context, UtmDetailActivity::class.java
+                context,
+                UtmDetailActivity::class.java
             ).apply {
                 putExtra(
-                    EXTRA_ITEMS, parcelableItems
+                    UtmDetailViewModel
+                        .EXTRA_CATEGORY_NAME,
+                    category.name
                 )
                 putExtra(
-                    EXTRA_TOTAL_VIEWS,
-                    detailData.totalViews
+                    UtmDetailViewModel
+                        .EXTRA_PERIOD_TYPE,
+                    period.toTypeString()
                 )
-                putExtra(
-                    EXTRA_TOTAL_VIEWS_CHANGE,
-                    detailData.totalViewsChange
-                )
-                putExtra(
-                    EXTRA_TOTAL_VIEWS_CHANGE_PERCENT,
-                    detailData.totalViewsChangePercent
-                )
-                putExtra(
-                    EXTRA_DATE_RANGE,
-                    detailData.dateRange
-                )
-                putExtra(
-                    EXTRA_CATEGORY_LABEL_RES_ID,
-                    detailData.selectedCategory
-                        .labelResId
-                )
+                if (period is StatsPeriod.Custom) {
+                    putExtra(
+                        UtmDetailViewModel
+                            .EXTRA_CUSTOM_START_DATE,
+                        period.startDate.toEpochDay()
+                    )
+                    putExtra(
+                        UtmDetailViewModel
+                            .EXTRA_CUSTOM_END_DATE,
+                        period.endDate.toEpochDay()
+                    )
+                }
             }
             context.startActivity(intent)
         }
     }
 }
 
+private const val LOADING_ITEM_COUNT = 8
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun UtmDetailScreen(
-    items: List<UtmDetailItem>,
-    maxViewsForBar: Long,
-    totalViews: Long,
-    totalViewsChange: Long,
-    totalViewsChangePercent: Double,
-    dateRange: String,
-    @StringRes categoryLabelResId: Int,
+    uiState: UtmDetailUiState,
+    onRetry: () -> Unit,
     onBackPressed: () -> Unit
 ) {
     Scaffold(
@@ -183,56 +136,136 @@ private fun UtmDetailScreen(
                     )
                 },
                 navigationIcon = {
-                    IconButton(onClick = onBackPressed) {
+                    IconButton(
+                        onClick = onBackPressed
+                    ) {
                         Icon(
                             Icons.AutoMirrored.Filled
                                 .ArrowBack,
                             contentDescription =
-                                stringResource(R.string.back)
+                                stringResource(
+                                    R.string.back
+                                )
                         )
                     }
                 }
             )
         }
     ) { contentPadding ->
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(contentPadding)
-                .padding(horizontal = 16.dp)
-        ) {
-            item {
-                Spacer(
-                    modifier = Modifier.height(8.dp)
+        when (uiState) {
+            is UtmDetailUiState.Loading ->
+                DetailLoadingContent(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(contentPadding)
+                        .padding(horizontal = 16.dp)
                 )
-                StatsSummaryCard(
-                    totalViews = totalViews,
-                    dateRange = dateRange,
-                    totalViewsChange =
-                        totalViewsChange,
-                    totalViewsChangePercent =
-                        totalViewsChangePercent
+            is UtmDetailUiState.Error ->
+                StatsCardErrorContent(
+                    titleResId =
+                        R.string.stats_utm_title,
+                    errorMessageResId =
+                        uiState.messageResId,
+                    onRetry = onRetry,
+                    onRemoveCard = {},
+                    cardPosition = null,
+                    onMoveUp = null,
+                    onMoveToTop = null,
+                    onMoveDown = null,
+                    onMoveToBottom = null
+                )
+            is UtmDetailUiState.Loaded ->
+                DetailLoadedContent(
+                    state = uiState,
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(contentPadding)
+                        .padding(horizontal = 16.dp)
+                )
+        }
+    }
+}
+
+@Composable
+private fun DetailLoadingContent(
+    modifier: Modifier = Modifier
+) {
+    LazyColumn(modifier = modifier) {
+        item {
+            Spacer(
+                modifier = Modifier.height(16.dp)
+            )
+        }
+        items(LOADING_ITEM_COUNT) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 8.dp),
+                verticalAlignment =
+                    Alignment.CenterVertically
+            ) {
+                ShimmerBox(
+                    modifier = Modifier
+                        .weight(1f)
+                        .height(16.dp)
                 )
                 Spacer(
-                    modifier = Modifier.height(16.dp)
+                    modifier = Modifier.width(12.dp)
+                )
+                ShimmerBox(
+                    modifier = Modifier
+                        .width(50.dp)
+                        .height(16.dp)
                 )
             }
+        }
+    }
+}
 
+@Composable
+private fun DetailLoadedContent(
+    state: UtmDetailUiState.Loaded,
+    modifier: Modifier = Modifier
+) {
+    LazyColumn(modifier = modifier) {
+        item {
+            Spacer(
+                modifier = Modifier.height(8.dp)
+            )
+            StatsSummaryCard(
+                totalViews = state.totalViews,
+                dateRange = state.dateRange,
+                totalViewsChange =
+                    state.totalViewsChange,
+                totalViewsChangePercent =
+                    state.totalViewsChangePercent
+            )
+            Spacer(
+                modifier = Modifier.height(16.dp)
+            )
+        }
+
+        if (state.items.isEmpty()) {
+            item { StatsCardEmptyContent() }
+        } else {
             item {
                 StatsListHeader(
                     leftHeaderResId =
-                        categoryLabelResId
+                        state.categoryLabelResId
                 )
                 Spacer(
                     modifier = Modifier.height(8.dp)
                 )
             }
 
-            itemsIndexed(items) { index, item ->
+            itemsIndexed(
+                state.items
+            ) { index, item ->
                 val percentage =
-                    if (maxViewsForBar > 0) {
+                    if (state.maxViewsForBar > 0) {
                         item.views.toFloat() /
-                            maxViewsForBar.toFloat()
+                            state.maxViewsForBar
+                                .toFloat()
                     } else {
                         0f
                     }
@@ -241,18 +274,19 @@ private fun UtmDetailScreen(
                     item = item,
                     percentage = percentage
                 )
-                if (index < items.lastIndex) {
+                if (index < state.items.lastIndex) {
                     Spacer(
-                        modifier = Modifier.height(4.dp)
+                        modifier = Modifier
+                            .height(4.dp)
                     )
                 }
             }
+        }
 
-            item {
-                Spacer(
-                    modifier = Modifier.height(16.dp)
-                )
-            }
+        item {
+            Spacer(
+                modifier = Modifier.height(16.dp)
+            )
         }
     }
 }
@@ -260,14 +294,18 @@ private fun UtmDetailScreen(
 @Composable
 private fun DetailUtmRow(
     position: Int,
-    item: UtmDetailItem,
+    item: UtmUiItem,
     percentage: Float
 ) {
-    var expanded by remember { mutableStateOf(false) }
+    var expanded by remember {
+        mutableStateOf(false)
+    }
     val hasTopPosts = item.topPosts.isNotEmpty()
 
     Column {
-        StatsListRowContainer(percentage = percentage) {
+        StatsListRowContainer(
+            percentage = percentage
+        ) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -347,7 +385,7 @@ private fun DetailUtmRow(
 
 @Composable
 private fun DetailUtmPostRow(
-    post: UtmDetailPostItem
+    post: UtmPostUiItem
 ) {
     StatsListRowContainer(percentage = 0f) {
         Row(

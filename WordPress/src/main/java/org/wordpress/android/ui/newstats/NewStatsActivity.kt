@@ -757,10 +757,11 @@ private fun TrafficTabContent(
                         selectedCategory = selectedUtmCategory,
                         onCategoryChanged = utmViewModel::onCategoryChanged,
                         onShowAllClick = {
-                            val detailData = utmViewModel.getDetailData()
                             UtmDetailActivity.start(
                                 context = context,
-                                detailData = detailData
+                                category =
+                                    selectedUtmCategory,
+                                period = selectedPeriod
                             )
                         },
                         onRetry = utmViewModel::onRetry,

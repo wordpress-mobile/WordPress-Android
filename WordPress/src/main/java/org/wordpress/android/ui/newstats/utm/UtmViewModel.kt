@@ -17,11 +17,10 @@ import org.wordpress.android.ui.newstats.StatsPeriod
 import org.wordpress.android.ui.newstats.repository.StatsRepository
 import org.wordpress.android.ui.newstats.repository.UtmItemData
 import org.wordpress.android.ui.newstats.repository.UtmResult
-import org.wordpress.android.ui.newstats.util.toDateRangeString
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.util.AppLog
-import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
+import java.util.concurrent.ConcurrentHashMap
 
 private const val CARD_MAX_ITEMS = 10
 
@@ -30,8 +29,7 @@ class UtmViewModel @Inject constructor(
     private val selectedSiteRepository: SelectedSiteRepository,
     private val accountStore: AccountStore,
     private val statsRepository: StatsRepository,
-    private val appPrefsWrapper: AppPrefsWrapper,
-    private val resourceProvider: ResourceProvider
+    private val appPrefsWrapper: AppPrefsWrapper
 ) : ViewModel() {
     private val _selectedCategory =
         MutableStateFlow(UtmCategory.SOURCE_MEDIUM)
@@ -51,7 +49,8 @@ class UtmViewModel @Inject constructor(
     ) { values ->
         val cat = values[0] as UtmCategory
         @Suppress("UNCHECKED_CAST")
-        val states = values.drop(1) as List<UtmCardUiState>
+        val states =
+            values.drop(1) as List<UtmCardUiState>
         states[cat.ordinal]
     }.stateIn(
         viewModelScope,
@@ -63,20 +62,12 @@ class UtmViewModel @Inject constructor(
     val isRefreshing: StateFlow<Boolean> =
         _isRefreshing.asStateFlow()
 
-    private var currentPeriod: StatsPeriod = StatsPeriod.Last7Days
-    private var loadingPeriods =
-        mutableMapOf<UtmCategory, StatsPeriod?>()
-    private var loadedPeriods =
-        mutableMapOf<UtmCategory, StatsPeriod?>()
-
-    private var allItemsCache =
-        mutableMapOf<UtmCategory, List<UtmUiItem>>()
-    private var totalViewsCache =
-        mutableMapOf<UtmCategory, Long>()
-    private var totalViewsChangeCache =
-        mutableMapOf<UtmCategory, Long>()
-    private var totalViewsChangePercentCache =
-        mutableMapOf<UtmCategory, Double>()
+    private var currentPeriod: StatsPeriod =
+        StatsPeriod.Last7Days
+    private val loadingPeriods =
+        ConcurrentHashMap<UtmCategory, StatsPeriod>()
+    private val loadedPeriods =
+        ConcurrentHashMap<UtmCategory, StatsPeriod>()
 
     init {
         loadSavedCategory()
@@ -148,7 +139,10 @@ class UtmViewModel @Inject constructor(
     }
 
     fun getAdminUrl(): String? =
-        selectedSiteRepository.getSelectedSite()?.adminUrl
+        selectedSiteRepository.getSelectedSite()
+            ?.adminUrl
+
+    fun getCurrentPeriod(): StatsPeriod = currentPeriod
 
     fun onPeriodChanged(period: StatsPeriod) {
         val cat = _selectedCategory.value
@@ -184,21 +178,6 @@ class UtmViewModel @Inject constructor(
         }
     }
 
-    fun getDetailData(): UtmDetailData {
-        val cat = _selectedCategory.value
-        return UtmDetailData(
-            items = allItemsCache[cat].orEmpty(),
-            totalViews = totalViewsCache[cat] ?: 0L,
-            totalViewsChange =
-                totalViewsChangeCache[cat] ?: 0L,
-            totalViewsChangePercent =
-                totalViewsChangePercentCache[cat] ?: 0.0,
-            dateRange = currentPeriod
-                .toDateRangeString(resourceProvider),
-            selectedCategory = cat
-        )
-    }
-
     private fun setCurrentCategoryState(
         state: UtmCardUiState
     ) {
@@ -207,13 +186,15 @@ class UtmViewModel @Inject constructor(
     }
 
     private fun resetLoadedPeriodForCurrentCategory() {
-        loadedPeriods[_selectedCategory.value] = null
+        loadedPeriods.remove(_selectedCategory.value)
     }
 
     private suspend fun fetchForCurrentCategory(
         siteId: Long
     ) {
-        fetchForCategory(_selectedCategory.value, siteId)
+        fetchForCategory(
+            _selectedCategory.value, siteId
+        )
     }
 
     @Suppress("TooGenericExceptionCaught")
@@ -227,17 +208,11 @@ class UtmViewModel @Inject constructor(
             )
             when (result) {
                 is UtmResult.Success -> {
-                    loadedPeriods[category] = currentPeriod
-                    loadingPeriods[category] = null
+                    loadedPeriods[category] =
+                        currentPeriod
+                    loadingPeriods.remove(category)
                     val items = result.items
                         .map { it.toUiItem() }
-                    allItemsCache[category] = items
-                    totalViewsCache[category] =
-                        result.totalViews
-                    totalViewsChangeCache[category] =
-                        result.totalViewsChange
-                    totalViewsChangePercentCache[category] =
-                        result.totalViewsChangePercent
                     val cardItems =
                         items.take(CARD_MAX_ITEMS)
                     val maxViews = cardItems
@@ -247,11 +222,12 @@ class UtmViewModel @Inject constructor(
                             items = cardItems,
                             maxViewsForBar = maxViews,
                             hasMoreItems =
-                                items.size > CARD_MAX_ITEMS
+                                items.size >
+                                    CARD_MAX_ITEMS
                         )
                 }
                 is UtmResult.Error -> {
-                    loadingPeriods[category] = null
+                    loadingPeriods.remove(category)
                     _categoryStates[category]?.value =
                         UtmCardUiState.Error(
                             result.messageResId,
@@ -260,7 +236,7 @@ class UtmViewModel @Inject constructor(
                 }
             }
         } catch (e: Exception) {
-            loadingPeriods[category] = null
+            loadingPeriods.remove(category)
             AppLog.e(
                 AppLog.T.STATS,
                 "Error fetching UTM data", e
@@ -280,21 +256,5 @@ class UtmViewModel @Inject constructor(
                 UtmPostUiItem(it.title, it.views)
             }
         )
-    }
-
-    /**
-     * Formats a raw UTM name from the API
-     * (e.g. `["impact","affiliate"]`) into a
-     * readable slash-separated string
-     * (e.g. `impact / affiliate`).
-     */
-    private fun formatUtmName(raw: String): String {
-        if (!raw.startsWith("[")) return raw
-        return raw
-            .removeSurrounding("[", "]")
-            .split(",")
-            .joinToString(" / ") {
-                it.trim().removeSurrounding("\"")
-            }
     }
 }
