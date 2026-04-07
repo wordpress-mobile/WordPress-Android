@@ -37,6 +37,7 @@ class UtmDetailViewModel @Inject constructor(
 
     private var hasLoaded = false
 
+    @Suppress("ReturnCount")
     fun loadData() {
         if (hasLoaded) return
         hasLoaded = true
@@ -89,42 +90,9 @@ class UtmDetailViewModel @Inject constructor(
             )
             when (result) {
                 is UtmResult.Success -> {
-                    val items = result.items.map {
-                        UtmUiItem(
-                            title = formatUtmName(
-                                it.name
-                            ),
-                            views = it.views,
-                            topPosts = it.topPosts.map {
-                                    post ->
-                                UtmPostUiItem(
-                                    post.title,
-                                    post.views
-                                )
-                            }
-                        )
-                    }
-                    val maxViews =
-                        items.firstOrNull()?.views
-                            ?: 0L
-                    _uiState.value =
-                        UtmDetailUiState.Loaded(
-                            items = items,
-                            maxViewsForBar = maxViews,
-                            totalViews =
-                                result.totalViews,
-                            totalViewsChange =
-                                result.totalViewsChange,
-                            totalViewsChangePercent =
-                                result
-                                    .totalViewsChangePercent,
-                            dateRange = period
-                                .toDateRangeString(
-                                    resourceProvider
-                                ),
-                            categoryLabelResId =
-                                category.labelResId
-                        )
+                    _uiState.value = buildLoadedState(
+                        result, category, period
+                    )
                 }
                 is UtmResult.Error -> {
                     _uiState.value =
@@ -143,6 +111,40 @@ class UtmDetailViewModel @Inject constructor(
                 R.string.stats_error_unknown
             )
         }
+    }
+
+    private fun buildLoadedState(
+        result: UtmResult.Success,
+        category: UtmCategory,
+        period: StatsPeriod
+    ): UtmDetailUiState.Loaded {
+        val items = result.items.map {
+            UtmUiItem(
+                title = formatUtmName(it.name),
+                views = it.views,
+                topPosts = it.topPosts.map { post ->
+                    UtmPostUiItem(
+                        post.title, post.views
+                    )
+                }
+            )
+        }
+        val maxViews =
+            items.firstOrNull()?.views ?: 0L
+        return UtmDetailUiState.Loaded(
+            items = items,
+            maxViewsForBar = maxViews,
+            totalViews = result.totalViews,
+            totalViewsChange =
+                result.totalViewsChange,
+            totalViewsChangePercent =
+                result.totalViewsChangePercent,
+            dateRange = period.toDateRangeString(
+                resourceProvider
+            ),
+            categoryLabelResId =
+                category.labelResId
+        )
     }
 
     private fun resolveCategory(): UtmCategory {

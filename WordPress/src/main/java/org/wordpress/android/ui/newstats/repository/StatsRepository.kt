@@ -1302,43 +1302,10 @@ class StatsRepository @Inject constructor(
             c.await() to p.await()
         }
         when (curResult) {
-            is UtmDataResult.Success -> {
-                val prevMap =
-                    if (prevResult is UtmDataResult.Success) {
-                        prevResult.data.topUtmValues
-                    } else {
-                        emptyMap()
-                    }
-                val curValues = curResult.data.topUtmValues
-                val total = curValues.values.sum()
-                val prevTotal = prevMap.values.sum()
-                val change = total - prevTotal
-                val changePct = calculateChangePercent(
-                    total, prevTotal, change
+            is UtmDataResult.Success ->
+                buildUtmSuccess(
+                    curResult, prevResult
                 )
-                UtmResult.Success(
-                    items = curValues.entries
-                        .sortedByDescending { it.value }
-                        .map { (name, views) ->
-                            val prev = prevMap[name] ?: 0L
-                            val posts = curResult.data
-                                .topPosts[name].orEmpty()
-                            UtmItemData(
-                                name = name,
-                                views = views,
-                                previousViews = prev,
-                                topPosts = posts.map {
-                                    UtmPostItemData(
-                                        it.title, it.views
-                                    )
-                                }
-                            )
-                        },
-                    totalViews = total,
-                    totalViewsChange = change,
-                    totalViewsChangePercent = changePct
-                )
-            }
             is UtmDataResult.Error -> {
                 appLogWrapper.e(
                     AppLog.T.STATS,
@@ -1352,6 +1319,47 @@ class StatsRepository @Inject constructor(
                 )
             }
         }
+    }
+
+    private fun buildUtmSuccess(
+        curResult: UtmDataResult.Success,
+        prevResult: UtmDataResult
+    ): UtmResult.Success {
+        val prevMap =
+            if (prevResult is UtmDataResult.Success) {
+                prevResult.data.topUtmValues
+            } else {
+                emptyMap()
+            }
+        val curValues = curResult.data.topUtmValues
+        val total = curValues.values.sum()
+        val prevTotal = prevMap.values.sum()
+        val change = total - prevTotal
+        val changePct = calculateChangePercent(
+            total, prevTotal, change
+        )
+        return UtmResult.Success(
+            items = curValues.entries
+                .sortedByDescending { it.value }
+                .map { (name, views) ->
+                    val prev = prevMap[name] ?: 0L
+                    val posts = curResult.data
+                        .topPosts[name].orEmpty()
+                    UtmItemData(
+                        name = name,
+                        views = views,
+                        previousViews = prev,
+                        topPosts = posts.map {
+                            UtmPostItemData(
+                                it.title, it.views
+                            )
+                        }
+                    )
+                },
+            totalViews = total,
+            totalViewsChange = change,
+            totalViewsChangePercent = changePct
+        )
     }
 
     private fun StatsDateRange.dateString(): String =

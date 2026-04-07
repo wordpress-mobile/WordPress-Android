@@ -43,6 +43,7 @@ class UtmViewModel @Inject constructor(
             )
         }
 
+    @Suppress("SpreadOperator")
     val uiState: StateFlow<UtmCardUiState> = combine(
         _selectedCategory,
         *_categoryStates.values.toTypedArray()
