@@ -63,7 +63,7 @@
 
     </FrameLayout>
 
-    <!-- Blog section (avatar + author + date + reading time) -->
+    <!-- Blog section (avatar + author + date) -->
     <include layout="@layout/reader_blog_section_view_new"
         android:id="@+id/layout_blog_section"
         android:layout_width="0dp"
