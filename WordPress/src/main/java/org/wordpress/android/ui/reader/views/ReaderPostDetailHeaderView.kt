@@ -72,20 +72,19 @@ class ReaderPostDetailHeaderView @JvmOverloads constructor(
             textBlogName.isClickable = false
         }
 
+        val readingTimeText = uiState.readingTime?.let {
+            uiHelpers.getTextOfUiString(root.context, it)
+        }
         setAuthorAndDate(
             uiState.authorName,
             uiState.blogSectionUiState.dateLine,
+            readingTimeText,
         )
 
         updateFollowButton(uiState.followButtonUiState)
 
         updateAvatars(uiState.blogSectionUiState)
         updateBlogSectionClick(uiState.blogSectionUiState, onHeaderAction)
-
-        uiHelpers.setTextOrHide(
-            layoutBlogSection.blogSectionTextReadingTime,
-            uiState.readingTime
-        )
         updateFeaturedImage(uiState.featuredImageUiState, onHeaderAction)
         uiHelpers.setTextOrHide(textExcerpt, uiState.excerpt)
         excerptTruncationCheck?.let { textExcerpt.removeCallbacks(it) }
@@ -202,9 +201,15 @@ class ReaderPostDetailHeaderView @JvmOverloads constructor(
     private fun setAuthorAndDate(
         authorName: String?,
         dateLine: String,
+        readingTime: CharSequence?,
     ) = with(binding.layoutBlogSection) {
         uiHelpers.setTextOrHide(blogSectionTextAuthor, authorName)
-        uiHelpers.setTextOrHide(blogSectionTextDateline, dateLine)
+        val combinedDateLine = if (readingTime != null) {
+            "$dateLine \u00B7 $readingTime"
+        } else {
+            dateLine
+        }
+        uiHelpers.setTextOrHide(blogSectionTextDateline, combinedDateLine)
     }
 
     private fun ReaderPostDetailHeaderViewBinding.updateFeaturedImage(
