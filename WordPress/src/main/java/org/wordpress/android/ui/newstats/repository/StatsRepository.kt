@@ -2290,13 +2290,7 @@ data class UtmItemData(
     val views: Long,
     val previousViews: Long,
     val topPosts: List<UtmPostItemData>
-) {
-    val viewsChange: Long get() = views - previousViews
-    val viewsChangePercent: Double
-        get() = calculateItemChangePercent(
-            views, previousViews
-        )
-}
+)
 
 /**
  * Data for a single post within a UTM item.

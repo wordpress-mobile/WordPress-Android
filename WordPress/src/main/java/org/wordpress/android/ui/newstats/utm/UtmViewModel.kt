@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.store.AccountStore
@@ -67,6 +68,8 @@ class UtmViewModel @Inject constructor(
         ConcurrentHashMap<UtmCategory, StatsPeriod>()
     private val loadedPeriods =
         ConcurrentHashMap<UtmCategory, StatsPeriod>()
+    private val fetchJobs =
+        ConcurrentHashMap<UtmCategory, Job>()
 
     init {
         loadSavedCategory()
@@ -111,11 +114,13 @@ class UtmViewModel @Inject constructor(
         val cat = _selectedCategory.value
         loadingPeriods[cat] = currentPeriod
         setCurrentCategoryState(UtmCardUiState.Loading)
-        viewModelScope.launch {
+        fetchJobs[cat]?.cancel()
+        fetchJobs[cat] = viewModelScope.launch {
             try {
                 fetchForCurrentCategory(site.siteId)
             } finally {
                 loadingPeriods.remove(cat)
+                fetchJobs.remove(cat)
             }
         }
     }
@@ -154,6 +159,7 @@ class UtmViewModel @Inject constructor(
         ) return
         if (loadedPeriods[cat] == period) return
         currentPeriod = period
+        cancelAllFetchJobs()
         loadedPeriods.clear()
         loadingPeriods.clear()
         loadData()
@@ -176,14 +182,24 @@ class UtmViewModel @Inject constructor(
             setCurrentCategoryState(
                 UtmCardUiState.Loading
             )
-            viewModelScope.launch {
-                try {
-                    fetchForCategory(category, siteId)
-                } finally {
-                    loadingPeriods.remove(category)
+            fetchJobs[category]?.cancel()
+            fetchJobs[category] =
+                viewModelScope.launch {
+                    try {
+                        fetchForCategory(
+                            category, siteId
+                        )
+                    } finally {
+                        loadingPeriods.remove(category)
+                        fetchJobs.remove(category)
+                    }
                 }
-            }
         }
+    }
+
+    private fun cancelAllFetchJobs() {
+        fetchJobs.values.forEach { it.cancel() }
+        fetchJobs.clear()
     }
 
     private fun setCurrentCategoryState(
