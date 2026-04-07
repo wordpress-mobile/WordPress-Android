@@ -40,10 +40,7 @@ import uniffi.wp_api.SubscribersByUserTypeSortField
 import uniffi.wp_api.StatsEmailsSummaryParams
 import uniffi.wp_api.StatsEmailsSummaryPeriod
 import uniffi.wp_api.StatsEmailsSummarySortField
-// TODO: Import UTM types when wordpress-rs adds UTM support
-// import uniffi.wp_api.StatsUtmKey
-// import uniffi.wp_api.StatsUtmKeys
-// import uniffi.wp_api.StatsUtmParams
+import uniffi.wp_api.StatsUtmParams
 import uniffi.wp_api.WpApiParamOrder
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
@@ -1351,9 +1348,6 @@ class StatsDataSourceImpl @Inject constructor(
         }
     }
 
-    // TODO: Implement via wordpress-rs UniFFI bindings when
-    // StatsUtmKey, StatsUtmKeys, StatsUtmParams types are
-    // available in the wordpress-rs library.
     override suspend fun fetchUtm(
         siteId: Long,
         keys: List<String>,
@@ -1362,14 +1356,61 @@ class StatsDataSourceImpl @Inject constructor(
         max: Int,
         queryTopPosts: Boolean
     ): UtmDataResult {
+        val key = keys.joinToString(",")
+        val params = StatsUtmParams(
+            max = max.toUInt(),
+            date = date,
+            days = days.toUInt(),
+            startDate = null,
+            queryTopPosts = queryTopPosts
+        )
         AppLog.d(
             T.STATS,
             "fetchUtm - siteId=$siteId, " +
-                "keys=$keys, date=$date, days=$days"
+                "key=$key, date=$date, days=$days"
         )
-        return UtmDataResult.Error(
-            StatsErrorType.API_ERROR
-        )
+        val result = getOrCreateClient()
+            .request { requestBuilder ->
+                requestBuilder.statsUtm()
+                    .getStatsUtm(
+                        wpComSiteId = siteId.toULong(),
+                        statsUtmKeys = key,
+                        params = params
+                    )
+            }
+        logResultType("fetchUtm", result)
+        return when (result) {
+            is WpRequestResult.Success -> {
+                val response = result.response.data
+                val topValues = response.topUtmValues
+                    .mapValues { it.value.toLong() }
+                val topPosts = response.topPosts
+                    .mapValues { entry ->
+                        entry.value.map { post ->
+                            UtmPostData(
+                                title = post.title,
+                                views = post.views.toLong()
+                            )
+                        }
+                    }
+                AppLog.d(
+                    T.STATS,
+                    "fetchUtm success - " +
+                        "${topValues.size} values"
+                )
+                UtmDataResult.Success(
+                    UtmData(
+                        topUtmValues = topValues,
+                        topPosts = topPosts
+                    )
+                )
+            }
+            else -> logErrorAndReturn(
+                "fetchUtm", result
+            ) {
+                UtmDataResult.Error(it)
+            }
+        }
     }
 
     companion object {
