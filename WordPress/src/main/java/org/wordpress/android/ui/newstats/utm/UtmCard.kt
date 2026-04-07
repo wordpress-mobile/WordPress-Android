@@ -226,10 +226,8 @@ private fun LoadedContent(
                 }
             }
 
-            if (state.hasMoreItems) {
-                Spacer(modifier = Modifier.height(12.dp))
-                ShowAllFooter(onClick = onShowAllClick)
-            }
+            Spacer(modifier = Modifier.height(12.dp))
+            ShowAllFooter(onClick = onShowAllClick)
         }
     }
 }
