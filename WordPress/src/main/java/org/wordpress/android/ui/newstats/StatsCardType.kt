@@ -34,7 +34,8 @@ enum class StatsCardType(
             MOST_VIEWED_REFERRERS,
             LOCATIONS,
             AUTHORS,
-            DEVICES
+            DEVICES,
+            UTM
         )
     }
 }
