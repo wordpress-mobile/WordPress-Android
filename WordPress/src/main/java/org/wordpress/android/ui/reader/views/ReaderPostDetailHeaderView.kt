@@ -204,12 +204,11 @@ class ReaderPostDetailHeaderView @JvmOverloads constructor(
         readingTime: CharSequence?,
     ) = with(binding.layoutBlogSection) {
         uiHelpers.setTextOrHide(blogSectionTextAuthor, authorName)
-        val combinedDateLine = if (readingTime != null) {
-            "$dateLine \u00B7 $readingTime"
-        } else {
-            dateLine
+        uiHelpers.setTextOrHide(blogSectionTextDateline, dateLine)
+        blogSectionTextReadingTime.setVisible(readingTime != null)
+        if (readingTime != null) {
+            blogSectionTextReadingTime.text = readingTime
         }
-        uiHelpers.setTextOrHide(blogSectionTextDateline, combinedDateLine)
     }
 
     private fun ReaderPostDetailHeaderViewBinding.updateFeaturedImage(
