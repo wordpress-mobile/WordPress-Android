@@ -1544,13 +1544,6 @@ open class SiteStore @Inject constructor(
                     )
                 )
                 if (!siteModel.isError) {
-                    // Mirror the XML-RPC variant: store credentials
-                    // as Application Password REST credentials so
-                    // downstream code works unchanged.
-                    siteModel.username = ""
-                    siteModel.password = ""
-                    siteModel.apiRestUsernamePlain = payload.username
-                    siteModel.apiRestPasswordPlain = payload.password
                     siteModel.wpApiRestUrl = payload.apiRootUrl
                 }
                 updateSite(siteModel)

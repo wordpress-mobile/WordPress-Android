@@ -76,8 +76,8 @@ class SiteWPAPIRestClient @Inject constructor(
 
                     wpApiRestUrl = discoveredWpApiUrl
                     this.url = cleanedUrl.replaceBefore("://", urlScheme)
-                    this.username = payload.username
-                    this.password = payload.password
+                    this.apiRestUsernamePlain = payload.username
+                    this.apiRestPasswordPlain = payload.password
                 }
             }
 

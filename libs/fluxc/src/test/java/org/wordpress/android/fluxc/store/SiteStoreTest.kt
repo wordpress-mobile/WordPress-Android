@@ -553,8 +553,8 @@ class SiteStoreTest {
                 name = "Test Site"
                 origin = SiteModel.ORIGIN_WPAPI
                 url = "https://example.com"
-                username = "appUser"
-                password = "appPass"
+                apiRestUsernamePlain = "appUser"
+                apiRestPasswordPlain = "appPass"
             }
             whenever(siteWPAPIClient.fetchWPAPISite(any<SiteStore.FetchWPAPISitePayload>()))
                 .thenReturn(fetchedSite)
@@ -567,8 +567,8 @@ class SiteStoreTest {
 
             // Then
             assertThat(result.isError).isFalse()
-            assertThat(fetchedSite.username).isEmpty()
-            assertThat(fetchedSite.password).isEmpty()
+            assertThat(fetchedSite.username).isNullOrEmpty()
+            assertThat(fetchedSite.password).isNullOrEmpty()
             assertThat(fetchedSite.apiRestUsernamePlain)
                 .isEqualTo("appUser")
             assertThat(fetchedSite.apiRestPasswordPlain)
@@ -580,19 +580,23 @@ class SiteStoreTest {
     @Test
     fun `fetchPostFormats returns empty list for WPAPI site without crashing`() =
         test {
-            // Given
-            val site = SiteModel().apply {
-                origin = SiteModel.ORIGIN_WPAPI
-                // xmlRpcUrl is intentionally null
+            org.mockito.Mockito.mockStatic(
+                org.wordpress.android.util.AppLog::class.java
+            ).use {
+                // Given
+                val site = SiteModel().apply {
+                    origin = SiteModel.ORIGIN_WPAPI
+                    // xmlRpcUrl is intentionally null
+                }
+
+                // When
+                val result = siteStore.fetchPostFormats(site)
+
+                // Then - no crash, empty post formats
+                assertThat(result.isError).isFalse()
+                verifyNoInteractions(siteXMLRPCClient)
+                verifyNoInteractions(siteRestClient)
             }
-
-            // When
-            val result = siteStore.fetchPostFormats(site)
-
-            // Then - no crash, empty post formats
-            assertThat(result.isError).isFalse()
-            verifyNoInteractions(siteXMLRPCClient)
-            verifyNoInteractions(siteRestClient)
         }
 
     @Test
