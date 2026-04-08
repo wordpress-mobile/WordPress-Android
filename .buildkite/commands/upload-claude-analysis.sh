@@ -41,7 +41,7 @@ if [ -z "${build_info}" ]; then
   exit 0
 fi
 
-total_failures=$(echo "${build_info}" | jq '[.jobs[] | select(.state == "failed")] | length' 2>/dev/null || echo "-1")
+total_failures=$(echo "${build_info}" | jq '[.jobs[] | select(.state == "failed" or .state == "timed_out")] | length' 2>/dev/null || echo "-1")
 
 if [ "${total_failures}" -eq "${non_essential_failures}" ]; then
   echo "Only non-essential job(s) failed (${non_essential_failures}/${total_failures}), skipping Claude analysis"
