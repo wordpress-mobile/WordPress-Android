@@ -507,9 +507,9 @@ private fun ViewsStatsChart(
             when (chartType) {
                 ChartType.LINE -> modelProducer.runTransaction {
                     lineSeries {
-                        series(chartData.currentPeriod.map { it.views.toInt() })
+                        series(chartData.currentPeriod.map { it.views })
                         if (hasPreviousPeriod) {
-                            series(chartData.previousPeriod.map { it.views.toInt() })
+                            series(chartData.previousPeriod.map { it.views })
                         }
                     }
                 }
@@ -523,8 +523,8 @@ private fun ViewsStatsChart(
                                     chartData.previousPeriod
                                 ) { current, previous ->
                                     if (previous.views <= current.views)
-                                        current.views.toInt()
-                                    else 0
+                                        current.views
+                                    else 0L
                                 }
                             )
                             // Series 2: current value when there
@@ -534,8 +534,8 @@ private fun ViewsStatsChart(
                                     chartData.previousPeriod
                                 ) { current, previous ->
                                     if (previous.views > current.views)
-                                        current.views.toInt()
-                                    else 0
+                                        current.views
+                                    else 0L
                                 }
                             )
                             // Series 3: delta (rounded top)
@@ -546,13 +546,13 @@ private fun ViewsStatsChart(
                                     maxOf(
                                         0L,
                                         previous.views - current.views
-                                    ).toInt()
+                                    )
                                 }
                             )
                         } else {
                             series(
                                 chartData.currentPeriod.map {
-                                    it.views.toInt()
+                                    it.views
                                 }
                             )
                         }

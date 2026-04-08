@@ -237,7 +237,7 @@ private fun SubscribersChart(
         modelProducer.runTransaction {
             lineSeries {
                 series(
-                    dataPoints.map { it.count.toInt() }
+                    dataPoints.map { it.count }
                 )
             }
         }
