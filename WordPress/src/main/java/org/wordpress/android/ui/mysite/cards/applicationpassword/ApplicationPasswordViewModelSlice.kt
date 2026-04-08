@@ -82,9 +82,15 @@ class ApplicationPasswordViewModelSlice @Inject constructor(
                 appLogWrapper.d(AppLog.T.MAIN, "A_P: API response type: ${response::class.simpleName}")
                 when (response) {
                     is WpRequestResult.Success -> {
-                        // Credentials are valid, hide the card
-                        uiModelMutable.postValue(null)
-                        appLogWrapper.d(AppLog.T.MAIN, "A_P: Credentials valid for ${site.url}")
+                        appLogWrapper.d(
+                            AppLog.T.MAIN,
+                            "A_P: Credentials valid for ${site.url}"
+                        )
+                        if (site.xmlRpcUrl.isNullOrEmpty()) {
+                            buildXmlRpcDisabledCard(site)
+                        } else {
+                            uiModelMutable.postValue(null)
+                        }
                     }
                     is WpRequestResult.WpError -> {
                         appLogWrapper.d(AppLog.T.MAIN, "A_P: WpError for ${site.url}: ${response.response}")
@@ -189,6 +195,27 @@ class ApplicationPasswordViewModelSlice @Inject constructor(
         appLogWrapper.d(AppLog.T.MAIN, "A_P: Showing card for ${site.url}")
     }
 
+
+    private fun buildXmlRpcDisabledCard(site: SiteModel) {
+        uiModelMutable.postValue(
+            MySiteCardAndItem.Item.SingleActionCard(
+                textResource = R.string.xmlrpc_disabled_card_text,
+                imageResource = R.drawable.ic_notice_white_24dp,
+                onActionClick = {
+                    _onNavigation.postValue(
+                        Event(
+                            SiteNavigationAction
+                                .OpenXmlRpcDisabledBottomSheet(site)
+                        )
+                    )
+                }
+            )
+        )
+        appLogWrapper.d(
+            AppLog.T.MAIN,
+            "A_P: Showing XML-RPC disabled card for ${site.url}"
+        )
+    }
 
     private fun onClick(site: SiteModel, alternativeUrl: String) {
         _onNavigation.postValue(

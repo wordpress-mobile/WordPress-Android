@@ -578,6 +578,24 @@ class SiteStoreTest {
         }
 
     @Test
+    fun `fetchPostFormats returns empty list for WPAPI site without crashing`() =
+        test {
+            // Given
+            val site = SiteModel().apply {
+                origin = SiteModel.ORIGIN_WPAPI
+                // xmlRpcUrl is intentionally null
+            }
+
+            // When
+            val result = siteStore.fetchPostFormats(site)
+
+            // Then - no crash, empty post formats
+            assertThat(result.isError).isFalse()
+            verifyNoInteractions(siteXMLRPCClient)
+            verifyNoInteractions(siteRestClient)
+        }
+
+    @Test
     fun `sitesAccessedViaWPAPICount returns correct count`() {
         val wpapiSites = listOf(
             SiteModel().apply { origin = SiteModel.ORIGIN_WPAPI },

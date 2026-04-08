@@ -1466,6 +1466,10 @@ open class SiteStore @Inject constructor(
     }
 
     private fun fetchProfileXmlRpc(site: SiteModel) {
+        if (site.xmlRpcUrl.isNullOrEmpty()) {
+            AppLog.w(T.API, "fetchProfileXmlRpc: skipping, xmlRpcUrl is null")
+            return
+        }
         siteXMLRPCClient.fetchProfile(site)
     }
 
@@ -1852,10 +1856,16 @@ open class SiteStore @Inject constructor(
     }
 
     suspend fun fetchPostFormats(site: SiteModel): OnPostFormatsChanged {
-        val payload = if (site.isUsingWpComRestApi) {
-            siteRestClient.fetchPostFormats(site)
-        } else {
-            siteXMLRPCClient.fetchPostFormats(site)
+        val payload = when {
+            site.isUsingWpComRestApi -> siteRestClient.fetchPostFormats(site)
+            site.origin == SiteModel.ORIGIN_WPAPI -> {
+                AppLog.w(
+                    T.API,
+                    "fetchPostFormats: skipping for WPAPI site"
+                )
+                FetchedPostFormatsPayload(site, emptyList())
+            }
+            else -> siteXMLRPCClient.fetchPostFormats(site)
         }
         val event = OnPostFormatsChanged(payload.site)
         if (payload.isError) {
