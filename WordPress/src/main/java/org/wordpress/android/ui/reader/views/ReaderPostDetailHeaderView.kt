@@ -205,10 +205,7 @@ class ReaderPostDetailHeaderView @JvmOverloads constructor(
     ) = with(binding.layoutBlogSection) {
         uiHelpers.setTextOrHide(blogSectionTextAuthor, authorName)
         uiHelpers.setTextOrHide(blogSectionTextDateline, dateLine)
-        blogSectionTextReadingTime.setVisible(readingTime != null)
-        if (readingTime != null) {
-            blogSectionTextReadingTime.text = readingTime
-        }
+        uiHelpers.setTextOrHide(blogSectionTextReadingTime, readingTime)
     }
 
     private fun ReaderPostDetailHeaderViewBinding.updateFeaturedImage(
