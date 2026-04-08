@@ -16,7 +16,7 @@ GEM
       securerandom (>= 0.3)
       tzinfo (~> 2.0, >= 2.0.5)
       uri (>= 0.13.1)
-    addressable (2.8.8)
+    addressable (2.9.0)
       public_suffix (>= 2.0.2, < 8.0)
     artifactory (3.0.17)
     ast (2.4.3)
@@ -311,7 +311,7 @@ GEM
       highline (>= 1.6)
       options (~> 2.3.0)
     pstore (0.2.0)
-    public_suffix (7.0.2)
+    public_suffix (7.0.5)
     racc (1.8.1)
     rainbow (3.1.1)
     rake (13.3.1)
@@ -400,4 +400,4 @@ DEPENDENCIES
   rmagick (~> 4.1)
 
 BUNDLED WITH
-   2.4.21
+   2.6.8
