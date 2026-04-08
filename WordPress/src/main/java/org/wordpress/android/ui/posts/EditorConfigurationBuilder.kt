@@ -27,6 +27,7 @@ object EditorConfigurationBuilder {
             setTitle(settings.getSetting<String>("postTitle") ?: "")
             setContent(settings.getSetting<String>("postContent") ?: "")
             setPostId(postId)
+            setPostStatus(settings.getSetting<String>("status") ?: "draft")
 
             setSiteApiNamespace(siteApiNamespace)
             setNamespaceExcludedPaths(
