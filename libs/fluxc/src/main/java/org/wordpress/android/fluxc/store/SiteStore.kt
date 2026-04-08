@@ -54,6 +54,7 @@ import org.wordpress.android.fluxc.action.SiteAction.FETCH_SITES_XML_RPC
 import org.wordpress.android.fluxc.action.SiteAction.FETCH_SITES_XML_RPC_FROM_APPLICATION_PASSWORD
 import org.wordpress.android.fluxc.action.SiteAction.FETCH_SITE_EDITORS
 import org.wordpress.android.fluxc.action.SiteAction.FETCH_SITE_WP_API
+import org.wordpress.android.fluxc.action.SiteAction.FETCH_SITE_WP_API_FROM_APPLICATION_PASSWORD
 import org.wordpress.android.fluxc.action.SiteAction.FETCH_USER_ROLES
 import org.wordpress.android.fluxc.action.SiteAction.FETCH_WPCOM_SITE_BY_URL
 import org.wordpress.android.fluxc.action.SiteAction.HIDE_SITES
@@ -1360,6 +1361,19 @@ open class SiteStore @Inject constructor(
             FETCH_SITE_WP_API -> coroutineEngine.launch(T.MAIN, this, "Fetch WPAPI Site") {
                 emitChange(fetchWPAPISite(action.payload as FetchWPAPISitePayload))
             }
+            FETCH_SITE_WP_API_FROM_APPLICATION_PASSWORD ->
+                coroutineEngine.launch(
+                    T.MAIN,
+                    this,
+                    "Fetch WPAPI Site from Application Password"
+                ) {
+                    emitChange(
+                        fetchSiteWPAPIFromApplicationPassword(
+                            action.payload
+                                as RefreshSitesXMLRPCApplicationPasswordCredentialsPayload
+                        )
+                    )
+                }
             UPDATE_SITE -> {
                 emitChange(updateSite(action.payload as SiteModel))
             }
@@ -1505,6 +1519,48 @@ open class SiteStore @Inject constructor(
     suspend fun fetchWPAPISite(payload: FetchWPAPISitePayload): OnSiteChanged {
         return coroutineEngine.withDefaultContext(T.MAIN, this, "Fetch WPAPI Site") {
             updateSite(siteWPAPIRestClient.fetchWPAPISite(payload))
+        }
+    }
+
+    @Suppress("TooGenericExceptionCaught")
+    suspend fun fetchSiteWPAPIFromApplicationPassword(
+        payload: RefreshSitesXMLRPCApplicationPasswordCredentialsPayload
+    ): OnSiteChanged {
+        return coroutineEngine.withDefaultContext(
+            T.API,
+            this,
+            "Fetch WPAPI Site from Application Password"
+        ) {
+            try {
+                val siteModel = siteWPAPIRestClient.fetchWPAPISite(
+                    FetchWPAPISitePayload(
+                        url = payload.url,
+                        username = payload.username,
+                        password = payload.password,
+                    )
+                )
+                if (!siteModel.isError) {
+                    // Mirror the XML-RPC variant: store credentials
+                    // as Application Password REST credentials so
+                    // downstream code works unchanged.
+                    siteModel.username = ""
+                    siteModel.password = ""
+                    siteModel.apiRestUsernamePlain = payload.username
+                    siteModel.apiRestPasswordPlain = payload.password
+                    siteModel.wpApiRestUrl = payload.apiRootUrl
+                }
+                updateSite(siteModel)
+            } catch (e: Exception) {
+                val errorMsg = e.message ?: e.javaClass.simpleName
+                AppLog.e(
+                    T.API,
+                    "Failed to fetch/store site via WPAPI: $errorMsg",
+                    e
+                )
+                OnSiteChanged(
+                    SiteError(SiteErrorType.GENERIC_ERROR, errorMsg)
+                )
+            }
         }
     }
 

@@ -148,7 +148,9 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
         apiRootUrl: String
         ) = withContext(ioDispatcher) {
         try {
-            if (username.isEmpty() || password.isEmpty() || siteUrl.isEmpty() || apiRootUrl.isEmpty()) {
+            if (username.isEmpty() || password.isEmpty()
+                || siteUrl.isEmpty() || apiRootUrl.isEmpty()
+            ) {
                 appLogWrapper.e(
                     AppLog.T.MAIN,
                     "A_P: Cannot fetch sites for credential storing" +
@@ -165,18 +167,46 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
                     errorMessage = "empty_fetch_params"
                 )
             } else {
-                val xmlRpcEndpoint =
-                    selfHostedEndpointFinder.verifyOrDiscoverXMLRPCEndpoint(siteUrl)
-                dispatcher.dispatch(
-                    SiteActionBuilder.newFetchSitesXmlRpcFromApplicationPasswordAction(
-                        SiteStore.RefreshSitesXMLRPCApplicationPasswordCredentialsPayload(
-                            username = username,
-                            password = password,
-                            url = xmlRpcEndpoint,
-                            apiRootUrl = apiRootUrl,
+                val xmlRpcEndpoint = try {
+                    selfHostedEndpointFinder
+                        .verifyOrDiscoverXMLRPCEndpoint(siteUrl)
+                } catch (e: SelfHostedEndpointFinder.DiscoveryException) {
+                    appLogWrapper.w(
+                        AppLog.T.API,
+                        "A_P: XML-RPC discovery failed" +
+                            " (${e.message}). Falling back to" +
+                            " WPAPI fetch using" +
+                            " apiRootUrl=$apiRootUrl"
+                    )
+                    null
+                }
+                if (xmlRpcEndpoint != null) {
+                    dispatcher.dispatch(
+                        SiteActionBuilder
+                            .newFetchSitesXmlRpcFromApplicationPasswordAction(
+                            SiteStore
+                                .RefreshSitesXMLRPCApplicationPasswordCredentialsPayload(
+                                username = username,
+                                password = password,
+                                url = xmlRpcEndpoint,
+                                apiRootUrl = apiRootUrl,
+                            )
                         )
                     )
-                )
+                } else {
+                    dispatcher.dispatch(
+                        SiteActionBuilder
+                            .newFetchSiteWpApiFromApplicationPasswordAction(
+                            SiteStore
+                                .RefreshSitesXMLRPCApplicationPasswordCredentialsPayload(
+                                username = username,
+                                password = password,
+                                url = siteUrl,
+                                apiRootUrl = apiRootUrl,
+                            )
+                        )
+                    )
+                }
             }
         } catch (e: Exception) {
             appLogWrapper.e(
