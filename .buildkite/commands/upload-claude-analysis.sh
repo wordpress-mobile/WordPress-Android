@@ -15,7 +15,7 @@ NON_ESSENTIAL_STEPS=("danger")
 non_essential_failures=0
 for step_key in "${NON_ESSENTIAL_STEPS[@]}"; do
   outcome=$(buildkite-agent step get outcome --step "${step_key}" 2>/dev/null || echo "not_run")
-  if [ "${outcome}" = "failed" ]; then
+  if [ "${outcome}" = "hard_failed" ]; then
     echo "Non-essential job '${step_key}' failed"
     non_essential_failures=$((non_essential_failures + 1))
   fi
