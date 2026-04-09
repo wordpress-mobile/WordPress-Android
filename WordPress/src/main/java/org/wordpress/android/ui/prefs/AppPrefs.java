@@ -197,6 +197,7 @@ public class AppPrefs {
         STATS_CARDS_CONFIGURATION_JSON,
         STATS_INSIGHTS_CARDS_CONFIGURATION_JSON,
         SUBSCRIBERS_CARDS_CONFIGURATION_JSON,
+        STATS_UTM_CATEGORY,
 
         // Login flow preserved across OAuth Custom Tabs redirect
         PENDING_LOGIN_FLOW,
@@ -1819,6 +1820,26 @@ public class AppPrefs {
     @NonNull
     private static String getSubscribersCardsConfigurationKey(long siteId) {
         return DeletablePrefKey.SUBSCRIBERS_CARDS_CONFIGURATION_JSON.name() + siteId;
+    }
+
+    @Nullable
+    public static String getStatsUtmCategory(long siteId) {
+        return prefs().getString(getStatsUtmCategoryKey(siteId), null);
+    }
+
+    public static void setStatsUtmCategory(long siteId, @Nullable String category) {
+        SharedPreferences.Editor editor = prefs().edit();
+        if (category == null) {
+            editor.remove(getStatsUtmCategoryKey(siteId));
+        } else {
+            editor.putString(getStatsUtmCategoryKey(siteId), category);
+        }
+        editor.apply();
+    }
+
+    @NonNull
+    private static String getStatsUtmCategoryKey(long siteId) {
+        return DeletablePrefKey.STATS_UTM_CATEGORY.name() + siteId;
     }
 
     /**

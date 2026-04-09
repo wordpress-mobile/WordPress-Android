@@ -20,7 +20,8 @@ enum class StatsCardType(
     SEARCH_TERMS(R.string.stats_search_terms),
     VIDEO_PLAYS(R.string.stats_videos),
     FILE_DOWNLOADS(R.string.stats_file_downloads),
-    DEVICES(R.string.stats_devices_title);
+    DEVICES(R.string.stats_devices_title),
+    UTM(R.string.stats_utm_title);
 
     companion object {
         /**
@@ -33,7 +34,8 @@ enum class StatsCardType(
             MOST_VIEWED_REFERRERS,
             LOCATIONS,
             AUTHORS,
-            DEVICES
+            DEVICES,
+            UTM
         )
     }
 }

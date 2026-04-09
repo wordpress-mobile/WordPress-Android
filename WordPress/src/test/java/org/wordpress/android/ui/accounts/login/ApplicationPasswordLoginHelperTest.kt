@@ -147,11 +147,47 @@ class ApplicationPasswordLoginHelperTest : BaseUnitTest() {
     }
 
     @Test
-    fun `storeApplicationPasswordCredentialsFrom with empty api root url returns BadData`() = runTest {
-        val result = applicationPasswordLoginHelper.storeApplicationPasswordCredentialsFrom(
-            UriLogin(TEST_URL, TEST_USER, TEST_PASSWORD, null)
+    fun `storeApplicationPasswordCredentialsFrom when apiRootUrl null and fallback discovery fails returns BadData`() =
+        runTest {
+            whenever(wpLoginClient.apiDiscovery(any())).thenReturn(
+                ApiDiscoveryResult.FailureParseSiteUrl(ParseUrlException.Generic(""))
+            )
+
+            val result = applicationPasswordLoginHelper.storeApplicationPasswordCredentialsFrom(
+                UriLogin(TEST_URL, TEST_USER, TEST_PASSWORD, null)
+            )
+
+            assertIs<StoreCredentialsResult.BadData>(result)
+        }
+
+    @Test
+    fun `storeApplicationPasswordCredentialsFrom recovers missing apiRootUrl via fallback discovery`() = runTest {
+        val autoDiscoveryAttemptSuccess = AutoDiscoveryAttemptSuccess(
+            mock(), mock(), mock(), DiscoveredAuthenticationMechanism.ApplicationPasswords(mock())
         )
-        assertIs<StoreCredentialsResult.BadData>(result)
+        val apiDiscoveryResult = ApiDiscoveryResult.Success(autoDiscoveryAttemptSuccess)
+        whenever(wpLoginClient.apiDiscovery(any())).thenReturn(apiDiscoveryResult)
+        whenever(discoverSuccessWrapper.getApiRootUrl(eq(apiDiscoveryResult))).thenReturn(TEST_API_ROOT_URL)
+        val siteModel = SiteModel().apply { url = TEST_URL }
+        whenever(siteStore.sites).thenReturn(listOf(siteModel))
+
+        val loginWithoutApiRoot = UriLogin(TEST_URL, TEST_USER, TEST_PASSWORD, null)
+        val result = applicationPasswordLoginHelper.storeApplicationPasswordCredentialsFrom(loginWithoutApiRoot)
+
+        assertIs<StoreCredentialsResult.Success>(result)
+        verify(wpLoginClient, times(1)).apiDiscovery(any())
+        verify(dispatcherWrapper).updateApplicationPassword(eq(siteModel))
+    }
+
+    @Test
+    fun `storeApplicationPasswordCredentialsFrom does not run discovery when apiRootUrl is present`() = runTest {
+        val siteModel = SiteModel().apply { url = TEST_URL }
+        whenever(siteStore.sites).thenReturn(listOf(siteModel))
+
+        val result = applicationPasswordLoginHelper.storeApplicationPasswordCredentialsFrom(testUriLogin)
+
+        assertIs<StoreCredentialsResult.Success>(result)
+        verify(wpLoginClient, times(0)).apiDiscovery(any())
     }
 
     @Test

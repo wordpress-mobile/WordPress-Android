@@ -87,6 +87,10 @@ import org.wordpress.android.ui.newstats.clicks.ClicksViewModel
 import org.wordpress.android.ui.newstats.devices.DevicesCard
 import org.wordpress.android.ui.newstats.devices.DevicesCardUiState
 import org.wordpress.android.ui.newstats.devices.DevicesViewModel
+import org.wordpress.android.ui.newstats.utm.UtmCard
+import org.wordpress.android.ui.newstats.utm.UtmCardUiState
+import org.wordpress.android.ui.newstats.utm.UtmDetailActivity
+import org.wordpress.android.ui.newstats.utm.UtmViewModel
 import org.wordpress.android.ui.newstats.filedownloads.FileDownloadsViewModel
 import org.wordpress.android.ui.newstats.locations.LocationsCardUiState
 import org.wordpress.android.ui.newstats.searchterms.SearchTermsViewModel
@@ -396,6 +400,7 @@ private fun TrafficTabContent(
     videoPlaysViewModel: VideoPlaysViewModel = viewModel(),
     fileDownloadsViewModel: FileDownloadsViewModel = viewModel(),
     devicesViewModel: DevicesViewModel = viewModel(),
+    utmViewModel: UtmViewModel = viewModel(),
     newStatsViewModel: NewStatsViewModel = viewModel()
 ) {
     val context = LocalContext.current
@@ -412,6 +417,8 @@ private fun TrafficTabContent(
     val fileDownloadsUiState by fileDownloadsViewModel.uiState.collectAsState()
     val devicesUiState by devicesViewModel.uiState.collectAsState()
     val selectedDeviceType by devicesViewModel.selectedDeviceType.collectAsState()
+    val utmUiState by utmViewModel.uiState.collectAsState()
+    val selectedUtmCategory by utmViewModel.selectedCategory.collectAsState()
     val selectedPeriod by viewsStatsViewModel.selectedPeriod.collectAsState()
     val isTodaysStatsRefreshing by todaysStatsViewModel.isRefreshing.collectAsState()
     val isViewsStatsRefreshing by viewsStatsViewModel.isRefreshing.collectAsState()
@@ -429,13 +436,14 @@ private fun TrafficTabContent(
     val isFileDownloadsRefreshing by fileDownloadsViewModel
         .isRefreshing.collectAsState()
     val isDevicesRefreshing by devicesViewModel.isRefreshing.collectAsState()
+    val isUtmRefreshing by utmViewModel.isRefreshing.collectAsState()
     val isRefreshing = listOf(
         isTodaysStatsRefreshing, isViewsStatsRefreshing,
         isMostViewedPostsRefreshing, isMostViewedReferrersRefreshing,
         isLocationsRefreshing, isAuthorsRefreshing,
         isClicksRefreshing, isSearchTermsRefreshing,
         isVideoPlaysRefreshing, isFileDownloadsRefreshing,
-        isDevicesRefreshing
+        isDevicesRefreshing, isUtmRefreshing
     ).any { it }
     val pullToRefreshState = rememberPullToRefreshState()
 
@@ -486,6 +494,9 @@ private fun TrafficTabContent(
             },
             onDevices = {
                 devicesViewModel.onPeriodChanged(selectedPeriod)
+            },
+            onUtm = {
+                utmViewModel.onPeriodChanged(selectedPeriod)
             }
         )
     }
@@ -519,7 +530,8 @@ private fun TrafficTabContent(
             onSearchTerms = { searchTermsViewModel.loadData() },
             onVideoPlays = { videoPlaysViewModel.loadData() },
             onFileDownloads = { fileDownloadsViewModel.loadData() },
-            onDevices = { devicesViewModel.loadData() }
+            onDevices = { devicesViewModel.loadData() },
+            onUtm = { utmViewModel.loadData() }
         )
     }
 
@@ -570,7 +582,8 @@ private fun TrafficTabContent(
                 onFileDownloads = {
                     fileDownloadsViewModel.refresh()
                 },
-                onDevices = { devicesViewModel.refresh() }
+                onDevices = { devicesViewModel.refresh() },
+                onUtm = { utmViewModel.refresh() }
             )
         },
         indicator = {
@@ -736,6 +749,43 @@ private fun TrafficTabContent(
                                 ?.isAuthError == true,
                             getAdminUrl =
                                 devicesViewModel::getAdminUrl,
+                            context = context
+                        )
+                    )
+                    StatsCardType.UTM -> UtmCard(
+                        uiState = utmUiState,
+                        selectedCategory = selectedUtmCategory,
+                        onCategoryChanged = utmViewModel::onCategoryChanged,
+                        onShowAllClick = {
+                            UtmDetailActivity.start(
+                                context = context,
+                                category =
+                                    selectedUtmCategory,
+                                period = selectedPeriod
+                            )
+                        },
+                        onRetry = utmViewModel::onRetry,
+                        onRemoveCard = {
+                            newStatsViewModel.removeCard(cardType)
+                        },
+                        cardPosition = cardPosition,
+                        onMoveUp = {
+                            newStatsViewModel.moveCardUp(cardType)
+                        },
+                        onMoveToTop = {
+                            newStatsViewModel.moveCardToTop(cardType)
+                        },
+                        onMoveDown = {
+                            newStatsViewModel.moveCardDown(cardType)
+                        },
+                        onMoveToBottom = {
+                            newStatsViewModel.moveCardToBottom(cardType)
+                        },
+                        onOpenWpAdmin = buildOpenWpAdminAction(
+                            isAuthError = (utmUiState as?
+                                UtmCardUiState.Error)
+                                ?.isAuthError == true,
+                            getAdminUrl = utmViewModel::getAdminUrl,
                             context = context
                         )
                     )
@@ -975,7 +1025,8 @@ private fun List<StatsCardType>.dispatchToVisibleCards(
     onSearchTerms: () -> Unit,
     onVideoPlays: () -> Unit,
     onFileDownloads: () -> Unit,
-    onDevices: () -> Unit
+    onDevices: () -> Unit,
+    onUtm: () -> Unit
 ) {
     if (StatsCardType.TODAYS_STATS in this) onTodaysStats()
     if (StatsCardType.VIEWS_STATS in this) onViewsStats()
@@ -992,6 +1043,7 @@ private fun List<StatsCardType>.dispatchToVisibleCards(
     if (StatsCardType.VIDEO_PLAYS in this) onVideoPlays()
     if (StatsCardType.FILE_DOWNLOADS in this) onFileDownloads()
     if (StatsCardType.DEVICES in this) onDevices()
+    if (StatsCardType.UTM in this) onUtm()
 }
 
 @OptIn(ExperimentalMaterial3Api::class)

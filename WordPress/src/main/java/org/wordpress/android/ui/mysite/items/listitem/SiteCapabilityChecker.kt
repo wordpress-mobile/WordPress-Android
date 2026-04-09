@@ -5,6 +5,7 @@ import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpApiClientProvider
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.util.AppLog
 import rs.wordpress.api.kotlin.WpRequestResult
+import uniffi.wp_api.UserCapability
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -47,9 +48,8 @@ class SiteCapabilityChecker @Inject constructor(
             }
             when (response) {
                 is WpRequestResult.Success -> {
-                    response.response.data.capabilities.entries.any { (key, value) ->
-                        key.toString().equals("edit_theme_options", ignoreCase = true) && value
-                    }
+                    response.response.data.capabilities
+                        .hasCap(UserCapability.EditThemeOptions)
                 }
                 else -> false
             }
