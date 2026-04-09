@@ -138,6 +138,12 @@
             android:summary="@string/site_settings_use_theme_styles_summary"
             android:title="@string/site_settings_use_theme_styles" />
 
+        <org.wordpress.android.ui.prefs.WPSwitchPreference
+            android:id="@+id/pref_use_third_party_blocks"
+            android:key="@string/pref_key_use_third_party_blocks"
+            android:summary="@string/site_settings_use_third_party_blocks_summary"
+            android:title="@string/site_settings_use_third_party_blocks" />
+
     </PreferenceCategory>
 
     <!-- Writing Settings -->

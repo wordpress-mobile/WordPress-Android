@@ -628,6 +628,14 @@ public abstract class SiteSettingsInterface {
         mSettings.useThemeStyles = enabled;
     }
 
+    public boolean getUseThirdPartyBlocks() {
+        return mSettings.useThirdPartyBlocks;
+    }
+
+    public void setUseThirdPartyBlocks(boolean enabled) {
+        mSettings.useThirdPartyBlocks = enabled;
+    }
+
     public boolean isJetpackMonitorEnabled() {
         return mJpSettings.monitorActive;
     }
