@@ -68,6 +68,7 @@ class GutenbergKitEditorFragment : GutenbergKitEditorFragmentBase() {
     }
 
     private fun initializeFragmentListeners() {
+        // Set up history change listener
         historyChangeListener = object : HistoryChangeListener {
             override fun onHistoryChanged(hasUndo: Boolean, hasRedo: Boolean) {
                 mEditorFragmentListener.onToggleUndo(!hasUndo)
@@ -75,12 +76,14 @@ class GutenbergKitEditorFragment : GutenbergKitEditorFragmentBase() {
             }
         }
 
+        // Set up featured image change listener
         featuredImageChangeListener = object : FeaturedImageChangeListener {
             override fun onFeaturedImageChanged(mediaID: Long) {
                 mEditorFragmentListener.onFeaturedImageIdChanged(mediaID, true)
             }
         }
 
+        // Set up media library listener
         openMediaLibraryListener = object : OpenMediaLibraryListener {
             override fun onOpenMediaLibrary(
                 config: GutenbergView.OpenMediaLibraryConfig
@@ -89,6 +92,7 @@ class GutenbergKitEditorFragment : GutenbergKitEditorFragmentBase() {
             }
         }
 
+        // Set up JS exception listener
         onLogJsExceptionListener = object : LogJsExceptionListener {
             override fun onLogJsException(
                 exception: org.wordpress.gutenberg.GutenbergJsException
@@ -125,6 +129,7 @@ class GutenbergKitEditorFragment : GutenbergKitEditorFragmentBase() {
             }
         }
 
+        // Set up modal dialog state listener
         modalDialogStateListener = object : GutenbergView.ModalDialogStateListener {
             override fun onModalDialogOpened(dialogType: String) {
                 mEditorFragmentListener.onModalDialogOpened(dialogType)
@@ -140,6 +145,7 @@ class GutenbergKitEditorFragment : GutenbergKitEditorFragmentBase() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
+        // Set up fragment's own listeners before initializing the editor
         initializeFragmentListeners()
 
         mEditorFragmentListener.onEditorFragmentInitialized()
@@ -221,6 +227,7 @@ class GutenbergKitEditorFragment : GutenbergKitEditorFragmentBase() {
                         "at-symbol" ->
                             mEditorFragmentListener.showUserSuggestions { result ->
                                 result?.let {
+                                    // Appended space completes the autocomplete session
                                     gutenbergView.appendTextAtCursor("$it ")
                                 }
                             }
@@ -229,6 +236,7 @@ class GutenbergKitEditorFragment : GutenbergKitEditorFragmentBase() {
                                 mEditorFragmentListener
                                     .showXpostSuggestions { result ->
                                         result?.let {
+                                            // Appended space completes the autocomplete session
                                             gutenbergView
                                                 .appendTextAtCursor("$it ")
                                         }
@@ -452,6 +460,10 @@ class GutenbergKitEditorFragment : GutenbergKitEditorFragmentBase() {
     override fun appendMediaFiles(
         mediaList: MutableMap<String?, MediaFile?>
     ) {
+        // appendMediaFile may be called from a background thread
+        // (example: EditPostActivity.java#L2165) and Activity may
+        // have already be gone.
+        // Ticket: https://github.com/wordpress-mobile/WordPress-Android/issues/7386
         if (activity == null) {
             AppLog.d(
                 AppLog.T.MEDIA,
@@ -460,6 +472,8 @@ class GutenbergKitEditorFragment : GutenbergKitEditorFragmentBase() {
             return
         }
 
+        // Get media URL of first of media first to check
+        // if it is network or local one.
         var mediaUrl: String? = ""
         val mediaUrls: Array<Any?> = mediaList.keys.toTypedArray()
         if (mediaUrls.isNotEmpty()) {
@@ -468,6 +482,7 @@ class GutenbergKitEditorFragment : GutenbergKitEditorFragmentBase() {
 
         val isNetworkUrl = URLUtil.isNetworkUrl(mediaUrl)
 
+        // Disable upload handling until supported--e.g., media shared to the app
         if (gutenbergView == null || !isNetworkUrl) {
             return
         }

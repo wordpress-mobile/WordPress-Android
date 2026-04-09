@@ -26,11 +26,13 @@ object EditorConfigurationBuilder {
             val postId = settings.getSetting<Int>("postId")
                 ?.let { if (it == 0) null else it.toUInt() }
 
+            // Post settings
             setTitle(settings.getSetting<String>("postTitle") ?: "")
             setContent(settings.getSetting<String>("postContent") ?: "")
             setPostId(postId)
             setPostStatus(settings.getSetting<String>("status") ?: "draft")
 
+            // Site settings
             setSiteApiNamespace(siteApiNamespace)
             setNamespaceExcludedPaths(
                 settings.getStringArray("namespaceExcludedPaths")
@@ -39,6 +41,7 @@ object EditorConfigurationBuilder {
                 settings.getSetting<String>("authHeader") ?: ""
             )
 
+            // Features
             setThemeStyles(
                 settings.getSettingOrDefault("themeStyles", false)
             )
@@ -47,15 +50,18 @@ object EditorConfigurationBuilder {
             )
             setLocale(settings.getSetting<String>("locale") ?: "en")
 
+            // Editor asset caching configuration
             configureEditorAssetCaching(
                 settings, siteURL, siteApiNamespace
             )
 
+            // Cookies
             setCookies(
                 settings.getSetting<Map<String, String>>("cookies")
                     ?: emptyMap()
             )
 
+            // Network logging for debugging
             setEnableNetworkLogging(
                 settings.getSettingOrDefault("enableNetworkLogging", false)
             )
@@ -87,6 +93,7 @@ object EditorConfigurationBuilder {
         }
     }
 
+    // Type-safe settings accessors
     private inline fun <reified T> Map<String, Any?>.getSetting(
         key: String
     ): T? = this[key] as? T
