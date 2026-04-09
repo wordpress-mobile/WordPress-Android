@@ -166,68 +166,6 @@ class WpApiClientProvider @Inject constructor(
         }
     }
 
-    /**
-     * Fetches the WP.com site manifest (API root index) and
-     * returns the set of route paths.
-     * Returns `null` on failure.
-     */
-    suspend fun fetchWpComManifestRoutes(
-        site: SiteModel
-    ): Set<String>? {
-        val siteHost = URL(site.url).host
-        val manifestUrl =
-            "https://public-api.wordpress.com" +
-                "/wp-json/?rest_route=/sites/$siteHost"
-        val token = accountStore.accessToken ?: return null
-        return fetchManifestRoutes(manifestUrl, "Bearer $token")
-    }
-
-    /**
-     * Fetches the site's API root index directly (no auth)
-     * and returns the set of route paths.
-     * Returns `null` on failure.
-     */
-    suspend fun fetchSiteManifestRoutes(
-        site: SiteModel
-    ): Set<String>? {
-        val manifestUrl = site.buildUrl()
-        return fetchManifestRoutes(manifestUrl)
-    }
-
-    @Suppress("TooGenericExceptionCaught")
-    private suspend fun fetchManifestRoutes(
-        url: String,
-        authHeader: String? = null
-    ): Set<String>? {
-        val request = okhttp3.Request.Builder()
-            .url(url)
-            .apply {
-                if (authHeader != null) {
-                    addHeader("Authorization", authHeader)
-                }
-            }
-            .build()
-        val client = OkHttpClient.Builder().build()
-        return kotlinx.coroutines.withContext(
-            kotlinx.coroutines.Dispatchers.IO
-        ) {
-            try {
-                client.newCall(request).execute().use { resp ->
-                    if (!resp.isSuccessful) return@use null
-                    val body = resp.body?.string()
-                        ?: return@use null
-                    val json = org.json.JSONObject(body)
-                    val routes =
-                        json.optJSONObject("routes")
-                            ?: return@use null
-                    routes.keys().asSequence().toSet()
-                }
-            } catch (e: Exception) {
-                null
-            }
-        }
-    }
-
     fun getApiRootUrlFrom(site: SiteModel): String = site.buildUrl()
 
     private fun SiteModel.buildUrl(): String =
