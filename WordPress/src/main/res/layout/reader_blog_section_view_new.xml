@@ -75,6 +75,23 @@
         app:layout_constraintStart_toEndOf="@id/blog_section_image_blog_avatar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/blog_section_text_author"
+        app:layout_constraintBottom_toTopOf="@id/blog_section_text_reading_time"
+        tools:text="Dec 18, 2025" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/blog_section_text_reading_time"
+        style="@style/ReaderTextView.PostDetail.BlogSection.Subtitle.MediumEmphasis"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_large"
+        android:includeFontPadding="false"
+        android:maxLines="1"
+        android:visibility="gone"
+        app:layout_goneMarginStart="0dp"
+        app:layout_constraintStart_toEndOf="@id/blog_section_image_blog_avatar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/blog_section_text_dateline"
         app:layout_constraintBottom_toBottomOf="@id/blog_section_image_blog_avatar"
-        tools:text="Dec 18, 2025 at 3:30 PM" />
+        tools:text="5 min read"
+        tools:visibility="visible" />
 </androidx.constraintlayout.widget.ConstraintLayout>
