@@ -110,15 +110,17 @@ class CommentsStore @Inject constructor(
         offset: Int,
         networkStatusFilter: CommentStatus
     ): CommentsActionPayload<CommentsActionEntityIds> {
-        val payload = if (site.isUsingWpComRestApi) {
-            commentsRestClient.fetchCommentsPage(
+        val payload = when {
+            site.isUsingWpComRestApi -> commentsRestClient.fetchCommentsPage(
                     site = site,
                     number = number,
                     offset = offset,
                     status = networkStatusFilter
             )
-        } else {
-            commentsXMLRPCClient.fetchCommentsPage(
+            site.origin == SiteModel.ORIGIN_WPAPI -> return CommentsActionPayload(
+                    CommentError(INVALID_INPUT, XMLRPC_UNAVAILABLE_MSG)
+            )
+            else -> commentsXMLRPCClient.fetchCommentsPage(
                     site = site,
                     number = number,
                     offset = offset,
@@ -147,10 +149,14 @@ class CommentsStore @Inject constructor(
     ): CommentsActionPayload<CommentsActionData> {
         val remoteCommentIdToFetch = comment?.remoteCommentId ?: remoteCommentId
 
-        val payload = if (site.isUsingWpComRestApi) {
-            commentsRestClient.fetchComment(site, remoteCommentIdToFetch)
-        } else {
-            commentsXMLRPCClient.fetchComment(site, remoteCommentIdToFetch)
+        val payload = when {
+            site.isUsingWpComRestApi ->
+                commentsRestClient.fetchComment(site, remoteCommentIdToFetch)
+            site.origin == SiteModel.ORIGIN_WPAPI -> return CommentsActionPayload(
+                    CommentError(INVALID_INPUT, XMLRPC_UNAVAILABLE_MSG)
+            )
+            else ->
+                commentsXMLRPCClient.fetchComment(site, remoteCommentIdToFetch)
         }
 
         return if (payload.isError) {
@@ -164,10 +170,14 @@ class CommentsStore @Inject constructor(
     }
 
     suspend fun createNewComment(site: SiteModel, comment: CommentEntity): CommentsActionPayload<CommentsActionData> {
-        val payload = if (site.isUsingWpComRestApi) {
-            commentsRestClient.createNewComment(site, comment.remotePostId, comment.content)
-        } else {
-            commentsXMLRPCClient.createNewComment(site, comment.remotePostId, comment)
+        val payload = when {
+            site.isUsingWpComRestApi ->
+                commentsRestClient.createNewComment(site, comment.remotePostId, comment.content)
+            site.origin == SiteModel.ORIGIN_WPAPI -> return CommentsActionPayload(
+                    CommentError(INVALID_INPUT, XMLRPC_UNAVAILABLE_MSG)
+            )
+            else ->
+                commentsXMLRPCClient.createNewComment(site, comment.remotePostId, comment)
         }
 
         return if (payload.isError) {
@@ -186,10 +196,14 @@ class CommentsStore @Inject constructor(
         comment: CommentEntity,
         reply: CommentEntity
     ): CommentsActionPayload<CommentsActionData> {
-        val payload = if (site.isUsingWpComRestApi) {
-            commentsRestClient.createNewReply(site, comment.remoteCommentId, reply.content)
-        } else {
-            commentsXMLRPCClient.createNewReply(site, comment, reply)
+        val payload = when {
+            site.isUsingWpComRestApi ->
+                commentsRestClient.createNewReply(site, comment.remoteCommentId, reply.content)
+            site.origin == SiteModel.ORIGIN_WPAPI -> return CommentsActionPayload(
+                    CommentError(INVALID_INPUT, XMLRPC_UNAVAILABLE_MSG)
+            )
+            else ->
+                commentsXMLRPCClient.createNewReply(site, comment, reply)
         }
 
         return if (payload.isError) {
@@ -204,10 +218,14 @@ class CommentsStore @Inject constructor(
     }
 
     suspend fun pushComment(site: SiteModel, comment: CommentEntity): CommentsActionPayload<CommentsActionData> {
-        val payload = if (site.isUsingWpComRestApi) {
-            commentsRestClient.pushComment(site, comment)
-        } else {
-            commentsXMLRPCClient.pushComment(site, comment)
+        val payload = when {
+            site.isUsingWpComRestApi ->
+                commentsRestClient.pushComment(site, comment)
+            site.origin == SiteModel.ORIGIN_WPAPI -> return CommentsActionPayload(
+                    CommentError(INVALID_INPUT, XMLRPC_UNAVAILABLE_MSG)
+            )
+            else ->
+                commentsXMLRPCClient.pushComment(site, comment)
         }
 
         return if (payload.isError) {
@@ -222,10 +240,14 @@ class CommentsStore @Inject constructor(
     }
 
     suspend fun updateEditComment(site: SiteModel, comment: CommentEntity): CommentsActionPayload<CommentsActionData> {
-        val payload = if (site.isUsingWpComRestApi) {
-            commentsRestClient.updateEditComment(site, comment)
-        } else {
-            commentsXMLRPCClient.updateEditComment(site, comment)
+        val payload = when {
+            site.isUsingWpComRestApi ->
+                commentsRestClient.updateEditComment(site, comment)
+            site.origin == SiteModel.ORIGIN_WPAPI -> return CommentsActionPayload(
+                    CommentError(INVALID_INPUT, XMLRPC_UNAVAILABLE_MSG)
+            )
+            else ->
+                commentsXMLRPCClient.updateEditComment(site, comment)
         }
 
         return if (payload.isError) {
@@ -254,10 +276,14 @@ class CommentsStore @Inject constructor(
 
         val remoteCommentIdToDelete = commentToDelete?.remoteCommentId ?: remoteCommentId
 
-        val payload = if (site.isUsingWpComRestApi) {
-            commentsRestClient.deleteComment(site, remoteCommentIdToDelete)
-        } else {
-            commentsXMLRPCClient.deleteComment(site, remoteCommentIdToDelete)
+        val payload = when {
+            site.isUsingWpComRestApi ->
+                commentsRestClient.deleteComment(site, remoteCommentIdToDelete)
+            site.origin == SiteModel.ORIGIN_WPAPI -> return CommentsActionPayload(
+                    CommentError(INVALID_INPUT, XMLRPC_UNAVAILABLE_MSG)
+            )
+            else ->
+                commentsXMLRPCClient.deleteComment(site, remoteCommentIdToDelete)
         }
 
         if (payload.isError) {
@@ -375,15 +401,17 @@ class CommentsStore @Inject constructor(
         networkStatusFilter: CommentStatus,
         cacheStatuses: List<CommentStatus>
     ): CommentsActionPayload<PagingData> {
-        val payload = if (site.isUsingWpComRestApi) {
-            commentsRestClient.fetchCommentsPage(
+        val payload = when {
+            site.isUsingWpComRestApi -> commentsRestClient.fetchCommentsPage(
                     site = site,
                     number = number,
                     offset = offset,
                     status = networkStatusFilter
             )
-        } else {
-            commentsXMLRPCClient.fetchCommentsPage(
+            site.origin == SiteModel.ORIGIN_WPAPI -> return CommentsActionPayload(
+                    CommentError(INVALID_INPUT, XMLRPC_UNAVAILABLE_MSG)
+            )
+            else -> commentsXMLRPCClient.fetchCommentsPage(
                     site = site,
                     number = number,
                     offset = offset,
@@ -860,5 +888,10 @@ class CommentsStore @Inject constructor(
         )
 
         return numOfDeletedComments
+    }
+
+    companion object {
+        private const val XMLRPC_UNAVAILABLE_MSG =
+            "XML-RPC is unavailable for WPAPI sites"
     }
 }
