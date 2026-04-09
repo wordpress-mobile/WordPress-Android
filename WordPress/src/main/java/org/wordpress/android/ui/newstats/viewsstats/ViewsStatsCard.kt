@@ -57,35 +57,29 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.patrykandpatrick.vico.compose.cartesian.CartesianChartHost
-import com.patrykandpatrick.vico.compose.cartesian.axis.rememberBottom
-import com.patrykandpatrick.vico.compose.cartesian.axis.rememberStart
-import com.patrykandpatrick.vico.compose.cartesian.marker.rememberDefaultCartesianMarker
-import com.patrykandpatrick.vico.compose.common.component.rememberShapeComponent
-import com.patrykandpatrick.vico.compose.common.component.rememberTextComponent
-import com.patrykandpatrick.vico.compose.common.fill
-import com.patrykandpatrick.vico.compose.common.shader.verticalGradient
-import com.patrykandpatrick.vico.core.cartesian.CartesianDrawingContext
-import com.patrykandpatrick.vico.core.cartesian.axis.HorizontalAxis
-import com.patrykandpatrick.vico.core.cartesian.axis.VerticalAxis
-import com.patrykandpatrick.vico.core.cartesian.data.CartesianChartModelProducer
-import com.patrykandpatrick.vico.core.cartesian.data.CartesianValueFormatter
-import com.patrykandpatrick.vico.core.cartesian.data.columnSeries
-import com.patrykandpatrick.vico.core.cartesian.data.lineSeries
-import com.patrykandpatrick.vico.core.cartesian.decoration.HorizontalLine
-import com.patrykandpatrick.vico.core.cartesian.layer.ColumnCartesianLayer
-import com.patrykandpatrick.vico.core.cartesian.layer.LineCartesianLayer
-import com.patrykandpatrick.vico.core.cartesian.marker.CartesianMarker
-import com.patrykandpatrick.vico.core.cartesian.marker.CartesianMarkerVisibilityListener
-import com.patrykandpatrick.vico.core.cartesian.marker.DefaultCartesianMarker
+import com.patrykandpatrick.vico.compose.cartesian.CartesianDrawingContext
+import com.patrykandpatrick.vico.compose.cartesian.axis.HorizontalAxis
+import com.patrykandpatrick.vico.compose.cartesian.axis.VerticalAxis
+import com.patrykandpatrick.vico.compose.cartesian.data.CartesianChartModelProducer
+import com.patrykandpatrick.vico.compose.cartesian.data.CartesianValueFormatter
+import com.patrykandpatrick.vico.compose.cartesian.data.columnSeries
+import com.patrykandpatrick.vico.compose.cartesian.data.lineSeries
+import com.patrykandpatrick.vico.compose.cartesian.decoration.HorizontalLine
+import com.patrykandpatrick.vico.compose.cartesian.layer.ColumnCartesianLayer
+import com.patrykandpatrick.vico.compose.cartesian.layer.LineCartesianLayer
 import com.patrykandpatrick.vico.compose.cartesian.layer.rememberColumnCartesianLayer
 import com.patrykandpatrick.vico.compose.cartesian.layer.rememberLineCartesianLayer
-import com.patrykandpatrick.vico.compose.cartesian.layer.stacked
+import com.patrykandpatrick.vico.compose.cartesian.marker.CartesianMarker
+import com.patrykandpatrick.vico.compose.cartesian.marker.CartesianMarkerVisibilityListener
+import com.patrykandpatrick.vico.compose.cartesian.marker.DefaultCartesianMarker
+import com.patrykandpatrick.vico.compose.cartesian.marker.rememberDefaultCartesianMarker
 import com.patrykandpatrick.vico.compose.cartesian.rememberCartesianChart
 import com.patrykandpatrick.vico.compose.cartesian.rememberVicoScrollState
-import com.patrykandpatrick.vico.core.common.Insets
-import com.patrykandpatrick.vico.core.common.component.LineComponent
-import com.patrykandpatrick.vico.core.common.shader.ShaderProvider
-import com.patrykandpatrick.vico.core.common.shape.CorneredShape
+import com.patrykandpatrick.vico.compose.common.Fill
+import com.patrykandpatrick.vico.compose.common.Insets
+import com.patrykandpatrick.vico.compose.common.component.LineComponent
+import com.patrykandpatrick.vico.compose.common.component.rememberShapeComponent
+import com.patrykandpatrick.vico.compose.common.component.rememberTextComponent
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.newstats.components.CardPosition
@@ -513,9 +507,9 @@ private fun ViewsStatsChart(
             when (chartType) {
                 ChartType.LINE -> modelProducer.runTransaction {
                     lineSeries {
-                        series(chartData.currentPeriod.map { it.views.toInt() })
+                        series(chartData.currentPeriod.map { it.views })
                         if (hasPreviousPeriod) {
-                            series(chartData.previousPeriod.map { it.views.toInt() })
+                            series(chartData.previousPeriod.map { it.views })
                         }
                     }
                 }
@@ -529,8 +523,8 @@ private fun ViewsStatsChart(
                                     chartData.previousPeriod
                                 ) { current, previous ->
                                     if (previous.views <= current.views)
-                                        current.views.toInt()
-                                    else 0
+                                        current.views
+                                    else 0L
                                 }
                             )
                             // Series 2: current value when there
@@ -540,8 +534,8 @@ private fun ViewsStatsChart(
                                     chartData.previousPeriod
                                 ) { current, previous ->
                                     if (previous.views > current.views)
-                                        current.views.toInt()
-                                    else 0
+                                        current.views
+                                    else 0L
                                 }
                             )
                             // Series 3: delta (rounded top)
@@ -552,13 +546,13 @@ private fun ViewsStatsChart(
                                     maxOf(
                                         0L,
                                         previous.views - current.views
-                                    ).toInt()
+                                    )
                                 }
                             )
                         } else {
                             series(
                                 chartData.currentPeriod.map {
-                                    it.views.toInt()
+                                    it.views
                                 }
                             )
                         }
@@ -613,19 +607,21 @@ private fun ViewsStatsChart(
     // Marker that shows on touch
     val marker = rememberDefaultCartesianMarker(
         label = rememberTextComponent(
-            color = MaterialTheme.colorScheme.onSurface,
-            textSize = 12.sp,
+            style = MaterialTheme.typography.bodySmall.copy(
+                color = MaterialTheme.colorScheme.onSurface,
+                fontSize = 12.sp
+            ),
             lineCount = 3,
-            padding = Insets(horizontalDp = 12f, verticalDp = 8f),
+            padding = Insets(horizontal = 12.dp, vertical = 8.dp),
             background = rememberShapeComponent(
-                fill = fill(MaterialTheme.colorScheme.surfaceContainer),
-                shape = CorneredShape.rounded(allPercent = 25)
+                fill = Fill(MaterialTheme.colorScheme.surfaceContainer),
+                shape = RoundedCornerShape(25)
             )
         ),
         labelPosition = DefaultCartesianMarker.LabelPosition.AroundPoint,
         guideline = LineComponent(
-            fill = fill(MaterialTheme.colorScheme.outline.copy(alpha = 0.5f)),
-            thicknessDp = 1f
+            fill = Fill(MaterialTheme.colorScheme.outline.copy(alpha = 0.5f)),
+            thickness = 1.dp
         ),
         valueFormatter = markerValueFormatter
     )
@@ -634,15 +630,15 @@ private fun ViewsStatsChart(
     val averageLine = HorizontalLine(
         y = { periodAverage.toDouble() },
         line = LineComponent(
-            fill = fill(MaterialTheme.colorScheme.outline),
-            thicknessDp = 1f
+            fill = Fill(MaterialTheme.colorScheme.outline),
+            thickness = 1.dp
         )
     )
 
     when (chartType) {
         ChartType.LINE -> {
-            val areaGradient = ShaderProvider.verticalGradient(
-                colors = arrayOf(
+            val areaGradient = Brush.verticalGradient(
+                colors = listOf(
                     primaryColor.copy(alpha = 0.3f),
                     primaryColor.copy(alpha = 0f)
                 )
@@ -653,14 +649,14 @@ private fun ViewsStatsChart(
                     rememberLineCartesianLayer(
                         lineProvider = LineCartesianLayer.LineProvider.series(
                             LineCartesianLayer.Line(
-                                fill = LineCartesianLayer.LineFill.single(fill(primaryColor)),
-                                areaFill = LineCartesianLayer.AreaFill.single(fill(areaGradient)),
-                                pointConnector = LineCartesianLayer.PointConnector.Sharp
+                                fill = LineCartesianLayer.LineFill.single(Fill(primaryColor)),
+                                areaFill = LineCartesianLayer.AreaFill.single(Fill(areaGradient)),
+                                interpolator = LineCartesianLayer.Interpolator.Sharp
                             ),
                             LineCartesianLayer.Line(
-                                fill = LineCartesianLayer.LineFill.single(fill(secondaryColor)),
+                                fill = LineCartesianLayer.LineFill.single(Fill(secondaryColor)),
                                 stroke = LineCartesianLayer.LineStroke.Dashed(),
-                                pointConnector = LineCartesianLayer.PointConnector.Sharp
+                                interpolator = LineCartesianLayer.Interpolator.Sharp
                             )
                         )
                     ),
@@ -707,28 +703,28 @@ private fun ViewsStatsChart(
                         columnProvider = ColumnCartesianLayer
                             .ColumnProvider.series(
                                 LineComponent(
-                                    fill = fill(primaryColor),
-                                    thicknessDp = 16f,
-                                    shape = CorneredShape.rounded(
-                                        topLeftPercent = 20,
-                                        topRightPercent = 20,
+                                    fill = Fill(primaryColor),
+                                    thickness = 16.dp,
+                                    shape = RoundedCornerShape(
+                                        topStartPercent = 20,
+                                        topEndPercent = 20,
                                     )
                                 ),
                                 LineComponent(
-                                    fill = fill(primaryColor),
-                                    thicknessDp = 16f,
+                                    fill = Fill(primaryColor),
+                                    thickness = 16.dp,
                                 ),
                                 LineComponent(
-                                    fill = fill(secondaryColor),
-                                    thicknessDp = 16f,
-                                    shape = CorneredShape.rounded(
-                                        topLeftPercent = 20,
-                                        topRightPercent = 20,
+                                    fill = Fill(secondaryColor),
+                                    thickness = 16.dp,
+                                    shape = RoundedCornerShape(
+                                        topStartPercent = 20,
+                                        topEndPercent = 20,
                                     )
                                 )
                             ),
                         mergeMode = {
-                            ColumnCartesianLayer.MergeMode.stacked()
+                            ColumnCartesianLayer.MergeMode.Stacked
                         }
                     ),
                     startAxis = VerticalAxis.rememberStart(
