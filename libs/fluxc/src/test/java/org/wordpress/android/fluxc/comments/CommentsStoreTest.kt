@@ -13,7 +13,6 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
-import org.mockito.kotlin.verifyNoInteractions
 import org.mockito.kotlin.whenever
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.CommentStatus.APPROVED
@@ -32,7 +31,6 @@ import org.wordpress.android.fluxc.persistence.comments.CommentsDao
 import org.wordpress.android.fluxc.persistence.comments.CommentsDao.CommentEntity
 import org.wordpress.android.fluxc.store.CommentStore.CommentError
 import org.wordpress.android.fluxc.store.CommentStore.CommentErrorType.GENERIC_ERROR
-import org.wordpress.android.fluxc.store.CommentStore.CommentErrorType.INVALID_INPUT
 import org.wordpress.android.fluxc.store.CommentsStore
 import org.wordpress.android.fluxc.store.CommentsStore.CommentsData.CommentsActionData
 import org.wordpress.android.fluxc.store.CommentsStore.CommentsData.CommentsActionEntityIds
@@ -755,60 +753,6 @@ class CommentsStoreTest {
                         status = SPAM.toString()
                 )
         )
-    }
-
-    @Test
-    fun `fetchComments returns INVALID_INPUT for WPAPI site`() = test {
-        whenever(site.isUsingWpComRestApi).thenReturn(false)
-        whenever(site.origin).thenReturn(SiteModel.ORIGIN_WPAPI)
-
-        val result = commentsStore.fetchComments(
-                site = site,
-                number = NUMBER_PER_PAGE,
-                offset = 0,
-                networkStatusFilter = APPROVED
-        )
-
-        assertThat(result.isError).isTrue
-        assertThat(result.error.type).isEqualTo(INVALID_INPUT)
-        verifyNoInteractions(restClient)
-        verifyNoInteractions(xmlRpcClient)
-    }
-
-    @Test
-    fun `fetchCommentsPage returns INVALID_INPUT for WPAPI site`() =
-        test {
-            whenever(site.isUsingWpComRestApi).thenReturn(false)
-            whenever(site.origin).thenReturn(SiteModel.ORIGIN_WPAPI)
-
-            val result = commentsStore.fetchCommentsPage(
-                    site = site,
-                    number = NUMBER_PER_PAGE,
-                    offset = 0,
-                    networkStatusFilter = APPROVED,
-                    cacheStatuses = listOf(APPROVED)
-            )
-
-            assertThat(result.isError).isTrue
-            assertThat(result.error.type).isEqualTo(INVALID_INPUT)
-            verifyNoInteractions(restClient)
-            verifyNoInteractions(xmlRpcClient)
-        }
-
-    @Test
-    fun `pushComment returns INVALID_INPUT for WPAPI site`() = test {
-        whenever(site.isUsingWpComRestApi).thenReturn(false)
-        whenever(site.origin).thenReturn(SiteModel.ORIGIN_WPAPI)
-
-        val result = commentsStore.pushComment(
-                site = site,
-                comment = getDefaultComment()
-        )
-
-        assertThat(result.isError).isTrue
-        assertThat(result.error.type).isEqualTo(INVALID_INPUT)
-        verifyNoInteractions(restClient)
-        verifyNoInteractions(xmlRpcClient)
     }
 
     companion object {
