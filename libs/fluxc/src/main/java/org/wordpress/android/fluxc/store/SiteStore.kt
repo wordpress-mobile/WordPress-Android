@@ -1467,7 +1467,16 @@ open class SiteStore @Inject constructor(
 
     private fun fetchProfileXmlRpc(site: SiteModel) {
         if (site.xmlRpcUrl.isNullOrEmpty()) {
-            AppLog.w(T.API, "fetchProfileXmlRpc: skipping, xmlRpcUrl is null")
+            AppLog.w(
+                T.API,
+                "fetchProfileXmlRpc: skipping, xmlRpcUrl is null"
+            )
+            val event = OnProfileFetched(site)
+            event.error = SiteError(
+                SiteErrorType.GENERIC_ERROR,
+                "XML-RPC is unavailable for this site"
+            )
+            emitChange(event)
             return
         }
         siteXMLRPCClient.fetchProfile(site)

@@ -259,6 +259,7 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
     }
 
     private suspend fun handleSiteChangedError(event: OnSiteChanged) {
+        waitingForFetchedSite = false
         val error = event.error
         appLogWrapper.e(
             AppLog.T.MAIN,
@@ -278,6 +279,7 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
 
     @Suppress("TooGenericExceptionCaught")
     private suspend fun handleSiteChangedSuccess(event: OnSiteChanged) {
+        waitingForFetchedSite = false
         val normalizedUrl =
             UrlUtils.normalizeUrl(currentUrlLogin?.siteUrl)
 

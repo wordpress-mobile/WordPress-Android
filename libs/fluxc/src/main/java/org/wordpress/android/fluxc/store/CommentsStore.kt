@@ -35,6 +35,7 @@ import org.wordpress.android.fluxc.persistence.comments.CommentEntityList
 import org.wordpress.android.fluxc.persistence.comments.CommentsDao
 import org.wordpress.android.fluxc.persistence.comments.CommentsDao.CommentEntity
 import org.wordpress.android.fluxc.store.CommentStore.CommentError
+import org.wordpress.android.fluxc.store.CommentStore.CommentErrorType.GENERIC_ERROR
 import org.wordpress.android.fluxc.store.CommentStore.CommentErrorType.INVALID_INPUT
 import org.wordpress.android.fluxc.store.CommentStore.CommentErrorType.INVALID_RESPONSE
 import org.wordpress.android.fluxc.store.CommentStore.FetchCommentsPayload
@@ -118,7 +119,7 @@ class CommentsStore @Inject constructor(
                     status = networkStatusFilter
             )
             site.origin == SiteModel.ORIGIN_WPAPI -> return CommentsActionPayload(
-                    CommentError(INVALID_INPUT, XMLRPC_UNAVAILABLE_MSG)
+                    CommentError(GENERIC_ERROR, XMLRPC_UNAVAILABLE_MSG)
             )
             else -> commentsXMLRPCClient.fetchCommentsPage(
                     site = site,
@@ -153,7 +154,7 @@ class CommentsStore @Inject constructor(
             site.isUsingWpComRestApi ->
                 commentsRestClient.fetchComment(site, remoteCommentIdToFetch)
             site.origin == SiteModel.ORIGIN_WPAPI -> return CommentsActionPayload(
-                    CommentError(INVALID_INPUT, XMLRPC_UNAVAILABLE_MSG)
+                    CommentError(GENERIC_ERROR, XMLRPC_UNAVAILABLE_MSG)
             )
             else ->
                 commentsXMLRPCClient.fetchComment(site, remoteCommentIdToFetch)
@@ -174,7 +175,7 @@ class CommentsStore @Inject constructor(
             site.isUsingWpComRestApi ->
                 commentsRestClient.createNewComment(site, comment.remotePostId, comment.content)
             site.origin == SiteModel.ORIGIN_WPAPI -> return CommentsActionPayload(
-                    CommentError(INVALID_INPUT, XMLRPC_UNAVAILABLE_MSG)
+                    CommentError(GENERIC_ERROR, XMLRPC_UNAVAILABLE_MSG)
             )
             else ->
                 commentsXMLRPCClient.createNewComment(site, comment.remotePostId, comment)
@@ -200,7 +201,7 @@ class CommentsStore @Inject constructor(
             site.isUsingWpComRestApi ->
                 commentsRestClient.createNewReply(site, comment.remoteCommentId, reply.content)
             site.origin == SiteModel.ORIGIN_WPAPI -> return CommentsActionPayload(
-                    CommentError(INVALID_INPUT, XMLRPC_UNAVAILABLE_MSG)
+                    CommentError(GENERIC_ERROR, XMLRPC_UNAVAILABLE_MSG)
             )
             else ->
                 commentsXMLRPCClient.createNewReply(site, comment, reply)
@@ -222,7 +223,7 @@ class CommentsStore @Inject constructor(
             site.isUsingWpComRestApi ->
                 commentsRestClient.pushComment(site, comment)
             site.origin == SiteModel.ORIGIN_WPAPI -> return CommentsActionPayload(
-                    CommentError(INVALID_INPUT, XMLRPC_UNAVAILABLE_MSG)
+                    CommentError(GENERIC_ERROR, XMLRPC_UNAVAILABLE_MSG)
             )
             else ->
                 commentsXMLRPCClient.pushComment(site, comment)
@@ -244,7 +245,7 @@ class CommentsStore @Inject constructor(
             site.isUsingWpComRestApi ->
                 commentsRestClient.updateEditComment(site, comment)
             site.origin == SiteModel.ORIGIN_WPAPI -> return CommentsActionPayload(
-                    CommentError(INVALID_INPUT, XMLRPC_UNAVAILABLE_MSG)
+                    CommentError(GENERIC_ERROR, XMLRPC_UNAVAILABLE_MSG)
             )
             else ->
                 commentsXMLRPCClient.updateEditComment(site, comment)
@@ -280,7 +281,7 @@ class CommentsStore @Inject constructor(
             site.isUsingWpComRestApi ->
                 commentsRestClient.deleteComment(site, remoteCommentIdToDelete)
             site.origin == SiteModel.ORIGIN_WPAPI -> return CommentsActionPayload(
-                    CommentError(INVALID_INPUT, XMLRPC_UNAVAILABLE_MSG)
+                    CommentError(GENERIC_ERROR, XMLRPC_UNAVAILABLE_MSG)
             )
             else ->
                 commentsXMLRPCClient.deleteComment(site, remoteCommentIdToDelete)
@@ -409,7 +410,7 @@ class CommentsStore @Inject constructor(
                     status = networkStatusFilter
             )
             site.origin == SiteModel.ORIGIN_WPAPI -> return CommentsActionPayload(
-                    CommentError(INVALID_INPUT, XMLRPC_UNAVAILABLE_MSG)
+                    CommentError(GENERIC_ERROR, XMLRPC_UNAVAILABLE_MSG)
             )
             else -> commentsXMLRPCClient.fetchCommentsPage(
                     site = site,

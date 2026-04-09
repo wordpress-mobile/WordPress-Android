@@ -16,7 +16,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.comment.CommentsRestClient
 import org.wordpress.android.fluxc.network.xmlrpc.comment.CommentsXMLRPCClient
 import org.wordpress.android.fluxc.persistence.comments.CommentsDao
 import org.wordpress.android.fluxc.persistence.comments.CommentsDao.CommentEntity
-import org.wordpress.android.fluxc.store.CommentStore.CommentErrorType.INVALID_INPUT
+import org.wordpress.android.fluxc.store.CommentStore.CommentErrorType.GENERIC_ERROR
 import org.wordpress.android.fluxc.store.CommentsStore
 import org.wordpress.android.fluxc.test
 import org.wordpress.android.fluxc.tools.initCoroutineEngine
@@ -42,8 +42,8 @@ class CommentsStoreWPAPITest {
                 commentsDao,
                 mapper,
                 initCoroutineEngine(),
-                dispatcher,
-                appLogWrapper
+                appLogWrapper,
+                dispatcher
         )
         whenever(site.isUsingWpComRestApi).thenReturn(false)
         whenever(site.origin).thenReturn(SiteModel.ORIGIN_WPAPI)
@@ -61,7 +61,7 @@ class CommentsStoreWPAPITest {
 
             assertThat(result.isError).isTrue
             assertThat(result.error.type)
-                .isEqualTo(INVALID_INPUT)
+                .isEqualTo(GENERIC_ERROR)
             verifyNoInteractions(restClient)
             verifyNoInteractions(xmlRpcClient)
         }
@@ -79,7 +79,7 @@ class CommentsStoreWPAPITest {
 
             assertThat(result.isError).isTrue
             assertThat(result.error.type)
-                .isEqualTo(INVALID_INPUT)
+                .isEqualTo(GENERIC_ERROR)
             verifyNoInteractions(restClient)
             verifyNoInteractions(xmlRpcClient)
         }
@@ -94,7 +94,85 @@ class CommentsStoreWPAPITest {
 
             assertThat(result.isError).isTrue
             assertThat(result.error.type)
-                .isEqualTo(INVALID_INPUT)
+                .isEqualTo(GENERIC_ERROR)
+            verifyNoInteractions(restClient)
+            verifyNoInteractions(xmlRpcClient)
+        }
+
+    @Test
+    fun `fetchComment returns INVALID_INPUT for WPAPI site`() =
+        test {
+            val result = commentsStore.fetchComment(
+                    site = site,
+                    remoteCommentId = REMOTE_COMMENT_ID,
+                    comment = null
+            )
+
+            assertThat(result.isError).isTrue
+            assertThat(result.error.type)
+                .isEqualTo(GENERIC_ERROR)
+            verifyNoInteractions(restClient)
+            verifyNoInteractions(xmlRpcClient)
+        }
+
+    @Test
+    fun `createNewComment returns INVALID_INPUT for WPAPI site`() =
+        test {
+            val result = commentsStore.createNewComment(
+                    site = site,
+                    comment = getDefaultComment()
+            )
+
+            assertThat(result.isError).isTrue
+            assertThat(result.error.type)
+                .isEqualTo(GENERIC_ERROR)
+            verifyNoInteractions(restClient)
+            verifyNoInteractions(xmlRpcClient)
+        }
+
+    @Test
+    fun `createNewReply returns INVALID_INPUT for WPAPI site`() =
+        test {
+            val result = commentsStore.createNewReply(
+                    site = site,
+                    comment = getDefaultComment(),
+                    reply = getDefaultComment()
+            )
+
+            assertThat(result.isError).isTrue
+            assertThat(result.error.type)
+                .isEqualTo(GENERIC_ERROR)
+            verifyNoInteractions(restClient)
+            verifyNoInteractions(xmlRpcClient)
+        }
+
+    @Test
+    fun `updateEditComment returns INVALID_INPUT for WPAPI site`() =
+        test {
+            val result = commentsStore.updateEditComment(
+                    site = site,
+                    comment = getDefaultComment()
+            )
+
+            assertThat(result.isError).isTrue
+            assertThat(result.error.type)
+                .isEqualTo(GENERIC_ERROR)
+            verifyNoInteractions(restClient)
+            verifyNoInteractions(xmlRpcClient)
+        }
+
+    @Test
+    fun `deleteComment returns INVALID_INPUT for WPAPI site`() =
+        test {
+            val result = commentsStore.deleteComment(
+                    site = site,
+                    remoteCommentId = REMOTE_COMMENT_ID,
+                    comment = getDefaultComment()
+            )
+
+            assertThat(result.isError).isTrue
+            assertThat(result.error.type)
+                .isEqualTo(GENERIC_ERROR)
             verifyNoInteractions(restClient)
             verifyNoInteractions(xmlRpcClient)
         }
@@ -123,5 +201,6 @@ class CommentsStoreWPAPITest {
 
     companion object {
         private const val NUMBER_PER_PAGE = 30
+        private const val REMOTE_COMMENT_ID = 10L
     }
 }
