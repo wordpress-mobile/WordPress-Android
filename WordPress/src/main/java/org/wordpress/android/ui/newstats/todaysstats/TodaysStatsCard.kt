@@ -44,14 +44,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.patrykandpatrick.vico.compose.cartesian.CartesianChartHost
 import com.patrykandpatrick.vico.compose.cartesian.rememberVicoScrollState
+import com.patrykandpatrick.vico.compose.cartesian.data.CartesianChartModelProducer
+import com.patrykandpatrick.vico.compose.cartesian.data.lineSeries
+import com.patrykandpatrick.vico.compose.cartesian.layer.LineCartesianLayer
 import com.patrykandpatrick.vico.compose.cartesian.layer.rememberLineCartesianLayer
 import com.patrykandpatrick.vico.compose.cartesian.rememberCartesianChart
-import com.patrykandpatrick.vico.compose.common.fill
-import com.patrykandpatrick.vico.compose.common.shader.verticalGradient
-import com.patrykandpatrick.vico.core.cartesian.data.CartesianChartModelProducer
-import com.patrykandpatrick.vico.core.cartesian.data.lineSeries
-import com.patrykandpatrick.vico.core.cartesian.layer.LineCartesianLayer
-import com.patrykandpatrick.vico.core.common.shader.ShaderProvider
+import com.patrykandpatrick.vico.compose.common.Fill
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.newstats.components.CardPosition
@@ -354,10 +352,10 @@ private fun StatsChart(chartData: ChartData) {
             modelProducer.runTransaction {
                 lineSeries {
                     // Today's data (solid line)
-                    series(chartData.currentPeriod.map { it.views.toInt() })
+                    series(chartData.currentPeriod.map { it.views })
                     // Yesterday's data (dashed line) - only if available
                     if (hasPreviousPeriod) {
-                        series(chartData.previousPeriod.map { it.views.toInt() })
+                        series(chartData.previousPeriod.map { it.views })
                     }
                 }
             }
@@ -387,9 +385,9 @@ private fun StatsChart(chartData: ChartData) {
     val primaryColor = MaterialTheme.colorScheme.primary
     val secondaryColor = MaterialTheme.colorScheme.outline.copy(alpha = 0.5f)
 
-    // Create gradient shader for area fill (primary color fading to transparent)
-    val areaGradient = ShaderProvider.verticalGradient(
-        colors = arrayOf(
+    // Create gradient brush for area fill (primary color fading to transparent)
+    val areaGradient = Brush.verticalGradient(
+        colors = listOf(
             primaryColor.copy(alpha = 0.3f),
             primaryColor.copy(alpha = 0f)
         )
@@ -401,15 +399,15 @@ private fun StatsChart(chartData: ChartData) {
                 lineProvider = LineCartesianLayer.LineProvider.series(
                     // Today's line - solid with gradient area fill, curved
                     LineCartesianLayer.Line(
-                        fill = LineCartesianLayer.LineFill.single(fill(primaryColor)),
-                        areaFill = LineCartesianLayer.AreaFill.single(fill(areaGradient)),
-                        pointConnector = LineCartesianLayer.PointConnector.cubic()
+                        fill = LineCartesianLayer.LineFill.single(Fill(primaryColor)),
+                        areaFill = LineCartesianLayer.AreaFill.single(Fill(areaGradient)),
+                        interpolator = LineCartesianLayer.Interpolator.cubic()
                     ),
                     // Yesterday's line - dashed, no area fill, curved
                     LineCartesianLayer.Line(
-                        fill = LineCartesianLayer.LineFill.single(fill(secondaryColor)),
+                        fill = LineCartesianLayer.LineFill.single(Fill(secondaryColor)),
                         stroke = LineCartesianLayer.LineStroke.Dashed(),
-                        pointConnector = LineCartesianLayer.PointConnector.cubic()
+                        interpolator = LineCartesianLayer.Interpolator.cubic()
                     )
                 )
             )

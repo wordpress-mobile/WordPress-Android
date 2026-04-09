@@ -18,30 +18,27 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.ui.graphics.Brush
 import com.patrykandpatrick.vico.compose.cartesian.CartesianChartHost
-import com.patrykandpatrick.vico.compose.cartesian.axis.rememberBottom
-import com.patrykandpatrick.vico.compose.cartesian.axis.rememberStart
+import com.patrykandpatrick.vico.compose.cartesian.CartesianDrawingContext
+import com.patrykandpatrick.vico.compose.cartesian.axis.HorizontalAxis
+import com.patrykandpatrick.vico.compose.cartesian.axis.VerticalAxis
+import com.patrykandpatrick.vico.compose.cartesian.data.CartesianChartModelProducer
+import com.patrykandpatrick.vico.compose.cartesian.data.CartesianValueFormatter
+import com.patrykandpatrick.vico.compose.cartesian.data.lineSeries
+import com.patrykandpatrick.vico.compose.cartesian.layer.LineCartesianLayer
 import com.patrykandpatrick.vico.compose.cartesian.layer.rememberLineCartesianLayer
+import com.patrykandpatrick.vico.compose.cartesian.marker.CartesianMarker
+import com.patrykandpatrick.vico.compose.cartesian.marker.DefaultCartesianMarker
 import com.patrykandpatrick.vico.compose.cartesian.marker.rememberDefaultCartesianMarker
 import com.patrykandpatrick.vico.compose.cartesian.rememberCartesianChart
 import com.patrykandpatrick.vico.compose.cartesian.rememberVicoScrollState
+import com.patrykandpatrick.vico.compose.common.Fill
+import com.patrykandpatrick.vico.compose.common.Insets
+import com.patrykandpatrick.vico.compose.common.component.LineComponent
 import com.patrykandpatrick.vico.compose.common.component.rememberShapeComponent
 import com.patrykandpatrick.vico.compose.common.component.rememberTextComponent
-import com.patrykandpatrick.vico.compose.common.fill
-import com.patrykandpatrick.vico.compose.common.shader.verticalGradient
-import com.patrykandpatrick.vico.core.cartesian.CartesianDrawingContext
-import com.patrykandpatrick.vico.core.cartesian.axis.HorizontalAxis
-import com.patrykandpatrick.vico.core.cartesian.axis.VerticalAxis
-import com.patrykandpatrick.vico.core.cartesian.data.CartesianChartModelProducer
-import com.patrykandpatrick.vico.core.cartesian.data.CartesianValueFormatter
-import com.patrykandpatrick.vico.core.cartesian.data.lineSeries
-import com.patrykandpatrick.vico.core.cartesian.layer.LineCartesianLayer
-import com.patrykandpatrick.vico.core.cartesian.marker.CartesianMarker
-import com.patrykandpatrick.vico.core.cartesian.marker.DefaultCartesianMarker
-import com.patrykandpatrick.vico.core.common.Insets
-import com.patrykandpatrick.vico.core.common.component.LineComponent
-import com.patrykandpatrick.vico.core.common.shader.ShaderProvider
-import com.patrykandpatrick.vico.core.common.shape.CorneredShape
 import org.wordpress.android.R
 import org.wordpress.android.ui.newstats.components.CardPosition
 import org.wordpress.android.ui.newstats.components.StatsCardContainer
@@ -240,7 +237,7 @@ private fun SubscribersChart(
         modelProducer.runTransaction {
             lineSeries {
                 series(
-                    dataPoints.map { it.count.toInt() }
+                    dataPoints.map { it.count }
                 )
             }
         }
@@ -265,37 +262,36 @@ private fun SubscribersChart(
 
     val marker = rememberDefaultCartesianMarker(
         label = rememberTextComponent(
-            color =
-                MaterialTheme.colorScheme.onSurface,
-            textSize = 12.sp,
+            style = MaterialTheme.typography.bodySmall.copy(
+                color = MaterialTheme.colorScheme.onSurface,
+                fontSize = 12.sp
+            ),
             lineCount = 2,
             padding = Insets(
-                horizontalDp = 12f,
-                verticalDp = 8f
+                horizontal = 12.dp,
+                vertical = 8.dp
             ),
             background = rememberShapeComponent(
-                fill = fill(
+                fill = Fill(
                     MaterialTheme.colorScheme
                         .surfaceContainer
                 ),
-                shape = CorneredShape.rounded(
-                    allPercent = 25
-                )
+                shape = RoundedCornerShape(25)
             )
         ),
         guideline = LineComponent(
-            fill = fill(
+            fill = Fill(
                 MaterialTheme.colorScheme.outline
                     .copy(alpha = 0.5f)
             ),
-            thicknessDp = 1f
+            thickness = 1.dp
         ),
         valueFormatter = markerValueFormatter
     )
 
     val areaGradient =
-        ShaderProvider.verticalGradient(
-            colors = arrayOf(
+        Brush.verticalGradient(
+            colors = listOf(
                 primaryColor.copy(alpha = 0.3f),
                 primaryColor.copy(alpha = 0f)
             )
@@ -310,18 +306,18 @@ private fun SubscribersChart(
                             LineCartesianLayer.Line(
                                 fill = LineCartesianLayer
                                     .LineFill.single(
-                                        fill(primaryColor)
+                                        Fill(primaryColor)
                                     ),
                                 areaFill =
                                     LineCartesianLayer
                                         .AreaFill.single(
-                                            fill(
+                                            Fill(
                                                 areaGradient
                                             )
                                         ),
-                                pointConnector =
+                                interpolator =
                                     LineCartesianLayer
-                                        .PointConnector
+                                        .Interpolator
                                         .cubic()
                             )
                         )
