@@ -1689,6 +1689,14 @@
     <string name="stats_devices_device_header">Device</string>
     <string name="stats_devices_percentage_header">Percentage</string>
 
+    <!-- UTM Stats Card -->
+    <string name="stats_utm_title">UTM</string>
+    <string name="stats_utm_source_medium">Source / Medium</string>
+    <string name="stats_utm_campaign_source_medium">Campaign / Source / Medium</string>
+    <string name="stats_utm_source">Source</string>
+    <string name="stats_utm_medium">Medium</string>
+    <string name="stats_utm_campaign">Campaign</string>
+
     <!-- Subscribers Stats Cards -->
     <string name="stats_subscribers_all_time">All-time Subscribers</string>
     <string name="stats_subscribers_graph">Subscribers Graph</string>
