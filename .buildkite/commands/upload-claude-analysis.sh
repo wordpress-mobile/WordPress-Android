@@ -9,7 +9,7 @@ source .buildkite/shared-pipeline-vars
 
 # Non-essential steps whose failure alone should NOT trigger Claude analysis.
 # Add step keys here as needed.
-NON_ESSENTIAL_STEPS=("danger")
+NON_ESSENTIAL_STEPS=("danger" "test-non-essential")
 
 # Count how many non-essential steps have a "failed" outcome.
 non_essential_failures=0

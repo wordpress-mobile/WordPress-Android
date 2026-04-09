@@ -37,6 +37,12 @@ steps:
         agents:
           queue: "linter"
 
+      - label: ":test_tube: Non-essential test step"
+        command: "echo 'This step always fails for testing' && exit 1"
+        key: test-non-essential
+        agents:
+          queue: "linter"
+
       - label: "🕵️ checkstyle"
         command: |
           if .buildkite/commands/should-skip-job.sh --job-type validation; then
