@@ -450,7 +450,7 @@ class GutenbergKitEditorFragment : GutenbergKitEditorFragmentBase() {
             throw EditorFragmentNotAddedException()
         }
 
-        return ""
+        return getTitleAndContent(originalContent ?: "").second
     }
 
     override fun getTitleOrContentChanged(): LiveData<Editable> {
