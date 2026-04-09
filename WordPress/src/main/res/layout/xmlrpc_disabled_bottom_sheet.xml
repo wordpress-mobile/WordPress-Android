@@ -12,12 +12,13 @@
         android:layout_marginBottom="@dimen/margin_small" />
 
     <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="80dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:layout_gravity="center"
         android:layout_marginTop="@dimen/margin_extra_large"
+        android:layout_marginBottom="@dimen/margin_medium"
         android:importantForAccessibility="no"
-        android:src="@drawable/ic_warning" />
+        android:src="@drawable/ic_notice_red_24dp" />
 
     <TextView
         style="@style/WordPress.BottomSheetDialogTheme.Title"

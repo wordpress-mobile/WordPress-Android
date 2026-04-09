@@ -200,7 +200,7 @@ class ApplicationPasswordViewModelSlice @Inject constructor(
         uiModelMutable.postValue(
             MySiteCardAndItem.Item.SingleActionCard(
                 textResource = R.string.xmlrpc_disabled_card_text,
-                imageResource = R.drawable.ic_notice_white_24dp,
+                imageResource = R.drawable.ic_notice_red_24dp,
                 onActionClick = {
                     _onNavigation.postValue(
                         Event(
