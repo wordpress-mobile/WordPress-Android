@@ -81,6 +81,7 @@ import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewModel;
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper;
 import org.wordpress.android.util.PlansConstants;
 import org.wordpress.android.ui.posts.GutenbergKitFeatureChecker;
+import org.wordpress.android.util.config.GutenbergKitPluginsFeature;
 import org.wordpress.android.ui.prefs.EditTextPreferenceWithValidation.ValidationType;
 import org.wordpress.android.ui.prefs.SiteSettingsFormatDialog.FormatType;
 import org.wordpress.android.ui.prefs.homepage.HomepageSettingsDialog;
@@ -194,6 +195,7 @@ public class SiteSettingsFragment extends PreferenceFragment
     @Inject JetpackFeatureRemovalPhaseHelper mJetpackFeatureRemovalPhaseHelper;
     @Inject BloggingPromptsSettingsHelper mPromptsSettingsHelper;
     @Inject GutenbergKitFeatureChecker mGutenbergKitFeatureChecker;
+    @Inject GutenbergKitPluginsFeature mGutenbergKitPluginsFeature;
     @Inject AppPrefsWrapper mAppPrefsWrapper;
 
     private BloggingRemindersViewModel mBloggingRemindersViewModel;
@@ -1100,8 +1102,9 @@ public class SiteSettingsFragment extends PreferenceFragment
                             + getString(R.string.site_settings_use_theme_styles_not_block_theme));
         }
 
-        // hide third-party blocks preference if GutenbergKit is not enabled
-        if (!mGutenbergKitFeatureChecker.isGutenbergKitEnabled()) {
+        // hide third-party blocks preference if GutenbergKit or plugins feature is not enabled
+        if (!mGutenbergKitFeatureChecker.isGutenbergKitEnabled()
+                || !mGutenbergKitPluginsFeature.isEnabled()) {
             WPPrefUtils.removePreference(
                     this, R.string.pref_key_site_editor,
                     R.string.pref_key_use_third_party_blocks);
