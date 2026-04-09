@@ -7,6 +7,7 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.fluxc.network.UserAgent
+import org.wordpress.gutenberg.model.PostTypeDetails
 
 @RunWith(MockitoJUnitRunner::class)
 @Suppress("LargeClass")
@@ -428,7 +429,7 @@ class GutenbergKitSettingsBuilderTest {
 
         // Verify all settings are correctly configured
         assertThat(settings["postId"]).isEqualTo(456)
-        assertThat(settings["postType"]).isEqualTo("post")
+        assertThat(settings["postType"]).isEqualTo(PostTypeDetails.post)
         assertThat(settings["postTitle"]).isEqualTo("Test Post")
         assertThat(settings["postContent"]).isEqualTo("Test Content")
         assertThat(settings["siteURL"]).isEqualTo("https://example.wordpress.com")
@@ -476,7 +477,7 @@ class GutenbergKitSettingsBuilderTest {
             featureConfig = createFeatureConfig(isPluginsFeatureEnabled = true)
         )
 
-        assertThat(settings["postType"]).isEqualTo("page")
+        assertThat(settings["postType"]).isEqualTo(PostTypeDetails.page)
         assertThat(settings["authHeader"] as String).startsWith("Basic ")
         assertThat(settings["siteApiRoot"]).isEqualTo("https://jetpack-site.com/wp-json/")
         assertThat(settings["siteApiNamespace"] as Array<*>).isEmpty()
@@ -598,7 +599,7 @@ class GutenbergKitSettingsBuilderTest {
         assertThat(settings["postTitle"]).isNull()
         assertThat(settings["postContent"]).isNull()
         assertThat(settings["status"]).isNull()
-        assertThat(settings["postType"]).isEqualTo("post") // Still defaults to post
+        assertThat(settings["postType"]).isEqualTo(PostTypeDetails.post) // Still defaults to post
     }
 
     @Test

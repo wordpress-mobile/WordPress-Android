@@ -2,6 +2,7 @@ package org.wordpress.android.ui.posts
 
 import org.wordpress.android.util.UrlUtils
 import org.wordpress.gutenberg.model.EditorConfiguration
+import org.wordpress.gutenberg.model.PostTypeDetails
 
 /**
  * Utility object for building EditorConfiguration from settings maps.
@@ -13,7 +14,8 @@ object EditorConfigurationBuilder {
     ): EditorConfiguration {
         val siteURL = settings.getSetting<String>("siteURL") ?: ""
         val siteApiRoot = settings.getSetting<String>("siteApiRoot") ?: ""
-        val postType = settings.getSetting<String>("postType") ?: "post"
+        val postType = settings.getSetting<PostTypeDetails>("postType")
+            ?: PostTypeDetails.post
         val siteApiNamespace = settings.getStringArray("siteApiNamespace")
 
         return EditorConfiguration.builder(
