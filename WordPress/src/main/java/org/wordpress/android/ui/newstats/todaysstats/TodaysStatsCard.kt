@@ -352,10 +352,10 @@ private fun StatsChart(chartData: ChartData) {
             modelProducer.runTransaction {
                 lineSeries {
                     // Today's data (solid line)
-                    series(chartData.currentPeriod.map { it.views.toInt() })
+                    series(chartData.currentPeriod.map { it.views })
                     // Yesterday's data (dashed line) - only if available
                     if (hasPreviousPeriod) {
-                        series(chartData.previousPeriod.map { it.views.toInt() })
+                        series(chartData.previousPeriod.map { it.views })
                     }
                 }
             }
