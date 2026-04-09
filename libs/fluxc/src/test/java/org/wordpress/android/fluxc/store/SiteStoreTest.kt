@@ -539,7 +539,7 @@ class SiteStoreTest {
     }
 
     @Test
-    fun `fetchSiteWPAPIFromApplicationPassword clears username and sets REST credentials`() =
+    fun `fetchSiteWPAPIFromApplicationPassword sets AP credentials and wpApiRestUrl`() =
         test {
             // Given
             val payload =

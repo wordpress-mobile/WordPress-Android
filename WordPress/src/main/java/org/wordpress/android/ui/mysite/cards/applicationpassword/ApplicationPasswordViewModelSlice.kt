@@ -208,7 +208,8 @@ class ApplicationPasswordViewModelSlice @Inject constructor(
                                 .OpenXmlRpcDisabledBottomSheet(site)
                         )
                     )
-                }
+                },
+                centerImageVertically = true
             )
         )
         appLogWrapper.d(

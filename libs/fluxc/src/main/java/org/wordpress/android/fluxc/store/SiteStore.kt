@@ -1527,7 +1527,7 @@ open class SiteStore @Inject constructor(
     }
 
     @Suppress("TooGenericExceptionCaught")
-    suspend fun fetchSiteWPAPIFromApplicationPassword(
+    internal suspend fun fetchSiteWPAPIFromApplicationPassword(
         payload: RefreshSitesXMLRPCApplicationPasswordCredentialsPayload
     ): OnSiteChanged {
         return coroutineEngine.withDefaultContext(

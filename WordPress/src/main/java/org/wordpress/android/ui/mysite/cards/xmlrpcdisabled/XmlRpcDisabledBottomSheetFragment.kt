@@ -48,7 +48,7 @@ class XmlRpcDisabledBottomSheetFragment : BottomSheetDialogFragment() {
             JetpackConnectionWebViewActivity
                 .startJetpackConnectionFlow(
                     requireActivity(),
-                    JetpackConnectionSource.STATS,
+                    JetpackConnectionSource.XMLRPC_DISABLED,
                     site,
                     accountStore.hasAccessToken()
                 )
