@@ -9,6 +9,7 @@ import org.wordpress.android.fluxc.utils.extensions.getPasswordProcessed
 import org.wordpress.android.fluxc.utils.extensions.getUserNameProcessed
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.UrlUtils
+import org.wordpress.gutenberg.model.PostTypeDetails
 
 object GutenbergKitSettingsBuilder {
     private const val AUTH_BEARER_PREFIX = "Bearer "
@@ -128,7 +129,11 @@ object GutenbergKitSettingsBuilder {
 
         return mutableMapOf(
             "postId" to postConfig.remotePostId?.toInt(),
-            "postType" to if (postConfig.isPage) "page" else "post",
+            "postType" to if (postConfig.isPage) {
+                PostTypeDetails.page
+            } else {
+                PostTypeDetails.post
+            },
             "status" to postConfig.status,
             "postTitle" to postConfig.title,
             "postContent" to postConfig.content,
