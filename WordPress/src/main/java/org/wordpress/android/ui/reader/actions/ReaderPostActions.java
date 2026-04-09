@@ -301,9 +301,7 @@ public class ReaderPostActions {
                     ReaderPost existingPost =
                             ReaderPostTable.getBlogPost(
                                     post.blogId, post.postId, true);
-                    if (existingPost != null
-                            && !TextUtils.isEmpty(
-                            existingPost.getDatePublished())) {
+                    if (existingPost != null) {
                         post.setDatePublished(
                                 existingPost.getDatePublished());
                     }
