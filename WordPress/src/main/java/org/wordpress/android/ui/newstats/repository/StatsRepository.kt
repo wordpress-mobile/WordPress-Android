@@ -1281,8 +1281,8 @@ class StatsRepository @Inject constructor(
         keys: List<String>,
         period: StatsPeriod
     ): UtmResult = withContext(ioDispatcher) {
-        val (curRange, _) =
-            calculateComparisonDateRanges(period)
+        val curRange =
+            calculateCurrentDateRange(period)
         val curResult = statsDataSource.fetchUtm(
             siteId, keys,
             curRange.dateString(),

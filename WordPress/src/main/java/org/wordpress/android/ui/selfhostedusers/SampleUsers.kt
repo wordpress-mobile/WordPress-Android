@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.selfhostedusers
 
+import uniffi.wp_api.UserCapabilitiesMap
 import uniffi.wp_api.UserRole
 import uniffi.wp_api.UserWithEditContext
 
@@ -15,7 +16,7 @@ object SampleUsers {
         id = 1,
         username = "@sampleUser",
         avatarUrls = emptyMap(),
-        capabilities = emptyMap(),
+        capabilities = UserCapabilitiesMap(emptyMap()),
         email = "email@example.com",
         extraCapabilities = emptyMap(),
         firstName = "Sample",
@@ -35,7 +36,7 @@ object SampleUsers {
         id = 2,
         username = "@sampleUserWithALongUserName",
         avatarUrls = emptyMap(),
-        capabilities = emptyMap(),
+        capabilities = UserCapabilitiesMap(emptyMap()),
         description = "User description",
         email = "email@example.com",
         extraCapabilities = emptyMap(),
@@ -55,7 +56,7 @@ object SampleUsers {
         id = 3,
         username = "@sampleUser",
         avatarUrls = emptyMap(),
-        capabilities = emptyMap(),
+        capabilities = UserCapabilitiesMap(emptyMap()),
         description = "User description",
         email = "email@example.com",
         extraCapabilities = emptyMap(),

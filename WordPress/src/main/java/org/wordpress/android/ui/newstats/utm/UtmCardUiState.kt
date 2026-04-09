@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.newstats.utm
 
 import androidx.annotation.StringRes
+import com.google.gson.JsonParseException
 import com.google.gson.JsonParser
 import org.wordpress.android.R
 
@@ -101,7 +102,7 @@ internal fun formatUtmName(raw: String): String {
         val arr = JsonParser.parseString(raw)
             .asJsonArray
         arr.joinToString(" / ") { it.asString }
-    } catch (_: Exception) {
+    } catch (_: JsonParseException) {
         raw
     }
 }
