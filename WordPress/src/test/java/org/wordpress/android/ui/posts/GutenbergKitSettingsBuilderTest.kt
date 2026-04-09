@@ -7,6 +7,7 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.fluxc.network.UserAgent
+import org.wordpress.gutenberg.model.PostTypeDetails
 
 @RunWith(MockitoJUnitRunner::class)
 @Suppress("LargeClass")
@@ -409,7 +410,8 @@ class GutenbergKitSettingsBuilderTest {
             remotePostId = 456L,
             isPage = false,
             title = "Test Post",
-            content = "Test Content"
+            content = "Test Content",
+            status = "publish"
         )
 
         val settings = GutenbergKitSettingsBuilder.buildSettings(
@@ -427,7 +429,7 @@ class GutenbergKitSettingsBuilderTest {
 
         // Verify all settings are correctly configured
         assertThat(settings["postId"]).isEqualTo(456)
-        assertThat(settings["postType"]).isEqualTo("post")
+        assertThat(settings["postType"]).isEqualTo(PostTypeDetails.post)
         assertThat(settings["postTitle"]).isEqualTo("Test Post")
         assertThat(settings["postContent"]).isEqualTo("Test Content")
         assertThat(settings["siteURL"]).isEqualTo("https://example.wordpress.com")
@@ -461,7 +463,8 @@ class GutenbergKitSettingsBuilderTest {
             remotePostId = 100L,
             isPage = true,
             title = "Test Page",
-            content = "Page Content"
+            content = "Page Content",
+            status = "draft"
         )
 
         val settings = GutenbergKitSettingsBuilder.buildSettings(
@@ -474,7 +477,7 @@ class GutenbergKitSettingsBuilderTest {
             featureConfig = createFeatureConfig(isPluginsFeatureEnabled = true)
         )
 
-        assertThat(settings["postType"]).isEqualTo("page")
+        assertThat(settings["postType"]).isEqualTo(PostTypeDetails.page)
         assertThat(settings["authHeader"] as String).startsWith("Basic ")
         assertThat(settings["siteApiRoot"]).isEqualTo("https://jetpack-site.com/wp-json/")
         assertThat(settings["siteApiNamespace"] as Array<*>).isEmpty()
@@ -579,7 +582,8 @@ class GutenbergKitSettingsBuilderTest {
             remotePostId = null,
             isPage = false,
             title = null,
-            content = null
+            content = null,
+            status = null
         )
 
         val settings = GutenbergKitSettingsBuilder.buildSettings(
@@ -594,7 +598,28 @@ class GutenbergKitSettingsBuilderTest {
         assertThat(settings["postId"]).isNull()
         assertThat(settings["postTitle"]).isNull()
         assertThat(settings["postContent"]).isNull()
-        assertThat(settings["postType"]).isEqualTo("post") // Still defaults to post
+        assertThat(settings["status"]).isNull()
+        assertThat(settings["postType"]).isEqualTo(PostTypeDetails.post) // Still defaults to post
+    }
+
+    @Test
+    fun `post status is included in settings`() {
+        val testCases = listOf("draft", "publish", "pending", "private", "future", "trash")
+
+        testCases.forEach { status ->
+            val postConfig = createPostConfig(status = status)
+
+            val settings = GutenbergKitSettingsBuilder.buildSettings(
+                siteConfig = createSiteConfig(),
+                postConfig = postConfig,
+                appConfig = createAppConfig(),
+                featureConfig = createFeatureConfig()
+            )
+
+            assertThat(settings["status"])
+                .withFailMessage("Expected status=$status in settings")
+                .isEqualTo(status)
+        }
     }
 
     // ===== Helper Methods =====
@@ -651,11 +676,13 @@ class GutenbergKitSettingsBuilderTest {
         remotePostId: Long? = 1L,
         isPage: Boolean = false,
         title: String? = "Test",
-        content: String? = "Content"
+        content: String? = "Content",
+        status: String? = "draft"
     ) = GutenbergKitSettingsBuilder.PostConfig(
         remotePostId = remotePostId,
         isPage = isPage,
         title = title,
-        content = content
+        content = content,
+        status = status
     )
 }
