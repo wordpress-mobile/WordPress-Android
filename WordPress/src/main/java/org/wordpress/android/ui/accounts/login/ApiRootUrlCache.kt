@@ -57,18 +57,22 @@ class ApiRootUrlCache @Inject constructor(
                 host.removePrefix("www.").lowercase()
             } else {
                 // If no host found, it might be just a domain without protocol
-                // Clean it up and use as-is
-                urlOrDomain.trim()
-                    .removePrefix("http://")
-                    .removePrefix("https://")
-                    .removePrefix("www.")
-                    .substringBefore("/")
-                    .substringBefore(":")
-                    .lowercase()
+                stripToDomain(urlOrDomain)
             }
         } catch (e: IllegalArgumentException) {
-            // Fallback for malformed URLs
-            urlOrDomain.trim()
+            // Fallback for malformed URLs — apply the same stripping so put/get stay
+            // consistent and a malformed write can still be matched on read.
+            stripToDomain(urlOrDomain)
         }
+    }
+
+    private fun stripToDomain(urlOrDomain: String): String {
+        return urlOrDomain.trim()
+            .removePrefix("http://")
+            .removePrefix("https://")
+            .removePrefix("www.")
+            .substringBefore("/")
+            .substringBefore(":")
+            .lowercase()
     }
 }
