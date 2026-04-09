@@ -167,46 +167,9 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
                     errorMessage = "empty_fetch_params"
                 )
             } else {
-                val xmlRpcEndpoint = try {
-                    selfHostedEndpointFinder
-                        .verifyOrDiscoverXMLRPCEndpoint(siteUrl)
-                } catch (e: SelfHostedEndpointFinder.DiscoveryException) {
-                    appLogWrapper.w(
-                        AppLog.T.API,
-                        "A_P: XML-RPC discovery failed" +
-                            " (${e.message}). Falling back to" +
-                            " WPAPI fetch using" +
-                            " apiRootUrl=$apiRootUrl"
-                    )
-                    null
-                }
-                if (xmlRpcEndpoint != null) {
-                    dispatcher.dispatch(
-                        SiteActionBuilder
-                            .newFetchSitesXmlRpcFromApplicationPasswordAction(
-                            SiteStore
-                                .RefreshSitesXMLRPCApplicationPasswordCredentialsPayload(
-                                username = username,
-                                password = password,
-                                url = xmlRpcEndpoint,
-                                apiRootUrl = apiRootUrl,
-                            )
-                        )
-                    )
-                } else {
-                    dispatcher.dispatch(
-                        SiteActionBuilder
-                            .newFetchSiteWpApiFromApplicationPasswordAction(
-                            SiteStore
-                                .RefreshSitesXMLRPCApplicationPasswordCredentialsPayload(
-                                username = username,
-                                password = password,
-                                url = siteUrl,
-                                apiRootUrl = apiRootUrl,
-                            )
-                        )
-                    )
-                }
+                discoverAndDispatchFetchSite(
+                    username, password, siteUrl, apiRootUrl
+                )
             }
         } catch (e: Exception) {
             appLogWrapper.e(
@@ -217,6 +180,49 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
                 siteUrl, "fetch_sites_exception", creationSource
             )
             emitError(siteUrl = siteUrl, errorMessage = e.message, cause = e)
+        }
+    }
+
+    private suspend fun discoverAndDispatchFetchSite(
+        username: String,
+        password: String,
+        siteUrl: String,
+        apiRootUrl: String
+    ) {
+        val xmlRpcEndpoint = try {
+            selfHostedEndpointFinder
+                .verifyOrDiscoverXMLRPCEndpoint(siteUrl)
+        } catch (e: SelfHostedEndpointFinder.DiscoveryException) {
+            appLogWrapper.w(
+                AppLog.T.API,
+                "A_P: XML-RPC discovery failed" +
+                    " (${e.message}). Falling back to" +
+                    " WPAPI fetch using" +
+                    " apiRootUrl=$apiRootUrl"
+            )
+            null
+        }
+        val payload =
+            SiteStore.RefreshSitesXMLRPCApplicationPasswordCredentialsPayload(
+                username = username,
+                password = password,
+                url = xmlRpcEndpoint ?: siteUrl,
+                apiRootUrl = apiRootUrl,
+            )
+        if (xmlRpcEndpoint != null) {
+            dispatcher.dispatch(
+                SiteActionBuilder
+                    .newFetchSitesXmlRpcFromApplicationPasswordAction(
+                        payload
+                    )
+            )
+        } else {
+            dispatcher.dispatch(
+                SiteActionBuilder
+                    .newFetchSiteWpApiFromApplicationPasswordAction(
+                        payload
+                    )
+            )
         }
     }
 
