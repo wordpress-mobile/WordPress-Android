@@ -81,6 +81,7 @@ import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewModel;
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper;
 import org.wordpress.android.util.PlansConstants;
 import org.wordpress.android.ui.posts.GutenbergKitFeatureChecker;
+import org.wordpress.android.repositories.EditorSettingsRepository;
 import org.wordpress.android.util.config.GutenbergKitPluginsFeature;
 import org.wordpress.android.ui.prefs.EditTextPreferenceWithValidation.ValidationType;
 import org.wordpress.android.ui.prefs.SiteSettingsFormatDialog.FormatType;
@@ -196,7 +197,7 @@ public class SiteSettingsFragment extends PreferenceFragment
     @Inject BloggingPromptsSettingsHelper mPromptsSettingsHelper;
     @Inject GutenbergKitFeatureChecker mGutenbergKitFeatureChecker;
     @Inject GutenbergKitPluginsFeature mGutenbergKitPluginsFeature;
-    @Inject AppPrefsWrapper mAppPrefsWrapper;
+    @Inject EditorSettingsRepository mEditorSettingsRepository;
 
     private BloggingRemindersViewModel mBloggingRemindersViewModel;
 
@@ -1091,12 +1092,12 @@ public class SiteSettingsFragment extends PreferenceFragment
         // hide theme styles preference if GutenbergKit is not enabled
         if (!mGutenbergKitFeatureChecker.isGutenbergKitEnabled()) {
             WPPrefUtils.removePreference(this, R.string.pref_key_site_editor, R.string.pref_key_use_theme_styles);
-        } else if (!mAppPrefsWrapper.getSiteSupportsEditorSettings(mSite)) {
+        } else if (!mEditorSettingsRepository.getSupportsEditorSettingsForSite(mSite)) {
             mUseThemeStylesPref.setEnabled(false);
             mUseThemeStylesPref.setSummary(
                     getString(R.string.site_settings_use_theme_styles_summary) + "\n\n"
                             + getString(R.string.site_settings_use_theme_styles_unsupported));
-        } else if (!mAppPrefsWrapper.getSiteThemeIsBlockTheme(mSite)) {
+        } else if (!mEditorSettingsRepository.getThemeSupportsBlockStyles(mSite)) {
             mUseThemeStylesPref.setSummary(
                     getString(R.string.site_settings_use_theme_styles_summary) + "\n\n"
                             + getString(R.string.site_settings_use_theme_styles_not_block_theme));
@@ -1108,7 +1109,7 @@ public class SiteSettingsFragment extends PreferenceFragment
             WPPrefUtils.removePreference(
                     this, R.string.pref_key_site_editor,
                     R.string.pref_key_use_third_party_blocks);
-        } else if (!mAppPrefsWrapper.getSiteSupportsEditorAssets(mSite)) {
+        } else if (!mEditorSettingsRepository.getSupportsEditorAssetsForSite(mSite)) {
             mUseThirdPartyBlocksPref.setEnabled(false);
             mUseThirdPartyBlocksPref.setSummary(
                     getString(R.string.site_settings_use_third_party_blocks_summary)
