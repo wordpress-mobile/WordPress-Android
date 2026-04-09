@@ -81,65 +81,6 @@ class EditorSettingsRepository @Inject constructor(
     }
 
     private suspend fun fetchRouteSupport(site: SiteModel) {
-        if (site.isWPCom || site.isUsingWpComRestApi) {
-            fetchRouteSupportViaManifest(site)
-        } else if (
-            !site.apiRestUsernamePlain.isNullOrEmpty() &&
-            !site.apiRestPasswordPlain.isNullOrEmpty()
-        ) {
-            fetchRouteSupportViaClient(site)
-        } else {
-            fetchRouteSupportViaSiteManifest(site)
-        }
-    }
-
-    private suspend fun fetchRouteSupportViaManifest(
-        site: SiteModel
-    ) {
-        val routes = wpApiClientProvider
-            .fetchWpComManifestRoutes(site)
-        applyManifestRoutes(site, routes)
-    }
-
-    private suspend fun fetchRouteSupportViaSiteManifest(
-        site: SiteModel
-    ) {
-        val routes = wpApiClientProvider
-            .fetchSiteManifestRoutes(site)
-        applyManifestRoutes(site, routes)
-    }
-
-    private fun applyManifestRoutes(
-        site: SiteModel,
-        routes: Set<String>?
-    ) {
-        if (routes != null) {
-            val supportsSettings = routes.any {
-                it.contains("wp-block-editor/") &&
-                    it.endsWith("/settings")
-            }
-            val supportsAssets = routes.any {
-                it.endsWith("/editor-assets")
-            }
-            appPrefsWrapper.setSiteSupportsEditorSettings(
-                site, supportsSettings
-            )
-            appPrefsWrapper.setSiteSupportsEditorAssets(
-                site, supportsAssets
-            )
-        } else {
-            appPrefsWrapper.setSiteSupportsEditorSettings(
-                site, false
-            )
-            appPrefsWrapper.setSiteSupportsEditorAssets(
-                site, false
-            )
-        }
-    }
-
-    private suspend fun fetchRouteSupportViaClient(
-        site: SiteModel
-    ) {
         val client = wpApiClientProvider.getWpApiClient(site)
         val response = client.request { it.apiRoot().get() }
 
