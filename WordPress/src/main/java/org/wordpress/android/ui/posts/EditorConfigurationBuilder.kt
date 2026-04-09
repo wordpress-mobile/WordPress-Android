@@ -9,6 +9,12 @@ import org.wordpress.gutenberg.model.PostTypeDetails
  * Eliminates duplication between GutenbergKitEditorFragment and GutenbergKitWarmupHelper.
  */
 object EditorConfigurationBuilder {
+    /**
+     * Builds an EditorConfiguration from the provided settings map.
+     *
+     * @param settings The settings map containing all configuration values
+     * @return Configured EditorConfiguration instance
+     */
     fun build(
         settings: Map<String, Any?>,
     ): EditorConfiguration {
