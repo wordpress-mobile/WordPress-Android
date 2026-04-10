@@ -29,6 +29,17 @@ class SingleActionCardViewHolder(
         } else {
             View.GONE
         }
+        val textParams = singleActionCardText.layoutParams
+            as ConstraintLayout.LayoutParams
+        if (!singleActionCard.showLearnMore) {
+            textParams.bottomToBottom =
+                ConstraintLayout.LayoutParams.PARENT_ID
+            textParams.bottomMargin = context.resources
+                .getDimensionPixelSize(
+                    org.wordpress.android.R.dimen.margin_extra_large
+                )
+        }
+        singleActionCardText.layoutParams = textParams
         val params = singleActionCardImage.layoutParams
             as ConstraintLayout.LayoutParams
         if (singleActionCard.centerImageVertically) {

@@ -1,17 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:layout_height="wrap_content">
 
-    <include
-        android:id="@+id/handle"
-        layout="@layout/bottom_sheet_handle_view"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/margin_small" />
+        android:orientation="vertical">
 
-    <ImageView
+        <include
+            android:id="@+id/handle"
+            layout="@layout/bottom_sheet_handle_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/margin_small" />
+
+        <ImageView
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_gravity="center"
@@ -59,4 +63,6 @@
         android:textColor="?attr/colorPrimary"
         android:textSize="@dimen/text_sz_large" />
 
-</LinearLayout>
+    </LinearLayout>
+
+</ScrollView>

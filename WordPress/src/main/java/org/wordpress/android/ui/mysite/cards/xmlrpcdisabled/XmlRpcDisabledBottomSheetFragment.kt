@@ -4,8 +4,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
+import com.google.android.material.R as MaterialR
 import org.wordpress.android.databinding.XmlrpcDisabledBottomSheetBinding
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
@@ -37,6 +41,17 @@ class XmlRpcDisabledBottomSheetFragment : BottomSheetDialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        dialog?.setOnShowListener { dialogInterface ->
+            val bottomSheet =
+                (dialogInterface as? BottomSheetDialog)
+                    ?.findViewById<View>(
+                        MaterialR.id.design_bottom_sheet
+                    ) as? FrameLayout
+            bottomSheet?.let {
+                BottomSheetBehavior.from(it).state =
+                    BottomSheetBehavior.STATE_EXPANDED
+            }
+        }
         val binding = XmlrpcDisabledBottomSheetBinding.bind(view)
         val siteLocalId = arguments?.getInt(ARG_SITE_LOCAL_ID) ?: run {
             dismiss()
