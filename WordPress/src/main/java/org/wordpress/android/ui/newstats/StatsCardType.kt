@@ -31,11 +31,7 @@ enum class StatsCardType(
             TODAYS_STATS,
             VIEWS_STATS,
             MOST_VIEWED_POSTS_AND_PAGES,
-            MOST_VIEWED_REFERRERS,
-            LOCATIONS,
-            AUTHORS,
-            DEVICES,
-            UTM
+            LOCATIONS
         )
     }
 }
