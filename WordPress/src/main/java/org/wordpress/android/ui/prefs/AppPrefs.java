@@ -152,6 +152,8 @@ public class AppPrefs {
         READER_RECOMMENDED_STREAM_PAGE_HANDLE,
         // Next page_handle cursor for the Latest sub-tab (read/streams/discover?sort=date)
         READER_LATEST_STREAM_PAGE_HANDLE,
+        // Next page_handle cursor for the Freshly Pressed sub-tab (read/streams/freshly-pressed)
+        READER_FRESHLY_PRESSED_STREAM_PAGE_HANDLE,
         MANUAL_FEATURE_CONFIG,
         EXPERIMENTAL_FEATURE_CONFIG,
         SITE_JETPACK_CAPABILITIES,
@@ -1194,6 +1196,14 @@ public class AppPrefs {
 
     public static void setReaderLatestStreamPageHandle(String pageHandle) {
         setString(DeletablePrefKey.READER_LATEST_STREAM_PAGE_HANDLE, pageHandle);
+    }
+
+    public static String getReaderFreshlyPressedStreamPageHandle() {
+        return getString(DeletablePrefKey.READER_FRESHLY_PRESSED_STREAM_PAGE_HANDLE, null);
+    }
+
+    public static void setReaderFreshlyPressedStreamPageHandle(String pageHandle) {
+        setString(DeletablePrefKey.READER_FRESHLY_PRESSED_STREAM_PAGE_HANDLE, pageHandle);
     }
 
     public static boolean getReaderRecommendedTagsDeletedForLoggedOutUser() {

@@ -80,6 +80,10 @@ class AppPrefsWrapper @Inject constructor(val buildConfigWrapper: BuildConfigWra
         get() = AppPrefs.getReaderLatestStreamPageHandle()
         set(pageHandle) = AppPrefs.setReaderLatestStreamPageHandle(pageHandle)
 
+    var readerFreshlyPressedStreamPageHandle: String?
+        get() = AppPrefs.getReaderFreshlyPressedStreamPageHandle()
+        set(pageHandle) = AppPrefs.setReaderFreshlyPressedStreamPageHandle(pageHandle)
+
     var readerTopBarSelectedFeedItemId: String?
         get() = AppPrefs.getReaderTopBarSelectedFeedItemId()
         set(selectedFeedItemId) = AppPrefs.setReaderTopBarSelectedFeedItemId(selectedFeedItemId)

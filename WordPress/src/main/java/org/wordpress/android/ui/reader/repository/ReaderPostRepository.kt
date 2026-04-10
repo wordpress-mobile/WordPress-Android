@@ -73,10 +73,11 @@ class ReaderPostRepository @Inject constructor(
         updateAction: ReaderPostServiceStarter.UpdateAction,
         resultListener: UpdateResultListener
     ) {
-        // The Discover "Recommended" and "Latest" sub-tabs use the v2 /read/streams/discover endpoint
-        // (matching iOS ReaderCardService). Route them through a dedicated path that builds the
-        // cards-style request and parses the cards response into ReaderPosts.
-        if (tag.isRecommended || tag.isLatest) {
+        // The Discover "Freshly Pressed", "Recommended", and "Latest" sub-tabs all use the v2
+        // /read/streams/{slug} pipeline (matching iOS ReaderPostServiceRemote.fetchStreamCards).
+        // Route them through a dedicated path that builds the cards-style request and parses
+        // the cards response into ReaderPosts.
+        if (tag.isFreshlyPressed || tag.isRecommended || tag.isLatest) {
             requestPostsForDiscoverStream(tag, updateAction, resultListener)
             return
         }
@@ -219,9 +220,10 @@ class ReaderPostRepository @Inject constructor(
     }
 
     /**
-     * Requests posts for a Discover "Recommended" or "Latest" sub-tab using the v2
-     * /read/streams/discover endpoint. Both sub-tabs hit the same endpoint and are distinguished
-     * by the tag slug: Latest passes sort=date while Recommended uses the server default ordering.
+     * Requests posts for a Discover "Freshly Pressed", "Recommended", or "Latest" sub-tab using
+     * the v2 /read/streams/{slug} endpoint. All three sub-tabs share this pipeline (matching iOS
+     * ReaderPostServiceRemote.fetchStreamCards) and are distinguished by the tag's slug/endpoint:
+     * Latest adds sort=date while Recommended and Freshly Pressed use the server default ordering.
      *
      * Pagination is cursor-based via an opaque page_handle stored per-stream in AppPrefs. First-page
      * requests also include a "refresh" counter so the server returns a different shard of content,
@@ -246,7 +248,8 @@ class ReaderPostRepository @Inject constructor(
                 userTags.joinToString(",") { it.tagSlug }
             }
 
-            // Latest sorts by date; Recommended uses the server's default (editorial) order.
+            // Latest sorts by date; Recommended and Freshly Pressed use the server's default
+            // (editorial) order.
             if (tag.isLatest) {
                 params["sort"] = "date"
             }
@@ -258,20 +261,12 @@ class ReaderPostRepository @Inject constructor(
             if (isFirstPage) {
                 // Clear the stored cursor so the next "load more" starts from the new first page,
                 // then bump the refresh counter so the server rotates the visible shard.
-                if (tag.isLatest) {
-                    appPrefsWrapper.readerLatestStreamPageHandle = null
-                } else {
-                    appPrefsWrapper.readerRecommendedStreamPageHandle = null
-                }
+                setDiscoverStreamPageHandle(tag, null)
                 params["refresh"] = appPrefsWrapper.getReaderCardsRefreshCounter().toString()
                 appPrefsWrapper.incrementReaderCardsRefreshCounter()
             } else {
                 // REQUEST_OLDER: resume pagination with the previously-stored cursor.
-                val pageHandle = if (tag.isLatest) {
-                    appPrefsWrapper.readerLatestStreamPageHandle
-                } else {
-                    appPrefsWrapper.readerRecommendedStreamPageHandle
-                }
+                val pageHandle = getDiscoverStreamPageHandle(tag)
                 if (pageHandle.isNullOrEmpty()) {
                     // Nothing more to load — nothing changed locally either.
                     resultListener.onUpdateResult(ReaderActions.UpdateResult.UNCHANGED)
@@ -292,13 +287,30 @@ class ReaderPostRepository @Inject constructor(
                 resultListener.onUpdateResult(ReaderActions.UpdateResult.FAILED)
             }
 
+            // The tag's endpoint already carries the stream path (read/streams/{slug}) set at
+            // tag-creation time in ReaderDiscoverTabsFragment.
             WordPress.getRestClientUtilsV2().get(
-                ReaderTag.DISCOVER_STREAMS_PATH,
+                tag.endpoint,
                 params,
                 null,
                 listener,
                 errorListener
             )
+        }
+    }
+
+    private fun getDiscoverStreamPageHandle(tag: ReaderTag): String? = when {
+        tag.isFreshlyPressed -> appPrefsWrapper.readerFreshlyPressedStreamPageHandle
+        tag.isLatest -> appPrefsWrapper.readerLatestStreamPageHandle
+        tag.isRecommended -> appPrefsWrapper.readerRecommendedStreamPageHandle
+        else -> null
+    }
+
+    private fun setDiscoverStreamPageHandle(tag: ReaderTag, pageHandle: String?) {
+        when {
+            tag.isFreshlyPressed -> appPrefsWrapper.readerFreshlyPressedStreamPageHandle = pageHandle
+            tag.isLatest -> appPrefsWrapper.readerLatestStreamPageHandle = pageHandle
+            tag.isRecommended -> appPrefsWrapper.readerRecommendedStreamPageHandle = pageHandle
         }
     }
 
@@ -354,11 +366,7 @@ class ReaderPostRepository @Inject constructor(
             // Store the next_page_handle for this stream (empty means we're at the end).
             val nextPageHandle = parseDiscoverCardsJsonUseCase.parseNextPageHandle(jsonObject)
                 .takeIf { it.isNotEmpty() }
-            if (tag.isLatest) {
-                appPrefsWrapper.readerLatestStreamPageHandle = nextPageHandle
-            } else if (tag.isRecommended) {
-                appPrefsWrapper.readerRecommendedStreamPageHandle = nextPageHandle
-            }
+            setDiscoverStreamPageHandle(tag, nextPageHandle)
 
             val updateResult = localSource.saveUpdatedPosts(serverPosts, updateAction, tag)
             resultListener.onUpdateResult(updateResult)

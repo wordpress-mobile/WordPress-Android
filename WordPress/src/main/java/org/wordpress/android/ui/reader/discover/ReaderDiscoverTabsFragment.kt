@@ -129,7 +129,7 @@ class ReaderDiscoverTabsFragment : ViewPagerFragment(R.layout.reader_discover_ta
             ReaderTag.TAG_SLUG_FRESHLY_PRESSED,
             ReaderTag.TAG_TITLE_FRESHLY_PRESSED,
             ReaderTag.TAG_TITLE_FRESHLY_PRESSED,
-            ReaderTag.FRESHLY_PRESSED_PATH,
+            ReaderTag.FRESHLY_PRESSED_STREAMS_PATH,
             ReaderTagType.DEFAULT,
         )
 
