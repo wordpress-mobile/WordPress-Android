@@ -25,6 +25,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
 import org.wordpress.android.ui.newstats.components.CardPosition
@@ -33,7 +34,6 @@ import org.wordpress.android.ui.newstats.components.StatsCardContainer
 import org.wordpress.android.ui.newstats.components.StatsCardEmptyContent
 import org.wordpress.android.ui.newstats.components.StatsCardErrorContent
 import org.wordpress.android.ui.newstats.components.StatsCardHeader
-import org.wordpress.android.ui.newstats.components.StatsListHeader
 import org.wordpress.android.ui.newstats.util.ShimmerBox
 
 private val CardPadding = 16.dp
@@ -131,11 +131,6 @@ private fun LoadingContent(
             onSelected = onCategoryChanged
         )
         Spacer(modifier = Modifier.height(12.dp))
-        StatsListHeader(
-            leftHeaderResId =
-                selectedCategory.labelResId
-        )
-        Spacer(modifier = Modifier.height(8.dp))
         repeat(LOADING_ITEM_COUNT) { index ->
             Row(
                 modifier = Modifier
@@ -199,9 +194,14 @@ private fun LoadedContent(
         if (state.items.isEmpty()) {
             StatsCardEmptyContent()
         } else {
-            StatsListHeader(
-                leftHeaderResId =
-                    selectedCategory.labelResId
+            Text(
+                text = stringResource(
+                    R.string.stats_countries_views_header
+                ),
+                modifier = Modifier.fillMaxWidth(),
+                textAlign = TextAlign.End,
+                style = MaterialTheme.typography.labelMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
             )
             Spacer(modifier = Modifier.height(8.dp))
 
