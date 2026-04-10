@@ -7,11 +7,14 @@ import android.view.ViewGroup
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.databinding.XmlrpcDisabledBottomSheetBinding
+import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.JetpackConnectionSource
 import org.wordpress.android.ui.JetpackConnectionWebViewActivity
+import org.wordpress.android.ui.jetpackrestconnection.JetpackRestConnectionActivity
+import org.wordpress.android.ui.jetpackrestconnection.JetpackRestConnectionViewModel
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -45,13 +48,15 @@ class XmlRpcDisabledBottomSheetFragment : BottomSheetDialogFragment() {
         }
 
         binding.connectJetpackButton.setOnClickListener {
-            JetpackConnectionWebViewActivity
-                .startJetpackConnectionFlow(
-                    requireActivity(),
-                    JetpackConnectionSource.XMLRPC_DISABLED,
-                    site,
-                    accountStore.hasAccessToken()
-                )
+            if (!startJetpackRestConnectionFlow(site)) {
+                JetpackConnectionWebViewActivity
+                    .startJetpackConnectionFlow(
+                        requireActivity(),
+                        JetpackConnectionSource.XMLRPC_DISABLED,
+                        site,
+                        accountStore.hasAccessToken()
+                    )
+            }
             dismiss()
         }
 
@@ -61,6 +66,23 @@ class XmlRpcDisabledBottomSheetFragment : BottomSheetDialogFragment() {
                 LEARN_MORE_URL
             )
         }
+    }
+
+    private fun startJetpackRestConnectionFlow(
+        site: SiteModel
+    ): Boolean {
+        if (JetpackRestConnectionViewModel
+                .canInitiateJetpackRestConnection(site)
+        ) {
+            JetpackRestConnectionActivity
+                .startJetpackRestConnectionFlow(
+                    requireActivity(),
+                    JetpackRestConnectionViewModel
+                        .ConnectionSource.XMLRPC_DISABLED
+                )
+            return true
+        }
+        return false
     }
 
     companion object {
