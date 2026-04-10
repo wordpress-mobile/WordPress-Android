@@ -76,6 +76,10 @@ class AppPrefsWrapper @Inject constructor(val buildConfigWrapper: BuildConfigWra
         get() = AppPrefs.getReaderTopBarSelectedFeedItemId()
         set(selectedFeedItemId) = AppPrefs.setReaderTopBarSelectedFeedItemId(selectedFeedItemId)
 
+    var readerDiscoverSelectedSubTabIndex: Int
+        get() = AppPrefs.getReaderDiscoverSelectedSubTabIndex()
+        set(index) = AppPrefs.setReaderDiscoverSelectedSubTabIndex(index)
+
     var shouldScheduleCreateSiteNotification: Boolean
         get() = AppPrefs.shouldScheduleCreateSiteNotification()
         set(shouldSchedule) = AppPrefs.setShouldScheduleCreateSiteNotification(shouldSchedule)
