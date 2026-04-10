@@ -387,7 +387,8 @@ sealed class MySiteCardAndItem(open val type: Type) {
             @StringRes val textResource: Int,
             @DrawableRes val imageResource: Int,
             val onActionClick: () -> Unit,
-            val centerImageVertically: Boolean = false
+            val centerImageVertically: Boolean = false,
+            val showLearnMore: Boolean = true
         ) : Item(SINGLE_ACTION_CARD)
 
         data class CategoryHeaderItem(val title: UiString) : Item(CATEGORY_HEADER_ITEM)

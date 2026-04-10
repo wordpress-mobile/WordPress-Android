@@ -209,7 +209,8 @@ class ApplicationPasswordViewModelSlice @Inject constructor(
                         )
                     )
                 },
-                centerImageVertically = true
+                centerImageVertically = true,
+                showLearnMore = false
             )
         )
         appLogWrapper.d(

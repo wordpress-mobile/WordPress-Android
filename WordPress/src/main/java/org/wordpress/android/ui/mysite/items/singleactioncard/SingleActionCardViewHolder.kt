@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.mysite.items.singleactioncard
 
+import android.view.View
 import android.view.ViewGroup
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
@@ -22,6 +23,11 @@ class SingleActionCardViewHolder(
         )
         singleActionCardCover.setOnClickListener {
             singleActionCard.onActionClick()
+        }
+        learnMore.visibility = if (singleActionCard.showLearnMore) {
+            View.VISIBLE
+        } else {
+            View.GONE
         }
         val params = singleActionCardImage.layoutParams
             as ConstraintLayout.LayoutParams
