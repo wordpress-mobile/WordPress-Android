@@ -17,10 +17,12 @@ public class ReaderTag implements Serializable, FilterCriteria {
     public static final String DISCOVER_PATH = String.format(Locale.US, "read/sites/%d/posts",
             ReaderConstants.DISCOVER_SITE_ID);
     public static final String FRESHLY_PRESSED_PATH = "/freshly-pressed";
-    // TODO: replace with real endpoint once the Calypso Recommended path is identified
-    public static final String RECOMMENDED_PATH = "/read/TODO-recommended";
-    // TODO: replace with real endpoint once the Calypso Latest path is identified
-    public static final String LATEST_PATH = "/read/TODO-latest";
+    // Both Recommended and Latest sub-tabs hit the same REST v2 endpoint; they are distinguished
+    // at request time by the tag slug (Latest adds sort=date, Recommended uses the default order).
+    // Matches iOS ReaderCardService which uses /rest/v2/read/streams/discover.
+    public static final String DISCOVER_STREAMS_PATH = "read/streams/discover";
+    public static final String RECOMMENDED_PATH = DISCOVER_STREAMS_PATH;
+    public static final String LATEST_PATH = DISCOVER_STREAMS_PATH;
 
     public static final String TAG_TITLE_FOLLOWED_SITES = "Followed Sites";
     public static final String TAG_TITLE_FRESHLY_PRESSED = "Freshly Pressed";
@@ -190,11 +192,15 @@ public class ReaderTag implements Serializable, FilterCriteria {
     }
 
     public boolean isRecommended() {
-        return tagType == ReaderTagType.DEFAULT && getEndpoint().endsWith(RECOMMENDED_PATH);
+        return tagType == ReaderTagType.DEFAULT && TAG_SLUG_RECOMMENDED.equals(getTagSlug());
     }
 
     public boolean isLatest() {
-        return tagType == ReaderTagType.DEFAULT && getEndpoint().endsWith(LATEST_PATH);
+        return tagType == ReaderTagType.DEFAULT && TAG_SLUG_LATEST.equals(getTagSlug());
+    }
+
+    public boolean isDiscoverStream() {
+        return isRecommended() || isLatest();
     }
 
     public boolean isDefaultInMemoryTag() {

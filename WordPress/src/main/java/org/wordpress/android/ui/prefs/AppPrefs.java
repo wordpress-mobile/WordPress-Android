@@ -148,6 +148,10 @@ public class AppPrefs {
         READER_TOP_BAR_SELECTED_FEED_ITEM_ID,
         // Index of the last-selected sub-tab inside the Reader Discover tabbed UI
         READER_DISCOVER_SELECTED_SUB_TAB_INDEX,
+        // Next page_handle cursor for the Recommended sub-tab (read/streams/discover)
+        READER_RECOMMENDED_STREAM_PAGE_HANDLE,
+        // Next page_handle cursor for the Latest sub-tab (read/streams/discover?sort=date)
+        READER_LATEST_STREAM_PAGE_HANDLE,
         MANUAL_FEATURE_CONFIG,
         EXPERIMENTAL_FEATURE_CONFIG,
         SITE_JETPACK_CAPABILITIES,
@@ -1174,6 +1178,22 @@ public class AppPrefs {
 
     public static void incrementReaderCardsRefreshCounter() {
         setInt(DeletablePrefKey.READER_CARDS_ENDPOINT_REFRESH_COUNTER, getReaderCardsRefreshCounter() + 1);
+    }
+
+    public static String getReaderRecommendedStreamPageHandle() {
+        return getString(DeletablePrefKey.READER_RECOMMENDED_STREAM_PAGE_HANDLE, null);
+    }
+
+    public static void setReaderRecommendedStreamPageHandle(String pageHandle) {
+        setString(DeletablePrefKey.READER_RECOMMENDED_STREAM_PAGE_HANDLE, pageHandle);
+    }
+
+    public static String getReaderLatestStreamPageHandle() {
+        return getString(DeletablePrefKey.READER_LATEST_STREAM_PAGE_HANDLE, null);
+    }
+
+    public static void setReaderLatestStreamPageHandle(String pageHandle) {
+        setString(DeletablePrefKey.READER_LATEST_STREAM_PAGE_HANDLE, pageHandle);
     }
 
     public static boolean getReaderRecommendedTagsDeletedForLoggedOutUser() {

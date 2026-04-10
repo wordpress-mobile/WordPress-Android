@@ -4,20 +4,29 @@ import com.android.volley.VolleyError
 import com.wordpress.rest.RestRequest
 import dagger.Reusable
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
 import org.json.JSONObject
+import org.wordpress.android.WordPress
 import org.wordpress.android.WordPress.Companion.getRestClientUtilsV1_2
 import org.wordpress.android.datasets.ReaderPostTable
 import org.wordpress.android.datasets.ReaderTagTable
+import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.models.ReaderPostList
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.ReaderTagType
 import org.wordpress.android.modules.IO_THREAD
+import org.wordpress.android.ui.bloggingprompts.BloggingPromptsPostTagProvider.Companion.BLOGGING_PROMPT_TAG
+import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.reader.ReaderConstants
 import org.wordpress.android.ui.reader.actions.ReaderActions
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResultListener
 import org.wordpress.android.ui.reader.exceptions.ReaderPostFetchException
+import org.wordpress.android.ui.reader.repository.usecases.ParseDiscoverCardsJsonUseCase
+import org.wordpress.android.ui.reader.repository.usecases.tags.GetFollowedTagsUseCase
 import org.wordpress.android.ui.reader.services.post.ReaderPostServiceStarter
 import org.wordpress.android.ui.reader.sources.ReaderPostLocalSource
 import org.wordpress.android.ui.reader.utils.ReaderUtils
@@ -34,6 +43,9 @@ import kotlin.coroutines.resumeWithException
 class ReaderPostRepository @Inject constructor(
     private val perAppLocaleManager: PerAppLocaleManager,
     private val localSource: ReaderPostLocalSource,
+    private val getFollowedTagsUseCase: GetFollowedTagsUseCase,
+    private val parseDiscoverCardsJsonUseCase: ParseDiscoverCardsJsonUseCase,
+    private val appPrefsWrapper: AppPrefsWrapper,
     @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher,
 ) {
     /**
@@ -61,6 +73,13 @@ class ReaderPostRepository @Inject constructor(
         updateAction: ReaderPostServiceStarter.UpdateAction,
         resultListener: UpdateResultListener
     ) {
+        // The Discover "Recommended" and "Latest" sub-tabs use the v2 /read/streams/discover endpoint
+        // (matching iOS ReaderCardService). Route them through a dedicated path that builds the
+        // cards-style request and parses the cards response into ReaderPosts.
+        if (tag.isDiscoverStream) {
+            requestPostsForDiscoverStream(tag, updateAction, resultListener)
+            return
+        }
         val path = getRelativeEndpointForTag(tag)
         if (path.isNullOrBlank()) {
             resultListener.onUpdateResult(ReaderActions.UpdateResult.FAILED)
@@ -197,6 +216,156 @@ class ReaderPostRepository @Inject constructor(
                 resultListener.onUpdateResult(updateResult)
             }
         }.start()
+    }
+
+    /**
+     * Requests posts for a Discover "Recommended" or "Latest" sub-tab using the v2
+     * /read/streams/discover endpoint. Both sub-tabs hit the same endpoint and are distinguished
+     * by the tag slug: Latest passes sort=date while Recommended uses the server default ordering.
+     *
+     * Pagination is cursor-based via an opaque page_handle stored per-stream in AppPrefs. First-page
+     * requests also include a "refresh" counter so the server returns a different shard of content,
+     * matching the existing ReaderDiscoverLogic behavior.
+     */
+    private fun requestPostsForDiscoverStream(
+        tag: ReaderTag,
+        updateAction: ReaderPostServiceStarter.UpdateAction,
+        resultListener: UpdateResultListener
+    ) {
+        val scope = CoroutineScope(SupervisorJob() + ioDispatcher)
+        scope.launch {
+            val params = HashMap<String, String>()
+
+            // Use the user's followed tags to seed the discover stream. If the user doesn't follow
+            // anything (ignoring the default dailyprompt tag) fall back to "dailyprompt,wordpress"
+            // — this mirrors ReaderDiscoverLogic / iOS ReaderPostServiceRemote behavior.
+            val userTags = getFollowedTagsUseCase.get()
+            params["tags"] = if (userTags.filterNot { it.tagSlug == BLOGGING_PROMPT_TAG }.isEmpty()) {
+                "$BLOGGING_PROMPT_TAG,wordpress"
+            } else {
+                userTags.joinToString(",") { it.tagSlug }
+            }
+
+            // Latest sorts by date; Recommended uses the server's default (editorial) order.
+            if (tag.isLatest) {
+                params["sort"] = "date"
+            }
+
+            val isFirstPage = updateAction == ReaderPostServiceStarter.UpdateAction.REQUEST_NEWER ||
+                    updateAction == ReaderPostServiceStarter.UpdateAction.REQUEST_REFRESH ||
+                    updateAction == ReaderPostServiceStarter.UpdateAction.REQUEST_OLDER_THAN_GAP
+
+            if (isFirstPage) {
+                // Clear the stored cursor so the next "load more" starts from the new first page,
+                // then bump the refresh counter so the server rotates the visible shard.
+                setPageHandleForStream(tag, null)
+                params["refresh"] = appPrefsWrapper.getReaderCardsRefreshCounter().toString()
+                appPrefsWrapper.incrementReaderCardsRefreshCounter()
+            } else {
+                // REQUEST_OLDER: resume pagination with the previously-stored cursor.
+                val pageHandle = getPageHandleForStream(tag)
+                if (pageHandle.isNullOrEmpty()) {
+                    // Nothing more to load — nothing changed locally either.
+                    resultListener.onUpdateResult(ReaderActions.UpdateResult.UNCHANGED)
+                    return@launch
+                }
+                params["page_handle"] = pageHandle
+            }
+
+            params["_locale"] = perAppLocaleManager.getCurrentLocaleLanguageCode()
+
+            val listener = RestRequest.Listener { jsonObject: JSONObject? ->
+                handleDiscoverStreamResponse(tag, jsonObject, updateAction, resultListener)
+            }
+            val errorListener = RestRequest.ErrorListener { volleyError: VolleyError? ->
+                AppLog.e(AppLog.T.READER, volleyError)
+                resultListener.onUpdateResult(ReaderActions.UpdateResult.FAILED)
+            }
+
+            WordPress.getRestClientUtilsV2().get(
+                ReaderTag.DISCOVER_STREAMS_PATH,
+                params,
+                null,
+                listener,
+                errorListener
+            )
+        }
+    }
+
+    /**
+     * Parses a /read/streams/discover response: filters the cards array down to post cards,
+     * converts them into ReaderPosts, stores the next page handle, and saves the posts keyed
+     * by the requesting stream tag via ReaderPostLocalSource (so that gap handling and the
+     * existing REQUEST_REFRESH/REQUEST_NEWER semantics keep working).
+     */
+    private fun handleDiscoverStreamResponse(
+        tag: ReaderTag,
+        jsonObject: JSONObject?,
+        updateAction: ReaderPostServiceStarter.UpdateAction,
+        resultListener: UpdateResultListener
+    ) {
+        if (jsonObject == null) {
+            resultListener.onUpdateResult(ReaderActions.UpdateResult.FAILED)
+            return
+        }
+        object : Thread() {
+            override fun run() {
+                try {
+                    val serverPosts = ReaderPostList()
+                    val cardsJson = jsonObject.optJSONArray(ReaderConstants.JSON_CARDS)
+                    if (cardsJson != null) {
+                        val seenPostIds = HashSet<Long>()
+                        for (i in 0 until cardsJson.length()) {
+                            val cardJson = cardsJson.optJSONObject(i) ?: continue
+                            if (cardJson.optString(ReaderConstants.JSON_CARD_TYPE)
+                                != ReaderConstants.JSON_CARD_POST
+                            ) {
+                                continue
+                            }
+                            try {
+                                val post: ReaderPost = parseDiscoverCardsJsonUseCase.parsePostCard(cardJson)
+                                if (seenPostIds.add(post.postId)) {
+                                    serverPosts.add(post)
+                                }
+                            } catch (e: Exception) {
+                                AppLog.w(AppLog.T.READER, "Failed to parse discover post card: ${e.message}")
+                            }
+                        }
+                    }
+
+                    // Remember when the tag was last updated for first-page requests, matching the
+                    // behavior of the regular tag-based flow in requestPostsWithTag.
+                    if (updateAction == ReaderPostServiceStarter.UpdateAction.REQUEST_NEWER ||
+                        updateAction == ReaderPostServiceStarter.UpdateAction.REQUEST_REFRESH
+                    ) {
+                        ReaderTagTable.setTagLastUpdated(tag)
+                    }
+
+                    // Store the next_page_handle for this stream (empty means we're at the end).
+                    val nextPageHandle = parseDiscoverCardsJsonUseCase.parseNextPageHandle(jsonObject)
+                    setPageHandleForStream(tag, nextPageHandle.takeIf { it.isNotEmpty() })
+
+                    val updateResult = localSource.saveUpdatedPosts(serverPosts, updateAction, tag)
+                    resultListener.onUpdateResult(updateResult)
+                } catch (e: Exception) {
+                    AppLog.e(AppLog.T.READER, e)
+                    resultListener.onUpdateResult(ReaderActions.UpdateResult.FAILED)
+                }
+            }
+        }.start()
+    }
+
+    private fun getPageHandleForStream(tag: ReaderTag): String? = when {
+        tag.isLatest -> appPrefsWrapper.readerLatestStreamPageHandle
+        tag.isRecommended -> appPrefsWrapper.readerRecommendedStreamPageHandle
+        else -> null
+    }
+
+    private fun setPageHandleForStream(tag: ReaderTag, pageHandle: String?) {
+        when {
+            tag.isLatest -> appPrefsWrapper.readerLatestStreamPageHandle = pageHandle
+            tag.isRecommended -> appPrefsWrapper.readerRecommendedStreamPageHandle = pageHandle
+        }
     }
 
     /**

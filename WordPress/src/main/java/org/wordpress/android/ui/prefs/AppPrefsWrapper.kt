@@ -72,6 +72,14 @@ class AppPrefsWrapper @Inject constructor(val buildConfigWrapper: BuildConfigWra
         get() = AppPrefs.getReaderCardsPageHandle()
         set(pageHandle) = AppPrefs.setReaderCardsPageHandle(pageHandle)
 
+    var readerRecommendedStreamPageHandle: String?
+        get() = AppPrefs.getReaderRecommendedStreamPageHandle()
+        set(pageHandle) = AppPrefs.setReaderRecommendedStreamPageHandle(pageHandle)
+
+    var readerLatestStreamPageHandle: String?
+        get() = AppPrefs.getReaderLatestStreamPageHandle()
+        set(pageHandle) = AppPrefs.setReaderLatestStreamPageHandle(pageHandle)
+
     var readerTopBarSelectedFeedItemId: String?
         get() = AppPrefs.getReaderTopBarSelectedFeedItemId()
         set(selectedFeedItemId) = AppPrefs.setReaderTopBarSelectedFeedItemId(selectedFeedItemId)
