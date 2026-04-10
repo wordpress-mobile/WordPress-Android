@@ -21,11 +21,11 @@ public class ReaderTag implements Serializable, FilterCriteria {
     // at request time by the tag slug (Latest adds sort=date, Recommended uses the default order).
     // Matches iOS ReaderCardService which uses /rest/v2/read/streams/discover.
     public static final String DISCOVER_STREAMS_PATH = "read/streams/discover";
-    public static final String RECOMMENDED_PATH = DISCOVER_STREAMS_PATH;
-    public static final String LATEST_PATH = DISCOVER_STREAMS_PATH;
 
     public static final String TAG_TITLE_FOLLOWED_SITES = "Followed Sites";
     public static final String TAG_TITLE_FRESHLY_PRESSED = "Freshly Pressed";
+    public static final String TAG_TITLE_RECOMMENDED = "Recommended";
+    public static final String TAG_TITLE_LATEST = "Latest";
     public static final String TAG_SLUG_FRESHLY_PRESSED = "freshly-pressed";
     public static final String TAG_SLUG_RECOMMENDED = "recommended";
     public static final String TAG_SLUG_LATEST = "latest";
@@ -197,10 +197,6 @@ public class ReaderTag implements Serializable, FilterCriteria {
 
     public boolean isLatest() {
         return tagType == ReaderTagType.DEFAULT && TAG_SLUG_LATEST.equals(getTagSlug());
-    }
-
-    public boolean isDiscoverStream() {
-        return isRecommended() || isLatest();
     }
 
     public boolean isDefaultInMemoryTag() {

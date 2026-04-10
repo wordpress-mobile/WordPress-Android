@@ -101,7 +101,7 @@ class ReaderDiscoverTabsFragment : ViewPagerFragment(R.layout.reader_discover_ta
         INDEX_FRESHLY_PRESSED -> R.string.reader_discover_tab_freshly_pressed
         INDEX_RECOMMENDED -> R.string.reader_discover_tab_recommended
         INDEX_LATEST -> R.string.reader_discover_tab_latest
-        else -> R.string.reader_discover_tab_freshly_pressed
+        else -> error("Unknown Discover sub-tab position: $position")
     }
 
     private class DiscoverTabsAdapter(
@@ -135,17 +135,17 @@ class ReaderDiscoverTabsFragment : ViewPagerFragment(R.layout.reader_discover_ta
 
         private fun createRecommendedTag(): ReaderTag = ReaderTag(
             ReaderTag.TAG_SLUG_RECOMMENDED,
-            ReaderTag.TAG_SLUG_RECOMMENDED,
-            ReaderTag.TAG_SLUG_RECOMMENDED,
-            ReaderTag.RECOMMENDED_PATH,
+            ReaderTag.TAG_TITLE_RECOMMENDED,
+            ReaderTag.TAG_TITLE_RECOMMENDED,
+            ReaderTag.DISCOVER_STREAMS_PATH,
             ReaderTagType.DEFAULT,
         )
 
         private fun createLatestTag(): ReaderTag = ReaderTag(
             ReaderTag.TAG_SLUG_LATEST,
-            ReaderTag.TAG_SLUG_LATEST,
-            ReaderTag.TAG_SLUG_LATEST,
-            ReaderTag.LATEST_PATH,
+            ReaderTag.TAG_TITLE_LATEST,
+            ReaderTag.TAG_TITLE_LATEST,
+            ReaderTag.DISCOVER_STREAMS_PATH,
             ReaderTagType.DEFAULT,
         )
     }

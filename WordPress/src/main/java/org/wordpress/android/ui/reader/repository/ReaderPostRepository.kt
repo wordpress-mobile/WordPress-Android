@@ -76,7 +76,7 @@ class ReaderPostRepository @Inject constructor(
         // The Discover "Recommended" and "Latest" sub-tabs use the v2 /read/streams/discover endpoint
         // (matching iOS ReaderCardService). Route them through a dedicated path that builds the
         // cards-style request and parses the cards response into ReaderPosts.
-        if (tag.isDiscoverStream) {
+        if (tag.isRecommended || tag.isLatest) {
             requestPostsForDiscoverStream(tag, updateAction, resultListener)
             return
         }
@@ -258,12 +258,20 @@ class ReaderPostRepository @Inject constructor(
             if (isFirstPage) {
                 // Clear the stored cursor so the next "load more" starts from the new first page,
                 // then bump the refresh counter so the server rotates the visible shard.
-                setPageHandleForStream(tag, null)
+                if (tag.isLatest) {
+                    appPrefsWrapper.readerLatestStreamPageHandle = null
+                } else {
+                    appPrefsWrapper.readerRecommendedStreamPageHandle = null
+                }
                 params["refresh"] = appPrefsWrapper.getReaderCardsRefreshCounter().toString()
                 appPrefsWrapper.incrementReaderCardsRefreshCounter()
             } else {
                 // REQUEST_OLDER: resume pagination with the previously-stored cursor.
-                val pageHandle = getPageHandleForStream(tag)
+                val pageHandle = if (tag.isLatest) {
+                    appPrefsWrapper.readerLatestStreamPageHandle
+                } else {
+                    appPrefsWrapper.readerRecommendedStreamPageHandle
+                }
                 if (pageHandle.isNullOrEmpty()) {
                     // Nothing more to load — nothing changed locally either.
                     resultListener.onUpdateResult(ReaderActions.UpdateResult.UNCHANGED)
@@ -275,7 +283,9 @@ class ReaderPostRepository @Inject constructor(
             params["_locale"] = perAppLocaleManager.getCurrentLocaleLanguageCode()
 
             val listener = RestRequest.Listener { jsonObject: JSONObject? ->
-                handleDiscoverStreamResponse(tag, jsonObject, updateAction, resultListener)
+                scope.launch {
+                    handleDiscoverStreamResponse(tag, jsonObject, updateAction, resultListener)
+                }
             }
             val errorListener = RestRequest.ErrorListener { volleyError: VolleyError? ->
                 AppLog.e(AppLog.T.READER, volleyError)
@@ -297,6 +307,8 @@ class ReaderPostRepository @Inject constructor(
      * converts them into ReaderPosts, stores the next page handle, and saves the posts keyed
      * by the requesting stream tag via ReaderPostLocalSource (so that gap handling and the
      * existing REQUEST_REFRESH/REQUEST_NEWER semantics keep working).
+     *
+     * Must be called from a coroutine on [ioDispatcher] (it does blocking DB work).
      */
     private fun handleDiscoverStreamResponse(
         tag: ReaderTag,
@@ -308,63 +320,51 @@ class ReaderPostRepository @Inject constructor(
             resultListener.onUpdateResult(ReaderActions.UpdateResult.FAILED)
             return
         }
-        object : Thread() {
-            override fun run() {
-                try {
-                    val serverPosts = ReaderPostList()
-                    val cardsJson = jsonObject.optJSONArray(ReaderConstants.JSON_CARDS)
-                    if (cardsJson != null) {
-                        val seenPostIds = HashSet<Long>()
-                        for (i in 0 until cardsJson.length()) {
-                            val cardJson = cardsJson.optJSONObject(i) ?: continue
-                            if (cardJson.optString(ReaderConstants.JSON_CARD_TYPE)
-                                != ReaderConstants.JSON_CARD_POST
-                            ) {
-                                continue
-                            }
-                            try {
-                                val post: ReaderPost = parseDiscoverCardsJsonUseCase.parsePostCard(cardJson)
-                                if (seenPostIds.add(post.postId)) {
-                                    serverPosts.add(post)
-                                }
-                            } catch (e: Exception) {
-                                AppLog.w(AppLog.T.READER, "Failed to parse discover post card: ${e.message}")
-                            }
-                        }
-                    }
-
-                    // Remember when the tag was last updated for first-page requests, matching the
-                    // behavior of the regular tag-based flow in requestPostsWithTag.
-                    if (updateAction == ReaderPostServiceStarter.UpdateAction.REQUEST_NEWER ||
-                        updateAction == ReaderPostServiceStarter.UpdateAction.REQUEST_REFRESH
+        try {
+            val serverPosts = ReaderPostList()
+            val cardsJson = jsonObject.optJSONArray(ReaderConstants.JSON_CARDS)
+            if (cardsJson != null) {
+                val seenPostIds = HashSet<Long>()
+                for (i in 0 until cardsJson.length()) {
+                    val cardJson = cardsJson.optJSONObject(i) ?: continue
+                    if (cardJson.optString(ReaderConstants.JSON_CARD_TYPE)
+                        != ReaderConstants.JSON_CARD_POST
                     ) {
-                        ReaderTagTable.setTagLastUpdated(tag)
+                        continue
                     }
-
-                    // Store the next_page_handle for this stream (empty means we're at the end).
-                    val nextPageHandle = parseDiscoverCardsJsonUseCase.parseNextPageHandle(jsonObject)
-                    setPageHandleForStream(tag, nextPageHandle.takeIf { it.isNotEmpty() })
-
-                    val updateResult = localSource.saveUpdatedPosts(serverPosts, updateAction, tag)
-                    resultListener.onUpdateResult(updateResult)
-                } catch (e: Exception) {
-                    AppLog.e(AppLog.T.READER, e)
-                    resultListener.onUpdateResult(ReaderActions.UpdateResult.FAILED)
+                    try {
+                        val post: ReaderPost = parseDiscoverCardsJsonUseCase.parsePostCard(cardJson)
+                        if (seenPostIds.add(post.postId)) {
+                            serverPosts.add(post)
+                        }
+                    } catch (e: Exception) {
+                        AppLog.w(AppLog.T.READER, "Failed to parse discover post card: ${e.message}")
+                    }
                 }
             }
-        }.start()
-    }
 
-    private fun getPageHandleForStream(tag: ReaderTag): String? = when {
-        tag.isLatest -> appPrefsWrapper.readerLatestStreamPageHandle
-        tag.isRecommended -> appPrefsWrapper.readerRecommendedStreamPageHandle
-        else -> null
-    }
+            // Remember when the tag was last updated for first-page requests, matching the
+            // behavior of the regular tag-based flow in requestPostsWithTag.
+            if (updateAction == ReaderPostServiceStarter.UpdateAction.REQUEST_NEWER ||
+                updateAction == ReaderPostServiceStarter.UpdateAction.REQUEST_REFRESH
+            ) {
+                ReaderTagTable.setTagLastUpdated(tag)
+            }
 
-    private fun setPageHandleForStream(tag: ReaderTag, pageHandle: String?) {
-        when {
-            tag.isLatest -> appPrefsWrapper.readerLatestStreamPageHandle = pageHandle
-            tag.isRecommended -> appPrefsWrapper.readerRecommendedStreamPageHandle = pageHandle
+            // Store the next_page_handle for this stream (empty means we're at the end).
+            val nextPageHandle = parseDiscoverCardsJsonUseCase.parseNextPageHandle(jsonObject)
+                .takeIf { it.isNotEmpty() }
+            if (tag.isLatest) {
+                appPrefsWrapper.readerLatestStreamPageHandle = nextPageHandle
+            } else if (tag.isRecommended) {
+                appPrefsWrapper.readerRecommendedStreamPageHandle = nextPageHandle
+            }
+
+            val updateResult = localSource.saveUpdatedPosts(serverPosts, updateAction, tag)
+            resultListener.onUpdateResult(updateResult)
+        } catch (e: Exception) {
+            AppLog.e(AppLog.T.READER, e)
+            resultListener.onUpdateResult(ReaderActions.UpdateResult.FAILED)
         }
     }
 
