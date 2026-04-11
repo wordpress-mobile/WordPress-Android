@@ -5,7 +5,6 @@ import com.wordpress.rest.RestRequest
 import dagger.Reusable
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
@@ -18,6 +17,7 @@ import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.models.ReaderPostList
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.ReaderTagType
+import org.wordpress.android.modules.APPLICATION_SCOPE
 import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.ui.bloggingprompts.BloggingPromptsPostTagProvider.Companion.BLOGGING_PROMPT_TAG
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
@@ -47,6 +47,7 @@ class ReaderPostRepository @Inject constructor(
     private val parseDiscoverCardsJsonUseCase: ParseDiscoverCardsJsonUseCase,
     private val appPrefsWrapper: AppPrefsWrapper,
     @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher,
+    @Named(APPLICATION_SCOPE) private val applicationScope: CoroutineScope,
 ) {
     /**
      * Fetches and returns the most recent posts for the passed tag, respecting the maxPosts limit.
@@ -77,7 +78,7 @@ class ReaderPostRepository @Inject constructor(
         // /read/streams/{slug} pipeline (matching iOS ReaderPostServiceRemote.fetchStreamCards).
         // Route them through a dedicated path that builds the cards-style request and parses
         // the cards response into ReaderPosts.
-        if (tag.isFreshlyPressed || tag.isRecommended || tag.isLatest) {
+        if (tag.tagType == ReaderTagType.DEFAULT && tag.tagSlug in DISCOVER_STREAM_TAG_SLUGS) {
             requestPostsForDiscoverStream(tag, updateAction, resultListener)
             return
         }
@@ -234,8 +235,7 @@ class ReaderPostRepository @Inject constructor(
         updateAction: ReaderPostServiceStarter.UpdateAction,
         resultListener: UpdateResultListener
     ) {
-        val scope = CoroutineScope(SupervisorJob() + ioDispatcher)
-        scope.launch {
+        applicationScope.launch(ioDispatcher) {
             val params = HashMap<String, String>()
 
             // Use the user's followed tags to seed the discover stream. If the user doesn't follow
@@ -250,7 +250,7 @@ class ReaderPostRepository @Inject constructor(
 
             // Latest sorts by date; Recommended and Freshly Pressed use the server's default
             // (editorial) order.
-            if (tag.isLatest) {
+            if (tag.tagSlug == ReaderTag.TAG_SLUG_LATEST) {
                 params["sort"] = "date"
             }
 
@@ -261,12 +261,12 @@ class ReaderPostRepository @Inject constructor(
             if (isFirstPage) {
                 // Clear the stored cursor so the next "load more" starts from the new first page,
                 // then bump the refresh counter so the server rotates the visible shard.
-                setDiscoverStreamPageHandle(tag, null)
+                appPrefsWrapper.setReaderDiscoverStreamPageHandle(tag.tagSlug, null)
                 params["refresh"] = appPrefsWrapper.getReaderCardsRefreshCounter().toString()
                 appPrefsWrapper.incrementReaderCardsRefreshCounter()
             } else {
                 // REQUEST_OLDER: resume pagination with the previously-stored cursor.
-                val pageHandle = getDiscoverStreamPageHandle(tag)
+                val pageHandle = appPrefsWrapper.getReaderDiscoverStreamPageHandle(tag.tagSlug)
                 if (pageHandle.isNullOrEmpty()) {
                     // Nothing more to load — nothing changed locally either.
                     resultListener.onUpdateResult(ReaderActions.UpdateResult.UNCHANGED)
@@ -278,7 +278,7 @@ class ReaderPostRepository @Inject constructor(
             params["_locale"] = perAppLocaleManager.getCurrentLocaleLanguageCode()
 
             val listener = RestRequest.Listener { jsonObject: JSONObject? ->
-                scope.launch {
+                applicationScope.launch(ioDispatcher) {
                     handleDiscoverStreamResponse(tag, jsonObject, updateAction, resultListener)
                 }
             }
@@ -296,21 +296,6 @@ class ReaderPostRepository @Inject constructor(
                 listener,
                 errorListener
             )
-        }
-    }
-
-    private fun getDiscoverStreamPageHandle(tag: ReaderTag): String? = when {
-        tag.isFreshlyPressed -> appPrefsWrapper.readerFreshlyPressedStreamPageHandle
-        tag.isLatest -> appPrefsWrapper.readerLatestStreamPageHandle
-        tag.isRecommended -> appPrefsWrapper.readerRecommendedStreamPageHandle
-        else -> null
-    }
-
-    private fun setDiscoverStreamPageHandle(tag: ReaderTag, pageHandle: String?) {
-        when {
-            tag.isFreshlyPressed -> appPrefsWrapper.readerFreshlyPressedStreamPageHandle = pageHandle
-            tag.isLatest -> appPrefsWrapper.readerLatestStreamPageHandle = pageHandle
-            tag.isRecommended -> appPrefsWrapper.readerRecommendedStreamPageHandle = pageHandle
         }
     }
 
@@ -366,7 +351,7 @@ class ReaderPostRepository @Inject constructor(
             // Store the next_page_handle for this stream (empty means we're at the end).
             val nextPageHandle = parseDiscoverCardsJsonUseCase.parseNextPageHandle(jsonObject)
                 .takeIf { it.isNotEmpty() }
-            setDiscoverStreamPageHandle(tag, nextPageHandle)
+            appPrefsWrapper.setReaderDiscoverStreamPageHandle(tag.tagSlug, nextPageHandle)
 
             val updateResult = localSource.saveUpdatedPosts(serverPosts, updateAction, tag)
             resultListener.onUpdateResult(updateResult)
@@ -424,6 +409,12 @@ class ReaderPostRepository @Inject constructor(
     }
 
     companion object {
+        private val DISCOVER_STREAM_TAG_SLUGS = setOf(
+            ReaderTag.TAG_SLUG_FRESHLY_PRESSED,
+            ReaderTag.TAG_SLUG_RECOMMENDED,
+            ReaderTag.TAG_SLUG_LATEST,
+        )
+
         private fun formatRelativeEndpointForTag(tagSlug: String): String {
             return String.format(Locale.US, "read/tags/%s/posts", ReaderUtils.sanitizeWithDashes(tagSlug))
         }

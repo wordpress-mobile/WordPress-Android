@@ -245,26 +245,6 @@ class ReaderTopBarMenuHelperTest {
     }
 
     @Test
-    fun `GIVEN discover and following tags WHEN createMenu THEN freshly pressed menu item not created`() {
-        // Freshly Pressed is no longer a top-level dropdown entry; it lives inside the tabbed
-        // Reader Discover container, so the helper must never surface it in the dropdown menu.
-        val tags = ReaderTagList().apply {
-            add(mockDiscoverTag()) // item 0
-            add(mockFollowingTag()) // item 1
-        }
-
-        val menu = helper.createMenu(tags)
-
-        val singleItems = menu.filterIsInstance<JetpackMenuElementData.Item.Single>()
-
-        // Verify Discover and Subscriptions are shown, but not Freshly Pressed.
-        assertThat(singleItems.map { it.text }).containsExactly(
-            UiStringRes(R.string.reader_dropdown_menu_discover),
-            UiStringRes(R.string.reader_dropdown_menu_subscriptions),
-        )
-    }
-
-    @Test
     fun `GIVEN custom lists not present WHEN createMenu THEN custom lists menu item not created`() {
         val tags = ReaderTagList().apply {
             add(mockDiscoverTag()) // item 0

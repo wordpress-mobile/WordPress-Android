@@ -10,7 +10,7 @@ class ReaderTagTest {
             ReaderTag.TAG_SLUG_FRESHLY_PRESSED,
             ReaderTag.TAG_TITLE_FRESHLY_PRESSED,
             ReaderTag.TAG_TITLE_FRESHLY_PRESSED,
-            ReaderTag.FRESHLY_PRESSED_STREAMS_PATH,
+            "read/streams/freshly-pressed",
             ReaderTagType.DEFAULT
         )
 
@@ -36,7 +36,7 @@ class ReaderTagTest {
             ReaderTag.TAG_SLUG_FRESHLY_PRESSED,
             ReaderTag.TAG_TITLE_FRESHLY_PRESSED,
             ReaderTag.TAG_TITLE_FRESHLY_PRESSED,
-            ReaderTag.FRESHLY_PRESSED_STREAMS_PATH,
+            "read/streams/freshly-pressed",
             ReaderTagType.FOLLOWED
         )
 
@@ -75,7 +75,7 @@ class ReaderTagTest {
             ReaderTag.TAG_SLUG_FRESHLY_PRESSED,
             ReaderTag.TAG_TITLE_FRESHLY_PRESSED,
             ReaderTag.TAG_TITLE_FRESHLY_PRESSED,
-            ReaderTag.FRESHLY_PRESSED_STREAMS_PATH,
+            "read/streams/freshly-pressed",
             ReaderTagType.DEFAULT
         )
 

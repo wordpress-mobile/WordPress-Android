@@ -16,12 +16,6 @@ public class ReaderTag implements Serializable, FilterCriteria {
     public static final String LIKED_PATH = "/read/liked";
     public static final String DISCOVER_PATH = String.format(Locale.US, "read/sites/%d/posts",
             ReaderConstants.DISCOVER_SITE_ID);
-    // Freshly Pressed / Recommended / Latest all use the REST v2 /read/streams/{slug} pipeline,
-    // matching iOS ReaderPostServiceRemote.fetchStreamCards. They are distinguished at request
-    // time by the tag slug: Latest adds sort=date; Recommended and Freshly Pressed use the
-    // server's default (editorial) order.
-    public static final String FRESHLY_PRESSED_STREAMS_PATH = "read/streams/freshly-pressed";
-    public static final String DISCOVER_STREAMS_PATH = "read/streams/discover";
 
     public static final String TAG_TITLE_FOLLOWED_SITES = "Followed Sites";
     public static final String TAG_TITLE_FRESHLY_PRESSED = "Freshly Pressed";
@@ -190,14 +184,6 @@ public class ReaderTag implements Serializable, FilterCriteria {
 
     public boolean isFreshlyPressed() {
         return tagType == ReaderTagType.DEFAULT && TAG_SLUG_FRESHLY_PRESSED.equals(getTagSlug());
-    }
-
-    public boolean isRecommended() {
-        return tagType == ReaderTagType.DEFAULT && TAG_SLUG_RECOMMENDED.equals(getTagSlug());
-    }
-
-    public boolean isLatest() {
-        return tagType == ReaderTagType.DEFAULT && TAG_SLUG_LATEST.equals(getTagSlug());
     }
 
     public boolean isDefaultInMemoryTag() {

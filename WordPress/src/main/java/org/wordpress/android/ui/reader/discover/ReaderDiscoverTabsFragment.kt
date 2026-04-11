@@ -35,11 +35,32 @@ class ReaderDiscoverTabsFragment : ViewPagerFragment(R.layout.reader_discover_ta
 
     private var binding: ReaderDiscoverTabsFragmentBinding? = null
 
-    private val tabs: List<ReaderTag> by lazy {
+    private val tabs: List<DiscoverSubTab> by lazy {
         listOf(
-            createFreshlyPressedTag(),
-            createRecommendedTag(),
-            createLatestTag(),
+            DiscoverSubTab(
+                tag = createDiscoverTag(
+                    ReaderTag.TAG_SLUG_FRESHLY_PRESSED,
+                    ReaderTag.TAG_TITLE_FRESHLY_PRESSED,
+                    FRESHLY_PRESSED_STREAMS_PATH,
+                ),
+                titleRes = R.string.reader_discover_tab_freshly_pressed,
+            ),
+            DiscoverSubTab(
+                tag = createDiscoverTag(
+                    ReaderTag.TAG_SLUG_RECOMMENDED,
+                    ReaderTag.TAG_TITLE_RECOMMENDED,
+                    DISCOVER_STREAMS_PATH,
+                ),
+                titleRes = R.string.reader_discover_tab_recommended,
+            ),
+            DiscoverSubTab(
+                tag = createDiscoverTag(
+                    ReaderTag.TAG_SLUG_LATEST,
+                    ReaderTag.TAG_TITLE_LATEST,
+                    DISCOVER_STREAMS_PATH,
+                ),
+                titleRes = R.string.reader_discover_tab_latest,
+            ),
         )
     }
 
@@ -47,10 +68,10 @@ class ReaderDiscoverTabsFragment : ViewPagerFragment(R.layout.reader_discover_ta
         super.onViewCreated(view, savedInstanceState)
         val binding = ReaderDiscoverTabsFragmentBinding.bind(view).also { this.binding = it }
 
-        binding.viewPager.adapter = DiscoverTabsAdapter(this, tabs)
+        binding.viewPager.adapter = DiscoverTabsAdapter(this, tabs.map { it.tag })
 
         TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
-            tab.text = getString(tabTitleResFor(position))
+            tab.text = getString(tabs[position].titleRes)
         }.attach()
 
         // Restore last selected sub-tab (defaults to 0 == Freshly Pressed on first open).
@@ -97,22 +118,15 @@ class ReaderDiscoverTabsFragment : ViewPagerFragment(R.layout.reader_discover_ta
         (childFragmentManager.findFragmentByTag(tag) as? OnScrollToTopListener)?.onScrollToTop()
     }
 
-    private fun tabTitleResFor(position: Int): Int = when (position) {
-        INDEX_FRESHLY_PRESSED -> R.string.reader_discover_tab_freshly_pressed
-        INDEX_RECOMMENDED -> R.string.reader_discover_tab_recommended
-        INDEX_LATEST -> R.string.reader_discover_tab_latest
-        else -> error("Unknown Discover sub-tab position: $position")
-    }
-
     private class DiscoverTabsAdapter(
         fragment: Fragment,
-        private val tabs: List<ReaderTag>,
+        private val tags: List<ReaderTag>,
     ) : FragmentStateAdapter(fragment) {
-        override fun getItemCount(): Int = tabs.size
+        override fun getItemCount(): Int = tags.size
 
         override fun createFragment(position: Int): Fragment {
             return ReaderPostListFragment.newInstanceForTag(
-                tabs[position],
+                tags[position],
                 ReaderTypes.ReaderPostListType.TAG_FOLLOWED,
                 /* isTopLevel = */ true,
                 /* isFilterable = */ false,
@@ -120,33 +134,17 @@ class ReaderDiscoverTabsFragment : ViewPagerFragment(R.layout.reader_discover_ta
         }
     }
 
+    private data class DiscoverSubTab(val tag: ReaderTag, val titleRes: Int)
+
     companion object {
-        private const val INDEX_FRESHLY_PRESSED = 0
-        private const val INDEX_RECOMMENDED = 1
-        private const val INDEX_LATEST = 2
+        // Freshly Pressed / Recommended / Latest all use the REST v2 /read/streams/{slug}
+        // pipeline, matching iOS ReaderPostServiceRemote.fetchStreamCards. They are
+        // distinguished at request time by the tag slug: Latest adds sort=date; Recommended
+        // and Freshly Pressed use the server's default (editorial) order.
+        const val FRESHLY_PRESSED_STREAMS_PATH = "read/streams/freshly-pressed"
+        const val DISCOVER_STREAMS_PATH = "read/streams/discover"
 
-        private fun createFreshlyPressedTag(): ReaderTag = ReaderTag(
-            ReaderTag.TAG_SLUG_FRESHLY_PRESSED,
-            ReaderTag.TAG_TITLE_FRESHLY_PRESSED,
-            ReaderTag.TAG_TITLE_FRESHLY_PRESSED,
-            ReaderTag.FRESHLY_PRESSED_STREAMS_PATH,
-            ReaderTagType.DEFAULT,
-        )
-
-        private fun createRecommendedTag(): ReaderTag = ReaderTag(
-            ReaderTag.TAG_SLUG_RECOMMENDED,
-            ReaderTag.TAG_TITLE_RECOMMENDED,
-            ReaderTag.TAG_TITLE_RECOMMENDED,
-            ReaderTag.DISCOVER_STREAMS_PATH,
-            ReaderTagType.DEFAULT,
-        )
-
-        private fun createLatestTag(): ReaderTag = ReaderTag(
-            ReaderTag.TAG_SLUG_LATEST,
-            ReaderTag.TAG_TITLE_LATEST,
-            ReaderTag.TAG_TITLE_LATEST,
-            ReaderTag.DISCOVER_STREAMS_PATH,
-            ReaderTagType.DEFAULT,
-        )
+        private fun createDiscoverTag(slug: String, title: String, endpoint: String): ReaderTag =
+            ReaderTag(slug, title, title, endpoint, ReaderTagType.DEFAULT)
     }
 }
