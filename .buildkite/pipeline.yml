@@ -97,6 +97,8 @@ steps:
       - label: "🕵️ Lint Libraries"
         command: ".buildkite/commands/lint.sh library"
         plugins: [$CI_TOOLKIT]
+        artifact_paths:
+          - "**/build/reports/lint-results*.*"
 
   #################
   # Diff Reports
