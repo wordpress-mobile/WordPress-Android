@@ -74,10 +74,8 @@ class ReaderPostRepository @Inject constructor(
         updateAction: ReaderPostServiceStarter.UpdateAction,
         resultListener: UpdateResultListener
     ) {
-        // The Discover "Freshly Pressed", "Recommended", and "Latest" sub-tabs all use the v2
-        // /read/streams/{slug} pipeline (matching iOS ReaderPostServiceRemote.fetchStreamCards).
-        // Route them through a dedicated path that builds the cards-style request and parses
-        // the cards response into ReaderPosts.
+        // The Discover "Recommended" and "Latest" sub-tabs use the v2 cards-style pipeline.
+        // Freshly Pressed uses the v1.2 /freshly-pressed endpoint (handled below).
         if (tag.tagType == ReaderTagType.DEFAULT && tag.tagSlug in DISCOVER_STREAM_TAG_SLUGS) {
             requestPostsForDiscoverStream(tag, updateAction, resultListener)
             return
@@ -248,8 +246,7 @@ class ReaderPostRepository @Inject constructor(
                 userTags.joinToString(",") { it.tagSlug }
             }
 
-            // Latest sorts by date; Recommended and Freshly Pressed use the server's default
-            // (editorial) order.
+            // Latest sorts by date; Recommended uses the server's default order.
             if (tag.tagSlug == ReaderTag.TAG_SLUG_LATEST) {
                 params["sort"] = "date"
             }
@@ -410,7 +407,6 @@ class ReaderPostRepository @Inject constructor(
 
     companion object {
         private val DISCOVER_STREAM_TAG_SLUGS = setOf(
-            ReaderTag.TAG_SLUG_FRESHLY_PRESSED,
             ReaderTag.TAG_SLUG_RECOMMENDED,
             ReaderTag.TAG_SLUG_LATEST,
         )

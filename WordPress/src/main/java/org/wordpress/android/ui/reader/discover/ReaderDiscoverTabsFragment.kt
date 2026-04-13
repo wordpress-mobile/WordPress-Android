@@ -41,7 +41,7 @@ class ReaderDiscoverTabsFragment : ViewPagerFragment(R.layout.reader_discover_ta
                 tag = createDiscoverTag(
                     ReaderTag.TAG_SLUG_FRESHLY_PRESSED,
                     ReaderTag.TAG_TITLE_FRESHLY_PRESSED,
-                    FRESHLY_PRESSED_STREAMS_PATH,
+                    FRESHLY_PRESSED_PATH,
                 ),
                 titleRes = R.string.reader_discover_tab_freshly_pressed,
             ),
@@ -137,8 +137,8 @@ class ReaderDiscoverTabsFragment : ViewPagerFragment(R.layout.reader_discover_ta
     private data class DiscoverSubTab(val tag: ReaderTag, val titleRes: Int)
 
     companion object {
-        // REST v2 /read/streams/{slug} endpoints used by the Discover sub-tabs.
-        const val FRESHLY_PRESSED_STREAMS_PATH = "read/streams/freshly-pressed"
+        // Freshly Pressed uses the v1.2 /freshly-pressed endpoint (matching web and iOS).
+        const val FRESHLY_PRESSED_PATH = "freshly-pressed"
         const val DISCOVER_STREAMS_PATH = "read/streams/discover"
 
         private fun createDiscoverTag(slug: String, title: String, endpoint: String): ReaderTag =
