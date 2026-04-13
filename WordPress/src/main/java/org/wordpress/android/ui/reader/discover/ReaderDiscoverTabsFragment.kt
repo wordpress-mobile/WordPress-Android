@@ -137,10 +137,7 @@ class ReaderDiscoverTabsFragment : ViewPagerFragment(R.layout.reader_discover_ta
     private data class DiscoverSubTab(val tag: ReaderTag, val titleRes: Int)
 
     companion object {
-        // Freshly Pressed / Recommended / Latest all use the REST v2 /read/streams/{slug}
-        // pipeline, matching iOS ReaderPostServiceRemote.fetchStreamCards. They are
-        // distinguished at request time by the tag slug: Latest adds sort=date; Recommended
-        // and Freshly Pressed use the server's default (editorial) order.
+        // REST v2 /read/streams/{slug} endpoints used by the Discover sub-tabs.
         const val FRESHLY_PRESSED_STREAMS_PATH = "read/streams/freshly-pressed"
         const val DISCOVER_STREAMS_PATH = "read/streams/discover"
 
