@@ -6,8 +6,11 @@ fi
 
 "$(dirname "${BASH_SOURCE[0]}")/restore-cache.sh"
 
-# Use Debug for PR builds (faster), Release for trunk builds (catches release-only issues).
-if [ "${BUILDKITE_PULL_REQUEST:-false}" != "false" ]; then
+# Use Debug for PR builds (faster), Release for trunk and release-branch builds.
+# PRs targeting a release branch use Release to catch release-only issues before merge.
+if [[ "${BUILDKITE_PULL_REQUEST:-false}" != "false" && "${BUILDKITE_PULL_REQUEST_BASE_BRANCH:-}" =~ ^release/ ]]; then
+  BUILD_VARIANT="Release"
+elif [ "${BUILDKITE_PULL_REQUEST:-false}" != "false" ]; then
   BUILD_VARIANT="Debug"
 else
   BUILD_VARIANT="Release"
@@ -32,8 +35,8 @@ fi
 
 if [ "$1" = "library" ]; then
   ./gradlew \
-    :libs:editor:lintDebug \
-    :libs:image-editor:lintDebug
+    :libs:editor:lint"${BUILD_VARIANT}" \
+    :libs:image-editor:lint"${BUILD_VARIANT}"
   exit 0
 fi
 
