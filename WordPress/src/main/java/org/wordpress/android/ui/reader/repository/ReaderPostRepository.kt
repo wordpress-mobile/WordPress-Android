@@ -375,10 +375,6 @@ class ReaderPostRepository @Inject constructor(
             }
     }
 
-    private fun formatRelativeEndpointForTag(tagSlug: String): String {
-        return String.format(Locale.US, "read/tags/%s/posts", ReaderUtils.sanitizeWithDashes(tagSlug))
-    }
-
     /**
      * returns the passed endpoint without the unnecessary path - this is
      * needed because as of 20-Feb-2015 the /read/menu/ call returns the

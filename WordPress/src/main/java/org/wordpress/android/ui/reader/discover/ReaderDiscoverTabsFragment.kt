@@ -12,7 +12,6 @@ import org.wordpress.android.databinding.ReaderDiscoverTabsFragmentBinding
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.ReaderTagType
 import org.wordpress.android.ui.ScrollableViewInitializedListener
-import org.wordpress.android.ui.ViewPagerFragment
 import org.wordpress.android.ui.main.WPMainActivity.OnScrollToTopListener
 import org.wordpress.android.ui.reader.ReaderPostListFragment
 import org.wordpress.android.ui.reader.ReaderTypes
@@ -28,7 +27,7 @@ import javax.inject.Inject
  * sub-tab from [AppPrefsWrapper] on subsequent opens.
  */
 @AndroidEntryPoint
-class ReaderDiscoverTabsFragment : ViewPagerFragment(R.layout.reader_discover_tabs_fragment),
+class ReaderDiscoverTabsFragment : Fragment(R.layout.reader_discover_tabs_fragment),
     OnScrollToTopListener, ScrollableViewInitializedListener {
     @Inject
     lateinit var appPrefsWrapper: AppPrefsWrapper
@@ -90,13 +89,6 @@ class ReaderDiscoverTabsFragment : ViewPagerFragment(R.layout.reader_discover_ta
         super.onDestroyView()
         binding = null
     }
-
-    /**
-     * The active inner [ReaderPostListFragment] notifies the parent chain of its
-     * scrollable view id during its own [onResume]; we return null here so we
-     * don't interfere with that.
-     */
-    override fun getScrollableViewForUniqueIdProvision(): View? = null
 
     /**
      * Forwards the scrollable view id notification from the active inner
