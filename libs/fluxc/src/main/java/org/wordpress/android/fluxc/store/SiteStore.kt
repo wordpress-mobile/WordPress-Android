@@ -185,6 +185,7 @@ open class SiteStore @Inject constructor(
         val url: String,
         val username: String? = null,
         val password: String? = null,
+        val isApplicationPassword: Boolean = false,
     ) : Payload<BaseNetworkError>()
 
     data class FetchSitesPayload @JvmOverloads constructor(
@@ -1550,6 +1551,7 @@ open class SiteStore @Inject constructor(
                         url = payload.url,
                         username = payload.username,
                         password = payload.password,
+                        isApplicationPassword = true,
                     )
                 )
                 if (!siteModel.isError) {
