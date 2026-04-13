@@ -102,6 +102,8 @@ class SiteWPAPIRestClient @Inject constructor(
                 url = site.url,
                 username = site.getUserNameProcessed(),
                 password = site.getPasswordProcessed(),
+                isApplicationPassword =
+                    site.hasApplicationPassword(),
             )
         )
     }
