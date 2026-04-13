@@ -50,7 +50,7 @@ class CommentsStoreWPAPITest {
     }
 
     @Test
-    fun `fetchComments returns INVALID_INPUT for WPAPI site`() =
+    fun `fetchComments returns GENERIC_ERROR for WPAPI site`() =
         test {
             val result = commentsStore.fetchComments(
                     site = site,
@@ -67,7 +67,7 @@ class CommentsStoreWPAPITest {
         }
 
     @Test
-    fun `fetchCommentsPage returns INVALID_INPUT for WPAPI site`() =
+    fun `fetchCommentsPage returns GENERIC_ERROR for WPAPI site`() =
         test {
             val result = commentsStore.fetchCommentsPage(
                     site = site,
@@ -85,7 +85,7 @@ class CommentsStoreWPAPITest {
         }
 
     @Test
-    fun `pushComment returns INVALID_INPUT for WPAPI site`() =
+    fun `pushComment returns GENERIC_ERROR for WPAPI site`() =
         test {
             val result = commentsStore.pushComment(
                     site = site,
@@ -100,7 +100,7 @@ class CommentsStoreWPAPITest {
         }
 
     @Test
-    fun `fetchComment returns INVALID_INPUT for WPAPI site`() =
+    fun `fetchComment returns GENERIC_ERROR for WPAPI site`() =
         test {
             val result = commentsStore.fetchComment(
                     site = site,
@@ -116,7 +116,7 @@ class CommentsStoreWPAPITest {
         }
 
     @Test
-    fun `createNewComment returns INVALID_INPUT for WPAPI site`() =
+    fun `createNewComment returns GENERIC_ERROR for WPAPI site`() =
         test {
             val result = commentsStore.createNewComment(
                     site = site,
@@ -131,7 +131,7 @@ class CommentsStoreWPAPITest {
         }
 
     @Test
-    fun `createNewReply returns INVALID_INPUT for WPAPI site`() =
+    fun `createNewReply returns GENERIC_ERROR for WPAPI site`() =
         test {
             val result = commentsStore.createNewReply(
                     site = site,
@@ -147,7 +147,7 @@ class CommentsStoreWPAPITest {
         }
 
     @Test
-    fun `updateEditComment returns INVALID_INPUT for WPAPI site`() =
+    fun `updateEditComment returns GENERIC_ERROR for WPAPI site`() =
         test {
             val result = commentsStore.updateEditComment(
                     site = site,
@@ -162,7 +162,7 @@ class CommentsStoreWPAPITest {
         }
 
     @Test
-    fun `deleteComment returns INVALID_INPUT for WPAPI site`() =
+    fun `deleteComment returns GENERIC_ERROR for WPAPI site`() =
         test {
             val result = commentsStore.deleteComment(
                     site = site,

@@ -38,8 +38,16 @@ class SingleActionCardViewHolder(
                 .getDimensionPixelSize(
                     org.wordpress.android.R.dimen.margin_extra_large
                 )
+        } else {
+            textParams.bottomToBottom =
+                ConstraintLayout.LayoutParams.UNSET
+            textParams.bottomMargin = 0
         }
         singleActionCardText.layoutParams = textParams
+        val marginExtraLarge = context.resources
+            .getDimensionPixelSize(
+                org.wordpress.android.R.dimen.margin_extra_large
+            )
         val params = singleActionCardImage.layoutParams
             as ConstraintLayout.LayoutParams
         if (singleActionCard.centerImageVertically) {
@@ -48,8 +56,11 @@ class SingleActionCardViewHolder(
             params.topMargin = 0
             params.bottomMargin = 0
         } else {
+            params.topToTop = ConstraintLayout.LayoutParams.UNSET
             params.bottomToBottom =
                 ConstraintLayout.LayoutParams.UNSET
+            params.topMargin = marginExtraLarge
+            params.bottomMargin = marginExtraLarge
         }
         singleActionCardImage.layoutParams = params
     }
