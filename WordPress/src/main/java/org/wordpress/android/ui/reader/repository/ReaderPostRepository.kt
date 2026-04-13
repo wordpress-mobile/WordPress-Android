@@ -8,6 +8,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
+import org.json.JSONException
 import org.json.JSONObject
 import org.wordpress.android.WordPress
 import org.wordpress.android.WordPress.Companion.getRestClientUtilsV1_2
@@ -315,27 +316,7 @@ class ReaderPostRepository @Inject constructor(
             return
         }
         try {
-            val serverPosts = ReaderPostList()
-            val cardsJson = jsonObject.optJSONArray(ReaderConstants.JSON_CARDS)
-            if (cardsJson != null) {
-                val seenPostIds = HashSet<Long>()
-                for (i in 0 until cardsJson.length()) {
-                    val cardJson = cardsJson.optJSONObject(i) ?: continue
-                    if (cardJson.optString(ReaderConstants.JSON_CARD_TYPE)
-                        != ReaderConstants.JSON_CARD_POST
-                    ) {
-                        continue
-                    }
-                    try {
-                        val post: ReaderPost = parseDiscoverCardsJsonUseCase.parsePostCard(cardJson)
-                        if (seenPostIds.add(post.postId)) {
-                            serverPosts.add(post)
-                        }
-                    } catch (e: Exception) {
-                        AppLog.w(AppLog.T.READER, "Failed to parse discover post card: ${e.message}")
-                    }
-                }
-            }
+            val serverPosts = parsePostCards(jsonObject)
 
             // Remember when the tag was last updated for first-page requests, matching the
             // behavior of the regular tag-based flow in requestPostsWithTag.
@@ -352,9 +333,38 @@ class ReaderPostRepository @Inject constructor(
 
             val updateResult = localSource.saveUpdatedPosts(serverPosts, updateAction, tag)
             resultListener.onUpdateResult(updateResult)
-        } catch (e: Exception) {
+        } catch (e: JSONException) {
             AppLog.e(AppLog.T.READER, e)
             resultListener.onUpdateResult(ReaderActions.UpdateResult.FAILED)
+        }
+    }
+
+    private fun parsePostCards(jsonObject: JSONObject): ReaderPostList {
+        val posts = ReaderPostList()
+        val cardsJson = jsonObject.optJSONArray(ReaderConstants.JSON_CARDS)
+            ?: return posts
+        val seenPostIds = HashSet<Long>()
+        for (i in 0 until cardsJson.length()) {
+            val post = parsePostCard(cardsJson.optJSONObject(i)) ?: continue
+            if (seenPostIds.add(post.postId)) {
+                posts.add(post)
+            }
+        }
+        return posts
+    }
+
+    private fun parsePostCard(cardJson: JSONObject?): ReaderPost? {
+        if (cardJson == null ||
+            cardJson.optString(ReaderConstants.JSON_CARD_TYPE) != ReaderConstants.JSON_CARD_POST
+        ) return null
+        return try {
+            parseDiscoverCardsJsonUseCase.parsePostCard(cardJson)
+        } catch (e: JSONException) {
+            AppLog.w(
+                AppLog.T.READER,
+                "Failed to parse discover post card: ${e.message}"
+            )
+            null
         }
     }
 
