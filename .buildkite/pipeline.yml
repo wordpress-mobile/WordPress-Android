@@ -75,31 +75,27 @@ steps:
         plugins: [$CI_TOOLKIT]
         artifact_paths:
           - "**/build/reports/lint-results*.*"
+        notify:
+          - slack:
+              channels:
+                - "#wpmobile-team"
+              message: "⚠️ Lint WordPress failed on trunk."
+            if: build.pull_request.id == null && step.outcome != "passed"
 
       - label: "🕵️ Lint Jetpack"
         command: ".buildkite/commands/lint.sh jetpack"
         plugins: [$CI_TOOLKIT]
         artifact_paths:
           - "**/build/reports/lint-results*.*"
+        notify:
+          - slack:
+              channels:
+                - "#wpmobile-team"
+              message: "⚠️ Lint Jetpack failed on trunk."
+            if: build.pull_request.id == null && step.outcome != "passed"
 
-      - label: "🕵️ Lint libs:editor"
-        command: |
-          if .buildkite/commands/should-skip-job.sh --job-type lint; then
-            exit 0
-          fi
-
-          .buildkite/commands/restore-cache.sh
-          ./gradlew :libs:editor:lint
-        plugins: [$CI_TOOLKIT]
-
-      - label: "🕵️ Lint libs:image-editor"
-        command: |
-          if .buildkite/commands/should-skip-job.sh --job-type lint; then
-            exit 0
-          fi
-
-          .buildkite/commands/restore-cache.sh
-          ./gradlew :libs:image-editor:lint
+      - label: "🕵️ Lint Libraries"
+        command: ".buildkite/commands/lint.sh library"
         plugins: [$CI_TOOLKIT]
 
   #################

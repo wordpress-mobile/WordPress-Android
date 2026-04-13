@@ -6,21 +6,35 @@ fi
 
 "$(dirname "${BASH_SOURCE[0]}")/restore-cache.sh"
 
-echo "--- :microscope: Linting"
+# Use Debug for PR builds (faster), Release for trunk builds (catches release-only issues).
+if [ "${BUILDKITE_PULL_REQUEST:-false}" != "false" ]; then
+  BUILD_VARIANT="Debug"
+else
+  BUILD_VARIANT="Release"
+fi
+
+echo "--- :microscope: Linting (${BUILD_VARIANT})"
 
 if [ "$1" = "wordpress" ]; then
-  ./gradlew lintWordpressDebug
+  ./gradlew lintWordpress"${BUILD_VARIANT}"
   exit 0
 fi
 
 if [ "$1" = "jetpack" ]; then
   set +e
-  ./gradlew lintJetpackDebug
+  ./gradlew lintJetpack"${BUILD_VARIANT}"
   lint_exit_code=$?
   set -e
 
-  upload_sarif_to_github "WordPress/build/reports/lint-results-jetpackDebug.sarif"
+  upload_sarif_to_github "WordPress/build/reports/lint-results-jetpack${BUILD_VARIANT}.sarif"
   exit $lint_exit_code
+fi
+
+if [ "$1" = "library" ]; then
+  ./gradlew \
+    :libs:editor:lintDebug \
+    :libs:image-editor:lintDebug
+  exit 0
 fi
 
 echo "No target provided – unable to lint"
