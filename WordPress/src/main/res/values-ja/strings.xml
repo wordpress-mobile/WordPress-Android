@@ -269,11 +269,6 @@ Language: ja_JP
     <string name="reader_tags_feed_error_title">%s の投稿が見つかりませんでした</string>
     <string name="reader_tags_feed_see_more_from_tag">%s の続き</string>
     <string name="reader_tags_display_name">タグ</string>
-    <string name="reader_announcement_card_reading_preferences_description">お好みの色とフォントを選択してください。 投稿を読んでいるときに、画面上部の AA アイコンをタップします。</string>
-    <string name="reader_announcement_card_reading_preferences_title">閲覧の設定</string>
-    <string name="reader_announcement_card_tags_stream_description">上部のドロップダウンをタップし、「タグ」を選択して、フォロー中のタグからストリームにアクセスします。</string>
-    <string name="reader_announcement_card_tags_stream_title">タグのストリーム</string>
-    <string name="reader_announcement_card_title">Reader の新規</string>
     <string name="reader_dropdown_menu_tags">あなたのタグ</string>
     <string name="no_connection_error_description">ネットワーク接続を確認して、もう一度お試しください。</string>
     <string name="no_connection_error_title">現在このコンテンツを読み込めません</string>
@@ -613,11 +608,7 @@ Language: ja_JP
     <string name="new_site_creation_preview_caption_paid">カスタムドメインが使用可能になるまでに最長30分かかる場合があります。</string>
     <string name="new_site_creation_preview_subtitle_paid">領収書をメールで送信しました。 %s</string>
     <string name="notifications_disabled_permission_dialog">アプリ通知が無効化されています。 ここをタップして有効化します。</string>
-    <string name="jp_migration_delete_message">データの競合を避けるため、お使いの端末から &lt;b&gt;WordPress アプリをアンインストール&lt;/b&gt;することをおすすめします。</string>
-    <string name="jp_migration_delete_subtitle">WordPress アプリがまだインストールされているようです。</string>
-    <string name="jp_migration_delete_title">お使いの端末に WordPress アプリは不要になりました</string>
     <string name="jp_migration_done_delete_wp_message">データの競合を避けるため、お使いの端末から &lt;b&gt;WordPress アプリをアンインストール&lt;/b&gt;することをおすすめします。</string>
-    <string name="jp_migration_success_card_message">Jetpack アプリへようこそ。WordPress アプリはアンインストールできます。</string>
     <string name="dashboard_pages_card_create_another_page_description">カスタムメイドのスマートフォンに対応したレイアウトから始める</string>
     <string name="dashboard_pages_card_create_another_page_button">別のページを作成</string>
     <string name="dashboard_pages_card_no_pages_create_page_button">サイトにページを追加</string>
@@ -794,8 +785,6 @@ Language: ja_JP
     <string name="preference_open_links_in_jetpack_setting_change_disable_error">「Jetpack でリンクを開く」を無効にできません</string>
     <string name="preference_open_links_in_jetpack_setting_change_enable_error">「Jetpack でリンクを開く」を有効にできません</string>
     <string name="preference_open_links_in_jetpack">Jetpack でリンクを開く</string>
-    <string name="jp_migration_need_help_button">ヘルプが必要ですか ?</string>
-    <string name="jp_migration_got_it_button">OK</string>
     <string name="jp_migration_network_error_message">ネットワークに接続しないと、データと設定を転送できません。</string>
     <string name="jp_migration_network_error_subtitle">ネットワーク接続が有効であることを確認し、もう一度お試しください。</string>
     <string name="jp_migration_network_error_title">インターネットに接続できません。</string>

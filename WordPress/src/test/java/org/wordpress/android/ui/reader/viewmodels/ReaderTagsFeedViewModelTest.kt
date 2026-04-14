@@ -14,9 +14,7 @@ import org.junit.Test
 import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.kotlin.any
-import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.doSuspendableAnswer
-import org.mockito.kotlin.mock
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.verifyNoInteractions
@@ -40,11 +38,11 @@ import org.wordpress.android.ui.reader.exceptions.ReaderPostFetchException
 import org.wordpress.android.ui.reader.repository.ReaderPostRepository
 import org.wordpress.android.ui.reader.repository.usecases.PostLikeUseCase
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
-import org.wordpress.android.ui.reader.utils.ReaderAnnouncementHelper
+
 import org.wordpress.android.ui.reader.viewmodels.tagsfeed.ReaderTagsFeedUiStateMapper
 import org.wordpress.android.ui.reader.viewmodels.tagsfeed.ReaderTagsFeedViewModel
 import org.wordpress.android.ui.reader.viewmodels.tagsfeed.ReaderTagsFeedViewModel.ActionEvent
-import org.wordpress.android.ui.reader.views.compose.ReaderAnnouncementCardItemData
+
 import org.wordpress.android.ui.reader.views.compose.tagsfeed.TagsFeedPostItem
 import org.wordpress.android.util.DisplayUtilsWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
@@ -90,9 +88,6 @@ class ReaderTagsFeedViewModelTest : BaseUnitTest() {
     @Mock
     lateinit var networkUtilsWrapper: NetworkUtilsWrapper
 
-    @Mock
-    lateinit var readerAnnouncementHelper: ReaderAnnouncementHelper
-
     private lateinit var viewModel: ReaderTagsFeedViewModel
 
     private val collectedUiStates: MutableList<ReaderTagsFeedViewModel.UiState> = mutableListOf()
@@ -123,7 +118,6 @@ class ReaderTagsFeedViewModelTest : BaseUnitTest() {
             displayUtilsWrapper = displayUtilsWrapper,
             readerTracker = readerTracker,
             networkUtilsWrapper = networkUtilsWrapper,
-            readerAnnouncementHelper = readerAnnouncementHelper,
         )
         whenever(readerPostCardActionsHandler.navigationEvents)
             .thenReturn(navigationEvents)
@@ -146,51 +140,6 @@ class ReaderTagsFeedViewModelTest : BaseUnitTest() {
 
         // Then
         assertThat(collectedUiStates).contains(
-            ReaderTagsFeedViewModel.UiState.Loaded(
-                data = listOf(getInitialTagFeedItem(tag)),
-            )
-        )
-    }
-
-    @Test
-    fun `given has announcement, when tags changed, then UI state should update properly`() = testCollectingUiStates {
-        // Given
-        val tag = ReaderTestUtils.createTag("tag")
-        val announcementItems = listOf<ReaderAnnouncementCardItemData>(mock(), mock())
-        mockMapInitialTagFeedItems()
-        whenever(readerAnnouncementHelper.hasReaderAnnouncement()).thenReturn(true)
-        whenever(readerAnnouncementHelper.getReaderAnnouncementItems()).thenReturn(announcementItems)
-
-        // When
-        viewModel.onTagsChanged(listOf(tag))
-        advanceUntilIdle()
-
-        // Then
-        val loadedState = collectedUiStates.last() as ReaderTagsFeedViewModel.UiState.Loaded
-        assertThat(loadedState.data).isEqualTo(listOf(getInitialTagFeedItem(tag)))
-        assertThat(loadedState.announcementItem!!.items).isEqualTo(announcementItems)
-    }
-
-    @Test
-    fun `given has announcement, when done clicked, then UI state should update properly`() = testCollectingUiStates {
-        // Given
-        val tag = ReaderTestUtils.createTag("tag")
-        val announcementItems = listOf<ReaderAnnouncementCardItemData>(mock(), mock())
-        mockMapInitialTagFeedItems()
-        whenever(readerAnnouncementHelper.hasReaderAnnouncement()).thenReturn(true)
-        whenever(readerAnnouncementHelper.getReaderAnnouncementItems()).thenReturn(announcementItems)
-
-        viewModel.onTagsChanged(listOf(tag))
-        advanceUntilIdle()
-
-        // When
-        val loadedState = collectedUiStates.last() as ReaderTagsFeedViewModel.UiState.Loaded
-        loadedState.announcementItem!!.onDoneClicked()
-        advanceUntilIdle()
-
-        // Then
-        verify(readerAnnouncementHelper).dismissReaderAnnouncement()
-        assertThat(collectedUiStates.last()).isEqualTo(
             ReaderTagsFeedViewModel.UiState.Loaded(
                 data = listOf(getInitialTagFeedItem(tag)),
             )
@@ -972,14 +921,12 @@ class ReaderTagsFeedViewModelTest : BaseUnitTest() {
     private fun mockMapInitialTagFeedItems() {
         whenever(
             readerTagsFeedUiStateMapper.mapInitialPostsUiState(
-                any(), anyOrNull(), any(), any(), any(), any(), any()
+                any(), any(), any(), any(), any(), any()
             )
         ).thenAnswer {
             val tags = it.getArgument<List<ReaderTag>>(0)
-            val announcementItem = it.getArgument<ReaderTagsFeedViewModel.ReaderAnnouncementItem?>(1)
             ReaderTagsFeedViewModel.UiState.Loaded(
                 data = tags.map { tag -> getInitialTagFeedItem(tag) },
-                announcementItem = announcementItem,
             )
         }
     }

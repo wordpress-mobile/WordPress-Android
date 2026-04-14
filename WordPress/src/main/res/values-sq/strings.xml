@@ -293,11 +293,6 @@ Language: sq_AL
     <string name="reader_tags_feed_error_title">S’u gjetën postime për %s</string>
     <string name="reader_tags_feed_see_more_from_tag">Më tepër nga %s</string>
     <string name="reader_tags_display_name">Etiketa</string>
-    <string name="reader_announcement_card_reading_preferences_description">Zgjidhni ngjyra dhe shkronja që ju vijnë për shtat. Kur lexoni një postim, prekni ikonën AA në krye të ekranit.</string>
-    <string name="reader_announcement_card_reading_preferences_title">Parapëlqime Leximi</string>
-    <string name="reader_announcement_card_tags_stream_description">Prekni menunë hapmbyll në krye dhe përzgjidhni Etiketa për përdorim rrjedhash nga etiketat që ndiqni.</string>
-    <string name="reader_announcement_card_tags_stream_title">Rrjedhë etiketash</string>
-    <string name="reader_announcement_card_title">Të reja në Lexues</string>
     <string name="reader_dropdown_menu_tags">Etiketat Tuaja</string>
     <string name="no_connection_error_description">Kontrolloni lidhjen tuaj në rrjet dhe riprovoni.</string>
     <string name="no_connection_error_title">S’arrihet të ngarkohet kjo lëndë këtë çast</string>
@@ -647,11 +642,7 @@ Language: sq_AL
     <string name="new_site_creation_preview_caption_paid">Mund të duhen deri në 30 minuta që përkatësia juaj vetjake të fillojë të funksionojë.</string>
     <string name="new_site_creation_preview_subtitle_paid">Ju dërguam faturën tuaj me email. %s</string>
     <string name="notifications_disabled_permission_dialog">Njoftimet nga aplikacioni janë çaktivizuar. Prekni këtu, që të aktivizohen.</string>
-    <string name="jp_migration_delete_message">Rekomandojmë &lt;b&gt;çinstalimin e aplikacionit WordPress&lt;/b&gt; në pajisjen tuaj, për të shmangur përplasje të dhënash.</string>
-    <string name="jp_migration_delete_subtitle">Duket sikur ende keni të instaluar aplikacionin WordPress.</string>
-    <string name="jp_migration_delete_title">S’ju duhet më aplikacioni WordPress në pajisjen tuaj</string>
     <string name="jp_migration_done_delete_wp_message">Rekomandojmë &lt;b&gt;çinstalimin e aplikacionit WordPress&lt;/b&gt; në pajisjen tuaj, për të shmangur përplasje të dhënash.</string>
-    <string name="jp_migration_success_card_message">Mirë se vini te aplikacioni Jetpack. Mund të çinstaloni aplikacionin WordPress.</string>
     <string name="dashboard_pages_card_create_another_page_description">Fillojani me skema të qepura me porosi, të përshtatshme për celular</string>
     <string name="dashboard_pages_card_create_another_page_button">Krijoni Një Faqe Tjetër</string>
     <string name="dashboard_pages_card_no_pages_create_page_button">Shtoni Faqe te sajti juaj</string>
@@ -827,8 +818,6 @@ Language: sq_AL
     <string name="preference_open_links_in_jetpack_setting_change_disable_error">S’arrihet të çaktivizohet hapje lidhjesh në Jetpack</string>
     <string name="preference_open_links_in_jetpack_setting_change_enable_error">S’arrihet të aktivizohet hapje lidhjesh në Jetpack</string>
     <string name="preference_open_links_in_jetpack">Lidhjet hapi në Jetpack</string>
-    <string name="jp_migration_need_help_button">Ju duhet ndihmë?</string>
-    <string name="jp_migration_got_it_button">E kuptova</string>
     <string name="jp_migration_network_error_message">S’jeni në gjendje të shpërngulim të dhënat dhe rregullimet tuaja pa një lidhje në rrjet.</string>
     <string name="jp_migration_network_error_subtitle">JU lutemi, kontrolloni për t’u siguruar se lidhja juaj në rrjet funksionon dhe riprovoni.</string>
     <string name="jp_migration_network_error_title">S’arrihet të lidhet në internet.</string>

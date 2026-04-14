@@ -294,11 +294,6 @@ Language: ko_KR
     <string name="reader_tags_feed_error_title">%s에 대한 글을 찾을 수 없습니다.</string>
     <string name="reader_tags_feed_see_more_from_tag">%s에서 더 보기</string>
     <string name="reader_tags_display_name">태그</string>
-    <string name="reader_announcement_card_reading_preferences_description">자신에게 맞는 색상과 글꼴을 선택하세요. 글을 읽을 때 화면 상단의 AA 아이콘을 탭하세요.</string>
-    <string name="reader_announcement_card_reading_preferences_title">읽기 기본 설정</string>
-    <string name="reader_announcement_card_tags_stream_description">상단의 드롭다운을 탭하고 태그를 선택하여 회원님이 팔로우하는 태그의 스트림에 접근하세요.</string>
-    <string name="reader_announcement_card_tags_stream_title">태그 스트림</string>
-    <string name="reader_announcement_card_title">뉴스피드 새 항목</string>
     <string name="reader_dropdown_menu_tags">내 태그</string>
     <string name="no_connection_error_description">네트워크 연결을 확인하고 다시 시도하세요.</string>
     <string name="no_connection_error_title">지금 이 콘텐츠를 로드할 수 없습니다.</string>
@@ -648,11 +643,7 @@ Language: ko_KR
     <string name="new_site_creation_preview_caption_paid">사용자 정의 도메인이 작동하기 시작하려면 30분 정도 걸릴 수 있습니다.</string>
     <string name="new_site_creation_preview_subtitle_paid">영수증을 이메일로 보내드렸습니다. %s</string>
     <string name="notifications_disabled_permission_dialog">앱 알림이 비활성화되었습니다. 활성화하려면 여기를 누르세요.</string>
-    <string name="jp_migration_delete_message">데이터가 충돌하지 않도록 기기에서 &lt;b&gt;워드프레스 앱을 제거&lt;/b&gt;하는 것이 좋습니다.</string>
-    <string name="jp_migration_delete_subtitle">아직 워드프레스 앱이 설치되어 있는 것 같습니다.</string>
-    <string name="jp_migration_delete_title">더는 기기에 워드프레스 앱이 필요하지 않습니다.</string>
     <string name="jp_migration_done_delete_wp_message">데이터가 충돌하지 않도록 기기에서 &lt;b&gt;워드프레스 앱을 제거&lt;/b&gt;하는 것이 좋습니다.</string>
-    <string name="jp_migration_success_card_message">젯팩 앱에 오신 것을 환영합니다. 워드프레스 앱을 제거하실 수 있습니다.</string>
     <string name="dashboard_pages_card_create_another_page_description">모바일 친화적인 맞춤형 레이아웃으로 시작</string>
     <string name="dashboard_pages_card_create_another_page_button">다른 페이지 생성</string>
     <string name="dashboard_pages_card_no_pages_create_page_button">사이트에 페이지 추가</string>
@@ -829,8 +820,6 @@ Language: ko_KR
     <string name="preference_open_links_in_jetpack_setting_change_disable_error">젯팩에서 링크 열기를 비활성화할 수 없음</string>
     <string name="preference_open_links_in_jetpack_setting_change_enable_error">젯팩에서 링크 여기를 활성화할 수 없음</string>
     <string name="preference_open_links_in_jetpack">젯팩에서 링크 열기</string>
-    <string name="jp_migration_need_help_button">도움말이 필요하신가요?</string>
-    <string name="jp_migration_got_it_button">알겠습니다.</string>
     <string name="jp_migration_network_error_message">네트워크 연결 없이 데이터와 설정을 이전할 수 없습니다.</string>
     <string name="jp_migration_network_error_subtitle">네트워크 연결이 작동하도록 점검하고 다시 시도하세요.</string>
     <string name="jp_migration_network_error_title">인터넷에 연결할 수 없습니다.</string>

@@ -106,11 +106,6 @@ Language: lv
     <string name="reader_tags_feed_error_title">Nav atrastas ziņas par tēmu %s</string>
     <string name="reader_tags_feed_see_more_from_tag">Vairāk no %s</string>
     <string name="reader_tags_display_name">Birkas</string>
-    <string name="reader_announcement_card_reading_preferences_description">Izvēlieties sev piemērotas krāsas un fontus. Lasot ierakstu, pieskarieties AA ikonai ekrāna augšdaļā.</string>
-    <string name="reader_announcement_card_reading_preferences_title">Lasīšanas preferences</string>
-    <string name="reader_announcement_card_tags_stream_description">Pieskarieties nolaižamajai izvēlnei augšpusē un atlasiet Atslēgvārdi, lai piekļūtu straumēm no jūsu sekotajām atzīmēm.</string>
-    <string name="reader_announcement_card_tags_stream_title">Atzīmju plūsma</string>
-    <string name="reader_announcement_card_title">Jaunumi pakalpojumā Lasītājs</string>
     <string name="reader_dropdown_menu_tags">Jūsu birkas</string>
     <string name="no_connection_error_description">Pārbaudiet tīkla savienojumu un mēģiniet vēlreiz.</string>
     <string name="no_connection_error_title">Šobrīd nevar ielādēt šo saturu.</string>
@@ -460,11 +455,7 @@ Language: lv
     <string name="new_site_creation_preview_caption_paid">Var paiet līdz 30 minūtēm, līdz jūsu pielāgotais domēns sāks darboties.</string>
     <string name="new_site_creation_preview_subtitle_paid">Mēs nosūtījām jūsu kvīti pa e-pastu. %s</string>
     <string name="notifications_disabled_permission_dialog">Lietotņu paziņojumi ir atspējoti. Pieskarieties šeit, lai tos iespējotu.</string>
-    <string name="jp_migration_delete_message">Lai izvairītos no datu konfliktiem, ieteicams ierīcē &lt;b&gt;atinstalēt lietotni WordPress&lt;/b&gt;.</string>
-    <string name="jp_migration_delete_subtitle">Šķiet, ka jums joprojām ir instalēta WordPress lietotne.</string>
-    <string name="jp_migration_delete_title">Jums vairs nav nepieciešama WordPress lietotne jūsu ierīcē</string>
     <string name="jp_migration_done_delete_wp_message">Lai izvairītos no datu konfliktiem, ieteicams ierīcē &lt;b&gt;atinstalēt lietotni WordPress&lt;/b&gt;.</string>
-    <string name="jp_migration_success_card_message">Laipni lūdzam Jetpack lietotnē. Varat atinstalēt WordPress lietotni.</string>
     <string name="dashboard_pages_card_create_another_page_description">Sāciet ar pielāgotiem, mobilajām ierīcēm draudzīgiem izkārtojumiem</string>
     <string name="dashboard_pages_card_create_another_page_button">Izveidot citu lapu</string>
     <string name="dashboard_pages_card_no_pages_create_page_button">Pievienojiet lapas savai vietnei</string>
@@ -641,8 +632,6 @@ Language: lv
     <string name="preference_open_links_in_jetpack_setting_change_disable_error">Nevar atspējot atvērtās saites pakalpojumā Jetpack</string>
     <string name="preference_open_links_in_jetpack_setting_change_enable_error">Nevar iespējot atvērtās saites pakalpojumā Jetpack</string>
     <string name="preference_open_links_in_jetpack">Atveriet saites pakalpojumā Jetpack</string>
-    <string name="jp_migration_need_help_button">Vajadzīga palīdzība?</string>
-    <string name="jp_migration_got_it_button">Sapratu</string>
     <string name="jp_migration_network_error_message">Mēs nevaram pārsūtīt jūsu datus un iestatījumus bez tīkla savienojuma.</string>
     <string name="jp_migration_network_error_subtitle">Lūdzu, pārbaudiet, vai tīkla savienojums darbojas, un mēģiniet vēlreiz.</string>
     <string name="jp_migration_network_error_title">Nevar izveidot savienojumu ar internetu.</string>

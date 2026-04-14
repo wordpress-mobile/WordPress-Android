@@ -191,11 +191,6 @@ Language: en_CA
     <string name="reader_tags_feed_error_title">No posts found for %s</string>
     <string name="reader_tags_feed_see_more_from_tag">More from %s</string>
     <string name="reader_tags_display_name">Tags</string>
-    <string name="reader_announcement_card_reading_preferences_description">Choose colors and fonts that suit you. When you’re reading a post tap the AA icon at the top of the screen.</string>
-    <string name="reader_announcement_card_reading_preferences_title">Reading Preferences</string>
-    <string name="reader_announcement_card_tags_stream_description">Tap the dropdown at the top and select Tags to access streams from your followed tags.</string>
-    <string name="reader_announcement_card_tags_stream_title">Tags stream</string>
-    <string name="reader_announcement_card_title">New in Reader</string>
     <string name="reader_dropdown_menu_tags">Your Tags</string>
     <string name="no_connection_error_description">Check your network connection and try again.</string>
     <string name="no_connection_error_title">Unable to load this content right now</string>
@@ -545,11 +540,7 @@ Language: en_CA
     <string name="new_site_creation_preview_caption_paid">It may take up to 30 minutes for your custom domain to start working.</string>
     <string name="new_site_creation_preview_subtitle_paid">We’ve emailed your receipt. %s</string>
     <string name="notifications_disabled_permission_dialog">App notifications have been disabled. Tap here to enable them.</string>
-    <string name="jp_migration_delete_message">We recommend &lt;b&gt;uninstalling the WordPress app&lt;/b&gt; on your device to avoid data conflicts.</string>
-    <string name="jp_migration_delete_subtitle">It looks like you still have the WordPress app installed.</string>
-    <string name="jp_migration_delete_title">You no longer need the WordPress app on your device</string>
     <string name="jp_migration_done_delete_wp_message">We recommend &lt;b&gt;uninstalling the WordPress app&lt;/b&gt; on your device to avoid data conflicts.</string>
-    <string name="jp_migration_success_card_message">Welcome to the Jetpack app. You can uninstall the WordPress app.</string>
     <string name="dashboard_pages_card_create_another_page_description">Start with bespoke, mobile friendly layouts</string>
     <string name="dashboard_pages_card_create_another_page_button">Create Another Page</string>
     <string name="dashboard_pages_card_no_pages_create_page_button">Add Pages to your site</string>
@@ -726,8 +717,6 @@ Language: en_CA
     <string name="preference_open_links_in_jetpack_setting_change_disable_error">Unable to disable open links in Jetpack</string>
     <string name="preference_open_links_in_jetpack_setting_change_enable_error">Unable to enable open links in Jetpack</string>
     <string name="preference_open_links_in_jetpack">Open links in Jetpack</string>
-    <string name="jp_migration_need_help_button">Need help?</string>
-    <string name="jp_migration_got_it_button">Got it</string>
     <string name="jp_migration_network_error_message">We are unable to transfer your data and settings without a network connection.</string>
     <string name="jp_migration_network_error_subtitle">Please check to make sure your network connection is working and try again.</string>
     <string name="jp_migration_network_error_title">Unable to connect to the internet.</string>

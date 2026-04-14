@@ -438,15 +438,9 @@ class ReaderTagsFeedUiStateMapperTest : BaseUnitTest() {
             ReaderTagType.FOLLOWED,
         )
         val tags = listOf(tag1, tag2)
-        val announcementItem = ReaderTagsFeedViewModel.ReaderAnnouncementItem(
-            items = listOf(mock(), mock()),
-            onDoneClicked = {},
-        )
-
         // When
         val actual = classToTest.mapInitialPostsUiState(
             tags = tags,
-            announcementItem = announcementItem,
             isRefreshing = true,
             onTagChipClick = onTagChipClick,
             onMoreFromTagClick = onMoreFromTagClick,
@@ -476,7 +470,6 @@ class ReaderTagsFeedUiStateMapperTest : BaseUnitTest() {
                     onItemEnteredView = onItemEnteredView,
                 )
             ),
-            announcementItem = announcementItem,
             isRefreshing = true,
             onRefresh = onRefresh,
         )

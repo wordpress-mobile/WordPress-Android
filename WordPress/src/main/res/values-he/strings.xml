@@ -291,11 +291,6 @@ Language: he_IL
     <string name="reader_tags_feed_error_title">לא נמצאו פוסטים עבור %s</string>
     <string name="reader_tags_feed_see_more_from_tag">עוד בנושא %s</string>
     <string name="reader_tags_display_name">תגיות</string>
-    <string name="reader_announcement_card_reading_preferences_description">לבחור צבעים וגופנים לפי טעמך. כשקוראים פוסט, אפשר ללחוץ על הסמל AA שבחלקו העליון של המסך.</string>
-    <string name="reader_announcement_card_reading_preferences_title">העדפות קריאה</string>
-    <string name="reader_announcement_card_tags_stream_description">יש להקיש על התפריט הנפתח למעלה ולבחור \'תגיות\' כדי לגשת לפיד של התגיות שבמעקב שלך.</string>
-    <string name="reader_announcement_card_tags_stream_title">פיד תגיות</string>
-    <string name="reader_announcement_card_title">חדש ב-Reader</string>
     <string name="reader_dropdown_menu_tags">התגיות שלך</string>
     <string name="no_connection_error_description">יש לבדוק את החיבור לרשת ולנסות שוב.</string>
     <string name="no_connection_error_title">אין אפשרות לטעון את התוכן כרגע</string>
@@ -641,11 +636,7 @@ Language: he_IL
     <string name="new_site_creation_preview_caption_paid">יידרשו עד 30 דקות להתחלת הפעילות של הדומיין האישי.</string>
     <string name="new_site_creation_preview_subtitle_paid">שלחנו את הקבלה שלך באימייל. %s</string>
     <string name="notifications_disabled_permission_dialog">הודעות מהאפליקציה הושבתו. יש להקיש כאן כדי להפעיל אותן.</string>
-    <string name="jp_migration_delete_message">אנחנו ממליצים &lt;b&gt;להסיר את ההתקנה של האפליקציה של WordPress&lt;/b&gt; כדי להימנע מהתנגשויות נתונים.</string>
-    <string name="jp_migration_delete_subtitle">נראה שהאפליקציה של WordPress עדיין מותקנת אצלך.</string>
-    <string name="jp_migration_delete_title">כבר אין לך צורך באפליקציה של WordPress במכשיר לך</string>
     <string name="jp_migration_done_delete_wp_message">אנחנו ממליצים &lt;b&gt;להסיר את ההתקנה של האפליקציה של WordPress&lt;/b&gt; כדי להימנע מהתנגשויות נתונים.</string>
-    <string name="jp_migration_success_card_message">שמחים שהצטרפת לאפליקציה של Jetpack. אפשר להסיר את ההתקנה של האפליקציה של WordPress כעת.</string>
     <string name="dashboard_pages_card_create_another_page_description">להתחיל עם פריסות ידידותיות למכשירים ניידים בהתאמה אישית</string>
     <string name="dashboard_pages_card_create_another_page_button">ליצור עמוד נוסף</string>
     <string name="dashboard_pages_card_no_pages_create_page_button">להוסיף עמודים לאתר שלך</string>
@@ -822,8 +813,6 @@ Language: he_IL
     <string name="preference_open_links_in_jetpack_setting_change_disable_error">אין אפשרות להשבית את פתיחת הקישורים ב-Jetpack</string>
     <string name="preference_open_links_in_jetpack_setting_change_enable_error">אין אפשרות להפעיל את פתיחת הקישורים ב-Jetpack</string>
     <string name="preference_open_links_in_jetpack">לפתוח את הקישורים ב-Jetpack</string>
-    <string name="jp_migration_need_help_button">נדרשת לך עזרה?</string>
-    <string name="jp_migration_got_it_button">הבנתי</string>
     <string name="jp_migration_network_error_message">אין לנו אפשרות להעביר את הנתונים וההגדרות שלך ללא חיבור לרשת.</string>
     <string name="jp_migration_network_error_subtitle">יש לבדוק שהחיבור לרשת תקין ולנסות שוב.</string>
     <string name="jp_migration_network_error_title">לא ניתן להתחבר לאינטרנט.</string>
