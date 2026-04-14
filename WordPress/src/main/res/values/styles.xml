@@ -477,7 +477,6 @@
         <item name="tabIndicator">@drawable/tab_indicator_md3</item>
         <item name="tabIndicatorColor">?attr/colorPrimary</item>
         <item name="tabTextColor">?attr/colorPrimary</item>
-        <item name="tabSelectedTextColor">?attr/colorPrimary</item>
         <item name="tabTextAppearance">@style/TextAppearance.Material3.TitleSmall</item>
         <item name="tabRippleColor">@null</item>
     </style>

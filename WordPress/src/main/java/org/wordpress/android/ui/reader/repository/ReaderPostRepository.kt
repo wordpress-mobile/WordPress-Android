@@ -235,7 +235,7 @@ class ReaderPostRepository @Inject constructor(
         resultListener: UpdateResultListener
     ) {
         applicationScope.launch(ioDispatcher) {
-            val params = HashMap<String, String>()
+            val params = mutableMapOf<String, String>()
 
             // Use the user's followed tags to seed the discover stream. If the user doesn't follow
             // anything (ignoring the default dailyprompt tag) fall back to "dailyprompt,wordpress"

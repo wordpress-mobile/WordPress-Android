@@ -130,8 +130,8 @@ class ReaderDiscoverTabsFragment : Fragment(R.layout.reader_discover_tabs_fragme
 
     companion object {
         // Freshly Pressed uses the v1.2 /freshly-pressed endpoint (matching web and iOS).
-        const val FRESHLY_PRESSED_PATH = "freshly-pressed"
-        const val DISCOVER_STREAMS_PATH = "read/streams/discover"
+        private const val FRESHLY_PRESSED_PATH = "freshly-pressed"
+        private const val DISCOVER_STREAMS_PATH = "read/streams/discover"
 
         private fun createDiscoverTag(slug: String, title: String, endpoint: String): ReaderTag =
             ReaderTag(slug, title, title, endpoint, ReaderTagType.DEFAULT)
