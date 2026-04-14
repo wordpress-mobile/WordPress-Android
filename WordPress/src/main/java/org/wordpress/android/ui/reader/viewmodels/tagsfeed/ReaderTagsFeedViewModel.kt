@@ -31,8 +31,7 @@ import org.wordpress.android.ui.reader.exceptions.ReaderPostFetchException
 import org.wordpress.android.ui.reader.repository.ReaderPostRepository
 import org.wordpress.android.ui.reader.repository.usecases.PostLikeUseCase
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
-import org.wordpress.android.ui.reader.utils.ReaderAnnouncementHelper
-import org.wordpress.android.ui.reader.views.compose.ReaderAnnouncementCardItemData
+
 import org.wordpress.android.ui.reader.views.compose.tagsfeed.TagsFeedPostItem
 import org.wordpress.android.util.DisplayUtilsWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
@@ -55,7 +54,7 @@ class ReaderTagsFeedViewModel @Inject constructor(
     private val displayUtilsWrapper: DisplayUtilsWrapper,
     private val readerTracker: ReaderTracker,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
-    private val readerAnnouncementHelper: ReaderAnnouncementHelper,
+
 ) : ScopedViewModel(bgDispatcher) {
     private val _uiStateFlow: MutableStateFlow<UiState> = MutableStateFlow(UiState.Initial)
     val uiStateFlow: StateFlow<UiState> = _uiStateFlow
@@ -103,7 +102,6 @@ class ReaderTagsFeedViewModel @Inject constructor(
                     if (currentState.isRefreshing) {
                         readerTagsFeedUiStateMapper.mapInitialPostsUiState(
                             tags,
-                            getAnnouncementItem(),
                             false,
                             ::onTagChipClick,
                             ::onMoreFromTagClick,
@@ -121,7 +119,6 @@ class ReaderTagsFeedViewModel @Inject constructor(
                     // Add tags to the list with the posts initial/loading UI
                     readerTagsFeedUiStateMapper.mapInitialPostsUiState(
                         tags,
-                        getAnnouncementItem(),
                         false,
                         ::onTagChipClick,
                         ::onMoreFromTagClick,
@@ -150,23 +147,6 @@ class ReaderTagsFeedViewModel @Inject constructor(
             UiState.Loading
         } else {
             UiState.NoConnection(::onNoConnectionRetryClick)
-        }
-    }
-
-    private fun getAnnouncementItem(): ReaderAnnouncementItem? =
-        if (readerAnnouncementHelper.hasReaderAnnouncement()) {
-            ReaderAnnouncementItem(
-                items = readerAnnouncementHelper.getReaderAnnouncementItems(),
-                onDoneClicked = ::dismissAnnouncementItem,
-            )
-        } else {
-            null
-        }
-
-    private fun dismissAnnouncementItem() {
-        readerAnnouncementHelper.dismissReaderAnnouncement()
-        _uiStateFlow.update {
-            (it as? UiState.Loaded)?.copy(announcementItem = null) ?: it
         }
     }
 
@@ -572,7 +552,6 @@ class ReaderTagsFeedViewModel @Inject constructor(
 
         data class Loaded(
             val data: List<TagFeedItem>,
-            val announcementItem: ReaderAnnouncementItem? = null,
             val isRefreshing: Boolean = false,
             val onRefresh: () -> Unit = {},
         ) : UiState()
@@ -583,11 +562,6 @@ class ReaderTagsFeedViewModel @Inject constructor(
 
         data class NoConnection(val onRetryClick: () -> Unit) : UiState()
     }
-
-    data class ReaderAnnouncementItem(
-        val items: List<ReaderAnnouncementCardItemData>,
-        val onDoneClicked: () -> Unit,
-    )
 
     data class TagFeedItem(
         val tagChip: TagChip,
