@@ -1514,18 +1514,45 @@ open class SiteStore @Inject constructor(
     ): OnSiteChanged {
         return coroutineEngine.withDefaultContext(T.API, this, "Fetch sites") {
             try {
-                updateSites(
+                val sites =
                     siteXMLRPCClient.fetchSitesFromApplicationPassword(
                         payload.url,
                         payload.apiRootUrl,
                         payload.username,
                         payload.password
                     )
-                )
+                if (sites.isError) {
+                    AppLog.w(
+                        T.API,
+                        "XML-RPC fetch failed" +
+                            " (${sites.error?.message})," +
+                            " falling back to WPAPI"
+                    )
+                    // Use apiRootUrl as the base URL for
+                    // WPAPI discovery since payload.url
+                    // is the xmlrpc.php endpoint.
+                    fetchSiteWPAPIFromApplicationPassword(
+                        payload.copy(
+                            url = payload.apiRootUrl
+                        )
+                    )
+                } else {
+                    updateSites(sites)
+                }
             } catch (e: Exception) {
-                val errorMsg = e.message ?: e.javaClass.simpleName
-                AppLog.e(T.API, "Failed to fetch/store sites: $errorMsg", e)
-                OnSiteChanged(SiteError(SiteErrorType.GENERIC_ERROR, errorMsg))
+                val errorMsg =
+                    e.message ?: e.javaClass.simpleName
+                AppLog.e(
+                    T.API,
+                    "Failed to fetch/store sites: $errorMsg",
+                    e
+                )
+                OnSiteChanged(
+                    SiteError(
+                        SiteErrorType.GENERIC_ERROR,
+                        errorMsg
+                    )
+                )
             }
         }
     }
