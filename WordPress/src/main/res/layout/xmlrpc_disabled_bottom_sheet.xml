@@ -40,16 +40,6 @@
             android:paddingHorizontal="@dimen/margin_extra_large"
             android:text="@string/xmlrpc_disabled_bottom_sheet_body" />
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/connect_jetpack_button"
-            style="@style/WordPress.BottomSheetDialogTheme.PrimaryButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginHorizontal="@dimen/margin_extra_large"
-            android:layout_marginTop="@dimen/margin_extra_large"
-            android:text="@string/xmlrpc_disabled_connect_jetpack" />
-
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/learn_more_button"
             android:layout_width="wrap_content"

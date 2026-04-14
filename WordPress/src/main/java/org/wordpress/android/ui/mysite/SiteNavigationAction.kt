@@ -82,9 +82,7 @@ sealed class SiteNavigationAction {
     object OpenApplicationPasswordsList : SiteNavigationAction()
 
     data class OpenMenus(val site: SiteModel) : SiteNavigationAction()
-    data class OpenXmlRpcDisabledBottomSheet(
-        val site: SiteModel
-    ) : SiteNavigationAction()
+    data object OpenXmlRpcDisabledBottomSheet : SiteNavigationAction()
     data class OpenApplicationPasswordAuthentication(val url: String) : SiteNavigationAction()
     // alternativeUrl used to open the web view authentication if necessary
     data class OpenApplicationPasswordAutoAuthentication(

@@ -4632,8 +4632,7 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <!-- XML-RPC Disabled -->
     <string name="xmlrpc_disabled_card_text">XML-RPC Disabled\nSome features may be limited</string>
     <string name="xmlrpc_disabled_bottom_sheet_title">XML-RPC Disabled</string>
-    <string name="xmlrpc_disabled_bottom_sheet_body">Some features in the app require XML-RPC. Connect Jetpack or enable XML-RPC to resolve this.</string>
-    <string name="xmlrpc_disabled_connect_jetpack">Connect Jetpack</string>
+    <string name="xmlrpc_disabled_bottom_sheet_body">Some features in the app require XML-RPC. Enable it on your site to resolve this.</string>
 
     <!-- DataView -->
     <string name="dataview_default_empty_message">There\'s nothing here</string>

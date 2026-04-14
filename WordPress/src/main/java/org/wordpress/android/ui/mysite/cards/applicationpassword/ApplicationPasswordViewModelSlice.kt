@@ -205,7 +205,7 @@ class ApplicationPasswordViewModelSlice @Inject constructor(
                     _onNavigation.postValue(
                         Event(
                             SiteNavigationAction
-                                .OpenXmlRpcDisabledBottomSheet(site)
+                                .OpenXmlRpcDisabledBottomSheet
                         )
                     )
                 },

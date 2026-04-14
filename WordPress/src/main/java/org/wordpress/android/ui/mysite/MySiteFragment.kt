@@ -648,7 +648,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         is SiteNavigationAction.OpenJetpackPoweredBottomSheet -> showJetpackPoweredBottomSheet()
         is SiteNavigationAction.OpenXmlRpcDisabledBottomSheet ->
             XmlRpcDisabledBottomSheetFragment
-                .newInstance(action.site.id)
+                .newInstance()
                 .show(
                     childFragmentManager,
                     XmlRpcDisabledBottomSheetFragment.TAG
