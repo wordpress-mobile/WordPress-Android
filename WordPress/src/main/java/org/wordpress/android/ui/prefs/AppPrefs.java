@@ -193,7 +193,6 @@ public class AppPrefs {
         SHOULD_HIDE_DYNAMIC_CARD,
         PINNED_SITE_IDS,
         READER_READING_PREFERENCES_JSON,
-
         STATS_CARDS_CONFIGURATION_JSON,
         STATS_INSIGHTS_CARDS_CONFIGURATION_JSON,
         SUBSCRIBERS_CARDS_CONFIGURATION_JSON,
@@ -1734,8 +1733,6 @@ public class AppPrefs {
     public static void setPinnedSiteLocalIds(@NonNull final String ids) {
         setString(DeletablePrefKey.PINNED_SITE_IDS, ids);
     }
-
-
 
     @Nullable
     public static String getReaderReadingPreferencesJson() {
