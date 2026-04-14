@@ -28,6 +28,9 @@ public class DiscoveryUtils {
 
         sanitizedURL = truncateUrl(sanitizedURL, "/xmlrpc.php?rsd");
 
+        // Remove '/wp-json' if available in the URL
+        sanitizedURL = truncateUrl(sanitizedURL, "/wp-json");
+
         // remove any trailing slashes
         while (sanitizedURL.endsWith("/")) {
             sanitizedURL = sanitizedURL.substring(0, sanitizedURL.length() - 1);
