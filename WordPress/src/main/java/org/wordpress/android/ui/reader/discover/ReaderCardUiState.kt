@@ -134,7 +134,6 @@ sealed class ReaderCardUiState {
             }
         }
     }
-
 }
 
 data class ReaderPostActions(

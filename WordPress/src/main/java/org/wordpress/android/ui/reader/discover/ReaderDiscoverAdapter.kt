@@ -22,7 +22,6 @@ private const val INTEREST_VIEW_TYPE: Int = 2
 private const val RECOMMENDED_BLOGS_VIEW_TYPE: Int = 3
 private const val POST_NEW_VIEW_TYPE: Int = 4
 
-
 class ReaderDiscoverAdapter(
     private val uiHelpers: UiHelpers,
     private val imageManager: ImageManager,
