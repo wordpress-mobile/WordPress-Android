@@ -49,18 +49,6 @@ class ContentMigrationAnalyticsTracker @Inject constructor(
     fun trackNoSitesFlowThanksScreenFinishButtonTapped() =
         analyticsTracker.track(Stat.JPMIGRATION_THANKS_SCREEN_FINISH_BUTTON_TAPPED, mapOf(NO_SITES to true))
 
-    fun trackPleaseDeleteWordPressCardTapped() =
-        analyticsTracker.track(Stat.JPMIGRATION_PLEASE_DELETE_WORDPRESS_CARD_TAPPED)
-
-    fun trackPleaseDeleteWordPressScreenShown() =
-        analyticsTracker.track(Stat.JPMIGRATION_PLEASE_DELETE_WORDPRESS_SCREEN_SHOWN)
-
-    fun trackPleaseDeleteWordPressGotItTapped() =
-        analyticsTracker.track(Stat.JPMIGRATION_PLEASE_DELETE_WORDPRESS_GOTIT_TAPPED)
-
-    fun trackPleaseDeleteWordPressHelpTapped() =
-        analyticsTracker.track(Stat.JPMIGRATION_PLEASE_DELETE_WORDPRESS_HELP_BUTTON_TAPPED)
-
     fun trackErrorScreenShown() =
         analyticsTracker.track(Stat.JPMIGRATION_ERROR_SCREEN_SHOWN)
 

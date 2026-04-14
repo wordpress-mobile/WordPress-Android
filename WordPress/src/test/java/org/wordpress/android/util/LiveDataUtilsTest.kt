@@ -187,6 +187,57 @@ class LiveDataUtilsTest : BaseUnitTest() {
     }
 
     @Test
+    fun `merge merges 9 sources with function`() = test {
+        val sourceA = MutableLiveData<Int>()
+        val sourceB = MutableLiveData<String>()
+        val sourceC = MutableLiveData<Boolean>()
+        val sourceD = MutableLiveData<Double>()
+        val sourceE = MutableLiveData<Float>()
+        val sourceF = MutableLiveData<List<Unit>>()
+        val sourceG = MutableLiveData<Long>()
+        val sourceH = MutableLiveData<Char>()
+        val sourceI = MutableLiveData<Short>()
+
+        val mergedSources = merge(
+            sourceA, sourceB, sourceC, sourceD, sourceE,
+            sourceF, sourceG, sourceH, sourceI
+        ) { a, b, c, d, e, f, g, h, i ->
+            "$a:$b:$c:$d:$e:${f?.size}:$g:$h:$i"
+        }
+        mergedSources.observeForever { }
+
+        assertThat(mergedSources.value)
+            .isEqualTo("null:null:null:null:null:null:null:null:null")
+        sourceA.value = 1
+        assertThat(mergedSources.value)
+            .isEqualTo("1:null:null:null:null:null:null:null:null")
+        sourceB.value = "v"
+        assertThat(mergedSources.value)
+            .isEqualTo("1:v:null:null:null:null:null:null:null")
+        sourceC.value = true
+        assertThat(mergedSources.value)
+            .isEqualTo("1:v:true:null:null:null:null:null:null")
+        sourceD.value = 2.4
+        assertThat(mergedSources.value)
+            .isEqualTo("1:v:true:2.4:null:null:null:null:null")
+        sourceE.value = 3F
+        assertThat(mergedSources.value)
+            .isEqualTo("1:v:true:2.4:3.0:null:null:null:null")
+        sourceF.value = List(5) {}
+        assertThat(mergedSources.value)
+            .isEqualTo("1:v:true:2.4:3.0:5:null:null:null")
+        sourceG.value = 99L
+        assertThat(mergedSources.value)
+            .isEqualTo("1:v:true:2.4:3.0:5:99:null:null")
+        sourceH.value = 'X'
+        assertThat(mergedSources.value)
+            .isEqualTo("1:v:true:2.4:3.0:5:99:X:null")
+        sourceI.value = 7
+        assertThat(mergedSources.value)
+            .isEqualTo("1:v:true:2.4:3.0:5:99:X:7")
+    }
+
+    @Test
     fun `combineMap combines sources in a map`() {
         val sourceA = MutableLiveData<Int>()
         val sourceB = MutableLiveData<Int>()

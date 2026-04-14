@@ -173,8 +173,6 @@ Language: cs_CZ
     <string name="preference_open_links_in_jetpack_setting_change_disable_error">Nelze zakázat otevřené odkazy v Jetpacku</string>
     <string name="preference_open_links_in_jetpack_setting_change_enable_error">Nelze povolit otevřené odkazy v Jetpacku</string>
     <string name="preference_open_links_in_jetpack">Otevřít odkazy v Jetpacku</string>
-    <string name="jp_migration_need_help_button">Potřebujete pomoci?</string>
-    <string name="jp_migration_got_it_button">Mám to</string>
     <string name="jp_migration_network_error_message">Bez připojení k síti nemůžeme přenést vaše data a nastavení.</string>
     <string name="jp_migration_network_error_subtitle">Zkontrolujte, zda vaše síťové připojení funguje, a zkuste to znovu.</string>
     <string name="jp_migration_network_error_title">Nelze se připojit k internetu.</string>

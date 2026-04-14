@@ -29,14 +29,12 @@ import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.JetpackMigrationActionEvent
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.JetpackMigrationActionEvent.CompleteFlow
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.JetpackMigrationActionEvent.FallbackToLogin
-import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.JetpackMigrationActionEvent.FinishActivity
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.JetpackMigrationActionEvent.Logout
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.JetpackMigrationActionEvent.RequestNotificationPermission
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.JetpackMigrationActionEvent.ShowHelp
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.UiState.Content
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.UiState.Error
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.UiState.Loading
-import org.wordpress.android.ui.main.jetpack.migration.compose.state.DeleteStep
 import org.wordpress.android.ui.main.jetpack.migration.compose.state.DoneStep
 import org.wordpress.android.ui.main.jetpack.migration.compose.state.ErrorStep
 import org.wordpress.android.ui.main.jetpack.migration.compose.state.LoadingState
@@ -78,11 +76,9 @@ class JetpackMigrationFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         observeViewModelEvents()
         observeRefreshAppThemeEvents()
-        val showDeleteWpState = arguments?.getBoolean(KEY_SHOW_DELETE_WP_STATE, false) ?: false
         val deepLinkData = arguments?.getParcelableCompat<PreMigrationDeepLinkData>(KEY_DEEP_LINK_DATA)
-        initBackPressHandler(showDeleteWpState)
+        initBackPressHandler()
         viewModel.start(
-            showDeleteWpState,
             requireActivity().application as WordPress,
             deepLinkData
         )
@@ -115,7 +111,6 @@ class JetpackMigrationFragment : Fragment() {
             is Logout -> (requireActivity().application as? WordPress)?.let { viewModel.signOutWordPress(it) }
             is ShowHelp -> launchHelpScreen()
             is RequestNotificationPermission -> requestNotificationPermission()
-            is FinishActivity -> requireActivity().finish()
         }
     }
 
@@ -153,8 +148,7 @@ class JetpackMigrationFragment : Fragment() {
         }
     }
 
-    private fun initBackPressHandler(showDeleteWpState: Boolean) {
-        if (showDeleteWpState) return
+    private fun initBackPressHandler() {
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
             viewModel.logoutAndFallbackToLogin()
         }
@@ -162,15 +156,12 @@ class JetpackMigrationFragment : Fragment() {
 
     companion object {
         private const val KEY_DEEP_LINK_DATA = "KEY_DEEP_LINK_DATA"
-        private const val KEY_SHOW_DELETE_WP_STATE = "KEY_SHOW_DELETE_WP_STATE"
 
         fun newInstance(
-            showDeleteWpState: Boolean = false,
             deepLinkData: PreMigrationDeepLinkData?
         ): JetpackMigrationFragment =
             JetpackMigrationFragment().apply {
                 arguments = Bundle().apply {
-                    putBoolean(KEY_SHOW_DELETE_WP_STATE, showDeleteWpState)
                     if (deepLinkData != null) {
                         putParcelable(KEY_DEEP_LINK_DATA, deepLinkData)
                     }
@@ -189,7 +180,6 @@ private fun JetpackMigrationScreen(viewModel: JetpackMigrationViewModel = viewMo
                 is Content.Welcome -> WelcomeStep(state)
                 is Content.Notifications -> NotificationsStep(state)
                 is Content.Done -> DoneStep(state)
-                is Content.Delete -> DeleteStep(state)
                 is Error -> ErrorStep(state)
                 is Loading -> LoadingState()
             }
