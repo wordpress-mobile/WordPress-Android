@@ -106,11 +106,6 @@ Language: lv
     <string name="reader_tags_feed_error_title">Nav atrastas ziņas par tēmu %s</string>
     <string name="reader_tags_feed_see_more_from_tag">Vairāk no %s</string>
     <string name="reader_tags_display_name">Birkas</string>
-    <string name="reader_announcement_card_reading_preferences_description">Izvēlieties sev piemērotas krāsas un fontus. Lasot ierakstu, pieskarieties AA ikonai ekrāna augšdaļā.</string>
-    <string name="reader_announcement_card_reading_preferences_title">Lasīšanas preferences</string>
-    <string name="reader_announcement_card_tags_stream_description">Pieskarieties nolaižamajai izvēlnei augšpusē un atlasiet Atslēgvārdi, lai piekļūtu straumēm no jūsu sekotajām atzīmēm.</string>
-    <string name="reader_announcement_card_tags_stream_title">Atzīmju plūsma</string>
-    <string name="reader_announcement_card_title">Jaunumi pakalpojumā Lasītājs</string>
     <string name="reader_dropdown_menu_tags">Jūsu birkas</string>
     <string name="no_connection_error_description">Pārbaudiet tīkla savienojumu un mēģiniet vēlreiz.</string>
     <string name="no_connection_error_title">Šobrīd nevar ielādēt šo saturu.</string>

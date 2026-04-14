@@ -294,11 +294,6 @@ Language: de
     <string name="reader_tags_feed_error_title">Es wurden keine Beiträge für „%s“ gefunden</string>
     <string name="reader_tags_feed_see_more_from_tag">Mehr von %s</string>
     <string name="reader_tags_display_name">Schlagwörter</string>
-    <string name="reader_announcement_card_reading_preferences_description">Wähle Farben und Schriftarten, die zu dir passen. Wenn du einen Beitrag liest, klicke oben im Bildschirm auf das AA-Icon.</string>
-    <string name="reader_announcement_card_reading_preferences_title">Leseeinstellungen</string>
-    <string name="reader_announcement_card_tags_stream_description">Tippe oben auf das Dropdown-Menü und wähle „Schlagwörter“ aus, um auf Streams deiner abonnierten Schlagwörter zuzugreifen.</string>
-    <string name="reader_announcement_card_tags_stream_title">Schlagwörter-Feed</string>
-    <string name="reader_announcement_card_title">Neu im Reader</string>
     <string name="reader_dropdown_menu_tags">Deine Schlagwörter</string>
     <string name="no_connection_error_description">Prüfe deine Netzwerkverbindung und versuche es erneut.</string>
     <string name="no_connection_error_title">Dieser Inhalt kann gerade nicht geladen werden</string>

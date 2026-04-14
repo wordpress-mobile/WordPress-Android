@@ -193,7 +193,6 @@ public class AppPrefs {
         SHOULD_HIDE_DYNAMIC_CARD,
         PINNED_SITE_IDS,
         READER_READING_PREFERENCES_JSON,
-        SHOULD_SHOW_READER_ANNOUNCEMENT_CARD,
         STATS_CARDS_CONFIGURATION_JSON,
         STATS_INSIGHTS_CARDS_CONFIGURATION_JSON,
         SUBSCRIBERS_CARDS_CONFIGURATION_JSON,
@@ -1733,14 +1732,6 @@ public class AppPrefs {
 
     public static void setPinnedSiteLocalIds(@NonNull final String ids) {
         setString(DeletablePrefKey.PINNED_SITE_IDS, ids);
-    }
-
-    public static boolean getShouldShowReaderAnnouncementCard() {
-        return prefs().getBoolean(DeletablePrefKey.SHOULD_SHOW_READER_ANNOUNCEMENT_CARD.name(), true);
-    }
-
-    public static void setShouldShowReaderAnnouncementCard(final boolean shouldShow) {
-        prefs().edit().putBoolean(DeletablePrefKey.SHOULD_SHOW_READER_ANNOUNCEMENT_CARD.name(), shouldShow).apply();
     }
 
     @Nullable

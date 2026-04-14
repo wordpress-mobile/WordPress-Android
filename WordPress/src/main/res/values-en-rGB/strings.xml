@@ -211,11 +211,6 @@ Language: en_GB
     <string name="reader_tags_feed_error_title">No posts found for %s</string>
     <string name="reader_tags_feed_see_more_from_tag">More from %s</string>
     <string name="reader_tags_display_name">Tags</string>
-    <string name="reader_announcement_card_reading_preferences_description">Choose colours and fonts that suit you. When you’re reading a post, tap the AA icon at the top of the screen.</string>
-    <string name="reader_announcement_card_reading_preferences_title">Reading Preferences</string>
-    <string name="reader_announcement_card_tags_stream_description">Tap the dropdown at the top and select Tags to access streams from your followed tags.</string>
-    <string name="reader_announcement_card_tags_stream_title">Tags stream</string>
-    <string name="reader_announcement_card_title">New in Reader</string>
     <string name="reader_dropdown_menu_tags">Your tags</string>
     <string name="no_connection_error_description">Check your network connection and try again.</string>
     <string name="no_connection_error_title">Unable to load this content right now</string>

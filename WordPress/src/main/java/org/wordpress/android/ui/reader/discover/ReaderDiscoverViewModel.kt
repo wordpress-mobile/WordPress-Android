@@ -25,7 +25,7 @@ import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowPosts
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowReaderSubs
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowSitePickerForResult
 import org.wordpress.android.ui.reader.reblog.ReblogUseCase
-import org.wordpress.android.ui.reader.utils.ReaderAnnouncementHelper
+
 import org.wordpress.android.ui.reader.repository.ReaderDiscoverCommunication
 import org.wordpress.android.ui.reader.repository.ReaderDiscoverCommunication.Error
 import org.wordpress.android.ui.reader.repository.ReaderDiscoverCommunication.Started
@@ -57,7 +57,7 @@ class ReaderDiscoverViewModel @Inject constructor(
     private val readerUtilsWrapper: ReaderUtilsWrapper,
     private val readerTracker: ReaderTracker,
     displayUtilsWrapper: DisplayUtilsWrapper,
-    private val readerAnnouncementHelper: ReaderAnnouncementHelper,
+
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(mainDispatcher) {
@@ -146,22 +146,11 @@ class ReaderDiscoverViewModel @Inject constructor(
         _uiState.addSource(readerDiscoverDataProvider.discoverFeed) { posts ->
             launch {
                 if (posts != null && posts.cards.isNotEmpty()) {
-                    val announcement = if (readerAnnouncementHelper.hasReaderAnnouncement()) {
-                        listOf(
-                            ReaderCardUiState.ReaderAnnouncementCardUiState(
-                                readerAnnouncementHelper.getReaderAnnouncementItems(),
-                                ::dismissAnnouncementCard
-                            )
-                        )
-                    } else {
-                        emptyList()
-                    }
-
                     val newCards = convertCardsToUiStates(posts)
                     val cardsWithPreservedState = preserveFollowActionRunningState(newCards)
 
                     _uiState.value = DiscoverUiState.ContentUiState(
-                        announcement + cardsWithPreservedState,
+                        cardsWithPreservedState,
                         reloadProgressVisibility = false,
                         loadMoreProgressVisibility = false,
                     )
@@ -209,15 +198,6 @@ class ReaderDiscoverViewModel @Inject constructor(
             }
         }
         return card.copy(blogs = updatedBlogs)
-    }
-
-    private fun dismissAnnouncementCard() {
-        readerAnnouncementHelper.dismissReaderAnnouncement()
-        _uiState.value = (_uiState.value as? DiscoverUiState.ContentUiState)?.let { contentUiState ->
-            contentUiState.copy(
-                cards = contentUiState.cards.filterNot { it is ReaderCardUiState.ReaderAnnouncementCardUiState }
-            )
-        }
     }
 
     private fun observeFollowStatus() {

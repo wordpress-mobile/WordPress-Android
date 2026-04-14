@@ -294,11 +294,6 @@ Language: tr
     <string name="reader_tags_feed_error_title">%s etiketli hiç yazı bulunamadı</string>
     <string name="reader_tags_feed_see_more_from_tag">%s etiketli daha fazla içerik</string>
     <string name="reader_tags_display_name">Etiketler</string>
-    <string name="reader_announcement_card_reading_preferences_description">Size uygun renkler ve yazı tipleri. Bir gönderiyi okurken ekranın üst kısmındaki AA simgesine dokunun.</string>
-    <string name="reader_announcement_card_reading_preferences_title">Okuma Tercihleri</string>
-    <string name="reader_announcement_card_tags_stream_description">Üstteki açılır menüye dokunun ve takip ettiğiniz etiketlerin akışına erişmek için Etiketler seçeneğini belirleyin.</string>
-    <string name="reader_announcement_card_tags_stream_title">Etiket akışı</string>
-    <string name="reader_announcement_card_title">Okuyucuda Yeni</string>
     <string name="reader_dropdown_menu_tags">Etiketleriniz</string>
     <string name="no_connection_error_description">Ağ bağlantınızı kontrol edip tekrar deneyin.</string>
     <string name="no_connection_error_title">Bu içerik şu an yüklenemiyor</string>

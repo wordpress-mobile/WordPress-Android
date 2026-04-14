@@ -293,11 +293,6 @@ Language: sq_AL
     <string name="reader_tags_feed_error_title">S’u gjetën postime për %s</string>
     <string name="reader_tags_feed_see_more_from_tag">Më tepër nga %s</string>
     <string name="reader_tags_display_name">Etiketa</string>
-    <string name="reader_announcement_card_reading_preferences_description">Zgjidhni ngjyra dhe shkronja që ju vijnë për shtat. Kur lexoni një postim, prekni ikonën AA në krye të ekranit.</string>
-    <string name="reader_announcement_card_reading_preferences_title">Parapëlqime Leximi</string>
-    <string name="reader_announcement_card_tags_stream_description">Prekni menunë hapmbyll në krye dhe përzgjidhni Etiketa për përdorim rrjedhash nga etiketat që ndiqni.</string>
-    <string name="reader_announcement_card_tags_stream_title">Rrjedhë etiketash</string>
-    <string name="reader_announcement_card_title">Të reja në Lexues</string>
     <string name="reader_dropdown_menu_tags">Etiketat Tuaja</string>
     <string name="no_connection_error_description">Kontrolloni lidhjen tuaj në rrjet dhe riprovoni.</string>
     <string name="no_connection_error_title">S’arrihet të ngarkohet kjo lëndë këtë çast</string>

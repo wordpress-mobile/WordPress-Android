@@ -219,11 +219,6 @@ Language: gl_ES
     <string name="reader_tags_feed_error_title">No se atoparon entradas para %s</string>
     <string name="reader_tags_feed_see_more_from_tag">Máis de %s</string>
     <string name="reader_tags_display_name">Etiquetas</string>
-    <string name="reader_announcement_card_reading_preferences_description">Escolle cores e fontes que che conveñan. Cando esteas lendo unha publicación, toca a icona AA na parte superior da pantalla.</string>
-    <string name="reader_announcement_card_reading_preferences_title">Preferencias de lectura</string>
-    <string name="reader_announcement_card_tags_stream_description">Toca o menú despregable na parte superior e selecciona Etiquetas para acceder aos fluxos das túas etiquetas seguidas.</string>
-    <string name="reader_announcement_card_tags_stream_title">Fluxo de etiquetas</string>
-    <string name="reader_announcement_card_title">Novo no lector</string>
     <string name="reader_dropdown_menu_tags">As túas etiquetas:</string>
     <string name="no_connection_error_description">Comproba a túa conexión de rede e téntao de novo.</string>
     <string name="no_connection_error_title">Neste momento non se puido cargar este contido</string>

@@ -294,11 +294,6 @@ Language: ru
     <string name="reader_tags_feed_error_title">Записей по запросу %s не найдено</string>
     <string name="reader_tags_feed_see_more_from_tag">Другие записи с меткой %s</string>
     <string name="reader_tags_display_name">Метки</string>
-    <string name="reader_announcement_card_reading_preferences_description">Выберите цвета и шрифты по своему вкусу. Во время чтения записи нажмите значок АА в верхней части экрана.</string>
-    <string name="reader_announcement_card_reading_preferences_title">Настройки чтения</string>
-    <string name="reader_announcement_card_tags_stream_description">Нажмите раскрывающееся меню в верхней части и выберите «Метки», чтобы перейти к лентам записей с метками, на которые вы подписались.</string>
-    <string name="reader_announcement_card_tags_stream_title">Ленты записей с метками</string>
-    <string name="reader_announcement_card_title">Новое в «Чтиве»</string>
     <string name="reader_dropdown_menu_tags">Ваши метки</string>
     <string name="no_connection_error_description">Проверьте подключение к сети и попробуйте снова.</string>
     <string name="no_connection_error_title">Сейчас невозможно загрузить этот контент.</string>

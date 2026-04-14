@@ -294,11 +294,6 @@ Language: ko_KR
     <string name="reader_tags_feed_error_title">%s에 대한 글을 찾을 수 없습니다.</string>
     <string name="reader_tags_feed_see_more_from_tag">%s에서 더 보기</string>
     <string name="reader_tags_display_name">태그</string>
-    <string name="reader_announcement_card_reading_preferences_description">자신에게 맞는 색상과 글꼴을 선택하세요. 글을 읽을 때 화면 상단의 AA 아이콘을 탭하세요.</string>
-    <string name="reader_announcement_card_reading_preferences_title">읽기 기본 설정</string>
-    <string name="reader_announcement_card_tags_stream_description">상단의 드롭다운을 탭하고 태그를 선택하여 회원님이 팔로우하는 태그의 스트림에 접근하세요.</string>
-    <string name="reader_announcement_card_tags_stream_title">태그 스트림</string>
-    <string name="reader_announcement_card_title">뉴스피드 새 항목</string>
     <string name="reader_dropdown_menu_tags">내 태그</string>
     <string name="no_connection_error_description">네트워크 연결을 확인하고 다시 시도하세요.</string>
     <string name="no_connection_error_title">지금 이 콘텐츠를 로드할 수 없습니다.</string>

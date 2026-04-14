@@ -271,11 +271,6 @@ Language: fr
     <string name="reader_tags_feed_error_title">Aucun résultat pour %s</string>
     <string name="reader_tags_feed_see_more_from_tag">Plus de %s</string>
     <string name="reader_tags_display_name">Étiquettes</string>
-    <string name="reader_announcement_card_reading_preferences_description">Choisissez les couleurs et polices qui vous conviennent. Lorsque vous lisez un article, appuyez sur l’icône AA en haut de l’écran.</string>
-    <string name="reader_announcement_card_reading_preferences_title">Préférences de lecture</string>
-    <string name="reader_announcement_card_tags_stream_description">Appuyez sur la liste déroulante en haut et sélectionnez Étiquettes pour accéder aux flux des étiquettes que vous suivez.</string>
-    <string name="reader_announcement_card_tags_stream_title">Flux Étiquettes</string>
-    <string name="reader_announcement_card_title">Nouveau dans le Lecteur</string>
     <string name="reader_dropdown_menu_tags">Vos étiquettes</string>
     <string name="no_connection_error_description">Vérifiez votre connexion réseau et réessayez.</string>
     <string name="no_connection_error_title">Impossible de charger ce contenu pour le moment</string>
