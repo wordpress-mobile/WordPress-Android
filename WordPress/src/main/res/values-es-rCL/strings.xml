@@ -83,11 +83,6 @@ Language: es_CL
     <string name="reader_tags_feed_error_title">No se encontraron entradas para %s</string>
     <string name="reader_tags_feed_see_more_from_tag">Más de %s</string>
     <string name="reader_tags_display_name">Etiquetas</string>
-    <string name="reader_announcement_card_reading_preferences_description">Elige colores y fuentes que te gusten. Cuando estés leyendo una entrada, toca el ícono AA en la parte superior de la pantalla.</string>
-    <string name="reader_announcement_card_reading_preferences_title">Preferencias de lectura</string>
-    <string name="reader_announcement_card_tags_stream_description">Toca el menú desplegable en la parte superior y selecciona \"Etiquetas\" para acceder al feed de las etiquetas que sigues.</string>
-    <string name="reader_announcement_card_tags_stream_title">Feed de etiquetas</string>
-    <string name="reader_announcement_card_title">Nuevo en el lector</string>
     <string name="reader_dropdown_menu_tags">Tus etiquetas</string>
     <string name="no_connection_error_description">Comprueba tu conexión a la red e inténtalo de nuevo.</string>
     <string name="no_connection_error_title">En este momento no se ha podido cargar este contenido</string>

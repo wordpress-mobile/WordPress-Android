@@ -294,11 +294,6 @@ Language: ro
     <string name="reader_tags_feed_error_title">Nu am găsit niciun articol pentru %s</string>
     <string name="reader_tags_feed_see_more_from_tag">Mai multe pentru %s</string>
     <string name="reader_tags_display_name">Etichete</string>
-    <string name="reader_announcement_card_reading_preferences_description">Alegi culorile și fonturile pe care le vrei. Când citești un articol, atinge iconul AA în partea de sus a ecranului.</string>
-    <string name="reader_announcement_card_reading_preferences_title">Preferințe pentru citire</string>
-    <string name="reader_announcement_card_tags_stream_description">Atinge lista derulantă în partea de sus și selectează Etichete pentru a accesa fluxurile pentru etichetele urmărite.</string>
-    <string name="reader_announcement_card_tags_stream_title">Flux de etichete</string>
-    <string name="reader_announcement_card_title">Noutăți în Cititor</string>
     <string name="reader_dropdown_menu_tags">Etichetele tale</string>
     <string name="no_connection_error_description">Verifică conexiunea la rețea și încearcă din nou.</string>
     <string name="no_connection_error_title">Nu pot să încarc acest conținut chiar acum</string>

@@ -270,11 +270,6 @@ Language: ar
     <string name="reader_tags_feed_error_title">لا توجد تدوينات لـ %s</string>
     <string name="reader_tags_feed_see_more_from_tag">المزيد من %s</string>
     <string name="reader_tags_display_name">الوسوم</string>
-    <string name="reader_announcement_card_reading_preferences_description">اختر الألوان والخطوط الملائمة لك. عند قراءة تدوينة، اضغط على أيقونة AA في أعلى الشاشة.</string>
-    <string name="reader_announcement_card_reading_preferences_title">تفضيلات القراءة</string>
-    <string name="reader_announcement_card_tags_stream_description">اضغط على القائمة المنسدلة في الأعلى وحدد الوسوم للوصول إلى التدفقات الواردة من الوسوم التي تتابعها.</string>
-    <string name="reader_announcement_card_tags_stream_title">تدفق الوسوم</string>
-    <string name="reader_announcement_card_title">جديد في القارئ</string>
     <string name="reader_dropdown_menu_tags">الوسوم الخاصة بك</string>
     <string name="no_connection_error_description">تحقق من اتصالك بالشبكة وحاول مرة أخرى.</string>
     <string name="no_connection_error_title">يتعذر تحميل هذا المحتوى حاليًا.</string>

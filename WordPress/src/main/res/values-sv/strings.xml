@@ -293,11 +293,6 @@ Language: sv_SE
     <string name="reader_tags_feed_error_title">Inga inlägg hittades för %s</string>
     <string name="reader_tags_feed_see_more_from_tag">Mer från %s</string>
     <string name="reader_tags_display_name">Etiketter</string>
-    <string name="reader_announcement_card_reading_preferences_description">Välj färger och typsnitt som passar dig. När du läser ett inlägg, tryck på AA-ikonen längst upp på skärmen.</string>
-    <string name="reader_announcement_card_reading_preferences_title">Läsinställningar</string>
-    <string name="reader_announcement_card_tags_stream_description">Tryck på rullgardinsmenyn längst upp och välj Etiketter för att komma åt strömmar från etiketter du följer.</string>
-    <string name="reader_announcement_card_tags_stream_title">Etikettström</string>
-    <string name="reader_announcement_card_title">Nytt i Läsaren</string>
     <string name="reader_dropdown_menu_tags">Dina etiketter</string>
     <string name="no_connection_error_description">Kontrollera din nätverksanslutning och försök igen.</string>
     <string name="no_connection_error_title">Det går inte att ladda detta innehåll för tillfället</string>

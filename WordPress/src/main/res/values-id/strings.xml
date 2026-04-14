@@ -290,11 +290,6 @@ Language: id
     <string name="reader_tags_feed_error_title">Tidak ditemukan pos untuk %s</string>
     <string name="reader_tags_feed_see_more_from_tag">Selengkapnya dari %s</string>
     <string name="reader_tags_display_name">Tag</string>
-    <string name="reader_announcement_card_reading_preferences_description">Pilih warna dan font sesuai selera. Saat membaca pos, ketuk ikon AA di bagian atas layar.</string>
-    <string name="reader_announcement_card_reading_preferences_title">Preferensi Membaca</string>
-    <string name="reader_announcement_card_tags_stream_description">Ketuk menu tarik-turun di bagian atas dan pilih Tag untuk mengakses stream dari tag yang Anda ikuti.</string>
-    <string name="reader_announcement_card_tags_stream_title">Tags Stream</string>
-    <string name="reader_announcement_card_title">Baru di Pembaca</string>
     <string name="reader_dropdown_menu_tags">Tag Anda</string>
     <string name="no_connection_error_description">Periksa koneksi internet dan coba lagi.</string>
     <string name="no_connection_error_title">Tidak dapat memuat konten ini sekarang</string>

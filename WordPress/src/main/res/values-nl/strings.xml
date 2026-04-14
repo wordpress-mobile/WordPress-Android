@@ -294,11 +294,6 @@ Language: nl
     <string name="reader_tags_feed_error_title">Geen berichten gevonden voor %s</string>
     <string name="reader_tags_feed_see_more_from_tag">Meer van %s</string>
     <string name="reader_tags_display_name">Tags</string>
-    <string name="reader_announcement_card_reading_preferences_description">Kies kleuren en lettertypen die bij je passen. Als je een bericht leest, dan tikken op het icoon AA bovenaan het scherm.</string>
-    <string name="reader_announcement_card_reading_preferences_title">Leesvoorkeuren</string>
-    <string name="reader_announcement_card_tags_stream_description">Tikken op de dropdown bovenaan en selecteer Tags om toegang te krijgen tot streams van je gevolgde tags.</string>
-    <string name="reader_announcement_card_tags_stream_title">Tags stream</string>
-    <string name="reader_announcement_card_title">Nieuw in Reader</string>
     <string name="reader_dropdown_menu_tags">Je tags</string>
     <string name="no_connection_error_description">Controleer je netwerkverbinding en probeer het nogmaals.</string>
     <string name="no_connection_error_title">Deze inhoud kan momenteel niet geladen worden</string>

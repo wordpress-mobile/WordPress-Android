@@ -290,11 +290,6 @@ Language: it
     <string name="reader_tags_feed_error_title">Nessun articolo trovato per %s</string>
     <string name="reader_tags_feed_see_more_from_tag">Ulteriori informazioni da %s</string>
     <string name="reader_tags_display_name">Tag</string>
-    <string name="reader_announcement_card_reading_preferences_description">Scegli i colori e i font che più ti si addicono. Mentre leggi un articolo, tocca l\'icona AA nella parte superiore dello schermo.</string>
-    <string name="reader_announcement_card_reading_preferences_title">Preferenze di lettura</string>
-    <string name="reader_announcement_card_tags_stream_description">Tocca il menu a tendina in alto e seleziona Tag per accedere agli stream dei tag seguiti.</string>
-    <string name="reader_announcement_card_tags_stream_title">Stream dei tag</string>
-    <string name="reader_announcement_card_title">Novità su Reader</string>
     <string name="reader_dropdown_menu_tags">I tuoi tag</string>
     <string name="no_connection_error_description">Controlla la connessione di rete e riprova.</string>
     <string name="no_connection_error_title">Impossibile caricare questo contenuto al momento</string>

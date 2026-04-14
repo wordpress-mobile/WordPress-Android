@@ -211,11 +211,6 @@ Language: pl
     <string name="reader_tags_feed_error_title">Nie znaleziono wpisów dla %s</string>
     <string name="reader_tags_feed_see_more_from_tag">Więcej z %s</string>
     <string name="reader_tags_display_name">Tagi</string>
-    <string name="reader_announcement_card_reading_preferences_description">Wybierz pasujące ci kolory i czcionki. Podczas czytania wpisu kliknij ikonę AA na górze ekranu.</string>
-    <string name="reader_announcement_card_reading_preferences_title">Ustawienia czytania</string>
-    <string name="reader_announcement_card_tags_stream_description">Aby uzyskać dostęp do zawartości obserwowanych tagów kliknij listę rozwijaną na górze je wybierz.</string>
-    <string name="reader_announcement_card_tags_stream_title">Tagi stream</string>
-    <string name="reader_announcement_card_title">Nowość w aplikacji Reader</string>
     <string name="reader_dropdown_menu_tags">Twoje tagi</string>
     <string name="no_connection_error_description">Sprawdź swoje połączenie internetowe i spróbuj ponownie.</string>
     <string name="no_connection_error_title">Nie można teraz załadować wybranej treści</string>

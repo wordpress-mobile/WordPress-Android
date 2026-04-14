@@ -294,11 +294,6 @@ Language: pt_BR
     <string name="reader_tags_feed_error_title">Nenhum post encontrado para %s</string>
     <string name="reader_tags_feed_see_more_from_tag">Mais de %s</string>
     <string name="reader_tags_display_name">Tags</string>
-    <string name="reader_announcement_card_reading_preferences_description">Escolha cores e fontes que combinem com você. Quando você estiver lendo um post, clique no ícone \"AA\" na parte superior da tela.</string>
-    <string name="reader_announcement_card_reading_preferences_title">Preferências de leitura</string>
-    <string name="reader_announcement_card_tags_stream_description">Clique no menu suspenso na parte superior da tela e selecione \"Tags\" para acessar os fluxos de suas tags seguidas.</string>
-    <string name="reader_announcement_card_tags_stream_title">Fluxo de tags</string>
-    <string name="reader_announcement_card_title">Novo em Leitor</string>
     <string name="reader_dropdown_menu_tags">Suas tags</string>
     <string name="no_connection_error_description">Verifique sua conexão de rede e tente novamente.</string>
     <string name="no_connection_error_title">Não é possível carregar este conteúdo no momento</string>

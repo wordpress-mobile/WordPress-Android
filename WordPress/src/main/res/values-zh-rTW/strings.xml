@@ -209,11 +209,6 @@ Language: zh_TW
     <string name="reader_tags_feed_error_title">找不到與「%s」相符的文章</string>
     <string name="reader_tags_feed_see_more_from_tag">更多來自「%s」的項目</string>
     <string name="reader_tags_display_name">標籤</string>
-    <string name="reader_announcement_card_reading_preferences_description">選擇適合你的顏色和字型。 閱讀文章時，點選畫面頂端的 AA 圖示。</string>
-    <string name="reader_announcement_card_reading_preferences_title">閱讀喜好</string>
-    <string name="reader_announcement_card_tags_stream_description">點選頂端的下拉式清單，然後選取標籤，存取與你關注的標籤相關的文章串。</string>
-    <string name="reader_announcement_card_tags_stream_title">標籤串</string>
-    <string name="reader_announcement_card_title">閱讀器新功能</string>
     <string name="reader_dropdown_menu_tags">你的標籤</string>
     <string name="no_connection_error_description">請檢查你的網路連線並再試一次。</string>
     <string name="no_connection_error_title">目前無法載入此內容</string>

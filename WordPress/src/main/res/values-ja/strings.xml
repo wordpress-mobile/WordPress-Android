@@ -269,11 +269,6 @@ Language: ja_JP
     <string name="reader_tags_feed_error_title">%s の投稿が見つかりませんでした</string>
     <string name="reader_tags_feed_see_more_from_tag">%s の続き</string>
     <string name="reader_tags_display_name">タグ</string>
-    <string name="reader_announcement_card_reading_preferences_description">お好みの色とフォントを選択してください。 投稿を読んでいるときに、画面上部の AA アイコンをタップします。</string>
-    <string name="reader_announcement_card_reading_preferences_title">閲覧の設定</string>
-    <string name="reader_announcement_card_tags_stream_description">上部のドロップダウンをタップし、「タグ」を選択して、フォロー中のタグからストリームにアクセスします。</string>
-    <string name="reader_announcement_card_tags_stream_title">タグのストリーム</string>
-    <string name="reader_announcement_card_title">Reader の新規</string>
     <string name="reader_dropdown_menu_tags">あなたのタグ</string>
     <string name="no_connection_error_description">ネットワーク接続を確認して、もう一度お試しください。</string>
     <string name="no_connection_error_title">現在このコンテンツを読み込めません</string>
