@@ -220,14 +220,14 @@ class ReaderPostRepository @Inject constructor(
     }
 
     /**
-     * Requests posts for a Discover "Freshly Pressed", "Recommended", or "Latest" sub-tab using
-     * the v2 /read/streams/{slug} endpoint. All three sub-tabs share this pipeline (matching iOS
-     * ReaderPostServiceRemote.fetchStreamCards) and are distinguished by the tag's slug/endpoint:
-     * Latest adds sort=date while Recommended and Freshly Pressed use the server default ordering.
+     * Requests posts for a Discover "Recommended" or "Latest" sub-tab using the v2
+     * /read/streams/discover endpoint. Latest adds sort=date while Recommended uses
+     * the server default ordering. Freshly Pressed uses a separate v1.2 endpoint and
+     * is handled by [requestPostsWithTag].
      *
-     * Pagination is cursor-based via an opaque page_handle stored per-stream in AppPrefs. First-page
-     * requests also include a "refresh" counter so the server returns a different shard of content,
-     * matching the existing ReaderDiscoverLogic behavior.
+     * Pagination is cursor-based via an opaque page_handle stored per-stream in AppPrefs.
+     * First-page requests also include a "refresh" counter so the server returns a different
+     * shard of content, matching the existing ReaderDiscoverLogic behavior.
      */
     private fun requestPostsForDiscoverStream(
         tag: ReaderTag,
