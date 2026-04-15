@@ -26,15 +26,6 @@ class JetpackConnectionSourceTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given valid xmlrpc_disabled source, when fromString requested, then results match enum`() {
-        val value = "xmlrpc_disabled"
-
-        val result = JetpackConnectionSource.fromString(value)
-
-        assertThat(result).isEqualTo(JetpackConnectionSource.XMLRPC_DISABLED)
-    }
-
-    @Test
     fun `given invalid source, when fromString requested, then results are null`() {
         val value = "abcdefg"
 

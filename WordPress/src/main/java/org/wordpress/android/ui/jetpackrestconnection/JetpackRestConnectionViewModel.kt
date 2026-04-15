@@ -551,8 +551,7 @@ class JetpackRestConnectionViewModel @Inject constructor(
 
     enum class ConnectionSource {
         STATS,
-        NOTIFS,
-        XMLRPC_DISABLED
+        NOTIFS
     }
 
     companion object {

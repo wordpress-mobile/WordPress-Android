@@ -209,7 +209,6 @@ class ApplicationPasswordViewModelSlice @Inject constructor(
         appLogWrapper.d(AppLog.T.MAIN, "A_P: Showing card for ${site.url}")
     }
 
-
     private fun buildXmlRpcDisabledCard(site: SiteModel) {
         uiModelMutable.postValue(
             MySiteCardAndItem.Item.SingleActionCard(
