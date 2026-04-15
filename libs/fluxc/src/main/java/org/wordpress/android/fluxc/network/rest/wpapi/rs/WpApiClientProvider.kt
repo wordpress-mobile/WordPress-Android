@@ -166,6 +166,19 @@ class WpApiClientProvider @Inject constructor(
         }
     }
 
+    fun getApiUrlResolver(
+        site: SiteModel
+    ): uniffi.wp_api.ApiUrlResolver = when {
+        site.isWPCom || site.isUsingWpComRestApi ->
+            WpComUrlResolver(
+                siteId = site.siteId.toString(),
+                baseUrl = WpComBaseUrl.Production
+            )
+        else -> WpOrgSiteApiUrlResolver(
+            ParsedUrl.parse(site.buildUrl())
+        )
+    }
+
     fun getApiRootUrlFrom(site: SiteModel): String = site.buildUrl()
 
     private fun SiteModel.buildUrl(): String =

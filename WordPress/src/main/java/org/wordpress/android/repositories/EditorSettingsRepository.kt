@@ -99,6 +99,8 @@ class EditorSettingsRepository @Inject constructor(
     ): Boolean = try {
         val client =
             wpApiClientProvider.getWpApiClient(site)
+        val resolver =
+            wpApiClientProvider.getApiUrlResolver(site)
         val response =
             client.request { it.apiRoot().get() }
 
@@ -107,15 +109,19 @@ class EditorSettingsRepository @Inject constructor(
             appPrefsWrapper
                 .setSiteSupportsEditorSettings(
                     site,
-                    data.hasRoute(
-                        "/wp-block-editor/v1/settings"
+                    data.hasRouteForEndpoint(
+                        resolver,
+                        "/wp-block-editor/v1",
+                        "settings"
                     )
                 )
             appPrefsWrapper
                 .setSiteSupportsEditorAssets(
                     site,
-                    data.hasRoute(
-                        "/wpcom/v2/editor-assets"
+                    data.hasRouteForEndpoint(
+                        resolver,
+                        "/wp-block-editor/v1",
+                        "assets"
                     )
                 )
             true
