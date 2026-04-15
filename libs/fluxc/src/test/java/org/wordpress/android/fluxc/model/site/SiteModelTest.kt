@@ -3,7 +3,9 @@ package org.wordpress.android.fluxc.model.site
 import org.junit.Test
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.site.SiteUtils
+import kotlin.test.assertEquals
 import kotlin.test.assertFalse
+import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
 class SiteModelTest {
@@ -155,6 +157,100 @@ class SiteModelTest {
         site.setShareButtonsSupport(false)
 
         assertFalse(site.supportsSharing())
+    }
+
+    /* isWPComSimpleSite */
+    @Test
+    fun `wpcom non-atomic site is a simple site`() {
+        val site = SiteUtils.generateWPComSite()
+        site.setIsWPComAtomic(false)
+
+        assertTrue(site.isWPComSimpleSite)
+    }
+
+    @Test
+    fun `wpcom atomic site is not a simple site`() {
+        val site = SiteUtils.generateWPComSite()
+        site.setIsWPComAtomic(true)
+
+        assertFalse(site.isWPComSimpleSite)
+    }
+
+    @Test
+    fun `self-hosted site is not a simple site`() {
+        val site = SiteUtils.generateSelfHostedNonJPSite()
+
+        assertFalse(site.isWPComSimpleSite)
+    }
+
+    @Test
+    fun `jetpack site is not a simple site`() {
+        val site = SiteUtils.generateJetpackSiteOverRestOnly()
+
+        assertFalse(site.isWPComSimpleSite)
+    }
+
+    /* getWpApiRestUrl — proxy URL for simple sites */
+    @Test
+    fun `atomic site returns stored wpApiRestUrl`() {
+        val site = SiteUtils.generateWPComSite()
+        site.setIsWPComAtomic(true)
+        site.wpApiRestUrl = "https://atomic.example.com/wp-json/"
+
+        assertEquals("https://atomic.example.com/wp-json/", site.wpApiRestUrl)
+    }
+
+    @Test
+    fun `self-hosted site with no wpApiRestUrl returns null`() {
+        val site = SiteUtils.generateSelfHostedNonJPSite()
+
+        assertNull(site.wpApiRestUrl)
+    }
+
+    @Test
+    fun `atomic site with no stored wpApiRestUrl returns null`() {
+        val site = SiteUtils.generateWPComSite()
+        site.setIsWPComAtomic(true)
+
+        assertNull(site.wpApiRestUrl)
+    }
+
+    @Test
+    fun `simple site proxy URL uses wpcom siteId not local id`() {
+        val site = SiteUtils.generateWPComSite()
+        site.setIsWPComAtomic(false)
+        site.siteId = 99887766
+        site.id = 42
+
+        assertEquals(
+            "https://public-api.wordpress.com/wp/v2/sites/99887766",
+            site.wpApiRestUrl
+        )
+    }
+
+    @Test
+    fun `simple site proxy URL overrides stored wpApiRestUrl`() {
+        val site = SiteUtils.generateWPComSite()
+        site.setIsWPComAtomic(false)
+        site.wpApiRestUrl = "https://should-be-ignored.example.com/wp-json/"
+
+        assertEquals(
+            "https://public-api.wordpress.com/wp/v2/sites/${site.siteId}",
+            site.wpApiRestUrl
+        )
+    }
+
+    @Test
+    fun `jetpack REST site returns stored url not proxy`() {
+        val site = SiteUtils.generateJetpackSiteOverRestOnly()
+        site.wpApiRestUrl = "https://jetpack.example.com/wp-json/"
+
+        assertTrue(site.isUsingWpComRestApi)
+        assertFalse(site.isWPComSimpleSite)
+        assertEquals(
+            "https://jetpack.example.com/wp-json/",
+            site.wpApiRestUrl
+        )
     }
 
     private fun SiteModel.setPublicizeSupport(enablePublicizeSupport: Boolean) {

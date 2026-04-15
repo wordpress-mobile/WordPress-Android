@@ -438,6 +438,14 @@ public class SiteModel extends Payload<BaseNetworkError> implements Identifiable
     }
 
     public String getWpApiRestUrl() {
+        // WP.com simple sites don't have a stored wpApiRestUrl (the WP.com REST API
+        // response never sets it, and no other code path populates it for these sites).
+        // Return the public-api proxy URL so all callers get the correct endpoint
+        // without needing site-type checks at every call site.
+        if (isWPComSimpleSite()) {
+            return "https://public-api.wordpress.com/wp/v2/sites/"
+                    + mSiteId;
+        }
         return mWpApiRestUrl;
     }
 
@@ -924,6 +932,10 @@ public class SiteModel extends Payload<BaseNetworkError> implements Identifiable
 
     public boolean hasDiskSpaceQuotaInformation() {
         return mSpaceAllowed > 0;
+    }
+
+    public boolean isWPComSimpleSite() {
+        return isWPCom() && !isWPComAtomic();
     }
 
     public boolean isWPComAtomic() {

@@ -16,9 +16,11 @@ import uniffi.wp_api.CookiesNonceAuthenticationProvider
 import uniffi.wp_api.WpAppNotifier
 import uniffi.wp_api.WpAuthentication
 import uniffi.wp_api.WpAuthenticationProvider
+import uniffi.wp_api.ParsedUrl
 import uniffi.wp_api.WpComBaseUrl
 import uniffi.wp_api.WpComDotOrgApiUrlResolver as WpComUrlResolver // checkstyle ignore
 import uniffi.wp_api.WpDynamicAuthenticationProvider
+import uniffi.wp_api.WpOrgSiteApiUrlResolver
 import java.net.URL
 import javax.inject.Inject
 import javax.inject.Named
@@ -56,7 +58,8 @@ class WpApiClientProvider @Inject constructor(
         site: SiteModel,
         uploadListener: WpRequestExecutor.UploadListener? = null
     ): WpApiClient = when {
-        site.isWPCom -> getWpComApiClient(site)
+        site.isWPCom || site.isUsingWpComRestApi ->
+            getWpComApiClient(site)
         // Skip caching when an upload listener is provided —
         // upload flows need a dedicated client with progress
         // callbacks.
@@ -76,8 +79,12 @@ class WpApiClientProvider @Inject constructor(
                 username = site.apiRestUsernamePlain,
                 password = site.apiRestPasswordPlain,
             )
+
+        val urlResolver =
+            WpOrgSiteApiUrlResolver(ParsedUrl.parse(site.buildUrl()))
+
         return WpApiClient(
-            wpOrgSiteApiRootUrl = URL(site.buildUrl()),
+            apiUrlResolver = urlResolver,
             authProvider = authProvider,
             requestExecutor = WpRequestExecutor(
                 interceptors = interceptors.toList(),
