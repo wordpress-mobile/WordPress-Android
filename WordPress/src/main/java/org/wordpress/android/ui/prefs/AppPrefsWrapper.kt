@@ -115,6 +115,12 @@ class AppPrefsWrapper @Inject constructor(val buildConfigWrapper: BuildConfigWra
     fun setSubscribersCardsConfigurationJson(siteId: Long, json: String?) =
         AppPrefs.setSubscribersCardsConfigurationJson(siteId, json)
 
+    fun getStatsUtmCategory(siteId: Long): String? =
+        AppPrefs.getStatsUtmCategory(siteId)
+
+    fun setStatsUtmCategory(siteId: Long, category: String?) =
+        AppPrefs.setStatsUtmCategory(siteId, category)
+
     fun getAppWidgetSiteId(appWidgetId: Int) = AppPrefs.getStatsWidgetSelectedSiteId(appWidgetId)
     fun setAppWidgetSiteId(siteId: Long, appWidgetId: Int) = AppPrefs.setStatsWidgetSelectedSiteId(siteId, appWidgetId)
     fun removeAppWidgetSiteId(appWidgetId: Int) = AppPrefs.removeStatsWidgetSelectedSiteId(appWidgetId)
@@ -460,10 +466,6 @@ class AppPrefsWrapper @Inject constructor(val buildConfigWrapper: BuildConfigWra
 
     fun setBookmarkPostsPseudoIdsUpdated() = AppPrefs.setBookmarkPostsPseudoIdsUpdated()
 
-    fun shouldShowReaderAnnouncementCard(): Boolean = AppPrefs.getShouldShowReaderAnnouncementCard()
-
-    fun setShouldShowReaderAnnouncementCard(shouldShow: Boolean) =
-        AppPrefs.setShouldShowReaderAnnouncementCard(shouldShow)
 
     fun getAllPrefs(): Map<String, Any?> = AppPrefs.getAllPrefs()
 

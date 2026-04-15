@@ -2209,40 +2209,35 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
             }
 
             val siteConfig = GutenbergKitSettingsBuilder.SiteConfig.fromSiteModel(siteModel)
-
             val postConfig = GutenbergKitSettingsBuilder.PostConfig.fromPostModel(
                 editPostRepository.getPost()
             )
-
             val featureConfig = GutenbergKitSettingsBuilder.FeatureConfig(
                 isPluginsFeatureEnabled = gutenbergKitPluginsFeature.isEnabled(),
                 isThemeStylesFeatureEnabled = siteSettings?.useThemeStyles ?: true,
                 isNetworkLoggingEnabled = AppPrefs.isTrackNetworkRequestsEnabled()
             )
-
             val appConfig = GutenbergKitSettingsBuilder.AppConfig(
                 accessToken = accountStore.accessToken,
                 locale = perAppLocaleManager.getCurrentLocaleLanguageCode(),
-                cookies = editPostAuthViewModel.getCookiesForPrivateSites(site, privateAtomicCookie),
+                cookies = editPostAuthViewModel.getCookiesForPrivateSites(
+                    site, privateAtomicCookie
+                ),
                 accountUserId = accountStore.account.userId,
                 accountUserName = accountStore.account.userName,
                 userAgent = userAgent,
                 isJetpackSsoEnabled = isJetpackSsoEnabled
             )
 
-            val config = GutenbergKitSettingsBuilder.GutenbergKitConfig(
+            val settings = GutenbergKitSettingsBuilder.buildSettings(
                 siteConfig = siteConfig,
                 postConfig = postConfig,
                 appConfig = appConfig,
                 featureConfig = featureConfig
             )
+            val configuration = EditorConfigurationBuilder.build(settings)
 
-            return GutenbergKitEditorFragment.newInstanceWithBuilder(
-                getContext(),
-                isNewPost,
-                jetpackFeatureRemovalPhaseHelper.shouldShowJetpackPoweredEditorFeatures(),
-                config
-            )
+            return GutenbergKitEditorFragment.newInstance(configuration)
         }
 
         override fun instantiateItem(container: ViewGroup, position: Int): Any {
@@ -2955,6 +2950,10 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
         Handler(Looper.getMainLooper()).post { invalidateOptionsMenu() }
     }
 
+    override fun getPersistedTitle(): String = editPostRepository.title
+
+    override fun getPersistedContent(): String = editPostRepository.content
+
     // FluxC events
     @Suppress("unused", "CyclomaticComplexMethod")
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -3133,8 +3132,9 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
     @Suppress("unused")
     @Subscribe(threadMode = ThreadMode.MAIN_ORDERED)
     fun onEditorSettingsChanged(event: OnEditorSettingsChanged) {
-        val editorSettingsString = event.editorSettings?.toJsonString() ?: "undefined"
-        editorFragment?.startWithEditorSettings(editorSettingsString)
+        // In GutenbergKit v0.15.0, the editor configuration is provided at
+        // construction time. Editor settings are no longer applied after the
+        // fact. This handler is retained for the EventBus subscription.
     }
 
     // EditorDataProvider methods

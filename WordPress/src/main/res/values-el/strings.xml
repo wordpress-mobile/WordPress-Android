@@ -18,8 +18,6 @@ Language: el_GR
     <string name="blogging_prompts_list_number_of_answers_one">1 απάντηση</string>
     <string name="blogging_prompts_list_number_of_answers_zero">0 απαντήσεις</string>
     <string name="blogging_prompts_list_answered_prompt">Απαντήθηκε</string>
-    <string name="jp_migration_got_it_button">Το\'πιασα</string>
-    <string name="jp_migration_need_help_button">Χρειάζεστε βοήθεια;</string>
     <string name="jp_migration_network_error_title">Αδυναμία σύνδεσης στο διαδίκτυο</string>
     <string name="jp_migration_try_again_button">Δοκιμάστε ξανά</string>
     <string name="jp_migration_generic_error_title">Χμμ.. κάτι πήγε στραβά!</string>

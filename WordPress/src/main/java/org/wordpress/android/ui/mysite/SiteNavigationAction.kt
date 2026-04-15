@@ -56,7 +56,6 @@ sealed class SiteNavigationAction {
     data class OpenUrlInWebView(val url: String) : SiteNavigationAction()
     data class OpenDeepLink(val url: String) : SiteNavigationAction()
     object OpenJetpackPoweredBottomSheet : SiteNavigationAction()
-    object OpenJetpackMigrationDeleteWP : SiteNavigationAction()
     data class OpenJetpackFeatureOverlay(val source: JetpackFeatureCollectionOverlaySource) : SiteNavigationAction()
     data class OpenPromoteWithBlazeOverlay(val source: BlazeFlowSource, val shouldShowBlazeOverlay: Boolean = false) :
         SiteNavigationAction()

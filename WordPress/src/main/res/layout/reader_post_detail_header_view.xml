@@ -34,10 +34,39 @@
         app:layout_constraintTop_toBottomOf="@id/text_blog_name"
         tools:text="Post Title: This could be a quite big title" />
 
+    <!-- Subscribe / Follow button (right-aligned, centered with blog section) -->
+    <FrameLayout
+        android:id="@+id/header_follow_button_container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_medium"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/layout_blog_section"
+        app:layout_constraintBottom_toBottomOf="@id/layout_blog_section"
+        tools:visibility="visible">
+
+        <org.wordpress.android.ui.reader.views.ReaderFollowButton
+            android:id="@+id/header_follow_button"
+            style="@style/Reader.Follow.Button.New.Compact"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center" />
+
+        <ProgressBar
+            android:id="@+id/header_follow_progress"
+            android:layout_width="@dimen/reader_follow_button_progress_size"
+            android:layout_height="@dimen/reader_follow_button_progress_size"
+            android:layout_gravity="center"
+            android:visibility="gone"
+            tools:visibility="visible" />
+
+    </FrameLayout>
+
     <!-- Blog section (avatar + author + date) -->
     <include layout="@layout/reader_blog_section_view_new"
         android:id="@+id/layout_blog_section"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:importantForAccessibility="no"
         android:layout_marginTop="@dimen/margin_medium"
@@ -45,7 +74,7 @@
         android:clickable="true"
         android:focusable="true"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/header_follow_button_container"
         app:layout_constraintTop_toBottomOf="@id/text_title" />
 
     <!-- Featured image (adaptive aspect ratio) -->
@@ -102,65 +131,5 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/text_excerpt_view_more"
         tools:visibility="visible" />
-
-    <androidx.constraintlayout.widget.Barrier
-        android:id="@+id/blog_description_barrier"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:barrierDirection="bottom"
-        app:constraint_referenced_ids="header_featured_image,text_excerpt,text_excerpt_view_more,excerpt_divider" />
-
-    <!-- Reading time -->
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/text_reading_time"
-        style="@style/ReaderTextView.PostDetail.BlogSection.Subtitle.MediumEmphasis"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_medium"
-        android:drawablePadding="@dimen/margin_extra_small"
-        android:gravity="center_vertical"
-        android:includeFontPadding="false"
-        android:visibility="gone"
-        app:drawableStartCompat="@drawable/ic_clock_16dp"
-        app:drawableTint="?android:textColorSecondary"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/blog_description_barrier"
-        tools:text="5 min read"
-        tools:visibility="visible" />
-
-    <FrameLayout
-        android:id="@+id/header_follow_button_container"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/margin_medium"
-        android:layout_marginTop="@dimen/margin_medium"
-        android:visibility="gone"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/blog_description_barrier"
-        tools:visibility="visible">
-
-        <org.wordpress.android.ui.reader.views.ReaderFollowButton
-            android:id="@+id/header_follow_button"
-            style="@style/Reader.Follow.Button.New.Compact"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center" />
-
-        <ProgressBar
-            android:id="@+id/header_follow_progress"
-            android:layout_width="@dimen/reader_follow_button_progress_size"
-            android:layout_height="@dimen/reader_follow_button_progress_size"
-            android:layout_gravity="center"
-            android:visibility="gone"
-            tools:visibility="visible" />
-
-    </FrameLayout>
-
-    <androidx.constraintlayout.widget.Barrier
-        android:id="@+id/reading_time_barrier"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:barrierDirection="bottom"
-        app:constraint_referenced_ids="text_excerpt,text_excerpt_view_more,excerpt_divider,text_reading_time,header_follow_button_container" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

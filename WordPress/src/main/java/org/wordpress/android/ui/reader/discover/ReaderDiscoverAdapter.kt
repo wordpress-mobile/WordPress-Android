@@ -3,11 +3,11 @@ package org.wordpress.android.ui.reader.discover
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView.Adapter
-import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderAnnouncementCardUiState
+
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderInterestsCardUiState
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderRecommendedBlogsCardUiState
-import org.wordpress.android.ui.reader.discover.viewholders.ReaderAnnouncementCardViewHolder
+
 import org.wordpress.android.ui.reader.discover.viewholders.ReaderInterestsCardViewHolder
 import org.wordpress.android.ui.reader.discover.viewholders.ReaderPostNewViewHolder
 import org.wordpress.android.ui.reader.discover.viewholders.ReaderRecommendedBlogsCardNewViewHolder
@@ -21,7 +21,6 @@ import org.wordpress.android.util.image.ImageManager
 private const val INTEREST_VIEW_TYPE: Int = 2
 private const val RECOMMENDED_BLOGS_VIEW_TYPE: Int = 3
 private const val POST_NEW_VIEW_TYPE: Int = 4
-private const val READER_ANNOUNCEMENT_TYPE: Int = 5
 
 class ReaderDiscoverAdapter(
     private val uiHelpers: UiHelpers,
@@ -43,8 +42,6 @@ class ReaderDiscoverAdapter(
             INTEREST_VIEW_TYPE -> ReaderInterestsCardViewHolder(uiHelpers, parent)
 
             RECOMMENDED_BLOGS_VIEW_TYPE -> ReaderRecommendedBlogsCardNewViewHolder(parent, imageManager)
-
-            READER_ANNOUNCEMENT_TYPE -> ReaderAnnouncementCardViewHolder(parent)
 
             else -> throw NotImplementedError("Unknown ViewType")
         }
@@ -76,7 +73,6 @@ class ReaderDiscoverAdapter(
             is ReaderPostUiState -> POST_NEW_VIEW_TYPE
             is ReaderInterestsCardUiState -> INTEREST_VIEW_TYPE
             is ReaderRecommendedBlogsCardUiState -> RECOMMENDED_BLOGS_VIEW_TYPE
-            is ReaderAnnouncementCardUiState -> READER_ANNOUNCEMENT_TYPE
         }
     }
 
@@ -105,7 +101,7 @@ class ReaderDiscoverAdapter(
                     oldItem.blogs.map { it.blogId to it.feedId } == newItemState?.blogs?.map { it.blogId to it.feedId }
                 }
 
-                is ReaderInterestsCardUiState, is ReaderAnnouncementCardUiState -> {
+                is ReaderInterestsCardUiState -> {
                     oldItem == newItem
                 }
             }

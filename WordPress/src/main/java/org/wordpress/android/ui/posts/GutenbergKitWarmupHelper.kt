@@ -1,20 +1,13 @@
 package org.wordpress.android.ui.posts
 
-import android.content.Context
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.network.UserAgent
-import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
-import org.wordpress.android.util.PerAppLocaleManager
 import org.wordpress.android.util.SiteUtils
-import org.wordpress.android.util.config.GutenbergKitPluginsFeature
-import org.wordpress.gutenberg.EditorConfiguration
-import org.wordpress.gutenberg.GutenbergView
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
@@ -25,12 +18,7 @@ import javax.inject.Singleton
  */
 @Singleton
 class GutenbergKitWarmupHelper @Inject constructor(
-    private val appContext: Context,
-    private val accountStore: AccountStore,
-    private val userAgent: UserAgent,
-    private val perAppLocaleManager: PerAppLocaleManager,
     private val gutenbergKitFeatureChecker: GutenbergKitFeatureChecker,
-    private val gutenbergKitPluginsFeature: GutenbergKitPluginsFeature,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) {
     private var lastWarmedUpSiteId: Long? = null
@@ -93,62 +81,13 @@ class GutenbergKitWarmupHelper @Inject constructor(
         return shouldWarmup
     }
 
+    @Suppress("UnusedParameter")
     private suspend fun performWarmup(site: SiteModel) {
-        try {
-            isWarmupInProgress = true
-            AppLog.d(T.EDITOR, "GutenbergKitWarmupHelper: Starting warmup for site ${site.siteId}")
-
-            val configuration = buildWarmupConfiguration(site)
-
-            // Perform the warmup on the main thread as it involves WebView
-            kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
-                GutenbergView.warmup(appContext, configuration)
-            }
-
-            lastWarmedUpSiteId = site.siteId
-            AppLog.d(T.EDITOR, "GutenbergKitWarmupHelper: Warmup completed for site ${site.siteId}")
-        } catch (e: IllegalStateException) {
-            AppLog.e(T.EDITOR, "GutenbergKitWarmupHelper: Warmup failed - illegal state", e)
-        } finally {
-            isWarmupInProgress = false
-        }
-    }
-
-    private fun buildWarmupConfiguration(site: SiteModel): EditorConfiguration {
-        // Build the configuration using the same patterns as GutenbergKitSettingsBuilder
-        val siteConfig = GutenbergKitSettingsBuilder.SiteConfig.fromSiteModel(site)
-
-        // Create minimal post config for warmup (no specific post data)
-        val postConfig = GutenbergKitSettingsBuilder.PostConfig(
-            remotePostId = null,
-            isPage = false,
-            title = "",
-            content = ""
+        // GutenbergView.warmup() was removed in GutenbergKit v0.15.0.
+        // Warmup/preloading needs to be reimplemented using the new API.
+        AppLog.d(
+            T.EDITOR,
+            "GutenbergKitWarmupHelper: Warmup not yet supported in v0.15.0"
         )
-
-        val appConfig = GutenbergKitSettingsBuilder.AppConfig(
-            accessToken = accountStore.accessToken,
-            locale = perAppLocaleManager.getCurrentLocaleLanguageCode(),
-            cookies = null, // No cookies needed for warmup
-            accountUserId = accountStore.account.userId,
-            accountUserName = accountStore.account.userName,
-            userAgent = userAgent,
-            isJetpackSsoEnabled = false // Default to false for warmup
-        )
-
-        val featureConfig = GutenbergKitSettingsBuilder.FeatureConfig(
-            isPluginsFeatureEnabled = gutenbergKitPluginsFeature.isEnabled(),
-            // Default to true during warmup; actual value will be used when editor launches
-            isThemeStylesFeatureEnabled = true
-        )
-
-        val settings = GutenbergKitSettingsBuilder.buildSettings(
-            siteConfig = siteConfig,
-            postConfig = postConfig,
-            appConfig = appConfig,
-            featureConfig = featureConfig
-        )
-
-        return EditorConfigurationBuilder.build(settings, editorSettings = null)
     }
 }

@@ -193,10 +193,10 @@ public class AppPrefs {
         SHOULD_HIDE_DYNAMIC_CARD,
         PINNED_SITE_IDS,
         READER_READING_PREFERENCES_JSON,
-        SHOULD_SHOW_READER_ANNOUNCEMENT_CARD,
         STATS_CARDS_CONFIGURATION_JSON,
         STATS_INSIGHTS_CARDS_CONFIGURATION_JSON,
         SUBSCRIBERS_CARDS_CONFIGURATION_JSON,
+        STATS_UTM_CATEGORY,
 
         // Login flow preserved across OAuth Custom Tabs redirect
         PENDING_LOGIN_FLOW,
@@ -1734,14 +1734,6 @@ public class AppPrefs {
         setString(DeletablePrefKey.PINNED_SITE_IDS, ids);
     }
 
-    public static boolean getShouldShowReaderAnnouncementCard() {
-        return prefs().getBoolean(DeletablePrefKey.SHOULD_SHOW_READER_ANNOUNCEMENT_CARD.name(), true);
-    }
-
-    public static void setShouldShowReaderAnnouncementCard(final boolean shouldShow) {
-        prefs().edit().putBoolean(DeletablePrefKey.SHOULD_SHOW_READER_ANNOUNCEMENT_CARD.name(), shouldShow).apply();
-    }
-
     @Nullable
     public static String getReaderReadingPreferencesJson() {
         return getString(DeletablePrefKey.READER_READING_PREFERENCES_JSON, null);
@@ -1819,6 +1811,26 @@ public class AppPrefs {
     @NonNull
     private static String getSubscribersCardsConfigurationKey(long siteId) {
         return DeletablePrefKey.SUBSCRIBERS_CARDS_CONFIGURATION_JSON.name() + siteId;
+    }
+
+    @Nullable
+    public static String getStatsUtmCategory(long siteId) {
+        return prefs().getString(getStatsUtmCategoryKey(siteId), null);
+    }
+
+    public static void setStatsUtmCategory(long siteId, @Nullable String category) {
+        SharedPreferences.Editor editor = prefs().edit();
+        if (category == null) {
+            editor.remove(getStatsUtmCategoryKey(siteId));
+        } else {
+            editor.putString(getStatsUtmCategoryKey(siteId), category);
+        }
+        editor.apply();
+    }
+
+    @NonNull
+    private static String getStatsUtmCategoryKey(long siteId) {
+        return DeletablePrefKey.STATS_UTM_CATEGORY.name() + siteId;
     }
 
     /**

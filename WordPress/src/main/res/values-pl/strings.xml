@@ -211,11 +211,6 @@ Language: pl
     <string name="reader_tags_feed_error_title">Nie znaleziono wpisów dla %s</string>
     <string name="reader_tags_feed_see_more_from_tag">Więcej z %s</string>
     <string name="reader_tags_display_name">Tagi</string>
-    <string name="reader_announcement_card_reading_preferences_description">Wybierz pasujące ci kolory i czcionki. Podczas czytania wpisu kliknij ikonę AA na górze ekranu.</string>
-    <string name="reader_announcement_card_reading_preferences_title">Ustawienia czytania</string>
-    <string name="reader_announcement_card_tags_stream_description">Aby uzyskać dostęp do zawartości obserwowanych tagów kliknij listę rozwijaną na górze je wybierz.</string>
-    <string name="reader_announcement_card_tags_stream_title">Tagi stream</string>
-    <string name="reader_announcement_card_title">Nowość w aplikacji Reader</string>
     <string name="reader_dropdown_menu_tags">Twoje tagi</string>
     <string name="no_connection_error_description">Sprawdź swoje połączenie internetowe i spróbuj ponownie.</string>
     <string name="no_connection_error_title">Nie można teraz załadować wybranej treści</string>
@@ -565,11 +560,7 @@ Language: pl
     <string name="new_site_creation_preview_caption_paid">Rozpoczęcie prawidłowego działania domeny może potrwać około 30 minut.</string>
     <string name="new_site_creation_preview_subtitle_paid">Wysłaliśmy tobie e-mail z paragonem. %s</string>
     <string name="notifications_disabled_permission_dialog">Powiadomienia aplikacji zostały wyłączone. Naciśnij tutaj aby je uaktywnić.</string>
-    <string name="jp_migration_delete_message">Zalecamy &lt;b&gt;odinstalowanie aplikacji WordPress&lt;/b&gt; na twoim urządzeniu, żeby uniknąć konfliktów danych.</string>
-    <string name="jp_migration_delete_subtitle">Wygląda na to, że nadal masz zainstalowaną aplikację WordPress.</string>
-    <string name="jp_migration_delete_title">Nie potrzebujesz już aplikacji WordPress na swoim urządzeniu</string>
     <string name="jp_migration_done_delete_wp_message">Zalecamy &lt;b&gt;odinstalowanie aplikacji WordPress&lt;/b&gt; na twoim urządzeniu, żeby uniknąć konfliktów danych.</string>
-    <string name="jp_migration_success_card_message">Witaj w aplikacji Jetpack. Możesz odinstalować aplikację WordPress.</string>
     <string name="dashboard_pages_card_create_another_page_description">Zacznij od szytych na miarę, przyjaznych dla urządzeń mobilnych układów</string>
     <string name="dashboard_pages_card_create_another_page_button">Utwórz kolejną stronę</string>
     <string name="dashboard_pages_card_no_pages_create_page_button">Dodaj strony do swojej witryny</string>
@@ -746,8 +737,6 @@ Language: pl
     <string name="preference_open_links_in_jetpack_setting_change_disable_error">Nie można wyłączyć otwartych odnośników w Jetpacku</string>
     <string name="preference_open_links_in_jetpack_setting_change_enable_error">Nie mogę włączyć otwierania odnośników w Jetpacku</string>
     <string name="preference_open_links_in_jetpack">Otwórz odnośniki w Jetpack</string>
-    <string name="jp_migration_need_help_button">Potrzebujesz pomocy?</string>
-    <string name="jp_migration_got_it_button">Rozumiem</string>
     <string name="jp_migration_network_error_message">Nie możemy przenieść twoich danych i ustawień bez połączenia z siecią.</string>
     <string name="jp_migration_network_error_subtitle">Sprawdź, czy twoje połączenie sieciowe działa i spróbuj ponownie.</string>
     <string name="jp_migration_network_error_title">Nie można połączyć się z siecią.</string>

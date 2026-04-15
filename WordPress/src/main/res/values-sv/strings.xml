@@ -293,11 +293,6 @@ Language: sv_SE
     <string name="reader_tags_feed_error_title">Inga inlägg hittades för %s</string>
     <string name="reader_tags_feed_see_more_from_tag">Mer från %s</string>
     <string name="reader_tags_display_name">Etiketter</string>
-    <string name="reader_announcement_card_reading_preferences_description">Välj färger och typsnitt som passar dig. När du läser ett inlägg, tryck på AA-ikonen längst upp på skärmen.</string>
-    <string name="reader_announcement_card_reading_preferences_title">Läsinställningar</string>
-    <string name="reader_announcement_card_tags_stream_description">Tryck på rullgardinsmenyn längst upp och välj Etiketter för att komma åt strömmar från etiketter du följer.</string>
-    <string name="reader_announcement_card_tags_stream_title">Etikettström</string>
-    <string name="reader_announcement_card_title">Nytt i Läsaren</string>
     <string name="reader_dropdown_menu_tags">Dina etiketter</string>
     <string name="no_connection_error_description">Kontrollera din nätverksanslutning och försök igen.</string>
     <string name="no_connection_error_title">Det går inte att ladda detta innehåll för tillfället</string>
@@ -647,11 +642,7 @@ Language: sv_SE
     <string name="new_site_creation_preview_caption_paid">Det kan dröja upp till 30 minuter innan din anpassade domän börjar fungera.</string>
     <string name="new_site_creation_preview_subtitle_paid">Vi har skickat ditt kvitto via e-post. %s</string>
     <string name="notifications_disabled_permission_dialog">App-notiser har inaktiverats. Tryck här för att aktivera dem.</string>
-    <string name="jp_migration_delete_message">Vi rekommenderar att du &lt;b&gt;avinstallerar WordPress-appen&lt;/b&gt; på din enhet för att undvika datakonflikter.</string>
-    <string name="jp_migration_delete_subtitle">Det ser ut som att du fortfarande har WordPress-appen installerad.</string>
-    <string name="jp_migration_delete_title">Du behöver inte längre WordPress-appen på din enhet</string>
     <string name="jp_migration_done_delete_wp_message">Vi rekommenderar att du &lt;b&gt;avinstallerar WordPress-appen&lt;/b&gt; på din enhet för att undvika datakonflikter.</string>
-    <string name="jp_migration_success_card_message">Välkommen till Jetpack-appen. Du kan avinstallera WordPress-appen.</string>
     <string name="dashboard_pages_card_create_another_page_description">Kom igång med skräddarsydda, mobilvänliga layouter</string>
     <string name="dashboard_pages_card_create_another_page_button">Skapa en ny sida</string>
     <string name="dashboard_pages_card_no_pages_create_page_button">Lägg till sidor på din webbplats</string>
@@ -828,8 +819,6 @@ Language: sv_SE
     <string name="preference_open_links_in_jetpack_setting_change_disable_error">Det gick inte att inaktivera öppning av länkar i Jetpack</string>
     <string name="preference_open_links_in_jetpack_setting_change_enable_error">Det gick inte att aktivera öppning av länkar i Jetpack</string>
     <string name="preference_open_links_in_jetpack">Öppna länkar i Jetpack</string>
-    <string name="jp_migration_need_help_button">Behöver du hjälp?</string>
-    <string name="jp_migration_got_it_button">Jag förstår</string>
     <string name="jp_migration_network_error_message">Vi kan inte överföra dina data och inställningar utan en nätverksanslutning.</string>
     <string name="jp_migration_network_error_subtitle">Kontrollera att din internetanslutning fungerar och försök igen.</string>
     <string name="jp_migration_network_error_title">Det går inte att ansluta till Internet.</string>
