@@ -11,11 +11,17 @@ import org.mockito.MockitoAnnotations
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.any
 import org.mockito.kotlin.eq
+import org.mockito.kotlin.never
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
+import org.mockito.kotlin.mock
+import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.SitesModel
+import org.wordpress.android.fluxc.network.discovery.SelfHostedEndpointFinder
+import org.wordpress.android.fluxc.network.xmlrpc.site.SiteXMLRPCClient
 import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpApiClientProvider
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.utils.AppLogWrapper
@@ -45,6 +51,15 @@ class ApplicationPasswordViewModelSliceTest : BaseUnitTest() {
     @Mock
     lateinit var wpApiClientProvider: WpApiClientProvider
 
+    @Mock
+    lateinit var selfHostedEndpointFinder: SelfHostedEndpointFinder
+
+    @Mock
+    lateinit var siteXMLRPCClient: SiteXMLRPCClient
+
+    @Mock
+    lateinit var dispatcher: Dispatcher
+
     private lateinit var siteTest: SiteModel
 
     private var applicationPasswordCard: MySiteCardAndItem? = null
@@ -59,7 +74,11 @@ class ApplicationPasswordViewModelSliceTest : BaseUnitTest() {
             applicationPasswordLoginHelper,
             siteStore,
             appLogWrapper,
-            wpApiClientProvider
+            wpApiClientProvider,
+            selfHostedEndpointFinder,
+            siteXMLRPCClient,
+            dispatcher,
+            testDispatcher()
         ).apply {
             initialize(testScope())
         }
@@ -69,6 +88,8 @@ class ApplicationPasswordViewModelSliceTest : BaseUnitTest() {
             name = TEST_SITE_NAME
             iconUrl = TEST_SITE_ICON
             siteId = TEST_SITE_ID.toLong()
+            apiRestUsernamePlain = "testuser"
+            apiRestPasswordPlain = "testpass"
         }
 
         applicationPasswordCard = null
@@ -118,4 +139,68 @@ class ApplicationPasswordViewModelSliceTest : BaseUnitTest() {
         verify(siteStore).sites
         verify(applicationPasswordLoginHelper, times(0)).getAuthorizationUrlComplete(any())
     }
+
+    @Test
+    fun `given xmlRpc rediscovery and auth check succeed, then update site and dispatch`() =
+        runTest {
+            val xmlRpcUrl = "https://www.test.com/xmlrpc.php"
+            whenever(
+                selfHostedEndpointFinder
+                    .verifyOrDiscoverXMLRPCEndpoint(TEST_URL)
+            ).thenReturn(xmlRpcUrl)
+            whenever(
+                siteXMLRPCClient.fetchSites(
+                    eq(xmlRpcUrl), any(), any()
+                )
+            ).thenReturn(SitesModel(listOf(SiteModel())))
+
+            applicationPasswordViewModelSlice
+                .attemptXmlRpcRediscovery(siteTest)
+
+            verify(dispatcher).dispatch(any())
+            assert(siteTest.xmlRpcUrl == xmlRpcUrl)
+        }
+
+    @Test
+    fun `given xmlRpc rediscovery succeeds but auth check fails, then do not dispatch`() =
+        runTest {
+            val xmlRpcUrl = "https://www.test.com/xmlrpc.php"
+            whenever(
+                selfHostedEndpointFinder
+                    .verifyOrDiscoverXMLRPCEndpoint(TEST_URL)
+            ).thenReturn(xmlRpcUrl)
+            val errorResult = SitesModel().apply {
+                error = mock()
+            }
+            whenever(
+                siteXMLRPCClient.fetchSites(
+                    eq(xmlRpcUrl), any(), any()
+                )
+            ).thenReturn(errorResult)
+
+            applicationPasswordViewModelSlice
+                .attemptXmlRpcRediscovery(siteTest)
+
+            verify(dispatcher, never()).dispatch(any())
+            assert(siteTest.xmlRpcUrl.isNullOrEmpty())
+        }
+
+    @Test
+    fun `given xmlRpc rediscovery fails, then do not dispatch`() =
+        runTest {
+            whenever(
+                selfHostedEndpointFinder
+                    .verifyOrDiscoverXMLRPCEndpoint(TEST_URL)
+            ).thenThrow(
+                mock<SelfHostedEndpointFinder.DiscoveryException>()
+            )
+
+            applicationPasswordViewModelSlice
+                .attemptXmlRpcRediscovery(siteTest)
+
+            verify(selfHostedEndpointFinder)
+                .verifyOrDiscoverXMLRPCEndpoint(TEST_URL)
+            verify(dispatcher, never()).dispatch(any())
+            assert(siteTest.xmlRpcUrl.isNullOrEmpty())
+        }
 }

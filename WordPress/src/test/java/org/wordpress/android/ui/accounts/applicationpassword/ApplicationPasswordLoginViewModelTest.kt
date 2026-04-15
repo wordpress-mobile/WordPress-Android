@@ -9,12 +9,15 @@ import org.junit.Test
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
 import org.mockito.kotlin.any
+import org.mockito.kotlin.argThat
 import org.mockito.kotlin.eq
+import org.mockito.kotlin.mock
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.Dispatcher
+import org.wordpress.android.fluxc.action.SiteAction
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.discovery.SelfHostedEndpointFinder
 import org.wordpress.android.fluxc.store.SiteStore
@@ -492,6 +495,38 @@ class ApplicationPasswordLoginViewModelTest : BaseUnitTest() {
 
                 // No second event should be emitted
                 expectNoEvents()
+                cancelAndIgnoreRemainingEvents()
+            }
+        }
+
+    @Test
+    fun `given DiscoveryException, when fetchSites, then dispatch WPAPI fallback`() =
+        runTest {
+            // Given
+            whenever(
+                applicationPasswordLoginHelper
+                    .storeApplicationPasswordCredentialsFrom(
+                        eq(urlLogin), any()
+                    )
+            ).thenReturn(StoreCredentialsResult.SiteNotFound)
+            whenever(
+                selfHostedEndpointFinder
+                    .verifyOrDiscoverXMLRPCEndpoint(any())
+            ).thenThrow(
+                mock<SelfHostedEndpointFinder.DiscoveryException>()
+            )
+
+            // When
+            viewModel.onFinishedEvent.test {
+                viewModel.setupSite(rawData)
+
+                // Then - no error emitted, WPAPI action dispatched
+                expectNoEvents()
+                verify(dispatcher, times(1)).dispatch(
+                    argThat {
+                        type == SiteAction.FETCH_SITE_WP_API_FROM_APPLICATION_PASSWORD
+                    }
+                )
                 cancelAndIgnoreRemainingEvents()
             }
         }
