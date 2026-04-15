@@ -14,6 +14,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
+import org.mockito.kotlin.any
 import org.mockito.kotlin.atLeastOnce
 import org.mockito.kotlin.never
 import org.mockito.kotlin.times
@@ -39,6 +40,7 @@ import org.wordpress.android.ui.mysite.cards.applicationpassword.ApplicationPass
 import org.wordpress.android.ui.mysite.cards.siteinfo.SiteInfoHeaderCardViewModelSlice
 import org.wordpress.android.ui.mysite.items.DashboardItemsViewModelSlice
 import org.wordpress.android.ui.mysite.items.listitem.SiteCapabilityChecker
+import org.wordpress.android.repositories.EditorSettingsRepository
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.posts.GutenbergKitWarmupHelper
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationSource
@@ -103,6 +105,9 @@ class MySiteViewModelTest : BaseUnitTest() {
     @Mock
     lateinit var siteCapabilityChecker: SiteCapabilityChecker
 
+    @Mock
+    lateinit var editorSettingsRepository: EditorSettingsRepository
+
     private lateinit var viewModel: MySiteViewModel
     private lateinit var uiModels: MutableList<MySiteViewModel.State>
     private lateinit var snackbars: MutableList<SnackbarMessageHolder>
@@ -138,6 +143,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         whenever(dashboardCardsViewModelSlice.uiModel).thenReturn(MutableLiveData())
         whenever(dashboardItemsViewModelSlice.uiModel).thenReturn(MutableLiveData())
         whenever(applicationPasswordViewModelSlice.uiModel).thenReturn(MutableLiveData())
+        whenever(editorSettingsRepository.fetchEditorCapabilitiesForSite(any())).thenReturn(true)
 
         viewModel = MySiteViewModel(
             testDispatcher(),
@@ -158,6 +164,7 @@ class MySiteViewModelTest : BaseUnitTest() {
             applicationPasswordViewModelSlice,
             gutenbergKitWarmupHelper,
             siteCapabilityChecker,
+            editorSettingsRepository,
         )
         uiModels = mutableListOf()
         snackbars = mutableListOf()
