@@ -1,21 +1,26 @@
 package org.wordpress.android.ui.postsrs
 
-import dagger.Reusable
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.ui.postsrs.data.PostRsRestClient
 import org.wordpress.android.util.DateTimeUtils
 import uniffi.wp_api.AnyPostWithEditContext
 import uniffi.wp_api.PostFormat
 import uniffi.wp_api.PostStatus
+import uniffi.wp_api.TermEndpointType
 import javax.inject.Inject
 
 /**
  * Maps a wordpress-rs [AnyPostWithEditContext] to a FluxC [PostModel]
  * so the editor can load it from FluxC's local database.
  */
-@Reusable
-class PostRsToFluxCMapper @Inject constructor() {
-    fun map(post: AnyPostWithEditContext, site: SiteModel): PostModel {
+class PostRsToFluxCMapper @Inject constructor(
+    private val restClient: PostRsRestClient,
+) {
+    suspend fun map(
+        post: AnyPostWithEditContext,
+        site: SiteModel
+    ): PostModel {
         val modified = DateTimeUtils.iso8601UTCFromDate(
             post.modifiedGmt
         )
@@ -54,11 +59,23 @@ class PostRsToFluxCMapper @Inject constructor() {
             setRemoteLastModified(modified)
 
             setCategoryIdList(post.categories ?: emptyList())
+            setTagNameList(resolveTagNames(post.tags, site))
 
             setIsPage(false)
             setIsLocalDraft(false)
             setIsLocallyChanged(false)
         }
+    }
+
+    private suspend fun resolveTagNames(
+        ids: List<Long>?,
+        site: SiteModel
+    ): List<String> {
+        if (ids.isNullOrEmpty()) return emptyList()
+        val nameMap = restClient.fetchTermNames(
+            site, ids, TermEndpointType.Tags
+        )
+        return ids.mapNotNull { nameMap[it] }
     }
 
     private fun mapStatus(status: PostStatus?): String =

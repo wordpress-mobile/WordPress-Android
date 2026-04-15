@@ -65,8 +65,6 @@ class PostRsFluxCBridge @Inject constructor(
 
         // Re-read to get the auto-assigned local ID
         return postStore.getPostByRemotePostId(remotePostId, site)
-            ?: throw IllegalStateException(
-                "Post inserted but not found in FluxC"
-            )
+            ?: error("Post inserted but not found in FluxC")
     }
 }
