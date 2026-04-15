@@ -40,6 +40,7 @@ import uniffi.wp_api.SubscribersByUserTypeSortField
 import uniffi.wp_api.StatsEmailsSummaryParams
 import uniffi.wp_api.StatsEmailsSummaryPeriod
 import uniffi.wp_api.StatsEmailsSummarySortField
+import uniffi.wp_api.StatsUtmKey
 import uniffi.wp_api.StatsUtmParams
 import uniffi.wp_api.WpApiParamOrder
 import org.wordpress.android.util.AppLog
@@ -1356,7 +1357,7 @@ class StatsDataSourceImpl @Inject constructor(
         max: Int,
         queryTopPosts: Boolean
     ): UtmDataResult {
-        val key = keys.joinToString(",")
+        val utmKeys = keys.mapNotNull(::toStatsUtmKey)
         val params = StatsUtmParams(
             max = max.toUInt(),
             date = date,
@@ -1367,14 +1368,14 @@ class StatsDataSourceImpl @Inject constructor(
         AppLog.d(
             T.STATS,
             "fetchUtm - siteId=$siteId, " +
-                "key=$key, date=$date, days=$days"
+                "keys=$keys, date=$date, days=$days"
         )
         val result = getOrCreateClient()
             .request { requestBuilder ->
                 requestBuilder.statsUtm()
                     .getStatsUtm(
                         wpComSiteId = siteId.toULong(),
-                        statsUtmKeys = key,
+                        statsUtmKeys = utmKeys,
                         params = params
                     )
             }
@@ -1412,6 +1413,14 @@ class StatsDataSourceImpl @Inject constructor(
             }
         }
     }
+
+    private fun toStatsUtmKey(key: String): StatsUtmKey? =
+        when (key) {
+            "utm_source" -> StatsUtmKey.UTM_SOURCE
+            "utm_medium" -> StatsUtmKey.UTM_MEDIUM
+            "utm_campaign" -> StatsUtmKey.UTM_CAMPAIGN
+            else -> null
+        }
 
     companion object {
         private const val HTTP_UNAUTHORIZED = 401
