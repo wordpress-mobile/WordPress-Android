@@ -19,7 +19,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
-import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.post.PostStatus as FluxCPostStatus
 import org.wordpress.android.fluxc.store.AccountStore
@@ -373,46 +372,21 @@ class PostRsListViewModel @Inject constructor(
                         postStatusUpdate(PostStatus.Draft)
                     )
                 }
-                val post = try {
-                    withContext(Dispatchers.IO) {
-                        fluxCBridge.fetchAndBridge(postId, site)
-                    }
-                } catch (e: CancellationException) {
-                    throw e
-                } catch (e: Exception) {
-                    AppLog.e(
-                        AppLog.T.POSTS, "Bridge post failed", e
-                    )
-                    _snackbarMessages.trySend(
-                        SnackbarMessage(
-                            friendlyErrorMessage(
-                                e, R.string.post_not_found
-                            )
-                        )
-                    )
-                    null
-                }
+                val post = bridgePostOrNull(postId)
                 if (post != null) {
                     _events.trySend(PostRsListEvent.EditPost(site, post))
                 } else {
                     _events.trySend(
-                        PostRsListEvent.ShowToast(
-                            R.string.post_rs_moved_to_draft
-                        )
+                        PostRsListEvent.ShowToast(R.string.post_rs_moved_to_draft)
                     )
                 }
             } catch (e: CancellationException) {
                 throw e
             } catch (e: Exception) {
-                AppLog.e(
-                    AppLog.T.POSTS,
-                    "Move to draft and edit failed", e
-                )
+                AppLog.e(AppLog.T.POSTS, "Move to draft failed", e)
                 _snackbarMessages.trySend(
                     SnackbarMessage(
-                        friendlyErrorMessage(
-                            e, R.string.post_rs_error_update_status
-                        )
+                        friendlyErrorMessage(e, R.string.post_rs_error_update_status)
                     )
                 )
             } finally {
@@ -421,6 +395,21 @@ class PostRsListViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    @Suppress("TooGenericExceptionCaught")
+    private suspend fun bridgePostOrNull(remotePostId: Long) = try {
+        withContext(Dispatchers.IO) {
+            fluxCBridge.fetchAndBridge(remotePostId, site)
+        }
+    } catch (e: CancellationException) {
+        throw e
+    } catch (e: Exception) {
+        AppLog.e(AppLog.T.POSTS, "Bridge post failed", e)
+        _snackbarMessages.trySend(
+            SnackbarMessage(friendlyErrorMessage(e, R.string.post_not_found))
+        )
+        null
     }
 
     /**

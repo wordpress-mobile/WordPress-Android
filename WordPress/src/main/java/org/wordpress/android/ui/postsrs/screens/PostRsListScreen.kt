@@ -73,6 +73,7 @@ import org.wordpress.android.ui.postsrs.PostRsListViewModel.Companion.MIN_SEARCH
 import org.wordpress.android.ui.postsrs.PostRsMenuAction
 import org.wordpress.android.ui.postsrs.PostTabUiState
 
+@Suppress("CyclomaticComplexMethod")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PostRsListScreen(
