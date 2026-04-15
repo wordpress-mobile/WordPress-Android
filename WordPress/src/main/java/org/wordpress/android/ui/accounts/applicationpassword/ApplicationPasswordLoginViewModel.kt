@@ -148,7 +148,9 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
         apiRootUrl: String
         ) = withContext(ioDispatcher) {
         try {
-            if (username.isEmpty() || password.isEmpty() || siteUrl.isEmpty() || apiRootUrl.isEmpty()) {
+            if (username.isEmpty() || password.isEmpty()
+                || siteUrl.isEmpty() || apiRootUrl.isEmpty()
+            ) {
                 appLogWrapper.e(
                     AppLog.T.MAIN,
                     "A_P: Cannot fetch sites for credential storing" +
@@ -165,17 +167,8 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
                     errorMessage = "empty_fetch_params"
                 )
             } else {
-                val xmlRpcEndpoint =
-                    selfHostedEndpointFinder.verifyOrDiscoverXMLRPCEndpoint(siteUrl)
-                dispatcher.dispatch(
-                    SiteActionBuilder.newFetchSitesXmlRpcFromApplicationPasswordAction(
-                        SiteStore.RefreshSitesXMLRPCApplicationPasswordCredentialsPayload(
-                            username = username,
-                            password = password,
-                            url = xmlRpcEndpoint,
-                            apiRootUrl = apiRootUrl,
-                        )
-                    )
+                discoverAndDispatchFetchSite(
+                    username, password, siteUrl, apiRootUrl
                 )
             }
         } catch (e: Exception) {
@@ -187,6 +180,49 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
                 siteUrl, "fetch_sites_exception", creationSource
             )
             emitError(siteUrl = siteUrl, errorMessage = e.message, cause = e)
+        }
+    }
+
+    private suspend fun discoverAndDispatchFetchSite(
+        username: String,
+        password: String,
+        siteUrl: String,
+        apiRootUrl: String
+    ) {
+        val xmlRpcEndpoint = try {
+            selfHostedEndpointFinder
+                .verifyOrDiscoverXMLRPCEndpoint(siteUrl)
+        } catch (e: SelfHostedEndpointFinder.DiscoveryException) {
+            appLogWrapper.w(
+                AppLog.T.API,
+                "A_P: XML-RPC discovery failed" +
+                    " (${e.message}). Falling back to" +
+                    " WPAPI fetch using" +
+                    " apiRootUrl=$apiRootUrl"
+            )
+            null
+        }
+        val payload =
+            SiteStore.RefreshSitesXMLRPCApplicationPasswordCredentialsPayload(
+                username = username,
+                password = password,
+                url = xmlRpcEndpoint ?: siteUrl,
+                apiRootUrl = apiRootUrl,
+            )
+        if (xmlRpcEndpoint != null) {
+            dispatcher.dispatch(
+                SiteActionBuilder
+                    .newFetchSitesXmlRpcFromApplicationPasswordAction(
+                        payload
+                    )
+            )
+        } else {
+            dispatcher.dispatch(
+                SiteActionBuilder
+                    .newFetchSiteWpApiFromApplicationPasswordAction(
+                        payload
+                    )
+            )
         }
     }
 
@@ -223,6 +259,7 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
     }
 
     private suspend fun handleSiteChangedError(event: OnSiteChanged) {
+        waitingForFetchedSite = false
         val error = event.error
         appLogWrapper.e(
             AppLog.T.MAIN,
@@ -242,6 +279,7 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
 
     @Suppress("TooGenericExceptionCaught")
     private suspend fun handleSiteChangedSuccess(event: OnSiteChanged) {
+        waitingForFetchedSite = false
         val normalizedUrl =
             UrlUtils.normalizeUrl(currentUrlLogin?.siteUrl)
 
