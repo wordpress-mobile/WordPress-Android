@@ -1,5 +1,6 @@
 package org.wordpress.android.repositories
 
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.supervisorScope
@@ -71,60 +72,99 @@ class EditorSettingsRepository @Inject constructor(
      * [getThemeSupportsBlockStyles] return them
      * synchronously on future calls.
      */
+    /**
+     * Returns `true` when both checks complete without
+     * transport-level failures.
+     */
     suspend fun fetchEditorCapabilitiesForSite(
         site: SiteModel
-    ) = withContext(ioDispatcher) {
+    ): Boolean = withContext(ioDispatcher) {
+        var routeOk = true
+        var themeOk = true
         supervisorScope {
-            launch { fetchRouteSupport(site) }
-            launch { fetchThemeBlockStyleSupport(site) }
-        }
-    }
-
-    private suspend fun fetchRouteSupport(site: SiteModel) {
-        val client = wpApiClientProvider.getWpApiClient(site)
-        val response = client.request { it.apiRoot().get() }
-
-        when (response) {
-            is WpRequestResult.Success -> {
-                val data = response.response.data
-                val supportsSettings = data.hasRoute(
-                    "/wp-block-editor/v1/settings"
-                )
-                val supportsAssets = data.hasRoute(
-                    "/wpcom/v2/editor-assets"
-                )
-                appPrefsWrapper.setSiteSupportsEditorSettings(
-                    site, supportsSettings
-                )
-                appPrefsWrapper.setSiteSupportsEditorAssets(
-                    site, supportsAssets
-                )
+            launch {
+                routeOk = fetchRouteSupport(site)
             }
-            else -> {
-                appPrefsWrapper.setSiteSupportsEditorSettings(
-                    site, false
-                )
-                appPrefsWrapper.setSiteSupportsEditorAssets(
-                    site, false
-                )
+            launch {
+                themeOk =
+                    fetchThemeBlockStyleSupport(site)
             }
         }
+        routeOk && themeOk
     }
 
+    @Suppress("TooGenericExceptionCaught")
+    private suspend fun fetchRouteSupport(
+        site: SiteModel
+    ): Boolean = try {
+        val client =
+            wpApiClientProvider.getWpApiClient(site)
+        val response =
+            client.request { it.apiRoot().get() }
+
+        if (response is WpRequestResult.Success) {
+            val data = response.response.data
+            appPrefsWrapper
+                .setSiteSupportsEditorSettings(
+                    site,
+                    data.hasRoute(
+                        "/wp-block-editor/v1/settings"
+                    )
+                )
+            appPrefsWrapper
+                .setSiteSupportsEditorAssets(
+                    site,
+                    data.hasRoute(
+                        "/wpcom/v2/editor-assets"
+                    )
+                )
+            true
+        } else {
+            false
+        }
+    } catch (e: CancellationException) {
+        throw e
+    } catch (e: Exception) {
+        AppLog.e(
+            T.EDITOR,
+            "Failed to fetch route support" +
+                " for site=${site.name}",
+            e
+        )
+        false
+    }
+
+    @Suppress("TooGenericExceptionCaught")
     private suspend fun fetchThemeBlockStyleSupport(
         site: SiteModel
-    ) {
-        val theme = themeRepository.fetchCurrentTheme(site)
-        val isBlockTheme = theme?.isBlockTheme ?: false
-        AppLog.d(
+    ): Boolean = try {
+        val theme =
+            themeRepository.fetchCurrentTheme(site)
+        if (theme != null) {
+            AppLog.d(
+                T.EDITOR,
+                "EditorSettingsRepository:" +
+                    " theme fetched" +
+                    " for site=${site.name}" +
+                    " themeName=${theme.name}" +
+                    " isBlockTheme=${theme.isBlockTheme}"
+            )
+            appPrefsWrapper.setSiteThemeIsBlockTheme(
+                site, theme.isBlockTheme
+            )
+            true
+        } else {
+            false
+        }
+    } catch (e: CancellationException) {
+        throw e
+    } catch (e: Exception) {
+        AppLog.e(
             T.EDITOR,
-            "EditorSettingsRepository: theme fetched" +
-                " for site=${site.name}" +
-                " themeName=${theme?.name}" +
-                " isBlockTheme=$isBlockTheme"
+            "Failed to fetch theme info" +
+                " for site=${site.name}",
+            e
         )
-        appPrefsWrapper.setSiteThemeIsBlockTheme(
-            site, isBlockTheme
-        )
+        false
     }
 }
