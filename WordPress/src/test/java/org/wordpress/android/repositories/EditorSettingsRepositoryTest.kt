@@ -18,6 +18,7 @@ import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import rs.wordpress.api.kotlin.WpApiClient
 import rs.wordpress.api.kotlin.WpRequestResult
 import uniffi.wp_api.ApiRootRequestGetResponse
+import uniffi.wp_api.ApiUrlResolver
 import uniffi.wp_api.WpApiDetails
 import uniffi.wp_api.WpNetworkHeaderMap
 
@@ -35,6 +36,9 @@ class EditorSettingsRepositoryTest : BaseUnitTest() {
     @Mock
     lateinit var wpApiClient: WpApiClient
 
+    @Mock
+    lateinit var apiUrlResolver: ApiUrlResolver
+
     private lateinit var repository: EditorSettingsRepository
 
     private val testSite = SiteModel().apply {
@@ -46,6 +50,8 @@ class EditorSettingsRepositoryTest : BaseUnitTest() {
     fun setUp() {
         whenever(wpApiClientProvider.getWpApiClient(testSite))
             .thenReturn(wpApiClient)
+        whenever(wpApiClientProvider.getApiUrlResolver(testSite))
+            .thenReturn(apiUrlResolver)
 
         repository = EditorSettingsRepository(
             wpApiClientProvider = wpApiClientProvider,
@@ -178,12 +184,18 @@ class EditorSettingsRepositoryTest : BaseUnitTest() {
     ) {
         val apiDetails = mock<WpApiDetails>()
         whenever(
-            apiDetails.hasRoute(
-                "/wp-block-editor/v1/settings"
+            apiDetails.hasRouteForEndpoint(
+                apiUrlResolver,
+                "/wp-block-editor/v1",
+                "settings"
             )
         ).thenReturn(hasEditorSettings)
         whenever(
-            apiDetails.hasRoute("/wpcom/v2/editor-assets")
+            apiDetails.hasRouteForEndpoint(
+                apiUrlResolver,
+                "/wp-block-editor/v1",
+                "assets"
+            )
         ).thenReturn(hasEditorAssets)
 
         val response = ApiRootRequestGetResponse(
