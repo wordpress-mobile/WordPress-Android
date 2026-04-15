@@ -2,10 +2,17 @@ package org.wordpress.android.ui.mysite.cards.applicationpassword
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.wordpress.android.R
+import androidx.annotation.VisibleForTesting
+import org.wordpress.android.fluxc.Dispatcher
+import org.wordpress.android.fluxc.generated.SiteActionBuilder
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.network.discovery.SelfHostedEndpointFinder
+import org.wordpress.android.fluxc.network.xmlrpc.site.SiteXMLRPCClient
 import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpApiClientProvider
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.utils.AppLogWrapper
@@ -17,16 +24,22 @@ import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.AppLog
+import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.viewmodel.Event
 import rs.wordpress.api.kotlin.WpRequestResult
 import uniffi.wp_api.RequestExecutionErrorReason
 import javax.inject.Inject
+import javax.inject.Named
 
 class ApplicationPasswordViewModelSlice @Inject constructor(
     private val applicationPasswordLoginHelper: ApplicationPasswordLoginHelper,
     private val siteStore: SiteStore,
     private val appLogWrapper: AppLogWrapper,
     private val wpApiClientProvider: WpApiClientProvider,
+    private val selfHostedEndpointFinder: SelfHostedEndpointFinder,
+    private val siteXMLRPCClient: SiteXMLRPCClient,
+    private val dispatcher: Dispatcher,
+    @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher,
 ) {
     lateinit var scope: CoroutineScope
 
@@ -88,6 +101,7 @@ class ApplicationPasswordViewModelSlice @Inject constructor(
                         )
                         if (site.xmlRpcUrl.isNullOrEmpty()) {
                             buildXmlRpcDisabledCard(site)
+                            attemptXmlRpcRediscovery(site)
                         } else {
                             uiModelMutable.postValue(null)
                         }
@@ -217,6 +231,41 @@ class ApplicationPasswordViewModelSlice @Inject constructor(
             AppLog.T.MAIN,
             "A_P: Showing XML-RPC disabled card for ${site.url}"
         )
+    }
+
+    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+    internal fun attemptXmlRpcRediscovery(site: SiteModel) {
+        scope.launch {
+            try {
+                val xmlRpcEndpoint = withContext(ioDispatcher) {
+                    selfHostedEndpointFinder
+                        .verifyOrDiscoverXMLRPCEndpoint(site.url)
+                }
+
+                // Verify with an authenticated call
+                val result = withContext(ioDispatcher) {
+                    siteXMLRPCClient.fetchSites(
+                        xmlRpcEndpoint,
+                        site.apiRestUsernamePlain,
+                        site.apiRestPasswordPlain
+                    )
+                }
+                if (result.isError) {
+                    return@launch
+                }
+
+                site.xmlRpcUrl = xmlRpcEndpoint
+                dispatcher.dispatch(
+                    SiteActionBuilder.newUpdateSiteAction(site)
+                )
+                buildCard(site)
+            } catch (
+                @Suppress("SwallowedException")
+                e: SelfHostedEndpointFinder.DiscoveryException
+            ) {
+                // XML-RPC rediscovery failed; card remains visible
+            }
+        }
     }
 
     private fun onClick(site: SiteModel, alternativeUrl: String) {
