@@ -247,7 +247,7 @@ class PostRsListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
     @Test
     fun `openPost shows snackbar when bridge fails`() = test {
         whenever(fluxCBridge.fetchAndBridge(42L, site))
-            .thenAnswer { throw PostBridgeException("not found") }
+            .thenAnswer { throw IllegalStateException("not found") }
         val viewModel = createViewModel()
 
         viewModel.snackbarMessages.test {

@@ -33,8 +33,7 @@ class PostRsFluxCBridge @Inject constructor(
      * Returns a [PostModel] for [remotePostId] that is guaranteed
      * to exist in FluxC's local database.
      *
-     * @throws PostBridgeException if the post cannot be fetched
-     *   or inserted.
+     * @throws IllegalStateException if the post cannot be fetched or inserted.
      */
     suspend fun fetchAndBridge(
         remotePostId: Long,
@@ -58,7 +57,7 @@ class PostRsFluxCBridge @Inject constructor(
             else -> {
                 val msg = (response as? WpRequestResult.WpError<*>)
                     ?.errorMessage ?: "Failed to fetch post"
-                throw PostBridgeException(msg)
+                throw IllegalStateException(msg)
             }
         }
 
@@ -68,10 +67,8 @@ class PostRsFluxCBridge @Inject constructor(
 
         // Re-read to get the auto-assigned local ID
         return postStore.getPostByRemotePostId(remotePostId, site)
-            ?: throw PostBridgeException(
+            ?: throw IllegalStateException(
                 "Post inserted but not found in FluxC"
             )
     }
 }
-
-class PostBridgeException(message: String) : Exception(message)
