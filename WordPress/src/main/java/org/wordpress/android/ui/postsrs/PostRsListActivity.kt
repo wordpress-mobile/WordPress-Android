@@ -46,6 +46,7 @@ class PostRsListActivity : BaseAppCompatActivity() {
         setContent {
             val tabStates by viewModel.tabStates.collectAsState()
             val isSearchActive by viewModel.isSearchActive.collectAsState()
+            val isOpeningPost by viewModel.isOpeningPost.collectAsState()
             val searchQuery by viewModel.searchQuery.collectAsState()
             val authorFilter by viewModel.authorFilter.collectAsState()
             val confirmation by viewModel.pendingConfirmation.collectAsState()
@@ -53,6 +54,7 @@ class PostRsListActivity : BaseAppCompatActivity() {
                 PostRsListScreen(
                     tabStates = tabStates,
                     isSearchActive = isSearchActive,
+                    isOpeningPost = isOpeningPost,
                     searchQuery = searchQuery,
                     authorFilter = authorFilter,
                     isAuthorFilterSupported = viewModel.isAuthorFilterSupported,

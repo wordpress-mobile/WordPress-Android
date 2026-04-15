@@ -20,6 +20,7 @@ import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -46,6 +47,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
@@ -76,6 +78,7 @@ import org.wordpress.android.ui.postsrs.PostTabUiState
 fun PostRsListScreen(
     tabStates: Map<PostRsListTab, PostTabUiState>,
     isSearchActive: Boolean,
+    isOpeningPost: Boolean,
     searchQuery: String,
     authorFilter: AuthorFilterSelection,
     isAuthorFilterSupported: Boolean,
@@ -279,6 +282,15 @@ fun PostRsListScreen(
             onDismiss = confirmationDialog.onDismiss
         )
         null -> {}
+    }
+
+    if (isOpeningPost) {
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            CircularProgressIndicator()
+        }
     }
 }
 

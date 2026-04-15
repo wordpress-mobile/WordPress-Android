@@ -54,6 +54,7 @@ class PostRsListViewModel @Inject constructor(
     private val restClient: PostRsRestClient,
     private val resourceProvider: ResourceProvider,
     private val postStore: PostStore,
+    private val fluxCBridge: PostRsFluxCBridge,
     private val blazeFeatureUtils: BlazeFeatureUtils,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     private val accountStore: AccountStore,
@@ -62,6 +63,9 @@ class PostRsListViewModel @Inject constructor(
 ) : ViewModel() {
     private val _tabStates = MutableStateFlow<Map<PostRsListTab, PostTabUiState>>(emptyMap())
     val tabStates: StateFlow<Map<PostRsListTab, PostTabUiState>> = _tabStates.asStateFlow()
+
+    private val _isOpeningPost = MutableStateFlow(false)
+    val isOpeningPost: StateFlow<Boolean> = _isOpeningPost.asStateFlow()
 
     private val _isSearchActive = MutableStateFlow(false)
     val isSearchActive: StateFlow<Boolean> = _isSearchActive.asStateFlow()
@@ -131,8 +135,8 @@ class PostRsListViewModel @Inject constructor(
     }
 
     /**
-     * Looks up a post in the local FluxC database and emits
-     * an [PostRsListEvent.EditPost] to open the editor.
+     * Bridges the post into FluxC's database and emits an
+     * [PostRsListEvent.EditPost] to open the editor.
      * If the post is trashed, shows a confirmation dialog first.
      */
     @MainThread
@@ -158,8 +162,7 @@ class PostRsListViewModel @Inject constructor(
                 TRACKS_POST_ID to remotePostId
             )
         )
-        val post = getFluxCPost(remotePostId) ?: return
-        _events.trySend(PostRsListEvent.EditPost(site, post))
+        bridgeAndOpen(remotePostId)
     }
 
     /**
@@ -284,10 +287,7 @@ class PostRsListViewModel @Inject constructor(
                 }
                 _events.trySend(PostRsListEvent.SharePost(url, post.title))
             }
-            PostRsMenuAction.BLAZE -> {
-                val post = getFluxCPost(remotePostId) ?: return
-                _events.trySend(PostRsListEvent.PromoteWithBlaze(site, post))
-            }
+            PostRsMenuAction.BLAZE -> bridgeAndOpen(remotePostId, blaze = true)
             PostRsMenuAction.STATS -> _events.trySend(
                 PostRsListEvent.ViewStats(
                     site = site, postId = remotePostId,
@@ -373,21 +373,46 @@ class PostRsListViewModel @Inject constructor(
                         postStatusUpdate(PostStatus.Draft)
                     )
                 }
-                val post = getFluxCPost(postId)
+                val post = try {
+                    withContext(Dispatchers.IO) {
+                        fluxCBridge.fetchAndBridge(postId, site)
+                    }
+                } catch (e: CancellationException) {
+                    throw e
+                } catch (e: Exception) {
+                    AppLog.e(
+                        AppLog.T.POSTS, "Bridge post failed", e
+                    )
+                    _snackbarMessages.trySend(
+                        SnackbarMessage(
+                            friendlyErrorMessage(
+                                e, R.string.post_not_found
+                            )
+                        )
+                    )
+                    null
+                }
                 if (post != null) {
                     _events.trySend(PostRsListEvent.EditPost(site, post))
                 } else {
                     _events.trySend(
-                        PostRsListEvent.ShowToast(R.string.post_rs_moved_to_draft)
+                        PostRsListEvent.ShowToast(
+                            R.string.post_rs_moved_to_draft
+                        )
                     )
                 }
             } catch (e: CancellationException) {
                 throw e
             } catch (e: Exception) {
-                AppLog.e(AppLog.T.POSTS, "Move to draft and edit failed", e)
+                AppLog.e(
+                    AppLog.T.POSTS,
+                    "Move to draft and edit failed", e
+                )
                 _snackbarMessages.trySend(
                     SnackbarMessage(
-                        friendlyErrorMessage(e, R.string.post_rs_error_update_status)
+                        friendlyErrorMessage(
+                            e, R.string.post_rs_error_update_status
+                        )
                     )
                 )
             } finally {
@@ -400,22 +425,42 @@ class PostRsListViewModel @Inject constructor(
 
     /**
      * Duplicates a post by creating a new draft with the same content.
-     * The FluxC dependency is temporary and will be removed once the
-     * editor supports loading posts via wordpress-rs.
+     * Bridges the source post into FluxC first so we can read its
+     * content, then creates a new local draft from it.
      */
+    @Suppress("TooGenericExceptionCaught")
     private fun duplicatePost(remotePostId: Long) {
-        val postToCopy = getFluxCPost(remotePostId) ?: return
-        val newPost = postStore.instantiatePostModel(
-            site,
-            false,
-            postToCopy.title,
-            postToCopy.content,
-            FluxCPostStatus.DRAFT.toString(),
-            postToCopy.categoryIdList,
-            postToCopy.postFormat,
-            true
-        )
-        _events.trySend(PostRsListEvent.EditPost(site, newPost))
+        if (!checkNetwork()) return
+        _isOpeningPost.value = true
+        viewModelScope.launch {
+            try {
+                val postToCopy = withContext(Dispatchers.IO) {
+                    fluxCBridge.fetchAndBridge(remotePostId, site)
+                }
+                val newPost = postStore.instantiatePostModel(
+                    site,
+                    false,
+                    postToCopy.title,
+                    postToCopy.content,
+                    FluxCPostStatus.DRAFT.toString(),
+                    postToCopy.categoryIdList,
+                    postToCopy.postFormat,
+                    true
+                )
+                _events.trySend(PostRsListEvent.EditPost(site, newPost))
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                AppLog.e(AppLog.T.POSTS, "Duplicate post failed", e)
+                _snackbarMessages.trySend(
+                    SnackbarMessage(
+                        friendlyErrorMessage(e, R.string.post_not_found)
+                    )
+                )
+            } finally {
+                _isOpeningPost.value = false
+            }
+        }
     }
 
     private fun checkNetwork(): Boolean {
@@ -479,18 +524,44 @@ class PostRsListViewModel @Inject constructor(
     }
 
     /**
-     * Looks up a post in the local FluxC database and shows a toast if not found.
-     * This FluxC dependency is temporary and will be removed once the editor
-     * supports loading posts via wordpress-rs.
+     * Fetches the post via the bridge (fast path from FluxC cache
+     * or slow path via wordpress-rs), then opens the editor or
+     * Blaze promotion screen.
      */
-    private fun getFluxCPost(remotePostId: Long): PostModel? {
-        val post = postStore.getPostByRemotePostId(remotePostId, site)
-        if (post == null) {
-            _snackbarMessages.trySend(
-                SnackbarMessage(resourceProvider.getString(R.string.post_not_found))
-            )
+    @Suppress("TooGenericExceptionCaught")
+    private fun bridgeAndOpen(
+        remotePostId: Long,
+        blaze: Boolean = false
+    ) {
+        if (!checkNetwork()) return
+        _isOpeningPost.value = true
+        viewModelScope.launch {
+            try {
+                val post = withContext(Dispatchers.IO) {
+                    fluxCBridge.fetchAndBridge(remotePostId, site)
+                }
+                if (blaze) {
+                    _events.trySend(
+                        PostRsListEvent.PromoteWithBlaze(site, post)
+                    )
+                } else {
+                    _events.trySend(
+                        PostRsListEvent.EditPost(site, post)
+                    )
+                }
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                AppLog.e(AppLog.T.POSTS, "Bridge post failed", e)
+                _snackbarMessages.trySend(
+                    SnackbarMessage(
+                        friendlyErrorMessage(e, R.string.post_not_found)
+                    )
+                )
+            } finally {
+                _isOpeningPost.value = false
+            }
         }
-        return post
     }
 
     private fun getMenuActions(
