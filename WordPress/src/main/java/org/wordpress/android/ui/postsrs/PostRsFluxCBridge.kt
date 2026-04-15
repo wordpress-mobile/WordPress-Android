@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.postsrs
 
-import dagger.Reusable
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpApiClientProvider
@@ -22,7 +21,6 @@ import javax.inject.Inject
  * to a [PostModel], inserts it into FluxC's DB, and re-reads it
  * to obtain the auto-assigned local ID.
  */
-@Reusable
 class PostRsFluxCBridge @Inject constructor(
     private val wpApiClientProvider: WpApiClientProvider,
     private val postStore: PostStore,
