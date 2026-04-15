@@ -141,7 +141,7 @@ class PostRsListViewModel @Inject constructor(
             analyticsTracker.track(
                 Stat.POST_LIST_ITEM_SELECTED,
                 site,
-                mutableMapOf(
+                mapOf(
                     TRACKS_ACTION to "move_to_draft",
                     TRACKS_POST_ID to remotePostId
                 )
@@ -153,7 +153,7 @@ class PostRsListViewModel @Inject constructor(
         analyticsTracker.track(
             Stat.POST_LIST_ITEM_SELECTED,
             site,
-            mutableMapOf(
+            mapOf(
                 TRACKS_ACTION to "edit",
                 TRACKS_POST_ID to remotePostId
             )
@@ -182,7 +182,7 @@ class PostRsListViewModel @Inject constructor(
         analyticsTracker.track(
             Stat.POST_LIST_TAB_CHANGED,
             site,
-            mutableMapOf(TRACKS_SELECTED_TAB to tab.name.lowercase())
+            mapOf(TRACKS_SELECTED_TAB to tab.name.lowercase())
         )
     }
 
@@ -192,7 +192,7 @@ class PostRsListViewModel @Inject constructor(
         analyticsTracker.track(
             Stat.POST_LIST_CREATE_POST_TAPPED,
             site,
-            mutableMapOf(TRACKS_ACTION to TRACKS_CREATE_NEW_POST)
+            mapOf(TRACKS_ACTION to TRACKS_CREATE_NEW_POST)
         )
         _events.trySend(PostRsListEvent.CreatePost(site))
     }
@@ -241,7 +241,7 @@ class PostRsListViewModel @Inject constructor(
         analyticsTracker.track(
             Stat.POST_LIST_AUTHOR_FILTER_CHANGED,
             site,
-            mutableMapOf(TRACKS_SELECTED_AUTHOR_FILTER to selection.toString())
+            mapOf(TRACKS_SELECTED_AUTHOR_FILTER to selection.toString())
         )
         appPrefsWrapper.postListAuthorSelection = selection
         _authorFilter.value = selection
@@ -256,7 +256,7 @@ class PostRsListViewModel @Inject constructor(
         analyticsTracker.track(
             Stat.POST_LIST_BUTTON_PRESSED,
             site,
-            mutableMapOf(
+            mapOf(
                 TRACKS_ACTION to action.toAnalyticsAction(),
                 TRACKS_POST_ID to remotePostId
             )
