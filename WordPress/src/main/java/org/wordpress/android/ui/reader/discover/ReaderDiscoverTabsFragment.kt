@@ -33,6 +33,7 @@ class ReaderDiscoverTabsFragment : Fragment(R.layout.reader_discover_tabs_fragme
     lateinit var appPrefsWrapper: AppPrefsWrapper
 
     private var binding: ReaderDiscoverTabsFragmentBinding? = null
+    private var pageChangeCallback: ViewPager2.OnPageChangeCallback? = null
 
     private val tabs: List<DiscoverSubTab> by lazy {
         listOf(
@@ -78,16 +79,22 @@ class ReaderDiscoverTabsFragment : Fragment(R.layout.reader_discover_tabs_fragme
             .coerceIn(0, tabs.lastIndex)
         binding.viewPager.setCurrentItem(initialIndex, false)
 
-        binding.viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+        val callback = object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
                 appPrefsWrapper.readerDiscoverSelectedSubTabIndex = position
             }
-        })
+        }
+        pageChangeCallback = callback
+        binding.viewPager.registerOnPageChangeCallback(callback)
     }
 
     override fun onDestroyView() {
-        super.onDestroyView()
+        pageChangeCallback?.let {
+            binding?.viewPager?.unregisterOnPageChangeCallback(it)
+        }
+        pageChangeCallback = null
         binding = null
+        super.onDestroyView()
     }
 
     /**
