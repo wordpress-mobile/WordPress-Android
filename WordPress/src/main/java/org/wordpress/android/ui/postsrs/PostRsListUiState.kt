@@ -3,6 +3,7 @@ package org.wordpress.android.ui.postsrs
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import org.wordpress.android.R
+import org.wordpress.android.util.DateTimeUtils
 import org.wordpress.android.util.HtmlUtils
 import uniffi.wp_api.AnyPostWithEditContext
 import uniffi.wp_api.PostCommentStatus
@@ -51,6 +52,7 @@ data class PostRsUiModel(
     val title: String,
     val excerpt: String,
     val date: String,
+    val lastModified: String = "",
     val link: String = "",
     val hasPassword: Boolean = false,
     val commentsOpen: Boolean = false,
@@ -165,6 +167,9 @@ private fun FullEntityAnyPostWithEditContext.toUiModel(
             ).let { HtmlUtils.fastStripHtml(it).trim() },
         date = PostRsDateFormatter.format(
             post.dateGmt, post.status
+        ),
+        lastModified = DateTimeUtils.iso8601UTCFromDate(
+            post.modifiedGmt
         ),
         link = post.link,
         authorId = post.author ?: 0L,
