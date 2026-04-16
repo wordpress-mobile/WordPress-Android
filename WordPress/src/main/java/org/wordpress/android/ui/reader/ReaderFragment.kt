@@ -428,7 +428,7 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), ScrollableView
 
     override fun onScrollToTop() {
         binding?.appBar?.setExpanded(true, true)
-        // Instance of ReaderPostListFragment or ReaderDiscoverFragment
+        // Instance of ReaderPostListFragment or ReaderDiscoverTabsFragment
         val currentFragment = getCurrentFeedFragment()
         if (currentFragment is OnScrollToTopListener) {
             currentFragment.onScrollToTop()
