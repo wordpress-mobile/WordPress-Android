@@ -16,6 +16,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.MarginPageTransformer
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 import com.google.android.material.tabs.TabLayout.Tab
@@ -33,6 +34,7 @@ import org.wordpress.android.ui.main.WPMainNavigationView.PageType.MY_SITE
 import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredBottomSheetFragment
 import org.wordpress.android.ui.newstats.NewStatsActivity
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
+import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures
 import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures.Feature
 import org.wordpress.android.ui.stats.refresh.StatsViewModel.StatsModuleUiModel
@@ -83,6 +85,9 @@ class StatsFragment : Fragment(R.layout.stats_fragment), ScrollableViewInitializ
     lateinit var analyticsTracker: AnalyticsTrackerWrapper
 
     @Inject
+    lateinit var appPrefsWrapper: AppPrefsWrapper
+
+    @Inject
     lateinit var mStatsTrafficSubscribersTabsFeatureConfig: StatsTrafficSubscribersTabsFeatureConfig
 
     private val viewModel: StatsViewModel by activityViewModels()
@@ -119,6 +124,7 @@ class StatsFragment : Fragment(R.layout.stats_fragment), ScrollableViewInitializ
             initializeViews()
             setupMenu()
         }
+        maybeShowNewStatsSuggestion()
     }
 
     private fun setupMenu() {
@@ -131,10 +137,7 @@ class StatsFragment : Fragment(R.layout.stats_fragment), ScrollableViewInitializ
                 override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
                     return when (menuItem.itemId) {
                         R.id.menu_try_new_stats -> {
-                            analyticsTracker.track(Stat.STATS_NEW_STATS_ENABLED)
-                            experimentalFeatures.setEnabled(Feature.NEW_STATS, true)
-                            NewStatsActivity.start(requireContext())
-                            requireActivity().finish()
+                            switchToNewStats()
                             true
                         }
                         else -> false
@@ -144,6 +147,26 @@ class StatsFragment : Fragment(R.layout.stats_fragment), ScrollableViewInitializ
             viewLifecycleOwner,
             Lifecycle.State.RESUMED
         )
+    }
+
+    private fun switchToNewStats() {
+        analyticsTracker.track(Stat.STATS_NEW_STATS_ENABLED)
+        experimentalFeatures.setEnabled(Feature.NEW_STATS, true)
+        NewStatsActivity.start(requireContext())
+        requireActivity().finish()
+    }
+
+    private fun maybeShowNewStatsSuggestion() {
+        if (appPrefsWrapper.getStatsNewStatsSuggestionShown()) return
+        appPrefsWrapper.setStatsNewStatsSuggestionShown(true)
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle(R.string.stats_new_stats_suggestion_title)
+            .setMessage(R.string.stats_new_stats_suggestion_message)
+            .setPositiveButton(R.string.stats_new_stats_suggestion_positive) { _, _ ->
+                switchToNewStats()
+            }
+            .setNegativeButton(R.string.stats_new_stats_suggestion_negative, null)
+            .show()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
