@@ -29,7 +29,9 @@ import org.wordpress.android.databinding.StatsFragmentBinding
 import org.wordpress.android.models.JetpackPoweredScreen
 import org.wordpress.android.ui.ScrollableViewInitializedListener
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureFullScreenOverlayFragment
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil.JetpackFeatureOverlayScreenType
+import org.wordpress.android.ui.jetpackoverlay.JetpackOverlayConnectedFeature
 import org.wordpress.android.ui.main.WPMainNavigationView.PageType.MY_SITE
 import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredBottomSheetFragment
 import org.wordpress.android.ui.newstats.NewStatsActivity
@@ -89,6 +91,9 @@ class StatsFragment : Fragment(R.layout.stats_fragment), ScrollableViewInitializ
 
     @Inject
     lateinit var appPrefsWrapper: AppPrefsWrapper
+
+    @Inject
+    lateinit var jetpackFeatureRemovalOverlayUtil: JetpackFeatureRemovalOverlayUtil
 
     @Inject
     lateinit var mStatsTrafficSubscribersTabsFeatureConfig: StatsTrafficSubscribersTabsFeatureConfig
@@ -153,6 +158,7 @@ class StatsFragment : Fragment(R.layout.stats_fragment), ScrollableViewInitializ
     }
 
     private fun switchToNewStats() {
+        if (!isAdded) return
         analyticsTracker.track(Stat.STATS_NEW_STATS_ENABLED)
         experimentalFeatures.setEnabled(Feature.NEW_STATS, true)
         NewStatsActivity.start(requireContext())
@@ -161,6 +167,13 @@ class StatsFragment : Fragment(R.layout.stats_fragment), ScrollableViewInitializ
 
     private fun maybeShowNewStatsSuggestion() {
         if (appPrefsWrapper.getStatsNewStatsSuggestionShown()) return
+        // Avoid stacking on top of the Jetpack-powered bottom sheet or the feature-removal overlay,
+        // both of which may show on a fresh Stats activity launch.
+        if (jetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()) return
+        if (jetpackFeatureRemovalOverlayUtil.shouldShowFeatureSpecificJetpackOverlay(
+                JetpackOverlayConnectedFeature.STATS
+            )
+        ) return
         val lastDismissedAt = appPrefsWrapper.getStatsNewStatsSuggestionLastDismissedAt()
         val isSecondAttempt = lastDismissedAt > 0L
         if (isSecondAttempt &&
