@@ -76,8 +76,13 @@ class SiteWPAPIRestClient @Inject constructor(
 
                     wpApiRestUrl = discoveredWpApiUrl
                     this.url = cleanedUrl.replaceBefore("://", urlScheme)
-                    this.username = payload.username
-                    this.password = payload.password
+                    if (payload.isApplicationPassword) {
+                        this.apiRestUsernamePlain = payload.username
+                        this.apiRestPasswordPlain = payload.password
+                    } else {
+                        this.username = payload.username
+                        this.password = payload.password
+                    }
                 }
             }
 
@@ -97,6 +102,8 @@ class SiteWPAPIRestClient @Inject constructor(
                 url = site.url,
                 username = site.getUserNameProcessed(),
                 password = site.getPasswordProcessed(),
+                isApplicationPassword =
+                    site.hasApplicationPassword(),
             )
         )
     }

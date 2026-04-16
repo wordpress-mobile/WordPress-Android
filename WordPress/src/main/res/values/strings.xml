@@ -997,6 +997,10 @@
     <string name="experimental_new_stats_description">Show stats in a more modern and advanced UI</string>
     <string name="stats_try_new_stats">Try new stats</string>
     <string name="stats_switch_to_old_stats">Disable new stats</string>
+    <string name="stats_new_stats_suggestion_title">A new Stats experience</string>
+    <string name="stats_new_stats_suggestion_message">We\'ve built a brand new Stats experience. Want to give it a try? You can always go back to the old one from the Stats menu.</string>
+    <string name="stats_new_stats_suggestion_positive">Try it out</string>
+    <string name="stats_new_stats_suggestion_negative">Maybe later</string>
     <!-- New Stats intro bottom sheet -->
     <string name="new_stats_intro_title">New Stats</string>
     <string name="new_stats_intro_subtitle">A better way to understand your site\'s performance.</string>
@@ -4625,6 +4629,11 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="application_password_app_name_jetpack">Jetpack Android App on %s</string>
     <string name="application_password_app_name_wordpress">WordPress Android App on %s</string>
     <string name="application_password_reauthentication_banner">Your site credentials are invalid. Tap to reauthenticate.</string>
+
+    <!-- XML-RPC Disabled -->
+    <string name="xmlrpc_disabled_card_text">XML-RPC Disabled\nSome features may be limited</string>
+    <string name="xmlrpc_disabled_bottom_sheet_title">XML-RPC Disabled</string>
+    <string name="xmlrpc_disabled_bottom_sheet_body">Some features in the app require XML-RPC. Enable it on your site to resolve this.</string>
 
     <!-- DataView -->
     <string name="dataview_default_empty_message">There\'s nothing here</string>

@@ -8,6 +8,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
+import org.mockito.kotlin.any
 import org.mockito.kotlin.argWhere
 import org.mockito.kotlin.inOrder
 import org.mockito.kotlin.never
@@ -536,6 +537,67 @@ class SiteStoreTest {
 
         assertThat(siteStore.hasSiteAccessedViaWPAPI()).isFalse()
     }
+
+    @Test
+    fun `fetchSiteWPAPIFromApplicationPassword sets AP credentials and wpApiRestUrl`() =
+        test {
+            // Given
+            val payload =
+                SiteStore.RefreshSitesXMLRPCApplicationPasswordCredentialsPayload(
+                    username = "appUser",
+                    password = "appPass",
+                    url = "https://example.com",
+                    apiRootUrl = "https://example.com/wp-json/",
+                )
+            val fetchedSite = SiteModel().apply {
+                name = "Test Site"
+                origin = SiteModel.ORIGIN_WPAPI
+                url = "https://example.com"
+                apiRestUsernamePlain = "appUser"
+                apiRestPasswordPlain = "appPass"
+            }
+            whenever(siteWPAPIClient.fetchWPAPISite(any<SiteStore.FetchWPAPISitePayload>()))
+                .thenReturn(fetchedSite)
+            whenever(siteSqlUtils.insertOrUpdateSite(fetchedSite))
+                .thenReturn(1)
+
+            // When
+            val result =
+                siteStore.fetchSiteWPAPIFromApplicationPassword(payload)
+
+            // Then
+            assertThat(result.isError).isFalse()
+            assertThat(fetchedSite.username).isNullOrEmpty()
+            assertThat(fetchedSite.password).isNullOrEmpty()
+            assertThat(fetchedSite.apiRestUsernamePlain)
+                .isEqualTo("appUser")
+            assertThat(fetchedSite.apiRestPasswordPlain)
+                .isEqualTo("appPass")
+            assertThat(fetchedSite.wpApiRestUrl)
+                .isEqualTo("https://example.com/wp-json/")
+        }
+
+    @Test
+    fun `fetchPostFormats returns empty list for WPAPI site without crashing`() =
+        test {
+            org.mockito.Mockito.mockStatic(
+                org.wordpress.android.util.AppLog::class.java
+            ).use {
+                // Given
+                val site = SiteModel().apply {
+                    origin = SiteModel.ORIGIN_WPAPI
+                    // xmlRpcUrl is intentionally null
+                }
+
+                // When
+                val result = siteStore.fetchPostFormats(site)
+
+                // Then - no crash, empty post formats
+                assertThat(result.isError).isFalse()
+                verifyNoInteractions(siteXMLRPCClient)
+                verifyNoInteractions(siteRestClient)
+            }
+        }
 
     @Test
     fun `sitesAccessedViaWPAPICount returns correct count`() {

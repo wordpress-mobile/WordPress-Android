@@ -38,6 +38,7 @@ class PostRsListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
     @Mock lateinit var restClient: PostRsRestClient
     @Mock lateinit var resourceProvider: ResourceProvider
     @Mock lateinit var postStore: PostStore
+    @Mock lateinit var fluxCBridge: PostRsFluxCBridge
     @Mock lateinit var blazeFeatureUtils: BlazeFeatureUtils
     @Mock lateinit var networkUtilsWrapper: NetworkUtilsWrapper
     @Mock lateinit var accountStore: AccountStore
@@ -72,6 +73,7 @@ class PostRsListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
         restClient = restClient,
         resourceProvider = resourceProvider,
         postStore = postStore,
+        fluxCBridge = fluxCBridge,
         blazeFeatureUtils = blazeFeatureUtils,
         networkUtilsWrapper = networkUtilsWrapper,
         accountStore = accountStore,
@@ -222,14 +224,15 @@ class PostRsListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
     }
 
     @Test
-    fun `openPost emits EditPost when FluxC post found`() = test {
+    fun `openPost emits EditPost when bridge succeeds`() = test {
         val postModel = PostModel()
-        whenever(postStore.getPostByRemotePostId(42L, site))
+        whenever(fluxCBridge.fetchAndBridge(42L, site))
             .thenReturn(postModel)
         val viewModel = createViewModel()
 
         viewModel.events.test {
             viewModel.openPost(42L, PostRsListTab.PUBLISHED)
+            advanceUntilIdle()
 
             val event = awaitItem()
             assertThat(event)
@@ -242,18 +245,25 @@ class PostRsListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
     }
 
     @Test
-    fun `openPost shows snackbar when FluxC post not found`() = test {
-        whenever(postStore.getPostByRemotePostId(42L, site))
-            .thenReturn(null)
+    fun `openPost shows snackbar when bridge fails`() = test {
+        whenever(fluxCBridge.fetchAndBridge(42L, site))
+            .thenAnswer { throw IllegalStateException("not found") }
         val viewModel = createViewModel()
 
         viewModel.snackbarMessages.test {
             viewModel.openPost(42L, PostRsListTab.PUBLISHED)
+            advanceUntilIdle()
 
             val message = awaitItem()
             assertThat(message.message).isNotEmpty()
             cancelAndIgnoreRemainingEvents()
         }
+    }
+
+    @Test
+    fun `isOpeningPost is false on init`() {
+        val viewModel = createViewModel()
+        assertThat(viewModel.isOpeningPost.value).isFalse()
     }
 
     @Test

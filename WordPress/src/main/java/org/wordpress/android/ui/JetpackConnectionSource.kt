@@ -1,7 +1,8 @@
 package org.wordpress.android.ui
 
 enum class JetpackConnectionSource(private val value: String) {
-    NOTIFICATIONS("notifications"), STATS("stats");
+    NOTIFICATIONS("notifications"),
+    STATS("stats");
 
     override fun toString() = value
 
