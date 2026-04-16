@@ -165,6 +165,7 @@ class StatsFragment : Fragment(R.layout.stats_fragment), ScrollableViewInitializ
         requireActivity().finish()
     }
 
+    @Suppress("ReturnCount")
     private fun maybeShowNewStatsSuggestion() {
         if (appPrefsWrapper.getStatsNewStatsSuggestionShown()) return
         // Avoid stacking on top of the Jetpack-powered bottom sheet or the feature-removal overlay,
