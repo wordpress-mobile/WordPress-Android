@@ -63,7 +63,10 @@ import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 import org.wordpress.android.viewmodel.observeEvent
 import org.wordpress.android.widgets.WPSnackbar
 import java.lang.ref.WeakReference
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
+
+private val NEW_STATS_SUGGESTION_RESHOW_DELAY_MS = TimeUnit.DAYS.toMillis(7)
 
 private val statsSections = listOf(INSIGHTS, DAYS, WEEKS, MONTHS, YEARS)
 private val statsSectionsWithTrafficTab = listOf(TRAFFIC, INSIGHTS, SUBSCRIBERS)
@@ -158,14 +161,29 @@ class StatsFragment : Fragment(R.layout.stats_fragment), ScrollableViewInitializ
 
     private fun maybeShowNewStatsSuggestion() {
         if (appPrefsWrapper.getStatsNewStatsSuggestionShown()) return
-        appPrefsWrapper.setStatsNewStatsSuggestionShown(true)
+        val lastDismissedAt = appPrefsWrapper.getStatsNewStatsSuggestionLastDismissedAt()
+        val isSecondAttempt = lastDismissedAt > 0L
+        if (isSecondAttempt &&
+            System.currentTimeMillis() - lastDismissedAt < NEW_STATS_SUGGESTION_RESHOW_DELAY_MS
+        ) {
+            return
+        }
+        val onDismiss = {
+            if (isSecondAttempt) {
+                appPrefsWrapper.setStatsNewStatsSuggestionShown(true)
+            } else {
+                appPrefsWrapper.setStatsNewStatsSuggestionLastDismissedAt(System.currentTimeMillis())
+            }
+        }
         MaterialAlertDialogBuilder(requireContext())
             .setTitle(R.string.stats_new_stats_suggestion_title)
             .setMessage(R.string.stats_new_stats_suggestion_message)
             .setPositiveButton(R.string.stats_new_stats_suggestion_positive) { _, _ ->
+                appPrefsWrapper.setStatsNewStatsSuggestionShown(true)
                 switchToNewStats()
             }
-            .setNegativeButton(R.string.stats_new_stats_suggestion_negative, null)
+            .setNegativeButton(R.string.stats_new_stats_suggestion_negative) { _, _ -> onDismiss() }
+            .setOnCancelListener { onDismiss() }
             .show()
     }
 
