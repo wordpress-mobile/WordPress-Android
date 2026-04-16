@@ -63,6 +63,10 @@ public class AppPrefs {
 
         NEW_STATS_INTRO_SHOWN,
 
+        STATS_NEW_STATS_SUGGESTION_SHOWN,
+
+        STATS_NEW_STATS_SUGGESTION_LAST_DISMISSED_AT,
+
         READER_TAGS_UPDATE_TIMESTAMP,
         // last selected tag in the reader
         READER_TAG_NAME,
@@ -1887,5 +1891,21 @@ public class AppPrefs {
 
     public static void setNewStatsIntroShown(boolean shown) {
         setBoolean(DeletablePrefKey.NEW_STATS_INTRO_SHOWN, shown);
+    }
+
+    public static boolean getStatsNewStatsSuggestionShown() {
+        return getBoolean(DeletablePrefKey.STATS_NEW_STATS_SUGGESTION_SHOWN, false);
+    }
+
+    public static void setStatsNewStatsSuggestionShown(boolean shown) {
+        setBoolean(DeletablePrefKey.STATS_NEW_STATS_SUGGESTION_SHOWN, shown);
+    }
+
+    public static long getStatsNewStatsSuggestionLastDismissedAt() {
+        return getLong(DeletablePrefKey.STATS_NEW_STATS_SUGGESTION_LAST_DISMISSED_AT, 0L);
+    }
+
+    public static void setStatsNewStatsSuggestionLastDismissedAt(long timestamp) {
+        setLong(DeletablePrefKey.STATS_NEW_STATS_SUGGESTION_LAST_DISMISSED_AT, timestamp);
     }
 }

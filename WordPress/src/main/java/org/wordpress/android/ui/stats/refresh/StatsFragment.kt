@@ -16,6 +16,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.MarginPageTransformer
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 import com.google.android.material.tabs.TabLayout.Tab
@@ -28,11 +29,14 @@ import org.wordpress.android.databinding.StatsFragmentBinding
 import org.wordpress.android.models.JetpackPoweredScreen
 import org.wordpress.android.ui.ScrollableViewInitializedListener
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureFullScreenOverlayFragment
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil.JetpackFeatureOverlayScreenType
+import org.wordpress.android.ui.jetpackoverlay.JetpackOverlayConnectedFeature
 import org.wordpress.android.ui.main.WPMainNavigationView.PageType.MY_SITE
 import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredBottomSheetFragment
 import org.wordpress.android.ui.newstats.NewStatsActivity
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
+import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures
 import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures.Feature
 import org.wordpress.android.ui.stats.refresh.StatsViewModel.StatsModuleUiModel
@@ -61,7 +65,10 @@ import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 import org.wordpress.android.viewmodel.observeEvent
 import org.wordpress.android.widgets.WPSnackbar
 import java.lang.ref.WeakReference
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
+
+private val NEW_STATS_SUGGESTION_RESHOW_DELAY_MS = TimeUnit.DAYS.toMillis(7)
 
 private val statsSections = listOf(INSIGHTS, DAYS, WEEKS, MONTHS, YEARS)
 private val statsSectionsWithTrafficTab = listOf(TRAFFIC, INSIGHTS, SUBSCRIBERS)
@@ -81,6 +88,12 @@ class StatsFragment : Fragment(R.layout.stats_fragment), ScrollableViewInitializ
 
     @Inject
     lateinit var analyticsTracker: AnalyticsTrackerWrapper
+
+    @Inject
+    lateinit var appPrefsWrapper: AppPrefsWrapper
+
+    @Inject
+    lateinit var jetpackFeatureRemovalOverlayUtil: JetpackFeatureRemovalOverlayUtil
 
     @Inject
     lateinit var mStatsTrafficSubscribersTabsFeatureConfig: StatsTrafficSubscribersTabsFeatureConfig
@@ -119,6 +132,7 @@ class StatsFragment : Fragment(R.layout.stats_fragment), ScrollableViewInitializ
             initializeViews()
             setupMenu()
         }
+        maybeShowNewStatsSuggestion()
     }
 
     private fun setupMenu() {
@@ -131,10 +145,7 @@ class StatsFragment : Fragment(R.layout.stats_fragment), ScrollableViewInitializ
                 override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
                     return when (menuItem.itemId) {
                         R.id.menu_try_new_stats -> {
-                            analyticsTracker.track(Stat.STATS_NEW_STATS_ENABLED)
-                            experimentalFeatures.setEnabled(Feature.NEW_STATS, true)
-                            NewStatsActivity.start(requireContext())
-                            requireActivity().finish()
+                            switchToNewStats()
                             true
                         }
                         else -> false
@@ -144,6 +155,50 @@ class StatsFragment : Fragment(R.layout.stats_fragment), ScrollableViewInitializ
             viewLifecycleOwner,
             Lifecycle.State.RESUMED
         )
+    }
+
+    private fun switchToNewStats() {
+        if (!isAdded) return
+        analyticsTracker.track(Stat.STATS_NEW_STATS_ENABLED)
+        experimentalFeatures.setEnabled(Feature.NEW_STATS, true)
+        NewStatsActivity.start(requireContext())
+        requireActivity().finish()
+    }
+
+    @Suppress("ReturnCount")
+    private fun maybeShowNewStatsSuggestion() {
+        if (appPrefsWrapper.getStatsNewStatsSuggestionShown()) return
+        // Avoid stacking on top of the Jetpack-powered bottom sheet or the feature-removal overlay,
+        // both of which may show on a fresh Stats activity launch.
+        if (jetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()) return
+        if (jetpackFeatureRemovalOverlayUtil.shouldShowFeatureSpecificJetpackOverlay(
+                JetpackOverlayConnectedFeature.STATS
+            )
+        ) return
+        val lastDismissedAt = appPrefsWrapper.getStatsNewStatsSuggestionLastDismissedAt()
+        val isSecondAttempt = lastDismissedAt > 0L
+        if (isSecondAttempt &&
+            System.currentTimeMillis() - lastDismissedAt < NEW_STATS_SUGGESTION_RESHOW_DELAY_MS
+        ) {
+            return
+        }
+        val onDismiss = {
+            if (isSecondAttempt) {
+                appPrefsWrapper.setStatsNewStatsSuggestionShown(true)
+            } else {
+                appPrefsWrapper.setStatsNewStatsSuggestionLastDismissedAt(System.currentTimeMillis())
+            }
+        }
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle(R.string.stats_new_stats_suggestion_title)
+            .setMessage(R.string.stats_new_stats_suggestion_message)
+            .setPositiveButton(R.string.stats_new_stats_suggestion_positive) { _, _ ->
+                appPrefsWrapper.setStatsNewStatsSuggestionShown(true)
+                switchToNewStats()
+            }
+            .setNegativeButton(R.string.stats_new_stats_suggestion_negative) { _, _ -> onDismiss() }
+            .setOnCancelListener { onDismiss() }
+            .show()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
