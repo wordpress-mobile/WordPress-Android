@@ -140,6 +140,7 @@ class PostRsListViewModel @Inject constructor(
      */
     @MainThread
     fun openPost(remotePostId: Long, tab: PostRsListTab) {
+        if (_isOpeningPost.value) return
         if (tab == PostRsListTab.TRASHED) {
             analyticsTracker.track(
                 Stat.POST_LIST_ITEM_SELECTED,
