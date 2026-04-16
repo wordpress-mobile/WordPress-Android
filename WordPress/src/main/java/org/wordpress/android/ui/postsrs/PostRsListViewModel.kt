@@ -400,8 +400,9 @@ class PostRsListViewModel @Inject constructor(
 
     @Suppress("TooGenericExceptionCaught")
     private suspend fun bridgePostOrNull(remotePostId: Long) = try {
+        val lastModified = findPost(remotePostId)?.lastModified
         withContext(Dispatchers.IO) {
-            fluxCBridge.fetchAndBridge(remotePostId, site)
+            fluxCBridge.fetchAndBridge(remotePostId, site, lastModified)
         }
     } catch (e: CancellationException) {
         throw e
@@ -424,8 +425,11 @@ class PostRsListViewModel @Inject constructor(
         _isOpeningPost.value = true
         viewModelScope.launch {
             try {
+                val lastModified = findPost(remotePostId)?.lastModified
                 val postToCopy = withContext(Dispatchers.IO) {
-                    fluxCBridge.fetchAndBridge(remotePostId, site)
+                    fluxCBridge.fetchAndBridge(
+                        remotePostId, site, lastModified
+                    )
                 }
                 val newPost = postStore.instantiatePostModel(
                     site,
@@ -527,8 +531,11 @@ class PostRsListViewModel @Inject constructor(
         _isOpeningPost.value = true
         viewModelScope.launch {
             try {
+                val lastModified = findPost(remotePostId)?.lastModified
                 val post = withContext(Dispatchers.IO) {
-                    fluxCBridge.fetchAndBridge(remotePostId, site)
+                    fluxCBridge.fetchAndBridge(
+                        remotePostId, site, lastModified
+                    )
                 }
                 if (blaze) {
                     _events.trySend(

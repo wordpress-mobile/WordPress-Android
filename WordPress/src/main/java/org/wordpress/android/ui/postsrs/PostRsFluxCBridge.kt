@@ -29,17 +29,26 @@ class PostRsFluxCBridge @Inject constructor(
 ) {
     /**
      * Returns a [PostModel] for [remotePostId] that is guaranteed
-     * to exist in FluxC's local database.
+     * to exist in FluxC's local database. If [lastModified] is
+     * provided and differs from the cached row's
+     * `remoteLastModified`, the cache is considered
+     * stale and the post is re-fetched from the server.
      *
      * @throws IllegalStateException if the post cannot be fetched or inserted.
      */
     suspend fun fetchAndBridge(
         remotePostId: Long,
-        site: SiteModel
+        site: SiteModel,
+        lastModified: String? = null
     ): PostModel {
-        // Fast path — already in FluxC
-        postStore.getPostByRemotePostId(remotePostId, site)
-            ?.let { return it }
+        // Fast path — already in FluxC and still fresh
+        postStore.getPostByRemotePostId(remotePostId, site)?.let { cached ->
+            if (lastModified == null ||
+                lastModified == cached.remoteLastModified
+            ) {
+                return cached
+            }
+        }
 
         // Slow path — fetch via wordpress-rs
         val client = wpApiClientProvider.getWpApiClient(site)
