@@ -229,71 +229,81 @@ class ReaderPostRepository @Inject constructor(
      * First-page requests also include a "refresh" counter so the server returns a different
      * shard of content, matching the existing ReaderDiscoverLogic behavior.
      */
+    @Suppress("TooGenericExceptionCaught")
     private fun requestPostsForDiscoverStream(
         tag: ReaderTag,
         updateAction: ReaderPostServiceStarter.UpdateAction,
         resultListener: UpdateResultListener
     ) {
         applicationScope.launch(ioDispatcher) {
-            val params = mutableMapOf<String, String>()
+            try {
+                val params = mutableMapOf<String, String>()
 
-            // Use the user's followed tags to seed the discover stream. If the user doesn't follow
-            // anything (ignoring the default dailyprompt tag) fall back to "dailyprompt,wordpress"
-            // — this mirrors ReaderDiscoverLogic / iOS ReaderPostServiceRemote behavior.
-            val userTags = getFollowedTagsUseCase.get()
-            params["tags"] = if (userTags.filterNot { it.tagSlug == BLOGGING_PROMPT_TAG }.isEmpty()) {
-                "$BLOGGING_PROMPT_TAG,wordpress"
-            } else {
-                userTags.joinToString(",") { it.tagSlug }
-            }
-
-            // Latest sorts by date; Recommended uses the server's default order.
-            if (tag.tagSlug == ReaderTag.TAG_SLUG_LATEST) {
-                params["sort"] = "date"
-            }
-
-            val isFirstPage = updateAction == ReaderPostServiceStarter.UpdateAction.REQUEST_NEWER ||
-                    updateAction == ReaderPostServiceStarter.UpdateAction.REQUEST_REFRESH ||
-                    updateAction == ReaderPostServiceStarter.UpdateAction.REQUEST_OLDER_THAN_GAP
-
-            if (isFirstPage) {
-                // Clear the stored cursor so the next "load more" starts from the new first page,
-                // then bump the refresh counter so the server rotates the visible shard.
-                appPrefsWrapper.setReaderDiscoverStreamPageHandle(tag.tagSlug, null)
-                params["refresh"] = appPrefsWrapper.getReaderCardsRefreshCounter().toString()
-                appPrefsWrapper.incrementReaderCardsRefreshCounter()
-            } else {
-                // REQUEST_OLDER: resume pagination with the previously-stored cursor.
-                val pageHandle = appPrefsWrapper.getReaderDiscoverStreamPageHandle(tag.tagSlug)
-                if (pageHandle.isNullOrEmpty()) {
-                    // Nothing more to load — nothing changed locally either.
-                    resultListener.onUpdateResult(ReaderActions.UpdateResult.UNCHANGED)
-                    return@launch
+                // Use the user's followed tags to seed the discover stream. If the user doesn't
+                // follow anything (ignoring the default dailyprompt tag) fall back to
+                // "dailyprompt,wordpress" — mirrors ReaderDiscoverLogic / iOS behavior.
+                val userTags = getFollowedTagsUseCase.get()
+                params["tags"] = if (
+                    userTags.filterNot { it.tagSlug == BLOGGING_PROMPT_TAG }.isEmpty()
+                ) {
+                    "$BLOGGING_PROMPT_TAG,wordpress"
+                } else {
+                    userTags.joinToString(",") { it.tagSlug }
                 }
-                params["page_handle"] = pageHandle
-            }
 
-            params["_locale"] = perAppLocaleManager.getCurrentLocaleLanguageCode()
-
-            val listener = RestRequest.Listener { jsonObject: JSONObject? ->
-                applicationScope.launch(ioDispatcher) {
-                    handleDiscoverStreamResponse(tag, jsonObject, updateAction, resultListener)
+                // Latest sorts by date; Recommended uses the server's default order.
+                if (tag.tagSlug == ReaderTag.TAG_SLUG_LATEST) {
+                    params["sort"] = "date"
                 }
-            }
-            val errorListener = RestRequest.ErrorListener { volleyError: VolleyError? ->
-                AppLog.e(AppLog.T.READER, volleyError)
+
+                val isFirstPage =
+                    updateAction == ReaderPostServiceStarter.UpdateAction.REQUEST_NEWER ||
+                        updateAction == ReaderPostServiceStarter.UpdateAction.REQUEST_REFRESH ||
+                        updateAction == ReaderPostServiceStarter.UpdateAction.REQUEST_OLDER_THAN_GAP
+
+                if (isFirstPage) {
+                    // Clear the stored cursor so the next "load more" starts from the new first
+                    // page, then bump the refresh counter so the server rotates the shard.
+                    appPrefsWrapper.setReaderDiscoverStreamPageHandle(tag.tagSlug, null)
+                    params["refresh"] =
+                        appPrefsWrapper.getReaderCardsRefreshCounter().toString()
+                    appPrefsWrapper.incrementReaderCardsRefreshCounter()
+                } else {
+                    // REQUEST_OLDER: resume pagination with the previously-stored cursor.
+                    val pageHandle =
+                        appPrefsWrapper.getReaderDiscoverStreamPageHandle(tag.tagSlug)
+                    if (pageHandle.isNullOrEmpty()) {
+                        resultListener.onUpdateResult(ReaderActions.UpdateResult.UNCHANGED)
+                        return@launch
+                    }
+                    params["page_handle"] = pageHandle
+                }
+
+                params["_locale"] = perAppLocaleManager.getCurrentLocaleLanguageCode()
+
+                val listener = RestRequest.Listener { jsonObject: JSONObject? ->
+                    applicationScope.launch(ioDispatcher) {
+                        handleDiscoverStreamResponse(
+                            tag, jsonObject, updateAction, resultListener
+                        )
+                    }
+                }
+                val errorListener = RestRequest.ErrorListener { volleyError: VolleyError? ->
+                    AppLog.e(AppLog.T.READER, volleyError)
+                    resultListener.onUpdateResult(ReaderActions.UpdateResult.FAILED)
+                }
+
+                WordPress.getRestClientUtilsV2().get(
+                    tag.endpoint,
+                    params,
+                    null,
+                    listener,
+                    errorListener
+                )
+            } catch (e: Exception) {
+                AppLog.e(AppLog.T.READER, "Discover stream request failed", e)
                 resultListener.onUpdateResult(ReaderActions.UpdateResult.FAILED)
             }
-
-            // The tag's endpoint already carries the stream path (read/streams/{slug}) set at
-            // tag-creation time in ReaderDiscoverTabsFragment.
-            WordPress.getRestClientUtilsV2().get(
-                tag.endpoint,
-                params,
-                null,
-                listener,
-                errorListener
-            )
         }
     }
 
