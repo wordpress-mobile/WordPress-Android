@@ -1,6 +1,8 @@
 package org.wordpress.android.ui.postsrs.screens
 
 import androidx.annotation.StringRes
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -287,7 +289,14 @@ fun PostRsListScreen(
 
     if (isOpeningPost) {
         Box(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier
+                .fillMaxSize()
+                .clickable(
+                    indication = null,
+                    interactionSource = remember {
+                        MutableInteractionSource()
+                    }
+                ) { },
             contentAlignment = Alignment.Center
         ) {
             CircularProgressIndicator()
