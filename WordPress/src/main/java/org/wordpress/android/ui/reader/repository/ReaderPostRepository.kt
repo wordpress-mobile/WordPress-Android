@@ -243,9 +243,7 @@ class ReaderPostRepository @Inject constructor(
                 // follow anything (ignoring the default dailyprompt tag) fall back to
                 // "dailyprompt,wordpress" — mirrors ReaderDiscoverLogic / iOS behavior.
                 val userTags = getFollowedTagsUseCase.get()
-                params["tags"] = if (
-                    userTags.filterNot { it.tagSlug == BLOGGING_PROMPT_TAG }.isEmpty()
-                ) {
+                params["tags"] = if (userTags.none { it.tagSlug != BLOGGING_PROMPT_TAG }) {
                     "$BLOGGING_PROMPT_TAG,wordpress"
                 } else {
                     userTags.joinToString(",") { it.tagSlug }

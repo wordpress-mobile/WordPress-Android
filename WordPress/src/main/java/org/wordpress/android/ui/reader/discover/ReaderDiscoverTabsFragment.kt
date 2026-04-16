@@ -13,9 +13,9 @@ import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.ReaderTagType
 import org.wordpress.android.ui.ScrollableViewInitializedListener
 import org.wordpress.android.ui.main.WPMainActivity.OnScrollToTopListener
+import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.reader.ReaderPostListFragment
 import org.wordpress.android.ui.reader.ReaderTypes
-import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import javax.inject.Inject
 
 /**
