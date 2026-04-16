@@ -6,10 +6,10 @@ on:
 
 jobs:
   check-labels-on-issues:
-    uses: Automattic/dangermattic/.github/workflows/reusable-check-labels-on-issues.yml@v1.1.2
+    uses: Automattic/dangermattic/.github/workflows/reusable-check-labels-on-issues.yml@v1
     with:
       label-format-list: '[
-        "^\[.+\]",
+        "^\\[.+\\]",
         "^[[:alnum:]]"
       ]'
       label-error-message: '🚫 Please add a type label (e.g. **[Type] Enhancement**) and a feature label (e.g. **Stats**) to this issue.'
