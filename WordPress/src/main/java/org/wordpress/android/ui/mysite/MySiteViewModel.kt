@@ -170,6 +170,12 @@ class MySiteViewModel @Inject constructor(
                 siteCapabilityChecker.clearCacheForSite(site.siteId)
             }
             buildDashboardOrSiteItems(site)
+            launch {
+                fetchEditorCapabilitiesWithSnackbar(
+                    site,
+                    isUserInitiated = isPullToRefresh
+                )
+            }
         } ?: run {
             accountDataViewModelSlice.onRefresh()
         }
@@ -182,23 +188,35 @@ class MySiteViewModel @Inject constructor(
         selectedSiteRepository.getSelectedSite()?.let {
             buildDashboardOrSiteItems(it)
             launch {
-                val ok = editorSettingsRepository
-                    .fetchEditorCapabilitiesForSite(it)
-                if (!ok) {
-                    _onSnackbarMessage.postValue(
-                        Event(
-                            SnackbarMessageHolder(
-                                UiString.UiStringRes(
-                                    R.string
-                                        .site_settings_fetch_failed
-                                )
-                            )
-                        )
-                    )
-                }
+                fetchEditorCapabilitiesWithSnackbar(
+                    it,
+                    isUserInitiated = false
+                )
             }
         } ?: run {
             accountDataViewModelSlice.onResume()
+        }
+    }
+
+    private suspend fun fetchEditorCapabilitiesWithSnackbar(
+        site: SiteModel,
+        isUserInitiated: Boolean
+    ) {
+        val ok = editorSettingsRepository
+            .fetchEditorCapabilitiesForSite(site)
+        val hasCache = editorSettingsRepository
+            .hasCachedCapabilities(site)
+        if (!ok && (isUserInitiated || !hasCache)) {
+            _onSnackbarMessage.postValue(
+                Event(
+                    SnackbarMessageHolder(
+                        UiString.UiStringRes(
+                            R.string
+                                .site_settings_fetch_failed
+                        )
+                    )
+                )
+            )
         }
     }
 

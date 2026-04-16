@@ -26,6 +26,9 @@ class EditorSettingsRepository @Inject constructor(
 ) {
     private val editorSettingsSqlUtils = EditorSettingsSqlUtils()
 
+    fun hasCachedCapabilities(site: SiteModel): Boolean =
+        appPrefsWrapper.hasSiteEditorCapabilities(site)
+
     /**
      * Returns whether the site is known to support the
      * `wp-block-editor/v1/settings` endpoint, based on
