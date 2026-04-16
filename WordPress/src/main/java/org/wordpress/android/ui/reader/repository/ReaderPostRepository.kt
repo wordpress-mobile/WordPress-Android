@@ -76,7 +76,8 @@ class ReaderPostRepository @Inject constructor(
         resultListener: UpdateResultListener
     ) {
         // The Discover "Recommended" and "Latest" sub-tabs use the v2 cards-style pipeline.
-        // Freshly Pressed uses the v1.2 /freshly-pressed endpoint (handled below).
+        // Freshly Pressed falls through to the regular tag-based flow below, which hits the
+        // v1.2 /freshly-pressed endpoint carried on tag.endpoint.
         if (tag.tagType == ReaderTagType.DEFAULT && tag.tagSlug in DISCOVER_STREAM_TAG_SLUGS) {
             requestPostsForDiscoverStream(tag, updateAction, resultListener)
             return
@@ -254,6 +255,9 @@ class ReaderPostRepository @Inject constructor(
                     params["sort"] = "date"
                 }
 
+                // REQUEST_OLDER_THAN_GAP is intentionally treated as a first-page refresh:
+                // the cursor-based streams endpoint has no equivalent to ReaderPostTable's
+                // gap markers, so starting fresh is the safest recovery path.
                 val isFirstPage =
                     updateAction == ReaderPostServiceStarter.UpdateAction.REQUEST_NEWER ||
                         updateAction == ReaderPostServiceStarter.UpdateAction.REQUEST_REFRESH ||

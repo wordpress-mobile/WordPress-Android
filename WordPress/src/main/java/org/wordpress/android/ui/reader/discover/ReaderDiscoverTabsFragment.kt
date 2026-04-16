@@ -75,8 +75,10 @@ class ReaderDiscoverTabsFragment : Fragment(R.layout.reader_discover_tabs_fragme
         }.attach()
 
         // Restore last selected sub-tab (defaults to 0 == Freshly Pressed on first open).
-        val initialIndex = appPrefsWrapper.readerDiscoverSelectedSubTabIndex
-            .coerceIn(0, tabs.lastIndex)
+        val initialIndex = resolveInitialTabIndex(
+            appPrefsWrapper.readerDiscoverSelectedSubTabIndex,
+            tabs.size,
+        )
         binding.viewPager.setCurrentItem(initialIndex, false)
 
         val callback = object : ViewPager2.OnPageChangeCallback() {
@@ -142,5 +144,15 @@ class ReaderDiscoverTabsFragment : Fragment(R.layout.reader_discover_tabs_fragme
 
         private fun createDiscoverTag(slug: String, title: String, endpoint: String): ReaderTag =
             ReaderTag(slug, title, title, endpoint, ReaderTagType.DEFAULT)
+
+        /**
+         * Clamps a persisted sub-tab index into the current tab range. Returns 0 when
+         * the tab list is empty so callers can safely hand the result to ViewPager2.
+         */
+        @JvmStatic
+        internal fun resolveInitialTabIndex(storedIndex: Int, tabCount: Int): Int {
+            if (tabCount <= 0) return 0
+            return storedIndex.coerceIn(0, tabCount - 1)
+        }
     }
 }
