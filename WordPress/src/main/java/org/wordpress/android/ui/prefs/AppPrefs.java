@@ -1837,6 +1837,15 @@ public class AppPrefs {
         return DeletablePrefKey.STATS_UTM_CATEGORY.name() + siteId;
     }
 
+    public static boolean hasSiteEditorCapabilities(
+            @NonNull SiteModel site
+    ) {
+        return prefs().contains(
+                DeletablePrefKey.SITE_SUPPORTS_EDITOR_SETTINGS.name()
+                        + site.getId()
+        );
+    }
+
     public static boolean getSiteSupportsEditorSettings(
             @NonNull SiteModel site
     ) {

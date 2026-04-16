@@ -122,6 +122,9 @@ class AppPrefsWrapper @Inject constructor(val buildConfigWrapper: BuildConfigWra
     fun setStatsUtmCategory(siteId: Long, category: String?) =
         AppPrefs.setStatsUtmCategory(siteId, category)
 
+    fun hasSiteEditorCapabilities(site: SiteModel): Boolean =
+        AppPrefs.hasSiteEditorCapabilities(site)
+
     fun getSiteSupportsEditorSettings(site: SiteModel): Boolean =
         AppPrefs.getSiteSupportsEditorSettings(site)
 
