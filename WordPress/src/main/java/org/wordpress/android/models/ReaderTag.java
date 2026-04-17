@@ -16,11 +16,14 @@ public class ReaderTag implements Serializable, FilterCriteria {
     public static final String LIKED_PATH = "/read/liked";
     public static final String DISCOVER_PATH = String.format(Locale.US, "read/sites/%d/posts",
             ReaderConstants.DISCOVER_SITE_ID);
-    public static final String FRESHLY_PRESSED_PATH = "/freshly-pressed";
 
     public static final String TAG_TITLE_FOLLOWED_SITES = "Followed Sites";
     public static final String TAG_TITLE_FRESHLY_PRESSED = "Freshly Pressed";
+    public static final String TAG_TITLE_RECOMMENDED = "Recommended";
+    public static final String TAG_TITLE_LATEST = "Latest";
     public static final String TAG_SLUG_FRESHLY_PRESSED = "freshly-pressed";
+    public static final String TAG_SLUG_RECOMMENDED = "recommended";
+    public static final String TAG_SLUG_LATEST = "latest";
     public static final String TAG_SLUG_P2 = "p2";
     public static final String TAG_SLUG_BOOKMARKED = "bookmarked-posts";
     public static final String TAG_TITLE_DEFAULT = TAG_TITLE_FOLLOWED_SITES;
@@ -180,7 +183,18 @@ public class ReaderTag implements Serializable, FilterCriteria {
     }
 
     public boolean isFreshlyPressed() {
-        return tagType == ReaderTagType.DEFAULT && getEndpoint().endsWith(FRESHLY_PRESSED_PATH);
+        return tagType == ReaderTagType.DEFAULT && TAG_SLUG_FRESHLY_PRESSED.equals(getTagSlug());
+    }
+
+    /**
+     * Returns true for the Discover "Recommended" sub-tab, which is backed by the v2
+     * /read/streams/discover endpoint with editorial (non-date) ordering. It needs a
+     * sort column that preserves insertion order rather than date_published — see
+     * ReaderPostTable. Latest uses the standard date-sorted tags endpoint and doesn't
+     * need special handling.
+     */
+    public boolean isDiscoverStream() {
+        return tagType == ReaderTagType.DEFAULT && TAG_SLUG_RECOMMENDED.equals(getTagSlug());
     }
 
     public boolean isDefaultInMemoryTag() {

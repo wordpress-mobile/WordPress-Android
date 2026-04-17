@@ -72,9 +72,20 @@ class AppPrefsWrapper @Inject constructor(val buildConfigWrapper: BuildConfigWra
         get() = AppPrefs.getReaderCardsPageHandle()
         set(pageHandle) = AppPrefs.setReaderCardsPageHandle(pageHandle)
 
+    fun getReaderDiscoverStreamPageHandle(tagSlug: String): String? =
+        AppPrefs.getReaderDiscoverStreamPageHandle(tagSlug)
+
+    fun setReaderDiscoverStreamPageHandle(tagSlug: String, pageHandle: String?) {
+        AppPrefs.setReaderDiscoverStreamPageHandle(tagSlug, pageHandle)
+    }
+
     var readerTopBarSelectedFeedItemId: String?
         get() = AppPrefs.getReaderTopBarSelectedFeedItemId()
         set(selectedFeedItemId) = AppPrefs.setReaderTopBarSelectedFeedItemId(selectedFeedItemId)
+
+    var readerDiscoverSelectedSubTabIndex: Int
+        get() = AppPrefs.getReaderDiscoverSelectedSubTabIndex()
+        set(index) = AppPrefs.setReaderDiscoverSelectedSubTabIndex(index)
 
     var shouldScheduleCreateSiteNotification: Boolean
         get() = AppPrefs.shouldScheduleCreateSiteNotification()

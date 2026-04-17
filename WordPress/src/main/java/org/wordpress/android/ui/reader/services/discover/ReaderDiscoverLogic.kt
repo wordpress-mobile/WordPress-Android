@@ -156,7 +156,7 @@ class ReaderDiscoverLogic @Inject constructor(
             // Parse the json into cards model objects
             val cards = parseCards(fullCardsJson)
             insertPostsIntoDb(cards.filterIsInstance<ReaderPostCard>().map { it.post })
-            insertBlogsIntoDb(cards.filterIsInstance<ReaderRecommendedBlogsCard>().map { it.blogs }.flatten())
+            insertBlogsIntoDb(cards.filterIsInstance<ReaderRecommendedBlogsCard>().flatMap { it.blogs })
 
             // Simplify the json. The simplified version is used in the upper layers to load the data from the db.
             val simplifiedCardsJson = createSimplifiedJson(fullCardsJson, taskType)

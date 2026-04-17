@@ -468,6 +468,20 @@
         <item name="android:layout_marginBottom">@dimen/bottom_tabs_divider_size</item>
     </style>
 
+    <style name="WordPress.TabLayout.Material3" parent="Widget.MaterialComponents.TabLayout">
+        <item name="android:background">?attr/colorSurface</item>
+        <item name="android:elevation">0dp</item>
+        <item name="tabIndicatorAnimationMode">elastic</item>
+        <item name="tabIndicatorFullWidth">false</item>
+        <item name="tabIndicatorHeight">3dp</item>
+        <item name="tabIndicator">@drawable/tab_indicator_md3</item>
+        <item name="tabIndicatorColor">?attr/colorPrimary</item>
+        <item name="tabTextColor">?attr/colorPrimary</item>
+        <item name="tabSelectedTextColor">?attr/colorPrimary</item>
+        <item name="tabTextAppearance">@style/TextAppearance.Material3.TitleSmall</item>
+        <item name="tabRippleColor">@null</item>
+    </style>
+
     <style name="ActionButton.CloseMode.WordPress" parent="android:Widget.Material.ActionButton.CloseMode">
         <item name="android:background">@drawable/btn_cab_done_wordpress</item>
     </style>

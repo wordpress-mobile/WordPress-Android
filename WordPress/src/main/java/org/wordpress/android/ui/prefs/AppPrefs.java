@@ -150,6 +150,8 @@ public class AppPrefs {
         READER_RECOMMENDED_TAGS_DELETED_FOR_LOGGED_OUT_USER,
         // Selected Reader feed ID for persisting user preferred feed
         READER_TOP_BAR_SELECTED_FEED_ITEM_ID,
+        // Index of the last-selected sub-tab inside the Reader Discover tabbed UI
+        READER_DISCOVER_SELECTED_SUB_TAB_INDEX,
         MANUAL_FEATURE_CONFIG,
         EXPERIMENTAL_FEATURE_CONFIG,
         SITE_JETPACK_CAPABILITIES,
@@ -1177,6 +1179,26 @@ public class AppPrefs {
         setInt(DeletablePrefKey.READER_CARDS_ENDPOINT_REFRESH_COUNTER, getReaderCardsRefreshCounter() + 1);
     }
 
+    @Nullable
+    public static String getReaderDiscoverStreamPageHandle(@NonNull String tagSlug) {
+        return prefs().getString(getReaderDiscoverStreamPageHandleKey(tagSlug), null);
+    }
+
+    public static void setReaderDiscoverStreamPageHandle(@NonNull String tagSlug, @Nullable String pageHandle) {
+        SharedPreferences.Editor editor = prefs().edit();
+        if (pageHandle == null) {
+            editor.remove(getReaderDiscoverStreamPageHandleKey(tagSlug));
+        } else {
+            editor.putString(getReaderDiscoverStreamPageHandleKey(tagSlug), pageHandle);
+        }
+        editor.apply();
+    }
+
+    @NonNull
+    private static String getReaderDiscoverStreamPageHandleKey(@NonNull String tagSlug) {
+        return "READER_DISCOVER_STREAM_PAGE_HANDLE_" + tagSlug;
+    }
+
     public static boolean getReaderRecommendedTagsDeletedForLoggedOutUser() {
         return getBoolean(DeletablePrefKey.READER_RECOMMENDED_TAGS_DELETED_FOR_LOGGED_OUT_USER, false);
     }
@@ -1196,6 +1218,14 @@ public class AppPrefs {
         } else {
             setString(DeletablePrefKey.READER_TOP_BAR_SELECTED_FEED_ITEM_ID, selectedFeedItemId);
         }
+    }
+
+    public static int getReaderDiscoverSelectedSubTabIndex() {
+        return getInt(DeletablePrefKey.READER_DISCOVER_SELECTED_SUB_TAB_INDEX, 0);
+    }
+
+    public static void setReaderDiscoverSelectedSubTabIndex(int index) {
+        setInt(DeletablePrefKey.READER_DISCOVER_SELECTED_SUB_TAB_INDEX, index);
     }
 
     public static void setShouldShowStorageWarning(boolean shouldShow) {
