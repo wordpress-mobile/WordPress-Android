@@ -373,16 +373,11 @@ class ReaderPostRepository @Inject constructor(
         val nowSeconds = System.currentTimeMillis() / MILLIS_PER_SECOND
         val baseTimestampSeconds: Long =
             if (updateAction == ReaderPostServiceStarter.UpdateAction.REQUEST_OLDER) {
-                val parsedOldest = ReaderPostTable.getOldestDateWithTag(tag)
+                ReaderPostTable.getOldestDateWithTag(tag)
                     ?.takeIf { it.isNotBlank() }
                     ?.let { DateTimeUtils.dateFromIso8601(it) }
                     ?.time?.div(MILLIS_PER_SECOND)
-                // If the oldest existing date_tagged isn't parseable (e.g., stale rows from
-                // pre-fix builds that left date_tagged empty), fall back to a timestamp that
-                // sits below the likely stamps of any currently-stamped posts, so the new
-                // batch still lands at the end of the list.
-                parsedOldest
-                    ?: (nowSeconds - ReaderPostTable.getNumPostsWithTag(tag).toLong().coerceAtLeast(0L))
+                    ?: nowSeconds
             } else {
                 nowSeconds
             }
