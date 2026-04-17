@@ -248,15 +248,7 @@ class ReaderPostRepository @Inject constructor(
             try {
                 val params = mutableMapOf<String, String>()
 
-                // Use the user's followed tags to seed the discover stream. If the user doesn't
-                // follow anything (ignoring the default dailyprompt tag) fall back to
-                // "dailyprompt,wordpress" — mirrors ReaderDiscoverLogic / iOS behavior.
-                val userTags = getFollowedTagsUseCase.get()
-                params["tags"] = if (userTags.none { it.tagSlug != BLOGGING_PROMPT_TAG }) {
-                    "$BLOGGING_PROMPT_TAG,wordpress"
-                } else {
-                    userTags.joinToString(",") { it.tagSlug }
-                }
+                params["tags"] = buildFollowedTagsParam()
 
                 // REQUEST_OLDER_THAN_GAP is intentionally treated as a first-page refresh:
                 // the cursor-based streams endpoint has no equivalent to ReaderPostTable's
@@ -329,12 +321,7 @@ class ReaderPostRepository @Inject constructor(
             try {
                 val params = mutableMapOf<String, String>()
 
-                val userTags = getFollowedTagsUseCase.get()
-                params["tags"] = if (userTags.none { it.tagSlug != BLOGGING_PROMPT_TAG }) {
-                    "$BLOGGING_PROMPT_TAG,wordpress"
-                } else {
-                    userTags.joinToString(",") { it.tagSlug }
-                }
+                params["tags"] = buildFollowedTagsParam()
 
                 params["orderBy"] = "date"
                 params["number"] = ReaderConstants.READER_MAX_POSTS_TO_REQUEST.toString()
@@ -412,10 +399,9 @@ class ReaderPostRepository @Inject constructor(
                 .takeIf { it.isNotEmpty() }
             appPrefsWrapper.setReaderDiscoverStreamPageHandle(tag.tagSlug, nextPageHandle)
 
-            // Preserve server order when saving: Recommended is editorially curated and Latest
-            // can overlap at page boundaries, so date_published ordering shuffles the list.
-            // Stamp each post with a monotonically decreasing date_tagged so the sort column
-            // configured for discover streams (getSortColumnForTag) reflects insertion order.
+            // Recommended is editorially curated, so date_published ordering shuffles the list.
+            // Stamp each post with a monotonically decreasing date_tagged so getSortColumnForTag's
+            // datetime(date_tagged) sort reflects the server's insertion order.
             stampServerOrderOnPosts(serverPosts, tag, updateAction)
 
             val updateResult = localSource.saveUpdatedPosts(serverPosts, updateAction, tag)
@@ -423,6 +409,20 @@ class ReaderPostRepository @Inject constructor(
         } catch (e: JSONException) {
             AppLog.e(AppLog.T.READER, e)
             resultListener.onUpdateResult(ReaderActions.UpdateResult.FAILED)
+        }
+    }
+
+    /**
+     * Builds the "tags" query param for Discover streams from the user's followed tags.
+     * If the user doesn't follow anything (ignoring the default dailyprompt tag) fall back
+     * to "dailyprompt,wordpress" — mirrors ReaderDiscoverLogic and iOS behavior.
+     */
+    private suspend fun buildFollowedTagsParam(): String {
+        val userTags = getFollowedTagsUseCase.get()
+        return if (userTags.all { it.tagSlug == BLOGGING_PROMPT_TAG }) {
+            "$BLOGGING_PROMPT_TAG,wordpress"
+        } else {
+            userTags.joinToString(",") { it.tagSlug }
         }
     }
 
