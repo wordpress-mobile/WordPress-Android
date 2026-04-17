@@ -76,22 +76,7 @@ class ReaderPostRepository @Inject constructor(
         updateAction: ReaderPostServiceStarter.UpdateAction,
         resultListener: UpdateResultListener
     ) {
-        // Discover routes each sub-tab to its own endpoint, matching the web Reader:
-        //   Recommended → v2 /read/streams/discover (editorially curated, page_handle)
-        //   Latest      → v2 /read/tags/posts?orderBy=date&tags=... (before=<date>)
-        //   Freshly Pressed falls through to the regular v1.2 flow below.
-        if (tag.tagType == ReaderTagType.DEFAULT) {
-            when (tag.tagSlug) {
-                ReaderTag.TAG_SLUG_RECOMMENDED -> {
-                    requestPostsForDiscoverStream(tag, updateAction, resultListener)
-                    return
-                }
-                ReaderTag.TAG_SLUG_LATEST -> {
-                    requestPostsForLatestStream(tag, updateAction, resultListener)
-                    return
-                }
-            }
-        }
+        if (routeDiscoverSubTab(tag, updateAction, resultListener)) return
         val path = getRelativeEndpointForTag(tag)
         if (path.isNullOrBlank()) {
             resultListener.onUpdateResult(ReaderActions.UpdateResult.FAILED)
@@ -228,6 +213,31 @@ class ReaderPostRepository @Inject constructor(
                 resultListener.onUpdateResult(updateResult)
             }
         }.start()
+    }
+
+    /**
+     * Routes the Recommended and Latest Discover sub-tabs to their dedicated pipelines.
+     * Returns true when the tag was handled so [requestPostsWithTag] can skip the default
+     * tag flow. Freshly Pressed is not routed here — it falls through to the regular v1.2
+     * endpoint carried on tag.endpoint.
+     */
+    private fun routeDiscoverSubTab(
+        tag: ReaderTag,
+        updateAction: ReaderPostServiceStarter.UpdateAction,
+        resultListener: UpdateResultListener,
+    ): Boolean {
+        if (tag.tagType != ReaderTagType.DEFAULT) return false
+        return when (tag.tagSlug) {
+            ReaderTag.TAG_SLUG_RECOMMENDED -> {
+                requestPostsForDiscoverStream(tag, updateAction, resultListener)
+                true
+            }
+            ReaderTag.TAG_SLUG_LATEST -> {
+                requestPostsForLatestStream(tag, updateAction, resultListener)
+                true
+            }
+            else -> false
+        }
     }
 
     /**
