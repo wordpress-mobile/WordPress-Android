@@ -57,7 +57,7 @@ class ReaderDiscoverTabsFragment : Fragment(R.layout.reader_discover_tabs_fragme
                 tag = createDiscoverTag(
                     ReaderTag.TAG_SLUG_LATEST,
                     ReaderTag.TAG_TITLE_LATEST,
-                    DISCOVER_STREAMS_PATH,
+                    LATEST_PATH,
                 ),
                 titleRes = R.string.reader_discover_tab_latest,
             ),
@@ -140,7 +140,11 @@ class ReaderDiscoverTabsFragment : Fragment(R.layout.reader_discover_tabs_fragme
     companion object {
         // Freshly Pressed uses the v1.2 /freshly-pressed endpoint (matching web and iOS).
         private const val FRESHLY_PRESSED_PATH = "freshly-pressed"
+        // Recommended uses the editorially-curated v2 cards endpoint.
         private const val DISCOVER_STREAMS_PATH = "read/streams/discover"
+        // Latest reads from the standard v2 tags/posts endpoint (matching web), which
+        // returns posts in date-descending order and supports before=<date> pagination.
+        private const val LATEST_PATH = "read/tags/posts"
 
         private fun createDiscoverTag(slug: String, title: String, endpoint: String): ReaderTag =
             ReaderTag(slug, title, title, endpoint, ReaderTagType.DEFAULT)

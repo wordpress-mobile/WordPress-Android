@@ -46,7 +46,7 @@ class ReaderPostRepositoryTest : BaseUnitTest() {
     }
 
     @Test
-    fun `GIVEN discover stream tag and no stored page handle WHEN REQUEST_OLDER THEN reports UNCHANGED`() = test {
+    fun `GIVEN Recommended tag and no stored page handle WHEN REQUEST_OLDER THEN reports UNCHANGED`() = test {
         whenever(getFollowedTagsUseCase.get()).thenReturn(ReaderTagList())
         whenever(appPrefsWrapper.getReaderDiscoverStreamPageHandle(ReaderTag.TAG_SLUG_RECOMMENDED))
             .thenReturn(null)
@@ -67,14 +67,14 @@ class ReaderPostRepositoryTest : BaseUnitTest() {
     }
 
     @Test
-    fun `GIVEN discover stream tag and empty stored page handle WHEN REQUEST_OLDER THEN reports UNCHANGED`() = test {
+    fun `GIVEN Recommended tag and empty stored page handle WHEN REQUEST_OLDER THEN reports UNCHANGED`() = test {
         whenever(getFollowedTagsUseCase.get()).thenReturn(ReaderTagList())
-        whenever(appPrefsWrapper.getReaderDiscoverStreamPageHandle(ReaderTag.TAG_SLUG_LATEST))
+        whenever(appPrefsWrapper.getReaderDiscoverStreamPageHandle(ReaderTag.TAG_SLUG_RECOMMENDED))
             .thenReturn("")
         val listener: UpdateResultListener = mock()
 
         repository.requestPostsWithTag(
-            latestTag(),
+            recommendedTag(),
             ReaderPostServiceStarter.UpdateAction.REQUEST_OLDER,
             listener,
         )
@@ -88,14 +88,6 @@ class ReaderPostRepositoryTest : BaseUnitTest() {
         ReaderTag.TAG_SLUG_RECOMMENDED,
         ReaderTag.TAG_TITLE_RECOMMENDED,
         ReaderTag.TAG_TITLE_RECOMMENDED,
-        "read/streams/discover",
-        ReaderTagType.DEFAULT,
-    )
-
-    private fun latestTag() = ReaderTag(
-        ReaderTag.TAG_SLUG_LATEST,
-        ReaderTag.TAG_TITLE_LATEST,
-        ReaderTag.TAG_TITLE_LATEST,
         "read/streams/discover",
         ReaderTagType.DEFAULT,
     )

@@ -187,14 +187,14 @@ public class ReaderTag implements Serializable, FilterCriteria {
     }
 
     /**
-     * Returns true for the Discover "Recommended" and "Latest" sub-tabs, which are backed
-     * by the v2 /read/streams/discover endpoint. These streams are ordered by the server
-     * (curated for Recommended, date-sorted for Latest), so they need a sort column that
-     * preserves insertion order rather than date_published — see ReaderPostTable.
+     * Returns true for the Discover "Recommended" sub-tab, which is backed by the v2
+     * /read/streams/discover endpoint with editorial (non-date) ordering. It needs a
+     * sort column that preserves insertion order rather than date_published — see
+     * ReaderPostTable. Latest uses the standard date-sorted tags endpoint and doesn't
+     * need special handling.
      */
     public boolean isDiscoverStream() {
-        return tagType == ReaderTagType.DEFAULT
-                && (TAG_SLUG_RECOMMENDED.equals(getTagSlug()) || TAG_SLUG_LATEST.equals(getTagSlug()));
+        return tagType == ReaderTagType.DEFAULT && TAG_SLUG_RECOMMENDED.equals(getTagSlug());
     }
 
     public boolean isDefaultInMemoryTag() {

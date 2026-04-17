@@ -76,12 +76,21 @@ class ReaderPostRepository @Inject constructor(
         updateAction: ReaderPostServiceStarter.UpdateAction,
         resultListener: UpdateResultListener
     ) {
-        // The Discover "Recommended" and "Latest" sub-tabs use the v2 cards-style pipeline.
-        // Freshly Pressed falls through to the regular tag-based flow below, which hits the
-        // v1.2 /freshly-pressed endpoint carried on tag.endpoint.
-        if (tag.tagType == ReaderTagType.DEFAULT && tag.tagSlug in DISCOVER_STREAM_TAG_SLUGS) {
-            requestPostsForDiscoverStream(tag, updateAction, resultListener)
-            return
+        // Discover routes each sub-tab to its own endpoint, matching the web Reader:
+        //   Recommended → v2 /read/streams/discover (editorially curated, page_handle)
+        //   Latest      → v2 /read/tags/posts?orderBy=date&tags=... (before=<date>)
+        //   Freshly Pressed falls through to the regular v1.2 flow below.
+        if (tag.tagType == ReaderTagType.DEFAULT) {
+            when (tag.tagSlug) {
+                ReaderTag.TAG_SLUG_RECOMMENDED -> {
+                    requestPostsForDiscoverStream(tag, updateAction, resultListener)
+                    return
+                }
+                ReaderTag.TAG_SLUG_LATEST -> {
+                    requestPostsForLatestStream(tag, updateAction, resultListener)
+                    return
+                }
+            }
         }
         val path = getRelativeEndpointForTag(tag)
         if (path.isNullOrBlank()) {
@@ -222,14 +231,12 @@ class ReaderPostRepository @Inject constructor(
     }
 
     /**
-     * Requests posts for a Discover "Recommended" or "Latest" sub-tab using the v2
-     * /read/streams/discover endpoint. Latest adds sort=date while Recommended uses
-     * the server default ordering. Freshly Pressed uses a separate v1.2 endpoint and
-     * is handled by [requestPostsWithTag].
-     *
-     * Pagination is cursor-based via an opaque page_handle stored per-stream in AppPrefs.
-     * First-page requests also include a "refresh" counter so the server returns a different
-     * shard of content, matching the existing ReaderDiscoverLogic behavior.
+     * Requests posts for the Discover "Recommended" sub-tab using the v2
+     * /read/streams/discover endpoint. The response is editorially curated, so
+     * pagination is cursor-based via an opaque page_handle stored per-stream in
+     * AppPrefs. First-page requests include a "refresh" counter so the server
+     * returns a different shard of content, matching existing ReaderDiscoverLogic
+     * behavior. Latest and Freshly Pressed are handled by dedicated methods.
      */
     @Suppress("TooGenericExceptionCaught")
     private fun requestPostsForDiscoverStream(
@@ -249,11 +256,6 @@ class ReaderPostRepository @Inject constructor(
                     "$BLOGGING_PROMPT_TAG,wordpress"
                 } else {
                     userTags.joinToString(",") { it.tagSlug }
-                }
-
-                // Latest sorts by date; Recommended uses the server's default order.
-                if (tag.tagSlug == ReaderTag.TAG_SLUG_LATEST) {
-                    params["sort"] = "date"
                 }
 
                 // REQUEST_OLDER_THAN_GAP is intentionally treated as a first-page refresh:
@@ -305,6 +307,72 @@ class ReaderPostRepository @Inject constructor(
                 )
             } catch (e: Exception) {
                 AppLog.e(AppLog.T.READER, "Discover stream request failed", e)
+                resultListener.onUpdateResult(ReaderActions.UpdateResult.FAILED)
+            }
+        }
+    }
+
+    /**
+     * Requests posts for the Discover "Latest" sub-tab using the v2 /read/tags/posts
+     * endpoint (matching web), seeded with the user's followed tags. The response is a
+     * standard post list in date-descending order, so pagination uses before=<oldestDate>
+     * and the existing date_published sort column just works — no page_handle, no
+     * date_tagged stamping.
+     */
+    @Suppress("TooGenericExceptionCaught")
+    private fun requestPostsForLatestStream(
+        tag: ReaderTag,
+        updateAction: ReaderPostServiceStarter.UpdateAction,
+        resultListener: UpdateResultListener
+    ) {
+        applicationScope.launch(ioDispatcher) {
+            try {
+                val params = mutableMapOf<String, String>()
+
+                val userTags = getFollowedTagsUseCase.get()
+                params["tags"] = if (userTags.none { it.tagSlug != BLOGGING_PROMPT_TAG }) {
+                    "$BLOGGING_PROMPT_TAG,wordpress"
+                } else {
+                    userTags.joinToString(",") { it.tagSlug }
+                }
+
+                params["orderBy"] = "date"
+                params["number"] = ReaderConstants.READER_MAX_POSTS_TO_REQUEST.toString()
+
+                val beforeDate = when (updateAction) {
+                    ReaderPostServiceStarter.UpdateAction.REQUEST_OLDER ->
+                        ReaderPostTable.getOldestDateWithTag(tag)
+                    ReaderPostServiceStarter.UpdateAction.REQUEST_OLDER_THAN_GAP ->
+                        ReaderPostTable.getGapMarkerDateForTag(tag)
+                    else -> null
+                }
+                if (!beforeDate.isNullOrBlank()) {
+                    params["before"] = beforeDate
+                }
+                params["_locale"] = perAppLocaleManager.getCurrentLocaleLanguageCode()
+
+                val listener = RestRequest.Listener { jsonObject: JSONObject? ->
+                    if (updateAction == ReaderPostServiceStarter.UpdateAction.REQUEST_NEWER ||
+                        updateAction == ReaderPostServiceStarter.UpdateAction.REQUEST_REFRESH
+                    ) {
+                        ReaderTagTable.setTagLastUpdated(tag)
+                    }
+                    handleUpdatePostsResponse(tag, jsonObject, updateAction, resultListener)
+                }
+                val errorListener = RestRequest.ErrorListener { volleyError: VolleyError? ->
+                    AppLog.e(AppLog.T.READER, volleyError)
+                    resultListener.onUpdateResult(ReaderActions.UpdateResult.FAILED)
+                }
+
+                WordPress.getRestClientUtilsV2().get(
+                    tag.endpoint,
+                    params,
+                    null,
+                    listener,
+                    errorListener
+                )
+            } catch (e: Exception) {
+                AppLog.e(AppLog.T.READER, "Latest stream request failed", e)
                 resultListener.onUpdateResult(ReaderActions.UpdateResult.FAILED)
             }
         }
@@ -465,11 +533,6 @@ class ReaderPostRepository @Inject constructor(
 
     companion object {
         private const val MILLIS_PER_SECOND = 1000L
-
-        private val DISCOVER_STREAM_TAG_SLUGS = setOf(
-            ReaderTag.TAG_SLUG_RECOMMENDED,
-            ReaderTag.TAG_SLUG_LATEST,
-        )
 
         private fun formatRelativeEndpointForTag(tagSlug: String): String {
             return String.format(Locale.US, "read/tags/%s/posts", ReaderUtils.sanitizeWithDashes(tagSlug))
