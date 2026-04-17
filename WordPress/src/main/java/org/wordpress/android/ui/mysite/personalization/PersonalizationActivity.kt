@@ -120,8 +120,6 @@ class PersonalizationActivity : BaseAppCompatActivity() {
         Column(modifier = modifier.fillMaxWidth()) {
             PrimaryTabRow(
                 selectedTabIndex = tabIndex,
-                containerColor = MaterialTheme.colorScheme.surface,
-                contentColor = MaterialTheme.colorScheme.onSurface,
             ) {
                 tabs.forEachIndexed { index, title ->
                     Tab(text = { Text(stringResource(id = title).uppercase()) },
