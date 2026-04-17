@@ -32,6 +32,7 @@ import org.wordpress.android.ui.reader.services.post.ReaderPostServiceStarter
 import org.wordpress.android.ui.reader.sources.ReaderPostLocalSource
 import org.wordpress.android.ui.reader.utils.ReaderUtils
 import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.DateTimeUtils
 import org.wordpress.android.util.PerAppLocaleManager
 import org.wordpress.android.util.UrlUtils
 import java.util.Locale
@@ -343,11 +344,52 @@ class ReaderPostRepository @Inject constructor(
                 .takeIf { it.isNotEmpty() }
             appPrefsWrapper.setReaderDiscoverStreamPageHandle(tag.tagSlug, nextPageHandle)
 
+            // Preserve server order when saving: Recommended is editorially curated and Latest
+            // can overlap at page boundaries, so date_published ordering shuffles the list.
+            // Stamp each post with a monotonically decreasing date_tagged so the sort column
+            // configured for discover streams (getSortColumnForTag) reflects insertion order.
+            stampServerOrderOnPosts(serverPosts, tag, updateAction)
+
             val updateResult = localSource.saveUpdatedPosts(serverPosts, updateAction, tag)
             resultListener.onUpdateResult(updateResult)
         } catch (e: JSONException) {
             AppLog.e(AppLog.T.READER, e)
             resultListener.onUpdateResult(ReaderActions.UpdateResult.FAILED)
+        }
+    }
+
+    /**
+     * Stamps each post's date_tagged with a monotonically decreasing timestamp in server
+     * order so that ORDER BY date_tagged DESC returns posts in the order the server sent
+     * them. For REQUEST_OLDER (pagination) we start from just before the oldest existing
+     * post so the new batch lands after existing ones; otherwise we start from now.
+     */
+    private fun stampServerOrderOnPosts(
+        serverPosts: ReaderPostList,
+        tag: ReaderTag,
+        updateAction: ReaderPostServiceStarter.UpdateAction,
+    ) {
+        if (serverPosts.isEmpty()) return
+        val nowSeconds = System.currentTimeMillis() / MILLIS_PER_SECOND
+        val baseTimestampSeconds: Long =
+            if (updateAction == ReaderPostServiceStarter.UpdateAction.REQUEST_OLDER) {
+                val parsedOldest = ReaderPostTable.getOldestDateWithTag(tag)
+                    ?.takeIf { it.isNotBlank() }
+                    ?.let { DateTimeUtils.dateFromIso8601(it) }
+                    ?.time?.div(MILLIS_PER_SECOND)
+                // If the oldest existing date_tagged isn't parseable (e.g., stale rows from
+                // pre-fix builds that left date_tagged empty), fall back to a timestamp that
+                // sits below the likely stamps of any currently-stamped posts, so the new
+                // batch still lands at the end of the list.
+                parsedOldest
+                    ?: (nowSeconds - ReaderPostTable.getNumPostsWithTag(tag).toLong().coerceAtLeast(0L))
+            } else {
+                nowSeconds
+            }
+        serverPosts.forEachIndexed { index, post ->
+            post.dateTagged = DateTimeUtils.iso8601UTCFromTimestamp(
+                baseTimestampSeconds - (index + 1)
+            )
         }
     }
 
@@ -424,6 +466,8 @@ class ReaderPostRepository @Inject constructor(
     }
 
     companion object {
+        private const val MILLIS_PER_SECOND = 1000L
+
         private val DISCOVER_STREAM_TAG_SLUGS = setOf(
             ReaderTag.TAG_SLUG_RECOMMENDED,
             ReaderTag.TAG_SLUG_LATEST,
