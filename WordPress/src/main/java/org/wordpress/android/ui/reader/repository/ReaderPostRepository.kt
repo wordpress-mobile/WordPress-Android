@@ -373,7 +373,10 @@ class ReaderPostRepository @Inject constructor(
         val nowSeconds = System.currentTimeMillis() / MILLIS_PER_SECOND
         val baseTimestampSeconds: Long =
             if (updateAction == ReaderPostServiceStarter.UpdateAction.REQUEST_OLDER) {
-                ReaderPostTable.getOldestDateWithTag(tag)
+                // Read the raw date_tagged column rather than SELECT datetime(date_tagged),
+                // since SQLite's datetime() returns a normalized "YYYY-MM-DD HH:MM:SS" string
+                // that DateTimeUtils can't parse back to a Date.
+                ReaderPostTable.getOldestDateTaggedForTag(tag)
                     ?.takeIf { it.isNotBlank() }
                     ?.let { DateTimeUtils.dateFromIso8601(it) }
                     ?.time?.div(MILLIS_PER_SECOND)
