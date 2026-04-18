@@ -193,7 +193,7 @@ class SiteMonitorParentActivity : BaseAppCompatActivity(), SiteMonitorWebViewCli
                     Tab(
                         text = {
                             Text(
-                                text = stringResource(item.title).uppercase(),
+                                text = stringResource(item.title),
                                 maxLines = 1,
                                 overflow = TextOverflow.Ellipsis,
                                 fontWeight = FontWeight.Normal

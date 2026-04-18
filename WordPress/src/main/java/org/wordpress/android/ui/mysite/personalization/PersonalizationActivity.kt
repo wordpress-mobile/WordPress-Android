@@ -122,7 +122,7 @@ class PersonalizationActivity : BaseAppCompatActivity() {
                 selectedTabIndex = tabIndex,
             ) {
                 tabs.forEachIndexed { index, title ->
-                    Tab(text = { Text(stringResource(id = title).uppercase()) },
+                    Tab(text = { Text(stringResource(id = title)) },
                         selected = tabIndex == index,
                         onClick = { tabIndex = index }
                     )

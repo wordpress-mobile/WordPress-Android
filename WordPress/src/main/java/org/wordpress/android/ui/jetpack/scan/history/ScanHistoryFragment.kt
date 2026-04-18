@@ -28,7 +28,6 @@ import org.wordpress.android.ui.jetpack.scan.history.ScanHistoryViewModel.UiStat
 import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredBottomSheetFragment
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.JetpackBrandingUtils
-import org.wordpress.android.util.LocaleManagerWrapper
 import org.wordpress.android.util.extensions.getSerializableCompat
 import org.wordpress.android.util.extensions.getSerializableExtraCompat
 import javax.inject.Inject
@@ -38,9 +37,6 @@ import android.R as AndroidR
 class ScanHistoryFragment : Fragment(R.layout.scan_history_fragment), MenuProvider, ScrollableViewInitializedListener {
     @Inject
     lateinit var uiHelpers: UiHelpers
-
-    @Inject
-    lateinit var localeManagerWrapper: LocaleManagerWrapper
 
     @Inject
     lateinit var jetpackBrandingUtils: JetpackBrandingUtils
@@ -105,8 +101,6 @@ class ScanHistoryFragment : Fragment(R.layout.scan_history_fragment), MenuProvid
 
         TabLayoutMediator(tabLayout, viewPager) { tab, position ->
             tab.text = uiHelpers.getTextOfUiString(requireContext(), list[position].label)
-                .toString()
-                .uppercase(localeManagerWrapper.getLocale())
         }.attach()
         tabLayout.addOnTabSelectedListener(onTabSelectedListener)
     }
