@@ -18,7 +18,6 @@
     <color name="primary_dark">@color/jetpack_green_80</color>
 
     <color name="nav_bar">@color/black</color>
-    <color name="tab_indicator">@color/black</color>
 
     <color name="fab_container">#EADDFF</color>
     <color name="fab_on_container">#21005D</color>
