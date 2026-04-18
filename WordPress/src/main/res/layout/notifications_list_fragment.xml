@@ -33,9 +33,7 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:visibility="visible"
-            app:layout_scrollFlags="scroll|enterAlways"
-            app:tabGravity="fill"
-            app:tabMode="scrollable" />
+            app:layout_scrollFlags="scroll|enterAlways" />
 
         <LinearLayout
             android:id="@+id/notification_permission_warning"

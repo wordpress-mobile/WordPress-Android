@@ -23,8 +23,7 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:layout_gravity="bottom"
-            android:visibility="visible"
-            app:tabMode="scrollable" />
+            android:visibility="visible" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
