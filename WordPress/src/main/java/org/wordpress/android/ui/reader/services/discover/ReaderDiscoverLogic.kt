@@ -48,7 +48,6 @@ import org.wordpress.android.ui.reader.services.discover.ReaderDiscoverLogic.Dis
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.READER
 import org.wordpress.android.util.PerAppLocaleManager
-import org.wordpress.android.util.config.ReaderDiscoverNewEndpointFeatureConfig
 import javax.inject.Inject
 
 /**
@@ -60,7 +59,6 @@ class ReaderDiscoverLogic @Inject constructor(
     private val getFollowedTagsUseCase: GetFollowedTagsUseCase,
     private val getDiscoverCardsUseCase: GetDiscoverCardsUseCase,
     private val appPrefsWrapper: AppPrefsWrapper,
-    private val readerDiscoverNewEndpointFeatureConfig: ReaderDiscoverNewEndpointFeatureConfig,
     private val perAppLocaleManager: PerAppLocaleManager,
 ) {
     enum class DiscoverTasks {
@@ -131,12 +129,8 @@ class ReaderDiscoverLogic @Inject constructor(
                 resultListener.onUpdateResult(FAILED)
             }
             params["_locale"] = perAppLocaleManager.getCurrentLocaleLanguageCode()
-            val endpoint = if (readerDiscoverNewEndpointFeatureConfig.isEnabled()) {
-                "read/streams/discover"
-            } else {
-                "read/tags/cards"
-            }
-            WordPress.getRestClientUtilsV2().get(endpoint, params, null, listener, errorListener)
+            WordPress.getRestClientUtilsV2()
+                .get("read/streams/discover", params, null, listener, errorListener)
         }
     }
 
