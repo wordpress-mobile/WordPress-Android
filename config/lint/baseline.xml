@@ -2456,28 +2456,6 @@
 
     <issue
         id="DoNotMockDataClass"
-        message="&apos;org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.OpenEditorForReblog&apos; is a data class, so mocking it should not be necessary"
-        errorLine1="        whenever(reblogUseCase.convertReblogStateToNavigationEvent(anyOrNull())).thenReturn(mock&lt;OpenEditorForReblog>())"
-        errorLine2="                                                                                            ~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/test/java/org/wordpress/android/ui/reader/discover/ReaderDiscoverViewModelTest.kt"
-            line="200"
-            column="93"/>
-    </issue>
-
-    <issue
-        id="DoNotMockDataClass"
-        message="&apos;org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState.GalleryThumbnailStripData&apos; is a data class, so mocking it should not be necessary"
-        errorLine1="            thumbnailStripSection = mock(),"
-        errorLine2="                                    ~~~~~~">
-        <location
-            file="src/test/java/org/wordpress/android/ui/reader/discover/ReaderDiscoverViewModelTest.kt"
-            line="711"
-            column="37"/>
-    </issue>
-
-    <issue
-        id="DoNotMockDataClass"
         message="&apos;org.wordpress.android.ui.reader.usecases.ReaderSiteFollowUseCase.FollowSiteState.FollowStatusChanged&apos; is a data class, so mocking it should not be necessary"
         errorLine1="            .thenReturn(flowOf(mock&lt;FollowStatusChanged>()))"
         errorLine2="                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~">
@@ -4256,61 +4234,6 @@
             file="src/test/java/org/wordpress/android/fluxc/network/rest/wpcom/reactnative/ReactNativeWPComRestClientTest.kt"
             line="106"
             column="24"/>
-    </issue>
-
-    <issue
-        id="DoNotMockSealedClass"
-        message="&apos;org.wordpress.android.ui.reader.reblog.ReblogState&apos; is a sealed type and has a restricted type hierarchy, use a subtype instead."
-        errorLine1="        whenever(reblogUseCase.onReblogSiteSelected(anyInt(), anyOrNull())).thenReturn(mock())"
-        errorLine2="                                                                                       ~~~~~~">
-        <location
-            file="src/test/java/org/wordpress/android/ui/reader/discover/ReaderDiscoverViewModelTest.kt"
-            line="199"
-            column="88"/>
-    </issue>
-
-    <issue
-        id="DoNotMockSealedClass"
-        message="&apos;org.wordpress.android.ui.utils.UiString&apos; is a sealed type and has a restricted type hierarchy, use a subtype instead."
-        errorLine1="                mock(),"
-        errorLine2="                ~~~~~~">
-        <location
-            file="src/test/java/org/wordpress/android/ui/reader/discover/ReaderDiscoverViewModelTest.kt"
-            line="696"
-            column="17"/>
-    </issue>
-
-    <issue
-        id="DoNotMockSealedClass"
-        message="&apos;org.wordpress.android.ui.utils.UiString&apos; is a sealed type and has a restricted type hierarchy, use a subtype instead."
-        errorLine1="            title = mock(),"
-        errorLine2="                    ~~~~~~">
-        <location
-            file="src/test/java/org/wordpress/android/ui/reader/discover/ReaderDiscoverViewModelTest.kt"
-            line="708"
-            column="21"/>
-    </issue>
-
-    <issue
-        id="DoNotMockSealedClass"
-        message="&apos;org.wordpress.android.ui.utils.UiDimen&apos; is a sealed type and has a restricted type hierarchy, use a subtype instead."
-        errorLine1="            featuredImageCornerRadius = mock(),"
-        errorLine2="                                        ~~~~~~">
-        <location
-            file="src/test/java/org/wordpress/android/ui/reader/discover/ReaderDiscoverViewModelTest.kt"
-            line="710"
-            column="41"/>
-    </issue>
-
-    <issue
-        id="DoNotMockSealedClass"
-        message="&apos;org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderInterestsCardUiState.ChipStyle&apos; is a sealed type and has a restricted type hierarchy, use a subtype instead."
-        errorLine1="        ReaderInterestsCardUiState(readerTagList.map { ReaderInterestUiState(&quot;&quot;, &quot;&quot;, mock(), mock()) })"
-        errorLine2="                                                                                             ~~~~~~">
-        <location
-            file="src/test/java/org/wordpress/android/ui/reader/discover/ReaderDiscoverViewModelTest.kt"
-            line="729"
-            column="94"/>
     </issue>
 
     <issue

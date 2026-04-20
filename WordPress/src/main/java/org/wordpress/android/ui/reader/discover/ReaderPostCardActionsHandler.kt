@@ -123,7 +123,6 @@ class ReaderPostCardActionsHandler @Inject constructor(
     val followStatusUpdated: LiveData<FollowStatusChanged> = _followStatusUpdated
 
     // Used only in legacy ReaderPostListFragment and ReaderPostDetailFragment.
-    // The discover tab observes reactive ReaderDiscoverDataProvider.
     private val _refreshPosts = MediatorLiveData<Event<Unit>>()
     val refreshPosts: LiveData<Event<Unit>> = _refreshPosts
 
