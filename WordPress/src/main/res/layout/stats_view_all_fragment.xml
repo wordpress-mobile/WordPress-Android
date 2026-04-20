@@ -53,6 +53,7 @@
                 android:layout_height="48dp"
                 android:layout_gravity="start"
                 android:visibility="gone"
+                app:tabMode="scrollable"
                 app:tabPaddingEnd="16dp"
                 app:tabPaddingStart="16dp" />
 

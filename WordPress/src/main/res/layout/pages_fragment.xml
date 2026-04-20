@@ -59,6 +59,7 @@
                 android:layout_marginBottom="0dp"
                 android:background="@null"
                 android:clipToPadding="false"
+                app:tabMode="scrollable"
                 tools:paddingEnd="0dp"
                 tools:paddingStart="@dimen/page_list_tab_layout_fading_edge_width" />
 

@@ -36,6 +36,7 @@
                 android:background="@null"
                 android:clipToPadding="false"
                 android:importantForAccessibility="no"
+                app:tabMode="scrollable"
                 tools:paddingEnd="0dp"
                 tools:paddingStart="0dp" />
         </RelativeLayout>
