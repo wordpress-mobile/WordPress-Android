@@ -219,6 +219,7 @@ fun PostRsListScreen(
                             onClick = {
                                 coroutineScope.launch { pagerState.animateScrollToPage(index) }
                             },
+                            unselectedContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
                             text = { Text(text = stringResource(tab.labelResId)) }
                         )
                     }

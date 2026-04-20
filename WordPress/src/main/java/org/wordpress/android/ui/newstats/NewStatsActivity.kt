@@ -348,6 +348,7 @@ private fun NewStatsScreen(
                                     pagerState.animateScrollToPage(index)
                                 }
                             },
+                            unselectedContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
                             text = {
                                 Text(
                                     text = stringResource(id = tab.titleResId)

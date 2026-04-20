@@ -124,7 +124,8 @@ class PersonalizationActivity : BaseAppCompatActivity() {
                 tabs.forEachIndexed { index, title ->
                     Tab(text = { Text(stringResource(id = title)) },
                         selected = tabIndex == index,
-                        onClick = { tabIndex = index }
+                        onClick = { tabIndex = index },
+                        unselectedContentColor = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
             }

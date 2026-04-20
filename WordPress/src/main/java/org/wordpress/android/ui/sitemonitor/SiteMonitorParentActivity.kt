@@ -204,6 +204,7 @@ class SiteMonitorParentActivity : BaseAppCompatActivity(), SiteMonitorWebViewCli
                             siteMonitorUtils.trackTabLoaded(tabs[index].siteMonitorType)
                             tabIndex = index
                         },
+                        unselectedContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
                 }
             }
