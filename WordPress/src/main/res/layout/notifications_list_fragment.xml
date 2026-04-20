@@ -34,7 +34,6 @@
             android:layout_height="?attr/actionBarSize"
             android:visibility="visible"
             app:layout_scrollFlags="scroll|enterAlways"
-            app:tabGravity="fill"
             app:tabMode="scrollable" />
 
         <LinearLayout

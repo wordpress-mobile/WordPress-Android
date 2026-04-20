@@ -34,7 +34,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.PrimaryTabRow
+import androidx.compose.material3.PrimaryScrollableTabRow
 import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -339,7 +339,7 @@ private fun NewStatsScreen(
                 .padding(contentPadding)
         ) {
             if (tabs.size > 1) {
-                PrimaryTabRow(selectedTabIndex = pagerState.currentPage) {
+                PrimaryScrollableTabRow(selectedTabIndex = pagerState.currentPage) {
                     tabs.forEachIndexed { index, tab ->
                         Tab(
                             selected = pagerState.currentPage == index,
@@ -348,6 +348,7 @@ private fun NewStatsScreen(
                                     pagerState.animateScrollToPage(index)
                                 }
                             },
+                            unselectedContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
                             text = {
                                 Text(
                                     text = stringResource(id = tab.titleResId)

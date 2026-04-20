@@ -29,7 +29,6 @@ import androidx.compose.material3.PrimaryTabRow
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Tab
-import androidx.compose.material3.TabRowDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
@@ -189,21 +188,12 @@ class SiteMonitorParentActivity : BaseAppCompatActivity(), SiteMonitorWebViewCli
         Column(modifier = modifier.fillMaxWidth()) {
             PrimaryTabRow(
                 selectedTabIndex = tabIndex,
-                containerColor = MaterialTheme.colorScheme.surface,
-                contentColor = MaterialTheme.colorScheme.onSurface,
-                indicator = {
-                    TabRowDefaults.SecondaryIndicator(
-                        color = MaterialTheme.colorScheme.onSurface,
-                        height = 2.0.dp,
-                        modifier = Modifier.tabIndicatorOffset(tabIndex)
-                    )
-                }
             ) {
                 tabs.forEachIndexed { index, item ->
                     Tab(
                         text = {
                             Text(
-                                text = stringResource(item.title).uppercase(),
+                                text = stringResource(item.title),
                                 maxLines = 1,
                                 overflow = TextOverflow.Ellipsis,
                                 fontWeight = FontWeight.Normal
@@ -214,6 +204,7 @@ class SiteMonitorParentActivity : BaseAppCompatActivity(), SiteMonitorWebViewCli
                             siteMonitorUtils.trackTabLoaded(tabs[index].siteMonitorType)
                             tabIndex = index
                         },
+                        unselectedContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
                 }
             }
