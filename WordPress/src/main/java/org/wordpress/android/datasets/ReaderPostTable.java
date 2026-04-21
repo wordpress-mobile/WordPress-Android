@@ -430,7 +430,8 @@ public class ReaderPostTable {
             if (existingPost == null) {
                 return ReaderActions.UpdateResult.HAS_NEW;
             }
-            if (!hasChanges && !post.isSamePost(existingPost)) {
+            // existingPost was loaded without the text column, so skip comparing text
+            if (!hasChanges && !post.isSamePost(existingPost, false)) {
                 hasChanges = true;
             }
         }

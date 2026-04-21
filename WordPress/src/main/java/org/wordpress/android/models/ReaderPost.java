@@ -662,6 +662,14 @@ public class ReaderPost {
      * retrieved to determine which ones are new/changed/unchanged
      */
     public boolean isSamePost(ReaderPost post) {
+        return isSamePost(post, true);
+    }
+
+    /*
+     * pass compareText=false when either side was loaded without the text column, since an
+     * absent text would otherwise be compared against the incoming post's body and always differ
+     */
+    public boolean isSamePost(ReaderPost post, boolean compareText) {
         return post != null
                && post.blogId == this.blogId
                && post.postId == this.postId
@@ -675,7 +683,7 @@ public class ReaderPost {
                && post.useExcerpt == this.useExcerpt
                && post.getTitle().equals(this.getTitle())
                && post.getExcerpt().equals(this.getExcerpt())
-               && post.getText().equals(this.getText());
+               && (!compareText || post.getText().equals(this.getText()));
     }
 
     public boolean hasIds(ReaderBlogIdPostId ids) {
