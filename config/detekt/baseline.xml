@@ -40,7 +40,6 @@
     <ID>EmptyFunctionBlock:PostsListActivity.kt$PostsListActivity.&lt;no name provided>${}</ID>
     <ID>EmptyFunctionBlock:PrepublishingAddCategoryFragment.kt$PrepublishingAddCategoryFragment.&lt;no name provided>${ }</ID>
     <ID>EmptyFunctionBlock:QuickStartFocusPoint.kt$QuickStartFocusPoint.&lt;no name provided>${}</ID>
-    <ID>EmptyFunctionBlock:ReaderDiscoverDataProvider.kt$ReaderDiscoverDataProvider${ }</ID>
     <ID>EmptyFunctionBlock:SearchInputWithHeader.kt$SearchInputWithHeader.&lt;no name provided>${}</ID>
     <ID>EmptyFunctionBlock:SettingsUsernameChangerFragment.kt$SettingsUsernameChangerFragment.&lt;no name provided>${ }</ID>
     <ID>EmptyFunctionBlock:SiteCreationService.kt$SiteCreationService${ }</ID>
@@ -169,7 +168,6 @@
     <ID>ReturnCount:MediaPickerAdapterDiffCallback.kt$MediaPickerAdapterDiffCallback$override fun getChangePayload(oldItemPosition: Int, newItemPosition: Int): Any?</ID>
     <ID>ReturnCount:PageListViewModel.kt$PageListViewModel$private fun getFeaturedImageUrl(featuredImageId: Long): String?</ID>
     <ID>ReturnCount:PageParentFragment.kt$PageParentFragment$override fun onOptionsItemSelected(item: MenuItem): Boolean</ID>
-    <ID>ReturnCount:ParseDiscoverCardsJsonUseCase.kt$ParseDiscoverCardsJsonUseCase$fun parseInterestCard(interestCardJson: JSONObject?): ReaderTagList</ID>
     <ID>ReturnCount:PhotoPickerAdapterDiffCallback.kt$PhotoPickerAdapterDiffCallback$override fun getChangePayload(oldItemPosition: Int, newItemPosition: Int): Any?</ID>
     <ID>ReturnCount:PostListAdapter.kt$&lt;no name provided>$override fun areContentsTheSame(oldItem: PostListItemType, newItem: PostListItemType): Boolean</ID>
     <ID>ReturnCount:PostListAdapter.kt$&lt;no name provided>$override fun areItemsTheSame(oldItem: PostListItemType, newItem: PostListItemType): Boolean</ID>
@@ -216,10 +214,6 @@
     <ID>TopLevelPropertyNaming:PrepublishingHomeAdapter.kt$private const val headerViewType: Int = 1</ID>
     <ID>TopLevelPropertyNaming:PrepublishingHomeAdapter.kt$private const val homeItemViewType: Int = 2</ID>
     <ID>TopLevelPropertyNaming:PrepublishingHomeAdapter.kt$private const val submitButtonViewType: Int = 3</ID>
-    <ID>TopLevelPropertyNaming:ReaderDiscoverAdapter.kt$private const val interestViewType: Int = 3</ID>
-    <ID>TopLevelPropertyNaming:ReaderDiscoverAdapter.kt$private const val postViewType: Int = 2</ID>
-    <ID>TopLevelPropertyNaming:ReaderDiscoverAdapter.kt$private const val recommendedBlogsViewType: Int = 4</ID>
-    <ID>TopLevelPropertyNaming:ReaderDiscoverAdapter.kt$private const val welcomeBannerViewType: Int = 1</ID>
     <ID>TopLevelPropertyNaming:SiteCreationDomainsAdapter.kt$private const val suggestionErrorViewType: Int = 2</ID>
     <ID>TopLevelPropertyNaming:SiteCreationDomainsAdapter.kt$private const val suggestionItemViewType: Int = 1</ID>
     <ID>TopLevelPropertyNaming:SupportedBlocks.kt$private const val defaultAssetFilename = "supported-blocks.json"</ID>

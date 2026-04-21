@@ -245,8 +245,8 @@ class ReaderPostRepository @Inject constructor(
      * /read/streams/discover endpoint. The response is editorially curated, so
      * pagination is cursor-based via an opaque page_handle stored per-stream in
      * AppPrefs. First-page requests include a "refresh" counter so the server
-     * returns a different shard of content, matching existing ReaderDiscoverLogic
-     * behavior. Latest and Freshly Pressed are handled by dedicated methods.
+     * returns a different shard of content. Latest and Freshly Pressed are
+     * handled by dedicated methods.
      */
     @Suppress("TooGenericExceptionCaught")
     private fun requestPostsForDiscoverStream(
@@ -425,7 +425,7 @@ class ReaderPostRepository @Inject constructor(
     /**
      * Builds the "tags" query param for Discover streams from the user's followed tags.
      * If the user doesn't follow anything (ignoring the default dailyprompt tag) fall back
-     * to "dailyprompt,wordpress" — mirrors ReaderDiscoverLogic and iOS behavior.
+     * to "dailyprompt,wordpress" — matches iOS behavior.
      */
     private suspend fun buildFollowedTagsParam(): String {
         val userTags = getFollowedTagsUseCase.get()
