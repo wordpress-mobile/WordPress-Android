@@ -255,6 +255,7 @@ class WPMainNavigationView @JvmOverloads constructor(
         maybeHandleReaderDebugTap(item.itemId)
     }
 
+    // Debug-only: 5 quick taps on the Reader tab prompt to reset the Reader database.
     private fun maybeHandleReaderDebugTap(@IdRes itemId: Int) {
         if (!BuildConfig.DEBUG) return
         if (itemId != R.id.nav_reader) {
