@@ -4,6 +4,8 @@ import android.content.Context
 import android.webkit.WebSettings
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.PackageUtils
+import java.util.concurrent.CompletableFuture
+import java.util.concurrent.Executors
 
 class UserAgent(
     private val appContext: Context,
@@ -22,18 +24,38 @@ class UserAgent(
         "$systemUserAgent $appVersionName".trim()
     }
 
+    // Eagerly compute the default WebView user agent on a background
+    // thread to avoid blocking the main thread with WebView JNI init.
+    private val defaultWebViewUserAgentFuture: CompletableFuture<String> =
+        CompletableFuture.supplyAsync(
+            {
+                runCatching {
+                    WebSettings.getDefaultUserAgent(appContext)
+                }.onFailure {
+                    AppLog.e(
+                        AppLog.T.UTILS,
+                        "Error getting default user agent",
+                        it
+                    )
+                }.getOrNull().orEmpty()
+            },
+            SINGLE_THREAD_EXECUTOR
+        )
+
     /**
      * User-Agent string to be used in WebView.
      */
     val webViewUserAgent: String by lazy {
-        val systemUserAgent = runCatching {
-            WebSettings.getDefaultUserAgent(appContext)
-        }.onFailure {
-            // `getDefaultUserAgent()` can throw an Exception
-            // see: https://github.com/wordpress-mobile/WordPress-Android/issues/20147#issuecomment-1961238187
-            AppLog.e(AppLog.T.UTILS, "Error getting default user agent", it)
-        }.getOrNull().orEmpty()
-
+        val systemUserAgent = defaultWebViewUserAgentFuture.get()
         "$systemUserAgent $appVersionName".trim()
+    }
+
+    companion object {
+        private val SINGLE_THREAD_EXECUTOR =
+            Executors.newSingleThreadExecutor { runnable ->
+                Thread(runnable, "user-agent-init").apply {
+                    isDaemon = true
+                }
+            }
     }
 }
