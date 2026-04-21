@@ -421,17 +421,124 @@ public class ReaderPostTable {
             return ReaderActions.UpdateResult.UNCHANGED;
         }
 
+        // Fetch all existing rows that match any of the incoming (blog_id, post_id) pairs in a
+        // single query, keyed by "blogId|postId". Mirrors ReaderPost.isSamePost, but reads the
+        // comparison fields directly from the cursor to avoid building full ReaderPost instances.
+        Map<String, PostComparisonRow> existing = loadPostComparisonRows(posts);
+
         boolean hasChanges = false;
         for (ReaderPost post : posts) {
-            ReaderPost existingPost = getBlogPost(post.blogId, post.postId, true);
-            if (existingPost == null) {
+            PostComparisonRow row = existing.get(postComparisonKey(post.blogId, post.postId));
+            if (row == null) {
                 return ReaderActions.UpdateResult.HAS_NEW;
-            } else if (!hasChanges && !post.isSamePost(existingPost)) {
+            }
+            if (!hasChanges && !row.matches(post)) {
                 hasChanges = true;
             }
         }
 
         return (hasChanges ? ReaderActions.UpdateResult.CHANGED : ReaderActions.UpdateResult.UNCHANGED);
+    }
+
+    private static String postComparisonKey(long blogId, long postId) {
+        return blogId + "|" + postId;
+    }
+
+    private static Map<String, PostComparisonRow> loadPostComparisonRows(ReaderPostList posts) {
+        Map<String, PostComparisonRow> map = new LinkedHashMap<>(posts.size());
+        StringBuilder where = new StringBuilder(posts.size() * 28);
+        String[] args = new String[posts.size() * 2];
+        int argIdx = 0;
+        for (ReaderPost post : posts) {
+            if (where.length() > 0) {
+                where.append(" OR ");
+            }
+            where.append("(blog_id=? AND post_id=?)");
+            args[argIdx++] = Long.toString(post.blogId);
+            args[argIdx++] = Long.toString(post.postId);
+        }
+
+        String sql = "SELECT blog_id, post_id, feed_id, feed_item_id, num_likes, num_replies,"
+                + " is_liked, is_followed, is_comments_open, use_excerpt, title, excerpt"
+                + " FROM tbl_posts WHERE " + where;
+
+        Cursor c = ReaderDatabase.getReadableDb().rawQuery(sql, args);
+        try {
+            if (!c.moveToFirst()) {
+                return map;
+            }
+            int idxBlogId = c.getColumnIndexOrThrow("blog_id");
+            int idxPostId = c.getColumnIndexOrThrow("post_id");
+            int idxFeedId = c.getColumnIndexOrThrow("feed_id");
+            int idxFeedItemId = c.getColumnIndexOrThrow("feed_item_id");
+            int idxNumLikes = c.getColumnIndexOrThrow("num_likes");
+            int idxNumReplies = c.getColumnIndexOrThrow("num_replies");
+            int idxIsLiked = c.getColumnIndexOrThrow("is_liked");
+            int idxIsFollowed = c.getColumnIndexOrThrow("is_followed");
+            int idxIsCommentsOpen = c.getColumnIndexOrThrow("is_comments_open");
+            int idxUseExcerpt = c.getColumnIndexOrThrow("use_excerpt");
+            int idxTitle = c.getColumnIndexOrThrow("title");
+            int idxExcerpt = c.getColumnIndexOrThrow("excerpt");
+            do {
+                long blogId = c.getLong(idxBlogId);
+                long postId = c.getLong(idxPostId);
+                String key = postComparisonKey(blogId, postId);
+                // the same post can appear multiple times (one row per tag) - keep the first row
+                if (map.containsKey(key)) {
+                    continue;
+                }
+                PostComparisonRow row = new PostComparisonRow();
+                row.blogId = blogId;
+                row.postId = postId;
+                row.feedId = c.getLong(idxFeedId);
+                row.feedItemId = c.getLong(idxFeedItemId);
+                row.numLikes = c.getInt(idxNumLikes);
+                row.numReplies = c.getInt(idxNumReplies);
+                row.isLiked = SqlUtils.sqlToBool(c.getInt(idxIsLiked));
+                row.isFollowed = SqlUtils.sqlToBool(c.getInt(idxIsFollowed));
+                row.isCommentsOpen = SqlUtils.sqlToBool(c.getInt(idxIsCommentsOpen));
+                row.useExcerpt = SqlUtils.sqlToBool(c.getInt(idxUseExcerpt));
+                row.title = c.getString(idxTitle);
+                row.excerpt = c.getString(idxExcerpt);
+                map.put(key, row);
+            } while (c.moveToNext());
+        } finally {
+            SqlUtils.closeCursor(c);
+        }
+        return map;
+    }
+
+    private static final class PostComparisonRow {
+        long blogId;
+        long postId;
+        long feedId;
+        long feedItemId;
+        int numLikes;
+        int numReplies;
+        boolean isLiked;
+        boolean isFollowed;
+        boolean isCommentsOpen;
+        boolean useExcerpt;
+        String title;
+        String excerpt;
+
+        // mirrors ReaderPost.isSamePost; the text column is intentionally omitted to match the
+        // prior behavior of loading the existing row with excludeTextColumn=true
+        boolean matches(ReaderPost post) {
+            return post.blogId == blogId
+                    && post.postId == postId
+                    && post.feedId == feedId
+                    && post.feedItemId == feedItemId
+                    && post.numLikes == numLikes
+                    && post.numReplies == numReplies
+                    && post.isFollowedByCurrentUser == isFollowed
+                    && post.isLikedByCurrentUser == isLiked
+                    && post.isCommentsOpen == isCommentsOpen
+                    && post.useExcerpt == useExcerpt
+                    && post.getTitle().equals(title == null ? "" : title)
+                    && post.getExcerpt().equals(excerpt == null ? "" : excerpt)
+                    && post.getText().isEmpty();
+        }
     }
 
     /*
