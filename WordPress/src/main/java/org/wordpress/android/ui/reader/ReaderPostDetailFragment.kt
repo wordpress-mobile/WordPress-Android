@@ -186,7 +186,6 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     private lateinit var readerProgressBar: ProgressBar
 
     private lateinit var likeFacesTrain: View
-    private lateinit var likeProgressBar: ProgressBar
     private lateinit var likeEmptyStateText: TextView
     private lateinit var likeFacesRecycler: RecyclerView
 
@@ -429,7 +428,6 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     private fun initLikeFacesTrain(view: View) {
         likeFacesTrain = view.findViewById(R.id.liker_faces_container)
         likeFacesRecycler = view.findViewById(R.id.likes_recycler)
-        likeProgressBar = view.findViewById(R.id.progress_bar)
         likeEmptyStateText = view.findViewById(R.id.empty_state_text)
     }
 
@@ -673,17 +671,19 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         with(requireActivity()) {
             if (this.isFinishing) return@with
 
+            // Defer the likers row until the WebView has laid out, so it
+            // doesn't pop in above the body before the content renders.
+            if (!hasWebViewContent) {
+                likeFacesTrain.visibility = View.GONE
+                likeEmptyStateText.visibility = View.GONE
+                return@with
+            }
+
             val shouldSkipAnimation =
                 likeFacesTrain.isGone && state.goingToShowFaces
 
-            setupLikeFacesTrain(
-                state.engageItemsList,
-                state.showLoading,
-                shouldSkipAnimation
-            )
+            setupLikeFacesTrain(state.engageItemsList, shouldSkipAnimation)
 
-            likeProgressBar.visibility =
-                if (state.showLoading) View.VISIBLE else View.GONE
             likeFacesTrain.visibility =
                 if (state.showLikeFacesTrainContainer) {
                     View.VISIBLE
@@ -750,9 +750,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         commentSnippetRecycler.layoutManager?.onRestoreInstanceState(recyclerViewState)
     }
 
-    private fun setupLikeFacesTrain(items: List<TrainOfAvatarsItem>, loading: Boolean, shouldSkipAnimation: Boolean) {
-        likeFacesRecycler.visibility = if (loading) View.GONE else View.VISIBLE
-
+    private fun setupLikeFacesTrain(items: List<TrainOfAvatarsItem>, shouldSkipAnimation: Boolean) {
         if (shouldSkipAnimation) {
             likeFacesRecycler.itemAnimator = null
         } else if (likeFacesRecycler.itemAnimator == null) {
@@ -796,6 +794,9 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                     }
                 viewModel.commentSnippetState.value?.let {
                     manageCommentSnippetUiState(it)
+                }
+                if (likesEnhancementsFeatureConfig.isEnabled()) {
+                    viewModel.likesUiState.value?.let { manageLikesUiState(it) }
                 }
             }
         }
