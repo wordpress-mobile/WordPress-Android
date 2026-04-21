@@ -8,7 +8,9 @@ common_params:
       format: "junit"
 
 agents:
-  queue: "android"
+  # Temporary: trial the m8i.2xlarge-backed `android-staging` queue
+  # per AINFRA-2296. Revert once the prod `android` queue is flipped.
+  queue: "android-staging"
 
 steps:
   #################
