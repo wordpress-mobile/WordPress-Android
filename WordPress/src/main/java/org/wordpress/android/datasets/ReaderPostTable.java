@@ -28,6 +28,7 @@ import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.SqlUtils;
 
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -421,9 +422,6 @@ public class ReaderPostTable {
             return ReaderActions.UpdateResult.UNCHANGED;
         }
 
-        // Fetch all existing rows for the incoming (blog_id, post_id) pairs in a single query,
-        // keyed by "blogId|postId", so the comparison loop can probe the map instead of issuing
-        // one SELECT per post. Text column is excluded, matching the prior per-post lookup.
         Map<String, ReaderPost> existing = loadExistingPostsForComparison(posts);
 
         boolean hasChanges = false;
@@ -442,14 +440,10 @@ public class ReaderPostTable {
 
     private static Map<String, ReaderPost> loadExistingPostsForComparison(ReaderPostList posts) {
         Map<String, ReaderPost> map = new LinkedHashMap<>(posts.size());
-        StringBuilder where = new StringBuilder(posts.size() * 28);
+        String where = String.join(" OR ", Collections.nCopies(posts.size(), "(blog_id=? AND post_id=?)"));
         String[] args = new String[posts.size() * 2];
         int argIdx = 0;
         for (ReaderPost post : posts) {
-            if (where.length() > 0) {
-                where.append(" OR ");
-            }
-            where.append("(blog_id=? AND post_id=?)");
             args[argIdx++] = Long.toString(post.blogId);
             args[argIdx++] = Long.toString(post.postId);
         }
