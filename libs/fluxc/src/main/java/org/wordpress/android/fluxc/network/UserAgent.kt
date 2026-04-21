@@ -5,6 +5,7 @@ import android.webkit.WebSettings
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.PackageUtils
 import java.util.concurrent.CompletableFuture
+import java.util.concurrent.ExecutionException
 import java.util.concurrent.Executors
 
 class UserAgent(
@@ -46,7 +47,16 @@ class UserAgent(
      * User-Agent string to be used in WebView.
      */
     val webViewUserAgent: String by lazy {
-        val systemUserAgent = defaultWebViewUserAgentFuture.get()
+        val systemUserAgent = try {
+            defaultWebViewUserAgentFuture.get()
+        } catch (e: InterruptedException) {
+            Thread.currentThread().interrupt()
+            AppLog.e(AppLog.T.UTILS, "Interrupted while getting default user agent", e)
+            ""
+        } catch (e: ExecutionException) {
+            AppLog.e(AppLog.T.UTILS, "Error getting default user agent", e)
+            ""
+        }
         "$systemUserAgent $appVersionName".trim()
     }
 
