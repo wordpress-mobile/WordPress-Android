@@ -6,11 +6,13 @@ import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.PackageUtils
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.ExecutionException
+import java.util.concurrent.Executor
 import java.util.concurrent.Executors
 
-class UserAgent(
+class UserAgent @JvmOverloads constructor(
     private val appContext: Context,
-    private val appName: String
+    private val appName: String,
+    defaultUserAgentExecutor: Executor = SINGLE_THREAD_EXECUTOR
 ) {
     private val appVersionName by lazy {
         "$appName/${PackageUtils.getVersionName(appContext)}"
@@ -40,7 +42,7 @@ class UserAgent(
                     )
                 }.getOrNull().orEmpty()
             },
-            SINGLE_THREAD_EXECUTOR
+            defaultUserAgentExecutor
         )
 
     /**

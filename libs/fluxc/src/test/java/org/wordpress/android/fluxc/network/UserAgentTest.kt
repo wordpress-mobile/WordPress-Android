@@ -8,6 +8,7 @@ import org.mockito.kotlin.whenever
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.RuntimeEnvironment
 import org.wordpress.android.util.PackageUtils
+import java.util.concurrent.Executor
 import kotlin.test.assertEquals
 
 private const val APP_NAME = "App Name"
@@ -17,12 +18,13 @@ private const val APP_VERSION = "1.0"
 @RunWith(RobolectricTestRunner::class)
 class UserAgentTest {
     private val context = RuntimeEnvironment.getApplication().applicationContext
+    private val directExecutor = Executor { it.run() }
 
     @Test
     fun testUserAgent() = withMockedPackageUtils {
         mockStatic(WebSettings::class.java).use {
             whenever(WebSettings.getDefaultUserAgent(context)).thenReturn(USER_AGENT)
-            val result = UserAgent(context, APP_NAME)
+            val result = UserAgent(context, APP_NAME, directExecutor)
             assertEquals("$USER_AGENT $APP_NAME/$APP_VERSION", result.webViewUserAgent)
         }
     }
@@ -31,7 +33,7 @@ class UserAgentTest {
     fun testDefaultUserAgentFailure() = withMockedPackageUtils {
         mockStatic(WebSettings::class.java).use {
             whenever(WebSettings.getDefaultUserAgent(context)).thenThrow(RuntimeException(""))
-            val result = UserAgent(context, APP_NAME)
+            val result = UserAgent(context, APP_NAME, directExecutor)
             assertEquals("$APP_NAME/$APP_VERSION", result.webViewUserAgent)
         }
     }
