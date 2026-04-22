@@ -263,8 +263,11 @@ class WPMainNavigationView @JvmOverloads constructor(
             return
         }
         val now = System.currentTimeMillis()
-        readerDebugTapCount = if (now - readerDebugLastTapMs > READER_DEBUG_TAP_WINDOW_MS) 1
-        else readerDebugTapCount + 1
+        readerDebugTapCount = if (now - readerDebugLastTapMs > READER_DEBUG_TAP_WINDOW_MS) {
+            1
+        } else {
+            readerDebugTapCount + 1
+        }
         readerDebugLastTapMs = now
         if (readerDebugTapCount >= READER_DEBUG_TAP_THRESHOLD) {
             readerDebugTapCount = 0
