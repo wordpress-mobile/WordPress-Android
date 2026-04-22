@@ -202,10 +202,12 @@ class ReaderTagsFeedFragment : Fragment(R.layout.reader_tag_feed_fragment_layout
     }
 
     private fun removeCurrentPostListFragment() {
-        childFragmentManager.run {
-            findFragmentById(R.id.post_list_container)?.let {
-                commitNow {
-                    remove(it)
+        if (isAdded) {
+            childFragmentManager.run {
+                findFragmentById(R.id.post_list_container)?.let {
+                    commitNow {
+                        remove(it)
+                    }
                 }
             }
         }

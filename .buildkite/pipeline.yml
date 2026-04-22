@@ -59,17 +59,52 @@ steps:
         artifact_paths:
           - "**/build/reports/detekt/detekt.html"
 
+      - label: "🌐 Locale Consistency"
+        command: |
+          if .buildkite/commands/should-skip-job.sh --job-type validation; then
+            exit 0
+          fi
+
+          install_gems
+          bundle exec fastlane check_declared_locales_consistency app:wordpress
+          bundle exec fastlane check_declared_locales_consistency app:jetpack
+        plugins: [$CI_TOOLKIT]
+
       - label: "🕵️ Lint WordPress"
         command: ".buildkite/commands/lint.sh wordpress"
         plugins: [$CI_TOOLKIT]
         artifact_paths:
           - "**/build/reports/lint-results*.*"
+        notify:
+          - slack:
+              channels:
+                - "#wpmobile-team"
+              message: "⚠️ Lint WordPress failed on trunk."
+            if: build.pull_request.id == null && step.outcome != "passed"
 
       - label: "🕵️ Lint Jetpack"
         command: ".buildkite/commands/lint.sh jetpack"
         plugins: [$CI_TOOLKIT]
         artifact_paths:
           - "**/build/reports/lint-results*.*"
+        notify:
+          - slack:
+              channels:
+                - "#wpmobile-team"
+              message: "⚠️ Lint Jetpack failed on trunk."
+            if: build.pull_request.id == null && step.outcome != "passed"
+
+      - label: "🕵️ Lint Libraries"
+        command: ".buildkite/commands/lint.sh library"
+        plugins: [$CI_TOOLKIT]
+        artifact_paths:
+          - "**/build/reports/lint-results*.*"
+        notify:
+          - slack:
+              channels:
+                - "#wpmobile-team"
+              message: "⚠️ Lint Libraries failed on trunk."
+            if: build.pull_request.id == null && step.outcome != "passed"
 
   #################
   # Diff Reports
