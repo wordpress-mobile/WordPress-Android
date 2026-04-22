@@ -9,7 +9,6 @@ import org.mockito.ArgumentMatchers.anyBoolean
 import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
-import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.spy
@@ -18,7 +17,6 @@ import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.store.AccountStore
-import org.wordpress.android.models.ReaderBlog
 import org.wordpress.android.models.ReaderCardType
 import org.wordpress.android.models.ReaderCardType.DEFAULT
 import org.wordpress.android.models.ReaderCardType.GALLERY
@@ -515,6 +513,34 @@ class ReaderPostUiStateBuilderTest : BaseUnitTest() {
     }
 
     @Test
+    fun `author name is displayed when the post has no blog name or url`() = test {
+        // Arrange
+        val post = createPost(
+            hasBlogName = false,
+            authorName = "Author Name"
+        )
+        // Act
+        val uiState = mapPostToUiState(post)
+        // Assert
+        assertThat((uiState.blogSection.blogName as UiStringText).text).isEqualTo("Author Name")
+    }
+
+    @Test
+    fun `blog url is displayed before author name when the post has no blog name`() = test {
+        // Arrange
+        val post = createPost(
+            hasBlogName = false,
+            blogUrl = "https://author.wordpress.com",
+            authorName = "Author Name"
+        )
+        whenever(urlUtilsWrapper.removeScheme("https://author.wordpress.com")).thenReturn("author.wordpress.com")
+        // Act
+        val uiState = mapPostToUiState(post)
+        // Assert
+        assertThat((uiState.blogSection.blogName as UiStringText).text).isEqualTo("author.wordpress.com")
+    }
+
+    @Test
     fun `p2 posts in the feed show author's first name (or full name) alongside the blog name`() = test {
         // Arrange
         val postWithFirstName = createPost(
@@ -1006,56 +1032,6 @@ class ReaderPostUiStateBuilderTest : BaseUnitTest() {
 
     // endregion
 
-    @Test
-    fun `scheme is removed from recommended blog url`() = test {
-        // Arrange
-        val url = "http://dummy.url"
-        val blog = createRecommendedBlog(blogUrl = url)
-        whenever(urlUtilsWrapper.removeScheme(url)).thenReturn("dummy.url")
-        // Act
-        val uiState = builder.mapRecommendedBlogsToReaderRecommendedBlogsCardUiState(
-            listOf(blog),
-            { _, _, _ -> },
-            { }
-        )
-        // Assert
-        assertThat(uiState.blogs[0].url).isEqualTo("dummy.url")
-    }
-
-    @Test
-    fun `limits recommended blogs count to 3`() = test {
-        // Arrange
-        whenever(urlUtilsWrapper.removeScheme(any())).thenReturn("dummy.url")
-        val blogs = List(6) { createRecommendedBlog() }
-
-        // Act
-        val uiState = builder.mapRecommendedBlogsToReaderRecommendedBlogsCardUiState(
-            blogs,
-            { _, _, _ -> },
-            { }
-        )
-
-        // Assert
-        assertThat(uiState.blogs.size).isEqualTo(3)
-    }
-
-    @Test
-    fun `ReaderRecommendedBlogUiState description is null when description is empty`() = test {
-        // Arrange
-        whenever(urlUtilsWrapper.removeScheme(any())).thenReturn("dummy.url")
-        val blogs = List(1) { createRecommendedBlog(blogDescription = "") }
-
-        // Act
-        val uiState = builder.mapRecommendedBlogsToReaderRecommendedBlogsCardUiState(
-            blogs,
-            { _, _, _ -> },
-            { }
-        )
-
-        // Assert
-        assertThat(uiState.blogs[0].description).isNull()
-    }
-
     // region Private methods
     private suspend fun mapPostToUiState(
         post: ReaderPost,
@@ -1147,17 +1123,5 @@ class ReaderPostUiStateBuilderTest : BaseUnitTest() {
         false
     )
 
-    private fun createRecommendedBlog(
-        blogUrl: String = "url",
-        blogDescription: String = "desc"
-    ) = ReaderBlog().apply {
-        blogId = 1L
-        name = "name"
-        description = blogDescription
-        url = blogUrl
-        imageUrl = null
-        feedId = 0L
-        isFollowing = false
-    }
     // endregion
 }

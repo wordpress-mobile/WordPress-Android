@@ -281,6 +281,26 @@ interface StatsDataSource {
         siteId: Long,
         quantity: Int = 10
     ): StatsEmailsSummaryDataResult
+
+    /**
+     * Fetches UTM stats for a specific site.
+     *
+     * @param siteId The WordPress.com site ID
+     * @param keys UTM key names to query
+     * @param date End date for the query (format: yyyy-MM-dd)
+     * @param days Number of days to include
+     * @param max Maximum number of items to return (0 = no limit)
+     * @param queryTopPosts Whether to include top posts
+     * @return Result containing UTM data or an error
+     */
+    suspend fun fetchUtm(
+        siteId: Long,
+        keys: List<String>,
+        date: String,
+        days: Int,
+        max: Int = 0,
+        queryTopPosts: Boolean = true
+    ): UtmDataResult
 }
 
 /**
@@ -766,4 +786,30 @@ data class EmailSummaryItem(
     val title: String,
     val opens: Long,
     val clicks: Long
+)
+
+/**
+ * Result wrapper for UTM stats fetch operation.
+ */
+sealed class UtmDataResult {
+    data class Success(val data: UtmData) : UtmDataResult()
+    data class Error(
+        val errorType: StatsErrorType
+    ) : UtmDataResult()
+}
+
+/**
+ * UTM stats data from the API.
+ */
+data class UtmData(
+    val topUtmValues: Map<String, Long>,
+    val topPosts: Map<String, List<UtmPostData>>
+)
+
+/**
+ * A single UTM post item from the API.
+ */
+data class UtmPostData(
+    val title: String,
+    val views: Long
 )

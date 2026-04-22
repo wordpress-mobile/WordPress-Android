@@ -63,6 +63,10 @@ public class AppPrefs {
 
         NEW_STATS_INTRO_SHOWN,
 
+        STATS_NEW_STATS_SUGGESTION_SHOWN,
+
+        STATS_NEW_STATS_SUGGESTION_LAST_DISMISSED_AT,
+
         READER_TAGS_UPDATE_TIMESTAMP,
         // last selected tag in the reader
         READER_TAG_NAME,
@@ -146,6 +150,8 @@ public class AppPrefs {
         READER_RECOMMENDED_TAGS_DELETED_FOR_LOGGED_OUT_USER,
         // Selected Reader feed ID for persisting user preferred feed
         READER_TOP_BAR_SELECTED_FEED_ITEM_ID,
+        // Index of the last-selected sub-tab inside the Reader Discover tabbed UI
+        READER_DISCOVER_SELECTED_SUB_TAB_INDEX,
         MANUAL_FEATURE_CONFIG,
         EXPERIMENTAL_FEATURE_CONFIG,
         SITE_JETPACK_CAPABILITIES,
@@ -193,10 +199,10 @@ public class AppPrefs {
         SHOULD_HIDE_DYNAMIC_CARD,
         PINNED_SITE_IDS,
         READER_READING_PREFERENCES_JSON,
-        SHOULD_SHOW_READER_ANNOUNCEMENT_CARD,
         STATS_CARDS_CONFIGURATION_JSON,
         STATS_INSIGHTS_CARDS_CONFIGURATION_JSON,
         SUBSCRIBERS_CARDS_CONFIGURATION_JSON,
+        STATS_UTM_CATEGORY,
 
         // Login flow preserved across OAuth Custom Tabs redirect
         PENDING_LOGIN_FLOW,
@@ -1173,6 +1179,26 @@ public class AppPrefs {
         setInt(DeletablePrefKey.READER_CARDS_ENDPOINT_REFRESH_COUNTER, getReaderCardsRefreshCounter() + 1);
     }
 
+    @Nullable
+    public static String getReaderDiscoverStreamPageHandle(@NonNull String tagSlug) {
+        return prefs().getString(getReaderDiscoverStreamPageHandleKey(tagSlug), null);
+    }
+
+    public static void setReaderDiscoverStreamPageHandle(@NonNull String tagSlug, @Nullable String pageHandle) {
+        SharedPreferences.Editor editor = prefs().edit();
+        if (pageHandle == null) {
+            editor.remove(getReaderDiscoverStreamPageHandleKey(tagSlug));
+        } else {
+            editor.putString(getReaderDiscoverStreamPageHandleKey(tagSlug), pageHandle);
+        }
+        editor.apply();
+    }
+
+    @NonNull
+    private static String getReaderDiscoverStreamPageHandleKey(@NonNull String tagSlug) {
+        return "READER_DISCOVER_STREAM_PAGE_HANDLE_" + tagSlug;
+    }
+
     public static boolean getReaderRecommendedTagsDeletedForLoggedOutUser() {
         return getBoolean(DeletablePrefKey.READER_RECOMMENDED_TAGS_DELETED_FOR_LOGGED_OUT_USER, false);
     }
@@ -1192,6 +1218,14 @@ public class AppPrefs {
         } else {
             setString(DeletablePrefKey.READER_TOP_BAR_SELECTED_FEED_ITEM_ID, selectedFeedItemId);
         }
+    }
+
+    public static int getReaderDiscoverSelectedSubTabIndex() {
+        return getInt(DeletablePrefKey.READER_DISCOVER_SELECTED_SUB_TAB_INDEX, 0);
+    }
+
+    public static void setReaderDiscoverSelectedSubTabIndex(int index) {
+        setInt(DeletablePrefKey.READER_DISCOVER_SELECTED_SUB_TAB_INDEX, index);
     }
 
     public static void setShouldShowStorageWarning(boolean shouldShow) {
@@ -1734,14 +1768,6 @@ public class AppPrefs {
         setString(DeletablePrefKey.PINNED_SITE_IDS, ids);
     }
 
-    public static boolean getShouldShowReaderAnnouncementCard() {
-        return prefs().getBoolean(DeletablePrefKey.SHOULD_SHOW_READER_ANNOUNCEMENT_CARD.name(), true);
-    }
-
-    public static void setShouldShowReaderAnnouncementCard(final boolean shouldShow) {
-        prefs().edit().putBoolean(DeletablePrefKey.SHOULD_SHOW_READER_ANNOUNCEMENT_CARD.name(), shouldShow).apply();
-    }
-
     @Nullable
     public static String getReaderReadingPreferencesJson() {
         return getString(DeletablePrefKey.READER_READING_PREFERENCES_JSON, null);
@@ -1821,6 +1847,26 @@ public class AppPrefs {
         return DeletablePrefKey.SUBSCRIBERS_CARDS_CONFIGURATION_JSON.name() + siteId;
     }
 
+    @Nullable
+    public static String getStatsUtmCategory(long siteId) {
+        return prefs().getString(getStatsUtmCategoryKey(siteId), null);
+    }
+
+    public static void setStatsUtmCategory(long siteId, @Nullable String category) {
+        SharedPreferences.Editor editor = prefs().edit();
+        if (category == null) {
+            editor.remove(getStatsUtmCategoryKey(siteId));
+        } else {
+            editor.putString(getStatsUtmCategoryKey(siteId), category);
+        }
+        editor.apply();
+    }
+
+    @NonNull
+    private static String getStatsUtmCategoryKey(long siteId) {
+        return DeletablePrefKey.STATS_UTM_CATEGORY.name() + siteId;
+    }
+
     /**
      * Returns whether network request tracking (Chucker) is enabled.
      * This is a device-level preference that persists across logout/login cycles
@@ -1875,5 +1921,21 @@ public class AppPrefs {
 
     public static void setNewStatsIntroShown(boolean shown) {
         setBoolean(DeletablePrefKey.NEW_STATS_INTRO_SHOWN, shown);
+    }
+
+    public static boolean getStatsNewStatsSuggestionShown() {
+        return getBoolean(DeletablePrefKey.STATS_NEW_STATS_SUGGESTION_SHOWN, false);
+    }
+
+    public static void setStatsNewStatsSuggestionShown(boolean shown) {
+        setBoolean(DeletablePrefKey.STATS_NEW_STATS_SUGGESTION_SHOWN, shown);
+    }
+
+    public static long getStatsNewStatsSuggestionLastDismissedAt() {
+        return getLong(DeletablePrefKey.STATS_NEW_STATS_SUGGESTION_LAST_DISMISSED_AT, 0L);
+    }
+
+    public static void setStatsNewStatsSuggestionLastDismissedAt(long timestamp) {
+        setLong(DeletablePrefKey.STATS_NEW_STATS_SUGGESTION_LAST_DISMISSED_AT, timestamp);
     }
 }

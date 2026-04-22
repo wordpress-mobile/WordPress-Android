@@ -29,7 +29,7 @@ import java.util.Locale;
  */
 public class ReaderDatabase extends SQLiteOpenHelper {
     protected static final String DB_NAME = "wpreader.db";
-    private static final int DB_VERSION = 155;
+    private static final int DB_VERSION = 156;
     private static final int DB_LAST_VERSION_WITHOUT_MIGRATION_SCRIPT = 136; // do not change this value
 
     /*
@@ -118,6 +118,7 @@ public class ReaderDatabase extends SQLiteOpenHelper {
      * 153 - added author_email to tbl_comments
      * 154 - added tbl_blocked_authors table
      * 155 - added tbl_blocked_blogs table
+     * 156 - dropped tbl_discover_cards (Reader Discover legacy code removed)
      */
 
     /*
@@ -211,7 +212,7 @@ public class ReaderDatabase extends SQLiteOpenHelper {
                 db.execSQL("ALTER TABLE tbl_posts ADD is_private_atomic BOOLEAN;");
                 currentVersion++;
             case 138:
-                ReaderDiscoverCardsTable.INSTANCE.createTable(db);
+                // no-op (tbl_discover_cards was created here; dropped at v156)
                 currentVersion++;
             case 139:
                 db.execSQL("DROP TABLE IF EXISTS tbl_tags_recommended;");
@@ -273,6 +274,9 @@ public class ReaderDatabase extends SQLiteOpenHelper {
             case 154:
                 ReaderBlockedBlogTable.createTables(db);
                 currentVersion++;
+            case 155:
+                db.execSQL("DROP TABLE IF EXISTS tbl_discover_cards;");
+                currentVersion++;
         }
         if (currentVersion != newVersion) {
             throw new RuntimeException(
@@ -299,7 +303,6 @@ public class ReaderDatabase extends SQLiteOpenHelper {
         ReaderThumbnailTable.createTables(db);
         ReaderBlogTable.createTables(db);
         ReaderSearchTable.createTables(db);
-        ReaderDiscoverCardsTable.INSTANCE.createTable(db);
         ReaderBlockedBlogTable.createTables(db);
     }
 
@@ -313,7 +316,6 @@ public class ReaderDatabase extends SQLiteOpenHelper {
         ReaderThumbnailTable.dropTables(db);
         ReaderBlogTable.dropTables(db);
         ReaderSearchTable.dropTables(db);
-        ReaderDiscoverCardsTable.INSTANCE.dropTables(db);
         ReaderBlockedBlogTable.dropTables(db);
     }
 

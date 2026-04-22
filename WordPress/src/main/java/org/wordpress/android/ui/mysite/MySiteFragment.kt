@@ -40,10 +40,10 @@ import org.wordpress.android.ui.main.AddSiteHandler
 import org.wordpress.android.ui.main.ChooseSiteActivity
 import org.wordpress.android.ui.main.WPMainActivity
 import org.wordpress.android.ui.main.WPMainActivity.OnScrollToTopListener
-import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationActivity
 import org.wordpress.android.ui.main.utils.MeGravatarLoader
 import org.wordpress.android.ui.mysite.MySiteViewModel.State
 import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptsCardAnalyticsTracker
+import org.wordpress.android.ui.mysite.cards.xmlrpcdisabled.XmlRpcDisabledBottomSheetFragment
 import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredBottomSheetFragment
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.photopicker.MediaPickerConstants
@@ -645,7 +645,13 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         is SiteNavigationAction.OpenDeepLink ->
             DeepLinkingIntentReceiverActivity.openDeepLinkUrl(requireActivity(), action.url)
         is SiteNavigationAction.OpenJetpackPoweredBottomSheet -> showJetpackPoweredBottomSheet()
-        is SiteNavigationAction.OpenJetpackMigrationDeleteWP -> showJetpackMigrationDeleteWP()
+        is SiteNavigationAction.OpenXmlRpcDisabledBottomSheet ->
+            XmlRpcDisabledBottomSheetFragment
+                .newInstance()
+                .show(
+                    childFragmentManager,
+                    XmlRpcDisabledBottomSheetFragment.TAG
+                )
         is SiteNavigationAction.OpenJetpackFeatureOverlay -> showJetpackFeatureOverlay(action.source)
         is SiteNavigationAction.OpenPromoteWithBlazeOverlay -> activityNavigator.openPromoteWithBlaze(
             requireActivity(),
@@ -775,14 +781,6 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         JetpackPoweredBottomSheetFragment
             .newInstance()
             .show(requireActivity().supportFragmentManager, JetpackPoweredBottomSheetFragment.TAG)
-    }
-
-    private fun showJetpackMigrationDeleteWP() {
-        val intent = JetpackMigrationActivity.createIntent(
-            context = requireActivity(),
-            showDeleteWpState = true
-        )
-        startActivity(intent)
     }
 
     private fun showJetpackFeatureOverlay(

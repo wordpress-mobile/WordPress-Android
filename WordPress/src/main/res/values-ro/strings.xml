@@ -294,11 +294,6 @@ Language: ro
     <string name="reader_tags_feed_error_title">Nu am găsit niciun articol pentru %s</string>
     <string name="reader_tags_feed_see_more_from_tag">Mai multe pentru %s</string>
     <string name="reader_tags_display_name">Etichete</string>
-    <string name="reader_announcement_card_reading_preferences_description">Alegi culorile și fonturile pe care le vrei. Când citești un articol, atinge iconul AA în partea de sus a ecranului.</string>
-    <string name="reader_announcement_card_reading_preferences_title">Preferințe pentru citire</string>
-    <string name="reader_announcement_card_tags_stream_description">Atinge lista derulantă în partea de sus și selectează Etichete pentru a accesa fluxurile pentru etichetele urmărite.</string>
-    <string name="reader_announcement_card_tags_stream_title">Flux de etichete</string>
-    <string name="reader_announcement_card_title">Noutăți în Cititor</string>
     <string name="reader_dropdown_menu_tags">Etichetele tale</string>
     <string name="no_connection_error_description">Verifică conexiunea la rețea și încearcă din nou.</string>
     <string name="no_connection_error_title">Nu pot să încarc acest conținut chiar acum</string>
@@ -648,11 +643,7 @@ Language: ro
     <string name="new_site_creation_preview_caption_paid">Poate să dureze până la 30 de minute până când domeniul tău personalizat va începe să funcționeze.</string>
     <string name="new_site_creation_preview_subtitle_paid">Ți-am trimis chitanța prin email. %s</string>
     <string name="notifications_disabled_permission_dialog">Notificările aplicației au fost dezactivate. Atinge aici pentru a le activa.</string>
-    <string name="jp_migration_delete_message">Recomandăm &lt;b&gt;să dezinstalezi aplicația WordPress&lt;/b&gt; pe dispozitivul tău ca să eviți conflictele.</string>
-    <string name="jp_migration_delete_subtitle">Se pare că încă ai instalată aplicația WordPress.</string>
-    <string name="jp_migration_delete_title">Nu mai ai nevoie de aplicația WordPress pe dispozitivul tău</string>
     <string name="jp_migration_done_delete_wp_message">Recomandăm &lt;b&gt;să dezinstalezi aplicația WordPress&lt;/b&gt; pe dispozitivul tău ca să eviți conflictele.</string>
-    <string name="jp_migration_success_card_message">Bine ai venit la aplicația Jetpack. Acum poți să dezinstalezi aplicația WordPress.</string>
     <string name="dashboard_pages_card_create_another_page_description">Începe cu aranjamente personalizate, prietenoase pentru dispozitivele mobile</string>
     <string name="dashboard_pages_card_create_another_page_button">Creează o altă pagină</string>
     <string name="dashboard_pages_card_no_pages_create_page_button">Adaugă pagini pe site-ul tău</string>
@@ -829,8 +820,6 @@ Language: ro
     <string name="preference_open_links_in_jetpack_setting_change_disable_error">Nu pot dezactiva deschiderea legăturilor în Jetpack</string>
     <string name="preference_open_links_in_jetpack_setting_change_enable_error">Nu pot activa deschiderea legăturilor în Jetpack</string>
     <string name="preference_open_links_in_jetpack">Deschide legăturile în Jetpack</string>
-    <string name="jp_migration_need_help_button">Ai nevoie de ajutor?</string>
-    <string name="jp_migration_got_it_button">Am înțeles</string>
     <string name="jp_migration_network_error_message">Nu putem să transferăm datele și setările fără o conexiune la rețea.</string>
     <string name="jp_migration_network_error_subtitle">Te rog verifică dacă ai o conexiunea la rețea care funcționează și încearcă din nou.</string>
     <string name="jp_migration_network_error_title">Nu mă pot conecta la internet.</string>

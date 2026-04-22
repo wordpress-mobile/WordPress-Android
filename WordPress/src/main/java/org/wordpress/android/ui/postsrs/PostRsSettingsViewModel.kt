@@ -18,13 +18,16 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
+import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpApiClientProvider
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.postsrs.data.PostRsRestClient
 import org.wordpress.android.ui.postsrs.data.PostRsRestClient.Companion.AUTHORS_PER_PAGE
+import org.wordpress.android.ui.posts.trackPostSettings
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.NetworkUtilsWrapper
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
 import rs.wordpress.api.kotlin.WpRequestResult
 import uniffi.wp_api.AnyPostWithEditContext
@@ -53,6 +56,7 @@ class PostRsSettingsViewModel @Inject constructor(
     private val resourceProvider: ResourceProvider,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     private val uriToFileMapper: UriToFileMapper,
+    private val analyticsTracker: AnalyticsTrackerWrapper,
 ) : ViewModel() {
     private val postId: Long = requireNotNull(savedStateHandle[EXTRA_POST_ID]) {
         "Missing $EXTRA_POST_ID in SavedStateHandle"
@@ -193,6 +197,11 @@ class PostRsSettingsViewModel @Inject constructor(
 
     fun onStatusSelected(status: PostStatus) {
         val original = _uiState.value.postStatus
+        if (status != original) {
+            analyticsTracker.trackPostSettings(
+                Stat.EDITOR_POST_VISIBILITY_CHANGED
+            )
+        }
         _uiState.update {
             it.copy(
                 editedStatus = status.takeIf { es ->
@@ -211,6 +220,11 @@ class PostRsSettingsViewModel @Inject constructor(
 
     fun onPasswordSet(password: String) {
         val original = _uiState.value.password ?: ""
+        if (password != original) {
+            analyticsTracker.trackPostSettings(
+                Stat.EDITOR_POST_PASSWORD_CHANGED
+            )
+        }
         _uiState.update {
             it.copy(
                 editedPassword = password.takeIf { ep ->
@@ -229,6 +243,9 @@ class PostRsSettingsViewModel @Inject constructor(
 
     fun onSlugSet(slug: String) {
         val original = _uiState.value.slug
+        if (slug != original) {
+            analyticsTracker.track(Stat.EDITOR_POST_SLUG_CHANGED)
+        }
         _uiState.update {
             it.copy(
                 editedSlug = slug.takeIf { es ->
@@ -247,6 +264,11 @@ class PostRsSettingsViewModel @Inject constructor(
 
     fun onExcerptSet(excerpt: String) {
         val original = _uiState.value.excerpt
+        if (excerpt != original) {
+            analyticsTracker.track(
+                Stat.EDITOR_POST_EXCERPT_CHANGED
+            )
+        }
         _uiState.update {
             it.copy(
                 editedExcerpt = excerpt.takeIf { ee ->
@@ -270,6 +292,11 @@ class PostRsSettingsViewModel @Inject constructor(
 
     fun onFormatSelected(format: PostFormat) {
         val original = _uiState.value.postFormat
+        if (format != original) {
+            analyticsTracker.track(
+                Stat.EDITOR_POST_FORMAT_CHANGED
+            )
+        }
         _uiState.update {
             it.copy(
                 editedFormat = format.takeIf { ef ->
@@ -331,6 +358,11 @@ class PostRsSettingsViewModel @Inject constructor(
             this[Calendar.MILLISECOND] = 0
         }
         val newDate = cal.time
+        if (newDate != current.originalDate) {
+            analyticsTracker.trackPostSettings(
+                Stat.EDITOR_POST_SCHEDULE_CHANGED
+            )
+        }
         _uiState.update {
             it.copy(
                 editedDate = newDate.takeIf { ed ->
@@ -405,9 +437,15 @@ class PostRsSettingsViewModel @Inject constructor(
     }
 
     fun onCategoriesSelected(ids: LongArray) {
+        val originalIds = _uiState.value.categoryIds
+        if (ids.toList().sorted() != originalIds.sorted()) {
+            analyticsTracker.trackPostSettings(
+                Stat.EDITOR_POST_CATEGORIES_ADDED
+            )
+        }
         onTermsSelected(
             ids = ids,
-            originalIds = _uiState.value.categoryIds,
+            originalIds = originalIds,
             endpointType = TermEndpointType.Categories,
             updateEdited = { state, edited ->
                 state.copy(editedCategoryIds = edited)
@@ -419,9 +457,15 @@ class PostRsSettingsViewModel @Inject constructor(
     }
 
     fun onTagsSelected(ids: LongArray) {
+        val originalIds = _uiState.value.tagIds
+        if (ids.toList().sorted() != originalIds.sorted()) {
+            analyticsTracker.trackPostSettings(
+                Stat.EDITOR_POST_TAGS_CHANGED
+            )
+        }
         onTermsSelected(
             ids = ids,
-            originalIds = _uiState.value.tagIds,
+            originalIds = originalIds,
             endpointType = TermEndpointType.Tags,
             updateEdited = { state, edited ->
                 state.copy(editedTagIds = edited)

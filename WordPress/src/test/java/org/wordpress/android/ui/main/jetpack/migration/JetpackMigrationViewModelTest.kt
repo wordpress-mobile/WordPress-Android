@@ -26,8 +26,6 @@ import org.wordpress.android.localcontentmigration.ContentMigrationAnalyticsTrac
 import org.wordpress.android.localcontentmigration.MigrationEmailHelper
 import org.wordpress.android.localcontentmigration.WelcomeScreenData
 import org.wordpress.android.sharedlogin.resolver.LocalMigrationOrchestrator
-import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.ActionButton.DeletePrimaryButton
-import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.ActionButton.DeleteSecondaryButton
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.ActionButton.DonePrimaryButton
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.ActionButton.ErrorPrimaryButton
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.ActionButton.ErrorSecondaryButton
@@ -244,31 +242,6 @@ class JetpackMigrationViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `Should track when delete wp app screen is shown`() {
-        classToTest.initPleaseDeleteWordPressAppScreenUi()
-
-        verify(contentMigrationAnalyticsTracker).trackPleaseDeleteWordPressScreenShown()
-    }
-
-    @Test
-    fun `Should track when got it button is tapped on delete wp app screen`() {
-        val pleaseDeleteScreen = classToTest.initPleaseDeleteWordPressAppScreenUi()
-
-        pleaseDeleteScreen.primaryActionButton.onClick.invoke()
-
-        verify(contentMigrationAnalyticsTracker).trackPleaseDeleteWordPressGotItTapped()
-    }
-
-    @Test
-    fun `Should track when help button is tapped on delete wp app screen`() {
-        val pleaseDeleteScreen = classToTest.initPleaseDeleteWordPressAppScreenUi()
-
-        pleaseDeleteScreen.secondaryActionButton.onClick.invoke()
-
-        verify(contentMigrationAnalyticsTracker).trackPleaseDeleteWordPressHelpTapped()
-    }
-
-    @Test
     fun `Should track when error screen is shown`() {
         classToTest.initErrorScreenUi()
 
@@ -461,45 +434,6 @@ class JetpackMigrationViewModelTest : BaseUnitTest() {
         assertThat(actual).isEqualTo(expected)
     }
 
-    @Test
-    fun `Should have correct screenIconRes for Delete Content`() {
-        val deleteContent = Content.Delete(DeletePrimaryButton {}, DeleteSecondaryButton {})
-        val actual = deleteContent.screenIconRes
-        val expected = R.drawable.ic_jetpack_migration_delete
-        assertThat(actual).isEqualTo(expected)
-    }
-
-    @Test
-    fun `Should have correct title for Delete Content`() {
-        val deleteContent = Content.Delete(DeletePrimaryButton {}, DeleteSecondaryButton {})
-        val actual = deleteContent.title
-        val expected = UiStringRes(R.string.jp_migration_delete_title)
-        assertThat(actual).isEqualTo(expected)
-    }
-
-    @Test
-    fun `Should have correct subtitle for Delete Content`() {
-        val deleteContent = Content.Delete(DeletePrimaryButton {}, DeleteSecondaryButton {})
-        val actual = deleteContent.subtitle
-        val expected = UiStringRes(R.string.jp_migration_delete_subtitle)
-        assertThat(actual).isEqualTo(expected)
-    }
-
-    @Test
-    fun `Should have correct message for Delete Content`() {
-        val deleteContent = Content.Delete(DeletePrimaryButton {}, DeleteSecondaryButton {})
-        val actual = deleteContent.message
-        val expected = UiStringRes(R.string.jp_migration_delete_message)
-        assertThat(actual).isEqualTo(expected)
-    }
-
-    @Test
-    fun `Should have correct deleteWpIcon for Delete Content`() {
-        val deleteContent = Content.Delete(DeletePrimaryButton {}, DeleteSecondaryButton {})
-        val actual = deleteContent.deleteWpIcon
-        val expected = R.drawable.ic_jetpack_migration_delete_wp
-        assertThat(actual).isEqualTo(expected)
-    }
     // endregion
 
     // region UiState Error
@@ -625,20 +559,5 @@ class JetpackMigrationViewModelTest : BaseUnitTest() {
         assertThat(actual).isEqualTo(expected)
     }
 
-    @Test
-    fun `Should have correct text for DeletePrimaryButton`() {
-        val button = DeletePrimaryButton {}
-        val actual = button.text
-        val expected = UiStringRes(R.string.jp_migration_got_it_button)
-        assertThat(actual).isEqualTo(expected)
-    }
-
-    @Test
-    fun `Should have correct text for DeleteSecondaryButton`() {
-        val button = DeleteSecondaryButton {}
-        val actual = button.text
-        val expected = UiStringRes(R.string.jp_migration_need_help_button)
-        assertThat(actual).isEqualTo(expected)
-    }
     // endregion
 }

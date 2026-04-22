@@ -293,6 +293,19 @@ public class ReaderPostActions {
                 new Thread(() -> {
                     ReaderPost post = ReaderPost.fromJson(jsonObject);
 
+                    // Preserve the existing date_published if the post
+                    // already exists in the DB. This prevents editorial
+                    // dates (e.g. Freshly Pressed "displayed_on") from
+                    // being overwritten when the detail endpoint response
+                    // lacks the editorial section.
+                    ReaderPost existingPost =
+                            ReaderPostTable.getBlogPost(
+                                    post.blogId, post.postId, true);
+                    if (existingPost != null) {
+                        post.setDatePublished(
+                                existingPost.getDatePublished());
+                    }
+
                     ReaderPostTable.addPost(post);
                     handlePostLikes(post, jsonObject);
 

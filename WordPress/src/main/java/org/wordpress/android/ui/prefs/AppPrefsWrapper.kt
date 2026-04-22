@@ -72,9 +72,20 @@ class AppPrefsWrapper @Inject constructor(val buildConfigWrapper: BuildConfigWra
         get() = AppPrefs.getReaderCardsPageHandle()
         set(pageHandle) = AppPrefs.setReaderCardsPageHandle(pageHandle)
 
+    fun getReaderDiscoverStreamPageHandle(tagSlug: String): String? =
+        AppPrefs.getReaderDiscoverStreamPageHandle(tagSlug)
+
+    fun setReaderDiscoverStreamPageHandle(tagSlug: String, pageHandle: String?) {
+        AppPrefs.setReaderDiscoverStreamPageHandle(tagSlug, pageHandle)
+    }
+
     var readerTopBarSelectedFeedItemId: String?
         get() = AppPrefs.getReaderTopBarSelectedFeedItemId()
         set(selectedFeedItemId) = AppPrefs.setReaderTopBarSelectedFeedItemId(selectedFeedItemId)
+
+    var readerDiscoverSelectedSubTabIndex: Int
+        get() = AppPrefs.getReaderDiscoverSelectedSubTabIndex()
+        set(index) = AppPrefs.setReaderDiscoverSelectedSubTabIndex(index)
 
     var shouldScheduleCreateSiteNotification: Boolean
         get() = AppPrefs.shouldScheduleCreateSiteNotification()
@@ -114,6 +125,12 @@ class AppPrefsWrapper @Inject constructor(val buildConfigWrapper: BuildConfigWra
 
     fun setSubscribersCardsConfigurationJson(siteId: Long, json: String?) =
         AppPrefs.setSubscribersCardsConfigurationJson(siteId, json)
+
+    fun getStatsUtmCategory(siteId: Long): String? =
+        AppPrefs.getStatsUtmCategory(siteId)
+
+    fun setStatsUtmCategory(siteId: Long, category: String?) =
+        AppPrefs.setStatsUtmCategory(siteId, category)
 
     fun getAppWidgetSiteId(appWidgetId: Int) = AppPrefs.getStatsWidgetSelectedSiteId(appWidgetId)
     fun setAppWidgetSiteId(siteId: Long, appWidgetId: Int) = AppPrefs.setStatsWidgetSelectedSiteId(siteId, appWidgetId)
@@ -460,10 +477,6 @@ class AppPrefsWrapper @Inject constructor(val buildConfigWrapper: BuildConfigWra
 
     fun setBookmarkPostsPseudoIdsUpdated() = AppPrefs.setBookmarkPostsPseudoIdsUpdated()
 
-    fun shouldShowReaderAnnouncementCard(): Boolean = AppPrefs.getShouldShowReaderAnnouncementCard()
-
-    fun setShouldShowReaderAnnouncementCard(shouldShow: Boolean) =
-        AppPrefs.setShouldShowReaderAnnouncementCard(shouldShow)
 
     fun getAllPrefs(): Map<String, Any?> = AppPrefs.getAllPrefs()
 
@@ -527,6 +540,18 @@ class AppPrefsWrapper @Inject constructor(val buildConfigWrapper: BuildConfigWra
 
     fun setNewStatsIntroShown(shown: Boolean) =
         AppPrefs.setNewStatsIntroShown(shown)
+
+    fun getStatsNewStatsSuggestionShown(): Boolean =
+        AppPrefs.getStatsNewStatsSuggestionShown()
+
+    fun setStatsNewStatsSuggestionShown(shown: Boolean) =
+        AppPrefs.setStatsNewStatsSuggestionShown(shown)
+
+    fun getStatsNewStatsSuggestionLastDismissedAt(): Long =
+        AppPrefs.getStatsNewStatsSuggestionLastDismissedAt()
+
+    fun setStatsNewStatsSuggestionLastDismissedAt(timestamp: Long) =
+        AppPrefs.setStatsNewStatsSuggestionLastDismissedAt(timestamp)
 
     companion object {
         private const val LIGHT_MODE_ID = 0

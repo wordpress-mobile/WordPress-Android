@@ -140,9 +140,7 @@ import org.wordpress.android.ui.reader.adapters.ReaderCommentAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderPostAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderTagAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderUserAdapter;
-import org.wordpress.android.ui.reader.discover.ReaderDiscoverFragment;
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsFragment;
-import org.wordpress.android.ui.reader.services.discover.ReaderDiscoverLogic;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic;
 import org.wordpress.android.ui.reader.views.ReaderCommentsPostHeaderView;
 import org.wordpress.android.ui.reader.views.ReaderExpandableTagsView;
@@ -434,7 +432,6 @@ public interface AppComponent {
     void inject(FeatureAnnouncementDialogFragment object);
 
     void inject(FeatureAnnouncementListAdapter object);
-    void inject(ReaderDiscoverFragment object);
 
     void inject(ReaderSearchActivity object);
 
@@ -446,7 +443,6 @@ public interface AppComponent {
 
     void inject(AztecVideoLoader object);
 
-    void inject(ReaderDiscoverLogic object);
 
     void inject(SuggestionActivity object);
 

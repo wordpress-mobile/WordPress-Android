@@ -1,6 +1,8 @@
 package org.wordpress.android.ui.postsrs.screens
 
 import androidx.annotation.StringRes
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -20,6 +22,7 @@ import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -46,6 +49,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
@@ -71,11 +75,13 @@ import org.wordpress.android.ui.postsrs.PostRsListViewModel.Companion.MIN_SEARCH
 import org.wordpress.android.ui.postsrs.PostRsMenuAction
 import org.wordpress.android.ui.postsrs.PostTabUiState
 
+@Suppress("CyclomaticComplexMethod")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PostRsListScreen(
     tabStates: Map<PostRsListTab, PostTabUiState>,
     isSearchActive: Boolean,
+    isOpeningPost: Boolean,
     searchQuery: String,
     authorFilter: AuthorFilterSelection,
     isAuthorFilterSupported: Boolean,
@@ -87,6 +93,7 @@ fun PostRsListScreen(
     onSearchClose: (PostRsListTab) -> Unit,
     onAuthorFilterChanged: (AuthorFilterSelection, PostRsListTab) -> Unit,
     onInitTab: (PostRsListTab) -> Unit,
+    onTabChanged: (PostRsListTab) -> Unit,
     onRefreshTab: (PostRsListTab) -> Unit,
     onLoadMore: (PostRsListTab) -> Unit,
     onNavigateBack: () -> Unit,
@@ -212,6 +219,7 @@ fun PostRsListScreen(
                             onClick = {
                                 coroutineScope.launch { pagerState.animateScrollToPage(index) }
                             },
+                            unselectedContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
                             text = { Text(text = stringResource(tab.labelResId)) }
                         )
                     }
@@ -219,7 +227,15 @@ fun PostRsListScreen(
             }
 
             LaunchedEffect(pagerState) {
-                snapshotFlow { pagerState.settledPage }.collect { page -> onInitTab(tabs[page]) }
+                var isFirstEmission = true
+                snapshotFlow { pagerState.settledPage }.collect { page ->
+                    onInitTab(tabs[page])
+                    if (isFirstEmission) {
+                        isFirstEmission = false
+                    } else {
+                        onTabChanged(tabs[page])
+                    }
+                }
             }
 
             HorizontalPager(
@@ -270,6 +286,22 @@ fun PostRsListScreen(
             onDismiss = confirmationDialog.onDismiss
         )
         null -> {}
+    }
+
+    if (isOpeningPost) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .clickable(
+                    indication = null,
+                    interactionSource = remember {
+                        MutableInteractionSource()
+                    }
+                ) { },
+            contentAlignment = Alignment.Center
+        ) {
+            CircularProgressIndicator()
+        }
     }
 }
 

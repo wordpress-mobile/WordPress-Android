@@ -210,9 +210,7 @@ steps:
     continue_on_failure: true
 
   - label: ":claude: 🕵️ Check for Build Failures and Run Claude Analysis"
-    command: |
-      source .buildkite/shared-pipeline-vars
-      buildkite-agent pipeline upload .buildkite/claude-analysis.yml
+    command: .buildkite/commands/upload-claude-analysis.sh
     agents:
       queue: upload
 

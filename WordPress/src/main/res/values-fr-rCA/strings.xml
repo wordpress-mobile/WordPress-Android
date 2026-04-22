@@ -271,11 +271,6 @@ Language: fr
     <string name="reader_tags_feed_error_title">Aucun résultat pour %s</string>
     <string name="reader_tags_feed_see_more_from_tag">Plus de %s</string>
     <string name="reader_tags_display_name">Étiquettes</string>
-    <string name="reader_announcement_card_reading_preferences_description">Choisissez les couleurs et polices qui vous conviennent. Lorsque vous lisez un article, appuyez sur l’icône AA en haut de l’écran.</string>
-    <string name="reader_announcement_card_reading_preferences_title">Préférences de lecture</string>
-    <string name="reader_announcement_card_tags_stream_description">Appuyez sur la liste déroulante en haut et sélectionnez Étiquettes pour accéder aux flux des étiquettes que vous suivez.</string>
-    <string name="reader_announcement_card_tags_stream_title">Flux Étiquettes</string>
-    <string name="reader_announcement_card_title">Nouveau dans le Lecteur</string>
     <string name="reader_dropdown_menu_tags">Vos étiquettes</string>
     <string name="no_connection_error_description">Vérifiez votre connexion réseau et réessayez.</string>
     <string name="no_connection_error_title">Impossible de charger ce contenu pour le moment</string>
@@ -622,11 +617,7 @@ Language: fr
     <string name="new_site_creation_preview_caption_paid">Un délai de 30 minutes peut être nécessaire pour que votre domaine personnalisé soit opérationnel.</string>
     <string name="new_site_creation_preview_subtitle_paid">Nous vous avons envoyé le reçu par e-mail. %s</string>
     <string name="notifications_disabled_permission_dialog">Les notifications de l’application ont été désactivées. Appuyez ici pour les activer.</string>
-    <string name="jp_migration_delete_message">Nous vous recommandons de &lt;b&gt;désinstaller l’application WordPress&lt;/b&gt; sur votre appareil pour éviter les conflits de données.</string>
-    <string name="jp_migration_delete_subtitle">Il semblerait que l’application WordPress soit toujours installée.</string>
-    <string name="jp_migration_delete_title">Vous n’avez plus besoin de l’application WordPress sur votre appareil.</string>
     <string name="jp_migration_done_delete_wp_message">Nous vous recommandons de &lt;b&gt;désinstaller l’application WordPress&lt;/b&gt; sur votre appareil pour éviter les conflits de données.</string>
-    <string name="jp_migration_success_card_message">Bienvenue dans l’application Jetpack. Vous pouvez désinstaller l’application WordPress.</string>
     <string name="dashboard_pages_card_create_another_page_description">Commencez par des mises en page sur mesure et adaptées aux appareils mobiles</string>
     <string name="dashboard_pages_card_create_another_page_button">Créer une autre page</string>
     <string name="dashboard_pages_card_no_pages_create_page_button">Ajouter des pages à votre site</string>
@@ -803,8 +794,6 @@ Language: fr
     <string name="preference_open_links_in_jetpack_setting_change_disable_error">Impossible de désactiver l’ouverture des liens dans Jetpack</string>
     <string name="preference_open_links_in_jetpack_setting_change_enable_error">Impossible d’activer l’ouverture des liens dans Jetpack</string>
     <string name="preference_open_links_in_jetpack">Ouvrir les liens dans Jetpack</string>
-    <string name="jp_migration_need_help_button">Besoin d’aide ?</string>
-    <string name="jp_migration_got_it_button">J’ai compris</string>
     <string name="jp_migration_network_error_message">Nous ne pouvons pas transférer vos données et réglages sans connexion réseau.</string>
     <string name="jp_migration_network_error_subtitle">Assurez-vous que votre connexion réseau fonctionne, puis réessayez.</string>
     <string name="jp_migration_network_error_title">Impossible de se connecter à Internet.</string>

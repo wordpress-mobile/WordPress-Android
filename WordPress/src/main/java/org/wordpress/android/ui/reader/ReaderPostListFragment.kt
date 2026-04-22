@@ -894,16 +894,18 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
         if (isAdded && recyclerView.adapter == null) {
             recyclerView.adapter = getPostAdapter()
             refreshPosts()
-            if (!hasRequestedPosts && NetworkUtils.isNetworkAvailable(
-                    activity
+        }
+        if (isAdded && !hasRequestedPosts && NetworkUtils.isNetworkAvailable(
+                activity
+            )
+        ) {
+            hasRequestedPosts = true
+            if (getPostListType().isTagType) {
+                updateCurrentTagIfTime()
+            } else if (getPostListType() == ReaderPostListType.BLOG_PREVIEW) {
+                updatePostsInCurrentBlogOrFeed(
+                    ReaderPostServiceStarter.UpdateAction.REQUEST_NEWER
                 )
-            ) {
-                hasRequestedPosts = true
-                if (getPostListType().isTagType) {
-                    updateCurrentTagIfTime()
-                } else if (getPostListType() == ReaderPostListType.BLOG_PREVIEW) {
-                    updatePostsInCurrentBlogOrFeed(ReaderPostServiceStarter.UpdateAction.REQUEST_NEWER)
-                }
             }
         }
     }

@@ -294,11 +294,6 @@ Language: nl
     <string name="reader_tags_feed_error_title">Geen berichten gevonden voor %s</string>
     <string name="reader_tags_feed_see_more_from_tag">Meer van %s</string>
     <string name="reader_tags_display_name">Tags</string>
-    <string name="reader_announcement_card_reading_preferences_description">Kies kleuren en lettertypen die bij je passen. Als je een bericht leest, dan tikken op het icoon AA bovenaan het scherm.</string>
-    <string name="reader_announcement_card_reading_preferences_title">Leesvoorkeuren</string>
-    <string name="reader_announcement_card_tags_stream_description">Tikken op de dropdown bovenaan en selecteer Tags om toegang te krijgen tot streams van je gevolgde tags.</string>
-    <string name="reader_announcement_card_tags_stream_title">Tags stream</string>
-    <string name="reader_announcement_card_title">Nieuw in Reader</string>
     <string name="reader_dropdown_menu_tags">Je tags</string>
     <string name="no_connection_error_description">Controleer je netwerkverbinding en probeer het nogmaals.</string>
     <string name="no_connection_error_title">Deze inhoud kan momenteel niet geladen worden</string>
@@ -648,11 +643,7 @@ Language: nl
     <string name="new_site_creation_preview_caption_paid">Het kan tot 30 minuten duren voor je aangepaste domein werkt.</string>
     <string name="new_site_creation_preview_subtitle_paid">We hebben je betalingsbewijs naar je gemaild. %s</string>
     <string name="notifications_disabled_permission_dialog">Appmeldingen zijn uitgeschakeld. Tik hier om ze in te schakelen.</string>
-    <string name="jp_migration_delete_message">We raden je aan om &lt;b&gt;de WordPress app van je apparaat te verwijderen&lt;/b&gt; om gegevensconflicten te vermijden.</string>
-    <string name="jp_migration_delete_subtitle">Het lijkt erop dat je de WordPress-app nog steeds geïnstalleerd hebt.</string>
-    <string name="jp_migration_delete_title">Je hebt de WordPress app niet meer nodig op je apparaat</string>
     <string name="jp_migration_done_delete_wp_message">We raden je aan om &lt;b&gt;de WordPress app van je apparaat te verwijderen&lt;/b&gt; om gegevensconflicten te vermijden.</string>
-    <string name="jp_migration_success_card_message">Welkom bij de Jetpack app. Je kan de WordPress app verwijderen.</string>
     <string name="dashboard_pages_card_create_another_page_description">Ga aan de slag met op maat gemaakte lay-outs die geschikt zijn voor mobiele apparaten</string>
     <string name="dashboard_pages_card_create_another_page_button">Nog een pagina aanmaken</string>
     <string name="dashboard_pages_card_no_pages_create_page_button">Voeg pagina\'s toe aan je site</string>
@@ -829,8 +820,6 @@ Language: nl
     <string name="preference_open_links_in_jetpack_setting_change_disable_error">Kan links openen in Jetpack niet uitschakelen</string>
     <string name="preference_open_links_in_jetpack_setting_change_enable_error">Kan links openen in Jetpack niet inschakelen</string>
     <string name="preference_open_links_in_jetpack">Links openen in Jetpack</string>
-    <string name="jp_migration_need_help_button">Hulp nodig?</string>
-    <string name="jp_migration_got_it_button">Duidelijk</string>
     <string name="jp_migration_network_error_message">We kunnen je gegevens en instellingen niet overdragen zonder netwerkverbinding.</string>
     <string name="jp_migration_network_error_subtitle">Controleer of je een netwerkverbinding hebt en probeer het opnieuw.</string>
     <string name="jp_migration_network_error_title">Kan geen verbinding maken met het internet.</string>

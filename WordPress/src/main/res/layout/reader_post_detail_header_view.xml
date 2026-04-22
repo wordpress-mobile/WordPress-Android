@@ -17,23 +17,33 @@
         android:includeFontPadding="false"
         app:layout_constrainedWidth="true"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/header_follow_button_container"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="@id/header_follow_button_container"
-        app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintHorizontal_bias="0"
         tools:text="My Blog Name" />
 
+    <!-- Post title -->
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/text_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/ReaderTextView.PostDetail.Header.Title"
+        android:layout_marginTop="@dimen/margin_extra_large"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/text_blog_name"
+        tools:text="Post Title: This could be a quite big title" />
+
+    <!-- Subscribe / Follow button (right-aligned, centered with blog section) -->
     <FrameLayout
         android:id="@+id/header_follow_button_container"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/margin_medium"
         android:visibility="gone"
-        app:layout_constraintStart_toEndOf="@id/text_blog_name"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintTop_toTopOf="@id/layout_blog_section"
+        app:layout_constraintBottom_toBottomOf="@id/layout_blog_section"
         tools:visibility="visible">
 
         <org.wordpress.android.ui.reader.views.ReaderFollowButton
@@ -53,29 +63,10 @@
 
     </FrameLayout>
 
-    <androidx.constraintlayout.widget.Barrier
-        android:id="@+id/blog_name_barrier"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:barrierDirection="bottom"
-        app:constraint_referenced_ids="text_blog_name,header_follow_button_container" />
-
-    <!-- Post title -->
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/text_title"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        style="@style/ReaderTextView.PostDetail.Header.Title"
-        android:layout_marginTop="@dimen/margin_extra_large"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/blog_name_barrier"
-        tools:text="Post Title: This could be a quite big title" />
-
     <!-- Blog section (avatar + author + date) -->
     <include layout="@layout/reader_blog_section_view_new"
         android:id="@+id/layout_blog_section"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:importantForAccessibility="no"
         android:layout_marginTop="@dimen/margin_medium"
@@ -83,7 +74,7 @@
         android:clickable="true"
         android:focusable="true"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/header_follow_button_container"
         app:layout_constraintTop_toBottomOf="@id/text_title" />
 
     <!-- Featured image (adaptive aspect ratio) -->
@@ -140,56 +131,5 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/text_excerpt_view_more"
         tools:visibility="visible" />
-
-    <androidx.constraintlayout.widget.Barrier
-        android:id="@+id/blog_description_barrier"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:barrierDirection="bottom"
-        app:constraint_referenced_ids="header_featured_image,text_excerpt,text_excerpt_view_more,excerpt_divider" />
-
-    <!-- Reading time -->
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/text_reading_time"
-        style="@style/ReaderTextView.PostDetail.BlogSection.Subtitle.MediumEmphasis"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_medium"
-        android:drawablePadding="@dimen/margin_extra_small"
-        android:gravity="center_vertical"
-        android:includeFontPadding="false"
-        android:visibility="gone"
-        app:drawableStartCompat="@drawable/ic_clock_16dp"
-        app:drawableTint="?android:textColorSecondary"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/blog_description_barrier"
-        tools:text="5 min read"
-        tools:visibility="visible" />
-
-    <!-- View original button -->
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/text_view_original"
-        style="@style/ReaderTextView.PostDetail.BlogSection.Subtitle.MediumEmphasis"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:drawablePadding="@dimen/margin_extra_small"
-        android:gravity="center_vertical"
-        android:includeFontPadding="false"
-        android:text="@string/reader_label_view_original"
-        android:visibility="gone"
-        app:drawableStartCompat="@drawable/ic_outbound_16dp"
-        app:drawableTint="?android:textColorSecondary"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/text_reading_time"
-        app:layout_constraintBottom_toBottomOf="@id/text_reading_time"
-        tools:visibility="visible" />
-
-    <androidx.constraintlayout.widget.Barrier
-        android:id="@+id/reading_time_barrier"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:barrierDirection="bottom"
-        app:constraint_referenced_ids="text_excerpt,text_excerpt_view_more,excerpt_divider,text_reading_time,text_view_original" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

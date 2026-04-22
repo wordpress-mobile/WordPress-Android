@@ -30,7 +30,7 @@ import org.wordpress.android.ui.main.WPMainActivity.OnScrollToTopListener
 import org.wordpress.android.ui.main.WPMainNavigationView.PageType.READER
 import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredBottomSheetFragment
 import org.wordpress.android.ui.reader.SubfilterBottomSheetFragment.Companion.newInstance
-import org.wordpress.android.ui.reader.discover.ReaderDiscoverFragment
+import org.wordpress.android.ui.reader.discover.ReaderDiscoverTabsFragment
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsFragment
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic.UpdateTask
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic.UpdateTask.FOLLOWED_BLOGS
@@ -314,7 +314,7 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), ScrollableView
 
         val selectedTag = uiState.selectedReaderTag
         val fragment = when {
-            selectedTag.isDiscover -> ReaderDiscoverFragment()
+            selectedTag.isDiscover -> ReaderDiscoverTabsFragment()
             selectedTag.isTags -> ReaderTagsFeedFragment.newInstance(selectedTag)
             else -> ReaderPostListFragment.newInstanceForTag(
                 selectedTag,
@@ -428,7 +428,7 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), ScrollableView
 
     override fun onScrollToTop() {
         binding?.appBar?.setExpanded(true, true)
-        // Instance of ReaderPostListFragment or ReaderDiscoverFragment
+        // Instance of ReaderPostListFragment or ReaderDiscoverTabsFragment
         val currentFragment = getCurrentFeedFragment()
         if (currentFragment is OnScrollToTopListener) {
             currentFragment.onScrollToTop()

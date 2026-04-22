@@ -54,6 +54,7 @@ import org.wordpress.android.fluxc.action.SiteAction.FETCH_SITES_XML_RPC
 import org.wordpress.android.fluxc.action.SiteAction.FETCH_SITES_XML_RPC_FROM_APPLICATION_PASSWORD
 import org.wordpress.android.fluxc.action.SiteAction.FETCH_SITE_EDITORS
 import org.wordpress.android.fluxc.action.SiteAction.FETCH_SITE_WP_API
+import org.wordpress.android.fluxc.action.SiteAction.FETCH_SITE_WP_API_FROM_APPLICATION_PASSWORD
 import org.wordpress.android.fluxc.action.SiteAction.FETCH_USER_ROLES
 import org.wordpress.android.fluxc.action.SiteAction.FETCH_WPCOM_SITE_BY_URL
 import org.wordpress.android.fluxc.action.SiteAction.HIDE_SITES
@@ -184,6 +185,7 @@ open class SiteStore @Inject constructor(
         val url: String,
         val username: String? = null,
         val password: String? = null,
+        val isApplicationPassword: Boolean = false,
     ) : Payload<BaseNetworkError>()
 
     data class FetchSitesPayload @JvmOverloads constructor(
@@ -1360,6 +1362,19 @@ open class SiteStore @Inject constructor(
             FETCH_SITE_WP_API -> coroutineEngine.launch(T.MAIN, this, "Fetch WPAPI Site") {
                 emitChange(fetchWPAPISite(action.payload as FetchWPAPISitePayload))
             }
+            FETCH_SITE_WP_API_FROM_APPLICATION_PASSWORD ->
+                coroutineEngine.launch(
+                    T.MAIN,
+                    this,
+                    "Fetch WPAPI Site from Application Password"
+                ) {
+                    emitChange(
+                        fetchSiteWPAPIFromApplicationPassword(
+                            action.payload
+                                as RefreshSitesXMLRPCApplicationPasswordCredentialsPayload
+                        )
+                    )
+                }
             UPDATE_SITE -> {
                 emitChange(updateSite(action.payload as SiteModel))
             }
@@ -1452,6 +1467,19 @@ open class SiteStore @Inject constructor(
     }
 
     private fun fetchProfileXmlRpc(site: SiteModel) {
+        if (site.xmlRpcUrl.isNullOrEmpty()) {
+            AppLog.w(
+                T.API,
+                "fetchProfileXmlRpc: skipping, xmlRpcUrl is null"
+            )
+            val event = OnProfileFetched(site)
+            event.error = SiteError(
+                SiteErrorType.GENERIC_ERROR,
+                "XML-RPC is unavailable for this site"
+            )
+            emitChange(event)
+            return
+        }
         siteXMLRPCClient.fetchProfile(site)
     }
 
@@ -1486,18 +1514,45 @@ open class SiteStore @Inject constructor(
     ): OnSiteChanged {
         return coroutineEngine.withDefaultContext(T.API, this, "Fetch sites") {
             try {
-                updateSites(
+                val sites =
                     siteXMLRPCClient.fetchSitesFromApplicationPassword(
                         payload.url,
                         payload.apiRootUrl,
                         payload.username,
                         payload.password
                     )
-                )
+                if (sites.isError) {
+                    AppLog.w(
+                        T.API,
+                        "XML-RPC fetch failed" +
+                            " (${sites.error?.message})," +
+                            " falling back to WPAPI"
+                    )
+                    // Use apiRootUrl as the base URL for
+                    // WPAPI discovery since payload.url
+                    // is the xmlrpc.php endpoint.
+                    fetchSiteWPAPIFromApplicationPassword(
+                        payload.copy(
+                            url = payload.apiRootUrl
+                        )
+                    )
+                } else {
+                    updateSites(sites)
+                }
             } catch (e: Exception) {
-                val errorMsg = e.message ?: e.javaClass.simpleName
-                AppLog.e(T.API, "Failed to fetch/store sites: $errorMsg", e)
-                OnSiteChanged(SiteError(SiteErrorType.GENERIC_ERROR, errorMsg))
+                val errorMsg =
+                    e.message ?: e.javaClass.simpleName
+                AppLog.e(
+                    T.API,
+                    "Failed to fetch/store sites: $errorMsg",
+                    e
+                )
+                OnSiteChanged(
+                    SiteError(
+                        SiteErrorType.GENERIC_ERROR,
+                        errorMsg
+                    )
+                )
             }
         }
     }
@@ -1505,6 +1560,42 @@ open class SiteStore @Inject constructor(
     suspend fun fetchWPAPISite(payload: FetchWPAPISitePayload): OnSiteChanged {
         return coroutineEngine.withDefaultContext(T.MAIN, this, "Fetch WPAPI Site") {
             updateSite(siteWPAPIRestClient.fetchWPAPISite(payload))
+        }
+    }
+
+    @Suppress("TooGenericExceptionCaught")
+    internal suspend fun fetchSiteWPAPIFromApplicationPassword(
+        payload: RefreshSitesXMLRPCApplicationPasswordCredentialsPayload
+    ): OnSiteChanged {
+        return coroutineEngine.withDefaultContext(
+            T.API,
+            this,
+            "Fetch WPAPI Site from Application Password"
+        ) {
+            try {
+                val siteModel = siteWPAPIRestClient.fetchWPAPISite(
+                    FetchWPAPISitePayload(
+                        url = payload.url,
+                        username = payload.username,
+                        password = payload.password,
+                        isApplicationPassword = true,
+                    )
+                )
+                if (!siteModel.isError) {
+                    siteModel.wpApiRestUrl = payload.apiRootUrl
+                }
+                updateSite(siteModel)
+            } catch (e: Exception) {
+                val errorMsg = e.message ?: e.javaClass.simpleName
+                AppLog.e(
+                    T.API,
+                    "Failed to fetch/store site via WPAPI: $errorMsg",
+                    e
+                )
+                OnSiteChanged(
+                    SiteError(SiteErrorType.GENERIC_ERROR, errorMsg)
+                )
+            }
         }
     }
 
@@ -1796,10 +1887,16 @@ open class SiteStore @Inject constructor(
     }
 
     suspend fun fetchPostFormats(site: SiteModel): OnPostFormatsChanged {
-        val payload = if (site.isUsingWpComRestApi) {
-            siteRestClient.fetchPostFormats(site)
-        } else {
-            siteXMLRPCClient.fetchPostFormats(site)
+        val payload = when {
+            site.isUsingWpComRestApi -> siteRestClient.fetchPostFormats(site)
+            site.origin == SiteModel.ORIGIN_WPAPI -> {
+                AppLog.w(
+                    T.API,
+                    "fetchPostFormats: skipping for WPAPI site"
+                )
+                FetchedPostFormatsPayload(site, emptyList())
+            }
+            else -> siteXMLRPCClient.fetchPostFormats(site)
         }
         val event = OnPostFormatsChanged(payload.site)
         if (payload.isError) {

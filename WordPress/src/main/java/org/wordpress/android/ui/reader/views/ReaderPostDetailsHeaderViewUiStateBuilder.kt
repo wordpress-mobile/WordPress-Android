@@ -32,7 +32,7 @@ class ReaderPostDetailsHeaderViewUiStateBuilder @Inject constructor(
     /**
      * Maps a [ReaderPost] to the UI state for the post detail header,
      * including title, author, blog section, tags, follow button,
-     * reading time, excerpt, featured image, and view-original action.
+     * reading time, excerpt, and featured image.
      */
     fun mapPostToUiState(
         post: ReaderPost,
@@ -64,7 +64,6 @@ class ReaderPostDetailsHeaderViewUiStateBuilder @Inject constructor(
             readingTime = buildReadingTime(post),
             excerpt = buildExcerpt(post),
             featuredImageUiState = featuredImage,
-            showViewOriginal = !post.url.isNullOrBlank(),
         )
     }
 

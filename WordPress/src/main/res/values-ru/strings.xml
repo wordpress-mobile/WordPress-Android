@@ -294,11 +294,6 @@ Language: ru
     <string name="reader_tags_feed_error_title">Записей по запросу %s не найдено</string>
     <string name="reader_tags_feed_see_more_from_tag">Другие записи с меткой %s</string>
     <string name="reader_tags_display_name">Метки</string>
-    <string name="reader_announcement_card_reading_preferences_description">Выберите цвета и шрифты по своему вкусу. Во время чтения записи нажмите значок АА в верхней части экрана.</string>
-    <string name="reader_announcement_card_reading_preferences_title">Настройки чтения</string>
-    <string name="reader_announcement_card_tags_stream_description">Нажмите раскрывающееся меню в верхней части и выберите «Метки», чтобы перейти к лентам записей с метками, на которые вы подписались.</string>
-    <string name="reader_announcement_card_tags_stream_title">Ленты записей с метками</string>
-    <string name="reader_announcement_card_title">Новое в «Чтиве»</string>
     <string name="reader_dropdown_menu_tags">Ваши метки</string>
     <string name="no_connection_error_description">Проверьте подключение к сети и попробуйте снова.</string>
     <string name="no_connection_error_title">Сейчас невозможно загрузить этот контент.</string>
@@ -648,11 +643,7 @@ Language: ru
     <string name="new_site_creation_preview_caption_paid">Это может занять до 30 минут, после чего пользовательский домен начнёт работать.</string>
     <string name="new_site_creation_preview_subtitle_paid">Чек отправлен вам на почту. %s</string>
     <string name="notifications_disabled_permission_dialog">Уведомления в приложении отключены. Нажмите здесь, чтобы включить.</string>
-    <string name="jp_migration_delete_message">Рекомендуем &lt;b&gt;удалить приложение WordPress&lt;/b&gt; с устройства, чтобы избежать конфликтов данных.</string>
-    <string name="jp_migration_delete_subtitle">Кажется, у вас всё ещё установлено приложение WordPress.</string>
-    <string name="jp_migration_delete_title">Вам больше не нужно приложение WordPress</string>
     <string name="jp_migration_done_delete_wp_message">Рекомендуем &lt;b&gt;удалить приложение WordPress&lt;/b&gt; с устройства, чтобы избежать конфликтов данных.</string>
-    <string name="jp_migration_success_card_message">Добро пожаловать в приложение Jetpack. Можете удалить приложение WordPress.</string>
     <string name="dashboard_pages_card_create_another_page_description">Начните с макетов для мобильных устройств</string>
     <string name="dashboard_pages_card_create_another_page_button">Создать еще страницу</string>
     <string name="dashboard_pages_card_no_pages_create_page_button">Добавление новых страниц на сайт</string>
@@ -829,8 +820,6 @@ Language: ru
     <string name="preference_open_links_in_jetpack_setting_change_disable_error">Не удалось отключить открытие ссылок в Jetpack</string>
     <string name="preference_open_links_in_jetpack_setting_change_enable_error">Не удалось включить открытие ссылок в Jetpack</string>
     <string name="preference_open_links_in_jetpack">Открывать ссылки в Jetpack</string>
-    <string name="jp_migration_need_help_button">Нужна помощь?</string>
-    <string name="jp_migration_got_it_button">Понятно</string>
     <string name="jp_migration_network_error_message">Не удаётся перенести ваши данные и настройки без подключения к сети.</string>
     <string name="jp_migration_network_error_subtitle">Убедитесь, что сетевое подключение работает, и повторите попытку.</string>
     <string name="jp_migration_network_error_title">Не удаётся подключиться к Интернету.</string>

@@ -18,7 +18,7 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
-import org.wordpress.android.fluxc.model.PostModel
+import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.post.PostStatus as FluxCPostStatus
 import org.wordpress.android.fluxc.store.AccountStore
@@ -32,6 +32,7 @@ import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.SiteUtils
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
 import rs.wordpress.cache.kotlin.ObservableMetadataCollection
 import rs.wordpress.cache.kotlin.getObservablePostMetadataCollectionWithEditContext
@@ -52,13 +53,18 @@ class PostRsListViewModel @Inject constructor(
     private val restClient: PostRsRestClient,
     private val resourceProvider: ResourceProvider,
     private val postStore: PostStore,
+    private val fluxCBridge: PostRsFluxCBridge,
     private val blazeFeatureUtils: BlazeFeatureUtils,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     private val accountStore: AccountStore,
     private val appPrefsWrapper: AppPrefsWrapper,
+    private val analyticsTracker: AnalyticsTrackerWrapper,
 ) : ViewModel() {
     private val _tabStates = MutableStateFlow<Map<PostRsListTab, PostTabUiState>>(emptyMap())
     val tabStates: StateFlow<Map<PostRsListTab, PostTabUiState>> = _tabStates.asStateFlow()
+
+    private val _isOpeningPost = MutableStateFlow(false)
+    val isOpeningPost: StateFlow<Boolean> = _isOpeningPost.asStateFlow()
 
     private val _isSearchActive = MutableStateFlow(false)
     val isSearchActive: StateFlow<Boolean> = _isSearchActive.asStateFlow()
@@ -72,6 +78,7 @@ class PostRsListViewModel @Inject constructor(
     private val userRefreshingTabs = mutableSetOf<PostRsListTab>()
     private val resolveImageJobs = mutableMapOf<PostRsListTab, Job>()
     private val resolveAuthorJobs = mutableMapOf<PostRsListTab, Job>()
+    private var lastTrackedTab: PostRsListTab? = null
 
     private val _events = Channel<PostRsListEvent>(Channel.BUFFERED)
     val events = _events.receiveAsFlow()
@@ -127,19 +134,35 @@ class PostRsListViewModel @Inject constructor(
     }
 
     /**
-     * Looks up a post in the local FluxC database and emits
-     * an [PostRsListEvent.EditPost] to open the editor.
+     * Bridges the post into FluxC's database and emits an
+     * [PostRsListEvent.EditPost] to open the editor.
      * If the post is trashed, shows a confirmation dialog first.
      */
     @MainThread
     fun openPost(remotePostId: Long, tab: PostRsListTab) {
+        if (_isOpeningPost.value) return
         if (tab == PostRsListTab.TRASHED) {
+            analyticsTracker.track(
+                Stat.POST_LIST_ITEM_SELECTED,
+                site,
+                mapOf(
+                    TRACKS_ACTION to "move_to_draft",
+                    TRACKS_POST_ID to remotePostId
+                )
+            )
             _pendingConfirmation.value =
                 PendingConfirmation.MoveToDraft(remotePostId)
             return
         }
-        val post = getFluxCPost(remotePostId) ?: return
-        _events.trySend(PostRsListEvent.EditPost(site, post))
+        analyticsTracker.track(
+            Stat.POST_LIST_ITEM_SELECTED,
+            site,
+            mapOf(
+                TRACKS_ACTION to "edit",
+                TRACKS_POST_ID to remotePostId
+            )
+        )
+        bridgeAndOpen(remotePostId)
     }
 
     /**
@@ -154,9 +177,26 @@ class PostRsListViewModel @Inject constructor(
         }
     }
 
+    /** Tracks a tab change event when the user swipes or taps a tab. */
+    @MainThread
+    fun onTabChanged(tab: PostRsListTab) {
+        if (tab == lastTrackedTab) return
+        lastTrackedTab = tab
+        analyticsTracker.track(
+            Stat.POST_LIST_TAB_CHANGED,
+            site,
+            mapOf(TRACKS_SELECTED_TAB to tab.name.lowercase())
+        )
+    }
+
     /** Emits a [PostRsListEvent.CreatePost] for the selected site. */
     @MainThread
     fun createNewPost() {
+        analyticsTracker.track(
+            Stat.POST_LIST_CREATE_POST_TAPPED,
+            site,
+            mapOf(TRACKS_ACTION to TRACKS_CREATE_NEW_POST)
+        )
         _events.trySend(PostRsListEvent.CreatePost(site))
     }
 
@@ -166,6 +206,7 @@ class PostRsListViewModel @Inject constructor(
      */
     @MainThread
     fun onSearchOpen() {
+        analyticsTracker.track(Stat.POST_LIST_SEARCH_ACCESSED, site)
         _isSearchActive.value = true
         clearCollections()
     }
@@ -200,6 +241,11 @@ class PostRsListViewModel @Inject constructor(
     @MainThread
     fun onAuthorFilterChanged(selection: AuthorFilterSelection, activeTab: PostRsListTab) {
         if (selection == _authorFilter.value) return
+        analyticsTracker.track(
+            Stat.POST_LIST_AUTHOR_FILTER_CHANGED,
+            site,
+            mapOf(TRACKS_SELECTED_AUTHOR_FILTER to selection.toString())
+        )
         appPrefsWrapper.postListAuthorSelection = selection
         _authorFilter.value = selection
         clearCollections()
@@ -210,6 +256,14 @@ class PostRsListViewModel @Inject constructor(
     @MainThread
     @Suppress("LongMethod", "ReturnCount")
     fun onPostMenuAction(remotePostId: Long, action: PostRsMenuAction) {
+        analyticsTracker.track(
+            Stat.POST_LIST_BUTTON_PRESSED,
+            site,
+            mapOf(
+                TRACKS_ACTION to action.toAnalyticsAction(),
+                TRACKS_POST_ID to remotePostId
+            )
+        )
         val post = findPost(remotePostId)
 
         when (action) {
@@ -233,10 +287,7 @@ class PostRsListViewModel @Inject constructor(
                 }
                 _events.trySend(PostRsListEvent.SharePost(url, post.title))
             }
-            PostRsMenuAction.BLAZE -> {
-                val post = getFluxCPost(remotePostId) ?: return
-                _events.trySend(PostRsListEvent.PromoteWithBlaze(site, post))
-            }
+            PostRsMenuAction.BLAZE -> bridgeAndOpen(remotePostId, blaze = true)
             PostRsMenuAction.STATS -> _events.trySend(
                 PostRsListEvent.ViewStats(
                     site = site, postId = remotePostId,
@@ -322,7 +373,7 @@ class PostRsListViewModel @Inject constructor(
                         postStatusUpdate(PostStatus.Draft)
                     )
                 }
-                val post = getFluxCPost(postId)
+                val post = bridgePostOrNull(postId)
                 if (post != null) {
                     _events.trySend(PostRsListEvent.EditPost(site, post))
                 } else {
@@ -333,7 +384,7 @@ class PostRsListViewModel @Inject constructor(
             } catch (e: CancellationException) {
                 throw e
             } catch (e: Exception) {
-                AppLog.e(AppLog.T.POSTS, "Move to draft and edit failed", e)
+                AppLog.e(AppLog.T.POSTS, "Move to draft failed", e)
                 _snackbarMessages.trySend(
                     SnackbarMessage(
                         friendlyErrorMessage(e, R.string.post_rs_error_update_status)
@@ -347,24 +398,63 @@ class PostRsListViewModel @Inject constructor(
         }
     }
 
+    @Suppress("TooGenericExceptionCaught")
+    private suspend fun bridgePostOrNull(remotePostId: Long) = try {
+        val lastModified = findPost(remotePostId)?.lastModified
+        withContext(Dispatchers.IO) {
+            fluxCBridge.fetchAndBridge(remotePostId, site, lastModified)
+        }
+    } catch (e: CancellationException) {
+        throw e
+    } catch (e: Exception) {
+        AppLog.e(AppLog.T.POSTS, "Bridge post failed", e)
+        _snackbarMessages.trySend(
+            SnackbarMessage(friendlyErrorMessage(e, R.string.post_not_found))
+        )
+        null
+    }
+
     /**
      * Duplicates a post by creating a new draft with the same content.
-     * The FluxC dependency is temporary and will be removed once the
-     * editor supports loading posts via wordpress-rs.
+     * Bridges the source post into FluxC first so we can read its
+     * content, then creates a new local draft from it.
      */
+    @Suppress("TooGenericExceptionCaught")
     private fun duplicatePost(remotePostId: Long) {
-        val postToCopy = getFluxCPost(remotePostId) ?: return
-        val newPost = postStore.instantiatePostModel(
-            site,
-            false,
-            postToCopy.title,
-            postToCopy.content,
-            FluxCPostStatus.DRAFT.toString(),
-            postToCopy.categoryIdList,
-            postToCopy.postFormat,
-            true
-        )
-        _events.trySend(PostRsListEvent.EditPost(site, newPost))
+        if (!checkNetwork()) return
+        _isOpeningPost.value = true
+        viewModelScope.launch {
+            try {
+                val lastModified = findPost(remotePostId)?.lastModified
+                val postToCopy = withContext(Dispatchers.IO) {
+                    fluxCBridge.fetchAndBridge(
+                        remotePostId, site, lastModified
+                    )
+                }
+                val newPost = postStore.instantiatePostModel(
+                    site,
+                    false,
+                    postToCopy.title,
+                    postToCopy.content,
+                    FluxCPostStatus.DRAFT.toString(),
+                    postToCopy.categoryIdList,
+                    postToCopy.postFormat,
+                    true
+                )
+                _events.trySend(PostRsListEvent.EditPost(site, newPost))
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                AppLog.e(AppLog.T.POSTS, "Duplicate post failed", e)
+                _snackbarMessages.trySend(
+                    SnackbarMessage(
+                        friendlyErrorMessage(e, R.string.post_not_found)
+                    )
+                )
+            } finally {
+                _isOpeningPost.value = false
+            }
+        }
     }
 
     private fun checkNetwork(): Boolean {
@@ -428,18 +518,47 @@ class PostRsListViewModel @Inject constructor(
     }
 
     /**
-     * Looks up a post in the local FluxC database and shows a toast if not found.
-     * This FluxC dependency is temporary and will be removed once the editor
-     * supports loading posts via wordpress-rs.
+     * Fetches the post via the bridge (fast path from FluxC cache
+     * or slow path via wordpress-rs), then opens the editor or
+     * Blaze promotion screen.
      */
-    private fun getFluxCPost(remotePostId: Long): PostModel? {
-        val post = postStore.getPostByRemotePostId(remotePostId, site)
-        if (post == null) {
-            _snackbarMessages.trySend(
-                SnackbarMessage(resourceProvider.getString(R.string.post_not_found))
-            )
+    @Suppress("TooGenericExceptionCaught")
+    private fun bridgeAndOpen(
+        remotePostId: Long,
+        blaze: Boolean = false
+    ) {
+        if (!checkNetwork()) return
+        _isOpeningPost.value = true
+        viewModelScope.launch {
+            try {
+                val lastModified = findPost(remotePostId)?.lastModified
+                val post = withContext(Dispatchers.IO) {
+                    fluxCBridge.fetchAndBridge(
+                        remotePostId, site, lastModified
+                    )
+                }
+                if (blaze) {
+                    _events.trySend(
+                        PostRsListEvent.PromoteWithBlaze(site, post)
+                    )
+                } else {
+                    _events.trySend(
+                        PostRsListEvent.EditPost(site, post)
+                    )
+                }
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                AppLog.e(AppLog.T.POSTS, "Bridge post failed", e)
+                _snackbarMessages.trySend(
+                    SnackbarMessage(
+                        friendlyErrorMessage(e, R.string.post_not_found)
+                    )
+                )
+            } finally {
+                _isOpeningPost.value = false
+            }
         }
-        return post
     }
 
     private fun getMenuActions(
@@ -853,5 +972,26 @@ class PostRsListViewModel @Inject constructor(
         internal const val MIN_SEARCH_QUERY_LENGTH = 3
         private const val THUMBNAIL_SIZE_DP = 64
         private val ALL_STATUSES = PostRsListTab.entries.flatMap { it.statuses }.distinct()
+
+        private const val TRACKS_SELECTED_TAB = "selected_tab"
+        private const val TRACKS_SELECTED_AUTHOR_FILTER = "author_filter_selection"
+        private const val TRACKS_ACTION = "action"
+        private const val TRACKS_POST_ID = "post_id"
+        private const val TRACKS_CREATE_NEW_POST = "create_new_post"
     }
+}
+
+private fun PostRsMenuAction.toAnalyticsAction(): String = when (this) {
+    PostRsMenuAction.SETTINGS -> "settings"
+    PostRsMenuAction.VIEW -> "view"
+    PostRsMenuAction.READ -> "read"
+    PostRsMenuAction.PUBLISH -> "publish"
+    PostRsMenuAction.MOVE_TO_DRAFT -> "move_to_draft"
+    PostRsMenuAction.DUPLICATE -> "copy"
+    PostRsMenuAction.SHARE -> "share"
+    PostRsMenuAction.BLAZE -> "promote_with_blaze"
+    PostRsMenuAction.STATS -> "stats"
+    PostRsMenuAction.COMMENTS -> "comments"
+    PostRsMenuAction.TRASH -> "trash"
+    PostRsMenuAction.DELETE_PERMANENTLY -> "delete"
 }

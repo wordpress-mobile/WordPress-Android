@@ -653,6 +653,23 @@ public class ReaderPostTable {
     }
 
     /*
+     * Returns the raw date_tagged column value (without SQLite's datetime() normalization)
+     * of the oldest post with the passed tag. Used by the Discover stream pipeline so the
+     * stored ISO8601-with-timezone value round-trips intact through DateTimeUtils parsing.
+     */
+    public static String getOldestDateTaggedForTag(final ReaderTag tag) {
+        if (tag == null) {
+            return "";
+        }
+
+        String sql = "SELECT date_tagged FROM tbl_posts"
+                     + " WHERE tag_name=? AND tag_type=?"
+                     + " ORDER BY datetime(date_tagged) LIMIT 1";
+        String[] args = {tag.getTagSlug(), Integer.toString(tag.tagType.toInt())};
+        return SqlUtils.stringForQuery(ReaderDatabase.getReadableDb(), sql, args);
+    }
+
+    /*
      * returns the iso8601 pub date of the oldest post in the passed blog
      */
     public static String getOldestPubDateInBlog(long blogId) {
@@ -748,7 +765,7 @@ public class ReaderPostTable {
             return "datetime(date_published)";
         } else if (tag.tagType == ReaderTagType.SEARCH) {
             return "score";
-        } else if (tag.isTagTopic() || tag.isBookmarked()) {
+        } else if (tag.isTagTopic() || tag.isBookmarked() || tag.isDiscoverStream()) {
             return "datetime(date_tagged)";
         } else {
             return "datetime(date_published)";

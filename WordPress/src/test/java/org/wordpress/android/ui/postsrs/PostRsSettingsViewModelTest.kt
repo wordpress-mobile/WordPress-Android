@@ -20,6 +20,7 @@ import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.postsrs.PostRsSettingsViewModel.Companion.EXTRA_POST_ID
 import org.wordpress.android.ui.postsrs.data.PostRsRestClient
 import org.wordpress.android.util.NetworkUtilsWrapper
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
 import uniffi.wp_api.PostFormat
 import uniffi.wp_api.PostStatus
@@ -46,6 +47,9 @@ class PostRsSettingsViewModelTest :
 
     @Mock
     lateinit var uriToFileMapper: UriToFileMapper
+
+    @Mock
+    lateinit var analyticsTracker: AnalyticsTrackerWrapper
 
     private lateinit var site: SiteModel
     private var activeViewModel: PostRsSettingsViewModel? =
@@ -96,6 +100,7 @@ class PostRsSettingsViewModelTest :
             resourceProvider = resourceProvider,
             networkUtilsWrapper = networkUtilsWrapper,
             uriToFileMapper = uriToFileMapper,
+            analyticsTracker = analyticsTracker,
         ).also { activeViewModel = it }
     }
 

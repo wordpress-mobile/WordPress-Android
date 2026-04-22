@@ -129,6 +129,24 @@ class ReaderPostDetailUiStateBuilderTest : BaseUnitTest() {
     }
 
     @Test
+    fun `given excerpt is shown with blank blog name, when post ui is built, then use author name`() = test {
+        val readerPost = mock<ReaderPost>()
+        whenever(readerPost.blogName).thenReturn("")
+        whenever(readerPost.authorName).thenReturn("author name")
+        whenever(readerPost.url).thenReturn("url")
+        whenever(readerPost.shouldShowExcerpt()).thenReturn(true)
+
+        val postUiState = buildPostUiState(readerPost = readerPost)
+
+        assertThat(postUiState.excerptFooterUiState).isEqualTo(
+            ExcerptFooterUiState(
+                visitPostExcerptFooterLinkText = UiStringText(dummyVisitPostLinkText),
+                postLink = readerPost.url
+            )
+        )
+    }
+
+    @Test
     fun `given excerpt is not shown, when post ui is built, then excerpt footer does not exists`() = test {
         val readerPost = mock<ReaderPost>()
         whenever(readerPost.shouldShowExcerpt()).thenReturn(false)
@@ -147,6 +165,21 @@ class ReaderPostDetailUiStateBuilderTest : BaseUnitTest() {
             UiStringResWithParams(
                 R.string.reader_label_local_related_posts,
                 listOf(UiStringText(dummySourceReaderPost.blogName))
+            )
+        )
+    }
+
+    @Test
+    fun `when local related posts source has no blog name, then author name exists in header label`() = test {
+        dummySourceReaderPost.blogName = ""
+        dummySourceReaderPost.authorName = "author name"
+
+        val relatedPostsUiState = buildRelatedPostsUiState(isGlobal = false)
+
+        assertThat(relatedPostsUiState.headerLabel).isEqualTo(
+            UiStringResWithParams(
+                R.string.reader_label_local_related_posts,
+                listOf(UiStringText("author name"))
             )
         )
     }
@@ -306,12 +339,13 @@ class ReaderPostDetailUiStateBuilderTest : BaseUnitTest() {
         val post = readerPost ?: dummySourceReaderPost
 
         if (post.shouldShowExcerpt()) {
+            val excerptLinkName = post.blogName.ifEmpty { post.authorName }
             val dummyLinkHexColor = "#FFFFFF"
             whenever(htmlUtilsWrapper.colorResToHtmlColor(anyOrNull(), any())).thenReturn(dummyLinkHexColor)
             whenever(
                 htmlMessageUtils.getHtmlMessageFromStringFormatResId(
                     R.string.reader_excerpt_link,
-                    "<font color='" + dummyLinkHexColor + "'>" + post.blogName + "</font>"
+                    "<font color='" + dummyLinkHexColor + "'>" + excerptLinkName + "</font>"
                 )
             ).thenReturn(dummyVisitPostLinkText)
         }

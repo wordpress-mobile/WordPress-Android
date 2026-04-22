@@ -294,11 +294,6 @@ Language: tr
     <string name="reader_tags_feed_error_title">%s etiketli hiç yazı bulunamadı</string>
     <string name="reader_tags_feed_see_more_from_tag">%s etiketli daha fazla içerik</string>
     <string name="reader_tags_display_name">Etiketler</string>
-    <string name="reader_announcement_card_reading_preferences_description">Size uygun renkler ve yazı tipleri. Bir gönderiyi okurken ekranın üst kısmındaki AA simgesine dokunun.</string>
-    <string name="reader_announcement_card_reading_preferences_title">Okuma Tercihleri</string>
-    <string name="reader_announcement_card_tags_stream_description">Üstteki açılır menüye dokunun ve takip ettiğiniz etiketlerin akışına erişmek için Etiketler seçeneğini belirleyin.</string>
-    <string name="reader_announcement_card_tags_stream_title">Etiket akışı</string>
-    <string name="reader_announcement_card_title">Okuyucuda Yeni</string>
     <string name="reader_dropdown_menu_tags">Etiketleriniz</string>
     <string name="no_connection_error_description">Ağ bağlantınızı kontrol edip tekrar deneyin.</string>
     <string name="no_connection_error_title">Bu içerik şu an yüklenemiyor</string>
@@ -648,11 +643,7 @@ Language: tr
     <string name="new_site_creation_preview_caption_paid">Özel etki alanınızın çalışmaya başlaması 30 dakika kadar sürebilir.</string>
     <string name="new_site_creation_preview_subtitle_paid">Alındınızı e-posta ile gönderdik. %s</string>
     <string name="notifications_disabled_permission_dialog">Uygulama bildirimleri kapatıldı. Açmak için buraya dokunun.</string>
-    <string name="jp_migration_delete_message">Veri çakışmalarını önlemek için aygıtınızdan &lt;b&gt;WordPress uygulamasını kaldırmanızı&lt;/b&gt; öneririz.</string>
-    <string name="jp_migration_delete_subtitle">Görünüşe göre WordPress uygulaması hala kurulu.</string>
-    <string name="jp_migration_delete_title">Artık aygıtınızda WordPress uygulamasına ihtiyacınız yok</string>
     <string name="jp_migration_done_delete_wp_message">Veri çakışmalarını önlemek için aygıtınızdan &lt;b&gt;WordPress uygulamasını kaldırmanızı&lt;/b&gt; öneririz.</string>
-    <string name="jp_migration_success_card_message">Jetpack uygulamasına hoş geldiniz. WordPress uygulamasını kaldırabilirsiniz.</string>
     <string name="dashboard_pages_card_create_another_page_description">Sipariş üzerine oluşturulan mobil uyumlu yerleşimlerle başlayın</string>
     <string name="dashboard_pages_card_create_another_page_button">Başka bir sayfa oluştur</string>
     <string name="dashboard_pages_card_no_pages_create_page_button">Sitenize sayfalar ekleyin</string>
@@ -829,8 +820,6 @@ Language: tr
     <string name="preference_open_links_in_jetpack_setting_change_disable_error">Bağlantıları Jetpack ile açma özelliği kapatılamadı</string>
     <string name="preference_open_links_in_jetpack_setting_change_enable_error">Bağlantıları Jetpack ile açma özelliği açılamadı</string>
     <string name="preference_open_links_in_jetpack">Bağlantıları Jetpack ile aç</string>
-    <string name="jp_migration_need_help_button">Yardıma mı ihtiyacınız var?</string>
-    <string name="jp_migration_got_it_button">Anladım</string>
     <string name="jp_migration_network_error_message">Ağ bağlantısı olmadığı için verilerinizi ve ayarlarınızı aktaramıyoruz.</string>
     <string name="jp_migration_network_error_subtitle">Lütfen ağ bağlantınızı denetleyip yeniden deneyin.</string>
     <string name="jp_migration_network_error_title">İnternet bağlantısı kurulamadı.</string>
