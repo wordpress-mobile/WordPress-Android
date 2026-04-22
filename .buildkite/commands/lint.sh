@@ -35,8 +35,12 @@ fi
 
 if [ "$1" = "library" ]; then
   ./gradlew \
+    :libs:analytics:lint"${BUILD_VARIANT}" \
     :libs:editor:lint"${BUILD_VARIANT}" \
-    :libs:image-editor:lint"${BUILD_VARIANT}"
+    :libs:image-editor:lint"${BUILD_VARIANT}" \
+    :libs:mocks:lint"${BUILD_VARIANT}" \
+    :libs:networking:lint"${BUILD_VARIANT}" \
+    :libs:posttypes:lint"${BUILD_VARIANT}"
   exit 0
 fi
 
