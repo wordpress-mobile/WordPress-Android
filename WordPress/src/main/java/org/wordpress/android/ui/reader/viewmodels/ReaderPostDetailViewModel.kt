@@ -194,7 +194,6 @@ class ReaderPostDetailViewModel @Inject constructor(
 
     data class TrainOfFacesUiState(
         val showLikeFacesTrainContainer: Boolean,
-        val showLoading: Boolean,
         val engageItemsList: List<TrainOfAvatarsItem>,
         val showEmptyState: Boolean,
         val emptyStateTitle: UiString? = null,
@@ -791,7 +790,6 @@ class ReaderPostDetailViewModel @Inject constructor(
     private fun buildLikersUiState(updateLikesState: GetLikesState?): TrainOfFacesUiState {
         val (likers, numLikes) = getLikersEssentials(updateLikesState)
 
-        val showLoading = updateLikesState is Loading
         var showEmptyState = false
         var emptyStateTitle: UiString? = null
 
@@ -803,7 +801,7 @@ class ReaderPostDetailViewModel @Inject constructor(
         }
 
         val showLikeFacesTrainContainer = post?.let {
-            it.isWP && ((numLikes > 0 && (likers.isNotEmpty() || showEmptyState)) || showLoading)
+            it.isWP && numLikes > 0 && (likers.isNotEmpty() || showEmptyState)
         } ?: false
 
         val engageItemsList = if (showLikeFacesTrainContainer) {
@@ -818,7 +816,6 @@ class ReaderPostDetailViewModel @Inject constructor(
 
         return TrainOfFacesUiState(
             showLikeFacesTrainContainer = showLikeFacesTrainContainer,
-            showLoading = showLoading,
             engageItemsList = engageItemsList,
             showEmptyState = showEmptyState,
             emptyStateTitle = emptyStateTitle,

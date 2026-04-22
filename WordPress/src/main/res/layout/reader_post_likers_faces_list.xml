@@ -28,14 +28,6 @@
         tools:listitem="@layout/avatar_item"
         tools:orientation="horizontal" />
 
-    <ProgressBar
-        android:id="@+id/progress_bar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:visibility="gone"
-        tools:visibility="visible" />
-
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/empty_state_text"
         android:layout_width="wrap_content"
