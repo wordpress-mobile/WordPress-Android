@@ -3,7 +3,8 @@ package org.wordpress.android.repositories
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpApiClientProvider
+import org.wordpress.android.fluxc.utils.extensions.getWpApiClient
+import org.wordpress.android.networking.rs.WpApiClientProvider
 import org.wordpress.android.modules.IO_THREAD
 import rs.wordpress.api.kotlin.WpRequestResult
 import uniffi.wp_api.ThemeListParams

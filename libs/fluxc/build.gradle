@@ -108,6 +108,7 @@ dependencies {
     implementation libs.kotlinx.coroutines.android
 
     implementation(libs.wordpress.rs.android)
+    implementation project(':libs:networking-rs')
 
     // Unit tests
     testImplementation libs.junit

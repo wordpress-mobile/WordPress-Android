@@ -13,7 +13,8 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpApiClientProvider
+import org.wordpress.android.fluxc.utils.extensions.toRsSite
+import org.wordpress.android.networking.rs.WpApiClientProvider
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import rs.wordpress.api.kotlin.WpApiClient
 import rs.wordpress.api.kotlin.WpRequestResult
@@ -48,9 +49,9 @@ class EditorSettingsRepositoryTest : BaseUnitTest() {
 
     @Before
     fun setUp() {
-        whenever(wpApiClientProvider.getWpApiClient(testSite))
+        whenever(wpApiClientProvider.getWpApiClient(testSite.toRsSite()))
             .thenReturn(wpApiClient)
-        whenever(wpApiClientProvider.getApiUrlResolver(testSite))
+        whenever(wpApiClientProvider.getApiUrlResolver(testSite.toRsSite()))
             .thenReturn(apiUrlResolver)
 
         repository = EditorSettingsRepository(

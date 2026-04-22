@@ -895,7 +895,10 @@ public class SiteModel extends Payload<BaseNetworkError> implements Identifiable
     }
 
     public boolean hasApplicationPassword() {
-        return mApiRestUsernamePlain != null && mApiRestPasswordPlain != null;
+        // Empty strings are written by SiteStore#removeApplicationPassword;
+        // treat them the same as null to avoid misrouting cleared sites.
+        return mApiRestUsernamePlain != null && !mApiRestUsernamePlain.isEmpty()
+                && mApiRestPasswordPlain != null && !mApiRestPasswordPlain.isEmpty();
     }
 
     public void setSpaceAvailable(long spaceAvailable) {

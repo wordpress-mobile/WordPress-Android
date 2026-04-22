@@ -1,0 +1,24 @@
+plugins {
+    alias(libs.plugins.android.library)
+    alias(libs.plugins.dependency.analysis)
+}
+
+android {
+    namespace "org.wordpress.android.networking.rs"
+
+    defaultConfig {
+        minSdkVersion rootProject.minSdkVersion
+        targetSdkVersion rootProject.targetSdkVersion
+        compileSdk rootProject.compileSdkVersion
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.toVersion(libs.versions.java.get())
+        targetCompatibility JavaVersion.toVersion(libs.versions.java.get())
+    }
+}
+
+dependencies {
+    api(libs.wordpress.rs.android)
+    implementation(libs.kotlinx.coroutines.core)
+}

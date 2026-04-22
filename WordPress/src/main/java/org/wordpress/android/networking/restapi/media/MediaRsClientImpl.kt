@@ -1,4 +1,4 @@
-package org.wordpress.android.fluxc.network.rest.wpapi.media
+package org.wordpress.android.networking.restapi.media
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -10,7 +10,7 @@ import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.MediaModel.MediaUploadState
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.module.FLUXC_SCOPE
-import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpApiClientProvider
+import org.wordpress.android.fluxc.network.rest.wpapi.media.MediaRsClient
 import org.wordpress.android.fluxc.store.MediaStore.FetchMediaListResponsePayload
 import org.wordpress.android.fluxc.store.MediaStore.MediaError
 import org.wordpress.android.fluxc.store.MediaStore.MediaErrorType
@@ -19,6 +19,8 @@ import org.wordpress.android.fluxc.store.MediaStore.ProgressPayload
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.fluxc.utils.MediaUtils
 import org.wordpress.android.fluxc.utils.MimeType
+import org.wordpress.android.fluxc.utils.extensions.getWpApiClient
+import org.wordpress.android.networking.rs.WpApiClientProvider
 import org.wordpress.android.util.AppLog
 import rs.wordpress.api.kotlin.WpRequestExecutor
 import rs.wordpress.api.kotlin.WpRequestResult
@@ -36,28 +38,26 @@ private const val PATH_SEPARATOR = "/"
 private const val SUFFIX_SEPARATOR = "?"
 
 /**
- * MediaRSApiRestClient provides an interface for calling media endpoints using the WordPress Rust library
+ * Calls the WordPress media endpoints through the wordpress-rs client.
  */
 @Singleton
-class MediaRSApiRestClient @Inject constructor(
+class MediaRsClientImpl @Inject constructor(
     @Named(FLUXC_SCOPE) private val scope: CoroutineScope,
     private val dispatcher: Dispatcher,
     private val appLogWrapper: AppLogWrapper,
     private val wpApiClientProvider: WpApiClientProvider,
     private val fileCheckWrapper: FileCheckWrapper,
-) {
-    // Class to hold both the coroutine job and the OkHttp call
+) : MediaRsClient {
     private class UploadHandle(var job: Job, var call: WpRequestExecutor.CancellableUpload? = null)
 
-    // Map to store upload handles keyed by media ID for cancellation
     private val uploadHandles = ConcurrentHashMap<Int, UploadHandle>()
 
-    fun fetchMediaList(
+    override fun fetchMediaList(
         site: SiteModel,
         number: Int,
         offset: Int,
         mimeType: MimeType.Type?,
-        searchTerm: String? = null
+        searchTerm: String?
     ) {
         scope.launch {
             val client = wpApiClientProvider.getWpApiClient(site)
@@ -103,7 +103,7 @@ class MediaRSApiRestClient @Inject constructor(
         dispatcher.dispatch(MediaActionBuilder.newFetchedMediaListAction(payload))
     }
 
-    fun fetchMedia(site: SiteModel, media: MediaModel?) {
+    override fun fetchMedia(site: SiteModel, media: MediaModel?) {
         if (media == null) {
             val error = MediaError(MediaErrorType.NULL_MEDIA_ARG)
             error.logMessage = "Requested media is null"
@@ -186,7 +186,7 @@ class MediaRSApiRestClient @Inject constructor(
         dispatcher.dispatch(MediaActionBuilder.newFetchedMediaAction(payload))
     }
 
-    fun deleteMedia(site: SiteModel, media: MediaModel?) {
+    override fun deleteMedia(site: SiteModel, media: MediaModel?) {
         if (media == null) {
             val error = MediaError(MediaErrorType.NULL_MEDIA_ARG)
             error.logMessage =  "Media to delete is null"
@@ -230,7 +230,7 @@ class MediaRSApiRestClient @Inject constructor(
     }
 
     @Suppress("LongMethod")
-    fun uploadMedia(site: SiteModel, media: MediaModel?) {
+    override fun uploadMedia(site: SiteModel, media: MediaModel?) {
         if (media == null || media.id == 0) {
             // we can't have a MediaModel without an ID - otherwise we can't keep track of them.
             val error = MediaError(MediaErrorType.INVALID_ID)
@@ -330,7 +330,7 @@ class MediaRSApiRestClient @Inject constructor(
         dispatcher.dispatch(UploadActionBuilder.newUploadedMediaAction(payload))
     }
 
-    fun cancelUpload(media: MediaModel?) {
+    override fun cancelUpload(media: MediaModel?) {
         if (media == null) {
             appLogWrapper.e(AppLog.T.MEDIA, "Error: no media passed to cancel upload")
             return
@@ -360,7 +360,7 @@ class MediaRSApiRestClient @Inject constructor(
         dispatcher.dispatch(MediaActionBuilder.newCanceledMediaUploadAction(payload))
     }
 
-    fun pushMedia(site: SiteModel, media: MediaModel?) {
+    override fun pushMedia(site: SiteModel, media: MediaModel?) {
         if (media == null) {
             // caller may be expecting a notification
             val error = MediaError(MediaErrorType.NULL_MEDIA_ARG)

@@ -1,4 +1,4 @@
-package org.wordpress.android.fluxc.network.rest.wpapi.media
+package org.wordpress.android.networking.restapi.media
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -11,7 +11,6 @@ import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
 import org.mockito.ArgumentCaptor
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
@@ -21,7 +20,6 @@ import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
-import org.robolectric.RobolectricTestRunner
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.action.MediaAction
 import org.wordpress.android.fluxc.action.UploadAction
@@ -29,14 +27,14 @@ import org.wordpress.android.fluxc.annotations.action.Action
 import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.MediaModel.MediaUploadState
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.network.rest.wpapi.media.MediaRSApiRestClient.FileCheckWrapper
-import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpApiClientProvider
 import org.wordpress.android.fluxc.store.MediaStore.FetchMediaListResponsePayload
 import org.wordpress.android.fluxc.store.MediaStore.MediaErrorType
 import org.wordpress.android.fluxc.store.MediaStore.MediaPayload
 import org.wordpress.android.fluxc.store.MediaStore.ProgressPayload
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.fluxc.utils.MimeType
+import org.wordpress.android.networking.restapi.media.MediaRsClientImpl.FileCheckWrapper
+import org.wordpress.android.networking.rs.WpApiClientProvider
 import org.wordpress.android.util.AppLog
 import rs.wordpress.api.kotlin.WpApiClient
 import rs.wordpress.api.kotlin.WpRequestResult
@@ -65,8 +63,7 @@ private const val PATH_SEPARATOR = "/"
 private const val SUFFIX_SEPARATOR = "?"
 
 @ExperimentalCoroutinesApi
-@RunWith(RobolectricTestRunner::class)
-class MediaRsApiRestClientTest {
+class MediaRsClientImplTest {
     @Mock
     private lateinit var dispatcher: Dispatcher
     @Mock
@@ -79,7 +76,7 @@ class MediaRsApiRestClientTest {
     private lateinit var fileCheckWrapper: FileCheckWrapper
 
     private lateinit var testScope: CoroutineScope
-    private lateinit var restClient: MediaRSApiRestClient
+    private lateinit var restClient: MediaRsClientImpl
 
     @Before
     fun setUp() {
@@ -92,7 +89,7 @@ class MediaRsApiRestClientTest {
         whenever(wpApiClientProvider.getWpApiClient(any(), any())).thenReturn(wpApiClient)
         whenever(wpApiClientProvider.getWpApiClient(any(), eq(null))).thenReturn(wpApiClient)
 
-        restClient = MediaRSApiRestClient(
+        restClient = MediaRsClientImpl(
             scope = testScope,
             dispatcher = dispatcher,
             appLogWrapper = appLogWrapper,

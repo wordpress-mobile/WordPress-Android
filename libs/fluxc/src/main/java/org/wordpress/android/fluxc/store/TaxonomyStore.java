@@ -16,7 +16,7 @@ import org.wordpress.android.fluxc.model.TaxonomyModel;
 import org.wordpress.android.fluxc.model.TermModel;
 import org.wordpress.android.fluxc.model.TermsModel;
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
-import org.wordpress.android.fluxc.network.rest.wpapi.taxonomy.TaxonomyRsApiRestClient;
+import org.wordpress.android.fluxc.network.rest.wpapi.taxonomy.TaxonomyRsClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.taxonomy.TaxonomyRestClient;
 import org.wordpress.android.fluxc.network.xmlrpc.taxonomy.TaxonomyXMLRPCClient;
 import org.wordpress.android.fluxc.persistence.TaxonomySqlUtils;
@@ -154,15 +154,15 @@ public class TaxonomyStore extends Store {
 
     private final TaxonomyRestClient mTaxonomyRestClient;
     private final TaxonomyXMLRPCClient mTaxonomyXMLRPCClient;
-    private final TaxonomyRsApiRestClient mTaxonomyRsApiRestClient;
+    private final TaxonomyRsClient mTaxonomyRsClient;
 
     @Inject public TaxonomyStore(Dispatcher dispatcher, TaxonomyRestClient taxonomyRestClient,
                                  TaxonomyXMLRPCClient taxonomyXMLRPCClient,
-                                 TaxonomyRsApiRestClient taxonomyRsApiRestClient) {
+                                 TaxonomyRsClient taxonomyRsClient) {
         super(dispatcher);
         mTaxonomyRestClient = taxonomyRestClient;
         mTaxonomyXMLRPCClient = taxonomyXMLRPCClient;
-        mTaxonomyRsApiRestClient = taxonomyRsApiRestClient;
+        mTaxonomyRsClient = taxonomyRsClient;
     }
 
     @Override
@@ -329,7 +329,7 @@ public class TaxonomyStore extends Store {
 
     private void fetchTerms(@NonNull SiteModel site, @NonNull String taxonomyName) {
         if (site.isUsingSelfHostedRestApi()) {
-            mTaxonomyRsApiRestClient.fetchTerms(site, taxonomyName);
+            mTaxonomyRsClient.fetchTerms(site, taxonomyName);
         } else if (site.isUsingWpComRestApi()) {
             mTaxonomyRestClient.fetchTerms(site, taxonomyName);
         } else {
@@ -426,9 +426,9 @@ public class TaxonomyStore extends Store {
         if (payload.site.isUsingSelfHostedRestApi()) {
             // FluxC pushTerm to update terms, so we need to make the distinction here
             if (payload.term.getRemoteTermId() > 0) {
-                mTaxonomyRsApiRestClient.updateTerm(payload.site, payload.term);
+                mTaxonomyRsClient.updateTerm(payload.site, payload.term);
             } else {
-                mTaxonomyRsApiRestClient.createTerm(payload.site, payload.term);
+                mTaxonomyRsClient.createTerm(payload.site, payload.term);
             }
         } else if (payload.site.isUsingWpComRestApi()) {
             mTaxonomyRestClient.pushTerm(payload.term, payload.site);

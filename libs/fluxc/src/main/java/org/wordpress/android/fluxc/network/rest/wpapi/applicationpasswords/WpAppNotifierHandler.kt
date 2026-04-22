@@ -15,10 +15,15 @@ class WpAppNotifierHandler @Inject constructor() {
 
     @Synchronized
     fun notifyRequestedWithInvalidAuthentication(site: SiteModel) {
+        notifyRequestedWithInvalidAuthentication(site.url)
+    }
+
+    @Synchronized
+    fun notifyRequestedWithInvalidAuthentication(siteUrl: String) {
         cleanupDeadReferences()
         listeners.forEach {
             val listener = it.value.get()
-            listener?.onRequestedWithInvalidAuthentication(site.url)
+            listener?.onRequestedWithInvalidAuthentication(siteUrl)
         }
     }
 

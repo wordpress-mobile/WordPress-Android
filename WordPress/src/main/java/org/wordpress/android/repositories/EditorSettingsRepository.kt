@@ -6,7 +6,9 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.supervisorScope
 import kotlinx.coroutines.withContext
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpApiClientProvider
+import org.wordpress.android.fluxc.utils.extensions.getWpApiClient
+import org.wordpress.android.fluxc.utils.extensions.getApiUrlResolver
+import org.wordpress.android.networking.rs.WpApiClientProvider
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.fluxc.persistence.EditorSettingsSqlUtils
 import org.wordpress.android.modules.IO_THREAD

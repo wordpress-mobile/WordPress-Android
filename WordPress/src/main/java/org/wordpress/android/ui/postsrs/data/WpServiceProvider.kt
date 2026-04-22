@@ -5,7 +5,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.rest.wpapi.applicationpasswords.WpAppNotifierHandler
 import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpNetworkAvailabilityProvider
-import org.wordpress.android.fluxc.network.rest.wpapi.rs.createWpComAuthProvider
+import org.wordpress.android.networking.restapi.createWpComAuthProvider
 import org.wordpress.android.fluxc.store.AccountStore
 import rs.wordpress.api.kotlin.WpRequestExecutor
 import rs.wordpress.cache.kotlin.DatabaseChangeNotifier

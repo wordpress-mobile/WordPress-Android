@@ -1,25 +1,27 @@
-package org.wordpress.android.fluxc.network.rest.wpapi.rs
+package org.wordpress.android.networking.restapi
 
 import okhttp3.Cookie
 import okhttp3.CookieJar
 import okhttp3.HttpUrl
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
-import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.module.OkHttpClientQualifiers
 import org.wordpress.android.fluxc.network.rest.wpapi.applicationpasswords.WpAppNotifierHandler
+import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpNetworkAvailabilityProvider
 import org.wordpress.android.fluxc.store.AccountStore
+import org.wordpress.android.networking.rs.RsSite
+import org.wordpress.android.networking.rs.WpApiClientProvider
+import org.wordpress.android.networking.rs.shouldUseWpComProxy
 import rs.wordpress.api.kotlin.WpApiClient
 import rs.wordpress.api.kotlin.WpHttpClient
 import rs.wordpress.api.kotlin.WpRequestExecutor
+import uniffi.wp_api.ApiUrlResolver
 import uniffi.wp_api.CookiesNonceAuthenticationProvider
-import uniffi.wp_api.WpAppNotifier
-import uniffi.wp_api.WpAuthentication
-import uniffi.wp_api.WpAuthenticationProvider
 import uniffi.wp_api.ParsedUrl
+import uniffi.wp_api.WpAppNotifier
+import uniffi.wp_api.WpAuthenticationProvider
 import uniffi.wp_api.WpComBaseUrl
 import uniffi.wp_api.WpComDotOrgApiUrlResolver as WpComUrlResolver // checkstyle ignore
-import uniffi.wp_api.WpDynamicAuthenticationProvider
 import uniffi.wp_api.WpOrgSiteApiUrlResolver
 import java.net.URL
 import javax.inject.Inject
@@ -27,51 +29,44 @@ import javax.inject.Named
 import javax.inject.Singleton
 
 @Singleton
-class WpApiClientProvider @Inject constructor(
+class WpApiClientProviderImpl @Inject constructor(
     private val wpAppNotifierHandler: WpAppNotifierHandler,
     private val accountStore: AccountStore,
     @Named(OkHttpClientQualifiers.INTERCEPTORS) private val interceptors: Set<@JvmSuppressWildcards Interceptor>,
     private val networkAvailabilityProvider: WpNetworkAvailabilityProvider,
-) {
+) : WpApiClientProvider {
     private val wpComClients = mutableMapOf<Long, WpApiClient>()
     private val selfHostedClients = mutableMapOf<Int, WpApiClient>()
 
-    /** Removes all cached API clients (e.g. on sign-out). */
     @Synchronized
-    fun clearAllClients() {
+    override fun clearAllClients() {
         wpComClients.clear()
         selfHostedClients.clear()
     }
 
-    /**
-     * Removes the cached self-hosted client for a specific site so that the
-     * next call to [getWpApiClient] creates a fresh client with up-to-date
-     * credentials from the database.
-     */
     @Synchronized
-    fun clearSelfHostedClient(siteId: Int) {
+    override fun clearSelfHostedClient(siteId: Int) {
         selfHostedClients.remove(siteId)
     }
 
     @Synchronized
-    fun getWpApiClient(
-        site: SiteModel,
-        uploadListener: WpRequestExecutor.UploadListener? = null
+    override fun getWpApiClient(
+        site: RsSite,
+        uploadListener: WpRequestExecutor.UploadListener?
     ): WpApiClient = when {
-        site.isWPCom || site.isUsingWpComRestApi ->
-            getWpComApiClient(site)
+        site.shouldUseWpComProxy() -> getWpComApiClient(site)
         // Skip caching when an upload listener is provided —
         // upload flows need a dedicated client with progress
         // callbacks.
         uploadListener != null ->
             createSelfHostedClient(site, uploadListener)
-        else -> selfHostedClients.getOrPut(site.id) {
+        else -> selfHostedClients.getOrPut(site.localId) {
             createSelfHostedClient(site, uploadListener = null)
         }
     }
 
     private fun createSelfHostedClient(
-        site: SiteModel,
+        site: RsSite,
         uploadListener: WpRequestExecutor.UploadListener?,
     ): WpApiClient {
         val authProvider =
@@ -81,7 +76,7 @@ class WpApiClientProvider @Inject constructor(
             )
 
         val urlResolver =
-            WpOrgSiteApiUrlResolver(ParsedUrl.parse(site.buildUrl()))
+            WpOrgSiteApiUrlResolver(ParsedUrl.parse(site.buildRestApiUrl()))
 
         return WpApiClient(
             apiUrlResolver = urlResolver,
@@ -98,14 +93,14 @@ class WpApiClientProvider @Inject constructor(
                 ) {
                     wpAppNotifierHandler
                         .notifyRequestedWithInvalidAuthentication(
-                            site
+                            site.url
                         )
                 }
             },
         )
     }
 
-    fun getWpApiClientCookiesNonceAuthentication(site: SiteModel): WpApiClient {
+    override fun getWpApiClientCookiesNonceAuthentication(site: RsSite): WpApiClient {
         // Create OkHttpClient with cookie jar for cookies/nonce authentication
         val okHttpClient = OkHttpClient.Builder()
             .cookieJar(object : CookieJar {
@@ -134,12 +129,12 @@ class WpApiClientProvider @Inject constructor(
         )
         val authProvider = WpAuthenticationProvider.dynamic(cookiesNonceProvider)
         val client = WpApiClient(
-            wpOrgSiteApiRootUrl = URL(site.buildUrl()),
+            wpOrgSiteApiRootUrl = URL(site.buildRestApiUrl()),
             authProvider = authProvider,
             requestExecutor = requestExecutor,
             appNotifier = object : WpAppNotifier {
                 override suspend fun requestedWithInvalidAuthentication(requestUrl: String) {
-                    wpAppNotifierHandler.notifyRequestedWithInvalidAuthentication(site)
+                    wpAppNotifierHandler.notifyRequestedWithInvalidAuthentication(site.url)
                 }
             }
         )
@@ -147,7 +142,7 @@ class WpApiClientProvider @Inject constructor(
     }
 
     @Synchronized
-    private fun getWpComApiClient(site: SiteModel): WpApiClient {
+    private fun getWpComApiClient(site: RsSite): WpApiClient {
         return wpComClients.getOrPut(site.siteId) {
             val urlResolver = WpComUrlResolver(
                 siteId = site.siteId.toString(),
@@ -159,43 +154,22 @@ class WpApiClientProvider @Inject constructor(
                 requestExecutor = WpRequestExecutor(emptyList(), networkAvailabilityProvider),
                 appNotifier = object : WpAppNotifier {
                     override suspend fun requestedWithInvalidAuthentication(requestUrl: String) {
-                        wpAppNotifierHandler.notifyRequestedWithInvalidAuthentication(site)
+                        wpAppNotifierHandler.notifyRequestedWithInvalidAuthentication(site.url)
                     }
                 }
             )
         }
     }
 
-    fun getApiUrlResolver(
-        site: SiteModel
-    ): uniffi.wp_api.ApiUrlResolver = when {
-        site.isWPCom || site.isUsingWpComRestApi ->
+    override fun getApiUrlResolver(site: RsSite): ApiUrlResolver =
+        if (site.shouldUseWpComProxy()) {
             WpComUrlResolver(
                 siteId = site.siteId.toString(),
                 baseUrl = WpComBaseUrl.Production
             )
-        else -> WpOrgSiteApiUrlResolver(
-            ParsedUrl.parse(site.buildUrl())
-        )
-    }
+        } else {
+            WpOrgSiteApiUrlResolver(ParsedUrl.parse(site.buildRestApiUrl()))
+        }
 
-    fun getApiRootUrlFrom(site: SiteModel): String = site.buildUrl()
-
-    private fun SiteModel.buildUrl(): String =
-        wpApiRestUrl?.takeIf { it.isNotEmpty() } ?: "${url}/wp-json"
+    override fun getApiRootUrlFrom(site: RsSite): String = site.buildRestApiUrl()
 }
-
-/**
- * Creates a [WpAuthenticationProvider] that reads the WordPress.com OAuth bearer token from
- * [AccountStore] on every request. This ensures cached API clients automatically pick up
- * refreshed tokens without needing to be recreated.
- */
-fun createWpComAuthProvider(accountStore: AccountStore): WpAuthenticationProvider =
-    WpAuthenticationProvider.dynamic(object : WpDynamicAuthenticationProvider {
-        override fun auth() = WpAuthentication.Bearer(
-            token = requireNotNull(accountStore.accessToken) {
-                "WP.com access token is required"
-            }
-        )
-        override suspend fun refresh() = accountStore.accessToken != null
-    })

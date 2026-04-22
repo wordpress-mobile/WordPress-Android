@@ -360,6 +360,7 @@ dependencies {
         exclude group: 'org.wordpress', module: 'utils'
     }
     implementation project(':libs:fluxc')
+    implementation project(':libs:networking-rs')
     implementation("$gradle.ext.wputilsBinaryPath:${libs.wordpress.utils.get().version}") {
         version {
             strictly libs.wordpress.utils.get().version

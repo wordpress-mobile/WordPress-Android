@@ -7,7 +7,8 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.navmenus.models.NavMenuItemModel
 import org.wordpress.android.ui.navmenus.models.NavMenuLocationModel
 import org.wordpress.android.ui.navmenus.models.NavMenuModel
-import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpApiClientProvider
+import org.wordpress.android.fluxc.utils.extensions.getWpApiClient
+import org.wordpress.android.networking.rs.WpApiClientProvider
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.ui.navmenus.parseJsonStringArray
 import org.wordpress.android.ui.navmenus.toJsonStringArray

@@ -1,4 +1,4 @@
-package org.wordpress.android.fluxc.network.rest.wpapi.taxonomy
+package org.wordpress.android.networking.restapi.taxonomy
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -8,7 +8,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.TermModel
 import org.wordpress.android.fluxc.model.TermsModel
 import org.wordpress.android.fluxc.module.FLUXC_SCOPE
-import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpApiClientProvider
+import org.wordpress.android.fluxc.network.rest.wpapi.taxonomy.TaxonomyRsClient
 import org.wordpress.android.fluxc.store.TaxonomyStore.DEFAULT_TAXONOMY_CATEGORY
 import org.wordpress.android.fluxc.store.TaxonomyStore.DEFAULT_TAXONOMY_TAG
 import org.wordpress.android.fluxc.store.TaxonomyStore.FetchTermsResponsePayload
@@ -16,6 +16,8 @@ import org.wordpress.android.fluxc.store.TaxonomyStore.RemoteTermPayload
 import org.wordpress.android.fluxc.store.TaxonomyStore.TaxonomyError
 import org.wordpress.android.fluxc.store.TaxonomyStore.TaxonomyErrorType
 import org.wordpress.android.fluxc.utils.AppLogWrapper
+import org.wordpress.android.fluxc.utils.extensions.getWpApiClient
+import org.wordpress.android.networking.rs.WpApiClientProvider
 import org.wordpress.android.util.AppLog
 import rs.wordpress.api.kotlin.WpRequestResult
 import uniffi.wp_api.TermCreateParams
@@ -27,13 +29,13 @@ import javax.inject.Named
 import javax.inject.Singleton
 
 @Singleton
-class TaxonomyRsApiRestClient @Inject constructor(
+class TaxonomyRsClientImpl @Inject constructor(
     @Named(FLUXC_SCOPE) private val scope: CoroutineScope,
     private val dispatcher: Dispatcher,
     private val appLogWrapper: AppLogWrapper,
     private val wpApiClientProvider: WpApiClientProvider,
-) {
-    fun deleteTerm(site: SiteModel, term: TermModel) {
+) : TaxonomyRsClient {
+    override fun deleteTerm(site: SiteModel, term: TermModel) {
         scope.launch {
             when (term.taxonomy) {
                 DEFAULT_TAXONOMY_CATEGORY -> deleteTerm(TermEndpointType.Categories, term, site)
@@ -99,7 +101,7 @@ class TaxonomyRsApiRestClient @Inject constructor(
         dispatcher.dispatch(TaxonomyActionBuilder.newDeletedTermAction(payload))
     }
 
-    fun createTerm(site: SiteModel, term: TermModel) {
+    override fun createTerm(site: SiteModel, term: TermModel) {
         scope.launch {
             when (term.taxonomy) {
                 DEFAULT_TAXONOMY_CATEGORY -> createTerm(TermEndpointType.Categories, term, site)
@@ -159,7 +161,7 @@ class TaxonomyRsApiRestClient @Inject constructor(
         }
     }
 
-    fun updateTerm(site: SiteModel, term: TermModel) {
+    override fun updateTerm(site: SiteModel, term: TermModel) {
         scope.launch {
             if (term.remoteTermId < 0) {
                 appLogWrapper.e(AppLog.T.POSTS, "Failed updating term: $term - id <= 0")
@@ -233,7 +235,7 @@ class TaxonomyRsApiRestClient @Inject constructor(
         dispatcher.dispatch(TaxonomyActionBuilder.newPushedTermAction(payload))
     }
 
-    fun fetchTerms(site: SiteModel, taxonomyName: String) {
+    override fun fetchTerms(site: SiteModel, taxonomyName: String) {
         scope.launch {
             when (taxonomyName) {
                 DEFAULT_TAXONOMY_CATEGORY -> fetchTerms(TermEndpointType.Categories, site)
@@ -289,7 +291,6 @@ class TaxonomyRsApiRestClient @Inject constructor(
         }
         dispatcher.dispatch(TaxonomyActionBuilder.newFetchedTermsAction(termsResponsePayload))
     }
-
 
     private fun TermEndpointType.toTaxonomyName(): String = when (this) {
         TermEndpointType.Categories -> DEFAULT_TAXONOMY_CATEGORY

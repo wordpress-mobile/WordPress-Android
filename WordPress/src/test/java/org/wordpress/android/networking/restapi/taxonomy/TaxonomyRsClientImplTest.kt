@@ -1,4 +1,4 @@
-package org.wordpress.android.fluxc.network.rest.wpapi.taxonomy
+package org.wordpress.android.networking.restapi.taxonomy
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -10,7 +10,6 @@ import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertNull
 import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
 import org.mockito.ArgumentCaptor
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
@@ -18,32 +17,31 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
-import org.robolectric.RobolectricTestRunner
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.action.TaxonomyAction
 import org.wordpress.android.fluxc.annotations.action.Action
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpApiClientProvider
 import org.wordpress.android.fluxc.model.TermModel
 import org.wordpress.android.fluxc.store.TaxonomyStore.FetchTermsResponsePayload
 import org.wordpress.android.fluxc.store.TaxonomyStore.RemoteTermPayload
 import org.wordpress.android.fluxc.store.TaxonomyStore.TaxonomyErrorType
 import org.wordpress.android.fluxc.utils.AppLogWrapper
+import org.wordpress.android.fluxc.utils.extensions.toRsSite
+import org.wordpress.android.networking.rs.WpApiClientProvider
 import rs.wordpress.api.kotlin.WpApiClient
 import rs.wordpress.api.kotlin.WpRequestResult
 import uniffi.wp_api.AnyTermWithEditContext
 import uniffi.wp_api.RequestMethod
+import uniffi.wp_api.TaxonomyType
 import uniffi.wp_api.TermDeleteResponse
 import uniffi.wp_api.TermsRequestCreateResponse
 import uniffi.wp_api.TermsRequestDeleteResponse
 import uniffi.wp_api.TermsRequestListWithEditContextResponse
 import uniffi.wp_api.TermsRequestUpdateResponse
-import uniffi.wp_api.TaxonomyType
 import uniffi.wp_api.WpNetworkHeaderMap
 
 @ExperimentalCoroutinesApi
-@RunWith(RobolectricTestRunner::class)
-class TaxonomyRsApiRestClientTest {
+class TaxonomyRsClientImplTest {
     @Mock
     private lateinit var dispatcher: Dispatcher
     @Mock
@@ -54,7 +52,7 @@ class TaxonomyRsApiRestClientTest {
     private lateinit var wpApiClient: WpApiClient
 
     private lateinit var testScope: CoroutineScope
-    private lateinit var taxonomyClient: TaxonomyRsApiRestClient
+    private lateinit var taxonomyClient: TaxonomyRsClientImpl
 
     private val testSite = SiteModel().apply {
         id = 123
@@ -98,9 +96,9 @@ class TaxonomyRsApiRestClientTest {
         val testDispatcher = UnconfinedTestDispatcher(testScheduler)
         testScope = CoroutineScope(testDispatcher)
 
-        whenever(wpApiClientProvider.getWpApiClient(testSite)).thenReturn(wpApiClient)
+        whenever(wpApiClientProvider.getWpApiClient(testSite.toRsSite())).thenReturn(wpApiClient)
 
-        taxonomyClient = TaxonomyRsApiRestClient(
+        taxonomyClient = TaxonomyRsClientImpl(
             testScope,
             dispatcher,
             appLogWrapper,
@@ -110,7 +108,6 @@ class TaxonomyRsApiRestClientTest {
 
     @Test
     fun `fetchTerms tags with error response dispatches error action`() = runTest {
-        // Use a concrete error type that we can create - UnknownError requires statusCode and response
         val errorResponse = WpRequestResult.UnknownError<Any>(
             statusCode = 500u,
             response = "Internal Server Error",
@@ -122,7 +119,6 @@ class TaxonomyRsApiRestClientTest {
 
         taxonomyClient.fetchTerms(testSite, testTagTaxonomyName)
 
-        // Verify dispatcher was called with error action
         val actionCaptor = ArgumentCaptor.forClass(Action::class.java)
         verify(dispatcher).dispatch(actionCaptor.capture())
 
@@ -141,7 +137,6 @@ class TaxonomyRsApiRestClientTest {
             createTestAnyTermWithEditContext()
         )
 
-        // Create the correct response structure following the MediaRSApiRestClientTest pattern
         val tagResponse = TermsRequestListWithEditContextResponse(
             anyTermWithEditContext,
             mock<WpNetworkHeaderMap>(),
@@ -157,7 +152,6 @@ class TaxonomyRsApiRestClientTest {
 
         taxonomyClient.fetchTerms(testSite, testTagTaxonomyName)
 
-        // Verify dispatcher was called with success action
         val actionCaptor = ArgumentCaptor.forClass(Action::class.java)
         verify(dispatcher).dispatch(actionCaptor.capture())
 
@@ -173,7 +167,6 @@ class TaxonomyRsApiRestClientTest {
 
     @Test
     fun `fetchTerms categories with error response dispatches error action`() = runTest {
-        // Use a concrete error type that we can create - UnknownError requires statusCode and response
         val errorResponse = WpRequestResult.UnknownError<Any>(
             statusCode = 500u,
             response = "Internal Server Error",
@@ -185,7 +178,6 @@ class TaxonomyRsApiRestClientTest {
 
         taxonomyClient.fetchTerms(testSite, testCategoryTaxonomyName)
 
-        // Verify dispatcher was called with error action
         val actionCaptor = ArgumentCaptor.forClass(Action::class.java)
         verify(dispatcher).dispatch(actionCaptor.capture())
 
@@ -204,7 +196,6 @@ class TaxonomyRsApiRestClientTest {
             createTestAnyTermWithEditContext()
         )
 
-        // Create the correct response structure following the MediaRSApiRestClientTest pattern
         val categoryResponse = TermsRequestListWithEditContextResponse(
             anyTermWithEditContext,
             mock<WpNetworkHeaderMap>(),
@@ -220,7 +211,6 @@ class TaxonomyRsApiRestClientTest {
 
         taxonomyClient.fetchTerms(testSite, testCategoryTaxonomyName)
 
-        // Verify dispatcher was called with success action
         val actionCaptor = ArgumentCaptor.forClass(Action::class.java)
         verify(dispatcher).dispatch(actionCaptor.capture())
 
@@ -236,7 +226,6 @@ class TaxonomyRsApiRestClientTest {
 
     @Test
     fun `createTerm category with error response dispatches error action`() = runTest {
-        // Use a concrete error type that we can create - UnknownError requires statusCode and response
         val errorResponse = WpRequestResult.UnknownError<Any>(
             statusCode = 500u,
             response = "Internal Server Error",
@@ -248,7 +237,6 @@ class TaxonomyRsApiRestClientTest {
 
         taxonomyClient.createTerm(testSite, testCategoryTermModel)
 
-        // Verify dispatcher was called with error action
         val actionCaptor = ArgumentCaptor.forClass(Action::class.java)
         verify(dispatcher).dispatch(actionCaptor.capture())
 
@@ -265,7 +253,6 @@ class TaxonomyRsApiRestClientTest {
     fun `createTerm category with success response dispatches success action`() = runTest {
         val anyTermWithEditContext = createTestAnyTermWithEditContext()
 
-        // Create the correct response structure following the MediaRSApiRestClientTest pattern
         val categoryResponse = TermsRequestCreateResponse(
             anyTermWithEditContext,
             mock<WpNetworkHeaderMap>()
@@ -279,7 +266,6 @@ class TaxonomyRsApiRestClientTest {
 
         taxonomyClient.createTerm(testSite, testCategoryTermModel)
 
-        // Verify dispatcher was called with success action
         val actionCaptor = ArgumentCaptor.forClass(Action::class.java)
         verify(dispatcher).dispatch(actionCaptor.capture())
 
@@ -288,7 +274,6 @@ class TaxonomyRsApiRestClientTest {
         assertEquals(capturedAction.type, TaxonomyAction.PUSHED_TERM)
         assertEquals(testSite, payload.site)
         assertNotNull(payload.term)
-        // Verify the created term has the correct properties
         assertEquals(anyTermWithEditContext.id.toInt(), payload.term.id)
         assertEquals(testSite.id, payload.term.localSiteId)
         assertEquals(anyTermWithEditContext.id, payload.term.remoteTermId)
@@ -302,7 +287,6 @@ class TaxonomyRsApiRestClientTest {
 
     @Test
     fun `createTerm tag with error response dispatches error action`() = runTest {
-        // Use a concrete error type that we can create - UnknownError requires statusCode and response
         val errorResponse = WpRequestResult.UnknownError<Any>(
             statusCode = 500u,
             response = "Internal Server Error",
@@ -314,7 +298,6 @@ class TaxonomyRsApiRestClientTest {
 
         taxonomyClient.createTerm(testSite, testTagTermModel)
 
-        // Verify dispatcher was called with error action
         val actionCaptor = ArgumentCaptor.forClass(Action::class.java)
         verify(dispatcher).dispatch(actionCaptor.capture())
 
@@ -331,7 +314,6 @@ class TaxonomyRsApiRestClientTest {
     fun `createTerm tag with success response dispatches success action`() = runTest {
         val anyTermWithEditContext = createTestAnyTermWithEditContext()
 
-        // Create the correct response structure following the MediaRSApiRestClientTest pattern
         val tagResponse = TermsRequestCreateResponse(
             anyTermWithEditContext,
             mock<WpNetworkHeaderMap>()
@@ -345,7 +327,6 @@ class TaxonomyRsApiRestClientTest {
 
         taxonomyClient.createTerm(testSite, testTagTermModel)
 
-        // Verify dispatcher was called with success action
         val actionCaptor = ArgumentCaptor.forClass(Action::class.java)
         verify(dispatcher).dispatch(actionCaptor.capture())
 
@@ -354,7 +335,6 @@ class TaxonomyRsApiRestClientTest {
         assertEquals(capturedAction.type, TaxonomyAction.PUSHED_TERM)
         assertEquals(testSite, payload.site)
         assertNotNull(payload.term)
-        // Verify the created term has the correct properties
         assertEquals(anyTermWithEditContext.id.toInt(), payload.term.id)
         assertEquals(testSite.id, payload.term.localSiteId)
         assertEquals(anyTermWithEditContext.id, payload.term.remoteTermId)
@@ -368,7 +348,6 @@ class TaxonomyRsApiRestClientTest {
 
     @Test
     fun `deleteTerm category with error response dispatches error action`() = runTest {
-        // Use a concrete error type that we can create - UnknownError requires statusCode and response
         val errorResponse = WpRequestResult.UnknownError<Any>(
             statusCode = 500u,
             response = "Internal Server Error",
@@ -380,7 +359,6 @@ class TaxonomyRsApiRestClientTest {
 
         taxonomyClient.deleteTerm(testSite, testCategoryTermModel)
 
-        // Verify dispatcher was called with error action
         val actionCaptor = ArgumentCaptor.forClass(Action::class.java)
         verify(dispatcher).dispatch(actionCaptor.capture())
 
@@ -397,7 +375,6 @@ class TaxonomyRsApiRestClientTest {
     fun `deleteTerm category with success response dispatches success action`() = runTest {
         val categoryDeleteData = createTestCategoryDeleteData(deleted = true)
 
-        // Create the correct response structure following the MediaRsApiRestClientTest pattern
         val categoryResponse = TermsRequestDeleteResponse(
             categoryDeleteData,
             mock<WpNetworkHeaderMap>()
@@ -411,7 +388,6 @@ class TaxonomyRsApiRestClientTest {
 
         taxonomyClient.deleteTerm(testSite, testCategoryTermModel)
 
-        // Verify dispatcher was called with success action
         val actionCaptor = ArgumentCaptor.forClass(Action::class.java)
         verify(dispatcher).dispatch(actionCaptor.capture())
 
@@ -420,7 +396,6 @@ class TaxonomyRsApiRestClientTest {
         assertEquals(capturedAction.type, TaxonomyAction.DELETED_TERM)
         assertEquals(testSite, payload.site)
         assertNotNull(payload.term)
-        // Verify the deleted term has the correct properties
         assertEquals(testCategoryTermModel.id, payload.term.id)
         assertEquals(testSite.id, payload.term.localSiteId)
         assertEquals(testCategoryTermModel.id.toLong(), payload.term.remoteTermId)
@@ -436,7 +411,6 @@ class TaxonomyRsApiRestClientTest {
     fun `deleteTerm category with failed deletion response dispatches error action`() = runTest {
         val categoryDeleteData = createTestCategoryDeleteData(deleted = false)
 
-        // Create the correct response structure with deleted = false
         val categoryResponse = TermsRequestDeleteResponse(
             categoryDeleteData,
             mock<WpNetworkHeaderMap>()
@@ -450,7 +424,6 @@ class TaxonomyRsApiRestClientTest {
 
         taxonomyClient.deleteTerm(testSite, testCategoryTermModel)
 
-        // Verify dispatcher was called with error action
         val actionCaptor = ArgumentCaptor.forClass(Action::class.java)
         verify(dispatcher).dispatch(actionCaptor.capture())
 
@@ -465,7 +438,6 @@ class TaxonomyRsApiRestClientTest {
 
     @Test
     fun `deleteTerm tag with error response dispatches error action`() = runTest {
-        // Use a concrete error type that we can create - UnknownError requires statusCode and response
         val errorResponse = WpRequestResult.UnknownError<Any>(
             statusCode = 500u,
             response = "Internal Server Error",
@@ -477,7 +449,6 @@ class TaxonomyRsApiRestClientTest {
 
         taxonomyClient.deleteTerm(testSite, testTagTermModel)
 
-        // Verify dispatcher was called with error action
         val actionCaptor = ArgumentCaptor.forClass(Action::class.java)
         verify(dispatcher).dispatch(actionCaptor.capture())
 
@@ -494,7 +465,6 @@ class TaxonomyRsApiRestClientTest {
     fun `deleteTerm tag with success response dispatches success action`() = runTest {
         val tagDeleteData = createTestTagDeleteData(deleted = true)
 
-        // Create the correct response structure following the MediaRsApiRestClientTest pattern
         val tagResponse = TermsRequestDeleteResponse(
             tagDeleteData,
             mock<WpNetworkHeaderMap>()
@@ -508,7 +478,6 @@ class TaxonomyRsApiRestClientTest {
 
         taxonomyClient.deleteTerm(testSite, testTagTermModel)
 
-        // Verify dispatcher was called with success action
         val actionCaptor = ArgumentCaptor.forClass(Action::class.java)
         verify(dispatcher).dispatch(actionCaptor.capture())
 
@@ -517,7 +486,6 @@ class TaxonomyRsApiRestClientTest {
         assertEquals(capturedAction.type, TaxonomyAction.DELETED_TERM)
         assertEquals(testSite, payload.site)
         assertNotNull(payload.term)
-        // Verify the deleted term has the correct properties
         assertEquals(testTagTermModel.id, payload.term.id)
         assertEquals(testSite.id, payload.term.localSiteId)
         assertEquals(testTagTermModel.id.toLong(), payload.term.remoteTermId)
@@ -533,7 +501,6 @@ class TaxonomyRsApiRestClientTest {
     fun `deleteTerm tag with failed deletion response dispatches error action`() = runTest {
         val tagDeleteData = createTestTagDeleteData(deleted = false)
 
-        // Create the correct response structure with deleted = false
         val tagResponse = TermsRequestDeleteResponse(
             tagDeleteData,
             mock<WpNetworkHeaderMap>()
@@ -547,7 +514,6 @@ class TaxonomyRsApiRestClientTest {
 
         taxonomyClient.deleteTerm(testSite, testTagTermModel)
 
-        // Verify dispatcher was called with error action
         val actionCaptor = ArgumentCaptor.forClass(Action::class.java)
         verify(dispatcher).dispatch(actionCaptor.capture())
 
@@ -761,4 +727,3 @@ class TaxonomyRsApiRestClientTest {
         )
     }
 }
-

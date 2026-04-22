@@ -15,6 +15,10 @@
 - [TalkBack Guidelines](talkback-guidelines.md)
 - [Right to Left Layout Guidelines](right-to-left-layout-guidelines.md)
 
+## Architecture
+
+- [WP.com API Routing](wpcom-routing.md) - how the apps decide whether to proxy REST calls through `public-api.wordpress.com` or hit the site directly
+
 ## Others
 
 - [Frequently Asked Questions](faq.md)

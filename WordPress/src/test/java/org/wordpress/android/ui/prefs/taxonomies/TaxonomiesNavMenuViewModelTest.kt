@@ -17,7 +17,8 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpApiClientProvider
+import org.wordpress.android.fluxc.utils.extensions.toRsSite
+import org.wordpress.android.networking.rs.WpApiClientProvider
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.util.AppLog
 import rs.wordpress.api.kotlin.WpApiClient
@@ -57,7 +58,7 @@ class TaxonomiesNavMenuViewModelTest : BaseUnitTest() {
     fun setUp() {
         MockitoAnnotations.openMocks(this)
 
-        whenever(wpApiClientProvider.getWpApiClient(testSite)).thenReturn(wpApiClient)
+        whenever(wpApiClientProvider.getWpApiClient(testSite.toRsSite())).thenReturn(wpApiClient)
 
         viewModel = TaxonomiesNavMenuViewModel(
             wpApiClientProvider,
@@ -89,7 +90,7 @@ class TaxonomiesNavMenuViewModelTest : BaseUnitTest() {
 
     @Test
     fun `fetch taxonomies with success response dispatches success action`() = runTest {
-        // Create the correct response structure following the MediaRSApiRestClientTest pattern
+        // Create the correct response structure following the MediaRsClientImplTest pattern
         val response = TaxonomiesRequestListWithEditContextResponse(
             createTestTaxonomyTypesResponseWithEditContext(),
             mock<WpNetworkHeaderMap>(),

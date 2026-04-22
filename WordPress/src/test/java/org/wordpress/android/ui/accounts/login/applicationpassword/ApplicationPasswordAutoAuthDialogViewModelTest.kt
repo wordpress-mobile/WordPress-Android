@@ -17,7 +17,8 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpApiClientProvider
+import org.wordpress.android.fluxc.utils.extensions.toRsSite
+import org.wordpress.android.networking.rs.WpApiClientProvider
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.ui.accounts.applicationpassword.ApplicationPasswordCreationTracker
 import org.wordpress.android.ui.accounts.login.ApplicationPasswordLoginHelper
@@ -70,7 +71,7 @@ class ApplicationPasswordAutoAuthDialogViewModelTest : BaseUnitTest() {
         whenever(applicationPasswordLoginHelper.getAuthorizationUrlComplete(testSite.url))
             .thenReturn(testAuthUrl)
         val testException = RuntimeException("API client creation failed")
-        whenever(wpApiClientProvider.getWpApiClientCookiesNonceAuthentication(eq(testSite)))
+        whenever(wpApiClientProvider.getWpApiClientCookiesNonceAuthentication(eq(testSite.toRsSite())))
             .doThrow(testException)
 
         viewModel.navigationEvent.test {
