@@ -22,6 +22,7 @@ import androidx.core.view.setPadding
 import androidx.core.widget.ImageViewCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.navigation.NavigationBarView
 import com.google.android.material.navigation.NavigationBarView.OnItemReselectedListener
 import com.google.android.material.navigation.NavigationBarView.OnItemSelectedListener
@@ -29,6 +30,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.datasets.ReaderDatabase
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
 import org.wordpress.android.ui.main.WPMainActivity.OnScrollToTopListener
@@ -98,6 +100,9 @@ class WPMainNavigationView @JvmOverloads constructor(
         set(pageType) = updateCurrentPosition(pages().indexOf(pageType))
 
     private var gravatarLoaded = false
+
+    private var readerDebugTapCount = 0
+    private var readerDebugLastTapMs = 0L
 
     interface OnPageListener {
         fun onPageChanged(position: Int)
@@ -230,6 +235,7 @@ class WPMainNavigationView @JvmOverloads constructor(
         currentPosition = position
         performHapticFeedback()
         pageListener.onPageChanged(position)
+        maybeHandleReaderDebugTap(item.itemId)
         return true
     }
 
@@ -246,6 +252,47 @@ class WPMainNavigationView @JvmOverloads constructor(
         // scroll the active fragment's contents to the top when user re-taps the current item
         val position = getPositionForItemId(item.itemId)
         (navAdapter.getFragment(position) as? OnScrollToTopListener)?.onScrollToTop()
+        maybeHandleReaderDebugTap(item.itemId)
+    }
+
+    // Debug-only: 5 quick taps on the Reader tab prompt to reset the Reader database.
+    private fun maybeHandleReaderDebugTap(@IdRes itemId: Int) {
+        if (!BuildConfig.DEBUG) return
+        if (itemId != R.id.nav_reader) {
+            readerDebugTapCount = 0
+            return
+        }
+        val now = System.currentTimeMillis()
+        readerDebugTapCount = if (now - readerDebugLastTapMs > READER_DEBUG_TAP_WINDOW_MS) {
+            1
+        } else {
+            readerDebugTapCount + 1
+        }
+        readerDebugLastTapMs = now
+        if (readerDebugTapCount >= READER_DEBUG_TAP_THRESHOLD) {
+            readerDebugTapCount = 0
+            showReaderDebugResetDialog()
+        }
+    }
+
+    private fun showReaderDebugResetDialog() {
+        MaterialAlertDialogBuilder(context)
+            .setTitle("Reset Reader database")
+            .setMessage("Clear all cached Reader data and reload the Reader screen?")
+            .setNegativeButton(R.string.cancel, null)
+            .setPositiveButton(R.string.ok) { _, _ ->
+                ReaderDatabase.reset(false)
+                recreateReaderFragment()
+            }
+            .show()
+    }
+
+    private fun recreateReaderFragment() {
+        val fm = fragmentManager ?: return
+        fm.findFragmentByTag(TAG_READER)?.let {
+            fm.beginTransaction().remove(it).commitNow()
+        }
+        navAdapter.getFragment(getPosition(READER))
     }
 
     private fun getPositionForItemId(@IdRes itemId: Int): Int {
@@ -497,6 +544,9 @@ class WPMainNavigationView @JvmOverloads constructor(
         private const val TAG_READER = "tag-reader"
         private const val TAG_NOTIFS = "tag-notifs"
         private const val TAG_ME = "tag-me"
+
+        private const val READER_DEBUG_TAP_THRESHOLD = 5
+        private const val READER_DEBUG_TAP_WINDOW_MS = 2000L
 
         private fun numPages(): Int = pages.size
 
