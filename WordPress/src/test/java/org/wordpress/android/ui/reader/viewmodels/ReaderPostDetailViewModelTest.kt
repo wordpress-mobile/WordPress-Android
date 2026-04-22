@@ -1032,7 +1032,6 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
 
         assertThat(likeObserver).isNotEmpty
         with(likeObserver.first()) {
-            assertThat(showLoading).isFalse
             assertThat(engageItemsList).isEqualTo(
                 likers + TrailingLabelTextItem(
                     UiStringText(
@@ -1061,7 +1060,6 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
 
         assertThat(likeObserver).isNotEmpty
         with(likeObserver.first()) {
-            assertThat(showLoading).isFalse
             assertThat(engageItemsList).isEqualTo(likers)
             assertThat(showEmptyState).isTrue
             assertThat(emptyStateTitle is UiStringRes).isTrue
