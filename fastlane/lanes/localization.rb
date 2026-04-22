@@ -278,10 +278,8 @@ platform :android do
   JETPACK_MAIN_STRINGS_PATH = File.join(PROJECT_ROOT_FOLDER, 'WordPress', 'src', 'jetpack', 'res', 'values', 'strings.xml').freeze
   JETPACK_FROZEN_STRINGS_DIR_PATH = File.join(FASTLANE_FOLDER, 'jetpack_resources', 'values').freeze
   LOCAL_LIBRARIES_STRINGS_PATHS = [
-    # NOTE: for those we don't set `add_ignore_attr` to true because we currently use `checkDependencies true` in `WordPress/build.gradle`
-    # Which will correctly detect strings from the app's `strings.xml` being used by one of the module.
-    { library: 'Image Editor', strings_path: './libs/image-editor/src/main/res/values/strings.xml', source_id: 'module:image-editor' },
-    { library: 'Editor', strings_path: './libs/editor/src/main/res/values/strings.xml', source_id: 'module:editor' }
+    { library: 'Image Editor', strings_path: './libs/image-editor/src/main/res/values/strings.xml', source_id: 'module:image-editor', add_ignore_attr: true },
+    { library: 'Editor', strings_path: './libs/editor/src/main/res/values/strings.xml', source_id: 'module:editor', add_ignore_attr: true }
   ].freeze
   REMOTE_LIBRARIES_STRINGS_PATHS = [
     {

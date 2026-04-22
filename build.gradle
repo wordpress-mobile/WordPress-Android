@@ -99,7 +99,7 @@ subprojects {
         android {
             lint {
                 warningsAsErrors = true
-                checkDependencies true
+                checkDependencies false
                 checkGeneratedSources = true
                 lintConfig file("${project.rootDir}/config/lint/lint.xml")
                 baseline file("${project.rootDir}/config/lint/baseline.xml")
