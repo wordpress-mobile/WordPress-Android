@@ -99,6 +99,12 @@ steps:
         plugins: [$CI_TOOLKIT]
         artifact_paths:
           - "**/build/reports/lint-results*.*"
+        notify:
+          - slack:
+              channels:
+                - "#wpmobile-team"
+              message: "⚠️ Lint Libraries failed on trunk."
+            if: build.pull_request.id == null && step.outcome != "passed"
 
   #################
   # Diff Reports
