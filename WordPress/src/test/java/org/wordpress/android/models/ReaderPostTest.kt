@@ -65,4 +65,32 @@ class ReaderPostTest {
         method.isAccessible = true
         return method.invoke(null, imageUrl) as String?
     }
+
+    @Test
+    fun `GIVEN different useExcerpt WHEN isSamePost THEN returns false`() {
+        val a = samplePost()
+        val b = samplePost().apply { useExcerpt = true }
+
+        assertThat(a.isSamePost(b)).isFalse()
+    }
+
+    @Test
+    fun `GIVEN different text and compareText true WHEN isSamePost THEN returns false`() {
+        val a = samplePost()
+        val b = samplePost().apply { text = "Different body" }
+
+        assertThat(a.isSamePost(b, true)).isFalse()
+    }
+
+    @Test
+    fun `GIVEN different text and compareText false WHEN isSamePost THEN returns true`() {
+        val a = samplePost()
+        val b = samplePost().apply { text = "Different body" }
+
+        assertThat(a.isSamePost(b, false)).isTrue()
+    }
+
+    private fun samplePost(): ReaderPost = ReaderPost().apply {
+        text = "A body"
+    }
 }
