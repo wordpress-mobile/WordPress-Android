@@ -339,7 +339,7 @@ private fun DropdownItems(
     currentItem: DataViewDropdownItem?,
     onItemClick: (DataViewDropdownItem) -> Unit
 ) {
-    val locale = ConfigurationCompat.getLocales(LocalConfiguration.current)[0] ?: Locale.getDefault()
+    val locale = ConfigurationCompat.getLocales(LocalConfiguration.current)[0] ?: Locale.ROOT
     DropdownMenuItem(
         text = {
             Text(
