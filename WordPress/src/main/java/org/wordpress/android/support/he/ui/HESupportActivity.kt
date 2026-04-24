@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -130,13 +131,14 @@ class HESupportActivity : AppCompatActivity() {
         val errorMessage by viewModel.errorMessage.collectAsState()
 
         // Show snackbar when error occurs
-        errorMessage?.let { errorType ->
+        val errorType = errorMessage
+        if (errorType != null) {
             val message = when (errorType) {
                 ConversationsSupportViewModel.ErrorType.GENERAL -> getString(R.string.he_support_generic_error)
                 ConversationsSupportViewModel.ErrorType.FORBIDDEN -> getString(R.string.he_support_forbidden_error)
                 ConversationsSupportViewModel.ErrorType.OFFLINE -> getString(R.string.no_network_title)
             }
-            scope.launch {
+            LaunchedEffect(errorType) {
                 snackbarHostState.showSnackbar(
                     message = message,
                     duration = SnackbarDuration.Long

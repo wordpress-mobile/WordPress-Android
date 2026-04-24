@@ -9,10 +9,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.lifecycle.Lifecycle
@@ -85,17 +85,17 @@ class AIBotSupportActivity : AppCompatActivity() {
     private fun NavigableContent() {
         navController = rememberNavController()
         val snackbarHostState = remember { SnackbarHostState() }
-        val scope = rememberCoroutineScope()
         val errorMessage by viewModel.errorMessage.collectAsState()
 
         // Show snackbar when error occurs
-        errorMessage?.let { errorType ->
+        val errorType = errorMessage
+        if (errorType != null) {
             val message = when (errorType) {
                 ConversationsSupportViewModel.ErrorType.GENERAL -> getString(R.string.ai_bot_generic_error)
                 ConversationsSupportViewModel.ErrorType.FORBIDDEN -> getString(R.string.he_support_forbidden_error)
                 ConversationsSupportViewModel.ErrorType.OFFLINE -> getString(R.string.no_network_title)
             }
-            scope.launch {
+            LaunchedEffect(errorType) {
                 snackbarHostState.showSnackbar(
                     message = message,
                     duration = SnackbarDuration.Long

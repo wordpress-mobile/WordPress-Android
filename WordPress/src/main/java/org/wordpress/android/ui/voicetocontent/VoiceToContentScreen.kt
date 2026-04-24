@@ -38,6 +38,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.rememberNestedScrollInteropConnection
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -49,6 +50,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import androidx.core.os.ConfigurationCompat
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.components.buttons.Drawable
 import org.wordpress.android.ui.compose.theme.AppThemeM3
@@ -203,8 +205,9 @@ fun formatTime(remainingTimeInSeconds: Int, maxDurationInSeconds: Int): String {
 
     val minutes = remainingTimeInSeconds / 60
     val seconds = remainingTimeInSeconds % 60
+    val locale = ConfigurationCompat.getLocales(LocalConfiguration.current)[0] ?: Locale.ROOT
 
-    return String.format(Locale.getDefault(), "%02d:%02d", minutes, seconds)
+    return String.format(locale, "%02d:%02d", minutes, seconds)
 }
 
 @Composable
@@ -215,8 +218,9 @@ fun getDefaultTimeString(maxDurationInSeconds: Int): String {
 
     val minutes = (maxDurationInSeconds - 1) / 60
     val seconds = (maxDurationInSeconds - 1) % 60
+    val locale = ConfigurationCompat.getLocales(LocalConfiguration.current)[0] ?: Locale.ROOT
 
-    return String.format(Locale.getDefault(), "%02d:%02d", minutes, seconds)
+    return String.format(locale, "%02d:%02d", minutes, seconds)
 }
 
 @Composable
