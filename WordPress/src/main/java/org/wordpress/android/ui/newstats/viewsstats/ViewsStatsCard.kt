@@ -51,11 +51,13 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import org.wordpress.android.ui.newstats.StatsColors
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.os.ConfigurationCompat
 import com.patrykandpatrick.vico.compose.cartesian.CartesianChartHost
 import com.patrykandpatrick.vico.compose.cartesian.CartesianDrawingContext
 import com.patrykandpatrick.vico.compose.cartesian.axis.HorizontalAxis
@@ -431,6 +433,7 @@ private fun DifferenceRow(difference: Long, percentageChange: Double) {
         difference > 0 -> StatsColors.ChangeBadgePositive
         else -> MaterialTheme.colorScheme.outline
     }
+    val locale = ConfigurationCompat.getLocales(LocalConfiguration.current)[0] ?: Locale.ROOT
 
     Row(verticalAlignment = Alignment.CenterVertically) {
         Text(
@@ -446,7 +449,7 @@ private fun DifferenceRow(difference: Long, percentageChange: Double) {
         )
         Spacer(modifier = Modifier.width(4.dp))
         Text(
-            text = String.format(Locale.getDefault(), "%.1f%%", abs(percentageChange)),
+            text = String.format(locale, "%.1f%%", abs(percentageChange)),
             style = MaterialTheme.typography.bodyMedium,
             color = color
         )
@@ -805,14 +808,15 @@ private fun StatItemCard(stat: StatItem) {
 
 @Composable
 private fun ChangeBadge(change: StatChange) {
+    val locale = ConfigurationCompat.getLocales(LocalConfiguration.current)[0] ?: Locale.ROOT
     val (text, backgroundColor, textColor) = when (change) {
         is StatChange.Positive -> Triple(
-            "↗ ${String.format(Locale.getDefault(), "%.1f%%", change.percentage)}",
+            "↗ ${String.format(locale, "%.1f%%", change.percentage)}",
             StatsColors.ChangeBadgePositive.copy(alpha = 0.15f),
             StatsColors.ChangeBadgePositive
         )
         is StatChange.Negative -> Triple(
-            "↘ ${String.format(Locale.getDefault(), "%.1f%%", change.percentage)}",
+            "↘ ${String.format(locale, "%.1f%%", change.percentage)}",
             StatsColors.ChangeBadgeNegative.copy(alpha = 0.15f),
             StatsColors.ChangeBadgeNegative
         )
