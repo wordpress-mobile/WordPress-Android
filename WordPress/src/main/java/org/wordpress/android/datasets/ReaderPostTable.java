@@ -28,6 +28,7 @@ import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.SqlUtils;
 
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -421,17 +422,45 @@ public class ReaderPostTable {
             return ReaderActions.UpdateResult.UNCHANGED;
         }
 
+        Map<String, ReaderPost> existing = loadExistingPostsForComparison(posts);
+
         boolean hasChanges = false;
         for (ReaderPost post : posts) {
-            ReaderPost existingPost = getBlogPost(post.blogId, post.postId, true);
+            ReaderPost existingPost = existing.get(post.blogId + "|" + post.postId);
             if (existingPost == null) {
                 return ReaderActions.UpdateResult.HAS_NEW;
-            } else if (!hasChanges && !post.isSamePost(existingPost)) {
+            }
+            // existingPost was loaded without the text column, so skip comparing text
+            if (!hasChanges && !post.isSamePost(existingPost, false)) {
                 hasChanges = true;
             }
         }
 
         return (hasChanges ? ReaderActions.UpdateResult.CHANGED : ReaderActions.UpdateResult.UNCHANGED);
+    }
+
+    private static Map<String, ReaderPost> loadExistingPostsForComparison(ReaderPostList posts) {
+        Map<String, ReaderPost> map = new LinkedHashMap<>(posts.size());
+        String where = String.join(" OR ", Collections.nCopies(posts.size(), "(blog_id=? AND post_id=?)"));
+        String[] args = new String[posts.size() * 2];
+        int argIdx = 0;
+        for (ReaderPost post : posts) {
+            args[argIdx++] = Long.toString(post.blogId);
+            args[argIdx++] = Long.toString(post.postId);
+        }
+
+        String sql = "SELECT " + COLUMN_NAMES_NO_TEXT + " FROM tbl_posts WHERE " + where;
+        Cursor c = ReaderDatabase.getReadableDb().rawQuery(sql, args);
+        try {
+            while (c.moveToNext()) {
+                ReaderPost existing = getPostFromCursor(c);
+                // the same post can appear multiple times (one row per tag) - keep the first row
+                map.putIfAbsent(existing.blogId + "|" + existing.postId, existing);
+            }
+        } finally {
+            SqlUtils.closeCursor(c);
+        }
+        return map;
     }
 
     /*
