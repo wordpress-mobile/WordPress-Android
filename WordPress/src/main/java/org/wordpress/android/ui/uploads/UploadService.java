@@ -3,10 +3,12 @@ package org.wordpress.android.ui.uploads;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.IBinder;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -176,6 +178,24 @@ public class UploadService extends Service {
         super.onTimeout(startId);
         stopSelf(startId);
         AppLog.i(T.MAIN, "UploadService > timed out");
+    }
+
+    // Android 15+ enforces a 6-hour-per-24h cap on dataSync foreground services. The system calls
+    // this two-arg overload before throwing ForegroundServiceDidNotStopInTimeException; we have a
+    // few seconds to stop. Cancel in-flight uploads eagerly so onDestroy() finishes within budget.
+    @Override
+    @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
+    public void onTimeout(int startId, int fgsType) {
+        super.onTimeout(startId, fgsType);
+        AppLog.w(T.MAIN, "UploadService > foreground service timeout reached (type=" + fgsType
+                         + "); stopping service");
+        if (mMediaUploadHandler != null) {
+            mMediaUploadHandler.cancelInProgressUploads();
+        }
+        if (mPostUploadHandler != null) {
+            mPostUploadHandler.cancelInProgressUploads();
+        }
+        stopSelf(startId);
     }
 
     private void unpackMediaIntent(@NonNull Intent intent) {
