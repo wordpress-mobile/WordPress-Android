@@ -25,8 +25,7 @@ class SiteSettingsProviderImpl @Inject constructor() :
     override fun isBlockEditorDefault(site: SiteModel): Boolean {
         val editor = site.mobileEditor
         if (editor.isNullOrEmpty()) return true
-        val isWpComSimple = site.isWPCom && !site.isWPComAtomic
-        return isWpComSimple || editor == GUTENBERG_EDITOR_NAME
+        return site.isWPComSimpleSite || editor == GUTENBERG_EDITOR_NAME
     }
 
     private companion object {
