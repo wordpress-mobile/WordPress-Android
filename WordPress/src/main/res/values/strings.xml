@@ -701,7 +701,7 @@
     <string name="site_settings_use_theme_styles">Use Theme Styles</string>
     <string name="site_settings_use_theme_styles_summary">Make the block editor look like your theme.</string>
     <string name="site_settings_use_theme_styles_unsupported">Install the Gutenberg Plugin on your site to activate theme style support.</string>
-    <string name="site_settings_use_theme_styles_not_block_theme">Your site isn\'t using a Block Theme, so the editor might not match your content correctly. If things aren\'t looking right, you can disable editor styles.</string>
+    <string name="site_settings_use_theme_styles_not_block_theme">Your site isn\'t using a block theme. The editor may not match your content. If things don\'t look right, disable this setting.</string>
     <string name="site_settings_use_third_party_blocks">Use Third-Party Blocks (Beta)</string>
     <string name="site_settings_use_third_party_blocks_summary">Load third-party blocks from plugins installed on your site.</string>
     <string name="site_settings_use_third_party_blocks_unsupported">Your site doesn\'t support loading third-party blocks in the editor.</string>
