@@ -94,6 +94,11 @@ class ApiRootUrlCacheTest {
     }
 
     @Test
+    fun `get returns null for null key`() {
+        assertNull(apiRootUrlCache.get(null))
+    }
+
+    @Test
     fun `cache handles special characters in values`() {
         val key = "test-site.com"
         val value = "https://test-site.com/wp-json/?auth=token&user=test@email.com"

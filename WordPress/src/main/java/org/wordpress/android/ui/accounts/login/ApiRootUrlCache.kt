@@ -27,8 +27,8 @@ class ApiRootUrlCache @Inject constructor(
         }
     }
 
-    fun get(key: String): String? {
-        if (key.isEmpty()) {
+    fun get(key: String?): String? {
+        if (key.isNullOrEmpty()) {
             return null
         }
 
