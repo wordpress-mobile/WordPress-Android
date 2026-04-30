@@ -144,11 +144,10 @@ class EditorSettingsRepository @Inject constructor(
         if (theme != null) {
             AppLog.d(
                 T.EDITOR,
-                "EditorSettingsRepository:" +
-                    " theme fetched" +
-                    " for site=${site.name}" +
-                    " themeName=${theme.name}" +
-                    " isBlockTheme=${theme.isBlockTheme}"
+                "EditorSettingsRepository: theme fetched for " +
+                    "site=${site.name}, " +
+                    "themeName=${theme.name}, " +
+                    "isBlockTheme=${theme.isBlockTheme}"
             )
             appPrefsWrapper.setSiteThemeIsBlockTheme(
                 site, theme.isBlockTheme
