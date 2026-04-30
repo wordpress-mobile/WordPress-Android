@@ -74,10 +74,9 @@ class EditorSettingsRepository @Inject constructor(
      * [getSupportsEditorAssetsForSite], and
      * [getThemeSupportsBlockStyles] return them
      * synchronously on future calls.
-     */
-    /**
-     * Returns `true` when both checks complete without
-     * transport-level failures.
+     *
+     * @return `true` when both checks complete without
+     *   transport-level failures.
      */
     suspend fun fetchEditorCapabilitiesForSite(
         site: SiteModel
