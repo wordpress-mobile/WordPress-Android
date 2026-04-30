@@ -921,7 +921,6 @@ public class SiteSettingsFragment extends PreferenceFragment
             return;
         }
         ToastUtils.showToast(getActivity(), R.string.error_fetch_remote_site_settings);
-        getActivity().finish();
     }
 
     @Override
