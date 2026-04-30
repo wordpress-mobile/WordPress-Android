@@ -2,8 +2,8 @@ package org.wordpress.android.repositories
 
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.supervisorScope
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.withContext
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpApiClientProvider
@@ -81,18 +81,11 @@ class EditorSettingsRepository @Inject constructor(
     suspend fun fetchEditorCapabilitiesForSite(
         site: SiteModel
     ): Boolean = withContext(ioDispatcher) {
-        var routeOk = true
-        var themeOk = true
-        supervisorScope {
-            launch {
-                routeOk = fetchRouteSupport(site)
-            }
-            launch {
-                themeOk =
-                    fetchThemeBlockStyleSupport(site)
-            }
-        }
-        routeOk && themeOk
+        val results = awaitAll(
+            async { fetchRouteSupport(site) },
+            async { fetchThemeBlockStyleSupport(site) }
+        )
+        results.all { it }
     }
 
     @Suppress("TooGenericExceptionCaught")
