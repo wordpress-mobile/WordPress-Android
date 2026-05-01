@@ -512,10 +512,10 @@ object ReaderActivityLauncher {
     @JvmOverloads
     fun openUrl(
         context: Context,
-        url: String,
+        url: String?,
         openUrlType: OpenUrlType = OpenUrlType.INTERNAL
     ) {
-        if (TextUtils.isEmpty(url)) {
+        if (url.isNullOrEmpty()) {
             return
         }
 
