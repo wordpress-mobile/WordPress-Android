@@ -1196,7 +1196,13 @@ public class WPMainActivity extends BaseAppCompatActivity implements
             return;
         }
 
-        ActivityLauncher.addNewPostForResult(this, getSelectedSite(), false, source, promptId, entryPoint);
+        SiteModel selectedSite = getSelectedSite();
+        if (selectedSite == null) {
+            // Sites exist but none is selected - send the user to My Sites so they can pick one
+            mBottomNav.setCurrentSelectedPage(PageType.MY_SITE);
+            return;
+        }
+        ActivityLauncher.addNewPostForResult(this, selectedSite, false, source, promptId, entryPoint);
     }
 
     private void launchVoiceToContent() {
