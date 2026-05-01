@@ -47,6 +47,7 @@ class FeatureFlagsStore @Inject constructor(
             }
         }
 
+    @Suppress("TooGenericExceptionCaught")
     fun getFeatureFlags(): List<FeatureFlag> {
         return try {
             featureFlagConfigDao.getFeatureFlagList()
@@ -58,6 +59,7 @@ class FeatureFlagsStore @Inject constructor(
 
     // This returns a list because there can be multiple values for a single key.
     // It will be the client's responsibility to decide which value to use.
+    @Suppress("TooGenericExceptionCaught")
     fun getFeatureFlagsByKey(key: String): List<FeatureFlag> {
         return try {
             featureFlagConfigDao.getFeatureFlag(key)
