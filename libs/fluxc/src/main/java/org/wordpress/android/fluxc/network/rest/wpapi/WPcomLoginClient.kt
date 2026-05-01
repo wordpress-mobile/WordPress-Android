@@ -83,7 +83,13 @@ class WPcomLoginClient @Inject constructor(
 }
 
 sealed class WPcomLoginError(val code: Int): Throwable() {
-    data object AccessDenied: WPcomLoginError(1)
-    data object InvalidResponse: WPcomLoginError(2)
-    data class NetworkError(override val cause: Throwable): WPcomLoginError(3)
+    data object AccessDenied: WPcomLoginError(CODE_ACCESS_DENIED)
+    data object InvalidResponse: WPcomLoginError(CODE_INVALID_RESPONSE)
+    data class NetworkError(override val cause: Throwable): WPcomLoginError(CODE_NETWORK_ERROR)
+
+    companion object {
+        private const val CODE_ACCESS_DENIED = 1
+        private const val CODE_INVALID_RESPONSE = 2
+        private const val CODE_NETWORK_ERROR = 3
+    }
 }
