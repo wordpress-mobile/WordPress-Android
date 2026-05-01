@@ -97,12 +97,16 @@ class JetpackFeatureFullScreenOverlayViewModel @Inject constructor(
         }
 
         if (isFeatureCollectionOverlay) {
+            val currentPhase = getCurrentPhase() ?: run {
+                _action.postValue(JetpackFeatureOverlayActions.DismissDialog)
+                return
+            }
             isFeatureCollectionOverlayScreen = true
             featureCollectionOverlayOrigin = featureCollectionOverlaySource
             _uiState.postValue(
                 jetpackFeatureOverlayContentBuilder.buildFeatureCollectionOverlayState(
                     rtlLayout,
-                    getCurrentPhase()!!,
+                    currentPhase,
                     getBlogPostLinkForTheCurrentPhase()
                 )
             )
@@ -111,8 +115,12 @@ class JetpackFeatureFullScreenOverlayViewModel @Inject constructor(
         }
 
         screenType = overlayScreenType ?: return
+        val currentPhase = getCurrentPhase() ?: run {
+            _action.postValue(JetpackFeatureOverlayActions.DismissDialog)
+            return
+        }
         val params = JetpackFeatureOverlayContentBuilderParams(
-            currentPhase = getCurrentPhase()!!,
+            currentPhase = currentPhase,
             isRtl = rtlLayout,
             feature = overlayScreenType,
             jpDeadlineDate = jpDeadlineConfig.getValue(),
