@@ -41,6 +41,7 @@ class RemoteConfigStore @Inject constructor(
         }
     }
 
+    @Suppress("TooGenericExceptionCaught")
     fun getRemoteConfigs(): List<RemoteConfig> {
         return try {
             remoteConfigDao.getRemoteConfigList()
