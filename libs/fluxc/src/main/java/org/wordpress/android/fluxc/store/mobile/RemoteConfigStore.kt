@@ -42,7 +42,12 @@ class RemoteConfigStore @Inject constructor(
     }
 
     fun getRemoteConfigs(): List<RemoteConfig> {
-        return remoteConfigDao.getRemoteConfigList()
+        return try {
+            remoteConfigDao.getRemoteConfigList()
+        } catch (e: Exception) {
+            AppLog.e(AppLog.T.DB, "Failed to read remote config list", e)
+            emptyList()
+        }
     }
 
     fun insertRemoteConfig(key: String, value: String) {

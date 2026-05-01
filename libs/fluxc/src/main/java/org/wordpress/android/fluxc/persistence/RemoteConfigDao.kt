@@ -64,8 +64,10 @@ abstract class RemoteConfigDao {
 
     class RemoteConfigValueConverter {
         @TypeConverter
-        fun toRemoteConfigValueSource(value: Int): RemoteConfigValueSource =
-                enumValues<RemoteConfigValueSource>()[value]
+        fun toRemoteConfigValueSource(value: Int): RemoteConfigValueSource {
+            val values = enumValues<RemoteConfigValueSource>()
+            return if (value in values.indices) values[value] else RemoteConfigValueSource.BUILD_CONFIG
+        }
 
         @TypeConverter
         fun fromRemoteConfigValueSource(value: RemoteConfigValueSource): Int = value.ordinal
