@@ -64,8 +64,10 @@ abstract class FeatureFlagConfigDao {
 
     class FeatureFlagValueSourceConverter {
         @TypeConverter
-        fun toFeatureFlagValueSource(value: Int): FeatureFlagValueSource =
-                enumValues<FeatureFlagValueSource>()[value]
+        fun toFeatureFlagValueSource(value: Int): FeatureFlagValueSource {
+            val values = enumValues<FeatureFlagValueSource>()
+            return if (value in values.indices) values[value] else FeatureFlagValueSource.BUILD_CONFIG
+        }
 
         @TypeConverter
         fun fromFeatureFlagValueSource(value: FeatureFlagValueSource): Int = value.ordinal

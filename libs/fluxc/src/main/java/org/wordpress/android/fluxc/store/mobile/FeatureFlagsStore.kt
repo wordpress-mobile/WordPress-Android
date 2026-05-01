@@ -48,13 +48,23 @@ class FeatureFlagsStore @Inject constructor(
         }
 
     fun getFeatureFlags(): List<FeatureFlag> {
-        return featureFlagConfigDao.getFeatureFlagList()
+        return try {
+            featureFlagConfigDao.getFeatureFlagList()
+        } catch (e: Exception) {
+            AppLog.e(AppLog.T.DB, "Failed to read feature flag list", e)
+            emptyList()
+        }
     }
 
     // This returns a list because there can be multiple values for a single key.
     // It will be the client's responsibility to decide which value to use.
     fun getFeatureFlagsByKey(key: String): List<FeatureFlag> {
-        return featureFlagConfigDao.getFeatureFlag(key)
+        return try {
+            featureFlagConfigDao.getFeatureFlag(key)
+        } catch (e: Exception) {
+            AppLog.e(AppLog.T.DB, "Failed to read feature flag for key=$key", e)
+            emptyList()
+        }
     }
 
     fun insertFeatureFlagValue(key: String, value: Boolean) {
