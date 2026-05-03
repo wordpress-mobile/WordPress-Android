@@ -1,6 +1,5 @@
 package org.wordpress.android.fluxc.store.mobile
 
-import android.util.Log
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -21,6 +20,7 @@ import org.wordpress.android.fluxc.persistence.FeatureFlagConfigDao
 import org.wordpress.android.fluxc.store.mobile.FeatureFlagsStore.FeatureFlagsResult
 import org.wordpress.android.fluxc.test
 import org.wordpress.android.fluxc.tools.initCoroutineEngine
+import org.wordpress.android.util.AppLog
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull
@@ -87,23 +87,33 @@ class FeatureFlagsStoreTest {
     }
 
     @Test
-    fun `given dao throws, when getFeatureFlags is called, then empty list is returned`() {
-        whenever(featureFlagConfigDao.getFeatureFlagList()).thenThrow(RuntimeException("db error"))
+    fun `given dao throws, when getFeatureFlags is called, then empty list is returned and error is logged`() {
+        val exception = RuntimeException("db error")
+        whenever(featureFlagConfigDao.getFeatureFlagList()).thenThrow(exception)
 
-        mockStatic(Log::class.java).use {
+        mockStatic(AppLog::class.java).use { appLog ->
             val result = store.getFeatureFlags()
+
             assertTrue(result.isEmpty())
+            appLog.verify {
+                AppLog.e(AppLog.T.DB, "Failed to read feature flag list", exception)
+            }
         }
     }
 
     @Test
-    fun `given dao throws, when getFeatureFlagsByKey is called, then empty list is returned`() {
+    fun `given dao throws, when getFeatureFlagsByKey is called, then empty list is returned and error is logged`() {
         val key = "flag-1"
-        whenever(featureFlagConfigDao.getFeatureFlag(eq(key))).thenThrow(RuntimeException("db error"))
+        val exception = RuntimeException("db error")
+        whenever(featureFlagConfigDao.getFeatureFlag(eq(key))).thenThrow(exception)
 
-        mockStatic(Log::class.java).use {
+        mockStatic(AppLog::class.java).use { appLog ->
             val result = store.getFeatureFlagsByKey(key)
+
             assertTrue(result.isEmpty())
+            appLog.verify {
+                AppLog.e(AppLog.T.DB, "Failed to read feature flag for key=$key", exception)
+            }
         }
     }
 
