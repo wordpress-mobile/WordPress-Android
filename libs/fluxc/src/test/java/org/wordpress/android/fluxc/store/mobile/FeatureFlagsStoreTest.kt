@@ -1,11 +1,14 @@
 package org.wordpress.android.fluxc.store.mobile
 
+import android.util.Log
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
+import org.mockito.Mockito.mockStatic
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.any
+import org.mockito.kotlin.eq
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.verifyNoInteractions
 import org.mockito.kotlin.whenever
@@ -21,6 +24,7 @@ import org.wordpress.android.fluxc.tools.initCoroutineEngine
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull
+import kotlin.test.assertTrue
 
 @RunWith(MockitoJUnitRunner::class)
 class FeatureFlagsStoreTest {
@@ -80,6 +84,27 @@ class FeatureFlagsStoreTest {
         verifyNoInteractions(featureFlagConfigDao)
         assertNull(response.featureFlags)
         assertEquals(FeatureFlagsResult(errorResult), response)
+    }
+
+    @Test
+    fun `given dao throws, when getFeatureFlags is called, then empty list is returned`() {
+        whenever(featureFlagConfigDao.getFeatureFlagList()).thenThrow(RuntimeException("db error"))
+
+        mockStatic(Log::class.java).use {
+            val result = store.getFeatureFlags()
+            assertTrue(result.isEmpty())
+        }
+    }
+
+    @Test
+    fun `given dao throws, when getFeatureFlagsByKey is called, then empty list is returned`() {
+        val key = "flag-1"
+        whenever(featureFlagConfigDao.getFeatureFlag(eq(key))).thenThrow(RuntimeException("db error"))
+
+        mockStatic(Log::class.java).use {
+            val result = store.getFeatureFlagsByKey(key)
+            assertTrue(result.isEmpty())
+        }
     }
 
     companion object {
