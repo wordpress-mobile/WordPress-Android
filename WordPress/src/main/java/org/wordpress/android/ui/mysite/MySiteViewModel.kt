@@ -45,6 +45,7 @@ import org.wordpress.android.ui.mysite.cards.applicationpassword.ApplicationPass
 import org.wordpress.android.ui.mysite.items.listitem.SiteCapabilityChecker
 import org.wordpress.android.ui.posts.GutenbergKitWarmupHelper
 import org.wordpress.android.ui.utils.UiString
+import org.wordpress.android.repositories.EditorSettingsRepository
 
 @Suppress("LargeClass", "LongMethod", "LongParameterList")
 class MySiteViewModel @Inject constructor(
@@ -66,6 +67,7 @@ class MySiteViewModel @Inject constructor(
     private val applicationPasswordViewModelSlice: ApplicationPasswordViewModelSlice,
     private val gutenbergKitWarmupHelper: GutenbergKitWarmupHelper,
     private val siteCapabilityChecker: SiteCapabilityChecker,
+    private val editorSettingsRepository: EditorSettingsRepository,
 ) : ScopedViewModel(mainDispatcher) {
     private val _onSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
     private val _onNavigation = MutableLiveData<Event<SiteNavigationAction>>()
@@ -168,6 +170,12 @@ class MySiteViewModel @Inject constructor(
                 siteCapabilityChecker.clearCacheForSite(site.siteId)
             }
             buildDashboardOrSiteItems(site)
+            launch {
+                fetchEditorCapabilitiesWithSnackbar(
+                    site,
+                    isUserInitiated = isPullToRefresh
+                )
+            }
         } ?: run {
             accountDataViewModelSlice.onRefresh()
         }
@@ -179,8 +187,36 @@ class MySiteViewModel @Inject constructor(
         selectedSiteRepository.updateSiteSettingsIfNecessary()
         selectedSiteRepository.getSelectedSite()?.let {
             buildDashboardOrSiteItems(it)
+            launch {
+                fetchEditorCapabilitiesWithSnackbar(
+                    it,
+                    isUserInitiated = false
+                )
+            }
         } ?: run {
             accountDataViewModelSlice.onResume()
+        }
+    }
+
+    private suspend fun fetchEditorCapabilitiesWithSnackbar(
+        site: SiteModel,
+        isUserInitiated: Boolean
+    ) {
+        val ok = editorSettingsRepository
+            .fetchEditorCapabilitiesForSite(site)
+        val hasCache = editorSettingsRepository
+            .hasCachedCapabilities(site)
+        if (!ok && (isUserInitiated || !hasCache)) {
+            _onSnackbarMessage.postValue(
+                Event(
+                    SnackbarMessageHolder(
+                        UiString.UiStringRes(
+                            R.string
+                                .site_settings_fetch_failed
+                        )
+                    )
+                )
+            )
         }
     }
 
