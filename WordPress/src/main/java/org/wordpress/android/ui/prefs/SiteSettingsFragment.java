@@ -81,6 +81,8 @@ import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewModel;
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper;
 import org.wordpress.android.util.PlansConstants;
 import org.wordpress.android.ui.posts.GutenbergKitFeatureChecker;
+import org.wordpress.android.repositories.EditorSettingsRepository;
+import org.wordpress.android.util.config.GutenbergKitPluginsFeature;
 import org.wordpress.android.ui.prefs.EditTextPreferenceWithValidation.ValidationType;
 import org.wordpress.android.ui.prefs.SiteSettingsFormatDialog.FormatType;
 import org.wordpress.android.ui.prefs.homepage.HomepageSettingsDialog;
@@ -194,6 +196,8 @@ public class SiteSettingsFragment extends PreferenceFragment
     @Inject JetpackFeatureRemovalPhaseHelper mJetpackFeatureRemovalPhaseHelper;
     @Inject BloggingPromptsSettingsHelper mPromptsSettingsHelper;
     @Inject GutenbergKitFeatureChecker mGutenbergKitFeatureChecker;
+    @Inject GutenbergKitPluginsFeature mGutenbergKitPluginsFeature;
+    @Inject EditorSettingsRepository mEditorSettingsRepository;
 
     private BloggingRemindersViewModel mBloggingRemindersViewModel;
 
@@ -228,6 +232,7 @@ public class SiteSettingsFragment extends PreferenceFragment
     // Writing settings
     private WPSwitchPreference mGutenbergDefaultForNewPosts;
     private WPSwitchPreference mUseThemeStylesPref;
+    private WPSwitchPreference mUseThirdPartyBlocksPref;
     private DetailListPreference mCategoryPref;
     private DetailListPreference mFormatPref;
     private WPPreference mDateFormatPref;
@@ -848,6 +853,8 @@ public class SiteSettingsFragment extends PreferenceFragment
             AnalyticsUtils.refreshMetadata(mAccountStore, mSiteStore);
         } else if (preference == mUseThemeStylesPref) {
             mSiteSettings.setUseThemeStyles((Boolean) newValue);
+        } else if (preference == mUseThirdPartyBlocksPref) {
+            mSiteSettings.setUseThirdPartyBlocks((Boolean) newValue);
         } else if (preference == mBloggingPromptsPref) {
             final boolean isEnabled = (boolean) newValue;
             mPromptsSettingsHelper.updatePromptsCardEnabledBlocking(mSite.getId(), isEnabled);
@@ -914,7 +921,6 @@ public class SiteSettingsFragment extends PreferenceFragment
             return;
         }
         ToastUtils.showToast(getActivity(), R.string.error_fetch_remote_site_settings);
-        getActivity().finish();
     }
 
     @Override
@@ -1037,6 +1043,10 @@ public class SiteSettingsFragment extends PreferenceFragment
                 (WPSwitchPreference) getChangePref(R.string.pref_key_use_theme_styles);
         mUseThemeStylesPref.setChecked(mSiteSettings.getUseThemeStyles());
 
+        mUseThirdPartyBlocksPref =
+                (WPSwitchPreference) getChangePref(R.string.pref_key_use_third_party_blocks);
+        mUseThirdPartyBlocksPref.setChecked(mSiteSettings.getUseThirdPartyBlocks());
+
         mSiteAcceleratorSettings = (PreferenceScreen) getClickPref(R.string.pref_key_site_accelerator_settings);
         mSiteAcceleratorSettingsNested =
                 (PreferenceScreen) getClickPref(R.string.pref_key_site_accelerator_settings_nested);
@@ -1081,6 +1091,30 @@ public class SiteSettingsFragment extends PreferenceFragment
         // hide theme styles preference if GutenbergKit is not enabled
         if (!mGutenbergKitFeatureChecker.isGutenbergKitEnabled()) {
             WPPrefUtils.removePreference(this, R.string.pref_key_site_editor, R.string.pref_key_use_theme_styles);
+        } else if (!mEditorSettingsRepository.getSupportsEditorSettingsForSite(mSite)) {
+            mUseThemeStylesPref.setEnabled(false);
+            mUseThemeStylesPref.setSummary(
+                    getString(R.string.site_settings_use_theme_styles_summary) + "\n\n"
+                            + getString(R.string.site_settings_use_theme_styles_unsupported));
+        } else if (!mEditorSettingsRepository.getThemeSupportsBlockStyles(mSite)) {
+            mUseThemeStylesPref.setSummary(
+                    getString(R.string.site_settings_use_theme_styles_summary) + "\n\n"
+                            + getString(R.string.site_settings_use_theme_styles_not_block_theme));
+        }
+
+        // hide third-party blocks preference if GutenbergKit or plugins feature is not enabled
+        if (!mGutenbergKitFeatureChecker.isGutenbergKitEnabled()
+                || !mGutenbergKitPluginsFeature.isEnabled()) {
+            WPPrefUtils.removePreference(
+                    this, R.string.pref_key_site_editor,
+                    R.string.pref_key_use_third_party_blocks);
+        } else if (!mEditorSettingsRepository.getSupportsEditorAssetsForSite(mSite)) {
+            mUseThirdPartyBlocksPref.setEnabled(false);
+            mUseThirdPartyBlocksPref.setSummary(
+                    getString(R.string.site_settings_use_third_party_blocks_summary)
+                            + "\n\n"
+                            + getString(
+                            R.string.site_settings_use_third_party_blocks_unsupported));
         }
 
         // hide Admin options depending of capabilities on this site
@@ -1207,7 +1241,8 @@ public class SiteSettingsFragment extends PreferenceFragment
                 mDateFormatPref, mTimeFormatPref, mTimezonePref, mBloggingRemindersPref, mPostsPerPagePref, mAmpPref,
                 mDeleteSitePref, mJpMonitorActivePref, mJpMonitorEmailNotesPref, mJpSsoPref,
                 mJpMonitorWpNotesPref, mJpBruteForcePref, mJpAllowlistPref, mJpMatchEmailPref, mJpUseTwoFactorPref,
-                mGutenbergDefaultForNewPosts, mUseThemeStylesPref, mHomepagePref, mBloggingPromptsPref
+                mGutenbergDefaultForNewPosts, mUseThemeStylesPref, mUseThirdPartyBlocksPref,
+                mHomepagePref, mBloggingPromptsPref
         };
 
         for (Preference preference : editablePreference) {
@@ -1552,6 +1587,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         mWeekStartPref.setSummary(mWeekStartPref.getEntry());
         mGutenbergDefaultForNewPosts.setChecked(SiteUtils.isBlockEditorDefaultForNewPost(mSite));
         mUseThemeStylesPref.setChecked(mSiteSettings.getUseThemeStyles());
+        mUseThirdPartyBlocksPref.setChecked(mSiteSettings.getUseThirdPartyBlocks());
         setAdFreeHostingChecked(mSiteSettings.isAdFreeHostingEnabled());
         boolean checked = mSiteSettings.isImprovedSearchEnabled() || mSiteSettings.getJetpackSearchEnabled();
         mImprovedSearch.setChecked(checked);
