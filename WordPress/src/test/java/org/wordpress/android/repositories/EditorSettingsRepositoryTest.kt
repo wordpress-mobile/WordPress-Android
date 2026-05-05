@@ -19,6 +19,15 @@ import rs.wordpress.api.kotlin.WpApiClient
 import rs.wordpress.api.kotlin.WpRequestResult
 import uniffi.wp_api.ApiRootRequestGetResponse
 import uniffi.wp_api.ApiUrlResolver
+import uniffi.wp_api.ThemeAuthor
+import uniffi.wp_api.ThemeAuthorUri
+import uniffi.wp_api.ThemeDescription
+import uniffi.wp_api.ThemeName
+import uniffi.wp_api.ThemeStatus
+import uniffi.wp_api.ThemeStylesheet
+import uniffi.wp_api.ThemeTags
+import uniffi.wp_api.ThemeUri
+import uniffi.wp_api.ThemeWithEditContext
 import uniffi.wp_api.WpApiDetails
 import uniffi.wp_api.WpNetworkHeaderMap
 
@@ -224,10 +233,30 @@ class EditorSettingsRepositoryTest : BaseUnitTest() {
     private suspend fun mockThemeResponse(
         isBlockTheme: Boolean
     ) {
-        val theme = mock<uniffi.wp_api.ThemeWithEditContext>()
-        whenever(theme.isBlockTheme).thenReturn(isBlockTheme)
         whenever(
             themeRepository.fetchCurrentTheme(testSite)
-        ).thenReturn(theme)
+        ).thenReturn(buildTheme(isBlockTheme = isBlockTheme))
     }
+
+    private fun buildTheme(isBlockTheme: Boolean) = ThemeWithEditContext(
+        stylesheet = ThemeStylesheet(value = ""),
+        template = "",
+        requiresPhp = "",
+        requiresWp = "",
+        textdomain = "",
+        version = "",
+        screenshot = "",
+        author = ThemeAuthor(raw = "", rendered = ""),
+        authorUri = ThemeAuthorUri(raw = "", rendered = ""),
+        description = ThemeDescription(raw = "", rendered = ""),
+        name = ThemeName(raw = "", rendered = ""),
+        tags = ThemeTags(raw = emptyList(), rendered = ""),
+        themeUri = ThemeUri(raw = "", rendered = ""),
+        status = ThemeStatus.Active,
+        isBlockTheme = isBlockTheme,
+        stylesheetUri = "",
+        templateUri = "",
+        themeSupports = null,
+        defaultTemplateTypes = null,
+    )
 }
