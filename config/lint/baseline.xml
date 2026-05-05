@@ -553,6 +553,17 @@
 
     <issue
         id="DoNotMockDataClass"
+        message="&apos;uniffi.wp_api.ThemeWithEditContext&apos; is a data class, so mocking it should not be necessary"
+        errorLine1="        val theme = mock&lt;uniffi.wp_api.ThemeWithEditContext>()"
+        errorLine2="                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/test/java/org/wordpress/android/repositories/EditorSettingsRepositoryTest.kt"
+            line="227"
+            column="21"/>
+    </issue>
+
+    <issue
+        id="DoNotMockDataClass"
         message="&apos;org.wordpress.android.ui.engagement.ListScenario&apos; is a data class, so mocking it should not be necessary"
         errorLine1="    @Mock"
         errorLine2="    ^">
