@@ -24,6 +24,8 @@ import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsActivit
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsFragment
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.utils.ReaderUtils
+import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.WPUrlUtils
 import java.util.EnumSet
 
@@ -516,6 +518,7 @@ object ReaderActivityLauncher {
         openUrlType: OpenUrlType = OpenUrlType.INTERNAL
     ) {
         if (url.isNullOrEmpty()) {
+            AppLog.w(T.READER, "openUrl called with null or empty url")
             return
         }
 
