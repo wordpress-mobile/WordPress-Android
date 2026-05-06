@@ -46,7 +46,7 @@ class CategoryDetailViewModel @Inject constructor(
     selectedSiteRepository: SelectedSiteRepository
 ) : ScopedViewModel(bgDispatcher) {
     private var isStarted = false
-    private val siteModel: SiteModel? = selectedSiteRepository.getSelectedSite()
+    private val siteModel: SiteModel = requireNotNull(selectedSiteRepository.getSelectedSite())
     var existingCategory: TermModel? = null
 
     private val topLevelCategory = CategoryNode(0, 0, resourceProvider.getString(R.string.top_level_category_name))
@@ -70,15 +70,14 @@ class CategoryDetailViewModel @Inject constructor(
         if (isStarted) return
         isStarted = true
 
-        if (siteModel == null) return
-        initCategories(categoryId, siteModel)
+        initCategories(categoryId)
     }
 
-    private fun initCategories(categoryId: Long?, site: SiteModel) {
+    private fun initCategories(categoryId: Long?) {
         launch {
-            val siteCategories = getCategoriesUseCase.getSiteCategories(site)
+            val siteCategories = getCategoriesUseCase.getSiteCategories(siteModel)
             siteCategories.add(0, topLevelCategory)
-            categoryId?.let { initializeEditCategoryState(siteCategories, categoryId, site) }
+            categoryId?.let { initializeEditCategoryState(siteCategories, categoryId) }
                 ?: initializeAddCategoryState(siteCategories)
         }
     }
@@ -93,12 +92,8 @@ class CategoryDetailViewModel @Inject constructor(
         )
     }
 
-    private fun initializeEditCategoryState(
-        siteCategories: ArrayList<CategoryNode>,
-        categoryId: Long,
-        site: SiteModel
-    ) {
-        existingCategory = getCategoriesUseCase.getCategoriesForSite(site)
+    private fun initializeEditCategoryState(siteCategories: ArrayList<CategoryNode>, categoryId: Long) {
+        existingCategory = getCategoriesUseCase.getCategoriesForSite(siteModel)
             .find { it.remoteTermId == categoryId }
         var parentCategoryPosition = siteCategories.indexOfFirst { it.categoryId == existingCategory!!.parentRemoteId }
         if (parentCategoryPosition == -1) parentCategoryPosition = 0
@@ -122,7 +117,6 @@ class CategoryDetailViewModel @Inject constructor(
     }
 
     private fun addCategory(categoryText: String, parentCategory: CategoryNode) {
-        val site = siteModel ?: return
         if (!networkUtilsWrapper.isNetworkAvailable()) {
             _onCategoryPush.postValue(
                 Event(Failure(UiStringRes(R.string.no_network_message)))
@@ -131,12 +125,11 @@ class CategoryDetailViewModel @Inject constructor(
         }
         launch {
             _onCategoryPush.postValue(Event(InProgress(R.string.adding_cat)))
-            addCategoryUseCase.addCategory(categoryText, parentCategory.categoryId, site)
+            addCategoryUseCase.addCategory(categoryText, parentCategory.categoryId, siteModel)
         }
     }
 
     private fun editCategory(categoryId: Long, categoryText: String, parentCategory: CategoryNode) {
-        val site = siteModel ?: return
         if (!networkUtilsWrapper.isNetworkAvailable()) {
             _onCategoryPush.postValue(
                 Event(Failure(UiStringRes(R.string.no_network_message)))
@@ -150,7 +143,7 @@ class CategoryDetailViewModel @Inject constructor(
                 categoryId,
                 categoryText,
                 parentCategory.categoryId,
-                site
+                siteModel
             )
         }
     }
@@ -225,7 +218,6 @@ class CategoryDetailViewModel @Inject constructor(
     }
 
     fun deleteCategory() {
-        val site = siteModel ?: return
         if (!networkUtilsWrapper.isNetworkAvailable()) {
             _onCategoryPush.postValue(
                 Event(Failure(UiStringRes(R.string.no_network_message)))
@@ -234,7 +226,7 @@ class CategoryDetailViewModel @Inject constructor(
         }
         launch {
             _onCategoryPush.postValue(Event(InProgress(R.string.deleting_cat)))
-            deleteCategoryUseCase.deleteCategory(existingCategory!!, site)
+            deleteCategoryUseCase.deleteCategory(existingCategory!!, siteModel)
         }
     }
 }
