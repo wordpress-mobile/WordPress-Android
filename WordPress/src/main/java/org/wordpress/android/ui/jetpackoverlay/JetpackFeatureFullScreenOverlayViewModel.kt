@@ -97,10 +97,8 @@ class JetpackFeatureFullScreenOverlayViewModel @Inject constructor(
         }
 
         if (isFeatureCollectionOverlay) {
-            val currentPhase = getCurrentPhase() ?: run {
-                _action.postValue(JetpackFeatureOverlayActions.DismissDialog)
-                return
-            }
+            val currentPhase = getCurrentPhase()
+                ?: return _action.postValue(JetpackFeatureOverlayActions.DismissDialog)
             isFeatureCollectionOverlayScreen = true
             featureCollectionOverlayOrigin = featureCollectionOverlaySource
             _uiState.postValue(
@@ -114,10 +112,8 @@ class JetpackFeatureFullScreenOverlayViewModel @Inject constructor(
             return
         }
 
-        val currentPhase = getCurrentPhase() ?: run {
-            _action.postValue(JetpackFeatureOverlayActions.DismissDialog)
-            return
-        }
+        val currentPhase = getCurrentPhase()
+            ?: return _action.postValue(JetpackFeatureOverlayActions.DismissDialog)
         screenType = overlayScreenType ?: return
         val params = JetpackFeatureOverlayContentBuilderParams(
             currentPhase = currentPhase,
