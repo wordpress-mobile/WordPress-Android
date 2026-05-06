@@ -11,6 +11,7 @@ import okhttp3.Request
 import org.wordpress.android.fluxc.module.OkHttpClientQualifiers
 import org.wordpress.android.fluxc.network.rest.wpapi.applicationpasswords.WPcomAuthorizationCodeResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AppSecrets
+import java.io.IOException
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
@@ -61,21 +62,34 @@ class WPcomLoginClient @Inject constructor(
             .build()
 
         return withContext(context) {
-            val response = client.newCall(request).execute()
+            try {
+                val response = client.newCall(request).execute()
 
-            if (!response.isSuccessful) {
-                response.body?.let { Log.e("WPCOM_LOGIN", it.string()) }
-                Result.failure(WPcomLoginError.AccessDenied)
-            } else {
-                val json = response.body?.string() ?: return@withContext Result.failure(WPcomLoginError.InvalidResponse)
-                val gson = Gson().fromJson(json, WPcomAuthorizationCodeResponse::class.java)
-                Result.success(gson.accessToken)
+                if (!response.isSuccessful) {
+                    response.body?.let { Log.e("WPCOM_LOGIN", it.string()) }
+                    Result.failure(WPcomLoginError.AccessDenied)
+                } else {
+                    val json = response.body?.string()
+                        ?: return@withContext Result.failure(WPcomLoginError.InvalidResponse)
+                    val gson = Gson().fromJson(json, WPcomAuthorizationCodeResponse::class.java)
+                    Result.success(gson.accessToken)
+                }
+            } catch (e: IOException) {
+                Log.e("WPCOM_LOGIN", "Network error exchanging auth code for token", e)
+                Result.failure(WPcomLoginError.NetworkError(e))
             }
         }
     }
 }
 
 sealed class WPcomLoginError(val code: Int): Throwable() {
-    data object AccessDenied: WPcomLoginError(1)
-    data object InvalidResponse: WPcomLoginError(2)
+    data object AccessDenied: WPcomLoginError(CODE_ACCESS_DENIED)
+    data object InvalidResponse: WPcomLoginError(CODE_INVALID_RESPONSE)
+    data class NetworkError(override val cause: Throwable): WPcomLoginError(CODE_NETWORK_ERROR)
+
+    companion object {
+        private const val CODE_ACCESS_DENIED = 1
+        private const val CODE_INVALID_RESPONSE = 2
+        private const val CODE_NETWORK_ERROR = 3
+    }
 }
