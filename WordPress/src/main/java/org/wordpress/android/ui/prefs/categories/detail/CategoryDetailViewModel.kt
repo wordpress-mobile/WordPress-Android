@@ -70,13 +70,8 @@ class CategoryDetailViewModel @Inject constructor(
         if (isStarted) return
         isStarted = true
 
-        val site = siteModel
-        if (site == null) {
-            AppLog.e(T.SETTINGS, "CategoryDetailViewModel started without a selected site")
-            _onCategoryPush.postValue(Event(Failure(UiStringRes(R.string.menu_error_no_site_selected))))
-            return
-        }
-        initCategories(categoryId, site)
+        if (siteModel == null) return
+        initCategories(categoryId, siteModel)
     }
 
     private fun initCategories(categoryId: Long?, site: SiteModel) {
