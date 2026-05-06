@@ -74,6 +74,7 @@ class EditPostRepository
         get() = post!!.password
     val status: PostStatus
         get() = fromPost(getPost())
+    /** Returns `false` when no post is loaded. */
     val isPage: Boolean
         get() = post?.isPage ?: run {
             AppLog.w(T.POSTS, "EditPostRepository.isPage queried before a post was loaded")
