@@ -114,11 +114,11 @@ class JetpackFeatureFullScreenOverlayViewModel @Inject constructor(
             return
         }
 
-        screenType = overlayScreenType ?: return
         val currentPhase = getCurrentPhase() ?: run {
             _action.postValue(JetpackFeatureOverlayActions.DismissDialog)
             return
         }
+        screenType = overlayScreenType ?: return
         val params = JetpackFeatureOverlayContentBuilderParams(
             currentPhase = currentPhase,
             isRtl = rtlLayout,
