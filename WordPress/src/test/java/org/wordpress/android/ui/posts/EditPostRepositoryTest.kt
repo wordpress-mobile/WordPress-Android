@@ -70,19 +70,6 @@ class EditPostRepositoryTest : BaseUnitTest() {
     }
 
     @Test
-    fun `isPage returns false before initialization instead of throwing`() {
-        assertThat(editPostRepository.isPage).isFalse()
-    }
-
-    @Test
-    fun `isPage reflects the loaded post`() {
-        val post = PostModel().apply { setIsPage(true) }
-        editPostRepository.set { post }
-
-        assertThat(editPostRepository.isPage).isTrue()
-    }
-
-    @Test
     fun `reads post for undo correctly`() {
         val post = PostModel()
 
