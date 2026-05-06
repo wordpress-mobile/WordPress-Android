@@ -281,6 +281,10 @@ class ApplicationPasswordLoginHelper @Inject constructor(
         return uriLoginWrapper.parseUriLogin(url)
     }
 
+    fun isUserRejectedAuthorization(rawData: String): Boolean {
+        return uriLoginWrapper.isUserRejectedAuthorization(rawData)
+    }
+
     private fun findSiteByUrl(
         normalizedUrl: String?,
         sites: List<SiteModel>
@@ -341,6 +345,13 @@ class ApplicationPasswordLoginHelper @Inject constructor(
             val password = uri.getQueryParameter("password")
             val apiRootUrl = apiRootUrlCache.get(siteUrl)
             return UriLogin(siteUrl, userLogin, password, apiRootUrl)
+        }
+
+        // WordPress' authorize-application.php redirects to the success_url with `success=false`
+        // when the user clicks "No, I do not approve this connection". No credentials are returned.
+        fun isUserRejectedAuthorization(rawData: String): Boolean {
+            if (rawData.isEmpty()) return false
+            return runCatching { rawData.toUri().getQueryParameter("success") }.getOrNull() == "false"
         }
 
         fun appendParamsToRestAuthorizationUrl(authorizationUrl: String?): String {

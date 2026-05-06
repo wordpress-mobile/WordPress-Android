@@ -16,6 +16,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.fluxc.model.JetpackCapability;
+import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagType;
 import org.wordpress.android.ui.ActivityId;
@@ -203,6 +204,9 @@ public class AppPrefs {
         STATS_INSIGHTS_CARDS_CONFIGURATION_JSON,
         SUBSCRIBERS_CARDS_CONFIGURATION_JSON,
         STATS_UTM_CATEGORY,
+        SITE_SUPPORTS_EDITOR_SETTINGS,
+        SITE_SUPPORTS_EDITOR_ASSETS,
+        SITE_THEME_IS_BLOCK_THEME,
 
         // Login flow preserved across OAuth Custom Tabs redirect
         PENDING_LOGIN_FLOW,
@@ -1865,6 +1869,69 @@ public class AppPrefs {
     @NonNull
     private static String getStatsUtmCategoryKey(long siteId) {
         return DeletablePrefKey.STATS_UTM_CATEGORY.name() + siteId;
+    }
+
+    public static boolean hasSiteEditorCapabilities(
+            @NonNull SiteModel site
+    ) {
+        return prefs().contains(
+                DeletablePrefKey.SITE_SUPPORTS_EDITOR_SETTINGS.name()
+                        + site.getId()
+        );
+    }
+
+    public static boolean getSiteSupportsEditorSettings(
+            @NonNull SiteModel site
+    ) {
+        return prefs().getBoolean(
+                DeletablePrefKey.SITE_SUPPORTS_EDITOR_SETTINGS.name()
+                        + site.getId(), false
+        );
+    }
+
+    public static void setSiteSupportsEditorSettings(
+            @NonNull SiteModel site, boolean supports
+    ) {
+        prefs().edit().putBoolean(
+                DeletablePrefKey.SITE_SUPPORTS_EDITOR_SETTINGS.name()
+                        + site.getId(), supports
+        ).apply();
+    }
+
+    public static boolean getSiteSupportsEditorAssets(
+            @NonNull SiteModel site
+    ) {
+        return prefs().getBoolean(
+                DeletablePrefKey.SITE_SUPPORTS_EDITOR_ASSETS.name()
+                        + site.getId(), false
+        );
+    }
+
+    public static void setSiteSupportsEditorAssets(
+            @NonNull SiteModel site, boolean supports
+    ) {
+        prefs().edit().putBoolean(
+                DeletablePrefKey.SITE_SUPPORTS_EDITOR_ASSETS.name()
+                        + site.getId(), supports
+        ).apply();
+    }
+
+    public static boolean getSiteThemeIsBlockTheme(
+            @NonNull SiteModel site
+    ) {
+        return prefs().getBoolean(
+                DeletablePrefKey.SITE_THEME_IS_BLOCK_THEME.name()
+                        + site.getId(), false
+        );
+    }
+
+    public static void setSiteThemeIsBlockTheme(
+            @NonNull SiteModel site, boolean isBlockTheme
+    ) {
+        prefs().edit().putBoolean(
+                DeletablePrefKey.SITE_THEME_IS_BLOCK_THEME.name()
+                        + site.getId(), isBlockTheme
+        ).apply();
     }
 
     /**

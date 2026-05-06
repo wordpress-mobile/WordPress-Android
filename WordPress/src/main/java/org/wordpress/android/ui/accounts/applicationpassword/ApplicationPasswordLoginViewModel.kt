@@ -81,6 +81,10 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
                 emitError(siteUrl = "", errorMessage = "empty_raw_data")
                 return@launch
             }
+            if (applicationPasswordLoginHelper.isUserRejectedAuthorization(rawData)) {
+                handleUserRejected()
+                return@launch
+            }
             val urlLogin = applicationPasswordLoginHelper.getSiteUrlLoginFromRawData(rawData)
             currentUrlLogin = urlLogin
             // Store credentials if the site already exists
@@ -113,6 +117,25 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    private suspend fun handleUserRejected() {
+        appLogWrapper.d(
+            AppLog.T.MAIN,
+            "A_P: User rejected authorization on the WordPress consent page"
+        )
+        applicationPasswordLoginHelper.trackStoringFailed(
+            "", USER_REJECTED, creationSource
+        )
+        _onFinishedEvent.emit(
+            NavigationActionData(
+                showSiteSelector = false,
+                siteUrl = null,
+                oldSitesIDs = oldSitesIDs,
+                isError = true,
+                errorMessage = USER_REJECTED
+            )
+        )
     }
 
     @Suppress("TooGenericExceptionCaught")
@@ -377,4 +400,8 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
         val newSiteLocalId: Int? = null,
         val errorMessage: String? = null
     )
+
+    companion object {
+        const val USER_REJECTED = "user_rejected"
+    }
 }
