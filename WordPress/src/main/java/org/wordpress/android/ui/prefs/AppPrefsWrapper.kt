@@ -3,6 +3,7 @@ package org.wordpress.android.ui.prefs
 import androidx.core.content.edit
 import com.google.gson.Gson
 import org.wordpress.android.fluxc.model.JetpackCapability
+import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase
 import org.wordpress.android.ui.posts.AuthorFilterSelection
@@ -131,6 +132,27 @@ class AppPrefsWrapper @Inject constructor(val buildConfigWrapper: BuildConfigWra
 
     fun setStatsUtmCategory(siteId: Long, category: String?) =
         AppPrefs.setStatsUtmCategory(siteId, category)
+
+    fun hasSiteEditorCapabilities(site: SiteModel): Boolean =
+        AppPrefs.hasSiteEditorCapabilities(site)
+
+    fun getSiteSupportsEditorSettings(site: SiteModel): Boolean =
+        AppPrefs.getSiteSupportsEditorSettings(site)
+
+    fun setSiteSupportsEditorSettings(site: SiteModel, supports: Boolean) =
+        AppPrefs.setSiteSupportsEditorSettings(site, supports)
+
+    fun getSiteSupportsEditorAssets(site: SiteModel): Boolean =
+        AppPrefs.getSiteSupportsEditorAssets(site)
+
+    fun setSiteSupportsEditorAssets(site: SiteModel, supports: Boolean) =
+        AppPrefs.setSiteSupportsEditorAssets(site, supports)
+
+    fun getSiteThemeIsBlockTheme(site: SiteModel): Boolean =
+        AppPrefs.getSiteThemeIsBlockTheme(site)
+
+    fun setSiteThemeIsBlockTheme(site: SiteModel, isBlockTheme: Boolean) =
+        AppPrefs.setSiteThemeIsBlockTheme(site, isBlockTheme)
 
     fun getAppWidgetSiteId(appWidgetId: Int) = AppPrefs.getStatsWidgetSelectedSiteId(appWidgetId)
     fun setAppWidgetSiteId(siteId: Long, appWidgetId: Int) = AppPrefs.setStatsWidgetSelectedSiteId(siteId, appWidgetId)

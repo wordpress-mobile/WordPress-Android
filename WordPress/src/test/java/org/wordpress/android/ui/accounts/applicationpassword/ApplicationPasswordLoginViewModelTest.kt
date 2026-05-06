@@ -106,6 +106,40 @@ class ApplicationPasswordLoginViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `given user rejected authorization, when setup site, then emit user_rejected without crash report`() =
+        runTest {
+            // Given
+            val rejectionRawData = "wordpress://app-pass-authorize?success=false"
+            whenever(applicationPasswordLoginHelper.isUserRejectedAuthorization(rejectionRawData))
+                .thenReturn(true)
+            val expectedResult = ApplicationPasswordLoginViewModel.NavigationActionData(
+                showSiteSelector = false,
+                siteUrl = null,
+                oldSitesIDs = null,
+                isError = true,
+                errorMessage = "user_rejected"
+            )
+
+            // When
+            viewModel.onFinishedEvent.test {
+                viewModel.setupSite(rejectionRawData)
+
+                // Then
+                val finishedEvent = awaitItem()
+                assertEquals(expectedResult, finishedEvent)
+                verify(applicationPasswordLoginHelper)
+                    .trackStoringFailed(eq(""), eq("user_rejected"), any())
+                verify(applicationPasswordLoginHelper, times(0))
+                    .getSiteUrlLoginFromRawData(any())
+                verify(applicationPasswordLoginHelper, times(0))
+                    .storeApplicationPasswordCredentialsFrom(any(), any())
+                verify(crashLogging, times(0))
+                    .sendReport(any(), any(), any())
+                cancelAndIgnoreRemainingEvents()
+            }
+        }
+
+    @Test
     fun `given malformed rawData, when setup site and bad data, then emit bad_data error`() =
         runTest {
             // Given

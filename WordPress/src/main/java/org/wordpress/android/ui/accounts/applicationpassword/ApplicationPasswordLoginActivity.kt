@@ -66,6 +66,9 @@ class ApplicationPasswordLoginActivity: BaseAppCompatActivity() {
                 )
             )
             intent.setData(null)
+        } else if (navigationActionData.errorMessage == ApplicationPasswordLoginViewModel.USER_REJECTED) {
+            ToastUtils.showToast(this, getString(R.string.application_password_authorization_cancelled))
+            intent.setData(null)
         } else {
             ToastUtils.showToast(
                 this,
