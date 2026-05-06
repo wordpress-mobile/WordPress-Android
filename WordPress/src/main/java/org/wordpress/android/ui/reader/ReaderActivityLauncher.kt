@@ -10,6 +10,11 @@ import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.app.ActivityOptionsCompat
 import androidx.fragment.app.Fragment
+import com.automattic.android.tracks.crashlogging.CrashLogging
+import dagger.hilt.EntryPoint
+import dagger.hilt.InstallIn
+import dagger.hilt.android.EntryPointAccessors
+import dagger.hilt.components.SingletonComponent
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.models.ReaderPost
@@ -24,7 +29,10 @@ import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsActivit
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsFragment
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.utils.ReaderUtils
+import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.WPUrlUtils
+import org.wordpress.android.util.crashlogging.sendReportWithTag
 import java.util.EnumSet
 
 object ReaderActivityLauncher {
@@ -512,10 +520,13 @@ object ReaderActivityLauncher {
     @JvmOverloads
     fun openUrl(
         context: Context,
-        url: String,
+        url: String?,
         openUrlType: OpenUrlType = OpenUrlType.INTERNAL
     ) {
-        if (TextUtils.isEmpty(url)) {
+        if (url.isNullOrEmpty()) {
+            val message = "openUrl called with null or empty url, openUrlType=$openUrlType"
+            AppLog.w(T.READER, message)
+            reportNullOrEmptyUrlToSentry(context, message)
             return
         }
 
@@ -524,6 +535,21 @@ object ReaderActivityLauncher {
         } else {
             ActivityLauncher.openUrlExternal(context, url)
         }
+    }
+
+    private fun reportNullOrEmptyUrlToSentry(context: Context, message: String) {
+        runCatching {
+            EntryPointAccessors.fromApplication(
+                context.applicationContext,
+                ReaderActivityLauncherEntryPoint::class.java
+            ).crashLogging().sendReportWithTag(IllegalArgumentException(message), T.READER)
+        }
+    }
+
+    @EntryPoint
+    @InstallIn(SingletonComponent::class)
+    interface ReaderActivityLauncherEntryPoint {
+        fun crashLogging(): CrashLogging
     }
 
     /*
