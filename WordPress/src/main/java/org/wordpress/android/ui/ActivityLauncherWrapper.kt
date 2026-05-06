@@ -71,7 +71,7 @@ class ActivityLauncherWrapper @Inject constructor() {
     }
 
     private fun preventBackNavigation(activity: Activity, shouldPrevent: Boolean) {
-        if (shouldPrevent) {
+        if (shouldPrevent && !activity.isFinishing && !activity.isDestroyed) {
             activity.finishAffinity()
         }
     }
