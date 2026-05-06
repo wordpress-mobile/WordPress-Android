@@ -518,7 +518,7 @@ object ReaderActivityLauncher {
         openUrlType: OpenUrlType = OpenUrlType.INTERNAL
     ) {
         if (url.isNullOrEmpty()) {
-            AppLog.w(T.READER, "openUrl called with null or empty url")
+            AppLog.w(T.READER, "openUrl called with null or empty url, openUrlType=$openUrlType")
             return
         }
 
