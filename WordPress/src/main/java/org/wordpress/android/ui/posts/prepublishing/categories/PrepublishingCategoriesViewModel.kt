@@ -7,6 +7,8 @@ import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.ensureActive
+import kotlin.coroutines.coroutineContext
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.action.TaxonomyAction
@@ -110,6 +112,10 @@ class PrepublishingCategoriesViewModel @Inject constructor(
                 getPostCategories()
             }
             val siteCategories = getSiteCategories()
+            // getSiteCategories() doesn't honor cooperative cancellation, so a
+            // cancelled rebuild can still finish its DB read. Drop the result
+            // here so a stale rebuild doesn't overwrite a fresher one.
+            coroutineContext.ensureActive()
             _uiState.postValue(
                 UiState(
                     categoriesListItemUiState = buildListOfCategoriesItemUiState(
@@ -224,10 +230,10 @@ class PrepublishingCategoriesViewModel @Inject constructor(
                 .map { id -> id.categoryNode.categoryId }
                 .toMutableList()
             selectedIds.add(event.term.remoteTermId)
-            // Move the taxonomy DB read off the main thread to avoid ANRs.
             refreshUiStateJob?.cancel()
             refreshUiStateJob = launch(bgDispatcher) {
                 val categoryLevels = getSiteCategories()
+                coroutineContext.ensureActive()
                 val recreatedListItemUiState = buildListOfCategoriesItemUiState(
                     categoryLevels,
                     selectedIds
