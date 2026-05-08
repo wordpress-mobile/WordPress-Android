@@ -212,15 +212,9 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
         }
     }
 
-    private fun Throwable.isRecoverableNetworkOrDiscoveryError(): Boolean {
-        var t: Throwable? = this
-        while (t != null) {
-            if (t is IOException) return true
-            if (t is SelfHostedEndpointFinder.DiscoveryException) return true
-            t = t.cause
-        }
-        return false
-    }
+    private fun Throwable.isRecoverableNetworkOrDiscoveryError(): Boolean =
+        generateSequence(this as Throwable?) { it.cause }
+            .any { it is IOException || it is SelfHostedEndpointFinder.DiscoveryException }
 
     private suspend fun discoverAndDispatchFetchSite(
         username: String,
