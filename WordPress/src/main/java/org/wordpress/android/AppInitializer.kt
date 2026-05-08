@@ -349,7 +349,7 @@ class AppInitializer @Inject constructor(
         // memory usage and the use of Configuration). More information: http://bit.ly/2H1KTQo
         // Note: if removed, this will cause crashes on Android < 21
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
-        AppThemeUtils.setAppTheme(application)
+        AppThemeUtils.setAppThemeAsync(application, appScope)
 
         // verify media is sanitized
         sanitizeMediaUploadStateForSite()
