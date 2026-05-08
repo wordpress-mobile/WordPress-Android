@@ -116,8 +116,9 @@ class PostListMainViewModel @Inject constructor(
     private val _scrollToLocalPostId = SingleLiveEvent<LocalPostId>()
     val scrollToLocalPostId = _scrollToLocalPostId as LiveData<LocalPostId>
 
-    private val _openPrepublishingBottomSheet = MutableLiveData<Event<Unit>>()
-    val openPrepublishingBottomSheet: LiveData<Event<Unit>> = _openPrepublishingBottomSheet
+    private val _openPrepublishingBottomSheet = MutableLiveData<Event<Boolean>>()
+    /** Event payload is `isPage` for the post triggering the prepublishing bottom sheet. */
+    val openPrepublishingBottomSheet: LiveData<Event<Boolean>> = _openPrepublishingBottomSheet
 
     private val _snackBarMessage = SingleLiveEvent<SnackbarMessageHolder>()
     val snackBarMessage = _snackBarMessage as LiveData<SnackbarMessageHolder>
@@ -503,7 +504,7 @@ class PostListMainViewModel @Inject constructor(
     private fun showPrepublishingBottomSheet(post: PostModel) {
         currentBottomSheetPostId = LocalId(post.id)
         editPostRepository.loadPostByLocalPostId(post.id)
-        _openPrepublishingBottomSheet.postValue(Event(Unit))
+        _openPrepublishingBottomSheet.postValue(Event(post.isPage))
     }
 
     /**
