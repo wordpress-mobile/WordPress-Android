@@ -47,6 +47,7 @@ class PrepublishingCategoriesViewModel @Inject constructor(
     private lateinit var siteModel: SiteModel
     private var updateCategoriesJob: Job? = null
     private var addCategoryJob: Job? = null
+    private var refreshUiStateJob: Job? = null
     private lateinit var selectedCategoryIds: List<Long>
 
     private val _navigateToHomeScreen = MutableLiveData<Event<Unit>>()
@@ -97,20 +98,28 @@ class PrepublishingCategoriesViewModel @Inject constructor(
         }
     }
 
+    // Build the categories UI on the bg dispatcher: getSiteCategories() reads
+    // from the SQLite-backed taxonomy store, which can stall the main thread on
+    // large or slow taxonomies and contributes to background ANRs in this flow.
     private fun updateCategoriesListItemUiState(addCategoryRequest: PrepublishingAddCategoryRequest? = null) {
-        val selectedIds = if (selectedCategoryIds.isNotEmpty()) {
-            selectedCategoryIds
-        } else {
-            getPostCategories()
+        refreshUiStateJob?.cancel()
+        refreshUiStateJob = launch(bgDispatcher) {
+            val selectedIds = if (selectedCategoryIds.isNotEmpty()) {
+                selectedCategoryIds
+            } else {
+                getPostCategories()
+            }
+            val siteCategories = getSiteCategories()
+            _uiState.postValue(
+                UiState(
+                    categoriesListItemUiState = buildListOfCategoriesItemUiState(
+                        siteCategories = siteCategories,
+                        selectedCategoryIds = selectedIds
+                    ),
+                    progressVisibility = addCategoryRequest != null
+                )
+            )
         }
-
-        val siteCategories = getSiteCategories()
-        _uiState.value = UiState(
-            categoriesListItemUiState = buildListOfCategoriesItemUiState(
-                siteCategories = siteCategories,
-                selectedCategoryIds = selectedIds
-            ), progressVisibility = addCategoryRequest != null
-        )
     }
 
     private fun setToolbarTitleUiState() {
@@ -215,16 +224,23 @@ class PrepublishingCategoriesViewModel @Inject constructor(
                 .map { id -> id.categoryNode.categoryId }
                 .toMutableList()
             selectedIds.add(event.term.remoteTermId)
-            val categoryLevels = getSiteCategories()
-            val recreatedListItemUiState = buildListOfCategoriesItemUiState(
-                categoryLevels,
-                selectedIds
-            )
-            _uiState.value = uiState.value?.copy(
-                categoriesListItemUiState = recreatedListItemUiState, progressVisibility = false
-            )
+            // Move the taxonomy DB read off the main thread to avoid ANRs.
+            refreshUiStateJob?.cancel()
+            refreshUiStateJob = launch(bgDispatcher) {
+                val categoryLevels = getSiteCategories()
+                val recreatedListItemUiState = buildListOfCategoriesItemUiState(
+                    categoryLevels,
+                    selectedIds
+                )
+                _uiState.postValue(
+                    uiState.value?.copy(
+                        categoriesListItemUiState = recreatedListItemUiState,
+                        progressVisibility = false
+                    )
+                )
+            }
         } else {
-            _uiState.value = uiState.value?.copy(progressVisibility = false)
+            _uiState.postValue(uiState.value?.copy(progressVisibility = false))
         }
     }
 
