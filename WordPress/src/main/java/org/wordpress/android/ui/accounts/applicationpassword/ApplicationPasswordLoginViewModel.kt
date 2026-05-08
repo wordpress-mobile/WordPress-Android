@@ -27,6 +27,7 @@ import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.UrlUtils
 import com.automattic.android.tracks.crashlogging.CrashLogging
 import org.wordpress.android.util.crashlogging.sendReportWithTag
+import java.io.IOException
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -202,8 +203,23 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
             applicationPasswordLoginHelper.trackStoringFailed(
                 siteUrl, "fetch_sites_exception", creationSource
             )
-            emitError(siteUrl = siteUrl, errorMessage = e.message, cause = e)
+            emitError(
+                siteUrl = siteUrl,
+                errorMessage = e.message,
+                cause = e,
+                reportToSentry = !e.isRecoverableNetworkOrDiscoveryError(),
+            )
         }
+    }
+
+    private fun Throwable.isRecoverableNetworkOrDiscoveryError(): Boolean {
+        var t: Throwable? = this
+        while (t != null) {
+            if (t is IOException) return true
+            if (t is SelfHostedEndpointFinder.DiscoveryException) return true
+            t = t.cause
+        }
+        return false
     }
 
     private suspend fun discoverAndDispatchFetchSite(
@@ -252,11 +268,14 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
     private suspend fun emitError(
         siteUrl: String,
         errorMessage: String? = null,
-        cause: Throwable? = null
+        cause: Throwable? = null,
+        reportToSentry: Boolean = true,
     ) {
-        val exception = cause
-            ?: Exception("Application password login failed: $errorMessage")
-        crashLogging.sendReportWithTag(exception, AppLog.T.MAIN)
+        if (reportToSentry) {
+            val exception = cause
+                ?: Exception("Application password login failed: $errorMessage")
+            crashLogging.sendReportWithTag(exception, AppLog.T.MAIN)
+        }
         _onFinishedEvent.emit(
             NavigationActionData(
                 showSiteSelector = false,
@@ -284,6 +303,7 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
     private suspend fun handleSiteChangedError(event: OnSiteChanged) {
         waitingForFetchedSite = false
         val error = event.error
+        val errorTypeName = error?.type?.name ?: "unknown"
         appLogWrapper.e(
             AppLog.T.MAIN,
             "A_P: onSiteChanged failed: " +
@@ -291,12 +311,16 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
         )
         applicationPasswordLoginHelper.trackStoringFailed(
             currentUrlLogin?.siteUrl,
-            "site_changed_failed",
+            "site_changed_failed:$errorTypeName",
             creationSource
         )
+        // Don't report SiteStore errors to Sentry — every transient network
+        // failure, auth failure, or backend hiccup ends up here, drowning out
+        // genuine bugs. The reason is preserved in analytics + AppLog above.
         emitError(
             siteUrl = currentUrlLogin?.siteUrl.orEmpty(),
-            errorMessage = "site_store_error"
+            errorMessage = "site_store_error",
+            reportToSentry = false,
         )
     }
 
@@ -307,24 +331,31 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
             UrlUtils.normalizeUrl(currentUrlLogin?.siteUrl)
 
         val site = try {
-            siteStore.sites.firstOrNull {
-                UrlUtils.normalizeUrl(it.url) == normalizedUrl
-            }
+            // Reuse the helper's tolerant matching (exact, then ignoring scheme
+            // and www) so site_not_found doesn't fire on cosmetic URL differences
+            // between the callback URL and the stored SiteModel.
+            applicationPasswordLoginHelper.findSiteByUrl(
+                normalizedUrl, siteStore.sites
+            )
         } catch (e: Exception) {
             logAndEmitSiteChangedError(
                 logMessage = "exception reading sites from DB: " +
                     e.stackTraceToString(),
                 errorCode = "db_read_exception",
-                cause = e
+                cause = e,
             )
             return
         }
 
         val validationError = validateSiteChanged(event, site)
         if (validationError != null) {
+            // These validation outcomes (site_not_found, no_rows_affected,
+            // empty_credentials) are user-recoverable login failures, not bugs;
+            // analytics + AppLog are enough.
             logAndEmitSiteChangedError(
                 logMessage = validationError.logMessage,
-                errorCode = validationError.errorCode
+                errorCode = validationError.errorCode,
+                reportToSentry = false,
             )
         } else {
             val resolvedSite = site ?: return
@@ -374,7 +405,8 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
     private suspend fun logAndEmitSiteChangedError(
         logMessage: String,
         errorCode: String,
-        cause: Throwable? = null
+        cause: Throwable? = null,
+        reportToSentry: Boolean = true,
     ) {
         appLogWrapper.e(
             AppLog.T.MAIN,
@@ -388,7 +420,8 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
         emitError(
             siteUrl = currentUrlLogin?.siteUrl.orEmpty(),
             errorMessage = errorCode,
-            cause = cause
+            cause = cause,
+            reportToSentry = reportToSentry,
         )
     }
 
