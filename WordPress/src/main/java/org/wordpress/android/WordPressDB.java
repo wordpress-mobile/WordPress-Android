@@ -44,21 +44,37 @@ public class WordPressDB {
     public WordPressDB(Context ctx) {
         mDb = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 
-        // Create tables if they don't exist
-        mDb.execSQL(CREATE_TABLE_QUICKPRESS_SHORTCUTS);
-        SiteSettingsTable.createTable(mDb);
-        UserSuggestionTable.createTables(mDb);
-        NotificationsTable.createTables(mDb);
-        PublicizeTable.createTables(mDb);
+        // Wrap schema creation and version migrations in a single transaction so SQLite
+        // performs one fsync at the end instead of one per statement. On slow devices the
+        // per-statement fsync was the dominant cost during Application.onCreate() and the
+        // primary cause of WORDPRESS-ANDROID-3FV7 ANRs.
+        mDb.beginTransaction();
+        try {
+            // Create tables if they don't exist
+            mDb.execSQL(CREATE_TABLE_QUICKPRESS_SHORTCUTS);
+            SiteSettingsTable.createTable(mDb);
+            UserSuggestionTable.createTables(mDb);
+            NotificationsTable.createTables(mDb);
+            PublicizeTable.createTables(mDb);
 
-        // Update tables for new installs and app updates
-        int currentVersion = mDb.getVersion();
-        boolean isNewInstall = (currentVersion == 0);
+            // Update tables for new installs and app updates
+            int currentVersion = mDb.getVersion();
+            boolean isNewInstall = (currentVersion == 0);
 
-        if (!isNewInstall && currentVersion != DATABASE_VERSION) {
-            AppLog.d(T.DB, "upgrading database from version " + currentVersion + " to " + DATABASE_VERSION);
+            if (!isNewInstall && currentVersion != DATABASE_VERSION) {
+                AppLog.d(T.DB, "upgrading database from version " + currentVersion + " to " + DATABASE_VERSION);
+            }
+
+            applyMigrations(ctx, currentVersion);
+            mDb.setVersion(DATABASE_VERSION);
+            mDb.setTransactionSuccessful();
+        } finally {
+            mDb.endTransaction();
         }
+    }
 
+    @SuppressWarnings({"FallThrough"})
+    private void applyMigrations(Context ctx, int currentVersion) {
         switch (currentVersion) {
             case 0:
                 // New install
@@ -191,7 +207,6 @@ public class WordPressDB {
                 // add third-party blocks site setting
                 mDb.execSQL(SiteSettingsModel.ADD_USE_THIRD_PARTY_BLOCKS);
         }
-        mDb.setVersion(DATABASE_VERSION);
     }
 
     public SQLiteDatabase getDatabase() {
