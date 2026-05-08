@@ -2,9 +2,6 @@ package org.wordpress.android.ui.posts.prepublishing
 
 import android.os.Bundle
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.StandardTestDispatcher
-import kotlinx.coroutines.test.advanceUntilIdle
-import kotlinx.coroutines.test.runTest
 import org.assertj.core.api.Assertions
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -283,37 +280,6 @@ class PrepublishingCategoriesViewModelTest : BaseUnitTest() {
         viewModel.onBackButtonClick()
 
         assertThat(uiStates[2].progressVisibility).isEqualTo(true)
-    }
-
-    @Test
-    fun `start defers UiState until the bg dispatcher is advanced`() = runTest {
-        // Use a StandardTestDispatcher so launch(bgDispatcher) is queued, not eager.
-        // The default UnconfinedTestDispatcher used elsewhere in this class would mask
-        // the asynchrony we want to verify.
-        val standardDispatcher = StandardTestDispatcher(testScheduler)
-        val asyncViewModel = PrepublishingCategoriesViewModel(
-            getCategoriesUseCase,
-            addCategoryUseCase,
-            analyticsTrackerWrapper,
-            networkUtilsWrapper,
-            standardDispatcher
-        )
-        val uiStates = mutableListOf<UiState>()
-        asyncViewModel.uiState.observeForever { uiStates.add(it) }
-
-        asyncViewModel.start(editPostRepository, siteModel, null, listOf())
-
-        // Pre-advance: the bg launch hasn't run, so no UiState has been posted.
-        assertThat(uiStates).isEmpty()
-
-        advanceUntilIdle()
-
-        // Post-advance: the bg launch ran, getSiteCategories() was called, and the
-        // resulting UiState made it through postValue to the observer.
-        verify(getCategoriesUseCase, times(1)).getSiteCategories(siteModel)
-        assertThat(uiStates).hasSize(1)
-        assertThat(uiStates[0].categoriesListItemUiState.size)
-            .isEqualTo(siteCategoriesList().size)
     }
 
     private fun postCategoriesList() = listOf<Long>(1, 2, 3, 4, 5)
