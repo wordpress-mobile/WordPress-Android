@@ -250,6 +250,13 @@ class ZendeskHelper(
      * and it will need to be set again when the user wants to create a new ticket.
      */
     fun reset() {
+        // setupZendesk() is now started on a background coroutine, so this can be called
+        // (e.g. from a logout flow) before init has finished. Skip silently in that case
+        // rather than throwing — there is nothing to reset yet.
+        if (!isZendeskEnabled) {
+            AppLog.d(T.SUPPORT, "ZendeskHelper.reset() called before setup completed; skipping")
+            return
+        }
         disablePushNotifications()
         clearIdentity()
     }
@@ -259,8 +266,12 @@ class ZendeskHelper(
      * notification device token is required. If either doesn't exist, the request will simply be ignored.
      */
     fun enablePushNotifications() {
-        require(isZendeskEnabled) {
-            zendeskNeedsToBeEnabledError
+        // setupZendesk() is now started on a background coroutine, so this can be called
+        // (e.g. from GCMRegistrationWorker) before init has finished. Skip silently in
+        // that case — push registration is retried on subsequent app launches.
+        if (!isZendeskEnabled) {
+            AppLog.d(T.SUPPORT, "enablePushNotifications() called before setup completed; skipping")
+            return
         }
         if (!isIdentitySet()) {
             // identity should be set before registering the device token
