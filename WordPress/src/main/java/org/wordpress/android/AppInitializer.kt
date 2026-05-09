@@ -330,13 +330,17 @@ class AppInitializer @Inject constructor(
             // when called from Application.onCreate(). The Help screen is the only entry
             // point that needs Zendesk and is gated by user navigation, so deferring init
             // to a background coroutine is safe in practice.
-            appScope.launch(Dispatchers.Default) {
-                zendeskHelper.setupZendesk(
-                    application,
-                    BuildConfig.ZENDESK_DOMAIN,
-                    BuildConfig.ZENDESK_APP_ID,
-                    BuildConfig.ZENDESK_OAUTH_CLIENT_ID
-                )
+            appScope.launch(Dispatchers.IO) {
+                try {
+                    zendeskHelper.setupZendesk(
+                        application,
+                        BuildConfig.ZENDESK_DOMAIN,
+                        BuildConfig.ZENDESK_APP_ID,
+                        BuildConfig.ZENDESK_OAUTH_CLIENT_ID
+                    )
+                } catch (e: Exception) {
+                    AppLog.e(T.SUPPORT, "Failed to initialize Zendesk SDK", e)
+                }
             }
         }
 
