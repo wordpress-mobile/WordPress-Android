@@ -70,8 +70,14 @@ class ActivityLauncherWrapper @Inject constructor() {
         return referrer?.let { "$storeUrl&$it" } ?: storeUrl
     }
 
+    /**
+     * After launching the target app (e.g. Jetpack) from the source app, finishes the source app's task so the
+     * user can't press Back to return to it — completing the "switch over" flow in one direction. Only invoked
+     * when the target app was already installed; if it wasn't, we leave the source app intact so the user can
+     * return after visiting the Play Store.
+     */
     private fun preventBackNavigation(activity: Activity, shouldPrevent: Boolean) {
-        if (shouldPrevent) {
+        if (shouldPrevent && !activity.isFinishing && !activity.isDestroyed) {
             activity.finishAffinity()
         }
     }
