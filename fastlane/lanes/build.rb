@@ -402,7 +402,7 @@ platform :android do
   def generate_prototype_build_number
     if ENV['BUILDKITE']
       commit = ENV.fetch('BUILDKITE_COMMIT', nil)[0, 7]
-      branch = parameterize(ENV['BUILDKITE_BRANCH'])
+      branch = parameterize(ENV.fetch('BUILDKITE_BRANCH', nil))
       pr_num = ENV.fetch('BUILDKITE_PULL_REQUEST', nil)
 
       pr_num == 'false' ? "#{branch}-#{commit}" : "pr#{pr_num}-#{commit}"
