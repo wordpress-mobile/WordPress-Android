@@ -10,12 +10,14 @@ import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.UrlUtils
 import java.security.GeneralSecurityException
 import java.security.KeyStore
+import java.util.Optional
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class ApplicationPasswordsStore @Inject constructor(
-    private val context: Context
+    private val context: Context,
+    private val listener: Optional<ApplicationPasswordsListener>
 ) {
     companion object {
         private const val USERNAME_PREFERENCE_KEY_PREFIX = "username_"
@@ -40,10 +42,15 @@ class ApplicationPasswordsStore @Inject constructor(
     private val applicationName: String
         get() = configuration.applicationName
 
-    private val encryptedPreferences: SharedPreferences? by lazy {
+    @Volatile
+    private var encryptedPreferences: SharedPreferences? = null
+
+    @Synchronized
+    private fun loadEncryptedPreferences(): SharedPreferences? {
+        encryptedPreferences?.let { return it }
         @Suppress("TooGenericExceptionCaught")
-        try {
-            initEncryptedPrefs()
+        return try {
+            initEncryptedPrefs().also { encryptedPreferences = it }
         } catch (e: Exception) {
             // Both the initial create and the post-delete retry failed; the Keystore-backed
             // master key is unrecoverable on this device (Play Console reports this as
@@ -53,6 +60,7 @@ class ApplicationPasswordsStore @Inject constructor(
                 "Failed to initialise application-password EncryptedSharedPreferences",
                 e
             )
+            reportKeystoreError(e)
             null
         }
     }
@@ -102,14 +110,15 @@ class ApplicationPasswordsStore @Inject constructor(
     // AndroidKeystoreAesGcm, which can fail with InvalidKeyException long after init
     // succeeded (e.g. when the hardware-backed key becomes inaccessible after a system
     // update or credential change). Treat any failure as "no stored credentials" so the
-    // caller can re-authenticate instead of crashing.
+    // caller can re-authenticate instead of crashing, and reset the cached prefs so a
+    // subsequent access re-initialises a fresh keystore-backed file.
     private inline fun withEncryptedPrefs(block: (SharedPreferences) -> Unit) {
         withEncryptedPrefs(Unit, block)
     }
 
     @Suppress("TooGenericExceptionCaught")
     private inline fun <T> withEncryptedPrefs(default: T, block: (SharedPreferences) -> T): T {
-        val prefs = encryptedPreferences ?: return default
+        val prefs = loadEncryptedPreferences() ?: return default
         return try {
             block(prefs)
         } catch (e: GeneralSecurityException) {
@@ -118,6 +127,8 @@ class ApplicationPasswordsStore @Inject constructor(
                 "Keystore failure while accessing application-password preferences",
                 e
             )
+            reportKeystoreError(e)
+            invalidateEncryptedPrefs()
             default
         } catch (e: Exception) {
             AppLog.e(
@@ -125,35 +136,32 @@ class ApplicationPasswordsStore @Inject constructor(
                 "Failed to access application-password preferences",
                 e
             )
+            reportKeystoreError(e)
+            invalidateEncryptedPrefs()
             default
         }
     }
 
-    private fun initEncryptedPrefs(): SharedPreferences {
-        val keySpec = MasterKeys.AES256_GCM_SPEC
-        val filename = "$applicationName-encrypted-prefs"
+    private fun reportKeystoreError(error: Throwable) {
+        listener.ifPresent { it.onKeystoreError(error) }
+    }
 
-        fun createPrefs(): SharedPreferences {
-            val masterKey = MasterKeys.getOrCreate(keySpec)
-            return EncryptedSharedPreferences.create(
-                filename,
-                masterKey,
-                context,
-                EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
-                EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+    @Synchronized
+    @Suppress("TooGenericExceptionCaught", "SwallowedException")
+    private fun invalidateEncryptedPrefs() {
+        encryptedPreferences = null
+        try {
+            deleteEncryptedPrefsFiles()
+        } catch (e: Exception) {
+            AppLog.e(
+                AppLog.T.MAIN,
+                "Failed to delete application-password preferences during recovery",
+                e
             )
         }
+    }
 
-        fun deletePrefs() {
-            context.deleteSharedPreferences(filename)
-            with(KeyStore.getInstance("AndroidKeyStore")) {
-                load(null)
-                if (containsAlias(keySpec.keystoreAlias)) {
-                    deleteEntry(keySpec.keystoreAlias)
-                }
-            }
-        }
-
+    private fun initEncryptedPrefs(): SharedPreferences {
         // The documentation recommends excluding the file from auto backup, but since the file
         // is defined in an internal library, adding to the backup rules and maintaining them won't
         // be straightforward.
@@ -161,17 +169,42 @@ class ApplicationPasswordsStore @Inject constructor(
         // We simply delete it and create a new one.
         @Suppress("TooGenericExceptionCaught", "SwallowedException")
         return try {
-            createPrefs()
+            createEncryptedPrefs()
         } catch (e: Exception) {
             // In case we can't decrypt the file after a backup, let's delete it
             AppLog.d(
                 AppLog.T.MAIN,
                 "Can't decrypt encrypted preferences, delete it and create new one"
             )
-            deletePrefs()
-            createPrefs()
+            deleteEncryptedPrefsFiles()
+            createEncryptedPrefs()
         }
     }
+
+    private fun createEncryptedPrefs(): SharedPreferences {
+        val masterKey = MasterKeys.getOrCreate(MasterKeys.AES256_GCM_SPEC)
+        return EncryptedSharedPreferences.create(
+            encryptedPrefsFilename,
+            masterKey,
+            context,
+            EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+            EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+        )
+    }
+
+    private fun deleteEncryptedPrefsFiles() {
+        context.deleteSharedPreferences(encryptedPrefsFilename)
+        with(KeyStore.getInstance("AndroidKeyStore")) {
+            load(null)
+            val alias = MasterKeys.AES256_GCM_SPEC.keystoreAlias
+            if (containsAlias(alias)) {
+                deleteEntry(alias)
+            }
+        }
+    }
+
+    private val encryptedPrefsFilename: String
+        get() = "$applicationName-encrypted-prefs"
 
     private val SiteModel.domainName
         get() = UrlUtils.removeScheme(url).trim('/')
