@@ -210,11 +210,6 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
     @Suppress("LongMethod")
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        AppLog.d(
-            AppLog.T.READER,
-            "reader pager > onCreate (savedInstanceState=${savedInstanceState != null}, " +
-                    "intent.action=${intent.action}, intent.data=${intent.data})"
-        )
         (application as WordPress).component().inject(this)
         jetpackFullScreenViewModel =
             ViewModelProvider(this)[JetpackFeatureFullScreenOverlayViewModel::class.java]
@@ -741,14 +736,9 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
         }
     }
 
-    override fun onStart() {
-        super.onStart()
-        AppLog.d(AppLog.T.READER, "reader pager > onStart")
-    }
-
     override fun onResume() {
         super.onResume()
-        AppLog.d(AppLog.T.READER, "reader pager > onResume (hasPagerAdapter=${hasPagerAdapter()}, backFromLogin=$backFromLogin)")
+        AppLog.d(AppLog.T.READER, "TRACK READER ReaderPostPagerActivity > START Count")
         readerTracker.start(ReaderTrackerType.PAGED_POST)
         EventBus.getDefault().register(this)
 
@@ -756,10 +746,9 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
         dispatcher.register(this)
 
         if (!hasPagerAdapter() || backFromLogin) {
-            val isDeep = ActivityUtils.isDeepLinking(intent)
-            val isViewPost = ReaderConstants.ACTION_VIEW_POST == intent.action
-            AppLog.d(AppLog.T.READER, "reader pager > onResume entering load branch (isDeepLinking=$isDeep, isViewPostAction=$isViewPost)")
-            if (isDeep || isViewPost) {
+            if (ActivityUtils.isDeepLinking(intent) || (ReaderConstants.ACTION_VIEW_POST
+                        == intent.action)
+            ) {
                 handleDeepLinking()
             }
 
@@ -772,33 +761,10 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
 
     override fun onPause() {
         super.onPause()
-        AppLog.d(
-            AppLog.T.READER,
-            "reader pager > onPause (isFinishing=$isFinishing, isChangingConfigurations=$isChangingConfigurations)"
-        )
+        AppLog.d(AppLog.T.READER, "TRACK READER ReaderPostPagerActivity > STOP Count")
         readerTracker.stop(ReaderTrackerType.PAGED_POST)
         EventBus.getDefault().unregister(this)
         dispatcher.unregister(this)
-    }
-
-    override fun onStop() {
-        super.onStop()
-        AppLog.d(AppLog.T.READER, "reader pager > onStop (isFinishing=$isFinishing)")
-    }
-
-    override fun onDestroy() {
-        AppLog.d(AppLog.T.READER, "reader pager > onDestroy (isFinishing=$isFinishing)")
-        super.onDestroy()
-    }
-
-    override fun finish() {
-        AppLog.e(AppLog.T.READER, "reader pager > finish() called", Throwable("finish() call site"))
-        super.finish()
-    }
-
-    override fun onNewIntent(intent: Intent) {
-        super.onNewIntent(intent)
-        AppLog.d(AppLog.T.READER, "reader pager > onNewIntent action=${intent.action} data=${intent.data}")
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
