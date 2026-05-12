@@ -871,30 +871,45 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
                 val newPosition = idList.indexOf(blogId, postId)
 
                 runOnUiThread {
-                    if (isFinishing) {
+                    if (isFinishing || isDestroyed) {
                         return@runOnUiThread
                     }
                     AppLog.d(
                         AppLog.T.READER,
                         "reader pager > creating adapter"
                     )
-                    val adapter = PostPagerAdapter(idList)
-                    viewPager.adapter = adapter
+                    // Assigning the adapter triggers FragmentStateAdapter to rehydrate any
+                    // pending saved-state fragments. On a process-death restore those keys
+                    // may point to fragments that no longer exist, which throws
+                    // IllegalStateException("Fragment no longer exists for key …") and
+                    // crashes the activity. Treat that as a benign restore failure — leave
+                    // the user on the previous screen instead of bringing the whole
+                    // activity down. (Sentry: JETPACK-ANDROID-1G8W)
+                    try {
+                        val adapter = PostPagerAdapter(idList)
+                        viewPager.adapter = adapter
 
-                    // set the current position without smooth scrolling - otherwise the previous post in
-                    // the list may briefly appear
-                    if (adapter.isValidPosition(newPosition)) {
-                        viewPager.setCurrentItem(newPosition, false)
-                        trackPostAtPositionIfNeeded(newPosition)
-                    } else if (adapter.isValidPosition(currentPosition)) {
-                        viewPager.setCurrentItem(currentPosition, false)
-                        trackPostAtPositionIfNeeded(currentPosition)
-                    }
+                        // set the current position without smooth scrolling - otherwise the previous post in
+                        // the list may briefly appear
+                        if (adapter.isValidPosition(newPosition)) {
+                            viewPager.setCurrentItem(newPosition, false)
+                            trackPostAtPositionIfNeeded(newPosition)
+                        } else if (adapter.isValidPosition(currentPosition)) {
+                            viewPager.setCurrentItem(currentPosition, false)
+                            trackPostAtPositionIfNeeded(currentPosition)
+                        }
 
-                    // let the user know they can swipe between posts
-                    if (adapter.itemCount > 1 && !AppPrefs.isReaderSwipeToNavigateShown()) {
-                        WPSwipeSnackbar.show(viewPager)
-                        AppPrefs.setReaderSwipeToNavigateShown(true)
+                        // let the user know they can swipe between posts
+                        if (adapter.itemCount > 1 && !AppPrefs.isReaderSwipeToNavigateShown()) {
+                            WPSwipeSnackbar.show(viewPager)
+                            AppPrefs.setReaderSwipeToNavigateShown(true)
+                        }
+                    } catch (e: IllegalStateException) {
+                        AppLog.e(
+                            AppLog.T.READER,
+                            "reader pager > failed to attach adapter after saved-state restore",
+                            e
+                        )
                     }
                 }
             }
