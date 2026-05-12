@@ -45,9 +45,18 @@ class ApplicationPasswordsStore @Inject constructor(
     @Volatile
     private var encryptedPreferences: SharedPreferences? = null
 
+    // Set to true once initEncryptedPrefs has failed even after the delete+retry path; cleared
+    // by invalidateEncryptedPrefs() since that gives the next init a fresh keystore alias to
+    // work with. Without this flag, every read/write after a permanent init failure would
+    // re-run the expensive delete+retry and emit another Sentry report — turning one broken
+    // device into hundreds of duplicate non-fatals.
+    @Volatile
+    private var initPermanentlyFailed: Boolean = false
+
     @Synchronized
     private fun loadEncryptedPreferences(): SharedPreferences? {
         encryptedPreferences?.let { return it }
+        if (initPermanentlyFailed) return null
         @Suppress("TooGenericExceptionCaught")
         return try {
             initEncryptedPrefs().also { encryptedPreferences = it }
@@ -55,6 +64,7 @@ class ApplicationPasswordsStore @Inject constructor(
             // Both the initial create and the post-delete retry failed; the Keystore-backed
             // master key is unrecoverable on this device (Play Console reports this as
             // AndroidKeystoreAesGcm.encryptInternal → InvalidKeyException).
+            initPermanentlyFailed = true
             AppLog.e(
                 AppLog.T.MAIN,
                 "Failed to initialise application-password EncryptedSharedPreferences",
@@ -150,6 +160,9 @@ class ApplicationPasswordsStore @Inject constructor(
     @Suppress("TooGenericExceptionCaught", "SwallowedException")
     private fun invalidateEncryptedPrefs() {
         encryptedPreferences = null
+        // Files + keystore alias are about to be deleted, so the next init runs against a
+        // clean slate and deserves another attempt before we declare permanent failure.
+        initPermanentlyFailed = false
         try {
             deleteEncryptedPrefsFiles()
         } catch (e: Exception) {
