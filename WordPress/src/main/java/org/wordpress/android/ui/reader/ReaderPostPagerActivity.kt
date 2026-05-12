@@ -210,6 +210,11 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
     @Suppress("LongMethod")
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        AppLog.d(
+            AppLog.T.READER,
+            "reader pager > onCreate (savedInstanceState=${savedInstanceState != null}, " +
+                    "intent.action=${intent.action}, intent.data=${intent.data})"
+        )
         (application as WordPress).component().inject(this)
         jetpackFullScreenViewModel =
             ViewModelProvider(this)[JetpackFeatureFullScreenOverlayViewModel::class.java]
@@ -736,9 +741,14 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
         }
     }
 
+    override fun onStart() {
+        super.onStart()
+        AppLog.d(AppLog.T.READER, "reader pager > onStart")
+    }
+
     override fun onResume() {
         super.onResume()
-        AppLog.d(AppLog.T.READER, "TRACK READER ReaderPostPagerActivity > START Count")
+        AppLog.d(AppLog.T.READER, "reader pager > onResume (hasPagerAdapter=${hasPagerAdapter()}, backFromLogin=$backFromLogin)")
         readerTracker.start(ReaderTrackerType.PAGED_POST)
         EventBus.getDefault().register(this)
 
@@ -746,9 +756,10 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
         dispatcher.register(this)
 
         if (!hasPagerAdapter() || backFromLogin) {
-            if (ActivityUtils.isDeepLinking(intent) || (ReaderConstants.ACTION_VIEW_POST
-                        == intent.action)
-            ) {
+            val isDeep = ActivityUtils.isDeepLinking(intent)
+            val isViewPost = ReaderConstants.ACTION_VIEW_POST == intent.action
+            AppLog.d(AppLog.T.READER, "reader pager > onResume entering load branch (isDeepLinking=$isDeep, isViewPostAction=$isViewPost)")
+            if (isDeep || isViewPost) {
                 handleDeepLinking()
             }
 
