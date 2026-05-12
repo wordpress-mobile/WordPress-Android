@@ -36,6 +36,8 @@ import com.automattic.android.tracks.crashlogging.CrashLogging
 import com.google.firebase.iid.FirebaseInstanceId
 import com.wordpress.rest.RestClient
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -324,12 +326,7 @@ class AppInitializer @Inject constructor(
         RestClientUtils.setUserAgent(userAgent.apiUserAgent)
 
         if (!initialized) {
-            zendeskHelper.setupZendesk(
-                application,
-                BuildConfig.ZENDESK_DOMAIN,
-                BuildConfig.ZENDESK_APP_ID,
-                BuildConfig.ZENDESK_OAUTH_CLIENT_ID
-            )
+            initZendeskAsync()
         }
 
         val memoryAndConfigChangeMonitor = MemoryAndConfigChangeMonitor()
@@ -382,6 +379,26 @@ class AppInitializer @Inject constructor(
         if (buildConfig.isDebugSettingsEnabled()) {
             debugCookieManager = DebugCookieManager(application, cookieManager, buildConfig)
             debugCookieManager.sync()
+        }
+    }
+
+    // Zendesk SDK init does enough work to trip the ANR threshold on slow devices
+    // when called from Application.onCreate(). The Help screen is the only entry
+    // point that needs Zendesk and is gated by user navigation, so deferring init
+    // to a background coroutine is safe in practice.
+    @Suppress("TooGenericExceptionCaught")
+    private fun initZendeskAsync() {
+        appScope.launch(Dispatchers.IO) {
+            try {
+                zendeskHelper.setupZendesk(
+                    application,
+                    BuildConfig.ZENDESK_DOMAIN,
+                    BuildConfig.ZENDESK_APP_ID,
+                    BuildConfig.ZENDESK_OAUTH_CLIENT_ID
+                )
+            } catch (e: Exception) {
+                AppLog.e(T.SUPPORT, "Failed to initialize Zendesk SDK", e)
+            }
         }
     }
 

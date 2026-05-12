@@ -247,20 +247,33 @@ class ZendeskHelper(
     /**
      * This function should be called when the user logs out of WordPress.com. Push notifications are only available
      * for WordPress.com users, so they'll be disabled. We'll also clear the Zendesk identity of the user on logout
-     * and it will need to be set again when the user wants to create a new ticket.
+     * and it will need to be set again when the user wants to create a new ticket. Silently no-ops if Zendesk has
+     * not yet been set up (the background-coroutine init may not have completed when a logout fires on cold start).
      */
     fun reset() {
+        // setupZendesk() is now started on a background coroutine, so this can be called
+        // (e.g. from a logout flow) before init has finished. Skip silently in that case
+        // rather than throwing — there is nothing to reset yet.
+        if (!isZendeskEnabled) {
+            AppLog.d(T.SUPPORT, "ZendeskHelper.reset() called before setup completed; skipping")
+            return
+        }
         disablePushNotifications()
         clearIdentity()
     }
 
     /**
-     * This function will enable push notifications for Zendesk. Both a Zendesk identity and a valid push
-     * notification device token is required. If either doesn't exist, the request will simply be ignored.
+     * This function will enable push notifications for Zendesk. The request is silently ignored if Zendesk
+     * has not yet been set up, or if either a Zendesk identity or a valid push notification device token
+     * is missing.
      */
     fun enablePushNotifications() {
-        require(isZendeskEnabled) {
-            zendeskNeedsToBeEnabledError
+        // setupZendesk() is now started on a background coroutine, so this can be called
+        // (e.g. from GCMRegistrationWorker) before init has finished. Skip silently in
+        // that case — push registration is retried on subsequent app launches.
+        if (!isZendeskEnabled) {
+            AppLog.d(T.SUPPORT, "enablePushNotifications() called before setup completed; skipping")
+            return
         }
         if (!isIdentitySet()) {
             // identity should be set before registering the device token
