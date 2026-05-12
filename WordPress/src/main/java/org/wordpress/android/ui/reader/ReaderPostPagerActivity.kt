@@ -882,7 +882,7 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
                         "reader pager > creating adapter"
                     )
                     val adapter = PostPagerAdapter(idList)
-                    // Assigning the adapter triggers FragmentStateAdapter to rehydrate any
+                    // Assigning the adapter triggers FragmentStateAdapter to restore any
                     // pending saved-state fragments. On a process-death restore those keys
                     // may point to fragments that no longer exist, which throws
                     // IllegalStateException("Fragment no longer exists for key …"). The
