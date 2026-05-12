@@ -391,17 +391,24 @@ platform :android do
     )
   end
 
+  # Mimics the subset of ActiveSupport's `String#parameterize` we rely on.
+  # release-toolkit dropped its `activesupport` runtime dependency in v14.3.1,
+  # so `String#parameterize` is no longer available here.
+  def parameterize(string)
+    string.downcase.gsub(/[^a-z0-9\-_]+/, '-').squeeze('-').gsub(/\A-|-\z/, '')
+  end
+
   # This function is Buildkite-specific
   def generate_prototype_build_number
     if ENV['BUILDKITE']
       commit = ENV.fetch('BUILDKITE_COMMIT', nil)[0, 7]
-      branch = ENV['BUILDKITE_BRANCH'].parameterize
+      branch = parameterize(ENV.fetch('BUILDKITE_BRANCH', nil))
       pr_num = ENV.fetch('BUILDKITE_PULL_REQUEST', nil)
 
       pr_num == 'false' ? "#{branch}-#{commit}" : "pr#{pr_num}-#{commit}"
     else
       repo = Git.open(PROJECT_ROOT_FOLDER)
-      commit = repo.current_branch.parameterize
+      commit = parameterize(repo.current_branch)
       branch = repo.revparse('HEAD')[0, 7]
 
       "#{branch}-#{commit}"
