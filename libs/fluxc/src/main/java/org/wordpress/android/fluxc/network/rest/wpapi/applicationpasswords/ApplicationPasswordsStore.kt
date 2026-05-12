@@ -8,6 +8,7 @@ import okhttp3.Credentials
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.UrlUtils
+import java.security.GeneralSecurityException
 import java.security.KeyStore
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -27,54 +28,101 @@ class ApplicationPasswordsStore @Inject constructor(
     there. Do not use directly in WCAndroid app.
      */
     fun getApplicationPasswordAuthHeader(site: SiteModel): String =
-        Credentials.basic(
-            username = encryptedPreferences.getString(site.usernamePrefKey, null).orEmpty(),
-            password = encryptedPreferences.getString(site.passwordPrefKey, null).orEmpty()
-        )
+        withEncryptedPrefs("") { prefs ->
+            Credentials.basic(
+                username = prefs.getString(site.usernamePrefKey, null).orEmpty(),
+                password = prefs.getString(site.passwordPrefKey, null).orEmpty()
+            )
+        }
 
     @Inject internal lateinit var configuration: ApplicationPasswordsConfiguration
 
     private val applicationName: String
         get() = configuration.applicationName
 
-    private val encryptedPreferences by lazy {
-        initEncryptedPrefs()
-    }
-
-    @Synchronized
-    internal fun getCredentials(site: SiteModel): ApplicationPasswordCredentials? {
-        val username = encryptedPreferences.getString(site.usernamePrefKey, null)
-        val password = encryptedPreferences.getString(site.passwordPrefKey, null)
-        val uuid = encryptedPreferences.getString(site.uuidPrefKey, null)
-
-        return when {
-            !site.isUsingWpComRestApi && site.username != username -> null
-            username != null && password != null ->
-                ApplicationPasswordCredentials(
-                    userName = username,
-                    password = password,
-                    uuid = uuid
-                )
-            else -> null
+    private val encryptedPreferences: SharedPreferences? by lazy {
+        @Suppress("TooGenericExceptionCaught")
+        try {
+            initEncryptedPrefs()
+        } catch (e: Exception) {
+            // Both the initial create and the post-delete retry failed; the Keystore-backed
+            // master key is unrecoverable on this device (Play Console reports this as
+            // AndroidKeystoreAesGcm.encryptInternal → InvalidKeyException).
+            AppLog.e(
+                AppLog.T.MAIN,
+                "Failed to initialise application-password EncryptedSharedPreferences",
+                e
+            )
+            null
         }
     }
 
     @Synchronized
+    internal fun getCredentials(site: SiteModel): ApplicationPasswordCredentials? =
+        withEncryptedPrefs(null) { prefs ->
+            val username = prefs.getString(site.usernamePrefKey, null)
+            val password = prefs.getString(site.passwordPrefKey, null)
+            val uuid = prefs.getString(site.uuidPrefKey, null)
+
+            when {
+                !site.isUsingWpComRestApi && site.username != username -> null
+                username != null && password != null ->
+                    ApplicationPasswordCredentials(
+                        userName = username,
+                        password = password,
+                        uuid = uuid
+                    )
+                else -> null
+            }
+        }
+
+    @Synchronized
     fun saveCredentials(site: SiteModel, credentials: ApplicationPasswordCredentials) {
-        encryptedPreferences.edit()
-            .putString(site.usernamePrefKey, credentials.userName)
-            .putString(site.passwordPrefKey, credentials.password)
-            .putString(site.uuidPrefKey, credentials.uuid)
-            .apply()
+        withEncryptedPrefs(Unit) { prefs ->
+            prefs.edit()
+                .putString(site.usernamePrefKey, credentials.userName)
+                .putString(site.passwordPrefKey, credentials.password)
+                .putString(site.uuidPrefKey, credentials.uuid)
+                .apply()
+        }
     }
 
     @Synchronized
     fun deleteCredentials(site: SiteModel) {
-        encryptedPreferences.edit()
-            .remove(site.usernamePrefKey)
-            .remove(site.passwordPrefKey)
-            .remove(site.uuidPrefKey)
-            .apply()
+        withEncryptedPrefs(Unit) { prefs ->
+            prefs.edit()
+                .remove(site.usernamePrefKey)
+                .remove(site.passwordPrefKey)
+                .remove(site.uuidPrefKey)
+                .apply()
+        }
+    }
+
+    // Every read/write to EncryptedSharedPreferences ultimately goes through Tink's
+    // AndroidKeystoreAesGcm, which can fail with InvalidKeyException long after init
+    // succeeded (e.g. when the hardware-backed key becomes inaccessible after a system
+    // update or credential change). Treat any failure as "no stored credentials" so the
+    // caller can re-authenticate instead of crashing.
+    @Suppress("TooGenericExceptionCaught")
+    private inline fun <T> withEncryptedPrefs(default: T, block: (SharedPreferences) -> T): T {
+        val prefs = encryptedPreferences ?: return default
+        return try {
+            block(prefs)
+        } catch (e: GeneralSecurityException) {
+            AppLog.e(
+                AppLog.T.MAIN,
+                "Keystore failure while accessing application-password preferences",
+                e
+            )
+            default
+        } catch (e: Exception) {
+            AppLog.e(
+                AppLog.T.MAIN,
+                "Failed to access application-password preferences",
+                e
+            )
+            default
+        }
     }
 
     private fun initEncryptedPrefs(): SharedPreferences {
