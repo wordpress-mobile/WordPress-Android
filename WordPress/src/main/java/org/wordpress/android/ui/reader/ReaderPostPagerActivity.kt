@@ -761,10 +761,33 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
 
     override fun onPause() {
         super.onPause()
-        AppLog.d(AppLog.T.READER, "TRACK READER ReaderPostPagerActivity > STOP Count")
+        AppLog.d(
+            AppLog.T.READER,
+            "reader pager > onPause (isFinishing=$isFinishing, isChangingConfigurations=$isChangingConfigurations)"
+        )
         readerTracker.stop(ReaderTrackerType.PAGED_POST)
         EventBus.getDefault().unregister(this)
         dispatcher.unregister(this)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        AppLog.d(AppLog.T.READER, "reader pager > onStop (isFinishing=$isFinishing)")
+    }
+
+    override fun onDestroy() {
+        AppLog.d(AppLog.T.READER, "reader pager > onDestroy (isFinishing=$isFinishing)")
+        super.onDestroy()
+    }
+
+    override fun finish() {
+        AppLog.e(AppLog.T.READER, "reader pager > finish() called", Throwable("finish() call site"))
+        super.finish()
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        AppLog.d(AppLog.T.READER, "reader pager > onNewIntent action=${intent.action} data=${intent.data}")
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
