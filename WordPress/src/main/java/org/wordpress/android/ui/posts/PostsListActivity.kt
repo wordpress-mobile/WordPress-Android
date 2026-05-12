@@ -300,12 +300,12 @@ class PostsListActivity : BaseAppCompatActivity(),
             )
         }
         setupActions()
-        viewModel.openPrepublishingBottomSheet.observeEvent(this@PostsListActivity) {
+        viewModel.openPrepublishingBottomSheet.observeEvent(this@PostsListActivity) { isPage ->
             val fragment = supportFragmentManager.findFragmentByTag(PrepublishingBottomSheetFragment.TAG)
             if (fragment == null) {
                 val prepublishingFragment = newInstance(
                     site = site,
-                    isPage = editPostRepository.isPage
+                    isPage = isPage
                 )
                 prepublishingFragment.show(supportFragmentManager, PrepublishingBottomSheetFragment.TAG)
             }
