@@ -345,16 +345,16 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
         observeOverlayEvents()
     }
 
-    override fun onPostCreate(savedInstanceState: Bundle?) {
-        super.onPostCreate(savedInstanceState)
-        // After view-hierarchy state has been restored, ViewPager2 holds the saved
-        // FragmentStateAdapter bundle as a pending state. We always rebuild the
-        // adapter from scratch in loadPosts(), so applying that bundle to the new
-        // adapter would just try to resolve fragment references that no longer
-        // exist in the rebuilt FragmentManager and throw
-        // IllegalStateException("Fragment no longer exists for key f#…").
-        // Assigning a non-StatefulAdapter consumes the pending state harmlessly.
-        if (savedInstanceState != null && viewPager.adapter == null) {
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        super.onRestoreInstanceState(savedInstanceState)
+        // super.onRestoreInstanceState just restored the view-hierarchy state, which
+        // populates ViewPager2.mPendingAdapterState with the saved FragmentStateAdapter
+        // bundle. We always rebuild the adapter in loadPosts(), so applying that bundle
+        // to a fresh PostPagerAdapter just throws "Fragment no longer exists for key
+        // f#…" against the rebuilt FragmentManager. Assigning a non-StatefulAdapter
+        // here makes ViewPager2.restorePendingState() drop the pending bundle.
+        if (::viewPager.isInitialized && viewPager.adapter == null) {
+            AppLog.d(AppLog.T.READER, "reader pager > dropping pending FSA state via placeholder adapter")
             viewPager.adapter = noOpAdapter()
         }
     }
