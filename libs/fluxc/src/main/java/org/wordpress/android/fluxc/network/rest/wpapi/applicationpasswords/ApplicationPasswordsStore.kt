@@ -54,24 +54,27 @@ class ApplicationPasswordsStore @Inject constructor(
     private var initPermanentlyFailed: Boolean = false
 
     @Synchronized
+    @Suppress("TooGenericExceptionCaught")
     private fun loadEncryptedPreferences(): SharedPreferences? {
-        encryptedPreferences?.let { return it }
-        if (initPermanentlyFailed) return null
-        @Suppress("TooGenericExceptionCaught")
-        return try {
-            initEncryptedPrefs().also { encryptedPreferences = it }
-        } catch (e: Exception) {
-            // Both the initial create and the post-delete retry failed; the Keystore-backed
-            // master key is unrecoverable on this device (Play Console reports this as
-            // AndroidKeystoreAesGcm.encryptInternal → InvalidKeyException).
-            initPermanentlyFailed = true
-            AppLog.e(
-                AppLog.T.MAIN,
-                "Failed to initialise application-password EncryptedSharedPreferences",
-                e
-            )
-            reportKeystoreError(e)
-            null
+        val cached = encryptedPreferences
+        return when {
+            cached != null -> cached
+            initPermanentlyFailed -> null
+            else -> try {
+                initEncryptedPrefs().also { encryptedPreferences = it }
+            } catch (e: Exception) {
+                // Both the initial create and the post-delete retry failed; the Keystore-backed
+                // master key is unrecoverable on this device (Play Console reports this as
+                // AndroidKeystoreAesGcm.encryptInternal → InvalidKeyException).
+                initPermanentlyFailed = true
+                AppLog.e(
+                    AppLog.T.MAIN,
+                    "Failed to initialise application-password EncryptedSharedPreferences",
+                    e
+                )
+                reportKeystoreError(e)
+                null
+            }
         }
     }
 
