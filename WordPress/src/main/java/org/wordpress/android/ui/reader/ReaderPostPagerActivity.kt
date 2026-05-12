@@ -9,6 +9,7 @@ import android.os.Bundle
 import android.util.AttributeSet
 import android.view.MenuItem
 import android.view.View
+import android.view.ViewGroup
 import android.widget.ProgressBar
 import androidx.activity.addCallback
 import androidx.core.os.BundleCompat
@@ -16,6 +17,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import dagger.hilt.android.AndroidEntryPoint
@@ -273,11 +275,8 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
                     trackedPositions.addAll(positions as HashSet<Int>)
                 }
             }
-            // Bump the generation so any FragmentStateAdapter fragment keys
-            // saved before process death are rejected by containsItem(), preventing
-            // FSA from trying to rehydrate fragments that no longer exist.
             pagerGeneration =
-                savedInstanceState.getLong(KEY_PAGER_GENERATION) + 1
+                savedInstanceState.getLong(KEY_PAGER_GENERATION)
         } else {
             isFeed = intent.getBooleanExtra(ReaderConstants.ARG_IS_FEED, false)
             blogId = intent.getLongExtra(ReaderConstants.ARG_BLOG_ID, 0)
@@ -345,6 +344,30 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
 
         observeOverlayEvents()
     }
+
+    override fun onPostCreate(savedInstanceState: Bundle?) {
+        super.onPostCreate(savedInstanceState)
+        // After view-hierarchy state has been restored, ViewPager2 holds the saved
+        // FragmentStateAdapter bundle as a pending state. We always rebuild the
+        // adapter from scratch in loadPosts(), so applying that bundle to the new
+        // adapter would just try to resolve fragment references that no longer
+        // exist in the rebuilt FragmentManager and throw
+        // IllegalStateException("Fragment no longer exists for key f#…").
+        // Assigning a non-StatefulAdapter consumes the pending state harmlessly.
+        if (savedInstanceState != null && viewPager.adapter == null) {
+            viewPager.adapter = noOpAdapter()
+        }
+    }
+
+    private fun noOpAdapter(): RecyclerView.Adapter<RecyclerView.ViewHolder> =
+        object : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+            override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder =
+                error("placeholder adapter — should never inflate")
+
+            override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) = Unit
+
+            override fun getItemCount() = 0
+        }
 
     @Suppress("DEPRECATION")
     override fun onCreateView(
@@ -752,7 +775,7 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-    private fun hasPagerAdapter() = viewPager.adapter != null
+    private fun hasPagerAdapter() = viewPager.adapter is PostPagerAdapter
 
     private val pagerAdapter: PostPagerAdapter?
         get() = viewPager.adapter as? PostPagerAdapter
