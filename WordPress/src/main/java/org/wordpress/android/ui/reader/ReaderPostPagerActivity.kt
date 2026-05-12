@@ -273,8 +273,11 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
                     trackedPositions.addAll(positions as HashSet<Int>)
                 }
             }
+            // Bump the generation so any FragmentStateAdapter fragment keys
+            // saved before process death are rejected by containsItem(), preventing
+            // FSA from trying to rehydrate fragments that no longer exist.
             pagerGeneration =
-                savedInstanceState.getLong(KEY_PAGER_GENERATION)
+                savedInstanceState.getLong(KEY_PAGER_GENERATION) + 1
         } else {
             isFeed = intent.getBooleanExtra(ReaderConstants.ARG_IS_FEED, false)
             blogId = intent.getLongExtra(ReaderConstants.ARG_BLOG_ID, 0)
@@ -878,38 +881,41 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
                         AppLog.T.READER,
                         "reader pager > creating adapter"
                     )
+                    val adapter = PostPagerAdapter(idList)
                     // Assigning the adapter triggers FragmentStateAdapter to rehydrate any
                     // pending saved-state fragments. On a process-death restore those keys
                     // may point to fragments that no longer exist, which throws
-                    // IllegalStateException("Fragment no longer exists for key …") and
-                    // crashes the activity. Treat that as a benign restore failure — leave
-                    // the user on the previous screen instead of bringing the whole
-                    // activity down. (Sentry: JETPACK-ANDROID-1G8W)
+                    // IllegalStateException("Fragment no longer exists for key …"). The
+                    // pagerGeneration bump on restore should prevent this, but keep a
+                    // narrow catch as a safety net: bail out of the activity so the user
+                    // returns to the previous screen instead of crashing.
+                    // (Sentry: JETPACK-ANDROID-1G8W)
                     try {
-                        val adapter = PostPagerAdapter(idList)
                         viewPager.adapter = adapter
-
-                        // set the current position without smooth scrolling - otherwise the previous post in
-                        // the list may briefly appear
-                        if (adapter.isValidPosition(newPosition)) {
-                            viewPager.setCurrentItem(newPosition, false)
-                            trackPostAtPositionIfNeeded(newPosition)
-                        } else if (adapter.isValidPosition(currentPosition)) {
-                            viewPager.setCurrentItem(currentPosition, false)
-                            trackPostAtPositionIfNeeded(currentPosition)
-                        }
-
-                        // let the user know they can swipe between posts
-                        if (adapter.itemCount > 1 && !AppPrefs.isReaderSwipeToNavigateShown()) {
-                            WPSwipeSnackbar.show(viewPager)
-                            AppPrefs.setReaderSwipeToNavigateShown(true)
-                        }
                     } catch (e: IllegalStateException) {
                         AppLog.e(
                             AppLog.T.READER,
                             "reader pager > failed to attach adapter after saved-state restore",
                             e
                         )
+                        finish()
+                        return@runOnUiThread
+                    }
+
+                    // set the current position without smooth scrolling - otherwise the previous post in
+                    // the list may briefly appear
+                    if (adapter.isValidPosition(newPosition)) {
+                        viewPager.setCurrentItem(newPosition, false)
+                        trackPostAtPositionIfNeeded(newPosition)
+                    } else if (adapter.isValidPosition(currentPosition)) {
+                        viewPager.setCurrentItem(currentPosition, false)
+                        trackPostAtPositionIfNeeded(currentPosition)
+                    }
+
+                    // let the user know they can swipe between posts
+                    if (adapter.itemCount > 1 && !AppPrefs.isReaderSwipeToNavigateShown()) {
+                        WPSwipeSnackbar.show(viewPager)
+                        AppPrefs.setReaderSwipeToNavigateShown(true)
                     }
                 }
             }
