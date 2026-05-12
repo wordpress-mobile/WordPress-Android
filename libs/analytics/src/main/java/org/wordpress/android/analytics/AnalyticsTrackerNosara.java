@@ -367,13 +367,21 @@ public class AnalyticsTrackerNosara extends Tracker {
             propertiesToJSON = new JSONObject(predefinedEventProperties);
         }
 
-        if (propertiesToJSON.length() > 0) {
-            mNosaraClient.track(mEventsPrefix + eventName, propertiesToJSON, user, userType);
-            String jsonString = propertiesToJSON.toString();
-            AppLog.i(T.STATS, "\uD83D\uDD35 Tracked: " + eventName + ", Properties: " + jsonString);
-        } else {
-            mNosaraClient.track(mEventsPrefix + eventName, user, userType);
-            AppLog.i(T.STATS, "\uD83D\uDD35 Tracked: " + eventName);
+        // Tracks' MessageBuilder.createRequestCommonPropsJSONObject can throw — most
+        // commonly NPE on Locale.getDefault().toString() returning null after a config
+        // restore race (Sentry: JETPACK-ANDROID-1G35). Analytics failures should never
+        // crash the app, so swallow the throw and log it.
+        try {
+            if (propertiesToJSON.length() > 0) {
+                mNosaraClient.track(mEventsPrefix + eventName, propertiesToJSON, user, userType);
+                String jsonString = propertiesToJSON.toString();
+                AppLog.i(T.STATS, "\uD83D\uDD35 Tracked: " + eventName + ", Properties: " + jsonString);
+            } else {
+                mNosaraClient.track(mEventsPrefix + eventName, user, userType);
+                AppLog.i(T.STATS, "\uD83D\uDD35 Tracked: " + eventName);
+            }
+        } catch (Exception e) {
+            AppLog.e(AppLog.T.STATS, "Failed to track event " + eventName, e);
         }
     }
 
@@ -420,7 +428,14 @@ public class AnalyticsTrackerNosara extends Tracker {
             setWordPressComUserName(metadata.getUsername());
             // Re-unify the user
             if (getAnonID() != null) {
-                mNosaraClient.trackAliasUser(getWordPressComUserName(), getAnonID(), TracksClient.NosaraUserType.WPCOM);
+                try {
+                    mNosaraClient.trackAliasUser(
+                            getWordPressComUserName(), getAnonID(), TracksClient.NosaraUserType.WPCOM);
+                } catch (Exception e) {
+                    // Same family as the track() NPE above (Sentry JETPACK-ANDROID-1G35) —
+                    // don't let an alias-emit failure crash login.
+                    AppLog.e(AppLog.T.STATS, "Failed to track alias user", e);
+                }
                 clearAnonID();
             }
         } else {
