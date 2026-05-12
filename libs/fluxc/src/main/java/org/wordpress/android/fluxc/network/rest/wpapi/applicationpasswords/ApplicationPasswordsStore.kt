@@ -28,7 +28,7 @@ class ApplicationPasswordsStore @Inject constructor(
     there. Do not use directly in WCAndroid app.
      */
     fun getApplicationPasswordAuthHeader(site: SiteModel): String =
-        withEncryptedPrefs("") { prefs ->
+        withEncryptedPrefs(Credentials.basic("", "")) { prefs ->
             Credentials.basic(
                 username = prefs.getString(site.usernamePrefKey, null).orEmpty(),
                 password = prefs.getString(site.passwordPrefKey, null).orEmpty()
@@ -78,7 +78,7 @@ class ApplicationPasswordsStore @Inject constructor(
 
     @Synchronized
     fun saveCredentials(site: SiteModel, credentials: ApplicationPasswordCredentials) {
-        withEncryptedPrefs(Unit) { prefs ->
+        withEncryptedPrefs { prefs ->
             prefs.edit()
                 .putString(site.usernamePrefKey, credentials.userName)
                 .putString(site.passwordPrefKey, credentials.password)
@@ -89,7 +89,7 @@ class ApplicationPasswordsStore @Inject constructor(
 
     @Synchronized
     fun deleteCredentials(site: SiteModel) {
-        withEncryptedPrefs(Unit) { prefs ->
+        withEncryptedPrefs { prefs ->
             prefs.edit()
                 .remove(site.usernamePrefKey)
                 .remove(site.passwordPrefKey)
@@ -103,6 +103,10 @@ class ApplicationPasswordsStore @Inject constructor(
     // succeeded (e.g. when the hardware-backed key becomes inaccessible after a system
     // update or credential change). Treat any failure as "no stored credentials" so the
     // caller can re-authenticate instead of crashing.
+    private inline fun withEncryptedPrefs(block: (SharedPreferences) -> Unit) {
+        withEncryptedPrefs(Unit, block)
+    }
+
     @Suppress("TooGenericExceptionCaught")
     private inline fun <T> withEncryptedPrefs(default: T, block: (SharedPreferences) -> T): T {
         val prefs = encryptedPreferences ?: return default
