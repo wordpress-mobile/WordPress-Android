@@ -470,7 +470,7 @@ object ReaderActivityLauncher {
         intent.putExtra(ReaderConstants.ARG_IMAGE_URL, imageUrl)
         intent.putExtra(ReaderConstants.ARG_IS_PRIVATE, isPrivate)
         intent.putExtra(ReaderConstants.ARG_IS_GALLERY, isGallery)
-        if (!TextUtils.isEmpty(content)) {
+        if (!content.isNullOrEmpty()) {
             intent.putExtra(ReaderConstants.ARG_CONTENT, content)
         }
         if (!galleryImageUrls.isNullOrEmpty()) {
