@@ -448,7 +448,7 @@ object ReaderActivityLauncher {
     @Suppress("LongParameterList")
     fun showReaderPhotoViewer(
         context: Context,
-        imageUrl: String,
+        imageUrl: String?,
         content: String?,
         sourceView: View?,
         imageOptions: EnumSet<PhotoViewerOption>,
@@ -456,7 +456,10 @@ object ReaderActivityLauncher {
         startY: Int,
         galleryImageUrls: ArrayList<String>? = null
     ) {
-        if (TextUtils.isEmpty(imageUrl)) {
+        if (imageUrl.isNullOrEmpty()) {
+            val message = "showReaderPhotoViewer called with null or empty imageUrl"
+            AppLog.w(T.READER, message)
+            reportNullOrEmptyUrlToSentry(context, message)
             return
         }
 
