@@ -13,12 +13,12 @@ import org.wordpress.android.util.AppLog
  * Sentry: JETPACK-ANDROID-1ATH (and the same shape across all stats widget VMs:
  * 1AV2, 1AZW, 1AZQ, 1AWZ, 1B0V, 1C2Y).
  */
-@Suppress("TooGenericExceptionCaught")
 internal fun runBlockingForWidget(block: suspend () -> Unit) {
     try {
         runBlocking { block() }
     } catch (e: InterruptedException) {
         AppLog.w(AppLog.T.STATS, "Widget data fetch interrupted: ${e.message}")
+        Thread.currentThread().interrupt()
     } catch (e: CancellationException) {
         AppLog.w(AppLog.T.STATS, "Widget data fetch cancelled: ${e.message}")
     }
