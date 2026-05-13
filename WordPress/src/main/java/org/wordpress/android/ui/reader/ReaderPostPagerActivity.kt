@@ -9,6 +9,7 @@ import android.os.Bundle
 import android.util.AttributeSet
 import android.view.MenuItem
 import android.view.View
+import android.view.ViewGroup
 import android.widget.ProgressBar
 import androidx.activity.addCallback
 import androidx.core.os.BundleCompat
@@ -16,6 +17,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import dagger.hilt.android.AndroidEntryPoint
@@ -342,6 +344,30 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
 
         observeOverlayEvents()
     }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        super.onRestoreInstanceState(savedInstanceState)
+        // super.onRestoreInstanceState just restored the view-hierarchy state, which
+        // populates ViewPager2.mPendingAdapterState with the saved FragmentStateAdapter
+        // bundle. We always rebuild the adapter in loadPosts(), so applying that bundle
+        // to a fresh PostPagerAdapter just throws "Fragment no longer exists for key
+        // f#…" against the rebuilt FragmentManager. Assigning a non-StatefulAdapter
+        // here makes ViewPager2.restorePendingState() drop the pending bundle.
+        if (::viewPager.isInitialized && viewPager.adapter == null) {
+            AppLog.d(AppLog.T.READER, "reader pager > dropping pending FSA state via placeholder adapter")
+            viewPager.adapter = noOpAdapter()
+        }
+    }
+
+    private fun noOpAdapter(): RecyclerView.Adapter<RecyclerView.ViewHolder> =
+        object : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+            override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder =
+                error("placeholder adapter — should never inflate")
+
+            override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) = Unit
+
+            override fun getItemCount() = 0
+        }
 
     @Suppress("DEPRECATION")
     override fun onCreateView(
@@ -749,7 +775,7 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-    private fun hasPagerAdapter() = viewPager.adapter != null
+    private fun hasPagerAdapter() = viewPager.adapter is PostPagerAdapter
 
     private val pagerAdapter: PostPagerAdapter?
         get() = viewPager.adapter as? PostPagerAdapter
@@ -871,7 +897,7 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
                 val newPosition = idList.indexOf(blogId, postId)
 
                 runOnUiThread {
-                    if (isFinishing) {
+                    if (isFinishing || isDestroyed) {
                         return@runOnUiThread
                     }
                     AppLog.d(
@@ -879,7 +905,25 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
                         "reader pager > creating adapter"
                     )
                     val adapter = PostPagerAdapter(idList)
-                    viewPager.adapter = adapter
+                    // Assigning the adapter triggers FragmentStateAdapter to restore any
+                    // pending saved-state fragments. On a process-death restore those keys
+                    // may point to fragments that no longer exist, which throws
+                    // IllegalStateException("Fragment no longer exists for key …"). The
+                    // pagerGeneration bump on restore should prevent this, but keep a
+                    // narrow catch as a safety net: bail out of the activity so the user
+                    // returns to the previous screen instead of crashing.
+                    // (Sentry: JETPACK-ANDROID-1G8W)
+                    try {
+                        viewPager.adapter = adapter
+                    } catch (e: IllegalStateException) {
+                        AppLog.e(
+                            AppLog.T.READER,
+                            "reader pager > failed to attach adapter after saved-state restore",
+                            e
+                        )
+                        finish()
+                        return@runOnUiThread
+                    }
 
                     // set the current position without smooth scrolling - otherwise the previous post in
                     // the list may briefly appear
