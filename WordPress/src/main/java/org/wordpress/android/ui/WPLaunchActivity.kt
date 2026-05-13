@@ -26,6 +26,16 @@ class WPLaunchActivity : AppCompatActivity() {
             showMissingSplitsDialog()
             return
         }
+        // If the launcher icon is tapped while the app's task is still in the
+        // recents stack (e.g. after process death or "Don't keep activities"),
+        // Android starts us on top of the existing stack. Bail out so the system
+        // can simply bring that stack forward — otherwise launchWPMainActivity()
+        // below uses FLAG_ACTIVITY_CLEAR_TASK and wipes whatever screen the user
+        // was on (e.g. a Reader post they had open).
+        if (!isTaskRoot) {
+            finish()
+            return
+        }
         ProfilingUtils.split("WPLaunchActivity.onCreate")
         launchWPMainActivity()
     }
