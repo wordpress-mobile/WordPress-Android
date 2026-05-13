@@ -13,10 +13,10 @@ import org.wordpress.android.util.AppLog
 internal fun runBlockingForWidget(block: suspend () -> Unit) {
     try {
         runBlocking { block() }
-    } catch (e: InterruptedException) {
-        AppLog.w(AppLog.T.STATS, "Widget data fetch interrupted: ${e.message}")
+    } catch (_: InterruptedException) {
+        AppLog.w(AppLog.T.STATS, "Widget data fetch interrupted")
         Thread.currentThread().interrupt()
-    } catch (e: CancellationException) {
-        AppLog.w(AppLog.T.STATS, "Widget data fetch cancelled: ${e.message}")
+    } catch (_: CancellationException) {
+        AppLog.w(AppLog.T.STATS, "Widget data fetch cancelled")
     }
 }
