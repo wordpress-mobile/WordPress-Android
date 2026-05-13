@@ -37,7 +37,16 @@ class WpServiceProvider @Inject constructor(
 
     @Synchronized
     fun getService(site: SiteModel): WpService {
-        return services.getOrPut(site.id) { createService(site) }
+        return try {
+            services.getOrPut(site.id) { createService(site) }
+        } catch (e: LinkageError) {
+            // ExceptionInInitializerError / NoClassDefFoundError / UnsatisfiedLinkError:
+            // the wordpress-rs native library is out of sync with its Kotlin bindings
+            // on this device (most commonly armeabi-v7a split-APK builds). Rewrap as a
+            // RuntimeException so the caller's existing catch(Exception) can surface a
+            // friendly error state instead of crashing.
+            throw WpServiceUnavailableException(e)
+        }
     }
 
     /** Removes all cached services. */
@@ -98,3 +107,12 @@ class WpServiceProvider @Inject constructor(
         }
     }
 }
+
+/**
+ * Thrown when the wordpress-rs native library cannot be initialized on this device
+ * (e.g. UniFFI checksum mismatch between the native .so and the Kotlin bindings).
+ * Wraps the original [LinkageError] so callers can recover gracefully via the
+ * existing `catch (Exception)` paths in the RS post-list flow.
+ */
+class WpServiceUnavailableException(cause: LinkageError) :
+    RuntimeException("wordpress-rs native library unavailable: ${cause.message}", cause)
