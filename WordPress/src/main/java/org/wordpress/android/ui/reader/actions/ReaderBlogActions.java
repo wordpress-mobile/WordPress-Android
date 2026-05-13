@@ -1,5 +1,7 @@
 package org.wordpress.android.ui.reader.actions;
 
+import android.os.Handler;
+import android.os.Looper;
 import android.text.TextUtils;
 import android.util.Pair;
 
@@ -456,12 +458,14 @@ public class ReaderBlogActions {
             return;
         }
 
-        ReaderBlog blogInfo = ReaderBlog.fromJson(jsonObject);
-        ReaderBlogTable.addOrUpdateBlog(blogInfo);
-
-        if (infoListener != null) {
-            infoListener.onResult(blogInfo);
-        }
+        final ReaderBlog blogInfo = ReaderBlog.fromJson(jsonObject);
+        // Move the INSERT OR REPLACE off the main thread; callers expect onResult on main.
+        new Thread(() -> {
+            ReaderBlogTable.addOrUpdateBlog(blogInfo);
+            if (infoListener != null) {
+                new Handler(Looper.getMainLooper()).post(() -> infoListener.onResult(blogInfo));
+            }
+        }).start();
     }
 
     /*
