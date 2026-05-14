@@ -48,7 +48,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.facebook.shimmer.ShimmerFrameLayout
 import com.google.android.material.appbar.AppBarLayout
-import com.google.android.material.behavior.HideBottomViewOnScrollBehavior
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
@@ -457,7 +456,9 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                 layoutFooterBinding = ReaderIncludePostDetailFooterBinding.bind(inflated).mapBinding().apply {
                         // the new bar should hide on scroll
                         val params = root.layoutParams as CoordinatorLayout.LayoutParams
-                        params.behavior = HideBottomViewOnScrollBehavior<View>()
+                        @Suppress("DEPRECATION")
+                        params.behavior =
+                            com.google.android.material.behavior.HideBottomViewOnScrollBehavior<View>()
                     }
                 layoutFooterBinding.root.isInvisible = true
             }
