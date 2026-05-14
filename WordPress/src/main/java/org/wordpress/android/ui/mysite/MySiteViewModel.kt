@@ -78,6 +78,12 @@ class MySiteViewModel @Inject constructor(
        as they're already built on site select. */
     private var isSiteSelected = false
 
+    /* Editor capabilities rarely change, so once we've successfully fetched them for a site we
+       skip subsequent non-user-initiated fetches in this ViewModel session. Failed fetches do
+       not populate this set, so a transient network failure recovers on the next onResume.
+       User-initiated refreshes (e.g. pull-to-refresh) always bypass this gate. */
+    private val fetchedCapabilitiesForSite = mutableSetOf<Int>()
+
     val onScrollTo: MutableLiveData<Event<Int>> = MutableLiveData()
 
     val onSnackbarMessage = merge(
@@ -202,8 +208,14 @@ class MySiteViewModel @Inject constructor(
         site: SiteModel,
         isUserInitiated: Boolean
     ) {
+        if (site.id in fetchedCapabilitiesForSite && !isUserInitiated) {
+            return
+        }
         val ok = editorSettingsRepository
             .fetchEditorCapabilitiesForSite(site)
+        if (ok) {
+            fetchedCapabilitiesForSite.add(site.id)
+        }
         val hasCache = editorSettingsRepository
             .hasCachedCapabilities(site)
         if (!ok && (isUserInitiated || !hasCache)) {

@@ -362,6 +362,89 @@ class MySiteViewModelTest : BaseUnitTest() {
         verify(dashboardCardsViewModelSlice).clearValue()
     }
 
+    @Test
+    fun `given selected site, when onResume invoked twice, then editor capabilities are fetched once`() = test {
+        initSelectedSite()
+
+        viewModel.onResume()
+        advanceUntilIdle()
+        viewModel.onResume()
+        advanceUntilIdle()
+
+        verify(editorSettingsRepository, times(1)).fetchEditorCapabilitiesForSite(siteTest)
+    }
+
+    @Test
+    fun `given selected site, when onResume then non-PTR refresh, then editor capabilities are fetched once`() =
+        test {
+            initSelectedSite()
+
+            viewModel.onResume()
+            advanceUntilIdle()
+            viewModel.refresh(isPullToRefresh = false)
+            advanceUntilIdle()
+
+            verify(editorSettingsRepository, times(1)).fetchEditorCapabilitiesForSite(siteTest)
+        }
+
+    @Test
+    fun `given selected site, when onResume then PTR refresh, then editor capabilities are fetched twice`() = test {
+        initSelectedSite()
+
+        viewModel.onResume()
+        advanceUntilIdle()
+        viewModel.refresh(isPullToRefresh = true)
+        advanceUntilIdle()
+
+        verify(editorSettingsRepository, times(2)).fetchEditorCapabilitiesForSite(siteTest)
+    }
+
+    @Test
+    fun `given PTR refresh, when onResume invoked after, then editor capabilities are not re-fetched`() = test {
+        initSelectedSite()
+
+        viewModel.refresh(isPullToRefresh = true)
+        advanceUntilIdle()
+        viewModel.onResume()
+        advanceUntilIdle()
+
+        verify(editorSettingsRepository, times(1)).fetchEditorCapabilitiesForSite(siteTest)
+    }
+
+    @Test
+    fun `given fetch failed, when onResume invoked again, then editor capabilities are re-fetched`() = test {
+        initSelectedSite()
+        whenever(editorSettingsRepository.fetchEditorCapabilitiesForSite(siteTest)).thenReturn(false, true)
+
+        viewModel.onResume()
+        advanceUntilIdle()
+        viewModel.onResume()
+        advanceUntilIdle()
+
+        verify(editorSettingsRepository, times(2)).fetchEditorCapabilitiesForSite(siteTest)
+    }
+
+    @Test
+    fun `given site switched, when onResume invoked, then editor capabilities are fetched for the new site`() =
+        test {
+            initSelectedSite()
+            val otherSite = SiteModel().apply {
+                id = TEST_SITE_ID + 1
+                url = TEST_URL
+                name = TEST_SITE_NAME
+                siteId = (TEST_SITE_ID + 1).toLong()
+            }
+
+            viewModel.onResume()
+            advanceUntilIdle()
+            whenever(selectedSiteRepository.getSelectedSite()).thenReturn(otherSite)
+            viewModel.onResume()
+            advanceUntilIdle()
+
+            verify(editorSettingsRepository, times(1)).fetchEditorCapabilitiesForSite(siteTest)
+            verify(editorSettingsRepository, times(1)).fetchEditorCapabilitiesForSite(otherSite)
+        }
+
 
 
     /* LAND ON THE EDITOR A/B EXPERIMENT */

@@ -12,6 +12,7 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.argThat
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
+import org.mockito.kotlin.never
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
@@ -24,6 +25,8 @@ import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.ui.accounts.login.ApplicationPasswordLoginHelper
 import org.wordpress.android.ui.accounts.login.ApplicationPasswordLoginHelper.StoreCredentialsResult
+import org.wordpress.android.util.UrlUtils
+import java.io.IOException
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
@@ -77,6 +80,14 @@ class ApplicationPasswordLoginViewModelTest : BaseUnitTest() {
             crashLogging
         )
         whenever(applicationPasswordLoginHelper.getSiteUrlLoginFromRawData(rawData)).thenReturn(urlLogin)
+        // Mirror the helper's exact-match behavior so existing tests that stub
+        // siteStore.sites still find their fixture site by URL. Tests that need
+        // tolerant or no-match behavior can override this stub.
+        whenever(applicationPasswordLoginHelper.findSiteByUrl(any(), any())).thenAnswer { invocation ->
+            val normalizedUrl = invocation.getArgument<String?>(0)
+            val sites = invocation.getArgument<List<SiteModel>>(1)
+            sites.firstOrNull { UrlUtils.normalizeUrl(it.url) == normalizedUrl }
+        }
     }
 
     @Test
@@ -532,6 +543,109 @@ class ApplicationPasswordLoginViewModelTest : BaseUnitTest() {
                 cancelAndIgnoreRemainingEvents()
             }
         }
+
+    @Test
+    fun `given onSiteChanged with error, then no Sentry report is sent`() = runTest {
+        // Given
+        setupFetchSitesFlow()
+        val siteError = SiteStore.SiteError(
+            SiteStore.SiteErrorType.GENERIC_ERROR, "boom"
+        )
+
+        // When
+        viewModel.onFinishedEvent.test {
+            viewModel.setupSite(rawData)
+            viewModel.onSiteChanged(SiteStore.OnSiteChanged(0, siteError))
+
+            // Then — error surfaces in UI but is not noised into Sentry
+            val result = awaitItem()
+            assertTrue(result.isError)
+            assertEquals("site_store_error", result.errorMessage)
+            verify(crashLogging, never()).sendReport(any(), any(), any())
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
+    fun `given site_not_found validation, then no Sentry report is sent`() = runTest {
+        // Given — site list is empty so validateSiteChanged hits site_not_found
+        setupFetchSitesFlow()
+        whenever(siteStore.sites).thenReturn(emptyList())
+
+        // When
+        viewModel.onFinishedEvent.test {
+            viewModel.setupSite(rawData)
+            viewModel.onSiteChanged(SiteStore.OnSiteChanged(rowsAffected = 1))
+
+            // Then
+            val result = awaitItem()
+            assertTrue(result.isError)
+            assertEquals("site_not_found", result.errorMessage)
+            verify(crashLogging, never()).sendReport(any(), any(), any())
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
+    fun `given fetchSites with IOException cause, then no Sentry report is sent`() = runTest {
+        // Given — verifyOrDiscoverXMLRPCEndpoint only declares DiscoveryException,
+        // so use an unchecked exception with an IOException cause to exercise the
+        // cause-chain traversal in isRecoverableNetworkOrDiscoveryError.
+        whenever(
+            applicationPasswordLoginHelper
+                .storeApplicationPasswordCredentialsFrom(eq(urlLogin), any())
+        ).thenReturn(StoreCredentialsResult.SiteNotFound)
+        whenever(selfHostedEndpointFinder.verifyOrDiscoverXMLRPCEndpoint(any()))
+            .thenThrow(RuntimeException("wrapped", IOException("offline")))
+
+        // When
+        viewModel.onFinishedEvent.test {
+            viewModel.setupSite(rawData)
+
+            // Then
+            val result = awaitItem()
+            assertTrue(result.isError)
+            verify(crashLogging, never()).sendReport(any(), any(), any())
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
+    fun `given onSiteChanged success and site matched via tolerant URL match, then emit success`() = runTest {
+        // Given — stored URL has www. prefix while callback URL does not. Without
+        // the tolerant fallback the lookup would fail with site_not_found.
+        val storedSite = SiteModel().apply {
+            apiRestUsernamePlain = urlLogin.user
+            apiRestPasswordPlain = urlLogin.password
+            url = "https://www.example.com"
+        }
+        whenever(siteStore.hasSite()).thenReturn(true)
+        whenever(siteStore.sites).thenReturn(listOf(storedSite))
+        whenever(applicationPasswordLoginHelper.findSiteByUrl(any(), any()))
+            .thenReturn(storedSite)
+        whenever(
+            applicationPasswordLoginHelper
+                .storeApplicationPasswordCredentialsFrom(eq(urlLogin), any())
+        ).thenReturn(StoreCredentialsResult.SiteNotFound)
+        whenever(selfHostedEndpointFinder.verifyOrDiscoverXMLRPCEndpoint(any()))
+            .thenReturn("https://example.com/xmlrpc.php")
+
+        // When
+        viewModel.onFinishedEvent.test {
+            viewModel.setupSite(rawData)
+            viewModel.onSiteChanged(
+                SiteStore.OnSiteChanged(
+                    rowsAffected = 1,
+                    updatedSites = listOf(storedSite)
+                )
+            )
+
+            // Then
+            val result = awaitItem()
+            assertFalse(result.isError)
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
 
     @Test
     fun `given DiscoveryException, when fetchSites, then dispatch WPAPI fallback`() =
