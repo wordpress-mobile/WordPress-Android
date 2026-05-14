@@ -185,10 +185,24 @@ class GutenbergKitSettingsBuilderTest {
         val result = builder.buildSiteApiNamespace(
             shouldUseWPComRestApi = true,
             siteId = 789L,
-            siteUrl = "not-a-valid-url"
+            siteUrl = "not a valid url"
         )
 
         assertThat(result).containsExactly("sites/789/")
+    }
+
+    @Test
+    fun `namespace uses host alias when URL is schemeless`() {
+        val result = builder.buildSiteApiNamespace(
+            shouldUseWPComRestApi = true,
+            siteId = 456L,
+            siteUrl = "example.wordpress.com"
+        )
+
+        assertThat(result).containsExactly(
+            "sites/456/",
+            "sites/example.wordpress.com/"
+        )
     }
 
     // ===== Extract Host Tests =====
@@ -203,9 +217,15 @@ class GutenbergKitSettingsBuilderTest {
     }
 
     @Test
-    fun `extractHost returns null for invalid URL`() {
+    fun `extractHost returns null for blank input`() {
+        assertThat(builder.extractHost("")).isNull()
+        assertThat(builder.extractHost("   ")).isNull()
+    }
+
+    @Test
+    fun `extractHost returns null for URL with whitespace`() {
         assertThat(
-            builder.extractHost("not-a-url")
+            builder.extractHost("not a url")
         ).isNull()
     }
 
@@ -215,6 +235,34 @@ class GutenbergKitSettingsBuilderTest {
             builder.extractHost(
                 "https://example.com/blog/page"
             )
+        ).isEqualTo("example.com")
+    }
+
+    @Test
+    fun `extractHost handles schemeless host`() {
+        assertThat(
+            builder.extractHost("example.wordpress.com")
+        ).isEqualTo("example.wordpress.com")
+    }
+
+    @Test
+    fun `extractHost handles schemeless host with path`() {
+        assertThat(
+            builder.extractHost("example.com/blog")
+        ).isEqualTo("example.com")
+    }
+
+    @Test
+    fun `extractHost strips port from URL`() {
+        assertThat(
+            builder.extractHost("https://example.com:8080/foo")
+        ).isEqualTo("example.com")
+    }
+
+    @Test
+    fun `extractHost strips userinfo from URL`() {
+        assertThat(
+            builder.extractHost("https://user:pass@example.com/")
         ).isEqualTo("example.com")
     }
 
@@ -252,13 +300,36 @@ class GutenbergKitSettingsBuilderTest {
     }
 
     @Test
-    fun `WPCom site sets editor assets endpoint`() {
+    fun `WPCom site sets editor assets endpoint when plugins available`() {
+        whenever(editorCapabilityResolver.resolveThirdPartyBlocks(any()))
+            .thenReturn(Resolved.Available(userEnabled = true))
+
         val config = buildWPComConfig(siteId = 100L)
 
         assertThat(config.editorAssetsEndpoint).isEqualTo(
             "https://public-api.wordpress.com/" +
                 "wpcom/v2/sites/100/editor-assets"
         )
+    }
+
+    @Test
+    fun `editor assets endpoint is null when plugins unsupported`() {
+        whenever(editorCapabilityResolver.resolveThirdPartyBlocks(any()))
+            .thenReturn(Resolved.Unsupported(Resolved.UnsupportedReason.CapabilityMissing))
+
+        val config = buildWPComConfig(siteId = 100L)
+
+        assertThat(config.editorAssetsEndpoint).isNull()
+    }
+
+    @Test
+    fun `editor assets endpoint is null when plugins hidden`() {
+        whenever(editorCapabilityResolver.resolveThirdPartyBlocks(any()))
+            .thenReturn(Resolved.Hidden)
+
+        val config = buildWPComConfig(siteId = 100L)
+
+        assertThat(config.editorAssetsEndpoint).isNull()
     }
 
     @Test
@@ -310,6 +381,9 @@ class GutenbergKitSettingsBuilderTest {
 
     @Test
     fun `self-hosted site builds editor assets endpoint from API root`() {
+        whenever(editorCapabilityResolver.resolveThirdPartyBlocks(any()))
+            .thenReturn(Resolved.Available(userEnabled = true))
+
         val config = buildSelfHostedConfig()
 
         assertThat(config.editorAssetsEndpoint).isEqualTo(
@@ -333,7 +407,10 @@ class GutenbergKitSettingsBuilderTest {
         }
         val config = builder.buildPostConfiguration(
             site = site,
-            accessToken = "wpcom_token"
+            accessToken = "wpcom_token",
+            locale = "en",
+            cookies = emptyMap(),
+            isNetworkLoggingEnabled = false,
         )
 
         assertThat(config.siteApiRoot)
@@ -387,8 +464,11 @@ class GutenbergKitSettingsBuilderTest {
         }
         val config = builder.buildPostConfiguration(
             site = site,
+            accessToken = "test_token",
+            locale = "en",
+            cookies = emptyMap(),
+            isNetworkLoggingEnabled = false,
             post = post,
-            accessToken = "test_token"
         )
 
         assertThat(config.postId).isNull()
@@ -423,11 +503,13 @@ class GutenbergKitSettingsBuilderTest {
     }
 
     @Test
-    fun `cached hosts includes only s0 wp com for invalid URL`() {
-        val config = buildWPComConfig(siteUrl = "not-a-url")
+    fun `cached hosts includes schemeless site host`() {
+        val config = buildWPComConfig(siteUrl = "shieldeyesfromlight.wordpress.com")
 
-        assertThat(config.cachedAssetHosts)
-            .containsExactly("s0.wp.com")
+        assertThat(config.cachedAssetHosts).containsExactlyInAnyOrder(
+            "s0.wp.com",
+            "shieldeyesfromlight.wordpress.com"
+        )
     }
 
     // --- Namespace excluded paths ---
@@ -476,27 +558,6 @@ class GutenbergKitSettingsBuilderTest {
             .containsExactly("s0.wp.com")
     }
 
-    // ===== buildEditorAssetsEndpoint (via buildPostConfiguration) =====
-
-    @Test
-    fun `editor assets endpoint uses first namespace`() {
-        val config = buildWPComConfig(siteId = 55L)
-
-        assertThat(config.editorAssetsEndpoint).isEqualTo(
-            "https://public-api.wordpress.com/" +
-                "wpcom/v2/sites/55/editor-assets"
-        )
-    }
-
-    @Test
-    fun `editor assets endpoint for non-WPCom site uses API root`() {
-        val config = buildSelfHostedConfig()
-
-        assertThat(config.editorAssetsEndpoint).isEqualTo(
-            "https://mysite.com/wp-json/wpcom/v2/editor-assets"
-        )
-    }
-
     // ===== buildSiteApiNamespace edge cases =====
 
     @Test
@@ -526,8 +587,11 @@ class GutenbergKitSettingsBuilderTest {
         }
         val config = builder.buildPostConfiguration(
             site = site,
+            accessToken = "test_token",
+            locale = "en",
+            cookies = emptyMap(),
+            isNetworkLoggingEnabled = false,
             post = post,
-            accessToken = "test_token"
         )
 
         assertThat(config.postType).isEqualTo(PostTypeDetails.page)
@@ -548,11 +612,39 @@ class GutenbergKitSettingsBuilderTest {
         }
         val config = builder.buildPostConfiguration(
             site = site,
+            accessToken = "test_token",
+            locale = "en",
+            cookies = emptyMap(),
+            isNetworkLoggingEnabled = false,
             post = post,
-            accessToken = "test_token"
         )
 
         assertThat(config.postId).isEqualTo(42u)
+    }
+
+    // ===== Per-call values propagate through =====
+
+    @Test
+    fun `locale passes through to configuration`() {
+        val config = buildWPComConfig(locale = "fr-fr")
+
+        assertThat(config.locale).isEqualTo("fr-fr")
+    }
+
+    @Test
+    fun `cookies pass through to configuration`() {
+        val cookies = mapOf("wp_session" to "abc123", "wordpress_logged_in" to "xyz")
+
+        val config = buildWPComConfig(cookies = cookies)
+
+        assertThat(config.cookies).isEqualTo(cookies)
+    }
+
+    @Test
+    fun `network logging flag passes through to configuration`() {
+        val config = buildWPComConfig(isNetworkLoggingEnabled = true)
+
+        assertThat(config.enableNetworkLogging).isTrue()
     }
 
     // ===== Capability resolver integration =====
@@ -602,7 +694,10 @@ class GutenbergKitSettingsBuilderTest {
     private fun buildWPComConfig(
         siteUrl: String = "https://example.wordpress.com",
         siteId: Long = 123L,
-        accessToken: String? = "test_token"
+        accessToken: String? = "test_token",
+        locale: String = "en",
+        cookies: Map<String, String> = emptyMap(),
+        isNetworkLoggingEnabled: Boolean = false,
     ): org.wordpress.gutenberg.model.EditorConfiguration {
         val site = SiteModel().apply {
             url = siteUrl
@@ -613,7 +708,10 @@ class GutenbergKitSettingsBuilderTest {
         }
         return builder.buildPostConfiguration(
             site = site,
-            accessToken = accessToken
+            accessToken = accessToken,
+            locale = locale,
+            cookies = cookies,
+            isNetworkLoggingEnabled = isNetworkLoggingEnabled,
         )
     }
 
@@ -634,7 +732,10 @@ class GutenbergKitSettingsBuilderTest {
         }
         return builder.buildPostConfiguration(
             site = site,
-            accessToken = null
+            accessToken = null,
+            locale = "en",
+            cookies = emptyMap(),
+            isNetworkLoggingEnabled = false,
         )
     }
 }

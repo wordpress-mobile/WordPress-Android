@@ -2217,27 +2217,20 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
             site: SiteModel,
             post: PostImmutableModel?
         ): EditorConfiguration {
-            val base = gutenbergKitSettingsBuilder.buildPostConfiguration(
-                site = site,
-                post = post,
-                accessToken = accountStore.accessToken
-            )
-
             val locale = perAppLocaleManager
                 .getCurrentLocaleLanguageCode()
                 .replace("_", "-").lowercase()
 
-            return base.toBuilder()
-                .setLocale(locale)
-                .setCookies(
-                    editPostAuthViewModel.getCookiesForPrivateSites(
-                        site, privateAtomicCookie
-                    )
-                )
-                .setEnableNetworkLogging(
-                    AppPrefs.isTrackNetworkRequestsEnabled()
-                )
-                .build()
+            return gutenbergKitSettingsBuilder.buildPostConfiguration(
+                site = site,
+                accessToken = accountStore.accessToken,
+                locale = locale,
+                cookies = editPostAuthViewModel.getCookiesForPrivateSites(
+                    site, privateAtomicCookie
+                ),
+                isNetworkLoggingEnabled = AppPrefs.isTrackNetworkRequestsEnabled(),
+                post = post,
+            )
         }
 
         override fun instantiateItem(container: ViewGroup, position: Int): Any {

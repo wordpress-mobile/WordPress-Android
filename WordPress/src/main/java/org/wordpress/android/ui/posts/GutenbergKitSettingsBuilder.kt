@@ -16,8 +16,11 @@ class GutenbergKitSettingsBuilder @Inject constructor(
 ) {
     fun buildPostConfiguration(
         site: SiteModel,
+        accessToken: String?,
+        locale: String,
+        cookies: Map<String, String>,
+        isNetworkLoggingEnabled: Boolean,
         post: PostImmutableModel? = null,
-        accessToken: String?
     ): EditorConfiguration {
         val applicationPassword = site.apiRestPasswordPlain
         val shouldUseWPComRestApi =
@@ -43,8 +46,12 @@ class GutenbergKitSettingsBuilder @Inject constructor(
         val postType = if (post?.isPage == true) PostTypeDetails.page else PostTypeDetails.post
 
         val cachedHosts = buildCachedHosts(site.url)
-        val editorAssetsEndpoint =
+        val thirdPartyBlocks = editorCapabilityResolver.resolveThirdPartyBlocks(site)
+        val editorAssetsEndpoint = if (thirdPartyBlocks.isAvailable) {
             buildEditorAssetsEndpoint(siteApiRoot, siteApiNamespace)
+        } else {
+            null
+        }
 
         return EditorConfiguration.builder(
             siteURL = site.url,
@@ -69,15 +76,13 @@ class GutenbergKitSettingsBuilder @Inject constructor(
             setThemeStyles(
                 editorCapabilityResolver.resolveThemeStyles(site).shouldApplyInEditor
             )
-            setPlugins(
-                editorCapabilityResolver.resolveThirdPartyBlocks(site).shouldApplyInEditor
-            )
-            setLocale("en")
-            setCookies(emptyMap())
+            setPlugins(thirdPartyBlocks.shouldApplyInEditor)
+            setLocale(locale)
+            setCookies(cookies)
             setEnableAssetCaching(true)
             setCachedAssetHosts(cachedHosts)
             setEditorAssetsEndpoint(editorAssetsEndpoint)
-            setEnableNetworkLogging(false)
+            setEnableNetworkLogging(isNetworkLoggingEnabled)
         }.build()
     }
 
@@ -149,16 +154,18 @@ class GutenbergKitSettingsBuilder @Inject constructor(
 
     private fun buildEditorAssetsEndpoint(
         siteApiRoot: String,
-        siteApiNamespace: Array<String>
-    ): String? {
-        if (siteApiRoot.isEmpty()) return null
+        siteApiNamespace: Array<String>,
+    ): String {
         val firstNamespace = siteApiNamespace.firstOrNull() ?: ""
         return "${siteApiRoot}wpcom/v2/${firstNamespace}editor-assets"
     }
 
     internal fun extractHost(url: String): String? {
+        val trimmed = url.trim()
+        if (trimmed.isEmpty()) return null
+        val normalized = if ("://" in trimmed) trimmed else "https://$trimmed"
         return try {
-            URI(url).host
+            URI(normalized).host?.takeIf { it.isNotEmpty() }
         } catch (_: Exception) {
             null
         }
