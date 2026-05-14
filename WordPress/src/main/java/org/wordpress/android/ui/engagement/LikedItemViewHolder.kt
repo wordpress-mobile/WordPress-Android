@@ -13,7 +13,7 @@ import org.wordpress.android.util.WPAvatarUtils
 import org.wordpress.android.util.extensions.getDrawableResIdFromAttribute
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType
-import com.google.android.material.R as MaterialR
+import android.R as AndroidR
 
 class LikedItemViewHolder(
     parent: ViewGroup,
@@ -52,7 +52,7 @@ class LikedItemViewHolder(
                     )
                 }
                 setBackgroundResource(
-                    this.context.getDrawableResIdFromAttribute(MaterialR.attr.selectableItemBackgroundBorderless)
+                    this.context.getDrawableResIdFromAttribute(AndroidR.attr.selectableItemBackgroundBorderless)
                 )
             }
         } else {

@@ -19,6 +19,7 @@ import org.wordpress.android.R
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.extensions.getColorFromAttribute
 import org.wordpress.android.util.extensions.redirectContextClickToLongPressListener
+import androidx.appcompat.R as AppCompatR
 import com.google.android.material.R as MaterialR
 
 /**
@@ -42,7 +43,7 @@ class PrefMainSwitchToolbarView @JvmOverloads constructor(
         HIGHLIGHTED(
             0,
             MaterialR.attr.colorOnPrimary,
-            MaterialR.attr.colorPrimary
+            AppCompatR.attr.colorPrimary
         ),
         NORMAL(
             1,
