@@ -59,7 +59,7 @@ public class NoteBlockClickableSpan extends ClickableSpan {
         );
         mLinkColor = ContextExtensionsKt.getColorFromAttribute(
                 context,
-                com.google.android.material.R.attr.colorPrimary
+                androidx.appcompat.R.attr.colorPrimary
         );
         mLightTextColor = ContextExtensionsKt.getColorFromAttribute(
                 context,

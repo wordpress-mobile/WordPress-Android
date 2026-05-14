@@ -834,7 +834,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
             binding.textName.setOnClickListener(authorListener);
             binding.textName.setTextColor(ContextExtensionsKt.getColorFromAttribute(
                     binding.textName.getContext(),
-                    com.google.android.material.R.attr.colorPrimary)
+                    androidx.appcompat.R.attr.colorPrimary)
             );
         } else {
             binding.textName.setTextColor(ContextExtensionsKt.getColorFromAttribute(
@@ -886,7 +886,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
                           + " <font color=" + HtmlUtils.colorResToHtmlColor(getActivity(),
                     ContextExtensionsKt.getColorResIdFromAttribute(
                             requireActivity(),
-                            com.google.android.material.R.attr.colorPrimary
+                            androidx.appcompat.R.attr.colorPrimary
                     ))
                           + ">"
                           + postTitle.trim()
@@ -1198,7 +1198,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
                 statusTextResId = R.string.comment_status_spam;
                 statusColor = ContextExtensionsKt.getColorFromAttribute(
                         requireActivity(),
-                        com.google.android.material.R.attr.colorError
+                        androidx.appcompat.R.attr.colorError
                 );
                 break;
             case DELETED:
@@ -1211,7 +1211,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
                 statusTextResId = R.string.comment_status_trash;
                 statusColor = ContextExtensionsKt.getColorFromAttribute(
                         requireActivity(),
-                        com.google.android.material.R.attr.colorError
+                        androidx.appcompat.R.attr.colorError
                 );
                 break;
         }

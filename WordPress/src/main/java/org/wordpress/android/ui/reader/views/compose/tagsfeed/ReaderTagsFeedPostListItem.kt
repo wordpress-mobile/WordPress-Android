@@ -250,7 +250,7 @@ fun ReaderTagsFeedPostListItem(
                         contentDescription = context.resources.getString(R.string.show_more_desc)
                         setBackgroundResource(
                             context.getDrawableResIdFromAttribute(
-                                com.google.android.material.R.attr.selectableItemBackgroundBorderless
+                                android.R.attr.selectableItemBackgroundBorderless
                             )
                         )
                         setColorFilter(

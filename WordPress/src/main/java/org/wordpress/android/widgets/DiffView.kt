@@ -12,6 +12,7 @@ import org.wordpress.android.fluxc.model.revisions.Diff
 import org.wordpress.android.fluxc.model.revisions.DiffOperations.ADD
 import org.wordpress.android.fluxc.model.revisions.DiffOperations.DELETE
 import org.wordpress.android.util.extensions.getColorFromAttribute
+import androidx.appcompat.R as AppCompatR
 import com.google.android.material.R as MaterialR
 
 class DiffView : MaterialTextView {
@@ -38,7 +39,7 @@ class DiffView : MaterialTextView {
             if (diff.operation == ADD) {
                 diffContent.setSpan(
                     ColorUnderlineSpan(
-                        context.getColorFromAttribute(MaterialR.attr.colorPrimary)
+                        context.getColorFromAttribute(AppCompatR.attr.colorPrimary)
                     ), 0, diffContent.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
                 )
                 diffContent.setSpan(
