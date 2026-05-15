@@ -410,7 +410,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 R.drawable.ic_undo_white_24dp,
                 ContextExtensionsKt.getColorResIdFromAttribute(
                         context,
-                        com.google.android.material.R.attr.colorPrimary
+                        androidx.appcompat.R.attr.colorPrimary
                 )
         );
         holder.mUndoRemoveAction.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null);
