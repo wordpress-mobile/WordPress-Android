@@ -6,7 +6,7 @@ import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.SwitchCompat
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.components.buttons.WPSwitch
-import com.google.android.material.R as MaterialR
+import android.R as AndroidR
 
 /**
  * SwitchCompat with custom track and thumb drawables and width to match closely the [WPSwitch] composable. This lets
@@ -20,7 +20,7 @@ import com.google.android.material.R as MaterialR
 class WPSwitchCompat @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
-    defStyleAttr: Int = MaterialR.attr.switchStyle,
+    defStyleAttr: Int = AndroidR.attr.switchStyle,
 ) : SwitchCompat(context, attrs, defStyleAttr) {
     init {
         setEnforceSwitchWidth(false)

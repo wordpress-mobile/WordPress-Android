@@ -285,7 +285,7 @@ class ApplicationPasswordLoginHelper @Inject constructor(
         return uriLoginWrapper.isUserRejectedAuthorization(rawData)
     }
 
-    private fun findSiteByUrl(
+    internal fun findSiteByUrl(
         normalizedUrl: String?,
         sites: List<SiteModel>
     ): SiteModel? {

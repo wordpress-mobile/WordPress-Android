@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.stats.refresh.lists.widget.weeks
 
 import androidx.annotation.LayoutRes
-import kotlinx.coroutines.runBlocking
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.stats.LimitMode
 import org.wordpress.android.fluxc.model.stats.time.VisitsAndViewsModel
@@ -10,6 +9,7 @@ import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.stats.time.VisitsAndViewsStore
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsColorSelectionViewModel.Color
+import org.wordpress.android.ui.stats.refresh.lists.widget.utils.runBlockingForWidget
 import org.wordpress.android.ui.stats.refresh.utils.ONE_THOUSAND
 import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
 import org.wordpress.android.viewmodel.ResourceProvider
@@ -38,7 +38,7 @@ class WeekViewsWidgetListViewModel @Inject constructor(
         siteId?.let { nonNullSiteId ->
             val site = siteStore.getSiteByLocalId(nonNullSiteId)
             if (site != null) {
-                runBlocking {
+                runBlockingForWidget {
                     visitsAndViewsStore.fetchVisits(site, WEEKS, LimitMode.Top(1))
                 }
                 visitsAndViewsStore.getVisits(site, WEEKS, LimitMode.All)?.let { visitsAndViewsModel ->

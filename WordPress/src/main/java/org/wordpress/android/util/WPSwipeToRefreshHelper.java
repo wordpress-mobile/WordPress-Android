@@ -36,7 +36,7 @@ public class WPSwipeToRefreshHelper {
 
         int primaryProgressColor = ContextExtensionsKt.getColorResIdFromAttribute(
                 context,
-                com.google.android.material.R.attr.colorPrimary
+                androidx.appcompat.R.attr.colorPrimary
         );
         int secondaryProgressColor = ContextExtensionsKt.getColorResIdFromAttribute(
                 context,

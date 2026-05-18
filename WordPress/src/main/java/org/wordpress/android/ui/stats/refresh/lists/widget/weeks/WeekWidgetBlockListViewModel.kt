@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.stats.refresh.lists.widget.weeks
 
 import android.content.Context
-import kotlinx.coroutines.runBlocking
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.stats.LimitMode
 import org.wordpress.android.fluxc.model.stats.time.VisitsAndViewsModel
@@ -12,6 +11,7 @@ import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.stats.refresh.lists.widget.WidgetBlockListProvider.BlockItemUiModel
 import org.wordpress.android.ui.stats.refresh.lists.widget.WidgetBlockListProvider.WidgetBlockListViewModel
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsColorSelectionViewModel.Color
+import org.wordpress.android.ui.stats.refresh.lists.widget.utils.runBlockingForWidget
 import org.wordpress.android.ui.stats.refresh.utils.MILLION
 import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
 import org.wordpress.android.viewmodel.ResourceProvider
@@ -46,7 +46,7 @@ class WeekWidgetBlockListViewModel
         siteId?.let { nonNullSiteId ->
             val site = siteStore.getSiteByLocalId(nonNullSiteId)
             if (site != null) {
-                runBlocking {
+                runBlockingForWidget {
                     visitsAndViewsStore.fetchVisits(site, WEEKS, LimitMode.Top(1))
                 }
                 visitsAndViewsStore.getVisits(site, WEEKS, LimitMode.All)?.let { visitsAndViewsModel ->

@@ -18,7 +18,7 @@ import org.wordpress.android.R
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Text
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.ViewsAndVisitorsMapper.Companion.EXTERNAL_LINK_ICON_TOKEN
 import org.wordpress.android.util.extensions.getColorFromAttribute
-import com.google.android.material.R as MaterialR
+import androidx.appcompat.R as AppCompatR
 
 class TextViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
     parent,
@@ -88,7 +88,7 @@ class TextViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
             }
 
             override fun updateDrawState(ds: TextPaint) {
-                ds.color = context.getColorFromAttribute(MaterialR.attr.colorPrimary)
+                ds.color = context.getColorFromAttribute(AppCompatR.attr.colorPrimary)
                 ds.typeface = Typeface.create(
                     Typeface.DEFAULT_BOLD,
                     Typeface.NORMAL
