@@ -42,7 +42,7 @@ import org.wordpress.android.ui.mysite.items.DashboardItemsViewModelSlice
 import org.wordpress.android.ui.mysite.items.listitem.SiteCapabilityChecker
 import org.wordpress.android.repositories.EditorSettingsRepository
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
-import org.wordpress.android.ui.posts.GutenbergKitWarmupHelper
+import org.wordpress.android.ui.posts.GutenbergEditorPreloader
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationSource
 import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
@@ -100,10 +100,10 @@ class MySiteViewModelTest : BaseUnitTest() {
     lateinit var applicationPasswordViewModelSlice: ApplicationPasswordViewModelSlice
 
     @Mock
-    lateinit var gutenbergKitWarmupHelper: GutenbergKitWarmupHelper
+    lateinit var siteCapabilityChecker: SiteCapabilityChecker
 
     @Mock
-    lateinit var siteCapabilityChecker: SiteCapabilityChecker
+    lateinit var gutenbergEditorPreloader: GutenbergEditorPreloader
 
     @Mock
     lateinit var editorSettingsRepository: EditorSettingsRepository
@@ -162,9 +162,9 @@ class MySiteViewModelTest : BaseUnitTest() {
             dashboardCardsViewModelSlice,
             dashboardItemsViewModelSlice,
             applicationPasswordViewModelSlice,
-            gutenbergKitWarmupHelper,
             siteCapabilityChecker,
             editorSettingsRepository,
+            gutenbergEditorPreloader,
         )
         uiModels = mutableListOf()
         snackbars = mutableListOf()
@@ -489,6 +489,19 @@ class MySiteViewModelTest : BaseUnitTest() {
         verify(accountDataViewModelSlice).onCleared()
         verify(dashboardCardsViewModelSlice).onCleared()
         verify(dashboardItemsViewModelSlice).onCleared()
+        verify(gutenbergEditorPreloader).clear()
+    }
+
+    @Test
+    fun `when dashboard is built, then editor preload is triggered`() {
+        initSelectedSite()
+
+        viewModel.refresh()
+
+        verify(gutenbergEditorPreloader).preloadIfNeeded(
+            org.mockito.kotlin.eq(siteTest),
+            org.mockito.kotlin.any()
+        )
     }
 
     @Suppress("LongParameterList")

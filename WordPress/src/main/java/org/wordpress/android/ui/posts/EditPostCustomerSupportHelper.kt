@@ -37,6 +37,7 @@ object EditPostCustomerSupportHelper {
 
     private fun getTagsList(site: SiteModel): List<String>? =
         // Append the "mobile_gutenberg_is_default" tag if gutenberg is set to default for new posts
+        @Suppress("DEPRECATION")
         if (SiteUtils.isBlockEditorDefaultForNewPost(site)) {
             listOf(ZendeskExtraTags.gutenbergIsDefault)
         } else {

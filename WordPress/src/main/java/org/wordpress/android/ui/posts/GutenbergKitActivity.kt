@@ -313,6 +313,8 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
 
     @Inject lateinit var editorThemeStore: EditorThemeStore
 
+
+
     @Inject lateinit var imageLoader: FluxCImageLoader
 
     @Inject lateinit var shortcutUtils: ShortcutUtils
@@ -2210,7 +2212,10 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
             val post = editPostRepository.getPost()
             val configuration = buildEditorConfiguration(siteModel, post)
 
-            return GutenbergKitEditorFragment.newInstance(configuration)
+            return GutenbergKitEditorFragment.newInstance(
+                configuration,
+                siteModel
+            )
         }
 
         private fun buildEditorConfiguration(

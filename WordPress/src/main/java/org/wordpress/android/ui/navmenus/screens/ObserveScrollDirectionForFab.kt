@@ -58,7 +58,12 @@ fun ObserveLoadMore(
         }
     }
 
-    LaunchedEffect(lastVisibleItemIndex.value, itemCount, canLoadMore) {
+    LaunchedEffect(
+        lastVisibleItemIndex.value,
+        itemCount,
+        canLoadMore,
+        isLoadingMore
+    ) {
         val shouldLoadMore =
             lastVisibleItemIndex.value >= itemCount - 1 &&
                 canLoadMore &&
