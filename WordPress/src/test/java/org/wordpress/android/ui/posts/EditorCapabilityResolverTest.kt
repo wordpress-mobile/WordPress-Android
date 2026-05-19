@@ -5,6 +5,7 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
+import org.mockito.Mockito.lenient
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.any
 import org.mockito.kotlin.whenever
@@ -72,7 +73,9 @@ class EditorCapabilityResolverTest {
     @Test
     fun `third-party blocks hidden when both feature flags disabled`() {
         whenever(gutenbergKitFeatureChecker.isGutenbergKitEnabled()).thenReturn(false)
-        whenever(gutenbergKitPluginsFeature.isEnabled()).thenReturn(false)
+        // lenient(): the resolver short-circuits on the GutenbergKit flag, so the plugins
+        // stub is never read — strict mocking would treat that as a smell.
+        lenient().`when`(gutenbergKitPluginsFeature.isEnabled()).thenReturn(false)
 
         val result = resolver.resolveThirdPartyBlocks(site)
 
@@ -145,7 +148,9 @@ class EditorCapabilityResolverTest {
 
     @Test
     fun `theme styles available even when plugins feature disabled`() {
-        whenever(gutenbergKitPluginsFeature.isEnabled()).thenReturn(false)
+        // lenient(): the assertion is precisely that resolveThemeStyles ignores this flag,
+        // so the stub goes unused — strict mocking would treat that as a smell.
+        lenient().`when`(gutenbergKitPluginsFeature.isEnabled()).thenReturn(false)
 
         val result = resolver.resolveThemeStyles(site)
 
