@@ -1085,6 +1085,7 @@ public class SiteSettingsFragment extends PreferenceFragment
             WPPrefUtils.removePreference(this, R.string.pref_key_homepage, R.string.pref_key_homepage_settings);
         }
 
+        // Available with no advisory falls off the end — the pref keeps its default state.
         EditorCapabilityState themeStyles = mEditorCapabilityResolver.resolveThemeStyles(mSite);
         if (themeStyles.isHidden()) {
             WPPrefUtils.removePreference(this, R.string.pref_key_site_editor, R.string.pref_key_use_theme_styles);

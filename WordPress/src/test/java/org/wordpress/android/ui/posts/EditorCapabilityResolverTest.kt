@@ -7,8 +7,6 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.any
-import org.mockito.kotlin.never
-import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.datasets.SiteSettingsProvider
 import org.wordpress.android.fluxc.model.SiteModel
@@ -64,6 +62,16 @@ class EditorCapabilityResolverTest {
 
     @Test
     fun `third-party blocks hidden when plugins feature disabled`() {
+        whenever(gutenbergKitPluginsFeature.isEnabled()).thenReturn(false)
+
+        val result = resolver.resolveThirdPartyBlocks(site)
+
+        assertThat(result).isEqualTo(EditorCapabilityState.Hidden)
+    }
+
+    @Test
+    fun `third-party blocks hidden when both feature flags disabled`() {
+        whenever(gutenbergKitFeatureChecker.isGutenbergKitEnabled()).thenReturn(false)
         whenever(gutenbergKitPluginsFeature.isEnabled()).thenReturn(false)
 
         val result = resolver.resolveThirdPartyBlocks(site)
@@ -136,11 +144,12 @@ class EditorCapabilityResolverTest {
     }
 
     @Test
-    fun `theme styles ignores plugins feature flag`() {
+    fun `theme styles available even when plugins feature disabled`() {
+        whenever(gutenbergKitPluginsFeature.isEnabled()).thenReturn(false)
+
         val result = resolver.resolveThemeStyles(site)
 
         assertThat(result).isInstanceOf(EditorCapabilityState.Available::class.java)
-        verify(gutenbergKitPluginsFeature, never()).isEnabled()
     }
 
     @Test
