@@ -33,7 +33,9 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.RecyclerView
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import com.google.android.material.R as MaterialR
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
@@ -255,56 +257,63 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
     private var readerViewModel: ReaderViewModel? = null
 
     /*
-     * called by post adapter to load older posts when user scrolls to the last post
+     * called by post adapter to load older posts when user scrolls to the last post.
+     * RecyclerView's GapWorker invokes this on the main thread; the count queries below
+     * park on the SQLite connection pool when it's busy, so do them on Dispatchers.IO
+     * and only resume on main to fire the (UI-touching) update calls.
      */
     private val dataRequestedListener: DataRequestedListener = object : DataRequestedListener {
         override fun onRequestData() {
-            // skip if update is already in progress
             if (isUpdating) {
                 return
             }
-
-            // request older posts unless we already have the max # to show
-            when (getPostListType()) {
-                ReaderPostListType.TAG_FOLLOWED,
-                ReaderPostListType.TAG_PREVIEW -> {
-                    if (ReaderPostTable.getNumPostsWithTag(currentReaderTag) <
-                        ReaderConstants.READER_MAX_POSTS_TO_DISPLAY
-                    ) {
-                        // request older posts
-                        updatePostsWithTag(
-                            currentTag,
-                            ReaderPostServiceStarter.UpdateAction.REQUEST_OLDER
-                        )
-                        readerTracker.track(AnalyticsTracker.Stat.READER_INFINITE_SCROLL)
+            val listType = getPostListType()
+            val tagSnapshot = currentTag
+            viewLifecycleOwner.lifecycleScope.launch {
+                when (listType) {
+                    ReaderPostListType.TAG_FOLLOWED,
+                    ReaderPostListType.TAG_PREVIEW -> {
+                        val numPosts = withContext(Dispatchers.IO) {
+                            ReaderPostTable.getNumPostsWithTag(tagSnapshot)
+                        }
+                        if (numPosts < ReaderConstants.READER_MAX_POSTS_TO_DISPLAY) {
+                            updatePostsWithTag(
+                                tagSnapshot,
+                                ReaderPostServiceStarter.UpdateAction.REQUEST_OLDER
+                            )
+                            readerTracker.track(AnalyticsTracker.Stat.READER_INFINITE_SCROLL)
+                        }
                     }
-                }
 
-                ReaderPostListType.BLOG_PREVIEW -> {
-                    val numPosts = if (currentFeedId != 0L) {
-                        ReaderPostTable.getNumPostsInFeed(currentFeedId)
-                    } else {
-                        ReaderPostTable.getNumPostsInBlog(currentBlogId)
+                    ReaderPostListType.BLOG_PREVIEW -> {
+                        val numPosts = withContext(Dispatchers.IO) {
+                            if (currentFeedId != 0L) {
+                                ReaderPostTable.getNumPostsInFeed(currentFeedId)
+                            } else {
+                                ReaderPostTable.getNumPostsInBlog(currentBlogId)
+                            }
+                        }
+                        if (numPosts < ReaderConstants.READER_MAX_POSTS_TO_DISPLAY) {
+                            updatePostsInCurrentBlogOrFeed(ReaderPostServiceStarter.UpdateAction.REQUEST_OLDER)
+                            readerTracker.track(AnalyticsTracker.Stat.READER_INFINITE_SCROLL)
+                        }
                     }
-                    if (numPosts < ReaderConstants.READER_MAX_POSTS_TO_DISPLAY) {
-                        updatePostsInCurrentBlogOrFeed(ReaderPostServiceStarter.UpdateAction.REQUEST_OLDER)
-                        readerTracker.track(AnalyticsTracker.Stat.READER_INFINITE_SCROLL)
-                    }
-                }
 
-                ReaderPostListType.SEARCH_RESULTS -> {
-                    val searchTag = ReaderUtils.getTagForSearchQuery(
-                        currentSearchQuery!!
-                    )
-                    val offset = ReaderPostTable.getNumPostsWithTag(searchTag)
-                    if (offset < ReaderConstants.READER_MAX_POSTS_TO_DISPLAY) {
-                        updatePostsInCurrentSearch(offset)
-                        readerTracker.track(AnalyticsTracker.Stat.READER_INFINITE_SCROLL)
+                    ReaderPostListType.SEARCH_RESULTS -> {
+                        val query = currentSearchQuery ?: return@launch
+                        val searchTag = ReaderUtils.getTagForSearchQuery(query)
+                        val offset = withContext(Dispatchers.IO) {
+                            ReaderPostTable.getNumPostsWithTag(searchTag)
+                        }
+                        if (offset < ReaderConstants.READER_MAX_POSTS_TO_DISPLAY) {
+                            updatePostsInCurrentSearch(offset)
+                            readerTracker.track(AnalyticsTracker.Stat.READER_INFINITE_SCROLL)
+                        }
                     }
-                }
 
-                else -> {
-                    // noop
+                    else -> {
+                        // noop
+                    }
                 }
             }
         }
