@@ -268,16 +268,17 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
                 return
             }
             val listType = getPostListType()
+            val tagSnapshot = currentTag
             viewLifecycleOwner.lifecycleScope.launch {
                 when (listType) {
                     ReaderPostListType.TAG_FOLLOWED,
                     ReaderPostListType.TAG_PREVIEW -> {
                         val numPosts = withContext(Dispatchers.IO) {
-                            ReaderPostTable.getNumPostsWithTag(currentReaderTag)
+                            ReaderPostTable.getNumPostsWithTag(tagSnapshot)
                         }
                         if (numPosts < ReaderConstants.READER_MAX_POSTS_TO_DISPLAY) {
                             updatePostsWithTag(
-                                currentTag,
+                                tagSnapshot,
                                 ReaderPostServiceStarter.UpdateAction.REQUEST_OLDER
                             )
                             readerTracker.track(AnalyticsTracker.Stat.READER_INFINITE_SCROLL)
