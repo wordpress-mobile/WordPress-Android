@@ -80,9 +80,8 @@ import org.wordpress.android.ui.bloggingreminders.BloggingReminderUtils;
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewModel;
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper;
 import org.wordpress.android.util.PlansConstants;
-import org.wordpress.android.ui.posts.GutenbergKitFeatureChecker;
-import org.wordpress.android.repositories.EditorSettingsRepository;
-import org.wordpress.android.util.config.GutenbergKitPluginsFeature;
+import org.wordpress.android.ui.posts.EditorCapabilityResolver;
+import org.wordpress.android.ui.posts.EditorCapabilityState;
 import org.wordpress.android.ui.prefs.EditTextPreferenceWithValidation.ValidationType;
 import org.wordpress.android.ui.prefs.SiteSettingsFormatDialog.FormatType;
 import org.wordpress.android.ui.prefs.homepage.HomepageSettingsDialog;
@@ -195,9 +194,7 @@ public class SiteSettingsFragment extends PreferenceFragment
     @Inject UiHelpers mUiHelpers;
     @Inject JetpackFeatureRemovalPhaseHelper mJetpackFeatureRemovalPhaseHelper;
     @Inject BloggingPromptsSettingsHelper mPromptsSettingsHelper;
-    @Inject GutenbergKitFeatureChecker mGutenbergKitFeatureChecker;
-    @Inject GutenbergKitPluginsFeature mGutenbergKitPluginsFeature;
-    @Inject EditorSettingsRepository mEditorSettingsRepository;
+    @Inject EditorCapabilityResolver mEditorCapabilityResolver;
 
     private BloggingRemindersViewModel mBloggingRemindersViewModel;
 
@@ -1088,27 +1085,28 @@ public class SiteSettingsFragment extends PreferenceFragment
             WPPrefUtils.removePreference(this, R.string.pref_key_homepage, R.string.pref_key_homepage_settings);
         }
 
-        // hide theme styles preference if GutenbergKit is not enabled
-        if (!mGutenbergKitFeatureChecker.isGutenbergKitEnabled()) {
+        // Available with no advisory falls off the end — the pref keeps its default state.
+        EditorCapabilityState themeStyles = mEditorCapabilityResolver.resolveThemeStyles(mSite);
+        if (themeStyles.isHidden()) {
             WPPrefUtils.removePreference(this, R.string.pref_key_site_editor, R.string.pref_key_use_theme_styles);
-        } else if (!mEditorSettingsRepository.getSupportsEditorSettingsForSite(mSite)) {
+        } else if (themeStyles.isUnsupported()) {
             mUseThemeStylesPref.setEnabled(false);
             mUseThemeStylesPref.setSummary(
                     getString(R.string.site_settings_use_theme_styles_summary) + "\n\n"
                             + getString(R.string.site_settings_use_theme_styles_unsupported));
-        } else if (!mEditorSettingsRepository.getThemeSupportsBlockStyles(mSite)) {
+        } else if (themeStyles.getAdvisory() == EditorCapabilityState.AdvisoryReason.ThemeNotBlockTheme) {
+            // Available — pref stays enabled, attach advisory summary
             mUseThemeStylesPref.setSummary(
                     getString(R.string.site_settings_use_theme_styles_summary) + "\n\n"
                             + getString(R.string.site_settings_use_theme_styles_not_block_theme));
         }
 
-        // hide third-party blocks preference if GutenbergKit or plugins feature is not enabled
-        if (!mGutenbergKitFeatureChecker.isGutenbergKitEnabled()
-                || !mGutenbergKitPluginsFeature.isEnabled()) {
+        EditorCapabilityState thirdPartyBlocks = mEditorCapabilityResolver.resolveThirdPartyBlocks(mSite);
+        if (thirdPartyBlocks.isHidden()) {
             WPPrefUtils.removePreference(
                     this, R.string.pref_key_site_editor,
                     R.string.pref_key_use_third_party_blocks);
-        } else if (!mEditorSettingsRepository.getSupportsEditorAssetsForSite(mSite)) {
+        } else if (thirdPartyBlocks.isUnsupported()) {
             mUseThirdPartyBlocksPref.setEnabled(false);
             mUseThirdPartyBlocksPref.setSummary(
                     getString(R.string.site_settings_use_third_party_blocks_summary)
