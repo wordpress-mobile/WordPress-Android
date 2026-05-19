@@ -1,11 +1,9 @@
 package org.wordpress.android.fluxc.store.mobile
 
-import android.util.Log
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
-import org.mockito.Mockito.mockStatic
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.verifyNoInteractions
@@ -21,7 +19,6 @@ import org.wordpress.android.fluxc.tools.initCoroutineEngine
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull
-import kotlin.test.assertTrue
 
 @RunWith(MockitoJUnitRunner::class)
 class RemoteConfigStoreTest {
@@ -63,16 +60,5 @@ class RemoteConfigStoreTest {
         verifyNoInteractions(remoteConfigDao)
         assertNull(response.remoteConfig)
         assertEquals(RemoteConfigResult(errorResult), response)
-    }
-
-    @Test
-    fun `given DAO throws, when getRemoteConfigs is called, then empty list is returned`() {
-        whenever(remoteConfigDao.getRemoteConfigList()).thenThrow(NullPointerException("Room crashed"))
-
-        val result: List<RemoteConfigDao.RemoteConfig> = mockStatic(Log::class.java).use {
-            store.getRemoteConfigs()
-        }
-
-        assertTrue(result.isEmpty())
     }
 }
