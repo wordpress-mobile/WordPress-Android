@@ -116,7 +116,7 @@ class ReaderPostRepository @Inject constructor(
             if (updateAction == ReaderPostServiceStarter.UpdateAction.REQUEST_NEWER ||
                 updateAction == ReaderPostServiceStarter.UpdateAction.REQUEST_REFRESH
             ) {
-                ReaderTagTable.setTagLastUpdated(tag)
+                applicationScope.launch(ioDispatcher) { ReaderTagTable.setTagLastUpdated(tag) }
             }
             handleUpdatePostsResponse(tag, jsonObject, updateAction, resultListener)
         }
@@ -352,7 +352,7 @@ class ReaderPostRepository @Inject constructor(
                     if (updateAction == ReaderPostServiceStarter.UpdateAction.REQUEST_NEWER ||
                         updateAction == ReaderPostServiceStarter.UpdateAction.REQUEST_REFRESH
                     ) {
-                        ReaderTagTable.setTagLastUpdated(tag)
+                        applicationScope.launch(ioDispatcher) { ReaderTagTable.setTagLastUpdated(tag) }
                     }
                     handleUpdatePostsResponse(tag, jsonObject, updateAction, resultListener)
                 }
