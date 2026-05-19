@@ -64,6 +64,13 @@ abstract class WordPress : Application(), coil.ImageLoaderFactory {
         const val USER_AGENT_APPNAME = "wp-android"
 
         lateinit var versionName: String
+
+        // Initialized asynchronously by AppInitializer on a background dispatcher to
+        // avoid the main-thread ANR family (Sentry 2X24 / 224Q / P9N / 88Q) caused by
+        // running SQLite open + schema migrations on Application.onCreate. Callers
+        // should check isWpDBInitialized before accessing if the call may race with
+        // app start (e.g. early lifecycle paths). All known call sites are user-action
+        // driven and run long after init completes.
         lateinit var wpDB: WordPressDB
         var appIsInTheBackground = true
 

@@ -308,7 +308,7 @@ class AppInitializer @Inject constructor(
         AppLog.i(T.UTILS, "AppInitializer.init")
 
         WordPress.versionName = PackageUtils.getVersionName(application)
-        initWpDb()
+        initWpDbAsync()
         context?.let { enableHttpResponseCache(it) }
 
         AppReviewManager.init(application)
@@ -573,6 +573,19 @@ class AppInitializer @Inject constructor(
             dispatcher.dispatch(AccountActionBuilder.newFetchAccountAction())
             dispatcher.dispatch(AccountActionBuilder.newFetchSettingsAction())
             NotificationsUpdateServiceStarter.startService(context)
+        }
+    }
+
+    // WordPressDB construction does synchronous SQLite open + schema migrations.
+    // Running it on the main thread during Application.onCreate caused a long-standing
+    // ANR family (Sentry 2X24 / 224Q / P9N / 88Q) - especially when the OS cold-starts
+    // the process to run a SystemJobService and the main thread can't dispatch the
+    // service binder call until onCreate returns. Construct it on Dispatchers.IO so
+    // Application.onCreate returns quickly; all known WordPress.wpDB call sites run
+    // on user actions long after this completes.
+    private fun initWpDbAsync() {
+        appScope.launch(Dispatchers.IO) {
+            initWpDb()
         }
     }
 
