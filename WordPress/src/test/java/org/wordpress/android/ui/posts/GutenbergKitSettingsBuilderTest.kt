@@ -24,9 +24,9 @@ class GutenbergKitSettingsBuilderTest {
     @Before
     fun setUp() {
         whenever(editorCapabilityResolver.resolveThemeStyles(any()))
-            .thenReturn(Resolved.Hidden)
+            .thenReturn(EditorCapabilityState.Hidden)
         whenever(editorCapabilityResolver.resolveThirdPartyBlocks(any()))
-            .thenReturn(Resolved.Hidden)
+            .thenReturn(EditorCapabilityState.Hidden)
     }
 
     // ===== Auth Header Tests =====
@@ -302,7 +302,7 @@ class GutenbergKitSettingsBuilderTest {
     @Test
     fun `WPCom site sets editor assets endpoint when plugins available`() {
         whenever(editorCapabilityResolver.resolveThirdPartyBlocks(any()))
-            .thenReturn(Resolved.Available(userEnabled = true))
+            .thenReturn(EditorCapabilityState.Available(userEnabled = true))
 
         val config = buildWPComConfig(siteId = 100L)
 
@@ -315,7 +315,7 @@ class GutenbergKitSettingsBuilderTest {
     @Test
     fun `editor assets endpoint is null when plugins unsupported`() {
         whenever(editorCapabilityResolver.resolveThirdPartyBlocks(any()))
-            .thenReturn(Resolved.Unsupported(Resolved.UnsupportedReason.CapabilityMissing))
+            .thenReturn(EditorCapabilityState.Unsupported(EditorCapabilityState.UnsupportedReason.CapabilityMissing))
 
         val config = buildWPComConfig(siteId = 100L)
 
@@ -325,7 +325,7 @@ class GutenbergKitSettingsBuilderTest {
     @Test
     fun `editor assets endpoint is null when plugins hidden`() {
         whenever(editorCapabilityResolver.resolveThirdPartyBlocks(any()))
-            .thenReturn(Resolved.Hidden)
+            .thenReturn(EditorCapabilityState.Hidden)
 
         val config = buildWPComConfig(siteId = 100L)
 
@@ -382,7 +382,7 @@ class GutenbergKitSettingsBuilderTest {
     @Test
     fun `self-hosted site builds editor assets endpoint from API root`() {
         whenever(editorCapabilityResolver.resolveThirdPartyBlocks(any()))
-            .thenReturn(Resolved.Available(userEnabled = true))
+            .thenReturn(EditorCapabilityState.Available(userEnabled = true))
 
         val config = buildSelfHostedConfig()
 
@@ -652,7 +652,7 @@ class GutenbergKitSettingsBuilderTest {
     @Test
     fun `themeStyles reflects resolver result`() {
         whenever(editorCapabilityResolver.resolveThemeStyles(any()))
-            .thenReturn(Resolved.Available(userEnabled = true))
+            .thenReturn(EditorCapabilityState.Available(userEnabled = true))
 
         val config = buildWPComConfig()
 
@@ -662,7 +662,7 @@ class GutenbergKitSettingsBuilderTest {
     @Test
     fun `themeStyles is false when resolver hides the capability`() {
         whenever(editorCapabilityResolver.resolveThemeStyles(any()))
-            .thenReturn(Resolved.Hidden)
+            .thenReturn(EditorCapabilityState.Hidden)
 
         val config = buildWPComConfig()
 
@@ -672,7 +672,7 @@ class GutenbergKitSettingsBuilderTest {
     @Test
     fun `plugins reflects resolver result`() {
         whenever(editorCapabilityResolver.resolveThirdPartyBlocks(any()))
-            .thenReturn(Resolved.Available(userEnabled = true))
+            .thenReturn(EditorCapabilityState.Available(userEnabled = true))
 
         val config = buildWPComConfig()
 
@@ -682,7 +682,7 @@ class GutenbergKitSettingsBuilderTest {
     @Test
     fun `plugins is false when resolver hides the capability`() {
         whenever(editorCapabilityResolver.resolveThirdPartyBlocks(any()))
-            .thenReturn(Resolved.Hidden)
+            .thenReturn(EditorCapabilityState.Hidden)
 
         val config = buildWPComConfig()
 

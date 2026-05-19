@@ -86,7 +86,7 @@ class GutenbergKitSettingsBuilder @Inject constructor(
         }.build()
     }
 
-    fun buildAuthHeader(
+    internal fun buildAuthHeader(
         shouldUseWPComRestApi: Boolean,
         accessToken: String?,
         username: String?,
