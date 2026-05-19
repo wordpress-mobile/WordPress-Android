@@ -81,7 +81,7 @@ import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewModel;
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper;
 import org.wordpress.android.util.PlansConstants;
 import org.wordpress.android.ui.posts.EditorCapabilityResolver;
-import org.wordpress.android.ui.posts.Resolved;
+import org.wordpress.android.ui.posts.EditorCapabilityState;
 import org.wordpress.android.ui.prefs.EditTextPreferenceWithValidation.ValidationType;
 import org.wordpress.android.ui.prefs.SiteSettingsFormatDialog.FormatType;
 import org.wordpress.android.ui.prefs.homepage.HomepageSettingsDialog;
@@ -1085,7 +1085,7 @@ public class SiteSettingsFragment extends PreferenceFragment
             WPPrefUtils.removePreference(this, R.string.pref_key_homepage, R.string.pref_key_homepage_settings);
         }
 
-        Resolved themeStyles = mEditorCapabilityResolver.resolveThemeStyles(mSite);
+        EditorCapabilityState themeStyles = mEditorCapabilityResolver.resolveThemeStyles(mSite);
         if (themeStyles.isHidden()) {
             WPPrefUtils.removePreference(this, R.string.pref_key_site_editor, R.string.pref_key_use_theme_styles);
         } else if (themeStyles.isUnsupported()) {
@@ -1093,14 +1093,14 @@ public class SiteSettingsFragment extends PreferenceFragment
             mUseThemeStylesPref.setSummary(
                     getString(R.string.site_settings_use_theme_styles_summary) + "\n\n"
                             + getString(R.string.site_settings_use_theme_styles_unsupported));
-        } else if (themeStyles.getAsAvailable().getAdvisory() == Resolved.AdvisoryReason.ThemeNotBlockTheme) {
+        } else if (themeStyles.getAdvisory() == EditorCapabilityState.AdvisoryReason.ThemeNotBlockTheme) {
             // Available — pref stays enabled, attach advisory summary
             mUseThemeStylesPref.setSummary(
                     getString(R.string.site_settings_use_theme_styles_summary) + "\n\n"
                             + getString(R.string.site_settings_use_theme_styles_not_block_theme));
         }
 
-        Resolved thirdPartyBlocks = mEditorCapabilityResolver.resolveThirdPartyBlocks(mSite);
+        EditorCapabilityState thirdPartyBlocks = mEditorCapabilityResolver.resolveThirdPartyBlocks(mSite);
         if (thirdPartyBlocks.isHidden()) {
             WPPrefUtils.removePreference(
                     this, R.string.pref_key_site_editor,

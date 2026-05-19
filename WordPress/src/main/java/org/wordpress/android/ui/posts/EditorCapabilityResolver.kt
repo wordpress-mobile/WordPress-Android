@@ -30,35 +30,35 @@ class EditorCapabilityResolver @Inject constructor(
     private val editorSettingsRepository: EditorSettingsRepository,
     private val siteSettingsProvider: SiteSettingsProvider,
 ) {
-    fun resolveThirdPartyBlocks(site: SiteModel): Resolved = when {
-        !gutenbergKitFeatureChecker.isGutenbergKitEnabled() -> Resolved.Hidden
-        !gutenbergKitPluginsFeature.isEnabled() -> Resolved.Hidden
+    fun resolveThirdPartyBlocks(site: SiteModel): EditorCapabilityState = when {
+        !gutenbergKitFeatureChecker.isGutenbergKitEnabled() -> EditorCapabilityState.Hidden
+        !gutenbergKitPluginsFeature.isEnabled() -> EditorCapabilityState.Hidden
         !editorSettingsRepository.getSupportsEditorAssetsForSite(site) ->
-            Resolved.Unsupported(Resolved.UnsupportedReason.CapabilityMissing)
+            EditorCapabilityState.Unsupported(EditorCapabilityState.UnsupportedReason.CapabilityMissing)
         else -> {
             val userEnabled = siteSettingsProvider
                 .getSettings(site)
                 ?.useThirdPartyBlocks
                 ?: DEFAULT_USE_THIRD_PARTY_BLOCKS
-            Resolved.Available(userEnabled)
+            EditorCapabilityState.Available(userEnabled)
         }
     }
 
-    fun resolveThemeStyles(site: SiteModel): Resolved = when {
-        !gutenbergKitFeatureChecker.isGutenbergKitEnabled() -> Resolved.Hidden
+    fun resolveThemeStyles(site: SiteModel): EditorCapabilityState = when {
+        !gutenbergKitFeatureChecker.isGutenbergKitEnabled() -> EditorCapabilityState.Hidden
         !editorSettingsRepository.getSupportsEditorSettingsForSite(site) ->
-            Resolved.Unsupported(Resolved.UnsupportedReason.CapabilityMissing)
+            EditorCapabilityState.Unsupported(EditorCapabilityState.UnsupportedReason.CapabilityMissing)
         else -> {
             val userEnabled = siteSettingsProvider
                 .getSettings(site)
                 ?.useThemeStyles
                 ?: DEFAULT_USE_THEME_STYLES
             val advisory = if (!editorSettingsRepository.getThemeSupportsBlockStyles(site)) {
-                Resolved.AdvisoryReason.ThemeNotBlockTheme
+                EditorCapabilityState.AdvisoryReason.ThemeNotBlockTheme
             } else {
                 null
             }
-            Resolved.Available(userEnabled, advisory)
+            EditorCapabilityState.Available(userEnabled, advisory)
         }
     }
 
@@ -76,19 +76,19 @@ class EditorCapabilityResolver @Inject constructor(
  * sealed hierarchy to pick the correct visibility / disabled /
  * advisory-note treatment.
  */
-sealed class Resolved {
+sealed class EditorCapabilityState {
     /**
      * Globally disabled (feature flag off). The setting row is
      * hidden; the editor does not apply the capability.
      */
-    data object Hidden : Resolved()
+    data object Hidden : EditorCapabilityState()
 
     /**
      * Globally enabled, but this site cannot use the capability.
      * The setting row is shown but disabled, with a reason the
      * UI can surface to the user.
      */
-    data class Unsupported(val reason: UnsupportedReason) : Resolved()
+    data class Unsupported(val reason: UnsupportedReason) : EditorCapabilityState()
 
     /**
      * Globally enabled and toggle-able for this site.
@@ -98,20 +98,27 @@ sealed class Resolved {
      */
     data class Available(
         val userEnabled: Boolean,
-        val advisory: AdvisoryReason? = null,
-    ) : Resolved()
+        override val advisory: AdvisoryReason? = null,
+    ) : EditorCapabilityState()
 
     enum class UnsupportedReason { CapabilityMissing }
     enum class AdvisoryReason { ThemeNotBlockTheme }
 
-    // Accessors for Java callers that can't `is`-match on a
-    // sealed hierarchy. Kotlin callers should prefer `when`.
+    /**
+     * The advisory note attached to this state, or `null` if there
+     * is none — including non-[Available] states. Safe for Java
+     * callers to query without an instanceof check.
+     */
+    open val advisory: AdvisoryReason? get() = null
+
+    val shouldApplyInEditor: Boolean
+        get() = this is Available && userEnabled
+
+    // Type predicates for Java callers that can't `is`-match
+    // on a sealed hierarchy. Kotlin callers should prefer `when`.
     val isHidden: Boolean get() = this is Hidden
     val isUnsupported: Boolean get() = this is Unsupported
     val isAvailable: Boolean get() = this is Available
 
     val asAvailable: Available? get() = this as? Available
-
-    val shouldApplyInEditor: Boolean
-        get() = this is Available && userEnabled
 }

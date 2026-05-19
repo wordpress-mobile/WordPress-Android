@@ -59,7 +59,7 @@ class EditorCapabilityResolverTest {
 
         val result = resolver.resolveThirdPartyBlocks(site)
 
-        assertThat(result).isEqualTo(Resolved.Hidden)
+        assertThat(result).isEqualTo(EditorCapabilityState.Hidden)
     }
 
     @Test
@@ -68,7 +68,7 @@ class EditorCapabilityResolverTest {
 
         val result = resolver.resolveThirdPartyBlocks(site)
 
-        assertThat(result).isEqualTo(Resolved.Hidden)
+        assertThat(result).isEqualTo(EditorCapabilityState.Hidden)
     }
 
     @Test
@@ -78,7 +78,7 @@ class EditorCapabilityResolverTest {
         val result = resolver.resolveThirdPartyBlocks(site)
 
         assertThat(result).isEqualTo(
-            Resolved.Unsupported(Resolved.UnsupportedReason.CapabilityMissing)
+            EditorCapabilityState.Unsupported(EditorCapabilityState.UnsupportedReason.CapabilityMissing)
         )
     }
 
@@ -89,7 +89,7 @@ class EditorCapabilityResolverTest {
 
         val result = resolver.resolveThirdPartyBlocks(site)
 
-        assertThat(result).isEqualTo(Resolved.Available(userEnabled = true))
+        assertThat(result).isEqualTo(EditorCapabilityState.Available(userEnabled = true))
     }
 
     @Test
@@ -98,7 +98,7 @@ class EditorCapabilityResolverTest {
 
         val result = resolver.resolveThirdPartyBlocks(site)
 
-        assertThat(result).isEqualTo(Resolved.Available(userEnabled = false))
+        assertThat(result).isEqualTo(EditorCapabilityState.Available(userEnabled = false))
     }
 
     @Test
@@ -132,14 +132,14 @@ class EditorCapabilityResolverTest {
 
         val result = resolver.resolveThemeStyles(site)
 
-        assertThat(result).isEqualTo(Resolved.Hidden)
+        assertThat(result).isEqualTo(EditorCapabilityState.Hidden)
     }
 
     @Test
     fun `theme styles ignores plugins feature flag`() {
         val result = resolver.resolveThemeStyles(site)
 
-        assertThat(result).isInstanceOf(Resolved.Available::class.java)
+        assertThat(result).isInstanceOf(EditorCapabilityState.Available::class.java)
         verify(gutenbergKitPluginsFeature, never()).isEnabled()
     }
 
@@ -150,7 +150,7 @@ class EditorCapabilityResolverTest {
         val result = resolver.resolveThemeStyles(site)
 
         assertThat(result).isEqualTo(
-            Resolved.Unsupported(Resolved.UnsupportedReason.CapabilityMissing)
+            EditorCapabilityState.Unsupported(EditorCapabilityState.UnsupportedReason.CapabilityMissing)
         )
     }
 
@@ -161,9 +161,9 @@ class EditorCapabilityResolverTest {
         val result = resolver.resolveThemeStyles(site)
 
         assertThat(result).isEqualTo(
-            Resolved.Available(
+            EditorCapabilityState.Available(
                 userEnabled = true,
-                advisory = Resolved.AdvisoryReason.ThemeNotBlockTheme,
+                advisory = EditorCapabilityState.AdvisoryReason.ThemeNotBlockTheme,
             )
         )
     }
@@ -175,7 +175,7 @@ class EditorCapabilityResolverTest {
 
         val result = resolver.resolveThemeStyles(site)
 
-        assertThat(result).isEqualTo(Resolved.Available(userEnabled = false))
+        assertThat(result).isEqualTo(EditorCapabilityState.Available(userEnabled = false))
     }
 
     @Test
@@ -184,7 +184,7 @@ class EditorCapabilityResolverTest {
 
         val result = resolver.resolveThemeStyles(site)
 
-        assertThat(result).isEqualTo(Resolved.Available(userEnabled = true))
+        assertThat(result).isEqualTo(EditorCapabilityState.Available(userEnabled = true))
     }
 
     @Test
@@ -206,11 +206,11 @@ class EditorCapabilityResolverTest {
         assertThat(resolver.resolveThemeStyles(site).shouldApplyInEditor).isFalse
     }
 
-    // ===== Resolved accessors (for Java callers) =====
+    // ===== EditorCapabilityState accessors (for Java callers) =====
 
     @Test
     fun `Hidden reports isHidden true and other flags false`() {
-        val state: Resolved = Resolved.Hidden
+        val state: EditorCapabilityState = EditorCapabilityState.Hidden
 
         assertThat(state.isHidden).isTrue
         assertThat(state.isUnsupported).isFalse
@@ -219,7 +219,8 @@ class EditorCapabilityResolverTest {
 
     @Test
     fun `Unsupported reports isUnsupported true and other flags false`() {
-        val state: Resolved = Resolved.Unsupported(Resolved.UnsupportedReason.CapabilityMissing)
+        val state: EditorCapabilityState =
+            EditorCapabilityState.Unsupported(EditorCapabilityState.UnsupportedReason.CapabilityMissing)
 
         assertThat(state.isUnsupported).isTrue
         assertThat(state.isHidden).isFalse
@@ -228,7 +229,7 @@ class EditorCapabilityResolverTest {
 
     @Test
     fun `Available reports isAvailable true and other flags false`() {
-        val state: Resolved = Resolved.Available(userEnabled = true)
+        val state: EditorCapabilityState = EditorCapabilityState.Available(userEnabled = true)
 
         assertThat(state.isAvailable).isTrue
         assertThat(state.isHidden).isFalse
@@ -237,26 +238,59 @@ class EditorCapabilityResolverTest {
 
     @Test
     fun `asAvailable returns the Available instance when available`() {
-        val available = Resolved.Available(
+        val available = EditorCapabilityState.Available(
             userEnabled = true,
-            advisory = Resolved.AdvisoryReason.ThemeNotBlockTheme,
+            advisory = EditorCapabilityState.AdvisoryReason.ThemeNotBlockTheme,
         )
-        val state: Resolved = available
+        val state: EditorCapabilityState = available
 
         assertThat(state.asAvailable).isSameAs(available)
     }
 
     @Test
     fun `asAvailable returns null for Hidden`() {
-        val state: Resolved = Resolved.Hidden
+        val state: EditorCapabilityState = EditorCapabilityState.Hidden
 
         assertThat(state.asAvailable).isNull()
     }
 
     @Test
     fun `asAvailable returns null for Unsupported`() {
-        val state: Resolved = Resolved.Unsupported(Resolved.UnsupportedReason.CapabilityMissing)
+        val state: EditorCapabilityState =
+            EditorCapabilityState.Unsupported(EditorCapabilityState.UnsupportedReason.CapabilityMissing)
 
         assertThat(state.asAvailable).isNull()
+    }
+
+    @Test
+    fun `advisory is null for Hidden`() {
+        val state: EditorCapabilityState = EditorCapabilityState.Hidden
+
+        assertThat(state.advisory).isNull()
+    }
+
+    @Test
+    fun `advisory is null for Unsupported`() {
+        val state: EditorCapabilityState =
+            EditorCapabilityState.Unsupported(EditorCapabilityState.UnsupportedReason.CapabilityMissing)
+
+        assertThat(state.advisory).isNull()
+    }
+
+    @Test
+    fun `advisory is null for Available without advisory`() {
+        val state: EditorCapabilityState = EditorCapabilityState.Available(userEnabled = true)
+
+        assertThat(state.advisory).isNull()
+    }
+
+    @Test
+    fun `advisory returns reason for Available with advisory`() {
+        val state: EditorCapabilityState = EditorCapabilityState.Available(
+            userEnabled = true,
+            advisory = EditorCapabilityState.AdvisoryReason.ThemeNotBlockTheme,
+        )
+
+        assertThat(state.advisory).isEqualTo(EditorCapabilityState.AdvisoryReason.ThemeNotBlockTheme)
     }
 }
