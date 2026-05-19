@@ -64,7 +64,6 @@ abstract class WordPress : Application(), coil.ImageLoaderFactory {
         const val USER_AGENT_APPNAME = "wp-android"
 
         lateinit var versionName: String
-
         lateinit var wpDB: WordPressDB
         var appIsInTheBackground = true
 
