@@ -10,7 +10,7 @@ import org.wordpress.gutenberg.model.EditorDependencies
  * [EditorService] so callers can be tested without the real
  * service.
  */
-interface EditorServiceProvider {
+fun interface EditorServiceProvider {
     suspend fun prepare(
         context: Context,
         configuration: EditorConfiguration,
