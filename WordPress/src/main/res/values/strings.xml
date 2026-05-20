@@ -705,7 +705,7 @@
     <string name="site_settings_use_third_party_blocks">Use Third-Party Blocks (Beta)</string>
     <string name="site_settings_use_third_party_blocks_summary">Load third-party blocks from plugins installed on your site.</string>
     <string name="site_settings_use_third_party_blocks_unsupported">Your site doesn\'t support loading third-party blocks in the editor.</string>
-    <string name="site_settings_fetch_failed">Failed to fetch site settings – some editor functionality may be limited.</string>
+    <string name="site_connectivity_banner_text">Unable to connect to your site. Some functionality might be limited.</string>
     <string name="site_settings_password_updated">Password updated</string>
     <string name="site_settings_update_password_message">To reconnect the app to your self-hosted site, enter the site\'s new password here.</string>
     <string name="site_settings_homepage_settings">Homepage Settings</string>

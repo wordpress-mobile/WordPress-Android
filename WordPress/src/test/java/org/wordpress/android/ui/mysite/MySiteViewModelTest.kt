@@ -14,7 +14,6 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
-import org.mockito.kotlin.any
 import org.mockito.kotlin.atLeastOnce
 import org.mockito.kotlin.never
 import org.mockito.kotlin.times
@@ -40,7 +39,7 @@ import org.wordpress.android.ui.mysite.cards.applicationpassword.ApplicationPass
 import org.wordpress.android.ui.mysite.cards.siteinfo.SiteInfoHeaderCardViewModelSlice
 import org.wordpress.android.ui.mysite.items.DashboardItemsViewModelSlice
 import org.wordpress.android.ui.mysite.items.listitem.SiteCapabilityChecker
-import org.wordpress.android.repositories.EditorSettingsRepository
+import org.wordpress.android.ui.mysite.cards.connectivity.SiteConnectivityBannerViewModelSlice
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.posts.GutenbergEditorPreloader
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationSource
@@ -106,7 +105,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     lateinit var gutenbergEditorPreloader: GutenbergEditorPreloader
 
     @Mock
-    lateinit var editorSettingsRepository: EditorSettingsRepository
+    lateinit var siteConnectivityBannerViewModelSlice: SiteConnectivityBannerViewModelSlice
 
     private lateinit var viewModel: MySiteViewModel
     private lateinit var uiModels: MutableList<MySiteViewModel.State>
@@ -143,7 +142,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         whenever(dashboardCardsViewModelSlice.uiModel).thenReturn(MutableLiveData())
         whenever(dashboardItemsViewModelSlice.uiModel).thenReturn(MutableLiveData())
         whenever(applicationPasswordViewModelSlice.uiModel).thenReturn(MutableLiveData())
-        whenever(editorSettingsRepository.fetchEditorCapabilitiesForSite(any())).thenReturn(true)
+        whenever(siteConnectivityBannerViewModelSlice.uiModel).thenReturn(MutableLiveData())
 
         viewModel = MySiteViewModel(
             testDispatcher(),
@@ -163,8 +162,8 @@ class MySiteViewModelTest : BaseUnitTest() {
             dashboardItemsViewModelSlice,
             applicationPasswordViewModelSlice,
             siteCapabilityChecker,
-            editorSettingsRepository,
             gutenbergEditorPreloader,
+            siteConnectivityBannerViewModelSlice,
         )
         uiModels = mutableListOf()
         snackbars = mutableListOf()
@@ -361,91 +360,6 @@ class MySiteViewModelTest : BaseUnitTest() {
         verify(dashboardItemsViewModelSlice).buildItems(siteTest)
         verify(dashboardCardsViewModelSlice).clearValue()
     }
-
-    @Test
-    fun `given selected site, when onResume invoked twice, then editor capabilities are fetched once`() = test {
-        initSelectedSite()
-
-        viewModel.onResume()
-        advanceUntilIdle()
-        viewModel.onResume()
-        advanceUntilIdle()
-
-        verify(editorSettingsRepository, times(1)).fetchEditorCapabilitiesForSite(siteTest)
-    }
-
-    @Test
-    fun `given selected site, when onResume then non-PTR refresh, then editor capabilities are fetched once`() =
-        test {
-            initSelectedSite()
-
-            viewModel.onResume()
-            advanceUntilIdle()
-            viewModel.refresh(isPullToRefresh = false)
-            advanceUntilIdle()
-
-            verify(editorSettingsRepository, times(1)).fetchEditorCapabilitiesForSite(siteTest)
-        }
-
-    @Test
-    fun `given selected site, when onResume then PTR refresh, then editor capabilities are fetched twice`() = test {
-        initSelectedSite()
-
-        viewModel.onResume()
-        advanceUntilIdle()
-        viewModel.refresh(isPullToRefresh = true)
-        advanceUntilIdle()
-
-        verify(editorSettingsRepository, times(2)).fetchEditorCapabilitiesForSite(siteTest)
-    }
-
-    @Test
-    fun `given PTR refresh, when onResume invoked after, then editor capabilities are not re-fetched`() = test {
-        initSelectedSite()
-
-        viewModel.refresh(isPullToRefresh = true)
-        advanceUntilIdle()
-        viewModel.onResume()
-        advanceUntilIdle()
-
-        verify(editorSettingsRepository, times(1)).fetchEditorCapabilitiesForSite(siteTest)
-    }
-
-    @Test
-    fun `given fetch failed, when onResume invoked again, then editor capabilities are re-fetched`() = test {
-        initSelectedSite()
-        whenever(editorSettingsRepository.fetchEditorCapabilitiesForSite(siteTest)).thenReturn(false, true)
-
-        viewModel.onResume()
-        advanceUntilIdle()
-        viewModel.onResume()
-        advanceUntilIdle()
-
-        verify(editorSettingsRepository, times(2)).fetchEditorCapabilitiesForSite(siteTest)
-    }
-
-    @Test
-    fun `given site switched, when onResume invoked, then editor capabilities are fetched for the new site`() =
-        test {
-            initSelectedSite()
-            val otherSite = SiteModel().apply {
-                id = TEST_SITE_ID + 1
-                url = TEST_URL
-                name = TEST_SITE_NAME
-                siteId = (TEST_SITE_ID + 1).toLong()
-            }
-
-            viewModel.onResume()
-            advanceUntilIdle()
-            whenever(selectedSiteRepository.getSelectedSite()).thenReturn(otherSite)
-            viewModel.onResume()
-            advanceUntilIdle()
-
-            verify(editorSettingsRepository, times(1)).fetchEditorCapabilitiesForSite(siteTest)
-            verify(editorSettingsRepository, times(1)).fetchEditorCapabilitiesForSite(otherSite)
-        }
-
-
 
     /* LAND ON THE EDITOR A/B EXPERIMENT */
     @Test
