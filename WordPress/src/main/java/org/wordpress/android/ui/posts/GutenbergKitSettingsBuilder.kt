@@ -1,170 +1,92 @@
 package org.wordpress.android.ui.posts
 
 import android.util.Base64
-import org.wordpress.android.editor.gutenberg.GutenbergWebViewAuthorizationData
 import org.wordpress.android.fluxc.model.PostImmutableModel
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.network.UserAgent
-import org.wordpress.android.fluxc.utils.extensions.getPasswordProcessed
-import org.wordpress.android.fluxc.utils.extensions.getUserNameProcessed
 import org.wordpress.android.util.AppLog
-import org.wordpress.android.util.UrlUtils
+import org.wordpress.gutenberg.model.EditorConfiguration
 import org.wordpress.gutenberg.model.PostTypeDetails
+import java.net.URI
+import javax.inject.Inject
+import javax.inject.Singleton
 
-object GutenbergKitSettingsBuilder {
-    private const val AUTH_BEARER_PREFIX = "Bearer "
-    private const val AUTH_BASIC_PREFIX = "Basic "
+@Singleton
+class GutenbergKitSettingsBuilder @Inject constructor(
+    private val editorCapabilityResolver: EditorCapabilityResolver,
+) {
+    fun buildPostConfiguration(
+        site: SiteModel,
+        accessToken: String?,
+        locale: String,
+        cookies: Map<String, String>,
+        isNetworkLoggingEnabled: Boolean,
+        post: PostImmutableModel? = null,
+    ): EditorConfiguration {
+        val applicationPassword = site.apiRestPasswordPlain
+        val shouldUseWPComRestApi =
+            applicationPassword.isNullOrEmpty() && site.isUsingWpComRestApi
 
-    data class SiteConfig(
-        val url: String,
-        val siteId: Long,
-        val isWPCom: Boolean,
-        val isWPComAtomic: Boolean,
-        val isJetpackConnected: Boolean,
-        val isUsingWpComRestApi: Boolean,
-        val wpApiRestUrl: String?,
-        val apiRestUsernamePlain: String?,
-        val apiRestPasswordPlain: String?,
-        val selfHostedSiteId: Long,
-        val webEditor: String?,
-        val apiRestUsernameProcessed: String?,
-        val apiRestPasswordProcessed: String?
-    ) {
-        companion object {
-            fun fromSiteModel(site: SiteModel): SiteConfig {
-                return SiteConfig(
-                    url = site.url,
-                    siteId = site.siteId,
-                    isWPCom = site.isWPCom,
-                    isWPComAtomic = site.isWPComAtomic,
-                    isJetpackConnected = site.isJetpackConnected,
-                    isUsingWpComRestApi = site.isUsingWpComRestApi,
-                    wpApiRestUrl = site.wpApiRestUrl,
-                    apiRestUsernamePlain = site.apiRestUsernamePlain,
-                    apiRestPasswordPlain = site.apiRestPasswordPlain,
-                    selfHostedSiteId = site.selfHostedSiteId,
-                    webEditor = site.webEditor,
-                    apiRestUsernameProcessed = site.getUserNameProcessed(),
-                    apiRestPasswordProcessed = site.getPasswordProcessed()
-                )
-            }
+        val siteApiRoot = if (shouldUseWPComRestApi) {
+            WPCOM_API_ROOT
+        } else {
+            site.wpApiRestUrl ?: "${site.url}/wp-json/"
         }
-    }
-
-    data class PostConfig(
-        val remotePostId: Long?,
-        val isPage: Boolean,
-        val title: String?,
-        val content: String?,
-        val status: String?
-    ) {
-        companion object {
-            fun fromPostModel(postModel: PostImmutableModel?): PostConfig {
-                return PostConfig(
-                    remotePostId = postModel?.remotePostId,
-                    isPage = postModel?.isPage ?: false,
-                    title = postModel?.title,
-                    content = postModel?.content,
-                    status = postModel?.status
-                )
-            }
-        }
-    }
-
-    data class FeatureConfig(
-        val isPluginsFeatureEnabled: Boolean,
-        val isThemeStylesFeatureEnabled: Boolean,
-        val isNetworkLoggingEnabled: Boolean = false
-    )
-
-    data class AppConfig(
-        val accessToken: String?,
-        val locale: String,
-        val cookies: Any?,
-        val accountUserId: Long,
-        val accountUserName: String?,
-        val userAgent: UserAgent,
-        val isJetpackSsoEnabled: Boolean
-    )
-
-    data class GutenbergKitConfig(
-        val siteConfig: SiteConfig,
-        val postConfig: PostConfig,
-        val appConfig: AppConfig,
-        val featureConfig: FeatureConfig
-    )
-
-    /**
-     * Builds the settings configuration for GutenbergKit editor.
-     *
-     * This method determines the appropriate authentication method based on site type:
-     * - WP.com sites use Bearer token authentication with the public API
-     * - Jetpack/self-hosted sites with application passwords use Basic authentication
-     * - Falls back to WP.com REST API when no application password is available
-     */
-    fun buildSettings(
-        siteConfig: SiteConfig,
-        postConfig: PostConfig,
-        appConfig: AppConfig,
-        featureConfig: FeatureConfig
-    ): MutableMap<String, Any?> {
-        val applicationPassword = siteConfig.apiRestPasswordPlain
-        val shouldUseWPComRestApi = applicationPassword.isNullOrEmpty() && siteConfig.isUsingWpComRestApi
-
-        val siteApiRoot = if (shouldUseWPComRestApi) "https://public-api.wordpress.com/"
-        else siteConfig.wpApiRestUrl ?: "${siteConfig.url}/wp-json/"
 
         val authHeader = buildAuthHeader(
             shouldUseWPComRestApi = shouldUseWPComRestApi,
-            accessToken = appConfig.accessToken,
-            username = siteConfig.apiRestUsernamePlain,
+            accessToken = accessToken,
+            username = site.apiRestUsernamePlain,
             password = applicationPassword
+        ) ?: ""
+
+        val siteApiNamespace = buildSiteApiNamespace(
+            shouldUseWPComRestApi, site.siteId, site.url
         )
 
-        val siteApiNamespace = if (shouldUseWPComRestApi)
-            arrayOf("sites/${siteConfig.siteId}/", "sites/${UrlUtils.removeScheme(siteConfig.url)}/")
-        else arrayOf()
+        val postType = if (post?.isPage == true) PostTypeDetails.page else PostTypeDetails.post
 
-        val wpcomLocaleSlug = appConfig.locale.replace("_", "-").lowercase()
+        val cachedHosts = buildCachedHosts(site.url)
+        val thirdPartyBlocks = editorCapabilityResolver.resolveThirdPartyBlocks(site)
+        val editorAssetsEndpoint = if (thirdPartyBlocks.isAvailable) {
+            buildEditorAssetsEndpoint(siteApiRoot, siteApiNamespace)
+        } else {
+            null
+        }
 
-        return mutableMapOf(
-            "postId" to postConfig.remotePostId?.toInt(),
-            "postType" to if (postConfig.isPage) {
-                PostTypeDetails.page
-            } else {
-                PostTypeDetails.post
-            },
-            "status" to postConfig.status,
-            "postTitle" to postConfig.title,
-            "postContent" to postConfig.content,
-            "siteURL" to siteConfig.url,
-            "siteApiRoot" to siteApiRoot,
-            "namespaceExcludedPaths" to arrayOf("/wpcom/v2/following/recommendations", "/wpcom/v2/following/mine"),
-            "authHeader" to authHeader,
-            "siteApiNamespace" to siteApiNamespace,
-            "themeStyles" to featureConfig.isThemeStylesFeatureEnabled,
-            "plugins" to shouldUsePlugins(
-                isFeatureEnabled = featureConfig.isPluginsFeatureEnabled,
-                isWPComSite = siteConfig.isWPCom,
-                isJetpackConnected = siteConfig.isJetpackConnected,
-                applicationPassword = applicationPassword
-            ),
-            "locale" to wpcomLocaleSlug,
-            "cookies" to appConfig.cookies,
-            "enableNetworkLogging" to featureConfig.isNetworkLoggingEnabled
-        )
+        return EditorConfiguration.builder(
+            siteURL = site.url,
+            siteApiRoot = siteApiRoot,
+            postType = postType
+        ).apply {
+            setTitle(post?.title ?: "")
+            setContent(post?.content ?: "")
+            setPostId(
+                if (post?.isLocalDraft == true) null
+                else post?.remotePostId?.toUInt()
+            )
+            setPostStatus(post?.status ?: "draft")
+            setAuthHeader(authHeader)
+            setSiteApiNamespace(siteApiNamespace)
+            setNamespaceExcludedPaths(
+                arrayOf(
+                    "/wpcom/v2/following/recommendations",
+                    "/wpcom/v2/following/mine"
+                )
+            )
+            setThemeStyles(
+                editorCapabilityResolver.resolveThemeStyles(site).shouldApplyInEditor
+            )
+            setPlugins(thirdPartyBlocks.shouldApplyInEditor)
+            setLocale(locale)
+            setCookies(cookies)
+            setEnableAssetCaching(true)
+            setCachedAssetHosts(cachedHosts)
+            setEditorAssetsEndpoint(editorAssetsEndpoint)
+            setEnableNetworkLogging(isNetworkLoggingEnabled)
+        }.build()
     }
 
-    /**
-     * Builds the authentication header based on the authentication method.
-     *
-     * @param shouldUseWPComRestApi True if using WP.com REST API (Bearer auth)
-     * @param accessToken The OAuth2 access token for WP.com authentication
-     * @param username The username for Basic auth (application passwords)
-     * @param password The password for Basic auth (application passwords)
-     * @return The formatted authentication header string, or null if credentials are invalid
-     */
-    private fun buildAuthHeader(
+    internal fun buildAuthHeader(
         shouldUseWPComRestApi: Boolean,
         accessToken: String?,
         username: String?,
@@ -174,7 +96,10 @@ object GutenbergKitSettingsBuilder {
             if (!accessToken.isNullOrEmpty()) {
                 "$AUTH_BEARER_PREFIX$accessToken"
             } else {
-                AppLog.w(AppLog.T.EDITOR, "Missing access token for WP.com REST API authentication")
+                AppLog.w(
+                    AppLog.T.EDITOR,
+                    "Missing access token for WP.com REST API authentication"
+                )
                 null
             }
         } else {
@@ -187,49 +112,69 @@ object GutenbergKitSettingsBuilder {
                     )
                     "$AUTH_BASIC_PREFIX$encodedCredentials"
                 } catch (e: IllegalArgumentException) {
-                    AppLog.e(AppLog.T.EDITOR, "Failed to encode Basic auth credentials", e)
+                    AppLog.e(
+                        AppLog.T.EDITOR,
+                        "Failed to encode Basic auth credentials",
+                        e
+                    )
                     null
                 }
             } else {
-                AppLog.w(AppLog.T.EDITOR, "Incomplete credentials for Basic authentication")
+                AppLog.w(
+                    AppLog.T.EDITOR,
+                    "Incomplete credentials for Basic authentication"
+                )
                 null
             }
         }
     }
 
-    private fun shouldUsePlugins(
-        isFeatureEnabled: Boolean,
-        isWPComSite: Boolean,
-        isJetpackConnected: Boolean,
-        applicationPassword: String?
-    ): Boolean {
-        // Enable plugins for:
-        // 1. WP.com Simple sites (when feature is enabled)
-        // 2. Jetpack-connected sites with application passwords (when feature is enabled)
-        return isFeatureEnabled &&
-                (isWPComSite || (isJetpackConnected && !applicationPassword.isNullOrEmpty()))
+    internal fun buildSiteApiNamespace(
+        shouldUseWPComRestApi: Boolean,
+        siteId: Long,
+        siteUrl: String
+    ): Array<String> {
+        if (!shouldUseWPComRestApi) return arrayOf()
+        val host = extractHost(siteUrl)
+        return if (host != null) {
+            arrayOf("sites/$siteId/", "sites/$host/")
+        } else {
+            arrayOf("sites/$siteId/")
+        }
     }
 
-    /**
-     * Builds Gutenberg WebView authorization data for the fragment.
-     */
-    fun buildAuthorizationData(
-        siteConfig: SiteConfig,
-        appConfig: AppConfig
-    ): GutenbergWebViewAuthorizationData {
-        return GutenbergWebViewAuthorizationData(
-            siteConfig.url,
-            siteConfig.isWPCom || siteConfig.isWPComAtomic,
-            appConfig.accountUserId,
-            appConfig.accountUserName,
-            appConfig.accessToken,
-            siteConfig.selfHostedSiteId,
-            siteConfig.apiRestUsernameProcessed,
-            siteConfig.apiRestPasswordProcessed,
-            siteConfig.isUsingWpComRestApi,
-            siteConfig.webEditor,
-            appConfig.userAgent.webViewUserAgent,
-            appConfig.isJetpackSsoEnabled
-        )
+    private fun buildCachedHosts(siteUrl: String): Set<String> {
+        val siteHost = extractHost(siteUrl)
+        return if (!siteHost.isNullOrEmpty()) {
+            setOf("s0.wp.com", siteHost)
+        } else {
+            setOf("s0.wp.com")
+        }
+    }
+
+    private fun buildEditorAssetsEndpoint(
+        siteApiRoot: String,
+        siteApiNamespace: Array<String>,
+    ): String {
+        val firstNamespace = siteApiNamespace.firstOrNull() ?: ""
+        return "${siteApiRoot}wpcom/v2/${firstNamespace}editor-assets"
+    }
+
+    internal fun extractHost(url: String): String? {
+        val trimmed = url.trim()
+        if (trimmed.isEmpty()) return null
+        val normalized = if ("://" in trimmed) trimmed else "https://$trimmed"
+        return try {
+            URI(normalized).host?.takeIf { it.isNotEmpty() }
+        } catch (_: Exception) {
+            null
+        }
+    }
+
+    companion object {
+        private const val AUTH_BEARER_PREFIX = "Bearer "
+        private const val AUTH_BASIC_PREFIX = "Basic "
+        private const val WPCOM_API_ROOT =
+            "https://public-api.wordpress.com/"
     }
 }
