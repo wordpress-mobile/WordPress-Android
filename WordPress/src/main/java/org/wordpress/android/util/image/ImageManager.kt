@@ -107,7 +107,14 @@ class ImageManager @Inject constructor(
      * If no URL is provided, it only loads the placeholder
      */
     @JvmOverloads
-    fun load(imageView: ImageView, imageType: ImageType, imgUrl: String = "", scaleType: ScaleType = CENTER) {
+    fun load(
+        imageView: ImageView,
+        imageType: ImageType,
+        imgUrl: String = "",
+        scaleType: ScaleType = CENTER,
+        width: Int? = null,
+        height: Int? = null
+    ) {
         val context = imageView.context
         if (!context.isAvailable()) return
         Glide.with(context)
@@ -115,6 +122,7 @@ class ImageManager @Inject constructor(
             .addFallback(imageType)
             .addPlaceholder(imageType)
             .applyScaleType(scaleType)
+            .applySize(width, height)
             .into(imageView)
             .clearOnDetach()
     }

@@ -140,18 +140,10 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
     }
 
     /*
-     * returns the most optimal url to use when retrieving a media image for display here
+     * returns the most optimal url to use when retrieving a media image for display here - used only
+     * for sites that aren't Photon capable
      */
     private String getBestImageUrl(@NonNull MediaModel media) {
-        // return photon-ized url if the site allows it since this gives us the image at the
-        // exact size we need here
-        if (SiteUtils.isPhotonCapable(mSite)) {
-            return PhotonUtils.getPhotonImageUrl(media.getUrl(), mThumbWidth, mThumbHeight,
-                    mSite.isPrivateWPComAtomic());
-        }
-
-        // can't use photon, so try the various image sizes - note we favor medium-large and
-        // medium because they're more bandwidth-friendly than large
         if (!TextUtils.isEmpty(media.getFileUrlMediumLargeSize())) {
             return media.getFileUrlMediumLargeSize();
         } else if (!TextUtils.isEmpty(media.getFileUrlMediumSize())) {
@@ -160,7 +152,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
             return media.getFileUrlLargeSize();
         }
 
-        // next stop is to return the thumbnail, which will look pixelated in the grid but it's
+        // next stop is to return the thumbnail, which will look pixelated in the grid, but it's
         // better than eating bandwidth showing the full-sized image
         if (!TextUtils.isEmpty(media.getThumbnailUrl())) {
             return media.getThumbnailUrl();
@@ -193,8 +185,15 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
             holder.mFileContainer.setVisibility(View.GONE);
             if (isLocalFile) {
                 mImageManager.load(holder.mImageView, ImageType.PHOTO, media.getFilePath(), ScaleType.CENTER_CROP);
+            } else if (SiteUtils.isPhotonCapable(mSite)) {
+                String photonUrl = PhotonUtils.getPhotonImageUrl(media.getUrl(), mThumbWidth, mThumbHeight,
+                        mSite.isPrivateWPComAtomic());
+                mImageManager.load(holder.mImageView, ImageType.PHOTO, photonUrl, ScaleType.CENTER_CROP);
             } else {
-                mImageManager.load(holder.mImageView, ImageType.PHOTO, getBestImageUrl(media), ScaleType.CENTER_CROP);
+                // Photon isn't available, so cap the decoded bitmap size to avoid OOM when
+                // falling back to medium/large/full-size URLs.
+                mImageManager.load(holder.mImageView, ImageType.PHOTO, getBestImageUrl(media),
+                        ScaleType.CENTER_CROP, mThumbWidth, mThumbHeight);
             }
         } else if (media.isVideo()) {
             holder.mFileContainer.setVisibility(View.GONE);
