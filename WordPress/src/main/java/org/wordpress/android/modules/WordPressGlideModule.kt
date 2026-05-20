@@ -16,11 +16,8 @@ import org.wordpress.android.networking.GlideAuthInterceptor
 import org.wordpress.android.networking.GlideMShotsLoader
 import org.wordpress.android.networking.MShot
 import java.io.InputStream
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Named
-
-private const val GLIDE_CALL_TIMEOUT_SECONDS = 15L
 
 // Backs Glide's GlideUrl→InputStream loader with OkHttp so responses stream into the downsampler
 // instead of being buffered into a byte[] by Volley — this is what prevents OOM on huge images.
@@ -49,7 +46,6 @@ class WordPressGlideModule : AppGlideModule() {
         (context as WordPress).component().inject(this)
         val glideOkHttpClient = baseOkHttpClient.newBuilder()
             .addInterceptor(glideAuthInterceptor)
-            .callTimeout(GLIDE_CALL_TIMEOUT_SECONDS, TimeUnit.SECONDS)
             .build()
         registry.replace(
             GlideUrl::class.java, InputStream::class.java,
