@@ -115,8 +115,8 @@ class EditorSettingsRepository @Inject constructor(
                     site,
                     data.hasRouteForEndpoint(
                         resolver,
-                        "/wp-block-editor/v1",
-                        "assets"
+                        "/wpcom/v2",
+                        "editor-assets"
                     )
                 )
             true
