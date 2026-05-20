@@ -194,6 +194,7 @@ automattic-tracks-crashlogging = { group = "com.automattic.tracks", name = "cras
 bumptech-glide-compiler = { module = "com.github.bumptech.glide:compiler", version.ref = "bumptech-glide" }
 bumptech-glide-ksp = { group = "com.github.bumptech.glide", name = "ksp", version.ref = "bumptech-glide" }
 bumptech-glide-main = { group = "com.github.bumptech.glide", name = "glide", version.ref = "bumptech-glide" }
+bumptech-glide-okhttp-integration = { group = "com.github.bumptech.glide", name = "okhttp3-integration", version.ref = "bumptech-glide" }
 bumptech-glide-volley-integration = { group = "com.github.bumptech.glide", name = "volley-integration", version.ref = "bumptech-glide" }
 cascade-compose = { group = "me.saket.cascade", name = "cascade-compose", version.ref = "cascade" }
 chucker = { group = "com.github.chuckerteam.chucker", name = "library", version.ref = "chucker" }
