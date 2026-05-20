@@ -22,10 +22,7 @@ class GlideAuthInterceptor @Inject constructor(
             originalUrl
         }
 
-        val builder = original.newBuilder()
-        if (upgradedUrl != originalUrl) {
-            builder.url(upgradedUrl)
-        }
+        val builder = original.newBuilder().url(upgradedUrl)
         authenticationUtils.getAuthHeaders(upgradedUrl).forEach { (name, value) ->
             builder.header(name, value)
         }
