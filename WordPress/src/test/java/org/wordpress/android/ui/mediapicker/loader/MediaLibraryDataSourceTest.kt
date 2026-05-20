@@ -318,6 +318,19 @@ class MediaLibraryDataSourceTest : BaseUnitTest() {
         assertThat(result.data[0].url).isEqualTo("http://media.jpg")
     }
 
+    @Test
+    fun `uses thumbnail URL for picker item when available`() = test {
+        val mediaModel = buildMediaModel(10)
+        mediaModel.thumbnailUrl = "http://media-thumb.jpg"
+        whenever(mediaStore.getSiteImages(siteModel)).thenReturn(listOf(mediaModel))
+
+        val dataSource = setupDataSource(false, setOf(IMAGE))
+        val result = dataSource.load(forced = false, loadMore = false, filter = null) as Success
+
+        assertThat(result.data).hasSize(1)
+        assertThat(result.data[0].url).isEqualTo("http://media-thumb.jpg")
+    }
+
     private fun setupDataSource(
         hasMore: Boolean,
         allowedTypes: Set<MediaType>,

@@ -28,6 +28,7 @@ import org.wordpress.android.ui.mediapicker.loader.MediaSource.MediaLoadingResul
 import org.wordpress.android.ui.mediapicker.loader.MediaSource.MediaLoadingResult.Failure
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
+import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.DateTimeUtilsWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
 import javax.inject.Inject
@@ -126,13 +127,25 @@ class MediaLibraryDataSource(
         return this.filter { it.url.isNotBlank() }.map { mediaModel ->
             MediaItem(
                 RemoteId(mediaModel.mediaId),
-                mediaModel.url,
+                mediaModel.thumbnailOrFullUrl(),
                 mediaModel.title,
                 mediaType,
                 mediaModel.mimeType,
                 mediaModel.uploadDate?.let { dateTimeUtilsWrapper.dateFromIso8601(it)?.time } ?: 0L
             )
         }
+    }
+
+    private fun MediaModel.thumbnailOrFullUrl(): String {
+        val thumbnail = thumbnailUrl
+        if (!thumbnail.isNullOrBlank()) {
+            return thumbnail
+        }
+        AppLog.w(
+            AppLog.T.MEDIA,
+            "MediaLibraryDataSource > no thumbnail for mediaId=$mediaId, falling back to full-size URL"
+        )
+        return url
     }
 
     private fun getFromDatabase(mediaType: MediaType): List<MediaItem> {
