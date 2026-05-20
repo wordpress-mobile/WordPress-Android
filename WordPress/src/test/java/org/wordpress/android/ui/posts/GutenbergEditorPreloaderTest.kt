@@ -12,6 +12,7 @@ import org.junit.Test
 import org.mockito.Mock
 import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
+import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
@@ -470,7 +471,4 @@ class GutenbergEditorPreloaderTest :
     }
 
     // endregion
-
-    private inline fun <reified T> mock(): T =
-        org.mockito.Mockito.mock(T::class.java)
 }

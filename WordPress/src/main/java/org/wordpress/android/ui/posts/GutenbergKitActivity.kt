@@ -313,8 +313,6 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
 
     @Inject lateinit var editorThemeStore: EditorThemeStore
 
-
-
     @Inject lateinit var imageLoader: FluxCImageLoader
 
     @Inject lateinit var shortcutUtils: ShortcutUtils
