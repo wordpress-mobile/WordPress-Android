@@ -17,10 +17,13 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -845,22 +848,24 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
      * perform analytics tracking and bump the page view for the post
      */
     private fun trackPost(blogId: Long, postId: Long) {
-        // bump the page view
-        ReaderPostActions.bumpPageViewForPost(siteStore, blogId, postId)
+        // ReaderPostTable.getBlogPost runs a rawQuery; do it off the main thread
+        // (Volley/post-handler callbacks otherwise park on the SQLite connection pool).
+        lifecycleScope.launch(Dispatchers.IO) {
+            ReaderPostActions.bumpPageViewForPost(siteStore, blogId, postId)
 
-        if (seenUnseenWithCounterFeatureConfig.isEnabled()) {
-            val currentPost = ReaderPostTable.getBlogPost(blogId, postId, true)
-            if (currentPost != null) {
-                postSeenStatusWrapper.markPostAsSeenSilently(currentPost)
+            if (seenUnseenWithCounterFeatureConfig.isEnabled()) {
+                val currentPost = ReaderPostTable.getBlogPost(blogId, postId, true)
+                if (currentPost != null) {
+                    postSeenStatusWrapper.markPostAsSeenSilently(currentPost)
+                }
             }
-        }
 
-        // analytics tracking
-        readerTracker.trackPost(
-            AnalyticsTracker.Stat.READER_ARTICLE_OPENED,
-            readerPostTableWrapper.getBlogPost(blogId, postId, true),
-            getReadingPreferencesSyncUseCase.invoke()
-        )
+            readerTracker.trackPost(
+                AnalyticsTracker.Stat.READER_ARTICLE_OPENED,
+                readerPostTableWrapper.getBlogPost(blogId, postId, true),
+                getReadingPreferencesSyncUseCase.invoke()
+            )
+        }
     }
 
     /*
