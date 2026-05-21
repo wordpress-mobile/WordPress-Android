@@ -206,6 +206,10 @@ public class SiteUtils {
                 new DesignateMobileEditorPayload(siteModel, AZTEC_EDITOR_NAME)));
     }
 
+    /**
+     * @deprecated Use {@code SiteSettingsProvider.isBlockEditorDefault()} instead.
+     */
+    @Deprecated
     public static boolean isBlockEditorDefaultForNewPost(@Nullable SiteModel site) {
         if (site == null) {
             return true;
@@ -218,6 +222,10 @@ public class SiteUtils {
         }
     }
 
+    /**
+     * @deprecated Use {@code SiteSettingsProvider.isBlockEditorDefault()} instead.
+     */
+    @Deprecated
     public static boolean alwaysDefaultToGutenberg(SiteModel site) {
         return site.isWPCom() && !site.isWPComAtomic();
     }
