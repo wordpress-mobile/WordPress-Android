@@ -2210,7 +2210,10 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
             val post = editPostRepository.getPost()
             val configuration = buildEditorConfiguration(siteModel, post)
 
-            return GutenbergKitEditorFragment.newInstance(configuration)
+            return GutenbergKitEditorFragment.newInstance(
+                configuration,
+                siteModel
+            )
         }
 
         private fun buildEditorConfiguration(

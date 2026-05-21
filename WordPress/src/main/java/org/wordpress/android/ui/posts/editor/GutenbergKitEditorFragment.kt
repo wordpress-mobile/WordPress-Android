@@ -26,6 +26,8 @@ import org.wordpress.android.editor.EditorEditMediaListener
 import org.wordpress.android.editor.EditorFragmentAbstract
 import org.wordpress.android.editor.EditorImagePreviewListener
 import org.wordpress.android.editor.LiveTextWatcher
+import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.ui.posts.GutenbergEditorPreloader
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.PermissionUtils
 import org.wordpress.android.util.ProfilingUtils
@@ -40,8 +42,12 @@ import org.wordpress.gutenberg.GutenbergView.TitleAndContentCallback
 import org.wordpress.gutenberg.Media
 import org.wordpress.gutenberg.model.EditorConfiguration
 import java.util.concurrent.CountDownLatch
+import javax.inject.Inject
 
 class GutenbergKitEditorFragment : GutenbergKitEditorFragmentBase() {
+    @Inject
+    lateinit var gutenbergEditorPreloader: GutenbergEditorPreloader
+
     private var gutenbergView: GutenbergView? = null
     private var isHtmlModeEnabled = false
 
@@ -57,6 +63,8 @@ class GutenbergKitEditorFragment : GutenbergKitEditorFragmentBase() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        (requireActivity().application as org.wordpress.android.WordPress)
+            .component().inject(this)
 
         ProfilingUtils.start("Visual Editor Startup")
         ProfilingUtils.split("EditorFragment.onCreate")
@@ -164,9 +172,10 @@ class GutenbergKitEditorFragment : GutenbergKitEditorFragmentBase() {
             )
         )
 
+        val siteLocalId = requireArguments().getInt(ARG_SITE_LOCAL_ID)
         val gutenbergView = GutenbergView(
             configuration = configuration,
-            dependencies = null,
+            dependencies = gutenbergEditorPreloader.getDependencies(siteLocalId),
             coroutineScope = this.lifecycleScope,
             context = requireContext()
         )
@@ -537,16 +546,19 @@ class GutenbergKitEditorFragment : GutenbergKitEditorFragmentBase() {
         const val ARG_FEATURED_IMAGE_ID: String = "featured_image_id"
         const val ARG_GUTENBERG_KIT_SETTINGS: String =
             "gutenberg_kit_settings"
+        private const val ARG_SITE_LOCAL_ID = "site_local_id"
 
         private const val CAPTURE_PHOTO_PERMISSION_REQUEST_CODE = 101
         private const val CAPTURE_VIDEO_PERMISSION_REQUEST_CODE = 102
 
         fun newInstance(
-            configuration: EditorConfiguration
+            configuration: EditorConfiguration,
+            site: SiteModel
         ): GutenbergKitEditorFragment {
             val fragment = GutenbergKitEditorFragment()
             val args = Bundle()
             args.putParcelable(ARG_GUTENBERG_KIT_SETTINGS, configuration)
+            args.putInt(ARG_SITE_LOCAL_ID, site.id)
             fragment.arguments = args
             return fragment
         }
