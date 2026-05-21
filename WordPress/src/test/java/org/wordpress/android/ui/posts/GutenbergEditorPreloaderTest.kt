@@ -22,8 +22,10 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.repositories.EditorSettingsRepository
 import org.wordpress.gutenberg.model.EditorAssetBundle
+import org.wordpress.gutenberg.model.EditorConfiguration
 import org.wordpress.gutenberg.model.EditorDependencies
 import org.wordpress.gutenberg.model.EditorSettings
+import org.wordpress.gutenberg.model.PostTypeDetails
 
 @ExperimentalCoroutinesApi
 class GutenbergEditorPreloaderTest :
@@ -93,8 +95,15 @@ class GutenbergEditorPreloaderTest :
                 isNetworkLoggingEnabled = any(),
                 post = anyOrNull(),
             )
-        ).thenReturn(mock())
+        ).thenReturn(stubEditorConfiguration())
     }
+
+    private fun stubEditorConfiguration(): EditorConfiguration =
+        EditorConfiguration.builder(
+            siteURL = "https://example.test",
+            siteApiRoot = "https://example.test/wp-json/",
+            postType = PostTypeDetails.post,
+        ).build()
 
     private suspend fun stubEditorService() {
         whenever(
