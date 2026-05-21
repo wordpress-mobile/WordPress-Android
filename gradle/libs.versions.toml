@@ -12,7 +12,7 @@ androidx-arch-core = '2.2.0'
 androidx-browser = '1.10.0'
 androidx-camera = '1.6.1'
 androidx-cardview = '1.0.0'
-androidx-compose-bom = '2026.05.00'
+androidx-compose-bom = '2026.05.01'
 androidx-compose-material3 = '1.4.0'
 androidx-constraintlayout-compose = '1.1.1'
 androidx-constraintlayout-main = '2.2.1'
@@ -52,7 +52,7 @@ chucker = '4.2.0'
 coil = '2.7.0'
 commons-fileupload = '1.5'
 detekt = '1.23.8'
-dependency-analysis = '3.12.0'
+dependency-analysis = '3.12.1'
 facebook-react = '0.73.3'
 facebook-shimmer = '0.5.0'
 fastlane-screengrab = '2.1.1'
@@ -92,7 +92,7 @@ mockito-kotlin = '6.3.0'
 mpandroidchart = 'v3.1.0'
 photoview = '2.3.0'
 robolectric = '4.16.1'
-sentry = '6.7.0'
+sentry = '6.7.1'
 squareup-java-poet = '1.13.0'
 squareup-kotlin-poet = '2.3.0'
 squareup-okhttp3 = '5.3.2'
@@ -194,6 +194,7 @@ automattic-tracks-crashlogging = { group = "com.automattic.tracks", name = "cras
 bumptech-glide-compiler = { module = "com.github.bumptech.glide:compiler", version.ref = "bumptech-glide" }
 bumptech-glide-ksp = { group = "com.github.bumptech.glide", name = "ksp", version.ref = "bumptech-glide" }
 bumptech-glide-main = { group = "com.github.bumptech.glide", name = "glide", version.ref = "bumptech-glide" }
+bumptech-glide-okhttp-integration = { group = "com.github.bumptech.glide", name = "okhttp3-integration", version.ref = "bumptech-glide" }
 bumptech-glide-volley-integration = { group = "com.github.bumptech.glide", name = "volley-integration", version.ref = "bumptech-glide" }
 cascade-compose = { group = "me.saket.cascade", name = "cascade-compose", version.ref = "cascade" }
 chucker = { group = "com.github.chuckerteam.chucker", name = "library", version.ref = "chucker" }
