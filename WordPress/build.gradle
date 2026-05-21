@@ -432,6 +432,7 @@ dependencies {
     }
     implementation(libs.bumptech.glide.main)
     ksp(libs.bumptech.glide.ksp)
+    implementation(libs.bumptech.glide.okhttp.integration)
     implementation(libs.bumptech.glide.volley.integration)
     implementation(libs.indexos.media.for.mobile.domain)
     implementation(libs.indexos.media.for.mobile.android)

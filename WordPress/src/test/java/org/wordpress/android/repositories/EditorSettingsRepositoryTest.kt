@@ -202,8 +202,8 @@ class EditorSettingsRepositoryTest : BaseUnitTest() {
         whenever(
             apiDetails.hasRouteForEndpoint(
                 apiUrlResolver,
-                "/wp-block-editor/v1",
-                "assets"
+                "/wpcom/v2",
+                "editor-assets"
             )
         ).thenReturn(hasEditorAssets)
 

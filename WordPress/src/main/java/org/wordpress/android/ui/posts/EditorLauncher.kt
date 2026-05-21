@@ -156,6 +156,7 @@ class EditorLauncher @Inject constructor(
         site: SiteModel
     ) {
         val hasGutenbergBlocks = PostUtils.contentContainsGutenbergBlocks(postContent)
+        @Suppress("DEPRECATION")
         val isBlockEditorDefaultForNewPosts = SiteUtils.isBlockEditorDefaultForNewPost(site)
 
         val postInfo = if (post != null) {

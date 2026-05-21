@@ -84,6 +84,7 @@ import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.fluxc.network.UserAgent
+import org.wordpress.gutenberg.model.EditorConfiguration
 import org.wordpress.android.fluxc.network.rest.wpcom.site.PrivateAtomicCookie
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged
@@ -208,7 +209,6 @@ import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.analytics.AnalyticsUtils
 import org.wordpress.android.util.analytics.AnalyticsUtils.BlockEditorEnabledSource
 import org.wordpress.android.util.config.ContactSupportFeatureConfig
-import org.wordpress.android.util.config.GutenbergKitPluginsFeature
 import org.wordpress.android.util.config.PostConflictResolutionFeatureConfig
 import org.wordpress.android.util.extensions.setLiftOnScrollTargetViewIdAndRequestLayout
 import org.wordpress.android.util.helpers.MediaFile
@@ -381,8 +381,6 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
 
     @Inject lateinit var postConflictResolutionFeatureConfig: PostConflictResolutionFeatureConfig
 
-    @Inject lateinit var gutenbergKitPluginsFeature: GutenbergKitPluginsFeature
-
     @Inject lateinit var activityNavigator: ActivityNavigator
 
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -391,6 +389,7 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
     @Inject lateinit var editorBloggingPromptsViewModel: EditorBloggingPromptsViewModel
     @Inject lateinit var editorJetpackSocialViewModel: EditorJetpackSocialViewModel
     @Inject lateinit var gutenbergKitNetworkLogger: GutenbergKitNetworkLogger
+    @Inject lateinit var gutenbergKitSettingsBuilder: GutenbergKitSettingsBuilder
     private lateinit var editPostNavigationViewModel: EditPostNavigationViewModel
     private lateinit var editPostSettingsViewModel: EditPostSettingsViewModel
     private lateinit var prepublishingViewModel: PrepublishingViewModel
@@ -2208,36 +2207,33 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
                 onXpostsSettingsCapability(isXpostsCapable)
             }
 
-            val siteConfig = GutenbergKitSettingsBuilder.SiteConfig.fromSiteModel(siteModel)
-            val postConfig = GutenbergKitSettingsBuilder.PostConfig.fromPostModel(
-                editPostRepository.getPost()
+            val post = editPostRepository.getPost()
+            val configuration = buildEditorConfiguration(siteModel, post)
+
+            return GutenbergKitEditorFragment.newInstance(
+                configuration,
+                siteModel
             )
-            val featureConfig = GutenbergKitSettingsBuilder.FeatureConfig(
-                isPluginsFeatureEnabled = gutenbergKitPluginsFeature.isEnabled(),
-                isThemeStylesFeatureEnabled = siteSettings?.useThemeStyles ?: true,
-                isNetworkLoggingEnabled = AppPrefs.isTrackNetworkRequestsEnabled()
-            )
-            val appConfig = GutenbergKitSettingsBuilder.AppConfig(
+        }
+
+        private fun buildEditorConfiguration(
+            site: SiteModel,
+            post: PostImmutableModel?
+        ): EditorConfiguration {
+            val locale = perAppLocaleManager
+                .getCurrentLocaleLanguageCode()
+                .replace("_", "-").lowercase()
+
+            return gutenbergKitSettingsBuilder.buildPostConfiguration(
+                site = site,
                 accessToken = accountStore.accessToken,
-                locale = perAppLocaleManager.getCurrentLocaleLanguageCode(),
+                locale = locale,
                 cookies = editPostAuthViewModel.getCookiesForPrivateSites(
                     site, privateAtomicCookie
                 ),
-                accountUserId = accountStore.account.userId,
-                accountUserName = accountStore.account.userName,
-                userAgent = userAgent,
-                isJetpackSsoEnabled = isJetpackSsoEnabled
+                isNetworkLoggingEnabled = AppPrefs.isTrackNetworkRequestsEnabled(),
+                post = post,
             )
-
-            val settings = GutenbergKitSettingsBuilder.buildSettings(
-                siteConfig = siteConfig,
-                postConfig = postConfig,
-                appConfig = appConfig,
-                featureConfig = featureConfig
-            )
-            val configuration = EditorConfigurationBuilder.build(settings)
-
-            return GutenbergKitEditorFragment.newInstance(configuration)
         }
 
         override fun instantiateItem(container: ViewGroup, position: Int): Any {
