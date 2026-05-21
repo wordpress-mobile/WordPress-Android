@@ -8,6 +8,7 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
+import org.mockito.Mockito.lenient
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.doSuspendableAnswer
 import org.mockito.kotlin.eq
@@ -19,6 +20,7 @@ import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.repositories.EditorSettingsRepository
 import org.wordpress.android.ui.mysite.MySiteCardAndItem
+import org.wordpress.android.util.NetworkUtilsWrapper
 
 private const val TEST_SITE_LOCAL_ID = 42
 
@@ -28,6 +30,9 @@ class SiteConnectivityBannerViewModelSliceTest : BaseUnitTest() {
     @Mock
     lateinit var editorSettingsRepository: EditorSettingsRepository
 
+    @Mock
+    lateinit var networkUtilsWrapper: NetworkUtilsWrapper
+
     private lateinit var siteTest: SiteModel
     private lateinit var slice: SiteConnectivityBannerViewModelSlice
     private val emittedBanners = mutableListOf<MySiteCardAndItem?>()
@@ -35,7 +40,10 @@ class SiteConnectivityBannerViewModelSliceTest : BaseUnitTest() {
     @Before
     fun setUp() {
         siteTest = SiteModel().apply { id = TEST_SITE_LOCAL_ID }
-        slice = SiteConnectivityBannerViewModelSlice(editorSettingsRepository)
+        // Default network state is available; tests that need offline override per-test. Lenient
+        // because tests where the fetch succeeds never reach the network check.
+        lenient().`when`(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
+        slice = SiteConnectivityBannerViewModelSlice(editorSettingsRepository, networkUtilsWrapper)
         slice.initialize(testScope())
         slice.uiModel.observeForever { emittedBanners.add(it) }
     }
@@ -62,6 +70,20 @@ class SiteConnectivityBannerViewModelSliceTest : BaseUnitTest() {
         assertThat(banner.textResource).isEqualTo(R.string.site_connectivity_banner_text)
         assertThat(banner.showLearnMore).isFalse
     }
+
+    @Test
+    fun `given fetch fails with no cache but device offline, when fetchCapabilities invoked, then banner is null`() =
+        test {
+            whenever(editorSettingsRepository.fetchEditorCapabilitiesForSite(siteTest)).thenReturn(false)
+            whenever(editorSettingsRepository.hasCachedCapabilities(siteTest)).thenReturn(false)
+            whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(false)
+
+            slice.fetchCapabilities(siteTest, isUserInitiated = false)
+            advanceUntilIdle()
+
+            // Global offline indicator covers this case — suppress to avoid stacked warnings.
+            assertThat(emittedBanners.last()).isNull()
+        }
 
     @Test
     fun `given fetch fails but cache exists, when fetchCapabilities invoked, then banner is null`() = test {

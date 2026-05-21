@@ -9,10 +9,12 @@ import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.repositories.EditorSettingsRepository
 import org.wordpress.android.ui.mysite.MySiteCardAndItem
+import org.wordpress.android.util.NetworkUtilsWrapper
 import javax.inject.Inject
 
 class SiteConnectivityBannerViewModelSlice @Inject constructor(
     private val editorSettingsRepository: EditorSettingsRepository,
+    private val networkUtilsWrapper: NetworkUtilsWrapper,
 ) {
     private lateinit var scope: CoroutineScope
     private var currentJob: Job? = null
@@ -46,7 +48,11 @@ class SiteConnectivityBannerViewModelSlice @Inject constructor(
             // Bail if the user switched sites while we were suspended — postValue
             // isn't a suspension point, so cancellation alone won't catch this.
             if (currentSite?.id != site.id) return@launch
-            _uiModel.postValue(if (ok || hasCache) null else buildBanner())
+            // Suppress the banner when the device is offline — the global "no
+            // connection" banner already covers this case, and stacking warnings
+            // for the same root cause is just noise.
+            val suppressForOffline = !ok && !networkUtilsWrapper.isNetworkAvailable()
+            _uiModel.postValue(if (ok || hasCache || suppressForOffline) null else buildBanner())
         }
     }
 
