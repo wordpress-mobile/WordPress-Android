@@ -188,7 +188,8 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
                 )
                 emitError(
                     siteUrl = siteUrl,
-                    errorMessage = "empty_fetch_params"
+                    errorMessage = "empty_fetch_params",
+                    reportToSentry = false,
                 )
             } else {
                 discoverAndDispatchFetchSite(
