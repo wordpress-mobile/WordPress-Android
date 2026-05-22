@@ -8,6 +8,7 @@ import androidx.browser.customtabs.CustomTabsClient
 import androidx.browser.customtabs.CustomTabsServiceConnection
 import androidx.browser.customtabs.CustomTabsSession
 import androidx.core.net.toUri
+import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -17,6 +18,7 @@ import kotlinx.coroutines.withContext
 import org.wordpress.android.fluxc.network.rest.wpapi.WPcomLoginClient
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AppSecrets
 import org.wordpress.android.fluxc.store.AccountStore
+import org.wordpress.android.util.AppLog
 import javax.inject.Inject
 
 class WPcomLoginHelper @Inject constructor(
@@ -24,7 +26,10 @@ class WPcomLoginHelper @Inject constructor(
     private val accountStore: AccountStore,
     appSecrets: AppSecrets,
 ) {
-    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
+    private val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
+        AppLog.e(AppLog.T.MAIN, "Uncaught exception in WPcomLoginHelper", throwable)
+    }
+    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO + exceptionHandler)
 
     val wpcomLoginUri = loginClient.loginUri(appSecrets.redirectUri)
     private val customTabsServiceConnection = ServiceConnection(wpcomLoginUri)
@@ -66,9 +71,7 @@ class WPcomLoginHelper @Inject constructor(
                 },
                 onFailure = { error ->
                     withContext(Dispatchers.Main) {
-                        onFailure.accept(
-                            Exception(error)
-                        )
+                        onFailure.accept(error as? Exception ?: Exception(error))
                     }
                 }
             )

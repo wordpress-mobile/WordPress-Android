@@ -32,7 +32,9 @@ class WPcomLoginClientTest {
         val result = subject.exchangeAuthCodeForToken("any_code")
 
         assertTrue(result.isFailure)
-        val error = result.exceptionOrNull()
+        val exception = result.exceptionOrNull()
+        assertIs<WPcomLoginException>(exception)
+        val error = exception.error
         assertIs<WPcomLoginError.NetworkError>(error)
         assertSame(ioException, error.cause)
     }
