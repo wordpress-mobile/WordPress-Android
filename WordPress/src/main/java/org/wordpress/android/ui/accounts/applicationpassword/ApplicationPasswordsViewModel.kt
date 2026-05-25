@@ -186,7 +186,13 @@ class ApplicationPasswordsViewModel @Inject constructor(
     }
 
     private suspend fun getApplicationPasswordsList(site: SiteModel): List<ApplicationPasswordWithViewContext> {
-        val wpApiClient = wpApiClientProvider.getWpApiClient(site)
+        // Always use the direct-host Basic-auth client. `getWpApiClient` routes WPCom-flagged
+        // sites (including Atomic) through the WP.com REST proxy, which doesn't expose the
+        // `application-passwords` routes — every call 404s with `rest_no_route`. Talking to the
+        // site directly with the stored application password sidesteps that limitation.
+        // Requires the SiteModel to have credentials already (e.g. via the My Site auto-mint
+        // flow); otherwise the call will 401.
+        val wpApiClient = wpApiClientProvider.getApplicationPasswordClient(site)
 
         val currentUserId = getCurrentUserId(wpApiClient)
         return if (currentUserId == null) {
