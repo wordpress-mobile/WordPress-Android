@@ -7,6 +7,8 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.whenever
+import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures
 import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures.Feature
 import org.wordpress.android.util.config.GutenbergKitFeature
@@ -19,11 +21,14 @@ class GutenbergKitFeatureCheckerTest {
     @Mock
     private lateinit var gutenbergKitFeature: GutenbergKitFeature
 
+    @Mock
+    private lateinit var appPrefsWrapper: AppPrefsWrapper
+
     private lateinit var featureChecker: GutenbergKitFeatureChecker
 
     @Before
     fun setUp() {
-        featureChecker = GutenbergKitFeatureChecker(experimentalFeatures, gutenbergKitFeature)
+        featureChecker = GutenbergKitFeatureChecker(experimentalFeatures, gutenbergKitFeature, appPrefsWrapper)
     }
 
     // Helper method to setup mock behavior
@@ -106,7 +111,9 @@ class GutenbergKitFeatureCheckerTest {
     }
 
     @Test
-    fun `isGutenbergKitEnabled returns true when GutenbergKit feature is enabled`() {
+    fun `remote feature flag alone does not enable GutenbergKit for editor routing`() {
+        // The remote `gutenberg_kit` flag only gates the announcement and Site Settings toggle
+        // visibility. Editor routing requires either the experimental flag or a per-site opt-in.
         setupFeatureFlags(
             experimentalBlockEditor = false,
             gutenbergKitEnabled = true,
@@ -115,11 +122,11 @@ class GutenbergKitFeatureCheckerTest {
 
         val result = featureChecker.isGutenbergKitEnabled()
 
-        assertThat(result).isTrue()
+        assertThat(result).isFalse()
     }
 
     @Test
-    fun `isGutenbergKitEnabled returns true when both experimental and GutenbergKit features are enabled`() {
+    fun `isGutenbergKitEnabled returns true when experimental flag is on regardless of remote flag`() {
         setupFeatureFlags(
             experimentalBlockEditor = true,
             gutenbergKitEnabled = true,
@@ -232,28 +239,118 @@ class GutenbergKitFeatureCheckerTest {
     }
 
     @Test
-    fun `feature is enabled when at least one enabling flag is true and disable flag is false`() {
-        val enabledTestCases = listOf(
-            Triple(true, false, false),   // Only experimental
-            Triple(false, true, false),   // Only GutenbergKit
-            Triple(true, true, false)     // Both enabled
+    fun `per-site opt-in enables GutenbergKit when no other flag is set`() {
+        setupFeatureFlags(
+            experimentalBlockEditor = false,
+            gutenbergKitEnabled = false,
+            disableExperimentalBlockEditor = false
+        )
+        val site = SiteModel().apply { url = "https://example.com" }
+        whenever(appPrefsWrapper.getGutenbergKitSiteOverride("https://example.com")).thenReturn(true)
+
+        assertThat(featureChecker.isGutenbergKitEnabled(site)).isTrue()
+    }
+
+    @Test
+    fun `remote feature flag on with no override does not enable for a site`() {
+        // Editor routing only: announcement visibility is checked via
+        // `isGutenbergKitRemoteFeatureEnabled()` separately.
+        setupFeatureFlags(
+            experimentalBlockEditor = false,
+            gutenbergKitEnabled = true,
+            disableExperimentalBlockEditor = false
+        )
+        val site = SiteModel().apply { url = "https://example.com" }
+        whenever(appPrefsWrapper.getGutenbergKitSiteOverride("https://example.com")).thenReturn(null)
+
+        assertThat(featureChecker.isGutenbergKitEnabled(site)).isFalse()
+    }
+
+    @Test
+    fun `per-site opt-out wins over experimental flag`() {
+        setupFeatureFlags(
+            experimentalBlockEditor = true,
+            gutenbergKitEnabled = false,
+            disableExperimentalBlockEditor = false
+        )
+        val site = SiteModel().apply { url = "https://example.com" }
+        whenever(appPrefsWrapper.getGutenbergKitSiteOverride("https://example.com")).thenReturn(false)
+
+        assertThat(featureChecker.isGutenbergKitEnabled(site)).isFalse()
+    }
+
+    @Test
+    fun `per-site opt-in wins when remote and experimental flags are off`() {
+        setupFeatureFlags(
+            experimentalBlockEditor = false,
+            gutenbergKitEnabled = false,
+            disableExperimentalBlockEditor = false
+        )
+        val site = SiteModel().apply { url = "https://example.com" }
+        whenever(appPrefsWrapper.getGutenbergKitSiteOverride("https://example.com")).thenReturn(true)
+
+        assertThat(featureChecker.isGutenbergKitEnabled(site)).isTrue()
+    }
+
+    @Test
+    fun `per-site opt-in wins when remote flag is on`() {
+        setupFeatureFlags(
+            experimentalBlockEditor = false,
+            gutenbergKitEnabled = true,
+            disableExperimentalBlockEditor = false
+        )
+        val site = SiteModel().apply { url = "https://example.com" }
+        whenever(appPrefsWrapper.getGutenbergKitSiteOverride("https://example.com")).thenReturn(true)
+
+        assertThat(featureChecker.isGutenbergKitEnabled(site)).isTrue()
+    }
+
+    @Test
+    fun `disable flag overrides per-site opt-in`() {
+        setupFeatureFlags(
+            experimentalBlockEditor = false,
+            gutenbergKitEnabled = false,
+            disableExperimentalBlockEditor = true
+        )
+        val site = SiteModel().apply { url = "https://example.com" }
+        whenever(appPrefsWrapper.getGutenbergKitSiteOverride("https://example.com")).thenReturn(true)
+
+        assertThat(featureChecker.isGutenbergKitEnabled(site)).isFalse()
+    }
+
+    @Test
+    fun `editor routing is enabled only by experimental flag or per-site opt-in`() {
+        // The remote `gutenberg_kit` flag is intentionally NOT an editor-routing input — it only
+        // gates announcement visibility. Editor routing requires experimental OR per-site opt-in.
+        data class Case(
+            val experimental: Boolean,
+            val gutenbergKitRemote: Boolean,
+            val siteOverride: Boolean?,
+            val expected: Boolean,
+        )
+        val cases = listOf(
+            Case(experimental = true, gutenbergKitRemote = false, siteOverride = null, expected = true),
+            Case(experimental = true, gutenbergKitRemote = true, siteOverride = null, expected = true),
+            Case(experimental = false, gutenbergKitRemote = true, siteOverride = null, expected = false),
+            Case(experimental = false, gutenbergKitRemote = false, siteOverride = true, expected = true),
+            Case(experimental = false, gutenbergKitRemote = true, siteOverride = true, expected = true),
+            Case(experimental = true, gutenbergKitRemote = true, siteOverride = false, expected = false),
+            Case(experimental = false, gutenbergKitRemote = false, siteOverride = null, expected = false),
         )
 
-        enabledTestCases.forEach { (experimental, gutenbergKit, disable) ->
+        cases.forEach { case ->
             setupFeatureFlags(
-                experimentalBlockEditor = experimental,
-                gutenbergKitEnabled = gutenbergKit,
-                disableExperimentalBlockEditor = disable
+                experimentalBlockEditor = case.experimental,
+                gutenbergKitEnabled = case.gutenbergKitRemote,
+                disableExperimentalBlockEditor = false
             )
+            val site = SiteModel().apply { url = "https://example.com" }
+            whenever(appPrefsWrapper.getGutenbergKitSiteOverride("https://example.com"))
+                .thenReturn(case.siteOverride)
 
-            val result = featureChecker.isGutenbergKitEnabled()
-
-            assertThat(result)
-                .withFailMessage(
-                    "Should be true when at least one enabling flag is true " +
-                            "(experimental=$experimental, gutenbergKit=$gutenbergKit)"
-                )
-                .isTrue()
+            assertThat(featureChecker.isGutenbergKitEnabled(site))
+                .withFailMessage("Case $case")
+                .isEqualTo(case.expected)
         }
     }
 }

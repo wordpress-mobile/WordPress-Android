@@ -5,6 +5,7 @@
 * [**] Resolved an issue where the editor could become impossible to exit when it failed to load.
 * [*] Atomic sites can now create application passwords without leaving the app.
 * [**] Fixed a case where the editor failed to load on WP.com Atomic sites whose host doesn't expose `wp-block-editor/v1/settings`.
+* [*] Try out the next-generation block editor on a per-site basis from Site Settings.
 
 26.7
 -----

@@ -43,7 +43,7 @@ class EditorCapabilityResolverTest {
         )
         // Defaults that let resolution reach `Available` unless
         // a test overrides them.
-        whenever(gutenbergKitFeatureChecker.isGutenbergKitEnabled()).thenReturn(true)
+        whenever(gutenbergKitFeatureChecker.isGutenbergKitEnabled(any())).thenReturn(true)
         whenever(gutenbergKitPluginsFeature.isEnabled()).thenReturn(true)
         whenever(editorSettingsRepository.getSupportsEditorAssetsForSite(any())).thenReturn(true)
         whenever(editorSettingsRepository.getSupportsEditorSettingsForSite(any())).thenReturn(true)
@@ -54,11 +54,22 @@ class EditorCapabilityResolverTest {
 
     @Test
     fun `third-party blocks hidden when GutenbergKit disabled`() {
-        whenever(gutenbergKitFeatureChecker.isGutenbergKitEnabled()).thenReturn(false)
+        whenever(gutenbergKitFeatureChecker.isGutenbergKitEnabled(any())).thenReturn(false)
 
         val result = resolver.resolveThirdPartyBlocks(site)
 
         assertThat(result).isEqualTo(EditorCapabilityState.Hidden)
+    }
+
+    @Test
+    fun `third-party blocks consult per-site GutenbergKit override`() {
+        val otherSite = SiteModel().apply { url = "https://other.example.com" }
+        whenever(gutenbergKitFeatureChecker.isGutenbergKitEnabled(site)).thenReturn(true)
+        whenever(gutenbergKitFeatureChecker.isGutenbergKitEnabled(otherSite)).thenReturn(false)
+
+        assertThat(resolver.resolveThirdPartyBlocks(site))
+            .isInstanceOf(EditorCapabilityState.Available::class.java)
+        assertThat(resolver.resolveThirdPartyBlocks(otherSite)).isEqualTo(EditorCapabilityState.Hidden)
     }
 
     @Test
@@ -72,7 +83,7 @@ class EditorCapabilityResolverTest {
 
     @Test
     fun `third-party blocks hidden when both feature flags disabled`() {
-        whenever(gutenbergKitFeatureChecker.isGutenbergKitEnabled()).thenReturn(false)
+        whenever(gutenbergKitFeatureChecker.isGutenbergKitEnabled(any())).thenReturn(false)
         // lenient(): the resolver short-circuits on the GutenbergKit flag, so the plugins
         // stub is never read — strict mocking would treat that as a smell.
         lenient().`when`(gutenbergKitPluginsFeature.isEnabled()).thenReturn(false)
@@ -139,11 +150,22 @@ class EditorCapabilityResolverTest {
 
     @Test
     fun `theme styles hidden when GutenbergKit disabled`() {
-        whenever(gutenbergKitFeatureChecker.isGutenbergKitEnabled()).thenReturn(false)
+        whenever(gutenbergKitFeatureChecker.isGutenbergKitEnabled(any())).thenReturn(false)
 
         val result = resolver.resolveThemeStyles(site)
 
         assertThat(result).isEqualTo(EditorCapabilityState.Hidden)
+    }
+
+    @Test
+    fun `theme styles consult per-site GutenbergKit override`() {
+        val otherSite = SiteModel().apply { url = "https://other.example.com" }
+        whenever(gutenbergKitFeatureChecker.isGutenbergKitEnabled(site)).thenReturn(true)
+        whenever(gutenbergKitFeatureChecker.isGutenbergKitEnabled(otherSite)).thenReturn(false)
+
+        assertThat(resolver.resolveThemeStyles(site))
+            .isInstanceOf(EditorCapabilityState.Available::class.java)
+        assertThat(resolver.resolveThemeStyles(otherSite)).isEqualTo(EditorCapabilityState.Hidden)
     }
 
     @Test
