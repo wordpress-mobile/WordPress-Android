@@ -51,12 +51,20 @@ class ApplicationPasswordValidator @Inject constructor(
     private fun <T> classify(response: WpRequestResult<T>): Outcome = when (response) {
         is WpRequestResult.Success -> Outcome.Valid
 
-        is WpRequestResult.WpError -> if (isAuthErrorCode(response.errorCode)) {
+        // A WpError is the server returning a parseable error envelope. Treat any 401/403 as an
+        // auth rejection regardless of the WpErrorCode value — WordPress emits a wide variety of
+        // codes for credential failures (`incorrect_password`, `invalid_username`,
+        // `application_passwords_disabled_for_user`, plugin-defined codes, etc.) and many of them
+        // get parsed as `WpErrorCode.CustomError` via the library's untagged fallback. Status
+        // code is the reliable signal. Also include a few non-auth-status codes that we know
+        // mean the credential is unusable.
+        is WpRequestResult.WpError -> if (
+            isAuthErrorCode(response.errorCode) || isAuthStatusCode(response.statusCode)
+        ) {
             Outcome.Invalid
         } else {
-            // Parseable WP error envelope that isn't an auth rejection (e.g. 5xx returned as a
-            // structured WpError, or a server-side plugin returning a custom code). Ambiguous —
-            // don't wipe creds.
+            // Parseable error envelope without an auth-rejection signal (e.g. a 5xx returned as
+            // a structured WpError). Ambiguous — don't wipe creds.
             Outcome.NetworkUnavailable
         }
 
@@ -78,10 +86,18 @@ class ApplicationPasswordValidator @Inject constructor(
             code is WpErrorCode.ApplicationPasswordNotFound ||
             code is WpErrorCode.NoAuthenticatedAppPassword
 
+    private fun isAuthStatusCode(statusCode: UShort): Boolean =
+        statusCode.toInt() == HTTP_UNAUTHORIZED || statusCode.toInt() == HTTP_FORBIDDEN
+
     private fun isAuthErrorReason(reason: RequestExecutionErrorReason): Boolean =
         reason is RequestExecutionErrorReason.HttpAuthenticationRejectedError ||
             reason is RequestExecutionErrorReason.HttpAuthenticationRequiredError ||
             reason is RequestExecutionErrorReason.HttpForbiddenError
+
+    companion object {
+        private const val HTTP_UNAUTHORIZED = 401
+        private const val HTTP_FORBIDDEN = 403
+    }
 
     enum class Outcome { Valid, Invalid, NetworkUnavailable }
 }

@@ -52,10 +52,10 @@ class ApplicationPasswordValidatorTest : BaseUnitTest() {
         whenever(wpApiClient.request<Any>(any())).thenReturn(response as WpRequestResult<Any>)
     }
 
-    private fun wpError(code: WpErrorCode) = WpRequestResult.WpError<Any>(
+    private fun wpError(code: WpErrorCode, statusCode: Int = 401) = WpRequestResult.WpError<Any>(
         errorCode = code,
         errorMessage = "msg",
-        statusCode = 401.toUShort(),
+        statusCode = statusCode.toUShort(),
         response = "",
         requestUrl = "https://example.com",
         requestMethod = RequestMethod.GET,
@@ -107,8 +107,35 @@ class ApplicationPasswordValidatorTest : BaseUnitTest() {
     // --- WpError: non-auth codes must NOT wipe creds ---
 
     @Test
-    fun `WpError InvalidParam maps to NetworkUnavailable (do not wipe creds)`() = runTest {
-        stubResponse(wpError(WpErrorCode.InvalidParam()))
+    fun `WpError non-auth code with non-auth status maps to NetworkUnavailable`() = runTest {
+        // Non-401/403 status with an unrelated WpErrorCode: ambiguous, don't wipe creds.
+        stubResponse(wpError(WpErrorCode.InvalidParam(), statusCode = 400))
+        assertThat(validator.validate(site))
+            .isEqualTo(ApplicationPasswordValidator.Outcome.NetworkUnavailable)
+    }
+
+    @Test
+    fun `WpError with 401 status maps to Invalid regardless of code`() = runTest {
+        // WordPress emits a wide range of WpErrorCodes for credential rejections (e.g.
+        // `incorrect_password`, `invalid_username`, plugin-defined codes). Many fall through
+        // to wordpress-rs's untagged-string fallback and aren't recognized as auth codes by
+        // name. The status code is the reliable signal — a parseable WpError with 401/403 is
+        // always an auth rejection regardless of which WpErrorCode it carries.
+        stubResponse(wpError(WpErrorCode.InvalidParam(), statusCode = 401))
+        assertThat(validator.validate(site)).isEqualTo(ApplicationPasswordValidator.Outcome.Invalid)
+    }
+
+    @Test
+    fun `WpError with 403 status maps to Invalid regardless of code`() = runTest {
+        stubResponse(wpError(WpErrorCode.InvalidParam(), statusCode = 403))
+        assertThat(validator.validate(site)).isEqualTo(ApplicationPasswordValidator.Outcome.Invalid)
+    }
+
+    @Test
+    fun `WpError with 500 status maps to NetworkUnavailable`() = runTest {
+        // A server returning a structured WpError on 5xx is unusual but possible. Without an
+        // auth-status signal and without an auth code, treat it as transient.
+        stubResponse(wpError(WpErrorCode.InvalidParam(), statusCode = 500))
         assertThat(validator.validate(site))
             .isEqualTo(ApplicationPasswordValidator.Outcome.NetworkUnavailable)
     }
