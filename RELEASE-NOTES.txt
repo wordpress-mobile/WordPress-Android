@@ -3,6 +3,7 @@
 26.8
 -----
 * [**] Resolved an issue where the editor could become impossible to exit when it failed to load.
+* [*] Atomic sites can now create application passwords without leaving the app.
 
 26.7
 -----

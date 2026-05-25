@@ -42,7 +42,7 @@ internal class ApplicationPasswordsManager @Inject constructor(
     suspend fun getApplicationCredentials(
         site: SiteModel
     ): ApplicationPasswordCreationResult {
-        if (site.isWPCom) return ApplicationPasswordCreationResult.NotSupported(
+        if (site.isWPComSimpleSite) return ApplicationPasswordCreationResult.NotSupported(
             WPAPINetworkError(
                 BaseNetworkError(
                     GenericErrorType.UNKNOWN,
