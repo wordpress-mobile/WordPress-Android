@@ -86,7 +86,7 @@ class ApplicationPasswordValidator @Inject constructor(
             code is WpErrorCode.ApplicationPasswordNotFound ||
             code is WpErrorCode.NoAuthenticatedAppPassword
 
-    private fun isAuthStatusCode(statusCode: UShort): Boolean =
+    private fun isAuthStatusCode(statusCode: UInt): Boolean =
         statusCode.toInt() == HTTP_UNAUTHORIZED || statusCode.toInt() == HTTP_FORBIDDEN
 
     private fun isAuthErrorReason(reason: RequestExecutionErrorReason): Boolean =

@@ -55,7 +55,7 @@ class ApplicationPasswordValidatorTest : BaseUnitTest() {
     private fun wpError(code: WpErrorCode, statusCode: Int = 401) = WpRequestResult.WpError<Any>(
         errorCode = code,
         errorMessage = "msg",
-        statusCode = statusCode.toUShort(),
+        statusCode = statusCode.toUInt(),
         response = "",
         requestUrl = "https://example.com",
         requestMethod = RequestMethod.GET,
@@ -221,7 +221,7 @@ class ApplicationPasswordValidatorTest : BaseUnitTest() {
     fun `UnknownError (5xx without parseable JSON) maps to NetworkUnavailable`() = runTest {
         stubResponse(
             WpRequestResult.UnknownError<Any>(
-                statusCode = 503.toUShort(),
+                statusCode = 503.toUInt(),
                 response = "<html>Service Unavailable</html>",
                 requestUrl = "https://example.com",
                 requestMethod = RequestMethod.GET,
@@ -235,7 +235,7 @@ class ApplicationPasswordValidatorTest : BaseUnitTest() {
     fun `InvalidHttpStatusCode maps to NetworkUnavailable`() = runTest {
         stubResponse(
             WpRequestResult.InvalidHttpStatusCode<Any>(
-                statusCode = 999.toUShort(),
+                statusCode = 999.toUInt(),
                 requestUrl = "https://example.com",
                 requestMethod = RequestMethod.GET,
             )
