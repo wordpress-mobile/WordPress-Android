@@ -36,8 +36,8 @@ class NewDomainsSearchRepository @Inject constructor(
         val params = DomainSuggestionsParams(
             query = query,
             quantity = SUGGESTIONS_REQUEST_COUNT,
-            onlyWordpressdotcom = false,
-            includeWordpressdotcom = false,
+            onlyWordpressdotcom = false, // checkstyle ignore
+            includeWordpressdotcom = false, // checkstyle ignore
             includeDotblogsubdomain = false,
         )
 

@@ -178,6 +178,33 @@ class NewDomainsSearchRepositoryTest : BaseUnitTest() {
         }
 
     @Test
+    fun `GIVEN products fetch fails WHEN searchForDomains THEN return Success with null sale prices`() =
+        test {
+            mockProductsErrorThenSuggestions(
+                suggestions = listOf(
+                    DomainSuggestion.Paid(
+                        paidSuggestion(
+                            domainName = "example.com",
+                            cost = "\$50.00",
+                            productId = 6u,
+                        )
+                    )
+                )
+            )
+
+            val result = repository.searchForDomains("query")
+
+            val success =
+                result as NewDomainsSearchRepository.DomainsResult.Success
+            assertThat(success.proposedDomains).hasSize(1)
+            assertThat(success.proposedDomains[0].domain)
+                .isEqualTo("example.com")
+            assertThat(success.proposedDomains[0].price)
+                .isEqualTo("\$50.00")
+            assertThat(success.proposedDomains[0].salePrice).isNull()
+        }
+
+    @Test
     fun `GIVEN API error WHEN searchForDomains THEN return Error`() =
         test {
             mockProductsThenError()
@@ -197,6 +224,23 @@ class NewDomainsSearchRepositoryTest : BaseUnitTest() {
             .thenReturn(
                 WpRequestResult.Success(products) as WpRequestResult<Any>,
                 WpRequestResult.Success(suggestions) as WpRequestResult<Any>,
+            )
+    }
+
+    @Suppress("UNCHECKED_CAST")
+    private suspend fun mockProductsErrorThenSuggestions(
+        suggestions: List<DomainSuggestion>,
+    ) {
+        whenever(wpComApiClient.request<Any>(any()))
+            .thenReturn(
+                WpRequestResult.UnknownError<Any>(
+                    500.toUInt(),
+                    "Internal Server Error",
+                    "",
+                    RequestMethod.GET
+                ),
+                WpRequestResult.Success(suggestions)
+                    as WpRequestResult<Any>,
             )
     }
 
