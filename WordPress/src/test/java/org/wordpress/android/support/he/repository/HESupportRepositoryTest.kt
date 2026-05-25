@@ -110,7 +110,7 @@ class HESupportRepositoryTest : BaseUnitTest() {
         repository.init(testAccessToken)
 
         val errorResponse: WpRequestResult<List<SupportConversationSummary>> =
-            WpRequestResult.UnknownError(500.toUShort(), "Internal Server Error", "", RequestMethod.GET)
+            WpRequestResult.UnknownError(500.toUInt(), "Internal Server Error", "", RequestMethod.GET)
 
         whenever(
             wpComApiClient.request<List<SupportConversationSummary>>(any())
@@ -159,7 +159,7 @@ class HESupportRepositoryTest : BaseUnitTest() {
         val conversationId = 123L
 
         val errorResponse: WpRequestResult<uniffi.wp_api.SupportConversation> =
-            WpRequestResult.UnknownError(404.toUShort(), "Not Found", "", RequestMethod.GET)
+            WpRequestResult.UnknownError(404.toUInt(), "Not Found", "", RequestMethod.GET)
 
         whenever(
             wpComApiClient.request<uniffi.wp_api.SupportConversation>(any())
@@ -221,7 +221,7 @@ class HESupportRepositoryTest : BaseUnitTest() {
             WpRequestResult.WpError(
                 errorCode = WpErrorCode.Forbidden(),
                 errorMessage = "Forbidden",
-                statusCode = 403.toUShort(),
+                statusCode = 403.toUInt(),
                 response = "",
                 requestUrl = "",
                 requestMethod = RequestMethod.GET
@@ -250,7 +250,7 @@ class HESupportRepositoryTest : BaseUnitTest() {
         repository.init(testAccessToken)
 
         val errorResponse: WpRequestResult<uniffi.wp_api.SupportConversation> =
-            WpRequestResult.UnknownError(500.toUShort(), "Internal Server Error", "", RequestMethod.GET)
+            WpRequestResult.UnknownError(500.toUInt(), "Internal Server Error", "", RequestMethod.GET)
 
         whenever(
             wpComApiClient.request<uniffi.wp_api.SupportConversation>(any())
@@ -312,7 +312,7 @@ class HESupportRepositoryTest : BaseUnitTest() {
         repository.init(testAccessToken)
 
         val errorResponse: WpRequestResult<uniffi.wp_api.SupportConversation> =
-            WpRequestResult.UnknownError(500.toUShort(), "Internal Server Error", "", RequestMethod.GET)
+            WpRequestResult.UnknownError(500.toUInt(), "Internal Server Error", "", RequestMethod.GET)
 
         whenever(
             wpComApiClient.request<uniffi.wp_api.SupportConversation>(any())
