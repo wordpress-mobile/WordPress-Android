@@ -57,8 +57,6 @@ import org.wordpress.android.viewmodel.uistate.ProgressBarUiState
 import javax.inject.Inject
 import javax.inject.Named
 
-private const val DEFAULT_INDENT = 0
-
 class PageListViewModel @Inject constructor(
     private val createPageListItemLabelsUseCase: CreatePageListItemLabelsUseCase,
     private val postModelUploadUiStateUseCase: PostModelUploadUiStateUseCase,
