@@ -83,9 +83,13 @@ import org.wordpress.android.fluxc.model.asDomainModel
 import org.wordpress.android.fluxc.model.jetpacksocial.JetpackSocial
 import org.wordpress.android.fluxc.model.jetpacksocial.JetpackSocialMapper
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
+import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType
 import org.wordpress.android.fluxc.network.rest.wpapi.WPAPINetworkError
 import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIResponse
+import org.wordpress.android.fluxc.network.rest.wpapi.applicationpasswords.ApplicationPasswordCreationResult
+import org.wordpress.android.fluxc.network.rest.wpapi.applicationpasswords.ApplicationPasswordCredentials
 import org.wordpress.android.fluxc.network.rest.wpapi.applicationpasswords.ApplicationPasswordDeletionResult
+import org.wordpress.android.fluxc.network.rest.wpapi.applicationpasswords.ApplicationPasswordsConfiguration
 import org.wordpress.android.fluxc.network.rest.wpapi.applicationpasswords.ApplicationPasswordsManager
 import org.wordpress.android.fluxc.network.rest.wpapi.site.SiteWPAPIRestClient
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError
@@ -161,6 +165,7 @@ open class SiteStore @Inject constructor(
     private val coroutineEngine: CoroutineEngine
 ) : Store(dispatcher) {
     @Inject internal lateinit var applicationPasswordsManagerProvider: Provider<ApplicationPasswordsManager>
+    @Inject internal lateinit var applicationPasswordsConfigurationProvider: Provider<ApplicationPasswordsConfiguration>
 
     // Payloads
     data class CompleteQuickStartPayload(
@@ -798,6 +803,15 @@ open class SiteStore @Inject constructor(
         }
     }
 
+    data class OnApplicationPasswordCreated(
+        val site: SiteModel,
+        val credentials: ApplicationPasswordCredentials? = null,
+    ) : OnChanged<OnApplicationPasswordCreateError>() {
+        constructor(site: SiteModel, error: BaseNetworkError, notSupported: Boolean): this(site) {
+            this.error = OnApplicationPasswordCreateError(error, notSupported)
+        }
+    }
+
     class OnSiteLaunched() : OnChanged<LaunchSiteError>() {
         constructor(error: LaunchSiteError) : this() {
             this.error = error
@@ -816,6 +830,23 @@ open class SiteStore @Inject constructor(
     }
 
     class OnApplicationPasswordDeleteError(error: BaseNetworkError) : OnChangedError {
+        var errorCode: String? = null
+        var message: String
+
+        init {
+            if (error is WPAPINetworkError) {
+                errorCode = error.errorCode
+            } else if (error is WPComGsonNetworkError) {
+                errorCode = error.apiError
+            }
+            message = error.message
+        }
+    }
+
+    class OnApplicationPasswordCreateError(
+        error: BaseNetworkError,
+        val notSupported: Boolean,
+    ) : OnChangedError {
         var errorCode: String? = null
         var message: String
 
@@ -2371,6 +2402,67 @@ open class SiteStore @Inject constructor(
                 is ApplicationPasswordDeletionResult.Failure -> OnApplicationPasswordDeleted(site, result.error)
             }
         }
+
+    suspend fun createApplicationPassword(site: SiteModel): OnApplicationPasswordCreated =
+        coroutineEngine.withDefaultContext(T.API, this, "Create Application Password") {
+            if (!applicationPasswordsConfigurationProvider.get().isEnabled) {
+                return@withDefaultContext OnApplicationPasswordCreated(
+                    site,
+                    BaseNetworkError(
+                        GenericErrorType.UNKNOWN,
+                        "Application Passwords feature is not configured for this app"
+                    ),
+                    notSupported = true,
+                )
+            }
+            when (val result = applicationPasswordsManagerProvider.get().getApplicationCredentials(site)) {
+                is ApplicationPasswordCreationResult.Created -> {
+                    persistApplicationPasswordCredentials(site, result.credentials)
+                    OnApplicationPasswordCreated(site, result.credentials)
+                }
+                is ApplicationPasswordCreationResult.Existing -> {
+                    if (site.apiRestUsernamePlain.isNullOrEmpty() || site.apiRestPasswordPlain.isNullOrEmpty()) {
+                        persistApplicationPasswordCredentials(site, result.credentials)
+                    }
+                    OnApplicationPasswordCreated(site, result.credentials)
+                }
+                is ApplicationPasswordCreationResult.NotSupported ->
+                    OnApplicationPasswordCreated(site, result.originalError, notSupported = true)
+                is ApplicationPasswordCreationResult.Failure ->
+                    OnApplicationPasswordCreated(site, result.error, notSupported = false)
+            }
+        }
+
+    /**
+     * Clears stored application-password credentials (encrypted prefs) so the next call to
+     * [createApplicationPassword] mints a fresh one. Use this when a validation call against the
+     * stored credentials has failed (e.g. 401, password revoked server-side).
+     */
+    fun deleteStoredApplicationPasswordCredentials(site: SiteModel) {
+        applicationPasswordsManagerProvider.get().deleteLocalApplicationPassword(site)
+    }
+
+    private fun persistApplicationPasswordCredentials(
+        site: SiteModel,
+        credentials: ApplicationPasswordCredentials,
+    ) {
+        // Despite the "Plain" suffix, these fields are transient in-memory only — they have no
+        // `@Column` annotation. `SiteSqlUtils.insertOrUpdateSite` runs them through
+        // `encryptAPIRestCredentials` (AES/GCM/NoPadding, key in AndroidKeyStore) and persists
+        // ciphertext + IV into the *Encrypted columns. We clear the encrypted columns here so
+        // re-mints re-encrypt from the fresh plain values — `encryptAPIRestCredentials`
+        // short-circuits if the encrypted columns are already populated and would otherwise leave
+        // the stale ciphertext in place.
+        site.apply {
+            apiRestUsernamePlain = credentials.userName
+            apiRestPasswordPlain = credentials.password
+            apiRestUsernameEncrypted = ""
+            apiRestPasswordEncrypted = ""
+            apiRestUsernameIV = ""
+            apiRestPasswordIV = ""
+        }
+        emitChange(updateApplicationPassword(site))
+    }
 
     suspend fun fetchSitePlans(siteModel: SiteModel): FetchedPlansPayload {
         return if (siteModel.isUsingWpComRestApi) {

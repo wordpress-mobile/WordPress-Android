@@ -47,7 +47,7 @@ class ApplicationPasswordDialogViewModelTest : BaseUnitTest() {
     fun `onDialogConfirmed with valid URL processes successfully and emits NavigateToLogin`() = runTest {
         // Given
         whenever(applicationPasswordLoginHelper.getAuthorizationUrlComplete(eq(testAuthUrl)))
-            .thenReturn(testCompleteAuthUrl)
+            .thenReturn(ApplicationPasswordLoginHelper.DiscoveryResult.Authorized(testCompleteAuthUrl))
 
         // When & Then
         viewModel.navigationEvent.test {
@@ -103,7 +103,7 @@ class ApplicationPasswordDialogViewModelTest : BaseUnitTest() {
     fun `onDialogConfirmed with helper returning empty URL emits ShowError`() = runTest {
         // Given
         whenever(applicationPasswordLoginHelper.getAuthorizationUrlComplete(eq(testAuthUrl)))
-            .thenReturn("")
+            .thenReturn(ApplicationPasswordLoginHelper.DiscoveryResult.Failed("test failure"))
 
         // When & Then
         viewModel.navigationEvent.test {

@@ -4,6 +4,7 @@ import android.content.Context
 import com.automattic.android.tracks.crashlogging.CrashLogging
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
@@ -345,48 +346,56 @@ class ApplicationPasswordLoginHelperTest : BaseUnitTest() {
 
         val result = applicationPasswordLoginHelper.getAuthorizationUrlComplete(TEST_URL)
 
-        assertEquals("$TEST_URL_AUTH$TEST_URL_AUTH_SUFFIX", result)
+        assertEquals(
+            ApplicationPasswordLoginHelper.DiscoveryResult.Authorized("$TEST_URL_AUTH$TEST_URL_AUTH_SUFFIX"),
+            result
+        )
         verify(wpLoginClient).apiDiscovery(eq(TEST_URL))
     }
 
     @Test
-    fun `given login scenario, when api discovery fails, then return emtpy`() = runTest {
+    fun `given login scenario, when api discovery throws, then return Failed`() = runTest {
         whenever(wpLoginClient.apiDiscovery(eq(TEST_URL))).doThrow(RuntimeException("API discovery failed"))
 
         val result = applicationPasswordLoginHelper.getAuthorizationUrlComplete(TEST_URL)
 
-        assertEquals("", result)
+        assertTrue(result is ApplicationPasswordLoginHelper.DiscoveryResult.Failed)
         verify(wpLoginClient).apiDiscovery(eq(TEST_URL))
     }
 
     @Test
-    fun `given login scenario, when api discovery is empty, then return empty`() = runTest {
+    fun `given Success result but auth URL extraction fails, then return Failed`() = runTest {
         val autoDiscoveryAttemptSuccess = AutoDiscoveryAttemptSuccess(
             mock(), mock(), mock(), DiscoveredAuthenticationMechanism.ApplicationPasswords(mock())
         )
         val apiDiscoveryResult = ApiDiscoveryResult.Success(autoDiscoveryAttemptSuccess)
         whenever(wpLoginClient.apiDiscovery(eq(TEST_URL))).thenReturn(apiDiscoveryResult)
+        // DiscoverSuccessWrapper.getApplicationPasswordsAuthenticationUrl uses requireNotNull and
+        // will throw when the mocked authentication graph has no application-passwords URL — that
+        // throw lands in the catch block in getAuthorizationUrlComplete and surfaces as Failed.
+
         val result = applicationPasswordLoginHelper.getAuthorizationUrlComplete(TEST_URL)
 
-        assertEquals("", result)
+        assertTrue(result is ApplicationPasswordLoginHelper.DiscoveryResult.Failed)
         verify(wpLoginClient).apiDiscovery(eq(TEST_URL))
     }
 
 
     @Test
-    fun `given login scenario, when api discovery is failed, then return empty`() = runTest {
-        whenever(wpLoginClient.apiDiscovery(eq(TEST_URL)))
-            .thenReturn(
-                ApiDiscoveryResult.FailureParseSiteUrl(
-                    ParseUrlException.Generic("")
+    fun `given login scenario, when api discovery is failed, then return Failed with wordpress-rs message`() =
+        runTest {
+            whenever(wpLoginClient.apiDiscovery(eq(TEST_URL)))
+                .thenReturn(
+                    ApiDiscoveryResult.FailureParseSiteUrl(
+                        ParseUrlException.Generic("")
+                    )
                 )
-            )
 
-        val result = applicationPasswordLoginHelper.getAuthorizationUrlComplete(TEST_URL)
+            val result = applicationPasswordLoginHelper.getAuthorizationUrlComplete(TEST_URL)
 
-        assertEquals("", result)
-        verify(wpLoginClient).apiDiscovery(eq(TEST_URL))
-    }
+            assertTrue(result is ApplicationPasswordLoginHelper.DiscoveryResult.Failed)
+            verify(wpLoginClient).apiDiscovery(eq(TEST_URL))
+        }
 
     @Test
     fun `maskUrl with no dot returns url unmasked`() {
