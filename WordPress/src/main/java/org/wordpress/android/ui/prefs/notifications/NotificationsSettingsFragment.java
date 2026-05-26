@@ -164,7 +164,7 @@ public class NotificationsSettingsFragment extends PreferenceFragment
 
     private void removeSightAndSounds() {
         // on API26 we removed the Sight & Sounds category altogether, as it can always be
-        // overriden by the user in the Device settings, and the settings here
+        // overridden by the user in the Device settings, and the settings here
         // wouldn't either reflect nor have any effect anyway.
         PreferenceScreen preferenceScreen =
                 (PreferenceScreen) findPreference(getActivity().getString(R.string.wp_pref_notifications_root));
