@@ -597,7 +597,7 @@ class SiteRestClientTest {
     }
 
     @Test
-    fun `given not authenticated, when all domains are requested, then retun auth required error`() = test {
+    fun `given not authenticated, when all domains are requested, then return auth required error`() = test {
         val tokenErrorMessage = "An active access token must be used to query information about the current user."
         val error = WPComGsonNetworkError(BaseNetworkError(GenericErrorType.NOT_AUTHENTICATED, tokenErrorMessage))
         initAllDomainsResponse(error = error)
