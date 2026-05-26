@@ -1878,15 +1878,24 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
         updateAndSavePostAsync(listener, isFinishing)
     }
 
+    @Suppress("ReturnCount")
     private fun updateFromEditor(oldContent: String, isFinishing: Boolean = false): UpdateFromEditor {
         editorFragment?.let {
+            // Don't read title/content from a stalled editor — doing so would
+            // overwrite the in-memory PostModel with empty strings, and the
+            // postChanged observer would then persist that empty state to
+            // SQLite. See issue #22878.
+            if (!it.isEditorReady()) {
+                AppLog.w(AppLog.T.EDITOR, "Skipping content update: Gutenberg editor not ready")
+                return UpdateFromEditor.Failed(java.lang.Exception("Gutenberg editor not ready"))
+            }
             return try {
                 // To reduce redundant bridge events emitted to the Gutenberg editor, we get title and content at once
                 val titleAndContent = it.getTitleAndContent(oldContent, isFinishing)
                 val title = titleAndContent.first as String
                 val content = titleAndContent.second as String
                 PostFields(title, content)
-            } catch (e: EditorFragmentAbstract.EditorFragmentNotAddedException) {
+            } catch (e: GutenbergKitEditorFragmentBase.EditorFragmentNotAddedException) {
                 AppLog.e(AppLog.T.EDITOR, "Impossible to save the post, we weren't able to update it.")
                 UpdateFromEditor.Failed(e)
             }

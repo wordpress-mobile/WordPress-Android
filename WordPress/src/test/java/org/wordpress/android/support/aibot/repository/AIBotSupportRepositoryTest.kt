@@ -125,7 +125,7 @@ class AIBotSupportRepositoryTest : BaseUnitTest() {
     @Test
     fun `loadConversations returns empty list on error`() = test {
         val errorResponse: WpRequestResult<Any> = WpRequestResult.UnknownError(
-            statusCode = 500u.toUShort(),
+            statusCode = 500u,
             response = "",
             requestUrl = "",
             requestMethod = RequestMethod.GET
@@ -145,7 +145,7 @@ class AIBotSupportRepositoryTest : BaseUnitTest() {
     @Test
     fun `loadConversation returns null on error`() = test {
         val errorResponse: WpRequestResult<Any> = WpRequestResult.UnknownError(
-            statusCode = 404u.toUShort(),
+            statusCode = 404u,
             response = "",
             requestUrl = "",
             requestMethod = RequestMethod.GET
@@ -200,7 +200,7 @@ class AIBotSupportRepositoryTest : BaseUnitTest() {
     @Test
     fun `createNewConversation returns null on error`() = test {
         val errorResponse: WpRequestResult<Any> = WpRequestResult.UnknownError(
-            statusCode = 500u.toUShort(),
+            statusCode = 500u,
             response = "",
             requestUrl = "",
             requestMethod = RequestMethod.GET
@@ -258,7 +258,7 @@ class AIBotSupportRepositoryTest : BaseUnitTest() {
     @Test
     fun `sendMessageToConversation returns null on error`() = test {
         val errorResponse: WpRequestResult<Any> = WpRequestResult.UnknownError(
-            statusCode = 500u.toUShort(),
+            statusCode = 500u,
             response = "",
             requestUrl = "",
             requestMethod = RequestMethod.GET

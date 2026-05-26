@@ -42,6 +42,7 @@ import org.wordpress.gutenberg.GutenbergView.TitleAndContentCallback
 import org.wordpress.gutenberg.Media
 import org.wordpress.gutenberg.model.EditorConfiguration
 import java.util.concurrent.CountDownLatch
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class GutenbergKitEditorFragment : GutenbergKitEditorFragmentBase() {
@@ -50,6 +51,9 @@ class GutenbergKitEditorFragment : GutenbergKitEditorFragmentBase() {
 
     private var gutenbergView: GutenbergView? = null
     private var isHtmlModeEnabled = false
+
+    @Volatile
+    private var editorReady = false
 
     private val textWatcher = LiveTextWatcher()
     private var historyChangeListener: HistoryChangeListener? = null
@@ -257,7 +261,10 @@ class GutenbergKitEditorFragment : GutenbergKitEditorFragmentBase() {
             }
         )
 
+        editorReady = false
+
         gutenbergView.setEditorDidBecomeAvailable {
+            editorReady = true
             mEditorFragmentListener.onEditorFragmentContentReady(
                 ArrayList<Any?>(), false
             )
@@ -434,8 +441,19 @@ class GutenbergKitEditorFragment : GutenbergKitEditorFragmentBase() {
         )
 
         val finalResult = try {
-            latch.await()
-            result[0]
+            val completed = latch.await(
+                GET_TITLE_AND_CONTENT_TIMEOUT_SECONDS, TimeUnit.SECONDS
+            )
+            if (!completed) {
+                AppLog.w(
+                    AppLog.T.EDITOR,
+                    "Timed out waiting for title and content from " +
+                        "Gutenberg editor"
+                )
+                null
+            } else {
+                result[0]
+            }
         } catch (e: InterruptedException) {
             AppLog.w(
                 AppLog.T.EDITOR,
@@ -446,7 +464,10 @@ class GutenbergKitEditorFragment : GutenbergKitEditorFragmentBase() {
             null
         }
 
-        return finalResult ?: Pair("", "")
+        // Surface failure to the caller as a checked exception so it can
+        // skip mutating the PostModel rather than persisting empty content
+        // over the user's existing draft. See issue #22878.
+        return finalResult ?: throw EditorFragmentNotAddedException()
     }
 
     override fun getEditorName(): String {
@@ -517,6 +538,8 @@ class GutenbergKitEditorFragment : GutenbergKitEditorFragmentBase() {
         super.onDestroy()
     }
 
+    fun isEditorReady(): Boolean = editorReady
+
     fun setXPostsEnabled(enabled: Boolean) {
         isXPostsEnabled = enabled
     }
@@ -550,6 +573,8 @@ class GutenbergKitEditorFragment : GutenbergKitEditorFragmentBase() {
 
         private const val CAPTURE_PHOTO_PERMISSION_REQUEST_CODE = 101
         private const val CAPTURE_VIDEO_PERMISSION_REQUEST_CODE = 102
+
+        private const val GET_TITLE_AND_CONTENT_TIMEOUT_SECONDS = 5L
 
         fun newInstance(
             configuration: EditorConfiguration,

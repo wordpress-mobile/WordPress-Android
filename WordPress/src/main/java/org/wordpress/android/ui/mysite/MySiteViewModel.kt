@@ -45,7 +45,7 @@ import javax.inject.Named
 import org.wordpress.android.ui.mysite.cards.applicationpassword.ApplicationPasswordViewModelSlice
 import org.wordpress.android.ui.mysite.items.listitem.SiteCapabilityChecker
 import org.wordpress.android.ui.utils.UiString
-import org.wordpress.android.repositories.EditorSettingsRepository
+import org.wordpress.android.ui.mysite.cards.connectivity.SiteConnectivityBannerViewModelSlice
 
 @Suppress("LargeClass", "LongMethod", "LongParameterList")
 class MySiteViewModel @Inject constructor(
@@ -66,8 +66,8 @@ class MySiteViewModel @Inject constructor(
     private val dashboardItemsViewModelSlice: DashboardItemsViewModelSlice,
     private val applicationPasswordViewModelSlice: ApplicationPasswordViewModelSlice,
     private val siteCapabilityChecker: SiteCapabilityChecker,
-    private val editorSettingsRepository: EditorSettingsRepository,
     private val gutenbergEditorPreloader: GutenbergEditorPreloader,
+    private val siteConnectivityBannerViewModelSlice: SiteConnectivityBannerViewModelSlice,
 ) : ScopedViewModel(mainDispatcher) {
     private val _onSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
     private val _onNavigation = MutableLiveData<Event<SiteNavigationAction>>()
@@ -77,12 +77,6 @@ class MySiteViewModel @Inject constructor(
     /* Capture and track the site selected event so we can circumvent refreshing sources on resume
        as they're already built on site select. */
     private var isSiteSelected = false
-
-    /* Editor capabilities rarely change, so once we've successfully fetched them for a site we
-       skip subsequent non-user-initiated fetches in this ViewModel session. Failed fetches do
-       not populate this set, so a transient network failure recovers on the next onResume.
-       User-initiated refreshes (e.g. pull-to-refresh) always bypass this gate. */
-    private val fetchedCapabilitiesForSite = mutableSetOf<Int>()
 
     val onScrollTo: MutableLiveData<Event<Int>> = MutableLiveData()
 
@@ -132,15 +126,17 @@ class MySiteViewModel @Inject constructor(
         applicationPasswordViewModelSlice.uiModel,
         accountDataViewModelSlice.uiModel,
         dashboardCardsViewModelSlice.uiModel,
-        dashboardItemsViewModelSlice.uiModel
+        dashboardItemsViewModelSlice.uiModel,
+        siteConnectivityBannerViewModelSlice.uiModel,
     ) { siteInfoHeaderCard,
         applicationPAsswordModel,
         accountData,
         dashboardCards,
-        siteItems ->
+        siteItems,
+        connectivityBanner ->
         val nonNullSiteInfoHeaderCard =
             siteInfoHeaderCard ?: return@merge buildNoSiteState(accountData?.url, accountData?.name)
-        val headerList = listOfNotNull(nonNullSiteInfoHeaderCard, applicationPAsswordModel)
+        val headerList = listOfNotNull(nonNullSiteInfoHeaderCard, applicationPAsswordModel, connectivityBanner)
         return@merge if (!dashboardCards.isNullOrEmpty<MySiteCardAndItem>())
             SiteSelected(dashboardData = headerList + dashboardCards)
         else if (!siteItems.isNullOrEmpty<MySiteCardAndItem>())
@@ -156,6 +152,7 @@ class MySiteViewModel @Inject constructor(
         dashboardCardsViewModelSlice.initialize(viewModelScope)
         dashboardItemsViewModelSlice.initialize(viewModelScope)
         accountDataViewModelSlice.initialize(viewModelScope)
+        siteConnectivityBannerViewModelSlice.initialize(viewModelScope)
     }
 
     private fun shouldShowDashboard(site: SiteModel): Boolean {
@@ -176,12 +173,10 @@ class MySiteViewModel @Inject constructor(
                 siteCapabilityChecker.clearCacheForSite(site.siteId)
             }
             buildDashboardOrSiteItems(site, forceRefresh = isPullToRefresh)
-            launch {
-                fetchEditorCapabilitiesWithSnackbar(
-                    site,
-                    isUserInitiated = isPullToRefresh
-                )
-            }
+            siteConnectivityBannerViewModelSlice.fetchCapabilities(
+                site,
+                isUserInitiated = isPullToRefresh
+            )
         } ?: run {
             accountDataViewModelSlice.onRefresh()
         }
@@ -193,42 +188,12 @@ class MySiteViewModel @Inject constructor(
         selectedSiteRepository.updateSiteSettingsIfNecessary()
         selectedSiteRepository.getSelectedSite()?.let {
             buildDashboardOrSiteItems(it)
-            launch {
-                fetchEditorCapabilitiesWithSnackbar(
-                    it,
-                    isUserInitiated = false
-                )
-            }
+            siteConnectivityBannerViewModelSlice.fetchCapabilities(
+                it,
+                isUserInitiated = false
+            )
         } ?: run {
             accountDataViewModelSlice.onResume()
-        }
-    }
-
-    private suspend fun fetchEditorCapabilitiesWithSnackbar(
-        site: SiteModel,
-        isUserInitiated: Boolean
-    ) {
-        if (site.id in fetchedCapabilitiesForSite && !isUserInitiated) {
-            return
-        }
-        val ok = editorSettingsRepository
-            .fetchEditorCapabilitiesForSite(site)
-        if (ok) {
-            fetchedCapabilitiesForSite.add(site.id)
-        }
-        val hasCache = editorSettingsRepository
-            .hasCachedCapabilities(site)
-        if (!ok && (isUserInitiated || !hasCache)) {
-            _onSnackbarMessage.postValue(
-                Event(
-                    SnackbarMessageHolder(
-                        UiString.UiStringRes(
-                            R.string
-                                .site_settings_fetch_failed
-                        )
-                    )
-                )
-            )
         }
     }
 
@@ -352,6 +317,7 @@ class MySiteViewModel @Inject constructor(
     private fun onSitePicked(site: SiteModel) {
         siteInfoHeaderCardViewModelSlice.buildCard(site)
         applicationPasswordViewModelSlice.buildCard(site)
+        siteConnectivityBannerViewModelSlice.clearBanner()
         dashboardItemsViewModelSlice.clearValue()
         dashboardCardsViewModelSlice.clearValue()
         dashboardCardsViewModelSlice.resetShownTracker()
