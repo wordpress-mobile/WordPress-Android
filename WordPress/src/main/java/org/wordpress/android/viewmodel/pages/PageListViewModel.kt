@@ -57,7 +57,6 @@ import org.wordpress.android.viewmodel.uistate.ProgressBarUiState
 import javax.inject.Inject
 import javax.inject.Named
 
-private const val MAX_TOPOLOGICAL_PAGE_COUNT = 100
 private const val DEFAULT_INDENT = 0
 
 class PageListViewModel @Inject constructor(
@@ -317,23 +316,16 @@ class PageListViewModel @Inject constructor(
     }
 
     private fun preparePublishedPages(pages: List<PageModel>, actionsEnabled: Boolean): List<PageItem> {
-        val shouldSortTopologically = pages.size < MAX_TOPOLOGICAL_PAGE_COUNT
-        val sortedPages = (if (shouldSortTopologically) {
-            topologicalSort(pages.sortedBy { !(it.isHomepage && it.parent == null) }, listType = PUBLISHED)
-        } else {
-            pages.sortedByDescending { it.date }.sortedBy { !it.isHomepage }
-        })
+        val sortedPages = topologicalSort(
+            pages.sortedBy { !(it.isHomepage && it.parent == null) },
+            listType = PUBLISHED
+        )
 
         val showVirtualHomepage = siteEditorMVPFeatureConfig.isEnabled() && isBlockBasedTheme.value
 
         return sortedPages
             .let { if (showVirtualHomepage) it.filterNot { page -> page.isHomepage } else it }
             .map {
-                val pageItemIndent = if (shouldSortTopologically) {
-                    getPageItemIndent(it)
-                } else {
-                    DEFAULT_INDENT
-                }
                 val itemUiStateData = createItemUiStateData(it)
                 val author = getAuthorName(it.post)
                 PublishedPage(
@@ -345,7 +337,7 @@ class PageListViewModel @Inject constructor(
                     date = it.date,
                     labels = itemUiStateData.labels,
                     labelsColor = itemUiStateData.labelsColor,
-                    indent = pageItemIndent,
+                    indent = getPageItemIndent(it),
                     imageUrl = getFeaturedImageUrl(it.featuredImageId),
                     actions = itemUiStateData.actions,
                     actionsEnabled = actionsEnabled,
@@ -458,18 +450,25 @@ class PageListViewModel @Inject constructor(
 
     private fun topologicalSort(
         pages: List<PageModel>,
-        listType: PageListType,
-        parent: PageModel? = null
+        listType: PageListType
     ): List<PageModel> {
-        val sortedList = mutableListOf<PageModel>()
-        pages.filter {
-            it.parent?.remoteId == parent?.remoteId ||
-                    (parent == null && !listType.pageStatuses.contains(it.parent?.status))
-        }.forEach {
-            sortedList += it
-            sortedList += topologicalSort(pages, listType, it)
+        val isRoot = { page: PageModel ->
+            page.parent?.remoteId == null ||
+                !listType.pageStatuses.contains(page.parent?.status)
         }
-        return sortedList
+        val childrenByParentId = pages
+            .filterNot { isRoot(it) }
+            .groupBy { it.parent?.remoteId }
+        val roots = pages.filter { isRoot(it) }
+
+        fun collect(page: PageModel, result: MutableList<PageModel>) {
+            result += page
+            childrenByParentId[page.remoteId]?.forEach {
+                collect(it, result)
+            }
+        }
+
+        return buildList { roots.forEach { collect(it, this) } }
     }
 
     private fun getPageItemIndent(page: PageModel?): Int {
