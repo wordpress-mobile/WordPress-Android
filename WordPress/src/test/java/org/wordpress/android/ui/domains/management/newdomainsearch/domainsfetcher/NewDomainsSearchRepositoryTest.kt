@@ -2,306 +2,314 @@ package org.wordpress.android.ui.domains.management.newdomainsearch.domainsfetch
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.any
-import org.mockito.kotlin.mock
-import org.mockito.kotlin.times
-import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
-import org.wordpress.android.Constants
-import org.wordpress.android.fluxc.model.products.Product
-import org.wordpress.android.fluxc.network.rest.wpcom.site.DomainSuggestionResponse
-import org.wordpress.android.fluxc.store.ProductsStore
-import org.wordpress.android.fluxc.store.SiteStore
+import org.wordpress.android.fluxc.store.AccountStore
+import org.wordpress.android.networking.restapi.WpComApiClientProvider
+import rs.wordpress.api.kotlin.WpComApiClient
+import rs.wordpress.api.kotlin.WpRequestResult
+import uniffi.wp_api.DomainSuggestion
+import uniffi.wp_api.PaidDomainSuggestion
+import uniffi.wp_api.Product
+import uniffi.wp_api.RequestMethod
 
 @Suppress("MaxLineLength")
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class NewDomainsSearchRepositoryTest : BaseUnitTest() {
     @Mock
-    private lateinit var productsStore: ProductsStore
+    private lateinit var wpComApiClientProvider: WpComApiClientProvider
 
     @Mock
-    private lateinit var suggestedDomainsFetcher: SuggestedDomainsFetcher
+    private lateinit var accountStore: AccountStore
 
-    @InjectMocks
+    @Mock
+    private lateinit var wpComApiClient: WpComApiClient
+
     private lateinit var repository: NewDomainsSearchRepository
 
-    @Test
-    fun `GIVEN successfully fetched products with sale price available and suggestions WHEN searchForDomains THEN return DomainsResult Success with suggestions`() =
-        test {
-            mockProductWithSaleResponse()
-            mockSuccessfulDomainFetchResponse()
-
-            val result = repository.searchForDomains("query")
-
-            assertThat(result).isEqualTo(
-                NewDomainsSearchRepository.DomainsResult.Success(
-                    proposedDomains = listOf(
-                        ProposedDomain(
-                            productId = 0,
-                            domain = "example.com",
-                            price = "USD 50",
-                            salePrice = "USD 10",
-                            supportsPrivacy = true
-                        )
-                    )
-                )
-            )
-        }
-
-    @Test
-    fun `GIVEN product with sale does not appear in domains fetch response WHEN searchForDomains THEN return DomainsResult Success with suggestions with no sale`() =
-        test {
-            mockProductWithSaleResponse(productId = 1)
-            mockSuccessfulDomainFetchResponse()
-
-            val result = repository.searchForDomains("query")
-
-            assertThat(result).isEqualTo(
-                NewDomainsSearchRepository.DomainsResult.Success(
-                    proposedDomains = listOf(
-                        ProposedDomain(
-                            productId = 0,
-                            domain = "example.com",
-                            price = "USD 50",
-                            salePrice = null,
-                            supportsPrivacy = true
-                        )
-                    )
-                )
-            )
-        }
-
-    @Suppress("LongMethod")
-    @Test
-    fun `GIVEN few domains with different relevance WHEN searchForDomains THEN sort domains by descending by relevance`() =
-        test {
-            mockFetchProductsError()
-            whenever(suggestedDomainsFetcher.fetch(any())).thenReturn(
-                SiteStore.OnSuggestedDomains(
-                    query = "query",
-                    suggestions = listOf(
-                        DomainSuggestionResponse().apply {
-                            product_id = 0
-                            domain_name = "first.com"
-                            is_free = false
-                            relevance = 1f
-                            cost = "USD 30"
-                            supports_privacy = true
-                        },
-                        DomainSuggestionResponse().apply {
-                            product_id = 1
-                            domain_name = "second.com"
-                            is_free = false
-                            relevance = 2f
-                            cost = "USD 40"
-                            supports_privacy = true
-                        },
-                        DomainSuggestionResponse().apply {
-                            product_id = 2
-                            domain_name = "third.com"
-                            is_free = false
-                            relevance = 0f
-                            cost = "USD 50"
-                            supports_privacy = true
-                        },
-                    )
-                )
-            )
-
-            val result = repository.searchForDomains("query")
-
-            assertThat(result).isEqualTo(
-                NewDomainsSearchRepository.DomainsResult.Success(
-                    proposedDomains = listOf(
-                        ProposedDomain(
-                            productId = 1,
-                            domain = "second.com",
-                            price = "USD 40",
-                            salePrice = null,
-                            supportsPrivacy = true
-                        ),
-                        ProposedDomain(
-                            productId = 0,
-                            domain = "first.com",
-                            price = "USD 30",
-                            salePrice = null,
-                            supportsPrivacy = true
-                        ),
-                        ProposedDomain(productId = 2,
-                            domain = "third.com",
-                            price = "USD 50",
-                            salePrice = null,
-                            supportsPrivacy = true
-                        ),
-                    )
-                )
-            )
-        }
-
-    @Test
-    fun `GIVEN few domains with a free domain WHEN searchForDomains THEN filter out free domains`() =
-        test {
-            mockFetchProductsError()
-            whenever(suggestedDomainsFetcher.fetch(any())).thenReturn(
-                SiteStore.OnSuggestedDomains(
-                    query = "query",
-                    suggestions = listOf(
-                        DomainSuggestionResponse().apply {
-                            product_id = 0
-                            domain_name = "first.com"
-                            is_free = false
-                            relevance = 1f
-                            cost = "USD 30"
-                            supports_privacy = true
-                        },
-                        DomainSuggestionResponse().apply {
-                            product_id = 1
-                            domain_name = "second.com"
-                            is_free = false
-                            relevance = 2f
-                            cost = "USD 40"
-                            supports_privacy = true
-                        },
-                        DomainSuggestionResponse().apply {
-                            product_id = 2
-                            domain_name = "third.com"
-                            is_free = true
-                            relevance = 0f
-                            cost = "USD 50"
-                            supports_privacy = true
-                        },
-                    )
-                )
-            )
-
-            val result = repository.searchForDomains("query")
-
-            assertThat(result).isEqualTo(
-                NewDomainsSearchRepository.DomainsResult.Success(
-                    proposedDomains = listOf(
-                        ProposedDomain(
-                            productId = 1,
-                            domain = "second.com",
-                            price = "USD 40",
-                            salePrice = null,
-                            supportsPrivacy = true
-                        ),
-                        ProposedDomain(
-                            productId = 0,
-                            domain = "first.com",
-                            price = "USD 30",
-                            salePrice = null,
-                            supportsPrivacy = true
-                        ),
-                    )
-                )
-            )
-        }
-
-    @Test
-    fun `GIVEN product fetch with error and successful suggestions response WHEN searchForDomains THEN return DomainsResult Success with suggestions with no sale`() =
-        test {
-            mockFetchProductsError()
-            mockSuccessfulDomainFetchResponse()
-
-            val result = repository.searchForDomains("query")
-
-            assertThat(result).isEqualTo(
-                NewDomainsSearchRepository.DomainsResult.Success(
-                    proposedDomains = listOf(
-                        ProposedDomain(
-                            productId = 0,
-                            domain = "example.com",
-                            price = "USD 50",
-                            salePrice = null,
-                            supportsPrivacy = true
-                        )
-                    )
-                )
-            )
-        }
-
-    @Test
-    fun `GIVEN product fetch with error and suggestions with error WHEN searchForDomains THEN return DomainsResult Error`() =
-        test {
-            mockFetchProductsError()
-            mockDomainsFetchError()
-
-            val result = repository.searchForDomains("query")
-
-            assertThat(result).isEqualTo(NewDomainsSearchRepository.DomainsResult.Error)
-        }
-
-    @Test
-    fun `GIVEN two search calls WHEN searchForDomains THEN fetch products only once`() =
-        test {
-            mockProductWithSaleResponse()
-            mockSuccessfulDomainFetchResponse("incorrect query")
-
-            val result = repository.searchForDomains("query")
-
-            assertThat(result).isEqualTo(NewDomainsSearchRepository.DomainsResult.Error)
-        }
-
-    @Test
-    fun `GIVEN event query is not equal to onDomainSuggestionFetched query argument WHEN searchForDomains THEN return error`() =
-        test {
-            mockProductWithSaleResponse()
-            mockSuccessfulDomainFetchResponse()
-
-            repository.searchForDomains("query")
-            repository.searchForDomains("query")
-
-            verify(productsStore, times(1)).fetchProducts(Constants.TYPE_DOMAINS_PRODUCT)
-        }
-
-    private suspend fun mockProductWithSaleResponse(productId: Int = 0) {
-        whenever(productsStore.fetchProducts(Constants.TYPE_DOMAINS_PRODUCT)).thenReturn(
-            ProductsStore.OnProductsFetched(
-                products = listOf(Product(productId = productId, combinedSaleCostDisplay = "USD 10",))
-            )
+    @Before
+    fun setUp() {
+        whenever(accountStore.accessToken).thenReturn("test-token")
+        whenever(wpComApiClientProvider.getWpComApiClient("test-token"))
+            .thenReturn(wpComApiClient)
+        repository = NewDomainsSearchRepository(
+            wpComApiClientProvider,
+            accountStore
         )
     }
 
-    private suspend fun mockFetchProductsError() {
-        whenever(productsStore.fetchProducts(Constants.TYPE_DOMAINS_PRODUCT)).thenReturn(
-            ProductsStore.OnProductsFetched(error = mock())
-        )
-    }
-
-    private suspend fun mockSuccessfulDomainFetchResponse(
-        query: String = "query",
-        productId: Int = 0,
-        domainName: String = "example.com",
-        isFree: Boolean = false,
-    ) {
-        whenever(suggestedDomainsFetcher.fetch(any())).thenReturn(
-            SiteStore.OnSuggestedDomains(
-                query = query,
+    @Test
+    fun `GIVEN product with sale WHEN searchForDomains THEN sale price comes from product`() =
+        test {
+            mockProductsThenSuggestions(
+                products = mapOf(
+                    "domain_reg" to testProduct(
+                        productId = 6u,
+                        combinedSaleCostDisplay = "$7.00"
+                    )
+                ),
                 suggestions = listOf(
-                    DomainSuggestionResponse().apply {
-                        product_id = productId
-                        domain_name = domainName
-                        is_free = isFree
-                        relevance = 0f
-                        cost = "USD 50"
-                        supports_privacy = true
-                    }
+                    DomainSuggestion.Paid(
+                        paidSuggestion(
+                            domainName = "example.com",
+                            cost = "\$50.00",
+                            productId = 6u,
+                        )
+                    )
                 )
             )
-        )
+
+            val result = repository.searchForDomains("query")
+
+            val success = result as NewDomainsSearchRepository.DomainsResult.Success
+            assertThat(success.proposedDomains).hasSize(1)
+            assertThat(success.proposedDomains[0].domain).isEqualTo("example.com")
+            assertThat(success.proposedDomains[0].price).isEqualTo("\$50.00")
+            assertThat(success.proposedDomains[0].salePrice).isEqualTo("$7.00")
+        }
+
+    @Test
+    fun `GIVEN product without sale WHEN searchForDomains THEN sale price is null`() =
+        test {
+            mockProductsThenSuggestions(
+                products = mapOf(
+                    "domain_reg" to testProduct(
+                        productId = 6u,
+                        combinedSaleCostDisplay = null
+                    )
+                ),
+                suggestions = listOf(
+                    DomainSuggestion.Paid(
+                        paidSuggestion(
+                            domainName = "example.com",
+                            cost = "\$50.00",
+                            productId = 6u,
+                        )
+                    )
+                )
+            )
+
+            val result = repository.searchForDomains("query")
+
+            val success = result as NewDomainsSearchRepository.DomainsResult.Success
+            assertThat(success.proposedDomains[0].salePrice).isNull()
+        }
+
+    @Test
+    fun `GIVEN no matching product WHEN searchForDomains THEN sale price is null`() =
+        test {
+            mockProductsThenSuggestions(
+                products = mapOf(
+                    "other_product" to testProduct(
+                        productId = 99u,
+                        combinedSaleCostDisplay = "$5.00"
+                    )
+                ),
+                suggestions = listOf(
+                    DomainSuggestion.Paid(
+                        paidSuggestion(
+                            domainName = "example.com",
+                            productId = 6u,
+                        )
+                    )
+                )
+            )
+
+            val result = repository.searchForDomains("query")
+
+            val success = result as NewDomainsSearchRepository.DomainsResult.Success
+            assertThat(success.proposedDomains[0].salePrice).isNull()
+        }
+
+    @Test
+    fun `GIVEN domains with different relevance WHEN searchForDomains THEN sort descending by relevance`() =
+        test {
+            mockProductsThenSuggestions(
+                suggestions = listOf(
+                    DomainSuggestion.Paid(
+                        paidSuggestion(domainName = "first.com", relevance = 1.0)
+                    ),
+                    DomainSuggestion.Paid(
+                        paidSuggestion(domainName = "second.com", relevance = 2.0)
+                    ),
+                    DomainSuggestion.Paid(
+                        paidSuggestion(domainName = "third.com", relevance = 0.0)
+                    ),
+                )
+            )
+
+            val result = repository.searchForDomains("query")
+
+            val success = result as NewDomainsSearchRepository.DomainsResult.Success
+            assertThat(success.proposedDomains.map { it.domain })
+                .containsExactly("second.com", "first.com", "third.com")
+        }
+
+    @Test
+    fun `GIVEN mix of free and paid domains WHEN searchForDomains THEN filter out free domains`() =
+        test {
+            mockProductsThenSuggestions(
+                suggestions = listOf(
+                    DomainSuggestion.Paid(
+                        paidSuggestion(domainName = "paid.com", relevance = 1.0)
+                    ),
+                    DomainSuggestion.Free(
+                        uniffi.wp_api.FreeDomainSuggestion(
+                            domainName = "free.wordpress.com",
+                            cost = "Free",
+                            isFree = true
+                        )
+                    ),
+                )
+            )
+
+            val result = repository.searchForDomains("query")
+
+            val success = result as NewDomainsSearchRepository.DomainsResult.Success
+            assertThat(success.proposedDomains).hasSize(1)
+            assertThat(success.proposedDomains[0].domain).isEqualTo("paid.com")
+        }
+
+    @Test
+    fun `GIVEN products fetch fails WHEN searchForDomains THEN return Success with null sale prices`() =
+        test {
+            mockProductsErrorThenSuggestions(
+                suggestions = listOf(
+                    DomainSuggestion.Paid(
+                        paidSuggestion(
+                            domainName = "example.com",
+                            cost = "\$50.00",
+                            productId = 6u,
+                        )
+                    )
+                )
+            )
+
+            val result = repository.searchForDomains("query")
+
+            val success =
+                result as NewDomainsSearchRepository.DomainsResult.Success
+            assertThat(success.proposedDomains).hasSize(1)
+            assertThat(success.proposedDomains[0].domain)
+                .isEqualTo("example.com")
+            assertThat(success.proposedDomains[0].price)
+                .isEqualTo("\$50.00")
+            assertThat(success.proposedDomains[0].salePrice).isNull()
+        }
+
+    @Test
+    fun `GIVEN API error WHEN searchForDomains THEN return Error`() =
+        test {
+            mockProductsThenError()
+
+            val result = repository.searchForDomains("query")
+
+            assertThat(result)
+                .isEqualTo(NewDomainsSearchRepository.DomainsResult.Error)
+        }
+
+    @Suppress("UNCHECKED_CAST")
+    private suspend fun mockProductsThenSuggestions(
+        products: Map<String, Product> = emptyMap(),
+        suggestions: List<DomainSuggestion>,
+    ) {
+        whenever(wpComApiClient.request<Any>(any()))
+            .thenReturn(
+                WpRequestResult.Success(products) as WpRequestResult<Any>,
+                WpRequestResult.Success(suggestions) as WpRequestResult<Any>,
+            )
     }
 
-    private suspend fun mockDomainsFetchError() {
-        whenever(suggestedDomainsFetcher.fetch(any())).thenReturn(
-            SiteStore.OnSuggestedDomains("query", emptyList()).apply { error = mock() }
-        )
+    @Suppress("UNCHECKED_CAST")
+    private suspend fun mockProductsErrorThenSuggestions(
+        suggestions: List<DomainSuggestion>,
+    ) {
+        whenever(wpComApiClient.request<Any>(any()))
+            .thenReturn(
+                WpRequestResult.UnknownError<Any>(
+                    500.toUInt(),
+                    "Internal Server Error",
+                    "",
+                    RequestMethod.GET
+                ),
+                WpRequestResult.Success(suggestions)
+                    as WpRequestResult<Any>,
+            )
     }
+
+    @Suppress("UNCHECKED_CAST")
+    private suspend fun mockProductsThenError() {
+        whenever(wpComApiClient.request<Any>(any()))
+            .thenReturn(
+                WpRequestResult.Success(emptyMap<String, Product>()) as WpRequestResult<Any>,
+                WpRequestResult.UnknownError<Any>(
+                    500.toUInt(),
+                    "Internal Server Error",
+                    "",
+                    RequestMethod.GET
+                ),
+            )
+    }
+
+    private fun paidSuggestion(
+        domainName: String = "example.com",
+        relevance: Double = 0.0,
+        cost: String = "\$18.00",
+        productId: ULong = 6u,
+        supportsPrivacy: Boolean = true,
+    ) = PaidDomainSuggestion(
+        domainName = domainName,
+        relevance = relevance,
+        supportsPrivacy = supportsPrivacy,
+        vendor = "donuts",
+        matchReasons = listOf("tld-common"),
+        maxRegYears = 10u,
+        multiYearRegAllowed = true,
+        productId = productId,
+        productSlug = "domain_reg",
+        cost = cost,
+        renewCost = cost,
+        renewRawPrice = 1800L,
+        rawPrice = 1800L,
+        currencyCode = "USD",
+        saleCost = null,
+        hstsRequired = null,
+        policyNotices = emptyList(),
+    )
+
+    private fun testProduct(
+        productId: ULong = 6u,
+        combinedSaleCostDisplay: String? = null,
+    ) = Product(
+        productId = productId,
+        productName = "Domain Registration",
+        productSlug = "domain_reg",
+        description = "Register a domain",
+        productType = "domains",
+        available = true,
+        billingProductSlug = "domain_reg",
+        isDomainRegistration = true,
+        costDisplay = "$18.00",
+        combinedCostDisplay = "$18",
+        cost = 1800L,
+        costSmallestUnit = 1800u,
+        currencyCode = "USD",
+        productTerm = uniffi.wp_api.ProductTerm.Year,
+        productTermLocalized = "year",
+        priceTierSlug = "",
+        priceTierList = emptyList(),
+        domainInfo = null,
+        costPerMonthDisplay = null,
+        saleCost = null,
+        combinedSaleCostDisplay = combinedSaleCostDisplay,
+        saleCoupon = null,
+        introductoryOffer = null,
+    )
 }
