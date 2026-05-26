@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
@@ -55,8 +56,21 @@ class ApplicationPasswordViewModelSlice @Inject constructor(
     val uiModelMutable = MutableLiveData<MySiteCardAndItem?>()
     val uiModel: LiveData<MySiteCardAndItem?> = uiModelMutable
 
+    // Single-flight guard: buildCard is invoked from onResume / refresh / onSitePicked, which can
+    // fire close together. Without this, two coroutines both pass the "creds missing" check in
+    // ApplicationPasswordsManager and issue two server-side mints. Worse, the 409 conflict handler
+    // then deletes-and-recreates the winner's password, so the losing racer destroys working creds.
+    private var buildJob: Job? = null
+
     fun buildCard(siteModel: SiteModel) {
-        scope.launch {
+        if (buildJob?.isActive == true) {
+            appLogWrapper.d(
+                AppLog.T.MAIN,
+                "A_P: Skipping buildCard for ${siteModel.url} - previous run still in flight"
+            )
+            return
+        }
+        buildJob = scope.launch {
             val storedSite = siteStore.sites.firstOrNull { it.id == siteModel.id } ?: siteModel
             val hadCreds = !applicationPasswordLoginHelper.siteHasBadCredentials(storedSite)
 

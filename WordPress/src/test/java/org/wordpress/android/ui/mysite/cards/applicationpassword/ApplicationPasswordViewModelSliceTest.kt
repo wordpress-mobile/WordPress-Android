@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.mysite.cards.applicationpassword
 
 import junit.framework.TestCase.assertNull
+import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
@@ -10,6 +11,7 @@ import org.mockito.Mock
 import org.mockito.MockitoAnnotations
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.any
+import org.mockito.kotlin.doSuspendableAnswer
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.never
 import org.mockito.kotlin.times
@@ -287,6 +289,29 @@ class ApplicationPasswordViewModelSliceTest : BaseUnitTest() {
         assertNull(applicationPasswordCard)
         verify(siteStore, never()).createApplicationPassword(any())
         verify(siteStore, never()).deleteStoredApplicationPasswordCredentials(any())
+    }
+
+    @Test
+    fun `concurrent buildCard calls coalesce to a single mint`() = runTest {
+        // Gate the mint so the first buildCard suspends mid-call and the second arrives while it's
+        // still in flight. Without the single-flight guard, both calls would issue separate
+        // server-side mints and race the 409 conflict handler in ApplicationPasswordsManager.
+        val mintGate = CompletableDeferred<Unit>()
+        whenever(siteStore.createApplicationPassword(any())).doSuspendableAnswer {
+            mintGate.await()
+            OnApplicationPasswordCreated(
+                siteTest,
+                ApplicationPasswordCredentials("user", "pass", uuid = "u")
+            )
+        }
+
+        applicationPasswordViewModelSlice.buildCard(siteTest)
+        applicationPasswordViewModelSlice.buildCard(siteTest)
+
+        mintGate.complete(Unit)
+        advanceUntilIdle()
+
+        verify(siteStore, times(1)).createApplicationPassword(any())
     }
 
     @Test
