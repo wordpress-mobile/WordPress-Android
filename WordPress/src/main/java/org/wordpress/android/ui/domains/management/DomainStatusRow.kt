@@ -28,10 +28,11 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
-import org.wordpress.android.fluxc.network.rest.wpcom.site.DomainStatus
-import org.wordpress.android.fluxc.network.rest.wpcom.site.StatusType
 import org.wordpress.android.ui.domains.management.composable.PendingGhostStrip
 import org.wordpress.android.ui.compose.theme.AppThemeM3
+import uniffi.wp_api.DomainListItemStatus
+import uniffi.wp_api.DomainListItemStatusId
+import uniffi.wp_api.DomainListItemStatusType
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
@@ -58,7 +59,9 @@ fun StatusRow(
                     text = uiState.statusText,
                     color = uiState.textColor,
                     style = if (uiState.isBold) {
-                        LocalTextStyle.current.copy(fontWeight = FontWeight.Bold)
+                        LocalTextStyle.current.copy(
+                            fontWeight = FontWeight.Bold
+                        )
                     } else {
                         LocalTextStyle.current
                     },
@@ -66,7 +69,10 @@ fun StatusRow(
                 Spacer(modifier = Modifier.weight(1f))
                 uiState.expiry?.let { localDate ->
                     Text(
-                        text = stringResource(R.string.domain_management_expires, localDate.mediumFormat),
+                        text = stringResource(
+                            R.string.domain_management_expires,
+                            localDate.mediumFormat
+                        ),
                         textAlign = TextAlign.End,
                         color = MaterialTheme.colorScheme.outline,
                     )
@@ -89,30 +95,72 @@ fun BulletPoint(
 )
 
 private val LocalDate.mediumFormat
-    get() = format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM))
+    get() = format(
+        DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)
+    )
 
+private val previewStatusTypes = listOf(
+    DomainListItemStatusType.Success,
+    DomainListItemStatusType.Warning,
+    DomainListItemStatusType.Error,
+    DomainListItemStatusType.Alert,
+    DomainListItemStatusType.Neutral,
+    DomainListItemStatusType.Premium,
+)
 
-class PreviewStatusProvider: PreviewParameterProvider<Pair<DomainStatus, LocalDate?>?> {
+class PreviewStatusProvider :
+    PreviewParameterProvider<Pair<DomainListItemStatus, LocalDate?>?> {
     override val values
-        get() = StatusType.values().asSequence()
-            .map {
+        get() = previewStatusTypes.asSequence()
+            .map { statusType ->
                 Pair(
-                    DomainStatus(it.titleName, it),
-                    LocalDate.of(2024,8,15),
+                    DomainListItemStatus(
+                        id = DomainListItemStatusId.Active,
+                        label = statusType.previewLabel,
+                        statusType = statusType,
+                        cta = null,
+                    ),
+                    LocalDate.of(2024, 8, 15),
                 )
             } +
-                sequenceOf(Pair(DomainStatus(), null)) +
+                sequenceOf(
+                    Pair(
+                        DomainListItemStatus(
+                            id = DomainListItemStatusId.Active,
+                            label = "",
+                            statusType = DomainListItemStatusType.Success,
+                            cta = null,
+                        ),
+                        null
+                    )
+                ) +
                 sequenceOf(null)
 }
 
+private val DomainListItemStatusType.previewLabel: String
+    get() = when (this) {
+        is DomainListItemStatusType.Success -> "Success"
+        is DomainListItemStatusType.Warning -> "Warning"
+        is DomainListItemStatusType.Error -> "Error"
+        is DomainListItemStatusType.Alert -> "Alert"
+        is DomainListItemStatusType.Neutral -> "Neutral"
+        is DomainListItemStatusType.Premium -> "Premium"
+        is DomainListItemStatusType.Other -> "Other"
+    }
+
 @Preview(showBackground = true, widthDp = 296)
-@Preview(showBackground = true, widthDp = 296, uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Preview(
+    showBackground = true,
+    widthDp = 296,
+    uiMode = Configuration.UI_MODE_NIGHT_YES
+)
 @Composable
 fun DomainStatusRowPreview(
-    @PreviewParameter(PreviewStatusProvider::class) status: Pair<DomainStatus, LocalDate?>?,
+    @PreviewParameter(PreviewStatusProvider::class)
+    status: Pair<DomainListItemStatus, LocalDate?>?,
 ) {
     AppThemeM3 {
-        Column (Modifier.padding(8.dp)) {
+        Column(Modifier.padding(8.dp)) {
             StatusRow(
                 uiState = status?.let { (domainStatus, expiry) ->
                     StatusRowUiState.Loaded(
@@ -130,6 +178,3 @@ fun DomainStatusRowPreview(
         }
     }
 }
-
-val StatusType.titleName
-    get() = name.lowercase().replaceFirstChar(Char::titlecase)
