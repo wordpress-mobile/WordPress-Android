@@ -70,6 +70,20 @@ class WpApiClientProvider @Inject constructor(
         }
     }
 
+    /**
+     * Always returns a Basic-auth client against the direct host using the SiteModel's
+     * application-password credentials, regardless of WP.com routing. Use this when you need to
+     * talk to the site's own REST endpoints with the application password — `getWpApiClient`
+     * routes WPCom-flagged sites (including Atomic) through the bearer-token path and the WP.com
+     * REST proxy, which doesn't expose application-password-authenticated routes like
+     * `/wp/v2/users/{id}/application-passwords`.
+     */
+    @Synchronized
+    fun getApplicationPasswordClient(site: SiteModel): WpApiClient =
+        selfHostedClients.getOrPut(site.id) {
+            createSelfHostedClient(site, uploadListener = null)
+        }
+
     private fun createSelfHostedClient(
         site: SiteModel,
         uploadListener: WpRequestExecutor.UploadListener?,
