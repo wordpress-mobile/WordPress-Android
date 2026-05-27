@@ -131,8 +131,6 @@ Language: zh_TW
     <string name="experimental_features_feedback_dialog_title">分享意見！</string>
     <string name="experimental_block_editor_description">存取額外的區塊類型和設定</string>
     <string name="experimental_block_editor_note">試用版區塊編輯器將在未來版本中成為預設選項，屆時將無法停用。</string>
-    <string name="disable_experimental_block_editor_description">選擇不啟用額外區塊類型與設定</string>
-    <string name="disable_experimental_block_editor">停用試用版區塊編輯器</string>
     <string name="avatar_update_email_unverified">若想更新大頭貼，請先驗證電子郵件地址。</string>
     <string name="feedback_form_note_link_wordpress">社群論壇。</string>
     <string name="default_web_client_id" a8c-src-lib="module:login">預留位置</string>

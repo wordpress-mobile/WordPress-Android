@@ -122,8 +122,6 @@ class EditorLauncher @Inject constructor(
 
     private fun logFeatureDisabledReason(featureState: GutenbergKitFeatureChecker.FeatureState) {
         val reason = when {
-            featureState.isDisableExperimentalBlockEditorEnabled ->
-                "the experimental block editor is explicitly disabled"
             featureState.siteOverride == false ->
                 "this site has an explicit GutenbergKit opt-out"
             featureState.siteOverride == null && !featureState.isExperimentalBlockEditorEnabled ->
@@ -147,8 +145,7 @@ class EditorLauncher @Inject constructor(
     ): String {
         return "(experimental_block_editor: ${featureState.isExperimentalBlockEditorEnabled}, " +
                 "gutenberg_kit_remote_flag: ${featureState.isGutenbergKitFeatureEnabled}, " +
-                "site_override: ${featureState.siteOverride}, " +
-                "disable_experimental_block_editor: ${featureState.isDisableExperimentalBlockEditorEnabled})"
+                "site_override: ${featureState.siteOverride})"
     }
 
     private fun logEditorDecision(

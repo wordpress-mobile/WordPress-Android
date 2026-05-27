@@ -24,15 +24,13 @@ class GutenbergKitFeatureChecker @Inject constructor(
     data class FeatureState(
         val isExperimentalBlockEditorEnabled: Boolean,
         val isGutenbergKitFeatureEnabled: Boolean,
-        val isDisableExperimentalBlockEditorEnabled: Boolean,
         val siteOverride: Boolean? = null
     ) {
         /**
          * Determines if GutenbergKit should be used for editor routing.
          *
          * Resolution: a per-site override (set or cleared via the announcement sheet or Site
-         * Settings) wins over everything except the `DISABLE_EXPERIMENTAL_BLOCK_EDITOR` kill
-         * switch. When absent, falls back to the experimental flag.
+         * Settings) wins. When absent, falls back to the experimental flag.
          *
          * The remote `gutenberg_kit` feature flag is deliberately NOT part of editor routing
          * — it only gates the visibility of opt-in surfaces (the announcement bottom sheet and
@@ -41,10 +39,7 @@ class GutenbergKitFeatureChecker @Inject constructor(
          * GutenbergKit the default for everyone, the change is a one-line edit here.
          */
         val isGutenbergKitEnabled: Boolean
-            get() {
-                val resolved = siteOverride ?: isExperimentalBlockEditorEnabled
-                return resolved && !isDisableExperimentalBlockEditorEnabled
-            }
+            get() = siteOverride ?: isExperimentalBlockEditorEnabled
     }
 
     /**
@@ -55,9 +50,6 @@ class GutenbergKitFeatureChecker @Inject constructor(
         return FeatureState(
             isExperimentalBlockEditorEnabled = experimentalFeatures.isEnabled(Feature.EXPERIMENTAL_BLOCK_EDITOR),
             isGutenbergKitFeatureEnabled = gutenbergKitFeature.isEnabled(),
-            isDisableExperimentalBlockEditorEnabled = experimentalFeatures.isEnabled(
-                Feature.DISABLE_EXPERIMENTAL_BLOCK_EDITOR
-            ),
             siteOverride = site?.url?.let { appPrefsWrapper.getGutenbergKitSiteOverride(it) }
         )
     }

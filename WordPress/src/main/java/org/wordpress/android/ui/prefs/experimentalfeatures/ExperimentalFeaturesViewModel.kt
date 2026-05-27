@@ -13,13 +13,11 @@ import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures.Feature
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
-import org.wordpress.android.util.config.GutenbergKitFeature
 import javax.inject.Inject
 
 @HiltViewModel
 internal class ExperimentalFeaturesViewModel @Inject constructor(
     private val experimentalFeatures: ExperimentalFeatures,
-    private val gutenbergKitFeature: GutenbergKitFeature,
     private val appLogWrapper: AppLogWrapper,
     private val appPrefsWrapper: AppPrefsWrapper,
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
@@ -44,10 +42,8 @@ internal class ExperimentalFeaturesViewModel @Inject constructor(
         // Only show Post Types feature in debug builds
         return if (feature == Feature.EXPERIMENTAL_POST_TYPES) {
             BuildConfig.DEBUG
-        } else if (gutenbergKitFeature.isEnabled()) {
-            feature != Feature.EXPERIMENTAL_BLOCK_EDITOR
         } else {
-            feature != Feature.DISABLE_EXPERIMENTAL_BLOCK_EDITOR
+            true
         }
     }
 

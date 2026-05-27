@@ -213,8 +213,6 @@ Language: he_IL
     <string name="experimental_features_feedback_dialog_title">לשלוח משוב</string>
     <string name="experimental_block_editor_description">לגשת להגדרות נוספות ולסוגי בלוקים נוספים</string>
     <string name="experimental_block_editor_note">עורך הבלוקים הניסיוני יהפוך לברירת המחדל בגרסה עתידית והאפשרות להשבית אותו תוסר.</string>
-    <string name="disable_experimental_block_editor_description">לבטל את הגישה להגדרות נוספות ולסוגי בלוקים נוספים</string>
-    <string name="disable_experimental_block_editor">להשבית את עורך הבלוקים הניסיוני</string>
     <string name="avatar_update_email_unverified">כדי לעדכן את צלמית המשתמש, עליך לאמת את כתובת האימייל שלך תחילה.</string>
     <string name="feedback_form_note_link_wordpress">בפורומים של הקהילה.</string>
     <string name="default_web_client_id" a8c-src-lib="module:login">מציין מיקום</string>
