@@ -215,8 +215,6 @@ Language: nl
     <string name="experimental_features_feedback_dialog_title">Feedback delen</string>
     <string name="experimental_block_editor_description">Toegang tot extra bloktypen en instellingen</string>
     <string name="experimental_block_editor_note">De experimentele blok-editor wordt de standaard in een toekomstige release en de mogelijkheid om deze uit te schakelen wordt verwijderd.</string>
-    <string name="disable_experimental_block_editor_description">Afmelden voor extra bloktypen en instellingen</string>
-    <string name="disable_experimental_block_editor">Experimentele blok-editor uitschakelen</string>
     <string name="avatar_update_email_unverified">Om je avatar te updaten, moet je eerst je e-mailadres verifiëren.</string>
     <string name="feedback_form_note_link_wordpress">community forums.</string>
     <string name="default_web_client_id" a8c-src-lib="module:login">plaatshouder</string>

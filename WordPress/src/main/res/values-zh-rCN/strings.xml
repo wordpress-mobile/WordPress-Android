@@ -214,8 +214,6 @@ Language: zh_CN
     <string name="experimental_features_feedback_dialog_title">分享反馈</string>
     <string name="experimental_block_editor_description">启用更多区块类型和设置</string>
     <string name="experimental_block_editor_note">实验性区块编辑器将在今后的版本中成为默认设置，并且将无法禁用。</string>
-    <string name="disable_experimental_block_editor_description">停用更多区块类型和设置</string>
-    <string name="disable_experimental_block_editor">禁用实验性区块编辑器</string>
     <string name="avatar_update_email_unverified">要更新您的头像，请先验证您的电子邮件地址。</string>
     <string name="feedback_form_note_link_wordpress">社区论坛。</string>
     <string name="default_web_client_id" a8c-src-lib="module:login">占位符</string>

@@ -107,6 +107,10 @@ class MySiteViewModelTest : BaseUnitTest() {
     @Mock
     lateinit var siteConnectivityBannerViewModelSlice: SiteConnectivityBannerViewModelSlice
 
+    @Mock
+    lateinit var gutenbergKitAnnouncementController:
+            org.wordpress.android.ui.posts.GutenbergKitAnnouncementController
+
     private lateinit var viewModel: MySiteViewModel
     private lateinit var uiModels: MutableList<MySiteViewModel.State>
     private lateinit var snackbars: MutableList<SnackbarMessageHolder>
@@ -164,6 +168,7 @@ class MySiteViewModelTest : BaseUnitTest() {
             siteCapabilityChecker,
             gutenbergEditorPreloader,
             siteConnectivityBannerViewModelSlice,
+            gutenbergKitAnnouncementController,
         )
         uiModels = mutableListOf()
         snackbars = mutableListOf()
@@ -416,6 +421,36 @@ class MySiteViewModelTest : BaseUnitTest() {
             org.mockito.kotlin.eq(siteTest),
             org.mockito.kotlin.any()
         )
+    }
+
+    /* GUTENBERGKIT ANNOUNCEMENT */
+
+    @Test
+    fun `onResume posts gutenberg kit announcement event when controller says show`() = test {
+        initSelectedSite()
+        whenever(gutenbergKitAnnouncementController.shouldShowAnnouncement(siteTest)).thenReturn(true)
+        val observed = mutableListOf<SiteModel>()
+        viewModel.onShowGutenbergKitAnnouncement.observeForever { event ->
+            event?.getContentIfNotHandled()?.let { observed.add(it) }
+        }
+
+        viewModel.onResume()
+
+        assertThat(observed).containsExactly(siteTest)
+    }
+
+    @Test
+    fun `onResume does not post gutenberg kit announcement event when controller says skip`() = test {
+        initSelectedSite()
+        whenever(gutenbergKitAnnouncementController.shouldShowAnnouncement(siteTest)).thenReturn(false)
+        val observed = mutableListOf<SiteModel>()
+        viewModel.onShowGutenbergKitAnnouncement.observeForever { event ->
+            event?.getContentIfNotHandled()?.let { observed.add(it) }
+        }
+
+        viewModel.onResume()
+
+        assertThat(observed).isEmpty()
     }
 
     @Suppress("LongParameterList")

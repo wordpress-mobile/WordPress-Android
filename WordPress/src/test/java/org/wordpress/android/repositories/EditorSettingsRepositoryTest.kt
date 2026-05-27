@@ -15,10 +15,15 @@ import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpApiClientProvider
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import rs.wordpress.api.kotlin.ApiDiscoveryResult
 import rs.wordpress.api.kotlin.WpApiClient
+import rs.wordpress.api.kotlin.WpLoginClient
 import rs.wordpress.api.kotlin.WpRequestResult
 import uniffi.wp_api.ApiRootRequestGetResponse
 import uniffi.wp_api.ApiUrlResolver
+import uniffi.wp_api.AutoDiscoveryAttemptSuccess
+import uniffi.wp_api.DiscoveredAuthenticationMechanism
+import uniffi.wp_api.ParseUrlException
 import uniffi.wp_api.ThemeAuthor
 import uniffi.wp_api.ThemeAuthorUri
 import uniffi.wp_api.ThemeDescription
@@ -37,6 +42,9 @@ class EditorSettingsRepositoryTest : BaseUnitTest() {
     lateinit var wpApiClientProvider: WpApiClientProvider
 
     @Mock
+    lateinit var wpLoginClient: WpLoginClient
+
+    @Mock
     lateinit var appPrefsWrapper: AppPrefsWrapper
 
     @Mock
@@ -47,6 +55,9 @@ class EditorSettingsRepositoryTest : BaseUnitTest() {
 
     @Mock
     lateinit var apiUrlResolver: ApiUrlResolver
+
+    @Mock
+    lateinit var directHostResolver: ApiUrlResolver
 
     private lateinit var repository: EditorSettingsRepository
 
@@ -64,6 +75,7 @@ class EditorSettingsRepositoryTest : BaseUnitTest() {
 
         repository = EditorSettingsRepository(
             wpApiClientProvider = wpApiClientProvider,
+            wpLoginClient = wpLoginClient,
             appPrefsWrapper = appPrefsWrapper,
             themeRepository = themeRepository,
             ioDispatcher = testDispatcher()
@@ -186,22 +198,155 @@ class EditorSettingsRepositoryTest : BaseUnitTest() {
                 .setSiteThemeIsBlockTheme(any(), any())
         }
 
-    @Suppress("UNCHECKED_CAST")
+    @Test
+    fun `atomic site probes via api discovery`() =
+        runTest {
+            val atomicSite = SiteModel().apply {
+                id = 2
+                url = "https://atomic.example.com"
+                setIsWPCom(true)
+                setIsWPComAtomic(true)
+            }
+            mockDiscoverySuccess(
+                siteUrl = atomicSite.url,
+                hasEditorSettings = false,
+                hasEditorAssets = false
+            )
+            whenever(themeRepository.fetchCurrentTheme(atomicSite))
+                .thenReturn(buildTheme(isBlockTheme = false))
+
+            val result =
+                repository.fetchEditorCapabilitiesForSite(atomicSite)
+
+            assertThat(result).isTrue()
+            verify(appPrefsWrapper)
+                .setSiteSupportsEditorSettings(atomicSite, false)
+            verify(appPrefsWrapper)
+                .setSiteSupportsEditorAssets(atomicSite, false)
+            verify(wpApiClientProvider, never()).getWpApiClient(atomicSite)
+        }
+
+    @Test
+    fun `atomic site returns false when discovery fails`() =
+        runTest {
+            val atomicSite = SiteModel().apply {
+                id = 4
+                url = "https://atomic.example.com"
+                setIsWPCom(true)
+                setIsWPComAtomic(true)
+            }
+            whenever(wpLoginClient.apiDiscovery(atomicSite.url))
+                .thenReturn(
+                    ApiDiscoveryResult.FailureParseSiteUrl(
+                        ParseUrlException.Generic("")
+                    )
+                )
+            whenever(themeRepository.fetchCurrentTheme(atomicSite))
+                .thenReturn(buildTheme(isBlockTheme = false))
+
+            val result =
+                repository.fetchEditorCapabilitiesForSite(atomicSite)
+
+            assertThat(result).isFalse()
+            verify(appPrefsWrapper, never())
+                .setSiteSupportsEditorSettings(any(), any())
+            verify(appPrefsWrapper, never())
+                .setSiteSupportsEditorAssets(any(), any())
+            verify(wpApiClientProvider, never()).getWpApiClient(atomicSite)
+        }
+
+    @Test
+    fun `atomic site with app password also probes via api discovery`() =
+        runTest {
+            val atomicSite = SiteModel().apply {
+                id = 3
+                url = "https://atomic.example.com"
+                setIsWPCom(true)
+                setIsWPComAtomic(true)
+                apiRestUsernamePlain = "user"
+                apiRestPasswordPlain = "secret"
+            }
+            mockDiscoverySuccess(
+                siteUrl = atomicSite.url,
+                hasEditorSettings = true,
+                hasEditorAssets = true
+            )
+            whenever(themeRepository.fetchCurrentTheme(atomicSite))
+                .thenReturn(buildTheme(isBlockTheme = false))
+
+            val result =
+                repository.fetchEditorCapabilitiesForSite(atomicSite)
+
+            assertThat(result).isTrue()
+            verify(appPrefsWrapper)
+                .setSiteSupportsEditorSettings(atomicSite, true)
+            verify(appPrefsWrapper)
+                .setSiteSupportsEditorAssets(atomicSite, true)
+            verify(wpApiClientProvider, never()).getWpApiClient(atomicSite)
+        }
+
     private suspend fun mockApiRootResponse(
         hasEditorSettings: Boolean,
         hasEditorAssets: Boolean
+    ) = mockApiRootResponseFor(
+        client = wpApiClient,
+        resolver = apiUrlResolver,
+        hasEditorSettings = hasEditorSettings,
+        hasEditorAssets = hasEditorAssets,
+    )
+
+    private suspend fun mockDiscoverySuccess(
+        siteUrl: String,
+        hasEditorSettings: Boolean,
+        hasEditorAssets: Boolean,
     ) {
         val apiDetails = mock<WpApiDetails>()
         whenever(
             apiDetails.hasRouteForEndpoint(
-                apiUrlResolver,
+                directHostResolver,
                 "/wp-block-editor/v1",
                 "settings"
             )
         ).thenReturn(hasEditorSettings)
         whenever(
             apiDetails.hasRouteForEndpoint(
-                apiUrlResolver,
+                directHostResolver,
+                "/wpcom/v2",
+                "editor-assets"
+            )
+        ).thenReturn(hasEditorAssets)
+        val apiRootUrl = mock<uniffi.wp_api.ParsedUrl>()
+        whenever(wpApiClientProvider.urlResolverFor(apiRootUrl))
+            .thenReturn(directHostResolver)
+        val success = AutoDiscoveryAttemptSuccess(
+            parsedSiteUrl = mock(),
+            apiRootUrl = apiRootUrl,
+            apiDetails = apiDetails,
+            authentication = DiscoveredAuthenticationMechanism
+                .ApplicationPasswords(mock()),
+        )
+        whenever(wpLoginClient.apiDiscovery(siteUrl))
+            .thenReturn(ApiDiscoveryResult.Success(success))
+    }
+
+    @Suppress("UNCHECKED_CAST")
+    private suspend fun mockApiRootResponseFor(
+        client: WpApiClient,
+        resolver: ApiUrlResolver,
+        hasEditorSettings: Boolean,
+        hasEditorAssets: Boolean
+    ) {
+        val apiDetails = mock<WpApiDetails>()
+        whenever(
+            apiDetails.hasRouteForEndpoint(
+                resolver,
+                "/wp-block-editor/v1",
+                "settings"
+            )
+        ).thenReturn(hasEditorSettings)
+        whenever(
+            apiDetails.hasRouteForEndpoint(
+                resolver,
                 "/wpcom/v2",
                 "editor-assets"
             )
@@ -211,7 +356,7 @@ class EditorSettingsRepositoryTest : BaseUnitTest() {
             data = apiDetails,
             headerMap = mock<WpNetworkHeaderMap>()
         )
-        whenever(wpApiClient.request<Any>(any()))
+        whenever(client.request<Any>(any()))
             .thenReturn(
                 WpRequestResult.Success(response)
                     as WpRequestResult<Any>

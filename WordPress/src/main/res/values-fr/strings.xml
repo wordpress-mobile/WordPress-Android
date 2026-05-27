@@ -195,8 +195,6 @@ Language: fr
     <string name="experimental_features_feedback_dialog_title">Partager des commentaires</string>
     <string name="experimental_block_editor_description">Accéder à des types de blocs et réglages supplémentaires</string>
     <string name="experimental_block_editor_note">L’éditeur de blocs expérimental deviendra l’option par défaut dans une prochaine version et il ne sera plus possible de le désactiver.</string>
-    <string name="disable_experimental_block_editor_description">Se désabonner des types et réglages de blocs supplémentaires</string>
-    <string name="disable_experimental_block_editor">Désactiver l’éditeur de blocs expérimental</string>
     <string name="default_web_client_id" a8c-src-lib="module:login">texte indicatif</string>
     <string name="personalization_screen_shortcuts_accessibility_label">(Dés)activer le raccourci %s</string>
     <string name="personalization_screen_card_accessibility_label">(Dés)activer la carte %s</string>
