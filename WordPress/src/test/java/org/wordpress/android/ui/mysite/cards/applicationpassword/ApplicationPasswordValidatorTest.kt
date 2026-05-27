@@ -52,7 +52,9 @@ class ApplicationPasswordValidatorTest : BaseUnitTest() {
         whenever(wpApiClient.request<Any>(any())).thenReturn(response as WpRequestResult<Any>)
     }
 
-    private fun wpError(code: WpErrorCode, statusCode: Int = 401) = WpRequestResult.WpError<Any>(
+    // Default to a non-auth status so WpErrorCode-only tests isolate the code path from the
+    // status path. Tests of the status path (401/403) pass an explicit value.
+    private fun wpError(code: WpErrorCode, statusCode: Int = 500) = WpRequestResult.WpError<Any>(
         errorCode = code,
         errorMessage = "msg",
         statusCode = statusCode.toUInt(),
