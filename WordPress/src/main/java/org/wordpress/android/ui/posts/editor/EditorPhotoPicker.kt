@@ -112,7 +112,6 @@ class EditorPhotoPicker(
             if (site.isUsingWpComRestApi) {
                 availableDataSources.add(DataSource.STOCK_LIBRARY)
             }
-            availableDataSources.add(DataSource.GIF_LIBRARY)
         }
 
         return MediaPickerSetup(
@@ -234,7 +233,6 @@ class EditorPhotoPicker(
         val uriList = identifiers.mapNotNull { identifier ->
             when (identifier) {
                 is Identifier.LocalUri -> identifier.value.uri
-                is Identifier.GifMediaIdentifier -> identifier.largeImageUri.uri
                 else -> null
             }
         }
@@ -287,13 +285,6 @@ class EditorPhotoPicker(
                             activity,
                             siteModel,
                             requestCode,
-                            setup.canMultiselect
-                        )
-                    }
-                    DataSource.GIF_LIBRARY -> {
-                        mediaPickerLauncher.showGifPickerForResult(
-                            activity,
-                            siteModel,
                             setup.canMultiselect
                         )
                     }

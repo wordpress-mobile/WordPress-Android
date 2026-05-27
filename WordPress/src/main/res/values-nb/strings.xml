@@ -236,7 +236,6 @@ Language: nb_NO
     <string name="stats_referrer_popup_menu_open_website">Åpne nettstedet</string>
     <string name="stats_referrer_popup_unmark_as_spam">Merk som ikke spam</string>
     <string name="stats_referrer_popup_menu_mark_as_spam">Merk som spam</string>
-    <string name="media_uploading_gif_library_photo">Laster opp gif-media</string>
     <string name="media_uploading_default">Laster opp media</string>
     <string name="mlp_notselected_description">%s</string>
     <string name="mlp_selected_description">%s valgt</string>
@@ -333,7 +332,6 @@ Language: nb_NO
     <string name="new_site_creation_creating_site_loading_subtitle">Ditt nettsted vil straks være klart</string>
     <string name="new_site_creation_creating_site_loading_title">Hurra!\nNesten ferdig</string>
     <string name="pages_and_posts_cancel_auto_upload">Avbryt opplastning</string>
-    <string name="gif_list_search_returned_unknown_error">Det oppsto et problem med å håndtere forespørselen</string>
     <string name="weekday_friday">Fredag</string>
     <string name="weekday_thursday">Torsdag</string>
     <string name="weekday_saturday">Lørdag</string>
@@ -341,8 +339,6 @@ Language: nb_NO
     <string name="weekday_tuesday">Tirsdag</string>
     <string name="weekday_monday">Mandag</string>
     <string name="weekday_sunday">Søndag</string>
-    <string name="gif_powered_by_tenor">Drevet av Tenor</string>
-    <string name="photo_picker_gif">Velg fra Tenor</string>
     <string name="preview_image_description">Forhåndsvis bilde</string>
     <string name="failed_to_load_image_tap_to_retry">Mislyktes i å laste bilde.\nVennligst trykk for å prøve igjen.</string>
     <string name="error_unknown_page_type">Ukjent sideformat</string>
@@ -743,11 +739,9 @@ Language: nb_NO
     <string name="stats_insights_view_more">Vis mer</string>
     <string name="stats_insights_share_post">Del innlegg</string>
     <string name="stats_insights_create_post">Lag innlegg</string>
-    <string name="gif_picker_initial_empty_text">Søk for å finne GIF-er å legge til i ditt mediebibliotek!</string>
     <string name="stats_referrer_label">Referent</string>
     <string name="stats_referrers">Referenter</string>
     <string name="stats_insights_latest_post_message">Det har gått %1$s siden %2$s ble publisert. Her er hvordan det har gått med innlegget så langt:</string>
-    <string name="gif_picker_empty_search_list">Ingen media passet til ditt søk</string>
     <string name="stats_insights_tags_and_categories">Stikkord og kategorier</string>
     <string name="stats_insights_latest_post_with_no_engagement">Det har gått %1$s siden %2$s ble publisert. Få ballen til å rulle og øk ditt antall visninger ved å dele ditt innlegg:</string>
     <string name="stats_insights_all_time_stats">Til all tid</string>

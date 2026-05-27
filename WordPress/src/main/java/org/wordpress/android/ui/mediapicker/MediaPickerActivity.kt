@@ -32,7 +32,6 @@ import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerActio
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerListener
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource.DEVICE
-import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource.GIF_LIBRARY
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource.STOCK_LIBRARY
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource.WP_LIBRARY
 import org.wordpress.android.ui.photopicker.MediaPickerConstants
@@ -100,7 +99,6 @@ class MediaPickerActivity : BaseAppCompatActivity(), MediaPickerListener {
                     DEVICE -> APP_PICKER
                     WP_LIBRARY -> WP_MEDIA_PICKER
                     STOCK_LIBRARY -> STOCK_MEDIA_PICKER
-                    GIF_LIBRARY -> APP_PICKER
                 }
             }
         }

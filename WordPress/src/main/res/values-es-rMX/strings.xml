@@ -125,7 +125,6 @@ Language: es_MX
     <string name="reader_discover_empty_button_text">Primeros pasos</string>
     <string name="media_uploading_default">Subiendo medios</string>
     <string name="media_uploading_stock_library_photo">Subiendo medios de inventarios</string>
-    <string name="media_uploading_gif_library_photo">Subiendo medios GIF</string>
     <string name="stats_referrer_popup_menu_open_website">Abrir la web</string>
     <string name="stats_referrer_popup_menu_mark_as_spam">Marcar como spam</string>
     <string name="stats_referrer_popup_unmark_as_spam">Desmarcar como spam</string>
@@ -258,9 +257,6 @@ Language: es_MX
     <string name="new_site_creation_creating_site_loading_subtitle">Tu sitio estará listo en breve</string>
     <string name="new_site_creation_creating_site_loading_title">¡Hurra!\nCasi está hecho</string>
     <string name="pages_and_posts_cancel_auto_upload">Cancelar la subida</string>
-    <string name="gif_list_search_returned_unknown_error">Ha habido un problema al gestionar la petición</string>
-    <string name="gif_powered_by_tenor">Funciona con Tenor</string>
-    <string name="photo_picker_gif">Elegir desde Tenor</string>
     <string name="weekday_saturday">Sábado</string>
     <string name="weekday_friday">Viernes</string>
     <string name="weekday_thursday">Jueves</string>
@@ -679,8 +675,6 @@ Language: es_MX
     <string name="stats_referrer_label">Referente</string>
     <string name="stats_referrers">Referentes</string>
     <string name="stats_posts_and_pages">Entradas y Páginas</string>
-    <string name="gif_picker_empty_search_list">Ningún medio coincide con tu búsqueda</string>
-    <string name="gif_picker_initial_empty_text">¡Busca para encontrar GIF para añadir a tu biblioteca de medios!</string>
     <string name="stats_insights_latest_post_with_no_engagement">Ha sido %1$s desde que %2$s fue publicado. Empieza la avalancha y aumenta las vistas de publicaciones compartiendo la publicación.</string>
     <string name="stats_insights_tags_and_categories">Tags y Catégorias</string>
     <string name="stats_insights_all_time_stats">Histórico</string>

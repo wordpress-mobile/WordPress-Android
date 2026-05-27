@@ -3,6 +3,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
     <!-- APPLICATION -->
+    <color name="transparent">@android:color/transparent</color>
     <color name="background_dark">#121212</color>
     <color name="background_dark_elevated">#2e2e2e</color>
     <color name="background_default">@color/neutral_0</color>

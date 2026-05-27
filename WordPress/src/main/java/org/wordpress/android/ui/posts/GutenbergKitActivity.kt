@@ -2544,8 +2544,6 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
                 // No-op because it was Aztec only
             }
             RequestCodes.STOCK_MEDIA_PICKER_MULTI_SELECT -> handleStockMediaPickerMultiSelect(data)
-            RequestCodes.GIF_PICKER_SINGLE_SELECT,
-            RequestCodes.GIF_PICKER_MULTI_SELECT -> handleGifPicker(data)
             RequestCodes.HISTORY_DETAIL -> handleHistoryDetail()
             RequestCodes.IMAGE_EDITOR_EDIT_IMAGE -> handleImageEditor(data)
             RequestCodes.SELECTED_USER_MENTION -> handleUserMention(data)
@@ -2587,13 +2585,6 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
                     it
                 )
             }
-        }
-    }
-
-    private fun handleGifPicker(data: Intent?) {
-        val localIds = data?.getIntArrayExtra(MediaPickerConstants.EXTRA_SAVED_MEDIA_MODEL_LOCAL_IDS)
-        if (localIds != null && localIds.isNotEmpty()) {
-            editorMedia.addGifMediaToPostAsync(localIds)
         }
     }
 
