@@ -25,7 +25,7 @@ class GetDomainDetailsUrlTest : BaseUnitTest() {
         val domain = testDomainItem(
             domain = "redirect.domain",
             siteSlug = "redirect.domain.slug",
-            subtypeId = DomainSubtypeId.Other("redirect"),
+            subtypeId = DomainSubtypeId.SiteRedirect,
         )
         val expected =
             "https://wordpress.com/domains/manage/all/redirect.domain/redirect/redirect.domain.slug"
