@@ -190,6 +190,56 @@ class SiteStoreTest {
     }
 
     @Test
+    fun `fetchSites preserves DB wpApiRestUrl when the response omits it`() = test {
+        val payload = FetchSitesPayload(listOf(WPCOM))
+        val fetchedSite = SiteModel().apply {
+            siteId = 42
+            url = "https://atomic.example/"
+            // /me/sites doesn't include wpApiRestUrl — leave it null.
+        }
+        val sitesModel = SitesModel().apply { sites = listOf(fetchedSite) }
+        val siteFromDB = SiteModel().apply {
+            siteId = 42
+            url = "https://atomic.example/"
+            wpApiRestUrl = "https://atomic.example/wp-json/"
+        }
+        whenever(siteRestClient.fetchSites(payload.filters, false)).thenReturn(sitesModel)
+        whenever(siteSqlUtils.getSitesWithRemoteId(42)).thenReturn(listOf(siteFromDB))
+        whenever(siteSqlUtils.insertOrUpdateSite(any())).thenReturn(1)
+
+        siteStore.fetchSites(payload)
+
+        verify(siteSqlUtils).insertOrUpdateSite(
+            argWhere { it.wpApiRestUrl == "https://atomic.example/wp-json/" }
+        )
+    }
+
+    @Test
+    fun `fetchSites uses the response wpApiRestUrl when present`() = test {
+        val payload = FetchSitesPayload(listOf(WPCOM))
+        val fetchedSite = SiteModel().apply {
+            siteId = 42
+            url = "https://atomic.example/"
+            wpApiRestUrl = "https://atomic.example/wp-json/v2/"
+        }
+        val sitesModel = SitesModel().apply { sites = listOf(fetchedSite) }
+        val siteFromDB = SiteModel().apply {
+            siteId = 42
+            url = "https://atomic.example/"
+            wpApiRestUrl = "https://atomic.example/wp-json/"
+        }
+        whenever(siteRestClient.fetchSites(payload.filters, false)).thenReturn(sitesModel)
+        whenever(siteSqlUtils.getSitesWithRemoteId(42)).thenReturn(listOf(siteFromDB))
+        whenever(siteSqlUtils.insertOrUpdateSite(any())).thenReturn(1)
+
+        siteStore.fetchSites(payload)
+
+        verify(siteSqlUtils).insertOrUpdateSite(
+            argWhere { it.wpApiRestUrl == "https://atomic.example/wp-json/v2/" }
+        )
+    }
+
+    @Test
     fun `fetchSites saves jetpack CP connected sites to DB`() = test {
         val payload = FetchSitesPayload(listOf(WPCOM))
         val sitesModel = SitesModel()
