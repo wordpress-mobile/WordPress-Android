@@ -816,7 +816,6 @@ Language: cs_CZ
     <string name="reader_discover_empty_button_text">Začínáme</string>
     <string name="media_uploading_default">Nahrávání médií</string>
     <string name="media_uploading_stock_library_photo">Nahrávání skladových médií</string>
-    <string name="media_uploading_gif_library_photo">Nahrávání médií ve formátu GIF</string>
     <string name="stats_referrer_popup_menu_open_website">Otevřít web</string>
     <string name="stats_referrer_popup_menu_mark_as_spam">Označit jako spam</string>
     <string name="stats_referrer_popup_unmark_as_spam">Zrušit označení jako spam</string>
@@ -952,7 +951,6 @@ Language: cs_CZ
     <string name="new_site_creation_creating_site_loading_2">Přidávání funkcí webu</string>
     <string name="new_site_creation_creating_site_loading_3">Nastavení šablony</string>
     <string name="new_site_creation_creating_site_loading_4">Vytváření řídicího panelu</string>
-    <string name="gif_list_search_returned_unknown_error">Při zpracování požadavku došlo k problému</string>
     <string name="pages_and_posts_cancel_auto_upload">Zrušit nahrávání</string>
     <string name="weekday_saturday">Sobota</string>
     <string name="weekday_friday">Pátek</string>
@@ -961,8 +959,6 @@ Language: cs_CZ
     <string name="weekday_tuesday">Úterý</string>
     <string name="weekday_monday">Pondělí</string>
     <string name="weekday_sunday">Neděle</string>
-    <string name="photo_picker_gif">Vyberte si z nabídky Tenor</string>
-    <string name="gif_powered_by_tenor">Běží na Tenor</string>
     <string name="media_accessing_progress">Přístup k obsahu soukromé stránky</string>
     <string name="media_accessing_failed">Přístup k obsahu soukromého webu se nezdařil. Některá média nemusí být k dispozici</string>
     <string name="error_failed_to_crop_and_save_image">Oříznutí a uložení obrázku se nezdařilo, zkuste to znovu.</string>
@@ -1383,8 +1379,6 @@ Language: cs_CZ
     <string name="stats_posts_and_pages">Příspěvky a Stránky</string>
     <string name="stats_insights_path">Cesta</string>
     <string name="stats_insights_latest_post_message">Bylo to %1$s od %2$s publikován. Zde je návod, jak byl příspěvek doposud upravován…</string>
-    <string name="gif_picker_initial_empty_text">Vyhledejte GIF a přidejte jej do knihovny médií!</string>
-    <string name="gif_picker_empty_search_list">Vašemu vyhledávání neodpovídají žádná média</string>
     <string name="stats_insights_tags_and_categories">Štítky a Rubriky</string>
     <string name="stats_insights_all_time_stats">Pořád</string>
     <string name="stats_insights_latest_post_with_no_engagement">Od zveřejnění %2$s s uplynulo %1$s. Zvyšte počet zobrazení příspěvku tím, že ho budete sdílet:</string>
