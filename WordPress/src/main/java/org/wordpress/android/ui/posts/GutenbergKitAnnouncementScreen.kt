@@ -25,7 +25,6 @@ import androidx.compose.ui.text.LinkAnnotation
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextLinkStyles
 import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withLink
 import androidx.compose.ui.tooling.preview.Preview
@@ -38,7 +37,7 @@ private val HANDLE_WIDTH = 32.dp
 private val HANDLE_HEIGHT = 4.dp
 private val HANDLE_TOP_MARGIN = 4.dp
 private val TITLE_TOP_SPACE = 24.dp
-private val TITLE_BODY_SPACE = 8.dp
+private val PARAGRAPH_SPACE = 8.dp
 private val BUTTONS_TOP_SPACE = 24.dp
 private val BOTTOM_SPACE = 16.dp
 private val BUTTON_GAP = 8.dp
@@ -62,14 +61,21 @@ fun GutenbergKitAnnouncementScreen(
         Text(
             text = stringResource(R.string.gutenberg_kit_announcement_title),
             style = MaterialTheme.typography.headlineSmall,
-            fontFamily = FontFamily.Serif,
             color = MaterialTheme.colorScheme.onSurface,
             textAlign = TextAlign.Start,
         )
 
-        Spacer(modifier = Modifier.height(TITLE_BODY_SPACE))
+        Spacer(modifier = Modifier.height(PARAGRAPH_SPACE))
         Text(
-            text = buildBodyWithLearnMore(onLearnMore),
+            text = stringResource(R.string.gutenberg_kit_announcement_body_intro),
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurface,
+            textAlign = TextAlign.Start,
+        )
+
+        Spacer(modifier = Modifier.height(PARAGRAPH_SPACE))
+        Text(
+            text = buildDeadlineWithLearnMore(onLearnMore),
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurface,
             textAlign = TextAlign.Start,
@@ -100,9 +106,9 @@ fun GutenbergKitAnnouncementScreen(
 }
 
 @Composable
-private fun buildBodyWithLearnMore(onLearnMore: () -> Unit) = buildAnnotatedString {
+private fun buildDeadlineWithLearnMore(onLearnMore: () -> Unit) = buildAnnotatedString {
     val learnMoreText = stringResource(R.string.gutenberg_kit_announcement_learn_more)
-    val body = stringResource(R.string.gutenberg_kit_announcement_body, learnMoreText)
+    val body = stringResource(R.string.gutenberg_kit_announcement_body_deadline, learnMoreText)
     val linkStart = body.indexOf(learnMoreText)
     val link = LinkAnnotation.Clickable(
         tag = "learn_more",
