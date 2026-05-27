@@ -265,7 +265,7 @@ class EditorPhotoPicker(
                 }
             }
             is MediaPickerAction.SwitchMediaPicker -> {
-                // Handle switching to different data sources (WP Media, Stock, GIF)
+                // Handle switching to different data sources (WP Media, Stock)
                 val setup = action.mediaPickerSetup
                 when (setup.primaryDataSource) {
                     DataSource.WP_LIBRARY -> {
