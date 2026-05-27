@@ -1789,10 +1789,6 @@ open class SiteStore @Inject constructor(
                         site.apiRestPasswordEncrypted = siteFromDB.apiRestPasswordEncrypted
                         site.apiRestUsernameIV = siteFromDB.apiRestUsernameIV
                         site.apiRestPasswordIV = siteFromDB.apiRestPasswordIV
-                    }
-                    // /me/sites never includes wpApiRestUrl. Preserve the DB value when the
-                    // response omits one so a concurrent recovery write isn't clobbered.
-                    if (site.wpApiRestUrl.isNullOrEmpty()) {
                         site.wpApiRestUrl = siteFromDB.wpApiRestUrl
                     }
                 }

@@ -194,66 +194,6 @@ class ApplicationPasswordViewModelSliceTest : BaseUnitTest() {
     }
 
     @Test
-    fun `heal persists when site is self-hosted`() = runTest {
-        whenever(applicationPasswordLoginHelper.siteHasBadCredentials(any())).thenReturn(false)
-        whenever(siteStore.sites).thenReturn(
-            listOf(
-                SiteModel().apply {
-                    id = siteTest.id
-                    url = TEST_URL
-                    apiRestUsernamePlain = "user"
-                    apiRestPasswordPlain = "password"
-                    xmlRpcUrl = siteTest.xmlRpcUrl
-                    // setIsWPCom not called -> isUsingWpComRestApi() == false (self-hosted)
-                }
-            )
-        )
-        whenever(applicationPasswordValidator.validate(any()))
-            .thenReturn(ApplicationPasswordValidator.Outcome.Valid)
-        whenever(siteApiRestUrlRecoverer.discoverApiRootUrl(eq(TEST_URL)))
-            .thenReturn("$TEST_URL/wp-json/")
-
-        applicationPasswordViewModelSlice.buildCard(siteTest)
-        advanceUntilIdle()
-
-        verify(siteApiRestUrlRecoverer).discoverApiRootUrl(TEST_URL)
-        verify(siteApiRestUrlRecoverer).persistApiRootUrl(eq(siteTest.id), eq("$TEST_URL/wp-json/"))
-    }
-
-    @Test
-    fun `heal does not persist when site is Atomic`() = runTest {
-        // Atomic sites go through /me/sites which doesn't include wpApiRestUrl. Persisting would
-        // get clobbered on the next FETCH_SITES, so skip the DB write — the in-memory heal is
-        // enough for the editor session and we'll re-discover next launch.
-        // (Simple WP.com sites get a synthetic public-api URL from getWpApiRestUrl(), so the heal
-        // early-returns for them and this branch is never reached.)
-        whenever(applicationPasswordLoginHelper.siteHasBadCredentials(any())).thenReturn(false)
-        whenever(siteStore.sites).thenReturn(
-            listOf(
-                SiteModel().apply {
-                    id = siteTest.id
-                    url = TEST_URL
-                    apiRestUsernamePlain = "user"
-                    apiRestPasswordPlain = "password"
-                    xmlRpcUrl = siteTest.xmlRpcUrl
-                    setIsWPCom(true)
-                    setIsWPComAtomic(true)
-                }
-            )
-        )
-        whenever(applicationPasswordValidator.validate(any()))
-            .thenReturn(ApplicationPasswordValidator.Outcome.Valid)
-        whenever(siteApiRestUrlRecoverer.discoverApiRootUrl(eq(TEST_URL)))
-            .thenReturn("$TEST_URL/wp-json/")
-
-        applicationPasswordViewModelSlice.buildCard(siteTest)
-        advanceUntilIdle()
-
-        verify(siteApiRestUrlRecoverer).discoverApiRootUrl(TEST_URL)
-        verify(siteApiRestUrlRecoverer, never()).persistApiRootUrl(any(), any())
-    }
-
-    @Test
     fun `given valid stored creds, card hides without waiting for the recoverer`() = runTest {
         whenever(applicationPasswordLoginHelper.siteHasBadCredentials(any())).thenReturn(false)
         whenever(siteStore.sites).thenReturn(

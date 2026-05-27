@@ -139,13 +139,7 @@ class ApplicationPasswordViewModelSlice @Inject constructor(
         if (!site.wpApiRestUrl.isNullOrEmpty()) return
         siteApiRestUrlRecoverer.discoverApiRootUrl(site.url)?.let { apiRootUrl ->
             site.wpApiRestUrl = apiRootUrl
-            // Sites going through /me/sites can have their wpApiRestUrl clobbered to NULL on
-            // a subsequent FETCH_SITES because the response omits the field. Skip the DB write
-            // for those — the in-memory heal is enough for the editor session, and we'll
-            // re-discover on the next launch. Self-hosted sites get a durable persist.
-            if (!site.isUsingWpComRestApi) {
-                siteApiRestUrlRecoverer.persistApiRootUrl(site.id, apiRootUrl)
-            }
+            siteApiRestUrlRecoverer.persistApiRootUrl(site.id, apiRootUrl)
         }
     }
 
