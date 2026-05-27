@@ -12,6 +12,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.repositories.EditorSettingsRepository
+import org.wordpress.android.ui.accounts.login.SiteApiRestUrlRecoverer
 import org.wordpress.android.util.AppLog
 import org.wordpress.gutenberg.model.EditorDependencies
 import java.util.concurrent.ConcurrentHashMap
@@ -63,6 +64,7 @@ class GutenbergEditorPreloader @Inject constructor(
     private val siteSettingsProvider: SiteSettingsProvider,
     private val editorServiceProvider: EditorServiceProvider,
     private val editorSettingsRepository: EditorSettingsRepository,
+    private val siteApiRestUrlRecoverer: SiteApiRestUrlRecoverer,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) {
     private sealed class PreloadState {
@@ -93,6 +95,7 @@ class GutenbergEditorPreloader @Inject constructor(
         val siteId = site.id
         val job = scope.launch(bgDispatcher) {
             try {
+                siteApiRestUrlRecoverer.discoverInMemoryIfMissing(site)
                 editorSettingsRepository
                     .fetchEditorCapabilitiesForSite(site)
                 // Preloading produces EditorDependencies, which the editor
