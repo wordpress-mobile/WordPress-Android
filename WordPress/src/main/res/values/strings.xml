@@ -706,6 +706,18 @@
     <string name="site_settings_use_third_party_blocks_summary">Load third-party blocks from plugins installed on your site.</string>
     <string name="site_settings_use_third_party_blocks_unsupported">Your site doesn\'t support loading third-party blocks in the editor.</string>
     <string name="site_connectivity_banner_text">Unable to connect to your site. Some functionality might be limited.</string>
+    <string name="site_settings_gutenberg_kit_enabled">Try the new editor</string>
+    <string name="site_settings_gutenberg_kit_enabled_summary">Opt in to the next-generation block editor for this site</string>
+    <string name="site_settings_gutenberg_kit_enabled_unsupported">Switch to the block editor first to try the new editor.</string>
+
+    <!-- GutenbergKit announcement -->
+    <string name="gutenberg_kit_announcement_title">A better block editor is coming</string>
+    <string name="gutenberg_kit_announcement_body_intro">The next-generation block editor is ready, and it brings more new features.</string>
+    <string name="gutenberg_kit_announcement_body_deadline">By the end of June 2026, it will become the default editor for everyone. %1$s</string>
+    <string name="gutenberg_kit_announcement_activate">Activate</string>
+    <string name="gutenberg_kit_announcement_maybe_later">Maybe later</string>
+    <string name="gutenberg_kit_announcement_learn_more">Learn more</string>
+    <string name="gutenberg_kit_learn_more_url" translatable="false">https://wordpress.com/support/editors/</string>
     <string name="site_settings_password_updated">Password updated</string>
     <string name="site_settings_update_password_message">To reconnect the app to your self-hosted site, enter the site\'s new password here.</string>
     <string name="site_settings_homepage_settings">Homepage Settings</string>
@@ -970,8 +982,6 @@
 
     <!-- Experimental Features -->
     <string name="experimental_features_screen_title">Experimental Features</string>
-    <string name="disable_experimental_block_editor">Disable experimental block editor</string>
-    <string name="disable_experimental_block_editor_description">Opt out of additional block types and settings</string>
     <string name="experimental_block_editor_note">Experimental block editor will become the default in a future release and the ability to disable it will be removed.</string>
     <string name="experimental_block_editor">Experimental block editor</string>
     <string name="experimental_block_editor_description">Access additional block types and settings</string>

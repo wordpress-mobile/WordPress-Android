@@ -575,6 +575,18 @@ class AppPrefsWrapper @Inject constructor(val buildConfigWrapper: BuildConfigWra
     fun setStatsNewStatsSuggestionLastDismissedAt(timestamp: Long) =
         AppPrefs.setStatsNewStatsSuggestionLastDismissedAt(timestamp)
 
+    fun getGutenbergKitSiteOverride(siteUrl: String?): Boolean? =
+        AppPrefs.getGutenbergKitSiteOverride(siteUrl)
+
+    fun setGutenbergKitSiteOverride(siteUrl: String?, enabled: Boolean) =
+        AppPrefs.setGutenbergKitSiteOverride(siteUrl, enabled)
+
+    fun getGutenbergKitAnnouncementDeferredUntil(siteUrl: String?): Long =
+        AppPrefs.getGutenbergKitAnnouncementDeferredUntil(siteUrl)
+
+    fun setGutenbergKitAnnouncementDeferredUntil(siteUrl: String?, timestampMillis: Long) =
+        AppPrefs.setGutenbergKitAnnouncementDeferredUntil(siteUrl, timestampMillis)
+
     companion object {
         private const val LIGHT_MODE_ID = 0
         private const val DARK_MODE_ID = 1
