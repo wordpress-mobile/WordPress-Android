@@ -26,7 +26,6 @@ class ApplicationPasswordValidator @Inject constructor(
     private val wpApiClientProvider: WpApiClientProvider,
     private val appLogWrapper: AppLogWrapper,
 ) {
-    @Suppress("ReturnCount")
     suspend fun validate(site: SiteModel): Outcome {
         appLogWrapper.d(
             AppLog.T.MAIN,
