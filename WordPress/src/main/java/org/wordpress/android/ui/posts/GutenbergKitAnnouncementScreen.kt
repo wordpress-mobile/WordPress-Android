@@ -1,25 +1,22 @@
 package org.wordpress.android.ui.posts
 
 import android.content.res.Configuration
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.BottomSheetDefaults
 import androidx.compose.material3.Button
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.LinkAnnotation
 import androidx.compose.ui.text.SpanStyle
@@ -33,16 +30,13 @@ import org.wordpress.android.R
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 
 private val HORIZONTAL_PADDING = 24.dp
-private val HANDLE_WIDTH = 32.dp
-private val HANDLE_HEIGHT = 4.dp
-private val HANDLE_TOP_MARGIN = 4.dp
 private val TITLE_TOP_SPACE = 24.dp
 private val PARAGRAPH_SPACE = 8.dp
 private val BUTTONS_TOP_SPACE = 24.dp
 private val BOTTOM_SPACE = 16.dp
 private val BUTTON_GAP = 8.dp
-private const val HANDLE_ALPHA = 0.38f
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun GutenbergKitAnnouncementScreen(
     onActivate: () -> Unit,
@@ -55,7 +49,7 @@ fun GutenbergKitAnnouncementScreen(
             .fillMaxWidth()
             .padding(horizontal = HORIZONTAL_PADDING)
     ) {
-        BottomSheetHandle(modifier = Modifier.padding(top = HANDLE_TOP_MARGIN))
+        BottomSheetDefaults.DragHandle(modifier = Modifier.align(Alignment.CenterHorizontally))
 
         Spacer(modifier = Modifier.height(TITLE_TOP_SPACE))
         Text(
@@ -121,24 +115,6 @@ private fun buildDeadlineWithLearnMore(onLearnMore: () -> Unit) = buildAnnotated
     withLink(link) { append(learnMoreText) }
     val suffixStart = linkStart + learnMoreText.length
     if (suffixStart < body.length) append(body.substring(suffixStart))
-}
-
-@Composable
-private fun BottomSheetHandle(modifier: Modifier = Modifier) {
-    Box(
-        modifier = modifier.fillMaxWidth(),
-        contentAlignment = Alignment.Center,
-    ) {
-        Box(
-            modifier = Modifier
-                .size(width = HANDLE_WIDTH, height = HANDLE_HEIGHT)
-                .alpha(HANDLE_ALPHA)
-                .background(
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    shape = RoundedCornerShape(HANDLE_HEIGHT / 2),
-                ),
-        )
-    }
 }
 
 @Preview(name = "Light", showBackground = true)
