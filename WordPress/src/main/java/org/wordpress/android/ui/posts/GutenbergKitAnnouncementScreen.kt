@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.BottomSheetDefaults
 import androidx.compose.material3.Button
@@ -30,10 +31,8 @@ import org.wordpress.android.R
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 
 private val HORIZONTAL_PADDING = 24.dp
-private val TITLE_TOP_SPACE = 24.dp
 private val PARAGRAPH_SPACE = 8.dp
 private val BUTTONS_TOP_SPACE = 24.dp
-private val BOTTOM_SPACE = 16.dp
 private val BUTTON_GAP = 8.dp
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -47,11 +46,11 @@ fun GutenbergKitAnnouncementScreen(
     Column(
         modifier = modifier
             .fillMaxWidth()
+            .navigationBarsPadding()
             .padding(horizontal = HORIZONTAL_PADDING)
     ) {
         BottomSheetDefaults.DragHandle(modifier = Modifier.align(Alignment.CenterHorizontally))
 
-        Spacer(modifier = Modifier.height(TITLE_TOP_SPACE))
         Text(
             text = stringResource(R.string.gutenberg_kit_announcement_title),
             style = MaterialTheme.typography.headlineSmall,
@@ -94,8 +93,6 @@ fun GutenbergKitAnnouncementScreen(
                 Text(stringResource(R.string.gutenberg_kit_announcement_activate))
             }
         }
-
-        Spacer(modifier = Modifier.height(BOTTOM_SPACE))
     }
 }
 
