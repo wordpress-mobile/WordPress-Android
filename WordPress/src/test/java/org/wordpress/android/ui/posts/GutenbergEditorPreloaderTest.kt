@@ -489,7 +489,7 @@ class GutenbergEditorPreloaderTest :
     // region wpApiRestUrl recovery
 
     @Test
-    fun `successful preload invokes in-memory discovery only — slice owns persistence`() = test {
+    fun `successful preload invokes discovery only — slice owns persistence`() = test {
         val site = createSite()
         enablePreloading(site)
         stubSuccessfulPreload()
@@ -498,8 +498,8 @@ class GutenbergEditorPreloaderTest :
         preloader.preloadIfNeeded(site, this)
         advanceUntilIdle()
 
-        verify(siteApiRestUrlRecoverer).discoverInMemoryIfMissing(site)
-        verify(siteApiRestUrlRecoverer, never()).recoverAndPersistIfMissing(any())
+        verify(siteApiRestUrlRecoverer).discoverApiRootUrl(site.url)
+        verify(siteApiRestUrlRecoverer, never()).persistApiRootUrl(any(), any())
     }
 
     // endregion

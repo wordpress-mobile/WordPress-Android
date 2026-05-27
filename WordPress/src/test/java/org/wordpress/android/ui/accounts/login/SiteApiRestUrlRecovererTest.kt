@@ -11,11 +11,8 @@ import org.mockito.MockitoAnnotations
 import org.mockito.kotlin.any
 import org.mockito.kotlin.doThrow
 import org.mockito.kotlin.eq
-import org.mockito.kotlin.never
-import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
-import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.persistence.SiteSqlUtils
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.ui.accounts.login.ApplicationPasswordLoginHelper.DiscoverSuccessWrapper
@@ -52,12 +49,6 @@ class SiteApiRestUrlRecovererTest : BaseUnitTest() {
         )
     }
 
-    private fun siteWithoutUrl(): SiteModel = SiteModel().apply {
-        id = LOCAL_ID
-        url = SITE_URL
-        wpApiRestUrl = null
-    }
-
     private suspend fun stubDiscoverySuccess(apiRootUrl: String) {
         val result = ApiDiscoveryResult.Success(
             AutoDiscoveryAttemptSuccess(
@@ -71,141 +62,69 @@ class SiteApiRestUrlRecovererTest : BaseUnitTest() {
     }
 
     @Test
-    fun `recoverAndPersist populates wpApiRestUrl in memory and writes the DB row`() = runTest {
-        val site = siteWithoutUrl()
-        val siteFromDB = siteWithoutUrl()
+    fun `discoverApiRootUrl returns the discovered URL on success`() = runTest {
         stubDiscoverySuccess(DISCOVERED_API_ROOT)
-        whenever(siteSqlUtils.getSitesWithLocalId(LOCAL_ID)).thenReturn(listOf(siteFromDB))
 
-        recoverer.recoverAndPersistIfMissing(site)
+        val result = recoverer.discoverApiRootUrl(SITE_URL)
 
-        assertThat(site.wpApiRestUrl).isEqualTo(DISCOVERED_API_ROOT)
-        assertThat(siteFromDB.wpApiRestUrl).isEqualTo(DISCOVERED_API_ROOT)
-        verify(siteSqlUtils).insertOrUpdateSite(siteFromDB)
+        assertThat(result).isEqualTo(DISCOVERED_API_ROOT)
     }
 
     @Test
-    fun `recoverAndPersist skips discovery when wpApiRestUrl is already populated`() = runTest {
-        val site = siteWithoutUrl().apply { wpApiRestUrl = "https://example.test/wp-json/" }
-
-        recoverer.recoverAndPersistIfMissing(site)
-
-        verify(wpLoginClient, never()).apiDiscovery(any())
-        verify(siteSqlUtils, never()).insertOrUpdateSite(any())
-    }
-
-    @Test
-    fun `recoverAndPersist does nothing when discovery returns a blank apiRootUrl`() = runTest {
-        val site = siteWithoutUrl()
+    fun `discoverApiRootUrl returns null when the discovered URL is blank`() = runTest {
         stubDiscoverySuccess(apiRootUrl = "")
 
-        recoverer.recoverAndPersistIfMissing(site)
+        val result = recoverer.discoverApiRootUrl(SITE_URL)
 
-        assertThat(site.wpApiRestUrl).isNull()
-        verify(siteSqlUtils, never()).insertOrUpdateSite(any())
+        assertThat(result).isNull()
     }
 
     @Test
-    fun `recoverAndPersist does nothing when discovery returns a failure`() = runTest {
-        val site = siteWithoutUrl()
+    fun `discoverApiRootUrl returns null when discovery returns a failure`() = runTest {
         whenever(wpLoginClient.apiDiscovery(any())).thenReturn(
             ApiDiscoveryResult.FailureParseSiteUrl(ParseUrlException.Generic(""))
         )
 
-        recoverer.recoverAndPersistIfMissing(site)
+        val result = recoverer.discoverApiRootUrl(SITE_URL)
 
-        assertThat(site.wpApiRestUrl).isNull()
-        verify(siteSqlUtils, never()).insertOrUpdateSite(any())
+        assertThat(result).isNull()
     }
 
     @Test
-    fun `recoverAndPersist swallows non-cancellation exceptions thrown by discovery`() = runTest {
-        val site = siteWithoutUrl()
+    fun `discoverApiRootUrl swallows non-cancellation exceptions and returns null`() = runTest {
         whenever(wpLoginClient.apiDiscovery(any()))
             .doThrow(RuntimeException("network error"))
 
-        recoverer.recoverAndPersistIfMissing(site)
+        val result = recoverer.discoverApiRootUrl(SITE_URL)
 
-        assertThat(site.wpApiRestUrl).isNull()
-        verify(siteSqlUtils, never()).insertOrUpdateSite(any())
+        assertThat(result).isNull()
     }
 
     @Test
-    fun `recoverAndPersist rethrows CancellationException to preserve structured concurrency`() = runTest {
-        val site = siteWithoutUrl()
+    fun `discoverApiRootUrl rethrows CancellationException to preserve structured concurrency`() = runTest {
         whenever(wpLoginClient.apiDiscovery(any()))
             .doThrow(CancellationException("cancelled"))
 
         assertFailsWith<CancellationException> {
-            recoverer.recoverAndPersistIfMissing(site)
+            recoverer.discoverApiRootUrl(SITE_URL)
         }
-        verify(siteSqlUtils, never()).insertOrUpdateSite(any())
     }
 
     @Test
-    fun `recoverAndPersist skips the DB write when the site is not in the DB`() = runTest {
-        val site = siteWithoutUrl()
-        stubDiscoverySuccess(DISCOVERED_API_ROOT)
-        whenever(siteSqlUtils.getSitesWithLocalId(LOCAL_ID)).thenReturn(emptyList())
+    fun `persistApiRootUrl returns true and writes the column when a row matches`() = runTest {
+        whenever(siteSqlUtils.updateWpApiRestUrl(LOCAL_ID, DISCOVERED_API_ROOT)).thenReturn(1)
 
-        recoverer.recoverAndPersistIfMissing(site)
+        val updated = recoverer.persistApiRootUrl(LOCAL_ID, DISCOVERED_API_ROOT)
 
-        assertThat(site.wpApiRestUrl).isEqualTo(DISCOVERED_API_ROOT)
-        verify(siteSqlUtils, never()).insertOrUpdateSite(any())
+        assertThat(updated).isTrue()
     }
 
     @Test
-    fun `discoverInMemory populates wpApiRestUrl when missing but never touches the DB`() = runTest {
-        val site = siteWithoutUrl()
-        stubDiscoverySuccess(DISCOVERED_API_ROOT)
+    fun `persistApiRootUrl returns false when no row matches the local id`() = runTest {
+        whenever(siteSqlUtils.updateWpApiRestUrl(LOCAL_ID, DISCOVERED_API_ROOT)).thenReturn(0)
 
-        recoverer.discoverInMemoryIfMissing(site)
+        val updated = recoverer.persistApiRootUrl(LOCAL_ID, DISCOVERED_API_ROOT)
 
-        assertThat(site.wpApiRestUrl).isEqualTo(DISCOVERED_API_ROOT)
-        verify(siteSqlUtils, never()).getSitesWithLocalId(any())
-        verify(siteSqlUtils, never()).insertOrUpdateSite(any())
-    }
-
-    @Test
-    fun `discoverInMemory skips discovery when wpApiRestUrl is already populated`() = runTest {
-        val site = siteWithoutUrl().apply { wpApiRestUrl = "https://example.test/wp-json/" }
-
-        recoverer.discoverInMemoryIfMissing(site)
-
-        verify(wpLoginClient, never()).apiDiscovery(any())
-    }
-
-    @Test
-    fun `discoverInMemory does nothing when discovery fails`() = runTest {
-        val site = siteWithoutUrl()
-        whenever(wpLoginClient.apiDiscovery(any())).thenReturn(
-            ApiDiscoveryResult.FailureParseSiteUrl(ParseUrlException.Generic(""))
-        )
-
-        recoverer.discoverInMemoryIfMissing(site)
-
-        assertThat(site.wpApiRestUrl).isNull()
-    }
-
-    @Test
-    fun `discoverInMemory swallows non-cancellation exceptions thrown by discovery`() = runTest {
-        val site = siteWithoutUrl()
-        whenever(wpLoginClient.apiDiscovery(any()))
-            .doThrow(RuntimeException("network error"))
-
-        recoverer.discoverInMemoryIfMissing(site)
-
-        assertThat(site.wpApiRestUrl).isNull()
-    }
-
-    @Test
-    fun `discoverInMemory rethrows CancellationException to preserve structured concurrency`() = runTest {
-        val site = siteWithoutUrl()
-        whenever(wpLoginClient.apiDiscovery(any()))
-            .doThrow(CancellationException("cancelled"))
-
-        assertFailsWith<CancellationException> {
-            recoverer.discoverInMemoryIfMissing(site)
-        }
+        assertThat(updated).isFalse()
     }
 }

@@ -180,14 +180,14 @@ class ApplicationPasswordViewModelSliceTest : BaseUnitTest() {
     fun `given headless mint succeeds, card hides without waiting for the recoverer`() = runTest {
         stubMintSuccess()
         val recoverGate = CompletableDeferred<Unit>()
-        whenever(siteApiRestUrlRecoverer.recoverAndPersistIfMissing(any()))
-            .doSuspendableAnswer { recoverGate.await() }
+        whenever(siteApiRestUrlRecoverer.discoverApiRootUrl(any()))
+            .doSuspendableAnswer { recoverGate.await(); null }
 
         applicationPasswordViewModelSlice.buildCard(siteTest)
 
         // Card has been hidden even though the recoverer is still suspended on the gate.
         assertNull(applicationPasswordCard)
-        verify(siteApiRestUrlRecoverer).recoverAndPersistIfMissing(siteTest)
+        verify(siteApiRestUrlRecoverer).discoverApiRootUrl(siteTest.url)
 
         // Release the recoverer so the test scope doesn't carry a dangling coroutine.
         recoverGate.complete(Unit)
@@ -210,13 +210,13 @@ class ApplicationPasswordViewModelSliceTest : BaseUnitTest() {
         whenever(applicationPasswordValidator.validate(any()))
             .thenReturn(ApplicationPasswordValidator.Outcome.Valid)
         val recoverGate = CompletableDeferred<Unit>()
-        whenever(siteApiRestUrlRecoverer.recoverAndPersistIfMissing(any()))
-            .doSuspendableAnswer { recoverGate.await() }
+        whenever(siteApiRestUrlRecoverer.discoverApiRootUrl(any()))
+            .doSuspendableAnswer { recoverGate.await(); null }
 
         applicationPasswordViewModelSlice.buildCard(siteTest)
 
         assertNull(applicationPasswordCard)
-        verify(siteApiRestUrlRecoverer).recoverAndPersistIfMissing(any())
+        verify(siteApiRestUrlRecoverer).discoverApiRootUrl(TEST_URL)
 
         recoverGate.complete(Unit)
     }

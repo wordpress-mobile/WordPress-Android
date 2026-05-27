@@ -84,7 +84,7 @@ class ApplicationPasswordViewModelSlice @Inject constructor(
                 when (applicationPasswordValidator.validate(storedSite)) {
                     ApplicationPasswordValidator.Outcome.Valid -> {
                         // Heal in the background so the card hides immediately on a slow network.
-                        scope.launch { siteApiRestUrlRecoverer.recoverAndPersistIfMissing(storedSite) }
+                        scope.launch { healApiRestUrlIfMissing(storedSite) }
                         handleValidAuth(storedSite)
                         return@launch
                     }
@@ -115,7 +115,7 @@ class ApplicationPasswordViewModelSlice @Inject constructor(
                 // The mint goes through the Jetpack tunnel and never runs discovery — without this
                 // step, freshly minted Atomic sites end up with working creds but a NULL
                 // wpApiRestUrl in the local DB. Run in the background so the card hides immediately.
-                scope.launch { siteApiRestUrlRecoverer.recoverAndPersistIfMissing(storedSite) }
+                scope.launch { healApiRestUrlIfMissing(storedSite) }
                 handleValidAuth(storedSite)
                 return@launch
             }
@@ -132,6 +132,14 @@ class ApplicationPasswordViewModelSlice @Inject constructor(
             } else {
                 buildAuthenticationCard(storedSite)
             }
+        }
+    }
+
+    private suspend fun healApiRestUrlIfMissing(site: SiteModel) {
+        if (!site.wpApiRestUrl.isNullOrEmpty()) return
+        siteApiRestUrlRecoverer.discoverApiRootUrl(site.url)?.let { apiRootUrl ->
+            site.wpApiRestUrl = apiRootUrl
+            siteApiRestUrlRecoverer.persistApiRootUrl(site.id, apiRootUrl)
         }
     }
 

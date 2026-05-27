@@ -16,13 +16,14 @@ import javax.inject.Singleton
 import kotlin.coroutines.cancellation.CancellationException
 
 /**
- * Discovers and populates [SiteModel.wpApiRestUrl] when it's missing, healing sites that
- * landed in the DB without one (WP.com `/me/sites` omits the field; headless application-
- * password mint goes through the Jetpack tunnel without running discovery).
+ * Heals [SiteModel.wpApiRestUrl] when it's missing — WP.com `/me/sites` omits the field, and
+ * headless application-password mint runs through the Jetpack tunnel without doing discovery.
  *
- * - [recoverAndPersistIfMissing] writes to the DB. Used from the auth flow.
- * - [discoverInMemoryIfMissing] sets the in-memory model only — for short-lived consumers
- *   (editor preloader) that just need the URL for one call.
+ * - [discoverApiRootUrl] runs REST API autodiscovery and returns the discovered root URL.
+ * - [persistApiRootUrl] writes only that one column to the DB row for `localId`.
+ *
+ * Callers handle the "is it missing?" check and the in-memory assignment themselves so the
+ * mutation stays visible at the call site.
  */
 @Singleton
 class SiteApiRestUrlRecoverer @Inject constructor(
@@ -32,74 +33,38 @@ class SiteApiRestUrlRecoverer @Inject constructor(
     private val appLogWrapper: AppLogWrapper,
     @param:Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
 ) {
-    suspend fun recoverAndPersistIfMissing(site: SiteModel) {
-        if (!site.wpApiRestUrl.isNullOrEmpty()) return
-        withContext(bgDispatcher) {
-            val apiRootUrl = runDiscovery(site) ?: return@withContext
-            site.wpApiRestUrl = apiRootUrl
-            persist(site.id, apiRootUrl)
-        }
-    }
-
-    suspend fun discoverInMemoryIfMissing(site: SiteModel) {
-        if (!site.wpApiRestUrl.isNullOrEmpty()) return
-        withContext(bgDispatcher) {
-            val apiRootUrl = runDiscovery(site) ?: return@withContext
-            site.wpApiRestUrl = apiRootUrl
-            appLogWrapper.d(
-                AppLog.T.API,
-                "Discovered wpApiRestUrl=$apiRootUrl for ${site.url} (in-memory only)"
-            )
-        }
-    }
-
-    // Re-reads the DB row by local ID and writes only [SiteModel.wpApiRestUrl]. This preserves
-    // anything that other code paths (e.g. an UPDATE_APPLICATION_PASSWORD that ran between site
-    // load and here) wrote since the in-memory model was last loaded. Writing the in-memory site
-    // directly is *unsafe* — it would clobber concurrent updates to other fields.
-    @Suppress("SwallowedException")
-    private fun persist(localId: Int, apiRootUrl: String) {
-        val siteFromDB = siteSqlUtils.getSitesWithLocalId(localId).firstOrNull() ?: run {
-            appLogWrapper.w(AppLog.T.API, "Cannot persist wpApiRestUrl: no site with localId=$localId")
-            return
-        }
-        siteFromDB.wpApiRestUrl = apiRootUrl
+    @Suppress("TooGenericExceptionCaught")
+    suspend fun discoverApiRootUrl(siteUrl: String): String? = withContext(bgDispatcher) {
         try {
-            siteSqlUtils.insertOrUpdateSite(siteFromDB)
-            appLogWrapper.d(
-                AppLog.T.API,
-                "Recovered wpApiRestUrl=$apiRootUrl for ${siteFromDB.url} (persisted)"
-            )
-        } catch (e: SiteSqlUtils.DuplicateSiteException) {
+            when (val result = wpLoginClient.apiDiscovery(siteUrl)) {
+                is ApiDiscoveryResult.Success -> {
+                    val apiRootUrl = discoverSuccessWrapper.getApiRootUrl(result)
+                    if (apiRootUrl.isBlank()) null else apiRootUrl
+                }
+                else -> {
+                    appLogWrapper.w(AppLog.T.API, "API discovery failed for $siteUrl")
+                    null
+                }
+            }
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
             appLogWrapper.e(
                 AppLog.T.API,
-                "DuplicateSiteException persisting wpApiRestUrl=$apiRootUrl for ${siteFromDB.url}"
+                "API discovery threw for $siteUrl: ${e::class.simpleName}: ${e.message}"
             )
+            null
         }
     }
 
-    @Suppress("TooGenericExceptionCaught")
-    private suspend fun runDiscovery(site: SiteModel): String? = try {
-        when (val result = wpLoginClient.apiDiscovery(site.url)) {
-            is ApiDiscoveryResult.Success -> {
-                val apiRootUrl = discoverSuccessWrapper.getApiRootUrl(result)
-                if (apiRootUrl.isBlank()) null else apiRootUrl
-            }
-            else -> {
-                appLogWrapper.w(
-                    AppLog.T.API,
-                    "API discovery failed for ${site.url}"
-                )
-                null
-            }
+    suspend fun persistApiRootUrl(localId: Int, apiRootUrl: String): Boolean = withContext(bgDispatcher) {
+        val rowsUpdated = siteSqlUtils.updateWpApiRestUrl(localId, apiRootUrl)
+        if (rowsUpdated == 0) {
+            appLogWrapper.w(AppLog.T.API, "Cannot persist wpApiRestUrl: no site with localId=$localId")
+            false
+        } else {
+            appLogWrapper.d(AppLog.T.API, "Persisted wpApiRestUrl=$apiRootUrl for localId=$localId")
+            true
         }
-    } catch (e: CancellationException) {
-        throw e
-    } catch (e: Exception) {
-        appLogWrapper.e(
-            AppLog.T.API,
-            "API discovery threw for ${site.url}: ${e::class.simpleName}: ${e.message}"
-        )
-        null
     }
 }

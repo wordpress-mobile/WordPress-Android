@@ -95,7 +95,10 @@ class GutenbergEditorPreloader @Inject constructor(
         val siteId = site.id
         val job = scope.launch(bgDispatcher) {
             try {
-                siteApiRestUrlRecoverer.discoverInMemoryIfMissing(site)
+                if (site.wpApiRestUrl.isNullOrEmpty()) {
+                    siteApiRestUrlRecoverer.discoverApiRootUrl(site.url)
+                        ?.let { site.wpApiRestUrl = it }
+                }
                 editorSettingsRepository
                     .fetchEditorCapabilitiesForSite(site)
                 // Preloading produces EditorDependencies, which the editor
