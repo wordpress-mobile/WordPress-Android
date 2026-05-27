@@ -2434,12 +2434,47 @@ open class SiteStore @Inject constructor(
         }
 
     /**
-     * Clears stored application-password credentials (encrypted prefs) so the next call to
+     * Clears stored application-password credentials so the next call to
      * [createApplicationPassword] mints a fresh one. Use this when a validation call against the
      * stored credentials has failed (e.g. 401, password revoked server-side).
+     *
+     * Both storage locations are cleared:
+     * - The encrypted SharedPreferences cache (`ApplicationPasswordsStore`), so
+     *   [ApplicationPasswordsManager] doesn't short-circuit the next mint by returning
+     *   `Existing` with the revoked password.
+     * - The SiteModel's credential columns (`apiRest*`), so subsequent reads — validation
+     *   loops, XML-RPC rediscovery, etc. — don't see the stale credentials.
+     *
+     * `wpApiRestUrl` is intentionally preserved. Unlike [removeApplicationPassword] (full sign-out),
+     * the discovered REST URL is reusable across credential rotations; clearing it would force a
+     * re-discovery on every refresh after a revoke.
      */
     fun deleteStoredApplicationPasswordCredentials(site: SiteModel) {
         applicationPasswordsManagerProvider.get().deleteLocalApplicationPassword(site)
+        emitChange(clearApplicationPasswordColumns(site))
+    }
+
+    @Suppress("SwallowedException")
+    private fun clearApplicationPasswordColumns(siteModel: SiteModel): OnSiteChanged {
+        return try {
+            val siteFromDB = getSiteByLocalId(siteModel.id)
+                ?: return OnSiteChanged(SiteError(SiteErrorType.INVALID_SITE))
+            // Clear both Plain and Encrypted columns. `SiteSqlUtils.encryptAPIRestCredentials`
+            // short-circuits when the encrypted columns are non-empty, so clearing only the plain
+            // values would leave the stale ciphertext in place and `decryptAPIRestCredentials`
+            // would resurrect them on the next read.
+            siteFromDB.apply {
+                apiRestUsernamePlain = ""
+                apiRestPasswordPlain = ""
+                apiRestUsernameEncrypted = ""
+                apiRestPasswordEncrypted = ""
+                apiRestUsernameIV = ""
+                apiRestPasswordIV = ""
+            }
+            OnSiteChanged(siteSqlUtils.insertOrUpdateSite(siteFromDB))
+        } catch (e: DuplicateSiteException) {
+            OnSiteChanged(SiteError(DUPLICATE_SITE))
+        }
     }
 
     private fun persistApplicationPasswordCredentials(
