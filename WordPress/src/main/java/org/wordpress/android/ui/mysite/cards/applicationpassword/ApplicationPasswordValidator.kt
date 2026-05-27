@@ -8,6 +8,7 @@ import org.wordpress.android.util.AppLog
 import rs.wordpress.api.kotlin.WpRequestResult
 import uniffi.wp_api.RequestExecutionErrorReason
 import uniffi.wp_api.WpErrorCode
+import java.net.HttpURLConnection
 import javax.inject.Inject
 
 /**
@@ -18,9 +19,10 @@ import javax.inject.Inject
  *
  * Classification is intentionally asymmetric: a return of [Outcome.Invalid] cascades into a
  * credential wipe + re-mint in the caller, so we only classify as Invalid when we have positive
- * evidence the server rejected the credential (auth-specific [WpErrorCode] or
- * [RequestExecutionErrorReason]). Everything ambiguous — 5xx, parse errors, offline, DNS — falls
- * to [Outcome.NetworkUnavailable], which hides the card and lets the next foreground retry.
+ * evidence the server rejected the credential — an auth-specific [WpErrorCode], an auth-specific
+ * [RequestExecutionErrorReason], or a [WpRequestResult.WpError] with a 401/403 status. Everything
+ * ambiguous — 5xx, parse errors, offline, DNS — falls to [Outcome.NetworkUnavailable], which
+ * hides the card and lets the next foreground retry.
  */
 class ApplicationPasswordValidator @Inject constructor(
     private val wpApiClientProvider: WpApiClientProvider,
@@ -55,8 +57,9 @@ class ApplicationPasswordValidator @Inject constructor(
         // codes for credential failures (`incorrect_password`, `invalid_username`,
         // `application_passwords_disabled_for_user`, plugin-defined codes, etc.) and many of them
         // get parsed as `WpErrorCode.CustomError` via the library's untagged fallback. Status
-        // code is the reliable signal. Also include a few non-auth-status codes that we know
-        // mean the credential is unusable.
+        // code is the reliable signal. Additionally, accept a small allowlist of WpErrorCode
+        // names (e.g. `ApplicationPasswordNotFound`, which comes back with 404) that signal an
+        // unusable credential outside the 401/403 status range.
         is WpRequestResult.WpError -> if (
             isAuthErrorCode(response.errorCode) || isAuthStatusCode(response.statusCode)
         ) {
@@ -86,17 +89,13 @@ class ApplicationPasswordValidator @Inject constructor(
             code is WpErrorCode.NoAuthenticatedAppPassword
 
     private fun isAuthStatusCode(statusCode: UInt): Boolean =
-        statusCode.toInt() == HTTP_UNAUTHORIZED || statusCode.toInt() == HTTP_FORBIDDEN
+        statusCode.toInt() == HttpURLConnection.HTTP_UNAUTHORIZED ||
+            statusCode.toInt() == HttpURLConnection.HTTP_FORBIDDEN
 
     private fun isAuthErrorReason(reason: RequestExecutionErrorReason): Boolean =
         reason is RequestExecutionErrorReason.HttpAuthenticationRejectedError ||
             reason is RequestExecutionErrorReason.HttpAuthenticationRequiredError ||
             reason is RequestExecutionErrorReason.HttpForbiddenError
-
-    companion object {
-        private const val HTTP_UNAUTHORIZED = 401
-        private const val HTTP_FORBIDDEN = 403
-    }
 
     enum class Outcome { Valid, Invalid, NetworkUnavailable }
 }
