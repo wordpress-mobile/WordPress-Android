@@ -71,11 +71,13 @@ class GutenbergKitAnnouncementBottomSheetFragment : BottomSheetDialogFragment() 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        // Force STATE_EXPANDED so the screen has a defined height — the flex spacer between body
-        // and buttons in the Compose layout relies on the parent being taller than its content.
+        // Defer the expand to the show callback so the sheet slides up from offscreen instead of
+        // starting at its final position (which skips the slide-in animation entirely).
         (dialog as? BottomSheetDialog)?.apply {
-            behavior.state = BottomSheetBehavior.STATE_EXPANDED
             behavior.skipCollapsed = true
+            setOnShowListener {
+                behavior.state = BottomSheetBehavior.STATE_EXPANDED
+            }
         }
     }
 
