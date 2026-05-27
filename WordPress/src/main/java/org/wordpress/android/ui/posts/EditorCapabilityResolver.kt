@@ -31,7 +31,7 @@ class EditorCapabilityResolver @Inject constructor(
     private val siteSettingsProvider: SiteSettingsProvider,
 ) {
     fun resolveThirdPartyBlocks(site: SiteModel): EditorCapabilityState = when {
-        !gutenbergKitFeatureChecker.isGutenbergKitEnabled() -> EditorCapabilityState.Hidden
+        !gutenbergKitFeatureChecker.isGutenbergKitEnabled(site) -> EditorCapabilityState.Hidden
         !gutenbergKitPluginsFeature.isEnabled() -> EditorCapabilityState.Hidden
         !editorSettingsRepository.getSupportsEditorAssetsForSite(site) ->
             EditorCapabilityState.Unsupported(EditorCapabilityState.UnsupportedReason.CapabilityMissing)
@@ -45,7 +45,7 @@ class EditorCapabilityResolver @Inject constructor(
     }
 
     fun resolveThemeStyles(site: SiteModel): EditorCapabilityState = when {
-        !gutenbergKitFeatureChecker.isGutenbergKitEnabled() -> EditorCapabilityState.Hidden
+        !gutenbergKitFeatureChecker.isGutenbergKitEnabled(site) -> EditorCapabilityState.Hidden
         !editorSettingsRepository.getSupportsEditorSettingsForSite(site) ->
             EditorCapabilityState.Unsupported(EditorCapabilityState.UnsupportedReason.CapabilityMissing)
         else -> {
