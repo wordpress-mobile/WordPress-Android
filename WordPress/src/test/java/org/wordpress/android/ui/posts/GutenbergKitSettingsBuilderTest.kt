@@ -626,9 +626,9 @@ class GutenbergKitSettingsBuilderTest {
 
     @Test
     fun `locale passes through to configuration`() {
-        val config = buildWPComConfig(locale = "fr-fr")
+        val config = buildWPComConfig(locale = "pt-br")
 
-        assertThat(config.locale).isEqualTo("fr-fr")
+        assertThat(config.locale).isEqualTo("pt-br")
     }
 
     @Test

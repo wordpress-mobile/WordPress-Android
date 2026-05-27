@@ -7,6 +7,7 @@ import org.wordpress.android.util.AppLog
 import org.wordpress.gutenberg.model.EditorConfiguration
 import org.wordpress.gutenberg.model.PostTypeDetails
 import java.net.URI
+import java.util.Locale
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -77,12 +78,13 @@ class GutenbergKitSettingsBuilder @Inject constructor(
                 editorCapabilityResolver.resolveThemeStyles(site).shouldApplyInEditor
             )
             setPlugins(thirdPartyBlocks.shouldApplyInEditor)
-            setLocale(locale)
+            setLocale(Locale.forLanguageTag(locale))
             setCookies(cookies)
             setEnableAssetCaching(true)
             setCachedAssetHosts(cachedHosts)
             setEditorAssetsEndpoint(editorAssetsEndpoint)
             setEnableNetworkLogging(isNetworkLoggingEnabled)
+            setEnableNativeBlockInserter(true)
         }.build()
     }
 
