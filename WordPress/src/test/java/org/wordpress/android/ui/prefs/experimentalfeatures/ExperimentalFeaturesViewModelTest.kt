@@ -14,15 +14,11 @@ import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures.Feature
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
-import org.wordpress.android.util.config.GutenbergKitFeature
 
 @ExperimentalCoroutinesApi
 class ExperimentalFeaturesViewModelTest : BaseUnitTest() {
     @Mock
     private lateinit var experimentalFeatures: ExperimentalFeatures
-
-    @Mock
-    private lateinit var gutenbergKitFeature: GutenbergKitFeature
 
     @Mock
     private lateinit var appLogWrapper: AppLogWrapper
@@ -38,31 +34,15 @@ class ExperimentalFeaturesViewModelTest : BaseUnitTest() {
     @Before
     fun setUp() {
         whenever(experimentalFeatures.isEnabled(any())).thenReturn(false)
-        whenever(gutenbergKitFeature.isEnabled()).thenReturn(false)
     }
 
     @Test
-    fun `init shows disable block editor when gutenberg kit is enabled`() = test {
-        whenever(gutenbergKitFeature.isEnabled()).thenReturn(true)
-
-        createViewModel()
-
-        val states = viewModel.switchStates.value
-
-        assertThat(states).containsKey(Feature.DISABLE_EXPERIMENTAL_BLOCK_EDITOR)
-        assertThat(states).doesNotContainKey(Feature.EXPERIMENTAL_BLOCK_EDITOR)
-    }
-
-    @Test
-    fun `init shows experimental block editor when gutenberg kit is disabled`() = test {
-        whenever(gutenbergKitFeature.isEnabled()).thenReturn(false)
-
+    fun `init shows experimental block editor feature`() = test {
         createViewModel()
 
         val states = viewModel.switchStates.value
 
         assertThat(states).containsKey(Feature.EXPERIMENTAL_BLOCK_EDITOR)
-        assertThat(states).doesNotContainKey(Feature.DISABLE_EXPERIMENTAL_BLOCK_EDITOR)
     }
 
     @Test
@@ -133,7 +113,6 @@ class ExperimentalFeaturesViewModelTest : BaseUnitTest() {
     private fun createViewModel() {
         viewModel = ExperimentalFeaturesViewModel(
             experimentalFeatures = experimentalFeatures,
-            gutenbergKitFeature = gutenbergKitFeature,
             appLogWrapper = appLogWrapper,
             appPrefsWrapper = appPrefsWrapper,
             analyticsTrackerWrapper = analyticsTrackerWrapper

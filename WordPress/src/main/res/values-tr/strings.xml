@@ -215,8 +215,6 @@ Language: tr
     <string name="experimental_features_feedback_dialog_title">Görüşlerinizi paylaşın</string>
     <string name="experimental_block_editor_description">Ek blok türlerine ve ayarlarına erişin</string>
     <string name="experimental_block_editor_note">Deneysel blok düzenleyici gelecekteki bir sürümde varsayılan olacak ve bunu devre dışı bırakma özelliği kaldırılacak.</string>
-    <string name="disable_experimental_block_editor_description">Ek blok türlerini ve ayarlarını devre dışı bırakın</string>
-    <string name="disable_experimental_block_editor">Deneysel blok düzenleyiciyi devre dışı bırakın</string>
     <string name="avatar_update_email_unverified">Avatarınızı güncellemek için öncelikle e-posta adresinizi doğrulamanız gerekir.</string>
     <string name="feedback_form_note_link_wordpress">topluluk forumları.</string>
     <string name="default_web_client_id" a8c-src-lib="module:login">yer tutucu</string>

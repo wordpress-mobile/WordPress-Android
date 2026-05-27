@@ -132,8 +132,6 @@ Language: pl
     <string name="experimental_features_feedback_dialog_title">Podziel się swoją informacją zwrotną</string>
     <string name="experimental_block_editor_description">Uzyskaj dostęp do dodatkowych rodzajów bloków oraz ustawień</string>
     <string name="experimental_block_editor_note">Eksperymentalny edytor bloków stanie się domyślny w przyszłych wydaniach, a funkcjonalność umożliwiająca wyłączenie go będzie usunięta.</string>
-    <string name="disable_experimental_block_editor_description">Zrezygnuj z dodatkowych rodzajów bloków oraz ustawień</string>
-    <string name="disable_experimental_block_editor">Wyłącz eksperymentalny edytor blokowy</string>
     <string name="avatar_update_email_unverified">Aby zaktualizować swój awatar, musisz najpierw zweryfikować swój adres e-mail.</string>
     <string name="feedback_form_note_link_wordpress">fora społecznościowe.</string>
     <string name="default_web_client_id" a8c-src-lib="module:login">symbol zastępczy</string>

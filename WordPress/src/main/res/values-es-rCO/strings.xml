@@ -132,8 +132,6 @@ Language: es_CO
     <string name="experimental_features_feedback_dialog_message">¿Te apetece compartir impresiones sobre el editor experimental?</string>
     <string name="experimental_block_editor_description">Accede a tipos de bloque y ajustes adicionales</string>
     <string name="experimental_block_editor_note">El editor de bloques experimental se convertirá en el predeterminado en una futura versión y se eliminará la posibilidad de desactivarlo.</string>
-    <string name="disable_experimental_block_editor_description">Exclusión de tipos de bloque y ajustes adicionales</string>
-    <string name="disable_experimental_block_editor">Desactivar el editor de bloques experimental</string>
     <string name="avatar_update_email_unverified">Para actualizar su avatar, primero debes verificar tu dirección de correo electrónico.</string>
     <string name="feedback_form_note_link_wordpress">foros de la comunidad</string>
     <string name="default_web_client_id" a8c-src-lib="module:login">marcador de posición</string>

@@ -192,8 +192,6 @@ Language: ja_JP
     <string name="experimental_features_feedback_dialog_title">フィードバックを共有</string>
     <string name="experimental_block_editor_description">追加のブロックタイプと設定にアクセス</string>
     <string name="experimental_block_editor_note">試験用のブロックエディターは将来のリリースでデフォルトになり、無効化する機能は削除されます。</string>
-    <string name="disable_experimental_block_editor_description">追加のブロックタイプと設定をオプトアウト</string>
-    <string name="disable_experimental_block_editor">試験用のブロックエディターを無効化</string>
     <string name="avatar_update_email_unverified">アバターを更新するには、まずメールアドレスを確認する必要があります。</string>
     <string name="feedback_form_note_link_wordpress">コミュニティフォーラム。</string>
     <string name="default_web_client_id" a8c-src-lib="module:login">プレースホルダー</string>

@@ -215,8 +215,6 @@ Language: ro
     <string name="experimental_features_feedback_dialog_title">Împărtășește impresiile</string>
     <string name="experimental_block_editor_description">Ai acces la tipuri de blocuri și setări suplimentare</string>
     <string name="experimental_block_editor_note">Editorul de blocuri experimental va deveni implicit într-o versiune viitoare și posibilitatea de a-l dezactiva va fi înlăturată.</string>
-    <string name="disable_experimental_block_editor_description">Renunță la tipuri de bloc și setările suplimentare</string>
-    <string name="disable_experimental_block_editor">Dezactivează editorul de blocuri experimental</string>
     <string name="avatar_update_email_unverified">Pentru a-ți actualiza avatarul, mai întâi trebuie să-ți confirmi adresa de email.</string>
     <string name="feedback_form_note_link_wordpress">forumuri pentru comunitate.</string>
     <string name="default_web_client_id" a8c-src-lib="module:login">substituent</string>

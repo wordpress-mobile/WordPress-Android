@@ -32,6 +32,7 @@ import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.mediapicker.MediaPickerActivity
 import org.wordpress.android.ui.posts.BasicDialogViewModel
 import org.wordpress.android.ui.posts.GutenbergEditorPreloader
+import org.wordpress.android.ui.posts.GutenbergKitAnnouncementController
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationSource
 import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
@@ -68,11 +69,14 @@ class MySiteViewModel @Inject constructor(
     private val siteCapabilityChecker: SiteCapabilityChecker,
     private val gutenbergEditorPreloader: GutenbergEditorPreloader,
     private val siteConnectivityBannerViewModelSlice: SiteConnectivityBannerViewModelSlice,
+    private val gutenbergKitAnnouncementController: GutenbergKitAnnouncementController,
 ) : ScopedViewModel(mainDispatcher) {
     private val _onSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
     private val _onNavigation = MutableLiveData<Event<SiteNavigationAction>>()
     private val _onOpenJetpackInstallFullPluginOnboarding = SingleLiveEvent<Event<Unit>>()
     private val _onShowJetpackIndividualPluginOverlay = SingleLiveEvent<Event<Unit>>()
+    private val _onShowGutenbergKitAnnouncement = SingleLiveEvent<Event<SiteModel>>()
+    val onShowGutenbergKitAnnouncement: LiveData<Event<SiteModel>> = _onShowGutenbergKitAnnouncement
 
     /* Capture and track the site selected event so we can circumvent refreshing sources on resume
        as they're already built on site select. */
@@ -185,6 +189,7 @@ class MySiteViewModel @Inject constructor(
     fun onResume() {
         isSiteSelected = false
         checkAndShowJetpackFullPluginInstallOnboarding()
+        checkAndShowGutenbergKitAnnouncement()
         selectedSiteRepository.updateSiteSettingsIfNecessary()
         selectedSiteRepository.getSelectedSite()?.let {
             buildDashboardOrSiteItems(it)
@@ -201,6 +206,14 @@ class MySiteViewModel @Inject constructor(
         selectedSiteRepository.getSelectedSite()?.let { selectedSite ->
             if (getShowJetpackFullPluginInstallOnboardingUseCase.execute(selectedSite)) {
                 _onOpenJetpackInstallFullPluginOnboarding.postValue(Event(Unit))
+            }
+        }
+    }
+
+    private fun checkAndShowGutenbergKitAnnouncement() {
+        selectedSiteRepository.getSelectedSite()?.let { selectedSite ->
+            if (gutenbergKitAnnouncementController.shouldShowAnnouncement(selectedSite)) {
+                _onShowGutenbergKitAnnouncement.postValue(Event(selectedSite))
             }
         }
     }

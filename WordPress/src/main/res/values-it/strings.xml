@@ -215,8 +215,6 @@ Language: it
     <string name="experimental_features_feedback_dialog_title">Condividi un feedback</string>
     <string name="experimental_block_editor_description">Accedi a tipi di blocco e impostazioni aggiuntivi</string>
     <string name="experimental_block_editor_note">L\'editor a blocchi sperimentale diventerà l\'editor predefinito in una prossima versione e verrà rimossa la possibilità di disattivarlo.</string>
-    <string name="disable_experimental_block_editor_description">Annulla l\'adesione a tipi di blocco e impostazioni aggiuntivi</string>
-    <string name="disable_experimental_block_editor">Disabilita l\'editor a blocchi sperimentale</string>
     <string name="avatar_update_email_unverified">Per aggiornare il tuo avatar devi prima verificare il tuo indirizzo e-mail.</string>
     <string name="feedback_form_note_link_wordpress">i forum della community.</string>
     <string name="default_web_client_id" a8c-src-lib="module:login">segnaposto</string>
