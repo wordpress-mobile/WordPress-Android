@@ -454,10 +454,8 @@ class PageListViewModel @Inject constructor(
             page.parent?.remoteId == null ||
                 !listType.pageStatuses.contains(page.parent?.status)
         }
-        val childrenByParentId = pages
-            .filterNot { isRoot(it) }
-            .groupBy { it.parent?.remoteId }
-        val roots = pages.filter { isRoot(it) }
+        val (roots, nonRoots) = pages.partition { isRoot(it) }
+        val childrenByParentId = nonRoots.groupBy { it.parent?.remoteId }
 
         fun collect(page: PageModel, result: MutableList<PageModel>) {
             result += page
