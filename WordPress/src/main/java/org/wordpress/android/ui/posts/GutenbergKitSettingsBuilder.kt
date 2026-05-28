@@ -4,21 +4,21 @@ import android.util.Base64
 import org.wordpress.android.fluxc.model.PostImmutableModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.PerAppLocaleManager
 import org.wordpress.gutenberg.model.EditorConfiguration
 import org.wordpress.gutenberg.model.PostTypeDetails
 import java.net.URI
-import java.util.Locale
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class GutenbergKitSettingsBuilder @Inject constructor(
     private val editorCapabilityResolver: EditorCapabilityResolver,
+    private val perAppLocaleManager: PerAppLocaleManager,
 ) {
     fun buildPostConfiguration(
         site: SiteModel,
         accessToken: String?,
-        locale: String,
         cookies: Map<String, String>,
         isNetworkLoggingEnabled: Boolean,
         post: PostImmutableModel? = null,
@@ -78,7 +78,7 @@ class GutenbergKitSettingsBuilder @Inject constructor(
                 editorCapabilityResolver.resolveThemeStyles(site).shouldApplyInEditor
             )
             setPlugins(thirdPartyBlocks.shouldApplyInEditor)
-            setLocale(Locale.forLanguageTag(locale))
+            setLocale(perAppLocaleManager.getCurrentLocale())
             setCookies(cookies)
             setEnableAssetCaching(true)
             setCachedAssetHosts(cachedHosts)
