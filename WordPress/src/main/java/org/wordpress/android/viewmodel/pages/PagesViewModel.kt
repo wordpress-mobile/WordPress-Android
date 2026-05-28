@@ -218,7 +218,7 @@ class PagesViewModel
 
     private var _site: SiteModel? = null
     val site: SiteModel
-        get() = checkNotNull(_site) { "Trying to access unitialized site" }
+        get() = checkNotNull(_site) { "Trying to access uninitialized site" }
 
     private var _arePageActionsEnabled = true
     val arePageActionsEnabled: Boolean

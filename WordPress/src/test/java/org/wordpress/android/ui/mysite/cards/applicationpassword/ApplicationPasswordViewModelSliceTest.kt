@@ -32,6 +32,7 @@ import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.SiteStore.OnApplicationPasswordCreated
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.ui.accounts.login.ApplicationPasswordLoginHelper
+import org.wordpress.android.ui.accounts.login.SiteApiRestUrlRecoverer
 import org.wordpress.android.ui.mysite.MySiteCardAndItem
 import kotlin.test.assertNotNull
 
@@ -67,6 +68,9 @@ class ApplicationPasswordViewModelSliceTest : BaseUnitTest() {
     lateinit var siteXMLRPCClient: SiteXMLRPCClient
 
     @Mock
+    lateinit var siteApiRestUrlRecoverer: SiteApiRestUrlRecoverer
+
+    @Mock
     lateinit var dispatcher: Dispatcher
 
     private lateinit var siteTest: SiteModel
@@ -87,6 +91,7 @@ class ApplicationPasswordViewModelSliceTest : BaseUnitTest() {
             applicationPasswordValidator,
             selfHostedEndpointFinder,
             siteXMLRPCClient,
+            siteApiRestUrlRecoverer,
             dispatcher,
             testDispatcher()
         ).apply {
@@ -169,6 +174,51 @@ class ApplicationPasswordViewModelSliceTest : BaseUnitTest() {
         assertNull(applicationPasswordCard)
         verify(siteStore).createApplicationPassword(any())
         verify(applicationPasswordLoginHelper, never()).getAuthorizationUrlComplete(any())
+    }
+
+    @Test
+    fun `given headless mint succeeds, card hides without waiting for the recoverer`() = runTest {
+        stubMintSuccess()
+        val recoverGate = CompletableDeferred<Unit>()
+        whenever(siteApiRestUrlRecoverer.discoverApiRootUrl(any()))
+            .doSuspendableAnswer { recoverGate.await(); null }
+
+        applicationPasswordViewModelSlice.buildCard(siteTest)
+
+        // Card has been hidden even though the recoverer is still suspended on the gate.
+        assertNull(applicationPasswordCard)
+        verify(siteApiRestUrlRecoverer).discoverApiRootUrl(siteTest.url)
+
+        // Release the recoverer so the test scope doesn't carry a dangling coroutine.
+        recoverGate.complete(Unit)
+    }
+
+    @Test
+    fun `given valid stored creds, card hides without waiting for the recoverer`() = runTest {
+        whenever(applicationPasswordLoginHelper.siteHasBadCredentials(any())).thenReturn(false)
+        whenever(siteStore.sites).thenReturn(
+            listOf(
+                SiteModel().apply {
+                    id = siteTest.id
+                    url = TEST_URL
+                    apiRestUsernamePlain = "user"
+                    apiRestPasswordPlain = "password"
+                    xmlRpcUrl = siteTest.xmlRpcUrl
+                }
+            )
+        )
+        whenever(applicationPasswordValidator.validate(any()))
+            .thenReturn(ApplicationPasswordValidator.Outcome.Valid)
+        val recoverGate = CompletableDeferred<Unit>()
+        whenever(siteApiRestUrlRecoverer.discoverApiRootUrl(any()))
+            .doSuspendableAnswer { recoverGate.await(); null }
+
+        applicationPasswordViewModelSlice.buildCard(siteTest)
+
+        assertNull(applicationPasswordCard)
+        verify(siteApiRestUrlRecoverer).discoverApiRootUrl(TEST_URL)
+
+        recoverGate.complete(Unit)
     }
 
     @Test
