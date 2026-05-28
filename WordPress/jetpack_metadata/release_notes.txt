@@ -1,3 +1,6 @@
-- We added the Traffic tab to the Stats area as an experimental feature.
-- Button colors are now consistent across different areas of the app.
-- We fixed an infinite loop that sometimes appeared when opening certain types of links.
+* [**] Resolved an issue where the editor could become impossible to exit when it failed to load.
+* [*] Atomic sites can now create application passwords without leaving the app.
+* [**] Fixed a case where the editor failed to load on WP.com Atomic sites whose host doesn't expose `wp-block-editor/v1/settings`.
+* [*] Editor now discovers the correct REST API root for sites with non-default API URLs.
+* [*] Try out the next-generation block editor on a per-site basis from Site Settings.
+* [**] The block inserter now opens as a native bottom sheet instead of a web-based menu.
