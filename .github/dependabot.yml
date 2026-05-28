@@ -60,4 +60,6 @@ updates:
     groups:
       ruby-minor-and-patch:
         update-types: [minor, patch]
+    reviewers:
+      - "wordpress-mobile/apps-infra-tooling"
     open-pull-requests-limit: 5
