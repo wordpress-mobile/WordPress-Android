@@ -1279,7 +1279,6 @@ Language: lv
     <string name="stats_referrer_popup_unmark_as_spam">Noņemt atzīmi no mēstules</string>
     <string name="stats_referrer_popup_menu_mark_as_spam">Atzīmēt kā mēstuli</string>
     <string name="stats_referrer_popup_menu_open_website">Atvērt vietni</string>
-    <string name="media_uploading_gif_library_photo">GIF multivides augšupielāde</string>
     <string name="media_uploading_stock_library_photo">Krājuma multivides augšupielāde</string>
     <string name="media_uploading_default">Notiek multivides augšupielāde</string>
     <string name="suggestion_no_connection">Nav interneta savienojuma. \nIeteikumi nav pieejami.</string>
@@ -1419,9 +1418,6 @@ Language: lv
     <string name="new_site_creation_creating_site_loading_subtitle">Jūsu vietne drīz būs gatava</string>
     <string name="new_site_creation_creating_site_loading_title">Urrā! Gandrīz pabeigts</string>
     <string name="pages_and_posts_cancel_auto_upload">Atcelt augšupielādi</string>
-    <string name="gif_list_search_returned_unknown_error">Apstrādājot pieprasījumu, radās problēma</string>
-    <string name="gif_powered_by_tenor">Darbojas ar Tenor</string>
-    <string name="photo_picker_gif">Izvēlieties no Tenor</string>
     <string name="weekday_saturday">sestdiena</string>
     <string name="weekday_friday">piektdiena</string>
     <string name="weekday_thursday">ceturtdiena</string>
@@ -1825,8 +1821,6 @@ Language: lv
     <string name="stats_no_data_for_period">Nav datu par šo periodu</string>
     <string name="preference_strip_image_location">Noņemiet atrašanās vietu no multivides</string>
     <string name="stats_cannot_be_started">Pašlaik nevaram atvērt statistiku. Lūdzu, pamēģiniet vēlreiz vēlāk</string>
-    <string name="gif_picker_empty_search_list">Nav neviena multivides satura vienība, kas atbilstu jūsu meklējumam</string>
-    <string name="gif_picker_initial_empty_text">Meklējiet, lai atrastu GIF, ko pievienot savai multivides bibliotēkai!</string>
     <string name="stats_author_views_label">Skatījumi</string>
     <string name="stats_author_label">Autors</string>
     <string name="stats_authors">Autori</string>

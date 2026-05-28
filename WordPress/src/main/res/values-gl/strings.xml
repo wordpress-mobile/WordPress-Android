@@ -1394,7 +1394,6 @@ Language: gl_ES
     <string name="stats_referrer_popup_unmark_as_spam">Desmarcar como spam</string>
     <string name="stats_referrer_popup_menu_mark_as_spam">Marcar como spam</string>
     <string name="stats_referrer_popup_menu_open_website">Abrir a web</string>
-    <string name="media_uploading_gif_library_photo">Subindo medios GIF</string>
     <string name="media_uploading_stock_library_photo">Subindo medios de inventarios</string>
     <string name="media_uploading_default">Subindo medios</string>
     <string name="suggestion_no_connection">Non hai conexión a Internet.\nNon están dispoñibles as suxestións.</string>
@@ -1534,9 +1533,6 @@ Language: gl_ES
     <string name="new_site_creation_creating_site_loading_subtitle">O teu sitio estará listo en breve</string>
     <string name="new_site_creation_creating_site_loading_title">Hurra!\nCase está feito</string>
     <string name="pages_and_posts_cancel_auto_upload">Cancelar a subida</string>
-    <string name="gif_list_search_returned_unknown_error">Houbo un problema ao xestionar a petición</string>
-    <string name="gif_powered_by_tenor">Funciona con Tenor</string>
-    <string name="photo_picker_gif">Elixir desde Tenor</string>
     <string name="weekday_saturday">Sábado</string>
     <string name="weekday_friday">Venres</string>
     <string name="weekday_thursday">Xoves</string>
@@ -1940,8 +1936,6 @@ Language: gl_ES
     <string name="stats_no_data_for_period">Non hai datos neste período</string>
     <string name="preference_strip_image_location">Eliminar a ubicación dos medios</string>
     <string name="stats_cannot_be_started">Non podemos abrir as estatísticas neste momento. Por favor, inténtao de novo máis tarde</string>
-    <string name="gif_picker_empty_search_list">Ningún medio coincide coa túa busca</string>
-    <string name="gif_picker_initial_empty_text">Busca para encontrar GIF para engadir á túa biblioteca de medios!</string>
     <string name="stats_author_views_label">Visitas</string>
     <string name="stats_author_label">Autor</string>
     <string name="stats_authors">Autores</string>

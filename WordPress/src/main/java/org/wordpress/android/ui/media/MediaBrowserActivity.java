@@ -158,8 +158,7 @@ public class MediaBrowserActivity extends BaseAppCompatActivity implements Media
         ITEM_CAPTURE_PHOTO,
         ITEM_CAPTURE_VIDEO,
         ITEM_CHOOSE_FILE,
-        ITEM_CHOOSE_STOCK_MEDIA,
-        ITEM_CHOOSE_GIF
+        ITEM_CHOOSE_STOCK_MEDIA
     }
 
     @Override
@@ -552,20 +551,6 @@ public class MediaBrowserActivity extends BaseAppCompatActivity implements Media
             case RequestCodes.STOCK_MEDIA_PICKER_MULTI_SELECT:
                 if (resultCode == RESULT_OK) {
                     reloadMediaGrid();
-                }
-                break;
-            case RequestCodes.GIF_PICKER_SINGLE_SELECT:
-            case RequestCodes.GIF_PICKER_MULTI_SELECT:
-                if (resultCode == RESULT_OK
-                    && data.hasExtra(MediaPickerConstants.EXTRA_SAVED_MEDIA_MODEL_LOCAL_IDS)) {
-                    int[] mediaLocalIds = data.getIntArrayExtra(MediaPickerConstants.EXTRA_SAVED_MEDIA_MODEL_LOCAL_IDS);
-
-                    ArrayList<MediaModel> mediaModels = new ArrayList<>();
-                    for (int localId : mediaLocalIds) {
-                        mediaModels.add(mMediaStore.getMediaWithLocalId(localId));
-                    }
-
-                    addMediaToUploadService(mediaModels);
                 }
                 break;
         }
@@ -1013,14 +998,6 @@ public class MediaBrowserActivity extends BaseAppCompatActivity implements Media
                     });
         }
 
-        if (mBrowserType.isBrowser() && !mJetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures()) {
-            popup.getMenu().add(R.string.photo_picker_gif).setOnMenuItemClickListener(
-                    item -> {
-                        doAddMediaItemClicked(AddMenuItem.ITEM_CHOOSE_GIF);
-                        return true;
-                    });
-        }
-
         popup.show();
     }
 
@@ -1054,13 +1031,6 @@ public class MediaBrowserActivity extends BaseAppCompatActivity implements Media
             case ITEM_CHOOSE_STOCK_MEDIA:
                 mMediaPickerLauncher.showStockMediaPickerForResult(this,
                         mSite, RequestCodes.STOCK_MEDIA_PICKER_MULTI_SELECT, true);
-                break;
-            case ITEM_CHOOSE_GIF:
-                mMediaPickerLauncher.showGifPickerForResult(
-                        this,
-                        mSite,
-                        true
-                );
                 break;
         }
     }

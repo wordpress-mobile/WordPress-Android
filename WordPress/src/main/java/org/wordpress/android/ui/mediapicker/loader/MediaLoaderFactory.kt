@@ -3,7 +3,6 @@ package org.wordpress.android.ui.mediapicker.loader
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource.DEVICE
-import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource.GIF_LIBRARY
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource.STOCK_LIBRARY
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource.WP_LIBRARY
 import org.wordpress.android.ui.mediapicker.loader.DeviceListBuilder.DeviceListBuilderFactory
@@ -13,8 +12,7 @@ import javax.inject.Inject
 class MediaLoaderFactory @Inject constructor(
     private val deviceListBuilderFactory: DeviceListBuilderFactory,
     private val mediaLibraryDataSourceFactory: MediaLibraryDataSourceFactory,
-    private val stockMediaDataSource: StockMediaDataSource,
-    private val gifMediaDataSource: GifMediaDataSource
+    private val stockMediaDataSource: StockMediaDataSource
 ) {
     fun build(mediaPickerSetup: MediaPickerSetup, siteModel: SiteModel?): MediaLoader {
         return when (mediaPickerSetup.primaryDataSource) {
@@ -23,7 +21,6 @@ class MediaLoaderFactory @Inject constructor(
                 "Site is necessary when loading WP media library "
             }, mediaPickerSetup.allowedTypes)
             STOCK_LIBRARY -> stockMediaDataSource
-            GIF_LIBRARY -> gifMediaDataSource
         }.toMediaLoader()
     }
 

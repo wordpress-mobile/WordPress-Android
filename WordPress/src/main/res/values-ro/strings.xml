@@ -1469,7 +1469,6 @@ Language: ro
     <string name="stats_referrer_popup_unmark_as_spam">Anulează marcarea ca spam</string>
     <string name="stats_referrer_popup_menu_mark_as_spam">Marchează ca spam</string>
     <string name="stats_referrer_popup_menu_open_website">Deschide site-ul web</string>
-    <string name="media_uploading_gif_library_photo">Încărcare GIF media</string>
     <string name="media_uploading_stock_library_photo">Încărcare stock media</string>
     <string name="media_uploading_default">Încărcare media</string>
     <string name="suggestion_no_connection">Nu există conexiune la internet.\nSugestiile nu sunt disponibile.</string>
@@ -1609,9 +1608,6 @@ Language: ro
     <string name="new_site_creation_creating_site_loading_subtitle">Site-ul tău va fi gata în curând</string>
     <string name="new_site_creation_creating_site_loading_title">Ura!\nAproape gata</string>
     <string name="pages_and_posts_cancel_auto_upload">Anulează încărcarea</string>
-    <string name="gif_list_search_returned_unknown_error">A fost o problemă la gestionarea cererii</string>
-    <string name="gif_powered_by_tenor">Propulsat de Tenor</string>
-    <string name="photo_picker_gif">Alege din Tenor</string>
     <string name="weekday_saturday">Sâmbătă</string>
     <string name="weekday_friday">Vineri</string>
     <string name="weekday_thursday">Joi</string>
@@ -2015,8 +2011,6 @@ Language: ro
     <string name="stats_no_data_for_period">Nu există date pentru această perioadă</string>
     <string name="preference_strip_image_location">Înlătură locația din Media</string>
     <string name="stats_cannot_be_started">Pentru moment, nu putem deschide statisticile. Te rog reîncearcă mai târziu</string>
-    <string name="gif_picker_empty_search_list">Nu s-a potrivit niciun element media cu căutarea ta</string>
-    <string name="gif_picker_initial_empty_text">Caută pentru a găsi imagini GIF pe care să le adaugi în biblioteca ta Media!</string>
     <string name="stats_author_views_label">Vizualizări</string>
     <string name="stats_author_label">Autor</string>
     <string name="stats_authors">Autori</string>

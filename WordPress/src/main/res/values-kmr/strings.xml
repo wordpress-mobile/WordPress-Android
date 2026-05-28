@@ -81,7 +81,6 @@ Language: ku_TR
     <string name="reader_discover_empty_button_text">Dest Pê Bike</string>
     <string name="stats_referrer_popup_menu_mark_as_spam">Wekî Spam nîşan bike</string>
     <string name="stats_referrer_popup_menu_open_website">Malperê Veke</string>
-    <string name="media_uploading_gif_library_photo">Hilxistina medyaya gif\'ê</string>
     <string name="media_uploading_stock_library_photo">Hilxistina \"stock medya\"yê</string>
     <string name="media_uploading_default">Medya tê hilxistin</string>
     <string name="stats_referrer_snackbar_cant_mark_as_spam">Ev şander wekî spam nayê nîşankirin</string>
@@ -214,7 +213,6 @@ Language: ku_TR
     <string name="new_site_creation_creating_site_loading_subtitle">Malpera te ew ê di demeke kin de amade be</string>
     <string name="new_site_creation_creating_site_loading_1">Stendina URL\'ya malperê</string>
     <string name="pages_and_posts_cancel_auto_upload">Hilxistinê betal bike</string>
-    <string name="gif_list_search_returned_unknown_error">Gava ev daxwaz dihat pêkanîn pirsgirêkek çêbû</string>
     <string name="weekday_saturday">Şemî</string>
     <string name="weekday_friday">În</string>
     <string name="weekday_thursday">Pêncşem</string>
@@ -222,8 +220,6 @@ Language: ku_TR
     <string name="weekday_tuesday">Sêşem</string>
     <string name="weekday_monday">Duşem</string>
     <string name="weekday_sunday">Yekşem</string>
-    <string name="gif_powered_by_tenor">Bihêzkirin ji aliyê Tenor</string>
-    <string name="photo_picker_gif">Ji Tenor\'ê hilbijêre</string>
     <string name="media_accessing_failed">Gihînî naveroka malpereke taybet nebû. Dibe ku hinek medya neyên bikaranîn</string>
     <string name="media_accessing_progress">Gihînî naveroka malpereke taybet dibe</string>
     <string name="error_failed_to_crop_and_save_image">Wêne nehat qirpandin û tomarkirin, jkx dîsa biceribîne.</string>
@@ -621,12 +617,10 @@ Language: ku_TR
     <string name="stats_insights_facebook">Facebook</string>
     <string name="stats_insights_view_more">Zêdetir bibîne</string>
     <string name="stats_posts_and_pages">Şandî û Rûpel</string>
-    <string name="gif_picker_initial_empty_text">Ji bo tu GIF\'an tevlî Medyageha xwe bikî, lê bigere!</string>
     <string name="stats_search_terms_label">Têgiha Lêgerînê</string>
     <string name="stats_search_terms">Têgihên Lêgerînê</string>
     <string name="stats_insights_share_post">Şandiyê parve bike</string>
     <string name="stats_insights_create_post">Şandiya biafirîne</string>
-    <string name="gif_picker_empty_search_list">Li gorî lêgerîna te ti medya nehat dîtin</string>
     <string name="stats_insights_latest_post_message">Ji weşandina %2$s\'ê û vir ve %1$s bûye. Heta niha performansa şandiya te wiha ye:</string>
     <string name="stats_insights_latest_post_with_no_engagement">Ji weşana %2$s vir ve %1$s. Topa xwe bigindire û bi riya parvekirinê dîtinên şandeya xwe zêde bike:</string>
     <string name="stats_insights_tags_and_categories">Etîket û Kategorî</string>

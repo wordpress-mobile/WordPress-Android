@@ -48,7 +48,6 @@ import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerIconT
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.ActionModeUiModel
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.BrowseMenuUiModel.BrowseAction.DEVICE
-import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.BrowseMenuUiModel.BrowseAction.GIF_LIBRARY
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.BrowseMenuUiModel.BrowseAction.STOCK_LIBRARY
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.BrowseMenuUiModel.BrowseAction.SYSTEM_PICKER
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.BrowseMenuUiModel.BrowseAction.WP_MEDIA_LIBRARY
@@ -355,9 +354,6 @@ class MediaPickerFragment : Fragment(), MenuProvider {
         val stockLibraryMenuItem = checkNotNull(menu.findItem(R.id.mnu_choose_from_stock_library)) {
             "Menu does not contain mandatory stock library item"
         }
-        val tenorLibraryMenuItem = checkNotNull(menu.findItem(R.id.mnu_choose_from_tenor_library)) {
-            "Menu does not contain mandatory tenor library item"
-        }
 
         initializeSearchView(searchMenuItem)
         viewModel.uiState.observe(viewLifecycleOwner) { uiState ->
@@ -379,7 +375,6 @@ class MediaPickerFragment : Fragment(), MenuProvider {
             mediaLibraryMenuItem.isVisible = shownActions.contains(WP_MEDIA_LIBRARY)
             deviceMenuItem.isVisible = shownActions.contains(DEVICE)
             stockLibraryMenuItem.isVisible = shownActions.contains(STOCK_LIBRARY)
-            tenorLibraryMenuItem.isVisible = shownActions.contains(GIF_LIBRARY)
         }
     }
 
@@ -398,10 +393,6 @@ class MediaPickerFragment : Fragment(), MenuProvider {
         }
         R.id.mnu_choose_from_stock_library -> {
             viewModel.onMenuItemClicked(STOCK_LIBRARY)
-            true
-        }
-        R.id.mnu_choose_from_tenor_library -> {
-            viewModel.onMenuItemClicked(GIF_LIBRARY)
             true
         }
         else -> true

@@ -1469,7 +1469,6 @@ Language: nl
     <string name="stats_referrer_popup_unmark_as_spam">Markering als spam ongedaan maken</string>
     <string name="stats_referrer_popup_menu_mark_as_spam">Markeer als spam</string>
     <string name="stats_referrer_popup_menu_open_website">Open site</string>
-    <string name="media_uploading_gif_library_photo">Gif media aan het uploaden</string>
     <string name="media_uploading_stock_library_photo">Voorraad media aan het uploaden</string>
     <string name="media_uploading_default">Media aan het uploaden</string>
     <string name="suggestion_no_connection">Geen internetverbinding.\nSuggesties zijn niet beschikbaar.</string>
@@ -1609,9 +1608,6 @@ Language: nl
     <string name="new_site_creation_creating_site_loading_subtitle">Je site is binnen enkele ogenblikken gereed</string>
     <string name="new_site_creation_creating_site_loading_title">Hoera!\nBijna klaar</string>
     <string name="pages_and_posts_cancel_auto_upload">Uploaden annuleren</string>
-    <string name="gif_list_search_returned_unknown_error">Er is een probleem opgetreden bij het uitvoeren van de aanvraag</string>
-    <string name="gif_powered_by_tenor">Mogelijk gemaakt door Tenor</string>
-    <string name="photo_picker_gif">Kiezen uit Tenor</string>
     <string name="weekday_saturday">Zaterdag</string>
     <string name="weekday_friday">Vrijdag</string>
     <string name="weekday_thursday">Donderdag</string>
@@ -2015,8 +2011,6 @@ Language: nl
     <string name="stats_no_data_for_period">Geen gegevens voor deze periode</string>
     <string name="preference_strip_image_location">Locatie van media verwijderen</string>
     <string name="stats_cannot_be_started">We kunnen de statistieken momenteel niet openen. Probeer het later opnieuw</string>
-    <string name="gif_picker_empty_search_list">Geen media die overeenkomen met je zoekopdracht</string>
-    <string name="gif_picker_initial_empty_text">Zoeken om GIF\'s te vinden die je aan je mediabibliotheek kunt toevoegen!</string>
     <string name="stats_author_views_label">Weergaven</string>
     <string name="stats_author_label">Auteur</string>
     <string name="stats_authors">Auteurs</string>

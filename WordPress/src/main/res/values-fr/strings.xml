@@ -1443,7 +1443,6 @@ Language: fr
     <string name="stats_referrer_popup_unmark_as_spam">Marquer comme sain</string>
     <string name="stats_referrer_popup_menu_mark_as_spam">Marquer comme indésirable</string>
     <string name="stats_referrer_popup_menu_open_website">Ouvrir le site web</string>
-    <string name="media_uploading_gif_library_photo">Média gif en cours de téléversement</string>
     <string name="media_uploading_stock_library_photo">Média de stock en cours de téléversement</string>
     <string name="media_uploading_default">Média en cours de téléversement</string>
     <string name="suggestion_no_connection">Aucune connexion internet.\nLes suggestions ne sont pas disponibles.</string>
@@ -1583,9 +1582,6 @@ Language: fr
     <string name="new_site_creation_creating_site_loading_subtitle">Votre site sera prêt rapidement.</string>
     <string name="new_site_creation_creating_site_loading_title">Hourra !\nC’est presque fini.</string>
     <string name="pages_and_posts_cancel_auto_upload">Annuler le téléversement</string>
-    <string name="gif_list_search_returned_unknown_error">Il y a eu un problème durant le traitement de la demande</string>
-    <string name="gif_powered_by_tenor">Propulsé par Tenor</string>
-    <string name="photo_picker_gif">Choisir parmi « Ténor »</string>
     <string name="weekday_saturday">Samedi</string>
     <string name="weekday_friday">Vendredi</string>
     <string name="weekday_thursday">Jeudi</string>
@@ -1989,8 +1985,6 @@ Language: fr
     <string name="stats_no_data_for_period">Aucune donnée pour cette période</string>
     <string name="preference_strip_image_location">Supprimer les données de localisation des photos et vidéos</string>
     <string name="stats_cannot_be_started">Nous ne pouvons pas ouvrir les statistiques pour le moment. Veuillez réessayer plus tard</string>
-    <string name="gif_picker_empty_search_list">Aucun média ne correspond à votre recherche.</string>
-    <string name="gif_picker_initial_empty_text">Recherchez des GIF à ajouter à votre bibliothèque de médias !</string>
     <string name="stats_author_views_label">Vues</string>
     <string name="stats_author_label">Auteur</string>
     <string name="stats_authors">Auteurs</string>

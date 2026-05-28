@@ -12,7 +12,6 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup.CameraSetup.HIDDEN
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource.DEVICE
-import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource.GIF_LIBRARY
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource.STOCK_LIBRARY
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource.WP_LIBRARY
 import org.wordpress.android.ui.mediapicker.loader.DeviceListBuilder.DeviceListBuilderFactory
@@ -36,9 +35,6 @@ class MediaLoaderFactoryTest {
     lateinit var stockMediaDataSource: StockMediaDataSource
 
     @Mock
-    lateinit var gifMediaDataSource: GifMediaDataSource
-
-    @Mock
     lateinit var site: SiteModel
     private lateinit var mediaLoaderFactory: MediaLoaderFactory
 
@@ -47,8 +43,7 @@ class MediaLoaderFactoryTest {
         mediaLoaderFactory = MediaLoaderFactory(
             deviceListBuilderFactory,
             mediaLibraryDataSourceFactory,
-            stockMediaDataSource,
-            gifMediaDataSource
+            stockMediaDataSource
         )
     }
 
@@ -117,27 +112,5 @@ class MediaLoaderFactoryTest {
         val mediaLoader = mediaLoaderFactory.build(mediaPickerSetup, site)
 
         assertThat(mediaLoader).isEqualTo(MediaLoader(stockMediaDataSource))
-    }
-
-    @Test
-    fun `returns gif media source on GIF_LIBRARY source`() {
-        val mediaPickerSetup = MediaPickerSetup(
-            GIF_LIBRARY,
-            availableDataSources = setOf(),
-            canMultiselect = true,
-            requiresPhotosVideosPermissions = false,
-            requiresMusicAudioPermissions = false,
-            allowedTypes = setOf(),
-            cameraSetup = HIDDEN,
-            systemPickerEnabled = false,
-            editingEnabled = false,
-            queueResults = false,
-            defaultSearchView = true,
-            title = R.string.photo_picker_gif
-        )
-
-        val mediaLoader = mediaLoaderFactory.build(mediaPickerSetup, site)
-
-        assertThat(mediaLoader).isEqualTo(MediaLoader(gifMediaDataSource))
     }
 }

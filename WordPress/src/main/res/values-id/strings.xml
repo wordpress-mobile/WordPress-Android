@@ -1465,7 +1465,6 @@ Language: id
     <string name="stats_referrer_popup_unmark_as_spam">Hilangkan tanda sebagai Spam</string>
     <string name="stats_referrer_popup_menu_mark_as_spam">Tandai sebagai Spam</string>
     <string name="stats_referrer_popup_menu_open_website">Buka Situs Web</string>
-    <string name="media_uploading_gif_library_photo">Mengunggah media gif</string>
     <string name="media_uploading_stock_library_photo">Mengunggah media stok</string>
     <string name="media_uploading_default">Mengunggah media</string>
     <string name="suggestion_no_connection">Tidak tersedia koneksi internet.\nSaran tidak tersedia.</string>
@@ -1605,9 +1604,6 @@ Language: id
     <string name="new_site_creation_creating_site_loading_subtitle">Situs Anda akan siap sesaat lagi</string>
     <string name="new_site_creation_creating_site_loading_title">Horeee!\nHampir selesai</string>
     <string name="pages_and_posts_cancel_auto_upload">Batalkan unggahan</string>
-    <string name="gif_list_search_returned_unknown_error">Ada masalah saat menangani permintaan</string>
-    <string name="gif_powered_by_tenor">Didukung oleh Tenor</string>
-    <string name="photo_picker_gif">Pilih dari Tenor</string>
     <string name="weekday_saturday">Sabtu</string>
     <string name="weekday_friday">Jumat</string>
     <string name="weekday_thursday">Kamis</string>
@@ -2011,8 +2007,6 @@ Language: id
     <string name="stats_no_data_for_period">Tidak ada data selama periode ini</string>
     <string name="preference_strip_image_location">Hapus lokasi dari media</string>
     <string name="stats_cannot_be_started">Saat ini kami tidak dapat membuka statistik. Harap coba lagi nanti</string>
-    <string name="gif_picker_empty_search_list">Tidak ada media yang sesuai dengan pencarian Anda</string>
-    <string name="gif_picker_initial_empty_text">Cari GIF untuk ditambahkan ke Pustaka Media Anda!</string>
     <string name="stats_author_views_label">Tampilan</string>
     <string name="stats_author_label">Penulis</string>
     <string name="stats_authors">Penulis</string>

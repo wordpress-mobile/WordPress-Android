@@ -1469,7 +1469,6 @@ Language: ru
     <string name="stats_referrer_popup_unmark_as_spam">Убрать отметку спам</string>
     <string name="stats_referrer_popup_menu_mark_as_spam">Пометить как спам</string>
     <string name="stats_referrer_popup_menu_open_website">Открыть сайт</string>
-    <string name="media_uploading_gif_library_photo">Загузка GIF медиафайла</string>
     <string name="media_uploading_stock_library_photo">Загрузка стоковых медиафайлов</string>
     <string name="media_uploading_default">Загрузка медиафайлов</string>
     <string name="suggestion_no_connection">Нет подключения к сети.\nПредложения недоступны.</string>
@@ -1609,9 +1608,6 @@ Language: ru
     <string name="new_site_creation_creating_site_loading_subtitle">Ваш сайт вскоре будет готов</string>
     <string name="new_site_creation_creating_site_loading_title">Ура!\nПочти всё готово</string>
     <string name="pages_and_posts_cancel_auto_upload">Отменить загрузку</string>
-    <string name="gif_list_search_returned_unknown_error">Возникла проблема с вашим запросом.</string>
-    <string name="gif_powered_by_tenor">GIF с сервиса Tenor</string>
-    <string name="photo_picker_gif">Выберите из Tenor</string>
     <string name="weekday_saturday">Суббота</string>
     <string name="weekday_friday">Пятница</string>
     <string name="weekday_thursday">Четверг</string>
@@ -2015,8 +2011,6 @@ Language: ru
     <string name="stats_no_data_for_period">Для указанного периода нет данных</string>
     <string name="preference_strip_image_location">Убрать данные местоположения из медиафайлов</string>
     <string name="stats_cannot_be_started">Извините, статистика в данный момент недоступна, попробуйте позже.</string>
-    <string name="gif_picker_empty_search_list">Мультимедиа по критериям поиска не найдены</string>
-    <string name="gif_picker_initial_empty_text">Найдите GIF изображения и добавьте их в медиатеку!</string>
     <string name="stats_author_views_label">Просмотры</string>
     <string name="stats_author_label">Автор</string>
     <string name="stats_authors">Авторы</string>
