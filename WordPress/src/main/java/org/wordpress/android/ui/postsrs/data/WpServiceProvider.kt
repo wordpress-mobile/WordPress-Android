@@ -10,10 +10,12 @@ import org.wordpress.android.fluxc.store.AccountStore
 import rs.wordpress.api.kotlin.WpRequestExecutor
 import rs.wordpress.cache.kotlin.DatabaseChangeNotifier
 import rs.wordpress.cache.kotlin.WordPressApiCache
+import uniffi.wp_api.ParsedUrl
 import uniffi.wp_api.WpApiClientDelegate
 import uniffi.wp_api.WpApiMiddlewarePipeline
 import uniffi.wp_api.WpAppNotifier
 import uniffi.wp_api.WpAuthenticationProvider
+import uniffi.wp_mobile.SiteInfo
 import uniffi.wp_mobile.WpService
 import java.io.File
 import javax.inject.Inject
@@ -49,12 +51,13 @@ class WpServiceProvider @Inject constructor(
     private fun createService(site: SiteModel): WpService {
         val delegate = createDelegate(site)
         val wpApiCache = getOrCreateCache()
-        return if (site.isWPCom) {
-            WpService.wordpressCom(site.siteId.toULong(), delegate, wpApiCache.cache)
+        val siteInfo = if (site.isWPCom) {
+            SiteInfo.WordPressCom(site.siteId.toULong())
         } else {
             val apiRoot = site.wpApiRestUrl?.takeIf { it.isNotEmpty() } ?: "${site.url}/wp-json"
-            WpService.selfHosted(site.url, apiRoot, delegate, wpApiCache.cache)
+            SiteInfo.SelfHosted(ParsedUrl.parse(site.url), ParsedUrl.parse(apiRoot))
         }
+        return WpService(siteInfo, delegate, wpApiCache.cache)
     }
 
     private fun createDelegate(site: SiteModel): WpApiClientDelegate {
