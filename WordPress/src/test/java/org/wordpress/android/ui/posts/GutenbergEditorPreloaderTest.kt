@@ -95,7 +95,6 @@ class GutenbergEditorPreloaderTest :
             gutenbergKitSettingsBuilder.buildPostConfiguration(
                 site = any(),
                 accessToken = anyOrNull(),
-                locale = any(),
                 cookies = any(),
                 isNetworkLoggingEnabled = any(),
                 post = anyOrNull(),
@@ -234,7 +233,6 @@ class GutenbergEditorPreloaderTest :
             gutenbergKitSettingsBuilder.buildPostConfiguration(
                 site = any(),
                 accessToken = anyOrNull(),
-                locale = any(),
                 cookies = any(),
                 isNetworkLoggingEnabled = any(),
                 post = anyOrNull(),
@@ -419,7 +417,6 @@ class GutenbergEditorPreloaderTest :
             gutenbergKitSettingsBuilder.buildPostConfiguration(
                 site = any(),
                 accessToken = anyOrNull(),
-                locale = any(),
                 cookies = any(),
                 isNetworkLoggingEnabled = any(),
                 post = anyOrNull(),

@@ -103,14 +103,13 @@ class GutenbergEditorPreloader @Inject constructor(
                     .fetchEditorCapabilitiesForSite(site)
                 // Preloading produces EditorDependencies, which the editor
                 // consumes alongside its own per-launch EditorConfiguration.
-                // Locale, cookies, and network-logging are per-launch
-                // concerns the preloaded dependencies don't depend on, so
-                // pass safe defaults here.
+                // Cookies and network-logging are per-launch concerns the
+                // preloaded dependencies don't depend on, so pass safe
+                // defaults here.
                 val config = gutenbergKitSettingsBuilder
                     .buildPostConfiguration(
                         site = site,
                         accessToken = accountStore.accessToken,
-                        locale = "en",
                         cookies = emptyMap(),
                         isNetworkLoggingEnabled = false,
                     )

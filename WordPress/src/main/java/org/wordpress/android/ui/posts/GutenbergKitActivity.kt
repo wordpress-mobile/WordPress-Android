@@ -194,7 +194,6 @@ import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.FluxCUtils
 import org.wordpress.android.util.MediaUtils
 import org.wordpress.android.util.NetworkUtils
-import org.wordpress.android.util.PerAppLocaleManager
 import org.wordpress.android.util.ReblogUtils
 import org.wordpress.android.util.ShortcutUtils
 import org.wordpress.android.util.SiteUtils
@@ -334,8 +333,6 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
     @Inject lateinit var reactNativeRequestHandler: ReactNativeRequestHandler
 
     @Inject lateinit var editorMedia: EditorMedia
-
-    @Inject lateinit var perAppLocaleManager: PerAppLocaleManager
 
     @Inject internal lateinit var editPostRepository: EditPostRepository
 
@@ -2229,14 +2226,9 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
             site: SiteModel,
             post: PostImmutableModel?
         ): EditorConfiguration {
-            val locale = perAppLocaleManager
-                .getCurrentLocaleLanguageCode()
-                .replace("_", "-").lowercase()
-
             return gutenbergKitSettingsBuilder.buildPostConfiguration(
                 site = site,
                 accessToken = accountStore.accessToken,
-                locale = locale,
                 cookies = editPostAuthViewModel.getCookiesForPrivateSites(
                     site, privateAtomicCookie
                 ),
