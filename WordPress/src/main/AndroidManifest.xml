@@ -493,6 +493,11 @@
             android:label="@string/support_screen_title"
             android:windowSoftInputMode="adjustResize"/>
 
+        <activity android:name="org.wordpress.android.support.unified.ui.UnifiedSupportActivity"
+            android:theme="@style/WordPress.NoActionBar"
+            android:label="@string/unified_support_conversations_title"
+            android:windowSoftInputMode="adjustResize"/>
+
         <!-- Deep Linking Activity -->
         <activity
             android:name="org.wordpress.android.ui.deeplinks.DeepLinkingIntentReceiverActivity"

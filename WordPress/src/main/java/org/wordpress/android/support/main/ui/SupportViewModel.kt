@@ -33,6 +33,7 @@ class SupportViewModel @Inject constructor(
         data object NavigateToHelpCenter : NavigationEvent()
         data object NavigateToApplicationLogs : NavigationEvent()
         data object NavigateToAskHappinessEngineers : NavigationEvent()
+        data object NavigateToUnifiedSupport : NavigationEvent()
         data object NavigateToNetworkRequests : NavigationEvent()
     }
 
@@ -47,7 +48,8 @@ class SupportViewModel @Inject constructor(
 
     data class SupportOptionsVisibility(
         val showAskTheBots: Boolean = true,
-        val showAskHappinessEngineers: Boolean = true
+        val showAskHappinessEngineers: Boolean = true,
+        val showUnifiedSupport: Boolean = true,
     )
 
     data class NetworkTrackingState(
@@ -87,7 +89,8 @@ class SupportViewModel @Inject constructor(
 
         _optionsVisibility.value = SupportOptionsVisibility(
             showAskTheBots = hasAccessToken && BuildConfig.IS_JETPACK_APP,
-            showAskHappinessEngineers = hasAccessToken && BuildConfig.IS_JETPACK_APP
+            showAskHappinessEngineers = hasAccessToken && BuildConfig.IS_JETPACK_APP,
+            showUnifiedSupport = hasAccessToken && BuildConfig.IS_JETPACK_APP,
         )
 
         initNetworkTrackingState()
@@ -133,6 +136,16 @@ class SupportViewModel @Inject constructor(
                 appLogWrapper.d(AppLog.T.SUPPORT, "Trying to open a HE conversation without access token")
             } else {
                 _navigationEvents.emit(NavigationEvent.NavigateToAskHappinessEngineers)
+            }
+        }
+    }
+
+    fun onUnifiedSupportClick() {
+        viewModelScope.launch {
+            if (!accountStore.hasAccessToken()) {
+                appLogWrapper.d(AppLog.T.SUPPORT, "Trying to open unified support without access token")
+            } else {
+                _navigationEvents.emit(NavigationEvent.NavigateToUnifiedSupport)
             }
         }
     }

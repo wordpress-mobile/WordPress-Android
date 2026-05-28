@@ -53,6 +53,7 @@ fun SupportScreen(
     isLoggedIn: Boolean,
     showAskTheBots: Boolean,
     showAskHappinessEngineers: Boolean,
+    showUnifiedSupport: Boolean,
     showNetworkDebugging: Boolean,
     isNetworkTrackingEnabled: Boolean,
     networkTrackingRetentionInfo: String,
@@ -63,6 +64,7 @@ fun SupportScreen(
     onHelpCenterClick: () -> Unit,
     onAskTheBotsClick: () -> Unit,
     onAskHappinessEngineersClick: () -> Unit,
+    onUnifiedSupportClick: () -> Unit,
     onApplicationLogsClick: () -> Unit,
     onNetworkTrackingToggle: (Boolean) -> Unit,
     onViewNetworkRequestsClick: () -> Unit,
@@ -207,6 +209,18 @@ fun SupportScreen(
                     title = stringResource(R.string.support_screen_ask_happiness_engineers_title),
                     description = stringResource(R.string.support_screen_ask_happiness_engineers_description),
                     onClick = onAskHappinessEngineersClick,
+                )
+
+                HorizontalDivider(
+                    color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f)
+                )
+            }
+
+            if (showUnifiedSupport) {
+                SupportOptionItem(
+                    title = stringResource(R.string.support_screen_unified_support_title),
+                    description = stringResource(R.string.support_screen_unified_support_description),
+                    onClick = onUnifiedSupportClick,
                 )
 
                 HorizontalDivider(
@@ -431,6 +445,7 @@ private fun SupportScreenPreview() {
             isLoggedIn = true,
             showAskTheBots = true,
             showAskHappinessEngineers = true,
+            showUnifiedSupport = true,
             showNetworkDebugging = true,
             isNetworkTrackingEnabled = true,
             networkTrackingRetentionInfo = "Retention: 1 Hour",
@@ -441,6 +456,7 @@ private fun SupportScreenPreview() {
             onHelpCenterClick = {},
             onAskTheBotsClick = {},
             onAskHappinessEngineersClick = {},
+            onUnifiedSupportClick = {},
             onApplicationLogsClick = {},
             onNetworkTrackingToggle = {},
             onViewNetworkRequestsClick = {},
@@ -463,6 +479,7 @@ private fun SupportScreenPreviewDark() {
             isLoggedIn = true,
             showAskTheBots = true,
             showAskHappinessEngineers = true,
+            showUnifiedSupport = true,
             showNetworkDebugging = true,
             isNetworkTrackingEnabled = false,
             networkTrackingRetentionInfo = "",
@@ -473,6 +490,7 @@ private fun SupportScreenPreviewDark() {
             onHelpCenterClick = {},
             onAskTheBotsClick = {},
             onAskHappinessEngineersClick = {},
+            onUnifiedSupportClick = {},
             onApplicationLogsClick = {},
             onNetworkTrackingToggle = {},
             onViewNetworkRequestsClick = {},
@@ -495,6 +513,7 @@ private fun SupportScreenPreviewLoggedOut() {
             isLoggedIn = false,
             showAskTheBots = false,
             showAskHappinessEngineers = false,
+            showUnifiedSupport = false,
             showNetworkDebugging = false,
             isNetworkTrackingEnabled = false,
             networkTrackingRetentionInfo = "",
@@ -505,6 +524,7 @@ private fun SupportScreenPreviewLoggedOut() {
             onHelpCenterClick = {},
             onAskTheBotsClick = {},
             onAskHappinessEngineersClick = {},
+            onUnifiedSupportClick = {},
             onApplicationLogsClick = {},
             onNetworkTrackingToggle = {},
             onViewNetworkRequestsClick = {},

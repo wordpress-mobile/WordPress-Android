@@ -25,6 +25,7 @@ import org.wordpress.android.fluxc.network.NetworkRequestsRetentionPeriod
 import org.wordpress.android.support.aibot.ui.AIBotSupportActivity
 import org.wordpress.android.support.he.ui.HESupportActivity
 import org.wordpress.android.support.logs.ui.LogsActivity
+import org.wordpress.android.support.unified.ui.UnifiedSupportActivity
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.ActivityNavigator
 import org.wordpress.android.ui.compose.theme.AppThemeM3
@@ -64,6 +65,7 @@ class SupportActivity : AppCompatActivity() {
                             isLoggedIn = isLoggedIn,
                             showAskTheBots = optionsVisibility.showAskTheBots,
                             showAskHappinessEngineers = optionsVisibility.showAskHappinessEngineers,
+                            showUnifiedSupport = optionsVisibility.showUnifiedSupport,
                             showNetworkDebugging = networkTrackingState.showNetworkDebugging,
                             isNetworkTrackingEnabled = networkTrackingState.isTrackingEnabled,
                             networkTrackingRetentionInfo = getRetentionInfoText(
@@ -76,6 +78,7 @@ class SupportActivity : AppCompatActivity() {
                             onHelpCenterClick = { viewModel.onHelpCenterClick() },
                             onAskTheBotsClick = { viewModel.onAskTheBotsClick() },
                             onAskHappinessEngineersClick = { viewModel.onAskHappinessEngineersClick() },
+                            onUnifiedSupportClick = { viewModel.onUnifiedSupportClick() },
                             onApplicationLogsClick = { viewModel.onApplicationLogsClick() },
                             onNetworkTrackingToggle = { viewModel.onNetworkTrackingToggle(it) },
                             onViewNetworkRequestsClick = { viewModel.onViewNetworkRequestsClick() },
@@ -120,6 +123,9 @@ private fun getRetentionPeriodStringRes(period: NetworkRequestsRetentionPeriod):
                         is SupportViewModel.NavigationEvent.NavigateToAskHappinessEngineers -> {
                             navigateToAskTheHappinessEngineers()
                         }
+                        is SupportViewModel.NavigationEvent.NavigateToUnifiedSupport -> {
+                            navigateToUnifiedSupport()
+                        }
                         is SupportViewModel.NavigationEvent.NavigateToNetworkRequests -> {
                             navigateToNetworkRequests()
                         }
@@ -138,6 +144,12 @@ private fun getRetentionPeriodStringRes(period: NetworkRequestsRetentionPeriod):
     private fun navigateToAskTheHappinessEngineers() {
         startActivity(
             HESupportActivity.Companion.createIntent(this)
+        )
+    }
+
+    private fun navigateToUnifiedSupport() {
+        startActivity(
+            UnifiedSupportActivity.Companion.createIntent(this)
         )
     }
 
