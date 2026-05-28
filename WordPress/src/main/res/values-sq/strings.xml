@@ -215,8 +215,6 @@ Language: sq_AL
     <string name="experimental_features_feedback_dialog_title">Jepni përshtypje</string>
     <string name="experimental_block_editor_description">Përdorni lloje blloqesh dhe rregullime shtesë</string>
     <string name="experimental_block_editor_note">Përpunuesi eksprerimental me blloqe do të bëhet parazgjedhja, në një hedhje të ardhshme në qarkullim dhe aftësia për ta aktivizuar do të hiqet.</string>
-    <string name="disable_experimental_block_editor_description">Zgjidhni lënien jashtë nga lloje blloqesh dhe rregullime shtesë</string>
-    <string name="disable_experimental_block_editor">Çaktivizo përpunues eksperimental me blloqe</string>
     <string name="avatar_update_email_unverified">Që të përditësoni avatarin tuaj, lypset të verifikohet adresa juaj email së pari.</string>
     <string name="feedback_form_note_link_wordpress">forume bashkësie.</string>
     <string name="default_web_client_id" a8c-src-lib="module:login">vendmbajtëse</string>

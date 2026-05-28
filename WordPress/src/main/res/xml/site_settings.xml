@@ -144,6 +144,12 @@
             android:summary="@string/site_settings_use_third_party_blocks_summary"
             android:title="@string/site_settings_use_third_party_blocks" />
 
+        <org.wordpress.android.ui.prefs.WPSwitchPreference
+            android:id="@+id/pref_gutenberg_kit_enabled"
+            android:key="@string/pref_key_gutenberg_kit_enabled"
+            android:summary="@string/site_settings_gutenberg_kit_enabled_summary"
+            android:title="@string/site_settings_gutenberg_kit_enabled" />
+
     </PreferenceCategory>
 
     <!-- Writing Settings -->

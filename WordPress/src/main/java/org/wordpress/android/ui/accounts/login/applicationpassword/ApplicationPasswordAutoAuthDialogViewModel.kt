@@ -149,8 +149,17 @@ class ApplicationPasswordAutoAuthDialogViewModel @Inject constructor(
     @Suppress("TooGenericExceptionCaught")
     private suspend fun fallbackToManualLogin(siteUrl: String) {
         try {
-            val authUrl = applicationPasswordLoginHelper.getAuthorizationUrlComplete(siteUrl)
-            _navigationEvent.emit(NavigationEvent.FallbackToManualLogin(authUrl))
+            when (val result = applicationPasswordLoginHelper.getAuthorizationUrlComplete(siteUrl)) {
+                is ApplicationPasswordLoginHelper.DiscoveryResult.Authorized ->
+                    _navigationEvent.emit(NavigationEvent.FallbackToManualLogin(result.authorizationUrl))
+                is ApplicationPasswordLoginHelper.DiscoveryResult.Failed -> {
+                    appLogWrapper.e(
+                        AppLog.T.API,
+                        "A_P: Discovery failed for: $siteUrl - ${result.userFacingMessage}"
+                    )
+                    _navigationEvent.emit(NavigationEvent.Error)
+                }
+            }
         } catch (e: Exception) {
             appLogWrapper.e(
                 AppLog.T.API,

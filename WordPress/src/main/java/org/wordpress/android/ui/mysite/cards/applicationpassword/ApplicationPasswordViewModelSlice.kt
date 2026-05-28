@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
@@ -26,8 +27,6 @@ import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.viewmodel.Event
-import rs.wordpress.api.kotlin.WpRequestResult
-import uniffi.wp_api.RequestExecutionErrorReason
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -36,6 +35,7 @@ class ApplicationPasswordViewModelSlice @Inject constructor(
     private val siteStore: SiteStore,
     private val appLogWrapper: AppLogWrapper,
     private val wpApiClientProvider: WpApiClientProvider,
+    private val applicationPasswordValidator: ApplicationPasswordValidator,
     private val selfHostedEndpointFinder: SelfHostedEndpointFinder,
     private val siteXMLRPCClient: SiteXMLRPCClient,
     private val dispatcher: Dispatcher,
@@ -56,140 +56,124 @@ class ApplicationPasswordViewModelSlice @Inject constructor(
     val uiModelMutable = MutableLiveData<MySiteCardAndItem?>()
     val uiModel: LiveData<MySiteCardAndItem?> = uiModelMutable
 
+    // Single-flight guard: buildCard is invoked from onResume / refresh / onSitePicked, which can
+    // fire close together. Without this, two coroutines both pass the "creds missing" check in
+    // ApplicationPasswordsManager and issue two server-side mints. Worse, the 409 conflict handler
+    // then deletes-and-recreates the winner's password, so the losing racer destroys working creds.
+    private var buildJob: Job? = null
+
     fun buildCard(siteModel: SiteModel) {
-        val storedSite = siteStore.sites.firstOrNull { it.id == siteModel.id }
-
-        // For sites using application passwords, validate credentials
-        if (storedSite != null && storedSite.isUsingSelfHostedRestApi) {
-            validateCredentialsAndBuildCard(storedSite)
-            return
-        }
-
-        buildApplicationPasswordDiscovery(siteModel)
-    }
-
-    @Suppress("TooGenericExceptionCaught", "LongMethod")
-    private fun validateCredentialsAndBuildCard(site: SiteModel) {
-        appLogWrapper.d(AppLog.T.MAIN, "A_P: Validating credentials for ${site.url}")
-        appLogWrapper.d(AppLog.T.MAIN, "A_P:   isUsingSelfHostedRestApi: ${site.isUsingSelfHostedRestApi}")
-        appLogWrapper.d(AppLog.T.MAIN, "A_P:   hasApiRestUsername: ${!site.apiRestUsernamePlain.isNullOrEmpty()}")
-        appLogWrapper.d(AppLog.T.MAIN, "A_P:   hasApiRestPassword: ${!site.apiRestPasswordPlain.isNullOrEmpty()}")
-        appLogWrapper.d(AppLog.T.MAIN, "A_P:   wpApiRestUrl: ${site.wpApiRestUrl}")
-        appLogWrapper.d(AppLog.T.MAIN, "A_P:   origin: ${site.origin}")
-
-        // If credentials are missing, show reauthentication banner immediately
-        if (applicationPasswordLoginHelper.siteHasBadCredentials(site)) {
-            appLogWrapper.d(AppLog.T.MAIN, "A_P: Credentials missing for ${site.url}, showing banner")
-            buildReauthenticationBanner(site)
-            return
-        }
-
-        // Validate credentials by making a simple API call
-        scope.launch {
-            try {
-                appLogWrapper.d(AppLog.T.MAIN, "A_P: Making API call to validate credentials")
-                val client = wpApiClientProvider.getWpApiClient(site)
-                val response = client.request { requestBuilder ->
-                    requestBuilder.users().retrieveMeWithViewContext()
-                }
-                appLogWrapper.d(AppLog.T.MAIN, "A_P: API response type: ${response::class.simpleName}")
-                when (response) {
-                    is WpRequestResult.Success -> {
-                        appLogWrapper.d(
-                            AppLog.T.MAIN,
-                            "A_P: Credentials valid for ${site.url}"
-                        )
-                        if (site.xmlRpcUrl.isNullOrEmpty()) {
-                            buildXmlRpcDisabledCard(site)
-                            attemptXmlRpcRediscovery(site)
-                        } else {
-                            uiModelMutable.postValue(null)
-                        }
-                    }
-                    is WpRequestResult.WpError -> {
-                        appLogWrapper.d(AppLog.T.MAIN, "A_P: WpError for ${site.url}: ${response.response}")
-                        buildReauthenticationBanner(site)
-                    }
-                    is WpRequestResult.UnknownError -> {
-                        appLogWrapper.d(
-                            AppLog.T.MAIN,
-                            "A_P: UnknownError for ${site.url}: code=${response.statusCode}, msg=${response.response}"
-                        )
-                        buildReauthenticationBanner(site)
-                    }
-                    is WpRequestResult.RequestExecutionFailed -> {
-                        val isTimeout = response.reason is RequestExecutionErrorReason.HttpTimeoutError
-                        if (isTimeout) {
-                            appLogWrapper.d(AppLog.T.MAIN, "A_P: Request timed out for ${site.url}")
-                        } else {
-                            appLogWrapper.d(
-                                AppLog.T.MAIN,
-                                "A_P: RequestExecutionFailed for ${site.url}: " +
-                                    "reason=${response.reason}, statusCode=${response.statusCode}"
-                            )
-                        }
-                        // Don't show reauthentication banner for timeouts - it's likely a network issue
-                        if (!isTimeout) {
-                            buildReauthenticationBanner(site)
-                        } else {
-                            uiModelMutable.postValue(null)
-                        }
-                    }
-                    else -> {
-                        // Credentials are invalid, show reauthentication banner
-                        appLogWrapper.d(AppLog.T.MAIN, "A_P: Other error for ${site.url}: $response")
-                        buildReauthenticationBanner(site)
-                    }
-                }
-            } catch (e: Exception) {
-                appLogWrapper.e(
-                    AppLog.T.MAIN,
-                    "A_P: Exception validating credentials for ${site.url}: ${e::class.simpleName}: ${e.message}"
-                )
-                uiModelMutable.postValue(null)
-            }
-        }
-    }
-
-    private fun buildReauthenticationBanner(site: SiteModel) {
-        scope.launch {
-            val authorizationUrlComplete = applicationPasswordLoginHelper.getAuthorizationUrlComplete(site.url)
-            if (authorizationUrlComplete.isEmpty()) {
-                uiModelMutable.postValue(null)
-                appLogWrapper.d(AppLog.T.MAIN, "A_P: Hiding reauthentication card for ${site.url} - bad discovery")
-            } else {
-                showReauthenticationCard(site, authorizationUrlComplete)
-            }
-        }
-    }
-
-    private fun showReauthenticationCard(site: SiteModel, alternativeUrl: String) {
-        uiModelMutable.postValue(
-            MySiteCardAndItem.Item.SingleActionCard(
-                textResource = R.string.application_password_reauthentication_banner,
-                imageResource = R.drawable.ic_notice_white_24dp,
-                onActionClick = { onClick(site, alternativeUrl) }
+        if (buildJob?.isActive == true) {
+            appLogWrapper.d(
+                AppLog.T.MAIN,
+                "A_P: Skipping buildCard for ${siteModel.url} - previous run still in flight"
             )
-        )
-        appLogWrapper.d(AppLog.T.MAIN, "A_P: Showing reauthentication card for ${site.url}")
-    }
+            return
+        }
+        buildJob = scope.launch {
+            val storedSite = siteStore.sites.firstOrNull { it.id == siteModel.id } ?: siteModel
+            val hadCreds = !applicationPasswordLoginHelper.siteHasBadCredentials(storedSite)
 
-    private fun buildApplicationPasswordDiscovery(site: SiteModel) {
-        scope.launch {
-            // If the site is already authorized, no need to run the discovery
-            val storedSite = siteStore.sites.firstOrNull { it.id == site.id }
-            if (storedSite != null && !applicationPasswordLoginHelper.siteHasBadCredentials(storedSite)) {
-                uiModelMutable.postValue(null)
-                appLogWrapper.d(AppLog.T.MAIN, "A_P: Hiding card for ${site.url} - authenticated")
+            // Step 1: if we already have stored creds, validate them with Basic auth against the
+            // direct host. This actually exercises the application password (unlike
+            // WpApiClientProvider.getWpApiClient, which routes WPCom-flagged sites through the
+            // bearer-token path and would not catch a revoked password).
+            if (hadCreds) {
+                when (applicationPasswordValidator.validate(storedSite)) {
+                    ApplicationPasswordValidator.Outcome.Valid -> {
+                        handleValidAuth(storedSite)
+                        return@launch
+                    }
+                    ApplicationPasswordValidator.Outcome.NetworkUnavailable -> {
+                        // Don't punish flaky networks — leave the card hidden and try again next time.
+                        uiModelMutable.postValue(null)
+                        appLogWrapper.d(AppLog.T.MAIN, "A_P: Validation network error for ${storedSite.url}")
+                        return@launch
+                    }
+                    ApplicationPasswordValidator.Outcome.Invalid -> {
+                        // Stored creds are stale (revoked, deleted, etc.) — clear them so the next
+                        // mint creates fresh ones, and invalidate the cached client.
+                        appLogWrapper.d(AppLog.T.MAIN, "A_P: Stored creds invalid for ${storedSite.url}, clearing")
+                        siteStore.deleteStoredApplicationPasswordCredentials(storedSite)
+                        wpApiClientProvider.clearSelfHostedClient(storedSite.id)
+                    }
+                }
+            }
+
+            // Step 2: mint a fresh application password via the FluxC Jetpack tunnel. wordpress-rs
+            // can't do this today — the WP.com REST proxy doesn't expose the application-passwords
+            // endpoint under /wp/v2/sites/{id}/... (see Automattic/wordpress-rs#1350) — so FluxC's
+            // Jetpack-tunnel client is the only working path for Atomic / Jetpack-WPCom-REST sites.
+            val createResult = siteStore.createApplicationPassword(storedSite)
+            if (!createResult.isError && createResult.credentials != null) {
+                wpApiClientProvider.clearSelfHostedClient(storedSite.id)
+                appLogWrapper.d(AppLog.T.MAIN, "A_P: Headless mint succeeded for ${storedSite.url}")
+                handleValidAuth(storedSite)
                 return@launch
             }
+            appLogWrapper.d(
+                AppLog.T.MAIN,
+                "A_P: Headless mint failed for ${storedSite.url} (notSupported=" +
+                    "${createResult.error?.notSupported})"
+            )
 
-            val authorizationUrlComplete = applicationPasswordLoginHelper.getAuthorizationUrlComplete(site.url)
-            if (authorizationUrlComplete.isEmpty()) {
-                uiModelMutable.postValue(null)
-                appLogWrapper.d(AppLog.T.MAIN, "A_P: Hiding card for ${site.url} - bad discovery")
+            // Step 3: mint failed. If we started with creds, show the reauth banner; otherwise the
+            // standard "authenticate" card. Either way, discovery is required to populate the URL.
+            if (hadCreds) {
+                buildReauthenticationBanner(storedSite)
             } else {
-                showApplicationPasswordCreateCard(site, authorizationUrlComplete)
+                buildAuthenticationCard(storedSite)
+            }
+        }
+    }
+
+    private fun handleValidAuth(site: SiteModel) {
+        // Only true self-hosted sites need the XML-RPC fallback path — Atomic and Jetpack-WPCom-REST
+        // sites talk REST end-to-end and don't need XML-RPC.
+        if (!site.isUsingWpComRestApi && site.xmlRpcUrl.isNullOrEmpty()) {
+            buildXmlRpcDisabledCard(site)
+            attemptXmlRpcRediscovery(site)
+        } else {
+            uiModelMutable.postValue(null)
+            appLogWrapper.d(AppLog.T.MAIN, "A_P: Hiding card for ${site.url} - authenticated")
+        }
+    }
+
+    private suspend fun buildReauthenticationBanner(site: SiteModel) {
+        when (val result = applicationPasswordLoginHelper.getAuthorizationUrlComplete(site.url)) {
+            is ApplicationPasswordLoginHelper.DiscoveryResult.Authorized -> {
+                uiModelMutable.postValue(
+                    MySiteCardAndItem.Item.SingleActionCard(
+                        textResource = R.string.application_password_reauthentication_banner,
+                        imageResource = R.drawable.ic_notice_white_24dp,
+                        onActionClick = { onClick(site, result.authorizationUrl) }
+                    )
+                )
+                appLogWrapper.d(AppLog.T.MAIN, "A_P: Showing reauthentication card for ${site.url}")
+            }
+            is ApplicationPasswordLoginHelper.DiscoveryResult.Failed -> {
+                // TODO follow-up: surface result.userFacingMessage in the card (issue #22884).
+                uiModelMutable.postValue(null)
+                appLogWrapper.d(
+                    AppLog.T.MAIN,
+                    "A_P: Hiding reauthentication card for ${site.url} - bad discovery: ${result.userFacingMessage}"
+                )
+            }
+        }
+    }
+
+    private suspend fun buildAuthenticationCard(site: SiteModel) {
+        when (val result = applicationPasswordLoginHelper.getAuthorizationUrlComplete(site.url)) {
+            is ApplicationPasswordLoginHelper.DiscoveryResult.Authorized -> {
+                showApplicationPasswordCreateCard(site, result.authorizationUrl)
+            }
+            is ApplicationPasswordLoginHelper.DiscoveryResult.Failed -> {
+                // TODO follow-up: surface result.userFacingMessage in the card (issue #22884).
+                uiModelMutable.postValue(null)
+                appLogWrapper.d(
+                    AppLog.T.MAIN,
+                    "A_P: Hiding card for ${site.url} - bad discovery: ${result.userFacingMessage}"
+                )
             }
         }
     }

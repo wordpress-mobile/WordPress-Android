@@ -40,7 +40,7 @@ class LoginSiteApplicationPasswordViewModelTest : BaseUnitTest() {
         val siteUrl = "https.example.com"
         val expectedDiscoveryUrl = "https://example.com/wp-json/wp/v2/application-passwords/authorization"
         whenever(applicationPasswordLoginHelper.getAuthorizationUrlComplete(siteUrl))
-            .thenReturn(expectedDiscoveryUrl)
+            .thenReturn(ApplicationPasswordLoginHelper.DiscoveryResult.Authorized(expectedDiscoveryUrl))
 
         // A collector for the discoveryURL SharedFlow
         var collectedUrl: String? = null

@@ -38,13 +38,16 @@ class ApplicationPasswordDialogViewModel @Inject constructor(
             }
 
             try {
-                val completeAuthUrl = applicationPasswordLoginHelper.getAuthorizationUrlComplete(authenticationUrl)
-
-                if (completeAuthUrl.isNotEmpty()) {
-                    _navigationEvent.emit(NavigationEvent.NavigateToLogin(completeAuthUrl))
-                } else {
-                    appLogWrapper.e(AppLog.T.MAIN, "Failed to process authentication URL")
-                    _navigationEvent.emit(NavigationEvent.ShowError)
+                when (val result = applicationPasswordLoginHelper.getAuthorizationUrlComplete(authenticationUrl)) {
+                    is ApplicationPasswordLoginHelper.DiscoveryResult.Authorized ->
+                        _navigationEvent.emit(NavigationEvent.NavigateToLogin(result.authorizationUrl))
+                    is ApplicationPasswordLoginHelper.DiscoveryResult.Failed -> {
+                        appLogWrapper.e(
+                            AppLog.T.MAIN,
+                            "Failed to process authentication URL - ${result.userFacingMessage}"
+                        )
+                        _navigationEvent.emit(NavigationEvent.ShowError)
+                    }
                 }
             } catch (e: Throwable) {
                 appLogWrapper.e(AppLog.T.MAIN, "Error processing authentication URL - ${e.stackTraceToString()}")

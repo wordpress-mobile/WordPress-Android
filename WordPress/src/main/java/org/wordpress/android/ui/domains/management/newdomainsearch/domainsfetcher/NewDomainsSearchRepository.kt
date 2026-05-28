@@ -1,66 +1,87 @@
 package org.wordpress.android.ui.domains.management.newdomainsearch.domainsfetcher
 
-import org.wordpress.android.Constants
-import org.wordpress.android.fluxc.generated.SiteActionBuilder
-import org.wordpress.android.fluxc.model.products.Product
-import org.wordpress.android.fluxc.store.ProductsStore
-import org.wordpress.android.fluxc.store.SiteStore
-import org.wordpress.android.fluxc.store.SiteStore.OnSuggestedDomains
+import org.wordpress.android.fluxc.store.AccountStore
+import org.wordpress.android.networking.restapi.WpComApiClientProvider
+import rs.wordpress.api.kotlin.WpComApiClient
+import rs.wordpress.api.kotlin.WpRequestResult
+import uniffi.wp_api.DomainSuggestion
+import uniffi.wp_api.DomainSuggestionsParams
+import uniffi.wp_api.Product
+import uniffi.wp_api.ProductTypeFilter
+import uniffi.wp_api.ProductsParams
 import javax.inject.Inject
 
-private const val SUGGESTIONS_REQUEST_COUNT = 20
+private const val SUGGESTIONS_REQUEST_COUNT = 20u
 
 class NewDomainsSearchRepository @Inject constructor(
-    private val productsStore: ProductsStore,
-    private val suggestedDomainsFetcher: SuggestedDomainsFetcher
+    private val wpComApiClientProvider: WpComApiClientProvider,
+    private val accountStore: AccountStore,
 ) {
-    var products: List<Product>? = null
+    private var wpComApiClient: WpComApiClient? = null
+    private var products: List<Product>? = null
+
+    @Synchronized
+    private fun getOrCreateClient(): WpComApiClient {
+        val token = requireNotNull(accountStore.accessToken) {
+            "WP.com access token is required"
+        }
+        return wpComApiClient
+            ?: wpComApiClientProvider.getWpComApiClient(token)
+                .also { wpComApiClient = it }
+    }
 
     suspend fun searchForDomains(query: String): DomainsResult {
         if (products == null) fetchProducts()
-        return SiteActionBuilder.newSuggestDomainsAction(
-            SiteStore.SuggestDomainsPayload(
-                query = query,
-                onlyWordpressCom = false,
-                includeWordpressCom = false,
-                includeDotBlogSubdomain = false,
-                quantity = SUGGESTIONS_REQUEST_COUNT
-            )
-        ).let { action ->
-            suggestedDomainsFetcher.fetch(action)
-        }.let { event ->
-            onDomainSuggestionsFetched(query, event)
+
+        val params = DomainSuggestionsParams(
+            query = query,
+            quantity = SUGGESTIONS_REQUEST_COUNT,
+            onlyWordpressdotcom = false, // checkstyle ignore
+            includeWordpressdotcom = false, // checkstyle ignore
+            includeDotblogsubdomain = false,
+        )
+
+        return when (
+            val result = getOrCreateClient()
+                .request { it.domains().suggestions(params).data }
+        ) {
+            is WpRequestResult.Success -> {
+                val suggestions = result.response
+                    .filterIsInstance<DomainSuggestion.Paid>()
+                    .sortedByDescending { it.v1.relevance }
+                    .map { paid ->
+                        val product = products?.firstOrNull {
+                            it.productId == paid.v1.productId
+                        }
+                        ProposedDomain(
+                            productId = paid.v1.productId.toInt(),
+                            domain = paid.v1.domainName,
+                            price = paid.v1.cost,
+                            salePrice = product?.combinedSaleCostDisplay,
+                            supportsPrivacy = paid.v1.supportsPrivacy,
+                        )
+                    }
+                DomainsResult.Success(suggestions)
+            }
+            else -> DomainsResult.Error
         }
     }
 
     private suspend fun fetchProducts() {
-        val result = productsStore.fetchProducts(Constants.TYPE_DOMAINS_PRODUCT)
-        if (!result.isError) result.products?.let { products = it }
-    }
-
-    private fun onDomainSuggestionsFetched(query: String, event: OnSuggestedDomains): DomainsResult {
-        return if (query == event.query && !event.isError) {
-            val suggestions = event.suggestions
-                .filter { !it.is_free }
-                .sortedByDescending { it.relevance }
-                .map { domain ->
-                    val product = products?.firstOrNull { product -> product.productId == domain.product_id }
-                    ProposedDomain(
-                        productId = domain.product_id,
-                        domain = domain.domain_name,
-                        price = domain.cost,
-                        salePrice = product?.combinedSaleCostDisplay,
-                        supportsPrivacy = domain.supports_privacy
-                    )
-                }
-            DomainsResult.Success(suggestions)
-        } else {
-            DomainsResult.Error
+        val params = ProductsParams(
+            productType = ProductTypeFilter.Domains
+        )
+        val result = getOrCreateClient()
+            .request { it.products().list(params).data }
+        if (result is WpRequestResult.Success) {
+            products = result.response.values.toList()
         }
     }
 
     sealed interface DomainsResult {
-        data class Success(val proposedDomains: List<ProposedDomain>) : DomainsResult
-        object Error : DomainsResult
+        data class Success(
+            val proposedDomains: List<ProposedDomain>
+        ) : DomainsResult
+        data object Error : DomainsResult
     }
 }

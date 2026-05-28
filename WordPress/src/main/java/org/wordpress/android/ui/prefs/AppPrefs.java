@@ -127,6 +127,9 @@ public class AppPrefs {
         SHOULD_AUTO_ENABLE_GUTENBERG_FOR_THE_NEW_POSTS_PHASE_2,
         GUTENBERG_OPT_IN_DIALOG_SHOWN,
         GUTENBERG_FOCAL_POINT_PICKER_TOOLTIP_SHOWN,
+        GUTENBERG_KIT_OPT_IN_SITES,
+        GUTENBERG_KIT_OPT_OUT_SITES,
+        GUTENBERG_KIT_ANNOUNCEMENT_DEFERRED_UNTIL,
 
         POST_LIST_AUTHOR_FILTER,
         POST_LIST_VIEW_LAYOUT_TYPE,
@@ -829,6 +832,118 @@ public class AppPrefs {
         }
 
         return urls != null && urls.contains(siteURL);
+    }
+
+    /**
+     * Returns the explicit per-site override for GutenbergKit, or {@code null} if the user has
+     * not set one. When {@code null}, downstream resolution in {@code GutenbergKitFeatureChecker}
+     * falls back to the experimental and remote feature flags.
+     */
+    @Nullable
+    public static Boolean getGutenbergKitSiteOverride(String siteURL) {
+        if (TextUtils.isEmpty(siteURL)) {
+            return null;
+        }
+        if (siteSetContains(DeletablePrefKey.GUTENBERG_KIT_OPT_OUT_SITES, siteURL)) {
+            return Boolean.FALSE;
+        }
+        if (siteSetContains(DeletablePrefKey.GUTENBERG_KIT_OPT_IN_SITES, siteURL)) {
+            return Boolean.TRUE;
+        }
+        return null;
+    }
+
+    /**
+     * Sets an explicit per-site override for GutenbergKit, replacing any prior override for the
+     * site. The site is added to the opt-in or opt-out set (per {@code enabled}) and removed from
+     * the other so the two sets stay mutually exclusive.
+     */
+    public static void setGutenbergKitSiteOverride(String siteURL, boolean enabled) {
+        if (TextUtils.isEmpty(siteURL)) {
+            return;
+        }
+        DeletablePrefKey added = enabled
+                ? DeletablePrefKey.GUTENBERG_KIT_OPT_IN_SITES
+                : DeletablePrefKey.GUTENBERG_KIT_OPT_OUT_SITES;
+        DeletablePrefKey removed = enabled
+                ? DeletablePrefKey.GUTENBERG_KIT_OPT_OUT_SITES
+                : DeletablePrefKey.GUTENBERG_KIT_OPT_IN_SITES;
+        addToSiteSet(added, siteURL);
+        removeFromSiteSet(removed, siteURL);
+    }
+
+    /**
+     * Returns {@code true} if {@code siteURL} is currently a member of the StringSet at {@code key}.
+     * A missing entry or a value of the wrong type is treated as absence.
+     */
+    private static boolean siteSetContains(DeletablePrefKey key, String siteURL) {
+        try {
+            Set<String> urls = prefs().getStringSet(key.name(), null);
+            return urls != null && urls.contains(siteURL);
+        } catch (ClassCastException exp) {
+            return false;
+        }
+    }
+
+    /**
+     * Adds {@code siteURL} to the StringSet at {@code key}, creating the set if it does not exist.
+     * No-ops if the stored value is of the wrong type.
+     */
+    private static void addToSiteSet(DeletablePrefKey key, String siteURL) {
+        Set<String> urls;
+        try {
+            urls = prefs().getStringSet(key.name(), null);
+        } catch (ClassCastException exp) {
+            return;
+        }
+        Set<String> newUrls = new HashSet<>();
+        if (urls != null) newUrls.addAll(urls);
+        newUrls.add(siteURL);
+        prefs().edit().putStringSet(key.name(), newUrls).apply();
+    }
+
+    /**
+     * Removes {@code siteURL} from the StringSet at {@code key}. No-ops if the site is not present
+     * or the stored value is of the wrong type.
+     */
+    private static void removeFromSiteSet(DeletablePrefKey key, String siteURL) {
+        Set<String> urls;
+        try {
+            urls = prefs().getStringSet(key.name(), null);
+        } catch (ClassCastException exp) {
+            return;
+        }
+        if (urls == null || !urls.contains(siteURL)) return;
+        Set<String> newUrls = new HashSet<>(urls);
+        newUrls.remove(siteURL);
+        prefs().edit().putStringSet(key.name(), newUrls).apply();
+    }
+
+    /**
+     * Returns the wall-clock timestamp (millis) before which the GutenbergKit announcement should
+     * not be re-shown for {@code siteURL}. Returns {@code 0L} if no deferral is set (i.e., free
+     * to show now, subject to the other gates).
+     */
+    public static long getGutenbergKitAnnouncementDeferredUntil(String siteURL) {
+        if (TextUtils.isEmpty(siteURL)) {
+            return 0L;
+        }
+        return prefs().getLong(gutenbergKitDeferralKey(siteURL), 0L);
+    }
+
+    /**
+     * Defers the GutenbergKit announcement for {@code siteURL} until the given wall-clock
+     * timestamp (millis).
+     */
+    public static void setGutenbergKitAnnouncementDeferredUntil(String siteURL, long timestampMillis) {
+        if (TextUtils.isEmpty(siteURL)) {
+            return;
+        }
+        prefs().edit().putLong(gutenbergKitDeferralKey(siteURL), timestampMillis).apply();
+    }
+
+    private static String gutenbergKitDeferralKey(String siteURL) {
+        return DeletablePrefKey.GUTENBERG_KIT_ANNOUNCEMENT_DEFERRED_UNTIL.name() + "_" + siteURL;
     }
 
     public static void setGutenbergInfoPopupDisplayed(String siteURL, boolean isDisplayed) {

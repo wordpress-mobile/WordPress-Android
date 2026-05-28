@@ -50,6 +50,45 @@ class ApplicationPasswordManagerTests {
     }
 
     @Test
+    fun `given a simple WPCom site, when we ask for a password, then return NotSupported`() = runTest {
+        val site = SiteModel().apply {
+            url = "http://simple.wordpress.com"
+            setIsWPCom(true)
+            setIsWPComAtomic(false)
+        }
+
+        val result = mApplicationPasswordsManager.getApplicationCredentials(site)
+
+        Assert.assertTrue(result is ApplicationPasswordCreationResult.NotSupported)
+    }
+
+    @Test
+    fun `given an Atomic site, when we ask for a password, then create it via the Jetpack client`() = runTest {
+        val site = SiteModel().apply {
+            url = "http://atomic.example.com"
+            username = "username"
+            setIsWPCom(true)
+            setIsWPComAtomic(true)
+            origin = SiteModel.ORIGIN_WPCOM_REST
+        }
+
+        whenever(applicationPasswordsStore.getCredentials(site)).thenReturn(null)
+        whenever(mJetpackApplicationPasswordsRestClient.fetchWPAdminUsername(site))
+            .thenReturn(UsernameFetchPayload(testCredentials.userName))
+        whenever(
+            mJetpackApplicationPasswordsRestClient.createApplicationPassword(site, applicationName)
+        ).thenReturn(
+            ApplicationPasswordCreationPayload(testCredentials.password, testCredentials.uuid!!)
+        )
+
+        val result = mApplicationPasswordsManager.getApplicationCredentials(site)
+
+        assertEquals(ApplicationPasswordCreationResult.Created(testCredentials), result)
+        verify(mJetpackApplicationPasswordsRestClient).createApplicationPassword(site, applicationName)
+        verify(applicationPasswordsStore).saveCredentials(site, testCredentials)
+    }
+
+    @Test
     fun `given a local password exists, when we ask for a password, then return it`() = runTest {
         whenever(applicationPasswordsStore.getCredentials(testSite)).thenReturn(testCredentials)
         val result = mApplicationPasswordsManager.getApplicationCredentials(

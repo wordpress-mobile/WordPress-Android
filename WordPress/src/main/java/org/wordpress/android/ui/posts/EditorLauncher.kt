@@ -89,10 +89,10 @@ class EditorLauncher @Inject constructor(
      * Determines if GutenbergKit editor should be used based on feature flags and post content.
      */
     private fun shouldUseGutenbergKitEditor(params: EditorLauncherParams): Boolean {
-        val featureState = gutenbergKitFeatureChecker.getFeatureState()
+        val site = params.siteSource.getSite(siteStore)
+        val featureState = gutenbergKitFeatureChecker.getFeatureState(site)
         val isGutenbergFeatureEnabled = featureState.isGutenbergKitEnabled
 
-        val site = params.siteSource.getSite(siteStore)
         return when {
             !isGutenbergFeatureEnabled -> {
                 logFeatureDisabledReason(featureState)
@@ -122,10 +122,10 @@ class EditorLauncher @Inject constructor(
 
     private fun logFeatureDisabledReason(featureState: GutenbergKitFeatureChecker.FeatureState) {
         val reason = when {
-            featureState.isDisableExperimentalBlockEditorEnabled ->
-                "the experimental block editor is explicitly disabled"
-            !featureState.isExperimentalBlockEditorEnabled && !featureState.isGutenbergKitFeatureEnabled ->
-                "neither the experimental block editor feature nor GutenbergKit feature is enabled"
+            featureState.siteOverride == false ->
+                "this site has an explicit GutenbergKit opt-out"
+            featureState.siteOverride == null && !featureState.isExperimentalBlockEditorEnabled ->
+                "no per-site opt-in and the experimental block editor flag is off"
             else -> "GutenbergKit feature checks failed"
         }
         val featureFlags = getFeatureFlagsString(featureState)
@@ -144,8 +144,8 @@ class EditorLauncher @Inject constructor(
         featureState: GutenbergKitFeatureChecker.FeatureState = gutenbergKitFeatureChecker.getFeatureState()
     ): String {
         return "(experimental_block_editor: ${featureState.isExperimentalBlockEditorEnabled}, " +
-                "gutenberg_kit_feature: ${featureState.isGutenbergKitFeatureEnabled}, " +
-                "disable_experimental_block_editor: ${featureState.isDisableExperimentalBlockEditorEnabled})"
+                "gutenberg_kit_remote_flag: ${featureState.isGutenbergKitFeatureEnabled}, " +
+                "site_override: ${featureState.siteOverride})"
     }
 
     private fun logEditorDecision(
