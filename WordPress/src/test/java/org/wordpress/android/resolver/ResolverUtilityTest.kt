@@ -33,7 +33,7 @@ class ResolverUtilityTest : BaseUnitTest() {
     }
 
     @Test
-    fun `Transaction is completed succesfully when no errors`() {
+    fun `Transaction is completed successfully when no errors`() {
         resolverUtility.copySitesWithIndexes(sites = listOf(SiteModel(), SiteModel()))
         verify(sqliteDatabase, times(1)).beginTransaction()
         verify(sqliteDatabase, times(1)).setTransactionSuccessful()

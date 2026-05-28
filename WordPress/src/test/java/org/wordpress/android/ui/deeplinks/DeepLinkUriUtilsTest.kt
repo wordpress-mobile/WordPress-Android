@@ -88,7 +88,7 @@ class DeepLinkUriUtilsTest {
     }
 
     @Test
-    fun `returns null when site doesnt exist`() {
+    fun `returns null when site doesn't exist`() {
         whenever(siteStore.getSitesByNameOrUrlMatching(host)).thenReturn(listOf())
 
         val hostToSite = deepLinkUriUtils.hostToSite(host)
