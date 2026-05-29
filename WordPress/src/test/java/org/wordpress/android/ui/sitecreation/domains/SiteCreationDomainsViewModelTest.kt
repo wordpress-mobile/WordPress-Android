@@ -23,15 +23,15 @@ import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
-import org.wordpress.android.Constants.TYPE_DOMAINS_PRODUCT
 import org.wordpress.android.R
-import org.wordpress.android.fluxc.Dispatcher
-import org.wordpress.android.fluxc.model.products.Product
-import org.wordpress.android.fluxc.network.rest.wpcom.site.DomainSuggestionResponse
-import org.wordpress.android.fluxc.store.ProductsStore
-import org.wordpress.android.fluxc.store.ProductsStore.OnProductsFetched
-import org.wordpress.android.fluxc.store.SiteStore.OnSuggestedDomains
-import org.wordpress.android.fluxc.store.SiteStore.SuggestDomainError
+import org.wordpress.android.fluxc.store.AccountStore
+import org.wordpress.android.networking.restapi.WpComApiClientProvider
+import rs.wordpress.api.kotlin.WpComApiClient
+import rs.wordpress.api.kotlin.WpRequestResult
+import uniffi.wp_api.DomainSuggestion
+import uniffi.wp_api.FreeDomainSuggestion
+import uniffi.wp_api.PaidDomainSuggestion
+import org.wordpress.android.ui.sitecreation.usecases.FetchDomainsResult
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainsUiState
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainsUiState.CreateSiteButtonState
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainsUiState.DomainsUiContentState
@@ -52,19 +52,24 @@ import kotlin.test.assertIs
 private const val MULTI_RESULT_DOMAIN_FETCH_RESULT_SIZE = 20
 private val MULTI_RESULT_DOMAIN_FETCH_QUERY = "multi_result_query" to MULTI_RESULT_DOMAIN_FETCH_RESULT_SIZE
 private val EMPTY_RESULT_DOMAIN_FETCH_QUERY = "empty_result_query" to 0
-private val SALE_PRODUCTS = listOf(Product(productId = 3, saleCost = 1.0, currencyCode = "EUR"))
+// Sale products test is @Ignore'd — keeping placeholder for future use
+@Suppress("unused")
+private val SALE_PRODUCTS_COUNT = 1
 
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class SiteCreationDomainsViewModelTest : BaseUnitTest() {
     @Mock
-    lateinit var dispatcher: Dispatcher
-
-    @Mock
     lateinit var fetchDomainsUseCase: FetchDomainsUseCase
 
     @Mock
-    private lateinit var productsStore: ProductsStore
+    private lateinit var wpComApiClientProvider: WpComApiClientProvider
+
+    @Mock
+    private lateinit var accountStore: AccountStore
+
+    @Mock
+    private lateinit var wpComApiClient: WpComApiClient
 
     @Mock
     lateinit var plansInSiteCreationFeatureConfig: PlansInSiteCreationFeatureConfig
@@ -94,12 +99,15 @@ class SiteCreationDomainsViewModelTest : BaseUnitTest() {
 
     @Before
     fun setUp() {
+        whenever(accountStore.accessToken).thenReturn("test-token")
+        whenever(wpComApiClientProvider.getWpComApiClient("test-token"))
+            .thenReturn(wpComApiClient)
         viewModel = SiteCreationDomainsViewModel(
             networkUtils = networkUtils,
             domainSanitizer = mSiteCreationDomainSanitizer,
-            dispatcher = dispatcher,
             fetchDomainsUseCase = fetchDomainsUseCase,
-            productsStore = productsStore,
+            wpComApiClientProvider = wpComApiClientProvider,
+            accountStore = accountStore,
             plansInSiteCreationFeatureConfig = plansInSiteCreationFeatureConfig,
             tracker = tracker,
             bgDispatcher = testDispatcher(),
@@ -128,7 +136,7 @@ class SiteCreationDomainsViewModelTest : BaseUnitTest() {
                 createSanitizedDomainResult(isDomainAvailableInSuggestions)
             )
             whenever(fetchDomainsUseCase.fetchDomains(eq(queryResultSizePair.first), any(), any(), any())).thenReturn(
-                createSuccessfulOnSuggestedDomains(queryResultSizePair)
+                createSuccessfulFetchResult(queryResultSizePair)
             )
             block()
         }
@@ -214,13 +222,13 @@ class SiteCreationDomainsViewModelTest : BaseUnitTest() {
      */
     @Test
     fun verifyNonEmptyUpdateQueryUiStateAfterErrorResponse() = test {
-        val queryResultErrorPair = "error_result_query" to "GENERIC_ERROR"
-        whenever(fetchDomainsUseCase.fetchDomains(eq(queryResultErrorPair.first), any(), any(), any())).thenReturn(
-            createFailedOnSuggestedDomains(queryResultErrorPair)
+        val errorQuery = "error_result_query"
+        whenever(fetchDomainsUseCase.fetchDomains(eq(errorQuery), any(), any(), any())).thenReturn(
+            FetchDomainsResult.Error(errorQuery)
         )
 
         viewModel.start()
-        viewModel.onQueryChanged(queryResultErrorPair.first)
+        viewModel.onQueryChanged(errorQuery)
         advanceUntilIdle()
 
         val captor = ArgumentCaptor.forClass(DomainsUiState::class.java)
@@ -239,13 +247,13 @@ class SiteCreationDomainsViewModelTest : BaseUnitTest() {
      */
     @Test
     fun verifyNonEmptyUpdateQueryUiStateAfterErrorResponseOfTypeInvalidQuery() = test {
-        val queryResultErrorPair = "empty_result_query_invalid" to "INVALID_QUERY"
-        whenever(fetchDomainsUseCase.fetchDomains(eq(queryResultErrorPair.first), any(), any(), any())).thenReturn(
-            createFailedOnSuggestedDomains(queryResultErrorPair)
+        val invalidQuery = "empty_result_query_invalid"
+        whenever(fetchDomainsUseCase.fetchDomains(eq(invalidQuery), any(), any(), any())).thenReturn(
+            FetchDomainsResult.InvalidQuery(invalidQuery)
         )
 
         viewModel.start()
-        viewModel.onQueryChanged(queryResultErrorPair.first)
+        viewModel.onQueryChanged(invalidQuery)
         advanceUntilIdle()
 
         val captor = ArgumentCaptor.forClass(DomainsUiState::class.java)
@@ -353,31 +361,63 @@ class SiteCreationDomainsViewModelTest : BaseUnitTest() {
 
     // region New UI
 
+    @Suppress("UNCHECKED_CAST")
     private fun testNewUi(block: suspend CoroutineScope.() -> Unit) = test {
         whenever(plansInSiteCreationFeatureConfig.isEnabled()).thenReturn(true)
-        whenever(productsStore.fetchProducts(any())).thenReturn(mock())
+        whenever(wpComApiClient.request<Any>(any()))
+            .thenReturn(
+                WpRequestResult.Success(emptyMap<String, Any>())
+                    as WpRequestResult<Any>
+            )
         block()
     }
 
     private fun <T> testWithSuccessResultNewUi(
         queryToSize: Pair<String, Int> = MULTI_RESULT_DOMAIN_FETCH_QUERY,
-        block: suspend CoroutineScope.(OnSuggestedDomains) -> T
+        block: suspend CoroutineScope.(List<DomainSuggestion>) -> T
     ) = testNewUi {
         val (query, size) = queryToSize
 
         val suggestions = List(size) {
-            DomainSuggestionResponse().apply {
-                domain_name = if (it == 0) query else "$query-$it.com"
-                is_free = it % 2 == 0
-                cost = if (is_free) "Free" else "$$it.00"
-                product_id = it
-                supports_privacy = !is_free
+            val name = if (it == 0) query else "$query-$it.com"
+            val isFree = it % 2 == 0
+            if (isFree) {
+                DomainSuggestion.Free(
+                    FreeDomainSuggestion(
+                        domainName = name,
+                        cost = "Free",
+                        isFree = true,
+                    )
+                )
+            } else {
+                DomainSuggestion.Paid(
+                    PaidDomainSuggestion(
+                        domainName = name,
+                        relevance = 0.0,
+                        supportsPrivacy = true,
+                        vendor = "donuts",
+                        matchReasons = emptyList(),
+                        maxRegYears = 10u,
+                        multiYearRegAllowed = true,
+                        productId = it.toULong(),
+                        productSlug = "domain_reg",
+                        cost = "$$it.00",
+                        renewCost = "$$it.00",
+                        renewRawPrice = (it * 100).toLong(),
+                        rawPrice = (it * 100).toLong(),
+                        currencyCode = "USD",
+                        saleCost = null,
+                        hstsRequired = null,
+                        policyNotices = emptyList(),
+                    )
+                )
             }
         }
 
-        val event = OnSuggestedDomains(query, suggestions)
-        whenever(fetchDomainsUseCase.fetchDomains(any(), any(), any(), any())).thenReturn(event)
-        block(event)
+        val result = FetchDomainsResult.Success(query, suggestions)
+        whenever(fetchDomainsUseCase.fetchDomains(any(), any(), any(), any()))
+            .thenReturn(result)
+        block(suggestions)
     }
 
     private val uiDomains get() = assertIs<List<New.DomainUiState>>(viewModel.uiState.value?.contentState?.items)
@@ -398,12 +438,13 @@ class SiteCreationDomainsViewModelTest : BaseUnitTest() {
         )
     }
 
+    @Suppress("UNCHECKED_CAST")
     @Test
     fun `verify domain products are fetched only at first start`() = testNewUi {
         viewModel.start()
         viewModel.start()
 
-        verify(productsStore).fetchProducts(eq(TYPE_DOMAINS_PRODUCT))
+        verify(wpComApiClient).request<Any>(any())
     }
 
     @Test
@@ -426,18 +467,20 @@ class SiteCreationDomainsViewModelTest : BaseUnitTest() {
 
 
     @Test
-    fun `verify all domain results from api are visible`() = testWithSuccessResultNewUi { (query, results) ->
+    fun `verify all domain results from api are visible`() = testWithSuccessResultNewUi { suggestions ->
+        val query = MULTI_RESULT_DOMAIN_FETCH_QUERY.first
         viewModel.start()
 
         viewModel.onQueryChanged(query)
         advanceUntilIdle()
 
-        assertThat(uiDomains).hasSameSizeAs(results)
+        assertThat(uiDomains).hasSameSizeAs(suggestions)
     }
 
     @Test
-    fun `verify cost of free domain results from api is 'Free'`() = testWithSuccessResultNewUi { (query, results) ->
-        val apiFreeDomains = results.filter { it.is_free }
+    fun `verify cost of free domain results from api is 'Free'`() = testWithSuccessResultNewUi { suggestions ->
+        val query = MULTI_RESULT_DOMAIN_FETCH_QUERY.first
+        val apiFreeDomains = suggestions.filterIsInstance<DomainSuggestion.Free>()
         viewModel.start()
 
         viewModel.onQueryChanged(query)
@@ -447,8 +490,9 @@ class SiteCreationDomainsViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `verify cost of paid domain results from api is 'Paid'`() = testWithSuccessResultNewUi { (query, results) ->
-        val apiPaidDomains = results.filter { !it.is_free }
+    fun `verify cost of paid domain results from api is 'Paid'`() = testWithSuccessResultNewUi { suggestions ->
+        val query = MULTI_RESULT_DOMAIN_FETCH_QUERY.first
+        val apiPaidDomains = suggestions.filterIsInstance<DomainSuggestion.Paid>()
         viewModel.start()
 
         viewModel.onQueryChanged(query)
@@ -458,31 +502,30 @@ class SiteCreationDomainsViewModelTest : BaseUnitTest() {
     }
 
     @Test @Ignore("It is removed from UI for now, for being Free with annual plan")
-    fun `verify cost of sale domain results from api is 'OnSale'`() = testWithSuccessResultNewUi { (query) ->
-        whenever(productsStore.fetchProducts(any())).thenReturn(OnProductsFetched(SALE_PRODUCTS))
-
+    fun `verify cost of sale domain results from api is 'OnSale'`() = testWithSuccessResultNewUi {
+        val query = MULTI_RESULT_DOMAIN_FETCH_QUERY.first
         viewModel.start()
 
         viewModel.onQueryChanged(query)
         advanceUntilIdle()
 
-        assertThat(uiDomains).filteredOn { it.cost is Cost.OnSale }.hasSameSizeAs(SALE_PRODUCTS)
+        assertThat(uiDomains).filteredOn { it.cost is Cost.OnSale }.hasSize(SALE_PRODUCTS_COUNT)
     }
 
     @Test @Ignore("It is removed from UI for now, for being Free with annual plan")
-    fun `verify sale domain results from api have tag 'Sale'`() = testWithSuccessResultNewUi { (query) ->
-        whenever(productsStore.fetchProducts(any())).thenReturn(OnProductsFetched(SALE_PRODUCTS))
-
+    fun `verify sale domain results from api have tag 'Sale'`() = testWithSuccessResultNewUi {
+        val query = MULTI_RESULT_DOMAIN_FETCH_QUERY.first
         viewModel.start()
 
         viewModel.onQueryChanged(query)
         advanceUntilIdle()
 
-        assertThat(uiDomains.flatMap { it.tags }).filteredOn { it is Tag.Sale }.hasSameSizeAs(SALE_PRODUCTS)
+        assertThat(uiDomains.flatMap { it.tags }).filteredOn { it is Tag.Sale }.hasSize(SALE_PRODUCTS_COUNT)
     }
 
     @Test
-    fun `verify only 1st domain result from api is 'Recommended'`() = testWithSuccessResultNewUi { (query) ->
+    fun `verify only 1st domain result from api is 'Recommended'`() = testWithSuccessResultNewUi {
+        val query = MULTI_RESULT_DOMAIN_FETCH_QUERY.first
         viewModel.start()
 
         viewModel.onQueryChanged(query)
@@ -492,7 +535,8 @@ class SiteCreationDomainsViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `verify only 2nd domain result from api is 'BestAlternative'`() = testWithSuccessResultNewUi { (query) ->
+    fun `verify only 2nd domain result from api is 'BestAlternative'`() = testWithSuccessResultNewUi {
+        val query = MULTI_RESULT_DOMAIN_FETCH_QUERY.first
         viewModel.start()
 
         viewModel.onQueryChanged(query)
@@ -502,7 +546,8 @@ class SiteCreationDomainsViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `verify selected domain is propagated to UI on click`() = testWithSuccessResultNewUi { (query) ->
+    fun `verify selected domain is propagated to UI on click`() = testWithSuccessResultNewUi {
+        val query = MULTI_RESULT_DOMAIN_FETCH_QUERY.first
         viewModel.start()
 
         viewModel.onQueryChanged(query)
@@ -576,25 +621,19 @@ class SiteCreationDomainsViewModelTest : BaseUnitTest() {
     }
 
     /**
-     * Helper function that creates an [OnSuggestedDomains] event for the given query and number of results pair.
+     * Helper function that creates a [FetchDomainsResult.Success] for the given query and number of results pair.
      */
-    private fun createSuccessfulOnSuggestedDomains(queryResultSizePair: Pair<String, Int>): OnSuggestedDomains {
+    private fun createSuccessfulFetchResult(queryResultSizePair: Pair<String, Int>): FetchDomainsResult.Success {
         val suggestions = (0 until queryResultSizePair.second).map {
-            val response = DomainSuggestionResponse()
-            response.domain_name = "${queryResultSizePair.first}-$it.wordpress.com"
-            response
+            DomainSuggestion.Free(
+                FreeDomainSuggestion(
+                    domainName = "${queryResultSizePair.first}-$it.wordpress.com",
+                    cost = "Free",
+                    isFree = true,
+                )
+            )
         }
-        return OnSuggestedDomains(queryResultSizePair.first, suggestions)
-    }
-
-    /**
-     * Helper function that creates an error [OnSuggestedDomains] event.
-     */
-    private fun createFailedOnSuggestedDomains(queryResultErrorPair: Pair<String, String>): OnSuggestedDomains {
-        return OnSuggestedDomains(queryResultErrorPair.first, emptyList())
-            .apply {
-                error = SuggestDomainError(queryResultErrorPair.second, "test")
-            }
+        return FetchDomainsResult.Success(queryResultSizePair.first, suggestions)
     }
 
     /**

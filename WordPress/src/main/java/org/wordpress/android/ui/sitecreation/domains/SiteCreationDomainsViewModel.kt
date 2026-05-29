@@ -13,14 +13,15 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import org.wordpress.android.Constants.TYPE_DOMAINS_PRODUCT
 import org.wordpress.android.R
-import org.wordpress.android.fluxc.Dispatcher
-import org.wordpress.android.fluxc.model.products.Product
-import org.wordpress.android.fluxc.network.rest.wpcom.site.DomainSuggestionResponse
-import org.wordpress.android.fluxc.store.ProductsStore
-import org.wordpress.android.fluxc.store.SiteStore.OnSuggestedDomains
-import org.wordpress.android.fluxc.store.SiteStore.SuggestDomainErrorType
+import org.wordpress.android.fluxc.store.AccountStore
+import org.wordpress.android.networking.restapi.WpComApiClientProvider
+import rs.wordpress.api.kotlin.WpComApiClient
+import rs.wordpress.api.kotlin.WpRequestResult
+import uniffi.wp_api.DomainSuggestion
+import uniffi.wp_api.Product
+import uniffi.wp_api.ProductTypeFilter
+import uniffi.wp_api.ProductsParams
 import org.wordpress.android.models.networkresource.ListState
 import org.wordpress.android.models.networkresource.ListState.Error
 import org.wordpress.android.models.networkresource.ListState.Loading
@@ -41,6 +42,7 @@ import org.wordpress.android.ui.sitecreation.misc.SiteCreationSearchInputUiState
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker
 import org.wordpress.android.ui.sitecreation.usecases.FETCH_DOMAINS_VENDOR_DOT
 import org.wordpress.android.ui.sitecreation.usecases.FETCH_DOMAINS_VENDOR_MOBILE
+import org.wordpress.android.ui.sitecreation.usecases.FetchDomainsResult
 import org.wordpress.android.ui.sitecreation.usecases.FetchDomainsUseCase
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
@@ -60,10 +62,10 @@ private const val ERROR_CONTEXT = "domains"
 @HiltViewModel
 class SiteCreationDomainsViewModel @Inject constructor(
     private val networkUtils: NetworkUtilsWrapper,
-    private val dispatcher: Dispatcher,
     private val domainSanitizer: SiteCreationDomainSanitizer,
     private val fetchDomainsUseCase: FetchDomainsUseCase,
-    private val productsStore: ProductsStore,
+    private val wpComApiClientProvider: WpComApiClientProvider,
+    private val accountStore: AccountStore,
     private val plansInSiteCreationFeatureConfig: PlansInSiteCreationFeatureConfig,
     private val tracker: SiteCreationTracker,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
@@ -78,7 +80,8 @@ class SiteCreationDomainsViewModel @Inject constructor(
     private val _uiState: MutableLiveData<DomainsUiState> = MutableLiveData()
     val uiState: LiveData<DomainsUiState> = _uiState
 
-    private var products: Map<Int?, Product> = mapOf()
+    private var wpComApiClient: WpComApiClient? = null
+    private var products: List<Product>? = null
     private var currentQuery: DomainSuggestionsQuery? = null
     private var listState: ListState<DomainModel> = ListState.Init()
     private var selectedDomain by Delegates.observable<DomainModel?>(null) { _, old, new ->
@@ -96,13 +99,14 @@ class SiteCreationDomainsViewModel @Inject constructor(
     private val _onHelpClicked = SingleLiveEvent<Unit?>()
     val onHelpClicked: LiveData<Unit?> = _onHelpClicked
 
-    init {
-        dispatcher.register(fetchDomainsUseCase)
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-        dispatcher.unregister(fetchDomainsUseCase)
+    @Synchronized
+    private fun getOrCreateClient(): WpComApiClient {
+        val token = requireNotNull(accountStore.accessToken) {
+            "WP.com access token is required"
+        }
+        return wpComApiClient
+            ?: wpComApiClientProvider.getWpComApiClient(token)
+                .also { wpComApiClient = it }
     }
 
     fun start() {
@@ -115,15 +119,18 @@ class SiteCreationDomainsViewModel @Inject constructor(
 
     private fun fetchAndCacheProducts() {
         launch {
-            val result = productsStore.fetchProducts(TYPE_DOMAINS_PRODUCT)
-            when {
-                result.isError -> {
-                    AppLog.e(AppLog.T.DOMAIN_REGISTRATION, "Error while fetching domain products: ${result.error}")
-                }
-
-                else -> {
-                    products = result.products.orEmpty().associateBy { it.productId }
-                }
+            val params = ProductsParams(
+                productType = ProductTypeFilter.Domains
+            )
+            val result = getOrCreateClient()
+                .request { it.products().list(params).data }
+            if (result is WpRequestResult.Success) {
+                products = result.response.values.toList()
+            } else {
+                AppLog.e(
+                    AppLog.T.DOMAIN_REGISTRATION,
+                    "Error while fetching domain products"
+                )
             }
         }
     }
@@ -159,10 +166,12 @@ class SiteCreationDomainsViewModel @Inject constructor(
             updateUiStateToContent(query, Loading(Ready(emptyList()), false))
             fetchDomainsJob = launch {
                 delay(THROTTLE_DELAY)
-                val onSuggestedDomains: OnSuggestedDomains = fetchDomainsByPurchasingFeatureConfig(query.value)
+                val onlyWordpressCom = !plansInSiteCreationFeatureConfig.isEnabled()
+                val vendor = if (onlyWordpressCom) FETCH_DOMAINS_VENDOR_DOT else FETCH_DOMAINS_VENDOR_MOBILE
+                val result = fetchDomainsUseCase.fetchDomains(query.value, vendor, onlyWordpressCom)
 
                 withContext(mainDispatcher) {
-                    onDomainsFetched(query, onSuggestedDomains)
+                    onDomainsFetched(query, result)
                 }
             }
         } else {
@@ -174,55 +183,52 @@ class SiteCreationDomainsViewModel @Inject constructor(
         }
     }
 
-    private suspend fun fetchDomainsByPurchasingFeatureConfig(query: String): OnSuggestedDomains {
-        val onlyWordpressCom = !plansInSiteCreationFeatureConfig.isEnabled()
-        val vendor = if (onlyWordpressCom) FETCH_DOMAINS_VENDOR_DOT else FETCH_DOMAINS_VENDOR_MOBILE
-
-        return fetchDomainsUseCase.fetchDomains(query, vendor, onlyWordpressCom)
-    }
-
-    private fun onDomainsFetched(query: DomainSuggestionsQuery, event: OnSuggestedDomains) {
-        // We want to treat `INVALID_QUERY` as if it's an empty result, so we'll ignore it
-        if (event.isError && event.error.type != SuggestDomainErrorType.INVALID_QUERY) {
-            tracker.trackErrorShown(
-                ERROR_CONTEXT,
-                event.error.type.toString(),
-                event.error.message
-            )
-            updateUiStateToContent(
-                query,
-                Error(
-                    listState,
-                    errorMessageResId = R.string.site_creation_fetch_suggestions_error_unknown
+    private fun onDomainsFetched(query: DomainSuggestionsQuery, result: FetchDomainsResult) {
+        when (result) {
+            is FetchDomainsResult.Error -> {
+                tracker.trackErrorShown(ERROR_CONTEXT, "GENERIC_ERROR", null)
+                updateUiStateToContent(
+                    query,
+                    Error(
+                        listState,
+                        errorMessageResId = R.string.site_creation_fetch_suggestions_error_unknown
+                    )
                 )
-            )
-        } else {
-            /**
-             * We would like to show the domains that matches the current query at the top. For this, we split the
-             * domains into two, one part for the domain names that start with the current query plus `.` and the
-             * other part for the others. We then combine them back again into a single list.
-             */
-            val domains = event.suggestions.map(::parseSuggestion)
-                .partition { it.domainName.startsWith("${query.value}.") }
-                .toList().flatten()
+            }
+            is FetchDomainsResult.InvalidQuery -> {
+                val emptyListMessage = UiStringRes(
+                    R.string.new_site_creation_empty_domain_list_message_invalid_query
+                )
+                updateUiStateToContent(query, Success(emptyList()), emptyListMessage)
+            }
+            is FetchDomainsResult.Success -> {
+                val domains = result.suggestions.map(::parseSuggestion)
+                    .partition { it.domainName.startsWith("${query.value}.") }
+                    .toList().flatten()
 
-            val isInvalidQuery = event.isError && event.error.type == SuggestDomainErrorType.INVALID_QUERY
-            val emptyListMessage = UiStringRes(
-                if (isInvalidQuery) R.string.new_site_creation_empty_domain_list_message_invalid_query
-                else R.string.new_site_creation_empty_domain_list_message
-            )
+                val emptyListMessage = UiStringRes(
+                    R.string.new_site_creation_empty_domain_list_message
+                )
 
-            updateUiStateToContent(query, Success(domains), emptyListMessage)
+                updateUiStateToContent(query, Success(domains), emptyListMessage)
+            }
         }
     }
 
-    private fun parseSuggestion(response: DomainSuggestionResponse): DomainModel = with(response) {
-        DomainModel(
-            domainName = domain_name,
-            isFree = is_free,
-            cost = cost.orEmpty(),
-            productId = product_id,
-            supportsPrivacy = supports_privacy,
+    private fun parseSuggestion(suggestion: DomainSuggestion): DomainModel = when (suggestion) {
+        is DomainSuggestion.Free -> DomainModel(
+            domainName = suggestion.v1.domainName,
+            isFree = true,
+            cost = suggestion.v1.cost,
+            productId = 0,
+            supportsPrivacy = false,
+        )
+        is DomainSuggestion.Paid -> DomainModel(
+            domainName = suggestion.v1.domainName,
+            isFree = false,
+            cost = suggestion.v1.cost,
+            productId = suggestion.v1.productId.toInt(),
+            supportsPrivacy = suggestion.v1.supportsPrivacy,
         )
     }
 
