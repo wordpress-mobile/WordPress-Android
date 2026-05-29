@@ -11,8 +11,8 @@ Guidance for AI agents working in this repository. Read alongside `CLAUDE.md`
 - **Do not use `runBlocking` on the main thread or in production code.** It is
   acceptable only in tests.
 - **Do not hardcode `Dispatchers.IO`/`Dispatchers.Main` inside classes.** Inject
-  dispatchers (see existing `@Named("IO_THREAD")` / `CoroutineDispatcher`
-  injection patterns) so they can be swapped in tests.
+  `CoroutineDispatcher` via constructor with `@Named(IO_THREAD)` so it can be
+  swapped in tests. See `ReaderPostRepository.kt` for the canonical pattern.
 - **Do not launch coroutines from constructors or `init` blocks.** Start them
   from a lifecycle-aware entry point.
 - **Do not use `Thread.sleep`** to wait for async work. Use coroutines, `delay`,
@@ -57,9 +57,10 @@ Guidance for AI agents working in this repository. Read alongside `CLAUDE.md`
 
 ## Error Handling
 
-- **Do not `catch (e: Exception)` / `catch (t: Throwable)` to swallow errors.**
-  Catch the specific exception, or rethrow / log via the existing
-  `AppLog`/Sentry pipeline.
+- **Do not catch broad exceptions (`Exception`, `Throwable`) without logging
+  via `AppLog` or rethrowing.** Prefer catching the specific exception when
+  practical; broad catches are acceptable at network/IO boundaries as long as
+  the error flows through the existing `AppLog`/Sentry pipeline.
 - **Do not catch and ignore (`catch (e: Exception) {}`).** Even if intentional,
   add a one-line comment explaining why.
 - **Do not throw raw `RuntimeException`/`IllegalStateException` for control
