@@ -1,11 +1,11 @@
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2026-03-16 01:24+0000\n"
+"PO-Revision-Date: 2026-05-29 09:18+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: fastlane-plugin-wpmreleasetoolkit 14.0.0\n"
+"X-Generator: fastlane-plugin-wpmreleasetoolkit 14.6.0\n"
 
 #. translators: Title to be displayed in the Play Store. Limit to 30 characters including spaces and commas!
 msgctxt "play_store_app_title"
@@ -143,11 +143,9 @@ msgctxt "play_store_screenshot_9"
 msgid "Stay engaged with blogging reminders."
 msgstr ""
 
-msgctxt "release_note_267"
+msgctxt "release_note_268"
 msgid ""
-"26.7:\n"
-"- Button colors are now consistent across different areas of the app.\n"
-"- We fixed an infinite loop that sometimes appeared when opening certain types"
-" of links.\n"
+"26.8:\n"
+"Bug fixes and improvements.\n"
 msgstr ""
 
