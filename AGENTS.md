@@ -8,6 +8,8 @@ Guidance for AI agents working in this repository. Read alongside `CLAUDE.md`
 
 - **Do not use `GlobalScope`.** Use an injected `CoroutineScope` tied to a
   lifecycle (`viewModelScope`, `lifecycleScope`) or a scope owned by the class.
+  For fire-and-forget work that must outlive the lifecycle owner, inject
+  `@Named(APPLICATION_SCOPE) CoroutineScope` — never reach for `GlobalScope`.
 - **Do not use `runBlocking` on the main thread or in production code.** It is
   acceptable only in tests.
 - **Do not hardcode `Dispatchers.IO`/`Dispatchers.Main` inside classes.** Inject
@@ -28,7 +30,9 @@ Guidance for AI agents working in this repository. Read alongside `CLAUDE.md`
   Exception: the Fragment view-binding backing-field idiom
   (`private val binding get() = _binding!!`) is accepted in this codebase.
 - **Avoid `lateinit var` for values that have a sensible default or can be
-  constructor-injected.** Reserve it for DI-injected fields and view bindings.
+  constructor-injected.** Reserve it for DI-injected fields. For view
+  bindings, use the nullable backing-field idiom described below in
+  *Android Lifecycle & Memory Leaks*.
 - **Do not use `!!` on `intent.extras`, `arguments`, or `savedInstanceState`.**
   Use safe calls with sensible fallbacks.
 - **Do not write `if (x != null) x.foo()`.** Use `x?.foo()` or `x?.let { ... }`.
@@ -59,10 +63,10 @@ Guidance for AI agents working in this repository. Read alongside `CLAUDE.md`
 
 - **Do not catch broad exceptions (`Exception`, `Throwable`) without logging
   via `AppLog` or rethrowing.** Prefer catching the specific exception when
-  practical; broad catches are acceptable at network/IO boundaries as long as
-  the error flows through the existing `AppLog`/Sentry pipeline.
-- **Do not catch and ignore (`catch (e: Exception) {}`).** Even if intentional,
-  add a one-line comment explaining why.
+  practical. Broad catches are acceptable at network/IO boundaries as long
+  as the error flows through the existing `AppLog`/Sentry pipeline. If you
+  intentionally swallow an exception, add a one-line comment explaining
+  why.
 - **Do not throw raw `RuntimeException`/`IllegalStateException` for control
   flow or expected error paths.** Use sealed result types or nullable
   returns. `check`/`require`/`error` for genuine precondition violations is
@@ -99,8 +103,8 @@ Guidance for AI agents working in this repository. Read alongside `CLAUDE.md`
 ## Compose
 
 - **Do not call `mutableStateOf` outside `remember` in a composable, and do
-  not mutate state from the composable body.** Use `LaunchedEffect` or event
-  handlers.
+  not mutate state during composition.** Do mutations in event handlers or
+  `LaunchedEffect`.
 - **Do not create `ViewModel` instances inside composables via constructors.**
   Use `hiltViewModel()` / `viewModel()`.
 - **Do not pass `ViewModel` deep into the composable tree.** Hoist state and
