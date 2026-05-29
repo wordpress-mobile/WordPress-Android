@@ -118,7 +118,9 @@ public class LoginActivity extends BaseAppCompatActivity implements
     // Flag to track that the user actually launched a login during share flow
     private boolean mShareFlowLoginLaunched = false;
     // Flag to track when the in-flight site fetch targets the user's primary blog (via /me),
-    // so a failure can fall back to fetching the full site list.
+    // so a failure can fall back to fetching the full site list. Assumes no other code path
+    // dispatches a site fetch during the post-OAuth login window — OnSiteChanged has no
+    // causeOfChange, so a spurious event here would be mistaken for our primary-site result.
     private boolean mFetchingPrimarySite = false;
     private ArrayList<Integer> mOldSitesIdsForLoginUpdate;
 
