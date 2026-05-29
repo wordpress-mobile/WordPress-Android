@@ -29,7 +29,7 @@ class PerAppLocaleManager @Inject constructor(
     private val siteStore: SiteStore,
     private val accountStore: AccountStore,
 ) {
-    private fun getCurrentLocale(): Locale {
+    fun getCurrentLocale(): Locale {
         val locales = AppCompatDelegate.getApplicationLocales()
         return if (locales.isEmpty || locales == LocaleListCompat.getEmptyLocaleList()) {
             Locale.getDefault()

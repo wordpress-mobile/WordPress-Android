@@ -1464,7 +1464,6 @@ Language: sq_AL
     <string name="stats_referrer_popup_unmark_as_spam">Hiqja Shenjën Si i Padëshiruar</string>
     <string name="stats_referrer_popup_menu_mark_as_spam">Vëri Shenjë si I padëshiruar</string>
     <string name="stats_referrer_popup_menu_open_website">Hap Sajtin</string>
-    <string name="media_uploading_gif_library_photo">Po ngarkohet media gif</string>
     <string name="media_uploading_stock_library_photo">Po ngarkohet media stok</string>
     <string name="media_uploading_default">Po ngarkohet media</string>
     <string name="suggestion_no_connection">S’ka lidhje në internet.\nS’merren dot sugjerime.</string>
@@ -1604,9 +1603,6 @@ Language: sq_AL
     <string name="new_site_creation_creating_site_loading_subtitle">Sajti juaj do të jetë gati pas pak</string>
     <string name="new_site_creation_creating_site_loading_title">Urra!\nPothuajse mbaruat</string>
     <string name="pages_and_posts_cancel_auto_upload">Anuloje ngarkimin</string>
-    <string name="gif_list_search_returned_unknown_error">Pati një problem me trajtimin e kërkesës</string>
-    <string name="gif_powered_by_tenor">Bazuar në Tenor</string>
-    <string name="photo_picker_gif">Zgjidhni prej Tenor-i</string>
     <string name="weekday_saturday">E shtunë</string>
     <string name="weekday_friday">E premte</string>
     <string name="weekday_thursday">E enjte</string>
@@ -2010,8 +2006,6 @@ Language: sq_AL
     <string name="stats_no_data_for_period">S’ka të dhëna për këtë periudhë</string>
     <string name="preference_strip_image_location">Hiqe vendndodhjen prej mediash</string>
     <string name="stats_cannot_be_started">S’i hapim dot statistikat tani. Ju lutemi, riprovoni më vonë</string>
-    <string name="gif_picker_empty_search_list">S’ka media që përputhet me kërkimin tuaj</string>
-    <string name="gif_picker_initial_empty_text">Kërkoni për të gjetur GIF-e që t’i shtoni te Mediateka juaj!</string>
     <string name="stats_author_views_label">Parje</string>
     <string name="stats_author_label">Autor</string>
     <string name="stats_authors">Autorë</string>

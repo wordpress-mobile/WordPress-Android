@@ -1469,7 +1469,6 @@ Language: tr
     <string name="stats_referrer_popup_unmark_as_spam">İstenmeyen e-posta işaretini kaldır</string>
     <string name="stats_referrer_popup_menu_mark_as_spam">İstenmeyen olarak işaretle</string>
     <string name="stats_referrer_popup_menu_open_website">Siteyi aç</string>
-    <string name="media_uploading_gif_library_photo">Gif ortamı yükleme</string>
     <string name="media_uploading_stock_library_photo">Stok ortam yükleme</string>
     <string name="media_uploading_default">Ortam yükleniyor</string>
     <string name="suggestion_no_connection">İnternet bağlantısı yok.\nÖneriler kullanılamaz.</string>
@@ -1609,9 +1608,6 @@ Language: tr
     <string name="new_site_creation_creating_site_loading_subtitle">Siteniz kısa süre içinde hazır olacak</string>
     <string name="new_site_creation_creating_site_loading_title">Tebrikler!\nNeredeyse bitti</string>
     <string name="pages_and_posts_cancel_auto_upload">Yüklemeyi iptal et</string>
-    <string name="gif_list_search_returned_unknown_error">İstek işlenirken bir sorun oluştu</string>
-    <string name="gif_powered_by_tenor">Destekleyen: Tenor</string>
-    <string name="photo_picker_gif">Tenor\'dan Seç</string>
     <string name="weekday_saturday">Cumartesi</string>
     <string name="weekday_friday">Cuma</string>
     <string name="weekday_thursday">Perşembe</string>
@@ -2015,8 +2011,6 @@ Language: tr
     <string name="stats_no_data_for_period">Bu dönem için bir veri yok</string>
     <string name="preference_strip_image_location">Ortam dosyasından konum bilgisini kaldır</string>
     <string name="stats_cannot_be_started">Şu anda istatistikleri açamıyoruz. Lütfen bir süre sonra yeniden deneyin</string>
-    <string name="gif_picker_empty_search_list">Aramanızla eşleşen bir ortam yok</string>
-    <string name="gif_picker_initial_empty_text">Ortam kitaplığınıza eklenecek GIF dosyalarını arayın!</string>
     <string name="stats_author_views_label">Görüntülemeler</string>
     <string name="stats_author_label">Yazar</string>
     <string name="stats_authors">Yazarlar</string>

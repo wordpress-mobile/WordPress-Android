@@ -18,6 +18,7 @@ import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpApiClientProvider
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.ui.accounts.login.ApplicationPasswordLoginHelper
+import org.wordpress.android.ui.accounts.login.SiteApiRestUrlRecoverer
 import org.wordpress.android.ui.mysite.MySiteCardAndItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickLinksItem.QuickLinkItem
 import org.wordpress.android.ui.mysite.SiteNavigationAction
@@ -38,6 +39,7 @@ class ApplicationPasswordViewModelSlice @Inject constructor(
     private val applicationPasswordValidator: ApplicationPasswordValidator,
     private val selfHostedEndpointFinder: SelfHostedEndpointFinder,
     private val siteXMLRPCClient: SiteXMLRPCClient,
+    private val siteApiRestUrlRecoverer: SiteApiRestUrlRecoverer,
     private val dispatcher: Dispatcher,
     @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher,
 ) {
@@ -81,6 +83,8 @@ class ApplicationPasswordViewModelSlice @Inject constructor(
             if (hadCreds) {
                 when (applicationPasswordValidator.validate(storedSite)) {
                     ApplicationPasswordValidator.Outcome.Valid -> {
+                        // Heal in the background so the card hides immediately on a slow network.
+                        scope.launch { healApiRestUrlIfMissing(storedSite) }
                         handleValidAuth(storedSite)
                         return@launch
                     }
@@ -108,6 +112,10 @@ class ApplicationPasswordViewModelSlice @Inject constructor(
             if (!createResult.isError && createResult.credentials != null) {
                 wpApiClientProvider.clearSelfHostedClient(storedSite.id)
                 appLogWrapper.d(AppLog.T.MAIN, "A_P: Headless mint succeeded for ${storedSite.url}")
+                // The mint goes through the Jetpack tunnel and never runs discovery — without this
+                // step, freshly minted Atomic sites end up with working creds but a NULL
+                // wpApiRestUrl in the local DB. Run in the background so the card hides immediately.
+                scope.launch { healApiRestUrlIfMissing(storedSite) }
                 handleValidAuth(storedSite)
                 return@launch
             }
@@ -124,6 +132,14 @@ class ApplicationPasswordViewModelSlice @Inject constructor(
             } else {
                 buildAuthenticationCard(storedSite)
             }
+        }
+    }
+
+    private suspend fun healApiRestUrlIfMissing(site: SiteModel) {
+        if (!site.wpApiRestUrl.isNullOrEmpty()) return
+        siteApiRestUrlRecoverer.discoverApiRootUrl(site.url)?.let { apiRootUrl ->
+            site.wpApiRestUrl = apiRootUrl
+            siteApiRestUrlRecoverer.persistApiRootUrl(site.id, apiRootUrl)
         }
     }
 

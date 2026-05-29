@@ -179,8 +179,6 @@
 
     <string name="media_uploading_default">Uploading media</string>
     <string name="media_uploading_stock_library_photo">Uploading stock media</string>
-    <string name="media_uploading_gif_library_photo">Uploading gif media</string>
-
     <string name="media_upload_state_queued">Queued</string>
     <string name="media_upload_state_uploading">Uploading</string>
     <string name="media_upload_state_deleting">Deleting</string>
@@ -3295,7 +3293,6 @@
     <string name="photo_picker_capture_video">Take video</string>
     <string name="photo_picker_stock_media">Choose from Free Photo Library</string>
     <string name="photo_picker_wordpress_media_library">Choose from WordPress Media Library</string>
-    <string name="photo_picker_gif">Choose from Tenor</string>
     <string name="photo_picker_soft_ask_label">%s needs permissions to access your photos</string>
     <string name="photo_picker_soft_ask_photos_videos_audio_label">%s needs permission to access your music, audio, photos and videos</string>
     <string name="photo_picker_soft_ask_photos_videos_label">%s needs permission to access your photos and videos</string>
@@ -3323,12 +3320,6 @@
     <string name="media_insert_failed">Media insert failed.</string>
     <string name="media_loading_failed">Media loading failed</string>
     <string name="media_picker_soft_ask_media_permissions_denied">%1$s was denied access to your media files. To fix this, edit your permissions and turn on %2$s.</string>
-
-    <!-- GIFs -->
-    <string name="gif_powered_by_tenor">Powered by Tenor</string>
-    <string name="gif_picker_initial_empty_text">Search to find GIFs to add to your Media Library!</string>
-    <string name="gif_picker_empty_search_list">No media matching your search</string>
-    <string name="gif_list_search_returned_unknown_error">There was a problem handling the request</string>
 
     <!-- E-mail verification reminder dialog -->
     <string name="toast_saving_post_as_draft">Saving post as draft</string>

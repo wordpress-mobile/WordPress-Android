@@ -12,6 +12,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.repositories.EditorSettingsRepository
+import org.wordpress.android.ui.accounts.login.SiteApiRestUrlRecoverer
 import org.wordpress.android.util.AppLog
 import org.wordpress.gutenberg.model.EditorDependencies
 import java.util.concurrent.ConcurrentHashMap
@@ -63,6 +64,7 @@ class GutenbergEditorPreloader @Inject constructor(
     private val siteSettingsProvider: SiteSettingsProvider,
     private val editorServiceProvider: EditorServiceProvider,
     private val editorSettingsRepository: EditorSettingsRepository,
+    private val siteApiRestUrlRecoverer: SiteApiRestUrlRecoverer,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) {
     private sealed class PreloadState {
@@ -93,18 +95,21 @@ class GutenbergEditorPreloader @Inject constructor(
         val siteId = site.id
         val job = scope.launch(bgDispatcher) {
             try {
+                if (site.wpApiRestUrl.isNullOrEmpty()) {
+                    siteApiRestUrlRecoverer.discoverApiRootUrl(site.url)
+                        ?.let { site.wpApiRestUrl = it }
+                }
                 editorSettingsRepository
                     .fetchEditorCapabilitiesForSite(site)
                 // Preloading produces EditorDependencies, which the editor
                 // consumes alongside its own per-launch EditorConfiguration.
-                // Locale, cookies, and network-logging are per-launch
-                // concerns the preloaded dependencies don't depend on, so
-                // pass safe defaults here.
+                // Cookies and network-logging are per-launch concerns the
+                // preloaded dependencies don't depend on, so pass safe
+                // defaults here.
                 val config = gutenbergKitSettingsBuilder
                     .buildPostConfiguration(
                         site = site,
                         accessToken = accountStore.accessToken,
-                        locale = "en",
                         cookies = emptyMap(),
                         isNetworkLoggingEnabled = false,
                     )

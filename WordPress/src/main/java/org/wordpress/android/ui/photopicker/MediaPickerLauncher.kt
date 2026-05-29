@@ -14,7 +14,6 @@ import org.wordpress.android.ui.mediapicker.MediaPickerSetup
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup.CameraSetup.ENABLED
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup.CameraSetup.HIDDEN
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource.DEVICE
-import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource.GIF_LIBRARY
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource.STOCK_LIBRARY
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource.WP_LIBRARY
 import org.wordpress.android.ui.mediapicker.MediaType
@@ -31,9 +30,9 @@ class MediaPickerLauncher @Inject constructor() {
         localPostId: Int
     ) {
         val availableDataSources = if (site != null && site.isUsingWpComRestApi) {
-            setOf(WP_LIBRARY, STOCK_LIBRARY, GIF_LIBRARY)
+            setOf(WP_LIBRARY, STOCK_LIBRARY)
         } else {
-            setOf(WP_LIBRARY, GIF_LIBRARY)
+            setOf(WP_LIBRARY)
         }
 
         val mediaPickerSetup = MediaPickerSetup(
@@ -226,38 +225,6 @@ class MediaPickerLauncher @Inject constructor() {
             queueResults = false,
             defaultSearchView = true,
             title = R.string.photo_picker_stock_media
-        )
-        val intent = MediaPickerActivity.buildIntent(
-            activity,
-            mediaPickerSetup,
-            site
-        )
-        activity.startActivityForResult(intent, requestCode)
-    }
-
-    fun showGifPickerForResult(
-        activity: Activity,
-        site: SiteModel,
-        allowMultipleSelection: Boolean
-    ) {
-        val requestCode = if (allowMultipleSelection) {
-            RequestCodes.GIF_PICKER_MULTI_SELECT
-        } else {
-            RequestCodes.GIF_PICKER_SINGLE_SELECT
-        }
-        val mediaPickerSetup = MediaPickerSetup(
-            primaryDataSource = GIF_LIBRARY,
-            availableDataSources = setOf(),
-            canMultiselect = allowMultipleSelection,
-            requiresPhotosVideosPermissions = false,
-            requiresMusicAudioPermissions = false,
-            allowedTypes = setOf(IMAGE),
-            cameraSetup = HIDDEN,
-            systemPickerEnabled = false,
-            editingEnabled = false,
-            queueResults = false,
-            defaultSearchView = true,
-            title = R.string.photo_picker_gif
         )
         val intent = MediaPickerActivity.buildIntent(
             activity,

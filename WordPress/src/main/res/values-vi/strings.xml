@@ -581,7 +581,6 @@ Language: vi_VN
     <string name="reader_discover_empty_button_text">Bắt Đầu</string>
     <string name="stats_referrer_popup_unmark_as_spam">Bỏ đánh dấu là spam</string>
     <string name="stats_referrer_popup_menu_mark_as_spam">Đánh dấu là spam</string>
-    <string name="media_uploading_gif_library_photo">Đang tải lên GIF</string>
     <string name="media_uploading_stock_library_photo">Đang tải lên media stock</string>
     <string name="media_uploading_default">Đang tải lên media</string>
     <string name="stats_referrer_snackbar_cant_mark_as_spam">Không thể đánh dấu nguồn dẫn về này là spam</string>
@@ -716,9 +715,6 @@ Language: vi_VN
     <string name="new_site_creation_creating_site_loading_1">Đang nhận URL blog</string>
     <string name="new_site_creation_creating_site_loading_subtitle">Blog của bạn sắp sẵn sàng</string>
     <string name="pages_and_posts_cancel_auto_upload">Hủy tải lên</string>
-    <string name="gif_list_search_returned_unknown_error">Có vấn đề khi xử lý yêu cầu</string>
-    <string name="gif_powered_by_tenor">Cung cấp bởi Tenor</string>
-    <string name="photo_picker_gif">Chọn từ Tenor</string>
     <string name="weekday_saturday">Thứ Bảy</string>
     <string name="weekday_friday">Thứ Sáu</string>
     <string name="weekday_thursday">Thứ Năm</string>
@@ -1112,7 +1108,6 @@ Language: vi_VN
     <string name="preference_strip_image_location">Xóa định vị vị trí khỏi ảnh</string>
     <string name="stats_no_data_for_period">Chưa có dữ liệu</string>
     <string name="stats_cannot_be_started">Không thể mở thống kê vào lúc này. Hãy thử lại sau</string>
-    <string name="gif_picker_initial_empty_text">Tìm GIF để thêm vào Thư viện Media!</string>
     <string name="stats_author_views_label">Lượt xem</string>
     <string name="stats_author_label">Tác giả</string>
     <string name="stats_authors">Tác giả</string>
@@ -1142,7 +1137,6 @@ Language: vi_VN
     <string name="stats_search_terms">Từ khóa</string>
     <string name="stats_search_terms_label">Từ khóa tìm kiếm</string>
     <string name="stats_posts_and_pages">Bài viết và Trang</string>
-    <string name="gif_picker_empty_search_list">Không có media nào trùng khớp</string>
     <string name="stats_insights_tags_and_categories">Thẻ và Chuyên mục</string>
     <string name="stats_insights_all_time_stats">Mọi lúc</string>
     <string name="stats_insights_latest_post_with_no_engagement">%2$s đăng cách đây %1$s. Tăng lượt xem bằng cách chia sẻ bài viết:</string>

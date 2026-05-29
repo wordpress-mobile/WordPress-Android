@@ -31,9 +31,4 @@
         android:id="@+id/mnu_choose_from_stock_library"
         android:title="@string/photo_picker_stock_media"
         app:showAsAction="never" />
-
-    <item
-        android:id="@+id/mnu_choose_from_tenor_library"
-        android:title="@string/photo_picker_gif"
-        app:showAsAction="never" />
 </menu>

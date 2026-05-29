@@ -1469,7 +1469,6 @@ Language: ko_KR
     <string name="stats_referrer_popup_unmark_as_spam">스팸 표시 해제하기</string>
     <string name="stats_referrer_popup_menu_mark_as_spam">스팸으로 표시하기</string>
     <string name="stats_referrer_popup_menu_open_website">웹사이트 열기</string>
-    <string name="media_uploading_gif_library_photo">gif 미디어 업로드 중</string>
     <string name="media_uploading_stock_library_photo">스톡 미디어 업로드 중</string>
     <string name="media_uploading_default">미디어 업로드 중</string>
     <string name="suggestion_no_connection">인터넷에 연결되지 않았습니다.\n제안을 사용할 수 없습니다.</string>
@@ -1609,9 +1608,6 @@ Language: ko_KR
     <string name="new_site_creation_creating_site_loading_subtitle">사이트가 금새 준비될 것입니다</string>
     <string name="new_site_creation_creating_site_loading_title">씬난다!\n거의 다 됐습니다</string>
     <string name="pages_and_posts_cancel_auto_upload">업로드 취소</string>
-    <string name="gif_list_search_returned_unknown_error">요청을 다루는데 문제가 있습니다</string>
-    <string name="gif_powered_by_tenor">테너 제공</string>
-    <string name="photo_picker_gif">테너에서 선택</string>
     <string name="weekday_saturday">토요일</string>
     <string name="weekday_friday">금요일</string>
     <string name="weekday_thursday">목요일</string>
@@ -2015,8 +2011,6 @@ Language: ko_KR
     <string name="stats_no_data_for_period">이 기간에 데이터 없음</string>
     <string name="preference_strip_image_location">미디어에서 위치 제거</string>
     <string name="stats_cannot_be_started">지금은 통계를 열 수 없습니다. 나중에 다시 시도해 주세요.</string>
-    <string name="gif_picker_empty_search_list">검색과 일치하는 미디어 없음</string>
-    <string name="gif_picker_initial_empty_text">GIF를 검색하여 미디어 라이브러리에 추가하세요!</string>
     <string name="stats_author_views_label">조회수</string>
     <string name="stats_author_label">글쓴이</string>
     <string name="stats_authors">글쓴이</string>

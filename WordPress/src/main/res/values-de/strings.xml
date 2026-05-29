@@ -1469,7 +1469,6 @@ Language: de
     <string name="stats_referrer_popup_unmark_as_spam">Spam-Markierung aufheben</string>
     <string name="stats_referrer_popup_menu_mark_as_spam">Als Spam markieren</string>
     <string name="stats_referrer_popup_menu_open_website">Website öffnen</string>
-    <string name="media_uploading_gif_library_photo">Gif-Medien werden hochgeladen</string>
     <string name="media_uploading_stock_library_photo">Archivmedien werden hochgeladen</string>
     <string name="media_uploading_default">Medien werden hochgeladen …</string>
     <string name="suggestion_no_connection">Keine Internetverbindung.\nKeine Vorschläge verfügbar.</string>
@@ -1609,9 +1608,6 @@ Language: de
     <string name="new_site_creation_creating_site_loading_subtitle">Deine Website wird in Kürze bereit sein</string>
     <string name="new_site_creation_creating_site_loading_title">Hurra!\nFast geschafft</string>
     <string name="pages_and_posts_cancel_auto_upload">Upload abbrechen</string>
-    <string name="gif_list_search_returned_unknown_error">Beim Verarbeiten der Anfrage ist ein Problem aufgetreten</string>
-    <string name="gif_powered_by_tenor">Bereitgestellt von Tenor</string>
-    <string name="photo_picker_gif">Von Tenor auswählen</string>
     <string name="weekday_saturday">Samstag</string>
     <string name="weekday_friday">Freitag</string>
     <string name="weekday_thursday">Donnerstag</string>
@@ -2015,8 +2011,6 @@ Language: de
     <string name="stats_no_data_for_period">Keine Daten für diesen Zeitraum</string>
     <string name="preference_strip_image_location">Positionsangabe von Medien entfernen</string>
     <string name="stats_cannot_be_started">Wir können die Statistiken momentan nicht öffnen. Bitte versuche es später erneut</string>
-    <string name="gif_picker_empty_search_list">Keine Medien entsprechen deiner Suche</string>
-    <string name="gif_picker_initial_empty_text">Suche, um GIFs zu finden und sie zu deiner Mediathek hinzuzufügen!</string>
     <string name="stats_author_views_label">Aufrufe</string>
     <string name="stats_author_label">Autor</string>
     <string name="stats_authors">Autoren</string>

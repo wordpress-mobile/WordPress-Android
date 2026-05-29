@@ -21,7 +21,7 @@ data class MediaPickerSetup(
     val initialSelection: List<Int> = emptyList()
 ) {
     enum class DataSource {
-        DEVICE, WP_LIBRARY, STOCK_LIBRARY, GIF_LIBRARY
+        DEVICE, WP_LIBRARY, STOCK_LIBRARY
     }
 
     enum class CameraSetup {

@@ -7,7 +7,6 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.MEDIA_PICKER_ITEM_S
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.MEDIA_PICKER_ITEM_UNSELECTED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.MEDIA_PICKER_OPENED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.MEDIA_PICKER_OPEN_DEVICE_LIBRARY
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.MEDIA_PICKER_OPEN_GIF_LIBRARY
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.MEDIA_PICKER_OPEN_STOCK_LIBRARY
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.MEDIA_PICKER_OPEN_WP_MEDIA
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.MEDIA_PICKER_PREVIEW_OPENED
@@ -22,7 +21,6 @@ import org.wordpress.android.ui.mediapicker.MediaItem.Identifier
 import org.wordpress.android.ui.mediapicker.MediaItem.Identifier.LocalUri
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerIcon
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource.DEVICE
-import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource.GIF_LIBRARY
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource.STOCK_LIBRARY
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource.WP_LIBRARY
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
@@ -88,7 +86,6 @@ class MediaPickerTracker
                     DEVICE -> MEDIA_PICKER_OPEN_DEVICE_LIBRARY
                     WP_LIBRARY -> MEDIA_PICKER_OPEN_WP_MEDIA
                     STOCK_LIBRARY -> MEDIA_PICKER_OPEN_STOCK_LIBRARY
-                    GIF_LIBRARY -> MEDIA_PICKER_OPEN_GIF_LIBRARY
                 }
                 analyticsTrackerWrapper.track(event, mediaPickerSetup.toProperties())
             }
@@ -137,7 +134,6 @@ class MediaPickerTracker
             DEVICE -> "device_media_library"
             WP_LIBRARY -> "wordpress_media_library"
             STOCK_LIBRARY -> "pexel_image_library"
-            GIF_LIBRARY -> "tenor_gif_library"
         }
         this["can_multiselect"] = mediaPickerSetup.canMultiselect
         this["default_search_view"] = mediaPickerSetup.defaultSearchView

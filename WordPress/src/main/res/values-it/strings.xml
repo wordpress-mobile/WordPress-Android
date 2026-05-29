@@ -1461,7 +1461,6 @@ Language: it
     <string name="stats_referrer_popup_unmark_as_spam">Annulla contrassegno come spam</string>
     <string name="stats_referrer_popup_menu_mark_as_spam">Contrassegna come spam</string>
     <string name="stats_referrer_popup_menu_open_website">Apri sito web</string>
-    <string name="media_uploading_gif_library_photo">Caricamento GIF multimediale</string>
     <string name="media_uploading_stock_library_photo">Caricamento magazzino multimediale</string>
     <string name="media_uploading_default">Caricamento elemento multimediale</string>
     <string name="suggestion_no_connection">Nessuna connessione Internet.\nI suggerimenti non sono disponibili.</string>
@@ -1600,9 +1599,6 @@ Language: it
     <string name="new_site_creation_creating_site_loading_subtitle">Il tuo sito sarà pronto a breve</string>
     <string name="new_site_creation_creating_site_loading_title">Finalmente!\nQuasi finito</string>
     <string name="pages_and_posts_cancel_auto_upload">Annulla caricamento</string>
-    <string name="gif_list_search_returned_unknown_error">Si è verificato un errore durante la gestione della richiesta</string>
-    <string name="gif_powered_by_tenor">Promosso da Tenor</string>
-    <string name="photo_picker_gif">Scegli da Tenor</string>
     <string name="weekday_saturday">Sabato</string>
     <string name="weekday_friday">Venerdì</string>
     <string name="weekday_thursday">Giovedì</string>
@@ -2006,8 +2002,6 @@ Language: it
     <string name="stats_no_data_for_period">Nessun dato per questo periodo</string>
     <string name="preference_strip_image_location">Rimuovi posizione dal contenuto multimediale</string>
     <string name="stats_cannot_be_started">Non è possibile aprire le statistiche. Riprova più tardi</string>
-    <string name="gif_picker_empty_search_list">Nessun elemento multimediale corrispondente alla ricerca</string>
-    <string name="gif_picker_initial_empty_text">Cerca per trovare GIF da aggiungere alla tua Libreria multimediale!</string>
     <string name="stats_author_views_label">Visualizzazioni</string>
     <string name="stats_author_label">Autore</string>
     <string name="stats_authors">Autori</string>

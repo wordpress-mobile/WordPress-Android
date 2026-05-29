@@ -10,15 +10,20 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.whenever
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.util.PerAppLocaleManager
 import org.wordpress.gutenberg.model.PostTypeDetails
+import java.util.Locale
 
 @RunWith(MockitoJUnitRunner::class)
 class GutenbergKitSettingsBuilderTest {
     @Mock
     lateinit var editorCapabilityResolver: EditorCapabilityResolver
 
+    @Mock
+    lateinit var perAppLocaleManager: PerAppLocaleManager
+
     private val builder by lazy {
-        GutenbergKitSettingsBuilder(editorCapabilityResolver)
+        GutenbergKitSettingsBuilder(editorCapabilityResolver, perAppLocaleManager)
     }
 
     @Before
@@ -27,6 +32,7 @@ class GutenbergKitSettingsBuilderTest {
             .thenReturn(EditorCapabilityState.Hidden)
         whenever(editorCapabilityResolver.resolveThirdPartyBlocks(any()))
             .thenReturn(EditorCapabilityState.Hidden)
+        whenever(perAppLocaleManager.getCurrentLocale()).thenReturn(Locale.ENGLISH)
     }
 
     // ===== Auth Header Tests =====
@@ -408,7 +414,6 @@ class GutenbergKitSettingsBuilderTest {
         val config = builder.buildPostConfiguration(
             site = site,
             accessToken = "wpcom_token",
-            locale = "en",
             cookies = emptyMap(),
             isNetworkLoggingEnabled = false,
         )
@@ -465,7 +470,6 @@ class GutenbergKitSettingsBuilderTest {
         val config = builder.buildPostConfiguration(
             site = site,
             accessToken = "test_token",
-            locale = "en",
             cookies = emptyMap(),
             isNetworkLoggingEnabled = false,
             post = post,
@@ -588,7 +592,6 @@ class GutenbergKitSettingsBuilderTest {
         val config = builder.buildPostConfiguration(
             site = site,
             accessToken = "test_token",
-            locale = "en",
             cookies = emptyMap(),
             isNetworkLoggingEnabled = false,
             post = post,
@@ -613,7 +616,6 @@ class GutenbergKitSettingsBuilderTest {
         val config = builder.buildPostConfiguration(
             site = site,
             accessToken = "test_token",
-            locale = "en",
             cookies = emptyMap(),
             isNetworkLoggingEnabled = false,
             post = post,
@@ -625,10 +627,13 @@ class GutenbergKitSettingsBuilderTest {
     // ===== Per-call values propagate through =====
 
     @Test
-    fun `locale passes through to configuration`() {
-        val config = buildWPComConfig(locale = "fr-fr")
+    fun `current device locale passes through to configuration`() {
+        whenever(perAppLocaleManager.getCurrentLocale())
+            .thenReturn(Locale.forLanguageTag("pt-BR"))
 
-        assertThat(config.locale).isEqualTo("fr-fr")
+        val config = buildWPComConfig()
+
+        assertThat(config.locale).isEqualTo("pt-br")
     }
 
     @Test
@@ -695,7 +700,6 @@ class GutenbergKitSettingsBuilderTest {
         siteUrl: String = "https://example.wordpress.com",
         siteId: Long = 123L,
         accessToken: String? = "test_token",
-        locale: String = "en",
         cookies: Map<String, String> = emptyMap(),
         isNetworkLoggingEnabled: Boolean = false,
     ): org.wordpress.gutenberg.model.EditorConfiguration {
@@ -709,7 +713,6 @@ class GutenbergKitSettingsBuilderTest {
         return builder.buildPostConfiguration(
             site = site,
             accessToken = accessToken,
-            locale = locale,
             cookies = cookies,
             isNetworkLoggingEnabled = isNetworkLoggingEnabled,
         )
@@ -733,7 +736,6 @@ class GutenbergKitSettingsBuilderTest {
         return builder.buildPostConfiguration(
             site = site,
             accessToken = null,
-            locale = "en",
             cookies = emptyMap(),
             isNetworkLoggingEnabled = false,
         )
