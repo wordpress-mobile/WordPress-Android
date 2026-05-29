@@ -25,6 +25,8 @@ Guidance for AI agents working in this repository. Read alongside `CLAUDE.md`
 
 - **Avoid `!!` (non-null assertion).** If a value is guaranteed non-null,
   restructure to express that in the type. If not, handle the null branch.
+  Exception: the Fragment view-binding backing-field idiom
+  (`private val binding get() = _binding!!`) is accepted in this codebase.
 - **Avoid `lateinit var` for values that have a sensible default or can be
   constructor-injected.** Reserve it for DI-injected fields and view bindings.
 - **Do not use `!!` on `intent.extras`, `arguments`, or `savedInstanceState`.**
@@ -44,7 +46,8 @@ Guidance for AI agents working in this repository. Read alongside `CLAUDE.md`
   nullable backing-field pattern already used across the codebase
   (`private var _binding: FooBinding? = null` exposed via
   `private val binding get() = _binding!!`, nulled in `onDestroyView`). See
-  `ReaderFragment.kt` for an example. For ViewHolders, use the
+  `ReaderAuthorProfileBottomSheetFragment.kt` for an example. For
+  ViewHolders, use the
   `ViewGroup.viewBinding(...)` extension in
   `util/extensions/ViewGroupExtensions.kt`.
 - **Do not start work in `onCreate` that must outlive the screen.** Use
@@ -103,7 +106,7 @@ Guidance for AI agents working in this repository. Read alongside `CLAUDE.md`
   pass plain data + lambdas.
 - **Do not launch coroutines from composables without `LaunchedEffect` /
   `rememberCoroutineScope`.**
-- **Do not perform heavy work or allocations in the composable body.** Wrap in
+- **Do not perform expensive work in the composable body.** Wrap in
   `remember` / `derivedStateOf`.
 
 ## Testing
