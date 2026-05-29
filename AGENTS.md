@@ -40,8 +40,13 @@ Guidance for AI agents working in this repository. Read alongside `CLAUDE.md`
   `applicationContext` if a Context is truly required at app scope.
 - **Do not capture `Activity`/`Fragment` in long-lived callbacks, listeners, or
   coroutine scopes** without lifecycle awareness.
-- **Do not access `binding` after `onDestroyView` in Fragments.** Null it out
-  in `onDestroyView` or use a view-binding delegate.
+- **Do not access `binding` after `onDestroyView` in Fragments.** Use the
+  nullable backing-field pattern already used across the codebase
+  (`private var _binding: FooBinding? = null` exposed via
+  `private val binding get() = _binding!!`, nulled in `onDestroyView`). See
+  `ReaderFragment.kt` for an example. For ViewHolders, use the
+  `ViewGroup.viewBinding(...)` extension in
+  `util/extensions/ViewGroupExtensions.kt`.
 - **Do not start work in `onCreate` that must outlive the screen.** Use
   `ViewModel`, `WorkManager`, or a foreground service as appropriate.
 - **Do not register `BroadcastReceiver`/observers without unregistering** in
@@ -55,7 +60,9 @@ Guidance for AI agents working in this repository. Read alongside `CLAUDE.md`
 - **Do not catch and ignore (`catch (e: Exception) {}`).** Even if intentional,
   add a one-line comment explaining why.
 - **Do not throw raw `RuntimeException`/`IllegalStateException` for control
-  flow.** Use sealed result types or nullable returns.
+  flow or expected error paths.** Use sealed result types or nullable
+  returns. `check`/`require`/`error` for genuine precondition violations is
+  fine.
 - **Do not log exceptions with `printStackTrace()`.** Use `AppLog` so output
   ends up in the right place in release builds.
 
@@ -87,7 +94,9 @@ Guidance for AI agents working in this repository. Read alongside `CLAUDE.md`
 
 ## Compose
 
-- **Do not read `MutableState` outside a composable / `remember` block.**
+- **Do not call `mutableStateOf` outside `remember` in a composable, and do
+  not mutate state from the composable body.** Use `LaunchedEffect` or event
+  handlers.
 - **Do not create `ViewModel` instances inside composables via constructors.**
   Use `hiltViewModel()` / `viewModel()`.
 - **Do not pass `ViewModel` deep into the composable tree.** Hoist state and
@@ -116,6 +125,9 @@ Guidance for AI agents working in this repository. Read alongside `CLAUDE.md`
   flexibility"** when there is exactly one caller and one implementation.
 - **Do not duplicate strings across `strings.xml` translations.** Only edit
   the base `values/strings.xml`; translations are managed externally.
+  Exception: when *removing* a string, delete it from every
+  `values-*/strings.xml` too — lint's `ExtraTranslation` rule will fail
+  otherwise.
 - **Do not add new dependencies in `build.gradle` directly.** Add to
   `gradle/libs.versions.toml` (already in `CLAUDE.md`).
 
