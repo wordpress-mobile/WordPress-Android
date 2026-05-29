@@ -34,7 +34,6 @@ import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerIcon.
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup.CameraSetup.ENABLED
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup.CameraSetup.HIDDEN
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource.DEVICE
-import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource.GIF_LIBRARY
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource.STOCK_LIBRARY
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource.WP_LIBRARY
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.BrowseMenuUiModel.BrowseAction
@@ -161,7 +160,6 @@ class MediaPickerViewModel @Inject constructor(
                     DEVICE -> BrowseAction.DEVICE
                     WP_LIBRARY -> BrowseAction.WP_MEDIA_LIBRARY
                     STOCK_LIBRARY -> BrowseAction.STOCK_LIBRARY
-                    GIF_LIBRARY -> BrowseAction.GIF_LIBRARY
                 }
             })
             BrowseMenuUiModel(actions)
@@ -435,9 +433,6 @@ class MediaPickerViewModel @Inject constructor(
                     }
                 }
             }
-            is Identifier.GifMediaIdentifier -> {
-                _onNavigate.postValue(Event(PreviewUrl(identifier.largeImageUri.toString())))
-            }
             is Identifier.LocalId -> Unit // Do nothing
         }
     }
@@ -563,7 +558,7 @@ class MediaPickerViewModel @Inject constructor(
                         primaryDataSource = icon.dataSource,
                         availableDataSources = setOf(),
                         systemPickerEnabled = icon.dataSource == DEVICE,
-                        defaultSearchView = icon.dataSource == STOCK_LIBRARY || icon.dataSource == GIF_LIBRARY,
+                        defaultSearchView = icon.dataSource == STOCK_LIBRARY,
                         cameraSetup = HIDDEN
                     )
                 )
@@ -606,7 +601,6 @@ class MediaPickerViewModel @Inject constructor(
             BrowseAction.DEVICE -> SwitchSource(DEVICE)
             BrowseAction.WP_MEDIA_LIBRARY -> SwitchSource(WP_LIBRARY)
             BrowseAction.STOCK_LIBRARY -> SwitchSource(STOCK_LIBRARY)
-            BrowseAction.GIF_LIBRARY -> SwitchSource(GIF_LIBRARY)
             BrowseAction.SYSTEM_PICKER -> ChooseFromAndroidDevice(mediaPickerSetup.allowedTypes)
         }
         clickIcon(icon)
@@ -764,7 +758,7 @@ class MediaPickerViewModel @Inject constructor(
 
     data class BrowseMenuUiModel(val shownActions: Set<BrowseAction>) {
         enum class BrowseAction {
-            SYSTEM_PICKER, DEVICE, WP_MEDIA_LIBRARY, STOCK_LIBRARY, GIF_LIBRARY
+            SYSTEM_PICKER, DEVICE, WP_MEDIA_LIBRARY, STOCK_LIBRARY
         }
     }
 

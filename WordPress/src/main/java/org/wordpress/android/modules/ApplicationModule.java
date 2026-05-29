@@ -11,11 +11,7 @@ import androidx.preference.PreferenceManager;
 
 import com.google.android.play.core.appupdate.AppUpdateManager;
 import com.google.android.play.core.appupdate.AppUpdateManagerFactory;
-import com.tenor.android.core.network.ApiClient;
-import com.tenor.android.core.network.ApiService;
-import com.tenor.android.core.network.IApiClient;
 
-import org.wordpress.android.BuildConfig;
 import org.wordpress.android.inappupdate.IInAppUpdateManager;
 import org.wordpress.android.inappupdate.InAppUpdateAnalyticsTracker;
 import org.wordpress.android.inappupdate.InAppUpdateManagerImpl;
@@ -25,7 +21,6 @@ import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadStep;
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadStepsProvider;
 import org.wordpress.android.ui.jetpack.restore.RestoreStep;
 import org.wordpress.android.ui.jetpack.restore.RestoreStepsProvider;
-import org.wordpress.android.ui.mediapicker.loader.TenorGifClient;
 import org.wordpress.android.ui.sitecreation.SiteCreationStep;
 import org.wordpress.android.ui.sitecreation.SiteCreationStepsProvider;
 import org.wordpress.android.util.BuildConfigWrapper;
@@ -79,14 +74,6 @@ public abstract class ApplicationModule {
     @Provides
     static LiveData<ConnectionStatus> provideConnectionStatusLiveData(@ApplicationContext Context context) {
         return new ConnectionStatusLiveData.Factory(context).create();
-    }
-
-    @Provides
-    static TenorGifClient provideTenorGifClient(@ApplicationContext Context context) {
-        ApiService.IBuilder<IApiClient> builder = new ApiService.Builder<>(context, IApiClient.class);
-        builder.apiKey(BuildConfig.TENOR_API_KEY);
-        ApiClient.init(context, builder);
-        return new TenorGifClient(context, ApiClient.getInstance(context));
     }
 
     @Provides

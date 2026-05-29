@@ -193,6 +193,16 @@ class WpApiClientProvider @Inject constructor(
         )
     }
 
+    /**
+     * Builds a [WpOrgSiteApiUrlResolver] for an already-parsed REST API root
+     * URL (e.g. one returned by `WpLoginClient.apiDiscovery`). Exposed so
+     * callers don't have to construct the uniffi resolver directly — useful
+     * for testability.
+     */
+    fun urlResolverFor(
+        apiRootUrl: ParsedUrl
+    ): uniffi.wp_api.ApiUrlResolver = WpOrgSiteApiUrlResolver(apiRootUrl)
+
     fun getApiRootUrlFrom(site: SiteModel): String = site.buildUrl()
 
     private fun SiteModel.buildUrl(): String =

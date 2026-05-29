@@ -131,8 +131,6 @@ Language: zh_TW
     <string name="experimental_features_feedback_dialog_title">分享意見！</string>
     <string name="experimental_block_editor_description">存取額外的區塊類型和設定</string>
     <string name="experimental_block_editor_note">試用版區塊編輯器將在未來版本中成為預設選項，屆時將無法停用。</string>
-    <string name="disable_experimental_block_editor_description">選擇不啟用額外區塊類型與設定</string>
-    <string name="disable_experimental_block_editor">停用試用版區塊編輯器</string>
     <string name="avatar_update_email_unverified">若想更新大頭貼，請先驗證電子郵件地址。</string>
     <string name="feedback_form_note_link_wordpress">社群論壇。</string>
     <string name="default_web_client_id" a8c-src-lib="module:login">預留位置</string>
@@ -1381,7 +1379,6 @@ Language: zh_TW
     <string name="stats_referrer_popup_unmark_as_spam">取消標記為垃圾郵件</string>
     <string name="stats_referrer_popup_menu_mark_as_spam">標記為垃圾</string>
     <string name="stats_referrer_popup_menu_open_website">開啟網站</string>
-    <string name="media_uploading_gif_library_photo">正在上傳 GIF 媒體</string>
     <string name="media_uploading_stock_library_photo">正在上傳庫存媒體</string>
     <string name="media_uploading_default">正在上傳媒體</string>
     <string name="suggestion_no_connection">沒有網際網路連線。\n建議無法使用。</string>
@@ -1521,9 +1518,6 @@ Language: zh_TW
     <string name="new_site_creation_creating_site_loading_subtitle">你的網站即將準備就緒</string>
     <string name="new_site_creation_creating_site_loading_title">太棒了！\n快完成了</string>
     <string name="pages_and_posts_cancel_auto_upload">取消上傳</string>
-    <string name="gif_list_search_returned_unknown_error">處理要求時發生問題</string>
-    <string name="gif_powered_by_tenor">由 Tenor 支援</string>
-    <string name="photo_picker_gif">從 Tenor 中選擇</string>
     <string name="weekday_saturday">星期六</string>
     <string name="weekday_friday">星期五</string>
     <string name="weekday_thursday">星期四</string>
@@ -1927,8 +1921,6 @@ Language: zh_TW
     <string name="stats_no_data_for_period">此期間沒有資料</string>
     <string name="preference_strip_image_location">從媒體移除位置資訊</string>
     <string name="stats_cannot_be_started">目前我們無法開啟統計資料。請稍後再試一次</string>
-    <string name="gif_picker_empty_search_list">沒有符合搜尋條件的媒體</string>
-    <string name="gif_picker_initial_empty_text">搜尋 GIF 以新增至你的媒體庫！</string>
     <string name="stats_author_views_label">瀏覽數</string>
     <string name="stats_author_label">作者</string>
     <string name="stats_authors">作者</string>

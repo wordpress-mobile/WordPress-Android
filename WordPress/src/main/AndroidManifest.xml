@@ -1345,15 +1345,21 @@
         <!-- Smart Lock for Passwords -->
         <meta-data android:name="asset_statements" android:resource="@string/asset_statements" />
 
-        <!-- Provider for exposing file URIs on Android 7+ -->
+        <!-- Provider for exposing file URIs on Android 7+. The `gutenberg.fileprovider`
+             authority is owned by the GutenbergKit library (camera capture temp files);
+             we host both authorities on the same FileProvider element so the manifest
+             merger doesn't see two declarations of `androidx.core.content.FileProvider`
+             as a duplicate. `gbk_file_paths` is folded into `provider_paths.xml`. -->
         <provider
             android:name="androidx.core.content.FileProvider"
-            android:authorities="${applicationId}.provider"
+            android:authorities="${applicationId}.provider;${applicationId}.gutenberg.fileprovider"
             android:exported="false"
-            android:grantUriPermissions="true">
+            android:grantUriPermissions="true"
+            tools:replace="android:authorities">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/provider_paths"/>
+                android:resource="@xml/provider_paths"
+                tools:replace="android:resource"/>
         </provider>
 
         <!-- Remove only the default initializer to provide a custom configuration.

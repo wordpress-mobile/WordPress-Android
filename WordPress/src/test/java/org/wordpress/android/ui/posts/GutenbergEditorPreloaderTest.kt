@@ -20,6 +20,7 @@ import org.wordpress.android.datasets.SiteSettingsProvider
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.repositories.EditorSettingsRepository
+import org.wordpress.android.ui.accounts.login.SiteApiRestUrlRecoverer
 import org.wordpress.gutenberg.model.EditorAssetBundle
 import org.wordpress.gutenberg.model.EditorConfiguration
 import org.wordpress.gutenberg.model.EditorDependencies
@@ -50,6 +51,9 @@ class GutenbergEditorPreloaderTest :
     @Mock
     lateinit var editorSettingsRepository: EditorSettingsRepository
 
+    @Mock
+    lateinit var siteApiRestUrlRecoverer: SiteApiRestUrlRecoverer
+
     private val editorDependencies = EditorDependencies.empty
 
     private lateinit var preloader: GutenbergEditorPreloader
@@ -58,6 +62,7 @@ class GutenbergEditorPreloaderTest :
         val site = SiteModel()
         site.id = id
         site.name = "Site $id"
+        site.url = "https://example.test"
         return site
     }
 
@@ -71,6 +76,7 @@ class GutenbergEditorPreloaderTest :
             siteSettingsProvider = siteSettingsProvider,
             editorServiceProvider = editorServiceProvider,
             editorSettingsRepository = editorSettingsRepository,
+            siteApiRestUrlRecoverer = siteApiRestUrlRecoverer,
             bgDispatcher = testDispatcher()
         )
     }
@@ -89,7 +95,6 @@ class GutenbergEditorPreloaderTest :
             gutenbergKitSettingsBuilder.buildPostConfiguration(
                 site = any(),
                 accessToken = anyOrNull(),
-                locale = any(),
                 cookies = any(),
                 isNetworkLoggingEnabled = any(),
                 post = anyOrNull(),
@@ -228,7 +233,6 @@ class GutenbergEditorPreloaderTest :
             gutenbergKitSettingsBuilder.buildPostConfiguration(
                 site = any(),
                 accessToken = anyOrNull(),
-                locale = any(),
                 cookies = any(),
                 isNetworkLoggingEnabled = any(),
                 post = anyOrNull(),
@@ -413,7 +417,6 @@ class GutenbergEditorPreloaderTest :
             gutenbergKitSettingsBuilder.buildPostConfiguration(
                 site = any(),
                 accessToken = anyOrNull(),
-                locale = any(),
                 cookies = any(),
                 isNetworkLoggingEnabled = any(),
                 post = anyOrNull(),
@@ -476,6 +479,24 @@ class GutenbergEditorPreloaderTest :
 
         assertThat(preloader.getDependencies(siteA)).isNull()
         assertThat(preloader.getDependencies(siteB)).isNull()
+    }
+
+    // endregion
+
+    // region wpApiRestUrl recovery
+
+    @Test
+    fun `successful preload invokes discovery only — slice owns persistence`() = test {
+        val site = createSite()
+        enablePreloading(site)
+        stubSuccessfulPreload()
+        stubEditorService()
+
+        preloader.preloadIfNeeded(site, this)
+        advanceUntilIdle()
+
+        verify(siteApiRestUrlRecoverer).discoverApiRootUrl(site.url)
+        verify(siteApiRestUrlRecoverer, never()).persistApiRootUrl(any(), any())
     }
 
     // endregion

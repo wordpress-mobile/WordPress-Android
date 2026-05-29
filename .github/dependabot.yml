@@ -50,3 +50,16 @@ updates:
       - dependency-name: "com.fasterxml.jackson.core:jackson-databind"
       - dependency-name: "com.jayway.jsonpath:json-path"
       - dependency-name: "commons-fileupload:commons-fileupload"
+
+  - package-ecosystem: "bundler"
+    directory: "/"
+    schedule:
+      interval: "daily"
+    labels:
+      - "bot: dependencies update"
+    groups:
+      ruby-minor-and-patch:
+        update-types: [minor, patch]
+    reviewers:
+      - "wordpress-mobile/apps-infra-tooling"
+    open-pull-requests-limit: 5

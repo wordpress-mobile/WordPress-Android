@@ -49,49 +49,54 @@ class ApplicationPasswordLoginHelper @Inject constructor(
 ) {
     private var processedAppPasswordData: String? = null
 
+    sealed class DiscoveryResult {
+        data class Authorized(val authorizationUrl: String) : DiscoveryResult()
+        data class Failed(val userFacingMessage: String) : DiscoveryResult()
+    }
+
     @Suppress("TooGenericExceptionCaught")
-    suspend fun getAuthorizationUrlComplete(siteUrl: String): String =
+    suspend fun getAuthorizationUrlComplete(siteUrl: String): DiscoveryResult =
         try {
             getAuthorizationUrlCompleteInternal(siteUrl)
         } catch (throwable: Throwable) {
-            handleAuthenticationDiscoveryError(siteUrl, throwable)
+            handleAuthenticationDiscoveryError(siteUrl, throwable.message ?: throwable::class.simpleName.orEmpty())
         }
 
-    private suspend fun getAuthorizationUrlCompleteInternal(siteUrl: String): String = withContext(bgDispatcher) {
-        when (val urlDiscoveryResult = wpLoginClient.apiDiscovery(siteUrl)) {
-            is ApiDiscoveryResult.Success -> {
-                val authorizationUrl =
-                    discoverSuccessWrapper.getApplicationPasswordsAuthenticationUrl(urlDiscoveryResult)
-                val apiRootUrl = discoverSuccessWrapper.getApiRootUrl(urlDiscoveryResult)
-                if (apiRootUrl.isNotEmpty()) {
-                    // Store the ApiRootUrl for use it after the login
-                    apiRootUrlCache.put(UrlUtils.normalizeUrl(siteUrl), apiRootUrl)
+    private suspend fun getAuthorizationUrlCompleteInternal(siteUrl: String): DiscoveryResult =
+        withContext(bgDispatcher) {
+            when (val urlDiscoveryResult = wpLoginClient.apiDiscovery(siteUrl)) {
+                is ApiDiscoveryResult.Success -> {
+                    val authorizationUrl =
+                        discoverSuccessWrapper.getApplicationPasswordsAuthenticationUrl(urlDiscoveryResult)
+                    val apiRootUrl = discoverSuccessWrapper.getApiRootUrl(urlDiscoveryResult)
+                    if (apiRootUrl.isNotEmpty()) {
+                        // Store the ApiRootUrl for use it after the login
+                        apiRootUrlCache.put(UrlUtils.normalizeUrl(siteUrl), apiRootUrl)
+                    }
+                    val authorizationUrlComplete =
+                        uriLoginWrapper.appendParamsToRestAuthorizationUrl(authorizationUrl)
+                    appLogWrapper.d(
+                        AppLog.T.API,
+                        "A_P: Found authorization for $siteUrl URL: $authorizationUrlComplete " +
+                                "API_ROOT_URL $apiRootUrl")
+                    AnalyticsTracker.track(Stat.BACKGROUND_REST_AUTODISCOVERY_SUCCESSFUL)
+                    DiscoveryResult.Authorized(authorizationUrlComplete)
                 }
-                val authorizationUrlComplete =
-                    uriLoginWrapper.appendParamsToRestAuthorizationUrl(authorizationUrl)
-                appLogWrapper.d(
-                    AppLog.T.API,
-                    "A_P: Found authorization for $siteUrl URL: $authorizationUrlComplete " +
-                            "API_ROOT_URL $apiRootUrl")
-                AnalyticsTracker.track(Stat.BACKGROUND_REST_AUTODISCOVERY_SUCCESSFUL)
-                authorizationUrlComplete
+
+                is ApiDiscoveryResult.FailureFetchAndParseApiRoot,
+                is ApiDiscoveryResult.FailureFindApiRoot,
+                is ApiDiscoveryResult.FailureParseSiteUrl ->
+                    handleAuthenticationDiscoveryError(
+                        siteUrl,
+                        urlDiscoveryResult.userFacingErrorMessage(siteUrl).orEmpty()
+                    )
             }
-
-            is ApiDiscoveryResult.FailureFetchAndParseApiRoot ->
-                handleAuthenticationDiscoveryError(siteUrl, Exception("FailureFetchAndParseApiRoot"))
-
-            is ApiDiscoveryResult.FailureFindApiRoot ->
-                handleAuthenticationDiscoveryError(siteUrl, Exception("FailureFindApiRoot"))
-
-            is ApiDiscoveryResult.FailureParseSiteUrl ->
-                handleAuthenticationDiscoveryError(siteUrl, urlDiscoveryResult.error)
         }
-    }
 
-    private fun handleAuthenticationDiscoveryError(siteUrl: String, throwable: Throwable): String {
-        appLogWrapper.e(AppLog.T.API, "A_P: Error during API discovery for $siteUrl - ${throwable.message}")
+    private fun handleAuthenticationDiscoveryError(siteUrl: String, message: String): DiscoveryResult {
+        appLogWrapper.e(AppLog.T.API, "A_P: Error during API discovery for $siteUrl - $message")
         AnalyticsTracker.track(Stat.BACKGROUND_REST_AUTODISCOVERY_FAILED)
-        return ""
+        return DiscoveryResult.Failed(message)
     }
 
     sealed class StoreCredentialsResult {

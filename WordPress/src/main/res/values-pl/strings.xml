@@ -132,8 +132,6 @@ Language: pl
     <string name="experimental_features_feedback_dialog_title">Podziel się swoją informacją zwrotną</string>
     <string name="experimental_block_editor_description">Uzyskaj dostęp do dodatkowych rodzajów bloków oraz ustawień</string>
     <string name="experimental_block_editor_note">Eksperymentalny edytor bloków stanie się domyślny w przyszłych wydaniach, a funkcjonalność umożliwiająca wyłączenie go będzie usunięta.</string>
-    <string name="disable_experimental_block_editor_description">Zrezygnuj z dodatkowych rodzajów bloków oraz ustawień</string>
-    <string name="disable_experimental_block_editor">Wyłącz eksperymentalny edytor blokowy</string>
     <string name="avatar_update_email_unverified">Aby zaktualizować swój awatar, musisz najpierw zweryfikować swój adres e-mail.</string>
     <string name="feedback_form_note_link_wordpress">fora społecznościowe.</string>
     <string name="default_web_client_id" a8c-src-lib="module:login">symbol zastępczy</string>
@@ -1388,7 +1386,6 @@ Language: pl
     <string name="stats_referrer_popup_unmark_as_spam">Oznacz jako Nie Spam</string>
     <string name="stats_referrer_popup_menu_mark_as_spam">Oznacz jako spam</string>
     <string name="stats_referrer_popup_menu_open_website">Otwórz witrynę</string>
-    <string name="media_uploading_gif_library_photo">Przesyłanie plików gif</string>
     <string name="media_uploading_stock_library_photo">Przesyłanie stockowych mediów</string>
     <string name="media_uploading_default">Przesyłanie plików mediów</string>
     <string name="suggestion_no_connection">Brak połączenia internetowego.\nSugestie nie są dostępne.</string>
@@ -1528,9 +1525,6 @@ Language: pl
     <string name="new_site_creation_creating_site_loading_subtitle">Twoja witryna będzie niebawem gotowa</string>
     <string name="new_site_creation_creating_site_loading_title">Hurra!\nPrawie gotowe</string>
     <string name="pages_and_posts_cancel_auto_upload">Anuluj przesyłanie</string>
-    <string name="gif_list_search_returned_unknown_error">Wystąpił problem podczas wykonywania żądania</string>
-    <string name="gif_powered_by_tenor">Napędzane przez Tenor</string>
-    <string name="photo_picker_gif">Wybierz z Tenor</string>
     <string name="weekday_saturday">Sobota</string>
     <string name="weekday_friday">Piątek</string>
     <string name="weekday_thursday">Czwartek</string>
@@ -1934,8 +1928,6 @@ Language: pl
     <string name="stats_no_data_for_period">Brak danych dla tego okresu</string>
     <string name="preference_strip_image_location">Usuń lokalizację GPS z plików mediów</string>
     <string name="stats_cannot_be_started">Nie możemy w tym momencie otworzyć statystyk. Spróbuj ponownie później</string>
-    <string name="gif_picker_empty_search_list">Brak plików mediów dopasowanych do twojego zapytania</string>
-    <string name="gif_picker_initial_empty_text">Przeszukaj aby znaleźć pliki GIF które możesz dodać do swojej biblioteki mediów!</string>
     <string name="stats_author_views_label">Wyświetlenia</string>
     <string name="stats_author_label">Autor</string>
     <string name="stats_authors">Autorzy</string>

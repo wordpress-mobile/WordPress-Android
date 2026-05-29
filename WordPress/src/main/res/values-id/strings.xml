@@ -211,8 +211,6 @@ Language: id
     <string name="experimental_features_feedback_dialog_title">Bagikan feedback</string>
     <string name="experimental_block_editor_description">Akses jenis blok dan pengaturan lainnya</string>
     <string name="experimental_block_editor_note">Editor blok eksperimental akan menjadi pengaturan asal di rilis mendatang dan fitur untuk menonaktifkannya akan dihapus.</string>
-    <string name="disable_experimental_block_editor_description">Tolak jenis blok dan pengaturan lainnya</string>
-    <string name="disable_experimental_block_editor">Nonaktifkan editor blok eksperimental</string>
     <string name="avatar_update_email_unverified">Untuk memperbarui avatar, alamat email Anda harus diverifikasi terlebih dahulu.</string>
     <string name="feedback_form_note_link_wordpress">forum komunitas.</string>
     <string name="default_web_client_id" a8c-src-lib="module:login">placeholder</string>
@@ -1467,7 +1465,6 @@ Language: id
     <string name="stats_referrer_popup_unmark_as_spam">Hilangkan tanda sebagai Spam</string>
     <string name="stats_referrer_popup_menu_mark_as_spam">Tandai sebagai Spam</string>
     <string name="stats_referrer_popup_menu_open_website">Buka Situs Web</string>
-    <string name="media_uploading_gif_library_photo">Mengunggah media gif</string>
     <string name="media_uploading_stock_library_photo">Mengunggah media stok</string>
     <string name="media_uploading_default">Mengunggah media</string>
     <string name="suggestion_no_connection">Tidak tersedia koneksi internet.\nSaran tidak tersedia.</string>
@@ -1607,9 +1604,6 @@ Language: id
     <string name="new_site_creation_creating_site_loading_subtitle">Situs Anda akan siap sesaat lagi</string>
     <string name="new_site_creation_creating_site_loading_title">Horeee!\nHampir selesai</string>
     <string name="pages_and_posts_cancel_auto_upload">Batalkan unggahan</string>
-    <string name="gif_list_search_returned_unknown_error">Ada masalah saat menangani permintaan</string>
-    <string name="gif_powered_by_tenor">Didukung oleh Tenor</string>
-    <string name="photo_picker_gif">Pilih dari Tenor</string>
     <string name="weekday_saturday">Sabtu</string>
     <string name="weekday_friday">Jumat</string>
     <string name="weekday_thursday">Kamis</string>
@@ -2013,8 +2007,6 @@ Language: id
     <string name="stats_no_data_for_period">Tidak ada data selama periode ini</string>
     <string name="preference_strip_image_location">Hapus lokasi dari media</string>
     <string name="stats_cannot_be_started">Saat ini kami tidak dapat membuka statistik. Harap coba lagi nanti</string>
-    <string name="gif_picker_empty_search_list">Tidak ada media yang sesuai dengan pencarian Anda</string>
-    <string name="gif_picker_initial_empty_text">Cari GIF untuk ditambahkan ke Pustaka Media Anda!</string>
     <string name="stats_author_views_label">Tampilan</string>
     <string name="stats_author_label">Penulis</string>
     <string name="stats_authors">Penulis</string>

@@ -19,7 +19,6 @@ import androidx.core.util.Pair
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.lifecycleScope
 import com.google.gson.Gson
-import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.editor.BuildConfig
 import org.wordpress.android.editor.EditorEditMediaListener
@@ -306,13 +305,9 @@ class GutenbergKitEditorFragment : GutenbergKitEditorFragmentBase() {
             return
         }
 
-        lifecycleScope.launch {
-            val uris = gutenbergView.extractUrisFromIntent(data)
-            val processedUris =
-                gutenbergView.processFileUris(requireContext(), uris)
-            filePathCallback.onReceiveValue(processedUris)
-            gutenbergView.resetFilePathCallback()
-        }
+        val uris = gutenbergView.extractUrisFromIntent(data)
+        filePathCallback.onReceiveValue(uris)
+        gutenbergView.resetFilePathCallback()
     }
 
     @Deprecated("Deprecated in Java")

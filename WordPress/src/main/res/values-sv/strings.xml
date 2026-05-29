@@ -214,8 +214,6 @@ Language: sv_SE
     <string name="experimental_features_feedback_dialog_title">Dela feedback</string>
     <string name="experimental_block_editor_description">Få åtkomst till ytterligare blocktyper och inställningar</string>
     <string name="experimental_block_editor_note">Den experimentella blockredigeraren kommer att bli standard i en framtida version och möjligheten att inaktivera den kommer att tas bort.</string>
-    <string name="disable_experimental_block_editor_description">Tacka nej till ytterligare blocktyper och inställningar</string>
-    <string name="disable_experimental_block_editor">Inaktivera den experimentella blockredigeraren</string>
     <string name="avatar_update_email_unverified">För att uppdatera din profilbild måste du först verifiera din e-postadress.</string>
     <string name="feedback_form_note_link_wordpress">community-forum.</string>
     <string name="default_web_client_id" a8c-src-lib="module:login">platshållare</string>
@@ -1470,7 +1468,6 @@ Language: sv_SE
     <string name="stats_referrer_popup_unmark_as_spam">Ta bort markering som skräppost</string>
     <string name="stats_referrer_popup_menu_mark_as_spam">Markera som skräppost</string>
     <string name="stats_referrer_popup_menu_open_website">Öppna webbplats</string>
-    <string name="media_uploading_gif_library_photo">Laddar upp gif-mediafiler</string>
     <string name="media_uploading_stock_library_photo">Laddar upp stockfoton</string>
     <string name="media_uploading_default">Laddar upp media</string>
     <string name="suggestion_no_connection">Internetförbindelse saknas.\nFörslag är inte tillgängliga.</string>
@@ -1610,9 +1607,6 @@ Language: sv_SE
     <string name="new_site_creation_creating_site_loading_subtitle">Din webbplats är snart klar</string>
     <string name="new_site_creation_creating_site_loading_title">Hurra!\nNästan klart nu</string>
     <string name="pages_and_posts_cancel_auto_upload">Avbryt uppladdningen</string>
-    <string name="gif_list_search_returned_unknown_error">Ett problem uppstod när din begäran behandlades</string>
-    <string name="gif_powered_by_tenor">Drivs med Tenor</string>
-    <string name="photo_picker_gif">Välj från Tenor</string>
     <string name="weekday_saturday">Lördag</string>
     <string name="weekday_friday">Fredag</string>
     <string name="weekday_thursday">Torsdag</string>
@@ -2016,8 +2010,6 @@ Language: sv_SE
     <string name="stats_no_data_for_period">Inga uppgifter för denna tidsperiod</string>
     <string name="preference_strip_image_location">Avlägsna position från media</string>
     <string name="stats_cannot_be_started">Just nu går det inte att öppna statistiken. Försök igen senare</string>
-    <string name="gif_picker_empty_search_list">Inga media matchar din sökning</string>
-    <string name="gif_picker_initial_empty_text">Leta efter GIF-filer du kan lägga till i ditt mediebibliotek!</string>
     <string name="stats_author_views_label">Visningar</string>
     <string name="stats_author_label">Författare</string>
     <string name="stats_authors">Författare</string>

@@ -131,7 +131,7 @@ class ReferrersStoreTest {
     }
 
     @Test
-    fun `report referrer as spam doesnt mark spam when cache fails`() = test {
+    fun `report referrer as spam doesn't mark spam when cache fails`() = test {
         val date = Date()
         val restResponse = ReportReferrerAsSpamPayload(ReportReferrerAsSpamResponse(true))
         whenever(restClient.reportReferrerAsSpam(site, domain)).thenReturn(restResponse)

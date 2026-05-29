@@ -215,8 +215,6 @@ Language: de
     <string name="experimental_features_feedback_dialog_title">Feedback teilen</string>
     <string name="experimental_block_editor_description">Auf zusätzliche Blocktypen und -einstellungen zugreifen</string>
     <string name="experimental_block_editor_note">Der experimentelle Block-Editor wird in einer zukünftigen Version zum Standard und die Möglichkeit, ihn zu deaktivieren, wird entfernt.</string>
-    <string name="disable_experimental_block_editor_description">Zusätzliche Blocktypen und -einstellungen ablehnen</string>
-    <string name="disable_experimental_block_editor">Experimentellen Block-Editor deaktivieren</string>
     <string name="avatar_update_email_unverified">Um deinen Avatar zu aktualisieren, musst du zuerst deine E-Mail-Adresse verifizieren.</string>
     <string name="feedback_form_note_link_wordpress">Community-Foren.</string>
     <string name="default_web_client_id" a8c-src-lib="module:login">Platzhalter</string>
@@ -1471,7 +1469,6 @@ Language: de
     <string name="stats_referrer_popup_unmark_as_spam">Spam-Markierung aufheben</string>
     <string name="stats_referrer_popup_menu_mark_as_spam">Als Spam markieren</string>
     <string name="stats_referrer_popup_menu_open_website">Website öffnen</string>
-    <string name="media_uploading_gif_library_photo">Gif-Medien werden hochgeladen</string>
     <string name="media_uploading_stock_library_photo">Archivmedien werden hochgeladen</string>
     <string name="media_uploading_default">Medien werden hochgeladen …</string>
     <string name="suggestion_no_connection">Keine Internetverbindung.\nKeine Vorschläge verfügbar.</string>
@@ -1611,9 +1608,6 @@ Language: de
     <string name="new_site_creation_creating_site_loading_subtitle">Deine Website wird in Kürze bereit sein</string>
     <string name="new_site_creation_creating_site_loading_title">Hurra!\nFast geschafft</string>
     <string name="pages_and_posts_cancel_auto_upload">Upload abbrechen</string>
-    <string name="gif_list_search_returned_unknown_error">Beim Verarbeiten der Anfrage ist ein Problem aufgetreten</string>
-    <string name="gif_powered_by_tenor">Bereitgestellt von Tenor</string>
-    <string name="photo_picker_gif">Von Tenor auswählen</string>
     <string name="weekday_saturday">Samstag</string>
     <string name="weekday_friday">Freitag</string>
     <string name="weekday_thursday">Donnerstag</string>
@@ -2017,8 +2011,6 @@ Language: de
     <string name="stats_no_data_for_period">Keine Daten für diesen Zeitraum</string>
     <string name="preference_strip_image_location">Positionsangabe von Medien entfernen</string>
     <string name="stats_cannot_be_started">Wir können die Statistiken momentan nicht öffnen. Bitte versuche es später erneut</string>
-    <string name="gif_picker_empty_search_list">Keine Medien entsprechen deiner Suche</string>
-    <string name="gif_picker_initial_empty_text">Suche, um GIFs zu finden und sie zu deiner Mediathek hinzuzufügen!</string>
     <string name="stats_author_views_label">Aufrufe</string>
     <string name="stats_author_label">Autor</string>
     <string name="stats_authors">Autoren</string>

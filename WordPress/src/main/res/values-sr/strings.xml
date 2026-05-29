@@ -248,7 +248,6 @@ Language: sr_RS
     <string name="weekday_tuesday">уторак</string>
     <string name="weekday_monday">понедељак</string>
     <string name="weekday_sunday">недеља</string>
-    <string name="photo_picker_gif">Одабери из Tenor-а</string>
     <string name="preview_image_description">Приказ слике</string>
     <string name="error_unknown_page_type">Непознат облик странице</string>
     <string name="page_queued">Страница на чекању</string>
@@ -517,7 +516,6 @@ Language: sr_RS
     <string name="stats_insights_create_post">Креирај чланак</string>
     <string name="stats_insights_latest_post_message">Прошло је %1$s од када је %2$s објављен. Ево какви су досадашњи резултати чланка:</string>
     <string name="stats_author_views_label">Прегледи</string>
-    <string name="gif_picker_empty_search_list">Нема садржаја који се поклапају са Вашом претрагом</string>
     <string name="stats_author_label">Аутор</string>
     <string name="stats_authors">Аутори</string>
     <string name="stats_search_terms_views_label">Прегледи</string>

@@ -130,7 +130,6 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     private static final String MEDIA_SOURCE_FILE = "MEDIA_SOURCE_FILE";
     private static final String MEDIA_SOURCE_AUDIO_FILE = "MEDIA_SOURCE_AUDIO_FILE";
     private static final String MEDIA_SOURCE_STOCK_MEDIA = "MEDIA_SOURCE_STOCK_MEDIA";
-    private static final String GIF_MEDIA = "GIF_MEDIA";
 
     private static final String USER_EVENT_KEY_TEMPLATE = "template";
 
@@ -350,9 +349,6 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                         switch (mediaSource) {
                             case MEDIA_SOURCE_STOCK_MEDIA:
                                 mEditorFragmentListener.onAddStockMediaClicked(allowMultipleSelection);
-                                break;
-                            case GIF_MEDIA:
-                                mEditorFragmentListener.onAddGifClicked(allowMultipleSelection);
                                 break;
                             case MEDIA_SOURCE_FILE:
                                 mEditorFragmentListener.onAddFileClicked(allowMultipleSelection);
@@ -717,7 +713,6 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
         boolean supportStockPhotos = gutenbergWebViewAuthorizationData.isSiteUsingWPComRestAPI()
                                      && jetpackFeaturesEnabled;
-        boolean supportsTenor = jetpackFeaturesEnabled;
 
         String packageName = activity.getApplication().getPackageName();
         if (supportStockPhotos) {
@@ -725,11 +720,6 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                     context.getResources().getIdentifier("photo_picker_stock_media", "string", packageName);
 
             otherMediaOptions.add(new MediaOption(MEDIA_SOURCE_STOCK_MEDIA, getString(stockMediaResourceId)));
-        }
-        if (supportsTenor) {
-            int gifMediaResourceId =
-                    context.getResources().getIdentifier("photo_picker_gif", "string", packageName);
-            otherMediaOptions.add(new MediaOption(GIF_MEDIA, getString(gifMediaResourceId)));
         }
 
         return otherMediaOptions;
@@ -788,7 +778,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     }
 
     public void resetUploadingMediaToFailed(Set<Integer> failedMediaIds) {
-        // get all media failed for this post, and represent it on tje UI
+        // get all media failed for this post, and represent it on the UI
         if (failedMediaIds != null && !failedMediaIds.isEmpty()) {
             for (Integer mediaId : failedMediaIds) {
                 // and keep track of failed ids around
