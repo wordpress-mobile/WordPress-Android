@@ -102,9 +102,10 @@ Guidance for AI agents working in this repository. Read alongside `CLAUDE.md`
 
 ## Compose
 
-- **Do not call `mutableStateOf` outside `remember` in a composable, and do
+- **Inside a composable, always wrap `mutableStateOf` in `remember`, and do
   not mutate state during composition.** Do mutations in event handlers or
-  `LaunchedEffect`.
+  `LaunchedEffect`. Top-level `mutableStateOf` properties on a class
+  (e.g., a `ViewModel`) are fine.
 - **Do not create `ViewModel` instances inside composables via constructors.**
   Use `hiltViewModel()` / `viewModel()`.
 - **Do not pass `ViewModel` deep into the composable tree.** Hoist state and
