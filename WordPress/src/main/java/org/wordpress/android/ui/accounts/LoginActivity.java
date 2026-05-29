@@ -364,7 +364,6 @@ public class LoginActivity extends BaseAppCompatActivity implements
     }
 
     private void dispatchFetchAllSites() {
-        mFetchingPrimarySite = false;
         mDispatcher.dispatch(SiteActionBuilder.newFetchSitesAction(SiteUtils.getFetchSitesPayload()));
     }
 
