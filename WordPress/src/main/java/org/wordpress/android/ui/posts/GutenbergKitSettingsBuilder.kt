@@ -1,9 +1,8 @@
 package org.wordpress.android.ui.posts
 
-import android.util.Base64
 import org.wordpress.android.fluxc.model.PostImmutableModel
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.util.AppLog
+import org.wordpress.android.repositories.EditorAuthHeaderBuilder
 import org.wordpress.android.util.PerAppLocaleManager
 import org.wordpress.gutenberg.model.EditorConfiguration
 import org.wordpress.gutenberg.model.PostTypeDetails
@@ -15,6 +14,7 @@ import javax.inject.Singleton
 class GutenbergKitSettingsBuilder @Inject constructor(
     private val editorCapabilityResolver: EditorCapabilityResolver,
     private val perAppLocaleManager: PerAppLocaleManager,
+    private val editorAuthHeaderBuilder: EditorAuthHeaderBuilder,
 ) {
     fun buildPostConfiguration(
         site: SiteModel,
@@ -33,7 +33,7 @@ class GutenbergKitSettingsBuilder @Inject constructor(
             site.wpApiRestUrl ?: "${site.url}/wp-json/"
         }
 
-        val authHeader = buildAuthHeader(
+        val authHeader = editorAuthHeaderBuilder.build(
             shouldUseWPComRestApi = shouldUseWPComRestApi,
             accessToken = accessToken,
             username = site.apiRestUsernamePlain,
@@ -88,49 +88,6 @@ class GutenbergKitSettingsBuilder @Inject constructor(
         }.build()
     }
 
-    internal fun buildAuthHeader(
-        shouldUseWPComRestApi: Boolean,
-        accessToken: String?,
-        username: String?,
-        password: String?
-    ): String? {
-        return if (shouldUseWPComRestApi) {
-            if (!accessToken.isNullOrEmpty()) {
-                "$AUTH_BEARER_PREFIX$accessToken"
-            } else {
-                AppLog.w(
-                    AppLog.T.EDITOR,
-                    "Missing access token for WP.com REST API authentication"
-                )
-                null
-            }
-        } else {
-            if (!username.isNullOrEmpty() && !password.isNullOrEmpty()) {
-                try {
-                    val credentials = "$username:$password"
-                    val encodedCredentials = Base64.encodeToString(
-                        credentials.toByteArray(Charsets.UTF_8),
-                        Base64.NO_WRAP
-                    )
-                    "$AUTH_BASIC_PREFIX$encodedCredentials"
-                } catch (e: IllegalArgumentException) {
-                    AppLog.e(
-                        AppLog.T.EDITOR,
-                        "Failed to encode Basic auth credentials",
-                        e
-                    )
-                    null
-                }
-            } else {
-                AppLog.w(
-                    AppLog.T.EDITOR,
-                    "Incomplete credentials for Basic authentication"
-                )
-                null
-            }
-        }
-    }
-
     internal fun buildSiteApiNamespace(
         shouldUseWPComRestApi: Boolean,
         siteId: Long,
@@ -174,8 +131,6 @@ class GutenbergKitSettingsBuilder @Inject constructor(
     }
 
     companion object {
-        private const val AUTH_BEARER_PREFIX = "Bearer "
-        private const val AUTH_BASIC_PREFIX = "Basic "
         private const val WPCOM_API_ROOT =
             "https://public-api.wordpress.com/"
     }

@@ -10,6 +10,7 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.whenever
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.repositories.EditorAuthHeaderBuilder
 import org.wordpress.android.util.PerAppLocaleManager
 import org.wordpress.gutenberg.model.PostTypeDetails
 import java.util.Locale
@@ -23,7 +24,11 @@ class GutenbergKitSettingsBuilderTest {
     lateinit var perAppLocaleManager: PerAppLocaleManager
 
     private val builder by lazy {
-        GutenbergKitSettingsBuilder(editorCapabilityResolver, perAppLocaleManager)
+        GutenbergKitSettingsBuilder(
+            editorCapabilityResolver,
+            perAppLocaleManager,
+            EditorAuthHeaderBuilder(),
+        )
     }
 
     @Before
@@ -33,130 +38,6 @@ class GutenbergKitSettingsBuilderTest {
         whenever(editorCapabilityResolver.resolveThirdPartyBlocks(any()))
             .thenReturn(EditorCapabilityState.Hidden)
         whenever(perAppLocaleManager.getCurrentLocale()).thenReturn(Locale.ENGLISH)
-    }
-
-    // ===== Auth Header Tests =====
-
-    @Test
-    fun `WPCom site returns Bearer token header`() {
-        val header = builder.buildAuthHeader(
-            shouldUseWPComRestApi = true,
-            accessToken = "my_token",
-            username = null,
-            password = null
-        )
-
-        assertThat(header).isEqualTo("Bearer my_token")
-    }
-
-    @Test
-    fun `WPCom site with null token returns null`() {
-        val header = builder.buildAuthHeader(
-            shouldUseWPComRestApi = true,
-            accessToken = null,
-            username = null,
-            password = null
-        )
-
-        assertThat(header).isNull()
-    }
-
-    @Test
-    fun `WPCom site with empty token returns null`() {
-        val header = builder.buildAuthHeader(
-            shouldUseWPComRestApi = true,
-            accessToken = "",
-            username = null,
-            password = null
-        )
-
-        assertThat(header).isNull()
-    }
-
-    @Test
-    fun `self-hosted site returns Basic auth header`() {
-        val header = builder.buildAuthHeader(
-            shouldUseWPComRestApi = false,
-            accessToken = null,
-            username = "testuser",
-            password = "testpass"
-        )
-
-        assertThat(header).isNotNull()
-        assertThat(header).startsWith("Basic ")
-    }
-
-    @Test
-    fun `Basic auth with null username returns null`() {
-        val header = builder.buildAuthHeader(
-            shouldUseWPComRestApi = false,
-            accessToken = null,
-            username = null,
-            password = "password123"
-        )
-
-        assertThat(header).isNull()
-    }
-
-    @Test
-    fun `Basic auth with empty username returns null`() {
-        val header = builder.buildAuthHeader(
-            shouldUseWPComRestApi = false,
-            accessToken = null,
-            username = "",
-            password = "password123"
-        )
-
-        assertThat(header).isNull()
-    }
-
-    @Test
-    fun `Basic auth with null password returns null`() {
-        val header = builder.buildAuthHeader(
-            shouldUseWPComRestApi = false,
-            accessToken = null,
-            username = "username",
-            password = null
-        )
-
-        assertThat(header).isNull()
-    }
-
-    @Test
-    fun `Basic auth with empty password returns null`() {
-        val header = builder.buildAuthHeader(
-            shouldUseWPComRestApi = false,
-            accessToken = null,
-            username = "username",
-            password = ""
-        )
-
-        assertThat(header).isNull()
-    }
-
-    @Test
-    fun `Basic auth with both empty returns null`() {
-        val header = builder.buildAuthHeader(
-            shouldUseWPComRestApi = false,
-            accessToken = null,
-            username = "",
-            password = ""
-        )
-
-        assertThat(header).isNull()
-    }
-
-    @Test
-    fun `special characters in Basic auth are encoded`() {
-        val header = builder.buildAuthHeader(
-            shouldUseWPComRestApi = false,
-            accessToken = null,
-            username = "user@example.com",
-            password = "p@ss:word!123"
-        )
-
-        assertThat(header).isNotNull()
-        assertThat(header).startsWith("Basic ")
     }
 
     // ===== Site API Namespace Tests =====

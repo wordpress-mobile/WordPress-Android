@@ -1,29 +1,31 @@
 package org.wordpress.android.repositories
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.cancelAndJoin
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
+import okhttp3.Call
+import okhttp3.Callback
+import okhttp3.OkHttpClient
+import okhttp3.Protocol
+import okhttp3.Request
+import okhttp3.Response
+import okhttp3.ResponseBody.Companion.toResponseBody
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
 import org.mockito.kotlin.any
+import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpApiClientProvider
+import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
-import rs.wordpress.api.kotlin.ApiDiscoveryResult
-import rs.wordpress.api.kotlin.WpApiClient
-import rs.wordpress.api.kotlin.WpLoginClient
-import rs.wordpress.api.kotlin.WpRequestResult
-import uniffi.wp_api.ApiRootRequestGetResponse
-import uniffi.wp_api.ApiUrlResolver
-import uniffi.wp_api.AutoDiscoveryAttemptSuccess
-import uniffi.wp_api.DiscoveredAuthenticationMechanism
-import uniffi.wp_api.ParseUrlException
 import uniffi.wp_api.ThemeAuthor
 import uniffi.wp_api.ThemeAuthorUri
 import uniffi.wp_api.ThemeDescription
@@ -33,17 +35,10 @@ import uniffi.wp_api.ThemeStylesheet
 import uniffi.wp_api.ThemeTags
 import uniffi.wp_api.ThemeUri
 import uniffi.wp_api.ThemeWithEditContext
-import uniffi.wp_api.WpApiDetails
-import uniffi.wp_api.WpNetworkHeaderMap
+import java.io.IOException
 
 @ExperimentalCoroutinesApi
 class EditorSettingsRepositoryTest : BaseUnitTest() {
-    @Mock
-    lateinit var wpApiClientProvider: WpApiClientProvider
-
-    @Mock
-    lateinit var wpLoginClient: WpLoginClient
-
     @Mock
     lateinit var appPrefsWrapper: AppPrefsWrapper
 
@@ -51,65 +46,121 @@ class EditorSettingsRepositoryTest : BaseUnitTest() {
     lateinit var themeRepository: ThemeRepository
 
     @Mock
-    lateinit var wpApiClient: WpApiClient
+    lateinit var accountStore: AccountStore
 
     @Mock
-    lateinit var apiUrlResolver: ApiUrlResolver
-
-    @Mock
-    lateinit var directHostResolver: ApiUrlResolver
+    lateinit var okHttpClient: OkHttpClient
 
     private lateinit var repository: EditorSettingsRepository
 
-    private val testSite = SiteModel().apply {
+    private val wpComSite = SiteModel().apply {
         id = 1
-        url = "https://test.wordpress.com"
+        siteId = 42L
+        url = "https://example.wordpress.com"
+        setIsWPCom(true)
+        setIsJetpackConnected(false)
+        origin = SiteModel.ORIGIN_WPCOM_REST
+    }
+
+    private val atomicSite = SiteModel().apply {
+        id = 5
+        siteId = 777L
+        url = "https://atomic.example.com"
+        setIsWPCom(true)
+        setIsWPComAtomic(true)
+        setIsJetpackConnected(false)
+        origin = SiteModel.ORIGIN_WPCOM_REST
+        wpApiRestUrl = "https://atomic.example.com/wp-json/"
+    }
+
+    private val selfHostedSite = SiteModel().apply {
+        id = 2
+        siteId = 0L
+        url = "https://mysite.com"
+        setIsWPCom(false)
+        setIsJetpackConnected(false)
+        wpApiRestUrl = "https://mysite.com/wp-json/"
+        apiRestUsernamePlain = "admin"
+        apiRestPasswordPlain = "app_pass"
     }
 
     @Before
     fun setUp() {
-        whenever(wpApiClientProvider.getWpApiClient(testSite))
-            .thenReturn(wpApiClient)
-        whenever(wpApiClientProvider.getApiUrlResolver(testSite))
-            .thenReturn(apiUrlResolver)
-
+        whenever(accountStore.accessToken).thenReturn("wpcom_token")
         repository = EditorSettingsRepository(
-            wpApiClientProvider = wpApiClientProvider,
-            wpLoginClient = wpLoginClient,
-            appPrefsWrapper = appPrefsWrapper,
             themeRepository = themeRepository,
-            ioDispatcher = testDispatcher()
+            appPrefsWrapper = appPrefsWrapper,
+            accountStore = accountStore,
+            editorAuthHeaderBuilder = EditorAuthHeaderBuilder(),
+            okHttpClient = okHttpClient,
+            ioDispatcher = testDispatcher(),
         )
     }
 
-    @Test
-    fun `fetch persists true when routes are present`() =
-        runTest {
-            mockApiRootResponse(
-                hasEditorSettings = true,
-                hasEditorAssets = true
-            )
-            mockThemeResponse(isBlockTheme = false)
-
-            val result =
-                repository.fetchEditorCapabilitiesForSite(
-                    testSite
-                )
-
-            assertThat(result).isTrue()
-            verify(appPrefsWrapper)
-                .setSiteSupportsEditorSettings(testSite, true)
-            verify(appPrefsWrapper)
-                .setSiteSupportsEditorAssets(testSite, true)
-        }
+    // ===== Probe outcomes =====
 
     @Test
-    fun `fetch does not persist routes on API error`() = runTest {
-        mockApiRootError()
-        mockThemeResponse(isBlockTheme = false)
+    fun `2xx on both endpoints persists true and returns true`() = runTest {
+        stubResponses(
+            "wp-block-editor/v1" to 200,
+            "wpcom/v2" to 200,
+        )
+        mockTheme(isBlockTheme = true)
 
-        repository.fetchEditorCapabilitiesForSite(testSite)
+        val ok = repository.fetchEditorCapabilitiesForSite(wpComSite)
 
+        assertThat(ok).isTrue()
+        verify(appPrefsWrapper)
+            .setSiteSupportsEditorSettings(wpComSite, true)
+        verify(appPrefsWrapper)
+            .setSiteSupportsEditorAssets(wpComSite, true)
+    }
+
+    @Test
+    fun `404 persists false but still returns true (definitive answer)`() = runTest {
+        stubResponses(
+            "wp-block-editor/v1" to 404,
+            "wpcom/v2" to 404,
+        )
+        mockTheme(isBlockTheme = false)
+
+        val ok = repository.fetchEditorCapabilitiesForSite(wpComSite)
+
+        assertThat(ok).isTrue()
+        verify(appPrefsWrapper)
+            .setSiteSupportsEditorSettings(wpComSite, false)
+        verify(appPrefsWrapper)
+            .setSiteSupportsEditorAssets(wpComSite, false)
+    }
+
+    @Test
+    fun `mixed 200 and 404 persists per-endpoint`() = runTest {
+        stubResponses(
+            "wp-block-editor/v1" to 200,
+            "wpcom/v2" to 404,
+        )
+        mockTheme(isBlockTheme = true)
+
+        val ok = repository.fetchEditorCapabilitiesForSite(wpComSite)
+
+        assertThat(ok).isTrue()
+        verify(appPrefsWrapper)
+            .setSiteSupportsEditorSettings(wpComSite, true)
+        verify(appPrefsWrapper)
+            .setSiteSupportsEditorAssets(wpComSite, false)
+    }
+
+    @Test
+    fun `5xx response leaves pref untouched and returns false`() = runTest {
+        stubResponses(
+            "wp-block-editor/v1" to 500,
+            "wpcom/v2" to 500,
+        )
+        mockTheme(isBlockTheme = true)
+
+        val ok = repository.fetchEditorCapabilitiesForSite(wpComSite)
+
+        assertThat(ok).isFalse()
         verify(appPrefsWrapper, never())
             .setSiteSupportsEditorSettings(any(), any())
         verify(appPrefsWrapper, never())
@@ -117,270 +168,416 @@ class EditorSettingsRepositoryTest : BaseUnitTest() {
     }
 
     @Test
-    fun `fetch does not persist block theme when theme is null`() =
-        runTest {
-            mockApiRootResponse(
-                hasEditorSettings = true,
-                hasEditorAssets = true
-            )
-            whenever(
-                themeRepository.fetchCurrentTheme(testSite)
-            ).thenReturn(null)
-
-            repository.fetchEditorCapabilitiesForSite(
-                testSite
-            )
-
-            verify(appPrefsWrapper, never())
-                .setSiteThemeIsBlockTheme(any(), any())
-        }
-
-    @Test
-    fun `route failure does not prevent theme update`() =
-        runTest {
-            whenever(wpApiClient.request<Any>(any()))
-                .thenThrow(RuntimeException("network error"))
-            mockThemeResponse(isBlockTheme = true)
-
-            val result =
-                repository.fetchEditorCapabilitiesForSite(
-                    testSite
-                )
-
-            assertThat(result).isFalse()
-            verify(appPrefsWrapper)
-                .setSiteThemeIsBlockTheme(testSite, true)
-        }
-
-    @Test
-    fun `theme failure does not prevent route update`() =
-        runTest {
-            mockApiRootResponse(
-                hasEditorSettings = true,
-                hasEditorAssets = true
-            )
-            whenever(
-                themeRepository.fetchCurrentTheme(testSite)
-            ).thenThrow(RuntimeException("network error"))
-
-            val result =
-                repository.fetchEditorCapabilitiesForSite(
-                    testSite
-                )
-
-            assertThat(result).isFalse()
-            verify(appPrefsWrapper)
-                .setSiteSupportsEditorSettings(testSite, true)
-            verify(appPrefsWrapper)
-                .setSiteSupportsEditorAssets(testSite, true)
-        }
-
-    @Test
-    fun `both failures returns false without writing prefs`() =
-        runTest {
-            whenever(wpApiClient.request<Any>(any()))
-                .thenThrow(RuntimeException("network error"))
-            whenever(
-                themeRepository.fetchCurrentTheme(testSite)
-            ).thenThrow(RuntimeException("network error"))
-
-            val result =
-                repository.fetchEditorCapabilitiesForSite(
-                    testSite
-                )
-
-            assertThat(result).isFalse()
-            verify(appPrefsWrapper, never())
-                .setSiteSupportsEditorSettings(any(), any())
-            verify(appPrefsWrapper, never())
-                .setSiteSupportsEditorAssets(any(), any())
-            verify(appPrefsWrapper, never())
-                .setSiteThemeIsBlockTheme(any(), any())
-        }
-
-    @Test
-    fun `atomic site probes via api discovery`() =
-        runTest {
-            val atomicSite = SiteModel().apply {
-                id = 2
-                url = "https://atomic.example.com"
-                setIsWPCom(true)
-                setIsWPComAtomic(true)
+    fun `network IOException leaves pref untouched and returns false`() = runTest {
+        whenever(okHttpClient.newCall(any())).thenAnswer {
+            mock<Call>().also { call ->
+                whenever(call.enqueue(any())).thenAnswer { callInvocation ->
+                    val callback = callInvocation.arguments[0] as Callback
+                    callback.onFailure(call, IOException("offline"))
+                }
             }
-            mockDiscoverySuccess(
-                siteUrl = atomicSite.url,
-                hasEditorSettings = false,
-                hasEditorAssets = false
-            )
-            whenever(themeRepository.fetchCurrentTheme(atomicSite))
-                .thenReturn(buildTheme(isBlockTheme = false))
-
-            val result =
-                repository.fetchEditorCapabilitiesForSite(atomicSite)
-
-            assertThat(result).isTrue()
-            verify(appPrefsWrapper)
-                .setSiteSupportsEditorSettings(atomicSite, false)
-            verify(appPrefsWrapper)
-                .setSiteSupportsEditorAssets(atomicSite, false)
-            verify(wpApiClientProvider, never()).getWpApiClient(atomicSite)
         }
+        mockTheme(isBlockTheme = true)
 
-    @Test
-    fun `atomic site returns false when discovery fails`() =
-        runTest {
-            val atomicSite = SiteModel().apply {
-                id = 4
-                url = "https://atomic.example.com"
-                setIsWPCom(true)
-                setIsWPComAtomic(true)
-            }
-            whenever(wpLoginClient.apiDiscovery(atomicSite.url))
-                .thenReturn(
-                    ApiDiscoveryResult.FailureParseSiteUrl(
-                        ParseUrlException.Generic("")
-                    )
-                )
-            whenever(themeRepository.fetchCurrentTheme(atomicSite))
-                .thenReturn(buildTheme(isBlockTheme = false))
+        val ok = repository.fetchEditorCapabilitiesForSite(wpComSite)
 
-            val result =
-                repository.fetchEditorCapabilitiesForSite(atomicSite)
-
-            assertThat(result).isFalse()
-            verify(appPrefsWrapper, never())
-                .setSiteSupportsEditorSettings(any(), any())
-            verify(appPrefsWrapper, never())
-                .setSiteSupportsEditorAssets(any(), any())
-            verify(wpApiClientProvider, never()).getWpApiClient(atomicSite)
-        }
-
-    @Test
-    fun `atomic site with app password also probes via api discovery`() =
-        runTest {
-            val atomicSite = SiteModel().apply {
-                id = 3
-                url = "https://atomic.example.com"
-                setIsWPCom(true)
-                setIsWPComAtomic(true)
-                apiRestUsernamePlain = "user"
-                apiRestPasswordPlain = "secret"
-            }
-            mockDiscoverySuccess(
-                siteUrl = atomicSite.url,
-                hasEditorSettings = true,
-                hasEditorAssets = true
-            )
-            whenever(themeRepository.fetchCurrentTheme(atomicSite))
-                .thenReturn(buildTheme(isBlockTheme = false))
-
-            val result =
-                repository.fetchEditorCapabilitiesForSite(atomicSite)
-
-            assertThat(result).isTrue()
-            verify(appPrefsWrapper)
-                .setSiteSupportsEditorSettings(atomicSite, true)
-            verify(appPrefsWrapper)
-                .setSiteSupportsEditorAssets(atomicSite, true)
-            verify(wpApiClientProvider, never()).getWpApiClient(atomicSite)
-        }
-
-    private suspend fun mockApiRootResponse(
-        hasEditorSettings: Boolean,
-        hasEditorAssets: Boolean
-    ) = mockApiRootResponseFor(
-        client = wpApiClient,
-        resolver = apiUrlResolver,
-        hasEditorSettings = hasEditorSettings,
-        hasEditorAssets = hasEditorAssets,
-    )
-
-    private suspend fun mockDiscoverySuccess(
-        siteUrl: String,
-        hasEditorSettings: Boolean,
-        hasEditorAssets: Boolean,
-    ) {
-        val apiDetails = mock<WpApiDetails>()
-        whenever(
-            apiDetails.hasRouteForEndpoint(
-                directHostResolver,
-                "/wp-block-editor/v1",
-                "settings"
-            )
-        ).thenReturn(hasEditorSettings)
-        whenever(
-            apiDetails.hasRouteForEndpoint(
-                directHostResolver,
-                "/wpcom/v2",
-                "editor-assets"
-            )
-        ).thenReturn(hasEditorAssets)
-        val apiRootUrl = mock<uniffi.wp_api.ParsedUrl>()
-        whenever(wpApiClientProvider.urlResolverFor(apiRootUrl))
-            .thenReturn(directHostResolver)
-        val success = AutoDiscoveryAttemptSuccess(
-            parsedSiteUrl = mock(),
-            apiRootUrl = apiRootUrl,
-            apiDetails = apiDetails,
-            authentication = DiscoveredAuthenticationMechanism
-                .ApplicationPasswords(mock()),
-        )
-        whenever(wpLoginClient.apiDiscovery(siteUrl))
-            .thenReturn(ApiDiscoveryResult.Success(success))
+        assertThat(ok).isFalse()
+        verify(appPrefsWrapper, never())
+            .setSiteSupportsEditorSettings(any(), any())
+        verify(appPrefsWrapper, never())
+            .setSiteSupportsEditorAssets(any(), any())
     }
 
-    @Suppress("UNCHECKED_CAST")
-    private suspend fun mockApiRootResponseFor(
-        client: WpApiClient,
-        resolver: ApiUrlResolver,
-        hasEditorSettings: Boolean,
-        hasEditorAssets: Boolean
-    ) {
-        val apiDetails = mock<WpApiDetails>()
-        whenever(
-            apiDetails.hasRouteForEndpoint(
-                resolver,
-                "/wp-block-editor/v1",
-                "settings"
-            )
-        ).thenReturn(hasEditorSettings)
-        whenever(
-            apiDetails.hasRouteForEndpoint(
-                resolver,
-                "/wpcom/v2",
-                "editor-assets"
-            )
-        ).thenReturn(hasEditorAssets)
+    @Test
+    fun `missing access token on WPCom site marks probe inconclusive`() = runTest {
+        whenever(accountStore.accessToken).thenReturn(null)
+        mockTheme(isBlockTheme = false)
 
-        val response = ApiRootRequestGetResponse(
-            data = apiDetails,
-            headerMap = mock<WpNetworkHeaderMap>()
-        )
-        whenever(client.request<Any>(any()))
-            .thenReturn(
-                WpRequestResult.Success(response)
-                    as WpRequestResult<Any>
-            )
+        val ok = repository.fetchEditorCapabilitiesForSite(wpComSite)
+
+        assertThat(ok).isFalse()
+        verify(okHttpClient, never()).newCall(any())
+        verify(appPrefsWrapper, never())
+            .setSiteSupportsEditorSettings(any(), any())
+        verify(appPrefsWrapper, never())
+            .setSiteSupportsEditorAssets(any(), any())
     }
 
-    @Suppress("UNCHECKED_CAST")
-    private suspend fun mockApiRootError() {
-        val error = WpRequestResult.UnknownError<Any>(
-            statusCode = 500u,
-            response = "Internal Server Error",
-            requestUrl = "https://test.wordpress.com/wp-json",
-            requestMethod = uniffi.wp_api.RequestMethod.GET
+    // ===== Probe URL and headers =====
+
+    @Test
+    fun `WPCom site probes through proxy with sites prefix and Bearer auth`() = runTest {
+        stubResponses(
+            "wp-block-editor/v1" to 200,
+            "wpcom/v2" to 200,
         )
-        whenever(wpApiClient.request<Any>(any()))
-            .thenReturn(error)
+        mockTheme(isBlockTheme = true)
+
+        repository.fetchEditorCapabilitiesForSite(wpComSite)
+
+        val requests = captureRequests()
+        val urls = requests.map { it.url.toString() }
+        assertThat(urls).contains(
+            "https://public-api.wordpress.com/wp-block-editor/v1/sites/42/settings",
+            "https://public-api.wordpress.com/wpcom/v2/sites/42/editor-assets",
+        )
+        requests.forEach {
+            assertThat(it.header("Authorization"))
+                .isEqualTo("Bearer wpcom_token")
+        }
     }
 
-    private suspend fun mockThemeResponse(
-        isBlockTheme: Boolean
-    ) {
-        whenever(
-            themeRepository.fetchCurrentTheme(testSite)
-        ).thenReturn(buildTheme(isBlockTheme = isBlockTheme))
+    @Test
+    fun `self-hosted site probes wpApiRestUrl directly with Basic auth`() = runTest {
+        stubResponses(
+            "wp-block-editor/v1" to 200,
+            "wpcom/v2" to 200,
+        )
+        mockTheme(isBlockTheme = true)
+
+        repository.fetchEditorCapabilitiesForSite(selfHostedSite)
+
+        val requests = captureRequests()
+        val urls = requests.map { it.url.toString() }
+        assertThat(urls).contains(
+            "https://mysite.com/wp-json/wp-block-editor/v1/settings",
+            "https://mysite.com/wp-json/wpcom/v2/editor-assets",
+        )
+        requests.forEach {
+            assertThat(it.header("Authorization"))
+                .startsWith("Basic ")
+        }
+    }
+
+    @Test
+    fun `self-hosted site without wpApiRestUrl falls back to siteUrl wp-json`() = runTest {
+        val site = SiteModel().apply {
+            id = 3
+            url = "https://fallback.example"
+            setIsWPCom(false)
+            setIsJetpackConnected(false)
+            apiRestUsernamePlain = "admin"
+            apiRestPasswordPlain = "app_pass"
+            // no wpApiRestUrl set
+        }
+        stubResponses(
+            "wp-block-editor/v1" to 200,
+            "wpcom/v2" to 200,
+        )
+        mockTheme(isBlockTheme = true)
+
+        repository.fetchEditorCapabilitiesForSite(site)
+
+        val urls = captureRequests().map { it.url.toString() }
+        assertThat(urls).contains(
+            "https://fallback.example/wp-json/wp-block-editor/v1/settings",
+            "https://fallback.example/wp-json/wpcom/v2/editor-assets",
+        )
+    }
+
+    @Test
+    fun `app password on WPCom-routed site forces direct probe with Basic auth`() = runTest {
+        val site = SiteModel().apply {
+            id = 4
+            siteId = 99L
+            url = "https://atomic.example"
+            setIsWPCom(false)
+            setIsJetpackConnected(true)
+            origin = SiteModel.ORIGIN_WPCOM_REST
+            wpApiRestUrl = "https://atomic.example/wp-json/"
+            apiRestUsernamePlain = "admin"
+            apiRestPasswordPlain = "app_pass"
+        }
+        stubResponses(
+            "wp-block-editor/v1" to 200,
+            "wpcom/v2" to 200,
+        )
+        mockTheme(isBlockTheme = true)
+
+        repository.fetchEditorCapabilitiesForSite(site)
+
+        val requests = captureRequests()
+        val urls = requests.map { it.url.toString() }
+        assertThat(urls).contains(
+            "https://atomic.example/wp-json/wp-block-editor/v1/settings",
+            "https://atomic.example/wp-json/wpcom/v2/editor-assets",
+        )
+        requests.forEach {
+            assertThat(it.header("Authorization"))
+                .startsWith("Basic ")
+        }
+    }
+
+    // ===== Atomic direct-host routing (MUST NOT REMOVE — see #22879/#22883) =====
+
+    /**
+     * Atomic sites: GutenbergKit fetches `wp-block-editor/v1/settings` from
+     * the DIRECT host, bypassing the configured `siteApiRoot`. Capability
+     * detection for this endpoint MUST hit the same host. Probing the WP.com
+     * proxy here would false-positive on Atomic sites where the proxy
+     * advertises a route the direct host doesn't actually serve — the editor
+     * would then 404 trying to fetch from the direct host.
+     *
+     * If this test fails, the production fix from #22883 has regressed.
+     * Restore the direct-host routing rather than weakening the assertion.
+     */
+    @Test
+    fun `MUST_NOT_REMOVE - atomic settings probe goes to the direct host, not the proxy`() = runTest {
+        stubResponses(
+            "atomic.example.com" to 200,
+            "public-api.wordpress.com" to 200,
+        )
+        mockTheme(isBlockTheme = true)
+
+        repository.fetchEditorCapabilitiesForSite(atomicSite)
+
+        val settingsRequests = captureRequests().filter {
+            it.url.toString().endsWith("wp-block-editor/v1/settings") ||
+                it.url.toString().endsWith("/settings")
+        }
+        assertThat(settingsRequests).isNotEmpty
+        settingsRequests.forEach {
+            assertThat(it.url.toString())
+                .`as`("Atomic settings probe must hit the direct host")
+                .isEqualTo("https://atomic.example.com/wp-json/wp-block-editor/v1/settings")
+            assertThat(it.url.host)
+                .`as`("Atomic settings probe must NOT go through the WP.com proxy")
+                .isNotEqualTo("public-api.wordpress.com")
+        }
+    }
+
+    @Test
+    fun `atomic editor-assets probe still goes through the proxy (only settings is special)`() = runTest {
+        stubResponses(
+            "atomic.example.com" to 200,
+            "public-api.wordpress.com" to 200,
+        )
+        mockTheme(isBlockTheme = true)
+
+        repository.fetchEditorCapabilitiesForSite(atomicSite)
+
+        val assetsRequests = captureRequests().filter {
+            it.url.toString().contains("editor-assets")
+        }
+        assertThat(assetsRequests).isNotEmpty
+        assetsRequests.forEach {
+            assertThat(it.url.toString())
+                .isEqualTo("https://public-api.wordpress.com/wpcom/v2/sites/777/editor-assets")
+        }
+    }
+
+    @Test
+    fun `non-atomic WPCom site keeps proxy routing for settings`() = runTest {
+        // Regression check: only Atomic gets the direct-host override.
+        stubResponses(
+            "public-api.wordpress.com" to 200,
+        )
+        mockTheme(isBlockTheme = true)
+
+        repository.fetchEditorCapabilitiesForSite(wpComSite)
+
+        val urls = captureRequests().map { it.url.toString() }
+        assertThat(urls).contains(
+            "https://public-api.wordpress.com/wp-block-editor/v1/sites/42/settings",
+        )
+    }
+
+    // ===== 401/403 handling (route exists, auth rejected) =====
+
+    @Test
+    fun `401 response is treated as Supported (route exists, auth required)`() = runTest {
+        stubResponses(
+            "wp-block-editor/v1" to 401,
+            "wpcom/v2" to 401,
+        )
+        mockTheme(isBlockTheme = true)
+
+        val ok = repository.fetchEditorCapabilitiesForSite(wpComSite)
+
+        assertThat(ok).isTrue()
+        verify(appPrefsWrapper)
+            .setSiteSupportsEditorSettings(wpComSite, true)
+        verify(appPrefsWrapper)
+            .setSiteSupportsEditorAssets(wpComSite, true)
+    }
+
+    @Test
+    fun `403 response is treated as Supported (route exists, lacks permission)`() = runTest {
+        stubResponses(
+            "wp-block-editor/v1" to 403,
+            "wpcom/v2" to 403,
+        )
+        mockTheme(isBlockTheme = true)
+
+        val ok = repository.fetchEditorCapabilitiesForSite(wpComSite)
+
+        assertThat(ok).isTrue()
+        verify(appPrefsWrapper)
+            .setSiteSupportsEditorSettings(wpComSite, true)
+        verify(appPrefsWrapper)
+            .setSiteSupportsEditorAssets(wpComSite, true)
+    }
+
+    // ===== Theme block-style support =====
+
+    @Test
+    fun `theme is fetched and persisted independently of probes`() = runTest {
+        stubResponses(
+            "wp-block-editor/v1" to 200,
+            "wpcom/v2" to 200,
+        )
+        mockTheme(isBlockTheme = true)
+
+        repository.fetchEditorCapabilitiesForSite(wpComSite)
+
+        verify(appPrefsWrapper)
+            .setSiteThemeIsBlockTheme(wpComSite, true)
+    }
+
+    @Test
+    fun `null theme is not persisted`() = runTest {
+        stubResponses(
+            "wp-block-editor/v1" to 200,
+            "wpcom/v2" to 200,
+        )
+        whenever(themeRepository.fetchCurrentTheme(wpComSite))
+            .thenReturn(null)
+
+        val ok = repository.fetchEditorCapabilitiesForSite(wpComSite)
+
+        assertThat(ok).isFalse()
+        verify(appPrefsWrapper, never())
+            .setSiteThemeIsBlockTheme(any(), any())
+    }
+
+    @Test
+    fun `theme failure does not block probe persistence`() = runTest {
+        stubResponses(
+            "wp-block-editor/v1" to 200,
+            "wpcom/v2" to 200,
+        )
+        whenever(themeRepository.fetchCurrentTheme(wpComSite))
+            .thenThrow(RuntimeException("network error"))
+
+        val ok = repository.fetchEditorCapabilitiesForSite(wpComSite)
+
+        assertThat(ok).isFalse()
+        verify(appPrefsWrapper)
+            .setSiteSupportsEditorSettings(wpComSite, true)
+        verify(appPrefsWrapper)
+            .setSiteSupportsEditorAssets(wpComSite, true)
+    }
+
+    @Test
+    fun `probe failure does not block theme persistence`() = runTest {
+        stubResponses(
+            "wp-block-editor/v1" to 500,
+            "wpcom/v2" to 500,
+        )
+        mockTheme(isBlockTheme = true)
+
+        val ok = repository.fetchEditorCapabilitiesForSite(wpComSite)
+
+        assertThat(ok).isFalse()
+        verify(appPrefsWrapper)
+            .setSiteThemeIsBlockTheme(wpComSite, true)
+    }
+
+    // ===== Cancellation =====
+
+    @Test
+    fun `cancelling the probe coroutine cancels in-flight OkHttp calls`() = runTest {
+        val capturedCalls = mutableListOf<Call>()
+        whenever(okHttpClient.newCall(any())).thenAnswer {
+            mock<Call>().also { call ->
+                // enqueue() never invokes the callback — the call sits "in flight"
+                // until something cancels it.
+                whenever(call.enqueue(any())).then { /* no-op */ }
+                capturedCalls.add(call)
+            }
+        }
+        mockTheme(isBlockTheme = true)
+
+        val job = launch {
+            repository.fetchEditorCapabilitiesForSite(wpComSite)
+        }
+        advanceUntilIdle()
+        job.cancelAndJoin()
+
+        // Cancellation propagated to OkHttp.
+        assertThat(capturedCalls).hasSize(2)
+        capturedCalls.forEach { verify(it).cancel() }
+
+        // Coroutine actually ended in a cancelled state — not still suspended
+        // (a buggy invokeOnCancellation could leak the continuation) and not
+        // completed normally (the suspension must have observed cancellation).
+        assertThat(job.isCancelled).isTrue
+        assertThat(job.isCompleted).isTrue
+    }
+
+    // ===== getSupportsEditorSettingsForSite gating =====
+
+    @Test
+    fun `getSupports honours probe result of true once probe has run`() {
+        whenever(appPrefsWrapper.hasSiteEditorCapabilities(wpComSite))
+            .thenReturn(true)
+        whenever(appPrefsWrapper.getSiteSupportsEditorSettings(wpComSite))
+            .thenReturn(true)
+
+        assertThat(repository.getSupportsEditorSettingsForSite(wpComSite))
+            .isTrue()
+    }
+
+    @Test
+    fun `getSupports honours probe result of false once probe has run`() {
+        whenever(appPrefsWrapper.hasSiteEditorCapabilities(wpComSite))
+            .thenReturn(true)
+        whenever(appPrefsWrapper.getSiteSupportsEditorSettings(wpComSite))
+            .thenReturn(false)
+
+        // Probe is authoritative — even if a legacy SQL row would otherwise
+        // suggest supported, the probe's `false` wins. This is the fix for
+        // sites where the endpoint was once available but no longer is.
+        assertThat(repository.getSupportsEditorSettingsForSite(wpComSite))
+            .isFalse()
+    }
+
+    // ===== Helpers =====
+
+    private fun stubResponses(vararg matches: Pair<String, Int>) {
+        whenever(okHttpClient.newCall(any())).thenAnswer { invocation ->
+            val request = invocation.arguments[0] as Request
+            val url = request.url.toString()
+            val code = matches.firstOrNull { url.contains(it.first) }?.second
+                ?: error("No stubbed response for URL: $url")
+            mock<Call>().also { call ->
+                whenever(call.enqueue(any())).thenAnswer { callInvocation ->
+                    val callback = callInvocation.arguments[0] as Callback
+                    callback.onResponse(call, buildResponse(request, code))
+                }
+            }
+        }
+    }
+
+    private fun buildResponse(request: Request, code: Int): Response =
+        Response.Builder()
+            .request(request)
+            .protocol(Protocol.HTTP_1_1)
+            .code(code)
+            .message(if (code in 200..299) "OK" else "Error")
+            .body("".toResponseBody(null))
+            .build()
+
+    private fun captureRequests(): List<Request> {
+        val captor = argumentCaptor<Request>()
+        verify(okHttpClient, org.mockito.kotlin.atLeastOnce())
+            .newCall(captor.capture())
+        return captor.allValues
+    }
+
+    private suspend fun mockTheme(isBlockTheme: Boolean) {
+        whenever(themeRepository.fetchCurrentTheme(any()))
+            .thenReturn(buildTheme(isBlockTheme = isBlockTheme))
     }
 
     private fun buildTheme(
