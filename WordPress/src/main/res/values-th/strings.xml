@@ -136,6 +136,7 @@ Language: th
     <string name="push_auth_expired">การร้องขอหมดอายุแล้ว  ลงทะเบียนเข้าสู่ WordPress.com เพื่อลองอีกครั้ง</string>
     <string name="stats_insights_best_ever">การดูที่ดีที่สุด</string>
     <string name="ignore">ไม่สนใจ</string>
+    <string name="stats_insights_most_popular_day">วันยอดนิยมที่สุด</string>
     <string name="stats_insights_today">สถิติวันนี้</string>
     <string name="stats_insights_all_time">เรื่อง การดูและผู้เยี่ยมชมของเวลาทั้งหมด</string>
     <string name="stats_insights">แบบละเอียด</string>
@@ -199,7 +200,6 @@ Language: th
     <string name="more">กว่า</string>
     <string name="browse_our_faq_button">เรียกดูคำถามที่พบบ่อยของเรา</string>
     <string name="reader_empty_comments">ยังไม่มีความเห็น</string>
-    <string name="reader_label_view_original">ดูบทความเริ่มต้น</string>
     <string name="reader_label_like">ชื่นชอบ</string>
     <string name="signing_out">กำลังออกจากระบบ…</string>
     <string name="reader_toast_err_generic">ไม่สามารถทำการกระทำนี้ได้</string>
@@ -261,11 +261,10 @@ Language: th
     <string name="file_error_create">ไม่สามารถสร้างไฟล์ชั่วคราวสำหรับการอัปโหลดไฟล์สื่อ โปรดตรวจสอบว่าอุปกรณ์ของคุณมีพื้นที่ว่างเพียงพอสำหรับการอัปโหลด</string>
     <string name="local_changes">การเปลี่ยนแปลงบนอุปกรณ์</string>
     <string name="media_gallery_type_thumbnail_grid">ตารางรูปขนาดย่อ</string>
-    <string name="horizontal_alignment" a8c-src-lib="module:editor">การเรียงในแนวนอน</string>
+    <string name="horizontal_alignment" tools:ignore="UnusedResources" a8c-src-lib="module:editor">การเรียงในแนวนอน</string>
     <string name="http_authorization_required" a8c-src-lib="module:login">ต้องการการอนุญาติ</string>
     <string name="reader_title_applog">log แอพพลิเคชั่น</string>
     <string name="remove_account">ลบเว็บ</string>
-    <string name="notifications_empty_all">ยังไม่มีคำเตือน</string>
     <string name="share_link">แบ่งปันลิงก์</string>
     <string name="reader_empty_posts_in_tag_updating">กำลังดึงข้อมูลเรื่อง…</string>
     <string name="comment_spammed">ความเห็นนี้ถูกบันทึกเป็นสแปม</string>
@@ -324,16 +323,16 @@ Language: th
     <string name="log_in" a8c-src-lib="module:login">เข้าสู่ระบบ</string>
     <string name="reader">ผู้อ่าน</string>
     <string name="pages">หน้า</string>
-    <string name="caption" a8c-src-lib="module:editor">ป้ายชื่อ (ทางเลือก)</string>
-    <string name="width" a8c-src-lib="module:editor">ความกว้าง</string>
+    <string name="caption" tools:ignore="UnusedResources" a8c-src-lib="module:editor">ป้ายชื่อ (ทางเลือก)</string>
+    <string name="width" tools:ignore="UnusedResources" a8c-src-lib="module:editor">ความกว้าง</string>
     <string name="posts">เรื่อง</string>
     <string name="anonymous">นิรนาม</string>
-    <string name="featured" a8c-src-lib="module:editor">ใช้เป็นรูปเด่น</string>
-    <string name="featured_in_post" a8c-src-lib="module:editor">รวมรูปภาพในเนื้อหาเรื่อง</string>
+    <string name="featured" tools:ignore="UnusedResources" a8c-src-lib="module:editor">ใช้เป็นรูปเด่น</string>
+    <string name="featured_in_post" tools:ignore="UnusedResources" a8c-src-lib="module:editor">รวมรูปภาพในเนื้อหาเรื่อง</string>
     <string name="no_network_title">ไม่มีเครือข่ายใช้งานได้</string>
     <string name="ok">ตกลง</string>
     <string name="link_enter_url">URL</string>
-    <string name="uploading" a8c-src-lib="module:editor">กำลังอัปโหลด…</string>
+    <string name="uploading" tools:ignore="UnusedResources" a8c-src-lib="module:editor">กำลังอัปโหลด…</string>
     <string name="image_alignment">จัดหน้า</string>
     <string name="refresh">รีเฟรช</string>
     <string name="untitled">ไม่มีหัวข้อ</string>

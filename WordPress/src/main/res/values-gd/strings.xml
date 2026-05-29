@@ -15,8 +15,8 @@ Language: gd_GB
     <string name="error_remove_viewer">Cha b’ urrainn dhuinn an neach-coimhid a thoirt air falbh</string>
     <string name="editor_failed_uploads_switch_html">Cha deach gach meadhan a luchdadh suas. Chan urrainn dhut leum gun mhodh\n        HTML is cùisean mar seo. A bheil thu airson na dh’fhàillig a thoirt air falbh is leantainn air adhart?</string>
     <string name="stop_upload_dialog_title">A bheil thu airson sgur dhen luchdadh suas?</string>
-    <string name="alert_action_while_uploading" a8c-src-lib="module:editor">Tha thu a’ luchdadh suas meadhanan. Fuirich ort gus am bi sin deiseil.</string>
-    <string name="alert_insert_image_html_mode" a8c-src-lib="module:editor">Chan urrainn dhut meadhanan a chur a-steach mar sin sa mhodh HTML. Cleachd am modh lèirsinneach airson sin.</string>
+    <string name="alert_action_while_uploading" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Tha thu a’ luchdadh suas meadhanan. Fuirich ort gus am bi sin deiseil.</string>
+    <string name="alert_insert_image_html_mode" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Chan urrainn dhut meadhanan a chur a-steach mar sin sa mhodh HTML. Cleachd am modh lèirsinneach airson sin.</string>
     <string name="invite_error_some_failed">Chaidh an cuireadh a chur ach thachair co-dhiù aon mhearachd!</string>
     <string name="invite_error_for_username">%1$s: %2$s</string>
     <string name="invite_sent">Chaidh an cuireadh a chur</string>
@@ -26,6 +26,7 @@ Language: gd_GB
     <string name="invite_error_invalid_usernames_one">Cha ghabh a chur: Tha ainm no post-d ann nach eil dligheach</string>
     <string name="stats_insights_best_ever">Na seallaidhean as fhearr a-riamh</string>
     <string name="ignore">Leig seachad</string>
+    <string name="stats_insights_most_popular_day">An latha as fhèillmhoire</string>
     <string name="stats_insights_today">Stats an latha</string>
     <string name="stats_insights_all_time">Puist, seallaidhean is aoighean air fad</string>
     <string name="stats_insights">Insights</string>
@@ -73,7 +74,6 @@ Language: gd_GB
     <string name="cab_selected">%d air a thaghadh</string>
     <string name="browse_our_faq_button">Rùraich na CÀBHA agam</string>
     <string name="reader_empty_comments">Chan eil beachd ann fhathast</string>
-    <string name="reader_label_view_original">Seall an t-artaigil tùsail</string>
     <string name="reader_label_like">’S toil</string>
     <string name="reader_label_comments_closed">Tha na beachdan dùinte</string>
     <string name="reader_title_photo_viewer">%1$d de %2$d</string>
@@ -126,7 +126,7 @@ Language: gd_GB
     <string name="link_enter_url_text">Teacsa a’ cheangail (roghainneil)</string>
     <string name="page_settings">Roghainnean na duilleige</string>
     <string name="local_draft">Dreachd ionadail</string>
-    <string name="horizontal_alignment" a8c-src-lib="module:editor">Co-thaobhadh còmhnard</string>
+    <string name="horizontal_alignment" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Co-thaobhadh còmhnard</string>
     <string name="post_settings">Roghainnean a’ phuist</string>
     <string name="comment_status_approved">Air aontachadh</string>
     <string name="comment_status_unapproved">Ri dhèanamh</string>
@@ -153,7 +153,6 @@ Language: gd_GB
     <string name="fatal_db_error">Thachair mearachd fhad ’s a bha sinn a’ cruthachadh stòr-dàta nan aplacaidean. Feuch is stàlaich an aplacaid às ùr.</string>
     <string name="reader_title_applog">Loga na h-aplacaid</string>
     <string name="invalid_site_url_message">Dèan cinnteach gu bheil an URL a chuir thu a-steach dligheach</string>
-    <string name="notifications_empty_all">Chan eil brath ann… fhathast.</string>
     <string name="share_link">Co-roinn an ceangal</string>
     <string name="reader_empty_posts_in_tag_updating">A\' faighinn nam post…</string>
     <string name="comment_unapproved">Chaidh an t-aonta a thoirt far a\' bheachd</string>
@@ -210,17 +209,17 @@ Language: gd_GB
     <string name="username">Ainm-cleachdaiche</string>
     <string name="log_in" a8c-src-lib="module:login">Clàraich a-steach</string>
     <string name="reader">Leughadair</string>
-    <string name="featured" a8c-src-lib="module:editor">Cleachd mar dhealbh brosnaichte</string>
-    <string name="featured_in_post" a8c-src-lib="module:editor">Gabh a-steach an dealbh ann an susbaint a\' phuist</string>
+    <string name="featured" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Cleachd mar dhealbh brosnaichte</string>
+    <string name="featured_in_post" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Gabh a-steach an dealbh ann an susbaint a\' phuist</string>
     <string name="no_network_title">Chan eil lìonra ri fhaighinn</string>
     <string name="pages">Duilleagan</string>
-    <string name="caption" a8c-src-lib="module:editor">Caipsean (roghainneil)</string>
-    <string name="width" a8c-src-lib="module:editor">Leud</string>
+    <string name="caption" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Caipsean (roghainneil)</string>
+    <string name="width" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Leud</string>
     <string name="posts">Puist</string>
     <string name="anonymous">Gun urra</string>
     <string name="ok">Ceart ma-thà</string>
     <string name="link_enter_url">URL</string>
-    <string name="uploading" a8c-src-lib="module:editor">’Ga luchdadh suas…</string>
+    <string name="uploading" tools:ignore="UnusedResources" a8c-src-lib="module:editor">’Ga luchdadh suas…</string>
     <string name="image_alignment">Co-thaobhadh</string>
     <string name="refresh">Ath-nuadhaich</string>
     <string name="untitled">Gun tiotal</string>
