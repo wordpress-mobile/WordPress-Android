@@ -1,1 +1,1 @@
-Bug fixes and improvements.
+It’s almost summer, and that means bugs. Don’t worry, we’ve been hard at work squashing them. This update involved assorted fixes that should make you enjoy using the app even more than you did before.
