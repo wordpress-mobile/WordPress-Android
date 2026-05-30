@@ -210,7 +210,7 @@ Language: cs_CZ
     <string name="site_settings_tags_empty_subtitle">Proč jej nevytvořit, aby bylo snazší označovat příspěvky štítky?</string>
     <string name="posts_published_empty_subtitle">Proč jej nevytvořit?</string>
     <string name="media_empty_list_subtitle">Proč něco nenahrát?</string>
-    <string name="confirm_remove_site">Odebrat \\"%s\\" z aplikace?</string>
+    <string name="confirm_remove_site">Odebrat \"%s\" z aplikace?</string>
     <string name="he_support_forbidden_error">Omlouváme se, tuto akci nemáte povoleno provést.</string>
     <string name="he_support_generic_error">Došlo k chybě. Zkuste to prosím později.</string>
     <string name="he_support_send_ticket_button">Odeslat</string>
@@ -296,7 +296,7 @@ Language: cs_CZ
     <string name="error_deleting_term">Při mazání výrazu došlo k chybě</string>
     <string name="error_saving_term">Při ukládání výrazu došlo k chybě</string>
     <string name="add_term">Přidat výraz</string>
-    <string name="term_delete_confirmation_message">Opravdu chcete smazat \\"%1$s\\"?</string>
+    <string name="term_delete_confirmation_message">Opravdu chcete smazat \"%1$s\"?</string>
     <string name="term_delete_confirmation_title">Smazat výraz</string>
     <string name="term_sort_by_count">Počet</string>
     <string name="term_sort_by_name">Název</string>
