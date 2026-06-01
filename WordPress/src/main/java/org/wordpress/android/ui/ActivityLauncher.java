@@ -96,7 +96,6 @@ import org.wordpress.android.ui.postsrs.PostRsListActivity;
 import org.wordpress.android.posttypes.CptPostTypesActivity;
 import org.wordpress.android.posttypes.bridge.SiteReference;
 import org.wordpress.android.ui.prefs.AccountSettingsActivity;
-import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.AppSettingsActivity;
 import org.wordpress.android.ui.prefs.BlogPreferencesActivity;
 import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures;
@@ -645,13 +644,7 @@ public class ActivityLauncher {
     }
 
     private static boolean shouldUseNewPostList(@Nullable SiteModel site) {
-        if (site != null && AppPrefs.getExperimentalFeatureConfig(Feature.RS_POST_LIST.getPrefKey())) {
-            if (site.hasApplicationPassword()) {
-                return true;
-            }
-            return site.isUsingWpComRestApi();
-        }
-        return false;
+        return site != null && site.hasApplicationPassword();
     }
 
     public static void viewCurrentBlogPosts(Context context, SiteModel site) {
