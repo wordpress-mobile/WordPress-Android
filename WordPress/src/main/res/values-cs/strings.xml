@@ -71,7 +71,7 @@ Language: cs_CZ
     <string name="menu_item_type_page">Stránka</string>
     <string name="menu_item_type_custom">Vlastní odkaz</string>
     <string name="menu_item_type_label">Typ</string>
-    <string name="delete_menu_item_confirmation_message">Opravdu chcete smazat \\"%1$s\\"?</string>
+    <string name="delete_menu_item_confirmation_message">Opravdu chcete smazat \"%1$s\"?</string>
     <string name="delete_menu_item_confirmation_title">Smazat položku nabídky</string>
     <string name="menu_item_deleted">Položka nabídky byla smazána</string>
     <string name="menu_item_saved">Položka nabídky byla uložena</string>
@@ -87,7 +87,7 @@ Language: cs_CZ
     <string name="no_menu_items">Tato nabídka zatím nemá žádné položky!</string>
     <string name="edit_menu_item">Upravit položku nabídky</string>
     <string name="add_menu_item">Přidat položku nabídky</string>
-    <string name="delete_menu_confirmation_message">Opravdu chcete smazat \\"%1$s\\"?</string>
+    <string name="delete_menu_confirmation_message">Opravdu chcete smazat \"%1$s\"?</string>
     <string name="delete_menu_confirmation_title">Smazat nabídku</string>
     <string name="menu_deleted">Nabídka byla smazána</string>
     <string name="menu_saved">Nabídka byla uložena</string>
@@ -296,7 +296,7 @@ Language: cs_CZ
     <string name="error_deleting_term">Při mazání výrazu došlo k chybě</string>
     <string name="error_saving_term">Při ukládání výrazu došlo k chybě</string>
     <string name="add_term">Přidat výraz</string>
-    <string name="term_delete_confirmation_message">Opravdu chcete smazat \\"%1$s\\"?</string>
+    <string name="term_delete_confirmation_message">Opravdu chcete smazat \"%1$s\"?</string>
     <string name="term_delete_confirmation_title">Smazat výraz</string>
     <string name="term_sort_by_count">Počet</string>
     <string name="term_sort_by_name">Název</string>
