@@ -1,16 +1,218 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2025-11-25 10:54:11+0000
+Translation-Revision-Date: 2026-04-02 09:58:23+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.3
 Language: id
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="new_stats_intro_trends_desc">Setiap metrik menunjukkan bagaimana tren dibandingkan dengan periode sebelumnya, jadi Anda selalu tahu apakah Anda mengalami pertumbuhan.</string>
+    <string name="new_stats_intro_trends_title">Tren dalam Sekejap</string>
+    <string name="new_stats_intro_on_par_desc">Perangkat, UTM, lokasi, WordAds (segera hadir) — data yang sama dengan yang Anda dapatkan di WordPress.com.</string>
+    <string name="new_stats_intro_on_par_title">Setara dengan Web</string>
+    <string name="new_stats_intro_any_period_desc">Pilih dari preset umum atau tetapkan rentang tanggal kustom dengan periode perbandingan, semua dalam satu ketuk.</string>
+    <string name="new_stats_intro_any_period_title">Periode Apa Pun, Rentang Apa Pun</string>
+    <string name="new_stats_intro_subtitle">Cara lebih baik untuk memahami performa situs Anda.</string>
+    <string name="new_stats_intro_title">Statistik Baru</string>
+    <string name="stats_switch_to_old_stats">Nonaktifkan statistik baru</string>
+    <string name="stats_try_new_stats">Coba statistik baru</string>
+    <string name="stats_devices_percentage_header">Persentase</string>
+    <string name="stats_devices_device_header">Perangkat</string>
+    <string name="stats_devices_screensize">Ukuran</string>
+    <string name="stats_devices_title">Perangkat</string>
+    <string name="show_less">Tampilkan sedikit</string>
+    <string name="post_rs_settings_author_no_permission">Anda tidak memiliki izin untuk mengubah penyusun</string>
+    <string name="post_rs_settings_author_dialog_title">Penyusun</string>
+    <string name="post_rs_settings_select_time">Pilih Waktu</string>
+    <string name="post_rs_settings_clear_excerpt">Hapus kutipan</string>
+    <string name="post_rs_settings_format_dialog_title">Format Pos</string>
+    <string name="post_rs_settings_excerpt_dialog_title">Kutipan</string>
+    <string name="post_rs_settings_discard_message">Anda memiliki perubahan yang belum disimpan. Buang?</string>
+    <string name="post_rs_settings_discard_title">Buang perubahan</string>
+    <string name="post_rs_settings_status_dialog_title">Status Pos</string>
+    <string name="post_rs_settings_save_error">Tidak dapat memperbarui pos</string>
+    <string name="post_rs_settings_remove_password">Hapus kata sandi</string>
+    <string name="post_rs_settings_password_hint">Masukkan kata sandi</string>
+    <string name="post_rs_settings_password_dialog_title">Kata Sandi Pos</string>
+    <string name="post_rs_settings_remove_featured_image">Hapus</string>
+    <string name="post_rs_settings_edit_featured_image">Edit gambar andalan</string>
+    <string name="post_rs_settings_featured_image_error">Tidak dapat memuat gambar andalan.</string>
+    <string name="post_rs_settings_featured_image_not_set">Gambar andalan belum ditetapkan.</string>
+    <string name="post_rs_settings_loading">%s: Memuat</string>
+    <string name="post_rs_settings_tap_to_retry">Ketuk untuk coba lagi</string>
+    <string name="post_rs_settings_field_error">Tidak dapat memuat</string>
+    <string name="post_rs_settings_protected">Dilindungi</string>
+    <string name="post_rs_sync_failed">Sinkronisasi gagal</string>
+    <string name="post_rs_error_auth">Autentikasi Anda telah kedaluwarsa. Harap login lagi.</string>
+    <string name="post_rs_error_load_more">Tidak dapat memuat lebih banyak pos</string>
+    <string name="menu_item_accessibility_description">Level%1$d, %2$s, %3$s</string>
+    <string name="menu_item_reorder_failed">Gagal menyusun ulang item menu</string>
+    <string name="menu_item_invalid_url">Masukkan URL yang valid</string>
+    <string name="menu_item_url_required">URL diperlukan untuk tautan khusus</string>
+    <string name="menu_item_title_required">Judul wajib diisi</string>
+    <string name="menu_name_required">Nama menu wajib diisi</string>
+    <string name="menu_error_no_site_selected">Tidak ada situs yang dipilih</string>
+    <string name="menu_item_select_required">Pilih item yang akan ditautkan</string>
+    <string name="menu_item_loading_items">Memuat…</string>
+    <string name="menu_item_no_items_found">Tidak ada item yang ditemukan</string>
+    <string name="menu_item_select_tag">Pilih tag</string>
+    <string name="menu_item_select_category">Pilih kategori</string>
+    <string name="menu_item_select_page">Pilih halaman</string>
+    <string name="menu_item_select_post">Pilih pos</string>
+    <string name="menu_item_select_item">Pilih item</string>
+    <string name="menu_item_link_to_label">Tautan ke</string>
+    <string name="menu_item_type_tag">Tag</string>
+    <string name="menu_item_type_category">Kategori</string>
+    <string name="menu_item_type_post">Pos</string>
+    <string name="menu_item_type_page">Halaman</string>
+    <string name="menu_item_type_custom">Tautan Khusus</string>
+    <string name="menu_item_type_label">Ketik</string>
+    <string name="delete_menu_item_confirmation_message">Anda yakin ingin menghapus \"%1$s\"?</string>
+    <string name="delete_menu_item_confirmation_title">Hapus item menu</string>
+    <string name="menu_item_deleted">Item menu dihapus</string>
+    <string name="menu_item_saved">Item menu disimpan</string>
+    <string name="menu_item_description_label">Deskripsi</string>
+    <string name="menu_item_target_label">Target tautan</string>
+    <string name="menu_item_no_parent">Tidak ada (level teratas)</string>
+    <string name="menu_item_parent_label">Induk</string>
+    <string name="menu_item_url_label">URL</string>
+    <string name="menu_item_title_label">Judul</string>
+    <string name="move_down">Pindahkan ke bawah</string>
+    <string name="move_up">Pindahkan ke atas</string>
+    <string name="menu_items_title">%s Item</string>
+    <string name="no_menu_items">Menu ini belum memiliki item!</string>
+    <string name="edit_menu_item">Edit Item Menu</string>
+    <string name="add_menu_item">Tambahkan Item Menu</string>
+    <string name="delete_menu_confirmation_message">Anda yakin ingin menghapus \"%1$s\"?</string>
+    <string name="delete_menu_confirmation_title">Hapus menu</string>
+    <string name="menu_deleted">Menu dihapus</string>
+    <string name="menu_saved">Menu disimpan</string>
+    <string name="menu_display_locations">Lokasi tampilan</string>
+    <string name="menu_auto_add_pages">Tambahkan halaman tingkat atas baru secara otomatis</string>
+    <string name="menu_description_label">Deskripsi</string>
+    <string name="menu_name_label">Nama</string>
+    <string name="edit_items">Edit Item</string>
+    <string name="menu_locations_label">Lokasi: %1$s</string>
+    <string name="no_menus">Tidak ada menu yang ditemukan</string>
+    <string name="edit_menu">Edit Menu</string>
+    <string name="create_menu">Buat Menu</string>
+    <string name="menus">Menu</string>
+    <string name="qrcode_auth_flow_error_auth_failed_subtitle">Tidak dapat login menggunakan kode ini</string>
+    <string name="qrcode_auth_flow_error_expired_subtitle">Kode login telah kedaluwarsa</string>
+    <string name="qrcode_auth_flow_error_invalid_data_title">Validasi gagal</string>
+    <string name="reader_subscription_settings_update_error">Gagal memperbarui pengaturan langganan</string>
+    <string name="reader_subscription_settings_email_comments">Kirimkan komentar baru melalui email</string>
+    <string name="reader_subscription_settings_email_posts">Kirimkan pos baru melalui email</string>
+    <string name="reader_subscription_settings_notify_posts">Beri tahu saya jika ada pos baru</string>
+    <string name="reader_subscription_settings_description">Kelola opsi langganan</string>
+    <string name="reader_subscription_settings_title">Pengaturan langganan</string>
+    <string name="stats_no_cards_message">Tidak ada kartu untuk ditampilkan.</string>
+    <string name="stats_all_cards_visible">Semua kartu saat ini terlihat</string>
+    <string name="stats_add_card_title">Tambahkan Kartu</string>
+    <string name="stats_card_move_to_bottom">Pindahkan ke Paling Bawah</string>
+    <string name="stats_card_move_down">Pindahkan ke Bawah</string>
+    <string name="stats_card_move_to_top">Pindahkan ke Paling Atas</string>
+    <string name="stats_card_move_up">Pindahkan ke Atas</string>
+    <string name="stats_card_move_submenu">Buka opsi pindah</string>
+    <string name="stats_card_move">Pindahkan Kartu</string>
+    <string name="stats_card_remove">Ambil Kartu</string>
+    <string name="stats_authors_author_header">Penulis</string>
+    <string name="stats_authors_title">Penulis</string>
+    <string name="stats_cities_title">Kota</string>
+    <string name="stats_regions_title">Wilayah</string>
+    <string name="stats_countries_views_header">Jumlah Tayang</string>
+    <string name="stats_countries_location_header">Lokasi</string>
+    <string name="stats_countries_title">Negara</string>
+    <string name="stats_most_viewed_top_n">Atas %d</string>
+    <string name="stats_show_all">Tampilkan Semua</string>
+    <string name="stats_most_viewed_referrer_header">Pengarah</string>
+    <string name="stats_most_viewed_title_header">Judul</string>
+    <string name="stats_most_viewed_referrers">Pengarah</string>
+    <string name="stats_most_viewed_posts_and_pages">Pos &amp; Halaman</string>
+    <string name="stats_most_viewed_title">Paling Banyak Dilihat</string>
+    <string name="stats_select_date_range">Pilih rentang tanggal</string>
+    <string name="stats_period_selector_content_description">Pilih periode statistik</string>
+    <string name="stats_period_custom">Kustom</string>
+    <string name="stats_period_last_12_months">12 bulan terakhir</string>
+    <string name="stats_period_last_6_months">6 bulan terakhir</string>
+    <string name="stats_period_last_30_days">30 hari terakhir</string>
+    <string name="stats_period_last_7_days">7 hari terakhir</string>
+    <string name="stats_period_today">Hari ini</string>
+    <string name="stats_insights_management_title">Kelola wawasan Anda untuk melihat statistik yang paling relevan saja</string>
+    <string name="stats_timeframe_hours">Jam</string>
+    <string name="scan_start_request_failed_subtitle">Jetpack Scan tidak dapat menyelesaikan pemindaian situs Anda. Harap periksa apakah situs Anda tidak aktif</string>
+    <string name="post_rs_error_update_status">Gagal memperbarui status pos</string>
+    <string name="post_rs_error_delete">Gagal menghapus pos</string>
+    <string name="post_rs_error_trash">Gagal membuang pos</string>
+    <string name="post_rs_moved_to_draft">Pos dipindahkan ke konsep</string>
+    <string name="post_rs_published">Pos diterbitkan</string>
+    <string name="post_rs_deleted">Pos dihapus permanen</string>
+    <string name="post_rs_trashed">Pos dipindahkan ke tempat sampah</string>
+    <string name="post_rs_confirm_delete_message">Tindakan ini akan menghapus pos secara permanen. Tindakan ini tidak dapat dibatalkan.</string>
+    <string name="post_rs_confirm_trash_message">Anda yakin ingin membuang pos ini?</string>
+    <string name="post_rs_failed_to_load">Gagal memuat pos</string>
+    <string name="experimental_rs_post_list_description">Tampilkan daftar pos di UI yang lebih modern untuk WordPress.com dan situs yang di-hosting sendiri dengan kata sandi aplikasi</string>
+    <string name="experimental_rs_post_list">Daftar Pos Baru</string>
+    <string name="beta_label">Beta</string>
+    <string name="stats_error_admin_url_unavailable">Tidak dapat membuka WP Admin untuk situs ini</string>
+    <string name="stats_error_parsing">Terjadi masalah saat memuat data. Coba lagi</string>
+    <string name="stats_error_network">Error jaringan. Periksa koneksi Anda dan coba lagi</string>
+    <string name="stats_error_auth">Anda tidak memiliki izin untuk melihat statistik ini</string>
+    <string name="stats_error_unknown">Terjadi error tidak terduga</string>
+    <string name="stats_error_api">Gagal memuat status</string>
+    <string name="stats_error_no_site">Tidak ada situs yang dipilih</string>
+    <string name="mlp_network_error_subtitle">Ketuk coba lagi setelah kembali online atau buat halaman kosong</string>
+    <string name="mlp_error_subtitle">Ketuk coba lagi atau buat halaman kosong</string>
+    <string name="pages_empty_published_subtitle">Mengapa tidak membuatnya?</string>
+    <string name="people_empty_list_filtered_users_button">Tambahkan pengguna</string>
+    <string name="people_empty_list_filtered_users_subtitle">Mengapa tidak menambahkannya?</string>
+    <string name="error_fetching_account">Tidak dapat mengambil akun: %s\"</string>
+    <string name="reader_empty_subscriptions">Anda belum berlangganan blog mana pun</string>
+    <string name="reader_open_in_browser">Buka di browser</string>
+    <string name="reader_err_get_post_not_authorized_signin_fallback">Anda tidak diizinkan melihat pos ini. Coba login ke WordPress.com terlebih dulu.</string>
+    <string name="reader_err_get_post_not_authorized_fallback">Anda tidak diizinkan melihat pos ini</string>
+    <string name="reader_toast_err_blog_not_found">Error: Tidak dapat menemukan blog</string>
+    <string name="error_browser_no_network">Tidak dapat memuat halaman ini</string>
+    <string name="history_empty_subtitle_post">Anda akan melihat riwayat pos ini saat melakukan perubahan</string>
+    <string name="history_empty_subtitle_page">Anda akan melihat riwayat halaman ini saat melakukan perubahan</string>
+    <string name="notifications_empty_action_comments">Bergabung dalam percakapan! Komentari pos di Pembaca.</string>
+    <string name="notifications_empty_action_all">Aktiflah! Komentari pos di Pembaca.</string>
+    <string name="more_options">Pilihan lainnya</string>
+    <string name="stats_weekly_average">rata-rata %1$s</string>
+    <string name="stats_chart_type_bars">Bilah</string>
+    <string name="stats_chart_type_lines">Garis</string>
+    <string name="post_types_screen_title">Tipe Pos</string>
+    <string name="experimental_new_stats_description">Tampilkan statistik dalam UI yang lebih modern dan canggih</string>
+    <string name="experimental_new_stats">Statistik Baru</string>
+    <string name="experimental_post_types_description">Aktifkan layar tipe pos eksperimental</string>
+    <string name="experimental_post_types">Tipe Pos</string>
+    <string name="network_requests_disable">Nonaktifkan</string>
+    <string name="network_requests_disable_tracking_description">Log yang sudah ada akan kedaluwarsa berdasarkan periode retensi. Untuk menghapus log saat ini, ketuk \"Lihat Permintaan Jaringan\" dan gunakan ikon tempat sampah sebelum menonaktifkan.</string>
+    <string name="network_requests_disable_tracking_title">Nonaktifkan Pelacakan?</string>
+    <string name="network_requests_enable">Aktifkan</string>
+    <string name="network_requests_enable_dialog_description">Log hanya disimpan di perangkat Anda dan tidak akan pernah dibagikan, kecuali Anda secara khusus membagikannya. Anda dapat menghapus log kapan pun melalui \"Lihat Permintaan Jaringan\" menggunakan ikon tempat sampah. Pilih berapa lama untuk menyimpan log.</string>
+    <string name="network_requests_retention_info">Retensi: %s</string>
+    <string name="network_requests_retention_until_cleared">Hingga Dihapus</string>
+    <string name="network_requests_retention_one_week">1 Minggu</string>
+    <string name="network_requests_retention_one_day">1 Hari</string>
+    <string name="network_requests_retention_one_hour">1 Jam</string>
+    <string name="view_network_requests">Lihat Permintaan Jaringan</string>
+    <string name="track_network_requests_description">Catat permintaan HTTP untuk pemecahan masalah. Log tetap di perangkat, kecuali Anda membagikannya.</string>
+    <string name="track_network_requests">Lacak Permintaan Jaringan</string>
+    <string name="experimental_network_debugging_disable_error_message">Pelacakan jaringan saat ini diaktifkan. Buka Bantuan dan nonaktifkan \"Lacak Permintaan Jaringan\" sebelum menonaktifkan fitur ini.</string>
+    <string name="experimental_network_debugging_disable_error_title">Nonaktifkan Pelacakan Terlebih Dahulu</string>
+    <string name="experimental_network_debugging_description">Tampilkan alat pelacakan permintaan jaringan di layar Bantuan</string>
+    <string name="experimental_network_debugging">Debug Jaringan</string>
+    <string name="site_settings_tags_empty_subtitle">Mengapa tidak membuatnya agar lebih mudah untuk menandai pos?</string>
+    <string name="posts_published_empty_subtitle">Mengapa tidak membuatnya?</string>
+    <string name="media_empty_list_subtitle">Mengapa tidak mengunggah sesuatu?</string>
+    <string name="confirm_remove_site">Hapus \"%s\" dari aplikasi?</string>
     <string name="he_support_forbidden_error">Maaf, Anda tidak diizinkan melakukan tindakan ini.</string>
     <string name="he_support_generic_error">Terjadi error. Coba lagi nanti.</string>
     <string name="he_support_send_ticket_button">Kirim</string>
     <string name="he_support_contact_email_message">Kami akan mengirimkan e-mail kepada Anda di alamat ini.</string>
     <string name="he_support_contact_information">Informasi Kontak</string>
+    <string name="he_support_site_address_placeholder">https://situsanda.com</string>
     <string name="he_support_site_address_label">Alamat Situs (Opsional)</string>
     <string name="he_support_subject_placeholder">Ringkasan singkat permasalahan Anda</string>
     <string name="he_support_subject_label">Subjek</string>
@@ -78,7 +280,7 @@ Language: id
     <string name="support_screen_ask_happiness_engineers_description">Untuk pertanyaan sulit Anda. Kami akan membalas melalui email</string>
     <string name="support_screen_ask_happiness_engineers_title">Tanya Happiness Engineer</string>
     <string name="support_screen_ask_bots_description">Dapatkan jawaban cepat untuk pertanyaan umum</string>
-    <string name="support_screen_ask_bots_title">Tanya para bot</string>
+    <string name="support_screen_ask_bots_title">Tanya Bot</string>
     <string name="support_screen_help_center_description">Dokumentasi dan Tutorial untuk membantu Anda memulai</string>
     <string name="support_screen_help_center_title">Pusat Bantuan</string>
     <string name="support_screen_how_can_we_help_title">Apa yang dapat kami bantu?</string>
@@ -86,7 +288,6 @@ Language: id
     <string name="support_screen_title">Dukungan</string>
     <string name="modern_support_description">Aktifkan pengalaman dukungan modern yang baru</string>
     <string name="modern_support">Dukungan Modern</string>
-    <string name="site_settings_use_theme_styles_summary">Jadikan editor blok terlihat seperti tema Anda</string>
     <string name="site_settings_use_theme_styles">Gunakan Gaya Tema</string>
     <string name="error_deleting_term">Terjadi error saat menghapus istilah</string>
     <string name="error_saving_term">Terjadi error saat menyimpan istilah</string>
@@ -99,6 +300,7 @@ Language: id
     <string name="term_parent_label">Induk:</string>
     <string name="term_count">Jumlah: %1$d</string>
     <string name="term_description_label">Deskripsi:</string>
+    <string name="term_slug_label">Slug:</string>
     <string name="term_name_label">Nama:</string>
     <string name="application_password_required_block_editor">Editor Blok</string>
     <string name="application_password_required_description">Agar lebih aman, gunakan kata sandi aplikasi untuk terhubung dengan situs Anda yang dihosting sendiri dan mendapatkan dukungan untuk fitur seperti %1$s.</string>
@@ -190,10 +392,11 @@ Language: id
     <string name="subscribers_filter_email_subscription">Langganan email</string>
     <string name="about_update_email_unverified">Untuk memperbarui profil, alamat email harus diverifikasi terlebih dahulu.</string>
     <string name="sort_by">Urutkan berdasarkan</string>
+    <string name="filter">Filter</string>
     <string name="application_password_not_supported_error" a8c-src-lib="module:login">Situs yang disediakan tidak mendukung autentikasi Kata Sandi Aplikasi.</string>
     <string name="application_password_title">Autentikasi menggunakan Kata Sandi Aplikasi</string>
     <string name="application_password_credentials_stored">Kredensial kata sandi aplikasi disimpan untuk %1$s</string>
-    <string name="qrcode_auth_flow_timeout_subtitle">Terlalu lama untuk mendeteksi kode. Harap coba lagi atau gunakan kamera untuk memindai kode.</string>
+    <string name="qrcode_auth_flow_timeout_subtitle">Terlalu lama untuk mendeteksi kode. Coba lagi atau gunakan aplikasi kamera untuk memindai kode.</string>
     <string name="qrcode_auth_flow_timeout_title">Waktu pemindaian habis</string>
     <string name="invite_users">Undang pengguna</string>
     <string name="cant_share_no_blog">Anda tidak bisa berbagi ke WordPress tanpa memiliki blog</string>
@@ -271,6 +474,7 @@ Language: id
     <string name="voice_to_content_processing_label">Pemrosesan</string>
     <string name="voice_to_content_error_label">Error</string>
     <string name="voice_to_content_processing">Pemrosesan</string>
+    <string name="gutenberg_native_tap_to_edit" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Ketuk untuk menyunting</string>
     <string name="voice_to_content_permissions_required_msg">Aplikasi ini perlu izin untuk mengakses mikrofon untuk merekam audio. Anda telah menolak izin ini sebelumnya. Aktifkan izin mikrofon dalam pengaturan aplikasi untuk menggunakan fitur ini.</string>
     <string name="voice_to_content_permissions_required_title">Izin Perekaman Audio Diperlukan</string>
     <string name="permission_access_media_location">Lokasi Media</string>
@@ -352,6 +556,7 @@ Language: id
     <string name="reader_preferences_screen_font_family_label">Font</string>
     <string name="reader_preferences_screen_theme_label">Skema Warna</string>
     <string name="experimental_badge">&lt;Experimental&gt;</string>
+    <string name="gutenberg_native_clear_selected_color" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Batalkan warna yang dipilih</string>
     <string name="reader_no_followed_tags_text_title">Tidak ada tag yang diikuti</string>
     <string name="reader_toast_err_tag_already_following">Anda telah mengikuti tag ini</string>
     <string name="reader_menu_reading_preferences">Preferensi Reader</string>
@@ -367,7 +572,19 @@ Language: id
     <string name="reader_preferences_screen_preview_title">Preferensi Reader</string>
     <string name="reader_filter_empty_tags_action_follow">Ikuti sebuah tag</string>
     <string name="button_read">Baca</string>
+    <string name="gutenberg_native_you_can_copy_your_post_text_in_case_your_content_is_impacted_copy" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Anda dapat menyalin teks pos seandainya konten Anda terdampak. Salin detail error untuk di-debug dan dibagikan kepada dukungan.</string>
+    <string name="gutenberg_native_the_editor_has_encountered_an_unexpected_error" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Editor mengalami error tak terduga</string>
+    <string name="gutenberg_native_tap_here_to_copy_post_text" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Ketuk di sini untuk menyalin teks pos</string>
+    <string name="gutenberg_native_tap_here_to_copy_error_details" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Ketuk di sini untuk menyalin detail error</string>
+    <string name="gutenberg_native_copy_post_text" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Salin teks pos</string>
+    <string name="gutenberg_native_copy_error_details" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Salin detail error</string>
+    <string name="gutenberg_native_button_to_copy_post_text" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Tombol untuk menyalin teks pos</string>
+    <string name="gutenberg_native_button_to_copy_error_details" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Tombol untuk menyalin detail error</string>
     <string name="editor_updating_content_failed">Gagal memperbarui konten</string>
+    <string name="gutenberg_native_video_caption_s_0141bd20" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Keterangan video. %s</string>
+    <string name="gutenberg_native_video_caption_empty_663aab49" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Keterangan video. Kosong</string>
+    <string name="gutenberg_native_edit_video_024aee6d" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Sunting video</string>
+    <string name="gutenberg_native_autoplay_may_cause_usability_issues_for_some_users" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Memutar otomatis video dapat menyebabkan masalah kemudahan penggunaan bagi beberapa pengguna.</string>
     <string name="notifications_action_mark_all_as_read">Tandai semua sebagai sudah dibaca</string>
     <string name="notifications_unread_content_description">Belum dibaca</string>
     <string name="qrcode_media_deeplink_error">Situs tidak ditemukan. Pastikan Anda login ke akun yang dimaksud.</string>
@@ -428,7 +645,13 @@ Language: id
     <string name="reader_filter_empty_blogs_list_title">Tidak ada langganan blog</string>
     <string name="reader_filter_by_tag_title">Saring berdasarkan tag</string>
     <string name="reader_filter_by_blog_title">Saring berdasarkan blog</string>
+    <string name="gutenberg_native_waiting_for_connection" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Menunggu koneksi</string>
     <string name="stats_traffic">Lalu lintas</string>
+    <string name="gutenberg_native_working_offline" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Bekerja secara Offline</string>
+    <string name="gutenberg_native_network_connection_re_established" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Koneksi internet terhubung lagi</string>
+    <string name="gutenberg_native_network_connection_lost_working_offline" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Koneksi internet terputus, bekerja secara offline</string>
+    <string name="gutenberg_native_font_size_1_s" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Ukuran Font, %1$s</string>
+    <string name="gutenberg_native_file_type_not_supported_as_a_media_file" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Jenis berkas tidak didukung sebagai berkas media.</string>
     <string name="media_cannot_be_started">Saat ini kami tidak dapat membuka media. Coba lagi nanti</string>
     <string name="domains_just_search_for_a_domain_button">Silakan cari domain</string>
     <string name="domains_upgrade_to_a_plan_button">Upgrade paket</string>
@@ -450,12 +673,16 @@ Language: id
     <string name="bloganuary_dashboard_nudge_overlay_icon_content_description">Bloganuary</string>
     <string name="bloganuary_dashboard_nudge_text">Selama bulan Januari, prompt blogging akan datang dari Bloganuary — tantangan kami untuk komunitas guna membentuk kebiasaan blogging di tahun yang baru.</string>
     <string name="bloganuary_dashboard_nudge_title_december">Bloganuary segera hadir!</string>
+    <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_your_web_bro" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Karenanya, kami menyarankan Anda untuk mengedit blok melalui browser web.</string>
+    <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_the_web_edit" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Karenanya, kami menyarankan Anda untuk mengedit blok melalui editor web.</string>
+    <string name="gutenberg_native_alternatively_you_can_flatten_the_content_by_ungrouping_the_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Atau, Anda dapat meratakan konten dengan membatalkan pengelompokan blok.</string>
     <string name="barcode_scanning_alert_dialog_permanently_denied_cta_label">Buka pengaturan</string>
     <string name="barcode_scanning_alert_dialog_dismiss_label">Batal</string>
     <string name="barcode_scanning_alert_dialog_rationale_cta_label">Izinkan</string>
     <string name="barcode_scanning_alert_dialog_permanently_denied_message">Anda telah menolak izin Kamera secara permanen. Izin diperlukan untuk memindai barcode. Harap izinkan di pengaturan aplikasi</string>
     <string name="barcode_scanning_alert_dialog_rationale_message">Izin kamera diperlukan untuk memindai barcode</string>
     <string name="barcode_scanning_alert_dialog_title">Izinkan Akses Kamera</string>
+    <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Blok bertingkat yang kedalamannya melebihi %d level mungkin tidak dapat ditampilkan dengan benar di editor seluler.</string>
     <string name="jp_migration_lets_go_button">Ayo</string>
     <string name="jp_migration_done_no_sites_message">Waktunya untuk melanjutkan perjalanan WordPress Anda di aplikasi Jetpack!</string>
     <string name="domain_management_clear_search">Hapus pencarian</string>
@@ -478,6 +705,8 @@ Language: id
     <string name="site_domain_title">Domain Situs</string>
     <string name="my_site_blogging_prompt_card_attribution_bloganuary">Dari &lt;b&gt;Bloganuary&lt;/b&gt;</string>
     <string name="post_list_toggle_author_filter">Saring berdasarkan penulis</string>
+    <string name="gutenberg_native_s_block_converted_to_blocks" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Blok \'%s\' dikonversi menjadi blok</string>
+    <string name="gutenberg_native_alternatively_you_can_convert_the_content_to_blocks" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Anda dapat mengonversi konten menjadi blok.</string>
     <string name="personalization_screen_tab_shortcuts_inactive_shortcuts">Pintasan Tidak Aktif</string>
     <string name="personalization_screen_tab_shortcuts_active_shortcuts">Pintasan Aktif</string>
     <string name="personalization_screen_shortcuts_tab_title">Pintasan</string>
@@ -508,6 +737,11 @@ Language: id
     <string name="reader_secondary_bookmarked">Tersimpan</string>
     <string name="reader_secondary_bookmark">Simpan</string>
     <string name="reader_discover_recommended_header_new">Anda mungkin suka</string>
+    <string name="gutenberg_native_ungroup_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Batalkan pengelompokan blok</string>
+    <string name="gutenberg_native_tap_here_to_show_more_details" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Ketuk di sini untuk menampilkan detail selengkapnya.</string>
+    <string name="gutenberg_native_synced_patterns" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Pola tersinkron</string>
+    <string name="gutenberg_native_deeply_nested_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Blok bertingkat terlalu dalam</string>
+    <string name="gutenberg_native_block_cannot_be_rendered_because_it_is_deeply_nested_tap_here_for" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Blok tidak dapat ditampilkan karena bertingkat terlalu dalam. Ketuk di sini untuk detail selengkapnya.</string>
     <string name="pages_no_site_something_went_wrong">Ups, ada yang salah. Silakan coba lagi nanti.</string>
     <string name="sharing_connect_via_web_warning_positive_button">Kunjungi situs</string>
     <string name="my_site_dashboard_no_cards_message_description">Ketuk tombol personalisasi untuk menampilkan lebih banyak kartu.</string>
@@ -533,12 +767,15 @@ Language: id
     <string name="blaze_campaigns_card_more_menu_view_all_campaigns">Lihat semua kampanye</string>
     <string name="dashboard_activity_card_menu_all_activity">Semua aktivitas</string>
     <string name="dashboard_pages_card_more_menu_all_pages">Semua halaman</string>
+    <string name="gutenberg_native_choose_a_file" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Pilih berkas</string>
+    <string name="gutenberg_native_add_image_or_video" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Tambahkan gambar atau video</string>
     <string name="my_site_post_card_menu_view_all_scheduled_posts">Lihat semua pos terjadwal</string>
     <string name="my_site_post_card_menu_view_all_drafts">Lihat semua konsep</string>
     <string name="my_site_todays_stats_menu_view_stats">Lihat statistik</string>
     <string name="my_site_dashboard_card_more_menu_hide_card">Sembunyikan ini</string>
     <string name="contact_support_first_message_hint">Jika saya tidak mampu menjawab pertanyaan Anda, saya akan membantu Anda membuka tiket dukungan dengan tim kami.</string>
     <string name="contact_support_first_message_hi">Hai, saya adalah Asisten AI Jetpack.</string>
+    <string name="gutenberg_native_access_this_paywall_block_on_your_web_browser_for_advanced_settin" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Akses blok Paywall di browser untuk pengaturan lanjutan.</string>
     <string name="contact_support_bot_ticket_comment_answer">Jawaban:</string>
     <string name="contact_support_bot_ticket_comment_question">Pertanyaan:</string>
     <string name="contact_support_bot_ticket_comment_start">Transkrip Bot Seluler Jetpack:</string>
@@ -568,6 +805,10 @@ Language: id
     <string name="post_settings_jetpack_social_share_message_title">Sesuaikan pesan</string>
     <string name="post_settings_jetpack_social_connect_not_now_button">Lain kali</string>
     <string name="post_settings_jetpack_social_connect_social_profiles_button">Hubungkan akun</string>
+    <string name="gutenberg_native_insert_video_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Masukkan Blok Video</string>
+    <string name="gutenberg_native_insert_image_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Masukkan Blok Gambar</string>
+    <string name="gutenberg_native_insert_gallery_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Masukkan Blok Galeri</string>
+    <string name="gutenberg_native_insert_audio_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Masukkan Blok Audio</string>
     <string name="campaign_listing_page_no_campaigns_button_text">Buat</string>
     <string name="campaign_listing_page_no_campaigns_message_description">Anda belum membuat kampanye. Klik buat untuk memulai.</string>
     <string name="campaign_listing_page_no_campaigns_message_title">Anda tidak memiliki kampanye</string>
@@ -592,6 +833,9 @@ Language: id
     <string name="post_settings_jetpack_social_subscribe_share_more">Langganan sekarang untuk kesempatan berbagi lebih banyak</string>
     <string name="post_settings_jetpack_social_connect_social_profiles_message">Tingkatkan lalu lintas dengan membagikan pos secara otomatis kepada teman-teman di media sosial.</string>
     <string name="post_settings_jetpack_social_header">Berbagi di Media Sosial</string>
+    <string name="gutenberg_native_s_detached" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">%s terpisah</string>
+    <string name="gutenberg_native_editing_synced_patterns_is_not_yet_supported_on_s_for_ios" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Menyunting pola tersinkron belum didukung di %s untuk iOS</string>
+    <string name="gutenberg_native_editing_synced_patterns_is_not_yet_supported_on_s_for_android" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Menyunting pola tersinkron belum didukung di %s untuk Android</string>
     <string name="privacy_banner_error_save">Terjadi error saat menyimpan pilihan privasi Anda.</string>
     <string name="privacy_banner_save">Simpan</string>
     <string name="privacy_banner_settings">Pengaturan</string>
@@ -601,6 +845,8 @@ Language: id
     <string name="privacy_banner_description">Privasi Anda selalu kami utamakan. Kami menggunakan, menyimpan, dan memproses data pribadi Anda untuk mengoptimalkan aplikasi kami (dan pengalaman Anda) dengan beragam cara. Sebagian penggunaan data Anda sangat kami butuhkan agar aplikasi berjalan optimal, dan sisanya dapat Anda sesuaikan dari Pengaturan.</string>
     <string name="tabbar_accessibility_label_me">Saya. Kelola detail profil Anda.</string>
     <string name="social_item_message_title">Pesan</string>
+    <string name="gutenberg_native_block_ungrouped" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Blok tidak dikelompokkan</string>
+    <string name="gutenberg_native_block_grouped" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Blok dikelompokkan</string>
     <string name="dashboard_card_plans_checkout_success_info">Domain Anda memerlukan waktu hingga 30 menit untuk mulai berfungsi dengan benar.</string>
     <string name="dashboard_card_plans_checkout_success_subtitle">Domain baru Anda &lt;b&gt;%s&lt;/b&gt; sedang disiapkan.</string>
     <string name="dashboard_card_plans_checkout_success_title">Semua siap!</string>
@@ -627,6 +873,7 @@ Language: id
     <string name="wp_jp_static_poster_message">Aplikasi Jetpack memiliki semua fungsionalitas aplikasi WordPress, dan sekarang memiliki akses eksklusif ke Statistik, Pembaca, Notifikasi, dan lainnya.</string>
     <string name="wp_jp_static_poster_title_plural">Gunakan WordPress dengan %s di aplikasi\u00A0Jetpack.</string>
     <string name="wp_jp_static_poster_title">Gunakan WordPress dengan %s di aplikasi\u00A0Jetpack.</string>
+    <string name="gutenberg_native_unlabeled_color_s" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Warna tanpa label. %s</string>
     <string name="dashboard_activity_card_title">Aktivitas terbaru</string>
     <string name="site_creation_search_domain_example_body">Seperti contoh di atas, domain mengizinkan Anda menemukan dan mengunjungi situs Anda dari web browser.</string>
     <string name="site_creation_search_domain_example_title">NamaSitusAnda.com</string>
@@ -638,6 +885,13 @@ Language: id
     <string name="new_site_creation_preview_subtitle_paid">Kami telah mengirim e-mail resi Anda. %s</string>
     <string name="notifications_disabled_permission_dialog">Pemberitahuan aplikasi telah dinonaktifkan. Ketuk di sini untuk mengaktifkannya.</string>
     <string name="jp_migration_done_delete_wp_message">Kami sarankan untuk &lt;b&gt;menghapus instalan aplikasi WordPress&lt;/b&gt; di perangkat Anda guna mencegah terjadinya konflik data.</string>
+    <string name="gutenberg_native_remove_blocks" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Hapus blok</string>
+    <string name="gutenberg_native_privacy_and_rating" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Privasi dan rating</string>
+    <string name="gutenberg_native_playback_settings" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Pengaturan Playback</string>
+    <string name="gutenberg_native_playback_bar_color" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Warna Bar Playback</string>
+    <string name="gutenberg_native_manual" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Manual</string>
+    <string name="gutenberg_native_dynamic" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Dinamis</string>
+    <string name="gutenberg_native_describe_the_purpose_of_the_image_leave_empty_if_decorative" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Jelaskan maksud gambar tersebut. Biarkan kosong jika hanya berupa hiasan.</string>
     <string name="dashboard_pages_card_create_another_page_description">Mulai dengan bespoke, tampilan ramah perangkat seluler</string>
     <string name="dashboard_pages_card_create_another_page_button">Buat Halaman Lain</string>
     <string name="dashboard_pages_card_no_pages_create_page_button">Tambahkan Halaman ke situs Anda</string>
@@ -701,6 +955,7 @@ Language: id
     <string name="tickets">Tiket</string>
     <string name="free">Gratis</string>
     <string name="help_buttons_screen_title">Bantuan</string>
+    <string name="gutenberg_native_blocks_menu" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Menu blok</string>
     <string name="promote_blaze_card_sub_title">Tunjukkan karya Anda di jutaan situs.</string>
     <string name="promote_blaze_card_title">Promosikan konten Anda dengan Blaze</string>
     <string name="jetpack_full_plugin_install_onboarding_dismiss_button_content_description">Tutup</string>
@@ -790,6 +1045,7 @@ Language: id
     <string name="blogging_prompts_list_answered_prompt">✓ Terjawab</string>
     <string name="blogging_prompts_list_title">Prompt</string>
     <string name="close_desc">tutup</string>
+    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_this_block_separately_by_ta" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Atau, blok ini bisa dipisahkan lalu disunting secara tersendiri dengan mengetuk \"Pisahkan\".</string>
     <string name="dlg_confirm_delete_category">Hapus Kategori \'%s\' secara permanen?</string>
     <string name="deleting_cat_success">Kategori berhasil dihapus</string>
     <string name="deleting_cat_failed">Gagal menghapus kategori</string>
@@ -829,6 +1085,8 @@ Language: id
     <string name="jp_migration_notifications_subtitle">Anda akan tetap menerima pemberitahuan tersebut, tetapi dari aplikasi Jetpack.</string>
     <string name="wordpress_help_center_button">Pusat bantuan WordPress</string>
     <string name="support_title">Dukungan</string>
+    <string name="notification_disable_broadcast_permission_desc">Mengizinkan aplikasi untuk menonaktifkan pemberitahuan WordPress.</string>
+    <string name="notification_disable_broadcast_permission_label">nonaktifkan pemberitahuan WordPress</string>
     <string name="jp_migration_help_button">Butuh bantuan?</string>
     <string name="jp_migration_continue_button">Lanjutkan</string>
     <string name="jp_migration_welcome_site_found_message">Kami menemukan situs Anda. Lanjutkan memindahkan semua data Anda dan masuk ke Jetpack secara otomatis.</string>
@@ -841,6 +1099,8 @@ Language: id
     <string name="post_settings_page_attributes">Atribut Halaman</string>
     <string name="about_automattic_contribute_item_title" a8c-src-lib="about">Kontribusi</string>
     <string name="about_news">Berita</string>
+    <string name="login_prologue_revamped_content_description_wordpress_icon">Ikon WordPress</string>
+    <string name="login_prologue_revamped_tagline">Tulis, edit, dan publikasikan dari mana pun.</string>
     <string name="error_fetch_authors_list">Tidak dapat mengambil penulis</string>
     <string name="post_settings_author">Penulis</string>
     <string name="connection_service_label">Bagikan pos ke %s</string>
@@ -855,10 +1115,15 @@ Language: id
     <string name="wp_jetpack_powered_reader_powered_by_jetpack">Pembaca didukung oleh Jetpack</string>
     <string name="wp_jetpack_powered_features">Aplikasi Jetpack yang baru memiliki Statistik, Reader, Notifikasi, dan fitur-fitur lainnya yang membuat WordPress Anda lebih andal.</string>
     <string name="wp_jetpack_powered_better_with_jetpack">WordPress lebih andal dengan Jetpack</string>
+    <string name="gutenberg_native_upgrade_your_plan_to_use_video_covers" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Upgrade paket Anda untuk menggunakan sampul video</string>
+    <string name="gutenberg_native_upgrade_your_plan_to_upload_audio" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Upgrade paket Anda untuk mengunggah audio</string>
+    <string name="gutenberg_native_jetpack_powered" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Didukung Jetpack</string>
+    <string name="gutenberg_native_invalid_url" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">URL tidak valid.</string>
     <string name="wp_jetpack_continue_to_notifications">Lanjutkan ke Pemberitahuan</string>
     <string name="wp_jetpack_continue_to_stats">Lanjutkan ke Statistik</string>
     <string name="wp_jetpack_continue_to_reader">Lanjutkan ke Pembaca</string>
     <string name="wp_jetpack_get_new_jetpack_app">Coba aplikasi Jetpack baru</string>
+    <string name="gutenberg_native_problem_displaying_block_tap_to_attempt_block_recovery" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Terjadi masalah saat menampilkan blok. \nKetuk untuk mencoba pemulihan blok.</string>
     <string name="weekly_roundup_notification_text_views_and_comments">Minggu lalu Anda mendapatkan %1$s tayangan dan %2$s komentar</string>
     <string name="weekly_roundup_notification_text_views_and_likes">Minggu lalu Anda mendapatkan %1$s tayangan dan %2$s suka</string>
     <string name="weekly_roundup_notification_text_views_only">Minggu lalu Anda mendapatkan %1$s tayangan.</string>
@@ -867,12 +1132,9 @@ Language: id
     <string name="wp_jetpack_powered">Didukung Jetpack</string>
     <string name="qrcode_auth_flow_content_description">Gambar menunjukkan pemindaian kode login sedang berlangsung</string>
     <string name="qrcode_auth_flow_error_content_description">Gambar menunjukkan terjadinya error</string>
-    <string name="qrcode_auth_flow_error_auth_failed_subtitle">Tidak dapat login menggunakan kode ini. Ketuk tombol Pindai Lagi untuk memindai ulang kode.</string>
     <string name="qrcode_auth_flow_error_auth_failed_title">Autentikasi Gagal</string>
-    <string name="qrcode_auth_flow_error_expired_subtitle">Kode login telah kedaluwarsa. Ketuk tombol Pindai Lagi untuk memindai ulang kode.</string>
     <string name="qrcode_auth_flow_error_expired_title">Kode login kedaluwarsa</string>
-    <string name="qrcode_auth_flow_error_invalid_data_subtitle">Kode login yang dipindai tidak dapat divalidasi. Ketuk tombol Pindai Lagi untuk memindai ulang kode.</string>
-    <string name="qrcode_auth_flow_error_invalid_data_title">Tidak dapat memvalidasi kode login</string>
+    <string name="qrcode_auth_flow_error_invalid_data_subtitle">Tidak dapat memvalidasi kode login yang dipindai</string>
     <string name="qrcode_auth_flow_error_no_connection_subtitle">Diperlukan koneksi internet yang aktif untuk memindai kode login</string>
     <string name="qrcode_auth_flow_error_no_connection_title">Tidak ada koneksi.</string>
     <string name="qrcode_auth_flow_scan_again">Pindai Lagi</string>
@@ -910,9 +1172,15 @@ Language: id
     <string name="stats_action_card_blogging_reminders_title">Setel pengingat blogging Anda</string>
     <string name="stats_action_card_grow_audience_button_label">Periksa kursus</string>
     <string name="stats_action_card_grow_audience_title">Perbanyak audiens Anda</string>
+    <string name="gutenberg_native_you_can_also_rearrange_blocks_by_tapping_a_block_and_then_tapping" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Anda juga dapat mengatur ulang blok dengan mengetuk blok lalu mengetuk anak panah atas dan bawah yang muncul di sisi kiri bawah blok untuk memindahkannya ke atas atau ke bawah.</string>
+    <string name="gutenberg_native_image_file_not_found" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Berkas gambar tidak ditemukan.</string>
+    <string name="gutenberg_native_drag_drop_makes_rearranging_blocks_a_breeze_press_and_hold_on_a_b" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Seret &amp; lepaskan memudahkan pengaturan ulang blok. Klik dan tahan blok, kemudian seret blok tersebut ke lokasi baru lalu lepaskan.</string>
+    <string name="gutenberg_native_drag_drop" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Seret &amp; lepas</string>
+    <string name="gutenberg_native_arrow_buttons" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Tombol panah</string>
+    <string name="gutenberg_native_1_s_currently_selected_2_s" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">%1$s. Pilihan saat ini: %2$s</string>
     <string name="me_btn_scan_login_code">Pindai Kode Login</string>
     <string name="stats_insights_likes_guide_card">⭐️ Artikel terbaru Anda %1$s telah menerima %2$s suka.</string>
-    <string name="stats_most_popular_percent_views_empty">Aktivitas tidak cukup. Periksa lagi nanti saat situs Anda lebih ramai pengunjung!</string>
+    <string name="stats_most_popular_percent_views_empty">Aktivitas tidak cukup. Periksa lagi saat situs Anda lebih ramai pengunjung!</string>
     <string name="stats_total_subscribers_content_description">%1$s, %2$s%% dari total pelanggan</string>
     <string name="stats_value_percent">%1$s (%2$s%%)</string>
     <string name="photo_picker_video_thumbnail_content_description">Gambar Poster Video</string>
@@ -953,31 +1221,31 @@ Language: id
     <string name="new_site_creation_site_name_title">Nama situs</string>
     <string name="my_site_todays_stats_get_more_views_message">Ingin mengembangkan audiens Anda? Baca &lt;a href=\"%1$s\"&gt;petunjuk terbaik kami&lt;/a&gt;.</string>
     <string name="stats_insights_views_and_visitors">Kunjungan &amp; Pengunjung</string>
-    <string name="featured_image_removed_notice" a8c-src-lib="module:editor">Hapus sebagai gambar andalan</string>
-    <string name="featured_image_confirmation_notice" a8c-src-lib="module:editor">Atur sebagai gambar andalan</string>
-    <string name="featured_image_replace_dialog_cancel" a8c-src-lib="module:editor">Pertahankan</string>
-    <string name="featured_image_replace_dialog_confirm" a8c-src-lib="module:editor">Ganti gambar andalan</string>
-    <string name="featured_image_replace_dialog_description" a8c-src-lib="module:editor">Anda sudah memiliki kumpulan gambar unggulan. Apakah Anda ingin menggantinya dengan gambar baru?</string>
-    <string name="featured_image_replace_dialog_title" a8c-src-lib="module:editor">Ganti gambar andalan saat ini?</string>
-    <string name="dialog_dismiss_try_block_editor" translatable="true" a8c-src-lib="module:editor">Tutup</string>
-    <string name="dialog_body_try_block_editor" translatable="true" a8c-src-lib="module:editor">Kami akan segera menghapus editor klasik untuk pos baru tetapi hal ini tidak akan memengaruhi proses pengeditan pos atau halaman yang sudah ada. Mulailah dengan mengaktifkan Editor Blok sekarang di pengaturan situs.</string>
-    <string name="dialog_title_try_block_editor" translatable="true" a8c-src-lib="module:editor">Coba Editor Blok yang baru</string>
-    <string name="menu_toolbar_title" a8c-src-lib="module:editor">Edit %s blok </string>
-    <string name="long_post_dlg_saving" a8c-src-lib="module:editor">Menyimpan</string>
-    <string name="retry_failed_upload_remove" a8c-src-lib="module:editor">Hapus upload</string>
-    <string name="retry_failed_upload_yes" a8c-src-lib="module:editor">Coba lagi</string>
-    <string name="retry_failed_upload_title" a8c-src-lib="module:editor">Tidak dapat upload file</string>
-    <string name="stop_upload_dialog_button_no" a8c-src-lib="module:editor">Tidak</string>
-    <string name="stop_upload_dialog_button_yes" a8c-src-lib="module:editor">Ya</string>
-    <string name="dialog_button_cancel" a8c-src-lib="module:editor">Batalkan</string>
-    <string name="dialog_button_ok" a8c-src-lib="module:editor">Oke</string>
-    <string name="toast_content_info_editor_not_ready" a8c-src-lib="module:editor">Editor sedang memuat</string>
-    <string name="toast_content_info_failed" a8c-src-lib="module:editor">Gagal untuk mendapatkan struktur konten</string>
-    <string name="dialog_content_info_body" a8c-src-lib="module:editor">Blok: %1$d\nkata: %2$d\nKarakter: %3$d</string>
-    <string name="dialog_content_info_title" a8c-src-lib="module:editor">Struktur konten</string>
-    <string name="media_bar_description_library" a8c-src-lib="module:editor">Pilih media dari Pustaka Media WordPress</string>
-    <string name="media_bar_description_gallery" a8c-src-lib="module:editor">Pilih media dari galeri</string>
-    <string name="media_bar_description_camera" a8c-src-lib="module:editor">Ambil foto atau video dengan kamera</string>
+    <string name="featured_image_removed_notice" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Hapus sebagai gambar andalan</string>
+    <string name="featured_image_confirmation_notice" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Atur sebagai gambar andalan</string>
+    <string name="featured_image_replace_dialog_cancel" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Pertahankan</string>
+    <string name="featured_image_replace_dialog_confirm" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Ganti gambar andalan</string>
+    <string name="featured_image_replace_dialog_description" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Anda sudah memiliki kumpulan gambar unggulan. Apakah Anda ingin menggantinya dengan gambar baru?</string>
+    <string name="featured_image_replace_dialog_title" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Ganti gambar andalan saat ini?</string>
+    <string name="dialog_dismiss_try_block_editor" translatable="true" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Tutup</string>
+    <string name="dialog_body_try_block_editor" translatable="true" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Kami akan segera menghapus editor klasik untuk pos baru tetapi hal ini tidak akan memengaruhi proses pengeditan pos atau halaman yang sudah ada. Mulailah dengan mengaktifkan Editor Blok sekarang di pengaturan situs.</string>
+    <string name="dialog_title_try_block_editor" translatable="true" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Coba Editor Blok yang baru</string>
+    <string name="menu_toolbar_title" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Edit %s blok </string>
+    <string name="long_post_dlg_saving" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Menyimpan</string>
+    <string name="retry_failed_upload_remove" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Hapus upload</string>
+    <string name="retry_failed_upload_yes" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Coba lagi</string>
+    <string name="retry_failed_upload_title" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Tidak dapat upload file</string>
+    <string name="stop_upload_dialog_button_no" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Tidak</string>
+    <string name="stop_upload_dialog_button_yes" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Ya</string>
+    <string name="dialog_button_cancel" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Batalkan</string>
+    <string name="dialog_button_ok" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Oke</string>
+    <string name="toast_content_info_editor_not_ready" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Editor sedang memuat</string>
+    <string name="toast_content_info_failed" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Gagal untuk mendapatkan struktur konten</string>
+    <string name="dialog_content_info_body" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Blok: %1$d\nkata: %2$d\nKarakter: %3$d</string>
+    <string name="dialog_content_info_title" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Struktur konten</string>
+    <string name="media_bar_description_library" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Pilih media dari Pustaka Media WordPress</string>
+    <string name="media_bar_description_gallery" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Pilih media dari galeri</string>
+    <string name="media_bar_description_camera" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Ambil foto atau video dengan kamera</string>
     <string name="blogging_prompts_onboarding_card_prompt">Berperanlah dalam film kehidupan Anda.</string>
     <string name="blogging_prompts_onboarding_remind_me">Ingatkan saya</string>
     <string name="blogging_prompts_onboarding_try_it_now">Coba sekarang</string>
@@ -1028,6 +1296,9 @@ Language: id
     <string name="my_site_blogging_prompt_card_answer_prompt">Menjawab prompt</string>
     <string name="my_site_blogging_prompt_card_title">Prompt</string>
     <string name="my_site_all_tab_title">Semua</string>
+    <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a_a31656b3" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Kombinasi warna ini mungkin sulit dibaca. Coba gunakan warna latar belakang yang lebih terang dan/atau warna teks yang lebih gelap.</string>
+    <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Kombinasi warna ini mungkin sulit dibaca. Coba gunakan warna latar belakang yang lebih gelap dan/atau warna teks yang lebih terang.</string>
+    <string name="gutenberg_native_failed_to_insert_media_tap_for_more_info" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Gagal menyisipkan media.\nKetuk untuk info selengkapnya.</string>
     <string name="new_site_creation_intents_header_subtitle">Pilih topik dari daftar berikut atau ketik sendiri.</string>
     <string name="new_site_creation_intents_header_title">Apa isi situs Anda?</string>
     <string name="notification_channel_weekly_roundup_title">Ringkasan Mingguan</string>
@@ -1048,21 +1319,65 @@ Language: id
     <string name="reader_comment_menu_trash">Pindahkan ke Tong Sampah</string>
     <string name="reader_comment_menu_spam">Tandai sebagai Spam</string>
     <string name="reader_comment_menu_unapprove">Tolak</string>
+    <string name="gutenberg_native_tiled_gallery_settings" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Pengaturan galeri tampilan kotak</string>
+    <string name="gutenberg_native_navigates_to_layout_selection_screen" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Buka layar pemilihan tata letak</string>
+    <string name="gutenberg_native_gallery_style" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Gaya galeri</string>
     <string name="sharing_connect_via_web_warning_message">Anda dapat menghubungkan akun %s Anda di situs WordPress.com. Setelah selesai, kembali ke aplikasi untuk mengubah pengaturan Sosial.</string>
-    <string name="about_automattic_work_with_us_item_subtitle" a8c-src-lib="about">Bekerja dari Mana Saja</string>
-    <string name="about_automattic_work_with_us_item_title" a8c-src-lib="about">Berkarya Bersama Kami</string>
+    <string name="about_automattic_app_icon_description" tools:ignore="UnusedResources" a8c-src-lib="about">Ikon Aplikasi</string>
+    <string name="about_automattic_back_icon_description" tools:ignore="UnusedResources" a8c-src-lib="about">Ikon kembali</string>
+    <string name="about_automattic_logo_description" tools:ignore="UnusedResources" a8c-src-lib="about">Logo Automattic</string>
+    <string name="about_automattic_wordpress" tools:ignore="UnusedResources" a8c-src-lib="about">WordPress</string>
+    <string name="about_automattic_woocommerce" tools:ignore="UnusedResources" a8c-src-lib="about">WooCommerce</string>
+    <string name="about_automattic_tumblr" tools:ignore="UnusedResources" a8c-src-lib="about">Tumblr</string>
+    <string name="about_automattic_simplenote" tools:ignore="UnusedResources" a8c-src-lib="about">Simplenote</string>
+    <string name="about_automattic_pocketcasts" tools:ignore="UnusedResources" a8c-src-lib="about">Pocket Casts</string>
+    <string name="about_automattic_jetpack" tools:ignore="UnusedResources" a8c-src-lib="about">Jetpack</string>
+    <string name="about_automattic_dayone" tools:ignore="UnusedResources" a8c-src-lib="about">Day One</string>
+    <string name="about_automattic_source_code_item_title" tools:ignore="UnusedResources" a8c-src-lib="about">Kode Sumber</string>
+    <string name="about_automattic_privacy_policy_item_title" tools:ignore="UnusedResources" a8c-src-lib="about">Kebijakan Privasi</string>
+    <string name="about_automattic_terms_of_service_item_title" tools:ignore="UnusedResources" a8c-src-lib="about">Syarat Layanan</string>
+    <string name="about_automattic_work_with_us_item_subtitle" tools:ignore="UnusedResources" a8c-src-lib="about">Bekerja dari Mana Saja</string>
+    <string name="about_automattic_work_with_us_item_title" tools:ignore="UnusedResources" a8c-src-lib="about">Berkarya Bersama Kami</string>
+    <string name="about_automattic_family_item_title" tools:ignore="UnusedResources" a8c-src-lib="about">Keluarga Automattic</string>
+    <string name="about_automattic_legal_and_more_item_title" tools:ignore="UnusedResources" a8c-src-lib="about">Informasi Hukum dan Lainnya</string>
+    <string name="about_automattic_twitter_item_title" tools:ignore="UnusedResources" a8c-src-lib="about">Twitter</string>
+    <string name="about_automattic_instagram_item_title" tools:ignore="UnusedResources" a8c-src-lib="about">Instagram</string>
+    <string name="about_automattic_rate_us_item_title" tools:ignore="UnusedResources" a8c-src-lib="about">Beri Rating</string>
+    <string name="about_automattic_share_with_friends_item_title" tools:ignore="UnusedResources" a8c-src-lib="about">Bagikan dengan Teman</string>
+    <string name="gutenberg_native_you_can_edit_this_block_using_the_web_version_of_the_editor" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Anda dapat mengedit blok ini menggunakan editor versi web.</string>
+    <string name="gutenberg_native_open_jetpack_security_settings" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Buka pengaturan Jetpack Security</string>
+    <string name="gutenberg_native_note_you_must_allow_wordpress_com_login_to_edit_this_block_in_the" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Catatan: Anda harus mengizinkan login WordPress.com untuk mengedit blok ini di editor seluler.</string>
+    <string name="gutenberg_native_note_layout_may_vary_between_themes_and_screen_sizes" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Catatan: Tata letak dapat bervariasi antara tema dan ukuran layar</string>
+    <string name="gutenberg_native_address_settings" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Pengaturan Alamat</string>
+    <string name="gutenberg_native_add_media" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">TAMBAHKAN MEDIA</string>
     <string name="my_site_error_card_subtitle">Saat ini, kami mengalami masalah saat memuat data situs Anda.</string>
     <string name="my_site_error_card_title">Sejumlah data belum dimuat</string>
     <string name="my_site_dashboard_stale_message">Dasbor belum diperbarui. Harap periksa koneksi internet Anda lalu tarik layar untuk menyegarkan.</string>
     <string name="my_site_dashboard_update_error">Tidak dapat memperbarui dasbor.</string>
     <string name="error_media_video_duration_exceeds_limit">Video tidak terunggah! Diperlukan paket berbayar untuk mengunggah video berdurasi lebih dari 5 menit.</string>
+    <string name="about_automattic_acknowledgements_item_title" tools:ignore="UnusedResources" a8c-src-lib="about">Pernyataan</string>
+    <string name="about_automattic_california_privacy_notice_item_title" tools:ignore="UnusedResources" a8c-src-lib="about">Pemberitahuan Privasi untuk California</string>
+    <string name="about_automattic_version_label" tools:ignore="UnusedResources" a8c-src-lib="about">Versi %1$s</string>
+    <string name="about_automattic_acknowledgements_page_title" tools:ignore="UnusedResources" a8c-src-lib="about">Pernyataan</string>
+    <string name="about_automattic_legal_page_title" tools:ignore="UnusedResources" a8c-src-lib="about">Informasi Hukum dan Lainnya</string>
+    <string name="about_automattic_main_page_title" tools:ignore="UnusedResources" a8c-src-lib="about">Tentang %1$s</string>
     <string name="about_blog">Blog</string>
+    <string name="gutenberg_native_the_basics" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Dasar-dasar</string>
+    <string name="gutenberg_native_selected_default" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Terpilih: Default</string>
+    <string name="gutenberg_native_more_support_options" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Pilihan dukungan lainnya</string>
+    <string name="gutenberg_native_get_support" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Dapatkan dukungan</string>
+    <string name="gutenberg_native_font_size" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Ukuran Font</string>
+    <string name="gutenberg_native_double_tap_to_select_font_size" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Ketuk dua kali untuk memilih ukuran font</string>
+    <string name="gutenberg_native_double_tap_to_select_default_font_size" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Ketuk dua kali untuk memilih ukuran font default</string>
+    <string name="gutenberg_native_contact_support" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Hubungi dukungan</string>
     <string name="reader_comments_follow_conversation">Ikuti Percakapan</string>
     <string name="reader_comments_be_first_to_comment">Jadilah yang pertama memberi komentar</string>
     <string name="reader_comments_view_all">Lihat semua komentar</string>
     <string name="reader_comments_post_fetch_failure">Terjadi error saat memuat data pos</string>
     <string name="reader_comments_fetch_failure">Terjadi error saat memuat komentar</string>
     <string name="reader_btn_follow_conversation_settings">Pengaturan untuk ikuti percakapan</string>
+    <string name="gutenberg_native_from_clipboard" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Dari papan klip</string>
+    <string name="gutenberg_native_copy_url_from_the_clipboard_s" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Salin URL dari papan klip, %s</string>
     <string name="me_btn_about">Tentang WordPress</string>
     <string name="menu_visual_mode_switched_notice">Beralih ke Editor Visual</string>
     <string name="menu_html_mode_switched_notice">Beralih ke Editor Kode</string>
@@ -1073,6 +1388,7 @@ Language: id
     <string name="my_site_post_card_scheduled_title">Pos terjadwal mendatang</string>
     <string name="my_site_post_card_draft_title">Buat pos konsep</string>
     <string name="domain_suggestions_list_item_cost_free">&lt;span style=\"color:#008000;\"&gt;Gratis untuk tahun pertama &lt;/span&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%s /year&lt;/s&gt;&lt;/span&gt;</string>
+    <string name="gutenberg_native_create_link" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Buat tautan</string>
     <string name="domains_suggestions_select_domain">Pilih domain</string>
     <string name="domains_title">Domain</string>
     <string name="post_status_sticky">Lekat</string>
@@ -1108,7 +1424,11 @@ Language: id
     <string name="comment_edit_comment">Komentar</string>
     <string name="comment_edit_user_name">Nama</string>
     <string name="comment_edit_menu_done">Selesai</string>
+    <string name="gutenberg_native_embed_block_previews_are_coming_soon" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Pratinjau blok sematan akan segera hadir</string>
     <string name="weekly_roundup">Ringkasan Mingguan</string>
+    <string name="gutenberg_native_embed_options" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Pilihan sematan</string>
+    <string name="gutenberg_native_double_tap_to_view_embed_options" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Ketuk dua kali untuk melihat pilihan sematan.</string>
+    <string name="gutenberg_native_line_height" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Ketinggian Baris</string>
     <string name="domains_free_plan_get_your_domain_title">Dapatkan domain Anda</string>
     <string name="recommend_app_generic_get_template_error">Terjadi error yang tidak diketahui saat memuat templat rekomendasikan aplikasi</string>
     <string name="recommend_app_bad_format_response">Respons yang diterima tidak valid</string>
@@ -1120,6 +1440,31 @@ Language: id
     <string name="blogging_reminders_notification_time">Waktu pemberitahuan</string>
     <string name="blogging_reminders_epilogue_body_everyday_with_time">Anda akan mendapat pengingat blogging &lt;b&gt;setiap hari&lt;/b&gt; pada &lt;b&gt;%s&lt;/b&gt;.</string>
     <string name="blogging_reminders_site_settings_label">%1$s seminggu pada %2$s</string>
+    <string name="gutenberg_native_text_formatting_controls_are_located_within_the_toolbar_positione" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Kontrol pemformatan teks terletak pada bilah peralatan yang ada di atas keyboard saat menyunting blok teks</string>
+    <string name="gutenberg_native_selected_s" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Terpilih: %s</string>
+    <string name="gutenberg_native_select_a_color_above" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Pilih warna di atas</string>
+    <string name="gutenberg_native_navigates_to_select_s" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Navigasikan untuk memilih %s</string>
+    <string name="gutenberg_native_move_blocks" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Pindahkan blok</string>
+    <string name="gutenberg_native_how_to_edit_your_post" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Cara menyunting pos</string>
+    <string name="gutenberg_native_how_to_edit_your_page" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Cara menyunting halaman</string>
+    <string name="gutenberg_native_customize_blocks" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Sesuaikan blok</string>
+    <string name="gutenberg_native_changes_to_featured_image_will_not_be_affected_by_the_undo_redo_b" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Perubahan pada gambar andalan tidak akan terpengaruh oleh tombol undo/redo.</string>
+    <string name="gutenberg_native_applies_the_setting" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Menerapkan pengaturan</string>
+    <string name="gutenberg_native_welcome_to_the_world_of_blocks" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Selamat datang di dunia blok</string>
+    <string name="gutenberg_native_to_remove_a_block_select_the_block_and_click_the_three_dots_in_th" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Untuk menghapus blok, pilih blok dan klik titik tiga yang ada di kanan bawah blok untuk melihat pengaturan. Dari sana, pilih opsi untuk menghapus blok.</string>
+    <string name="gutenberg_native_some_blocks_have_additional_settings_tap_the_settings_icon_on_the" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Beberapa blok memiliki beberapa pengaturan tambahan. Ketuk ikon pengaturan di kanan bawah blok untuk melihat opsi lainnya.</string>
+    <string name="gutenberg_native_s_block_newly_available" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Blok %s, baru tersedia</string>
+    <string name="gutenberg_native_rich_text_editing" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Mengedit rich text</string>
+    <string name="gutenberg_native_once_you_become_familiar_with_the_names_of_different_blocks_you_c" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Setelah akrab dengan berbagai nama blok, Anda dapat menambahkan blok dengan mengetik tanda garis miring diikuti nama blok – contohnya, /gambar atau /judul.</string>
+    <string name="gutenberg_native_make_your_content_stand_out_by_adding_images_gifs_videos_and_embe" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Tonjolkan konten Anda dengan menambahkan gambar, viideo, dan media tersemat ke halaman Anda.</string>
+    <string name="gutenberg_native_give_it_a_try_by_adding_a_few_blocks_to_your_post_or_page" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Cobalah dengan menambahkan beberapa blok ke postingan atau halaman Anda!</string>
+    <string name="gutenberg_native_embed_media" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Sematkan media</string>
+    <string name="gutenberg_native_each_block_has_its_own_settings_to_find_them_tap_on_a_block_its_s" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Setiap blok memiliki pengaturannya sendiri. Ketuk pada blok untuk menemukan pengaturannya. Pengaturan akan muncul pada bilah peralatan di bawah layar.</string>
+    <string name="gutenberg_native_build_layouts" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Bangun tata letak</string>
+    <string name="gutenberg_native_blocks_are_pieces_of_content_that_you_can_insert_rearrange_and_st" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Blok adalah bagian-bagian konten yang dapat Anda masukkan, atur ulang, dan tata gayanya tanpa perlu menulis kode. Blok adalah cara yang mudah dan modern untuk membuat tata letak yang indah.</string>
+    <string name="gutenberg_native_blocks_allow_you_to_focus_on_writing_your_content_knowing_that_al" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Dengan blok, Anda dapat fokus menulis konten, karena semua alat pemformatan yang dibutuhkan tersedia untuk membantu Anda menyampaikan pesan.</string>
+    <string name="gutenberg_native_arrange_your_content_into_columns_add_call_to_action_buttons_and" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Atur konten ke dalam kolom-kolom, tambahkan tombol Ajakan Bertindak, dan lengkapi gambar dengan teks.</string>
+    <string name="gutenberg_native_add_a_new_block_at_any_time_by_tapping_on_the_icon_in_the_toolbar" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Tambahkan blok baru kapan saja dengan mengetuk ikon + pada toolbar di kiri bawah.</string>
     <string name="comment_batch_moderation_error">Gagal memoderasi satu atau lebih komentar</string>
     <string name="create_site_notification_create_site_action">Buat situs</string>
     <string name="create_site_notification_text">Siapkan dan jalankan situs Anda hanya dengan beberapa langkah cepat</string>
@@ -1128,8 +1473,21 @@ Language: id
     <string name="stats_disabled_enable_stats_button">Aktifkan statistik situs</string>
     <string name="stats_disabled_subtitle">Aktifkan statistik situs untuk melihat detail informasi tentang lalu lintas kunjungan, suka, komentar, dan pelanggan Anda.</string>
     <string name="stats_disabled_title">Mencari statistik?</string>
-    <string name="scan_multisite_not_supported_subtitle">Mohon maaf, Jetpack Scan tidak kompatibel dengan penginstalan WordPress multisitus saat ini.</string>
+    <string name="gutenberg_native_what_is_a_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Apa itu blok?</string>
+    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_s_previews_in_the_meanti_d8f5837e" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Kami bekerja keras dalam menambahkan fitur pratinjau %s. Saat ini, Anda dapat melakukan pratinjau konten sematan di artikel.</string>
+    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_s_previews_in_the_meanti" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Kami bekerja keras dalam menambahkan fitur pratinjau %s. Saat ini, Anda dapat melakukan pratinjau konten sematan di halaman.</string>
+    <string name="gutenberg_native_unable_to_embed_media" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Tidak dapat menyematkan media</string>
+    <string name="gutenberg_native_try_another_search_term" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Coba istilah pencarian lain</string>
+    <string name="gutenberg_native_no_blocks_found" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Tidak menemukan blok</string>
+    <string name="gutenberg_native_s_previews_not_yet_available" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Pratinjau %s belum tersedia</string>
+    <string name="gutenberg_native_s_embed_block_previews_are_coming_soon" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Pratinjau blok sematan %s akan segera tersedia</string>
+    <string name="gutenberg_native_double_tap_to_preview_post" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Ketuk dua kali untuk melihat pos.</string>
+    <string name="gutenberg_native_double_tap_to_preview_page" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Ketuk dua kali untuk melihat halaman.</string>
+    <string name="scan_multisite_not_supported_subtitle">Mohon maaf, Jetpack Scan tidak kompatibel dengan penginstalan WordPress multisitus</string>
     <string name="scan_multisite_not_supported_title">Multisitus WordPress tidak didukung</string>
+    <string name="gutenberg_native_invalid_url_please_enter_a_valid_url" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">URL tidak valid. Silakan masukkan URL yang benar.</string>
+    <string name="gutenberg_native_embed_caption_s" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Sematkan keterangan. %s</string>
+    <string name="gutenberg_native_embed_caption_empty" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Sematkan keterangan. Kosong</string>
     <string name="activity_log_visit_our_documentation_page">kunjungi halaman dokumentasi kami</string>
     <string name="activity_log_multisite_message">Pemasangan Jetpack Backup untuk Multisitus memberikan fitur cadangan yang bisa diunduh, tanpa fitur permulihan sekali klik. Untuk informasi lebih lanjut %1$s.</string>
     <string name="blogging_reminders_tip_message">Dengan rutin membuat pos, para pembaca akan tetap tertarik dan pengunjung baru akan mengunjungi situs Anda.</string>
@@ -1153,16 +1511,38 @@ Language: id
     <string name="blogging_reminders_done">Selesai</string>
     <string name="blogging_reminders_notify_me">Beri tahu saya</string>
     <string name="restore_details_enter_server_creds_msg">&lt;a href=\"%1$s\"&gt;Masukkan kredensial server Anda&lt;/a&gt; untuk mengaktifkan pemulihan situs sekali klik dari pencadangan.</string>
+    <string name="gutenberg_native_set_as_featured_image" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Jadikan Gambar Unggulan</string>
+    <string name="gutenberg_native_remove_as_featured_image" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Hapus Gambar Unggulan</string>
     <string name="fab_add_category_desc">Buat Kategori</string>
     <string name="support_ticket_subject">WordPress untuk Dukungan Android</string>
     <string name="site_settings_categories_hint">Kelola kategori situs Anda</string>
     <string name="site_settings_categories_title">Kategori</string>
     <string name="site_settings_blogging_reminders_title">Pengingat</string>
     <string name="page_is_posts_page_warning">Konten halaman pos terbaru Anda dibuat secara otomatis dan tidak dapat disunting.</string>
+    <string name="gutenberg_native_border_settings" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Pengaturan Batas</string>
     <string name="storage_utils_dialog_dont_show_button">Jangan Tampilkan Lagi</string>
     <string name="storage_utils_dialog_ok_button">Lihat Penyimpanan</string>
     <string name="storage_utils_dialog_message">Kami perlu menyimpan konten Anda di perangkat sebelum memublikasikannya. Tinjau pengaturan penyimpanan dan hapus beberapa file untuk membuat ruang lebih lega.</string>
     <string name="storage_utils_dialog_title">Ruang penyimpanan perangkat tidak cukup</string>
+    <string name="gutenberg_native_y_axis_position" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Posisi Sumbu Y</string>
+    <string name="gutenberg_native_x_axis_position" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Posisi Sumbu X</string>
+    <string name="gutenberg_native_type_a_url" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Ketik URL</string>
+    <string name="gutenberg_native_slash_inserter_results" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Hasil penyisip garis miring</string>
+    <string name="gutenberg_native_s_has_url_set" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">URL %s telah ditetapkan</string>
+    <string name="gutenberg_native_s_has_no_url_set" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">URL %s belum ditetapkan</string>
+    <string name="gutenberg_native_s_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">%s blok</string>
+    <string name="gutenberg_native_opacity" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Keburaman</string>
+    <string name="gutenberg_native_media_options" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Opsi media</string>
+    <string name="gutenberg_native_invalid_url_audio_file_not_found" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">URL tidak valid. File audio tidak ditemukan.</string>
+    <string name="gutenberg_native_insert_crosspost" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Sisipkan lintas pos</string>
+    <string name="gutenberg_native_drag_to_adjust_focal_point" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Seret untuk menyetel titik fokus</string>
+    <string name="gutenberg_native_double_tap_to_open_bottom_sheet_to_add_image_or_video" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Ketuk dua kali guna membuka Lembar Bawah untuk menambahkan gambar atau video</string>
+    <string name="gutenberg_native_double_tap_to_open_action_sheet_to_add_image_or_video" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Ketuk dua kali guna membuka Lembar Tindakan untuk menambahkan gambar atau video</string>
+    <string name="gutenberg_native_current_unit_is_s" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Unit saat ini adalah %s</string>
+    <string name="gutenberg_native_crosspost" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Lintas pos</string>
+    <string name="gutenberg_native_columns_settings" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Pengaturan Kolom</string>
+    <string name="gutenberg_native_add_link_to_s" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Tambahkan tautan ke %s</string>
+    <string name="gutenberg_native_add_link_text" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Tambahkan teks tautan</string>
     <string name="error_media_path_is_directory">Lokasi yang telah ditetapkan berupa direktori dan bukan file Media</string>
     <string name="error_media_could_not_find_media_in_path">Tidak dapat menemukan file media di lokasi</string>
     <string name="error_media_unexpected_empty_media_file_path">Lokasi file kosong tak terduga untuk Media </string>
@@ -1170,33 +1550,92 @@ Language: id
     <string name="error_media_unexpected_null_value">Media kosong</string>
     <string name="threat_fix_enter_server_creds_msg_plural">&lt;a href=\"%1$s\"&gt;Masukkan kredensial server Anda&lt;/a&gt; untuk memperbaiki ancaman.</string>
     <string name="threat_fix_enter_server_creds_msg_singular">&lt;a href=\"%1$s\"&gt;Masukkan kredensial server Anda&lt;/a&gt; untuk memperbaiki ancaman.</string>
+    <string name="gutenberg_native_double_tap_to_add_a_link" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Ketuk dua kali untuk menambahkan tautan.</string>
     <string name="login_empty_view_try_another_account">Coba dengan akun lain</string>
     <string name="login_empty_view_see_instructions">Lihat petunjuk</string>
     <string name="login_no_jetpack_sites_error_message">Jika telah memiliki situs, Anda perlu menginstal plugin Jetpack gratis dan menghubungkannya ke akun WordPress.com Anda.</string>
     <string name="login_empty_view_avatar_content_description">Foto profil Anda</string>
     <string name="login_not_a_jetpack_site">Untuk menggunakan aplikasi ini untuk %1$s, Anda perlu memasang plugin Jeptpack dan menghubungkannya ke akun WordPress.com Anda.</string>
+    <string name="gutenberg_native_width_settings" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Pengaturan Lebar</string>
+    <string name="gutenberg_native_link_rel" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Link Rel</string>
+    <string name="gutenberg_native_column_settings" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Pengaturan Kolom</string>
+    <string name="gutenberg_native_no_description" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Tanpa deskripsi</string>
     <string name="user_profile_untitled_site">(Tanpa judul)</string>
     <string name="user_profile_site_section_header">Situs</string>
     <string name="user_profile_bottom_sheet_description">Informasi lembar bawah profil pengguna</string>
     <string name="likes_list_screen_title">Daftar Suka %s</string>
+    <string name="gutenberg_native_two" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Dua.</string>
+    <string name="gutenberg_native_three" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Tiga.</string>
+    <string name="gutenberg_native_no_title" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Tanpa judul</string>
+    <string name="gutenberg_native_s_social_icon" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Ikon media sosial %s</string>
+    <string name="gutenberg_native_mention" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Sebutan</string>
+    <string name="gutenberg_native_new" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Baru</string>
+    <string name="gutenberg_native_preview_post" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Pratinjau pos</string>
+    <string name="gutenberg_native_preview_page" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Pratinjau halaman</string>
+    <string name="gutenberg_native_retry" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Coba lagi</string>
+    <string name="gutenberg_native_gif" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">GIF</string>
+    <string name="gutenberg_native_one" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Satu.</string>
+    <string name="gutenberg_native_add_title" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Tambahkan judul</string>
+    <string name="gutenberg_native_no_preview_available" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Pratinjau tidak tersedia</string>
+    <string name="gutenberg_native_loading" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Memuat</string>
+    <string name="gutenberg_native_link_label" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Label tautan</string>
+    <string name="gutenberg_native_text_color" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Warna teks</string>
+    <string name="gutenberg_native_s_link" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">%s tautan</string>
+    <string name="gutenberg_native_padding" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Padding</string>
+    <string name="gutenberg_native_four" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Empat.</string>
+    <string name="gutenberg_native_featured" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Andalan</string>
+    <string name="gutenberg_native_add_image" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Tambahkan gambar</string>
+    <string name="gutenberg_native_custom_url" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">URL Tersuai</string>
+    <string name="gutenberg_native_create_embed" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Buat sematan</string>
+    <string name="gutenberg_native_column_d" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Kolom %d</string>
+    <string name="gutenberg_native_more" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Lainnya</string>
+    <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Menjelaskan secara singkat tautan untuk membantu pengguna pembaca layar</string>
+    <string name="gutenberg_native_add_blocks" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Tambahkan blok</string>
     <string name="login_no_jetpack_sites">Situs Jetpack tidak ditemukan</string>
+    <string name="gutenberg_native_what_is_alt_text" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Apa itu teks alt?</string>
+    <string name="gutenberg_native_transform_s_to" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Ubah %s menjadi</string>
+    <string name="gutenberg_native_transform_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Mengubah blok…</string>
+    <string name="gutenberg_native_1_s_transformed_to_2_s" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">%1$s diubah menjadi %2$s</string>
     <string name="like_faces_error_loading_message">Terjadi error saat memuat data sukai. %s.</string>
     <string name="like_title_plural">%d Suka</string>
     <string name="like_title_singular">1 Suka</string>
     <string name="suggestion">Saran:</string>
+    <string name="gutenberg_native_use_icon_button" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Gunakan tombol ikon</string>
+    <string name="gutenberg_native_search_input_field" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Kolom input pencarian.</string>
+    <string name="gutenberg_native_search_button_current_button_text_is" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Tombol cari. Teks tombol saat ini adalah</string>
+    <string name="gutenberg_native_search_blocks" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Cari blok</string>
+    <string name="gutenberg_native_search_block_label_current_text_is" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Cari label blok. Teks saat ini adalah</string>
+    <string name="gutenberg_native_outside" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Luar</string>
+    <string name="gutenberg_native_no_custom_placeholder_set" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Placeholder kustom belum diatur</string>
+    <string name="gutenberg_native_inside" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Di dalam</string>
+    <string name="gutenberg_native_hide_search_heading" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Sembunyikan judul pencarian</string>
+    <string name="gutenberg_native_double_tap_to_edit_placeholder_text" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Ketuk dua kali untuk mengedit teks placeholder</string>
+    <string name="gutenberg_native_double_tap_to_edit_label_text" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Ketuk dua kali untuk mengedit teks label</string>
+    <string name="gutenberg_native_double_tap_to_edit_button_text" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Ketuk dua kali untuk mengedit teks tombol</string>
+    <string name="gutenberg_native_double_tap_to_change_unit" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">ketuk dua kali untuk mengubah unit</string>
+    <string name="gutenberg_native_current_placeholder_text_is" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Teks placeholder saat ini adalah</string>
+    <string name="gutenberg_native_clear_search" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Hapus pencarian</string>
+    <string name="gutenberg_native_cancel_search" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Batalkan pencarian</string>
+    <string name="gutenberg_native_button_position" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Posisi tombol</string>
+    <string name="gutenberg_native_1_s_2_s_is_3_s_4_s" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">%1$s. %2$s adalah %3$s %4$s.</string>
     <string name="get_likes_empty_state_title">Terjadi error saat mengumpulkan data suka</string>
     <string name="get_likes_unknown_error">Terjadi error yang tidak diketahui saat mengumpulkan suka.</string>
     <string name="get_likes_no_network_error">Tidak ada jaringan.</string>
     <string name="comments_empty_list_filtered_unreplied">Tidak ada komentar belum dibalas</string>
     <string name="comment_status_unreplied">Belum dibalas</string>
+    <string name="gutenberg_native_search_settings" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Pengaturan pencarian</string>
     <string name="jetpack_brute_force_allowlist_title">Alamat IP yang selalu diizinkan</string>
     <string name="site_settings_denylist_title">Komentar yang tidak diizinkan</string>
+    <string name="gutenberg_native_add_button_text" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Tambahkan teks tombol</string>
     <string name="activity_log_backup_download_notice_dismiss_action">Tutup</string>
     <string name="activity_log_backup_download_notice_download_action">Unduh</string>
     <string name="threat_fix_all_status_success_message_plural">Ancaman berhasil ditangani.</string>
     <string name="threat_fix_all_confirmation_message_plural">Harap konfirmasi bahwa Anda ingin memperbaiki %s ancaman aktif seluruhnya.</string>
     <string name="scan_idle_threats_description_plural">Pemindaian menemukan %1$s potensi ancaman dengan %2$s. Tinjau di bawah ini dan ambil tindakan atau ketuk tombol perbaiki semua. Kami %3$s jika Anda membutuhkan kami.</string>
     <string name="scan_fixing_threats_description_plural">Kami berupaya keras di latar belakang untuk memperbaiki ancaman ini. Sementara itu, Anda dapat terus menggunakan situs seperti biasa dan memeriksa progresnya kapan saja.</string>
+    <string name="gutenberg_native_edit_focal_point" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Sunting titik fokus</string>
+    <string name="gutenberg_native_double_tap_to_open_bottom_sheet_to_edit_replace_or_clear_the_imag" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Ketuk dua kali untuk membuka Lembar Bawah untuk menyunting, mengganti, atau menghapus gambar</string>
+    <string name="gutenberg_native_double_tap_to_open_action_sheet_to_edit_replace_or_clear_the_imag" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Ketuk dua kali untuk membuka Lembar Tindakan untuk menyunting, mengganti, atau menghapus gambar</string>
     <string name="new_site_creation_search_domain_example">contoh.com</string>
     <string name="new_site_creation_search_domain_input_hint">Ketik nama untuk situs Anda</string>
     <string name="magic_link_not_meaning_to_create_account" a8c-src-lib="module:login">Tidak ingin membuat akun baru? Silakan kembali dan masukkan lagi alamat email Anda.</string>
@@ -1239,6 +1678,22 @@ Language: id
     <string name="backup_item_contents">Direktori konten-WP</string>
     <string name="backup_item_roots">Root WordPress</string>
     <string name="backup_download_details_choose_items_header">Item yang disertakan di unduhan ini</string>
+    <string name="gutenberg_native_uploading" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Mengunggah…</string>
+    <string name="gutenberg_native_replace_file" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Ganti file</string>
+    <string name="gutenberg_native_replace_audio" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Ganti audio</string>
+    <string name="gutenberg_native_problem_opening_the_audio" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Terjadi masalah saat membuka audio</string>
+    <string name="gutenberg_native_open" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">BUKA</string>
+    <string name="gutenberg_native_no_application_can_handle_this_request" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Tidak ada aplikasi yang dapat menangani permintaan ini.</string>
+    <string name="gutenberg_native_lock_icon" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Ikon kunci</string>
+    <string name="gutenberg_native_failed_to_insert_audio_file_please_tap_for_options" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Gagal memasukkan file audio. Ketuk untuk melihat pilihan.</string>
+    <string name="gutenberg_native_double_tap_to_select_an_audio_file" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Ketuk dua kali untuk memilih file audio</string>
+    <string name="gutenberg_native_double_tap_to_listen_the_audio_file" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Ketuk dua kali untuk mendengarkan file audio</string>
+    <string name="gutenberg_native_choose_audio" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Pilih audio</string>
+    <string name="gutenberg_native_audio_player" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Pemutar Audio</string>
+    <string name="gutenberg_native_audio_file" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">berkas audio</string>
+    <string name="gutenberg_native_audio_caption_s" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Keterangan audio. %s</string>
+    <string name="gutenberg_native_audio_caption_empty" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Keterangan audio. Kosong</string>
+    <string name="gutenberg_native_add_audio" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Tambahkan audio</string>
     <string name="continue_with_wpcom">Login atau daftar dengan WordPress.com</string>
     <string name="photo_picker_use_audio">Gunakan audio ini</string>
     <string name="photo_picker_choose_audio">Pilih audio dari perangkat</string>
@@ -1254,7 +1709,6 @@ Language: id
     <string name="scan_fixing_threats_description_singular">Kami berupaya keras di latar belakang untuk memperbaiki ancaman ini. Sementara itu, Anda dapat terus menggunakan situs seperti biasa dan memeriksa progresnya kapan saja.</string>
     <string name="scan_scanning_description">Kami akan mengirimkan pemberitahuan jika menemukan ancaman. Sementara itu, Anda dapat terus menggunakan situs seperti biasa dan memeriksa progresnya kapan saja.</string>
     <string name="scan_fixing_threats_title_plural">Memperbaiki Ancaman</string>
-    <string name="scan_start_request_failed_subtitle">Jetpack Scan tidak dapat menyelesaikan pemindaian situs Anda. Harap periksa apakah situs Anda tidak aktif – jika tidak, coba lagi. Jika tidak aktif, atau jika Jetpack Scan masih mengalami masalah, hubungi tim dukungan kami.</string>
     <string name="scan_request_failed_title">Terjadi kesalahan</string>
     <string name="activity_log_currently_backing_up_message_no_dates">Mencadangkan situs</string>
     <string name="activity_log_currently_backing_up_message">Mencadangkan situs dari %1$s %2$s</string>
@@ -1325,6 +1779,8 @@ Language: id
     <string name="backup_empty_subtitle">Pencadangan pertama Anda akan muncul di sini dalam waktu 24 jam dan Anda akan menerima pemberitahuan setelah pencadangan selesai.</string>
     <string name="backup_empty_title">Pencadangan pertama Anda akan segera tersedia</string>
     <string name="request_failed_message">Terdapat kendala saat menangani permintaan. Silakan coba kembali.</string>
+    <string name="gutenberg_native_move_to_bottom" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Pindah ke bawah</string>
+    <string name="gutenberg_native_change_block_position" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Ubah posisi blok</string>
     <string name="jetpack_icon_content_description">ikon</string>
     <string name="backup_download_complete_info">Kami juga telah mengirimkan email berisi tautan ke file Anda.</string>
     <string name="backup_download_complete_download_share_action_button_content_description">Tombol bagikan tautan</string>
@@ -1413,6 +1869,8 @@ Language: id
     <string name="backup_download_details_header">Buat cadangan yang dapat diunduh</string>
     <string name="backup_download_details_page_title">Unduh Cadangan</string>
     <string name="backup_download">Unduhan Cadangan</string>
+    <string name="gutenberg_native_error" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Galat</string>
+    <string name="gutenberg_native_choose_file" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Pilih berkas</string>
     <string name="activity_log_item_menu_download_backup_label">Unduh cadangan</string>
     <string name="activity_log_item_menu_restore_label">Pulihkan hingga ke titik ini</string>
     <string name="activity_log_activity_type_filter_label">Jenis Aktivitas</string>
@@ -1423,6 +1881,12 @@ Language: id
     <string name="dialog_confirm_copy_local_message">Pos yang ingin Anda salin mempunyai dua versi yang saling konflik atau baru-baru ini ada perubahan yang tidak disimpan.\nSunting pos terlebih dahulu untuk menyelesaikan konflik atau lanjutkan dengan menyalin versi dari aplikasi ini.</string>
     <string name="dialog_confirm_copy_local_title">Konflik sinkronisasi pos</string>
     <string name="button_copy">Duplikat</string>
+    <string name="gutenberg_native_file_name" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Nama file</string>
+    <string name="gutenberg_native_file_block_settings" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Pengaturan blok Berkas</string>
+    <string name="gutenberg_native_failed_to_upload_files_please_tap_for_options" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Gagal mengunggah file.\nKetuk untuk melihat pilihan.</string>
+    <string name="gutenberg_native_failed_to_save_files_please_tap_for_options" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Gagal menyimpan file.\nKetuk untuk melihat pilihan.</string>
+    <string name="gutenberg_native_edit_file" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Sunting file</string>
+    <string name="gutenberg_native_copy_file_url" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Salin URL file</string>
     <string name="new_site_creation_domain_header_title">Pilih domain</string>
     <string name="reader_follow_comments_could_not_unsubscribe_error">Tidak dapat berhenti berlangganan komentar pos ini</string>
     <string name="reader_follow_comments_could_not_subscribe_error">Tidak dapat berlangganan komentar pos ini</string>
@@ -1442,10 +1906,10 @@ Language: id
     <string name="reader_discover_no_posts_title">Tak ada pos terbaru</string>
     <string name="reader_discover_empty_title">Selamat datang!</string>
     <string name="scan">Pindai</string>
+    <string name="gutenberg_native_scrollable_block_menu_opened_select_a_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Menu blok yang dapat digulir terbuka. Pilih blok.</string>
+    <string name="gutenberg_native_scrollable_block_menu_closed" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Menu blok yang dapat digulir tertutup.</string>
     <string name="hpp_choose_button">Pilih</string>
-    <string name="mlp_network_error_subtitle">Ketuk coba lagi setelah Anda kembali online atau buat halaman kosong dengan tombol di bawah ini.</string>
     <string name="mlp_network_error_title">Tata letak tidak tersedia saat offline</string>
-    <string name="mlp_error_subtitle">Ketuk coba lagi atau buat halaman kosong dengan tombol di bawah ini.</string>
     <string name="mlp_error_title">Tata letak tersedia karena error</string>
     <string name="prepublishing_nudges_add_category_button">Tambahkan Kategori</string>
     <string name="prepublishing_nudges_toolbar_title_add_categories">Tambah Kategori Baru</string>
@@ -1453,6 +1917,11 @@ Language: id
     <string name="prepublishing_nudges_home_categories_not_set">Tidak ditentukan</string>
     <string name="prepublishing_nudges_categories_action">Kategori</string>
     <string name="media_loading_failed">Gagal memuat media</string>
+    <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Kami berusaha keras untuk menambahkan banyak blok setiap rilis.</string>
+    <string name="gutenberg_native_s_is_not_fully_supported" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">\'%s\' tidak sepenuhnya didukung</string>
+    <string name="gutenberg_native_help_button" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Tombol Bantuan</string>
+    <string name="gutenberg_native_edit_using_web_editor" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Edit menggunakan editor web</string>
+    <string name="gutenberg_native_choose_images" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Pilih gambar</string>
     <string name="mlp_notice_blank_page_created">Halaman kosong dibuat</string>
     <string name="mlp_notice_page_created">Halaman dibuat</string>
     <string name="media_insert_failed">Penyisipan media gagal.</string>
@@ -1467,6 +1936,9 @@ Language: id
     <string name="stats_referrer_popup_menu_open_website">Buka Situs Web</string>
     <string name="media_uploading_stock_library_photo">Mengunggah media stok</string>
     <string name="media_uploading_default">Mengunggah media</string>
+    <string name="gutenberg_native_add_this_telephone_link" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Tambahkan link telepon ini</string>
+    <string name="gutenberg_native_add_this_link" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Tambahkan link ini</string>
+    <string name="gutenberg_native_add_this_email_link" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Tambahkan link email ini</string>
     <string name="suggestion_no_connection">Tidak tersedia koneksi internet.\nSaran tidak tersedia.</string>
     <string name="mlp_notselected_description">%s</string>
     <string name="mlp_selected_description">%s dipilih</string>
@@ -1479,9 +1951,16 @@ Language: id
     <string name="error_media_xmlrcp_server_error">Terjadi kesalahan server internal</string>
     <string name="error_media_xmlrpc_not_allowed">Tindakan Anda tidak diizinkan</string>
     <string name="show_n_hidden_items_desc">%1$s item lainnya</string>
+    <string name="gutenberg_native_select_a_layout" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Pilih Tata Letak</string>
+    <string name="gutenberg_native_note_column_layout_may_vary_between_themes_and_screen_sizes" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Catatan: Tata letak kolom dapat bervariasi antara tema dan ukuran layar</string>
     <string name="create_page_fab_tooltip">Buat halaman</string>
     <string name="create_post_fab_tooltip">Buat pos</string>
     <string name="reader_expandable_tags_view_overflow_indicator_collapse_title">Sembunyikan</string>
+    <string name="gutenberg_native_video_caption_empty" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Keterangan video. Kosong</string>
+    <string name="gutenberg_native_updates_the_title" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Perbarui judul.</string>
+    <string name="gutenberg_native_paste_block_after" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Tempel block setelah</string>
+    <string name="gutenberg_native_page_title_s" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Judul halaman. %s</string>
+    <string name="gutenberg_native_page_title_empty" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Judul halaman. Kosong</string>
     <string name="label_close_button">Tutup</string>
     <string name="mlp_preview_page">Pratinjau</string>
     <string name="mlp_create_page">Buat halaman</string>
@@ -1493,6 +1972,13 @@ Language: id
     <string name="reader_toast_err_page_jump_not_found">Tidak dapat menemukan lompatan halaman yang ditautkan</string>
     <string name="error_media_quota_exceeded">Kuota penyimpanan terlampaui.</string>
     <string name="pick_file">Tambahkan file</string>
+    <string name="gutenberg_native_replace_video" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Ganti video</string>
+    <string name="gutenberg_native_replace_image_or_video" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Ganti gambar atau video</string>
+    <string name="gutenberg_native_convert_to_link" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Ubah menjadi tautan</string>
+    <string name="gutenberg_native_choose_video" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Pilih video</string>
+    <string name="gutenberg_native_choose_image_or_video" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Pilih gambar atau video</string>
+    <string name="gutenberg_native_choose_image" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Pilih gambar</string>
+    <string name="gutenberg_native_block_removed" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Blok dihapus</string>
     <string name="enter_your_site_address">Masukkan alamat situs Anda saat ini</string>
     <string name="signup_confirmation_title" a8c-src-lib="module:login">Konfirmasi pendaftaran</string>
     <string name="continue_with_google_terms_of_service_text" a8c-src-lib="module:login">Jika Anda melanjutkan dengan Google dan belum memiliki akun WordPress.com, Anda akan membuat akun dan menyetujui  %1$sKetentuan Layanan%2$s kami.</string>
@@ -1516,14 +2002,30 @@ Language: id
     <string name="reset_your_password" a8c-src-lib="module:login">Reset kata sandi</string>
     <string name="reader_error_request_failed_title">Ada masalah saat menangani permintaan. Silakan coba lagi nanti.</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">Membuang pos ini juga akan menghapus perubahan lokal, Anda yakin ingin melanjutkan?</string>
+    <string name="gutenberg_native_s_block_options" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">%s pilihan blok</string>
+    <string name="gutenberg_native_remove_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Hapus blok</string>
+    <string name="gutenberg_native_duplicate_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Duplikasi blok</string>
+    <string name="gutenberg_native_copied_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Blok disalin</string>
+    <string name="gutenberg_native_block_pasted" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Blok ditempelkan</string>
+    <string name="gutenberg_native_block_duplicated" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Blok diduplikasi</string>
+    <string name="gutenberg_native_block_cut" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Blok dipotong</string>
+    <string name="gutenberg_native_block_copied" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Blok disalin</string>
     <string name="my_site_title_changer_dialog_not_allowed_hint">Judul Situs hanya dapat diubah oleh pengguna yang berperan sebagai administrator.</string>
     <string name="my_site_title_changer_dialog_hint">Judul Situs ditampilkan di bilah judul perambah web dan ditampilkan pada header sebagian besar tema.</string>
     <string name="error_update_site_title_network">Tidak dapat memperbarui judul situs. Periksa koneksi jaringan Anda dan coba lagi.</string>
     <string name="dialog_confirm_trash_losing_unsaved_changes_title">Perubahan yang belum disimpan</string>
+    <string name="gutenberg_native_open_link_in_a_browser" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Buka tautan pada perambah</string>
+    <string name="gutenberg_native_navigates_to_the_previous_content_sheet" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Navigasi ke halaman konten sebelumnya</string>
+    <string name="gutenberg_native_navigates_to_customize_the_gradient" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Navigasi untuk mengustomisasi gradien</string>
+    <string name="gutenberg_native_navigates_to_custom_color_picker" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Navigasi untuk mengustomisasi pemilih warna</string>
+    <string name="gutenberg_native_gradient_type" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Jenis Gradasi</string>
+    <string name="gutenberg_native_double_tap_to_select_the_option" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Ketuk dua kali untuk memilih opsi</string>
+    <string name="gutenberg_native_customize_gradient" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Kustomisasi Gradasi</string>
     <string name="error_media_thumbnail_not_loaded">Thumbnail media tidak dapat dimuat</string>
     <string name="menu_content_info">Struktur konten</string>
     <string name="everyone">Setiap Orang</string>
     <string name="me">Saya</string>
+    <string name="gutenberg_native_dismiss" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Tutup</string>
     <string name="prepublishing_nudges_home_tags_not_set">Tidak ditentukan</string>
     <string name="prepublishing_tags_description">Tag membantu memberi tahu para pembaca tentang isi sebuah pos</string>
     <string name="prepublishing_nudges_toolbar_title_publish">Tanggal Publikasi</string>
@@ -1552,6 +2054,11 @@ Language: id
     <string name="status_and_visibility">Status &amp; Keterlihatan</string>
     <string name="update_now">Perbarui Sekarang</string>
     <string name="pages_item_subtitle">%1$s ·</string>
+    <string name="gutenberg_native_open_block_actions_menu" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Buka Menu Tindakan Blokir</string>
+    <string name="gutenberg_native_move_to_top" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Pindah ke atas</string>
+    <string name="gutenberg_native_insert_mention" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Sertakan penyebutan</string>
+    <string name="gutenberg_native_double_tap_to_open_bottom_sheet_with_available_options" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Ketuk dua kali untuk membuka Lembar Bawah dengan opsi yang tersedia</string>
+    <string name="gutenberg_native_double_tap_to_open_action_sheet_with_available_options" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Ketuk dua kali untuk membuka Lembar Tindakan dengan opsi yang tersedia</string>
     <string name="pages_cannot_be_started">Saat ini kami tidak dapat membuka halaman. Harap coba lagi nanti</string>
     <string name="pages_set_as_posts_page">Atur sebagai Halaman Pos</string>
     <string name="pages_set_as_homepage">Atur sebagai Beranda</string>
@@ -1575,6 +2082,8 @@ Language: id
     <string name="page_homepage_successfully_updated">Beranda berhasil diperbarui</string>
     <string name="page_cannot_set_posts_page">Untuk memasang halaman Pos, aktifkan \"Halaman Beranda Statis\" di Pengaturan Situs</string>
     <string name="page_cannot_set_homepage">Untuk memasang Halaman Beranda, aktifkan \"Halaman Beranda Statis\" di Pengaturan Situs</string>
+    <string name="gutenberg_native_select_a_color" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Pilih warna</string>
+    <string name="gutenberg_native_double_tap_to_go_to_color_settings" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Ketuk dua kali untuk membuka pengaturan warna</string>
     <string name="feature_announcement_find_out_mode">Cari tahu selengkapnya</string>
     <string name="feature_announcement_dialog_label">Apa yang Baru Di %s</string>
     <string name="insert_label_with_count">Sisipkan %d</string>
@@ -1597,6 +2106,14 @@ Language: id
     <string name="button_insert">Sisipkan</string>
     <string name="continue_label">Lanjutkan</string>
     <string name="copy_text">Salin</string>
+    <string name="gutenberg_native_number_of_columns" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Jumlah kolom</string>
+    <string name="gutenberg_native_move_block_right_from_position_1_s_to_position_2_s" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Geser blok ke kanan dari posisi %1$s ke posisi %2$s\"</string>
+    <string name="gutenberg_native_move_block_right" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Geser blok ke kanan</string>
+    <string name="gutenberg_native_move_block_left_from_position_1_s_to_position_2_s" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Geser blok ke kiri dari posisi %1$s ke posisi %2$s\"</string>
+    <string name="gutenberg_native_move_block_left" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Geser blok ke kiri</string>
+    <string name="gutenberg_native_double_tap_to_move_the_block_to_the_right" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Ketuk dua kali untuk memindahkan blok ke kanan</string>
+    <string name="gutenberg_native_double_tap_to_move_the_block_to_the_left" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Ketuk dua kali untuk memindahkan blok ke kiri</string>
+    <string name="gutenberg_native_block_settings" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Pengaturan blok</string>
     <string name="new_site_creation_creating_site_loading_4">Membuat dasbor</string>
     <string name="new_site_creation_creating_site_loading_3">Menyiapkan tema</string>
     <string name="new_site_creation_creating_site_loading_2">Menambahkan fitur situs</string>
@@ -1648,6 +2165,17 @@ Language: id
     <string name="app_theme_light">Terang</string>
     <string name="app_theme">Tampilan</string>
     <string name="dialog_confirm_autosave_body_first_part_for_page">Baru-baru ini Anda membuat perubahan pada halaman ini namun tidak menyimpannya. Pilih versi untuk dimuat:\n\n</string>
+    <string name="gutenberg_native_warning_message" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Pesan peringatan</string>
+    <string name="gutenberg_native_show_post_content" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Tampilkan konten pos</string>
+    <string name="gutenberg_native_only_show_excerpt" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Hanya tampilkan kutipan</string>
+    <string name="gutenberg_native_link_to" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Tautan Ke</string>
+    <string name="gutenberg_native_link_settings" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Pengaturan Tautan</string>
+    <string name="gutenberg_native_excerpt_length_words" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Panjang kutipan (kata)</string>
+    <string name="gutenberg_native_edit_cover_media" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Edit media sampul</string>
+    <string name="gutenberg_native_customize" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">SESUAIKAN</string>
+    <string name="gutenberg_native_button_link_url" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">URL Tautan Tombol</string>
+    <string name="gutenberg_native_border_radius" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Radius Batas</string>
+    <string name="gutenberg_native_add_paragraph_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Tambahkan blok paragraf</string>
     <string name="create_post_page_fab_tooltip_contributors">Buat pos</string>
     <string name="post_list_tab_trashed_posts">Dibuang</string>
     <string name="post_list_tab_scheduled_posts">Terjadwal</string>
@@ -1668,7 +2196,16 @@ Language: id
     <string name="reader_filter_self_hosted_empty_sites_tags_action">Login ke WordPress.com</string>
     <string name="reader_filter_self_hosted_empty_tags_list">Login ke WordPress.com untuk melihat pos terbaru dari tag langganan Anda</string>
     <string name="reader_filter_self_hosted_empty_blogs_list">Login ke WordPress.com untuk melihat pos terbaru dari blog langganan Anda</string>
+    <string name="gutenberg_native_replace_current_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Ganti Blok Saat Ini</string>
+    <string name="gutenberg_native_add_to_end" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Tambahkan ke Akhir</string>
+    <string name="gutenberg_native_add_to_beginning" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Tambahkan ke Awal</string>
+    <string name="gutenberg_native_add_block_before" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Tambahkan Blok Sebelum</string>
+    <string name="gutenberg_native_add_block_after" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Tambahkan Blok Setelah</string>
     <string name="reader_filter_cta">Penyaring</string>
+    <string name="gutenberg_native_video_caption_s" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Keterangan video. %s</string>
+    <string name="gutenberg_native_edit_video" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Sunting video</string>
+    <string name="gutenberg_native_edit_media" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Sunting media</string>
+    <string name="gutenberg_native_add_a_shortcode" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Tambahkan shortcode…</string>
     <string name="fab_create_desc">Buat pos</string>
     <string name="stats_posting_activity_end_description">Anda telah mendengar semua statistik untuk periode ini.\n Mengetuk lagi akan memulai ulang dari awal.</string>
     <string name="stats_posting_activity_empty_description">Tidak ada statistik dalam periode ini.</string>
@@ -1681,6 +2218,8 @@ Language: id
     <string name="stats_box_type_low">rendah</string>
     <string name="stats_bar_chart_accessibility_overlapping_entry">  &amp; %1$d %2$s</string>
     <string name="stats_bar_chart_accessibility_entry">%1$s, %2$d %3$s</string>
+    <string name="gutenberg_native_replace_image" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Ganti gambar</string>
+    <string name="gutenberg_native_gallery_caption_s" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Keterangan galeri. %s</string>
     <string name="create_post_page_fab_tooltip">Buat pos atau halaman</string>
     <string name="content_description_person_building_website">Orang membangun situs web</string>
     <string name="post_signup_interstitial_not_right_now">Jangan sekarang</string>
@@ -1717,6 +2256,51 @@ Language: id
     <string name="suffix_1_000">%sK</string>
     <string name="posts_cannot_be_started">Kami saat ini tidak dapat membuka pos. Harap coba lagi nanti</string>
     <string name="site_cannot_be_loaded">Kami saat ini tidak dapat memuat data untuk situs Anda. Harap coba lagi nanti</string>
+    <string name="gutenberg_native_wordpress_media_library" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Pustaka Media WordPress</string>
+    <string name="gutenberg_native_unsupported" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Tidak didukung</string>
+    <string name="gutenberg_native_tap_to_hide_the_keyboard" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Ketuk untuk menyembunyikan keyboard</string>
+    <string name="gutenberg_native_tap_here_to_show_help" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Ketuk di sini untuk menampilkan bantuan</string>
+    <string name="gutenberg_native_take_a_video" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Ambil Video</string>
+    <string name="gutenberg_native_take_a_photo" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Ambil Foto</string>
+    <string name="gutenberg_native_start_writing" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Mulai menulis…</string>
+    <string name="gutenberg_native_s_block_this_block_has_invalid_content" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">%s blok. Blok ini memiliki konten yang tidak valid</string>
+    <string name="gutenberg_native_s_block_empty" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">%s blok. Kosong</string>
+    <string name="gutenberg_native_cut_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Potong blok</string>
+    <string name="gutenberg_native_problem_opening_the_video" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Terjadi masalah saat membuka video</string>
+    <string name="gutenberg_native_post_title_s" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Judul pos. %s</string>
+    <string name="gutenberg_native_post_title_empty" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Judul pos. Kosong</string>
+    <string name="gutenberg_native_paste_url" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Tempel URL</string>
+    <string name="gutenberg_native_page_break_block_s" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Blok pemisah halaman. %s</string>
+    <string name="gutenberg_native_open_settings" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Buka Pengaturan</string>
+    <string name="gutenberg_native_no_application_can_handle_this_request_please_install_a_web_brows" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Tidak ada aplikasi yang dapat menangani permintaan ini. Harap instal Perambah web.</string>
+    <string name="gutenberg_native_navigate_up" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Arahkan ke Atas</string>
+    <string name="gutenberg_native_move_block_up_from_row_1_s_to_row_2_s" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Pindahkan balok ke atas dari baris %1$s ke baris %2$s</string>
+    <string name="gutenberg_native_move_block_up" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Naikkan blok</string>
+    <string name="gutenberg_native_move_block_down_from_row_1_s_to_row_2_s" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Pindahkan balok ke bawah dari baris %1$s ke baris %2$s</string>
+    <string name="gutenberg_native_move_block_down" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Turunkan blok</string>
+    <string name="gutenberg_native_link_text" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Teks tautan</string>
+    <string name="gutenberg_native_link_inserted" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Tautan disisipkan</string>
+    <string name="gutenberg_native_image_caption_s" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Keterangan gambar. %s</string>
+    <string name="gutenberg_native_hide_keyboard" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Sembunyikan keyboard</string>
+    <string name="gutenberg_native_help_icon" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Ikon bantuan</string>
+    <string name="gutenberg_native_double_tap_to_toggle_setting" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Ketuk dua kali untuk mengaktifkan/menonaktifkan pengaturan</string>
+    <string name="gutenberg_native_double_tap_to_select_an_image" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Ketuk dua kali untuk memilih gambar</string>
+    <string name="gutenberg_native_double_tap_to_select_a_video" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Ketuk dua kali untuk memilih video</string>
+    <string name="gutenberg_native_double_tap_to_select" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Ketuk dua kali untuk memilih</string>
+    <string name="gutenberg_native_double_tap_to_move_the_block_up" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Ketuk dua kali untuk memindahkan blok ke atas</string>
+    <string name="gutenberg_native_double_tap_to_move_the_block_down" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Ketuk dua kali untuk memindahkan blok ke bawah</string>
+    <string name="gutenberg_native_double_tap_to_edit_this_value" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Ketuk dua kali untuk menyunting nilai ini</string>
+    <string name="gutenberg_native_double_tap_to_add_a_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Ketuk dua kali untuk menambahkan blok</string>
+    <string name="gutenberg_native_double_tap_and_hold_to_edit" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Ketuk dua kali dan tahan untuk menyunting</string>
+    <string name="gutenberg_native_current_value_is_s" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Nilai saat ini adalah %s</string>
+    <string name="gutenberg_native_choose_from_device" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Pilih dari perangkat</string>
+    <string name="gutenberg_native_an_unknown_error_occurred_please_try_again" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Terjadi error yang tidak diketahui. Coba lagi.</string>
+    <string name="gutenberg_native_alt_text" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Teks Alt</string>
+    <string name="gutenberg_native_add_video" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Tambahkan video</string>
+    <string name="gutenberg_native_add_url" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Tambahkan URL</string>
+    <string name="gutenberg_native_add_alt_text" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Tambahkan teks alt</string>
+    <string name="gutenberg_native_add_block_here" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">TAMBAHKAN BLOK DI SINI</string>
+    <string name="gutenberg_native_add_description" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Tambahkan deskripsi</string>
     <string name="reader_empty_saved_posts_content_description">Ketuk tombol Tambahkan untuk Simpan Pos untuk menyimpan pos ke daftar Anda.</string>
     <string name="reader_acessibility_list_loaded">\"Daftar ini telah diisi dengan %1$d item.\"</string>
     <string name="notifications_tab_dialog_switch_desc">Pemberitahuan</string>
@@ -1816,7 +2400,7 @@ Language: id
     <string name="post_notification_off">Nonaktif</string>
     <string name="post_settings_add_to_calendar">Tambahkan ke kalender</string>
     <string name="post_settings_notification">Pemberitahuan</string>
-    <string name="post_settings_time_and_date">Tanggal dan Waktu</string>
+    <string name="post_settings_time_and_date">Tanggal &amp; Waktu</string>
     <string name="login_invalid_site_url" a8c-src-lib="module:login">Masukkan alamat situs web lengkap, seperti contoh.com.</string>
     <string name="enter_email_for_site" a8c-src-lib="module:login">Login dengan WordPress.com untuk terhubung ke %1$s</string>
     <string name="stats_post_views_label">Tampilan</string>
@@ -1865,8 +2449,7 @@ Language: id
     <string name="plugin_install_site_ineligible_default_error">Jika Anda baru saja mendaftarkan nama domain, harap tunggu sampai kami selesai menyiapkannya dan silakan coba lagi.\n\nJika tidak, sepertinya terjadi kesalahan dan fitur plugin mungkin tidak tersedia di situs ini.</string>
     <string name="domain_contact_information_state_not_available_hint">Negara Bagian (Tidak Tersedia)</string>
     <string name="domain_registration_privacy_protection_tos">Dengan mendaftarkan domain ini, Anda menyetujui %1$ssyarat dan ketentuan%2$s kami</string>
-    <string name="error_network_connection">Periksa koneksi jaringan Anda dan coba lagi.</string>
-    <string name="error_browser_no_network">Tidak dapat memuat halaman ini sekarang.</string>
+    <string name="error_network_connection">Periksa koneksi internet Anda lalu coba lagi</string>
     <string name="error_disabled_apis">Tidak dapat memuat pengaturan: Beberapa API tidak tersedia untuk kombinasi ID aplikasi OAuth + akun ini.</string>
     <string name="jetpack_connection_terms_and_conditions">Dengan menyiapkan Jetpack, Anda menyetujui %1$ssyarat dan ketentuan%2$s kami</string>
     <string name="site_settings_disconnected_toast">Tidak ada koneksi. Tidak dapat menyunting.</string>
@@ -1905,7 +2488,6 @@ Language: id
     <string name="post_list_tab_drafts">Konsep</string>
     <string name="error_restoring_post">Terjadi error saat memulihkan pos</string>
     <string name="backdated_for">Dimundurkan selama: %s</string>
-    <string name="stats_insights_management_title">Hanya lihat statistik yang paling relevan. Tambahkan dan kelola wawasan Anda di bawah ini.</string>
     <string name="stats_insights_annual_site_stats">Statistik Situs Tahunan</string>
     <string name="domain_suggestions_fetch_error">Saran domain tidak dapat dimuat</string>
     <string name="domain_suggestions_search_hint">Ketikkan kata kunci untuk mendapatkan lebih banyak ide</string>
@@ -1925,7 +2507,7 @@ Language: id
     <string name="posts_trashed_empty">Anda tidak memiliki pos yang dibuang</string>
     <string name="posts_draft_empty">Anda tidak memiliki pos konsep</string>
     <string name="posts_scheduled_empty">Anda belum memiliki pos terjadwal</string>
-    <string name="posts_published_empty">Anda belum memublikasikan pos sama sekali</string>
+    <string name="posts_published_empty">Anda belum memublikasikan pos apa pun!</string>
     <string name="notification_wpcom_username_needed" a8c-src-lib="module:login">Silakan login dengan nama pengguna dan kata sandi Anda.</string>
     <string name="error_user_username_instead_of_email" a8c-src-lib="module:login">Silakan login menggunakan nama pengguna WordPress.com sebagai ganti alamat email Anda.</string>
     <string name="stats_insights_average_words">Rata-rata kata/pos</string>
@@ -2077,8 +2659,6 @@ Language: id
     <string name="history_footer_post">Pos Dibuat pada %1$s di %2$s</string>
     <string name="history_footer_page">Halaman Dibuat pada %1$s di %2$s</string>
     <string name="history_empty_title">Belum ada riwayat</string>
-    <string name="history_empty_subtitle_post">Saat membuat perubahan pada pos, Anda akan dapat melihat riwayatnya di sini</string>
-    <string name="history_empty_subtitle_page">Saat membuat perubahan pada halaman, Anda akan dapat melihat riwayatnya di sini</string>
     <string name="description_user">Avatar pengguna</string>
     <string name="image_size_full_label">Ukuran Penuh</string>
     <string name="image_size_large_label">Besar</string>
@@ -2090,7 +2670,7 @@ Language: id
     <string name="pages_empty_trashed">Anda tidak punya halaman yang dibuang</string>
     <string name="pages_empty_scheduled">Anda tidak punya halaman yang dijadwalkan</string>
     <string name="pages_empty_drafts">Anda tidak punya halaman konsep</string>
-    <string name="pages_empty_published">Anda belum memublikasikan laman apa pun</string>
+    <string name="pages_empty_published">Anda belum memublikasikan laman apa pun!</string>
     <string name="pages_search_suggestion">Cari halaman</string>
     <string name="pages_empty_search_result">Tidak ada halaman yang cocok dengan pencarian Anda</string>
     <string name="pages_delete_permanently">Hapus Permanen</string>
@@ -2128,14 +2708,13 @@ Language: id
     <string name="themes_empty_list">Tidak ada tema yang cocok dengan pencarian Anda</string>
     <string name="reader_label_post_search_explainer">Apa yang ingin Anda cari?</string>
     <string name="site_settings_tags_empty_title_search">Tidak ada tag yang cocok dengan pencarian Anda</string>
-    <string name="site_settings_tags_empty_title">Anda tidak memiliki tag apa pun</string>
-    <string name="site_settings_tags_empty_subtitle">Tambahkan tag yang sering Anda gunakan di sini agar bisa dipilih dengan cepat saat memberi tag pada pos</string>
+    <string name="site_settings_tags_empty_title">Anda belum memiliki tag apa pun!</string>
     <string name="site_settings_tags_empty_button">Buat tag</string>
     <string name="media_empty_search_list">Tidak ada media yang cocok dengan pencarian Anda</string>
     <string name="sign_out_wpcom_confirm_with_no_changes">Logout dari WordPress?</string>
     <string name="sign_out_wpcom_confirm_with_changes">Ada perubahan pada pos yang belum diunggah ke situs Anda. Perubahan tersebut akan dihapus dari perangkat jika Anda logout sekarang. Tetap logout?</string>
     <string name="people_empty_list_filtered_viewers">Belum ada pengunjung</string>
-    <string name="people_empty_list_filtered_users">Belum ada pengguna</string>
+    <string name="people_empty_list_filtered_users">Belum ada pengguna!</string>
     <string name="reader_empty_posts_liked_description">Pos yang Anda sukai akan ditampilkan di sini</string>
     <string name="reader_empty_posts_liked_title">Belum ada yang menyukai</string>
     <string name="reader_no_followed_blogs_button_discover">Temukan blog</string>
@@ -2146,7 +2725,7 @@ Language: id
     <string name="posts_empty_list_button">Buat pos</string>
     <string name="pages_empty_list_button">Buat halaman</string>
     <string name="media_empty_upload_media">Unggah media</string>
-    <string name="media_empty_list">Anda tidak memiliki media apa pun</string>
+    <string name="media_empty_list">Anda belum memiliki media apa pun!</string>
     <string name="reader_gallery_images_desc">galeri gambar</string>
     <string name="blavatar_desc">ikon situs</string>
     <string name="theme_image_desc">gambar tema</string>
@@ -2292,6 +2871,7 @@ Language: id
     <string name="file_size_in_terabytes">%s TB</string>
     <string name="file_size_in_gigabytes">%s GB</string>
     <string name="file_size_in_megabytes">%s MB</string>
+    <string name="file_size_in_kilobytes">%s KB</string>
     <string name="file_size_in_bytes">%s B</string>
     <string name="site_settings_quota_space_value">%1$s dari %2$s</string>
     <string name="site_settings_quota_space_hint">Jika Anda perlu lebih banyak ruang penyimpanan, pertimbangkan melakukan upgrade paket WordPress Anda.</string>
@@ -2638,10 +3218,10 @@ Language: id
     <string name="notifications_tab_title_all">Semua</string>
     <string name="top_level_category_name">Level teratas</string>
     <string name="category_parent">Kategori induk (opsional):</string>
-    <string name="media_empty_audio_list">Anda tidak memiliki audio apa pun</string>
-    <string name="media_empty_documents_list">Anda tidak memiliki dokumen apa pun</string>
-    <string name="media_empty_videos_list">Anda tidak memiliki video apa pun</string>
-    <string name="media_empty_image_list">Anda tidak memiliki gambar apa pun</string>
+    <string name="media_empty_audio_list">Anda belum memiliki audio apa pun!</string>
+    <string name="media_empty_documents_list">Anda belum memiliki dokumen apa pun!</string>
+    <string name="media_empty_videos_list">Anda belum memiliki video apa pun!</string>
+    <string name="media_empty_image_list">Anda belum memiliki gambar apa pun!</string>
     <string name="media_error_timeout">Server terlalu lama merespons</string>
     <string name="media_error_exceeds_memory_limit">Berkas terlalu besar untuk diunggah ke situs</string>
     <string name="media_error_exceeds_php_filesize">File melebihi ukuran maksimum unggahan untuk situs ini</string>
@@ -2778,9 +3358,7 @@ Language: id
     <string name="pending_draft_one_day_1">Anda membuat konsep \'%1$s\' kemarin. Jangan lupa menerbitkannya!</string>
     <string name="reader_label_visit">Kunjungi situs</string>
     <string name="swipe_for_more">Geser untuk selengkapnya</string>
-    <string name="reader_err_get_post_not_authorized_signin_fallback">Anda tidak diizinkan melihat pos ini. Coba masuk ke WordPress.com lebih dulu atau gunakan tombol tindakan di atas untuk membuka browser.</string>
     <string name="reader_err_get_post_not_authorized_signin">Anda tidak diizinkan melihat pos ini. Coba masuk ke WordPress.com lebih dulu.</string>
-    <string name="reader_err_get_post_not_authorized_fallback">Anda tidak diizinkan melihat pos ini. Gunakan tombol tindakan di atas untuk mencoba menggunakan browser.</string>
     <string name="reader_snackbar_err_cannot_like_post_logged_out">Tak bisa menyukai sebelum masuk ke WordPress.com</string>
     <string name="reader_toast_err_already_liked">Anda sudah menyukai komentar itu</string>
     <string name="reader_toast_err_comment_not_found">Komentar tidak ditemukan!</string>
@@ -2823,8 +3401,8 @@ Language: id
     <string name="error_remove_viewer">Gagal menghapus pengunjung</string>
     <string name="editor_failed_uploads_switch_html">Beberapa media gagal diunggah. Anda bisa pindah ke mode HTML\n        dalam situasi begini. Hapus semua unggahan yang gagal dan lanjutkan?</string>
     <string name="stop_upload_dialog_title">Stop mengunggah?</string>
-    <string name="alert_action_while_uploading" a8c-src-lib="module:editor">Anda sedang mengunggah media. Mohon tunggu hingga selesai.</string>
-    <string name="alert_insert_image_html_mode" a8c-src-lib="module:editor">Gagal menyisipkan media dalam mode HTML. Silakan pindah ke mode visual.</string>
+    <string name="alert_action_while_uploading" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Anda sedang mengunggah media. Mohon tunggu hingga selesai.</string>
+    <string name="alert_insert_image_html_mode" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Gagal menyisipkan media dalam mode HTML. Silakan pindah ke mode visual.</string>
     <string name="tap_to_try_again">Ketuk untuk mencoba lagi!</string>
     <string name="invite_sent">Undangan berhasil terkirim</string>
     <string name="invite_error_for_username">%1$s: %2$s</string>
@@ -3079,10 +3657,8 @@ Language: id
     <string name="notifications_no_search_results">Tidak ada situs yang cocok dengan \'%s\'</string>
     <string name="search_sites">Cari situs</string>
     <string name="notifications_empty_view_reader">Buka Pembaca</string>
-    <string name="notifications_empty_action_followers_likes">Dapatkan pemberitahuan: komentari pos yang telah Anda baca</string>
-    <string name="notifications_empty_action_comments">Bergabung dalam percakapan: komentari pos dari blog yang Anda ikuti</string>
-    <string name="notifications_empty_action_unread">Mulai kembali percakapan: tulis pos baru</string>
-    <string name="notifications_empty_action_all">Aktiflah! Komentari pos dari blog yang Anda ikuti.</string>
+    <string name="notifications_empty_action_followers_likes">Dapatkan perhatian! Komentari pos yang sudah Anda baca.</string>
+    <string name="notifications_empty_action_unread">Mulai kembali percakapan! Tulis pos baru.</string>
     <string name="notifications_empty_comments">Belum ada komentar</string>
     <string name="notifications_empty_unread">Semua sudah diperbarui!</string>
     <string name="reader_short_comment_count_multi">%s Komentar</string>
@@ -3121,6 +3697,7 @@ Language: id
     <string name="push_auth_expired">Permintaan sudah kadaluwarsa. Log in ke WordPress.com untuk mencoba lagi.</string>
     <string name="ignore">Abaikan</string>
     <string name="stats_insights_best_ever">Tampilan Terbaik</string>
+    <string name="stats_insights_most_popular_day">Hari paling populer</string>
     <string name="stats_insights_today">Statistik Hari Ini</string>
     <string name="stats_insights_all_time">Pos, tampilan, dan pengunjung sepanjang waktu</string>
     <string name="stats_insights">Wawasan</string>
@@ -3178,7 +3755,6 @@ Language: id
     <string name="browse_our_faq_button">Telusuri Tanya Jawab Umum kami</string>
     <string name="reader_empty_comments">Belum ada komentar</string>
     <string name="reader_label_like">Suka</string>
-    <string name="reader_label_view_original">Lihat artikel asli</string>
     <string name="reader_label_comments_closed">Komentar ditutup</string>
     <string name="reader_title_photo_viewer">%1$d dari %2$d</string>
     <string name="error_publish_empty_post">Tidak dapat menerbitkan pos kosong</string>
@@ -3233,7 +3809,7 @@ Language: id
     <string name="local_changes">Perubahan lokal</string>
     <string name="new_media">Media baru</string>
     <string name="new_post">Pos baru</string>
-    <string name="notifications_empty_all">Belum ada pemberitahuan…sampai sekarang.</string>
+    <string name="notifications_empty_all">Belum ada pemberitahuan…sampai sekarang!</string>
     <string name="http_authorization_required" a8c-src-lib="module:login">Otorisasi diwajibkan</string>
     <string name="invalid_site_url_message">Pastikan URL situs yang dimasukkan sudah valid</string>
     <string name="file_error_create">Tidak bisa membuat berkas temporer untuk pengunggahan media. Pastikan masih cukup ruang di perangkat Anda.</string>
@@ -3257,7 +3833,7 @@ Language: id
     <string name="delete_post">Hapus pos?</string>
     <string name="post_settings">Pengaturan pos</string>
     <string name="file_not_found">Tidak dapat menemukan file yang akan diunggah. Apakah file dihapus atau dipindahkan?</string>
-    <string name="horizontal_alignment" a8c-src-lib="module:editor">Perataan horisontal</string>
+    <string name="horizontal_alignment" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Perataan horisontal</string>
     <string name="local_draft">Draf lokal</string>
     <string name="page_settings">Pengaturan laman</string>
     <string name="link_enter_url_text">Teks tautan (opsional)</string>
@@ -3330,10 +3906,10 @@ Language: id
     <string name="username">Nama pengguna</string>
     <string name="password">Kata sandi</string>
     <string name="reader">Pembaca</string>
-    <string name="featured_in_post" a8c-src-lib="module:editor">Sertakan gambar dalam konten tulisan</string>
-    <string name="featured" a8c-src-lib="module:editor">Gunakan sebagai gambar terfitur</string>
-    <string name="width" a8c-src-lib="module:editor">Lebar</string>
-    <string name="caption" a8c-src-lib="module:editor">Subjudul (opsional)</string>
+    <string name="featured_in_post" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Sertakan gambar dalam konten tulisan</string>
+    <string name="featured" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Gunakan sebagai gambar terfitur</string>
+    <string name="width" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Lebar</string>
+    <string name="caption" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Subjudul (opsional)</string>
     <string name="pages">Halaman</string>
     <string name="posts">Tulisan</string>
     <string name="anonymous">Anonim</string>
@@ -3341,7 +3917,7 @@ Language: id
     <string name="done">selesai</string>
     <string name="ok">OK</string>
     <string name="link_enter_url">URL</string>
-    <string name="uploading" a8c-src-lib="module:editor">Mengunggah…</string>
+    <string name="uploading" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Mengunggah…</string>
     <string name="image_alignment">Penjajaran</string>
     <string name="refresh">Segarkan</string>
     <string name="untitled">Tanpa judul</string>
