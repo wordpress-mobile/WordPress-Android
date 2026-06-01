@@ -139,24 +139,56 @@ class EditorSettingsRepository @Inject constructor(
      * assume the API lives at `/wp-json` (custom permalink structures or
      * REST API paths would break that assumption), then use the routes list
      * returned by discovery directly — no second request needed.
+     *
+     * Discovery is unauthenticated, so it can't reach a *private* Atomic host
+     * — the host gates anonymous requests and the API root never loads. When
+     * the site has application-password credentials, fall back to an
+     * authenticated probe against the same direct host (Basic auth), which is
+     * exactly the transport the editor uses there. Without credentials there's
+     * nothing to authenticate with, so we report failure. See #22883.
      */
     private suspend fun fetchRouteSupportViaDirectHostDiscovery(
         site: SiteModel
     ): Boolean {
         val discovery = wpLoginClient.apiDiscovery(site.url)
-        if (discovery !is ApiDiscoveryResult.Success) {
-            AppLog.w(
-                T.EDITOR,
-                "Direct-host API discovery failed for" +
-                    " site=${site.name}: ${discovery::class.simpleName}"
+        if (discovery is ApiDiscoveryResult.Success) {
+            val resolver = wpApiClientProvider.urlResolverFor(
+                discovery.success.apiRootUrl
             )
-            return false
+            persistRouteSupport(site, discovery.success.apiDetails, resolver)
+            return true
         }
-        val resolver = wpApiClientProvider.urlResolverFor(
-            discovery.success.apiRootUrl
+        AppLog.w(
+            T.EDITOR,
+            "Direct-host API discovery failed for" +
+                " site=${site.name}: ${discovery::class.simpleName}"
         )
-        persistRouteSupport(site, discovery.success.apiDetails, resolver)
-        return true
+        return if (site.hasApplicationPasswordCredentials()) {
+            fetchRouteSupportViaApplicationPasswordClient(site)
+        } else {
+            false
+        }
+    }
+
+    /**
+     * Authenticated direct-host route probe for Atomic sites whose host
+     * rejects the anonymous discovery request (e.g. private sites). Uses the
+     * site's application-password (Basic auth) client and resolves routes
+     * against the same direct host — mirrors
+     * [fetchRouteSupportViaConfiguredClient] but bypasses the WP.com proxy.
+     */
+    private suspend fun fetchRouteSupportViaApplicationPasswordClient(
+        site: SiteModel
+    ): Boolean {
+        val client = wpApiClientProvider.getApplicationPasswordClient(site)
+        val resolver = wpApiClientProvider.getDirectHostApiUrlResolver(site)
+        val response = client.request { it.apiRoot().get() }
+        return if (response is WpRequestResult.Success) {
+            persistRouteSupport(site, response.response.data, resolver)
+            true
+        } else {
+            false
+        }
     }
 
     private fun persistRouteSupport(
@@ -215,3 +247,7 @@ class EditorSettingsRepository @Inject constructor(
         false
     }
 }
+
+private fun SiteModel.hasApplicationPasswordCredentials(): Boolean =
+    !apiRestUsernamePlain.isNullOrEmpty() &&
+        !apiRestPasswordPlain.isNullOrEmpty()
