@@ -32,7 +32,6 @@ Language: mk
     <string name="cab_selected">%d слекетирано</string>
     <string name="browse_our_faq_button">Разгледи наши ЧПП</string>
     <string name="reader_empty_comments">Нема коментари сеуште</string>
-    <string name="reader_label_view_original">Види ја оригиналната статија</string>
     <string name="reader_label_like">Сака</string>
     <string name="reader_label_comments_closed">Коментари затворени</string>
     <string name="error_refresh_unauthorized_pages">Немате дозвола за гледање или уредување на страници</string>
@@ -81,7 +80,7 @@ Language: mk
     <string name="page_settings">Подесувања на страницата</string>
     <string name="http_authorization_required" a8c-src-lib="module:login">Ауторизација е потребна</string>
     <string name="mnu_comment_spam">Спам</string>
-    <string name="horizontal_alignment" a8c-src-lib="module:editor">Хоризонтално порамнување</string>
+    <string name="horizontal_alignment" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Хоризонтално порамнување</string>
     <string name="dlg_confirm_trash_comments">Испрати во корпа?</string>
     <string name="post_settings">Подесувања на напис</string>
     <string name="comment_status_approved">Одобрено</string>
@@ -161,14 +160,14 @@ Language: mk
     <string name="password">Лозинка</string>
     <string name="username">Корисничко име</string>
     <string name="reader">Читач</string>
-    <string name="width" a8c-src-lib="module:editor">Широчина</string>
+    <string name="width" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Широчина</string>
     <string name="anonymous">Анонимно</string>
     <string name="posts">Написи</string>
-    <string name="caption" a8c-src-lib="module:editor">Наслов (изборно)</string>
+    <string name="caption" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Наслов (изборно)</string>
     <string name="pages">Страници</string>
     <string name="no_network_title">Не е достапна мрежа</string>
-    <string name="featured_in_post" a8c-src-lib="module:editor">Вклучете ги сликите во содржината на написот</string>
-    <string name="featured" a8c-src-lib="module:editor">Користи како избрана слика</string>
+    <string name="featured_in_post" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Вклучете ги сликите во содржината на написот</string>
+    <string name="featured" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Користи како избрана слика</string>
     <string name="ok">Добро</string>
     <string name="link_enter_url">URL</string>
     <string name="image_alignment">Усогласување</string>

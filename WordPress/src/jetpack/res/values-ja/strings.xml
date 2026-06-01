@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-01-16 11:54:00+0000
+Translation-Revision-Date: 2026-03-18 11:58:33+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.4.0-alpha
 Language: ja_JP
@@ -26,8 +26,8 @@ Language: ja_JP
     <string name="login_prologue_revamped_jetpack_feature_text_1">プラグインを更新</string>
     <string name="login_prologue_revamped_content_description_jetpack_logo">Jetpack のロゴ</string>
     <string name="me_btn_about">Jetpack について</string>
-    <string name="sign_out_wpcom_confirm_with_no_changes">Jetpack からログアウトしますか ?</string>
-    <string name="me_disconnect_from_wordpress_com">Jetpack からログアウト</string>
+    <string name="sign_out_wpcom_confirm_with_no_changes">WordPress.com からログアウトしますか ?</string>
+    <string name="me_disconnect_from_wordpress_com">WordPress.com からログアウト</string>
     <string name="support_ticket_subject">Android サポート版 Jetpack</string>
     <string name="login_magic_links_sent_label">この端末でメールを確認して、Jetpack.com から届いたメールに記載されているリンクをタップしてください。</string>
     <string name="continue_with_wpcom_no_signup">WordPress.com で続ける</string>

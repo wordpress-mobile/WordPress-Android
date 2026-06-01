@@ -158,10 +158,6 @@ Language: ms
     <string name="notifications_tab_title_all">Semua</string>
     <string name="category_parent">Kategori induk (pilihan):</string>
     <string name="top_level_category_name">Paras Atas</string>
-    <string name="media_empty_audio_list">Anda tidak mempunyai audio</string>
-    <string name="media_empty_documents_list">Anda tidak mempunyai dokumen</string>
-    <string name="media_empty_videos_list">Anda tidak mempunyai video</string>
-    <string name="media_empty_image_list">Anda tidak mempunyai imej</string>
     <string name="media_error_timeout">Pelayar mengambil masa terlalu lama untuk membalas</string>
     <string name="media_error_exceeds_memory_limit">Fail terlalu besar untuk dimuat naik di laman ini</string>
     <string name="media_error_exceeds_php_filesize">Fail melebihi saiz muat naik maksimum bagi laman ini</string>
@@ -288,9 +284,7 @@ Language: ms
     <string name="pending_draft_one_day_2">Tahukah anda bahawa \'%1$s\' masih lagi suatu draf? Terbitkannya!</string>
     <string name="pending_draft_one_day_1">Anda telah mendraf \'%1$s\' semalam. Jangan lupa untuk menerbitkannya!</string>
     <string name="swipe_for_more">Sapu untuk seterusnya</string>
-    <string name="reader_err_get_post_not_authorized_signin_fallback">Anda tidak dibenarkan melihat kiriman ini. Cuba daftar masuk ke WordPress.com dahulu atau sebaliknya gunakan butang aksi di atas untuk membuka di pelayar.</string>
     <string name="reader_err_get_post_not_authorized_signin">Anda tidak dibenarkan melihat kiriman ini. Cuba daftar masuk ke WordPress.com dahulu.</string>
-    <string name="reader_err_get_post_not_authorized_fallback">Anda tidak dibenarkan melihat kiriman ini. Sebaliknya gunakan butang aksi di atas untuk mencuba di pelayar.</string>
     <string name="reader_snackbar_err_cannot_like_post_logged_out">Tidak boleh menyuka sambil melog keluar dari WordPress.com</string>
     <string name="reader_toast_err_already_liked">Anda sudahpun menyukai ulasan itu</string>
     <string name="reader_toast_err_comment_not_found">Ulasan tidak dijumpai!</string>
@@ -331,8 +325,8 @@ Language: ms
     <string name="error_remove_viewer">Tidak dapat membuang penonton</string>
     <string name="editor_failed_uploads_switch_html">Sebahagian muat naik media telah gagal. Anda tidak boleh menukar ke mod HTML\ndalam keadaan ini. in this state. Buang semua muat naik yang gagal dan bersambung?</string>
     <string name="stop_upload_dialog_title">Berhenti memuat naik?</string>
-    <string name="alert_action_while_uploading" a8c-src-lib="module:editor">Anda sedang memuat naik media. Sila tunggu sehingga ianya selesai.</string>
-    <string name="alert_insert_image_html_mode" a8c-src-lib="module:editor">Tidak dapat menyisip media terus dalam mod HTML. Sila tukar kembali ke mod visual.</string>
+    <string name="alert_action_while_uploading" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Anda sedang memuat naik media. Sila tunggu sehingga ianya selesai.</string>
+    <string name="alert_insert_image_html_mode" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Tidak dapat menyisip media terus dalam mod HTML. Sila tukar kembali ke mod visual.</string>
     <string name="invite_error_for_username">%1$s: %2$s</string>
     <string name="invite_error_some_failed">Jemputan dihantar tetapi ralat berlaku!</string>
     <string name="invite_sent">Jemputan berjaya dihantar</string>
@@ -603,6 +597,7 @@ Language: ms
     <string name="push_auth_expired">Permintaan telah tamat tempoh. Log masuk ke WordPress.com dan cuba lagi.</string>
     <string name="ignore">Abaikan</string>
     <string name="stats_insights_best_ever">Pandangan Terbaik Sampai Bila-Bila</string>
+    <string name="stats_insights_most_popular_day">Hari paling popular</string>
     <string name="stats_insights_today">Statistik Hari Ini</string>
     <string name="stats_insights_all_time">Kiriman, pandangan, dan pelawat sepanjang masa</string>
     <string name="stats_insights">Wawasan</string>
@@ -667,7 +662,6 @@ Language: ms
     <string name="posts_empty_list">Belum ada kiriman. Kenapa tidak wujudkannya?</string>
     <string name="comment_reply_to_user">Balasan kepada %s</string>
     <string name="signing_out">Melog keluar…</string>
-    <string name="reader_label_view_original">Lihat artikel asal</string>
     <string name="error_refresh_unauthorized_pages">Anda tidak mempunyai kebenaran melihat atau menyunting halaman</string>
     <string name="older_month">Lebih dari sebulan</string>
     <string name="error_refresh_unauthorized_posts">Anda tidak mempunyai kebenaran melihat atau menyunting kiriman</string>
@@ -709,7 +703,7 @@ Language: ms
     <string name="dlg_confirm_trash_comments">Hantar ke sampah?</string>
     <string name="trash">Sampah</string>
     <string name="saving_changes">Simpan perubahan</string>
-    <string name="horizontal_alignment" a8c-src-lib="module:editor">Jajaran melintang</string>
+    <string name="horizontal_alignment" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Jajaran melintang</string>
     <string name="comment_status_approved">Diluluskan</string>
     <string name="comment_status_unapproved">Menunggu</string>
     <string name="comment_status_spam">Spam</string>
@@ -734,7 +728,6 @@ Language: ms
     <string name="edit_comment">Sunting ulasan</string>
     <string name="learn_more">Pelajari selanjutnya</string>
     <string name="invalid_site_url_message">Periksa bahawa URL laman yang dimasukkan adalah sah</string>
-    <string name="notifications_empty_all">Belum ada pemberitahuan.</string>
     <string name="media_error_no_permission">Anda tidak mempunyai kebenaran untuk melihat pustaka media</string>
     <string name="connection_error">Ralat sambungan</string>
     <string name="file_not_found">Fail media untuk dimuat naik tidak dapat dicari. Adakah ia dihapuskan atau dipindahkan?</string>
@@ -795,17 +788,17 @@ Language: ms
     <string name="password">Kata laluan</string>
     <string name="log_in" a8c-src-lib="module:login">Log masuk</string>
     <string name="reader">Pembaca</string>
-    <string name="featured" a8c-src-lib="module:editor">Guna sebagai imej yang diketengahkan</string>
-    <string name="featured_in_post" a8c-src-lib="module:editor">Sertakan imej dalam kandungan kiriman</string>
+    <string name="featured" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Guna sebagai imej yang diketengahkan</string>
+    <string name="featured_in_post" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Sertakan imej dalam kandungan kiriman</string>
     <string name="no_network_title">Tiada rangkaian yang tersedia</string>
     <string name="pages">Laman</string>
-    <string name="caption" a8c-src-lib="module:editor">Sari kata (pilihan)</string>
-    <string name="width" a8c-src-lib="module:editor">Lebar</string>
+    <string name="caption" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Sari kata (pilihan)</string>
+    <string name="width" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Lebar</string>
     <string name="posts">Kiriman</string>
     <string name="anonymous">Tak bernama</string>
     <string name="ok">OK</string>
     <string name="link_enter_url">URL</string>
-    <string name="uploading" a8c-src-lib="module:editor">Memuat naik…</string>
+    <string name="uploading" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Memuat naik…</string>
     <string name="image_alignment">Penjajaran</string>
     <string name="refresh">Segar semula</string>
     <string name="untitled">Tiada tajuk</string>
