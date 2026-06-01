@@ -349,7 +349,7 @@ class CardsViewModelSliceTest : BaseUnitTest() {
     }
 
     @Test
-    fun `when build is invoked, then todays stats is from store(db)`() = test {
+    fun `when build is invoked, then today's stats is from store(db)`() = test {
         setUpMocks()
         whenever(cardsStore.getCards(siteModel)).thenReturn(flowOf(data))
 
@@ -402,7 +402,7 @@ class CardsViewModelSliceTest : BaseUnitTest() {
     }
 
     @Test
-    fun `when refresh is invoked, then todays stats are requested from network`() =
+    fun `when refresh is invoked, then today's stats are requested from network`() =
         test {
             setUpMocks()
             whenever(cardsStore.getCards(siteModel)).thenReturn(flowOf(data))
