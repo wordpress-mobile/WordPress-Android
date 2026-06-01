@@ -427,7 +427,7 @@ class CardsStoreTest {
     }
 
     @Test
-    fun `given today's stats type, when fetch cards triggered, then today's stats card model inserted into db`() = test {
+    fun `given todays stats type, when fetch cards triggered, then today's stats card model inserted into db`() = test {
         val payload = CardsPayload(CardsResponse(todaysStats = TODAYS_STATS_RESPONSE))
         whenever(
             restClient.fetchCards(
