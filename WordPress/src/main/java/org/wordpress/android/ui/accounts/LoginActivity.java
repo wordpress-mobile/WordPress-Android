@@ -347,6 +347,10 @@ public class LoginActivity extends BaseAppCompatActivity implements
                 return;
             }
             AppLog.i(T.MAIN, "Primary site fetched, proceeding to main activity");
+            // Kick off a background fetch of the remaining sites so the user can move on without
+            // waiting. SiteStore will populate independently; LoginActivity ignores the result
+            // because finishLoginAfterSitesLoaded() clears mIsWaitingForSitesToLoad below.
+            dispatchFetchAllSites();
         } else {
             if (event.isError()) {
                 AppLog.e(T.MAIN, "Site fetch failed: " + event.error.type);
