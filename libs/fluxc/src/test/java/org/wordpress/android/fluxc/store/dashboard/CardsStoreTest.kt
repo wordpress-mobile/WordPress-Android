@@ -427,7 +427,7 @@ class CardsStoreTest {
     }
 
     @Test
-    fun `given todays stats type, when fetch cards triggered, then today's stats card model inserted into db`() = test {
+    fun `given today's stats type, when fetch cards triggered, then today's stats card model inserted into db`() = test {
         val payload = CardsPayload(CardsResponse(todaysStats = TODAYS_STATS_RESPONSE))
         whenever(
             restClient.fetchCards(
@@ -680,7 +680,7 @@ class CardsStoreTest {
     /* TODAYS STATS CARD WITH ERROR */
 
     @Test
-    fun `given todays stats card with error, when fetch cards triggered, then card with error inserted into db`() =
+    fun `given today's stats card with error, when fetch cards triggered, then card with error inserted into db`() =
             test {
                 whenever(restClient.fetchCards(defaultFetchCardsPayload)).thenReturn(
                     CardsPayload(
