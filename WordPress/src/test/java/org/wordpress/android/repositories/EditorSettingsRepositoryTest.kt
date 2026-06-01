@@ -3,7 +3,7 @@ package org.wordpress.android.repositories
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.test.advanceUntilIdle
+import kotlinx.coroutines.test.runCurrent
 import kotlinx.coroutines.test.runTest
 import okhttp3.Call
 import okhttp3.Callback
@@ -322,14 +322,26 @@ class EditorSettingsRepositoryTest : BaseUnitTest() {
      * Restore the direct-host routing rather than weakening the assertion.
      */
     @Test
-    fun `MUST_NOT_REMOVE - atomic settings probe goes to the direct host, not the proxy`() = runTest {
+    fun `MUST_NOT_REMOVE - atomic settings probe goes to the direct host with Basic auth`() = runTest {
+        val atomicWithAppPassword = SiteModel().apply {
+            id = 5
+            siteId = 777L
+            url = "https://atomic.example.com"
+            setIsWPCom(true)
+            setIsWPComAtomic(true)
+            setIsJetpackConnected(false)
+            origin = SiteModel.ORIGIN_WPCOM_REST
+            wpApiRestUrl = "https://atomic.example.com/wp-json/"
+            apiRestUsernamePlain = "admin"
+            apiRestPasswordPlain = "app_pass"
+        }
         stubResponses(
             "atomic.example.com" to 200,
             "public-api.wordpress.com" to 200,
         )
         mockTheme(isBlockTheme = true)
 
-        repository.fetchEditorCapabilitiesForSite(atomicSite)
+        repository.fetchEditorCapabilitiesForSite(atomicWithAppPassword)
 
         val settingsRequests = captureRequests().filter {
             it.url.toString().endsWith("wp-block-editor/v1/settings") ||
@@ -343,7 +355,33 @@ class EditorSettingsRepositoryTest : BaseUnitTest() {
             assertThat(it.url.host)
                 .`as`("Atomic settings probe must NOT go through the WP.com proxy")
                 .isNotEqualTo("public-api.wordpress.com")
+            assertThat(it.header("Authorization"))
+                .`as`("Atomic direct-host probe must use Basic, not the WPCom bearer")
+                .startsWith("Basic ")
         }
+    }
+
+    @Test
+    fun `atomic site without application password skips the settings probe`() = runTest {
+        // The direct-host probe requires Basic auth. We don't fall back to
+        // the WPCom bearer (it isn't honored by the direct host anyway, and
+        // we don't want to send WPCom credentials to whatever host
+        // `wpApiRestUrl` points at). Until the application password mints,
+        // the probe is Inconclusive and the cached pref is left alone.
+        stubResponses(
+            "public-api.wordpress.com" to 200,
+        )
+        mockTheme(isBlockTheme = true)
+
+        val ok = repository.fetchEditorCapabilitiesForSite(atomicSite)
+
+        assertThat(ok).isFalse()
+        val settingsRequests = captureRequests().filter {
+            it.url.toString().contains("wp-block-editor/v1/settings")
+        }
+        assertThat(settingsRequests).isEmpty()
+        verify(appPrefsWrapper, never())
+            .setSiteSupportsEditorSettings(any(), any())
     }
 
     @Test
@@ -501,7 +539,11 @@ class EditorSettingsRepositoryTest : BaseUnitTest() {
         val job = launch {
             repository.fetchEditorCapabilitiesForSite(wpComSite)
         }
-        advanceUntilIdle()
+        // `runCurrent` lets the probes start and suspend at their HTTP
+        // calls without advancing virtual time — otherwise the
+        // `withTimeoutOrNull` inside the probe would fire and complete
+        // the job naturally before we got a chance to cancel it.
+        runCurrent()
         job.cancelAndJoin()
 
         // Cancellation propagated to OkHttp.

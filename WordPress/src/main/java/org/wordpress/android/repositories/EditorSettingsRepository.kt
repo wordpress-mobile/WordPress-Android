@@ -6,6 +6,7 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
+import kotlinx.coroutines.withTimeoutOrNull
 import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.OkHttpClient
@@ -130,6 +131,11 @@ class EditorSettingsRepository @Inject constructor(
                     // probe below — editor-assets does go through the
                     // configured root, which is the proxy for WPCom-routed
                     // sites.
+                    //
+                    // `probeEndpoint` additionally requires an application
+                    // password before sending a direct-host request, so this
+                    // probe is skipped (Inconclusive) on Atomic sites that
+                    // haven't minted one yet.
                     forceDirectHost = site.isWPComAtomic,
                     persist = appPrefsWrapper::setSiteSupportsEditorSettings,
                 )
@@ -166,13 +172,22 @@ class EditorSettingsRepository @Inject constructor(
         ProbeResult.Inconclusive -> false
     }
 
-    @Suppress("TooGenericExceptionCaught")
     private suspend fun probeEndpoint(
         site: SiteModel,
         namespace: String,
         endpoint: String,
         forceDirectHost: Boolean,
     ): ProbeResult {
+        // Direct-host probes (Atomic settings) require Basic auth via
+        // the application password. We don't fall back to the WPCom
+        // bearer: the direct host doesn't honor it, and we don't want
+        // to send WPCom credentials to whatever host `wpApiRestUrl`
+        // points at. Atomic sites without an app password yet (e.g.
+        // before the headless mint completes) leave the cached pref
+        // alone until the next preload.
+        if (forceDirectHost && site.apiRestPasswordPlain.isNullOrEmpty()) {
+            return ProbeResult.Inconclusive
+        }
         val url = buildProbeUrl(site, namespace, endpoint, forceDirectHost)
         val authHeader = editorAuthHeaderBuilder.build(
             site, accountStore.accessToken
@@ -182,39 +197,67 @@ class EditorSettingsRepository @Inject constructor(
             .header(AUTHORIZATION_HEADER, authHeader)
             .get()
             .build()
-        return try {
-            executeProbe(request).use { response ->
+        // One cheap retry on transport failure. Capability detection
+        // gates editor preload, and a single blip would otherwise
+        // leave the editor degraded until the next preload runs.
+        val first = attemptProbe(request, namespace, endpoint, site)
+        return if (first == ProbeResult.Inconclusive) {
+            attemptProbe(request, namespace, endpoint, site)
+        } else {
+            first
+        }
+    }
+
+    @Suppress("TooGenericExceptionCaught")
+    private suspend fun attemptProbe(
+        request: Request,
+        namespace: String,
+        endpoint: String,
+        site: SiteModel,
+    ): ProbeResult = try {
+        val response = withTimeoutOrNull(PROBE_TIMEOUT_MS) {
+            executeProbe(request)
+        }
+        if (response == null) {
+            AppLog.w(
+                T.EDITOR,
+                "Probe timed out after ${PROBE_TIMEOUT_MS}ms for" +
+                    " $namespace/$endpoint on site=${site.name}"
+            )
+            ProbeResult.Inconclusive
+        } else {
+            response.use {
                 when {
-                    response.isSuccessful -> ProbeResult.Supported
-                    // 401/403 mean the route exists but auth was rejected /
-                    // insufficient — still "registered." Critical for the
-                    // Atomic direct-host probe where the WPCom bearer token
-                    // is not necessarily honored by the direct host.
-                    response.code == HttpURLConnection.HTTP_UNAUTHORIZED ||
-                        response.code == HttpURLConnection.HTTP_FORBIDDEN ->
+                    it.isSuccessful -> ProbeResult.Supported
+                    // 401/403 mean the route exists but auth was rejected
+                    // or insufficient — still "registered." On Atomic this
+                    // covers a stale or rotated application password, so
+                    // capability detection stays definitive.
+                    it.code == HttpURLConnection.HTTP_UNAUTHORIZED ||
+                        it.code == HttpURLConnection.HTTP_FORBIDDEN ->
                         ProbeResult.Supported
-                    response.code == HttpURLConnection.HTTP_NOT_FOUND ->
+                    it.code == HttpURLConnection.HTTP_NOT_FOUND ->
                         ProbeResult.Unsupported
                     else -> ProbeResult.Inconclusive
                 }
             }
-        } catch (e: IOException) {
-            AppLog.e(
-                T.EDITOR,
-                "Probe failed for $namespace/$endpoint" +
-                    " on site=${site.name}",
-                e
-            )
-            ProbeResult.Inconclusive
-        } catch (e: IllegalArgumentException) {
-            AppLog.e(
-                T.EDITOR,
-                "Probe URL invalid for $namespace/$endpoint" +
-                    " on site=${site.name}: $url",
-                e
-            )
-            ProbeResult.Inconclusive
         }
+    } catch (e: IOException) {
+        AppLog.e(
+            T.EDITOR,
+            "Probe failed for $namespace/$endpoint" +
+                " on site=${site.name}",
+            e
+        )
+        ProbeResult.Inconclusive
+    } catch (e: IllegalArgumentException) {
+        AppLog.e(
+            T.EDITOR,
+            "Probe URL invalid for $namespace/$endpoint" +
+                " on site=${site.name}: ${request.url}",
+            e
+        )
+        ProbeResult.Inconclusive
     }
 
     /**
@@ -261,6 +304,12 @@ class EditorSettingsRepository @Inject constructor(
         val ns = namespace.trim('/')
         val ep = endpoint.trim('/')
         return if (shouldUseProxy) {
+            // `GutenbergKitSettingsBuilder` hands GutenbergKit two
+            // namespace prefixes for WPCom-routed sites — `sites/<id>/`
+            // and `sites/<host>/` — so the editor can fall back if one
+            // form doesn't resolve. We probe only `sites/<id>/` because
+            // the WP.com proxy resolves both forms through the same
+            // backend code path; a 404 on one is a 404 on the other.
             "$WPCOM_API_ROOT$ns/sites/${site.siteId}/$ep"
         } else {
             val apiRoot = site.wpApiRestUrl
@@ -311,5 +360,6 @@ class EditorSettingsRepository @Inject constructor(
         private const val WPCOM_API_ROOT =
             "https://public-api.wordpress.com/"
         private const val AUTHORIZATION_HEADER = "Authorization"
+        private const val PROBE_TIMEOUT_MS = 5_000L
     }
 }
