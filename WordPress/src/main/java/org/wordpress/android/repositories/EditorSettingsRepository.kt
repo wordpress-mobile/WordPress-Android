@@ -166,6 +166,11 @@ class EditorSettingsRepository @Inject constructor(
         return if (site.hasApplicationPasswordCredentials()) {
             fetchRouteSupportViaApplicationPasswordClient(site)
         } else {
+            AppLog.w(
+                T.EDITOR,
+                "No application password for site=${site.name};" +
+                    " skipping authenticated direct-host probe"
+            )
             false
         }
     }
@@ -187,6 +192,11 @@ class EditorSettingsRepository @Inject constructor(
             persistRouteSupport(site, response.response.data, resolver)
             true
         } else {
+            AppLog.w(
+                T.EDITOR,
+                "Authenticated direct-host probe failed for" +
+                    " site=${site.name}: ${response::class.simpleName}"
+            )
             false
         }
     }
