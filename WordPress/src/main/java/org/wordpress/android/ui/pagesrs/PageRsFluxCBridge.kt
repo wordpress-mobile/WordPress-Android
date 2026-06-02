@@ -70,7 +70,6 @@ class PageRsFluxCBridge @Inject constructor(
             }
         }
 
-        // Map and insert (mapper sets isPage = true)
         val pageModel = mapper.map(rsPage, site)
         postSqlUtils.insertOrUpdatePost(pageModel, false)
 
