@@ -52,9 +52,7 @@ Language: is
     <string name="pending_draft_one_day_2">Vissir þú að ‘%1$s’ er enn í drögum? Birtu!</string>
     <string name="pending_draft_one_day_1">Þú skrifaðir drög að ‘%1$s’ í gær. Ekki gleyma að birta!</string>
     <string name="swipe_for_more">Strjúktu fyrir meira</string>
-    <string name="reader_err_get_post_not_authorized_signin_fallback">Þú hefur ekki heimild til þess að skoða þessa færslu. Reyndu að skrá þig inn á WordPress.com fyrst eða nota hnappinn efst til þess að opna í vafra í staðinn.</string>
     <string name="reader_err_get_post_not_authorized_signin">Þú hefur ekki heimild til þess að skoða þessa færslu. Reyndu að skrá þig inn á WordPress.com fyrst.</string>
-    <string name="reader_err_get_post_not_authorized_fallback">Þú hefur ekki heimild til þess að skoða þessa færslu. Notaðu hnappinn efst til að reyna í vafra í staðinn.</string>
     <string name="reader_snackbar_err_cannot_like_post_logged_out">Get ekki líkað við þegar þú ert útskráð(ur) af WordPress.com</string>
     <string name="reader_toast_err_already_liked">Þú hefur nú þegar líkað við þessa athugasemd</string>
     <string name="reader_toast_err_comment_not_found">Athugasemd fannst ekki!</string>
@@ -95,8 +93,8 @@ Language: is
     <string name="error_remove_viewer">Gat ekki fjarlægt skoðanda</string>
     <string name="editor_failed_uploads_switch_html">Einhver skráarupphöl mistókust. Þú getur ekki skipt í HTML ham\n        eins og er. Fjarlægja öll misheppnuð upphöl og halda áfram?</string>
     <string name="stop_upload_dialog_title">Hætta upphleðslu?</string>
-    <string name="alert_action_while_uploading" a8c-src-lib="module:editor">Þú ert að hala upp skrá eins og er. Vinsamlegast bíðið þangað til því er lokið.</string>
-    <string name="alert_insert_image_html_mode" a8c-src-lib="module:editor">Þú getur ekki fellt inn skrá í HTML ham. Vinsamlegast skiptu aftur yfir í sjónrænan ham.</string>
+    <string name="alert_action_while_uploading" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Þú ert að hala upp skrá eins og er. Vinsamlegast bíðið þangað til því er lokið.</string>
+    <string name="alert_insert_image_html_mode" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Þú getur ekki fellt inn skrá í HTML ham. Vinsamlegast skiptu aftur yfir í sjónrænan ham.</string>
     <string name="invite_error_for_username">%1$s: %2$s</string>
     <string name="invite_sent">Boð sent</string>
     <string name="invite_error_some_failed">Boð sent en með villu(m)!</string>
@@ -363,6 +361,7 @@ Language: is
     <string name="push_auth_expired">Fyrirspurnin rann út á tíma. Skráðu þig inn á WordPress.com til þess að reyna aftur.</string>
     <string name="ignore">Hunsa</string>
     <string name="stats_insights_best_ever">Flestar flettingar frá upphafi</string>
+    <string name="stats_insights_most_popular_day">Vinsælasti dagurinn</string>
     <string name="stats_insights_today">Tölfræði dagsins í dag</string>
     <string name="stats_insights_all_time">Færslur, flettingar og gestir frá upphafi</string>
     <string name="stats_insights">Innsýn</string>
@@ -429,7 +428,6 @@ Language: is
     <string name="older_two_days">Eldri en 2 dagar</string>
     <string name="posts_empty_list">Engar færslur enn. Hví ekki rita eina?</string>
     <string name="reader_empty_comments">Engar athugasemdir enn</string>
-    <string name="reader_label_view_original">Skoða upprunalega grein</string>
     <string name="reader_toast_err_generic">Gat ekki framkvæmt þessa aðgerð</string>
     <string name="update_verb">Uppfæra</string>
     <string name="schedule_verb">Tímaáætla</string>
@@ -478,14 +476,13 @@ Language: is
     <string name="comment_status_trash">Hent í ruslið</string>
     <string name="cannot_delete_multi_media_items">Ekki var hægt að eyða öllum skrám í þetta sinn. Reyndu aftur síðar.</string>
     <string name="dlg_confirm_trash_comments">Henda í ruslatunnu?</string>
-    <string name="horizontal_alignment" a8c-src-lib="module:editor">Lárétt jöfnun</string>
+    <string name="horizontal_alignment" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Lárétt jöfnun</string>
     <string name="local_draft">Staðvær drög</string>
     <string name="new_media">Ný skrá</string>
     <string name="new_post">Ný færsla</string>
     <string name="remove_account">Fjarlægja vef</string>
     <string name="saving_changes">Vista breytingar</string>
     <string name="select_categories">Veldu flokk</string>
-    <string name="notifications_empty_all">Engar tilkynningar…enn.</string>
     <string name="link_enter_url_text">Texti tengils (valkvæmt)</string>
     <string name="local_changes">Staðværar breytingar</string>
     <string name="post_settings">Stillingar færslu</string>
@@ -550,17 +547,17 @@ Language: is
     <string name="password">Lykilorð</string>
     <string name="username">Notandanafn</string>
     <string name="reader">Lesari</string>
-    <string name="caption" a8c-src-lib="module:editor">Myndatexti (valkvæmt)</string>
+    <string name="caption" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Myndatexti (valkvæmt)</string>
     <string name="anonymous">Nafnlaust</string>
     <string name="pages">Síður</string>
-    <string name="width" a8c-src-lib="module:editor">Breidd</string>
+    <string name="width" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Breidd</string>
     <string name="posts">Færslur</string>
     <string name="no_network_title">Ekkert net tiltækt</string>
-    <string name="featured_in_post" a8c-src-lib="module:editor">Hafa mynd með í efni færslu</string>
-    <string name="featured" a8c-src-lib="module:editor">Nota sem einkennismynd</string>
+    <string name="featured_in_post" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Hafa mynd með í efni færslu</string>
+    <string name="featured" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Nota sem einkennismynd</string>
     <string name="ok">Í lagi</string>
     <string name="link_enter_url">Slóð</string>
-    <string name="uploading" a8c-src-lib="module:editor">Hleð upp…</string>
+    <string name="uploading" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Hleð upp…</string>
     <string name="image_alignment">Jöfnun</string>
     <string name="refresh">Endurhlaða</string>
     <string name="untitled">Án titils</string>

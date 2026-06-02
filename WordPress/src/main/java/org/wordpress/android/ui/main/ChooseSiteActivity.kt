@@ -82,11 +82,11 @@ class ChooseSiteActivity : BaseAppCompatActivity() {
             AnalyticsTracker.track(Stat.SITE_SWITCHER_ADD_SITE_TAPPED)
             AddSiteHandler.addSite(this, accountStore.hasAccessToken(), SiteCreationSource.MY_SITE)
         }
-        binding.progress.isVisible = true
+        binding.progress.isVisible = !appPrefsWrapper.hasFetchedSites
         setupRecycleView()
 
         viewModel.sites.observe(this) {
-            binding.progress.isVisible = false
+            binding.progress.isVisible = !appPrefsWrapper.hasFetchedSites
             binding.recyclerView.isVisible = it.isNotEmpty()
             binding.actionableEmptyView.isVisible = it.isEmpty()
             adapter.setSites(it)
@@ -130,8 +130,12 @@ class ChooseSiteActivity : BaseAppCompatActivity() {
             refreshHelper.isRefreshing = false
         }
         if (event.isError.not()) {
+            appPrefsWrapper.hasFetchedSites = true
             viewModel.loadSites(mode, searchKeyword)
         }
+        // Hide the "first fetch" spinner whether the fetch succeeded or errored so the user
+        // isn't stranded looking at a spinner when the network call fails.
+        binding.progress.isVisible = false
     }
 
     @Suppress("unused")

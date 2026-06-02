@@ -194,7 +194,6 @@ import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.FluxCUtils
 import org.wordpress.android.util.MediaUtils
 import org.wordpress.android.util.NetworkUtils
-import org.wordpress.android.util.PerAppLocaleManager
 import org.wordpress.android.util.ReblogUtils
 import org.wordpress.android.util.ShortcutUtils
 import org.wordpress.android.util.SiteUtils
@@ -334,8 +333,6 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
     @Inject lateinit var reactNativeRequestHandler: ReactNativeRequestHandler
 
     @Inject lateinit var editorMedia: EditorMedia
-
-    @Inject lateinit var perAppLocaleManager: PerAppLocaleManager
 
     @Inject internal lateinit var editPostRepository: EditPostRepository
 
@@ -2229,14 +2226,9 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
             site: SiteModel,
             post: PostImmutableModel?
         ): EditorConfiguration {
-            val locale = perAppLocaleManager
-                .getCurrentLocaleLanguageCode()
-                .replace("_", "-").lowercase()
-
             return gutenbergKitSettingsBuilder.buildPostConfiguration(
                 site = site,
                 accessToken = accountStore.accessToken,
-                locale = locale,
                 cookies = editPostAuthViewModel.getCookiesForPrivateSites(
                     site, privateAtomicCookie
                 ),
@@ -2544,8 +2536,6 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
                 // No-op because it was Aztec only
             }
             RequestCodes.STOCK_MEDIA_PICKER_MULTI_SELECT -> handleStockMediaPickerMultiSelect(data)
-            RequestCodes.GIF_PICKER_SINGLE_SELECT,
-            RequestCodes.GIF_PICKER_MULTI_SELECT -> handleGifPicker(data)
             RequestCodes.HISTORY_DETAIL -> handleHistoryDetail()
             RequestCodes.IMAGE_EDITOR_EDIT_IMAGE -> handleImageEditor(data)
             RequestCodes.SELECTED_USER_MENTION -> handleUserMention(data)
@@ -2587,13 +2577,6 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
                     it
                 )
             }
-        }
-    }
-
-    private fun handleGifPicker(data: Intent?) {
-        val localIds = data?.getIntArrayExtra(MediaPickerConstants.EXTRA_SAVED_MEDIA_MODEL_LOCAL_IDS)
-        if (localIds != null && localIds.isNotEmpty()) {
-            editorMedia.addGifMediaToPostAsync(localIds)
         }
     }
 
