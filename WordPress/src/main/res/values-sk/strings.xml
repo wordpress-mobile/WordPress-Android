@@ -6,6 +6,7 @@ Generator: GlotPress/4.0.3
 Language: sk
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="gutenberg_native_add_button_text" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Pridať text tlačidla</string>
     <string name="activity_log_backup_download_notice_download_action">Stiahnuť</string>
     <string name="error_failed_to_crop_and_save_image">Nepodarilo sa orezať a uložiť obrázok, skúste znova.</string>
     <string name="preview_image_description">Náhľad obrázku</string>
@@ -17,6 +18,8 @@ Language: sk
     <string name="app_theme_light">Svetlá</string>
     <string name="app_theme_dark">Tmavá</string>
     <string name="dialog_confirm_autosave_body_first_part_for_page">Nedávno ste na tejto stránke vykonali zmeny, ale neboli uložené. Zvoľte verziu k načítaniu:\n\n</string>
+    <string name="gutenberg_native_link_to" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Odkaz na</string>
+    <string name="gutenberg_native_link_settings" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Nastavenia odkazu</string>
     <string name="reader_filter_cta">Filter</string>
     <string name="plugin_install_custom_domain_required_dialog_title">Inštaluj plugin</string>
     <string name="scheduled_for">Naplánované na: %s</string>
@@ -107,8 +110,6 @@ Language: sk
     <string name="history_footer_post">Článok vytvorený na %1$s o %2$s</string>
     <string name="history_footer_page">Stránka vytvorená na %1$s o %2$s</string>
     <string name="history_empty_title">Žiadna história</string>
-    <string name="history_empty_subtitle_post">Keď spravíte zmeny vo svojom článku, zobrazí sa vám história</string>
-    <string name="history_empty_subtitle_page">Keď spravíte zmeny na stránke, zobrazí sa vám história</string>
     <string name="enter_wpcom_or_jetpack_site" a8c-src-lib="module:login">Zadajte WordPress.com alebo samo-hostovanú WordPress webovú stránku pripojenú s Jetpack.</string>
     <string name="description_user">Avatar používateľa</string>
     <string name="image_size_full_label">Plná veľkosť</string>
@@ -118,7 +119,6 @@ Language: sk
     <string name="menu_history">História</string>
     <string name="pages_pending">Nepotvrdená recenzia</string>
     <string name="pages_open_page_error">Vybraná stránka nie je dostupná</string>
-    <string name="pages_empty_published">Nezverejnili ste ešte žiadne stránky</string>
     <string name="pages_empty_drafts">Nemáte žiadne koncepty stránok.</string>
     <string name="pages_empty_trashed">Nemáte žiadne vyhodené stránky.</string>
     <string name="pages_empty_scheduled">Nemáte žiadne plánované stránky.</string>
@@ -159,14 +159,11 @@ Language: sk
     <string name="themes_empty_list">Žiadne témy nezodpovedajú vášmu vyhľadávaniu</string>
     <string name="reader_label_post_search_explainer">Čo by ste chceli nájsť?</string>
     <string name="site_settings_tags_empty_title_search">Žiadne značky zodpovedajúce vášmu vyhľadávaniu</string>
-    <string name="site_settings_tags_empty_title">Nemáte žiadne značky</string>
-    <string name="site_settings_tags_empty_subtitle">Pridajte sem svoje často používané značky, tak aby sa mohli rýchlo vybrať pri označovaní vašich príspevkov </string>
     <string name="site_settings_tags_empty_button">Vytvorte značku</string>
     <string name="media_empty_search_list">Žiadne médiá zodpovedajúce vášmu vyhľadávaniu</string>
     <string name="sign_out_wpcom_confirm_with_no_changes">Odhlásiť sa z WordPress?</string>
     <string name="sign_out_wpcom_confirm_with_changes">Máte zmeny v príspevkoch, ktoré neboli nahrané na vaše webové stránky. Ak sa teraz odhlásite, dôjde k ich zmazaniu z vášho zariadenia. Chcete sa aj tak odhlásiť?</string>
     <string name="people_empty_list_filtered_viewers">Zatiaľ žiadni návštevníci</string>
-    <string name="people_empty_list_filtered_users">Zatiaľ žiadni používatelia</string>
     <string name="reader_empty_posts_liked_description">Zobrazia sa tu príspevky, ktoré sa vám páčia</string>
     <string name="reader_empty_posts_liked_title">Zatiaľ nebolo nič označené Páči sa mi to</string>
     <string name="reader_no_followed_blogs_button_discover">Objavte blogy</string>
@@ -177,7 +174,6 @@ Language: sk
     <string name="posts_empty_list_button">Vytvorte príspevok</string>
     <string name="pages_empty_list_button">Vytvorte stránku</string>
     <string name="media_empty_upload_media">Nahrajte súbory</string>
-    <string name="media_empty_list">Nemáte žiadne súbory</string>
     <string name="reader_gallery_images_desc">galéria obrázkov</string>
     <string name="featured_image_desc">hlavný obrázok</string>
     <string name="blavatar_desc">ikona webovej stránky</string>
@@ -669,10 +665,6 @@ Language: sk
     <string name="notifications_tab_title_all">Všetky</string>
     <string name="top_level_category_name">Najvyššia úroveň</string>
     <string name="category_parent">Nadradená kategória (nepovinné):</string>
-    <string name="media_empty_audio_list">Nemáte žiadne audio</string>
-    <string name="media_empty_documents_list">Nemáte žiadne dokumenty</string>
-    <string name="media_empty_videos_list">Nemáte žiadne videá</string>
-    <string name="media_empty_image_list">Nemáte žiadne obrázky</string>
     <string name="media_error_timeout">Serveru trvalo príliš dlho kým odpovedal.</string>
     <string name="media_error_exceeds_memory_limit">Súbor je príliš veľký, aby sa nahral na túto webovú stránku.</string>
     <string name="media_error_exceeds_php_filesize">Súbor presahuje maximálnu veľkosť, ktorú možno nahrať na tejto webovej stránke.</string>
@@ -808,9 +800,7 @@ Language: sk
     <string name="pending_draft_one_day_1">\'%1$s\' ste  včera uložili ako koncept. Nezabudnite ho zverejniť!</string>
     <string name="reader_label_visit">Navštívte webstránku</string>
     <string name="swipe_for_more">Potiahnite prstom pre viac informácii </string>
-    <string name="reader_err_get_post_not_authorized_signin_fallback">Nie ste poverený vidieť tento článok. Pokúste sa prihlásiť do WordPress.com alebo použite tlačidlo akcie a prehliadač sa otvorí.</string>
     <string name="reader_err_get_post_not_authorized_signin">Nie ste poverený vidieť tento článok. Pokúste sa prihlásiť do WordPress.com.</string>
-    <string name="reader_err_get_post_not_authorized_fallback">Nie ste poverený vidieť tento článok. Použite tlčačdilo akcie a prehliadač sa otvorí.</string>
     <string name="reader_snackbar_err_cannot_like_post_logged_out">Nemôžete lajkovať pokiaľ nie ste prihlásený do WordPress.com.</string>
     <string name="reader_toast_err_already_liked">Už ste lajkli komentár.</string>
     <string name="reader_toast_err_comment_not_found">Komentár sa nenašiel!</string>
@@ -853,8 +843,8 @@ Language: sk
     <string name="error_remove_viewer">Nemožno odstrániť návštevníka</string>
     <string name="editor_failed_uploads_switch_html">Nahrávanie niektorých médií zlyhalo. Nemôžete prepnúť do HTML módu v tomto štádiu. Odstrániť všetky zlyhané nahrávania a pokračovať?</string>
     <string name="stop_upload_dialog_title">Zastaviť nahrávanie?</string>
-    <string name="alert_action_while_uploading" a8c-src-lib="module:editor">Práve nahrávate súbory. Počkajte na dokončenie.</string>
-    <string name="alert_insert_image_html_mode" a8c-src-lib="module:editor">V HTML móde nemôžete vkladať súbory. Prepnite sa späť do vizuálneho módu.</string>
+    <string name="alert_action_while_uploading" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Práve nahrávate súbory. Počkajte na dokončenie.</string>
+    <string name="alert_insert_image_html_mode" tools:ignore="UnusedResources" a8c-src-lib="module:editor">V HTML móde nemôžete vkladať súbory. Prepnite sa späť do vizuálneho módu.</string>
     <string name="invite_error_for_username">%1$s: %2$s</string>
     <string name="invite_sent">Pozvánka úspešne odoslaná</string>
     <string name="tap_to_try_again">Ťuknite a skúste ešte raz!</string>
@@ -1109,7 +1099,6 @@ Language: sk
     <string name="notifications_no_search_results">Žiadne stránky sa nezhodujú s \'%s\'</string>
     <string name="search_sites">Nájsť webové stránky</string>
     <string name="notifications_empty_view_reader">Prejsť na čítačku</string>
-    <string name="notifications_empty_action_comments">Pridajte sa ku konverzácii: komentujte príspevky z blogov, ktoré odoberáte</string>
     <string name="notifications_empty_comments">Zatiaľ žiadne komentáre</string>
     <string name="notifications_empty_unread">Máte všetky informácie!</string>
     <string name="reader_short_comment_count_multi">%s komentárov</string>
@@ -1148,6 +1137,7 @@ Language: sk
     <string name="push_auth_expired">Platnosť požiadavky uplynula. Prihláste sa na stránku WordPress.com a skúste to znova.</string>
     <string name="stats_insights_best_ever">Najlepšie zobrazenia</string>
     <string name="ignore">Ignorovať</string>
+    <string name="stats_insights_most_popular_day">Najobľúbenejší deň</string>
     <string name="stats_insights_today">Dnešné štatistiky</string>
     <string name="stats_insights_all_time">Články, zobrazenia a návštevníci počas celej doby</string>
     <string name="stats_insights">Prehľady</string>
@@ -1210,7 +1200,6 @@ Language: sk
     <string name="reader_empty_comments">Zatiaľ nie sú žiadne komentáre</string>
     <string name="reader_label_comments_closed">Už nie je možné pridávať komentáre</string>
     <string name="reader_title_photo_viewer">%1$d z %2$d</string>
-    <string name="reader_label_view_original">Pozrieť originál článku</string>
     <string name="error_refresh_unauthorized_posts">Nemáte oprávnenie prezerať alebo upravovať príspevky</string>
     <string name="help_and_support">Pomoc a podpora</string>
     <string name="comment_trashed">Komentár bol odstránený</string>
@@ -1256,7 +1245,7 @@ Language: sk
     <string name="learn_more">Zistiť viac</string>
     <string name="select_categories">Vyberte si kategórie</string>
     <string name="page_settings">Nastavenia stránky</string>
-    <string name="horizontal_alignment" a8c-src-lib="module:editor">Horizontálne zarovnanie</string>
+    <string name="horizontal_alignment" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Horizontálne zarovnanie</string>
     <string name="post_settings">Nastavenia príspevku</string>
     <string name="comment_status_approved">Schválené</string>
     <string name="comment_status_spam">Spam</string>
@@ -1287,7 +1276,6 @@ Language: sk
     <string name="file_error_create">Nie je možné vytvoriť dočasný súbor. Uistite sa, či máte dostatok miesta vo vašom zariadení.</string>
     <string name="cannot_delete_multi_media_items">Niektoré súbory nie je možné teraz zmazať. skúste neskôr.</string>
     <string name="remove_account">Odstrániť webovú stránku</string>
-    <string name="notifications_empty_all">Žiadne upozornenia. Zatiaľ.</string>
     <string name="error_refresh_media">Média momentálne nemohli byť obnovené </string>
     <string name="invalid_site_url_message">Skontrolujte, či je zadaná adresa URL stránky je platná</string>
     <string name="plugin_not_found">Došlo k chybe pri vstupe do tohto pluginu</string>
@@ -1355,16 +1343,16 @@ Language: sk
     <string name="log_in" a8c-src-lib="module:login">Prihlásiť sa</string>
     <string name="reader">Čitateľ</string>
     <string name="posts">Príspevky</string>
-    <string name="width" a8c-src-lib="module:editor">Šírka</string>
+    <string name="width" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Šírka</string>
     <string name="anonymous">Anonymný</string>
     <string name="no_network_title">Sieť nedostupná</string>
-    <string name="caption" a8c-src-lib="module:editor">Titulok (voliteľný)</string>
-    <string name="featured_in_post" a8c-src-lib="module:editor">Vložiť obrázok do príspevku</string>
+    <string name="caption" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Titulok (voliteľný)</string>
+    <string name="featured_in_post" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Vložiť obrázok do príspevku</string>
     <string name="pages">Podstránky</string>
-    <string name="featured" a8c-src-lib="module:editor">Použiť ilustračný obrázok</string>
+    <string name="featured" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Použiť ilustračný obrázok</string>
     <string name="ok">OK</string>
     <string name="link_enter_url">URL adresa</string>
-    <string name="uploading" a8c-src-lib="module:editor">Nahrávanie…</string>
+    <string name="uploading" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Nahrávanie…</string>
     <string name="image_alignment">Zarovnanie</string>
     <string name="refresh">Obnoviť</string>
     <string name="untitled">Bez názvu</string>

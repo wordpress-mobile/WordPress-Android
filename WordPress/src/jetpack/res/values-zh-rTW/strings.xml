@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-01-16 09:54:03+0000
+Translation-Revision-Date: 2026-03-19 09:55:03+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.4.0-alpha
 Language: zh_TW
@@ -26,8 +26,8 @@ Language: zh_TW
     <string name="login_prologue_revamped_jetpack_feature_text_1">Update a plugin</string>
     <string name="login_prologue_revamped_content_description_jetpack_logo">Jetpack 標誌</string>
     <string name="me_btn_about">關於 Jetpack</string>
-    <string name="sign_out_wpcom_confirm_with_no_changes">是否登出 Jetpack？</string>
-    <string name="me_disconnect_from_wordpress_com">是否登出 Jetpack？</string>
+    <string name="sign_out_wpcom_confirm_with_no_changes">要登出 WordPress.com 嗎？</string>
+    <string name="me_disconnect_from_wordpress_com">登出 WordPress.com</string>
     <string name="support_ticket_subject">Jetpack for Android 支援</string>
     <string name="login_magic_links_sent_label">請使用此裝置查看電子郵件，並點選 Jetpack.com 所傳送電子郵件中的連結。</string>
     <string name="continue_with_wpcom_no_signup">繼續使用 WordPress.com</string>

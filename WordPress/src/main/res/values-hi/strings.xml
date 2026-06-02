@@ -6,16 +6,18 @@ Generator: GlotPress/4.0.3
 Language: hi_IN
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="gutenberg_native_tap_to_edit" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">संपादित करने के लिए टैप करें</string>
     <string name="reader_dropdown_menu_tags">आपके टैग</string>
     <string name="stats_subscribers_marker_view_plural">अभिदाता</string>
     <string name="stats_subscribers_marker_view_singular">अभिदाता</string>
     <string name="privacy_banner_save">सहेजें</string>
     <string name="help_buttons_screen_title">सहायता</string>
     <string name="about_news">समाचार</string>
-    <string name="dialog_button_ok" a8c-src-lib="module:editor">ठीक है</string>
-    <string name="stop_upload_dialog_button_no" a8c-src-lib="module:editor">नहीं</string>
+    <string name="dialog_button_ok" tools:ignore="UnusedResources" a8c-src-lib="module:editor">ठीक है</string>
+    <string name="stop_upload_dialog_button_no" tools:ignore="UnusedResources" a8c-src-lib="module:editor">नहीं</string>
     <string name="my_site_menu_tab_title">मेनू</string>
     <string name="user_profile_site_section_header">साइट</string>
+    <string name="gutenberg_native_new" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">नया</string>
     <string name="mlp_notselected_description">%s</string>
     <string name="reader_expandable_tags_view_overflow_indicator_collapse_title">छिपायें</string>
     <string name="login_or" a8c-src-lib="module:login">या</string>
@@ -100,9 +102,7 @@ Language: hi_IN
     <string name="confirm">पुष्टि करें</string>
     <string name="reader_label_visit">साईट पर जाये</string>
     <string name="swipe_for_more">अधिक के लिए स्वाइप करें</string>
-    <string name="reader_err_get_post_not_authorized_signin_fallback">आप इस पोस्ट को देखने के लिए अधिकृत नहीं  हैं। पहले WordPress.com में जाकर लॉग इन करें या एक ब्राउज़र को खोलने के लिए शीर्ष कार्रवाई बटन का उपयोग करें।</string>
     <string name="reader_err_get_post_not_authorized_signin">आप इस पोस्ट को देखने के लिए अधिकृत नहीं  हैं। पहले WordPress.com में जाकर लॉग इन करें</string>
-    <string name="reader_err_get_post_not_authorized_fallback">आप इस पोस्ट देखने के लिए अधिकृत नहीं  हैं। एक ब्राउज़र बदले की कोशिश करने के लिए शीर्ष कार्रवाई बटन का प्रयोग करें</string>
     <string name="reader_snackbar_err_cannot_like_post_logged_out">Can\'t like while logged out of WordPress.com</string>
     <string name="reader_toast_err_already_liked">आपने पहले से ही उस टिप्पणी को पसंद किया हुआ हैI</string>
     <string name="reader_toast_err_comment_not_found">कोई टिप्पणी नहीं पाया!</string>
@@ -185,6 +185,7 @@ Language: hi_IN
     <string name="button_trash">ट्रैश</string>
     <string name="button_stats">आकड़े</string>
     <string name="ignore">ध्यान न दें</string>
+    <string name="stats_insights_most_popular_day">सबसे लोकप्रिय दिन</string>
     <string name="stats_insights_today">आज के आँकड़े</string>
     <string name="account_settings">अकाउंट सेटिंग्स</string>
     <string name="site_picker_add_self_hosted">सेल्फ-होस्टेड साइट डाले </string>
@@ -271,7 +272,7 @@ Language: hi_IN
     <string name="cannot_delete_multi_media_items">कुछ मीडिया को इस समय हटाया नहीं जा सकता है. बाद में पुन: प्रयास करें.</string>
     <string name="media_gallery_type_thumbnail_grid">लघुछवि ग्रिड</string>
     <string name="post_not_found">पोस्ट लोड करते समय एक त्रुटि हुई.पोस्ट को रिफ्रेश करे और फिर से प्रयास करें</string>
-    <string name="horizontal_alignment" a8c-src-lib="module:editor">क्षैतिज संरेखण</string>
+    <string name="horizontal_alignment" tools:ignore="UnusedResources" a8c-src-lib="module:editor">क्षैतिज संरेखण</string>
     <string name="local_changes">स्थानीय परिवर्तन</string>
     <string name="local_draft">स्थानीय प्रारूप</string>
     <string name="file_error_create">मीडिया अपलोड करने के लिए अस्थायी फ़ाइल नहीं बनाया जा सका. आपके डिवाइस पर पर्याप्त खाली स्थान है सुनिश्चित करें.</string>
@@ -340,13 +341,13 @@ Language: hi_IN
     <string name="no_network_title">नेटवर्क उपलब्ध नहीं </string>
     <string name="pages">पृष्ठे</string>
     <string name="posts">पोस्ट</string>
-    <string name="width" a8c-src-lib="module:editor">चौडाई</string>
-    <string name="caption" a8c-src-lib="module:editor">शीर्षक (वैकल्पिक)</string>
-    <string name="featured" a8c-src-lib="module:editor">विशेष छवि के रुप में उपयोग करें</string>
-    <string name="featured_in_post" a8c-src-lib="module:editor">पोस्ट सामग्री में छवि को शामिल करे</string>
+    <string name="width" tools:ignore="UnusedResources" a8c-src-lib="module:editor">चौडाई</string>
+    <string name="caption" tools:ignore="UnusedResources" a8c-src-lib="module:editor">शीर्षक (वैकल्पिक)</string>
+    <string name="featured" tools:ignore="UnusedResources" a8c-src-lib="module:editor">विशेष छवि के रुप में उपयोग करें</string>
+    <string name="featured_in_post" tools:ignore="UnusedResources" a8c-src-lib="module:editor">पोस्ट सामग्री में छवि को शामिल करे</string>
     <string name="ok">ओके</string>
     <string name="link_enter_url">यूआरएल</string>
-    <string name="uploading" a8c-src-lib="module:editor">अपलोड किया जा रहा</string>
+    <string name="uploading" tools:ignore="UnusedResources" a8c-src-lib="module:editor">अपलोड किया जा रहा</string>
     <string name="image_alignment">संरेखण</string>
     <string name="refresh">रिफ्रेश</string>
     <string name="untitled">बिना शीर्षक का</string>

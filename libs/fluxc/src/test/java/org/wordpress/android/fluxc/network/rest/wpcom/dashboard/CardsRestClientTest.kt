@@ -304,7 +304,7 @@ class CardsRestClientTest {
 
     /* TODAY'S STATS CARD ERRORS */
     @Test
-    fun `given jetpack disconn, when fetch cards triggered, then returns todays stats jetpack disconn card error`() =
+    fun `given jetpack disconn, when fetch cards triggered, then returns today's stats jetpack disconn card error`() =
             test {
                 val json = UnitTestUtils.getStringFromResourceFile(javaClass, DASHBOARD_CARDS_WITH_ERRORS_JSON)
                 initFetchCards(data = getCardsResponseFromJsonString(json))
@@ -315,7 +315,7 @@ class CardsRestClientTest {
             }
 
     @Test
-    fun `given jetpack disabled, when fetch cards triggered, then returns todays stats jetpack disabled card error`() =
+    fun `given jetpack disabled, when fetch cards triggered, then returns today's stats jetpack disabled card error`() =
             test {
                 val json = UnitTestUtils.getStringFromResourceFile(javaClass, DASHBOARD_CARDS_WITH_ERRORS_JSON)
                 val data = getCardsResponseFromJsonString(json)
@@ -328,7 +328,7 @@ class CardsRestClientTest {
             }
 
     @Test
-    fun `given stats unauthorized, when fetch cards triggered, then returns todays stats unauthorized card error`() =
+    fun `given stats unauthorized, when fetch cards triggered, then returns today's stats unauthorized card error`() =
             test {
                 val json = UnitTestUtils.getStringFromResourceFile(javaClass, DASHBOARD_CARDS_WITH_ERRORS_JSON)
                 val data = getCardsResponseFromJsonString(json)
