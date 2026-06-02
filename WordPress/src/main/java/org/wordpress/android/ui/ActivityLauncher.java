@@ -16,6 +16,8 @@ import androidx.annotation.StringRes;
 import androidx.core.app.TaskStackBuilder;
 import androidx.fragment.app.Fragment;
 
+import dagger.hilt.android.EntryPointAccessors;
+
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -92,6 +94,7 @@ import org.wordpress.android.ui.posts.PostUtils;
 import org.wordpress.android.ui.posts.PostUtils.EntryPoint;
 import org.wordpress.android.ui.posts.PostsListActivity;
 import org.wordpress.android.ui.posts.RemotePreviewLogicHelper.RemotePreviewType;
+import org.wordpress.android.ui.pagesrs.PagesRsListActivity;
 import org.wordpress.android.ui.postsrs.PostRsListActivity;
 import org.wordpress.android.posttypes.CptPostTypesActivity;
 import org.wordpress.android.posttypes.bridge.SiteReference;
@@ -684,10 +687,26 @@ public class ActivityLauncher {
     }
 
     public static void viewCurrentBlogPages(@NonNull Context context, @NonNull SiteModel site) {
+        if (shouldUseNewPagesList(context, site)) {
+            context.startActivity(PagesRsListActivity.Companion.createIntent(context));
+            AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_PAGES, site);
+            return;
+        }
         Intent intent = new Intent(context, PagesActivity.class);
         intent.putExtra(WordPress.SITE, site);
         context.startActivity(intent);
         AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_PAGES, site);
+    }
+
+    private static boolean shouldUseNewPagesList(@NonNull Context context, @NonNull SiteModel site) {
+        if (!site.isWPCom() && !site.hasApplicationPassword()) {
+            return false;
+        }
+        ActivityLauncherEntryPoint entryPoint = EntryPointAccessors.fromApplication(
+                context.getApplicationContext(),
+                ActivityLauncherEntryPoint.class
+        );
+        return entryPoint.experimentalFeatures().isEnabled(Feature.RS_PAGES_LIST);
     }
 
     public static void viewPostTypes(@NonNull Context context, @NonNull SiteModel site) {
