@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2025-08-15 13:06:11+0000
+Translation-Revision-Date: 2026-02-16 13:42:53+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.3
 Language: da_DK
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="he_support_category_other">Andet</string>
     <string name="signup_magic_link_title" a8c-src-lib="module:login">Magisk link sendt</string>
     <string name="error_media_save">Kunne ikke gemme medie</string>
     <string name="editor_draft_saved_locally">Kladde gemt på enheden</string>
@@ -73,6 +74,7 @@ Language: da_DK
     <string name="push_auth_expired">Forespørgslen er udløbet. Log ind på WordPress.com og prøv igen.</string>
     <string name="ignore">Ignorer</string>
     <string name="stats_insights_best_ever">Bedste visninger nogensinde</string>
+    <string name="stats_insights_most_popular_day">Mest populære dag</string>
     <string name="stats_insights_today">Dagens statistikker</string>
     <string name="stats_insights_all_time">Totale indlæg, visninger og besøgende</string>
     <string name="stats_insights">Indsigt</string>
@@ -128,7 +130,6 @@ Language: da_DK
     <string name="cab_selected">%d markeret</string>
     <string name="browse_our_faq_button">Gennemse vores FAQ</string>
     <string name="reader_empty_comments">Endnu ingen kommentarer</string>
-    <string name="reader_label_view_original">Vis oprindelig artikel</string>
     <string name="reader_label_like">Synes om</string>
     <string name="reader_label_comments_closed">Der er lukket for kommentarer</string>
     <string name="reader_title_photo_viewer">%1$d af %2$d</string>
@@ -198,7 +199,7 @@ Language: da_DK
     <string name="wordpress_blog">WordPress-blog</string>
     <string name="local_draft">Lokal kladde</string>
     <string name="reader_title_applog">Applikationslog</string>
-    <string name="horizontal_alignment" a8c-src-lib="module:editor">Vandret justering</string>
+    <string name="horizontal_alignment" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Vandret justering</string>
     <string name="link_enter_url_text">Linktekst (valgfri)</string>
     <string name="local_changes">Lokale ændringer</string>
     <string name="http_authorization_required" a8c-src-lib="module:login">Godkendelse påkrævet</string>
@@ -265,16 +266,16 @@ Language: da_DK
     <string name="username">Brugernavn</string>
     <string name="reader">Læser</string>
     <string name="pages">Sider</string>
-    <string name="width" a8c-src-lib="module:editor">Bredde</string>
+    <string name="width" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Bredde</string>
     <string name="posts">Indlæg</string>
     <string name="anonymous">Anonym</string>
     <string name="no_network_title">Intet netværk tilgængeligt</string>
-    <string name="caption" a8c-src-lib="module:editor">Billedtekst (valgfri)</string>
-    <string name="featured" a8c-src-lib="module:editor">Brug som fremhævet billede</string>
-    <string name="featured_in_post" a8c-src-lib="module:editor">Inkluder billede i indhold</string>
+    <string name="caption" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Billedtekst (valgfri)</string>
+    <string name="featured" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Brug som fremhævet billede</string>
+    <string name="featured_in_post" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Inkluder billede i indhold</string>
     <string name="ok">OK</string>
     <string name="link_enter_url">URL</string>
-    <string name="uploading" a8c-src-lib="module:editor">Uploader</string>
+    <string name="uploading" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Uploader</string>
     <string name="image_alignment">Justering</string>
     <string name="refresh">Genindlæs</string>
     <string name="untitled">Ikke-navngivet</string>

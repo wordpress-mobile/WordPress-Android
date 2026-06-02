@@ -25,9 +25,7 @@ Language: cy_GB
     <string name="pending_draft_one_day_2">Wyddoch chi fod \'%1$s\' yn dal i fod yn ddrafft? Cyhoeddwch!</string>
     <string name="pending_draft_one_day_1">Cafodd \'%1$s\' ei ddrafftio ddoe. Peidiwch ag anghofio\'i gyhoeddi!</string>
     <string name="swipe_for_more">Llusgo am rhagor</string>
-    <string name="reader_err_get_post_not_authorized_signin_fallback">Nid oes gennych hawl i weld y cofnod hwn. Mewngofnodwch i WordPress.com yn gyntaf neu ddefnyddiwch y botwm gweithred uchaf i agor porwr yn lle hynny.</string>
     <string name="reader_err_get_post_not_authorized_signin">Nid oes gennych hawl i weld y cofnod hwn. Mewngofnodwch i WordPress.com yn gyntaf.</string>
-    <string name="reader_err_get_post_not_authorized_fallback">Nid oes gennych hawl i weld y cofnod hwn. Defnyddiwch y botwm gweithred uchaf i agor porwr yn lle hynny.</string>
     <string name="reader_snackbar_err_cannot_like_post_logged_out">Nid oes modd hoffi tra fod wedi allgofnodi o WordPress.com</string>
     <string name="reader_toast_err_already_liked">Rydych eisoes wedi hoffi\'r sylw hwnnw</string>
     <string name="reader_toast_err_comment_not_found">Heb ganfod y sylw!</string>
@@ -68,8 +66,8 @@ Language: cy_GB
     <string name="error_remove_viewer">Methu tynnu darllenydd</string>
     <string name="editor_failed_uploads_switch_html">Mae rhai lwythi cyfryngau wedi methu. Nid oes modd newid i\'r modd HTML\n       yn y cyflwr hwn. Tynnu pob cyfrwng sydd wedi methu a pharhau?</string>
     <string name="stop_upload_dialog_title">Atal y llwytho?</string>
-    <string name="alert_action_while_uploading" a8c-src-lib="module:editor">Rydych wrthi\'n llwytho cyfrwng. Arhoswch nes i hyn orffen.</string>
-    <string name="alert_insert_image_html_mode" a8c-src-lib="module:editor">Nid oes modd mewnosod y cyfrwng yn uniongyrchol yn y modd HTML.Ewch i\'r modd gweledol</string>
+    <string name="alert_action_while_uploading" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Rydych wrthi\'n llwytho cyfrwng. Arhoswch nes i hyn orffen.</string>
+    <string name="alert_insert_image_html_mode" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Nid oes modd mewnosod y cyfrwng yn uniongyrchol yn y modd HTML.Ewch i\'r modd gweledol</string>
     <string name="invite_sent">wedi anfon gwahoddiad yn llwyddiannus</string>
     <string name="tap_to_try_again">Tapiwch i geisio eto!</string>
     <string name="invite_error_some_failed">Wedi anfon y gwahoddiad ond digwyddodd gwall(au)!</string>
@@ -336,6 +334,7 @@ Language: cy_GB
     <string name="push_auth_expired">Daeth y cais i ben. Mewngofnodwch i WordPress.com a cheisio eto.</string>
     <string name="stats_insights_best_ever">Golygon Gorau Erioed</string>
     <string name="ignore">Anwybyddu</string>
+    <string name="stats_insights_most_popular_day">Diwrnod mwyaf poblogaidd</string>
     <string name="stats_insights_today">Ystadegau Heddiw</string>
     <string name="stats_insights_all_time">Cofnodion, golygon ac ymwelwyr erioed</string>
     <string name="stats_insights">Mewnwelediadau</string>
@@ -385,7 +384,6 @@ Language: cy_GB
     <string name="cab_selected">%d wedi eu dewis</string>
     <string name="browse_our_faq_button">Porwch ein Cwestiynnau Cyffredin</string>
     <string name="reader_empty_comments">Dim sylwadau eto</string>
-    <string name="reader_label_view_original">Darllen yr erthygl wreiddiol</string>
     <string name="reader_label_like">Hoffi</string>
     <string name="reader_label_comments_closed">Mae\'r sylwadau wedi cau</string>
     <string name="reader_title_photo_viewer">%1$d o %2$d</string>
@@ -439,7 +437,7 @@ Language: cy_GB
     <string name="link_enter_url_text">Testun dolen (dewisol)</string>
     <string name="page_settings">Gosodiadau tudalen</string>
     <string name="local_draft">Drafft lleol</string>
-    <string name="horizontal_alignment" a8c-src-lib="module:editor">Alinio llorweddol</string>
+    <string name="horizontal_alignment" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Alinio llorweddol</string>
     <string name="post_settings">Gosodiadau cofnodion</string>
     <string name="comment_status_approved">Cymeradwy</string>
     <string name="comment_status_unapproved">Dan ystyriaeth</string>
@@ -465,7 +463,6 @@ Language: cy_GB
     <string name="wordpress_blog">Blog WordPress</string>
     <string name="fatal_db_error">Digwyddodd gwall wrth greu cronfa ddata\'r ap. Ceisiwch ailosod yr ap.</string>
     <string name="reader_title_applog">Cofnod yr ap</string>
-    <string name="notifications_empty_all">Dim hysbysiadau…eto.</string>
     <string name="invalid_site_url_message">Gwiriwch fod URL y blog yn ddilys</string>
     <string name="share_link">Rhannu dolen</string>
     <string name="reader_empty_posts_in_tag_updating">Estyn cofnodion…</string>
@@ -522,17 +519,17 @@ Language: cy_GB
     <string name="password">Cyfrinair</string>
     <string name="username">Enw defnyddiwr</string>
     <string name="reader">Darllennydd</string>
-    <string name="featured" a8c-src-lib="module:editor">Defnyddio fel delwedd nodwedd</string>
-    <string name="featured_in_post" a8c-src-lib="module:editor">Cynnwys delwedd yng nghynnwys y cofnod</string>
+    <string name="featured" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Defnyddio fel delwedd nodwedd</string>
+    <string name="featured_in_post" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Cynnwys delwedd yng nghynnwys y cofnod</string>
     <string name="no_network_title">Dim rhwydwaith ar gael</string>
     <string name="pages">Tudalennau</string>
-    <string name="caption" a8c-src-lib="module:editor">Egluryn (dewisol)</string>
-    <string name="width" a8c-src-lib="module:editor">Lled</string>
+    <string name="caption" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Egluryn (dewisol)</string>
+    <string name="width" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Lled</string>
     <string name="posts">Cofnodion</string>
     <string name="anonymous">Di-enw</string>
     <string name="ok">Iawn</string>
     <string name="link_enter_url">URL</string>
-    <string name="uploading" a8c-src-lib="module:editor">Llwytho…</string>
+    <string name="uploading" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Llwytho…</string>
     <string name="image_alignment">Alinio</string>
     <string name="refresh">Adnewyddu</string>
     <string name="untitled">Dideitl</string>

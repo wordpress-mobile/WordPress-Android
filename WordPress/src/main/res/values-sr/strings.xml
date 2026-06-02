@@ -9,6 +9,9 @@ Language: sr_RS
     <string name="feedback_form_add_attachments">Додај прилог</string>
     <string name="bloganuary_dashboard_nudge_overlay_action_dismiss">Идемо!</string>
     <string name="bloganuary_dashboard_nudge_overlay_action_turn_on_prompts">Укључи предлоге за блоговање</string>
+    <string name="gutenberg_native_ungroup_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Разгрупиши блок</string>
+    <string name="gutenberg_native_synced_patterns" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Синхронизоване мустре</string>
+    <string name="gutenberg_native_deeply_nested_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Дубоко угњежден блок</string>
     <string name="pages_no_site_something_went_wrong">Охо, нешто је пошло по злу. Молимо покушајте поново касније.</string>
     <string name="sharing_connect_via_web_warning_positive_button">Иди на веб</string>
     <string name="personalization_screen_scheduled_posts_card_title">Заказани чланци</string>
@@ -21,8 +24,10 @@ Language: sr_RS
     <string name="partial_media_access_prompt_select_more">Означи више</string>
     <string name="partial_media_access_prompt_change_settings">Измени подешавања</string>
     <string name="personalization_screen_title"> Персонализуј почетни језичак</string>
+    <string name="gutenberg_native_choose_a_file" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Одабери датотеку</string>
     <string name="my_site_post_card_menu_view_all_drafts">Види све нацрте</string>
     <string name="my_site_post_card_menu_view_all_scheduled_posts">Види све заказане чланке</string>
+    <string name="gutenberg_native_add_image_or_video" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Додај слику или видео запис</string>
     <string name="dashboard_pages_card_more_menu_all_pages">Све странице</string>
     <string name="dashboard_activity_card_menu_all_activity">Сва активност</string>
     <string name="blaze_campaigns_card_more_menu_view_all_campaigns">Види све кампање</string>
@@ -67,26 +72,70 @@ Language: sr_RS
     <string name="reader_comment_menu_trash">Пребаци у Отпад</string>
     <string name="reader_comment_menu_spam">Означи као Непожељно</string>
     <string name="reader_comment_menu_unapprove">Поништи одобрење</string>
-    <string name="about_automattic_work_with_us_item_subtitle" a8c-src-lib="about">Ради од било где</string>
-    <string name="about_automattic_work_with_us_item_title" a8c-src-lib="about">Ради с нама</string>
+    <string name="about_automattic_app_icon_description" tools:ignore="UnusedResources" a8c-src-lib="about">Иконица апликације</string>
+    <string name="about_automattic_back_icon_description" tools:ignore="UnusedResources" a8c-src-lib="about">Иконица за повратак</string>
+    <string name="about_automattic_logo_description" tools:ignore="UnusedResources" a8c-src-lib="about">Лого Automattic-а</string>
+    <string name="about_automattic_wordpress" tools:ignore="UnusedResources" a8c-src-lib="about">Вордпрес</string>
+    <string name="about_automattic_woocommerce" tools:ignore="UnusedResources" a8c-src-lib="about">WooCommerce</string>
+    <string name="about_automattic_tumblr" tools:ignore="UnusedResources" a8c-src-lib="about">Tumblr</string>
+    <string name="about_automattic_jetpack" tools:ignore="UnusedResources" a8c-src-lib="about">Jetpack</string>
+    <string name="about_automattic_source_code_item_title" tools:ignore="UnusedResources" a8c-src-lib="about">Изворни код</string>
+    <string name="about_automattic_privacy_policy_item_title" tools:ignore="UnusedResources" a8c-src-lib="about">Политика приватности</string>
+    <string name="about_automattic_terms_of_service_item_title" tools:ignore="UnusedResources" a8c-src-lib="about">Услови коришћења</string>
+    <string name="about_automattic_work_with_us_item_subtitle" tools:ignore="UnusedResources" a8c-src-lib="about">Ради од било где</string>
+    <string name="about_automattic_work_with_us_item_title" tools:ignore="UnusedResources" a8c-src-lib="about">Ради с нама</string>
+    <string name="about_automattic_family_item_title" tools:ignore="UnusedResources" a8c-src-lib="about">Automattic породица</string>
+    <string name="about_automattic_twitter_item_title" tools:ignore="UnusedResources" a8c-src-lib="about">Твитер</string>
+    <string name="about_automattic_instagram_item_title" tools:ignore="UnusedResources" a8c-src-lib="about">Инстаграм</string>
+    <string name="about_automattic_share_with_friends_item_title" tools:ignore="UnusedResources" a8c-src-lib="about">Подели с пријатељима</string>
+    <string name="gutenberg_native_add_media" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Додај саржај</string>
+    <string name="gutenberg_native_address_settings" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Подешавања адресе</string>
+    <string name="about_automattic_version_label" tools:ignore="UnusedResources" a8c-src-lib="about">Верзија %1$s</string>
     <string name="about_blog">Блог</string>
+    <string name="about_automattic_main_page_title" tools:ignore="UnusedResources" a8c-src-lib="about">О %1$s</string>
+    <string name="gutenberg_native_the_basics" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Основе</string>
+    <string name="gutenberg_native_selected_default" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Одабрано: Уобичајено</string>
+    <string name="gutenberg_native_get_support" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Тражи подршку</string>
+    <string name="gutenberg_native_font_size" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Величина слова</string>
+    <string name="gutenberg_native_contact_support" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Контактирајте подршку</string>
     <string name="me_btn_about">О Вордпресу</string>
     <string name="comment_author_badge">Аутор</string>
     <string name="my_site_untitled_post">Без наслова</string>
     <string name="my_site_post_card_scheduled_title">Предстојећи заказани чланци</string>
+    <string name="gutenberg_native_create_link" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Направи везу</string>
     <string name="comment_edit_comment">Коментар</string>
     <string name="comment_edit_user_name">Име</string>
     <string name="comment_edit_menu_done">Готово</string>
+    <string name="gutenberg_native_embed_options" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Могућности угнежђавања</string>
     <string name="my_site_btn_domains">Домени</string>
     <string name="blogging_reminders_site_settings_label">%1$s недељно у %2$s</string>
+    <string name="gutenberg_native_selected_s" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Одабрано: %s</string>
+    <string name="gutenberg_native_move_blocks" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Помери блокове</string>
+    <string name="gutenberg_native_use_icon_button" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Користите дугме иконице</string>
+    <string name="gutenberg_native_search_input_field" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Поље за унос претраге</string>
+    <string name="gutenberg_native_search_button_current_button_text_is" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Дугме за претрагу. Тренутни текст на дугмету је</string>
+    <string name="gutenberg_native_search_blocks" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Блокови претраге</string>
+    <string name="gutenberg_native_search_block_label_current_text_is" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Натпис блока претраге. Тренутни текст је</string>
+    <string name="gutenberg_native_outside" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Изван</string>
+    <string name="gutenberg_native_inside" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Унутар</string>
+    <string name="gutenberg_native_1_s_2_s_is_3_s_4_s" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">%1$s. %2$s је %3$s %4$s.</string>
+    <string name="gutenberg_native_add_button_text" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Додај текст дугмета</string>
     <string name="activity_log_backup_download_notice_download_action">Преузми</string>
     <string name="activity_log_backup_download_notice_dismiss_action">Одбаци</string>
     <string name="threat_fix_all_status_success_message_plural">Претње су успешно исправљене.</string>
     <string name="threat_fix_all_confirmation_message_plural">Молимо потврдите да желите да исправите свих %s активних претњи.</string>
     <string name="scan_idle_threats_description_plural">Скенирањем је пронађено %1$s потенцијалних претњи са %2$s. Молимо прегледајте их и примените радњу или притисните дугме за поправку свих. Ми смо %3$s ако смо Вам потребни.</string>
     <string name="restore_warning_action_button">Потврди</string>
+    <string name="gutenberg_native_replace_file" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Замени датотеку</string>
+    <string name="gutenberg_native_replace_audio" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Замени звучни запис</string>
+    <string name="gutenberg_native_problem_opening_the_audio" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Проблем приликом отварања звучног записа</string>
+    <string name="gutenberg_native_open" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">ОТВОРИ</string>
+    <string name="gutenberg_native_lock_icon" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Иконица за закључавање</string>
+    <string name="gutenberg_native_choose_audio" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Одабери звучни запис</string>
+    <string name="gutenberg_native_audio_file" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Датотека звучног записа</string>
     <string name="photo_picker_use_audio">Употреби овај звучни запис</string>
     <string name="photo_picker_choose_audio">Одабери звучни запис са уређаја</string>
+    <string name="gutenberg_native_add_audio" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Додај звучни запис</string>
     <string name="threat_status_fixed">Поправљено</string>
     <string name="threat_found_header">Пронађено</string>
     <string name="pick_audio">Одабери звучни запис</string>
@@ -119,10 +168,15 @@ Language: sr_RS
     <string name="backup_item_media_uploads">Отпремања садржаја</string>
     <string name="backup_item_plugins">Вордпресови додаци</string>
     <string name="backup_item_themes">Вордпрес теме</string>
+    <string name="gutenberg_native_error" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Грешка</string>
+    <string name="gutenberg_native_choose_file" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Одабери датотеку</string>
     <string name="activity_log_item_menu_restore_label">Поврати на ову тачку</string>
     <string name="activity_log_activity_type_filter_label">Тип активности</string>
     <string name="activity_log_date_range_filter_label">Распон датума</string>
     <string name="activity_log_activity_type_filter_header">Филтрирај по типу активности</string>
+    <string name="gutenberg_native_file_name" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Назив датотеке</string>
+    <string name="gutenberg_native_edit_file" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Уреди датотеку</string>
+    <string name="gutenberg_native_copy_file_url" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Ископирај URL датотеке</string>
     <string name="new_site_creation_domain_header_title">Одабери домен</string>
     <string name="activity_log_activity_type_filter_clear">Очисти</string>
     <string name="activity_log_activity_type_filter_apply">Примени</string>
@@ -140,6 +194,11 @@ Language: sr_RS
     <string name="prepublishing_nudges_home_categories_not_set">Није постављено</string>
     <string name="prepublishing_nudges_categories_action">Категорије</string>
     <string name="media_loading_failed">Учитавање садржаја није успело</string>
+    <string name="gutenberg_native_s_is_not_fully_supported" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">\'%s\' није у потпуности подржан</string>
+    <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Дајемо све од себе да додамо нове блокове са сваком објавом.</string>
+    <string name="gutenberg_native_help_button" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Дугме помоћи</string>
+    <string name="gutenberg_native_edit_using_web_editor" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Уреди помоћу веб уређивача</string>
+    <string name="gutenberg_native_choose_images" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Одабери слике</string>
     <string name="mlp_notice_blank_page_created">Празна страница је направљена</string>
     <string name="mlp_notice_page_created">Страница направљена</string>
     <string name="reader_label_toolbar_back">Назад</string>
@@ -152,9 +211,15 @@ Language: sr_RS
     <string name="error_media_xmlrpc_not_allowed">Ваша акција није дозвољена</string>
     <string name="error_media_xmlrcp_server_error">Дошло је до интерне грешке сервера</string>
     <string name="show_n_hidden_items_desc">још %1$s ставки</string>
+    <string name="gutenberg_native_select_a_layout" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Изаберите распоред</string>
     <string name="reader_expandable_tags_view_overflow_indicator_collapse_title">Сакрити</string>
     <string name="create_page_fab_tooltip">Направити страницу</string>
     <string name="create_post_fab_tooltip">Направити чланак</string>
+    <string name="gutenberg_native_video_caption_empty" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Натпис видео записа. Празно</string>
+    <string name="gutenberg_native_updates_the_title" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Ажурира наслов.</string>
+    <string name="gutenberg_native_paste_block_after" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Залепи блок након</string>
+    <string name="gutenberg_native_page_title_s" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Наслов странице. %s</string>
+    <string name="gutenberg_native_page_title_empty" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Наслов странице. Празно</string>
     <string name="mlp_create_page">Напарвити страницу</string>
     <string name="mlp_create_blank_page">Направити празну страницу</string>
     <string name="label_close_button">Затвори</string>
@@ -163,6 +228,12 @@ Language: sr_RS
     <string name="photo_picker_choose_file">Одабери са уређаја</string>
     <string name="error_media_quota_exceeded">Прекорачено ограничење складиштења</string>
     <string name="pick_file">Додај датотеку</string>
+    <string name="gutenberg_native_replace_video" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Замени видео запис</string>
+    <string name="gutenberg_native_replace_image_or_video" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Замени слику или видео запис</string>
+    <string name="gutenberg_native_choose_video" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Одабери видео запис</string>
+    <string name="gutenberg_native_choose_image_or_video" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Одабери слику или видео запис</string>
+    <string name="gutenberg_native_choose_image" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Одабери слику</string>
+    <string name="gutenberg_native_block_removed" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Уклоњен блок</string>
     <string name="signup_confirmation_title" a8c-src-lib="module:login">Потврда пријаве</string>
     <string name="enter_your_site_address">Унесите постојећу адресу свој сајта</string>
     <string name="continue_terms_of_service_text" a8c-src-lib="module:login">Наставком, прихваћате наше %1$sУслове коришћења%2$s.</string>
@@ -176,11 +247,22 @@ Language: sr_RS
     <string name="or_type_your_password" a8c-src-lib="module:login">Или укуцајте своју лозинку</string>
     <string name="send_link_by_email" a8c-src-lib="module:login">Пошаљи повезницу електронском поштом</string>
     <string name="reset_your_password" a8c-src-lib="module:login">Ресетујте своју лозинку</string>
+    <string name="gutenberg_native_s_block_options" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">опције блока %s</string>
+    <string name="gutenberg_native_remove_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Уклони блок</string>
+    <string name="gutenberg_native_duplicate_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Дуплирај блок</string>
+    <string name="gutenberg_native_copied_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Ископиран блок</string>
+    <string name="gutenberg_native_block_pasted" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Блок залепљен</string>
+    <string name="gutenberg_native_block_duplicated" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Блок дуплиран</string>
+    <string name="gutenberg_native_block_cut" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Блок исечен</string>
+    <string name="gutenberg_native_block_copied" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Блок копиран</string>
     <string name="my_site_title_changer_dialog_not_allowed_hint">Наслов сајта може да измени само корисник са администраторском улогом.</string>
     <string name="dialog_confirm_trash_losing_unsaved_changes_title">Несачуване измене</string>
+    <string name="gutenberg_native_open_link_in_a_browser" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Отвори везу у прегледачу</string>
+    <string name="gutenberg_native_double_tap_to_select_the_option" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Двапут тапни за одабир опције</string>
     <string name="everyone">Сви</string>
     <string name="me">Ја</string>
     <string name="menu_content_info">Структура садржаја</string>
+    <string name="gutenberg_native_dismiss" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Одбаци</string>
     <string name="prepublishing_nudges_home_tags_not_set">Није постављено</string>
     <string name="prepublishing_nudges_toolbar_title_publish">Датум објаве</string>
     <string name="prepublishing_nudges_toolbar_title_tags">Додај ознаке</string>
@@ -205,6 +287,8 @@ Language: sr_RS
     <string name="status_and_visibility">Статус &amp; Видљивост</string>
     <string name="update_now">Ажурирај сада</string>
     <string name="pages_item_subtitle">%1$s ·</string>
+    <string name="gutenberg_native_move_to_top" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Помери на горе</string>
+    <string name="gutenberg_native_insert_mention" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Уметни спомињање</string>
     <string name="pages_set_as_posts_page">Постави страницу чланака</string>
     <string name="pages_set_as_homepage">Постави почетну страницу</string>
     <string name="site_settings_select_page">Одабери страницу</string>
@@ -220,6 +304,8 @@ Language: sr_RS
     <string name="page_posts_page_successfully_updated">Страница чланак успешно ажурирана</string>
     <string name="page_homepage_update_failed">Неуспело ажурирање почетне странице</string>
     <string name="page_homepage_successfully_updated">Почетна страница успешно ажурирана</string>
+    <string name="gutenberg_native_select_a_color" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Одабери боју</string>
+    <string name="gutenberg_native_double_tap_to_go_to_color_settings" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Додирни двапут за подешавања боја</string>
     <string name="crop">исеци</string>
     <string name="feature_announcement_find_out_mode">Сазнај више</string>
     <string name="insert_label_with_count">Убаци %d</string>
@@ -236,8 +322,14 @@ Language: sr_RS
     <string name="button_insert">Убаци</string>
     <string name="continue_label">Настави</string>
     <string name="copy_text">Копирај</string>
+    <string name="gutenberg_native_number_of_columns" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Број колона</string>
+    <string name="gutenberg_native_move_block_right" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Помери блок удесно</string>
+    <string name="gutenberg_native_move_block_left" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Помери блок улево</string>
+    <string name="gutenberg_native_move_block_left_from_position_1_s_to_position_2_s" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Помери блок улево од места %1$s на место %2$s</string>
+    <string name="gutenberg_native_move_block_right_from_position_1_s_to_position_2_s" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Помери блок удесно од места %1$s на место %2$s</string>
     <string name="new_site_creation_creating_site_loading_title">Ура!\nСкоро готово</string>
     <string name="new_site_creation_creating_site_loading_subtitle">Ваш сајт ће ускоро бити спреман</string>
+    <string name="gutenberg_native_block_settings" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Подешавања блокова</string>
     <string name="new_site_creation_creating_site_loading_3">Постављање теме</string>
     <string name="new_site_creation_creating_site_loading_2">Додавање могућности веб места</string>
     <string name="pages_and_posts_cancel_auto_upload">Откажи отпремање</string>
@@ -259,6 +351,12 @@ Language: sr_RS
     <string name="editor_uploading_page">Ваша страница се отпрема</string>
     <string name="editor_page_saved_locally">Страница сачувана на уређају</string>
     <string name="editor_page_saved_online">Страница сачувана онлајн</string>
+    <string name="gutenberg_native_warning_message" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Порука упозорења</string>
+    <string name="gutenberg_native_show_post_content" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Прикажи садржај чланка</string>
+    <string name="gutenberg_native_only_show_excerpt" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Прикажи само одломак </string>
+    <string name="gutenberg_native_link_to" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Повежи са</string>
+    <string name="gutenberg_native_link_settings" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Подешавања веза</string>
+    <string name="gutenberg_native_customize" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">ПРИЛАГОДИ</string>
     <string name="post_list_tab_scheduled_posts">Заказано</string>
     <string name="post_list_tab_published_posts">Објављено</string>
     <string name="create_post_page_fab_tooltip_contributors">Направите чланак</string>
@@ -274,7 +372,13 @@ Language: sr_RS
     <string name="stats_insights_management_general">Опште</string>
     <string name="stats_management_screen_title">Додај нову картицу</string>
     <string name="stats_management_add_new_stats_card">Додај нову картицу статистике</string>
+    <string name="gutenberg_native_replace_current_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Замени тренутни блок</string>
+    <string name="gutenberg_native_add_to_end" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Додај на крај</string>
+    <string name="gutenberg_native_add_to_beginning" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Додај на почетак</string>
+    <string name="gutenberg_native_add_block_before" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Додај блок пре</string>
+    <string name="gutenberg_native_add_block_after" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Додај блок после</string>
     <string name="reader_filter_cta">Филтрирај</string>
+    <string name="gutenberg_native_edit_video" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Уреди видео запис</string>
     <string name="fab_create_desc">Креирај чланак</string>
     <string name="stats_box_type_very_high">врло високо</string>
     <string name="stats_box_type_high">високо</string>
@@ -309,6 +413,35 @@ Language: sr_RS
     <string name="suffix_1_000_000_000">%sB</string>
     <string name="suffix_1_000_000">%sM</string>
     <string name="suffix_1_000">%sK</string>
+    <string name="gutenberg_native_tap_to_hide_the_keyboard" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Додирни да сакријеш тастатуру</string>
+    <string name="gutenberg_native_tap_here_to_show_help" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Додирни овде да се прикаже помоћ</string>
+    <string name="gutenberg_native_start_writing" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Почни да пишеш…</string>
+    <string name="gutenberg_native_take_a_video" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Направи видео запис</string>
+    <string name="gutenberg_native_take_a_photo" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Направи фотографију</string>
+    <string name="gutenberg_native_unsupported" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Неподржано</string>
+    <string name="gutenberg_native_cut_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Исеци блок</string>
+    <string name="gutenberg_native_s_block_empty" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">%s блок. Празно</string>
+    <string name="gutenberg_native_post_title_s" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Наслов чланка. %s</string>
+    <string name="gutenberg_native_post_title_empty" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Наслов чланка. Празно</string>
+    <string name="gutenberg_native_paste_url" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Залепи URL</string>
+    <string name="gutenberg_native_open_settings" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Отвори подешавања</string>
+    <string name="gutenberg_native_move_block_down_from_row_1_s_to_row_2_s" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Помери блок доле од реда %1$s до реда %2$s</string>
+    <string name="gutenberg_native_move_block_up_from_row_1_s_to_row_2_s" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Помери блок горе од реда %1$s до реда %2$s</string>
+    <string name="gutenberg_native_move_block_up" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Помери блок горе</string>
+    <string name="gutenberg_native_help_icon" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Иконица помоћи</string>
+    <string name="gutenberg_native_hide_keyboard" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Сакриј тастатуру</string>
+    <string name="gutenberg_native_link_text" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Текст везе</string>
+    <string name="gutenberg_native_link_inserted" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Веза уметнута</string>
+    <string name="gutenberg_native_move_block_down" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Помери блок доле</string>
+    <string name="gutenberg_native_current_value_is_s" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Тренутна вредност је %s</string>
+    <string name="gutenberg_native_choose_from_device" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Одабери свој уређај</string>
+    <string name="gutenberg_native_alt_text" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Алтернативни текст</string>
+    <string name="gutenberg_native_add_url" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Додај URL</string>
+    <string name="gutenberg_native_add_block_here" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">ДОДАЈ БЛОК ОВДЕ</string>
+    <string name="gutenberg_native_add_description" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Додај опис</string>
+    <string name="gutenberg_native_an_unknown_error_occurred_please_try_again" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Јавила се непозната грешка. Молимо вас да покушате поново касније.</string>
+    <string name="gutenberg_native_add_alt_text" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Додај алтернативни текст</string>
+    <string name="gutenberg_native_add_video" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Додај видео запис</string>
     <string name="notifications_tab_dialog_switch_desc">Обавештења</string>
     <string name="main_switch_default_title_off">Искључи</string>
     <string name="main_switch_default_title_on">Укључи</string>
@@ -358,7 +491,6 @@ Language: sr_RS
     <string name="notification_post_will_be_published_in_one_hour">\"%s\" ће бити објављен за 1 сат</string>
     <string name="notification_post_has_been_published">\"%s\" је објављен</string>
     <string name="post_notification_when_published">Кад је објављено</string>
-    <string name="post_settings_time_and_date">Датум и време</string>
     <string name="post_notification_off">Искључено</string>
     <string name="post_notification_ten_minutes_before">10 минута раније</string>
     <string name="post_notification_one_hour_before">1 сат раније</string>
@@ -444,7 +576,6 @@ Language: sr_RS
     <string name="posts_draft_empty">Немате чланке у нацртима</string>
     <string name="posts_trashed_empty">Немате чланке у отпаду</string>
     <string name="posts_scheduled_empty">Немате заказане чланке</string>
-    <string name="posts_published_empty">Још увек нисте објавили ниједан чланак</string>
     <string name="notification_wpcom_username_needed" a8c-src-lib="module:login">Молимо, пријавите се са својим корисничким именом и лозинком.</string>
     <string name="stats_insights_total_comments">Укупно коментара</string>
     <string name="stats_insights_average_comments">Просечно коментара / чланак</string>
@@ -576,8 +707,6 @@ Language: sr_RS
     <string name="history_loading_revision">Ревизије се учитавају</string>
     <string name="history_loaded_revision">Ревизије су учитане</string>
     <string name="history_empty_title">Још увек нема историјата</string>
-    <string name="history_empty_subtitle_post">Када направите измене на свом чланку, бићете у могућности да видите историјат овде</string>
-    <string name="history_empty_subtitle_page">Када направите измене на својој страници, бићете у могућности да видите историјат овде</string>
     <string name="description_user">Кориснички аватар</string>
     <string name="image_size_full_label">Пуна величина</string>
     <string name="image_size_large_label">Велико</string>
@@ -594,7 +723,6 @@ Language: sr_RS
     <string name="pages_empty_trashed">Немате страница у отпаду</string>
     <string name="pages_empty_scheduled">Немате заказаних страница</string>
     <string name="pages_empty_drafts">Немате страница у нацртима</string>
-    <string name="pages_empty_published">Још увек немате ниједну објављену страницу</string>
     <string name="pages_trashed">У отпаду</string>
     <string name="pages_scheduled">Заказано</string>
     <string name="pages_drafts">Нацрти</string>
@@ -621,12 +749,10 @@ Language: sr_RS
     <string name="login_to_to_connect_jetpack" a8c-src-lib="module:login">Пријавите се на WordPress.com налог који сте користили за повезивање Jetpack-а.</string>
     <string name="sign_out_wpcom_confirm_with_no_changes">Одјавите се из Вордпреса?</string>
     <string name="site_settings_tags_empty_button">Направити ознаку</string>
-    <string name="site_settings_tags_empty_title">Немате ниједну ознаку</string>
     <string name="site_settings_tags_empty_title_search">Нема ознака које се поклапају са Вашом претрагом</string>
     <string name="reader_label_post_search_explainer">Шта бисте желели да пронађете?</string>
     <string name="themes_empty_list">Нема тема које се поклапају са Вашом претрагом</string>
     <string name="media_empty_search_list">Нема садржаја који се поклапа са Вашом претрагом</string>
-    <string name="people_empty_list_filtered_users">Још увек нема корисника</string>
     <string name="people_empty_list_filtered_viewers">Још увек нема гледалаца</string>
     <string name="reader_empty_posts_liked_description">Чланци који Вам се свиђају ће се појавити овде</string>
     <string name="notifications_empty_likes">Још нема свиђања</string>
@@ -634,7 +760,6 @@ Language: sr_RS
     <string name="posts_empty_list_button">Направити чланак</string>
     <string name="pages_empty_list_button">Направити страницу</string>
     <string name="media_empty_upload_media">Отпреми садржај</string>
-    <string name="media_empty_list">Немате никакав садржај</string>
     <string name="reader_gallery_images_desc">Галерија слика</string>
     <string name="blavatar_desc">иконица сајта</string>
     <string name="theme_image_desc">слика теме</string>
@@ -1048,10 +1173,6 @@ Language: sr_RS
     <string name="notifications_tab_title_all">Све</string>
     <string name="top_level_category_name">Највиши ниво</string>
     <string name="category_parent">Родитељска категорија (опционо):</string>
-    <string name="media_empty_audio_list">Немате ниједан звучни запис</string>
-    <string name="media_empty_documents_list">Немате ниједан документ</string>
-    <string name="media_empty_videos_list">Немате ниједан видео запис</string>
-    <string name="media_empty_image_list">Немате ниједну слику</string>
     <string name="media_error_timeout">Одзив сервера је трајао предуго</string>
     <string name="media_error_exceeds_memory_limit">Датотека је превелика да би се отпрмила на овај сајт</string>
     <string name="media_error_exceeds_php_filesize">Датотека премашује максималну величину за отпремање на овом сајту</string>
@@ -1143,9 +1264,7 @@ Language: sr_RS
     <string name="pending_draft_one_day_2">Да ли сте знали да је \'%1$s\' још увек нацрт? Објавите га!</string>
     <string name="reader_label_visit">Посети</string>
     <string name="swipe_for_more">Превуците за више</string>
-    <string name="reader_err_get_post_not_authorized_signin_fallback">Није вам дозвољено да погледате овај пост. Пробајте да се пријавите у WordPress.com прво или искористите дугме на врху да отворите пост у интернет прегледачу.</string>
     <string name="reader_err_get_post_not_authorized_signin">Није вам дозвољено да гледате овај пост. Пробајте да се пријавите у WordPress.com прво.</string>
-    <string name="reader_err_get_post_not_authorized_fallback">Није вам дозвољено да гледате овај пост. Кликните на дугме на врху да отворите пост у интернет прегледачу.</string>
     <string name="reader_snackbar_err_cannot_like_post_logged_out">Не можете да лајкујете док се не улогујете у WordPress.com</string>
     <string name="reader_toast_err_already_liked">Већ сте лајковали овај коментар</string>
     <string name="reader_toast_err_comment_not_found">Коментар није пронађен!</string>
@@ -1186,8 +1305,8 @@ Language: sr_RS
     <string name="error_remove_viewer">Није могуће уклонити прегледач</string>
     <string name="editor_failed_uploads_switch_html">Неки од медија које сте послали нису успешно послати. У овом тренутку не можете да се пребаците у HTML мод.\nЖелите ли да уклоните све неуспешне медије и да наставите?</string>
     <string name="stop_upload_dialog_title">Заустави слање?</string>
-    <string name="alert_action_while_uploading" a8c-src-lib="module:editor">Тренутно додајете медиј. Молимо вас сачекајте док се додавање не заврши.</string>
-    <string name="alert_insert_image_html_mode" a8c-src-lib="module:editor">Није могуће убацити медиј директно у HTML peжиму. Молимo вас пребаците се на визуални режим.</string>
+    <string name="alert_action_while_uploading" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Тренутно додајете медиј. Молимо вас сачекајте док се додавање не заврши.</string>
+    <string name="alert_insert_image_html_mode" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Није могуће убацити медиј директно у HTML peжиму. Молимo вас пребаците се на визуални режим.</string>
     <string name="invite_error_for_username">%1$s: %2$s</string>
     <string name="tap_to_try_again">Притисните да пробате поново!</string>
     <string name="invite_sent">Позивница је успешно послата</string>
@@ -1402,9 +1521,6 @@ Language: sr_RS
     <string name="reader_label_gap_marker">Учитај више чланака</string>
     <string name="search_sites">Претражи сајтове</string>
     <string name="notifications_empty_view_reader">Идите у Читач</string>
-    <string name="notifications_empty_action_followers_likes">Будите примећени: коментаришите чланке које сте прочитали</string>
-    <string name="notifications_empty_action_comments">Придружите се разговору: коментаришите чланке блогова које пратите</string>
-    <string name="notifications_empty_action_all">Будите активни! Коментaришите чланке блогова које пратите.</string>
     <string name="notifications_empty_comments">Још увек нема коментара</string>
     <string name="notifications_empty_unread">У току сте са свим!</string>
     <string name="reader_short_comment_count_multi">%s коментара</string>
@@ -1442,6 +1558,7 @@ Language: sr_RS
     <string name="push_auth_expired">Захтев је истекао. Пријавите се на WordPress.com да бисте покушали поново.</string>
     <string name="ignore">Занемари</string>
     <string name="stats_insights_best_ever">Најбољи прегледи икад</string>
+    <string name="stats_insights_most_popular_day">Најпопуларнији дан</string>
     <string name="stats_insights_today">Данашња статистика</string>
     <string name="stats_insights_all_time">Чланци, прегледи и посетиоци за све време</string>
     <string name="stats_insights">Увиди</string>
@@ -1495,7 +1612,6 @@ Language: sr_RS
     <string name="ssl_certificate_details">Детаљи</string>
     <string name="cab_selected">%d изабрано</string>
     <string name="reader_empty_comments">Нема коментара</string>
-    <string name="reader_label_view_original">Прикажи изворни чланак</string>
     <string name="reader_label_like">Свиђа ми се</string>
     <string name="reader_label_comments_closed">Коментарисање је затворено</string>
     <string name="reader_title_photo_viewer">%1$d од %2$d</string>
@@ -1573,7 +1689,7 @@ Language: sr_RS
     <string name="view_in_browser">Погледајте у прегледачу веба</string>
     <string name="reader_title_applog">Белешка апликације</string>
     <string name="fatal_db_error">Дошло је до грешке током прављења базе података апликације. Покушајте поново са инсталацијом апликације.</string>
-    <string name="horizontal_alignment" a8c-src-lib="module:editor">Водоравно поравнање</string>
+    <string name="horizontal_alignment" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Водоравно поравнање</string>
     <string name="mnu_comment_spam">Непожељни коментар</string>
     <string name="comment_status_spam">Непожељни коментар</string>
     <string name="post_not_found">Дошло је до грешке током учитавања чланка. Освежите списак чланака и пробајте поново.</string>
@@ -1582,7 +1698,6 @@ Language: sr_RS
     <string name="file_not_found">Није могуће пронаћи датотеку за отпремање. Да ли је можда обрисана или померена?</string>
     <string name="invalid_site_url_message">Проверите да ли је унета УРЛ адреса тачна</string>
     <string name="error_refresh_media">Тренутно није могуће освежити медије</string>
-    <string name="notifications_empty_all">Нема обавештења … још увек.</string>
     <string name="delete_page">Обриши страницу?</string>
     <string name="delete_post">Обриши чланак?</string>
     <string name="share_link">Подели везу</string>
@@ -1645,17 +1760,17 @@ Language: sr_RS
     <string name="log_in" a8c-src-lib="module:login">Пријавите се</string>
     <string name="reader">Читач</string>
     <string name="pages">Стране</string>
-    <string name="featured" a8c-src-lib="module:editor">Користи као препоручену слику</string>
+    <string name="featured" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Користи као препоручену слику</string>
     <string name="no_network_title">Нема доступне мреже</string>
-    <string name="caption" a8c-src-lib="module:editor">Натпис (опционо)</string>
-    <string name="width" a8c-src-lib="module:editor">Ширина</string>
+    <string name="caption" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Натпис (опционо)</string>
+    <string name="width" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Ширина</string>
     <string name="posts">Чланци</string>
     <string name="anonymous">Анониман</string>
-    <string name="featured_in_post" a8c-src-lib="module:editor">Укључи слику у садржај чланка</string>
+    <string name="featured_in_post" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Укључи слику у садржај чланка</string>
     <string name="ok">У реду</string>
     <string name="done">обављено</string>
     <string name="link_enter_url">URL</string>
-    <string name="uploading" a8c-src-lib="module:editor">Отпремање…</string>
+    <string name="uploading" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Отпремање…</string>
     <string name="image_alignment">Поравнање</string>
     <string name="refresh">Освежи</string>
     <string name="untitled">Без имена</string>
