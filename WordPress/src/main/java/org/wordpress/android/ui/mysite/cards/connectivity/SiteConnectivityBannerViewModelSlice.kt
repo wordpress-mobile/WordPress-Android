@@ -74,10 +74,11 @@ class SiteConnectivityBannerViewModelSlice @Inject constructor(
             // the application-password card owns that state and a later fetch will succeed.
             val suppressForPendingAuth =
                 !ok && editorSettingsRepository.isAwaitingApplicationPassword(site)
-            _uiModel.postValue(
-                if (ok || hasCache || suppressForOffline || suppressForPendingAuth) null
-                else buildBanner()
-            )
+            // Show the banner only as a last resort — not when detection succeeded, when we have
+            // cached capabilities, or while a transient non-error state (offline / pending creds)
+            // already explains the failure.
+            val suppressBanner = ok || hasCache || suppressForOffline || suppressForPendingAuth
+            _uiModel.postValue(if (suppressBanner) null else buildBanner())
         }
     }
 
