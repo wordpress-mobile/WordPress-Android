@@ -87,6 +87,7 @@ public class LoginActivity extends BaseAppCompatActivity implements
     private static final String KEY_IS_WAITING_FOR_SITES = "KEY_IS_WAITING_FOR_SITES";
     private static final String KEY_OLD_SITES_IDS = "KEY_OLD_SITES_IDS";
     private static final String KEY_SHARE_FLOW_LOGIN_LAUNCHED = "KEY_SHARE_FLOW_LOGIN_LAUNCHED";
+    private static final String KEY_FETCHING_PRIMARY_SITE = "KEY_FETCHING_PRIMARY_SITE";
 
     private int mFragmentContainerId;
     private View mLoadingOverlay;
@@ -116,6 +117,11 @@ public class LoginActivity extends BaseAppCompatActivity implements
     private boolean mIsWaitingForSitesToLoad = false;
     // Flag to track that the user actually launched a login during share flow
     private boolean mShareFlowLoginLaunched = false;
+    // Flag to track when the in-flight site fetch targets the user's primary blog (via /me),
+    // so a failure can fall back to fetching the full site list. Assumes no other code path
+    // dispatches a site fetch during the post-OAuth login window — OnSiteChanged has no
+    // causeOfChange, so a spurious event here would be mistaken for our primary-site result.
+    private boolean mFetchingPrimarySite = false;
     private ArrayList<Integer> mOldSitesIdsForLoginUpdate;
 
     @Inject ExperimentalFeatures mExperimentalFeatures;
@@ -207,6 +213,7 @@ public class LoginActivity extends BaseAppCompatActivity implements
             mUnifiedLoginTracker.setFlow(savedInstanceState.getString(KEY_UNIFIED_TRACKER_FLOW));
             mIsWaitingForSitesToLoad = savedInstanceState.getBoolean(KEY_IS_WAITING_FOR_SITES);
             mShareFlowLoginLaunched = savedInstanceState.getBoolean(KEY_SHARE_FLOW_LOGIN_LAUNCHED);
+            mFetchingPrimarySite = savedInstanceState.getBoolean(KEY_FETCHING_PRIMARY_SITE);
             mOldSitesIdsForLoginUpdate = savedInstanceState.getIntegerArrayList(KEY_OLD_SITES_IDS);
         }
 
@@ -243,6 +250,7 @@ public class LoginActivity extends BaseAppCompatActivity implements
         }
         outState.putBoolean(KEY_IS_WAITING_FOR_SITES, mIsWaitingForSitesToLoad);
         outState.putBoolean(KEY_SHARE_FLOW_LOGIN_LAUNCHED, mShareFlowLoginLaunched);
+        outState.putBoolean(KEY_FETCHING_PRIMARY_SITE, mFetchingPrimarySite);
         outState.putIntegerArrayList(KEY_OLD_SITES_IDS, mOldSitesIdsForLoginUpdate);
     }
 
@@ -309,9 +317,17 @@ public class LoginActivity extends BaseAppCompatActivity implements
                 String errMsg = this.getString(R.string.error_fetching_account, event.error.message);
                 ToastUtils.showToast(this, errMsg, Duration.LONG);
             } else if (event.causeOfChange == AccountAction.FETCH_ACCOUNT) {
-                // Account fetched, now fetch sites
-                AppLog.i(T.MAIN, "Account fetched, now fetching sites");
-                mDispatcher.dispatch(SiteActionBuilder.newFetchSitesAction(SiteUtils.getFetchSitesPayload()));
+                // Account fetched. To avoid the slow full /me/sites fetch for users with many
+                // sites, fetch only the primary blog returned by /me. Fall back to the full list
+                // if there's no primary blog or the targeted fetch fails (see onSiteChanged).
+                long primarySiteId = mAccountStore.getAccount().getPrimarySiteId();
+                if (primarySiteId > 0) {
+                    AppLog.i(T.MAIN, "Account fetched, fetching primary site " + primarySiteId);
+                    dispatchFetchPrimarySite(primarySiteId);
+                } else {
+                    AppLog.i(T.MAIN, "Account fetched with no primary site, fetching all sites");
+                    dispatchFetchAllSites();
+                }
             }
         }
     }
@@ -319,14 +335,42 @@ public class LoginActivity extends BaseAppCompatActivity implements
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSiteChanged(OnSiteChanged event) {
-        if (mIsWaitingForSitesToLoad) {
+        if (!mIsWaitingForSitesToLoad) {
+            return;
+        }
+        if (mFetchingPrimarySite) {
+            mFetchingPrimarySite = false;
+            if (event.isError()) {
+                AppLog.w(T.MAIN, "Primary site fetch failed: " + event.error.type
+                        + ", falling back to fetching all sites");
+                dispatchFetchAllSites();
+                return;
+            }
+            AppLog.i(T.MAIN, "Primary site fetched, proceeding to main activity");
+            // Kick off a background fetch of the remaining sites so the user can move on without
+            // waiting. SiteStore will populate independently; LoginActivity ignores the result
+            // because finishLoginAfterSitesLoaded() clears mIsWaitingForSitesToLoad below.
+            dispatchFetchAllSites();
+        } else {
             if (event.isError()) {
                 AppLog.e(T.MAIN, "Site fetch failed: " + event.error.type);
             }
-            // Sites loaded (or failed), proceed to main activity
             AppLog.i(T.MAIN, "Sites loaded, proceeding to main activity");
-            finishLoginAfterSitesLoaded();
         }
+        finishLoginAfterSitesLoaded();
+    }
+
+    private void dispatchFetchPrimarySite(long primarySiteId) {
+        mFetchingPrimarySite = true;
+        SiteModel primarySite = new SiteModel();
+        primarySite.setSiteId(primarySiteId);
+        primarySite.setIsWPCom(true);
+        primarySite.setOrigin(SiteModel.ORIGIN_WPCOM_REST);
+        mDispatcher.dispatch(SiteActionBuilder.newFetchSiteAction(primarySite));
+    }
+
+    private void dispatchFetchAllSites() {
+        mDispatcher.dispatch(SiteActionBuilder.newFetchSitesAction(SiteUtils.getFetchSitesPayload()));
     }
 
     private void finishLoginAfterSitesLoaded() {
