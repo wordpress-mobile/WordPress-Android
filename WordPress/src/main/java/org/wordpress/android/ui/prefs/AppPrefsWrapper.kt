@@ -537,6 +537,10 @@ class AppPrefsWrapper @Inject constructor(val buildConfigWrapper: BuildConfigWra
         get() = getBoolean(AppPrefs.DeletablePrefKey.HAS_SAVED_PRIVACY_SETTINGS, false)
         set(value) = AppPrefs.setBoolean(AppPrefs.DeletablePrefKey.HAS_SAVED_PRIVACY_SETTINGS, value)
 
+    var hasFetchedSites: Boolean
+        get() = getBoolean(AppPrefs.DeletablePrefKey.HAS_FETCHED_SITES, false)
+        set(value) = AppPrefs.setBoolean(AppPrefs.DeletablePrefKey.HAS_FETCHED_SITES, value)
+
     var pinnedSiteLocalIds: MutableSet<Int>
         get() = Gson().fromJson(AppPrefs.getPinnedSiteLocalIds(), Array<Int>::class.java).toMutableSet()
         set(value) = AppPrefs.setPinnedSiteLocalIds(Gson().toJson(value))

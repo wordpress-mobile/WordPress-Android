@@ -155,8 +155,6 @@ Language: zh_TW
     <string name="post_rs_confirm_delete_message">這將會永久刪除此文章。 此動作無法復原。</string>
     <string name="post_rs_confirm_trash_message">你確定要將這篇文章移至垃圾桶嗎？</string>
     <string name="post_rs_failed_to_load">無法載入文章</string>
-    <string name="experimental_rs_post_list_description">以更現代的 UI 顯示文章清單，適用於 WordPress.com 和有應用程式密碼的自助託管網站</string>
-    <string name="experimental_rs_post_list">新文章清單</string>
     <string name="beta_label">測試版</string>
     <string name="stats_error_admin_url_unavailable">無法開啟此網站的 WP 管理員</string>
     <string name="stats_error_parsing">載入資料時發生問題。 請再試一次</string>
