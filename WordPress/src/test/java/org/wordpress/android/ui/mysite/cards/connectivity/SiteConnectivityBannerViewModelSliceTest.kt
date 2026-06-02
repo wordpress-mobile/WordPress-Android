@@ -86,6 +86,20 @@ class SiteConnectivityBannerViewModelSliceTest : BaseUnitTest() {
         }
 
     @Test
+    fun `given fetch fails but app password pending, when fetchCapabilities invoked, then banner is null`() =
+        test {
+            whenever(editorSettingsRepository.fetchEditorCapabilitiesForSite(siteTest)).thenReturn(false)
+            whenever(editorSettingsRepository.hasCachedCapabilities(siteTest)).thenReturn(false)
+            whenever(editorSettingsRepository.isAwaitingApplicationPassword(siteTest)).thenReturn(true)
+
+            slice.fetchCapabilities(siteTest, isUserInitiated = false)
+            advanceUntilIdle()
+
+            // Credentials are still being minted — pending, not a connection failure.
+            assertThat(emittedBanners.last()).isNull()
+        }
+
+    @Test
     fun `given fetch fails but cache exists, when fetchCapabilities invoked, then banner is null`() = test {
         whenever(editorSettingsRepository.fetchEditorCapabilitiesForSite(siteTest)).thenReturn(false)
         whenever(editorSettingsRepository.hasCachedCapabilities(siteTest)).thenReturn(true)

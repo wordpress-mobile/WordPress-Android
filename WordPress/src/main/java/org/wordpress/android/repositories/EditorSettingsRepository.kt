@@ -35,6 +35,17 @@ class EditorSettingsRepository @Inject constructor(
         appPrefsWrapper.hasSiteEditorCapabilities(site)
 
     /**
+     * True when capability detection can't run yet because an Atomic site's
+     * direct-host probe needs an application password that hasn't been
+     * provisioned. The password is minted asynchronously on the My Site
+     * screen (see ApplicationPasswordViewModelSlice), so a first-login fetch
+     * can fail purely for lack of credentials — callers should treat this as
+     * pending, not a connection failure.
+     */
+    fun isAwaitingApplicationPassword(site: SiteModel): Boolean =
+        site.isWPComAtomic && !site.hasApplicationPasswordCredentials()
+
+    /**
      * Returns whether the site is known to support the
      * `wp-block-editor/v1/settings` endpoint, based on
      * cached editor settings or a previously persisted

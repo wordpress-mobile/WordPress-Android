@@ -52,7 +52,16 @@ class SiteConnectivityBannerViewModelSlice @Inject constructor(
             // connection" banner already covers this case, and stacking warnings
             // for the same root cause is just noise.
             val suppressForOffline = !ok && !networkUtilsWrapper.isNetworkAvailable()
-            _uiModel.postValue(if (ok || hasCache || suppressForOffline) null else buildBanner())
+            // Atomic sites probe the direct host with an application password that's minted
+            // asynchronously on this same screen, so a first-login fetch can fail purely because
+            // the credential isn't ready yet. Treat that as pending, not a connection failure —
+            // the application-password card owns that state and a later fetch will succeed.
+            val suppressForPendingAuth =
+                !ok && editorSettingsRepository.isAwaitingApplicationPassword(site)
+            _uiModel.postValue(
+                if (ok || hasCache || suppressForOffline || suppressForPendingAuth) null
+                else buildBanner()
+            )
         }
     }
 
