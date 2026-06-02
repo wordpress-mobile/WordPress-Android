@@ -153,8 +153,6 @@ Language: ja_JP
     <string name="post_rs_confirm_delete_message">この投稿は完全に削除されます。 この操作を取り消すことはできません。</string>
     <string name="post_rs_confirm_trash_message">この投稿をゴミ箱へ移動してもよいですか ?</string>
     <string name="post_rs_failed_to_load">投稿の読み込みに失敗しました</string>
-    <string name="experimental_rs_post_list_description">アプリケーションパスワードを使用して、WordPress.com やインストール型サイト向けの最新の UI で投稿リストを表示します</string>
-    <string name="experimental_rs_post_list">新規投稿リスト</string>
     <string name="beta_label">ベータ</string>
     <string name="stats_error_admin_url_unavailable">このサイトの WP 管理画面を開けません</string>
     <string name="stats_error_parsing">データの読み込み中に問題が発生しました もう一度お試しください</string>

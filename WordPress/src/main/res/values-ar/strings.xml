@@ -154,8 +154,6 @@ Language: ar
     <string name="post_rs_confirm_delete_message">سيؤدي ذلك إلى حذف هذه التدوينة نهائيًا. لا يمكن التراجع عن هذا الإجراء.</string>
     <string name="post_rs_confirm_trash_message">هل أنت متأكد من رغبتك في نقل هذه التدوينة إلى سلة المهملات؟</string>
     <string name="post_rs_failed_to_load">فشل تحميل التدوينة</string>
-    <string name="experimental_rs_post_list_description">عرض قائمة التدوينات في واجهة مستخدم أكثر حداثة لمواقع WordPress.com والمواقع المستضافة ذاتيًا باستخدام كلمات مرور التطبيقات</string>
-    <string name="experimental_rs_post_list">قائمة التدوينات الجديدة</string>
     <string name="beta_label">تجريبي</string>
     <string name="stats_error_admin_url_unavailable">يتعذر فتح مشرف ووردبريس (WP Admin) لهذا الموقع</string>
     <string name="stats_error_parsing">حدثت مشكلة أثناء تحميل البيانات. يُرجى إعادة المحاولة</string>
