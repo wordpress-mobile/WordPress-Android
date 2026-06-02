@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-01-16 09:54:05+0000
+Translation-Revision-Date: 2026-03-20 09:54:51+0000
 Plural-Forms: nplurals=2; plural=(n > 1);
 Generator: GlotPress/2.4.0-alpha
 Language: tr
@@ -26,8 +26,8 @@ Language: tr
     <string name="login_prologue_revamped_jetpack_feature_text_1">Eklentiyi güncelle</string>
     <string name="login_prologue_revamped_content_description_jetpack_logo">Jetpack logosu</string>
     <string name="me_btn_about">Jetpack Hakkında</string>
-    <string name="sign_out_wpcom_confirm_with_no_changes">Jetpack\'ten çıkılsın mı?</string>
-    <string name="me_disconnect_from_wordpress_com">Jetpack oturumunu kapat</string>
+    <string name="sign_out_wpcom_confirm_with_no_changes">WordPress.com\'da oturumunuz kapatılsın mı?</string>
+    <string name="me_disconnect_from_wordpress_com">WordPress.com\'da oturumunuzu kapatın</string>
     <string name="support_ticket_subject">Android için Jetpack Desteği</string>
     <string name="login_magic_links_sent_label">Bu cihazda e-postanızı kontrol edin ve Jetpack.com’dan gelen e-postadaki bağlantıya dokunun.</string>
     <string name="continue_with_wpcom_no_signup">WordPress.com ile devam et</string>

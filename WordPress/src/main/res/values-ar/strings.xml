@@ -1,11 +1,215 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2025-11-24 16:54:09+0000
+Translation-Revision-Date: 2026-04-20 17:56:20+0000
 Plural-Forms: nplurals=6; plural=(n == 0) ? 0 : ((n == 1) ? 1 : ((n == 2) ? 2 : ((n % 100 >= 3 && n % 100 <= 10) ? 3 : ((n % 100 >= 11 && n % 100 <= 99) ? 4 : 5))));
 Generator: GlotPress/4.0.3
 Language: ar
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="new_stats_intro_trends_desc">يوضح كل مقياس اتجاهه مقارنة بالفترة السابقة، لتعرف دائمًا ما إذا كنت تحقق نموًا.</string>
+    <string name="new_stats_intro_trends_title">لمحة عن الاتجاهات</string>
+    <string name="new_stats_intro_on_par_desc">الأجهزة، وUTM، والمواقع، وWordAds (قادمة) — البيانات ذاتها التي تحصل عليها في WordPress.com.</string>
+    <string name="new_stats_intro_on_par_title">مماثلة لتجربة الويب</string>
+    <string name="new_stats_intro_any_period_desc">اختر من الإعدادات المسبقة الشائعة أو حدد نطاقاً زمنياً مخصصاً مع فترة مقارنة، كل ذلك بنقرة واحدة.</string>
+    <string name="new_stats_intro_any_period_title">أي فترة، أي نطاق</string>
+    <string name="new_stats_intro_subtitle">طريقة أفضل لفهم أداء موقعك الإلكتروني.</string>
+    <string name="new_stats_intro_title">إحصاءات جديدة</string>
+    <string name="stats_switch_to_old_stats">تعطيل الإحصاءات الجديدة</string>
+    <string name="stats_try_new_stats">جرب الإحصاءات الجديدة</string>
+    <string name="stats_devices_percentage_header">النسبة المئوية</string>
+    <string name="stats_devices_device_header">جهاز</string>
+    <string name="stats_devices_platform">منصة</string>
+    <string name="stats_devices_browser">متصفح</string>
+    <string name="stats_devices_screensize">الحجم</string>
+    <string name="stats_devices_title">الأجهزة</string>
+    <string name="show_less">إظهار أقل</string>
+    <string name="post_rs_settings_author_no_permission">ليست لديك صلاحية تغيير المؤلف</string>
+    <string name="post_rs_settings_author_dialog_title">المؤلف</string>
+    <string name="post_rs_settings_select_time">تحديد وقت</string>
+    <string name="post_rs_settings_clear_excerpt">مسح المقتطف</string>
+    <string name="post_rs_settings_format_dialog_title">تنسيق التدوينة</string>
+    <string name="post_rs_settings_excerpt_dialog_title">المقتطف</string>
+    <string name="post_rs_settings_slug_dialog_title">الاسم اللطيف</string>
+    <string name="post_rs_settings_discard_message">لديك تغييرات غير محفوظة. هل تريد تجاهلها؟</string>
+    <string name="post_rs_settings_discard_title">تجاهل التغييرات</string>
+    <string name="post_rs_settings_status_dialog_title">حالة التدوينة</string>
+    <string name="post_rs_settings_save_error">تعذّر تحديث التدوينة</string>
+    <string name="post_rs_settings_remove_password">إزالة كلمة المرور</string>
+    <string name="post_rs_settings_password_hint">إدخال كلمة المرور</string>
+    <string name="post_rs_settings_password_dialog_title">كلمة مرور التدوينة</string>
+    <string name="post_rs_settings_remove_featured_image">إزالة</string>
+    <string name="post_rs_settings_edit_featured_image">تحرير الصورة البارزة</string>
+    <string name="post_rs_settings_featured_image_error">تعذّر تحميل الصورة البارزة.</string>
+    <string name="post_rs_settings_featured_image_not_set">لم يتم تعيين صورة بارزة.</string>
+    <string name="post_rs_settings_loading">%s: جارٍ التحميل</string>
+    <string name="post_rs_settings_tap_to_retry">انقر لإعادة المحاولة</string>
+    <string name="post_rs_settings_field_error">تعذّر التحميل</string>
+    <string name="post_rs_settings_protected">محمي</string>
+    <string name="post_rs_sync_failed">فشلت المزامنة</string>
+    <string name="post_rs_error_auth">انتهت صلاحية المصادقة الخاصة بك. يُرجى تسجيل الدخول مجددًا.</string>
+    <string name="post_rs_error_load_more">تعذّر تحميل المزيد من التدوينات</string>
+    <string name="menu_item_accessibility_description">المستوى ⁦%1$d⁩، %2$s، %3$s</string>
+    <string name="menu_item_reorder_failed">فشلت إعادة ترتيب عنصر القائمة</string>
+    <string name="menu_item_invalid_url">يُرجى إدخال عنوان موقع صالح</string>
+    <string name="menu_item_url_required">عنوان الموقع مطلوب للروابط المخصصة</string>
+    <string name="menu_item_title_required">العنوان مطلوب</string>
+    <string name="menu_name_required">اسم القائمة مطلوب</string>
+    <string name="menu_error_no_site_selected">لم يتم تحديد أي موقع</string>
+    <string name="menu_item_select_required">يُرجى تحديد عنصر لإضافة رابط إليه</string>
+    <string name="menu_item_loading_items">جارٍ التحميل…</string>
+    <string name="menu_item_no_items_found">لم يتم العثور على أي عناصر</string>
+    <string name="menu_item_select_tag">تحديد وسم</string>
+    <string name="menu_item_select_category">تحديد تصنيف</string>
+    <string name="menu_item_select_page">تحديد صفحة</string>
+    <string name="menu_item_select_post">تحديد تدوينة</string>
+    <string name="menu_item_select_item">تحديد عنصر</string>
+    <string name="menu_item_link_to_label">رابط إلى</string>
+    <string name="menu_item_type_tag">وسم</string>
+    <string name="menu_item_type_category">تصنيف</string>
+    <string name="menu_item_type_post">تدوينة</string>
+    <string name="menu_item_type_page">صفحة</string>
+    <string name="menu_item_type_custom">رابط مخصص</string>
+    <string name="menu_item_type_label">النوع</string>
+    <string name="delete_menu_item_confirmation_message">هل أنت متأكد من رغبتك في حذف\"⁦%1$s⁩\"؟</string>
+    <string name="delete_menu_item_confirmation_title">حذف عنصر القائمة</string>
+    <string name="menu_item_deleted">تم حذف عنصر القائمة</string>
+    <string name="menu_item_saved">تم حفظ عنصر القائمة</string>
+    <string name="menu_item_description_label">الوصف</string>
+    <string name="menu_item_target_label">مكان فتح الرابط</string>
+    <string name="menu_item_no_parent">لا يوجد (المستوى الأعلى)</string>
+    <string name="menu_item_parent_label">العنصر الرئيسي</string>
+    <string name="menu_item_url_label">عنوان الموقع</string>
+    <string name="menu_item_title_label">العنوان</string>
+    <string name="move_down">نقل لأسفل</string>
+    <string name="move_up">نقل لأعلى</string>
+    <string name="menu_items_title">عناصر %s</string>
+    <string name="no_menu_items">لا توجد عناصر في هذه القائمة - حتى الآن!</string>
+    <string name="edit_menu_item">تحرير عنصر القائمة</string>
+    <string name="add_menu_item">إضافة عنصر قائمة</string>
+    <string name="delete_menu_confirmation_message">هل أنت متأكد من رغبتك في حذف\"⁦%1$s⁩\"؟</string>
+    <string name="delete_menu_confirmation_title">حذف القائمة</string>
+    <string name="menu_deleted">تم حذف القائمة</string>
+    <string name="menu_saved">تم حفظ القائمة</string>
+    <string name="menu_display_locations">عرض المواقع</string>
+    <string name="menu_auto_add_pages">إضافة الصفحات الجديدة ذات المستوى الأعلى تلقائيًا</string>
+    <string name="menu_description_label">الوصف</string>
+    <string name="menu_name_label">الاسم</string>
+    <string name="edit_items">تحرير العناصر</string>
+    <string name="menu_locations_label">المواقع: ⁦%1$s⁩</string>
+    <string name="no_menus">لم يتم العثور على أي قوائم</string>
+    <string name="edit_menu">تحرير القائمة</string>
+    <string name="create_menu">إنشاء قائمة</string>
+    <string name="menus">القوائم</string>
+    <string name="qrcode_auth_flow_error_auth_failed_subtitle">تعذّر تسجيل دخولك باستخدام كود تسجيل الدخول هذا</string>
+    <string name="qrcode_auth_flow_error_expired_subtitle">انتهت صلاحية كود تسجيل الدخول هذا</string>
+    <string name="qrcode_auth_flow_error_invalid_data_title">فشل التحقق</string>
+    <string name="reader_subscription_settings_update_error">فشل تحديث إعدادات الاشتراك</string>
+    <string name="reader_subscription_settings_email_comments">إرسال التعليقات الجديدة لي عبر البريد الإلكتروني</string>
+    <string name="reader_subscription_settings_email_posts">إرسال التدوينات الجديدة لي عبر البريد الإلكتروني</string>
+    <string name="reader_subscription_settings_notify_posts">إبلاغي بالتدوينات الجديدة</string>
+    <string name="reader_subscription_settings_description">إدارة خيارات الاشتراك</string>
+    <string name="reader_subscription_settings_title">إعدادات الاشتراك</string>
+    <string name="stats_no_cards_message">لا توجد بطاقات لعرضها.</string>
+    <string name="stats_all_cards_visible">جميع البطاقات مرئية حاليًا</string>
+    <string name="stats_add_card_title">إضافة بطاقة</string>
+    <string name="stats_card_move_to_bottom">النقل إلى أدنى مستوى</string>
+    <string name="stats_card_move_down">نقل لأسفل</string>
+    <string name="stats_card_move_to_top">نقل إلى أعلى مستوى</string>
+    <string name="stats_card_move_up">نقل لأعلى</string>
+    <string name="stats_card_move_submenu">فتح خيارات النقل</string>
+    <string name="stats_card_move">نقل البطاقة</string>
+    <string name="stats_card_remove">إزالة البطاقة</string>
+    <string name="stats_authors_author_header">المؤلف</string>
+    <string name="stats_authors_title">المؤلفون</string>
+    <string name="stats_cities_title">المدن</string>
+    <string name="stats_regions_title">المناطق</string>
+    <string name="stats_countries_views_header">المشاهدات</string>
+    <string name="stats_countries_location_header">المواقع</string>
+    <string name="stats_countries_title">البلاد</string>
+    <string name="stats_most_viewed_top_n">أعلى العناصر مشاهدة %d</string>
+    <string name="stats_show_all">عرض الكل</string>
+    <string name="stats_most_viewed_referrer_header">الموجه</string>
+    <string name="stats_most_viewed_title_header">العنوان</string>
+    <string name="stats_most_viewed_referrers">الموجهون</string>
+    <string name="stats_most_viewed_posts_and_pages">التدوينات والصفحات</string>
+    <string name="stats_most_viewed_title">الأكثر مشاهدة</string>
+    <string name="stats_select_date_range">تحديد نطاق التاريخ</string>
+    <string name="stats_period_selector_content_description">تحديد فترة الإحصاءات</string>
+    <string name="stats_period_custom">مخصص</string>
+    <string name="stats_period_last_12_months">آخر 12 شهرًا</string>
+    <string name="stats_period_last_6_months">آخر 6 أشهر</string>
+    <string name="stats_period_last_30_days">آخر 30 يومًا</string>
+    <string name="stats_period_last_7_days">آخر 7 أيام</string>
+    <string name="stats_period_today">اليوم</string>
+    <string name="stats_insights_management_title">إدارة الرؤى الخاصة بك لعرض الإحصاءات الأكثر صلة فقط</string>
+    <string name="stats_timeframe_hours">ساعات</string>
+    <string name="scan_start_request_failed_subtitle">تعذر على Jetpack Scan إكمال فحص موقعك. يرجى التحقق لمعرفة ما إذا كان موقعك معطلاً أم لا.</string>
+    <string name="post_rs_error_update_status">فشل تحديث حالة التدوينة</string>
+    <string name="post_rs_error_delete">فشل حذف التدوينة</string>
+    <string name="post_rs_error_trash">فشل نقل التدوينة إلى سلة المهملات</string>
+    <string name="post_rs_moved_to_draft">تم نقل التدوينة إلى المسودات</string>
+    <string name="post_rs_published">تم نشر التدوينة</string>
+    <string name="post_rs_deleted">تم حذف التدوينة نهائيًا</string>
+    <string name="post_rs_trashed">تم نقل التدوينة إلى سلة المهملات</string>
+    <string name="post_rs_confirm_delete_message">سيؤدي ذلك إلى حذف هذه التدوينة نهائيًا. لا يمكن التراجع عن هذا الإجراء.</string>
+    <string name="post_rs_confirm_trash_message">هل أنت متأكد من رغبتك في نقل هذه التدوينة إلى سلة المهملات؟</string>
+    <string name="post_rs_failed_to_load">فشل تحميل التدوينة</string>
+    <string name="experimental_rs_post_list_description">عرض قائمة التدوينات في واجهة مستخدم أكثر حداثة لمواقع WordPress.com والمواقع المستضافة ذاتيًا باستخدام كلمات مرور التطبيقات</string>
+    <string name="experimental_rs_post_list">قائمة التدوينات الجديدة</string>
+    <string name="beta_label">تجريبي</string>
+    <string name="stats_error_admin_url_unavailable">يتعذر فتح مشرف ووردبريس (WP Admin) لهذا الموقع</string>
+    <string name="stats_error_parsing">حدثت مشكلة أثناء تحميل البيانات. يُرجى إعادة المحاولة</string>
+    <string name="stats_error_network">خطأ في الشبكة. يُرجى التحقق من الاتصال بالشبكة وإعادة المحاولة</string>
+    <string name="stats_error_auth">ليست لديك الصلاحية اللازمة لعرض هذه الإحصاءات</string>
+    <string name="stats_error_unknown">حدث خطأ غير متوقع</string>
+    <string name="stats_error_api">فشل تحميل الإحصاءات</string>
+    <string name="stats_error_no_site">لم يتم تحديد أي موقع</string>
+    <string name="mlp_network_error_subtitle">انقر على إعادة المحاولة عند الاتصال بالإنترنت مرة أخرى أو إنشاء صفحة فارغة باستخدام الزر.</string>
+    <string name="mlp_error_subtitle">النقر على إعادة المحاولة أو إنشاء صفحة فارغة</string>
+    <string name="pages_empty_published_subtitle">لماذا لا تبادر بإنشاء واحدة؟</string>
+    <string name="people_empty_list_filtered_users_button">إضافة مستخدم</string>
+    <string name="people_empty_list_filtered_users_subtitle">لم لا تضيف واحدة؟</string>
+    <string name="error_fetching_account">يتعذر جلب الحساب: %s\"</string>
+    <string name="reader_empty_subscriptions">لم تشترك في أي مدونات بعد</string>
+    <string name="reader_open_in_browser">فتح في متصفح</string>
+    <string name="reader_err_get_post_not_authorized_signin_fallback">لست مخولاً لعرض هذه التدوينة. جرِّب تسجيل الدخول إلى موقع WordPress.com أولاً.</string>
+    <string name="reader_err_get_post_not_authorized_fallback">لست مخولاً لعرض هذه المقالة</string>
+    <string name="reader_toast_err_blog_not_found">خطأ: يتعذر العثور على المدونة</string>
+    <string name="error_browser_no_network">يتعذر تحميل هذه الصفحة</string>
+    <string name="history_empty_subtitle_post">ستشاهد محفوظات هذا المقال عندما تجري عليها تغييرات</string>
+    <string name="history_empty_subtitle_page">ستشاهد محفوظات هذه الصفحة عندما تجري عليها تغييرات</string>
+    <string name="notifications_empty_action_comments">الانضمام إلى محادثة! تعليق على التدوينات في القارئ.</string>
+    <string name="notifications_empty_action_all">كن نشطًا! تعليق على التدوينات في القارئ.</string>
+    <string name="more_options">المزيد من الخيارات</string>
+    <string name="stats_weekly_average">المتوسط ⁦%1$s⁩</string>
+    <string name="stats_chart_type_bars">الأشرطة</string>
+    <string name="stats_chart_type_lines">الخطوط</string>
+    <string name="post_types_screen_title">أنواع التدوينات</string>
+    <string name="experimental_new_stats_description">عرض الإحصاءات في واجهة مستخدم أكثر حداثة وتقدمًا</string>
+    <string name="experimental_new_stats">إحصاءات جديدة</string>
+    <string name="experimental_post_types_description">تمكين شاشة أنواع التدوينات التجريبية</string>
+    <string name="experimental_post_types">أنواع التدوينات</string>
+    <string name="network_requests_disable">تعطيل</string>
+    <string name="network_requests_disable_tracking_description">ستنتهي صلاحية السجلات الموجودة بناءً على فترة الاستبقاء. لمسح السجلات الآن، اضغط على \"عرض طلبات الشبكة\" واستخدم أيقونة سلة المهملات قبل التعطيل.</string>
+    <string name="network_requests_disable_tracking_title">تعطيل التعقُّب</string>
+    <string name="network_requests_enable">التمكين</string>
+    <string name="network_requests_enable_dialog_description">لا تُخزن السجلات إلا على جهازك ولا تتم مشاركتها أبدا ما لم تشاركها صراحة. يمكنك مسح السجلات في أي وقت عبر \"عرض طلبات الشبكة\" باستخدام أيقونة سلة المهملات. حدد مدة الاحتفاظ بالسجلات.</string>
+    <string name="network_requests_retention_info">الاستبقاء: %s</string>
+    <string name="network_requests_retention_until_cleared">حتى الحذف</string>
+    <string name="network_requests_retention_one_week">1 أسبوع</string>
+    <string name="network_requests_retention_one_day">1 يوم</string>
+    <string name="network_requests_retention_one_hour">1 ساعة</string>
+    <string name="view_network_requests">عرض طلبات الشبكة</string>
+    <string name="track_network_requests_description">سجل طلبات HTTP لحل المشكلات. تظل السجلات على الجهاز ما لم تشاركها.</string>
+    <string name="track_network_requests">تعقب طلبات الشبكة</string>
+    <string name="experimental_network_debugging_disable_error_message">تم تمكين تعقب الشبكة حاليًا. يُرجى الانتقال إلى \"التعليمات\" وتعطيل \"تعقب طلبات الشبكة\" قبل إيقاف تشغيل هذه الميزة.</string>
+    <string name="experimental_network_debugging_disable_error_title">تعطيل التعقب أولًا</string>
+    <string name="experimental_network_debugging_description">إظهار أدوات تعقب طلبات الشبكة في شاشة المساعدة</string>
+    <string name="experimental_network_debugging">تصحيح أخطاء الشبكة</string>
+    <string name="site_settings_tags_empty_subtitle">لماذا لا تنشئ حسابًا لتسهيل وسم مقالة؟</string>
+    <string name="posts_published_empty_subtitle">لماذا لا تبادر بإنشاء واحدة؟</string>
+    <string name="media_empty_list_subtitle">لماذا لا ترفع شيئًا؟</string>
+    <string name="confirm_remove_site">إزالة \"%s\" من التطبيق؟</string>
     <string name="he_support_forbidden_error">عذرًا، غير مسموح لك بتنفيذ هذا الإجراء.</string>
     <string name="he_support_generic_error">حدث خطأ. يُرجى إعادة المحاولة لاحقًا.</string>
     <string name="he_support_send_ticket_button">إرسال</string>
@@ -78,7 +282,7 @@ Language: ar
     <string name="support_screen_ask_happiness_engineers_description">لطرح أسئلتك الصعبة. سنرد عبر البريد الإلكتروني</string>
     <string name="support_screen_ask_happiness_engineers_title">اسأل أحد أعضاء فريق الدعم</string>
     <string name="support_screen_ask_bots_description">احصل على إجابات سريعة على الأسئلة الشائعة</string>
-    <string name="support_screen_ask_bots_title">سؤال الروبوتات</string>
+    <string name="support_screen_ask_bots_title">اسأل الروبوتات</string>
     <string name="support_screen_help_center_description">المستندات والبرامج التعليمية لمساعدتك على البدء</string>
     <string name="support_screen_help_center_title">مركز المساعدة</string>
     <string name="support_screen_how_can_we_help_title">كيف يمكننا مساعدتك؟</string>
@@ -86,7 +290,6 @@ Language: ar
     <string name="support_screen_title">الدعم</string>
     <string name="modern_support_description">تمكين تجربة الدعم الحديث الجديدة</string>
     <string name="modern_support">الدعم الحديث</string>
-    <string name="site_settings_use_theme_styles_summary">أجعل محرر المكونات يعكس مظهر قالبك</string>
     <string name="site_settings_use_theme_styles">استخدم أنماط القالب</string>
     <string name="error_deleting_term">حدث خطأ في حذف المصطلح</string>
     <string name="error_saving_term">حدث خطأ في حفظ المصطلح</string>
@@ -123,6 +326,7 @@ Language: ar
     <string name="application_password_info_description_1">كلمات مرور التطبيقات هي طريقة آمنة للتطبيقات للوصول إلى موقعك بدون استخدام كلمة مرور حسابك.</string>
     <string name="application_password_info_title">كلمات مرور التطبيقات</string>
     <string name="application_password_invalid_description">لم تعد كلمة مرور تطبيقك موجودة. يُرجى تسجيل الدخول مرة أخرى لإنشاء كلمة مرور جديدة للتطبيق.</string>
+    <string name="subscribers_delete_failed">تعذّر حذف المشترك</string>
     <string name="subscribers_delete_success_message">حُذِف المشترك، لكن قد يستغرق الأمر دقيقة حتى يصبح الحذف ساري المفعول</string>
     <string name="subscribers_delete_success_title">حُذِف المشترك</string>
     <string name="subscribers_delete_confirmation_message">هل أنت متأكد من رغبتك في حذف هذا المشترك؟</string>
@@ -176,7 +380,7 @@ Language: ar
     <string name="application_password_not_supported_error" a8c-src-lib="module:login">لا يدعم الموقع المذكور مصادقة كلمة مرور التطبيق.</string>
     <string name="application_password_title">المصادقة بكلمة مرور التطبيق</string>
     <string name="application_password_credentials_stored">بيانات اعتماد كلمة مرور التطبيق مُخزنة بغرض ⁦%1$s⁩</string>
-    <string name="qrcode_auth_flow_timeout_subtitle">استغرق الأمر وقتًا طويلًا للغاية لرصد الكود. يُرجى المحاولة مرة أخرى أو استخدام تطبيق الكاميرا الخاص بك لفحص الكود.</string>
+    <string name="qrcode_auth_flow_timeout_subtitle">استغرق التعرف على الكود وقتًا طويلاً للغاية. يُرجى إعادة المحاولة أو استخدام تطبيق الكاميرا الخاص بك لمسح الكود ضوئيًا.</string>
     <string name="qrcode_auth_flow_timeout_title">انتهت مهلة المسح</string>
     <string name="invite_users">دعوة مستخدمين</string>
     <string name="cant_share_no_blog">لا تستطيع مشاركتها في ووردبريس دون مدونة</string>
@@ -213,12 +417,14 @@ Language: ar
     <string name="me_btn_help_and_support">المساعدة والدعم</string>
     <string name="me_btn_experimental_features">الميزات التجريبية</string>
     <string name="more_content_description_plans">خطط أكثر</string>
+    <string name="more_content_description_recent_activity">المزيد من آخر نشاط</string>
     <string name="more_content_description_pages">صفحات أكثر</string>
     <string name="more_content_description_posts">تدوينات أكثر</string>
     <string name="more_content_description_today_stats">إحصاءات اليوم أكثر</string>
     <string name="more_content_description_blogging_prompts">موجّهات أكثر</string>
     <string name="more_content_description_promote_blaze">Blaze أكثر</string>
     <string name="reader_toast_success_undo">تم إلغاء حظر التدوينة</string>
+    <string name="feedback_form_note_link_jetpack">شاشة التواصل بالدعم الفني.</string>
     <string name="feedback_form_note_text">يرجى ملاحظة أن هذا ليس نموذج دعم، ولن نتمكن من الرد. إذا كنت تحتاج مساعدة، فيرجى استخدام \"</string>
     <string name="experimental_block_editor">محرر المكوِّن التجريبي</string>
     <string name="experimental_features_screen_title">الميزات التجريبية</string>
@@ -251,6 +457,7 @@ Language: ar
     <string name="voice_to_content_processing_label">معالجة</string>
     <string name="voice_to_content_error_label">خطأ</string>
     <string name="voice_to_content_processing">معالجة</string>
+    <string name="gutenberg_native_tap_to_edit" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">النقر للتحرير</string>
     <string name="voice_to_content_permissions_required_msg">لتسجيل صوت، يحتاج هذا التطبيق إلى صلاحية للوصول إلى الميكروفون الخاص بك. لقد سبق لك رفض هذه الصلاحية. يرجى تمكين صلاحية الميكروفون ضمن إعدادات التطبيق لاستخدام هذه الميزة.</string>
     <string name="voice_to_content_permissions_required_title">صلاحية تسجيل الصوت مطلوبة</string>
     <string name="permission_access_media_location">موقع الوسائط</string>
@@ -332,6 +539,7 @@ Language: ar
     <string name="reader_preferences_screen_font_family_label">الخط</string>
     <string name="reader_preferences_screen_theme_label">نظام الألوان</string>
     <string name="experimental_badge">&lt;Experimental&gt;</string>
+    <string name="gutenberg_native_clear_selected_color" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">مسح لون محدد</string>
     <string name="reader_no_followed_tags_text_title">لا توجد وسوم تمت متابعتها</string>
     <string name="reader_toast_err_tag_already_following">أنت تتابع هذا الوسم بالفعل</string>
     <string name="reader_menu_reading_preferences">تفضيلات القراءة</string>
@@ -347,7 +555,19 @@ Language: ar
     <string name="reader_preferences_screen_preview_title">تفضيلات القراءة</string>
     <string name="reader_filter_empty_tags_action_follow">متابعة وسم</string>
     <string name="button_read">قراءة</string>
+    <string name="gutenberg_native_you_can_copy_your_post_text_in_case_your_content_is_impacted_copy" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">يمكنك نسخ نص تدوينتك في حال تأثر محتواك. انسخ تفاصيل الخطأ لتصحيح الأخطاء ومشاركتها مع الدعم.</string>
+    <string name="gutenberg_native_the_editor_has_encountered_an_unexpected_error" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">واجه المحرر خطأ غير متوقع</string>
+    <string name="gutenberg_native_tap_here_to_copy_post_text" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">الضغط هنا لنسخ نص التدوينة</string>
+    <string name="gutenberg_native_tap_here_to_copy_error_details" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">الضغط هنا لنسخ تفاصيل الخطأ</string>
+    <string name="gutenberg_native_copy_post_text" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">نسخ نص التدوينة</string>
+    <string name="gutenberg_native_copy_error_details" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">نسخ تفاصيل الخطأ</string>
+    <string name="gutenberg_native_button_to_copy_post_text" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">زر نسخ نص التدوينة</string>
+    <string name="gutenberg_native_button_to_copy_error_details" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">زر نسخ تفاصيل الخطأ</string>
     <string name="editor_updating_content_failed">فشل تحديث المحتوى</string>
+    <string name="gutenberg_native_video_caption_s_0141bd20" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">تسمية الفيديو. %s</string>
+    <string name="gutenberg_native_video_caption_empty_663aab49" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">تسمية الفيديو. فارغ</string>
+    <string name="gutenberg_native_edit_video_024aee6d" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">تحرير الفيديو</string>
+    <string name="gutenberg_native_autoplay_may_cause_usability_issues_for_some_users" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">قد يتسبب التشغيل التلقائي في حدوث مشكلات متعلقة بإمكانية الاستخدام لدى بعض المستخدمين.</string>
     <string name="notifications_action_mark_all_as_read">وسم الكل بأنه مقروء</string>
     <string name="notifications_unread_content_description">غير مقروء</string>
     <string name="qrcode_media_deeplink_error">الموقع غير موجود. تحقق من تسجيلك الدخول إلى الحساب الصحيح.</string>
@@ -408,7 +628,13 @@ Language: ar
     <string name="reader_filter_empty_blogs_list_title">لا توجد اشتراكات في المدونة</string>
     <string name="reader_filter_by_tag_title">التصفية حسب الوسم</string>
     <string name="reader_filter_by_blog_title">التصفية حسب المدونة</string>
+    <string name="gutenberg_native_waiting_for_connection" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">انتظار الاتصال</string>
     <string name="stats_traffic">حركة المرور</string>
+    <string name="gutenberg_native_working_offline" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">العمل من دون اتصال بالإنترنت</string>
+    <string name="gutenberg_native_network_connection_re_established" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">أعيد إنشاء الاتصال بالشبكة</string>
+    <string name="gutenberg_native_network_connection_lost_working_offline" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">فقدان الاتصال بالشبكة، العمل من دون اتصال بالإنترنت</string>
+    <string name="gutenberg_native_font_size_1_s" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">حجم الخط، ⁦%1$s⁩</string>
+    <string name="gutenberg_native_file_type_not_supported_as_a_media_file" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">نوع الملف غير مدعوم كملف وسائط.</string>
     <string name="media_cannot_be_started">يتعذر علينا فتح الوسائط في الوقت الحالي. يرجى المحاولة مجددًا في وقت لاحق</string>
     <string name="domains_just_search_for_a_domain_button">البحث عن نطاق فحسب</string>
     <string name="domains_upgrade_to_a_plan_button">الترقية إلى خطة</string>
@@ -430,12 +656,16 @@ Language: ar
     <string name="bloganuary_dashboard_nudge_overlay_icon_content_description">Bloganuary</string>
     <string name="bloganuary_dashboard_nudge_text">في شهر يناير، ستأتي موجّهات التدوين من Bloganuary - تحدٍّ مجتمعي لدينا لإنشاء عادة التدوين الخاصة بالعام الجديد.</string>
     <string name="bloganuary_dashboard_nudge_title_december">Bloganuary مقبلة!</string>
+    <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_your_web_bro" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">لهذا السبب، نوصي بتحرير المكوّن باستخدام متصفح الويب لديك.</string>
+    <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_the_web_edit" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">لهذا السبب، نوصي بتحرير المكوّن باستخدام محرر الويب.</string>
+    <string name="gutenberg_native_alternatively_you_can_flatten_the_content_by_ungrouping_the_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">بدلاً من ذلك، يمكنك تمهيد المحتوى عن طريق فك تجميع المكوّن.</string>
     <string name="barcode_scanning_alert_dialog_permanently_denied_cta_label">الانتقال إلى الإعدادات</string>
     <string name="barcode_scanning_alert_dialog_dismiss_label">إلغاء</string>
     <string name="barcode_scanning_alert_dialog_rationale_cta_label">منح</string>
     <string name="barcode_scanning_alert_dialog_permanently_denied_message">لقد رفضت صلاحية الكاميرا بشكل دائم. إنها مطلوبة من أجل مسح الرمز الشريطي ضوئيًا. يرجى تمكينها من إعدادات التطبيق</string>
     <string name="barcode_scanning_alert_dialog_rationale_message">صلاحية الكاميرا مطلوبة من أجل مسح الرمز الشريطي ضوئيًا</string>
     <string name="barcode_scanning_alert_dialog_title">منح صلاحية الكاميرا</string>
+    <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">قد لا تظهر المكوّنات المتداخلة بشكل أكثر عمقًا من %d من المستويات بشكل صحيح في محرر الهاتف المحمول.</string>
     <string name="jp_migration_lets_go_button">لنبدأ</string>
     <string name="jp_migration_done_no_sites_message">حان الوقت لمواصلة رحلتك في ووردبريس.كوم على تطبيق Jetpack.</string>
     <string name="domain_management_clear_search">مسح البحث</string>
@@ -458,6 +688,8 @@ Language: ar
     <string name="site_domain_title">نطاق الموقع</string>
     <string name="my_site_blogging_prompt_card_attribution_bloganuary">من &lt;b&gt;Bloganuary&lt;/b&gt;</string>
     <string name="post_list_toggle_author_filter">التصفية حسب المؤلف</string>
+    <string name="gutenberg_native_s_block_converted_to_blocks" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">تم تحويل مكوّن \"%s\" إلى المكوّنات</string>
+    <string name="gutenberg_native_alternatively_you_can_convert_the_content_to_blocks" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">بدلاً من ذلك، يمكنك تحويل المحتوى إلى مكوّنات.</string>
     <string name="personalization_screen_tab_shortcuts_inactive_shortcuts">اختصارات غير نشطة</string>
     <string name="personalization_screen_tab_shortcuts_active_shortcuts">اختصارات نشطة</string>
     <string name="personalization_screen_shortcuts_tab_title">الاختصارات</string>
@@ -488,6 +720,11 @@ Language: ar
     <string name="reader_secondary_bookmarked">تم الحفظ</string>
     <string name="reader_secondary_bookmark">حفظ</string>
     <string name="reader_discover_recommended_header_new">ربما ينال إعجابك</string>
+    <string name="gutenberg_native_ungroup_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">مكوّن الترقية</string>
+    <string name="gutenberg_native_tap_here_to_show_more_details" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">اضغط هنا لعرض مزيد من التفاصيل.</string>
+    <string name="gutenberg_native_synced_patterns" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">الأنماط التي تمت مزامنتها</string>
+    <string name="gutenberg_native_deeply_nested_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">مكوّن متداخل بشكل عميق</string>
+    <string name="gutenberg_native_block_cannot_be_rendered_because_it_is_deeply_nested_tap_here_for" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">يتعذر عرض المكوّن نظرًا إلى تداخله بشكل عميق. اضغط هنا للحصول على مزيد من التفاصيل.</string>
     <string name="pages_no_site_something_went_wrong">حسنًا، حدث خطأ. ترجى المحاولة مرة أخرى لاحقًا.</string>
     <string name="sharing_connect_via_web_warning_positive_button">الانتقال إلى الويب</string>
     <string name="my_site_dashboard_no_cards_message_description">انقر على زر \"تخصيص\" لإظهار مزيد من البطاقات.</string>
@@ -513,12 +750,15 @@ Language: ar
     <string name="blaze_campaigns_card_more_menu_view_all_campaigns">عرض كل الحملات</string>
     <string name="dashboard_activity_card_menu_all_activity">كل النشاط</string>
     <string name="dashboard_pages_card_more_menu_all_pages">كل الصفحات</string>
+    <string name="gutenberg_native_choose_a_file" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">اختيار ملف</string>
+    <string name="gutenberg_native_add_image_or_video" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">إضافة صورة أو فيديو</string>
     <string name="my_site_post_card_menu_view_all_scheduled_posts">عرض كل التدوينات المجدولة</string>
     <string name="my_site_post_card_menu_view_all_drafts">عرض كل المسودات</string>
     <string name="my_site_todays_stats_menu_view_stats">عرض الإحصاءات</string>
     <string name="my_site_dashboard_card_more_menu_hide_card">إخفاء ذلك</string>
     <string name="contact_support_first_message_hint">إذا لم أتمكن من الإجابة عن سؤالك، فإنني سأساعدك على فتح بطاقة دعم من خلال فريقنا!</string>
     <string name="contact_support_first_message_hi">مرحبًا، أنا Jetpack AI Assistant.</string>
+    <string name="gutenberg_native_access_this_paywall_block_on_your_web_browser_for_advanced_settin" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">قم بالوصول إلى مكوّن جدار الدفع هذا على متصفح الويب الخاص بك للحصول على الإعدادات المتقدمة.</string>
     <string name="contact_support_bot_ticket_comment_answer">الإجابة:</string>
     <string name="contact_support_bot_ticket_comment_question">السؤال:</string>
     <string name="contact_support_bot_ticket_comment_start">النص المكتوب في Jetpack Mobile Bot:</string>
@@ -548,6 +788,10 @@ Language: ar
     <string name="post_settings_jetpack_social_share_message_title">تخصيص الرسالة</string>
     <string name="post_settings_jetpack_social_connect_not_now_button">ليس الآن</string>
     <string name="post_settings_jetpack_social_connect_social_profiles_button">ربط الحسابات</string>
+    <string name="gutenberg_native_insert_video_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">إدراج مكوّن الفيديوهات</string>
+    <string name="gutenberg_native_insert_image_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">إدراج مكوّن الصور</string>
+    <string name="gutenberg_native_insert_gallery_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">إدراج مكوّن المعرض</string>
+    <string name="gutenberg_native_insert_audio_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">إدراج مكوّن الملفات الصوتية</string>
     <string name="campaign_listing_page_no_campaigns_button_text">إنشاء</string>
     <string name="campaign_listing_page_no_campaigns_message_description">لم تنشئ أي حملات حتى الآن. انقر هنا للبدء.</string>
     <string name="campaign_listing_page_no_campaigns_message_title">ليست لديك حملات</string>
@@ -572,6 +816,9 @@ Language: ar
     <string name="post_settings_jetpack_social_subscribe_share_more">الاشتراك لمشاركة المزيد</string>
     <string name="post_settings_jetpack_social_connect_social_profiles_message">قم بزيادة حركة المرور لديك من حلال مشاركة تدويناتك تلقائيًا مع أصدقائك على شبكات التواصل الاجتماعي.</string>
     <string name="post_settings_jetpack_social_header">المشاركة عبر شبكات التواصل الاجتماعي</string>
+    <string name="gutenberg_native_s_detached" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">تم فصل %s</string>
+    <string name="gutenberg_native_editing_synced_patterns_is_not_yet_supported_on_s_for_ios" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">تحرير الأنماط التي تمت مزامنتها غير مدعوم حتى الآن على %s لنظام التشغيل iOS</string>
+    <string name="gutenberg_native_editing_synced_patterns_is_not_yet_supported_on_s_for_android" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">تحرير الأنماط التي تمت مزامنتها غير مدعوم حتى الآن على %s لنظام التشغيل Android</string>
     <string name="privacy_banner_error_save">كان هناك خطأ في أثناء حفظ خيارات الخصوصية الخاصة بك.</string>
     <string name="privacy_banner_save">حفظ</string>
     <string name="privacy_banner_settings">الإعدادات</string>
@@ -581,6 +828,8 @@ Language: ar
     <string name="privacy_banner_description">تُمثِّل خصوصيتك أهمية بالغة بالنسبة إلينا وكانت دومًا كذلك. إننا نستخدم بياناتك الشخصية ونخزّنها ونعالجها لتحسين تطبيقنا (وتجربتك) بطرق متنوعة. إننا بحاجة إلى بعض استخدامات بياناتك بشكل كلي لكي تسير الأمور على ما يرام، إلى جانب استخدامات أخرى يمكنك تحسينها من إعداداتك.</string>
     <string name="tabbar_accessibility_label_me">أنا. Manage your profile details.</string>
     <string name="social_item_message_title">رسالة</string>
+    <string name="gutenberg_native_block_ungrouped" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">تم إلغاء تجميع المكوّنات</string>
+    <string name="gutenberg_native_block_grouped" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">تم تجميع المكوّنات</string>
     <string name="dashboard_card_plans_checkout_success_info">قد يستغرق الأمر ما يصل إلى 30 دقيقة لكي يبدأ نطاقك بالعمل بشكل صحيح.</string>
     <string name="dashboard_card_plans_checkout_success_subtitle">يجري إعداد نطاقك الجديد &lt;b&gt;%s&lt;/b&gt;.</string>
     <string name="dashboard_card_plans_checkout_success_title">كل شيء جاهز الآن!</string>
@@ -607,6 +856,7 @@ Language: ar
     <string name="wp_jp_static_poster_message">يحتوي تطبيق Jetpack على كل وظائف تطبيق ووردبريس، إلى جانب وصول حصري الآن إلى ميزات Stats وReader وNotifications والمزيد.</string>
     <string name="wp_jp_static_poster_title_plural">استخدم ووردبريس مع %s في Jetpack\u00A0app.</string>
     <string name="wp_jp_static_poster_title">استخدم ووردبريس مع %s في Jetpack\u00A0app.</string>
+    <string name="gutenberg_native_unlabeled_color_s" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">لون غير مصنّف. %s</string>
     <string name="dashboard_activity_card_title">آخر نشاط</string>
     <string name="site_creation_search_domain_example_body">على غرار المثال أعلاه، يسمح النطاق للأشخاص بالعثور على موقعك وزيارته من متصفح الويب لديهم.</string>
     <string name="site_creation_search_domain_example_title">YourSiteName.com</string>
@@ -618,6 +868,13 @@ Language: ar
     <string name="new_site_creation_preview_subtitle_paid">لقد أرسلنا إليك الإيصال الخاص بك في رسالة عبر البريد الإلكتروني. %s</string>
     <string name="notifications_disabled_permission_dialog">تم تعطيل تنبيهات التطبيق. انقر هنا لتمكينها.</string>
     <string name="jp_migration_done_delete_wp_message">نوصي &lt;b&gt;بإلغاء تثبيت تطبيق ووردبريس&lt;/b&gt; على جهازك لتفادي تعارضات البيانات.</string>
+    <string name="gutenberg_native_remove_blocks" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">إزالة المكوّنات</string>
+    <string name="gutenberg_native_privacy_and_rating" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">الخصوصية والتصنيف</string>
+    <string name="gutenberg_native_playback_settings" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">إعدادات التشغيل</string>
+    <string name="gutenberg_native_playback_bar_color" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">لون شريط التشغيل</string>
+    <string name="gutenberg_native_manual" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">يدوي</string>
+    <string name="gutenberg_native_dynamic" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">ديناميكية</string>
+    <string name="gutenberg_native_describe_the_purpose_of_the_image_leave_empty_if_decorative" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">صف غرض الصورة. اترك ذلك الحقل فارغًا إذا كان للزخرفة.</string>
     <string name="dashboard_pages_card_create_another_page_description">البدء بتخطيطات معدة حسب الطلب ومناسبة للهواتف المحمولة</string>
     <string name="dashboard_pages_card_create_another_page_button">إنشاء صفحة أخرى</string>
     <string name="dashboard_pages_card_no_pages_create_page_button">إضافة صفحات إلى موقعك</string>
@@ -681,6 +938,7 @@ Language: ar
     <string name="tickets">التذاكر</string>
     <string name="free">مجانًا</string>
     <string name="help_buttons_screen_title">مساعدة</string>
+    <string name="gutenberg_native_blocks_menu" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">قائمة المكوّنات</string>
     <string name="promote_blaze_card_sub_title">اعرض عملك عبر ملايين المواقع.</string>
     <string name="promote_blaze_card_title">الترويج لمحتواك من خلال Blaze</string>
     <string name="jetpack_full_plugin_install_onboarding_dismiss_button_content_description">إغلاق</string>
@@ -770,6 +1028,7 @@ Language: ar
     <string name="blogging_prompts_list_answered_prompt">✓ تم الرد</string>
     <string name="blogging_prompts_list_title">المطالبات</string>
     <string name="close_desc">إغلاق</string>
+    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_this_block_separately_by_ta" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">بدلاً من ذلك، يمكنك فصل هذا المكوّن وتحريره على حدة عن طريق النقر على \"فصل\".</string>
     <string name="dlg_confirm_delete_category">هل تريد حذف تصنيف \"%s\" بشكل دائم؟</string>
     <string name="deleting_cat_success">نجح حذف التصنيف</string>
     <string name="deleting_cat_failed">فشل حذف التصنيف</string>
@@ -809,6 +1068,8 @@ Language: ar
     <string name="jp_migration_notifications_subtitle">ستتلقى كل التنبيهات نفسها ولكنها ستأتي الآن من تطبيق Jetpack.</string>
     <string name="wordpress_help_center_button">مركز مساعدة ووردبريس</string>
     <string name="support_title">دعم</string>
+    <string name="notification_disable_broadcast_permission_desc">يسمح للتطبيق بتعطيل تنبيهات ووردبريس.</string>
+    <string name="notification_disable_broadcast_permission_label">تعطيل تنبيهات ووردبريس</string>
     <string name="jp_migration_help_button">هل تحتاج إلى مساعدة؟</string>
     <string name="jp_migration_continue_button">متابعة</string>
     <string name="jp_migration_welcome_site_found_message">عثرنا على موقعك. استمر في نقل جميع البيانات وسجّل الدخول إلى Jetpack تلقائيًا.</string>
@@ -821,6 +1082,8 @@ Language: ar
     <string name="post_settings_page_attributes">خصائص الصفحة</string>
     <string name="about_automattic_contribute_item_title" a8c-src-lib="about">مساهمة</string>
     <string name="about_news">الأخبار</string>
+    <string name="login_prologue_revamped_content_description_wordpress_icon">أيقونة ووردبريس</string>
+    <string name="login_prologue_revamped_tagline">الكتابة والتحرير والنشر من أي مكان.</string>
     <string name="error_fetch_authors_list">يتعذر استرداد الكتّاب</string>
     <string name="post_settings_author">الكاتب</string>
     <string name="connection_service_label">مشاركة التدوينة على %s</string>
@@ -835,10 +1098,15 @@ Language: ar
     <string name="wp_jetpack_powered_reader_powered_by_jetpack">يدعم Jetpack القارئ</string>
     <string name="wp_jetpack_powered_features">يحتوي تطبيق Jetpack الجديد على إحصاءات وقارئ وتنبيهات والمزيد الذي يجعل ووردبريس الخاص بك أفضل.</string>
     <string name="wp_jetpack_powered_better_with_jetpack">ووردبريس أفضل مع Jetpack</string>
+    <string name="gutenberg_native_upgrade_your_plan_to_use_video_covers" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">ترقية خطتك لاستخدام أغطية مقاطع الفيديو</string>
+    <string name="gutenberg_native_upgrade_your_plan_to_upload_audio" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">ترقية خطتك لرفع مقاطع الصوت</string>
+    <string name="gutenberg_native_jetpack_powered" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">مدعوم بواسطة Jetpack</string>
+    <string name="gutenberg_native_invalid_url" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">عنوان URL غير صالح.</string>
     <string name="wp_jetpack_continue_to_notifications">المتابعة إلى التنبيهات</string>
     <string name="wp_jetpack_continue_to_stats">المتابعة إلى الإحصاءات</string>
     <string name="wp_jetpack_continue_to_reader">المتابعة إلى القارئ</string>
     <string name="wp_jetpack_get_new_jetpack_app">تجربة تطبيق Jetpack الجديد</string>
+    <string name="gutenberg_native_problem_displaying_block_tap_to_attempt_block_recovery" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">ثمَّة مشكلة في أثناء عرض المكوِّن. \nانقر لمحاولة استعادة المكوِّن.</string>
     <string name="weekly_roundup_notification_text_views_and_comments">كانت لديك الأسبوع الماضي ⁦%1$s⁩ من المشاهدات و⁦%2$s⁩ من التعليقات</string>
     <string name="weekly_roundup_notification_text_views_and_likes">كانت لديك الأسبوع الماضي ⁦%1$s⁩ من المشاهدات و⁦%2$s⁩ من الإعجابات</string>
     <string name="weekly_roundup_notification_text_views_only">كانت لديك الأسبوع الماضي ⁦%1$s⁩ من المشاهدات.</string>
@@ -847,12 +1115,9 @@ Language: ar
     <string name="wp_jetpack_powered">مدعوم بواسطة Jetpack</string>
     <string name="qrcode_auth_flow_content_description">صورة تشير إلى مسح رمز تسجيل الدخول قيد التقدم</string>
     <string name="qrcode_auth_flow_error_content_description">صورة تشير إلى وجود خطأ</string>
-    <string name="qrcode_auth_flow_error_auth_failed_subtitle">تعذر عليك تسجيل الدخول باستخدام رمز تسجيل الدخول هذا. يرجى الضغط على زر المسح الضوئي مرة أخرى لإعادة مسح الرمز ضوئيًا.</string>
     <string name="qrcode_auth_flow_error_auth_failed_title">فشلت المصادقة</string>
-    <string name="qrcode_auth_flow_error_expired_subtitle">لقد انتهت صلاحية رمز تسجيل الدخول هذا. يرجى الضغط على زر المسح الضوئي مرة أخرى لإعادة مسح الرمز ضوئيًا.</string>
     <string name="qrcode_auth_flow_error_expired_title">رمز تسجيل دخول منتهي الصلاحية</string>
-    <string name="qrcode_auth_flow_error_invalid_data_subtitle">تعذر التحقُّق من صحة رمز تسجيل الدخول الذي تم مسحه ضوئيًا. يرجى الضغط على زر المسح الضوئي مرة أخرى لإعادة مسح الرمز ضوئيًا.</string>
-    <string name="qrcode_auth_flow_error_invalid_data_title">تعذر التحقُّق من صحة رمز تسجيل الدخول</string>
+    <string name="qrcode_auth_flow_error_invalid_data_subtitle">يتعذر التحقق من كود تسجيل الدخول الذي تم مسحه ضوئيًا</string>
     <string name="qrcode_auth_flow_error_no_connection_subtitle">يلزم اتصال إنترنت نشط لمسح رموز تسجيل الدخول ضوئيًا</string>
     <string name="qrcode_auth_flow_error_no_connection_title">لا يوجد اتصال</string>
     <string name="qrcode_auth_flow_scan_again">إعادة المسح</string>
@@ -890,9 +1155,15 @@ Language: ar
     <string name="stats_action_card_blogging_reminders_title">تعيين تذكيرات التدوين الخاصة بك</string>
     <string name="stats_action_card_grow_audience_button_label">التحقُّق من الدورة التدريبية</string>
     <string name="stats_action_card_grow_audience_title">تكبير جمهورك</string>
+    <string name="gutenberg_native_you_can_also_rearrange_blocks_by_tapping_a_block_and_then_tapping" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">يمكنك كذلك إعادة ترتيب المكوِّنات عن طريق النقر على مكوِّن، ثم النقر على الأسهم المتجهة إلى الأعلى والأسفل التي تظهر أسفل يسار المكوِّن لنقله إلى الأعلى أو الأسفل.</string>
+    <string name="gutenberg_native_image_file_not_found" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">لم يتم العثور على ملف الصورة.</string>
+    <string name="gutenberg_native_drag_drop_makes_rearranging_blocks_a_breeze_press_and_hold_on_a_b" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">يجعل السحب والإفلات إعادة ترتيب المكوِّنات في المحرِّر أمرًا سهلاً للغاية. اضغط مع الاستمرار على أحد المكوِّنات، ثم اسحبه إلى موقعه الجديد وأفلته.</string>
+    <string name="gutenberg_native_drag_drop" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">السحب والإفلات</string>
+    <string name="gutenberg_native_arrow_buttons" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">أزرار السهم</string>
+    <string name="gutenberg_native_1_s_currently_selected_2_s" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">%1$s. المحدَّد في الوقت الحالي: ⁦%2$s⁩</string>
     <string name="me_btn_scan_login_code">مسح رمز تسجيل الدخول ضوئيًا</string>
     <string name="stats_insights_likes_guide_card">⭐️ لقد تلقت آخر تدويناتك ⁦%1$s⁩ ⁦%2$s⁩ من الإعجابات.</string>
-    <string name="stats_most_popular_percent_views_empty">لا يوجد نشاط كافٍ. تحقَّق من هذا مرة أخرى لاحقًا عندما يكون لدى موقعك مزيد من الزائرين!</string>
+    <string name="stats_most_popular_percent_views_empty">لا يوجد نشاط كافٍ. تحقق لاحقًا عندما يزداد عدد زائري موقعك!</string>
     <string name="stats_total_subscribers_content_description">%1$s، %2$s%% من إجمالي المشتركين</string>
     <string name="stats_value_percent">%1$s (%2$s%%)</string>
     <string name="photo_picker_video_thumbnail_content_description">صورة مصغَّرة للفيديو</string>
@@ -933,31 +1204,31 @@ Language: ar
     <string name="new_site_creation_site_name_title">اسم الموقع</string>
     <string name="my_site_todays_stats_get_more_views_message">هل أنت مهتم ببناء جمهورك؟ راجع &lt;a href=\"%1$s\"&gt;أفضل نصائحنا&lt;/a&gt;.</string>
     <string name="stats_insights_views_and_visitors">المشاهدات والزائرون</string>
-    <string name="featured_image_removed_notice" a8c-src-lib="module:editor">تمت الإزالة كصورة بارزة</string>
-    <string name="featured_image_confirmation_notice" a8c-src-lib="module:editor">تعيين كصورة بارزة</string>
-    <string name="featured_image_replace_dialog_cancel" a8c-src-lib="module:editor">الاحتفاظ بالحالي</string>
-    <string name="featured_image_replace_dialog_confirm" a8c-src-lib="module:editor">استبدال صورة بارزة</string>
-    <string name="featured_image_replace_dialog_description" a8c-src-lib="module:editor">لديك صورة بارزة معيَّنة بالفعل. هل ترغب في استبدالها بصورة جديدة؟</string>
-    <string name="featured_image_replace_dialog_title" a8c-src-lib="module:editor">هل تريد استبدال الصورة البارزة الحالية؟</string>
-    <string name="dialog_dismiss_try_block_editor" translatable="true" a8c-src-lib="module:editor">تجاهُل</string>
-    <string name="dialog_body_try_block_editor" translatable="true" a8c-src-lib="module:editor">سنقوم بإزالة المحرِّر التقليدي الخاص بالمقالات الجديدة قريبًا، ولكن لن يؤثر ذلك في تحرير أي من مقالاتك أو صفحاتك الحالية. احصل على السبق عن طريق تمكين محرِّر المكوِّن الآن في إعدادات الموقع.</string>
-    <string name="dialog_title_try_block_editor" translatable="true" a8c-src-lib="module:editor">تجربة محرر المكوِّنات الجديد</string>
-    <string name="menu_toolbar_title" a8c-src-lib="module:editor">تحرير مكوِّن %s</string>
-    <string name="long_post_dlg_saving" a8c-src-lib="module:editor">الحفظ</string>
-    <string name="retry_failed_upload_remove" a8c-src-lib="module:editor">إزالة الرفع</string>
-    <string name="retry_failed_upload_yes" a8c-src-lib="module:editor">إعادة المحاولة</string>
-    <string name="retry_failed_upload_title" a8c-src-lib="module:editor">يتعذر رفع الملف</string>
-    <string name="stop_upload_dialog_button_no" a8c-src-lib="module:editor">لا</string>
-    <string name="stop_upload_dialog_button_yes" a8c-src-lib="module:editor">نعم</string>
-    <string name="dialog_button_cancel" a8c-src-lib="module:editor">إلغاء</string>
-    <string name="dialog_button_ok" a8c-src-lib="module:editor">موافق</string>
-    <string name="toast_content_info_editor_not_ready" a8c-src-lib="module:editor">لا يزال يقوم المحرِّر بالتحميل</string>
-    <string name="toast_content_info_failed" a8c-src-lib="module:editor">فشل الحصول على بنية المحتوى</string>
-    <string name="dialog_content_info_body" a8c-src-lib="module:editor">المكوِّنات: ⁦%1$d⁩\nالكلمات: ⁦%2$d⁩\nالأحرف: ⁦%3$d⁩</string>
-    <string name="dialog_content_info_title" a8c-src-lib="module:editor">بنية المحتوى</string>
-    <string name="media_bar_description_library" a8c-src-lib="module:editor">انتقاء وسائط من مكتبة وسائط ووردبريس</string>
-    <string name="media_bar_description_gallery" a8c-src-lib="module:editor">انتقاء وسائط من معرض</string>
-    <string name="media_bar_description_camera" a8c-src-lib="module:editor">التقاط صورة أو مقطع فيديو باستخدام كاميرا</string>
+    <string name="featured_image_removed_notice" tools:ignore="UnusedResources" a8c-src-lib="module:editor">تمت الإزالة كصورة بارزة</string>
+    <string name="featured_image_confirmation_notice" tools:ignore="UnusedResources" a8c-src-lib="module:editor">تعيين كصورة بارزة</string>
+    <string name="featured_image_replace_dialog_cancel" tools:ignore="UnusedResources" a8c-src-lib="module:editor">الاحتفاظ بالحالي</string>
+    <string name="featured_image_replace_dialog_confirm" tools:ignore="UnusedResources" a8c-src-lib="module:editor">استبدال صورة بارزة</string>
+    <string name="featured_image_replace_dialog_description" tools:ignore="UnusedResources" a8c-src-lib="module:editor">لديك صورة بارزة معيَّنة بالفعل. هل ترغب في استبدالها بصورة جديدة؟</string>
+    <string name="featured_image_replace_dialog_title" tools:ignore="UnusedResources" a8c-src-lib="module:editor">هل تريد استبدال الصورة البارزة الحالية؟</string>
+    <string name="dialog_dismiss_try_block_editor" translatable="true" tools:ignore="UnusedResources" a8c-src-lib="module:editor">تجاهُل</string>
+    <string name="dialog_body_try_block_editor" translatable="true" tools:ignore="UnusedResources" a8c-src-lib="module:editor">سنقوم بإزالة المحرِّر التقليدي الخاص بالمقالات الجديدة قريبًا، ولكن لن يؤثر ذلك في تحرير أي من مقالاتك أو صفحاتك الحالية. احصل على السبق عن طريق تمكين محرِّر المكوِّن الآن في إعدادات الموقع.</string>
+    <string name="dialog_title_try_block_editor" translatable="true" tools:ignore="UnusedResources" a8c-src-lib="module:editor">تجربة محرر المكوِّنات الجديد</string>
+    <string name="menu_toolbar_title" tools:ignore="UnusedResources" a8c-src-lib="module:editor">تحرير مكوِّن %s</string>
+    <string name="long_post_dlg_saving" tools:ignore="UnusedResources" a8c-src-lib="module:editor">الحفظ</string>
+    <string name="retry_failed_upload_remove" tools:ignore="UnusedResources" a8c-src-lib="module:editor">إزالة الرفع</string>
+    <string name="retry_failed_upload_yes" tools:ignore="UnusedResources" a8c-src-lib="module:editor">إعادة المحاولة</string>
+    <string name="retry_failed_upload_title" tools:ignore="UnusedResources" a8c-src-lib="module:editor">يتعذر رفع الملف</string>
+    <string name="stop_upload_dialog_button_no" tools:ignore="UnusedResources" a8c-src-lib="module:editor">لا</string>
+    <string name="stop_upload_dialog_button_yes" tools:ignore="UnusedResources" a8c-src-lib="module:editor">نعم</string>
+    <string name="dialog_button_cancel" tools:ignore="UnusedResources" a8c-src-lib="module:editor">إلغاء</string>
+    <string name="dialog_button_ok" tools:ignore="UnusedResources" a8c-src-lib="module:editor">موافق</string>
+    <string name="toast_content_info_editor_not_ready" tools:ignore="UnusedResources" a8c-src-lib="module:editor">لا يزال يقوم المحرِّر بالتحميل</string>
+    <string name="toast_content_info_failed" tools:ignore="UnusedResources" a8c-src-lib="module:editor">فشل الحصول على بنية المحتوى</string>
+    <string name="dialog_content_info_body" tools:ignore="UnusedResources" a8c-src-lib="module:editor">المكوِّنات: ⁦%1$d⁩\nالكلمات: ⁦%2$d⁩\nالأحرف: ⁦%3$d⁩</string>
+    <string name="dialog_content_info_title" tools:ignore="UnusedResources" a8c-src-lib="module:editor">بنية المحتوى</string>
+    <string name="media_bar_description_library" tools:ignore="UnusedResources" a8c-src-lib="module:editor">انتقاء وسائط من مكتبة وسائط ووردبريس</string>
+    <string name="media_bar_description_gallery" tools:ignore="UnusedResources" a8c-src-lib="module:editor">انتقاء وسائط من معرض</string>
+    <string name="media_bar_description_camera" tools:ignore="UnusedResources" a8c-src-lib="module:editor">التقاط صورة أو مقطع فيديو باستخدام كاميرا</string>
     <string name="blogging_prompts_onboarding_card_prompt">قم ببناء فيلم حياتك.</string>
     <string name="blogging_prompts_onboarding_remind_me">ذكِّرني</string>
     <string name="blogging_prompts_onboarding_try_it_now">تجربته الآن</string>
@@ -1008,6 +1279,9 @@ Language: ar
     <string name="my_site_blogging_prompt_card_answer_prompt">الرد على المطالبة</string>
     <string name="my_site_blogging_prompt_card_title">المطالبات</string>
     <string name="my_site_all_tab_title">الكل</string>
+    <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a_a31656b3" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">قد يصعب على الأشخاص قراءة تركيبة الألوان هذه. حاول استخدام لون خلفية أغمق و/أو لون نص أكثر إشراقًا.</string>
+    <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">قد يصعب على الأشخاص قراءة تركيبة الألوان هذه. حاول استخدام لون خلفية أغمق و/أو لون نص أكثر إشراقًا.</string>
+    <string name="gutenberg_native_failed_to_insert_media_tap_for_more_info" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">فشل في إدراج وسائط.\nانقر للحصول على مزيد من المعلومات.</string>
     <string name="new_site_creation_intents_header_subtitle">اختر موضوعًا من القائمة الواردة أدناه أو اكتب موضوعك الخاص.</string>
     <string name="new_site_creation_intents_header_title">ما الذي يدور موقعك حوله؟</string>
     <string name="notification_channel_weekly_roundup_title">موجز أسبوعي</string>
@@ -1028,21 +1302,65 @@ Language: ar
     <string name="reader_comment_menu_trash">نقل إلى سلة المهملات</string>
     <string name="reader_comment_menu_spam">وضع علامة مزعج</string>
     <string name="reader_comment_menu_unapprove">غير موافق</string>
+    <string name="gutenberg_native_tiled_gallery_settings" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">إعدادات المعرض المتجانب</string>
+    <string name="gutenberg_native_navigates_to_layout_selection_screen" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">ينتقل إلى شاشة اختيار التخطيط</string>
+    <string name="gutenberg_native_gallery_style" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">نمط المعرض</string>
     <string name="sharing_connect_via_web_warning_message">يمكنك ربط حسابك على %s على موقع ووردبريس.كوم على الويب. عند الانتهاء من ذلك، ارجع إلى التطبيق لتغيير إعدادات \"شبكات التواصل الاجتماعي\".</string>
-    <string name="about_automattic_work_with_us_item_subtitle" a8c-src-lib="about">العمل من أي مكان</string>
-    <string name="about_automattic_work_with_us_item_title" a8c-src-lib="about">العمل معنا</string>
+    <string name="about_automattic_app_icon_description" tools:ignore="UnusedResources" a8c-src-lib="about">أيقونة التطبيق</string>
+    <string name="about_automattic_back_icon_description" tools:ignore="UnusedResources" a8c-src-lib="about">أيقونة الرجوع</string>
+    <string name="about_automattic_logo_description" tools:ignore="UnusedResources" a8c-src-lib="about">شعار شركة Automattic</string>
+    <string name="about_automattic_wordpress" tools:ignore="UnusedResources" a8c-src-lib="about">ووردبريس</string>
+    <string name="about_automattic_woocommerce" tools:ignore="UnusedResources" a8c-src-lib="about">ووكومرس</string>
+    <string name="about_automattic_tumblr" tools:ignore="UnusedResources" a8c-src-lib="about">Tumblr</string>
+    <string name="about_automattic_simplenote" tools:ignore="UnusedResources" a8c-src-lib="about">Simplenote</string>
+    <string name="about_automattic_pocketcasts" tools:ignore="UnusedResources" a8c-src-lib="about">تطبيق Pocket Casts</string>
+    <string name="about_automattic_jetpack" tools:ignore="UnusedResources" a8c-src-lib="about">Jetpack</string>
+    <string name="about_automattic_dayone" tools:ignore="UnusedResources" a8c-src-lib="about">مجلة Day One</string>
+    <string name="about_automattic_source_code_item_title" tools:ignore="UnusedResources" a8c-src-lib="about">التعليمات البرمجية المصدر</string>
+    <string name="about_automattic_privacy_policy_item_title" tools:ignore="UnusedResources" a8c-src-lib="about">سياسة الخصوصية</string>
+    <string name="about_automattic_terms_of_service_item_title" tools:ignore="UnusedResources" a8c-src-lib="about">بنود الخدمة</string>
+    <string name="about_automattic_work_with_us_item_subtitle" tools:ignore="UnusedResources" a8c-src-lib="about">العمل من أي مكان</string>
+    <string name="about_automattic_work_with_us_item_title" tools:ignore="UnusedResources" a8c-src-lib="about">العمل معنا</string>
+    <string name="about_automattic_family_item_title" tools:ignore="UnusedResources" a8c-src-lib="about">عائلة Automattic</string>
+    <string name="about_automattic_legal_and_more_item_title" tools:ignore="UnusedResources" a8c-src-lib="about">الشؤون القانونية والمزيد</string>
+    <string name="about_automattic_twitter_item_title" tools:ignore="UnusedResources" a8c-src-lib="about">تويتر</string>
+    <string name="about_automattic_instagram_item_title" tools:ignore="UnusedResources" a8c-src-lib="about">إنستغرام</string>
+    <string name="about_automattic_rate_us_item_title" tools:ignore="UnusedResources" a8c-src-lib="about">قيّمنا</string>
+    <string name="about_automattic_share_with_friends_item_title" tools:ignore="UnusedResources" a8c-src-lib="about">مشاركة مع الأصدقاء</string>
+    <string name="gutenberg_native_you_can_edit_this_block_using_the_web_version_of_the_editor" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">يمكنك تحرير هذا المكوِّن باستخدام إصدار ويب المحرِّر.</string>
+    <string name="gutenberg_native_open_jetpack_security_settings" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">فتح إعدادات أمان Jetpack</string>
+    <string name="gutenberg_native_note_you_must_allow_wordpress_com_login_to_edit_this_block_in_the" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">ملحوظة: يجب أن تسمح بتسجيل الدخول إلى ووردبريس.كوم لتحرير هذا المكوِّن في محرِّر الجهاز المحمول.</string>
+    <string name="gutenberg_native_note_layout_may_vary_between_themes_and_screen_sizes" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">ملحوظة: قد يختلف التخطيط بين القوالب وأحجام الشاشة</string>
+    <string name="gutenberg_native_address_settings" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">إعدادات العنوان</string>
+    <string name="gutenberg_native_add_media" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">إضافة وسائط</string>
     <string name="my_site_error_card_subtitle">نواجه مشكلة في تحميل بيانات موقعك في هذه اللحظة.</string>
     <string name="my_site_error_card_title">لم يتم تحميل بعض البيانات</string>
     <string name="my_site_dashboard_stale_message">لوحة التحكم غير مُحدثة. يرجى التحقُّق من اتصالك، ثم السحب للتحديث.</string>
     <string name="my_site_dashboard_update_error">يتعذر تحديث لوحة التحكم.</string>
     <string name="error_media_video_duration_exceeds_limit">لم يتم رفع مقطع فيديو! يتطلب رفع مقاطع فيديو تزيد عن 5 دقائق خطة مدفوعة.</string>
+    <string name="about_automattic_acknowledgements_item_title" tools:ignore="UnusedResources" a8c-src-lib="about">شكر وتقدير</string>
+    <string name="about_automattic_california_privacy_notice_item_title" tools:ignore="UnusedResources" a8c-src-lib="about">إشعار الخصوصية في كاليفورنيا</string>
+    <string name="about_automattic_version_label" tools:ignore="UnusedResources" a8c-src-lib="about">النسخة %1$s</string>
+    <string name="about_automattic_acknowledgements_page_title" tools:ignore="UnusedResources" a8c-src-lib="about">شكر وتقدير</string>
+    <string name="about_automattic_legal_page_title" tools:ignore="UnusedResources" a8c-src-lib="about">الشؤون القانونية والمزيد</string>
+    <string name="about_automattic_main_page_title" tools:ignore="UnusedResources" a8c-src-lib="about">نبذة عن ⁦%1$s⁩</string>
     <string name="about_blog">المدوّنة</string>
+    <string name="gutenberg_native_the_basics" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">الأساسيات</string>
+    <string name="gutenberg_native_selected_default" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">المحدَّد: الإعداد الافتراضي</string>
+    <string name="gutenberg_native_more_support_options" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">خيارات دعم إضافية</string>
+    <string name="gutenberg_native_get_support" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">الحصول على الدعم</string>
+    <string name="gutenberg_native_font_size" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">حجم الخط</string>
+    <string name="gutenberg_native_double_tap_to_select_font_size" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">الضغط المزدوج لتحديد حجم الخط</string>
+    <string name="gutenberg_native_double_tap_to_select_default_font_size" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">الضغط المزدوج لتحديد حجم الخط الافتراضي</string>
+    <string name="gutenberg_native_contact_support" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">الاتصال بالدعم</string>
     <string name="reader_comments_follow_conversation">متابعة المحادثة</string>
     <string name="reader_comments_be_first_to_comment">كن أول من يعلق</string>
     <string name="reader_comments_view_all">عرض كل التعليقات</string>
     <string name="reader_comments_post_fetch_failure">حدث خطأ في أثناء الحصول على بيانات المقالة</string>
     <string name="reader_comments_fetch_failure">حدث خطأ في أثناء الحصول على التعليقات</string>
     <string name="reader_btn_follow_conversation_settings">إعدادات متابعة المحادثة</string>
+    <string name="gutenberg_native_from_clipboard" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">من الحافظة</string>
+    <string name="gutenberg_native_copy_url_from_the_clipboard_s" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">نسخ الرابط URL من الحافظة، %s</string>
     <string name="me_btn_about">نبذة عن ووردبريس</string>
     <string name="menu_visual_mode_switched_notice">تم التبديل إلى المحرر المرئي</string>
     <string name="menu_html_mode_switched_notice">تم التبديل إلى محرر الشفرة البرمجية</string>
@@ -1053,6 +1371,7 @@ Language: ar
     <string name="my_site_post_card_scheduled_title">المقالات المجدولة القادمة</string>
     <string name="my_site_post_card_draft_title">العمل على مسودة مقالة</string>
     <string name="domain_suggestions_list_item_cost_free">&lt;span style=\"color:#008000;\"&gt;مجاني للعام الأول &lt;/span&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%s في العام&lt;/s&gt;&lt;/span&gt;</string>
+    <string name="gutenberg_native_create_link" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">إنشاء رابط</string>
     <string name="domains_suggestions_select_domain">تحديد نطاق</string>
     <string name="domains_title">النطاقات</string>
     <string name="post_status_sticky">مثبّت</string>
@@ -1088,7 +1407,11 @@ Language: ar
     <string name="comment_edit_comment">تعليق</string>
     <string name="comment_edit_user_name">الاسم</string>
     <string name="comment_edit_menu_done">تمّ</string>
+    <string name="gutenberg_native_embed_block_previews_are_coming_soon" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">ستتوفر ميزة معاينات مكوّن التضمين قريبًا</string>
     <string name="weekly_roundup">موجز أسبوعي</string>
+    <string name="gutenberg_native_embed_options" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">خيارات التضمين</string>
+    <string name="gutenberg_native_double_tap_to_view_embed_options" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">اضغط ضغطًا مزدوجًا لعرض خيارات التضمين.</string>
+    <string name="gutenberg_native_line_height" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">ارتفاع السطر</string>
     <string name="domains_free_plan_get_your_domain_title">الحصول على نطاقك</string>
     <string name="recommend_app_generic_get_template_error">خطأ غير معروف في أثناء إحضار قالب توصية التطبيق</string>
     <string name="recommend_app_bad_format_response">تم تلقي ردّ غير صالح</string>
@@ -1100,6 +1423,31 @@ Language: ar
     <string name="blogging_reminders_notification_time">وقت التنبيه</string>
     <string name="blogging_reminders_epilogue_body_everyday_with_time">ستحصل على تذكيرات للتدوين &lt;b&gt;يوميًا&lt;/b&gt; في &lt;b&gt;%s&lt;/b&gt;.</string>
     <string name="blogging_reminders_site_settings_label">⁦%1$s⁩ في الأسبوع في ⁦%2$s⁩</string>
+    <string name="gutenberg_native_text_formatting_controls_are_located_within_the_toolbar_positione" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">توجد عناصر التحكم في تنسيق النص ضمن شريط الأدوات الذي يوجد فوق لوحة المفاتيح في أثناء تحرير مكوِّن نص</string>
+    <string name="gutenberg_native_selected_s" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">مُحدَّد %s</string>
+    <string name="gutenberg_native_select_a_color_above" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">تحديد لون أعلاه</string>
+    <string name="gutenberg_native_navigates_to_select_s" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">ينتقل لتحديد %s</string>
+    <string name="gutenberg_native_move_blocks" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">نقل المكوِّنات</string>
+    <string name="gutenberg_native_how_to_edit_your_post" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">كيفية تحرير مقالتك</string>
+    <string name="gutenberg_native_how_to_edit_your_page" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">كيفية تحرير صفحتك</string>
+    <string name="gutenberg_native_customize_blocks" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">تخصيص المكوِّنات</string>
+    <string name="gutenberg_native_changes_to_featured_image_will_not_be_affected_by_the_undo_redo_b" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">لن تتأثر التغييرات على الصورة البارزة عن طريق أزرار التراجع/الإعادة.</string>
+    <string name="gutenberg_native_applies_the_setting" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">يقوم بتطبيق الإعداد</string>
+    <string name="gutenberg_native_welcome_to_the_world_of_blocks" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">مرحبًا في عالم المكوِّنات</string>
+    <string name="gutenberg_native_to_remove_a_block_select_the_block_and_click_the_three_dots_in_th" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">لإزالة مكوِّن، حدِّد المكوِّن وانقر على النقاط الثلاث الموجودة في أسفل يمين المكوِّن لعرض الإعدادات. من هناك، اختر خيار إزالة المكوِّن.</string>
+    <string name="gutenberg_native_some_blocks_have_additional_settings_tap_the_settings_icon_on_the" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">تتضمن بعض المكوِّنات إعدادات إضافية. انقر على أيقونة الإعدادات الموجودة في أسفل يمين المكوِّن لعرض مزيد من الخيارات.</string>
+    <string name="gutenberg_native_s_block_newly_available" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">%s مكوِّن متاح حديثًا</string>
+    <string name="gutenberg_native_rich_text_editing" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">تحرير النص المنسَّق</string>
+    <string name="gutenberg_native_once_you_become_familiar_with_the_names_of_different_blocks_you_c" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">بمجرد التعرف على أسماء المكوِّنات المختلفة، يمكنك إضافة مكوِّن عن طريق كتابة شرطة مائلة للأمام متبوعة باسم المكوِّن — على سبيل المثال، /image أو /heading.</string>
+    <string name="gutenberg_native_make_your_content_stand_out_by_adding_images_gifs_videos_and_embe" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">اجعل محتواك مميزًا عن طريق إضافة صور وصورgif ومقاطع فيديو ووسائط مضمنة إلى صفحاتك.</string>
+    <string name="gutenberg_native_give_it_a_try_by_adding_a_few_blocks_to_your_post_or_page" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">جربه عن طريق إضافة القليل من المكوِّنات إلى مقالتك أو صفحتك!</string>
+    <string name="gutenberg_native_embed_media" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">تضمين وسائط</string>
+    <string name="gutenberg_native_each_block_has_its_own_settings_to_find_them_tap_on_a_block_its_s" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">لكل مكوِّن الإعدادات الخاصة به. للعثور عليها، أنقر على مكوِّن. ستظهر إعداداته على شريط الأدوات في الجزء السفلي من الشاشة.</string>
+    <string name="gutenberg_native_build_layouts" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">إنشاء تخطيطات</string>
+    <string name="gutenberg_native_blocks_are_pieces_of_content_that_you_can_insert_rearrange_and_st" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">المكوِّنات عبارة عن أجزاء من المحتوى التي يمكنك إدراجها وإعادة ترتيبها وتصميمها من دون الحاجة إلى معرفة كيفية ترميزها. المكوِّنات عبارة عن طريقة سهلة وعصرية لك لإنشاء تخطيطات جميلة.</string>
+    <string name="gutenberg_native_blocks_allow_you_to_focus_on_writing_your_content_knowing_that_al" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">تسمح لك المكوِّنات بالتركيز على كتابة محتواك، مع العلم بأن جميع أدوات التنسيق التي تحتاج إليها متوافرة هناك لمساعدتك على توصيل رسالتك.</string>
+    <string name="gutenberg_native_arrange_your_content_into_columns_add_call_to_action_buttons_and" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">قم بترتيب محتواك إلى أعمدة، وإضافة أزرار الدعوة إلى اتخاذ إجراء، وتراكب الصور باستخدام النص.</string>
+    <string name="gutenberg_native_add_a_new_block_at_any_time_by_tapping_on_the_icon_in_the_toolbar" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">أضف مكوِّنًا جديدًا في أي وقت عن طريق النقر على أيقونة + الموجودة في شريط الأدوات في أسفل اليسار.</string>
     <string name="comment_batch_moderation_error">فشل إدارة تعليق واحد أو أكثر</string>
     <string name="create_site_notification_create_site_action">إنشاء موقع</string>
     <string name="create_site_notification_text">إعداد موقعك وتشغيله ببعض الخطوات السريعة فقط</string>
@@ -1108,8 +1456,21 @@ Language: ar
     <string name="stats_disabled_enable_stats_button">تمكين إحصاءات الموقع</string>
     <string name="stats_disabled_subtitle">قم بتفعيل إحصاءات الموقع لمراجعة معلوماتك المفصّلة حول حركة المرور ومرات الإعجاب والتعليقات والمشتركين.</string>
     <string name="stats_disabled_title">هل تبحث عن الإحصاءات؟</string>
-    <string name="scan_multisite_not_supported_subtitle">عذرًا، لكن عملية المسح على Jetpack Scan غير متوافقة مع تثبيت ووردبريس متعددة المواقع في الوقت الحالي.</string>
+    <string name="gutenberg_native_what_is_a_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">ماذا يُقصد بالمكوِّن؟</string>
+    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_s_previews_in_the_meanti_d8f5837e" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">نعمل بجد على إضافة الدعم ميزة معاينات %s. وفي هذه الأثناء، يمكنك معاينة المحتوى المضمَّن في المقالة.</string>
+    <string name="gutenberg_native_we_re_working_hard_on_adding_support_for_s_previews_in_the_meanti" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">نعمل بجد على إضافة الدعم ميزة معاينات %s. وفي هذه الأثناء، يمكنك معاينة المحتوى المضمَّن في الصفحة.</string>
+    <string name="gutenberg_native_unable_to_embed_media" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">يتعذر تضمين وسائط</string>
+    <string name="gutenberg_native_try_another_search_term" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">تجربة مصطلح بحث آخر</string>
+    <string name="gutenberg_native_no_blocks_found" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">لم يتم العثور على أي مكوِّنات</string>
+    <string name="gutenberg_native_s_previews_not_yet_available" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">معاينات %s غير متاحة حتى الآن</string>
+    <string name="gutenberg_native_s_embed_block_previews_are_coming_soon" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">ستتوفر ميزة معاينات مكوّن التضمين %s قريبًا</string>
+    <string name="gutenberg_native_double_tap_to_preview_post" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">انقر نقرًا مزدوجًا لمعاينة مقالة.</string>
+    <string name="gutenberg_native_double_tap_to_preview_page" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">انقر نقرًا مزدوجًا لمعاينة صفحة.</string>
+    <string name="scan_multisite_not_supported_subtitle">عذرًا، الأداة Jetpack Scan غير متوافقة مع النُسخ المثبتة من ووردبريس متعددة المواقع</string>
     <string name="scan_multisite_not_supported_title">مواقع ووردبريس المتعددة غير مدعومة</string>
+    <string name="gutenberg_native_invalid_url_please_enter_a_valid_url" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">رابط غير صالح. الرجاء إدخال عنوان موقع صالح.</string>
+    <string name="gutenberg_native_embed_caption_s" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">قم بتضمين تسمية توضيحية. %s</string>
+    <string name="gutenberg_native_embed_caption_empty" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">قم بتضمين تسمية توضيحية. فارغ</string>
     <string name="activity_log_visit_our_documentation_page">زيارة صفحة الوثائق الخاصة بنا</string>
     <string name="activity_log_multisite_message">يوفِّر Jetpack Backup الخاصة بعمليات تثبيت مواقع متعددة نسخًا احتياطية قابلة للتنزيل، ولا يوفِّر عمليات استعادة من نقرة واحدة. لمزيد من المعلومات ⁦%1$s⁩.</string>
     <string name="blogging_reminders_tip_message">يمكن أن يساعد النشر بشكل منتظم على الحفاظ على انشغال القراء وجذب زائرين جدد إلى موقعك.</string>
@@ -1133,16 +1494,38 @@ Language: ar
     <string name="blogging_reminders_done">تمّ</string>
     <string name="blogging_reminders_notify_me">إشعاري بذلك</string>
     <string name="restore_details_enter_server_creds_msg">&lt;a href=\"%1$s\"&gt;أدخل بيانات اعتماد الخادم الخاص بك&lt;/a&gt; لتمكين استعادة الموقع بنقرة واحدة من النُسخ الاحتياطية.</string>
+    <string name="gutenberg_native_set_as_featured_image" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">تعيين كصورة بارزة </string>
+    <string name="gutenberg_native_remove_as_featured_image" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">إزالة كصورة بارزة</string>
     <string name="fab_add_category_desc">إنشاء تصنيف</string>
     <string name="support_ticket_subject">دعم ووردبريس لـ Android</string>
     <string name="site_settings_categories_hint">إدارة تصنيفات موقعك</string>
     <string name="site_settings_categories_title">التصنيفات</string>
     <string name="site_settings_blogging_reminders_title">التذكيرات</string>
     <string name="page_is_posts_page_warning">تم إنشاء محتوى صفحة أحدث المقالات تلقائيًّا ولا يمكن تحريره.</string>
+    <string name="gutenberg_native_border_settings" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">إعدادات الحدود</string>
     <string name="storage_utils_dialog_dont_show_button">عدم العرض مرة أخرى</string>
     <string name="storage_utils_dialog_ok_button">عرض مساحة التخزين</string>
     <string name="storage_utils_dialog_message">يتعين علينا حفظ محتواك على جهازك قبل التمكن من نشره. راجع إعدادات التخزين الخاصة بك، وأزل الملفات لتوفير مساحة.</string>
     <string name="storage_utils_dialog_title">مساحة التخزين على الجهاز غير كافية</string>
+    <string name="gutenberg_native_y_axis_position" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">موضع المحور الصادي</string>
+    <string name="gutenberg_native_x_axis_position" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">موضع المحور السيني</string>
+    <string name="gutenberg_native_type_a_url" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">كتابة عنوان URL</string>
+    <string name="gutenberg_native_slash_inserter_results" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">نتائج أداة إدراج الشرطة المائلة</string>
+    <string name="gutenberg_native_s_has_url_set" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">لدى %s عنوان URL معين</string>
+    <string name="gutenberg_native_s_has_no_url_set" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">ليس لدى %s عنوان URL معين</string>
+    <string name="gutenberg_native_s_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">مكوّن [%s]</string>
+    <string name="gutenberg_native_opacity" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">الشفافية</string>
+    <string name="gutenberg_native_media_options" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">خيارات الوسائط</string>
+    <string name="gutenberg_native_invalid_url_audio_file_not_found" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">رابط غير صالح. لم يتم العثور على ملف صوت.</string>
+    <string name="gutenberg_native_insert_crosspost" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">إدراج مقالة في عدد من المجموعات الإخبارية في وقت واحد</string>
+    <string name="gutenberg_native_drag_to_adjust_focal_point" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">السحب لضبط نقطة التركيز</string>
+    <string name="gutenberg_native_double_tap_to_open_bottom_sheet_to_add_image_or_video" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">الضغط المزدوج لفتح الورقة السفلية لإضافة صورة أو مقطع فيديو</string>
+    <string name="gutenberg_native_double_tap_to_open_action_sheet_to_add_image_or_video" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">الضغط المزدوج لفتح ورقة الإجراءات لإضافة صورة أو مقطع فيديو</string>
+    <string name="gutenberg_native_current_unit_is_s" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">الوحدة الحالي هي %s</string>
+    <string name="gutenberg_native_crosspost" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">النشر المتعدد</string>
+    <string name="gutenberg_native_columns_settings" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">إعدادات الأعمدة</string>
+    <string name="gutenberg_native_add_link_to_s" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">إضافة رابط إلى %s</string>
+    <string name="gutenberg_native_add_link_text" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">إضافة نصّ للرابط</string>
     <string name="error_media_path_is_directory">يُعد المسار المحدَّد دليلاً بدلاً من ملف الوسائط</string>
     <string name="error_media_could_not_find_media_in_path">يتعذر العثور على ملف الوسائط في المسار</string>
     <string name="error_media_unexpected_empty_media_file_path">مسار ملف فارغ غير متوقع خاص بالوسائط</string>
@@ -1150,33 +1533,92 @@ Language: ar
     <string name="error_media_unexpected_null_value">كانت الوسائط فارغة</string>
     <string name="threat_fix_enter_server_creds_msg_plural">&lt;a href=\"%1$s\"&gt;أدخل بيانات اعتماد خادمك&lt;/a&gt; لإصلاح التهديدات.</string>
     <string name="threat_fix_enter_server_creds_msg_singular">&lt;a href=\"%1$s\"&gt;أدخل بيانات اعتماد خادمك&lt;/a&gt; لإصلاح التهديد.</string>
+    <string name="gutenberg_native_double_tap_to_add_a_link" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">أنقر نقرًا مزدوجًا لإضافة رابط.</string>
     <string name="login_empty_view_try_another_account">المحاولة باستخدام حساب آخر</string>
     <string name="login_empty_view_see_instructions">الاطلاع على الإرشادات</string>
     <string name="login_no_jetpack_sites_error_message">إذا كان لديك موقع بالفعل، فسيتعيَّن عليك تنصيب إضافة Jetpack المجانية وربطها بحسابك على WordPress.com.</string>
     <string name="login_empty_view_avatar_content_description">صورة ملفك الشخصي</string>
     <string name="login_not_a_jetpack_site">لاستخدام هذا التطبيق لـ ⁦%1$s⁩، سيتعيَّن عليك تثبيت إضافة Jetpack وربطها بحسابك على WordPress.com.</string>
+    <string name="gutenberg_native_width_settings" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">إعدادات العرض</string>
+    <string name="gutenberg_native_link_rel" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">خصائص الرابط</string>
+    <string name="gutenberg_native_column_settings" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">إعدادات العمود</string>
+    <string name="gutenberg_native_no_description" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">من دون وصف</string>
     <string name="user_profile_untitled_site">(بدون عنوان)</string>
     <string name="user_profile_site_section_header">الموقع</string>
     <string name="user_profile_bottom_sheet_description">معلومات الورقة السفلية لملف المستخدم الشخصي</string>
     <string name="likes_list_screen_title">قائمة الإعجابات %s</string>
+    <string name="gutenberg_native_two" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">اثنان</string>
+    <string name="gutenberg_native_three" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">ثلاثة</string>
+    <string name="gutenberg_native_no_title" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">من دون عنوان</string>
+    <string name="gutenberg_native_s_social_icon" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">أيقونة %s الاجتماعية</string>
+    <string name="gutenberg_native_mention" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">الإشارة</string>
+    <string name="gutenberg_native_new" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">جديد</string>
+    <string name="gutenberg_native_preview_post" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">معاينة المقالة</string>
+    <string name="gutenberg_native_preview_page" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">معاينة الصفحة</string>
+    <string name="gutenberg_native_retry" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">أعد المحاولة</string>
+    <string name="gutenberg_native_gif" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">GIF</string>
+    <string name="gutenberg_native_one" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">واحد</string>
+    <string name="gutenberg_native_add_title" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">أضف عنواناً</string>
+    <string name="gutenberg_native_no_preview_available" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">لا توجد معاينة متاحة</string>
+    <string name="gutenberg_native_loading" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">تحميل</string>
+    <string name="gutenberg_native_link_label" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">تسمية الرابط</string>
+    <string name="gutenberg_native_text_color" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">لون النص</string>
+    <string name="gutenberg_native_s_link" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">%s رابط</string>
+    <string name="gutenberg_native_padding" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">الهوامش الداخلية</string>
+    <string name="gutenberg_native_four" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">أربعة</string>
+    <string name="gutenberg_native_featured" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">مميز</string>
+    <string name="gutenberg_native_add_image" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">إضافة صورة</string>
+    <string name="gutenberg_native_custom_url" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">رابط (URL) مخصّص</string>
+    <string name="gutenberg_native_create_embed" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">إنشاء تضمين</string>
+    <string name="gutenberg_native_column_d" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">عمود %d</string>
+    <string name="gutenberg_native_more" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">المزيد</string>
+    <string name="gutenberg_native_briefly_describe_the_link_to_help_screen_reader_user" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">قدّم وصفاً موجزًا للرابط لمساعدة مستخدم قارئ الشاشة</string>
+    <string name="gutenberg_native_add_blocks" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">إضافة مكوِّنات</string>
     <string name="login_no_jetpack_sites">لم يتم العثور على أي مواقع Jetpack</string>
+    <string name="gutenberg_native_what_is_alt_text" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">ماهو النص البديل؟</string>
+    <string name="gutenberg_native_transform_s_to" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">تحويل %s إلى</string>
+    <string name="gutenberg_native_transform_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">تحويل المكوِّن…</string>
+    <string name="gutenberg_native_1_s_transformed_to_2_s" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">تم تحويل %1$s إلى %2$s</string>
     <string name="like_faces_error_loading_message">خطأ أثناء تحميل بيانات \"الإعجابات\". %s</string>
     <string name="like_title_plural">%d إعجابات</string>
     <string name="like_title_singular">إعجاب واحد</string>
     <string name="suggestion">اقتراح:</string>
+    <string name="gutenberg_native_use_icon_button" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">استخدام زر الأيقونة</string>
+    <string name="gutenberg_native_search_input_field" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">حقل إدخال البحث.</string>
+    <string name="gutenberg_native_search_button_current_button_text_is" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">زر البحث. نص الزر الحالي هو</string>
+    <string name="gutenberg_native_search_blocks" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">البحث في المكوّنات</string>
+    <string name="gutenberg_native_search_block_label_current_text_is" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">تسمية مكون البحث. النص الحالي هو</string>
+    <string name="gutenberg_native_outside" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">خارجي</string>
+    <string name="gutenberg_native_no_custom_placeholder_set" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">لم يتم تعيين عنصر نائب مخصص</string>
+    <string name="gutenberg_native_inside" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">داخلي</string>
+    <string name="gutenberg_native_hide_search_heading" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">إخفاء عنوان البحث</string>
+    <string name="gutenberg_native_double_tap_to_edit_placeholder_text" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">أنقر نقرًا مزدوجًا لتحرير نص العنصر النائب</string>
+    <string name="gutenberg_native_double_tap_to_edit_label_text" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">أنقر نقرًا مزدوجًا لتحرير نص التسمية</string>
+    <string name="gutenberg_native_double_tap_to_edit_button_text" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">أنقر نقرًا مزدوجًا لتحرير نص الزر</string>
+    <string name="gutenberg_native_double_tap_to_change_unit" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">أنقر نقرًا مزدوجًا لتغيير الوحدة</string>
+    <string name="gutenberg_native_current_placeholder_text_is" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">نص العنصر النائب الحالي هو</string>
+    <string name="gutenberg_native_clear_search" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">مسح البحث</string>
+    <string name="gutenberg_native_cancel_search" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">إلغاء البحث</string>
+    <string name="gutenberg_native_button_position" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">موضع الزر</string>
+    <string name="gutenberg_native_1_s_2_s_is_3_s_4_s" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">%1$s. %2$s - %3$s %4$s.</string>
     <string name="get_likes_empty_state_title">حدث خطأ أثناء الحصول على بيانات الإعجابات</string>
     <string name="get_likes_unknown_error">حدث خطأ غير معروف أثناء الحصول على الإعجابات.</string>
     <string name="get_likes_no_network_error">لا توجد شبكة متاحة.</string>
     <string name="comments_empty_list_filtered_unreplied">لا توجد تعليقات لم يتم الرد عليها</string>
     <string name="comment_status_unreplied">لم يتم الرد عليها</string>
+    <string name="gutenberg_native_search_settings" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">إعدادات البحث</string>
     <string name="jetpack_brute_force_allowlist_title">عناوين IP المسموح بها دائمًا</string>
     <string name="site_settings_denylist_title">التعليقات غير المسموح بها</string>
+    <string name="gutenberg_native_add_button_text" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">إضافة نصّ للزر</string>
     <string name="activity_log_backup_download_notice_dismiss_action">تجاهل</string>
     <string name="activity_log_backup_download_notice_download_action">تنزيل</string>
     <string name="threat_fix_all_status_success_message_plural">تم معالجة التهديدات بنجاح.</string>
     <string name="threat_fix_all_confirmation_message_plural">يرجى التأكيد على رغبتك في معالجة جميع التهديدات النشطة التي تصل إلى %s.</string>
     <string name="scan_idle_threats_description_plural">عثر الفحص على %1$s من التهديدات المحتملة من خلال %2$s. يرجى مراجعتها أدناه واتخاذ الإجراءات أو الضغط على زر إصلاح الكل. نحن ⁦%3$s⁩ إذا كنت بحاجة إلينا.</string>
     <string name="scan_fixing_threats_description_plural">نعمل بجد في الخلفية لإصلاح هذه التهديدات. في هذه الأثناء، لا تتردد في الاستمرار في استخدام موقعك كالمعتاد، ويمكنك التحقُّق من التقدُّم في أي وقت.</string>
+    <string name="gutenberg_native_edit_focal_point" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">تحرير نقطة التركيز</string>
+    <string name="gutenberg_native_double_tap_to_open_bottom_sheet_to_edit_replace_or_clear_the_imag" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">الضغط المزدوج لفتح الورقة السفلية لتحريرها أو استبدالها أو مسح الصورة</string>
+    <string name="gutenberg_native_double_tap_to_open_action_sheet_to_edit_replace_or_clear_the_imag" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">الضغط المزدوج لفتح ورقة الإجراءات لتحريرها أو استبدالها أو مسح الصورة</string>
     <string name="new_site_creation_search_domain_example">example.com</string>
     <string name="new_site_creation_search_domain_input_hint">اكتب اسمًا لموقعك (اسم للنطاق)</string>
     <string name="magic_link_not_meaning_to_create_account" a8c-src-lib="module:login">ألم تقصد إنشاء حساب جديد؟ العودة للخلف لإعادة إدخال عنوان بريدك الإلكتروني.</string>
@@ -1219,6 +1661,22 @@ Language: ar
     <string name="backup_item_contents">دليل WP-content</string>
     <string name="backup_item_roots">جذر ووردبريس</string>
     <string name="backup_download_details_choose_items_header">العناصر المضمنة في هذا التنزيل</string>
+    <string name="gutenberg_native_uploading" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">جاري الرفع…</string>
+    <string name="gutenberg_native_replace_file" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">استبدال الملف</string>
+    <string name="gutenberg_native_replace_audio" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">استبدال الصوت</string>
+    <string name="gutenberg_native_problem_opening_the_audio" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">ثمَّة مشكلة أثناء فتح ملف الصوت</string>
+    <string name="gutenberg_native_open" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">فتح</string>
+    <string name="gutenberg_native_no_application_can_handle_this_request" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">لا يوجد تطبيق يمكنه معالجة هذا الطلب.</string>
+    <string name="gutenberg_native_lock_icon" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">أيقونة القفل</string>
+    <string name="gutenberg_native_failed_to_insert_audio_file_please_tap_for_options" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">فشل إدراج الملف الصوتي. يرجى النقر على الخيارات.</string>
+    <string name="gutenberg_native_double_tap_to_select_an_audio_file" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">الضغط المزدوج لتحديد ملف صوت</string>
+    <string name="gutenberg_native_double_tap_to_listen_the_audio_file" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">أنقر نقرًا مزدوجًا للاستماع إلى ملف الصوت</string>
+    <string name="gutenberg_native_choose_audio" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">اختيار الصوت</string>
+    <string name="gutenberg_native_audio_player" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">مشغل الصوت</string>
+    <string name="gutenberg_native_audio_file" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">ملف صوت</string>
+    <string name="gutenberg_native_audio_caption_s" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">تسمية الملف الصوتي. %s</string>
+    <string name="gutenberg_native_audio_caption_empty" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">تسمية الملف الصوتي. فارغة</string>
+    <string name="gutenberg_native_add_audio" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">إضافة صوت</string>
     <string name="continue_with_wpcom">تسجيل الدخول أو إنشاء حساب على WordPress.com</string>
     <string name="photo_picker_use_audio">استخدام هذا الصوت</string>
     <string name="photo_picker_choose_audio">اختيار ملف صوتي من الجهاز</string>
@@ -1234,7 +1692,6 @@ Language: ar
     <string name="scan_fixing_threats_description_singular">نعمل بجد على إصلاح هذا التهديد في الخلفية. في هذه الأثناء، لا تتردد في الاستمرار في استخدام موقعك كالمعتاد، ويمكنك التحقُّق من التقدُّم في أي وقت.</string>
     <string name="scan_scanning_description">سنرسل إليك إشعارًا إذا تم العثور على تهديد. في هذه الأثناء لا تتردد في الاستمرار في استخدام موقعك كالمعتاد، ويمكنك التحقُّق مجددًا من حالة التقدُّم في أي وقت.</string>
     <string name="scan_fixing_threats_title_plural">جاري معالجة التهديدات</string>
-    <string name="scan_start_request_failed_subtitle">يتعذر على \"فحص Jetpack\" إكمال فحص موقعك. يرجى التحقُّق لمعرفة ما إذا كان موقعك معطَّلاً أم لا، وإذا لم يكن كذلك، فحاول مرة أخرى. إذا كان الأمر كذلك، أو إذا كان \"فحص Jetpack\" لا يزال يواجه مشكلات، فاتصل بفريق الدعم لدينا.</string>
     <string name="scan_request_failed_title">حدث خطأ ما</string>
     <string name="activity_log_currently_backing_up_message_no_dates">نسخ الموقع احتياطيًا</string>
     <string name="activity_log_currently_backing_up_message">نسخ الموقع احتياطيًا من %1$s %2$s</string>
@@ -1305,6 +1762,8 @@ Language: ar
     <string name="backup_empty_subtitle">ستظهر نسختك الاحتياطية الأولى هنا في غضون 24 ساعة وستتلقى إشعارًا بمجرد اكتمال النسخ الاحتياطي</string>
     <string name="backup_empty_title">ستكون نسختك الاحتياطية الأولى جاهزة قريبًا</string>
     <string name="request_failed_message">حدثت مشكلة أثناء معالجة الطلب. يرجى المحاولة مرة أخرى لاحقاً.</string>
+    <string name="gutenberg_native_move_to_bottom" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">تحريك للأسفل</string>
+    <string name="gutenberg_native_change_block_position" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">تغيير موضع المكوّن</string>
     <string name="jetpack_icon_content_description">أيقونة</string>
     <string name="backup_download_complete_info">أرسلنا إليك أيضًا رابطًا إلى ملفك عبر البريد الإلكتروني.</string>
     <string name="backup_download_complete_download_share_action_button_content_description">زر رابط المشاركة</string>
@@ -1393,6 +1852,8 @@ Language: ar
     <string name="backup_download_details_header">إنشاء نسخة احتياطية قابلة للتنزيل</string>
     <string name="backup_download_details_page_title">تنزيل النسخة الاحتياطية</string>
     <string name="backup_download">تنزيل النسخ الاحتياطي</string>
+    <string name="gutenberg_native_error" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">خطأ</string>
+    <string name="gutenberg_native_choose_file" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">اختيار ملف</string>
     <string name="activity_log_item_menu_download_backup_label">تنزيل النسخة الاحتياطية</string>
     <string name="activity_log_item_menu_restore_label">استعادة إلى هذه النقطة</string>
     <string name="activity_log_activity_type_filter_label">نوع النشاط</string>
@@ -1403,6 +1864,12 @@ Language: ar
     <string name="dialog_confirm_copy_local_message">تحتوي المقالة التي تحاول نسخها على إصدارين متعارضين أو أنك قمت بإجراء تغييرات مؤخرًا لكنك لم تحفظها.\nقم بتحرير المقالة أولاً لحل أي تعارض أو استمر في نسخ الإصدار من هذا التطبيق.</string>
     <string name="dialog_confirm_copy_local_title">تعارض مزامنة المقالة</string>
     <string name="button_copy">تكرار</string>
+    <string name="gutenberg_native_file_name" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">اسم الملف</string>
+    <string name="gutenberg_native_file_block_settings" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">إعدادات مكوّن ملف</string>
+    <string name="gutenberg_native_failed_to_upload_files_please_tap_for_options" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">فشل رفع الملفات.\nيرجى النقر على الخيارات.</string>
+    <string name="gutenberg_native_failed_to_save_files_please_tap_for_options" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">فشل حفظ الملفات.\nيرجى النقر على الخيارات.</string>
+    <string name="gutenberg_native_edit_file" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">تحرير الملف</string>
+    <string name="gutenberg_native_copy_file_url" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">نسخ رابط الملف</string>
     <string name="new_site_creation_domain_header_title">اختيار نطاق</string>
     <string name="reader_follow_comments_could_not_unsubscribe_error">لا يمكن إلغاء الاشتراك في التعليقات لهذه المقالة</string>
     <string name="reader_follow_comments_could_not_subscribe_error">لا يمكن الاشتراك في التعليقات لهذه المقالة</string>
@@ -1422,10 +1889,10 @@ Language: ar
     <string name="reader_discover_no_posts_title">لا توجد مقالات حديثة</string>
     <string name="reader_discover_empty_title">مرحبًا!</string>
     <string name="scan">فحص</string>
+    <string name="gutenberg_native_scrollable_block_menu_opened_select_a_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">تم فتح قائمة المكوّن القابلة للتمرير. حدد مكوّنًا.</string>
+    <string name="gutenberg_native_scrollable_block_menu_closed" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">تم قفل قائمة المكوّن القابلة للتمرير.</string>
     <string name="hpp_choose_button">اختيار</string>
-    <string name="mlp_network_error_subtitle">انقر على إعادة المحاولة عند الاتصال بالإنترنت مرة أخرى أو إنشاء صفحة فارغة باستخدام الزر أدناه.</string>
     <string name="mlp_network_error_title">التخطيطات غير متوفرة دون اتصال انترنت</string>
-    <string name="mlp_error_subtitle">انقر على إعادة المحاولة أو إنشاء صفحة فارغة باستخدام الزر أدناه.</string>
     <string name="mlp_error_title">التخطيطات غير متوفرة بسبب خطأ</string>
     <string name="prepublishing_nudges_add_category_button">إضافة تصنيف</string>
     <string name="prepublishing_nudges_toolbar_title_add_categories">أضف تصنيفاً جديداً</string>
@@ -1433,6 +1900,11 @@ Language: ar
     <string name="prepublishing_nudges_home_categories_not_set">لم يتم التعيين</string>
     <string name="prepublishing_nudges_categories_action">التصنيفات</string>
     <string name="media_loading_failed">فشل تحميل الوسائط</string>
+    <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">نعمل بجد لإضافة المزيد من المكوِّنات مع كل إصدار.</string>
+    <string name="gutenberg_native_s_is_not_fully_supported" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">لم يتم دعم \"%s\" بالكامل</string>
+    <string name="gutenberg_native_help_button" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">زر المساعدة</string>
+    <string name="gutenberg_native_edit_using_web_editor" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">تحرير باستخدام محرر الويب</string>
+    <string name="gutenberg_native_choose_images" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">اختيار الصور</string>
     <string name="mlp_notice_blank_page_created">تم إنشاء صفحة فارغة</string>
     <string name="mlp_notice_page_created">تم إنشاء صفحة</string>
     <string name="media_insert_failed">فشل إدراج الوسائط.</string>
@@ -1447,6 +1919,9 @@ Language: ar
     <string name="stats_referrer_popup_menu_open_website">فتح الموقع الإلكتروني</string>
     <string name="media_uploading_stock_library_photo">رفع وسائط المخزون</string>
     <string name="media_uploading_default">رفع الوسائط</string>
+    <string name="gutenberg_native_add_this_telephone_link" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">أضف رابط الهاتف هذا</string>
+    <string name="gutenberg_native_add_this_link" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">إضافة هذا الرابط</string>
+    <string name="gutenberg_native_add_this_email_link" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">إضافة رابط البريد الإلكتروني هذا</string>
     <string name="suggestion_no_connection">لا يوجد اتصال بالإنترنت.\nالاقتراحات غير متوفرة.</string>
     <string name="mlp_notselected_description">%s </string>
     <string name="mlp_selected_description">%s محدد</string>
@@ -1459,9 +1934,16 @@ Language: ar
     <string name="error_media_xmlrcp_server_error">حدث خطأ داخلي في الخادم</string>
     <string name="error_media_xmlrpc_not_allowed">إجراؤك غير مسموح به</string>
     <string name="show_n_hidden_items_desc">⁦%1$s⁩ المزيد من العناصر</string>
+    <string name="gutenberg_native_select_a_layout" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">اختيار تخطيط</string>
+    <string name="gutenberg_native_note_column_layout_may_vary_between_themes_and_screen_sizes" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">ملحوظة: قد يختلف تخطيط العمود بين القوالب وأحجام الشاشة</string>
     <string name="create_page_fab_tooltip">إنشاء صفحة</string>
     <string name="create_post_fab_tooltip">إنشاء مقالة</string>
     <string name="reader_expandable_tags_view_overflow_indicator_collapse_title">إخفاء</string>
+    <string name="gutenberg_native_video_caption_empty" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">تسمية الفيديو. فارغ</string>
+    <string name="gutenberg_native_updates_the_title" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">يقوم بتحديث العنوان.</string>
+    <string name="gutenberg_native_paste_block_after" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">لصق المكوِّن بعد</string>
+    <string name="gutenberg_native_page_title_s" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">عنوان الصفحة. %s</string>
+    <string name="gutenberg_native_page_title_empty" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">عنوان الصفحة. فارغ</string>
     <string name="label_close_button">إغلاق</string>
     <string name="mlp_preview_page">معاينة</string>
     <string name="mlp_create_page">إنشاء صفحة</string>
@@ -1473,6 +1955,13 @@ Language: ar
     <string name="reader_toast_err_page_jump_not_found">يتعذر العثور على الانتقال السريع بين الصفحات ذات الصلة</string>
     <string name="error_media_quota_exceeded">تم تجاوز المساحة المتوافرة للتخزين</string>
     <string name="pick_file">إضافة ملف</string>
+    <string name="gutenberg_native_replace_video" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">استبدال الفيديو</string>
+    <string name="gutenberg_native_replace_image_or_video" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">استبدال صورة أو فيديو</string>
+    <string name="gutenberg_native_convert_to_link" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">تحويل إلى رابط</string>
+    <string name="gutenberg_native_choose_video" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">اختيار فيديو</string>
+    <string name="gutenberg_native_choose_image_or_video" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">اختيار صورة أو فيديو</string>
+    <string name="gutenberg_native_choose_image" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">اختيار صورة</string>
+    <string name="gutenberg_native_block_removed" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">تم إزالة المكوّن</string>
     <string name="enter_your_site_address">أدخل رابط موقعك الحالي</string>
     <string name="signup_confirmation_title" a8c-src-lib="module:login">تأكيد التسجيل</string>
     <string name="continue_with_google_terms_of_service_text" a8c-src-lib="module:login">إذا تابعت مع Google وليس لديك حساب WordPress.com بالفعل، فأنت تقوم بإنشاء حساب وتوافق على %1$sشروط الخدمة%2$s.</string>
@@ -1496,14 +1985,30 @@ Language: ar
     <string name="reset_your_password" a8c-src-lib="module:login">إعادة تعيين كلمة المرور الخاصة بك</string>
     <string name="reader_error_request_failed_title">حدثت مشكلة أثناء معالجة الطلب. يرجى المحاولة مرة أخرى لاحقاً.</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">سيؤدي نقل هذه المقالة إلى سلة المهملات إلى تجاهل التغييرات المحلية كذلك، هل ترغب بالتأكيد في المتابعة؟</string>
+    <string name="gutenberg_native_s_block_options" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">خيارات المكوِّن %s</string>
+    <string name="gutenberg_native_remove_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">إزالة المكوّن</string>
+    <string name="gutenberg_native_duplicate_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">تكرار المكوِّن</string>
+    <string name="gutenberg_native_copied_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">المكوِّن الذي تم نسخه</string>
+    <string name="gutenberg_native_block_pasted" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">المكوِّن الذي تم لصقه</string>
+    <string name="gutenberg_native_block_duplicated" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">المكوِّن الذي تم تكراره</string>
+    <string name="gutenberg_native_block_cut" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">المكوِّن الذي تم قصه</string>
+    <string name="gutenberg_native_block_copied" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">المكوِّن الذي تم نسخه</string>
     <string name="my_site_title_changer_dialog_not_allowed_hint">يمكن للمستخدم فقط تغيير عنوان الموقع باستخدام دور المسؤول.</string>
     <string name="my_site_title_changer_dialog_hint">يُعرض عنوان الموقع في شريط العناوين في متصفح الويب ويُعرض في رأس الصفحة في معظم القوالب.</string>
     <string name="error_update_site_title_network">تعذر تحديث عنوان الموقع. تحقَّق من اتصال شبكتك وحاول مجددًا.</string>
     <string name="dialog_confirm_trash_losing_unsaved_changes_title">تغييرات غير محفوظة</string>
+    <string name="gutenberg_native_open_link_in_a_browser" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">فتح الرابط في متصفح</string>
+    <string name="gutenberg_native_navigates_to_the_previous_content_sheet" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">التنقل إلى ورقة المحتوى السابقة</string>
+    <string name="gutenberg_native_navigates_to_customize_the_gradient" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">التنقل لتخصيص التدرج</string>
+    <string name="gutenberg_native_navigates_to_custom_color_picker" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">التنقل إلى منتقي اللون المخصص</string>
+    <string name="gutenberg_native_gradient_type" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">نوع التدرج</string>
+    <string name="gutenberg_native_double_tap_to_select_the_option" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">الضغط ضغطًا مزدوجًا لتحديد الخيار</string>
+    <string name="gutenberg_native_customize_gradient" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">تخصيص التدرج</string>
     <string name="error_media_thumbnail_not_loaded">تعذر تحميل الصورة المصغَّرة للوسائط</string>
     <string name="menu_content_info">بنية المحتوى</string>
     <string name="everyone">الجميع</string>
     <string name="me">أنا</string>
+    <string name="gutenberg_native_dismiss" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">تجاهل</string>
     <string name="prepublishing_nudges_home_tags_not_set">لم يتم التعيين</string>
     <string name="prepublishing_tags_description">تساعد الوسوم على إخبار القراء بما تدور حوله التدوينة</string>
     <string name="prepublishing_nudges_toolbar_title_publish">تاريخ النشر</string>
@@ -1532,6 +2037,11 @@ Language: ar
     <string name="status_and_visibility">الحالة والظهور</string>
     <string name="update_now">قم بالتحديث الآن</string>
     <string name="pages_item_subtitle">%1$s ·</string>
+    <string name="gutenberg_native_open_block_actions_menu" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">فتح قائمة إجراءات المكوِّن</string>
+    <string name="gutenberg_native_move_to_top" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">تحريك للأعلى</string>
+    <string name="gutenberg_native_insert_mention" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">إدراج إشارة</string>
+    <string name="gutenberg_native_double_tap_to_open_bottom_sheet_with_available_options" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">النقر المزدوج لفتح الورقة السفلية التي تحتوي على خيارات متوافرة</string>
+    <string name="gutenberg_native_double_tap_to_open_action_sheet_with_available_options" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">النقر المزدوج لفتح ورقة الإجراءات التي تحتوي على خيارات متوافرة</string>
     <string name="pages_cannot_be_started">يتعذر علينا فتح الصفحات في الوقت الحالي. يرجى المحاولة مجددًا في وقت لاحق</string>
     <string name="pages_set_as_posts_page">تعيين كصفحة مقالات</string>
     <string name="pages_set_as_homepage">تعيين كصفحة رئيسية</string>
@@ -1555,6 +2065,8 @@ Language: ar
     <string name="page_homepage_successfully_updated">تم تحديث الصفحة الرئيسية بنجاح</string>
     <string name="page_cannot_set_posts_page">لتعيين صفحة المقالات، قم بتمكين \"الصفحة الرئيسية الثابتة\" في إعدادات الموقع</string>
     <string name="page_cannot_set_homepage">لتعيين صفحة رئيسية، قم بتمكين \"الصفحة الرئيسية الثابتة\" في إعدادات الموقع</string>
+    <string name="gutenberg_native_select_a_color" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">تحديد لون</string>
+    <string name="gutenberg_native_double_tap_to_go_to_color_settings" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">الضغط ضغطًا مزدوجًا للانتقال إلى إعدادات الألوان</string>
     <string name="feature_announcement_find_out_mode">اكتشاف المزيد</string>
     <string name="feature_announcement_dialog_label">ما الجديد في %s</string>
     <string name="insert_label_with_count">إدراج %d</string>
@@ -1577,6 +2089,14 @@ Language: ar
     <string name="button_insert">إدراج</string>
     <string name="continue_label">المتابعة</string>
     <string name="copy_text">نسخ</string>
+    <string name="gutenberg_native_number_of_columns" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">عدد الأعمدة</string>
+    <string name="gutenberg_native_move_block_right_from_position_1_s_to_position_2_s" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">نقل المكوِّن إلى اليمين من الموضع %1$s إلى الموضع %2$s</string>
+    <string name="gutenberg_native_move_block_right" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">نقل المكوِّن إلى اليمين</string>
+    <string name="gutenberg_native_move_block_left_from_position_1_s_to_position_2_s" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">نقل المكوِّن إلى اليسار من الموضع %1$s إلى الموضع %2$s</string>
+    <string name="gutenberg_native_move_block_left" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">نقل المكوِّن إلى اليسار</string>
+    <string name="gutenberg_native_double_tap_to_move_the_block_to_the_right" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">الضغط المزدوج لنقل المكوِّن إلى اليمين</string>
+    <string name="gutenberg_native_double_tap_to_move_the_block_to_the_left" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">الضغط المزدوج لنقل المكوِّن إلى اليسار</string>
+    <string name="gutenberg_native_block_settings" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">إعدادات المكوِّن</string>
     <string name="new_site_creation_creating_site_loading_4">إنشاء لوحة التحكم</string>
     <string name="new_site_creation_creating_site_loading_3">إعداد القالب</string>
     <string name="new_site_creation_creating_site_loading_2">إضافة ميزات الموقع</string>
@@ -1628,6 +2148,17 @@ Language: ar
     <string name="app_theme_light">فاتح</string>
     <string name="app_theme">المظهر</string>
     <string name="dialog_confirm_autosave_body_first_part_for_page">لقد أجريت مؤخرًا تغييرات على هذه الصفحة ولكن لم نحفظها. اختيار إصدار لتحميله:\n</string>
+    <string name="gutenberg_native_warning_message" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">رسالة تحذير</string>
+    <string name="gutenberg_native_show_post_content" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">إظهار محتوى المقالة</string>
+    <string name="gutenberg_native_only_show_excerpt" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">إظهار المقتطف فقط</string>
+    <string name="gutenberg_native_link_to" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">رابط لـ</string>
+    <string name="gutenberg_native_link_settings" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">إعدادات الرابط</string>
+    <string name="gutenberg_native_excerpt_length_words" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">طول المقتطف (كلمات)</string>
+    <string name="gutenberg_native_edit_cover_media" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">تحرير غلاف الوسائط</string>
+    <string name="gutenberg_native_customize" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">تخصيص</string>
+    <string name="gutenberg_native_button_link_url" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">رابط الزر URL</string>
+    <string name="gutenberg_native_border_radius" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">زوايا الحدود</string>
+    <string name="gutenberg_native_add_paragraph_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">إضافة مكوّن فقرة</string>
     <string name="create_post_page_fab_tooltip_contributors">إنشاء مقالة</string>
     <string name="post_list_tab_trashed_posts">محذوف</string>
     <string name="post_list_tab_scheduled_posts">مجدول</string>
@@ -1648,7 +2179,16 @@ Language: ar
     <string name="reader_filter_self_hosted_empty_sites_tags_action">تسجيل الدخول إلى WordPress.com</string>
     <string name="reader_filter_self_hosted_empty_tags_list">تسجيل الدخول إلى ووردبريس.كوم للاطلاع على أحدث التدوينات الواردة من الوسوم التي اشتركت فيها</string>
     <string name="reader_filter_self_hosted_empty_blogs_list">تسجيل الدخول إلى ووردبريس.كوم للاطلاع على أحدث التدوينات الواردة من المدونات التي اشتركت فيها</string>
+    <string name="gutenberg_native_replace_current_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">استبدال المكوِّن الحالي</string>
+    <string name="gutenberg_native_add_to_end" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">إضافة إلى النهاية</string>
+    <string name="gutenberg_native_add_to_beginning" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">إضافة إلى البداية</string>
+    <string name="gutenberg_native_add_block_before" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">إضافة مكوّن قبل</string>
+    <string name="gutenberg_native_add_block_after" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">إضافة مكوّن بعد</string>
     <string name="reader_filter_cta">عامل التصفية</string>
+    <string name="gutenberg_native_video_caption_s" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">تسمية الفيديو. %s</string>
+    <string name="gutenberg_native_edit_video" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">تحرير الفيديو</string>
+    <string name="gutenberg_native_edit_media" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">تحرير الوسائط</string>
+    <string name="gutenberg_native_add_a_shortcode" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">إضافة كود قصير…</string>
     <string name="fab_create_desc">إنشاء مقالة</string>
     <string name="stats_posting_activity_end_description">لقد استمعت إلى جميع الإحصاءت لهذه الفترة.\n بالنقر مرة أخرى سيجرى إعادة التشغيل من البداية.</string>
     <string name="stats_posting_activity_empty_description">لا توجد إحصاءات في هذه الفترة.</string>
@@ -1661,6 +2201,8 @@ Language: ar
     <string name="stats_box_type_low">منخفض</string>
     <string name="stats_bar_chart_accessibility_overlapping_entry">  &amp; %1$d %2$s</string>
     <string name="stats_bar_chart_accessibility_entry">%1$s، %2$d %3$s</string>
+    <string name="gutenberg_native_replace_image" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">استبدال الصورة</string>
+    <string name="gutenberg_native_gallery_caption_s" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">التسمية التوضيحية لمعرض الصور. %s</string>
     <string name="create_post_page_fab_tooltip">إنشاء مقالة أو صفحة</string>
     <string name="content_description_person_building_website">شخص ينشئ موقعًا على الويب</string>
     <string name="post_signup_interstitial_not_right_now">ليس الآن</string>
@@ -1697,6 +2239,51 @@ Language: ar
     <string name="suffix_1_000">%sK</string>
     <string name="posts_cannot_be_started">يتعذر علينا فتح هذه المقالات الآن. يرجى المحاولة مجددًا في وقت لاحق</string>
     <string name="site_cannot_be_loaded">يتعذر علينا تحميل بيانات موقعك الآن. يرجى المحاولة مجددًا في وقت لاحق</string>
+    <string name="gutenberg_native_wordpress_media_library" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">مكتبة وسائط ووردبريس</string>
+    <string name="gutenberg_native_unsupported" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">غير مدعوم</string>
+    <string name="gutenberg_native_tap_to_hide_the_keyboard" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">أنقر لإخفاء لوحة المفاتيح</string>
+    <string name="gutenberg_native_tap_here_to_show_help" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">أنقر هنا لإظهار المساعدة</string>
+    <string name="gutenberg_native_take_a_video" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">تسجيل مقطع فيديو</string>
+    <string name="gutenberg_native_take_a_photo" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">التقاط صورة</string>
+    <string name="gutenberg_native_start_writing" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">بدء الكتابة…</string>
+    <string name="gutenberg_native_s_block_this_block_has_invalid_content" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">مكوِّن %s. يحتوي هذا المكوِّن على محتوى غير صالح</string>
+    <string name="gutenberg_native_s_block_empty" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">مكوِّن %s. فارغ</string>
+    <string name="gutenberg_native_cut_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">قص المكوِّن</string>
+    <string name="gutenberg_native_problem_opening_the_video" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">ثمَّة مشكلة أثناء فتح مقطع الفيديو</string>
+    <string name="gutenberg_native_post_title_s" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">عنوان المقالة. %s</string>
+    <string name="gutenberg_native_post_title_empty" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">عنوان المقالة. فارغ</string>
+    <string name="gutenberg_native_paste_url" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">لصق الرابط</string>
+    <string name="gutenberg_native_page_break_block_s" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">مكوِّن فاصل الصفحات. %s</string>
+    <string name="gutenberg_native_open_settings" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">فتح الإعدادات</string>
+    <string name="gutenberg_native_no_application_can_handle_this_request_please_install_a_web_brows" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">لا يتوفر تطبيق لمعالجة هذا الطلب. يرجى تثبيت متصفح ويب.</string>
+    <string name="gutenberg_native_navigate_up" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">الانتقال إلى الأعلى</string>
+    <string name="gutenberg_native_move_block_up_from_row_1_s_to_row_2_s" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">نقل المكوِّن إلى أعلى من الصف %1$s إلى الصف %2$s</string>
+    <string name="gutenberg_native_move_block_up" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">تحريك المكوّن لأعلى</string>
+    <string name="gutenberg_native_move_block_down_from_row_1_s_to_row_2_s" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">نقل المكوِّن إلى أسفل من الصف %1$s إلى الصف %2$s</string>
+    <string name="gutenberg_native_move_block_down" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">تحريك المكوّن لأسفل</string>
+    <string name="gutenberg_native_link_text" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">نص الرابط</string>
+    <string name="gutenberg_native_link_inserted" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">تمّ إدراج الرابط</string>
+    <string name="gutenberg_native_image_caption_s" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">تسمية توضيحية للصورة. %s</string>
+    <string name="gutenberg_native_hide_keyboard" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">إخفاء لوحة المفاتيح</string>
+    <string name="gutenberg_native_help_icon" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">أيقونة المساعدة</string>
+    <string name="gutenberg_native_double_tap_to_toggle_setting" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">الضغط المزدوج لتبديل الإعداد</string>
+    <string name="gutenberg_native_double_tap_to_select_an_image" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">الضغط المزدوج لتحديد صورة</string>
+    <string name="gutenberg_native_double_tap_to_select_a_video" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">الضغط المزدوج لتحديد مقطع الفيديو</string>
+    <string name="gutenberg_native_double_tap_to_select" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">الضغط المزدوج للتحديد</string>
+    <string name="gutenberg_native_double_tap_to_move_the_block_up" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">الضغط المزدوج لنقل المكوِّن إلى أعلى</string>
+    <string name="gutenberg_native_double_tap_to_move_the_block_down" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">الضغط المزدوج لنقل المكوِّن إلى أسفل</string>
+    <string name="gutenberg_native_double_tap_to_edit_this_value" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">الضغط المزدوج لتحرير هذه القيمة</string>
+    <string name="gutenberg_native_double_tap_to_add_a_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">الضغط المزدوج لإضافة مكوِّن</string>
+    <string name="gutenberg_native_double_tap_and_hold_to_edit" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">الضغط المزدوج مع الاستمرار للتحرير</string>
+    <string name="gutenberg_native_current_value_is_s" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">القيمة الحالية هي %s</string>
+    <string name="gutenberg_native_choose_from_device" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">الاختيار من الجهاز</string>
+    <string name="gutenberg_native_an_unknown_error_occurred_please_try_again" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">حدث خطأ غير معروف. يُرجى المحاولة مرة أخرى.</string>
+    <string name="gutenberg_native_alt_text" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">النص البديل</string>
+    <string name="gutenberg_native_add_video" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">إضافة فيديو</string>
+    <string name="gutenberg_native_add_url" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">إضافة رابط</string>
+    <string name="gutenberg_native_add_alt_text" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">إضافة نصّ بديل للرابط</string>
+    <string name="gutenberg_native_add_block_here" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">إضافة مكوّن هنا</string>
+    <string name="gutenberg_native_add_description" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">إضافة وصف</string>
     <string name="reader_empty_saved_posts_content_description">أنقر فوق الزرّ \"حفظ المقالات\" لحفظ مقالةٍ في قائمتك.</string>
     <string name="reader_acessibility_list_loaded">\"تم تحميل القائمة بعناصر %1$d.\"</string>
     <string name="notifications_tab_dialog_switch_desc">الإشعارات</string>
@@ -1796,7 +2383,6 @@ Language: ar
     <string name="post_notification_off">إيقاف</string>
     <string name="post_settings_add_to_calendar">إضافة إلى تقويم</string>
     <string name="post_settings_notification">إشعار</string>
-    <string name="post_settings_time_and_date">التاريخ والوقت</string>
     <string name="login_invalid_site_url" a8c-src-lib="module:login">يرجى إدخال عنوان موقع ويب كامل، مثل example.com.</string>
     <string name="enter_email_for_site" a8c-src-lib="module:login">تسجيل الدخول باستخدام WordPress.com للاتصال بـ %1$s</string>
     <string name="stats_post_views_label">المشاهدات</string>
@@ -1845,8 +2431,7 @@ Language: ar
     <string name="plugin_install_site_ineligible_default_error">إذا قمت للتو بتسجيل اسم نطاق، فيرجى الانتظار حتى ننتهي من إعداده ومن ثم المحاولة مرة أخرى.\n\nإذا لم يكن الأمر كذلك، يبدو أنه حدث خطأ ما وقد لا تكون ميزة الإضافة متاحة لهذا الموقع.</string>
     <string name="domain_contact_information_state_not_available_hint">الحالة (غير متوفرة)</string>
     <string name="domain_registration_privacy_protection_tos">من خلال تسجيل هذا النطاق فإنك توافق على%1$sالشروط والأحكام%2$s</string>
-    <string name="error_network_connection">تحقق من اتصال الشبكة وحاول مرة أخرى.</string>
-    <string name="error_browser_no_network">يتعذر تحميل هذه الصفحة حاليًا.</string>
+    <string name="error_network_connection">تحقق من اتصالك بالشبكة وحاول مرة أخرى</string>
     <string name="error_disabled_apis">تعذّر جلب الإعدادات: بعض واجهات برمجة التطبيقات APIs غير متاحة لمُعرّف تطبيق OAuth هذا + دمج الحساب.</string>
     <string name="jetpack_connection_terms_and_conditions">من خلال إعداد Jetpack فإنك توافق على %1$sالشروط والأحكام%2$s</string>
     <string name="site_settings_disconnected_toast">لا يوجد اتصال. التحرير مُعطّل.</string>
@@ -1885,7 +2470,6 @@ Language: ar
     <string name="post_list_tab_drafts">المسودات</string>
     <string name="error_restoring_post">حدث خطأ أثناء استعادة المقالة</string>
     <string name="backdated_for">تاريخ سابق ليوم: %s</string>
-    <string name="stats_insights_management_title">لن ترى إلا الإحصاءات الأكثر أهمية. أضف الرؤى الخاصة بك ونظِّمها أدناه.</string>
     <string name="stats_insights_annual_site_stats">إحصاءات الموقع السنوية</string>
     <string name="domain_suggestions_fetch_error">تعذّر تحميل اقتراحات النطاق</string>
     <string name="domain_suggestions_search_hint">كتابة كلمة مفتاحية للحصول على مزيد من الأفكار</string>
@@ -1905,7 +2489,7 @@ Language: ar
     <string name="posts_trashed_empty">ليس لديك أي مقالات تم وضعها في سلة المهملات</string>
     <string name="posts_draft_empty">ليس لديك أي مسودة مقالات</string>
     <string name="posts_scheduled_empty">ليس لديك أية مقالات مجدولة</string>
-    <string name="posts_published_empty">لم تنشر أي مقالات حتى الآن</string>
+    <string name="posts_published_empty">لم تنشر أي مقالات - حتى الآن!</string>
     <string name="notification_wpcom_username_needed" a8c-src-lib="module:login">يرجى تسجيل الدخول باسم المستخدم وكلمة المرور الخاصة بك.</string>
     <string name="error_user_username_instead_of_email" a8c-src-lib="module:login">يرجى تسجيل الدخول باستخدام اسم مستخدم WordPress.com الخاص بك بدلاً من عنوان بريدك الإلكتروني.</string>
     <string name="stats_insights_average_words">معدل الكلمات/المقالة</string>
@@ -2057,8 +2641,6 @@ Language: ar
     <string name="history_footer_post">تم إنشاء المقالة بتاريخ %1$s في تمام %2$s</string>
     <string name="history_footer_page">تم إنشاء الصفحة بتاريخ %1$s في تمام %2$s</string>
     <string name="history_empty_title">لا يوجد تاريخ حتى الآن</string>
-    <string name="history_empty_subtitle_post">عندما تُجري تغييرات على مقالتك، ستتمكن من رؤية التاريخ هنا</string>
-    <string name="history_empty_subtitle_page">عندما تُجري تغييرات على صفحتك، ستتمكن من رؤية التاريخ هنا</string>
     <string name="description_user">صورة رمزية للمستخدم</string>
     <string name="image_size_full_label">الحجم الكامل</string>
     <string name="image_size_large_label">كبير</string>
@@ -2070,7 +2652,7 @@ Language: ar
     <string name="pages_empty_trashed">ليس لديك أي صفحات تم نقلها إلى سلة المهملات</string>
     <string name="pages_empty_scheduled">ليس لديك أي صفحات مجدولة</string>
     <string name="pages_empty_drafts">ليس لديك أي مسودة صفحات</string>
-    <string name="pages_empty_published">لم تنشر أي صفحات حتى الآن</string>
+    <string name="pages_empty_published">لم تنشر أي صفحات - حتى الآن!</string>
     <string name="pages_search_suggestion">بحث في الصفحات</string>
     <string name="pages_empty_search_result">لا تتطابق أي صفحات مع بحثك</string>
     <string name="pages_delete_permanently">حذف بشكل دائم</string>
@@ -2108,14 +2690,13 @@ Language: ar
     <string name="themes_empty_list">لا توجد سمات مطابقة لبحثك</string>
     <string name="reader_label_post_search_explainer">ما الذي ترغب في إيجاده؟</string>
     <string name="site_settings_tags_empty_title_search">لا توجد وسوم مطابقة لبحثك</string>
-    <string name="site_settings_tags_empty_title">لا توجد لديك أي وسوم</string>
-    <string name="site_settings_tags_empty_subtitle">أضف وسومك المستخدمة بكثرة هنا بحيث يمكن تحديدها بسرعة عندما تقوم بإضافة وسوم إلى مقالاتك</string>
+    <string name="site_settings_tags_empty_title">لا توجد لديك أي وسوم - حتى الآن!</string>
     <string name="site_settings_tags_empty_button">إنشاء وسم</string>
     <string name="media_empty_search_list">لا توجد وسائط مطابقة لبحثك</string>
     <string name="sign_out_wpcom_confirm_with_no_changes">هل ترغب في تسجيل الخروج من ووردبريس؟</string>
     <string name="sign_out_wpcom_confirm_with_changes">لقد أدخلتَ تغييرات على المقالات التي لم يتم رفعها إلى موقعك. سيؤدي تسجيل الخروج الآن إلى حذف تلك التغييرات من جهازك. هل ترغب في تسجيل الخروج على أي حال؟</string>
     <string name="people_empty_list_filtered_viewers">لا توجد مشاهدات بعد</string>
-    <string name="people_empty_list_filtered_users">لا يوجد مستخدمين حتى الآن</string>
+    <string name="people_empty_list_filtered_users">لا يوجد مستخدمين - حتى الآن!</string>
     <string name="reader_empty_posts_liked_description">ستظهر المقالات التي نالت إعجابك هنا</string>
     <string name="reader_empty_posts_liked_title">لا توجد إعجابات حتى الآن</string>
     <string name="reader_no_followed_blogs_button_discover">اكتشاف المدونات</string>
@@ -2126,7 +2707,6 @@ Language: ar
     <string name="posts_empty_list_button">إنشاء مقالة</string>
     <string name="pages_empty_list_button">إنشاء صفحة</string>
     <string name="media_empty_upload_media">رفع الوسائط</string>
-    <string name="media_empty_list">ليست لديك أي وسائط</string>
     <string name="reader_gallery_images_desc">معرض الصور</string>
     <string name="blavatar_desc">أيقونة الموقع</string>
     <string name="theme_image_desc">صورة القالب</string>
@@ -2618,10 +3198,10 @@ Language: ar
     <string name="notifications_tab_title_all">الكل</string>
     <string name="top_level_category_name">أعلى مستوى</string>
     <string name="category_parent">التصنيف الأب (اختياري):</string>
-    <string name="media_empty_audio_list">ليس لديك أي مقطع صوتي</string>
-    <string name="media_empty_documents_list">ليست لديك أي مستندات</string>
-    <string name="media_empty_videos_list">ليست لديك أي مقاطع فيديو</string>
-    <string name="media_empty_image_list">ليست لديك أي صور</string>
+    <string name="media_empty_audio_list">ليس لديك أي صوت - حتى الآن!</string>
+    <string name="media_empty_documents_list">ليست لديك أي مستندات - حتى الآن!</string>
+    <string name="media_empty_videos_list">ليست لديك أي مقاطع فيديو - حتى الآن!</string>
+    <string name="media_empty_image_list">ليست لديك أي صور - حتى الآن!</string>
     <string name="media_error_timeout">استغرق الخادم وقتًا طويلاً جدًا لدرجة أنه لم يستجب</string>
     <string name="media_error_exceeds_memory_limit">الملف كبير جدًا لدرجة أنه لا يمكن تحميله على هذا الموقع</string>
     <string name="media_error_exceeds_php_filesize">يتجاوز الملف الحجم الأقصى للتحميل على هذا الموقع</string>
@@ -2758,9 +3338,7 @@ Language: ar
     <string name="pending_draft_one_day_1">قمت بصياغة \"%1$s\" في صورة مسودة أمس. لا تنس أن تنشرها!</string>
     <string name="reader_label_visit">زيارة الموقع</string>
     <string name="swipe_for_more">التمرير سريعًا للاطلاع على المزيد</string>
-    <string name="reader_err_get_post_not_authorized_signin_fallback">لست مخولاً لعرض هذه المقالة. جرِّب تسجيل الدخول إلى موقع WordPress.com أولاً أو استخدم زر \"الإجراء\" في الجزء العلوي لفتح متصفح ما بدلاً من ذلك.</string>
     <string name="reader_err_get_post_not_authorized_signin">لست مخولاً لعرض هذه المقالة. جرِّب تسجيل الدخول إلى موقع WordPress.com أولاً.</string>
-    <string name="reader_err_get_post_not_authorized_fallback">لست مخولاً لعرض هذه المقالة. استخدم زر \"الإجراء\" في الجزء العلوي لتجربة متصفح ما بدلاً من ذلك.</string>
     <string name="reader_snackbar_err_cannot_like_post_logged_out">لا يمكنك تسجيل إعجاب أثناء تسجيل الخروج من WordPress.com</string>
     <string name="reader_toast_err_already_liked">لقد قمت بالفعل بتسجيل إعجاب لذلك التعليق</string>
     <string name="reader_toast_err_comment_not_found">لم يتم العثور على تعليق!</string>
@@ -2803,8 +3381,8 @@ Language: ar
     <string name="error_remove_viewer">تعذر إزالة المشاهد</string>
     <string name="editor_failed_uploads_switch_html">فشل رفع بعض الوسائط. يمكنك الإنتقال الى وضع HTML\nبهذه الحالة. إزالة جميع المرفوعات الفاشلة والمتابعة؟</string>
     <string name="stop_upload_dialog_title">إيقاف الرفع؟</string>
-    <string name="alert_action_while_uploading" a8c-src-lib="module:editor">أنت تقوم برفع وسائط حاليًا. يرجى الانتظار حتى يكتمل هذا.</string>
-    <string name="alert_insert_image_html_mode" a8c-src-lib="module:editor">لا يمكن إدراج الوسائط مباشرة في وضع HTML. يرجى التبديل إلى الوضع المرئي.</string>
+    <string name="alert_action_while_uploading" tools:ignore="UnusedResources" a8c-src-lib="module:editor">أنت تقوم برفع وسائط حاليًا. يرجى الانتظار حتى يكتمل هذا.</string>
+    <string name="alert_insert_image_html_mode" tools:ignore="UnusedResources" a8c-src-lib="module:editor">لا يمكن إدراج الوسائط مباشرة في وضع HTML. يرجى التبديل إلى الوضع المرئي.</string>
     <string name="tap_to_try_again">اضغط للمحاولة مرة أخرى!</string>
     <string name="invite_sent">تم إرسال الدعوة بنجاح</string>
     <string name="invite_error_for_username">%1$s: %2$s</string>
@@ -3059,10 +3637,8 @@ Language: ar
     <string name="notifications_no_search_results">لا توجد مواقع مطابقة \"%s\"</string>
     <string name="search_sites">بحث في المواقع</string>
     <string name="notifications_empty_view_reader">الانتقال إلى القارئ</string>
-    <string name="notifications_empty_action_followers_likes">ملاحظة: قم بالتعليق على المقالات التي قرأتها</string>
-    <string name="notifications_empty_action_comments">الانضمام إلى محادثة: التعليق على المقالات من المدونات التي تتابعها</string>
-    <string name="notifications_empty_action_unread">إعادة بدء المحادثة: كتابة مقالة جديدة</string>
-    <string name="notifications_empty_action_all">كن نشطًا! علّق على مقالات من المدونات التي تتابعها.</string>
+    <string name="notifications_empty_action_followers_likes">ادخل دائرة الضوء! علّق على المقالات التي قرأتها</string>
+    <string name="notifications_empty_action_unread">أعد حماس المحادثة! كتابة تدوينة جديدة.</string>
     <string name="notifications_empty_comments">لا توجد تعليقات حتى الآن</string>
     <string name="notifications_empty_unread">تم تحديثك!</string>
     <string name="reader_short_comment_count_multi">%s تعليقات</string>
@@ -3101,6 +3677,7 @@ Language: ar
     <string name="push_auth_expired">انتهت صلاحية الطلب. سجِّل الدخول إلى WordPress.com للمحاولة مرة أخرى.</string>
     <string name="ignore">تجاهل</string>
     <string name="stats_insights_best_ever">المشاهدات الأفضل على الإطلاق</string>
+    <string name="stats_insights_most_popular_day">اليوم الأكثر شيوعًا</string>
     <string name="stats_insights_today">إحصاءات اليوم</string>
     <string name="stats_insights_all_time">مقالات ومشاهدات وزوار كل الأوقات</string>
     <string name="stats_insights">الرؤى</string>
@@ -3158,7 +3735,6 @@ Language: ar
     <string name="browse_our_faq_button">استعراض الأسئلة المتداولة</string>
     <string name="reader_empty_comments">لا توجد تعليقات حتى الآن</string>
     <string name="reader_label_like">أعجبني</string>
-    <string name="reader_label_view_original">عرض المقالة الأصلية</string>
     <string name="reader_label_comments_closed">التعليقات مغلقة</string>
     <string name="reader_title_photo_viewer">%1$d من %2$d</string>
     <string name="error_publish_empty_post">يتعذر نشر مقالة فارغة</string>
@@ -3213,7 +3789,7 @@ Language: ar
     <string name="local_changes">التغيرات المحلية</string>
     <string name="new_media">وسائط جديدة</string>
     <string name="new_post">مقال جديد</string>
-    <string name="notifications_empty_all">ليست هناك تنبيهات…حتى الآن.</string>
+    <string name="notifications_empty_all">ليست هناك تنبيهات…حتى الآن!</string>
     <string name="http_authorization_required" a8c-src-lib="module:login">التخويل مطلوب</string>
     <string name="invalid_site_url_message">تحقق من أن عنوان URL الذي تم إدخاله في الموقع صحيح</string>
     <string name="file_error_create">تعذر إنشاء ملف مؤقت لرفع الوسائط. تأكد من وجود مساحة حرة كافية على الجهاز.</string>
@@ -3237,7 +3813,7 @@ Language: ar
     <string name="delete_post">هل تريد حذف المقالة؟</string>
     <string name="post_settings">إعدادات المقالة</string>
     <string name="file_not_found">تعذر العثور على الملف المراد رفعه. هل تم حذفه أم نقله؟</string>
-    <string name="horizontal_alignment" a8c-src-lib="module:editor">المحاذاة الأفقية</string>
+    <string name="horizontal_alignment" tools:ignore="UnusedResources" a8c-src-lib="module:editor">المحاذاة الأفقية</string>
     <string name="local_draft">مسودة محلية</string>
     <string name="page_settings">إعدادات الصفحة</string>
     <string name="link_enter_url_text">نص الرابط (اختياري)</string>
@@ -3310,10 +3886,10 @@ Language: ar
     <string name="username">اسم المستخدم</string>
     <string name="password">كلمة المرور</string>
     <string name="reader">القارئ</string>
-    <string name="featured_in_post" a8c-src-lib="module:editor">إدراج الصورة في محتوى المقالة</string>
-    <string name="featured" a8c-src-lib="module:editor">استخدام كصورة بارزة</string>
-    <string name="width" a8c-src-lib="module:editor">عرض</string>
-    <string name="caption" a8c-src-lib="module:editor">الكلمات التوضيحية (اختياري)</string>
+    <string name="featured_in_post" tools:ignore="UnusedResources" a8c-src-lib="module:editor">إدراج الصورة في محتوى المقالة</string>
+    <string name="featured" tools:ignore="UnusedResources" a8c-src-lib="module:editor">استخدام كصورة بارزة</string>
+    <string name="width" tools:ignore="UnusedResources" a8c-src-lib="module:editor">عرض</string>
+    <string name="caption" tools:ignore="UnusedResources" a8c-src-lib="module:editor">الكلمات التوضيحية (اختياري)</string>
     <string name="pages">صفحات</string>
     <string name="posts">المقالات</string>
     <string name="anonymous">غير معروف</string>
@@ -3321,7 +3897,7 @@ Language: ar
     <string name="done">تم</string>
     <string name="ok">موافق</string>
     <string name="link_enter_url">الرابط URL</string>
-    <string name="uploading" a8c-src-lib="module:editor">جاري الرفع…</string>
+    <string name="uploading" tools:ignore="UnusedResources" a8c-src-lib="module:editor">جاري الرفع…</string>
     <string name="image_alignment">المحاذاة</string>
     <string name="refresh">تجديد</string>
     <string name="untitled">بدون عنوان</string>
