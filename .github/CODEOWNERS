@@ -1,7 +1,6 @@
 # Dependabot
 /gradle/libs.versions.toml @wordpress-mobile/android-developers
 
-# Route Dependabot Ruby dependency PRs to the tooling team. See AINFRA-2437.
 Gemfile*       @wordpress-mobile/apps-infra-tooling
 .ruby-version  @wordpress-mobile/apps-infra-tooling
 .bundle/       @wordpress-mobile/apps-infra-tooling
