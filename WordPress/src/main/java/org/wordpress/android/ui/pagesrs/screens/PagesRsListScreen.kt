@@ -35,6 +35,7 @@ import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.emptyFlow
+import kotlinx.coroutines.flow.withIndex
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.ui.pagesrs.PageRsListTab
@@ -105,16 +106,12 @@ internal fun PagesRsListScreen(
             }
 
             LaunchedEffect(pagerState) {
-                var isFirstEmission = true
                 snapshotFlow { pagerState.settledPage }
                     .distinctUntilChanged()
-                    .collect { page ->
+                    .withIndex()
+                    .collect { (index, page) ->
                         onInitTab(tabs[page])
-                        if (isFirstEmission) {
-                            isFirstEmission = false
-                        } else {
-                            onTabChanged(tabs[page])
-                        }
+                        if (index > 0) onTabChanged(tabs[page])
                     }
             }
 
