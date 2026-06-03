@@ -5,6 +5,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpApiClientProvider
 import org.wordpress.android.fluxc.persistence.PostSqlUtils
 import org.wordpress.android.fluxc.store.PostStore
+import org.wordpress.android.ui.postsrs.PostRsToFluxCMapper
 import rs.wordpress.api.kotlin.WpRequestResult
 import uniffi.wp_api.PostEndpointType
 import uniffi.wp_api.PostRetrieveParams
@@ -28,7 +29,7 @@ internal class PageRsFluxCBridge @Inject constructor(
     private val wpApiClientProvider: WpApiClientProvider,
     private val postStore: PostStore,
     private val postSqlUtils: PostSqlUtils,
-    private val mapper: PageRsToFluxCMapper,
+    private val postMapper: PostRsToFluxCMapper,
 ) {
     /**
      * Returns a [PostModel] for [remotePageId] that is guaranteed to exist
@@ -68,7 +69,7 @@ internal class PageRsFluxCBridge @Inject constructor(
             }
         }
 
-        val pageModel = mapper.map(rsPage, site)
+        val pageModel = postMapper.map(rsPage, site).apply { setIsPage(true) }
         postSqlUtils.insertOrUpdatePost(pageModel, false)
 
         return postStore.getPostByRemotePostId(remotePageId, site)

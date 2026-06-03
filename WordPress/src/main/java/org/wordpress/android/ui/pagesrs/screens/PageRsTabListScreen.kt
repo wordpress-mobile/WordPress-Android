@@ -63,7 +63,7 @@ internal fun PageRsTabListScreen(
     ) {
         when {
             state.isLoading -> ShimmerList()
-            state.error != null && state.pages.isEmpty() -> {
+            state.error != null -> {
                 ErrorContent(
                     error = state.error,
                     onRetry = if (state.isAuthError) null else onRefresh
