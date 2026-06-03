@@ -24,7 +24,7 @@ import javax.inject.Inject
  * [PostModel], inserts it into FluxC's DB, and re-reads it to obtain the
  * auto-assigned local ID.
  */
-class PageRsFluxCBridge @Inject constructor(
+internal class PageRsFluxCBridge @Inject constructor(
     private val wpApiClientProvider: WpApiClientProvider,
     private val postStore: PostStore,
     private val postSqlUtils: PostSqlUtils,
@@ -43,7 +43,6 @@ class PageRsFluxCBridge @Inject constructor(
         site: SiteModel,
         lastModified: String? = null
     ): PostModel {
-        // Fast path — already in FluxC, marked as a page, and still fresh
         postStore.getPostByRemotePostId(remotePageId, site)?.let { cached ->
             val fresh = lastModified == null ||
                     lastModified == cached.remoteLastModified
@@ -52,7 +51,6 @@ class PageRsFluxCBridge @Inject constructor(
             }
         }
 
-        // Slow path — fetch via wordpress-rs (Pages endpoint)
         val client = wpApiClientProvider.getWpApiClient(site)
         val response = client.request {
             it.posts().retrieveWithEditContext(
@@ -73,7 +71,6 @@ class PageRsFluxCBridge @Inject constructor(
         val pageModel = mapper.map(rsPage, site)
         postSqlUtils.insertOrUpdatePost(pageModel, false)
 
-        // Re-read to get the auto-assigned local ID
         return postStore.getPostByRemotePostId(remotePageId, site)
             ?: error("Page inserted but not found in FluxC")
     }

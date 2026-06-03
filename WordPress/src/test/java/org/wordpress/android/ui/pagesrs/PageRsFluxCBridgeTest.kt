@@ -60,9 +60,6 @@ class PageRsFluxCBridgeTest {
 
     @Test
     fun `fast path is skipped when cached row is not a page`() = runTest {
-        // A cached row with the same remote ID but isPage = false (e.g. a
-        // collision with a post) must not short-circuit; the slow path
-        // takes over. We assert the cache miss leads to provider use.
         val site = SiteModel().apply { id = 1 }
         val cached = PostModel().apply {
             setRemotePostId(REMOTE_ID)

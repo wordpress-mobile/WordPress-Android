@@ -33,6 +33,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
@@ -42,7 +43,7 @@ import org.wordpress.android.ui.postsrs.SnackbarMessage
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PagesRsListScreen(
+internal fun PagesRsListScreen(
     tabStates: Map<PageRsListTab, PageTabUiState>,
     isOpeningPage: Boolean,
     snackbarMessages: Flow<SnackbarMessage> = emptyFlow(),
@@ -105,14 +106,16 @@ fun PagesRsListScreen(
 
             LaunchedEffect(pagerState) {
                 var isFirstEmission = true
-                snapshotFlow { pagerState.settledPage }.collect { page ->
-                    onInitTab(tabs[page])
-                    if (isFirstEmission) {
-                        isFirstEmission = false
-                    } else {
-                        onTabChanged(tabs[page])
+                snapshotFlow { pagerState.settledPage }
+                    .distinctUntilChanged()
+                    .collect { page ->
+                        onInitTab(tabs[page])
+                        if (isFirstEmission) {
+                            isFirstEmission = false
+                        } else {
+                            onTabChanged(tabs[page])
+                        }
                     }
-                }
             }
 
             HorizontalPager(

@@ -9,7 +9,7 @@ import uniffi.wp_api.PostStatus
 import uniffi.wp_mobile.FullEntityAnyPostWithEditContext
 import uniffi.wp_mobile.PostItemState
 
-data class PageTabUiState(
+internal data class PageTabUiState(
     val pages: List<PageRsUiModel> = emptyList(),
     val isLoading: Boolean = false,
     val isRefreshing: Boolean = false,
@@ -19,7 +19,7 @@ data class PageTabUiState(
     val isAuthError: Boolean = false
 )
 
-enum class PageRsDisplayState {
+internal enum class PageRsDisplayState {
     NORMAL,
     FETCHING_WITH_DATA,
     FAILED_WITH_DATA,
@@ -27,14 +27,12 @@ enum class PageRsDisplayState {
     ERROR
 }
 
-data class PageRsUiModel(
+internal data class PageRsUiModel(
     val remotePageId: Long,
     val title: String,
     val excerpt: String,
     val date: String,
     val lastModified: String = "",
-    val link: String = "",
-    val status: PostStatus? = null,
     val badges: List<Int> = emptyList(),
     val displayState: PageRsDisplayState = PageRsDisplayState.NORMAL
 )
@@ -79,8 +77,6 @@ private fun FullEntityAnyPostWithEditContext.toPageUiModel(
             ).let { HtmlUtils.fastStripHtml(it).trim() },
         date = PostRsDateFormatter.format(page.dateGmt, page.status),
         lastModified = DateTimeUtils.iso8601UTCFromDate(page.modifiedGmt),
-        link = page.link,
-        status = page.status,
         badges = buildList {
             if (page.status is PostStatus.Private) {
                 add(R.string.post_status_post_private)

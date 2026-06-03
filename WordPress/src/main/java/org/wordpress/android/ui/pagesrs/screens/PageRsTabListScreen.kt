@@ -33,10 +33,11 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import org.wordpress.android.R
 import org.wordpress.android.ui.pagesrs.PageRsUiModel
 import org.wordpress.android.ui.pagesrs.PageTabUiState
+import org.wordpress.android.ui.postsrs.screens.PlaceholderItem
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PageRsTabListScreen(
+internal fun PageRsTabListScreen(
     state: PageTabUiState,
     emptyMessageResId: Int,
     onRefresh: () -> Unit,
@@ -141,7 +142,7 @@ private fun PageListContent(
 private fun ShimmerList() {
     LazyColumn(modifier = Modifier.fillMaxSize()) {
         items(SHIMMER_ITEM_COUNT) {
-            PageRsPlaceholderItem()
+            PlaceholderItem()
         }
     }
 }

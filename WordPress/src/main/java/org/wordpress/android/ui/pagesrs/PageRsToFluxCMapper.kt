@@ -15,7 +15,7 @@ import javax.inject.Inject
  * `AnyPageWithEditContext`), so this delegates to [PostRsToFluxCMapper] and
  * flips the page flag on the result.
  */
-class PageRsToFluxCMapper @Inject constructor(
+internal class PageRsToFluxCMapper @Inject constructor(
     private val postMapper: PostRsToFluxCMapper,
 ) {
     suspend fun map(
@@ -23,7 +23,5 @@ class PageRsToFluxCMapper @Inject constructor(
         site: SiteModel
     ): PostModel = postMapper.map(page, site).apply {
         setIsPage(true)
-        // TODO Phase 1: surface page-specific fields (parent id, menu order)
-        // once their availability on AnyPostWithEditContext is confirmed.
     }
 }

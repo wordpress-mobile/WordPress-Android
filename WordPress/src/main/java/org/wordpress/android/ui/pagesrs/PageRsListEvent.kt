@@ -3,7 +3,7 @@ package org.wordpress.android.ui.pagesrs
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 
-sealed interface PageRsListEvent {
+internal sealed interface PageRsListEvent {
     data class EditPage(
         val site: SiteModel,
         val page: PostModel

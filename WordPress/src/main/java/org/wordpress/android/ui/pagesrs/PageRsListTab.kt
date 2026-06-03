@@ -4,7 +4,7 @@ import org.wordpress.android.R
 import uniffi.wp_api.PostStatus
 import uniffi.wp_api.WpApiParamOrder
 
-enum class PageRsListTab(
+internal enum class PageRsListTab(
     val labelResId: Int,
     val emptyMessageResId: Int,
     val statuses: List<PostStatus>,

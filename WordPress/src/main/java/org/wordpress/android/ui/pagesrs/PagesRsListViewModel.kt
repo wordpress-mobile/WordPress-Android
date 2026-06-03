@@ -34,7 +34,7 @@ import uniffi.wp_mobile_cache.ListState
 import javax.inject.Inject
 
 @HiltViewModel
-class PagesRsListViewModel @Inject constructor(
+internal class PagesRsListViewModel @Inject constructor(
     selectedSiteRepository: SelectedSiteRepository,
     private val serviceProvider: WpServiceProvider,
     private val resourceProvider: ResourceProvider,
@@ -249,7 +249,7 @@ class PagesRsListViewModel @Inject constructor(
     }
 
     private fun friendlyErrorMessage(
-        e: Exception? = null,
+        e: Exception,
         defaultResId: Int? = null,
     ): String = PostRsErrorUtils.friendlyErrorMessage(
         e, defaultResId, resourceProvider, networkUtilsWrapper
@@ -292,7 +292,9 @@ class PagesRsListViewModel @Inject constructor(
 
         val isError = listInfo?.state == ListState.ERROR
         val hasPages = getTabUiState(tab).pages.isNotEmpty()
-        val errorMessage = if (isError) friendlyErrorMessage() else null
+        val errorMessage = if (isError) {
+            PostRsErrorUtils.friendlyErrorMessage(null, null, resourceProvider, networkUtilsWrapper)
+        } else null
 
         if (isError && hasPages) {
             val authError = getTabUiState(tab).isAuthError
@@ -332,7 +334,10 @@ class PagesRsListViewModel @Inject constructor(
     }
 
     private fun updateTabUiState(tab: PageRsListTab, update: PageTabUiState.() -> PageTabUiState) {
-        _tabStates.value += (tab to getTabUiState(tab).update())
+        val current = getTabUiState(tab)
+        val next = current.update()
+        if (next == current) return
+        _tabStates.value = _tabStates.value + (tab to next)
     }
 
     override fun onCleared() {

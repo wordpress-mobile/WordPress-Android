@@ -1,16 +1,9 @@
 package org.wordpress.android.ui.pagesrs.screens
 
-import androidx.compose.animation.core.RepeatMode
-import androidx.compose.animation.core.animateFloat
-import androidx.compose.animation.core.infiniteRepeatable
-import androidx.compose.animation.core.rememberInfiniteTransition
-import androidx.compose.animation.core.tween
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -22,9 +15,7 @@ import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -32,15 +23,16 @@ import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
 import org.wordpress.android.ui.pagesrs.PageRsDisplayState
 import org.wordpress.android.ui.pagesrs.PageRsUiModel
+import org.wordpress.android.ui.postsrs.screens.PlaceholderItem
 
 @Composable
-fun PageRsListItem(
+internal fun PageRsListItem(
     page: PageRsUiModel,
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     when (page.displayState) {
-        PageRsDisplayState.PLACEHOLDER -> PageRsPlaceholderItem(modifier)
+        PageRsDisplayState.PLACEHOLDER -> PlaceholderItem(modifier)
         PageRsDisplayState.ERROR -> ErrorItem(modifier)
         PageRsDisplayState.NORMAL,
         PageRsDisplayState.FETCHING_WITH_DATA,
@@ -123,62 +115,6 @@ private fun BadgeRow(badges: List<Int>, modifier: Modifier = Modifier) {
                     )
                     .padding(horizontal = 6.dp, vertical = 2.dp)
             )
-        }
-    }
-}
-
-@Composable
-private fun ShimmerBox(modifier: Modifier = Modifier) {
-    val infiniteTransition = rememberInfiniteTransition(label = "shimmer")
-    val alpha by infiniteTransition.animateFloat(
-        initialValue = 0.06f,
-        targetValue = 0.14f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(durationMillis = 800),
-            repeatMode = RepeatMode.Reverse
-        ),
-        label = "shimmerAlpha"
-    )
-    androidx.compose.foundation.layout.Box(
-        modifier = modifier.background(
-            MaterialTheme.colorScheme.onSurface.copy(alpha = alpha)
-        )
-    )
-}
-
-@Composable
-internal fun PageRsPlaceholderItem(modifier: Modifier = Modifier) {
-    Card(
-        modifier = modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 4.dp),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-        elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
-    ) {
-        Column(modifier = Modifier.padding(16.dp)) {
-            ShimmerBox(
-                modifier = Modifier
-                    .fillMaxWidth(0.25f)
-                    .height(12.dp)
-                    .clip(RoundedCornerShape(4.dp))
-            )
-            Spacer(modifier = Modifier.height(4.dp))
-            ShimmerBox(
-                modifier = Modifier
-                    .fillMaxWidth(0.7f)
-                    .height(20.dp)
-                    .clip(RoundedCornerShape(4.dp))
-            )
-            Spacer(modifier = Modifier.height(4.dp))
-            repeat(2) { index ->
-                ShimmerBox(
-                    modifier = Modifier
-                        .fillMaxWidth(0.9f)
-                        .height(14.dp)
-                        .clip(RoundedCornerShape(4.dp))
-                )
-                if (index == 0) {
-                    Spacer(modifier = Modifier.height(4.dp))
-                }
-            }
         }
     }
 }

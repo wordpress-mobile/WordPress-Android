@@ -21,7 +21,7 @@ import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
 
 @ExperimentalCoroutinesApi
-class PagesRsListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
+internal class PagesRsListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
     @Mock lateinit var selectedSiteRepository: SelectedSiteRepository
     @Mock lateinit var serviceProvider: WpServiceProvider
     @Mock lateinit var resourceProvider: ResourceProvider
