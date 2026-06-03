@@ -7,7 +7,7 @@ gem 'fastlane', '~> 2'
 
 ### Fastlane Plugins
 
-gem 'fastlane-plugin-firebase_app_distribution', '~> 0.10'
+gem 'fastlane-plugin-firebase_app_distribution', '~> 1.0'
 gem 'fastlane-plugin-sentry'
 gem 'fastlane-plugin-wpmreleasetoolkit', '~> 14.6'
 # gem 'fastlane-plugin-wpmreleasetoolkit', path: '../../release-toolkit'
