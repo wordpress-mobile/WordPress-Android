@@ -156,11 +156,16 @@ internal class PagesRsListViewModel @Inject constructor(
                 AppLog.e(AppLog.T.PAGES, "Failed to refresh tab $tab", e)
                 userRefreshingTabs.remove(tab)
                 val message = friendlyErrorMessage(e)
+                val authError = PostRsErrorUtils.isAuthError(e)
                 if (getTabUiState(tab).pages.isNotEmpty()) {
                     updateTabUiState(tab) {
-                        copy(isLoading = false, isRefreshing = false, error = null)
+                        copy(
+                            isLoading = false,
+                            isRefreshing = false,
+                            error = null,
+                            isAuthError = authError
+                        )
                     }
-                    val authError = PostRsErrorUtils.isAuthError(e)
                     _snackbarMessages.trySend(
                         SnackbarMessage(
                             message = message,
@@ -173,9 +178,10 @@ internal class PagesRsListViewModel @Inject constructor(
                 } else {
                     updateTabUiState(tab) {
                         copy(
-                            isLoading = false, isRefreshing = false,
+                            isLoading = false,
+                            isRefreshing = false,
                             error = message,
-                            isAuthError = PostRsErrorUtils.isAuthError(e)
+                            isAuthError = authError
                         )
                     }
                 }
@@ -267,7 +273,9 @@ internal class PagesRsListViewModel @Inject constructor(
                     item.state.toPageUiModel(item.id)
                 }
             }
-            updateTabUiState(tab) { copy(pages = items, isLoading = false, error = null) }
+            updateTabUiState(tab) {
+                copy(pages = items, isLoading = false, error = null, isAuthError = false)
+            }
         } catch (e: Exception) {
             AppLog.e(AppLog.T.PAGES, "Failed to load items for tab $tab", e)
         }
@@ -290,7 +298,6 @@ internal class PagesRsListViewModel @Inject constructor(
         } else null
 
         if (isError && hasPages) {
-            val authError = getTabUiState(tab).isAuthError
             updateTabUiState(tab) {
                 copy(
                     isLoading = false,
@@ -300,13 +307,14 @@ internal class PagesRsListViewModel @Inject constructor(
                     error = null
                 )
             }
+            // The observer doesn't expose the underlying exception, so we can't classify
+            // this as an auth error here. Offer retry unconditionally; if the cause is
+            // auth, the next refreshTab catch will downgrade the snackbar accordingly.
             _snackbarMessages.trySend(
                 SnackbarMessage(
                     message = errorMessage.orEmpty(),
-                    actionLabel = if (authError) null
-                        else resourceProvider.getString(R.string.retry),
-                    onAction = if (authError) null
-                        else ({ refreshTab(tab) })
+                    actionLabel = resourceProvider.getString(R.string.retry),
+                    onAction = { refreshTab(tab) }
                 )
             )
         } else {
