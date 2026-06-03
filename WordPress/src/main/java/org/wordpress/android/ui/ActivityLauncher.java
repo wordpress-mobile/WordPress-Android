@@ -699,7 +699,7 @@ public class ActivityLauncher {
     }
 
     private static boolean shouldUseNewPagesList(@NonNull Context context, @NonNull SiteModel site) {
-        if (!site.isWPCom() && !site.hasApplicationPassword()) {
+        if (!site.hasApplicationPassword()) {
             return false;
         }
         ActivityLauncherEntryPoint entryPoint = EntryPointAccessors.fromApplication(
