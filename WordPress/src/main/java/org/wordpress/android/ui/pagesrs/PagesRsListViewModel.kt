@@ -86,6 +86,8 @@ internal class PagesRsListViewModel @Inject constructor(
         if (collections.containsKey(tab) || initializingTabs.contains(tab)) return
 
         initializingTabs.add(tab)
+        // Reset to a loading state so a retry after a failed init clears the prior error UI.
+        updateTabUiState(tab) { PageTabUiState(isLoading = true) }
 
         viewModelScope.launch {
             @Suppress("TooGenericExceptionCaught")
@@ -139,7 +141,12 @@ internal class PagesRsListViewModel @Inject constructor(
 
     @MainThread
     fun refreshTab(tab: PageRsListTab, isUserRefresh: Boolean = false) {
-        val collection = collections[tab] ?: return
+        val collection = collections[tab] ?: run {
+            // The collection wasn't created (init failed or hasn't run). Re-attempt init so
+            // a Retry tap from the error UI can recover instead of silently doing nothing.
+            initTab(tab)
+            return
+        }
 
         if (isUserRefresh) {
             userRefreshingTabs.add(tab)
@@ -298,6 +305,9 @@ internal class PagesRsListViewModel @Inject constructor(
         } else null
 
         if (isError && hasPages) {
+            // Just sync state here; the snackbar is emitted by whichever action's catch
+            // block (refreshTab / loadMorePages) caused the ERROR, since it can classify
+            // the exception (e.g. auth) and choose the right action label.
             updateTabUiState(tab) {
                 copy(
                     isLoading = false,
@@ -307,16 +317,6 @@ internal class PagesRsListViewModel @Inject constructor(
                     error = null
                 )
             }
-            // The observer doesn't expose the underlying exception, so we can't classify
-            // this as an auth error here. Offer retry unconditionally; if the cause is
-            // auth, the next refreshTab catch will downgrade the snackbar accordingly.
-            _snackbarMessages.trySend(
-                SnackbarMessage(
-                    message = errorMessage.orEmpty(),
-                    actionLabel = resourceProvider.getString(R.string.retry),
-                    onAction = { refreshTab(tab) }
-                )
-            )
         } else {
             updateTabUiState(tab) {
                 copy(

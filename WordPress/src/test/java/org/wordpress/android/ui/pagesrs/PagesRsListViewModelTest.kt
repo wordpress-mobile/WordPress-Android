@@ -105,11 +105,15 @@ internal class PagesRsListViewModelTest : BaseUnitTest(StandardTestDispatcher())
     }
 
     @Test
-    fun `refreshTab no-ops when collection not initialized`() {
+    fun `refreshTab triggers init when collection not initialized`() {
         val viewModel = createViewModel()
 
         viewModel.refreshTab(PageRsListTab.PUBLISHED, isUserRefresh = true)
 
-        assertThat(viewModel.tabStates.value).isEmpty()
+        // No collection exists, so refreshTab falls back to initTab. The synchronous portion
+        // leaves the tab in an effective loading state (no error has been recorded yet).
+        val state = viewModel.tabStates.value[PageRsListTab.PUBLISHED]
+        assertThat(state?.error).isNull()
+        assertThat(state?.isRefreshing ?: false).isFalse
     }
 }
