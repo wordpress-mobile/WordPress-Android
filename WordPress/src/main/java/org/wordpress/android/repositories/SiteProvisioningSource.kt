@@ -2,6 +2,8 @@ package org.wordpress.android.repositories
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -12,6 +14,7 @@ import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.modules.APPLICATION_SCOPE
 import org.wordpress.android.ui.accounts.login.ApplicationPasswordLoginHelper
 import org.wordpress.android.ui.accounts.login.SiteApiRestUrlRecoverer
+import org.wordpress.android.ui.accounts.login.SiteXmlRpcUrlRecoverer
 import org.wordpress.android.ui.mysite.cards.applicationpassword.ApplicationPasswordValidator
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.NetworkUtilsWrapper
@@ -22,28 +25,35 @@ import javax.inject.Singleton
 
 /**
  * The single source of truth for getting a site ready to use: it provisions
- * application-password credentials, recovers the REST API root, and detects
- * editor capabilities — **in that order, each stage awaited before the next**.
+ * application-password credentials, recovers the REST API root, recovers the
+ * XML-RPC endpoint (self-hosted), and detects editor capabilities.
  *
- * Those three things have a genuine ordering dependency (you can't probe the
- * REST API of a private Atomic host until you've minted a credential for it),
- * and they used to be spread across the connectivity banner, the editor
- * preloader, and the application-password card, each triggering its slice of
- * the work independently and racing the others. Running them as one serialized
- * per-site pipeline makes the race structurally impossible: [detectCapabilities]
- * is downstream of [ensureAuth], so the probe can never run before the mint.
+ * Capability detection can't run until a credential exists (you can't probe a
+ * private Atomic host's REST API unauthenticated), so **auth is awaited first**;
+ * after that, the REST-capability branch and the XML-RPC branch are independent
+ * and run **in parallel**. Routing every consumer (connectivity banner, editor
+ * preloader, application-password card) through this one pipeline means the
+ * first-login race is structurally impossible — the probe is downstream of the
+ * mint — and there's one shared, deduplicated run per site instead of each
+ * consumer racing the others.
+ *
+ * ### No model is held across stages
+ * Stages take a **`siteLocalId`**, read the `SiteModel` fresh from the store at
+ * the point of use, and write back **only the one column they changed**
+ * (`persistApiRootUrl` / `persistXmlRpcUrl`). Nothing keeps a mutated `SiteModel`
+ * around, so the two parallel branches can't clobber each other and there's no
+ * stale-model write (see #22905). The passed `SiteModel` is used for its id only.
  *
  * Per site there is at most one in-flight pipeline (single-flight, keyed by
- * [SiteModel.id]); concurrent callers join it rather than starting a second —
- * which also subsumes the application-password card's old single-flight guard
- * (two concurrent mints hit a 409 that destroys the winner's credentials).
+ * [SiteModel.id]); concurrent callers join it — which also subsumes the
+ * application-password card's old single-flight guard (two concurrent mints hit
+ * a 409 that destroys the winner's credentials).
  *
  * ## Entry points
- * - [stateFor] — reactive: returns a shared [StateFlow]; the first access runs
- *   the pipeline, later accesses reuse a [SiteReadiness.Ready] result.
+ * - [stateFor] — reactive: returns a shared [StateFlow]; first access runs the
+ *   pipeline, later accesses reuse a [SiteReadiness.Ready] result.
  * - [await] — one-shot: runs the pipeline (if needed) and returns the result.
- * - [invalidate] — forces a re-run, bypassing the once-per-site gate
- *   (pull-to-refresh, retry).
+ * - [invalidate] — forces a re-run (pull-to-refresh, retry).
  * - [clear] — cancels all work and drops all state; wire into sign-out.
  */
 @Singleton
@@ -54,6 +64,7 @@ class SiteProvisioningSource @Inject constructor(
     private val applicationPasswordValidator: ApplicationPasswordValidator,
     private val wpApiClientProvider: WpApiClientProvider,
     private val siteApiRestUrlRecoverer: SiteApiRestUrlRecoverer,
+    private val siteXmlRpcUrlRecoverer: SiteXmlRpcUrlRecoverer,
     private val editorSettingsRepository: EditorSettingsRepository,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     private val appLogWrapper: AppLogWrapper,
@@ -64,18 +75,18 @@ class SiteProvisioningSource @Inject constructor(
 
     // Sites whose pipeline reached Ready this process — the dedup gate. Only a fully-ready site
     // latches; auth-needed / unreachable / transient outcomes are left to re-run on the next
-    // access (so a later resume re-mints or re-probes). Reset by invalidate / clear.
+    // access. Reset by invalidate / clear.
     private val ready = ConcurrentHashMap.newKeySet<Int>()
 
     /**
      * The shared readiness state for [site]. The first call starts the pipeline;
      * later calls return the same flow without re-running once it reached
-     * [SiteReadiness.Ready]. Collect it to react to provisioning / capability changes.
+     * [SiteReadiness.Ready]. Only [SiteModel.id] is read from [site].
      */
     @Synchronized
     fun stateFor(site: SiteModel): StateFlow<SiteReadiness> {
         val flow = flowFor(site.id)
-        if (shouldRun(site.id)) launchPipeline(site)
+        if (shouldRun(site.id)) launchPipeline(site.id)
         return flow
     }
 
@@ -98,7 +109,7 @@ class SiteProvisioningSource @Inject constructor(
     fun invalidate(site: SiteModel) {
         if (jobs[site.id]?.isActive == true) return
         ready.remove(site.id)
-        launchPipeline(site)
+        launchPipeline(site.id)
     }
 
     /** Cancels all in-flight pipelines and drops all cached state (sign-out). */
@@ -111,13 +122,13 @@ class SiteProvisioningSource @Inject constructor(
     }
 
     @Synchronized
-    private fun launchPipeline(site: SiteModel) {
-        jobs[site.id]?.cancel()
-        val flow = flowFor(site.id)
-        jobs[site.id] = appScope.launch {
-            val readiness = runPipeline(site)
+    private fun launchPipeline(siteLocalId: Int) {
+        jobs[siteLocalId]?.cancel()
+        val flow = flowFor(siteLocalId)
+        jobs[siteLocalId] = appScope.launch {
+            val readiness = runPipeline(siteLocalId)
             flow.value = readiness
-            if (readiness is SiteReadiness.Ready) ready.add(site.id)
+            if (readiness is SiteReadiness.Ready) ready.add(siteLocalId)
         }
     }
 
@@ -127,39 +138,40 @@ class SiteProvisioningSource @Inject constructor(
     private fun shouldRun(siteLocalId: Int): Boolean =
         jobs[siteLocalId]?.isActive != true && siteLocalId !in ready
 
-    private suspend fun runPipeline(site: SiteModel): SiteReadiness {
-        // Re-read from the store so we provision against the persisted SiteModel and mutate that
-        // instance in place — later stages (URL recovery, capability probe) see the fresh creds.
-        val storedSite = siteStore.sites.firstOrNull { it.id == site.id } ?: site
-        return when (val auth = ensureAuth(storedSite)) {
-            SiteAuthState.Provisioned -> {
-                recoverRestUrl(storedSite)
-                detectCapabilities(storedSite)
+    private suspend fun runPipeline(siteLocalId: Int): SiteReadiness =
+        when (val auth = ensureAuth(siteLocalId)) {
+            SiteAuthState.Provisioned -> coroutineScope {
+                // Post-auth, the REST-capability chain and the XML-RPC recovery are independent —
+                // each reads the site fresh and writes only its own column — so run them in
+                // parallel. recoverRestUrl precedes detectCapabilities within its branch because
+                // the probe needs the recovered REST root.
+                val capabilities = async { recoverRestUrl(siteLocalId); detectCapabilities(siteLocalId) }
+                val xmlRpc = async { recoverXmlRpc(siteLocalId) }
+                xmlRpc.await()
+                capabilities.await()
             }
             else -> SiteReadiness.NeedsAuth(auth)
         }
-    }
 
     /**
      * Stage 1 — ensure the site has working application-password credentials.
      * Validates stored creds with Basic auth against the direct host; on a
      * confirmed rejection wipes them and mints fresh ones via the FluxC Jetpack
-     * tunnel (the only path that works for Atomic / Jetpack-WPCom-REST sites).
+     * tunnel. The mint persists the credentials, so later stages read them back.
      */
-    private suspend fun ensureAuth(site: SiteModel): SiteAuthState {
+    private suspend fun ensureAuth(siteLocalId: Int): SiteAuthState {
+        val site = siteStore.getSiteByLocalId(siteLocalId)
+            ?: return SiteAuthState.Unprovisionable(hadCredentials = false)
         val hadCredentials = !applicationPasswordLoginHelper.siteHasBadCredentials(site)
         if (hadCredentials) {
             when (applicationPasswordValidator.validate(site)) {
                 ApplicationPasswordValidator.Outcome.Valid ->
                     return SiteAuthState.Provisioned
                 ApplicationPasswordValidator.Outcome.NetworkUnavailable -> {
-                    // Don't punish flaky networks — treat as in-progress and retry next run.
                     appLogWrapper.d(AppLog.T.MAIN, "A_P: Validation network error for ${site.url}")
                     return SiteAuthState.Provisioning
                 }
                 ApplicationPasswordValidator.Outcome.Invalid -> {
-                    // Stored creds are stale (revoked, deleted) — clear them so the mint below
-                    // creates fresh ones, and invalidate the cached client.
                     appLogWrapper.d(AppLog.T.MAIN, "A_P: Stored creds invalid for ${site.url}, clearing")
                     siteStore.deleteStoredApplicationPasswordCredentials(site)
                     wpApiClientProvider.clearSelfHostedClient(site.id)
@@ -180,15 +192,29 @@ class SiteProvisioningSource @Inject constructor(
     }
 
     /**
-     * Stage 2 — recover the REST API root for Atomic sites minted through the
-     * Jetpack tunnel, which never runs discovery and so leaves `wpApiRestUrl`
-     * null. One owner for the heal that the card and preloader used to duplicate.
+     * Stage 2a — recover the REST API root for Atomic sites minted through the
+     * Jetpack tunnel (which never runs discovery and leaves `wpApiRestUrl` null).
+     * Persists the one column; the capability probe re-reads it.
      */
-    private suspend fun recoverRestUrl(site: SiteModel) {
+    private suspend fun recoverRestUrl(siteLocalId: Int) {
+        val site = siteStore.getSiteByLocalId(siteLocalId) ?: return
         if (!site.wpApiRestUrl.isNullOrEmpty()) return
         siteApiRestUrlRecoverer.discoverApiRootUrl(site.url)?.let { apiRootUrl ->
-            site.wpApiRestUrl = apiRootUrl
-            siteApiRestUrlRecoverer.persistApiRootUrl(site.id, apiRootUrl)
+            siteApiRestUrlRecoverer.persistApiRootUrl(siteLocalId, apiRootUrl)
+        }
+    }
+
+    /**
+     * Stage 2b (parallel) — recover the XML-RPC endpoint for true self-hosted
+     * sites that don't have one. Discovers + authenticates against it, and on
+     * success persists the one column; the application-password card re-reads it.
+     */
+    private suspend fun recoverXmlRpc(siteLocalId: Int) {
+        val site = siteStore.getSiteByLocalId(siteLocalId) ?: return
+        // WP.com / Atomic / Jetpack-WPCom-REST sites talk REST end-to-end and don't use XML-RPC.
+        if (site.isUsingWpComRestApi || !site.xmlRpcUrl.isNullOrEmpty()) return
+        siteXmlRpcUrlRecoverer.discoverAndVerifyXmlRpcUrl(site)?.let { endpoint ->
+            siteXmlRpcUrlRecoverer.persistXmlRpcUrl(siteLocalId, endpoint)
         }
     }
 
@@ -198,7 +224,8 @@ class SiteProvisioningSource @Inject constructor(
      * guaranteed present: a failure here is a real transport problem, not a
      * pending mint.
      */
-    private suspend fun detectCapabilities(site: SiteModel): SiteReadiness {
+    private suspend fun detectCapabilities(siteLocalId: Int): SiteReadiness {
+        val site = siteStore.getSiteByLocalId(siteLocalId) ?: return SiteReadiness.Unreachable
         val ok = editorSettingsRepository.fetchEditorCapabilitiesForSite(site)
         val hasCache = editorSettingsRepository.hasCachedCapabilities(site)
         return when {

@@ -23,6 +23,7 @@ import org.wordpress.android.fluxc.store.SiteStore.OnApplicationPasswordCreated
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.ui.accounts.login.ApplicationPasswordLoginHelper
 import org.wordpress.android.ui.accounts.login.SiteApiRestUrlRecoverer
+import org.wordpress.android.ui.accounts.login.SiteXmlRpcUrlRecoverer
 import org.wordpress.android.ui.mysite.cards.applicationpassword.ApplicationPasswordValidator
 import org.wordpress.android.util.NetworkUtilsWrapper
 
@@ -35,6 +36,7 @@ class SiteProvisioningSourceTest : BaseUnitTest(StandardTestDispatcher()) {
     @Mock lateinit var applicationPasswordValidator: ApplicationPasswordValidator
     @Mock lateinit var wpApiClientProvider: WpApiClientProvider
     @Mock lateinit var siteApiRestUrlRecoverer: SiteApiRestUrlRecoverer
+    @Mock lateinit var siteXmlRpcUrlRecoverer: SiteXmlRpcUrlRecoverer
     @Mock lateinit var editorSettingsRepository: EditorSettingsRepository
     @Mock lateinit var networkUtilsWrapper: NetworkUtilsWrapper
     @Mock lateinit var appLogWrapper: AppLogWrapper
@@ -47,15 +49,19 @@ class SiteProvisioningSourceTest : BaseUnitTest(StandardTestDispatcher()) {
         site = SiteModel().apply {
             id = TEST_SITE_LOCAL_ID
             url = "https://test.example.com"
-            // A non-null REST root so recoverRestUrl short-circuits unless a test clears it.
+            // Non-null REST root + XML-RPC url so both recovery branches short-circuit unless a
+            // test clears them — keeping the auth/capability tests focused.
             wpApiRestUrl = "https://test.example.com/wp-json"
+            xmlRpcUrl = "https://test.example.com/xmlrpc.php"
         }
+        whenever(siteStore.getSiteByLocalId(TEST_SITE_LOCAL_ID)).thenReturn(site)
         source = SiteProvisioningSource(
             siteStore,
             applicationPasswordLoginHelper,
             applicationPasswordValidator,
             wpApiClientProvider,
             siteApiRestUrlRecoverer,
+            siteXmlRpcUrlRecoverer,
             editorSettingsRepository,
             networkUtilsWrapper,
             appLogWrapper,
@@ -81,8 +87,7 @@ class SiteProvisioningSourceTest : BaseUnitTest(StandardTestDispatcher()) {
 
     private suspend fun stubCapabilityProbe(ok: Boolean, cached: Boolean = false) {
         whenever(editorSettingsRepository.fetchEditorCapabilitiesForSite(any())).thenReturn(ok)
-        // `ok || hasCache` short-circuits, so the cache is only read (and only needs stubbing)
-        // when the live probe failed — stubbing it on success would be an unnecessary stub.
+        // `ok || hasCache` short-circuits, so only stub the cache when the live probe failed.
         if (!ok) whenever(editorSettingsRepository.hasCachedCapabilities(any())).thenReturn(cached)
     }
 
@@ -116,7 +121,6 @@ class SiteProvisioningSourceTest : BaseUnitTest(StandardTestDispatcher()) {
         val result = source.await(site)
 
         assertThat(result).isEqualTo(SiteReadiness.NeedsAuth(SiteAuthState.Unprovisionable(hadCredentials = false)))
-        // Auth failed — the capability probe must not run.
         verify(editorSettingsRepository, never()).fetchEditorCapabilitiesForSite(any())
     }
 
@@ -144,9 +148,18 @@ class SiteProvisioningSourceTest : BaseUnitTest(StandardTestDispatcher()) {
         verify(editorSettingsRepository, never()).fetchEditorCapabilitiesForSite(any())
     }
 
+    @Test
+    fun `given the site is gone from the store, then unprovisionable`() = test {
+        whenever(siteStore.getSiteByLocalId(TEST_SITE_LOCAL_ID)).thenReturn(null)
+
+        val result = source.await(site)
+
+        assertThat(result).isEqualTo(SiteReadiness.NeedsAuth(SiteAuthState.Unprovisionable(hadCredentials = false)))
+    }
+
     // endregion
 
-    // region url recovery + capability stages
+    // region recovery + capability stages
 
     @Test
     fun `given provisioned with a missing REST root, then it recovers and persists the url`() = test {
@@ -160,6 +173,27 @@ class SiteProvisioningSourceTest : BaseUnitTest(StandardTestDispatcher()) {
         source.await(site)
 
         verify(siteApiRestUrlRecoverer).persistApiRootUrl(eq(site.id), eq("https://test.example.com/custom-rest"))
+    }
+
+    @Test
+    fun `given a provisioned self-hosted site without XML-RPC, then it recovers and persists xmlRpcUrl`() = test {
+        val selfHosted = SiteModel().apply {
+            id = TEST_SITE_LOCAL_ID
+            url = "https://selfhosted.example.com"
+            wpApiRestUrl = "https://selfhosted.example.com/wp-json" // REST branch short-circuits
+            // not WP.com and no xmlRpcUrl → the XML-RPC branch runs
+        }
+        whenever(siteStore.getSiteByLocalId(TEST_SITE_LOCAL_ID)).thenReturn(selfHosted)
+        stubHasStoredCredentials(true)
+        stubValidate(ApplicationPasswordValidator.Outcome.Valid)
+        stubCapabilityProbe(ok = true)
+        whenever(siteXmlRpcUrlRecoverer.discoverAndVerifyXmlRpcUrl(selfHosted))
+            .thenReturn("https://selfhosted.example.com/xmlrpc.php")
+
+        source.await(selfHosted)
+
+        verify(siteXmlRpcUrlRecoverer)
+            .persistXmlRpcUrl(eq(TEST_SITE_LOCAL_ID), eq("https://selfhosted.example.com/xmlrpc.php"))
     }
 
     @Test

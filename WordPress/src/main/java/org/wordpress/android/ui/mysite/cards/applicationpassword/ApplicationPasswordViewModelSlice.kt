@@ -2,18 +2,11 @@ package org.wordpress.android.ui.mysite.cards.applicationpassword
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import org.wordpress.android.R
-import androidx.annotation.VisibleForTesting
-import org.wordpress.android.fluxc.Dispatcher
-import org.wordpress.android.fluxc.generated.SiteActionBuilder
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.network.discovery.SelfHostedEndpointFinder
-import org.wordpress.android.fluxc.network.xmlrpc.site.SiteXMLRPCClient
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.repositories.SiteAuthState
@@ -27,31 +20,26 @@ import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.AppLog
-import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.viewmodel.Event
 import javax.inject.Inject
-import javax.inject.Named
 
 /**
- * Renders the application-password card from the site's readiness. Credential
- * provisioning (validate / mint) now lives in [SiteProvisioningSource]; this
- * slice is a view over the auth slice of that state:
+ * Renders the application-password card from the site's readiness. All the
+ * provisioning mechanics — validate, mint, REST-root recovery, XML-RPC
+ * recovery — live in [SiteProvisioningSource]; this slice is a thin view over
+ * the result:
  *
  * - [SiteAuthState.Unprovisionable] → a re-authentication banner (creds went
  *   bad) or a first-time "authenticate" card, looked up lazily.
  * - provisioned (any non-[SiteReadiness.NeedsAuth] terminal state) → hidden,
- *   except true self-hosted sites missing an XML-RPC endpoint, which get the
- *   XML-RPC-disabled card plus a background rediscovery attempt.
+ *   except true self-hosted sites whose XML-RPC endpoint the pipeline couldn't
+ *   recover, which get the XML-RPC-disabled card.
  */
 class ApplicationPasswordViewModelSlice @Inject constructor(
     private val applicationPasswordLoginHelper: ApplicationPasswordLoginHelper,
     private val siteStore: SiteStore,
     private val appLogWrapper: AppLogWrapper,
-    private val selfHostedEndpointFinder: SelfHostedEndpointFinder,
-    private val siteXMLRPCClient: SiteXMLRPCClient,
     private val siteProvisioningSource: SiteProvisioningSource,
-    private val dispatcher: Dispatcher,
-    @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher,
 ) {
     lateinit var scope: CoroutineScope
 
@@ -107,13 +95,11 @@ class ApplicationPasswordViewModelSlice @Inject constructor(
     }
 
     private fun handleProvisioned(site: SiteModel) {
-        // Re-read the stored site so we see credentials/endpoints the pipeline just persisted.
-        val storedSite = siteStore.sites.firstOrNull { it.id == site.id } ?: site
-        // Only true self-hosted sites need the XML-RPC fallback path — Atomic and Jetpack-WPCom-REST
-        // sites talk REST end-to-end and don't need XML-RPC.
+        // Read fresh: the pipeline's parallel XML-RPC branch may have just recovered the endpoint.
+        val storedSite = siteStore.getSiteByLocalId(site.id) ?: site
+        // Only true self-hosted sites need XML-RPC; if the pipeline couldn't recover it, surface it.
         if (!storedSite.isUsingWpComRestApi && storedSite.xmlRpcUrl.isNullOrEmpty()) {
             buildXmlRpcDisabledCard(storedSite)
-            attemptXmlRpcRediscovery(storedSite)
         } else {
             uiModelMutable.postValue(null)
             appLogWrapper.d(AppLog.T.MAIN, "A_P: Hiding card for ${site.url} - authenticated")
@@ -195,42 +181,6 @@ class ApplicationPasswordViewModelSlice @Inject constructor(
             AppLog.T.MAIN,
             "A_P: Showing XML-RPC disabled card for ${site.url}"
         )
-    }
-
-    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
-    internal fun attemptXmlRpcRediscovery(site: SiteModel) {
-        scope.launch {
-            try {
-                val xmlRpcEndpoint = withContext(ioDispatcher) {
-                    selfHostedEndpointFinder
-                        .verifyOrDiscoverXMLRPCEndpoint(site.url)
-                }
-
-                // Verify with an authenticated call
-                val result = withContext(ioDispatcher) {
-                    siteXMLRPCClient.fetchSites(
-                        xmlRpcEndpoint,
-                        site.apiRestUsernamePlain,
-                        site.apiRestPasswordPlain
-                    )
-                }
-                if (result.isError) {
-                    return@launch
-                }
-
-                site.xmlRpcUrl = xmlRpcEndpoint
-                dispatcher.dispatch(
-                    SiteActionBuilder.newUpdateSiteAction(site)
-                )
-                // Endpoint recovered — hide the XML-RPC-disabled card.
-                uiModelMutable.postValue(null)
-            } catch (
-                @Suppress("SwallowedException")
-                e: SelfHostedEndpointFinder.DiscoveryException
-            ) {
-                // XML-RPC rediscovery failed; card remains visible
-            }
-        }
     }
 
     private fun onClick(site: SiteModel, alternativeUrl: String) {

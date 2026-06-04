@@ -12,16 +12,12 @@ import org.mockito.MockitoAnnotations
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.any
 import org.mockito.kotlin.eq
-import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
-import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.network.discovery.SelfHostedEndpointFinder
-import org.wordpress.android.fluxc.network.xmlrpc.site.SiteXMLRPCClient
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.repositories.SiteAuthState
@@ -40,10 +36,7 @@ class ApplicationPasswordViewModelSliceTest : BaseUnitTest() {
     @Mock lateinit var applicationPasswordLoginHelper: ApplicationPasswordLoginHelper
     @Mock lateinit var siteStore: SiteStore
     @Mock lateinit var appLogWrapper: AppLogWrapper
-    @Mock lateinit var selfHostedEndpointFinder: SelfHostedEndpointFinder
-    @Mock lateinit var siteXMLRPCClient: SiteXMLRPCClient
     @Mock lateinit var siteProvisioningSource: SiteProvisioningSource
-    @Mock lateinit var dispatcher: Dispatcher
 
     private lateinit var siteTest: SiteModel
     private var card: MySiteCardAndItem? = null
@@ -56,17 +49,11 @@ class ApplicationPasswordViewModelSliceTest : BaseUnitTest() {
             applicationPasswordLoginHelper,
             siteStore,
             appLogWrapper,
-            selfHostedEndpointFinder,
-            siteXMLRPCClient,
             siteProvisioningSource,
-            dispatcher,
-            testDispatcher(),
         ).apply { initialize(testScope()) }
         siteTest = SiteModel().apply {
             id = TEST_SITE_ID
             url = TEST_URL
-            // A WP.com-REST site by default, so a provisioned site hides the card (no XML-RPC path).
-            setIsWPCom(true)
         }
         card = null
         slice.uiModel.observeForever { card = it }
@@ -126,6 +113,9 @@ class ApplicationPasswordViewModelSliceTest : BaseUnitTest() {
     @Test
     fun `given ready on a WPCom-REST site, then no card`() = test {
         stubReadiness(SiteReadiness.Ready)
+        whenever(siteStore.getSiteByLocalId(TEST_SITE_ID)).thenReturn(
+            SiteModel().apply { id = TEST_SITE_ID; url = TEST_URL; setIsWPCom(true) }
+        )
 
         slice.buildCard(siteTest)
 
@@ -134,16 +124,12 @@ class ApplicationPasswordViewModelSliceTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given ready on a self-hosted site missing XML-RPC, then show the XML-RPC disabled card`() = test {
-        siteTest = SiteModel().apply {
-            id = TEST_SITE_ID
-            url = TEST_URL
-            // Not WP.com-REST and no XML-RPC endpoint — the one case the card still surfaces.
-        }
+    fun `given ready on a self-hosted site whose XML-RPC stayed unrecovered, then show the disabled card`() = test {
         stubReadiness(SiteReadiness.Ready)
-        // Let rediscovery fail so the card stays put for the assertion.
-        whenever(selfHostedEndpointFinder.verifyOrDiscoverXMLRPCEndpoint(TEST_URL))
-            .thenThrow(mock<SelfHostedEndpointFinder.DiscoveryException>())
+        // Not WP.com-REST and still no XML-RPC endpoint after the pipeline's recovery attempt.
+        whenever(siteStore.getSiteByLocalId(TEST_SITE_ID)).thenReturn(
+            SiteModel().apply { id = TEST_SITE_ID; url = TEST_URL }
+        )
 
         slice.buildCard(siteTest)
 
