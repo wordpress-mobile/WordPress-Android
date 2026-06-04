@@ -32,6 +32,7 @@ import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.SiteStore.OnApplicationPasswordCreated
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.ui.accounts.login.ApplicationPasswordLoginHelper
+import org.wordpress.android.ui.accounts.login.CredentialsChangedNotifier
 import org.wordpress.android.ui.accounts.login.SiteApiRestUrlRecoverer
 import org.wordpress.android.ui.mysite.MySiteCardAndItem
 import kotlin.test.assertNotNull
@@ -73,6 +74,9 @@ class ApplicationPasswordViewModelSliceTest : BaseUnitTest() {
     @Mock
     lateinit var dispatcher: Dispatcher
 
+    @Mock
+    lateinit var credentialsChangedNotifier: CredentialsChangedNotifier
+
     private lateinit var siteTest: SiteModel
 
     private var applicationPasswordCard: MySiteCardAndItem? = null
@@ -93,6 +97,7 @@ class ApplicationPasswordViewModelSliceTest : BaseUnitTest() {
             siteXMLRPCClient,
             siteApiRestUrlRecoverer,
             dispatcher,
+            credentialsChangedNotifier,
             testDispatcher()
         ).apply {
             initialize(testScope())
@@ -177,6 +182,15 @@ class ApplicationPasswordViewModelSliceTest : BaseUnitTest() {
     }
 
     @Test
+    fun `given headless mint succeeds, then notify credentials changed`() = runTest {
+        stubMintSuccess()
+
+        applicationPasswordViewModelSlice.buildCard(siteTest)
+
+        verify(credentialsChangedNotifier).notifyChanged(TEST_SITE_ID)
+    }
+
+    @Test
     fun `given headless mint succeeds, card hides without waiting for the recoverer`() = runTest {
         stubMintSuccess()
         val recoverGate = CompletableDeferred<Unit>()
@@ -234,6 +248,7 @@ class ApplicationPasswordViewModelSliceTest : BaseUnitTest() {
         assertNotNull(applicationPasswordCard)
         verify(siteStore).createApplicationPassword(any())
         verify(applicationPasswordLoginHelper).getAuthorizationUrlComplete(eq(TEST_URL))
+        verify(credentialsChangedNotifier, never()).notifyChanged(any())
     }
 
     @Test
