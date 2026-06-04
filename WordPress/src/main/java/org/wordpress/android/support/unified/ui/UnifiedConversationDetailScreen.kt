@@ -90,9 +90,12 @@ fun UnifiedConversationDetailScreen(
     val scope = rememberCoroutineScope()
     val listState = rememberLazyListState()
     val resources = LocalResources.current
+    val isBot = conversation.status.equals(BOT_STATUS, ignoreCase = true)
+    val isBotTyping = isBot && isSendingReply
 
-    LaunchedEffect(conversation.id, conversation.messages.lastOrNull()?.id) {
-        if (conversation.messages.isNotEmpty()) {
+    // Scroll to bottom when a new message is added or when the bot starts "typing".
+    LaunchedEffect(conversation.id, conversation.messages.lastOrNull()?.id, isBotTyping) {
+        if (conversation.messages.isNotEmpty() || isBotTyping) {
             listState.scrollToItem(listState.layoutInfo.totalItemsCount.coerceAtLeast(1) - 1)
         }
     }
@@ -120,11 +123,11 @@ fun UnifiedConversationDetailScreen(
         },
         bottomBar = {
             when {
-                conversation.status.equals(BOT_STATUS, ignoreCase = true) -> {
+                isBot -> {
                     if (conversation.canAcceptReply) {
                         ChatInputBar(
                             messageText = messageText,
-                            isSending = isSendingReply,
+                            canSendMessage = !isSendingReply && !isLoading,
                             onMessageTextChange = { messageText = it },
                             onSendClick = {
                                 if (messageText.isNotBlank()) {
@@ -171,6 +174,12 @@ fun UnifiedConversationDetailScreen(
                         message = message,
                         timestamp = formatRelativeTime(message.createdAt, resources)
                     )
+                }
+
+                if (isBotTyping) {
+                    item {
+                        TypingIndicatorBubble()
+                    }
                 }
 
                 item {
@@ -314,11 +323,11 @@ private fun AttachmentRow(attachment: UnifiedAttachment) {
 @Composable
 private fun ChatInputBar(
     messageText: String,
-    isSending: Boolean,
+    canSendMessage: Boolean,
     onMessageTextChange: (String) -> Unit,
     onSendClick: () -> Unit
 ) {
-    val canSend = messageText.isNotBlank() && !isSending
+    val canSend = messageText.isNotBlank() && canSendMessage
 
     Row(
         modifier = Modifier
@@ -335,7 +344,6 @@ private fun ChatInputBar(
             modifier = Modifier.weight(1f),
             placeholder = { Text(stringResource(R.string.unified_support_message_input_placeholder)) },
             maxLines = 4,
-            enabled = !isSending,
             keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences)
         )
 
@@ -506,5 +514,68 @@ private fun ClosedConversationBanner() {
     }
 }
 
+@Composable
+private fun TypingIndicatorBubble() {
+    val typingDescription = stringResource(R.string.unified_support_bot_typing_content_description)
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.Start
+    ) {
+        Box(
+            modifier = Modifier
+                .background(
+                    color = MaterialTheme.colorScheme.surfaceVariant,
+                    shape = RoundedCornerShape(
+                        topStart = 16.dp,
+                        topEnd = 16.dp,
+                        bottomStart = 4.dp,
+                        bottomEnd = 16.dp
+                    )
+                )
+                .padding(16.dp)
+                .semantics {
+                    contentDescription = typingDescription
+                }
+        ) {
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(4.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                TypingDot(delay = 0)
+                TypingDot(delay = TYPING_DOT_DELAY_STEP)
+                TypingDot(delay = TYPING_DOT_DELAY_STEP * 2)
+            }
+        }
+    }
+}
+
+@Composable
+private fun TypingDot(delay: Int) {
+    var alpha by remember { mutableStateOf(TYPING_DOT_MIN_ALPHA) }
+
+    LaunchedEffect(Unit) {
+        kotlinx.coroutines.delay(delay.toLong())
+        while (true) {
+            alpha = 1f
+            kotlinx.coroutines.delay(TYPING_DOT_PULSE_MS)
+            alpha = TYPING_DOT_MIN_ALPHA
+            kotlinx.coroutines.delay(TYPING_DOT_PULSE_MS)
+        }
+    }
+
+    Box(
+        modifier = Modifier
+            .padding(2.dp)
+            .background(
+                color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = alpha),
+                shape = RoundedCornerShape(50)
+            )
+            .padding(4.dp)
+    )
+}
+
 private const val PERCENT_MULTIPLIER = 100
 private const val BOT_STATUS = "bot"
+private const val TYPING_DOT_DELAY_STEP = 150
+private const val TYPING_DOT_PULSE_MS = 600L
+private const val TYPING_DOT_MIN_ALPHA = 0.3f

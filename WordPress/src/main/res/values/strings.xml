@@ -4795,6 +4795,7 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="unified_support_generic_error">Something went wrong. Please try again later.</string>
     <string name="unified_support_message_input_placeholder">Type a message…</string>
     <string name="unified_support_send_button_content_description">Send</string>
+    <string name="unified_support_bot_typing_content_description">Support bot is typing</string>
     <string name="unified_support_attachment_match_score">%1$d%% match</string>
     <string name="support_screen_unified_support_title">Support (beta)</string>
     <string name="support_screen_unified_support_description">All your conversations with bots and Happiness Engineers in one place</string>
