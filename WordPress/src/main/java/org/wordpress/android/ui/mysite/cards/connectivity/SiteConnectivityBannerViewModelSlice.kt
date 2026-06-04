@@ -7,13 +7,13 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.repositories.EditorCapabilityDetectionState
-import org.wordpress.android.repositories.EditorCapabilityDetector
+import org.wordpress.android.repositories.SiteProvisioningSource
+import org.wordpress.android.repositories.SiteReadiness
 import org.wordpress.android.ui.mysite.MySiteCardAndItem
 import javax.inject.Inject
 
 class SiteConnectivityBannerViewModelSlice @Inject constructor(
-    private val editorCapabilityDetector: EditorCapabilityDetector,
+    private val siteProvisioningSource: SiteProvisioningSource,
 ) {
     private lateinit var scope: CoroutineScope
     private var collectJob: Job? = null
@@ -27,24 +27,23 @@ class SiteConnectivityBannerViewModelSlice @Inject constructor(
     }
 
     /**
-     * Subscribes the banner to [site]'s editor-capability detection state. The
-     * banner is a thin view over that state — it surfaces only when detection
-     * reports the site [Unreachable][EditorCapabilityDetectionState.Unreachable].
-     * Every other state (probing, pending credentials, offline, ready) leaves it
-     * hidden, so the dedup, offline-suppression, and pending-credential handling
-     * that used to live here now belong to the one detector. [isUserInitiated]
-     * (pull-to-refresh, banner retry) forces a fresh probe.
+     * Subscribes the banner to [site]'s readiness. The banner is a thin view over
+     * that state — it surfaces only when the site is provisioned but the capability
+     * probe failed ([SiteReadiness.Unreachable]). Every other state (probing, needs
+     * auth, offline, ready) leaves it hidden: when credentials are the problem the
+     * application-password card owns it, and the banner stays out of the way.
+     * [isUserInitiated] (pull-to-refresh, retry) forces a fresh run.
      */
     fun fetchCapabilities(site: SiteModel, isUserInitiated: Boolean) {
         collectJob?.cancel()
         currentSite = site
-        if (isUserInitiated) editorCapabilityDetector.refresh(site)
+        if (isUserInitiated) siteProvisioningSource.invalidate(site)
         collectJob = scope.launch {
-            editorCapabilityDetector.stateFor(site).collect { state ->
+            siteProvisioningSource.stateFor(site).collect { readiness ->
                 // Bail if the user switched sites while suspended — postValue is
                 // not a suspension point, so cancellation alone won't catch this.
                 if (currentSite?.id != site.id) return@collect
-                val showBanner = state is EditorCapabilityDetectionState.Unreachable
+                val showBanner = readiness is SiteReadiness.Unreachable
                 _uiModel.postValue(if (showBanner) buildBanner() else null)
             }
         }

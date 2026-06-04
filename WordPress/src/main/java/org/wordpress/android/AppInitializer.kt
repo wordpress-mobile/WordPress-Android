@@ -71,7 +71,7 @@ import org.wordpress.android.networking.ConnectionChangeReceiver
 import org.wordpress.android.networking.OAuthAuthenticator
 import org.wordpress.android.networking.RestClientUtils
 import org.wordpress.android.push.GCMRegistrationScheduler
-import org.wordpress.android.repositories.EditorCapabilityDetector
+import org.wordpress.android.repositories.SiteProvisioningSource
 import org.wordpress.android.support.ZendeskHelper
 import org.wordpress.android.ui.ActivityId
 import org.wordpress.android.ui.debug.cookies.DebugCookieManager
@@ -231,7 +231,7 @@ class AppInitializer @Inject constructor(
     lateinit var wpApiClientProvider: WpApiClientProvider
 
     @Inject
-    lateinit var editorCapabilityDetector: EditorCapabilityDetector
+    lateinit var siteProvisioningSource: SiteProvisioningSource
 
     @Inject
     lateinit var openWebLinksWithJetpackHelper: DeepLinkOpenWebLinksWithJetpackHelper
@@ -722,8 +722,8 @@ class AppInitializer @Inject constructor(
         wpServiceProvider.clearAll()
         wpApiClientProvider.clearAllClients()
 
-        // Drop per-site editor-capability detection state for the signed-out user
-        editorCapabilityDetector.clear()
+        // Drop per-site provisioning + capability state for the signed-out user
+        siteProvisioningSource.clear()
     }
 
     /*

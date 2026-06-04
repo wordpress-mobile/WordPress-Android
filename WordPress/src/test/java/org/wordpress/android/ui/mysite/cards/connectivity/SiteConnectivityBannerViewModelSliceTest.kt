@@ -16,8 +16,9 @@ import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.repositories.EditorCapabilityDetectionState
-import org.wordpress.android.repositories.EditorCapabilityDetector
+import org.wordpress.android.repositories.SiteAuthState
+import org.wordpress.android.repositories.SiteProvisioningSource
+import org.wordpress.android.repositories.SiteReadiness
 import org.wordpress.android.ui.mysite.MySiteCardAndItem
 
 private const val TEST_SITE_LOCAL_ID = 42
@@ -26,7 +27,7 @@ private const val TEST_SITE_LOCAL_ID = 42
 @RunWith(MockitoJUnitRunner::class)
 class SiteConnectivityBannerViewModelSliceTest : BaseUnitTest() {
     @Mock
-    lateinit var editorCapabilityDetector: EditorCapabilityDetector
+    lateinit var siteProvisioningSource: SiteProvisioningSource
 
     private lateinit var siteTest: SiteModel
     private lateinit var slice: SiteConnectivityBannerViewModelSlice
@@ -35,23 +36,23 @@ class SiteConnectivityBannerViewModelSliceTest : BaseUnitTest() {
     @Before
     fun setUp() {
         siteTest = SiteModel().apply { id = TEST_SITE_LOCAL_ID }
-        slice = SiteConnectivityBannerViewModelSlice(editorCapabilityDetector)
+        slice = SiteConnectivityBannerViewModelSlice(siteProvisioningSource)
         slice.initialize(testScope())
         slice.uiModel.observeForever { emittedBanners.add(it) }
     }
 
-    private fun stubState(
+    private fun stubReadiness(
         site: SiteModel,
-        state: EditorCapabilityDetectionState,
-    ): MutableStateFlow<EditorCapabilityDetectionState> {
-        val flow = MutableStateFlow(state)
-        whenever(editorCapabilityDetector.stateFor(site)).thenReturn(flow)
+        readiness: SiteReadiness,
+    ): MutableStateFlow<SiteReadiness> {
+        val flow = MutableStateFlow(readiness)
+        whenever(siteProvisioningSource.stateFor(site)).thenReturn(flow)
         return flow
     }
 
     @Test
-    fun `given detection unreachable, when fetchCapabilities invoked, then banner is shown`() = test {
-        stubState(siteTest, EditorCapabilityDetectionState.Unreachable)
+    fun `given unreachable, when fetchCapabilities invoked, then banner is shown`() = test {
+        stubReadiness(siteTest, SiteReadiness.Unreachable)
 
         slice.fetchCapabilities(siteTest, isUserInitiated = false)
         advanceUntilIdle()
@@ -62,8 +63,8 @@ class SiteConnectivityBannerViewModelSliceTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given detection ready, when fetchCapabilities invoked, then banner is null`() = test {
-        stubState(siteTest, EditorCapabilityDetectionState.Ready)
+    fun `given ready, when fetchCapabilities invoked, then banner is null`() = test {
+        stubReadiness(siteTest, SiteReadiness.Ready)
 
         slice.fetchCapabilities(siteTest, isUserInitiated = false)
         advanceUntilIdle()
@@ -72,64 +73,73 @@ class SiteConnectivityBannerViewModelSliceTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given detection pending, when fetchCapabilities invoked, then banner is null`() = test {
-        stubState(siteTest, EditorCapabilityDetectionState.Pending)
+    fun `given needs auth, when fetchCapabilities invoked, then banner is null`() = test {
+        // Credentials are the problem — the application-password card owns it, banner stays hidden.
+        stubReadiness(siteTest, SiteReadiness.NeedsAuth(SiteAuthState.Unprovisionable(hadCredentials = false)))
 
         slice.fetchCapabilities(siteTest, isUserInitiated = false)
         advanceUntilIdle()
 
-        // Pending = probing or awaiting credentials — never a false "can't connect".
         assertThat(emittedBanners.last()).isNull()
     }
 
     @Test
-    fun `given detection transient error, when fetchCapabilities invoked, then banner is null`() = test {
-        stubState(siteTest, EditorCapabilityDetectionState.TransientError)
+    fun `given probing, when fetchCapabilities invoked, then banner is null`() = test {
+        stubReadiness(siteTest, SiteReadiness.Probing)
 
         slice.fetchCapabilities(siteTest, isUserInitiated = false)
         advanceUntilIdle()
 
-        // Transient (e.g. offline) is covered by the global indicator — don't stack a warning.
+        assertThat(emittedBanners.last()).isNull()
+    }
+
+    @Test
+    fun `given transient error, when fetchCapabilities invoked, then banner is null`() = test {
+        stubReadiness(siteTest, SiteReadiness.TransientError)
+
+        slice.fetchCapabilities(siteTest, isUserInitiated = false)
+        advanceUntilIdle()
+
         assertThat(emittedBanners.last()).isNull()
     }
 
     @Test
     fun `given unreachable then recovered to ready, when state changes, then banner clears`() = test {
-        val flow = stubState(siteTest, EditorCapabilityDetectionState.Unreachable)
+        val flow = stubReadiness(siteTest, SiteReadiness.Unreachable)
 
         slice.fetchCapabilities(siteTest, isUserInitiated = false)
         advanceUntilIdle()
         assertThat(emittedBanners.last()).isNotNull
 
-        flow.value = EditorCapabilityDetectionState.Ready
+        flow.value = SiteReadiness.Ready
         advanceUntilIdle()
 
         assertThat(emittedBanners.last()).isNull()
     }
 
     @Test
-    fun `given user-initiated, when fetchCapabilities invoked, then detector is refreshed`() = test {
-        stubState(siteTest, EditorCapabilityDetectionState.Ready)
+    fun `given user-initiated, when fetchCapabilities invoked, then source is invalidated`() = test {
+        stubReadiness(siteTest, SiteReadiness.Ready)
 
         slice.fetchCapabilities(siteTest, isUserInitiated = true)
         advanceUntilIdle()
 
-        verify(editorCapabilityDetector).refresh(siteTest)
+        verify(siteProvisioningSource).invalidate(siteTest)
     }
 
     @Test
-    fun `given non-user-initiated, when fetchCapabilities invoked, then detector is not refreshed`() = test {
-        stubState(siteTest, EditorCapabilityDetectionState.Ready)
+    fun `given non-user-initiated, when fetchCapabilities invoked, then source is not invalidated`() = test {
+        stubReadiness(siteTest, SiteReadiness.Ready)
 
         slice.fetchCapabilities(siteTest, isUserInitiated = false)
         advanceUntilIdle()
 
-        verify(editorCapabilityDetector, never()).refresh(any())
+        verify(siteProvisioningSource, never()).invalidate(any())
     }
 
     @Test
-    fun `given banner showing, when retry tapped, then detector is refreshed`() = test {
-        stubState(siteTest, EditorCapabilityDetectionState.Unreachable)
+    fun `given banner showing, when retry tapped, then source is invalidated`() = test {
+        stubReadiness(siteTest, SiteReadiness.Unreachable)
 
         slice.fetchCapabilities(siteTest, isUserInitiated = false)
         advanceUntilIdle()
@@ -138,12 +148,12 @@ class SiteConnectivityBannerViewModelSliceTest : BaseUnitTest() {
         banner.onActionClick()
         advanceUntilIdle()
 
-        verify(editorCapabilityDetector).refresh(siteTest)
+        verify(siteProvisioningSource).invalidate(siteTest)
     }
 
     @Test
     fun `when clearBanner invoked, then banner is null`() = test {
-        stubState(siteTest, EditorCapabilityDetectionState.Unreachable)
+        stubReadiness(siteTest, SiteReadiness.Unreachable)
 
         slice.fetchCapabilities(siteTest, isUserInitiated = false)
         advanceUntilIdle()
@@ -155,8 +165,8 @@ class SiteConnectivityBannerViewModelSliceTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given banner cleared, when retry tapped, then no refresh runs`() = test {
-        stubState(siteTest, EditorCapabilityDetectionState.Unreachable)
+    fun `given banner cleared, when retry tapped, then no invalidate runs`() = test {
+        stubReadiness(siteTest, SiteReadiness.Unreachable)
 
         slice.fetchCapabilities(siteTest, isUserInitiated = false)
         advanceUntilIdle()
@@ -164,26 +174,24 @@ class SiteConnectivityBannerViewModelSliceTest : BaseUnitTest() {
         slice.clearBanner()
         advanceUntilIdle()
 
-        // Simulate a tap that landed before LiveData propagated the null clear.
         banner.onActionClick()
         advanceUntilIdle()
 
-        verify(editorCapabilityDetector, never()).refresh(any())
+        verify(siteProvisioningSource, never()).invalidate(any())
     }
 
     @Test
     fun `given site switched, when old site becomes unreachable, then banner ignores it`() = test {
         val siteB = SiteModel().apply { id = TEST_SITE_LOCAL_ID + 1 }
-        val flowA = stubState(siteTest, EditorCapabilityDetectionState.Ready)
-        stubState(siteB, EditorCapabilityDetectionState.Ready)
+        val flowA = stubReadiness(siteTest, SiteReadiness.Ready)
+        stubReadiness(siteB, SiteReadiness.Ready)
 
         slice.fetchCapabilities(siteTest, isUserInitiated = false)
         advanceUntilIdle()
         slice.fetchCapabilities(siteB, isUserInitiated = false)
         advanceUntilIdle()
 
-        // Site A's probe resolves to Unreachable after we've switched to B — must not surface.
-        flowA.value = EditorCapabilityDetectionState.Unreachable
+        flowA.value = SiteReadiness.Unreachable
         advanceUntilIdle()
 
         assertThat(
