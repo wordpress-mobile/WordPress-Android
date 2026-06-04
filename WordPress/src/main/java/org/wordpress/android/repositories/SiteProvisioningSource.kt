@@ -159,6 +159,9 @@ class SiteProvisioningSource @Inject constructor(
      * confirmed rejection wipes them and mints fresh ones via the FluxC Jetpack
      * tunnel. The mint persists the credentials, so later stages read them back.
      */
+    // Each return is a distinct auth outcome (missing site, valid, transient, minted, failed);
+    // collapsing to one return would thread a result through nested branches and read worse.
+    @Suppress("ReturnCount")
     private suspend fun ensureAuth(siteLocalId: Int): SiteAuthState {
         val site = siteStore.getSiteByLocalId(siteLocalId)
             ?: return SiteAuthState.Unprovisionable(hadCredentials = false)
