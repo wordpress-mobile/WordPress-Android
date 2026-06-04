@@ -8,7 +8,7 @@ import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.repositories.EditorSettingsRepository
-import org.wordpress.android.ui.accounts.login.ApplicationPasswordMonitor
+import org.wordpress.android.ui.accounts.login.CredentialsChangedNotifier
 import org.wordpress.android.ui.mysite.MySiteCardAndItem
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.util.NetworkUtilsWrapper
@@ -17,7 +17,7 @@ import javax.inject.Inject
 class SiteConnectivityBannerViewModelSlice @Inject constructor(
     private val editorSettingsRepository: EditorSettingsRepository,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
-    private val applicationPasswordMonitor: ApplicationPasswordMonitor,
+    private val credentialsChangedNotifier: CredentialsChangedNotifier,
     private val selectedSiteRepository: SelectedSiteRepository,
 ) {
     private lateinit var scope: CoroutineScope
@@ -40,7 +40,7 @@ class SiteConnectivityBannerViewModelSlice @Inject constructor(
         // for the next resume/refresh. Re-read the selected site so we see the just-persisted
         // credentials; isUserInitiated = false so a replayed event is a no-op once cached.
         scope.launch {
-            applicationPasswordMonitor.events.collect { siteLocalId ->
+            credentialsChangedNotifier.events.collect { siteLocalId ->
                 val site = selectedSiteRepository.getSelectedSite()
                 if (site != null && site.id == siteLocalId) {
                     fetchCapabilities(site, isUserInitiated = false)
@@ -69,13 +69,11 @@ class SiteConnectivityBannerViewModelSlice @Inject constructor(
             // for the same root cause is just noise.
             val suppressForOffline = !ok && !networkUtilsWrapper.isNetworkAvailable()
             // Atomic sites probe the direct host with an application password that's minted
-            // asynchronously on this same screen. While the mint is in flight, treat a
-            // credential-less fetch as pending and stay quiet. But once the mint has failed
-            // terminally, stop suppressing — surface the banner so the user isn't left with a
-            // broken private site and no signal at all.
-            val suppressForPendingAuth = !ok &&
-                editorSettingsRepository.isAwaitingApplicationPassword(site) &&
-                !applicationPasswordMonitor.hasMintFailed(site.id)
+            // asynchronously on this same screen, so a first-login fetch can fail purely because
+            // the credential isn't ready yet. Treat that as pending, not a connection failure —
+            // the application-password card owns that state and a later fetch will succeed.
+            val suppressForPendingAuth =
+                !ok && editorSettingsRepository.isAwaitingApplicationPassword(site)
             // Show the banner only as a last resort — not when detection succeeded, when we have
             // cached capabilities, or while a transient non-error state (offline / pending creds)
             // already explains the failure.
