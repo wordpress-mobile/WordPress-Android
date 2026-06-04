@@ -1,5 +1,6 @@
 package org.wordpress.android.support.unified.ui
 
+import android.net.Uri
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -46,9 +47,28 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.automirrored.filled.Reply
+import androidx.compose.material3.Button
+import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.SheetState
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.rememberModalBottomSheetState
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.semantics
 import coil.compose.AsyncImage
+import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.support.aibot.util.formatRelativeTime
+import org.wordpress.android.support.he.model.AttachmentState
+import org.wordpress.android.support.he.ui.TicketMainContentView
+import org.wordpress.android.support.he.util.AttachmentActionsListener
 import org.wordpress.android.support.unified.model.UnifiedAttachment
 import org.wordpress.android.support.unified.model.UnifiedConversation
 import org.wordpress.android.support.unified.model.UnifiedMessage
@@ -64,6 +84,10 @@ fun UnifiedConversationDetailScreen(
     onSendReply: (String) -> Unit,
 ) {
     var messageText by remember { mutableStateOf("") }
+    var replyText by rememberSaveable { mutableStateOf("") }
+    var showReplySheet by rememberSaveable { mutableStateOf(false) }
+    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+    val scope = rememberCoroutineScope()
     val listState = rememberLazyListState()
     val resources = LocalResources.current
 
@@ -95,18 +119,35 @@ fun UnifiedConversationDetailScreen(
             )
         },
         bottomBar = {
-            if (conversation.canAcceptReply) {
-                ChatInputBar(
-                    messageText = messageText,
-                    isSending = isSendingReply,
-                    onMessageTextChange = { messageText = it },
-                    onSendClick = {
-                        if (messageText.isNotBlank()) {
-                            onSendReply(messageText)
-                            messageText = ""
-                        }
+            when {
+                conversation.status.equals(BOT_STATUS, ignoreCase = true) -> {
+                    if (conversation.canAcceptReply) {
+                        ChatInputBar(
+                            messageText = messageText,
+                            isSending = isSendingReply,
+                            onMessageTextChange = { messageText = it },
+                            onSendClick = {
+                                if (messageText.isNotBlank()) {
+                                    onSendReply(messageText)
+                                    messageText = ""
+                                }
+                            }
+                        )
                     }
-                )
+                }
+                conversation.canAcceptReply -> {
+                    Box(modifier = Modifier.navigationBarsPadding()) {
+                        ReplyButton(
+                            enabled = !isLoading,
+                            onClick = { showReplySheet = true }
+                        )
+                    }
+                }
+                else -> {
+                    Box(modifier = Modifier.navigationBarsPadding()) {
+                        ClosedConversationBanner()
+                    }
+                }
             }
         }
     ) { contentPadding ->
@@ -143,6 +184,25 @@ fun UnifiedConversationDetailScreen(
                 )
             }
         }
+    }
+
+    if (showReplySheet) {
+        UnifiedReplyBottomSheet(
+            sheetState = sheetState,
+            isSending = isSendingReply,
+            messageText = replyText,
+            onMessageChange = { replyText = it },
+            onDismiss = {
+                scope.launch { sheetState.hide() }
+                    .invokeOnCompletion { showReplySheet = false }
+            },
+            onSend = { message ->
+                onSendReply(message)
+                replyText = ""
+                scope.launch { sheetState.hide() }
+                    .invokeOnCompletion { showReplySheet = false }
+            },
+        )
     }
 }
 
@@ -296,4 +356,155 @@ private fun ChatInputBar(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun UnifiedReplyBottomSheet(
+    sheetState: SheetState,
+    isSending: Boolean,
+    messageText: String,
+    onMessageChange: (String) -> Unit,
+    onDismiss: () -> Unit,
+    onSend: (String) -> Unit,
+) {
+    ModalBottomSheet(
+        onDismissRequest = onDismiss,
+        sheetState = sheetState
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .imePadding()
+                .verticalScroll(rememberScrollState())
+                .padding(horizontal = 16.dp)
+                .padding(bottom = 32.dp)
+        ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 24.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                TextButton(
+                    onClick = onDismiss,
+                    enabled = !isSending
+                ) {
+                    Text(
+                        text = stringResource(R.string.cancel),
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                }
+
+                Text(
+                    text = stringResource(R.string.he_support_reply_button),
+                    style = MaterialTheme.typography.titleLarge,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.semantics { heading() }
+                )
+
+                TextButton(
+                    onClick = { onSend(messageText) },
+                    enabled = messageText.isNotBlank() && !isSending
+                ) {
+                    if (isSending) {
+                        CircularProgressIndicator(
+                            modifier = Modifier.size(20.dp),
+                            strokeWidth = 2.dp
+                        )
+                    } else {
+                        Text(
+                            text = stringResource(R.string.he_support_send_button),
+                            style = MaterialTheme.typography.titleMedium
+                        )
+                    }
+                }
+            }
+
+            TicketMainContentView(
+                messageText = messageText,
+                includeAppLogs = false,
+                onMessageChanged = onMessageChange,
+                onIncludeAppLogsChanged = {},
+                enabled = !isSending,
+                attachmentsEnabled = false,
+                appLogsEnabled = false,
+                attachmentState = AttachmentState(),
+                attachmentActionsListener = NoOpAttachmentActionsListener
+            )
+        }
+    }
+}
+
+@Suppress("EmptyFunctionBlock")
+private object NoOpAttachmentActionsListener : AttachmentActionsListener {
+    override fun onAddImageClick() {}
+    override fun onRemoveImage(uri: Uri) {}
+}
+
+@Composable
+private fun ReplyButton(
+    enabled: Boolean = true,
+    onClick: () -> Unit
+) {
+    val replyButtonLabel = stringResource(R.string.he_support_reply_button)
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp)
+    ) {
+        Button(
+            onClick = onClick,
+            enabled = enabled,
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(56.dp)
+                .semantics { contentDescription = replyButtonLabel },
+            shape = RoundedCornerShape(28.dp)
+        ) {
+            Icon(
+                imageVector = Icons.AutoMirrored.Filled.Reply,
+                contentDescription = null,
+                modifier = Modifier.size(20.dp)
+            )
+            Spacer(modifier = Modifier.size(8.dp))
+            Text(
+                text = replyButtonLabel,
+                style = MaterialTheme.typography.titleMedium
+            )
+        }
+    }
+}
+
+@Composable
+private fun ClosedConversationBanner() {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp)
+            .background(
+                color = MaterialTheme.colorScheme.errorContainer,
+                shape = RoundedCornerShape(8.dp)
+            )
+            .padding(16.dp)
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            Icon(
+                painter = painterResource(R.drawable.ic_info_outline_white_24dp),
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.onErrorContainer,
+                modifier = Modifier.size(24.dp)
+            )
+            Text(
+                text = stringResource(R.string.he_support_conversation_closed_message),
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onErrorContainer
+            )
+        }
+    }
+}
+
 private const val PERCENT_MULTIPLIER = 100
+private const val BOT_STATUS = "bot"

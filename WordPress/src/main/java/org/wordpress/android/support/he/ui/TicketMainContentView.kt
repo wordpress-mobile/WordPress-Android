@@ -69,6 +69,8 @@ fun TicketMainContentView(
     onMessageChanged: (String) -> Unit,
     onIncludeAppLogsChanged: (Boolean) -> Unit,
     enabled: Boolean = true,
+    attachmentsEnabled: Boolean = enabled,
+    appLogsEnabled: Boolean = enabled,
     attachmentState: AttachmentState = AttachmentState(),
     attachmentActionsListener: AttachmentActionsListener
 ) {
@@ -146,10 +148,10 @@ fun TicketMainContentView(
                 .height(48.dp)
                 .semantics { contentDescription = addScreenshotsLabel },
             shape = RoundedCornerShape(12.dp),
-            enabled = enabled,
+            enabled = attachmentsEnabled,
             border = BorderStroke(
                 width = 1.dp,
-                color = if (enabled) {
+                color = if (attachmentsEnabled) {
                     MaterialTheme.colorScheme.outline
                 } else {
                     MaterialTheme.colorScheme.outline.copy(alpha = 0.5f)
@@ -236,7 +238,7 @@ fun TicketMainContentView(
                 Switch(
                     checked = includeAppLogs,
                     onCheckedChange = { checked -> onIncludeAppLogsChanged(checked) },
-                    enabled = enabled,
+                    enabled = appLogsEnabled,
                     modifier = Modifier.semantics {
                         contentDescription = includeLogsLabel
                     }
