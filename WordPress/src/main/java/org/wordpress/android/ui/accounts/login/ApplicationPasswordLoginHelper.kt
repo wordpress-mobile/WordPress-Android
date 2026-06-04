@@ -46,7 +46,7 @@ class ApplicationPasswordLoginHelper @Inject constructor(
     private val discoverSuccessWrapper: DiscoverSuccessWrapper,
     private val crashLogging: CrashLogging,
     private val wpApiClientProvider: WpApiClientProvider,
-    private val credentialsChangedNotifier: CredentialsChangedNotifier,
+    private val applicationPasswordMonitor: ApplicationPasswordMonitor,
 ) {
     private var processedAppPasswordData: String? = null
 
@@ -149,7 +149,7 @@ class ApplicationPasswordLoginHelper @Inject constructor(
                 }
                 wpApiClientProvider.clearSelfHostedClient(site.id)
                 dispatcherWrapper.updateApplicationPassword(site)
-                credentialsChangedNotifier.notifyChanged(site.id)
+                applicationPasswordMonitor.onCredentialsEstablished(site.id)
                 trackSuccessful(effectiveUrlLogin.siteUrl)
                 trackCreated(creationSource, success = true)
                 processedAppPasswordData = effectiveUrlLogin.siteUrl

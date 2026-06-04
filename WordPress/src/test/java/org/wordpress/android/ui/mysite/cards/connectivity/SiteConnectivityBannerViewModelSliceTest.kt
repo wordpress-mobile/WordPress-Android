@@ -20,7 +20,7 @@ import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.repositories.EditorSettingsRepository
-import org.wordpress.android.ui.accounts.login.CredentialsChangedNotifier
+import org.wordpress.android.ui.accounts.login.ApplicationPasswordMonitor
 import org.wordpress.android.ui.mysite.MySiteCardAndItem
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.util.NetworkUtilsWrapper
@@ -37,12 +37,12 @@ class SiteConnectivityBannerViewModelSliceTest : BaseUnitTest() {
     lateinit var networkUtilsWrapper: NetworkUtilsWrapper
 
     @Mock
-    lateinit var credentialsChangedNotifier: CredentialsChangedNotifier
+    lateinit var applicationPasswordMonitor: ApplicationPasswordMonitor
 
     @Mock
     lateinit var selectedSiteRepository: SelectedSiteRepository
 
-    private val credentialsChangedFlow = MutableSharedFlow<Int>(extraBufferCapacity = 1)
+    private val appPasswordEvents = MutableSharedFlow<Int>(extraBufferCapacity = 1)
 
     private lateinit var siteTest: SiteModel
     private lateinit var slice: SiteConnectivityBannerViewModelSlice
@@ -54,11 +54,11 @@ class SiteConnectivityBannerViewModelSliceTest : BaseUnitTest() {
         // Default network state is available; tests that need offline override per-test. Lenient
         // because tests where the fetch succeeds never reach the network check.
         lenient().`when`(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
-        whenever(credentialsChangedNotifier.events).thenReturn(credentialsChangedFlow)
+        whenever(applicationPasswordMonitor.events).thenReturn(appPasswordEvents)
         slice = SiteConnectivityBannerViewModelSlice(
             editorSettingsRepository,
             networkUtilsWrapper,
-            credentialsChangedNotifier,
+            applicationPasswordMonitor,
             selectedSiteRepository,
         )
         slice.initialize(testScope())
@@ -117,11 +117,27 @@ class SiteConnectivityBannerViewModelSliceTest : BaseUnitTest() {
         }
 
     @Test
+    fun `given fetch fails and app password mint failed, when fetchCapabilities invoked, then banner shown`() =
+        test {
+            whenever(editorSettingsRepository.fetchEditorCapabilitiesForSite(siteTest)).thenReturn(false)
+            whenever(editorSettingsRepository.hasCachedCapabilities(siteTest)).thenReturn(false)
+            whenever(editorSettingsRepository.isAwaitingApplicationPassword(siteTest)).thenReturn(true)
+            whenever(applicationPasswordMonitor.hasMintFailed(TEST_SITE_LOCAL_ID)).thenReturn(true)
+
+            slice.fetchCapabilities(siteTest, isUserInitiated = false)
+            advanceUntilIdle()
+
+            // Mint failed terminally — surface the banner instead of staying silent.
+            val banner = emittedBanners.last() as MySiteCardAndItem.Item.SingleActionCard
+            assertThat(banner.textResource).isEqualTo(R.string.site_connectivity_banner_text)
+        }
+
+    @Test
     fun `when credentials change for the selected site, then capabilities are re-fetched`() = test {
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(siteTest)
         whenever(editorSettingsRepository.fetchEditorCapabilitiesForSite(siteTest)).thenReturn(true)
 
-        credentialsChangedFlow.emit(TEST_SITE_LOCAL_ID)
+        appPasswordEvents.emit(TEST_SITE_LOCAL_ID)
         advanceUntilIdle()
 
         verify(editorSettingsRepository).fetchEditorCapabilitiesForSite(siteTest)

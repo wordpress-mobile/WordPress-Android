@@ -77,7 +77,7 @@ class ApplicationPasswordLoginHelperTest : BaseUnitTest() {
     lateinit var wpApiClientProvider: WpApiClientProvider
 
     @Mock
-    lateinit var credentialsChangedNotifier: CredentialsChangedNotifier
+    lateinit var applicationPasswordMonitor: ApplicationPasswordMonitor
 
     private lateinit var applicationPasswordLoginHelper: ApplicationPasswordLoginHelper
 
@@ -96,7 +96,7 @@ class ApplicationPasswordLoginHelperTest : BaseUnitTest() {
             discoverSuccessWrapper,
             crashLogging,
             wpApiClientProvider,
-            credentialsChangedNotifier
+            applicationPasswordMonitor
         )
     }
 
@@ -210,7 +210,7 @@ class ApplicationPasswordLoginHelperTest : BaseUnitTest() {
         verify(siteStore).sites
         verify(dispatcherWrapper).updateApplicationPassword(eq(siteModel))
         verify(wpApiClientProvider).clearSelfHostedClient(eq(siteModel.id))
-        verify(credentialsChangedNotifier).notifyChanged(eq(siteModel.id))
+        verify(applicationPasswordMonitor).onCredentialsEstablished(eq(siteModel.id))
     }
 
     @Test
