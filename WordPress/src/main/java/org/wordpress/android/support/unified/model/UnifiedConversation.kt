@@ -14,4 +14,10 @@ data class UnifiedConversation(
     val messages: List<UnifiedMessage>,
 ) : Conversation {
     override fun getConversationId(): Long = id
+
+    val isBot: Boolean get() = status.equals(STATUS_BOT, ignoreCase = true)
+
+    companion object {
+        const val STATUS_BOT = "bot"
+    }
 }

@@ -1,11 +1,14 @@
 package org.wordpress.android.support.unified.ui
 
 import android.content.res.Resources
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -24,6 +27,7 @@ import org.wordpress.android.R
 import org.wordpress.android.support.aibot.util.formatRelativeTime
 import org.wordpress.android.support.common.ui.ConversationsListScreen
 import org.wordpress.android.support.common.ui.ConversationsSupportViewModel
+import org.wordpress.android.support.he.ui.ConversationStatusBadge
 import org.wordpress.android.support.unified.model.UnifiedConversation
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -34,17 +38,19 @@ fun UnifiedConversationsListScreen(
     conversationsState: ConversationsSupportViewModel.ConversationsState,
     onConversationClick: (UnifiedConversation) -> Unit,
     onBackClick: () -> Unit,
+    onCreateNewConversationClick: () -> Unit,
     onRefresh: () -> Unit,
 ) {
     val resources = LocalResources.current
     ConversationsListScreen(
         title = stringResource(R.string.unified_support_conversations_title),
-        addConversationContentDescription = "",
+        addConversationContentDescription =
+            stringResource(R.string.unified_support_new_conversation_content_description),
         snackbarHostState = snackbarHostState,
         conversations = conversations,
         conversationsState = conversationsState,
         onBackClick = onBackClick,
-        onCreateNewConversationClick = null,
+        onCreateNewConversationClick = onCreateNewConversationClick,
         onRefresh = onRefresh,
         conversationListItem = { conversation ->
             UnifiedConversationListItem(
@@ -72,14 +78,33 @@ private fun UnifiedConversationListItem(
         Column(
             modifier = Modifier.weight(1f)
         ) {
-            Text(
-                text = conversation.title.ifBlank { conversation.description },
-                style = MaterialTheme.typography.bodyLarge,
-                fontWeight = FontWeight.Medium,
-                color = MaterialTheme.colorScheme.onSurface,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis
+            UnifiedStatusBadge(
+                conversation = conversation,
+                modifier = Modifier.padding(bottom = 4.dp)
             )
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = conversation.title.ifBlank { conversation.description },
+                    style = MaterialTheme.typography.bodyLarge,
+                    fontWeight = FontWeight.Medium,
+                    color = MaterialTheme.colorScheme.onSurface,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    modifier = Modifier.weight(1f, fill = false)
+                )
+
+                Text(
+                    text = formatRelativeTime(conversation.updatedAt, resources),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.padding(start = 8.dp)
+                )
+            }
 
             if (conversation.description.isNotBlank() && conversation.title.isNotBlank()) {
                 Text(
@@ -91,13 +116,6 @@ private fun UnifiedConversationListItem(
                     overflow = TextOverflow.Ellipsis
                 )
             }
-
-            Text(
-                modifier = Modifier.padding(top = 4.dp),
-                text = formatRelativeTime(conversation.updatedAt, resources),
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
         }
 
         Icon(
@@ -105,6 +123,31 @@ private fun UnifiedConversationListItem(
             contentDescription = null,
             tint = MaterialTheme.colorScheme.onSurfaceVariant,
             modifier = Modifier.padding(start = 8.dp)
+        )
+    }
+}
+
+@Composable
+private fun UnifiedStatusBadge(
+    conversation: UnifiedConversation,
+    modifier: Modifier = Modifier
+) {
+    if (conversation.isBot) {
+        Text(
+            text = stringResource(R.string.unified_support_status_bot),
+            style = MaterialTheme.typography.labelSmall,
+            color = MaterialTheme.colorScheme.onTertiaryContainer,
+            modifier = modifier
+                .background(
+                    color = MaterialTheme.colorScheme.tertiaryContainer,
+                    shape = RoundedCornerShape(4.dp)
+                )
+                .padding(horizontal = 6.dp, vertical = 2.dp)
+        )
+    } else {
+        ConversationStatusBadge(
+            status = conversation.status,
+            modifier = modifier
         )
     }
 }

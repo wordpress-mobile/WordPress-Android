@@ -8,6 +8,9 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.utils.AppLogWrapper
+import org.wordpress.android.support.aibot.model.BotConversation
+import org.wordpress.android.support.aibot.model.BotMessage
+import org.wordpress.android.support.aibot.repository.AIBotSupportRepository
 import org.wordpress.android.support.common.ui.ConversationsSupportViewModel
 import org.wordpress.android.support.unified.model.UnifiedConversation
 import org.wordpress.android.support.unified.model.UnifiedMessage
@@ -22,6 +25,7 @@ import javax.inject.Inject
 class UnifiedSupportViewModel @Inject constructor(
     accountStore: AccountStore,
     private val repository: UnifiedSupportRepository,
+    private val aiBotSupportRepository: AIBotSupportRepository,
     appLogWrapper: AppLogWrapper,
     networkUtilsWrapper: NetworkUtilsWrapper,
 ) : ConversationsSupportViewModel<UnifiedConversation>(accountStore, appLogWrapper, networkUtilsWrapper) {
@@ -30,6 +34,30 @@ class UnifiedSupportViewModel @Inject constructor(
 
     override fun initRepository(accessToken: String) {
         repository.init(accessToken)
+        // New conversations are created as bot chats through the AI bot endpoint.
+        aiBotSupportRepository.init(accessToken, accountStore.account.userId)
+    }
+
+    /**
+     * Starts a brand-new bot conversation. The conversation is created on the backend when the
+     * first message is sent (see [sendReply]), mirroring the "Ask the Bots" flow.
+     */
+    fun onCreateNewBotConversationClick() {
+        viewModelScope.launch {
+            val now = Date()
+            setNewConversation(
+                UnifiedConversation(
+                    id = NEW_CONVERSATION_ID,
+                    title = "",
+                    description = "",
+                    status = UnifiedConversation.STATUS_BOT,
+                    canAcceptReply = true,
+                    createdAt = now,
+                    updatedAt = now,
+                    messages = emptyList()
+                )
+            )
+        }
     }
 
     override suspend fun getConversations(): List<UnifiedConversation> = repository.loadConversations()
@@ -55,10 +83,19 @@ class UnifiedSupportViewModel @Inject constructor(
             )
 
             try {
-                val updated = repository.replyToConversation(conversation.id, message)
+                val isNewConversation = conversation.id == NEW_CONVERSATION_ID
+                val updated = if (isNewConversation) {
+                    aiBotSupportRepository.createNewConversation(message)?.toUnifiedConversation()
+                } else {
+                    repository.replyToConversation(conversation.id, message)
+                }
                 if (updated != null) {
                     _selectedConversation.value = updated
-                    replaceInList(updated)
+                    if (isNewConversation) {
+                        _conversations.value = listOf(updated) + _conversations.value
+                    } else {
+                        replaceInList(updated)
+                    }
                 } else {
                     rollbackOptimisticMessage(conversation, optimisticMessage.id)
                     _errorMessage.value = ErrorType.GENERAL
@@ -100,5 +137,32 @@ class UnifiedSupportViewModel @Inject constructor(
         _conversations.value = _conversations.value.map { existing ->
             if (existing.id == updated.id) updated.copy(messages = emptyList()) else existing
         }
+    }
+
+    private fun BotConversation.toUnifiedConversation(): UnifiedConversation =
+        UnifiedConversation(
+            id = id,
+            title = "",
+            description = lastMessage,
+            status = UnifiedConversation.STATUS_BOT,
+            canAcceptReply = true,
+            createdAt = createdAt,
+            updatedAt = mostRecentMessageDate,
+            messages = messages.map { it.toUnifiedMessage() }
+        )
+
+    private fun BotMessage.toUnifiedMessage(): UnifiedMessage =
+        UnifiedMessage(
+            id = id,
+            rawText = rawText,
+            formattedText = formattedText,
+            authorRole = if (isWrittenByUser) UnifiedMessage.AUTHOR_ROLE_USER else UnifiedMessage.AUTHOR_ROLE_BOT,
+            authorName = "",
+            createdAt = date,
+            attachments = emptyList()
+        )
+
+    companion object {
+        private const val NEW_CONVERSATION_ID = 0L
     }
 }

@@ -119,6 +119,7 @@ class UnifiedSupportActivity : AppCompatActivity() {
                             viewModel.onConversationClick(conversation)
                         },
                         onBackClick = { finish() },
+                        onCreateNewConversationClick = { viewModel.onCreateNewBotConversationClick() },
                         onRefresh = { viewModel.refreshConversations() },
                     )
                 }

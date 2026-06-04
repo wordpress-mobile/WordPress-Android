@@ -90,7 +90,7 @@ fun UnifiedConversationDetailScreen(
     val scope = rememberCoroutineScope()
     val listState = rememberLazyListState()
     val resources = LocalResources.current
-    val isBot = conversation.status.equals(BOT_STATUS, ignoreCase = true)
+    val isBot = conversation.isBot
     val isBotTyping = isBot && isSendingReply
 
     // Scroll to bottom when a new message is added or when the bot starts "typing".
@@ -575,7 +575,6 @@ private fun TypingDot(delay: Int) {
 }
 
 private const val PERCENT_MULTIPLIER = 100
-private const val BOT_STATUS = "bot"
 private const val TYPING_DOT_DELAY_STEP = 150
 private const val TYPING_DOT_PULSE_MS = 600L
 private const val TYPING_DOT_MIN_ALPHA = 0.3f
