@@ -1,1 +1,1 @@
-It’s almost summer, and that means bugs. Don’t worry, we’ve been hard at work squashing them. This update involved assorted fixes that should make you enjoy using the app even more than you did before.
+It’s almost summer, and that means bugs. Don’t worry, we’ve been hard at work squashing them, with assorted fixes to make the app even nicer to use. This release contains the all-new block editor — try it on any site from Site Settings.
