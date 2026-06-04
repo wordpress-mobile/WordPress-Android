@@ -108,11 +108,12 @@ class EditorSettingsRepository @Inject constructor(
     private suspend fun fetchRouteSupport(
         site: SiteModel
     ): Boolean = try {
-        // For Atomic sites the editor fetches `wp-block-editor/v1/settings`
-        // from the direct host — proxy and direct host can advertise
-        // different route lists, so detection has to probe the direct host
-        // too. See #22879.
-        if (site.isWPComAtomic) {
+        // Atomic and Jetpack-WPCom-REST sites have their own REST host that the editor talks to
+        // directly — the WP.com proxy and the direct host advertise different route lists, so
+        // detection has to probe the direct host too. The proxy is only for minting the application
+        // password. WP.com Simple sites have no direct host (the WP.com REST API *is* their API),
+        // and self-hosted sites are already direct via the configured client. See #22879.
+        if (site.isUsingWpComRestApi && !site.isWPComSimpleSite) {
             fetchRouteSupportViaDirectHostDiscovery(site)
         } else {
             fetchRouteSupportViaConfiguredClient(site)
