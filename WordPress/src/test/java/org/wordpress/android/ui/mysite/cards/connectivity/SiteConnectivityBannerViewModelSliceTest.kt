@@ -2,6 +2,7 @@ package org.wordpress.android.ui.mysite.cards.connectivity
 
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.test.advanceUntilIdle
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -19,7 +20,9 @@ import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.repositories.EditorSettingsRepository
+import org.wordpress.android.ui.accounts.login.CredentialsChangedNotifier
 import org.wordpress.android.ui.mysite.MySiteCardAndItem
+import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.util.NetworkUtilsWrapper
 
 private const val TEST_SITE_LOCAL_ID = 42
@@ -33,6 +36,14 @@ class SiteConnectivityBannerViewModelSliceTest : BaseUnitTest() {
     @Mock
     lateinit var networkUtilsWrapper: NetworkUtilsWrapper
 
+    @Mock
+    lateinit var credentialsChangedNotifier: CredentialsChangedNotifier
+
+    @Mock
+    lateinit var selectedSiteRepository: SelectedSiteRepository
+
+    private val credentialsChangedFlow = MutableSharedFlow<Int>(extraBufferCapacity = 1)
+
     private lateinit var siteTest: SiteModel
     private lateinit var slice: SiteConnectivityBannerViewModelSlice
     private val emittedBanners = mutableListOf<MySiteCardAndItem?>()
@@ -43,7 +54,13 @@ class SiteConnectivityBannerViewModelSliceTest : BaseUnitTest() {
         // Default network state is available; tests that need offline override per-test. Lenient
         // because tests where the fetch succeeds never reach the network check.
         lenient().`when`(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
-        slice = SiteConnectivityBannerViewModelSlice(editorSettingsRepository, networkUtilsWrapper)
+        whenever(credentialsChangedNotifier.events).thenReturn(credentialsChangedFlow)
+        slice = SiteConnectivityBannerViewModelSlice(
+            editorSettingsRepository,
+            networkUtilsWrapper,
+            credentialsChangedNotifier,
+            selectedSiteRepository,
+        )
         slice.initialize(testScope())
         slice.uiModel.observeForever { emittedBanners.add(it) }
     }
@@ -84,6 +101,31 @@ class SiteConnectivityBannerViewModelSliceTest : BaseUnitTest() {
             // Global offline indicator covers this case — suppress to avoid stacked warnings.
             assertThat(emittedBanners.last()).isNull()
         }
+
+    @Test
+    fun `given fetch fails but app password pending, when fetchCapabilities invoked, then banner is null`() =
+        test {
+            whenever(editorSettingsRepository.fetchEditorCapabilitiesForSite(siteTest)).thenReturn(false)
+            whenever(editorSettingsRepository.hasCachedCapabilities(siteTest)).thenReturn(false)
+            whenever(editorSettingsRepository.isAwaitingApplicationPassword(siteTest)).thenReturn(true)
+
+            slice.fetchCapabilities(siteTest, isUserInitiated = false)
+            advanceUntilIdle()
+
+            // Credentials are still being minted — pending, not a connection failure.
+            assertThat(emittedBanners.last()).isNull()
+        }
+
+    @Test
+    fun `when credentials change for the selected site, then capabilities are re-fetched`() = test {
+        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(siteTest)
+        whenever(editorSettingsRepository.fetchEditorCapabilitiesForSite(siteTest)).thenReturn(true)
+
+        credentialsChangedFlow.emit(TEST_SITE_LOCAL_ID)
+        advanceUntilIdle()
+
+        verify(editorSettingsRepository).fetchEditorCapabilitiesForSite(siteTest)
+    }
 
     @Test
     fun `given fetch fails but cache exists, when fetchCapabilities invoked, then banner is null`() = test {

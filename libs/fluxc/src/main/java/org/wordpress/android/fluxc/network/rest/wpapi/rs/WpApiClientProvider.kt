@@ -203,6 +203,16 @@ class WpApiClientProvider @Inject constructor(
         apiRootUrl: ParsedUrl
     ): uniffi.wp_api.ApiUrlResolver = WpOrgSiteApiUrlResolver(apiRootUrl)
 
+    /**
+     * Always returns a direct-host [WpOrgSiteApiUrlResolver] for the site, regardless of WP.com
+     * routing — the resolver counterpart to [getApplicationPasswordClient]. Use it to resolve
+     * routes fetched through that client against the host they actually came from.
+     */
+    fun getDirectHostApiUrlResolver(
+        site: SiteModel
+    ): uniffi.wp_api.ApiUrlResolver =
+        WpOrgSiteApiUrlResolver(ParsedUrl.parse(site.buildUrl()))
+
     fun getApiRootUrlFrom(site: SiteModel): String = site.buildUrl()
 
     private fun SiteModel.buildUrl(): String =

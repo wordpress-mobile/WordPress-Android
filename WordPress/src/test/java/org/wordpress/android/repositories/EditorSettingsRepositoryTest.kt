@@ -54,6 +54,9 @@ class EditorSettingsRepositoryTest : BaseUnitTest() {
     lateinit var wpApiClient: WpApiClient
 
     @Mock
+    lateinit var appPasswordClient: WpApiClient
+
+    @Mock
     lateinit var apiUrlResolver: ApiUrlResolver
 
     @Mock
@@ -285,6 +288,84 @@ class EditorSettingsRepositoryTest : BaseUnitTest() {
             verify(wpApiClientProvider, never()).getWpApiClient(atomicSite)
         }
 
+    @Test
+    fun `atomic site falls back to authenticated probe when discovery fails`() =
+        runTest {
+            val atomicSite = SiteModel().apply {
+                id = 5
+                url = "https://atomic.example.com"
+                setIsWPCom(true)
+                setIsWPComAtomic(true)
+                apiRestUsernamePlain = "user"
+                apiRestPasswordPlain = "secret"
+            }
+            mockDiscoveryFailure(atomicSite.url)
+            whenever(
+                wpApiClientProvider.getApplicationPasswordClient(atomicSite)
+            ).thenReturn(appPasswordClient)
+            whenever(
+                wpApiClientProvider.getDirectHostApiUrlResolver(atomicSite)
+            ).thenReturn(directHostResolver)
+            mockApiRootResponseFor(
+                client = appPasswordClient,
+                resolver = directHostResolver,
+                hasEditorSettings = true,
+                hasEditorAssets = true,
+            )
+            whenever(themeRepository.fetchCurrentTheme(atomicSite))
+                .thenReturn(buildTheme(isBlockTheme = false))
+
+            val result =
+                repository.fetchEditorCapabilitiesForSite(atomicSite)
+
+            assertThat(result).isTrue()
+            verify(appPrefsWrapper)
+                .setSiteSupportsEditorSettings(atomicSite, true)
+            verify(appPrefsWrapper)
+                .setSiteSupportsEditorAssets(atomicSite, true)
+        }
+
+    @Test
+    fun `atomic site returns false when authenticated probe also fails`() =
+        runTest {
+            val atomicSite = SiteModel().apply {
+                id = 6
+                url = "https://atomic.example.com"
+                setIsWPCom(true)
+                setIsWPComAtomic(true)
+                apiRestUsernamePlain = "user"
+                apiRestPasswordPlain = "secret"
+            }
+            mockDiscoveryFailure(atomicSite.url)
+            whenever(
+                wpApiClientProvider.getApplicationPasswordClient(atomicSite)
+            ).thenReturn(appPasswordClient)
+            whenever(
+                wpApiClientProvider.getDirectHostApiUrlResolver(atomicSite)
+            ).thenReturn(directHostResolver)
+            mockApiRootErrorFor(appPasswordClient)
+            whenever(themeRepository.fetchCurrentTheme(atomicSite))
+                .thenReturn(buildTheme(isBlockTheme = false))
+
+            val result =
+                repository.fetchEditorCapabilitiesForSite(atomicSite)
+
+            assertThat(result).isFalse()
+            verify(appPrefsWrapper, never())
+                .setSiteSupportsEditorSettings(any(), any())
+            verify(appPrefsWrapper, never())
+                .setSiteSupportsEditorAssets(any(), any())
+        }
+
+    private suspend fun mockDiscoveryFailure(siteUrl: String) {
+        whenever(wpLoginClient.apiDiscovery(siteUrl))
+            .thenReturn(
+                ApiDiscoveryResult.FailureParseSiteUrl(
+                    ParseUrlException.Generic("")
+                )
+            )
+    }
+
     private suspend fun mockApiRootResponse(
         hasEditorSettings: Boolean,
         hasEditorAssets: Boolean
@@ -363,15 +444,17 @@ class EditorSettingsRepositoryTest : BaseUnitTest() {
             )
     }
 
+    private suspend fun mockApiRootError() = mockApiRootErrorFor(wpApiClient)
+
     @Suppress("UNCHECKED_CAST")
-    private suspend fun mockApiRootError() {
+    private suspend fun mockApiRootErrorFor(client: WpApiClient) {
         val error = WpRequestResult.UnknownError<Any>(
             statusCode = 500u,
             response = "Internal Server Error",
             requestUrl = "https://test.wordpress.com/wp-json",
             requestMethod = uniffi.wp_api.RequestMethod.GET
         )
-        whenever(wpApiClient.request<Any>(any()))
+        whenever(client.request<Any>(any()))
             .thenReturn(error)
     }
 
