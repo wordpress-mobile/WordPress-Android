@@ -1,5 +1,7 @@
 package org.wordpress.android.support.unified.model
 
+import org.wordpress.android.support.he.model.AttachmentType
+
 data class UnifiedAttachment(
     val id: Long,
     val filename: String,
@@ -9,4 +11,11 @@ data class UnifiedAttachment(
     val botCitationScore: Float?,
 ) {
     val isImage: Boolean get() = contentType.startsWith("image/")
+
+    val type: AttachmentType
+        get() = when {
+            contentType.startsWith("image/") -> AttachmentType.Image
+            contentType.startsWith("video/") -> AttachmentType.Video
+            else -> AttachmentType.Other
+        }
 }

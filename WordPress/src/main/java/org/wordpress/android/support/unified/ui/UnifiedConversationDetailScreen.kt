@@ -62,11 +62,28 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.material.icons.filled.PlayCircle
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.semantics.clearAndSetSemantics
 import coil.compose.AsyncImage
+import coil.compose.SubcomposeAsyncImage
+import coil.decode.VideoFrameDecoder
+import coil.request.ImageRequest
+import coil.request.videoFrameMillis
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.support.aibot.util.formatRelativeTime
 import org.wordpress.android.support.he.model.AttachmentState
+import org.wordpress.android.support.he.model.AttachmentType
+import org.wordpress.android.support.he.model.VideoDownloadState
+import org.wordpress.android.support.he.ui.AttachmentFullscreenImagePreview
+import org.wordpress.android.support.he.ui.AttachmentFullscreenVideoPlayer
+import org.wordpress.android.support.he.ui.ConversationStatusBadge
+import org.wordpress.android.support.he.ui.HESupportActivity
 import org.wordpress.android.support.he.ui.TicketMainContentView
 import org.wordpress.android.support.he.util.AttachmentActionsListener
 import org.wordpress.android.support.unified.model.UnifiedAttachment
@@ -82,10 +99,16 @@ fun UnifiedConversationDetailScreen(
     isSendingReply: Boolean,
     onBackClick: () -> Unit,
     onSendReply: (String) -> Unit,
+    onDownloadAttachment: (UnifiedAttachment) -> Unit,
+    onGetAuthorizationHeaderArgument: () -> String,
+    videoDownloadState: VideoDownloadState,
+    onStartVideoDownload: (String) -> Unit,
+    onResetVideoDownloadState: () -> Unit,
 ) {
     var messageText by remember { mutableStateOf("") }
     var replyText by rememberSaveable { mutableStateOf("") }
     var showReplySheet by rememberSaveable { mutableStateOf(false) }
+    var previewAttachment by remember { mutableStateOf<UnifiedAttachment?>(null) }
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     val scope = rememberCoroutineScope()
     val listState = rememberLazyListState()
@@ -105,8 +128,9 @@ fun UnifiedConversationDetailScreen(
         topBar = {
             TopAppBar(
                 title = {
+                    // HE conversations show their title in the body (title card), like the old screen.
                     Text(
-                        text = conversation.title,
+                        text = if (isBot) conversation.title else "",
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
                     )
@@ -166,19 +190,45 @@ fun UnifiedConversationDetailScreen(
                 state = listState,
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                items(
-                    items = conversation.messages,
-                    key = { message -> message.id }
-                ) { message ->
-                    MessageBubble(
-                        message = message,
-                        timestamp = formatRelativeTime(message.createdAt, resources)
-                    )
-                }
+                if (isBot) {
+                    items(
+                        items = conversation.messages,
+                        key = { message -> message.id }
+                    ) { message ->
+                        MessageBubble(
+                            message = message,
+                            timestamp = formatRelativeTime(message.createdAt, resources)
+                        )
+                    }
 
-                if (isBotTyping) {
+                    if (isBotTyping) {
+                        item {
+                            TypingIndicatorBubble()
+                        }
+                    }
+                } else {
                     item {
-                        TypingIndicatorBubble()
+                        UnifiedConversationHeader(
+                            status = conversation.status,
+                            lastUpdated = formatRelativeTime(conversation.updatedAt, resources)
+                        )
+                    }
+
+                    item {
+                        UnifiedConversationTitleCard(title = conversation.title)
+                    }
+
+                    items(
+                        items = conversation.messages,
+                        key = { message -> message.id }
+                    ) { message ->
+                        UnifiedMessageItem(
+                            message = message,
+                            timestamp = formatRelativeTime(message.createdAt, resources),
+                            onPreviewAttachment = { previewAttachment = it },
+                            onDownloadAttachment = onDownloadAttachment,
+                            onGetAuthorizationHeaderArgument = onGetAuthorizationHeaderArgument
+                        )
                     }
                 }
 
@@ -212,6 +262,30 @@ fun UnifiedConversationDetailScreen(
                     .invokeOnCompletion { showReplySheet = false }
             },
         )
+    }
+
+    previewAttachment?.let { attachment ->
+        when (attachment.type) {
+            AttachmentType.Image -> {
+                AttachmentFullscreenImagePreview(
+                    imageUrl = attachment.url,
+                    onGetAuthorizationHeaderArgument = onGetAuthorizationHeaderArgument,
+                    onDismiss = { previewAttachment = null },
+                    onDownload = { onDownloadAttachment(attachment) }
+                )
+            }
+            AttachmentType.Video -> {
+                AttachmentFullscreenVideoPlayer(
+                    videoUrl = attachment.url,
+                    downloadState = videoDownloadState,
+                    onStartVideoDownload = onStartVideoDownload,
+                    onResetVideoDownloadState = onResetVideoDownloadState,
+                    onDismiss = { previewAttachment = null },
+                    onDownload = { onDownloadAttachment(attachment) },
+                )
+            }
+            else -> Unit
+        }
     }
 }
 
@@ -572,6 +646,226 @@ private fun TypingDot(delay: Int) {
             )
             .padding(4.dp)
     )
+}
+
+@Composable
+private fun UnifiedConversationHeader(status: String, lastUpdated: String) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 8.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        ConversationStatusBadge(status = status)
+
+        Text(
+            text = stringResource(R.string.he_support_last_updated, lastUpdated),
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+    }
+}
+
+@Composable
+private fun UnifiedConversationTitleCard(title: String) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp)
+    ) {
+        Text(
+            text = title,
+            style = MaterialTheme.typography.titleLarge,
+            fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colorScheme.primary,
+            modifier = Modifier.semantics { heading() }
+        )
+    }
+}
+
+@Composable
+private fun UnifiedMessageItem(
+    message: UnifiedMessage,
+    timestamp: String,
+    onPreviewAttachment: (UnifiedAttachment) -> Unit,
+    onDownloadAttachment: (UnifiedAttachment) -> Unit,
+    onGetAuthorizationHeaderArgument: () -> String,
+) {
+    val messageDescription = "${message.authorName}, $timestamp. ${message.formattedText}"
+
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(
+                color = if (message.isUser) {
+                    MaterialTheme.colorScheme.primary.copy(alpha = 0.20f)
+                } else {
+                    MaterialTheme.colorScheme.surfaceVariant
+                },
+                shape = RoundedCornerShape(8.dp)
+            )
+            .padding(16.dp)
+            .clearAndSetSemantics {
+                contentDescription = messageDescription
+            }
+    ) {
+        Column(modifier = Modifier.fillMaxWidth()) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = message.authorName,
+                    style = MaterialTheme.typography.bodyMedium,
+                    fontWeight = if (message.isUser) FontWeight.Bold else FontWeight.Normal,
+                    color = if (message.isUser) {
+                        MaterialTheme.colorScheme.primary
+                    } else {
+                        MaterialTheme.colorScheme.onSurfaceVariant
+                    }
+                )
+
+                Text(
+                    text = timestamp,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Text(
+                text = message.formattedText,
+                style = MaterialTheme.typography.bodyMedium.copy(
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+            )
+
+            if (message.attachments.isNotEmpty()) {
+                Spacer(modifier = Modifier.height(12.dp))
+                UnifiedAttachmentsList(
+                    attachments = message.attachments,
+                    onPreviewAttachment = onPreviewAttachment,
+                    onDownloadAttachment = onDownloadAttachment,
+                    onGetAuthorizationHeaderArgument = onGetAuthorizationHeaderArgument
+                )
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalLayoutApi::class)
+@Composable
+private fun UnifiedAttachmentsList(
+    attachments: List<UnifiedAttachment>,
+    onPreviewAttachment: (UnifiedAttachment) -> Unit,
+    onDownloadAttachment: (UnifiedAttachment) -> Unit,
+    onGetAuthorizationHeaderArgument: () -> String,
+) {
+    FlowRow(
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        attachments.forEach { attachment ->
+            UnifiedAttachmentItem(
+                attachment = attachment,
+                onClick = {
+                    when (attachment.type) {
+                        AttachmentType.Image, AttachmentType.Video -> onPreviewAttachment(attachment)
+                        else -> onDownloadAttachment(attachment)
+                    }
+                },
+                onGetAuthorizationHeaderArgument = onGetAuthorizationHeaderArgument
+            )
+        }
+    }
+}
+
+@Composable
+private fun UnifiedAttachmentItem(
+    attachment: UnifiedAttachment,
+    onClick: () -> Unit,
+    onGetAuthorizationHeaderArgument: () -> String,
+) {
+    // Cache the auth header so it is not recomputed on every recomposition.
+    val authorizationHeader = remember { onGetAuthorizationHeaderArgument() }
+
+    val iconRes = when (attachment.type) {
+        AttachmentType.Image -> R.drawable.ic_image_white_24dp
+        AttachmentType.Video -> R.drawable.ic_video_camera_white_24dp
+        AttachmentType.Other -> R.drawable.ic_pages_white_24dp
+    }
+
+    Box(
+        modifier = Modifier
+            .size(120.dp)
+            .clickable(onClick = onClick)
+            .background(
+                color = MaterialTheme.colorScheme.surface.copy(alpha = 0.5f),
+                shape = RoundedCornerShape(8.dp)
+            ),
+        contentAlignment = Alignment.Center
+    ) {
+        if (attachment.type == AttachmentType.Image || attachment.type == AttachmentType.Video) {
+            SubcomposeAsyncImage(
+                model = ImageRequest.Builder(LocalContext.current)
+                    .data(attachment.url)
+                    .crossfade(true)
+                    .apply {
+                        if (attachment.type == AttachmentType.Video) {
+                            decoderFactory(VideoFrameDecoder.Factory())
+                            videoFrameMillis(0) // First frame as thumbnail
+                        }
+                    }
+                    .apply {
+                        addHeader(HESupportActivity.AUTHORIZATION_TAG, authorizationHeader)
+                    }
+                    .build(),
+                contentDescription = attachment.filename,
+                modifier = Modifier.fillMaxSize(),
+                contentScale = ContentScale.Crop,
+                loading = {
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        CircularProgressIndicator(
+                            modifier = Modifier.size(24.dp),
+                            strokeWidth = 2.dp
+                        )
+                    }
+                },
+                error = {
+                    Icon(
+                        painter = painterResource(iconRes),
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.size(48.dp)
+                    )
+                }
+            )
+
+            if (attachment.type == AttachmentType.Video) {
+                Icon(
+                    imageVector = Icons.Default.PlayCircle,
+                    contentDescription = null,
+                    modifier = Modifier
+                        .align(Alignment.Center)
+                        .size(48.dp),
+                    tint = MaterialTheme.colorScheme.surface.copy(alpha = 0.9f)
+                )
+            }
+        } else {
+            Icon(
+                painter = painterResource(iconRes),
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.size(48.dp)
+            )
+        }
+    }
 }
 
 private const val PERCENT_MULTIPLIER = 100

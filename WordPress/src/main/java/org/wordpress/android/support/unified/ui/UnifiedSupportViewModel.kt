@@ -2,40 +2,108 @@ package org.wordpress.android.support.unified.ui
 
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.utils.AppLogWrapper
+import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.support.aibot.model.BotConversation
 import org.wordpress.android.support.aibot.model.BotMessage
 import org.wordpress.android.support.aibot.repository.AIBotSupportRepository
 import org.wordpress.android.support.common.ui.ConversationsSupportViewModel
+import org.wordpress.android.support.he.model.VideoDownloadState
+import org.wordpress.android.support.he.util.TempAttachmentsUtil
 import org.wordpress.android.support.unified.model.UnifiedConversation
 import org.wordpress.android.support.unified.model.UnifiedMessage
 import org.wordpress.android.support.unified.repository.UnifiedSupportRepository
 import org.wordpress.android.ui.compose.utils.markdownToAnnotatedString
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.NetworkUtilsWrapper
+import java.io.File
 import java.util.Date
 import javax.inject.Inject
+import javax.inject.Named
 
 @HiltViewModel
 class UnifiedSupportViewModel @Inject constructor(
     accountStore: AccountStore,
     private val repository: UnifiedSupportRepository,
     private val aiBotSupportRepository: AIBotSupportRepository,
+    private val tempAttachmentsUtil: TempAttachmentsUtil,
+    @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher,
     appLogWrapper: AppLogWrapper,
     networkUtilsWrapper: NetworkUtilsWrapper,
 ) : ConversationsSupportViewModel<UnifiedConversation>(accountStore, appLogWrapper, networkUtilsWrapper) {
     private val _isSendingReply = MutableStateFlow(false)
     val isSendingReply: StateFlow<Boolean> = _isSendingReply.asStateFlow()
 
+    // Cache for downloaded video file paths (videoUrl -> file path) used by the attachment player.
+    private val videoCache = mutableMapOf<String, String>()
+
+    private val _videoDownloadState = MutableStateFlow<VideoDownloadState>(VideoDownloadState.Idle)
+    val videoDownloadState: StateFlow<VideoDownloadState> = _videoDownloadState.asStateFlow()
+
     override fun initRepository(accessToken: String) {
         repository.init(accessToken)
         // New conversations are created as bot chats through the AI bot endpoint.
         aiBotSupportRepository.init(accessToken, accountStore.account.userId)
+    }
+
+    fun getAuthorizationHeader(): String = "$BEARER_TAG ${accountStore.accessToken}"
+
+    /**
+     * Downloads a video attachment to a temporary file (with caching) so it can be played in-app.
+     * Updates [videoDownloadState] as it progresses.
+     */
+    @Suppress("TooGenericExceptionCaught")
+    fun downloadVideoToTempFile(videoUrl: String) {
+        viewModelScope.launch(ioDispatcher) {
+            try {
+                videoCache[videoUrl]?.let { cachedFilePath ->
+                    val cachedFile = File(cachedFilePath)
+                    if (cachedFile.exists()) {
+                        _videoDownloadState.value = VideoDownloadState.Success(cachedFile)
+                        return@launch
+                    } else {
+                        videoCache.remove(videoUrl)
+                    }
+                }
+
+                _videoDownloadState.value = VideoDownloadState.Downloading
+                val tempFile = tempAttachmentsUtil.createVideoTempFile(videoUrl)
+                if (tempFile == null) {
+                    _videoDownloadState.value = VideoDownloadState.Error
+                } else {
+                    videoCache[videoUrl] = tempFile.absolutePath
+                    _videoDownloadState.value = VideoDownloadState.Success(tempFile)
+                }
+            } catch (e: Exception) {
+                appLogWrapper.e(AppLog.T.SUPPORT, "Error downloading video: ${e.stackTraceToString()}")
+                _videoDownloadState.value = VideoDownloadState.Error
+            }
+        }
+    }
+
+    fun resetVideoDownloadState() {
+        _videoDownloadState.value = VideoDownloadState.Idle
+    }
+
+    fun cleanupVideoCache() {
+        videoCache.values.forEach { filePath ->
+            val file = File(filePath)
+            if (file.exists()) {
+                file.delete()
+            }
+        }
+        videoCache.clear()
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        cleanupVideoCache()
     }
 
     /**
@@ -164,5 +232,6 @@ class UnifiedSupportViewModel @Inject constructor(
 
     companion object {
         private const val NEW_CONVERSATION_ID = 0L
+        private const val BEARER_TAG = "Bearer"
     }
 }

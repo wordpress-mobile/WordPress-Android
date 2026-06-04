@@ -13,6 +13,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.lifecycle.Lifecycle
@@ -27,9 +28,12 @@ import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.support.common.ui.ConversationsSupportViewModel
 import org.wordpress.android.ui.compose.theme.AppThemeM3
+import org.wordpress.android.ui.reader.ReaderFileDownloadManager
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class UnifiedSupportActivity : AppCompatActivity() {
+    @Inject lateinit var fileDownloadManager: ReaderFileDownloadManager
     private val viewModel by viewModels<UnifiedSupportViewModel>()
 
     private lateinit var composeView: ComposeView
@@ -51,6 +55,11 @@ class UnifiedSupportActivity : AppCompatActivity() {
         )
         observeNavigationEvents()
         viewModel.init()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        viewModel.cleanupVideoCache()
     }
 
     private fun observeNavigationEvents() {
@@ -82,6 +91,7 @@ class UnifiedSupportActivity : AppCompatActivity() {
     private fun NavigableContent() {
         navController = rememberNavController()
         val snackbarHostState = remember { SnackbarHostState() }
+        val scope = rememberCoroutineScope()
         val errorMessage by viewModel.errorMessage.collectAsState()
 
         val errorType = errorMessage
@@ -128,6 +138,7 @@ class UnifiedSupportActivity : AppCompatActivity() {
                     val selectedConversation by viewModel.selectedConversation.collectAsState()
                     val isLoadingConversation by viewModel.isLoadingConversation.collectAsState()
                     val isSendingReply by viewModel.isSendingReply.collectAsState()
+                    val videoDownloadState by viewModel.videoDownloadState.collectAsState()
                     selectedConversation?.let { conversation ->
                         UnifiedConversationDetailScreen(
                             snackbarHostState = snackbarHostState,
@@ -136,6 +147,22 @@ class UnifiedSupportActivity : AppCompatActivity() {
                             isSendingReply = isSendingReply,
                             onBackClick = { viewModel.onBackClick() },
                             onSendReply = { text -> viewModel.sendReply(text) },
+                            onDownloadAttachment = { attachment ->
+                                scope.launch {
+                                    snackbarHostState.showSnackbar(
+                                        message = getString(
+                                            R.string.he_support_downloading_attachment,
+                                            attachment.filename
+                                        ),
+                                        duration = SnackbarDuration.Short
+                                    )
+                                }
+                                fileDownloadManager.downloadFile(attachment.url, attachment.filename)
+                            },
+                            onGetAuthorizationHeaderArgument = { viewModel.getAuthorizationHeader() },
+                            videoDownloadState = videoDownloadState,
+                            onStartVideoDownload = { url -> viewModel.downloadVideoToTempFile(url) },
+                            onResetVideoDownloadState = { viewModel.resetVideoDownloadState() },
                         )
                     }
                 }
