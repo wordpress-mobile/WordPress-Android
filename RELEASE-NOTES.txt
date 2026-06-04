@@ -2,7 +2,7 @@
 
 26.9
 -----
-
+* [*] Reworked editor capability detection to be more reliable and prevent a false "Unable to connect to your site" banner on private Atomic sites.
 
 26.8
 -----
