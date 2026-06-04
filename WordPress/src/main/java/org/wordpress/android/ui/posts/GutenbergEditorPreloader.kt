@@ -11,7 +11,7 @@ import org.wordpress.android.datasets.SiteSettingsProvider
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.modules.BG_THREAD
-import org.wordpress.android.repositories.EditorSettingsRepository
+import org.wordpress.android.repositories.EditorCapabilityDetector
 import org.wordpress.android.ui.accounts.login.SiteApiRestUrlRecoverer
 import org.wordpress.android.util.AppLog
 import org.wordpress.gutenberg.model.EditorDependencies
@@ -63,7 +63,7 @@ class GutenbergEditorPreloader @Inject constructor(
     private val gutenbergKitSettingsBuilder: GutenbergKitSettingsBuilder,
     private val siteSettingsProvider: SiteSettingsProvider,
     private val editorServiceProvider: EditorServiceProvider,
-    private val editorSettingsRepository: EditorSettingsRepository,
+    private val editorCapabilityDetector: EditorCapabilityDetector,
     private val siteApiRestUrlRecoverer: SiteApiRestUrlRecoverer,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) {
@@ -99,8 +99,11 @@ class GutenbergEditorPreloader @Inject constructor(
                     siteApiRestUrlRecoverer.discoverApiRootUrl(site.url)
                         ?.let { site.wpApiRestUrl = it }
                 }
-                editorSettingsRepository
-                    .fetchEditorCapabilitiesForSite(site)
+                // Detect (and persist) editor capabilities via the shared
+                // detector so the preloader and connectivity banner can't
+                // double-probe. We only need the probe to have run before
+                // building config, so the settled state itself is ignored.
+                editorCapabilityDetector.awaitProbe(site)
                 // Preloading produces EditorDependencies, which the editor
                 // consumes alongside its own per-launch EditorConfiguration.
                 // Cookies and network-logging are per-launch concerns the
@@ -146,6 +149,9 @@ class GutenbergEditorPreloader @Inject constructor(
     @MainThread
     fun refreshPreloading(site: SiteModel, scope: CoroutineScope) {
         clearSite(site)
+        // Pull-to-refresh: force a fresh capability probe so the awaitProbe in
+        // preloadIfNeeded re-detects instead of returning the cached result.
+        editorCapabilityDetector.refresh(site)
         preloadIfNeeded(site, scope)
     }
 

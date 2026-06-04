@@ -19,7 +19,7 @@ import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.datasets.SiteSettingsProvider
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
-import org.wordpress.android.repositories.EditorSettingsRepository
+import org.wordpress.android.repositories.EditorCapabilityDetector
 import org.wordpress.android.ui.accounts.login.SiteApiRestUrlRecoverer
 import org.wordpress.gutenberg.model.EditorAssetBundle
 import org.wordpress.gutenberg.model.EditorConfiguration
@@ -49,7 +49,7 @@ class GutenbergEditorPreloaderTest :
     lateinit var editorServiceProvider: EditorServiceProvider
 
     @Mock
-    lateinit var editorSettingsRepository: EditorSettingsRepository
+    lateinit var editorCapabilityDetector: EditorCapabilityDetector
 
     @Mock
     lateinit var siteApiRestUrlRecoverer: SiteApiRestUrlRecoverer
@@ -75,7 +75,7 @@ class GutenbergEditorPreloaderTest :
             gutenbergKitSettingsBuilder = gutenbergKitSettingsBuilder,
             siteSettingsProvider = siteSettingsProvider,
             editorServiceProvider = editorServiceProvider,
-            editorSettingsRepository = editorSettingsRepository,
+            editorCapabilityDetector = editorCapabilityDetector,
             siteApiRestUrlRecoverer = siteApiRestUrlRecoverer,
             bgDispatcher = testDispatcher()
         )
@@ -194,7 +194,7 @@ class GutenbergEditorPreloaderTest :
     }
 
     @Test
-    fun `successful preload fetches editor capabilities`() = test {
+    fun `successful preload detects editor capabilities via the detector`() = test {
         val site = createSite()
         enablePreloading(site)
         stubSuccessfulPreload()
@@ -203,8 +203,7 @@ class GutenbergEditorPreloaderTest :
         preloader.preloadIfNeeded(site, this)
         advanceUntilIdle()
 
-        verify(editorSettingsRepository)
-            .fetchEditorCapabilitiesForSite(site)
+        verify(editorCapabilityDetector).awaitProbe(site)
     }
 
     @Test

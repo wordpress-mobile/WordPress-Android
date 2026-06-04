@@ -19,6 +19,7 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.mockito.kotlin.mock
+import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.SitesModel
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
@@ -30,8 +31,8 @@ import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpApiClientProvider
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.SiteStore.OnApplicationPasswordCreated
 import org.wordpress.android.fluxc.utils.AppLogWrapper
+import org.wordpress.android.repositories.EditorCapabilityDetector
 import org.wordpress.android.ui.accounts.login.ApplicationPasswordLoginHelper
-import org.wordpress.android.ui.accounts.login.CredentialsChangedNotifier
 import org.wordpress.android.ui.accounts.login.SiteApiRestUrlRecoverer
 import org.wordpress.android.ui.mysite.MySiteCardAndItem
 import kotlin.test.assertNotNull
@@ -71,7 +72,10 @@ class ApplicationPasswordViewModelSliceTest : BaseUnitTest() {
     lateinit var siteApiRestUrlRecoverer: SiteApiRestUrlRecoverer
 
     @Mock
-    lateinit var credentialsChangedNotifier: CredentialsChangedNotifier
+    lateinit var dispatcher: Dispatcher
+
+    @Mock
+    lateinit var editorCapabilityDetector: EditorCapabilityDetector
 
     private lateinit var siteTest: SiteModel
 
@@ -92,7 +96,8 @@ class ApplicationPasswordViewModelSliceTest : BaseUnitTest() {
             selfHostedEndpointFinder,
             siteXMLRPCClient,
             siteApiRestUrlRecoverer,
-            credentialsChangedNotifier,
+            dispatcher,
+            editorCapabilityDetector,
             testDispatcher()
         ).apply {
             initialize(testScope())
@@ -177,12 +182,14 @@ class ApplicationPasswordViewModelSliceTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given headless mint succeeds, then notify credentials changed`() = runTest {
+    fun `given headless mint succeeds, then re-probe editor capabilities for the minted site`() = runTest {
         stubMintSuccess()
 
         applicationPasswordViewModelSlice.buildCard(siteTest)
 
-        verify(credentialsChangedNotifier).notifyChanged(TEST_SITE_ID)
+        // The just-minted credentials live on this exact SiteModel instance, so the detector
+        // re-probes against it — no stale-SiteModel re-read, capabilities settle without a refresh.
+        verify(editorCapabilityDetector).refresh(siteTest)
     }
 
     @Test
@@ -243,7 +250,6 @@ class ApplicationPasswordViewModelSliceTest : BaseUnitTest() {
         assertNotNull(applicationPasswordCard)
         verify(siteStore).createApplicationPassword(any())
         verify(applicationPasswordLoginHelper).getAuthorizationUrlComplete(eq(TEST_URL))
-        verify(credentialsChangedNotifier, never()).notifyChanged(any())
     }
 
     @Test
@@ -375,10 +381,8 @@ class ApplicationPasswordViewModelSliceTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given xmlRpc rediscovery and auth check succeed, then persist the discovered xmlRpcUrl`() =
+    fun `given xmlRpc rediscovery and auth check succeed, then update site and dispatch`() =
         runTest {
-            // @Before seeds siteTest.xmlRpcUrl; clear it so the final assertion proves rediscovery set it.
-            siteTest.xmlRpcUrl = null
             val xmlRpcUrl = "https://www.test.com/xmlrpc.php"
             whenever(
                 selfHostedEndpointFinder
@@ -389,17 +393,16 @@ class ApplicationPasswordViewModelSliceTest : BaseUnitTest() {
                     eq(xmlRpcUrl), any(), any()
                 )
             ).thenReturn(SitesModel(listOf(SiteModel())))
-            whenever(siteStore.persistXmlRpcUrl(any(), any())).thenReturn(SiteStore.OnSiteChanged(0))
 
             applicationPasswordViewModelSlice
                 .attemptXmlRpcRediscovery(siteTest)
 
-            verify(siteStore).persistXmlRpcUrl(siteTest.id, xmlRpcUrl)
+            verify(dispatcher).dispatch(any())
             assert(siteTest.xmlRpcUrl == xmlRpcUrl)
         }
 
     @Test
-    fun `given xmlRpc rediscovery succeeds but auth check fails, then do not persist`() =
+    fun `given xmlRpc rediscovery succeeds but auth check fails, then do not dispatch`() =
         runTest {
             siteTest.xmlRpcUrl = null
             val xmlRpcUrl = "https://www.test.com/xmlrpc.php"
@@ -419,12 +422,12 @@ class ApplicationPasswordViewModelSliceTest : BaseUnitTest() {
             applicationPasswordViewModelSlice
                 .attemptXmlRpcRediscovery(siteTest)
 
-            verify(siteStore, never()).persistXmlRpcUrl(any(), any())
+            verify(dispatcher, never()).dispatch(any())
             assert(siteTest.xmlRpcUrl.isNullOrEmpty())
         }
 
     @Test
-    fun `given xmlRpc rediscovery fails, then do not persist`() =
+    fun `given xmlRpc rediscovery fails, then do not dispatch`() =
         runTest {
             siteTest.xmlRpcUrl = null
             whenever(
@@ -439,7 +442,7 @@ class ApplicationPasswordViewModelSliceTest : BaseUnitTest() {
 
             verify(selfHostedEndpointFinder)
                 .verifyOrDiscoverXMLRPCEndpoint(TEST_URL)
-            verify(siteStore, never()).persistXmlRpcUrl(any(), any())
+            verify(dispatcher, never()).dispatch(any())
             assert(siteTest.xmlRpcUrl.isNullOrEmpty())
         }
 }

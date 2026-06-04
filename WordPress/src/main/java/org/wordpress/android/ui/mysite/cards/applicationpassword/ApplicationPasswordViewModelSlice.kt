@@ -9,14 +9,16 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
 import androidx.annotation.VisibleForTesting
+import org.wordpress.android.fluxc.Dispatcher
+import org.wordpress.android.fluxc.generated.SiteActionBuilder
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.discovery.SelfHostedEndpointFinder
 import org.wordpress.android.fluxc.network.xmlrpc.site.SiteXMLRPCClient
 import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpApiClientProvider
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.utils.AppLogWrapper
+import org.wordpress.android.repositories.EditorCapabilityDetector
 import org.wordpress.android.ui.accounts.login.ApplicationPasswordLoginHelper
-import org.wordpress.android.ui.accounts.login.CredentialsChangedNotifier
 import org.wordpress.android.ui.accounts.login.SiteApiRestUrlRecoverer
 import org.wordpress.android.ui.mysite.MySiteCardAndItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickLinksItem.QuickLinkItem
@@ -39,7 +41,8 @@ class ApplicationPasswordViewModelSlice @Inject constructor(
     private val selfHostedEndpointFinder: SelfHostedEndpointFinder,
     private val siteXMLRPCClient: SiteXMLRPCClient,
     private val siteApiRestUrlRecoverer: SiteApiRestUrlRecoverer,
-    private val credentialsChangedNotifier: CredentialsChangedNotifier,
+    private val dispatcher: Dispatcher,
+    private val editorCapabilityDetector: EditorCapabilityDetector,
     @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher,
 ) {
     lateinit var scope: CoroutineScope
@@ -111,7 +114,11 @@ class ApplicationPasswordViewModelSlice @Inject constructor(
             if (!createResult.isError && createResult.credentials != null) {
                 wpApiClientProvider.clearSelfHostedClient(storedSite.id)
                 appLogWrapper.d(AppLog.T.MAIN, "A_P: Headless mint succeeded for ${storedSite.url}")
-                credentialsChangedNotifier.notifyChanged(storedSite.id)
+                // The first-login capability probe can lose the race to this async mint. storedSite
+                // was just mutated in place with the new credentials (SiteStore
+                // .persistApplicationPasswordCredentials), so re-probe against this exact instance —
+                // no stale-SiteModel re-read, and capabilities settle without a manual pull-to-refresh.
+                editorCapabilityDetector.refresh(storedSite)
                 // The mint goes through the Jetpack tunnel and never runs discovery — without this
                 // step, freshly minted Atomic sites end up with working creds but a NULL
                 // wpApiRestUrl in the local DB. Run in the background so the card hides immediately.
@@ -254,10 +261,9 @@ class ApplicationPasswordViewModelSlice @Inject constructor(
                 }
 
                 site.xmlRpcUrl = xmlRpcEndpoint
-                // Persist only the rediscovered column — mirrors healApiRestUrlIfMissing. A full-row
-                // updateSite would rewrite ~80 columns from this in-memory model for a one-field change
-                // (risking clobbering other out-of-band values), so write just xmlRpcUrl.
-                siteStore.persistXmlRpcUrl(site.id, xmlRpcEndpoint)
+                dispatcher.dispatch(
+                    SiteActionBuilder.newUpdateSiteAction(site)
+                )
                 buildCard(site)
             } catch (
                 @Suppress("SwallowedException")
