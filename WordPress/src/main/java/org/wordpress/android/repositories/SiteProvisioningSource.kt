@@ -140,7 +140,7 @@ class SiteProvisioningSource @Inject constructor(
 
     private suspend fun runPipeline(siteLocalId: Int): SiteReadiness =
         when (val auth = ensureAuth(siteLocalId)) {
-            SiteAuthState.Provisioned -> coroutineScope {
+            SiteAuthState.Provisioned, SiteAuthState.NotApplicable -> coroutineScope {
                 // Post-auth, the REST-capability chain and the XML-RPC recovery are independent —
                 // each reads the site fresh and writes only its own column — so run them in
                 // parallel. recoverRestUrlIfNeeded precedes detectCapabilities within its branch because
@@ -165,6 +165,10 @@ class SiteProvisioningSource @Inject constructor(
     private suspend fun ensureAuth(siteLocalId: Int): SiteAuthState {
         val site = siteStore.getSiteByLocalId(siteLocalId)
             ?: return SiteAuthState.Unprovisionable(hadCredentials = false)
+        // WP.com Simple sites are fully proxied and OAuth-bearer-authed — no application password
+        // applies (the mint returns NotSupported). Capability detection works through the proxy, so
+        // treat them as ready instead of blocking detection behind a mint that can never run.
+        if (site.isWPComSimpleSite) return SiteAuthState.NotApplicable
         val hadCredentials = !applicationPasswordLoginHelper.siteHasBadCredentials(site)
         if (hadCredentials) {
             when (applicationPasswordValidator.validate(site)) {
@@ -201,7 +205,9 @@ class SiteProvisioningSource @Inject constructor(
      */
     private suspend fun recoverRestUrlIfNeeded(siteLocalId: Int) {
         val site = siteStore.getSiteByLocalId(siteLocalId) ?: return
-        if (!site.wpApiRestUrl.isNullOrEmpty()) return
+        // WP.com Simple sites are proxy-served — no direct REST host to recover (their wpApiRestUrl
+        // is legitimately null), so don't burn a discovery call on them.
+        if (site.isWPComSimpleSite || !site.wpApiRestUrl.isNullOrEmpty()) return
         siteApiRestUrlRecoverer.discoverApiRootUrl(site.url)?.let { apiRootUrl ->
             siteApiRestUrlRecoverer.persistApiRootUrl(siteLocalId, apiRootUrl)
         }
@@ -246,6 +252,10 @@ class SiteProvisioningSource @Inject constructor(
 sealed interface SiteAuthState {
     /** Credentials are usable (validated, or freshly minted). */
     data object Provisioned : SiteAuthState
+
+    /** No application password applies — a WP.com Simple site, which is proxy-served and
+     *  OAuth-bearer-authed. Treated like [Provisioned]: capability detection runs via the proxy. */
+    data object NotApplicable : SiteAuthState
 
     /** Not usable yet, but not a terminal failure — a mint is implied / a transient
      *  validation error occurred. The card stays hidden; the next run retries. */

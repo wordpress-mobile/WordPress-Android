@@ -157,6 +157,23 @@ class SiteProvisioningSourceTest : BaseUnitTest(StandardTestDispatcher()) {
         assertThat(result).isEqualTo(SiteReadiness.NeedsAuth(SiteAuthState.Unprovisionable(hadCredentials = false)))
     }
 
+    @Test
+    fun `given a WPCom Simple site, then it detects capabilities without minting`() = test {
+        val simple = SiteModel().apply {
+            id = TEST_SITE_LOCAL_ID
+            url = "https://simple.wordpress.com"
+            setIsWPCom(true) // isWPComSimpleSite = isWPCom && !isWPComAtomic
+            wpApiRestUrl = "https://simple.wordpress.com/wp-json"
+        }
+        whenever(siteStore.getSiteByLocalId(TEST_SITE_LOCAL_ID)).thenReturn(simple)
+        stubCapabilityProbe(ok = true)
+
+        assertThat(source.await(simple)).isEqualTo(SiteReadiness.Ready)
+        // No application password applies — it must not validate or mint, just probe via the proxy.
+        verify(applicationPasswordValidator, never()).validate(any())
+        verify(siteStore, never()).createApplicationPassword(any())
+    }
+
     // endregion
 
     // region recovery + capability stages
