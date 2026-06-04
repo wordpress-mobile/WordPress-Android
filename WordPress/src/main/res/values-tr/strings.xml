@@ -155,8 +155,6 @@ Language: tr
     <string name="post_rs_confirm_delete_message">Bu işlem bu gönderiyi kalıcı olarak silecektir. Bu işlem geri alınamaz.</string>
     <string name="post_rs_confirm_trash_message">Bu gönderiyi çöpe atmak istediğinizden emin misiniz?</string>
     <string name="post_rs_failed_to_load">Gönderi yüklenemedi</string>
-    <string name="experimental_rs_post_list_description">WordPress.com ve kullanıcı tarafından barındırılan siteler için uygulama şifreleri ile daha modern bir kullanıcı arayüzünde gönderi listesini göster</string>
-    <string name="experimental_rs_post_list">Yeni Gönderi Listesi</string>
     <string name="beta_label">Beta</string>
     <string name="stats_error_admin_url_unavailable">Bu site için WP Yöneticisi açılamıyor</string>
     <string name="stats_error_parsing">Veri yüklenirken bir sorun oluştu. Lütfen tekrar deneyin</string>

@@ -243,8 +243,6 @@ Language: nl
     <string name="post_rs_confirm_delete_message">Dit zal permanent dit bericht verwijderen. Deze actie kan niet ongedaan worden gemaakt.</string>
     <string name="post_rs_confirm_trash_message">Weet je zeker dat je dit bericht naar de prullenbak wil verplaatsen?</string>
     <string name="post_rs_failed_to_load">Bericht laden is mislukt</string>
-    <string name="experimental_rs_post_list_description">Berichten weergeven in een modernere UI voor WordPress.com en zelf gehoste sites met toepassing wachtwoorden</string>
-    <string name="experimental_rs_post_list">Lijst met nieuwe berichten</string>
     <string name="beta_label">Bèta</string>
     <string name="stats_error_admin_url_unavailable">Kan WP Admin voor deze site niet openen</string>
     <string name="stats_error_parsing">Er is een probleem opgetreden bij het laden van de gegevens. Probeer het opnieuw</string>

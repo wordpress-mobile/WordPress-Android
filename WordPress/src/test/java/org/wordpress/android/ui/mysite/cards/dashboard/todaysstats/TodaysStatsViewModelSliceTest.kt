@@ -68,7 +68,7 @@ class TodaysStatsViewModelSliceTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given todays stat card, when card item is clicked, then stats page is opened`() =
+    fun `given today's stat card, when card item is clicked, then stats page is opened`() =
         test {
             val params = todaysStatsViewModelSlice.getTodaysStatsBuilderParams(mock())
 
@@ -82,7 +82,7 @@ class TodaysStatsViewModelSliceTest : BaseUnitTest() {
         }
 
     @Test
-    fun `given todays stat card, when get more views url is clicked, then external link is opened`() =
+    fun `given today's stat card, when get more views url is clicked, then external link is opened`() =
         test {
             val params = todaysStatsViewModelSlice.getTodaysStatsBuilderParams(mock())
 
@@ -102,7 +102,7 @@ class TodaysStatsViewModelSliceTest : BaseUnitTest() {
 
 
     @Test
-    fun `given todays stats card, when more menu is accessed, then event is tracked`() = test {
+    fun `given today's stats card, when more menu is accessed, then event is tracked`() = test {
         val params = todaysStatsViewModelSlice.getTodaysStatsBuilderParams(mock())
 
         params.moreMenuClickParams.onMoreMenuClick.invoke()
@@ -111,7 +111,7 @@ class TodaysStatsViewModelSliceTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given todays stats card, when more menu item view stats is accessed, then event is tracked`() = test {
+    fun `given today's stats card, when more menu item view stats is accessed, then event is tracked`() = test {
         val params = todaysStatsViewModelSlice.getTodaysStatsBuilderParams(mock())
 
         params.moreMenuClickParams.onViewStatsMenuItemClick.invoke()
@@ -125,7 +125,7 @@ class TodaysStatsViewModelSliceTest : BaseUnitTest() {
 
 
     @Test
-    fun `given todays stats card, when more menu item hide this is accessed, then event is tracked`() = test {
+    fun `given today's stats card, when more menu item hide this is accessed, then event is tracked`() = test {
         val siteId = 1L
         whenever(selectedSiteRepository.getSelectedSite()?.siteId).thenReturn(siteId)
 

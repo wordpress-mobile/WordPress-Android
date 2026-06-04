@@ -154,8 +154,6 @@ Language: zh_CN
     <string name="post_rs_confirm_delete_message">这将永久删除此文章。 此操作无法撤销。</string>
     <string name="post_rs_confirm_trash_message">是否确定要将此文章移至回收站？</string>
     <string name="post_rs_failed_to_load">加载文章失败</string>
-    <string name="experimental_rs_post_list_description">为 WordPress.com 和使用应用程序密码的自托管站点提供更现代化的 UI 来显示文章列表</string>
-    <string name="experimental_rs_post_list">新文章列表</string>
     <string name="beta_label">测试版</string>
     <string name="stats_error_admin_url_unavailable">无法为此站点打开 WP Admin</string>
     <string name="stats_error_parsing">加载数据时出现问题。 请重试</string>

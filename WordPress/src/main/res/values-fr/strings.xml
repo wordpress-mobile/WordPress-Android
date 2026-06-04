@@ -147,8 +147,6 @@ Language: fr
     <string name="post_rs_confirm_delete_message">Cet article sera définitivement supprimé. Cette action est irréversible.</string>
     <string name="post_rs_confirm_trash_message">Voulez-vous vraiment déplacer cet article vers la corbeille ?</string>
     <string name="post_rs_failed_to_load">Échec du chargement de l’article</string>
-    <string name="experimental_rs_post_list_description">Afficher la liste des articles dans une interface utilisateur plus moderne pour WordPress.com et les sites auto-hébergés avec des mots de passe d’application</string>
-    <string name="experimental_rs_post_list">Nouvelle liste d’articles</string>
     <string name="beta_label">Bêta</string>
     <string name="stats_error_admin_url_unavailable">Impossible d’ouvrir WP Admin pour ce site</string>
     <string name="stats_error_parsing">Un problème est survenu lors du chargement des données. Veuillez réessayer.</string>
