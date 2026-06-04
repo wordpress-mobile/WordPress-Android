@@ -143,10 +143,10 @@ class SiteProvisioningSource @Inject constructor(
             SiteAuthState.Provisioned -> coroutineScope {
                 // Post-auth, the REST-capability chain and the XML-RPC recovery are independent —
                 // each reads the site fresh and writes only its own column — so run them in
-                // parallel. recoverRestUrl precedes detectCapabilities within its branch because
+                // parallel. recoverRestUrlIfNeeded precedes detectCapabilities within its branch because
                 // the probe needs the recovered REST root.
-                val capabilities = async { recoverRestUrl(siteLocalId); detectCapabilities(siteLocalId) }
-                val xmlRpc = async { recoverXmlRpc(siteLocalId) }
+                val capabilities = async { recoverRestUrlIfNeeded(siteLocalId); detectCapabilities(siteLocalId) }
+                val xmlRpc = async { recoverXmlRpcIfNeeded(siteLocalId) }
                 xmlRpc.await()
                 capabilities.await()
             }
@@ -199,7 +199,7 @@ class SiteProvisioningSource @Inject constructor(
      * Jetpack tunnel (which never runs discovery and leaves `wpApiRestUrl` null).
      * Persists the one column; the capability probe re-reads it.
      */
-    private suspend fun recoverRestUrl(siteLocalId: Int) {
+    private suspend fun recoverRestUrlIfNeeded(siteLocalId: Int) {
         val site = siteStore.getSiteByLocalId(siteLocalId) ?: return
         if (!site.wpApiRestUrl.isNullOrEmpty()) return
         siteApiRestUrlRecoverer.discoverApiRootUrl(site.url)?.let { apiRootUrl ->
@@ -212,7 +212,7 @@ class SiteProvisioningSource @Inject constructor(
      * sites that don't have one. Discovers + authenticates against it, and on
      * success persists the one column; the application-password card re-reads it.
      */
-    private suspend fun recoverXmlRpc(siteLocalId: Int) {
+    private suspend fun recoverXmlRpcIfNeeded(siteLocalId: Int) {
         val site = siteStore.getSiteByLocalId(siteLocalId) ?: return
         // WP.com / Atomic / Jetpack-WPCom-REST sites talk REST end-to-end and don't use XML-RPC.
         if (site.isUsingWpComRestApi || !site.xmlRpcUrl.isNullOrEmpty()) return
