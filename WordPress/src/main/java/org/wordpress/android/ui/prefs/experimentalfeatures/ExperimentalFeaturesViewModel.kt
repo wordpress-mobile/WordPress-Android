@@ -39,11 +39,11 @@ internal class ExperimentalFeaturesViewModel @Inject constructor(
     }
 
     private fun shouldShowFeature(feature: Feature): Boolean {
-        // Only show Post Types feature in debug builds
-        return if (feature == Feature.EXPERIMENTAL_POST_TYPES) {
-            BuildConfig.DEBUG
-        } else {
-            true
+        // These features are only shown in debug builds
+        return when (feature) {
+            Feature.EXPERIMENTAL_POST_TYPES,
+            Feature.RS_PAGES_LIST -> BuildConfig.DEBUG
+            else -> true
         }
     }
 
