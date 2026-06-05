@@ -221,9 +221,18 @@ class SiteSqlUtils
             AppLog.d(DB, "Updating site: " + finalSiteModel.url)
             val oldId = siteResult[0].id
             try {
-                // WP_API_REST_URL and the application-password credential columns are written out of band by
-                // dedicated single-column writers (updateWpApiRestUrl / updateApplicationPasswordCredentials),
-                // so they're excluded from the generic mapper to keep stale full-row writes from clobbering them.
+                // WP_API_REST_URL and the application-password credential columns are discovered/healed out
+                // of band — never carried by the general site-sync responses — so they're excluded from the
+                // generic mapper and written only by their dedicated writers (updateWpApiRestUrl /
+                // updateApplicationPasswordCredentials); a stale full-row write must not clobber them.
+                //
+                // XMLRPC_URL is different: the WP.com REST sync reliably carries it (meta.links.xmlrpc), so
+                // the generic write persists it — that's how a changed endpoint (e.g. a domain migration)
+                // lands. But partial writers that don't carry it (the WPAPI fetch builds a model with a null
+                // xmlRpcUrl) must not clear a stored/rediscovered value, so preserve it on absence.
+                if (finalSiteModel.xmlRpcUrl.isNullOrEmpty()) {
+                    finalSiteModel.xmlRpcUrl = siteResult[0].xmlRpcUrl
+                }
                 WellSql.update(SiteModel::class.java).whereId(oldId)
                         .put(
                                 finalSiteModel,
@@ -294,6 +303,23 @@ class SiteSqlUtils
      * generic update path no longer touches the column.
      */
     fun clearWpApiRestUrl(localId: Int): Int = updateWpApiRestUrl(localId, "")
+
+    /**
+     * Targeted writer for [SiteModel.xmlRpcUrl], used by the XML-RPC rediscovery heal to persist just that
+     * one column without a full-row write of an in-memory model. Unlike [updateWpApiRestUrl], XMLRPC_URL is
+     * NOT excluded from the generic mapper — the WP.com sync reliably carries it — but the generic update
+     * path preserves it on absence, so a partial write can't clobber a rediscovered value. (The recovery flow
+     * that calls this lands separately.)
+     */
+    fun updateXmlRpcUrl(localId: Int, xmlRpcUrl: String): Int {
+        return WellSql.update(SiteModel::class.java)
+                .whereId(localId)
+                .put(xmlRpcUrl, { value ->
+                    val cv = ContentValues()
+                    cv.put(SiteModelTable.XMLRPC_URL, value)
+                    cv
+                }).execute()
+    }
 
     /**
      * Targeted writer for the application-password credential columns: the encrypted username and password

@@ -191,6 +191,82 @@ class SiteSqlUtilsTest {
         assertThat(stored.apiRestPasswordIV).isEmpty()
     }
 
+    @Test
+    fun `updateXmlRpcUrl writes the column and leaves other fields alone`() {
+        WellSql.insert(SiteModel().apply {
+            siteId = 42
+            url = "https://example.test"
+            name = "Example"
+            xmlRpcUrl = null
+        }).execute()
+        val localId = siteSqlUtils.getSites().single().id
+
+        val rowsUpdated = siteSqlUtils.updateXmlRpcUrl(localId, "https://example.test/xmlrpc.php")
+
+        assertThat(rowsUpdated).isEqualTo(1)
+        val stored = siteSqlUtils.getSites().single()
+        assertThat(stored.xmlRpcUrl).isEqualTo("https://example.test/xmlrpc.php")
+        assertThat(stored.url).isEqualTo("https://example.test")
+        assertThat(stored.name).isEqualTo("Example")
+    }
+
+    @Test
+    fun `updateXmlRpcUrl returns 0 when no site row matches the local id`() {
+        val rowsUpdated = siteSqlUtils.updateXmlRpcUrl(localId = 999, xmlRpcUrl = "https://example.test/xmlrpc.php")
+
+        assertThat(rowsUpdated).isEqualTo(0)
+    }
+
+    @Test
+    fun `insertOrUpdateSite update does not clobber xmlRpcUrl from a stale model`() {
+        // Absence is preserved: a partial writer that doesn't carry xmlRpcUrl (e.g. the WPAPI fetch) must
+        // not clear a stored/rediscovered value, even though XMLRPC_URL is not excluded from the mapper.
+        val xmlRpc = "https://example.test/xmlrpc.php"
+        WellSql.insert(SiteModel().apply {
+            siteId = 42
+            url = "https://example.test"
+            name = "Example"
+            xmlRpcUrl = xmlRpc
+        }).execute()
+        val localId = siteSqlUtils.getSites().single().id
+
+        val stale = SiteModel().apply {
+            id = localId
+            siteId = 42
+            url = "https://example.test"
+            name = "Updated name"
+            xmlRpcUrl = null
+        }
+        siteSqlUtils.insertOrUpdateSite(stale)
+
+        val stored = siteSqlUtils.getSites().single()
+        assertThat(stored.xmlRpcUrl).isEqualTo(xmlRpc) // preserved
+        assertThat(stored.name).isEqualTo("Updated name") // other columns still update
+    }
+
+    @Test
+    fun `insertOrUpdateSite update persists a changed xmlRpcUrl carried by the inbound model`() {
+        // Presence is authoritative: the WP.com sync reliably carries meta.links.xmlrpc, so a non-empty
+        // inbound value (e.g. a domain migration) must overwrite the stored one — only absence is preserved.
+        WellSql.insert(SiteModel().apply {
+            siteId = 42
+            url = "https://example.test"
+            xmlRpcUrl = "https://example.test/xmlrpc.php"
+        }).execute()
+        val localId = siteSqlUtils.getSites().single().id
+
+        val migrated = SiteModel().apply {
+            id = localId
+            siteId = 42
+            url = "https://example.test"
+            xmlRpcUrl = "https://migrated.test/xmlrpc.php"
+        }
+        siteSqlUtils.insertOrUpdateSite(migrated)
+
+        assertThat(siteSqlUtils.getSites().single().xmlRpcUrl)
+                .isEqualTo("https://migrated.test/xmlrpc.php")
+    }
+
     // Raw read that bypasses SiteSqlUtils' decryptAPIRestCredentials, so tests can assert on the stored
     // ciphertext columns directly without invoking the AndroidKeyStore-backed EncryptionUtils.
     private fun storedSite(): SiteModel = WellSql.select(SiteModel::class.java).asModel.single()
