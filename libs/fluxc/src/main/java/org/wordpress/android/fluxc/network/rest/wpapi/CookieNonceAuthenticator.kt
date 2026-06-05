@@ -74,9 +74,9 @@ class CookieNonceAuthenticator @Inject constructor(
 
         return if (response is WPAPIResponse.Error<*> &&
             response.error.volleyError?.networkResponse?.statusCode == STATUS_CODE_NOT_FOUND) {
-            // call failed with 'not found' so clear the (failing) rest url
+            // Reset the in-memory rest url so the retry rediscovers it. The stored value is left intact
+            // (a 404 may be transient); WP_API_REST_URL is healed only via updateWpApiRestUrl.
             site.wpApiRestUrl = null
-            (siteSqlUtils::insertOrUpdateSite)(site)
 
             if (usingSavedRestUrl) {
                 // If we did the previous call with a saved rest url, try again by making

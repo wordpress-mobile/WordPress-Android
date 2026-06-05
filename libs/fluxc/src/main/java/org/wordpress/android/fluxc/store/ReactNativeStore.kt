@@ -15,7 +15,6 @@ import org.wordpress.android.fluxc.network.rest.wpapi.NonceRestClient
 import org.wordpress.android.fluxc.network.rest.wpapi.reactnative.ReactNativeWPAPIRestClient
 import org.wordpress.android.fluxc.network.rest.wpcom.reactnative.ReactNativeWPComRestClient
 import org.wordpress.android.fluxc.persistence.SiteSqlUtils
-import org.wordpress.android.fluxc.persistence.SiteSqlUtils.DuplicateSiteException
 import org.wordpress.android.fluxc.store.ReactNativeFetchResponse.Error
 import org.wordpress.android.fluxc.store.ReactNativeFetchResponse.Success
 import org.wordpress.android.fluxc.tools.CoroutineEngine
@@ -40,7 +39,6 @@ class ReactNativeStore @VisibleForTesting constructor(
     private val siteSqlUtils: SiteSqlUtils,
     private val coroutineEngine: CoroutineEngine,
     private val currentTimeMillis: () -> Long = System::currentTimeMillis,
-    private val sitePersistanceFunction: (site: SiteModel) -> Int = siteSqlUtils::insertOrUpdateSite,
     private val uriParser: (string: String) -> Uri = Uri::parse
 ) {
     @Inject constructor(
@@ -58,7 +56,6 @@ class ReactNativeStore @VisibleForTesting constructor(
             siteSqlUtils,
             coroutineEngine,
             System::currentTimeMillis,
-            siteSqlUtils::insertOrUpdateSite,
             Uri::parse
     )
 
@@ -233,9 +230,9 @@ class ReactNativeStore @VisibleForTesting constructor(
                 }
 
                 HttpURLConnection.HTTP_NOT_FOUND -> {
-                    // call failed with 'not found' so clear the (failing) rest url
+                    // Reset the in-memory rest url so the retry rediscovers it. The stored value is left
+                    // intact (a 404 may be transient); WP_API_REST_URL is healed only via updateWpApiRestUrl.
                     site.wpApiRestUrl = null
-                    persistSiteSafely(site)
 
                     if (usingSavedRestUrl) {
                         // If we did the previous call with a saved rest url, try again by making
@@ -289,8 +286,8 @@ class ReactNativeStore @VisibleForTesting constructor(
             is Success -> response
             is Error -> when (response.statusCode()) {
                 HttpURLConnection.HTTP_NOT_FOUND -> {
+                    // Reset the in-memory rest url so the retry rediscovers it (see executeWPAPIRequest).
                     site.wpApiRestUrl = null
-                    persistSiteSafely(site)
 
                     if (usingSavedRestUrl) {
                         executeWPAPIRequest(
@@ -352,16 +349,6 @@ class ReactNativeStore @VisibleForTesting constructor(
             }
         }.toMap()
         return Pair(uri.path, paramMap)
-    }
-
-    private fun persistSiteSafely(site: SiteModel) {
-        try {
-            sitePersistanceFunction.invoke(site)
-        } catch (e: DuplicateSiteException) {
-            // persistance failed, which is not a big deal because it just means we may need to re-discover the
-            // rest url later.
-            AppLog.d(AppLog.T.DB, "Error when persisting site: $e")
-        }
     }
 
     private fun getNonce(site: SiteModel) = nonceRestClient.getNonce(site)

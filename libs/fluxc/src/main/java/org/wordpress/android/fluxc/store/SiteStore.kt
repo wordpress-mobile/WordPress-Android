@@ -1668,21 +1668,13 @@ open class SiteStore @Inject constructor(
             OnSiteChanged(SiteErrorUtils.genericToSiteError(siteModel.error))
         } else {
             try {
-                // The REST API doesn't return info about the editor(s) nor the Application Password.
-                // Make sure to copy current values available on the DB.
-                // Otherwise the apps will receive an update site without editor prefs set.
-                // The apps will dispatch the action to update editor(s) when necessary.
+                // The REST API doesn't return editor prefs, so copy the current values from the DB to avoid
+                // emitting an updated site without them. (Credentials and wpApiRestUrl are protected by the
+                // mapper exclusion in SiteSqlUtils, so they don't need copying here.)
                 val freshSiteFromDB = getSiteByLocalId(siteModel.id)
                 if (freshSiteFromDB != null) {
                     siteModel.mobileEditor = freshSiteFromDB.mobileEditor
                     siteModel.webEditor = freshSiteFromDB.webEditor
-                    if (!freshSiteFromDB.apiRestUsernameEncrypted.isNullOrEmpty()) {
-                        siteModel.apiRestUsernameEncrypted = freshSiteFromDB.apiRestUsernameEncrypted
-                        siteModel.apiRestPasswordEncrypted = freshSiteFromDB.apiRestPasswordEncrypted
-                        siteModel.apiRestUsernameIV = freshSiteFromDB.apiRestUsernameIV
-                        siteModel.apiRestPasswordIV = freshSiteFromDB.apiRestPasswordIV
-                        siteModel.wpApiRestUrl = freshSiteFromDB.wpApiRestUrl
-                    }
                 }
                 OnSiteChanged(siteSqlUtils.insertOrUpdateSite(siteModel))
             } catch (e: DuplicateSiteException) {
@@ -1820,21 +1812,13 @@ open class SiteStore @Inject constructor(
         val updatedSites = mutableListOf<SiteModel>()
         for (site in sites.sites) {
             try {
-                // The REST API doesn't return info about the editor(s) nor the Application Password.
-                // Make sure to copy current values available on the DB.
-                // Otherwise the apps will receive an update site without editor prefs set.
-                // The apps will dispatch the action to update editor(s) when necessary.
+                // The REST API doesn't return editor prefs, so copy the current values from the DB to avoid
+                // emitting an updated site without them. (Credentials and wpApiRestUrl are protected by the
+                // mapper exclusion in SiteSqlUtils, so they don't need copying here.)
                 val siteFromDB = getSiteBySiteId(site.siteId)
                 if (siteFromDB != null) {
                     site.mobileEditor = siteFromDB.mobileEditor
                     site.webEditor = siteFromDB.webEditor
-                    if (!siteFromDB.apiRestUsernameEncrypted.isNullOrEmpty()) {
-                        site.apiRestUsernameEncrypted = siteFromDB.apiRestUsernameEncrypted
-                        site.apiRestPasswordEncrypted = siteFromDB.apiRestPasswordEncrypted
-                        site.apiRestUsernameIV = siteFromDB.apiRestUsernameIV
-                        site.apiRestPasswordIV = siteFromDB.apiRestPasswordIV
-                        site.wpApiRestUrl = siteFromDB.wpApiRestUrl
-                    }
                 }
                 val localId = siteSqlUtils.insertOrUpdateSiteReturningId(site)
                 if (localId != 0) {
