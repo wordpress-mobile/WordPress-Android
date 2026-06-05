@@ -225,8 +225,8 @@ internal class PagesRsListViewModel @Inject constructor(
      */
     @MainThread
     fun openPage(remotePageId: Long, tab: PageRsListTab) {
-        val site = _site ?: return
-        if (_isOpeningPage.value || tab == PageRsListTab.TRASHED) return
+        val site = _site
+        if (site == null || _isOpeningPage.value || tab == PageRsListTab.TRASHED) return
         if (!checkNetwork()) return
 
         _isOpeningPage.value = true
