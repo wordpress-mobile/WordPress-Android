@@ -15,7 +15,6 @@ import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.mediapicker.MediaItem.Identifier
-import org.wordpress.android.ui.mediapicker.MediaItem.Identifier.GifMediaIdentifier
 import org.wordpress.android.ui.mediapicker.MediaItem.Identifier.LocalUri
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.ChooserContext
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerAction.OpenCameraForPhotos
@@ -135,21 +134,6 @@ class EditorPhotoPickerTest {
     }
 
     @Test
-    fun `onItemsChosen adds GifMediaIdentifier items to editor`() {
-        // Arrange
-        val uri = mock<Uri>()
-        val uriWrapper = UriWrapper(uri)
-        val gifIdentifier = GifMediaIdentifier(uriWrapper, "title")
-        val identifiers = listOf<Identifier>(gifIdentifier)
-
-        // Act
-        editorPhotoPicker.onItemsChosen(identifiers)
-
-        // Assert
-        verify(editorMedia).addNewMediaItemsToEditorAsync(eq(listOf(uri)), eq(false))
-    }
-
-    @Test
     fun `onItemsChosen does not add media when list is empty`() {
         // Arrange
         val identifiers = emptyList<Identifier>()
@@ -178,17 +162,15 @@ class EditorPhotoPickerTest {
     fun `onItemsChosen handles mixed identifier types`() {
         // Arrange
         val uri1 = mock<Uri>()
-        val uri2 = mock<Uri>()
         val localUri = LocalUri(UriWrapper(uri1))
-        val gifIdentifier = GifMediaIdentifier(UriWrapper(uri2), "title")
         val remoteId = Identifier.RemoteId(123L)
-        val identifiers = listOf(localUri, gifIdentifier, remoteId)
+        val identifiers = listOf(localUri, remoteId)
 
         // Act
         editorPhotoPicker.onItemsChosen(identifiers)
 
         // Assert
-        verify(editorMedia).addNewMediaItemsToEditorAsync(eq(listOf(uri1, uri2)), eq(false))
+        verify(editorMedia).addNewMediaItemsToEditorAsync(eq(listOf(uri1)), eq(false))
     }
 
     // endregion
@@ -290,32 +272,6 @@ class EditorPhotoPickerTest {
 
         // Assert
         verify(mediaPickerLauncher).showStockMediaPickerForResult(any(), any(), any(), eq(true))
-    }
-
-    @Test
-    fun `onIconClicked with SwitchMediaPicker to GIF_LIBRARY launches GIF picker`() {
-        // Arrange
-        val setup = MediaPickerSetup(
-            primaryDataSource = DataSource.GIF_LIBRARY,
-            availableDataSources = emptySet(),
-            canMultiselect = false,
-            requiresPhotosVideosPermissions = false,
-            requiresMusicAudioPermissions = false,
-            allowedTypes = emptySet(),
-            cameraSetup = MediaPickerSetup.CameraSetup.HIDDEN,
-            systemPickerEnabled = false,
-            editingEnabled = false,
-            queueResults = false,
-            defaultSearchView = false,
-            title = 0
-        )
-        val action = SwitchMediaPicker(setup)
-
-        // Act
-        editorPhotoPicker.onIconClicked(action)
-
-        // Assert
-        verify(mediaPickerLauncher).showGifPickerForResult(any(), any(), eq(false))
     }
 
     // endregion

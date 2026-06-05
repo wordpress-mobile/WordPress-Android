@@ -118,17 +118,6 @@ class EditorMedia @Inject constructor(
         }
     }
 
-    /**
-     * This won't create a MediaModel. It assumes the model was already created.
-     */
-    fun addGifMediaToPostAsync(localMediaIds: IntArray) {
-        launch {
-            addLocalMediaToPostUseCase.addLocalMediaToEditorAsync(
-                localMediaIds.toList(),
-                editorMediaListener
-            )
-        }
-    }
     // endregion
 
     // region Add existing media to a post

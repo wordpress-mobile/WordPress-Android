@@ -14,7 +14,6 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
-import org.mockito.kotlin.any
 import org.mockito.kotlin.atLeastOnce
 import org.mockito.kotlin.never
 import org.mockito.kotlin.times
@@ -40,9 +39,9 @@ import org.wordpress.android.ui.mysite.cards.applicationpassword.ApplicationPass
 import org.wordpress.android.ui.mysite.cards.siteinfo.SiteInfoHeaderCardViewModelSlice
 import org.wordpress.android.ui.mysite.items.DashboardItemsViewModelSlice
 import org.wordpress.android.ui.mysite.items.listitem.SiteCapabilityChecker
-import org.wordpress.android.repositories.EditorSettingsRepository
+import org.wordpress.android.ui.mysite.cards.connectivity.SiteConnectivityBannerViewModelSlice
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
-import org.wordpress.android.ui.posts.GutenbergKitWarmupHelper
+import org.wordpress.android.ui.posts.GutenbergEditorPreloader
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationSource
 import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
@@ -100,13 +99,17 @@ class MySiteViewModelTest : BaseUnitTest() {
     lateinit var applicationPasswordViewModelSlice: ApplicationPasswordViewModelSlice
 
     @Mock
-    lateinit var gutenbergKitWarmupHelper: GutenbergKitWarmupHelper
-
-    @Mock
     lateinit var siteCapabilityChecker: SiteCapabilityChecker
 
     @Mock
-    lateinit var editorSettingsRepository: EditorSettingsRepository
+    lateinit var gutenbergEditorPreloader: GutenbergEditorPreloader
+
+    @Mock
+    lateinit var siteConnectivityBannerViewModelSlice: SiteConnectivityBannerViewModelSlice
+
+    @Mock
+    lateinit var gutenbergKitAnnouncementController:
+            org.wordpress.android.ui.posts.GutenbergKitAnnouncementController
 
     private lateinit var viewModel: MySiteViewModel
     private lateinit var uiModels: MutableList<MySiteViewModel.State>
@@ -143,7 +146,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         whenever(dashboardCardsViewModelSlice.uiModel).thenReturn(MutableLiveData())
         whenever(dashboardItemsViewModelSlice.uiModel).thenReturn(MutableLiveData())
         whenever(applicationPasswordViewModelSlice.uiModel).thenReturn(MutableLiveData())
-        whenever(editorSettingsRepository.fetchEditorCapabilitiesForSite(any())).thenReturn(true)
+        whenever(siteConnectivityBannerViewModelSlice.uiModel).thenReturn(MutableLiveData())
 
         viewModel = MySiteViewModel(
             testDispatcher(),
@@ -162,9 +165,10 @@ class MySiteViewModelTest : BaseUnitTest() {
             dashboardCardsViewModelSlice,
             dashboardItemsViewModelSlice,
             applicationPasswordViewModelSlice,
-            gutenbergKitWarmupHelper,
             siteCapabilityChecker,
-            editorSettingsRepository,
+            gutenbergEditorPreloader,
+            siteConnectivityBannerViewModelSlice,
+            gutenbergKitAnnouncementController,
         )
         uiModels = mutableListOf()
         snackbars = mutableListOf()
@@ -362,91 +366,6 @@ class MySiteViewModelTest : BaseUnitTest() {
         verify(dashboardCardsViewModelSlice).clearValue()
     }
 
-    @Test
-    fun `given selected site, when onResume invoked twice, then editor capabilities are fetched once`() = test {
-        initSelectedSite()
-
-        viewModel.onResume()
-        advanceUntilIdle()
-        viewModel.onResume()
-        advanceUntilIdle()
-
-        verify(editorSettingsRepository, times(1)).fetchEditorCapabilitiesForSite(siteTest)
-    }
-
-    @Test
-    fun `given selected site, when onResume then non-PTR refresh, then editor capabilities are fetched once`() =
-        test {
-            initSelectedSite()
-
-            viewModel.onResume()
-            advanceUntilIdle()
-            viewModel.refresh(isPullToRefresh = false)
-            advanceUntilIdle()
-
-            verify(editorSettingsRepository, times(1)).fetchEditorCapabilitiesForSite(siteTest)
-        }
-
-    @Test
-    fun `given selected site, when onResume then PTR refresh, then editor capabilities are fetched twice`() = test {
-        initSelectedSite()
-
-        viewModel.onResume()
-        advanceUntilIdle()
-        viewModel.refresh(isPullToRefresh = true)
-        advanceUntilIdle()
-
-        verify(editorSettingsRepository, times(2)).fetchEditorCapabilitiesForSite(siteTest)
-    }
-
-    @Test
-    fun `given PTR refresh, when onResume invoked after, then editor capabilities are not re-fetched`() = test {
-        initSelectedSite()
-
-        viewModel.refresh(isPullToRefresh = true)
-        advanceUntilIdle()
-        viewModel.onResume()
-        advanceUntilIdle()
-
-        verify(editorSettingsRepository, times(1)).fetchEditorCapabilitiesForSite(siteTest)
-    }
-
-    @Test
-    fun `given fetch failed, when onResume invoked again, then editor capabilities are re-fetched`() = test {
-        initSelectedSite()
-        whenever(editorSettingsRepository.fetchEditorCapabilitiesForSite(siteTest)).thenReturn(false, true)
-
-        viewModel.onResume()
-        advanceUntilIdle()
-        viewModel.onResume()
-        advanceUntilIdle()
-
-        verify(editorSettingsRepository, times(2)).fetchEditorCapabilitiesForSite(siteTest)
-    }
-
-    @Test
-    fun `given site switched, when onResume invoked, then editor capabilities are fetched for the new site`() =
-        test {
-            initSelectedSite()
-            val otherSite = SiteModel().apply {
-                id = TEST_SITE_ID + 1
-                url = TEST_URL
-                name = TEST_SITE_NAME
-                siteId = (TEST_SITE_ID + 1).toLong()
-            }
-
-            viewModel.onResume()
-            advanceUntilIdle()
-            whenever(selectedSiteRepository.getSelectedSite()).thenReturn(otherSite)
-            viewModel.onResume()
-            advanceUntilIdle()
-
-            verify(editorSettingsRepository, times(1)).fetchEditorCapabilitiesForSite(siteTest)
-            verify(editorSettingsRepository, times(1)).fetchEditorCapabilitiesForSite(otherSite)
-        }
-
-
-
     /* LAND ON THE EDITOR A/B EXPERIMENT */
     @Test
     fun `when performFirstStepAfterSiteCreation called, then home page editor is shown`() = test {
@@ -489,6 +408,49 @@ class MySiteViewModelTest : BaseUnitTest() {
         verify(accountDataViewModelSlice).onCleared()
         verify(dashboardCardsViewModelSlice).onCleared()
         verify(dashboardItemsViewModelSlice).onCleared()
+        verify(gutenbergEditorPreloader).clear()
+    }
+
+    @Test
+    fun `when dashboard is built, then editor preload is triggered`() {
+        initSelectedSite()
+
+        viewModel.refresh()
+
+        verify(gutenbergEditorPreloader).preloadIfNeeded(
+            org.mockito.kotlin.eq(siteTest),
+            org.mockito.kotlin.any()
+        )
+    }
+
+    /* GUTENBERGKIT ANNOUNCEMENT */
+
+    @Test
+    fun `onResume posts gutenberg kit announcement event when controller says show`() = test {
+        initSelectedSite()
+        whenever(gutenbergKitAnnouncementController.shouldShowAnnouncement(siteTest)).thenReturn(true)
+        val observed = mutableListOf<SiteModel>()
+        viewModel.onShowGutenbergKitAnnouncement.observeForever { event ->
+            event?.getContentIfNotHandled()?.let { observed.add(it) }
+        }
+
+        viewModel.onResume()
+
+        assertThat(observed).containsExactly(siteTest)
+    }
+
+    @Test
+    fun `onResume does not post gutenberg kit announcement event when controller says skip`() = test {
+        initSelectedSite()
+        whenever(gutenbergKitAnnouncementController.shouldShowAnnouncement(siteTest)).thenReturn(false)
+        val observed = mutableListOf<SiteModel>()
+        viewModel.onShowGutenbergKitAnnouncement.observeForever { event ->
+            event?.getContentIfNotHandled()?.let { observed.add(it) }
+        }
+
+        viewModel.onResume()
+
+        assertThat(observed).isEmpty()
     }
 
     @Suppress("LongParameterList")

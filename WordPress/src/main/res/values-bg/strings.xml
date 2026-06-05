@@ -79,7 +79,6 @@ Language: bg
     <string name="support_screen_ask_happiness_engineers_description">За трудни въпроси. Ще отговорим по имейл</string>
     <string name="support_screen_ask_happiness_engineers_title">Свържете се с инженер по поддръжката</string>
     <string name="support_screen_ask_bots_description">Бързи отговори на често задавани въпроси</string>
-    <string name="support_screen_ask_bots_title">Попитайте ботовете</string>
     <string name="support_screen_help_center_description">Документация и гидове за помощ да започнете</string>
     <string name="support_screen_help_center_title">Център за помощ</string>
     <string name="support_screen_how_can_we_help_title">Как можем да помогнем?</string>
@@ -87,7 +86,6 @@ Language: bg
     <string name="support_screen_title">Поддържа</string>
     <string name="modern_support_description">Активиране на новата система за поддръжка</string>
     <string name="modern_support">Модерна поддръжка</string>
-    <string name="site_settings_use_theme_styles_summary">Преобразете редактора в стила на темата ви</string>
     <string name="site_settings_use_theme_styles">Използване на стиловете на темата</string>
     <string name="error_deleting_term">Грешка при изтриване на термина</string>
     <string name="error_saving_term">Грешка при записване на термина</string>
@@ -173,8 +171,6 @@ Language: bg
     <string name="history_load_dialog_button_positive">Зареждане</string>
     <string name="history_footer_post">Публикацията е създадена на %1$s в %2$s</string>
     <string name="history_empty_title">Още няма история</string>
-    <string name="history_empty_subtitle_post">Когато направите промени в публикацията си, ще можете да видите историята тук</string>
-    <string name="history_empty_subtitle_page">Когато направите промени в страницата си, ще можете да видите историята тук</string>
     <string name="history_footer_page">Страницата е създадена на %1$s в %2$s</string>
     <string name="enter_wpcom_or_jetpack_site" a8c-src-lib="module:login">Въведете сайт на WordPress.com или самостоятелно хостван такъв, сръзан с Jetpack.</string>
     <string name="description_user">Потребителски аватар</string>
@@ -189,7 +185,6 @@ Language: bg
     <string name="pages_move_to_trash">Преместване в кошчето</string>
     <string name="pages_move_to_draft">Преместване в чернова</string>
     <string name="pages_empty_search_result">Няма страници, съвпадащи с търсенето ви</string>
-    <string name="pages_empty_published">Вие не сте публикували страници още</string>
     <string name="pages_empty_scheduled">Нямате планирани страници</string>
     <string name="pages_search_suggestion">Търсене на страници</string>
     <string name="pages_empty_drafts">Нямате чернови</string>
@@ -222,8 +217,6 @@ Language: bg
     <string name="reader_label_post_search_explainer">Какво бихте искали да намерите?</string>
     <string name="sign_out_wpcom_confirm_with_no_changes">Излезте от WordPress?</string>
     <string name="site_settings_tags_empty_title_search">Няма етикети, съответстващи на търсенето ви</string>
-    <string name="site_settings_tags_empty_title">Нямате етикети</string>
-    <string name="people_empty_list_filtered_users">Все още няма потребители</string>
     <string name="people_empty_list_filtered_viewers">Все още няма посетители</string>
     <string name="activity_log_empty_title">Още няма активност</string>
     <string name="activity_log_empty_subtitle">Когато направите промени в страницата си, ще можете да видите историята на дейността тук</string>
@@ -427,9 +420,7 @@ Language: bg
     <string name="pending_draft_one_week_2">\'%1$s\' все още е чернова. Не забравяйте да го публикувате.</string>
     <string name="pending_draft_one_week_1">Вашата чернова \'%1$s\' ви очаква да я публикувате!</string>
     <string name="swipe_for_more">Плъзнете за повече</string>
-    <string name="reader_err_get_post_not_authorized_signin_fallback">Не сте оторизирани да разглеждате тази публикация. Опитайте да влезете в WordPress.com или използвайте горния бутон, за да я отворите в браузъра.</string>
     <string name="reader_err_get_post_not_authorized_signin">Не сте оторизирани да разглеждате тази публикация. Опитайте да влезете в WordPress.com.</string>
-    <string name="reader_err_get_post_not_authorized_fallback">Не сте оторизирани да разглеждате тази публикация. Използвайте горния бутон, за да я отворите в браузъра.</string>
     <string name="reader_snackbar_err_cannot_like_post_logged_out">Трябва да влезете в WordPress.com, за да харесате</string>
     <string name="reader_toast_err_already_liked">Вече сте харесали този коментар</string>
     <string name="reader_toast_err_comment_not_found">Коментарът не е открит.</string>
@@ -470,8 +461,8 @@ Language: bg
     <string name="error_remove_viewer">Неуспешно премахване на потребителя</string>
     <string name="editor_failed_uploads_switch_html">Някои файлове не се качиха. Преминете в режим HTML\n        на сайта. Премахване на всички неуспешно качени файлове и напред?</string>
     <string name="stop_upload_dialog_title">Спиране на качването?</string>
-    <string name="alert_action_while_uploading" a8c-src-lib="module:editor">В момента качвате файл. Изчакайте докато процесът приключи.</string>
-    <string name="alert_insert_image_html_mode" a8c-src-lib="module:editor">Файлове не могат да се добавят в режим HTML. Превключете обратно към визуален режим.</string>
+    <string name="alert_action_while_uploading" tools:ignore="UnusedResources" a8c-src-lib="module:editor">В момента качвате файл. Изчакайте докато процесът приключи.</string>
+    <string name="alert_insert_image_html_mode" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Файлове не могат да се добавят в режим HTML. Превключете обратно към визуален режим.</string>
     <string name="invite_sent">Успешно изпращане на поканата</string>
     <string name="invite_error_for_username">%1$s: %2$s</string>
     <string name="tap_to_try_again">Тап за повторен опит</string>
@@ -742,6 +733,7 @@ Language: bg
     <string name="push_auth_expired">Заявката е изтекла. Влезте в WordPress.com и опитайте отново.</string>
     <string name="ignore">Игнориране</string>
     <string name="stats_insights_best_ever">Най-добри преглеждания</string>
+    <string name="stats_insights_most_popular_day">Най-популярен ден</string>
     <string name="stats_insights_today">Статистики от днес</string>
     <string name="stats_insights_all_time">Всички публикации, преглеждания и посетители</string>
     <string name="stats_insights">Данни</string>
@@ -806,7 +798,6 @@ Language: bg
     <string name="error_refresh_unauthorized_posts">Нямате нужните права за да преглеждате или променяте публикации</string>
     <string name="posts_empty_list">Все още няма публикации. Защо не създадете една?</string>
     <string name="reader_label_like">Харесване</string>
-    <string name="reader_label_view_original">Преглед оригиналната статия</string>
     <string name="error_publish_empty_post">Публикуването на празна публикация не е разрешено</string>
     <string name="comment_reply_to_user">Отговоряне на %s</string>
     <string name="more">Още</string>
@@ -847,7 +838,7 @@ Language: bg
     <string name="saving_changes">Промените се запазват</string>
     <string name="new_post">Нова публикация</string>
     <string name="category_name">Име на категорията</string>
-    <string name="horizontal_alignment" a8c-src-lib="module:editor">Хоризонтална подредба</string>
+    <string name="horizontal_alignment" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Хоризонтална подредба</string>
     <string name="connection_error">Грешка при свързване</string>
     <string name="post_settings">Настройки на публикацията</string>
     <string name="page_settings">Настройки на страницата</string>
@@ -874,7 +865,6 @@ Language: bg
     <string name="http_authorization_required" a8c-src-lib="module:login">Нужна е оторизация</string>
     <string name="wordpress_blog">Блог от вида WordPress</string>
     <string name="reader_title_applog">Дневник на приложението</string>
-    <string name="notifications_empty_all">Все още няма известявания.</string>
     <string name="invalid_site_url_message">Уверете се че въведения URL адрес на сайт е валиден</string>
     <string name="error_refresh_media">Файлът не може да бъде обновен в момента</string>
     <string name="share_link">Споделяне на връзка</string>
@@ -938,16 +928,16 @@ Language: bg
     <string name="reader">Читател</string>
     <string name="no_network_title">Няма активна мрежа</string>
     <string name="pages">Страници</string>
-    <string name="caption" a8c-src-lib="module:editor">Надпис (незадължителен)</string>
-    <string name="width" a8c-src-lib="module:editor">Ширина</string>
+    <string name="caption" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Надпис (незадължителен)</string>
+    <string name="width" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Ширина</string>
     <string name="posts">Публикации</string>
     <string name="anonymous">Анонимен</string>
-    <string name="featured" a8c-src-lib="module:editor">Задаване като основно изображение на публикацията</string>
-    <string name="featured_in_post" a8c-src-lib="module:editor">Използване на снимката в съдържанието на публикацията</string>
+    <string name="featured" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Задаване като основно изображение на публикацията</string>
+    <string name="featured_in_post" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Използване на снимката в съдържанието на публикацията</string>
     <string name="ok">ОК</string>
     <string name="done">готово</string>
     <string name="link_enter_url">URL</string>
-    <string name="uploading" a8c-src-lib="module:editor">Качва се…</string>
+    <string name="uploading" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Качва се…</string>
     <string name="image_alignment">Подравняване</string>
     <string name="refresh">Презареждане</string>
     <string name="untitled">Неозаглавен</string>

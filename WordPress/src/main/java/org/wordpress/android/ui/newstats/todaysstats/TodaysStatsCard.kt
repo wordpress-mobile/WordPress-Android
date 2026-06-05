@@ -45,7 +45,7 @@ import androidx.compose.ui.unit.dp
 import com.patrykandpatrick.vico.compose.cartesian.CartesianChartHost
 import com.patrykandpatrick.vico.compose.cartesian.rememberVicoScrollState
 import com.patrykandpatrick.vico.compose.cartesian.data.CartesianChartModelProducer
-import com.patrykandpatrick.vico.compose.cartesian.data.lineSeries
+import com.patrykandpatrick.vico.compose.cartesian.data.lineModel
 import com.patrykandpatrick.vico.compose.cartesian.layer.LineCartesianLayer
 import com.patrykandpatrick.vico.compose.cartesian.layer.rememberLineCartesianLayer
 import com.patrykandpatrick.vico.compose.cartesian.rememberCartesianChart
@@ -350,7 +350,7 @@ private fun StatsChart(chartData: ChartData) {
             // Check hasPreviousPeriod inside the effect to avoid capturing stale values
             val hasPreviousPeriod = chartData.previousPeriod.isNotEmpty()
             modelProducer.runTransaction {
-                lineSeries {
+                lineModel {
                     // Today's data (solid line)
                     series(chartData.currentPeriod.map { it.views })
                     // Yesterday's data (dashed line) - only if available

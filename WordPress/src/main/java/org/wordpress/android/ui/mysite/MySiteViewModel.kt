@@ -31,6 +31,8 @@ import org.wordpress.android.ui.mysite.items.DashboardItemsViewModelSlice
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.mediapicker.MediaPickerActivity
 import org.wordpress.android.ui.posts.BasicDialogViewModel
+import org.wordpress.android.ui.posts.GutenbergEditorPreloader
+import org.wordpress.android.ui.posts.GutenbergKitAnnouncementController
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationSource
 import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
@@ -43,9 +45,8 @@ import javax.inject.Inject
 import javax.inject.Named
 import org.wordpress.android.ui.mysite.cards.applicationpassword.ApplicationPasswordViewModelSlice
 import org.wordpress.android.ui.mysite.items.listitem.SiteCapabilityChecker
-import org.wordpress.android.ui.posts.GutenbergKitWarmupHelper
 import org.wordpress.android.ui.utils.UiString
-import org.wordpress.android.repositories.EditorSettingsRepository
+import org.wordpress.android.ui.mysite.cards.connectivity.SiteConnectivityBannerViewModelSlice
 
 @Suppress("LargeClass", "LongMethod", "LongParameterList")
 class MySiteViewModel @Inject constructor(
@@ -65,24 +66,21 @@ class MySiteViewModel @Inject constructor(
     private val dashboardCardsViewModelSlice: DashboardCardsViewModelSlice,
     private val dashboardItemsViewModelSlice: DashboardItemsViewModelSlice,
     private val applicationPasswordViewModelSlice: ApplicationPasswordViewModelSlice,
-    private val gutenbergKitWarmupHelper: GutenbergKitWarmupHelper,
     private val siteCapabilityChecker: SiteCapabilityChecker,
-    private val editorSettingsRepository: EditorSettingsRepository,
+    private val gutenbergEditorPreloader: GutenbergEditorPreloader,
+    private val siteConnectivityBannerViewModelSlice: SiteConnectivityBannerViewModelSlice,
+    private val gutenbergKitAnnouncementController: GutenbergKitAnnouncementController,
 ) : ScopedViewModel(mainDispatcher) {
     private val _onSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
     private val _onNavigation = MutableLiveData<Event<SiteNavigationAction>>()
     private val _onOpenJetpackInstallFullPluginOnboarding = SingleLiveEvent<Event<Unit>>()
     private val _onShowJetpackIndividualPluginOverlay = SingleLiveEvent<Event<Unit>>()
+    private val _onShowGutenbergKitAnnouncement = SingleLiveEvent<Event<SiteModel>>()
+    val onShowGutenbergKitAnnouncement: LiveData<Event<SiteModel>> = _onShowGutenbergKitAnnouncement
 
     /* Capture and track the site selected event so we can circumvent refreshing sources on resume
        as they're already built on site select. */
     private var isSiteSelected = false
-
-    /* Editor capabilities rarely change, so once we've successfully fetched them for a site we
-       skip subsequent non-user-initiated fetches in this ViewModel session. Failed fetches do
-       not populate this set, so a transient network failure recovers on the next onResume.
-       User-initiated refreshes (e.g. pull-to-refresh) always bypass this gate. */
-    private val fetchedCapabilitiesForSite = mutableSetOf<Int>()
 
     val onScrollTo: MutableLiveData<Event<Int>> = MutableLiveData()
 
@@ -132,15 +130,17 @@ class MySiteViewModel @Inject constructor(
         applicationPasswordViewModelSlice.uiModel,
         accountDataViewModelSlice.uiModel,
         dashboardCardsViewModelSlice.uiModel,
-        dashboardItemsViewModelSlice.uiModel
+        dashboardItemsViewModelSlice.uiModel,
+        siteConnectivityBannerViewModelSlice.uiModel,
     ) { siteInfoHeaderCard,
         applicationPAsswordModel,
         accountData,
         dashboardCards,
-        siteItems ->
+        siteItems,
+        connectivityBanner ->
         val nonNullSiteInfoHeaderCard =
             siteInfoHeaderCard ?: return@merge buildNoSiteState(accountData?.url, accountData?.name)
-        val headerList = listOfNotNull(nonNullSiteInfoHeaderCard, applicationPAsswordModel)
+        val headerList = listOfNotNull(nonNullSiteInfoHeaderCard, applicationPAsswordModel, connectivityBanner)
         return@merge if (!dashboardCards.isNullOrEmpty<MySiteCardAndItem>())
             SiteSelected(dashboardData = headerList + dashboardCards)
         else if (!siteItems.isNullOrEmpty<MySiteCardAndItem>())
@@ -156,6 +156,7 @@ class MySiteViewModel @Inject constructor(
         dashboardCardsViewModelSlice.initialize(viewModelScope)
         dashboardItemsViewModelSlice.initialize(viewModelScope)
         accountDataViewModelSlice.initialize(viewModelScope)
+        siteConnectivityBannerViewModelSlice.initialize(viewModelScope)
     }
 
     private fun shouldShowDashboard(site: SiteModel): Boolean {
@@ -175,13 +176,11 @@ class MySiteViewModel @Inject constructor(
             if (isPullToRefresh) {
                 siteCapabilityChecker.clearCacheForSite(site.siteId)
             }
-            buildDashboardOrSiteItems(site)
-            launch {
-                fetchEditorCapabilitiesWithSnackbar(
-                    site,
-                    isUserInitiated = isPullToRefresh
-                )
-            }
+            buildDashboardOrSiteItems(site, forceRefresh = isPullToRefresh)
+            siteConnectivityBannerViewModelSlice.fetchCapabilities(
+                site,
+                isUserInitiated = isPullToRefresh
+            )
         } ?: run {
             accountDataViewModelSlice.onRefresh()
         }
@@ -190,45 +189,16 @@ class MySiteViewModel @Inject constructor(
     fun onResume() {
         isSiteSelected = false
         checkAndShowJetpackFullPluginInstallOnboarding()
+        checkAndShowGutenbergKitAnnouncement()
         selectedSiteRepository.updateSiteSettingsIfNecessary()
         selectedSiteRepository.getSelectedSite()?.let {
             buildDashboardOrSiteItems(it)
-            launch {
-                fetchEditorCapabilitiesWithSnackbar(
-                    it,
-                    isUserInitiated = false
-                )
-            }
+            siteConnectivityBannerViewModelSlice.fetchCapabilities(
+                it,
+                isUserInitiated = false
+            )
         } ?: run {
             accountDataViewModelSlice.onResume()
-        }
-    }
-
-    private suspend fun fetchEditorCapabilitiesWithSnackbar(
-        site: SiteModel,
-        isUserInitiated: Boolean
-    ) {
-        if (site.id in fetchedCapabilitiesForSite && !isUserInitiated) {
-            return
-        }
-        val ok = editorSettingsRepository
-            .fetchEditorCapabilitiesForSite(site)
-        if (ok) {
-            fetchedCapabilitiesForSite.add(site.id)
-        }
-        val hasCache = editorSettingsRepository
-            .hasCachedCapabilities(site)
-        if (!ok && (isUserInitiated || !hasCache)) {
-            _onSnackbarMessage.postValue(
-                Event(
-                    SnackbarMessageHolder(
-                        UiString.UiStringRes(
-                            R.string
-                                .site_settings_fetch_failed
-                        )
-                    )
-                )
-            )
         }
     }
 
@@ -236,6 +206,14 @@ class MySiteViewModel @Inject constructor(
         selectedSiteRepository.getSelectedSite()?.let { selectedSite ->
             if (getShowJetpackFullPluginInstallOnboardingUseCase.execute(selectedSite)) {
                 _onOpenJetpackInstallFullPluginOnboarding.postValue(Event(Unit))
+            }
+        }
+    }
+
+    private fun checkAndShowGutenbergKitAnnouncement() {
+        selectedSiteRepository.getSelectedSite()?.let { selectedSite ->
+            if (gutenbergKitAnnouncementController.shouldShowAnnouncement(selectedSite)) {
+                _onShowGutenbergKitAnnouncement.postValue(Event(selectedSite))
             }
         }
     }
@@ -296,7 +274,7 @@ class MySiteViewModel @Inject constructor(
         dashboardCardsViewModelSlice.onCleared()
         dashboardItemsViewModelSlice.onCleared()
         accountDataViewModelSlice.onCleared()
-        gutenbergKitWarmupHelper.clearWarmupState()
+        gutenbergEditorPreloader.clear()
         super.onCleared()
     }
 
@@ -329,7 +307,10 @@ class MySiteViewModel @Inject constructor(
         }
     }
 
-    private fun buildDashboardOrSiteItems(site: SiteModel) {
+    private fun buildDashboardOrSiteItems(
+        site: SiteModel,
+        forceRefresh: Boolean = false
+    ) {
         siteInfoHeaderCardViewModelSlice.buildCard(site)
         applicationPasswordViewModelSlice.buildCard(site)
         if (shouldShowDashboard(site)) {
@@ -339,13 +320,17 @@ class MySiteViewModel @Inject constructor(
             dashboardItemsViewModelSlice.buildItems(site)
             dashboardCardsViewModelSlice.clearValue()
         }
-        // Trigger GutenbergView warmup for the selected site
-        gutenbergKitWarmupHelper.warmupIfNeeded(site, viewModelScope)
+        if (forceRefresh) {
+            gutenbergEditorPreloader.refreshPreloading(site, viewModelScope)
+        } else {
+            gutenbergEditorPreloader.preloadIfNeeded(site, viewModelScope)
+        }
     }
 
     private fun onSitePicked(site: SiteModel) {
         siteInfoHeaderCardViewModelSlice.buildCard(site)
         applicationPasswordViewModelSlice.buildCard(site)
+        siteConnectivityBannerViewModelSlice.clearBanner()
         dashboardItemsViewModelSlice.clearValue()
         dashboardCardsViewModelSlice.clearValue()
         dashboardCardsViewModelSlice.resetShownTracker()

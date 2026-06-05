@@ -179,8 +179,6 @@
 
     <string name="media_uploading_default">Uploading media</string>
     <string name="media_uploading_stock_library_photo">Uploading stock media</string>
-    <string name="media_uploading_gif_library_photo">Uploading gif media</string>
-
     <string name="media_upload_state_queued">Queued</string>
     <string name="media_upload_state_uploading">Uploading</string>
     <string name="media_upload_state_deleting">Deleting</string>
@@ -705,7 +703,19 @@
     <string name="site_settings_use_third_party_blocks">Use Third-Party Blocks (Beta)</string>
     <string name="site_settings_use_third_party_blocks_summary">Load third-party blocks from plugins installed on your site.</string>
     <string name="site_settings_use_third_party_blocks_unsupported">Your site doesn\'t support loading third-party blocks in the editor.</string>
-    <string name="site_settings_fetch_failed">Failed to fetch site settings – some editor functionality may be limited.</string>
+    <string name="site_connectivity_banner_text">Unable to connect to your site. Some functionality might be limited.</string>
+    <string name="site_settings_gutenberg_kit_enabled">Try the new editor</string>
+    <string name="site_settings_gutenberg_kit_enabled_summary">Opt in to the next-generation block editor for this site</string>
+    <string name="site_settings_gutenberg_kit_enabled_unsupported">Switch to the block editor first to try the new editor.</string>
+
+    <!-- GutenbergKit announcement -->
+    <string name="gutenberg_kit_announcement_title">A better block editor is coming</string>
+    <string name="gutenberg_kit_announcement_body_intro">The next-generation block editor is ready, and it brings more new features.</string>
+    <string name="gutenberg_kit_announcement_body_deadline">By the end of June 2026, it will become the default editor for everyone. %1$s</string>
+    <string name="gutenberg_kit_announcement_activate">Activate</string>
+    <string name="gutenberg_kit_announcement_maybe_later">Maybe later</string>
+    <string name="gutenberg_kit_announcement_learn_more">Learn more</string>
+    <string name="gutenberg_kit_learn_more_url" translatable="false">https://wordpress.com/support/editors/</string>
     <string name="site_settings_password_updated">Password updated</string>
     <string name="site_settings_update_password_message">To reconnect the app to your self-hosted site, enter the site\'s new password here.</string>
     <string name="site_settings_homepage_settings">Homepage Settings</string>
@@ -970,8 +980,6 @@
 
     <!-- Experimental Features -->
     <string name="experimental_features_screen_title">Experimental Features</string>
-    <string name="disable_experimental_block_editor">Disable experimental block editor</string>
-    <string name="disable_experimental_block_editor_description">Opt out of additional block types and settings</string>
     <string name="experimental_block_editor_note">Experimental block editor will become the default in a future release and the ability to disable it will be removed.</string>
     <string name="experimental_block_editor">Experimental block editor</string>
     <string name="experimental_block_editor_description">Access additional block types and settings</string>
@@ -1017,8 +1025,6 @@
     <string name="new_stats_intro_trends_title">Trends at a Glance</string>
     <string name="new_stats_intro_trends_desc">Every metric shows how it\'s trending compared to the previous period, so you always know if you\'re growing.</string>
     <string name="new_stats_intro_footer">You can turn off New Stats from the overflow menu in the Stats screen.</string>
-    <string name="experimental_rs_post_list">New Post List</string>
-    <string name="experimental_rs_post_list_description">Show post list in a more modern UI for WordPress.com and self-hosted sites with application passwords</string>
     <string name="post_rs_failed_to_load">Failed to load post</string>
     <string name="post_rs_confirm_trash_message">Are you sure you want to trash this post?</string>
     <string name="post_rs_confirm_delete_message">This will permanently delete this post. This action cannot be undone.</string>
@@ -3281,7 +3287,6 @@
     <string name="photo_picker_capture_video">Take video</string>
     <string name="photo_picker_stock_media">Choose from Free Photo Library</string>
     <string name="photo_picker_wordpress_media_library">Choose from WordPress Media Library</string>
-    <string name="photo_picker_gif">Choose from Tenor</string>
     <string name="photo_picker_soft_ask_label">%s needs permissions to access your photos</string>
     <string name="photo_picker_soft_ask_photos_videos_audio_label">%s needs permission to access your music, audio, photos and videos</string>
     <string name="photo_picker_soft_ask_photos_videos_label">%s needs permission to access your photos and videos</string>
@@ -3309,12 +3314,6 @@
     <string name="media_insert_failed">Media insert failed.</string>
     <string name="media_loading_failed">Media loading failed</string>
     <string name="media_picker_soft_ask_media_permissions_denied">%1$s was denied access to your media files. To fix this, edit your permissions and turn on %2$s.</string>
-
-    <!-- GIFs -->
-    <string name="gif_powered_by_tenor">Powered by Tenor</string>
-    <string name="gif_picker_initial_empty_text">Search to find GIFs to add to your Media Library!</string>
-    <string name="gif_picker_empty_search_list">No media matching your search</string>
-    <string name="gif_list_search_returned_unknown_error">There was a problem handling the request</string>
 
     <!-- E-mail verification reminder dialog -->
     <string name="toast_saving_post_as_draft">Saving post as draft</string>
@@ -4111,40 +4110,40 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="blogging_prompts_list_error_fetch_subtitle">There was an error loading prompts.</string>
 
     <!-- Editor module -->
-    <string name="uploading" a8c-src-lib="module:editor">Uploading…</string>
-    <string name="alert_insert_image_html_mode" a8c-src-lib="module:editor">Can\'t insert media directly in HTML mode. Please switch back to visual mode.</string>
-    <string name="alert_action_while_uploading" a8c-src-lib="module:editor">You are currently uploading media. Please wait until this completes.</string>
-    <string name="width" a8c-src-lib="module:editor">Width</string>
-    <string name="featured" a8c-src-lib="module:editor">Use as featured image</string>
-    <string name="featured_in_post" a8c-src-lib="module:editor">Include image in post content</string>
-    <string name="horizontal_alignment" a8c-src-lib="module:editor">Horizontal alignment</string>
-    <string name="caption" a8c-src-lib="module:editor">Caption (optional)</string>
-    <string name="media_bar_description_camera" a8c-src-lib="module:editor">Take Photo or Video with camera</string>
-    <string name="media_bar_description_gallery" a8c-src-lib="module:editor">Pick a media from gallery</string>
-    <string name="media_bar_description_library" a8c-src-lib="module:editor">Pick a media from WordPress media library</string>
-    <string name="dialog_content_info_title" a8c-src-lib="module:editor">Content structure</string>
-    <string name="dialog_content_info_body" a8c-src-lib="module:editor">Blocks: %1$d\nWords: %2$d\nCharacters: %3$d</string>
-    <string name="toast_content_info_failed" a8c-src-lib="module:editor">Failed to get content structure</string>
-    <string name="toast_content_info_editor_not_ready" a8c-src-lib="module:editor">Editor is still loading</string>
-    <string name="dialog_button_ok" a8c-src-lib="module:editor">OK</string>
-    <string name="dialog_button_cancel" a8c-src-lib="module:editor">Cancel</string>
-    <string name="stop_upload_dialog_button_yes" a8c-src-lib="module:editor">Yes</string>
-    <string name="stop_upload_dialog_button_no" a8c-src-lib="module:editor">No</string>
-    <string name="retry_failed_upload_title" a8c-src-lib="module:editor">Couldn\'t upload file</string>
-    <string name="retry_failed_upload_yes" a8c-src-lib="module:editor">Retry</string>
-    <string name="retry_failed_upload_remove" a8c-src-lib="module:editor">Remove upload</string>
-    <string name="long_post_dlg_saving" a8c-src-lib="module:editor">Saving</string>
-    <string name="menu_toolbar_title" a8c-src-lib="module:editor">Edit %s block</string>
-    <string name="pref_key_seen_classic_editor_deprecation_notice" translatable="false" a8c-src-lib="module:editor">wp_pref_seen_classic_editor_deprecation_notice</string>
-    <string name="dialog_title_try_block_editor" translatable="true" a8c-src-lib="module:editor">Try the new Block Editor</string>
-    <string name="dialog_body_try_block_editor" translatable="true" a8c-src-lib="module:editor">We’ll be removing the classic editor for new posts soon, but this won’t affect editing any of your existing posts or pages. Get a head start by enabling the Block Editor now in site settings.</string>
-    <string name="dialog_dismiss_try_block_editor" translatable="true" a8c-src-lib="module:editor">Dismiss</string>
-    <string name="featured_image_replace_dialog_title" a8c-src-lib="module:editor">Replace current featured image?</string>
-    <string name="featured_image_replace_dialog_description" a8c-src-lib="module:editor">You already have a featured image set. Do you want to replace it with the new image?</string>
-    <string name="featured_image_replace_dialog_confirm" a8c-src-lib="module:editor">Replace featured image</string>
-    <string name="featured_image_replace_dialog_cancel" a8c-src-lib="module:editor">Keep current</string>
-    <string name="featured_image_confirmation_notice" a8c-src-lib="module:editor">Set as featured image</string>
-    <string name="featured_image_removed_notice" a8c-src-lib="module:editor">Removed as featured image</string>
+    <string name="uploading" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Uploading…</string>
+    <string name="alert_insert_image_html_mode" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Can\'t insert media directly in HTML mode. Please switch back to visual mode.</string>
+    <string name="alert_action_while_uploading" tools:ignore="UnusedResources" a8c-src-lib="module:editor">You are currently uploading media. Please wait until this completes.</string>
+    <string name="width" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Width</string>
+    <string name="featured" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Use as featured image</string>
+    <string name="featured_in_post" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Include image in post content</string>
+    <string name="horizontal_alignment" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Horizontal alignment</string>
+    <string name="caption" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Caption (optional)</string>
+    <string name="media_bar_description_camera" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Take Photo or Video with camera</string>
+    <string name="media_bar_description_gallery" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Pick a media from gallery</string>
+    <string name="media_bar_description_library" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Pick a media from WordPress media library</string>
+    <string name="dialog_content_info_title" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Content structure</string>
+    <string name="dialog_content_info_body" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Blocks: %1$d\nWords: %2$d\nCharacters: %3$d</string>
+    <string name="toast_content_info_failed" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Failed to get content structure</string>
+    <string name="toast_content_info_editor_not_ready" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Editor is still loading</string>
+    <string name="dialog_button_ok" tools:ignore="UnusedResources" a8c-src-lib="module:editor">OK</string>
+    <string name="dialog_button_cancel" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Cancel</string>
+    <string name="stop_upload_dialog_button_yes" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Yes</string>
+    <string name="stop_upload_dialog_button_no" tools:ignore="UnusedResources" a8c-src-lib="module:editor">No</string>
+    <string name="retry_failed_upload_title" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Couldn\'t upload file</string>
+    <string name="retry_failed_upload_yes" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Retry</string>
+    <string name="retry_failed_upload_remove" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Remove upload</string>
+    <string name="long_post_dlg_saving" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Saving</string>
+    <string name="menu_toolbar_title" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Edit %s block</string>
+    <string name="pref_key_seen_classic_editor_deprecation_notice" translatable="false" tools:ignore="UnusedResources" a8c-src-lib="module:editor">wp_pref_seen_classic_editor_deprecation_notice</string>
+    <string name="dialog_title_try_block_editor" translatable="true" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Try the new Block Editor</string>
+    <string name="dialog_body_try_block_editor" translatable="true" tools:ignore="UnusedResources" a8c-src-lib="module:editor">We’ll be removing the classic editor for new posts soon, but this won’t affect editing any of your existing posts or pages. Get a head start by enabling the Block Editor now in site settings.</string>
+    <string name="dialog_dismiss_try_block_editor" translatable="true" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Dismiss</string>
+    <string name="featured_image_replace_dialog_title" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Replace current featured image?</string>
+    <string name="featured_image_replace_dialog_description" tools:ignore="UnusedResources" a8c-src-lib="module:editor">You already have a featured image set. Do you want to replace it with the new image?</string>
+    <string name="featured_image_replace_dialog_confirm" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Replace featured image</string>
+    <string name="featured_image_replace_dialog_cancel" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Keep current</string>
+    <string name="featured_image_confirmation_notice" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Set as featured image</string>
+    <string name="featured_image_removed_notice" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Removed as featured image</string>
 
     <!-- QRCode Auth Flow -->
     <string name="qrcode_auth_flow" translatable="false">Scan Login Code</string>

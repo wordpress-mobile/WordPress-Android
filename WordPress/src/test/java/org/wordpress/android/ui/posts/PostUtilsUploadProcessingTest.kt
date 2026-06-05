@@ -61,4 +61,14 @@ class PostUtilsUploadProcessingTest {
         )
         Assertions.assertThat(processedContent).isEqualTo(TestContent.newMediaTextBlockWithVideo)
     }
+
+    @Test
+    fun `replaceMediaFileWithUrlInGutenbergPost leaves content unchanged when mediaId is null`() {
+        whenever(mediaFile.mediaId).thenReturn(null)
+        val processedContent = PostUtils.replaceMediaFileWithUrlInGutenbergPost(
+            TestContent.oldImageBlock,
+            TestContent.localMediaId, mediaFile, TestContent.siteUrl
+        )
+        Assertions.assertThat(processedContent).isEqualTo(TestContent.oldImageBlock)
+    }
 }

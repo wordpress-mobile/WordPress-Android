@@ -19,13 +19,14 @@ import androidx.core.util.Pair
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.lifecycleScope
 import com.google.gson.Gson
-import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.editor.BuildConfig
 import org.wordpress.android.editor.EditorEditMediaListener
 import org.wordpress.android.editor.EditorFragmentAbstract
 import org.wordpress.android.editor.EditorImagePreviewListener
 import org.wordpress.android.editor.LiveTextWatcher
+import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.ui.posts.GutenbergEditorPreloader
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.PermissionUtils
 import org.wordpress.android.util.ProfilingUtils
@@ -40,10 +41,18 @@ import org.wordpress.gutenberg.GutenbergView.TitleAndContentCallback
 import org.wordpress.gutenberg.Media
 import org.wordpress.gutenberg.model.EditorConfiguration
 import java.util.concurrent.CountDownLatch
+import java.util.concurrent.TimeUnit
+import javax.inject.Inject
 
 class GutenbergKitEditorFragment : GutenbergKitEditorFragmentBase() {
+    @Inject
+    lateinit var gutenbergEditorPreloader: GutenbergEditorPreloader
+
     private var gutenbergView: GutenbergView? = null
     private var isHtmlModeEnabled = false
+
+    @Volatile
+    private var editorReady = false
 
     private val textWatcher = LiveTextWatcher()
     private var historyChangeListener: HistoryChangeListener? = null
@@ -57,6 +66,8 @@ class GutenbergKitEditorFragment : GutenbergKitEditorFragmentBase() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        (requireActivity().application as org.wordpress.android.WordPress)
+            .component().inject(this)
 
         ProfilingUtils.start("Visual Editor Startup")
         ProfilingUtils.split("EditorFragment.onCreate")
@@ -164,9 +175,10 @@ class GutenbergKitEditorFragment : GutenbergKitEditorFragmentBase() {
             )
         )
 
+        val siteLocalId = requireArguments().getInt(ARG_SITE_LOCAL_ID)
         val gutenbergView = GutenbergView(
             configuration = configuration,
-            dependencies = null,
+            dependencies = gutenbergEditorPreloader.getDependencies(siteLocalId),
             coroutineScope = this.lifecycleScope,
             context = requireContext()
         )
@@ -248,7 +260,10 @@ class GutenbergKitEditorFragment : GutenbergKitEditorFragmentBase() {
             }
         )
 
+        editorReady = false
+
         gutenbergView.setEditorDidBecomeAvailable {
+            editorReady = true
             mEditorFragmentListener.onEditorFragmentContentReady(
                 ArrayList<Any?>(), false
             )
@@ -290,13 +305,9 @@ class GutenbergKitEditorFragment : GutenbergKitEditorFragmentBase() {
             return
         }
 
-        lifecycleScope.launch {
-            val uris = gutenbergView.extractUrisFromIntent(data)
-            val processedUris =
-                gutenbergView.processFileUris(requireContext(), uris)
-            filePathCallback.onReceiveValue(processedUris)
-            gutenbergView.resetFilePathCallback()
-        }
+        val uris = gutenbergView.extractUrisFromIntent(data)
+        filePathCallback.onReceiveValue(uris)
+        gutenbergView.resetFilePathCallback()
     }
 
     @Deprecated("Deprecated in Java")
@@ -425,8 +436,19 @@ class GutenbergKitEditorFragment : GutenbergKitEditorFragmentBase() {
         )
 
         val finalResult = try {
-            latch.await()
-            result[0]
+            val completed = latch.await(
+                GET_TITLE_AND_CONTENT_TIMEOUT_SECONDS, TimeUnit.SECONDS
+            )
+            if (!completed) {
+                AppLog.w(
+                    AppLog.T.EDITOR,
+                    "Timed out waiting for title and content from " +
+                        "Gutenberg editor"
+                )
+                null
+            } else {
+                result[0]
+            }
         } catch (e: InterruptedException) {
             AppLog.w(
                 AppLog.T.EDITOR,
@@ -437,7 +459,10 @@ class GutenbergKitEditorFragment : GutenbergKitEditorFragmentBase() {
             null
         }
 
-        return finalResult ?: Pair("", "")
+        // Surface failure to the caller as a checked exception so it can
+        // skip mutating the PostModel rather than persisting empty content
+        // over the user's existing draft. See issue #22878.
+        return finalResult ?: throw EditorFragmentNotAddedException()
     }
 
     override fun getEditorName(): String {
@@ -508,6 +533,8 @@ class GutenbergKitEditorFragment : GutenbergKitEditorFragmentBase() {
         super.onDestroy()
     }
 
+    fun isEditorReady(): Boolean = editorReady
+
     fun setXPostsEnabled(enabled: Boolean) {
         isXPostsEnabled = enabled
     }
@@ -537,16 +564,21 @@ class GutenbergKitEditorFragment : GutenbergKitEditorFragmentBase() {
         const val ARG_FEATURED_IMAGE_ID: String = "featured_image_id"
         const val ARG_GUTENBERG_KIT_SETTINGS: String =
             "gutenberg_kit_settings"
+        private const val ARG_SITE_LOCAL_ID = "site_local_id"
 
         private const val CAPTURE_PHOTO_PERMISSION_REQUEST_CODE = 101
         private const val CAPTURE_VIDEO_PERMISSION_REQUEST_CODE = 102
 
+        private const val GET_TITLE_AND_CONTENT_TIMEOUT_SECONDS = 5L
+
         fun newInstance(
-            configuration: EditorConfiguration
+            configuration: EditorConfiguration,
+            site: SiteModel
         ): GutenbergKitEditorFragment {
             val fragment = GutenbergKitEditorFragment()
             val args = Bundle()
             args.putParcelable(ARG_GUTENBERG_KIT_SETTINGS, configuration)
+            args.putInt(ARG_SITE_LOCAL_ID, site.id)
             fragment.arguments = args
             return fragment
         }

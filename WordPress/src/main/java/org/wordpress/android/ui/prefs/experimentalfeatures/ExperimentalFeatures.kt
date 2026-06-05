@@ -20,11 +20,6 @@ class ExperimentalFeatures @Inject constructor(
         val labelResId: Int,
         val descriptionResId: Int
     ) {
-        DISABLE_EXPERIMENTAL_BLOCK_EDITOR(
-            "disable_experimental_block_editor",
-            R.string.disable_experimental_block_editor,
-            R.string.disable_experimental_block_editor_description
-        ),
         EXPERIMENTAL_BLOCK_EDITOR(
             "experimental_block_editor",
             R.string.experimental_block_editor,
@@ -49,11 +44,6 @@ class ExperimentalFeatures @Inject constructor(
             "new_stats",
             R.string.experimental_new_stats,
             R.string.experimental_new_stats_description
-        ),
-        RS_POST_LIST(
-            "rs_post_list",
-            R.string.experimental_rs_post_list,
-            R.string.experimental_rs_post_list_description
         );
     }
 }

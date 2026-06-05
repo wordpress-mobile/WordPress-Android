@@ -31,9 +31,14 @@ class LoginSiteApplicationPasswordViewModel @Inject constructor(
         _errorMessage.value = null
         _loadingStateFlow.value = true
         discoveryJob = viewModelScope.launch {
-            val discoveryUrl = applicationPasswordLoginHelper
-                .getAuthorizationUrlComplete(siteUrl)
-            _discoveryURL.send(discoveryUrl)
+            when (val result = applicationPasswordLoginHelper.getAuthorizationUrlComplete(siteUrl)) {
+                is ApplicationPasswordLoginHelper.DiscoveryResult.Authorized ->
+                    _discoveryURL.send(result.authorizationUrl)
+                is ApplicationPasswordLoginHelper.DiscoveryResult.Failed -> {
+                    _errorMessage.value = result.userFacingMessage
+                    _discoveryURL.send("")
+                }
+            }
             _loadingStateFlow.value = false
         }
     }

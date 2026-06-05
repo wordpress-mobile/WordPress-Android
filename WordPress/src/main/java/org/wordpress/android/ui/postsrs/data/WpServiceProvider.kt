@@ -52,10 +52,14 @@ class WpServiceProvider @Inject constructor(
         val delegate = createDelegate(site)
         val wpApiCache = getOrCreateCache()
         val siteInfo = if (site.isWPCom) {
-            SiteInfo.WordPressCom(site.siteId.toULong())
+            SiteInfo.WordPressCom(siteId = site.siteId.toULong())
         } else {
-            val apiRoot = site.wpApiRestUrl?.takeIf { it.isNotEmpty() } ?: "${site.url}/wp-json"
-            SiteInfo.SelfHosted(ParsedUrl.parse(site.url), ParsedUrl.parse(apiRoot))
+            val apiRoot = site.wpApiRestUrl?.takeIf { it.isNotEmpty() }
+                ?: "${site.url}/wp-json"
+            SiteInfo.SelfHosted(
+                siteUrl = ParsedUrl.parse(site.url),
+                apiRoot = ParsedUrl.parse(apiRoot),
+            )
         }
         return WpService(siteInfo, delegate, wpApiCache.cache)
     }

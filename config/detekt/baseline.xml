@@ -184,7 +184,6 @@
     <ID>ThrowsCount:PageListDialogHelper.kt$PageListDialogHelper$fun onPositiveClickedForBasicDialog( instanceTag: String, deletePage: (RemoteId) -> Unit, editPage: (RemoteId, LoadAutoSaveRevision) -> Unit, editPageFirst: (RemoteId) -> Unit )</ID>
     <ID>TooGenericExceptionCaught:BaseStatsUseCase.kt$BaseStatsUseCase$e: Exception</ID>
     <ID>TooGenericExceptionCaught:ColorUnderlineSpan.kt$ColorUnderlineSpan$e: Exception</ID>
-    <ID>TooGenericExceptionCaught:GifMediaInsertUseCase.kt$GifMediaInsertUseCase$e: Exception</ID>
     <ID>TooGenericExceptionCaught:MediaPickerActivity.kt$MediaPickerActivity$e: RuntimeException</ID>
     <ID>TooGenericExceptionCaught:UploadStarter.kt$UploadStarter$e: Exception</ID>
     <ID>TooGenericExceptionThrown:ActionableEmptyView.kt$ActionableEmptyView$throw RuntimeException("$context: ActionableEmptyView must have a title (aevTitle)")</ID>
@@ -193,7 +192,6 @@
     <ID>TooGenericExceptionThrown:BaseListUseCase.kt$BaseListUseCase$throw RuntimeException("Duplicate stats type in a use case")</ID>
     <ID>TooGenericExceptionThrown:BasicFragmentDialog.kt$BasicFragmentDialog$throw RuntimeException("Hosting activity must implement BasicDialogNegativeClickInterface")</ID>
     <ID>TooGenericExceptionThrown:BasicFragmentDialog.kt$BasicFragmentDialog$throw RuntimeException("Hosting activity must implement BasicDialogPositiveClickInterface")</ID>
-    <ID>TooGenericExceptionThrown:GifMediaInsertUseCase.kt$GifMediaInsertUseCase$throw Exception("Failed to download the image.")</ID>
     <ID>TooGenericExceptionThrown:PageListAdapter.kt$PageListAdapter$throw Throwable("Unexpected view type")</ID>
     <ID>TooGenericExceptionThrown:PageParentAdapter.kt$PageParentAdapter$throw Throwable("Unexpected view type")</ID>
     <ID>TooGenericExceptionThrown:PageParentSearchAdapter.kt$PageParentSearchAdapter$throw Throwable("Unexpected view type")</ID>

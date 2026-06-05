@@ -70,6 +70,20 @@ class WpApiClientProvider @Inject constructor(
         }
     }
 
+    /**
+     * Always returns a Basic-auth client against the direct host using the SiteModel's
+     * application-password credentials, regardless of WP.com routing. Use this when you need to
+     * talk to the site's own REST endpoints with the application password — `getWpApiClient`
+     * routes WPCom-flagged sites (including Atomic) through the bearer-token path and the WP.com
+     * REST proxy, which doesn't expose application-password-authenticated routes like
+     * `/wp/v2/users/{id}/application-passwords`.
+     */
+    @Synchronized
+    fun getApplicationPasswordClient(site: SiteModel): WpApiClient =
+        selfHostedClients.getOrPut(site.id) {
+            createSelfHostedClient(site, uploadListener = null)
+        }
+
     private fun createSelfHostedClient(
         site: SiteModel,
         uploadListener: WpRequestExecutor.UploadListener?,
@@ -178,6 +192,26 @@ class WpApiClientProvider @Inject constructor(
             ParsedUrl.parse(site.buildUrl())
         )
     }
+
+    /**
+     * Builds a [WpOrgSiteApiUrlResolver] for an already-parsed REST API root
+     * URL (e.g. one returned by `WpLoginClient.apiDiscovery`). Exposed so
+     * callers don't have to construct the uniffi resolver directly — useful
+     * for testability.
+     */
+    fun urlResolverFor(
+        apiRootUrl: ParsedUrl
+    ): uniffi.wp_api.ApiUrlResolver = WpOrgSiteApiUrlResolver(apiRootUrl)
+
+    /**
+     * Always returns a direct-host [WpOrgSiteApiUrlResolver] for the site, regardless of WP.com
+     * routing — the resolver counterpart to [getApplicationPasswordClient]. Use it to resolve
+     * routes fetched through that client against the host they actually came from.
+     */
+    fun getDirectHostApiUrlResolver(
+        site: SiteModel
+    ): uniffi.wp_api.ApiUrlResolver =
+        WpOrgSiteApiUrlResolver(ParsedUrl.parse(site.buildUrl()))
 
     fun getApiRootUrlFrom(site: SiteModel): String = site.buildUrl()
 

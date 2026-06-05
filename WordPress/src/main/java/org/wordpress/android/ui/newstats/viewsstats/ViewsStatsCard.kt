@@ -64,8 +64,8 @@ import com.patrykandpatrick.vico.compose.cartesian.axis.HorizontalAxis
 import com.patrykandpatrick.vico.compose.cartesian.axis.VerticalAxis
 import com.patrykandpatrick.vico.compose.cartesian.data.CartesianChartModelProducer
 import com.patrykandpatrick.vico.compose.cartesian.data.CartesianValueFormatter
-import com.patrykandpatrick.vico.compose.cartesian.data.columnSeries
-import com.patrykandpatrick.vico.compose.cartesian.data.lineSeries
+import com.patrykandpatrick.vico.compose.cartesian.data.columnModel
+import com.patrykandpatrick.vico.compose.cartesian.data.lineModel
 import com.patrykandpatrick.vico.compose.cartesian.decoration.HorizontalLine
 import com.patrykandpatrick.vico.compose.cartesian.layer.ColumnCartesianLayer
 import com.patrykandpatrick.vico.compose.cartesian.layer.LineCartesianLayer
@@ -509,7 +509,7 @@ private fun ViewsStatsChart(
             val hasPreviousPeriod = chartData.previousPeriod.isNotEmpty()
             when (chartType) {
                 ChartType.LINE -> modelProducer.runTransaction {
-                    lineSeries {
+                    lineModel {
                         series(chartData.currentPeriod.map { it.views })
                         if (hasPreviousPeriod) {
                             series(chartData.previousPeriod.map { it.views })
@@ -517,7 +517,7 @@ private fun ViewsStatsChart(
                     }
                 }
                 ChartType.BAR -> modelProducer.runTransaction {
-                    columnSeries {
+                    columnModel {
                         if (hasPreviousPeriod) {
                             // Series 1: current value when no
                             // delta (rounded top)

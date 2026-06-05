@@ -80,9 +80,11 @@ import org.wordpress.android.ui.bloggingreminders.BloggingReminderUtils;
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewModel;
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper;
 import org.wordpress.android.util.PlansConstants;
+import org.wordpress.android.ui.posts.EditorCapabilityResolver;
+import org.wordpress.android.ui.posts.EditorCapabilityState;
+import org.wordpress.android.ui.posts.GutenbergKitAnnouncementController;
 import org.wordpress.android.ui.posts.GutenbergKitFeatureChecker;
-import org.wordpress.android.repositories.EditorSettingsRepository;
-import org.wordpress.android.util.config.GutenbergKitPluginsFeature;
+import org.wordpress.android.datasets.SiteSettingsProvider;
 import org.wordpress.android.ui.prefs.EditTextPreferenceWithValidation.ValidationType;
 import org.wordpress.android.ui.prefs.SiteSettingsFormatDialog.FormatType;
 import org.wordpress.android.ui.prefs.homepage.HomepageSettingsDialog;
@@ -195,9 +197,10 @@ public class SiteSettingsFragment extends PreferenceFragment
     @Inject UiHelpers mUiHelpers;
     @Inject JetpackFeatureRemovalPhaseHelper mJetpackFeatureRemovalPhaseHelper;
     @Inject BloggingPromptsSettingsHelper mPromptsSettingsHelper;
+    @Inject EditorCapabilityResolver mEditorCapabilityResolver;
     @Inject GutenbergKitFeatureChecker mGutenbergKitFeatureChecker;
-    @Inject GutenbergKitPluginsFeature mGutenbergKitPluginsFeature;
-    @Inject EditorSettingsRepository mEditorSettingsRepository;
+    @Inject GutenbergKitAnnouncementController mGutenbergKitAnnouncementController;
+    @Inject SiteSettingsProvider mSiteSettingsProvider;
 
     private BloggingRemindersViewModel mBloggingRemindersViewModel;
 
@@ -233,6 +236,7 @@ public class SiteSettingsFragment extends PreferenceFragment
     private WPSwitchPreference mGutenbergDefaultForNewPosts;
     private WPSwitchPreference mUseThemeStylesPref;
     private WPSwitchPreference mUseThirdPartyBlocksPref;
+    private WPSwitchPreference mGutenbergKitPref;
     private DetailListPreference mCategoryPref;
     private DetailListPreference mFormatPref;
     private WPPreference mDateFormatPref;
@@ -855,6 +859,8 @@ public class SiteSettingsFragment extends PreferenceFragment
             mSiteSettings.setUseThemeStyles((Boolean) newValue);
         } else if (preference == mUseThirdPartyBlocksPref) {
             mSiteSettings.setUseThirdPartyBlocks((Boolean) newValue);
+        } else if (preference == mGutenbergKitPref) {
+            mGutenbergKitAnnouncementController.setOverride(mSite, (Boolean) newValue);
         } else if (preference == mBloggingPromptsPref) {
             final boolean isEnabled = (boolean) newValue;
             mPromptsSettingsHelper.updatePromptsCardEnabledBlocking(mSite.getId(), isEnabled);
@@ -1047,6 +1053,10 @@ public class SiteSettingsFragment extends PreferenceFragment
                 (WPSwitchPreference) getChangePref(R.string.pref_key_use_third_party_blocks);
         mUseThirdPartyBlocksPref.setChecked(mSiteSettings.getUseThirdPartyBlocks());
 
+        mGutenbergKitPref =
+                (WPSwitchPreference) getChangePref(R.string.pref_key_gutenberg_kit_enabled);
+        mGutenbergKitPref.setChecked(mGutenbergKitFeatureChecker.isGutenbergKitEnabled(mSite));
+
         mSiteAcceleratorSettings = (PreferenceScreen) getClickPref(R.string.pref_key_site_accelerator_settings);
         mSiteAcceleratorSettingsNested =
                 (PreferenceScreen) getClickPref(R.string.pref_key_site_accelerator_settings_nested);
@@ -1088,33 +1098,42 @@ public class SiteSettingsFragment extends PreferenceFragment
             WPPrefUtils.removePreference(this, R.string.pref_key_homepage, R.string.pref_key_homepage_settings);
         }
 
-        // hide theme styles preference if GutenbergKit is not enabled
-        if (!mGutenbergKitFeatureChecker.isGutenbergKitEnabled()) {
+        // Available with no advisory falls off the end — the pref keeps its default state.
+        EditorCapabilityState themeStyles = mEditorCapabilityResolver.resolveThemeStyles(mSite);
+        if (themeStyles.isHidden()) {
             WPPrefUtils.removePreference(this, R.string.pref_key_site_editor, R.string.pref_key_use_theme_styles);
-        } else if (!mEditorSettingsRepository.getSupportsEditorSettingsForSite(mSite)) {
+        } else if (themeStyles.isUnsupported()) {
             mUseThemeStylesPref.setEnabled(false);
             mUseThemeStylesPref.setSummary(
                     getString(R.string.site_settings_use_theme_styles_summary) + "\n\n"
                             + getString(R.string.site_settings_use_theme_styles_unsupported));
-        } else if (!mEditorSettingsRepository.getThemeSupportsBlockStyles(mSite)) {
+        } else if (themeStyles.getAdvisory() == EditorCapabilityState.AdvisoryReason.ThemeNotBlockTheme) {
+            // Available — pref stays enabled, attach advisory summary
             mUseThemeStylesPref.setSummary(
                     getString(R.string.site_settings_use_theme_styles_summary) + "\n\n"
                             + getString(R.string.site_settings_use_theme_styles_not_block_theme));
         }
 
-        // hide third-party blocks preference if GutenbergKit or plugins feature is not enabled
-        if (!mGutenbergKitFeatureChecker.isGutenbergKitEnabled()
-                || !mGutenbergKitPluginsFeature.isEnabled()) {
+        EditorCapabilityState thirdPartyBlocks = mEditorCapabilityResolver.resolveThirdPartyBlocks(mSite);
+        if (thirdPartyBlocks.isHidden()) {
             WPPrefUtils.removePreference(
                     this, R.string.pref_key_site_editor,
                     R.string.pref_key_use_third_party_blocks);
-        } else if (!mEditorSettingsRepository.getSupportsEditorAssetsForSite(mSite)) {
+        } else if (thirdPartyBlocks.isUnsupported()) {
             mUseThirdPartyBlocksPref.setEnabled(false);
             mUseThirdPartyBlocksPref.setSummary(
                     getString(R.string.site_settings_use_third_party_blocks_summary)
                             + "\n\n"
                             + getString(
                             R.string.site_settings_use_third_party_blocks_unsupported));
+        }
+
+        // hide the GutenbergKit opt-in switch unless the remote feature flag is on
+        if (!mGutenbergKitFeatureChecker.isGutenbergKitRemoteFeatureEnabled()) {
+            WPPrefUtils.removePreference(this, R.string.pref_key_site_editor,
+                    R.string.pref_key_gutenberg_kit_enabled);
+        } else {
+            refreshGutenbergKitToggleAvailability();
         }
 
         // hide Admin options depending of capabilities on this site
@@ -1163,6 +1182,25 @@ public class SiteSettingsFragment extends PreferenceFragment
         initBloggingSection();
         removeEmptyCategories();
         initTaxonomies();
+    }
+
+    /**
+     * On Aztec-default sites the GBKit toggle is shown disabled with an explanatory summary —
+     * switching mobileEditor to "gutenberg" is a prerequisite. The state must refresh whenever
+     * site settings change (e.g., the user just flipped "Use block editor as default for new
+     * posts" on this screen), not only at first inflation.
+     */
+    private void refreshGutenbergKitToggleAvailability() {
+        if (mGutenbergKitPref == null) return;
+        if (mSiteSettingsProvider.isBlockEditorDefault(mSite)) {
+            mGutenbergKitPref.setEnabled(true);
+            mGutenbergKitPref.setSummary(R.string.site_settings_gutenberg_kit_enabled_summary);
+        } else {
+            mGutenbergKitPref.setEnabled(false);
+            mGutenbergKitPref.setSummary(
+                    getString(R.string.site_settings_gutenberg_kit_enabled_summary) + "\n\n"
+                            + getString(R.string.site_settings_gutenberg_kit_enabled_unsupported));
+        }
     }
 
     private void initTaxonomies() {
@@ -1242,7 +1280,7 @@ public class SiteSettingsFragment extends PreferenceFragment
                 mDeleteSitePref, mJpMonitorActivePref, mJpMonitorEmailNotesPref, mJpSsoPref,
                 mJpMonitorWpNotesPref, mJpBruteForcePref, mJpAllowlistPref, mJpMatchEmailPref, mJpUseTwoFactorPref,
                 mGutenbergDefaultForNewPosts, mUseThemeStylesPref, mUseThirdPartyBlocksPref,
-                mHomepagePref, mBloggingPromptsPref
+                mGutenbergKitPref, mHomepagePref, mBloggingPromptsPref
         };
 
         for (Preference preference : editablePreference) {
@@ -1588,6 +1626,10 @@ public class SiteSettingsFragment extends PreferenceFragment
         mGutenbergDefaultForNewPosts.setChecked(SiteUtils.isBlockEditorDefaultForNewPost(mSite));
         mUseThemeStylesPref.setChecked(mSiteSettings.getUseThemeStyles());
         mUseThirdPartyBlocksPref.setChecked(mSiteSettings.getUseThirdPartyBlocks());
+        if (mGutenbergKitPref != null) {
+            mGutenbergKitPref.setChecked(mGutenbergKitFeatureChecker.isGutenbergKitEnabled(mSite));
+            refreshGutenbergKitToggleAvailability();
+        }
         setAdFreeHostingChecked(mSiteSettings.isAdFreeHostingEnabled());
         boolean checked = mSiteSettings.isImprovedSearchEnabled() || mSiteSettings.getJetpackSearchEnabled();
         mImprovedSearch.setChecked(checked);

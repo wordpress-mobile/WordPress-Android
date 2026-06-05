@@ -68,7 +68,7 @@ class ApplicationPasswordAutoAuthDialogViewModelTest : BaseUnitTest() {
     @Test
     fun `createApplicationPassword with exception during API call falls back to manual login`() = runTest {
         whenever(applicationPasswordLoginHelper.getAuthorizationUrlComplete(testSite.url))
-            .thenReturn(testAuthUrl)
+            .thenReturn(ApplicationPasswordLoginHelper.DiscoveryResult.Authorized(testAuthUrl))
         val testException = RuntimeException("API client creation failed")
         whenever(wpApiClientProvider.getWpApiClientCookiesNonceAuthentication(eq(testSite)))
             .doThrow(testException)
@@ -107,7 +107,7 @@ class ApplicationPasswordAutoAuthDialogViewModelTest : BaseUnitTest() {
             password = "testpass123"
         }
         whenever(applicationPasswordLoginHelper.getAuthorizationUrlComplete(invalidSite.url))
-            .thenReturn(testAuthUrl)
+            .thenReturn(ApplicationPasswordLoginHelper.DiscoveryResult.Authorized(testAuthUrl))
 
         viewModel.navigationEvent.test {
             viewModel.createApplicationPassword(invalidSite, ApplicationPasswordCreationTracker.SOURCE_AUTO_MIGRATION)
@@ -133,7 +133,7 @@ class ApplicationPasswordAutoAuthDialogViewModelTest : BaseUnitTest() {
             password = ""
         }
         whenever(applicationPasswordLoginHelper.getAuthorizationUrlComplete(invalidSite.url))
-            .thenReturn(testAuthUrl)
+            .thenReturn(ApplicationPasswordLoginHelper.DiscoveryResult.Authorized(testAuthUrl))
 
         viewModel.navigationEvent.test {
             viewModel.createApplicationPassword(invalidSite, ApplicationPasswordCreationTracker.SOURCE_AUTO_MIGRATION)

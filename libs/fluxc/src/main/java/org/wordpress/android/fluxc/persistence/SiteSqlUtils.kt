@@ -260,6 +260,16 @@ class SiteSqlUtils
                 }).execute()
     }
 
+    fun updateWpApiRestUrl(localId: Int, wpApiRestUrl: String): Int {
+        return WellSql.update(SiteModel::class.java)
+                .whereId(localId)
+                .put(wpApiRestUrl, { value ->
+                    val cv = ContentValues()
+                    cv.put(SiteModelTable.WP_API_REST_URL, value)
+                    cv
+                }).execute()
+    }
+
     val wPComSites: SelectQuery<SiteModel>
         get() = WellSql.select(SiteModel::class.java)
                 .where().beginGroup()

@@ -537,6 +537,10 @@ class AppPrefsWrapper @Inject constructor(val buildConfigWrapper: BuildConfigWra
         get() = getBoolean(AppPrefs.DeletablePrefKey.HAS_SAVED_PRIVACY_SETTINGS, false)
         set(value) = AppPrefs.setBoolean(AppPrefs.DeletablePrefKey.HAS_SAVED_PRIVACY_SETTINGS, value)
 
+    var hasFetchedSites: Boolean
+        get() = getBoolean(AppPrefs.DeletablePrefKey.HAS_FETCHED_SITES, false)
+        set(value) = AppPrefs.setBoolean(AppPrefs.DeletablePrefKey.HAS_FETCHED_SITES, value)
+
     var pinnedSiteLocalIds: MutableSet<Int>
         get() = Gson().fromJson(AppPrefs.getPinnedSiteLocalIds(), Array<Int>::class.java).toMutableSet()
         set(value) = AppPrefs.setPinnedSiteLocalIds(Gson().toJson(value))
@@ -574,6 +578,18 @@ class AppPrefsWrapper @Inject constructor(val buildConfigWrapper: BuildConfigWra
 
     fun setStatsNewStatsSuggestionLastDismissedAt(timestamp: Long) =
         AppPrefs.setStatsNewStatsSuggestionLastDismissedAt(timestamp)
+
+    fun getGutenbergKitSiteOverride(siteUrl: String?): Boolean? =
+        AppPrefs.getGutenbergKitSiteOverride(siteUrl)
+
+    fun setGutenbergKitSiteOverride(siteUrl: String?, enabled: Boolean) =
+        AppPrefs.setGutenbergKitSiteOverride(siteUrl, enabled)
+
+    fun getGutenbergKitAnnouncementDeferredUntil(siteUrl: String?): Long =
+        AppPrefs.getGutenbergKitAnnouncementDeferredUntil(siteUrl)
+
+    fun setGutenbergKitAnnouncementDeferredUntil(siteUrl: String?, timestampMillis: Long) =
+        AppPrefs.setGutenbergKitAnnouncementDeferredUntil(siteUrl, timestampMillis)
 
     companion object {
         private const val LIGHT_MODE_ID = 0
