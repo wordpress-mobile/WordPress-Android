@@ -7,6 +7,7 @@ import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
 import org.mockito.kotlin.any
+import org.mockito.kotlin.argThat
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.never
 import org.mockito.kotlin.times
@@ -91,6 +92,14 @@ class SiteProvisioningSourceTest : BaseUnitTest(StandardTestDispatcher()) {
         if (!ok) whenever(editorSettingsRepository.hasCachedCapabilities(any())).thenReturn(cached)
     }
 
+    private fun provisionableSiteCopy() = SiteModel().apply {
+        id = TEST_SITE_LOCAL_ID
+        url = "https://test.example.com"
+        // Non-null REST root + XML-RPC url so both recovery branches short-circuit.
+        wpApiRestUrl = "https://test.example.com/wp-json"
+        xmlRpcUrl = "https://test.example.com/xmlrpc.php"
+    }
+
     // region auth stage
 
     @Test
@@ -172,6 +181,33 @@ class SiteProvisioningSourceTest : BaseUnitTest(StandardTestDispatcher()) {
         // No application password applies — it must not validate or mint, just probe via the proxy.
         verify(applicationPasswordValidator, never()).validate(any())
         verify(siteStore, never()).createApplicationPassword(any())
+    }
+
+    @Test
+    fun `carries minted credentials to the probe even when the re-read lacks them`() = test {
+        // ensureAuth reads one copy and the mint sets credentials on it; detectCapabilities re-reads a
+        // SEPARATE copy that — simulating a concurrent whole-row clobber (#22905) — carries none. The
+        // probe must still receive a credentialed site, because the pipeline hands the mint's creds
+        // forward as an immutable value rather than relying on the re-read or a shared, race-prone model.
+        val authCopy = provisionableSiteCopy()
+        val credentiallessReread = provisionableSiteCopy()
+        whenever(siteStore.getSiteByLocalId(TEST_SITE_LOCAL_ID)).thenReturn(authCopy, credentiallessReread)
+        stubHasStoredCredentials(false)
+        whenever(siteStore.createApplicationPassword(any())).thenAnswer { invocation ->
+            // The real createApplicationPassword sets the plain credentials on the passed site.
+            (invocation.arguments[0] as SiteModel).apply {
+                apiRestUsernamePlain = "user"
+                apiRestPasswordPlain = "pass"
+            }
+            OnApplicationPasswordCreated(authCopy, ApplicationPasswordCredentials("user", "pass", uuid = "u"))
+        }
+        stubCapabilityProbe(ok = true)
+
+        source.await(site)
+
+        verify(editorSettingsRepository).fetchEditorCapabilitiesForSite(
+            argThat { apiRestUsernamePlain == "user" && apiRestPasswordPlain == "pass" }
+        )
     }
 
     // endregion
