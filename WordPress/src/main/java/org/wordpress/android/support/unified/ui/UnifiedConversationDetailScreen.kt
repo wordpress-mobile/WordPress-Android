@@ -74,6 +74,7 @@ import coil.request.ImageRequest
 import coil.request.videoFrameMillis
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
+import org.wordpress.android.support.aibot.ui.WelcomeHeader
 import org.wordpress.android.support.aibot.util.formatRelativeTime
 import org.wordpress.android.support.he.model.AttachmentState
 import org.wordpress.android.support.he.model.AttachmentType
@@ -96,6 +97,7 @@ fun UnifiedConversationDetailScreen(
     conversation: UnifiedConversation,
     isLoading: Boolean,
     isSendingReply: Boolean,
+    userName: String,
     onBackClick: () -> Unit,
     onSendReply: (String, Boolean) -> Unit,
     onDownloadAttachment: (UnifiedAttachment) -> Unit,
@@ -193,6 +195,12 @@ fun UnifiedConversationDetailScreen(
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 if (isBot) {
+                    // The whole conversation is loaded at once, so the beginning is always
+                    // visible — show the welcome header like the Ask the Bots screen does.
+                    item {
+                        WelcomeHeader(userName)
+                    }
+
                     items(
                         items = conversation.messages,
                         key = { message -> message.id }
@@ -300,9 +308,9 @@ private fun MessageBubble(message: UnifiedMessage, timestamp: String) {
         modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = if (message.isUser) Alignment.End else Alignment.Start
     ) {
-        if (!message.isUser && message.authorName.isNotBlank()) {
+        if (!message.isUser) {
             Text(
-                text = message.authorName,
+                text = stringResource(R.string.unified_support_status_bot),
                 style = MaterialTheme.typography.labelSmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.padding(bottom = 2.dp, start = 4.dp, end = 4.dp)

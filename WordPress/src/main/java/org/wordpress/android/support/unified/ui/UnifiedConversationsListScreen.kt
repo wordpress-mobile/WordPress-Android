@@ -136,10 +136,10 @@ private fun UnifiedStatusBadge(
         Text(
             text = stringResource(R.string.unified_support_status_bot),
             style = MaterialTheme.typography.labelSmall,
-            color = MaterialTheme.colorScheme.onTertiaryContainer,
+            color = MaterialTheme.colorScheme.onPrimaryContainer,
             modifier = modifier
                 .background(
-                    color = MaterialTheme.colorScheme.tertiaryContainer,
+                    color = MaterialTheme.colorScheme.primary.copy(alpha = 0.20f),
                     shape = RoundedCornerShape(4.dp)
                 )
                 .padding(horizontal = 6.dp, vertical = 2.dp)

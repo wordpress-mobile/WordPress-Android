@@ -169,12 +169,14 @@ class UnifiedSupportActivity : AppCompatActivity() {
                     val isSendingReply by viewModel.isSendingReply.collectAsState()
                     val videoDownloadState by viewModel.videoDownloadState.collectAsState()
                     val replyFormState by viewModel.replyFormState.collectAsState()
+                    val userInfo by viewModel.userInfo.collectAsState()
                     selectedConversation?.let { conversation ->
                         UnifiedConversationDetailScreen(
                             snackbarHostState = snackbarHostState,
                             conversation = conversation,
                             isLoading = isLoadingConversation,
                             isSendingReply = isSendingReply,
+                            userName = userInfo.userName,
                             onBackClick = {
                                 viewModel.clearReplyForm()
                                 viewModel.onBackClick()

@@ -199,7 +199,7 @@ fun AIBotConversationDetailScreen(
 }
 
 @Composable
-private fun WelcomeHeader(userName: String) {
+fun WelcomeHeader(userName: String) {
     val greeting = stringResource(R.string.ai_bot_welcome_greeting, userName)
     val message = stringResource(R.string.ai_bot_welcome_message)
     val welcomeDescription = "$greeting. $message"

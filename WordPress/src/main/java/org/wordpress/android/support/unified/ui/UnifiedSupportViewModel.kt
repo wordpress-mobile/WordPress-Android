@@ -164,7 +164,12 @@ class UnifiedSupportViewModel @Inject constructor(
             try {
                 val isNewConversation = conversation.id == NEW_CONVERSATION_ID
                 val updated = if (isNewConversation) {
-                    aiBotSupportRepository.createNewConversation(message)?.toUnifiedConversation()
+                    // The create endpoint only returns the bot reply, so keep the local
+                    // messages (including the optimistic question) like the Ask the Bots flow.
+                    aiBotSupportRepository.createNewConversation(message)?.toUnifiedConversation()?.let { created ->
+                        val localMessages = _selectedConversation.value?.messages ?: emptyList()
+                        created.copy(messages = localMessages + created.messages)
+                    }
                 } else {
                     val encryptedLogIds = if (includeAppLogs) {
                         encryptedAppLogsUploader.uploadLogs()
@@ -184,7 +189,7 @@ class UnifiedSupportViewModel @Inject constructor(
                     _selectedConversation.value = updated
                     clearReplyForm()
                     if (isNewConversation) {
-                        _conversations.value = listOf(updated) + _conversations.value
+                        _conversations.value = listOf(updated.copy(messages = emptyList())) + _conversations.value
                     } else {
                         replaceInList(updated)
                     }
