@@ -1691,6 +1691,17 @@ open class SiteStore @Inject constructor(
         }
     }
 
+    /**
+     * Targeted persist for [SiteModel.xmlRpcUrl] — for callers (e.g. XML-RPC rediscovery) that heal/discover
+     * only that one column and don't want to full-row write an in-memory model. The generic update path also
+     * persists xmlRpcUrl (and preserves it on absence), so this is a convenience for the single-column heal,
+     * not the sole writer.
+     */
+    suspend fun persistXmlRpcUrl(localId: Int, xmlRpcUrl: String): OnSiteChanged =
+        coroutineEngine.withDefaultContext(T.API, this, "persistXmlRpcUrl") {
+            OnSiteChanged(siteSqlUtils.updateXmlRpcUrl(localId, xmlRpcUrl))
+        }
+
     @Suppress("SwallowedException", "TooGenericExceptionCaught")
     private fun updateApplicationPassword(siteModel: SiteModel): OnSiteChanged {
         return try {

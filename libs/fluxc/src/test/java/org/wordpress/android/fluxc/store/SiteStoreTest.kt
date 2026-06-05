@@ -648,6 +648,13 @@ class SiteStoreTest {
     }
 
     @Test
+    fun `persistXmlRpcUrl writes the column via the targeted writer`() = test {
+        siteStore.persistXmlRpcUrl(9, "https://selfhosted.test/xmlrpc.php")
+
+        verify(siteSqlUtils).updateXmlRpcUrl(9, "https://selfhosted.test/xmlrpc.php")
+    }
+
+    @Test
     fun `fetchPostFormats returns empty list for WPAPI site without crashing`() =
         test {
             org.mockito.Mockito.mockStatic(
