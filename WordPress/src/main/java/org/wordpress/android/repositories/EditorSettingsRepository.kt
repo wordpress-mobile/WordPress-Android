@@ -35,6 +35,17 @@ class EditorSettingsRepository @Inject constructor(
         appPrefsWrapper.hasSiteEditorCapabilities(site)
 
     /**
+     * True when capability detection can't run yet because an Atomic site's
+     * direct-host probe needs an application password that hasn't been
+     * provisioned. The password is minted asynchronously on the My Site
+     * screen (see ApplicationPasswordViewModelSlice), so a first-login fetch
+     * can fail purely for lack of credentials — callers should treat this as
+     * pending, not a connection failure.
+     */
+    fun isAwaitingApplicationPassword(site: SiteModel): Boolean =
+        site.isWPComAtomic && !site.hasApplicationPasswordCredentials()
+
+    /**
      * Returns whether the site is known to support the
      * `wp-block-editor/v1/settings` endpoint, based on
      * cached editor settings or a previously persisted
@@ -139,24 +150,66 @@ class EditorSettingsRepository @Inject constructor(
      * assume the API lives at `/wp-json` (custom permalink structures or
      * REST API paths would break that assumption), then use the routes list
      * returned by discovery directly — no second request needed.
+     *
+     * Discovery is unauthenticated, so it can't reach a *private* Atomic host
+     * — the host gates anonymous requests and the API root never loads. When
+     * the site has application-password credentials, fall back to an
+     * authenticated probe against the same direct host (Basic auth), which is
+     * exactly the transport the editor uses there. Without credentials there's
+     * nothing to authenticate with, so we report failure. See #22883.
      */
     private suspend fun fetchRouteSupportViaDirectHostDiscovery(
         site: SiteModel
     ): Boolean {
         val discovery = wpLoginClient.apiDiscovery(site.url)
-        if (discovery !is ApiDiscoveryResult.Success) {
+        if (discovery is ApiDiscoveryResult.Success) {
+            val resolver = wpApiClientProvider.urlResolverFor(
+                discovery.success.apiRootUrl
+            )
+            persistRouteSupport(site, discovery.success.apiDetails, resolver)
+            return true
+        }
+        AppLog.w(
+            T.EDITOR,
+            "Direct-host API discovery failed for" +
+                " site=${site.name}: ${discovery::class.simpleName}"
+        )
+        return if (site.hasApplicationPasswordCredentials()) {
+            fetchRouteSupportViaApplicationPasswordClient(site)
+        } else {
             AppLog.w(
                 T.EDITOR,
-                "Direct-host API discovery failed for" +
-                    " site=${site.name}: ${discovery::class.simpleName}"
+                "No application password for site=${site.name};" +
+                    " skipping authenticated direct-host probe"
             )
-            return false
+            false
         }
-        val resolver = wpApiClientProvider.urlResolverFor(
-            discovery.success.apiRootUrl
-        )
-        persistRouteSupport(site, discovery.success.apiDetails, resolver)
-        return true
+    }
+
+    /**
+     * Authenticated direct-host route probe for Atomic sites whose host
+     * rejects the anonymous discovery request (e.g. private sites). Uses the
+     * site's application-password (Basic auth) client and resolves routes
+     * against the same direct host — mirrors
+     * [fetchRouteSupportViaConfiguredClient] but bypasses the WP.com proxy.
+     */
+    private suspend fun fetchRouteSupportViaApplicationPasswordClient(
+        site: SiteModel
+    ): Boolean {
+        val client = wpApiClientProvider.getApplicationPasswordClient(site)
+        val resolver = wpApiClientProvider.getDirectHostApiUrlResolver(site)
+        val response = client.request { it.apiRoot().get() }
+        return if (response is WpRequestResult.Success) {
+            persistRouteSupport(site, response.response.data, resolver)
+            true
+        } else {
+            AppLog.w(
+                T.EDITOR,
+                "Authenticated direct-host probe failed for" +
+                    " site=${site.name}: ${response::class.simpleName}"
+            )
+            false
+        }
     }
 
     private fun persistRouteSupport(
@@ -215,3 +268,7 @@ class EditorSettingsRepository @Inject constructor(
         false
     }
 }
+
+private fun SiteModel.hasApplicationPasswordCredentials(): Boolean =
+    !apiRestUsernamePlain.isNullOrEmpty() &&
+        !apiRestPasswordPlain.isNullOrEmpty()

@@ -18,6 +18,7 @@ import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpApiClientProvider
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.ui.accounts.login.ApplicationPasswordLoginHelper
+import org.wordpress.android.ui.accounts.login.CredentialsChangedNotifier
 import org.wordpress.android.ui.accounts.login.SiteApiRestUrlRecoverer
 import org.wordpress.android.ui.mysite.MySiteCardAndItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickLinksItem.QuickLinkItem
@@ -41,6 +42,7 @@ class ApplicationPasswordViewModelSlice @Inject constructor(
     private val siteXMLRPCClient: SiteXMLRPCClient,
     private val siteApiRestUrlRecoverer: SiteApiRestUrlRecoverer,
     private val dispatcher: Dispatcher,
+    private val credentialsChangedNotifier: CredentialsChangedNotifier,
     @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher,
 ) {
     lateinit var scope: CoroutineScope
@@ -112,6 +114,7 @@ class ApplicationPasswordViewModelSlice @Inject constructor(
             if (!createResult.isError && createResult.credentials != null) {
                 wpApiClientProvider.clearSelfHostedClient(storedSite.id)
                 appLogWrapper.d(AppLog.T.MAIN, "A_P: Headless mint succeeded for ${storedSite.url}")
+                credentialsChangedNotifier.notifyChanged(storedSite.id)
                 // The mint goes through the Jetpack tunnel and never runs discovery — without this
                 // step, freshly minted Atomic sites end up with working creds but a NULL
                 // wpApiRestUrl in the local DB. Run in the background so the card hides immediately.
