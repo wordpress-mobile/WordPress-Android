@@ -67,6 +67,7 @@ class UnifiedSupportRepository @Inject constructor(
         conversationId: Long,
         message: String,
         attachments: List<String> = emptyList(),
+        encryptedLogIds: List<String> = emptyList(),
     ): UnifiedConversation? =
         withContext(ioDispatcher) {
             val response = wpComApiClient.request { requestBuilder ->
@@ -75,6 +76,7 @@ class UnifiedSupportRepository @Inject constructor(
                     params = ReplyToUnifiedConversationParams(
                         message = message,
                         attachments = attachments,
+                        encryptedLogIds = encryptedLogIds,
                     )
                 )
             }

@@ -20,10 +20,9 @@ import org.wordpress.android.support.he.model.VideoDownloadState
 import org.wordpress.android.support.he.repository.CreateConversationResult
 import org.wordpress.android.support.he.repository.HESupportRepository
 import org.wordpress.android.support.he.util.AttachmentStateValidator
+import org.wordpress.android.support.he.util.EncryptedAppLogsUploader
 import org.wordpress.android.support.he.util.TempAttachmentsUtil
 import org.wordpress.android.util.AppLog
-import org.wordpress.android.util.EncryptedLogging
-import org.wordpress.android.util.LogFileProviderWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
 import java.io.File
 import javax.inject.Inject
@@ -34,8 +33,7 @@ class HESupportViewModel @Inject constructor(
     private val heSupportRepository: HESupportRepository,
     @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher,
     private val tempAttachmentsUtil: TempAttachmentsUtil,
-    private val encryptedLogging: EncryptedLogging,
-    private val logFileProvider: LogFileProviderWrapper,
+    private val encryptedAppLogsUploader: EncryptedAppLogsUploader,
     private val attachmentStateValidator: AttachmentStateValidator,
     accountStore: AccountStore,
     appLogWrapper: AppLogWrapper,
@@ -89,7 +87,7 @@ class HESupportViewModel @Inject constructor(
                 _isSendingMessage.value = true
 
                 val logsIds: List<String> = if (includeAppLogs) {
-                     uploadLogs()
+                     encryptedAppLogsUploader.uploadLogs()
                 } else {
                     emptyList()
                 }
@@ -133,27 +131,6 @@ class HESupportViewModel @Inject constructor(
                     "Error creating HE conversation ${e.stackTraceToString()}"
                 )
             }
-        }
-    }
-
-    @Suppress("NestedBlockDepth", "TooGenericExceptionCaught")
-    private fun uploadLogs(): List<String> {
-        try {
-            val encryptedLogsUuid = mutableListOf<String>()
-            logFileProvider.getLogFiles().forEach { logFile ->
-                if (logFile.exists()) {
-                    encryptedLogging.encryptAndUploadLogFile(
-                        logFile = logFile,
-                        shouldStartUploadImmediately = true
-                    )?.let { uuid ->
-                        encryptedLogsUuid.add(uuid)
-                    }
-                }
-            }
-            return encryptedLogsUuid
-        } catch (throwable: Throwable) {
-            appLogWrapper.e(AppLog.T.SUPPORT, "Error uploading logs: ${throwable.stackTraceToString()}")
-            throw throwable
         }
     }
 

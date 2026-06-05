@@ -18,6 +18,7 @@ import org.wordpress.android.support.common.ui.ConversationsSupportViewModel
 import org.wordpress.android.support.he.model.ConversationReplyFormState
 import org.wordpress.android.support.he.model.VideoDownloadState
 import org.wordpress.android.support.he.util.AttachmentStateValidator
+import org.wordpress.android.support.he.util.EncryptedAppLogsUploader
 import org.wordpress.android.support.he.util.TempAttachmentsUtil
 import org.wordpress.android.support.unified.model.UnifiedConversation
 import org.wordpress.android.support.unified.model.UnifiedMessage
@@ -37,6 +38,7 @@ class UnifiedSupportViewModel @Inject constructor(
     private val aiBotSupportRepository: AIBotSupportRepository,
     private val tempAttachmentsUtil: TempAttachmentsUtil,
     private val attachmentStateValidator: AttachmentStateValidator,
+    private val encryptedAppLogsUploader: EncryptedAppLogsUploader,
     @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher,
     appLogWrapper: AppLogWrapper,
     networkUtilsWrapper: NetworkUtilsWrapper,
@@ -158,22 +160,24 @@ class UnifiedSupportViewModel @Inject constructor(
                 messages = conversation.messages + optimisticMessage
             )
 
-            if (includeAppLogs) {
-                // We will add the logs when the RS layer is ready for this
-            }
-
             var tempAttachments: List<File> = emptyList()
             try {
                 val isNewConversation = conversation.id == NEW_CONVERSATION_ID
                 val updated = if (isNewConversation) {
                     aiBotSupportRepository.createNewConversation(message)?.toUnifiedConversation()
                 } else {
+                    val encryptedLogIds = if (includeAppLogs) {
+                        encryptedAppLogsUploader.uploadLogs()
+                    } else {
+                        emptyList()
+                    }
                     val attachmentUris = _replyFormState.value.attachmentState.acceptedUris
                     tempAttachments = tempAttachmentsUtil.createTempFilesFrom(attachmentUris)
                     repository.replyToConversation(
                         conversationId = conversation.id,
                         message = message,
-                        attachments = tempAttachments.map { it.path }
+                        attachments = tempAttachments.map { it.path },
+                        encryptedLogIds = encryptedLogIds
                     )
                 }
                 if (updated != null) {
