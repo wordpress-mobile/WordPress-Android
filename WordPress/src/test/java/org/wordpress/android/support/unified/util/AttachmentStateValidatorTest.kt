@@ -158,6 +158,36 @@ class AttachmentStateValidatorTest : BaseUnitTest() {
     }
 
     @Test
+    fun `removeAttachment recalculates total size`() = test {
+        val uri1 = mockUriWithSize(12 * MB)
+        val uri2 = mockUriWithSize(7 * MB)
+        val state = validator.addAttachments(AttachmentState(), listOf(uri1, uri2))
+        assertThat(state.currentTotalSizeBytes).isEqualTo(19 * MB)
+
+        val updated = validator.removeAttachment(state, uri1)
+
+        assertThat(updated.currentTotalSizeBytes).isEqualTo(7 * MB)
+    }
+
+    @Test
+    fun `removeAttachment frees space for previously rejected attachments`() = test {
+        // 12MB accepted, then 10MB rejected (12+10 exceeds the 20MB limit)
+        val uri1 = mockUriWithSize(12 * MB)
+        val uri2 = mockUriWithSize(10 * MB)
+        var state = validator.addAttachments(AttachmentState(), listOf(uri1))
+        state = validator.addAttachments(state, listOf(uri2))
+        assertThat(state.rejectedUris).containsExactly(uri2)
+
+        // Removing the 12MB attachment makes room to re-add the rejected 10MB one
+        state = validator.removeAttachment(state, uri1)
+        state = validator.addAttachments(state, state.rejectedUris)
+
+        assertThat(state.acceptedUris).containsExactly(uri2)
+        assertThat(state.rejectedUris).isEmpty()
+        assertThat(state.currentTotalSizeBytes).isEqualTo(10 * MB)
+    }
+
+    @Test
     fun `removeAttachment does nothing when URI not in list`() = test {
         val uri1 = mockUriWithSize(1 * MB)
         val uri2 = mockUriWithSize(1 * MB)

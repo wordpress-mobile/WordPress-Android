@@ -45,7 +45,7 @@ class UnifiedSupportRepository @Inject constructor(
         this.userId = userId
     }
 
-    suspend fun loadConversations(): List<UnifiedConversation> = withContext(ioDispatcher) {
+    suspend fun loadConversations(): List<UnifiedConversation>? = withContext(ioDispatcher) {
         val response = wpComApiClient.request { requestBuilder ->
             requestBuilder.unifiedConversations().getUnifiedConversationList()
         }
@@ -53,7 +53,7 @@ class UnifiedSupportRepository @Inject constructor(
             is WpRequestResult.Success -> response.response.data.toUnifiedConversations()
             else -> {
                 appLogWrapper.e(AppLog.T.SUPPORT, "Error loading unified conversations: $response")
-                emptyList()
+                null
             }
         }
     }

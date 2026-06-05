@@ -37,6 +37,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -108,7 +109,7 @@ fun UnifiedConversationDetailScreen(
     onReplyBottomSheetVisibilityChange: (Boolean) -> Unit,
     attachmentActionsListener: AttachmentActionsListener,
 ) {
-    var messageText by remember { mutableStateOf("") }
+    var messageText by rememberSaveable { mutableStateOf("") }
     var previewAttachment by remember { mutableStateOf<UnifiedAttachment?>(null) }
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     val scope = rememberCoroutineScope()
@@ -117,10 +118,15 @@ fun UnifiedConversationDetailScreen(
     val isBot = conversation.isBot
     val isBotTyping = isBot && isSendingReply
 
-    // Scroll to bottom when a new message is added or when the bot starts "typing".
+    // Scroll to bottom when a new message is added or when the bot starts "typing". The item count
+    // is derived from the data because listState.layoutInfo may not include items added in this
+    // composition yet.
     LaunchedEffect(conversation.id, conversation.messages.lastOrNull()?.id, isBotTyping) {
         if (conversation.messages.isNotEmpty() || isBotTyping) {
-            listState.scrollToItem(listState.layoutInfo.totalItemsCount.coerceAtLeast(1) - 1)
+            val headerCount = if (isBot) 1 else 2 // welcome header vs status header + title card
+            val typingCount = if (isBotTyping) 1 else 0
+            val itemCount = headerCount + conversation.messages.size + typingCount + 1 // trailing spacer
+            listState.scrollToItem(itemCount - 1)
         }
     }
 

@@ -104,8 +104,15 @@ abstract class ConversationsSupportViewModel<ConversationType: Conversation>(
 
             _conversationsState.value = if (isRefresh) ConversationsState.Refreshing else ConversationsState.Loading
             val conversations = getConversations()
-            _conversations.value = conversations
-            _conversationsState.value = ConversationsState.Loaded
+            if (conversations != null) {
+                _conversations.value = conversations
+                _conversationsState.value = ConversationsState.Loaded
+            } else {
+                _errorMessage.value = ErrorType.GENERAL
+                _conversationsState.value = ConversationsState.Error
+                appLogWrapper.e(AppLog.T.SUPPORT, "Error loading support conversations: " +
+                        "error retrieving them from server")
+            }
         } catch (throwable: Throwable) {
             _errorMessage.value = ErrorType.GENERAL
             _conversationsState.value = ConversationsState.Error
@@ -116,7 +123,8 @@ abstract class ConversationsSupportViewModel<ConversationType: Conversation>(
         }
     }
 
-    protected abstract suspend fun getConversations(): List<ConversationType>
+    /** Returns the conversations, or null when they could not be retrieved. */
+    protected abstract suspend fun getConversations(): List<ConversationType>?
 
     fun refreshConversations() {
         viewModelScope.launch {

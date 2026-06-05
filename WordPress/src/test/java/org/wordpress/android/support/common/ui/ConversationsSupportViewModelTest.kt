@@ -149,6 +149,18 @@ class ConversationsSupportViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `init sets GENERAL error and Error state when getConversations returns null`() = test {
+        viewModel.setConversationsToReturn(null)
+
+        viewModel.init()
+        advanceUntilIdle()
+
+        assertThat(viewModel.errorMessage.value).isEqualTo(ConversationsSupportViewModel.ErrorType.GENERAL)
+        assertThat(viewModel.conversationsState.value).isInstanceOf(ConversationsState.Error.javaClass)
+        verify(appLogWrapper).e(any(), any<String>())
+    }
+
+    @Test
     fun `init sets NoNetwork state when network is not available`() = test {
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(false)
 
@@ -406,7 +418,7 @@ class ConversationsSupportViewModelTest : BaseUnitTest() {
         private var shouldThrowOnInit = false
         private var shouldThrowOnGetConversations = false
         private var shouldThrowOnGetConversation = false
-        private var conversationsToReturn: List<TestConversation> = emptyList()
+        private var conversationsToReturn: List<TestConversation>? = emptyList()
         private var conversationToReturn: TestConversation? = null
 
         fun setShouldThrowOnInit(shouldThrow: Boolean) {
@@ -421,7 +433,7 @@ class ConversationsSupportViewModelTest : BaseUnitTest() {
             shouldThrowOnGetConversation = shouldThrow
         }
 
-        fun setConversationsToReturn(conversations: List<TestConversation>) {
+        fun setConversationsToReturn(conversations: List<TestConversation>?) {
             conversationsToReturn = conversations
         }
 
@@ -438,7 +450,7 @@ class ConversationsSupportViewModelTest : BaseUnitTest() {
         }
 
         @Suppress("TooGenericExceptionThrown")
-        override suspend fun getConversations(): List<TestConversation> {
+        override suspend fun getConversations(): List<TestConversation>? {
             if (shouldThrowOnGetConversations) {
                 throw RuntimeException("Get conversations failed")
             }

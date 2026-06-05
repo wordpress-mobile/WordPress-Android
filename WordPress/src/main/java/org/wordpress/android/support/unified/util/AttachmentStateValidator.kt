@@ -51,10 +51,14 @@ class AttachmentStateValidator @Inject constructor(
         )
     }
 
-    fun removeAttachment(currentState: AttachmentState, uri: Uri): AttachmentState {
-        val newAcceptedUris = currentState.acceptedUris.filter { it != uri }
-        return currentState.copy(acceptedUris = newAcceptedUris)
-    }
+    suspend fun removeAttachment(currentState: AttachmentState, uri: Uri): AttachmentState =
+        withContext(ioDispatcher) {
+            val newAcceptedUris = currentState.acceptedUris.filter { it != uri }
+            currentState.copy(
+                acceptedUris = newAcceptedUris,
+                currentTotalSizeBytes = calculateTotalSize(newAcceptedUris)
+            )
+        }
 
     private fun calculateTotalSize(uris: List<Uri>): Long = uris.sumOf { it.fileSize(application) }
 

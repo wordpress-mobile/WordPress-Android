@@ -132,7 +132,7 @@ class UnifiedSupportViewModel @Inject constructor(
         }
     }
 
-    override suspend fun getConversations(): List<UnifiedConversation> = repository.loadConversations()
+    override suspend fun getConversations(): List<UnifiedConversation>? = repository.loadConversations()
 
     override suspend fun getConversation(conversationId: Long): UnifiedConversation? =
         repository.loadConversation(conversationId)
