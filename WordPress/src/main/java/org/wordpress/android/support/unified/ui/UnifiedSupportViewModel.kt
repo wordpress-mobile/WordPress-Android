@@ -11,15 +11,12 @@ import kotlinx.coroutines.launch
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.modules.IO_THREAD
-import org.wordpress.android.support.aibot.model.BotConversation
-import org.wordpress.android.support.aibot.model.BotMessage
-import org.wordpress.android.support.aibot.repository.AIBotSupportRepository
 import org.wordpress.android.support.common.ui.ConversationsSupportViewModel
-import org.wordpress.android.support.he.model.ConversationReplyFormState
-import org.wordpress.android.support.he.model.VideoDownloadState
-import org.wordpress.android.support.he.util.AttachmentStateValidator
-import org.wordpress.android.support.he.util.EncryptedAppLogsUploader
-import org.wordpress.android.support.he.util.TempAttachmentsUtil
+import org.wordpress.android.support.unified.model.ConversationReplyFormState
+import org.wordpress.android.support.unified.model.VideoDownloadState
+import org.wordpress.android.support.unified.util.AttachmentStateValidator
+import org.wordpress.android.support.unified.util.EncryptedAppLogsUploader
+import org.wordpress.android.support.unified.util.TempAttachmentsUtil
 import org.wordpress.android.support.unified.model.UnifiedConversation
 import org.wordpress.android.support.unified.model.UnifiedMessage
 import org.wordpress.android.support.unified.repository.UnifiedSupportRepository
@@ -35,7 +32,6 @@ import javax.inject.Named
 class UnifiedSupportViewModel @Inject constructor(
     accountStore: AccountStore,
     private val repository: UnifiedSupportRepository,
-    private val aiBotSupportRepository: AIBotSupportRepository,
     private val tempAttachmentsUtil: TempAttachmentsUtil,
     private val attachmentStateValidator: AttachmentStateValidator,
     private val encryptedAppLogsUploader: EncryptedAppLogsUploader,
@@ -57,9 +53,7 @@ class UnifiedSupportViewModel @Inject constructor(
     val videoDownloadState: StateFlow<VideoDownloadState> = _videoDownloadState.asStateFlow()
 
     override fun initRepository(accessToken: String) {
-        repository.init(accessToken)
-        // New conversations are created as bot chats through the AI bot endpoint.
-        aiBotSupportRepository.init(accessToken, accountStore.account.userId)
+        repository.init(accessToken, accountStore.account.userId)
     }
 
     fun getAuthorizationHeader(): String = "$BEARER_TAG ${accountStore.accessToken}"
@@ -166,7 +160,7 @@ class UnifiedSupportViewModel @Inject constructor(
                 val updated = if (isNewConversation) {
                     // The create endpoint only returns the bot reply, so keep the local
                     // messages (including the optimistic question) like the Ask the Bots flow.
-                    aiBotSupportRepository.createNewConversation(message)?.toUnifiedConversation()?.let { created ->
+                    repository.createNewBotConversation(message)?.let { created ->
                         val localMessages = _selectedConversation.value?.messages ?: emptyList()
                         created.copy(messages = localMessages + created.messages)
                     }
@@ -273,29 +267,6 @@ class UnifiedSupportViewModel @Inject constructor(
             if (existing.id == updated.id) updated.copy(messages = emptyList()) else existing
         }
     }
-
-    private fun BotConversation.toUnifiedConversation(): UnifiedConversation =
-        UnifiedConversation(
-            id = id,
-            title = "",
-            description = lastMessage,
-            status = UnifiedConversation.STATUS_BOT,
-            canAcceptReply = true,
-            createdAt = createdAt,
-            updatedAt = mostRecentMessageDate,
-            messages = messages.map { it.toUnifiedMessage() }
-        )
-
-    private fun BotMessage.toUnifiedMessage(): UnifiedMessage =
-        UnifiedMessage(
-            id = id,
-            rawText = rawText,
-            formattedText = formattedText,
-            authorRole = if (isWrittenByUser) UnifiedMessage.AUTHOR_ROLE_USER else UnifiedMessage.AUTHOR_ROLE_BOT,
-            authorName = "",
-            createdAt = date,
-            attachments = emptyList()
-        )
 
     companion object {
         private const val NEW_CONVERSATION_ID = 0L

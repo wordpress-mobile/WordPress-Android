@@ -51,8 +51,6 @@ fun SupportScreen(
     userEmail: String,
     userAvatarUrl: String?,
     isLoggedIn: Boolean,
-    showAskTheBots: Boolean,
-    showAskHappinessEngineers: Boolean,
     showUnifiedSupport: Boolean,
     showNetworkDebugging: Boolean,
     isNetworkTrackingEnabled: Boolean,
@@ -62,8 +60,6 @@ fun SupportScreen(
     onBackClick: () -> Unit,
     onLoginClick: () -> Unit,
     onHelpCenterClick: () -> Unit,
-    onAskTheBotsClick: () -> Unit,
-    onAskHappinessEngineersClick: () -> Unit,
     onUnifiedSupportClick: () -> Unit,
     onApplicationLogsClick: () -> Unit,
     onNetworkTrackingToggle: (Boolean) -> Unit,
@@ -191,30 +187,6 @@ fun SupportScreen(
             HorizontalDivider(
                 color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f)
             )
-
-            if (showAskTheBots) {
-                SupportOptionItem(
-                    title = stringResource(R.string.support_screen_ask_bots_title),
-                    description = stringResource(R.string.support_screen_ask_bots_description),
-                    onClick = onAskTheBotsClick
-                )
-
-                HorizontalDivider(
-                    color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f)
-                )
-            }
-
-            if (showAskHappinessEngineers) {
-                SupportOptionItem(
-                    title = stringResource(R.string.support_screen_ask_happiness_engineers_title),
-                    description = stringResource(R.string.support_screen_ask_happiness_engineers_description),
-                    onClick = onAskHappinessEngineersClick,
-                )
-
-                HorizontalDivider(
-                    color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f)
-                )
-            }
 
             if (showUnifiedSupport) {
                 SupportOptionItem(
@@ -443,8 +415,6 @@ private fun SupportScreenPreview() {
             userEmail = "test.user@gmail.com",
             userAvatarUrl = null,
             isLoggedIn = true,
-            showAskTheBots = true,
-            showAskHappinessEngineers = true,
             showUnifiedSupport = true,
             showNetworkDebugging = true,
             isNetworkTrackingEnabled = true,
@@ -454,8 +424,6 @@ private fun SupportScreenPreview() {
             onBackClick = {},
             onLoginClick = {},
             onHelpCenterClick = {},
-            onAskTheBotsClick = {},
-            onAskHappinessEngineersClick = {},
             onUnifiedSupportClick = {},
             onApplicationLogsClick = {},
             onNetworkTrackingToggle = {},
@@ -477,8 +445,6 @@ private fun SupportScreenPreviewDark() {
             userEmail = "test.user@gmail.com",
             userAvatarUrl = null,
             isLoggedIn = true,
-            showAskTheBots = true,
-            showAskHappinessEngineers = true,
             showUnifiedSupport = true,
             showNetworkDebugging = true,
             isNetworkTrackingEnabled = false,
@@ -488,8 +454,6 @@ private fun SupportScreenPreviewDark() {
             onBackClick = {},
             onLoginClick = {},
             onHelpCenterClick = {},
-            onAskTheBotsClick = {},
-            onAskHappinessEngineersClick = {},
             onUnifiedSupportClick = {},
             onApplicationLogsClick = {},
             onNetworkTrackingToggle = {},
@@ -511,8 +475,6 @@ private fun SupportScreenPreviewLoggedOut() {
             userEmail = "",
             userAvatarUrl = null,
             isLoggedIn = false,
-            showAskTheBots = false,
-            showAskHappinessEngineers = false,
             showUnifiedSupport = false,
             showNetworkDebugging = false,
             isNetworkTrackingEnabled = false,
@@ -522,8 +484,6 @@ private fun SupportScreenPreviewLoggedOut() {
             onBackClick = {},
             onLoginClick = {},
             onHelpCenterClick = {},
-            onAskTheBotsClick = {},
-            onAskHappinessEngineersClick = {},
             onUnifiedSupportClick = {},
             onApplicationLogsClick = {},
             onNetworkTrackingToggle = {},

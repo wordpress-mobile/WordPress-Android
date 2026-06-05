@@ -12,9 +12,11 @@ import org.wordpress.android.ui.compose.utils.markdownToAnnotatedString
 import org.wordpress.android.util.AppLog
 import rs.wordpress.api.kotlin.WpComApiClient
 import rs.wordpress.api.kotlin.WpRequestResult
+import uniffi.wp_api.CreateBotConversationParams
 import uniffi.wp_api.JsonValue
 import uniffi.wp_api.ReplyToUnifiedConversationParams
 import uniffi.wp_api.UnifiedConversationSummary
+import java.util.Date
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -26,13 +28,21 @@ class UnifiedSupportRepository @Inject constructor(
     @Volatile
     private var accessToken: String? = null
 
+    /**
+     * User ID required by the bot conversations endpoint.
+     * Marked as @Volatile to ensure visibility across threads.
+     */
+    @Volatile
+    private var userId: Long = 0
+
     private val wpComApiClient: WpComApiClient by lazy {
         check(accessToken != null) { "Repository not initialized" }
         wpComApiClientProvider.getWpComApiClient(accessToken!!)
     }
 
-    fun init(accessToken: String) {
+    fun init(accessToken: String, userId: Long) {
         this.accessToken = accessToken
+        this.userId = userId
     }
 
     suspend fun loadConversations(): List<UnifiedConversation> = withContext(ioDispatcher) {
@@ -58,6 +68,29 @@ class UnifiedSupportRepository @Inject constructor(
             is WpRequestResult.Success -> response.response.data.toUnifiedConversation()
             else -> {
                 appLogWrapper.e(AppLog.T.SUPPORT, "Error loading unified conversation $conversationId: $response")
+                null
+            }
+        }
+    }
+
+    /**
+     * Creates a brand-new bot conversation through the support bots endpoint. The conversation
+     * then shows up in the unified conversation list and accepts replies through it.
+     */
+    suspend fun createNewBotConversation(message: String): UnifiedConversation? = withContext(ioDispatcher) {
+        val response = wpComApiClient.request { requestBuilder ->
+            requestBuilder.supportBots().createBotConversation(
+                botId = BOT_ID,
+                CreateBotConversationParams(
+                    message = message,
+                    userId = userId
+                )
+            )
+        }
+        when (response) {
+            is WpRequestResult.Success -> response.response.data.toUnifiedConversation()
+            else -> {
+                appLogWrapper.e(AppLog.T.SUPPORT, "Error creating new bot conversation: $response")
                 null
             }
         }
@@ -106,6 +139,29 @@ class UnifiedSupportRepository @Inject constructor(
             )
         }
 
+    private fun uniffi.wp_api.BotConversation.toUnifiedConversation(): UnifiedConversation =
+        UnifiedConversation(
+            id = chatId.toLong(),
+            title = "",
+            description = messages.lastOrNull()?.content.orEmpty(),
+            status = UnifiedConversation.STATUS_BOT,
+            canAcceptReply = true,
+            createdAt = createdAt,
+            updatedAt = messages.lastOrNull()?.createdAt ?: Date(),
+            messages = messages.map { it.toUnifiedMessage() }
+        )
+
+    private fun uniffi.wp_api.BotMessage.toUnifiedMessage(): UnifiedMessage =
+        UnifiedMessage(
+            id = messageId.toLong(),
+            rawText = content,
+            formattedText = markdownToAnnotatedString(content),
+            authorRole = if (role == "user") UnifiedMessage.AUTHOR_ROLE_USER else UnifiedMessage.AUTHOR_ROLE_BOT,
+            authorName = "",
+            createdAt = createdAt,
+            attachments = emptyList()
+        )
+
     private fun uniffi.wp_api.UnifiedConversation.toUnifiedConversation(): UnifiedConversation =
         UnifiedConversation(
             id = id.toLong(),
@@ -148,5 +204,6 @@ class UnifiedSupportRepository @Inject constructor(
 
     companion object {
         private const val METADATA_KEY_SCORE = "score"
+        private const val BOT_ID = "jetpack-chat-mobile"
     }
 }

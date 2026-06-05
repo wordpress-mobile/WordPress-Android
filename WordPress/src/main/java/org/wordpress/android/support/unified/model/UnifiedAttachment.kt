@@ -1,6 +1,6 @@
 package org.wordpress.android.support.unified.model
 
-import org.wordpress.android.support.he.model.AttachmentType
+import org.wordpress.android.support.unified.model.AttachmentType
 
 data class UnifiedAttachment(
     val id: Long,

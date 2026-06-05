@@ -22,8 +22,6 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.network.NetworkRequestsRetentionPeriod
-import org.wordpress.android.support.aibot.ui.AIBotSupportActivity
-import org.wordpress.android.support.he.ui.HESupportActivity
 import org.wordpress.android.support.logs.ui.LogsActivity
 import org.wordpress.android.support.unified.ui.UnifiedSupportActivity
 import org.wordpress.android.ui.ActivityLauncher
@@ -63,8 +61,6 @@ class SupportActivity : AppCompatActivity() {
                             userEmail = userInfo.userEmail,
                             userAvatarUrl = userInfo.avatarUrl,
                             isLoggedIn = isLoggedIn,
-                            showAskTheBots = optionsVisibility.showAskTheBots,
-                            showAskHappinessEngineers = optionsVisibility.showAskHappinessEngineers,
                             showUnifiedSupport = optionsVisibility.showUnifiedSupport,
                             showNetworkDebugging = networkTrackingState.showNetworkDebugging,
                             isNetworkTrackingEnabled = networkTrackingState.isTrackingEnabled,
@@ -76,8 +72,6 @@ class SupportActivity : AppCompatActivity() {
                             onBackClick = { finish() },
                             onLoginClick = { viewModel.onLoginClick() },
                             onHelpCenterClick = { viewModel.onHelpCenterClick() },
-                            onAskTheBotsClick = { viewModel.onAskTheBotsClick() },
-                            onAskHappinessEngineersClick = { viewModel.onAskHappinessEngineersClick() },
                             onUnifiedSupportClick = { viewModel.onUnifiedSupportClick() },
                             onApplicationLogsClick = { viewModel.onApplicationLogsClick() },
                             onNetworkTrackingToggle = { viewModel.onNetworkTrackingToggle(it) },
@@ -116,13 +110,9 @@ private fun getRetentionPeriodStringRes(period: NetworkRequestsRetentionPeriod):
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.navigationEvents.collect { event ->
                     when (event) {
-                        is SupportViewModel.NavigationEvent.NavigateToAskTheBots -> navigateToAskTheBots()
                         is SupportViewModel.NavigationEvent.NavigateToLogin -> navigateToLogin()
                         is SupportViewModel.NavigationEvent.NavigateToHelpCenter -> navigateToHelpCenter()
                         is SupportViewModel.NavigationEvent.NavigateToApplicationLogs -> navigateToApplicationLogs()
-                        is SupportViewModel.NavigationEvent.NavigateToAskHappinessEngineers -> {
-                            navigateToAskTheHappinessEngineers()
-                        }
                         is SupportViewModel.NavigationEvent.NavigateToUnifiedSupport -> {
                             navigateToUnifiedSupport()
                         }
@@ -133,18 +123,6 @@ private fun getRetentionPeriodStringRes(period: NetworkRequestsRetentionPeriod):
                 }
             }
         }
-    }
-
-    private fun navigateToAskTheBots() {
-        startActivity(
-            AIBotSupportActivity.Companion.createIntent(this)
-        )
-    }
-
-    private fun navigateToAskTheHappinessEngineers() {
-        startActivity(
-            HESupportActivity.Companion.createIntent(this)
-        )
     }
 
     private fun navigateToUnifiedSupport() {

@@ -73,19 +73,16 @@ import coil.decode.VideoFrameDecoder
 import coil.request.ImageRequest
 import coil.request.videoFrameMillis
 import kotlinx.coroutines.launch
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.ui.text.style.TextAlign
 import org.wordpress.android.R
-import org.wordpress.android.support.aibot.ui.WelcomeHeader
-import org.wordpress.android.support.aibot.util.formatRelativeTime
-import org.wordpress.android.support.he.model.AttachmentState
-import org.wordpress.android.support.he.model.AttachmentType
-import org.wordpress.android.support.he.model.ConversationReplyFormState
-import org.wordpress.android.support.he.model.VideoDownloadState
-import org.wordpress.android.support.he.ui.AttachmentFullscreenImagePreview
-import org.wordpress.android.support.he.ui.AttachmentFullscreenVideoPlayer
-import org.wordpress.android.support.he.ui.ConversationStatusBadge
-import org.wordpress.android.support.he.ui.HESupportActivity
-import org.wordpress.android.support.he.ui.TicketMainContentView
-import org.wordpress.android.support.he.util.AttachmentActionsListener
+import org.wordpress.android.support.unified.util.formatRelativeTime
+import org.wordpress.android.support.unified.model.AttachmentState
+import org.wordpress.android.support.unified.model.AttachmentType
+import org.wordpress.android.support.unified.model.ConversationReplyFormState
+import org.wordpress.android.support.unified.model.VideoDownloadState
+import org.wordpress.android.support.unified.util.AttachmentActionsListener
 import org.wordpress.android.support.unified.model.UnifiedAttachment
 import org.wordpress.android.support.unified.model.UnifiedConversation
 import org.wordpress.android.support.unified.model.UnifiedMessage
@@ -829,7 +826,7 @@ private fun UnifiedAttachmentItem(
                         }
                     }
                     .apply {
-                        addHeader(HESupportActivity.AUTHORIZATION_TAG, authorizationHeader)
+                        addHeader(UnifiedSupportActivity.AUTHORIZATION_TAG, authorizationHeader)
                     }
                     .build(),
                 contentDescription = attachment.filename,
@@ -872,6 +869,54 @@ private fun UnifiedAttachmentItem(
                 contentDescription = null,
                 tint = MaterialTheme.colorScheme.primary,
                 modifier = Modifier.size(48.dp)
+            )
+        }
+    }
+}
+
+@Composable
+private fun WelcomeHeader(userName: String) {
+    val greeting = stringResource(R.string.ai_bot_welcome_greeting, userName)
+    val message = stringResource(R.string.ai_bot_welcome_message)
+    val welcomeDescription = "$greeting. $message"
+
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 8.dp)
+            .clearAndSetSemantics {
+                contentDescription = welcomeDescription
+            },
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surface
+        ),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(20.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            Text(
+                text = "✨",
+                style = MaterialTheme.typography.displaySmall
+            )
+
+            Text(
+                text = stringResource(R.string.ai_bot_welcome_greeting, userName),
+                style = MaterialTheme.typography.titleLarge,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.semantics { heading() }
+            )
+
+            Text(
+                text = stringResource(R.string.ai_bot_welcome_message),
+                style = MaterialTheme.typography.bodyLarge,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                textAlign = TextAlign.Center
             )
         }
     }

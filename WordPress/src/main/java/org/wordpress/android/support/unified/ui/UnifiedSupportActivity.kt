@@ -31,7 +31,7 @@ import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.support.common.ui.ConversationsSupportViewModel
-import org.wordpress.android.support.he.util.AttachmentActionsListener
+import org.wordpress.android.support.unified.util.AttachmentActionsListener
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.mediapicker.MediaPickerActivity
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup
@@ -245,6 +245,8 @@ class UnifiedSupportActivity : AppCompatActivity() {
     }
 
     companion object {
+        const val AUTHORIZATION_TAG = "Authorization"
+
         @JvmStatic
         fun createIntent(context: Context): Intent = Intent(context, UnifiedSupportActivity::class.java)
     }

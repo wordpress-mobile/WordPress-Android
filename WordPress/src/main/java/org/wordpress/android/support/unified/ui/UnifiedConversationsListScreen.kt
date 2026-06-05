@@ -24,10 +24,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
-import org.wordpress.android.support.aibot.util.formatRelativeTime
+import org.wordpress.android.support.unified.util.formatRelativeTime
 import org.wordpress.android.support.common.ui.ConversationsListScreen
 import org.wordpress.android.support.common.ui.ConversationsSupportViewModel
-import org.wordpress.android.support.he.ui.ConversationStatusBadge
 import org.wordpress.android.support.unified.model.UnifiedConversation
 
 @OptIn(ExperimentalMaterial3Api::class)

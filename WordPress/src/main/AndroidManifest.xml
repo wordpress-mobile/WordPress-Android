@@ -475,11 +475,6 @@
             android:theme="@style/WordPress.NoActionBar"
             android:label="@string/subscribers"/>
 
-        <activity android:name="org.wordpress.android.support.aibot.ui.AIBotSupportActivity"
-            android:theme="@style/WordPress.NoActionBar"
-            android:label="@string/ai_bot_conversations_title"
-            android:windowSoftInputMode="adjustResize"/>
-
         <activity android:name="org.wordpress.android.support.main.ui.SupportActivity"
             android:theme="@style/WordPress.NoActionBar"
             android:label="@string/support_screen_title"/>
@@ -487,11 +482,6 @@
         <activity android:name="org.wordpress.android.support.logs.ui.LogsActivity"
             android:theme="@style/WordPress.NoActionBar"
             android:label="@string/support_screen_application_logs_title"/>
-
-        <activity android:name="org.wordpress.android.support.he.ui.HESupportActivity"
-            android:theme="@style/WordPress.NoActionBar"
-            android:label="@string/support_screen_title"
-            android:windowSoftInputMode="adjustResize"/>
 
         <activity android:name="org.wordpress.android.support.unified.ui.UnifiedSupportActivity"
             android:theme="@style/WordPress.NoActionBar"
