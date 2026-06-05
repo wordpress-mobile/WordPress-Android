@@ -1836,10 +1836,20 @@ open class SiteStore @Inject constructor(
                         site.wpApiRestUrl = siteFromDB.wpApiRestUrl
                     }
                 }
-                val isUpdated = (siteSqlUtils.insertOrUpdateSite(site) == 1)
-                if (isUpdated) {
+                val localId = siteSqlUtils.insertOrUpdateSiteReturningId(site)
+                if (localId != 0) {
                     rowsAffected++
                     updatedSites.add(site)
+                }
+                // Credentials + wpApiRestUrl are excluded from the full-row write, so when this site carries
+                // app-password creds (XML-RPC app-password login), persist them on the row that was just
+                // written (localId) via the targeted writers.
+                val apUsername = site.apiRestUsernamePlain
+                val apPassword = site.apiRestPasswordPlain
+                if (localId != 0 && !apUsername.isNullOrEmpty() && !apPassword.isNullOrEmpty()) {
+                    siteSqlUtils.updateApplicationPasswordCredentials(localId, apUsername, apPassword)
+                    site.wpApiRestUrl?.takeIf { it.isNotEmpty() }
+                        ?.let { siteSqlUtils.updateWpApiRestUrl(localId, it) }
                 }
             } catch (caughtException: DuplicateSiteException) {
                 duplicateSiteFound = true

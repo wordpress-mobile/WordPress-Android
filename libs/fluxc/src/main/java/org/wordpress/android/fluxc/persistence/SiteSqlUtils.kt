@@ -105,7 +105,17 @@ class SiteSqlUtils
             .decryptAPIRestCredentials()
 
     /**
-     * Inserts the given SiteModel into the DB, or updates an existing entry where sites match.
+     * Inserts or updates [site] and returns the number of rows affected (1 if a row was written, 0
+     * otherwise). Use [insertOrUpdateSiteReturningId] when you need the local id of the written row.
+     */
+    @Throws(DuplicateSiteException::class)
+    fun insertOrUpdateSite(site: SiteModel?): Int =
+        if (insertOrUpdateSiteReturningId(site) != 0) 1 else 0
+
+    /**
+     * Inserts the given SiteModel into the DB, or updates an existing entry where sites match, returning the
+     * local id of the written row (0 if nothing was written). Returning the id lets callers target that exact
+     * row with the single-column writers without a second, fragile lookup.
      *
      * Possible cases:
      * 1. Exists in the DB already and matches by local id (simple update) -> UPDATE
@@ -117,7 +127,7 @@ class SiteSqlUtils
      */
     @Suppress("LongMethod", "ReturnCount", "ComplexMethod")
     @Throws(DuplicateSiteException::class)
-    fun insertOrUpdateSite(site: SiteModel?): Int {
+    fun insertOrUpdateSiteReturningId(site: SiteModel?): Int {
         if (site == null) {
             return 0
         }
@@ -214,8 +224,9 @@ class SiteSqlUtils
         return if (siteResult.isEmpty()) {
             // No site with this local ID, REMOTE_ID + URL, or XMLRPC URL, then insert it
             AppLog.d(DB, "Inserting site: " + finalSiteModel.url)
+            // WellSql back-fills the auto-assigned id onto the model on insert (Identifiable.setId).
             WellSql.insert(finalSiteModel).asSingleTransaction(true).execute()
-            1
+            finalSiteModel.id
         } else {
             // Update old site
             AppLog.d(DB, "Updating site: " + finalSiteModel.url)
@@ -245,6 +256,7 @@ class SiteSqlUtils
                                         SiteModelTable.API_REST_PASSWORD_IV
                                 )
                         ).execute()
+                oldId
             } catch (e: SQLiteConstraintException) {
                 AppLog.e(
                         DB,

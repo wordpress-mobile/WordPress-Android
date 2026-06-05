@@ -267,6 +267,35 @@ class SiteSqlUtilsTest {
                 .isEqualTo("https://migrated.test/xmlrpc.php")
     }
 
+    @Test
+    fun `insertOrUpdateSiteReturningId returns the matched row id on update`() {
+        WellSql.insert(SiteModel().apply {
+            siteId = 42
+            url = "https://example.test"
+        }).execute()
+        val existingId = siteSqlUtils.getSites().single().id
+
+        // A fresh inbound model (id = 0) that matches the existing row by SITE_ID + URL.
+        val returnedId = siteSqlUtils.insertOrUpdateSiteReturningId(SiteModel().apply {
+            siteId = 42
+            url = "https://example.test"
+            name = "Updated"
+        })
+
+        assertThat(returnedId).isEqualTo(existingId)
+    }
+
+    @Test
+    fun `insertOrUpdateSiteReturningId returns the new row id on insert`() {
+        val returnedId = siteSqlUtils.insertOrUpdateSiteReturningId(SiteModel().apply {
+            siteId = 99
+            url = "https://newsite.test"
+        })
+
+        assertThat(returnedId).isNotEqualTo(0)
+        assertThat(siteSqlUtils.getSites().single().id).isEqualTo(returnedId)
+    }
+
     // Raw read that bypasses SiteSqlUtils' decryptAPIRestCredentials, so tests can assert on the stored
     // ciphertext columns directly without invoking the AndroidKeyStore-backed EncryptionUtils.
     private fun storedSite(): SiteModel = WellSql.select(SiteModel::class.java).asModel.single()

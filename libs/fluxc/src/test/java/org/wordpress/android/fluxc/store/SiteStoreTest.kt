@@ -180,16 +180,16 @@ class SiteStoreTest {
         val siteB = SiteModel()
         sitesModel.sites = listOf(siteA, siteB)
         whenever(siteRestClient.fetchSites(payload.filters, false)).thenReturn(sitesModel)
-        whenever(siteSqlUtils.insertOrUpdateSite(siteA)).thenReturn(1)
-        whenever(siteSqlUtils.insertOrUpdateSite(siteB)).thenReturn(1)
+        whenever(siteSqlUtils.insertOrUpdateSiteReturningId(siteA)).thenReturn(1)
+        whenever(siteSqlUtils.insertOrUpdateSiteReturningId(siteB)).thenReturn(1)
 
         val onSiteChanged = siteStore.fetchSites(payload)
 
         assertThat(onSiteChanged.rowsAffected).isEqualTo(2)
         assertThat(onSiteChanged.error).isNull()
         val inOrder = inOrder(siteSqlUtils)
-        inOrder.verify(siteSqlUtils).insertOrUpdateSite(siteA)
-        inOrder.verify(siteSqlUtils).insertOrUpdateSite(siteB)
+        inOrder.verify(siteSqlUtils).insertOrUpdateSiteReturningId(siteA)
+        inOrder.verify(siteSqlUtils).insertOrUpdateSiteReturningId(siteB)
         inOrder.verify(siteSqlUtils).removeWPComRestSitesAbsentFromList(postSqlUtils, sitesModel.sites)
     }
 
@@ -222,8 +222,8 @@ class SiteStoreTest {
         sitesModel.sites = listOf(siteA, siteB)
         sitesModel.jetpackCPSites = listOf(siteC)
         whenever(siteRestClient.fetchSites(payload.filters, false)).thenReturn(sitesModel)
-        whenever(siteSqlUtils.insertOrUpdateSite(siteA)).thenReturn(1)
-        whenever(siteSqlUtils.insertOrUpdateSite(siteB)).thenReturn(1)
+        whenever(siteSqlUtils.insertOrUpdateSiteReturningId(siteA)).thenReturn(1)
+        whenever(siteSqlUtils.insertOrUpdateSiteReturningId(siteB)).thenReturn(1)
 
         siteStore.fetchSites(payload)
 
@@ -252,8 +252,8 @@ class SiteStoreTest {
         }
         sitesModel.sites = listOf(siteA, siteB)
         whenever(siteRestClient.fetchSites(payload.filters, false)).thenReturn(sitesModel)
-        whenever(siteSqlUtils.insertOrUpdateSite(siteA)).thenReturn(1)
-        whenever(siteSqlUtils.insertOrUpdateSite(siteB)).thenReturn(1)
+        whenever(siteSqlUtils.insertOrUpdateSiteReturningId(siteA)).thenReturn(1)
+        whenever(siteSqlUtils.insertOrUpdateSiteReturningId(siteB)).thenReturn(1)
 
         siteStore.fetchSites(payload)
 
@@ -652,6 +652,25 @@ class SiteStoreTest {
         siteStore.persistXmlRpcUrl(9, "https://selfhosted.test/xmlrpc.php")
 
         verify(siteSqlUtils).updateXmlRpcUrl(9, "https://selfhosted.test/xmlrpc.php")
+    }
+
+    @Test
+    fun `createOrUpdateSites persists app-password credentials on the stamped row`() {
+        val appPwSite = SiteModel().apply {
+            selfHostedSiteId = 77L
+            url = "https://selfhosted.test"
+            xmlRpcUrl = "https://selfhosted.test/xmlrpc.php"
+            origin = SiteModel.ORIGIN_XMLRPC
+            apiRestUsernamePlain = "user"
+            apiRestPasswordPlain = "pass"
+            wpApiRestUrl = "https://selfhosted.test/wp-json/"
+        }
+        whenever(siteSqlUtils.insertOrUpdateSiteReturningId(any())).thenReturn(9)
+
+        siteStore.onAction(SiteActionBuilder.newUpdateSitesAction(SitesModel(listOf(appPwSite))))
+
+        verify(siteSqlUtils).updateApplicationPasswordCredentials(9, "user", "pass")
+        verify(siteSqlUtils).updateWpApiRestUrl(9, "https://selfhosted.test/wp-json/")
     }
 
     @Test
