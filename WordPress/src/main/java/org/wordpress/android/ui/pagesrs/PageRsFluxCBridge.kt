@@ -32,10 +32,13 @@ internal class PageRsFluxCBridge @Inject constructor(
     private val postMapper: PostRsToFluxCMapper,
 ) {
     /**
-     * Returns a [PostModel] for [remotePageId] that is guaranteed to exist
-     * in FluxC's local database with `isPage = true`. If [lastModified] is
-     * provided and differs from the cached row's `remoteLastModified`, the
-     * cache is considered stale and the page is re-fetched from the server.
+     * Returns a [PostModel] for [remotePageId] that exists in FluxC's local
+     * database with `isPage = true`. If [lastModified] is provided and differs
+     * from the cached row's `remoteLastModified`, the cache is considered stale
+     * and the page is re-fetched from the server — unless the cached row has
+     * unsaved local edits, in which case it is returned as-is to preserve them
+     * (FluxC will not overwrite a locally-changed row, so a network fetch in
+     * that case would be wasted).
      *
      * @throws IllegalStateException if the page cannot be fetched or inserted.
      */
@@ -47,7 +50,7 @@ internal class PageRsFluxCBridge @Inject constructor(
         postStore.getPostByRemotePostId(remotePageId, site)?.let { cached ->
             val fresh = lastModified == null ||
                     lastModified == cached.remoteLastModified
-            if (cached.isPage && fresh) {
+            if (cached.isPage && (fresh || cached.isLocallyChanged)) {
                 return cached
             }
         }

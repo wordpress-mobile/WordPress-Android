@@ -60,6 +60,25 @@ class PageRsFluxCBridgeTest {
     }
 
     @Test
+    fun `stale cached page with local changes short-circuits to avoid wasted fetch`() = runTest {
+        val site = SiteModel().apply { id = 1 }
+        val cached = PostModel().apply {
+            setRemotePostId(REMOTE_ID)
+            setIsPage(true)
+            setRemoteLastModified("2026-06-01T00:00:00Z")
+            setIsLocallyChanged(true)
+        }
+        whenever(postStore.getPostByRemotePostId(REMOTE_ID, site)).thenReturn(cached)
+
+        val result = bridge.fetchAndBridge(
+            REMOTE_ID, site, lastModified = "2026-06-05T00:00:00Z"
+        )
+
+        assertThat(result).isSameAs(cached)
+        verify(wpApiClientProvider, never()).getWpApiClient(eq(site), anyOrNull())
+    }
+
+    @Test
     fun `fast path is skipped when cached row is not a page`() = runTest {
         val site = SiteModel().apply { id = 1 }
         val cached = PostModel().apply {

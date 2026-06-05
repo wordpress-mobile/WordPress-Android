@@ -60,8 +60,6 @@ internal class PagesRsListViewModel @Inject constructor(
     val snackbarMessages = _snackbarMessages.receiveAsFlow()
 
     private val _site: SiteModel? = selectedSiteRepository.getSelectedSite()
-    private val site: SiteModel
-        get() = requireNotNull(_site) { "No selected site — Activity should have finished" }
 
     init {
         if (_site == null) {
@@ -72,6 +70,7 @@ internal class PagesRsListViewModel @Inject constructor(
 
     @MainThread
     fun onTabChanged(tab: PageRsListTab) {
+        val site = _site ?: return
         if (tab == lastTrackedTab) return
         lastTrackedTab = tab
         analyticsTracker.track(
@@ -83,6 +82,7 @@ internal class PagesRsListViewModel @Inject constructor(
 
     @MainThread
     fun initTab(tab: PageRsListTab) {
+        val site = _site ?: return
         if (collections.containsKey(tab) || initializingTabs.contains(tab)) return
 
         initializingTabs.add(tab)
@@ -225,6 +225,7 @@ internal class PagesRsListViewModel @Inject constructor(
      */
     @MainThread
     fun openPage(remotePageId: Long, tab: PageRsListTab) {
+        val site = _site ?: return
         if (_isOpeningPage.value || tab == PageRsListTab.TRASHED) return
         if (!checkNetwork()) return
 
