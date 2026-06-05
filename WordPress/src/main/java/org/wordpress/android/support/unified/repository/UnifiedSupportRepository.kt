@@ -63,12 +63,19 @@ class UnifiedSupportRepository @Inject constructor(
         }
     }
 
-    suspend fun replyToConversation(conversationId: Long, message: String): UnifiedConversation? =
+    suspend fun replyToConversation(
+        conversationId: Long,
+        message: String,
+        attachments: List<String> = emptyList(),
+    ): UnifiedConversation? =
         withContext(ioDispatcher) {
             val response = wpComApiClient.request { requestBuilder ->
                 requestBuilder.unifiedConversations().replyToUnifiedConversation(
                     conversationId = conversationId.toULong(),
-                    params = ReplyToUnifiedConversationParams(message = message)
+                    params = ReplyToUnifiedConversationParams(
+                        message = message,
+                        attachments = attachments,
+                    )
                 )
             }
             when (response) {

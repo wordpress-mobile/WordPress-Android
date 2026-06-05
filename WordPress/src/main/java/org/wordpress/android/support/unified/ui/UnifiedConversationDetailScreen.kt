@@ -1,6 +1,5 @@
 package org.wordpress.android.support.unified.ui
 
-import android.net.Uri
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -57,7 +56,6 @@ import androidx.compose.material3.SheetState
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.heading
@@ -79,6 +77,7 @@ import org.wordpress.android.R
 import org.wordpress.android.support.aibot.util.formatRelativeTime
 import org.wordpress.android.support.he.model.AttachmentState
 import org.wordpress.android.support.he.model.AttachmentType
+import org.wordpress.android.support.he.model.ConversationReplyFormState
 import org.wordpress.android.support.he.model.VideoDownloadState
 import org.wordpress.android.support.he.ui.AttachmentFullscreenImagePreview
 import org.wordpress.android.support.he.ui.AttachmentFullscreenVideoPlayer
@@ -98,16 +97,19 @@ fun UnifiedConversationDetailScreen(
     isLoading: Boolean,
     isSendingReply: Boolean,
     onBackClick: () -> Unit,
-    onSendReply: (String) -> Unit,
+    onSendReply: (String, Boolean) -> Unit,
     onDownloadAttachment: (UnifiedAttachment) -> Unit,
     onGetAuthorizationHeaderArgument: () -> String,
     videoDownloadState: VideoDownloadState,
     onStartVideoDownload: (String) -> Unit,
     onResetVideoDownloadState: () -> Unit,
+    replyFormState: ConversationReplyFormState,
+    onReplyMessageChange: (String) -> Unit,
+    onReplyIncludeAppLogsChange: (Boolean) -> Unit,
+    onReplyBottomSheetVisibilityChange: (Boolean) -> Unit,
+    attachmentActionsListener: AttachmentActionsListener,
 ) {
     var messageText by remember { mutableStateOf("") }
-    var replyText by rememberSaveable { mutableStateOf("") }
-    var showReplySheet by rememberSaveable { mutableStateOf(false) }
     var previewAttachment by remember { mutableStateOf<UnifiedAttachment?>(null) }
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     val scope = rememberCoroutineScope()
@@ -155,7 +157,7 @@ fun UnifiedConversationDetailScreen(
                             onMessageTextChange = { messageText = it },
                             onSendClick = {
                                 if (messageText.isNotBlank()) {
-                                    onSendReply(messageText)
+                                    onSendReply(messageText, false)
                                     messageText = ""
                                 }
                             }
@@ -166,7 +168,7 @@ fun UnifiedConversationDetailScreen(
                     Box(modifier = Modifier.navigationBarsPadding()) {
                         ReplyButton(
                             enabled = !isLoading,
-                            onClick = { showReplySheet = true }
+                            onClick = { onReplyBottomSheetVisibilityChange(true) }
                         )
                     }
                 }
@@ -245,22 +247,25 @@ fun UnifiedConversationDetailScreen(
         }
     }
 
-    if (showReplySheet) {
+    if (replyFormState.isBottomSheetVisible) {
         UnifiedReplyBottomSheet(
             sheetState = sheetState,
             isSending = isSendingReply,
-            messageText = replyText,
-            onMessageChange = { replyText = it },
+            messageText = replyFormState.message,
+            includeAppLogs = replyFormState.includeAppLogs,
+            onMessageChange = onReplyMessageChange,
+            onIncludeAppLogsChange = onReplyIncludeAppLogsChange,
             onDismiss = {
                 scope.launch { sheetState.hide() }
-                    .invokeOnCompletion { showReplySheet = false }
+                    .invokeOnCompletion { onReplyBottomSheetVisibilityChange(false) }
             },
-            onSend = { message ->
-                onSendReply(message)
-                replyText = ""
+            onSend = { message, includeAppLogs ->
+                onSendReply(message, includeAppLogs)
                 scope.launch { sheetState.hide() }
-                    .invokeOnCompletion { showReplySheet = false }
+                    .invokeOnCompletion { onReplyBottomSheetVisibilityChange(false) }
             },
+            attachmentState = replyFormState.attachmentState,
+            attachmentActionsListener = attachmentActionsListener,
         )
     }
 
@@ -444,9 +449,13 @@ private fun UnifiedReplyBottomSheet(
     sheetState: SheetState,
     isSending: Boolean,
     messageText: String,
+    includeAppLogs: Boolean,
     onMessageChange: (String) -> Unit,
+    onIncludeAppLogsChange: (Boolean) -> Unit,
     onDismiss: () -> Unit,
-    onSend: (String) -> Unit,
+    onSend: (String, Boolean) -> Unit,
+    attachmentState: AttachmentState,
+    attachmentActionsListener: AttachmentActionsListener,
 ) {
     ModalBottomSheet(
         onDismissRequest = onDismiss,
@@ -485,7 +494,7 @@ private fun UnifiedReplyBottomSheet(
                 )
 
                 TextButton(
-                    onClick = { onSend(messageText) },
+                    onClick = { onSend(messageText, includeAppLogs) },
                     enabled = messageText.isNotBlank() && !isSending
                 ) {
                     if (isSending) {
@@ -504,23 +513,15 @@ private fun UnifiedReplyBottomSheet(
 
             TicketMainContentView(
                 messageText = messageText,
-                includeAppLogs = false,
+                includeAppLogs = includeAppLogs,
                 onMessageChanged = onMessageChange,
-                onIncludeAppLogsChanged = {},
+                onIncludeAppLogsChanged = onIncludeAppLogsChange,
                 enabled = !isSending,
-                attachmentsEnabled = false,
-                appLogsEnabled = false,
-                attachmentState = AttachmentState(),
-                attachmentActionsListener = NoOpAttachmentActionsListener
+                attachmentState = attachmentState,
+                attachmentActionsListener = attachmentActionsListener
             )
         }
     }
-}
-
-@Suppress("EmptyFunctionBlock")
-private object NoOpAttachmentActionsListener : AttachmentActionsListener {
-    override fun onAddImageClick() {}
-    override fun onRemoveImage(uri: Uri) {}
 }
 
 @Composable

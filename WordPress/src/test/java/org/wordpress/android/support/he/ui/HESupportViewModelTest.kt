@@ -28,6 +28,7 @@ import org.wordpress.android.support.he.model.SupportConversation
 import org.wordpress.android.support.he.model.SupportMessage
 import org.wordpress.android.support.he.repository.CreateConversationResult
 import org.wordpress.android.support.he.repository.HESupportRepository
+import org.wordpress.android.support.he.util.AttachmentStateValidator
 import org.wordpress.android.support.he.util.TempAttachmentsUtil
 import org.wordpress.android.util.EncryptedLogging
 import org.wordpress.android.util.LogFileProviderWrapper
@@ -102,7 +103,11 @@ class HESupportViewModelTest : BaseUnitTest() {
             tempAttachmentsUtil = tempAttachmentsUtil,
             encryptedLogging = encryptedLogging,
             logFileProvider = logFileProvider,
-            application = application,
+            attachmentStateValidator = AttachmentStateValidator(
+                application = application,
+                appLogWrapper = appLogWrapper,
+                ioDispatcher = UnconfinedTestDispatcher(),
+            ),
             accountStore = accountStore,
             appLogWrapper = appLogWrapper,
             networkUtilsWrapper = networkUtilsWrapper,

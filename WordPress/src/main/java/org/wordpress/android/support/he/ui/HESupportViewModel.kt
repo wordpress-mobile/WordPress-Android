@@ -1,7 +1,5 @@
 package org.wordpress.android.support.he.ui
 
-import android.annotation.SuppressLint
-import android.app.Application
 import android.net.Uri
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -10,12 +8,10 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.support.common.ui.ConversationsSupportViewModel
-import org.wordpress.android.support.he.model.AttachmentState
 import org.wordpress.android.support.he.model.ConversationReplyFormState
 import org.wordpress.android.support.he.model.MessageSendResult
 import org.wordpress.android.support.he.model.NewTicketFormState
@@ -23,6 +19,7 @@ import org.wordpress.android.support.he.model.SupportConversation
 import org.wordpress.android.support.he.model.VideoDownloadState
 import org.wordpress.android.support.he.repository.CreateConversationResult
 import org.wordpress.android.support.he.repository.HESupportRepository
+import org.wordpress.android.support.he.util.AttachmentStateValidator
 import org.wordpress.android.support.he.util.TempAttachmentsUtil
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.EncryptedLogging
@@ -39,13 +36,12 @@ class HESupportViewModel @Inject constructor(
     private val tempAttachmentsUtil: TempAttachmentsUtil,
     private val encryptedLogging: EncryptedLogging,
     private val logFileProvider: LogFileProviderWrapper,
-    private val application: Application,
+    private val attachmentStateValidator: AttachmentStateValidator,
     accountStore: AccountStore,
     appLogWrapper: AppLogWrapper,
     networkUtilsWrapper: NetworkUtilsWrapper,
 ) : ConversationsSupportViewModel<SupportConversation>(accountStore, appLogWrapper, networkUtilsWrapper) {
     companion object {
-        const val MAX_TOTAL_SIZE_BYTES = 20L * 1024 * 1024 // 20MB total
         private const val BEARER_TAG = "Bearer"
     }
     private val _isSendingMessage = MutableStateFlow(false)
@@ -233,7 +229,7 @@ class HESupportViewModel @Inject constructor(
     fun addNewTicketAttachments(uris: List<Uri>) {
         viewModelScope.launch(ioDispatcher) {
             val currentState = _newTicketFormState.value.attachmentState
-            val newState = validateAndCreateAttachmentState(currentState, uris)
+            val newState = attachmentStateValidator.addAttachments(currentState, uris)
             _newTicketFormState.value = _newTicketFormState.value.copy(attachmentState = newState)
         }
     }
@@ -241,7 +237,7 @@ class HESupportViewModel @Inject constructor(
     fun removeNewTicketAttachment(uri: Uri) {
         viewModelScope.launch {
             val currentState = _newTicketFormState.value.attachmentState
-            val updatedState = removeAttachmentFromState(currentState, uri)
+            val updatedState = attachmentStateValidator.removeAttachment(currentState, uri)
             _newTicketFormState.value = _newTicketFormState.value.copy(attachmentState = updatedState)
             addNewTicketAttachments(currentState.rejectedUris)
         }
@@ -250,7 +246,7 @@ class HESupportViewModel @Inject constructor(
     fun addReplyAttachments(uris: List<Uri>) {
         viewModelScope.launch(ioDispatcher) {
             val currentState = _replyFormState.value.attachmentState
-            val newState = validateAndCreateAttachmentState(currentState, uris)
+            val newState = attachmentStateValidator.addAttachments(currentState, uris)
             _replyFormState.value = _replyFormState.value.copy(attachmentState = newState)
         }
     }
@@ -258,91 +254,10 @@ class HESupportViewModel @Inject constructor(
     fun removeReplyAttachment(uri: Uri) {
         viewModelScope.launch {
             val currentState = _replyFormState.value.attachmentState
-            val updatedState = removeAttachmentFromState(currentState, uri)
+            val updatedState = attachmentStateValidator.removeAttachment(currentState, uri)
             _replyFormState.value = _replyFormState.value.copy(attachmentState = updatedState)
             addReplyAttachments(currentState.rejectedUris)
         }
-    }
-
-    private fun removeAttachmentFromState(currentState: AttachmentState, uri: Uri): AttachmentState {
-        val newAcceptedUris = currentState.acceptedUris.filter { it != uri }
-        return currentState.copy(acceptedUris = newAcceptedUris)
-    }
-
-    @Suppress("LoopWithTooManyJumpStatements")
-    private suspend fun validateAndCreateAttachmentState(
-        currentAttachmentState: AttachmentState,
-        uris: List<Uri>
-    ): AttachmentState = withContext(ioDispatcher) {
-        if (uris.isEmpty()) {
-            return@withContext currentAttachmentState
-        }
-
-        val validUris = mutableListOf<Uri>()
-        val skippedUris = mutableListOf<Uri>()
-
-        // Calculate current total size
-        var currentTotalSize = calculateTotalSize(currentAttachmentState.acceptedUris)
-
-        // Validate each new attachment
-        for (uri in uris) {
-            val fileSize = getFileSize(uri)
-
-            // Skip if we can't determine file size we just allow it to be added
-            if (fileSize != null) {
-                // Check if adding this file would exceed total size limit
-                if (currentTotalSize + fileSize > MAX_TOTAL_SIZE_BYTES) {
-                    skippedUris.add(uri)
-                    continue
-                }
-            }
-
-            // File is valid, add it
-            validUris.add(uri)
-            currentTotalSize += fileSize ?: 0
-        }
-
-        // Build the new attachment state
-        val currentAccepted = currentAttachmentState.acceptedUris
-        val newAccepted = currentAccepted + validUris
-
-        // Calculate rejected total size
-        val rejectedTotalSize = calculateTotalSize(skippedUris)
-
-        AttachmentState(
-            acceptedUris = newAccepted,
-            rejectedUris = skippedUris,
-            currentTotalSizeBytes = currentTotalSize,
-            rejectedTotalSizeBytes = rejectedTotalSize
-        )
-    }
-
-    @SuppressLint("Recycle") // False positive: descriptor is closed via .use {}
-    @Suppress("TooGenericExceptionCaught")
-    private suspend fun getFileSize(uri: Uri): Long? = withContext(ioDispatcher) {
-        try {
-            application.contentResolver.openAssetFileDescriptor(uri, "r")?.use { descriptor ->
-                descriptor.length
-            }
-        } catch (e: Exception) {
-            appLogWrapper.d(AppLog.T.SUPPORT, "Could not determine file size for URI: $uri - ${e.message}")
-            // Silently return null if we can't get the file size
-            // This will be handled by the validation logic
-            null
-        }
-    }
-
-    /**
-     * Calculates the total size of all files in the list
-     * @param uris List of URIs to calculate size for
-     * @return Total size in bytes
-     */
-    private suspend fun calculateTotalSize(uris: List<Uri>): Long {
-        var totalSize = 0L
-        for (uri in uris) {
-            totalSize += getFileSize(uri) ?: 0L
-        }
-        return totalSize
     }
 
     fun updateNewTicketCategory(category: SupportCategory?) {

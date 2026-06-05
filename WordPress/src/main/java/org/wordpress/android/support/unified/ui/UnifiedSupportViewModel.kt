@@ -1,5 +1,6 @@
 package org.wordpress.android.support.unified.ui
 
+import android.net.Uri
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
@@ -14,7 +15,9 @@ import org.wordpress.android.support.aibot.model.BotConversation
 import org.wordpress.android.support.aibot.model.BotMessage
 import org.wordpress.android.support.aibot.repository.AIBotSupportRepository
 import org.wordpress.android.support.common.ui.ConversationsSupportViewModel
+import org.wordpress.android.support.he.model.ConversationReplyFormState
 import org.wordpress.android.support.he.model.VideoDownloadState
+import org.wordpress.android.support.he.util.AttachmentStateValidator
 import org.wordpress.android.support.he.util.TempAttachmentsUtil
 import org.wordpress.android.support.unified.model.UnifiedConversation
 import org.wordpress.android.support.unified.model.UnifiedMessage
@@ -33,12 +36,17 @@ class UnifiedSupportViewModel @Inject constructor(
     private val repository: UnifiedSupportRepository,
     private val aiBotSupportRepository: AIBotSupportRepository,
     private val tempAttachmentsUtil: TempAttachmentsUtil,
+    private val attachmentStateValidator: AttachmentStateValidator,
     @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher,
     appLogWrapper: AppLogWrapper,
     networkUtilsWrapper: NetworkUtilsWrapper,
 ) : ConversationsSupportViewModel<UnifiedConversation>(accountStore, appLogWrapper, networkUtilsWrapper) {
     private val _isSendingReply = MutableStateFlow(false)
     val isSendingReply: StateFlow<Boolean> = _isSendingReply.asStateFlow()
+
+    // Reply form state for HE-style conversations (survives configuration changes)
+    private val _replyFormState = MutableStateFlow(ConversationReplyFormState())
+    val replyFormState: StateFlow<ConversationReplyFormState> = _replyFormState.asStateFlow()
 
     // Cache for downloaded video file paths (videoUrl -> file path) used by the attachment player.
     private val videoCache = mutableMapOf<String, String>()
@@ -133,8 +141,8 @@ class UnifiedSupportViewModel @Inject constructor(
     override suspend fun getConversation(conversationId: Long): UnifiedConversation? =
         repository.loadConversation(conversationId)
 
-    @Suppress("TooGenericExceptionCaught")
-    fun sendReply(message: String) {
+    @Suppress("TooGenericExceptionCaught", "LongMethod")
+    fun sendReply(message: String, includeAppLogs: Boolean = false) {
         val conversation = _selectedConversation.value ?: return
         if (_isSendingReply.value) return
 
@@ -150,15 +158,27 @@ class UnifiedSupportViewModel @Inject constructor(
                 messages = conversation.messages + optimisticMessage
             )
 
+            if (includeAppLogs) {
+                // We will add the logs when the RS layer is ready for this
+            }
+
+            var tempAttachments: List<File> = emptyList()
             try {
                 val isNewConversation = conversation.id == NEW_CONVERSATION_ID
                 val updated = if (isNewConversation) {
                     aiBotSupportRepository.createNewConversation(message)?.toUnifiedConversation()
                 } else {
-                    repository.replyToConversation(conversation.id, message)
+                    val attachmentUris = _replyFormState.value.attachmentState.acceptedUris
+                    tempAttachments = tempAttachmentsUtil.createTempFilesFrom(attachmentUris)
+                    repository.replyToConversation(
+                        conversationId = conversation.id,
+                        message = message,
+                        attachments = tempAttachments.map { it.path }
+                    )
                 }
                 if (updated != null) {
                     _selectedConversation.value = updated
+                    clearReplyForm()
                     if (isNewConversation) {
                         _conversations.value = listOf(updated) + _conversations.value
                     } else {
@@ -177,9 +197,47 @@ class UnifiedSupportViewModel @Inject constructor(
                     "Error replying to unified conversation: ${throwable.message} - ${throwable.stackTraceToString()}"
                 )
             } finally {
+                tempAttachmentsUtil.removeTempFiles(tempAttachments)
                 _isSendingReply.value = false
             }
         }
+    }
+
+    fun addReplyAttachments(uris: List<Uri>) {
+        viewModelScope.launch(ioDispatcher) {
+            val currentState = _replyFormState.value.attachmentState
+            val newState = attachmentStateValidator.addAttachments(currentState, uris)
+            _replyFormState.value = _replyFormState.value.copy(attachmentState = newState)
+        }
+    }
+
+    fun removeReplyAttachment(uri: Uri) {
+        viewModelScope.launch {
+            val currentState = _replyFormState.value.attachmentState
+            val updatedState = attachmentStateValidator.removeAttachment(currentState, uri)
+            _replyFormState.value = _replyFormState.value.copy(attachmentState = updatedState)
+            addReplyAttachments(currentState.rejectedUris)
+        }
+    }
+
+    fun updateReplyMessage(message: String) {
+        _replyFormState.value = _replyFormState.value.copy(message = message)
+    }
+
+    fun updateReplyIncludeAppLogs(include: Boolean) {
+        _replyFormState.value = _replyFormState.value.copy(includeAppLogs = include)
+    }
+
+    fun updateReplyBottomSheetVisibility(isVisible: Boolean) {
+        _replyFormState.value = _replyFormState.value.copy(isBottomSheetVisible = isVisible)
+    }
+
+    fun clearReplyForm() {
+        _replyFormState.value = ConversationReplyFormState()
+    }
+
+    fun notifyGeneralError() {
+        _errorMessage.value = ErrorType.GENERAL
     }
 
     private fun buildOptimisticUserMessage(message: String): UnifiedMessage =
