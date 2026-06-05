@@ -140,4 +140,58 @@ class SiteSqlUtilsTest {
         assertThat(rows).isEqualTo(0)
         assertThat(siteSqlUtils.getSites().single().wpApiRestUrl).isNull()
     }
+
+    @Test
+    fun `insertOrUpdateSite update does not clobber credential columns from a stale model`() {
+        WellSql.insert(SiteModel().apply {
+            siteId = 42
+            url = "https://example.test"
+            apiRestUsernameEncrypted = "enc_user"
+            apiRestUsernameIV = "iv_user"
+            apiRestPasswordEncrypted = "enc_pass"
+            apiRestPasswordIV = "iv_pass"
+        }).execute()
+        val localId = storedSite().id
+
+        // A credential-less inbound model (e.g. a /me/sites sync) must not zero the credential columns.
+        val stale = SiteModel().apply {
+            id = localId
+            siteId = 42
+            url = "https://example.test"
+            name = "Updated name"
+        }
+        siteSqlUtils.insertOrUpdateSite(stale)
+
+        val stored = storedSite()
+        assertThat(stored.apiRestUsernameEncrypted).isEqualTo("enc_user")
+        assertThat(stored.apiRestUsernameIV).isEqualTo("iv_user")
+        assertThat(stored.apiRestPasswordEncrypted).isEqualTo("enc_pass")
+        assertThat(stored.apiRestPasswordIV).isEqualTo("iv_pass")
+        assertThat(stored.name).isEqualTo("Updated name") // other columns still update
+    }
+
+    @Test
+    fun `clearApplicationPasswordCredentials empties the credential columns`() {
+        WellSql.insert(SiteModel().apply {
+            url = "https://example.test"
+            apiRestUsernameEncrypted = "enc_user"
+            apiRestUsernameIV = "iv_user"
+            apiRestPasswordEncrypted = "enc_pass"
+            apiRestPasswordIV = "iv_pass"
+        }).execute()
+        val localId = storedSite().id
+
+        val rows = siteSqlUtils.clearApplicationPasswordCredentials(localId)
+
+        assertThat(rows).isEqualTo(1)
+        val stored = storedSite()
+        assertThat(stored.apiRestUsernameEncrypted).isEmpty()
+        assertThat(stored.apiRestUsernameIV).isEmpty()
+        assertThat(stored.apiRestPasswordEncrypted).isEmpty()
+        assertThat(stored.apiRestPasswordIV).isEmpty()
+    }
+
+    // Raw read that bypasses SiteSqlUtils' decryptAPIRestCredentials, so tests can assert on the stored
+    // ciphertext columns directly without invoking the AndroidKeyStore-backed EncryptionUtils.
+    private fun storedSite(): SiteModel = WellSql.select(SiteModel::class.java).asModel.single()
 }

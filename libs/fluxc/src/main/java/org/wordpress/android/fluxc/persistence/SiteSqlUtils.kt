@@ -221,12 +221,20 @@ class SiteSqlUtils
             AppLog.d(DB, "Updating site: " + finalSiteModel.url)
             val oldId = siteResult[0].id
             try {
-                // WP_API_REST_URL is healed/discovered locally (see updateWpApiRestUrl) and must not be
-                // overwritten by stale full-row writes, so it is excluded from the generic update mapper.
+                // WP_API_REST_URL and the application-password credential columns are written out of band by
+                // dedicated single-column writers (updateWpApiRestUrl / updateApplicationPasswordCredentials),
+                // so they're excluded from the generic mapper to keep stale full-row writes from clobbering them.
                 WellSql.update(SiteModel::class.java).whereId(oldId)
                         .put(
                                 finalSiteModel,
-                                UpdateAllExceptId(SiteModel::class.java, SiteModelTable.WP_API_REST_URL)
+                                UpdateAllExceptId(
+                                        SiteModel::class.java,
+                                        SiteModelTable.WP_API_REST_URL,
+                                        SiteModelTable.API_REST_USERNAME,
+                                        SiteModelTable.API_REST_PASSWORD,
+                                        SiteModelTable.API_REST_USERNAME_IV,
+                                        SiteModelTable.API_REST_PASSWORD_IV
+                                )
                         ).execute()
             } catch (e: SQLiteConstraintException) {
                 AppLog.e(
@@ -288,21 +296,76 @@ class SiteSqlUtils
     fun clearWpApiRestUrl(localId: Int): Int = updateWpApiRestUrl(localId, "")
 
     /**
-     * Updates [SiteModel.wpApiRestUrl] for an application-password (ORIGIN_WPAPI) site identified by its URL.
-     * Such sites are fetched as fresh models with no local id and no remote site id
-     * (see SiteWPAPIRestClient.fetchWPAPISite), so the local-id-keyed [updateWpApiRestUrl] can't target them.
-     * Scoped to ORIGIN_WPAPI so it can't touch a WP.com/Jetpack row that happens to share the same URL.
+     * Targeted writer for the application-password credential columns: the encrypted username and password
+     * and their IVs. The four are written as a set — the IVs are required to decrypt the ciphertext, so
+     * persisting the values without their IVs would break reads. This is the sole writer of these columns on
+     * an existing row: the generic full-row update path excludes them so a credential-less inbound SiteModel
+     * (e.g. a /me/sites sync model) can't zero them out.
+     */
+    fun updateApplicationPasswordCredentials(localId: Int, usernamePlain: String, passwordPlain: String): Int {
+        val username = encryptionUtils.encrypt(usernamePlain)
+        val password = encryptionUtils.encrypt(passwordPlain)
+        return WellSql.update(SiteModel::class.java)
+                .whereId(localId)
+                .put(localId, { _ ->
+                    val cv = ContentValues()
+                    cv.put(SiteModelTable.API_REST_USERNAME, username.first)
+                    cv.put(SiteModelTable.API_REST_USERNAME_IV, username.second)
+                    cv.put(SiteModelTable.API_REST_PASSWORD, password.first)
+                    cv.put(SiteModelTable.API_REST_PASSWORD_IV, password.second)
+                    cv
+                }).execute()
+    }
+
+    /**
+     * Clears the application-password credential columns (encrypted username/password and their IVs) for the
+     * given local id. Companion to [updateApplicationPasswordCredentials] for the sign-out / revoke paths,
+     * since the generic update path no longer touches these columns.
+     */
+    fun clearApplicationPasswordCredentials(localId: Int): Int {
+        return WellSql.update(SiteModel::class.java)
+                .whereId(localId)
+                .put(localId, { _ ->
+                    val cv = ContentValues()
+                    cv.put(SiteModelTable.API_REST_USERNAME, "")
+                    cv.put(SiteModelTable.API_REST_USERNAME_IV, "")
+                    cv.put(SiteModelTable.API_REST_PASSWORD, "")
+                    cv.put(SiteModelTable.API_REST_PASSWORD_IV, "")
+                    cv
+                }).execute()
+    }
+
+    /**
+     * URL-keyed variant of [updateWpApiRestUrl] for application-password (ORIGIN_WPAPI) sites, which are
+     * fetched as fresh models with no local id (see SiteWPAPIRestClient.fetchWPAPISite). Scoped to
+     * ORIGIN_WPAPI so it can't touch a WP.com/Jetpack row that happens to share the same URL.
      */
     fun updateWpApiRestUrlForWPAPISite(siteUrl: String, wpApiRestUrl: String): Int {
-        val site = WellSql.select(SiteModel::class.java)
+        val localId = wpApiSiteLocalIdByUrl(siteUrl) ?: return 0
+        return updateWpApiRestUrl(localId, wpApiRestUrl)
+    }
+
+    /**
+     * URL-keyed variant of [updateApplicationPasswordCredentials] for ORIGIN_WPAPI sites fetched without a
+     * local id. See [updateWpApiRestUrlForWPAPISite].
+     */
+    fun updateApplicationPasswordCredentialsForWPAPISite(
+        siteUrl: String,
+        usernamePlain: String,
+        passwordPlain: String
+    ): Int {
+        val localId = wpApiSiteLocalIdByUrl(siteUrl) ?: return 0
+        return updateApplicationPasswordCredentials(localId, usernamePlain, passwordPlain)
+    }
+
+    private fun wpApiSiteLocalIdByUrl(siteUrl: String): Int? =
+        WellSql.select(SiteModel::class.java)
                 .where().beginGroup()
                 .equals(SiteModelTable.URL, siteUrl)
                 .equals(SiteModelTable.ORIGIN, SiteModel.ORIGIN_WPAPI)
                 .endGroup().endWhere()
                 .asModel
-                .firstOrNull() ?: return 0
-        return updateWpApiRestUrl(site.id, wpApiRestUrl)
-    }
+                .firstOrNull()?.id
 
     val wPComSites: SelectQuery<SiteModel>
         get() = WellSql.select(SiteModel::class.java)

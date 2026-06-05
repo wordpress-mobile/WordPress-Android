@@ -11,6 +11,7 @@ import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.any
 import org.mockito.kotlin.argWhere
 import org.mockito.kotlin.inOrder
+import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.verifyNoInteractions
@@ -25,6 +26,7 @@ import org.wordpress.android.fluxc.model.jetpacksocial.JetpackSocialMapper
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
 import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType.NETWORK_ERROR
 import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType.PARSE_ERROR
+import org.wordpress.android.fluxc.network.rest.wpapi.applicationpasswords.ApplicationPasswordsManager
 import org.wordpress.android.fluxc.network.rest.wpapi.site.SiteWPAPIRestClient
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Response
@@ -62,6 +64,7 @@ import org.wordpress.android.fluxc.store.SiteStore.SiteFilter.WPCOM
 import org.wordpress.android.fluxc.store.SiteStore.SiteVisibility.PUBLIC
 import org.wordpress.android.fluxc.test
 import org.wordpress.android.fluxc.tools.initCoroutineEngine
+import javax.inject.Provider
 import kotlin.test.assertEquals
 
 @RunWith(MockitoJUnitRunner::class)
@@ -582,10 +585,15 @@ class SiteStoreTest {
                 "https://example.com",
                 "https://example.com/wp-json/"
             )
+            verify(siteSqlUtils).updateApplicationPasswordCredentialsForWPAPISite(
+                "https://example.com",
+                "appUser",
+                "appPass"
+            )
         }
 
     @Test
-    fun `updateApplicationPassword persists discovered wpApiRestUrl via targeted writer`() {
+    fun `updateApplicationPassword persists credentials and wpApiRestUrl via targeted writers`() {
         val existing = SiteModel().apply {
             id = 3
             url = "https://selfhosted.test"
@@ -601,11 +609,12 @@ class SiteStoreTest {
 
         siteStore.onAction(SiteActionBuilder.newUpdateApplicationPasswordAction(incoming))
 
+        verify(siteSqlUtils).updateApplicationPasswordCredentials(3, "user", "pass")
         verify(siteSqlUtils).updateWpApiRestUrl(3, "https://selfhosted.test/wp-json/")
     }
 
     @Test
-    fun `removeApplicationPassword clears wpApiRestUrl via targeted writer`() {
+    fun `removeApplicationPassword clears credentials and wpApiRestUrl via targeted writers`() {
         val existing = SiteModel().apply {
             id = 4
             url = "https://selfhosted.test"
@@ -618,7 +627,24 @@ class SiteStoreTest {
             SiteActionBuilder.newRemoveApplicationPasswordAction(SiteModel().apply { id = 4 })
         )
 
+        verify(siteSqlUtils).clearApplicationPasswordCredentials(4)
         verify(siteSqlUtils).clearWpApiRestUrl(4)
+    }
+
+    @Test
+    fun `clearApplicationPasswordColumns clears credentials but preserves wpApiRestUrl`() {
+        val existing = SiteModel().apply {
+            id = 8
+            url = "https://selfhosted.test"
+        }
+        whenever(siteSqlUtils.getSitesWithLocalId(8)).thenReturn(listOf(existing))
+        whenever(siteSqlUtils.insertOrUpdateSite(any())).thenReturn(1)
+        siteStore.applicationPasswordsManagerProvider = Provider { mock<ApplicationPasswordsManager>() }
+
+        siteStore.deleteStoredApplicationPasswordCredentials(SiteModel().apply { id = 8 })
+
+        verify(siteSqlUtils).clearApplicationPasswordCredentials(8)
+        verify(siteSqlUtils, never()).clearWpApiRestUrl(8)
     }
 
     @Test
