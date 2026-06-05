@@ -56,8 +56,11 @@ class CookieNonceAuthenticator @Inject constructor(
     ): T {
         val usingSavedRestUrl = site.wpApiRestUrl != null
         if (!usingSavedRestUrl) {
-            site.wpApiRestUrl = discoverApiEndpoint(site.url)
-            (siteSqlUtils::insertOrUpdateSite)(site)
+            val discoveredUrl = discoverApiEndpoint(site.url)
+            site.wpApiRestUrl = discoveredUrl
+            // WP_API_REST_URL is excluded from full-row writes (see SiteSqlUtils), so persist the
+            // freshly discovered value through its dedicated writer.
+            siteSqlUtils.updateWpApiRestUrl(site.id, discoveredUrl)
         }
 
         val response = makeAuthenticatedWPAPIRequest(

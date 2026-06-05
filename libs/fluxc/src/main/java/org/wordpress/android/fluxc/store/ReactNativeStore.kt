@@ -175,10 +175,13 @@ class ReactNativeStore @VisibleForTesting constructor(
 
         val usingSavedRestUrl = wpApiRestUrl != null
         if (!usingSavedRestUrl) {
-            wpApiRestUrl = discoveryWPAPIRestClient.discoverWPAPIBaseURL(site.url) // discover rest api endpoint
+            val discoveredUrl = discoveryWPAPIRestClient.discoverWPAPIBaseURL(site.url) // discover rest api endpoint
                     ?: slashJoin(site.url, "wp-json/") // fallback to ".../wp-json/" default if discovery fails
-            site.wpApiRestUrl = wpApiRestUrl
-            persistSiteSafely(site)
+            wpApiRestUrl = discoveredUrl
+            site.wpApiRestUrl = discoveredUrl
+            // WP_API_REST_URL is excluded from full-row writes (see SiteSqlUtils), so persist the
+            // freshly discovered value through its dedicated writer.
+            siteSqlUtils.updateWpApiRestUrl(site.id, discoveredUrl)
         }
         val fullRestUrl = slashJoin(wpApiRestUrl, path)
 

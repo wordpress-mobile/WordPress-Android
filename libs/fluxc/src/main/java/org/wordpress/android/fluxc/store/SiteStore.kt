@@ -1615,7 +1615,13 @@ open class SiteStore @Inject constructor(
                 if (!siteModel.isError) {
                     siteModel.wpApiRestUrl = payload.apiRootUrl
                 }
-                updateSite(siteModel)
+                val result = updateSite(siteModel)
+                // updateSite's full-row write skips WP_API_REST_URL, and this fresh site has no local id
+                // (it's matched by URL), so persist the discovered URL via the URL-keyed writer. See SiteSqlUtils.
+                if (!siteModel.isError && payload.apiRootUrl.isNotEmpty()) {
+                    siteSqlUtils.updateWpApiRestUrlForWPAPISite(siteModel.url, payload.apiRootUrl)
+                }
+                result
             } catch (e: Exception) {
                 val errorMsg = e.message ?: e.javaClass.simpleName
                 AppLog.e(
@@ -1695,7 +1701,15 @@ open class SiteStore @Inject constructor(
                 }
                 siteFromDB
             }
-            OnSiteChanged(siteSqlUtils.insertOrUpdateSite(siteToStore))
+            val rowsAffected = siteSqlUtils.insertOrUpdateSite(siteToStore)
+            // The generic update path no longer writes WP_API_REST_URL (see SiteSqlUtils), so when the
+            // application-password flow discovered a REST URL for an existing site, persist it explicitly.
+            if (siteFromDB != null) {
+                siteModel.wpApiRestUrl?.takeIf { it.isNotEmpty() }?.let {
+                    siteSqlUtils.updateWpApiRestUrl(siteFromDB.id, it)
+                }
+            }
+            OnSiteChanged(rowsAffected)
         } catch (e: DuplicateSiteException) {
             OnSiteChanged(SiteError(DUPLICATE_SITE))
         } catch (e: Exception) {
@@ -1726,7 +1740,11 @@ open class SiteStore @Inject constructor(
                     apiRestPasswordIV = ""
                     wpApiRestUrl = ""
                 }
-                OnSiteChanged(siteSqlUtils.insertOrUpdateSite(siteFromDB))
+                val rowsAffected = siteSqlUtils.insertOrUpdateSite(siteFromDB)
+                // The generic update path no longer writes WP_API_REST_URL (see SiteSqlUtils), so clear the
+                // stored REST URL explicitly now that the application password backing it is gone.
+                siteSqlUtils.clearWpApiRestUrl(siteFromDB.id)
+                OnSiteChanged(rowsAffected)
             }
         } catch (e: DuplicateSiteException) {
             OnSiteChanged(SiteError(DUPLICATE_SITE))

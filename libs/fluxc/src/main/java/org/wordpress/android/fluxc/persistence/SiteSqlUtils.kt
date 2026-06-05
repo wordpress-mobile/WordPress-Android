@@ -221,8 +221,13 @@ class SiteSqlUtils
             AppLog.d(DB, "Updating site: " + finalSiteModel.url)
             val oldId = siteResult[0].id
             try {
+                // WP_API_REST_URL is healed/discovered locally (see updateWpApiRestUrl) and must not be
+                // overwritten by stale full-row writes, so it is excluded from the generic update mapper.
                 WellSql.update(SiteModel::class.java).whereId(oldId)
-                        .put(finalSiteModel, UpdateAllExceptId(SiteModel::class.java)).execute()
+                        .put(
+                                finalSiteModel,
+                                UpdateAllExceptId(SiteModel::class.java, SiteModelTable.WP_API_REST_URL)
+                        ).execute()
             } catch (e: SQLiteConstraintException) {
                 AppLog.e(
                         DB,
@@ -260,6 +265,11 @@ class SiteSqlUtils
                 }).execute()
     }
 
+    /**
+     * Targeted writer for [SiteModel.wpApiRestUrl]. This is the sole writer of WP_API_REST_URL on an
+     * existing row: the generic full-row update path ([insertOrUpdateSite]) excludes the column so that
+     * stale in-memory sites can't clobber a value that was healed/discovered out of band.
+     */
     fun updateWpApiRestUrl(localId: Int, wpApiRestUrl: String): Int {
         return WellSql.update(SiteModel::class.java)
                 .whereId(localId)
@@ -268,6 +278,30 @@ class SiteSqlUtils
                     cv.put(SiteModelTable.WP_API_REST_URL, value)
                     cv
                 }).execute()
+    }
+
+    /**
+     * Clears [SiteModel.wpApiRestUrl] for the given local id. Use this instead of a full-row update when an
+     * explicit action (e.g. removing an application password) needs to drop the stored REST URL, since the
+     * generic update path no longer touches the column.
+     */
+    fun clearWpApiRestUrl(localId: Int): Int = updateWpApiRestUrl(localId, "")
+
+    /**
+     * Updates [SiteModel.wpApiRestUrl] for an application-password (ORIGIN_WPAPI) site identified by its URL.
+     * Such sites are fetched as fresh models with no local id and no remote site id
+     * (see SiteWPAPIRestClient.fetchWPAPISite), so the local-id-keyed [updateWpApiRestUrl] can't target them.
+     * Scoped to ORIGIN_WPAPI so it can't touch a WP.com/Jetpack row that happens to share the same URL.
+     */
+    fun updateWpApiRestUrlForWPAPISite(siteUrl: String, wpApiRestUrl: String): Int {
+        val site = WellSql.select(SiteModel::class.java)
+                .where().beginGroup()
+                .equals(SiteModelTable.URL, siteUrl)
+                .equals(SiteModelTable.ORIGIN, SiteModel.ORIGIN_WPAPI)
+                .endGroup().endWhere()
+                .asModel
+                .firstOrNull() ?: return 0
+        return updateWpApiRestUrl(site.id, wpApiRestUrl)
     }
 
     val wPComSites: SelectQuery<SiteModel>

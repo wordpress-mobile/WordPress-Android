@@ -16,6 +16,7 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.verifyNoInteractions
 import org.mockito.kotlin.whenever
 import org.wordpress.android.fluxc.Dispatcher
+import org.wordpress.android.fluxc.generated.SiteActionBuilder
 import org.wordpress.android.fluxc.model.PostFormatModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.SitesModel
@@ -575,7 +576,50 @@ class SiteStoreTest {
                 .isEqualTo("appPass")
             assertThat(fetchedSite.wpApiRestUrl)
                 .isEqualTo("https://example.com/wp-json/")
+            // updateSite's full-row write skips WP_API_REST_URL, so the discovered URL must be persisted
+            // via the URL-keyed targeted writer (the fetched site has no local id to key on).
+            verify(siteSqlUtils).updateWpApiRestUrlForWPAPISite(
+                "https://example.com",
+                "https://example.com/wp-json/"
+            )
         }
+
+    @Test
+    fun `updateApplicationPassword persists discovered wpApiRestUrl via targeted writer`() {
+        val existing = SiteModel().apply {
+            id = 3
+            url = "https://selfhosted.test"
+        }
+        whenever(siteSqlUtils.getSitesWithLocalId(3)).thenReturn(listOf(existing))
+        whenever(siteSqlUtils.insertOrUpdateSite(any())).thenReturn(1)
+        val incoming = SiteModel().apply {
+            id = 3
+            apiRestUsernamePlain = "user"
+            apiRestPasswordPlain = "pass"
+            wpApiRestUrl = "https://selfhosted.test/wp-json/"
+        }
+
+        siteStore.onAction(SiteActionBuilder.newUpdateApplicationPasswordAction(incoming))
+
+        verify(siteSqlUtils).updateWpApiRestUrl(3, "https://selfhosted.test/wp-json/")
+    }
+
+    @Test
+    fun `removeApplicationPassword clears wpApiRestUrl via targeted writer`() {
+        val existing = SiteModel().apply {
+            id = 4
+            url = "https://selfhosted.test"
+            wpApiRestUrl = "https://selfhosted.test/wp-json/"
+        }
+        whenever(siteSqlUtils.getSitesWithLocalId(4)).thenReturn(listOf(existing))
+        whenever(siteSqlUtils.insertOrUpdateSite(any())).thenReturn(1)
+
+        siteStore.onAction(
+            SiteActionBuilder.newRemoveApplicationPasswordAction(SiteModel().apply { id = 4 })
+        )
+
+        verify(siteSqlUtils).clearWpApiRestUrl(4)
+    }
 
     @Test
     fun `fetchPostFormats returns empty list for WPAPI site without crashing`() =
