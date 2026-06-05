@@ -23,7 +23,6 @@ abstract class ConversationsSupportViewModel<ConversationType: Conversation>(
 ) : ViewModel() {
     sealed class NavigationEvent {
         data object NavigateToConversationDetail : NavigationEvent()
-        data object NavigateToNewConversation : NavigationEvent()
         data object NavigateBack : NavigationEvent()
     }
 
@@ -173,16 +172,6 @@ abstract class ConversationsSupportViewModel<ConversationType: Conversation>(
         viewModelScope.launch {
             _selectedConversation.value = null
             _navigationEvents.emit(NavigationEvent.NavigateBack)
-        }
-    }
-
-    fun onCreateNewConversationClick() {
-        viewModelScope.launch {
-            if (!networkUtilsWrapper.isNetworkAvailable()) {
-                _errorMessage.value = ErrorType.OFFLINE
-                return@launch
-            }
-            _navigationEvents.emit(NavigationEvent.NavigateToNewConversation)
         }
     }
 

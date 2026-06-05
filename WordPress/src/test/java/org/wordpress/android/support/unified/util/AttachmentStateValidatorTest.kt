@@ -15,7 +15,6 @@ import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
-import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.support.unified.model.AttachmentState
 
 private const val MB = 1024L * 1024L
@@ -28,9 +27,6 @@ class AttachmentStateValidatorTest : BaseUnitTest() {
     @Mock
     private lateinit var contentResolver: ContentResolver
 
-    @Mock
-    private lateinit var appLogWrapper: AppLogWrapper
-
     private lateinit var validator: AttachmentStateValidator
 
     @Before
@@ -39,7 +35,6 @@ class AttachmentStateValidatorTest : BaseUnitTest() {
 
         validator = AttachmentStateValidator(
             application = application,
-            appLogWrapper = appLogWrapper,
             ioDispatcher = UnconfinedTestDispatcher(),
         )
     }

@@ -12,8 +12,7 @@ import javax.inject.Named
 
 /**
  * Encrypts and uploads the app log files to the encrypted logging service, returning the
- * generated log UUIDs so they can be referenced from support requests. Shared by the HE and
- * unified support flows.
+ * generated log UUIDs so they can be referenced from support requests.
  */
 class EncryptedAppLogsUploader @Inject constructor(
     private val encryptedLogging: EncryptedLogging,

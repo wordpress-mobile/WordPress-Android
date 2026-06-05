@@ -95,7 +95,7 @@ class UnifiedSupportViewModel @Inject constructor(
         _videoDownloadState.value = VideoDownloadState.Idle
     }
 
-    fun cleanupVideoCache() {
+    private fun cleanupVideoCache() {
         videoCache.values.forEach { filePath ->
             val file = File(filePath)
             if (file.exists()) {
@@ -150,9 +150,8 @@ class UnifiedSupportViewModel @Inject constructor(
 
             _isSendingReply.value = true
             val optimisticMessage = buildOptimisticUserMessage(message)
-            _selectedConversation.value = conversation.copy(
-                messages = conversation.messages + optimisticMessage
-            )
+            val localMessages = conversation.messages + optimisticMessage
+            _selectedConversation.value = conversation.copy(messages = localMessages)
 
             var tempAttachments: List<File> = emptyList()
             try {
@@ -161,7 +160,6 @@ class UnifiedSupportViewModel @Inject constructor(
                     // The create endpoint only returns the bot reply, so keep the local
                     // messages (including the optimistic question) like the Ask the Bots flow.
                     repository.createNewBotConversation(message)?.let { created ->
-                        val localMessages = _selectedConversation.value?.messages ?: emptyList()
                         created.copy(messages = localMessages + created.messages)
                     }
                 } else {
@@ -246,7 +244,6 @@ class UnifiedSupportViewModel @Inject constructor(
     private fun buildOptimisticUserMessage(message: String): UnifiedMessage =
         UnifiedMessage(
             id = -System.currentTimeMillis(),
-            rawText = message,
             formattedText = markdownToAnnotatedString(message),
             authorRole = UnifiedMessage.AUTHOR_ROLE_USER,
             authorName = _userInfo.value.userName,

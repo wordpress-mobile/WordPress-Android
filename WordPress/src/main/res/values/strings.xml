@@ -4760,10 +4760,8 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <!-- HE Support - New Ticket Screen -->
     <string name="he_support_forbidden_error">Sorry, you are not allowed to perform this action.</string>
     <string name="unified_support_conversations_title">Get help</string>
-    <string name="unified_support_back_button_content_description">Back</string>
     <string name="unified_support_generic_error">Something went wrong. Please try again later.</string>
     <string name="unified_support_message_input_placeholder">Type a message…</string>
-    <string name="unified_support_send_button_content_description">Send</string>
     <string name="unified_support_bot_typing_content_description">Support bot is typing</string>
     <string name="unified_support_new_conversation_content_description">New conversation</string>
     <string name="unified_support_status_bot">Oddie bot</string>

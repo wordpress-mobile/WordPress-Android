@@ -86,10 +86,10 @@ class UnifiedSupportRepositoryTest : BaseUnitTest() {
         assertThat(result?.canAcceptReply).isTrue
         assertThat(result?.description).isEqualTo("Bot welcome response")
         assertThat(result?.messages).hasSize(2)
-        assertThat(result?.messages?.get(0)?.rawText).isEqualTo(testMessage)
+        assertThat(result?.messages?.get(0)?.formattedText?.text).isEqualTo(testMessage)
         assertThat(result?.messages?.get(0)?.authorRole).isEqualTo(UnifiedMessage.AUTHOR_ROLE_USER)
         assertThat(result?.messages?.get(0)?.isUser).isTrue
-        assertThat(result?.messages?.get(1)?.rawText).isEqualTo("Bot welcome response")
+        assertThat(result?.messages?.get(1)?.formattedText?.text).isEqualTo("Bot welcome response")
         assertThat(result?.messages?.get(1)?.authorRole).isEqualTo(UnifiedMessage.AUTHOR_ROLE_BOT)
         assertThat(result?.messages?.get(1)?.isUser).isFalse
     }

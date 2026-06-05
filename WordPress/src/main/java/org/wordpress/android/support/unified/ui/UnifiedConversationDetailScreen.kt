@@ -98,7 +98,7 @@ fun UnifiedConversationDetailScreen(
     onBackClick: () -> Unit,
     onSendReply: (String, Boolean) -> Unit,
     onDownloadAttachment: (UnifiedAttachment) -> Unit,
-    onGetAuthorizationHeaderArgument: () -> String,
+    authorizationHeader: String,
     videoDownloadState: VideoDownloadState,
     onStartVideoDownload: (String) -> Unit,
     onResetVideoDownloadState: () -> Unit,
@@ -140,7 +140,7 @@ fun UnifiedConversationDetailScreen(
                     IconButton(onClick = onBackClick) {
                         Icon(
                             Icons.AutoMirrored.Filled.ArrowBack,
-                            stringResource(R.string.unified_support_back_button_content_description)
+                            stringResource(R.string.back)
                         )
                     }
                 }
@@ -234,7 +234,7 @@ fun UnifiedConversationDetailScreen(
                             timestamp = formatRelativeTime(message.createdAt, resources),
                             onPreviewAttachment = { previewAttachment = it },
                             onDownloadAttachment = onDownloadAttachment,
-                            onGetAuthorizationHeaderArgument = onGetAuthorizationHeaderArgument
+                            authorizationHeader = authorizationHeader,
                         )
                     }
                 }
@@ -253,6 +253,11 @@ fun UnifiedConversationDetailScreen(
     }
 
     if (replyFormState.isBottomSheetVisible) {
+        val hideSheet = {
+            scope.launch { sheetState.hide() }
+                .invokeOnCompletion { onReplyBottomSheetVisibilityChange(false) }
+            Unit
+        }
         UnifiedReplyBottomSheet(
             sheetState = sheetState,
             isSending = isSendingReply,
@@ -260,14 +265,10 @@ fun UnifiedConversationDetailScreen(
             includeAppLogs = replyFormState.includeAppLogs,
             onMessageChange = onReplyMessageChange,
             onIncludeAppLogsChange = onReplyIncludeAppLogsChange,
-            onDismiss = {
-                scope.launch { sheetState.hide() }
-                    .invokeOnCompletion { onReplyBottomSheetVisibilityChange(false) }
-            },
+            onDismiss = hideSheet,
             onSend = { message, includeAppLogs ->
                 onSendReply(message, includeAppLogs)
-                scope.launch { sheetState.hide() }
-                    .invokeOnCompletion { onReplyBottomSheetVisibilityChange(false) }
+                hideSheet()
             },
             attachmentState = replyFormState.attachmentState,
             attachmentActionsListener = attachmentActionsListener,
@@ -279,7 +280,7 @@ fun UnifiedConversationDetailScreen(
             AttachmentType.Image -> {
                 AttachmentFullscreenImagePreview(
                     imageUrl = attachment.url,
-                    onGetAuthorizationHeaderArgument = onGetAuthorizationHeaderArgument,
+                    authorizationHeader = authorizationHeader,
                     onDismiss = { previewAttachment = null },
                     onDownload = { onDownloadAttachment(attachment) }
                 )
@@ -437,7 +438,7 @@ private fun ChatInputBar(
         ) {
             Icon(
                 imageVector = Icons.AutoMirrored.Filled.Send,
-                contentDescription = stringResource(R.string.unified_support_send_button_content_description),
+                contentDescription = stringResource(R.string.send),
                 tint = if (canSend) {
                     MaterialTheme.colorScheme.primary
                 } else {
@@ -696,7 +697,7 @@ private fun UnifiedMessageItem(
     timestamp: String,
     onPreviewAttachment: (UnifiedAttachment) -> Unit,
     onDownloadAttachment: (UnifiedAttachment) -> Unit,
-    onGetAuthorizationHeaderArgument: () -> String,
+    authorizationHeader: String,
 ) {
     val messageDescription = "${message.authorName}, $timestamp. ${message.formattedText}"
 
@@ -755,7 +756,7 @@ private fun UnifiedMessageItem(
                     attachments = message.attachments,
                     onPreviewAttachment = onPreviewAttachment,
                     onDownloadAttachment = onDownloadAttachment,
-                    onGetAuthorizationHeaderArgument = onGetAuthorizationHeaderArgument
+                    authorizationHeader = authorizationHeader,
                 )
             }
         }
@@ -768,7 +769,7 @@ private fun UnifiedAttachmentsList(
     attachments: List<UnifiedAttachment>,
     onPreviewAttachment: (UnifiedAttachment) -> Unit,
     onDownloadAttachment: (UnifiedAttachment) -> Unit,
-    onGetAuthorizationHeaderArgument: () -> String,
+    authorizationHeader: String,
 ) {
     FlowRow(
         horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -783,7 +784,7 @@ private fun UnifiedAttachmentsList(
                         else -> onDownloadAttachment(attachment)
                     }
                 },
-                onGetAuthorizationHeaderArgument = onGetAuthorizationHeaderArgument
+                authorizationHeader = authorizationHeader,
             )
         }
     }
@@ -793,10 +794,9 @@ private fun UnifiedAttachmentsList(
 private fun UnifiedAttachmentItem(
     attachment: UnifiedAttachment,
     onClick: () -> Unit,
-    onGetAuthorizationHeaderArgument: () -> String,
+    authorizationHeader: String,
 ) {
     // Cache the auth header so it is not recomputed on every recomposition.
-    val authorizationHeader = remember { onGetAuthorizationHeaderArgument() }
 
     val iconRes = when (attachment.type) {
         AttachmentType.Image -> R.drawable.ic_image_white_24dp
@@ -905,7 +905,7 @@ private fun WelcomeHeader(userName: String) {
             )
 
             Text(
-                text = stringResource(R.string.ai_bot_welcome_greeting, userName),
+                text = greeting,
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.primary,
@@ -913,7 +913,7 @@ private fun WelcomeHeader(userName: String) {
             )
 
             Text(
-                text = stringResource(R.string.ai_bot_welcome_message),
+                text = message,
                 style = MaterialTheme.typography.bodyLarge,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 textAlign = TextAlign.Center

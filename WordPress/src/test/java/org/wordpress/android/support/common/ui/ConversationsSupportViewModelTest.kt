@@ -365,50 +365,6 @@ class ConversationsSupportViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `onCreateNewConversationClick emits NavigateToNewConversation event`() = test {
-        var emittedEvent: ConversationsSupportViewModel.NavigationEvent? = null
-        val job = launch {
-            viewModel.navigationEvents.collect { event ->
-                emittedEvent = event
-            }
-        }
-
-        viewModel.onCreateNewConversationClick()
-        advanceUntilIdle()
-
-        assertThat(emittedEvent).isEqualTo(ConversationsSupportViewModel.NavigationEvent.NavigateToNewConversation)
-        job.cancel()
-    }
-
-    @Test
-    fun `onCreateNewConversationClick sets OFFLINE error when network is not available`() = test {
-        whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(false)
-
-        viewModel.onCreateNewConversationClick()
-        advanceUntilIdle()
-
-        assertThat(viewModel.errorMessage.value).isEqualTo(ConversationsSupportViewModel.ErrorType.OFFLINE)
-    }
-
-    @Test
-    fun `onCreateNewConversationClick does not navigate when network is not available`() = test {
-        whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(false)
-
-        var emittedEvent: ConversationsSupportViewModel.NavigationEvent? = null
-        val job = launch {
-            viewModel.navigationEvents.collect { event ->
-                emittedEvent = event
-            }
-        }
-
-        viewModel.onCreateNewConversationClick()
-        advanceUntilIdle()
-
-        assertThat(emittedEvent).isNull()
-        job.cancel()
-    }
-
-    @Test
     fun `setNewConversation sets selected conversation and emits navigation event`() = test {
         val conversation = createTestConversation(1)
         var emittedEvent: ConversationsSupportViewModel.NavigationEvent? = null

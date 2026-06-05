@@ -36,7 +36,7 @@ fun <T : Conversation> ConversationsListScreen(
     conversations: List<T>,
     conversationsState: ConversationsSupportViewModel.ConversationsState,
     onBackClick: () -> Unit,
-    onCreateNewConversationClick: (() -> Unit)?,
+    onCreateNewConversationClick: () -> Unit,
     onRefresh: () -> Unit,
     conversationListItem: @Composable (T) -> Unit
 ) {
@@ -48,13 +48,11 @@ fun <T : Conversation> ConversationsListScreen(
                 navigationIcon = NavigationIcons.BackIcon,
                 onNavigationIconClick = onBackClick,
                 actions = {
-                    if (onCreateNewConversationClick != null) {
-                        IconButton(onClick = onCreateNewConversationClick) {
-                            Icon(
-                                imageVector = Icons.Default.Add,
-                                contentDescription = addConversationContentDescription
-                            )
-                        }
+                    IconButton(onClick = onCreateNewConversationClick) {
+                        Icon(
+                            imageVector = Icons.Default.Add,
+                            contentDescription = addConversationContentDescription
+                        )
                     }
                 }
             )
@@ -95,7 +93,7 @@ private fun <T : Conversation> ConversationsList(
     modifier: Modifier,
     conversations: List<T>,
     conversationsState: ConversationsSupportViewModel.ConversationsState,
-    onCreateNewConversationClick: (() -> Unit)?,
+    onCreateNewConversationClick: () -> Unit,
     conversationListItem: @Composable (T) -> Unit
 ) {
     when {

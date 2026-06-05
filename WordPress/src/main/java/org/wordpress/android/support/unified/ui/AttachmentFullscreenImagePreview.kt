@@ -46,7 +46,7 @@ import org.wordpress.android.ui.compose.theme.AppThemeM3
 @Composable
 fun AttachmentFullscreenImagePreview(
     imageUrl: String,
-    onGetAuthorizationHeaderArgument: () -> String,
+    authorizationHeader: String,
     onDismiss: () -> Unit,
     onDownload: () -> Unit = {},
 ) {
@@ -55,7 +55,6 @@ fun AttachmentFullscreenImagePreview(
     var offsetY by remember { mutableFloatStateOf(0f) }
 
     // Cache authorization header to avoid repeated function calls during composition
-    val authorizationHeader = remember { onGetAuthorizationHeaderArgument() }
 
     // Load semantics
     val loadingImageDescription = stringResource(R.string.he_support_loading_image)
@@ -189,7 +188,7 @@ private fun AttachmentFullscreenImagePreviewPreview() {
     AppThemeM3(isDarkTheme = false) {
         AttachmentFullscreenImagePreview(
             imageUrl = "https://via.placeholder.com/800x600",
-            onGetAuthorizationHeaderArgument = { "" },
+            authorizationHeader = "",
             onDismiss = { },
             onDownload = { }
         )
@@ -202,7 +201,7 @@ private fun AttachmentFullscreenImagePreviewPreviewDark() {
     AppThemeM3(isDarkTheme = true) {
         AttachmentFullscreenImagePreview(
             imageUrl = "https://via.placeholder.com/800x600",
-            onGetAuthorizationHeaderArgument = { "" },
+            authorizationHeader = "",
             onDismiss = { },
             onDownload = { }
         )

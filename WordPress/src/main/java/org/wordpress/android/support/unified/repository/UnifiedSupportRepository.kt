@@ -154,9 +154,12 @@ class UnifiedSupportRepository @Inject constructor(
     private fun uniffi.wp_api.BotMessage.toUnifiedMessage(): UnifiedMessage =
         UnifiedMessage(
             id = messageId.toLong(),
-            rawText = content,
             formattedText = markdownToAnnotatedString(content),
-            authorRole = if (role == "user") UnifiedMessage.AUTHOR_ROLE_USER else UnifiedMessage.AUTHOR_ROLE_BOT,
+            authorRole = if (role == UnifiedMessage.AUTHOR_ROLE_USER) {
+                UnifiedMessage.AUTHOR_ROLE_USER
+            } else {
+                UnifiedMessage.AUTHOR_ROLE_BOT
+            },
             authorName = "",
             createdAt = createdAt,
             attachments = emptyList()
@@ -177,7 +180,6 @@ class UnifiedSupportRepository @Inject constructor(
     private fun uniffi.wp_api.UnifiedMessage.toUnifiedMessage(): UnifiedMessage =
         UnifiedMessage(
             id = id.toLong(),
-            rawText = message,
             formattedText = markdownToAnnotatedString(message),
             authorRole = authorRole,
             authorName = authorName,
@@ -190,7 +192,6 @@ class UnifiedSupportRepository @Inject constructor(
             id = id.toLong(),
             filename = filename,
             contentType = contentType,
-            size = size.toLong(),
             url = url,
             botCitationScore = metadata.botCitationScore()
         )

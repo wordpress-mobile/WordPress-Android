@@ -24,7 +24,7 @@ import org.wordpress.android.ui.compose.theme.AppThemeM3
 @Composable
 fun EmptyConversationsView(
     modifier: Modifier,
-    onCreateNewConversationClick: (() -> Unit)?
+    onCreateNewConversationClick: () -> Unit
 ) {
     Column(
         modifier = modifier
@@ -56,12 +56,10 @@ fun EmptyConversationsView(
             textAlign = TextAlign.Center
         )
 
-        if (onCreateNewConversationClick != null) {
-            Spacer(modifier = Modifier.padding(24.dp))
+        Spacer(modifier = Modifier.padding(24.dp))
 
-            Button(onClick = onCreateNewConversationClick) {
-                Text(text = stringResource(R.string.he_support_empty_conversations_button))
-            }
+        Button(onClick = onCreateNewConversationClick) {
+            Text(text = stringResource(R.string.he_support_empty_conversations_button))
         }
     }
 }

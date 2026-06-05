@@ -7,7 +7,6 @@ import java.util.Date
 @Immutable
 data class UnifiedMessage(
     val id: Long,
-    val rawText: String,
     val formattedText: AnnotatedString,
     val authorRole: String,
     val authorName: String,

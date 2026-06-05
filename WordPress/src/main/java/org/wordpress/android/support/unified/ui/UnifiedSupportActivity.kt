@@ -86,11 +86,6 @@ class UnifiedSupportActivity : AppCompatActivity() {
         viewModel.init()
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        viewModel.cleanupVideoCache()
-    }
-
     private fun observeNavigationEvents() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -101,9 +96,6 @@ class UnifiedSupportActivity : AppCompatActivity() {
                         }
                         ConversationsSupportViewModel.NavigationEvent.NavigateBack -> {
                             navController.navigateUp()
-                        }
-                        ConversationsSupportViewModel.NavigationEvent.NavigateToNewConversation -> {
-                            // Not supported in unified flow.
                         }
                     }
                 }
@@ -196,7 +188,7 @@ class UnifiedSupportActivity : AppCompatActivity() {
                                 }
                                 fileDownloadManager.downloadFile(attachment.url, attachment.filename)
                             },
-                            onGetAuthorizationHeaderArgument = { viewModel.getAuthorizationHeader() },
+                            authorizationHeader = viewModel.getAuthorizationHeader(),
                             videoDownloadState = videoDownloadState,
                             onStartVideoDownload = { url -> viewModel.downloadVideoToTempFile(url) },
                             onResetVideoDownloadState = { viewModel.resetVideoDownloadState() },
