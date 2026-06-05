@@ -12,11 +12,7 @@ Language: gl_ES
     <string name="post_rs_settings_author_dialog_title">Autor</string>
     <string name="stats_devices_device_header">Dispositivo</string>
     <string name="stats_devices_percentage_header">Porcentaxe</string>
-    <string name="he_support_send_ticket_button">Enviar</string>
-    <string name="he_support_generic_error">Produciuse un erro. Por favor, inténtao de novo máis tarde.</string>
     <string name="he_support_forbidden_error">Síntoo, non tes permisos para realizar esta acción.</string>
-    <string name="he_support_contact_information">Información de contacto</string>
-    <string name="he_support_site_address_placeholder">https://oteusitio.com</string>
     <string name="he_support_status_closed">Pechado</string>
     <string name="he_support_message_label">Mensaxe</string>
     <string name="he_support_send_button">Enviar</string>

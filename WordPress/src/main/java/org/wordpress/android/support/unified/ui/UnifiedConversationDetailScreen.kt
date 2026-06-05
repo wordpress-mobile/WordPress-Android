@@ -153,36 +153,19 @@ fun UnifiedConversationDetailScreen(
             )
         },
         bottomBar = {
-            when {
-                isBot -> {
-                    if (conversation.canAcceptReply) {
-                        ChatInputBar(
-                            messageText = messageText,
-                            canSendMessage = !isSendingReply && !isLoading,
-                            onMessageTextChange = { messageText = it },
-                            onSendClick = {
-                                if (messageText.isNotBlank()) {
-                                    onSendReply(messageText, false)
-                                    messageText = ""
-                                }
-                            }
-                        )
-                    }
-                }
-                conversation.canAcceptReply -> {
-                    Box(modifier = Modifier.navigationBarsPadding()) {
-                        ReplyButton(
-                            enabled = !isLoading,
-                            onClick = { onReplyBottomSheetVisibilityChange(true) }
-                        )
-                    }
-                }
-                else -> {
-                    Box(modifier = Modifier.navigationBarsPadding()) {
-                        ClosedConversationBanner()
-                    }
-                }
-            }
+            ConversationBottomBar(
+                isBot = isBot,
+                canAcceptReply = conversation.canAcceptReply,
+                messageText = messageText,
+                canSendMessage = !isSendingReply && !isLoading,
+                onMessageTextChange = { messageText = it },
+                onSendMessage = { message ->
+                    onSendReply(message, false)
+                    messageText = ""
+                },
+                replyEnabled = !isLoading,
+                onReplyClick = { onReplyBottomSheetVisibilityChange(true) }
+            )
         }
     ) { contentPadding ->
         Box(
@@ -282,27 +265,90 @@ fun UnifiedConversationDetailScreen(
     }
 
     previewAttachment?.let { attachment ->
-        when (attachment.type) {
-            AttachmentType.Image -> {
-                AttachmentFullscreenImagePreview(
-                    imageUrl = attachment.url,
-                    authorizationHeader = authorizationHeader,
-                    onDismiss = { previewAttachment = null },
-                    onDownload = { onDownloadAttachment(attachment) }
+        AttachmentPreviewOverlay(
+            attachment = attachment,
+            authorizationHeader = authorizationHeader,
+            videoDownloadState = videoDownloadState,
+            onStartVideoDownload = onStartVideoDownload,
+            onResetVideoDownloadState = onResetVideoDownloadState,
+            onDismiss = { previewAttachment = null },
+            onDownload = { onDownloadAttachment(attachment) },
+        )
+    }
+}
+
+@Composable
+private fun ConversationBottomBar(
+    isBot: Boolean,
+    canAcceptReply: Boolean,
+    messageText: String,
+    canSendMessage: Boolean,
+    onMessageTextChange: (String) -> Unit,
+    onSendMessage: (String) -> Unit,
+    replyEnabled: Boolean,
+    onReplyClick: () -> Unit,
+) {
+    when {
+        isBot -> {
+            if (canAcceptReply) {
+                ChatInputBar(
+                    messageText = messageText,
+                    canSendMessage = canSendMessage,
+                    onMessageTextChange = onMessageTextChange,
+                    onSendClick = {
+                        if (messageText.isNotBlank()) {
+                            onSendMessage(messageText)
+                        }
+                    }
                 )
             }
-            AttachmentType.Video -> {
-                AttachmentFullscreenVideoPlayer(
-                    videoUrl = attachment.url,
-                    downloadState = videoDownloadState,
-                    onStartVideoDownload = onStartVideoDownload,
-                    onResetVideoDownloadState = onResetVideoDownloadState,
-                    onDismiss = { previewAttachment = null },
-                    onDownload = { onDownloadAttachment(attachment) },
-                )
-            }
-            else -> Unit
         }
+        canAcceptReply -> {
+            Box(modifier = Modifier.navigationBarsPadding()) {
+                ReplyButton(
+                    enabled = replyEnabled,
+                    onClick = onReplyClick
+                )
+            }
+        }
+        else -> {
+            Box(modifier = Modifier.navigationBarsPadding()) {
+                ClosedConversationBanner()
+            }
+        }
+    }
+}
+
+@Composable
+private fun AttachmentPreviewOverlay(
+    attachment: UnifiedAttachment,
+    authorizationHeader: String,
+    videoDownloadState: VideoDownloadState,
+    onStartVideoDownload: (String) -> Unit,
+    onResetVideoDownloadState: () -> Unit,
+    onDismiss: () -> Unit,
+    onDownload: () -> Unit,
+) {
+    when (attachment.type) {
+        AttachmentType.Image -> {
+            AttachmentFullscreenImagePreview(
+                imageUrl = attachment.url,
+                authorizationHeader = authorizationHeader,
+                onDismiss = onDismiss,
+                onDownload = onDownload
+            )
+        }
+        AttachmentType.Video -> {
+            AttachmentFullscreenVideoPlayer(
+                videoUrl = attachment.url,
+                downloadState = videoDownloadState,
+                onStartVideoDownload = onStartVideoDownload,
+                onResetVideoDownloadState = onResetVideoDownloadState,
+                onDismiss = onDismiss,
+                onDownload = onDownload,
+            )
+        }
+        else -> Unit
     }
 }
 
