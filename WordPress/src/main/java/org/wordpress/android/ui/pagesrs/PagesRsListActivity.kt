@@ -29,12 +29,24 @@ class PagesRsListActivity : BaseAppCompatActivity() {
 
         setContent {
             val tabStates by viewModel.tabStates.collectAsState()
+            val isSearchActive by viewModel.isSearchActive.collectAsState()
             val isOpeningPage by viewModel.isOpeningPage.collectAsState()
+            val searchQuery by viewModel.searchQuery.collectAsState()
+            val authorFilter by viewModel.authorFilter.collectAsState()
             AppThemeM3 {
                 PagesRsListScreen(
                     tabStates = tabStates,
+                    isSearchActive = isSearchActive,
                     isOpeningPage = isOpeningPage,
+                    searchQuery = searchQuery,
+                    authorFilter = authorFilter,
+                    isAuthorFilterSupported = viewModel.isAuthorFilterSupported,
+                    avatarUrl = viewModel.avatarUrl,
                     snackbarMessages = viewModel.snackbarMessages,
+                    onSearchOpen = viewModel::onSearchOpen,
+                    onSearchQueryChanged = viewModel::onSearchQueryChanged,
+                    onSearchClose = viewModel::onSearchClose,
+                    onAuthorFilterChanged = viewModel::onAuthorFilterChanged,
                     onInitTab = viewModel::initTab,
                     onTabChanged = viewModel::onTabChanged,
                     onRefreshTab = { tab -> viewModel.refreshTab(tab, isUserRefresh = true) },

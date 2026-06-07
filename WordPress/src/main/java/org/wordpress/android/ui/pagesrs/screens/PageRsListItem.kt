@@ -55,9 +55,26 @@ private fun PageContentItem(
         Column(
             modifier = Modifier.padding(16.dp)
         ) {
-            if (page.date.isNotBlank()) {
+            val statusLabel = if (page.statusLabelResId != 0) {
+                stringResource(page.statusLabelResId)
+            } else {
+                null
+            }
+            val bullet = stringResource(R.string.bullet_with_spaces)
+            val headerText = buildString {
+                if (!statusLabel.isNullOrBlank()) {
+                    append(statusLabel)
+                    if (page.date.isNotBlank()) append(bullet)
+                }
+                append(page.date)
+                if (!page.authorDisplayName.isNullOrBlank()) {
+                    if (isNotBlank()) append(bullet)
+                    append(page.authorDisplayName)
+                }
+            }
+            if (headerText.isNotBlank()) {
                 Text(
-                    text = page.date,
+                    text = headerText,
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.primary
                 )

@@ -43,7 +43,9 @@ internal fun PageRsTabListScreen(
     onRefresh: () -> Unit,
     onLoadMore: () -> Unit,
     onPageClick: (Long) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    isSearchIdle: Boolean = false,
+    isSearching: Boolean = false
 ) {
     val pullToRefreshState = rememberPullToRefreshState()
 
@@ -62,6 +64,7 @@ internal fun PageRsTabListScreen(
         }
     ) {
         when {
+            isSearchIdle -> Box(Modifier.fillMaxSize())
             state.isLoading -> ShimmerList()
             state.error != null -> {
                 ErrorContent(
@@ -70,7 +73,13 @@ internal fun PageRsTabListScreen(
                 )
             }
             state.pages.isEmpty() && !state.isRefreshing -> {
-                EmptyContent(emptyMessageResId = emptyMessageResId)
+                EmptyContent(
+                    emptyMessageResId = if (isSearching) {
+                        R.string.pages_empty_search_result
+                    } else {
+                        emptyMessageResId
+                    }
+                )
             }
             else -> PageListContent(
                 pages = state.pages,
