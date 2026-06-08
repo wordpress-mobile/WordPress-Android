@@ -205,6 +205,6 @@ class UnifiedSupportRepository @Inject constructor(
 
     companion object {
         private const val METADATA_KEY_SCORE = "score"
-        private const val BOT_ID = "jetpack-chat-mobile"
+        private const val BOT_ID = "jetpack-workflow-chat_mobile_support"
     }
 }
