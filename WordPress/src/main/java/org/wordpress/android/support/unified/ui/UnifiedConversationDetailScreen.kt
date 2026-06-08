@@ -39,6 +39,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalResources
@@ -118,16 +119,16 @@ fun UnifiedConversationDetailScreen(
     val isBot = conversation.isBot
     val isBotTyping = isBot && isSendingReply
 
-    // Scroll to bottom when a new message is added or when the bot starts "typing". The item count
-    // is derived from the data because listState.layoutInfo may not include items added in this
-    // composition yet.
-    LaunchedEffect(conversation.id, conversation.messages.lastOrNull()?.id, isBotTyping) {
-        if (conversation.messages.isNotEmpty() || isBotTyping) {
-            val headerCount = if (isBot) 1 else 2 // welcome header vs status header + title card
-            val typingCount = if (isBotTyping) 1 else 0
-            val itemCount = headerCount + conversation.messages.size + typingCount + 1 // trailing spacer
-            listState.scrollToItem(itemCount - 1)
-        }
+    // Keep the conversation pinned to its last item whenever a message is added or the bot's typing
+    // indicator appears/disappears. We scroll in reaction to layoutInfo.totalItemsCount rather than
+    // deriving the index from the data: the count is reported by the lazy layout once the new items
+    // are laid out (avoiding the composition lag that made an eager scroll miss them), and it stays
+    // correct regardless of how many headers/footers the list composition adds.
+    LaunchedEffect(listState) {
+        snapshotFlow { listState.layoutInfo.totalItemsCount }
+            .collect { itemCount ->
+                if (itemCount > 0) listState.scrollToItem(itemCount - 1)
+            }
     }
 
     Scaffold(
@@ -135,7 +136,9 @@ fun UnifiedConversationDetailScreen(
         topBar = {
             TopAppBar(
                 title = {
-                    // HE conversations show their title in the body (title card), like the old screen.
+                    // Bots intentionally have no title (it's always empty); the welcome header in the
+                    // body stands in for it. HE conversations show their title in the body (title card),
+                    // like the old screen, so the top bar is left empty in both cases.
                     Text(
                         text = if (isBot) conversation.title else "",
                         maxLines = 1,

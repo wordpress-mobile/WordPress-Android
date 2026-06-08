@@ -25,6 +25,7 @@ import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.NetworkUtilsWrapper
 import java.io.File
 import java.util.Date
+import java.util.concurrent.ConcurrentHashMap
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -47,7 +48,9 @@ class UnifiedSupportViewModel @Inject constructor(
     val replyFormState: StateFlow<ConversationReplyFormState> = _replyFormState.asStateFlow()
 
     // Cache for downloaded video file paths (videoUrl -> file path) used by the attachment player.
-    private val videoCache = mutableMapOf<String, String>()
+    // Concurrent because it is read/written from ioDispatcher download coroutines and cleared from
+    // onCleared() on the main thread.
+    private val videoCache = ConcurrentHashMap<String, String>()
 
     private val _videoDownloadState = MutableStateFlow<VideoDownloadState>(VideoDownloadState.Idle)
     val videoDownloadState: StateFlow<VideoDownloadState> = _videoDownloadState.asStateFlow()
@@ -140,15 +143,19 @@ class UnifiedSupportViewModel @Inject constructor(
     @Suppress("TooGenericExceptionCaught", "LongMethod")
     fun sendReply(message: String, includeAppLogs: Boolean = false) {
         val conversation = _selectedConversation.value ?: return
+        // Guard against concurrent sends. Setting the flag synchronously here (before launching the
+        // coroutine) closes the race where two quick calls both pass the check before either coroutine
+        // gets to set it.
         if (_isSendingReply.value) return
+        _isSendingReply.value = true
 
         viewModelScope.launch {
             if (!networkUtilsWrapper.isNetworkAvailable()) {
                 _errorMessage.value = ErrorType.OFFLINE
+                _isSendingReply.value = false
                 return@launch
             }
 
-            _isSendingReply.value = true
             val optimisticMessage = buildOptimisticUserMessage(message)
             val localMessages = conversation.messages + optimisticMessage
             _selectedConversation.value = conversation.copy(messages = localMessages)
@@ -215,9 +222,11 @@ class UnifiedSupportViewModel @Inject constructor(
     fun removeReplyAttachment(uri: Uri) {
         viewModelScope.launch {
             val currentState = _replyFormState.value.attachmentState
-            val updatedState = attachmentStateValidator.removeAttachment(currentState, uri)
-            _replyFormState.value = _replyFormState.value.copy(attachmentState = updatedState)
-            addReplyAttachments(currentState.rejectedUris)
+            val removedState = attachmentStateValidator.removeAttachment(currentState, uri)
+            // Re-validate previously rejected uris against the space freed by the removal in the same
+            // pass, so the form state is published exactly once (no transient intermediate emission).
+            val revalidatedState = attachmentStateValidator.addAttachments(removedState, removedState.rejectedUris)
+            _replyFormState.value = _replyFormState.value.copy(attachmentState = revalidatedState)
         }
     }
 
