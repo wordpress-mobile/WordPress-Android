@@ -80,6 +80,7 @@ internal class PagesRsListViewModel @Inject constructor(
     val snackbarMessages = _snackbarMessages.receiveAsFlow()
 
     private val _site: SiteModel? = selectedSiteRepository.getSelectedSite()
+    val site: SiteModel? get() = _site
 
     val avatarUrl: String? = accountStore.account?.avatarUrl
 
@@ -379,6 +380,7 @@ internal class PagesRsListViewModel @Inject constructor(
     @MainThread
     fun onAddNewPage() {
         val site = _site ?: return
+        analyticsTracker.track(Stat.PAGES_ADD_PAGE, site)
         _events.trySend(PageRsListEvent.CreateNewPage(site))
     }
 

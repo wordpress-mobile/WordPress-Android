@@ -236,6 +236,19 @@ internal class PagesRsListViewModelTest : BaseUnitTest(StandardTestDispatcher())
     }
 
     @Test
+    fun `onAddNewPage tracks PAGES_ADD_PAGE`() {
+        val viewModel = createViewModel()
+
+        viewModel.onAddNewPage()
+
+        verify(analyticsTracker).track(
+            eq(Stat.PAGES_ADD_PAGE),
+            eq(site),
+            anyOrNull<Map<String, *>>()
+        )
+    }
+
+    @Test
     fun `openPage on non-trashed tab tracks PAGES_LIST_ITEM_SELECTED`() {
         val viewModel = createViewModel()
 
