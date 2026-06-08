@@ -35,6 +35,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -687,7 +688,7 @@ private fun TypingIndicatorBubble() {
 
 @Composable
 private fun TypingDot(delay: Int) {
-    var alpha by remember { mutableStateOf(TYPING_DOT_MIN_ALPHA) }
+    var alpha by remember { mutableFloatStateOf(TYPING_DOT_MIN_ALPHA) }
 
     LaunchedEffect(Unit) {
         kotlinx.coroutines.delay(delay.toLong())
