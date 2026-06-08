@@ -222,15 +222,13 @@ internal class PagesRsListViewModelTest : BaseUnitTest(StandardTestDispatcher())
     }
 
     @Test
-    fun `onAddNewPage emits CreateNewPage with selected site`() = test {
+    fun `onAddNewPage emits CreateNewPage`() = test {
         val viewModel = createViewModel()
 
         viewModel.events.test {
             viewModel.onAddNewPage()
 
-            val event = awaitItem()
-            assertThat(event).isInstanceOf(PageRsListEvent.CreateNewPage::class.java)
-            assertThat((event as PageRsListEvent.CreateNewPage).site).isEqualTo(site)
+            assertThat(awaitItem()).isEqualTo(PageRsListEvent.CreateNewPage)
             cancelAndIgnoreRemainingEvents()
         }
     }

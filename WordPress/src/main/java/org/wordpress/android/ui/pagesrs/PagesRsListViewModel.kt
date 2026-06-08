@@ -381,7 +381,7 @@ internal class PagesRsListViewModel @Inject constructor(
     fun onAddNewPage() {
         val site = _site ?: return
         analyticsTracker.track(Stat.PAGES_ADD_PAGE, site)
-        _events.trySend(PageRsListEvent.CreateNewPage(site))
+        _events.trySend(PageRsListEvent.CreateNewPage)
     }
 
     private fun checkNetwork(): Boolean {

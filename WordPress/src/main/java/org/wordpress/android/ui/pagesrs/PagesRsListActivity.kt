@@ -86,18 +86,19 @@ class PagesRsListActivity : BaseAppCompatActivity() {
         when (event) {
             is PageRsListEvent.EditPage ->
                 ActivityLauncher.editPostOrPageForResult(this, event.site, event.page)
-            is PageRsListEvent.CreateNewPage -> startCreatePageFlow(event.site)
+            is PageRsListEvent.CreateNewPage -> startCreatePageFlow()
             is PageRsListEvent.ShowToast -> ToastUtils.showToast(this, event.messageResId)
             is PageRsListEvent.Finish -> finish()
         }
     }
 
-    private fun startCreatePageFlow(site: SiteModel) {
+    private fun startCreatePageFlow() {
         if (mlpViewModel.canShowModalLayoutPicker() &&
             jetpackFeatureRemovalPhaseHelper.shouldShowTemplateSelectionInPages()
         ) {
             mlpViewModel.createPageFlowTriggered()
         } else {
+            val site = viewModel.site ?: return
             launchNewPageEditor(site, title = "", template = null)
         }
     }
