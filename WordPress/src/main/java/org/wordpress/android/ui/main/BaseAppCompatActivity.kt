@@ -20,6 +20,7 @@ import org.wordpress.android.ui.media.MediaSettingsActivity
 import org.wordpress.android.ui.mysite.menu.MenuActivity
 import org.wordpress.android.ui.mysite.personalization.PersonalizationActivity
 import org.wordpress.android.ui.navmenus.NavMenusActivity
+import org.wordpress.android.ui.pagesrs.PagesRsListActivity
 import org.wordpress.android.ui.posts.GutenbergKitActivity
 import org.wordpress.android.ui.postsrs.PostRsListActivity
 import org.wordpress.android.ui.postsrs.PostRsSettingsActivity
@@ -93,6 +94,7 @@ private val excludedActivities = listOf(
     NavMenusActivity::class.java.name,
     NewDomainSearchActivity::class.java.name,
     PersonalizationActivity::class.java.name,
+    PagesRsListActivity::class.java.name,
     PostRsListActivity::class.java.name,
     PostRsSettingsActivity::class.java.name,
     TermSelectionActivity::class.java.name,
