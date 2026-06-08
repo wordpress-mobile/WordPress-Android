@@ -1,5 +1,10 @@
 package org.wordpress.android.ui.pagesrs.screens
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
@@ -28,6 +33,11 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.PlainTooltip
+import androidx.compose.material3.TooltipAnchorPosition
+import androidx.compose.material3.TooltipBox
+import androidx.compose.material3.TooltipDefaults
+import androidx.compose.material3.rememberTooltipState
 import androidx.compose.material3.PrimaryScrollableTabRow
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
@@ -118,14 +128,7 @@ internal fun PagesRsListScreen(
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
         floatingActionButton = {
-            if (!isSearchActive) {
-                FloatingActionButton(onClick = onAddNewPage) {
-                    Icon(
-                        Icons.Default.Add,
-                        contentDescription = stringResource(R.string.create_page_fab_tooltip)
-                    )
-                }
-            }
+            AddPageFab(visible = !isSearchActive, onClick = onAddNewPage)
         },
         topBar = {
             TopAppBar(
@@ -262,6 +265,27 @@ internal fun PagesRsListScreen(
             contentAlignment = Alignment.Center
         ) {
             CircularProgressIndicator()
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun AddPageFab(visible: Boolean, onClick: () -> Unit) {
+    AnimatedVisibility(
+        visible = visible,
+        enter = scaleIn() + fadeIn(),
+        exit = scaleOut() + fadeOut()
+    ) {
+        val tooltip = stringResource(R.string.create_page_fab_tooltip)
+        TooltipBox(
+            positionProvider = TooltipDefaults.rememberTooltipPositionProvider(TooltipAnchorPosition.Above),
+            tooltip = { PlainTooltip { Text(tooltip) } },
+            state = rememberTooltipState()
+        ) {
+            FloatingActionButton(onClick = onClick) {
+                Icon(Icons.Default.Add, contentDescription = tooltip)
+            }
         }
     }
 }
