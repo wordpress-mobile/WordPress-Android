@@ -12,6 +12,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import org.wordpress.android.ui.ActivityLauncher
+import org.wordpress.android.ui.PagePostCreationSourcesDetail.PAGE_FROM_PAGES_LIST
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.main.BaseAppCompatActivity
 import org.wordpress.android.ui.pagesrs.screens.PagesRsListScreen
@@ -52,7 +53,8 @@ class PagesRsListActivity : BaseAppCompatActivity() {
                     onRefreshTab = { tab -> viewModel.refreshTab(tab, isUserRefresh = true) },
                     onLoadMore = viewModel::loadMorePages,
                     onNavigateBack = { onBackPressedDispatcher.onBackPressed() },
-                    onPageClick = viewModel::openPage
+                    onPageClick = viewModel::openPage,
+                    onAddNewPage = viewModel::onAddNewPage
                 )
             }
         }
@@ -70,6 +72,10 @@ class PagesRsListActivity : BaseAppCompatActivity() {
         when (event) {
             is PageRsListEvent.EditPage ->
                 ActivityLauncher.editPostOrPageForResult(this, event.site, event.page)
+            is PageRsListEvent.CreateNewPage ->
+                ActivityLauncher.addNewPageForResult(
+                    this, event.site, "", "", null, PAGE_FROM_PAGES_LIST
+                )
             is PageRsListEvent.ShowToast -> ToastUtils.showToast(this, event.messageResId)
             is PageRsListEvent.Finish -> finish()
         }

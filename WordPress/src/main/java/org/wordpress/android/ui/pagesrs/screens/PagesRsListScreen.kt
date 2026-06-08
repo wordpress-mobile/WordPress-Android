@@ -15,6 +15,7 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Search
@@ -23,6 +24,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -90,7 +92,8 @@ internal fun PagesRsListScreen(
     onRefreshTab: (PageRsListTab) -> Unit,
     onLoadMore: (PageRsListTab) -> Unit,
     onNavigateBack: () -> Unit,
-    onPageClick: (Long, PageRsListTab) -> Unit
+    onPageClick: (Long, PageRsListTab) -> Unit,
+    onAddNewPage: () -> Unit
 ) {
     val tabs = PageRsListTab.entries
     val pagerState = rememberPagerState(pageCount = { tabs.size })
@@ -114,6 +117,16 @@ internal fun PagesRsListScreen(
 
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
+        floatingActionButton = {
+            if (!isSearchActive) {
+                FloatingActionButton(onClick = onAddNewPage) {
+                    Icon(
+                        Icons.Default.Add,
+                        contentDescription = stringResource(R.string.create_page_fab_tooltip)
+                    )
+                }
+            }
+        },
         topBar = {
             TopAppBar(
                 title = {

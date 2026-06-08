@@ -222,6 +222,20 @@ internal class PagesRsListViewModelTest : BaseUnitTest(StandardTestDispatcher())
     }
 
     @Test
+    fun `onAddNewPage emits CreateNewPage with selected site`() = test {
+        val viewModel = createViewModel()
+
+        viewModel.events.test {
+            viewModel.onAddNewPage()
+
+            val event = awaitItem()
+            assertThat(event).isInstanceOf(PageRsListEvent.CreateNewPage::class.java)
+            assertThat((event as PageRsListEvent.CreateNewPage).site).isEqualTo(site)
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
     fun `openPage on non-trashed tab tracks PAGES_LIST_ITEM_SELECTED`() {
         val viewModel = createViewModel()
 

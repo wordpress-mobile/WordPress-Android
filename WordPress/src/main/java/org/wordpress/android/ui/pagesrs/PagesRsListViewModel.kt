@@ -376,6 +376,12 @@ internal class PagesRsListViewModel @Inject constructor(
         }
     }
 
+    @MainThread
+    fun onAddNewPage() {
+        val site = _site ?: return
+        _events.trySend(PageRsListEvent.CreateNewPage(site))
+    }
+
     private fun checkNetwork(): Boolean {
         if (!networkUtilsWrapper.isNetworkAvailable()) {
             _snackbarMessages.trySend(
