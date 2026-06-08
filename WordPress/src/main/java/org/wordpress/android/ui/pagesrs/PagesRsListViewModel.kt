@@ -355,7 +355,10 @@ internal class PagesRsListViewModel @Inject constructor(
         viewModelScope.launch {
             @Suppress("TooGenericExceptionCaught")
             try {
-                val lastModified = findPage(remotePageId, tab)?.lastModified
+                val lastModified = _tabStates.value[tab]
+                    ?.pages
+                    ?.firstOrNull { it.remotePageId == remotePageId }
+                    ?.lastModified
                 val page = withContext(Dispatchers.IO) {
                     fluxCBridge.fetchAndBridge(remotePageId, site, lastModified)
                 }
@@ -389,9 +392,6 @@ internal class PagesRsListViewModel @Inject constructor(
     ): String = PostRsErrorUtils.friendlyErrorMessage(
         e, defaultResId, resourceProvider, networkUtilsWrapper
     )
-
-    private fun findPage(remotePageId: Long, tab: PageRsListTab): PageRsUiModel? =
-        _tabStates.value[tab]?.pages?.firstOrNull { it.remotePageId == remotePageId }
 
     private suspend fun loadItemsForTab(tab: PageRsListTab) {
         val collection = collections[tab] ?: return

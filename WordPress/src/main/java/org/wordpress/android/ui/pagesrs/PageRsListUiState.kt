@@ -35,7 +35,6 @@ internal data class PageRsUiModel(
     val excerpt: String,
     val date: String,
     val lastModified: String = "",
-    val status: PostStatus? = null,
     @StringRes val statusLabelResId: Int = 0,
     val authorId: Long = 0L,
     val authorDisplayName: String? = null,
@@ -87,7 +86,6 @@ private fun FullEntityAnyPostWithEditContext.toPageUiModel(
             ).let { HtmlUtils.fastStripHtml(it).trim() },
         date = PostRsDateFormatter.format(page.dateGmt, page.status),
         lastModified = DateTimeUtils.iso8601UTCFromDate(page.modifiedGmt),
-        status = page.status,
         statusLabelResId = if (showStatus) page.status.toLabel() else 0,
         authorId = page.author ?: 0L,
         badges = buildList {

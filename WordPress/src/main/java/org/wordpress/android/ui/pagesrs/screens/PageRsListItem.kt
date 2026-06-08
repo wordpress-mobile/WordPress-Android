@@ -61,17 +61,11 @@ private fun PageContentItem(
                 null
             }
             val bullet = stringResource(R.string.bullet_with_spaces)
-            val headerText = buildString {
-                if (!statusLabel.isNullOrBlank()) {
-                    append(statusLabel)
-                    if (page.date.isNotBlank()) append(bullet)
-                }
-                append(page.date)
-                if (!page.authorDisplayName.isNullOrBlank()) {
-                    if (isNotBlank()) append(bullet)
-                    append(page.authorDisplayName)
-                }
-            }
+            val headerText = listOfNotNull(
+                statusLabel?.takeIf { it.isNotBlank() },
+                page.date.takeIf { it.isNotBlank() },
+                page.authorDisplayName?.takeIf { it.isNotBlank() }
+            ).joinToString(bullet)
             if (headerText.isNotBlank()) {
                 Text(
                     text = headerText,
