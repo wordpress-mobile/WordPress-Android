@@ -191,7 +191,7 @@ internal class PagesRsListViewModelTest : BaseUnitTest(StandardTestDispatcher())
 
         viewModel.onAuthorFilterChanged(AuthorFilterSelection.ME, PageRsListTab.PUBLISHED)
 
-        verify(appPrefsWrapper).postListAuthorSelection = AuthorFilterSelection.ME
+        verify(appPrefsWrapper).pagesListAuthorSelection = AuthorFilterSelection.ME
     }
 
     @Test
@@ -213,7 +213,7 @@ internal class PagesRsListViewModelTest : BaseUnitTest(StandardTestDispatcher())
 
         viewModel.onAuthorFilterChanged(AuthorFilterSelection.EVERYONE, PageRsListTab.PUBLISHED)
 
-        verify(appPrefsWrapper, never()).postListAuthorSelection = any()
+        verify(appPrefsWrapper, never()).pagesListAuthorSelection = any()
         verify(analyticsTracker, never()).track(
             eq(Stat.PAGES_LIST_AUTHOR_FILTER_CHANGED),
             any<SiteModel>(),

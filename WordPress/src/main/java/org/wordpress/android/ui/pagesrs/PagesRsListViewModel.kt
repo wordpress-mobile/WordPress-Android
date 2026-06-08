@@ -92,7 +92,7 @@ internal class PagesRsListViewModel @Inject constructor(
 
     private val _authorFilter = MutableStateFlow(
         if (isAuthorFilterSupported) {
-            appPrefsWrapper.postListAuthorSelection
+            appPrefsWrapper.pagesListAuthorSelection
         } else {
             AuthorFilterSelection.EVERYONE
         }
@@ -180,7 +180,7 @@ internal class PagesRsListViewModel @Inject constructor(
             site,
             mapOf(TRACKS_SELECTED_AUTHOR_FILTER to selection.toString())
         )
-        appPrefsWrapper.postListAuthorSelection = selection
+        appPrefsWrapper.pagesListAuthorSelection = selection
         _authorFilter.value = selection
         clearCollections()
         initTab(activeTab)
