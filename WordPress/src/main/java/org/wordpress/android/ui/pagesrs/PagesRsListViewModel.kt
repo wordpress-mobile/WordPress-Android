@@ -79,13 +79,12 @@ internal class PagesRsListViewModel @Inject constructor(
     private val _snackbarMessages = Channel<SnackbarMessage>(Channel.BUFFERED)
     val snackbarMessages = _snackbarMessages.receiveAsFlow()
 
-    private val _site: SiteModel? = selectedSiteRepository.getSelectedSite()
-    val site: SiteModel? get() = _site
+    val site: SiteModel? = selectedSiteRepository.getSelectedSite()
 
     val avatarUrl: String? = accountStore.account?.avatarUrl
 
     val isAuthorFilterSupported: Boolean by lazy {
-        val site = _site ?: return@lazy false
+        val site = this.site ?: return@lazy false
         site.isUsingWpComRestApi &&
             site.hasCapabilityEditOthersPages &&
             site.isSingleUserSite == false
@@ -101,7 +100,7 @@ internal class PagesRsListViewModel @Inject constructor(
     val authorFilter: StateFlow<AuthorFilterSelection> = _authorFilter.asStateFlow()
 
     init {
-        if (_site == null) {
+        if (site == null) {
             _events.trySend(PageRsListEvent.ShowToast(R.string.blog_not_found))
             _events.trySend(PageRsListEvent.Finish)
         } else {
@@ -123,7 +122,7 @@ internal class PagesRsListViewModel @Inject constructor(
 
     @MainThread
     fun onTabChanged(tab: PageRsListTab) {
-        val site = _site ?: return
+        val site = this.site ?: return
         if (tab == lastTrackedTab) return
         lastTrackedTab = tab
         analyticsTracker.track(
@@ -139,7 +138,7 @@ internal class PagesRsListViewModel @Inject constructor(
      */
     @MainThread
     fun onSearchOpen() {
-        val site = _site ?: return
+        val site = this.site ?: return
         analyticsTracker.track(Stat.PAGES_LIST_SEARCH_ACCESSED, site)
         _isSearchActive.value = true
         clearCollections()
@@ -174,7 +173,7 @@ internal class PagesRsListViewModel @Inject constructor(
      */
     @MainThread
     fun onAuthorFilterChanged(selection: AuthorFilterSelection, activeTab: PageRsListTab) {
-        val site = _site ?: return
+        val site = this.site ?: return
         if (selection == _authorFilter.value) return
         analyticsTracker.track(
             Stat.PAGES_LIST_AUTHOR_FILTER_CHANGED,
@@ -189,7 +188,7 @@ internal class PagesRsListViewModel @Inject constructor(
 
     @MainThread
     fun initTab(tab: PageRsListTab) {
-        val site = _site ?: return
+        val site = this.site ?: return
         if (collections.containsKey(tab) || initializingTabs.contains(tab)) return
 
         initializingTabs.add(tab)
@@ -339,7 +338,7 @@ internal class PagesRsListViewModel @Inject constructor(
      */
     @MainThread
     fun openPage(remotePageId: Long, tab: PageRsListTab) {
-        val site = _site
+        val site = this.site
         if (site == null || _isOpeningPage.value || tab == PageRsListTab.TRASHED) return
         if (!checkNetwork()) return
 
@@ -379,7 +378,7 @@ internal class PagesRsListViewModel @Inject constructor(
 
     @MainThread
     fun onAddNewPage() {
-        val site = _site ?: return
+        val site = this.site ?: return
         analyticsTracker.track(Stat.PAGES_ADD_PAGE, site)
         _events.trySend(PageRsListEvent.CreateNewPage)
     }
@@ -446,7 +445,7 @@ internal class PagesRsListViewModel @Inject constructor(
         tab: PageRsListTab,
         pages: List<PageRsUiModel>
     ) {
-        val site = _site
+        val site = this.site
         if (site == null ||
             !isAuthorFilterSupported ||
             _authorFilter.value == AuthorFilterSelection.ME
