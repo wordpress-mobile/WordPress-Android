@@ -537,7 +537,7 @@ internal class PagesRsListViewModel @Inject constructor(
 
     companion object {
         private const val PAGE_SIZE = 20
-        private const val SEARCH_DEBOUNCE_MS = 200L
+        private const val SEARCH_DEBOUNCE_MS = 250L
         internal const val MIN_SEARCH_QUERY_LENGTH = 3
         private val ALL_STATUSES = PageRsListTab.entries.flatMap { it.statuses }.distinct()
 
