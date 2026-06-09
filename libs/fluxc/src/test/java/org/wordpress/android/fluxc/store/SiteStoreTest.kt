@@ -599,7 +599,6 @@ class SiteStoreTest {
             url = "https://selfhosted.test"
         }
         whenever(siteSqlUtils.getSitesWithLocalId(3)).thenReturn(listOf(existing))
-        whenever(siteSqlUtils.insertOrUpdateSite(any())).thenReturn(1)
         val incoming = SiteModel().apply {
             id = 3
             apiRestUsernamePlain = "user"
@@ -621,8 +620,6 @@ class SiteStoreTest {
             wpApiRestUrl = "https://selfhosted.test/wp-json/"
         }
         whenever(siteSqlUtils.getSitesWithLocalId(4)).thenReturn(listOf(existing))
-        whenever(siteSqlUtils.insertOrUpdateSite(any())).thenReturn(1)
-
         siteStore.onAction(
             SiteActionBuilder.newRemoveApplicationPasswordAction(SiteModel().apply { id = 4 })
         )
@@ -638,7 +635,6 @@ class SiteStoreTest {
             url = "https://selfhosted.test"
         }
         whenever(siteSqlUtils.getSitesWithLocalId(8)).thenReturn(listOf(existing))
-        whenever(siteSqlUtils.insertOrUpdateSite(any())).thenReturn(1)
         siteStore.applicationPasswordsManagerProvider = Provider { mock<ApplicationPasswordsManager>() }
 
         siteStore.deleteStoredApplicationPasswordCredentials(SiteModel().apply { id = 8 })

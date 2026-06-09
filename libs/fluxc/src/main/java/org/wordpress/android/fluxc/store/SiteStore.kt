@@ -1698,35 +1698,23 @@ open class SiteStore @Inject constructor(
     private fun updateApplicationPassword(siteModel: SiteModel): OnSiteChanged {
         return try {
             val siteFromDB = getSiteByLocalId(siteModel.id)
-            // If the site doesn't exists we rely on create a new one
-            val siteToStore = if (siteFromDB == null) {
-                siteModel
+            if (siteFromDB == null) {
+                // New site: the full insert persists everything, incl. credentials via encrypt-on-insert.
+                OnSiteChanged(siteSqlUtils.insertOrUpdateSite(siteModel))
             } else {
-                siteFromDB.apply {
-                    apiRestUsernamePlain = siteModel.apiRestUsernamePlain
-                    apiRestPasswordPlain = siteModel.apiRestPasswordPlain
-                    apiRestUsernameEncrypted = siteModel.apiRestUsernameEncrypted
-                    apiRestPasswordEncrypted = siteModel.apiRestPasswordEncrypted
-                    apiRestUsernameIV = siteModel.apiRestUsernameIV
-                    apiRestPasswordIV = siteModel.apiRestPasswordIV
-                    wpApiRestUrl = siteModel.wpApiRestUrl
-                }
-                siteFromDB
-            }
-            val rowsAffected = siteSqlUtils.insertOrUpdateSite(siteToStore)
-            // The credential columns and WP_API_REST_URL are excluded from the generic update path (see
-            // SiteSqlUtils), so persist them through their targeted writers for an existing site.
-            if (siteFromDB != null) {
+                // Existing site: credentials + WP_API_REST_URL are excluded from the full-row write, so
+                // persist them on the existing row via their targeted writers (nothing else changed).
                 val username = siteModel.apiRestUsernamePlain
                 val password = siteModel.apiRestPasswordPlain
+                var rowsAffected = 0
                 if (!username.isNullOrEmpty() && !password.isNullOrEmpty()) {
-                    siteSqlUtils.updateApplicationPasswordCredentials(siteFromDB.id, username, password)
+                    rowsAffected = siteSqlUtils.updateApplicationPasswordCredentials(siteFromDB.id, username, password)
                 }
                 siteModel.wpApiRestUrl?.takeIf { it.isNotEmpty() }?.let {
-                    siteSqlUtils.updateWpApiRestUrl(siteFromDB.id, it)
+                    rowsAffected = siteSqlUtils.updateWpApiRestUrl(siteFromDB.id, it)
                 }
+                OnSiteChanged(rowsAffected)
             }
-            OnSiteChanged(rowsAffected)
         } catch (e: DuplicateSiteException) {
             OnSiteChanged(SiteError(DUPLICATE_SITE))
         } catch (e: Exception) {
@@ -1748,21 +1736,10 @@ open class SiteStore @Inject constructor(
             if (siteFromDB == null) {
                 OnSiteChanged(SiteError(SiteErrorType.INVALID_SITE))
             } else {
-                siteFromDB.apply {
-                    apiRestUsernamePlain = ""
-                    apiRestPasswordPlain = ""
-                    apiRestUsernameEncrypted = ""
-                    apiRestPasswordEncrypted = ""
-                    apiRestUsernameIV = ""
-                    apiRestPasswordIV = ""
-                    wpApiRestUrl = ""
-                }
-                val rowsAffected = siteSqlUtils.insertOrUpdateSite(siteFromDB)
-                // The credential columns and WP_API_REST_URL are excluded from the generic update path (see
-                // SiteSqlUtils), so clear them explicitly now that the application password is gone.
+                // Credentials + WP_API_REST_URL are excluded from the full-row write, so clear them on the
+                // existing row via their targeted writers now that the application password is gone.
                 siteSqlUtils.clearApplicationPasswordCredentials(siteFromDB.id)
-                siteSqlUtils.clearWpApiRestUrl(siteFromDB.id)
-                OnSiteChanged(rowsAffected)
+                OnSiteChanged(siteSqlUtils.clearWpApiRestUrl(siteFromDB.id))
             }
         } catch (e: DuplicateSiteException) {
             OnSiteChanged(SiteError(DUPLICATE_SITE))
@@ -2497,23 +2474,9 @@ open class SiteStore @Inject constructor(
         return try {
             val siteFromDB = getSiteByLocalId(siteModel.id)
                 ?: return OnSiteChanged(SiteError(SiteErrorType.INVALID_SITE))
-            // Clear both Plain and Encrypted columns. `SiteSqlUtils.encryptAPIRestCredentials`
-            // short-circuits when the encrypted columns are non-empty, so clearing only the plain
-            // values would leave the stale ciphertext in place and `decryptAPIRestCredentials`
-            // would resurrect them on the next read.
-            siteFromDB.apply {
-                apiRestUsernamePlain = ""
-                apiRestPasswordPlain = ""
-                apiRestUsernameEncrypted = ""
-                apiRestPasswordEncrypted = ""
-                apiRestUsernameIV = ""
-                apiRestPasswordIV = ""
-            }
-            val rowsAffected = siteSqlUtils.insertOrUpdateSite(siteFromDB)
-            // The credential columns are excluded from the generic update path (see SiteSqlUtils); clear them
-            // explicitly. wpApiRestUrl is intentionally preserved here (see KDoc) — rotation reuses it.
-            siteSqlUtils.clearApplicationPasswordCredentials(siteFromDB.id)
-            OnSiteChanged(rowsAffected)
+            // Credentials are excluded from the full-row write, so clear them on the existing row via the
+            // targeted writer. wpApiRestUrl is intentionally preserved here (see KDoc) — rotation reuses it.
+            OnSiteChanged(siteSqlUtils.clearApplicationPasswordCredentials(siteFromDB.id))
         } catch (e: DuplicateSiteException) {
             OnSiteChanged(SiteError(DUPLICATE_SITE))
         }
