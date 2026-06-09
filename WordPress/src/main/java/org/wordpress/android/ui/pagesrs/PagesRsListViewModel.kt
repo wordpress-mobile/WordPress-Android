@@ -456,8 +456,8 @@ internal class PagesRsListViewModel @Inject constructor(
         tab: PageRsListTab,
         pages: List<PageRsUiModel>
     ) {
-        val site = this.site ?: return
-        if (!isAuthorFilterSupported || _authorFilter.value == AuthorFilterSelection.ME) return
+        val site = this.site
+        if (site == null || !isAuthorFilterSupported || _authorFilter.value == AuthorFilterSelection.ME) return
 
         val unresolvedIds = pages
             .filter { it.authorId != 0L && it.authorDisplayName == null }
