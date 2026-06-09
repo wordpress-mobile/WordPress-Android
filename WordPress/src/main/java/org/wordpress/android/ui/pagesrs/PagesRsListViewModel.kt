@@ -339,6 +339,7 @@ internal class PagesRsListViewModel @Inject constructor(
         val page = _tabStates.value[tab]
             ?.pages
             ?.firstOrNull { it.remotePageId == remotePageId }
+            ?.page
 
         when {
             tab == PageRsListTab.TRASHED || page?.isTrashed == true ->
@@ -414,7 +415,7 @@ internal class PagesRsListViewModel @Inject constructor(
                 }
             }
             val existingById = getTabUiState(tab).pages
-                .associateBy { it.remotePageId }
+                .associate { it.remotePageId to it.page }
             val uiModels = items.map { model ->
                 val existing = existingById[model.remotePageId]
                 model.copy(
@@ -428,8 +429,17 @@ internal class PagesRsListViewModel @Inject constructor(
                     }
                 )
             }
+            val applyHierarchy = tab == PageRsListTab.PUBLISHED &&
+                _searchQuery.value.isBlank() &&
+                _authorFilter.value != AuthorFilterSelection.ME
+            val rows = buildRows(
+                pages = uiModels,
+                applyHierarchy = applyHierarchy,
+                pageOnFront = site?.pageOnFront ?: 0L,
+                pageForPosts = site?.pageForPosts ?: 0L
+            )
             updateTabUiState(tab) {
-                copy(pages = uiModels, isLoading = false, error = null, isAuthError = false)
+                copy(pages = rows, isLoading = false, error = null, isAuthError = false)
             }
             resolveAuthorNames(tab, uiModels)
         } catch (e: Exception) {
@@ -463,13 +473,17 @@ internal class PagesRsListViewModel @Inject constructor(
             }
             if (names.isEmpty()) return@launch
             updateTabUiState(tab) {
-                copy(
-                    pages = this.pages.map { page ->
-                        val name = names[page.authorId]
-                        if (name != null) page.copy(authorDisplayName = name) else page
-                    }
-                )
+                copy(pages = this.pages.map { item -> item.withResolvedAuthor(names) })
             }
+        }
+    }
+
+    private fun PageRsListItem.withResolvedAuthor(names: Map<Long, String>): PageRsListItem {
+        val name = names[page.authorId] ?: return this
+        val updated = page.copy(authorDisplayName = name)
+        return when (this) {
+            is PageRsListItem.Real -> copy(page = updated)
+            is PageRsListItem.Virtual -> copy(page = updated)
         }
     }
 

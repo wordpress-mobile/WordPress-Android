@@ -31,7 +31,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.flow.distinctUntilChanged
 import org.wordpress.android.R
-import org.wordpress.android.ui.pagesrs.PageRsUiModel
+import org.wordpress.android.ui.pagesrs.PageRsListItem
 import org.wordpress.android.ui.pagesrs.PageTabUiState
 import org.wordpress.android.ui.postsrs.screens.PlaceholderItem
 
@@ -94,7 +94,7 @@ internal fun PageRsTabListScreen(
 
 @Composable
 private fun PageListContent(
-    pages: List<PageRsUiModel>,
+    pages: List<PageRsListItem>,
     isLoadingMore: Boolean,
     canLoadMore: Boolean,
     onLoadMore: () -> Unit,
@@ -120,11 +120,11 @@ private fun PageListContent(
     ) {
         items(
             items = pages,
-            key = { it.remotePageId }
-        ) { page ->
-            PageRsListItem(
-                page = page,
-                onClick = { onPageClick(page.remotePageId) },
+            key = { it.stableKey }
+        ) { item ->
+            PageRsRow(
+                item = item,
+                onClick = { onPageClick(item.remotePageId) },
                 modifier = Modifier.animateItem()
             )
         }
