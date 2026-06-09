@@ -38,6 +38,7 @@ internal data class PageRsUiModel(
     @StringRes val statusLabelResId: Int = 0,
     val authorId: Long = 0L,
     val authorDisplayName: String? = null,
+    val isTrashed: Boolean = false,
     val badges: List<Int> = emptyList(),
     val displayState: PageRsDisplayState = PageRsDisplayState.NORMAL
 )
@@ -88,6 +89,7 @@ private fun FullEntityAnyPostWithEditContext.toPageUiModel(
         lastModified = DateTimeUtils.iso8601UTCFromDate(page.modifiedGmt),
         statusLabelResId = if (showStatus) page.status.toLabel() else 0,
         authorId = page.author ?: 0L,
+        isTrashed = page.status is PostStatus.Trash,
         badges = buildList {
             if (page.status is PostStatus.Private) {
                 add(R.string.post_status_post_private)

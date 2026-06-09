@@ -260,11 +260,17 @@ internal class PagesRsListViewModelTest : BaseUnitTest(StandardTestDispatcher())
     }
 
     @Test
-    fun `openPage on trashed tab is a no-op`() = test {
+    fun `openPage on trashed tab emits trashed toast and does not track edit`() = test {
         val viewModel = createViewModel()
 
-        viewModel.openPage(remotePageId = 42L, tab = PageRsListTab.TRASHED)
+        viewModel.events.test {
+            viewModel.openPage(remotePageId = 42L, tab = PageRsListTab.TRASHED)
 
+            assertThat(awaitItem()).isEqualTo(
+                PageRsListEvent.ShowToast(R.string.pages_list_item_trashed)
+            )
+            cancelAndIgnoreRemainingEvents()
+        }
         assertThat(viewModel.isOpeningPage.value).isFalse()
         verify(analyticsTracker, never()).track(
             eq(Stat.PAGES_LIST_ITEM_SELECTED),
