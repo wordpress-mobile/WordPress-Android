@@ -83,12 +83,10 @@ internal class PagesRsListViewModel @Inject constructor(
 
     val avatarUrl: String? = accountStore.account?.avatarUrl
 
-    val isAuthorFilterSupported: Boolean by lazy {
-        val site = this.site ?: return@lazy false
+    val isAuthorFilterSupported: Boolean = site != null &&
         site.isUsingWpComRestApi &&
-            site.hasCapabilityEditOthersPages &&
-            site.isSingleUserSite == false
-    }
+        site.hasCapabilityEditOthersPages &&
+        site.isSingleUserSite == false
 
     private val _authorFilter = MutableStateFlow(
         if (isAuthorFilterSupported) {
@@ -416,10 +414,10 @@ internal class PagesRsListViewModel @Inject constructor(
                     item.state.toPageUiModel(item.id, showStatus = isSearch)
                 }
             }
-            val existingPages = getTabUiState(tab).pages
+            val existingById = getTabUiState(tab).pages
+                .associateBy { it.remotePageId }
             val uiModels = items.map { model ->
-                val existing = existingPages
-                    .firstOrNull { it.remotePageId == model.remotePageId }
+                val existing = existingById[model.remotePageId]
                 model.copy(
                     authorDisplayName = if (
                         model.authorId != 0L &&
