@@ -417,19 +417,14 @@ internal class PagesRsListViewModel @Inject constructor(
                 .associate { it.remotePageId to it.page }
             val uiModels = items.map { model ->
                 val existing = existingById[model.remotePageId]
-                model.copy(
-                    authorDisplayName = if (
-                        model.authorId != 0L &&
-                        model.authorId == existing?.authorId
-                    ) {
-                        existing.authorDisplayName
-                    } else {
-                        null
-                    }
-                )
+                if (model.authorId != 0L && model.authorId == existing?.authorId) {
+                    model.copy(authorDisplayName = existing.authorDisplayName)
+                } else {
+                    model
+                }
             }
             val applyHierarchy = tab == PageRsListTab.PUBLISHED &&
-                _searchQuery.value.isBlank() &&
+                !isSearch &&
                 _authorFilter.value != AuthorFilterSelection.ME
             val rows = buildRows(
                 pages = uiModels,

@@ -36,7 +36,6 @@ internal fun buildRows(
 }
 
 internal fun flattenToTree(pages: List<PageRsUiModel>): List<PageRsListItem.Real> {
-    if (pages.isEmpty()) return emptyList()
     val byId = pages.associateBy { it.remotePageId }
     val childrenByParent = pages
         .filter { it.parentId != 0L && it.parentId in byId }

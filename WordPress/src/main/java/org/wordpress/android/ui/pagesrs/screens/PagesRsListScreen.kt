@@ -141,9 +141,7 @@ internal fun PagesRsListScreen(
                                 Text(stringResource(R.string.pages_search_suggestion))
                             },
                             singleLine = true,
-                            keyboardOptions = KeyboardOptions.Default.copy(
-                                imeAction = ImeAction.Search
-                            ),
+                            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
                             keyboardActions = KeyboardActions(
                                 onSearch = { focusManager.clearFocus() }
                             ),
