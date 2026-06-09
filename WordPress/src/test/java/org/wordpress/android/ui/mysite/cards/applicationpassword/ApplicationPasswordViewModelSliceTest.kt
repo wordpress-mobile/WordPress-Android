@@ -377,6 +377,8 @@ class ApplicationPasswordViewModelSliceTest : BaseUnitTest() {
     @Test
     fun `given xmlRpc rediscovery and auth check succeed, then persist the discovered xmlRpcUrl`() =
         runTest {
+            // @Before seeds siteTest.xmlRpcUrl; clear it so the final assertion proves rediscovery set it.
+            siteTest.xmlRpcUrl = null
             val xmlRpcUrl = "https://www.test.com/xmlrpc.php"
             whenever(
                 selfHostedEndpointFinder

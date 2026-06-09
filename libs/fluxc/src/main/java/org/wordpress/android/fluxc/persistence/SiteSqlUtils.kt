@@ -343,16 +343,9 @@ class SiteSqlUtils
     fun updateApplicationPasswordCredentials(localId: Int, usernamePlain: String, passwordPlain: String): Int {
         val username = encryptionUtils.encrypt(usernamePlain)
         val password = encryptionUtils.encrypt(passwordPlain)
-        return WellSql.update(SiteModel::class.java)
-                .whereId(localId)
-                .put(localId, { _ ->
-                    val cv = ContentValues()
-                    cv.put(SiteModelTable.API_REST_USERNAME, username.first)
-                    cv.put(SiteModelTable.API_REST_USERNAME_IV, username.second)
-                    cv.put(SiteModelTable.API_REST_PASSWORD, password.first)
-                    cv.put(SiteModelTable.API_REST_PASSWORD_IV, password.second)
-                    cv
-                }).execute()
+        return writeApplicationPasswordCredentialColumns(
+                localId, username.first, username.second, password.first, password.second
+        )
     }
 
     /**
@@ -360,15 +353,29 @@ class SiteSqlUtils
      * given local id. Companion to [updateApplicationPasswordCredentials] for the sign-out / revoke paths,
      * since the generic update path no longer touches these columns.
      */
-    fun clearApplicationPasswordCredentials(localId: Int): Int {
+    fun clearApplicationPasswordCredentials(localId: Int): Int =
+            writeApplicationPasswordCredentialColumns(localId, "", "", "", "")
+
+    /**
+     * The single place that maps the four application-password credential columns to their values, so the
+     * column set lives in one spot. Callers pass already-encrypted values (or empty strings to clear); each
+     * IV always travels with its ciphertext, so a row can never be left holding one without the other.
+     */
+    private fun writeApplicationPasswordCredentialColumns(
+        localId: Int,
+        usernameCipher: String,
+        usernameIv: String,
+        passwordCipher: String,
+        passwordIv: String
+    ): Int {
         return WellSql.update(SiteModel::class.java)
                 .whereId(localId)
                 .put(localId, { _ ->
                     val cv = ContentValues()
-                    cv.put(SiteModelTable.API_REST_USERNAME, "")
-                    cv.put(SiteModelTable.API_REST_USERNAME_IV, "")
-                    cv.put(SiteModelTable.API_REST_PASSWORD, "")
-                    cv.put(SiteModelTable.API_REST_PASSWORD_IV, "")
+                    cv.put(SiteModelTable.API_REST_USERNAME, usernameCipher)
+                    cv.put(SiteModelTable.API_REST_USERNAME_IV, usernameIv)
+                    cv.put(SiteModelTable.API_REST_PASSWORD, passwordCipher)
+                    cv.put(SiteModelTable.API_REST_PASSWORD_IV, passwordIv)
                     cv
                 }).execute()
     }
