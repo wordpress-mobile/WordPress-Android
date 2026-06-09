@@ -342,12 +342,15 @@ internal class PagesRsListViewModel @Inject constructor(
         val page = _tabStates.value[tab]
             ?.pages
             ?.firstOrNull { it.remotePageId == remotePageId }
-        if (tab == PageRsListTab.TRASHED || page?.isTrashed == true) {
-            _events.trySend(PageRsListEvent.ShowToast(R.string.pages_list_item_trashed))
-            return
-        }
-        if (!checkNetwork()) return
 
+        when {
+            tab == PageRsListTab.TRASHED || page?.isTrashed == true ->
+                _events.trySend(PageRsListEvent.ShowToast(R.string.pages_list_item_trashed))
+            checkNetwork() -> proceedOpenPage(site, remotePageId, page?.lastModified)
+        }
+    }
+
+    private fun proceedOpenPage(site: SiteModel, remotePageId: Long, lastModified: String?) {
         analyticsTracker.track(
             Stat.PAGES_LIST_ITEM_SELECTED,
             site,
@@ -361,7 +364,6 @@ internal class PagesRsListViewModel @Inject constructor(
         viewModelScope.launch {
             @Suppress("TooGenericExceptionCaught")
             try {
-                val lastModified = page?.lastModified
                 val page = withContext(Dispatchers.IO) {
                     fluxCBridge.fetchAndBridge(remotePageId, site, lastModified)
                 }
