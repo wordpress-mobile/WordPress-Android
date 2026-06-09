@@ -36,7 +36,6 @@ import rs.wordpress.cache.kotlin.ObservableMetadataCollection
 import rs.wordpress.cache.kotlin.getObservablePostMetadataCollectionWithEditContext
 import rs.wordpress.cache.kotlin.hasMorePages
 import uniffi.wp_api.PostEndpointType
-import uniffi.wp_api.WpApiParamPostsOrderBy
 import uniffi.wp_mobile.PostListFilter
 import uniffi.wp_mobile_cache.ListState
 import javax.inject.Inject
@@ -226,7 +225,7 @@ internal class PagesRsListViewModel @Inject constructor(
         val filter = PostListFilter(
             status = if (query.isNotBlank()) ALL_STATUSES else tab.statuses,
             order = tab.order,
-            orderby = WpApiParamPostsOrderBy.DATE,
+            orderby = tab.orderBy,
             search = query.ifBlank { null },
             author = authorIds
         )
