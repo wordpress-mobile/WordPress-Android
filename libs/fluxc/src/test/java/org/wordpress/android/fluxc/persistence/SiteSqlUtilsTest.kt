@@ -5,6 +5,8 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.whenever
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.RuntimeEnvironment
 import org.wordpress.android.fluxc.encryption.EncryptionUtils
@@ -13,6 +15,13 @@ import org.wordpress.android.fluxc.model.SiteModel
 @RunWith(RobolectricTestRunner::class)
 class SiteSqlUtilsTest {
     private val siteSqlUtils = SiteSqlUtils(EncryptionUtils())
+
+    // EncryptionUtils uses the AndroidKeyStore provider, which Robolectric can't load, so the production
+    // util's encrypt/decrypt throw here. A stubbed util lets us exercise the encrypting writers' own
+    // ContentValues mapping (which half of each encrypt() Pair lands in which column) against a real DB —
+    // the SiteStore-level tests can't, since they verify a mocked SiteSqlUtils and never run the body.
+    private val fakeEncryptionUtils = mock<EncryptionUtils>()
+    private val encryptingSiteSqlUtils = SiteSqlUtils(fakeEncryptionUtils)
 
     @Before
     fun setUp() {
@@ -208,6 +217,85 @@ class SiteSqlUtilsTest {
 
         assertThat(stored.apiRestUsernamePlain).isNullOrEmpty()
         assertThat(stored.apiRestPasswordPlain).isNullOrEmpty()
+    }
+
+    @Test
+    fun `updateApplicationPasswordCredentials writes each encrypted value into its matching column`() {
+        // ciphertext (encrypt().first) -> *_ENCRYPTED column, IV (.second) -> *_IV column, and username
+        // must not be cross-wired with password. A .first/.second swap, a wrong column, or a dropped
+        // cv.put would all read back wrong here — the failure modes the SiteStore mock can't catch.
+        whenever(fakeEncryptionUtils.encrypt("user")).thenReturn("enc_user" to "iv_user")
+        whenever(fakeEncryptionUtils.encrypt("pass")).thenReturn("enc_pass" to "iv_pass")
+        WellSql.insert(SiteModel().apply { url = "https://example.test" }).execute()
+        val localId = storedSite().id
+
+        val rows = encryptingSiteSqlUtils.updateApplicationPasswordCredentials(localId, "user", "pass")
+
+        assertThat(rows).isEqualTo(1)
+        val stored = storedSite()
+        assertThat(stored.apiRestUsernameEncrypted).isEqualTo("enc_user")
+        assertThat(stored.apiRestUsernameIV).isEqualTo("iv_user")
+        assertThat(stored.apiRestPasswordEncrypted).isEqualTo("enc_pass")
+        assertThat(stored.apiRestPasswordIV).isEqualTo("iv_pass")
+    }
+
+    @Test
+    fun `updateApplicationPasswordCredentials persists credentials that decrypt back to the originals`() {
+        whenever(fakeEncryptionUtils.encrypt("user")).thenReturn("enc_user" to "iv_user")
+        whenever(fakeEncryptionUtils.encrypt("pass")).thenReturn("enc_pass" to "iv_pass")
+        whenever(fakeEncryptionUtils.decrypt("enc_user", "iv_user")).thenReturn("user")
+        whenever(fakeEncryptionUtils.decrypt("enc_pass", "iv_pass")).thenReturn("pass")
+        WellSql.insert(SiteModel().apply { url = "https://example.test" }).execute()
+        val localId = storedSite().id
+
+        encryptingSiteSqlUtils.updateApplicationPasswordCredentials(localId, "user", "pass")
+
+        // Read back through the decrypting path: the stored ciphertext/IV must round-trip to the inputs.
+        val stored = encryptingSiteSqlUtils.getSites().single()
+        assertThat(stored.apiRestUsernamePlain).isEqualTo("user")
+        assertThat(stored.apiRestPasswordPlain).isEqualTo("pass")
+    }
+
+    @Test
+    fun `updateApplicationPasswordCredentialsForWPAPISite writes the matching WPAPI site by url`() {
+        whenever(fakeEncryptionUtils.encrypt("user")).thenReturn("enc_user" to "iv_user")
+        whenever(fakeEncryptionUtils.encrypt("pass")).thenReturn("enc_pass" to "iv_pass")
+        WellSql.insert(SiteModel().apply {
+            url = "https://selfhosted.test"
+            origin = SiteModel.ORIGIN_WPAPI
+        }).execute()
+
+        val rows = encryptingSiteSqlUtils.updateApplicationPasswordCredentialsForWPAPISite(
+                siteUrl = "https://selfhosted.test",
+                usernamePlain = "user",
+                passwordPlain = "pass"
+        )
+
+        assertThat(rows).isEqualTo(1)
+        val stored = storedSite()
+        assertThat(stored.apiRestUsernameEncrypted).isEqualTo("enc_user")
+        assertThat(stored.apiRestUsernameIV).isEqualTo("iv_user")
+        assertThat(stored.apiRestPasswordEncrypted).isEqualTo("enc_pass")
+        assertThat(stored.apiRestPasswordIV).isEqualTo("iv_pass")
+    }
+
+    @Test
+    fun `updateApplicationPasswordCredentialsForWPAPISite leaves a non-WPAPI site with the same url untouched`() {
+        WellSql.insert(SiteModel().apply {
+            url = "https://shared.test"
+            origin = SiteModel.ORIGIN_WPCOM_REST
+        }).execute()
+
+        val rows = encryptingSiteSqlUtils.updateApplicationPasswordCredentialsForWPAPISite(
+                siteUrl = "https://shared.test",
+                usernamePlain = "user",
+                passwordPlain = "pass"
+        )
+
+        assertThat(rows).isEqualTo(0)
+        val stored = storedSite()
+        assertThat(stored.apiRestUsernameEncrypted).isNullOrEmpty()
+        assertThat(stored.apiRestPasswordEncrypted).isNullOrEmpty()
     }
 
     @Test
