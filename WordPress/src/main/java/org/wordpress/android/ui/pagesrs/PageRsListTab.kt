@@ -30,7 +30,7 @@ internal enum class PageRsListTab(
     ),
     // SCHEDULED stays chronological so "next to publish" is at the top; legacy groups by
     // date with dividers, but until those land an alphabetical sort here would be useless.
-    // TODO: add date-divider grouping (e.g. Today / Tomorrow / Next week) to match legacy.
+    // Follow-up: add date-divider grouping (e.g. Today / Tomorrow / Next week) to match legacy.
     SCHEDULED(
         labelResId = R.string.pages_scheduled,
         emptyMessageResId = R.string.pages_empty_scheduled,
