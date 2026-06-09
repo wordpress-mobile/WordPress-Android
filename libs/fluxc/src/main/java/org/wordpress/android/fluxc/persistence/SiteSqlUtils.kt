@@ -708,14 +708,17 @@ class SiteSqlUtils
         return this.map { it.decryptAPIRestCredentials() }
     }
 
-    @Suppress("ReturnCount")
+    @Suppress("ReturnCount", "ComplexCondition")
     private fun SiteModel.decryptAPIRestCredentials(): SiteModel {
         // If already decrypted, do nothing
         if (!apiRestUsernamePlain.isNullOrEmpty() && !apiRestPasswordPlain.isNullOrEmpty()) {
             return this
         }
-        // If the encrypted credentials are empty, there's nothing to decrypt
-        if (apiRestUsernameEncrypted.isNullOrEmpty() || apiRestPasswordEncrypted.isNullOrEmpty()) {
+        // If the encrypted credentials — or the IVs required to decrypt them — are empty, there's nothing to
+        // safely decrypt. The ciphertext/IV pairs are always written together, so a row missing any one is
+        // treated as having no decryptable credentials rather than risking a decrypt failure on a blank IV.
+        if (apiRestUsernameEncrypted.isNullOrEmpty() || apiRestPasswordEncrypted.isNullOrEmpty() ||
+            apiRestUsernameIV.isNullOrEmpty() || apiRestPasswordIV.isNullOrEmpty()) {
             return this
         }
         apiRestUsernamePlain = encryptionUtils.decrypt(apiRestUsernameEncrypted, apiRestUsernameIV)

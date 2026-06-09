@@ -192,6 +192,25 @@ class SiteSqlUtilsTest {
     }
 
     @Test
+    fun `reading a site with credential ciphertext but a blank IV does not attempt decryption`() {
+        // A row carrying credential ciphertext without its IV is malformed — decrypting it would fail. The
+        // read path must treat it as having no decryptable credentials instead of throwing. Both ciphertexts
+        // are present here so only the blank-IV guard (not the empty-ciphertext one) can short-circuit.
+        WellSql.insert(SiteModel().apply {
+            url = "https://example.test"
+            apiRestUsernameEncrypted = "enc_user"
+            apiRestUsernameIV = ""
+            apiRestPasswordEncrypted = "enc_pass"
+            apiRestPasswordIV = "iv_pass"
+        }).execute()
+
+        val stored = siteSqlUtils.getSites().single()
+
+        assertThat(stored.apiRestUsernamePlain).isNullOrEmpty()
+        assertThat(stored.apiRestPasswordPlain).isNullOrEmpty()
+    }
+
+    @Test
     fun `updateXmlRpcUrl writes the column and leaves other fields alone`() {
         WellSql.insert(SiteModel().apply {
             siteId = 42
