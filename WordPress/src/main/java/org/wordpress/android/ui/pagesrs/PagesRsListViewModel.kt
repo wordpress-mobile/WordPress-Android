@@ -5,9 +5,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -15,6 +18,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
@@ -67,6 +71,7 @@ internal class PagesRsListViewModel @Inject constructor(
     private var activeSearchTab = PageRsListTab.PUBLISHED
 
     private val collections = mutableMapOf<PageRsListTab, ObservableMetadataCollection>()
+    private var collectionsScope = createCollectionsScope()
     private val initializingTabs = mutableSetOf<PageRsListTab>()
     private val userRefreshingTabs = mutableSetOf<PageRsListTab>()
     private val resolveAuthorJobs = mutableMapOf<PageRsListTab, Job>()
@@ -189,7 +194,7 @@ internal class PagesRsListViewModel @Inject constructor(
         // Reset to a loading state so a retry after a failed init clears the prior error UI.
         updateTabUiState(tab) { PageTabUiState(isLoading = true) }
 
-        viewModelScope.launch {
+        launchCollectionJob {
             @Suppress("TooGenericExceptionCaught")
             try {
                 val collection = createCollection(site, tab)
@@ -198,6 +203,8 @@ internal class PagesRsListViewModel @Inject constructor(
                 registerObservers(tab, collection)
                 loadItemsForTab(tab)
                 refreshTab(tab)
+            } catch (e: CancellationException) {
+                throw e
             } catch (e: Exception) {
                 AppLog.e(AppLog.T.PAGES, "Failed to init RS page list tab", e)
                 initializingTabs.remove(tab)
@@ -238,12 +245,30 @@ internal class PagesRsListViewModel @Inject constructor(
 
     private fun registerObservers(tab: PageRsListTab, collection: ObservableMetadataCollection) {
         collection.addDataObserver {
-            viewModelScope.launch { loadItemsForTab(tab) }
+            launchCollectionJob { loadItemsForTab(tab) }
         }
         collection.addListInfoObserver {
-            viewModelScope.launch { updateListInfoForTab(tab) }
+            launchCollectionJob { updateListInfoForTab(tab) }
         }
     }
+
+    /**
+     * Launches collection-scoped work in [collectionsScope] so [clearCollections] can cancel
+     * anything in flight before closing the underlying collections. Without this, a late
+     * failure (e.g. a refresh resuming on an already-closed collection) could write stale
+     * error state into the freshly rebuilt tabs.
+     */
+    private fun launchCollectionJob(block: suspend CoroutineScope.() -> Unit) {
+        collectionsScope.launch(block = block)
+    }
+
+    /**
+     * A child scope of [viewModelScope] (so it is torn down with the ViewModel) that can
+     * also be cancelled independently when the collections it serves are closed.
+     */
+    private fun createCollectionsScope() = CoroutineScope(
+        viewModelScope.coroutineContext + SupervisorJob(viewModelScope.coroutineContext.job)
+    )
 
     @MainThread
     fun refreshTab(tab: PageRsListTab, isUserRefresh: Boolean = false) {
@@ -262,10 +287,12 @@ internal class PagesRsListViewModel @Inject constructor(
             updateTabUiState(tab) { copy(error = null) }
         }
 
-        viewModelScope.launch {
+        launchCollectionJob {
             @Suppress("TooGenericExceptionCaught")
             try {
                 withContext(Dispatchers.IO) { collection.refresh() }
+            } catch (e: CancellationException) {
+                throw e
             } catch (e: Exception) {
                 AppLog.e(AppLog.T.PAGES, "Failed to refresh tab $tab", e)
                 userRefreshingTabs.remove(tab)
@@ -311,10 +338,12 @@ internal class PagesRsListViewModel @Inject constructor(
 
         updateTabUiState(tab) { copy(isLoadingMore = true) }
 
-        viewModelScope.launch {
+        launchCollectionJob {
             @Suppress("TooGenericExceptionCaught")
             try {
                 withContext(Dispatchers.IO) { collection.loadNextPage() }
+            } catch (e: CancellationException) {
+                throw e
             } catch (e: Exception) {
                 AppLog.e(AppLog.T.PAGES, "Failed to load more for tab $tab", e)
                 updateTabUiState(tab) { copy(isLoadingMore = false) }
@@ -436,6 +465,8 @@ internal class PagesRsListViewModel @Inject constructor(
                 copy(pages = rows, isLoading = false, error = null, isAuthError = false)
             }
             resolveAuthorNames(tab, uiModels)
+        } catch (e: CancellationException) {
+            throw e
         } catch (e: Exception) {
             AppLog.e(AppLog.T.PAGES, "Failed to load items for tab $tab", e)
         }
@@ -535,6 +566,10 @@ internal class PagesRsListViewModel @Inject constructor(
     }
 
     private fun clearCollections() {
+        // Cancel in-flight collection work first so nothing can write stale state
+        // (or touch a closed collection) after the teardown below.
+        collectionsScope.cancel()
+        collectionsScope = createCollectionsScope()
         collections.values.forEach { it.close() }
         collections.clear()
         initializingTabs.clear()
