@@ -109,9 +109,6 @@ internal class PagesRsListViewModel @Inject constructor(
                     .filter { it.length >= MIN_SEARCH_QUERY_LENGTH }
                     .collect {
                         clearCollections()
-                        _tabStates.value = PageRsListTab.entries.associateWith {
-                            PageTabUiState(isLoading = true)
-                        }
                         initTab(activeSearchTab)
                     }
             }
@@ -450,11 +447,8 @@ internal class PagesRsListViewModel @Inject constructor(
         tab: PageRsListTab,
         pages: List<PageRsUiModel>
     ) {
-        val site = this.site
-        if (site == null ||
-            !isAuthorFilterSupported ||
-            _authorFilter.value == AuthorFilterSelection.ME
-        ) return
+        val site = this.site ?: return
+        if (!isAuthorFilterSupported || _authorFilter.value == AuthorFilterSelection.ME) return
 
         val unresolvedIds = pages
             .filter { it.authorId != 0L && it.authorDisplayName == null }
