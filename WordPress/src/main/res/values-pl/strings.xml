@@ -155,7 +155,6 @@ Language: pl
     <string name="post_rs_confirm_delete_message">Spowoduje to trwałe usunięcie tego wpisu. Tej akcji nie można cofnąć.</string>
     <string name="post_rs_confirm_trash_message">Czy na pewno chcesz przenieść ten wpis do kosza?</string>
     <string name="post_rs_failed_to_load">Nie udało się wczytać wpisu</string>
-    <string name="beta_label">Beta</string>
     <string name="stats_error_admin_url_unavailable">Nie można otworzyć WP Admin dla tej witryny</string>
     <string name="stats_error_parsing">Wystąpił problem z wczytywaniem danych. Spróbuj ponownie.</string>
     <string name="stats_error_network">Błąd sieci. Sprawdź połączenie i spróbuj ponownie</string>

@@ -127,8 +127,7 @@ class QuickLinksItemViewModelSlice @Inject constructor(
                 icon = listItem.primaryIcon,
                 disableTint = listItem.disablePrimaryIconTint,
                 label = (listItem.primaryText as UiString.UiStringRes),
-                onClick = listItem.onClick,
-                showBetaBadge = listItem.showBetaBadge
+                onClick = listItem.onClick
             )
         }
         val moreQuickLink = MySiteCardAndItem.Card.QuickLinksItem.QuickLinkItem(
