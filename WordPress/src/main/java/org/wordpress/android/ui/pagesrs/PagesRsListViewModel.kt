@@ -553,7 +553,7 @@ internal class PagesRsListViewModel @Inject constructor(
 
     override fun onCleared() {
         super.onCleared()
-        collections.values.forEach { it.close() }
+        clearCollections()
     }
 
     companion object {

@@ -116,6 +116,10 @@ internal fun PagesRsListScreen(
 
     BackHandler(enabled = isSearchActive) { onSearchClose(activeTab) }
 
+    LaunchedEffect(isSearchActive) {
+        if (isSearchActive) focusRequester.requestFocus()
+    }
+
     LaunchedEffect(snackbarMessages) {
         snackbarMessages.collect { msg ->
             val result = snackbarHostState.showSnackbar(
@@ -144,9 +148,7 @@ internal fun PagesRsListScreen(
                                 Text(stringResource(R.string.pages_search_suggestion))
                             },
                             singleLine = true,
-                            keyboardOptions = KeyboardOptions.Default.copy(
-                                imeAction = ImeAction.Search
-                            ),
+                            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
                             keyboardActions = KeyboardActions(
                                 onSearch = { focusManager.clearFocus() }
                             ),
@@ -201,10 +203,6 @@ internal fun PagesRsListScreen(
                     }
                 }
             )
-
-            if (isSearchActive) {
-                LaunchedEffect(Unit) { focusRequester.requestFocus() }
-            }
         }
     ) { contentPadding ->
         Column(modifier = Modifier.fillMaxSize().padding(contentPadding)) {

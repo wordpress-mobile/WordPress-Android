@@ -55,14 +55,10 @@ private fun PageContentItem(
         Column(
             modifier = Modifier.padding(16.dp)
         ) {
-            val statusLabel = if (page.statusLabelResId != 0) {
-                stringResource(page.statusLabelResId)
-            } else {
-                null
-            }
+            val statusLabel = page.statusLabelResId.takeIf { it != 0 }?.let { stringResource(it) }
             val bullet = stringResource(R.string.bullet_with_spaces)
             val headerText = listOfNotNull(
-                statusLabel?.takeIf { it.isNotBlank() },
+                statusLabel,
                 page.date.takeIf { it.isNotBlank() },
                 page.authorDisplayName?.takeIf { it.isNotBlank() }
             ).joinToString(bullet)
