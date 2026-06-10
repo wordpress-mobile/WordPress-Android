@@ -53,8 +53,9 @@ internal class WPApiApplicationPasswordsRestClient @Inject constructor(
 
         return when (response) {
             is WPAPIResponse.Success<ApplicationPasswordCreationResponse> -> {
-                response.data?.let {
-                    ApplicationPasswordCreationPayload(it.password, it.uuid)
+                val data = response.data
+                data?.uuid?.let {
+                    ApplicationPasswordCreationPayload(data.password, it)
                 } ?: ApplicationPasswordCreationPayload(
                     BaseNetworkError(
                         GenericErrorType.UNKNOWN,
@@ -85,8 +86,8 @@ internal class WPApiApplicationPasswordsRestClient @Inject constructor(
 
         return when (response) {
             is WPAPIResponse.Success -> {
-                response.data?.firstOrNull { it.name == applicationName }?.let {
-                    ApplicationPasswordUUIDFetchPayload(it.uuid)
+                response.data?.firstOrNull { it.name == applicationName }?.uuid?.let {
+                    ApplicationPasswordUUIDFetchPayload(it)
                 } ?: ApplicationPasswordUUIDFetchPayload(
                     BaseNetworkError(
                         GenericErrorType.UNKNOWN,
@@ -152,8 +153,8 @@ internal class WPApiApplicationPasswordsRestClient @Inject constructor(
 
         @Suppress("UNCHECKED_CAST")
         return when (response) {
-            is WPAPIResponse.Success -> response.data?.let {
-                WPAPIResponse.Success(it.uuid)
+            is WPAPIResponse.Success -> response.data?.uuid?.let {
+                WPAPIResponse.Success(it)
             } ?: WPAPIResponse.Error(
                 WPAPINetworkError(
                     BaseNetworkError(
