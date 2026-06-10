@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.pagesrs.screens
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -112,6 +113,8 @@ internal fun PagesRsListScreen(
     val focusManager = LocalFocusManager.current
     val activeTab = tabs[pagerState.settledPage]
     val snackbarHostState = remember { SnackbarHostState() }
+
+    BackHandler(enabled = isSearchActive) { onSearchClose(activeTab) }
 
     LaunchedEffect(snackbarMessages) {
         snackbarMessages.collect { msg ->

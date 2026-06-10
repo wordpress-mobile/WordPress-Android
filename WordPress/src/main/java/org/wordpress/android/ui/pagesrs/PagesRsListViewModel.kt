@@ -68,6 +68,14 @@ internal class PagesRsListViewModel @Inject constructor(
     private var activeSearchTab = PageRsListTab.PUBLISHED
 
     private val collections = mutableMapOf<PageRsListTab, ObservableMetadataCollection>()
+
+    /**
+     * Incremented by [clearCollections] so an in-flight [initTab] can detect that the
+     * collections it was creating were torn down (search/filter changed) while its network
+     * call was running, and discard its now-stale collection instead of leaking it into
+     * [collections].
+     */
+    private var collectionsGeneration = 0
     private val initializingTabs = mutableSetOf<PageRsListTab>()
     private val userRefreshingTabs = mutableSetOf<PageRsListTab>()
     private val resolveAuthorJobs = mutableMapOf<PageRsListTab, Job>()
@@ -190,10 +198,15 @@ internal class PagesRsListViewModel @Inject constructor(
         // Reset to a loading state so a retry after a failed init clears the prior error UI.
         updateTabUiState(tab) { PageTabUiState(isLoading = true) }
 
+        val generation = collectionsGeneration
         viewModelScope.launch {
             @Suppress("TooGenericExceptionCaught")
             try {
                 val collection = createCollection(site, tab)
+                if (generation != collectionsGeneration) {
+                    withContext(Dispatchers.IO) { collection.close() }
+                    return@launch
+                }
                 collections[tab] = collection
                 initializingTabs.remove(tab)
                 registerObservers(tab, collection)
@@ -201,6 +214,7 @@ internal class PagesRsListViewModel @Inject constructor(
                 refreshTab(tab)
             } catch (e: Exception) {
                 AppLog.e(AppLog.T.PAGES, "Failed to init RS page list tab", e)
+                if (generation != collectionsGeneration) return@launch
                 initializingTabs.remove(tab)
                 updateTabUiState(tab) {
                     PageTabUiState(
@@ -527,6 +541,7 @@ internal class PagesRsListViewModel @Inject constructor(
     }
 
     private fun clearCollections() {
+        collectionsGeneration++
         collections.values.forEach { it.close() }
         collections.clear()
         initializingTabs.clear()
