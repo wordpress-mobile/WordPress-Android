@@ -1,11 +1,96 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2026-04-02 09:57:48+0000
+Translation-Revision-Date: 2026-06-02 09:57:19+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.3
 Language: ko_KR
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="xmlrpc_disabled_bottom_sheet_body">앱의 일부 기능에는 XML-RPC가 필요합니다. 사이트에서 활성화하여 해결하세요.</string>
+    <string name="xmlrpc_disabled_bottom_sheet_title">XML-RPC 비활성화됨</string>
+    <string name="xmlrpc_disabled_card_text">XML-RPC 비활성화됨\n일부 기능은 제한될 수 있습니다.</string>
+    <string name="application_password_reauthentication_banner">사이트 자격 증명이 유효하지 않습니다. 눌러서 재인증하세요.</string>
+    <string name="application_password_app_name_wordpress">%s의 워드프레스 Android 앱</string>
+    <string name="application_password_app_name_jetpack">%s의 젯팩 Android 앱</string>
+    <string name="application_password_authorization_cancelled">권한 부여 취소됨</string>
+    <string name="reader_label_view">사이트 보기</string>
+    <string name="reader_excerpt_view_more">더 보기</string>
+    <string name="reader_reading_time">%s분 읽음</string>
+    <string name="reader_discover_tab_latest">최신</string>
+    <string name="reader_discover_tab_recommended">권장</string>
+    <string name="stats_subscriber_since_today">오늘</string>
+    <string name="stats_subscribers_graph_years">년</string>
+    <string name="stats_subscribers_graph_months">개월</string>
+    <string name="stats_subscribers_graph_weeks">주</string>
+    <string name="stats_subscribers_graph_days">일</string>
+    <string name="stats_emails_clicks_header">클릭 수</string>
+    <string name="stats_emails_opens_header">열린 횟수</string>
+    <string name="stats_emails_latest_header">최근 이메일 수</string>
+    <string name="stats_subscribers_since_header">다음 이후</string>
+    <string name="stats_subscribers_90_days_ago">90일 전</string>
+    <string name="stats_subscribers_60_days_ago">60일 전</string>
+    <string name="stats_subscribers_30_days_ago">30일 전</string>
+    <string name="stats_subscribers_current">현재</string>
+    <string name="stats_subscribers_emails">이메일</string>
+    <string name="stats_subscribers_list">구독자</string>
+    <string name="stats_subscribers_graph">구독자 그래프</string>
+    <string name="stats_subscribers_all_time">역대 구독자</string>
+    <string name="stats_utm_campaign">캠페인</string>
+    <string name="stats_utm_medium">중간</string>
+    <string name="stats_utm_source">소스</string>
+    <string name="stats_utm_campaign_source_medium">캠페인/소스/중간</string>
+    <string name="stats_utm_source_medium">소스/중간</string>
+    <string name="stats_error_not_authenticated">인증되지 않았습니다.</string>
+    <string name="stats_collapse_group">축소</string>
+    <string name="stats_expand_group">확장</string>
+    <string name="stats_tag_type_tag">태그</string>
+    <string name="stats_tag_type_category">카테고리</string>
+    <string name="stats_insights_tags_empty">태그 또는 카테고리 찾을 수 없음</string>
+    <string name="stats_insights_views_percent">조회수의 %1$s%%</string>
+    <string name="stats_insights_most_popular_day_label">일</string>
+    <string name="stats_insights_all_time_stats_title">역대 통계</string>
+    <string name="stats_insights_year_in_review_title">%s 되돌아보기</string>
+    <string name="stats_insights_year_in_review">한 해 되돌아보기</string>
+    <string name="stats_insights_avg_words_per_post">글 하나당 평균 단어 수</string>
+    <string name="stats_insights_avg_likes_per_post">글 하나당 평균 좋아요 수</string>
+    <string name="stats_insights_avg_comments_per_post">글 하나당 평균 댓글 수</string>
+    <string name="stats_insights_total_posts">전체 글 수</string>
+    <string name="stats_insights_likes">좋아요</string>
+    <string name="stats_insights_words">단어</string>
+    <string name="post_rs_settings_show_password">비밀번호 표시</string>
+    <string name="post_rs_settings_hide_password">비밀번호 숨기기</string>
+    <string name="post_rs_settings_saving">저장하기\u2026</string>
+    <string name="post_rs_settings_search_no_results">결과를 찾을 수 없음</string>
+    <string name="post_rs_settings_load_more">더 로드\u2026</string>
+    <string name="post_rs_settings_term_create_error">용어 생성 실패</string>
+    <string name="post_rs_settings_search_authors">글쓴이 검색</string>
+    <string name="post_rs_settings_search_terms">검색</string>
+    <string name="post_rs_settings_no_parent">해당 없음</string>
+    <string name="post_rs_settings_parent_category">상위 카테고리</string>
+    <string name="post_rs_settings_term_name_hint">이름</string>
+    <string name="post_rs_settings_add_term">신규 추가</string>
+    <string name="post_rs_settings_choose_from_device">기기에서 선택</string>
+    <string name="post_rs_settings_choose_from_wp_media">WP 미디어에서 선택</string>
+    <string name="stats_new_stats_suggestion_negative">나중에</string>
+    <string name="stats_new_stats_suggestion_positive">체험하기</string>
+    <string name="stats_new_stats_suggestion_message">새 통계 환경을 구축했습니다. 사용해 보시겠어요? 언제든지 통계 메뉴에서 이전 환경으로 돌아갈 수 있습니다.</string>
+    <string name="stats_new_stats_suggestion_title">새 통계 환경</string>
+    <string name="gutenberg_kit_announcement_learn_more">더 알아보기</string>
+    <string name="gutenberg_kit_announcement_maybe_later">나중에</string>
+    <string name="gutenberg_kit_announcement_activate">활성화</string>
+    <string name="gutenberg_kit_announcement_body_deadline">2026년 6월 말까지 모든 사람의 기본 편집기가 될 것입니다. %1$s</string>
+    <string name="gutenberg_kit_announcement_body_intro">차세대 블록 편집기가 준비되었으며, 추가 새 기능이 제공됩니다.</string>
+    <string name="gutenberg_kit_announcement_title">더 나은 블록 편집기 공개 예정</string>
+    <string name="site_settings_gutenberg_kit_enabled_unsupported">새 편집기를 사용해 보려면 먼저 블록 편집기로 전환하세요.</string>
+    <string name="site_settings_gutenberg_kit_enabled_summary">이 사이트에 차세대 블록 편집기 사용 선택</string>
+    <string name="site_settings_gutenberg_kit_enabled">새 편집기 사용해 보기</string>
+    <string name="site_connectivity_banner_text">사이트에 연결할 수 없습니다. 일부 기능이 제한될 수 있습니다.</string>
+    <string name="site_settings_use_third_party_blocks_unsupported">사이트에서 편집기의 서드파티 블록 로드하기가 지원되지 않습니다.</string>
+    <string name="site_settings_use_third_party_blocks_summary">사이트에 설치된 플러그인에서 서드파티 블록을 로드하세요.</string>
+    <string name="site_settings_use_third_party_blocks">서드파티 블록 사용(베타)</string>
+    <string name="site_settings_use_theme_styles_not_block_theme">사이트에서 블록 테마가 사용되고 있지 않습니다. 편집기가 콘텐츠와 어울리지 않을 수도 있습니다. 문제가 있는 것 같으면 이 설정을 비활성화하세요.</string>
+    <string name="site_settings_use_theme_styles_unsupported">사이트에 Gutenberg 플러그인을 설치하여 테마 스타일 지원을 활성화하세요.</string>
+    <string name="new_stats_intro_footer">통계 화면의 오버플로 메뉴에서 새 통계를 끌 수 있습니다.</string>
     <string name="new_stats_intro_trends_desc">모든 지표는 이전 기간 대비 추세를 보여주므로, 성장 여부를 항상 확인할 수 있습니다.</string>
     <string name="new_stats_intro_trends_title">동향 한눈에 살펴보기</string>
     <string name="new_stats_intro_on_par_desc">기기, UTM, 위치, WordAds(출시 예정) — WordPress.com에서 받는 동일한 데이터.</string>
@@ -174,6 +259,7 @@ Language: ko_KR
     <string name="error_browser_no_network">이 페이지를 로드할 수 없습니다.</string>
     <string name="history_empty_subtitle_post">이 글을 변경하면 해당 글의 내역이 표시됩니다.</string>
     <string name="history_empty_subtitle_page">이 페이지를 변경하면 페이지의 내역이 표시됩니다.</string>
+    <string name="reader_discover_tab_freshly_pressed">지금 주목할 글</string>
     <string name="notifications_empty_action_comments">대화에 참여하세요! 리더에서 글에 댓글을 달아보세요.</string>
     <string name="notifications_empty_action_all">다른 사용자와 소통하세요! 리더에서 글에 댓글을 달아보세요.</string>
     <string name="more_options">추가 옵션</string>
@@ -286,6 +372,7 @@ Language: ko_KR
     <string name="support_screen_title">지원</string>
     <string name="modern_support_description">새 현대적 지원 환경 활성화</string>
     <string name="modern_support">현대적 지원</string>
+    <string name="site_settings_use_theme_styles_summary">블록 편집기를 테마와 비슷한 모양으로 만드세요.</string>
     <string name="site_settings_use_theme_styles">테마 스타일 사용</string>
     <string name="error_deleting_term">용어를 삭제하는 중 오류가 발생했습니다</string>
     <string name="error_saving_term">용어를 저장하는 중 오류가 발생했습니다</string>
@@ -3695,6 +3782,7 @@ Language: ko_KR
     <string name="push_auth_expired">요청이 만료되었습니다. 다시 시도하려면 WordPress.com에 로그인하십시요.</string>
     <string name="ignore">무시</string>
     <string name="stats_insights_best_ever">최고 조회수</string>
+    <string name="stats_insights_most_popular_time">가장 인기 있는 시간</string>
     <string name="stats_insights_most_popular_day">가장 인기 있는 요일</string>
     <string name="stats_insights_today">오늘의 통계</string>
     <string name="stats_insights_all_time">최고 게시글, 조회수 및 방문자</string>
@@ -3753,6 +3841,7 @@ Language: ko_KR
     <string name="browse_our_faq_button">FAQ 찾아보기</string>
     <string name="reader_empty_comments">아직 댓글이 없음</string>
     <string name="reader_label_like">좋아요</string>
+    <string name="reader_label_view_original">원본 보기</string>
     <string name="reader_label_comments_closed">댓글을 남길 수 없습니다.</string>
     <string name="reader_title_photo_viewer">%1$d/%2$d</string>
     <string name="error_publish_empty_post">빈 게시물은 게시할 수 없습니다.</string>

@@ -1,11 +1,98 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2026-04-20 17:56:20+0000
+Translation-Revision-Date: 2026-06-04 11:58:29+0000
 Plural-Forms: nplurals=6; plural=(n == 0) ? 0 : ((n == 1) ? 1 : ((n == 2) ? 2 : ((n % 100 >= 3 && n % 100 <= 10) ? 3 : ((n % 100 >= 11 && n % 100 <= 99) ? 4 : 5))));
 Generator: GlotPress/4.0.3
 Language: ar
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="xmlrpc_disabled_bottom_sheet_body">تتطلب بعض ميزات التطبيق بروتوكول XML-RPC. فعّله على موقعك لحل هذه المشكلة.</string>
+    <string name="xmlrpc_disabled_bottom_sheet_title">تم تعطيل XML-RPC</string>
+    <string name="xmlrpc_disabled_card_text">تم تعطيل XML-RPC\nقد تكون بعض الميزات محدودة</string>
+    <string name="application_password_reauthentication_banner">بيانات اعتماد موقعك غير صالحة. انقر لإعادة المصادقة.</string>
+    <string name="application_password_app_name_wordpress">تطبيق ووردبريس لنظام Android على %s</string>
+    <string name="application_password_app_name_jetpack">تطبيق Jetpack لنظام Android على %s</string>
+    <string name="application_password_authorization_cancelled">أُلغيت عملية التفويض</string>
+    <string name="reader_label_view">عرض الموقع</string>
+    <string name="reader_excerpt_view_more">عرض المزيد</string>
+    <string name="reader_reading_time">%s دقيقة للقراءة</string>
+    <string name="reader_discover_tab_latest">الأحدث</string>
+    <string name="reader_discover_tab_recommended">موصى به</string>
+    <string name="stats_subscriber_years_and_days">%1$s، %2$s</string>
+    <string name="stats_subscriber_since_today">اليوم</string>
+    <string name="stats_subscribers_graph_years">السنوات</string>
+    <string name="stats_subscribers_graph_months">الأشهر</string>
+    <string name="stats_subscribers_graph_weeks">الأسابيع</string>
+    <string name="stats_subscribers_graph_days">الأيام</string>
+    <string name="stats_emails_clicks_header">النقرات</string>
+    <string name="stats_emails_opens_header">مرات الفتح</string>
+    <string name="stats_emails_latest_header">أحدث رسائل البريد الإلكتروني</string>
+    <string name="stats_subscribers_since_header">منذ</string>
+    <string name="stats_subscribers_90_days_ago">قبل 90 يومًا</string>
+    <string name="stats_subscribers_60_days_ago">قبل 60 يومًا</string>
+    <string name="stats_subscribers_30_days_ago">قبل 30 يومًا</string>
+    <string name="stats_subscribers_current">الحالي</string>
+    <string name="stats_subscribers_emails">رسائل البريد الإلكتروني</string>
+    <string name="stats_subscribers_list">المشتركون</string>
+    <string name="stats_subscribers_graph">مخطط المشتركين</string>
+    <string name="stats_subscribers_all_time">إجمالي المشتركين</string>
+    <string name="stats_utm_campaign">الحملة</string>
+    <string name="stats_utm_medium">الوسيلة</string>
+    <string name="stats_utm_source">المصدر</string>
+    <string name="stats_utm_campaign_source_medium">الحملة/المصدر/الوسيلة</string>
+    <string name="stats_utm_source_medium">المصدر/الوسيلة</string>
+    <string name="stats_error_not_authenticated">غير مصادق عليه</string>
+    <string name="stats_collapse_group">طي</string>
+    <string name="stats_expand_group">توسيع</string>
+    <string name="stats_tag_type_tag">الوسم</string>
+    <string name="stats_tag_type_category">التصنيف</string>
+    <string name="stats_insights_tags_empty">لم يتم العثور على أي وسوم أو تصنيفات</string>
+    <string name="stats_insights_views_percent">%1$s%% من المشاهدات</string>
+    <string name="stats_insights_most_popular_day_label">اليوم</string>
+    <string name="stats_insights_all_time_stats_title">إجمالي الإحصاءات</string>
+    <string name="stats_insights_year_in_review_title">استعراض %s</string>
+    <string name="stats_insights_year_in_review">استعراض السنة</string>
+    <string name="stats_insights_avg_words_per_post">إجمالي الكلمات لكل تدوينة</string>
+    <string name="stats_insights_avg_likes_per_post">متوسط الإعجابات لكل تدوينة</string>
+    <string name="stats_insights_avg_comments_per_post">متوسط التعليقات لكل تدوينة</string>
+    <string name="stats_insights_total_posts">إجمالي التدوينات</string>
+    <string name="stats_insights_likes">الإعجابات</string>
+    <string name="stats_insights_words">الكلمات</string>
+    <string name="activity_log_mcp_agent_label">عبر ⁦%1$s⁩</string>
+    <string name="post_rs_settings_show_password">إظهار كلمة المرور</string>
+    <string name="post_rs_settings_hide_password">إخفاء كلمة المرور</string>
+    <string name="post_rs_settings_saving">جارٍ الحفظ\u2026</string>
+    <string name="post_rs_settings_search_no_results">تعذَّر العثور على نتائج</string>
+    <string name="post_rs_settings_load_more">تحميل المزيد\u2026</string>
+    <string name="post_rs_settings_term_create_error">فشل في إنشاء المصطلح</string>
+    <string name="post_rs_settings_search_authors">البحث في الكتّاب</string>
+    <string name="post_rs_settings_search_terms">البحث</string>
+    <string name="post_rs_settings_no_parent">لا شيء</string>
+    <string name="post_rs_settings_parent_category">التصنيف الأصل</string>
+    <string name="post_rs_settings_term_name_hint">الاسم</string>
+    <string name="post_rs_settings_add_term">إضافة جديد</string>
+    <string name="post_rs_settings_choose_from_device">الاختيار من الجهاز</string>
+    <string name="post_rs_settings_choose_from_wp_media">الاختيار من وسائط WP</string>
+    <string name="stats_new_stats_suggestion_negative">ربما لاحقًا</string>
+    <string name="stats_new_stats_suggestion_positive">جرّبها الآن</string>
+    <string name="stats_new_stats_suggestion_message">طوّرنا تجربة جديدة كليًا للإحصاءات. هل ترغب في تجربتها؟ يمكنك دائمًا العودة إلى التجربة السابقة من قائمة الإحصاءات.</string>
+    <string name="stats_new_stats_suggestion_title">تجربة جديدة للإحصاءات</string>
+    <string name="gutenberg_kit_announcement_learn_more">معرفة المزيد</string>
+    <string name="gutenberg_kit_announcement_maybe_later">ربما لاحقًا</string>
+    <string name="gutenberg_kit_announcement_activate">تفعيل</string>
+    <string name="gutenberg_kit_announcement_body_deadline">وسيصبح المحرر الافتراضي للجميع بحلول نهاية يونيو 2026. %1$s</string>
+    <string name="gutenberg_kit_announcement_body_intro">أصبح محرر المكوّنات من الجيل الجديد جاهزًا، ويأتي مع المزيد من الميزات الجديدة.</string>
+    <string name="gutenberg_kit_announcement_title">نسخة أفضل من محرر المكوّنات قادمة قريبًا</string>
+    <string name="site_settings_gutenberg_kit_enabled_unsupported">انتقل أولاً إلى محرر المكوّنات لتجربة المحرر الجديد.</string>
+    <string name="site_settings_gutenberg_kit_enabled_summary">الاشتراك في استخدام محرر المكوّنات من الجيل الجديد لهذا الموقع</string>
+    <string name="site_settings_gutenberg_kit_enabled">جرّب المحرر الجديد</string>
+    <string name="site_connectivity_banner_text">تعذر الاتصال بموقعك. قد تكون بعض الوظائف محدودة.</string>
+    <string name="site_settings_use_third_party_blocks_unsupported">موقعك لا يدعم تحميل المكوّنات التابعة لجهات خارجية داخل المحرر.</string>
+    <string name="site_settings_use_third_party_blocks_summary">حمّل المكوّنات الأطراف الثالثة التابعة للإضافات المثبّتة على موقعك.</string>
+    <string name="site_settings_use_third_party_blocks">استخدام المكوّنات التابعة لأطراف ثالثة (إصدار تجريبي)</string>
+    <string name="site_settings_use_theme_styles_not_block_theme">موقعك لا يستخدم قالبًا قائمًا على المكوّنات. قد لا يتطابق المحرر مع محتوى موقعك. عطّل هذا الإعداد إذا لم تظهر الأشياء بالشكل الصحيح.</string>
+    <string name="site_settings_use_theme_styles_unsupported">ثبّت إضافة Gutenberg على موقعك لتفعيل دعم أنماط القالب.</string>
+    <string name="new_stats_intro_footer">يمكنك إيقاف تجربة الإحصاءات الجديدة من قائمة التجاوز في شاشة الإحصاءات.</string>
     <string name="new_stats_intro_trends_desc">يوضح كل مقياس اتجاهه مقارنة بالفترة السابقة، لتعرف دائمًا ما إذا كنت تحقق نموًا.</string>
     <string name="new_stats_intro_trends_title">لمحة عن الاتجاهات</string>
     <string name="new_stats_intro_on_par_desc">الأجهزة، وUTM، والمواقع، وWordAds (قادمة) — البيانات ذاتها التي تحصل عليها في WordPress.com.</string>
@@ -287,6 +374,7 @@ Language: ar
     <string name="support_screen_title">الدعم</string>
     <string name="modern_support_description">تمكين تجربة الدعم الحديث الجديدة</string>
     <string name="modern_support">الدعم الحديث</string>
+    <string name="site_settings_use_theme_styles_summary">اجعل محرر المكوّن يبدو مثل قالبك.</string>
     <string name="site_settings_use_theme_styles">استخدم أنماط القالب</string>
     <string name="error_deleting_term">حدث خطأ في حذف المصطلح</string>
     <string name="error_saving_term">حدث خطأ في حفظ المصطلح</string>
@@ -297,6 +385,7 @@ Language: ar
     <string name="term_count">العدد: ⁦%1$d⁩</string>
     <string name="application_password_required_block_editor">محرر المكوِّنات</string>
     <string name="application_password_required_description">كلمات مرور التطبيقات هي طريقة أكثر أمانًا للاتصال بموقعك المستضاف ذاتيًا، وتمكين الدعم لميزات، مثل: ⁦%1$s⁩.</string>
+    <string name="application_password_required">كلمة المرور الخاصة بالتطبيق مطلوبة</string>
     <string name="taxonomies_title">الفئات</string>
     <string name="jetpack_rest_connection_error_login_wpcom">يتعذّر تسجيل الدخول إلى ووردبريس.كوم</string>
     <string name="jetpack_rest_connection_step_connect_site">ربط الموقع الإلكتروني بووردبريس.كوم</string>
@@ -510,6 +599,7 @@ Language: ar
     <string name="page_upload_conflict_error">هناك نسخة مراجعة أحدث لهذه الصفحة</string>
     <string name="editor_updating_content">تحديث المحتوى</string>
     <string name="stats_subscribers">المشتركون</string>
+    <string name="stats_subscribers_subscriber_header">مشترك</string>
     <string name="weekly_roundup_notification_text_views_and_comment">كانت لديك الأسبوع الماضي ⁦%1$s⁩ من المشاهدات وتعليق واحد</string>
     <string name="weekly_roundup_notification_text_views_and_like">كانت لديك الأسبوع الماضي ⁦%1$s⁩ من المشاهدات وإعجاب واحد</string>
     <string name="weekly_roundup_notification_text_views_like_comment">كانت لديك الأسبوع الماضي ⁦%1$s⁩ من المشاهدات وإعجاب واحد وتعليق واحد.</string>
@@ -3674,6 +3764,7 @@ Language: ar
     <string name="push_auth_expired">انتهت صلاحية الطلب. سجِّل الدخول إلى WordPress.com للمحاولة مرة أخرى.</string>
     <string name="ignore">تجاهل</string>
     <string name="stats_insights_best_ever">المشاهدات الأفضل على الإطلاق</string>
+    <string name="stats_insights_most_popular_time">أكثر الأوقات نشاطًا</string>
     <string name="stats_insights_most_popular_day">اليوم الأكثر شيوعًا</string>
     <string name="stats_insights_today">إحصاءات اليوم</string>
     <string name="stats_insights_all_time">مقالات ومشاهدات وزوار كل الأوقات</string>
@@ -3732,6 +3823,7 @@ Language: ar
     <string name="browse_our_faq_button">استعراض الأسئلة المتداولة</string>
     <string name="reader_empty_comments">لا توجد تعليقات حتى الآن</string>
     <string name="reader_label_like">أعجبني</string>
+    <string name="reader_label_view_original">عرض النسخة الأصلية</string>
     <string name="reader_label_comments_closed">التعليقات مغلقة</string>
     <string name="reader_title_photo_viewer">%1$d من %2$d</string>
     <string name="error_publish_empty_post">يتعذر نشر مقالة فارغة</string>

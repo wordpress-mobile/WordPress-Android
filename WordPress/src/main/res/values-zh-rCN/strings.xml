@@ -1,11 +1,98 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2026-04-02 09:56:52+0000
+Translation-Revision-Date: 2026-06-02 15:56:23+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.3
 Language: zh_CN
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="xmlrpc_disabled_bottom_sheet_body">该应用程序中的某些功能需要 XML-RPC。 请在您的站点上将其启用以解决此问题。</string>
+    <string name="xmlrpc_disabled_bottom_sheet_title">XML-RPC 已禁用</string>
+    <string name="xmlrpc_disabled_card_text">XML-RPC 已禁用\n某些功能可能会受到限制</string>
+    <string name="application_password_reauthentication_banner">您的站点凭据无效。 点击以重新验证身份。</string>
+    <string name="application_password_app_name_wordpress">%s 上的 WordPress Android 版应用程序</string>
+    <string name="application_password_app_name_jetpack">%s 上的 Jetpack Android 版应用程序</string>
+    <string name="application_password_authorization_cancelled">授权已取消</string>
+    <string name="reader_label_view">查看站点</string>
+    <string name="reader_excerpt_view_more">查看更多</string>
+    <string name="reader_reading_time">已阅读 %s 分钟</string>
+    <string name="reader_discover_tab_latest">最新</string>
+    <string name="reader_discover_tab_recommended">推荐</string>
+    <string name="stats_subscriber_years_and_days">%1$s，%2$s</string>
+    <string name="stats_subscriber_since_today">今天</string>
+    <string name="stats_subscribers_graph_years">年</string>
+    <string name="stats_subscribers_graph_months">月</string>
+    <string name="stats_subscribers_graph_weeks">周</string>
+    <string name="stats_subscribers_graph_days">日</string>
+    <string name="stats_emails_clicks_header">点击次数</string>
+    <string name="stats_emails_opens_header">打开次数</string>
+    <string name="stats_emails_latest_header">最近的电子邮件</string>
+    <string name="stats_subscribers_since_header">自从</string>
+    <string name="stats_subscribers_90_days_ago">90 天前</string>
+    <string name="stats_subscribers_60_days_ago">60 天前</string>
+    <string name="stats_subscribers_30_days_ago">30 天前</string>
+    <string name="stats_subscribers_current">当前</string>
+    <string name="stats_subscribers_emails">电子邮件</string>
+    <string name="stats_subscribers_list">订阅者人数</string>
+    <string name="stats_subscribers_graph">订阅者人数图表</string>
+    <string name="stats_subscribers_all_time">历史订阅者人数</string>
+    <string name="stats_utm_campaign">广告活动</string>
+    <string name="stats_utm_medium">媒体</string>
+    <string name="stats_utm_source">来源</string>
+    <string name="stats_utm_campaign_source_medium">广告活动/来源/媒体</string>
+    <string name="stats_utm_source_medium">来源/媒体</string>
+    <string name="stats_error_not_authenticated">未验证</string>
+    <string name="stats_collapse_group">折叠</string>
+    <string name="stats_expand_group">展开</string>
+    <string name="stats_tag_type_tag">标签</string>
+    <string name="stats_tag_type_category">分类</string>
+    <string name="stats_insights_tags_empty">未找到标签或分类</string>
+    <string name="stats_insights_views_percent">%1$s%% 次浏览</string>
+    <string name="stats_insights_most_popular_day_label">日</string>
+    <string name="stats_insights_all_time_stats_title">历史统计信息</string>
+    <string name="stats_insights_year_in_review_title">%s 回顾</string>
+    <string name="stats_insights_year_in_review">年度回顾</string>
+    <string name="stats_insights_avg_words_per_post">每篇文章的平均字数</string>
+    <string name="stats_insights_avg_likes_per_post">每篇文章的平均点赞数</string>
+    <string name="stats_insights_avg_comments_per_post">每篇文章的平均评论数</string>
+    <string name="stats_insights_total_posts">文章总数</string>
+    <string name="stats_insights_likes">点赞数</string>
+    <string name="stats_insights_words">字数</string>
+    <string name="activity_log_mcp_agent_label">通过 %1$s</string>
+    <string name="post_rs_settings_show_password">显示密码</string>
+    <string name="post_rs_settings_hide_password">隐藏密码</string>
+    <string name="post_rs_settings_saving">正在保存\u2026</string>
+    <string name="post_rs_settings_search_no_results">未找到结果</string>
+    <string name="post_rs_settings_load_more">加载更多\u2026</string>
+    <string name="post_rs_settings_term_create_error">创建术语失败</string>
+    <string name="post_rs_settings_search_authors">搜索作者</string>
+    <string name="post_rs_settings_search_terms">搜索</string>
+    <string name="post_rs_settings_no_parent">无</string>
+    <string name="post_rs_settings_parent_category">父级分类</string>
+    <string name="post_rs_settings_term_name_hint">姓名</string>
+    <string name="post_rs_settings_add_term">新增</string>
+    <string name="post_rs_settings_choose_from_device">从设备中选择</string>
+    <string name="post_rs_settings_choose_from_wp_media">从 WP 媒体中选择</string>
+    <string name="stats_new_stats_suggestion_negative">稍后再说</string>
+    <string name="stats_new_stats_suggestion_positive">试试看</string>
+    <string name="stats_new_stats_suggestion_message">我们打造了一套全新的统计信息功能。 想要试试吗？ 您可以随时从“统计信息”菜单切换回旧版本。</string>
+    <string name="stats_new_stats_suggestion_title">全新的统计信息体验</string>
+    <string name="gutenberg_kit_announcement_learn_more">了解更多</string>
+    <string name="gutenberg_kit_announcement_maybe_later">稍后再说</string>
+    <string name="gutenberg_kit_announcement_activate">激活</string>
+    <string name="gutenberg_kit_announcement_body_deadline">到 2026 年 6 月底，它将成为所有用户的默认编辑器。 %1$s</string>
+    <string name="gutenberg_kit_announcement_body_intro">新一代区块编辑器已准备就绪，并带来了更多新功能。</string>
+    <string name="gutenberg_kit_announcement_title">更出色的区块编辑器即将上线</string>
+    <string name="site_settings_gutenberg_kit_enabled_unsupported">请先切换到区块编辑器，试用新的编辑器。</string>
+    <string name="site_settings_gutenberg_kit_enabled_summary">选择为此站点启用新一代区块编辑器</string>
+    <string name="site_settings_gutenberg_kit_enabled">试用新版编辑器</string>
+    <string name="site_connectivity_banner_text">无法连接到您的站点。 某些功能可能会受到限制。</string>
+    <string name="site_settings_use_third_party_blocks_unsupported">您的站点不支持在编辑器中加载第三方区块。</string>
+    <string name="site_settings_use_third_party_blocks_summary">请从您站点上安装的插件加载第三方区块。</string>
+    <string name="site_settings_use_third_party_blocks">使用第三方区块（测试版）</string>
+    <string name="site_settings_use_theme_styles_not_block_theme">您的站点未使用区块主题。 该编辑器可能与您的内容不匹配。 如果显示效果不理想，请禁用此设置。</string>
+    <string name="site_settings_use_theme_styles_unsupported">在您的站点上安装古腾堡插件，以激活主题样式支持。</string>
+    <string name="new_stats_intro_footer">您可以从“统计信息”屏幕的溢出菜单中关闭“新统计信息”。</string>
     <string name="new_stats_intro_trends_desc">每个指标都会显示与前一时间段的趋势对比，以便您可以随时掌握增长情况。</string>
     <string name="new_stats_intro_trends_title">趋势一览</string>
     <string name="new_stats_intro_on_par_desc">设备、UTM、地理位置、WordAds（即将推出） — 这些数据与您在 WordPress.com 上看到的一致。</string>
@@ -286,6 +373,7 @@ Language: zh_CN
     <string name="support_screen_title">支持</string>
     <string name="modern_support_description">启用全新现代支持体验</string>
     <string name="modern_support">现代支持</string>
+    <string name="site_settings_use_theme_styles_summary">让区块编辑器的外观与您的主题风格保持一致。</string>
     <string name="site_settings_use_theme_styles">使用主题样式</string>
     <string name="error_deleting_term">删除此项目时出错</string>
     <string name="error_saving_term">保存此项目时出错</string>
@@ -3694,6 +3782,7 @@ Language: zh_CN
     <string name="push_auth_expired">请求已过期。请登录 WordPress.com 再试一次。</string>
     <string name="ignore">忽略</string>
     <string name="stats_insights_best_ever">最受欢迎的文章</string>
+    <string name="stats_insights_most_popular_time">人气最高的时间</string>
     <string name="stats_insights_most_popular_day">人气最高的日期</string>
     <string name="stats_insights_today">今日统计</string>
     <string name="stats_insights_all_time">全时段的文章篇数、阅读次数和访客人数</string>
@@ -3752,6 +3841,7 @@ Language: zh_CN
     <string name="browse_our_faq_button">浏览我们的常见问题解答</string>
     <string name="reader_empty_comments">尚无评论</string>
     <string name="reader_label_like">喜欢</string>
+    <string name="reader_label_view_original">查看原版</string>
     <string name="reader_label_comments_closed">评论功能被关闭</string>
     <string name="reader_title_photo_viewer">%1$d/%2$d</string>
     <string name="error_publish_empty_post">发布的文章不能为空</string>

@@ -1,11 +1,99 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2026-04-17 11:29:54+0000
+Translation-Revision-Date: 2026-06-01 13:20:50+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.3
 Language: en_GB
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="xmlrpc_disabled_bottom_sheet_body">Some features in the app require XML-RPC. Enable it on your site to resolve this.</string>
+    <string name="xmlrpc_disabled_bottom_sheet_title">XML-RPC Disabled</string>
+    <string name="xmlrpc_disabled_card_text">XML-RPC Disabled\nSome features may be limited</string>
+    <string name="application_password_reauthentication_banner">Your site credentials are invalid. Tap to reauthenticate.</string>
+    <string name="application_password_app_name_wordpress">WordPress Android App on %s</string>
+    <string name="application_password_app_name_jetpack">Jetpack Android App on %s</string>
+    <string name="application_password_authorization_cancelled">Authorisation cancelled</string>
+    <string name="reader_label_view">View site</string>
+    <string name="reader_excerpt_view_more">View more</string>
+    <string name="reader_reading_time">%s min read</string>
+    <string name="reader_discover_tab_latest">Latest</string>
+    <string name="reader_discover_tab_recommended">Recommended</string>
+    <string name="stats_subscriber_years_and_days">%1$s, %2$s</string>
+    <string name="stats_subscriber_since_today">today</string>
+    <string name="stats_subscribers_graph_years">Years</string>
+    <string name="stats_subscribers_graph_months">Months</string>
+    <string name="stats_subscribers_graph_weeks">Weeks</string>
+    <string name="stats_subscribers_graph_days">Days</string>
+    <string name="stats_emails_clicks_header">Clicks</string>
+    <string name="stats_emails_opens_header">Opens</string>
+    <string name="stats_emails_latest_header">Latest emails</string>
+    <string name="stats_subscribers_since_header">Since</string>
+    <string name="stats_subscribers_90_days_ago">90 days ago</string>
+    <string name="stats_subscribers_60_days_ago">60 days ago</string>
+    <string name="stats_subscribers_30_days_ago">30 days ago</string>
+    <string name="stats_subscribers_current">Current</string>
+    <string name="stats_subscribers_emails">Emails</string>
+    <string name="stats_subscribers_list">Subscribers</string>
+    <string name="stats_subscribers_graph">Subscribers Graph</string>
+    <string name="stats_subscribers_all_time">All-time Subscribers</string>
+    <string name="stats_utm_campaign">Campaign</string>
+    <string name="stats_utm_medium">Medium</string>
+    <string name="stats_utm_source">Source</string>
+    <string name="stats_utm_campaign_source_medium">Campaign / Source / Medium</string>
+    <string name="stats_utm_source_medium">Source / Medium</string>
+    <string name="stats_utm_title">UTM</string>
+    <string name="stats_error_not_authenticated">Not authenticated</string>
+    <string name="stats_collapse_group">Collapse</string>
+    <string name="stats_expand_group">Expand</string>
+    <string name="stats_tag_type_tag">Tag</string>
+    <string name="stats_tag_type_category">Category</string>
+    <string name="stats_insights_tags_empty">No tags or categories found</string>
+    <string name="stats_insights_views_percent">%1$s%% of views</string>
+    <string name="stats_insights_most_popular_day_label">Day</string>
+    <string name="stats_insights_all_time_stats_title">All-time stats</string>
+    <string name="stats_insights_year_in_review_title">%s in review</string>
+    <string name="stats_insights_year_in_review">Year in Review</string>
+    <string name="stats_insights_avg_words_per_post">Avg words per post</string>
+    <string name="stats_insights_avg_likes_per_post">Avg likes per post</string>
+    <string name="stats_insights_avg_comments_per_post">Avg comments per post</string>
+    <string name="stats_insights_total_posts">Total posts</string>
+    <string name="stats_insights_likes">Likes</string>
+    <string name="stats_insights_words">Words</string>
+    <string name="activity_log_mcp_agent_label">via %1$s</string>
+    <string name="post_rs_settings_show_password">Show password</string>
+    <string name="post_rs_settings_hide_password">Hide password</string>
+    <string name="post_rs_settings_saving">Saving\u2026</string>
+    <string name="post_rs_settings_search_no_results">No results found</string>
+    <string name="post_rs_settings_load_more">Load more\u2026</string>
+    <string name="post_rs_settings_term_create_error">Failed to create term</string>
+    <string name="post_rs_settings_search_authors">Search authors</string>
+    <string name="post_rs_settings_search_terms">Search</string>
+    <string name="post_rs_settings_no_parent">None</string>
+    <string name="post_rs_settings_parent_category">Parent Category</string>
+    <string name="post_rs_settings_term_name_hint">Name</string>
+    <string name="post_rs_settings_add_term">Add New</string>
+    <string name="post_rs_settings_choose_from_device">Choose from device</string>
+    <string name="post_rs_settings_choose_from_wp_media">Choose from WP Media</string>
+    <string name="stats_new_stats_suggestion_negative">Maybe later</string>
+    <string name="stats_new_stats_suggestion_positive">Try it out</string>
+    <string name="stats_new_stats_suggestion_message">We\'ve built a brand new Stats experience. Want to give it a try? You can always go back to the old one from the Stats menu.</string>
+    <string name="stats_new_stats_suggestion_title">A new Stats experience</string>
+    <string name="gutenberg_kit_announcement_learn_more">Learn more</string>
+    <string name="gutenberg_kit_announcement_maybe_later">Maybe later</string>
+    <string name="gutenberg_kit_announcement_activate">Activate</string>
+    <string name="gutenberg_kit_announcement_body_deadline">By the end of June 2026, it will become the default editor for everyone. %1$s</string>
+    <string name="gutenberg_kit_announcement_body_intro">The next-generation block editor is ready, and it brings more new features.</string>
+    <string name="gutenberg_kit_announcement_title">A better block editor is coming</string>
+    <string name="site_settings_gutenberg_kit_enabled_unsupported">Switch to the block editor first to try the new editor.</string>
+    <string name="site_settings_gutenberg_kit_enabled_summary">Opt in to the next-generation block editor for this site</string>
+    <string name="site_settings_gutenberg_kit_enabled">Try the new editor</string>
+    <string name="site_connectivity_banner_text">Unable to connect to your site. Some functionality might be limited.</string>
+    <string name="site_settings_use_third_party_blocks_unsupported">Your site doesn\'t support loading third-party blocks in the editor.</string>
+    <string name="site_settings_use_third_party_blocks_summary">Load third-party blocks from plugins installed on your site.</string>
+    <string name="site_settings_use_third_party_blocks">Use Third-Party Blocks (Beta)</string>
+    <string name="site_settings_use_theme_styles_not_block_theme">Your site isn\'t using a block theme. The editor may not match your content. If things don\'t look right, disable this setting.</string>
+    <string name="site_settings_use_theme_styles_unsupported">Install the Gutenberg Plugin on your site to activate theme style support.</string>
+    <string name="new_stats_intro_footer">You can turn off New Stats from the overflow menu in the Stats screen.</string>
     <string name="new_stats_intro_trends_desc">Every metric shows how it\'s trending compared to the previous period, so you always know if you\'re growing.</string>
     <string name="new_stats_intro_trends_title">Trends at a Glance</string>
     <string name="new_stats_intro_on_par_desc">Devices, UTM, locations, WordAds (coming) — the same data you get on WordPress.com.</string>
@@ -176,6 +264,7 @@ Language: en_GB
     <string name="error_browser_no_network">Unable to load this page</string>
     <string name="history_empty_subtitle_post">You\'ll see this post\'s history when you make changes to it</string>
     <string name="history_empty_subtitle_page">You\'ll see this page\'s history when you make changes to it</string>
+    <string name="reader_discover_tab_freshly_pressed">Freshly Pressed</string>
     <string name="notifications_empty_action_comments">Join a conversation! Comment on posts in the Reader.</string>
     <string name="notifications_empty_action_all">Get active! Comment on posts in the Reader.</string>
     <string name="more_options">More options</string>
@@ -289,6 +378,7 @@ Language: en_GB
     <string name="support_screen_title">Support</string>
     <string name="modern_support_description">Enable the new modern support experience</string>
     <string name="modern_support">Modern Support</string>
+    <string name="site_settings_use_theme_styles_summary">Make the block editor look like your theme.</string>
     <string name="site_settings_use_theme_styles">Use Theme Styles</string>
     <string name="error_deleting_term">There was an error deleting the term</string>
     <string name="error_saving_term">There was an error saving the term</string>
@@ -532,6 +622,7 @@ Language: en_GB
     <string name="page_upload_conflict_error">There is a revision of this page that is more recent</string>
     <string name="editor_updating_content">Updating content</string>
     <string name="stats_subscribers">Subscribers</string>
+    <string name="stats_subscribers_subscriber_header">Subscriber</string>
     <string name="weekly_roundup_notification_text_views_and_comment">Last week you had %1$s views and 1 comment</string>
     <string name="weekly_roundup_notification_text_views_and_like">Last week you had %1$s views and 1 like</string>
     <string name="weekly_roundup_notification_text_views_like_comment">Last week you had %1$s views, 1 like, and 1 comment.</string>
@@ -3699,6 +3790,7 @@ Language: en_GB
     <string name="push_auth_expired">The request has expired. Log in to WordPress.com to try again.</string>
     <string name="ignore">Ignore</string>
     <string name="stats_insights_best_ever">Best Views Ever</string>
+    <string name="stats_insights_most_popular_time">Most popular time</string>
     <string name="stats_insights_most_popular_day">Most popular day</string>
     <string name="stats_insights_today">Today\'s Stats</string>
     <string name="stats_insights_all_time">All-time posts, views, and visitors</string>
@@ -3757,6 +3849,7 @@ Language: en_GB
     <string name="browse_our_faq_button">Browse our FAQ</string>
     <string name="reader_empty_comments">No comments yet</string>
     <string name="reader_label_like">Like</string>
+    <string name="reader_label_view_original">View original</string>
     <string name="reader_label_comments_closed">Comments are closed</string>
     <string name="reader_title_photo_viewer">%1$d of %2$d</string>
     <string name="error_publish_empty_post">Can\'t publish an empty post</string>

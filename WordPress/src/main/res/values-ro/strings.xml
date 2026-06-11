@@ -1,11 +1,99 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2026-05-25 17:10:13+0000
+Translation-Revision-Date: 2026-06-11 16:13:43+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n == 0 || n % 100 >= 2 && n % 100 <= 19) ? 1 : 2);
 Generator: GlotPress/4.0.3
 Language: ro
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="xmlrpc_disabled_bottom_sheet_body">Unele funcționalități din aplicație au nevoie de XML-RPC. Activează pe site pentru a rezolva această problemă.</string>
+    <string name="xmlrpc_disabled_bottom_sheet_title">XML-RPC este dezactivat</string>
+    <string name="xmlrpc_disabled_card_text">XML-RPC este dezactivat\nUnele funcționalități pot fi limitate</string>
+    <string name="application_password_reauthentication_banner">Datele de conectare la site-ul tău nu sunt valide. Atinge pentru a te reautentifica.</string>
+    <string name="application_password_app_name_wordpress">Aplicație WordPress pentru Android pe %s</string>
+    <string name="application_password_app_name_jetpack">Aplicație Jetpack pentru Android pe %s</string>
+    <string name="application_password_authorization_cancelled">Autorizarea este anulată</string>
+    <string name="reader_label_view">Vezi site-ul</string>
+    <string name="reader_excerpt_view_more">Vezi mai multe</string>
+    <string name="reader_reading_time">%s minute de citit</string>
+    <string name="reader_discover_tab_latest">Ultimele</string>
+    <string name="reader_discover_tab_recommended">Recomandate</string>
+    <string name="stats_subscriber_years_and_days">%1$s, %2$s</string>
+    <string name="stats_subscriber_since_today">azi</string>
+    <string name="stats_subscribers_graph_years">Ani</string>
+    <string name="stats_subscribers_graph_months">Luni</string>
+    <string name="stats_subscribers_graph_weeks">Săptămâni</string>
+    <string name="stats_subscribers_graph_days">Zile</string>
+    <string name="stats_emails_clicks_header">Clicuri</string>
+    <string name="stats_emails_opens_header">Deschideri</string>
+    <string name="stats_emails_latest_header">Ultimele emailuri</string>
+    <string name="stats_subscribers_since_header">De la</string>
+    <string name="stats_subscribers_90_days_ago">Acum 90 de zile</string>
+    <string name="stats_subscribers_60_days_ago">Acum 60 de zile</string>
+    <string name="stats_subscribers_30_days_ago">Acum 30 de zile</string>
+    <string name="stats_subscribers_current">Actual</string>
+    <string name="stats_subscribers_emails">Emailuri</string>
+    <string name="stats_subscribers_list">Abonați</string>
+    <string name="stats_subscribers_graph">Grafic abonați</string>
+    <string name="stats_subscribers_all_time">Toți abonații</string>
+    <string name="stats_utm_campaign">Campanie</string>
+    <string name="stats_utm_medium">Medie</string>
+    <string name="stats_utm_source">Sursă</string>
+    <string name="stats_utm_campaign_source_medium">Campanie/sursă/medie</string>
+    <string name="stats_utm_source_medium">Sursă/medie</string>
+    <string name="stats_utm_title">UTM</string>
+    <string name="stats_error_not_authenticated">Neautentificat</string>
+    <string name="stats_collapse_group">Restrânge</string>
+    <string name="stats_expand_group">Extinde</string>
+    <string name="stats_tag_type_tag">Etichetă</string>
+    <string name="stats_tag_type_category">Categorie</string>
+    <string name="stats_insights_tags_empty">Nu am găsit nicio etichetă sau categorie</string>
+    <string name="stats_insights_views_percent">%1$s%% din vizualizări</string>
+    <string name="stats_insights_most_popular_day_label">Zi</string>
+    <string name="stats_insights_all_time_stats_title">Total general statistici</string>
+    <string name="stats_insights_year_in_review_title">%s pe scurt</string>
+    <string name="stats_insights_year_in_review">Anul pe scurt</string>
+    <string name="stats_insights_avg_words_per_post">Medie de cuvinte per articol</string>
+    <string name="stats_insights_avg_likes_per_post">Medie de aprecieri per articol</string>
+    <string name="stats_insights_avg_comments_per_post">Medie de comentarii per articol</string>
+    <string name="stats_insights_total_posts">Total articole</string>
+    <string name="stats_insights_likes">Aprecieri</string>
+    <string name="stats_insights_words">Cuvinte</string>
+    <string name="activity_log_mcp_agent_label">via %1$s</string>
+    <string name="post_rs_settings_show_password">Arată parola</string>
+    <string name="post_rs_settings_hide_password">Ascunde parola</string>
+    <string name="post_rs_settings_saving">Salvez…</string>
+    <string name="post_rs_settings_search_no_results">Nu am găsit niciun rezultat</string>
+    <string name="post_rs_settings_load_more">Încarcă mai multe…</string>
+    <string name="post_rs_settings_term_create_error">Crearea termenului a eșuat</string>
+    <string name="post_rs_settings_search_authors">Caută autori</string>
+    <string name="post_rs_settings_search_terms">Caută</string>
+    <string name="post_rs_settings_no_parent">Niciunul</string>
+    <string name="post_rs_settings_parent_category">Categorie părinte</string>
+    <string name="post_rs_settings_term_name_hint">Nume</string>
+    <string name="post_rs_settings_add_term">Adaugă nou</string>
+    <string name="post_rs_settings_choose_from_device">Alege de pe dispozitiv</string>
+    <string name="post_rs_settings_choose_from_wp_media">Alege din Media WP</string>
+    <string name="stats_new_stats_suggestion_negative">Poate mai târziu</string>
+    <string name="stats_new_stats_suggestion_positive">Încearcă</string>
+    <string name="stats_new_stats_suggestion_message">Am creat o experiență complet nouă pentru Statistici. Vrei să o încerci? Poți oricând să revii la cea veche în meniul Statistici.</string>
+    <string name="stats_new_stats_suggestion_title">O experiență nouă pentru Statistici</string>
+    <string name="gutenberg_kit_announcement_learn_more">Află mai multe</string>
+    <string name="gutenberg_kit_announcement_maybe_later">Poate mai târziu</string>
+    <string name="gutenberg_kit_announcement_activate">Activează</string>
+    <string name="gutenberg_kit_announcement_body_deadline">Până la sfârșitul lunii iunie 2026, va deveni editorul implicit pentru toți. %1$s</string>
+    <string name="gutenberg_kit_announcement_body_intro">Noul editor de blocuri modern este pregătit și aduce mai multe funcționalități noi.</string>
+    <string name="gutenberg_kit_announcement_title">În curând, un editor de blocuri mai bun</string>
+    <string name="site_settings_gutenberg_kit_enabled_unsupported">Pentru a încerca noul editor, comută mai întâi la editorul de blocuri.</string>
+    <string name="site_settings_gutenberg_kit_enabled_summary">Optează pentru noul editor de blocuri modern pentru acest site</string>
+    <string name="site_settings_gutenberg_kit_enabled">Încearcă noul editor</string>
+    <string name="site_connectivity_banner_text">Nu am putut să-ți conectăm site-ul. Probabil unele funcționalități vor fi limitate.</string>
+    <string name="site_settings_use_third_party_blocks_unsupported">Site-ul tău nu acceptă încărcarea unor blocuri terțe în editor.</string>
+    <string name="site_settings_use_third_party_blocks_summary">Încarcă blocuri terțe din modulele instalate pe site-ul tău.</string>
+    <string name="site_settings_use_third_party_blocks">Folosește blocuri terțe (Beta)</string>
+    <string name="site_settings_use_theme_styles_not_block_theme">Site-ul tău nu folosește o temă cu blocuri. Probabil editorul nu se potrivește cu conținutul tău. Dacă aspectul nu pare a fi în regulă, dezactivează această setare.</string>
+    <string name="site_settings_use_theme_styles_unsupported">Instalează modulul Gutenberg pe site-ul tău pentru a activa suportul pentru stiluri temă.</string>
+    <string name="new_stats_intro_footer">Poți să dezactivezi Statistici noi în meniul suplimentar din ecranul Statistici.</string>
     <string name="new_stats_intro_trends_desc">Fiecare valoare metrică arată tendința în comparație cu perioada anterioară, astfel știi întotdeauna dacă te dezvolți.</string>
     <string name="new_stats_intro_trends_title">Tendințe dintr-o privire</string>
     <string name="new_stats_intro_on_par_desc">Dispozitive, UTM, locații, WordAds (în curând) - aceleași date de care beneficiezi pe WordPress.com.</string>
@@ -176,6 +264,7 @@ Language: ro
     <string name="error_browser_no_network">Nu pot să încarc această pagină</string>
     <string name="history_empty_subtitle_post">Vei vedea istoricul pentru acest articol când îi faci modificări</string>
     <string name="history_empty_subtitle_page">Vei vedea istoricul pentru această pagină când îi faci modificări</string>
+    <string name="reader_discover_tab_freshly_pressed">Freshly Pressed</string>
     <string name="notifications_empty_action_comments">Participă la o conversație! Comentează la articole în Cititor.</string>
     <string name="notifications_empty_action_all">Fii activ! Comentează la articole în Cititor.</string>
     <string name="more_options">Mai multe opțiuni</string>
@@ -289,6 +378,7 @@ Language: ro
     <string name="support_screen_title">Suport</string>
     <string name="modern_support_description">Activează noua experiență modernă pentru suport</string>
     <string name="modern_support">Suport modern</string>
+    <string name="site_settings_use_theme_styles_summary">Îți faci editorul de blocuri să arate ca tema ta.</string>
     <string name="site_settings_use_theme_styles">Folosește stilurile temei</string>
     <string name="error_deleting_term">A fost o eroare la ștergerea termenului</string>
     <string name="error_saving_term">A fost o eroare la salvarea termenului</string>
@@ -473,9 +563,9 @@ Language: ro
     <string name="voice_to_content_begin_recording_label">Începe înregistrarea</string>
     <string name="voice_to_content_secondary_header_label">Cereri disponibile:</string>
     <string name="voice_to_content_base_header_label">Articol din fișier audio</string>
-    <string name="voice_to_content_processing_label">În procesare</string>
+    <string name="voice_to_content_processing_label">Procesez</string>
     <string name="voice_to_content_error_label">Eroare</string>
-    <string name="voice_to_content_processing">În procesare</string>
+    <string name="voice_to_content_processing">Procesez</string>
     <string name="gutenberg_native_tap_to_edit" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Atinge pentru a edita</string>
     <string name="voice_to_content_permissions_required_msg">Pentru a înregistra audio, această aplicație are nevoie de permisiunea ta ca să-ți acceseze microfonul. Ai refuzat anterior această permisiune. Ca să folosești această funcționalitate, te rog să activezi permisiunea pentru microfon în setările aplicației.</string>
     <string name="voice_to_content_permissions_required_title">Permisiunea pentru înregistrare audio este obligatorie</string>
@@ -532,6 +622,7 @@ Language: ro
     <string name="page_upload_conflict_error">Există o revizie mai recentă pentru această pagină</string>
     <string name="editor_updating_content">Actualizez conținutul</string>
     <string name="stats_subscribers">Abonați</string>
+    <string name="stats_subscribers_subscriber_header">Abonat</string>
     <string name="weekly_roundup_notification_text_views_and_comment">Săptămâna trecută ai avut %1$s vizualizări și 1 comentariu</string>
     <string name="weekly_roundup_notification_text_views_and_like">Săptămâna trecută ai avut %1$s vizualizări și o apreciere</string>
     <string name="weekly_roundup_notification_text_views_like_comment">Săptămâna trecută ai avut %1$s vizualizări, o apreciere și 1 comentariu.</string>
@@ -3463,7 +3554,7 @@ Language: ro
     <string name="start_over">Reîncepe</string>
     <string name="me_btn_app_settings">Setări aplicație</string>
     <string name="editor_remove_failed_uploads">Înlătură încărcările eșuate</string>
-    <string name="site_settings_advanced_header">Avansat</string>
+    <string name="site_settings_advanced_header">Avansate</string>
     <string name="comments_empty_list_filtered_trashed">Niciun comentariu la gunoi</string>
     <string name="comments_empty_list_filtered_pending">Niciun comentariu în așteptare</string>
     <string name="comments_empty_list_filtered_approved">Niciun comentariu aprobat</string>
@@ -3699,6 +3790,7 @@ Language: ro
     <string name="push_auth_expired">Cererea a expirat. Autentifică-te pe WordPress.com pentru a încerca din nou.</string>
     <string name="ignore">Ignoră</string>
     <string name="stats_insights_best_ever">Cele mai multe vizualizări dintotdeauna</string>
+    <string name="stats_insights_most_popular_time">Cea mai populară oră</string>
     <string name="stats_insights_most_popular_day">Cea mai populară zi</string>
     <string name="stats_insights_today">Statistici pentru azi</string>
     <string name="stats_insights_all_time">Articole, vizualizări și vizitatori dintotdeauna.</string>
@@ -3757,6 +3849,7 @@ Language: ro
     <string name="browse_our_faq_button">Răsfoiește întrebările noastre frecvente</string>
     <string name="reader_empty_comments">Niciun comentariu încă</string>
     <string name="reader_label_like">Apreciază</string>
+    <string name="reader_label_view_original">Vezi originalul</string>
     <string name="reader_label_comments_closed">Comentariile sunt închise</string>
     <string name="reader_title_photo_viewer">%1$d din %2$d</string>
     <string name="error_publish_empty_post">Nu pot publica un articol gol</string>

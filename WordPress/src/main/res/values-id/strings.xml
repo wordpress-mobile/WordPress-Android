@@ -1,11 +1,96 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2026-04-02 09:58:23+0000
+Translation-Revision-Date: 2026-06-02 11:58:41+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.3
 Language: id
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="xmlrpc_disabled_bottom_sheet_body">Beberapa fitur di aplikasi memerlukan XML-RPC. Aktifkan di situs Anda untuk mengatasi masalah ini.</string>
+    <string name="xmlrpc_disabled_bottom_sheet_title">XML-RPC Dinonaktifkan</string>
+    <string name="xmlrpc_disabled_card_text">XML-RPC Dinonaktifkan\nBeberapa fitur mungkin terbatas</string>
+    <string name="application_password_reauthentication_banner">Kredensial situs Anda tidak valid. Ketuk untuk autentikasi ulang.</string>
+    <string name="application_password_app_name_wordpress">Aplikasi WordPress untuk Android di %s</string>
+    <string name="application_password_app_name_jetpack">Aplikasi Jetpack untuk Android di %s</string>
+    <string name="application_password_authorization_cancelled">Otorisasi dibatalkan</string>
+    <string name="reader_label_view">Lihat Situs</string>
+    <string name="reader_excerpt_view_more">Lihat selengkapnya</string>
+    <string name="reader_reading_time">Bacaan %s mnt</string>
+    <string name="reader_discover_tab_latest">Terbaru</string>
+    <string name="reader_discover_tab_recommended">Rekomendasi</string>
+    <string name="stats_subscriber_since_today">hari ini</string>
+    <string name="stats_subscribers_graph_years">Tahun</string>
+    <string name="stats_subscribers_graph_months">Bulan</string>
+    <string name="stats_subscribers_graph_weeks">Minggu</string>
+    <string name="stats_subscribers_graph_days">Hari</string>
+    <string name="stats_emails_clicks_header">Klik</string>
+    <string name="stats_emails_opens_header">Buka</string>
+    <string name="stats_emails_latest_header">Email terbaru</string>
+    <string name="stats_subscribers_since_header">Sejak</string>
+    <string name="stats_subscribers_90_days_ago">90 hari yang lalu</string>
+    <string name="stats_subscribers_60_days_ago">60 hari yang lalu</string>
+    <string name="stats_subscribers_30_days_ago">30 hari yang lalu</string>
+    <string name="stats_subscribers_current">Saat ini</string>
+    <string name="stats_subscribers_emails">Email</string>
+    <string name="stats_subscribers_list">Pelanggan</string>
+    <string name="stats_subscribers_graph">Grafik Pelanggan</string>
+    <string name="stats_subscribers_all_time">Pelanggan Sepanjang Waktu</string>
+    <string name="stats_utm_campaign">Kampanye</string>
+    <string name="stats_utm_medium">Sedang</string>
+    <string name="stats_utm_source">Sumber</string>
+    <string name="stats_utm_campaign_source_medium">Kampanye / Sumber / Sedang</string>
+    <string name="stats_utm_source_medium">Sumber / Sedang</string>
+    <string name="stats_error_not_authenticated">Tidak terautentikasi.</string>
+    <string name="stats_collapse_group">Ciutkan</string>
+    <string name="stats_expand_group">Bentangkan</string>
+    <string name="stats_tag_type_category">Kategori</string>
+    <string name="stats_insights_tags_empty">Tidak ada tag atau kategori yang ditemukan</string>
+    <string name="stats_insights_views_percent">%1$s%% kunjungan</string>
+    <string name="stats_insights_most_popular_day_label">Hari</string>
+    <string name="stats_insights_all_time_stats_title">Statistik sepanjang waktu</string>
+    <string name="stats_insights_year_in_review_title">%s Dalam Tinjauan</string>
+    <string name="stats_insights_year_in_review">Tinjauan Tahunan</string>
+    <string name="stats_insights_avg_words_per_post">Rata-rata kata per pos</string>
+    <string name="stats_insights_avg_likes_per_post">Rata-rata suka per pos</string>
+    <string name="stats_insights_avg_comments_per_post">Rata-rata komentar per pos</string>
+    <string name="stats_insights_total_posts">Total Pos</string>
+    <string name="stats_insights_likes">Suka</string>
+    <string name="stats_insights_words">Kata</string>
+    <string name="activity_log_mcp_agent_label">melalui %1$s</string>
+    <string name="post_rs_settings_show_password">Tampilkan kata sandi</string>
+    <string name="post_rs_settings_hide_password">Sembunyikan kata sandi</string>
+    <string name="post_rs_settings_saving">Menyimpan\u2026</string>
+    <string name="post_rs_settings_search_no_results">Hasil tidak ditemukan</string>
+    <string name="post_rs_settings_load_more">Muat lebih banyak\u2026</string>
+    <string name="post_rs_settings_term_create_error">Gagal membuat istilah.</string>
+    <string name="post_rs_settings_search_authors">Cari penyusun</string>
+    <string name="post_rs_settings_search_terms">Cari</string>
+    <string name="post_rs_settings_no_parent">Tidak ada</string>
+    <string name="post_rs_settings_parent_category">Kategori Induk</string>
+    <string name="post_rs_settings_term_name_hint">Nama</string>
+    <string name="post_rs_settings_add_term">Tambah Baru</string>
+    <string name="post_rs_settings_choose_from_device">Pilih dari perangkat</string>
+    <string name="post_rs_settings_choose_from_wp_media">Pilih dari Media WP</string>
+    <string name="stats_new_stats_suggestion_negative">Mungkin nanti</string>
+    <string name="stats_new_stats_suggestion_positive">Cobalah</string>
+    <string name="stats_new_stats_suggestion_message">Kami menghadirkan pengalaman Statistik yang benar-benar baru. Ingin mencoba fitur ini? Anda dapat kembali ke versi lama dari menu Statistik.</string>
+    <string name="stats_new_stats_suggestion_title">Pengalaman Statistik yang baru</string>
+    <string name="gutenberg_kit_announcement_learn_more">Baca selengkapnya</string>
+    <string name="gutenberg_kit_announcement_maybe_later">Mungkin nanti</string>
+    <string name="gutenberg_kit_announcement_activate">Aktifkan</string>
+    <string name="gutenberg_kit_announcement_body_deadline">Pada akhir Juni 2026, editor ini akan menjadi editor default untuk semua pengguna. %1$s</string>
+    <string name="gutenberg_kit_announcement_body_intro">Editor blok generasi baru telah siap dan menghadirkan lebih banyak fitur baru.</string>
+    <string name="gutenberg_kit_announcement_title">Editor blok yang lebih baik akan segera hadir</string>
+    <string name="site_settings_gutenberg_kit_enabled_unsupported">Beralih ke editor blok terlebih dahulu untuk mencoba editor baru.</string>
+    <string name="site_settings_gutenberg_kit_enabled_summary">Aktifkan editor blok generasi baru untuk situs ini.</string>
+    <string name="site_settings_gutenberg_kit_enabled">Coba editor baru</string>
+    <string name="site_connectivity_banner_text">Tidak dapat terhubung ke situs Anda. Beberapa fitur mungkin terbatas.</string>
+    <string name="site_settings_use_third_party_blocks_unsupported">Situs Anda tidak mendukung pemuatan blok pihak ketiga di editor.</string>
+    <string name="site_settings_use_third_party_blocks_summary">Muat blok pihak ketiga dari plugin yang terinstal di situs Anda.</string>
+    <string name="site_settings_use_third_party_blocks">Gunakan Blok Pihak Ketiga (Beta)</string>
+    <string name="site_settings_use_theme_styles_not_block_theme">Situs Anda tidak menggunakan tema blok. Editor mungkin tidak sepenuhnya sesuai dengan konten Anda. Jika ada yang salah, nonaktifkan pengaturan ini.</string>
+    <string name="site_settings_use_theme_styles_unsupported">Instal Plugin Gutenberg di situs Anda untuk mengaktifkan dukungan gaya tema.</string>
+    <string name="new_stats_intro_footer">Anda dapat menonaktifkan Statistik Baru dari menu overflow di layar Statistik.</string>
     <string name="new_stats_intro_trends_desc">Setiap metrik menunjukkan bagaimana tren dibandingkan dengan periode sebelumnya, jadi Anda selalu tahu apakah Anda mengalami pertumbuhan.</string>
     <string name="new_stats_intro_trends_title">Tren dalam Sekejap</string>
     <string name="new_stats_intro_on_par_desc">Perangkat, UTM, lokasi, WordAds (segera hadir) — data yang sama dengan yang Anda dapatkan di WordPress.com.</string>
@@ -285,6 +370,7 @@ Language: id
     <string name="support_screen_title">Dukungan</string>
     <string name="modern_support_description">Aktifkan pengalaman dukungan modern yang baru</string>
     <string name="modern_support">Dukungan Modern</string>
+    <string name="site_settings_use_theme_styles_summary">Jadikan editor blok terlihat seperti tema Anda.</string>
     <string name="site_settings_use_theme_styles">Gunakan Gaya Tema</string>
     <string name="error_deleting_term">Terjadi error saat menghapus istilah</string>
     <string name="error_saving_term">Terjadi error saat menyimpan istilah</string>
@@ -527,6 +613,7 @@ Language: id
     <string name="page_upload_conflict_error">Ada revisi yang lebih baru untuk halaman ini</string>
     <string name="editor_updating_content">Memperbarui konten</string>
     <string name="stats_subscribers">Pengikut</string>
+    <string name="stats_subscribers_subscriber_header">Pelanggan</string>
     <string name="weekly_roundup_notification_text_views_and_comment">Minggu lalu Anda mendapatkan %1$s penayangan dan 1 komentar</string>
     <string name="weekly_roundup_notification_text_views_and_like">Minggu lalu Anda mendapatkan %1$s penayangan dan 1 suka</string>
     <string name="weekly_roundup_notification_text_views_like_comment">Minggu lalu Anda mendapatkan %1$s penayangan, 1 suka, dan 1 komentar.</string>
@@ -3694,6 +3781,7 @@ Language: id
     <string name="push_auth_expired">Permintaan sudah kadaluwarsa. Log in ke WordPress.com untuk mencoba lagi.</string>
     <string name="ignore">Abaikan</string>
     <string name="stats_insights_best_ever">Tampilan Terbaik</string>
+    <string name="stats_insights_most_popular_time">Waktu yang paling disukai</string>
     <string name="stats_insights_most_popular_day">Hari paling populer</string>
     <string name="stats_insights_today">Statistik Hari Ini</string>
     <string name="stats_insights_all_time">Pos, tampilan, dan pengunjung sepanjang waktu</string>
@@ -3752,6 +3840,7 @@ Language: id
     <string name="browse_our_faq_button">Telusuri Tanya Jawab Umum kami</string>
     <string name="reader_empty_comments">Belum ada komentar</string>
     <string name="reader_label_like">Suka</string>
+    <string name="reader_label_view_original">Tampilan orisinal</string>
     <string name="reader_label_comments_closed">Komentar ditutup</string>
     <string name="reader_title_photo_viewer">%1$d dari %2$d</string>
     <string name="error_publish_empty_post">Tidak dapat menerbitkan pos kosong</string>

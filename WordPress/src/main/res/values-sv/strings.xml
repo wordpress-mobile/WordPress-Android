@@ -1,12 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2026-05-29 07:17:11+0000
+Translation-Revision-Date: 2026-06-03 09:54:41+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.3
 Language: sv_SE
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="xmlrpc_disabled_bottom_sheet_body">Vissa funktioner i appen kräver XML-RPC. Aktivera det på din webbplats för att lösa detta.</string>
     <string name="xmlrpc_disabled_bottom_sheet_title">XML-RPC inaktiverat</string>
+    <string name="xmlrpc_disabled_card_text">XML-RPC inaktiverat\nVissa funktioner kan vara begränsade</string>
+    <string name="application_password_reauthentication_banner">Dina webbplatsuppgifter är ogiltiga. Dags att återautentisera.</string>
+    <string name="application_password_app_name_wordpress">WordPress-appen för Android på %s</string>
+    <string name="application_password_app_name_jetpack">Jetpack Android-app på %s</string>
+    <string name="application_password_authorization_cancelled">Auktorisering avbruten</string>
     <string name="reader_label_view">Visa webbplats</string>
     <string name="reader_excerpt_view_more">Visa mer</string>
     <string name="reader_reading_time">%s min. läsning</string>
@@ -20,6 +26,7 @@ Language: sv_SE
     <string name="stats_subscribers_graph_days">Dagar</string>
     <string name="stats_emails_clicks_header">Klick</string>
     <string name="stats_emails_opens_header">Öppningar</string>
+    <string name="stats_emails_latest_header">Senaste e-postmeddelanden</string>
     <string name="stats_subscribers_since_header">Sedan</string>
     <string name="stats_subscribers_90_days_ago">90 dagar sedan</string>
     <string name="stats_subscribers_60_days_ago">60 dagar sedan</string>
@@ -27,9 +34,13 @@ Language: sv_SE
     <string name="stats_subscribers_current">Nuvarande</string>
     <string name="stats_subscribers_emails">E-post</string>
     <string name="stats_subscribers_list">Prenumeranter</string>
+    <string name="stats_subscribers_graph">Diagram över prenumeranter</string>
+    <string name="stats_subscribers_all_time">Prenumeranter sedan starten</string>
     <string name="stats_utm_campaign">Kampanj</string>
     <string name="stats_utm_medium">Medium</string>
     <string name="stats_utm_source">Källa</string>
+    <string name="stats_utm_campaign_source_medium">Kampanj / Källa / Medium</string>
+    <string name="stats_utm_source_medium">Källa / Medium</string>
     <string name="stats_utm_title">UTM</string>
     <string name="stats_error_not_authenticated">Inte autentiserad</string>
     <string name="stats_collapse_group">Minimera</string>
@@ -37,12 +48,20 @@ Language: sv_SE
     <string name="stats_tag_type_tag">Etikett</string>
     <string name="stats_tag_type_category">Kategori</string>
     <string name="stats_insights_tags_empty">Inga etiketter eller kategorier hittades</string>
+    <string name="stats_insights_views_percent">%1$s%% av visningarna</string>
     <string name="stats_insights_most_popular_day_label">Dag</string>
+    <string name="stats_insights_all_time_stats_title">Statistik sedan starten</string>
+    <string name="stats_insights_year_in_review_title">Återblick för %s</string>
+    <string name="stats_insights_year_in_review">Återblick för året</string>
+    <string name="stats_insights_likes">Gilla-markeringar</string>
     <string name="stats_insights_words">Ord</string>
     <string name="activity_log_mcp_agent_label">via %1$s</string>
     <string name="post_rs_settings_show_password">Visa lösenord</string>
     <string name="post_rs_settings_hide_password">Dölj lösenord</string>
+    <string name="post_rs_settings_saving">Sparar\u2026</string>
     <string name="post_rs_settings_search_no_results">Inga resultat hittades</string>
+    <string name="post_rs_settings_load_more">Ladda in fler\u2026</string>
+    <string name="post_rs_settings_term_create_error">Termen kunde inte skapas</string>
     <string name="post_rs_settings_search_authors">Sök författare</string>
     <string name="post_rs_settings_search_terms">Sök</string>
     <string name="post_rs_settings_no_parent">Ingen</string>
@@ -50,11 +69,27 @@ Language: sv_SE
     <string name="post_rs_settings_term_name_hint">Namn</string>
     <string name="post_rs_settings_add_term">Lägg till ny</string>
     <string name="post_rs_settings_choose_from_device">Välj från enhet</string>
+    <string name="post_rs_settings_choose_from_wp_media">Välj från WP-media</string>
     <string name="stats_new_stats_suggestion_negative">Kanske senare</string>
+    <string name="stats_new_stats_suggestion_positive">Prova den</string>
+    <string name="stats_new_stats_suggestion_message">Vi har byggt en helt ny statistikupplevelse. Vill du prova? Du kan alltid gå tillbaka till den gamla från statistikmenyn.</string>
+    <string name="stats_new_stats_suggestion_title">En ny statistikupplevelse</string>
     <string name="gutenberg_kit_announcement_learn_more">Lär dig mer</string>
     <string name="gutenberg_kit_announcement_maybe_later">Kanske senare</string>
     <string name="gutenberg_kit_announcement_activate">Aktivera</string>
+    <string name="gutenberg_kit_announcement_body_deadline">I slutet av juni 2026 kommer det att bli standardredigeraren för alla. %1$s</string>
+    <string name="gutenberg_kit_announcement_body_intro">Nästa generations blockredigerare är redo och ger fler nya funktioner.</string>
+    <string name="gutenberg_kit_announcement_title">En bättre blockredigerare är på väg</string>
+    <string name="site_settings_gutenberg_kit_enabled_unsupported">Byt till blockredigeraren först för att testa den nya redigeraren.</string>
+    <string name="site_settings_gutenberg_kit_enabled_summary">Tacka ja till nästa generations blockredigerare för denna webbplats</string>
     <string name="site_settings_gutenberg_kit_enabled">Prova den nya redigeraren</string>
+    <string name="site_connectivity_banner_text">Det gick inte att ansluta till din webbplats. Viss funktionalitet kan vara begränsad.</string>
+    <string name="site_settings_use_third_party_blocks_unsupported">Din webbplats stöder inte inladdning av block från tredje part i redigeraren.</string>
+    <string name="site_settings_use_third_party_blocks_summary">Ladda in block från tredje part från tillägg installerade på din webbplats.</string>
+    <string name="site_settings_use_third_party_blocks">Använd block från tredje part (beta)</string>
+    <string name="site_settings_use_theme_styles_not_block_theme">Din webbplats använder inte ett blocktema. Redigeraren kanske inte matchar ditt innehåll. Om saker och ting inte ser bra ut, inaktivera denna inställning.</string>
+    <string name="site_settings_use_theme_styles_unsupported">Installera Gutenberg-tillägget på din webbplats för att aktivera stöd för temastilar.</string>
+    <string name="new_stats_intro_footer">Du kan stänga av Ny statistik från spillmenyn på skärmen Statistik.</string>
     <string name="new_stats_intro_trends_desc">Varje mätvärde visar hur det trendar jämfört med föregående period, så att du alltid vet om antalet besökare växer.</string>
     <string name="new_stats_intro_trends_title">Trender i korthet</string>
     <string name="new_stats_intro_on_par_desc">Enheter, UTM, platser, WordAds (kommer) – samma data som du får på WordPress.com.</string>
@@ -225,6 +260,7 @@ Language: sv_SE
     <string name="error_browser_no_network">Kan inte ladda denna sida</string>
     <string name="history_empty_subtitle_post">Du ser historiken för det här inlägget när du gör ändringar i det</string>
     <string name="history_empty_subtitle_page">Du ser historiken för den här sidan när du gör ändringar i den</string>
+    <string name="reader_discover_tab_freshly_pressed">Freshly Pressed</string>
     <string name="notifications_empty_action_comments">Delta i ett samtal! Kommentera inlägg i Läsaren.</string>
     <string name="notifications_empty_action_all">Aktivera dig! Kommentera inlägg i Läsaren.</string>
     <string name="more_options">Fler alternativ</string>
@@ -338,6 +374,7 @@ Language: sv_SE
     <string name="support_screen_title">Support</string>
     <string name="modern_support_description">Aktivera den nya moderna supportupplevelsen</string>
     <string name="modern_support">Modern support</string>
+    <string name="site_settings_use_theme_styles_summary">Få blockredigeraren att se ut som ditt tema.</string>
     <string name="site_settings_use_theme_styles">Använd temastilar</string>
     <string name="error_deleting_term">Ett fel uppstod vid borttagningen av termen</string>
     <string name="error_saving_term">Ett fel uppstod när termen skulle sparas</string>
@@ -3749,6 +3786,7 @@ Language: sv_SE
     <string name="push_auth_expired">Begäran har löpt ut. Logga in på WordPress.com för att försöka igen.</string>
     <string name="ignore">Ignorera </string>
     <string name="stats_insights_best_ever">Flest visningar någonsin</string>
+    <string name="stats_insights_most_popular_time">Den mest populära tiden</string>
     <string name="stats_insights_most_popular_day">Mest populära dag</string>
     <string name="stats_insights_today">Dagens statistik </string>
     <string name="stats_insights_all_time">Alla inlägg, visningar och besökare</string>

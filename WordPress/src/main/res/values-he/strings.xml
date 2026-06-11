@@ -1,11 +1,97 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2026-04-01 13:58:08+0000
+Translation-Revision-Date: 2026-06-02 09:54:42+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.3
 Language: he_IL
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="xmlrpc_disabled_bottom_sheet_body">חלק מהתכונות באפליקציה דורשות XML-RPC. יש להפעיל הגדרה זו באתר שלך כדי לפתור את הבעיה.</string>
+    <string name="xmlrpc_disabled_bottom_sheet_title">XML-RPC מושבת</string>
+    <string name="xmlrpc_disabled_card_text">XML-RPC מושבת\nייתכן שחלק מהתכונות יהיו מוגבלות</string>
+    <string name="application_password_reauthentication_banner">פרטי הכניסה שלך לאתר שלך אינם תקפים. הגיע הזמן לאמת מחדש.</string>
+    <string name="application_password_app_name_wordpress">האפליקציה של WordPress ל-Android ב-%s</string>
+    <string name="application_password_app_name_jetpack">האפליקציה של Jetpack ל-Android ב-%s</string>
+    <string name="application_password_authorization_cancelled">ההרשאה בוטלה</string>
+    <string name="reader_label_view">צפייה באתר</string>
+    <string name="reader_excerpt_view_more">הצגת פריטים נוספים</string>
+    <string name="reader_reading_time">משך קריאה – %s דקות</string>
+    <string name="reader_discover_tab_latest">הפריטים האחרונים</string>
+    <string name="reader_discover_tab_recommended">מומלץ</string>
+    <string name="stats_subscriber_since_today">היום</string>
+    <string name="stats_subscribers_graph_years">שנים</string>
+    <string name="stats_subscribers_graph_months">חודשים</string>
+    <string name="stats_subscribers_graph_weeks">שבועות</string>
+    <string name="stats_subscribers_graph_days">ימים</string>
+    <string name="stats_emails_clicks_header">אירועי לחיצה</string>
+    <string name="stats_emails_opens_header">אירועי פתיחה</string>
+    <string name="stats_emails_latest_header">האימיילים האחרונים</string>
+    <string name="stats_subscribers_since_header">מאז</string>
+    <string name="stats_subscribers_90_days_ago">לפני 90 ימים</string>
+    <string name="stats_subscribers_60_days_ago">לפני 60 ימים</string>
+    <string name="stats_subscribers_30_days_ago">לפני 30 ימים</string>
+    <string name="stats_subscribers_current">נוכחי</string>
+    <string name="stats_subscribers_emails">הודעות אימייל</string>
+    <string name="stats_subscribers_list">מנויים</string>
+    <string name="stats_subscribers_graph">גרף מנויים</string>
+    <string name="stats_subscribers_all_time">מנויים מכל הזמנים</string>
+    <string name="stats_utm_campaign">קמפיין</string>
+    <string name="stats_utm_medium">בינוני</string>
+    <string name="stats_utm_source">מקור</string>
+    <string name="stats_utm_campaign_source_medium">קמפיין / מקור / בינוני</string>
+    <string name="stats_utm_source_medium">מקור / בינוני</string>
+    <string name="stats_error_not_authenticated">לא בוצע אימות</string>
+    <string name="stats_collapse_group">מזעור</string>
+    <string name="stats_expand_group">הרחבה</string>
+    <string name="stats_tag_type_tag">תגית</string>
+    <string name="stats_tag_type_category">קטגוריה</string>
+    <string name="stats_insights_tags_empty">לא נמצאו תגיות או קטגוריות</string>
+    <string name="stats_insights_views_percent">%1$s%% מהצפיות</string>
+    <string name="stats_insights_most_popular_day_label">יום</string>
+    <string name="stats_insights_all_time_stats_title">נתונים סטטיסטיים מכל הזמנים</string>
+    <string name="stats_insights_year_in_review_title">%s במבט לאחור</string>
+    <string name="stats_insights_year_in_review">שנה במבט לאחור</string>
+    <string name="stats_insights_avg_words_per_post">ממוצע מילים לפוסט</string>
+    <string name="stats_insights_avg_likes_per_post">ממוצע לייקים לפוסט</string>
+    <string name="stats_insights_avg_comments_per_post">ממוצע תגובות לפוסט</string>
+    <string name="stats_insights_total_posts">סך כל הפוסטים</string>
+    <string name="stats_insights_likes">לייקים</string>
+    <string name="stats_insights_words">מילים</string>
+    <string name="activity_log_mcp_agent_label">באמצעות ⁦%1$s⁩</string>
+    <string name="post_rs_settings_show_password">הצגת סיסמה</string>
+    <string name="post_rs_settings_hide_password">הסתרת סיסמה</string>
+    <string name="post_rs_settings_saving">שומר\u2026</string>
+    <string name="post_rs_settings_search_no_results">לא נמצאו תוצאות</string>
+    <string name="post_rs_settings_load_more">טעינת פריטים נוספים\u2026</string>
+    <string name="post_rs_settings_term_create_error">יצירת המונח נכשלה</string>
+    <string name="post_rs_settings_search_authors">חיפוש מחברים</string>
+    <string name="post_rs_settings_search_terms">חיפוש</string>
+    <string name="post_rs_settings_no_parent">ללא</string>
+    <string name="post_rs_settings_parent_category">קטגוריית אב</string>
+    <string name="post_rs_settings_term_name_hint">שם</string>
+    <string name="post_rs_settings_add_term">הוספת חדש</string>
+    <string name="post_rs_settings_choose_from_device">בחירה ממכשיר</string>
+    <string name="post_rs_settings_choose_from_wp_media">בחירה מ-WP Media</string>
+    <string name="stats_new_stats_suggestion_negative">אולי מאוחר יותר</string>
+    <string name="stats_new_stats_suggestion_positive">אנחנו מזמינים אותך לנסות</string>
+    <string name="stats_new_stats_suggestion_message">בנינו חוויית \'נתונים סטטיסטיים\' חדשה לגמרי. רוצה לנסות? תמיד אפשר לחזור לעמוד הקודם בתפריט \'נתונים סטטיסטיים\'.</string>
+    <string name="stats_new_stats_suggestion_title">חוויית \'נתונים סטטיסטיים\' חדשה</string>
+    <string name="gutenberg_kit_announcement_learn_more">למידע נוסף</string>
+    <string name="gutenberg_kit_announcement_maybe_later">אולי מאוחר יותר</string>
+    <string name="gutenberg_kit_announcement_activate">הפעלה</string>
+    <string name="gutenberg_kit_announcement_body_deadline">עד סוף יוני 2026, הוא יהפוך לעורך ברירת המחדל עבור כולם. %1$s</string>
+    <string name="gutenberg_kit_announcement_body_intro">עורך הבלוקים מהדור הבא מוכן, והוא מביא איתו תכונות חדשות.</string>
+    <string name="gutenberg_kit_announcement_title">עורך בלוקים משופר בדרך</string>
+    <string name="site_settings_gutenberg_kit_enabled_unsupported">יש לעבור לעורך הבלוקים כדי לנסות את העורך החדש.</string>
+    <string name="site_settings_gutenberg_kit_enabled_summary">הצטרפות לעורך הבלוקים מהדור הבא עבור אתר זה</string>
+    <string name="site_settings_gutenberg_kit_enabled">התנסות בעורך החדש</string>
+    <string name="site_connectivity_banner_text">לא ניתן היה להתחבר לאתר שלך. ייתכן שפונקציונליות מסוימת מוגבלת.</string>
+    <string name="site_settings_use_third_party_blocks_unsupported">האתר שלך אינו תומך בטעינת בלוקים של צד שלישי בעורך.</string>
+    <string name="site_settings_use_third_party_blocks_summary">תכונה זו מאפשרת טעינת בלוקים של צד שלישי מהתוספים שמותקנים באתר שלך.</string>
+    <string name="site_settings_use_third_party_blocks">שימוש בבלוקים של צד שלישי (בטא)</string>
+    <string name="site_settings_use_theme_styles_not_block_theme">האתר שלך אינו משתמש בערכת עיצוב מבוססת בלוקים. ייתכן שהעורך לא יתאים לתוכן שלך. אם דברים אינם נראים כשורה, יש להשבית הגדרה זו.</string>
+    <string name="site_settings_use_theme_styles_unsupported">יש להתקין את התוסף של Gutenberg באתר כדי להפעיל תמיכה בסגנונות ערכת עיצוב.</string>
+    <string name="new_stats_intro_footer">ניתן לכבות את \'נתונים סטטיסטיים חדשים\' מהתפריט הצף במסך \'נתונים סטטיסטיים\'.</string>
     <string name="new_stats_intro_trends_desc">כל מדד מציג את מגמות השינוי בהשוואה לתקופה הקודמת, כך שתמיד תדע אם אתה בצמיחה.</string>
     <string name="new_stats_intro_trends_title">מגמות במבט כללי</string>
     <string name="new_stats_intro_on_par_desc">מכשירים, UTM, מיקומים, WordAds (בקרוב) - אותם הנתונים שאפשר לקבל ב-WordPress.com.</string>
@@ -286,6 +372,7 @@ Language: he_IL
     <string name="support_screen_title">תמיכה</string>
     <string name="modern_support_description">להפעיל את חוויית התמיכה המודרנית החדשה</string>
     <string name="modern_support">תמיכה מודרנית</string>
+    <string name="site_settings_use_theme_styles_summary">ניתן להתאים את עורך הבלוקים לסגנון של ערכת העיצוב שלך.</string>
     <string name="site_settings_use_theme_styles">להשתמש בסגנונות של התבנית</string>
     <string name="error_deleting_term">אירעה שגיאה בעת מחיקת המונח</string>
     <string name="error_saving_term">אירעה שגיאה בעת שמירת המונח</string>
@@ -526,6 +613,7 @@ Language: he_IL
     <string name="page_upload_conflict_error">קיימת גרסה עדכנית יותר של העמוד</string>
     <string name="editor_updating_content">מעדכן תוכן</string>
     <string name="stats_subscribers">מנויים</string>
+    <string name="stats_subscribers_subscriber_header">מנוי</string>
     <string name="weekly_roundup_notification_text_views_and_comment">בשבוע הקודם היו לך ⁦%1$s⁩ צפיות ותגובה אחת</string>
     <string name="weekly_roundup_notification_text_views_and_like">בשבוע הקודם היו לך ⁦%1$s⁩ צפיות ולייק אחד</string>
     <string name="weekly_roundup_notification_text_views_like_comment">בשבוע הקודם היו לך ⁦%1$s⁩ צפיות, לייק אחד ותגובה אחת.</string>
@@ -3682,6 +3770,7 @@ Language: he_IL
     <string name="push_auth_expired">פג תוקף הבקשה. יש להיכנס לוורדפרס.קום כדי לנסות שוב.</string>
     <string name="ignore">להתעלם</string>
     <string name="stats_insights_best_ever">כמות הצפיות הגבוהה בכל הזמנים</string>
+    <string name="stats_insights_most_popular_time">המועד הפופולרי ביותר</string>
     <string name="stats_insights_most_popular_day">היום הפופולרי ביותר</string>
     <string name="stats_insights_today">הנתונים הסטטיסטיים של היום</string>
     <string name="stats_insights_all_time">פוסטים, צפיות ומבקרים מההתחלה ועד היום</string>
@@ -3740,6 +3829,7 @@ Language: he_IL
     <string name="browse_our_faq_button">לעיון בשאלות הנפוצות שלנו</string>
     <string name="reader_empty_comments">אין תגובות עדיין</string>
     <string name="reader_label_like">לייק</string>
+    <string name="reader_label_view_original">הצגת מקור</string>
     <string name="reader_label_comments_closed">תגובות לא מופעלות</string>
     <string name="reader_title_photo_viewer">%1$d מתוך %2$d</string>
     <string name="error_publish_empty_post">לא ניתן לפרסם פוסט ריק</string>

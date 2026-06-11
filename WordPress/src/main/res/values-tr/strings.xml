@@ -1,11 +1,97 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2026-03-27 10:09:05+0000
+Translation-Revision-Date: 2026-06-02 11:55:27+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.3
 Language: tr
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="xmlrpc_disabled_bottom_sheet_body">Uygulamadaki bazı özellikler XML-RPC gerektirir. Bunu çözmek için sitenizde etkinleştirin.</string>
+    <string name="xmlrpc_disabled_bottom_sheet_title">XML-RPC Devre Dışı Bırakıldı</string>
+    <string name="xmlrpc_disabled_card_text">XML-RPC Devre Dışı Bırakıldı\nBazı özellikler sınırlı olabilir</string>
+    <string name="application_password_reauthentication_banner">Site kimlik bilgileriniz geçersiz. Yeniden kimlik doğrulamak için dokunun.</string>
+    <string name="application_password_app_name_wordpress">%s üzerinde WordPress Android Uygulaması</string>
+    <string name="application_password_app_name_jetpack">%s üzerinde Jetpack Android Uygulaması</string>
+    <string name="application_password_authorization_cancelled">Yetkilendirme iptal edildi</string>
+    <string name="reader_label_view">Siteyi görüntüle</string>
+    <string name="reader_excerpt_view_more">Daha fazlasını görüntüle</string>
+    <string name="reader_reading_time">%s dakikalık okuma</string>
+    <string name="reader_discover_tab_latest">En yeniler</string>
+    <string name="reader_discover_tab_recommended">Önerilen</string>
+    <string name="stats_subscriber_since_today">bugün</string>
+    <string name="stats_subscribers_graph_years">Yıl</string>
+    <string name="stats_subscribers_graph_months">Ay</string>
+    <string name="stats_subscribers_graph_weeks">Hafta</string>
+    <string name="stats_subscribers_graph_days">Gün</string>
+    <string name="stats_emails_clicks_header">Tıklamalar</string>
+    <string name="stats_emails_opens_header">Açmalar</string>
+    <string name="stats_emails_latest_header">En son e-postalar</string>
+    <string name="stats_subscribers_since_header">Şundan itibaren:</string>
+    <string name="stats_subscribers_90_days_ago">90 gün önce</string>
+    <string name="stats_subscribers_60_days_ago">60 gün önce</string>
+    <string name="stats_subscribers_30_days_ago">30 gün önce</string>
+    <string name="stats_subscribers_current">Mevcut</string>
+    <string name="stats_subscribers_emails">E-postalar</string>
+    <string name="stats_subscribers_list">Aboneler</string>
+    <string name="stats_subscribers_graph">Abone Grafiği</string>
+    <string name="stats_subscribers_all_time">İlk Günden Bu Yana Aboneler</string>
+    <string name="stats_utm_campaign">Kampanya</string>
+    <string name="stats_utm_medium">Aracı</string>
+    <string name="stats_utm_source">Kaynak</string>
+    <string name="stats_utm_campaign_source_medium">Kampanya/Kaynak/Aracı</string>
+    <string name="stats_utm_source_medium">Kaynak/Aracı</string>
+    <string name="stats_error_not_authenticated">Kimliği doğrulanmadı</string>
+    <string name="stats_collapse_group">Daralt</string>
+    <string name="stats_expand_group">Genişlet</string>
+    <string name="stats_tag_type_tag">Etiket</string>
+    <string name="stats_tag_type_category">Kategori</string>
+    <string name="stats_insights_tags_empty">Hiçbir etiket veya kategori bulunamadı</string>
+    <string name="stats_insights_views_percent">Görüntüleme oranı: %1$s%%</string>
+    <string name="stats_insights_most_popular_day_label">Gün</string>
+    <string name="stats_insights_all_time_stats_title">Tüm zamanların istatistikleri</string>
+    <string name="stats_insights_year_in_review_title">%s değerlendirmesi</string>
+    <string name="stats_insights_year_in_review">Yılın Değerlendirmesi</string>
+    <string name="stats_insights_avg_words_per_post">Gönderi başına ortalama sözcük sayısı</string>
+    <string name="stats_insights_avg_likes_per_post">Gönderi başına ortalama beğeni sayısı</string>
+    <string name="stats_insights_avg_comments_per_post">Gönderi başına ortalama yorum sayısı</string>
+    <string name="stats_insights_total_posts">Toplam gönderi sayısı</string>
+    <string name="stats_insights_likes">Beğeniler</string>
+    <string name="stats_insights_words">Kelime</string>
+    <string name="activity_log_mcp_agent_label">%1$s ile</string>
+    <string name="post_rs_settings_show_password">Şifreyi göster</string>
+    <string name="post_rs_settings_hide_password">Şifreyi gizle</string>
+    <string name="post_rs_settings_saving">Kaydediliyoru2026</string>
+    <string name="post_rs_settings_search_no_results">Hiçbir sonuç bulunamadı</string>
+    <string name="post_rs_settings_load_more">Daha fazla yükleu2026</string>
+    <string name="post_rs_settings_term_create_error">Terim oluşturulamadı</string>
+    <string name="post_rs_settings_search_authors">Yazar ara</string>
+    <string name="post_rs_settings_search_terms">Arama</string>
+    <string name="post_rs_settings_no_parent">Hiçbiri</string>
+    <string name="post_rs_settings_parent_category">Üst Kategori</string>
+    <string name="post_rs_settings_term_name_hint">Ad</string>
+    <string name="post_rs_settings_add_term">Yeni Ekle</string>
+    <string name="post_rs_settings_choose_from_device">Cihazdan seç</string>
+    <string name="post_rs_settings_choose_from_wp_media">WP Ortamından Seç</string>
+    <string name="stats_new_stats_suggestion_negative">Belki daha sonra</string>
+    <string name="stats_new_stats_suggestion_positive">Deneyin</string>
+    <string name="stats_new_stats_suggestion_message">Yepyeni bir İstatistikler deneyimi oluşturduk. Bu özelliği denemek ister misiniz? İstatistikler menüsünden her zaman eskisine geri dönebilirsiniz.</string>
+    <string name="stats_new_stats_suggestion_title">Yeni bir İstatistikler deneyimi</string>
+    <string name="gutenberg_kit_announcement_learn_more">Daha fazla bilgi edinin</string>
+    <string name="gutenberg_kit_announcement_maybe_later">Belki daha sonra</string>
+    <string name="gutenberg_kit_announcement_activate">Etkinleştir</string>
+    <string name="gutenberg_kit_announcement_body_deadline">Haziran 2026\'nın sonuna kadar herkes için varsayılan düzenleyici olacak. %1$s</string>
+    <string name="gutenberg_kit_announcement_body_intro">Yeni nesil blok düzenleyici hazır, daha fazla yeni özellik getiriyor.</string>
+    <string name="gutenberg_kit_announcement_title">Daha iyi bir blok düzenleyici geliyor</string>
+    <string name="site_settings_gutenberg_kit_enabled_unsupported">Yeni düzenleyiciyi denemek için önce blok düzenleyiciye geçin.</string>
+    <string name="site_settings_gutenberg_kit_enabled_summary">Bu sitenin gelecek nesil blok düzenleyicisine geçin</string>
+    <string name="site_settings_gutenberg_kit_enabled">Yeni düzenleyiciyi deneyin</string>
+    <string name="site_connectivity_banner_text">Sitenize bağlanılamadı. Bazı işlevler sınırlı olabilir.</string>
+    <string name="site_settings_use_third_party_blocks_unsupported">Siteniz düzenleyiciye üçüncü taraf bloklar yüklemeyi desteklemiyor.</string>
+    <string name="site_settings_use_third_party_blocks_summary">Sitenize kurulu eklentilerden üçüncü taraf bloklar yükleyin.</string>
+    <string name="site_settings_use_third_party_blocks">Üçüncü Taraf Blokları Kullanın (Beta)</string>
+    <string name="site_settings_use_theme_styles_not_block_theme">Siteniz bir blok teması kullanmıyor. Düzenleyici içeriğinizle eşleşmeyebilir. İşler doğru görünmüyorsa bu ayarı devre dışı bırakın.</string>
+    <string name="site_settings_use_theme_styles_unsupported">Tema stili desteğini etkinleştirmek için sitenize Gutenberg Eklentisini yükleyin.</string>
+    <string name="new_stats_intro_footer">Yeni İstatistikleri İstatistikler ekranındaki taşma menüsünden kapatabilirsiniz.</string>
     <string name="new_stats_intro_trends_desc">Her metrik, önceki döneme kıyasla nasıl bir eğilim gösterdiğini sunar; böylece büyüyüp büyümediğinizi her zaman bilirsiniz.</string>
     <string name="new_stats_intro_trends_title">Eğilimlere Genel Bakış</string>
     <string name="new_stats_intro_on_par_desc">Cihazlar, UTM, konumlar, WordAds (yakında) — WordPress.com’da aldığınız verilerin aynısı.</string>
@@ -289,6 +375,7 @@ Language: tr
     <string name="support_screen_title">Destek</string>
     <string name="modern_support_description">Yeni modern destek deneyimini etkinleştirin</string>
     <string name="modern_support">Modern Destek</string>
+    <string name="site_settings_use_theme_styles_summary">Blok düzenleyicinin temanız gibi gözükmesini sağlayın.</string>
     <string name="site_settings_use_theme_styles">Tema Stillerini Kullan</string>
     <string name="error_deleting_term">Terim silinirken bir hata oluştu</string>
     <string name="error_saving_term">Terim kaydedilirken bir hata oluştu</string>
@@ -532,6 +619,7 @@ Language: tr
     <string name="page_upload_conflict_error">Bu sayfanın daha yeni olan bir revizyonu var</string>
     <string name="editor_updating_content">İçerik güncelleniyor</string>
     <string name="stats_subscribers">Aboneler</string>
+    <string name="stats_subscribers_subscriber_header">Abone</string>
     <string name="weekly_roundup_notification_text_views_and_comment">Geçen hafta %1$s görüntüleme oldu ve 1 yorum aldınız</string>
     <string name="weekly_roundup_notification_text_views_and_like">Geçen hafta %1$s görüntüleme oldu ve 1 beğeni aldınız</string>
     <string name="weekly_roundup_notification_text_views_like_comment">Geçen hafta %1$s görüntüleme oldu, 1 beğeni ve 1 yorum aldınız.</string>
@@ -3699,6 +3787,7 @@ Language: tr
     <string name="push_auth_expired">İsteğin süresi geçmiş. WordPress.com oturumu açıp yeniden deneyin.</string>
     <string name="ignore">Yok say</string>
     <string name="stats_insights_best_ever">Şimdiye kadar en iyi görüntülemeler</string>
+    <string name="stats_insights_most_popular_time">En popüler zaman</string>
     <string name="stats_insights_most_popular_day">En popüler gün</string>
     <string name="stats_insights_today">Bugünün istatistikleri</string>
     <string name="stats_insights_all_time">Tüm zamanlardaki yazılar, görüntülemeler ve ziyaretçiler</string>
@@ -3757,6 +3846,7 @@ Language: tr
     <string name="browse_our_faq_button">SSS sayfamıza bakın</string>
     <string name="reader_empty_comments">Henüz yorum yapılmadı</string>
     <string name="reader_label_like">Beğen</string>
+    <string name="reader_label_view_original">Orijinali gör</string>
     <string name="reader_label_comments_closed">Yorumlar kapalı</string>
     <string name="reader_title_photo_viewer">%1$d / %2$d</string>
     <string name="error_publish_empty_post">Boş bir yazı yayınlanamaz</string>

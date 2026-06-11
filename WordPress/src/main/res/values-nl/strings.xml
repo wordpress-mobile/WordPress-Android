@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2026-05-29 07:39:43+0000
+Translation-Revision-Date: 2026-06-03 17:42:24+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.3
 Language: nl
@@ -291,7 +291,7 @@ Language: nl
     <string name="track_network_requests">Netwerkaanvragen volgen</string>
     <string name="experimental_network_debugging_disable_error_message">Netwerk volging is momenteel ingeschakeld. Ga naar Hulp en schakel \"Netwerk aanvragen volgen\" uit voordat je deze functie uitschakelt.</string>
     <string name="experimental_network_debugging_disable_error_title">Tracking First uitschakelen</string>
-    <string name="experimental_network_debugging_description">Netwerkaanvraag volging gereedschap weergeven in het hulpscherm</string>
+    <string name="experimental_network_debugging_description">Netwerkaanvraag volgingstools weergeven in het hulpscherm</string>
     <string name="experimental_network_debugging">Netwerk debuggen</string>
     <string name="site_settings_tags_empty_subtitle">Waarom maak je er niet één om het makkelijker te maken om een bericht te taggen?</string>
     <string name="posts_published_empty_subtitle">Waarom niet een maken?</string>
@@ -364,7 +364,7 @@ Language: nl
     <string name="logs_screen_general_error">Er is iets fout gegaan…</string>
     <string name="logs_screen_empty_state">Geen logs beschikbaar</string>
     <string name="support_screen_user_avatar_content_description">Gebruiker avatar</string>
-    <string name="support_screen_application_logs_description">Geavanceerd gereedschap om problemen op te lossen</string>
+    <string name="support_screen_application_logs_description">Geavanceerde tool om problemen op te lossen</string>
     <string name="support_screen_application_logs_title">Applicatielogs</string>
     <string name="support_screen_diagnostics_section_title">Diagnostiek</string>
     <string name="support_screen_ask_happiness_engineers_description">Voor je moeilijke vragen. We zullen antwoorden via e-mail</string>
@@ -1555,7 +1555,7 @@ Language: nl
     <string name="gutenberg_native_each_block_has_its_own_settings_to_find_them_tap_on_a_block_its_s" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Elk blok heeft zijn eigen instellingen. Om ze te vinden, tik je op een blok. De instellingen zullen verschijnen in de toolbar onderaan het scherm.</string>
     <string name="gutenberg_native_build_layouts" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Bouw lay-outs</string>
     <string name="gutenberg_native_blocks_are_pieces_of_content_that_you_can_insert_rearrange_and_st" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Blokken zijn stukjes inhoud die je kunt invoegen, herschikken en stylen zonder dat je hoeft te weten hoe je moet coderen. Blokken zijn een gemakkelijke en moderne manier voor je om mooie lay-outs te maken.</string>
-    <string name="gutenberg_native_blocks_allow_you_to_focus_on_writing_your_content_knowing_that_al" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Blokken stellen je in staat je te concentreren op het schrijven van je inhoud, in de wetenschap dat alle opmaakhulpmiddelen die je nodig hebt aanwezig zijn om je te helpen je boodschap over te brengen.</string>
+    <string name="gutenberg_native_blocks_allow_you_to_focus_on_writing_your_content_knowing_that_al" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Blokken stellen je in staat je te concentreren op het schrijven van je inhoud, in de wetenschap dat alle opmaaktools die je nodig hebt aanwezig zijn om je te helpen je bericht over te brengen.</string>
     <string name="gutenberg_native_arrange_your_content_into_columns_add_call_to_action_buttons_and" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Rangschik je inhoud in kolommen, voeg Call To Action knoppen toe, en overlap afbeeldingen met tekst.</string>
     <string name="gutenberg_native_add_a_new_block_at_any_time_by_tapping_on_the_icon_in_the_toolbar" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Voeg op elk moment een nieuw blok toe, door te tikken op het + icoon in de toolbar links onderaan.</string>
     <string name="comment_batch_moderation_error">Eén of meer reacties modereren is mislukt</string>
@@ -2881,7 +2881,7 @@ Language: nl
     <string name="activity_log_icon">Activiteiten icoon</string>
     <string name="activity_log">Activiteitenlog</string>
     <string name="privacy_policy_read">Privacybeleid lezen</string>
-    <string name="third_party_policy_learn_more_caption">We gebruiken ook andere volgings gereedschap, waaronder een aantal van derden. Bekijk meer informatie over deze gereedschappen en hoe je ze kunt beheren.</string>
+    <string name="third_party_policy_learn_more_caption">We gebruiken ook andere volgingstools, waaronder een aantal van derden. Bekijk meer informatie over deze tools en hoe je ze kunt beheren.</string>
     <string name="third_party_policy_learn_more_header">Beleid van derden</string>
     <string name="privacy_policy_learn_more_caption">Deze informatie helpt ons om onze producten te verbeteren, marketing naar je relevanter te maken, je WordPress.com ervaring te personaliseren, en meer zoals gedetailleerd in ons privacybeleid.</string>
     <string name="privacy_policy_learn_more_header">Privacybeleid</string>

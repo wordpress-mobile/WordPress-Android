@@ -1,11 +1,93 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2026-04-02 09:55:54+0000
+Translation-Revision-Date: 2026-06-02 09:57:10+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.3
 Language: it
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="xmlrpc_disabled_bottom_sheet_body">Alcune funzionalità dell\'app richiedono XML-RPC. Attivalo sul sito per risolvere questo problema.</string>
+    <string name="xmlrpc_disabled_bottom_sheet_title">XML-RPC disattivato</string>
+    <string name="xmlrpc_disabled_card_text">XML-RPC disattivato\nAlcune funzionalità potrebbero essere limitate</string>
+    <string name="application_password_reauthentication_banner">Le credenziali del sito non sono valide. Tocca per rieseguire l\'autenticazione.</string>
+    <string name="application_password_app_name_wordpress">App WordPress per Android su %s</string>
+    <string name="application_password_app_name_jetpack">App Jetpack per Android su %s</string>
+    <string name="application_password_authorization_cancelled">Autorizzazione annullata</string>
+    <string name="reader_label_view">Visualizza il sito</string>
+    <string name="reader_excerpt_view_more">Visualizza altro</string>
+    <string name="reader_reading_time">%s min di lettura</string>
+    <string name="reader_discover_tab_latest">Più recenti</string>
+    <string name="reader_discover_tab_recommended">Consigliati</string>
+    <string name="stats_subscribers_graph_years">Anni</string>
+    <string name="stats_subscribers_graph_months">Mesi</string>
+    <string name="stats_subscribers_graph_weeks">Settimane</string>
+    <string name="stats_subscribers_graph_days">Giorni</string>
+    <string name="stats_emails_clicks_header">Clic</string>
+    <string name="stats_emails_opens_header">Aperture</string>
+    <string name="stats_emails_latest_header">Ultime e-mail</string>
+    <string name="stats_subscribers_since_header">A partire da</string>
+    <string name="stats_subscribers_90_days_ago">90 giorni fa</string>
+    <string name="stats_subscribers_60_days_ago">60 giorni fa</string>
+    <string name="stats_subscribers_30_days_ago">30 giorni fa</string>
+    <string name="stats_subscribers_current">Attuale</string>
+    <string name="stats_subscribers_emails">E-mail</string>
+    <string name="stats_subscribers_list">Iscritti</string>
+    <string name="stats_subscribers_graph">Grafico iscritti</string>
+    <string name="stats_subscribers_all_time">Iscritti di sempre</string>
+    <string name="stats_utm_campaign">Campagna</string>
+    <string name="stats_utm_source">Origine</string>
+    <string name="stats_utm_campaign_source_medium">Campagna / Origine / Medium</string>
+    <string name="stats_utm_source_medium">Origine / Medium</string>
+    <string name="stats_error_not_authenticated">Non autenticato</string>
+    <string name="stats_collapse_group">Comprimi</string>
+    <string name="stats_expand_group">Espandi</string>
+    <string name="stats_tag_type_category">Categoria</string>
+    <string name="stats_insights_tags_empty">Nessun tag o categoria trovati</string>
+    <string name="stats_insights_views_percent">%1$s%% di visualizzazioni</string>
+    <string name="stats_insights_most_popular_day_label">Giorno</string>
+    <string name="stats_insights_all_time_stats_title">Statistiche di sempre</string>
+    <string name="stats_insights_year_in_review_title">Panoramica di fine anno %s</string>
+    <string name="stats_insights_year_in_review">Panoramica di fine anno</string>
+    <string name="stats_insights_avg_words_per_post">Media parole per articolo</string>
+    <string name="stats_insights_avg_likes_per_post">Media \"Mi piace\" per articolo</string>
+    <string name="stats_insights_avg_comments_per_post">Media commenti per articolo</string>
+    <string name="stats_insights_total_posts">Articoli totali</string>
+    <string name="stats_insights_likes">Mi piace</string>
+    <string name="stats_insights_words">Parole</string>
+    <string name="post_rs_settings_show_password">Mostra password</string>
+    <string name="post_rs_settings_hide_password">Nascondi password</string>
+    <string name="post_rs_settings_saving">Salvataggio\u2026</string>
+    <string name="post_rs_settings_search_no_results">Nessun risultato trovato</string>
+    <string name="post_rs_settings_load_more">Carica altro\u2026</string>
+    <string name="post_rs_settings_term_create_error">Impossibile creare il termine</string>
+    <string name="post_rs_settings_search_authors">Cerca autori</string>
+    <string name="post_rs_settings_search_terms">Cerca</string>
+    <string name="post_rs_settings_no_parent">Nessuno</string>
+    <string name="post_rs_settings_parent_category">Categoria principale</string>
+    <string name="post_rs_settings_term_name_hint">Nome</string>
+    <string name="post_rs_settings_add_term">Aggiungi</string>
+    <string name="post_rs_settings_choose_from_device">Scegli da dispositivo</string>
+    <string name="post_rs_settings_choose_from_wp_media">Scegli dagli elementi multimediali di WP</string>
+    <string name="stats_new_stats_suggestion_negative">Forse dopo</string>
+    <string name="stats_new_stats_suggestion_positive">Prova</string>
+    <string name="stats_new_stats_suggestion_message">Abbiamo creato una nuova esperienza di Statistiche. Vuoi provare? Puoi sempre tornare alla versione precedente dal menu Statistiche.</string>
+    <string name="stats_new_stats_suggestion_title">Una nuova esperienza di Statistiche</string>
+    <string name="gutenberg_kit_announcement_learn_more">Scopri di più</string>
+    <string name="gutenberg_kit_announcement_maybe_later">Forse dopo</string>
+    <string name="gutenberg_kit_announcement_activate">Attiva</string>
+    <string name="gutenberg_kit_announcement_body_deadline">Entro la fine di giugno 2026 diventerà l\'editor predefinito per tutti. %1$s</string>
+    <string name="gutenberg_kit_announcement_body_intro">L\'editor a blocchi di nuova generazione è pronto e offre nuove funzionalità.</string>
+    <string name="gutenberg_kit_announcement_title">Sta arrivando un editor a blocchi migliore</string>
+    <string name="site_settings_gutenberg_kit_enabled_unsupported">Per provare il nuovo editor, passa prima all\'editor a blocchi.</string>
+    <string name="site_settings_gutenberg_kit_enabled_summary">Accedi all\'editor a blocchi di nuova generazione per questo sito</string>
+    <string name="site_settings_gutenberg_kit_enabled">Prova il nuovo editor</string>
+    <string name="site_connectivity_banner_text">Impossibile connettersi al tuo sito. Alcune funzionalità potrebbero essere limitate.</string>
+    <string name="site_settings_use_third_party_blocks_unsupported">Il tuo sito non supporta il caricamento di blocchi di terze parti nell\'editor.</string>
+    <string name="site_settings_use_third_party_blocks_summary">Carica blocchi di terze parti dai plugin installati sul tuo sito.</string>
+    <string name="site_settings_use_third_party_blocks">Usa blocchi di terze parti (Beta)</string>
+    <string name="site_settings_use_theme_styles_not_block_theme">Il tuo sito non usa un tema a blocchi. L\'editor potrebbe non corrispondere ai contenuti. Se qualcosa non va, disattiva questa impostazione.</string>
+    <string name="site_settings_use_theme_styles_unsupported">Installa il plugin Gutenberg sul tuo sito per attivare il supporto degli stili del tema.</string>
+    <string name="new_stats_intro_footer">Puoi disattivare le Nuove statistiche dal menu di overflow nella schermata Statistiche.</string>
     <string name="new_stats_intro_trends_desc">Ogni indicatore mostra l\'andamento rispetto al periodo precedente, così saprai sempre se stai crescendo.</string>
     <string name="new_stats_intro_trends_title">Tendenze a colpo d\'occhio</string>
     <string name="new_stats_intro_on_par_desc">Dispositivi, UTM, posizioni, WordAds (in arrivo): gli stessi dati di WordPress.com.</string>
@@ -286,6 +368,7 @@ Language: it
     <string name="support_screen_title">Supporto</string>
     <string name="modern_support_description">Attiva la nuova esperienza di supporto moderna</string>
     <string name="modern_support">Supporto moderno</string>
+    <string name="site_settings_use_theme_styles_summary">Rendi l\'editor a blocchi simile al tuo tema.</string>
     <string name="site_settings_use_theme_styles">Usa gli stili del tema</string>
     <string name="error_deleting_term">Si è verificato un errore durante l\'eliminazione del termine</string>
     <string name="error_saving_term">Si è verificato un errore durante il salvataggio del termine</string>
@@ -524,6 +607,7 @@ Language: it
     <string name="page_upload_conflict_error">C\'è una revisione di questa pagina che è più recente</string>
     <string name="editor_updating_content">Aggiornamento del contenuto</string>
     <string name="stats_subscribers">Abbonati</string>
+    <string name="stats_subscribers_subscriber_header">Iscritto</string>
     <string name="weekly_roundup_notification_text_views_and_comment">L\'ultima settimana hai avuto %1$s visualizzazioni e 1 commento</string>
     <string name="weekly_roundup_notification_text_views_and_like">L\'ultima settimana hai avuto %1$s visualizzazioni e 1 Mi piace</string>
     <string name="weekly_roundup_notification_text_views_like_comment">L\'ultima settimana hai avuto %1$s visualizzazioni, 1 Mi piace e 1 commento.</string>
@@ -3680,6 +3764,7 @@ Language: it
     <string name="push_auth_expired">La richiesta è scaduta. Accedi a WordPress.com per riprovare.</string>
     <string name="ignore">Ignora</string>
     <string name="stats_insights_best_ever">Le migliore visualizzazioni di sempre</string>
+    <string name="stats_insights_most_popular_time">Ora più popolare</string>
     <string name="stats_insights_most_popular_day">Giorno più popolare.</string>
     <string name="stats_insights_today">Statistiche odierne</string>
     <string name="stats_insights_all_time">Articoli, visualizzazioni e visitatori dall\'inizio</string>
@@ -3738,6 +3823,7 @@ Language: it
     <string name="browse_our_faq_button">Scorri le nostre FAQ</string>
     <string name="reader_empty_comments">Ancora nessun commento</string>
     <string name="reader_label_like">Like</string>
+    <string name="reader_label_view_original">Visualizza originale</string>
     <string name="reader_label_comments_closed">I commenti sono chiusi</string>
     <string name="reader_title_photo_viewer">%1$d di %2$d</string>
     <string name="error_publish_empty_post">Non è possibile pubblicare un articolo vuoto</string>
