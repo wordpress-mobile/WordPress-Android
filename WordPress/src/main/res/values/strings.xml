@@ -78,6 +78,7 @@
     <string name="refresh">Refresh</string>
     <string name="blog_not_found">An error occurred when accessing this blog</string>
     <string name="post_not_found">An error occurred when loading the post. Refresh your posts and try again.</string>
+    <string name="page_not_found">An error occurred when loading the page. Refresh your pages and try again.</string>
     <string name="sign_in">Log in</string>
     <string name="signing_out">Logging out…</string>
     <string name="sign_in_wpcom">Log in to WordPress.com</string>
@@ -1025,7 +1026,10 @@
     <string name="new_stats_intro_trends_title">Trends at a Glance</string>
     <string name="new_stats_intro_trends_desc">Every metric shows how it\'s trending compared to the previous period, so you always know if you\'re growing.</string>
     <string name="new_stats_intro_footer">You can turn off New Stats from the overflow menu in the Stats screen.</string>
+    <string name="experimental_rs_pages_list">New Pages List</string>
+    <string name="experimental_rs_pages_list_description">Show pages list in a more modern UI for WordPress.com and self-hosted sites with application passwords</string>
     <string name="post_rs_failed_to_load">Failed to load post</string>
+    <string name="page_rs_failed_to_load">Failed to load page</string>
     <string name="post_rs_confirm_trash_message">Are you sure you want to trash this post?</string>
     <string name="post_rs_confirm_delete_message">This will permanently delete this post. This action cannot be undone.</string>
     <string name="post_rs_trashed">Post moved to trash</string>
