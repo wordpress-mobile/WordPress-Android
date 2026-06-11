@@ -1,0 +1,2 @@
+26.8:
+A temporada dos bugs está chegando. Mas não se preocupe, temos trabalhado muito para acabar com eles, com diversas correções para melhorar ainda mais o uso do aplicativo. Esta versão contém o novo editor de blocos. Veja como ele funciona nas Configurações de qualquer site.
