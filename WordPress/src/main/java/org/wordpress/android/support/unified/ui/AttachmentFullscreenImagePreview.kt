@@ -42,6 +42,7 @@ import coil.request.ImageRequest
 import org.wordpress.android.R
 import org.wordpress.android.support.unified.ui.UnifiedSupportActivity.Companion.AUTHORIZATION_TAG
 import org.wordpress.android.ui.compose.theme.AppThemeM3
+import org.wordpress.android.util.WPUrlUtils
 
 @Composable
 fun AttachmentFullscreenImagePreview(
@@ -95,7 +96,11 @@ fun AttachmentFullscreenImagePreview(
                             .data(imageUrl)
                             .crossfade(true)
                             .apply {
-                                addHeader(AUTHORIZATION_TAG, authorizationHeader)
+                                // Only attach the WP.com auth token to trusted WP.com hosts, so the
+                                // bearer token is never leaked to an unexpected attachment host.
+                                if (WPUrlUtils.safeToAddWordPressComAuthToken(imageUrl)) {
+                                    addHeader(AUTHORIZATION_TAG, authorizationHeader)
+                                }
                             }
                             .build(),
                         contentDescription = attachmentImageDescription,

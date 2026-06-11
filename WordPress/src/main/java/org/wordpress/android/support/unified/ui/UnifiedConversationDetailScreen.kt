@@ -79,6 +79,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.ui.text.style.TextAlign
 import org.wordpress.android.R
+import org.wordpress.android.util.WPUrlUtils
 import org.wordpress.android.support.unified.util.formatRelativeTime
 import org.wordpress.android.support.unified.model.AttachmentState
 import org.wordpress.android.support.unified.model.AttachmentType
@@ -878,7 +879,11 @@ private fun UnifiedAttachmentItem(
                         }
                     }
                     .apply {
-                        addHeader(UnifiedSupportActivity.AUTHORIZATION_TAG, authorizationHeader)
+                        // Only attach the WP.com auth token to trusted WP.com hosts, so the bearer
+                        // token is never leaked to an unexpected attachment host.
+                        if (WPUrlUtils.safeToAddWordPressComAuthToken(attachment.url)) {
+                            addHeader(UnifiedSupportActivity.AUTHORIZATION_TAG, authorizationHeader)
+                        }
                     }
                     .build(),
                 contentDescription = attachment.filename,

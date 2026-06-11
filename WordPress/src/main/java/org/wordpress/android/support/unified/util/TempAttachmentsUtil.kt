@@ -8,6 +8,7 @@ import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.WPUrlUtils
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import java.io.File
@@ -104,10 +105,13 @@ class TempAttachmentsUtil @Inject constructor(
         try {
             tempFile = File.createTempFile("video_", ".mp4", application.cacheDir)
 
-            val request = Request.Builder()
-                .url(videoUrl)
-                .addHeader("Authorization", "Bearer ${accountStore.accessToken}")
-                .build()
+            val requestBuilder = Request.Builder().url(videoUrl)
+            // Only attach the WP.com auth token to trusted WP.com hosts, so the bearer token is
+            // never leaked to an unexpected attachment host.
+            if (WPUrlUtils.safeToAddWordPressComAuthToken(videoUrl)) {
+                requestBuilder.addHeader("Authorization", "Bearer ${accountStore.accessToken}")
+            }
+            val request = requestBuilder.build()
 
             val client = okHttpClient.newBuilder()
                 .connectTimeout(CONNECTION_TIMEOUT_MS.toLong(), TimeUnit.MILLISECONDS)
