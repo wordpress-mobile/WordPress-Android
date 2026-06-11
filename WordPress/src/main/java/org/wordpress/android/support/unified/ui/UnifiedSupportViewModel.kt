@@ -160,6 +160,10 @@ class UnifiedSupportViewModel @Inject constructor(
             val localMessages = conversation.messages + optimisticMessage
             _selectedConversation.value = conversation.copy(messages = localMessages)
 
+            // Clear the input immediately so the message reads as sent while we wait for the
+            // response. It is restored by rollbackInputMessage() if the send fails.
+            _replyFormState.value = _replyFormState.value.copy(message = "")
+
             var tempAttachments: List<File> = emptyList()
             try {
                 val isNewConversation = conversation.id == NEW_CONVERSATION_ID
@@ -194,11 +198,13 @@ class UnifiedSupportViewModel @Inject constructor(
                     }
                 } else {
                     rollbackOptimisticMessage(conversation, optimisticMessage.id)
+                    rollbackInputMessage(message)
                     _errorMessage.value = ErrorType.GENERAL
                     appLogWrapper.e(AppLog.T.SUPPORT, "Error replying to unified conversation: response is null")
                 }
             } catch (throwable: Throwable) {
                 rollbackOptimisticMessage(conversation, optimisticMessage.id)
+                rollbackInputMessage(message)
                 _errorMessage.value = ErrorType.GENERAL
                 appLogWrapper.e(
                     AppLog.T.SUPPORT,
@@ -259,6 +265,14 @@ class UnifiedSupportViewModel @Inject constructor(
             createdAt = Date(),
             attachments = emptyList()
         )
+
+    private fun rollbackInputMessage(message: String) {
+        // Restore the unsent text into the input, but only if the user hasn't started typing a
+        // new message while the send was in flight (so we don't clobber their newer text).
+        if (_replyFormState.value.message.isEmpty()) {
+            _replyFormState.value = _replyFormState.value.copy(message = message)
+        }
+    }
 
     private fun rollbackOptimisticMessage(original: UnifiedConversation, optimisticId: Long) {
         val current = _selectedConversation.value ?: return

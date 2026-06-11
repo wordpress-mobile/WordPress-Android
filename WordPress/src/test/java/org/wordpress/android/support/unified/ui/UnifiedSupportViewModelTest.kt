@@ -391,6 +391,38 @@ class UnifiedSupportViewModelTest : BaseUnitTest() {
         assertThat(viewModel.replyFormState.value).isEqualTo(ConversationReplyFormState())
     }
 
+    @Test
+    fun `sendReply restores the input message when the reply fails`() = test {
+        val conversation = createConversation(id = 1L)
+        selectConversation(conversation)
+        advanceUntilIdle()
+        viewModel.updateReplyMessage("My reply")
+        whenever(repository.replyToConversation(any(), any(), any(), any())).thenReturn(null)
+
+        viewModel.sendReply("My reply")
+        advanceUntilIdle()
+
+        assertThat(viewModel.replyFormState.value.message).isEqualTo("My reply")
+    }
+
+    @Test
+    fun `sendReply keeps a newly typed input message instead of restoring it on failure`() = test {
+        val conversation = createConversation(id = 1L)
+        selectConversation(conversation)
+        advanceUntilIdle()
+        viewModel.updateReplyMessage("Old reply")
+        // The user types a new message while the send is in flight, just before it fails.
+        whenever(repository.replyToConversation(any(), any(), any(), any())).then {
+            viewModel.updateReplyMessage("New draft")
+            null
+        }
+
+        viewModel.sendReply("Old reply")
+        advanceUntilIdle()
+
+        assertThat(viewModel.replyFormState.value.message).isEqualTo("New draft")
+    }
+
     // endregion
 
     // region Reply form state tests
