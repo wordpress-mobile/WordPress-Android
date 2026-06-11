@@ -167,13 +167,20 @@ class GutenbergKitEditorFragment : GutenbergKitEditorFragmentBase() {
         val gutenbergViewContainer =
             rootView!!.findViewById<ViewGroup>(R.id.gutenberg_view_container)
 
+        // The arguments hold the configuration with title and content stripped
+        // (see newInstance); re-populate them from the host's persisted post
+        // data, the same source the configuration was originally built from,
+        // kept fresh by the editor's autosave.
         val configuration = requireNotNull(
             BundleCompat.getParcelable(
                 requireArguments(),
                 ARG_GUTENBERG_KIT_SETTINGS,
                 EditorConfiguration::class.java
             )
-        )
+        ).toBuilder()
+            .setTitle(mEditorFragmentListener.persistedTitle)
+            .setContent(mEditorFragmentListener.persistedContent)
+            .build()
 
         val siteLocalId = requireArguments().getInt(ARG_SITE_LOCAL_ID)
         val gutenbergView = GutenbergView(
@@ -577,7 +584,17 @@ class GutenbergKitEditorFragment : GutenbergKitEditorFragmentBase() {
         ): GutenbergKitEditorFragment {
             val fragment = GutenbergKitEditorFragment()
             val args = Bundle()
-            args.putParcelable(ARG_GUTENBERG_KIT_SETTINGS, configuration)
+            // Strip title and content before storing the configuration in the
+            // arguments: Android parcels fragment arguments into the activity's
+            // saved instance state on every stop, and large post content can
+            // push the parcel past the ~1 MB binder limit, crashing with
+            // TransactionTooLargeException (WORDPRESS-ANDROID-2XAX).
+            // onCreateView restores both fields from the host's persisted post.
+            val strippedConfiguration = configuration.toBuilder()
+                .setTitle("")
+                .setContent("")
+                .build()
+            args.putParcelable(ARG_GUTENBERG_KIT_SETTINGS, strippedConfiguration)
             args.putInt(ARG_SITE_LOCAL_ID, site.id)
             fragment.arguments = args
             return fragment
