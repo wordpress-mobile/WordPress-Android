@@ -9,6 +9,8 @@ internal sealed interface PageRsListEvent {
         val page: PostModel
     ) : PageRsListEvent
 
+    data object CreateNewPage : PageRsListEvent
+
     data class ShowToast(
         val messageResId: Int
     ) : PageRsListEvent

@@ -84,8 +84,7 @@ sealed class MySiteCardAndItem(open val type: Type) {
                 val label: UiString.UiStringRes,
                 @DrawableRes val icon: Int,
                 val disableTint: Boolean = false,
-                val onClick: ListItemInteraction,
-                val showBetaBadge: Boolean = false
+                val onClick: ListItemInteraction
             )
         }
 
@@ -402,8 +401,7 @@ sealed class MySiteCardAndItem(open val type: Type) {
             val secondaryText: UiString? = null,
             val onClick: ListItemInteraction,
             val disablePrimaryIconTint: Boolean = false,
-            val listItemAction: ListItemAction,
-            val showBetaBadge: Boolean = false
+            val listItemAction: ListItemAction
         ) : Item(LIST_ITEM)
     }
 
