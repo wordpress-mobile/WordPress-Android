@@ -45,6 +45,8 @@ class AttachmentStateValidator @Inject constructor(
 
         AttachmentState(
             acceptedUris = currentAttachmentState.acceptedUris + validUris,
+            // rejectedUris reflects only the URIs skipped in this call; it is not accumulated
+            // across calls. The reply form re-validates these against freed space on removal.
             rejectedUris = skippedUris,
             currentTotalSizeBytes = currentTotalSize,
             rejectedTotalSizeBytes = calculateTotalSize(skippedUris)

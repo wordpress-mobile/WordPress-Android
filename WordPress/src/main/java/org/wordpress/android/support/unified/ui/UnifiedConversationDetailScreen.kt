@@ -38,7 +38,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
@@ -111,7 +110,6 @@ fun UnifiedConversationDetailScreen(
     onReplyBottomSheetVisibilityChange: (Boolean) -> Unit,
     attachmentActionsListener: AttachmentActionsListener,
 ) {
-    var messageText by rememberSaveable { mutableStateOf("") }
     var previewAttachment by remember { mutableStateOf<UnifiedAttachment?>(null) }
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     val scope = rememberCoroutineScope()
@@ -160,13 +158,13 @@ fun UnifiedConversationDetailScreen(
             ConversationBottomBar(
                 isBot = isBot,
                 canAcceptReply = conversation.canAcceptReply,
-                messageText = messageText,
+                // The chat input is backed by the shared reply form state so the typed text is
+                // retained on send failure (the VM clears it only on success) and survives
+                // configuration changes via the ViewModel.
+                messageText = replyFormState.message,
                 canSendMessage = !isSendingReply && !isLoading,
-                onMessageTextChange = { messageText = it },
-                onSendMessage = { message ->
-                    onSendReply(message, false)
-                    messageText = ""
-                },
+                onMessageTextChange = onReplyMessageChange,
+                onSendMessage = { message -> onSendReply(message, false) },
                 replyEnabled = !isLoading,
                 onReplyClick = { onReplyBottomSheetVisibilityChange(true) }
             )
@@ -852,8 +850,6 @@ private fun UnifiedAttachmentItem(
     onClick: () -> Unit,
     authorizationHeader: String,
 ) {
-    // Cache the auth header so it is not recomputed on every recomposition.
-
     val iconRes = when (attachment.type) {
         AttachmentType.Image -> R.drawable.ic_image_white_24dp
         AttachmentType.Video -> R.drawable.ic_video_camera_white_24dp

@@ -83,7 +83,11 @@ class UnifiedSupportActivity : AppCompatActivity() {
             }
         )
         observeNavigationEvents()
-        viewModel.init()
+        // The ViewModel survives configuration changes and keeps its loaded state, so only
+        // initialise (and load conversations) on the first creation, not on every recreation.
+        if (savedInstanceState == null) {
+            viewModel.init()
+        }
     }
 
     private fun observeNavigationEvents() {

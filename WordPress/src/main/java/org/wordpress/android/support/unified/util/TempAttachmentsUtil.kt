@@ -35,18 +35,18 @@ class TempAttachmentsUtil @Inject constructor(
     }
 
     @Suppress("TooGenericExceptionCaught")
-    suspend fun removeTempFiles(files: List<File>) = withContext(ioDispatcher) {
-        try {
-            var removed = files.isEmpty() // If empty, count them as removed
-            files.forEach { file ->
-                if (file.exists()) {
-                    removed = removed && file.delete()
+    suspend fun removeTempFiles(files: List<File>) {
+        withContext(ioDispatcher) {
+            try {
+                files.forEach { file ->
+                    if (file.exists()) {
+                        file.delete()
+                    }
                 }
+            } catch (e: Exception) {
+                appLogWrapper.e(AppLog.T.SUPPORT, "Error removing attachment temp files: " +
+                        e.stackTraceToString())
             }
-            removed
-        } catch (e: Exception) {
-            appLogWrapper.e(AppLog.T.SUPPORT, "Error removing attachment temp files temp files: " +
-                    e.stackTraceToString())
         }
     }
 
