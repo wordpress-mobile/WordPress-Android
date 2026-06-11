@@ -32,7 +32,15 @@ class TempAttachmentsUtil @Inject constructor(
 
     @Suppress("TooGenericExceptionCaught")
     suspend fun createTempFilesFrom(uris: List<Uri>): List<File> = withContext(ioDispatcher) {
-        uris.map{ it.toTempFile() }
+        val tempFiles = mutableListOf<File>()
+        try {
+            uris.forEach { uri -> tempFiles.add(uri.toTempFile()) }
+            tempFiles
+        } catch (e: Exception) {
+            // If any URI fails, delete the files already created so they don't linger in cacheDir.
+            removeTempFiles(tempFiles)
+            throw e
+        }
     }
 
     @Suppress("TooGenericExceptionCaught")
@@ -53,23 +61,22 @@ class TempAttachmentsUtil @Inject constructor(
 
     @Suppress("TooGenericExceptionCaught", "TooGenericExceptionThrown")
     private suspend fun Uri.toTempFile(): File = withContext(ioDispatcher) {
+        // Get file extension from MIME type or URI. Use createTempFile so each attachment gets a
+        // unique name even when several small files are copied within the same millisecond,
+        // avoiding collisions that would otherwise overwrite and send the same file twice.
+        val extension = getFileExtension()
+        val tempFile = File.createTempFile("support_attachment_", ".$extension", application.cacheDir)
         try {
-            val inputStream = application.contentResolver.openInputStream(this@toTempFile)
-                ?: throw Exception("Failed to open input stream for attachment")
-
-            // Get file extension from MIME type or URI. Use createTempFile so each attachment gets a
-            // unique name even when several small files are copied within the same millisecond,
-            // avoiding collisions that would otherwise overwrite and send the same file twice.
-            val extension = getFileExtension()
-            val tempFile = File.createTempFile("support_attachment_", ".$extension", application.cacheDir)
-
-            tempFile.outputStream().use { outputStream ->
-                inputStream.copyTo(outputStream)
-            }
-            inputStream.close()
+            // use {} on both streams so neither leaks if copyTo throws mid-copy.
+            application.contentResolver.openInputStream(this@toTempFile)?.use { inputStream ->
+                tempFile.outputStream().use { outputStream ->
+                    inputStream.copyTo(outputStream)
+                }
+            } ?: throw Exception("Failed to open input stream for attachment")
 
             tempFile
         } catch (e: Exception) {
+            tempFile.delete()
             appLogWrapper.e(AppLog.T.SUPPORT, "Error copying URI to temp file: ${e.stackTraceToString()}")
             throw e
         }

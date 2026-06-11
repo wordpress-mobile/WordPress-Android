@@ -7,6 +7,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.utils.AppLogWrapper
@@ -162,7 +163,7 @@ class UnifiedSupportViewModel @Inject constructor(
 
             // Clear the input immediately so the message reads as sent while we wait for the
             // response. It is restored by rollbackInputMessage() if the send fails.
-            _replyFormState.value = _replyFormState.value.copy(message = "")
+            _replyFormState.update { it.copy(message = "") }
 
             var tempAttachments: List<File> = emptyList()
             try {
@@ -219,33 +220,39 @@ class UnifiedSupportViewModel @Inject constructor(
 
     fun addReplyAttachments(uris: List<Uri>) {
         viewModelScope.launch(ioDispatcher) {
-            val currentState = _replyFormState.value.attachmentState
-            val newState = attachmentStateValidator.addAttachments(currentState, uris)
-            _replyFormState.value = _replyFormState.value.copy(attachmentState = newState)
+            // update {} applies the read-modify-write atomically so a concurrent removal or send-clear
+            // running on another dispatcher can't be lost. The validator is pure, so re-running the
+            // block on CAS contention is safe.
+            _replyFormState.update { current ->
+                val newState = attachmentStateValidator.addAttachments(current.attachmentState, uris)
+                current.copy(attachmentState = newState)
+            }
         }
     }
 
     fun removeReplyAttachment(uri: Uri) {
         viewModelScope.launch {
-            val currentState = _replyFormState.value.attachmentState
-            val removedState = attachmentStateValidator.removeAttachment(currentState, uri)
-            // Re-validate previously rejected uris against the space freed by the removal in the same
-            // pass, so the form state is published exactly once (no transient intermediate emission).
-            val revalidatedState = attachmentStateValidator.addAttachments(removedState, removedState.rejectedUris)
-            _replyFormState.value = _replyFormState.value.copy(attachmentState = revalidatedState)
+            _replyFormState.update { current ->
+                val removedState = attachmentStateValidator.removeAttachment(current.attachmentState, uri)
+                // Re-validate previously rejected uris against the space freed by the removal in the same
+                // pass, so the form state is published exactly once (no transient intermediate emission).
+                val revalidatedState =
+                    attachmentStateValidator.addAttachments(removedState, removedState.rejectedUris)
+                current.copy(attachmentState = revalidatedState)
+            }
         }
     }
 
     fun updateReplyMessage(message: String) {
-        _replyFormState.value = _replyFormState.value.copy(message = message)
+        _replyFormState.update { it.copy(message = message) }
     }
 
     fun updateReplyIncludeAppLogs(include: Boolean) {
-        _replyFormState.value = _replyFormState.value.copy(includeAppLogs = include)
+        _replyFormState.update { it.copy(includeAppLogs = include) }
     }
 
     fun updateReplyBottomSheetVisibility(isVisible: Boolean) {
-        _replyFormState.value = _replyFormState.value.copy(isBottomSheetVisible = isVisible)
+        _replyFormState.update { it.copy(isBottomSheetVisible = isVisible) }
     }
 
     fun clearReplyForm() {
@@ -275,8 +282,8 @@ class UnifiedSupportViewModel @Inject constructor(
     private fun rollbackInputMessage(message: String) {
         // Restore the unsent text into the input, but only if the user hasn't started typing a
         // new message while the send was in flight (so we don't clobber their newer text).
-        if (_replyFormState.value.message.isEmpty()) {
-            _replyFormState.value = _replyFormState.value.copy(message = message)
+        _replyFormState.update { current ->
+            if (current.message.isEmpty()) current.copy(message = message) else current
         }
     }
 
