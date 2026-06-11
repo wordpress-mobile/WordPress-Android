@@ -154,7 +154,6 @@ Language: he_IL
     <string name="post_rs_confirm_delete_message">הפעולה הזאת תמחק את הפוסט לצמיתות. לא ניתן לבטל פעולה זו.</string>
     <string name="post_rs_confirm_trash_message">בחרת לשלוח פוסט זה לפח - האם ההחלטה סופית?</string>
     <string name="post_rs_failed_to_load">טעינת הפוסט נכשלה</string>
-    <string name="beta_label">ביתא</string>
     <string name="stats_error_admin_url_unavailable">לא ניתן לפתוח את WP Admin לאתר זה</string>
     <string name="stats_error_parsing">הייתה בעיה בטעינת הנתונים. יש לנסות שוב</string>
     <string name="stats_error_network">שגיאת רשת. יש לבדוק את החיבור ולנסות שוב</string>

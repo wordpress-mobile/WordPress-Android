@@ -190,7 +190,6 @@ Language: de
     <string name="post_rs_confirm_delete_message">Dadurch wird dieser Beitrag endgültig gelöscht. Diese Aktion kann nicht rückgängig gemacht werden.</string>
     <string name="post_rs_confirm_trash_message">Möchtest du wirklich diesen Beitrag in den Papierkorb verschieben?</string>
     <string name="post_rs_failed_to_load">Beitrag konnte nicht geladen werden</string>
-    <string name="beta_label">Beta</string>
     <string name="stats_error_admin_url_unavailable">WP Admin kann für diese Website nicht geöffnet werden</string>
     <string name="stats_error_parsing">Beim Laden der Daten ist ein Problem aufgetreten. Bitte erneut versuchen</string>
     <string name="stats_error_network">Netzwerkfehler. Bitte überprüfe deine Verbindung und versuche es erneut</string>

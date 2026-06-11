@@ -147,7 +147,6 @@ Language: fr
     <string name="post_rs_confirm_delete_message">Cet article sera définitivement supprimé. Cette action est irréversible.</string>
     <string name="post_rs_confirm_trash_message">Voulez-vous vraiment déplacer cet article vers la corbeille ?</string>
     <string name="post_rs_failed_to_load">Échec du chargement de l’article</string>
-    <string name="beta_label">Bêta</string>
     <string name="stats_error_admin_url_unavailable">Impossible d’ouvrir WP Admin pour ce site</string>
     <string name="stats_error_parsing">Un problème est survenu lors du chargement des données. Veuillez réessayer.</string>
     <string name="stats_error_network">Erreur réseau. Veuillez vérifier votre connexion et réessayer.</string>
