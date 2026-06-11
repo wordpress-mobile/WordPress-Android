@@ -252,6 +252,12 @@ class UnifiedSupportViewModel @Inject constructor(
         _replyFormState.value = ConversationReplyFormState()
     }
 
+    // Clear any draft reply (text + attachments) when opening a conversation, so a draft started in
+    // one conversation never leaks into another regardless of how the previous one was exited.
+    override fun onConversationOpened() {
+        clearReplyForm()
+    }
+
     fun notifyGeneralError() {
         _errorMessage.value = ErrorType.GENERAL
     }

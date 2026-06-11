@@ -57,10 +57,11 @@ class TempAttachmentsUtil @Inject constructor(
             val inputStream = application.contentResolver.openInputStream(this@toTempFile)
                 ?: throw Exception("Failed to open input stream for attachment")
 
-            // Get file extension from MIME type or URI
+            // Get file extension from MIME type or URI. Use createTempFile so each attachment gets a
+            // unique name even when several small files are copied within the same millisecond,
+            // avoiding collisions that would otherwise overwrite and send the same file twice.
             val extension = getFileExtension()
-            val fileName = "support_attachment_${System.currentTimeMillis()}.$extension"
-            val tempFile = File(application.cacheDir, fileName)
+            val tempFile = File.createTempFile("support_attachment_", ".$extension", application.cacheDir)
 
             tempFile.outputStream().use { outputStream ->
                 inputStream.copyTo(outputStream)

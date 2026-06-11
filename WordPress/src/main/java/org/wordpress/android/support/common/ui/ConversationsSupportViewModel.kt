@@ -137,9 +137,18 @@ abstract class ConversationsSupportViewModel<ConversationType: Conversation>(
     }
 
     suspend fun setNewConversation(conversation: ConversationType) {
+        onConversationOpened()
         _selectedConversation.value = conversation
         _navigationEvents.emit(NavigationEvent.NavigateToConversationDetail)
     }
+
+    /**
+     * Hook invoked whenever a conversation is opened (either an existing one or a new one). Subclasses
+     * can override this to reset any per-conversation transient state (e.g. a draft reply form), so it
+     * does not leak into the next conversation regardless of how the user navigated away from the
+     * previous one (toolbar back, system back button, or back gesture).
+     */
+    protected open fun onConversationOpened() {}
 
     // Region navigation
 
@@ -152,6 +161,7 @@ abstract class ConversationsSupportViewModel<ConversationType: Conversation>(
                     return@launch
                 }
 
+                onConversationOpened()
                 _isLoadingConversation.value = true
                 _selectedConversation.value = conversation
                 _navigationEvents.emit(NavigationEvent.NavigateToConversationDetail)
