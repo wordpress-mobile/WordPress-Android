@@ -167,6 +167,35 @@ class PageRsTreeBuilderTest {
             .containsOnly(0)
     }
 
+    @Test
+    fun `self-parented page is appended as a flat row instead of dropped`() {
+        val pages = listOf(
+            page(1),
+            page(2, parentId = 2),
+        )
+
+        val rows = flattenToTree(pages)
+
+        assertThat(rows.map { it.page.remotePageId }).containsExactly(1L, 2L)
+        assertThat(rows.map { it.indentLevel }).containsOnly(0)
+    }
+
+    @Test
+    fun `pages in a parent cycle are appended as flat rows instead of dropped`() {
+        // 2 and 3 parent each other; 4's parent is inside the cycle
+        val pages = listOf(
+            page(1),
+            page(2, parentId = 3),
+            page(3, parentId = 2),
+            page(4, parentId = 2),
+        )
+
+        val rows = flattenToTree(pages)
+
+        assertThat(rows.map { it.page.remotePageId }).containsExactly(1L, 2L, 3L, 4L)
+        assertThat(rows.map { it.indentLevel }).containsOnly(0)
+    }
+
     private fun page(id: Long, parentId: Long = 0L) = PageRsUiModel(
         remotePageId = id,
         parentId = parentId,

@@ -43,14 +43,20 @@ internal fun flattenToTree(pages: List<PageRsUiModel>): List<PageRsListItem.Real
     val roots = pages.filter { it.parentId == 0L || it.parentId !in byId }
 
     val result = ArrayList<PageRsListItem.Real>(pages.size)
+    val visited = HashSet<Long>(pages.size)
     val stack = ArrayDeque<Pair<PageRsUiModel, Int>>()
     roots.asReversed().forEach { stack.addLast(it to 0) }
     while (stack.isNotEmpty()) {
         val (page, depth) = stack.removeLast()
+        if (!visited.add(page.remotePageId)) continue
         result.add(PageRsListItem.Real(page, minOf(depth, MAX_INDENT_LEVEL)))
         childrenByParent[page.remotePageId]?.asReversed()?.forEach { child ->
             stack.addLast(child to depth + 1)
         }
     }
+    // Pages caught in a parent cycle (self-parented, or in a loop of parent references) are
+    // unreachable from any root; append them as flat rows so corrupt data can't drop pages.
+    pages.filterNot { it.remotePageId in visited }
+        .forEach { result.add(PageRsListItem.Real(it)) }
     return result
 }

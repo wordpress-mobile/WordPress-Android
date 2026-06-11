@@ -529,7 +529,18 @@ internal class PagesRsListViewModel @Inject constructor(
     private suspend fun updateListInfoForTab(tab: PageRsListTab) {
         val collection = collections[tab] ?: return
 
-        val listInfo = withContext(Dispatchers.IO) { collection.listInfo() }
+        // Guard the Rust-backed call: an unhandled failure here (e.g. a late observer firing
+        // against a collection mid-teardown) would otherwise crash the app, since this runs in
+        // a scope with no exception handler.
+        @Suppress("TooGenericExceptionCaught")
+        val listInfo = try {
+            withContext(Dispatchers.IO) { collection.listInfo() }
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            AppLog.e(AppLog.T.PAGES, "Failed to read list info for tab $tab", e)
+            return
+        }
         val morePages = listInfo?.hasMorePages ?: false
         val fetchingFirstPage = listInfo?.state == ListState.FETCHING_FIRST_PAGE
         val isUserRefresh = userRefreshingTabs.contains(tab)
