@@ -35,6 +35,8 @@ import org.wordpress.android.ui.pagesrs.PageRsListItem
 import org.wordpress.android.ui.pagesrs.PageRsUiModel
 import org.wordpress.android.ui.postsrs.screens.PlaceholderItem
 
+// Follow-up: add the per-page actions menu (view, set as homepage, set parent, move to draft,
+// trash, etc.) that the legacy pages list offers on each row.
 @Composable
 internal fun PageRsRow(
     item: PageRsListItem,
