@@ -156,7 +156,6 @@ Language: ru
     <string name="post_rs_confirm_delete_message">Эта запись будет удалена навсегда. Это действие нельзя отменить.</string>
     <string name="post_rs_confirm_trash_message">Вы действительно хотите удалить эту запись?</string>
     <string name="post_rs_failed_to_load">Ошибка при загрузке записи</string>
-    <string name="beta_label">Бета-версия</string>
     <string name="stats_error_admin_url_unavailable">Не возможно открыть WP Admin на этом сайте</string>
     <string name="stats_error_parsing">При загрузке данных возникла ошибка. Повторите попытку</string>
     <string name="stats_error_network">Ошибка сети. Проверьте подключение и повторите попытку</string>
