@@ -72,8 +72,8 @@ private fun PageContentItem(
         modifier = modifier
             .fillMaxWidth()
             .padding(
-                start = (16 + indentLevel * INDENT_STEP_DP).dp,
-                end = 16.dp,
+                start = (H_PADDING_DP + indentLevel * INDENT_STEP_DP).dp,
+                end = H_PADDING_DP.dp,
                 top = 4.dp,
                 bottom = 4.dp
             ),
@@ -194,6 +194,7 @@ private fun PageRsListItem.Virtual.Kind.labelResId(): Int = when (this) {
 }
 
 private const val INDENT_STEP_DP = 16
+private const val H_PADDING_DP = 16
 
 @Preview(showBackground = true)
 @Composable

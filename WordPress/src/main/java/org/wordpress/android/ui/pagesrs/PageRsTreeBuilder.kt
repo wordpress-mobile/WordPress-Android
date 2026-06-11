@@ -26,7 +26,7 @@ internal fun buildRows(
     val homepage = pageOnFront.takeIf { it != 0L }?.let { byId[it] }
     val postsPage = pageForPosts.takeIf { it != 0L }?.let { byId[it] }
     val hiddenIds = setOfNotNull(homepage?.remotePageId, postsPage?.remotePageId)
-    val visible = if (hiddenIds.isEmpty()) pages else pages.filterNot { it.remotePageId in hiddenIds }
+    val visible = pages.filterNot { it.remotePageId in hiddenIds }
     val tree = flattenToTree(visible)
     return buildList {
         homepage?.let { add(PageRsListItem.Virtual(PageRsListItem.Virtual.Kind.HOMEPAGE, it)) }
@@ -57,6 +57,6 @@ internal fun flattenToTree(pages: List<PageRsUiModel>): List<PageRsListItem.Real
     // Pages caught in a parent cycle (self-parented, or in a loop of parent references) are
     // unreachable from any root; append them as flat rows so corrupt data can't drop pages.
     pages.filterNot { it.remotePageId in visited }
-        .forEach { result.add(PageRsListItem.Real(it)) }
+        .mapTo(result) { PageRsListItem.Real(it) }
     return result
 }
