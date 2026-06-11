@@ -292,8 +292,7 @@ class SiteListItemBuilder @Inject constructor(
                 R.drawable.ic_gridicons_menus,
                 UiStringRes(R.string.menus),
                 onClick = ListItemInteraction.create(ListItemAction.MENUS, onClick),
-                listItemAction = ListItemAction.MENUS,
-                showBetaBadge = true
+                listItemAction = ListItemAction.MENUS
             )
         } else {
             null
