@@ -48,7 +48,7 @@ import javax.inject.Inject
 @HiltViewModel
 @Suppress("LargeClass", "LongParameterList")
 internal class PagesRsListViewModel @Inject constructor(
-    selectedSiteRepository: SelectedSiteRepository,
+    private val selectedSiteRepository: SelectedSiteRepository,
     private val serviceProvider: WpServiceProvider,
     private val restClient: PostRsRestClient,
     private val resourceProvider: ResourceProvider,
@@ -469,11 +469,15 @@ internal class PagesRsListViewModel @Inject constructor(
             val applyHierarchy = tab == PageRsListTab.PUBLISHED &&
                 !isSearch &&
                 _authorFilter.value != AuthorFilterSelection.ME
+            // Re-read the site here: homepage settings can change while this screen is alive,
+            // and the construction-time [site] snapshot would pin stale pageOnFront /
+            // pageForPosts values onto the virtual rows.
+            val currentSite = selectedSiteRepository.getSelectedSite() ?: site
             val rows = buildRows(
                 pages = uiModels,
                 applyHierarchy = applyHierarchy,
-                pageOnFront = site?.pageOnFront ?: 0L,
-                pageForPosts = site?.pageForPosts ?: 0L
+                pageOnFront = currentSite?.pageOnFront ?: 0L,
+                pageForPosts = currentSite?.pageForPosts ?: 0L
             )
             updateTabUiState(tab) {
                 copy(pages = rows, isLoading = false, error = null, isAuthError = false)
