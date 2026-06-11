@@ -155,7 +155,6 @@ Language: cs_CZ
     <string name="post_rs_confirm_delete_message">Tím trvale smažete tento příspěvek. Tuto akci nelze vrátit zpět.</string>
     <string name="post_rs_confirm_trash_message">Opravdu chcete přesunout tento příspěvek do koše?</string>
     <string name="post_rs_failed_to_load">Načtení příspěvku se nezdařilo</string>
-    <string name="beta_label">Beta</string>
     <string name="stats_error_admin_url_unavailable">Nelze otevřít WP Admin pro tento web</string>
     <string name="stats_error_parsing">Při načítání dat došlo k chybě. Zkuste to prosím znovu</string>
     <string name="stats_error_network">Chyba sítě. Zkontrolujte připojení a zkuste to znovu</string>

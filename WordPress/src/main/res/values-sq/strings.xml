@@ -154,7 +154,6 @@ Language: sq_AL
     <string name="post_rs_confirm_delete_message">Kjo do të fshijë përgjithnjë këtë postim. Ky veprim s’mund të zhbëhet.</string>
     <string name="post_rs_confirm_trash_message">Jeni i sigurt se doni ta fshini këtë postim?</string>
     <string name="post_rs_failed_to_load">S’u arrit të ngarkohet postim</string>
-    <string name="beta_label">Beta</string>
     <string name="stats_error_admin_url_unavailable">S’arrihet të hape Përgjegjës WP për këtë sajt</string>
     <string name="stats_error_parsing">Pati një problem me ngarkimin e të dhënave. Ju lutemi, riprovoni.</string>
     <string name="stats_error_network">Gabim rrjeti. Ju lutemi, kontrolloni lidhjen tuaj dhe riprovoni.</string>

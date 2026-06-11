@@ -132,6 +132,7 @@ public class AppPrefs {
         GUTENBERG_KIT_ANNOUNCEMENT_DEFERRED_UNTIL,
 
         POST_LIST_AUTHOR_FILTER,
+        PAGES_LIST_AUTHOR_FILTER,
         POST_LIST_VIEW_LAYOUT_TYPE,
 
         // Widget settings
@@ -1156,6 +1157,15 @@ public class AppPrefs {
 
     public static void setAuthorFilterSelection(@NonNull AuthorFilterSelection selection) {
         setLong(DeletablePrefKey.POST_LIST_AUTHOR_FILTER, selection.getId());
+    }
+
+    @NonNull public static AuthorFilterSelection getPagesAuthorFilterSelection() {
+        long id = getLong(DeletablePrefKey.PAGES_LIST_AUTHOR_FILTER, AuthorFilterSelection.getDefaultValue().getId());
+        return AuthorFilterSelection.fromId(id);
+    }
+
+    public static void setPagesAuthorFilterSelection(@NonNull AuthorFilterSelection selection) {
+        setLong(DeletablePrefKey.PAGES_LIST_AUTHOR_FILTER, selection.getId());
     }
 
     public static void setStatsWidgetSelectedSiteId(long siteId, int appWidgetId) {

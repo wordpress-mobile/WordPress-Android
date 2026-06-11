@@ -155,7 +155,6 @@ Language: es_CO
     <string name="post_rs_confirm_delete_message">Esto eliminará permanentemente esta entrada. Esta acción no se puede deshacer.</string>
     <string name="post_rs_confirm_trash_message">¿Seguro que quieres enviar a la papelera esta entrada?</string>
     <string name="post_rs_failed_to_load">No se ha podido cargar la entrada</string>
-    <string name="beta_label">Versión beta</string>
     <string name="stats_error_admin_url_unavailable">No se puede abrir WP Admin para este sitio</string>
     <string name="stats_error_parsing">Se ha producido un problema al cargar los datos. Inténtalo de nuevo.</string>
     <string name="stats_error_network">Error de red. Comprueba la conexión e inténtalo de nuevo</string>

@@ -716,6 +716,8 @@ public final class AnalyticsTracker {
         FEATURE_ANNOUNCEMENT_FIND_OUT_MORE_TAPPED("feature_announcement_button_tapped"),
         FEATURE_ANNOUNCEMENT_CLOSE_DIALOG_BUTTON_TAPPED("feature_announcement_button_tapped"),
         PAGES_LIST_AUTHOR_FILTER_CHANGED,
+        PAGES_LIST_SEARCH_ACCESSED,
+        PAGES_LIST_ITEM_SELECTED,
         EDITOR_GUTENBERG_UNSUPPORTED_BLOCK_WEBVIEW_SHOWN("gutenberg_unsupported_block_webview_shown"),
         EDITOR_GUTENBERG_UNSUPPORTED_BLOCK_WEBVIEW_CLOSED("gutenberg_unsupported_block_webview_closed"),
         SELECT_INTERESTS_SHOWN,

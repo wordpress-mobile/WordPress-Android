@@ -153,7 +153,6 @@ Language: it
     <string name="post_rs_confirm_delete_message">Questo articolo verrà eliminato definitivamente. Questa azione non può essere annullata.</string>
     <string name="post_rs_confirm_trash_message">Sei sicuro di voler spostare questo articolo nel cestino?</string>
     <string name="post_rs_failed_to_load">Impossibile caricare l\'articolo</string>
-    <string name="beta_label">Beta</string>
     <string name="stats_error_admin_url_unavailable">Impossibile aprire WP Admin per questo sito</string>
     <string name="stats_error_parsing">Si è verificato un problema durante il caricamento dei dati. Riprova</string>
     <string name="stats_error_network">Errore di rete. Controlla la connessione e riprova</string>

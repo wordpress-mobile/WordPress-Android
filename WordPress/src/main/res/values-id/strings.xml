@@ -151,7 +151,6 @@ Language: id
     <string name="post_rs_confirm_delete_message">Tindakan ini akan menghapus pos secara permanen. Tindakan ini tidak dapat dibatalkan.</string>
     <string name="post_rs_confirm_trash_message">Anda yakin ingin membuang pos ini?</string>
     <string name="post_rs_failed_to_load">Gagal memuat pos</string>
-    <string name="beta_label">Beta</string>
     <string name="stats_error_admin_url_unavailable">Tidak dapat membuka WP Admin untuk situs ini</string>
     <string name="stats_error_parsing">Terjadi masalah saat memuat data. Coba lagi</string>
     <string name="stats_error_network">Error jaringan. Periksa koneksi Anda dan coba lagi</string>

@@ -155,7 +155,6 @@ Language: ro
     <string name="post_rs_confirm_delete_message">Asta va șterge definitiv acest articol. Această acțiune nu poate fi anulată.</string>
     <string name="post_rs_confirm_trash_message">Sigur vrei să arunci la gunoi acest articol?</string>
     <string name="post_rs_failed_to_load">Încărcarea articolului a eșuat</string>
-    <string name="beta_label">Beta</string>
     <string name="stats_error_admin_url_unavailable">Nu pot să deschid administrarea WP pentru acest site</string>
     <string name="stats_error_parsing">A fost o problemă la încărcarea datelor. Te rog să încerci din nou</string>
     <string name="stats_error_network">Eroare în rețea. Te rog să verifici conexiunea și să încerci din nou.</string>
