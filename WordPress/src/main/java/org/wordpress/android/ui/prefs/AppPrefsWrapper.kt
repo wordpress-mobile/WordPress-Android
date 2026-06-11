@@ -53,6 +53,10 @@ class AppPrefsWrapper @Inject constructor(val buildConfigWrapper: BuildConfigWra
         get() = AppPrefs.getAuthorFilterSelection()
         set(value) = AppPrefs.setAuthorFilterSelection(value)
 
+    var pagesListAuthorSelection: AuthorFilterSelection
+        get() = AppPrefs.getPagesAuthorFilterSelection()
+        set(value) = AppPrefs.setPagesAuthorFilterSelection(value)
+
     var systemNotificationsEnabled: Boolean
         get() = AppPrefs.getSystemNotificationsEnabled()
         set(value) = AppPrefs.setSystemNotificationsEnabled(value)
