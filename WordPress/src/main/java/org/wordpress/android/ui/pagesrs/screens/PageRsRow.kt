@@ -95,15 +95,11 @@ private fun PageContentItem(
             }
             Column(modifier = Modifier.fillMaxWidth()) {
                 val virtualLabel = virtualKind?.let { stringResource(it.labelResId()) }
-                val statusLabel = if (page.statusLabelResId != 0) {
-                    stringResource(page.statusLabelResId)
-                } else {
-                    null
-                }
+                val statusLabel = page.statusLabelResId.takeIf { it != 0 }?.let { stringResource(it) }
                 val bullet = stringResource(R.string.bullet_with_spaces)
                 val headerText = listOfNotNull(
                     virtualLabel,
-                    statusLabel?.takeIf { it.isNotBlank() },
+                    statusLabel,
                     page.date.takeIf { it.isNotBlank() },
                     page.authorDisplayName?.takeIf { it.isNotBlank() }
                 ).joinToString(bullet)
