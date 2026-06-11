@@ -9,6 +9,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.channels.Channel
@@ -218,29 +219,42 @@ internal class PagesRsListViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Creates the observable collection for [tab]. If the calling job is cancelled while the
+     * creation call is in flight, [withContext] discards its result and rethrows, so the
+     * orphaned collection is closed here before it can leak.
+     */
     private suspend fun createCollection(
         site: SiteModel,
         tab: PageRsListTab
-    ): ObservableMetadataCollection = withContext(Dispatchers.IO) {
-        val service = serviceProvider.getService(site)
-        val query = _searchQuery.value
-        val authorIds = if (_authorFilter.value == AuthorFilterSelection.ME) {
-            accountStore.account?.userId?.let { listOf(it) } ?: emptyList()
-        } else {
-            emptyList()
+    ): ObservableMetadataCollection {
+        var created: ObservableMetadataCollection? = null
+        try {
+            return withContext(Dispatchers.IO) {
+                val service = serviceProvider.getService(site)
+                val query = _searchQuery.value
+                val authorIds = if (_authorFilter.value == AuthorFilterSelection.ME) {
+                    accountStore.account?.userId?.let { listOf(it) } ?: emptyList()
+                } else {
+                    emptyList()
+                }
+                val filter = PostListFilter(
+                    status = if (query.isNotBlank()) ALL_STATUSES else tab.statuses,
+                    order = tab.order,
+                    orderby = tab.orderBy,
+                    search = query.ifBlank { null },
+                    author = authorIds
+                )
+                service.posts().getObservablePostMetadataCollectionWithEditContext(
+                    endpointType = PostEndpointType.Pages,
+                    filter = filter,
+                    perPage = PAGE_SIZE.toUInt()
+                ).also { created = it }
+            }
+        } catch (e: CancellationException) {
+            withContext(NonCancellable + Dispatchers.IO) { created?.close() }
+            throw e
         }
-        val filter = PostListFilter(
-            status = if (query.isNotBlank()) ALL_STATUSES else tab.statuses,
-            order = tab.order,
-            orderby = tab.orderBy,
-            search = query.ifBlank { null },
-            author = authorIds
-        )
-        service.posts().getObservablePostMetadataCollectionWithEditContext(
-            endpointType = PostEndpointType.Pages,
-            filter = filter,
-            perPage = PAGE_SIZE.toUInt()
-        )
     }
 
     private fun registerObservers(tab: PageRsListTab, collection: ObservableMetadataCollection) {
