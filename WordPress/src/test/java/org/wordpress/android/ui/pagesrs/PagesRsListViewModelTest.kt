@@ -22,7 +22,6 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.PostStore
-import org.wordpress.android.fluxc.store.SiteOptionsStore
 import org.wordpress.android.ui.blaze.BlazeFeatureUtils
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.posts.AuthorFilterSelection
@@ -40,7 +39,7 @@ internal class PagesRsListViewModelTest : BaseUnitTest(StandardTestDispatcher())
     @Mock lateinit var restClient: PostRsRestClient
     @Mock lateinit var resourceProvider: ResourceProvider
     @Mock lateinit var postStore: PostStore
-    @Mock lateinit var siteOptionsStore: SiteOptionsStore
+    @Mock lateinit var homepageSettings: PageRsHomepageSettings
     @Mock lateinit var blazeFeatureUtils: BlazeFeatureUtils
     @Mock lateinit var fluxCBridge: PageRsFluxCBridge
     @Mock lateinit var networkUtilsWrapper: NetworkUtilsWrapper
@@ -73,7 +72,7 @@ internal class PagesRsListViewModelTest : BaseUnitTest(StandardTestDispatcher())
         restClient = restClient,
         resourceProvider = resourceProvider,
         postStore = postStore,
-        siteOptionsStore = siteOptionsStore,
+        homepageSettings = homepageSettings,
         blazeFeatureUtils = blazeFeatureUtils,
         fluxCBridge = fluxCBridge,
         networkUtilsWrapper = networkUtilsWrapper,
@@ -362,6 +361,8 @@ internal class PagesRsListViewModelTest : BaseUnitTest(StandardTestDispatcher())
 
     @Test
     fun `onPageMenuAction SET_AS_HOMEPAGE without static homepage shows snackbar`() = test {
+        whenever(homepageSettings.setHomepage(site, 42L))
+            .thenReturn(PageRsHomepageSettings.Result.StaticHomepageDisabled)
         whenever(resourceProvider.getString(R.string.page_cannot_set_homepage))
             .thenReturn("Cannot set homepage")
         val viewModel = createViewModel()
@@ -376,6 +377,8 @@ internal class PagesRsListViewModelTest : BaseUnitTest(StandardTestDispatcher())
 
     @Test
     fun `onPageMenuAction SET_AS_POSTS_PAGE without static homepage shows snackbar`() = test {
+        whenever(homepageSettings.setPostsPage(site, 42L))
+            .thenReturn(PageRsHomepageSettings.Result.StaticHomepageDisabled)
         whenever(resourceProvider.getString(R.string.page_cannot_set_posts_page))
             .thenReturn("Cannot set posts page")
         val viewModel = createViewModel()
@@ -384,6 +387,38 @@ internal class PagesRsListViewModelTest : BaseUnitTest(StandardTestDispatcher())
             viewModel.onPageMenuAction(42L, PageRsMenuAction.SET_AS_POSTS_PAGE)
 
             assertThat(awaitItem().message).isEqualTo("Cannot set posts page")
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
+    fun `onPageMenuAction SET_AS_HOMEPAGE success shows confirmation snackbar`() = test {
+        whenever(homepageSettings.setHomepage(site, 42L))
+            .thenReturn(PageRsHomepageSettings.Result.Success)
+        whenever(resourceProvider.getString(R.string.page_homepage_successfully_updated))
+            .thenReturn("Homepage updated")
+        val viewModel = createViewModel()
+
+        viewModel.snackbarMessages.test {
+            viewModel.onPageMenuAction(42L, PageRsMenuAction.SET_AS_HOMEPAGE)
+
+            assertThat(awaitItem().message).isEqualTo("Homepage updated")
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
+    fun `onPageMenuAction SET_AS_HOMEPAGE failure shows error snackbar`() = test {
+        whenever(homepageSettings.setHomepage(site, 42L))
+            .thenReturn(PageRsHomepageSettings.Result.Error("403"))
+        whenever(resourceProvider.getString(R.string.page_homepage_update_failed))
+            .thenReturn("Homepage update failed")
+        val viewModel = createViewModel()
+
+        viewModel.snackbarMessages.test {
+            viewModel.onPageMenuAction(42L, PageRsMenuAction.SET_AS_HOMEPAGE)
+
+            assertThat(awaitItem().message).isEqualTo("Homepage update failed")
             cancelAndIgnoreRemainingEvents()
         }
     }

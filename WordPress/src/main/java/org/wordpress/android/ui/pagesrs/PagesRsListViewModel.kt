@@ -24,12 +24,10 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
-import org.wordpress.android.fluxc.model.SiteHomepageSettings.ShowOnFront
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.post.PostStatus as FluxCPostStatus
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.PostStore
-import org.wordpress.android.fluxc.store.SiteOptionsStore
 import org.wordpress.android.ui.blaze.BlazeFeatureUtils
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.posts.AuthorFilterSelection
@@ -60,7 +58,7 @@ internal class PagesRsListViewModel @Inject constructor(
     private val restClient: PostRsRestClient,
     private val resourceProvider: ResourceProvider,
     private val postStore: PostStore,
-    private val siteOptionsStore: SiteOptionsStore,
+    private val homepageSettings: PageRsHomepageSettings,
     private val blazeFeatureUtils: BlazeFeatureUtils,
     private val fluxCBridge: PageRsFluxCBridge,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
@@ -654,58 +652,55 @@ internal class PagesRsListViewModel @Inject constructor(
 
     private fun setAsHomepage(site: SiteModel, pageId: Long) {
         if (!checkNetwork()) return
-        if (site.showOnFront != ShowOnFront.PAGE.value) {
-            _snackbarMessages.trySend(
-                SnackbarMessage(resourceProvider.getString(R.string.page_cannot_set_homepage))
-            )
-            return
-        }
         updateHomepageSettings(
             successMessageResId = R.string.page_homepage_successfully_updated,
+            cannotSetMessageResId = R.string.page_cannot_set_homepage,
             errorMessageResId = R.string.page_homepage_update_failed
         ) {
-            siteOptionsStore.updatePageOnFront(site, pageId)
+            homepageSettings.setHomepage(site, pageId)
         }
     }
 
     private fun setAsPostsPage(site: SiteModel, pageId: Long) {
         if (!checkNetwork()) return
-        if (site.showOnFront != ShowOnFront.PAGE.value) {
-            _snackbarMessages.trySend(
-                SnackbarMessage(resourceProvider.getString(R.string.page_cannot_set_posts_page))
-            )
-            return
-        }
         updateHomepageSettings(
             successMessageResId = R.string.page_posts_page_successfully_updated,
+            cannotSetMessageResId = R.string.page_cannot_set_posts_page,
             errorMessageResId = R.string.page_posts_page_update_failed
         ) {
-            siteOptionsStore.updatePageForPosts(site, pageId)
+            homepageSettings.setPostsPage(site, pageId)
         }
     }
 
     /**
-     * Runs a homepage-settings update via [SiteOptionsStore], which mutates the shared
-     * [SiteModel] in place on success. The published tab is then re-rendered so the
-     * virtual Homepage / Posts Page rows reflect the new assignment.
+     * Runs a homepage-settings update via [PageRsHomepageSettings], which syncs the shared
+     * [SiteModel] on success. The published tab is then re-rendered so the virtual
+     * Homepage / Posts Page rows reflect the new assignment.
      */
     private fun updateHomepageSettings(
         successMessageResId: Int,
+        cannotSetMessageResId: Int,
         errorMessageResId: Int,
-        operation: suspend () -> SiteOptionsStore.HomepageUpdatedPayload
+        operation: suspend () -> PageRsHomepageSettings.Result
     ) {
         viewModelScope.launch {
-            val result = withContext(Dispatchers.IO) { operation() }
-            if (result.isError) {
-                AppLog.d(AppLog.T.PAGES, "${result.error.type}: ${result.error.message}")
-                _snackbarMessages.trySend(
-                    SnackbarMessage(resourceProvider.getString(errorMessageResId))
-                )
-            } else {
-                _snackbarMessages.trySend(
-                    SnackbarMessage(resourceProvider.getString(successMessageResId))
-                )
-                launchCollectionJob { loadItemsForTab(PageRsListTab.PUBLISHED) }
+            when (val result = withContext(Dispatchers.IO) { operation() }) {
+                is PageRsHomepageSettings.Result.Success -> {
+                    _snackbarMessages.trySend(
+                        SnackbarMessage(resourceProvider.getString(successMessageResId))
+                    )
+                    launchCollectionJob { loadItemsForTab(PageRsListTab.PUBLISHED) }
+                }
+                is PageRsHomepageSettings.Result.StaticHomepageDisabled ->
+                    _snackbarMessages.trySend(
+                        SnackbarMessage(resourceProvider.getString(cannotSetMessageResId))
+                    )
+                is PageRsHomepageSettings.Result.Error -> {
+                    AppLog.w(AppLog.T.PAGES, "Homepage settings update failed: ${result.message}")
+                    _snackbarMessages.trySend(
+                        SnackbarMessage(resourceProvider.getString(errorMessageResId))
+                    )
+                }
             }
         }
     }
@@ -924,13 +919,18 @@ internal class PagesRsListViewModel @Inject constructor(
     private fun PageRsListItem.withMenuActions(site: SiteModel?): PageRsListItem {
         val pageOnFront = site?.pageOnFront ?: 0L
         val pageForPosts = site?.pageForPosts ?: 0L
+        // WP.com capabilities are synced reliably; for self-hosted application-password
+        // sites they often aren't, so the actions are offered and the server enforces
+        // permissions (a 403 surfaces as the update-failed snackbar).
+        val canManageHomepage = site != null &&
+            (site.hasCapabilityManageOptions || !site.isUsingWpComRestApi)
         val actions = computePageMenuActions(
             status = page.status,
             isHomepage = pageOnFront != 0L && page.remotePageId == pageOnFront,
             isPostsPage = pageForPosts != 0L && page.remotePageId == pageForPosts,
             hasPassword = page.hasPassword,
             isBlazeEligibleSite = site != null && blazeFeatureUtils.isSiteBlazeEligible(site),
-            canManageHomepage = site?.isUsingWpComRestApi == true
+            canManageHomepage = canManageHomepage
         )
         if (actions == page.actions) return this
         val updated = page.copy(actions = actions)
