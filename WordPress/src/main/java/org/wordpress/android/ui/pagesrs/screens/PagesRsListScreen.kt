@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.pagesrs.screens
 
 import androidx.activity.compose.BackHandler
+import androidx.annotation.StringRes
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -26,6 +27,7 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.outlined.Person
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -42,6 +44,7 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TooltipAnchorPosition
@@ -76,7 +79,11 @@ import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.withIndex
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
+import org.wordpress.android.ui.pagesrs.PageRsConfirmationDialogState
+import org.wordpress.android.ui.pagesrs.PageRsListConfirmation
 import org.wordpress.android.ui.pagesrs.PageRsListTab
+import org.wordpress.android.ui.pagesrs.PageRsMenuAction
+import org.wordpress.android.ui.pagesrs.PageRsParentPickerState
 import org.wordpress.android.ui.pagesrs.PageTabUiState
 import org.wordpress.android.ui.pagesrs.PagesRsListViewModel.Companion.MIN_SEARCH_QUERY_LENGTH
 import org.wordpress.android.ui.posts.AuthorFilterSelection
@@ -93,6 +100,8 @@ internal fun PagesRsListScreen(
     authorFilter: AuthorFilterSelection,
     isAuthorFilterSupported: Boolean,
     avatarUrl: String?,
+    confirmationDialog: PageRsConfirmationDialogState,
+    parentPicker: PageRsParentPickerState?,
     snackbarMessages: Flow<SnackbarMessage> = emptyFlow(),
     onSearchOpen: () -> Unit,
     onSearchQueryChanged: (String, PageRsListTab) -> Unit,
@@ -104,6 +113,9 @@ internal fun PagesRsListScreen(
     onLoadMore: (PageRsListTab) -> Unit,
     onNavigateBack: () -> Unit,
     onPageClick: (Long, PageRsListTab) -> Unit,
+    onPageMenuAction: (Long, PageRsMenuAction) -> Unit,
+    onParentSelected: (Long) -> Unit,
+    onParentPickerDismissed: () -> Unit,
     onAddNewPage: () -> Unit
 ) {
     val tabs = PageRsListTab.entries
@@ -249,10 +261,21 @@ internal fun PagesRsListScreen(
                     isSearching = isSearchActive && searchQuery.length >= MIN_SEARCH_QUERY_LENGTH,
                     onRefresh = { onRefreshTab(tab) },
                     onLoadMore = { onLoadMore(tab) },
-                    onPageClick = { pageId -> onPageClick(pageId, tab) }
+                    onPageClick = { pageId -> onPageClick(pageId, tab) },
+                    onPageMenuAction = onPageMenuAction
                 )
             }
         }
+    }
+
+    PageConfirmationDialogHost(confirmationDialog)
+
+    if (parentPicker != null) {
+        PageRsParentPickerSheet(
+            state = parentPicker,
+            onParentSelected = onParentSelected,
+            onDismiss = onParentPickerDismissed
+        )
     }
 
     if (isOpeningPage) {
@@ -268,6 +291,67 @@ internal fun PagesRsListScreen(
             CircularProgressIndicator()
         }
     }
+}
+
+@Composable
+private fun PageConfirmationDialogHost(confirmationDialog: PageRsConfirmationDialogState) {
+    when (val pending = confirmationDialog.pending) {
+        is PageRsListConfirmation.Trash -> ConfirmationDialog(
+            titleResId = R.string.trash,
+            message = stringResource(R.string.page_rs_confirm_trash_message),
+            onConfirm = confirmationDialog.onConfirm,
+            onDismiss = confirmationDialog.onDismiss
+        )
+        is PageRsListConfirmation.Delete -> ConfirmationDialog(
+            titleResId = R.string.delete_page,
+            message = stringResource(R.string.page_delete_dialog_message, pending.pageTitle),
+            confirmTextResId = R.string.delete,
+            isDestructive = true,
+            onConfirm = confirmationDialog.onConfirm,
+            onDismiss = confirmationDialog.onDismiss
+        )
+        is PageRsListConfirmation.MoveToDraft -> ConfirmationDialog(
+            titleResId = R.string.page_rs_move_trashed_page_to_draft_dialog_title,
+            message = stringResource(R.string.page_rs_move_trashed_page_to_draft_dialog_message),
+            confirmTextResId = R.string.pages_move_to_draft,
+            onConfirm = confirmationDialog.onConfirm,
+            onDismiss = confirmationDialog.onDismiss
+        )
+        null -> {}
+    }
+}
+
+@Composable
+private fun ConfirmationDialog(
+    @StringRes titleResId: Int,
+    message: String,
+    onConfirm: () -> Unit,
+    onDismiss: () -> Unit,
+    @StringRes confirmTextResId: Int = titleResId,
+    isDestructive: Boolean = false
+) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text(stringResource(titleResId)) },
+        text = { Text(message) },
+        confirmButton = {
+            TextButton(onClick = onConfirm) {
+                Text(
+                    stringResource(confirmTextResId),
+                    color = if (isDestructive) {
+                        MaterialTheme.colorScheme.error
+                    } else {
+                        Color.Unspecified
+                    }
+                )
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text(stringResource(R.string.cancel))
+            }
+        }
+    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)

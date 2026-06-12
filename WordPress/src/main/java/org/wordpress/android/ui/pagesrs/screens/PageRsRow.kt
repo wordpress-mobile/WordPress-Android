@@ -1,7 +1,9 @@
 package org.wordpress.android.ui.pagesrs.screens
 
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
@@ -15,32 +17,41 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Article
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
 import org.wordpress.android.ui.pagesrs.PageRsDisplayState
 import org.wordpress.android.ui.pagesrs.PageRsListItem
+import org.wordpress.android.ui.pagesrs.PageRsMenuAction
 import org.wordpress.android.ui.pagesrs.PageRsUiModel
 import org.wordpress.android.ui.postsrs.screens.PlaceholderItem
 
-// Follow-up: add the per-page actions menu (view, set as homepage, set parent, move to draft,
-// trash, etc.) that the legacy pages list offers on each row.
 @Composable
 internal fun PageRsRow(
     item: PageRsListItem,
     onClick: () -> Unit,
+    onMenuAction: (PageRsMenuAction) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val page = item.page
@@ -56,6 +67,7 @@ internal fun PageRsRow(
             indentLevel = indentLevel,
             virtualKind = virtualKind,
             onClick = onClick,
+            onMenuAction = onMenuAction,
             modifier = modifier
         )
     }
@@ -67,6 +79,7 @@ private fun PageContentItem(
     indentLevel: Int,
     virtualKind: PageRsListItem.Virtual.Kind?,
     onClick: () -> Unit,
+    onMenuAction: (PageRsMenuAction) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Card(
@@ -95,7 +108,7 @@ private fun PageContentItem(
                 )
                 Spacer(modifier = Modifier.width(12.dp))
             }
-            Column(modifier = Modifier.fillMaxWidth()) {
+            Column(modifier = Modifier.weight(1f)) {
                 val virtualLabel = virtualKind?.let { stringResource(it.labelResId()) }
                 val statusLabel = page.statusLabelResId.takeIf { it != 0 }?.let { stringResource(it) }
                 val bullet = stringResource(R.string.bullet_with_spaces)
@@ -134,6 +147,10 @@ private fun PageContentItem(
                     )
                 }
             }
+            if (page.actions.isNotEmpty()) {
+                Spacer(modifier = Modifier.width(8.dp))
+                PageMenuButton(actions = page.actions, onAction = onMenuAction)
+            }
         }
         if (page.displayState == PageRsDisplayState.FETCHING_WITH_DATA) {
             LinearProgressIndicator(
@@ -143,6 +160,57 @@ private fun PageContentItem(
                 color = MaterialTheme.colorScheme.primary.copy(alpha = 0.5f),
                 trackColor = MaterialTheme.colorScheme.surface
             )
+        }
+    }
+}
+
+@Composable
+private fun PageMenuButton(
+    actions: List<PageRsMenuAction>,
+    onAction: (PageRsMenuAction) -> Unit
+) {
+    var expanded by remember { mutableStateOf(false) }
+
+    Box(
+        modifier = Modifier
+            .size(width = 40.dp, height = 48.dp)
+            .clickable(
+                role = Role.Button,
+                onClickLabel = stringResource(R.string.more),
+                onClick = { expanded = true }
+            ),
+        contentAlignment = Alignment.CenterEnd
+    ) {
+        Icon(
+            Icons.Default.MoreVert,
+            contentDescription = stringResource(R.string.more),
+            tint = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+        DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
+            actions.forEach { action ->
+                val color = if (action.isDestructive) {
+                    MaterialTheme.colorScheme.error
+                } else {
+                    MaterialTheme.colorScheme.onSurface
+                }
+                DropdownMenuItem(
+                    text = {
+                        Text(text = stringResource(action.labelResId), color = color)
+                    },
+                    onClick = {
+                        expanded = false
+                        onAction(action)
+                    },
+                    leadingIcon = {
+                        Icon(
+                            painter = painterResource(action.iconResId),
+                            contentDescription = null,
+                            modifier = Modifier.size(20.dp),
+                            tint = color
+                        )
+                    }
+                )
+            }
         }
     }
 }
@@ -211,7 +279,8 @@ private fun PreviewPageItem() {
                     date = "Dec 15, 2025"
                 )
             ),
-            onClick = {}
+            onClick = {},
+            onMenuAction = {}
         )
     }
 }
