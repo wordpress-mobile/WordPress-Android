@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2026-06-01 06:57:05+0000
+Translation-Revision-Date: 2026-06-12 07:01:21+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n >= 2 && n <= 4) ? 1 : 2);
 Generator: GlotPress/4.0.3
 Language: cs_CZ
@@ -383,7 +383,7 @@ Language: cs_CZ
     <string name="error_deleting_term">Při mazání výrazu došlo k chybě</string>
     <string name="error_saving_term">Při ukládání výrazu došlo k chybě</string>
     <string name="add_term">Přidat výraz</string>
-    <string name="term_delete_confirmation_message">Opravdu chcete smazat \\"%1$s\\"?</string>
+    <string name="term_delete_confirmation_message">Opravdu chcete smazat „%1$s“?</string>
     <string name="term_delete_confirmation_title">Smazat výraz</string>
     <string name="term_sort_by_count">Počet</string>
     <string name="term_sort_by_name">Název</string>
