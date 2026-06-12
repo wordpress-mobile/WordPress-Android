@@ -22,13 +22,17 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
+import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.SiteHomepageSettings.ShowOnFront
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.post.PostStatus as FluxCPostStatus
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.PostStore
+import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded
 import org.wordpress.android.ui.blaze.BlazeFeatureUtils
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.posts.AuthorFilterSelection
@@ -57,6 +61,7 @@ import javax.inject.Inject
 internal class PagesRsListViewModel @Inject constructor(
     private val selectedSiteRepository: SelectedSiteRepository,
     private val serviceProvider: WpServiceProvider,
+    private val dispatcher: Dispatcher,
     private val restClient: PostRsRestClient,
     private val resourceProvider: ResourceProvider,
     private val postStore: PostStore,
@@ -119,6 +124,7 @@ internal class PagesRsListViewModel @Inject constructor(
     val authorFilter: StateFlow<AuthorFilterSelection> = _authorFilter.asStateFlow()
 
     init {
+        dispatcher.register(this)
         if (site == null) {
             _events.trySend(PageRsListEvent.ShowToast(R.string.blog_not_found))
             _events.trySend(PageRsListEvent.Finish)
@@ -299,6 +305,29 @@ internal class PagesRsListViewModel @Inject constructor(
     private fun createCollectionsScope() = CoroutineScope(
         viewModelScope.coroutineContext + SupervisorJob(viewModelScope.coroutineContext.job)
     )
+
+    /**
+     * Fired by FluxC when UploadService finishes uploading a post/page — e.g. publishing a
+     * duplicated page from the editor, which happens in the background after the editor
+     * closes. The wordpress-rs collections don't see FluxC uploads, so refresh the tabs to
+     * pick up the change.
+     */
+    @Suppress("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onPostUploaded(event: OnPostUploaded) {
+        val post = event.post ?: return
+        if (!post.isPage || post.localSiteId != site?.id || event.isError) return
+        refreshAllTabs()
+    }
+
+    /** Refreshes all currently initialized tabs. */
+    @MainThread
+    fun refreshAllTabs() {
+        restClient.clearCaches()
+        collections.keys.toList().forEach { tab ->
+            refreshTab(tab)
+        }
+    }
 
     @MainThread
     fun refreshTab(tab: PageRsListTab, isUserRefresh: Boolean = false) {
@@ -1044,8 +1073,9 @@ internal class PagesRsListViewModel @Inject constructor(
         _tabStates.value = emptyMap()
     }
 
-    override fun onCleared() {
+    public override fun onCleared() {
         super.onCleared()
+        dispatcher.unregister(this)
         clearCollections()
     }
 

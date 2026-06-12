@@ -19,9 +19,12 @@ import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
+import org.wordpress.android.fluxc.Dispatcher
+import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.PostStore
+import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded
 import org.wordpress.android.ui.blaze.BlazeFeatureUtils
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.posts.AuthorFilterSelection
@@ -36,6 +39,7 @@ import org.wordpress.android.viewmodel.ResourceProvider
 internal class PagesRsListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
     @Mock lateinit var selectedSiteRepository: SelectedSiteRepository
     @Mock lateinit var serviceProvider: WpServiceProvider
+    @Mock lateinit var dispatcher: Dispatcher
     @Mock lateinit var restClient: PostRsRestClient
     @Mock lateinit var resourceProvider: ResourceProvider
     @Mock lateinit var postStore: PostStore
@@ -69,6 +73,7 @@ internal class PagesRsListViewModelTest : BaseUnitTest(StandardTestDispatcher())
     private fun createViewModel() = PagesRsListViewModel(
         selectedSiteRepository = selectedSiteRepository,
         serviceProvider = serviceProvider,
+        dispatcher = dispatcher,
         restClient = restClient,
         resourceProvider = resourceProvider,
         postStore = postStore,
@@ -290,6 +295,60 @@ internal class PagesRsListViewModelTest : BaseUnitTest(StandardTestDispatcher())
             any<SiteModel>(),
             any<Map<String, *>>()
         )
+    }
+
+    @Test
+    fun `registers with the dispatcher on init and unregisters on clear`() {
+        val viewModel = createViewModel()
+        verify(dispatcher).register(viewModel)
+
+        viewModel.onCleared()
+
+        verify(dispatcher).unregister(viewModel)
+    }
+
+    @Test
+    fun `onPostUploaded for a page of the selected site refreshes the tabs`() {
+        val viewModel = createViewModel()
+
+        viewModel.onPostUploaded(OnPostUploaded(pageUpload(), false))
+
+        verify(restClient).clearCaches()
+    }
+
+    @Test
+    fun `onPostUploaded ignores posts`() {
+        val viewModel = createViewModel()
+
+        viewModel.onPostUploaded(OnPostUploaded(pageUpload().apply { setIsPage(false) }, false))
+
+        verify(restClient, never()).clearCaches()
+    }
+
+    @Test
+    fun `onPostUploaded ignores pages from other sites`() {
+        val viewModel = createViewModel()
+
+        viewModel.onPostUploaded(OnPostUploaded(pageUpload().apply { setLocalSiteId(99) }, false))
+
+        verify(restClient, never()).clearCaches()
+    }
+
+    @Test
+    fun `onPostUploaded ignores failed uploads`() {
+        val viewModel = createViewModel()
+        val event = OnPostUploaded(pageUpload(), false).apply {
+            error = PostStore.PostError(PostStore.PostErrorType.GENERIC_ERROR)
+        }
+
+        viewModel.onPostUploaded(event)
+
+        verify(restClient, never()).clearCaches()
+    }
+
+    private fun pageUpload() = PostModel().apply {
+        setIsPage(true)
+        setLocalSiteId(site.id)
     }
 
     @Test
