@@ -12,7 +12,7 @@ import uniffi.wp_mobile.FullEntityAnyPostWithEditContext
 import uniffi.wp_mobile.PostItemState
 
 internal data class PageTabUiState(
-    val pages: List<PageRsUiModel> = emptyList(),
+    val pages: List<PageRsListItem> = emptyList(),
     val isLoading: Boolean = false,
     val isRefreshing: Boolean = false,
     val isLoadingMore: Boolean = false,
@@ -20,6 +20,28 @@ internal data class PageTabUiState(
     val error: String? = null,
     val isAuthError: Boolean = false
 )
+
+internal sealed interface PageRsListItem {
+    val page: PageRsUiModel
+    val stableKey: String
+    val remotePageId: Long get() = page.remotePageId
+
+    data class Real(
+        override val page: PageRsUiModel,
+        val indentLevel: Int = 0
+    ) : PageRsListItem {
+        override val stableKey: String get() = "real:${page.remotePageId}"
+    }
+
+    data class Virtual(
+        val kind: Kind,
+        override val page: PageRsUiModel
+    ) : PageRsListItem {
+        override val stableKey: String get() = "virtual:$kind"
+
+        enum class Kind { HOMEPAGE, POSTS_PAGE }
+    }
+}
 
 internal enum class PageRsDisplayState {
     NORMAL,
@@ -31,6 +53,7 @@ internal enum class PageRsDisplayState {
 
 internal data class PageRsUiModel(
     val remotePageId: Long,
+    val parentId: Long = 0L,
     val title: String,
     val excerpt: String,
     val date: String,
@@ -77,6 +100,7 @@ private fun FullEntityAnyPostWithEditContext.toPageUiModel(
     val page: AnyPostWithEditContext = data
     return PageRsUiModel(
         remotePageId = page.id,
+        parentId = page.parent ?: 0L,
         title = page.title?.raw?.takeIf { it.isNotBlank() }
             ?: page.title?.rendered
             ?: "",
