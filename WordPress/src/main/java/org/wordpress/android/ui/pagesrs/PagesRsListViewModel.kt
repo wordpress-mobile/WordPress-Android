@@ -24,6 +24,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
+import org.wordpress.android.fluxc.model.SiteHomepageSettings.ShowOnFront
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.post.PostStatus as FluxCPostStatus
 import org.wordpress.android.fluxc.store.AccountStore
@@ -47,6 +48,7 @@ import uniffi.wp_api.PostEndpointType
 import uniffi.wp_api.PostStatus
 import uniffi.wp_api.PostUpdateParams
 import uniffi.wp_mobile.PostListFilter
+import uniffi.wp_mobile.PostService
 import uniffi.wp_mobile_cache.ListState
 import javax.inject.Inject
 
@@ -99,8 +101,6 @@ internal class PagesRsListViewModel @Inject constructor(
     val parentPicker: StateFlow<PageRsParentPickerState?> = _parentPicker.asStateFlow()
 
     val site: SiteModel? = selectedSiteRepository.getSelectedSite()
-
-    private val pageService by lazy { serviceProvider.getService(requireNotNull(site)).posts() }
 
     val avatarUrl: String? = accountStore.account?.avatarUrl
 
@@ -400,17 +400,8 @@ internal class PagesRsListViewModel @Inject constructor(
             ?.page
 
         when {
-            tab == PageRsListTab.TRASHED || page?.isTrashed == true -> {
-                analyticsTracker.track(
-                    Stat.PAGES_LIST_ITEM_SELECTED,
-                    site,
-                    mapOf(
-                        TRACKS_ACTION to "move_to_draft",
-                        TRACKS_PAGE_ID to remotePageId
-                    )
-                )
+            tab == PageRsListTab.TRASHED || page?.isTrashed == true ->
                 _pendingConfirmation.value = PageRsListConfirmation.MoveToDraft(remotePageId)
-            }
             checkNetwork() -> proceedOpenPage(site, remotePageId, page?.lastModified)
         }
     }
@@ -513,15 +504,22 @@ internal class PagesRsListViewModel @Inject constructor(
      * Opens the "Set Parent" bottom sheet. Candidates are the published pages currently
      * loaded in any tab, excluding the page itself and its descendants (re-parenting a page
      * under its own subtree would create a cycle), matching the legacy parent picker rules.
+     *
+     * Known limitation: only pages already loaded into the tabs are offered, so on large
+     * sites pages beyond the loaded ones can't be chosen and the sheet's search field only
+     * filters the loaded candidates. A follow-up could page through the full list instead.
      */
     @MainThread
     fun openParentPicker(remotePageId: Long) {
-        val published = _tabStates.value.values
+        val allPages = _tabStates.value.values
             .flatMap { state -> state.pages.map { it.page } }
-            .filter { it.status is PostStatus.Publish || it.status is PostStatus.Private }
             .distinctBy { it.remotePageId }
+        val published = allPages
+            .filter { it.status is PostStatus.Publish || it.status is PostStatus.Private }
         val page = findPage(remotePageId) ?: return
-        val descendantIds = collectDescendantIds(remotePageId, published)
+        // Descendants are collected across pages of every status: a published descendant
+        // reached through a draft intermediate must still be excluded to prevent a cycle.
+        val descendantIds = collectDescendantIds(remotePageId, allPages)
         val candidates = published
             .filter { it.remotePageId != remotePageId && it.remotePageId !in descendantIds }
             .map { PageRsParentCandidate(it.remotePageId, it.title) }
@@ -543,20 +541,22 @@ internal class PagesRsListViewModel @Inject constructor(
         _parentPicker.value = null
         if (parentId == picker.currentParentId) return
         val site = this.site ?: return
-        analyticsTracker.track(
-            Stat.PAGES_SET_PARENT_CHANGES_SAVED,
-            site,
-            mapOf(
-                TRACKS_PAGE_ID to picker.pageId,
-                TRACKS_NEW_PARENT_ID to parentId
-            )
-        )
         executePageMutation(
             successMessageResId = R.string.page_parent_changed,
             errorMessageResId = R.string.page_parent_change_error,
-            logTag = "Set parent"
-        ) {
-            pageService.updatePost(
+            logTag = "Set parent",
+            onSuccess = {
+                analyticsTracker.track(
+                    Stat.PAGES_SET_PARENT_CHANGES_SAVED,
+                    site,
+                    mapOf(
+                        TRACKS_PAGE_ID to picker.pageId,
+                        TRACKS_NEW_PARENT_ID to parentId
+                    )
+                )
+            }
+        ) { service ->
+            service.updatePost(
                 PostEndpointType.Pages, picker.pageId,
                 PostUpdateParams(parent = parentId, meta = null)
             )
@@ -580,24 +580,24 @@ internal class PagesRsListViewModel @Inject constructor(
         successMessageResId = R.string.page_moved_to_trash,
         errorMessageResId = R.string.page_status_change_error,
         logTag = "Trash"
-    ) {
-        pageService.trashPost(PostEndpointType.Pages, pageId)
+    ) { service ->
+        service.trashPost(PostEndpointType.Pages, pageId)
     }
 
     private fun deletePage(pageId: Long) = executePageMutation(
         successMessageResId = R.string.page_permanently_deleted,
         errorMessageResId = R.string.page_delete_error,
         logTag = "Delete"
-    ) {
-        pageService.deletePostPermanently(PostEndpointType.Pages, pageId)
+    ) { service ->
+        service.deletePostPermanently(PostEndpointType.Pages, pageId)
     }
 
     private fun publishPage(pageId: Long) = executePageMutation(
         successMessageResId = R.string.page_published,
         errorMessageResId = R.string.page_status_change_error,
         logTag = "Publish"
-    ) {
-        pageService.updatePost(
+    ) { service ->
+        service.updatePost(
             PostEndpointType.Pages, pageId,
             pageStatusUpdate(PostStatus.Publish)
         )
@@ -607,8 +607,8 @@ internal class PagesRsListViewModel @Inject constructor(
         successMessageResId = R.string.page_moved_to_draft,
         errorMessageResId = R.string.page_status_change_error,
         logTag = "Move to draft"
-    ) {
-        pageService.updatePost(
+    ) { service ->
+        service.updatePost(
             PostEndpointType.Pages, pageId,
             pageStatusUpdate(PostStatus.Draft)
         )
@@ -622,11 +622,19 @@ internal class PagesRsListViewModel @Inject constructor(
     private fun moveToDraftAndEdit(pageId: Long) {
         val site = this.site ?: return
         if (!checkNetwork()) return
+        analyticsTracker.track(
+            Stat.PAGES_LIST_ITEM_SELECTED,
+            site,
+            mapOf(
+                TRACKS_ACTION to "move_to_draft",
+                TRACKS_PAGE_ID to pageId
+            )
+        )
         updateTabUiState(PageRsListTab.TRASHED) { copy(isRefreshing = true) }
         viewModelScope.launch {
             try {
                 withContext(Dispatchers.IO) {
-                    pageService.updatePost(
+                    serviceProvider.getService(site).posts().updatePost(
                         PostEndpointType.Pages, pageId,
                         pageStatusUpdate(PostStatus.Draft)
                     )
@@ -781,20 +789,24 @@ internal class PagesRsListViewModel @Inject constructor(
 
     /**
      * Executes a page mutation (trash, delete, status change, set parent) with standard
-     * error handling. The wordpress-rs cache notifies the observable collections after the
-     * call, so the affected tabs re-render without a manual refresh.
+     * error handling, handing [operation] the page service for the selected site. The
+     * wordpress-rs cache notifies the observable collections after the call, so the
+     * affected tabs re-render without a manual refresh.
      */
     @Suppress("TooGenericExceptionCaught")
     private fun executePageMutation(
         successMessageResId: Int,
         errorMessageResId: Int,
         logTag: String,
-        operation: suspend () -> Unit
+        onSuccess: () -> Unit = {},
+        operation: suspend (PostService) -> Unit
     ) {
+        val site = this.site ?: return
         if (!checkNetwork()) return
         viewModelScope.launch {
             try {
-                withContext(Dispatchers.IO) { operation() }
+                withContext(Dispatchers.IO) { operation(serviceProvider.getService(site).posts()) }
+                onSuccess()
                 _snackbarMessages.trySend(
                     SnackbarMessage(resourceProvider.getString(successMessageResId))
                 )
@@ -919,11 +931,16 @@ internal class PagesRsListViewModel @Inject constructor(
     private fun PageRsListItem.withMenuActions(site: SiteModel?): PageRsListItem {
         val pageOnFront = site?.pageOnFront ?: 0L
         val pageForPosts = site?.pageForPosts ?: 0L
-        // WP.com capabilities are synced reliably; for self-hosted application-password
-        // sites they often aren't, so the actions are offered and the server enforces
-        // permissions (a 403 surfaces as the update-failed snackbar).
-        val canManageHomepage = site != null &&
-            (site.hasCapabilityManageOptions || !site.isUsingWpComRestApi)
+        // WP.com capabilities and showOnFront are synced reliably, so the homepage actions
+        // are hidden when they can't succeed, matching the legacy list. For self-hosted
+        // application-password sites neither field is reliably populated, so the actions
+        // are offered and the server enforces the rules (a 403 or the static-homepage
+        // check surfaces as a snackbar).
+        val canManageHomepage = site != null && if (site.isUsingWpComRestApi) {
+            site.hasCapabilityManageOptions && site.showOnFront == ShowOnFront.PAGE.value
+        } else {
+            true
+        }
         val actions = computePageMenuActions(
             status = page.status,
             isHomepage = pageOnFront != 0L && page.remotePageId == pageOnFront,

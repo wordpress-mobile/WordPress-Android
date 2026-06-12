@@ -279,6 +279,20 @@ internal class PagesRsListViewModelTest : BaseUnitTest(StandardTestDispatcher())
     }
 
     @Test
+    fun `dismissing the move to draft confirmation does not track item selected`() {
+        val viewModel = createViewModel()
+        viewModel.openPage(remotePageId = 42L, tab = PageRsListTab.TRASHED)
+
+        viewModel.onDismissPendingAction()
+
+        verify(analyticsTracker, never()).track(
+            eq(Stat.PAGES_LIST_ITEM_SELECTED),
+            any<SiteModel>(),
+            any<Map<String, *>>()
+        )
+    }
+
+    @Test
     fun `onPageMenuAction TRASH sets Trash confirmation`() {
         val viewModel = createViewModel()
 
