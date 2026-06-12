@@ -15,3 +15,6 @@ Dangerfile*            @wordpress-mobile/apps-infra-tooling
 
 # Toolchain and environment pins
 .java-version  @wordpress-mobile/apps-infra-tooling
+
+# Secrets
+.configure-files/     @wordpress-mobile/apps-infra-tooling
