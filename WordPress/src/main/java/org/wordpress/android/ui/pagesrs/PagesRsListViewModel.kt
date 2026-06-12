@@ -568,8 +568,8 @@ internal class PagesRsListViewModel @Inject constructor(
     fun onParentSelected(parentId: Long) {
         val picker = _parentPicker.value ?: return
         _parentPicker.value = null
-        if (parentId == picker.currentParentId) return
-        val site = this.site ?: return
+        val site = this.site
+        if (parentId == picker.currentParentId || site == null) return
         executePageMutation(
             successMessageResId = R.string.page_parent_changed,
             errorMessageResId = R.string.page_parent_change_error,
