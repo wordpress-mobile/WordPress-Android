@@ -204,7 +204,6 @@ Language: sv_SE
     <string name="post_rs_confirm_delete_message">Inlägget tas då bort permanent. Denna åtgärd kan inte ångras.</string>
     <string name="post_rs_confirm_trash_message">Är du säker på att du vill flytta det här inlägget till papperskorgen?</string>
     <string name="post_rs_failed_to_load">Det gick inte att hämta inlägg</string>
-    <string name="beta_label">Beta</string>
     <string name="stats_error_admin_url_unavailable">Det gick inte att öppna WP Admin för den här webbplatsen</string>
     <string name="stats_error_parsing">Det uppstod ett problem när datan hämtades. Försök igen</string>
     <string name="stats_error_network">Nätverksfel. Kontrollera anslutningen och försök igen</string>

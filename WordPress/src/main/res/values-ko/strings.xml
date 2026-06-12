@@ -153,7 +153,6 @@ Language: ko_KR
     <string name="post_rs_confirm_delete_message">이 글은 영구적으로 삭제됩니다. 이 작업은 취소할 수 없습니다.</string>
     <string name="post_rs_confirm_trash_message">이 글을 휴지통으로 옮기시겠습니까?</string>
     <string name="post_rs_failed_to_load">글 로드 실패</string>
-    <string name="beta_label">베타</string>
     <string name="stats_error_admin_url_unavailable">이 사이트의 WP 관리자를 열 수 없습니다.</string>
     <string name="stats_error_parsing">데이터를 로드하는 데 문제가 발생했습니다. 다시 시도하세요.</string>
     <string name="stats_error_network">네트워크 오류가 발생했습니다. 연결을 확인하고 다시 시도하세요.</string>

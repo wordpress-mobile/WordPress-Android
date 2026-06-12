@@ -155,7 +155,6 @@ Language: en_GB
     <string name="post_rs_confirm_delete_message">This will permanently delete this post. This action cannot be undone.</string>
     <string name="post_rs_confirm_trash_message">Are you sure you want to bin this post?</string>
     <string name="post_rs_failed_to_load">Failed to load post</string>
-    <string name="beta_label">Beta</string>
     <string name="stats_error_admin_url_unavailable">Unable to open WP Admin for this site</string>
     <string name="stats_error_parsing">There was a problem loading the data. Please try again</string>
     <string name="stats_error_network">Network error. Please check your connection and try again</string>

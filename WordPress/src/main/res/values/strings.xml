@@ -109,7 +109,6 @@
     <string name="local_draft">Local draft</string>
     <string name="local_changes">Local changes</string>
     <string name="continue_label">Continue</string>
-    <string name="beta_label">Beta</string>
     <string name="publish_now">Publish Now</string>
     <string name="update_now">Update Now</string>
     <string name="status_and_visibility">Status &amp; Visibility</string>
@@ -3594,6 +3593,7 @@
     <string name="pages_empty_scheduled">You don\'t have any scheduled pages</string>
     <string name="pages_empty_trashed">You don\'t have any trashed pages</string>
     <string name="pages_open_page_error">The selected page is not available</string>
+    <string name="pages_list_item_trashed">This page is in the trash</string>
     <string name="pages_and_posts_cancel_auto_upload">Cancel upload</string>
     <string name="pages_cannot_be_started">We cannot open pages at the moment. Please try again later</string>
     <string name="pages_item_date_subtitle">%1$s ·</string>

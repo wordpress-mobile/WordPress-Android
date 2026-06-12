@@ -1,7 +1,9 @@
 package org.wordpress.android.ui.pagesrs
 
+import androidx.annotation.StringRes
 import org.wordpress.android.R
 import org.wordpress.android.ui.postsrs.PostRsDateFormatter
+import org.wordpress.android.ui.postsrs.toLabel
 import org.wordpress.android.util.DateTimeUtils
 import org.wordpress.android.util.HtmlUtils
 import uniffi.wp_api.AnyPostWithEditContext
@@ -33,17 +35,24 @@ internal data class PageRsUiModel(
     val excerpt: String,
     val date: String,
     val lastModified: String = "",
+    @StringRes val statusLabelResId: Int = 0,
+    val authorId: Long = 0L,
+    val authorDisplayName: String? = null,
+    val isTrashed: Boolean = false,
     val badges: List<Int> = emptyList(),
     val displayState: PageRsDisplayState = PageRsDisplayState.NORMAL
 )
 
-internal fun PostItemState.toPageUiModel(pageId: Long): PageRsUiModel = when (this) {
-    is PostItemState.Fresh -> data.toPageUiModel()
-    is PostItemState.Stale -> data.toPageUiModel()
+internal fun PostItemState.toPageUiModel(
+    pageId: Long,
+    showStatus: Boolean = false
+): PageRsUiModel = when (this) {
+    is PostItemState.Fresh -> data.toPageUiModel(showStatus)
+    is PostItemState.Stale -> data.toPageUiModel(showStatus)
     is PostItemState.FetchingWithData ->
-        data.toPageUiModel(PageRsDisplayState.FETCHING_WITH_DATA)
+        data.toPageUiModel(showStatus, PageRsDisplayState.FETCHING_WITH_DATA)
     is PostItemState.FailedWithData ->
-        data.toPageUiModel(PageRsDisplayState.FAILED_WITH_DATA)
+        data.toPageUiModel(showStatus, PageRsDisplayState.FAILED_WITH_DATA)
     is PostItemState.Missing,
     is PostItemState.Fetching -> PageRsUiModel(
         remotePageId = pageId,
@@ -62,6 +71,7 @@ internal fun PostItemState.toPageUiModel(pageId: Long): PageRsUiModel = when (th
 }
 
 private fun FullEntityAnyPostWithEditContext.toPageUiModel(
+    showStatus: Boolean,
     displayState: PageRsDisplayState = PageRsDisplayState.NORMAL
 ): PageRsUiModel {
     val page: AnyPostWithEditContext = data
@@ -77,6 +87,9 @@ private fun FullEntityAnyPostWithEditContext.toPageUiModel(
             ).let { HtmlUtils.fastStripHtml(it).trim() },
         date = PostRsDateFormatter.format(page.dateGmt, page.status),
         lastModified = DateTimeUtils.iso8601UTCFromDate(page.modifiedGmt),
+        statusLabelResId = if (showStatus) page.status.toLabel() else 0,
+        authorId = page.author ?: 0L,
+        isTrashed = page.status is PostStatus.Trash,
         badges = buildList {
             if (page.status is PostStatus.Private) {
                 add(R.string.post_status_post_private)
