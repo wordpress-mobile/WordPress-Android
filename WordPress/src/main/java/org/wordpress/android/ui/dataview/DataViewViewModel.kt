@@ -24,6 +24,7 @@ import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.fluxc.network.TrackNetworkRequestsInterceptor
 import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpNetworkAvailabilityProvider
 import org.wordpress.android.viewmodel.ScopedViewModel
+import rs.wordpress.api.kotlin.RequestErrorLogger
 import rs.wordpress.api.kotlin.WpComApiClient
 import uniffi.wp_api.WpApiParamOrder
 import uniffi.wp_api.WpAuthentication
@@ -91,7 +92,8 @@ open class DataViewViewModel @Inject constructor(
                 }
             ),
             interceptors = listOf(trackNetworkRequestsInterceptor),
-            networkAvailabilityProvider = networkAvailabilityProvider
+            networkAvailabilityProvider = networkAvailabilityProvider,
+            errorLogger = RequestErrorLogger { AppLog.e(AppLog.T.API, it) }
         )
     }
 

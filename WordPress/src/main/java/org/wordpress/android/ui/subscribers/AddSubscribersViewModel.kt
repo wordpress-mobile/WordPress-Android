@@ -17,6 +17,7 @@ import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.ToastUtilsWrapper
 import org.wordpress.android.viewmodel.ScopedViewModel
+import rs.wordpress.api.kotlin.RequestErrorLogger
 import rs.wordpress.api.kotlin.WpComApiClient
 import rs.wordpress.api.kotlin.WpRequestResult
 import uniffi.wp_api.AddSubscribersParams
@@ -53,7 +54,8 @@ class AddSubscribersViewModel @Inject constructor(
                 WpAuthentication.Bearer(token = accountStore.accessToken!!)
             ),
             interceptors = listOf(trackNetworkRequestsInterceptor),
-            networkAvailabilityProvider = networkAvailabilityProvider
+            networkAvailabilityProvider = networkAvailabilityProvider,
+            errorLogger = RequestErrorLogger { AppLog.e(AppLog.T.API, it) }
         )
     }
 
