@@ -56,7 +56,8 @@ class SiteXmlRpcUrlRecovererTest : BaseUnitTest() {
     @Test
     fun `given discovery and authenticated verify succeed, then returns the endpoint`() = test {
         whenever(selfHostedEndpointFinder.verifyOrDiscoverXMLRPCEndpoint(site.url)).thenReturn(ENDPOINT)
-        whenever(siteXMLRPCClient.fetchSites(eq(ENDPOINT), any(), any()))
+        // The site's stored credentials are forwarded to the authenticated verify call.
+        whenever(siteXMLRPCClient.fetchSites(eq(ENDPOINT), eq("user"), eq("pass")))
             .thenReturn(SitesModel(listOf(SiteModel())))
 
         assertThat(recoverer.discoverAndVerifyXmlRpcUrl(site)).isEqualTo(ENDPOINT)
@@ -66,6 +67,16 @@ class SiteXmlRpcUrlRecovererTest : BaseUnitTest() {
     fun `given discovery throws, then returns null`() = test {
         whenever(selfHostedEndpointFinder.verifyOrDiscoverXMLRPCEndpoint(site.url))
             .thenThrow(mock<SelfHostedEndpointFinder.DiscoveryException>())
+
+        assertThat(recoverer.discoverAndVerifyXmlRpcUrl(site)).isNull()
+    }
+
+    @Test
+    fun `given discovery throws an unexpected exception, then returns null`() = test {
+        // A non-DiscoveryException (e.g. a RuntimeException from the network/parse path) must be
+        // contained, not propagated — otherwise it cancels the whole provisioning pipeline.
+        whenever(selfHostedEndpointFinder.verifyOrDiscoverXMLRPCEndpoint(site.url))
+            .thenThrow(RuntimeException("unexpected"))
 
         assertThat(recoverer.discoverAndVerifyXmlRpcUrl(site)).isNull()
     }

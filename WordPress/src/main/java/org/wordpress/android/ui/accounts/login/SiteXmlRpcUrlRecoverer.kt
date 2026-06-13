@@ -12,6 +12,7 @@ import org.wordpress.android.util.AppLog
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
+import kotlin.coroutines.cancellation.CancellationException
 
 /**
  * Heals [SiteModel.xmlRpcUrl] for true self-hosted sites whose XML-RPC endpoint was never
@@ -19,7 +20,8 @@ import javax.inject.Singleton
  * follows the same shape so callers never hold a mutated [SiteModel]:
  *
  * - [discoverAndVerifyXmlRpcUrl] discovers the endpoint and confirms it works with an authenticated
- *   call, returning the verified URL (or `null` if discovery/verification fails).
+ *   call using the site's application-password credentials, returning the verified URL (or `null`
+ *   if discovery/verification fails).
  * - [persistXmlRpcUrl] writes only that one column to the DB row for `localId`.
  */
 @Singleton
@@ -30,7 +32,7 @@ class SiteXmlRpcUrlRecoverer @Inject constructor(
     private val appLogWrapper: AppLogWrapper,
     @param:Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
 ) {
-    @Suppress("SwallowedException")
+    @Suppress("SwallowedException", "TooGenericExceptionCaught")
     suspend fun discoverAndVerifyXmlRpcUrl(site: SiteModel): String? = withContext(bgDispatcher) {
         try {
             val endpoint = selfHostedEndpointFinder.verifyOrDiscoverXMLRPCEndpoint(site.url)
@@ -45,8 +47,20 @@ class SiteXmlRpcUrlRecoverer @Inject constructor(
             } else {
                 endpoint
             }
+        } catch (e: CancellationException) {
+            throw e
         } catch (e: SelfHostedEndpointFinder.DiscoveryException) {
+            // Expected when the site has no reachable XML-RPC endpoint — surfaces as the
+            // XML-RPC-disabled card (xmlRpcUrl stays empty) and retries on the next run.
             appLogWrapper.w(AppLog.T.API, "XML-RPC discovery failed for ${site.url}")
+            null
+        } catch (e: Exception) {
+            // Best-effort recovery must never let an unexpected throw escape and cancel the
+            // provisioning pipeline (mirrors SiteApiRestUrlRecoverer). Same null -> disabled-card surface.
+            appLogWrapper.e(
+                AppLog.T.API,
+                "XML-RPC discovery threw for ${site.url}: ${e::class.simpleName}: ${e.message}"
+            )
             null
         }
     }
