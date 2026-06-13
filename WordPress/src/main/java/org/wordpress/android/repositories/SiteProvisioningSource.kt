@@ -140,53 +140,49 @@ class SiteProvisioningSource @Inject constructor(
 
     private suspend fun runPipeline(siteLocalId: Int): SiteReadiness {
         val auth = ensureAuth(siteLocalId)
-        return when (auth.state) {
+        return when (auth) {
             SiteAuthState.Provisioned, SiteAuthState.NotApplicable -> coroutineScope {
                 // Post-auth, the REST-capability chain and the XML-RPC recovery are independent — each
                 // reads the site fresh and writes only its own column — so run them in parallel.
                 // recoverRestUrlIfNeeded precedes detectCapabilities within its branch because the probe
-                // needs the recovered REST root. The mint's credentials reach the probe as an immutable
-                // value (auth.credentials), never via a shared mutated SiteModel — the fresh-read columns
-                // can't be trusted to carry them (transient, and clobberable by a concurrent write, #22905).
+                // needs the recovered REST root. Both branches read the credentials fresh from the store:
+                // the mint persists them via a single writer that the generic full-row update can no
+                // longer clobber (#22947), so the re-read is now trustworthy (#22905).
                 val capabilities = async {
                     recoverRestUrlIfNeeded(siteLocalId)
-                    detectCapabilities(siteLocalId, auth.credentials)
+                    detectCapabilities(siteLocalId)
                 }
                 val xmlRpc = async { recoverXmlRpcIfNeeded(siteLocalId) }
                 xmlRpc.await()
                 capabilities.await()
             }
-            else -> SiteReadiness.NeedsAuth(auth.state)
+            else -> SiteReadiness.NeedsAuth(auth)
         }
     }
 
     /**
-     * Stage 1 — ensure the site has working application-password credentials, and
-     * return them. Validates stored creds with Basic auth against the direct host;
-     * on a confirmed rejection wipes them and mints fresh ones via the FluxC Jetpack
-     * tunnel. The credentials are returned in the [AuthResult] so [detectCapabilities]
-     * can authenticate with them without trusting a fresh re-read — the plain columns
-     * are transient and a concurrent whole-row site write can clobber the encrypted
-     * ones mid-run (#22905).
+     * Stage 1 — ensure the site has working application-password credentials. Validates stored creds
+     * with Basic auth against the direct host; on a confirmed rejection wipes them and mints fresh
+     * ones via the FluxC Jetpack tunnel. The mint persists the credentials (single-writer, #22947), so
+     * the downstream stages read them back from a fresh [SiteModel] rather than having them threaded.
      */
     // Each return is a distinct auth outcome (missing site, valid, transient, minted, failed);
     // collapsing to one return would thread a result through nested branches and read worse.
     @Suppress("ReturnCount")
-    private suspend fun ensureAuth(siteLocalId: Int): AuthResult {
+    private suspend fun ensureAuth(siteLocalId: Int): SiteAuthState {
         val site = siteStore.getSiteByLocalId(siteLocalId)
-            ?: return AuthResult(SiteAuthState.Unprovisionable(hadCredentials = false))
+            ?: return SiteAuthState.Unprovisionable(hadCredentials = false)
         // WP.com Simple sites are fully proxied and OAuth-bearer-authed — no application password
         // applies (the mint returns NotSupported). Capability detection works through the proxy, so
         // treat them as ready instead of blocking detection behind a mint that can never run.
-        if (site.isWPComSimpleSite) return AuthResult(SiteAuthState.NotApplicable)
+        if (site.isWPComSimpleSite) return SiteAuthState.NotApplicable
         val hadCredentials = !applicationPasswordLoginHelper.siteHasBadCredentials(site)
         if (hadCredentials) {
             when (applicationPasswordValidator.validate(site)) {
-                ApplicationPasswordValidator.Outcome.Valid ->
-                    return AuthResult(SiteAuthState.Provisioned, site.provisionedCredentials())
+                ApplicationPasswordValidator.Outcome.Valid -> return SiteAuthState.Provisioned
                 ApplicationPasswordValidator.Outcome.NetworkUnavailable -> {
                     appLogWrapper.d(AppLog.T.MAIN, "A_P: Validation network error for ${site.url}")
-                    return AuthResult(SiteAuthState.Provisioning)
+                    return SiteAuthState.Provisioning
                 }
                 ApplicationPasswordValidator.Outcome.Invalid -> {
                     appLogWrapper.d(AppLog.T.MAIN, "A_P: Stored creds invalid for ${site.url}, clearing")
@@ -195,18 +191,19 @@ class SiteProvisioningSource @Inject constructor(
                 }
             }
         }
-        // createApplicationPassword mutates this local `site` with the freshly minted plain credentials.
+        // createApplicationPassword mints and persists the credentials; downstream stages read them
+        // back from a fresh SiteModel.
         val createResult = siteStore.createApplicationPassword(site)
         if (!createResult.isError && createResult.credentials != null) {
             wpApiClientProvider.clearSelfHostedClient(site.id)
             appLogWrapper.d(AppLog.T.MAIN, "A_P: Headless mint succeeded for ${site.url}")
-            return AuthResult(SiteAuthState.Provisioned, site.provisionedCredentials())
+            return SiteAuthState.Provisioned
         }
         appLogWrapper.d(
             AppLog.T.MAIN,
             "A_P: Headless mint failed for ${site.url} (notSupported=${createResult.error?.notSupported})"
         )
-        return AuthResult(SiteAuthState.Unprovisionable(hadCredentials = hadCredentials))
+        return SiteAuthState.Unprovisionable(hadCredentials = hadCredentials)
     }
 
     /**
@@ -226,8 +223,10 @@ class SiteProvisioningSource @Inject constructor(
 
     /**
      * Stage 2b (parallel) — recover the XML-RPC endpoint for true self-hosted
-     * sites that don't have one. Discovers + authenticates against it, and on
-     * success persists the one column; the application-password card re-reads it.
+     * sites that don't have one. Discovers + authenticates against it with the
+     * site's application-password credentials (which work for XML-RPC just as for
+     * REST), and on success persists the one column; the application-password card
+     * re-reads it.
      */
     private suspend fun recoverXmlRpcIfNeeded(siteLocalId: Int) {
         val site = siteStore.getSiteByLocalId(siteLocalId) ?: return
@@ -241,24 +240,11 @@ class SiteProvisioningSource @Inject constructor(
     /**
      * Stage 3 — probe the REST API for editor-capability support and persist it.
      * Reached only once auth is [SiteAuthState.Provisioned] / [SiteAuthState.NotApplicable].
-     * [credentials] (from [ensureAuth]) are overlaid onto this run-local copy so the
-     * authenticated direct-host probe can run even when the fresh read doesn't reflect
-     * the mint; a failure here is then a real transport problem, not a pending mint.
+     * Reads the site fresh: the mint has already persisted the credentials (single-writer, #22947),
+     * so a probe failure here is a real transport problem, not a pending mint.
      */
-    private suspend fun detectCapabilities(
-        siteLocalId: Int,
-        credentials: ProvisionedCredentials?,
-    ): SiteReadiness {
+    private suspend fun detectCapabilities(siteLocalId: Int): SiteReadiness {
         val site = siteStore.getSiteByLocalId(siteLocalId) ?: return SiteReadiness.Unreachable
-        // Overlay the credentials ensureAuth obtained. The fresh read can't be trusted to carry them:
-        // the plain columns are transient (never persisted), and a concurrent whole-row site write
-        // during My Site load can clobber the encrypted ones before this read (#22905). This copy is
-        // local to this coroutine — not shared with the parallel XML-RPC stage — so the overlay is
-        // race-free.
-        credentials?.let {
-            if (site.apiRestUsernamePlain.isNullOrEmpty()) site.apiRestUsernamePlain = it.username
-            if (site.apiRestPasswordPlain.isNullOrEmpty()) site.apiRestPasswordPlain = it.password
-        }
         val ok = editorSettingsRepository.fetchEditorCapabilitiesForSite(site)
         val hasCache = editorSettingsRepository.hasCachedCapabilities(site)
         return when {
@@ -268,26 +254,6 @@ class SiteProvisioningSource @Inject constructor(
         }
     }
 }
-
-/**
- * Snapshot of the application-password credentials [SiteProvisioningSource.ensureAuth] obtained,
- * handed forward to the capability probe as an immutable value rather than via a shared, mutated
- * [SiteModel] — so the parallel stages never race on it.
- */
-private data class ProvisionedCredentials(val username: String, val password: String)
-
-private fun SiteModel.provisionedCredentials(): ProvisionedCredentials? {
-    val user = apiRestUsernamePlain
-    val pass = apiRestPasswordPlain
-    return if (!user.isNullOrEmpty() && !pass.isNullOrEmpty()) ProvisionedCredentials(user, pass) else null
-}
-
-/**
- * [SiteProvisioningSource.ensureAuth]'s outcome: the public [SiteAuthState] plus, when provisioned,
- * the credentials to hand to the capability probe. Internal so the credentials never leak into the
- * UI-facing [SiteReadiness] / [SiteAuthState].
- */
-private data class AuthResult(val state: SiteAuthState, val credentials: ProvisionedCredentials? = null)
 
 /**
  * Whether a site's application password is usable. Owned by [SiteProvisioningSource];
