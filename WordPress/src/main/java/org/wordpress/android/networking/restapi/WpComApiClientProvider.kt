@@ -2,6 +2,8 @@ package org.wordpress.android.networking.restapi
 
 import okhttp3.OkHttpClient
 import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpNetworkAvailabilityProvider
+import org.wordpress.android.util.AppLog
+import rs.wordpress.api.kotlin.RequestErrorLogger
 import rs.wordpress.api.kotlin.WpComApiClient
 import rs.wordpress.api.kotlin.WpHttpClient
 import rs.wordpress.api.kotlin.WpRequestExecutor
@@ -29,7 +31,8 @@ class WpComApiClientProvider @Inject constructor(
                 networkAvailabilityProvider = networkAvailabilityProvider
             ),
             authProvider = WpAuthenticationProvider.staticWithAuth(WpAuthentication.Bearer(token = accessToken)
-            )
+            ),
+            errorLogger = RequestErrorLogger { AppLog.e(AppLog.T.API, it) }
         )
     }
 }

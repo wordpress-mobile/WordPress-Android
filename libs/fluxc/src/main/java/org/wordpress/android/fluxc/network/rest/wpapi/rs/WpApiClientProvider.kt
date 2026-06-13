@@ -9,6 +9,8 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.module.OkHttpClientQualifiers
 import org.wordpress.android.fluxc.network.rest.wpapi.applicationpasswords.WpAppNotifierHandler
 import org.wordpress.android.fluxc.store.AccountStore
+import org.wordpress.android.util.AppLog
+import rs.wordpress.api.kotlin.RequestErrorLogger
 import rs.wordpress.api.kotlin.WpApiClient
 import rs.wordpress.api.kotlin.WpHttpClient
 import rs.wordpress.api.kotlin.WpRequestExecutor
@@ -35,6 +37,8 @@ class WpApiClientProvider @Inject constructor(
 ) {
     private val wpComClients = mutableMapOf<Long, WpApiClient>()
     private val selfHostedClients = mutableMapOf<Int, WpApiClient>()
+
+    private val errorLogger = RequestErrorLogger { AppLog.e(AppLog.T.API, it) }
 
     /** Removes all cached API clients (e.g. on sign-out). */
     @Synchronized
@@ -116,6 +120,7 @@ class WpApiClientProvider @Inject constructor(
                         )
                 }
             },
+            errorLogger = errorLogger,
         )
     }
 
@@ -155,7 +160,8 @@ class WpApiClientProvider @Inject constructor(
                 override suspend fun requestedWithInvalidAuthentication(requestUrl: String) {
                     wpAppNotifierHandler.notifyRequestedWithInvalidAuthentication(site)
                 }
-            }
+            },
+            errorLogger = errorLogger
         )
         return client
     }
@@ -175,7 +181,8 @@ class WpApiClientProvider @Inject constructor(
                     override suspend fun requestedWithInvalidAuthentication(requestUrl: String) {
                         wpAppNotifierHandler.notifyRequestedWithInvalidAuthentication(site)
                     }
-                }
+                },
+                errorLogger = errorLogger
             )
         }
     }
