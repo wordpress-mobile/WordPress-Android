@@ -9,8 +9,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
 import androidx.annotation.VisibleForTesting
-import org.wordpress.android.fluxc.Dispatcher
-import org.wordpress.android.fluxc.generated.SiteActionBuilder
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.discovery.SelfHostedEndpointFinder
 import org.wordpress.android.fluxc.network.xmlrpc.site.SiteXMLRPCClient
@@ -41,7 +39,6 @@ class ApplicationPasswordViewModelSlice @Inject constructor(
     private val selfHostedEndpointFinder: SelfHostedEndpointFinder,
     private val siteXMLRPCClient: SiteXMLRPCClient,
     private val siteApiRestUrlRecoverer: SiteApiRestUrlRecoverer,
-    private val dispatcher: Dispatcher,
     private val credentialsChangedNotifier: CredentialsChangedNotifier,
     @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher,
 ) {
@@ -257,9 +254,10 @@ class ApplicationPasswordViewModelSlice @Inject constructor(
                 }
 
                 site.xmlRpcUrl = xmlRpcEndpoint
-                dispatcher.dispatch(
-                    SiteActionBuilder.newUpdateSiteAction(site)
-                )
+                // Persist only the rediscovered column — mirrors healApiRestUrlIfMissing. A full-row
+                // updateSite would rewrite ~80 columns from this in-memory model for a one-field change
+                // (risking clobbering other out-of-band values), so write just xmlRpcUrl.
+                siteStore.persistXmlRpcUrl(site.id, xmlRpcEndpoint)
                 buildCard(site)
             } catch (
                 @Suppress("SwallowedException")

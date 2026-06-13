@@ -105,7 +105,17 @@ class SiteSqlUtils
             .decryptAPIRestCredentials()
 
     /**
-     * Inserts the given SiteModel into the DB, or updates an existing entry where sites match.
+     * Inserts or updates [site] and returns the number of rows affected (1 if a row was written, 0
+     * otherwise). Use [insertOrUpdateSiteReturningId] when you need the local id of the written row.
+     */
+    @Throws(DuplicateSiteException::class)
+    fun insertOrUpdateSite(site: SiteModel?): Int =
+        if (insertOrUpdateSiteReturningId(site) != 0) 1 else 0
+
+    /**
+     * Inserts the given SiteModel into the DB, or updates an existing entry where sites match, returning the
+     * local id of the written row (0 if nothing was written). Returning the id lets callers target that exact
+     * row with the single-column writers without a second, fragile lookup.
      *
      * Possible cases:
      * 1. Exists in the DB already and matches by local id (simple update) -> UPDATE
@@ -117,7 +127,7 @@ class SiteSqlUtils
      */
     @Suppress("LongMethod", "ReturnCount", "ComplexMethod")
     @Throws(DuplicateSiteException::class)
-    fun insertOrUpdateSite(site: SiteModel?): Int {
+    fun insertOrUpdateSiteReturningId(site: SiteModel?): Int {
         if (site == null) {
             return 0
         }
@@ -214,15 +224,39 @@ class SiteSqlUtils
         return if (siteResult.isEmpty()) {
             // No site with this local ID, REMOTE_ID + URL, or XMLRPC URL, then insert it
             AppLog.d(DB, "Inserting site: " + finalSiteModel.url)
+            // WellSql back-fills the auto-assigned id onto the model on insert (Identifiable.setId).
             WellSql.insert(finalSiteModel).asSingleTransaction(true).execute()
-            1
+            finalSiteModel.id
         } else {
             // Update old site
             AppLog.d(DB, "Updating site: " + finalSiteModel.url)
             val oldId = siteResult[0].id
             try {
+                // WP_API_REST_URL and the application-password credential columns are discovered/healed out
+                // of band — never carried by the general site-sync responses — so they're excluded from the
+                // generic mapper and written only by their dedicated writers (updateWpApiRestUrl /
+                // updateApplicationPasswordCredentials); a stale full-row write must not clobber them.
+                //
+                // XMLRPC_URL is different: the WP.com REST sync reliably carries it (meta.links.xmlrpc), so
+                // the generic write persists it — that's how a changed endpoint (e.g. a domain migration)
+                // lands. But partial writers that don't carry it (the WPAPI fetch builds a model with a null
+                // xmlRpcUrl) must not clear a stored/rediscovered value, so preserve it on absence.
+                if (finalSiteModel.xmlRpcUrl.isNullOrEmpty()) {
+                    finalSiteModel.xmlRpcUrl = siteResult[0].xmlRpcUrl
+                }
                 WellSql.update(SiteModel::class.java).whereId(oldId)
-                        .put(finalSiteModel, UpdateAllExceptId(SiteModel::class.java)).execute()
+                        .put(
+                                finalSiteModel,
+                                UpdateAllExceptId(
+                                        SiteModel::class.java,
+                                        SiteModelTable.WP_API_REST_URL,
+                                        SiteModelTable.API_REST_USERNAME,
+                                        SiteModelTable.API_REST_PASSWORD,
+                                        SiteModelTable.API_REST_USERNAME_IV,
+                                        SiteModelTable.API_REST_PASSWORD_IV
+                                )
+                        ).execute()
+                oldId
             } catch (e: SQLiteConstraintException) {
                 AppLog.e(
                         DB,
@@ -260,6 +294,11 @@ class SiteSqlUtils
                 }).execute()
     }
 
+    /**
+     * Targeted writer for [SiteModel.wpApiRestUrl]. This is the sole writer of WP_API_REST_URL on an
+     * existing row: the generic full-row update path ([insertOrUpdateSite]) excludes the column so that
+     * stale in-memory sites can't clobber a value that was healed/discovered out of band.
+     */
     fun updateWpApiRestUrl(localId: Int, wpApiRestUrl: String): Int {
         return WellSql.update(SiteModel::class.java)
                 .whereId(localId)
@@ -269,6 +308,109 @@ class SiteSqlUtils
                     cv
                 }).execute()
     }
+
+    /**
+     * Clears [SiteModel.wpApiRestUrl] for the given local id. Use this instead of a full-row update when an
+     * explicit action (e.g. removing an application password) needs to drop the stored REST URL, since the
+     * generic update path no longer touches the column.
+     */
+    fun clearWpApiRestUrl(localId: Int): Int = updateWpApiRestUrl(localId, "")
+
+    /**
+     * Targeted writer for [SiteModel.xmlRpcUrl], used by the XML-RPC rediscovery heal to persist just that
+     * one column without a full-row write of an in-memory model. Unlike [updateWpApiRestUrl], XMLRPC_URL is
+     * NOT excluded from the generic mapper — the WP.com sync reliably carries it — but the generic update
+     * path preserves it on absence, so a partial write can't clobber a rediscovered value. (The recovery flow
+     * that calls this lands separately.)
+     */
+    fun updateXmlRpcUrl(localId: Int, xmlRpcUrl: String): Int {
+        return WellSql.update(SiteModel::class.java)
+                .whereId(localId)
+                .put(xmlRpcUrl, { value ->
+                    val cv = ContentValues()
+                    cv.put(SiteModelTable.XMLRPC_URL, value)
+                    cv
+                }).execute()
+    }
+
+    /**
+     * Targeted writer for the application-password credential columns: the encrypted username and password
+     * and their IVs. The four are written as a set — the IVs are required to decrypt the ciphertext, so
+     * persisting the values without their IVs would break reads. This is the sole writer of these columns on
+     * an existing row: the generic full-row update path excludes them so a credential-less inbound SiteModel
+     * (e.g. a /me/sites sync model) can't zero them out.
+     */
+    fun updateApplicationPasswordCredentials(localId: Int, usernamePlain: String, passwordPlain: String): Int {
+        val username = encryptionUtils.encrypt(usernamePlain)
+        val password = encryptionUtils.encrypt(passwordPlain)
+        return writeApplicationPasswordCredentialColumns(
+                localId, username.first, username.second, password.first, password.second
+        )
+    }
+
+    /**
+     * Clears the application-password credential columns (encrypted username/password and their IVs) for the
+     * given local id. Companion to [updateApplicationPasswordCredentials] for the sign-out / revoke paths,
+     * since the generic update path no longer touches these columns.
+     */
+    fun clearApplicationPasswordCredentials(localId: Int): Int =
+            writeApplicationPasswordCredentialColumns(localId, "", "", "", "")
+
+    /**
+     * The single place that maps the four application-password credential columns to their values, so the
+     * column set lives in one spot. Callers pass already-encrypted values (or empty strings to clear); each
+     * IV always travels with its ciphertext, so a row can never be left holding one without the other.
+     */
+    private fun writeApplicationPasswordCredentialColumns(
+        localId: Int,
+        usernameCipher: String,
+        usernameIv: String,
+        passwordCipher: String,
+        passwordIv: String
+    ): Int {
+        return WellSql.update(SiteModel::class.java)
+                .whereId(localId)
+                .put(localId, { _ ->
+                    val cv = ContentValues()
+                    cv.put(SiteModelTable.API_REST_USERNAME, usernameCipher)
+                    cv.put(SiteModelTable.API_REST_USERNAME_IV, usernameIv)
+                    cv.put(SiteModelTable.API_REST_PASSWORD, passwordCipher)
+                    cv.put(SiteModelTable.API_REST_PASSWORD_IV, passwordIv)
+                    cv
+                }).execute()
+    }
+
+    /**
+     * URL-keyed variant of [updateWpApiRestUrl] for application-password (ORIGIN_WPAPI) sites, which are
+     * fetched as fresh models with no local id (see SiteWPAPIRestClient.fetchWPAPISite). Scoped to
+     * ORIGIN_WPAPI so it can't touch a WP.com/Jetpack row that happens to share the same URL.
+     */
+    fun updateWpApiRestUrlForWPAPISite(siteUrl: String, wpApiRestUrl: String): Int {
+        val localId = wpApiSiteLocalIdByUrl(siteUrl) ?: return 0
+        return updateWpApiRestUrl(localId, wpApiRestUrl)
+    }
+
+    /**
+     * URL-keyed variant of [updateApplicationPasswordCredentials] for ORIGIN_WPAPI sites fetched without a
+     * local id. See [updateWpApiRestUrlForWPAPISite].
+     */
+    fun updateApplicationPasswordCredentialsForWPAPISite(
+        siteUrl: String,
+        usernamePlain: String,
+        passwordPlain: String
+    ): Int {
+        val localId = wpApiSiteLocalIdByUrl(siteUrl) ?: return 0
+        return updateApplicationPasswordCredentials(localId, usernamePlain, passwordPlain)
+    }
+
+    private fun wpApiSiteLocalIdByUrl(siteUrl: String): Int? =
+        WellSql.select(SiteModel::class.java)
+                .where().beginGroup()
+                .equals(SiteModelTable.URL, siteUrl)
+                .equals(SiteModelTable.ORIGIN, SiteModel.ORIGIN_WPAPI)
+                .endGroup().endWhere()
+                .asModel
+                .firstOrNull()?.id
 
     val wPComSites: SelectQuery<SiteModel>
         get() = WellSql.select(SiteModel::class.java)
@@ -573,14 +715,17 @@ class SiteSqlUtils
         return this.map { it.decryptAPIRestCredentials() }
     }
 
-    @Suppress("ReturnCount")
+    @Suppress("ReturnCount", "ComplexCondition")
     private fun SiteModel.decryptAPIRestCredentials(): SiteModel {
         // If already decrypted, do nothing
         if (!apiRestUsernamePlain.isNullOrEmpty() && !apiRestPasswordPlain.isNullOrEmpty()) {
             return this
         }
-        // If the encrypted credentials are empty, there's nothing to decrypt
-        if (apiRestUsernameEncrypted.isNullOrEmpty() || apiRestPasswordEncrypted.isNullOrEmpty()) {
+        // If the encrypted credentials — or the IVs required to decrypt them — are empty, there's nothing to
+        // safely decrypt. The ciphertext/IV pairs are always written together, so a row missing any one is
+        // treated as having no decryptable credentials rather than risking a decrypt failure on a blank IV.
+        if (apiRestUsernameEncrypted.isNullOrEmpty() || apiRestPasswordEncrypted.isNullOrEmpty() ||
+            apiRestUsernameIV.isNullOrEmpty() || apiRestPasswordIV.isNullOrEmpty()) {
             return this
         }
         apiRestUsernamePlain = encryptionUtils.decrypt(apiRestUsernameEncrypted, apiRestUsernameIV)
