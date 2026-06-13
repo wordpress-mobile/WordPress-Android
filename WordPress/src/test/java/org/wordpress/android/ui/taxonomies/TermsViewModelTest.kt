@@ -17,14 +17,13 @@ import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.network.TrackNetworkRequestsInterceptor
 import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpApiClientProvider
-import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpNetworkAvailabilityProvider
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.TaxonomyStore
 import org.wordpress.android.fluxc.store.TaxonomyStore.DEFAULT_TAXONOMY_CATEGORY
 import org.wordpress.android.fluxc.store.TaxonomyStore.DEFAULT_TAXONOMY_TAG
 import org.wordpress.android.fluxc.utils.AppLogWrapper
+import org.wordpress.android.networking.restapi.WpComApiClientProvider
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.util.NetworkUtilsWrapper
 
@@ -58,10 +57,7 @@ class TermsViewModelTest : BaseUnitTest() {
     private lateinit var fluxCDispatcher: Dispatcher
 
     @Mock
-    private lateinit var trackNetworkRequestsInterceptor: TrackNetworkRequestsInterceptor
-
-    @Mock
-    private lateinit var networkAvailabilityProvider: WpNetworkAvailabilityProvider
+    private lateinit var wpComApiClientProvider: WpComApiClientProvider
 
     @Before
     fun setUp() {
@@ -81,8 +77,7 @@ class TermsViewModelTest : BaseUnitTest() {
             ioDispatcher = testDispatcher(),
             taxonomyStore = taxonomyStore,
             fluxCDispatcher = fluxCDispatcher,
-            trackNetworkRequestsInterceptor = trackNetworkRequestsInterceptor,
-            networkAvailabilityProvider = networkAvailabilityProvider
+            wpComApiClientProvider = wpComApiClientProvider
         )
     }
 

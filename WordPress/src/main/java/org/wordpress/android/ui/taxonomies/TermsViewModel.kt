@@ -19,9 +19,7 @@ import org.wordpress.android.fluxc.generated.TaxonomyActionBuilder
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.TermModel
 import org.wordpress.android.fluxc.model.TermsModel
-import org.wordpress.android.fluxc.network.TrackNetworkRequestsInterceptor
 import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpApiClientProvider
-import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpNetworkAvailabilityProvider
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.TaxonomyStore
 import org.wordpress.android.fluxc.store.TaxonomyStore.DEFAULT_TAXONOMY_CATEGORY
@@ -30,6 +28,7 @@ import org.wordpress.android.fluxc.store.TaxonomyStore.FetchTermsResponsePayload
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.modules.UI_THREAD
+import org.wordpress.android.networking.restapi.WpComApiClientProvider
 import org.wordpress.android.ui.dataview.DataViewDropdownItem
 import org.wordpress.android.ui.dataview.DataViewFieldType
 import org.wordpress.android.ui.dataview.DataViewItem
@@ -89,8 +88,7 @@ class TermsViewModel @Inject constructor(
     sharedPrefs: SharedPreferences,
     networkUtilsWrapper: NetworkUtilsWrapper,
     @Named(IO_THREAD) ioDispatcher: CoroutineDispatcher,
-    trackNetworkRequestsInterceptor: TrackNetworkRequestsInterceptor,
-    networkAvailabilityProvider: WpNetworkAvailabilityProvider,
+    wpComApiClientProvider: WpComApiClientProvider,
 ) : DataViewViewModel(
     mainDispatcher = mainDispatcher,
     appLogWrapper = appLogWrapper,
@@ -99,8 +97,7 @@ class TermsViewModel @Inject constructor(
     selectedSiteRepository = selectedSiteRepository,
     accountStore = accountStore,
     ioDispatcher = ioDispatcher,
-    trackNetworkRequestsInterceptor = trackNetworkRequestsInterceptor,
-    networkAvailabilityProvider = networkAvailabilityProvider
+    wpComApiClientProvider = wpComApiClientProvider
 ) {
     private var taxonomySlug: String = ""
     private var isHierarchical: Boolean = false
