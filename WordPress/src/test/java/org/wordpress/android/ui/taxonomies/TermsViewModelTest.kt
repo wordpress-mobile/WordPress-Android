@@ -18,14 +18,13 @@ import org.wordpress.android.R
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpApiClientProvider
-import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.TaxonomyStore
 import org.wordpress.android.fluxc.store.TaxonomyStore.DEFAULT_TAXONOMY_CATEGORY
 import org.wordpress.android.fluxc.store.TaxonomyStore.DEFAULT_TAXONOMY_TAG
 import org.wordpress.android.fluxc.utils.AppLogWrapper
-import org.wordpress.android.networking.restapi.WpComApiClientProvider
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.util.NetworkUtilsWrapper
+import rs.wordpress.api.kotlin.WpComApiClient
 
 @ExperimentalCoroutinesApi
 class TermsViewModelTest : BaseUnitTest() {
@@ -42,9 +41,6 @@ class TermsViewModelTest : BaseUnitTest() {
     private lateinit var selectedSiteRepository: SelectedSiteRepository
 
     @Mock
-    private lateinit var accountStore: AccountStore
-
-    @Mock
     private lateinit var sharedPrefs: SharedPreferences
 
     @Mock
@@ -57,7 +53,7 @@ class TermsViewModelTest : BaseUnitTest() {
     private lateinit var fluxCDispatcher: Dispatcher
 
     @Mock
-    private lateinit var wpComApiClientProvider: WpComApiClientProvider
+    private lateinit var wpComApiClient: WpComApiClient
 
     @Before
     fun setUp() {
@@ -70,14 +66,13 @@ class TermsViewModelTest : BaseUnitTest() {
             wpApiClientProvider = wpApiClientProvider,
             appLogWrapper = appLogWrapper,
             selectedSiteRepository = selectedSiteRepository,
-            accountStore = accountStore,
             mainDispatcher = testDispatcher(),
             sharedPrefs = sharedPrefs,
             networkUtilsWrapper = networkUtilsWrapper,
             ioDispatcher = testDispatcher(),
             taxonomyStore = taxonomyStore,
             fluxCDispatcher = fluxCDispatcher,
-            wpComApiClientProvider = wpComApiClientProvider
+            wpComApiClient = wpComApiClient
         )
     }
 

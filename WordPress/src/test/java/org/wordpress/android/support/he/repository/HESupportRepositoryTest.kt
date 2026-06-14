@@ -12,7 +12,6 @@ import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.utils.AppLogWrapper
-import org.wordpress.android.networking.restapi.WpComApiClientProvider
 import org.wordpress.android.support.he.model.SupportConversation
 import org.wordpress.android.support.he.model.SupportMessage
 import rs.wordpress.api.kotlin.WpComApiClient
@@ -29,53 +28,22 @@ class HESupportRepositoryTest : BaseUnitTest() {
     lateinit var appLogWrapper: AppLogWrapper
 
     @Mock
-    lateinit var wpComApiClientProvider: WpComApiClientProvider
-
-    @Mock
     lateinit var wpComApiClient: WpComApiClient
 
     private lateinit var repository: HESupportRepository
 
-    private val testAccessToken = "test_access_token_123"
-
     @Before
     fun setUp() {
-        whenever(wpComApiClientProvider.getWpComApiClient(testAccessToken))
-            .thenReturn(wpComApiClient)
-
         repository = HESupportRepository(
             appLogWrapper = appLogWrapper,
-            wpComApiClientProvider = wpComApiClientProvider,
+            wpComApiClient = wpComApiClient,
             ioDispatcher = testDispatcher()
         )
     }
 
     @Test
-    fun `init sets access token`() {
-        // When
-        repository.init(testAccessToken)
-
-        // Then - No exception thrown when using the repository
-        // The test passes if no exception is thrown
-    }
-
-    @Test
-    fun `repository requires initialization before use`() = runTest {
-        // Given - repository not initialized
-
-        // When/Then - Should throw when trying to use without init
-        try {
-            repository.loadConversations()
-            error("Expected exception was not thrown")
-        } catch (e: IllegalStateException) {
-            assertThat(e.message).contains("Repository not initialized")
-        }
-    }
-
-    @Test
     fun `loadConversations returns list when request succeeds`() = runTest {
         // Given
-        repository.init(testAccessToken)
 
         val conversationSummary1 = createSupportConversationSummary(1L)
         val conversationSummary2 = createSupportConversationSummary(2L)
@@ -107,7 +75,6 @@ class HESupportRepositoryTest : BaseUnitTest() {
     @Test
     fun `loadConversations returns empty list when request fails`() = runTest {
         // Given
-        repository.init(testAccessToken)
 
         val errorResponse: WpRequestResult<List<SupportConversationSummary>> =
             WpRequestResult.UnknownError(500.toUInt(), "Internal Server Error", "", RequestMethod.GET)
@@ -126,7 +93,6 @@ class HESupportRepositoryTest : BaseUnitTest() {
     @Test
     fun `loadConversation returns conversation when request succeeds`() = runTest {
         // Given
-        repository.init(testAccessToken)
         val conversationId = 123L
 
         val supportConversation = createSupportConversation(conversationId)
@@ -155,7 +121,6 @@ class HESupportRepositoryTest : BaseUnitTest() {
     @Test
     fun `loadConversation returns null when request fails`() = runTest {
         // Given
-        repository.init(testAccessToken)
         val conversationId = 123L
 
         val errorResponse: WpRequestResult<uniffi.wp_api.SupportConversation> =
@@ -175,7 +140,6 @@ class HESupportRepositoryTest : BaseUnitTest() {
     @Test
     fun `createConversation returns success when request succeeds`() = runTest {
         // Given
-        repository.init(testAccessToken)
         val subject = "Test Subject"
         val message = "Test Message"
         val tags = listOf("tag1", "tag2")
@@ -215,7 +179,6 @@ class HESupportRepositoryTest : BaseUnitTest() {
     @Test
     fun `createConversation returns Forbidden when request fails with WpErrorCode-Forbidden`() = runTest {
         // Given
-        repository.init(testAccessToken)
 
         val errorResponse: WpRequestResult<uniffi.wp_api.SupportConversation> =
             WpRequestResult.WpError(
@@ -247,7 +210,6 @@ class HESupportRepositoryTest : BaseUnitTest() {
     @Test
     fun `createConversation returns GeneralError when request fails with non-auth error`() = runTest {
         // Given
-        repository.init(testAccessToken)
 
         val errorResponse: WpRequestResult<uniffi.wp_api.SupportConversation> =
             WpRequestResult.UnknownError(500.toUInt(), "Internal Server Error", "", RequestMethod.GET)
@@ -272,7 +234,6 @@ class HESupportRepositoryTest : BaseUnitTest() {
     @Test
     fun `addMessageToConversation returns success when request succeeds`() = runTest {
         // Given
-        repository.init(testAccessToken)
         val conversationId = 456L
         val message = "Test Reply Message"
         val attachments = listOf("reply-attachment.jpg")
@@ -309,7 +270,6 @@ class HESupportRepositoryTest : BaseUnitTest() {
     @Test
     fun `addMessageToConversation returns GeneralError when request fails with non-auth error`() = runTest {
         // Given
-        repository.init(testAccessToken)
 
         val errorResponse: WpRequestResult<uniffi.wp_api.SupportConversation> =
             WpRequestResult.UnknownError(500.toUInt(), "Internal Server Error", "", RequestMethod.GET)

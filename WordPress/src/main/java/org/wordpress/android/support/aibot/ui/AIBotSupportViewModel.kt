@@ -42,8 +42,8 @@ class AIBotSupportViewModel @Inject constructor(
     private val paginationMutex = Mutex()
     private var currentPage = 1L
 
-    override fun initRepository(accessToken: String) {
-        aiBotSupportRepository.init(accessToken, accountStore.account.userId)
+    override fun initRepository() {
+        aiBotSupportRepository.init(accountStore.account.userId)
     }
 
     override suspend fun getConversations() = aiBotSupportRepository.loadConversations()

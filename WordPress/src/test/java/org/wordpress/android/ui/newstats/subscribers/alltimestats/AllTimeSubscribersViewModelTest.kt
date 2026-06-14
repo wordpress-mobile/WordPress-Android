@@ -258,17 +258,6 @@ class AllTimeSubscribersViewModelTest : BaseUnitTest() {
         assertThat(state.count90DaysAgo).isEqualTo(0L)
     }
 
-    @Test
-    fun `when data loads, then statsRepository init is called with token`() = test {
-        whenever(statsRepository.fetchSubscribersAllTime(any()))
-            .thenReturn(createSuccessResult())
-
-        initViewModel()
-        advanceUntilIdle()
-
-        verify(statsRepository).init(eq(TEST_ACCESS_TOKEN))
-    }
-
     private fun createSuccessResult() = SubscribersAllTimeResult.Success(
         currentCount = TEST_CURRENT,
         count30DaysAgo = TEST_30D,

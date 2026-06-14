@@ -70,10 +70,6 @@ class HESupportViewModel @Inject constructor(
     private val _replyFormState = MutableStateFlow(ConversationReplyFormState())
     val replyFormState: StateFlow<ConversationReplyFormState> = _replyFormState.asStateFlow()
 
-    override fun initRepository(accessToken: String) {
-        heSupportRepository.init(accessToken)
-    }
-
     override suspend fun getConversations(): List<SupportConversation> = heSupportRepository.loadConversations()
 
     @Suppress("TooGenericExceptionCaught")

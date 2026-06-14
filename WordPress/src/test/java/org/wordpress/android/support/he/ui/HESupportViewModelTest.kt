@@ -120,16 +120,6 @@ class HESupportViewModelTest : BaseUnitTest() {
 
     // region initRepository() override tests
 
-    @Test
-    fun `initRepository calls repository init with correct access token`() = test {
-        whenever(heSupportRepository.loadConversations()).thenReturn(emptyList())
-
-        viewModel.init()
-        advanceUntilIdle()
-
-        verify(heSupportRepository).init(testAccessToken)
-    }
-
     // endregion
 
     // region getConversations() override tests

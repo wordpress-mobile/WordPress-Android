@@ -27,7 +27,6 @@ class StatsSummaryUseCase @Inject constructor(
                 "No access token"
             )
         }
-        statsRepository.init(token)
         mutex.withLock {
             val cached = cachedSummary
             if (!forceRefresh &&

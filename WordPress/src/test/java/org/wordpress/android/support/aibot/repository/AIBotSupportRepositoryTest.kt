@@ -11,7 +11,6 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.utils.AppLogWrapper
-import org.wordpress.android.networking.restapi.WpComApiClientProvider
 import rs.wordpress.api.kotlin.WpComApiClient
 import rs.wordpress.api.kotlin.WpRequestResult
 import uniffi.wp_api.BotConversation as ApiBotConversation
@@ -34,24 +33,19 @@ class AIBotSupportRepositoryTest : BaseUnitTest() {
     @Mock
     private lateinit var appLogWrapper: AppLogWrapper
     @Mock
-    private lateinit var wpComApiClientProvider: WpComApiClientProvider
-    @Mock
     private lateinit var wpComApiClient: WpComApiClient
 
     private lateinit var repository: AIBotSupportRepository
 
-    private val testAccessToken = "test_access_token"
     private val testUserId = 12345L
     private val testChatId = 1L
     private val testMessage = "Test message"
 
     @Before
     fun setUp() = test {
-        whenever(wpComApiClientProvider.getWpComApiClient(testAccessToken)).thenReturn(wpComApiClient)
-
         repository = AIBotSupportRepository(
             appLogWrapper = appLogWrapper,
-            wpComApiClientProvider = wpComApiClientProvider,
+            wpComApiClient = wpComApiClient,
             testDispatcher()
         )
     }
@@ -72,7 +66,7 @@ class AIBotSupportRepositoryTest : BaseUnitTest() {
 
         val successResponse = WpRequestResult.Success(response = response)
 
-        repository.init(testAccessToken, testUserId)
+        repository.init(testUserId)
         whenever(wpComApiClient.request<SupportBotsRequestGetBotConversationListResponse>(any()))
             .thenReturn(successResponse)
 
@@ -106,7 +100,7 @@ class AIBotSupportRepositoryTest : BaseUnitTest() {
 
         val successResponse = WpRequestResult.Success(response = response)
 
-        repository.init(testAccessToken, testUserId)
+        repository.init(testUserId)
         whenever(wpComApiClient.request<SupportBotsRequestGetBotConversationResponse>(any()))
             .thenReturn(successResponse)
 
@@ -131,7 +125,7 @@ class AIBotSupportRepositoryTest : BaseUnitTest() {
             requestMethod = RequestMethod.GET
         )
 
-        repository.init(testAccessToken, testUserId)
+        repository.init(testUserId)
 
         // Mock the suspend function call
         whenever(wpComApiClient.request<Any>(any())).thenReturn(errorResponse)
@@ -151,7 +145,7 @@ class AIBotSupportRepositoryTest : BaseUnitTest() {
             requestMethod = RequestMethod.GET
         )
 
-        repository.init(testAccessToken, testUserId)
+        repository.init(testUserId)
         whenever(wpComApiClient.request<Any>(any())).thenReturn(errorResponse)
 
         val result = repository.loadConversation(testChatId)
@@ -182,7 +176,7 @@ class AIBotSupportRepositoryTest : BaseUnitTest() {
 
         val successResponse = WpRequestResult.Success(response = response)
 
-        repository.init(testAccessToken, testUserId)
+        repository.init(testUserId)
         whenever(wpComApiClient.request<SupportBotsRequestCreateBotConversationResponse>(any()))
             .thenReturn(successResponse)
 
@@ -206,7 +200,7 @@ class AIBotSupportRepositoryTest : BaseUnitTest() {
             requestMethod = RequestMethod.GET
         )
 
-        repository.init(testAccessToken, testUserId)
+        repository.init(testUserId)
         whenever(wpComApiClient.request<Any>(any())).thenReturn(errorResponse)
 
         val result = repository.createNewConversation(testMessage)
@@ -239,7 +233,7 @@ class AIBotSupportRepositoryTest : BaseUnitTest() {
 
         val successResponse = WpRequestResult.Success(response = response)
 
-        repository.init(testAccessToken, testUserId)
+        repository.init(testUserId)
         whenever(wpComApiClient.request<SupportBotsRequestAddMessageToBotConversationResponse>(any()))
             .thenReturn(successResponse)
 
@@ -264,7 +258,7 @@ class AIBotSupportRepositoryTest : BaseUnitTest() {
             requestMethod = RequestMethod.GET
         )
 
-        repository.init(testAccessToken, testUserId)
+        repository.init(testUserId)
         whenever(wpComApiClient.request<Any>(any())).thenReturn(errorResponse)
 
         val result = repository.sendMessageToConversation(testChatId, testMessage)

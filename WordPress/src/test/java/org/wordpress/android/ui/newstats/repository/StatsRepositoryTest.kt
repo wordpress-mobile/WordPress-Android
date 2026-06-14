@@ -50,15 +50,6 @@ class StatsRepositoryTest : BaseUnitTest() {
         )
     }
 
-    // region init
-    @Test
-    fun `when init is called, then data source is initialized with access token`() {
-        repository.init(TEST_ACCESS_TOKEN)
-
-        verify(statsDataSource).init(eq(TEST_ACCESS_TOKEN))
-    }
-    // endregion
-
     // region fetchTodayAggregates
     @Test
     fun `given successful response, when fetchTodayAggregates is called, then success result is returned`() = test {
@@ -758,7 +749,6 @@ class StatsRepositoryTest : BaseUnitTest() {
 
     companion object {
         private const val TEST_SITE_ID = 123L
-        private const val TEST_ACCESS_TOKEN = "test_access_token"
         private val TEST_ERROR_TYPE = StatsErrorType.NETWORK_ERROR
 
         private const val TEST_PERIOD_1 = "2024-01-15"

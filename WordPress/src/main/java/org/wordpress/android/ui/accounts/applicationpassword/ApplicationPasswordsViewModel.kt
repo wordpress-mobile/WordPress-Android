@@ -9,11 +9,9 @@ import kotlinx.coroutines.withContext
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpApiClientProvider
-import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.modules.UI_THREAD
-import org.wordpress.android.networking.restapi.WpComApiClientProvider
 import org.wordpress.android.ui.dataview.DataViewDropdownItem
 import org.wordpress.android.ui.dataview.DataViewFieldType
 import org.wordpress.android.ui.dataview.DataViewItem
@@ -25,6 +23,7 @@ import org.wordpress.android.util.NetworkUtilsWrapper
 import java.text.SimpleDateFormat
 import java.util.Locale
 import rs.wordpress.api.kotlin.WpApiClient
+import rs.wordpress.api.kotlin.WpComApiClient
 import rs.wordpress.api.kotlin.WpRequestResult
 import uniffi.wp_api.ApplicationPasswordWithViewContext
 import uniffi.wp_api.RequestExecutionErrorReason
@@ -38,21 +37,19 @@ class ApplicationPasswordsViewModel @Inject constructor(
     private val wpApiClientProvider: WpApiClientProvider,
     private val appLogWrapper: AppLogWrapper,
     private val selectedSiteRepository: SelectedSiteRepository,
-    accountStore: AccountStore,
     @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
     sharedPrefs: SharedPreferences,
     networkUtilsWrapper: NetworkUtilsWrapper,
     @Named(IO_THREAD) ioDispatcher: CoroutineDispatcher,
-    wpComApiClientProvider: WpComApiClientProvider,
+    wpComApiClient: WpComApiClient,
 ) : DataViewViewModel(
     mainDispatcher = mainDispatcher,
     appLogWrapper = appLogWrapper,
     sharedPrefs = sharedPrefs,
     networkUtilsWrapper = networkUtilsWrapper,
     selectedSiteRepository = selectedSiteRepository,
-    accountStore = accountStore,
     ioDispatcher = ioDispatcher,
-    wpComApiClientProvider = wpComApiClientProvider
+    wpComApiClient = wpComApiClient
 ) {
     init {
         initialize()

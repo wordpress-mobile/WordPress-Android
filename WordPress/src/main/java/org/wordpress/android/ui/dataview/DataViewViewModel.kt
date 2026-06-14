@@ -14,14 +14,12 @@ import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
-import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.NetworkUtilsWrapper
-import org.wordpress.android.networking.restapi.WpComApiClientProvider
 import org.wordpress.android.viewmodel.ScopedViewModel
 import rs.wordpress.api.kotlin.WpComApiClient
 import uniffi.wp_api.WpApiParamOrder
@@ -40,9 +38,8 @@ open class DataViewViewModel @Inject constructor(
     private val sharedPrefs: SharedPreferences,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     private val selectedSiteRepository: SelectedSiteRepository,
-    private val accountStore: AccountStore,
     @Named(IO_THREAD) protected val ioDispatcher: CoroutineDispatcher,
-    private val wpComApiClientProvider: WpComApiClientProvider,
+    protected val wpComApiClient: WpComApiClient,
 ) : ScopedViewModel(mainDispatcher) {
     private val _uiState = MutableStateFlow(DataViewUiState())
     val uiState: StateFlow<DataViewUiState> = _uiState.asStateFlow()
@@ -76,12 +73,6 @@ open class DataViewViewModel @Inject constructor(
                 errorMessage = null
             )
         }
-    }
-
-    protected val wpComApiClient: WpComApiClient by lazy {
-        wpComApiClientProvider.getWpComApiClient(
-            requireNotNull(accountStore.accessToken) { "Access token is required but was null" }
-        )
     }
 
     init {

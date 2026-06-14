@@ -529,22 +529,6 @@ class SubscribersGraphViewModelTest : BaseUnitTest() {
             assertThat(state.isAuthError).isTrue()
         }
 
-    @Test
-    fun `when data loads, then statsRepository init is called with token`() =
-        test {
-            whenever(
-                statsRepository.fetchSubscribersGraph(
-                    any(), any(), any(), any()
-                )
-            ).thenReturn(createSuccessResult())
-
-            initViewModel()
-            advanceUntilIdle()
-
-            verify(statsRepository)
-                .init(eq(TEST_ACCESS_TOKEN))
-        }
-
     private fun createSuccessResult() =
         SubscribersGraphResult.Success(
             dataPoints = listOf(

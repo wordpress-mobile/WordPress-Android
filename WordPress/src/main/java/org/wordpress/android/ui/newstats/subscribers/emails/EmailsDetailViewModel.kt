@@ -54,7 +54,6 @@ class EmailsDetailViewModel @Inject constructor(
                 _isLoading.value = false
                 return@launch
             }
-            statsRepository.init(accessToken)
 
             try {
                 val result =

@@ -356,7 +356,7 @@ class AIBotSupportViewModelTest : BaseUnitTest() {
         viewModel.init()
         advanceUntilIdle()
 
-        verify(aiBotSupportRepository).init(testAccessToken, testUserId)
+        verify(aiBotSupportRepository).init(testUserId)
     }
 
     @Test

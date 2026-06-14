@@ -276,17 +276,6 @@ class SubscribersListViewModelTest : BaseUnitTest() {
         assertThat(state.items[0].subscribedSince).isEqualTo("2024-06-15T10:00:00")
     }
 
-    @Test
-    fun `when data loads, then statsRepository init is called with token`() = test {
-        whenever(statsRepository.fetchSubscribersList(any(), any(), any()))
-            .thenReturn(SubscribersListResult.Success(createTestItems()))
-
-        initViewModel()
-        advanceUntilIdle()
-
-        verify(statsRepository).init(eq(TEST_ACCESS_TOKEN))
-    }
-
     private fun createTestItems() = listOf(
         SubscriberItemData(displayName = "User 1", subscribedSince = "2024-01-01"),
         SubscriberItemData(displayName = "User 2", subscribedSince = "2024-01-02")

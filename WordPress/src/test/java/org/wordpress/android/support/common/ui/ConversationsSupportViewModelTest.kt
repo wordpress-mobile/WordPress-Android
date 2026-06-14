@@ -474,7 +474,7 @@ class ConversationsSupportViewModelTest : BaseUnitTest() {
         }
 
         @Suppress("TooGenericExceptionThrown")
-        override fun initRepository(accessToken: String) {
+        override fun initRepository() {
             if (shouldThrowOnInit) {
                 throw RuntimeException("Init failed")
             }

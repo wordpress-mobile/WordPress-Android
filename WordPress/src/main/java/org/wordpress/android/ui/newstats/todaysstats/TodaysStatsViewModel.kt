@@ -85,8 +85,6 @@ class TodaysStatsViewModel @Inject constructor(
             )
             return
         }
-
-        statsRepository.init(accessToken)
         _uiState.value = TodaysStatsCardUiState.Loading
 
         viewModelScope.launch {

@@ -4,7 +4,6 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.modules.IO_THREAD
-import org.wordpress.android.networking.restapi.WpComApiClientProvider
 import org.wordpress.android.support.aibot.model.BotConversation
 import org.wordpress.android.support.aibot.model.BotMessage
 import org.wordpress.android.ui.compose.utils.markdownToAnnotatedString
@@ -26,17 +25,9 @@ private const val ITEMS_PER_PAGE = 20
 
 class AIBotSupportRepository @Inject constructor(
     private val appLogWrapper: AppLogWrapper,
-    private val wpComApiClientProvider: WpComApiClientProvider,
+    private val wpComApiClient: WpComApiClient,
     @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher,
 ) {
-    /**
-     * Access token for API authentication.
-     * Marked as @Volatile to ensure visibility across threads since this repository is accessed
-     * from multiple coroutine contexts (main thread initialization, IO dispatcher for API calls).
-     */
-    @Volatile
-    private var accessToken: String? = null
-
     /**
      * User ID for API operations.
      * Marked as @Volatile to ensure visibility across threads.
@@ -44,13 +35,7 @@ class AIBotSupportRepository @Inject constructor(
     @Volatile
     private var userId: Long = 0
 
-    private val wpComApiClient: WpComApiClient by lazy {
-        check(accessToken != null || userId != 0L) { "Repository not initialized" }
-        wpComApiClientProvider.getWpComApiClient(accessToken!!)
-    }
-
-    fun init(accessToken: String, userId: Long) {
-        this.accessToken = accessToken
+    fun init(userId: Long) {
         this.userId = userId
     }
 

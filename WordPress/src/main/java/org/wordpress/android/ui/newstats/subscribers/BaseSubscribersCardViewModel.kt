@@ -56,7 +56,6 @@ abstract class BaseSubscribersCardViewModel<UiState : Any>(
             ?: return
         val accessToken = accountStore.accessToken
         if (accessToken.isNullOrEmpty()) return
-        statsRepository.init(accessToken)
         resetLoadedSuccessfully()
         isLoading.set(true)
         loadJob?.cancel()
@@ -97,8 +96,6 @@ abstract class BaseSubscribersCardViewModel<UiState : Any>(
             )
             return
         }
-
-        statsRepository.init(accessToken)
         updateState(loadingState)
 
         loadJob?.cancel()

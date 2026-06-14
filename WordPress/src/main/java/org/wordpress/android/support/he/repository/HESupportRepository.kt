@@ -4,7 +4,6 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.modules.IO_THREAD
-import org.wordpress.android.networking.restapi.WpComApiClientProvider
 import org.wordpress.android.support.he.model.AttachmentType
 import org.wordpress.android.support.he.model.SupportAttachment
 import org.wordpress.android.support.he.model.SupportConversation
@@ -35,26 +34,9 @@ sealed class CreateConversationResult {
 
 class HESupportRepository @Inject constructor(
     private val appLogWrapper: AppLogWrapper,
-    private val wpComApiClientProvider: WpComApiClientProvider,
+    private val wpComApiClient: WpComApiClient,
     @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher,
 ) {
-    /**
-     * Access token for API authentication.
-     * Marked as @Volatile to ensure visibility across threads since this repository is accessed
-     * from multiple coroutine contexts (main thread initialization, IO dispatcher for API calls).
-     */
-    @Volatile
-    private var accessToken: String? = null
-
-    private val wpComApiClient: WpComApiClient by lazy {
-        check(accessToken != null) { "Repository not initialized" }
-        wpComApiClientProvider.getWpComApiClient(accessToken!!)
-    }
-
-    fun init(accessToken: String) {
-        this.accessToken = accessToken
-    }
-
     suspend fun loadConversations(): List<SupportConversation> = withContext(ioDispatcher) {
         val response = wpComApiClient.request { requestBuilder ->
             requestBuilder.supportTickets().getSupportConversationList()

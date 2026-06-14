@@ -60,8 +60,6 @@ class UtmDetailViewModel @Inject constructor(
 
         val category = resolveCategory()
         val period = resolvePeriod()
-
-        statsRepository.init(accessToken)
         _uiState.value = UtmDetailUiState.Loading
 
         viewModelScope.launch {

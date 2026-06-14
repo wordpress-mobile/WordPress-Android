@@ -6,11 +6,6 @@ package org.wordpress.android.ui.newstats.datasource
  */
 interface StatsDataSource {
     /**
-     * Initializes the data source with the access token.
-     */
-    fun init(accessToken: String)
-
-    /**
      * Fetches stats data for a specific site.
      *
      * @param siteId The WordPress.com site ID

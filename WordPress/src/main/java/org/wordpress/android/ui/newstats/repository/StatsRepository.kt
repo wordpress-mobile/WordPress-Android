@@ -92,9 +92,6 @@ class StatsRepository @Inject constructor(
     @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher,
 ) {
     private val dateFormatter = DateTimeFormatter.ISO_LOCAL_DATE
-    fun init(accessToken: String) {
-        statsDataSource.init(accessToken)
-    }
 
     /**
      * Fetches today's aggregated stats (views, visitors, likes, comments).

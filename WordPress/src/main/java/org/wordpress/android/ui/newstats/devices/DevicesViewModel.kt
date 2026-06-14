@@ -80,8 +80,6 @@ class DevicesViewModel @Inject constructor(
             setAllStatesError(R.string.stats_error_api)
             return
         }
-
-        statsRepository.init(accessToken)
         setCurrentTypeLoading()
 
         viewModelScope.launch {
@@ -93,8 +91,6 @@ class DevicesViewModel @Inject constructor(
         val site = selectedSiteRepository.getSelectedSite() ?: return
         val accessToken = accountStore.accessToken
         if (accessToken.isNullOrEmpty()) return
-
-        statsRepository.init(accessToken)
         viewModelScope.launch {
             try {
                 _isRefreshing.value = true
@@ -136,7 +132,6 @@ class DevicesViewModel @Inject constructor(
                 selectedSiteRepository.getSelectedSite() ?: return
             val accessToken = accountStore.accessToken
             if (accessToken.isNullOrEmpty()) return
-            statsRepository.init(accessToken)
 
             setTypeLoading(type)
             viewModelScope.launch {

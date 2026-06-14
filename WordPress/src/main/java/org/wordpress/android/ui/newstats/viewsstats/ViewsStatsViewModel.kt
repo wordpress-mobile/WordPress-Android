@@ -357,8 +357,6 @@ class ViewsStatsViewModel @Inject constructor(
             )
             return
         }
-
-        statsRepository.init(accessToken)
         val current = _uiState.value
         if (current !is ViewsStatsCardUiState.Loaded ||
             !current.isLoadingNewPeriod

@@ -257,17 +257,6 @@ class EmailsCardViewModelTest : BaseUnitTest() {
         assertThat(state.items[0].clicks).isEqualTo(42L)
     }
 
-    @Test
-    fun `when data loads, then statsRepository init is called with token`() = test {
-        whenever(statsRepository.fetchEmailsSummary(any(), any()))
-            .thenReturn(EmailsStatsResult.Success(createTestItems()))
-
-        initViewModel()
-        advanceUntilIdle()
-
-        verify(statsRepository).init(eq(TEST_ACCESS_TOKEN))
-    }
-
     private fun createTestItems() = listOf(
         EmailItemData(title = "Email 1", opens = 100L, clicks = 10L),
         EmailItemData(title = "Email 2", opens = 200L, clicks = 20L)

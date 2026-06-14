@@ -72,7 +72,7 @@ abstract class ConversationsSupportViewModel<ConversationType: Conversation>(
                         AppLog.T.SUPPORT, "Error initialising support conversations: The user has no valid access token"
                     )
                 } else {
-                    initRepository(accessToken)
+                    initRepository()
                     loadUserInfo()
                     loadConversations()
                 }
@@ -84,7 +84,7 @@ abstract class ConversationsSupportViewModel<ConversationType: Conversation>(
         }
     }
 
-    abstract fun initRepository(accessToken: String)
+    open fun initRepository() {}
 
     protected fun loadUserInfo() {
         val account = accountStore.account
