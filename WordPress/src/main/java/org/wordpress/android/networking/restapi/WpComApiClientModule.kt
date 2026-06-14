@@ -24,11 +24,11 @@ private const val READ_WRITE_TIMEOUT_SECONDS = 60L
 internal const val WP_COM_OK_HTTP_CLIENT = "wpcom-rs-okhttp"
 
 /**
- * Provides a single, app-wide [WpComApiClient] for the `public-api.wordpress.com` REST API.
+ * Provides the [WpComApiClient] for the `public-api.wordpress.com` REST API.
  *
- * The client is stateless: it reads the WP.com bearer token live on every request via
- * [createWpComAuthProvider], so one shared instance transparently survives token refresh and
- * sign-out/sign-in. The shared [OkHttpClient] is where the real reuse matters (one connection and
+ * The client is stateless and left unscoped: it reads the WP.com bearer token live on every request
+ * via [createWpComAuthProvider], so it transparently survives token refresh and sign-out/sign-in.
+ * The [OkHttpClient] it wraps is the singleton — that is where reuse matters (one connection and
  * thread pool app-wide); it is configured specifically for this stack rather than reusing the
  * legacy networking clients.
  */
@@ -48,7 +48,6 @@ object WpComApiClientModule {
         .build()
 
     @Provides
-    @Singleton
     fun provideWpComApiClient(
         @Named(WP_COM_OK_HTTP_CLIENT) okHttpClient: OkHttpClient,
         networkAvailabilityProvider: WpNetworkAvailabilityProvider,
