@@ -285,4 +285,20 @@ class SiteProvisioningSourceTest : BaseUnitTest(StandardTestDispatcher()) {
     }
 
     // endregion
+
+    // region failure containment
+
+    @Test
+    fun `given a stage throws, when awaited, then it settles off Probing`() = test {
+        // An unhandled throw inside the pipeline (here getSiteByLocalId failing like a SQLiteException)
+        // must not escape launchPipeline's appScope.launch: if it does, flow.value is never assigned, so
+        // every consumer is wedged on Probing and the shared appScope is cancelled. The run has to turn
+        // an unexpected failure into a terminal readiness instead.
+        whenever(siteStore.getSiteByLocalId(TEST_SITE_LOCAL_ID))
+            .thenThrow(RuntimeException("DB read failed"))
+
+        assertThat(source.await(site)).isNotEqualTo(SiteReadiness.Probing)
+    }
+
+    // endregion
 }

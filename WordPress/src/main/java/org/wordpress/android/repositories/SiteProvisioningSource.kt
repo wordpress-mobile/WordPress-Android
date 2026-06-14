@@ -22,6 +22,7 @@ import java.util.concurrent.ConcurrentHashMap
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
+import kotlin.coroutines.cancellation.CancellationException
 
 /**
  * The single source of truth for getting a site ready to use: it provisions
@@ -126,7 +127,21 @@ class SiteProvisioningSource @Inject constructor(
         jobs[siteLocalId]?.cancel()
         val flow = flowFor(siteLocalId)
         jobs[siteLocalId] = appScope.launch {
-            val readiness = runPipeline(siteLocalId)
+            // runPipeline runs on the app-lifetime appScope, a plain (non-supervisor) Job: an escaping
+            // throw would cancel it and every other app-scoped coroutine. Contain any unexpected failure
+            // (e.g. a SQLiteException from a stage's DB write) as Unreachable so the flow still settles
+            // and the next run retries; let cancellation propagate normally.
+            val readiness = try {
+                runPipeline(siteLocalId)
+            } catch (e: CancellationException) {
+                throw e
+            } catch (@Suppress("TooGenericExceptionCaught") e: Exception) {
+                appLogWrapper.e(
+                    AppLog.T.MAIN,
+                    "Provisioning pipeline failed for $siteLocalId: ${e::class.simpleName}: ${e.message}"
+                )
+                SiteReadiness.Unreachable
+            }
             flow.value = readiness
             if (readiness is SiteReadiness.Ready) ready.add(siteLocalId)
         }
