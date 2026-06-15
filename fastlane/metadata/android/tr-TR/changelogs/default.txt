@@ -1,0 +1,2 @@
+26.8:
+Yaz döneminde hatalarda artış olabilir. Endişelenmeyin, bu hataları ortadan kaldırmak için yoğun şekilde çalışıyoruz. Bu sürüm tamamen yeni blok düzenleyiciyi içerir, bunu Site Ayarları'ndan herhangi bir sitede deneyin.

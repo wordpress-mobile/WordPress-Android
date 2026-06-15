@@ -9,7 +9,7 @@ GEM
     ast (2.4.3)
     atomos (0.1.3)
     aws-eventstream (1.4.0)
-    aws-partitions (1.1259.0)
+    aws-partitions (1.1260.0)
     aws-sdk-core (3.252.0)
       aws-eventstream (~> 1, >= 1.3.0)
       aws-partitions (~> 1, >= 1.992.0)
@@ -167,12 +167,12 @@ GEM
       google-apis-firebaseappdistribution_v1alpha (>= 0.12.0)
     fastlane-plugin-sentry (1.29.0)
       os (~> 1.1, >= 1.1.4)
-    fastlane-plugin-wpmreleasetoolkit (14.6.0)
+    fastlane-plugin-wpmreleasetoolkit (14.7.0)
       buildkit (~> 1.5)
       chroma (= 0.2.0)
       diffy (~> 3.3)
       dotenv (~> 2.8)
-      fastlane (~> 2.231)
+      fastlane (~> 2.235)
       gettext (~> 3.5)
       git (~> 1.3)
       google-cloud-storage (~> 1.31)
@@ -225,7 +225,7 @@ GEM
       base64 (~> 0.2)
       faraday (>= 1.0, < 3.a)
     google-cloud-errors (1.6.0)
-    google-cloud-storage (1.60.0)
+    google-cloud-storage (1.61.0)
       addressable (~> 2.8)
       digest-crc (~> 0.4)
       google-apis-core (>= 0.18, < 2)
@@ -250,7 +250,7 @@ GEM
       mutex_m
     java-properties (0.3.0)
     jmespath (1.6.2)
-    json (2.19.8)
+    json (2.19.9)
     jwt (3.2.0)
       base64
     kramdown (2.5.2)
@@ -304,7 +304,7 @@ GEM
     rake (13.4.2)
     rake-compiler (1.3.1)
       rake
-    rchardet (1.10.0)
+    rchardet (1.10.2)
     regexp_parser (2.12.0)
     representable (3.2.0)
       declarative (< 0.1.0)
@@ -378,7 +378,7 @@ DEPENDENCIES
   fastlane (~> 2)
   fastlane-plugin-firebase_app_distribution (~> 1.0)
   fastlane-plugin-sentry
-  fastlane-plugin-wpmreleasetoolkit (~> 14.6)
+  fastlane-plugin-wpmreleasetoolkit (~> 14.7)
   rmagick (~> 7.0)
 
 BUNDLED WITH

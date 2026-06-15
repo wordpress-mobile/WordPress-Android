@@ -1191,7 +1191,7 @@ public class SiteSettingsFragment extends PreferenceFragment
      * posts" on this screen), not only at first inflation.
      */
     private void refreshGutenbergKitToggleAvailability() {
-        if (mGutenbergKitPref == null) return;
+        if (mGutenbergKitPref == null || mSite == null) return;
         if (mSiteSettingsProvider.isBlockEditorDefault(mSite)) {
             mGutenbergKitPref.setEnabled(true);
             mGutenbergKitPref.setSummary(R.string.site_settings_gutenberg_kit_enabled_summary);

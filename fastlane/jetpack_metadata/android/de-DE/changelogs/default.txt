@@ -1,0 +1,2 @@
+26.8:
+Es ist fast Sommer und das bedeutet die Bugs sind nicht weit. Keine Sorge, wir haben hart daran gearbeitet, ihnen Herr zu werden, beispielsweise mit verschiedenen Fehlerbehebungen, durch die die App noch benutzerfreundlicher werden soll. Diese Version enthält den brandneuen Block-Editor. Teste ihn auf jeder Website in den Website-Einstellungen.

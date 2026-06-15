@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2026-05-29 07:39:43+0000
+Translation-Revision-Date: 2026-06-03 17:42:24+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.3
 Language: nl
@@ -291,30 +291,13 @@ Language: nl
     <string name="track_network_requests">Netwerkaanvragen volgen</string>
     <string name="experimental_network_debugging_disable_error_message">Netwerk volging is momenteel ingeschakeld. Ga naar Hulp en schakel \"Netwerk aanvragen volgen\" uit voordat je deze functie uitschakelt.</string>
     <string name="experimental_network_debugging_disable_error_title">Tracking First uitschakelen</string>
-    <string name="experimental_network_debugging_description">Netwerkaanvraag volging gereedschap weergeven in het hulpscherm</string>
+    <string name="experimental_network_debugging_description">Netwerkaanvraag volgingstools weergeven in het hulpscherm</string>
     <string name="experimental_network_debugging">Netwerk debuggen</string>
     <string name="site_settings_tags_empty_subtitle">Waarom maak je er niet één om het makkelijker te maken om een bericht te taggen?</string>
     <string name="posts_published_empty_subtitle">Waarom niet een maken?</string>
     <string name="media_empty_list_subtitle">Waarom upload je niet iets?</string>
     <string name="confirm_remove_site">\"%s\" uit de app verwijderen?</string>
     <string name="he_support_forbidden_error">Je hebt geen toestemming om deze actie uit te voeren.</string>
-    <string name="he_support_generic_error">Er heeft zich een fout voorgedaan. Probeer het later opnieuw.</string>
-    <string name="he_support_send_ticket_button">Verzenden</string>
-    <string name="he_support_contact_email_message">We e-mailen je op dit adres.</string>
-    <string name="he_support_contact_information">Contactgegevens</string>
-    <string name="he_support_site_address_placeholder">https://yoursite.com</string>
-    <string name="he_support_site_address_label">Site adres (optioneel)</string>
-    <string name="he_support_subject_placeholder">Korte samenvatting van je probleem</string>
-    <string name="he_support_subject_label">Onderwerp</string>
-    <string name="he_support_issue_details">Probleem details</string>
-    <string name="he_support_category_other">Andere</string>
-    <string name="he_support_category_technical_issues">Technische problemen</string>
-    <string name="he_support_category_billing">Facturering &amp; aanmeldingen</string>
-    <string name="he_support_category_site_management">Site beheer</string>
-    <string name="he_support_category_jetpack_connection">Jetpack verbinding</string>
-    <string name="he_support_category_application">Applicatie</string>
-    <string name="he_support_need_help_with">Ik heb hulp nodig met</string>
-    <string name="he_support_contact_support_title">Neem contact op met ondersteuning</string>
     <string name="he_support_download_video_button">Download video</string>
     <string name="he_support_video_playback_error_message">Deze video kan niet inline worden afgespeeld. Download hem om te bekijken.</string>
     <string name="he_support_video_playback_error_title">Niet mogelijk video af te spelen</string>
@@ -347,30 +330,16 @@ Language: nl
     <string name="he_support_empty_conversations_button">Start conversatie</string>
     <string name="he_support_empty_conversations_message">Begin een conversatie met ons ondersteuningsteam om hulp te krijgen bij je vragen.</string>
     <string name="he_support_empty_conversations_title">Nog geen conversaties</string>
-    <string name="he_support_new_conversation_content_description">Nieuwe conversatie</string>
-    <string name="he_support_conversations_title">Conversaties ondersteunen</string>
     <string name="ai_bot_time_just_now">Net</string>
     <string name="ai_bot_welcome_message">Ik ben je persoonlijke AI assistent. Ik kan je helpen met al je vragen over je site of account.</string>
     <string name="ai_bot_welcome_greeting">Hallo %1$s 👋</string>
-    <string name="ai_bot_message_input_placeholder">Typ een bericht…</string>
-    <string name="ai_bot_send_button_content_description">Verzenden</string>
-    <string name="ai_bot_support_bot">Ondersteuning bot</string>
-    <string name="ai_bot_you">Je</string>
-    <string name="ai_bot_generic_error">Er is iets fout gegaan. Probeer het later nog eens.</string>
-    <string name="ai_bot_new_conversation_content_description">Nieuwe conversatie</string>
-    <string name="ai_bot_back_button_content_description">Terug</string>
-    <string name="ai_bot_conversations_title">Conversaties</string>
     <string name="create">Maken</string>
     <string name="logs_screen_general_error">Er is iets fout gegaan…</string>
     <string name="logs_screen_empty_state">Geen logs beschikbaar</string>
     <string name="support_screen_user_avatar_content_description">Gebruiker avatar</string>
-    <string name="support_screen_application_logs_description">Geavanceerd gereedschap om problemen op te lossen</string>
+    <string name="support_screen_application_logs_description">Geavanceerde tool om problemen op te lossen</string>
     <string name="support_screen_application_logs_title">Applicatielogs</string>
     <string name="support_screen_diagnostics_section_title">Diagnostiek</string>
-    <string name="support_screen_ask_happiness_engineers_description">Voor je moeilijke vragen. We zullen antwoorden via e-mail</string>
-    <string name="support_screen_ask_happiness_engineers_title">Vraag het de geluksingenieurs</string>
-    <string name="support_screen_ask_bots_description">Verkrijg snel antwoorden op veelgestelde vragen</string>
-    <string name="support_screen_ask_bots_title">Vraag het de bots</string>
     <string name="support_screen_help_center_description">Documentatie en handleidingen om je op weg te helpen</string>
     <string name="support_screen_help_center_title">Hulpcentrum</string>
     <string name="support_screen_how_can_we_help_title">Hoe kunnen we helpen?</string>
@@ -1555,7 +1524,7 @@ Language: nl
     <string name="gutenberg_native_each_block_has_its_own_settings_to_find_them_tap_on_a_block_its_s" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Elk blok heeft zijn eigen instellingen. Om ze te vinden, tik je op een blok. De instellingen zullen verschijnen in de toolbar onderaan het scherm.</string>
     <string name="gutenberg_native_build_layouts" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Bouw lay-outs</string>
     <string name="gutenberg_native_blocks_are_pieces_of_content_that_you_can_insert_rearrange_and_st" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Blokken zijn stukjes inhoud die je kunt invoegen, herschikken en stylen zonder dat je hoeft te weten hoe je moet coderen. Blokken zijn een gemakkelijke en moderne manier voor je om mooie lay-outs te maken.</string>
-    <string name="gutenberg_native_blocks_allow_you_to_focus_on_writing_your_content_knowing_that_al" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Blokken stellen je in staat je te concentreren op het schrijven van je inhoud, in de wetenschap dat alle opmaakhulpmiddelen die je nodig hebt aanwezig zijn om je te helpen je boodschap over te brengen.</string>
+    <string name="gutenberg_native_blocks_allow_you_to_focus_on_writing_your_content_knowing_that_al" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Blokken stellen je in staat je te concentreren op het schrijven van je inhoud, in de wetenschap dat alle opmaaktools die je nodig hebt aanwezig zijn om je te helpen je bericht over te brengen.</string>
     <string name="gutenberg_native_arrange_your_content_into_columns_add_call_to_action_buttons_and" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Rangschik je inhoud in kolommen, voeg Call To Action knoppen toe, en overlap afbeeldingen met tekst.</string>
     <string name="gutenberg_native_add_a_new_block_at_any_time_by_tapping_on_the_icon_in_the_toolbar" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Voeg op elk moment een nieuw blok toe, door te tikken op het + icoon in de toolbar links onderaan.</string>
     <string name="comment_batch_moderation_error">Eén of meer reacties modereren is mislukt</string>
@@ -2881,7 +2850,7 @@ Language: nl
     <string name="activity_log_icon">Activiteiten icoon</string>
     <string name="activity_log">Activiteitenlog</string>
     <string name="privacy_policy_read">Privacybeleid lezen</string>
-    <string name="third_party_policy_learn_more_caption">We gebruiken ook andere volgings gereedschap, waaronder een aantal van derden. Bekijk meer informatie over deze gereedschappen en hoe je ze kunt beheren.</string>
+    <string name="third_party_policy_learn_more_caption">We gebruiken ook andere volgingstools, waaronder een aantal van derden. Bekijk meer informatie over deze tools en hoe je ze kunt beheren.</string>
     <string name="third_party_policy_learn_more_header">Beleid van derden</string>
     <string name="privacy_policy_learn_more_caption">Deze informatie helpt ons om onze producten te verbeteren, marketing naar je relevanter te maken, je WordPress.com ervaring te personaliseren, en meer zoals gedetailleerd in ons privacybeleid.</string>
     <string name="privacy_policy_learn_more_header">Privacybeleid</string>
