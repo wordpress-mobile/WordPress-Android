@@ -53,8 +53,8 @@ import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.MediaModel.MediaUploadState;
 import org.wordpress.android.fluxc.model.SiteModel;
-import org.wordpress.android.fluxc.network.rest.wpapi.applicationpasswords.WpAppNotifierHandler;
 import org.wordpress.android.fluxc.store.MediaStore;
+import org.wordpress.android.ui.accounts.login.ApplicationPasswordReauthNotifier;
 import org.wordpress.android.fluxc.store.MediaStore.CancelMediaPayload;
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaChanged;
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaListFetched;
@@ -109,7 +109,7 @@ import static org.wordpress.android.util.ToastUtils.Duration.LONG;
  */
 public class MediaBrowserActivity extends BaseAppCompatActivity implements MediaGridListener,
         OnQueryTextListener, OnActionExpandListener,
-        WPMediaUtils.LaunchCameraCallback, WpAppNotifierHandler.NotifierListener {
+        WPMediaUtils.LaunchCameraCallback, ApplicationPasswordReauthNotifier.Listener {
     public static final String ARG_BROWSER_TYPE = "media_browser_type";
     public static final String ARG_FILTER = "filter";
     public static final String ARG_LAUNCH_PHOTO_PICKER = "launch_photo_picker";
@@ -129,7 +129,7 @@ public class MediaBrowserActivity extends BaseAppCompatActivity implements Media
     @Inject SelectedSiteRepository mSelectedSiteRepository;
     @Inject JetpackFeatureRemovalPhaseHelper mJetpackFeatureRemovalPhaseHelper;
     @Inject ActivityNavigator mActivityNavigator;
-    @Inject WpAppNotifierHandler mWpAppNotifierHandler;
+    @Inject ApplicationPasswordReauthNotifier mReauthNotifier;
 
     private SiteModel mSite;
 
@@ -299,7 +299,7 @@ public class MediaBrowserActivity extends BaseAppCompatActivity implements Media
         }
     }
 
-    @Override public void onRequestedWithInvalidAuthentication(@NonNull String siteUrl) {
+    @Override public void onReauthRequired(@NonNull String siteUrl) {
         showApplicationPasswordReauthenticateDialog(siteUrl);
     }
 
@@ -425,7 +425,7 @@ public class MediaBrowserActivity extends BaseAppCompatActivity implements Media
     public void onStart() {
         super.onStart();
 
-        mWpAppNotifierHandler.addListener(this);
+        mReauthNotifier.addListener(this);
 
         if (Build.VERSION.SDK_INT >= VERSION_CODES.UPSIDE_DOWN_CAKE) {
             registerReceiver(
@@ -459,7 +459,7 @@ public class MediaBrowserActivity extends BaseAppCompatActivity implements Media
 
     @Override
     public void onStop() {
-        mWpAppNotifierHandler.removeListener(this);
+        mReauthNotifier.removeListener(this);
         EventBus.getDefault().unregister(this);
         unregisterReceiver(mReceiver);
         mDispatcher.unregister(this);

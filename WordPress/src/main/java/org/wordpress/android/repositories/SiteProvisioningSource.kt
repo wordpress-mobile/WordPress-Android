@@ -8,11 +8,13 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.network.rest.wpapi.applicationpasswords.WpAppNotifierHandler
 import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpApiClientProvider
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.modules.APPLICATION_SCOPE
 import org.wordpress.android.ui.accounts.login.ApplicationPasswordLoginHelper
+import org.wordpress.android.ui.accounts.login.ApplicationPasswordReauthNotifier
 import org.wordpress.android.ui.accounts.login.SiteApiRestUrlRecoverer
 import org.wordpress.android.ui.accounts.login.SiteXmlRpcUrlRecoverer
 import org.wordpress.android.ui.mysite.cards.applicationpassword.ApplicationPasswordValidator
@@ -69,8 +71,10 @@ class SiteProvisioningSource @Inject constructor(
     private val editorSettingsRepository: EditorSettingsRepository,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     private val appLogWrapper: AppLogWrapper,
+    private val wpAppNotifierHandler: WpAppNotifierHandler,
+    private val applicationPasswordReauthNotifier: ApplicationPasswordReauthNotifier,
     @Named(APPLICATION_SCOPE) private val appScope: CoroutineScope,
-) {
+) : WpAppNotifierHandler.NotifierListener {
     private val states = ConcurrentHashMap<Int, MutableStateFlow<SiteReadiness>>()
     private val jobs = ConcurrentHashMap<Int, Job>()
 
@@ -78,6 +82,19 @@ class SiteProvisioningSource @Inject constructor(
     // latches; auth-needed / unreachable / transient outcomes are left to re-run on the next
     // access. Reset by invalidate / clear.
     private val ready = ConcurrentHashMap.newKeySet<Int>()
+
+    // Sites whose current run was triggered by a 401 (onRequestedWithInvalidAuthentication). If such a
+    // run settles Unprovisionable(hadCredentials), the headless heal failed, so we escalate to the
+    // interactive re-auth UI. A routine run (onResume) never sets this, so it never pops re-auth.
+    private val reauthOnFailure = ConcurrentHashMap.newKeySet<Int>()
+
+    init {
+        // Re-provision when wordpress-rs reports a request was rejected for invalid auth (the app
+        // password was revoked / rotated server-side). Without this, a site latched Ready keeps its
+        // silently-broken credentials until a manual pull-to-refresh; instead force ensureAuth to
+        // re-validate, which wipes the dead credential and re-mints (or surfaces the re-auth card).
+        wpAppNotifierHandler.addListener(this)
+    }
 
     /**
      * The shared readiness state for [site]. The first call starts the pipeline;
@@ -103,11 +120,17 @@ class SiteProvisioningSource @Inject constructor(
     }
 
     /**
-     * Forces a re-run for [site], bypassing the once-per-site gate. A no-op while
-     * a run is already in flight — that run already reflects current state.
+     * Forces a re-run for [site] (pull-to-refresh, banner retry), bypassing the once-per-site gate.
+     *
+     * Deliberately a **no-op while a run is already in flight**: cancelling mid-pipeline could
+     * interrupt an in-progress application-password mint after the server created it but before we
+     * persisted it, orphaning the credential and tripping a 409 on the next mint. So an explicit
+     * refresh that lands during an active run is coalesced into that run (the user gets its live
+     * result) rather than pre-empting it; a refresh once the run is idle starts a genuinely fresh one.
      */
     @Synchronized
     fun invalidate(site: SiteModel) {
+        // No-op while running — see KDoc: don't pre-empt an in-flight mint.
         if (jobs[site.id]?.isActive == true) return
         ready.remove(site.id)
         launchPipeline(site.id)
@@ -120,6 +143,47 @@ class SiteProvisioningSource @Inject constructor(
         jobs.clear()
         states.clear()
         ready.clear()
+        reauthOnFailure.clear()
+    }
+
+    /**
+     * [WpAppNotifierHandler.NotifierListener] — wordpress-rs rejected a request for [siteUrl] with
+     * invalid authentication (a revoked application password, or an expired WP.com bearer token).
+     * Re-provision the matching app-password sites so ensureAuth re-validates and heals them: for a
+     * WP.com-connected site the headless re-mint succeeds and recovery is silent; for one that can't
+     * be re-minted the run settles Unprovisionable and [maybeRequestReauth] escalates to interactive
+     * re-auth. WP.com Simple sites are bearer-only (no application password), so they're skipped here.
+     *
+     * The notifier carries only the URL, so resolve to local id(s). Already-Unprovisionable sites are
+     * skipped — their re-auth is pending the user, and re-running would just re-fail the mint on every
+     * 401. [invalidate] also no-ops while a run is active, so the validate call in the triggered re-run
+     * (which can itself 401) can't spin this into a loop.
+     */
+    override fun onRequestedWithInvalidAuthentication(siteUrl: String) {
+        siteStore.sites
+            .filter { it.url == siteUrl && !it.isWPComSimpleSite }
+            .forEach { site ->
+                val auth = (states[site.id]?.value as? SiteReadiness.NeedsAuth)?.auth
+                if (auth is SiteAuthState.Unprovisionable) return@forEach
+                // Mark this as 401-triggered so a failed heal escalates to interactive re-auth.
+                reauthOnFailure.add(site.id)
+                invalidate(site)
+            }
+    }
+
+    /**
+     * After a 401-triggered run settles, escalate to interactive re-auth only if the heal couldn't
+     * recover a previously-working credential. Consuming the flag bounds this to one prompt per heal;
+     * a routine (non-401) run never set the flag, so it never prompts.
+     */
+    private fun maybeRequestReauth(siteLocalId: Int, readiness: SiteReadiness) {
+        if (!reauthOnFailure.remove(siteLocalId)) return
+        val auth = (readiness as? SiteReadiness.NeedsAuth)?.auth
+        if (auth is SiteAuthState.Unprovisionable && auth.hadCredentials) {
+            siteStore.getSiteByLocalId(siteLocalId)?.let {
+                applicationPasswordReauthNotifier.notifyReauthRequired(it.url)
+            }
+        }
     }
 
     @Synchronized
@@ -144,6 +208,7 @@ class SiteProvisioningSource @Inject constructor(
             }
             flow.value = readiness
             if (readiness is SiteReadiness.Ready) ready.add(siteLocalId)
+            maybeRequestReauth(siteLocalId, readiness)
         }
     }
 

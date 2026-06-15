@@ -17,11 +17,13 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
 import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType
 import org.wordpress.android.fluxc.network.rest.wpapi.applicationpasswords.ApplicationPasswordCredentials
+import org.wordpress.android.fluxc.network.rest.wpapi.applicationpasswords.WpAppNotifierHandler
 import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpApiClientProvider
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.SiteStore.OnApplicationPasswordCreated
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.ui.accounts.login.ApplicationPasswordLoginHelper
+import org.wordpress.android.ui.accounts.login.ApplicationPasswordReauthNotifier
 import org.wordpress.android.ui.accounts.login.SiteApiRestUrlRecoverer
 import org.wordpress.android.ui.accounts.login.SiteXmlRpcUrlRecoverer
 import org.wordpress.android.ui.mysite.cards.applicationpassword.ApplicationPasswordValidator
@@ -40,6 +42,8 @@ class SiteProvisioningSourceTest : BaseUnitTest(StandardTestDispatcher()) {
     @Mock lateinit var editorSettingsRepository: EditorSettingsRepository
     @Mock lateinit var networkUtilsWrapper: NetworkUtilsWrapper
     @Mock lateinit var appLogWrapper: AppLogWrapper
+    @Mock lateinit var wpAppNotifierHandler: WpAppNotifierHandler
+    @Mock lateinit var applicationPasswordReauthNotifier: ApplicationPasswordReauthNotifier
 
     private lateinit var site: SiteModel
     private lateinit var source: SiteProvisioningSource
@@ -65,6 +69,8 @@ class SiteProvisioningSourceTest : BaseUnitTest(StandardTestDispatcher()) {
             editorSettingsRepository,
             networkUtilsWrapper,
             appLogWrapper,
+            wpAppNotifierHandler,
+            applicationPasswordReauthNotifier,
             testScope(),
         )
     }
@@ -282,6 +288,95 @@ class SiteProvisioningSourceTest : BaseUnitTest(StandardTestDispatcher()) {
         source.await(site)
 
         verify(applicationPasswordValidator, times(2)).validate(any())
+    }
+
+    // endregion
+
+    // region invalid-auth re-provisioning
+
+    @Test
+    fun `registers as an invalid-auth listener on construction`() {
+        verify(wpAppNotifierHandler).addListener(source)
+    }
+
+    @Test
+    fun `given a ready site, when auth is reported invalid, then it re-runs`() = test {
+        stubHasStoredCredentials(true)
+        stubValidate(ApplicationPasswordValidator.Outcome.Valid)
+        stubCapabilityProbe(ok = true)
+        whenever(siteStore.sites).thenReturn(listOf(site))
+
+        source.await(site)
+        source.onRequestedWithInvalidAuthentication(site.url)
+        source.await(site)
+
+        verify(applicationPasswordValidator, times(2)).validate(any())
+    }
+
+    @Test
+    fun `given a 401-triggered heal succeeds, then no reauth is requested`() = test {
+        whenever(siteStore.sites).thenReturn(listOf(site))
+        stubHasStoredCredentials(true)
+        stubValidate(ApplicationPasswordValidator.Outcome.Invalid) // creds revoked -> wiped
+        stubMintSuccess() // re-mint heals silently (WP.com-connected)
+        stubCapabilityProbe(ok = true)
+
+        source.onRequestedWithInvalidAuthentication(site.url)
+        source.await(site)
+
+        verify(siteStore).createApplicationPassword(any())
+        verify(applicationPasswordReauthNotifier, never()).notifyReauthRequired(any())
+    }
+
+    @Test
+    fun `given a 401-triggered heal fails, then reauth is requested`() = test {
+        whenever(siteStore.sites).thenReturn(listOf(site))
+        stubHasStoredCredentials(true)
+        stubValidate(ApplicationPasswordValidator.Outcome.Invalid)
+        stubMintFailure()
+
+        source.onRequestedWithInvalidAuthentication(site.url)
+        source.await(site)
+
+        verify(applicationPasswordReauthNotifier).notifyReauthRequired(site.url)
+    }
+
+    @Test
+    fun `given a 401 on a WPCom Simple site, then it is ignored`() = test {
+        val simple = SiteModel().apply {
+            id = TEST_SITE_LOCAL_ID
+            url = "https://simple.wordpress.com"
+            setIsWPCom(true) // isWPComSimpleSite = isWPCom && !isWPComAtomic -> bearer-only
+        }
+        whenever(siteStore.sites).thenReturn(listOf(simple))
+
+        source.onRequestedWithInvalidAuthentication(simple.url)
+
+        verify(applicationPasswordValidator, never()).validate(any())
+        verify(applicationPasswordReauthNotifier, never()).notifyReauthRequired(any())
+    }
+
+    @Test
+    fun `given an already-unprovisionable site, when 401 arrives, then it does not re-run`() = test {
+        whenever(siteStore.sites).thenReturn(listOf(site))
+        stubHasStoredCredentials(false)
+        stubMintFailure()
+
+        source.await(site) // settles NeedsAuth(Unprovisionable)
+        source.onRequestedWithInvalidAuthentication(site.url)
+
+        verify(siteStore, times(1)).createApplicationPassword(any())
+    }
+
+    @Test
+    fun `given a routine run settles unprovisionable, then no reauth is requested`() = test {
+        stubHasStoredCredentials(true)
+        stubValidate(ApplicationPasswordValidator.Outcome.Invalid)
+        stubMintFailure()
+
+        source.await(site) // not 401-triggered, so the failure must not pop re-auth
+
+        verify(applicationPasswordReauthNotifier, never()).notifyReauthRequired(any())
     }
 
     // endregion
