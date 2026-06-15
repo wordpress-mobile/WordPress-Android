@@ -11,11 +11,13 @@ import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.any
 import org.mockito.kotlin.argWhere
 import org.mockito.kotlin.inOrder
+import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.verifyNoInteractions
 import org.mockito.kotlin.whenever
 import org.wordpress.android.fluxc.Dispatcher
+import org.wordpress.android.fluxc.generated.SiteActionBuilder
 import org.wordpress.android.fluxc.model.PostFormatModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.SitesModel
@@ -24,6 +26,7 @@ import org.wordpress.android.fluxc.model.jetpacksocial.JetpackSocialMapper
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
 import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType.NETWORK_ERROR
 import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType.PARSE_ERROR
+import org.wordpress.android.fluxc.network.rest.wpapi.applicationpasswords.ApplicationPasswordsManager
 import org.wordpress.android.fluxc.network.rest.wpapi.site.SiteWPAPIRestClient
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Response
@@ -61,6 +64,7 @@ import org.wordpress.android.fluxc.store.SiteStore.SiteFilter.WPCOM
 import org.wordpress.android.fluxc.store.SiteStore.SiteVisibility.PUBLIC
 import org.wordpress.android.fluxc.test
 import org.wordpress.android.fluxc.tools.initCoroutineEngine
+import javax.inject.Provider
 import kotlin.test.assertEquals
 
 @RunWith(MockitoJUnitRunner::class)
@@ -176,16 +180,16 @@ class SiteStoreTest {
         val siteB = SiteModel()
         sitesModel.sites = listOf(siteA, siteB)
         whenever(siteRestClient.fetchSites(payload.filters, false)).thenReturn(sitesModel)
-        whenever(siteSqlUtils.insertOrUpdateSite(siteA)).thenReturn(1)
-        whenever(siteSqlUtils.insertOrUpdateSite(siteB)).thenReturn(1)
+        whenever(siteSqlUtils.insertOrUpdateSiteReturningId(siteA)).thenReturn(1)
+        whenever(siteSqlUtils.insertOrUpdateSiteReturningId(siteB)).thenReturn(1)
 
         val onSiteChanged = siteStore.fetchSites(payload)
 
         assertThat(onSiteChanged.rowsAffected).isEqualTo(2)
         assertThat(onSiteChanged.error).isNull()
         val inOrder = inOrder(siteSqlUtils)
-        inOrder.verify(siteSqlUtils).insertOrUpdateSite(siteA)
-        inOrder.verify(siteSqlUtils).insertOrUpdateSite(siteB)
+        inOrder.verify(siteSqlUtils).insertOrUpdateSiteReturningId(siteA)
+        inOrder.verify(siteSqlUtils).insertOrUpdateSiteReturningId(siteB)
         inOrder.verify(siteSqlUtils).removeWPComRestSitesAbsentFromList(postSqlUtils, sitesModel.sites)
     }
 
@@ -218,8 +222,8 @@ class SiteStoreTest {
         sitesModel.sites = listOf(siteA, siteB)
         sitesModel.jetpackCPSites = listOf(siteC)
         whenever(siteRestClient.fetchSites(payload.filters, false)).thenReturn(sitesModel)
-        whenever(siteSqlUtils.insertOrUpdateSite(siteA)).thenReturn(1)
-        whenever(siteSqlUtils.insertOrUpdateSite(siteB)).thenReturn(1)
+        whenever(siteSqlUtils.insertOrUpdateSiteReturningId(siteA)).thenReturn(1)
+        whenever(siteSqlUtils.insertOrUpdateSiteReturningId(siteB)).thenReturn(1)
 
         siteStore.fetchSites(payload)
 
@@ -248,8 +252,8 @@ class SiteStoreTest {
         }
         sitesModel.sites = listOf(siteA, siteB)
         whenever(siteRestClient.fetchSites(payload.filters, false)).thenReturn(sitesModel)
-        whenever(siteSqlUtils.insertOrUpdateSite(siteA)).thenReturn(1)
-        whenever(siteSqlUtils.insertOrUpdateSite(siteB)).thenReturn(1)
+        whenever(siteSqlUtils.insertOrUpdateSiteReturningId(siteA)).thenReturn(1)
+        whenever(siteSqlUtils.insertOrUpdateSiteReturningId(siteB)).thenReturn(1)
 
         siteStore.fetchSites(payload)
 
@@ -575,7 +579,95 @@ class SiteStoreTest {
                 .isEqualTo("appPass")
             assertThat(fetchedSite.wpApiRestUrl)
                 .isEqualTo("https://example.com/wp-json/")
+            // updateSite's full-row write skips WP_API_REST_URL, so the discovered URL must be persisted
+            // via the URL-keyed targeted writer (the fetched site has no local id to key on).
+            verify(siteSqlUtils).updateWpApiRestUrlForWPAPISite(
+                "https://example.com",
+                "https://example.com/wp-json/"
+            )
+            verify(siteSqlUtils).updateApplicationPasswordCredentialsForWPAPISite(
+                "https://example.com",
+                "appUser",
+                "appPass"
+            )
         }
+
+    @Test
+    fun `updateApplicationPassword persists credentials and wpApiRestUrl via targeted writers`() {
+        val existing = SiteModel().apply {
+            id = 3
+            url = "https://selfhosted.test"
+        }
+        whenever(siteSqlUtils.getSitesWithLocalId(3)).thenReturn(listOf(existing))
+        val incoming = SiteModel().apply {
+            id = 3
+            apiRestUsernamePlain = "user"
+            apiRestPasswordPlain = "pass"
+            wpApiRestUrl = "https://selfhosted.test/wp-json/"
+        }
+
+        siteStore.onAction(SiteActionBuilder.newUpdateApplicationPasswordAction(incoming))
+
+        verify(siteSqlUtils).updateApplicationPasswordCredentials(3, "user", "pass")
+        verify(siteSqlUtils).updateWpApiRestUrl(3, "https://selfhosted.test/wp-json/")
+    }
+
+    @Test
+    fun `removeApplicationPassword clears credentials and wpApiRestUrl via targeted writers`() {
+        val existing = SiteModel().apply {
+            id = 4
+            url = "https://selfhosted.test"
+            wpApiRestUrl = "https://selfhosted.test/wp-json/"
+        }
+        whenever(siteSqlUtils.getSitesWithLocalId(4)).thenReturn(listOf(existing))
+        siteStore.onAction(
+            SiteActionBuilder.newRemoveApplicationPasswordAction(SiteModel().apply { id = 4 })
+        )
+
+        verify(siteSqlUtils).clearApplicationPasswordCredentials(4)
+        verify(siteSqlUtils).clearWpApiRestUrl(4)
+    }
+
+    @Test
+    fun `clearApplicationPasswordColumns clears credentials but preserves wpApiRestUrl`() {
+        val existing = SiteModel().apply {
+            id = 8
+            url = "https://selfhosted.test"
+        }
+        whenever(siteSqlUtils.getSitesWithLocalId(8)).thenReturn(listOf(existing))
+        siteStore.applicationPasswordsManagerProvider = Provider { mock<ApplicationPasswordsManager>() }
+
+        siteStore.deleteStoredApplicationPasswordCredentials(SiteModel().apply { id = 8 })
+
+        verify(siteSqlUtils).clearApplicationPasswordCredentials(8)
+        verify(siteSqlUtils, never()).clearWpApiRestUrl(8)
+    }
+
+    @Test
+    fun `persistXmlRpcUrl writes the column via the targeted writer`() = test {
+        siteStore.persistXmlRpcUrl(9, "https://selfhosted.test/xmlrpc.php")
+
+        verify(siteSqlUtils).updateXmlRpcUrl(9, "https://selfhosted.test/xmlrpc.php")
+    }
+
+    @Test
+    fun `createOrUpdateSites persists app-password credentials on the stamped row`() {
+        val appPwSite = SiteModel().apply {
+            selfHostedSiteId = 77L
+            url = "https://selfhosted.test"
+            xmlRpcUrl = "https://selfhosted.test/xmlrpc.php"
+            origin = SiteModel.ORIGIN_XMLRPC
+            apiRestUsernamePlain = "user"
+            apiRestPasswordPlain = "pass"
+            wpApiRestUrl = "https://selfhosted.test/wp-json/"
+        }
+        whenever(siteSqlUtils.insertOrUpdateSiteReturningId(any())).thenReturn(9)
+
+        siteStore.onAction(SiteActionBuilder.newUpdateSitesAction(SitesModel(listOf(appPwSite))))
+
+        verify(siteSqlUtils).updateApplicationPasswordCredentials(9, "user", "pass")
+        verify(siteSqlUtils).updateWpApiRestUrl(9, "https://selfhosted.test/wp-json/")
+    }
 
     @Test
     fun `fetchPostFormats returns empty list for WPAPI site without crashing`() =

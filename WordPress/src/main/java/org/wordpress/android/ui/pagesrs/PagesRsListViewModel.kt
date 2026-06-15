@@ -5,9 +5,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.NonCancellable
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -15,6 +19,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
@@ -36,7 +41,6 @@ import rs.wordpress.cache.kotlin.ObservableMetadataCollection
 import rs.wordpress.cache.kotlin.getObservablePostMetadataCollectionWithEditContext
 import rs.wordpress.cache.kotlin.hasMorePages
 import uniffi.wp_api.PostEndpointType
-import uniffi.wp_api.WpApiParamPostsOrderBy
 import uniffi.wp_mobile.PostListFilter
 import uniffi.wp_mobile_cache.ListState
 import javax.inject.Inject
@@ -44,7 +48,7 @@ import javax.inject.Inject
 @HiltViewModel
 @Suppress("LargeClass", "LongParameterList")
 internal class PagesRsListViewModel @Inject constructor(
-    selectedSiteRepository: SelectedSiteRepository,
+    private val selectedSiteRepository: SelectedSiteRepository,
     private val serviceProvider: WpServiceProvider,
     private val restClient: PostRsRestClient,
     private val resourceProvider: ResourceProvider,
@@ -68,14 +72,7 @@ internal class PagesRsListViewModel @Inject constructor(
     private var activeSearchTab = PageRsListTab.PUBLISHED
 
     private val collections = mutableMapOf<PageRsListTab, ObservableMetadataCollection>()
-
-    /**
-     * Incremented by [clearCollections] so an in-flight [initTab] can detect that the
-     * collections it was creating were torn down (search/filter changed) while its network
-     * call was running, and discard its now-stale collection instead of leaking it into
-     * [collections].
-     */
-    private var collectionsGeneration = 0
+    private var collectionsScope = createCollectionsScope()
     private val initializingTabs = mutableSetOf<PageRsListTab>()
     private val userRefreshingTabs = mutableSetOf<PageRsListTab>()
     private val resolveAuthorJobs = mutableMapOf<PageRsListTab, Job>()
@@ -198,23 +195,19 @@ internal class PagesRsListViewModel @Inject constructor(
         // Reset to a loading state so a retry after a failed init clears the prior error UI.
         updateTabUiState(tab) { PageTabUiState(isLoading = true) }
 
-        val generation = collectionsGeneration
-        viewModelScope.launch {
+        launchCollectionJob {
             @Suppress("TooGenericExceptionCaught")
             try {
                 val collection = createCollection(site, tab)
-                if (generation != collectionsGeneration) {
-                    withContext(Dispatchers.IO) { collection.close() }
-                    return@launch
-                }
                 collections[tab] = collection
                 initializingTabs.remove(tab)
                 registerObservers(tab, collection)
                 loadItemsForTab(tab)
                 refreshTab(tab)
+            } catch (e: CancellationException) {
+                throw e
             } catch (e: Exception) {
                 AppLog.e(AppLog.T.PAGES, "Failed to init RS page list tab", e)
-                if (generation != collectionsGeneration) return@launch
                 initializingTabs.remove(tab)
                 updateTabUiState(tab) {
                     PageTabUiState(
@@ -226,39 +219,70 @@ internal class PagesRsListViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Creates the observable collection for [tab]. If the calling job is cancelled while the
+     * creation call is in flight, [withContext] discards its result and rethrows, so the
+     * orphaned collection is closed here before it can leak.
+     */
     private suspend fun createCollection(
         site: SiteModel,
         tab: PageRsListTab
-    ): ObservableMetadataCollection = withContext(Dispatchers.IO) {
-        val service = serviceProvider.getService(site)
-        val query = _searchQuery.value
-        val authorIds = if (_authorFilter.value == AuthorFilterSelection.ME) {
-            accountStore.account?.userId?.let { listOf(it) } ?: emptyList()
-        } else {
-            emptyList()
+    ): ObservableMetadataCollection {
+        var created: ObservableMetadataCollection? = null
+        try {
+            return withContext(Dispatchers.IO) {
+                val service = serviceProvider.getService(site)
+                val query = _searchQuery.value
+                val authorIds = if (_authorFilter.value == AuthorFilterSelection.ME) {
+                    accountStore.account?.userId?.let { listOf(it) } ?: emptyList()
+                } else {
+                    emptyList()
+                }
+                val filter = PostListFilter(
+                    status = if (query.isNotBlank()) ALL_STATUSES else tab.statuses,
+                    order = tab.order,
+                    orderby = tab.orderBy,
+                    search = query.ifBlank { null },
+                    author = authorIds
+                )
+                service.posts().getObservablePostMetadataCollectionWithEditContext(
+                    endpointType = PostEndpointType.Pages,
+                    filter = filter,
+                    perPage = PAGE_SIZE.toUInt()
+                ).also { created = it }
+            }
+        } catch (e: CancellationException) {
+            withContext(NonCancellable + Dispatchers.IO) { created?.close() }
+            throw e
         }
-        val filter = PostListFilter(
-            status = if (query.isNotBlank()) ALL_STATUSES else tab.statuses,
-            order = tab.order,
-            orderby = WpApiParamPostsOrderBy.DATE,
-            search = query.ifBlank { null },
-            author = authorIds
-        )
-        service.posts().getObservablePostMetadataCollectionWithEditContext(
-            endpointType = PostEndpointType.Pages,
-            filter = filter,
-            perPage = PAGE_SIZE.toUInt()
-        )
     }
 
     private fun registerObservers(tab: PageRsListTab, collection: ObservableMetadataCollection) {
         collection.addDataObserver {
-            viewModelScope.launch { loadItemsForTab(tab) }
+            launchCollectionJob { loadItemsForTab(tab) }
         }
         collection.addListInfoObserver {
-            viewModelScope.launch { updateListInfoForTab(tab) }
+            launchCollectionJob { updateListInfoForTab(tab) }
         }
     }
+
+    /**
+     * Launches collection-scoped work in [collectionsScope] so [clearCollections] can cancel
+     * anything in flight before closing the underlying collections. Without this, a late
+     * failure (e.g. a refresh resuming on an already-closed collection) could write stale
+     * error state into the freshly rebuilt tabs.
+     */
+    private fun launchCollectionJob(block: suspend CoroutineScope.() -> Unit) {
+        collectionsScope.launch(block = block)
+    }
+
+    /**
+     * A child scope of [viewModelScope] (so it is torn down with the ViewModel) that can
+     * also be cancelled independently when the collections it serves are closed.
+     */
+    private fun createCollectionsScope() = CoroutineScope(
+        viewModelScope.coroutineContext + SupervisorJob(viewModelScope.coroutineContext.job)
+    )
 
     @MainThread
     fun refreshTab(tab: PageRsListTab, isUserRefresh: Boolean = false) {
@@ -277,10 +301,12 @@ internal class PagesRsListViewModel @Inject constructor(
             updateTabUiState(tab) { copy(error = null) }
         }
 
-        viewModelScope.launch {
+        launchCollectionJob {
             @Suppress("TooGenericExceptionCaught")
             try {
                 withContext(Dispatchers.IO) { collection.refresh() }
+            } catch (e: CancellationException) {
+                throw e
             } catch (e: Exception) {
                 AppLog.e(AppLog.T.PAGES, "Failed to refresh tab $tab", e)
                 userRefreshingTabs.remove(tab)
@@ -326,10 +352,12 @@ internal class PagesRsListViewModel @Inject constructor(
 
         updateTabUiState(tab) { copy(isLoadingMore = true) }
 
-        viewModelScope.launch {
+        launchCollectionJob {
             @Suppress("TooGenericExceptionCaught")
             try {
                 withContext(Dispatchers.IO) { collection.loadNextPage() }
+            } catch (e: CancellationException) {
+                throw e
             } catch (e: Exception) {
                 AppLog.e(AppLog.T.PAGES, "Failed to load more for tab $tab", e)
                 updateTabUiState(tab) { copy(isLoadingMore = false) }
@@ -353,6 +381,7 @@ internal class PagesRsListViewModel @Inject constructor(
         val page = _tabStates.value[tab]
             ?.pages
             ?.firstOrNull { it.remotePageId == remotePageId }
+            ?.page
 
         when {
             tab == PageRsListTab.TRASHED || page?.isTrashed == true ->
@@ -428,24 +457,34 @@ internal class PagesRsListViewModel @Inject constructor(
                 }
             }
             val existingById = getTabUiState(tab).pages
-                .associateBy { it.remotePageId }
+                .associate { it.remotePageId to it.page }
             val uiModels = items.map { model ->
                 val existing = existingById[model.remotePageId]
-                model.copy(
-                    authorDisplayName = if (
-                        model.authorId != 0L &&
-                        model.authorId == existing?.authorId
-                    ) {
-                        existing.authorDisplayName
-                    } else {
-                        null
-                    }
-                )
+                if (model.authorId != 0L && model.authorId == existing?.authorId) {
+                    model.copy(authorDisplayName = existing.authorDisplayName)
+                } else {
+                    model
+                }
             }
+            val applyHierarchy = tab == PageRsListTab.PUBLISHED &&
+                !isSearch &&
+                _authorFilter.value != AuthorFilterSelection.ME
+            // Re-read the site here: homepage settings can change while this screen is alive,
+            // and the construction-time [site] snapshot would pin stale pageOnFront /
+            // pageForPosts values onto the virtual rows.
+            val currentSite = selectedSiteRepository.getSelectedSite() ?: site
+            val rows = buildRows(
+                pages = uiModels,
+                applyHierarchy = applyHierarchy,
+                pageOnFront = currentSite?.pageOnFront ?: 0L,
+                pageForPosts = currentSite?.pageForPosts ?: 0L
+            )
             updateTabUiState(tab) {
-                copy(pages = uiModels, isLoading = false, error = null, isAuthError = false)
+                copy(pages = rows, isLoading = false, error = null, isAuthError = false)
             }
             resolveAuthorNames(tab, uiModels)
+        } catch (e: CancellationException) {
+            throw e
         } catch (e: Exception) {
             AppLog.e(AppLog.T.PAGES, "Failed to load items for tab $tab", e)
         }
@@ -477,20 +516,35 @@ internal class PagesRsListViewModel @Inject constructor(
             }
             if (names.isEmpty()) return@launch
             updateTabUiState(tab) {
-                copy(
-                    pages = this.pages.map { page ->
-                        val name = names[page.authorId]
-                        if (name != null) page.copy(authorDisplayName = name) else page
-                    }
-                )
+                copy(pages = this.pages.map { item -> item.withResolvedAuthor(names) })
             }
+        }
+    }
+
+    private fun PageRsListItem.withResolvedAuthor(names: Map<Long, String>): PageRsListItem {
+        val name = names[page.authorId] ?: return this
+        val updated = page.copy(authorDisplayName = name)
+        return when (this) {
+            is PageRsListItem.Real -> copy(page = updated)
+            is PageRsListItem.Virtual -> copy(page = updated)
         }
     }
 
     private suspend fun updateListInfoForTab(tab: PageRsListTab) {
         val collection = collections[tab] ?: return
 
-        val listInfo = withContext(Dispatchers.IO) { collection.listInfo() }
+        // Guard the Rust-backed call: an unhandled failure here (e.g. a late observer firing
+        // against a collection mid-teardown) would otherwise crash the app, since this runs in
+        // a scope with no exception handler.
+        @Suppress("TooGenericExceptionCaught")
+        val listInfo = try {
+            withContext(Dispatchers.IO) { collection.listInfo() }
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            AppLog.e(AppLog.T.PAGES, "Failed to read list info for tab $tab", e)
+            return
+        }
         val morePages = listInfo?.hasMorePages ?: false
         val fetchingFirstPage = listInfo?.state == ListState.FETCHING_FIRST_PAGE
         val isUserRefresh = userRefreshingTabs.contains(tab)
@@ -541,7 +595,10 @@ internal class PagesRsListViewModel @Inject constructor(
     }
 
     private fun clearCollections() {
-        collectionsGeneration++
+        // Cancel in-flight collection work first so nothing can write stale state
+        // (or touch a closed collection) after the teardown below.
+        collectionsScope.cancel()
+        collectionsScope = createCollectionsScope()
         collections.values.forEach { it.close() }
         collections.clear()
         initializingTabs.clear()
