@@ -2,7 +2,10 @@
 
 source 'https://rubygems.org'
 
-gem 'danger-dangermattic', '~> 1.2'
+# TEMPORARY: point at the dangermattic branch to validate the new string-key guardrail
+# (https://github.com/Automattic/dangermattic/pull/126).
+# Revert to the released `~> 1.2` constraint once that PR ships in a tagged release.
+gem 'danger-dangermattic', git: 'https://github.com/Automattic/dangermattic.git', branch: 'add/strings-immutability-check'
 gem 'fastlane', '~> 2'
 
 ### Fastlane Plugins

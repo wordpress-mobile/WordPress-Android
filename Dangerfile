@@ -17,6 +17,11 @@ if github.pr_labels.include?('Releases')
   return
 end
 
+# Enforce string-key immutability: the value of an existing translatable string must not change in
+# place — add a new key for new copy instead, so in-progress translations stay valid. Bypass with
+# the `Allow String Modifications` label for intentional changes.
+android_strings_checker.check_existing_strings_not_modified unless github.pr_labels.include?('Allow String Modifications')
+
 common_release_checker.check_internal_release_notes_changed(report_type: :message)
 
 view_changes_checker.check

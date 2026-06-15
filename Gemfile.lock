@@ -1,3 +1,14 @@
+GIT
+  remote: https://github.com/Automattic/dangermattic.git
+  revision: 15f27d50d3c6b71487865d06ed920051a1e73cc6
+  branch: add/strings-immutability-check
+  specs:
+    danger-dangermattic (1.2.4)
+      danger (~> 9.5, >= 9.5.3)
+      danger-plugin-api (~> 1.0)
+      danger-rubocop (~> 0.13)
+      rubocop (~> 1.63)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -60,11 +71,6 @@ GEM
       octokit (>= 4.0)
       pstore (~> 0.1)
       terminal-table (>= 1, < 5)
-    danger-dangermattic (1.2.4)
-      danger (~> 9.4)
-      danger-plugin-api (~> 1.0)
-      danger-rubocop (~> 0.13)
-      rubocop (~> 1.63)
     danger-plugin-api (1.0.0)
       danger (> 2.0)
     danger-rubocop (0.13.0)
@@ -373,7 +379,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  danger-dangermattic (~> 1.2)
+  danger-dangermattic!
   faraday (~> 1.10, >= 1.10.5)
   fastlane (~> 2)
   fastlane-plugin-firebase_app_distribution (~> 1.0)
