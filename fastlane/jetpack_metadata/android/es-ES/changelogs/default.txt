@@ -1,0 +1,2 @@
+26.8:
+Es casi verano, y eso significa problemas de bichos. No te preocupes, hemos trabajado duro para eliminarlos con diversas correcciones para hacer que la aplicación sea aún más agradable de usar. Esta versión contiene el nuevo editor de bloques: pruébalo en cualquier sitio desde Ajustes del sitio.

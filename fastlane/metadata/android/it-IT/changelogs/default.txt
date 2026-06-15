@@ -1,0 +1,2 @@
+26.8:
+L'estate è alle porte, e si sa: con la bella stagione arrivano anche... i bug. Ma niente paura, ci siamo dati da fare per eliminarli, con una serie di correzioni volte a rendere l'app ancora più piacevole da usare. Questa versione include il nuovissimo editor a blocchi: puoi trovarlo nelle Impostazioni del sito.
