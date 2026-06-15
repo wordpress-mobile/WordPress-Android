@@ -181,6 +181,27 @@ class ApplicationPasswordManagerTests {
         }
 
     @Test
+    fun `given a non-jetpack site with no password, when we ask for a password, then return Failure`() =
+        runTest {
+            val site = SiteModel().apply {
+                origin = SiteModel.ORIGIN_XMLRPC
+                url = "http://test-site.com"
+                username = "username"
+                password = null
+            }
+            whenever(applicationPasswordsStore.getCredentials(site)).thenReturn(null)
+
+            val result = mApplicationPasswordsManager.getApplicationCredentials(site)
+
+            Assert.assertTrue(result is ApplicationPasswordCreationResult.Failure)
+            assertEquals(
+                GenericErrorType.NOT_AUTHENTICATED,
+                (result as ApplicationPasswordCreationResult.Failure).error.type
+            )
+            verifyNoInteractions(mWpApiApplicationPasswordsRestClient)
+        }
+
+    @Test
     fun `when a jetpack site returns 404, then return feature not available`() =
         runTest {
             val site = testSite.apply {
