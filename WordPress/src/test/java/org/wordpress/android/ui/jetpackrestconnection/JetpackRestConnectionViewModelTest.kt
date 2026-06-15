@@ -20,7 +20,6 @@ import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.BuildConfig
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.network.rest.wpapi.applicationpasswords.WpAppNotifierHandler
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.ui.jetpackrestconnection.JetpackRestConnectionViewModel.ButtonType
@@ -57,9 +56,6 @@ class JetpackRestConnectionViewModelTest : BaseUnitTest() {
     lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
 
     @Mock
-    lateinit var wpAppNotifierHandler: WpAppNotifierHandler
-
-    @Mock
     lateinit var siteModel: SiteModel
 
     private lateinit var viewModel: JetpackRestConnectionViewModel
@@ -94,7 +90,6 @@ class JetpackRestConnectionViewModelTest : BaseUnitTest() {
             jetpackModuleHelper = jetpackModuleHelper,
             appLogWrapper = appLogWrapper,
             analyticsTrackerWrapper = analyticsTrackerWrapper,
-            wpAppNotifierHandler = wpAppNotifierHandler,
         )
 
         // Override delays for faster tests
@@ -147,7 +142,7 @@ class JetpackRestConnectionViewModelTest : BaseUnitTest() {
     @Test
     fun `onRetryClick retries from failed step`() = runTest {
         whenever(accountStore.hasAccessToken()).thenReturn(true)
-        whenever(jetpackInstaller.installJetpack(any())).thenReturn(Result.failure(Exception("Failed")))
+        whenever(jetpackInstaller.installJetpack(any(), any())).thenReturn(Result.failure(Exception("Failed")))
 
         viewModel.onStartClick()
         advanceTimeBy(TEST_ADVANCE_TIME_MS)
@@ -155,7 +150,7 @@ class JetpackRestConnectionViewModelTest : BaseUnitTest() {
         assertThat(viewModel.stepStates.value[ConnectionStep.InstallJetpack]?.status)
             .isEqualTo(ConnectionStatus.Failed)
 
-        whenever(jetpackInstaller.installJetpack(any())).thenReturn(Result.success(PluginStatus.ACTIVE))
+        whenever(jetpackInstaller.installJetpack(any(), any())).thenReturn(Result.success(PluginStatus.ACTIVE))
 
         viewModel.onRetryClick()
         advanceTimeBy(TEST_ADVANCE_TIME_MS) // Need to advance time for retry to complete
@@ -213,7 +208,7 @@ class JetpackRestConnectionViewModelTest : BaseUnitTest() {
     @Test
     fun `installJetpack step succeeds with active plugin`() = runTest {
         whenever(accountStore.hasAccessToken()).thenReturn(true)
-        whenever(jetpackInstaller.installJetpack(any())).thenReturn(Result.success(PluginStatus.ACTIVE))
+        whenever(jetpackInstaller.installJetpack(any(), any())).thenReturn(Result.success(PluginStatus.ACTIVE))
 
         viewModel.onStartClick()
         advanceTimeBy(TEST_ADVANCE_TIME_MS)
@@ -225,7 +220,7 @@ class JetpackRestConnectionViewModelTest : BaseUnitTest() {
     @Test
     fun `installJetpack step fails with inactive plugin`() = runTest {
         whenever(accountStore.hasAccessToken()).thenReturn(true)
-        whenever(jetpackInstaller.installJetpack(any())).thenReturn(Result.success(PluginStatus.INACTIVE))
+        whenever(jetpackInstaller.installJetpack(any(), any())).thenReturn(Result.success(PluginStatus.INACTIVE))
 
         viewModel.onStartClick()
         advanceTimeBy(TEST_ADVANCE_TIME_MS)
@@ -237,7 +232,7 @@ class JetpackRestConnectionViewModelTest : BaseUnitTest() {
     @Test
     fun `connectSite step succeeds and updates site ID`() = runTest {
         whenever(accountStore.hasAccessToken()).thenReturn(true)
-        whenever(jetpackInstaller.installJetpack(any())).thenReturn(Result.success(PluginStatus.ACTIVE))
+        whenever(jetpackInstaller.installJetpack(any(), any())).thenReturn(Result.success(PluginStatus.ACTIVE))
         whenever(jetpackConnector.connectSite(any())).thenReturn(Result.success(TEST_SITE_ID))
 
         viewModel.onStartClick()
@@ -253,7 +248,7 @@ class JetpackRestConnectionViewModelTest : BaseUnitTest() {
         whenever(accountStore.hasAccessToken())
             .thenReturn(true) // Initial check for LoginWpCom
             .thenReturn(false) // Check in ConnectUser step
-        whenever(jetpackInstaller.installJetpack(any())).thenReturn(Result.success(PluginStatus.ACTIVE))
+        whenever(jetpackInstaller.installJetpack(any(), any())).thenReturn(Result.success(PluginStatus.ACTIVE))
         whenever(jetpackConnector.connectSite(any())).thenReturn(Result.success(TEST_SITE_ID))
 
         viewModel.onStartClick()
@@ -266,7 +261,7 @@ class JetpackRestConnectionViewModelTest : BaseUnitTest() {
     fun `connectUser step succeeds with access token`() = runTest {
         whenever(accountStore.hasAccessToken()).thenReturn(true)
         whenever(accountStore.accessToken).thenReturn(TEST_ACCESS_TOKEN)
-        whenever(jetpackInstaller.installJetpack(any())).thenReturn(Result.success(PluginStatus.ACTIVE))
+        whenever(jetpackInstaller.installJetpack(any(), any())).thenReturn(Result.success(PluginStatus.ACTIVE))
         whenever(jetpackConnector.connectSite(any())).thenReturn(Result.success(TEST_SITE_ID))
         whenever(jetpackConnector.connectUser(any(), any())).thenReturn(Result.success(TEST_USER_ID))
 
@@ -282,7 +277,7 @@ class JetpackRestConnectionViewModelTest : BaseUnitTest() {
     fun `finalize step succeeds and completes step`() = runTest {
         whenever(accountStore.hasAccessToken()).thenReturn(true)
         whenever(accountStore.accessToken).thenReturn(TEST_ACCESS_TOKEN)
-        whenever(jetpackInstaller.installJetpack(any())).thenReturn(Result.success(PluginStatus.ACTIVE))
+        whenever(jetpackInstaller.installJetpack(any(), any())).thenReturn(Result.success(PluginStatus.ACTIVE))
         whenever(jetpackConnector.connectSite(any())).thenReturn(Result.success(TEST_SITE_ID))
         whenever(jetpackConnector.connectUser(any(), any())).thenReturn(Result.success(TEST_USER_ID))
         whenever(jetpackModuleHelper.activateStatsModule(any())).thenReturn(Result.success(Unit))
@@ -297,7 +292,7 @@ class JetpackRestConnectionViewModelTest : BaseUnitTest() {
     fun `finalize step fails on exception`() = runTest {
         whenever(accountStore.hasAccessToken()).thenReturn(true)
         whenever(accountStore.accessToken).thenReturn(TEST_ACCESS_TOKEN)
-        whenever(jetpackInstaller.installJetpack(any())).thenReturn(Result.success(PluginStatus.ACTIVE))
+        whenever(jetpackInstaller.installJetpack(any(), any())).thenReturn(Result.success(PluginStatus.ACTIVE))
         whenever(jetpackConnector.connectSite(any())).thenReturn(Result.success(TEST_SITE_ID))
         whenever(jetpackConnector.connectUser(any(), any())).thenReturn(Result.success(TEST_USER_ID))
         whenever(jetpackModuleHelper.activateStatsModule(any())).thenReturn(Result.failure(Exception("Stats failed")))
@@ -313,18 +308,29 @@ class JetpackRestConnectionViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `onRequestedWithInvalidAuthentication resets and restarts flow`() = runTest {
-        viewModel.onRequestedWithInvalidAuthentication("https://example.com")
+    fun `install auth failure resets token and restarts the flow`() = runTest {
+        whenever(accountStore.hasAccessToken())
+            .thenReturn(true)  // initial LoginWpCom completes so the install step runs
+            .thenReturn(false) // after the reset, the restarted flow waits at the login step
+        // The install client signals invalid auth locally via the onInvalidAuth callback (2nd arg),
+        // not the app-wide WpAppNotifierHandler. Simulate that callback firing on a 401 (see #22944).
+        whenever(jetpackInstaller.installJetpack(any(), any())).doSuspendableAnswer {
+            it.getArgument<() -> Unit>(1).invoke()
+            Result.failure(Exception("Invalid credentials"))
+        }
 
-        verify(wpAppNotifierHandler).removeListener(viewModel)
+        viewModel.onStartClick()
+        advanceTimeBy(TEST_ADVANCE_TIME_MS)
+        advanceUntilIdle()
+
         verify(accountStore).resetAccessToken()
-        assertThat(viewModel.currentStep.value).isEqualTo(ConnectionStep.LoginWpCom)
+        assertThat(viewModel.uiEvent.value).isEqualTo(UiEvent.StartWPComLogin)
     }
 
     @Test
     fun `step timeout triggers timeout error`() = runTest {
         whenever(accountStore.hasAccessToken()).thenReturn(true)
-        whenever(jetpackInstaller.installJetpack(any())).doSuspendableAnswer {
+        whenever(jetpackInstaller.installJetpack(any(), any())).doSuspendableAnswer {
             delay(TEST_STEP_TIMEOUT_MS + 10L) // Longer than TEST_STEP_TIMEOUT_MS to trigger timeout
             Result.success(PluginStatus.ACTIVE)
         }
@@ -410,10 +416,10 @@ class JetpackRestConnectionViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `successful flow completion sets Done button and removes listener`() = runTest {
+    fun `successful flow completion sets Done button`() = runTest {
         whenever(accountStore.hasAccessToken()).thenReturn(true)
         whenever(accountStore.accessToken).thenReturn(TEST_ACCESS_TOKEN)
-        whenever(jetpackInstaller.installJetpack(any())).thenReturn(Result.success(PluginStatus.ACTIVE))
+        whenever(jetpackInstaller.installJetpack(any(), any())).thenReturn(Result.success(PluginStatus.ACTIVE))
         whenever(jetpackConnector.connectSite(any())).thenReturn(Result.success(TEST_SITE_ID))
         whenever(jetpackConnector.connectUser(any(), any())).thenReturn(Result.success(TEST_USER_ID))
         whenever(jetpackModuleHelper.activateStatsModule(any())).thenReturn(Result.success(Unit))
@@ -422,13 +428,12 @@ class JetpackRestConnectionViewModelTest : BaseUnitTest() {
         advanceTimeBy(TEST_ADVANCE_TIME_MS)
 
         assertThat(viewModel.buttonType.value).isEqualTo(ButtonType.Done)
-        verify(wpAppNotifierHandler).removeListener(viewModel)
     }
 
     @Test
     fun `failed flow completion sets Retry button`() = runTest {
         whenever(accountStore.hasAccessToken()).thenReturn(true)
-        whenever(jetpackInstaller.installJetpack(any())).thenReturn(Result.failure(Exception("Failed")))
+        whenever(jetpackInstaller.installJetpack(any(), any())).thenReturn(Result.failure(Exception("Failed")))
 
         viewModel.onStartClick()
         advanceTimeBy(TEST_ADVANCE_TIME_MS)
