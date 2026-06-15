@@ -1,0 +1,2 @@
+p26.8:
+Het is bijna zomer en dat betekent bugs. Maak je geen zorgen, we hebben hard gewerkt aan het verpletteren ervan, met allerlei oplossingen om de app nog leuker te maken om te gebruiken. Deze release bevat de geheel nieuwe blok-editor — Probeer het op elke site vanuit site instellingen.

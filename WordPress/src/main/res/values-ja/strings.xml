@@ -1,11 +1,98 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2026-04-02 09:56:01+0000
+Translation-Revision-Date: 2026-06-02 09:56:48+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.3
 Language: ja_JP
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="xmlrpc_disabled_bottom_sheet_body">アプリの一部の機能には XML-RPC が必要です。 解決するには、サイトで有効化してください。</string>
+    <string name="xmlrpc_disabled_bottom_sheet_title">XML-RPC が無効になっています</string>
+    <string name="xmlrpc_disabled_card_text">XML-RPC が無効になっています\n一部の機能に制限がある場合があります</string>
+    <string name="application_password_reauthentication_banner">サイトのログイン情報が間違っています。 タップして再認証してください。</string>
+    <string name="application_password_app_name_wordpress">%s の Android 用 WordPress アプリ</string>
+    <string name="application_password_app_name_jetpack">%s の Android 用 Jetpack アプリ</string>
+    <string name="application_password_authorization_cancelled">認証をキャンセルしました</string>
+    <string name="reader_label_view">サイトを表示</string>
+    <string name="reader_excerpt_view_more">詳細を表示</string>
+    <string name="reader_reading_time">読了時間の目安: %s分</string>
+    <string name="reader_discover_tab_latest">最新</string>
+    <string name="reader_discover_tab_recommended">おすすめ</string>
+    <string name="stats_subscriber_years_and_days">%1$s、%2$s</string>
+    <string name="stats_subscriber_since_today">今日</string>
+    <string name="stats_subscribers_graph_years">年</string>
+    <string name="stats_subscribers_graph_months">月</string>
+    <string name="stats_subscribers_graph_weeks">週</string>
+    <string name="stats_subscribers_graph_days">日</string>
+    <string name="stats_emails_clicks_header">クリック</string>
+    <string name="stats_emails_opens_header">開く</string>
+    <string name="stats_emails_latest_header">最新のメール</string>
+    <string name="stats_subscribers_since_header">開始日:</string>
+    <string name="stats_subscribers_90_days_ago">90日前</string>
+    <string name="stats_subscribers_60_days_ago">60日前</string>
+    <string name="stats_subscribers_30_days_ago">30日前</string>
+    <string name="stats_subscribers_current">現在</string>
+    <string name="stats_subscribers_emails">メールアドレス</string>
+    <string name="stats_subscribers_list">購読者</string>
+    <string name="stats_subscribers_graph">購読者グラフ</string>
+    <string name="stats_subscribers_all_time">全期間の購読者</string>
+    <string name="stats_utm_campaign">キャンペーン</string>
+    <string name="stats_utm_medium">メディア</string>
+    <string name="stats_utm_source">ソース</string>
+    <string name="stats_utm_campaign_source_medium">キャンペーン / ソース / メディア</string>
+    <string name="stats_utm_source_medium">ソース / メディア</string>
+    <string name="stats_error_not_authenticated">認証されていません</string>
+    <string name="stats_collapse_group">折りたたむ</string>
+    <string name="stats_expand_group">展開</string>
+    <string name="stats_tag_type_tag">タグ</string>
+    <string name="stats_tag_type_category">カテゴリー</string>
+    <string name="stats_insights_tags_empty">タグまたはカテゴリーが見つかりません</string>
+    <string name="stats_insights_views_percent">表示の%1$s%%</string>
+    <string name="stats_insights_most_popular_day_label">日</string>
+    <string name="stats_insights_all_time_stats_title">全期間の統計情報</string>
+    <string name="stats_insights_year_in_review_title">%s年のまとめ</string>
+    <string name="stats_insights_year_in_review">1年のまとめ</string>
+    <string name="stats_insights_avg_words_per_post">投稿毎の平均単語数</string>
+    <string name="stats_insights_avg_likes_per_post">投稿毎の「いいね」の平均数</string>
+    <string name="stats_insights_avg_comments_per_post">投稿毎の平均コメント数</string>
+    <string name="stats_insights_total_posts">総投稿数</string>
+    <string name="stats_insights_likes">いいね</string>
+    <string name="stats_insights_words">単語数</string>
+    <string name="activity_log_mcp_agent_label">%1$s 経由</string>
+    <string name="post_rs_settings_show_password">パスワードを表示</string>
+    <string name="post_rs_settings_hide_password">パスワードを隠す</string>
+    <string name="post_rs_settings_saving">保存しています\u2026</string>
+    <string name="post_rs_settings_search_no_results">結果が見つかりませんでした</string>
+    <string name="post_rs_settings_load_more">さらに読み込む\u2026</string>
+    <string name="post_rs_settings_term_create_error">項目の作成に失敗しました</string>
+    <string name="post_rs_settings_search_authors">投稿者を検索</string>
+    <string name="post_rs_settings_search_terms">検索</string>
+    <string name="post_rs_settings_no_parent">なし</string>
+    <string name="post_rs_settings_parent_category">親カテゴリー</string>
+    <string name="post_rs_settings_term_name_hint">名前</string>
+    <string name="post_rs_settings_add_term">新規追加</string>
+    <string name="post_rs_settings_choose_from_device">端末から選択</string>
+    <string name="post_rs_settings_choose_from_wp_media">WP メディアから選択</string>
+    <string name="stats_new_stats_suggestion_negative">後で確認する</string>
+    <string name="stats_new_stats_suggestion_positive">試す</string>
+    <string name="stats_new_stats_suggestion_message">新しい統計情報のエクスペリエンスが構築されました。 お試しをご希望ですか ? 統計情報メニューからいつでも旧バージョンに戻ることができます。</string>
+    <string name="stats_new_stats_suggestion_title">新しい統計情報のエクスペリエンス</string>
+    <string name="gutenberg_kit_announcement_learn_more">さらに詳しく</string>
+    <string name="gutenberg_kit_announcement_maybe_later">後で確認する</string>
+    <string name="gutenberg_kit_announcement_activate">有効化</string>
+    <string name="gutenberg_kit_announcement_body_deadline">2026年6月末までに、全ユーザーにとってデフォルトのエディターとなります。 %1$s</string>
+    <string name="gutenberg_kit_announcement_body_intro">次世代ブロックエディターの準備ができました。たくさんの新機能があります。</string>
+    <string name="gutenberg_kit_announcement_title">より高性能のブロックエディターが登場します</string>
+    <string name="site_settings_gutenberg_kit_enabled_unsupported">まずブロックエディターに切り替えてから、新しいエディターをお試しください。</string>
+    <string name="site_settings_gutenberg_kit_enabled_summary">このサイトの次世代ブロックエディターを有効化</string>
+    <string name="site_settings_gutenberg_kit_enabled">新しいエディターを試す</string>
+    <string name="site_connectivity_banner_text">サイトに接続できません。 一部の機能には制限がある場合があります。</string>
+    <string name="site_settings_use_third_party_blocks_unsupported">サイトがエディターでのサードパーティ製ブロックの読み込みに対応していません。</string>
+    <string name="site_settings_use_third_party_blocks_summary">サイトにインストールされているプラグインからサードパーティ製ブロックを読み込みます。</string>
+    <string name="site_settings_use_third_party_blocks">サードパーティ製ブロックを使用 (ベータ版)</string>
+    <string name="site_settings_use_theme_styles_not_block_theme">サイトでブロックテーマが使用されていません。 エディターがコンテンツと一致しない可能性があります。 問題がある場合は、この設定を無効にしてください。</string>
+    <string name="site_settings_use_theme_styles_unsupported">テーマスタイルのサポートを有効化するには、サイトに Gutenberg プラグインをインストールしてください。</string>
+    <string name="new_stats_intro_footer">統計画面のオーバーフローメニューから新しい統計情報をオフにできます。</string>
     <string name="new_stats_intro_trends_desc">すべての指標が前の期間と比較した傾向を表示するため、成長の程度をいつでも把握できます。</string>
     <string name="new_stats_intro_trends_title">傾向を瞬時に把握</string>
     <string name="new_stats_intro_on_par_desc">端末、UTM、位置情報、WordAds (近日公開)  — WordPress.com で取得するデータと同じデータを提供します。</string>
@@ -285,6 +372,7 @@ Language: ja_JP
     <string name="support_screen_title">サポート</string>
     <string name="modern_support_description">新しいモダンサポート体験を有効にする</string>
     <string name="modern_support">モダンサポート</string>
+    <string name="site_settings_use_theme_styles_summary">ブロックエディターをテーマのように見せましょう。</string>
     <string name="site_settings_use_theme_styles">テーマスタイルを使用</string>
     <string name="error_deleting_term">項目を削除中にエラーが発生しました</string>
     <string name="error_saving_term">項目を保存中にエラーが発生しました</string>
@@ -3679,6 +3767,7 @@ Language: ja_JP
     <string name="push_auth_expired">リクエストの有効期限が切れています。もう一度試すには WordPress.com にログインしてください。</string>
     <string name="ignore">無視</string>
     <string name="stats_insights_best_ever">過去最高の表示数</string>
+    <string name="stats_insights_most_popular_time">最も人気のある時間</string>
     <string name="stats_insights_most_popular_day">最も人気の日</string>
     <string name="stats_insights_today">今日の統計情報</string>
     <string name="stats_insights_all_time">全期間の投稿、表示数、訪問者</string>
@@ -3737,6 +3826,7 @@ Language: ja_JP
     <string name="browse_our_faq_button">よく聞かれる質問を表示</string>
     <string name="reader_empty_comments">コメントはまだありません</string>
     <string name="reader_label_like">いいね</string>
+    <string name="reader_label_view_original">元の投稿を表示</string>
     <string name="reader_label_comments_closed">コメントは受け付けていません</string>
     <string name="reader_title_photo_viewer">%1$d/%2$d</string>
     <string name="error_publish_empty_post">空の投稿は公開できません</string>

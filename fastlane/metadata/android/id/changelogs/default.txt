@@ -1,0 +1,2 @@
+26.8:
+Ini hampir musim panas, dan itu berarti ancaman bug. Jangan khawatir, kami telah bekerja keras untuk membasminya, dengan beragam perbaikan untuk membuat aplikasi lebih baik lagi untuk digunakan. Rilis ini berisi editor blok baru — silakan coba di situs mana pun dari Pengaturan Situs.

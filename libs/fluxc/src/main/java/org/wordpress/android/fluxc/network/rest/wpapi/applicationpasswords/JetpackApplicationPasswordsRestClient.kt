@@ -47,14 +47,18 @@ internal class JetpackApplicationPasswordsRestClient @Inject constructor(
 
         return when (response) {
             is JetpackSuccess<ApplicationPasswordCreationResponse> -> {
-                response.data?.let {
-                    ApplicationPasswordCreationPayload(it.password, it.uuid)
-                } ?: ApplicationPasswordCreationPayload(
-                    BaseNetworkError(
-                        GenericErrorType.UNKNOWN,
-                        "Password missing from response"
+                val password = response.data?.password
+                val uuid = response.data?.uuid
+                if (password != null && uuid != null) {
+                    ApplicationPasswordCreationPayload(password, uuid)
+                } else {
+                    ApplicationPasswordCreationPayload(
+                        BaseNetworkError(
+                            GenericErrorType.UNKNOWN,
+                            "Password or UUID missing from response"
+                        )
                     )
-                )
+                }
             }
             is JetpackError<ApplicationPasswordCreationResponse> ->
                 ApplicationPasswordCreationPayload(response.error)
@@ -77,8 +81,8 @@ internal class JetpackApplicationPasswordsRestClient @Inject constructor(
 
         return when (response) {
             is JetpackSuccess -> {
-                response.data?.firstOrNull { it.name == applicationName }?.let {
-                    ApplicationPasswordUUIDFetchPayload(it.uuid)
+                response.data?.firstOrNull { it.name == applicationName }?.uuid?.let {
+                    ApplicationPasswordUUIDFetchPayload(it)
                 } ?: ApplicationPasswordUUIDFetchPayload(
                     BaseNetworkError(
                         GenericErrorType.UNKNOWN,

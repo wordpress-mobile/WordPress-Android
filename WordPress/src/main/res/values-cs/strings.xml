@@ -1,11 +1,99 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2026-03-27 12:00:50+0000
+Translation-Revision-Date: 2026-06-12 07:01:21+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n >= 2 && n <= 4) ? 1 : 2);
 Generator: GlotPress/4.0.3
 Language: cs_CZ
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="xmlrpc_disabled_bottom_sheet_body">Některé funkce aplikace vyžadují protokol XML-RPC. Pro vyřešení tohoto problému jej na svém webu povolte.</string>
+    <string name="xmlrpc_disabled_bottom_sheet_title">XML-RPC je deaktivováno</string>
+    <string name="xmlrpc_disabled_card_text">XML-RPC je deaktivováno\nNěkteré funkce mohou být omezeny</string>
+    <string name="application_password_reauthentication_banner">Vaše přihlašovací údaje k webu nejsou platné. Klepnutím se znovu přihlaste.</string>
+    <string name="application_password_app_name_wordpress">Aplikace WordPress pro Android na %s</string>
+    <string name="application_password_app_name_jetpack">Aplikace Jetpack pro Android na %s</string>
+    <string name="application_password_authorization_cancelled">Oprávnění bylo zrušeno</string>
+    <string name="reader_label_view">Zobrazit web</string>
+    <string name="reader_excerpt_view_more">Zobrazit více</string>
+    <string name="reader_reading_time">Čas na přečtení: %s</string>
+    <string name="reader_discover_tab_latest">Nejnovější</string>
+    <string name="reader_discover_tab_recommended">Doporučeno</string>
+    <string name="stats_subscriber_years_and_days">%1$s, %2$s</string>
+    <string name="stats_subscriber_since_today">dnes</string>
+    <string name="stats_subscribers_graph_years">Roky</string>
+    <string name="stats_subscribers_graph_months">Měsíce</string>
+    <string name="stats_subscribers_graph_weeks">Týdny</string>
+    <string name="stats_subscribers_graph_days">Dny</string>
+    <string name="stats_emails_clicks_header">Kliknutí</string>
+    <string name="stats_emails_opens_header">Otevírá se</string>
+    <string name="stats_emails_latest_header">Nejnovější e-maily</string>
+    <string name="stats_subscribers_since_header">Vzhledem k tomu, že</string>
+    <string name="stats_subscribers_90_days_ago">před 90 dny</string>
+    <string name="stats_subscribers_60_days_ago">před 60 dny</string>
+    <string name="stats_subscribers_30_days_ago">před 30 dny</string>
+    <string name="stats_subscribers_current">Aktuální</string>
+    <string name="stats_subscribers_emails">E-maily</string>
+    <string name="stats_subscribers_list">Předplatitelé</string>
+    <string name="stats_subscribers_graph">Graf předplatitelů</string>
+    <string name="stats_subscribers_all_time">Celkový počet předplatitelů</string>
+    <string name="stats_utm_campaign">Kampaň</string>
+    <string name="stats_utm_medium">Střední</string>
+    <string name="stats_utm_source">Zdroj</string>
+    <string name="stats_utm_campaign_source_medium">Kampaň / Zdroj / Médium</string>
+    <string name="stats_utm_source_medium">Zdroj / Médium</string>
+    <string name="stats_utm_title">UTM</string>
+    <string name="stats_error_not_authenticated">Není přihlášeno</string>
+    <string name="stats_collapse_group">Sbalit</string>
+    <string name="stats_expand_group">Rozbalit</string>
+    <string name="stats_tag_type_tag">Den</string>
+    <string name="stats_tag_type_category">Kategorie</string>
+    <string name="stats_insights_tags_empty">Nebyly nalezeny žádné štítky ani kategorie</string>
+    <string name="stats_insights_views_percent">%1$s%% z celkového počtu zobrazení</string>
+    <string name="stats_insights_most_popular_day_label">Den</string>
+    <string name="stats_insights_all_time_stats_title">Celkové statistiky</string>
+    <string name="stats_insights_year_in_review_title">%s v recenzi</string>
+    <string name="stats_insights_year_in_review">Roční přehled</string>
+    <string name="stats_insights_avg_words_per_post">Průměrný počet slov na příspěvek</string>
+    <string name="stats_insights_avg_likes_per_post">Průměrný počet lajků na příspěvek</string>
+    <string name="stats_insights_avg_comments_per_post">Průměrný počet komentářů na příspěvek</string>
+    <string name="stats_insights_total_posts">Celkový počet příspěvků</string>
+    <string name="stats_insights_likes">Líbí se mi</string>
+    <string name="stats_insights_words">Slova</string>
+    <string name="activity_log_mcp_agent_label">prostřednictvím %1$s</string>
+    <string name="post_rs_settings_show_password">Zobrazit heslo</string>
+    <string name="post_rs_settings_hide_password">Skrýt heslo</string>
+    <string name="post_rs_settings_saving">Uložení\u2026</string>
+    <string name="post_rs_settings_search_no_results">Nebyly nalezeny žádné výsledky</string>
+    <string name="post_rs_settings_load_more">Načíst další\u2026</string>
+    <string name="post_rs_settings_term_create_error">Vytvoření pojmu se nezdařilo</string>
+    <string name="post_rs_settings_search_authors">Vyhledat autory</string>
+    <string name="post_rs_settings_search_terms">Hledat</string>
+    <string name="post_rs_settings_no_parent">Žádné</string>
+    <string name="post_rs_settings_parent_category">Nadřazená kategorie</string>
+    <string name="post_rs_settings_term_name_hint">Jméno</string>
+    <string name="post_rs_settings_add_term">Přidat nový</string>
+    <string name="post_rs_settings_choose_from_device">Vyberte zařízení</string>
+    <string name="post_rs_settings_choose_from_wp_media">Vyberte si z WP Media</string>
+    <string name="stats_new_stats_suggestion_negative">Možná později</string>
+    <string name="stats_new_stats_suggestion_positive">Vyzkoušejte to</string>
+    <string name="stats_new_stats_suggestion_message">Připravili jsme pro vás zcela nové rozhraní statistik. Chcete si ho vyzkoušet? V nabídce „Statistiky“ se můžete kdykoli vrátit ke starému rozhraní.</string>
+    <string name="stats_new_stats_suggestion_title">Nové prostředí pro statistiky</string>
+    <string name="gutenberg_kit_announcement_learn_more">Další informace</string>
+    <string name="gutenberg_kit_announcement_maybe_later">Možná později</string>
+    <string name="gutenberg_kit_announcement_activate">Aktivovat</string>
+    <string name="gutenberg_kit_announcement_body_deadline">Do konce června 2026 se stane výchozím editorem pro všechny. %1$s</string>
+    <string name="gutenberg_kit_announcement_body_intro">Blokový editor nové generace je připraven a přináší řadu nových funkcí.</string>
+    <string name="gutenberg_kit_announcement_title">Připravuje se vylepšený blokový editor</string>
+    <string name="site_settings_gutenberg_kit_enabled_unsupported">Nejprve přepněte do blokového editoru, abyste si nový editor vyzkoušeli.</string>
+    <string name="site_settings_gutenberg_kit_enabled_summary">Zapněte si na tomto webu blokový editor nové generace</string>
+    <string name="site_settings_gutenberg_kit_enabled">Vyzkoušejte nový editor</string>
+    <string name="site_connectivity_banner_text">Nelze se připojit k vašemu webu. Některé funkce mohou být omezené.</string>
+    <string name="site_settings_use_third_party_blocks_unsupported">Vaše stránka nepodporuje načítání bloků třetích stran v editoru.</string>
+    <string name="site_settings_use_third_party_blocks_summary">Načíst bloky třetích stran z pluginů nainstalovaných na vašem webu.</string>
+    <string name="site_settings_use_third_party_blocks">Použít bloky třetích stran (beta)</string>
+    <string name="site_settings_use_theme_styles_not_block_theme">Váš web nepoužívá blokové šablony. Editor nemusí odpovídat vašemu obsahu. Pokud se vám vzhled nelíbí, deaktivujte toto nastavení.</string>
+    <string name="site_settings_use_theme_styles_unsupported">Nainstalujte si na svůj web plugin Gutenberg, abyste aktivovali podporu stylů šablony.</string>
+    <string name="new_stats_intro_footer">Funkci „Nové statistiky“ můžete vypnout v rozbalovací nabídce na obrazovce „Statistiky“.</string>
     <string name="new_stats_intro_trends_desc">Každý ukazatel zobrazuje, jak se vyvíjí ve srovnání s předchozím obdobím, takže vždy víte, zda rostete.</string>
     <string name="new_stats_intro_trends_title">Přehled trendů</string>
     <string name="new_stats_intro_on_par_desc">Zařízení, UTM, lokality, WordAds (brzy k dispozici) – stejná data, jaká získáváte na WordPress.com.</string>
@@ -71,7 +159,7 @@ Language: cs_CZ
     <string name="menu_item_type_page">Stránka</string>
     <string name="menu_item_type_custom">Vlastní odkaz</string>
     <string name="menu_item_type_label">Typ</string>
-    <string name="delete_menu_item_confirmation_message">Opravdu chcete smazat \"%1$s\"?</string>
+    <string name="delete_menu_item_confirmation_message">Opravdu chcete smazat \\"%1$s\\"?</string>
     <string name="delete_menu_item_confirmation_title">Smazat položku nabídky</string>
     <string name="menu_item_deleted">Položka nabídky byla smazána</string>
     <string name="menu_item_saved">Položka nabídky byla uložena</string>
@@ -87,7 +175,7 @@ Language: cs_CZ
     <string name="no_menu_items">Tato nabídka zatím nemá žádné položky!</string>
     <string name="edit_menu_item">Upravit položku nabídky</string>
     <string name="add_menu_item">Přidat položku nabídky</string>
-    <string name="delete_menu_confirmation_message">Opravdu chcete smazat \"%1$s\"?</string>
+    <string name="delete_menu_confirmation_message">Opravdu chcete smazat \\"%1$s\\"?</string>
     <string name="delete_menu_confirmation_title">Smazat nabídku</string>
     <string name="menu_deleted">Nabídka byla smazána</string>
     <string name="menu_saved">Nabídka byla uložena</string>
@@ -176,6 +264,7 @@ Language: cs_CZ
     <string name="error_browser_no_network">Tuto stránku nelze načíst</string>
     <string name="history_empty_subtitle_post">Historie tohoto příspěvku se zobrazí, až ho začnete upravovat</string>
     <string name="history_empty_subtitle_page">Historie této stránky se zobrazí, až ji začnete upravovat</string>
+    <string name="reader_discover_tab_freshly_pressed">Vybrané příspěvky</string>
     <string name="notifications_empty_action_comments">Zapojte se do diskuze! Komentujte příspěvky ve Čtečce.</string>
     <string name="notifications_empty_action_all">Buďte aktivní! Komentujte příspěvky ve Čtečce.</string>
     <string name="more_options">Další možnosti</string>
@@ -289,11 +378,12 @@ Language: cs_CZ
     <string name="support_screen_title">Podpora</string>
     <string name="modern_support_description">Povolit nové moderní prostředí podpory</string>
     <string name="modern_support">Moderní podpora</string>
+    <string name="site_settings_use_theme_styles_summary">Upravte vzhled blokového editoru tak, aby odpovídal vašemu šabloně.</string>
     <string name="site_settings_use_theme_styles">Použít styly motivu</string>
     <string name="error_deleting_term">Při mazání výrazu došlo k chybě</string>
     <string name="error_saving_term">Při ukládání výrazu došlo k chybě</string>
     <string name="add_term">Přidat výraz</string>
-    <string name="term_delete_confirmation_message">Opravdu chcete smazat \"%1$s\"?</string>
+    <string name="term_delete_confirmation_message">Opravdu chcete smazat „%1$s“?</string>
     <string name="term_delete_confirmation_title">Smazat výraz</string>
     <string name="term_sort_by_count">Počet</string>
     <string name="term_sort_by_name">Název</string>
@@ -532,6 +622,7 @@ Language: cs_CZ
     <string name="page_upload_conflict_error">Existuje novější revize této stránky</string>
     <string name="editor_updating_content">Aktualizace obsahu</string>
     <string name="stats_subscribers">Odběratelé</string>
+    <string name="stats_subscribers_subscriber_header">Předplatitel</string>
     <string name="weekly_roundup_notification_text_views_and_comment">Minulý týden jste měli %1$s zobrazení a 1 komentář</string>
     <string name="weekly_roundup_notification_text_views_and_like">Minulý týden jste měli %1$s zobrazení a 1 to se mi líbí</string>
     <string name="weekly_roundup_notification_text_views_like_comment">Minulý týden jste měli %1$s zobrazení, 1 to se mi líbí a 1 komentář.</string>
@@ -3699,6 +3790,7 @@ Language: cs_CZ
     <string name="push_auth_expired">Žádost vypršela. Přihlaste se znovu přes WordPress.com </string>
     <string name="ignore">Ignorovat</string>
     <string name="stats_insights_best_ever">Nejlepší shlédnutí</string>
+    <string name="stats_insights_most_popular_time">Nejoblíbenější doba</string>
     <string name="stats_insights_most_popular_day">Nejoblíbenější den</string>
     <string name="stats_insights_today">Dnešní statistika</string>
     <string name="stats_insights_all_time">Všechny příspěvky, zobrazení a návštěvníci</string>
@@ -3757,6 +3849,7 @@ Language: cs_CZ
     <string name="browse_our_faq_button">Prohledat časté dotazy</string>
     <string name="reader_empty_comments">Žádné komentáře</string>
     <string name="reader_label_like">To se mi líbí</string>
+    <string name="reader_label_view_original">Zobrazit originál</string>
     <string name="reader_label_comments_closed">Komentáře jsou uzavřené</string>
     <string name="reader_title_photo_viewer">%1$d z %2$d</string>
     <string name="error_publish_empty_post">Nelze publikovat prázdný příspěvek</string>

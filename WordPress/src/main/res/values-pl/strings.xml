@@ -1,11 +1,99 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2026-05-29 04:42:55+0000
+Translation-Revision-Date: 2026-06-04 13:37:29+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/4.0.3
 Language: pl
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="xmlrpc_disabled_bottom_sheet_body">Niektóre funkcje w aplikacji wymagają XML-RPC. Włącz je w swojej witrynie, aby rozwiązać ten problem.</string>
+    <string name="xmlrpc_disabled_bottom_sheet_title">XML-RPC jest wyłączone</string>
+    <string name="xmlrpc_disabled_card_text">XML-RPC jest wyłączone\nNiektóre funkcje mogą być ograniczone</string>
+    <string name="application_password_reauthentication_banner">Nieprawidłowe dane logowania do witryny. Stuknij, aby uwierzytelnić ponownie.</string>
+    <string name="application_password_app_name_wordpress">Aplikacja WordPressa na Androida w %s</string>
+    <string name="application_password_app_name_jetpack">Aplikacja Jetpacka na Androida w %s</string>
+    <string name="application_password_authorization_cancelled">Anulowano autoryzację</string>
+    <string name="reader_label_view">Zobacz witrynę</string>
+    <string name="reader_excerpt_view_more">Zobacz więcej</string>
+    <string name="reader_reading_time">%s minut czytania</string>
+    <string name="reader_discover_tab_latest">Najnowsze</string>
+    <string name="reader_discover_tab_recommended">Zalecane</string>
+    <string name="stats_subscriber_years_and_days">%1$s, %2$s</string>
+    <string name="stats_subscriber_since_today">dziś</string>
+    <string name="stats_subscribers_graph_years">Lata</string>
+    <string name="stats_subscribers_graph_months">Miesiące</string>
+    <string name="stats_subscribers_graph_weeks">Tygodnie</string>
+    <string name="stats_subscribers_graph_days">Dni</string>
+    <string name="stats_emails_clicks_header">Kliknięcia</string>
+    <string name="stats_emails_opens_header">Otwarcia</string>
+    <string name="stats_emails_latest_header">Najnowsze wiadomości email</string>
+    <string name="stats_subscribers_since_header">Od</string>
+    <string name="stats_subscribers_90_days_ago">90 dni temu</string>
+    <string name="stats_subscribers_60_days_ago">60 dni temu</string>
+    <string name="stats_subscribers_30_days_ago">30 dni temu</string>
+    <string name="stats_subscribers_current">Obecnie</string>
+    <string name="stats_subscribers_emails">Adresy email</string>
+    <string name="stats_subscribers_list">Subskrybenci</string>
+    <string name="stats_subscribers_graph">Wykres subskrybentów</string>
+    <string name="stats_subscribers_all_time">Subskrybenci od początku istnienia</string>
+    <string name="stats_utm_campaign">Kampania</string>
+    <string name="stats_utm_medium">Medium</string>
+    <string name="stats_utm_source">Źródło</string>
+    <string name="stats_utm_campaign_source_medium">Kampania / źródło / medium</string>
+    <string name="stats_utm_source_medium">Źródło / medium</string>
+    <string name="stats_utm_title">UTM</string>
+    <string name="stats_error_not_authenticated">Brak uwierzytelnienia</string>
+    <string name="stats_collapse_group">Zwiń</string>
+    <string name="stats_expand_group">Rozwiń</string>
+    <string name="stats_tag_type_tag">Tag</string>
+    <string name="stats_tag_type_category">Kategoria</string>
+    <string name="stats_insights_tags_empty">Nie znaleziono tagów ani kategorii</string>
+    <string name="stats_insights_views_percent">%1$s%% wyświetleń</string>
+    <string name="stats_insights_most_popular_day_label">Dzień</string>
+    <string name="stats_insights_all_time_stats_title">Statystyki od początku istnienia</string>
+    <string name="stats_insights_year_in_review_title">%s w recenzji</string>
+    <string name="stats_insights_year_in_review">Przegląd roku</string>
+    <string name="stats_insights_avg_words_per_post">Średnio słów na wpis</string>
+    <string name="stats_insights_avg_likes_per_post">Średnio polubień na wpis</string>
+    <string name="stats_insights_avg_comments_per_post">Średnio komentarzy na wpis</string>
+    <string name="stats_insights_total_posts">Łącznie wpisów</string>
+    <string name="stats_insights_likes">Polubienia</string>
+    <string name="stats_insights_words">Słowa</string>
+    <string name="activity_log_mcp_agent_label">przez %1$s</string>
+    <string name="post_rs_settings_show_password">Pokaż hasło</string>
+    <string name="post_rs_settings_hide_password">Ukryj hasło</string>
+    <string name="post_rs_settings_saving">Zapisywanie\u2026</string>
+    <string name="post_rs_settings_search_no_results">Brak wyników</string>
+    <string name="post_rs_settings_load_more">Wczytaj więcej\u2026</string>
+    <string name="post_rs_settings_term_create_error">Nie utworzono taksonomii</string>
+    <string name="post_rs_settings_search_authors">Szukaj autorów</string>
+    <string name="post_rs_settings_search_terms">Szukaj</string>
+    <string name="post_rs_settings_no_parent">Brak</string>
+    <string name="post_rs_settings_parent_category">Kategoria nadrzędna</string>
+    <string name="post_rs_settings_term_name_hint">Nazwa</string>
+    <string name="post_rs_settings_add_term">Utwórz</string>
+    <string name="post_rs_settings_choose_from_device">Wybierz z urządzenia</string>
+    <string name="post_rs_settings_choose_from_wp_media">Wybierz z plików mediów</string>
+    <string name="stats_new_stats_suggestion_negative">Może później</string>
+    <string name="stats_new_stats_suggestion_positive">Wypróbuj</string>
+    <string name="stats_new_stats_suggestion_message">Stworzyliśmy zupełnie nowy wygląd statystyk. Chcesz wypróbować? Zawsze możesz wrócić do starej wersji w menu statystyk.</string>
+    <string name="stats_new_stats_suggestion_title">Nowy wygląd statystyk</string>
+    <string name="gutenberg_kit_announcement_learn_more">Dowiedz się więcej</string>
+    <string name="gutenberg_kit_announcement_maybe_later">Może później</string>
+    <string name="gutenberg_kit_announcement_activate">Włącz</string>
+    <string name="gutenberg_kit_announcement_body_deadline">Do końca czerwca 2026 roku stanie się domyślnym edytorem dla wszystkich. %1$s</string>
+    <string name="gutenberg_kit_announcement_body_intro">Edytor blokowy nowej generacji jest gotowy i oferuje więcej nowych funkcji.</string>
+    <string name="gutenberg_kit_announcement_title">Nadchodzi lepszy edytor blokowy</string>
+    <string name="site_settings_gutenberg_kit_enabled_unsupported">Aby przetestować nowy edytor, najpierw przełącz się na edytor blokowy.</string>
+    <string name="site_settings_gutenberg_kit_enabled_summary">Włącz edytor blokowy nowej generacji w witrynie</string>
+    <string name="site_settings_gutenberg_kit_enabled">Wypróbuj nowy edytor</string>
+    <string name="site_connectivity_banner_text">Nie można połączyć się z twoją witryną. Niektóre funkcje mogą być ograniczone.</string>
+    <string name="site_settings_use_third_party_blocks_unsupported">Twoja witryna nie obsługuje wczytywania bloków innych dostawców w edytorze.</string>
+    <string name="site_settings_use_third_party_blocks_summary">Wczytuj bloki innych dostawców z wtyczek zainstalowanych w twojej witrynie.</string>
+    <string name="site_settings_use_third_party_blocks">Używaj bloków innych dostawców (Beta)</string>
+    <string name="site_settings_use_theme_styles_not_block_theme">Twoja witryna nie używa motywu blokowego. Edytor może nie odpowiadać wyglądowi twoich treści. Jeśli coś wygląda nie tak, wyłącz to ustawienie.</string>
+    <string name="site_settings_use_theme_styles_unsupported">Zainstaluj w swojej witrynie wtyczkę Gutenberg, aby włączyć obsługę stylów motywu.</string>
+    <string name="new_stats_intro_footer">Możesz wyłączyć opcję „Nowe statystyki” z menu rozwijanego na ekranie statystyk.</string>
     <string name="new_stats_intro_trends_desc">Każdy wskaźnik pokazuje, jak wygląda tendencja w porównaniu z poprzednim okresem, dzięki czemu zawsze wiesz, czy odnotowujesz wzrost.</string>
     <string name="new_stats_intro_trends_title">Najważniejsze trendy</string>
     <string name="new_stats_intro_on_par_desc">Urządzenia, UTM, lokalizacje, WordAds (wkrótce) — te same dane, które widzisz na WordPress.com.</string>
@@ -105,8 +193,8 @@ Language: pl
     <string name="qrcode_auth_flow_error_expired_subtitle">Ten kod logowania wygasł</string>
     <string name="qrcode_auth_flow_error_invalid_data_title">Walidacja nie powiodła się</string>
     <string name="reader_subscription_settings_update_error">Nie udało się zaktualizować ustawień subskrypcji</string>
-    <string name="reader_subscription_settings_email_comments">Przesyłaj do mnie e-mailem nowe komentarze</string>
-    <string name="reader_subscription_settings_email_posts">Przesyłaj do mnie e-mailem nowe wpisy</string>
+    <string name="reader_subscription_settings_email_comments">Przesyłaj do mnie nowe komentarze w wiadomości email</string>
+    <string name="reader_subscription_settings_email_posts">Przesyłaj do mnie nowe wpisy w wiadomości email</string>
     <string name="reader_subscription_settings_notify_posts">Powiadom mnie o nowych wpisach</string>
     <string name="reader_subscription_settings_description">Zarządzaj opcjami subskrypcji</string>
     <string name="reader_subscription_settings_title">Ustawienia subskrypcji</string>
@@ -176,6 +264,7 @@ Language: pl
     <string name="error_browser_no_network">Nie można wczytać tej strony</string>
     <string name="history_empty_subtitle_post">Zobaczysz historię tego wpisu, gdy wprowadzisz w nim zmiany.</string>
     <string name="history_empty_subtitle_page">Zobaczysz historię tej strony, gdy wprowadzisz w niej zmiany.</string>
+    <string name="reader_discover_tab_freshly_pressed">Świeżo opublikowane</string>
     <string name="notifications_empty_action_comments">Dołącz do rozmowy! Komentuj wpisy w czytniku.</string>
     <string name="notifications_empty_action_all">Bądź aktywny! Komentuj wpisy w czytniku.</string>
     <string name="more_options">Więcej opcji</string>
@@ -289,6 +378,7 @@ Language: pl
     <string name="support_screen_title">Pomoc techniczna</string>
     <string name="modern_support_description">Włącz nową, nowoczesną obsługę</string>
     <string name="modern_support">Nowoczesne wsparcie</string>
+    <string name="site_settings_use_theme_styles_summary">Dopasuj wygląd edytora bloków do swojego motywu.</string>
     <string name="site_settings_use_theme_styles">Użyj stylów motywu</string>
     <string name="error_deleting_term">Wystąpił błąd podczas usuwania terminu</string>
     <string name="error_saving_term">Wystąpił błąd podczas zapisywania terminu</string>
@@ -360,7 +450,7 @@ Language: pl
     <string name="application_password_credentials_storing_error">Wystąpił błąd podczas zapisywania danych uwierzytelniających hasła aplikacji dla %1$s</string>
     <string name="subscribers_add_failed">Nie udało się dodać subskrybentów</string>
     <string name="subscribers_add_success">Pomyślnie dodano subskrybentów</string>
-    <string name="subscribers_add_disclosure">\n        Klikając „Wyślij”, oświadczasz, że uzyskałeś odpowiednią zgodę na wysyłanie wiadomości e-mail do każdej osoby. Skargi na spam lub wysoki współczynnik odrzuceń ze strony subskrybentów mogą skutkować podjęciem działań przeciwko Twojemu kontu.\n    </string>
+    <string name="subscribers_add_disclosure">\nKlikając „Wyślij”, oświadczasz, że uzyskałeś odpowiednią zgodę na wysyłanie wiadomości email do każdej osoby. Skargi na spam lub wysoki współczynnik odrzuceń ze strony subskrybentów mogą skutkować podjęciem działań przeciwko Twojemu kontu.\n    </string>
     <string name="subscribers_add_email_hint">nazwa@example.com</string>
     <string name="subscribers_add_subscribers">Dodaj subskrybentów</string>
     <string name="subscribers_gift_content_description">Prezent</string>
@@ -377,7 +467,7 @@ Language: pl
     <string name="subscribers_delete_button">Usuń subskrybenta</string>
     <string name="subscribers_site_label">Witryna</string>
     <string name="subscribers_country_label">Kraj</string>
-    <string name="subscribers_email_label">E-mail</string>
+    <string name="subscribers_email_label">Adres email</string>
     <string name="subscribers_plan_label">Plan</string>
     <string name="subscribers_status_label">Status subskrypcji</string>
     <string name="subscribers_date_label">Data subskrypcji</string>
@@ -385,14 +475,14 @@ Language: pl
     <string name="subscribers_newsletter_label">Subskrypcja newslettera</string>
     <string name="subscribers_clicked_label">Kliknięto</string>
     <string name="subscribers_opened_label">Otwierany</string>
-    <string name="subscribers_emails_sent_label">E-maile</string>
+    <string name="subscribers_emails_sent_label">Adresy email</string>
     <string name="subscribers_error_title">Coś poszło nie tak</string>
     <string name="subscribers_empty_search">Nie znaleziono wyników</string>
     <string name="subscribers_empty">Brak subskrybentów</string>
     <string name="subscribers_sort_date">Data subskrypcji</string>
     <string name="subscribers_filter_reader_subscription">Subskrypcja dla czytelników</string>
-    <string name="subscribers_filter_email_subscription">Subskrypcja e-mailowa</string>
-    <string name="about_update_email_unverified">Aby zaktualizować swój profil, musisz najpierw zweryfikować swój adres e-mail.</string>
+    <string name="subscribers_filter_email_subscription">Subskrypcja na email</string>
+    <string name="about_update_email_unverified">Aby zaktualizować swój profil, musisz najpierw zweryfikować swój adres email.</string>
     <string name="sort_by">Sortuj wg</string>
     <string name="filter">Filtruj</string>
     <string name="application_password_not_supported_error" a8c-src-lib="module:login">Podana witryna nie obsługuje uwierzytelniania hasłem aplikacji.</string>
@@ -416,7 +506,7 @@ Language: pl
     <string name="experimental_features_feedback_dialog_title">Podziel się swoją informacją zwrotną</string>
     <string name="experimental_block_editor_description">Uzyskaj dostęp do dodatkowych rodzajów bloków oraz ustawień</string>
     <string name="experimental_block_editor_note">Eksperymentalny edytor bloków stanie się domyślny w przyszłych wydaniach, a funkcjonalność umożliwiająca wyłączenie go będzie usunięta.</string>
-    <string name="avatar_update_email_unverified">Aby zaktualizować swój awatar, musisz najpierw zweryfikować swój adres e-mail.</string>
+    <string name="avatar_update_email_unverified">Aby zaktualizować swój awatar, musisz najpierw zweryfikować swój adres email.</string>
     <string name="feedback_form_note_link_wordpress">fora społecznościowe.</string>
     <string name="default_web_client_id" a8c-src-lib="module:login">symbol zastępczy</string>
     <string name="personalization_screen_shortcuts_accessibility_label">Przełącz skrót %s</string>
@@ -501,15 +591,15 @@ Language: pl
     <string name="stats_subscribers_marker_view_singular">Subskrybent</string>
     <string name="stats_view_subscriber_growth">Wzrost liczby subskrybentów</string>
     <string name="role_subscriber">Subskrybent</string>
-    <string name="title_email_subscriber">Napisz e-mail do subskrybenta</string>
-    <string name="people_empty_list_filtered_email_subscribers">Nie ma żadnych skubskrybujących przez e-mail</string>
+    <string name="title_email_subscriber">Napisz wiadomość email do subskrybenta</string>
+    <string name="people_empty_list_filtered_email_subscribers">Nie ma żadnych subskrybentów wiadomości email</string>
     <string name="people_empty_list_filtered_subscribers">Brak subskrybentów</string>
-    <string name="people_dropdown_item_email_subscribers">Subskrypcje przez e-mail</string>
+    <string name="people_dropdown_item_email_subscribers">Subskrybenci wiadomości email</string>
     <string name="people_dropdown_item_subscribers">Subskrybenci</string>
     <string name="invite_already_subscribed">%s: Już zasubskrybowane</string>
     <string name="error_no_camera_available">Nie ma aplikacji do zdjęć.</string>
     <string name="error_remove_subscriber">Nie można było usunąć subskrybenta</string>
-    <string name="error_fetch_email_subscribers_list">Nie można pobrać obserwujących witrynę przez e-mail</string>
+    <string name="error_fetch_email_subscribers_list">Nie można pobrać subskrybentów wiadomości email</string>
     <string name="error_fetch_subscribers_list">Nie można pobrać subskrybentów witryny</string>
     <string name="post_settings_add_to_calendar_error">Nie można było dodać do kalendarza</string>
     <string name="post_settings_no_calendar_app_exists">Nie znaleziono aplikacji do obsługi żądania dodania do kalendarza</string>
@@ -517,13 +607,13 @@ Language: pl
     <string name="notifications_tab_title_subscribers">Subskrybenci</string>
     <string name="subscribers">Subskrybenci</string>
     <string name="notifications_empty_subscribers">Brak subskrybentów</string>
-    <string name="stats_view_emails">Adresy e-mail</string>
+    <string name="stats_view_emails">Adresy email</string>
     <string name="stats_view_subscribers">Subskrybenci</string>
     <string name="stats_view_total_subscribers">Wszyscy subskrybenci</string>
     <string name="stats_list_item_with_two_values_description">%1$s: %2$s, %3$s: %4$s, %5$s: %6$s</string>
     <string name="stats_emails_clicks_label">Kliknięcia</string>
     <string name="stats_emails_opens_label">Otwarcia</string>
-    <string name="stats_emails_latest_emails_label">Najnowsze e-maile</string>
+    <string name="stats_emails_latest_emails_label">Najnowsze wiadomości email</string>
     <string name="stats_subscriber_since_label">Subskrybent od</string>
     <string name="stats_name_label">Nazwa</string>
     <string name="stats_publicize_subscribers_label">Subskrybenci</string>
@@ -532,6 +622,7 @@ Language: pl
     <string name="page_upload_conflict_error">Jest nowsza wersja tej strony</string>
     <string name="editor_updating_content">Aktualizacja treści</string>
     <string name="stats_subscribers">Subskrybenci</string>
+    <string name="stats_subscribers_subscriber_header">Subskrybent</string>
     <string name="weekly_roundup_notification_text_views_and_comment">W zeszłym tygodniu miałeś %1$s wyświetleń i jeden komentarz</string>
     <string name="weekly_roundup_notification_text_views_and_like">W zeszłym tygodniu miałe(a)ś %1$s wyświetleń i jedno polubienie</string>
     <string name="weekly_roundup_notification_text_views_like_comment">W zeszłym tygodniu miałeś %1$s wyświetleń, jedno polubienie i jeden komentarz.</string>
@@ -884,7 +975,7 @@ Language: pl
     <string name="site_creation_domain_cost_sale">za pierwszy rok</string>
     <string name="site_creation_error_cart_subtitle">Twoja witryna internetowa została pomyślnie stworzona, ale napotkaliśmy problem podczas przygotowywania twojej własnej domeny do zakupu. Spróbuj ponownie lub skontaktuj się z pomocą techniczną w celu uzyskania pomocy.</string>
     <string name="new_site_creation_preview_caption_paid">Rozpoczęcie prawidłowego działania domeny może potrwać około 30 minut.</string>
-    <string name="new_site_creation_preview_subtitle_paid">Wysłaliśmy tobie e-mail z paragonem. %s</string>
+    <string name="new_site_creation_preview_subtitle_paid">Wysłaliśmy tobie wiadomość email z paragonem. %s</string>
     <string name="notifications_disabled_permission_dialog">Powiadomienia aplikacji zostały wyłączone. Naciśnij tutaj aby je uaktywnić.</string>
     <string name="jp_migration_done_delete_wp_message">Zalecamy &lt;b&gt;odinstalowanie aplikacji WordPress&lt;/b&gt; na twoim urządzeniu, żeby uniknąć konfliktów danych.</string>
     <string name="gutenberg_native_remove_blocks" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Usuń bloki</string>
@@ -1096,7 +1187,7 @@ Language: pl
     <string name="jp_migration_avatar_content_description">Twoje zdjęcie profilowe</string>
     <string name="jp_migration_welcome_subtitle">Wygląda na to, że przełączasz się z aplikacji WordPress.</string>
     <string name="jp_migration_welcome_title">Witamy w Jetpacku!</string>
-    <string name="icon_desc">Ikonka</string>
+    <string name="icon_desc">ikonka</string>
     <string name="post_settings_parent">Strona nadrzędna</string>
     <string name="post_settings_page_attributes">Atrybuty strony</string>
     <string name="about_automattic_contribute_item_title" a8c-src-lib="about">Dodaj coś od siebie</string>
@@ -1421,7 +1512,7 @@ Language: pl
     <string name="comment_edit_user_email_error">Adres email użytkownika nie jest prawidłowy</string>
     <string name="comment_edit_web_address_error">Adres sieciowy nie jest prawidłowy</string>
     <string name="comment_edit_user_name_error">Nazwa użytkownika nie może być pusta</string>
-    <string name="comment_edit_email_address">Adres e-mail</string>
+    <string name="comment_edit_email_address">Adres email</string>
     <string name="comment_edit_web_address">Adres w sieci Web</string>
     <string name="comment_edit_comment">Komentarz</string>
     <string name="comment_edit_user_name">Nazwa</string>
@@ -1783,7 +1874,7 @@ Language: pl
     <string name="request_failed_message">Wystąpił błąd podczas obsługi tego zapytania. Proszę spróbować później.</string>
     <string name="gutenberg_native_move_to_bottom" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Przenieś na dół</string>
     <string name="gutenberg_native_change_block_position" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Zmień pozycję bloku</string>
-    <string name="jetpack_icon_content_description">Ikonka</string>
+    <string name="jetpack_icon_content_description">ikonka</string>
     <string name="backup_download_complete_info">Przesłaliśmy również odnośnik do twojego pliku na adres email.</string>
     <string name="backup_download_complete_download_share_action_button_content_description">Przycisk udostępniania łącza</string>
     <string name="backup_download_complete_download_action_button_content_description">Przycisk pobierania</string>
@@ -1995,7 +2086,7 @@ Language: pl
     <string name="magic_link_not_seeing_email_message" a8c-src-lib="module:login">Nie widzisz wiadomości email? Sprawdź folder Spam lub Wiadomości Śmieci w swoim programie pocztowym.</string>
     <string name="login_magic_links_sent_label" a8c-src-lib="module:login">Sprawdź pocztę na tym urządzeniu i stuknij na odnośnik we wiadomości email, którą otrzymałe(a)ś od WordPress.com.</string>
     <string name="login_magic_links_label" a8c-src-lib="module:login">Prześlemy tobie odnośnik, który zaloguje ciebie natychmiast, bez konieczności wpisywania hasła.</string>
-    <string name="check_email" a8c-src-lib="module:login">Sprawdź skrzynkę e-mail</string>
+    <string name="check_email" a8c-src-lib="module:login">Sprawdź skrzynkę email</string>
     <string name="get_started" a8c-src-lib="module:login">Rozpocznij</string>
     <string name="enter_email_to_continue_wordpress_com" a8c-src-lib="module:login">Wprowadź adres email aby zalogować się albo utworzyć konto WordPress.com.</string>
     <string name="or_type_your_password" a8c-src-lib="module:login">Lub wprowadź hasło</string>
@@ -2418,8 +2509,8 @@ Language: pl
     <string name="site_settings_editor">Edytor</string>
     <string name="description_expand">Rozwiń</string>
     <string name="description_collapse">Zwiń</string>
-    <string name="my_site_verify_your_email_without_email">Sprawdź swój adres e-mailowy - instrukcje zostały wysłane na twój e-mail</string>
-    <string name="my_site_verify_your_email">Sprawdź swój adres e-mailowy - instrukcje zostały wysłane na adres %s</string>
+    <string name="my_site_verify_your_email_without_email">Sprawdź swoją skrzynkę email - instrukcje zostały wysłane</string>
+    <string name="my_site_verify_your_email">Sprawdź swój adres email - instrukcje zostały wysłane na adres %s</string>
     <string name="post_settings_retry_featured_image">Prześlij ponownie</string>
     <string name="post_settings_featured_image_uploading_tap_for_options">Przesyłanie pliku mediów.\nStuknij aby dostać się do opcji.</string>
     <string name="link_open_new_window">Otwórz odnośnik w nowym oknie lub karcie</string>
@@ -2741,7 +2832,7 @@ Language: pl
     <string name="support_push_notification_message">Nowe wiadomości od zespołu \'Pomocy i wsparcia\'</string>
     <string name="support_push_notification_title">WordPress</string>
     <string name="support_contact_email_not_set">Nieustawione</string>
-    <string name="support_contact_email">Adres e-mail do kontaktu</string>
+    <string name="support_contact_email">Adres email do kontaktu</string>
     <string name="activity_log_currently_restoring_message_no_dates">Trwa przywracanie</string>
     <string name="activity_log_currently_restoring_message">Przywracanie stanu do %1$s %2$s</string>
     <string name="activity_log_currently_restoring_title">Trwa przywracanie twojej witryny</string>
@@ -3095,7 +3186,7 @@ Language: pl
     <string name="jetpack_disconnect_pref_title">\"Rozłącz z WordPress.com\"</string>
     <string name="site_settings_jetpack_allowlist_description">Możesz oznaczyć adres IP (lub serię adresów) jako \"Zawsze dozwolony\" aby zapobiec zablokowaniu przez Jetpacka. Dozwolone są adresy IPv4 i IPv6. Aby określić zakres, wprowadź dolną \n i górną wartość zakresu i odziej je myślnikiem. Przykład 12.12.12.1–12.12.12.100</string>
     <string name="jetpack_require_two_factor_title">Wymagaj uwierzytelniania dwuetapowego</string>
-    <string name="jetpack_match_wpcom_via_email_title">Połącz konta używając adresu e-mail</string>
+    <string name="jetpack_match_wpcom_via_email_title">Połącz konta używając adresu email</string>
     <string name="jetpack_allow_wpcom_sign_in_title">Zezwól na logowanie WordPress.com</string>
     <string name="jetpack_wpcom_sign_in_category_title">Logowanie WordPress.com</string>
     <string name="jetpack_prevent_brute_force_title">Blokuj złośliwe próby logowania</string>
@@ -3122,7 +3213,7 @@ Language: pl
     <string name="media_edit_duration_caption">Czas trwania</string>
     <string name="media_edit_video_dimensions_caption">Wymiary filmu</string>
     <string name="media_edit_image_dimensions_caption">Wymiary obrazka</string>
-    <string name="media_edit_filetype_caption">Typ pliku</string>
+    <string name="media_edit_filetype_caption">Rodzaj pliku</string>
     <string name="media_edit_filename_caption">Nazwa pliku</string>
     <string name="media_edit_url_caption">Adres URL</string>
     <string name="media_edit_alttext_text">Tekst alternatywny</string>
@@ -3301,7 +3392,7 @@ Language: pl
     <string name="media_insert_title">Dodaj kilka zdjęć</string>
     <string name="media_gallery_column_count_multi">%d kolumn</string>
     <string name="media_gallery_column_count_single">1 kolumna</string>
-    <string name="editor_confirm_email_prompt_negative">Ponownie wyślij e-mail</string>
+    <string name="editor_confirm_email_prompt_negative">Ponownie wyślij wiadomość email</string>
     <string name="editor_confirm_email_prompt_message_with_email">Wysłaliśmy email na adres %s podczas rejestracji. Otwórz wiadomość i kliknij niebieski przycisk aby uaktywnić publikowanie.</string>
     <string name="editor_confirm_email_prompt_message">Wysłaliśmy email na twój adres podczas rejestracji. Otwórz wiadomość i kliknij niebieski przycisk aby uaktywnić publikowanie.</string>
     <string name="editor_confirm_email_prompt_title">Proszę potwierdzić swój adres email</string>
@@ -3313,7 +3404,7 @@ Language: pl
     <string name="delete_site_warning_subtitle">Uwaga! Usunięcie witryny to proces nieodwracalny.</string>
     <string name="delete_site_warning">Wszystkie twoje wpisy, zdjęcia oraz dane zostaną usunięte. Adres twojej witryny (%s) również zostanie skasowany.</string>
     <string name="delete_site_warning_title">Usunąć witrynę?</string>
-    <string name="start_over_email_intent_error">Nie można wysłać e-maila</string>
+    <string name="start_over_email_intent_error">Nie można wysłać wiadomości email</string>
     <string name="start_over_email_body">Chcę zacząć od nowa i stworzyć witrynę %s od początku</string>
     <string name="start_over_email_subject">Zacznij jeszcze raz i stwórz od początku witrynę %s</string>
     <string name="site_picker_remove_site_error">Błąd usuwania witryny, spróbuj ponownie później</string>
@@ -3415,7 +3506,7 @@ Language: pl
     <string name="invite_error_no_usernames">Proszę dodać przynajmniej jednego użytkownika</string>
     <string name="invite_message_title">Własna wiadomość</string>
     <string name="invite">Zaproś</string>
-    <string name="invite_names_title">Nazwy użytkowników lub adresy e-mail</string>
+    <string name="invite_names_title">Nazwy użytkowników lub adresy email</string>
     <string name="label_clear_search_history">Usuń historię wyszukiwania</string>
     <string name="dlg_confirm_clear_search_history">Usunąć historię wyszukiwania?</string>
     <string name="reader_empty_search_description">Nie odnaleziono żadnych wyników wyszukiwania zawierających %s w twoim języku</string>
@@ -3509,12 +3600,12 @@ Language: pl
     <string name="days_quantity_one">1 dzień</string>
     <string name="web_address">Adres w sieci Web</string>
     <string name="primary_site">Główna witryna</string>
-    <string name="pending_email_change_snackbar">Kliknij na odnośnik weryfikujący wewnątrz e-maila przesłanego do %1$s w celu potwierdzenia Twojego nowego adresu</string>
+    <string name="pending_email_change_snackbar">Kliknij na odnośnik weryfikujący w wiadomości email przesłanej do %1$s w celu potwierdzenia nowego adresu</string>
     <string name="editor_toast_uploading_please_wait">Aktualnie przesyłasz media. Poczekaj aż proces się zakończy.</string>
     <string name="error_refresh_comments_showing_older">Odświeżenie komentarzy nie było możliwe - pokazane są starsze komentarze</string>
     <string name="post_settings_set_featured_image">Ustaw obrazek wyróżniający</string>
     <string name="post_settings_featured_image">Obrazek wyróżniający</string>
-    <string name="email_address">Adres e-mail</string>
+    <string name="email_address">Adres email</string>
     <string name="dlg_sure_to_delete_comments">Trwale usunąć te komentarze ?</string>
     <string name="dlg_sure_to_delete_comment">Trwale usunąć ten komentarz ?</string>
     <string name="mnu_comment_delete_permanently">Usuń</string>
@@ -3550,8 +3641,8 @@ Language: pl
     <string name="site_settings_paging_dialog_description">Podziel wątki komentarzy na kilka stron.</string>
     <string name="site_settings_paging_dialog_header">Komentarzy na strone</string>
     <string name="site_settings_close_after_dialog_title">Zamknij komentowanie</string>
-    <string name="site_settings_denylist_description">Komentarz zostanie oznaczony jako spam jeśli zawiera przynajmniej jedno ze słów z poniższej listy - w swojej zawartości, imieniu autora, odnośniku URL, adresie e-mail lub adresie IP.  Możesz wprowadzić część słowa - np. słowo \"press\" będzie dopasowane do słowa \"WordPress\".</string>
-    <string name="site_settings_hold_for_moderation_description">Komentarz zostanie umieszczony w kolejce do moderacji jeśli zawiera przynajmniej jedno ze słów z poniższej listy - w swojej zawartości, imieniu autora, odnośniku URL, adresie e-mail lub adresie IP.  Możesz wprowadzić część słowa - np. słowo \"press\" będzie dopasowane do słowa \"WordPress\".</string>
+    <string name="site_settings_denylist_description">Komentarz zostanie oznaczony jako spam jeśli zawiera przynajmniej jedno ze słów z poniższej listy - w swojej zawartości, imieniu autora, odnośniku URL, adresie email lub adresie IP.  Możesz wprowadzić część słowa - np. słowo „press” będzie dopasowane do słowa „WordPress”.</string>
+    <string name="site_settings_hold_for_moderation_description">Komentarz zostanie umieszczony w kolejce do moderacji jeśli zawiera przynajmniej jedno ze słów z poniższej listy - w swojej zawartości, imieniu autora, odnośniku URL, adresie email lub adresie IP.  Możesz wprowadzić część słowa - np. słowo „press” będzie dopasowane do słowa „WordPress”.</string>
     <string name="site_settings_list_editor_input_hint">Wprowadź słowo lub frazę</string>
     <string name="site_settings_list_editor_no_items_text">Brak elementów</string>
     <string name="site_settings_learn_more_caption">Możesz unieważnić te ustawienia dla poszczególnych wpisów.</string>
@@ -3570,7 +3661,7 @@ Language: pl
     <string name="site_settings_multiple_links_hint">Ignoruje limit odnośników od znanych tobie użytkowników</string>
     <string name="site_settings_allowlist_hint">Inny komentarz tego samego autora musi zostać wcześniej zatwierdzony</string>
     <string name="site_settings_user_account_required_hint">Użytkownicy muszą być zarejestrowani i zalogowani, aby móc komentować</string>
-    <string name="site_settings_identity_required_hint">Autor komentarza musi wprowadzić swój podpis oraz adres e-mail</string>
+    <string name="site_settings_identity_required_hint">Autor komentarza musi wprowadzić swój podpis oraz adres email</string>
     <string name="site_settings_paging_hint">Pokaż komentarze w kawałkach o określonym rozmiarze</string>
     <string name="site_settings_threading_hint">Zezwalaj na zagnieżdżanie do określonej głębokości</string>
     <string name="site_settings_sort_by_hint">Określa porządek w jakim prezentowane są komentarze</string>
@@ -3699,6 +3790,7 @@ Language: pl
     <string name="push_auth_expired">Zapytanie wygasło. Zaloguj się na WordPress.com aby spróbować ponownie.</string>
     <string name="ignore">Zignoruj</string>
     <string name="stats_insights_best_ever">Najwięcej wyświetleń</string>
+    <string name="stats_insights_most_popular_time">Najpopularniejsze godziny</string>
     <string name="stats_insights_most_popular_day">Najpopularniejszy dzień</string>
     <string name="stats_insights_today">Dzisiejsze statystyki</string>
     <string name="stats_insights_all_time">Wszystkie wpisy, odsłony i odwiedzający</string>
@@ -3757,6 +3849,7 @@ Language: pl
     <string name="browse_our_faq_button">Przejrzyj nasze FAQ</string>
     <string name="reader_empty_comments">Brak komentarzy</string>
     <string name="reader_label_like">Lubię</string>
+    <string name="reader_label_view_original">Zobacz oryginał</string>
     <string name="reader_label_comments_closed">Możliwość komentowania została wyłączona</string>
     <string name="reader_title_photo_viewer">%1$d z %2$d</string>
     <string name="error_publish_empty_post">Nie można opublikować pustego wpisu</string>
