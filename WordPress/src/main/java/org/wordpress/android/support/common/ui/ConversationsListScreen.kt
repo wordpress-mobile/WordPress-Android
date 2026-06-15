@@ -48,7 +48,7 @@ fun <T : Conversation> ConversationsListScreen(
                 navigationIcon = NavigationIcons.BackIcon,
                 onNavigationIconClick = onBackClick,
                 actions = {
-                    IconButton(onClick = { onCreateNewConversationClick() }) {
+                    IconButton(onClick = onCreateNewConversationClick) {
                         Icon(
                             imageVector = Icons.Default.Add,
                             contentDescription = addConversationContentDescription

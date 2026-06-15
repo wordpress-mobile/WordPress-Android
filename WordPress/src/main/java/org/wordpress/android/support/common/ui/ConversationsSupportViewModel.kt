@@ -23,7 +23,6 @@ abstract class ConversationsSupportViewModel<ConversationType: Conversation>(
 ) : ViewModel() {
     sealed class NavigationEvent {
         data object NavigateToConversationDetail : NavigationEvent()
-        data object NavigateToNewConversation : NavigationEvent()
         data object NavigateBack : NavigationEvent()
     }
 
@@ -105,8 +104,15 @@ abstract class ConversationsSupportViewModel<ConversationType: Conversation>(
 
             _conversationsState.value = if (isRefresh) ConversationsState.Refreshing else ConversationsState.Loading
             val conversations = getConversations()
-            _conversations.value = conversations
-            _conversationsState.value = ConversationsState.Loaded
+            if (conversations != null) {
+                _conversations.value = conversations
+                _conversationsState.value = ConversationsState.Loaded
+            } else {
+                _errorMessage.value = ErrorType.GENERAL
+                _conversationsState.value = ConversationsState.Error
+                appLogWrapper.e(AppLog.T.SUPPORT, "Error loading support conversations: " +
+                        "error retrieving them from server")
+            }
         } catch (throwable: Throwable) {
             _errorMessage.value = ErrorType.GENERAL
             _conversationsState.value = ConversationsState.Error
@@ -117,7 +123,8 @@ abstract class ConversationsSupportViewModel<ConversationType: Conversation>(
         }
     }
 
-    protected abstract suspend fun getConversations(): List<ConversationType>
+    /** Returns the conversations, or null when they could not be retrieved. */
+    protected abstract suspend fun getConversations(): List<ConversationType>?
 
     fun refreshConversations() {
         viewModelScope.launch {
@@ -130,9 +137,18 @@ abstract class ConversationsSupportViewModel<ConversationType: Conversation>(
     }
 
     suspend fun setNewConversation(conversation: ConversationType) {
+        onConversationOpened()
         _selectedConversation.value = conversation
         _navigationEvents.emit(NavigationEvent.NavigateToConversationDetail)
     }
+
+    /**
+     * Hook invoked whenever a conversation is opened (either an existing one or a new one). Subclasses
+     * can override this to reset any per-conversation transient state (e.g. a draft reply form), so it
+     * does not leak into the next conversation regardless of how the user navigated away from the
+     * previous one (toolbar back, system back button, or back gesture).
+     */
+    protected open fun onConversationOpened() {}
 
     // Region navigation
 
@@ -145,6 +161,7 @@ abstract class ConversationsSupportViewModel<ConversationType: Conversation>(
                     return@launch
                 }
 
+                onConversationOpened()
                 _isLoadingConversation.value = true
                 _selectedConversation.value = conversation
                 _navigationEvents.emit(NavigationEvent.NavigateToConversationDetail)
@@ -173,16 +190,6 @@ abstract class ConversationsSupportViewModel<ConversationType: Conversation>(
         viewModelScope.launch {
             _selectedConversation.value = null
             _navigationEvents.emit(NavigationEvent.NavigateBack)
-        }
-    }
-
-    fun onCreateNewConversationClick() {
-        viewModelScope.launch {
-            if (!networkUtilsWrapper.isNetworkAvailable()) {
-                _errorMessage.value = ErrorType.OFFLINE
-                return@launch
-            }
-            _navigationEvents.emit(NavigationEvent.NavigateToNewConversation)
         }
     }
 
