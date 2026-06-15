@@ -11,6 +11,20 @@ internal sealed interface PageRsListEvent {
 
     data object CreateNewPage : PageRsListEvent
 
+    data class ViewPage(val url: String) : PageRsListEvent
+
+    data class SharePage(
+        val url: String,
+        val title: String
+    ) : PageRsListEvent
+
+    data class CopyPageUrl(val url: String) : PageRsListEvent
+
+    data class PromoteWithBlaze(
+        val site: SiteModel,
+        val page: PostModel
+    ) : PageRsListEvent
+
     data class ShowToast(
         val messageResId: Int
     ) : PageRsListEvent

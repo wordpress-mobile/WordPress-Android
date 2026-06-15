@@ -1029,6 +1029,10 @@
     <string name="experimental_rs_pages_list_description">Show pages list in a more modern UI for WordPress.com and self-hosted sites with application passwords</string>
     <string name="post_rs_failed_to_load">Failed to load post</string>
     <string name="page_rs_failed_to_load">Failed to load page</string>
+    <string name="page_rs_copy_url">Copy URL</string>
+    <string name="page_rs_confirm_trash_message">Are you sure you want to trash this page?</string>
+    <string name="page_rs_move_trashed_page_to_draft_dialog_title">Move page to Drafts?</string>
+    <string name="page_rs_move_trashed_page_to_draft_dialog_message">Trashed pages can\'t be edited. Do you want to change the status of this page to \"draft\" so you can work on it?</string>
     <string name="post_rs_confirm_trash_message">Are you sure you want to trash this post?</string>
     <string name="post_rs_confirm_delete_message">This will permanently delete this post. This action cannot be undone.</string>
     <string name="post_rs_trashed">Post moved to trash</string>
@@ -3589,7 +3593,6 @@
     <string name="pages_empty_scheduled">You don\'t have any scheduled pages</string>
     <string name="pages_empty_trashed">You don\'t have any trashed pages</string>
     <string name="pages_open_page_error">The selected page is not available</string>
-    <string name="pages_list_item_trashed">This page is in the trash</string>
     <string name="pages_and_posts_cancel_auto_upload">Cancel upload</string>
     <string name="pages_cannot_be_started">We cannot open pages at the moment. Please try again later</string>
     <string name="pages_item_date_subtitle">%1$s ·</string>
