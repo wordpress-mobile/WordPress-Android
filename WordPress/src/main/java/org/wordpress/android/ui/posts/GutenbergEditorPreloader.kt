@@ -101,8 +101,7 @@ class GutenbergEditorPreloader @Inject constructor(
                 // run; re-read the provisioned site so the config points at the
                 // recovered REST root.
                 siteProvisioningSource.await(site)
-                val provisionedSite = siteStore.sites
-                    .firstOrNull { it.id == siteId } ?: site
+                val provisionedSite = siteStore.getSiteByLocalId(siteId) ?: site
                 // Preloading produces EditorDependencies, which the editor
                 // consumes alongside its own per-launch EditorConfiguration.
                 // Cookies and network-logging are per-launch concerns the
