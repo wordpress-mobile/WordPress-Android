@@ -153,12 +153,10 @@ class SupportViewModelTest : BaseUnitTest() {
         viewModel.init()
 
         // Then
-        // Note: For WordPress variant (IS_JETPACK_APP=false), these options should be hidden
-        // For Jetpack variant (IS_JETPACK_APP=true), they should be shown when user has access token
+        // Note: For WordPress variant (IS_JETPACK_APP=false), the option should be hidden
+        // For Jetpack variant (IS_JETPACK_APP=true), it should be shown when user has access token
         // This test will behave differently based on which variant is being tested
-        assertThat(viewModel.optionsVisibility.value.showAskTheBots)
-            .isEqualTo(org.wordpress.android.BuildConfig.IS_JETPACK_APP)
-        assertThat(viewModel.optionsVisibility.value.showAskHappinessEngineers)
+        assertThat(viewModel.optionsVisibility.value.showUnifiedSupport)
             .isEqualTo(org.wordpress.android.BuildConfig.IS_JETPACK_APP)
     }
 
@@ -176,8 +174,7 @@ class SupportViewModelTest : BaseUnitTest() {
         viewModel.init()
 
         // Then
-        assertThat(viewModel.optionsVisibility.value.showAskTheBots).isFalse()
-        assertThat(viewModel.optionsVisibility.value.showAskHappinessEngineers).isFalse()
+        assertThat(viewModel.optionsVisibility.value.showUnifiedSupport).isFalse()
     }
 
     @Test
@@ -246,51 +243,36 @@ class SupportViewModelTest : BaseUnitTest() {
 
     // endregion
 
-    // region onAskTheBotsClick() tests
+    // region onUnifiedSupportClick() tests
 
     @Test
-    fun `onAskTheBotsClick emits NavigateToAskTheBots event when user has access token`() = test {
+    fun `onUnifiedSupportClick emits NavigateToUnifiedSupport event when user has access token`() = test {
         // Given
         whenever(accountStore.hasAccessToken()).thenReturn(true)
 
         // When
         viewModel.navigationEvents.test {
-            viewModel.onAskTheBotsClick()
+            viewModel.onUnifiedSupportClick()
 
             // Then
             val event = awaitItem()
-            assertThat(event).isInstanceOf(SupportViewModel.NavigationEvent.NavigateToAskTheBots::class.java)
+            assertThat(event).isInstanceOf(SupportViewModel.NavigationEvent.NavigateToUnifiedSupport::class.java)
         }
     }
 
     @Test
-    fun `onAskTheBotsClick uses userName when displayName is empty`() = test {
-        // Given
-        whenever(accountStore.hasAccessToken()).thenReturn(true)
-
-        // When
-        viewModel.navigationEvents.test {
-            viewModel.onAskTheBotsClick()
-
-            // Then
-            val event = awaitItem()
-            assertThat(event).isInstanceOf(SupportViewModel.NavigationEvent.NavigateToAskTheBots::class.java)
-        }
-    }
-
-    @Test
-    fun `onAskTheBotsClick logs debug message and does not emit event when user has no access token`() = test {
+    fun `onUnifiedSupportClick logs debug message and does not emit event when user has no access token`() = test {
         // Given
         whenever(accountStore.hasAccessToken()).thenReturn(false)
 
         // When
         viewModel.navigationEvents.test {
-            viewModel.onAskTheBotsClick()
+            viewModel.onUnifiedSupportClick()
 
             // Then
             verify(appLogWrapper).d(
                 eq(AppLog.T.SUPPORT),
-                eq("Trying to open a bot conversation without access token")
+                eq("Trying to open unified support without access token")
             )
             expectNoEvents()
         }
@@ -346,16 +328,6 @@ class SupportViewModelTest : BaseUnitTest() {
 
     // endregion
 
-    // region placeholder tests for unimplemented methods
-
-    @Test
-    fun `onAskHappinessEngineersClick does not throw exception`() {
-        // When/Then - should not throw
-        viewModel.onAskHappinessEngineersClick()
-    }
-
-    // endregion
-
     // region StateFlow initial values tests
 
     @Test
@@ -369,8 +341,7 @@ class SupportViewModelTest : BaseUnitTest() {
     @Test
     fun `optionsVisibility has correct initial values before init`() {
         // Then
-        assertThat(viewModel.optionsVisibility.value.showAskTheBots).isTrue()
-        assertThat(viewModel.optionsVisibility.value.showAskHappinessEngineers).isTrue()
+        assertThat(viewModel.optionsVisibility.value.showUnifiedSupport).isTrue()
     }
 
     @Test
