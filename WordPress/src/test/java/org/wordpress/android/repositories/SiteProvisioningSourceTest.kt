@@ -265,6 +265,20 @@ class SiteProvisioningSourceTest : BaseUnitTest(StandardTestDispatcher()) {
     }
 
     @Test
+    fun `given a prior cache-only ready run, when awaited again, then it re-probes`() = test {
+        stubHasStoredCredentials(true)
+        stubValidate(ApplicationPasswordValidator.Outcome.Valid)
+        // Ready served from stale cache (live probe failing) must NOT latch the dedup gate, so the
+        // next access re-probes and can refresh / surface a genuine failure (#22944 c3).
+        stubCapabilityProbe(ok = false, cached = true)
+
+        source.await(site)
+        source.await(site)
+
+        verify(applicationPasswordValidator, times(2)).validate(any())
+    }
+
+    @Test
     fun `given a prior ready run, when invalidated, then it re-runs`() = test {
         stubHasStoredCredentials(true)
         stubValidate(ApplicationPasswordValidator.Outcome.Valid)
@@ -304,10 +318,9 @@ class SiteProvisioningSourceTest : BaseUnitTest(StandardTestDispatcher()) {
         stubHasStoredCredentials(true)
         stubValidate(ApplicationPasswordValidator.Outcome.Valid)
         stubCapabilityProbe(ok = true)
-        whenever(siteStore.sites).thenReturn(listOf(site))
 
         source.await(site)
-        source.onRequestedWithInvalidAuthentication(site.url)
+        source.onRequestedWithInvalidAuthentication(site)
         source.await(site)
 
         verify(applicationPasswordValidator, times(2)).validate(any())
@@ -315,13 +328,12 @@ class SiteProvisioningSourceTest : BaseUnitTest(StandardTestDispatcher()) {
 
     @Test
     fun `given a 401-triggered heal succeeds, then no reauth is requested`() = test {
-        whenever(siteStore.sites).thenReturn(listOf(site))
         stubHasStoredCredentials(true)
         stubValidate(ApplicationPasswordValidator.Outcome.Invalid) // creds revoked -> wiped
         stubMintSuccess() // re-mint heals silently (WP.com-connected)
         stubCapabilityProbe(ok = true)
 
-        source.onRequestedWithInvalidAuthentication(site.url)
+        source.onRequestedWithInvalidAuthentication(site)
         source.await(site)
 
         verify(siteStore).createApplicationPassword(any())
@@ -330,13 +342,48 @@ class SiteProvisioningSourceTest : BaseUnitTest(StandardTestDispatcher()) {
 
     @Test
     fun `given a 401-triggered heal fails, then reauth is requested`() = test {
-        whenever(siteStore.sites).thenReturn(listOf(site))
         stubHasStoredCredentials(true)
         stubValidate(ApplicationPasswordValidator.Outcome.Invalid)
         stubMintFailure()
 
-        source.onRequestedWithInvalidAuthentication(site.url)
+        source.onRequestedWithInvalidAuthentication(site)
         source.await(site)
+
+        verify(applicationPasswordReauthNotifier).notifyReauthRequired(site.url)
+    }
+
+    @Test
+    fun `given the reauth notifier throws, then the pipeline still settles off probing`() = test {
+        stubHasStoredCredentials(true)
+        stubValidate(ApplicationPasswordValidator.Outcome.Invalid)
+        stubMintFailure()
+        // The post-settle reauth escalation runs on the non-supervisor appScope; a throw here must be
+        // contained, not allowed to cancel the scope and wedge provisioning for every site (#22944 c1).
+        whenever(applicationPasswordReauthNotifier.notifyReauthRequired(any()))
+            .thenThrow(RuntimeException("boom"))
+
+        source.onRequestedWithInvalidAuthentication(site)
+        val result = source.await(site)
+
+        assertThat(result)
+            .isEqualTo(SiteReadiness.NeedsAuth(SiteAuthState.Unprovisionable(hadCredentials = true)))
+    }
+
+    @Test
+    fun `given a 401 during an active run, the deferred heal still escalates a dead credential`() = test {
+        stubHasStoredCredentials(true)
+        // The active run validates the not-yet-revoked credential (Valid -> Ready); the deferred re-heal
+        // then sees it revoked (Invalid) and can't re-mint, so it must escalate rather than be swallowed
+        // by the run that was already in flight when the 401 arrived (#22944 c2).
+        whenever(applicationPasswordValidator.validate(any()))
+            .thenReturn(ApplicationPasswordValidator.Outcome.Valid)
+            .thenReturn(ApplicationPasswordValidator.Outcome.Invalid)
+        stubCapabilityProbe(ok = true)
+        stubMintFailure()
+
+        source.stateFor(site)                                 // launch the run; it stays active (not yet run)
+        source.onRequestedWithInvalidAuthentication(site) // 401 while the run is active -> defer the heal
+        testScheduler.advanceUntilIdle()                      // run the active run, then the deferred heal
 
         verify(applicationPasswordReauthNotifier).notifyReauthRequired(site.url)
     }
@@ -348,9 +395,8 @@ class SiteProvisioningSourceTest : BaseUnitTest(StandardTestDispatcher()) {
             url = "https://simple.wordpress.com"
             setIsWPCom(true) // isWPComSimpleSite = isWPCom && !isWPComAtomic -> bearer-only
         }
-        whenever(siteStore.sites).thenReturn(listOf(simple))
 
-        source.onRequestedWithInvalidAuthentication(simple.url)
+        source.onRequestedWithInvalidAuthentication(simple)
 
         verify(applicationPasswordValidator, never()).validate(any())
         verify(applicationPasswordReauthNotifier, never()).notifyReauthRequired(any())
@@ -358,12 +404,11 @@ class SiteProvisioningSourceTest : BaseUnitTest(StandardTestDispatcher()) {
 
     @Test
     fun `given an already-unprovisionable site, when 401 arrives, then it does not re-run`() = test {
-        whenever(siteStore.sites).thenReturn(listOf(site))
         stubHasStoredCredentials(false)
         stubMintFailure()
 
         source.await(site) // settles NeedsAuth(Unprovisionable)
-        source.onRequestedWithInvalidAuthentication(site.url)
+        source.onRequestedWithInvalidAuthentication(site)
 
         verify(siteStore, times(1)).createApplicationPassword(any())
     }

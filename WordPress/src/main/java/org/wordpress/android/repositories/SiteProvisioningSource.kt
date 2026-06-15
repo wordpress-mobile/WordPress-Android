@@ -147,28 +147,58 @@ class SiteProvisioningSource @Inject constructor(
     }
 
     /**
-     * [WpAppNotifierHandler.NotifierListener] — wordpress-rs rejected a request for [siteUrl] with
-     * invalid authentication (a revoked application password, or an expired WP.com bearer token).
-     * Re-provision the matching app-password sites so ensureAuth re-validates and heals them: for a
-     * WP.com-connected site the headless re-mint succeeds and recovery is silent; for one that can't
-     * be re-minted the run settles Unprovisionable and [maybeRequestReauth] escalates to interactive
-     * re-auth. WP.com Simple sites are bearer-only (no application password), so they're skipped here.
+     * [WpAppNotifierHandler.NotifierListener] — wordpress-rs rejected a request for [site] with invalid
+     * authentication (a revoked application password, or an expired WP.com bearer token). Re-provision it
+     * so ensureAuth re-validates and heals: for a WP.com-connected site the headless re-mint succeeds and
+     * recovery is silent; for one that can't be re-minted the run settles Unprovisionable and
+     * [maybeRequestReauth] escalates to interactive re-auth. WP.com Simple sites are bearer-only (no
+     * application password), so they're skipped here.
      *
-     * The notifier carries only the URL, so resolve to local id(s). Already-Unprovisionable sites are
-     * skipped — their re-auth is pending the user, and re-running would just re-fail the mint on every
-     * 401. [invalidate] also no-ops while a run is active, so the validate call in the triggered re-run
-     * (which can itself 401) can't spin this into a loop.
+     * The notifier hands us the exact [SiteModel] whose client raised the 401, so we heal that one row by
+     * id — no resolving back by URL (which isn't unique: the DB constraint is on SITE_ID+URL, so two rows
+     * can share a URL). Already-Unprovisionable sites are skipped — their re-auth is pending the user, and
+     * re-running would just re-fail the mint on every 401. When a run is already in flight,
+     * [healForInvalidAuth] defers the heal until it finishes rather than pre-empting a possibly mid-mint
+     * stage, and skips it if that run already settled Unprovisionable — so a validate that itself 401s
+     * can't spin this into a loop.
      */
-    override fun onRequestedWithInvalidAuthentication(siteUrl: String) {
-        siteStore.sites
-            .filter { it.url == siteUrl && !it.isWPComSimpleSite }
-            .forEach { site ->
-                val auth = (states[site.id]?.value as? SiteReadiness.NeedsAuth)?.auth
-                if (auth is SiteAuthState.Unprovisionable) return@forEach
-                // Mark this as 401-triggered so a failed heal escalates to interactive re-auth.
-                reauthOnFailure.add(site.id)
-                invalidate(site)
+    override fun onRequestedWithInvalidAuthentication(site: SiteModel) {
+        if (site.isWPComSimpleSite) return
+        val auth = (states[site.id]?.value as? SiteReadiness.NeedsAuth)?.auth
+        if (auth is SiteAuthState.Unprovisionable) return
+        healForInvalidAuth(site)
+    }
+
+    /**
+     * Drive a heal for a 401. If the pipeline is idle, run it now and arm [reauthOnFailure] so a failed
+     * heal escalates to interactive re-auth. If a run is already in flight we must not pre-empt a
+     * possibly mid-mint stage — but the 401 must not be swallowed either: that run may have validated the
+     * credential *before* it was revoked and will settle Ready, consuming nothing and healing nothing. So
+     * defer a fresh heal until the active run finishes, unless it settled [SiteAuthState.Unprovisionable]
+     * (in which case it already escalated on its own). The flag is armed only when the heal actually
+     * launches, so the in-flight run's tail can't consume it for an outcome it never serviced.
+     */
+    @Synchronized
+    private fun healForInvalidAuth(site: SiteModel) {
+        val siteLocalId = site.id
+        val active = jobs[siteLocalId]
+        if (active?.isActive != true) {
+            reauthOnFailure.add(siteLocalId)
+            ready.remove(siteLocalId)
+            launchPipeline(siteLocalId)
+            return
+        }
+        active.invokeOnCompletion { cause ->
+            if (cause != null) return@invokeOnCompletion // cancelled / relaunched — a fresh run is coming
+            synchronized(this@SiteProvisioningSource) {
+                if (jobs[siteLocalId]?.isActive == true) return@synchronized // a newer run is already underway
+                val settledAuth = (states[siteLocalId]?.value as? SiteReadiness.NeedsAuth)?.auth
+                if (settledAuth is SiteAuthState.Unprovisionable) return@synchronized // already escalated
+                reauthOnFailure.add(siteLocalId)
+                ready.remove(siteLocalId)
+                launchPipeline(siteLocalId)
             }
+        }
     }
 
     /**
@@ -195,7 +225,7 @@ class SiteProvisioningSource @Inject constructor(
             // throw would cancel it and every other app-scoped coroutine. Contain any unexpected failure
             // (e.g. a SQLiteException from a stage's DB write) as Unreachable so the flow still settles
             // and the next run retries; let cancellation propagate normally.
-            val readiness = try {
+            val result = try {
                 runPipeline(siteLocalId)
             } catch (e: CancellationException) {
                 throw e
@@ -204,11 +234,25 @@ class SiteProvisioningSource @Inject constructor(
                     AppLog.T.MAIN,
                     "Provisioning pipeline failed for $siteLocalId: ${e::class.simpleName}: ${e.message}"
                 )
-                SiteReadiness.Unreachable
+                PipelineResult(SiteReadiness.Unreachable, latch = false)
             }
-            flow.value = readiness
-            if (readiness is SiteReadiness.Ready) ready.add(siteLocalId)
-            maybeRequestReauth(siteLocalId, readiness)
+            flow.value = result.readiness
+            // Latch the dedup gate only on a freshly live-probed Ready; a Ready served from stale cache
+            // (latch = false) is left to re-probe on the next run instead of sticking for the process.
+            if (result.latch) ready.add(siteLocalId)
+            // maybeRequestReauth reads the DB and drives the reauth notifier, and runs after the flow has
+            // already settled. Contain its throws too: on this non-supervisor appScope an escaping throw
+            // here would cancel the scope and wedge provisioning for every other site.
+            try {
+                maybeRequestReauth(siteLocalId, result.readiness)
+            } catch (e: CancellationException) {
+                throw e
+            } catch (@Suppress("TooGenericExceptionCaught") e: Exception) {
+                appLogWrapper.e(
+                    AppLog.T.MAIN,
+                    "Reauth escalation failed for $siteLocalId: ${e::class.simpleName}: ${e.message}"
+                )
+            }
         }
     }
 
@@ -218,7 +262,7 @@ class SiteProvisioningSource @Inject constructor(
     private fun shouldRun(siteLocalId: Int): Boolean =
         jobs[siteLocalId]?.isActive != true && siteLocalId !in ready
 
-    private suspend fun runPipeline(siteLocalId: Int): SiteReadiness {
+    private suspend fun runPipeline(siteLocalId: Int): PipelineResult {
         val auth = ensureAuth(siteLocalId)
         return when (auth) {
             SiteAuthState.Provisioned, SiteAuthState.NotApplicable -> coroutineScope {
@@ -236,7 +280,7 @@ class SiteProvisioningSource @Inject constructor(
                 xmlRpc.await()
                 capabilities.await()
             }
-            else -> SiteReadiness.NeedsAuth(auth)
+            else -> PipelineResult(SiteReadiness.NeedsAuth(auth), latch = false)
         }
     }
 
@@ -323,16 +367,29 @@ class SiteProvisioningSource @Inject constructor(
      * Reads the site fresh: the mint has already persisted the credentials (single-writer, #22947),
      * so a probe failure here is a real transport problem, not a pending mint.
      */
-    private suspend fun detectCapabilities(siteLocalId: Int): SiteReadiness {
-        val site = siteStore.getSiteByLocalId(siteLocalId) ?: return SiteReadiness.Unreachable
+    private suspend fun detectCapabilities(siteLocalId: Int): PipelineResult {
+        val site = siteStore.getSiteByLocalId(siteLocalId)
+            ?: return PipelineResult(SiteReadiness.Unreachable, latch = false)
         val ok = editorSettingsRepository.fetchEditorCapabilitiesForSite(site)
         val hasCache = editorSettingsRepository.hasCachedCapabilities(site)
         return when {
-            ok || hasCache -> SiteReadiness.Ready
-            !networkUtilsWrapper.isNetworkAvailable() -> SiteReadiness.TransientError
-            else -> SiteReadiness.Unreachable
+            // Live probe succeeded: latch so we stop re-probing — capabilities rarely change.
+            ok -> PipelineResult(SiteReadiness.Ready, latch = true)
+            // Probe failed but stale cache keeps the site usable and the banner hidden; do NOT latch,
+            // so the next run re-probes and can refresh the cache / surface a genuine failure (#22944).
+            hasCache -> PipelineResult(SiteReadiness.Ready, latch = false)
+            !networkUtilsWrapper.isNetworkAvailable() ->
+                PipelineResult(SiteReadiness.TransientError, latch = false)
+            else -> PipelineResult(SiteReadiness.Unreachable, latch = false)
         }
     }
+
+    /**
+     * A settled pipeline result plus whether it should latch the per-site dedup gate ([ready]). Only a
+     * freshly live-probed [SiteReadiness.Ready] latches; a Ready served from stale cache does not, so it
+     * re-probes on the next run. Internal to the pipeline — consumers only ever see [readiness].
+     */
+    private data class PipelineResult(val readiness: SiteReadiness, val latch: Boolean)
 }
 
 /**
