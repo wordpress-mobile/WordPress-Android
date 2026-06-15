@@ -32,6 +32,7 @@ import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.flow.distinctUntilChanged
 import org.wordpress.android.R
 import org.wordpress.android.ui.pagesrs.PageRsListItem
+import org.wordpress.android.ui.pagesrs.PageRsMenuAction
 import org.wordpress.android.ui.pagesrs.PageTabUiState
 import org.wordpress.android.ui.postsrs.screens.PlaceholderItem
 
@@ -43,6 +44,7 @@ internal fun PageRsTabListScreen(
     onRefresh: () -> Unit,
     onLoadMore: () -> Unit,
     onPageClick: (Long) -> Unit,
+    onPageMenuAction: (Long, PageRsMenuAction) -> Unit,
     modifier: Modifier = Modifier,
     isSearchIdle: Boolean = false,
     isSearching: Boolean = false
@@ -86,7 +88,8 @@ internal fun PageRsTabListScreen(
                 isLoadingMore = state.isLoadingMore,
                 canLoadMore = state.canLoadMore,
                 onLoadMore = onLoadMore,
-                onPageClick = onPageClick
+                onPageClick = onPageClick,
+                onPageMenuAction = onPageMenuAction
             )
         }
     }
@@ -98,7 +101,8 @@ private fun PageListContent(
     isLoadingMore: Boolean,
     canLoadMore: Boolean,
     onLoadMore: () -> Unit,
-    onPageClick: (Long) -> Unit
+    onPageClick: (Long) -> Unit,
+    onPageMenuAction: (Long, PageRsMenuAction) -> Unit
 ) {
     val listState = rememberLazyListState()
 
@@ -125,6 +129,7 @@ private fun PageListContent(
             PageRsRow(
                 item = item,
                 onClick = { onPageClick(item.remotePageId) },
+                onMenuAction = { action -> onPageMenuAction(item.remotePageId, action) },
                 modifier = Modifier.animateItem()
             )
         }
