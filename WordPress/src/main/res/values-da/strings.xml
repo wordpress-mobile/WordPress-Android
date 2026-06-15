@@ -6,7 +6,6 @@ Generator: GlotPress/4.0.3
 Language: da_DK
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="he_support_category_other">Andet</string>
     <string name="signup_magic_link_title" a8c-src-lib="module:login">Magisk link sendt</string>
     <string name="error_media_save">Kunne ikke gemme medie</string>
     <string name="editor_draft_saved_locally">Kladde gemt på enheden</string>
