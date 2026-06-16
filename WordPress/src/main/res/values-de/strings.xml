@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2026-06-09 20:48:56+0000
+Translation-Revision-Date: 2026-06-13 02:37:09+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.3
 Language: de
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="xmlrpc_disabled_bottom_sheet_body">Einige Funktionen der App erfordern XML-RPC. Aktiviere diese Funktion auf deiner Website, um das Problem zu beheben.</string>
+    <string name="xmlrpc_disabled_bottom_sheet_body">Einige Funktionen der App erfordern XML-RPC. Aktiviere es auf deiner Website, um das Problem zu beheben.</string>
     <string name="xmlrpc_disabled_bottom_sheet_title">XML-RPC deaktiviert</string>
     <string name="xmlrpc_disabled_card_text">XML-RPC ist deaktiviert\nEinige Funktionen sind möglicherweise eingeschränkt</string>
     <string name="application_password_reauthentication_banner">Deine Website-Anmeldedaten sind ungültig. Zum erneuten Authentifizieren tippen.</string>
@@ -305,7 +305,7 @@ Language: de
     <string name="he_support_status_unknown">Unbekannt</string>
     <string name="he_support_status_closed">Geschlossen</string>
     <string name="he_support_status_solved">Gelöst</string>
-    <string name="he_support_status_waiting_for_user">Warten auf Benutzer</string>
+    <string name="he_support_status_waiting_for_user">Wartet auf Benutzer</string>
     <string name="he_support_status_waiting_for_support">Warten auf Support</string>
     <string name="he_support_select_attachments">Anhänge auswählen</string>
     <string name="he_support_download_attachment">Anhang herunterladen</string>
