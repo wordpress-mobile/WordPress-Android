@@ -106,7 +106,7 @@ class PageRsFluxCBridgeTest {
     fun `slow path fetches, inserts as a page, and returns the re-read model`() = runTest {
         val site = SiteModel().apply { id = 1 }
         val client: WpApiClient = mock()
-        val rsPage: AnyPostWithEditContext = mock()
+        val rsPage = mockRsPage()
         val mapped = PostModel().apply { setRemotePostId(REMOTE_ID) }
         val stored = PostModel().apply {
             setRemotePostId(REMOTE_ID)
@@ -138,7 +138,7 @@ class PageRsFluxCBridgeTest {
             setIsLocallyChanged(false)
         }
         val client: WpApiClient = mock()
-        val rsPage: AnyPostWithEditContext = mock()
+        val rsPage = mockRsPage()
         val mapped = PostModel().apply { setRemotePostId(REMOTE_ID) }
         val stored = PostModel().apply {
             setRemotePostId(REMOTE_ID)
@@ -173,6 +173,11 @@ class PageRsFluxCBridgeTest {
             .hasMessage("boom")
         verify(postSqlUtils, never()).insertOrUpdatePost(any(), any())
     }
+
+    // The fetched page is a pass-through to the mocked mapper, so its contents are never
+    // read; mocking it avoids building the ~29-field data class by hand.
+    @Suppress("DoNotMockDataClass")
+    private fun mockRsPage(): AnyPostWithEditContext = mock()
 
     private fun fetchSuccess(page: AnyPostWithEditContext) =
         WpRequestResult.Success(
