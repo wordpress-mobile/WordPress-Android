@@ -74,10 +74,6 @@ Language: pl
     <string name="post_rs_settings_add_term">Utwórz</string>
     <string name="post_rs_settings_choose_from_device">Wybierz z urządzenia</string>
     <string name="post_rs_settings_choose_from_wp_media">Wybierz z plików mediów</string>
-    <string name="stats_new_stats_suggestion_negative">Może później</string>
-    <string name="stats_new_stats_suggestion_positive">Wypróbuj</string>
-    <string name="stats_new_stats_suggestion_message">Stworzyliśmy zupełnie nowy wygląd statystyk. Chcesz wypróbować? Zawsze możesz wrócić do starej wersji w menu statystyk.</string>
-    <string name="stats_new_stats_suggestion_title">Nowy wygląd statystyk</string>
     <string name="gutenberg_kit_announcement_learn_more">Dowiedz się więcej</string>
     <string name="gutenberg_kit_announcement_maybe_later">Może później</string>
     <string name="gutenberg_kit_announcement_activate">Włącz</string>
@@ -102,8 +98,6 @@ Language: pl
     <string name="new_stats_intro_any_period_title">Dowolny okres, dowolny zakres</string>
     <string name="new_stats_intro_subtitle">Lepszy sposób na zrozumienie wydajności twojej witryny.</string>
     <string name="new_stats_intro_title">Nowe statystyki</string>
-    <string name="stats_switch_to_old_stats">Wyłącz nowe statystyki</string>
-    <string name="stats_try_new_stats">Wypróbuj nowe statystyki</string>
     <string name="stats_devices_percentage_header">Procentowo</string>
     <string name="stats_devices_device_header">Urządzenie</string>
     <string name="stats_devices_platform">Platforma</string>
@@ -272,8 +266,6 @@ Language: pl
     <string name="stats_chart_type_bars">Paski</string>
     <string name="stats_chart_type_lines">Linie</string>
     <string name="post_types_screen_title">Typy treści</string>
-    <string name="experimental_new_stats_description">Pokaż statystyki w bardziej nowoczesnym i zaawansowanym interfejsie użytkownika</string>
-    <string name="experimental_new_stats">Nowe statystyki</string>
     <string name="experimental_post_types_description">Włącz eksperymentalny ekran typów treści</string>
     <string name="experimental_post_types">Typy treści</string>
     <string name="network_requests_disable">Wyłącz</string>

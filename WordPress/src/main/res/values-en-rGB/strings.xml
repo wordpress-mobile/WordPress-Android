@@ -74,10 +74,6 @@ Language: en_GB
     <string name="post_rs_settings_add_term">Add New</string>
     <string name="post_rs_settings_choose_from_device">Choose from device</string>
     <string name="post_rs_settings_choose_from_wp_media">Choose from WP Media</string>
-    <string name="stats_new_stats_suggestion_negative">Maybe later</string>
-    <string name="stats_new_stats_suggestion_positive">Try it out</string>
-    <string name="stats_new_stats_suggestion_message">We\'ve built a brand new Stats experience. Want to give it a try? You can always go back to the old one from the Stats menu.</string>
-    <string name="stats_new_stats_suggestion_title">A new Stats experience</string>
     <string name="gutenberg_kit_announcement_learn_more">Learn more</string>
     <string name="gutenberg_kit_announcement_maybe_later">Maybe later</string>
     <string name="gutenberg_kit_announcement_activate">Activate</string>
@@ -102,8 +98,6 @@ Language: en_GB
     <string name="new_stats_intro_any_period_title">Any Period, Any Range</string>
     <string name="new_stats_intro_subtitle">A better way to understand your site\'s performance.</string>
     <string name="new_stats_intro_title">New Stats</string>
-    <string name="stats_switch_to_old_stats">Disable new stats</string>
-    <string name="stats_try_new_stats">Try new stats</string>
     <string name="stats_devices_percentage_header">Percentage</string>
     <string name="stats_devices_device_header">Device</string>
     <string name="stats_devices_platform">Platform</string>
@@ -272,8 +266,6 @@ Language: en_GB
     <string name="stats_chart_type_bars">Bars</string>
     <string name="stats_chart_type_lines">Lines</string>
     <string name="post_types_screen_title">Post Types</string>
-    <string name="experimental_new_stats_description">Show stats in a more modern and advanced UI</string>
-    <string name="experimental_new_stats">New Stats</string>
     <string name="experimental_post_types_description">Enable experimental post types screen</string>
     <string name="experimental_post_types">Post Types</string>
     <string name="network_requests_disable">Disable</string>

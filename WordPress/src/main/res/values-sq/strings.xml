@@ -13,8 +13,6 @@ Language: sq_AL
     <string name="new_stats_intro_any_period_title">Çfarëdo Periudhe, Çfarëdo Intervali</string>
     <string name="new_stats_intro_subtitle">Një mënyrë më e mirë për të kuptuar funksionimin e sajtit tuaj.</string>
     <string name="new_stats_intro_title">Statistika të Reja</string>
-    <string name="stats_switch_to_old_stats">Çaktivizo statistikat e reja</string>
-    <string name="stats_try_new_stats">Provoni statistikat e reja</string>
     <string name="stats_devices_percentage_header">Percentage</string>
     <string name="stats_devices_device_header">Pajisje</string>
     <string name="stats_devices_platform">Platformë</string>
@@ -182,8 +180,6 @@ Language: sq_AL
     <string name="stats_chart_type_bars">Shtylla</string>
     <string name="stats_chart_type_lines">Vija</string>
     <string name="post_types_screen_title">Lloje Postimesh</string>
-    <string name="experimental_new_stats_description">Shfaqni statistika në një UI më moderne dhe të përparuar</string>
-    <string name="experimental_new_stats">Statistika të Reja</string>
     <string name="experimental_post_types_description">Aktivizoni skenë llojesh eksperimentale postimi</string>
     <string name="experimental_post_types">Lloje Postimesh</string>
     <string name="network_requests_disable">Çaktivizoje</string>

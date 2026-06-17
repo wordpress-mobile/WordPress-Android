@@ -71,10 +71,6 @@ Language: id
     <string name="post_rs_settings_add_term">Tambah Baru</string>
     <string name="post_rs_settings_choose_from_device">Pilih dari perangkat</string>
     <string name="post_rs_settings_choose_from_wp_media">Pilih dari Media WP</string>
-    <string name="stats_new_stats_suggestion_negative">Mungkin nanti</string>
-    <string name="stats_new_stats_suggestion_positive">Cobalah</string>
-    <string name="stats_new_stats_suggestion_message">Kami menghadirkan pengalaman Statistik yang benar-benar baru. Ingin mencoba fitur ini? Anda dapat kembali ke versi lama dari menu Statistik.</string>
-    <string name="stats_new_stats_suggestion_title">Pengalaman Statistik yang baru</string>
     <string name="gutenberg_kit_announcement_learn_more">Baca selengkapnya</string>
     <string name="gutenberg_kit_announcement_maybe_later">Mungkin nanti</string>
     <string name="gutenberg_kit_announcement_activate">Aktifkan</string>
@@ -99,8 +95,6 @@ Language: id
     <string name="new_stats_intro_any_period_title">Periode Apa Pun, Rentang Apa Pun</string>
     <string name="new_stats_intro_subtitle">Cara lebih baik untuk memahami performa situs Anda.</string>
     <string name="new_stats_intro_title">Statistik Baru</string>
-    <string name="stats_switch_to_old_stats">Nonaktifkan statistik baru</string>
-    <string name="stats_try_new_stats">Coba statistik baru</string>
     <string name="stats_devices_percentage_header">Persentase</string>
     <string name="stats_devices_device_header">Perangkat</string>
     <string name="stats_devices_screensize">Ukuran</string>
@@ -264,8 +258,6 @@ Language: id
     <string name="stats_chart_type_bars">Bilah</string>
     <string name="stats_chart_type_lines">Garis</string>
     <string name="post_types_screen_title">Tipe Pos</string>
-    <string name="experimental_new_stats_description">Tampilkan statistik dalam UI yang lebih modern dan canggih</string>
-    <string name="experimental_new_stats">Statistik Baru</string>
     <string name="experimental_post_types_description">Aktifkan layar tipe pos eksperimental</string>
     <string name="experimental_post_types">Tipe Pos</string>
     <string name="network_requests_disable">Nonaktifkan</string>

@@ -73,10 +73,6 @@ Language: ja_JP
     <string name="post_rs_settings_add_term">新規追加</string>
     <string name="post_rs_settings_choose_from_device">端末から選択</string>
     <string name="post_rs_settings_choose_from_wp_media">WP メディアから選択</string>
-    <string name="stats_new_stats_suggestion_negative">後で確認する</string>
-    <string name="stats_new_stats_suggestion_positive">試す</string>
-    <string name="stats_new_stats_suggestion_message">新しい統計情報のエクスペリエンスが構築されました。 お試しをご希望ですか ? 統計情報メニューからいつでも旧バージョンに戻ることができます。</string>
-    <string name="stats_new_stats_suggestion_title">新しい統計情報のエクスペリエンス</string>
     <string name="gutenberg_kit_announcement_learn_more">さらに詳しく</string>
     <string name="gutenberg_kit_announcement_maybe_later">後で確認する</string>
     <string name="gutenberg_kit_announcement_activate">有効化</string>
@@ -101,8 +97,6 @@ Language: ja_JP
     <string name="new_stats_intro_any_period_title">どんな期間も、どんな範囲も</string>
     <string name="new_stats_intro_subtitle">サイトのパフォーマンスを把握する優れた方法です。</string>
     <string name="new_stats_intro_title">新しい統計</string>
-    <string name="stats_switch_to_old_stats">新しい統計を無効化</string>
-    <string name="stats_try_new_stats">新しい統計を試す</string>
     <string name="stats_devices_percentage_header">パーセント</string>
     <string name="stats_devices_device_header">端末</string>
     <string name="stats_devices_platform">プラットフォーム</string>
@@ -268,8 +262,6 @@ Language: ja_JP
     <string name="stats_chart_type_bars">棒</string>
     <string name="stats_chart_type_lines">折れ線</string>
     <string name="post_types_screen_title">投稿タイプ</string>
-    <string name="experimental_new_stats_description">モダンで詳細な UI で統計情報を表示</string>
-    <string name="experimental_new_stats">新しい統計</string>
     <string name="experimental_post_types_description">実験的な投稿タイプ画面を有効化</string>
     <string name="experimental_post_types">投稿タイプ</string>
     <string name="network_requests_disable">無効化</string>

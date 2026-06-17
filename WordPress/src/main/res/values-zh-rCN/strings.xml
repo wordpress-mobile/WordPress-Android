@@ -73,10 +73,6 @@ Language: zh_CN
     <string name="post_rs_settings_add_term">新增</string>
     <string name="post_rs_settings_choose_from_device">从设备中选择</string>
     <string name="post_rs_settings_choose_from_wp_media">从 WP 媒体中选择</string>
-    <string name="stats_new_stats_suggestion_negative">稍后再说</string>
-    <string name="stats_new_stats_suggestion_positive">试试看</string>
-    <string name="stats_new_stats_suggestion_message">我们打造了一套全新的统计信息功能。 想要试试吗？ 您可以随时从“统计信息”菜单切换回旧版本。</string>
-    <string name="stats_new_stats_suggestion_title">全新的统计信息体验</string>
     <string name="gutenberg_kit_announcement_learn_more">了解更多</string>
     <string name="gutenberg_kit_announcement_maybe_later">稍后再说</string>
     <string name="gutenberg_kit_announcement_activate">激活</string>
@@ -101,8 +97,6 @@ Language: zh_CN
     <string name="new_stats_intro_any_period_title">任意时间段、任意范围</string>
     <string name="new_stats_intro_subtitle">更深入了解站点性能的方法。</string>
     <string name="new_stats_intro_title">新统计信息</string>
-    <string name="stats_switch_to_old_stats">禁用新统计信息</string>
-    <string name="stats_try_new_stats">试用新统计信息</string>
     <string name="stats_devices_percentage_header">百分比</string>
     <string name="stats_devices_device_header">设备</string>
     <string name="stats_devices_platform">平台</string>
@@ -269,8 +263,6 @@ Language: zh_CN
     <string name="stats_chart_type_bars">条形图</string>
     <string name="stats_chart_type_lines">折线图</string>
     <string name="post_types_screen_title">文章类型</string>
-    <string name="experimental_new_stats_description">在更现代化、更先进的用户界面中显示统计信息</string>
-    <string name="experimental_new_stats">新统计信息</string>
     <string name="experimental_post_types_description">启用实验性文章类型屏幕</string>
     <string name="experimental_post_types">文章类型</string>
     <string name="network_requests_disable">禁用</string>

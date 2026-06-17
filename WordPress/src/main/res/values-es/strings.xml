@@ -74,10 +74,6 @@ Language: es
     <string name="post_rs_settings_add_term">Añadir nuevo</string>
     <string name="post_rs_settings_choose_from_device">Elige un dispositivo</string>
     <string name="post_rs_settings_choose_from_wp_media">Elige entre los medios de WP</string>
-    <string name="stats_new_stats_suggestion_negative">Quizás más tarde</string>
-    <string name="stats_new_stats_suggestion_positive">Pruébalo</string>
-    <string name="stats_new_stats_suggestion_message">Hemos creado una nueva interfaz para las estadísticas. ¿Quieres probarla? Siempre puedes volver a la anterior desde el menú de estadísticas.</string>
-    <string name="stats_new_stats_suggestion_title">Una nueva forma de ver las estadísticas</string>
     <string name="gutenberg_kit_announcement_learn_more">Más información</string>
     <string name="gutenberg_kit_announcement_maybe_later">Quizás más tarde</string>
     <string name="gutenberg_kit_announcement_activate">Activar</string>
@@ -102,8 +98,6 @@ Language: es
     <string name="new_stats_intro_any_period_title">Cualquier periodo, cualquier rango.</string>
     <string name="new_stats_intro_subtitle">Una mejor forma de entender el rendimiento de tu sitio.</string>
     <string name="new_stats_intro_title">Nuevas estadísticas</string>
-    <string name="stats_switch_to_old_stats">Desactivar las nuevas estadísticas</string>
-    <string name="stats_try_new_stats">Prueba las nuevas estadísticas</string>
     <string name="stats_devices_percentage_header">Porcentaje</string>
     <string name="stats_devices_device_header">Dispositivo</string>
     <string name="stats_devices_platform">Plataforma</string>
@@ -272,8 +266,6 @@ Language: es
     <string name="stats_chart_type_bars">Barras</string>
     <string name="stats_chart_type_lines">Líneas</string>
     <string name="post_types_screen_title">Tipos de contenido</string>
-    <string name="experimental_new_stats_description">Mostrar estadísticas en una interfaz de usuario más moderna y avanzada.</string>
-    <string name="experimental_new_stats">Nuevas estadísticas</string>
     <string name="experimental_post_types_description">Activar la pantalla experimental de tipos de contenido</string>
     <string name="experimental_post_types">Tipos de contenido</string>
     <string name="network_requests_disable">Desactivar</string>
