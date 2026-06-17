@@ -90,6 +90,7 @@ internal class PagesRsListViewModel @Inject constructor(
     private var collectionsScope = createCollectionsScope()
     private val initializingTabs = mutableSetOf<PageRsListTab>()
     private val userRefreshingTabs = mutableSetOf<PageRsListTab>()
+    private val resolveImageJobs = mutableMapOf<PageRsListTab, Job>()
     private val resolveAuthorJobs = mutableMapOf<PageRsListTab, Job>()
     private var lastTrackedTab: PageRsListTab? = null
 
@@ -896,11 +897,14 @@ internal class PagesRsListViewModel @Inject constructor(
                 .associate { it.remotePageId to it.page }
             val uiModels = items.map { model ->
                 val existing = existingById[model.remotePageId]
+                var resolved = model
                 if (model.authorId != 0L && model.authorId == existing?.authorId) {
-                    model.copy(authorDisplayName = existing.authorDisplayName)
-                } else {
-                    model
+                    resolved = resolved.copy(authorDisplayName = existing.authorDisplayName)
                 }
+                if (model.featuredImageId != 0L && model.featuredImageId == existing?.featuredImageId) {
+                    resolved = resolved.copy(featuredImageUrl = existing.featuredImageUrl)
+                }
+                resolved
             }
             val applyHierarchy = tab == PageRsListTab.PUBLISHED &&
                 !isSearch &&
@@ -919,10 +923,39 @@ internal class PagesRsListViewModel @Inject constructor(
                 copy(pages = rows, isLoading = false, error = null, isAuthError = false)
             }
             resolveAuthorNames(tab, uiModels)
+            resolveFeaturedImages(tab, uiModels)
         } catch (e: CancellationException) {
             throw e
         } catch (e: Exception) {
             AppLog.e(AppLog.T.PAGES, "Failed to load items for tab $tab", e)
+        }
+    }
+
+    /**
+     * Fetches featured image URLs for pages that have a non-zero
+     * [PageRsUiModel.featuredImageId] but no resolved URL yet.
+     * All URLs are fetched in a single batched network call.
+     */
+    private fun resolveFeaturedImages(
+        tab: PageRsListTab,
+        pages: List<PageRsUiModel>
+    ) {
+        val site = this.site ?: return
+        val unresolvedIds = pages
+            .filter { it.featuredImageId != 0L && it.featuredImageUrl == null }
+            .map { it.featuredImageId }
+            .distinct()
+        if (unresolvedIds.isEmpty()) return
+
+        resolveImageJobs[tab]?.cancel()
+        resolveImageJobs[tab] = viewModelScope.launch {
+            val urls = withContext(Dispatchers.IO) {
+                restClient.fetchMediaUrls(site, unresolvedIds, THUMBNAIL_SIZE_DP)
+            }
+            if (urls.isEmpty()) return@launch
+            updateTabUiState(tab) {
+                copy(pages = this.pages.map { item -> item.withResolvedFeaturedImage(urls) })
+            }
         }
     }
 
@@ -989,6 +1022,15 @@ internal class PagesRsListViewModel @Inject constructor(
     private fun PageRsListItem.withResolvedAuthor(names: Map<Long, String>): PageRsListItem {
         val name = names[page.authorId] ?: return this
         val updated = page.copy(authorDisplayName = name)
+        return when (this) {
+            is PageRsListItem.Real -> copy(page = updated)
+            is PageRsListItem.Virtual -> copy(page = updated)
+        }
+    }
+
+    private fun PageRsListItem.withResolvedFeaturedImage(urls: Map<Long, String>): PageRsListItem {
+        val url = urls[page.featuredImageId] ?: return this
+        val updated = page.copy(featuredImageUrl = url)
         return when (this) {
             is PageRsListItem.Real -> copy(page = updated)
             is PageRsListItem.Virtual -> copy(page = updated)
@@ -1068,6 +1110,8 @@ internal class PagesRsListViewModel @Inject constructor(
         collections.clear()
         initializingTabs.clear()
         userRefreshingTabs.clear()
+        resolveImageJobs.values.forEach { it.cancel() }
+        resolveImageJobs.clear()
         resolveAuthorJobs.values.forEach { it.cancel() }
         resolveAuthorJobs.clear()
         _tabStates.value = emptyMap()
@@ -1083,6 +1127,7 @@ internal class PagesRsListViewModel @Inject constructor(
         private const val PAGE_SIZE = 20
         private const val SEARCH_DEBOUNCE_MS = 250L
         internal const val MIN_SEARCH_QUERY_LENGTH = 3
+        private const val THUMBNAIL_SIZE_DP = 64
         private val ALL_STATUSES = PageRsListTab.entries.flatMap { it.statuses }.distinct()
 
         private const val TRACKS_SELECTED_TAB = "selected_tab"

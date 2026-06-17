@@ -33,14 +33,20 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import org.wordpress.android.R
+import org.wordpress.android.ui.compose.components.ShimmerBox
 import org.wordpress.android.ui.pagesrs.PageRsDisplayState
 import org.wordpress.android.ui.pagesrs.PageRsListItem
 import org.wordpress.android.ui.pagesrs.PageRsMenuAction
@@ -147,9 +153,32 @@ private fun PageContentItem(
                     )
                 }
             }
-            if (page.actions.isNotEmpty()) {
+            if (page.actions.isNotEmpty() || page.featuredImageId != 0L) {
                 Spacer(modifier = Modifier.width(8.dp))
-                PageMenuButton(actions = page.actions, onAction = onMenuAction)
+                Column(horizontalAlignment = Alignment.End) {
+                    if (page.actions.isNotEmpty()) {
+                        PageMenuButton(actions = page.actions, onAction = onMenuAction)
+                    }
+                    if (page.featuredImageUrl != null) {
+                        AsyncImage(
+                            model = ImageRequest.Builder(LocalContext.current)
+                                .data(page.featuredImageUrl)
+                                .crossfade(true)
+                                .build(),
+                            contentDescription = stringResource(R.string.featured_image_desc),
+                            modifier = Modifier
+                                .size(FEATURED_IMAGE_SIZE)
+                                .clip(RoundedCornerShape(2.dp)),
+                            contentScale = ContentScale.Crop
+                        )
+                    } else if (page.featuredImageId != 0L) {
+                        ShimmerBox(
+                            modifier = Modifier
+                                .size(FEATURED_IMAGE_SIZE)
+                                .clip(RoundedCornerShape(2.dp))
+                        )
+                    }
+                }
             }
         }
         if (page.displayState == PageRsDisplayState.FETCHING_WITH_DATA) {
@@ -265,6 +294,7 @@ private fun PageRsListItem.Virtual.Kind.labelResId(): Int = when (this) {
 
 private const val INDENT_STEP_DP = 16
 private const val H_PADDING_DP = 16
+private val FEATURED_IMAGE_SIZE = 64.dp
 
 @Preview(showBackground = true)
 @Composable
@@ -276,7 +306,8 @@ private fun PreviewPageItem() {
                     remotePageId = 1L,
                     title = "About",
                     excerpt = "Learn more about our journey and what we do.",
-                    date = "Dec 15, 2025"
+                    date = "Dec 15, 2025",
+                    featuredImageId = 42L
                 )
             ),
             onClick = {},

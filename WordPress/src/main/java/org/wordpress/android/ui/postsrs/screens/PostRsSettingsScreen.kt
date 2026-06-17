@@ -2,11 +2,6 @@ package org.wordpress.android.ui.postsrs.screens
 
 import android.view.View
 import androidx.activity.compose.BackHandler
-import androidx.compose.animation.core.RepeatMode
-import androidx.compose.animation.core.animateFloat
-import androidx.compose.animation.core.infiniteRepeatable
-import androidx.compose.animation.core.rememberInfiniteTransition
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -107,6 +102,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.emptyFlow
 import org.wordpress.android.R
+import org.wordpress.android.ui.compose.components.ShimmerBox
 import org.wordpress.android.ui.compose.components.SingleChoiceAlertDialog
 import org.wordpress.android.ui.postsrs.AuthorInfo
 import org.wordpress.android.ui.postsrs.DialogState
@@ -1949,28 +1945,6 @@ private fun SettingsRow(
             null
         },
         modifier = modifier,
-    )
-}
-
-@Composable
-private fun ShimmerBox(modifier: Modifier = Modifier) {
-    val infiniteTransition = rememberInfiniteTransition(
-        label = "shimmer"
-    )
-    val alpha by infiniteTransition.animateFloat(
-        initialValue = 0.06f,
-        targetValue = 0.14f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(durationMillis = 800),
-            repeatMode = RepeatMode.Reverse
-        ),
-        label = "shimmerAlpha"
-    )
-    Box(
-        modifier = modifier.background(
-            MaterialTheme.colorScheme.onSurface
-                .copy(alpha = alpha)
-        )
     )
 }
 
