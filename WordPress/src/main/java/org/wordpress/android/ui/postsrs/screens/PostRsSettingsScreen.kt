@@ -102,6 +102,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.emptyFlow
 import org.wordpress.android.R
+import org.wordpress.android.ui.compose.components.ShimmerBox
 import org.wordpress.android.ui.compose.components.SingleChoiceAlertDialog
 import org.wordpress.android.ui.postsrs.AuthorInfo
 import org.wordpress.android.ui.postsrs.DialogState

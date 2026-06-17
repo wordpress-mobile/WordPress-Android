@@ -46,12 +46,12 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import org.wordpress.android.R
+import org.wordpress.android.ui.compose.components.ShimmerBox
 import org.wordpress.android.ui.pagesrs.PageRsDisplayState
 import org.wordpress.android.ui.pagesrs.PageRsListItem
 import org.wordpress.android.ui.pagesrs.PageRsMenuAction
 import org.wordpress.android.ui.pagesrs.PageRsUiModel
 import org.wordpress.android.ui.postsrs.screens.PlaceholderItem
-import org.wordpress.android.ui.postsrs.screens.ShimmerBox
 
 @Composable
 internal fun PageRsRow(

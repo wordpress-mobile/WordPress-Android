@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.postsrs.screens
+package org.wordpress.android.ui.compose.components
 
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
@@ -18,7 +18,7 @@ import androidx.compose.ui.Modifier
  * shimmer in [org.wordpress.android.ui.newstats.util.ShimmerBox].)
  */
 @Composable
-internal fun ShimmerBox(modifier: Modifier = Modifier) {
+fun ShimmerBox(modifier: Modifier = Modifier) {
     val infiniteTransition = rememberInfiniteTransition(label = "shimmer")
     val alpha by infiniteTransition.animateFloat(
         initialValue = 0.06f,
