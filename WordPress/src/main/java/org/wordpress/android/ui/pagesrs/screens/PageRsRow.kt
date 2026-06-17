@@ -1,5 +1,11 @@
 package org.wordpress.android.ui.pagesrs.screens
 
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -33,13 +39,18 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import org.wordpress.android.R
 import org.wordpress.android.ui.pagesrs.PageRsDisplayState
 import org.wordpress.android.ui.pagesrs.PageRsListItem
@@ -147,9 +158,32 @@ private fun PageContentItem(
                     )
                 }
             }
-            if (page.actions.isNotEmpty()) {
+            if (page.actions.isNotEmpty() || page.featuredImageId != 0L) {
                 Spacer(modifier = Modifier.width(8.dp))
-                PageMenuButton(actions = page.actions, onAction = onMenuAction)
+                Column(horizontalAlignment = Alignment.End) {
+                    if (page.actions.isNotEmpty()) {
+                        PageMenuButton(actions = page.actions, onAction = onMenuAction)
+                    }
+                    if (page.featuredImageUrl != null) {
+                        AsyncImage(
+                            model = ImageRequest.Builder(LocalContext.current)
+                                .data(page.featuredImageUrl)
+                                .crossfade(true)
+                                .build(),
+                            contentDescription = stringResource(R.string.featured_image_desc),
+                            modifier = Modifier
+                                .size(FEATURED_IMAGE_SIZE)
+                                .clip(RoundedCornerShape(2.dp)),
+                            contentScale = ContentScale.Crop
+                        )
+                    } else if (page.featuredImageId != 0L) {
+                        ShimmerBox(
+                            modifier = Modifier
+                                .size(FEATURED_IMAGE_SIZE)
+                                .clip(RoundedCornerShape(2.dp))
+                        )
+                    }
+                }
             }
         }
         if (page.displayState == PageRsDisplayState.FETCHING_WITH_DATA) {
@@ -253,6 +287,25 @@ private fun ErrorItem(modifier: Modifier = Modifier) {
     }
 }
 
+@Composable
+private fun ShimmerBox(modifier: Modifier = Modifier) {
+    val infiniteTransition = rememberInfiniteTransition(label = "shimmer")
+    val alpha by infiniteTransition.animateFloat(
+        initialValue = 0.06f,
+        targetValue = 0.14f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(durationMillis = 800),
+            repeatMode = RepeatMode.Reverse
+        ),
+        label = "shimmerAlpha"
+    )
+    Box(
+        modifier = modifier.background(
+            MaterialTheme.colorScheme.onSurface.copy(alpha = alpha)
+        )
+    )
+}
+
 private fun PageRsListItem.Virtual.Kind.icon(): ImageVector = when (this) {
     PageRsListItem.Virtual.Kind.HOMEPAGE -> Icons.Filled.Home
     PageRsListItem.Virtual.Kind.POSTS_PAGE -> Icons.AutoMirrored.Filled.Article
@@ -265,6 +318,7 @@ private fun PageRsListItem.Virtual.Kind.labelResId(): Int = when (this) {
 
 private const val INDENT_STEP_DP = 16
 private const val H_PADDING_DP = 16
+private val FEATURED_IMAGE_SIZE = 64.dp
 
 @Preview(showBackground = true)
 @Composable
@@ -276,7 +330,8 @@ private fun PreviewPageItem() {
                     remotePageId = 1L,
                     title = "About",
                     excerpt = "Learn more about our journey and what we do.",
-                    date = "Dec 15, 2025"
+                    date = "Dec 15, 2025",
+                    featuredImageId = 42L
                 )
             ),
             onClick = {},
