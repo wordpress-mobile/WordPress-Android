@@ -16,7 +16,7 @@ import org.wordpress.android.ui.blaze.blazecampaigns.campaignlisting.CampaignLis
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
 import org.wordpress.android.ui.mysite.SiteNavigationAction
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction
-import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures
+import org.wordpress.android.util.config.NewStatsFeatureConfig
 import kotlin.test.assertEquals
 
 @ExperimentalCoroutinesApi
@@ -32,7 +32,7 @@ class ListItemActionHandlerTest: BaseUnitTest() {
     lateinit var blazeFeatureUtils: BlazeFeatureUtils
 
     @Mock
-    lateinit var experimentalFeatures: ExperimentalFeatures
+    lateinit var newStatsFeatureConfig: NewStatsFeatureConfig
 
     private val site = SiteModel()
 
@@ -44,7 +44,7 @@ class ListItemActionHandlerTest: BaseUnitTest() {
             accountStore,
             jetpackFeatureRemovalPhaseHelper,
             blazeFeatureUtils,
-            experimentalFeatures
+            newStatsFeatureConfig
         )
     }
 
@@ -164,7 +164,7 @@ class ListItemActionHandlerTest: BaseUnitTest() {
     @Test
     fun `stats item click emits OpenNewStats when NEW_STATS feature is enabled and site is WPCom`() {
         site.setIsWPCom(true)
-        whenever(experimentalFeatures.isEnabled(ExperimentalFeatures.Feature.NEW_STATS)).thenReturn(true)
+        whenever(newStatsFeatureConfig.isEnabled()).thenReturn(true)
 
         val navigationAction = invokeItemClickAction(action = ListItemAction.STATS)
 
@@ -176,7 +176,7 @@ class ListItemActionHandlerTest: BaseUnitTest() {
         site.setIsJetpackConnected(true)
         site.setIsWPCom(true)
         whenever(accountStore.hasAccessToken()).thenReturn(true)
-        whenever(experimentalFeatures.isEnabled(ExperimentalFeatures.Feature.NEW_STATS)).thenReturn(true)
+        whenever(newStatsFeatureConfig.isEnabled()).thenReturn(true)
 
         val navigationAction = invokeItemClickAction(action = ListItemAction.STATS)
 

@@ -8,15 +8,14 @@ import org.wordpress.android.ui.blaze.blazecampaigns.campaignlisting.CampaignLis
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
 import org.wordpress.android.ui.mysite.SiteNavigationAction
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction
-import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures
-import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures.Feature
+import org.wordpress.android.util.config.NewStatsFeatureConfig
 import javax.inject.Inject
 
 class ListItemActionHandler @Inject constructor(
     private val accountStore: AccountStore,
     private val jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper,
     private val blazeFeatureUtils: BlazeFeatureUtils,
-    private val experimentalFeatures: ExperimentalFeatures
+    private val newStatsFeatureConfig: NewStatsFeatureConfig
 ) {
     fun handleAction(
         action: ListItemAction,
@@ -60,7 +59,7 @@ class ListItemActionHandler @Inject constructor(
 
         // If it's a WordPress.com or Jetpack site, show the Stats screen.
         site.isWPCom || site.isJetpackInstalled && site.isJetpackConnected -> {
-            if (experimentalFeatures.isEnabled(Feature.NEW_STATS)) {
+            if (newStatsFeatureConfig.isEnabled()) {
                 SiteNavigationAction.OpenNewStats
             } else {
                 SiteNavigationAction.OpenStats(site)

@@ -177,8 +177,6 @@ public final class AnalyticsTracker {
         STATS_CLICKS_ITEM_TAPPED,
         STATS_VIDEO_PLAYS_VIDEO_TAPPED,
         STATS_DETAIL_POST_TAPPED,
-        STATS_NEW_STATS_ENABLED,
-        STATS_NEW_STATS_DISABLED,
         EDITOR_CREATED_POST("editor_post_created"),
         EDITOR_ADDED_PHOTO_VIA_DEVICE_LIBRARY("editor_photo_added"),
         EDITOR_ADDED_VIDEO_VIA_DEVICE_LIBRARY("editor_video_added"),
