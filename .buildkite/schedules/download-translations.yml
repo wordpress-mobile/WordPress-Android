@@ -1,0 +1,20 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/buildkite/pipeline-schema/main/schema.json
+---
+
+# Runs on a daily schedule (configured in the Buildkite UI, ~06:00 UTC) to sync the latest
+# translations from GlotPress into a single rolling `translations/daily-update` PR.
+
+agents:
+  queue: "android"
+
+steps:
+  - label: ":globe_with_meridians: Download Translations"
+    command: .buildkite/commands/download-translations.sh
+    plugins: [$CI_TOOLKIT]
+
+notify:
+  - slack:
+      channels:
+        - "#android-core-notifs"
+      message: "Failed to sync translations from GlotPress."
+    if: build.state == "failed"

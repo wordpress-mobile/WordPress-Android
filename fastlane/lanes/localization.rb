@@ -375,6 +375,49 @@ platform :android do
     )
   end
 
+  TRANSLATIONS_SYNC_BRANCH = 'translations/daily-update'
+
+  #####################################################################################
+  # update_translations
+  # -----------------------------------------------------------------------------------
+  # Downloads the latest WordPress & Jetpack translations from GlotPress and opens (or
+  # refreshes) a single rolling Pull Request, so `trunk` stays continuously localized.
+  # Intended to run on a daily schedule.
+  #
+  # Each run resets `translations/daily-update` to `trunk` and re-downloads, so the PR
+  # always shows the complete current translation delta against `trunk` (no accumulation).
+  # If GlotPress has nothing new, no commit is made and the lane exits without a PR.
+  # -----------------------------------------------------------------------------------
+  # Usage:
+  # bundle exec fastlane update_translations
+  #####################################################################################
+  lane :update_translations do
+    Fastlane::Helper::GitHelper.checkout_and_pull(DEFAULT_BRANCH)
+    sh('git', 'checkout', '-B', TRANSLATIONS_SYNC_BRANCH)
+
+    download_translations
+
+    new_commits = sh('git', 'rev-list', '--count', "origin/#{DEFAULT_BRANCH}..HEAD").strip
+    if new_commits == '0'
+      UI.important('No new translations from GlotPress today; nothing to sync.')
+      next
+    end
+
+    sh('git', 'push', '--force', 'origin', TRANSLATIONS_SYNC_BRANCH)
+
+    # `find_or_create_pull_request` resolves the GitHub token the standard way (GITHUB_TOKEN) and only
+    # opens a PR when none is already open; the force-push above already refreshed any existing one.
+    pr_url = find_or_create_pull_request(
+      repository: GITHUB_REPO,
+      title: 'Update translations',
+      body: 'Automated daily translation sync from GlotPress. Opened by the `download-translations` scheduled pipeline.',
+      head: TRANSLATIONS_SYNC_BRANCH,
+      base: DEFAULT_BRANCH,
+      labels: ['Localization']
+    )
+    UI.success("Translations PR: #{pr_url}")
+  end
+
   # Updates the `.po` file at the given `po_path` using the content of the `sources` files,
   # interpolating `release_version` where appropriate.
   # Internally, this calls the `gp_update_metadata_source` release toolkit action and adds Git management to it.
