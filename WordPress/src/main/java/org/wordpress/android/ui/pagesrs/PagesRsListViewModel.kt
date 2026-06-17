@@ -705,8 +705,8 @@ internal class PagesRsListViewModel @Inject constructor(
     @MainThread
     fun onLoadMoreParents() {
         val collection = parentPickerCollection ?: return
-        val current = _parentPicker.value ?: return
-        if (current.isLoadingMore || !current.canLoadMore) return
+        val current = _parentPicker.value
+        if (current == null || current.isLoadingMore || !current.canLoadMore) return
 
         updateParentPicker { copy(isLoadingMore = true) }
         launchCollectionJob {
