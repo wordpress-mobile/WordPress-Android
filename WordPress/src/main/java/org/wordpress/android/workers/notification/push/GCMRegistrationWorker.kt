@@ -26,9 +26,9 @@ class GCMRegistrationWorker(
     // register(). However, register() is part of an opt-in "V1 registration" backend gated by the
     // manifest flag "firebase_messaging_installation_id_enabled"; without that flag (our current
     // setup) register() throws at runtime while getToken() remains the only functional token API.
-    // Suppressing the deprecation until we deliberately migrate to push-based token delivery.
-    // TODO: Migrate to the register()/onNewToken() registration model (requires manifest opt-in
-    //  and reworking on-demand registration call sites to stop fetching the token directly).
+    // Suppressing the deprecation until we deliberately migrate to push-based token delivery via
+    // the register()/onNewToken() registration model (which requires the manifest opt-in and
+    // reworking the on-demand registration call sites to stop fetching the token directly).
     @Suppress("DEPRECATION")
     override suspend fun doWork(): Result {
         return try {
