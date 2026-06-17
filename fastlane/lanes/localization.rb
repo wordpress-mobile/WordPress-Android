@@ -393,17 +393,21 @@ platform :android do
   #####################################################################################
   lane :update_translations do
     Fastlane::Helper::GitHelper.checkout_and_pull(DEFAULT_BRANCH)
-    sh('git', 'checkout', '-B', TRANSLATIONS_SYNC_BRANCH)
+
+    # Reset the rolling branch to the tip of `trunk` so each run produces a clean delta against it.
+    Fastlane::Helper::GitHelper.delete_local_branch_if_exists!(TRANSLATIONS_SYNC_BRANCH)
+    Fastlane::Helper::GitHelper.create_branch(TRANSLATIONS_SYNC_BRANCH, from: DEFAULT_BRANCH)
 
     download_translations
 
-    new_commits = sh('git', 'rev-list', '--count', "origin/#{DEFAULT_BRANCH}..HEAD").strip
-    if new_commits == '0'
+    # `download_translations` commits when GlotPress has updates; if nothing changed, HEAD still
+    # points at `trunk` and there is nothing to open a PR for.
+    if Fastlane::Helper::GitHelper.point_to_same_commit?(DEFAULT_BRANCH, 'HEAD')
       UI.important('No new translations from GlotPress today; nothing to sync.')
       next
     end
 
-    sh('git', 'push', '--force', 'origin', TRANSLATIONS_SYNC_BRANCH)
+    push_to_git_remote(remote_branch: TRANSLATIONS_SYNC_BRANCH, tags: false, force: true, set_upstream: true)
 
     # `find_or_create_pull_request` resolves the GitHub token the standard way (GITHUB_TOKEN) and only
     # opens a PR when none is already open; the force-push above already refreshed any existing one.
