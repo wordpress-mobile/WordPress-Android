@@ -3,9 +3,13 @@
 
 # Runs on a daily schedule (configured in the Buildkite UI, ~06:00 UTC) to sync the latest
 # translations from GlotPress into a single rolling `translations/daily-update` PR.
+#
+# Runs on `mac-metal` (like the release code-freeze/finalize lanes) because this job commits,
+# pushes and opens a PR, which needs the bot git identity from `use-bot-for-git` — that command
+# is only available on those agents.
 
 agents:
-  queue: "android"
+  queue: "mac-metal"
 
 steps:
   - label: ":globe_with_meridians: Download Translations"
