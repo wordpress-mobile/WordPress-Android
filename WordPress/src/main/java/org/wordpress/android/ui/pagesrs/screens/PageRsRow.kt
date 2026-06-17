@@ -1,11 +1,5 @@
 package org.wordpress.android.ui.pagesrs.screens
 
-import androidx.compose.animation.core.RepeatMode
-import androidx.compose.animation.core.animateFloat
-import androidx.compose.animation.core.infiniteRepeatable
-import androidx.compose.animation.core.rememberInfiniteTransition
-import androidx.compose.animation.core.tween
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -57,6 +51,7 @@ import org.wordpress.android.ui.pagesrs.PageRsListItem
 import org.wordpress.android.ui.pagesrs.PageRsMenuAction
 import org.wordpress.android.ui.pagesrs.PageRsUiModel
 import org.wordpress.android.ui.postsrs.screens.PlaceholderItem
+import org.wordpress.android.ui.postsrs.screens.ShimmerBox
 
 @Composable
 internal fun PageRsRow(
@@ -285,25 +280,6 @@ private fun ErrorItem(modifier: Modifier = Modifier) {
             color = MaterialTheme.colorScheme.onErrorContainer
         )
     }
-}
-
-@Composable
-private fun ShimmerBox(modifier: Modifier = Modifier) {
-    val infiniteTransition = rememberInfiniteTransition(label = "shimmer")
-    val alpha by infiniteTransition.animateFloat(
-        initialValue = 0.06f,
-        targetValue = 0.14f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(durationMillis = 800),
-            repeatMode = RepeatMode.Reverse
-        ),
-        label = "shimmerAlpha"
-    )
-    Box(
-        modifier = modifier.background(
-            MaterialTheme.colorScheme.onSurface.copy(alpha = alpha)
-        )
-    )
 }
 
 private fun PageRsListItem.Virtual.Kind.icon(): ImageVector = when (this) {
