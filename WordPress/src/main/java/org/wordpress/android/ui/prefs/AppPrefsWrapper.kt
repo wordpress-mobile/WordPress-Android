@@ -571,6 +571,18 @@ class AppPrefsWrapper @Inject constructor(val buildConfigWrapper: BuildConfigWra
     fun setNewStatsIntroShown(shown: Boolean) =
         AppPrefs.setNewStatsIntroShown(shown)
 
+    fun getStatsNewStatsSuggestionShown(): Boolean =
+        AppPrefs.getStatsNewStatsSuggestionShown()
+
+    fun setStatsNewStatsSuggestionShown(shown: Boolean) =
+        AppPrefs.setStatsNewStatsSuggestionShown(shown)
+
+    fun getStatsNewStatsSuggestionLastDismissedAt(): Long =
+        AppPrefs.getStatsNewStatsSuggestionLastDismissedAt()
+
+    fun setStatsNewStatsSuggestionLastDismissedAt(timestamp: Long) =
+        AppPrefs.setStatsNewStatsSuggestionLastDismissedAt(timestamp)
+
     fun getGutenbergKitSiteOverride(siteUrl: String?): Boolean? =
         AppPrefs.getGutenbergKitSiteOverride(siteUrl)
 
