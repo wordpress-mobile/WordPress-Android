@@ -89,6 +89,22 @@ class ApplicationPasswordManagerTests {
     }
 
     @Test
+    fun `given a non-jetpack site with a null username, when we ask for a password, then return Failure`() =
+        runTest {
+            val site = SiteModel().apply {
+                url = "http://no-username.example.com"
+                origin = SiteModel.ORIGIN_XMLRPC
+                username = null
+            }
+
+            whenever(applicationPasswordsStore.getCredentials(site)).thenReturn(null)
+
+            val result = mApplicationPasswordsManager.getApplicationCredentials(site)
+
+            Assert.assertTrue(result is ApplicationPasswordCreationResult.Failure)
+        }
+
+    @Test
     fun `given a local password exists, when we ask for a password, then return it`() = runTest {
         whenever(applicationPasswordsStore.getCredentials(testSite)).thenReturn(testCredentials)
         val result = mApplicationPasswordsManager.getApplicationCredentials(

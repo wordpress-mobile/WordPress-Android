@@ -74,7 +74,20 @@ internal class ApplicationPasswordsManager @Inject constructor(
         return if (site.origin == SiteModel.ORIGIN_WPCOM_REST) {
             jetpackApplicationPasswordsRestClient.fetchWPAdminUsername(site)
         } else {
-            UsernameFetchPayload(site.username)
+            val username = site.username
+            if (username.isNullOrEmpty()) {
+                UsernameFetchPayload(
+                    WPAPINetworkError(
+                        BaseNetworkError(
+                            GenericErrorType.NOT_AUTHENTICATED,
+                            "Site username is missing. " +
+                                "The application password was probably authorized using the Web flow"
+                        )
+                    )
+                )
+            } else {
+                UsernameFetchPayload(username)
+            }
         }
     }
 
