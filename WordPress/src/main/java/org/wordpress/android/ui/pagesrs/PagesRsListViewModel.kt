@@ -52,6 +52,7 @@ import rs.wordpress.cache.kotlin.hasMorePages
 import uniffi.wp_api.PostEndpointType
 import uniffi.wp_api.PostStatus
 import uniffi.wp_api.PostUpdateParams
+import uniffi.wp_mobile.FetchException
 import uniffi.wp_mobile.PostListFilter
 import uniffi.wp_mobile.PostService
 import uniffi.wp_mobile_cache.ListState
@@ -655,13 +656,21 @@ internal class PagesRsListViewModel @Inject constructor(
         val collection = parentPickerCollection ?: return
         @Suppress("TooGenericExceptionCaught")
         try {
-            val items = withContext(Dispatchers.IO) {
-                collection.loadItems().map { it.state.toPageUiModel(it.id) }
+            val (items, listInfo) = withContext(Dispatchers.IO) {
+                collection.loadItems().map { it.state.toPageUiModel(it.id) } to collection.listInfo()
             }
             val candidates = items
                 .filter { it.remotePageId !in parentPickerExcludedIds }
                 .filter { it.status is PostStatus.Publish || it.status is PostStatus.Private }
                 .map { PageRsParentCandidate(it.remotePageId, it.title) }
+            // Don't publish an empty result while a load is still in progress: loadItems() emits
+            // transient empty/partial sets during a refresh (and once before it starts), and
+            // flipping to the "no results" / spinner state on each of those makes the list blink.
+            // Wait until results arrive, or the fetch finishes and the list is genuinely empty
+            // (isLoading is cleared by updateParentPickerListInfo when fetching ends).
+            val loadInProgress = listInfo?.state == ListState.FETCHING_FIRST_PAGE ||
+                _parentPicker.value?.isLoading == true
+            if (candidates.isEmpty() && loadInProgress) return
             updateParentPicker { copy(candidates = candidates, isLoading = false, error = null) }
         } catch (e: CancellationException) {
             throw e
@@ -719,6 +728,11 @@ internal class PagesRsListViewModel @Inject constructor(
                 withContext(Dispatchers.IO) { collection.loadNextPage() }
             } catch (e: CancellationException) {
                 throw e
+            } catch (e: FetchException.StaleLoadMore) {
+                // A concurrent refresh superseded this page request. The list info observer
+                // reconciles paging state, so just clear the spinner — this isn't a user error.
+                AppLog.d(AppLog.T.PAGES, "Ignoring stale parent picker load-more: ${e.message}")
+                updateParentPicker { copy(isLoadingMore = false) }
             } catch (e: Exception) {
                 AppLog.e(AppLog.T.PAGES, "Failed to load more parents", e)
                 updateParentPicker { copy(isLoadingMore = false) }
