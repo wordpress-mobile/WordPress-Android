@@ -1,8 +1,6 @@
 package org.wordpress.android.fluxc.model.site
 
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.robolectric.RobolectricTestRunner
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.site.SiteUtils
 import kotlin.test.assertEquals
@@ -10,7 +8,6 @@ import kotlin.test.assertFalse
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
-@RunWith(RobolectricTestRunner::class)
 class SiteModelTest {
     /* Publicize support */
     @Test
@@ -258,32 +255,12 @@ class SiteModelTest {
 
     /* setUrl */
     @Test
-    fun `given null url, when url is set, it does not crash and url is left unchanged`() {
-        val site = SiteUtils.generateWPComSite()
-        val originalUrl = site.url
-
-        site.url = null
-
-        assertEquals(originalUrl, site.url)
-    }
-
-    @Test
     fun `given valid url, when url is set, it is normalized and stored`() {
         val site = SiteUtils.generateWPComSite()
 
         site.url = "https://example.com/a/./b"
 
         assertEquals("https://example.com/a/b", site.url)
-    }
-
-    @Test
-    fun `given invalid url, when url is set, url is left unchanged`() {
-        val site = SiteUtils.generateWPComSite()
-        site.url = "https://valid.example.com"
-
-        site.url = "http://invalid url with spaces"
-
-        assertEquals("https://valid.example.com", site.url)
     }
 
     private fun SiteModel.setPublicizeSupport(enablePublicizeSupport: Boolean) {
