@@ -20,6 +20,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.OpenInNew
 import androidx.compose.material.icons.automirrored.filled.Send
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -42,10 +43,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalResources
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardCapitalization
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.layout.size
@@ -425,6 +429,8 @@ private fun MessageBubble(message: UnifiedMessage, timestamp: String) {
 
 @Composable
 private fun AttachmentRow(attachment: UnifiedAttachment) {
+    val uriHandler = LocalUriHandler.current
+    val isLink = attachment.type == AttachmentType.Link
     Column(modifier = Modifier.padding(vertical = 4.dp)) {
         if (attachment.isImage) {
             AsyncImage(
@@ -441,7 +447,17 @@ private fun AttachmentRow(attachment: UnifiedAttachment) {
                 text = attachment.filename,
                 style = MaterialTheme.typography.labelMedium,
                 fontWeight = FontWeight.Medium,
-                modifier = Modifier.weight(1f, fill = false),
+                color = if (isLink) MaterialTheme.colorScheme.primary else Color.Unspecified,
+                textDecoration = if (isLink) TextDecoration.Underline else null,
+                modifier = Modifier
+                    .weight(1f, fill = false)
+                    .then(
+                        if (isLink) {
+                            Modifier.clickable { uriHandler.openUri(attachment.url) }
+                        } else {
+                            Modifier
+                        }
+                    ),
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
             )
@@ -826,22 +842,67 @@ private fun UnifiedAttachmentsList(
     onDownloadAttachment: (UnifiedAttachment) -> Unit,
     authorizationHeader: String,
 ) {
-    FlowRow(
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp)
-    ) {
-        attachments.forEach { attachment ->
-            UnifiedAttachmentItem(
-                attachment = attachment,
-                onClick = {
-                    when (attachment.type) {
-                        AttachmentType.Image, AttachmentType.Video -> onPreviewAttachment(attachment)
-                        else -> onDownloadAttachment(attachment)
-                    }
-                },
-                authorizationHeader = authorizationHeader,
-            )
+    // Link attachments (text/html web pages) are rendered as tappable links rather than
+    // file cards, since they point to web articles rather than downloadable files.
+    val (links, files) = attachments.partition { it.type == AttachmentType.Link }
+
+    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        links.forEach { attachment ->
+            UnifiedAttachmentLink(attachment)
         }
+
+        if (files.isNotEmpty()) {
+            FlowRow(
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                files.forEach { attachment ->
+                    UnifiedAttachmentItem(
+                        attachment = attachment,
+                        onClick = {
+                            when (attachment.type) {
+                                AttachmentType.Image, AttachmentType.Video -> onPreviewAttachment(attachment)
+                                else -> onDownloadAttachment(attachment)
+                            }
+                        },
+                        authorizationHeader = authorizationHeader,
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun UnifiedAttachmentLink(attachment: UnifiedAttachment) {
+    val uriHandler = LocalUriHandler.current
+    val linkDescription = stringResource(
+        R.string.unified_support_attachment_link_content_description,
+        attachment.filename
+    )
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable { uriHandler.openUri(attachment.url) }
+            .padding(vertical = 4.dp)
+            .semantics { contentDescription = linkDescription },
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        Icon(
+            imageVector = Icons.AutoMirrored.Filled.OpenInNew,
+            contentDescription = null,
+            tint = MaterialTheme.colorScheme.primary,
+            modifier = Modifier.size(20.dp)
+        )
+        Text(
+            text = attachment.filename,
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.primary,
+            textDecoration = TextDecoration.Underline,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+        )
     }
 }
 
@@ -851,10 +912,12 @@ private fun UnifiedAttachmentItem(
     onClick: () -> Unit,
     authorizationHeader: String,
 ) {
+    // Link attachments are rendered as links by UnifiedAttachmentLink, not as cards, so they
+    // fall back to the generic file icon here.
     val iconRes = when (attachment.type) {
         AttachmentType.Image -> R.drawable.ic_image_white_24dp
         AttachmentType.Video -> R.drawable.ic_video_camera_white_24dp
-        AttachmentType.Other -> R.drawable.ic_pages_white_24dp
+        AttachmentType.Link, AttachmentType.Other -> R.drawable.ic_pages_white_24dp
     }
 
     Box(

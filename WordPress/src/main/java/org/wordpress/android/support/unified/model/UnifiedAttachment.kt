@@ -13,6 +13,7 @@ data class UnifiedAttachment(
         get() = when {
             contentType.startsWith("image/") -> AttachmentType.Image
             contentType.startsWith("video/") -> AttachmentType.Video
+            contentType.equals("text/html", ignoreCase = true) -> AttachmentType.Link
             else -> AttachmentType.Other
         }
 }
