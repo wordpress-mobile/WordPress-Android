@@ -8,13 +8,12 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.network.TrackNetworkRequestsInterceptor
 import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpApiClientProvider
-import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpNetworkAvailabilityProvider
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.modules.UI_THREAD
+import org.wordpress.android.networking.restapi.WpComApiClientProvider
 import org.wordpress.android.ui.dataview.DataViewDropdownItem
 import org.wordpress.android.ui.dataview.DataViewFieldType
 import org.wordpress.android.ui.dataview.DataViewItem
@@ -44,8 +43,7 @@ class ApplicationPasswordsViewModel @Inject constructor(
     sharedPrefs: SharedPreferences,
     networkUtilsWrapper: NetworkUtilsWrapper,
     @Named(IO_THREAD) ioDispatcher: CoroutineDispatcher,
-    trackNetworkRequestsInterceptor: TrackNetworkRequestsInterceptor,
-    networkAvailabilityProvider: WpNetworkAvailabilityProvider,
+    wpComApiClientProvider: WpComApiClientProvider,
 ) : DataViewViewModel(
     mainDispatcher = mainDispatcher,
     appLogWrapper = appLogWrapper,
@@ -54,8 +52,7 @@ class ApplicationPasswordsViewModel @Inject constructor(
     selectedSiteRepository = selectedSiteRepository,
     accountStore = accountStore,
     ioDispatcher = ioDispatcher,
-    trackNetworkRequestsInterceptor = trackNetworkRequestsInterceptor,
-    networkAvailabilityProvider = networkAvailabilityProvider
+    wpComApiClientProvider = wpComApiClientProvider
 ) {
     init {
         initialize()
