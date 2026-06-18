@@ -172,7 +172,7 @@ private fun FullEntityAnyPostWithEditContext.toPageUiModel(
                 ?: page.excerpt?.rendered
                 ?: ""
             ).let { HtmlUtils.fastStripHtml(it).trim() },
-        date = PostRsDateFormatter.format(page.dateGmt, page.status),
+        date = PostRsDateFormatter.format(page.dateGmt, page.status, useTimeForScheduled = true),
         lastModified = DateTimeUtils.iso8601UTCFromDate(page.modifiedGmt),
         link = page.link,
         hasPassword = !page.password.isNullOrEmpty(),
