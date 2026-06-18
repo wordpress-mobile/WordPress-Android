@@ -110,6 +110,7 @@ internal class PagesRsListViewModel @Inject constructor(
     // The parent picker has its own observable collection so it can page through (and search)
     // the full list of published pages independently of the four tab collections.
     private var parentPickerCollection: ObservableMetadataCollection? = null
+    private var parentPickerJob: Job? = null
     private var parentPickerExcludedIds: Set<Long> = emptySet()
     private val _parentPickerQuery = MutableStateFlow("")
 
@@ -323,9 +324,8 @@ internal class PagesRsListViewModel @Inject constructor(
      * failure (e.g. a refresh resuming on an already-closed collection) could write stale
      * error state into the freshly rebuilt tabs.
      */
-    private fun launchCollectionJob(block: suspend CoroutineScope.() -> Unit) {
+    private fun launchCollectionJob(block: suspend CoroutineScope.() -> Unit): Job =
         collectionsScope.launch(block = block)
-    }
 
     /**
      * A child scope of [viewModelScope] (so it is torn down with the ViewModel) that can
@@ -589,7 +589,11 @@ internal class PagesRsListViewModel @Inject constructor(
     }
 
     private fun initParentPickerCollection(site: SiteModel, query: String) {
-        launchCollectionJob {
+        // Cancel any in-flight init so a stale, out-of-order query can't overwrite the
+        // collection assigned for the latest query (see createParentPickerCollection for the
+        // cancellation-safe cleanup that closes the half-built collection).
+        parentPickerJob?.cancel()
+        parentPickerJob = launchCollectionJob {
             @Suppress("TooGenericExceptionCaught")
             try {
                 val collection = createParentPickerCollection(site, query)
@@ -731,6 +735,8 @@ internal class PagesRsListViewModel @Inject constructor(
     }
 
     private fun closeParentPickerCollection() {
+        parentPickerJob?.cancel()
+        parentPickerJob = null
         parentPickerCollection?.close()
         parentPickerCollection = null
     }
