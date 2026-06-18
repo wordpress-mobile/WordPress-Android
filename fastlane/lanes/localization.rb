@@ -407,6 +407,18 @@ platform :android do
       next
     end
 
+    # Prune translations whose key is no longer in the source strings (GlotPress can still serve them),
+    # which would otherwise fail Lint's `ExtraTranslation` check. Done as a separate commit on top of the
+    # download so the PR shows exactly what was pruned vs. what was downloaded.
+    main_res = File.join('WordPress', 'src', 'main', 'res')
+    jetpack_res = File.join('WordPress', 'src', 'jetpack', 'res')
+    android_prune_orphaned_translations(res_dir: main_res)
+    android_prune_orphaned_translations(
+      res_dir: jetpack_res,
+      additional_source_strings_paths: [File.join(main_res, 'values', 'strings.xml')]
+    )
+    Fastlane::Helper::GitHelper.commit(message: 'Prune orphaned translations', files: :all)
+
     push_to_git_remote(remote_branch: TRANSLATIONS_SYNC_BRANCH, tags: false, force: true, set_upstream: true)
 
     # `find_or_create_pull_request` resolves the GitHub token the standard way (GITHUB_TOKEN) and only
