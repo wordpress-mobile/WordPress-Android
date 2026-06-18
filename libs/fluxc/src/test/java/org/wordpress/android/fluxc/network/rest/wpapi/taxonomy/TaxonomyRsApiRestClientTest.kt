@@ -45,6 +45,7 @@ import uniffi.wp_api.WpNetworkHeaderMap
 
 @ExperimentalCoroutinesApi
 @RunWith(RobolectricTestRunner::class)
+@Suppress("LargeClass")
 class TaxonomyRsApiRestClientTest {
     @Mock
     private lateinit var dispatcher: Dispatcher
