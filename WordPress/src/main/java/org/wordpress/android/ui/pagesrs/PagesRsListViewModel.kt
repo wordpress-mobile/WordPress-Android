@@ -17,6 +17,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.job
@@ -51,6 +52,7 @@ import rs.wordpress.cache.kotlin.hasMorePages
 import uniffi.wp_api.PostEndpointType
 import uniffi.wp_api.PostStatus
 import uniffi.wp_api.PostUpdateParams
+import uniffi.wp_mobile.FetchException
 import uniffi.wp_mobile.PostListFilter
 import uniffi.wp_mobile.PostService
 import uniffi.wp_mobile_cache.ListState
@@ -106,6 +108,13 @@ internal class PagesRsListViewModel @Inject constructor(
     private val _parentPicker = MutableStateFlow<PageRsParentPickerState?>(null)
     val parentPicker: StateFlow<PageRsParentPickerState?> = _parentPicker.asStateFlow()
 
+    // The parent picker has its own observable collection so it can page through (and search)
+    // the full list of published pages independently of the four tab collections.
+    private var parentPickerCollection: ObservableMetadataCollection? = null
+    private var parentPickerJob: Job? = null
+    private var parentPickerExcludedIds: Set<Long> = emptySet()
+    private val _parentPickerQuery = MutableStateFlow("")
+
     val site: SiteModel? = selectedSiteRepository.getSelectedSite()
 
     val avatarUrl: String? = accountStore.account?.avatarUrl
@@ -140,7 +149,28 @@ internal class PagesRsListViewModel @Inject constructor(
                         initTab(activeSearchTab)
                     }
             }
+            @OptIn(FlowPreview::class)
+            viewModelScope.launch {
+                _parentPickerQuery
+                    .debounce(SEARCH_DEBOUNCE_MS)
+                    .distinctUntilChanged()
+                    .collect { query -> onParentPickerQueryDebounced(query) }
+            }
         }
+    }
+
+    /**
+     * Rebuilds the parent picker's collection for a (debounced) search query. Queries shorter
+     * than [MIN_SEARCH_QUERY_LENGTH] are treated as blank so the full list is shown. No-ops if
+     * the picker has been dismissed while the debounce was pending.
+     */
+    private fun onParentPickerQueryDebounced(query: String) {
+        val site = this.site ?: return
+        if (_parentPicker.value == null) return
+        val effective = if (query.length >= MIN_SEARCH_QUERY_LENGTH) query else ""
+        closeParentPickerCollection()
+        updateParentPicker { copy(candidates = emptyList(), isLoading = true, error = null) }
+        initParentPickerCollection(site, effective)
     }
 
     @MainThread
@@ -295,9 +325,8 @@ internal class PagesRsListViewModel @Inject constructor(
      * failure (e.g. a refresh resuming on an already-closed collection) could write stale
      * error state into the freshly rebuilt tabs.
      */
-    private fun launchCollectionJob(block: suspend CoroutineScope.() -> Unit) {
+    private fun launchCollectionJob(block: suspend CoroutineScope.() -> Unit): Job =
         collectionsScope.launch(block = block)
-    }
 
     /**
      * A child scope of [viewModelScope] (so it is torn down with the ViewModel) that can
@@ -531,44 +560,213 @@ internal class PagesRsListViewModel @Inject constructor(
     }
 
     /**
-     * Opens the "Set Parent" bottom sheet. Candidates are the published pages currently
-     * loaded in any tab, excluding the page itself and its descendants (re-parenting a page
-     * under its own subtree would create a cycle), matching the legacy parent picker rules.
+     * Opens the "Set Parent" bottom sheet, backed by its own observable collection so the user
+     * can page through (and server-search) every eligible published page rather than only the
+     * pages already loaded into the tabs.
      *
-     * Known limitation: only pages already loaded into the tabs are offered, so on large
-     * sites pages beyond the loaded ones can't be chosen and the sheet's search field only
-     * filters the loaded candidates. A follow-up could page through the full list instead.
+     * The page itself and its descendants known from loaded data are excluded so re-parenting
+     * can't form a cycle. Descendants on not-yet-loaded pages can't be excluded up front; if
+     * such a page were chosen, WordPress core's loop check resets the parent to top level rather
+     * than creating a cycle, and the subsequent refresh re-renders the real parent.
      */
     @MainThread
     fun openParentPicker(remotePageId: Long) {
-        val allPages = _tabStates.value.values
-            .flatMap { state -> state.pages.map { it.page } }
-            .distinctBy { it.remotePageId }
-        val published = allPages
-            .filter { it.status is PostStatus.Publish || it.status is PostStatus.Private }
+        val site = this.site ?: return
         val page = findPage(remotePageId) ?: return
         // Descendants are collected across pages of every status: a published descendant
         // reached through a draft intermediate must still be excluded to prevent a cycle.
-        val descendantIds = collectDescendantIds(remotePageId, allPages)
-        val candidates = published
-            .filter { it.remotePageId != remotePageId && it.remotePageId !in descendantIds }
-            .map { PageRsParentCandidate(it.remotePageId, it.title) }
+        val allPages = _tabStates.value.values
+            .flatMap { state -> state.pages.map { it.page } }
+            .distinctBy { it.remotePageId }
+        parentPickerExcludedIds = collectDescendantIds(remotePageId, allPages) + remotePageId
+        _parentPickerQuery.value = ""
         _parentPicker.value = PageRsParentPickerState(
             pageId = remotePageId,
             currentParentId = page.parentId,
-            candidates = candidates
+            candidates = emptyList(),
+            isLoading = true
         )
+        initParentPickerCollection(site, query = "")
+    }
+
+    private fun initParentPickerCollection(site: SiteModel, query: String) {
+        // Cancel any in-flight init so a stale, out-of-order query can't overwrite the
+        // collection assigned for the latest query (see createParentPickerCollection for the
+        // cancellation-safe cleanup that closes the half-built collection).
+        parentPickerJob?.cancel()
+        parentPickerJob = launchCollectionJob {
+            @Suppress("TooGenericExceptionCaught")
+            try {
+                val collection = createParentPickerCollection(site, query)
+                parentPickerCollection = collection
+                registerParentPickerObservers(collection)
+                loadParentPickerItems()
+                withContext(Dispatchers.IO) { collection.refresh() }
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                AppLog.e(AppLog.T.PAGES, "Failed to init parent picker", e)
+                updateParentPicker { copy(isLoading = false, error = friendlyErrorMessage(e)) }
+            }
+        }
+    }
+
+    /**
+     * Creates the parent picker's observable collection (published + private pages, ordered by
+     * title). Mirrors [createCollection]'s cancellation-safe cleanup so a collection created
+     * after the job was cancelled is closed instead of leaking.
+     */
+    private suspend fun createParentPickerCollection(
+        site: SiteModel,
+        query: String
+    ): ObservableMetadataCollection {
+        var created: ObservableMetadataCollection? = null
+        try {
+            return withContext(Dispatchers.IO) {
+                val service = serviceProvider.getService(site)
+                val filter = PostListFilter(
+                    status = PageRsListTab.PUBLISHED.statuses,
+                    order = PageRsListTab.PUBLISHED.order,
+                    orderby = PageRsListTab.PUBLISHED.orderBy,
+                    search = query.ifBlank { null },
+                    author = emptyList()
+                )
+                service.posts().getObservablePostMetadataCollectionWithEditContext(
+                    endpointType = PostEndpointType.Pages,
+                    filter = filter,
+                    perPage = PAGE_SIZE.toUInt()
+                ).also { created = it }
+            }
+        } catch (e: CancellationException) {
+            withContext(NonCancellable + Dispatchers.IO) { created?.close() }
+            throw e
+        }
+    }
+
+    private fun registerParentPickerObservers(collection: ObservableMetadataCollection) {
+        collection.addDataObserver {
+            launchCollectionJob { loadParentPickerItems() }
+        }
+        collection.addListInfoObserver {
+            launchCollectionJob { updateParentPickerListInfo() }
+        }
+    }
+
+    private suspend fun loadParentPickerItems() {
+        val collection = parentPickerCollection ?: return
+        @Suppress("TooGenericExceptionCaught")
+        try {
+            val (items, listInfo) = withContext(Dispatchers.IO) {
+                collection.loadItems().map { it.state.toPageUiModel(it.id) } to collection.listInfo()
+            }
+            val candidates = items
+                .filter { it.remotePageId !in parentPickerExcludedIds }
+                .filter { it.status is PostStatus.Publish || it.status is PostStatus.Private }
+                .map { PageRsParentCandidate(it.remotePageId, it.title) }
+            // Don't publish an empty result while a load is still in progress: loadItems() emits
+            // transient empty/partial sets during a refresh (and once before it starts), and
+            // flipping to the "no results" / spinner state on each of those makes the list blink.
+            // Wait until results arrive, or the fetch finishes and the list is genuinely empty
+            // (isLoading is cleared by updateParentPickerListInfo when fetching ends).
+            val loadInProgress = listInfo?.state == ListState.FETCHING_FIRST_PAGE ||
+                _parentPicker.value?.isLoading == true
+            if (candidates.isEmpty() && loadInProgress) return
+            updateParentPicker { copy(candidates = candidates, isLoading = false, error = null) }
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            AppLog.e(AppLog.T.PAGES, "Failed to load parent picker items", e)
+        }
+    }
+
+    private suspend fun updateParentPickerListInfo() {
+        val collection = parentPickerCollection ?: return
+        @Suppress("TooGenericExceptionCaught")
+        val listInfo = try {
+            withContext(Dispatchers.IO) { collection.listInfo() }
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            AppLog.e(AppLog.T.PAGES, "Failed to read parent picker list info", e)
+            return
+        }
+        val morePages = listInfo?.hasMorePages ?: false
+        val fetchingFirstPage = listInfo?.state == ListState.FETCHING_FIRST_PAGE
+        val isError = listInfo?.state == ListState.ERROR
+        val hasData = _parentPicker.value?.candidates?.isNotEmpty() == true
+        updateParentPicker {
+            copy(
+                isLoading = isLoading && fetchingFirstPage,
+                isLoadingMore = listInfo?.state == ListState.FETCHING_NEXT_PAGE,
+                canLoadMore = morePages,
+                error = if (isError && !hasData) {
+                    PostRsErrorUtils.friendlyErrorMessage(
+                        null, null, resourceProvider, networkUtilsWrapper
+                    )
+                } else null
+            )
+        }
+    }
+
+    @MainThread
+    fun onParentSearchChanged(query: String) {
+        if (_parentPicker.value == null) return
+        _parentPickerQuery.value = query
+        updateParentPicker { copy(query = query) }
+    }
+
+    @MainThread
+    fun onLoadMoreParents() {
+        val collection = parentPickerCollection ?: return
+        val current = _parentPicker.value
+        if (current == null || current.isLoadingMore || !current.canLoadMore) return
+
+        updateParentPicker { copy(isLoadingMore = true) }
+        launchCollectionJob {
+            @Suppress("TooGenericExceptionCaught")
+            try {
+                withContext(Dispatchers.IO) { collection.loadNextPage() }
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: FetchException.StaleLoadMore) {
+                // A concurrent refresh superseded this page request. The list info observer
+                // reconciles paging state, so just clear the spinner — this isn't a user error.
+                AppLog.d(AppLog.T.PAGES, "Ignoring stale parent picker load-more: ${e.message}")
+                updateParentPicker { copy(isLoadingMore = false) }
+            } catch (e: Exception) {
+                AppLog.e(AppLog.T.PAGES, "Failed to load more parents", e)
+                updateParentPicker { copy(isLoadingMore = false) }
+                _snackbarMessages.trySend(SnackbarMessage(friendlyErrorMessage(e)))
+            }
+        }
     }
 
     @MainThread
     fun onParentPickerDismissed() {
         _parentPicker.value = null
+        _parentPickerQuery.value = ""
+        closeParentPickerCollection()
+    }
+
+    private fun closeParentPickerCollection() {
+        parentPickerJob?.cancel()
+        parentPickerJob = null
+        parentPickerCollection?.close()
+        parentPickerCollection = null
+    }
+
+    private inline fun updateParentPicker(
+        update: PageRsParentPickerState.() -> PageRsParentPickerState
+    ) {
+        _parentPicker.value = _parentPicker.value?.update()
     }
 
     @MainThread
     fun onParentSelected(parentId: Long) {
         val picker = _parentPicker.value ?: return
         _parentPicker.value = null
+        _parentPickerQuery.value = ""
+        closeParentPickerCollection()
         val site = this.site
         if (parentId == picker.currentParentId || site == null) return
         executePageMutation(
@@ -1114,6 +1312,10 @@ internal class PagesRsListViewModel @Inject constructor(
         resolveImageJobs.clear()
         resolveAuthorJobs.values.forEach { it.cancel() }
         resolveAuthorJobs.clear()
+        closeParentPickerCollection()
+        parentPickerExcludedIds = emptySet()
+        _parentPicker.value = null
+        _parentPickerQuery.value = ""
         _tabStates.value = emptyMap()
     }
 
