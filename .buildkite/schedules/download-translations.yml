@@ -16,9 +16,10 @@ steps:
     command: .buildkite/commands/download-translations.sh
     plugins: [$CI_TOOLKIT]
 
-notify:
-  - slack:
-      channels:
-        - "#android-core-notifs"
-      message: "Failed to sync translations from GlotPress."
-    if: build.state == "failed"
+# Failure notifications are disabled for now. If re-enabled, they go to #wpmobile.
+# notify:
+#   - slack:
+#       channels:
+#         - "#wpmobile"
+#       message: "Failed to sync translations from GlotPress."
+#     if: build.state == "failed"
