@@ -22,13 +22,12 @@ object PostRsDateFormatter {
 
     /**
      * Formats a GMT [Date] for display, matching the iOS posts/pages list:
-     * - Scheduled posts show an abbreviated absolute date; when [useTimeForScheduled] is true the
-     *   time of day is included too (e.g. "Dec 15, 2025, 9:00 AM") so the user can see when a
-     *   scheduled page will publish.
+     * - Scheduled posts show an absolute date with the time of day (e.g. "Dec 15, 2025, 9:00 AM")
+     *   so the user can see when the post or page will publish.
      * - Other posts within the last week show relative time ("2 days ago", "Yesterday").
      * - Older posts show an abbreviated absolute date ("Dec 15, 2025").
      */
-    fun format(dateGmt: Date, status: PostStatus?, useTimeForScheduled: Boolean = false): String {
+    fun format(dateGmt: Date, status: PostStatus?): String {
         val millis = dateGmt.time
         val now = System.currentTimeMillis()
         val isScheduled = status is PostStatus.Future
@@ -41,7 +40,7 @@ object PostRsDateFormatter {
                 now,
                 DateUtils.MINUTE_IN_MILLIS
             ).toString()
-            isScheduled && useTimeForScheduled -> formatAbbrDateTime(millis)
+            isScheduled -> formatAbbrDateTime(millis)
             else -> formatAbbrDate(millis)
         }
     }

@@ -10,28 +10,16 @@ import java.util.TimeZone
 
 class PostRsDateFormatterTest {
     @Test
-    fun `scheduled date includes the time of day when requested`() {
+    fun `scheduled date includes the time of day`() {
         withFixedLocaleAndZone {
             val date = Date(FIXED_MILLIS)
 
-            val dateOnly = PostRsDateFormatter.format(date, PostStatus.Future, useTimeForScheduled = false)
-            val withTime = PostRsDateFormatter.format(date, PostStatus.Future, useTimeForScheduled = true)
+            val formatted = PostRsDateFormatter.format(date, PostStatus.Future)
+            val dateOnly = DateFormat.getDateInstance(DateFormat.MEDIUM).format(date)
 
-            // The time-of-day form appends the time to the same medium date (iOS parity).
-            assertThat(withTime).startsWith(dateOnly)
-            assertThat(withTime).isNotEqualTo(dateOnly)
-        }
-    }
-
-    @Test
-    fun `scheduled date omits the time of day by default`() {
-        withFixedLocaleAndZone {
-            val date = Date(FIXED_MILLIS)
-
-            val default = PostRsDateFormatter.format(date, PostStatus.Future)
-            val dateOnly = PostRsDateFormatter.format(date, PostStatus.Future, useTimeForScheduled = false)
-
-            assertThat(default).isEqualTo(dateOnly)
+            // Scheduled dates show the medium date plus the time of day (iOS parity).
+            assertThat(formatted).startsWith(dateOnly)
+            assertThat(formatted).isNotEqualTo(dateOnly)
         }
     }
 
