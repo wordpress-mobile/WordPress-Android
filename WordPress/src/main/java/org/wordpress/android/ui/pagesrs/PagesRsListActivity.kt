@@ -83,6 +83,8 @@ class PagesRsListActivity : BaseAppCompatActivity() {
                     onPageClick = viewModel::openPage,
                     onPageMenuAction = viewModel::onPageMenuAction,
                     onParentSelected = viewModel::onParentSelected,
+                    onParentSearchChanged = viewModel::onParentSearchChanged,
+                    onLoadMoreParents = viewModel::onLoadMoreParents,
                     onParentPickerDismissed = viewModel::onParentPickerDismissed,
                     onAddNewPage = viewModel::onAddNewPage
                 )
