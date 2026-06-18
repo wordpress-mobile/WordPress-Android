@@ -70,6 +70,10 @@ Language: sv_SE
     <string name="post_rs_settings_add_term">Lägg till ny</string>
     <string name="post_rs_settings_choose_from_device">Välj från enhet</string>
     <string name="post_rs_settings_choose_from_wp_media">Välj från WP-media</string>
+    <string name="stats_new_stats_suggestion_negative">Kanske senare</string>
+    <string name="stats_new_stats_suggestion_positive">Prova den</string>
+    <string name="stats_new_stats_suggestion_message">Vi har byggt en helt ny statistikupplevelse. Vill du prova? Du kan alltid gå tillbaka till den gamla från statistikmenyn.</string>
+    <string name="stats_new_stats_suggestion_title">En ny statistikupplevelse</string>
     <string name="gutenberg_kit_announcement_learn_more">Lär dig mer</string>
     <string name="gutenberg_kit_announcement_maybe_later">Kanske senare</string>
     <string name="gutenberg_kit_announcement_activate">Aktivera</string>
@@ -94,6 +98,8 @@ Language: sv_SE
     <string name="new_stats_intro_any_period_title">Valfri period, valfritt intervall</string>
     <string name="new_stats_intro_subtitle">Ett bättre sätt att förstå din webbplats prestanda.</string>
     <string name="new_stats_intro_title">Ny statistik</string>
+    <string name="stats_switch_to_old_stats">Inaktivera Ny statistik</string>
+    <string name="stats_try_new_stats">Prova Ny statistik</string>
     <string name="stats_devices_percentage_header">Procent</string>
     <string name="stats_devices_device_header">Enhet</string>
     <string name="stats_devices_platform">Plattform</string>

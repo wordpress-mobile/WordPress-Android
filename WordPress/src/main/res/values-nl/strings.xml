@@ -74,6 +74,10 @@ Language: nl
     <string name="post_rs_settings_add_term">Nieuwe toevoegen</string>
     <string name="post_rs_settings_choose_from_device">Van apparaat kiezen</string>
     <string name="post_rs_settings_choose_from_wp_media">Uit WP Media kiezen</string>
+    <string name="stats_new_stats_suggestion_negative">Misschien later</string>
+    <string name="stats_new_stats_suggestion_positive">Probeer het uit</string>
+    <string name="stats_new_stats_suggestion_message">We hebben een geheel nieuwe statistiekenervaring gebouwd. Wil je deze eens proberen? Je kunt altijd terug naar de oude vanuit het statistieken menu.</string>
+    <string name="stats_new_stats_suggestion_title">Een nieuwe statistiekenervaring</string>
     <string name="gutenberg_kit_announcement_learn_more">Lees verder</string>
     <string name="gutenberg_kit_announcement_maybe_later">Misschien later</string>
     <string name="gutenberg_kit_announcement_activate">Activeren</string>
@@ -98,6 +102,8 @@ Language: nl
     <string name="new_stats_intro_any_period_title">Elke periode, elk bereik</string>
     <string name="new_stats_intro_subtitle">Een betere manier om de prestaties van je site te begrijpen.</string>
     <string name="new_stats_intro_title">Nieuwe statistieken</string>
+    <string name="stats_switch_to_old_stats">Nieuwe statistieken uitschakelen</string>
+    <string name="stats_try_new_stats">Probeer nieuwe statistieken</string>
     <string name="stats_devices_percentage_header">Percentage</string>
     <string name="stats_devices_device_header">Apparaat</string>
     <string name="stats_devices_platform">Platform</string>

@@ -74,6 +74,10 @@ Language: ro
     <string name="post_rs_settings_add_term">Adaugă nou</string>
     <string name="post_rs_settings_choose_from_device">Alege de pe dispozitiv</string>
     <string name="post_rs_settings_choose_from_wp_media">Alege din Media WP</string>
+    <string name="stats_new_stats_suggestion_negative">Poate mai târziu</string>
+    <string name="stats_new_stats_suggestion_positive">Încearcă</string>
+    <string name="stats_new_stats_suggestion_message">Am creat o experiență complet nouă pentru Statistici. Vrei să o încerci? Poți oricând să revii la cea veche în meniul Statistici.</string>
+    <string name="stats_new_stats_suggestion_title">O experiență nouă pentru Statistici</string>
     <string name="gutenberg_kit_announcement_learn_more">Află mai multe</string>
     <string name="gutenberg_kit_announcement_maybe_later">Poate mai târziu</string>
     <string name="gutenberg_kit_announcement_activate">Activează</string>
@@ -98,6 +102,8 @@ Language: ro
     <string name="new_stats_intro_any_period_title">Orice perioadă, orice interval</string>
     <string name="new_stats_intro_subtitle">O modalitate mai bună pentru a înțelege performanța pe site-ul tău.</string>
     <string name="new_stats_intro_title">Statistici noi</string>
+    <string name="stats_switch_to_old_stats">Dezactivează Statistici noi</string>
+    <string name="stats_try_new_stats">Încearcă Statistici noi</string>
     <string name="stats_devices_percentage_header">Procent</string>
     <string name="stats_devices_device_header">Dispozitiv</string>
     <string name="stats_devices_platform">Platformă</string>

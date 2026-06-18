@@ -73,6 +73,10 @@ Language: ar
     <string name="post_rs_settings_add_term">إضافة جديد</string>
     <string name="post_rs_settings_choose_from_device">الاختيار من الجهاز</string>
     <string name="post_rs_settings_choose_from_wp_media">الاختيار من وسائط WP</string>
+    <string name="stats_new_stats_suggestion_negative">ربما لاحقًا</string>
+    <string name="stats_new_stats_suggestion_positive">جرّبها الآن</string>
+    <string name="stats_new_stats_suggestion_message">طوّرنا تجربة جديدة كليًا للإحصاءات. هل ترغب في تجربتها؟ يمكنك دائمًا العودة إلى التجربة السابقة من قائمة الإحصاءات.</string>
+    <string name="stats_new_stats_suggestion_title">تجربة جديدة للإحصاءات</string>
     <string name="gutenberg_kit_announcement_learn_more">معرفة المزيد</string>
     <string name="gutenberg_kit_announcement_maybe_later">ربما لاحقًا</string>
     <string name="gutenberg_kit_announcement_activate">تفعيل</string>
@@ -97,6 +101,8 @@ Language: ar
     <string name="new_stats_intro_any_period_title">أي فترة، أي نطاق</string>
     <string name="new_stats_intro_subtitle">طريقة أفضل لفهم أداء موقعك الإلكتروني.</string>
     <string name="new_stats_intro_title">إحصاءات جديدة</string>
+    <string name="stats_switch_to_old_stats">تعطيل الإحصاءات الجديدة</string>
+    <string name="stats_try_new_stats">جرب الإحصاءات الجديدة</string>
     <string name="stats_devices_percentage_header">النسبة المئوية</string>
     <string name="stats_devices_device_header">جهاز</string>
     <string name="stats_devices_platform">منصة</string>

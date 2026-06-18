@@ -74,6 +74,10 @@ Language: de
     <string name="post_rs_settings_add_term">Hinzufügen</string>
     <string name="post_rs_settings_choose_from_device">Vom Gerät auswählen</string>
     <string name="post_rs_settings_choose_from_wp_media">Aus der WP-Mediathek auswählen</string>
+    <string name="stats_new_stats_suggestion_negative">Vielleicht später</string>
+    <string name="stats_new_stats_suggestion_positive">Jetzt ausprobieren</string>
+    <string name="stats_new_stats_suggestion_message">Wir haben eine brandneue Statistikansicht entwickelt. Möchtest du sie ausprobieren? Über das Statistikmenü kannst du jederzeit zur alten Ansicht zurückkehren.</string>
+    <string name="stats_new_stats_suggestion_title">Eine neue Statistikerfahrung</string>
     <string name="gutenberg_kit_announcement_learn_more">Mehr erfahren</string>
     <string name="gutenberg_kit_announcement_maybe_later">Vielleicht später</string>
     <string name="gutenberg_kit_announcement_activate">Aktivieren</string>
@@ -98,6 +102,8 @@ Language: de
     <string name="new_stats_intro_any_period_title">Beliebiger Zeitraum, beliebiger Datumsbereich</string>
     <string name="new_stats_intro_subtitle">Eine bessere Möglichkeit, die Leistung deiner Website zu verstehen.</string>
     <string name="new_stats_intro_title">Neue Statistiken</string>
+    <string name="stats_switch_to_old_stats">Neue Statistiken deaktivieren</string>
+    <string name="stats_try_new_stats">Neue Statistiken ausprobieren</string>
     <string name="stats_devices_percentage_header">Prozentsatz</string>
     <string name="stats_devices_device_header">Gerät</string>
     <string name="stats_devices_platform">Plattform</string>

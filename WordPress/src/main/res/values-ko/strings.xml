@@ -71,6 +71,10 @@ Language: ko_KR
     <string name="post_rs_settings_add_term">신규 추가</string>
     <string name="post_rs_settings_choose_from_device">기기에서 선택</string>
     <string name="post_rs_settings_choose_from_wp_media">WP 미디어에서 선택</string>
+    <string name="stats_new_stats_suggestion_negative">나중에</string>
+    <string name="stats_new_stats_suggestion_positive">체험하기</string>
+    <string name="stats_new_stats_suggestion_message">새 통계 환경을 구축했습니다. 사용해 보시겠어요? 언제든지 통계 메뉴에서 이전 환경으로 돌아갈 수 있습니다.</string>
+    <string name="stats_new_stats_suggestion_title">새 통계 환경</string>
     <string name="gutenberg_kit_announcement_learn_more">더 알아보기</string>
     <string name="gutenberg_kit_announcement_maybe_later">나중에</string>
     <string name="gutenberg_kit_announcement_activate">활성화</string>
@@ -95,6 +99,8 @@ Language: ko_KR
     <string name="new_stats_intro_any_period_title">어떤 기간이든, 어떤 범위든</string>
     <string name="new_stats_intro_subtitle">사이트 성과를 더 쉽게 이해하는 방법.</string>
     <string name="new_stats_intro_title">새 통계</string>
+    <string name="stats_switch_to_old_stats">새 통계 비활성화</string>
+    <string name="stats_try_new_stats">새 통계 사용해 보기</string>
     <string name="stats_devices_percentage_header">백분율</string>
     <string name="stats_devices_device_header">기기</string>
     <string name="stats_devices_platform">플랫폼</string>

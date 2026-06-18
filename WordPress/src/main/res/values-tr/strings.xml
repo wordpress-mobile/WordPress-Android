@@ -72,6 +72,10 @@ Language: tr
     <string name="post_rs_settings_add_term">Yeni Ekle</string>
     <string name="post_rs_settings_choose_from_device">Cihazdan seç</string>
     <string name="post_rs_settings_choose_from_wp_media">WP Ortamından Seç</string>
+    <string name="stats_new_stats_suggestion_negative">Belki daha sonra</string>
+    <string name="stats_new_stats_suggestion_positive">Deneyin</string>
+    <string name="stats_new_stats_suggestion_message">Yepyeni bir İstatistikler deneyimi oluşturduk. Bu özelliği denemek ister misiniz? İstatistikler menüsünden her zaman eskisine geri dönebilirsiniz.</string>
+    <string name="stats_new_stats_suggestion_title">Yeni bir İstatistikler deneyimi</string>
     <string name="gutenberg_kit_announcement_learn_more">Daha fazla bilgi edinin</string>
     <string name="gutenberg_kit_announcement_maybe_later">Belki daha sonra</string>
     <string name="gutenberg_kit_announcement_activate">Etkinleştir</string>
@@ -96,6 +100,8 @@ Language: tr
     <string name="new_stats_intro_any_period_title">Herhangi Bir Dönem, Herhangi Bir Aralık</string>
     <string name="new_stats_intro_subtitle">Sitenizin performansını anlamanın daha iyi bir yolu.</string>
     <string name="new_stats_intro_title">Yeni İstatistikler</string>
+    <string name="stats_switch_to_old_stats">Yeni istatistikleri etkisizleştir</string>
+    <string name="stats_try_new_stats">Yeni istatistikleri dene</string>
     <string name="stats_devices_percentage_header">Yüzde</string>
     <string name="stats_devices_device_header">Cihaz</string>
     <string name="stats_devices_platform">Platform</string>

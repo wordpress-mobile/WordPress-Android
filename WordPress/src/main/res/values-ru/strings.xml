@@ -74,6 +74,10 @@ Language: ru
     <string name="post_rs_settings_add_term">Добавить</string>
     <string name="post_rs_settings_choose_from_device">Выбрать с устройства</string>
     <string name="post_rs_settings_choose_from_wp_media">Выбрать из медиатеки WP</string>
+    <string name="stats_new_stats_suggestion_negative">Возможно, позже</string>
+    <string name="stats_new_stats_suggestion_positive">Попробовать</string>
+    <string name="stats_new_stats_suggestion_message">Мы создали совершенно новый интерфейс раздела «Статистика». Хотите попробовать? Вы всегда можете вернуться к старому варианту, перейдя в меню статистики.</string>
+    <string name="stats_new_stats_suggestion_title">Обновлённая статистика</string>
     <string name="gutenberg_kit_announcement_learn_more">Узнать больше</string>
     <string name="gutenberg_kit_announcement_maybe_later">Возможно позже</string>
     <string name="gutenberg_kit_announcement_activate">Активировать</string>
@@ -98,6 +102,8 @@ Language: ru
     <string name="new_stats_intro_any_period_title">Любой период, любой диапазон</string>
     <string name="new_stats_intro_subtitle">Лучший способ понять производительность своего сайта.</string>
     <string name="new_stats_intro_title">Новая статистика</string>
+    <string name="stats_switch_to_old_stats">Отключить новую статистику</string>
+    <string name="stats_try_new_stats">Попробовать новую статистику</string>
     <string name="stats_devices_percentage_header">Процент</string>
     <string name="stats_devices_device_header">Устройство</string>
     <string name="stats_devices_platform">Платформа</string>

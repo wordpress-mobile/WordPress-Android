@@ -68,6 +68,10 @@ Language: it
     <string name="post_rs_settings_add_term">Aggiungi</string>
     <string name="post_rs_settings_choose_from_device">Scegli da dispositivo</string>
     <string name="post_rs_settings_choose_from_wp_media">Scegli dagli elementi multimediali di WP</string>
+    <string name="stats_new_stats_suggestion_negative">Forse dopo</string>
+    <string name="stats_new_stats_suggestion_positive">Prova</string>
+    <string name="stats_new_stats_suggestion_message">Abbiamo creato una nuova esperienza di Statistiche. Vuoi provare? Puoi sempre tornare alla versione precedente dal menu Statistiche.</string>
+    <string name="stats_new_stats_suggestion_title">Una nuova esperienza di Statistiche</string>
     <string name="gutenberg_kit_announcement_learn_more">Scopri di più</string>
     <string name="gutenberg_kit_announcement_maybe_later">Forse dopo</string>
     <string name="gutenberg_kit_announcement_activate">Attiva</string>
@@ -92,6 +96,8 @@ Language: it
     <string name="new_stats_intro_any_period_title">Qualsiasi periodo, qualsiasi intervallo</string>
     <string name="new_stats_intro_subtitle">Un modo migliore per capire le prestazioni del tuo sito.</string>
     <string name="new_stats_intro_title">Nuove statistiche</string>
+    <string name="stats_switch_to_old_stats">Disattiva le Nuove statistiche</string>
+    <string name="stats_try_new_stats">Prova le Nuove statistiche</string>
     <string name="stats_devices_percentage_header">Percentuale</string>
     <string name="stats_devices_device_header">Dispositivo</string>
     <string name="stats_devices_platform">Piattaforma</string>

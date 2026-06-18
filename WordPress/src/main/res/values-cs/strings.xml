@@ -74,6 +74,10 @@ Language: cs_CZ
     <string name="post_rs_settings_add_term">Přidat nový</string>
     <string name="post_rs_settings_choose_from_device">Vyberte zařízení</string>
     <string name="post_rs_settings_choose_from_wp_media">Vyberte si z WP Media</string>
+    <string name="stats_new_stats_suggestion_negative">Možná později</string>
+    <string name="stats_new_stats_suggestion_positive">Vyzkoušejte to</string>
+    <string name="stats_new_stats_suggestion_message">Připravili jsme pro vás zcela nové rozhraní statistik. Chcete si ho vyzkoušet? V nabídce „Statistiky“ se můžete kdykoli vrátit ke starému rozhraní.</string>
+    <string name="stats_new_stats_suggestion_title">Nové prostředí pro statistiky</string>
     <string name="gutenberg_kit_announcement_learn_more">Další informace</string>
     <string name="gutenberg_kit_announcement_maybe_later">Možná později</string>
     <string name="gutenberg_kit_announcement_activate">Aktivovat</string>
@@ -98,6 +102,8 @@ Language: cs_CZ
     <string name="new_stats_intro_any_period_title">Jakékoli období, jakýkoli rozsah</string>
     <string name="new_stats_intro_subtitle">Lepší způsob, jak porozumět výkonu vašeho webu.</string>
     <string name="new_stats_intro_title">Nové statistiky</string>
+    <string name="stats_switch_to_old_stats">Zakázat nové statistiky</string>
+    <string name="stats_try_new_stats">Vyzkoušejte nové statistiky</string>
     <string name="stats_devices_percentage_header">Procento</string>
     <string name="stats_devices_device_header">Zařízení</string>
     <string name="stats_devices_platform">Platforma</string>

@@ -13,6 +13,8 @@ Language: sq_AL
     <string name="new_stats_intro_any_period_title">Çfarëdo Periudhe, Çfarëdo Intervali</string>
     <string name="new_stats_intro_subtitle">Një mënyrë më e mirë për të kuptuar funksionimin e sajtit tuaj.</string>
     <string name="new_stats_intro_title">Statistika të Reja</string>
+    <string name="stats_switch_to_old_stats">Çaktivizo statistikat e reja</string>
+    <string name="stats_try_new_stats">Provoni statistikat e reja</string>
     <string name="stats_devices_percentage_header">Percentage</string>
     <string name="stats_devices_device_header">Pajisje</string>
     <string name="stats_devices_platform">Platformë</string>
