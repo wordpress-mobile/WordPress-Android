@@ -27,6 +27,11 @@ class UnifiedAttachmentTest {
     }
 
     @Test
+    fun `text html with charset parameter maps to Link`() {
+        assertThat(attachment("text/html; charset=utf-8").type).isEqualTo(AttachmentType.Link)
+    }
+
+    @Test
     fun `other text and binary content types map to Other`() {
         assertThat(attachment("text/plain").type).isEqualTo(AttachmentType.Other)
         assertThat(attachment("application/pdf").type).isEqualTo(AttachmentType.Other)
