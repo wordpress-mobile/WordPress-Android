@@ -244,7 +244,6 @@ class TaxonomyRsApiRestClient @Inject constructor(
         }
     }
 
-    @Suppress("ReturnCount")
     private suspend fun fetchTerms(
         termEndpointType: TermEndpointType,
         site: SiteModel
