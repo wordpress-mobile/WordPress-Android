@@ -1,7 +1,6 @@
 package org.wordpress.android.fluxc.model;
 
 import androidx.annotation.IntDef;
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.yarolegovich.wellsql.core.Identifiable;
