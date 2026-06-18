@@ -90,6 +90,8 @@ internal data class PageRsUiModel(
     @StringRes val statusLabelResId: Int = 0,
     val authorId: Long = 0L,
     val authorDisplayName: String? = null,
+    val featuredImageId: Long = 0L,
+    val featuredImageUrl: String? = null,
     val isTrashed: Boolean = false,
     val actions: List<PageRsMenuAction> = emptyList(),
     val badges: List<Int> = emptyList(),
@@ -169,6 +171,7 @@ private fun FullEntityAnyPostWithEditContext.toPageUiModel(
         status = page.status,
         statusLabelResId = if (showStatus) page.status.toLabel() else 0,
         authorId = page.author ?: 0L,
+        featuredImageId = page.featuredMedia ?: 0L,
         isTrashed = page.status is PostStatus.Trash,
         badges = buildList {
             if (page.status is PostStatus.Private) {
