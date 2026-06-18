@@ -78,6 +78,7 @@
     <string name="refresh">Refresh</string>
     <string name="blog_not_found">An error occurred when accessing this blog</string>
     <string name="post_not_found">An error occurred when loading the post. Refresh your posts and try again.</string>
+    <string name="page_not_found">An error occurred when loading the page. Refresh your pages and try again.</string>
     <string name="sign_in">Log in</string>
     <string name="signing_out">Logging out…</string>
     <string name="sign_in_wpcom">Log in to WordPress.com</string>
@@ -108,7 +109,6 @@
     <string name="local_draft">Local draft</string>
     <string name="local_changes">Local changes</string>
     <string name="continue_label">Continue</string>
-    <string name="beta_label">Beta</string>
     <string name="publish_now">Publish Now</string>
     <string name="update_now">Update Now</string>
     <string name="status_and_visibility">Status &amp; Visibility</string>
@@ -1025,7 +1025,14 @@
     <string name="new_stats_intro_trends_title">Trends at a Glance</string>
     <string name="new_stats_intro_trends_desc">Every metric shows how it\'s trending compared to the previous period, so you always know if you\'re growing.</string>
     <string name="new_stats_intro_footer">You can turn off New Stats from the overflow menu in the Stats screen.</string>
+    <string name="experimental_rs_pages_list">New Pages List</string>
+    <string name="experimental_rs_pages_list_description">Show pages list in a more modern UI for WordPress.com and self-hosted sites with application passwords</string>
     <string name="post_rs_failed_to_load">Failed to load post</string>
+    <string name="page_rs_failed_to_load">Failed to load page</string>
+    <string name="page_rs_copy_url">Copy URL</string>
+    <string name="page_rs_confirm_trash_message">Are you sure you want to trash this page?</string>
+    <string name="page_rs_move_trashed_page_to_draft_dialog_title">Move page to Drafts?</string>
+    <string name="page_rs_move_trashed_page_to_draft_dialog_message">Trashed pages can\'t be edited. Do you want to change the status of this page to \"draft\" so you can work on it?</string>
     <string name="post_rs_confirm_trash_message">Are you sure you want to trash this post?</string>
     <string name="post_rs_confirm_delete_message">This will permanently delete this post. This action cannot be undone.</string>
     <string name="post_rs_trashed">Post moved to trash</string>
@@ -2785,10 +2792,6 @@
     <string name="support_screen_how_can_we_help_title">How can we help?</string>
     <string name="support_screen_help_center_title">Help Center</string>
     <string name="support_screen_help_center_description">Documentation and Tutorials to help you get started</string>
-    <string name="support_screen_ask_bots_title">Ask the Bots</string>
-    <string name="support_screen_ask_bots_description">Get quick answers to common questions</string>
-    <string name="support_screen_ask_happiness_engineers_title">Ask the Happiness Engineers</string>
-    <string name="support_screen_ask_happiness_engineers_description">For your tough questions. We\'ll reply via email</string>
     <string name="support_screen_diagnostics_section_title">Diagnostics</string>
     <string name="support_screen_application_logs_title">Application Logs</string>
     <string name="support_screen_application_logs_description">Advanced tool to debug issues</string>
@@ -4714,16 +4717,8 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="menu_item_accessibility_description">Level %1$d, %2$s, %3$s</string>
 
     <!-- AI Bot Support - Conversations List Screen -->
-    <string name="ai_bot_conversations_title">Conversations</string>
-    <string name="ai_bot_back_button_content_description">Back</string>
-    <string name="ai_bot_new_conversation_content_description">New conversation</string>
-    <string name="ai_bot_generic_error">Something went wrong. Please try again later.</string>
-    <string name="ai_bot_you">You</string>
-    <string name="ai_bot_support_bot">Support Bot</string>
 
     <!-- AI Bot Support - Conversation Detail Screen -->
-    <string name="ai_bot_send_button_content_description">Send</string>
-    <string name="ai_bot_message_input_placeholder">Type a message…</string>
 
     <!-- AI Bot Support - Welcome Header -->
     <string name="ai_bot_welcome_greeting">Howdy %1$s 👋</string>
@@ -4733,8 +4728,6 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="ai_bot_time_just_now">Just now</string>
 
     <!-- HE Support - Conversations List Screen -->
-    <string name="he_support_conversations_title">Support Conversations</string>
-    <string name="he_support_new_conversation_content_description">New conversation</string>
     <string name="he_support_empty_conversations_title">No conversations yet</string>
     <string name="he_support_empty_conversations_message">Start a conversation with our support team to get help with your questions.</string>
     <string name="he_support_empty_conversations_button">Start Conversation</string>
@@ -4771,24 +4764,16 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="he_support_download_video_button">Download Video</string>
 
     <!-- HE Support - New Ticket Screen -->
-    <string name="he_support_contact_support_title">Contact Support</string>
-    <string name="he_support_need_help_with">I need help with</string>
-    <string name="he_support_category_application">Application</string>
-    <string name="he_support_category_jetpack_connection">Jetpack Connection</string>
-    <string name="he_support_category_site_management">Site Management</string>
-    <string name="he_support_category_billing">Billing &amp; Subscriptions</string>
-    <string name="he_support_category_technical_issues">Technical Issues</string>
-    <string name="he_support_category_other">Other</string>
-    <string name="he_support_issue_details">Issue Details</string>
-    <string name="he_support_subject_label">Subject</string>
-    <string name="he_support_subject_placeholder">Brief summary of your issue</string>
-    <string name="he_support_site_address_label">Site Address (Optional)</string>
-    <string name="he_support_site_address_placeholder">https://yoursite.com</string>
-    <string name="he_support_contact_information">Contact Information</string>
-    <string name="he_support_contact_email_message">We\'ll email you at this address.</string>
-    <string name="he_support_send_ticket_button">Send</string>
-    <string name="he_support_generic_error">An error occurred. Please try again later.</string>
     <string name="he_support_forbidden_error">Sorry, you are not allowed to perform this action.</string>
+    <string name="unified_support_conversations_title">Get help</string>
+    <string name="unified_support_generic_error">Something went wrong. Please try again later.</string>
+    <string name="unified_support_message_input_placeholder">Type a message…</string>
+    <string name="unified_support_bot_typing_content_description">Support bot is typing</string>
+    <string name="unified_support_new_conversation_content_description">New conversation</string>
+    <string name="unified_support_status_bot">Oddie bot</string>
+    <string name="unified_support_attachment_match_score">%1$d%% match</string>
+    <string name="support_screen_unified_support_title">Get help</string>
+    <string name="support_screen_unified_support_description">Get answers from our support team, anytime</string>
     <string name="gutenberg_native_1_s_2_s_is_3_s_4_s" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">%1$s. %2$s is %3$s %4$s.</string>
     <string name="gutenberg_native_1_s_currently_selected_2_s" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">%1$s. Currently selected: %2$s</string>
     <string name="gutenberg_native_1_s_transformed_to_2_s" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">%1$s transformed to %2$s</string>
