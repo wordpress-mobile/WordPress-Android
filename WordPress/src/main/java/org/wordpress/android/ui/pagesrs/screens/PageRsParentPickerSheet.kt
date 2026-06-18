@@ -3,6 +3,8 @@ package org.wordpress.android.ui.pagesrs.screens
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -64,7 +66,14 @@ internal fun PageRsParentPickerSheet(
     }
 
     ModalBottomSheet(onDismissRequest = onDismiss) {
-        Column(modifier = Modifier.fillMaxWidth()) {
+        // Pin the sheet to a fixed fraction of the screen so it doesn't resize as the content
+        // region swaps between the spinner, the "no results" message and the (variable-length)
+        // candidate list while searching.
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .fillMaxHeight(SHEET_HEIGHT_FRACTION)
+        ) {
             Text(
                 text = stringResource(R.string.set_parent),
                 style = MaterialTheme.typography.titleLarge,
@@ -84,16 +93,18 @@ internal fun PageRsParentPickerSheet(
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp)
             )
-            when {
-                state.isLoading && state.candidates.isEmpty() ->
-                    CenteredMessage { CircularProgressIndicator() }
-                state.error != null && state.candidates.isEmpty() ->
-                    CenteredMessage { MessageText(state.error) }
-                state.candidates.isEmpty() && state.query.isNotBlank() ->
-                    CenteredMessage {
-                        MessageText(stringResource(R.string.pages_empty_search_result))
-                    }
-                else -> CandidateList(state, listState, onParentSelected)
+            Box(modifier = Modifier.fillMaxWidth().weight(1f)) {
+                when {
+                    state.isLoading && state.candidates.isEmpty() ->
+                        CenteredMessage { CircularProgressIndicator() }
+                    state.error != null && state.candidates.isEmpty() ->
+                        CenteredMessage { MessageText(state.error) }
+                    state.candidates.isEmpty() && state.query.isNotBlank() ->
+                        CenteredMessage {
+                            MessageText(stringResource(R.string.pages_empty_search_result))
+                        }
+                    else -> CandidateList(state, listState, onParentSelected)
+                }
             }
         }
     }
@@ -105,7 +116,7 @@ private fun CandidateList(
     listState: LazyListState,
     onParentSelected: (Long) -> Unit
 ) {
-    LazyColumn(state = listState, modifier = Modifier.fillMaxWidth()) {
+    LazyColumn(state = listState, modifier = Modifier.fillMaxSize()) {
         if (state.query.isBlank()) {
             item(key = "top_level") {
                 ParentCandidateRow(
@@ -146,7 +157,7 @@ private fun CandidateList(
 private fun CenteredMessage(content: @Composable () -> Unit) {
     Box(
         modifier = Modifier
-            .fillMaxWidth()
+            .fillMaxSize()
             .padding(32.dp),
         contentAlignment = Alignment.Center
     ) {
@@ -189,3 +200,6 @@ private fun ParentCandidateRow(
 }
 
 private const val LOAD_MORE_THRESHOLD = 5
+
+// Fraction of the screen height the sheet occupies, kept fixed so it doesn't resize while searching.
+private const val SHEET_HEIGHT_FRACTION = 0.75f
