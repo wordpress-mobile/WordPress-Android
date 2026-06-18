@@ -1,7 +1,6 @@
 package org.wordpress.android.fluxc.model;
 
 import androidx.annotation.IntDef;
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.yarolegovich.wellsql.core.Identifiable;
@@ -323,7 +322,13 @@ public class SiteModel extends Payload<BaseNetworkError> implements Identifiable
         return mUrl;
     }
 
-    public void setUrl(@NonNull String url) {
+    public void setUrl(@Nullable String url) {
+        if (url == null) {
+            // Don't set the URL. The value can come from a deserialized network response, so it may be null
+            // despite the annotation; guard against it to avoid an NPE in the URI constructor.
+            AppLog.e(T.API, "Trying to set a null url");
+            return;
+        }
         try {
             // Normalize the URL, because it can be used as an identifier.
             mUrl = (new URI(url)).normalize().toString();
