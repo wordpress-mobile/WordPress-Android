@@ -383,7 +383,6 @@ class StatsViewModel
 
     @SuppressLint("NullSafeMutableLiveData")
     override fun onCleared() {
-        super.onCleared()
         _showSnackbarMessage.value = null
     }
 

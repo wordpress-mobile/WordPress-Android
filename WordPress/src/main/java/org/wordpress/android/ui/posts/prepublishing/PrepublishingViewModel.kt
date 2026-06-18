@@ -56,7 +56,6 @@ class PrepublishingViewModel @Inject constructor(private val dispatcher: Dispatc
     }
 
     override fun onCleared() {
-        super.onCleared()
         dispatcher.unregister(this)
     }
 

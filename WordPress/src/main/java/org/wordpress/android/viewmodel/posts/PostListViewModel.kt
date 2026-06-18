@@ -315,7 +315,6 @@ class PostListViewModel @Inject constructor(
 
     override fun onCleared() {
         lifecycleOwner.lifecycleRegistry.currentState = Lifecycle.State.DESTROYED
-        super.onCleared()
     }
 
     // Public Methods

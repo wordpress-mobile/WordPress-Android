@@ -55,7 +55,6 @@ class SitePreviewViewModel @Inject constructor(
     }
 
     override fun onCleared() {
-        super.onCleared()
         dispatcher.unregister(fetchWpComSiteUseCase)
         job.cancel()
     }

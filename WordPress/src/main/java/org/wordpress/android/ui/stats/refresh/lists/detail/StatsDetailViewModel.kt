@@ -78,7 +78,6 @@ class StatsDetailViewModel
     }
 
     override fun onCleared() {
-        super.onCleared()
         detailUseCase.onCleared()
         statsPostProvider.clear()
     }

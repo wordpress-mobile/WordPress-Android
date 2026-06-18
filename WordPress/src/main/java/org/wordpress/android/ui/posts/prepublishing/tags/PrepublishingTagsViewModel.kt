@@ -66,7 +66,6 @@ class PrepublishingTagsViewModel @Inject constructor(
     fun getPostTags() = getPostTagsUseCase.getTags(editPostRepository)
 
     override fun onCleared() {
-        super.onCleared()
         updateTagsJob?.cancel()
     }
 }

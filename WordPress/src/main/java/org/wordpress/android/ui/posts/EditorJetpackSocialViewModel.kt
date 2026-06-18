@@ -358,7 +358,6 @@ class EditorJetpackSocialViewModel @Inject constructor(
 
     override fun onCleared() {
         dispatcher.unregister(this)
-        super.onCleared()
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

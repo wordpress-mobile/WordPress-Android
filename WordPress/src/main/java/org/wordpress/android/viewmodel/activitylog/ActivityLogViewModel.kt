@@ -403,7 +403,6 @@ class ActivityLogViewModel @Inject constructor(
         }
         jetpackCapabilitiesUseCase.clear()
 
-        super.onCleared()
     }
 
     private fun refreshFiltersUiState() {

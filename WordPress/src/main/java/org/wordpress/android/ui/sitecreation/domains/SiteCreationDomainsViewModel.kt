@@ -101,7 +101,6 @@ class SiteCreationDomainsViewModel @Inject constructor(
     }
 
     override fun onCleared() {
-        super.onCleared()
         dispatcher.unregister(fetchDomainsUseCase)
     }
 

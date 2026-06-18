@@ -104,7 +104,6 @@ class DomainSuggestionsViewModel @Inject constructor(
         dispatcher.unregister(this)
         debouncer.shutdown()
         createCartUseCase.clear()
-        super.onCleared()
     }
 
     fun start(site: SiteModel, domainRegistrationPurpose: DomainRegistrationPurpose) {

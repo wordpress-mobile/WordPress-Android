@@ -110,7 +110,6 @@ class UnifiedSupportViewModel @Inject constructor(
     }
 
     override fun onCleared() {
-        super.onCleared()
         cleanupVideoCache()
     }
 

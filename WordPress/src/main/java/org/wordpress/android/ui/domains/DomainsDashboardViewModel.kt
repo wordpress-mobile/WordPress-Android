@@ -79,7 +79,6 @@ class DomainsDashboardViewModel @Inject constructor(
 
     override fun onCleared() {
         fetchPlansUseCase.clear()
-        super.onCleared()
     }
 
     private fun refresh(site: SiteModel) = launch {

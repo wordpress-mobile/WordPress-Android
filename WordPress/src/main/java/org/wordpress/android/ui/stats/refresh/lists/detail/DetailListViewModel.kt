@@ -24,7 +24,6 @@ class DetailListViewModel
     dateSelectorFactory.build(StatsGranularity.DAYS)
 ) {
     override fun onCleared() {
-        super.onCleared()
         dateSelector?.clear()
     }
 }

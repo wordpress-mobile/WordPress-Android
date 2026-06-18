@@ -311,7 +311,6 @@ class PostListMainViewModel @Inject constructor(
     override fun onCleared() {
         lifecycleOwner.lifecycleRegistry.currentState = Lifecycle.State.DESTROYED
         scrollToTargetPostJob.cancel() // cancels all coroutines with the default coroutineContext
-        super.onCleared()
     }
 
     /*

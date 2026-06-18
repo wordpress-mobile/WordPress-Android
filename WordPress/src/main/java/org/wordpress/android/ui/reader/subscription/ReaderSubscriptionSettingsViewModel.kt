@@ -127,7 +127,6 @@ class ReaderSubscriptionSettingsViewModel @Inject constructor(
     }
 
     override fun onCleared() {
-        super.onCleared()
         subscriptionUseCase.cleanup()
     }
 
