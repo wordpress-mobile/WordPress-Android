@@ -161,6 +161,7 @@ class NewStatsActivity : BaseAppCompatActivity() {
 
     private fun switchToOldStats() {
         analyticsTracker.track(Stat.STATS_NEW_STATS_DISABLED)
+        appPrefsWrapper.setNewStatsUserOptedIn(false)
         appPrefsWrapper.setNewStatsIntroShown(false)
         selectedSiteRepository.getSelectedSite()?.let { site ->
             StatsActivity.start(

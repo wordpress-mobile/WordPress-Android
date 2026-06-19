@@ -16,6 +16,7 @@ import org.wordpress.android.ui.blaze.blazecampaigns.campaignlisting.CampaignLis
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
 import org.wordpress.android.ui.mysite.SiteNavigationAction
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction
+import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.util.config.NewStatsFeatureConfig
 import kotlin.test.assertEquals
 
@@ -34,6 +35,9 @@ class ListItemActionHandlerTest: BaseUnitTest() {
     @Mock
     lateinit var newStatsFeatureConfig: NewStatsFeatureConfig
 
+    @Mock
+    lateinit var appPrefsWrapper: AppPrefsWrapper
+
     private val site = SiteModel()
 
     private lateinit var  listItemActionHandler: ListItemActionHandler
@@ -44,7 +48,8 @@ class ListItemActionHandlerTest: BaseUnitTest() {
             accountStore,
             jetpackFeatureRemovalPhaseHelper,
             blazeFeatureUtils,
-            newStatsFeatureConfig
+            newStatsFeatureConfig,
+            appPrefsWrapper
         )
     }
 
@@ -181,6 +186,28 @@ class ListItemActionHandlerTest: BaseUnitTest() {
         val navigationAction = invokeItemClickAction(action = ListItemAction.STATS)
 
         assertEquals(SiteNavigationAction.OpenNewStats, navigationAction)
+    }
+
+    @Test
+    fun `stats item click emits OpenNewStats when user opted in even if NEW_STATS feature is disabled`() {
+        site.setIsWPCom(true)
+        whenever(newStatsFeatureConfig.isEnabled()).thenReturn(false)
+        whenever(appPrefsWrapper.getNewStatsUserOptedIn()).thenReturn(true)
+
+        val navigationAction = invokeItemClickAction(action = ListItemAction.STATS)
+
+        assertEquals(SiteNavigationAction.OpenNewStats, navigationAction)
+    }
+
+    @Test
+    fun `stats item click emits OpenStats when NEW_STATS feature is disabled and user has not opted in`() {
+        site.setIsWPCom(true)
+        whenever(newStatsFeatureConfig.isEnabled()).thenReturn(false)
+        whenever(appPrefsWrapper.getNewStatsUserOptedIn()).thenReturn(false)
+
+        val navigationAction = invokeItemClickAction(action = ListItemAction.STATS)
+
+        assertEquals(SiteNavigationAction.OpenStats(site), navigationAction)
     }
 
     @Test

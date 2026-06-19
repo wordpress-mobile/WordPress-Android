@@ -64,6 +64,8 @@ public class AppPrefs {
 
         NEW_STATS_INTRO_SHOWN,
 
+        NEW_STATS_USER_OPTED_IN,
+
         STATS_NEW_STATS_SUGGESTION_SHOWN,
 
         STATS_NEW_STATS_SUGGESTION_LAST_DISMISSED_AT,
@@ -2114,6 +2116,14 @@ public class AppPrefs {
 
     public static void setNewStatsIntroShown(boolean shown) {
         setBoolean(DeletablePrefKey.NEW_STATS_INTRO_SHOWN, shown);
+    }
+
+    public static boolean getNewStatsUserOptedIn() {
+        return getBoolean(DeletablePrefKey.NEW_STATS_USER_OPTED_IN, false);
+    }
+
+    public static void setNewStatsUserOptedIn(boolean optedIn) {
+        setBoolean(DeletablePrefKey.NEW_STATS_USER_OPTED_IN, optedIn);
     }
 
     public static boolean getStatsNewStatsSuggestionShown() {

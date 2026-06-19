@@ -155,6 +155,7 @@ class StatsFragment : Fragment(R.layout.stats_fragment), ScrollableViewInitializ
     private fun switchToNewStats() {
         if (!isAdded) return
         analyticsTracker.track(Stat.STATS_NEW_STATS_ENABLED)
+        appPrefsWrapper.setNewStatsUserOptedIn(true)
         NewStatsActivity.start(requireContext())
         requireActivity().finish()
     }
