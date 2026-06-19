@@ -115,6 +115,8 @@ internal fun PagesRsListScreen(
     onPageClick: (Long, PageRsListTab) -> Unit,
     onPageMenuAction: (Long, PageRsMenuAction) -> Unit,
     onParentSelected: (Long) -> Unit,
+    onParentSearchChanged: (String) -> Unit,
+    onLoadMoreParents: () -> Unit,
     onParentPickerDismissed: () -> Unit,
     onAddNewPage: () -> Unit
 ) {
@@ -274,6 +276,8 @@ internal fun PagesRsListScreen(
         PageRsParentPickerSheet(
             state = parentPicker,
             onParentSelected = onParentSelected,
+            onParentSearchChanged = onParentSearchChanged,
+            onLoadMoreParents = onLoadMoreParents,
             onDismiss = onParentPickerDismissed
         )
     }

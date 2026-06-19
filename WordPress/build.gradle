@@ -252,6 +252,12 @@ android {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard.cfg'
             buildConfigField "boolean", "ENABLE_DEBUG_SETTINGS", "false"
+
+            // Bundle native debug symbols into the AAB so Play Console can symbolicate
+            // native crashes and ANRs from the .so libraries shipped by our dependencies.
+            ndk {
+                debugSymbolLevel 'SYMBOL_TABLE'
+            }
         }
 
         debug {
