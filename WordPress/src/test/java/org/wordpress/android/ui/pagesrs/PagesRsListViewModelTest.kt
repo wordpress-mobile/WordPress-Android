@@ -515,6 +515,24 @@ internal class PagesRsListViewModelTest : BaseUnitTest(StandardTestDispatcher())
     }
 
     @Test
+    fun `onParentSearchChanged no-ops when picker not open`() {
+        val viewModel = createViewModel()
+
+        viewModel.onParentSearchChanged("home")
+
+        assertThat(viewModel.parentPicker.value).isNull()
+    }
+
+    @Test
+    fun `onLoadMoreParents no-ops when picker not open`() {
+        val viewModel = createViewModel()
+
+        viewModel.onLoadMoreParents()
+
+        assertThat(viewModel.parentPicker.value).isNull()
+    }
+
+    @Test
     fun `loadMorePages no-ops when collection not initialized`() {
         val viewModel = createViewModel()
 

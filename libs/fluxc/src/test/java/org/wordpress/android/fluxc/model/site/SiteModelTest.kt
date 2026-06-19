@@ -253,6 +253,16 @@ class SiteModelTest {
         )
     }
 
+    /* setUrl */
+    @Test
+    fun `given valid url, when url is set, it is normalized and stored`() {
+        val site = SiteUtils.generateWPComSite()
+
+        site.url = "https://example.com/a/./b"
+
+        assertEquals("https://example.com/a/b", site.url)
+    }
+
     private fun SiteModel.setPublicizeSupport(enablePublicizeSupport: Boolean) {
         this.hasCapabilityPublishPosts = enablePublicizeSupport
         if (isJetpackConnected) {
