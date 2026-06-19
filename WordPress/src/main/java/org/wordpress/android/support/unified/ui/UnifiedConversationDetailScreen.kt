@@ -437,10 +437,14 @@ private fun MessageBubble(
 @Composable
 private fun AttachmentRow(attachment: UnifiedAttachment, onLinkClick: (String) -> Unit) {
     val isLink = attachment.type == AttachmentType.Link
-    val linkDescription = stringResource(
-        R.string.unified_support_attachment_link_content_description,
-        attachment.filename
-    )
+    val linkModifier = if (isLink) {
+        val linkDescription = attachmentLinkDescription(attachment)
+        Modifier
+            .clickable(role = Role.Button) { onLinkClick(attachment.url) }
+            .semantics { contentDescription = linkDescription }
+    } else {
+        Modifier
+    }
     Column(modifier = Modifier.padding(vertical = 4.dp)) {
         if (attachment.isImage) {
             AsyncImage(
@@ -461,17 +465,7 @@ private fun AttachmentRow(attachment: UnifiedAttachment, onLinkClick: (String) -
                 textDecoration = if (isLink) TextDecoration.Underline else null,
                 modifier = Modifier
                     .weight(1f, fill = false)
-                    .then(
-                        if (isLink) {
-                            Modifier
-                                .clickable(role = Role.Button) {
-                                    onLinkClick(attachment.url)
-                                }
-                                .semantics { contentDescription = linkDescription }
-                        } else {
-                            Modifier
-                        }
-                    ),
+                    .then(linkModifier),
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
             )
@@ -891,11 +885,15 @@ private fun UnifiedAttachmentsList(
 }
 
 @Composable
-private fun UnifiedAttachmentLink(attachment: UnifiedAttachment, onLinkClick: (String) -> Unit) {
-    val linkDescription = stringResource(
+private fun attachmentLinkDescription(attachment: UnifiedAttachment): String =
+    stringResource(
         R.string.unified_support_attachment_link_content_description,
         attachment.filename
     )
+
+@Composable
+private fun UnifiedAttachmentLink(attachment: UnifiedAttachment, onLinkClick: (String) -> Unit) {
+    val linkDescription = attachmentLinkDescription(attachment)
     Row(
         modifier = Modifier
             .fillMaxWidth()
