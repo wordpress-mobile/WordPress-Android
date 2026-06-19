@@ -32,6 +32,7 @@ import org.wordpress.android.R
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.support.common.ui.ConversationsSupportViewModel
 import org.wordpress.android.support.unified.util.AttachmentActionsListener
+import org.wordpress.android.ui.ActivityNavigator
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.mediapicker.MediaPickerActivity
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup
@@ -45,6 +46,7 @@ import javax.inject.Inject
 class UnifiedSupportActivity : AppCompatActivity() {
     @Inject lateinit var fileDownloadManager: ReaderFileDownloadManager
     @Inject lateinit var appLogWrapper: AppLogWrapper
+    @Inject lateinit var activityNavigator: ActivityNavigator
     private val viewModel by viewModels<UnifiedSupportViewModel>()
 
     private lateinit var composeView: ComposeView
@@ -191,6 +193,9 @@ class UnifiedSupportActivity : AppCompatActivity() {
                                     )
                                 }
                                 fileDownloadManager.downloadFile(attachment.url, attachment.filename)
+                            },
+                            onLinkClick = { url ->
+                                activityNavigator.openInCustomTab(this@UnifiedSupportActivity, url)
                             },
                             authorizationHeader = viewModel.getAuthorizationHeader(),
                             videoDownloadState = videoDownloadState,
