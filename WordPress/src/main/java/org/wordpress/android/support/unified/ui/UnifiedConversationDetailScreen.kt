@@ -72,6 +72,8 @@ import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.material.icons.filled.PlayCircle
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.UriHandler
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import coil.compose.AsyncImage
 import coil.compose.SubcomposeAsyncImage
@@ -82,7 +84,10 @@ import kotlinx.coroutines.launch
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.ui.text.style.TextAlign
+import android.content.Context
+import android.widget.Toast
 import org.wordpress.android.R
+import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.WPUrlUtils
 import org.wordpress.android.support.unified.util.formatRelativeTime
 import org.wordpress.android.support.unified.model.AttachmentState
@@ -430,7 +435,12 @@ private fun MessageBubble(message: UnifiedMessage, timestamp: String) {
 @Composable
 private fun AttachmentRow(attachment: UnifiedAttachment) {
     val uriHandler = LocalUriHandler.current
+    val context = LocalContext.current
     val isLink = attachment.type == AttachmentType.Link
+    val linkDescription = stringResource(
+        R.string.unified_support_attachment_link_content_description,
+        attachment.filename
+    )
     Column(modifier = Modifier.padding(vertical = 4.dp)) {
         if (attachment.isImage) {
             AsyncImage(
@@ -453,7 +463,11 @@ private fun AttachmentRow(attachment: UnifiedAttachment) {
                     .weight(1f, fill = false)
                     .then(
                         if (isLink) {
-                            Modifier.clickable { uriHandler.openUri(attachment.url) }
+                            Modifier
+                                .clickable(role = Role.Button) {
+                                    openUriSafely(uriHandler, context, attachment.url, attachment.filename)
+                                }
+                                .semantics { contentDescription = linkDescription }
                         } else {
                             Modifier
                         }
@@ -473,6 +487,26 @@ private fun AttachmentRow(attachment: UnifiedAttachment) {
                 )
             }
         }
+    }
+}
+
+/**
+ * Opens [url] in the system browser, guarding against [ActivityNotFoundException] (e.g. no browser
+ * installed or a malformed bot-supplied URL). On failure the user is notified rather than crashing.
+ */
+private fun openUriSafely(
+    uriHandler: UriHandler,
+    context: Context,
+    url: String,
+    filename: String
+) {
+    runCatching { uriHandler.openUri(url) }.onFailure { throwable ->
+        AppLog.e(AppLog.T.SUPPORT, "Failed to open attachment link: $url", throwable)
+        Toast.makeText(
+            context,
+            context.getString(R.string.reader_toast_err_url_intent, filename),
+            Toast.LENGTH_SHORT
+        ).show()
     }
 }
 
@@ -876,6 +910,7 @@ private fun UnifiedAttachmentsList(
 @Composable
 private fun UnifiedAttachmentLink(attachment: UnifiedAttachment) {
     val uriHandler = LocalUriHandler.current
+    val context = LocalContext.current
     val linkDescription = stringResource(
         R.string.unified_support_attachment_link_content_description,
         attachment.filename
@@ -883,7 +918,9 @@ private fun UnifiedAttachmentLink(attachment: UnifiedAttachment) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable { uriHandler.openUri(attachment.url) }
+            .clickable(role = Role.Button) {
+                openUriSafely(uriHandler, context, attachment.url, attachment.filename)
+            }
             .padding(vertical = 4.dp)
             .semantics { contentDescription = linkDescription },
         verticalAlignment = Alignment.CenterVertically,
