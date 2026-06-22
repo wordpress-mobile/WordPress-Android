@@ -187,12 +187,13 @@ class MediaRSApiRestClient @Inject constructor(
             "Media request failed with HTTP $status " +
                     "(${mediaResponse.requestMethod} ${mediaResponse.requestUrl})"
         )
-        return MediaError(mediaErrorTypeFromHttpStatus(status)).apply {
-            statusCode = status
-            message = "Media request failed with HTTP status $status"
+        return buildMediaError(
+            type = mediaErrorTypeFromHttpStatus(status),
+            statusCode = status,
+            message = "Media request failed with HTTP status $status",
             logMessage = "InvalidHttpStatusCode: status=$status, " +
                     "method=${mediaResponse.requestMethod}, url=${mediaResponse.requestUrl}"
-        }
+        )
     }
 
     private fun parseWpError(mediaResponse: WpRequestResult.WpError<*>): MediaError {
@@ -202,13 +203,14 @@ class MediaRSApiRestClient @Inject constructor(
             "Media request returned WpError ${mediaResponse.errorCode} " +
                     "(HTTP $status): ${mediaResponse.errorMessage}"
         )
-        return MediaError(mediaErrorTypeFromHttpStatus(status)).apply {
-            statusCode = status
-            message = mediaResponse.errorMessage
+        return buildMediaError(
+            type = mediaErrorTypeFromHttpStatus(status),
+            statusCode = status,
+            message = mediaResponse.errorMessage,
             logMessage = "WpError: code=${mediaResponse.errorCode}, status=$status, " +
                     "method=${mediaResponse.requestMethod}, url=${mediaResponse.requestUrl}, " +
                     "message=${mediaResponse.errorMessage}"
-        }
+        )
     }
 
     private fun parseRequestExecutionFailed(mediaResponse: WpRequestResult.RequestExecutionFailed<*>): MediaError {
@@ -217,12 +219,13 @@ class MediaRSApiRestClient @Inject constructor(
             AppLog.T.MEDIA,
             "Media request execution failed: ${mediaResponse.reason} (HTTP $status)"
         )
-        return MediaError(mediaErrorTypeFromExecutionReason(mediaResponse.reason)).apply {
-            if (status != null) statusCode = status
-            message = "Media request could not be completed"
+        return buildMediaError(
+            type = mediaErrorTypeFromExecutionReason(mediaResponse.reason),
+            statusCode = status,
+            message = "Media request could not be completed",
             logMessage = "RequestExecutionFailed: reason=${mediaResponse.reason}, status=$status, " +
                     "method=${mediaResponse.requestMethod}, url=${mediaResponse.requestUrl}"
-        }
+        )
     }
 
     private fun parseUnknownError(mediaResponse: WpRequestResult.UnknownError<*>): MediaError {
@@ -231,12 +234,24 @@ class MediaRSApiRestClient @Inject constructor(
             AppLog.T.MEDIA,
             "Media request returned unknown error (HTTP $status): ${mediaResponse.response}"
         )
-        return MediaError(mediaErrorTypeFromHttpStatus(status)).apply {
-            statusCode = status
-            message = "Media request failed with HTTP status $status"
+        return buildMediaError(
+            type = mediaErrorTypeFromHttpStatus(status),
+            statusCode = status,
+            message = "Media request failed with HTTP status $status",
             logMessage = "UnknownError: status=$status, method=${mediaResponse.requestMethod}, " +
                     "url=${mediaResponse.requestUrl}, response=${mediaResponse.response}"
-        }
+        )
+    }
+
+    private fun buildMediaError(
+        type: MediaErrorType,
+        statusCode: Int?,
+        message: String?,
+        logMessage: String
+    ): MediaError = MediaError(type).apply {
+        statusCode?.let { this.statusCode = it }
+        this.message = message
+        this.logMessage = logMessage
     }
 
     /**
