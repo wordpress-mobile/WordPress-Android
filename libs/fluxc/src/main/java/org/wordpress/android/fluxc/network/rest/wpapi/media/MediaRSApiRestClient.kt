@@ -27,6 +27,7 @@ import uniffi.wp_api.MediaDetailsPayload
 import uniffi.wp_api.MediaListParams
 import uniffi.wp_api.MediaUpdateParams
 import uniffi.wp_api.MediaWithEditContext
+import uniffi.wp_api.RequestExecutionErrorReason
 import java.util.concurrent.ConcurrentHashMap
 import javax.inject.Inject
 import javax.inject.Named
@@ -34,6 +35,13 @@ import javax.inject.Singleton
 
 private const val PATH_SEPARATOR = "/"
 private const val SUFFIX_SEPARATOR = "?"
+
+private const val HTTP_UNAUTHORIZED = 401
+private const val HTTP_FORBIDDEN = 403
+private const val HTTP_NOT_FOUND = 404
+private const val HTTP_REQUEST_TOO_LARGE = 413
+private const val HTTP_SERVER_ERROR_START = 500
+private const val HTTP_SERVER_ERROR_END = 599
 
 /**
  * MediaRSApiRestClient provides an interface for calling media endpoints using the WordPress Rust library
@@ -165,17 +173,96 @@ class MediaRSApiRestClient @Inject constructor(
                 }
             }
 
-            is WpRequestResult.InvalidHttpStatusCode<*>,
-            is WpRequestResult.WpError<*>,
-            is WpRequestResult.RequestExecutionFailed<*>,
+            is WpRequestResult.InvalidHttpStatusCode<*> -> {
+                val status = mediaResponse.statusCode.toInt()
+                appLogWrapper.e(
+                    AppLog.T.MEDIA,
+                    "Media request failed with HTTP $status " +
+                            "(${mediaResponse.requestMethod} ${mediaResponse.requestUrl})"
+                )
+                MediaError(mediaErrorTypeFromHttpStatus(status)).apply {
+                    statusCode = status
+                    message = "Media request failed with HTTP status $status"
+                    logMessage = "InvalidHttpStatusCode: status=$status, " +
+                            "method=${mediaResponse.requestMethod}, url=${mediaResponse.requestUrl}"
+                }
+            }
+
+            is WpRequestResult.WpError<*> -> {
+                val status = mediaResponse.statusCode.toInt()
+                appLogWrapper.e(
+                    AppLog.T.MEDIA,
+                    "Media request returned WpError ${mediaResponse.errorCode} " +
+                            "(HTTP $status): ${mediaResponse.errorMessage}"
+                )
+                MediaError(mediaErrorTypeFromHttpStatus(status)).apply {
+                    statusCode = status
+                    message = mediaResponse.errorMessage
+                    logMessage = "WpError: code=${mediaResponse.errorCode}, status=$status, " +
+                            "method=${mediaResponse.requestMethod}, url=${mediaResponse.requestUrl}, " +
+                            "message=${mediaResponse.errorMessage}"
+                }
+            }
+
+            is WpRequestResult.RequestExecutionFailed<*> -> {
+                val status = mediaResponse.statusCode?.toInt()
+                appLogWrapper.e(
+                    AppLog.T.MEDIA,
+                    "Media request execution failed: ${mediaResponse.reason} (HTTP $status)"
+                )
+                MediaError(mediaErrorTypeFromExecutionReason(mediaResponse.reason)).apply {
+                    if (status != null) statusCode = status
+                    message = "Media request could not be completed"
+                    logMessage = "RequestExecutionFailed: reason=${mediaResponse.reason}, status=$status, " +
+                            "method=${mediaResponse.requestMethod}, url=${mediaResponse.requestUrl}"
+                }
+            }
+
             is WpRequestResult.UnknownError<*> -> {
-                appLogWrapper.e(AppLog.T.MEDIA, "Unknown error: $mediaResponse")
-                MediaError(MediaErrorType.GENERIC_ERROR).apply {
-                    message = "Unknown error occurred"
+                val status = mediaResponse.statusCode.toInt()
+                appLogWrapper.e(
+                    AppLog.T.MEDIA,
+                    "Media request returned unknown error (HTTP $status): ${mediaResponse.response}"
+                )
+                MediaError(mediaErrorTypeFromHttpStatus(status)).apply {
+                    statusCode = status
+                    message = "Media request failed with HTTP status $status"
+                    logMessage = "UnknownError: status=$status, method=${mediaResponse.requestMethod}, " +
+                            "url=${mediaResponse.requestUrl}, response=${mediaResponse.response}"
                 }
             }
         }
     }
+
+    /**
+     * Maps an HTTP status code to a more specific [MediaErrorType] so the user sees an actionable
+     * message (and reports carry a meaningful error type) instead of a generic failure.
+     */
+    private fun mediaErrorTypeFromHttpStatus(statusCode: Int): MediaErrorType = when (statusCode) {
+        HTTP_UNAUTHORIZED, HTTP_FORBIDDEN -> MediaErrorType.AUTHORIZATION_REQUIRED
+        HTTP_NOT_FOUND -> MediaErrorType.NOT_FOUND
+        HTTP_REQUEST_TOO_LARGE -> MediaErrorType.REQUEST_TOO_LARGE
+        in HTTP_SERVER_ERROR_START..HTTP_SERVER_ERROR_END -> MediaErrorType.SERVER_ERROR
+        else -> MediaErrorType.GENERIC_ERROR
+    }
+
+    /**
+     * Maps a transport-level failure reason (no HTTP response, or a connection/auth problem) to a
+     * more specific [MediaErrorType].
+     */
+    private fun mediaErrorTypeFromExecutionReason(reason: RequestExecutionErrorReason): MediaErrorType =
+        when (reason) {
+            is RequestExecutionErrorReason.HttpTimeoutError -> MediaErrorType.TIMEOUT
+            is RequestExecutionErrorReason.DeviceIsOfflineError,
+            is RequestExecutionErrorReason.InvalidSslError -> MediaErrorType.CONNECTION_ERROR
+            is RequestExecutionErrorReason.NonExistentSiteError -> MediaErrorType.NOT_FOUND
+            is RequestExecutionErrorReason.HttpForbiddenError,
+            is RequestExecutionErrorReason.HttpAuthenticationRequiredError,
+            is RequestExecutionErrorReason.HttpAuthenticationRejectedError,
+            is RequestExecutionErrorReason.MisconfiguredHttpAuthenticationError ->
+                MediaErrorType.AUTHORIZATION_REQUIRED
+            else -> MediaErrorType.GENERIC_ERROR
+        }
 
     private fun notifyMediaFetched(
         site: SiteModel,
