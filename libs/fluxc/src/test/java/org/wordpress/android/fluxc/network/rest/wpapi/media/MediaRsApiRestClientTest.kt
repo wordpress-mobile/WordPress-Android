@@ -571,6 +571,34 @@ class MediaRsApiRestClientTest {
     }
 
     @Test
+    fun `uploadMedia with request execution forbidden dispatches not authenticated error`() = runTest {
+        val testSite = createTestSite()
+        val testMedia = createTestMedia().apply {
+            filePath = "/valid/path/file.jpg"
+        }
+
+        whenever(fileCheckWrapper.canReadFile(any())).thenReturn(true)
+        whenever(wpApiClient.request<Any>(any())).thenReturn(
+            WpRequestResult.RequestExecutionFailed(
+                statusCode = null,
+                redirects = null,
+                reason = RequestExecutionErrorReason.HttpForbiddenError(hostname = ""),
+                requestUrl = "",
+                requestMethod = RequestMethod.POST
+            )
+        )
+
+        restClient.uploadMedia(testSite, testMedia)
+
+        val actionCaptor = ArgumentCaptor.forClass(Action::class.java)
+        verify(dispatcher).dispatch(actionCaptor.capture())
+
+        val payload = actionCaptor.value.payload as ProgressPayload
+        assertNotNull(payload.error)
+        assertEquals(MediaErrorType.NOT_AUTHENTICATED, payload.error?.type)
+    }
+
+    @Test
     fun `pushMedia with null media dispatches error action immediately`() = runTest {
         val testSite = createTestSite()
 

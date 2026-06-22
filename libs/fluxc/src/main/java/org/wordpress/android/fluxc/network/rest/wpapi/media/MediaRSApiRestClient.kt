@@ -36,13 +36,6 @@ import javax.inject.Singleton
 private const val PATH_SEPARATOR = "/"
 private const val SUFFIX_SEPARATOR = "?"
 
-private const val HTTP_UNAUTHORIZED = 401
-private const val HTTP_FORBIDDEN = 403
-private const val HTTP_NOT_FOUND = 404
-private const val HTTP_REQUEST_TOO_LARGE = 413
-private const val HTTP_SERVER_ERROR_START = 500
-private const val HTTP_SERVER_ERROR_END = 599
-
 /**
  * MediaRSApiRestClient provides an interface for calling media endpoints using the WordPress Rust library
  */
@@ -188,7 +181,7 @@ class MediaRSApiRestClient @Inject constructor(
                     "(${mediaResponse.requestMethod} ${mediaResponse.requestUrl})"
         )
         return buildMediaError(
-            type = mediaErrorTypeFromHttpStatus(status),
+            type = MediaErrorType.fromHttpStatusCode(status),
             statusCode = status,
             message = "Media request failed with HTTP status $status",
             logMessage = "InvalidHttpStatusCode: status=$status, " +
@@ -204,7 +197,7 @@ class MediaRSApiRestClient @Inject constructor(
                     "(HTTP $status): ${mediaResponse.errorMessage}"
         )
         return buildMediaError(
-            type = mediaErrorTypeFromHttpStatus(status),
+            type = MediaErrorType.fromHttpStatusCode(status),
             statusCode = status,
             message = mediaResponse.errorMessage,
             logMessage = "WpError: code=${mediaResponse.errorCode}, status=$status, " +
@@ -235,7 +228,7 @@ class MediaRSApiRestClient @Inject constructor(
             "Media request returned unknown error (HTTP $status): ${mediaResponse.response}"
         )
         return buildMediaError(
-            type = mediaErrorTypeFromHttpStatus(status),
+            type = MediaErrorType.fromHttpStatusCode(status),
             statusCode = status,
             message = "Media request failed with HTTP status $status",
             logMessage = "UnknownError: status=$status, method=${mediaResponse.requestMethod}, " +
@@ -255,20 +248,10 @@ class MediaRSApiRestClient @Inject constructor(
     }
 
     /**
-     * Maps an HTTP status code to a more specific [MediaErrorType] so the user sees an actionable
-     * message (and reports carry a meaningful error type) instead of a generic failure.
-     */
-    private fun mediaErrorTypeFromHttpStatus(statusCode: Int): MediaErrorType = when (statusCode) {
-        HTTP_UNAUTHORIZED, HTTP_FORBIDDEN -> MediaErrorType.AUTHORIZATION_REQUIRED
-        HTTP_NOT_FOUND -> MediaErrorType.NOT_FOUND
-        HTTP_REQUEST_TOO_LARGE -> MediaErrorType.REQUEST_TOO_LARGE
-        in HTTP_SERVER_ERROR_START..HTTP_SERVER_ERROR_END -> MediaErrorType.SERVER_ERROR
-        else -> MediaErrorType.GENERIC_ERROR
-    }
-
-    /**
      * Maps a transport-level failure reason (no HTTP response, or a connection/auth problem) to a
-     * more specific [MediaErrorType].
+     * more specific [MediaErrorType]. Intentionally exhaustive (no `else`) so that any new
+     * [RequestExecutionErrorReason] added upstream is surfaced as a compile error here rather than
+     * silently degrading to [MediaErrorType.GENERIC_ERROR].
      */
     private fun mediaErrorTypeFromExecutionReason(reason: RequestExecutionErrorReason): MediaErrorType =
         when (reason) {
@@ -276,12 +259,18 @@ class MediaRSApiRestClient @Inject constructor(
             is RequestExecutionErrorReason.DeviceIsOfflineError,
             is RequestExecutionErrorReason.InvalidSslError -> MediaErrorType.CONNECTION_ERROR
             is RequestExecutionErrorReason.NonExistentSiteError -> MediaErrorType.NOT_FOUND
-            is RequestExecutionErrorReason.HttpForbiddenError,
+            // Keep this aligned with MediaErrorType.fromHttpStatusCode: a 403 (forbidden) maps to
+            // NOT_AUTHENTICATED, while a 401 (auth required/rejected/misconfigured) maps to
+            // AUTHORIZATION_REQUIRED.
+            is RequestExecutionErrorReason.HttpForbiddenError -> MediaErrorType.NOT_AUTHENTICATED
             is RequestExecutionErrorReason.HttpAuthenticationRequiredError,
             is RequestExecutionErrorReason.HttpAuthenticationRejectedError,
             is RequestExecutionErrorReason.MisconfiguredHttpAuthenticationError ->
                 MediaErrorType.AUTHORIZATION_REQUIRED
-            else -> MediaErrorType.GENERIC_ERROR
+            is RequestExecutionErrorReason.MisconfiguredRateLimitError,
+            is RequestExecutionErrorReason.CancellationError,
+            is RequestExecutionErrorReason.HttpError,
+            is RequestExecutionErrorReason.GenericError -> MediaErrorType.GENERIC_ERROR
         }
 
     private fun notifyMediaFetched(
