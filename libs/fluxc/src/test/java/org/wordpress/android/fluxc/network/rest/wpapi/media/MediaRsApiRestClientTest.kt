@@ -41,7 +41,9 @@ import org.wordpress.android.util.AppLog
 import rs.wordpress.api.kotlin.WpApiClient
 import rs.wordpress.api.kotlin.WpRequestResult
 import uniffi.wp_api.MediaCaptionWithEditContext
+import uniffi.wp_api.RequestExecutionErrorReason
 import uniffi.wp_api.RequestMethod
+import uniffi.wp_api.WpErrorCode
 import uniffi.wp_api.MediaDeleteResponse
 import uniffi.wp_api.MediaDescriptionWithEditContext
 import uniffi.wp_api.MediaDetails
@@ -66,6 +68,7 @@ private const val SUFFIX_SEPARATOR = "?"
 
 @ExperimentalCoroutinesApi
 @RunWith(RobolectricTestRunner::class)
+@Suppress("LargeClass")
 class MediaRsApiRestClientTest {
     @Mock
     private lateinit var dispatcher: Dispatcher
@@ -178,8 +181,8 @@ class MediaRsApiRestClientTest {
         assertEquals(testSite, payload.site)
         assertEquals(testMedia, payload.media) // Error case returns original media
         assertNotNull(payload.error)
-        assertEquals(MediaErrorType.GENERIC_ERROR, payload.error?.type)
-        assertEquals("Unknown error occurred", payload.error?.message)
+        assertEquals(MediaErrorType.SERVER_ERROR, payload.error?.type)
+        assertEquals(500, payload.error?.statusCode)
     }
 
     @Test
@@ -318,7 +321,8 @@ class MediaRsApiRestClientTest {
         assertEquals(testSite, payload.site)
         assertEquals(testMedia, payload.media) // Error case returns original media
         assertNotNull(payload.error)
-        assertEquals(MediaErrorType.GENERIC_ERROR, payload.error?.type)
+        assertEquals(MediaErrorType.NOT_FOUND, payload.error?.type)
+        assertEquals(404, payload.error?.statusCode)
     }
 
     @Test
@@ -501,9 +505,97 @@ class MediaRsApiRestClientTest {
         assertEquals(testMedia, payload.media)
         assertEquals(MediaUploadState.FAILED.toString(), payload.media?.uploadState)
         assertNotNull(payload.error)
-        assertEquals(MediaErrorType.GENERIC_ERROR, payload.error?.type)
+        assertEquals(MediaErrorType.REQUEST_TOO_LARGE, payload.error?.type)
+        assertEquals(413, payload.error?.statusCode)
         assertEquals(1f, payload.progress, 0.01f)
         assertEquals(false, payload.completed)
+    }
+
+    @Test
+    fun `uploadMedia with WpError 401 dispatches authorization required error`() = runTest {
+        val testSite = createTestSite()
+        val testMedia = createTestMedia().apply {
+            filePath = "/valid/path/file.jpg"
+        }
+
+        whenever(fileCheckWrapper.canReadFile(any())).thenReturn(true)
+        whenever(wpApiClient.request<Any>(any())).thenReturn(
+            WpRequestResult.WpError(
+                errorCode = WpErrorCode.CannotEdit(),
+                errorMessage = "Sorry, you are not allowed to upload media.",
+                statusCode = 401u,
+                response = "",
+                requestUrl = "",
+                requestMethod = RequestMethod.POST
+            )
+        )
+
+        restClient.uploadMedia(testSite, testMedia)
+
+        val actionCaptor = ArgumentCaptor.forClass(Action::class.java)
+        verify(dispatcher).dispatch(actionCaptor.capture())
+
+        val payload = actionCaptor.value.payload as ProgressPayload
+        assertNotNull(payload.error)
+        assertEquals(MediaErrorType.AUTHORIZATION_REQUIRED, payload.error?.type)
+        assertEquals(401, payload.error?.statusCode)
+        assertEquals("Sorry, you are not allowed to upload media.", payload.error?.message)
+    }
+
+    @Test
+    fun `uploadMedia with request execution timeout dispatches timeout error`() = runTest {
+        val testSite = createTestSite()
+        val testMedia = createTestMedia().apply {
+            filePath = "/valid/path/file.jpg"
+        }
+
+        whenever(fileCheckWrapper.canReadFile(any())).thenReturn(true)
+        whenever(wpApiClient.request<Any>(any())).thenReturn(
+            WpRequestResult.RequestExecutionFailed(
+                statusCode = null,
+                redirects = null,
+                reason = RequestExecutionErrorReason.HttpTimeoutError,
+                requestUrl = "",
+                requestMethod = RequestMethod.POST
+            )
+        )
+
+        restClient.uploadMedia(testSite, testMedia)
+
+        val actionCaptor = ArgumentCaptor.forClass(Action::class.java)
+        verify(dispatcher).dispatch(actionCaptor.capture())
+
+        val payload = actionCaptor.value.payload as ProgressPayload
+        assertNotNull(payload.error)
+        assertEquals(MediaErrorType.TIMEOUT, payload.error?.type)
+    }
+
+    @Test
+    fun `uploadMedia with request execution forbidden dispatches not authenticated error`() = runTest {
+        val testSite = createTestSite()
+        val testMedia = createTestMedia().apply {
+            filePath = "/valid/path/file.jpg"
+        }
+
+        whenever(fileCheckWrapper.canReadFile(any())).thenReturn(true)
+        whenever(wpApiClient.request<Any>(any())).thenReturn(
+            WpRequestResult.RequestExecutionFailed(
+                statusCode = null,
+                redirects = null,
+                reason = RequestExecutionErrorReason.HttpForbiddenError(hostname = ""),
+                requestUrl = "",
+                requestMethod = RequestMethod.POST
+            )
+        )
+
+        restClient.uploadMedia(testSite, testMedia)
+
+        val actionCaptor = ArgumentCaptor.forClass(Action::class.java)
+        verify(dispatcher).dispatch(actionCaptor.capture())
+
+        val payload = actionCaptor.value.payload as ProgressPayload
+        assertNotNull(payload.error)
+        assertEquals(MediaErrorType.NOT_AUTHENTICATED, payload.error?.type)
     }
 
     @Test
@@ -582,8 +674,8 @@ class MediaRsApiRestClientTest {
         assertEquals(testSite, payload.site)
         assertEquals(testMedia, payload.media) // Error case returns original media
         assertNotNull(payload.error)
-        assertEquals(MediaErrorType.GENERIC_ERROR, payload.error?.type)
-        assertEquals("Unknown error occurred", payload.error?.message)
+        assertEquals(MediaErrorType.SERVER_ERROR, payload.error?.type)
+        assertEquals(500, payload.error?.statusCode)
     }
 
     @Test
