@@ -188,6 +188,7 @@ class EditorJetpackSocialViewModel @Inject constructor(
     }
 
     private fun shouldShowJetpackSocial() = ::editPostRepository.isInitialized
+            && editPostRepository.hasPost()
             && !editPostRepository.isPage
             && siteModel.supportsPublicize()
             && currentPost?.status != PostStatus.PRIVATE.toString()

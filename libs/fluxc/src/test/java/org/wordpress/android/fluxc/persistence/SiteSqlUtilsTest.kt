@@ -5,12 +5,14 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.mockito.kotlin.any
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.RuntimeEnvironment
 import org.wordpress.android.fluxc.encryption.EncryptionUtils
 import org.wordpress.android.fluxc.model.SiteModel
+import java.security.GeneralSecurityException
 
 @RunWith(RobolectricTestRunner::class)
 class SiteSqlUtilsTest {
@@ -214,6 +216,28 @@ class SiteSqlUtilsTest {
         }).execute()
 
         val stored = siteSqlUtils.getSites().single()
+
+        assertThat(stored.apiRestUsernamePlain).isNullOrEmpty()
+        assertThat(stored.apiRestPasswordPlain).isNullOrEmpty()
+    }
+
+    @Test
+    fun `reading a site whose credentials fail to decrypt does not crash and yields no plaintext`() {
+        // A keystore failure during decryption (seen in production as InvalidKeyException/KeyStoreException)
+        // must not propagate out of the hot getSites() path — it would crash the app. The site is returned
+        // without plaintext credentials instead.
+        whenever(fakeEncryptionUtils.decrypt(any(), any())).thenAnswer {
+            throw GeneralSecurityException("keystore failure")
+        }
+        WellSql.insert(SiteModel().apply {
+            url = "https://example.test"
+            apiRestUsernameEncrypted = "enc_user"
+            apiRestUsernameIV = "iv_user"
+            apiRestPasswordEncrypted = "enc_pass"
+            apiRestPasswordIV = "iv_pass"
+        }).execute()
+
+        val stored = encryptingSiteSqlUtils.getSites().single()
 
         assertThat(stored.apiRestUsernamePlain).isNullOrEmpty()
         assertThat(stored.apiRestPasswordPlain).isNullOrEmpty()
