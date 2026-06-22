@@ -386,9 +386,10 @@ internal class PagesRsListViewModel @Inject constructor(
     @Subscribe(threadMode = ThreadMode.MAIN_ORDERED)
     fun onEditorThemeChanged(event: OnEditorThemeChanged) {
         val site = this.site ?: return
-        if (site.id != event.siteId) return
-        val isBlockBased = event.editorTheme?.themeSupport?.isEditorThemeBlockBased() ?: return
-        if (isBlockBased == isBlockBasedTheme) return
+        val isBlockBased = event.editorTheme?.themeSupport?.isEditorThemeBlockBased()
+        if (site.id != event.siteId || isBlockBased == null || isBlockBased == isBlockBasedTheme) {
+            return
+        }
         isBlockBasedTheme = isBlockBased
         // Rebuild the published tab from cache so the SITE_EDITOR row appears/disappears.
         if (collections.containsKey(PageRsListTab.PUBLISHED)) {
@@ -1262,10 +1263,6 @@ internal class PagesRsListViewModel @Inject constructor(
     }
 
     private fun PageRsListItem.withMenuActions(site: SiteModel?): PageRsListItem {
-        // The SITE_EDITOR virtual has no backing page, so it gets no overflow menu.
-        if (this is PageRsListItem.Virtual && kind == PageRsListItem.Virtual.Kind.SITE_EDITOR) {
-            return this
-        }
         val pageOnFront = site?.pageOnFront ?: 0L
         val pageForPosts = site?.pageForPosts ?: 0L
         // WP.com capabilities and showOnFront are synced reliably, so the homepage actions
@@ -1278,14 +1275,22 @@ internal class PagesRsListViewModel @Inject constructor(
         } else {
             true
         }
-        val actions = computePageMenuActions(
-            status = page.status,
-            isHomepage = pageOnFront != 0L && page.remotePageId == pageOnFront,
-            isPostsPage = pageForPosts != 0L && page.remotePageId == pageForPosts,
-            hasPassword = page.hasPassword,
-            isBlazeEligibleSite = site != null && blazeFeatureUtils.isSiteBlazeEligible(site),
-            canManageHomepage = canManageHomepage
-        )
+        // The SITE_EDITOR virtual has no backing page, so it gets no overflow menu. Its synthetic
+        // page already has empty actions, so this leaves it unchanged below.
+        val isSiteEditor = this is PageRsListItem.Virtual &&
+            kind == PageRsListItem.Virtual.Kind.SITE_EDITOR
+        val actions = if (isSiteEditor) {
+            emptyList()
+        } else {
+            computePageMenuActions(
+                status = page.status,
+                isHomepage = pageOnFront != 0L && page.remotePageId == pageOnFront,
+                isPostsPage = pageForPosts != 0L && page.remotePageId == pageForPosts,
+                hasPassword = page.hasPassword,
+                isBlazeEligibleSite = site != null && blazeFeatureUtils.isSiteBlazeEligible(site),
+                canManageHomepage = canManageHomepage
+            )
+        }
         if (actions == page.actions) return this
         val updated = page.copy(actions = actions)
         return when (this) {

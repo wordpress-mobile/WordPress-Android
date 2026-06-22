@@ -115,26 +115,11 @@ private fun PageContentItem(
                 Spacer(modifier = Modifier.width(12.dp))
             }
             Column(modifier = Modifier.weight(1f)) {
-                // The SITE_EDITOR row has no backing page, so its title/subtitle come from string
-                // resources and it shows no header label, badges, or excerpt.
-                val isSiteEditor = virtualKind == PageRsListItem.Virtual.Kind.SITE_EDITOR
-                val titleText = if (isSiteEditor) {
-                    stringResource(R.string.virtual_homepage_title)
-                } else {
-                    page.title.ifBlank { stringResource(R.string.untitled_in_parentheses) }
-                }
-                val subtitleText = if (isSiteEditor) {
-                    stringResource(R.string.virtual_homepage_subtitle)
-                } else {
-                    page.excerpt
-                }
-                val virtualLabel = virtualKind
-                    ?.takeUnless { isSiteEditor }
-                    ?.let { stringResource(it.labelResId()) }
+                val rowText = pageRowText(page, virtualKind)
                 val statusLabel = page.statusLabelResId.takeIf { it != 0 }?.let { stringResource(it) }
                 val bullet = stringResource(R.string.bullet_with_spaces)
                 val headerText = listOfNotNull(
-                    virtualLabel,
+                    rowText.headerLabel,
                     statusLabel,
                     page.date.takeIf { it.isNotBlank() },
                     page.authorDisplayName?.takeIf { it.isNotBlank() }
@@ -152,15 +137,15 @@ private fun PageContentItem(
                     Spacer(modifier = Modifier.height(4.dp))
                 }
                 Text(
-                    text = titleText,
+                    text = rowText.title,
                     style = MaterialTheme.typography.titleMedium,
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis
                 )
-                if (subtitleText.isNotBlank()) {
+                if (rowText.subtitle.isNotBlank()) {
                     Spacer(modifier = Modifier.height(4.dp))
                     Text(
-                        text = subtitleText,
+                        text = rowText.subtitle,
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         maxLines = 2,
@@ -295,6 +280,38 @@ private fun ErrorItem(modifier: Modifier = Modifier) {
             color = MaterialTheme.colorScheme.onErrorContainer
         )
     }
+}
+
+private data class PageRowText(
+    val title: String,
+    val subtitle: String,
+    val headerLabel: String?
+)
+
+/**
+ * Resolves the row's title, subtitle, and header label. The SITE_EDITOR row has no backing page, so
+ * its title/subtitle come from string resources and it shows no header label.
+ */
+@Composable
+private fun pageRowText(
+    page: PageRsUiModel,
+    virtualKind: PageRsListItem.Virtual.Kind?
+): PageRowText {
+    val isSiteEditor = virtualKind == PageRsListItem.Virtual.Kind.SITE_EDITOR
+    val title = if (isSiteEditor) {
+        stringResource(R.string.virtual_homepage_title)
+    } else {
+        page.title.ifBlank { stringResource(R.string.untitled_in_parentheses) }
+    }
+    val subtitle = if (isSiteEditor) {
+        stringResource(R.string.virtual_homepage_subtitle)
+    } else {
+        page.excerpt
+    }
+    val headerLabel = virtualKind
+        ?.takeUnless { isSiteEditor }
+        ?.let { stringResource(it.labelResId()) }
+    return PageRowText(title, subtitle, headerLabel)
 }
 
 private fun PageRsListItem.Virtual.Kind.icon(): ImageVector = when (this) {
