@@ -777,6 +777,31 @@ public class MediaStoreTest {
         assertEquals(0, mMediaStore.getSiteMediaCount(testSite2));
     }
 
+    @Test
+    public void testMediaErrorTypeFromHttpStatusCode() {
+        assertEquals(MediaStore.MediaErrorType.BAD_REQUEST, MediaStore.MediaErrorType.fromHttpStatusCode(400));
+        assertEquals(MediaStore.MediaErrorType.AUTHORIZATION_REQUIRED,
+                MediaStore.MediaErrorType.fromHttpStatusCode(401));
+        assertEquals(MediaStore.MediaErrorType.NOT_AUTHENTICATED, MediaStore.MediaErrorType.fromHttpStatusCode(403));
+        assertEquals(MediaStore.MediaErrorType.NOT_FOUND, MediaStore.MediaErrorType.fromHttpStatusCode(404));
+        assertEquals(MediaStore.MediaErrorType.REQUEST_TOO_LARGE, MediaStore.MediaErrorType.fromHttpStatusCode(413));
+    }
+
+    @Test
+    public void testMediaErrorTypeFromHttpStatusCodeServerErrorRange() {
+        // any 5xx should be treated as a server error, not just 500
+        assertEquals(MediaStore.MediaErrorType.SERVER_ERROR, MediaStore.MediaErrorType.fromHttpStatusCode(500));
+        assertEquals(MediaStore.MediaErrorType.SERVER_ERROR, MediaStore.MediaErrorType.fromHttpStatusCode(502));
+        assertEquals(MediaStore.MediaErrorType.SERVER_ERROR, MediaStore.MediaErrorType.fromHttpStatusCode(503));
+        assertEquals(MediaStore.MediaErrorType.SERVER_ERROR, MediaStore.MediaErrorType.fromHttpStatusCode(599));
+    }
+
+    @Test
+    public void testMediaErrorTypeFromHttpStatusCodeUnmappedIsGeneric() {
+        assertEquals(MediaStore.MediaErrorType.GENERIC_ERROR, MediaStore.MediaErrorType.fromHttpStatusCode(418));
+        assertEquals(MediaStore.MediaErrorType.GENERIC_ERROR, MediaStore.MediaErrorType.fromHttpStatusCode(600));
+    }
+
     private MediaModel getBasicMedia() {
         return generateMedia("Test Title", "Test Description", "Test Caption", "Test Alt");
     }
