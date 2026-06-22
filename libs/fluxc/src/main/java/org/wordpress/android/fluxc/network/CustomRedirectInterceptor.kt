@@ -24,15 +24,15 @@ class CustomRedirectInterceptor : Interceptor {
 
     fun getRedirectRequest(originalRequest: Request, redirectResponse: Response): Request? {
         val location = redirectResponse.header("Location")
-        if (location.isNullOrEmpty()) {
-            return null
-        }
 
         // Resolve the Location header against the original request URL. This handles both absolute
         // redirects and relative ones (e.g. "/wp-json/..."). Passing a relative location straight to
         // Request.Builder.url() crashes with "Expected URL scheme 'http' or 'https'...". resolve()
         // returns null if the location can't be turned into a valid URL, in which case we don't follow.
-        val redirectUrl = originalRequest.url.resolve(location) ?: return null
+        val redirectUrl = if (location.isNullOrEmpty()) null else originalRequest.url.resolve(location)
+        if (redirectUrl == null) {
+            return null
+        }
 
         val newBuilder: Request.Builder = originalRequest.newBuilder().url(redirectUrl)
 
