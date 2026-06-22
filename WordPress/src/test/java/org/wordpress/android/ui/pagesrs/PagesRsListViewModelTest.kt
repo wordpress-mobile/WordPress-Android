@@ -304,6 +304,49 @@ internal class PagesRsListViewModelTest : BaseUnitTest(StandardTestDispatcher())
     }
 
     @Test
+    fun `openPage on the site editor row emits OpenSiteEditor`() = test {
+        site.setIsWPCom(true)
+        val viewModel = createViewModel()
+
+        viewModel.events.test {
+            viewModel.openPage(SITE_EDITOR_PAGE_ID, PageRsListTab.PUBLISHED)
+
+            val event = awaitItem()
+            assertThat(event).isInstanceOf(PageRsListEvent.OpenSiteEditor::class.java)
+            event as PageRsListEvent.OpenSiteEditor
+            assertThat(event.url).endsWith("site-editor.php?canvas=edit")
+            assertThat(event.useWpComCredentials).isTrue()
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
+    fun `openPage on the site editor row tracks PAGES_EDIT_HOMEPAGE_ITEM_PRESSED`() {
+        val viewModel = createViewModel()
+
+        viewModel.openPage(SITE_EDITOR_PAGE_ID, PageRsListTab.PUBLISHED)
+
+        verify(analyticsTracker).track(
+            eq(Stat.PAGES_EDIT_HOMEPAGE_ITEM_PRESSED),
+            eq(site),
+            anyOrNull<Map<String, *>>()
+        )
+    }
+
+    @Test
+    fun `openPage on the site editor row does not track PAGES_LIST_ITEM_SELECTED`() {
+        val viewModel = createViewModel()
+
+        viewModel.openPage(SITE_EDITOR_PAGE_ID, PageRsListTab.PUBLISHED)
+
+        verify(analyticsTracker, never()).track(
+            eq(Stat.PAGES_LIST_ITEM_SELECTED),
+            any<SiteModel>(),
+            any<Map<String, *>>()
+        )
+    }
+
+    @Test
     fun `registers with the dispatcher on init and unregisters on clear`() {
         val viewModel = createViewModel()
         verify(dispatcher).register(viewModel)

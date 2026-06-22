@@ -13,6 +13,7 @@ import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -145,6 +146,9 @@ internal class PagesRsListViewModel @Inject constructor(
     // current via [onEditorThemeChanged]. When true (and the Site Editor MVP flag is on) the
     // published tab shows a single SITE_EDITOR virtual row that opens the Site Editor web view.
     private var isBlockBasedTheme = false
+
+    // Guards against a rapid double-tap on the SITE_EDITOR row launching two web views.
+    private var isLaunchingSiteEditor = false
 
     init {
         dispatcher.register(this)
@@ -495,16 +499,15 @@ internal class PagesRsListViewModel @Inject constructor(
         val site = this.site
         if (site == null || _isOpeningPage.value) return
 
-        val item = _tabStates.value[tab]
-            ?.pages
-            ?.firstOrNull { it.remotePageId == remotePageId }
-
-        if (item is PageRsListItem.Virtual && item.kind == PageRsListItem.Virtual.Kind.SITE_EDITOR) {
+        if (remotePageId == SITE_EDITOR_PAGE_ID) {
             openSiteEditor(site)
             return
         }
 
-        val page = item?.page
+        val page = _tabStates.value[tab]
+            ?.pages
+            ?.firstOrNull { it.remotePageId == remotePageId }
+            ?.page
         when {
             tab == PageRsListTab.TRASHED || page?.isTrashed == true ->
                 _pendingConfirmation.value = PageRsListConfirmation.MoveToDraft(remotePageId)
@@ -514,6 +517,9 @@ internal class PagesRsListViewModel @Inject constructor(
 
     /** Opens the block-theme homepage in the Site Editor web view, matching the legacy pages list. */
     private fun openSiteEditor(site: SiteModel) {
+        if (isLaunchingSiteEditor) return
+        isLaunchingSiteEditor = true
+        analyticsTracker.track(Stat.PAGES_EDIT_HOMEPAGE_ITEM_PRESSED, site)
         val useWpComCredentials = site.isWPCom || site.isWPComAtomic || site.isPrivateWPComAtomic
         _events.trySend(
             PageRsListEvent.OpenSiteEditor(
@@ -521,6 +527,13 @@ internal class PagesRsListViewModel @Inject constructor(
                 useWpComCredentials = useWpComCredentials
             )
         )
+        // The web view opens in a separate activity with no completion callback, so clear the
+        // guard after a short debounce: a rapid double-tap is dropped, but the row stays tappable
+        // when the user returns.
+        viewModelScope.launch {
+            delay(SITE_EDITOR_LAUNCH_DEBOUNCE_MS)
+            isLaunchingSiteEditor = false
+        }
     }
 
     private fun proceedOpenPage(site: SiteModel, remotePageId: Long, lastModified: String?) {
@@ -1392,6 +1405,7 @@ internal class PagesRsListViewModel @Inject constructor(
     companion object {
         private const val PAGE_SIZE = 20
         private const val SEARCH_DEBOUNCE_MS = 250L
+        private const val SITE_EDITOR_LAUNCH_DEBOUNCE_MS = 1000L
         internal const val MIN_SEARCH_QUERY_LENGTH = 3
         private const val THUMBNAIL_SIZE_DP = 64
         private val ALL_STATUSES = PageRsListTab.entries.flatMap { it.statuses }.distinct()
