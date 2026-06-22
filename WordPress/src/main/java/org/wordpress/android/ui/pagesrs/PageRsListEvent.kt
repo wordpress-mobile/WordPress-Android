@@ -20,6 +20,12 @@ internal sealed interface PageRsListEvent {
 
     data class CopyPageUrl(val url: String) : PageRsListEvent
 
+    /** Opens the block-theme homepage in the Site Editor web view via WPWebViewActivity. */
+    data class OpenSiteEditor(
+        val url: String,
+        val useWpComCredentials: Boolean
+    ) : PageRsListEvent
+
     data class PromoteWithBlaze(
         val site: SiteModel,
         val page: PostModel

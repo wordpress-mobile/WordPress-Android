@@ -28,14 +28,19 @@ import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.Dispatcher
+import org.wordpress.android.fluxc.generated.EditorThemeActionBuilder
 import org.wordpress.android.fluxc.model.SiteHomepageSettings.ShowOnFront
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.post.PostStatus as FluxCPostStatus
 import org.wordpress.android.fluxc.store.AccountStore
+import org.wordpress.android.fluxc.store.EditorThemeStore
+import org.wordpress.android.fluxc.store.EditorThemeStore.FetchEditorThemePayload
+import org.wordpress.android.fluxc.store.EditorThemeStore.OnEditorThemeChanged
 import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded
 import org.wordpress.android.ui.blaze.BlazeFeatureUtils
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
+import org.wordpress.android.ui.pages.PageItem
 import org.wordpress.android.ui.posts.AuthorFilterSelection
 import org.wordpress.android.ui.postsrs.PostRsErrorUtils
 import org.wordpress.android.ui.postsrs.SnackbarMessage
@@ -45,6 +50,7 @@ import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.util.config.SiteEditorMVPFeatureConfig
 import org.wordpress.android.viewmodel.ResourceProvider
 import rs.wordpress.cache.kotlin.ObservableMetadataCollection
 import rs.wordpress.cache.kotlin.getObservablePostMetadataCollectionWithEditContext
@@ -74,6 +80,8 @@ internal class PagesRsListViewModel @Inject constructor(
     private val accountStore: AccountStore,
     private val appPrefsWrapper: AppPrefsWrapper,
     private val analyticsTracker: AnalyticsTrackerWrapper,
+    private val editorThemeStore: EditorThemeStore,
+    private val siteEditorMVPFeatureConfig: SiteEditorMVPFeatureConfig,
 ) : ViewModel() {
     private val _tabStates = MutableStateFlow<Map<PageRsListTab, PageTabUiState>>(emptyMap())
     val tabStates: StateFlow<Map<PageRsListTab, PageTabUiState>> = _tabStates.asStateFlow()
@@ -133,12 +141,18 @@ internal class PagesRsListViewModel @Inject constructor(
     )
     val authorFilter: StateFlow<AuthorFilterSelection> = _authorFilter.asStateFlow()
 
+    // Whether the site's homepage uses a block-based theme. Seeded from the local cache and kept
+    // current via [onEditorThemeChanged]. When true (and the Site Editor MVP flag is on) the
+    // published tab shows a single SITE_EDITOR virtual row that opens the Site Editor web view.
+    private var isBlockBasedTheme = false
+
     init {
         dispatcher.register(this)
         if (site == null) {
             _events.trySend(PageRsListEvent.ShowToast(R.string.blog_not_found))
             _events.trySend(PageRsListEvent.Finish)
         } else {
+            refreshEditorTheme(site)
             @OptIn(FlowPreview::class)
             viewModelScope.launch {
                 _searchQuery
@@ -350,6 +364,30 @@ internal class PagesRsListViewModel @Inject constructor(
         refreshAllTabs()
     }
 
+    /** Seeds [isBlockBasedTheme] from the local cache and dispatches a remote refresh. */
+    private fun refreshEditorTheme(site: SiteModel) {
+        isBlockBasedTheme = editorThemeStore.getIsBlockBasedTheme(site)
+        dispatcher.dispatch(
+            EditorThemeActionBuilder.newFetchEditorThemeAction(
+                FetchEditorThemePayload(site, gssEnabled = true)
+            )
+        )
+    }
+
+    @Suppress("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN_ORDERED)
+    fun onEditorThemeChanged(event: OnEditorThemeChanged) {
+        val site = this.site ?: return
+        if (site.id != event.siteId) return
+        val isBlockBased = event.editorTheme?.themeSupport?.isEditorThemeBlockBased() ?: return
+        if (isBlockBased == isBlockBasedTheme) return
+        isBlockBasedTheme = isBlockBased
+        // Rebuild the published tab from cache so the SITE_EDITOR row appears/disappears.
+        if (collections.containsKey(PageRsListTab.PUBLISHED)) {
+            viewModelScope.launch { loadItemsForTab(PageRsListTab.PUBLISHED) }
+        }
+    }
+
     /** Refreshes all currently initialized tabs. */
     @MainThread
     fun refreshAllTabs() {
@@ -453,16 +491,32 @@ internal class PagesRsListViewModel @Inject constructor(
         val site = this.site
         if (site == null || _isOpeningPage.value) return
 
-        val page = _tabStates.value[tab]
+        val item = _tabStates.value[tab]
             ?.pages
             ?.firstOrNull { it.remotePageId == remotePageId }
-            ?.page
 
+        if (item is PageRsListItem.Virtual && item.kind == PageRsListItem.Virtual.Kind.SITE_EDITOR) {
+            openSiteEditor(site)
+            return
+        }
+
+        val page = item?.page
         when {
             tab == PageRsListTab.TRASHED || page?.isTrashed == true ->
                 _pendingConfirmation.value = PageRsListConfirmation.MoveToDraft(remotePageId)
             checkNetwork() -> proceedOpenPage(site, remotePageId, page?.lastModified)
         }
+    }
+
+    /** Opens the block-theme homepage in the Site Editor web view, matching the legacy pages list. */
+    private fun openSiteEditor(site: SiteModel) {
+        val useWpComCredentials = site.isWPCom || site.isWPComAtomic || site.isPrivateWPComAtomic
+        _events.trySend(
+            PageRsListEvent.OpenSiteEditor(
+                url = PageItem.VirtualHomepage.Action.OpenSiteEditor.getUrl(site),
+                useWpComCredentials = useWpComCredentials
+            )
+        )
     }
 
     private fun proceedOpenPage(site: SiteModel, remotePageId: Long, lastModified: String?) {
@@ -1111,11 +1165,13 @@ internal class PagesRsListViewModel @Inject constructor(
             // and the construction-time [site] snapshot would pin stale pageOnFront /
             // pageForPosts values onto the virtual rows.
             val currentSite = selectedSiteRepository.getSelectedSite() ?: site
+            val showSiteEditorHomepage = siteEditorMVPFeatureConfig.isEnabled() && isBlockBasedTheme
             val rows = buildRows(
                 pages = uiModels,
                 applyHierarchy = applyHierarchy,
                 pageOnFront = currentSite?.pageOnFront ?: 0L,
-                pageForPosts = currentSite?.pageForPosts ?: 0L
+                pageForPosts = currentSite?.pageForPosts ?: 0L,
+                showSiteEditorHomepage = showSiteEditorHomepage
             ).map { row -> row.withMenuActions(currentSite) }
             updateTabUiState(tab) {
                 copy(pages = rows, isLoading = false, error = null, isAuthError = false)
@@ -1189,6 +1245,10 @@ internal class PagesRsListViewModel @Inject constructor(
     }
 
     private fun PageRsListItem.withMenuActions(site: SiteModel?): PageRsListItem {
+        // The SITE_EDITOR virtual has no backing page, so it gets no overflow menu.
+        if (this is PageRsListItem.Virtual && kind == PageRsListItem.Virtual.Kind.SITE_EDITOR) {
+            return this
+        }
         val pageOnFront = site?.pageOnFront ?: 0L
         val pageForPosts = site?.pageForPosts ?: 0L
         // WP.com capabilities and showOnFront are synced reliably, so the homepage actions

@@ -23,6 +23,7 @@ import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
+import org.wordpress.android.fluxc.store.EditorThemeStore
 import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded
 import org.wordpress.android.ui.blaze.BlazeFeatureUtils
@@ -33,6 +34,7 @@ import org.wordpress.android.ui.postsrs.data.WpServiceProvider
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.util.config.SiteEditorMVPFeatureConfig
 import org.wordpress.android.viewmodel.ResourceProvider
 
 @ExperimentalCoroutinesApi
@@ -50,6 +52,8 @@ internal class PagesRsListViewModelTest : BaseUnitTest(StandardTestDispatcher())
     @Mock lateinit var accountStore: AccountStore
     @Mock lateinit var appPrefsWrapper: AppPrefsWrapper
     @Mock lateinit var analyticsTracker: AnalyticsTrackerWrapper
+    @Mock lateinit var editorThemeStore: EditorThemeStore
+    @Mock lateinit var siteEditorMVPFeatureConfig: SiteEditorMVPFeatureConfig
 
     private lateinit var site: SiteModel
     private var activeViewModel: PagesRsListViewModel? = null
@@ -84,6 +88,8 @@ internal class PagesRsListViewModelTest : BaseUnitTest(StandardTestDispatcher())
         accountStore = accountStore,
         appPrefsWrapper = appPrefsWrapper,
         analyticsTracker = analyticsTracker,
+        editorThemeStore = editorThemeStore,
+        siteEditorMVPFeatureConfig = siteEditorMVPFeatureConfig,
     ).also { activeViewModel = it }
 
     @Test

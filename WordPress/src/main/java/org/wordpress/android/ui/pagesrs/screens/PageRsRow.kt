@@ -115,7 +115,22 @@ private fun PageContentItem(
                 Spacer(modifier = Modifier.width(12.dp))
             }
             Column(modifier = Modifier.weight(1f)) {
-                val virtualLabel = virtualKind?.let { stringResource(it.labelResId()) }
+                // The SITE_EDITOR row has no backing page, so its title/subtitle come from string
+                // resources and it shows no header label, badges, or excerpt.
+                val isSiteEditor = virtualKind == PageRsListItem.Virtual.Kind.SITE_EDITOR
+                val titleText = if (isSiteEditor) {
+                    stringResource(R.string.virtual_homepage_title)
+                } else {
+                    page.title.ifBlank { stringResource(R.string.untitled_in_parentheses) }
+                }
+                val subtitleText = if (isSiteEditor) {
+                    stringResource(R.string.virtual_homepage_subtitle)
+                } else {
+                    page.excerpt
+                }
+                val virtualLabel = virtualKind
+                    ?.takeUnless { isSiteEditor }
+                    ?.let { stringResource(it.labelResId()) }
                 val statusLabel = page.statusLabelResId.takeIf { it != 0 }?.let { stringResource(it) }
                 val bullet = stringResource(R.string.bullet_with_spaces)
                 val headerText = listOfNotNull(
@@ -137,15 +152,15 @@ private fun PageContentItem(
                     Spacer(modifier = Modifier.height(4.dp))
                 }
                 Text(
-                    text = page.title.ifBlank { stringResource(R.string.untitled_in_parentheses) },
+                    text = titleText,
                     style = MaterialTheme.typography.titleMedium,
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis
                 )
-                if (page.excerpt.isNotBlank()) {
+                if (subtitleText.isNotBlank()) {
                     Spacer(modifier = Modifier.height(4.dp))
                     Text(
-                        text = page.excerpt,
+                        text = subtitleText,
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         maxLines = 2,
@@ -283,13 +298,16 @@ private fun ErrorItem(modifier: Modifier = Modifier) {
 }
 
 private fun PageRsListItem.Virtual.Kind.icon(): ImageVector = when (this) {
-    PageRsListItem.Virtual.Kind.HOMEPAGE -> Icons.Filled.Home
+    PageRsListItem.Virtual.Kind.HOMEPAGE,
+    PageRsListItem.Virtual.Kind.SITE_EDITOR -> Icons.Filled.Home
     PageRsListItem.Virtual.Kind.POSTS_PAGE -> Icons.AutoMirrored.Filled.Article
 }
 
+// SITE_EDITOR renders its own title from string resources and has no header label.
 private fun PageRsListItem.Virtual.Kind.labelResId(): Int = when (this) {
     PageRsListItem.Virtual.Kind.HOMEPAGE -> R.string.site_settings_homepage
     PageRsListItem.Virtual.Kind.POSTS_PAGE -> R.string.site_settings_posts_page
+    PageRsListItem.Virtual.Kind.SITE_EDITOR -> R.string.virtual_homepage_title
 }
 
 private const val INDENT_STEP_DP = 16
