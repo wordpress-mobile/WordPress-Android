@@ -1,6 +1,6 @@
-* [**] The new Pages list can now be enabled for any site from Experimental Features. It adds search, an author filter, page hierarchy, featured image thumbnails, a quick-create button, and a full set of page actions. [#22989]
-* [**] The redesigned Posts list is now the default for sites that use an application password. [#22925]
-* [*] Signing in to WordPress.com is faster: the app opens your primary site right away instead of waiting for your full site list to load. [#22920]
-* [*] Getting help is simpler with a single conversations flow that combines support bots and Happiness Engineers. [#22946]
-* [**] Resolved an editor crash that could happen when opening media options while leaving the editor. [#22974]
-* [*] The Menus entry no longer shows a "BETA" badge. [#22967]
+- Enabled new Pages list with updated features
+- Set new Posts list to default for sites with application password
+- Sped up WordPress.com login
+- Combined bot/Happiness Engineer chats in Support
+- Fixed crash when opening media while leaving editor
+- Removed beta badge from Menus in My Site

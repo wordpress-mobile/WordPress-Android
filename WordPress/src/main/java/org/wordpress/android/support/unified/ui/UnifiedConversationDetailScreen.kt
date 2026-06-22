@@ -20,6 +20,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.OpenInNew
 import androidx.compose.material.icons.automirrored.filled.Send
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -42,10 +43,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardCapitalization
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.layout.size
@@ -68,6 +71,7 @@ import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.material.icons.filled.PlayCircle
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import coil.compose.AsyncImage
 import coil.compose.SubcomposeAsyncImage
@@ -101,6 +105,7 @@ fun UnifiedConversationDetailScreen(
     onBackClick: () -> Unit,
     onSendReply: (String, Boolean) -> Unit,
     onDownloadAttachment: (UnifiedAttachment) -> Unit,
+    onLinkClick: (String) -> Unit,
     authorizationHeader: String,
     videoDownloadState: VideoDownloadState,
     onStartVideoDownload: (String) -> Unit,
@@ -196,7 +201,8 @@ fun UnifiedConversationDetailScreen(
                     ) { message ->
                         MessageBubble(
                             message = message,
-                            timestamp = formatRelativeTime(message.createdAt, resources)
+                            timestamp = formatRelativeTime(message.createdAt, resources),
+                            onLinkClick = onLinkClick
                         )
                     }
 
@@ -226,6 +232,7 @@ fun UnifiedConversationDetailScreen(
                             timestamp = formatRelativeTime(message.createdAt, resources),
                             onPreviewAttachment = { previewAttachment = it },
                             onDownloadAttachment = onDownloadAttachment,
+                            onLinkClick = onLinkClick,
                             authorizationHeader = authorizationHeader,
                         )
                     }
@@ -356,7 +363,11 @@ private fun AttachmentPreviewOverlay(
 }
 
 @Composable
-private fun MessageBubble(message: UnifiedMessage, timestamp: String) {
+private fun MessageBubble(
+    message: UnifiedMessage,
+    timestamp: String,
+    onLinkClick: (String) -> Unit
+) {
     Column(
         modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = if (message.isUser) Alignment.End else Alignment.Start
@@ -403,7 +414,7 @@ private fun MessageBubble(message: UnifiedMessage, timestamp: String) {
                 if (message.attachments.isNotEmpty()) {
                     Spacer(modifier = Modifier.height(8.dp))
                     message.attachments.forEach { attachment ->
-                        AttachmentRow(attachment)
+                        AttachmentRow(attachment, onLinkClick)
                     }
                 }
 
@@ -424,7 +435,16 @@ private fun MessageBubble(message: UnifiedMessage, timestamp: String) {
 }
 
 @Composable
-private fun AttachmentRow(attachment: UnifiedAttachment) {
+private fun AttachmentRow(attachment: UnifiedAttachment, onLinkClick: (String) -> Unit) {
+    val isLink = attachment.type == AttachmentType.Link
+    val linkModifier = if (isLink) {
+        val linkDescription = attachmentLinkDescription(attachment)
+        Modifier
+            .clickable(role = Role.Button) { onLinkClick(attachment.url) }
+            .semantics { contentDescription = linkDescription }
+    } else {
+        Modifier
+    }
     Column(modifier = Modifier.padding(vertical = 4.dp)) {
         if (attachment.isImage) {
             AsyncImage(
@@ -441,7 +461,11 @@ private fun AttachmentRow(attachment: UnifiedAttachment) {
                 text = attachment.filename,
                 style = MaterialTheme.typography.labelMedium,
                 fontWeight = FontWeight.Medium,
-                modifier = Modifier.weight(1f, fill = false),
+                color = if (isLink) MaterialTheme.colorScheme.primary else Color.Unspecified,
+                textDecoration = if (isLink) TextDecoration.Underline else null,
+                modifier = Modifier
+                    .weight(1f, fill = false)
+                    .then(linkModifier),
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
             )
@@ -752,6 +776,7 @@ private fun UnifiedMessageItem(
     timestamp: String,
     onPreviewAttachment: (UnifiedAttachment) -> Unit,
     onDownloadAttachment: (UnifiedAttachment) -> Unit,
+    onLinkClick: (String) -> Unit,
     authorizationHeader: String,
 ) {
     val messageDescription = "${message.authorName}, $timestamp. ${message.formattedText}"
@@ -811,6 +836,7 @@ private fun UnifiedMessageItem(
                     attachments = message.attachments,
                     onPreviewAttachment = onPreviewAttachment,
                     onDownloadAttachment = onDownloadAttachment,
+                    onLinkClick = onLinkClick,
                     authorizationHeader = authorizationHeader,
                 )
             }
@@ -824,24 +850,75 @@ private fun UnifiedAttachmentsList(
     attachments: List<UnifiedAttachment>,
     onPreviewAttachment: (UnifiedAttachment) -> Unit,
     onDownloadAttachment: (UnifiedAttachment) -> Unit,
+    onLinkClick: (String) -> Unit,
     authorizationHeader: String,
 ) {
-    FlowRow(
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp)
-    ) {
-        attachments.forEach { attachment ->
-            UnifiedAttachmentItem(
-                attachment = attachment,
-                onClick = {
-                    when (attachment.type) {
-                        AttachmentType.Image, AttachmentType.Video -> onPreviewAttachment(attachment)
-                        else -> onDownloadAttachment(attachment)
-                    }
-                },
-                authorizationHeader = authorizationHeader,
-            )
+    // Link attachments (text/html web pages) are rendered as tappable links rather than
+    // file cards, since they point to web articles rather than downloadable files.
+    val (links, files) = attachments.partition { it.type == AttachmentType.Link }
+
+    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        links.forEach { attachment ->
+            UnifiedAttachmentLink(attachment, onLinkClick)
         }
+
+        if (files.isNotEmpty()) {
+            FlowRow(
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                files.forEach { attachment ->
+                    UnifiedAttachmentItem(
+                        attachment = attachment,
+                        onClick = {
+                            when (attachment.type) {
+                                AttachmentType.Image, AttachmentType.Video -> onPreviewAttachment(attachment)
+                                else -> onDownloadAttachment(attachment)
+                            }
+                        },
+                        authorizationHeader = authorizationHeader,
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun attachmentLinkDescription(attachment: UnifiedAttachment): String =
+    stringResource(
+        R.string.unified_support_attachment_link_content_description,
+        attachment.filename
+    )
+
+@Composable
+private fun UnifiedAttachmentLink(attachment: UnifiedAttachment, onLinkClick: (String) -> Unit) {
+    val linkDescription = attachmentLinkDescription(attachment)
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable(role = Role.Button) {
+                onLinkClick(attachment.url)
+            }
+            .padding(vertical = 4.dp)
+            .semantics { contentDescription = linkDescription },
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        Icon(
+            imageVector = Icons.AutoMirrored.Filled.OpenInNew,
+            contentDescription = null,
+            tint = MaterialTheme.colorScheme.primary,
+            modifier = Modifier.size(20.dp)
+        )
+        Text(
+            text = attachment.filename,
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.primary,
+            textDecoration = TextDecoration.Underline,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+        )
     }
 }
 
@@ -851,10 +928,12 @@ private fun UnifiedAttachmentItem(
     onClick: () -> Unit,
     authorizationHeader: String,
 ) {
+    // Link attachments are rendered as links by UnifiedAttachmentLink, not as cards, so they
+    // fall back to the generic file icon here.
     val iconRes = when (attachment.type) {
         AttachmentType.Image -> R.drawable.ic_image_white_24dp
         AttachmentType.Video -> R.drawable.ic_video_camera_white_24dp
-        AttachmentType.Other -> R.drawable.ic_pages_white_24dp
+        AttachmentType.Link, AttachmentType.Other -> R.drawable.ic_pages_white_24dp
     }
 
     Box(
