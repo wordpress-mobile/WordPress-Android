@@ -173,64 +173,69 @@ class MediaRSApiRestClient @Inject constructor(
                 }
             }
 
-            is WpRequestResult.InvalidHttpStatusCode<*> -> {
-                val status = mediaResponse.statusCode.toInt()
-                appLogWrapper.e(
-                    AppLog.T.MEDIA,
-                    "Media request failed with HTTP $status " +
-                            "(${mediaResponse.requestMethod} ${mediaResponse.requestUrl})"
-                )
-                MediaError(mediaErrorTypeFromHttpStatus(status)).apply {
-                    statusCode = status
-                    message = "Media request failed with HTTP status $status"
-                    logMessage = "InvalidHttpStatusCode: status=$status, " +
-                            "method=${mediaResponse.requestMethod}, url=${mediaResponse.requestUrl}"
-                }
-            }
+            is WpRequestResult.InvalidHttpStatusCode<*> -> parseInvalidHttpStatusCode(mediaResponse)
+            is WpRequestResult.WpError<*> -> parseWpError(mediaResponse)
+            is WpRequestResult.RequestExecutionFailed<*> -> parseRequestExecutionFailed(mediaResponse)
+            is WpRequestResult.UnknownError<*> -> parseUnknownError(mediaResponse)
+        }
+    }
 
-            is WpRequestResult.WpError<*> -> {
-                val status = mediaResponse.statusCode.toInt()
-                appLogWrapper.e(
-                    AppLog.T.MEDIA,
-                    "Media request returned WpError ${mediaResponse.errorCode} " +
-                            "(HTTP $status): ${mediaResponse.errorMessage}"
-                )
-                MediaError(mediaErrorTypeFromHttpStatus(status)).apply {
-                    statusCode = status
-                    message = mediaResponse.errorMessage
-                    logMessage = "WpError: code=${mediaResponse.errorCode}, status=$status, " +
-                            "method=${mediaResponse.requestMethod}, url=${mediaResponse.requestUrl}, " +
-                            "message=${mediaResponse.errorMessage}"
-                }
-            }
+    private fun parseInvalidHttpStatusCode(mediaResponse: WpRequestResult.InvalidHttpStatusCode<*>): MediaError {
+        val status = mediaResponse.statusCode.toInt()
+        appLogWrapper.e(
+            AppLog.T.MEDIA,
+            "Media request failed with HTTP $status " +
+                    "(${mediaResponse.requestMethod} ${mediaResponse.requestUrl})"
+        )
+        return MediaError(mediaErrorTypeFromHttpStatus(status)).apply {
+            statusCode = status
+            message = "Media request failed with HTTP status $status"
+            logMessage = "InvalidHttpStatusCode: status=$status, " +
+                    "method=${mediaResponse.requestMethod}, url=${mediaResponse.requestUrl}"
+        }
+    }
 
-            is WpRequestResult.RequestExecutionFailed<*> -> {
-                val status = mediaResponse.statusCode?.toInt()
-                appLogWrapper.e(
-                    AppLog.T.MEDIA,
-                    "Media request execution failed: ${mediaResponse.reason} (HTTP $status)"
-                )
-                MediaError(mediaErrorTypeFromExecutionReason(mediaResponse.reason)).apply {
-                    if (status != null) statusCode = status
-                    message = "Media request could not be completed"
-                    logMessage = "RequestExecutionFailed: reason=${mediaResponse.reason}, status=$status, " +
-                            "method=${mediaResponse.requestMethod}, url=${mediaResponse.requestUrl}"
-                }
-            }
+    private fun parseWpError(mediaResponse: WpRequestResult.WpError<*>): MediaError {
+        val status = mediaResponse.statusCode.toInt()
+        appLogWrapper.e(
+            AppLog.T.MEDIA,
+            "Media request returned WpError ${mediaResponse.errorCode} " +
+                    "(HTTP $status): ${mediaResponse.errorMessage}"
+        )
+        return MediaError(mediaErrorTypeFromHttpStatus(status)).apply {
+            statusCode = status
+            message = mediaResponse.errorMessage
+            logMessage = "WpError: code=${mediaResponse.errorCode}, status=$status, " +
+                    "method=${mediaResponse.requestMethod}, url=${mediaResponse.requestUrl}, " +
+                    "message=${mediaResponse.errorMessage}"
+        }
+    }
 
-            is WpRequestResult.UnknownError<*> -> {
-                val status = mediaResponse.statusCode.toInt()
-                appLogWrapper.e(
-                    AppLog.T.MEDIA,
-                    "Media request returned unknown error (HTTP $status): ${mediaResponse.response}"
-                )
-                MediaError(mediaErrorTypeFromHttpStatus(status)).apply {
-                    statusCode = status
-                    message = "Media request failed with HTTP status $status"
-                    logMessage = "UnknownError: status=$status, method=${mediaResponse.requestMethod}, " +
-                            "url=${mediaResponse.requestUrl}, response=${mediaResponse.response}"
-                }
-            }
+    private fun parseRequestExecutionFailed(mediaResponse: WpRequestResult.RequestExecutionFailed<*>): MediaError {
+        val status = mediaResponse.statusCode?.toInt()
+        appLogWrapper.e(
+            AppLog.T.MEDIA,
+            "Media request execution failed: ${mediaResponse.reason} (HTTP $status)"
+        )
+        return MediaError(mediaErrorTypeFromExecutionReason(mediaResponse.reason)).apply {
+            if (status != null) statusCode = status
+            message = "Media request could not be completed"
+            logMessage = "RequestExecutionFailed: reason=${mediaResponse.reason}, status=$status, " +
+                    "method=${mediaResponse.requestMethod}, url=${mediaResponse.requestUrl}"
+        }
+    }
+
+    private fun parseUnknownError(mediaResponse: WpRequestResult.UnknownError<*>): MediaError {
+        val status = mediaResponse.statusCode.toInt()
+        appLogWrapper.e(
+            AppLog.T.MEDIA,
+            "Media request returned unknown error (HTTP $status): ${mediaResponse.response}"
+        )
+        return MediaError(mediaErrorTypeFromHttpStatus(status)).apply {
+            statusCode = status
+            message = "Media request failed with HTTP status $status"
+            logMessage = "UnknownError: status=$status, method=${mediaResponse.requestMethod}, " +
+                    "url=${mediaResponse.requestUrl}, response=${mediaResponse.response}"
         }
     }
 
