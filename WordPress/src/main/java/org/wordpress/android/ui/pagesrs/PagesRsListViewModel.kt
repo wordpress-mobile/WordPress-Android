@@ -152,7 +152,11 @@ internal class PagesRsListViewModel @Inject constructor(
             _events.trySend(PageRsListEvent.ShowToast(R.string.blog_not_found))
             _events.trySend(PageRsListEvent.Finish)
         } else {
-            refreshEditorTheme(site)
+            // Only the SITE_EDITOR virtual row needs the block-theme state, so skip the fetch
+            // entirely when the Site Editor MVP flag is off to avoid a request on every visit.
+            if (siteEditorMVPFeatureConfig.isEnabled()) {
+                refreshEditorTheme(site)
+            }
             @OptIn(FlowPreview::class)
             viewModelScope.launch {
                 _searchQuery
