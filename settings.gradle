@@ -50,6 +50,14 @@ static def loadPropertiesFromFile(File inputFile) {
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
+        if (gradle.ext.isCi) {
+            // CI-only Reposilite mirror (Maven Central). Listed first so CI resolves
+            // through our internal proxy before reaching out to public repositories.
+            maven {
+                url 'http://10.0.2.215:8080/maven-central'
+                allowInsecureProtocol = true
+            }
+        }
         google()
         mavenCentral()
         maven {
