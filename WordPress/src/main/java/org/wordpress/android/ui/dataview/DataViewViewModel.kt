@@ -55,6 +55,13 @@ open class DataViewViewModel @Inject constructor(
 
     open val emptyView = DataViewEmptyView()
 
+    /**
+     * When false, the list is fetched in full by a single [performNetworkRequest] call and
+     * incremental (scroll) pagination is disabled. Subclasses that need the complete data set
+     * up front - e.g. to build a hierarchy - override this.
+     */
+    protected open val supportsLoadMore: Boolean = true
+
     private fun updateState(update: (DataViewUiState) -> DataViewUiState) {
         _uiState.update { update(it) }
     }
@@ -67,7 +74,7 @@ open class DataViewViewModel @Inject constructor(
                     if (currentState.searchQuery.isNotEmpty()) LoadingState.EMPTY_SEARCH
                     else LoadingState.EMPTY
                 } else LoadingState.LOADED,
-                canLoadMore = items.size == PAGE_SIZE
+                canLoadMore = supportsLoadMore && items.size == PAGE_SIZE
             )
         }
     }
