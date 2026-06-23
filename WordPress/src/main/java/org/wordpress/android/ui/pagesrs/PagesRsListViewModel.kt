@@ -1125,7 +1125,7 @@ internal class PagesRsListViewModel @Inject constructor(
                 // fetch genuinely completes, at which point an empty result is real.
                 copy(
                     pages = rows,
-                    isLoading = if (rows.isEmpty()) isLoading else false,
+                    isLoading = isLoading && rows.isEmpty(),
                     error = null,
                     isAuthError = false
                 )
