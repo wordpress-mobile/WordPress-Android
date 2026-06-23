@@ -3,6 +3,7 @@ package org.wordpress.android.ui.taxonomies
 import android.content.Context
 import android.content.SharedPreferences
 import android.content.res.Resources
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
@@ -13,6 +14,7 @@ import org.mockito.Mock
 import org.mockito.MockitoAnnotations
 import org.mockito.kotlin.any
 import org.mockito.kotlin.mock
+import org.mockito.kotlin.never
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
@@ -394,6 +396,107 @@ class TermsViewModelTest : BaseUnitTest() {
 
         assertThat(viewModel.uiState.value.loadingState).isEqualTo(LoadingState.ERROR)
         assertThat(viewModel.uiState.value.items).isEmpty()
+    }
+
+    @Test
+    fun `hierarchy is built across pages so a child paged after its parent nests under it`() = test {
+        stubSuccessfulFetch()
+        // The child is returned on the first page and its parent only on the second. Building the
+        // tree per-page would leave the child an orphan root; building from the full set must nest
+        // it. This is the headline bug this change fixes.
+        val firstPage = createListResponse(
+            terms = listOf(createTestTerm(id = 2L, parent = 1L)),
+            nextPageParams = TermListParams(perPage = 100u)
+        )
+        val secondPage = createListResponse(
+            terms = listOf(createTestTerm(id = 1L, parent = 0L)),
+            nextPageParams = null
+        )
+        whenever(wpApiClient.request<TermsRequestListWithEditContextResponse>(any()))
+            .thenReturn(firstPage, secondPage)
+
+        val viewModel = createViewModel()
+        viewModel.initialize(DEFAULT_TAXONOMY_CATEGORY, isHierarchical = true)
+        advanceUntilIdle()
+
+        val items = viewModel.uiState.value.items
+        assertThat(items).hasSize(2)
+        // Parent first at the root level, then the child indented one level (INDENTATION_IN_DP=10)
+        assertThat(items[0].id).isEqualTo(1L)
+        assertThat(items[0].indentation).isEqualTo(0.dp)
+        assertThat(items[1].id).isEqualTo(2L)
+        assertThat(items[1].indentation).isEqualTo(10.dp)
+    }
+
+    @Test
+    fun `hierarchy indents grandchildren split across pages by their depth`() = test {
+        stubSuccessfulFetch()
+        // root (id 1) -> child (id 2) -> grandchild (id 3), each delivered on a different page so
+        // the full chain only exists once every page has been combined.
+        val firstPage = createListResponse(
+            terms = listOf(createTestTerm(id = 3L, parent = 2L)),
+            nextPageParams = TermListParams(perPage = 100u)
+        )
+        val secondPage = createListResponse(
+            terms = listOf(createTestTerm(id = 2L, parent = 1L)),
+            nextPageParams = TermListParams(perPage = 100u)
+        )
+        val thirdPage = createListResponse(
+            terms = listOf(createTestTerm(id = 1L, parent = 0L)),
+            nextPageParams = null
+        )
+        whenever(wpApiClient.request<TermsRequestListWithEditContextResponse>(any()))
+            .thenReturn(firstPage, secondPage, thirdPage)
+
+        val viewModel = createViewModel()
+        viewModel.initialize(DEFAULT_TAXONOMY_CATEGORY, isHierarchical = true)
+        advanceUntilIdle()
+
+        val items = viewModel.uiState.value.items
+        assertThat(items.map { it.id }).containsExactly(1L, 2L, 3L)
+        assertThat(items.map { it.indentation }).containsExactly(0.dp, 10.dp, 20.dp)
+    }
+
+    @Test
+    fun `complete fetch stores the terms locally`() = test {
+        stubSuccessfulFetch()
+        val page = createListResponse(
+            terms = List(2) { createTestTerm(id = it.toLong()) },
+            nextPageParams = null
+        )
+        whenever(wpApiClient.request<TermsRequestListWithEditContextResponse>(any()))
+            .thenReturn(page)
+
+        val viewModel = createViewModel()
+        viewModel.initialize(DEFAULT_TAXONOMY_TAG, isHierarchical = false)
+        advanceUntilIdle()
+
+        verify(fluxCDispatcher).dispatch(any())
+    }
+
+    @Test
+    fun `partial failure does not store the incomplete terms locally`() = test {
+        stubSuccessfulFetch()
+        val firstPage = createListResponse(
+            terms = List(2) { createTestTerm(id = it.toLong()) },
+            nextPageParams = TermListParams(perPage = 100u)
+        )
+        val errorResponse = WpRequestResult.UnknownError<TermsRequestListWithEditContextResponse>(
+            statusCode = 500u,
+            response = "Internal Server Error",
+            requestUrl = "",
+            requestMethod = RequestMethod.GET
+        )
+        whenever(wpApiClient.request<TermsRequestListWithEditContextResponse>(any()))
+            .thenReturn(firstPage, errorResponse)
+
+        val viewModel = createViewModel()
+        viewModel.initialize(DEFAULT_TAXONOMY_TAG, isHierarchical = false)
+        advanceUntilIdle()
+
+        // The fetched terms are still shown, but an incomplete list must not poison the cache
+        assertThat(viewModel.uiState.value.items).hasSize(2)
+        verify(fluxCDispatcher, never()).dispatch(any())
     }
 
     private fun stubSuccessfulFetch() {

@@ -72,6 +72,11 @@ data class ParentOption(
     val name: String
 )
 
+private data class TermsFetchResult(
+    val terms: List<AnyTermWithEditContext>,
+    val isComplete: Boolean
+)
+
 sealed class UiEvent {
     data class ShowError(val messageRes: Int) : UiEvent()
 }
@@ -240,6 +245,8 @@ class TermsViewModel @Inject constructor(
     }
 
     override suspend fun performNetworkRequest(
+        // page is unused: the full list is fetched in one pass (see getTermsList) and
+        // incremental pagination is disabled via supportsLoadMore.
         page: Int,
         searchQuery: String,
         filter: DataViewDropdownItem?,
@@ -255,7 +262,7 @@ class TermsViewModel @Inject constructor(
             return@withContext emptyList()
         }
 
-        val allTerms = getTermsList(selectedSite, searchQuery, sortOrder, sortBy)
+        val (allTerms, isComplete) = getTermsList(selectedSite, searchQuery, sortOrder, sortBy)
         currentTerms = allTerms
 
         // Sort the results hierarchically if necessary
@@ -265,8 +272,10 @@ class TermsViewModel @Inject constructor(
             allTerms
         }
 
-        // Store terms when they are not filtered
-        if (sortedTerms.isNotEmpty() && filter == null) {
+        // Store terms only when the complete list was fetched and it isn't filtered. Persisting a
+        // partial list (e.g. after a mid-pagination failure) would poison the local cache with an
+        // incomplete set whose hierarchy is broken.
+        if (sortedTerms.isNotEmpty() && filter == null && isComplete) {
             storeTerms(selectedSite, sortedTerms)
         }
 
@@ -530,12 +539,17 @@ class TermsViewModel @Inject constructor(
         return indentation
     }
 
+    /**
+     * Fetches every page of terms and returns them together with whether the whole list was
+     * fetched successfully. [TermsFetchResult.isComplete] is false when a page failed mid
+     * pagination, so callers can avoid persisting a partial (and potentially broken) list.
+     */
     private suspend fun getTermsList(
         site: SiteModel,
         searchQuery: String,
         sortOrder: WpApiParamOrder,
         sortBy: DataViewDropdownItem?
-    ): List<AnyTermWithEditContext> {
+    ): TermsFetchResult {
         val wpApiClient = wpApiClientProvider.getWpApiClient(site)
         val orderBy = when {
             sortBy == null -> null
@@ -553,6 +567,7 @@ class TermsViewModel @Inject constructor(
             order = sortOrder,
             orderby = orderBy
         )
+        var isComplete = true
         while (params != null) {
             val currentParams = params
             val termsResponse = wpApiClient.request { requestBuilder ->
@@ -576,12 +591,13 @@ class TermsViewModel @Inject constructor(
                     if (allTerms.isEmpty()) {
                         onError(error)
                     }
+                    isComplete = false
                     break
                 }
             }
         }
-        appLogWrapper.d(AppLog.T.API, "Fetched ${allTerms.size} terms")
-        return allTerms
+        appLogWrapper.d(AppLog.T.API, "Fetched ${allTerms.size} terms (complete=$isComplete)")
+        return TermsFetchResult(allTerms, isComplete)
     }
 
     private fun getTermEndpointType(): TermEndpointType = when (taxonomySlug) {
