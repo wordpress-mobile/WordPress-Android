@@ -3,13 +3,12 @@ package org.wordpress.android.fluxc.taxonomy;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mockito;
 import org.robolectric.RobolectricTestRunner;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.TaxonomyActionBuilder;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.TermModel;
-import org.wordpress.android.fluxc.network.rest.wpapi.taxonomy.CategoriesRestApiMigrationConfig;
+import org.wordpress.android.fluxc.network.rest.wpapi.taxonomy.TaxonomiesRestApiMigrationConfig;
 import org.wordpress.android.fluxc.network.rest.wpapi.taxonomy.TaxonomyRsApiRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.taxonomy.TaxonomyRestClient;
 import org.wordpress.android.fluxc.network.xmlrpc.taxonomy.TaxonomyXMLRPCClient;
@@ -24,7 +23,7 @@ import static org.wordpress.android.fluxc.store.TaxonomyStore.DEFAULT_TAXONOMY_C
 
 /**
  * Verifies that {@link TaxonomyStore} only routes self-hosted taxonomy operations to the new wp-rs
- * REST client when the {@code categories_rest_api_migration} feature flag is enabled, and falls back
+ * REST client when the {@code taxonomies_rest_api_migration} feature flag is enabled, and falls back
  * to the legacy XML-RPC client when it is disabled.
  */
 @RunWith(RobolectricTestRunner.class)
@@ -32,7 +31,7 @@ public class TaxonomyStoreRoutingTest {
     private TaxonomyRestClient mRestClient;
     private TaxonomyXMLRPCClient mXmlRpcClient;
     private TaxonomyRsApiRestClient mRsApiRestClient;
-    private CategoriesRestApiMigrationConfig mMigrationConfig;
+    private TaxonomiesRestApiMigrationConfig mMigrationConfig;
 
     private TaxonomyStore mStore;
 
@@ -41,7 +40,7 @@ public class TaxonomyStoreRoutingTest {
         mRestClient = mock(TaxonomyRestClient.class);
         mXmlRpcClient = mock(TaxonomyXMLRPCClient.class);
         mRsApiRestClient = mock(TaxonomyRsApiRestClient.class);
-        mMigrationConfig = mock(CategoriesRestApiMigrationConfig.class);
+        mMigrationConfig = mock(TaxonomiesRestApiMigrationConfig.class);
         mStore = new TaxonomyStore(
                 new Dispatcher(),
                 mRestClient,
