@@ -570,8 +570,13 @@ class TermsViewModel @Inject constructor(
                 else -> {
                     val error = "Error getting Terms list for taxonomy: $taxonomySlug"
                     appLogWrapper.e(AppLog.T.API, error)
-                    onError(error)
-                    return emptyList()
+                    // Keep any terms already fetched from earlier pages so a transient failure
+                    // mid-pagination degrades gracefully instead of dropping the whole list. Only
+                    // surface the error when nothing could be fetched at all.
+                    if (allTerms.isEmpty()) {
+                        onError(error)
+                    }
+                    break
                 }
             }
         }
