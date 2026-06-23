@@ -1,13 +1,5 @@
 pluginManagement {
     repositories {
-        if (gradle.ext.isCi) {
-            // CI-only Reposilite mirror (Maven Central). Listed first so CI resolves
-            // through our internal proxy before reaching out to public repositories.
-            maven {
-                url 'http://10.0.2.215:8080/maven-central'
-                allowInsecureProtocol = true
-            }
-        }
         maven {
             url 'https://a8c-libs.s3.amazonaws.com/android'
             content {
