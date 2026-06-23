@@ -2745,7 +2745,8 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
                     getString(R.string.error_media_insufficient_fs_permissions)
 
                 MediaErrorType.NOT_FOUND -> errorMessage = getString(R.string.error_media_not_found)
-                MediaErrorType.AUTHORIZATION_REQUIRED -> errorMessage = getString(R.string.error_media_unauthorized)
+                MediaErrorType.AUTHORIZATION_REQUIRED, MediaErrorType.NOT_AUTHENTICATED ->
+                    errorMessage = getString(R.string.error_media_unauthorized)
                 MediaErrorType.PARSE_ERROR -> errorMessage = getString(R.string.error_media_parse_error)
                 MediaErrorType.MALFORMED_MEDIA_ARG, MediaErrorType.NULL_MEDIA_ARG, MediaErrorType.GENERIC_ERROR ->
                     errorMessage = getString(R.string.error_refresh_media)

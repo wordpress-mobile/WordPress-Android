@@ -10,9 +10,13 @@ data class UnifiedAttachment(
     val isImage: Boolean get() = type == AttachmentType.Image
 
     val type: AttachmentType
-        get() = when {
-            contentType.startsWith("image/") -> AttachmentType.Image
-            contentType.startsWith("video/") -> AttachmentType.Video
-            else -> AttachmentType.Other
+        get() {
+            val normalizedContentType = contentType.lowercase()
+            return when {
+                normalizedContentType.startsWith("image/") -> AttachmentType.Image
+                normalizedContentType.startsWith("video/") -> AttachmentType.Video
+                normalizedContentType.startsWith("text/html") -> AttachmentType.Link
+                else -> AttachmentType.Other
+            }
         }
 }

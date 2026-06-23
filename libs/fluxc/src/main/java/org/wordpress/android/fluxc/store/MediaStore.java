@@ -527,15 +527,19 @@ public class MediaStore extends Store {
             switch (code) {
                 case 400:
                     return MediaErrorType.BAD_REQUEST;
+                case 401:
+                    return MediaErrorType.AUTHORIZATION_REQUIRED;
                 case 404:
                     return MediaErrorType.NOT_FOUND;
                 case 403:
                     return MediaErrorType.NOT_AUTHENTICATED;
                 case 413:
                     return MediaErrorType.REQUEST_TOO_LARGE;
-                case 500:
-                    return MediaErrorType.SERVER_ERROR;
                 default:
+                    // any 5xx is a server-side failure (502/503 included, not just 500)
+                    if (code >= 500 && code <= 599) {
+                        return MediaErrorType.SERVER_ERROR;
+                    }
                     return MediaErrorType.GENERIC_ERROR;
             }
         }

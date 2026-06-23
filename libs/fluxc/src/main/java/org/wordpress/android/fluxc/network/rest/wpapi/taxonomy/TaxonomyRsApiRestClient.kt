@@ -18,6 +18,7 @@ import org.wordpress.android.fluxc.store.TaxonomyStore.TaxonomyErrorType
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.util.AppLog
 import rs.wordpress.api.kotlin.WpRequestResult
+import uniffi.wp_api.AnyTermWithEditContext
 import uniffi.wp_api.TermCreateParams
 import uniffi.wp_api.TermEndpointType
 import uniffi.wp_api.TermListParams
@@ -249,44 +250,58 @@ class TaxonomyRsApiRestClient @Inject constructor(
     ) {
         val client = wpApiClientProvider.getWpApiClient(site)
         val taxonomyName = termEndpointType.toTaxonomyName()
-        val termsResponse = client.request { requestBuilder ->
-            requestBuilder.terms().listWithEditContext(
-                termEndpointType = termEndpointType,
-                params = TermListParams()
-            )
-        }
-        val termsResponsePayload = when (termsResponse) {
-            is WpRequestResult.Success -> {
-                appLogWrapper.d(AppLog.T.POSTS, "Fetched $taxonomyName list: ${termsResponse.response.data.size}")
-                FetchTermsResponsePayload(
-                    TermsModel(
-                        termsResponse.response.data.map { term ->
-                            TermModel(
-                                term.id.toInt(),
-                                site.id,
-                                term.id,
-                                taxonomyName,
-                                term.name,
-                                term.slug,
-                                term.description,
-                                term.parent ?: 0,
-                                term.parent != null,
-                                term.count.toInt()
+        // The REST API defaults to 10 terms per page, so we request a larger page size and
+        // follow the pagination params until all terms have been fetched (see CMM-2122).
+        val allTerms = mutableListOf<AnyTermWithEditContext>()
+        var params: TermListParams? = TermListParams(perPage = TERMS_PER_PAGE)
+        while (params != null) {
+            val currentParams = params
+            val termsResponse = client.request { requestBuilder ->
+                requestBuilder.terms().listWithEditContext(
+                    termEndpointType = termEndpointType,
+                    params = currentParams
+                )
+            }
+            when (termsResponse) {
+                is WpRequestResult.Success -> {
+                    allTerms.addAll(termsResponse.response.data)
+                    params = termsResponse.response.nextPageParams
+                }
+                else -> {
+                    appLogWrapper.e(AppLog.T.POSTS, "Fetch $termEndpointType list failed: $termsResponse")
+                    dispatcher.dispatch(
+                        TaxonomyActionBuilder.newFetchedTermsAction(
+                            FetchTermsResponsePayload(
+                                TaxonomyError(TaxonomyErrorType.GENERIC_ERROR, ""),
+                                taxonomyName
                             )
-                        },
-                    ),
-                    site,
-                    taxonomyName
-                )
-            }
-            else -> {
-                appLogWrapper.e(AppLog.T.POSTS, "Fetch $termEndpointType list failed: $termsResponse")
-                FetchTermsResponsePayload(
-                    TaxonomyError(TaxonomyErrorType.GENERIC_ERROR, ""),
-                    taxonomyName
-                )
+                        )
+                    )
+                    return
+                }
             }
         }
+        appLogWrapper.d(AppLog.T.POSTS, "Fetched $taxonomyName list: ${allTerms.size}")
+        val termsResponsePayload = FetchTermsResponsePayload(
+            TermsModel(
+                allTerms.map { term ->
+                    TermModel(
+                        term.id.toInt(),
+                        site.id,
+                        term.id,
+                        taxonomyName,
+                        term.name,
+                        term.slug,
+                        term.description,
+                        term.parent ?: 0,
+                        term.parent != null,
+                        term.count.toInt()
+                    )
+                },
+            ),
+            site,
+            taxonomyName
+        )
         dispatcher.dispatch(TaxonomyActionBuilder.newFetchedTermsAction(termsResponsePayload))
     }
 
@@ -295,5 +310,9 @@ class TaxonomyRsApiRestClient @Inject constructor(
         TermEndpointType.Categories -> DEFAULT_TAXONOMY_CATEGORY
         TermEndpointType.Tags -> DEFAULT_TAXONOMY_TAG
         is TermEndpointType.Custom -> this.v1
+    }
+
+    companion object {
+        private const val TERMS_PER_PAGE = 100u
     }
 }

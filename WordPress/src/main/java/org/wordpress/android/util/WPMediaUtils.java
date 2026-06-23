@@ -132,6 +132,7 @@ public class WPMediaUtils {
             case NOT_FOUND:
                 return context.getString(R.string.error_media_not_found);
             case AUTHORIZATION_REQUIRED:
+            case NOT_AUTHENTICATED:
                 return context.getString(R.string.media_error_no_permission_upload);
             case REQUEST_TOO_LARGE:
                 if (media == null) {
