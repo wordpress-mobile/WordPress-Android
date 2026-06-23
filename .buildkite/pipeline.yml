@@ -54,7 +54,7 @@ steps:
             exit 0
           fi
 
-          ./gradlew detekt
+          ./gradlew detekt --debug
         plugins: [$CI_TOOLKIT]
         artifact_paths:
           - "**/build/reports/detekt/detekt.html"
