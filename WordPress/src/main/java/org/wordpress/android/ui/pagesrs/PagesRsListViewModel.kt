@@ -1118,7 +1118,17 @@ internal class PagesRsListViewModel @Inject constructor(
                 pageForPosts = currentSite?.pageForPosts ?: 0L
             ).map { row -> row.withMenuActions(currentSite) }
             updateTabUiState(tab) {
-                copy(pages = rows, isLoading = false, error = null, isAuthError = false)
+                // Only clear the loading flag once we actually have rows. While the first page
+                // is still being fetched (e.g. a fresh search collection with no cache), rows is
+                // empty; keeping isLoading lets the shimmer show instead of flashing the
+                // "No matches" empty state. updateListInfoForTab() flips isLoading off once the
+                // fetch genuinely completes, at which point an empty result is real.
+                copy(
+                    pages = rows,
+                    isLoading = if (rows.isEmpty()) isLoading else false,
+                    error = null,
+                    isAuthError = false
+                )
             }
             resolveAuthorNames(tab, uiModels)
             resolveFeaturedImages(tab, uiModels)
