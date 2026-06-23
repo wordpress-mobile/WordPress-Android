@@ -263,8 +263,6 @@ Language: it
     <string name="stats_chart_type_bars">Barre</string>
     <string name="stats_chart_type_lines">Linee</string>
     <string name="post_types_screen_title">Tipi di articolo</string>
-    <string name="experimental_new_stats_description">Mostra le statistiche in un\'interfaccia utente più moderna e avanzata</string>
-    <string name="experimental_new_stats">Nuove statistiche</string>
     <string name="experimental_post_types_description">Attiva la schermata dei tipi di articoli sperimentali</string>
     <string name="experimental_post_types">Tipi di articolo</string>
     <string name="network_requests_disable">Disabilita</string>

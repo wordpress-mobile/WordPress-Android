@@ -37,8 +37,6 @@ import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredBottomSheetFra
 import org.wordpress.android.ui.newstats.NewStatsActivity
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
-import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures
-import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures.Feature
 import org.wordpress.android.ui.stats.refresh.StatsViewModel.StatsModuleUiModel
 import org.wordpress.android.ui.stats.refresh.lists.StatsListFragment
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection
@@ -82,9 +80,6 @@ class StatsFragment : Fragment(R.layout.stats_fragment), ScrollableViewInitializ
 
     @Inject
     lateinit var jetpackBrandingUtils: JetpackBrandingUtils
-
-    @Inject
-    lateinit var experimentalFeatures: ExperimentalFeatures
 
     @Inject
     lateinit var analyticsTracker: AnalyticsTrackerWrapper
@@ -160,7 +155,7 @@ class StatsFragment : Fragment(R.layout.stats_fragment), ScrollableViewInitializ
     private fun switchToNewStats() {
         if (!isAdded) return
         analyticsTracker.track(Stat.STATS_NEW_STATS_ENABLED)
-        experimentalFeatures.setEnabled(Feature.NEW_STATS, true)
+        appPrefsWrapper.setNewStatsUserOptedIn(true)
         NewStatsActivity.start(requireContext())
         requireActivity().finish()
     }

@@ -272,8 +272,6 @@ Language: es
     <string name="stats_chart_type_bars">Barras</string>
     <string name="stats_chart_type_lines">Líneas</string>
     <string name="post_types_screen_title">Tipos de contenido</string>
-    <string name="experimental_new_stats_description">Mostrar estadísticas en una interfaz de usuario más moderna y avanzada.</string>
-    <string name="experimental_new_stats">Nuevas estadísticas</string>
     <string name="experimental_post_types_description">Activar la pantalla experimental de tipos de contenido</string>
     <string name="experimental_post_types">Tipos de contenido</string>
     <string name="network_requests_disable">Desactivar</string>

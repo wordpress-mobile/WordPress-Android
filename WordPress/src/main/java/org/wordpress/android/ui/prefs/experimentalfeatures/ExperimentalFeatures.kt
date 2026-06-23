@@ -40,11 +40,6 @@ class ExperimentalFeatures @Inject constructor(
             R.string.experimental_post_types,
             R.string.experimental_post_types_description
         ),
-        NEW_STATS(
-            "new_stats",
-            R.string.experimental_new_stats,
-            R.string.experimental_new_stats_description
-        ),
         RS_PAGES_LIST(
             "rs_pages_list",
             R.string.experimental_rs_pages_list,

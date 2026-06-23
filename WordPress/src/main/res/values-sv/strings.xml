@@ -268,8 +268,6 @@ Language: sv_SE
     <string name="stats_chart_type_bars">Staplar</string>
     <string name="stats_chart_type_lines">Rader</string>
     <string name="post_types_screen_title">Inläggstyper</string>
-    <string name="experimental_new_stats_description">Visa statistik i ett modernare och mer avancerat gränssnitt</string>
-    <string name="experimental_new_stats">Ny statistik</string>
     <string name="experimental_post_types_description">Aktivera skärmen för experimentella inläggstyper</string>
     <string name="experimental_post_types">Inläggstyper</string>
     <string name="network_requests_disable">Inaktivera</string>

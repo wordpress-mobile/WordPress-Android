@@ -272,8 +272,6 @@ Language: en_GB
     <string name="stats_chart_type_bars">Bars</string>
     <string name="stats_chart_type_lines">Lines</string>
     <string name="post_types_screen_title">Post Types</string>
-    <string name="experimental_new_stats_description">Show stats in a more modern and advanced UI</string>
-    <string name="experimental_new_stats">New Stats</string>
     <string name="experimental_post_types_description">Enable experimental post types screen</string>
     <string name="experimental_post_types">Post Types</string>
     <string name="network_requests_disable">Disable</string>

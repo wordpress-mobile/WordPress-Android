@@ -115,38 +115,39 @@ import org.wordpress.android.ui.newstats.util.ProvideShimmerBrush
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.newstats.components.NewStatsIntroBottomSheet
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
-import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures
-import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures.Feature
 import org.wordpress.android.ui.stats.refresh.StatsActivity
 import org.wordpress.android.ui.stats.refresh.utils.StatsLaunchedFrom
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.util.config.NewStatsFeatureConfig
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class NewStatsActivity : BaseAppCompatActivity() {
     @Inject
-    lateinit var experimentalFeatures: ExperimentalFeatures
+    lateinit var appPrefsWrapper: AppPrefsWrapper
 
     @Inject
     lateinit var selectedSiteRepository: SelectedSiteRepository
 
     @Inject
-    lateinit var appPrefsWrapper: AppPrefsWrapper
+    lateinit var analyticsTracker: AnalyticsTrackerWrapper
 
     @Inject
-    lateinit var analyticsTracker: AnalyticsTrackerWrapper
+    lateinit var newStatsFeatureConfig: NewStatsFeatureConfig
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val shouldShowIntro =
             !appPrefsWrapper.getNewStatsIntroShown()
+        val canSwitchToOldStats = !newStatsFeatureConfig.isEnabled()
         setContent {
             AppThemeM3 {
                 NewStatsScreen(
                     onBackPressed =
                         onBackPressedDispatcher::onBackPressed,
+                    showSwitchToOldStats = canSwitchToOldStats,
                     onSwitchToOldStats = ::switchToOldStats,
                     showIntroBottomSheet = shouldShowIntro,
                     onIntroDismissed = {
@@ -160,7 +161,7 @@ class NewStatsActivity : BaseAppCompatActivity() {
 
     private fun switchToOldStats() {
         analyticsTracker.track(Stat.STATS_NEW_STATS_DISABLED)
-        experimentalFeatures.setEnabled(Feature.NEW_STATS, false)
+        appPrefsWrapper.setNewStatsUserOptedIn(false)
         appPrefsWrapper.setNewStatsIntroShown(false)
         selectedSiteRepository.getSelectedSite()?.let { site ->
             StatsActivity.start(
@@ -224,6 +225,7 @@ private fun StatsOverflowMenu(
 @Composable
 private fun NewStatsScreen(
     onBackPressed: () -> Unit,
+    showSwitchToOldStats: Boolean = false,
     onSwitchToOldStats: () -> Unit = {},
     showIntroBottomSheet: Boolean = false,
     onIntroDismissed: () -> Unit = {}
@@ -326,9 +328,11 @@ private fun NewStatsScreen(
                             )
                         }
                     }
-                    StatsOverflowMenu(
-                        onSwitchToOldStats = onSwitchToOldStats
-                    )
+                    if (showSwitchToOldStats) {
+                        StatsOverflowMenu(
+                            onSwitchToOldStats = onSwitchToOldStats
+                        )
+                    }
                 }
             )
         }

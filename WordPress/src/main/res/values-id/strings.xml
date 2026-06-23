@@ -264,8 +264,6 @@ Language: id
     <string name="stats_chart_type_bars">Bilah</string>
     <string name="stats_chart_type_lines">Garis</string>
     <string name="post_types_screen_title">Tipe Pos</string>
-    <string name="experimental_new_stats_description">Tampilkan statistik dalam UI yang lebih modern dan canggih</string>
-    <string name="experimental_new_stats">Statistik Baru</string>
     <string name="experimental_post_types_description">Aktifkan layar tipe pos eksperimental</string>
     <string name="experimental_post_types">Tipe Pos</string>
     <string name="network_requests_disable">Nonaktifkan</string>

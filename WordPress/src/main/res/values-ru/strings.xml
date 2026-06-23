@@ -272,8 +272,6 @@ Language: ru
     <string name="stats_chart_type_bars">Гистограммы</string>
     <string name="stats_chart_type_lines">Строки</string>
     <string name="post_types_screen_title">Типы записей</string>
-    <string name="experimental_new_stats_description">Показывать статистику в более современном и расширенном интерфейсе</string>
-    <string name="experimental_new_stats">Новая статистика</string>
     <string name="experimental_post_types_description">Включить экспериментальный экран типов записей</string>
     <string name="experimental_post_types">Типы записей</string>
     <string name="network_requests_disable">Отключить</string>

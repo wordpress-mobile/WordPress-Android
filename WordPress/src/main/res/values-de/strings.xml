@@ -272,8 +272,6 @@ Language: de
     <string name="stats_chart_type_bars">Balken</string>
     <string name="stats_chart_type_lines">Linien</string>
     <string name="post_types_screen_title">Inhaltstypen</string>
-    <string name="experimental_new_stats_description">Statistiken in einer moderneren und fortschrittlichen Benutzeroberfläche anzeigen</string>
-    <string name="experimental_new_stats">Neue Statistiken</string>
     <string name="experimental_post_types_description">Ansicht „Experimentelle Inhaltstypen“ aktivieren</string>
     <string name="experimental_post_types">Inhaltstypen</string>
     <string name="network_requests_disable">Deaktivieren</string>
