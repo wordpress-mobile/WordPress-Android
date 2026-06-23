@@ -107,6 +107,10 @@ class TermsViewModel @Inject constructor(
     private var currentTerms = listOf<AnyTermWithEditContext>()
     private var navController: NavHostController? = null
 
+    // All terms are fetched in a single pass so the full list/hierarchy can be built, so the
+    // DataView incremental scroll pagination is not used here.
+    override val supportsLoadMore: Boolean = false
+
     private val _termDetailState = MutableStateFlow<TermDetailUiState?>(null)
     val termDetailState: StateFlow<TermDetailUiState?> = _termDetailState.asStateFlow()
 
@@ -251,7 +255,7 @@ class TermsViewModel @Inject constructor(
             return@withContext emptyList()
         }
 
-        val allTerms = getTermsList(selectedSite, page, searchQuery, sortOrder, sortBy)
+        val allTerms = getTermsList(selectedSite, searchQuery, sortOrder, sortBy)
         currentTerms = allTerms
 
         // Sort the results hierarchically if necessary
@@ -528,49 +532,51 @@ class TermsViewModel @Inject constructor(
 
     private suspend fun getTermsList(
         site: SiteModel,
-        page: Int,
         searchQuery: String,
         sortOrder: WpApiParamOrder,
         sortBy: DataViewDropdownItem?
     ): List<AnyTermWithEditContext> {
         val wpApiClient = wpApiClientProvider.getWpApiClient(site)
+        val orderBy = when {
+            sortBy == null -> null
+            sortBy.id == SORT_BY_COUNT_ID -> WpApiParamTermsOrderBy.COUNT
+            else -> WpApiParamTermsOrderBy.NAME
+        }
 
-        val termsResponse = wpApiClient.request { requestBuilder ->
-            requestBuilder.terms().listWithEditContext(
-                termEndpointType = getTermEndpointType(),
-                params = TermListParams(
-                    page = page.toUInt(),
-                    search = searchQuery,
-                    order = when (sortOrder) {
-                        WpApiParamOrder.ASC -> WpApiParamOrder.ASC
-                        WpApiParamOrder.DESC -> WpApiParamOrder.DESC
-                    },
-                    orderby = if (sortBy == null) {
-                        null
-                    } else {
-                        if (sortBy.id == SORT_BY_COUNT_ID) {
-                            WpApiParamTermsOrderBy.COUNT
-                        } else {
-                            WpApiParamTermsOrderBy.NAME // default
-                        }
-                    }
+        // Fetch every page so the complete list is available before it is sorted/built into a
+        // hierarchy. The REST API defaults to 10 terms per page, so we request a larger page size
+        // and follow the pagination params until all terms have been fetched (see CMM-2122).
+        val allTerms = mutableListOf<AnyTermWithEditContext>()
+        var params: TermListParams? = TermListParams(
+            perPage = TERMS_PER_PAGE,
+            search = searchQuery,
+            order = sortOrder,
+            orderby = orderBy
+        )
+        while (params != null) {
+            val currentParams = params
+            val termsResponse = wpApiClient.request { requestBuilder ->
+                requestBuilder.terms().listWithEditContext(
+                    termEndpointType = getTermEndpointType(),
+                    params = currentParams
                 )
-            )
-        }
-
-        return when (termsResponse) {
-            is WpRequestResult.Success -> {
-                appLogWrapper.d(AppLog.T.API, "Fetched ${termsResponse.response.data.size} terms")
-                termsResponse.response.data
             }
+            when (termsResponse) {
+                is WpRequestResult.Success -> {
+                    allTerms.addAll(termsResponse.response.data)
+                    params = termsResponse.response.nextPageParams
+                }
 
-            else -> {
-                val error = "Error getting Terms list for taxonomy: $taxonomySlug"
-                appLogWrapper.e(AppLog.T.API, error)
-                onError(error)
-                emptyList()
+                else -> {
+                    val error = "Error getting Terms list for taxonomy: $taxonomySlug"
+                    appLogWrapper.e(AppLog.T.API, error)
+                    onError(error)
+                    return emptyList()
+                }
             }
         }
+        appLogWrapper.d(AppLog.T.API, "Fetched ${allTerms.size} terms")
+        return allTerms
     }
 
     private fun getTermEndpointType(): TermEndpointType = when (taxonomySlug) {
@@ -586,5 +592,6 @@ class TermsViewModel @Inject constructor(
     companion object {
         private const val SORT_BY_NAME_ID = 1L
         private const val SORT_BY_COUNT_ID = 2L
+        private const val TERMS_PER_PAGE = 100u
     }
 }
