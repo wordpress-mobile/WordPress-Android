@@ -258,8 +258,6 @@ Language: fr
     <string name="stats_chart_type_bars">Bars</string>
     <string name="stats_chart_type_lines">Lignes</string>
     <string name="post_types_screen_title">Types d’articles</string>
-    <string name="experimental_new_stats_description">Afficher les statistiques dans une interface utilisateur plus moderne et avancée</string>
-    <string name="experimental_new_stats">Nouvelles statistiques</string>
     <string name="experimental_post_types_description">Activer l’écran des types d’articles expérimentaux</string>
     <string name="experimental_post_types">Types d’articles</string>
     <string name="network_requests_disable">Désactiver</string>

@@ -43,6 +43,9 @@ public class AppPrefs {
 
     private static final int THEME_IMAGE_SIZE_WIDTH_DEFAULT = 400;
 
+    // Legacy experimental-features pref key for New Stats, kept only for one-time opt-in migration.
+    private static final String LEGACY_NEW_STATS_EXPERIMENTAL_KEY = "new_stats";
+
     // store twice as many recent sites as we show
     private static final int MAX_RECENTLY_PICKED_SITES_TO_SHOW = 8;
     private static final int MAX_RECENTLY_PICKED_SITES_TO_SAVE = MAX_RECENTLY_PICKED_SITES_TO_SHOW * 2;
@@ -63,6 +66,8 @@ public class AppPrefs {
         LAST_ACTIVITY_STR,
 
         NEW_STATS_INTRO_SHOWN,
+
+        NEW_STATS_USER_OPTED_IN,
 
         STATS_NEW_STATS_SUGGESTION_SHOWN,
 
@@ -2114,6 +2119,32 @@ public class AppPrefs {
 
     public static void setNewStatsIntroShown(boolean shown) {
         setBoolean(DeletablePrefKey.NEW_STATS_INTRO_SHOWN, shown);
+    }
+
+    public static boolean getNewStatsUserOptedIn() {
+        migrateLegacyNewStatsOptIn();
+        return getBoolean(DeletablePrefKey.NEW_STATS_USER_OPTED_IN, false);
+    }
+
+    public static void setNewStatsUserOptedIn(boolean optedIn) {
+        setBoolean(DeletablePrefKey.NEW_STATS_USER_OPTED_IN, optedIn);
+    }
+
+    /**
+     * One-time migration for users who enabled New Stats via the old experimental-features toggle,
+     * before it was replaced by the remote flag + local opt-in preference. Without this, those users
+     * would be silently reverted to old Stats. Runs once: after the new key is written the legacy
+     * value is dropped, so this is a no-op on every subsequent read.
+     */
+    private static void migrateLegacyNewStatsOptIn() {
+        if (keyExists(DeletablePrefKey.NEW_STATS_USER_OPTED_IN)) {
+            return;
+        }
+        String legacyKey = getExperimentalFeatureConfigKey(LEGACY_NEW_STATS_EXPERIMENTAL_KEY);
+        if (prefs().contains(legacyKey)) {
+            setNewStatsUserOptedIn(prefs().getBoolean(legacyKey, false));
+            prefs().edit().remove(legacyKey).apply();
+        }
     }
 
     public static boolean getStatsNewStatsSuggestionShown() {
