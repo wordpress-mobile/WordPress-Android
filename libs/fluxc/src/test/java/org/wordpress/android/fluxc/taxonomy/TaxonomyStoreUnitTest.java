@@ -34,7 +34,8 @@ public class TaxonomyStoreUnitTest {
             new Dispatcher(),
             Mockito.mock(TaxonomyRestClient.class),
             Mockito.mock(TaxonomyXMLRPCClient.class),
-            Mockito.mock(TaxonomyRsApiRestClient.class)
+            Mockito.mock(TaxonomyRsApiRestClient.class),
+            () -> false
     );
 
     @Before
