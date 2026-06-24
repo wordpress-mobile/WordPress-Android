@@ -269,8 +269,6 @@ Language: ar
     <string name="stats_chart_type_bars">الأشرطة</string>
     <string name="stats_chart_type_lines">الخطوط</string>
     <string name="post_types_screen_title">أنواع التدوينات</string>
-    <string name="experimental_new_stats_description">عرض الإحصاءات في واجهة مستخدم أكثر حداثة وتقدمًا</string>
-    <string name="experimental_new_stats">إحصاءات جديدة</string>
     <string name="experimental_post_types_description">تمكين شاشة أنواع التدوينات التجريبية</string>
     <string name="experimental_post_types">أنواع التدوينات</string>
     <string name="network_requests_disable">تعطيل</string>

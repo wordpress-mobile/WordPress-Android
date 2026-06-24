@@ -182,8 +182,6 @@ Language: sq_AL
     <string name="stats_chart_type_bars">Shtylla</string>
     <string name="stats_chart_type_lines">Vija</string>
     <string name="post_types_screen_title">Lloje Postimesh</string>
-    <string name="experimental_new_stats_description">Shfaqni statistika në një UI më moderne dhe të përparuar</string>
-    <string name="experimental_new_stats">Statistika të Reja</string>
     <string name="experimental_post_types_description">Aktivizoni skenë llojesh eksperimentale postimi</string>
     <string name="experimental_post_types">Lloje Postimesh</string>
     <string name="network_requests_disable">Çaktivizoje</string>

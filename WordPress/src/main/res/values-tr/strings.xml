@@ -269,8 +269,6 @@ Language: tr
     <string name="stats_chart_type_bars">Barlar</string>
     <string name="stats_chart_type_lines">Satırlar</string>
     <string name="post_types_screen_title">Gönderi Türleri</string>
-    <string name="experimental_new_stats_description">İstatistikleri daha modern ve gelişmiş bir kullanıcı arayüzünde göster</string>
-    <string name="experimental_new_stats">Yeni İstatistikler</string>
     <string name="experimental_post_types_description">Deneysel gönderi türleri ekranını etkinleştir</string>
     <string name="experimental_post_types">Gönderi Türleri</string>
     <string name="network_requests_disable">Devre Dışı Bırak</string>

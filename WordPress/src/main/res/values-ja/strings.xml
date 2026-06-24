@@ -268,8 +268,6 @@ Language: ja_JP
     <string name="stats_chart_type_bars">棒</string>
     <string name="stats_chart_type_lines">折れ線</string>
     <string name="post_types_screen_title">投稿タイプ</string>
-    <string name="experimental_new_stats_description">モダンで詳細な UI で統計情報を表示</string>
-    <string name="experimental_new_stats">新しい統計</string>
     <string name="experimental_post_types_description">実験的な投稿タイプ画面を有効化</string>
     <string name="experimental_post_types">投稿タイプ</string>
     <string name="network_requests_disable">無効化</string>

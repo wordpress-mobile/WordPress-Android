@@ -272,8 +272,6 @@ Language: ro
     <string name="stats_chart_type_bars">Bare</string>
     <string name="stats_chart_type_lines">Linii</string>
     <string name="post_types_screen_title">Tipuri de articol</string>
-    <string name="experimental_new_stats_description">Arată statisticile într-o interfață pentru utilizatori mai modernă și avansată</string>
-    <string name="experimental_new_stats">Statistici noi</string>
     <string name="experimental_post_types_description">Activează ecranul experimental tipuri de articol</string>
     <string name="experimental_post_types">Tipuri de articol</string>
     <string name="network_requests_disable">Dezactivează</string>

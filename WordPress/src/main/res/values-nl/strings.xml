@@ -272,8 +272,6 @@ Language: nl
     <string name="stats_chart_type_bars">Balken</string>
     <string name="stats_chart_type_lines">Lijnen</string>
     <string name="post_types_screen_title">Berichttypen</string>
-    <string name="experimental_new_stats_description">Statistieken weergeven in een modernere en geavanceerdere UI</string>
-    <string name="experimental_new_stats">Nieuwe statistieken</string>
     <string name="experimental_post_types_description">Experimentele berichttypes scherm inschakelen</string>
     <string name="experimental_post_types">Berichttypen</string>
     <string name="network_requests_disable">Uitschakelen</string>

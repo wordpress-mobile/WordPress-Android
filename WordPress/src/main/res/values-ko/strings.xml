@@ -267,8 +267,6 @@ Language: ko_KR
     <string name="stats_chart_type_bars">막대</string>
     <string name="stats_chart_type_lines">선</string>
     <string name="post_types_screen_title">글 유형</string>
-    <string name="experimental_new_stats_description">보다 현대적인 고급 UI로 통계 표시</string>
-    <string name="experimental_new_stats">새 통계</string>
     <string name="experimental_post_types_description">실험적인 글 유형 화면 활성화</string>
     <string name="experimental_post_types">글 유형</string>
     <string name="network_requests_disable">비활성화</string>

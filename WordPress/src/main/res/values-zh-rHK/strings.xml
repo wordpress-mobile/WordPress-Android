@@ -270,8 +270,6 @@ Language: zh_TW
     <string name="stats_chart_type_bars">長條圖</string>
     <string name="stats_chart_type_lines">折線圖</string>
     <string name="post_types_screen_title">文章類型</string>
-    <string name="experimental_new_stats_description">以更現代的進階 UI 顯示統計資料</string>
-    <string name="experimental_new_stats">新統計資料</string>
     <string name="experimental_post_types_description">啟用試用版文章類型畫面</string>
     <string name="experimental_post_types">文章類型</string>
     <string name="network_requests_disable">停用</string>

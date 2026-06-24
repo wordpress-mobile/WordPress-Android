@@ -25,11 +25,19 @@ internal data class PageRsConfirmationDialogState(
     val onDismiss: () -> Unit = {}
 )
 
-/** State for the "Set Parent" bottom sheet. [candidates] excludes the page and its descendants. */
+/**
+ * State for the "Set Parent" bottom sheet. [candidates] is a paged, optionally search-filtered
+ * list of eligible published pages, excluding the page itself and its known descendants.
+ */
 internal data class PageRsParentPickerState(
     val pageId: Long,
     val currentParentId: Long,
-    val candidates: List<PageRsParentCandidate>
+    val candidates: List<PageRsParentCandidate>,
+    val query: String = "",
+    val isLoading: Boolean = false,
+    val isLoadingMore: Boolean = false,
+    val canLoadMore: Boolean = false,
+    val error: String? = null
 )
 
 internal data class PageRsParentCandidate(

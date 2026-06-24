@@ -1007,8 +1007,7 @@
     <string name="network_requests_disable">Disable</string>
     <string name="experimental_post_types">Post Types</string>
     <string name="experimental_post_types_description">Enable experimental post types screen</string>
-    <string name="experimental_new_stats">New Stats</string>
-    <string name="experimental_new_stats_description">Show stats in a more modern and advanced UI</string>
+    <!-- New Stats switch controls -->
     <string name="stats_try_new_stats">Try new stats</string>
     <string name="stats_switch_to_old_stats">Disable new stats</string>
     <string name="stats_new_stats_suggestion_title">A new Stats experience</string>
@@ -4772,6 +4771,7 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="unified_support_new_conversation_content_description">New conversation</string>
     <string name="unified_support_status_bot">Oddie bot</string>
     <string name="unified_support_attachment_match_score">%1$d%% match</string>
+    <string name="unified_support_attachment_link_content_description">Open link: %1$s</string>
     <string name="support_screen_unified_support_title">Get help</string>
     <string name="support_screen_unified_support_description">Get answers from our support team, anytime</string>
     <string name="gutenberg_native_1_s_2_s_is_3_s_4_s" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">%1$s. %2$s is %3$s %4$s.</string>

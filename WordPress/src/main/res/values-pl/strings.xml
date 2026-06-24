@@ -272,8 +272,6 @@ Language: pl
     <string name="stats_chart_type_bars">Paski</string>
     <string name="stats_chart_type_lines">Linie</string>
     <string name="post_types_screen_title">Typy treści</string>
-    <string name="experimental_new_stats_description">Pokaż statystyki w bardziej nowoczesnym i zaawansowanym interfejsie użytkownika</string>
-    <string name="experimental_new_stats">Nowe statystyki</string>
     <string name="experimental_post_types_description">Włącz eksperymentalny ekran typów treści</string>
     <string name="experimental_post_types">Typy treści</string>
     <string name="network_requests_disable">Wyłącz</string>

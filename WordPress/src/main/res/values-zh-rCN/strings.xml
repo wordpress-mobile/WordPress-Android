@@ -269,8 +269,6 @@ Language: zh_CN
     <string name="stats_chart_type_bars">条形图</string>
     <string name="stats_chart_type_lines">折线图</string>
     <string name="post_types_screen_title">文章类型</string>
-    <string name="experimental_new_stats_description">在更现代化、更先进的用户界面中显示统计信息</string>
-    <string name="experimental_new_stats">新统计信息</string>
     <string name="experimental_post_types_description">启用实验性文章类型屏幕</string>
     <string name="experimental_post_types">文章类型</string>
     <string name="network_requests_disable">禁用</string>

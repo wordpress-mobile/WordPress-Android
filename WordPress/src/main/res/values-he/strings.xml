@@ -268,8 +268,6 @@ Language: he_IL
     <string name="stats_chart_type_bars">עמודות</string>
     <string name="stats_chart_type_lines">שורות</string>
     <string name="post_types_screen_title">סוג הפוסטים</string>
-    <string name="experimental_new_stats_description">להציג נתונים סטטיסטיים בממשק משתמש מתקדם ומודרני יותר</string>
-    <string name="experimental_new_stats">נתונים סטטיסטיים חדשים</string>
     <string name="experimental_post_types_description">להפעיל מסך של סוגי פוסטים ניסיוניים</string>
     <string name="experimental_post_types">סוג הפוסטים</string>
     <string name="network_requests_disable">השבת</string>

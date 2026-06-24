@@ -272,8 +272,6 @@ Language: cs_CZ
     <string name="stats_chart_type_bars">Sloupcový</string>
     <string name="stats_chart_type_lines">Čárový</string>
     <string name="post_types_screen_title">Typy příspěvků</string>
-    <string name="experimental_new_stats_description">Zobrazit statistiky v modernějším a pokročilejším rozhraní</string>
-    <string name="experimental_new_stats">Nové statistiky</string>
     <string name="experimental_post_types_description">Povolit experimentální obrazovku typů příspěvků</string>
     <string name="experimental_post_types">Typy příspěvků</string>
     <string name="network_requests_disable">Zakázat</string>
