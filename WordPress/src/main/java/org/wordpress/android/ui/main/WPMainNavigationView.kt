@@ -124,33 +124,35 @@ class WPMainNavigationView @JvmOverloads constructor(
         assignNavigationListeners(true)
         disableShiftMode()
 
-        // This is a restricted NavigationBarMenuView
-        val menuView = navigationBarView.getChildAt(0) as ViewGroup
         if (!BuildConfig.ENABLE_READER) hideReaderTab()
 
-        // overlay each item with our custom view
+        // Overlay each item with our custom view. We resolve the item view by its menu item id
+        // rather than walking getChildAt(), because the NavigationRailView used on tablets nests
+        // its item container one level deeper than the phone's BottomNavigationView, which would
+        // otherwise leave the rail items blank.
         for (i in 0 until navigationBarView.menu.size) {
-            // This is a restricted NavigationBarItemView
-            (menuView.getChildAt(i) as? ViewGroup)?.let { itemView ->
-                val customView: View = inflater.inflate(R.layout.navbar_item, menuView, false)
-
-                val txtLabel = customView.findViewById<TextView>(R.id.nav_label)
-                val imgIcon = customView.findViewById<ImageView>(R.id.nav_icon)
-                txtLabel.text = getTitleForPosition(i)
-                customView.contentDescription = getContentDescriptionForPosition(i)
-                imgIcon.setImageResource(getDrawableResForPosition(i))
-                if (i == getPosition(READER)) {
-                    customView.id = R.id.bottom_nav_reader_button // identify view for QuickStart
-                }
-                if (i == getPosition(NOTIFS)) {
-                    customView.id = R.id.bottom_nav_notifications_button // identify view for QuickStart
-                }
-
-                if (i == getPosition(ME)) {
-                    loadGravatar(imgIcon, accountStore.account?.avatarUrl.orEmpty())
-                }
-                itemView.addView(customView)
+            val itemView = navigationBarView.findViewById<ViewGroup>(getItemIdForPosition(i))
+            if (itemView == null) {
+                AppLog.w(AppLog.T.MAIN, "Nav item view not found for position $i; skipping overlay")
+                continue
             }
+            val customView: View = inflater.inflate(R.layout.navbar_item, itemView, false)
+
+            val txtLabel = customView.findViewById<TextView>(R.id.nav_label)
+            val imgIcon = customView.findViewById<ImageView>(R.id.nav_icon)
+            txtLabel.text = getTitleForPosition(i)
+            customView.contentDescription = getContentDescriptionForPosition(i)
+            imgIcon.setImageResource(getDrawableResForPosition(i))
+            if (i == getPosition(READER)) {
+                customView.id = R.id.bottom_nav_reader_button // identify view for QuickStart
+            }
+            if (i == getPosition(NOTIFS)) {
+                customView.id = R.id.bottom_nav_notifications_button // identify view for QuickStart
+            }
+            if (i == getPosition(ME)) {
+                loadGravatar(imgIcon, accountStore.account?.avatarUrl.orEmpty())
+            }
+            itemView.addView(customView)
         }
 
         if (getMainPageIndex() != getPosition(ME)) {
@@ -438,10 +440,10 @@ class WPMainNavigationView @JvmOverloads constructor(
 
     private fun getItemView(position: Int): View? {
         if (isValidPosition(position)) {
-            // This is a restricted NavigationBarMenuView
-            val menuView = navigationBarView.getChildAt(0) as? ViewGroup
-            // This is a restricted NavigationBarItemView
-            return menuView?.getChildAt(position)
+            // Resolve the item view by its menu item id; the NavigationRailView used on tablets
+            // nests its item container one level deeper than the phone's BottomNavigationView, so
+            // walking getChildAt() would return the wrong view there.
+            return navigationBarView.findViewById(getItemIdForPosition(position))
         }
         return null
     }

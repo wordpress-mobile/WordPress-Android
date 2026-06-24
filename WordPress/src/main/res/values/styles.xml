@@ -1679,4 +1679,17 @@
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">@dimen/reader_featured_image_corner_radius_new</item>
     </style>
+
+    <!--
+      Root container for a main nav item (navbar_item.xml). Phones fill the bottom
+      bar item, so it matches its parent. The sw600dp variant overrides this to wrap
+      its content so rail items size individually instead of the first one filling
+      the whole vertical rail.
+    -->
+    <style name="NavbarItemRoot">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:gravity">center</item>
+        <item name="android:orientation">vertical</item>
+    </style>
 </resources>
