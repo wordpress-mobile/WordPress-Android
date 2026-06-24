@@ -131,7 +131,11 @@ class WPMainNavigationView @JvmOverloads constructor(
         // its item container one level deeper than the phone's BottomNavigationView, which would
         // otherwise leave the rail items blank.
         for (i in 0 until navigationBarView.menu.size) {
-            val itemView = navigationBarView.findViewById<ViewGroup>(getItemIdForPosition(i)) ?: continue
+            val itemView = navigationBarView.findViewById<ViewGroup>(getItemIdForPosition(i))
+            if (itemView == null) {
+                AppLog.w(AppLog.T.MAIN, "Nav item view not found for position $i; skipping overlay")
+                continue
+            }
             val customView: View = inflater.inflate(R.layout.navbar_item, itemView, false)
 
             val txtLabel = customView.findViewById<TextView>(R.id.nav_label)
