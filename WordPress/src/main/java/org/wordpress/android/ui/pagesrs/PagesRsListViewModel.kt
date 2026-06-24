@@ -1163,19 +1163,7 @@ internal class PagesRsListViewModel @Inject constructor(
                     item.state.toPageUiModel(item.id, showStatus = isSearch)
                 }
             }
-            val existingById = getTabUiState(tab).pages
-                .associate { it.remotePageId to it.page }
-            val uiModels = items.map { model ->
-                val existing = existingById[model.remotePageId]
-                var resolved = model
-                if (model.authorId != 0L && model.authorId == existing?.authorId) {
-                    resolved = resolved.copy(authorDisplayName = existing.authorDisplayName)
-                }
-                if (model.featuredImageId != 0L && model.featuredImageId == existing?.featuredImageId) {
-                    resolved = resolved.copy(featuredImageUrl = existing.featuredImageUrl)
-                }
-                resolved
-            }
+            val uiModels = mergeCachedFields(tab, items)
             val applyHierarchy = tab == PageRsListTab.PUBLISHED &&
                 !isSearch &&
                 _authorFilter.value != AuthorFilterSelection.ME
@@ -1210,6 +1198,29 @@ internal class PagesRsListViewModel @Inject constructor(
             throw e
         } catch (e: Exception) {
             AppLog.e(AppLog.T.PAGES, "Failed to load items for tab $tab", e)
+        }
+    }
+
+    /**
+     * Carries over already-resolved author names and featured image URLs from the
+     * current tab state onto freshly loaded items, so they don't visibly re-resolve.
+     */
+    private fun mergeCachedFields(
+        tab: PageRsListTab,
+        items: List<PageRsUiModel>
+    ): List<PageRsUiModel> {
+        val existingById = getTabUiState(tab).pages
+            .associate { it.remotePageId to it.page }
+        return items.map { model ->
+            val existing = existingById[model.remotePageId]
+            var resolved = model
+            if (model.authorId != 0L && model.authorId == existing?.authorId) {
+                resolved = resolved.copy(authorDisplayName = existing.authorDisplayName)
+            }
+            if (model.featuredImageId != 0L && model.featuredImageId == existing?.featuredImageId) {
+                resolved = resolved.copy(featuredImageUrl = existing.featuredImageUrl)
+            }
+            resolved
         }
     }
 
