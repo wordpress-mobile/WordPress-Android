@@ -18,6 +18,7 @@ import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.PagePostCreationSourcesDetail.PAGE_FROM_PAGES_LIST
+import org.wordpress.android.ui.WPWebViewActivity
 import org.wordpress.android.ui.blaze.BlazeFlowSource
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
@@ -30,6 +31,7 @@ import org.wordpress.android.util.extensions.clipboardManager
 import org.wordpress.android.util.extensions.setContent
 import org.wordpress.android.viewmodel.mlp.ModalLayoutPickerViewModel
 import org.wordpress.android.viewmodel.observeEvent
+import org.wordpress.android.viewmodel.wpwebview.WPWebViewSource
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -109,10 +111,23 @@ class PagesRsListActivity : BaseAppCompatActivity() {
             is PageRsListEvent.SharePage ->
                 ActivityLauncher.openShareIntent(this, event.url, event.title)
             is PageRsListEvent.CopyPageUrl -> copyUrlToClipboard(event.url)
+            is PageRsListEvent.OpenSiteEditor -> openSiteEditor(event.url, event.useWpComCredentials)
             is PageRsListEvent.PromoteWithBlaze ->
                 ActivityLauncher.openPromoteWithBlaze(this, event.page, BlazeFlowSource.PAGES_LIST)
             is PageRsListEvent.ShowToast -> ToastUtils.showToast(this, event.messageResId)
             is PageRsListEvent.Finish -> finish()
+        }
+    }
+
+    private fun openSiteEditor(url: String, useWpComCredentials: Boolean) {
+        if (useWpComCredentials) {
+            WPWebViewActivity.openUrlByUsingGlobalWPCOMCredentials(
+                this,
+                url,
+                WPWebViewSource.PAGE_LIST_EDIT_HOMEPAGE
+            )
+        } else {
+            WPWebViewActivity.openURL(this, url, WPWebViewSource.PAGE_LIST_EDIT_HOMEPAGE)
         }
     }
 
