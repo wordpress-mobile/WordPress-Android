@@ -28,6 +28,11 @@ open class WellSqlConfig : DefaultWellConfig {
         // SQLite versions prior to 3.32.0 (2020-05-22) or 32766 for SQLite versions after 3.32.0.
         // @see https://www.sqlite.org/limits.html
         const val SQLITE_MAX_VARIABLE_NUMBER = 999
+
+        // Batch size for IN-clause queries. Kept below SQLITE_MAX_VARIABLE_NUMBER to leave headroom for
+        // any additional bound parameters and for devices whose SQLite enforces a lower effective limit;
+        // batching at exactly the max can still throw "too many SQL variables" on some devices.
+        const val SQLITE_VARIABLE_BATCH_SIZE = 900
     }
 
     constructor(context: Context) : super(context)

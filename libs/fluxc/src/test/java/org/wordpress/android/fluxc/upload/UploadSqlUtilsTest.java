@@ -19,6 +19,7 @@ import org.wordpress.android.fluxc.persistence.UploadSqlUtils;
 import org.wordpress.android.fluxc.persistence.WellSqlConfig;
 import org.wordpress.android.fluxc.post.PostTestUtils;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
@@ -248,6 +249,33 @@ public class UploadSqlUtilsTest {
         pendingPostModels = UploadSqlUtils.getPostModelsForPostUploadModels(pendingPostUploadModels);
         assertEquals(1, pendingPostModels.size());
         assertEquals(postUploadModel2.getId(), pendingPostModels.get(0).getId());
+    }
+
+    // Regression test for Sentry 328G ("too many SQL variables"): when more PostUploadModels than the
+    // SQLite variable batch size are registered, getPostModelsForPostUploadModels must split the IN query
+    // into batches and still return every matching PostModel, without exceeding the host-parameter limit.
+    @Test
+    public void testGetPostModelsForPostUploadModelsBatchesLargeInput() {
+        final int count = WellSqlConfig.SQLITE_VARIABLE_BATCH_SIZE + 5;
+        for (int i = 0; i < count; i++) {
+            PostModel testPost = UploadTestUtils.getTestPost();
+            testPost.setIsLocalDraft(true);
+            assertEquals(1, mPostSqlUtils.insertOrUpdatePostOverwritingLocalChanges(testPost));
+        }
+        List<PostModel> postList = PostTestUtils.getPosts();
+        assertEquals(count, postList.size());
+
+        // Register a PostUploadModel for every inserted PostModel
+        List<PostUploadModel> postUploadModels = new ArrayList<>();
+        for (PostModel post : postList) {
+            PostUploadModel postUploadModel = new PostUploadModel(post.getId());
+            UploadSqlUtils.insertOrUpdatePost(postUploadModel);
+            postUploadModels.add(postUploadModel);
+        }
+
+        // The batched IN query must return all of them without throwing "too many SQL variables"
+        List<PostModel> result = UploadSqlUtils.getPostModelsForPostUploadModels(postUploadModels);
+        assertEquals(count, result.size());
     }
 
     @Test

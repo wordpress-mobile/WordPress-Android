@@ -24,7 +24,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import static org.wordpress.android.fluxc.persistence.WellSqlConfig.SQLITE_MAX_VARIABLE_NUMBER;
+import static org.wordpress.android.fluxc.persistence.WellSqlConfig.SQLITE_VARIABLE_BATCH_SIZE;
 
 public class UploadSqlUtils {
     public static int insertOrUpdateMedia(MediaUploadModel media) {
@@ -172,7 +172,7 @@ public class UploadSqlUtils {
 
     public static @NonNull List<PostModel> getPostModelsForPostUploadModels(List<PostUploadModel> postUploadModels) {
         if (postUploadModels.size() > 0) {
-            List<List<PostUploadModel>> batches = getBatches(postUploadModels, SQLITE_MAX_VARIABLE_NUMBER);
+            List<List<PostUploadModel>> batches = getBatches(postUploadModels, SQLITE_VARIABLE_BATCH_SIZE);
             List<PostModel> postModelList = new ArrayList<>();
 
             for (List<PostUploadModel> batch : batches) {
