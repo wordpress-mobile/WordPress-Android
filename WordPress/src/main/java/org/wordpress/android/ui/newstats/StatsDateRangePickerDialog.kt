@@ -106,6 +106,10 @@ private fun DateRangePickerContent(
                     modifier = Modifier.padding(start = 24.dp, end = 12.dp, top = 16.dp)
                 )
             },
+            // Omit the default headline: in long locales (e.g. Spanish) its start/end
+            // placeholder texts overflow and wrap one character per line. The title above
+            // already labels the dialog, so the headline is redundant. See CMM-2127.
+            headline = null,
             showModeToggle = true,
             colors = DatePickerDefaults.colors(
                 containerColor = MaterialTheme.colorScheme.surface
