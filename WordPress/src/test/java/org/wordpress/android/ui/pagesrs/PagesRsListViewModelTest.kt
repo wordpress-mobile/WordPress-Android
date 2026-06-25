@@ -23,6 +23,7 @@ import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
+import org.wordpress.android.fluxc.store.EditorThemeStore
 import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded
 import org.wordpress.android.ui.blaze.BlazeFeatureUtils
@@ -33,6 +34,7 @@ import org.wordpress.android.ui.postsrs.data.WpServiceProvider
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.util.config.SiteEditorMVPFeatureConfig
 import org.wordpress.android.viewmodel.ResourceProvider
 
 @ExperimentalCoroutinesApi
@@ -50,6 +52,8 @@ internal class PagesRsListViewModelTest : BaseUnitTest(StandardTestDispatcher())
     @Mock lateinit var accountStore: AccountStore
     @Mock lateinit var appPrefsWrapper: AppPrefsWrapper
     @Mock lateinit var analyticsTracker: AnalyticsTrackerWrapper
+    @Mock lateinit var editorThemeStore: EditorThemeStore
+    @Mock lateinit var siteEditorMVPFeatureConfig: SiteEditorMVPFeatureConfig
 
     private lateinit var site: SiteModel
     private var activeViewModel: PagesRsListViewModel? = null
@@ -84,6 +88,8 @@ internal class PagesRsListViewModelTest : BaseUnitTest(StandardTestDispatcher())
         accountStore = accountStore,
         appPrefsWrapper = appPrefsWrapper,
         analyticsTracker = analyticsTracker,
+        editorThemeStore = editorThemeStore,
+        siteEditorMVPFeatureConfig = siteEditorMVPFeatureConfig,
     ).also { activeViewModel = it }
 
     @Test
@@ -289,6 +295,49 @@ internal class PagesRsListViewModelTest : BaseUnitTest(StandardTestDispatcher())
         viewModel.openPage(remotePageId = 42L, tab = PageRsListTab.TRASHED)
 
         viewModel.onDismissPendingAction()
+
+        verify(analyticsTracker, never()).track(
+            eq(Stat.PAGES_LIST_ITEM_SELECTED),
+            any<SiteModel>(),
+            any<Map<String, *>>()
+        )
+    }
+
+    @Test
+    fun `openPage on the site editor row emits OpenSiteEditor`() = test {
+        site.setIsWPCom(true)
+        val viewModel = createViewModel()
+
+        viewModel.events.test {
+            viewModel.openPage(SITE_EDITOR_PAGE_ID, PageRsListTab.PUBLISHED)
+
+            val event = awaitItem()
+            assertThat(event).isInstanceOf(PageRsListEvent.OpenSiteEditor::class.java)
+            event as PageRsListEvent.OpenSiteEditor
+            assertThat(event.url).endsWith("site-editor.php?canvas=edit")
+            assertThat(event.useWpComCredentials).isTrue()
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
+    fun `openPage on the site editor row tracks PAGES_EDIT_HOMEPAGE_ITEM_PRESSED`() {
+        val viewModel = createViewModel()
+
+        viewModel.openPage(SITE_EDITOR_PAGE_ID, PageRsListTab.PUBLISHED)
+
+        verify(analyticsTracker).track(
+            eq(Stat.PAGES_EDIT_HOMEPAGE_ITEM_PRESSED),
+            eq(site),
+            anyOrNull<Map<String, *>>()
+        )
+    }
+
+    @Test
+    fun `openPage on the site editor row does not track PAGES_LIST_ITEM_SELECTED`() {
+        val viewModel = createViewModel()
+
+        viewModel.openPage(SITE_EDITOR_PAGE_ID, PageRsListTab.PUBLISHED)
 
         verify(analyticsTracker, never()).track(
             eq(Stat.PAGES_LIST_ITEM_SELECTED),

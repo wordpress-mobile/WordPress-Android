@@ -13,6 +13,7 @@ import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -28,14 +29,19 @@ import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.Dispatcher
+import org.wordpress.android.fluxc.generated.EditorThemeActionBuilder
 import org.wordpress.android.fluxc.model.SiteHomepageSettings.ShowOnFront
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.post.PostStatus as FluxCPostStatus
 import org.wordpress.android.fluxc.store.AccountStore
+import org.wordpress.android.fluxc.store.EditorThemeStore
+import org.wordpress.android.fluxc.store.EditorThemeStore.FetchEditorThemePayload
+import org.wordpress.android.fluxc.store.EditorThemeStore.OnEditorThemeChanged
 import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded
 import org.wordpress.android.ui.blaze.BlazeFeatureUtils
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
+import org.wordpress.android.ui.pages.PageItem
 import org.wordpress.android.ui.posts.AuthorFilterSelection
 import org.wordpress.android.ui.postsrs.PostRsErrorUtils
 import org.wordpress.android.ui.postsrs.SnackbarMessage
@@ -45,6 +51,7 @@ import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.util.config.SiteEditorMVPFeatureConfig
 import org.wordpress.android.viewmodel.ResourceProvider
 import rs.wordpress.cache.kotlin.ObservableMetadataCollection
 import rs.wordpress.cache.kotlin.getObservablePostMetadataCollectionWithEditContext
@@ -74,6 +81,8 @@ internal class PagesRsListViewModel @Inject constructor(
     private val accountStore: AccountStore,
     private val appPrefsWrapper: AppPrefsWrapper,
     private val analyticsTracker: AnalyticsTrackerWrapper,
+    private val editorThemeStore: EditorThemeStore,
+    private val siteEditorMVPFeatureConfig: SiteEditorMVPFeatureConfig,
 ) : ViewModel() {
     private val _tabStates = MutableStateFlow<Map<PageRsListTab, PageTabUiState>>(emptyMap())
     val tabStates: StateFlow<Map<PageRsListTab, PageTabUiState>> = _tabStates.asStateFlow()
@@ -133,12 +142,25 @@ internal class PagesRsListViewModel @Inject constructor(
     )
     val authorFilter: StateFlow<AuthorFilterSelection> = _authorFilter.asStateFlow()
 
+    // Whether the site's homepage uses a block-based theme. Seeded from the local cache and kept
+    // current via [onEditorThemeChanged]. When true (and the Site Editor MVP flag is on) the
+    // published tab shows a single SITE_EDITOR virtual row that opens the Site Editor web view.
+    private var isBlockBasedTheme = false
+
+    // Guards against a rapid double-tap on the SITE_EDITOR row launching two web views.
+    private var isLaunchingSiteEditor = false
+
     init {
         dispatcher.register(this)
         if (site == null) {
             _events.trySend(PageRsListEvent.ShowToast(R.string.blog_not_found))
             _events.trySend(PageRsListEvent.Finish)
         } else {
+            // Only the SITE_EDITOR virtual row needs the block-theme state, so skip the fetch
+            // entirely when the Site Editor MVP flag is off to avoid a request on every visit.
+            if (siteEditorMVPFeatureConfig.isEnabled()) {
+                refreshEditorTheme(site)
+            }
             @OptIn(FlowPreview::class)
             viewModelScope.launch {
                 _searchQuery
@@ -350,6 +372,31 @@ internal class PagesRsListViewModel @Inject constructor(
         refreshAllTabs()
     }
 
+    /** Seeds [isBlockBasedTheme] from the local cache and dispatches a remote refresh. */
+    private fun refreshEditorTheme(site: SiteModel) {
+        isBlockBasedTheme = editorThemeStore.getIsBlockBasedTheme(site)
+        dispatcher.dispatch(
+            EditorThemeActionBuilder.newFetchEditorThemeAction(
+                FetchEditorThemePayload(site, gssEnabled = true)
+            )
+        )
+    }
+
+    @Suppress("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN_ORDERED)
+    fun onEditorThemeChanged(event: OnEditorThemeChanged) {
+        val site = this.site ?: return
+        val isBlockBased = event.editorTheme?.themeSupport?.isEditorThemeBlockBased()
+        if (site.id != event.siteId || isBlockBased == null || isBlockBased == isBlockBasedTheme) {
+            return
+        }
+        isBlockBasedTheme = isBlockBased
+        // Rebuild the published tab from cache so the SITE_EDITOR row appears/disappears.
+        if (collections.containsKey(PageRsListTab.PUBLISHED)) {
+            viewModelScope.launch { loadItemsForTab(PageRsListTab.PUBLISHED) }
+        }
+    }
+
     /** Refreshes all currently initialized tabs. */
     @MainThread
     fun refreshAllTabs() {
@@ -453,15 +500,40 @@ internal class PagesRsListViewModel @Inject constructor(
         val site = this.site
         if (site == null || _isOpeningPage.value) return
 
+        if (remotePageId == SITE_EDITOR_PAGE_ID) {
+            openSiteEditor(site)
+            return
+        }
+
         val page = _tabStates.value[tab]
             ?.pages
             ?.firstOrNull { it.remotePageId == remotePageId }
             ?.page
-
         when {
             tab == PageRsListTab.TRASHED || page?.isTrashed == true ->
                 _pendingConfirmation.value = PageRsListConfirmation.MoveToDraft(remotePageId)
             checkNetwork() -> proceedOpenPage(site, remotePageId, page?.lastModified)
+        }
+    }
+
+    /** Opens the block-theme homepage in the Site Editor web view, matching the legacy pages list. */
+    private fun openSiteEditor(site: SiteModel) {
+        if (isLaunchingSiteEditor) return
+        isLaunchingSiteEditor = true
+        analyticsTracker.track(Stat.PAGES_EDIT_HOMEPAGE_ITEM_PRESSED, site)
+        val useWpComCredentials = site.isWPCom || site.isWPComAtomic || site.isPrivateWPComAtomic
+        _events.trySend(
+            PageRsListEvent.OpenSiteEditor(
+                url = PageItem.VirtualHomepage.Action.OpenSiteEditor.getUrl(site),
+                useWpComCredentials = useWpComCredentials
+            )
+        )
+        // The web view opens in a separate activity with no completion callback, so clear the
+        // guard after a short debounce: a rapid double-tap is dropped, but the row stays tappable
+        // when the user returns.
+        viewModelScope.launch {
+            delay(SITE_EDITOR_LAUNCH_DEBOUNCE_MS)
+            isLaunchingSiteEditor = false
         }
     }
 
@@ -1091,19 +1163,7 @@ internal class PagesRsListViewModel @Inject constructor(
                     item.state.toPageUiModel(item.id, showStatus = isSearch)
                 }
             }
-            val existingById = getTabUiState(tab).pages
-                .associate { it.remotePageId to it.page }
-            val uiModels = items.map { model ->
-                val existing = existingById[model.remotePageId]
-                var resolved = model
-                if (model.authorId != 0L && model.authorId == existing?.authorId) {
-                    resolved = resolved.copy(authorDisplayName = existing.authorDisplayName)
-                }
-                if (model.featuredImageId != 0L && model.featuredImageId == existing?.featuredImageId) {
-                    resolved = resolved.copy(featuredImageUrl = existing.featuredImageUrl)
-                }
-                resolved
-            }
+            val uiModels = mergeCachedFields(tab, items)
             val applyHierarchy = tab == PageRsListTab.PUBLISHED &&
                 !isSearch &&
                 _authorFilter.value != AuthorFilterSelection.ME
@@ -1111,14 +1171,26 @@ internal class PagesRsListViewModel @Inject constructor(
             // and the construction-time [site] snapshot would pin stale pageOnFront /
             // pageForPosts values onto the virtual rows.
             val currentSite = selectedSiteRepository.getSelectedSite() ?: site
+            val showSiteEditorHomepage = siteEditorMVPFeatureConfig.isEnabled() && isBlockBasedTheme
             val rows = buildRows(
                 pages = uiModels,
                 applyHierarchy = applyHierarchy,
                 pageOnFront = currentSite?.pageOnFront ?: 0L,
-                pageForPosts = currentSite?.pageForPosts ?: 0L
+                pageForPosts = currentSite?.pageForPosts ?: 0L,
+                showSiteEditorHomepage = showSiteEditorHomepage
             ).map { row -> row.withMenuActions(currentSite) }
             updateTabUiState(tab) {
-                copy(pages = rows, isLoading = false, error = null, isAuthError = false)
+                // Only clear the loading flag once we actually have rows. While the first page
+                // is still being fetched (e.g. a fresh search collection with no cache), rows is
+                // empty; keeping isLoading lets the shimmer show instead of flashing the
+                // "No matches" empty state. updateListInfoForTab() flips isLoading off once the
+                // fetch genuinely completes, at which point an empty result is real.
+                copy(
+                    pages = rows,
+                    isLoading = isLoading && rows.isEmpty(),
+                    error = null,
+                    isAuthError = false
+                )
             }
             resolveAuthorNames(tab, uiModels)
             resolveFeaturedImages(tab, uiModels)
@@ -1126,6 +1198,29 @@ internal class PagesRsListViewModel @Inject constructor(
             throw e
         } catch (e: Exception) {
             AppLog.e(AppLog.T.PAGES, "Failed to load items for tab $tab", e)
+        }
+    }
+
+    /**
+     * Carries over already-resolved author names and featured image URLs from the
+     * current tab state onto freshly loaded items, so they don't visibly re-resolve.
+     */
+    private fun mergeCachedFields(
+        tab: PageRsListTab,
+        items: List<PageRsUiModel>
+    ): List<PageRsUiModel> {
+        val existingById = getTabUiState(tab).pages
+            .associate { it.remotePageId to it.page }
+        return items.map { model ->
+            val existing = existingById[model.remotePageId]
+            var resolved = model
+            if (model.authorId != 0L && model.authorId == existing?.authorId) {
+                resolved = resolved.copy(authorDisplayName = existing.authorDisplayName)
+            }
+            if (model.featuredImageId != 0L && model.featuredImageId == existing?.featuredImageId) {
+                resolved = resolved.copy(featuredImageUrl = existing.featuredImageUrl)
+            }
+            resolved
         }
     }
 
@@ -1201,14 +1296,22 @@ internal class PagesRsListViewModel @Inject constructor(
         } else {
             true
         }
-        val actions = computePageMenuActions(
-            status = page.status,
-            isHomepage = pageOnFront != 0L && page.remotePageId == pageOnFront,
-            isPostsPage = pageForPosts != 0L && page.remotePageId == pageForPosts,
-            hasPassword = page.hasPassword,
-            isBlazeEligibleSite = site != null && blazeFeatureUtils.isSiteBlazeEligible(site),
-            canManageHomepage = canManageHomepage
-        )
+        // The SITE_EDITOR virtual has no backing page, so it gets no overflow menu. Its synthetic
+        // page already has empty actions, so this leaves it unchanged below.
+        val isSiteEditor = this is PageRsListItem.Virtual &&
+            kind == PageRsListItem.Virtual.Kind.SITE_EDITOR
+        val actions = if (isSiteEditor) {
+            emptyList()
+        } else {
+            computePageMenuActions(
+                status = page.status,
+                isHomepage = pageOnFront != 0L && page.remotePageId == pageOnFront,
+                isPostsPage = pageForPosts != 0L && page.remotePageId == pageForPosts,
+                hasPassword = page.hasPassword,
+                isBlazeEligibleSite = site != null && blazeFeatureUtils.isSiteBlazeEligible(site),
+                canManageHomepage = canManageHomepage
+            )
+        }
         if (actions == page.actions) return this
         val updated = page.copy(actions = actions)
         return when (this) {
@@ -1328,6 +1431,7 @@ internal class PagesRsListViewModel @Inject constructor(
     companion object {
         private const val PAGE_SIZE = 20
         private const val SEARCH_DEBOUNCE_MS = 250L
+        private const val SITE_EDITOR_LAUNCH_DEBOUNCE_MS = 1000L
         internal const val MIN_SEARCH_QUERY_LENGTH = 3
         private const val THUMBNAIL_SIZE_DP = 64
         private val ALL_STATUSES = PageRsListTab.entries.flatMap { it.statuses }.distinct()

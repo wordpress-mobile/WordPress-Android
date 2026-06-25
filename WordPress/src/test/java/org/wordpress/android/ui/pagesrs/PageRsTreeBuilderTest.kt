@@ -168,6 +168,85 @@ class PageRsTreeBuilderTest {
     }
 
     @Test
+    fun `showSiteEditorHomepage prepends a single SITE_EDITOR virtual`() {
+        val pages = listOf(page(1), page(2), page(3))
+
+        val rows = buildRows(
+            pages,
+            applyHierarchy = true,
+            pageOnFront = 0L,
+            pageForPosts = 0L,
+            showSiteEditorHomepage = true
+        )
+
+        assertThat(rows).hasSize(4)
+        assertThat(rows[0]).isInstanceOfSatisfying(PageRsListItem.Virtual::class.java) { virtual ->
+            assertThat(virtual.kind).isEqualTo(PageRsListItem.Virtual.Kind.SITE_EDITOR)
+            assertThat(virtual.page.remotePageId).isEqualTo(SITE_EDITOR_PAGE_ID)
+        }
+        assertThat(rows.drop(1).map { (it as PageRsListItem.Real).page.remotePageId })
+            .containsExactly(1L, 2L, 3L)
+    }
+
+    @Test
+    fun `showSiteEditorHomepage replaces the static HOMEPAGE row and hides its page`() {
+        val pages = listOf(page(1), page(2), page(3))
+
+        val rows = buildRows(
+            pages,
+            applyHierarchy = true,
+            pageOnFront = 2L,
+            pageForPosts = 0L,
+            showSiteEditorHomepage = true
+        )
+
+        // SITE_EDITOR is shown instead of the static HOMEPAGE virtual, and page 2 is hidden.
+        assertThat(rows).hasSize(3)
+        assertThat((rows[0] as PageRsListItem.Virtual).kind)
+            .isEqualTo(PageRsListItem.Virtual.Kind.SITE_EDITOR)
+        assertThat(rows.drop(1).map { (it as PageRsListItem.Real).page.remotePageId })
+            .containsExactly(1L, 3L)
+    }
+
+    @Test
+    fun `showSiteEditorHomepage still shows the POSTS_PAGE virtual after SITE_EDITOR`() {
+        val pages = listOf(page(1), page(2), page(3))
+
+        val rows = buildRows(
+            pages,
+            applyHierarchy = true,
+            pageOnFront = 0L,
+            pageForPosts = 3L,
+            showSiteEditorHomepage = true
+        )
+
+        assertThat((rows[0] as PageRsListItem.Virtual).kind)
+            .isEqualTo(PageRsListItem.Virtual.Kind.SITE_EDITOR)
+        assertThat((rows[1] as PageRsListItem.Virtual).kind)
+            .isEqualTo(PageRsListItem.Virtual.Kind.POSTS_PAGE)
+        assertThat((rows[1] as PageRsListItem.Virtual).page.remotePageId).isEqualTo(3L)
+        assertThat(rows.drop(2).map { (it as PageRsListItem.Real).page.remotePageId })
+            .containsExactly(1L, 2L)
+    }
+
+    @Test
+    fun `showSiteEditorHomepage is ignored when applyHierarchy is false`() {
+        val pages = listOf(page(1), page(2))
+
+        val rows = buildRows(
+            pages,
+            applyHierarchy = false,
+            pageOnFront = 0L,
+            pageForPosts = 0L,
+            showSiteEditorHomepage = true
+        )
+
+        assertThat(rows).allMatch { it is PageRsListItem.Real }
+        assertThat(rows.map { (it as PageRsListItem.Real).page.remotePageId })
+            .containsExactly(1L, 2L)
+    }
+
+    @Test
     fun `self-parented page is appended as a flat row instead of dropped`() {
         val pages = listOf(
             page(1),

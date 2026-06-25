@@ -73,9 +73,17 @@ internal sealed interface PageRsListItem {
     ) : PageRsListItem {
         override val stableKey: String get() = "virtual:$kind"
 
-        enum class Kind { HOMEPAGE, POSTS_PAGE }
+        // HOMEPAGE / POSTS_PAGE wrap a real assigned static page; SITE_EDITOR is the block-theme
+        // homepage, which has no backing page and opens the Site Editor web view on tap.
+        enum class Kind { HOMEPAGE, POSTS_PAGE, SITE_EDITOR }
     }
 }
+
+/**
+ * Sentinel [PageRsUiModel.remotePageId] for the synthetic SITE_EDITOR virtual row, which has no real
+ * page behind it. Real remote page ids are always positive, so a negative value can't collide.
+ */
+internal const val SITE_EDITOR_PAGE_ID = -1L
 
 internal enum class PageRsDisplayState {
     NORMAL,
