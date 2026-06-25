@@ -901,10 +901,10 @@ public class MediaStore extends Store {
             return;
         }
 
-        if (payload.site.isUsingSelfHostedRestApi()) {
-            mMediaRSApiRestClient.pushMedia(payload.site, payload.media);
-        } else if (payload.site.isUsingWpComRestApi()) {
+        if (payload.site.isUsingWpComRestApi()) {
             mMediaRestClient.pushMedia(payload.site, payload.media);
+        } else if (payload.site.isUsingSelfHostedRestApi()) {
+            mMediaRSApiRestClient.pushMedia(payload.site, payload.media);
         } else {
             mMediaXmlrpcClient.pushMedia(payload.site, payload.media);
         }
@@ -954,12 +954,12 @@ public class MediaStore extends Store {
             MediaUtils.stripLocation(payload.media.getFilePath());
         }
 
-        if (payload.site.isUsingSelfHostedRestApi()) {
-            mMediaRSApiRestClient.uploadMedia(payload.site, payload.media);
-        } else if (payload.site.isUsingWpComRestApi()) {
+        if (payload.site.isUsingWpComRestApi()) {
             mMediaRestClient.uploadMedia(payload.site, payload.media);
         } else if (payload.site.isJetpackCPConnected()) {
             mWPComV2MediaRestClient.uploadMedia(payload.site, payload.media);
+        } else if (payload.site.isUsingSelfHostedRestApi()) {
+            mMediaRSApiRestClient.uploadMedia(payload.site, payload.media);
         } else if (payload.site.getOrigin() == SiteModel.ORIGIN_WPAPI
                    && mApplicationPasswordsConfiguration.isEnabled()) {
             mApplicationPasswordsMediaRestClient.uploadMedia(payload.site, payload.media);
@@ -980,14 +980,14 @@ public class MediaStore extends Store {
                 offset = MediaSqlUtils.getMediaWithStates(payload.site, list).size();
             }
         }
-        if (payload.site.isUsingSelfHostedRestApi()) {
-            mMediaRSApiRestClient.fetchMediaList(
-                    payload.site, payload.number, offset, payload.mimeType, payload.searchTerm);
-        } else if (payload.site.isUsingWpComRestApi()) {
+        if (payload.site.isUsingWpComRestApi()) {
             mMediaRestClient.fetchMediaList(
                     payload.site, payload.number, offset, payload.mimeType, payload.searchTerm);
         } else if (payload.site.isJetpackCPConnected()) {
             mWPComV2MediaRestClient.fetchMediaList(
+                    payload.site, payload.number, offset, payload.mimeType, payload.searchTerm);
+        } else if (payload.site.isUsingSelfHostedRestApi()) {
+            mMediaRSApiRestClient.fetchMediaList(
                     payload.site, payload.number, offset, payload.mimeType, payload.searchTerm);
         } else if (payload.site.getOrigin() == SiteModel.ORIGIN_WPAPI
                    && mApplicationPasswordsConfiguration.isEnabled()) {
@@ -1005,12 +1005,12 @@ public class MediaStore extends Store {
             return;
         }
 
-        if (payload.site.isUsingSelfHostedRestApi()) {
-            mMediaRSApiRestClient.fetchMedia(payload.site, payload.media);
-        } else if (payload.site.isUsingWpComRestApi()) {
+        if (payload.site.isUsingWpComRestApi()) {
             mMediaRestClient.fetchMedia(payload.site, payload.media);
         } else if (payload.site.isJetpackCPConnected()) {
             mWPComV2MediaRestClient.fetchMedia(payload.site, payload.media);
+        } else if (payload.site.isUsingSelfHostedRestApi()) {
+            mMediaRSApiRestClient.fetchMedia(payload.site, payload.media);
         } else {
             mMediaXmlrpcClient.fetchMedia(payload.site, payload.media);
         }
@@ -1022,10 +1022,10 @@ public class MediaStore extends Store {
             return;
         }
 
-        if (payload.site.isUsingSelfHostedRestApi()) {
-            mMediaRSApiRestClient.deleteMedia(payload.site, payload.media);
-        } else if (payload.site.isUsingWpComRestApi()) {
+        if (payload.site.isUsingWpComRestApi()) {
             mMediaRestClient.deleteMedia(payload.site, payload.media);
+        } else if (payload.site.isUsingSelfHostedRestApi()) {
+            mMediaRSApiRestClient.deleteMedia(payload.site, payload.media);
         } else {
             mMediaXmlrpcClient.deleteMedia(payload.site, payload.media);
         }
@@ -1040,12 +1040,12 @@ public class MediaStore extends Store {
             MediaSqlUtils.insertOrUpdateMedia(media);
         }
 
-        if (payload.site.isUsingSelfHostedRestApi()) {
-            mMediaRSApiRestClient.cancelUpload(payload.media);
-        } else if (payload.site.isUsingWpComRestApi()) {
+        if (payload.site.isUsingWpComRestApi()) {
             mMediaRestClient.cancelUpload(media);
         } else if (payload.site.isJetpackCPConnected()) {
             mWPComV2MediaRestClient.cancelUpload(media);
+        } else if (payload.site.isUsingSelfHostedRestApi()) {
+            mMediaRSApiRestClient.cancelUpload(payload.media);
         } else if (payload.site.getOrigin() == SiteModel.ORIGIN_WPAPI
                    && mApplicationPasswordsConfiguration.isEnabled()) {
             mApplicationPasswordsMediaRestClient.cancelUpload(media);
