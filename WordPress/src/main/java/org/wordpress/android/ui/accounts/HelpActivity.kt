@@ -13,7 +13,6 @@ import android.widget.CompoundButton
 import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
-import androidx.core.net.toUri
 import androidx.core.view.isVisible
 import com.chuckerteam.chucker.api.Chucker
 import dagger.hilt.android.AndroidEntryPoint
@@ -329,16 +328,14 @@ class HelpActivity : BaseAppCompatActivity() {
     }
 
     private fun showFaq() {
-        @SuppressWarnings("UnsafeImplicitIntentLaunch")
-        val intent = Intent(Intent.ACTION_VIEW, "http://apps.wordpress.com/mobile-app-support/".toUri())
-        startActivity(intent)
+        // Use openUrlExternal so a missing browser (ActivityNotFoundException) or a hijacked
+        // VIEW handler (SecurityException) shows a toast instead of crashing. See Sentry 3F20/3F25.
+        ActivityLauncher.openUrlExternal(this, "http://apps.wordpress.com/mobile-app-support/")
         AnalyticsTracker.track(Stat.SUPPORT_HELP_CENTER_VIEWED)
     }
 
     private fun showMigrationFaq() {
-        @SuppressWarnings("UnsafeImplicitIntentLaunch")
-        val intent = Intent(Intent.ACTION_VIEW, "https://jetpack.com/support/switch-to-the-jetpack-app/".toUri())
-        startActivity(intent)
+        ActivityLauncher.openUrlExternal(this, "https://jetpack.com/support/switch-to-the-jetpack-app/")
         AnalyticsTracker.track(Stat.SUPPORT_MIGRATION_FAQ_TAPPED)
     }
 
