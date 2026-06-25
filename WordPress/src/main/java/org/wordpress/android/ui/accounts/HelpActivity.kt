@@ -328,8 +328,6 @@ class HelpActivity : BaseAppCompatActivity() {
     }
 
     private fun showFaq() {
-        // Use openUrlExternal so a missing browser (ActivityNotFoundException) or a hijacked
-        // VIEW handler (SecurityException) shows a toast instead of crashing. See Sentry 3F20/3F25.
         ActivityLauncher.openUrlExternal(this, "http://apps.wordpress.com/mobile-app-support/")
         AnalyticsTracker.track(Stat.SUPPORT_HELP_CENTER_VIEWED)
     }
