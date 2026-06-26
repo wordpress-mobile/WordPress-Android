@@ -20,4 +20,4 @@ end
 
 # Security: https://github.com/lostisland/faraday/pull/1665
 # Faraday 2.0 is not compatible with Fastlane
-gem 'faraday', '~> 1.10', '>= 1.10.5'
+gem 'faraday', '~> 1.10'
