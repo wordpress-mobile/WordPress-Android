@@ -18,8 +18,6 @@ import org.wordpress.android.fluxc.model.CommentStatus.TRASH
 import org.wordpress.android.fluxc.model.CommentStatus.UNAPPROVED
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.persistence.comments.CommentsDao.CommentEntity
-import org.wordpress.android.fluxc.store.CommentStore.CommentError
-import org.wordpress.android.fluxc.store.CommentStore.CommentErrorType.GENERIC_ERROR
 import org.wordpress.android.fluxc.store.CommentsStore
 import org.wordpress.android.fluxc.store.CommentsStore.CommentsActionPayload
 import org.wordpress.android.fluxc.store.CommentsStore.CommentsData.CommentsActionData
@@ -30,9 +28,10 @@ import org.wordpress.android.ui.comments.unified.CommentDetailsActionEvent.Launc
 import org.wordpress.android.ui.comments.unified.CommentDetailsActionEvent.OpenPostInReader
 import org.wordpress.android.ui.comments.unified.CommentDetailsActionEvent.ReplySent
 import org.wordpress.android.ui.comments.unified.CommentIdentifier.SiteCommentIdentifier
+import org.wordpress.android.ui.comments.unified.CommentsRsDataSource
+import org.wordpress.android.ui.comments.unified.CommentsRsDataSource.RsComment
 import org.wordpress.android.ui.comments.unified.UnifiedCommentDetailsViewModel
 import org.wordpress.android.ui.comments.unified.UnifiedCommentDetailsViewModel.CommentDetailsUiState
-import org.wordpress.android.ui.comments.unified.usecase.GetCommentUseCase
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.util.DateTimeUtilsWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
@@ -40,10 +39,10 @@ import org.wordpress.android.util.NetworkUtilsWrapper
 @ExperimentalCoroutinesApi
 class UnifiedCommentDetailsViewModelTest : BaseUnitTest() {
     @Mock
-    lateinit var commentsStore: CommentsStore
+    lateinit var commentsRsDataSource: CommentsRsDataSource
 
     @Mock
-    lateinit var getCommentUseCase: GetCommentUseCase
+    lateinit var commentsStore: CommentsStore
 
     @Mock
     lateinit var localCommentCacheUpdateHandler: LocalCommentCacheUpdateHandler
@@ -68,23 +67,21 @@ class UnifiedCommentDetailsViewModelTest : BaseUnitTest() {
     @Before
     fun setup() = test {
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
-        whenever(getCommentUseCase.execute(site, REMOTE_COMMENT_ID)).thenReturn(COMMENT_ENTITY)
-        whenever(commentsStore.moderateCommentLocally(eq(site), eq(REMOTE_COMMENT_ID), any()))
-            .thenReturn(successPayload())
-        whenever(commentsStore.pushLocalCommentByRemoteId(site, REMOTE_COMMENT_ID))
-            .thenReturn(successPayload())
+        whenever(commentsRsDataSource.getComment(site, REMOTE_COMMENT_ID)).thenReturn(RS_COMMENT)
+        whenever(commentsStore.getCommentByLocalSiteAndRemoteId(LOCAL_SITE_ID, REMOTE_COMMENT_ID))
+            .thenReturn(listOf(CACHED_COMMENT))
+        whenever(commentsRsDataSource.updateStatus(eq(site), eq(REMOTE_COMMENT_ID), any())).thenReturn(false)
+        whenever(commentsRsDataSource.trash(site, REMOTE_COMMENT_ID)).thenReturn(false)
+        whenever(commentsRsDataSource.delete(site, REMOTE_COMMENT_ID)).thenReturn(false)
+        whenever(commentsRsDataSource.createReply(eq(site), any(), any(), any())).thenReturn(false)
         whenever(commentsStore.likeComment(eq(site), eq(REMOTE_COMMENT_ID), eq(null), any()))
-            .thenReturn(successPayload())
-        whenever(commentsStore.createNewReply(eq(site), any(), any()))
-            .thenReturn(successPayload())
-        whenever(commentsStore.deleteComment(eq(site), eq(REMOTE_COMMENT_ID), eq(null)))
             .thenReturn(successPayload())
 
         viewModel = UnifiedCommentDetailsViewModel(
             mainDispatcher = testDispatcher(),
             bgDispatcher = testDispatcher(),
+            commentsRsDataSource = commentsRsDataSource,
             commentsStore = commentsStore,
-            getCommentUseCase = getCommentUseCase,
             localCommentCacheUpdateHandler = localCommentCacheUpdateHandler,
             networkUtilsWrapper = networkUtilsWrapper,
             dateTimeUtilsWrapper = dateTimeUtilsWrapper
@@ -94,7 +91,7 @@ class UnifiedCommentDetailsViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `start loads comment and populates ui state`() = test {
+    fun `start loads comment via rs and populates ui state`() = test {
         viewModel.start(site, REMOTE_COMMENT_ID)
 
         val state = uiStates.last()
@@ -106,7 +103,7 @@ class UnifiedCommentDetailsViewModelTest : BaseUnitTest() {
 
     @Test
     fun `start shows error snackbar when comment cannot be loaded`() = test {
-        whenever(getCommentUseCase.execute(site, REMOTE_COMMENT_ID)).thenReturn(null)
+        whenever(commentsRsDataSource.getComment(site, REMOTE_COMMENT_ID)).thenReturn(null)
 
         viewModel.start(site, REMOTE_COMMENT_ID)
 
@@ -114,41 +111,50 @@ class UnifiedCommentDetailsViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `onApproveClicked toggles approved comment to unapproved`() = test {
+    fun `onApproveClicked toggles approved comment to unapproved via rs and syncs cache`() = test {
         viewModel.start(site, REMOTE_COMMENT_ID)
 
         viewModel.onApproveClicked()
 
+        verify(commentsRsDataSource).updateStatus(site, REMOTE_COMMENT_ID, UNAPPROVED)
         verify(commentsStore).moderateCommentLocally(site, REMOTE_COMMENT_ID, UNAPPROVED)
-        verify(commentsStore).pushLocalCommentByRemoteId(site, REMOTE_COMMENT_ID)
         verify(localCommentCacheUpdateHandler, atLeastOnce()).requestCommentsUpdate()
         assertThat(uiStates.last().status).isEqualTo(UNAPPROVED)
     }
 
     @Test
-    fun `onSpamClicked marks comment as spam and closes screen`() = test {
+    fun `onSpamClicked marks comment as spam via rs and closes screen`() = test {
         viewModel.start(site, REMOTE_COMMENT_ID)
 
         viewModel.onSpamClicked()
 
-        verify(commentsStore).moderateCommentLocally(site, REMOTE_COMMENT_ID, SPAM)
+        verify(commentsRsDataSource).updateStatus(site, REMOTE_COMMENT_ID, SPAM)
         assertThat(uiActionEvents).contains(Close)
     }
 
     @Test
-    fun `onTrashClicked trashes comment and closes screen`() = test {
+    fun `onTrashClicked trashes comment via rs and closes screen`() = test {
         viewModel.start(site, REMOTE_COMMENT_ID)
 
         viewModel.onTrashClicked()
 
-        verify(commentsStore).moderateCommentLocally(site, REMOTE_COMMENT_ID, TRASH)
+        verify(commentsRsDataSource).trash(site, REMOTE_COMMENT_ID)
+        assertThat(uiActionEvents).contains(Close)
+    }
+
+    @Test
+    fun `onDeletePermanentlyClicked deletes comment via rs and closes screen`() = test {
+        viewModel.start(site, REMOTE_COMMENT_ID)
+
+        viewModel.onDeletePermanentlyClicked()
+
+        verify(commentsRsDataSource).delete(site, REMOTE_COMMENT_ID)
         assertThat(uiActionEvents).contains(Close)
     }
 
     @Test
     fun `moderation reverts status and shows snackbar on error`() = test {
-        whenever(commentsStore.pushLocalCommentByRemoteId(site, REMOTE_COMMENT_ID))
-            .thenReturn(errorPayload())
+        whenever(commentsRsDataSource.updateStatus(eq(site), eq(REMOTE_COMMENT_ID), any())).thenReturn(true)
         viewModel.start(site, REMOTE_COMMENT_ID)
 
         viewModel.onApproveClicked()
@@ -158,18 +164,18 @@ class UnifiedCommentDetailsViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `moderation shows snackbar and does not call store when offline`() = test {
+    fun `moderation shows snackbar and does not call rs when offline`() = test {
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(false)
         viewModel.start(site, REMOTE_COMMENT_ID)
 
         viewModel.onApproveClicked()
 
-        verify(commentsStore, times(0)).pushLocalCommentByRemoteId(site, REMOTE_COMMENT_ID)
+        verify(commentsRsDataSource, times(0)).updateStatus(eq(site), eq(REMOTE_COMMENT_ID), any())
         assertThat(snackbarMessages).isNotEmpty
     }
 
     @Test
-    fun `onLikeClicked likes comment and updates state`() = test {
+    fun `onLikeClicked likes comment via FluxC and updates state`() = test {
         viewModel.start(site, REMOTE_COMMENT_ID)
 
         viewModel.onLikeClicked()
@@ -179,7 +185,7 @@ class UnifiedCommentDetailsViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `onEditClicked emits launch edit event with site comment identifier`() = test {
+    fun `onEditClicked emits launch edit event with local id from cache`() = test {
         viewModel.start(site, REMOTE_COMMENT_ID)
 
         viewModel.onEditClicked()
@@ -188,58 +194,6 @@ class UnifiedCommentDetailsViewModelTest : BaseUnitTest() {
         assertThat(event).isInstanceOf(LaunchEditComment::class.java)
         assertThat((event as LaunchEditComment).commentIdentifier)
             .isEqualTo(SiteCommentIdentifier(LOCAL_COMMENT_ID, REMOTE_COMMENT_ID))
-    }
-
-    @Test
-    fun `onReplyClicked creates reply and emits reply sent event`() = test {
-        viewModel.start(site, REMOTE_COMMENT_ID)
-
-        viewModel.onReplyClicked("nice post")
-
-        verify(commentsStore).createNewReply(eq(site), any(), any())
-        verify(localCommentCacheUpdateHandler, atLeastOnce()).requestCommentsUpdate()
-        assertThat(uiActionEvents).contains(ReplySent)
-    }
-
-    @Test
-    fun `onReplyClicked does nothing for blank text`() = test {
-        viewModel.start(site, REMOTE_COMMENT_ID)
-
-        viewModel.onReplyClicked("   ")
-
-        verify(commentsStore, times(0)).createNewReply(eq(site), any(), any())
-    }
-
-    @Test
-    fun `onReplyClicked shows snackbar and does not call store when offline`() = test {
-        whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(false)
-        viewModel.start(site, REMOTE_COMMENT_ID)
-
-        viewModel.onReplyClicked("nice post")
-
-        verify(commentsStore, times(0)).createNewReply(eq(site), any(), any())
-        assertThat(snackbarMessages).isNotEmpty
-    }
-
-    @Test
-    fun `onReplyClicked shows snackbar and no reply sent event on error`() = test {
-        whenever(commentsStore.createNewReply(eq(site), any(), any())).thenReturn(errorPayload())
-        viewModel.start(site, REMOTE_COMMENT_ID)
-
-        viewModel.onReplyClicked("nice post")
-
-        assertThat(snackbarMessages).isNotEmpty
-        assertThat(uiActionEvents).doesNotContain(ReplySent)
-    }
-
-    @Test
-    fun `onDeletePermanentlyClicked deletes comment and closes screen`() = test {
-        viewModel.start(site, REMOTE_COMMENT_ID)
-
-        viewModel.onDeletePermanentlyClicked()
-
-        verify(commentsStore).deleteComment(site, REMOTE_COMMENT_ID, null)
-        assertThat(uiActionEvents).contains(Close)
     }
 
     @Test
@@ -255,14 +209,56 @@ class UnifiedCommentDetailsViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `replying to an unapproved comment approves it`() = test {
-        whenever(getCommentUseCase.execute(site, REMOTE_COMMENT_ID)).thenReturn(UNAPPROVED_COMMENT_ENTITY)
+    fun `onReplyClicked creates reply via rs and emits reply sent event`() = test {
         viewModel.start(site, REMOTE_COMMENT_ID)
 
         viewModel.onReplyClicked("nice post")
 
-        verify(commentsStore).createNewReply(eq(site), any(), any())
-        verify(commentsStore).moderateCommentLocally(site, REMOTE_COMMENT_ID, APPROVED)
+        verify(commentsRsDataSource).createReply(site, REMOTE_POST_ID, REMOTE_COMMENT_ID, "nice post")
+        verify(localCommentCacheUpdateHandler, atLeastOnce()).requestCommentsUpdate()
+        assertThat(uiActionEvents).contains(ReplySent)
+    }
+
+    @Test
+    fun `onReplyClicked does nothing for blank text`() = test {
+        viewModel.start(site, REMOTE_COMMENT_ID)
+
+        viewModel.onReplyClicked("   ")
+
+        verify(commentsRsDataSource, times(0)).createReply(eq(site), any(), any(), any())
+    }
+
+    @Test
+    fun `onReplyClicked shows snackbar and does not call rs when offline`() = test {
+        whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(false)
+        viewModel.start(site, REMOTE_COMMENT_ID)
+
+        viewModel.onReplyClicked("nice post")
+
+        verify(commentsRsDataSource, times(0)).createReply(eq(site), any(), any(), any())
+        assertThat(snackbarMessages).isNotEmpty
+    }
+
+    @Test
+    fun `onReplyClicked shows snackbar and no reply sent event on error`() = test {
+        whenever(commentsRsDataSource.createReply(eq(site), any(), any(), any())).thenReturn(true)
+        viewModel.start(site, REMOTE_COMMENT_ID)
+
+        viewModel.onReplyClicked("nice post")
+
+        assertThat(snackbarMessages).isNotEmpty
+        assertThat(uiActionEvents).doesNotContain(ReplySent)
+    }
+
+    @Test
+    fun `replying to an unapproved comment approves it via rs`() = test {
+        whenever(commentsRsDataSource.getComment(site, REMOTE_COMMENT_ID)).thenReturn(UNAPPROVED_RS_COMMENT)
+        viewModel.start(site, REMOTE_COMMENT_ID)
+
+        viewModel.onReplyClicked("nice post")
+
+        verify(commentsRsDataSource).createReply(site, REMOTE_POST_ID, REMOTE_COMMENT_ID, "nice post")
+        verify(commentsRsDataSource).updateStatus(site, REMOTE_COMMENT_ID, APPROVED)
         assertThat(uiStates.last().status).isEqualTo(APPROVED)
     }
 
@@ -278,17 +274,27 @@ class UnifiedCommentDetailsViewModelTest : BaseUnitTest() {
 
     private fun successPayload() = CommentsActionPayload(CommentsActionData(emptyList(), 0))
 
-    private fun errorPayload() = CommentsActionPayload<CommentsActionData>(CommentError(GENERIC_ERROR, "error"))
-
     companion object {
         private const val LOCAL_SITE_ID = 123
         private const val REMOTE_SITE_ID = 456L
         private const val LOCAL_COMMENT_ID = 1000
         private const val REMOTE_COMMENT_ID = 4321L
-
         private const val REMOTE_POST_ID = 99L
 
-        private val COMMENT_ENTITY = CommentEntity(
+        private val RS_COMMENT = RsComment(
+            authorName = "authorName",
+            authorAvatarUrl = "",
+            date = "",
+            contentHtml = "content",
+            url = "",
+            postId = REMOTE_POST_ID,
+            parentId = 0,
+            status = APPROVED
+        )
+
+        private val UNAPPROVED_RS_COMMENT = RS_COMMENT.copy(status = UNAPPROVED)
+
+        private val CACHED_COMMENT = CommentEntity(
             id = LOCAL_COMMENT_ID.toLong(),
             remoteCommentId = REMOTE_COMMENT_ID,
             remotePostId = REMOTE_POST_ID,
@@ -309,7 +315,5 @@ class UnifiedCommentDetailsViewModelTest : BaseUnitTest() {
             parentId = 0,
             iLike = false
         )
-
-        private val UNAPPROVED_COMMENT_ENTITY = COMMENT_ENTITY.copy(status = "unapproved")
     }
 }

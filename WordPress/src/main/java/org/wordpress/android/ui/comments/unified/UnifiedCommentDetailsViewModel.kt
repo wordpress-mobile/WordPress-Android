@@ -22,7 +22,7 @@ import org.wordpress.android.ui.comments.unified.CommentDetailsActionEvent.Launc
 import org.wordpress.android.ui.comments.unified.CommentDetailsActionEvent.OpenPostInReader
 import org.wordpress.android.ui.comments.unified.CommentDetailsActionEvent.ReplySent
 import org.wordpress.android.ui.comments.unified.CommentIdentifier.SiteCommentIdentifier
-import org.wordpress.android.ui.comments.unified.usecase.GetCommentUseCase
+import org.wordpress.android.ui.comments.unified.CommentsRsDataSource.RsComment
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.DateTimeUtilsWrapper
@@ -35,18 +35,21 @@ import javax.inject.Named
 /**
  * ViewModel for the unified comment detail screen (site-comments path).
  *
- * Loads a single comment via [GetCommentUseCase] and performs moderation, like and edit actions.
- * After any change it requests a local cache update so the comment list refreshes automatically
- * (the list subscribes to [LocalCommentCacheUpdateHandler]).
+ * Loads and mutates the comment through wordpress-rs ([CommentsRsDataSource]) — view, moderation,
+ * reply, edit. Two things stay on FluxC because wordpress-rs can't cover them:
+ *  - **Liking** (wordpress-rs has no comment like action).
+ *  - **Keeping the FluxC-backed comment list in sync**: after each rs write we mirror the change
+ *    into the local comment cache and poke [LocalCommentCacheUpdateHandler] so the (still FluxC)
+ *    list reflects it. The cache row is also the source of the post title, like state and local id
+ *    used to launch the (still FluxC) edit screen.
  *
- * Notification-sourced comments, reply, suggestions and the more-menu (copy/share link) are handled
- * in later phases of the Comments Unification migration.
+ * Notification-sourced comments are handled in a later phase of the Comments Unification migration.
  */
 class UnifiedCommentDetailsViewModel @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
+    private val commentsRsDataSource: CommentsRsDataSource,
     private val commentsStore: CommentsStore,
-    private val getCommentUseCase: GetCommentUseCase,
     private val localCommentCacheUpdateHandler: LocalCommentCacheUpdateHandler,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     private val dateTimeUtilsWrapper: DateTimeUtilsWrapper
@@ -62,7 +65,10 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
     private var isStarted = false
     private lateinit var site: SiteModel
     private var remoteCommentId: Long = 0
-    private var loadedComment: CommentEntity? = null
+    private var loadedComment: RsComment? = null
+
+    // From the FluxC cache row: the local id used to launch the (still FluxC) edit screen.
+    private var localCommentId: Int = 0
 
     fun start(site: SiteModel, remoteCommentId: Long) {
         if (isStarted) return
@@ -73,8 +79,7 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
     }
 
     /**
-     * Reloads the comment from the store. Used after returning from the edit screen so any edits
-     * are reflected here.
+     * Reloads the comment. Used after returning from the edit screen so any edits are reflected.
      */
     fun refreshComment() {
         if (!isStarted) return
@@ -84,12 +89,15 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
     private fun loadComment() {
         launch {
             _uiState.value = CommentDetailsUiState(showProgress = true)
-            val comment = withContext(bgDispatcher) {
-                getCommentUseCase.execute(site, remoteCommentId)
+            val (rsComment, cached) = withContext(bgDispatcher) {
+                val rs = commentsRsDataSource.getComment(site, remoteCommentId)
+                val local = commentsStore.getCommentByLocalSiteAndRemoteId(site.id, remoteCommentId).firstOrNull()
+                rs to local
             }
-            if (comment != null) {
-                loadedComment = comment
-                _uiState.value = comment.toUiState()
+            if (rsComment != null) {
+                loadedComment = rsComment
+                localCommentId = cached?.id?.toInt() ?: 0
+                _uiState.value = rsComment.toUiState(cached)
             } else {
                 _onSnackbarMessage.value = Event(
                     SnackbarMessageHolder(
@@ -141,16 +149,16 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
     }
 
     fun onEditClicked() {
-        val comment = loadedComment ?: return
+        if (loadedComment == null) return
         _uiActionEvent.value = Event(
-            LaunchEditComment(site, SiteCommentIdentifier(comment.id.toInt(), remoteCommentId))
+            LaunchEditComment(site, SiteCommentIdentifier(localCommentId, remoteCommentId))
         )
     }
 
     fun onPostTitleClicked() {
         val comment = loadedComment ?: return
-        if (comment.remotePostId <= 0) return
-        _uiActionEvent.value = Event(OpenPostInReader(site.siteId, comment.remotePostId))
+        if (comment.postId <= 0) return
+        _uiActionEvent.value = Event(OpenPostInReader(site.siteId, comment.postId))
     }
 
     fun onReplyClicked(replyText: String) {
@@ -159,15 +167,15 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
             showSnackbar(R.string.no_network_message)
             return
         }
-        val parent = loadedComment ?: return
+        val comment = loadedComment ?: return
         launch {
             _uiState.value = _uiState.value?.copy(isReplyInProgress = true)
             val isError = withContext(bgDispatcher) {
-                val result = commentsStore.createNewReply(site, parent, buildReply(parent, replyText))
-                if (!result.isError) {
+                val err = commentsRsDataSource.createReply(site, comment.postId, remoteCommentId, replyText)
+                if (!err) {
                     localCommentCacheUpdateHandler.requestCommentsUpdate()
                 }
-                result.isError
+                err
             }
             _uiState.value = _uiState.value?.copy(isReplyInProgress = false)
             if (isError) {
@@ -185,34 +193,11 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
 
     private suspend fun approveAfterReply() {
         _uiState.value = _uiState.value?.copy(status = APPROVED)
-        val isError = withContext(bgDispatcher) {
-            moderateOnStore(APPROVED, UNAPPROVED)
-        }
+        val isError = withContext(bgDispatcher) { moderate(APPROVED) }
         if (isError) {
             _uiState.value = _uiState.value?.copy(status = UNAPPROVED)
         }
     }
-
-    private fun buildReply(parent: CommentEntity, replyText: String) = CommentEntity(
-        remoteCommentId = 0,
-        remotePostId = parent.remotePostId,
-        localSiteId = site.id,
-        remoteSiteId = site.siteId,
-        authorUrl = null,
-        authorName = null,
-        authorEmail = null,
-        authorProfileImageUrl = null,
-        authorId = 0,
-        postTitle = null,
-        status = null,
-        datePublished = null,
-        publishedTimestamp = 0,
-        content = replyText,
-        url = null,
-        hasParent = true,
-        parentId = parent.remoteCommentId,
-        iLike = false
-    )
 
     private fun moderateComment(newStatus: CommentStatus, closeOnSuccess: Boolean) {
         if (!networkUtilsWrapper.isNetworkAvailable()) {
@@ -222,9 +207,7 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
         val previousStatus = currentStatus()
         launch {
             _uiState.value = _uiState.value?.copy(status = newStatus)
-            val isError = withContext(bgDispatcher) {
-                moderateOnStore(newStatus, previousStatus)
-            }
+            val isError = withContext(bgDispatcher) { moderate(newStatus) }
             if (isError) {
                 _uiState.value = _uiState.value?.copy(status = previousStatus)
                 showSnackbar(R.string.error_moderate_comment)
@@ -234,19 +217,21 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
         }
     }
 
-    private suspend fun moderateOnStore(newStatus: CommentStatus, fallbackStatus: CommentStatus): Boolean {
-        commentsStore.moderateCommentLocally(site, remoteCommentId, newStatus)
-        localCommentCacheUpdateHandler.requestCommentsUpdate()
-        val result = if (newStatus == DELETED) {
-            commentsStore.deleteComment(site, remoteCommentId, null)
-        } else {
-            commentsStore.pushLocalCommentByRemoteId(site, remoteCommentId)
+    /**
+     * Applies [newStatus] to the comment via wordpress-rs and, on success, mirrors it into the
+     * FluxC cache so the (still FluxC) list reflects the change. Returns true on error.
+     */
+    private suspend fun moderate(newStatus: CommentStatus): Boolean {
+        val isError = when (newStatus) {
+            TRASH -> commentsRsDataSource.trash(site, remoteCommentId)
+            DELETED -> commentsRsDataSource.delete(site, remoteCommentId)
+            else -> commentsRsDataSource.updateStatus(site, remoteCommentId, newStatus)
         }
-        if (result.isError) {
-            commentsStore.moderateCommentLocally(site, remoteCommentId, fallbackStatus)
+        if (!isError) {
+            commentsStore.moderateCommentLocally(site, remoteCommentId, newStatus)
+            localCommentCacheUpdateHandler.requestCommentsUpdate()
         }
-        localCommentCacheUpdateHandler.requestCommentsUpdate()
-        return result.isError
+        return isError
     }
 
     private fun currentStatus(): CommentStatus = _uiState.value?.status ?: CommentStatus.ALL
@@ -260,17 +245,17 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
         _onSnackbarMessage.value = Event(SnackbarMessageHolder(UiStringRes(messageRes)))
     }
 
-    private fun CommentEntity.toUiState() = CommentDetailsUiState(
+    private fun RsComment.toUiState(cached: CommentEntity?) = CommentDetailsUiState(
         showProgress = false,
         contentVisible = true,
-        authorName = authorName ?: "",
-        authorAvatarUrl = authorProfileImageUrl ?: "",
-        datePublished = formatDate(datePublished),
-        commentText = content ?: "",
-        postTitle = postTitle ?: "",
-        commentUrl = url ?: "",
-        status = CommentStatus.fromString(status),
-        isLiked = iLike
+        authorName = authorName,
+        authorAvatarUrl = authorAvatarUrl,
+        datePublished = formatDate(date),
+        commentText = contentHtml,
+        postTitle = cached?.postTitle ?: "",
+        commentUrl = url,
+        status = status,
+        isLiked = cached?.iLike ?: false
     )
 
     data class CommentDetailsUiState(
