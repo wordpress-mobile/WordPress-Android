@@ -173,6 +173,10 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
             val isError = withContext(bgDispatcher) {
                 val err = commentsRsDataSource.createReply(site, comment.postId, remoteCommentId, replyText)
                 if (!err) {
+                    // Known limitation: the rs reply is created server-side only, so the new reply
+                    // won't appear in the (still FluxC) comment list until it's refreshed from the
+                    // server. This resolves when the list is migrated to wordpress-rs; for now we
+                    // only refresh from the local cache, which reflects the parent's state.
                     localCommentCacheUpdateHandler.requestCommentsUpdate()
                 }
                 err
