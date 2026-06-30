@@ -6,10 +6,16 @@ import android.content.ClipboardManager
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
+import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.PopupMenu
+import androidx.core.content.ContextCompat
+import androidx.core.content.res.ResourcesCompat
 import androidx.core.text.HtmlCompat
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
@@ -17,6 +23,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import org.wordpress.android.R
+import com.google.android.material.R as MaterialR
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.ReaderIncludeCommentBoxBinding
 import org.wordpress.android.databinding.UnifiedCommentDetailsFragmentBinding
@@ -43,7 +50,9 @@ import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.SnackbarItem
 import org.wordpress.android.util.SnackbarItem.Info
 import org.wordpress.android.util.SnackbarSequencer
+import org.wordpress.android.util.ColorUtils
 import org.wordpress.android.util.ToastUtils
+import org.wordpress.android.util.extensions.getColorResIdFromAttribute
 import org.wordpress.android.util.extensions.getSerializableCompat
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType
@@ -73,6 +82,10 @@ class UnifiedCommentDetailsFragment :
     private lateinit var site: SiteModel
     private var remoteCommentId: Long = 0
     private var suggestionServiceConnectionManager: SuggestionServiceConnectionManager? = null
+
+    private val mediumOpacity by lazy {
+        ResourcesCompat.getFloat(resources, MaterialR.dimen.material_emphasis_medium)
+    }
 
     private val editCommentLauncher: ActivityResultLauncher<Intent> =
         registerForActivityResult(StartActivityForResult()) { result ->
@@ -243,18 +256,56 @@ class UnifiedCommentDetailsFragment :
 
     private fun UnifiedCommentDetailsFragmentBinding.renderActionButtons(uiState: CommentDetailsUiState) {
         with(layoutButtons) {
-            btnModerateText.setText(
-                if (uiState.status == APPROVED) R.string.mnu_comment_unapprove else R.string.mnu_comment_approve
-            )
+            when (uiState.status) {
+                APPROVED -> styleActionButton(
+                    btnModerateIcon, btnModerateText,
+                    R.drawable.ic_checkmark_white_24dp, R.string.comment_status_approved, isOn = true
+                )
+                TRASH -> styleActionButton(
+                    btnModerateIcon, btnModerateText,
+                    R.drawable.ic_undo_white_24dp, R.string.mnu_comment_untrash, isOn = false
+                )
+                else -> styleActionButton(
+                    btnModerateIcon, btnModerateText,
+                    R.drawable.ic_checkmark_white_24dp, R.string.mnu_comment_approve, isOn = false
+                )
+            }
+
             btnSpam.visibility = View.VISIBLE
             btnSpamText.setText(
                 if (uiState.status == SPAM) R.string.mnu_comment_unspam else R.string.mnu_comment_spam
             )
-            btnLikeIcon.setImageResource(
-                if (uiState.isLiked) R.drawable.ic_star_white_24dp else R.drawable.ic_star_outline_white_24dp
+
+            styleActionButton(
+                btnLikeIcon, btnLikeText,
+                if (uiState.isLiked) R.drawable.ic_star_white_24dp else R.drawable.ic_star_outline_white_24dp,
+                if (uiState.isLiked) R.string.mnu_comment_liked else R.string.like,
+                isOn = uiState.isLiked
             )
-            btnLikeText.setText(if (uiState.isLiked) R.string.mnu_comment_liked else R.string.like)
         }
+    }
+
+    /**
+     * Styles a footer action button (icon + label) for its on/off state, matching the legacy
+     * comment detail: accent colour at full opacity when on, [MaterialR.attr.colorOnSurface] at
+     * medium opacity when off.
+     */
+    private fun styleActionButton(
+        icon: ImageView,
+        text: TextView,
+        @DrawableRes iconRes: Int,
+        @StringRes textRes: Int,
+        isOn: Boolean
+    ) {
+        val colorRes = requireContext().getColorResIdFromAttribute(
+            if (isOn) MaterialR.attr.colorSecondary else MaterialR.attr.colorOnSurface
+        )
+        ColorUtils.setImageResourceWithTint(icon, iconRes, colorRes)
+        text.setText(textRes)
+        text.setTextColor(ContextCompat.getColor(requireContext(), colorRes))
+        val alpha = if (isOn) 1f else mediumOpacity
+        icon.alpha = alpha
+        text.alpha = alpha
     }
 
     private fun UnifiedCommentDetailsFragmentBinding.renderReplyBox(uiState: CommentDetailsUiState) {
