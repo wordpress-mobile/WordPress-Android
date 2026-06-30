@@ -25,6 +25,8 @@ import org.wordpress.android.ui.comments.unified.CommentListUiModelHelper.Commen
 import org.wordpress.android.ui.comments.unified.CommentListUiModelHelper.ConfirmationDialogUiModel
 import org.wordpress.android.ui.comments.unified.CommentListUiModelHelper.ConfirmationDialogUiModel.Visible
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
+import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures
+import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures.Feature
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.SnackbarItem
@@ -32,7 +34,6 @@ import org.wordpress.android.util.SnackbarItem.Action
 import org.wordpress.android.util.SnackbarItem.Info
 import org.wordpress.android.util.SnackbarSequencer
 import org.wordpress.android.util.WPSwipeToRefreshHelper
-import org.wordpress.android.util.config.UnifiedCommentsDetailFeatureConfig
 import org.wordpress.android.util.extensions.getSerializableCompat
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 import javax.inject.Inject
@@ -54,7 +55,7 @@ class UnifiedCommentListFragment : Fragment(R.layout.unified_comment_list_fragme
     lateinit var networkUtilsWrapper: NetworkUtilsWrapper
 
     @Inject
-    lateinit var unifiedCommentsDetailFeatureConfig: UnifiedCommentsDetailFeatureConfig
+    lateinit var experimentalFeatures: ExperimentalFeatures
 
     private lateinit var viewModel: UnifiedCommentListViewModel
     private lateinit var activityViewModel: UnifiedCommentActivityViewModel
@@ -165,8 +166,12 @@ class UnifiedCommentListFragment : Fragment(R.layout.unified_comment_list_fragme
 
     private fun showCommentDetails(commentId: Long, commentStatus: CommentStatus) {
         currentSnackbar?.dismiss()
-        if (unifiedCommentsDetailFeatureConfig.isEnabled()) {
-            ActivityLauncher.viewUnifiedCommentsDetails(context, selectedSiteRepository.getSelectedSite())
+        if (experimentalFeatures.isEnabled(Feature.UNIFIED_COMMENTS_DETAILS)) {
+            ActivityLauncher.viewUnifiedCommentsDetails(
+                context,
+                selectedSiteRepository.getSelectedSite(),
+                commentId
+            )
         } else {
             commentDetails.launch(
                 CommentDetailsActivityRequest(
