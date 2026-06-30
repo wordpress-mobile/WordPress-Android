@@ -42,7 +42,7 @@ internal class ExperimentalFeaturesViewModel @Inject constructor(
         // These features are only shown in debug builds
         return when (feature) {
             Feature.EXPERIMENTAL_POST_TYPES,
-            Feature.UNIFIED_COMMENTS_DETAILS -> BuildConfig.DEBUG
+            Feature.RS_UNIFIED_COMMENTS -> BuildConfig.DEBUG
             else -> true
         }
     }

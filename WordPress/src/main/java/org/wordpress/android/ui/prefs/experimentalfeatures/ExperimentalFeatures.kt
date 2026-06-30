@@ -45,10 +45,10 @@ class ExperimentalFeatures @Inject constructor(
             R.string.experimental_rs_pages_list,
             R.string.experimental_rs_pages_list_description
         ),
-        UNIFIED_COMMENTS_DETAILS(
-            "unified_comments_details",
-            R.string.experimental_unified_comments_details,
-            R.string.experimental_unified_comments_details_description
+        RS_UNIFIED_COMMENTS(
+            "rs_unified_comments",
+            R.string.experimental_rs_unified_comments,
+            R.string.experimental_rs_unified_comments_description
         );
     }
 }

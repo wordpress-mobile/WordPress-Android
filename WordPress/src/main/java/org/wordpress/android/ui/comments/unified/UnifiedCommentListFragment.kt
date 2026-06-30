@@ -166,7 +166,7 @@ class UnifiedCommentListFragment : Fragment(R.layout.unified_comment_list_fragme
 
     private fun showCommentDetails(commentId: Long, commentStatus: CommentStatus) {
         currentSnackbar?.dismiss()
-        if (experimentalFeatures.isEnabled(Feature.UNIFIED_COMMENTS_DETAILS)) {
+        if (experimentalFeatures.isEnabled(Feature.RS_UNIFIED_COMMENTS)) {
             ActivityLauncher.viewUnifiedCommentsDetails(
                 context,
                 selectedSiteRepository.getSelectedSite(),
