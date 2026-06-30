@@ -11,13 +11,10 @@ import org.wordpress.android.ui.main.BaseAppCompatActivity
 import org.wordpress.android.util.extensions.getSerializableExtraCompat
 
 class UnifiedCommentsDetailsActivity : BaseAppCompatActivity() {
-    private var binding: UnifiedCommentsDetailsActivityBinding? = null
-
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        (application as WordPress).component().inject(this)
 
-        binding = UnifiedCommentsDetailsActivityBinding.inflate(layoutInflater).apply {
+        UnifiedCommentsDetailsActivityBinding.inflate(layoutInflater).apply {
             setContentView(root)
             setupActionBar()
         }
