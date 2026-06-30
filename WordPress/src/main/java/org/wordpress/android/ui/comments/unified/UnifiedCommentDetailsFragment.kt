@@ -46,6 +46,7 @@ import org.wordpress.android.ui.suggestion.util.SuggestionUtils
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.ActivityUtils
+import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.SnackbarItem
 import org.wordpress.android.util.SnackbarItem.Info
@@ -385,6 +386,7 @@ class UnifiedCommentDetailsFragment :
         try {
             startActivity(Intent.createChooser(intent, getString(R.string.comment_share_link_via)))
         } catch (e: ActivityNotFoundException) {
+            AppLog.e(AppLog.T.COMMENTS, "No activity found to share the comment link", e)
             ToastUtils.showToast(requireContext(), R.string.comment_toast_err_share_intent)
         }
     }

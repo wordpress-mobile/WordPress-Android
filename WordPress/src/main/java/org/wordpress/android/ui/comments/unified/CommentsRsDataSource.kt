@@ -75,6 +75,7 @@ class CommentsRsDataSource @Inject constructor(
             client.request(request) !is WpRequestResult.Success
         }
 
+    @Suppress("TooGenericExceptionCaught")
     private suspend fun <R> safe(errorValue: R, block: suspend () -> R): R = try {
         block()
     } catch (e: CancellationException) {

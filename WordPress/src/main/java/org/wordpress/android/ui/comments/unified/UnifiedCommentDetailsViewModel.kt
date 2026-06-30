@@ -161,6 +161,7 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
         _uiActionEvent.value = Event(OpenPostInReader(site.siteId, comment.postId))
     }
 
+    @Suppress("ReturnCount")
     fun onReplyClicked(replyText: String) {
         if (replyText.isBlank()) return
         if (!networkUtilsWrapper.isNetworkAvailable()) {
