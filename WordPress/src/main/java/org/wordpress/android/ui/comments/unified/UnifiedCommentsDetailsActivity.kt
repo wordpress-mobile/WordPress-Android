@@ -43,6 +43,11 @@ class UnifiedCommentsDetailsActivity : BaseAppCompatActivity() {
         }
     }
 
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressedDispatcher.onBackPressed()
+        return true
+    }
+
     companion object {
         @JvmStatic
         fun createIntent(context: Context, site: SiteModel, remoteCommentId: Long): Intent =

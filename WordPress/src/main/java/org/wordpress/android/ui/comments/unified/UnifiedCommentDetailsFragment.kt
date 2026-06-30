@@ -105,13 +105,11 @@ class UnifiedCommentDetailsFragment :
     }
 
     private fun UnifiedCommentDetailsFragmentBinding.setupClickListeners() {
-        buttonApprove.setOnClickListener { viewModel.onApproveClicked() }
-        buttonSpam.setOnClickListener { viewModel.onSpamClicked() }
-        buttonTrash.setOnClickListener { viewModel.onTrashClicked() }
-        buttonLike.setOnClickListener { viewModel.onLikeClicked() }
-        buttonEdit.setOnClickListener { viewModel.onEditClicked() }
+        layoutButtons.btnModerate.setOnClickListener { viewModel.onApproveClicked() }
+        layoutButtons.btnSpam.setOnClickListener { viewModel.onSpamClicked() }
+        layoutButtons.btnLike.setOnClickListener { viewModel.onLikeClicked() }
+        layoutButtons.btnMore.setOnClickListener { showMoreMenu(it) }
         textPostTitle.setOnClickListener { viewModel.onPostTitleClicked() }
-        buttonMore.setOnClickListener { showMoreMenu(it) }
     }
 
     private fun ReaderIncludeCommentBoxBinding.setupReplyBox() {
@@ -239,18 +237,24 @@ class UnifiedCommentDetailsFragment :
             }
         )
 
-        buttonApprove.setText(
-            if (uiState.status == APPROVED) R.string.mnu_comment_unapprove else R.string.mnu_comment_approve
-        )
-        buttonSpam.setText(
-            if (uiState.status == SPAM) R.string.mnu_comment_unspam else R.string.mnu_comment_spam
-        )
-        buttonTrash.setText(
-            if (uiState.status == TRASH) R.string.mnu_comment_untrash else R.string.mnu_comment_trash
-        )
-        buttonLike.setText(if (uiState.isLiked) R.string.mnu_comment_liked else R.string.like)
-
+        renderActionButtons(uiState)
         renderReplyBox(uiState)
+    }
+
+    private fun UnifiedCommentDetailsFragmentBinding.renderActionButtons(uiState: CommentDetailsUiState) {
+        with(layoutButtons) {
+            btnModerateText.setText(
+                if (uiState.status == APPROVED) R.string.mnu_comment_unapprove else R.string.mnu_comment_approve
+            )
+            btnSpam.visibility = View.VISIBLE
+            btnSpamText.setText(
+                if (uiState.status == SPAM) R.string.mnu_comment_unspam else R.string.mnu_comment_spam
+            )
+            btnLikeIcon.setImageResource(
+                if (uiState.isLiked) R.drawable.ic_star_white_24dp else R.drawable.ic_star_outline_white_24dp
+            )
+            btnLikeText.setText(if (uiState.isLiked) R.string.mnu_comment_liked else R.string.like)
+        }
     }
 
     private fun UnifiedCommentDetailsFragmentBinding.renderReplyBox(uiState: CommentDetailsUiState) {
@@ -283,12 +287,17 @@ class UnifiedCommentDetailsFragment :
         val state = currentState ?: return
         PopupMenu(requireContext(), anchor).apply {
             menuInflater.inflate(R.menu.unified_comment_details_more, menu)
+            menu.findItem(R.id.menu_trash).setTitle(
+                if (state.status == TRASH) R.string.mnu_comment_untrash else R.string.mnu_comment_trash
+            )
             menu.findItem(R.id.menu_copy_link).isVisible = state.commentUrl.isNotEmpty()
             menu.findItem(R.id.menu_share_link).isVisible = state.commentUrl.isNotEmpty()
             menu.findItem(R.id.menu_delete_permanently).isVisible =
                 state.status == TRASH || state.status == SPAM
             setOnMenuItemClickListener { item ->
                 when (item.itemId) {
+                    R.id.menu_edit -> viewModel.onEditClicked()
+                    R.id.menu_trash -> viewModel.onTrashClicked()
                     R.id.menu_copy_link -> copyLink(state.commentUrl)
                     R.id.menu_share_link -> shareLink(state.commentUrl)
                     R.id.menu_delete_permanently -> confirmDeletePermanently()

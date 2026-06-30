@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/coordinator"
     android:layout_width="match_parent"
@@ -21,8 +20,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:paddingHorizontal="16dp"
-                android:paddingVertical="16dp">
+                android:paddingHorizontal="@dimen/margin_extra_large"
+                android:paddingVertical="@dimen/margin_extra_large">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -32,15 +31,15 @@
 
                     <ImageView
                         android:id="@+id/image_avatar"
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
+                        android:layout_width="@dimen/avatar_sz_medium"
+                        android:layout_height="@dimen/avatar_sz_medium"
                         android:contentDescription="@null"
                         tools:src="@drawable/bg_oval_neutral_30" />
 
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="12dp"
+                        android:layout_marginStart="@dimen/margin_large"
                         android:layout_weight="1"
                         android:orientation="vertical">
 
@@ -48,14 +47,17 @@
                             android:id="@+id/text_author_name"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:textAppearance="?attr/textAppearanceTitleMedium"
+                            android:textColor="?attr/colorOnSurface"
+                            android:textSize="@dimen/text_sz_extra_large"
+                            android:textStyle="bold"
                             tools:text="Jane Doe" />
 
                         <TextView
                             android:id="@+id/text_date"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:textAppearance="?attr/textAppearanceBodySmall"
+                            android:textColor="?attr/wpColorOnSurfaceMedium"
+                            android:textSize="@dimen/text_sz_small"
                             tools:text="2 hours ago" />
                     </LinearLayout>
 
@@ -63,7 +65,8 @@
                         android:id="@+id/text_status"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textAppearance="?attr/textAppearanceLabelMedium"
+                        android:textColor="?attr/wpColorOnSurfaceMedium"
+                        android:textSize="@dimen/text_sz_small"
                         tools:text="Pending" />
                 </LinearLayout>
 
@@ -71,8 +74,9 @@
                     android:id="@+id/text_post_title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:textAppearance="?attr/textAppearanceBodyMedium"
+                    android:layout_marginTop="@dimen/margin_extra_large"
+                    android:textColor="?attr/wpColorOnSurfaceMedium"
+                    android:textSize="@dimen/text_sz_medium"
                     android:textStyle="italic"
                     tools:text="On: My first post" />
 
@@ -80,72 +84,17 @@
                     android:id="@+id/text_comment_content"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:textAppearance="?attr/textAppearanceBodyLarge"
+                    android:layout_marginTop="@dimen/margin_extra_large"
+                    android:textColor="?attr/colorOnSurface"
                     android:textIsSelectable="true"
+                    android:textSize="@dimen/text_sz_large"
                     tools:text="This is a great post, thanks for sharing!" />
-
-                <HorizontalScrollView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="24dp"
-                    android:scrollbars="none">
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/button_approve"
-                            style="?attr/materialButtonOutlinedStyle"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/mnu_comment_approve" />
-
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/button_spam"
-                            style="?attr/materialButtonOutlinedStyle"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="8dp"
-                            android:text="@string/mnu_comment_spam" />
-
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/button_trash"
-                            style="?attr/materialButtonOutlinedStyle"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="8dp"
-                            android:text="@string/mnu_comment_trash" />
-
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/button_like"
-                            style="?attr/materialButtonOutlinedStyle"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="8dp"
-                            android:text="@string/like" />
-
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/button_edit"
-                            style="?attr/materialButtonOutlinedStyle"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="8dp"
-                            android:text="@string/edit" />
-
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/button_more"
-                            style="?attr/materialButtonOutlinedStyle"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="8dp"
-                            android:text="@string/more" />
-                    </LinearLayout>
-                </HorizontalScrollView>
             </LinearLayout>
         </androidx.core.widget.NestedScrollView>
+
+        <include
+            android:id="@+id/layout_buttons"
+            layout="@layout/comment_action_footer" />
 
         <include
             android:id="@+id/layout_comment_box"
