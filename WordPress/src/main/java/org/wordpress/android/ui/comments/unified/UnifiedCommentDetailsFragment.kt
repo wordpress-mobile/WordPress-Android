@@ -123,6 +123,9 @@ class UnifiedCommentDetailsFragment :
         layoutButtons.btnLike.setOnClickListener { viewModel.onLikeClicked() }
         layoutButtons.btnMore.setOnClickListener { showMoreMenu(it) }
         textPostTitle.setOnClickListener { viewModel.onPostTitleClicked() }
+        // Spam is hidden by default in the shared comment_action_footer layout; the unified detail
+        // always offers it, so show it up front rather than only once the comment has loaded.
+        layoutButtons.btnSpam.visibility = View.VISIBLE
     }
 
     private fun ReaderIncludeCommentBoxBinding.setupReplyBox() {
@@ -227,7 +230,9 @@ class UnifiedCommentDetailsFragment :
 
     private fun UnifiedCommentDetailsFragmentBinding.renderUiState(uiState: CommentDetailsUiState) {
         progressBar.visibility = if (uiState.showProgress) View.VISIBLE else View.GONE
-        scrollView.visibility = if (uiState.contentVisible) View.VISIBLE else View.GONE
+        // INVISIBLE (not GONE) so the scroll view keeps its weighted space while the comment loads,
+        // which keeps the action buttons pinned to the bottom instead of floating to the top.
+        scrollView.visibility = if (uiState.contentVisible) View.VISIBLE else View.INVISIBLE
         if (!uiState.contentVisible) return
         currentState = uiState
 
@@ -271,7 +276,6 @@ class UnifiedCommentDetailsFragment :
                 )
             }
 
-            btnSpam.visibility = View.VISIBLE
             btnSpamText.setText(
                 if (uiState.status == SPAM) R.string.mnu_comment_unspam else R.string.mnu_comment_spam
             )
