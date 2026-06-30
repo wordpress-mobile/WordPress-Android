@@ -11,19 +11,22 @@ import androidx.activity.result.contract.ActivityResultContracts.StartActivityFo
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.text.HtmlCompat
+import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.databinding.ReaderIncludeCommentBoxBinding
 import org.wordpress.android.databinding.UnifiedCommentDetailsFragmentBinding
 import org.wordpress.android.fluxc.model.CommentStatus.APPROVED
 import org.wordpress.android.fluxc.model.CommentStatus.SPAM
 import org.wordpress.android.fluxc.model.CommentStatus.TRASH
 import org.wordpress.android.fluxc.model.CommentStatus.UNAPPROVED
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.ui.ActivityLauncher
+import org.wordpress.android.ui.CollapseFullScreenDialogFragment
+import org.wordpress.android.ui.CommentFullScreenDialogFragment
 import org.wordpress.android.ui.comments.unified.CommentDetailsActionEvent.Close
 import org.wordpress.android.ui.comments.unified.CommentDetailsActionEvent.LaunchEditComment
 import org.wordpress.android.ui.comments.unified.CommentDetailsActionEvent.OpenPostInReader
@@ -31,9 +34,12 @@ import org.wordpress.android.ui.comments.unified.CommentDetailsActionEvent.Reply
 import org.wordpress.android.ui.comments.unified.UnifiedCommentDetailsViewModel.CommentDetailsUiState
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.reader.ReaderActivityLauncher
+import org.wordpress.android.ui.suggestion.util.SuggestionServiceConnectionManager
+import org.wordpress.android.ui.suggestion.util.SuggestionUtils
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.ActivityUtils
+import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.SnackbarItem
 import org.wordpress.android.util.SnackbarItem.Info
 import org.wordpress.android.util.SnackbarSequencer
@@ -44,7 +50,10 @@ import org.wordpress.android.util.image.ImageType
 import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
 
-class UnifiedCommentDetailsFragment : Fragment(R.layout.unified_comment_details_fragment) {
+class UnifiedCommentDetailsFragment :
+    Fragment(R.layout.unified_comment_details_fragment),
+    CollapseFullScreenDialogFragment.OnConfirmListener,
+    CollapseFullScreenDialogFragment.OnCollapseListener {
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
@@ -61,7 +70,11 @@ class UnifiedCommentDetailsFragment : Fragment(R.layout.unified_comment_details_
     private var binding: UnifiedCommentDetailsFragmentBinding? = null
     private var currentState: CommentDetailsUiState? = null
 
-    private val editCommentLauncher: ActivityResultLauncher<android.content.Intent> =
+    private lateinit var site: SiteModel
+    private var remoteCommentId: Long = 0
+    private var suggestionServiceConnectionManager: SuggestionServiceConnectionManager? = null
+
+    private val editCommentLauncher: ActivityResultLauncher<Intent> =
         registerForActivityResult(StartActivityForResult()) { result ->
             if (result.resultCode == AppCompatActivity.RESULT_OK) {
                 viewModel.refreshComment()
@@ -77,12 +90,14 @@ class UnifiedCommentDetailsFragment : Fragment(R.layout.unified_comment_details_
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val site = requireNotNull(arguments?.getSerializableCompat<SiteModel>(WordPress.SITE))
-        val remoteCommentId = requireArguments().getLong(KEY_REMOTE_COMMENT_ID)
+        site = requireNotNull(arguments?.getSerializableCompat<SiteModel>(WordPress.SITE))
+        remoteCommentId = requireArguments().getLong(KEY_REMOTE_COMMENT_ID)
 
         UnifiedCommentDetailsFragmentBinding.bind(view).apply {
             binding = this
             setupClickListeners()
+            layoutCommentBox.setupReplyBox()
+            layoutCommentBox.setupSuggestions()
             setupObservers()
         }
 
@@ -95,9 +110,75 @@ class UnifiedCommentDetailsFragment : Fragment(R.layout.unified_comment_details_
         buttonTrash.setOnClickListener { viewModel.onTrashClicked() }
         buttonLike.setOnClickListener { viewModel.onLikeClicked() }
         buttonEdit.setOnClickListener { viewModel.onEditClicked() }
-        buttonSendReply.setOnClickListener { viewModel.onReplyClicked(replyEditText.text.toString()) }
         textPostTitle.setOnClickListener { viewModel.onPostTitleClicked() }
         buttonMore.setOnClickListener { showMoreMenu(it) }
+    }
+
+    private fun ReaderIncludeCommentBoxBinding.setupReplyBox() {
+        layoutContainer.visibility = View.VISIBLE
+        editComment.initializeWithPrefix('@')
+        editComment.doAfterTextChanged { btnSubmitReply.isEnabled = !it.isNullOrBlank() }
+        btnSubmitReply.setOnClickListener { viewModel.onReplyClicked(editComment.text.toString()) }
+        buttonExpand.setOnClickListener { showFullScreenReply() }
+        editComment.autoSaveTextHelper.uniqueId = "${site.siteId}-$remoteCommentId"
+        editComment.autoSaveTextHelper.loadString(editComment)
+    }
+
+    private fun ReaderIncludeCommentBoxBinding.setupSuggestions() {
+        if (!SiteUtils.isAccessedViaWPComRest(site)) return
+        val connectionManager = SuggestionServiceConnectionManager(requireActivity(), site.siteId)
+        suggestionServiceConnectionManager = connectionManager
+        editComment.setAdapter(SuggestionUtils.setupUserSuggestions(site, requireActivity(), connectionManager))
+    }
+
+    private fun showFullScreenReply() {
+        val box = binding?.layoutCommentBox ?: return
+        val bundle = CommentFullScreenDialogFragment.newBundle(
+            box.editComment.text.toString(),
+            box.editComment.selectionStart,
+            box.editComment.selectionEnd,
+            site.siteId
+        )
+        CollapseFullScreenDialogFragment.Builder(requireContext())
+            .setTitle(R.string.comment)
+            .setOnCollapseListener(this)
+            .setOnConfirmListener(this)
+            .setContent(CommentFullScreenDialogFragment::class.java, bundle)
+            .setAction(R.string.send)
+            .setHideActivityBar(true)
+            .build()
+            .show(requireActivity().supportFragmentManager, fullScreenDialogTag())
+    }
+
+    override fun onConfirm(result: Bundle?) {
+        val box = binding?.layoutCommentBox ?: return
+        if (result != null) {
+            box.editComment.setText(result.getString(CommentFullScreenDialogFragment.RESULT_REPLY))
+            viewModel.onReplyClicked(box.editComment.text.toString())
+        }
+    }
+
+    override fun onCollapse(result: Bundle?) {
+        val box = binding?.layoutCommentBox ?: return
+        if (result != null) {
+            box.editComment.setText(result.getString(CommentFullScreenDialogFragment.RESULT_REPLY))
+            box.editComment.setSelection(
+                result.getInt(CommentFullScreenDialogFragment.RESULT_SELECTION_START),
+                result.getInt(CommentFullScreenDialogFragment.RESULT_SELECTION_END)
+            )
+            box.editComment.requestFocus()
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        // Reattach listeners to a collapsible reply dialog that may have survived recreation
+        val fragment = requireActivity().supportFragmentManager
+            .findFragmentByTag(fullScreenDialogTag()) as? CollapseFullScreenDialogFragment
+        if (fragment != null && fragment.isAdded) {
+            fragment.setOnCollapseListener(this)
+            fragment.setOnConfirmListener(this)
+        }
     }
 
     private fun UnifiedCommentDetailsFragmentBinding.setupObservers() {
@@ -106,10 +187,7 @@ class UnifiedCommentDetailsFragment : Fragment(R.layout.unified_comment_details_
         viewModel.uiActionEvent.observeEvent(viewLifecycleOwner) { event ->
             when (event) {
                 is Close -> requireActivity().finish()
-                is ReplySent -> {
-                    replyEditText.text?.clear()
-                    view?.let { ActivityUtils.hideKeyboardForced(it) }
-                }
+                is ReplySent -> clearReplyInput()
                 is LaunchEditComment -> editCommentLauncher.launch(
                     UnifiedCommentsEditActivity.createIntent(
                         requireContext(),
@@ -126,6 +204,14 @@ class UnifiedCommentDetailsFragment : Fragment(R.layout.unified_comment_details_
         }
 
         viewModel.onSnackbarMessage.observeEvent(viewLifecycleOwner) { showSnackbar(it) }
+    }
+
+    private fun clearReplyInput() {
+        binding?.layoutCommentBox?.editComment?.let { edit ->
+            edit.setText("")
+            edit.autoSaveTextHelper.clearSavedText(edit)
+        }
+        view?.let { ActivityUtils.hideKeyboardForced(it) }
     }
 
     private fun UnifiedCommentDetailsFragmentBinding.renderUiState(uiState: CommentDetailsUiState) {
@@ -164,12 +250,20 @@ class UnifiedCommentDetailsFragment : Fragment(R.layout.unified_comment_details_
         )
         buttonLike.setText(if (uiState.isLiked) R.string.mnu_comment_liked else R.string.like)
 
-        replyEditText.hint = if (uiState.authorName.isNotBlank()) {
-            getString(R.string.comment_reply_to_user, uiState.authorName)
-        } else {
-            getString(R.string.reply)
+        renderReplyBox(uiState)
+    }
+
+    private fun UnifiedCommentDetailsFragmentBinding.renderReplyBox(uiState: CommentDetailsUiState) {
+        with(layoutCommentBox) {
+            editComment.hint = if (uiState.authorName.isNotBlank()) {
+                getString(R.string.comment_reply_to_user, uiState.authorName)
+            } else {
+                getString(R.string.reader_hint_comment_on_post)
+            }
+            editComment.isEnabled = !uiState.isReplyInProgress
+            progressSubmitComment.visibility = if (uiState.isReplyInProgress) View.VISIBLE else View.GONE
+            btnSubmitReply.visibility = if (uiState.isReplyInProgress) View.GONE else View.VISIBLE
         }
-        buttonSendReply.isEnabled = !uiState.isReplyInProgress
     }
 
     private fun UnifiedCommentDetailsFragmentBinding.showSnackbar(holder: SnackbarMessageHolder) {
@@ -239,9 +333,16 @@ class UnifiedCommentDetailsFragment : Fragment(R.layout.unified_comment_details_
             .show()
     }
 
+    private fun fullScreenDialogTag() = "${CollapseFullScreenDialogFragment.TAG}_${site.siteId}_$remoteCommentId"
+
     override fun onDestroyView() {
         super.onDestroyView()
         binding = null
+    }
+
+    override fun onDestroy() {
+        suggestionServiceConnectionManager?.unbindFromService()
+        super.onDestroy()
     }
 
     companion object {

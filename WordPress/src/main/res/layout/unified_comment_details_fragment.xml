@@ -147,38 +147,9 @@
             </LinearLayout>
         </androidx.core.widget.NestedScrollView>
 
-        <com.google.android.material.divider.MaterialDivider
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="bottom"
-            android:orientation="horizontal"
-            android:paddingHorizontal="16dp"
-            android:paddingVertical="8dp">
-
-            <EditText
-                android:id="@+id/reply_edit_text"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="1"
-                android:autofillHints="@null"
-                android:hint="@string/reply"
-                android:inputType="textCapSentences|textMultiLine"
-                android:maxLines="4"
-                android:minHeight="48dp" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/button_send_reply"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginStart="8dp"
-                android:text="@string/send" />
-        </LinearLayout>
+        <include
+            android:id="@+id/layout_comment_box"
+            layout="@layout/reader_include_comment_box" />
     </LinearLayout>
 
     <ProgressBar
