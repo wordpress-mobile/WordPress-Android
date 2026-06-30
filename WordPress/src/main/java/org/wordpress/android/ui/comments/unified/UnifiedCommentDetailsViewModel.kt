@@ -23,8 +23,11 @@ import org.wordpress.android.ui.comments.unified.CommentDetailsActionEvent.OpenP
 import org.wordpress.android.ui.comments.unified.CommentDetailsActionEvent.ReplySent
 import org.wordpress.android.ui.comments.unified.CommentIdentifier.SiteCommentIdentifier
 import org.wordpress.android.ui.comments.unified.CommentsRsDataSource.RsComment
+import org.wordpress.android.ui.comments.unified.CommentsRsDataSource.RsResult
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
+import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
+import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.DateTimeUtilsWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.viewmodel.Event
@@ -171,20 +174,20 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
         val comment = loadedComment ?: return
         launch {
             _uiState.value = _uiState.value?.copy(isReplyInProgress = true)
-            val isError = withContext(bgDispatcher) {
-                val err = commentsRsDataSource.createReply(site, comment.postId, remoteCommentId, replyText)
-                if (!err) {
+            val result = withContext(bgDispatcher) {
+                val r = commentsRsDataSource.createReply(site, comment.postId, remoteCommentId, replyText)
+                if (r is RsResult.Success) {
                     // Known limitation: the rs reply is created server-side only, so the new reply
                     // won't appear in the (still FluxC) comment list until it's refreshed from the
                     // server. This resolves when the list is migrated to wordpress-rs; for now we
                     // only refresh from the local cache, which reflects the parent's state.
                     localCommentCacheUpdateHandler.requestCommentsUpdate()
                 }
-                err
+                r
             }
             _uiState.value = _uiState.value?.copy(isReplyInProgress = false)
-            if (isError) {
-                showSnackbar(R.string.error_generic)
+            if (result is RsResult.Error) {
+                showError(result.message, R.string.error_generic)
             } else {
                 // Replying to an unapproved comment implicitly approves it, matching legacy behaviour
                 if (currentStatus() == UNAPPROVED) {
@@ -198,8 +201,8 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
 
     private suspend fun approveAfterReply() {
         _uiState.value = _uiState.value?.copy(status = APPROVED)
-        val isError = withContext(bgDispatcher) { moderate(APPROVED) }
-        if (isError) {
+        val result = withContext(bgDispatcher) { moderate(APPROVED) }
+        if (result is RsResult.Error) {
             _uiState.value = _uiState.value?.copy(status = UNAPPROVED)
         }
     }
@@ -212,10 +215,10 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
         val previousStatus = currentStatus()
         launch {
             _uiState.value = _uiState.value?.copy(status = newStatus)
-            val isError = withContext(bgDispatcher) { moderate(newStatus) }
-            if (isError) {
+            val result = withContext(bgDispatcher) { moderate(newStatus) }
+            if (result is RsResult.Error) {
                 _uiState.value = _uiState.value?.copy(status = previousStatus)
-                showSnackbar(R.string.error_moderate_comment)
+                showError(result.message, R.string.error_moderate_comment)
             } else if (closeOnSuccess) {
                 _uiActionEvent.value = Event(Close)
             }
@@ -224,19 +227,19 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
 
     /**
      * Applies [newStatus] to the comment via wordpress-rs and, on success, mirrors it into the
-     * FluxC cache so the (still FluxC) list reflects the change. Returns true on error.
+     * FluxC cache so the (still FluxC) list reflects the change.
      */
-    private suspend fun moderate(newStatus: CommentStatus): Boolean {
-        val isError = when (newStatus) {
+    private suspend fun moderate(newStatus: CommentStatus): RsResult {
+        val result = when (newStatus) {
             TRASH -> commentsRsDataSource.trash(site, remoteCommentId)
             DELETED -> commentsRsDataSource.delete(site, remoteCommentId)
             else -> commentsRsDataSource.updateStatus(site, remoteCommentId, newStatus)
         }
-        if (!isError) {
+        if (result is RsResult.Success) {
             commentsStore.moderateCommentLocally(site, remoteCommentId, newStatus)
             localCommentCacheUpdateHandler.requestCommentsUpdate()
         }
-        return isError
+        return result
     }
 
     private fun currentStatus(): CommentStatus = _uiState.value?.status ?: CommentStatus.ALL
@@ -248,6 +251,12 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
 
     private fun showSnackbar(messageRes: Int) {
         _onSnackbarMessage.value = Event(SnackbarMessageHolder(UiStringRes(messageRes)))
+    }
+
+    /** Surfaces the server error [message] when available, otherwise the generic [fallbackRes]. */
+    private fun showError(message: String?, fallbackRes: Int) {
+        val uiMessage: UiString = if (!message.isNullOrBlank()) UiStringText(message) else UiStringRes(fallbackRes)
+        _onSnackbarMessage.value = Event(SnackbarMessageHolder(uiMessage))
     }
 
     private fun RsComment.toUiState(cached: CommentEntity?) = CommentDetailsUiState(

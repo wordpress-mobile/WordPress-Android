@@ -29,9 +29,11 @@ import org.wordpress.android.ui.comments.unified.CommentDetailsActionEvent.Reply
 import org.wordpress.android.ui.comments.unified.CommentIdentifier.SiteCommentIdentifier
 import org.wordpress.android.ui.comments.unified.CommentsRsDataSource
 import org.wordpress.android.ui.comments.unified.CommentsRsDataSource.RsComment
+import org.wordpress.android.ui.comments.unified.CommentsRsDataSource.RsResult
 import org.wordpress.android.ui.comments.unified.UnifiedCommentDetailsViewModel
 import org.wordpress.android.ui.comments.unified.UnifiedCommentDetailsViewModel.CommentDetailsUiState
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
+import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.DateTimeUtilsWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
 
@@ -69,10 +71,10 @@ class UnifiedCommentDetailsViewModelTest : BaseUnitTest() {
         whenever(commentsRsDataSource.getComment(site, REMOTE_COMMENT_ID)).thenReturn(RS_COMMENT)
         whenever(commentsStore.getCommentByLocalSiteAndRemoteId(LOCAL_SITE_ID, REMOTE_COMMENT_ID))
             .thenReturn(listOf(CACHED_COMMENT))
-        whenever(commentsRsDataSource.updateStatus(eq(site), eq(REMOTE_COMMENT_ID), any())).thenReturn(false)
-        whenever(commentsRsDataSource.trash(site, REMOTE_COMMENT_ID)).thenReturn(false)
-        whenever(commentsRsDataSource.delete(site, REMOTE_COMMENT_ID)).thenReturn(false)
-        whenever(commentsRsDataSource.createReply(eq(site), any(), any(), any())).thenReturn(false)
+        whenever(commentsRsDataSource.updateStatus(eq(site), eq(REMOTE_COMMENT_ID), any())).thenReturn(RsResult.Success)
+        whenever(commentsRsDataSource.trash(site, REMOTE_COMMENT_ID)).thenReturn(RsResult.Success)
+        whenever(commentsRsDataSource.delete(site, REMOTE_COMMENT_ID)).thenReturn(RsResult.Success)
+        whenever(commentsRsDataSource.createReply(eq(site), any(), any(), any())).thenReturn(RsResult.Success)
         whenever(commentsStore.likeComment(eq(site), eq(REMOTE_COMMENT_ID), eq(null), any()))
             .thenReturn(successPayload())
 
@@ -152,13 +154,15 @@ class UnifiedCommentDetailsViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `moderation reverts status and shows snackbar on error`() = test {
-        whenever(commentsRsDataSource.updateStatus(eq(site), eq(REMOTE_COMMENT_ID), any())).thenReturn(true)
+    fun `moderation reverts status and surfaces the server error message`() = test {
+        whenever(commentsRsDataSource.updateStatus(eq(site), eq(REMOTE_COMMENT_ID), any()))
+            .thenReturn(RsResult.Error("Sorry, you are not allowed to edit this comment."))
         viewModel.start(site, REMOTE_COMMENT_ID)
 
         viewModel.onApproveClicked()
 
-        assertThat(snackbarMessages).isNotEmpty
+        assertThat(snackbarMessages.last().message)
+            .isEqualTo(UiStringText("Sorry, you are not allowed to edit this comment."))
         assertThat(uiStates.last().status).isEqualTo(APPROVED)
     }
 
@@ -240,7 +244,8 @@ class UnifiedCommentDetailsViewModelTest : BaseUnitTest() {
 
     @Test
     fun `onReplyClicked shows snackbar and no reply sent event on error`() = test {
-        whenever(commentsRsDataSource.createReply(eq(site), any(), any(), any())).thenReturn(true)
+        whenever(commentsRsDataSource.createReply(eq(site), any(), any(), any()))
+            .thenReturn(RsResult.Error("nope"))
         viewModel.start(site, REMOTE_COMMENT_ID)
 
         viewModel.onReplyClicked("nice post")

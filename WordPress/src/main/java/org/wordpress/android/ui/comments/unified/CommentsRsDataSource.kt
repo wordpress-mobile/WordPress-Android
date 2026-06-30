@@ -38,6 +38,12 @@ class CommentsRsDataSource @Inject constructor(
         val status: CommentStatus
     )
 
+    /** Result of a write request, carrying the server error message when one is available. */
+    sealed interface RsResult {
+        object Success : RsResult
+        data class Error(val message: String?) : RsResult
+    }
+
     suspend fun getComment(site: SiteModel, commentId: Long): RsComment? = safe(errorValue = null) {
         val client = wpApiClientProvider.getWpApiClient(site)
         when (
@@ -50,13 +56,13 @@ class CommentsRsDataSource @Inject constructor(
         }
     }
 
-    suspend fun updateStatus(site: SiteModel, commentId: Long, status: CommentStatus): Boolean =
-        write(site) { it.comments().update(commentId, CommentUpdateParams(status = status.toRsStatus())) }
+    suspend fun updateStatus(site: SiteModel, commentId: Long, status: CommentStatus): RsResult =
+        write(site) { it.comments().update(commentId, CommentUpdateParams(status = status.toRsCommentStatus())) }
 
-    suspend fun trash(site: SiteModel, commentId: Long): Boolean =
+    suspend fun trash(site: SiteModel, commentId: Long): RsResult =
         write(site) { it.comments().trash(commentId, CommentDeleteParams()) }
 
-    suspend fun delete(site: SiteModel, commentId: Long): Boolean =
+    suspend fun delete(site: SiteModel, commentId: Long): RsResult =
         write(site) { it.comments().delete(commentId, CommentDeleteParams()) }
 
     suspend fun createReply(
@@ -64,15 +70,18 @@ class CommentsRsDataSource @Inject constructor(
         postId: Long,
         parentCommentId: Long,
         content: String
-    ): Boolean = write(site) {
+    ): RsResult = write(site) {
         it.comments().create(CommentCreateParams(post = postId, parent = parentCommentId, content = content))
     }
 
-    /** Runs a write request; returns true on error, matching the ViewModel's isError convention. */
-    private suspend fun write(site: SiteModel, request: suspend (UniffiWpApiClient) -> Any): Boolean =
-        safe(errorValue = true) {
+    private suspend fun write(site: SiteModel, request: suspend (UniffiWpApiClient) -> Any): RsResult =
+        safe(errorValue = RsResult.Error(null)) {
             val client = wpApiClientProvider.getWpApiClient(site)
-            client.request(request) !is WpRequestResult.Success
+            when (val result = client.request(request)) {
+                is WpRequestResult.Success -> RsResult.Success
+                is WpRequestResult.WpError -> RsResult.Error(result.errorMessage)
+                else -> RsResult.Error(null)
+            }
         }
 
     @Suppress("TooGenericExceptionCaught")
@@ -94,22 +103,22 @@ class CommentsRsDataSource @Inject constructor(
         url = link,
         postId = post,
         parentId = parent,
-        status = status.toAppStatus()
+        status = status.toAppCommentStatus()
     )
+}
 
-    private fun CommentStatus.toRsStatus(): RsCommentStatus = when (this) {
-        CommentStatus.APPROVED -> RsCommentStatus.Approved
-        CommentStatus.UNAPPROVED -> RsCommentStatus.Hold
-        CommentStatus.SPAM -> RsCommentStatus.Spam
-        CommentStatus.TRASH -> RsCommentStatus.Trash
-        else -> RsCommentStatus.Approved
-    }
+internal fun CommentStatus.toRsCommentStatus(): RsCommentStatus = when (this) {
+    CommentStatus.APPROVED -> RsCommentStatus.Approved
+    CommentStatus.UNAPPROVED -> RsCommentStatus.Hold
+    CommentStatus.SPAM -> RsCommentStatus.Spam
+    CommentStatus.TRASH -> RsCommentStatus.Trash
+    else -> RsCommentStatus.Approved
+}
 
-    private fun RsCommentStatus.toAppStatus(): CommentStatus = when (this) {
-        is RsCommentStatus.Approved -> CommentStatus.APPROVED
-        is RsCommentStatus.Hold -> CommentStatus.UNAPPROVED
-        is RsCommentStatus.Spam -> CommentStatus.SPAM
-        is RsCommentStatus.Trash -> CommentStatus.TRASH
-        else -> CommentStatus.ALL
-    }
+internal fun RsCommentStatus.toAppCommentStatus(): CommentStatus = when (this) {
+    is RsCommentStatus.Approved -> CommentStatus.APPROVED
+    is RsCommentStatus.Hold -> CommentStatus.UNAPPROVED
+    is RsCommentStatus.Spam -> CommentStatus.SPAM
+    is RsCommentStatus.Trash -> CommentStatus.TRASH
+    else -> CommentStatus.ALL
 }
