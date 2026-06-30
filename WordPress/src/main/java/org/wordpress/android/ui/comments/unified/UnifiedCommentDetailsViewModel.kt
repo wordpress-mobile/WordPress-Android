@@ -116,6 +116,10 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
         moderateComment(newStatus, closeOnSuccess = newStatus == TRASH)
     }
 
+    fun onDeletePermanentlyClicked() {
+        moderateComment(DELETED, closeOnSuccess = true)
+    }
+
     fun onLikeClicked() {
         if (!networkUtilsWrapper.isNetworkAvailable()) {
             showSnackbar(R.string.no_network_message)
@@ -264,6 +268,7 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
         datePublished = formatDate(datePublished),
         commentText = content ?: "",
         postTitle = postTitle ?: "",
+        commentUrl = url ?: "",
         status = CommentStatus.fromString(status),
         isLiked = iLike
     )
@@ -276,6 +281,7 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
         val datePublished: String = "",
         val commentText: String = "",
         val postTitle: String = "",
+        val commentUrl: String = "",
         val status: CommentStatus = CommentStatus.ALL,
         val isLiked: Boolean = false,
         val isReplyInProgress: Boolean = false

@@ -77,6 +77,8 @@ class UnifiedCommentDetailsViewModelTest : BaseUnitTest() {
             .thenReturn(successPayload())
         whenever(commentsStore.createNewReply(eq(site), any(), any()))
             .thenReturn(successPayload())
+        whenever(commentsStore.deleteComment(eq(site), eq(REMOTE_COMMENT_ID), eq(null)))
+            .thenReturn(successPayload())
 
         viewModel = UnifiedCommentDetailsViewModel(
             mainDispatcher = testDispatcher(),
@@ -228,6 +230,16 @@ class UnifiedCommentDetailsViewModelTest : BaseUnitTest() {
 
         assertThat(snackbarMessages).isNotEmpty
         assertThat(uiActionEvents).doesNotContain(ReplySent)
+    }
+
+    @Test
+    fun `onDeletePermanentlyClicked deletes comment and closes screen`() = test {
+        viewModel.start(site, REMOTE_COMMENT_ID)
+
+        viewModel.onDeletePermanentlyClicked()
+
+        verify(commentsStore).deleteComment(site, REMOTE_COMMENT_ID, null)
+        assertThat(uiActionEvents).contains(Close)
     }
 
     @Test

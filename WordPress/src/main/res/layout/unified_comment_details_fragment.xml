@@ -134,6 +134,14 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="8dp"
                             android:text="@string/edit" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/button_more"
+                            style="?attr/materialButtonOutlinedStyle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:text="@string/more" />
                     </LinearLayout>
                 </HorizontalScrollView>
             </LinearLayout>

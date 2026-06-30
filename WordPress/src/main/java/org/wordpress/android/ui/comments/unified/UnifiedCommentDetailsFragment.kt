@@ -1,13 +1,19 @@
 package org.wordpress.android.ui.comments.unified
 
+import android.content.ActivityNotFoundException
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.PopupMenu
 import androidx.core.text.HtmlCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
@@ -23,13 +29,15 @@ import org.wordpress.android.ui.comments.unified.CommentDetailsActionEvent.Launc
 import org.wordpress.android.ui.comments.unified.CommentDetailsActionEvent.OpenPostInReader
 import org.wordpress.android.ui.comments.unified.CommentDetailsActionEvent.ReplySent
 import org.wordpress.android.ui.comments.unified.UnifiedCommentDetailsViewModel.CommentDetailsUiState
-import org.wordpress.android.ui.reader.ReaderActivityLauncher
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
+import org.wordpress.android.ui.reader.ReaderActivityLauncher
 import org.wordpress.android.ui.utils.UiHelpers
+import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.ActivityUtils
 import org.wordpress.android.util.SnackbarItem
 import org.wordpress.android.util.SnackbarItem.Info
 import org.wordpress.android.util.SnackbarSequencer
+import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.extensions.getSerializableCompat
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType
@@ -51,6 +59,7 @@ class UnifiedCommentDetailsFragment : Fragment(R.layout.unified_comment_details_
 
     private lateinit var viewModel: UnifiedCommentDetailsViewModel
     private var binding: UnifiedCommentDetailsFragmentBinding? = null
+    private var currentState: CommentDetailsUiState? = null
 
     private val editCommentLauncher: ActivityResultLauncher<android.content.Intent> =
         registerForActivityResult(StartActivityForResult()) { result ->
@@ -88,6 +97,7 @@ class UnifiedCommentDetailsFragment : Fragment(R.layout.unified_comment_details_
         buttonEdit.setOnClickListener { viewModel.onEditClicked() }
         buttonSendReply.setOnClickListener { viewModel.onReplyClicked(replyEditText.text.toString()) }
         textPostTitle.setOnClickListener { viewModel.onPostTitleClicked() }
+        buttonMore.setOnClickListener { showMoreMenu(it) }
     }
 
     private fun UnifiedCommentDetailsFragmentBinding.setupObservers() {
@@ -122,6 +132,7 @@ class UnifiedCommentDetailsFragment : Fragment(R.layout.unified_comment_details_
         progressBar.visibility = if (uiState.showProgress) View.VISIBLE else View.GONE
         scrollView.visibility = if (uiState.contentVisible) View.VISIBLE else View.GONE
         if (!uiState.contentVisible) return
+        currentState = uiState
 
         textAuthorName.text = uiState.authorName
         textDate.text = uiState.datePublished
@@ -172,6 +183,60 @@ class UnifiedCommentDetailsFragment : Fragment(R.layout.unified_comment_details_
                 dismissCallback = { _, event -> holder.onDismissAction(event) }
             )
         )
+    }
+
+    private fun showMoreMenu(anchor: View) {
+        val state = currentState ?: return
+        PopupMenu(requireContext(), anchor).apply {
+            menuInflater.inflate(R.menu.unified_comment_details_more, menu)
+            menu.findItem(R.id.menu_copy_link).isVisible = state.commentUrl.isNotEmpty()
+            menu.findItem(R.id.menu_share_link).isVisible = state.commentUrl.isNotEmpty()
+            menu.findItem(R.id.menu_delete_permanently).isVisible =
+                state.status == TRASH || state.status == SPAM
+            setOnMenuItemClickListener { item ->
+                when (item.itemId) {
+                    R.id.menu_copy_link -> copyLink(state.commentUrl)
+                    R.id.menu_share_link -> shareLink(state.commentUrl)
+                    R.id.menu_delete_permanently -> confirmDeletePermanently()
+                    else -> return@setOnMenuItemClickListener false
+                }
+                true
+            }
+            show()
+        }
+    }
+
+    private fun copyLink(url: String) {
+        if (url.isEmpty()) return
+        val clipboard = requireContext().getSystemService(ClipboardManager::class.java)
+        val message = if (clipboard != null) {
+            clipboard.setPrimaryClip(ClipData.newPlainText("CommentLinkAddress", url))
+            R.string.comment_q_action_copied_url
+        } else {
+            R.string.error_copy_to_clipboard
+        }
+        binding?.showSnackbar(SnackbarMessageHolder(UiStringRes(message)))
+    }
+
+    private fun shareLink(url: String) {
+        if (url.isEmpty()) return
+        val intent = Intent(Intent.ACTION_SEND).apply {
+            type = "text/plain"
+            putExtra(Intent.EXTRA_TEXT, url)
+        }
+        try {
+            startActivity(Intent.createChooser(intent, getString(R.string.comment_share_link_via)))
+        } catch (e: ActivityNotFoundException) {
+            ToastUtils.showToast(requireContext(), R.string.comment_toast_err_share_intent)
+        }
+    }
+
+    private fun confirmDeletePermanently() {
+        MaterialAlertDialogBuilder(requireContext())
+            .setMessage(R.string.dlg_sure_to_delete_comment)
+            .setPositiveButton(R.string.delete) { _, _ -> viewModel.onDeletePermanentlyClicked() }
+            .setNegativeButton(R.string.cancel, null)
+            .show()
     }
 
     override fun onDestroyView() {
