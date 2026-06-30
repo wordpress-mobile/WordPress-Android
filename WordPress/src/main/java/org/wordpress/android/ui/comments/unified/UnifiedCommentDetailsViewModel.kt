@@ -19,11 +19,13 @@ import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.comments.unified.CommentDetailsActionEvent.Close
 import org.wordpress.android.ui.comments.unified.CommentDetailsActionEvent.LaunchEditComment
+import org.wordpress.android.ui.comments.unified.CommentDetailsActionEvent.OpenPostInReader
 import org.wordpress.android.ui.comments.unified.CommentDetailsActionEvent.ReplySent
 import org.wordpress.android.ui.comments.unified.CommentIdentifier.SiteCommentIdentifier
 import org.wordpress.android.ui.comments.unified.usecase.GetCommentUseCase
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.utils.UiString.UiStringRes
+import org.wordpress.android.util.DateTimeUtilsWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
@@ -46,7 +48,8 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
     private val commentsStore: CommentsStore,
     private val getCommentUseCase: GetCommentUseCase,
     private val localCommentCacheUpdateHandler: LocalCommentCacheUpdateHandler,
-    private val networkUtilsWrapper: NetworkUtilsWrapper
+    private val networkUtilsWrapper: NetworkUtilsWrapper,
+    private val dateTimeUtilsWrapper: DateTimeUtilsWrapper
 ) : ScopedViewModel(mainDispatcher) {
     private val _uiState = MutableLiveData<CommentDetailsUiState>()
     private val _uiActionEvent = MutableLiveData<Event<CommentDetailsActionEvent>>()
@@ -140,6 +143,12 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
         )
     }
 
+    fun onPostTitleClicked() {
+        val comment = loadedComment ?: return
+        if (comment.remotePostId <= 0) return
+        _uiActionEvent.value = Event(OpenPostInReader(site.siteId, comment.remotePostId))
+    }
+
     fun onReplyClicked(replyText: String) {
         if (replyText.isBlank()) return
         if (!networkUtilsWrapper.isNetworkAvailable()) {
@@ -160,9 +169,23 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
             if (isError) {
                 showSnackbar(R.string.error_generic)
             } else {
+                // Replying to an unapproved comment implicitly approves it, matching legacy behaviour
+                if (currentStatus() == UNAPPROVED) {
+                    approveAfterReply()
+                }
                 _uiActionEvent.value = Event(ReplySent)
                 showSnackbar(R.string.note_reply_successful)
             }
+        }
+    }
+
+    private suspend fun approveAfterReply() {
+        _uiState.value = _uiState.value?.copy(status = APPROVED)
+        val isError = withContext(bgDispatcher) {
+            moderateOnStore(APPROVED, UNAPPROVED)
+        }
+        if (isError) {
+            _uiState.value = _uiState.value?.copy(status = UNAPPROVED)
         }
     }
 
@@ -224,6 +247,11 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
 
     private fun currentStatus(): CommentStatus = _uiState.value?.status ?: CommentStatus.ALL
 
+    private fun formatDate(isoDate: String?): String {
+        if (isoDate.isNullOrEmpty()) return ""
+        return dateTimeUtilsWrapper.javaDateToTimeSpan(dateTimeUtilsWrapper.dateFromIso8601(isoDate))
+    }
+
     private fun showSnackbar(messageRes: Int) {
         _onSnackbarMessage.value = Event(SnackbarMessageHolder(UiStringRes(messageRes)))
     }
@@ -233,7 +261,7 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
         contentVisible = true,
         authorName = authorName ?: "",
         authorAvatarUrl = authorProfileImageUrl ?: "",
-        datePublished = datePublished ?: "",
+        datePublished = formatDate(datePublished),
         commentText = content ?: "",
         postTitle = postTitle ?: "",
         status = CommentStatus.fromString(status),
@@ -260,5 +288,9 @@ sealed class CommentDetailsActionEvent {
     data class LaunchEditComment(
         val site: SiteModel,
         val commentIdentifier: CommentIdentifier
+    ) : CommentDetailsActionEvent()
+    data class OpenPostInReader(
+        val blogId: Long,
+        val postId: Long
     ) : CommentDetailsActionEvent()
 }

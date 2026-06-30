@@ -20,8 +20,10 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.comments.unified.CommentDetailsActionEvent.Close
 import org.wordpress.android.ui.comments.unified.CommentDetailsActionEvent.LaunchEditComment
+import org.wordpress.android.ui.comments.unified.CommentDetailsActionEvent.OpenPostInReader
 import org.wordpress.android.ui.comments.unified.CommentDetailsActionEvent.ReplySent
 import org.wordpress.android.ui.comments.unified.UnifiedCommentDetailsViewModel.CommentDetailsUiState
+import org.wordpress.android.ui.reader.ReaderActivityLauncher
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.ActivityUtils
@@ -85,6 +87,7 @@ class UnifiedCommentDetailsFragment : Fragment(R.layout.unified_comment_details_
         buttonLike.setOnClickListener { viewModel.onLikeClicked() }
         buttonEdit.setOnClickListener { viewModel.onEditClicked() }
         buttonSendReply.setOnClickListener { viewModel.onReplyClicked(replyEditText.text.toString()) }
+        textPostTitle.setOnClickListener { viewModel.onPostTitleClicked() }
     }
 
     private fun UnifiedCommentDetailsFragmentBinding.setupObservers() {
@@ -103,6 +106,11 @@ class UnifiedCommentDetailsFragment : Fragment(R.layout.unified_comment_details_
                         event.commentIdentifier,
                         event.site
                     )
+                )
+                is OpenPostInReader -> ReaderActivityLauncher.showReaderPostDetail(
+                    requireContext(),
+                    event.blogId,
+                    event.postId
                 )
             }
         }

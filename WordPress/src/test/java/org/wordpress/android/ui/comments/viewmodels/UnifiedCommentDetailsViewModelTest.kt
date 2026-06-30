@@ -27,12 +27,14 @@ import org.wordpress.android.models.usecases.LocalCommentCacheUpdateHandler
 import org.wordpress.android.ui.comments.unified.CommentDetailsActionEvent
 import org.wordpress.android.ui.comments.unified.CommentDetailsActionEvent.Close
 import org.wordpress.android.ui.comments.unified.CommentDetailsActionEvent.LaunchEditComment
+import org.wordpress.android.ui.comments.unified.CommentDetailsActionEvent.OpenPostInReader
 import org.wordpress.android.ui.comments.unified.CommentDetailsActionEvent.ReplySent
 import org.wordpress.android.ui.comments.unified.CommentIdentifier.SiteCommentIdentifier
 import org.wordpress.android.ui.comments.unified.UnifiedCommentDetailsViewModel
 import org.wordpress.android.ui.comments.unified.UnifiedCommentDetailsViewModel.CommentDetailsUiState
 import org.wordpress.android.ui.comments.unified.usecase.GetCommentUseCase
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
+import org.wordpress.android.util.DateTimeUtilsWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
 
 @ExperimentalCoroutinesApi
@@ -48,6 +50,9 @@ class UnifiedCommentDetailsViewModelTest : BaseUnitTest() {
 
     @Mock
     lateinit var networkUtilsWrapper: NetworkUtilsWrapper
+
+    @Mock
+    lateinit var dateTimeUtilsWrapper: DateTimeUtilsWrapper
 
     private lateinit var viewModel: UnifiedCommentDetailsViewModel
 
@@ -79,7 +84,8 @@ class UnifiedCommentDetailsViewModelTest : BaseUnitTest() {
             commentsStore = commentsStore,
             getCommentUseCase = getCommentUseCase,
             localCommentCacheUpdateHandler = localCommentCacheUpdateHandler,
-            networkUtilsWrapper = networkUtilsWrapper
+            networkUtilsWrapper = networkUtilsWrapper,
+            dateTimeUtilsWrapper = dateTimeUtilsWrapper
         )
 
         setupObservers()
@@ -224,6 +230,30 @@ class UnifiedCommentDetailsViewModelTest : BaseUnitTest() {
         assertThat(uiActionEvents).doesNotContain(ReplySent)
     }
 
+    @Test
+    fun `onPostTitleClicked emits open post in reader event`() = test {
+        viewModel.start(site, REMOTE_COMMENT_ID)
+
+        viewModel.onPostTitleClicked()
+
+        val event = uiActionEvents.last()
+        assertThat(event).isInstanceOf(OpenPostInReader::class.java)
+        assertThat((event as OpenPostInReader).blogId).isEqualTo(REMOTE_SITE_ID)
+        assertThat(event.postId).isEqualTo(REMOTE_POST_ID)
+    }
+
+    @Test
+    fun `replying to an unapproved comment approves it`() = test {
+        whenever(getCommentUseCase.execute(site, REMOTE_COMMENT_ID)).thenReturn(UNAPPROVED_COMMENT_ENTITY)
+        viewModel.start(site, REMOTE_COMMENT_ID)
+
+        viewModel.onReplyClicked("nice post")
+
+        verify(commentsStore).createNewReply(eq(site), any(), any())
+        verify(commentsStore).moderateCommentLocally(site, REMOTE_COMMENT_ID, APPROVED)
+        assertThat(uiStates.last().status).isEqualTo(APPROVED)
+    }
+
     private fun setupObservers() {
         uiStates.clear()
         uiActionEvents.clear()
@@ -244,10 +274,12 @@ class UnifiedCommentDetailsViewModelTest : BaseUnitTest() {
         private const val LOCAL_COMMENT_ID = 1000
         private const val REMOTE_COMMENT_ID = 4321L
 
+        private const val REMOTE_POST_ID = 99L
+
         private val COMMENT_ENTITY = CommentEntity(
             id = LOCAL_COMMENT_ID.toLong(),
             remoteCommentId = REMOTE_COMMENT_ID,
-            remotePostId = 0,
+            remotePostId = REMOTE_POST_ID,
             authorId = 4,
             localSiteId = LOCAL_SITE_ID,
             remoteSiteId = REMOTE_SITE_ID,
@@ -265,5 +297,7 @@ class UnifiedCommentDetailsViewModelTest : BaseUnitTest() {
             parentId = 0,
             iLike = false
         )
+
+        private val UNAPPROVED_COMMENT_ENTITY = COMMENT_ENTITY.copy(status = "unapproved")
     }
 }
