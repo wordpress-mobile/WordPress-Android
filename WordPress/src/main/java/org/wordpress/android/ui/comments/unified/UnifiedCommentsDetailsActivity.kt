@@ -8,11 +8,21 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.UnifiedCommentsDetailsActivityBinding
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.main.BaseAppCompatActivity
+import org.wordpress.android.util.NetworkUtils
+import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.extensions.getSerializableExtraCompat
 
 class UnifiedCommentsDetailsActivity : BaseAppCompatActivity() {
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        // The comment is loaded from the network (wordpress-rs), so bail out with a toast rather
+        // than showing an empty screen when there's no connection.
+        if (!NetworkUtils.isNetworkAvailable(this)) {
+            ToastUtils.showToast(this, R.string.no_network_message)
+            finish()
+            return
+        }
 
         UnifiedCommentsDetailsActivityBinding.inflate(layoutInflater).apply {
             setContentView(root)
