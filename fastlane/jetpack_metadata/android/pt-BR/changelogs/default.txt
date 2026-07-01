@@ -1,2 +1,6 @@
-26.8:
-A temporada dos bugs está chegando. Mas não se preocupe, temos trabalhado muito para acabar com eles, com diversas correções para melhorar ainda mais o uso do aplicativo. Esta versão contém o novo editor de blocos. Veja como ele funciona nas Configurações de qualquer site.
+26.9:
+- Lista de novas páginas habilitada com funcionalidades atualizadas
+- Lista de novos posts definida como padrão para sites com senha de aplicativo
+- Conciliamos conversas com a equipe de suporte e com bot no suporte
+- Corrigida a falha que ocorria na abertura de mídia ao sair do editor
+- Selo beta removido dos menus em Meu site
