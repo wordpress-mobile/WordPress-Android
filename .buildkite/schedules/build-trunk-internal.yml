@@ -12,11 +12,5 @@ steps:
   - label: ":android: Build trunk → Play internal"
     command: .buildkite/commands/build-trunk-internal.sh
     plugins: [$CI_TOOLKIT]
-
-# Failure notifications are disabled for now. If re-enabled, they go to #wpmobile.
-# notify:
-#   - slack:
-#       channels:
-#         - "#wpmobile"
-#       message: "Trunk → Play internal build failed."
-#     if: build.state == "failed"
+    notify:
+      - slack: "#build-and-ship"
