@@ -295,7 +295,6 @@ class UnifiedCommentDetailsViewModelTest : BaseUnitTest() {
             contentHtml = "content",
             url = "",
             postId = REMOTE_POST_ID,
-            parentId = 0,
             status = APPROVED
         )
 

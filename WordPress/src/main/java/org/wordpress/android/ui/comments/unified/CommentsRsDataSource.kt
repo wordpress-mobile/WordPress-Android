@@ -35,7 +35,6 @@ class CommentsRsDataSource @Inject constructor(
         val contentHtml: String,
         val url: String,
         val postId: Long,
-        val parentId: Long,
         val status: CommentStatus
     )
 
@@ -105,7 +104,6 @@ class CommentsRsDataSource @Inject constructor(
         contentHtml = content.rendered,
         url = link,
         postId = post,
-        parentId = parent,
         status = status.toAppCommentStatus()
     )
 }
