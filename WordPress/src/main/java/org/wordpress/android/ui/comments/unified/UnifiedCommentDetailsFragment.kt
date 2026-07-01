@@ -5,6 +5,10 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Intent
 import android.os.Bundle
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.style.ForegroundColorSpan
+import android.view.MenuItem
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
@@ -53,6 +57,7 @@ import org.wordpress.android.util.SnackbarItem
 import org.wordpress.android.util.SnackbarItem.Info
 import org.wordpress.android.util.SnackbarSequencer
 import org.wordpress.android.util.ToastUtils
+import org.wordpress.android.util.extensions.getColorFromAttribute
 import org.wordpress.android.util.extensions.getColorResIdFromAttribute
 import org.wordpress.android.util.extensions.getSerializableCompat
 import org.wordpress.android.util.image.ImageManager
@@ -251,6 +256,11 @@ class UnifiedCommentDetailsFragment :
                 else -> R.string.comment_status_all
             }
         )
+        textStatus.setTextColor(
+            requireContext().getColorFromAttribute(
+                if (uiState.status == TRASH) androidx.appcompat.R.attr.colorError else R.attr.wpColorOnSurfaceMedium
+            )
+        )
 
         renderActionButtons(uiState)
         renderReplyBox(uiState)
@@ -337,15 +347,23 @@ class UnifiedCommentDetailsFragment :
 
     private fun showMoreMenu(anchor: View) {
         val state = viewModel.uiState.value ?: return
+        val errorColor = requireContext().getColorFromAttribute(androidx.appcompat.R.attr.colorError)
         PopupMenu(requireContext(), anchor).apply {
             menuInflater.inflate(R.menu.unified_comment_details_more, menu)
-            menu.findItem(R.id.menu_trash).setTitle(
-                if (state.status == TRASH) R.string.mnu_comment_untrash else R.string.mnu_comment_trash
-            )
+            menu.findItem(R.id.menu_trash).apply {
+                if (state.status == TRASH) {
+                    setTitle(R.string.mnu_comment_untrash)
+                } else {
+                    setTitle(R.string.mnu_comment_trash)
+                    setTitleColor(errorColor)
+                }
+            }
             menu.findItem(R.id.menu_copy_link).isVisible = state.commentUrl.isNotEmpty()
             menu.findItem(R.id.menu_share_link).isVisible = state.commentUrl.isNotEmpty()
-            menu.findItem(R.id.menu_delete_permanently).isVisible =
-                state.status == TRASH || state.status == SPAM
+            menu.findItem(R.id.menu_delete_permanently).apply {
+                isVisible = state.status == TRASH || state.status == SPAM
+                setTitleColor(errorColor)
+            }
             setOnMenuItemClickListener { item ->
                 when (item.itemId) {
                     R.id.menu_edit -> viewModel.onEditClicked()
@@ -358,6 +376,15 @@ class UnifiedCommentDetailsFragment :
                 true
             }
             show()
+        }
+    }
+
+    /** Tints a popup menu item's title, since PopupMenu items can't be coloured from XML. */
+    private fun MenuItem.setTitleColor(color: Int) {
+        title = title?.let {
+            SpannableString(it).apply {
+                setSpan(ForegroundColorSpan(color), 0, length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+            }
         }
     }
 
