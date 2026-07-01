@@ -1,2 +1,7 @@
-26.8 :
-L’été arrive ! C’est la saison idéale pour corriger les bugs. Nous avons travaillé d’arrache-pied pour en supprimer un maximum, et nous avons ajouté des correctifs pour rendre l’application encore plus agréable à utiliser. Cette version contient le tout nouvel éditeur de blocs. Essayez-le sur n’importe quel site dans les réglages.
+26.9 :
+- Nouvelle liste des pages activée avec les fonctionnalités mises à jour
+- Nouvelle liste d’articles définie par défaut pour les sites avec mot de passe d’application
+- Connexion accélérée à WordPress.com
+- Assistance combinée par chat avec le bot et les Happiness Engineers
+- Plantage résolu lors de l’ouverture de média en quittant l’éditeur
+- Badge bêta supprimé des menus de Mon site

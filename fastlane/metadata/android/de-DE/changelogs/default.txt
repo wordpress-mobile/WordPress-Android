@@ -1,2 +1,7 @@
-26.8:
-Der Sommer ist fast da, das bedeutet Ungeziefer. Aber keine Sorge, wir arbeiten hart daran, alles unerwünschte zu erwischen, und haben verschiedene Verbesserungen vorgenommen, damit die App noch benutzerfreundlicher wird. Diese Veröffentlichung enthält den brandneuen Block-Editor – probier ihn auf einer beliebigen Website über die Website-Einstellungen aus.
+26.9:
+- Neue Seitenliste mit aktualisierten Funktionen aktiviert
+- Neue Beitragsliste für Websites mit Anwendungspasswort auf Standard setzen
+- Anmeldung auf WordPress.com beschleunigt
+- Kombinierte Bot-/Support-Mitarbeiter-Chats im Support
+- Absturz beim Öffnen von Medien behoben, wenn der Editor verlassen wurde
+- Beta-Badge aus Menüs auf „Meine Website“ entfernt
