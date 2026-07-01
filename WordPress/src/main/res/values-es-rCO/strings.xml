@@ -274,8 +274,6 @@ Language: es_CO
     <string name="experimental_post_types">Tipos de entrada</string>
     <string name="network_requests_disable">Desactivar</string>
     <string name="stats_weekly_average">media %1$s</string>
-    <string name="experimental_new_stats_description">Mostrar estadísticas en una interfaz de usuario más moderna y avanzada.</string>
-    <string name="experimental_new_stats">Nuevas estadísticas</string>
     <string name="experimental_post_types_description">Activar la pantalla experimental de tipos de contenido</string>
     <string name="network_requests_disable_tracking_description">Los registros existentes caducarán según el periodo de retención. Para borrar los registros ahora, toca «Ver solicitudes de red» y utiliza el icono de la papelera antes de desactivarlos.</string>
     <string name="network_requests_enable">Activar</string>
