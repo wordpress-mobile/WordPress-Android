@@ -59,9 +59,6 @@ class CommentsRsDataSource @Inject constructor(
     suspend fun updateStatus(site: SiteModel, commentId: Long, status: CommentStatus): RsResult =
         write(site) { it.comments().update(commentId, CommentUpdateParams(status = status.toRsCommentStatus())) }
 
-    suspend fun trash(site: SiteModel, commentId: Long): RsResult =
-        write(site) { it.comments().trash(commentId, CommentDeleteParams()) }
-
     suspend fun delete(site: SiteModel, commentId: Long): RsResult =
         write(site) { it.comments().delete(commentId, CommentDeleteParams()) }
 

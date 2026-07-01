@@ -14,6 +14,7 @@ import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.model.CommentStatus.APPROVED
 import org.wordpress.android.fluxc.model.CommentStatus.SPAM
+import org.wordpress.android.fluxc.model.CommentStatus.TRASH
 import org.wordpress.android.fluxc.model.CommentStatus.UNAPPROVED
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.persistence.comments.CommentsDao.CommentEntity
@@ -73,7 +74,6 @@ class UnifiedCommentDetailsViewModelTest : BaseUnitTest() {
         whenever(commentsStore.getCommentByLocalSiteAndRemoteId(LOCAL_SITE_ID, REMOTE_COMMENT_ID))
             .thenReturn(listOf(CACHED_COMMENT))
         whenever(commentsRsDataSource.updateStatus(eq(site), eq(REMOTE_COMMENT_ID), any())).thenReturn(RsResult.Success)
-        whenever(commentsRsDataSource.trash(site, REMOTE_COMMENT_ID)).thenReturn(RsResult.Success)
         whenever(commentsRsDataSource.delete(site, REMOTE_COMMENT_ID)).thenReturn(RsResult.Success)
         whenever(commentsRsDataSource.createReply(eq(site), any(), any(), any())).thenReturn(RsResult.Success)
         whenever(commentsStore.likeComment(eq(site), eq(REMOTE_COMMENT_ID), eq(null), any()))
@@ -136,12 +136,12 @@ class UnifiedCommentDetailsViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `onTrashClicked trashes comment via rs and closes screen`() = test {
+    fun `onTrashClicked trashes comment via the update endpoint and closes screen`() = test {
         viewModel.start(site, REMOTE_COMMENT_ID)
 
         viewModel.onTrashClicked()
 
-        verify(commentsRsDataSource).trash(site, REMOTE_COMMENT_ID)
+        verify(commentsRsDataSource).updateStatus(site, REMOTE_COMMENT_ID, TRASH)
         assertThat(uiActionEvents).contains(Close)
     }
 

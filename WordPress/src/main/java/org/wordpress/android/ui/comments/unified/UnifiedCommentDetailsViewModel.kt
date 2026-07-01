@@ -225,7 +225,8 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
      */
     private suspend fun moderate(newStatus: CommentStatus): RsResult {
         val result = when (newStatus) {
-            TRASH -> commentsRsDataSource.trash(site, remoteCommentId)
+            // Trash via the update endpoint (status=trash) like spam/approve, rather than the DELETE
+            // endpoint with force=false, which some sites reject ("Invalid parameter(s): force").
             DELETED -> commentsRsDataSource.delete(site, remoteCommentId)
             else -> commentsRsDataSource.updateStatus(site, remoteCommentId, newStatus)
         }
