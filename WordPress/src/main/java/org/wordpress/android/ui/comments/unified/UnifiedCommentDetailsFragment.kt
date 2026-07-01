@@ -78,7 +78,6 @@ class UnifiedCommentDetailsFragment :
 
     private lateinit var viewModel: UnifiedCommentDetailsViewModel
     private var binding: UnifiedCommentDetailsFragmentBinding? = null
-    private var currentState: CommentDetailsUiState? = null
 
     private lateinit var site: SiteModel
     private var remoteCommentId: Long = 0
@@ -235,7 +234,6 @@ class UnifiedCommentDetailsFragment :
         // which keeps the action buttons pinned to the bottom instead of floating to the top.
         scrollView.visibility = if (uiState.contentVisible) View.VISIBLE else View.INVISIBLE
         if (!uiState.contentVisible) return
-        currentState = uiState
 
         textAuthorName.text = uiState.authorName
         textDate.text = uiState.datePublished
@@ -340,7 +338,7 @@ class UnifiedCommentDetailsFragment :
     }
 
     private fun showMoreMenu(anchor: View) {
-        val state = currentState ?: return
+        val state = viewModel.uiState.value ?: return
         PopupMenu(requireContext(), anchor).apply {
             menuInflater.inflate(R.menu.unified_comment_details_more, menu)
             menu.findItem(R.id.menu_trash).setTitle(

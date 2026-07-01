@@ -36,6 +36,7 @@ import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.DateTimeUtilsWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
+import java.util.Date
 
 @ExperimentalCoroutinesApi
 class UnifiedCommentDetailsViewModelTest : BaseUnitTest() {
@@ -77,6 +78,7 @@ class UnifiedCommentDetailsViewModelTest : BaseUnitTest() {
         whenever(commentsRsDataSource.createReply(eq(site), any(), any(), any())).thenReturn(RsResult.Success)
         whenever(commentsStore.likeComment(eq(site), eq(REMOTE_COMMENT_ID), eq(null), any()))
             .thenReturn(successPayload())
+        whenever(dateTimeUtilsWrapper.javaDateToTimeSpan(any())).thenReturn("2 hours ago")
 
         viewModel = UnifiedCommentDetailsViewModel(
             mainDispatcher = testDispatcher(),
@@ -150,6 +152,7 @@ class UnifiedCommentDetailsViewModelTest : BaseUnitTest() {
         viewModel.onDeletePermanentlyClicked()
 
         verify(commentsRsDataSource).delete(site, REMOTE_COMMENT_ID)
+        verify(commentsStore).removeCommentByRemoteId(site, REMOTE_COMMENT_ID)
         assertThat(uiActionEvents).contains(Close)
     }
 
@@ -288,7 +291,7 @@ class UnifiedCommentDetailsViewModelTest : BaseUnitTest() {
         private val RS_COMMENT = RsComment(
             authorName = "authorName",
             authorAvatarUrl = "",
-            date = "",
+            dateGmt = Date(0),
             contentHtml = "content",
             url = "",
             postId = REMOTE_POST_ID,

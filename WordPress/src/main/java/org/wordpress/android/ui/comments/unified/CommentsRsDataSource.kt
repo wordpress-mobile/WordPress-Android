@@ -13,6 +13,7 @@ import uniffi.wp_api.CommentUpdateParams
 import uniffi.wp_api.CommentWithViewContext
 import uniffi.wp_api.UniffiWpApiClient
 import uniffi.wp_api.UserAvatarSize
+import java.util.Date
 import javax.inject.Inject
 import uniffi.wp_api.CommentStatus as RsCommentStatus
 
@@ -30,7 +31,7 @@ class CommentsRsDataSource @Inject constructor(
     data class RsComment(
         val authorName: String,
         val authorAvatarUrl: String,
-        val date: String,
+        val dateGmt: Date,
         val contentHtml: String,
         val url: String,
         val postId: Long,
@@ -98,7 +99,9 @@ class CommentsRsDataSource @Inject constructor(
         authorName = authorName,
         authorAvatarUrl = (authorAvatarUrls[UserAvatarSize.Size96]
             ?: authorAvatarUrls.values.firstOrNull { !it.isNullOrEmpty() }).orEmpty(),
-        date = date,
+        // dateGmt is a UTC java.util.Date (an absolute instant), so relative-time formatting is
+        // correct regardless of the site's timezone — unlike the offset-less local `date` field.
+        dateGmt = dateGmt,
         contentHtml = content.rendered,
         url = link,
         postId = post,

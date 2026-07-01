@@ -166,6 +166,9 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
 
     @Suppress("ReturnCount")
     fun onReplyClicked(replyText: String) {
+        // Guard against a second reply while one is already in flight (fast double-tap, or the
+        // full-screen editor confirming while the inline send is still processing).
+        if (_uiState.value?.isReplyInProgress == true) return
         if (replyText.isBlank()) return
         if (!networkUtilsWrapper.isNetworkAvailable()) {
             showSnackbar(R.string.no_network_message)
@@ -236,18 +239,19 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
             else -> commentsRsDataSource.updateStatus(site, remoteCommentId, newStatus)
         }
         if (result is RsResult.Success) {
-            commentsStore.moderateCommentLocally(site, remoteCommentId, newStatus)
+            if (newStatus == DELETED) {
+                // A permanent delete removes the comment server-side, so drop it from the cache
+                // rather than leaving an orphaned "deleted" row behind.
+                commentsStore.removeCommentByRemoteId(site, remoteCommentId)
+            } else {
+                commentsStore.moderateCommentLocally(site, remoteCommentId, newStatus)
+            }
             localCommentCacheUpdateHandler.requestCommentsUpdate()
         }
         return result
     }
 
     private fun currentStatus(): CommentStatus = _uiState.value?.status ?: CommentStatus.ALL
-
-    private fun formatDate(isoDate: String?): String {
-        if (isoDate.isNullOrEmpty()) return ""
-        return dateTimeUtilsWrapper.javaDateToTimeSpan(dateTimeUtilsWrapper.dateFromIso8601(isoDate))
-    }
 
     private fun showSnackbar(messageRes: Int) {
         _onSnackbarMessage.value = Event(SnackbarMessageHolder(UiStringRes(messageRes)))
@@ -264,7 +268,7 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
         contentVisible = true,
         authorName = authorName,
         authorAvatarUrl = authorAvatarUrl,
-        datePublished = formatDate(date),
+        datePublished = dateTimeUtilsWrapper.javaDateToTimeSpan(dateGmt),
         commentText = contentHtml,
         postTitle = cached?.postTitle ?: "",
         commentUrl = url,
