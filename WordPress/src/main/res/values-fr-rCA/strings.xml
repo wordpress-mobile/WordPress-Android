@@ -1,11 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2026-06-04 15:55:24+0000
+Translation-Revision-Date: 2026-06-30 14:54:51+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.3
 Language: fr
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="support_screen_unified_support_description">Obtenez des réponses de notre équipe d’assistance à tout moment</string>
+    <string name="support_screen_unified_support_title">Obtenir de l’aide</string>
+    <string name="unified_support_attachment_match_score">%1$d %% de correspondance</string>
+    <string name="unified_support_bot_typing_content_description">Le bot d’assistance est en train d’écrire</string>
+    <string name="unified_support_message_input_placeholder">Saisir un message…</string>
+    <string name="unified_support_conversations_title">Obtenir de l’aide</string>
+    <string name="page_rs_move_trashed_page_to_draft_dialog_message">Les pages mises à la corbeille ne peuvent pas être modifiées. Voulez-vous changer le statut de cette page vers « brouillon » pour pouvoir travailler dessus ?</string>
+    <string name="page_rs_move_trashed_page_to_draft_dialog_title">Déplacer la page vers Brouillons ?</string>
+    <string name="page_rs_confirm_trash_message">Voulez-vous vraiment placer cette page dans la corbeille ?</string>
+    <string name="page_rs_copy_url">Copier l’URL</string>
+    <string name="page_rs_failed_to_load">Chargement de la page impossible</string>
+    <string name="page_not_found">Un erreur est survenue lors du chargement de la page. Rafraîchissez vos pages et réessayez</string>
     <string name="xmlrpc_disabled_bottom_sheet_body">Certaines fonctionnalités de l’application nécessitent XML-RPC. Activez-le sur votre site pour résoudre ce problème.</string>
     <string name="xmlrpc_disabled_bottom_sheet_title">XML-RPC désactivé</string>
     <string name="xmlrpc_disabled_card_text">XML-RPC désactivé\nCertaines fonctionnalités peuvent être limitées</string>
@@ -152,6 +164,7 @@ Language: fr
     <string name="menu_item_type_category">Catégorie</string>
     <string name="menu_item_type_post">Article</string>
     <string name="menu_item_type_custom">Lien personnalisé</string>
+    <string name="menu_item_type_label">Saisir</string>
     <string name="delete_menu_item_confirmation_message">Voulez-vous vraiment supprimer « %1$s » ?</string>
     <string name="delete_menu_item_confirmation_title">Supprimer l’élément de menu</string>
     <string name="menu_item_deleted">Élément de menu supprimé</string>
@@ -231,6 +244,8 @@ Language: fr
     <string name="post_rs_confirm_delete_message">Cet article sera définitivement supprimé. Cette action est irréversible.</string>
     <string name="post_rs_confirm_trash_message">Voulez-vous vraiment déplacer cet article vers la corbeille ?</string>
     <string name="post_rs_failed_to_load">Échec du chargement de l’article</string>
+    <string name="experimental_rs_pages_list_description">Affiche la liste des pages dans une interface utilisateur plus moderne pour WordPress.com et les sites auto-hébergés avec des mots de passe d’application</string>
+    <string name="experimental_rs_pages_list">Nouvelle liste de pages</string>
     <string name="stats_error_admin_url_unavailable">Impossible d’ouvrir WP Admin pour ce site</string>
     <string name="stats_error_parsing">Un problème est survenu lors du chargement des données. Veuillez réessayer.</string>
     <string name="stats_error_network">Erreur réseau. Veuillez vérifier votre connexion et réessayer.</string>
@@ -2482,6 +2497,7 @@ Language: fr
     <string name="plugin_install_site_ineligible_default_error">Si vous venez de créer un nom de domaine, veuillez attendre que nous ayons fini de le mettre en place, et réessayez.\n\nDans le cas contraire, il semble qu’une erreur soit survenue et que la fonctionnalité de l’extension n’est pas disponible pour ce site.</string>
     <string name="domain_contact_information_state_not_available_hint">État (non disponible)</string>
     <string name="domain_registration_privacy_protection_tos">En enregistrant ce domaine vous acceptez nos %1$sconditions générales%2$s</string>
+    <string name="error_network_connection">Vérifiez votre connexion réseau et réessayez</string>
     <string name="error_disabled_apis">Impossible de récupérer les réglages : Certaines APIs sont indisponibles pour cette combinaison d’id d’app OAuth + compte.</string>
     <string name="jetpack_connection_terms_and_conditions">En configurant jetpack vous acceptez nos %1$sconditions générales%2$s</string>
     <string name="site_settings_disconnected_toast">Aucune connexion. La modification est désactivée.</string>

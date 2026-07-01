@@ -1,11 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2026-06-02 09:55:33+0000
+Translation-Revision-Date: 2026-06-25 21:59:17+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.3
 Language: zh_TW
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="support_screen_unified_support_description">隨時取得支援團隊的解答</string>
+    <string name="support_screen_unified_support_title">取得協助</string>
+    <string name="unified_support_attachment_match_score">%1$d%% 相符</string>
+    <string name="unified_support_status_bot">Oddie 機器人</string>
+    <string name="unified_support_bot_typing_content_description">支援機器人正在輸入訊息</string>
+    <string name="unified_support_message_input_placeholder">輸入訊息…</string>
+    <string name="unified_support_conversations_title">取得協助</string>
+    <string name="page_rs_move_trashed_page_to_draft_dialog_message">你無法編輯移至垃圾桶的頁面。 要將此頁面狀態變更為「草稿」以便修正嗎？</string>
+    <string name="page_rs_move_trashed_page_to_draft_dialog_title">是否將頁面移至草稿？</string>
+    <string name="page_rs_confirm_trash_message">你確定要將此頁面移至垃圾桶嗎？</string>
+    <string name="page_rs_copy_url">複製 URL</string>
+    <string name="page_rs_failed_to_load">無法載入頁面</string>
+    <string name="page_not_found">載入頁面時發生錯誤。 請重新整理頁面，然後再試一次。</string>
     <string name="xmlrpc_disabled_bottom_sheet_body">此應用程式的部分功能需要使用 XML-RPC。 請在網站上啟用該協定以解決此問題。</string>
     <string name="xmlrpc_disabled_bottom_sheet_title">XML-RPC 已停用</string>
     <string name="xmlrpc_disabled_card_text">XML-RPC 已停用\n部分功能可能會受到限制</string>
@@ -242,6 +255,8 @@ Language: zh_TW
     <string name="post_rs_confirm_delete_message">這將會永久刪除此文章。 此動作無法復原。</string>
     <string name="post_rs_confirm_trash_message">你確定要將這篇文章移至垃圾桶嗎？</string>
     <string name="post_rs_failed_to_load">無法載入文章</string>
+    <string name="experimental_rs_pages_list_description">以更現代的 UI 顯示頁面清單，適用於 WordPress.com 和使用應用程式密碼的自助託管網站</string>
+    <string name="experimental_rs_pages_list">全新頁面清單</string>
     <string name="stats_error_admin_url_unavailable">無法開啟此網站的 WP 管理員</string>
     <string name="stats_error_parsing">載入資料時發生問題。 請再試一次</string>
     <string name="stats_error_network">網路錯誤。 請檢查你的連線並再試一次</string>
@@ -326,9 +341,11 @@ Language: zh_TW
     <string name="he_support_empty_conversations_button">開始對談</string>
     <string name="he_support_empty_conversations_message">與我們的支援團隊著手對談，協助你解決問題。</string>
     <string name="he_support_empty_conversations_title">尚未有任何對談</string>
+    <string name="unified_support_new_conversation_content_description">新對談</string>
     <string name="ai_bot_time_just_now">剛剛</string>
     <string name="ai_bot_welcome_message">我是你的個人 AI 助理。 如果你有任何關於網站或帳號的問題，我都能提供協助。</string>
     <string name="ai_bot_welcome_greeting">%1$s👋，您好：</string>
+    <string name="unified_support_generic_error">發生錯誤， 請稍後再試。</string>
     <string name="create">建立</string>
     <string name="logs_screen_general_error">發生錯誤…</string>
     <string name="logs_screen_empty_state">沒有可用的記錄</string>

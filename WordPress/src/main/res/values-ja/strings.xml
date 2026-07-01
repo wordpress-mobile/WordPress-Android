@@ -1,11 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2026-06-02 09:56:48+0000
+Translation-Revision-Date: 2026-06-25 09:57:43+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.3
 Language: ja_JP
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="support_screen_unified_support_description">いつでもサポートチームから回答を得られます</string>
+    <string name="support_screen_unified_support_title">ヘルプ</string>
+    <string name="unified_support_attachment_match_score">%1$d%% 一致</string>
+    <string name="unified_support_status_bot">Oddie ボット</string>
+    <string name="unified_support_bot_typing_content_description">サポートボットが入力中</string>
+    <string name="unified_support_message_input_placeholder">メッセージを入力…</string>
+    <string name="unified_support_conversations_title">ヘルプ</string>
+    <string name="page_rs_move_trashed_page_to_draft_dialog_message">ゴミ箱にある固定ページは編集できません。 この固定ページのステータスを「下書き」に戻して編集しますか ?</string>
+    <string name="page_rs_move_trashed_page_to_draft_dialog_title">固定ページを下書きに移動しますか ?</string>
+    <string name="page_rs_confirm_trash_message">このページをゴミ箱に移動してもよいですか ?</string>
+    <string name="page_rs_copy_url">URL をコピー</string>
+    <string name="page_rs_failed_to_load">固定ページを読み込めませんでした</string>
+    <string name="page_not_found">固定ページを読み込む際にエラーが発生しました。 固定ページをリフレッシュして、もう一度お試しください。</string>
     <string name="xmlrpc_disabled_bottom_sheet_body">アプリの一部の機能には XML-RPC が必要です。 解決するには、サイトで有効化してください。</string>
     <string name="xmlrpc_disabled_bottom_sheet_title">XML-RPC が無効になっています</string>
     <string name="xmlrpc_disabled_card_text">XML-RPC が無効になっています\n一部の機能に制限がある場合があります</string>
@@ -240,6 +253,8 @@ Language: ja_JP
     <string name="post_rs_confirm_delete_message">この投稿は完全に削除されます。 この操作を取り消すことはできません。</string>
     <string name="post_rs_confirm_trash_message">この投稿をゴミ箱へ移動してもよいですか ?</string>
     <string name="post_rs_failed_to_load">投稿の読み込みに失敗しました</string>
+    <string name="experimental_rs_pages_list_description">アプリケーションパスワードを使用して、WordPress.com やインストール型サイト用のより現代的な UI で固定ページリストを表示</string>
+    <string name="experimental_rs_pages_list">新しい固定ページリスト</string>
     <string name="stats_error_admin_url_unavailable">このサイトの WP 管理画面を開けません</string>
     <string name="stats_error_parsing">データの読み込み中に問題が発生しました もう一度お試しください</string>
     <string name="stats_error_network">ネットワークエラーです。 接続を確認して、もう一度お試しください</string>
