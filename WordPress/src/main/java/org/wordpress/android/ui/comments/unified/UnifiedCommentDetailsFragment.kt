@@ -47,11 +47,11 @@ import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.ActivityUtils
 import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.ColorUtils
 import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.SnackbarItem
 import org.wordpress.android.util.SnackbarItem.Info
 import org.wordpress.android.util.SnackbarSequencer
-import org.wordpress.android.util.ColorUtils
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.extensions.getColorResIdFromAttribute
 import org.wordpress.android.util.extensions.getSerializableCompat
@@ -166,22 +166,20 @@ class UnifiedCommentDetailsFragment :
 
     override fun onConfirm(result: Bundle?) {
         val box = binding?.layoutCommentBox ?: return
-        if (result != null) {
-            box.editComment.setText(result.getString(CommentFullScreenDialogFragment.RESULT_REPLY))
-            viewModel.onReplyClicked(box.editComment.text.toString())
-        }
+        val reply = result ?: return
+        box.editComment.setText(reply.getString(CommentFullScreenDialogFragment.RESULT_REPLY))
+        viewModel.onReplyClicked(box.editComment.text.toString())
     }
 
     override fun onCollapse(result: Bundle?) {
         val box = binding?.layoutCommentBox ?: return
-        if (result != null) {
-            box.editComment.setText(result.getString(CommentFullScreenDialogFragment.RESULT_REPLY))
-            box.editComment.setSelection(
-                result.getInt(CommentFullScreenDialogFragment.RESULT_SELECTION_START),
-                result.getInt(CommentFullScreenDialogFragment.RESULT_SELECTION_END)
-            )
-            box.editComment.requestFocus()
-        }
+        val reply = result ?: return
+        box.editComment.setText(reply.getString(CommentFullScreenDialogFragment.RESULT_REPLY))
+        box.editComment.setSelection(
+            reply.getInt(CommentFullScreenDialogFragment.RESULT_SELECTION_START),
+            reply.getInt(CommentFullScreenDialogFragment.RESULT_SELECTION_END)
+        )
+        box.editComment.requestFocus()
     }
 
     override fun onResume() {

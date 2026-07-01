@@ -132,10 +132,7 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
     }
 
     fun onLikeClicked() {
-        if (!networkUtilsWrapper.isNetworkAvailable()) {
-            showSnackbar(R.string.no_network_message)
-            return
-        }
+        if (isOffline()) return
         val isLike = !(_uiState.value?.isLiked ?: false)
         launch {
             _uiState.value = _uiState.value?.copy(isLiked = isLike)
@@ -170,10 +167,7 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
         // full-screen editor confirming while the inline send is still processing).
         if (_uiState.value?.isReplyInProgress == true) return
         if (replyText.isBlank()) return
-        if (!networkUtilsWrapper.isNetworkAvailable()) {
-            showSnackbar(R.string.no_network_message)
-            return
-        }
+        if (isOffline()) return
         val comment = loadedComment ?: return
         launch {
             _uiState.value = _uiState.value?.copy(isReplyInProgress = true)
@@ -211,10 +205,7 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
     }
 
     private fun moderateComment(newStatus: CommentStatus, closeOnSuccess: Boolean) {
-        if (!networkUtilsWrapper.isNetworkAvailable()) {
-            showSnackbar(R.string.no_network_message)
-            return
-        }
+        if (isOffline()) return
         val previousStatus = currentStatus()
         launch {
             _uiState.value = _uiState.value?.copy(status = newStatus)
@@ -252,6 +243,12 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
     }
 
     private fun currentStatus(): CommentStatus = _uiState.value?.status ?: CommentStatus.ALL
+
+    private fun isOffline(): Boolean {
+        if (networkUtilsWrapper.isNetworkAvailable()) return false
+        showSnackbar(R.string.no_network_message)
+        return true
+    }
 
     private fun showSnackbar(messageRes: Int) {
         _onSnackbarMessage.value = Event(SnackbarMessageHolder(UiStringRes(messageRes)))
