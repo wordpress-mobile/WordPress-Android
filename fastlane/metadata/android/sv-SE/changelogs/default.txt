@@ -1,2 +1,7 @@
-26.8:
-Det är nästan sommar, men buggarna tar inte semester. Oroa dig inte, vi har arbetat hårt med att åtgärda dem, med olika korrigeringar för att göra appen ännu trevligare att använda. Den här versionen innehåller den helt nya blockredigeraren – prova den på valfri webbplats via Webbplatsinställningar.
+26.9:
+- Aktiverade ny sidlista med uppdaterade funktioner
+- Ställ in ny inläggslista till standard för webbplatser med applikationslösenord
+- Uppsnabbad WordPress.com-inloggning
+- Kombinerad bot-/supporttekniker-chatt i support
+- Åtgärdade krasch när media öppnades medan redigeraren avslutades
+- Tog bort betatecken från menyer på min webbplats

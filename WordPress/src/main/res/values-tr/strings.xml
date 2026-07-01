@@ -1,11 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2026-06-02 11:55:27+0000
+Translation-Revision-Date: 2026-06-30 06:31:02+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.3
 Language: tr
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="support_screen_unified_support_description">Destek ekibimizden dilediğiniz zaman yanıt alın</string>
+    <string name="support_screen_unified_support_title">Yardım al</string>
+    <string name="unified_support_attachment_match_score">%1$d%% eşleşme</string>
+    <string name="unified_support_status_bot">Esrarengiz robot</string>
+    <string name="unified_support_bot_typing_content_description">Destek robotu yazıyor</string>
+    <string name="unified_support_message_input_placeholder">Bir mesaj yazın…</string>
+    <string name="unified_support_conversations_title">Yardım alın</string>
+    <string name="page_rs_move_trashed_page_to_draft_dialog_message">Çöpe atılan sayfalar düzenlenemez. Üzerinde çalışabilmek için bu sayfanın durumunu \"taslak\" olarak değiştirmek ister misiniz?</string>
+    <string name="page_rs_move_trashed_page_to_draft_dialog_title">Sayfa Taslaklara taşınsın mı?</string>
+    <string name="page_rs_confirm_trash_message">Bu sayfayı çöpe atmak istediğinizden emin misiniz?</string>
+    <string name="page_rs_copy_url">URL\'yi Kopyala</string>
+    <string name="page_rs_failed_to_load">Sayfa yüklenemedi</string>
+    <string name="page_not_found">Sayfa yüklenirken hata oluştu. Sayfalarınızı yenileyip tekrar deneyin.</string>
     <string name="xmlrpc_disabled_bottom_sheet_body">Uygulamadaki bazı özellikler XML-RPC gerektirir. Bunu çözmek için sitenizde etkinleştirin.</string>
     <string name="xmlrpc_disabled_bottom_sheet_title">XML-RPC Devre Dışı Bırakıldı</string>
     <string name="xmlrpc_disabled_card_text">XML-RPC Devre Dışı Bırakıldı\nBazı özellikler sınırlı olabilir</string>
@@ -18,6 +31,7 @@ Language: tr
     <string name="reader_reading_time">%s dakikalık okuma</string>
     <string name="reader_discover_tab_latest">En yeniler</string>
     <string name="reader_discover_tab_recommended">Önerilen</string>
+    <string name="stats_subscriber_years_and_days">%1$s, %2$s</string>
     <string name="stats_subscriber_since_today">bugün</string>
     <string name="stats_subscribers_graph_years">Yıl</string>
     <string name="stats_subscribers_graph_months">Ay</string>
@@ -40,6 +54,7 @@ Language: tr
     <string name="stats_utm_source">Kaynak</string>
     <string name="stats_utm_campaign_source_medium">Kampanya/Kaynak/Aracı</string>
     <string name="stats_utm_source_medium">Kaynak/Aracı</string>
+    <string name="stats_utm_title">UTM</string>
     <string name="stats_error_not_authenticated">Kimliği doğrulanmadı</string>
     <string name="stats_collapse_group">Daralt</string>
     <string name="stats_expand_group">Genişlet</string>
@@ -241,6 +256,8 @@ Language: tr
     <string name="post_rs_confirm_delete_message">Bu işlem bu gönderiyi kalıcı olarak silecektir. Bu işlem geri alınamaz.</string>
     <string name="post_rs_confirm_trash_message">Bu gönderiyi çöpe atmak istediğinizden emin misiniz?</string>
     <string name="post_rs_failed_to_load">Gönderi yüklenemedi</string>
+    <string name="experimental_rs_pages_list_description">WordPress.com ve kullanıcı tarafından barındırılan siteler için uygulama şifreleri ile daha modern bir kullanıcı arayüzünde sayfa listesini gösterin</string>
+    <string name="experimental_rs_pages_list">Yeni Sayfa Listesi</string>
     <string name="stats_error_admin_url_unavailable">Bu site için WP Yöneticisi açılamıyor</string>
     <string name="stats_error_parsing">Veri yüklenirken bir sorun oluştu. Lütfen tekrar deneyin</string>
     <string name="stats_error_network">Ağ hatası. Lütfen bağlantınızı kontrol edip tekrar deneyin</string>
@@ -262,6 +279,7 @@ Language: tr
     <string name="error_browser_no_network">Bu sayfa yüklenemiyor</string>
     <string name="history_empty_subtitle_post">Değişiklik yaptığınızda bu gönderinin geçmişini görürsünüz</string>
     <string name="history_empty_subtitle_page">Değişiklik yaptığınızda bu sayfanın geçmişini görürsünüz</string>
+    <string name="reader_discover_tab_freshly_pressed">Yeni Çıktı</string>
     <string name="notifications_empty_action_comments">Bir sohbete katılın! Okuyucuda gönderilere yorum yapın.</string>
     <string name="notifications_empty_action_all">Harekete geçin! Okuyucuda gönderilere yorum yapın.</string>
     <string name="more_options">Daha fazla seçenek</string>
@@ -325,9 +343,11 @@ Language: tr
     <string name="he_support_empty_conversations_button">Sohbeti Başlat</string>
     <string name="he_support_empty_conversations_message">Sorularınız için yardım almak üzere destek ekibimizle bir sohbet başlatın.</string>
     <string name="he_support_empty_conversations_title">Henüz sohbet yok</string>
+    <string name="unified_support_new_conversation_content_description">Yeni sohbet</string>
     <string name="ai_bot_time_just_now">Az önce</string>
     <string name="ai_bot_welcome_message">Ben sizin kişisel yapay zeka asistanınızım. Siteniz veya hesabınız hakkındaki tüm sorularınızda yardımcı olabilirim.</string>
     <string name="ai_bot_welcome_greeting">Selam %1$s 👋</string>
+    <string name="unified_support_generic_error">Bir sorun oluştu. Lütfen daha sonra tekrar deneyin.</string>
     <string name="create">Oluştur</string>
     <string name="logs_screen_general_error">Bir sorun oluştu…</string>
     <string name="logs_screen_empty_state">Kullanılabilir günlük yok</string>

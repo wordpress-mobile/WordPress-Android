@@ -1,6 +1,5 @@
 package org.wordpress.android.fluxc.network
 
-import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import okhttp3.Interceptor
 import okhttp3.Interceptor.Chain
 import okhttp3.Request
@@ -25,20 +24,24 @@ class CustomRedirectInterceptor : Interceptor {
 
     fun getRedirectRequest(originalRequest: Request, redirectResponse: Response): Request? {
         val location = redirectResponse.header("Location")
-        if (!location.isNullOrEmpty()) {
-            val newBuilder: Request.Builder = originalRequest.newBuilder().url(location)
 
-            // Remove the authorization header if the hosts' TLD and SLD are not the same
-            val originalHost = originalRequest.url.host
-            val redirectHttpUrl = location.toHttpUrlOrNull()
-            val redirectHost = redirectHttpUrl?.host ?: ""
-            if (!tldAndSldAreEqual(originalHost, redirectHost)) {
-                newBuilder.removeHeader("Authorization")
-            }
-
-            return newBuilder.build()
+        // Resolve the Location header against the original request URL. This handles both absolute
+        // redirects and relative ones (e.g. "/wp-json/..."). Passing a relative location straight to
+        // Request.Builder.url() crashes with "Expected URL scheme 'http' or 'https'...". resolve()
+        // returns null if the location can't be turned into a valid URL, in which case we don't follow.
+        val redirectUrl = if (location.isNullOrEmpty()) null else originalRequest.url.resolve(location)
+        if (redirectUrl == null) {
+            return null
         }
-        return null
+
+        val newBuilder: Request.Builder = originalRequest.newBuilder().url(redirectUrl)
+
+        // Remove the authorization header if the hosts' TLD and SLD are not the same
+        if (!tldAndSldAreEqual(originalRequest.url.host, redirectUrl.host)) {
+            newBuilder.removeHeader("Authorization")
+        }
+
+        return newBuilder.build()
     }
 
     private fun tldAndSldAreEqual(domain1: String, domain2: String): Boolean {

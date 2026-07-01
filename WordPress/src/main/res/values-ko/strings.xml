@@ -1,11 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2026-06-02 09:57:19+0000
+Translation-Revision-Date: 2026-06-25 09:55:25+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.3
 Language: ko_KR
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="support_screen_unified_support_description">언제든지 지원팀의 답변 받기</string>
+    <string name="support_screen_unified_support_title">도움말 이용</string>
+    <string name="unified_support_attachment_match_score">%1$d%% 일치</string>
+    <string name="unified_support_status_bot">Oddie 봇</string>
+    <string name="unified_support_bot_typing_content_description">지원 봇이 입력 중</string>
+    <string name="unified_support_message_input_placeholder">메시지 입력…</string>
+    <string name="unified_support_conversations_title">도움말 이용</string>
+    <string name="page_rs_move_trashed_page_to_draft_dialog_message">휴지통으로 이동한 페이지는 편집할 수 없습니다. 이 페이지에서 작업할 수 있도록 상태를 \"임시글\"로 변경하시겠습니까?</string>
+    <string name="page_rs_move_trashed_page_to_draft_dialog_title">페이지를 임시글로 이동하시겠습니까?</string>
+    <string name="page_rs_confirm_trash_message">이 페이지를 휴지통으로 이동하시겠어요?</string>
+    <string name="page_rs_copy_url">URL 복사</string>
+    <string name="page_rs_failed_to_load">페이지 로드 실패</string>
+    <string name="page_not_found">페이지 로드 중 오류가 발생했습니다. 페이지를 새로 고침한 후 다시 시도하세요.</string>
     <string name="xmlrpc_disabled_bottom_sheet_body">앱의 일부 기능에는 XML-RPC가 필요합니다. 사이트에서 활성화하여 해결하세요.</string>
     <string name="xmlrpc_disabled_bottom_sheet_title">XML-RPC 비활성화됨</string>
     <string name="xmlrpc_disabled_card_text">XML-RPC 비활성화됨\n일부 기능은 제한될 수 있습니다.</string>
@@ -238,6 +251,8 @@ Language: ko_KR
     <string name="post_rs_confirm_delete_message">이 글은 영구적으로 삭제됩니다. 이 작업은 취소할 수 없습니다.</string>
     <string name="post_rs_confirm_trash_message">이 글을 휴지통으로 옮기시겠습니까?</string>
     <string name="post_rs_failed_to_load">글 로드 실패</string>
+    <string name="experimental_rs_pages_list_description">더 현대적인 UI로 페이지 목록을 표시하여 WordPress.com 및 애플리케이션 비밀번호가 있는 독립 호스트 사이트를 지원합니다</string>
+    <string name="experimental_rs_pages_list">새 페이지 목록</string>
     <string name="stats_error_admin_url_unavailable">이 사이트의 WP 관리자를 열 수 없습니다.</string>
     <string name="stats_error_parsing">데이터를 로드하는 데 문제가 발생했습니다. 다시 시도하세요.</string>
     <string name="stats_error_network">네트워크 오류가 발생했습니다. 연결을 확인하고 다시 시도하세요.</string>

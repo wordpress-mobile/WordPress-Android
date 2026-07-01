@@ -1,11 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2026-06-02 17:55:39+0000
+Translation-Revision-Date: 2026-06-24 18:59:03+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/4.0.3
 Language: ru
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="support_screen_unified_support_description">Получайте ответы от нашей службы поддержки в любое время</string>
+    <string name="support_screen_unified_support_title">Справка</string>
+    <string name="unified_support_attachment_match_score">Совпадение %1$d%%</string>
+    <string name="unified_support_status_bot">Бот Oddie</string>
+    <string name="unified_support_bot_typing_content_description">Бот поддержки вводит текст</string>
+    <string name="unified_support_message_input_placeholder">Написать сообщение…</string>
+    <string name="unified_support_conversations_title">Справка</string>
+    <string name="page_rs_move_trashed_page_to_draft_dialog_message">Удалённые страницы нельзя редактировать. Хотите изменить статус страницы на «черновик», чтобы отредактировать её?</string>
+    <string name="page_rs_move_trashed_page_to_draft_dialog_title">Переместить страницу в черновики?</string>
+    <string name="page_rs_confirm_trash_message">Вы действительно хотите переместить эту страницу в корзину?</string>
+    <string name="page_rs_copy_url">Копировать URL-адрес</string>
+    <string name="page_rs_failed_to_load">Не удалось загрузить страницу.</string>
+    <string name="page_not_found">При загрузке страницы произошла ошибка. Обновите страницы и повторите попытку.</string>
     <string name="xmlrpc_disabled_bottom_sheet_body">Для работы некоторых функций приложения требуется XML-RPC. Включите его на сайте, чтобы решить эту проблему.</string>
     <string name="xmlrpc_disabled_bottom_sheet_title">XML-RPC отключён</string>
     <string name="xmlrpc_disabled_card_text">XML-RPC отключён\nНекоторые возможности могут быть ограничены</string>
@@ -243,6 +256,8 @@ Language: ru
     <string name="post_rs_confirm_delete_message">Эта запись будет удалена навсегда. Это действие нельзя отменить.</string>
     <string name="post_rs_confirm_trash_message">Вы действительно хотите удалить эту запись?</string>
     <string name="post_rs_failed_to_load">Ошибка при загрузке записи</string>
+    <string name="experimental_rs_pages_list_description">Показывать список записей WordPress.com и на автономных сайтах с паролями приложений в более современном интерфейсе</string>
+    <string name="experimental_rs_pages_list">Список новых записей</string>
     <string name="stats_error_admin_url_unavailable">Не возможно открыть WP Admin на этом сайте</string>
     <string name="stats_error_parsing">При загрузке данных возникла ошибка. Повторите попытку</string>
     <string name="stats_error_network">Ошибка сети. Проверьте подключение и повторите попытку</string>
@@ -328,9 +343,11 @@ Language: ru
     <string name="he_support_empty_conversations_button">Начать беседу</string>
     <string name="he_support_empty_conversations_message">Начните беседу со службой поддержки, чтобы вам помогли решить вопрос.</string>
     <string name="he_support_empty_conversations_title">Нет бесед</string>
+    <string name="unified_support_new_conversation_content_description">Новая беседа</string>
     <string name="ai_bot_time_just_now">Прямо сейчас</string>
     <string name="ai_bot_welcome_message">Я ваш персональный помощник на базе ИИ. Я могу ответить вам на любые вопросы о вашем сайте или учётной записи.</string>
     <string name="ai_bot_welcome_greeting">Здравствуйте, %1$s 👋</string>
+    <string name="unified_support_generic_error">Что-то пошло не так. Повторите попытку позже.</string>
     <string name="create">Создать</string>
     <string name="logs_screen_general_error">Что-то пошло не так</string>
     <string name="logs_screen_empty_state">Нет журналов</string>

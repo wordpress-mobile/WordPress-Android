@@ -28,6 +28,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.site.GutenbergLayoutCatego
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.DB
 import org.wordpress.android.util.UrlUtils
+import java.security.GeneralSecurityException
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -728,8 +729,18 @@ class SiteSqlUtils
             apiRestUsernameIV.isNullOrEmpty() || apiRestPasswordIV.isNullOrEmpty()) {
             return this
         }
-        apiRestUsernamePlain = encryptionUtils.decrypt(apiRestUsernameEncrypted, apiRestUsernameIV)
-        apiRestPasswordPlain = encryptionUtils.decrypt(apiRestPasswordEncrypted, apiRestPasswordIV)
+        // Decryption relies on the AndroidKeyStore, which can fail on some devices (e.g. an invalidated
+        // key or an unavailable secure element). Because this runs inside the hot getSites() path, a
+        // thrown KeyStoreException would crash the whole app, so we swallow it and leave the credentials
+        // unset — the site simply behaves as if it has no stored REST credentials and can re-fetch them.
+        try {
+            apiRestUsernamePlain = encryptionUtils.decrypt(apiRestUsernameEncrypted, apiRestUsernameIV)
+            apiRestPasswordPlain = encryptionUtils.decrypt(apiRestPasswordEncrypted, apiRestPasswordIV)
+        } catch (e: GeneralSecurityException) {
+            AppLog.e(DB, "Failed to decrypt API REST credentials for site $id", e)
+            apiRestUsernamePlain = null
+            apiRestPasswordPlain = null
+        }
         return this
     }
 }
