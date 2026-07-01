@@ -256,9 +256,10 @@ class UnifiedCommentDetailsFragment :
                 else -> R.string.comment_status_all
             }
         )
+        val statusIsDestructive = uiState.status == TRASH || uiState.status == SPAM
         textStatus.setTextColor(
             requireContext().getColorFromAttribute(
-                if (uiState.status == TRASH) androidx.appcompat.R.attr.colorError else R.attr.wpColorOnSurfaceMedium
+                if (statusIsDestructive) androidx.appcompat.R.attr.colorError else R.attr.wpColorOnSurfaceMedium
             )
         )
 
