@@ -1,2 +1,7 @@
-26.8:
-L'estate è alle porte, e si sa: con la bella stagione arrivano anche... i bug. Ma niente paura, ci siamo dati da fare per eliminarli, con una serie di correzioni volte a rendere l'app ancora più piacevole da usare. Questa versione include il nuovissimo editor a blocchi: puoi trovarlo nelle Impostazioni del sito.
+26.9:
+- Abilitato nuovo elenco delle pagine con funzionalità aggiornate
+- Imposta il nuovo elenco degli articoli come predefinito per i siti con password dell'applicazione
+- Accesso a WordPress.com velocizzato
+- Chat combinate tra bot e Happiness Engineer nell'assistenza
+- Risolto il crash che si verificava all'apertura di un file multimediale durante l'uscita dall'editor
+- Rimosso il badge beta dai menu su Il mio sito
