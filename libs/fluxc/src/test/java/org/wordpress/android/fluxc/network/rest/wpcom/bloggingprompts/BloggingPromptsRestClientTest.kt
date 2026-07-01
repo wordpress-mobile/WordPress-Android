@@ -103,6 +103,7 @@ class BloggingPromptsRestClientTest {
 
     private val siteId: Long = 1
     private val numberOfPromptsToFetch: Int = 40
+    private val locale: String = "en"
 
     @Before
     fun setUp() {
@@ -123,7 +124,7 @@ class BloggingPromptsRestClientTest {
         val json = UnitTestUtils.getStringFromResourceFile(javaClass, PROMPTS_JSON)
         initFetchPrompts(data = getPromptsResponseFromJsonString(json))
 
-        restClient.fetchPrompts(site, numberOfPromptsToFetch, Date())
+        restClient.fetchPrompts(site, numberOfPromptsToFetch, Date(), locale)
 
         assertEquals(
             urlCaptor.firstValue,
@@ -132,12 +133,22 @@ class BloggingPromptsRestClientTest {
     }
 
     @Test
+    fun `when fetch prompts gets triggered, then the given locale is sent as the _locale param`() = test {
+        val json = UnitTestUtils.getStringFromResourceFile(javaClass, PROMPTS_JSON)
+        initFetchPrompts(data = getPromptsResponseFromJsonString(json))
+
+        restClient.fetchPrompts(site, numberOfPromptsToFetch, Date(), locale)
+
+        assertEquals(locale, paramsCaptor.firstValue["_locale"])
+    }
+
+    @Test
     fun `given success call, when fetch prompts gets triggered, then prompts response is returned`() =
         test {
             val json = UnitTestUtils.getStringFromResourceFile(javaClass, PROMPTS_JSON)
             initFetchPrompts(data = getPromptsResponseFromJsonString(json))
 
-            val result = restClient.fetchPrompts(site, numberOfPromptsToFetch, Date())
+            val result = restClient.fetchPrompts(site, numberOfPromptsToFetch, Date(), locale)
 
             assertSuccess(PROMPTS_RESPONSE, result)
         }
@@ -147,7 +158,7 @@ class BloggingPromptsRestClientTest {
         test {
             initFetchPrompts(error = WPComGsonNetworkError(BaseNetworkError(GenericErrorType.UNKNOWN)))
 
-            val result = restClient.fetchPrompts(site, numberOfPromptsToFetch, Date())
+            val result = restClient.fetchPrompts(site, numberOfPromptsToFetch, Date(), locale)
 
             assertError(GENERIC_ERROR, result)
         }
@@ -157,7 +168,7 @@ class BloggingPromptsRestClientTest {
         test {
             initFetchPrompts(error = WPComGsonNetworkError(BaseNetworkError(GenericErrorType.TIMEOUT)))
 
-            val result = restClient.fetchPrompts(site, numberOfPromptsToFetch, Date())
+            val result = restClient.fetchPrompts(site, numberOfPromptsToFetch, Date(), locale)
 
             assertError(TIMEOUT, result)
         }
@@ -167,7 +178,7 @@ class BloggingPromptsRestClientTest {
         test {
             initFetchPrompts(error = WPComGsonNetworkError(BaseNetworkError(GenericErrorType.NETWORK_ERROR)))
 
-            val result = restClient.fetchPrompts(site, numberOfPromptsToFetch, Date())
+            val result = restClient.fetchPrompts(site, numberOfPromptsToFetch, Date(), locale)
 
             assertError(API_ERROR, result)
         }
@@ -177,7 +188,7 @@ class BloggingPromptsRestClientTest {
         test {
             initFetchPrompts(error = WPComGsonNetworkError(BaseNetworkError(GenericErrorType.INVALID_RESPONSE)))
 
-            val result = restClient.fetchPrompts(site, numberOfPromptsToFetch, Date())
+            val result = restClient.fetchPrompts(site, numberOfPromptsToFetch, Date(), locale)
 
             assertError(INVALID_RESPONSE, result)
         }
@@ -187,7 +198,7 @@ class BloggingPromptsRestClientTest {
         test {
             initFetchPrompts(error = WPComGsonNetworkError(BaseNetworkError(GenericErrorType.NOT_AUTHENTICATED)))
 
-            val result = restClient.fetchPrompts(site, numberOfPromptsToFetch, Date())
+            val result = restClient.fetchPrompts(site, numberOfPromptsToFetch, Date(), locale)
 
             assertError(AUTHORIZATION_REQUIRED, result)
         }
@@ -212,6 +223,7 @@ class BloggingPromptsRestClientTest {
                 eq(BloggingPromptsListResponseTypeToken.type),
                 eq(false),
                 any(),
+                eq(false),
                 eq(false)
             )
         ).thenReturn(response)

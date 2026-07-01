@@ -29,10 +29,11 @@ class BloggingPromptsStore @Inject constructor(
     suspend fun fetchPrompts(
         site: SiteModel,
         number: Int,
-        from: Date
+        from: Date,
+        locale: String
     ): BloggingPromptsResult<List<BloggingPromptModel>> {
         return coroutineEngine.withDefaultContext(AppLog.T.API, this, "fetchPrompts") {
-            val payload = restClient.fetchPrompts(site, number, from)
+            val payload = restClient.fetchPrompts(site, number, from, locale)
             storePrompts(site, payload)
         }
     }

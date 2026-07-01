@@ -29,6 +29,7 @@ import org.wordpress.android.ui.mysite.SiteNavigationAction
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.utils.UiString
+import org.wordpress.android.util.PerAppLocaleManager
 
 @Suppress("LargeClass")
 @ExperimentalCoroutinesApi
@@ -58,6 +59,9 @@ class BloggingPromptCardViewModelSliceTest : BaseUnitTest() {
     @Mock
     lateinit var promptsStore: BloggingPromptsStore
 
+    @Mock
+    lateinit var perAppLocaleManager: PerAppLocaleManager
+
     private lateinit var viewModelSlice: BloggingPromptCardViewModelSlice
 
     private lateinit var navigationActions: MutableList<SiteNavigationAction>
@@ -83,7 +87,8 @@ class BloggingPromptCardViewModelSliceTest : BaseUnitTest() {
             bloggingPromptsCardTrackHelper,
             bloggingPromptsPostTagProvider,
             bloggingPromptCardBuilder,
-            promptsStore
+            promptsStore,
+            perAppLocaleManager
         )
 
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)

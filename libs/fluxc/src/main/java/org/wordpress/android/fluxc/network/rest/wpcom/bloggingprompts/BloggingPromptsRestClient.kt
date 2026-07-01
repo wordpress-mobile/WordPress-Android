@@ -38,12 +38,17 @@ class BloggingPromptsRestClient @Inject constructor(
         site: SiteModel,
         perPage: Int,
         after: Date,
+        locale: String,
         ignoresYear: Boolean = true,
     ): BloggingPromptsPayload<BloggingPromptsListResponse> {
         val url = WPCOMV3.sites.site(site.siteId).blogging_prompts.url
         val params = mutableMapOf(
             "per_page" to perPage.toString(),
-            "after" to BloggingPromptsUtils.dateToString(after, ignoresYear)
+            "after" to BloggingPromptsUtils.dateToString(after, ignoresYear),
+            // Send the app's language slug (e.g. "tr") explicitly so prompt content is localized.
+            // The framework's default _locale is region-qualified (e.g. "tr_TR"), which the endpoint
+            // doesn't resolve, so we disable it below (addLocaleParameter = false) and set our own.
+            "_locale" to locale
         )
         if (ignoresYear) {
             // when ignoring the year we force the response to be for the current year
@@ -56,7 +61,8 @@ class BloggingPromptsRestClient @Inject constructor(
             this,
             url,
             params,
-            BloggingPromptsListResponseTypeToken.type
+            BloggingPromptsListResponseTypeToken.type,
+            addLocaleParameter = false
         )
         return when (response) {
             is Success -> BloggingPromptsPayload(response.data)

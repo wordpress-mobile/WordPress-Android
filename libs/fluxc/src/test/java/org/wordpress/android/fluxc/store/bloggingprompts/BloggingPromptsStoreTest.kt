@@ -168,6 +168,7 @@ class BloggingPromptsStoreTest {
 
     private val numberOfPromptsToFetch = 40
     private val requestedPromptDate = Date()
+    private val locale = "en"
 
     @Before
     fun setUp() {
@@ -190,11 +191,12 @@ class BloggingPromptsStoreTest {
             restClient.fetchPrompts(
                 siteModel,
                 numberOfPromptsToFetch,
-                requestedPromptDate
+                requestedPromptDate,
+                locale
             )
         ).thenReturn(payload)
 
-        promptsStore.fetchPrompts(siteModel, numberOfPromptsToFetch, requestedPromptDate)
+        promptsStore.fetchPrompts(siteModel, numberOfPromptsToFetch, requestedPromptDate, locale)
 
         verify(dao).insertForSite(siteModel.id, PROMPT_MODELS)
     }
@@ -207,7 +209,8 @@ class BloggingPromptsStoreTest {
                 restClient.fetchPrompts(
                     siteModel,
                     numberOfPromptsToFetch,
-                    requestedPromptDate
+                    requestedPromptDate,
+                locale
                 )
             ).thenReturn(
                 payload
@@ -216,7 +219,8 @@ class BloggingPromptsStoreTest {
             val result = promptsStore.fetchPrompts(
                 siteModel,
                 numberOfPromptsToFetch,
-                requestedPromptDate
+                requestedPromptDate,
+                locale
             )
 
             assertThat(result.model).isEqualTo(PROMPT_MODELS)
@@ -231,7 +235,8 @@ class BloggingPromptsStoreTest {
                 restClient.fetchPrompts(
                     siteModel,
                     numberOfPromptsToFetch,
-                    requestedPromptDate
+                    requestedPromptDate,
+                locale
                 )
             ).thenReturn(
                 payload
@@ -246,7 +251,8 @@ class BloggingPromptsStoreTest {
             val result = promptsStore.fetchPrompts(
                 siteModel,
                 numberOfPromptsToFetch,
-                requestedPromptDate
+                requestedPromptDate,
+                locale
             )
 
             assertThat(result.model).isNull()
@@ -311,14 +317,16 @@ class BloggingPromptsStoreTest {
                 restClient.fetchPrompts(
                     siteModel,
                     numberOfPromptsToFetch,
-                    requestedPromptDate
+                    requestedPromptDate,
+                locale
                 )
             ).thenReturn(payload)
 
             val result = promptsStore.fetchPrompts(
                 siteModel,
                 numberOfPromptsToFetch,
-                requestedPromptDate
+                requestedPromptDate,
+                locale
             )
 
             assertThat(result.model).isNull()

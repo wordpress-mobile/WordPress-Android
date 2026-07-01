@@ -73,7 +73,7 @@ public abstract class BaseWPComRestClient {
         return add(request, true);
     }
 
-    protected Request add(WPComGsonRequest request, boolean addLocaleParameter) {
+    public Request add(WPComGsonRequest request, boolean addLocaleParameter) {
         if (addLocaleParameter) {
             addLocaleToRequest(request);
         }

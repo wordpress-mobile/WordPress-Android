@@ -25,6 +25,7 @@ import org.wordpress.android.ui.mysite.SiteNavigationAction
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.utils.UiString
+import org.wordpress.android.util.PerAppLocaleManager
 import org.wordpress.android.viewmodel.Event
 import java.time.LocalDate
 import java.time.ZoneId
@@ -43,7 +44,8 @@ class BloggingPromptCardViewModelSlice @Inject constructor(
     private val bloggingPromptsCardTrackHelper: BloggingPromptsCardTrackHelper,
     private val bloggingPromptsPostTagProvider: BloggingPromptsPostTagProvider,
     private val bloggingPromptCardBuilder: BloggingPromptCardBuilder,
-    private val promptsStore: BloggingPromptsStore
+    private val promptsStore: BloggingPromptsStore,
+    private val perAppLocaleManager: PerAppLocaleManager
 ) {
     private val _onSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
     val onSnackbarMessage = _onSnackbarMessage as LiveData<Event<SnackbarMessageHolder>>
@@ -91,7 +93,12 @@ class BloggingPromptCardViewModelSlice @Inject constructor(
         isSinglePromptRefresh: Boolean = false
     ) {
         val numOfPromptsToFetch = if (isSinglePromptRefresh) 1 else NUM_PROMPTS_TO_REQUEST
-        val result = promptsStore.fetchPrompts(selectedSite, numOfPromptsToFetch, Date())
+        val result = promptsStore.fetchPrompts(
+            selectedSite,
+            numOfPromptsToFetch,
+            Date(),
+            perAppLocaleManager.getCurrentLocaleLanguageCode()
+        )
         when {
             result.isError -> postLastState()
             else -> {

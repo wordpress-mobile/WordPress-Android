@@ -17,6 +17,7 @@ import org.wordpress.android.ui.bloggingprompts.promptslist.BloggingPromptsListF
 import org.wordpress.android.ui.bloggingprompts.promptslist.usecase.FetchBloggingPromptsListUseCase.Result.Failure
 import org.wordpress.android.ui.bloggingprompts.promptslist.usecase.FetchBloggingPromptsListUseCase.Result.Success
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
+import org.wordpress.android.util.PerAppLocaleManager
 import java.util.Date
 
 @ExperimentalCoroutinesApi
@@ -26,13 +27,17 @@ class FetchBloggingPromptsListUseCaseTest : BaseUnitTest() {
 
     @Mock
     lateinit var bloggingPromptsStore: BloggingPromptsStore
+
+    @Mock
+    lateinit var perAppLocaleManager: PerAppLocaleManager
     lateinit var useCase: FetchBloggingPromptsListUseCase
 
     @Before
     fun setUp() {
         useCase = FetchBloggingPromptsListUseCase(
             bloggingPromptsStore = bloggingPromptsStore,
-            selectedSiteRepository = selectedSiteRepository
+            selectedSiteRepository = selectedSiteRepository,
+            perAppLocaleManager = perAppLocaleManager
         )
     }
 
@@ -48,7 +53,8 @@ class FetchBloggingPromptsListUseCaseTest : BaseUnitTest() {
     @Test
     fun `given fetching prompts fails, when execute is called, then return failure`() = test {
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(SiteModel().apply { id = 1 })
-        whenever(bloggingPromptsStore.fetchPrompts(any(), any(), any()))
+        whenever(perAppLocaleManager.getCurrentLocaleLanguageCode()).thenReturn("en")
+        whenever(bloggingPromptsStore.fetchPrompts(any(), any(), any(), any()))
             .thenReturn(BloggingPromptsResult(error = mock()))
 
         val result = useCase.execute()
@@ -62,7 +68,8 @@ class FetchBloggingPromptsListUseCaseTest : BaseUnitTest() {
         var initialDate: Date = now
         var count: Int = 0
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(SiteModel().apply { id = 1 })
-        whenever(bloggingPromptsStore.fetchPrompts(any(), any(), any()))
+        whenever(perAppLocaleManager.getCurrentLocaleLanguageCode()).thenReturn("en")
+        whenever(bloggingPromptsStore.fetchPrompts(any(), any(), any(), any()))
             .doSuspendableAnswer {
                 count = it.getArgument(1)
                 initialDate = it.getArgument(2)
@@ -97,7 +104,8 @@ class FetchBloggingPromptsListUseCaseTest : BaseUnitTest() {
         var initialDate: Date = now
         var count: Int = 0
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(SiteModel().apply { id = 1 })
-        whenever(bloggingPromptsStore.fetchPrompts(any(), any(), any()))
+        whenever(perAppLocaleManager.getCurrentLocaleLanguageCode()).thenReturn("en")
+        whenever(bloggingPromptsStore.fetchPrompts(any(), any(), any(), any()))
             .doSuspendableAnswer {
                 count = it.getArgument(1)
                 initialDate = it.getArgument(2)

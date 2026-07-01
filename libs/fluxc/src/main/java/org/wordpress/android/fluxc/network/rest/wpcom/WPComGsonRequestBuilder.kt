@@ -99,7 +99,8 @@ class WPComGsonRequestBuilder
         type: Type,
         enableCaching: Boolean = false,
         cacheTimeToLive: Int = BaseRequest.DEFAULT_CACHE_LIFETIME,
-        forced: Boolean = false
+        forced: Boolean = false,
+        addLocaleParameter: Boolean = true
     ) = suspendCancellableCoroutine<Response<T>> { cont ->
         val request = WPComGsonRequest.buildGetRequest<T>(url, params, type, {
             cont.resume(Success(it))
@@ -113,7 +114,7 @@ class WPComGsonRequestBuilder
         if (forced) {
             request.setShouldForceUpdate()
         }
-        restClient.add(request)
+        restClient.add(request, addLocaleParameter)
     }
 
     /**
