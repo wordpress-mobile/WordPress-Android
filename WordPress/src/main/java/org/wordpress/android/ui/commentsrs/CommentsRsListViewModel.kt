@@ -57,6 +57,10 @@ class CommentsRsListViewModel @Inject constructor(
 
     // Pagination cursors: the next-page params returned with each fetched page, per tab.
     private val nextPageParams = mutableMapOf<CommentsRsListTab, CommentListParams?>()
+
+    // Bumped whenever a first page is applied. A load-more result whose fetch started before the
+    // bump paged from a cursor that predates the new page 1, so it's stale and gets discarded.
+    private val pageGenerations = mutableMapOf<CommentsRsListTab, Int>()
     private val initializingTabs = mutableSetOf<CommentsRsListTab>()
     private val resolveTitleJobs = mutableMapOf<CommentsRsListTab, Job>()
 
@@ -107,13 +111,38 @@ class CommentsRsListViewModel @Inject constructor(
         if (params == null || isBusy) return
 
         updateTabUiState(tab) { copy(isLoadingMore = true) }
+        val generation = pageGenerations[tab]
         viewModelScope.launch {
             val result = withContext(bgDispatcher) { commentsRsDataSource.fetchCommentsPage(site, params) }
+            if (pageGenerations[tab] != generation) {
+                // A refresh replaced the list while this page was in flight, so its cursor is
+                // stale; appending it would mix old and new pages and corrupt the cursor chain.
+                updateTabUiState(tab) { copy(isLoadingMore = false) }
+                return@launch
+            }
             when (result) {
-                is RsCommentsPageResult.Success -> applyPage(tab, result, append = true)
+                is RsCommentsPageResult.Success -> {
+                    val sizeBefore = getTabUiState(tab).comments.size
+                    applyPage(tab, result, append = true)
+                    // When the whole page deduped away (the list shifted server-side), the
+                    // scroll position hasn't changed so the load-more trigger won't re-fire;
+                    // advance to the next page directly.
+                    if (result.comments.isNotEmpty() &&
+                        getTabUiState(tab).comments.size == sizeBefore &&
+                        nextPageParams[tab] != null
+                    ) {
+                        loadMore(tab)
+                    }
+                }
                 is RsCommentsPageResult.Error -> {
                     updateTabUiState(tab) { copy(isLoadingMore = false) }
-                    _snackbarMessages.trySend(SnackbarMessage(errorMessage(result.message)))
+                    _snackbarMessages.trySend(
+                        SnackbarMessage(
+                            message = errorMessage(result.message),
+                            actionLabel = resourceProvider.getString(R.string.retry),
+                            onAction = { loadMore(tab) }
+                        )
+                    )
                 }
             }
         }
@@ -143,6 +172,7 @@ class CommentsRsListViewModel @Inject constructor(
      * rather than replacing it (first page / refresh).
      */
     private fun applyPage(tab: CommentsRsListTab, result: RsCommentsPageResult.Success, append: Boolean) {
+        if (!append) pageGenerations[tab] = (pageGenerations[tab] ?: 0) + 1
         nextPageParams[tab] = result.nextPageParams
         val newRows = result.comments.map { it.toUiModel() }
         updateTabUiState(tab) {

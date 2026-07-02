@@ -168,6 +168,71 @@ class CommentsRsListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
     }
 
     @Test
+    fun `stale loadMore result arriving after a silent refresh is discarded`() = test {
+        givenPage(listOf(rsItem(id = 1), rsItem(id = 2)), nextPageParams = NEXT_PAGE)
+        val viewModel = createViewModel()
+        viewModel.initTab(CommentsRsListTab.ALL)
+        advanceUntilIdle()
+        // Next two fetches: the silent refresh gets a fresh first page; the concurrently
+        // launched loadMore gets the (now stale) old second page.
+        whenever(commentsRsDataSource.fetchCommentsPage(eq(site), any())).thenReturn(
+            RsCommentsPageResult.Success(listOf(rsItem(id = 10), rsItem(id = 11)), NEXT_PAGE),
+            RsCommentsPageResult.Success(listOf(rsItem(id = 3), rsItem(id = 4)), null)
+        )
+
+        viewModel.refreshTab(CommentsRsListTab.ALL) // silent: sets no busy flag
+        viewModel.loadMore(CommentsRsListTab.ALL)
+        advanceUntilIdle()
+
+        val state = viewModel.tabStates.value.getValue(CommentsRsListTab.ALL)
+        assertThat(state.comments.map { it.remoteCommentId }).containsExactly(10L, 11L)
+        assertThat(state.isLoadingMore).isFalse()
+        assertThat(state.canLoadMore).isTrue()
+    }
+
+    @Test
+    fun `loadMore failure offers a retry snackbar`() = test {
+        givenPage(listOf(rsItem(id = 1)), nextPageParams = NEXT_PAGE)
+        val viewModel = createViewModel()
+        viewModel.initTab(CommentsRsListTab.ALL)
+        advanceUntilIdle()
+        whenever(commentsRsDataSource.fetchCommentsPage(eq(site), any()))
+            .thenReturn(RsCommentsPageResult.Error("boom"))
+
+        viewModel.snackbarMessages.test {
+            viewModel.loadMore(CommentsRsListTab.ALL)
+            advanceUntilIdle()
+
+            val snackbar = awaitItem()
+            assertThat(snackbar.message).isEqualTo("boom")
+            assertThat(snackbar.onAction != null).isTrue()
+            cancelAndIgnoreRemainingEvents()
+        }
+        assertThat(viewModel.tabStates.value.getValue(CommentsRsListTab.ALL).isLoadingMore).isFalse()
+    }
+
+    @Test
+    fun `fully deduplicated page auto-advances to the next page`() = test {
+        givenPage(listOf(rsItem(id = 1), rsItem(id = 2)), nextPageParams = NEXT_PAGE)
+        val viewModel = createViewModel()
+        viewModel.initTab(CommentsRsListTab.ALL)
+        advanceUntilIdle()
+        // The next page duplicates the current rows entirely (server-side shift), then the
+        // page after that has the genuinely new comment.
+        whenever(commentsRsDataSource.fetchCommentsPage(eq(site), any())).thenReturn(
+            RsCommentsPageResult.Success(listOf(rsItem(id = 1), rsItem(id = 2)), THIRD_PAGE),
+            RsCommentsPageResult.Success(listOf(rsItem(id = 3)), null)
+        )
+
+        viewModel.loadMore(CommentsRsListTab.ALL)
+        advanceUntilIdle()
+
+        val state = viewModel.tabStates.value.getValue(CommentsRsListTab.ALL)
+        assertThat(state.comments.map { it.remoteCommentId }).containsExactly(1L, 2L, 3L)
+        assertThat(state.canLoadMore).isFalse()
+    }
+
+    @Test
     fun `loadMore is a no-op when there is no next page`() = test {
         givenPage(listOf(rsItem(id = 1)), nextPageParams = null)
         val viewModel = createViewModel()
@@ -262,5 +327,6 @@ class CommentsRsListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
     companion object {
         private val FIRST_PAGE = CommentListParams()
         private val NEXT_PAGE = CommentListParams(page = 2u)
+        private val THIRD_PAGE = CommentListParams(page = 3u)
     }
 }

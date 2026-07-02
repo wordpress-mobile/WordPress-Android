@@ -37,7 +37,10 @@ import uniffi.wp_api.CommentStatus as RsCommentStatus
 class CommentsRsDataSource @Inject constructor(
     private val wpApiClientProvider: WpApiClientProvider
 ) {
-    private val postTitleCache = ConcurrentHashMap<Long, String>()
+    // Keyed by (local site id, post id): post ids are only unique per site, and this is a
+    // singleton shared across site switches. An empty value is a negative-cache entry for ids
+    // whose title can't be resolved (custom post types, non-published posts).
+    private val postTitleCache = ConcurrentHashMap<Pair<Int, Long>, String>()
 
     data class RsComment(
         val authorName: String,
@@ -116,41 +119,72 @@ class CommentsRsDataSource @Inject constructor(
         )
 
     /**
-     * Fetches post titles for the given [postIds] in a single sparse-field network call, returning
+     * Fetches post titles for the given [postIds] in batched sparse-field network calls, returning
      * a map of post id to rendered title. Ids already cached skip the network round-trip.
      * (List rows show "author commented on {post}", but the comment payload only has the post id.)
+     *
+     * Comments can be attached to posts or pages, so unresolved ids fall back to the pages
+     * endpoint. Ids neither endpoint returns (custom post types, non-published posts) resolve to
+     * an empty title and are negative-cached so they aren't re-requested on every page load.
      */
     suspend fun fetchPostTitles(site: SiteModel, postIds: List<Long>): Map<Long, String> {
         val result = mutableMapOf<Long, String>()
         val uncached = mutableListOf<Long>()
         for (id in postIds.distinct()) {
-            val cached = postTitleCache[id]
+            val cached = postTitleCache[site.id to id]
             if (cached != null) result[id] = cached else uncached.add(id)
         }
         if (uncached.isEmpty()) return result
 
         safe(errorValue = Unit) {
-            val client = wpApiClientProvider.getWpApiClient(site)
-            val response = client.request {
-                it.posts().filterListWithViewContext(
-                    PostEndpointType.Posts,
-                    PostListParams(include = uncached),
-                    listOf(SparseAnyPostFieldWithViewContext.ID, SparseAnyPostFieldWithViewContext.TITLE)
-                )
-            }
-            if (response is WpRequestResult.Success) {
-                for (post in response.response.data) {
-                    val id = post.id ?: continue
-                    val title = post.title?.rendered.orEmpty()
-                    postTitleCache[id] = title
-                    result[id] = title
-                }
+            val unresolved = fetchTitlesFromEndpoint(site, PostEndpointType.Posts, uncached, result)
+                ?: return@safe
+            val stillUnresolved = if (unresolved.isEmpty()) {
+                unresolved
             } else {
-                val message = (response as? WpRequestResult.WpError<*>)?.errorMessage
-                AppLog.w(AppLog.T.COMMENTS, "fetchPostTitles failed: $message")
+                fetchTitlesFromEndpoint(site, PostEndpointType.Pages, unresolved, result) ?: return@safe
+            }
+            // Only reached when both endpoints succeeded, so these ids genuinely have no
+            // resolvable title (as opposed to a transient request failure).
+            for (id in stillUnresolved) {
+                postTitleCache[site.id to id] = ""
+                result[id] = ""
             }
         }
         return result
+    }
+
+    /**
+     * Fetches titles for [ids] from [endpointType] into [into] (and the cache), returning the ids
+     * the endpoint didn't include, or null when the request failed. [PostListParams.perPage] is
+     * set explicitly: the server default of 10 would silently truncate larger batches.
+     */
+    private suspend fun fetchTitlesFromEndpoint(
+        site: SiteModel,
+        endpointType: PostEndpointType,
+        ids: List<Long>,
+        into: MutableMap<Long, String>
+    ): List<Long>? {
+        val client = wpApiClientProvider.getWpApiClient(site)
+        val response = client.request {
+            it.posts().filterListWithViewContext(
+                endpointType,
+                PostListParams(include = ids, perPage = ids.size.toUInt()),
+                listOf(SparseAnyPostFieldWithViewContext.ID, SparseAnyPostFieldWithViewContext.TITLE)
+            )
+        }
+        if (response !is WpRequestResult.Success) {
+            val message = (response as? WpRequestResult.WpError<*>)?.errorMessage
+            AppLog.w(AppLog.T.COMMENTS, "fetchPostTitles ($endpointType) failed: $message")
+            return null
+        }
+        for (post in response.response.data) {
+            val id = post.id ?: continue
+            val title = post.title?.rendered.orEmpty()
+            postTitleCache[site.id to id] = title
+            into[id] = title
+        }
+        return ids.filter { it !in into }
     }
 
     suspend fun updateStatus(site: SiteModel, commentId: Long, status: CommentStatus): RsResult =
