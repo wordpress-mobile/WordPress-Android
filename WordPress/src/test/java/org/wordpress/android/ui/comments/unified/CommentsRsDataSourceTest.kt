@@ -68,7 +68,7 @@ class CommentsRsDataSourceTest {
                     perPage = params.perPage
                 )
                 // The payload is decided by the request-level stub below; this value is unused.
-                mock<PostsRequestFilterListWithViewContextResponse>()
+                PostsRequestFilterListWithViewContextResponse(emptyList(), mock(), null, null)
             }
         }
         wpApiClient.stub {
@@ -201,14 +201,35 @@ class CommentsRsDataSourceTest {
             )
     }
 
-    private fun sparsePost(id: Long, title: String): SparseAnyPostWithViewContext {
-        val sparseTitle = mock<SparsePostTitleWithViewContext>()
-        whenever(sparseTitle.rendered).thenReturn(title)
-        val post = mock<SparseAnyPostWithViewContext>()
-        whenever(post.id).thenReturn(id)
-        whenever(post.title).thenReturn(sparseTitle)
-        return post
-    }
+    // A sparse post as returned by the id+title sparse-field request: everything else null.
+    private fun sparsePost(id: Long, title: String) = SparseAnyPostWithViewContext(
+        id = id,
+        date = null,
+        dateGmt = null,
+        guid = null,
+        link = null,
+        modified = null,
+        modifiedGmt = null,
+        slug = null,
+        status = null,
+        postType = null,
+        title = SparsePostTitleWithViewContext(rendered = title),
+        content = null,
+        author = null,
+        excerpt = null,
+        featuredMedia = null,
+        commentStatus = null,
+        pingStatus = null,
+        format = null,
+        meta = null,
+        sticky = null,
+        template = null,
+        categories = null,
+        tags = null,
+        parent = null,
+        menuOrder = null,
+        additionalFields = null
+    )
 
     private fun successResponse(vararg posts: SparseAnyPostWithViewContext) = WpRequestResult.Success(
         response = PostsRequestFilterListWithViewContextResponse(posts.toList(), mock(), null, null)
