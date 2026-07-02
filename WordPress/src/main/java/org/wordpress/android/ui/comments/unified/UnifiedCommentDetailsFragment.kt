@@ -131,6 +131,10 @@ class UnifiedCommentDetailsFragment :
         // Spam is hidden by default in the shared comment_action_footer layout; the unified detail
         // always offers it, so show it up front rather than only once the comment has loaded.
         layoutButtons.btnSpam.visibility = View.VISIBLE
+        // Liking stays on FluxC, which only supports WP.com-accessed sites — hide the button on
+        // self-hosted application-password sites like the legacy comment detail does.
+        layoutButtons.btnLike.visibility =
+            if (SiteUtils.isAccessedViaWPComRest(site)) View.VISIBLE else View.GONE
     }
 
     private fun ReaderIncludeCommentBoxBinding.setupReplyBox() {

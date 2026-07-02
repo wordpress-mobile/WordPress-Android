@@ -69,6 +69,7 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
     private lateinit var site: SiteModel
     private var remoteCommentId: Long = 0
     private var loadedComment: RsComment? = null
+    private var isLikeInProgress = false
 
     // From the FluxC cache row: the local id used to launch the (still FluxC) edit screen.
     private var localCommentId: Int = 0
@@ -131,9 +132,15 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
         moderateComment(DELETED, closeOnSuccess = true)
     }
 
+    @Suppress("ReturnCount")
     fun onLikeClicked() {
+        if (loadedComment == null) return
+        // Guard against a second like/unlike while one is in flight (fast double-tap): the target
+        // state is derived from the optimistic ui state, so racing requests could desync it.
+        if (isLikeInProgress) return
         if (isOffline()) return
         val isLike = !(_uiState.value?.isLiked ?: false)
+        isLikeInProgress = true
         launch {
             _uiState.value = _uiState.value?.copy(isLiked = isLike)
             val isError = withContext(bgDispatcher) {
@@ -145,6 +152,7 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
             } else {
                 withContext(bgDispatcher) { localCommentCacheUpdateHandler.requestCommentsUpdate() }
             }
+            isLikeInProgress = false
         }
     }
 
@@ -158,6 +166,9 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
     fun onPostTitleClicked() {
         val comment = loadedComment ?: return
         if (comment.postId <= 0) return
+        // The Reader resolves posts by WP.com blog id, which is 0 for self-hosted
+        // application-password sites — opening it there would just show an error.
+        if (site.siteId == 0L) return
         _uiActionEvent.value = Event(OpenPostInReader(site.siteId, comment.postId))
     }
 
@@ -205,6 +216,10 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
     }
 
     private fun moderateComment(newStatus: CommentStatus, closeOnSuccess: Boolean) {
+        // The action footer stays visible while the comment loads, so ignore taps until then:
+        // before the load completes the ui state holds a default status and the toggle handlers
+        // would compute (and apply server-side) the wrong target status.
+        if (loadedComment == null) return
         if (isOffline()) return
         val previousStatus = currentStatus()
         launch {

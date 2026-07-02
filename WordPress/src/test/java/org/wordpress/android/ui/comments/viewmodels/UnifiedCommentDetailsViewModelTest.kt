@@ -1,12 +1,14 @@
 package org.wordpress.android.ui.comments.viewmodels
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.delay
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
 import org.mockito.kotlin.any
 import org.mockito.kotlin.atLeastOnce
+import org.mockito.kotlin.doSuspendableAnswer
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
@@ -170,6 +172,20 @@ class UnifiedCommentDetailsViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `moderation is ignored while the comment is still loading`() = test {
+        whenever(commentsRsDataSource.getComment(site, REMOTE_COMMENT_ID)).doSuspendableAnswer {
+            delay(LOAD_DELAY_MS)
+            RS_COMMENT
+        }
+        viewModel.start(site, REMOTE_COMMENT_ID)
+
+        viewModel.onApproveClicked()
+        advanceUntilIdle()
+
+        verify(commentsRsDataSource, times(0)).updateStatus(eq(site), eq(REMOTE_COMMENT_ID), any())
+    }
+
+    @Test
     fun `moderation shows snackbar and does not call rs when offline`() = test {
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(false)
         viewModel.start(site, REMOTE_COMMENT_ID)
@@ -188,6 +204,37 @@ class UnifiedCommentDetailsViewModelTest : BaseUnitTest() {
 
         verify(commentsStore).likeComment(site, REMOTE_COMMENT_ID, null, true)
         assertThat(uiStates.last().isLiked).isTrue
+    }
+
+    @Test
+    fun `onLikeClicked is ignored while the comment is still loading`() = test {
+        whenever(commentsRsDataSource.getComment(site, REMOTE_COMMENT_ID)).doSuspendableAnswer {
+            delay(LOAD_DELAY_MS)
+            RS_COMMENT
+        }
+        viewModel.start(site, REMOTE_COMMENT_ID)
+
+        viewModel.onLikeClicked()
+        advanceUntilIdle()
+
+        verify(commentsStore, times(0)).likeComment(eq(site), eq(REMOTE_COMMENT_ID), eq(null), any())
+    }
+
+    @Test
+    fun `onLikeClicked ignores a second tap while a like is in flight`() = test {
+        whenever(commentsStore.likeComment(eq(site), eq(REMOTE_COMMENT_ID), eq(null), any()))
+            .doSuspendableAnswer {
+                delay(LOAD_DELAY_MS)
+                successPayload()
+            }
+        viewModel.start(site, REMOTE_COMMENT_ID)
+
+        viewModel.onLikeClicked()
+        viewModel.onLikeClicked()
+        advanceUntilIdle()
+
+        verify(commentsStore, times(1)).likeComment(site, REMOTE_COMMENT_ID, null, true)
+        verify(commentsStore, times(0)).likeComment(site, REMOTE_COMMENT_ID, null, false)
     }
 
     @Test
@@ -212,6 +259,17 @@ class UnifiedCommentDetailsViewModelTest : BaseUnitTest() {
         assertThat(event).isInstanceOf(OpenPostInReader::class.java)
         assertThat((event as OpenPostInReader).blogId).isEqualTo(REMOTE_SITE_ID)
         assertThat(event.postId).isEqualTo(REMOTE_POST_ID)
+    }
+
+    @Test
+    fun `onPostTitleClicked does nothing on a site without a wpcom blog id`() = test {
+        val selfHostedSite = SiteModel().apply { id = LOCAL_SITE_ID }
+        whenever(commentsRsDataSource.getComment(selfHostedSite, REMOTE_COMMENT_ID)).thenReturn(RS_COMMENT)
+        viewModel.start(selfHostedSite, REMOTE_COMMENT_ID)
+
+        viewModel.onPostTitleClicked()
+
+        assertThat(uiActionEvents).isEmpty()
     }
 
     @Test
@@ -287,6 +345,7 @@ class UnifiedCommentDetailsViewModelTest : BaseUnitTest() {
         private const val LOCAL_COMMENT_ID = 1000
         private const val REMOTE_COMMENT_ID = 4321L
         private const val REMOTE_POST_ID = 99L
+        private const val LOAD_DELAY_MS = 1000L
 
         private val RS_COMMENT = RsComment(
             authorName = "authorName",
