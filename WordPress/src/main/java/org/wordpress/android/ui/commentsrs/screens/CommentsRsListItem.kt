@@ -1,7 +1,8 @@
 package org.wordpress.android.ui.commentsrs.screens
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
@@ -14,8 +15,10 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -38,17 +41,26 @@ import org.wordpress.android.ui.commentsrs.CommentRsUiModel
 private val AVATAR_SIZE = 40.dp
 private val PENDING_INDICATOR_WIDTH = 4.dp
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun CommentsRsListItem(
     comment: CommentRsUiModel,
+    isSelected: Boolean,
     onClick: () -> Unit,
+    onLongClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .background(MaterialTheme.colorScheme.surface)
-            .clickable(onClick = onClick)
+            .background(
+                if (isSelected) {
+                    MaterialTheme.colorScheme.surfaceVariant
+                } else {
+                    MaterialTheme.colorScheme.surface
+                }
+            )
+            .combinedClickable(onClick = onClick, onLongClick = onLongClick)
     ) {
         Row(modifier = Modifier.height(IntrinsicSize.Min)) {
             // The pending indicator: a colored bar on the row's leading edge, like the legacy
@@ -66,7 +78,7 @@ fun CommentsRsListItem(
                     )
             )
             Row(modifier = Modifier.padding(start = 12.dp, top = 16.dp, end = 16.dp, bottom = 16.dp)) {
-                CommentAvatar(comment = comment)
+                CommentAvatar(comment = comment, isSelected = isSelected)
                 Column(
                     modifier = Modifier
                         .padding(start = 16.dp)
@@ -102,18 +114,27 @@ fun CommentsRsListItem(
 }
 
 @Composable
-private fun CommentAvatar(comment: CommentRsUiModel) {
-    val fallback = rememberVectorPainter(Icons.Filled.Person)
-    AsyncImage(
-        model = comment.avatarUrl.ifBlank { null },
-        contentDescription = null,
-        contentScale = ContentScale.Crop,
-        fallback = fallback,
-        error = fallback,
-        modifier = Modifier
-            .size(AVATAR_SIZE)
-            .clip(CircleShape)
-    )
+private fun CommentAvatar(comment: CommentRsUiModel, isSelected: Boolean) {
+    if (isSelected) {
+        Icon(
+            imageVector = Icons.Filled.CheckCircle,
+            contentDescription = stringResource(R.string.comment_checkmark_desc),
+            tint = MaterialTheme.colorScheme.primary,
+            modifier = Modifier.size(AVATAR_SIZE)
+        )
+    } else {
+        val fallback = rememberVectorPainter(Icons.Filled.Person)
+        AsyncImage(
+            model = comment.avatarUrl.ifBlank { null },
+            contentDescription = null,
+            contentScale = ContentScale.Crop,
+            fallback = fallback,
+            error = fallback,
+            modifier = Modifier
+                .size(AVATAR_SIZE)
+                .clip(CircleShape)
+        )
+    }
 }
 
 /**

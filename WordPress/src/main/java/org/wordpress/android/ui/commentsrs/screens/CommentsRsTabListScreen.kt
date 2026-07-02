@@ -44,9 +44,11 @@ import org.wordpress.android.ui.compose.components.ShimmerBox
 fun CommentsRsTabListScreen(
     state: CommentsTabUiState,
     emptyMessageResId: Int,
+    selectedIds: Set<Long>,
     onRefresh: () -> Unit,
     onLoadMore: () -> Unit,
     onCommentClick: (Long) -> Unit,
+    onCommentLongClick: (Long) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val pullToRefreshState = rememberPullToRefreshState()
@@ -76,10 +78,12 @@ fun CommentsRsTabListScreen(
             )
             else -> CommentListContent(
                 comments = state.comments,
+                selectedIds = selectedIds,
                 isLoadingMore = state.isLoadingMore,
                 canLoadMore = state.canLoadMore,
                 onLoadMore = onLoadMore,
-                onCommentClick = onCommentClick
+                onCommentClick = onCommentClick,
+                onCommentLongClick = onCommentLongClick
             )
         }
     }
@@ -88,10 +92,12 @@ fun CommentsRsTabListScreen(
 @Composable
 private fun CommentListContent(
     comments: List<CommentRsUiModel>,
+    selectedIds: Set<Long>,
     isLoadingMore: Boolean,
     canLoadMore: Boolean,
     onLoadMore: () -> Unit,
-    onCommentClick: (Long) -> Unit
+    onCommentClick: (Long) -> Unit,
+    onCommentLongClick: (Long) -> Unit
 ) {
     val listState = rememberLazyListState()
 
@@ -121,7 +127,9 @@ private fun CommentListContent(
         ) { comment ->
             CommentsRsListItem(
                 comment = comment,
+                isSelected = comment.remoteCommentId in selectedIds,
                 onClick = { onCommentClick(comment.remoteCommentId) },
+                onLongClick = { onCommentLongClick(comment.remoteCommentId) },
                 modifier = Modifier.animateItem()
             )
         }

@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.commentsrs.screens
 
+import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -7,6 +8,8 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -18,6 +21,7 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -25,31 +29,45 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
+import org.wordpress.android.ui.commentsrs.CommentsRsBatchAction
 import org.wordpress.android.ui.commentsrs.CommentsRsListTab
 import org.wordpress.android.ui.commentsrs.CommentsTabUiState
+import org.wordpress.android.ui.commentsrs.ConfirmationDialogState
+import org.wordpress.android.ui.commentsrs.PendingConfirmation
+import org.wordpress.android.ui.commentsrs.batchActions
 import org.wordpress.android.ui.postsrs.SnackbarMessage
 
+@Suppress("LongMethod")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CommentsRsListScreen(
     tabStates: Map<CommentsRsListTab, CommentsTabUiState>,
+    selectedIds: Set<Long>,
+    confirmationDialog: ConfirmationDialogState,
     snackbarMessages: Flow<SnackbarMessage>,
     onInitTab: (CommentsRsListTab) -> Unit,
     onTabChanged: (CommentsRsListTab) -> Unit,
     onRefreshTab: (CommentsRsListTab) -> Unit,
     onLoadMore: (CommentsRsListTab) -> Unit,
     onNavigateBack: () -> Unit,
-    onCommentClick: (Long) -> Unit
+    onCommentClick: (Long) -> Unit,
+    onCommentLongClick: (Long) -> Unit,
+    onClearSelection: () -> Unit,
+    onBatchAction: (CommentsRsBatchAction, CommentsRsListTab) -> Unit,
+    onConfirmPendingAction: (CommentsRsListTab) -> Unit
 ) {
     val tabs = CommentsRsListTab.entries
     val pagerState = rememberPagerState(pageCount = { tabs.size })
     val coroutineScope = rememberCoroutineScope()
+    val activeTab = tabs[pagerState.settledPage]
     val snackbarHostState = remember { SnackbarHostState() }
+    val isSelectionActive = selectedIds.isNotEmpty()
 
     LaunchedEffect(snackbarMessages) {
         snackbarMessages.collect { msg ->
@@ -66,17 +84,26 @@ fun CommentsRsListScreen(
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
-            TopAppBar(
-                title = { Text(text = stringResource(R.string.comments)) },
-                navigationIcon = {
-                    IconButton(onClick = onNavigateBack) {
-                        Icon(
-                            Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = stringResource(R.string.back)
-                        )
+            if (isSelectionActive) {
+                SelectionTopBar(
+                    selectedCount = selectedIds.size,
+                    actions = activeTab.batchActions(),
+                    onClearSelection = onClearSelection,
+                    onBatchAction = { action -> onBatchAction(action, activeTab) }
+                )
+            } else {
+                TopAppBar(
+                    title = { Text(text = stringResource(R.string.comments)) },
+                    navigationIcon = {
+                        IconButton(onClick = onNavigateBack) {
+                            Icon(
+                                Icons.AutoMirrored.Filled.ArrowBack,
+                                contentDescription = stringResource(R.string.back)
+                            )
+                        }
                     }
-                }
-            )
+                )
+            }
         }
     ) { contentPadding ->
         Column(modifier = Modifier.fillMaxSize().padding(contentPadding)) {
@@ -113,11 +140,107 @@ fun CommentsRsListScreen(
                 CommentsRsTabListScreen(
                     state = tabState,
                     emptyMessageResId = tab.emptyMessageResId,
+                    selectedIds = selectedIds,
                     onRefresh = { onRefreshTab(tab) },
                     onLoadMore = { onLoadMore(tab) },
-                    onCommentClick = onCommentClick
+                    onCommentClick = onCommentClick,
+                    onCommentLongClick = onCommentLongClick
                 )
             }
         }
     }
+
+    when (val pending = confirmationDialog.pending) {
+        is PendingConfirmation.Trash -> ConfirmationDialog(
+            titleResId = R.string.trash,
+            message = stringResource(R.string.dlg_confirm_trash_comments),
+            confirmTextResId = R.string.dlg_confirm_action_trash,
+            isDestructive = true,
+            onConfirm = { onConfirmPendingAction(activeTab) },
+            onDismiss = confirmationDialog.onDismiss
+        )
+        is PendingConfirmation.Delete -> ConfirmationDialog(
+            titleResId = R.string.delete,
+            message = stringResource(
+                if (pending.commentIds.size > 1) {
+                    R.string.dlg_sure_to_delete_comments
+                } else {
+                    R.string.dlg_sure_to_delete_comment
+                }
+            ),
+            confirmTextResId = R.string.delete,
+            isDestructive = true,
+            onConfirm = { onConfirmPendingAction(activeTab) },
+            onDismiss = confirmationDialog.onDismiss
+        )
+        null -> {}
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun SelectionTopBar(
+    selectedCount: Int,
+    actions: List<CommentsRsBatchAction>,
+    onClearSelection: () -> Unit,
+    onBatchAction: (CommentsRsBatchAction) -> Unit
+) {
+    TopAppBar(
+        title = { Text(text = stringResource(R.string.cab_selected, selectedCount)) },
+        navigationIcon = {
+            IconButton(onClick = onClearSelection) {
+                Icon(
+                    Icons.Default.Close,
+                    contentDescription = stringResource(R.string.clear)
+                )
+            }
+        },
+        actions = {
+            actions.forEach { action ->
+                TextButton(onClick = { onBatchAction(action) }) {
+                    Text(
+                        text = stringResource(action.labelResId),
+                        color = if (action.isDestructive) {
+                            MaterialTheme.colorScheme.error
+                        } else {
+                            MaterialTheme.colorScheme.primary
+                        }
+                    )
+                }
+            }
+        }
+    )
+}
+
+@Composable
+private fun ConfirmationDialog(
+    @StringRes titleResId: Int,
+    message: String,
+    @StringRes confirmTextResId: Int,
+    isDestructive: Boolean = false,
+    onConfirm: () -> Unit,
+    onDismiss: () -> Unit
+) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text(stringResource(titleResId)) },
+        text = { Text(message) },
+        confirmButton = {
+            TextButton(onClick = onConfirm) {
+                Text(
+                    stringResource(confirmTextResId),
+                    color = if (isDestructive) {
+                        MaterialTheme.colorScheme.error
+                    } else {
+                        Color.Unspecified
+                    }
+                )
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text(stringResource(R.string.cancel))
+            }
+        }
+    )
 }
