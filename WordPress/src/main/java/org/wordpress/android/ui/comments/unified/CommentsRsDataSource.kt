@@ -8,26 +8,37 @@ import org.wordpress.android.util.AppLog
 import rs.wordpress.api.kotlin.WpRequestResult
 import uniffi.wp_api.CommentCreateParams
 import uniffi.wp_api.CommentDeleteParams
+import uniffi.wp_api.CommentListParams
 import uniffi.wp_api.CommentRetrieveParams
 import uniffi.wp_api.CommentUpdateParams
 import uniffi.wp_api.CommentWithViewContext
+import uniffi.wp_api.PostEndpointType
+import uniffi.wp_api.PostListParams
+import uniffi.wp_api.SparseAnyPostFieldWithViewContext
 import uniffi.wp_api.UniffiWpApiClient
 import uniffi.wp_api.UserAvatarSize
+import uniffi.wp_api.WpApiParamCommentsOrderBy
+import uniffi.wp_api.WpApiParamOrder
 import java.util.Date
+import java.util.concurrent.ConcurrentHashMap
 import javax.inject.Inject
+import javax.inject.Singleton
 import uniffi.wp_api.CommentStatus as RsCommentStatus
 
 /**
- * Comment CRUD against the wordpress-rs `/wp/v2/comments` endpoint, used by the unified comment
- * detail screen. Works on WP.com and self-hosted application-password sites — the same sites the
- * postsrs/pagesrs screens support.
+ * Comment CRUD and list paging against the wordpress-rs `/wp/v2/comments` endpoint, used by the
+ * unified comment detail and rs comment list screens. Works on WP.com and self-hosted
+ * application-password sites — the same sites the postsrs/pagesrs screens support.
  *
  * Liking is intentionally NOT here: wordpress-rs has no comment like action, so the detail screen
  * keeps using FluxC for likes (and for keeping the FluxC-backed comment list cache in sync).
  */
+@Singleton
 class CommentsRsDataSource @Inject constructor(
     private val wpApiClientProvider: WpApiClientProvider
 ) {
+    private val postTitleCache = ConcurrentHashMap<Long, String>()
+
     data class RsComment(
         val authorName: String,
         val authorAvatarUrl: String,
@@ -38,10 +49,34 @@ class CommentsRsDataSource @Inject constructor(
         val status: CommentStatus
     )
 
+    /** One comment list row, mapped from [CommentWithViewContext]. */
+    data class RsCommentListItem(
+        val remoteCommentId: Long,
+        val authorName: String,
+        val authorAvatarUrl: String,
+        val dateGmt: Date,
+        val contentHtml: String,
+        val postId: Long,
+        val status: CommentStatus
+    )
+
     /** Result of a write request, carrying the server error message when one is available. */
     sealed interface RsResult {
         object Success : RsResult
         data class Error(val message: String?) : RsResult
+    }
+
+    /** Result of fetching one page of the comment list. */
+    sealed interface RsCommentsPageResult {
+        data class Success(
+            val comments: List<RsCommentListItem>,
+            /** Ready-made params for the next page; null when this was the last page. */
+            val nextPageParams: CommentListParams?,
+            /** Total matching comments from the X-WP-Total header, when the server provides it. */
+            val total: Int?
+        ) : RsCommentsPageResult
+
+        data class Error(val message: String?) : RsCommentsPageResult
     }
 
     suspend fun getComment(site: SiteModel, commentId: Long): RsComment? = safe(errorValue = null) {
@@ -54,6 +89,71 @@ class CommentsRsDataSource @Inject constructor(
             is WpRequestResult.Success -> result.response.data.toRsComment()
             else -> null
         }
+    }
+
+    /**
+     * Fetches one page of the site's comments. Pass [firstPageParams] for the first page and the
+     * previous page's [RsCommentsPageResult.Success.nextPageParams] for subsequent pages.
+     */
+    suspend fun fetchCommentsPage(site: SiteModel, params: CommentListParams): RsCommentsPageResult =
+        safe(errorValue = RsCommentsPageResult.Error(null)) {
+            val client = wpApiClientProvider.getWpApiClient(site)
+            when (val result = client.request { it.comments().listWithViewContext(params) }) {
+                is WpRequestResult.Success -> RsCommentsPageResult.Success(
+                    comments = result.response.data.map { it.toRsCommentListItem() },
+                    nextPageParams = result.response.nextPageParams,
+                    total = result.response.headerMap.wpTotal()?.toInt()
+                )
+                is WpRequestResult.WpError -> RsCommentsPageResult.Error(result.errorMessage)
+                else -> RsCommentsPageResult.Error(null)
+            }
+        }
+
+    fun firstPageParams(status: RsCommentStatus?, search: String? = null): CommentListParams =
+        CommentListParams(
+            perPage = COMMENTS_PAGE_SIZE,
+            search = search,
+            status = status,
+            orderby = WpApiParamCommentsOrderBy.DATE_GMT,
+            order = WpApiParamOrder.DESC
+        )
+
+    /**
+     * Fetches post titles for the given [postIds] in a single sparse-field network call, returning
+     * a map of post id to rendered title. Ids already cached skip the network round-trip.
+     * (List rows show "author commented on {post}", but the comment payload only has the post id.)
+     */
+    suspend fun fetchPostTitles(site: SiteModel, postIds: List<Long>): Map<Long, String> {
+        val result = mutableMapOf<Long, String>()
+        val uncached = mutableListOf<Long>()
+        for (id in postIds.distinct()) {
+            val cached = postTitleCache[id]
+            if (cached != null) result[id] = cached else uncached.add(id)
+        }
+        if (uncached.isEmpty()) return result
+
+        safe(errorValue = Unit) {
+            val client = wpApiClientProvider.getWpApiClient(site)
+            val response = client.request {
+                it.posts().filterListWithViewContext(
+                    PostEndpointType.Posts,
+                    PostListParams(include = uncached),
+                    listOf(SparseAnyPostFieldWithViewContext.ID, SparseAnyPostFieldWithViewContext.TITLE)
+                )
+            }
+            if (response is WpRequestResult.Success) {
+                for (post in response.response.data) {
+                    val id = post.id ?: continue
+                    val title = post.title?.rendered.orEmpty()
+                    postTitleCache[id] = title
+                    result[id] = title
+                }
+            } else {
+                val message = (response as? WpRequestResult.WpError<*>)?.errorMessage
+                AppLog.w(AppLog.T.COMMENTS, "fetchPostTitles failed: $message")
+            }
+        }
+        return result
     }
 
     suspend fun updateStatus(site: SiteModel, commentId: Long, status: CommentStatus): RsResult =
@@ -93,8 +193,7 @@ class CommentsRsDataSource @Inject constructor(
 
     private fun CommentWithViewContext.toRsComment() = RsComment(
         authorName = authorName,
-        authorAvatarUrl = (authorAvatarUrls[UserAvatarSize.Size96]
-            ?: authorAvatarUrls.values.firstOrNull { !it.isNullOrEmpty() }).orEmpty(),
+        authorAvatarUrl = pickAvatarUrl(),
         // dateGmt is a UTC java.util.Date (an absolute instant), so relative-time formatting is
         // correct regardless of the site's timezone — unlike the offset-less local `date` field.
         dateGmt = dateGmt,
@@ -103,7 +202,24 @@ class CommentsRsDataSource @Inject constructor(
         postId = post,
         status = status.toAppCommentStatus()
     )
+
+    companion object {
+        internal const val COMMENTS_PAGE_SIZE = 30u
+    }
 }
+
+internal fun CommentWithViewContext.toRsCommentListItem() = CommentsRsDataSource.RsCommentListItem(
+    remoteCommentId = id,
+    authorName = authorName,
+    authorAvatarUrl = pickAvatarUrl(),
+    dateGmt = dateGmt,
+    contentHtml = content.rendered,
+    postId = post,
+    status = status.toAppCommentStatus()
+)
+
+internal fun CommentWithViewContext.pickAvatarUrl(): String =
+    (authorAvatarUrls[UserAvatarSize.Size96] ?: authorAvatarUrls.values.firstOrNull { !it.isNullOrEmpty() }).orEmpty()
 
 internal fun CommentStatus.toRsCommentStatus(): RsCommentStatus = when (this) {
     CommentStatus.APPROVED -> RsCommentStatus.Approved
