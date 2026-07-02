@@ -17,8 +17,9 @@ class UnifiedCommentsDetailsActivity : BaseAppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         // The comment is loaded from the network (wordpress-rs), so bail out with a toast rather
-        // than showing an empty screen when there's no connection.
-        if (!NetworkUtils.isNetworkAvailable(this)) {
+        // than showing an empty screen when there's no connection. Only on first launch: a
+        // recreation (rotation, process-death restore) may already have the comment on screen.
+        if (savedInstanceState == null && !NetworkUtils.isNetworkAvailable(this)) {
             ToastUtils.showToast(this, R.string.no_network_message)
             finish()
             return

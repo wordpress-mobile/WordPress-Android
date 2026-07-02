@@ -116,6 +116,34 @@ class UnifiedCommentDetailsViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `refresh failure keeps the loaded comment and does not close the screen`() = test {
+        viewModel.start(site, REMOTE_COMMENT_ID)
+        whenever(commentsRsDataSource.getComment(site, REMOTE_COMMENT_ID)).thenReturn(null)
+
+        viewModel.refreshComment()
+
+        assertThat(uiStates.last().contentVisible).isTrue
+        assertThat(uiStates.last().status).isEqualTo(APPROVED)
+        assertThat(uiActionEvents).doesNotContain(Close)
+        assertThat(snackbarMessages).isNotEmpty
+    }
+
+    @Test
+    fun `moderation during a refresh uses the previously loaded status`() = test {
+        viewModel.start(site, REMOTE_COMMENT_ID)
+        whenever(commentsRsDataSource.getComment(site, REMOTE_COMMENT_ID)).doSuspendableAnswer {
+            delay(LOAD_DELAY_MS)
+            RS_COMMENT
+        }
+        viewModel.refreshComment()
+
+        viewModel.onApproveClicked()
+        advanceUntilIdle()
+
+        verify(commentsRsDataSource).updateStatus(site, REMOTE_COMMENT_ID, UNAPPROVED)
+    }
+
+    @Test
     fun `onApproveClicked toggles approved comment to unapproved via rs and syncs cache`() = test {
         viewModel.start(site, REMOTE_COMMENT_ID)
 

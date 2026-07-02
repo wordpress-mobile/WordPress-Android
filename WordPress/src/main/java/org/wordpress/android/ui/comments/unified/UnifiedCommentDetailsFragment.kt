@@ -20,7 +20,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
-import androidx.core.text.HtmlCompat
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -57,6 +56,7 @@ import org.wordpress.android.util.SnackbarItem
 import org.wordpress.android.util.SnackbarItem.Info
 import org.wordpress.android.util.SnackbarSequencer
 import org.wordpress.android.util.ToastUtils
+import org.wordpress.android.util.WPLinkMovementMethod
 import org.wordpress.android.util.extensions.getColorFromAttribute
 import org.wordpress.android.util.extensions.getColorResIdFromAttribute
 import org.wordpress.android.util.extensions.getSerializableCompat
@@ -81,12 +81,19 @@ class UnifiedCommentDetailsFragment :
     @Inject
     lateinit var snackbarSequencer: SnackbarSequencer
 
+    @Inject
+    lateinit var commentListUiUtils: CommentListUiUtils
+
     private lateinit var viewModel: UnifiedCommentDetailsViewModel
     private var binding: UnifiedCommentDetailsFragmentBinding? = null
 
     private lateinit var site: SiteModel
     private var remoteCommentId: Long = 0
     private var suggestionServiceConnectionManager: SuggestionServiceConnectionManager? = null
+
+    // The comment HTML currently rendered, so transient state changes (like/reply progress/status)
+    // don't re-parse the body — which is expensive and resets the user's text selection.
+    private var renderedCommentHtml: String? = null
 
     private val mediumOpacity by lazy {
         ResourcesCompat.getFloat(resources, MaterialR.dimen.material_emphasis_medium)
@@ -143,7 +150,9 @@ class UnifiedCommentDetailsFragment :
         editComment.doAfterTextChanged { btnSubmitReply.isEnabled = !it.isNullOrBlank() }
         btnSubmitReply.setOnClickListener { viewModel.onReplyClicked(editComment.text.toString()) }
         buttonExpand.setOnClickListener { showFullScreenReply() }
-        editComment.autoSaveTextHelper.uniqueId = "${site.siteId}-$remoteCommentId"
+        // Key drafts by the local site id: siteId (the WP.com blog id) is 0 for all self-hosted
+        // application-password sites, which would collide drafts across sites.
+        editComment.autoSaveTextHelper.uniqueId = "${site.id}-$remoteCommentId"
         editComment.autoSaveTextHelper.loadString(editComment)
     }
 
@@ -244,7 +253,7 @@ class UnifiedCommentDetailsFragment :
 
         textAuthorName.text = uiState.authorName
         textDate.text = uiState.datePublished
-        textCommentContent.text = HtmlCompat.fromHtml(uiState.commentText, HtmlCompat.FROM_HTML_MODE_COMPACT)
+        renderCommentContent(uiState.commentText)
         uiHelpers.setTextOrHide(textPostTitle, uiState.postTitle)
 
         if (uiState.authorAvatarUrl.isNotEmpty()) {
@@ -269,6 +278,25 @@ class UnifiedCommentDetailsFragment :
 
         renderActionButtons(uiState)
         renderReplyBox(uiState)
+    }
+
+    /**
+     * Renders the comment body with the shared comment HTML renderer (inline images, emoticons,
+     * whitespace trimming) and tappable links, matching the legacy comment detail. Posted so the
+     * view is measured, since the renderer sizes inline images from the view width.
+     */
+    private fun UnifiedCommentDetailsFragmentBinding.renderCommentContent(commentHtml: String) {
+        if (commentHtml == renderedCommentHtml) return
+        renderedCommentHtml = commentHtml
+        textCommentContent.movementMethod = WPLinkMovementMethod.getInstance()
+        textCommentContent.post {
+            commentListUiUtils.displayHtmlComment(
+                commentHtml,
+                textCommentContent,
+                textCommentContent.width,
+                textCommentContent.lineHeight
+            )
+        }
     }
 
     private fun UnifiedCommentDetailsFragmentBinding.renderActionButtons(uiState: CommentDetailsUiState) {
@@ -372,7 +400,13 @@ class UnifiedCommentDetailsFragment :
             setOnMenuItemClickListener { item ->
                 when (item.itemId) {
                     R.id.menu_edit -> viewModel.onEditClicked()
-                    R.id.menu_trash -> viewModel.onTrashClicked()
+                    // Trashing is committed server-side immediately (no undo affordance like the
+                    // legacy list flow), so confirm it first; restoring needs no confirmation.
+                    R.id.menu_trash -> if (state.status == TRASH) {
+                        viewModel.onTrashClicked()
+                    } else {
+                        confirmTrash()
+                    }
                     R.id.menu_copy_link -> copyLink(state.commentUrl)
                     R.id.menu_share_link -> shareLink(state.commentUrl)
                     R.id.menu_delete_permanently -> confirmDeletePermanently()
@@ -419,6 +453,14 @@ class UnifiedCommentDetailsFragment :
         }
     }
 
+    private fun confirmTrash() {
+        MaterialAlertDialogBuilder(requireContext())
+            .setMessage(R.string.dlg_confirm_trash_comments)
+            .setPositiveButton(R.string.dlg_confirm_action_trash) { _, _ -> viewModel.onTrashClicked() }
+            .setNegativeButton(R.string.cancel, null)
+            .show()
+    }
+
     private fun confirmDeletePermanently() {
         MaterialAlertDialogBuilder(requireContext())
             .setMessage(R.string.dlg_sure_to_delete_comment)
@@ -427,11 +469,13 @@ class UnifiedCommentDetailsFragment :
             .show()
     }
 
-    private fun fullScreenDialogTag() = "${CollapseFullScreenDialogFragment.TAG}_${site.siteId}_$remoteCommentId"
+    private fun fullScreenDialogTag() = "${CollapseFullScreenDialogFragment.TAG}_${site.id}_$remoteCommentId"
 
     override fun onDestroyView() {
         super.onDestroyView()
         binding = null
+        // Force a re-render into the recreated TextView if the view is rebuilt (e.g. rotation)
+        renderedCommentHtml = null
     }
 
     override fun onDestroy() {

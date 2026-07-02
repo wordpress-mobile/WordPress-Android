@@ -92,18 +92,27 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
 
     private fun loadComment() {
         launch {
-            _uiState.value = CommentDetailsUiState(showProgress = true)
+            // On first load show the progress state. When refreshing (e.g. after an edit) keep the
+            // currently displayed comment on screen instead: resetting the ui state mid-refresh
+            // would make the action buttons compute toggles from a default status, and a failed
+            // refresh shouldn't blank (or close) a screen the user was already viewing.
+            val isRefresh = loadedComment != null
+            if (!isRefresh) {
+                _uiState.value = CommentDetailsUiState(showProgress = true)
+            }
             val (rsComment, cached) = withContext(bgDispatcher) {
                 val rs = commentsRsDataSource.getComment(site, remoteCommentId)
                 val local = commentsStore.getCommentByLocalSiteAndRemoteId(site.id, remoteCommentId).firstOrNull()
                 rs to local
             }
-            if (rsComment != null) {
-                loadedComment = rsComment
-                localCommentId = cached?.id?.toInt() ?: 0
-                _uiState.value = rsComment.toUiState(cached)
-            } else {
-                _onSnackbarMessage.value = Event(
+            when {
+                rsComment != null -> {
+                    loadedComment = rsComment
+                    localCommentId = cached?.id?.toInt() ?: 0
+                    _uiState.value = rsComment.toUiState(cached)
+                }
+                isRefresh -> showSnackbar(R.string.error_load_comment)
+                else -> _onSnackbarMessage.value = Event(
                     SnackbarMessageHolder(
                         message = UiStringRes(R.string.error_load_comment),
                         onDismissAction = { _uiActionEvent.value = Event(Close) }

@@ -166,10 +166,14 @@ class UnifiedCommentListFragment : Fragment(R.layout.unified_comment_list_fragme
 
     private fun showCommentDetails(commentId: Long, commentStatus: CommentStatus) {
         currentSnackbar?.dismiss()
-        if (experimentalFeatures.isEnabled(Feature.RS_UNIFIED_COMMENTS)) {
+        val site = selectedSiteRepository.getSelectedSite()
+        // The rs detail can only authenticate WP.com-accessed or application-password sites, so
+        // fall back to the legacy detail elsewhere (same gating as the rs pages/posts screens).
+        val siteSupportsRs = site != null && (site.isUsingWpComRestApi || site.hasApplicationPassword())
+        if (siteSupportsRs && experimentalFeatures.isEnabled(Feature.RS_UNIFIED_COMMENTS)) {
             ActivityLauncher.viewUnifiedCommentsDetails(
                 context,
-                selectedSiteRepository.getSelectedSite(),
+                site,
                 commentId
             )
         } else {
