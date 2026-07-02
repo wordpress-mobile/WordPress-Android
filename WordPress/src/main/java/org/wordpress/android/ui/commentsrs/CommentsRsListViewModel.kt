@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -12,6 +13,8 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -56,6 +59,13 @@ class CommentsRsListViewModel @Inject constructor(
     private val _tabStates = MutableStateFlow<Map<CommentsRsListTab, CommentsTabUiState>>(emptyMap())
     val tabStates: StateFlow<Map<CommentsRsListTab, CommentsTabUiState>> = _tabStates.asStateFlow()
 
+    private val _isSearchActive = MutableStateFlow(false)
+    val isSearchActive: StateFlow<Boolean> = _isSearchActive.asStateFlow()
+
+    private val _searchQuery = MutableStateFlow("")
+    val searchQuery: StateFlow<String> = _searchQuery.asStateFlow()
+    private var activeSearchTab = CommentsRsListTab.ALL
+
     private val _events = Channel<CommentsRsListEvent>(Channel.BUFFERED)
     val events = _events.receiveAsFlow()
 
@@ -92,6 +102,17 @@ class CommentsRsListViewModel @Inject constructor(
         if (_site == null) {
             _events.trySend(CommentsRsListEvent.ShowToast(R.string.blog_not_found))
             _events.trySend(CommentsRsListEvent.Finish)
+        } else {
+            @OptIn(FlowPreview::class)
+            viewModelScope.launch {
+                _searchQuery
+                    .debounce(SEARCH_DEBOUNCE_MS)
+                    .filter { it.length >= MIN_SEARCH_QUERY_LENGTH }
+                    .collect {
+                        clearTabs()
+                        initTab(activeSearchTab)
+                    }
+            }
         }
     }
 
@@ -319,9 +340,44 @@ class CommentsRsListViewModel @Inject constructor(
         )
     }
 
+    /** Clears all tab states so the list appears empty while the user types a query. */
+    @MainThread
+    fun onSearchOpen() {
+        onClearSelection()
+        _isSearchActive.value = true
+        clearTabs()
+    }
+
+    /**
+     * Updates the search query. Non-blank queries are debounced before triggering an API call.
+     * Blank queries immediately clear results so the idle state appears without delay.
+     */
+    @MainThread
+    fun onSearchQueryChanged(query: String, activeTab: CommentsRsListTab) {
+        activeSearchTab = activeTab
+        _searchQuery.value = query
+        if (query.isBlank()) clearTabs()
+    }
+
+    /**
+     * Closes search mode: clears the query and immediately re-initializes [activeTab] so the
+     * normal tab content appears without debounce delay.
+     */
+    @MainThread
+    fun onSearchClose(activeTab: CommentsRsListTab) {
+        onClearSelection()
+        _isSearchActive.value = false
+        _searchQuery.value = ""
+        clearTabs()
+        initTab(activeTab)
+    }
+
     private fun fetchFirstPage(tab: CommentsRsListTab, showErrorSnackbar: Boolean = true) {
         firstPageJobs[tab] = viewModelScope.launch {
-            val params = commentsRsDataSource.firstPageParams(status = tab.queryStatus)
+            val params = commentsRsDataSource.firstPageParams(
+                status = tab.queryStatus,
+                search = _searchQuery.value.ifBlank { null }
+            )
             val result = withContext(bgDispatcher) { commentsRsDataSource.fetchCommentsPage(site, params) }
             when (result) {
                 is RsCommentsPageResult.Success -> applyPage(tab, result, append = false)
@@ -406,6 +462,18 @@ class CommentsRsListViewModel @Inject constructor(
         }
     }
 
+    private fun clearTabs() {
+        nextPageParams.clear()
+        pageGenerations.clear()
+        // Cancel in-flight fetches so a page requested before the clear can't repopulate the
+        // emptied tabs with pre-search (or pre-close) content.
+        firstPageJobs.values.forEach { it.cancel() }
+        firstPageJobs.clear()
+        resolveTitleJobs.values.forEach { it.cancel() }
+        resolveTitleJobs.clear()
+        _tabStates.value = emptyMap()
+    }
+
     /** The server message when it sent one, otherwise a friendly offline/generic message. */
     private fun errorMessage(serverMessage: String?): String =
         serverMessage?.takeIf { it.isNotBlank() }
@@ -435,5 +503,8 @@ class CommentsRsListViewModel @Inject constructor(
 
         // Same property key as the legacy list's tracking (UnifiedCommentsActivity).
         private const val SELECTED_FILTER_PROPERTY = "selected_filter"
+
+        private const val SEARCH_DEBOUNCE_MS = 250L
+        internal const val MIN_SEARCH_QUERY_LENGTH = 3
     }
 }

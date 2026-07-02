@@ -49,7 +49,9 @@ fun CommentsRsTabListScreen(
     onLoadMore: () -> Unit,
     onCommentClick: (Long) -> Unit,
     onCommentLongClick: (Long) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    isSearchIdle: Boolean = false,
+    isSearching: Boolean = false
 ) {
     val pullToRefreshState = rememberPullToRefreshState()
 
@@ -68,13 +70,18 @@ fun CommentsRsTabListScreen(
         }
     ) {
         when {
+            isSearchIdle -> Box(Modifier.fillMaxSize())
             state.isLoading -> ShimmerList()
             state.error != null && state.comments.isEmpty() -> ErrorContent(
                 error = state.error,
                 onRetry = onRefresh
             )
             state.comments.isEmpty() && !state.isRefreshing -> EmptyContent(
-                emptyMessageResId = emptyMessageResId
+                emptyMessageResId = if (isSearching) {
+                    R.string.comments_rs_search_nothing_found
+                } else {
+                    emptyMessageResId
+                }
             )
             else -> CommentListContent(
                 comments = state.comments,

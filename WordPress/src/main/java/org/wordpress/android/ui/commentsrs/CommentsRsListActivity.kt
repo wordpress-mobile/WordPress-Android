@@ -41,17 +41,24 @@ class CommentsRsListActivity : BaseAppCompatActivity() {
 
         setContent {
             val tabStates by viewModel.tabStates.collectAsState()
+            val isSearchActive by viewModel.isSearchActive.collectAsState()
+            val searchQuery by viewModel.searchQuery.collectAsState()
             val selectedIds by viewModel.selectedIds.collectAsState()
             val confirmation by viewModel.pendingConfirmation.collectAsState()
             AppThemeM3 {
                 CommentsRsListScreen(
                     tabStates = tabStates,
+                    isSearchActive = isSearchActive,
+                    searchQuery = searchQuery,
                     selectedIds = selectedIds,
                     confirmationDialog = ConfirmationDialogState(
                         pending = confirmation,
                         onDismiss = viewModel::onDismissPendingAction
                     ),
                     snackbarMessages = viewModel.snackbarMessages,
+                    onSearchOpen = viewModel::onSearchOpen,
+                    onSearchQueryChanged = viewModel::onSearchQueryChanged,
+                    onSearchClose = viewModel::onSearchClose,
                     onInitTab = viewModel::initTab,
                     onTabChanged = viewModel::onTabChanged,
                     onRefreshTab = { tab -> viewModel.refreshTab(tab, isUserRefresh = true) },

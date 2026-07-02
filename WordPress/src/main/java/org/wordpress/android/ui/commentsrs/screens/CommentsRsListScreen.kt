@@ -3,12 +3,16 @@ package org.wordpress.android.ui.commentsrs.screens
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -22,6 +26,8 @@ import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -29,28 +35,38 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.ui.commentsrs.CommentsRsBatchAction
 import org.wordpress.android.ui.commentsrs.CommentsRsListTab
+import org.wordpress.android.ui.commentsrs.CommentsRsListViewModel.Companion.MIN_SEARCH_QUERY_LENGTH
 import org.wordpress.android.ui.commentsrs.CommentsTabUiState
 import org.wordpress.android.ui.commentsrs.ConfirmationDialogState
 import org.wordpress.android.ui.commentsrs.PendingConfirmation
 import org.wordpress.android.ui.commentsrs.batchActions
 import org.wordpress.android.ui.postsrs.SnackbarMessage
 
-@Suppress("LongMethod")
+@Suppress("CyclomaticComplexMethod", "LongMethod")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CommentsRsListScreen(
     tabStates: Map<CommentsRsListTab, CommentsTabUiState>,
+    isSearchActive: Boolean,
+    searchQuery: String,
     selectedIds: Set<Long>,
     confirmationDialog: ConfirmationDialogState,
     snackbarMessages: Flow<SnackbarMessage>,
+    onSearchOpen: () -> Unit,
+    onSearchQueryChanged: (String, CommentsRsListTab) -> Unit,
+    onSearchClose: (CommentsRsListTab) -> Unit,
     onInitTab: (CommentsRsListTab) -> Unit,
     onTabChanged: (CommentsRsListTab) -> Unit,
     onRefreshTab: (CommentsRsListTab) -> Unit,
@@ -65,6 +81,7 @@ fun CommentsRsListScreen(
     val tabs = CommentsRsListTab.entries
     val pagerState = rememberPagerState(pageCount = { tabs.size })
     val coroutineScope = rememberCoroutineScope()
+    val focusRequester = remember { FocusRequester() }
     val activeTab = tabs[pagerState.settledPage]
     val snackbarHostState = remember { SnackbarHostState() }
     val isSelectionActive = selectedIds.isNotEmpty()
@@ -92,34 +109,35 @@ fun CommentsRsListScreen(
                     onBatchAction = { action -> onBatchAction(action, activeTab) }
                 )
             } else {
-                TopAppBar(
-                    title = { Text(text = stringResource(R.string.comments)) },
-                    navigationIcon = {
-                        IconButton(onClick = onNavigateBack) {
-                            Icon(
-                                Icons.AutoMirrored.Filled.ArrowBack,
-                                contentDescription = stringResource(R.string.back)
-                            )
-                        }
-                    }
+                SearchableTopBar(
+                    isSearchActive = isSearchActive,
+                    searchQuery = searchQuery,
+                    activeTab = activeTab,
+                    focusRequester = focusRequester,
+                    onSearchOpen = onSearchOpen,
+                    onSearchQueryChanged = onSearchQueryChanged,
+                    onSearchClose = onSearchClose,
+                    onNavigateBack = onNavigateBack
                 )
             }
         }
     ) { contentPadding ->
         Column(modifier = Modifier.fillMaxSize().padding(contentPadding)) {
-            PrimaryScrollableTabRow(
-                selectedTabIndex = pagerState.settledPage,
-                edgePadding = 0.dp
-            ) {
-                tabs.forEachIndexed { index, tab ->
-                    Tab(
-                        selected = pagerState.settledPage == index,
-                        onClick = {
-                            coroutineScope.launch { pagerState.animateScrollToPage(index) }
-                        },
-                        unselectedContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
-                        text = { Text(text = stringResource(tab.labelResId)) }
-                    )
+            if (!isSearchActive) {
+                PrimaryScrollableTabRow(
+                    selectedTabIndex = pagerState.settledPage,
+                    edgePadding = 0.dp
+                ) {
+                    tabs.forEachIndexed { index, tab ->
+                        Tab(
+                            selected = pagerState.settledPage == index,
+                            onClick = {
+                                coroutineScope.launch { pagerState.animateScrollToPage(index) }
+                            },
+                            unselectedContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                            text = { Text(text = stringResource(tab.labelResId)) }
+                        )
+                    }
                 }
             }
 
@@ -132,7 +150,8 @@ fun CommentsRsListScreen(
 
             HorizontalPager(
                 state = pagerState,
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(1f),
+                userScrollEnabled = !isSearchActive
             ) { page ->
                 val tab = tabs[page]
                 val tabState = tabStates[tab] ?: CommentsTabUiState(isLoading = true)
@@ -141,6 +160,8 @@ fun CommentsRsListScreen(
                     state = tabState,
                     emptyMessageResId = tab.emptyMessageResId,
                     selectedIds = selectedIds,
+                    isSearchIdle = isSearchActive && searchQuery.length < MIN_SEARCH_QUERY_LENGTH,
+                    isSearching = isSearchActive && searchQuery.length >= MIN_SEARCH_QUERY_LENGTH,
                     onRefresh = { onRefreshTab(tab) },
                     onLoadMore = { onLoadMore(tab) },
                     onCommentClick = onCommentClick,
@@ -174,6 +195,77 @@ fun CommentsRsListScreen(
             onDismiss = confirmationDialog.onDismiss
         )
         null -> {}
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun SearchableTopBar(
+    isSearchActive: Boolean,
+    searchQuery: String,
+    activeTab: CommentsRsListTab,
+    focusRequester: FocusRequester,
+    onSearchOpen: () -> Unit,
+    onSearchQueryChanged: (String, CommentsRsListTab) -> Unit,
+    onSearchClose: (CommentsRsListTab) -> Unit,
+    onNavigateBack: () -> Unit
+) {
+    val focusManager = LocalFocusManager.current
+    TopAppBar(
+        title = {
+            if (isSearchActive) {
+                TextField(
+                    value = searchQuery,
+                    onValueChange = { query -> onSearchQueryChanged(query, activeTab) },
+                    placeholder = { Text(stringResource(R.string.comments_rs_search_prompt)) },
+                    singleLine = true,
+                    keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Search),
+                    keyboardActions = KeyboardActions(onSearch = { focusManager.clearFocus() }),
+                    colors = TextFieldDefaults.colors(
+                        focusedContainerColor = Color.Transparent,
+                        unfocusedContainerColor = Color.Transparent,
+                        focusedIndicatorColor = Color.Transparent,
+                        unfocusedIndicatorColor = Color.Transparent
+                    ),
+                    modifier = Modifier.fillMaxWidth().focusRequester(focusRequester)
+                )
+            } else {
+                Text(text = stringResource(R.string.comments))
+            }
+        },
+        navigationIcon = {
+            IconButton(onClick = {
+                if (isSearchActive) onSearchClose(activeTab) else onNavigateBack()
+            }) {
+                Icon(
+                    Icons.AutoMirrored.Filled.ArrowBack,
+                    contentDescription = stringResource(R.string.back)
+                )
+            }
+        },
+        actions = {
+            if (isSearchActive) {
+                if (searchQuery.isNotEmpty()) {
+                    IconButton(onClick = { onSearchQueryChanged("", activeTab) }) {
+                        Icon(
+                            Icons.Default.Close,
+                            contentDescription = stringResource(R.string.clear)
+                        )
+                    }
+                }
+            } else {
+                IconButton(onClick = onSearchOpen) {
+                    Icon(
+                        Icons.Default.Search,
+                        contentDescription = stringResource(R.string.comments_rs_search_prompt)
+                    )
+                }
+            }
+        }
+    )
+
+    if (isSearchActive) {
+        LaunchedEffect(Unit) { focusRequester.requestFocus() }
     }
 }
 
