@@ -1,12 +1,112 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/coordinator"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/comments_empty_list"/>
+        android:orientation="vertical">
+
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/scroll_view"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingHorizontal="@dimen/margin_extra_large"
+                android:paddingVertical="@dimen/margin_extra_large">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:id="@+id/image_avatar"
+                        android:layout_width="@dimen/avatar_sz_medium"
+                        android:layout_height="@dimen/avatar_sz_medium"
+                        android:contentDescription="@null"
+                        tools:src="@drawable/bg_oval_neutral_30" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/margin_large"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/text_author_name"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textColor="?attr/colorOnSurface"
+                            android:textSize="@dimen/text_sz_extra_large"
+                            android:textStyle="bold"
+                            tools:text="Jane Doe" />
+
+                        <TextView
+                            android:id="@+id/text_date"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textColor="?attr/wpColorOnSurfaceMedium"
+                            android:textSize="@dimen/text_sz_small"
+                            tools:text="2 hours ago" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/text_status"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="?attr/wpColorOnSurfaceMedium"
+                        android:textSize="@dimen/text_sz_small"
+                        tools:text="Pending" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/text_post_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_extra_large"
+                    android:textColor="?attr/wpColorOnSurfaceMedium"
+                    android:textSize="@dimen/text_sz_medium"
+                    android:textStyle="italic"
+                    tools:text="On: My first post" />
+
+                <TextView
+                    android:id="@+id/text_comment_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_extra_large"
+                    android:textColor="?attr/colorOnSurface"
+                    android:textIsSelectable="true"
+                    android:textSize="@dimen/text_sz_large"
+                    tools:text="This is a great post, thanks for sharing!" />
+            </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
+
+        <include
+            android:id="@+id/layout_buttons"
+            layout="@layout/comment_action_footer" />
+
+        <include
+            android:id="@+id/layout_comment_box"
+            layout="@layout/reader_include_comment_box" />
+    </LinearLayout>
+
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone"
+        tools:visibility="visible" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

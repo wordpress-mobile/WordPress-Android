@@ -750,9 +750,8 @@ public class ActivityLauncher {
         AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_COMMENTS, site);
     }
 
-    public static void viewUnifiedCommentsDetails(Context context, SiteModel site) {
-        Intent intent = new Intent(context, UnifiedCommentsDetailsActivity.class);
-        intent.putExtra(WordPress.SITE, site);
+    public static void viewUnifiedCommentsDetails(Context context, SiteModel site, long remoteCommentId) {
+        Intent intent = UnifiedCommentsDetailsActivity.createIntent(context, site, remoteCommentId);
         context.startActivity(intent);
     }
 

@@ -126,7 +126,6 @@ android {
         buildConfigField "boolean", "MANAGE_CATEGORIES", "false"
         buildConfigField "boolean", "TAXONOMIES_REST_API_MIGRATION", "false"
         buildConfigField "boolean", "RECOMMEND_THE_APP", "false"
-        buildConfigField "boolean", "UNIFIED_COMMENTS_DETAILS", "false"
         buildConfigField "boolean", "COMMENTS_SNIPPET", "false"
         buildConfigField "boolean", "READER_COMMENTS_MODERATION", "false"
         buildConfigField "boolean", "SITE_NAME", "false"
