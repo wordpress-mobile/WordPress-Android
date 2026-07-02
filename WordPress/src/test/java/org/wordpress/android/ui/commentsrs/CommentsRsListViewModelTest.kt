@@ -4,7 +4,9 @@ import androidx.lifecycle.viewModelScope
 import app.cash.turbine.test
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.runCurrent
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.After
 import org.junit.Before
@@ -12,6 +14,7 @@ import org.junit.Test
 import org.mockito.Mock
 import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
+import org.mockito.kotlin.doSuspendableAnswer
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.never
 import org.mockito.kotlin.times
@@ -287,6 +290,28 @@ class CommentsRsListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
         viewModel.refreshTab(CommentsRsListTab.ALL, isUserRefresh = true)
         advanceUntilIdle()
         verify(commentsRsDataSource).clearUnresolvedPostTitles(site)
+    }
+
+    @Test
+    fun `a user refresh cancels an in-flight title resolve and fetches fresh titles`() = test {
+        givenPage(listOf(rsItem(id = 1, postId = 10)))
+        // The first resolve hangs mid-flight (holding pre-refresh results); the retry after
+        // the user refresh returns the fresh title.
+        whenever(commentsRsDataSource.fetchPostTitles(eq(site), any()))
+            .doSuspendableAnswer { delay(60_000); emptyMap() }
+            .thenReturn(mapOf(10L to "Fresh title"))
+        val viewModel = createViewModel()
+        viewModel.initTab(CommentsRsListTab.ALL)
+        runCurrent() // page applied; resolve job now suspended mid-flight
+
+        viewModel.refreshTab(CommentsRsListTab.ALL, isUserRefresh = true)
+        advanceUntilIdle()
+
+        // Without the cancel, the identical-ids guard defers to the hung pre-refresh job and
+        // the fresh title is never fetched.
+        val state = viewModel.tabStates.value.getValue(CommentsRsListTab.ALL)
+        assertThat(state.comments.first().postTitle).isEqualTo("Fresh title")
+        verify(commentsRsDataSource, times(2)).fetchPostTitles(eq(site), any())
     }
 
     @Test

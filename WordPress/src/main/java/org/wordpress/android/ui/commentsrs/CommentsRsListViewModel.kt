@@ -95,9 +95,15 @@ class CommentsRsListViewModel @Inject constructor(
     @MainThread
     fun refreshTab(tab: CommentsRsListTab, isUserRefresh: Boolean = false) {
         if (!_tabStates.value.containsKey(tab)) return
-        // An explicit refresh also retries post titles that previously resolved as
-        // unresolvable — e.g. a post that has been published since it was first seen.
-        if (isUserRefresh) commentsRsDataSource.clearUnresolvedPostTitles(site)
+        if (isUserRefresh) {
+            // An explicit refresh also retries post titles that previously resolved as
+            // unresolvable — e.g. a post that has been published since it was first seen.
+            commentsRsDataSource.clearUnresolvedPostTitles(site)
+            // A resolve job that started before the clear may apply pre-clear "not found"
+            // titles; cancel it so the post-refresh pass fetches fresh results instead of
+            // deferring to it via the identical-ids guard.
+            resolveTitleJobs[tab]?.first?.cancel()
+        }
         updateTabUiState(tab) { copy(isRefreshing = isUserRefresh, error = null) }
         fetchFirstPage(tab)
     }

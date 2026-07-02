@@ -42,6 +42,11 @@ class CommentsRsDataSource @Inject constructor(
     // whose title can't be resolved (custom post types, non-published posts).
     private val postTitleCache = ConcurrentHashMap<Pair<Int, Long>, String>()
 
+    // Bumped by [clearUnresolvedPostTitles]: a fetch already in flight when the user cleared
+    // would otherwise re-poison the cache with its pre-clear "not found" results.
+    @Volatile
+    private var unresolvedCacheGeneration = 0
+
     data class RsComment(
         val authorName: String,
         val authorAvatarUrl: String,
@@ -137,6 +142,7 @@ class CommentsRsDataSource @Inject constructor(
         if (uncached.isEmpty()) return result
 
         safe(errorValue = Unit) {
+            val generation = unresolvedCacheGeneration
             val postsSucceeded = fetchTitlesFromEndpoint(site, PostEndpointType.Posts, uncached, result)
             val remaining = uncached.filter { it !in result }
             val pagesSucceeded = if (remaining.isEmpty()) {
@@ -145,8 +151,9 @@ class CommentsRsDataSource @Inject constructor(
                 fetchTitlesFromEndpoint(site, PostEndpointType.Pages, remaining, result)
             }
             // Only when both endpoints succeeded are the leftover ids genuinely unresolvable
-            // (custom post types, non-published posts) rather than a transient failure.
-            if (postsSucceeded && pagesSucceeded) {
+            // (custom post types, non-published posts) rather than a transient failure — and
+            // only when no clear happened mid-flight, so pre-clear results can't re-poison it.
+            if (postsSucceeded && pagesSucceeded && generation == unresolvedCacheGeneration) {
                 for (id in uncached.filter { it !in result }) {
                     postTitleCache[site.id to id] = ""
                     result[id] = ""
@@ -161,6 +168,7 @@ class CommentsRsDataSource @Inject constructor(
      * user-initiated refresh — a post that wasn't published when first seen may be by now.
      */
     fun clearUnresolvedPostTitles(site: SiteModel) {
+        unresolvedCacheGeneration++
         postTitleCache.entries.removeIf { it.key.first == site.id && it.value.isEmpty() }
     }
 

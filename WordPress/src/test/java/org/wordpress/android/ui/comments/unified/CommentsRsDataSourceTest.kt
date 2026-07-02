@@ -6,28 +6,50 @@ import org.junit.Before
 import org.junit.Test
 import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
+import org.mockito.kotlin.doSuspendableAnswer
 import org.mockito.kotlin.mock
-import org.mockito.kotlin.times
-import org.mockito.kotlin.verify
+import org.mockito.kotlin.stub
 import org.mockito.kotlin.whenever
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpApiClientProvider
 import rs.wordpress.api.kotlin.WpApiClient
 import rs.wordpress.api.kotlin.WpRequestResult
+import uniffi.wp_api.PostEndpointType
+import uniffi.wp_api.PostListParams
+import uniffi.wp_api.PostsRequestExecutor
 import uniffi.wp_api.PostsRequestFilterListWithViewContextResponse
 import uniffi.wp_api.RequestMethod
 import uniffi.wp_api.SparseAnyPostWithViewContext
 import uniffi.wp_api.SparsePostTitleWithViewContext
+import uniffi.wp_api.UniffiWpApiClient
 import uniffi.wp_api.WpErrorCode
 
 /**
  * Tests for [CommentsRsDataSource.fetchPostTitles]: the per-site title cache, the posts→pages
  * endpoint fallback, negative caching of unresolvable ids, and request chunking.
+ *
+ * The [wpApiClient] stub executes each request's builder lambda against a mocked
+ * [UniffiWpApiClient], recording the endpoint and paging params actually sent — so the tests
+ * pin the requests made, not just how many there were.
  */
 class CommentsRsDataSourceTest {
-    private val wpApiClient: WpApiClient = mock()
+    private data class RecordedRequest(
+        val endpointType: PostEndpointType,
+        val includeCount: Int,
+        val perPage: UInt?
+    )
+
     private val wpApiClientProvider: WpApiClientProvider = mock()
+    private val wpApiClient: WpApiClient = mock()
+    private val uniffiClient: UniffiWpApiClient = mock()
+    private val postsExecutor: PostsRequestExecutor = mock()
     private lateinit var dataSource: CommentsRsDataSource
+
+    private val recordedRequests = mutableListOf<RecordedRequest>()
+    private val cannedResults = ArrayDeque<WpRequestResult<Any>>()
+
+    /** Invoked after each request completes; lets a test simulate concurrent work mid-fetch. */
+    private var afterRequest: (() -> Unit)? = null
 
     private val siteA = SiteModel().apply { id = 1 }
     private val siteB = SiteModel().apply { id = 2 }
@@ -36,6 +58,29 @@ class CommentsRsDataSourceTest {
     fun setUp() {
         dataSource = CommentsRsDataSource(wpApiClientProvider)
         whenever(wpApiClientProvider.getWpApiClient(any(), anyOrNull())).thenReturn(wpApiClient)
+        whenever(uniffiClient.posts()).thenReturn(postsExecutor)
+        postsExecutor.stub {
+            on { filterListWithViewContext(any(), any(), any()) } doSuspendableAnswer { invocation ->
+                val params = invocation.getArgument<PostListParams>(1)
+                recordedRequests += RecordedRequest(
+                    endpointType = invocation.getArgument(0),
+                    includeCount = params.include.size,
+                    perPage = params.perPage
+                )
+                // The payload is decided by the request-level stub below; this value is unused.
+                mock<PostsRequestFilterListWithViewContextResponse>()
+            }
+        }
+        wpApiClient.stub {
+            on { request<Any>(any()) } doSuspendableAnswer { invocation ->
+                // Run the builder lambda so the executor stub above records what was requested.
+                val executor = invocation.getArgument<suspend (UniffiWpApiClient) -> Any>(0)
+                executor(uniffiClient)
+                val result = cannedResults.removeFirst()
+                afterRequest?.invoke()
+                result
+            }
+        }
     }
 
     @Test
@@ -45,7 +90,7 @@ class CommentsRsDataSourceTest {
         assertThat(dataSource.fetchPostTitles(siteA, listOf(5))).isEqualTo(mapOf(5L to "Hello"))
         assertThat(dataSource.fetchPostTitles(siteA, listOf(5))).isEqualTo(mapOf(5L to "Hello"))
 
-        verify(wpApiClient, times(1)).request<Any>(any())
+        assertThat(recordedRequests).hasSize(1)
     }
 
     @Test
@@ -58,7 +103,7 @@ class CommentsRsDataSourceTest {
         assertThat(dataSource.fetchPostTitles(siteA, listOf(5))).isEqualTo(mapOf(5L to "Site A post"))
         assertThat(dataSource.fetchPostTitles(siteB, listOf(5))).isEqualTo(mapOf(5L to "Site B post"))
 
-        verify(wpApiClient, times(2)).request<Any>(any())
+        assertThat(recordedRequests).hasSize(2)
     }
 
     @Test
@@ -67,7 +112,8 @@ class CommentsRsDataSourceTest {
 
         assertThat(dataSource.fetchPostTitles(siteA, listOf(7))).isEqualTo(mapOf(7L to "About"))
 
-        verify(wpApiClient, times(2)).request<Any>(any())
+        assertThat(recordedRequests.map { it.endpointType })
+            .containsExactly(PostEndpointType.Posts, PostEndpointType.Pages)
     }
 
     @Test
@@ -77,8 +123,9 @@ class CommentsRsDataSourceTest {
         assertThat(dataSource.fetchPostTitles(siteA, listOf(9))).isEqualTo(mapOf(9L to ""))
         assertThat(dataSource.fetchPostTitles(siteA, listOf(9))).isEqualTo(mapOf(9L to ""))
 
-        // Two requests (posts + pages) for the first call, none for the second.
-        verify(wpApiClient, times(2)).request<Any>(any())
+        // Posts + pages for the first call, none for the second.
+        assertThat(recordedRequests.map { it.endpointType })
+            .containsExactly(PostEndpointType.Posts, PostEndpointType.Pages)
     }
 
     @Test
@@ -92,7 +139,8 @@ class CommentsRsDataSourceTest {
         assertThat(dataSource.fetchPostTitles(siteA, listOf(9))).isEmpty()
         assertThat(dataSource.fetchPostTitles(siteA, listOf(9))).isEqualTo(mapOf(9L to "Resolved later"))
 
-        verify(wpApiClient, times(3)).request<Any>(any())
+        assertThat(recordedRequests.map { it.endpointType })
+            .containsExactly(PostEndpointType.Posts, PostEndpointType.Pages, PostEndpointType.Posts)
     }
 
     @Test
@@ -107,7 +155,29 @@ class CommentsRsDataSourceTest {
         dataSource.clearUnresolvedPostTitles(siteA)
 
         assertThat(dataSource.fetchPostTitles(siteA, listOf(9))).isEqualTo(mapOf(9L to "Now published"))
-        verify(wpApiClient, times(3)).request<Any>(any())
+        assertThat(recordedRequests).hasSize(3)
+    }
+
+    @Test
+    fun `a clear during an in-flight fetch prevents negative caching`() = runTest {
+        stubRequests(
+            successResponse(), // posts: not found
+            successResponse(), // pages: not found — but a clear lands before the cache write
+            successResponse(), // retry: posts
+            successResponse() // retry: pages
+        )
+        afterRequest = {
+            // Simulates another surface clearing while this fetch is between its network
+            // responses and its negative-cache write.
+            if (recordedRequests.size == 2) dataSource.clearUnresolvedPostTitles(siteA)
+        }
+
+        assertThat(dataSource.fetchPostTitles(siteA, listOf(9))).isEmpty()
+
+        // Not negative-cached, so a later fetch goes back to the network.
+        afterRequest = null
+        assertThat(dataSource.fetchPostTitles(siteA, listOf(9))).isEqualTo(mapOf(9L to ""))
+        assertThat(recordedRequests).hasSize(4)
     }
 
     @Test
@@ -122,7 +192,13 @@ class CommentsRsDataSourceTest {
 
         assertThat(titles).hasSize(101)
         assertThat(titles[101L]).isEqualTo("Post 101")
-        verify(wpApiClient, times(2)).request<Any>(any())
+        // Two posts-endpoint requests with the batch split at 100, each with a matching
+        // explicit perPage — NOT one oversized request plus a pages fallback.
+        assertThat(recordedRequests.map { Triple(it.endpointType, it.includeCount, it.perPage) })
+            .containsExactly(
+                Triple(PostEndpointType.Posts, 100, 100u),
+                Triple(PostEndpointType.Posts, 1, 1u)
+            )
     }
 
     private fun sparsePost(id: Long, title: String): SparseAnyPostWithViewContext {
@@ -148,10 +224,9 @@ class CommentsRsDataSourceTest {
     )
 
     @Suppress("UNCHECKED_CAST")
-    private suspend fun stubRequests(vararg responses: WpRequestResult<*>) {
-        var stubbing = whenever(wpApiClient.request<Any>(any()))
-        for (response in responses) {
-            stubbing = stubbing.thenReturn(response as WpRequestResult<Any>)
-        }
+    private fun stubRequests(vararg responses: WpRequestResult<*>) {
+        recordedRequests.clear()
+        cannedResults.clear()
+        responses.forEach { cannedResults.add(it as WpRequestResult<Any>) }
     }
 }
