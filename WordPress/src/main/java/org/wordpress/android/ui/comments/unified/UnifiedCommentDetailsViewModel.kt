@@ -165,10 +165,9 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
 
     fun onPostTitleClicked() {
         val comment = loadedComment ?: return
-        if (comment.postId <= 0) return
         // The Reader resolves posts by WP.com blog id, which is 0 for self-hosted
         // application-password sites — opening it there would just show an error.
-        if (site.siteId == 0L) return
+        if (comment.postId <= 0 || site.siteId == 0L) return
         _uiActionEvent.value = Event(OpenPostInReader(site.siteId, comment.postId))
     }
 
