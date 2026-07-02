@@ -1,2 +1,7 @@
-26.8:
-Yaz döneminde hatalarda artış olabilir. Endişelenmeyin, bu hataları ortadan kaldırmak için yoğun şekilde çalışıyoruz. Bu sürüm tamamen yeni blok düzenleyiciyi içerir, bunu Site Ayarları'ndan herhangi bir sitede deneyin.
+26.9:
+- Güncellenmiş özellikler içeren yeni sayfa listesi etkinleştirildi
+- Uygulama şifresi olan siteler için yeni gönderi listesi varsayılana ayarlandı
+WordPress.com oturum açma işlemi hızlandırıldı
+- Destek bölümünde robot/Mutluluk Mühendisi sohbetleri birleştirildi
+- Düzenleyiciden ayrılırken ortam açılırken oluşan çökme sorunu düzeltildi
+- Sitem'deki Menülerden beta rozeti kaldırıldı

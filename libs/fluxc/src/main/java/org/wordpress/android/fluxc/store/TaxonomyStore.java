@@ -16,6 +16,7 @@ import org.wordpress.android.fluxc.model.TaxonomyModel;
 import org.wordpress.android.fluxc.model.TermModel;
 import org.wordpress.android.fluxc.model.TermsModel;
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
+import org.wordpress.android.fluxc.network.rest.wpapi.taxonomy.TaxonomiesRestApiMigrationConfig;
 import org.wordpress.android.fluxc.network.rest.wpapi.taxonomy.TaxonomyRsApiRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.taxonomy.TaxonomyRestClient;
 import org.wordpress.android.fluxc.network.xmlrpc.taxonomy.TaxonomyXMLRPCClient;
@@ -155,14 +156,26 @@ public class TaxonomyStore extends Store {
     private final TaxonomyRestClient mTaxonomyRestClient;
     private final TaxonomyXMLRPCClient mTaxonomyXMLRPCClient;
     private final TaxonomyRsApiRestClient mTaxonomyRsApiRestClient;
+    private final TaxonomiesRestApiMigrationConfig mTaxonomiesRestApiMigrationConfig;
 
     @Inject public TaxonomyStore(Dispatcher dispatcher, TaxonomyRestClient taxonomyRestClient,
                                  TaxonomyXMLRPCClient taxonomyXMLRPCClient,
-                                 TaxonomyRsApiRestClient taxonomyRsApiRestClient) {
+                                 TaxonomyRsApiRestClient taxonomyRsApiRestClient,
+                                 TaxonomiesRestApiMigrationConfig taxonomiesRestApiMigrationConfig) {
         super(dispatcher);
         mTaxonomyRestClient = taxonomyRestClient;
         mTaxonomyXMLRPCClient = taxonomyXMLRPCClient;
         mTaxonomyRsApiRestClient = taxonomyRsApiRestClient;
+        mTaxonomiesRestApiMigrationConfig = taxonomiesRestApiMigrationConfig;
+    }
+
+    /**
+     * The self-hosted taxonomy wp-rs REST path is used only when the site exposes the REST API
+     * (Application Password) AND the taxonomies REST API migration feature flag is enabled.
+     * When the flag is off, self-hosted sites fall back to the legacy XML-RPC client.
+     */
+    private boolean shouldUseTaxonomyRsApiRestClient(@NonNull SiteModel site) {
+        return site.isUsingSelfHostedRestApi() && mTaxonomiesRestApiMigrationConfig.isEnabled();
     }
 
     @Override
@@ -328,7 +341,7 @@ public class TaxonomyStore extends Store {
     }
 
     private void fetchTerms(@NonNull SiteModel site, @NonNull String taxonomyName) {
-        if (site.isUsingSelfHostedRestApi()) {
+        if (shouldUseTaxonomyRsApiRestClient(site)) {
             mTaxonomyRsApiRestClient.fetchTerms(site, taxonomyName);
         } else if (site.isUsingWpComRestApi()) {
             mTaxonomyRestClient.fetchTerms(site, taxonomyName);
@@ -408,7 +421,7 @@ public class TaxonomyStore extends Store {
             onTermUploaded.error = payload.error;
             emitChange(onTermUploaded);
         } else {
-            if (payload.site.isUsingWpComRestApi() || payload.site.isUsingSelfHostedRestApi()) {
+            if (payload.site.isUsingWpComRestApi() || shouldUseTaxonomyRsApiRestClient(payload.site)) {
                 // The WP.COM and REST API response contains the modified term, so we're already in sync with the server
                 // All we need to do is store it and emit OnTaxonomyChanged
                 updateTerm(payload.term);
@@ -423,7 +436,7 @@ public class TaxonomyStore extends Store {
     }
 
     private void pushTerm(@NonNull RemoteTermPayload payload) {
-        if (payload.site.isUsingSelfHostedRestApi()) {
+        if (shouldUseTaxonomyRsApiRestClient(payload.site)) {
             // FluxC pushTerm to update terms, so we need to make the distinction here
             if (payload.term.getRemoteTermId() > 0) {
                 mTaxonomyRsApiRestClient.updateTerm(payload.site, payload.term);
@@ -438,7 +451,9 @@ public class TaxonomyStore extends Store {
     }
 
     private void deleteTerm(@NonNull RemoteTermPayload payload) {
-        if (payload.site.isUsingWpComRestApi()) {
+        if (shouldUseTaxonomyRsApiRestClient(payload.site)) {
+            mTaxonomyRsApiRestClient.deleteTerm(payload.site, payload.term);
+        } else if (payload.site.isUsingWpComRestApi()) {
             mTaxonomyRestClient.deleteTerm(payload.term, payload.site);
         } else {
             mTaxonomyXMLRPCClient.deleteTerm(payload.term, payload.site);
