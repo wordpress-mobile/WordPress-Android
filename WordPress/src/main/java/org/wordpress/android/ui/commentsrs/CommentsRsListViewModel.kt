@@ -62,7 +62,10 @@ class CommentsRsListViewModel @Inject constructor(
     // bump paged from a cursor that predates the new page 1, so it's stale and gets discarded.
     private val pageGenerations = mutableMapOf<CommentsRsListTab, Int>()
     private val initializingTabs = mutableSetOf<CommentsRsListTab>()
-    private val resolveTitleJobs = mutableMapOf<CommentsRsListTab, Job>()
+
+    // The in-flight title-resolve job per tab, with the ids it's resolving so an identical
+    // request isn't cancelled and re-fired when an applied page adds nothing new.
+    private val resolveTitleJobs = mutableMapOf<CommentsRsListTab, Pair<Job, List<Long>>>()
 
     private val _site: SiteModel? = selectedSiteRepository.getSelectedSite()
     private val site: SiteModel
@@ -92,6 +95,9 @@ class CommentsRsListViewModel @Inject constructor(
     @MainThread
     fun refreshTab(tab: CommentsRsListTab, isUserRefresh: Boolean = false) {
         if (!_tabStates.value.containsKey(tab)) return
+        // An explicit refresh also retries post titles that previously resolved as
+        // unresolvable — e.g. a post that has been published since it was first seen.
+        if (isUserRefresh) commentsRsDataSource.clearUnresolvedPostTitles(site)
         updateTabUiState(tab) { copy(isRefreshing = isUserRefresh, error = null) }
         fetchFirstPage(tab)
     }
@@ -105,6 +111,10 @@ class CommentsRsListViewModel @Inject constructor(
     /** Loads the next page for [tab] if there is one and nothing else is in flight. */
     @MainThread
     fun loadMore(tab: CommentsRsListTab) {
+        loadMoreInternal(tab, autoAdvanceDepth = 0)
+    }
+
+    private fun loadMoreInternal(tab: CommentsRsListTab, autoAdvanceDepth: Int) {
         val current = getTabUiState(tab)
         val params = nextPageParams[tab]
         val isBusy = current.isLoading || current.isRefreshing || current.isLoadingMore
@@ -124,14 +134,16 @@ class CommentsRsListViewModel @Inject constructor(
                 is RsCommentsPageResult.Success -> {
                     val sizeBefore = getTabUiState(tab).comments.size
                     applyPage(tab, result, append = true)
-                    // When the whole page deduped away (the list shifted server-side), the
-                    // scroll position hasn't changed so the load-more trigger won't re-fire;
-                    // advance to the next page directly.
-                    if (result.comments.isNotEmpty() &&
-                        getTabUiState(tab).comments.size == sizeBefore &&
-                        nextPageParams[tab] != null
+                    // When a page adds no rows (it deduped away after a server-side shift, or
+                    // came back empty mid-shrink), the scroll position hasn't changed so the
+                    // load-more trigger won't re-fire; advance to the next page directly. The
+                    // depth cap keeps a pathological cursor chain (e.g. a proxy ignoring the
+                    // page param) from firing unbounded unattended requests.
+                    if (getTabUiState(tab).comments.size == sizeBefore &&
+                        nextPageParams[tab] != null &&
+                        autoAdvanceDepth < MAX_AUTO_ADVANCE_PAGES
                     ) {
-                        loadMore(tab)
+                        loadMoreInternal(tab, autoAdvanceDepth + 1)
                     }
                 }
                 is RsCommentsPageResult.Error -> {
@@ -230,14 +242,20 @@ class CommentsRsListViewModel @Inject constructor(
             .distinct()
         if (unresolvedIds.isEmpty()) return
 
-        resolveTitleJobs[tab]?.cancel()
-        resolveTitleJobs[tab] = viewModelScope.launch {
+        // An applied page that added no rows (deduped away) leaves the same ids unresolved;
+        // let the in-flight request finish rather than cancelling and re-firing it.
+        val inFlight = resolveTitleJobs[tab]
+        if (inFlight != null && inFlight.first.isActive && inFlight.second == unresolvedIds) return
+
+        inFlight?.first?.cancel()
+        val job = viewModelScope.launch {
             val titles = withContext(bgDispatcher) { commentsRsDataSource.fetchPostTitles(site, unresolvedIds) }
             if (titles.isEmpty()) return@launch
             updateTabUiState(tab) {
                 copy(comments = comments.map { it.copy(postTitle = titles[it.postId] ?: it.postTitle) })
             }
         }
+        resolveTitleJobs[tab] = job to unresolvedIds
     }
 
     /** The server message when it sent one, otherwise a friendly offline/generic message. */
@@ -260,5 +278,11 @@ class CommentsRsListViewModel @Inject constructor(
 
     private fun updateTabUiState(tab: CommentsRsListTab, update: CommentsTabUiState.() -> CommentsTabUiState) {
         _tabStates.value += (tab to getTabUiState(tab).update())
+    }
+
+    companion object {
+        // How many extra pages a single load-more may fetch unattended when applied pages
+        // add no rows, before waiting for the next user scroll.
+        private const val MAX_AUTO_ADVANCE_PAGES = 3
     }
 }

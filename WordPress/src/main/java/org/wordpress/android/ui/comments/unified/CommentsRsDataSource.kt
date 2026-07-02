@@ -137,54 +137,69 @@ class CommentsRsDataSource @Inject constructor(
         if (uncached.isEmpty()) return result
 
         safe(errorValue = Unit) {
-            val unresolved = fetchTitlesFromEndpoint(site, PostEndpointType.Posts, uncached, result)
-                ?: return@safe
-            val stillUnresolved = if (unresolved.isEmpty()) {
-                unresolved
+            val postsSucceeded = fetchTitlesFromEndpoint(site, PostEndpointType.Posts, uncached, result)
+            val remaining = uncached.filter { it !in result }
+            val pagesSucceeded = if (remaining.isEmpty()) {
+                true
             } else {
-                fetchTitlesFromEndpoint(site, PostEndpointType.Pages, unresolved, result) ?: return@safe
+                fetchTitlesFromEndpoint(site, PostEndpointType.Pages, remaining, result)
             }
-            // Only reached when both endpoints succeeded, so these ids genuinely have no
-            // resolvable title (as opposed to a transient request failure).
-            for (id in stillUnresolved) {
-                postTitleCache[site.id to id] = ""
-                result[id] = ""
+            // Only when both endpoints succeeded are the leftover ids genuinely unresolvable
+            // (custom post types, non-published posts) rather than a transient failure.
+            if (postsSucceeded && pagesSucceeded) {
+                for (id in uncached.filter { it !in result }) {
+                    postTitleCache[site.id to id] = ""
+                    result[id] = ""
+                }
             }
         }
         return result
     }
 
     /**
-     * Fetches titles for [ids] from [endpointType] into [into] (and the cache), returning the ids
-     * the endpoint didn't include, or null when the request failed. [PostListParams.perPage] is
-     * set explicitly: the server default of 10 would silently truncate larger batches.
+     * Forgets negative-cached (unresolvable) titles for [site] so they're retried, e.g. on a
+     * user-initiated refresh — a post that wasn't published when first seen may be by now.
+     */
+    fun clearUnresolvedPostTitles(site: SiteModel) {
+        postTitleCache.entries.removeIf { it.key.first == site.id && it.value.isEmpty() }
+    }
+
+    /**
+     * Fetches titles for [ids] from [endpointType] into [into] (and the cache), returning whether
+     * every request succeeded. [PostListParams.perPage] is set explicitly (the server default of
+     * 10 would silently truncate larger batches) and ids are chunked to the server's per_page
+     * maximum of 100 (a larger value is rejected outright with `rest_invalid_param`).
      */
     private suspend fun fetchTitlesFromEndpoint(
         site: SiteModel,
         endpointType: PostEndpointType,
         ids: List<Long>,
         into: MutableMap<Long, String>
-    ): List<Long>? {
+    ): Boolean {
         val client = wpApiClientProvider.getWpApiClient(site)
-        val response = client.request {
-            it.posts().filterListWithViewContext(
-                endpointType,
-                PostListParams(include = ids, perPage = ids.size.toUInt()),
-                listOf(SparseAnyPostFieldWithViewContext.ID, SparseAnyPostFieldWithViewContext.TITLE)
-            )
+        var allSucceeded = true
+        for (chunk in ids.chunked(MAX_TITLES_PER_REQUEST)) {
+            val response = client.request {
+                it.posts().filterListWithViewContext(
+                    endpointType,
+                    PostListParams(include = chunk, perPage = chunk.size.toUInt()),
+                    listOf(SparseAnyPostFieldWithViewContext.ID, SparseAnyPostFieldWithViewContext.TITLE)
+                )
+            }
+            if (response is WpRequestResult.Success) {
+                for (post in response.response.data) {
+                    val id = post.id ?: continue
+                    val title = post.title?.rendered.orEmpty()
+                    postTitleCache[site.id to id] = title
+                    into[id] = title
+                }
+            } else {
+                val message = (response as? WpRequestResult.WpError<*>)?.errorMessage
+                AppLog.w(AppLog.T.COMMENTS, "fetchPostTitles ($endpointType) failed: $message")
+                allSucceeded = false
+            }
         }
-        if (response !is WpRequestResult.Success) {
-            val message = (response as? WpRequestResult.WpError<*>)?.errorMessage
-            AppLog.w(AppLog.T.COMMENTS, "fetchPostTitles ($endpointType) failed: $message")
-            return null
-        }
-        for (post in response.response.data) {
-            val id = post.id ?: continue
-            val title = post.title?.rendered.orEmpty()
-            postTitleCache[site.id to id] = title
-            into[id] = title
-        }
-        return ids.filter { it !in into }
+        return allSucceeded
     }
 
     suspend fun updateStatus(site: SiteModel, commentId: Long, status: CommentStatus): RsResult =
@@ -236,6 +251,7 @@ class CommentsRsDataSource @Inject constructor(
 
     companion object {
         internal const val COMMENTS_PAGE_SIZE = 30u
+        private const val MAX_TITLES_PER_REQUEST = 100
     }
 }
 

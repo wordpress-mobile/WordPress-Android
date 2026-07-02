@@ -13,6 +13,7 @@ import org.mockito.Mock
 import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.eq
+import org.mockito.kotlin.never
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
@@ -230,6 +231,62 @@ class CommentsRsListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
         val state = viewModel.tabStates.value.getValue(CommentsRsListTab.ALL)
         assertThat(state.comments.map { it.remoteCommentId }).containsExactly(1L, 2L, 3L)
         assertThat(state.canLoadMore).isFalse()
+    }
+
+    @Test
+    fun `an empty page with a remaining cursor auto-advances to the next page`() = test {
+        givenPage(listOf(rsItem(id = 1), rsItem(id = 2)), nextPageParams = NEXT_PAGE)
+        val viewModel = createViewModel()
+        viewModel.initTab(CommentsRsListTab.ALL)
+        advanceUntilIdle()
+        // A middle page can come back empty (comments deleted server-side) while the
+        // headers still advertise more pages.
+        whenever(commentsRsDataSource.fetchCommentsPage(eq(site), any())).thenReturn(
+            RsCommentsPageResult.Success(emptyList(), THIRD_PAGE),
+            RsCommentsPageResult.Success(listOf(rsItem(id = 3)), null)
+        )
+
+        viewModel.loadMore(CommentsRsListTab.ALL)
+        advanceUntilIdle()
+
+        val state = viewModel.tabStates.value.getValue(CommentsRsListTab.ALL)
+        assertThat(state.comments.map { it.remoteCommentId }).containsExactly(1L, 2L, 3L)
+        assertThat(state.canLoadMore).isFalse()
+    }
+
+    @Test
+    fun `auto-advance is capped when pages keep adding nothing`() = test {
+        givenPage(listOf(rsItem(id = 1)), nextPageParams = NEXT_PAGE)
+        val viewModel = createViewModel()
+        viewModel.initTab(CommentsRsListTab.ALL)
+        advanceUntilIdle()
+        // Pathological cursor chain: every page dedupes away with a cursor still present.
+        whenever(commentsRsDataSource.fetchCommentsPage(eq(site), any()))
+            .thenReturn(RsCommentsPageResult.Success(listOf(rsItem(id = 1)), NEXT_PAGE))
+
+        viewModel.loadMore(CommentsRsListTab.ALL)
+        advanceUntilIdle()
+
+        // 1 init + 1 user loadMore + at most 3 auto-advances, then the chain stops.
+        verify(commentsRsDataSource, times(5)).fetchCommentsPage(eq(site), any())
+        val state = viewModel.tabStates.value.getValue(CommentsRsListTab.ALL)
+        assertThat(state.isLoadingMore).isFalse()
+    }
+
+    @Test
+    fun `a user refresh retries unresolvable post titles, a silent refresh does not`() = test {
+        givenPage(listOf(rsItem(id = 1)))
+        val viewModel = createViewModel()
+        viewModel.initTab(CommentsRsListTab.ALL)
+        advanceUntilIdle()
+
+        viewModel.refreshTab(CommentsRsListTab.ALL) // silent
+        advanceUntilIdle()
+        verify(commentsRsDataSource, never()).clearUnresolvedPostTitles(any())
+
+        viewModel.refreshTab(CommentsRsListTab.ALL, isUserRefresh = true)
+        advanceUntilIdle()
+        verify(commentsRsDataSource).clearUnresolvedPostTitles(site)
     }
 
     @Test
