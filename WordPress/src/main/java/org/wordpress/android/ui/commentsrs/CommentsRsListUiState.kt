@@ -2,12 +2,6 @@ package org.wordpress.android.ui.commentsrs
 
 import org.wordpress.android.fluxc.model.CommentStatus
 
-data class CommentsRsSnackbarMessage(
-    val message: String,
-    val actionLabel: String? = null,
-    val onAction: (() -> Unit)? = null
-)
-
 /** One comment row. */
 data class CommentRsUiModel(
     val remoteCommentId: Long,
@@ -29,6 +23,5 @@ data class CommentsTabUiState(
     val isRefreshing: Boolean = false,
     val isLoadingMore: Boolean = false,
     val canLoadMore: Boolean = false,
-    val error: String? = null,
-    val isAuthError: Boolean = false
+    val error: String? = null
 )

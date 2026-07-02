@@ -21,6 +21,7 @@ import org.wordpress.android.ui.comments.unified.CommentsRsDataSource.RsCommentL
 import org.wordpress.android.ui.comments.unified.CommentsRsDataSource.RsCommentsPageResult
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.postsrs.PostRsErrorUtils
+import org.wordpress.android.ui.postsrs.SnackbarMessage
 import org.wordpress.android.util.DateTimeUtilsWrapper
 import org.wordpress.android.util.HtmlUtils
 import org.wordpress.android.util.NetworkUtilsWrapper
@@ -51,7 +52,7 @@ class CommentsRsListViewModel @Inject constructor(
     private val _events = Channel<CommentsRsListEvent>(Channel.BUFFERED)
     val events = _events.receiveAsFlow()
 
-    private val _snackbarMessages = Channel<CommentsRsSnackbarMessage>(Channel.BUFFERED)
+    private val _snackbarMessages = Channel<SnackbarMessage>(Channel.BUFFERED)
     val snackbarMessages = _snackbarMessages.receiveAsFlow()
 
     // Pagination cursors: the next-page params returned with each fetched page, per tab.
@@ -109,23 +110,10 @@ class CommentsRsListViewModel @Inject constructor(
         viewModelScope.launch {
             val result = withContext(bgDispatcher) { commentsRsDataSource.fetchCommentsPage(site, params) }
             when (result) {
-                is RsCommentsPageResult.Success -> {
-                    nextPageParams[tab] = result.nextPageParams
-                    updateTabUiState(tab) {
-                        copy(
-                            // A comment can shift pages if the list changed server-side between
-                            // requests, so dedupe on append.
-                            comments = (comments + result.comments.map { it.toUiModel() })
-                                .distinctBy { it.remoteCommentId },
-                            isLoadingMore = false,
-                            canLoadMore = result.nextPageParams != null
-                        )
-                    }
-                    resolvePostTitles(tab)
-                }
+                is RsCommentsPageResult.Success -> applyPage(tab, result, append = true)
                 is RsCommentsPageResult.Error -> {
                     updateTabUiState(tab) { copy(isLoadingMore = false) }
-                    _snackbarMessages.trySend(CommentsRsSnackbarMessage(errorMessage(result.message)))
+                    _snackbarMessages.trySend(SnackbarMessage(errorMessage(result.message)))
                 }
             }
         }
@@ -142,24 +130,41 @@ class CommentsRsListViewModel @Inject constructor(
             val params = commentsRsDataSource.firstPageParams(status = tab.queryStatus)
             val result = withContext(bgDispatcher) { commentsRsDataSource.fetchCommentsPage(site, params) }
             when (result) {
-                is RsCommentsPageResult.Success -> {
-                    nextPageParams[tab] = result.nextPageParams
-                    updateTabUiState(tab) {
-                        copy(
-                            comments = result.comments.map { it.toUiModel() },
-                            isLoading = false,
-                            isRefreshing = false,
-                            canLoadMore = result.nextPageParams != null,
-                            error = null,
-                            isAuthError = false
-                        )
-                    }
-                    resolvePostTitles(tab)
-                }
+                is RsCommentsPageResult.Success -> applyPage(tab, result, append = false)
                 is RsCommentsPageResult.Error -> onFirstPageError(tab, result.message)
             }
             onComplete()
         }
+    }
+
+    /**
+     * A fetched page: stores the next-page cursor, applies the rows to the tab state, and kicks
+     * off post-title resolution. [append] is true when the page extends the list (load more)
+     * rather than replacing it (first page / refresh).
+     */
+    private fun applyPage(tab: CommentsRsListTab, result: RsCommentsPageResult.Success, append: Boolean) {
+        nextPageParams[tab] = result.nextPageParams
+        val newRows = result.comments.map { it.toUiModel() }
+        updateTabUiState(tab) {
+            if (append) {
+                copy(
+                    // A comment can shift pages if the list changed server-side between
+                    // requests, so dedupe on append.
+                    comments = (comments + newRows).distinctBy { it.remoteCommentId },
+                    isLoadingMore = false,
+                    canLoadMore = result.nextPageParams != null
+                )
+            } else {
+                copy(
+                    comments = newRows,
+                    isLoading = false,
+                    isRefreshing = false,
+                    canLoadMore = result.nextPageParams != null,
+                    error = null
+                )
+            }
+        }
+        resolvePostTitles(tab)
     }
 
     /**
@@ -171,7 +176,7 @@ class CommentsRsListViewModel @Inject constructor(
         if (getTabUiState(tab).comments.isNotEmpty()) {
             updateTabUiState(tab) { copy(isLoading = false, isRefreshing = false, error = null) }
             _snackbarMessages.trySend(
-                CommentsRsSnackbarMessage(
+                SnackbarMessage(
                     message = friendly,
                     actionLabel = resourceProvider.getString(R.string.retry),
                     onAction = { refreshTab(tab) }

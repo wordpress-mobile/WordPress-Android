@@ -71,9 +71,7 @@ class CommentsRsDataSource @Inject constructor(
         data class Success(
             val comments: List<RsCommentListItem>,
             /** Ready-made params for the next page; null when this was the last page. */
-            val nextPageParams: CommentListParams?,
-            /** Total matching comments from the X-WP-Total header, when the server provides it. */
-            val total: Int?
+            val nextPageParams: CommentListParams?
         ) : RsCommentsPageResult
 
         data class Error(val message: String?) : RsCommentsPageResult
@@ -101,8 +99,7 @@ class CommentsRsDataSource @Inject constructor(
             when (val result = client.request { it.comments().listWithViewContext(params) }) {
                 is WpRequestResult.Success -> RsCommentsPageResult.Success(
                     comments = result.response.data.map { it.toRsCommentListItem() },
-                    nextPageParams = result.response.nextPageParams,
-                    total = result.response.headerMap.wpTotal()?.toInt()
+                    nextPageParams = result.response.nextPageParams
                 )
                 is WpRequestResult.WpError -> RsCommentsPageResult.Error(result.errorMessage)
                 else -> RsCommentsPageResult.Error(null)

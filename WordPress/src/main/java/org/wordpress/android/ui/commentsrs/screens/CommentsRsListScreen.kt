@@ -32,14 +32,14 @@ import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.ui.commentsrs.CommentsRsListTab
-import org.wordpress.android.ui.commentsrs.CommentsRsSnackbarMessage
 import org.wordpress.android.ui.commentsrs.CommentsTabUiState
+import org.wordpress.android.ui.postsrs.SnackbarMessage
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CommentsRsListScreen(
     tabStates: Map<CommentsRsListTab, CommentsTabUiState>,
-    snackbarMessages: Flow<CommentsRsSnackbarMessage> = emptyFlow(),
+    snackbarMessages: Flow<SnackbarMessage> = emptyFlow(),
     onInitTab: (CommentsRsListTab) -> Unit,
     onRefreshTab: (CommentsRsListTab) -> Unit,
     onLoadMore: (CommentsRsListTab) -> Unit,

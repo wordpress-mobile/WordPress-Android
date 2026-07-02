@@ -78,7 +78,7 @@ class CommentsRsListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
         nextPageParams: CommentListParams? = null
     ) {
         whenever(commentsRsDataSource.fetchCommentsPage(eq(site), any()))
-            .thenReturn(RsCommentsPageResult.Success(comments, nextPageParams, comments.size))
+            .thenReturn(RsCommentsPageResult.Success(comments, nextPageParams))
     }
 
     @Test

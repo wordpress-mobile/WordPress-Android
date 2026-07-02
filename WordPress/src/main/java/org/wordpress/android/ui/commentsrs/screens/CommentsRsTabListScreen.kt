@@ -69,7 +69,7 @@ fun CommentsRsTabListScreen(
             state.isLoading -> ShimmerList()
             state.error != null && state.comments.isEmpty() -> ErrorContent(
                 error = state.error,
-                onRetry = if (state.isAuthError) null else onRefresh
+                onRetry = onRefresh
             )
             state.comments.isEmpty() && !state.isRefreshing -> EmptyContent(
                 emptyMessageResId = emptyMessageResId
@@ -173,7 +173,7 @@ private fun PlaceholderItem() {
 }
 
 @Composable
-private fun ErrorContent(error: String, onRetry: (() -> Unit)?) {
+private fun ErrorContent(error: String, onRetry: () -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -193,11 +193,9 @@ private fun ErrorContent(error: String, onRetry: (() -> Unit)?) {
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             textAlign = TextAlign.Center
         )
-        if (onRetry != null) {
-            Spacer(modifier = Modifier.height(16.dp))
-            Button(onClick = onRetry) {
-                Text(text = stringResource(R.string.retry))
-            }
+        Spacer(modifier = Modifier.height(16.dp))
+        Button(onClick = onRetry) {
+            Text(text = stringResource(R.string.retry))
         }
     }
 }
