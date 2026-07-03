@@ -204,9 +204,11 @@ private fun LoadedContent(
                 val percentage = if (state.maxViewsForBar > 0) {
                     item.views.toFloat() / state.maxViewsForBar.toFloat()
                 } else 0f
-                // Key on the item id so the row's saved expanded state stays with its referrer
-                // (and resets to collapsed) when the list reloads after a period change.
-                key(item.id) {
+                // Key on the index plus the item id: the index guarantees uniqueness (referrer ids
+                // are derived from name.hashCode() and can collide on empty/duplicate names), while
+                // the id resets the row's saved expanded state when a different referrer lands at
+                // this position after a period reload. rememberSaveable keeps it across rotation.
+                key(index, item.id) {
                     MostViewedItemRow(item = item, percentage = percentage, onChildClick = onChildClick)
                 }
                 if (index < state.items.lastIndex) {
