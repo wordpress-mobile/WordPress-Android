@@ -33,7 +33,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -189,7 +189,7 @@ private fun MostViewedDetailScreen(
                 Spacer(modifier = Modifier.height(8.dp))
             }
 
-            itemsIndexed(items) { index, item ->
+            itemsIndexed(items, key = { _, item -> item.id }) { index, item ->
                 DetailItemRow(
                     position = index + 1,
                     item = item,
@@ -244,7 +244,7 @@ private fun DetailItemRow(
         alpha = HIGHLIGHTED_ITEM_BACKGROUND_ALPHA
     )
     val hasChildren = item.children.isNotEmpty()
-    var expanded by remember { mutableStateOf(false) }
+    var expanded by rememberSaveable { mutableStateOf(false) }
 
     Column {
         Box(
