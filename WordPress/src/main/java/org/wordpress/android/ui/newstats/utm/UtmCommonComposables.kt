@@ -120,7 +120,8 @@ fun UtmExpandableRow(
         AnimatedVisibility(visible = expanded) {
             Column(
                 modifier = Modifier.padding(
-                    start = 24.dp
+                    start = 24.dp,
+                    top = 4.dp
                 )
             ) {
                 item.topPosts.forEach { post ->
