@@ -28,7 +28,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.ui.commentsrs.CommentsRsListTab
@@ -39,13 +38,13 @@ import org.wordpress.android.ui.postsrs.SnackbarMessage
 @Composable
 fun CommentsRsListScreen(
     tabStates: Map<CommentsRsListTab, CommentsTabUiState>,
-    snackbarMessages: Flow<SnackbarMessage> = emptyFlow(),
+    snackbarMessages: Flow<SnackbarMessage>,
     onInitTab: (CommentsRsListTab) -> Unit,
     onTabChanged: (CommentsRsListTab) -> Unit,
     onRefreshTab: (CommentsRsListTab) -> Unit,
     onLoadMore: (CommentsRsListTab) -> Unit,
     onNavigateBack: () -> Unit,
-    onCommentClick: (Long, CommentsRsListTab) -> Unit
+    onCommentClick: (Long) -> Unit
 ) {
     val tabs = CommentsRsListTab.entries
     val pagerState = rememberPagerState(pageCount = { tabs.size })
@@ -116,7 +115,7 @@ fun CommentsRsListScreen(
                     emptyMessageResId = tab.emptyMessageResId,
                     onRefresh = { onRefreshTab(tab) },
                     onLoadMore = { onLoadMore(tab) },
-                    onCommentClick = { commentId -> onCommentClick(commentId, tab) }
+                    onCommentClick = onCommentClick
                 )
             }
         }

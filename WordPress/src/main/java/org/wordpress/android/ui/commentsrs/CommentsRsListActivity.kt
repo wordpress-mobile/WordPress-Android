@@ -50,7 +50,7 @@ class CommentsRsListActivity : BaseAppCompatActivity() {
                     onRefreshTab = { tab -> viewModel.refreshTab(tab, isUserRefresh = true) },
                     onLoadMore = viewModel::loadMore,
                     onNavigateBack = { onBackPressedDispatcher.onBackPressed() },
-                    onCommentClick = { commentId, _ -> viewModel.onCommentClick(commentId) }
+                    onCommentClick = viewModel::onCommentClick
                 )
             }
         }

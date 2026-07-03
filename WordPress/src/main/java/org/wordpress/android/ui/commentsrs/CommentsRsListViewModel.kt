@@ -70,9 +70,8 @@ class CommentsRsListViewModel @Inject constructor(
 
     private var lastTrackedTab: CommentsRsListTab? = null
 
-    // The in-flight title-resolve job per tab, with the ids it's resolving so an identical
-    // request isn't cancelled and re-fired when an applied page adds nothing new.
-    private val resolveTitleJobs = mutableMapOf<CommentsRsListTab, Pair<Job, List<Long>>>()
+    // The in-flight title-resolve job per tab.
+    private val resolveTitleJobs = mutableMapOf<CommentsRsListTab, Job>()
 
     private val _site: SiteModel? = selectedSiteRepository.getSelectedSite()
     private val site: SiteModel
@@ -112,9 +111,8 @@ class CommentsRsListViewModel @Inject constructor(
             // that may have gone stale (e.g. a post renamed since it was cached).
             commentsRsDataSource.clearPostTitles(site)
             // A resolve job that started before the clear may apply pre-clear titles; cancel it
-            // so the post-refresh pass fetches fresh results instead of deferring to it via the
-            // identical-ids guard.
-            resolveTitleJobs[tab]?.first?.cancel()
+            // so the post-refresh pass fetches fresh results.
+            resolveTitleJobs[tab]?.cancel()
         }
         updateTabUiState(tab) { copy(isRefreshing = isUserRefresh, error = null) }
         fetchFirstPage(tab, showErrorSnackbar = isUserRefresh)
@@ -273,20 +271,16 @@ class CommentsRsListViewModel @Inject constructor(
             .distinct()
         if (unresolvedIds.isEmpty()) return
 
-        // An applied page that added no rows (deduped away) leaves the same ids unresolved;
-        // let the in-flight request finish rather than cancelling and re-firing it.
-        val inFlight = resolveTitleJobs[tab]
-        if (inFlight != null && inFlight.first.isActive && inFlight.second == unresolvedIds) return
-
-        inFlight?.first?.cancel()
-        val job = viewModelScope.launch {
+        // Cancel-and-relaunch is cheap even when the ids haven't changed: the data source
+        // caches resolved titles, so a re-fired request skips them.
+        resolveTitleJobs[tab]?.cancel()
+        resolveTitleJobs[tab] = viewModelScope.launch {
             val titles = withContext(bgDispatcher) { commentsRsDataSource.fetchPostTitles(site, unresolvedIds) }
             if (titles.isEmpty()) return@launch
             updateTabUiState(tab) {
                 copy(comments = comments.map { it.copy(postTitle = titles[it.postId] ?: it.postTitle) })
             }
         }
-        resolveTitleJobs[tab] = job to unresolvedIds
     }
 
     /** The server message when it sent one, otherwise a friendly offline/generic message. */

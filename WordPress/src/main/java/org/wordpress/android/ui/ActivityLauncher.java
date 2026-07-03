@@ -46,7 +46,6 @@ import org.wordpress.android.ui.blaze.PostUIModel;
 import org.wordpress.android.ui.blaze.blazepromote.BlazePromoteParentActivity;
 import org.wordpress.android.ui.bloggingprompts.promptslist.BloggingPromptsListActivity;
 import org.wordpress.android.ui.comments.unified.UnifiedCommentsActivity;
-import org.wordpress.android.ui.comments.unified.UnifiedCommentsDetailsActivity;
 import org.wordpress.android.ui.commentsrs.CommentsRsListActivity;
 import org.wordpress.android.ui.debug.cookies.DebugCookiesActivity;
 import org.wordpress.android.ui.debug.preferences.DebugSharedPreferenceFlagsActivity;
@@ -767,11 +766,6 @@ public class ActivityLauncher {
                 ActivityLauncherEntryPoint.class
         );
         return entryPoint.experimentalFeatures().isEnabled(Feature.RS_UNIFIED_COMMENTS);
-    }
-
-    public static void viewUnifiedCommentsDetails(Context context, SiteModel site, long remoteCommentId) {
-        Intent intent = UnifiedCommentsDetailsActivity.createIntent(context, site, remoteCommentId);
-        context.startActivity(intent);
     }
 
     public static void viewCurrentBlogThemes(Context context, SiteModel site) {
