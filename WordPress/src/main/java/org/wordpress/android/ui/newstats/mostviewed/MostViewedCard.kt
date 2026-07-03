@@ -1,7 +1,9 @@
 package org.wordpress.android.ui.newstats.mostviewed
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -17,11 +19,17 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ChevronRight
+import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -60,7 +68,8 @@ fun MostViewedCard(
     onMoveToTop: (() -> Unit)? = null,
     onMoveDown: (() -> Unit)? = null,
     onMoveToBottom: (() -> Unit)? = null,
-    onOpenWpAdmin: (() -> Unit)? = null
+    onOpenWpAdmin: (() -> Unit)? = null,
+    onChildClick: (String) -> Unit = {}
 ) {
     val borderColor = MaterialTheme.colorScheme.outlineVariant
 
@@ -80,7 +89,8 @@ fun MostViewedCard(
             is MostViewedCardUiState.Loading -> LoadingContent()
             is MostViewedCardUiState.Loaded -> LoadedContent(
                 uiState, cardType, onShowAllClick, onRemoveCard,
-                cardPosition, onMoveUp, onMoveToTop, onMoveDown, onMoveToBottom
+                cardPosition, onMoveUp, onMoveToTop, onMoveDown, onMoveToBottom,
+                onChildClick
             )
             is MostViewedCardUiState.Error -> ErrorContent(
                 uiState, cardType, onRetry, onRemoveCard,
@@ -173,7 +183,8 @@ private fun LoadedContent(
     onMoveUp: (() -> Unit)?,
     onMoveToTop: (() -> Unit)?,
     onMoveDown: (() -> Unit)?,
-    onMoveToBottom: (() -> Unit)?
+    onMoveToBottom: (() -> Unit)?,
+    onChildClick: (String) -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -199,7 +210,7 @@ private fun LoadedContent(
                 val percentage = if (state.maxViewsForBar > 0) {
                     item.views.toFloat() / state.maxViewsForBar.toFloat()
                 } else 0f
-                MostViewedItemRow(item = item, percentage = percentage)
+                MostViewedItemRow(item = item, percentage = percentage, onChildClick = onChildClick)
                 if (index < state.items.lastIndex) {
                     Spacer(modifier = Modifier.height(4.dp))
                 }
@@ -283,62 +294,159 @@ private fun ColumnHeadersRow(cardType: StatsCardType) {
 }
 
 @Composable
-private fun MostViewedItemRow(item: MostViewedItem, percentage: Float) {
+private fun MostViewedItemRow(
+    item: MostViewedItem,
+    percentage: Float,
+    onChildClick: (String) -> Unit
+) {
     val barColor = MaterialTheme.colorScheme.primary.copy(alpha = HIGHLIGHTED_ITEM_BACKGROUND_ALPHA)
+    val hasChildren = item.children.isNotEmpty()
+    var expanded by remember { mutableStateOf(false) }
+    val maxChildViews = item.children.maxOfOrNull { it.views } ?: 0L
+
+    Column {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(IntrinsicSize.Min)
+                .clip(RoundedCornerShape(8.dp))
+                .then(
+                    if (hasChildren) Modifier.clickable { expanded = !expanded } else Modifier
+                )
+        ) {
+            // Background bar representing the percentage
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth(fraction = percentage)
+                    .fillMaxHeight()
+                    .background(barColor)
+            )
+
+            // Content
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 12.dp, horizontal = 16.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = item.title,
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.onSurface,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis,
+                    modifier = Modifier.weight(1f)
+                )
+
+                Spacer(modifier = Modifier.width(16.dp))
+
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Column(horizontalAlignment = Alignment.End) {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Text(
+                                text = formatStatValue(item.views),
+                                style = MaterialTheme.typography.bodyLarge,
+                                fontWeight = FontWeight.SemiBold,
+                                color = MaterialTheme.colorScheme.onSurface
+                            )
+                            Spacer(modifier = Modifier.width(4.dp))
+                            ExpandChevron(
+                                hasChildren = hasChildren,
+                                expanded = expanded
+                            )
+                        }
+                        ChangeIndicator(change = item.change)
+                    }
+                }
+            }
+        }
+
+        if (hasChildren) {
+            AnimatedVisibility(visible = expanded) {
+                Column(modifier = Modifier.padding(start = 24.dp)) {
+                    item.children.forEach { child ->
+                        val childPercentage = if (maxChildViews > 0) {
+                            child.views.toFloat() / maxChildViews.toFloat()
+                        } else 0f
+                        MostViewedChildRow(
+                            child = child,
+                            percentage = childPercentage,
+                            onChildClick = onChildClick
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun ExpandChevron(hasChildren: Boolean, expanded: Boolean) {
+    val imageVector = when {
+        !hasChildren -> Icons.Default.ChevronRight
+        expanded -> Icons.Default.KeyboardArrowUp
+        else -> Icons.Default.KeyboardArrowDown
+    }
+    val contentDescription = if (hasChildren) {
+        stringResource(
+            if (expanded) R.string.stats_collapse_group else R.string.stats_expand_group
+        )
+    } else null
+    Icon(
+        imageVector = imageVector,
+        contentDescription = contentDescription,
+        modifier = Modifier.size(16.dp),
+        tint = MaterialTheme.colorScheme.onSurfaceVariant
+    )
+}
+
+@Composable
+private fun MostViewedChildRow(
+    child: MostViewedChildItem,
+    percentage: Float,
+    onChildClick: (String) -> Unit
+) {
+    val barColor = MaterialTheme.colorScheme.primary.copy(alpha = HIGHLIGHTED_ITEM_BACKGROUND_ALPHA)
+    val url = child.url
+    val clickModifier = if (!url.isNullOrBlank()) {
+        Modifier.clickable { onChildClick(url) }
+    } else Modifier
 
     Box(
         modifier = Modifier
             .fillMaxWidth()
             .height(IntrinsicSize.Min)
             .clip(RoundedCornerShape(8.dp))
+            .then(clickModifier)
     ) {
-        // Background bar representing the percentage
         Box(
             modifier = Modifier
                 .fillMaxWidth(fraction = percentage)
                 .fillMaxHeight()
                 .background(barColor)
         )
-
-        // Content
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(vertical = 12.dp, horizontal = 16.dp),
+                .padding(vertical = 10.dp, horizontal = 16.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = item.title,
-                style = MaterialTheme.typography.bodyLarge,
+                text = child.name,
+                style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurface,
-                maxLines = 2,
+                maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
                 modifier = Modifier.weight(1f)
             )
-
-            Spacer(modifier = Modifier.width(16.dp))
-
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Column(horizontalAlignment = Alignment.End) {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Text(
-                            text = formatStatValue(item.views),
-                            style = MaterialTheme.typography.bodyLarge,
-                            fontWeight = FontWeight.SemiBold,
-                            color = MaterialTheme.colorScheme.onSurface
-                        )
-                        Spacer(modifier = Modifier.width(4.dp))
-                        Icon(
-                            imageVector = Icons.Default.ChevronRight,
-                            contentDescription = null,
-                            modifier = Modifier.size(16.dp),
-                            tint = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                    }
-                    ChangeIndicator(change = item.change)
-                }
-            }
+            Spacer(modifier = Modifier.width(8.dp))
+            Text(
+                text = formatStatValue(child.views),
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurface
+            )
         }
     }
 }

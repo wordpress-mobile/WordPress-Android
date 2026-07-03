@@ -4,7 +4,9 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.compose.setContent
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -24,6 +26,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.ChevronRight
+import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -32,6 +36,10 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -42,6 +50,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
+import org.wordpress.android.ui.ActivityNavigator
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.main.BaseAppCompatActivity
 import org.wordpress.android.ui.newstats.StatsCardType
@@ -49,6 +58,7 @@ import org.wordpress.android.ui.newstats.components.StatsSummaryCard
 import org.wordpress.android.ui.newstats.util.formatStatValue
 import org.wordpress.android.util.extensions.getParcelableArrayListCompat
 import org.wordpress.android.util.extensions.getSerializableCompat
+import javax.inject.Inject
 
 private const val EXTRA_CARD_TYPE = "extra_card_type"
 private const val EXTRA_ITEMS = "extra_items"
@@ -60,6 +70,8 @@ private const val EXTRA_VALUE_HEADER_RES_ID = "extra_value_header_res_id"
 
 @AndroidEntryPoint
 class MostViewedDetailActivity : BaseAppCompatActivity() {
+    @Inject lateinit var activityNavigator: ActivityNavigator
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -88,7 +100,8 @@ class MostViewedDetailActivity : BaseAppCompatActivity() {
                     totalViewsChangePercent = totalViewsChangePercent,
                     dateRange = dateRange,
                     valueHeaderResId = valueHeaderResId,
-                    onBackPressed = onBackPressedDispatcher::onBackPressed
+                    onBackPressed = onBackPressedDispatcher::onBackPressed,
+                    onChildClick = { url -> activityNavigator.openInCustomTab(this, url) }
                 )
             }
         }
@@ -136,7 +149,8 @@ private fun MostViewedDetailScreen(
     totalViewsChangePercent: Double,
     dateRange: String,
     valueHeaderResId: Int = R.string.stats_views,
-    onBackPressed: () -> Unit
+    onBackPressed: () -> Unit,
+    onChildClick: (String) -> Unit = {}
 ) {
     val title = stringResource(cardType.displayNameResId)
 
@@ -184,7 +198,8 @@ private fun MostViewedDetailScreen(
                 DetailItemRow(
                     position = index + 1,
                     item = item,
-                    maxViewsForBar = maxViewsForBar
+                    maxViewsForBar = maxViewsForBar,
+                    onChildClick = onChildClick
                 )
                 if (index < items.lastIndex) {
                     Spacer(modifier = Modifier.height(4.dp))
@@ -226,18 +241,135 @@ private fun ColumnHeaders(
 private fun DetailItemRow(
     position: Int,
     item: MostViewedDetailItem,
-    maxViewsForBar: Long
+    maxViewsForBar: Long,
+    onChildClick: (String) -> Unit
 ) {
     val percentage = if (maxViewsForBar > 0) item.views.toFloat() / maxViewsForBar.toFloat() else 0f
     val barColor = MaterialTheme.colorScheme.primary.copy(
         alpha = HIGHLIGHTED_ITEM_BACKGROUND_ALPHA
     )
+    val hasChildren = item.children.isNotEmpty()
+    var expanded by remember { mutableStateOf(false) }
+    val maxChildViews = item.children.maxOfOrNull { it.views } ?: 0L
+
+    Column {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(IntrinsicSize.Min)
+                .clip(RoundedCornerShape(8.dp))
+                .then(
+                    if (hasChildren) Modifier.clickable { expanded = !expanded } else Modifier
+                )
+        ) {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth(fraction = percentage)
+                    .fillMaxHeight()
+                    .background(barColor)
+            )
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 12.dp, horizontal = 16.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = position.toString(),
+                    style = MaterialTheme.typography.bodyLarge,
+                    fontWeight = FontWeight.SemiBold,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.width(32.dp)
+                )
+
+                Text(
+                    text = item.title,
+                    style = MaterialTheme.typography.bodyLarge,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis,
+                    modifier = Modifier.weight(1f)
+                )
+
+                Spacer(modifier = Modifier.width(8.dp))
+
+                Column(horizontalAlignment = Alignment.End) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Text(
+                            text = formatStatValue(item.views),
+                            style = MaterialTheme.typography.bodyLarge,
+                            fontWeight = FontWeight.SemiBold
+                        )
+                        Spacer(modifier = Modifier.width(4.dp))
+                        DetailExpandChevron(
+                            hasChildren = hasChildren,
+                            expanded = expanded
+                        )
+                    }
+                    ChangeIndicator(change = item.change)
+                }
+            }
+        }
+
+        if (hasChildren) {
+            AnimatedVisibility(visible = expanded) {
+                Column(modifier = Modifier.padding(start = 32.dp)) {
+                    item.children.forEach { child ->
+                        val childPercentage = if (maxChildViews > 0) {
+                            child.views.toFloat() / maxChildViews.toFloat()
+                        } else 0f
+                        DetailChildRow(
+                            child = child,
+                            percentage = childPercentage,
+                            onChildClick = onChildClick
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun DetailExpandChevron(hasChildren: Boolean, expanded: Boolean) {
+    val imageVector = when {
+        !hasChildren -> Icons.Default.ChevronRight
+        expanded -> Icons.Default.KeyboardArrowUp
+        else -> Icons.Default.KeyboardArrowDown
+    }
+    val contentDescription = if (hasChildren) {
+        stringResource(
+            if (expanded) R.string.stats_collapse_group else R.string.stats_expand_group
+        )
+    } else null
+    Icon(
+        imageVector = imageVector,
+        contentDescription = contentDescription,
+        modifier = Modifier.size(16.dp),
+        tint = MaterialTheme.colorScheme.onSurfaceVariant
+    )
+}
+
+@Composable
+private fun DetailChildRow(
+    child: MostViewedChildItem,
+    percentage: Float,
+    onChildClick: (String) -> Unit
+) {
+    val barColor = MaterialTheme.colorScheme.primary.copy(
+        alpha = HIGHLIGHTED_ITEM_BACKGROUND_ALPHA
+    )
+    val url = child.url
+    val clickModifier = if (!url.isNullOrBlank()) {
+        Modifier.clickable { onChildClick(url) }
+    } else Modifier
 
     Box(
         modifier = Modifier
             .fillMaxWidth()
             .height(IntrinsicSize.Min)
             .clip(RoundedCornerShape(8.dp))
+            .then(clickModifier)
     ) {
         Box(
             modifier = Modifier
@@ -245,48 +377,26 @@ private fun DetailItemRow(
                 .fillMaxHeight()
                 .background(barColor)
         )
-
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(vertical = 12.dp, horizontal = 16.dp),
+                .padding(vertical = 10.dp, horizontal = 16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = position.toString(),
-                style = MaterialTheme.typography.bodyLarge,
-                fontWeight = FontWeight.SemiBold,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                modifier = Modifier.width(32.dp)
-            )
-
-            Text(
-                text = item.title,
-                style = MaterialTheme.typography.bodyLarge,
-                maxLines = 2,
+                text = child.name,
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurface,
+                maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
                 modifier = Modifier.weight(1f)
             )
-
             Spacer(modifier = Modifier.width(8.dp))
-
-            Column(horizontalAlignment = Alignment.End) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text(
-                        text = formatStatValue(item.views),
-                        style = MaterialTheme.typography.bodyLarge,
-                        fontWeight = FontWeight.SemiBold
-                    )
-                    Spacer(modifier = Modifier.width(4.dp))
-                    Icon(
-                        imageVector = Icons.Default.ChevronRight,
-                        contentDescription = null,
-                        modifier = Modifier.size(16.dp),
-                        tint = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                }
-                ChangeIndicator(change = item.change)
-            }
+            Text(
+                text = formatStatValue(child.views),
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurface
+            )
         }
     }
 }

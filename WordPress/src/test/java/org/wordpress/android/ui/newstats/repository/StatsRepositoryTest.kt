@@ -5,6 +5,7 @@ import org.wordpress.android.ui.newstats.StatsPeriod
 import org.wordpress.android.ui.newstats.datasource.CommentsDataPoint
 import org.wordpress.android.ui.newstats.datasource.LikesDataPoint
 import org.wordpress.android.ui.newstats.datasource.PostsDataPoint
+import org.wordpress.android.ui.newstats.datasource.ReferrerChildDataItem
 import org.wordpress.android.ui.newstats.datasource.ReferrerDataItem
 import org.wordpress.android.ui.newstats.datasource.ReferrersDataResult
 import org.wordpress.android.ui.newstats.datasource.StatsDataSource
@@ -564,6 +565,34 @@ class StatsRepositoryTest : BaseUnitTest() {
         assertThat(success.items[0].views).isEqualTo(TEST_REFERRER_VIEWS_1)
         assertThat(success.items[1].title).isEqualTo(TEST_REFERRER_NAME_2)
         assertThat(success.items[1].views).isEqualTo(TEST_REFERRER_VIEWS_2)
+    }
+
+    @Test
+    fun `given referrer group with children, when fetchMostViewed with REFERRERS, then children propagate`() = test {
+        val referrersData = listOf(
+            ReferrerDataItem(
+                name = "Search Engines",
+                views = 23,
+                children = listOf(
+                    ReferrerChildDataItem(name = "Google Search", url = "http://google.com/", views = 23)
+                )
+            )
+        )
+        whenever(statsDataSource.fetchReferrers(any(), any(), any()))
+            .thenReturn(ReferrersDataResult.Success(referrersData))
+
+        val result = repository.fetchMostViewed(
+            TEST_SITE_ID,
+            StatsPeriod.Last7Days,
+            MostViewedDataSource.REFERRERS
+        )
+
+        assertThat(result).isInstanceOf(MostViewedResult.Success::class.java)
+        val success = result as MostViewedResult.Success
+        assertThat(success.items[0].children).hasSize(1)
+        assertThat(success.items[0].children[0].name).isEqualTo("Google Search")
+        assertThat(success.items[0].children[0].url).isEqualTo("http://google.com/")
+        assertThat(success.items[0].children[0].views).isEqualTo(23)
     }
 
     @Test

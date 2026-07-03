@@ -690,7 +690,14 @@ class StatsRepository @Inject constructor(
                         title = item.name,
                         views = item.views,
                         previousViews = previousViews,
-                        isFirst = index == 0
+                        isFirst = index == 0,
+                        children = item.children.map { child ->
+                            MostViewedChildData(
+                                name = child.name,
+                                url = child.url,
+                                views = child.views
+                            )
+                        }
                     )
                 },
                 totalViews = totalViews,
@@ -1869,12 +1876,22 @@ data class MostViewedItemData(
     val title: String,
     val views: Long,
     val previousViews: Long,
-    val isFirst: Boolean
+    val isFirst: Boolean,
+    val children: List<MostViewedChildData> = emptyList()
 ) {
     val viewsChange: Long get() = views - previousViews
     val viewsChangePercent: Double
         get() = calculateItemChangePercent(views, previousViews)
 }
+
+/**
+ * A child item nested under a most viewed item (e.g. a referrer under a referrer group).
+ */
+data class MostViewedChildData(
+    val name: String,
+    val url: String?,
+    val views: Long
+)
 
 /**
  * Result wrapper for country views fetch operation.
