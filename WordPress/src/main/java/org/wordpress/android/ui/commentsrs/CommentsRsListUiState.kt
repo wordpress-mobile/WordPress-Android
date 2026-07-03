@@ -34,11 +34,6 @@ sealed interface PendingConfirmation {
     data class Delete(val commentIds: List<Long>) : PendingConfirmation
 }
 
-data class ConfirmationDialogState(
-    val pending: PendingConfirmation? = null,
-    val onDismiss: () -> Unit = {}
-)
-
 /**
  * Batch moderation actions offered in selection mode. Each maps to a target [CommentStatus]
  * applied to every selected comment (except [DELETE], which deletes permanently).
@@ -54,7 +49,7 @@ enum class CommentsRsBatchAction(
     NOT_SPAM(R.string.mnu_comment_unspam, CommentStatus.APPROVED),
     TRASH(R.string.mnu_comment_trash, CommentStatus.TRASH, isDestructive = true),
     UNTRASH(R.string.mnu_comment_untrash, CommentStatus.APPROVED),
-    DELETE(R.string.mnu_comment_delete_permanently, CommentStatus.DELETED, isDestructive = true);
+    DELETE(R.string.mnu_comment_delete_permanently, CommentStatus.DELETED, isDestructive = true)
 }
 
 /** The batch actions offered for a tab's selection, mirroring the legacy action mode. */

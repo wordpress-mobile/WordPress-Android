@@ -47,10 +47,8 @@ class CommentsRsListActivity : BaseAppCompatActivity() {
                 CommentsRsListScreen(
                     tabStates = tabStates,
                     selectedIds = selectedIds,
-                    confirmationDialog = ConfirmationDialogState(
-                        pending = confirmation,
-                        onDismiss = viewModel::onDismissPendingAction
-                    ),
+                    pendingConfirmation = confirmation,
+                    onDismissConfirmation = viewModel::onDismissPendingAction,
                     snackbarMessages = viewModel.snackbarMessages,
                     onInitTab = viewModel::initTab,
                     onTabChanged = viewModel::onTabChanged,

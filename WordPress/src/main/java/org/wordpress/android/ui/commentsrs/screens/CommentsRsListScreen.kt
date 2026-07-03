@@ -38,18 +38,17 @@ import org.wordpress.android.R
 import org.wordpress.android.ui.commentsrs.CommentsRsBatchAction
 import org.wordpress.android.ui.commentsrs.CommentsRsListTab
 import org.wordpress.android.ui.commentsrs.CommentsTabUiState
-import org.wordpress.android.ui.commentsrs.ConfirmationDialogState
 import org.wordpress.android.ui.commentsrs.PendingConfirmation
 import org.wordpress.android.ui.commentsrs.batchActions
 import org.wordpress.android.ui.postsrs.SnackbarMessage
 
-@Suppress("LongMethod")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CommentsRsListScreen(
     tabStates: Map<CommentsRsListTab, CommentsTabUiState>,
     selectedIds: Set<Long>,
-    confirmationDialog: ConfirmationDialogState,
+    pendingConfirmation: PendingConfirmation?,
+    onDismissConfirmation: () -> Unit,
     snackbarMessages: Flow<SnackbarMessage>,
     onInitTab: (CommentsRsListTab) -> Unit,
     onTabChanged: (CommentsRsListTab) -> Unit,
@@ -150,14 +149,29 @@ fun CommentsRsListScreen(
         }
     }
 
-    when (val pending = confirmationDialog.pending) {
+    BatchConfirmationDialogs(
+        pending = pendingConfirmation,
+        activeTab = activeTab,
+        onConfirm = onConfirmPendingAction,
+        onDismiss = onDismissConfirmation
+    )
+}
+
+@Composable
+private fun BatchConfirmationDialogs(
+    pending: PendingConfirmation?,
+    activeTab: CommentsRsListTab,
+    onConfirm: (CommentsRsListTab) -> Unit,
+    onDismiss: () -> Unit
+) {
+    when (pending) {
         is PendingConfirmation.Trash -> ConfirmationDialog(
             titleResId = R.string.trash,
             message = stringResource(R.string.dlg_confirm_trash_comments),
             confirmTextResId = R.string.dlg_confirm_action_trash,
             isDestructive = true,
-            onConfirm = { onConfirmPendingAction(activeTab) },
-            onDismiss = confirmationDialog.onDismiss
+            onConfirm = { onConfirm(activeTab) },
+            onDismiss = onDismiss
         )
         is PendingConfirmation.Delete -> ConfirmationDialog(
             titleResId = R.string.delete,
@@ -170,8 +184,8 @@ fun CommentsRsListScreen(
             ),
             confirmTextResId = R.string.delete,
             isDestructive = true,
-            onConfirm = { onConfirmPendingAction(activeTab) },
-            onDismiss = confirmationDialog.onDismiss
+            onConfirm = { onConfirm(activeTab) },
+            onDismiss = onDismiss
         )
         null -> {}
     }
