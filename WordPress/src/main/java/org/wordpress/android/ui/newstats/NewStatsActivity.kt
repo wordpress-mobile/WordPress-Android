@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.newstats
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -64,6 +65,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.ui.ActivityLauncher
+import org.wordpress.android.ui.ActivityNavigator
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.main.BaseAppCompatActivity
 import org.wordpress.android.ui.newstats.components.AddCardBottomSheet
@@ -409,6 +411,10 @@ private fun TrafficTabContent(
     newStatsViewModel: NewStatsViewModel = viewModel()
 ) {
     val context = LocalContext.current
+    val activityNavigator = remember { ActivityNavigator() }
+    val onReferrerChildClick: (String) -> Unit = { url ->
+        (context as? Activity)?.let { activityNavigator.openInCustomTab(it, url) }
+    }
     val todaysStatsUiState by todaysStatsViewModel.uiState.collectAsState()
     val viewsStatsUiState by viewsStatsViewModel.uiState.collectAsState()
     val postsUiState by mostViewedViewModel.postsUiState.collectAsState()
@@ -696,7 +702,8 @@ private fun TrafficTabContent(
                         onMoveUp = { newStatsViewModel.moveCardUp(cardType) },
                         onMoveToTop = { newStatsViewModel.moveCardToTop(cardType) },
                         onMoveDown = { newStatsViewModel.moveCardDown(cardType) },
-                        onMoveToBottom = { newStatsViewModel.moveCardToBottom(cardType) }
+                        onMoveToBottom = { newStatsViewModel.moveCardToBottom(cardType) },
+                        onChildClick = onReferrerChildClick
                     )
                     StatsCardType.LOCATIONS -> LocationsCard(
                         uiState = locationsUiState,
