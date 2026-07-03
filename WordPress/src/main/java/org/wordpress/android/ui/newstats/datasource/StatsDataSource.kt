@@ -418,6 +418,16 @@ sealed class ReferrersDataResult {
  */
 data class ReferrerDataItem(
     val name: String,
+    val views: Long,
+    val children: List<ReferrerChildDataItem> = emptyList()
+)
+
+/**
+ * A child referrer nested under a referrer group (e.g. a specific search engine).
+ */
+data class ReferrerChildDataItem(
+    val name: String,
+    val url: String?,
     val views: Long
 )
 
