@@ -2,14 +2,11 @@ package org.wordpress.android.ui.newstats.mostviewed
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -21,15 +18,12 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
@@ -40,13 +34,11 @@ import org.wordpress.android.ui.newstats.components.CardPosition
 import org.wordpress.android.ui.newstats.components.ShowAllFooter
 import org.wordpress.android.ui.newstats.components.StatsCardMenu
 import org.wordpress.android.ui.newstats.util.ShimmerBox
-import org.wordpress.android.ui.newstats.util.formatStatValue
 import java.util.Locale
 
 private val CardCornerRadius = 10.dp
 private val CardPadding = 16.dp
 private val CardMargin = 16.dp
-internal const val HIGHLIGHTED_ITEM_BACKGROUND_ALPHA = 0.08f
 private const val LOADING_SHIMMER_ITEM_COUNT = 5
 
 @Composable
@@ -209,7 +201,14 @@ private fun LoadedContent(
                 // the id resets the row's saved expanded state when a different referrer lands at
                 // this position after a period reload. rememberSaveable keeps it across rotation.
                 key(index, item.id) {
-                    MostViewedItemRow(item = item, percentage = percentage, onChildClick = onChildClick)
+                    MostViewedExpandableRow(
+                        title = item.title,
+                        views = item.views,
+                        change = item.change,
+                        children = item.children,
+                        percentage = percentage,
+                        onChildClick = onChildClick
+                    )
                 }
                 if (index < state.items.lastIndex) {
                     Spacer(modifier = Modifier.height(4.dp))
@@ -289,84 +288,6 @@ private fun ColumnHeadersRow(cardType: StatsCardType) {
             text = stringResource(valueHeaderResId),
             style = MaterialTheme.typography.labelMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
-    }
-}
-
-@Composable
-private fun MostViewedItemRow(
-    item: MostViewedItem,
-    percentage: Float,
-    onChildClick: (String) -> Unit
-) {
-    val barColor = MaterialTheme.colorScheme.primary.copy(alpha = HIGHLIGHTED_ITEM_BACKGROUND_ALPHA)
-    val hasChildren = item.children.isNotEmpty()
-    // The caller wraps each row in key(item.id), so this saved state is scoped to (and resets with)
-    // the referrer, and survives configuration changes (e.g. rotation) via rememberSaveable.
-    var expanded by rememberSaveable { mutableStateOf(false) }
-
-    Column {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(IntrinsicSize.Min)
-                .clip(RoundedCornerShape(8.dp))
-                .then(
-                    if (hasChildren) Modifier.clickable { expanded = !expanded } else Modifier
-                )
-        ) {
-            // Background bar representing the percentage
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth(fraction = percentage)
-                    .fillMaxHeight()
-                    .background(barColor)
-            )
-
-            // Content
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 12.dp, horizontal = 16.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = item.title,
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = MaterialTheme.colorScheme.onSurface,
-                    maxLines = 2,
-                    overflow = TextOverflow.Ellipsis,
-                    modifier = Modifier.weight(1f)
-                )
-
-                Spacer(modifier = Modifier.width(16.dp))
-
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Column(horizontalAlignment = Alignment.End) {
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            if (hasChildren) {
-                                MostViewedExpandChevron(expanded = expanded)
-                                Spacer(modifier = Modifier.width(4.dp))
-                            }
-                            Text(
-                                text = formatStatValue(item.views),
-                                style = MaterialTheme.typography.bodyLarge,
-                                fontWeight = FontWeight.SemiBold,
-                                color = MaterialTheme.colorScheme.onSurface
-                            )
-                        }
-                        ChangeIndicator(change = item.change)
-                    }
-                }
-            }
-        }
-
-        MostViewedExpandableChildren(
-            children = item.children,
-            expanded = expanded,
-            startPadding = 24.dp,
-            onChildClick = onChildClick
         )
     }
 }

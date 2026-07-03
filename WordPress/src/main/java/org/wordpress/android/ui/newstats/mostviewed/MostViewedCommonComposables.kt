@@ -11,22 +11,113 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ChevronRight
+import androidx.compose.material.icons.automirrored.filled.OpenInNew
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
 import org.wordpress.android.ui.newstats.components.StatsListRowContainer
 import org.wordpress.android.ui.newstats.util.formatStatValue
+
+/**
+ * Expandable Most Viewed row (group title, views, change badge, and an optional expand/collapse
+ * chevron that reveals indented child rows). Shared by the card ([MostViewedCard]) and the detail
+ * screen ([MostViewedDetailActivity]); they differ only by the leading [position] number (detail
+ * only) and the child [childStartPadding] indent.
+ *
+ * The caller is expected to wrap this row in a `key(...)` so the [rememberSaveable] expanded state
+ * is scoped to the item and survives configuration changes (e.g. rotation).
+ *
+ * @param title The group title
+ * @param views The group's view count
+ * @param change The change badge shown under the views
+ * @param children The child rows revealed when expanded (empty = no chevron, not expandable)
+ * @param percentage Bar fill percentage (0f..1f)
+ * @param onChildClick Invoked with a child's URL when a linkable child row is tapped
+ * @param position Optional 1-based position number shown on the detail screen
+ * @param childStartPadding Indent applied to the expanded child rows
+ */
+@Composable
+internal fun MostViewedExpandableRow(
+    title: String,
+    views: Long,
+    change: MostViewedChange,
+    children: List<MostViewedChildItem>,
+    percentage: Float,
+    onChildClick: (String) -> Unit,
+    position: Int? = null,
+    childStartPadding: Dp = 24.dp
+) {
+    val hasChildren = children.isNotEmpty()
+    var expanded by rememberSaveable { mutableStateOf(false) }
+    val clickModifier = if (hasChildren) Modifier.clickable { expanded = !expanded } else Modifier
+
+    Column {
+        StatsListRowContainer(percentage = percentage, modifier = clickModifier) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 12.dp, horizontal = 16.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                if (position != null) {
+                    Text(
+                        text = position.toString(),
+                        style = MaterialTheme.typography.bodyLarge,
+                        fontWeight = FontWeight.SemiBold,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        modifier = Modifier.width(32.dp)
+                    )
+                }
+                Text(
+                    text = title,
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.onSurface,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis,
+                    modifier = Modifier.weight(1f)
+                )
+                Spacer(modifier = Modifier.width(16.dp))
+                Column(horizontalAlignment = Alignment.End) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        if (hasChildren) {
+                            MostViewedExpandChevron(expanded = expanded)
+                            Spacer(modifier = Modifier.width(4.dp))
+                        }
+                        Text(
+                            text = formatStatValue(views),
+                            style = MaterialTheme.typography.bodyLarge,
+                            fontWeight = FontWeight.SemiBold,
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
+                    }
+                    ChangeIndicator(change = change)
+                }
+            }
+        }
+
+        MostViewedExpandableChildren(
+            children = children,
+            expanded = expanded,
+            startPadding = childStartPadding,
+            onChildClick = onChildClick
+        )
+    }
+}
 
 /**
  * Expand/collapse chevron shown on a Most Viewed row that has children.
@@ -105,8 +196,8 @@ private fun MostViewedChildRow(
             if (isClickable) {
                 Spacer(modifier = Modifier.width(4.dp))
                 Icon(
-                    imageVector = Icons.Default.ChevronRight,
-                    contentDescription = null,
+                    imageVector = Icons.AutoMirrored.Filled.OpenInNew,
+                    contentDescription = stringResource(R.string.stats_open_referrer_link),
                     modifier = Modifier.size(16.dp),
                     tint = MaterialTheme.colorScheme.onSurfaceVariant
                 )

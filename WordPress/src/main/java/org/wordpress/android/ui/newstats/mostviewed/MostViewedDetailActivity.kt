@@ -5,23 +5,17 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Button
@@ -36,16 +30,11 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import dagger.hilt.android.AndroidEntryPoint
@@ -56,7 +45,6 @@ import org.wordpress.android.ui.main.BaseAppCompatActivity
 import org.wordpress.android.ui.newstats.StatsCardType
 import org.wordpress.android.ui.newstats.StatsPeriod
 import org.wordpress.android.ui.newstats.components.StatsSummaryCard
-import org.wordpress.android.ui.newstats.util.formatStatValue
 import org.wordpress.android.util.extensions.getParcelableArrayListCompat
 import org.wordpress.android.util.extensions.getSerializableCompat
 import javax.inject.Inject
@@ -266,11 +254,18 @@ private fun DetailLoadedContent(
         // which is not guaranteed unique (empty/duplicate names collide) and would crash the
         // LazyColumn. The list is a static snapshot, so the index is a stable, unique key.
         itemsIndexed(state.items, key = { index, _ -> index }) { index, item ->
-            DetailItemRow(
+            val percentage = if (state.maxViewsForBar > 0) {
+                item.views.toFloat() / state.maxViewsForBar.toFloat()
+            } else 0f
+            MostViewedExpandableRow(
+                title = item.title,
+                views = item.views,
+                change = item.change,
+                children = item.children,
+                percentage = percentage,
+                onChildClick = onChildClick,
                 position = index + 1,
-                item = item,
-                maxViewsForBar = state.maxViewsForBar,
-                onChildClick = onChildClick
+                childStartPadding = 32.dp
             )
             if (index < state.items.lastIndex) {
                 Spacer(modifier = Modifier.height(4.dp))
@@ -333,87 +328,6 @@ private fun ColumnHeaders(
             text = stringResource(valueHeaderResId),
             style = MaterialTheme.typography.labelMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
-    }
-}
-
-@Composable
-private fun DetailItemRow(
-    position: Int,
-    item: MostViewedDetailItem,
-    maxViewsForBar: Long,
-    onChildClick: (String) -> Unit
-) {
-    val percentage = if (maxViewsForBar > 0) item.views.toFloat() / maxViewsForBar.toFloat() else 0f
-    val barColor = MaterialTheme.colorScheme.primary.copy(
-        alpha = HIGHLIGHTED_ITEM_BACKGROUND_ALPHA
-    )
-    val hasChildren = item.children.isNotEmpty()
-    var expanded by rememberSaveable { mutableStateOf(false) }
-
-    Column {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(IntrinsicSize.Min)
-                .clip(RoundedCornerShape(8.dp))
-                .then(
-                    if (hasChildren) Modifier.clickable { expanded = !expanded } else Modifier
-                )
-        ) {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth(fraction = percentage)
-                    .fillMaxHeight()
-                    .background(barColor)
-            )
-
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 12.dp, horizontal = 16.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = position.toString(),
-                    style = MaterialTheme.typography.bodyLarge,
-                    fontWeight = FontWeight.SemiBold,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    modifier = Modifier.width(32.dp)
-                )
-
-                Text(
-                    text = item.title,
-                    style = MaterialTheme.typography.bodyLarge,
-                    maxLines = 2,
-                    overflow = TextOverflow.Ellipsis,
-                    modifier = Modifier.weight(1f)
-                )
-
-                Spacer(modifier = Modifier.width(8.dp))
-
-                Column(horizontalAlignment = Alignment.End) {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        if (hasChildren) {
-                            MostViewedExpandChevron(expanded = expanded)
-                            Spacer(modifier = Modifier.width(4.dp))
-                        }
-                        Text(
-                            text = formatStatValue(item.views),
-                            style = MaterialTheme.typography.bodyLarge,
-                            fontWeight = FontWeight.SemiBold
-                        )
-                    }
-                    ChangeIndicator(change = item.change)
-                }
-            }
-        }
-
-        MostViewedExpandableChildren(
-            children = item.children,
-            expanded = expanded,
-            startPadding = 32.dp,
-            onChildClick = onChildClick
         )
     }
 }
