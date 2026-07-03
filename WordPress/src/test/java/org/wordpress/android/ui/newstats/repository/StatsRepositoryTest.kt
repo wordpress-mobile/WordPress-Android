@@ -596,6 +596,28 @@ class StatsRepositoryTest : BaseUnitTest() {
     }
 
     @Test
+    fun `when fetchMostViewed with REFERRERS, then card-sized max is requested`() = test {
+        whenever(statsDataSource.fetchReferrers(any(), any(), any()))
+            .thenReturn(ReferrersDataResult.Success(createReferrersData()))
+
+        repository.fetchMostViewed(TEST_SITE_ID, StatsPeriod.Last7Days, MostViewedDataSource.REFERRERS)
+
+        // Card request is bounded (current + previous period).
+        verify(statsDataSource, times(2)).fetchReferrers(any(), any(), eq(REFERRERS_CARD_MAX))
+    }
+
+    @Test
+    fun `when fetchReferrersDetail, then unlimited max is requested`() = test {
+        whenever(statsDataSource.fetchReferrers(any(), any(), any()))
+            .thenReturn(ReferrersDataResult.Success(createReferrersData()))
+
+        repository.fetchReferrersDetail(TEST_SITE_ID, StatsPeriod.Last7Days)
+
+        // Detail request asks for all referrers (max = 0), for current + previous period.
+        verify(statsDataSource, times(2)).fetchReferrers(any(), any(), eq(REFERRERS_DETAIL_MAX))
+    }
+
+    @Test
     fun `given successful response, when fetchMostViewed, then totalViews is calculated correctly`() = test {
         whenever(statsDataSource.fetchTopPostsAndPages(any(), any(), any()))
             .thenReturn(TopPostsDataResult.Success(createTopPostsData()))
@@ -789,6 +811,10 @@ class StatsRepositoryTest : BaseUnitTest() {
         private const val TEST_SITE_ID = 123L
         private const val TEST_ACCESS_TOKEN = "test_access_token"
         private val TEST_ERROR_TYPE = StatsErrorType.NETWORK_ERROR
+
+        // Mirrors StatsRepository's private referrer max values (card vs. detail).
+        private const val REFERRERS_CARD_MAX = 10
+        private const val REFERRERS_DETAIL_MAX = 0
 
         private const val TEST_PERIOD_1 = "2024-01-15"
         private const val TEST_PERIOD_2 = "2024-01-16"

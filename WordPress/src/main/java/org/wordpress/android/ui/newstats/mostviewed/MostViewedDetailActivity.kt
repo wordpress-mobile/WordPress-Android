@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -23,6 +24,8 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -31,8 +34,10 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -49,6 +54,7 @@ import org.wordpress.android.ui.ActivityNavigator
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.main.BaseAppCompatActivity
 import org.wordpress.android.ui.newstats.StatsCardType
+import org.wordpress.android.ui.newstats.StatsPeriod
 import org.wordpress.android.ui.newstats.components.StatsSummaryCard
 import org.wordpress.android.ui.newstats.util.formatStatValue
 import org.wordpress.android.util.extensions.getParcelableArrayListCompat
@@ -63,43 +69,78 @@ private const val EXTRA_TOTAL_VIEWS_CHANGE_PERCENT = "extra_total_views_change_p
 private const val EXTRA_DATE_RANGE = "extra_date_range"
 private const val EXTRA_VALUE_HEADER_RES_ID = "extra_value_header_res_id"
 
+// Self-fetch mode (referrers): the detail screen re-fetches its own unbounded data for this period
+// instead of receiving the item list through the Intent. When these are absent the screen renders
+// the items passed via EXTRA_ITEMS (posts, clicks, search terms, etc.).
+private const val EXTRA_PERIOD_TYPE = "extra_period_type"
+private const val EXTRA_PERIOD_CUSTOM_START = "extra_period_custom_start"
+private const val EXTRA_PERIOD_CUSTOM_END = "extra_period_custom_end"
+private const val NO_EPOCH_DAY = -1L
+
 @AndroidEntryPoint
 class MostViewedDetailActivity : BaseAppCompatActivity() {
     @Inject lateinit var activityNavigator: ActivityNavigator
+
+    private val viewModel: MostViewedDetailViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         val cardType = intent.extras?.getSerializableCompat<StatsCardType>(EXTRA_CARD_TYPE)
             ?: StatsCardType.MOST_VIEWED_POSTS_AND_PAGES
-        val items = intent.extras?.getParcelableArrayListCompat<MostViewedDetailItem>(EXTRA_ITEMS)
-            ?: arrayListOf()
-        val totalViews = intent.getLongExtra(EXTRA_TOTAL_VIEWS, 0L)
-        val totalViewsChange = intent.getLongExtra(EXTRA_TOTAL_VIEWS_CHANGE, 0L)
-        val totalViewsChangePercent = intent.getDoubleExtra(EXTRA_TOTAL_VIEWS_CHANGE_PERCENT, 0.0)
-        val dateRange = intent.getStringExtra(EXTRA_DATE_RANGE) ?: ""
-        val valueHeaderResId = intent.getIntExtra(
-            EXTRA_VALUE_HEADER_RES_ID, R.string.stats_views
-        )
-        // Calculate maxViewsForBar once (list is sorted by views descending)
-        val maxViewsForBar = items.firstOrNull()?.views ?: 1L
+        val valueHeaderResId = intent.getIntExtra(EXTRA_VALUE_HEADER_RES_ID, R.string.stats_views)
+        val selfFetchPeriod = readSelfFetchPeriod()
+
+        if (selfFetchPeriod != null) {
+            viewModel.loadReferrers(selfFetchPeriod)
+        }
 
         setContent {
             AppThemeM3 {
+                val uiState = if (selfFetchPeriod != null) {
+                    viewModel.uiState.collectAsState().value
+                } else {
+                    remember { intent.toPassedItemsState() }
+                }
                 MostViewedDetailScreen(
                     cardType = cardType,
-                    items = items,
-                    maxViewsForBar = maxViewsForBar,
-                    totalViews = totalViews,
-                    totalViewsChange = totalViewsChange,
-                    totalViewsChangePercent = totalViewsChangePercent,
-                    dateRange = dateRange,
+                    uiState = uiState,
                     valueHeaderResId = valueHeaderResId,
                     onBackPressed = onBackPressedDispatcher::onBackPressed,
+                    onRetry = { viewModel.retry() },
                     onChildClick = { url -> activityNavigator.openInCustomTab(this, url) }
                 )
             }
         }
+    }
+
+    /**
+     * Reads the period for self-fetch mode, or null when the screen should render the items passed
+     * via the Intent (posts, clicks, search terms, etc.).
+     */
+    private fun readSelfFetchPeriod(): StatsPeriod? {
+        val periodType = intent.getStringExtra(EXTRA_PERIOD_TYPE) ?: return null
+        val customStart = intent.getLongExtra(EXTRA_PERIOD_CUSTOM_START, NO_EPOCH_DAY)
+        val customEnd = intent.getLongExtra(EXTRA_PERIOD_CUSTOM_END, NO_EPOCH_DAY)
+        return StatsPeriod.fromTypeString(
+            type = periodType,
+            customStartEpochDay = customStart.takeIf { it != NO_EPOCH_DAY },
+            customEndEpochDay = customEnd.takeIf { it != NO_EPOCH_DAY }
+        )
+    }
+
+    private fun Intent.toPassedItemsState(): MostViewedDetailUiState.Loaded {
+        val items = extras?.getParcelableArrayListCompat<MostViewedDetailItem>(EXTRA_ITEMS)
+            ?: arrayListOf()
+        return MostViewedDetailUiState.Loaded(
+            items = items,
+            // Calculate maxViewsForBar once (list is sorted by views descending)
+            maxViewsForBar = items.firstOrNull()?.views ?: 1L,
+            totalViews = getLongExtra(EXTRA_TOTAL_VIEWS, 0L),
+            totalViewsChange = getLongExtra(EXTRA_TOTAL_VIEWS_CHANGE, 0L),
+            totalViewsChangePercent = getDoubleExtra(EXTRA_TOTAL_VIEWS_CHANGE_PERCENT, 0.0),
+            dateRange = getStringExtra(EXTRA_DATE_RANGE) ?: ""
+        )
     }
 
     companion object {
@@ -130,6 +171,22 @@ class MostViewedDetailActivity : BaseAppCompatActivity() {
             }
             context.startActivity(intent)
         }
+
+        /**
+         * Launches the referrers detail screen in self-fetch mode: only the [period] is passed and
+         * the screen re-fetches the full referrer list itself (see [MostViewedDetailViewModel]).
+         */
+        fun startReferrers(context: Context, period: StatsPeriod) {
+            val intent = Intent(context, MostViewedDetailActivity::class.java).apply {
+                putExtra(EXTRA_CARD_TYPE, StatsCardType.MOST_VIEWED_REFERRERS)
+                putExtra(EXTRA_PERIOD_TYPE, period.toTypeString())
+                if (period is StatsPeriod.Custom) {
+                    putExtra(EXTRA_PERIOD_CUSTOM_START, period.startDate.toEpochDay())
+                    putExtra(EXTRA_PERIOD_CUSTOM_END, period.endDate.toEpochDay())
+                }
+            }
+            context.startActivity(intent)
+        }
     }
 }
 
@@ -137,14 +194,10 @@ class MostViewedDetailActivity : BaseAppCompatActivity() {
 @Composable
 private fun MostViewedDetailScreen(
     cardType: StatsCardType,
-    items: List<MostViewedDetailItem>,
-    maxViewsForBar: Long,
-    totalViews: Long,
-    totalViewsChange: Long,
-    totalViewsChangePercent: Double,
-    dateRange: String,
+    uiState: MostViewedDetailUiState,
     valueHeaderResId: Int = R.string.stats_views,
     onBackPressed: () -> Unit,
+    onRetry: () -> Unit = {},
     onChildClick: (String) -> Unit = {}
 ) {
     val title = stringResource(cardType.displayNameResId)
@@ -164,46 +217,98 @@ private fun MostViewedDetailScreen(
             )
         }
     ) { contentPadding ->
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(contentPadding)
-                .padding(horizontal = 16.dp)
-        ) {
-            item {
-                Spacer(modifier = Modifier.height(8.dp))
-                StatsSummaryCard(
-                    totalViews = totalViews,
-                    dateRange = dateRange,
-                    totalViewsChange = totalViewsChange,
-                    totalViewsChangePercent = totalViewsChangePercent
-                )
-                Spacer(modifier = Modifier.height(16.dp))
-            }
+        val contentModifier = Modifier
+            .fillMaxSize()
+            .padding(contentPadding)
+        when (uiState) {
+            is MostViewedDetailUiState.Loading -> DetailLoadingContent(contentModifier)
+            is MostViewedDetailUiState.Error -> DetailErrorContent(uiState.message, onRetry, contentModifier)
+            is MostViewedDetailUiState.Loaded -> DetailLoadedContent(
+                state = uiState,
+                valueHeaderResId = valueHeaderResId,
+                onChildClick = onChildClick,
+                modifier = contentModifier
+            )
+        }
+    }
+}
 
-            item {
-                ColumnHeaders(
-                    itemCount = items.size,
-                    valueHeaderResId = valueHeaderResId
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-            }
+@Composable
+private fun DetailLoadedContent(
+    state: MostViewedDetailUiState.Loaded,
+    valueHeaderResId: Int,
+    onChildClick: (String) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    LazyColumn(
+        modifier = modifier.padding(horizontal = 16.dp)
+    ) {
+        item {
+            Spacer(modifier = Modifier.height(8.dp))
+            StatsSummaryCard(
+                totalViews = state.totalViews,
+                dateRange = state.dateRange,
+                totalViewsChange = state.totalViewsChange,
+                totalViewsChangePercent = state.totalViewsChangePercent
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+        }
 
-            itemsIndexed(items, key = { _, item -> item.id }) { index, item ->
-                DetailItemRow(
-                    position = index + 1,
-                    item = item,
-                    maxViewsForBar = maxViewsForBar,
-                    onChildClick = onChildClick
-                )
-                if (index < items.lastIndex) {
-                    Spacer(modifier = Modifier.height(4.dp))
-                }
-            }
+        item {
+            ColumnHeaders(
+                itemCount = state.items.size,
+                valueHeaderResId = valueHeaderResId
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+        }
 
-            item {
-                Spacer(modifier = Modifier.height(16.dp))
+        // Key by index rather than item.id: referrer ids are derived from name.hashCode(),
+        // which is not guaranteed unique (empty/duplicate names collide) and would crash the
+        // LazyColumn. The list is a static snapshot, so the index is a stable, unique key.
+        itemsIndexed(state.items, key = { index, _ -> index }) { index, item ->
+            DetailItemRow(
+                position = index + 1,
+                item = item,
+                maxViewsForBar = state.maxViewsForBar,
+                onChildClick = onChildClick
+            )
+            if (index < state.items.lastIndex) {
+                Spacer(modifier = Modifier.height(4.dp))
             }
+        }
+
+        item {
+            Spacer(modifier = Modifier.height(16.dp))
+        }
+    }
+}
+
+@Composable
+private fun DetailLoadingContent(modifier: Modifier = Modifier) {
+    Box(modifier = modifier, contentAlignment = Alignment.Center) {
+        CircularProgressIndicator()
+    }
+}
+
+@Composable
+private fun DetailErrorContent(
+    message: String,
+    onRetry: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = modifier.padding(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Text(
+            text = message,
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.error
+        )
+        Spacer(modifier = Modifier.height(16.dp))
+        Button(onClick = onRetry) {
+            Text(text = stringResource(R.string.retry))
         }
     }
 }
@@ -319,23 +424,25 @@ private fun MostViewedDetailScreenPreview() {
     AppThemeM3 {
         MostViewedDetailScreen(
             cardType = StatsCardType.MOST_VIEWED_POSTS_AND_PAGES,
-            items = listOf(
-                MostViewedDetailItem(1, "Welcome to Automattic", 998,
-                    MostViewedChange.Positive(41, 4.3)),
-                MostViewedDetailItem(2, "Travel Guidelines", 111,
-                    MostViewedChange.Positive(22, 24.7)),
-                MostViewedDetailItem(3, "LibreChat", 93,
-                    MostViewedChange.Positive(21, 29.2)),
-                MostViewedDetailItem(4, "Getting Started with Claude Code: A Comprehensive Tutorial", 91,
-                    MostViewedChange.Positive(47, 106.8)),
-                MostViewedDetailItem(5, "AI Tools & Resource Hub", 72,
-                    MostViewedChange.Positive(31, 75.6))
+            uiState = MostViewedDetailUiState.Loaded(
+                items = listOf(
+                    MostViewedDetailItem(1, "Welcome to Automattic", 998,
+                        MostViewedChange.Positive(41, 4.3)),
+                    MostViewedDetailItem(2, "Travel Guidelines", 111,
+                        MostViewedChange.Positive(22, 24.7)),
+                    MostViewedDetailItem(3, "LibreChat", 93,
+                        MostViewedChange.Positive(21, 29.2)),
+                    MostViewedDetailItem(4, "Getting Started with Claude Code: A Comprehensive Tutorial", 91,
+                        MostViewedChange.Positive(47, 106.8)),
+                    MostViewedDetailItem(5, "AI Tools & Resource Hub", 72,
+                        MostViewedChange.Positive(31, 75.6))
+                ),
+                maxViewsForBar = 998,
+                totalViews = 5400,
+                totalViewsChange = 69,
+                totalViewsChangePercent = 1.3,
+                dateRange = "21-27 Jan"
             ),
-            maxViewsForBar = 998,
-            totalViews = 5400,
-            totalViewsChange = 69,
-            totalViewsChangePercent = 1.3,
-            dateRange = "21-27 Jan",
             onBackPressed = {}
         )
     }

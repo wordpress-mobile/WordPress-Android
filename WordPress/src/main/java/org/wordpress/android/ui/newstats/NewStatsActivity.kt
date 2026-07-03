@@ -691,15 +691,11 @@ private fun TrafficTabContent(
                         uiState = referrersUiState,
                         cardType = cardType,
                         onShowAllClick = {
-                            val detailData = mostViewedViewModel.getReferrersDetailData()
-                            MostViewedDetailActivity.start(
+                            // The referrers detail screen self-fetches the full (unbounded) list, so
+                            // only the selected period is passed instead of the whole item list.
+                            MostViewedDetailActivity.startReferrers(
                                 context = context,
-                                cardType = detailData.cardType,
-                                items = detailData.items,
-                                totalViews = detailData.totalViews,
-                                totalViewsChange = detailData.totalViewsChange,
-                                totalViewsChangePercent = detailData.totalViewsChangePercent,
-                                dateRange = detailData.dateRange
+                                period = mostViewedViewModel.getCurrentPeriod()
                             )
                         },
                         onRetry = mostViewedViewModel::onRetryReferrers,

@@ -510,22 +510,6 @@ class MostViewedViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `when getReferrersDetailData is called, then returns cached referrers data`() = test {
-        whenever(statsRepository.fetchMostViewed(any(), any(), any()))
-            .thenReturn(createSuccessResult())
-        whenever(resourceProvider.getString(R.string.stats_period_last_7_days))
-            .thenReturn("Last 7 days")
-
-        initViewModel()
-        advanceUntilIdle()
-
-        val detailData = viewModel.getReferrersDetailData()
-
-        assertThat(detailData.cardType).isEqualTo(StatsCardType.MOST_VIEWED_REFERRERS)
-        assertThat(detailData.items).hasSize(2)
-    }
-
-    @Test
     fun `when getPostsDetailData is called, then all items are returned not just card items`() = test {
         val manyItems = (1..15).mapIndexed { idx, index ->
             MostViewedItemData(
