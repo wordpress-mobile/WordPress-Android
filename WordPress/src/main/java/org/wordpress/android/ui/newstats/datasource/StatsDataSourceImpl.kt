@@ -205,19 +205,22 @@ class StatsDataSourceImpl @Inject constructor(
         dateRange: StatsDateRange,
         max: Int
     ): ReferrersDataResult {
+        // Referrers-specific max semantics: the server treats max=0 as "all" but an unset max as
+        // "default 10", so 0 is sent explicitly (unlike other endpoints that map 0 -> null).
+        val maxParam = max.coerceAtLeast(0).toUInt()
         val params = when (dateRange) {
             is StatsDateRange.Preset -> StatsReferrersParams(
                 period = StatsReferrersPeriod.DAY,
                 date = dateRange.date,
                 num = dateRange.num.toUInt(),
-                max = max.coerceAtLeast(0).toUInt(),
+                max = maxParam,
                 locale = wpComLanguage
             )
             is StatsDateRange.Custom -> StatsReferrersParams(
                 period = StatsReferrersPeriod.DAY,
                 date = dateRange.date,
                 startDate = dateRange.startDate,
-                max = max.coerceAtLeast(0).toUInt(),
+                max = maxParam,
                 locale = wpComLanguage
             )
         }
