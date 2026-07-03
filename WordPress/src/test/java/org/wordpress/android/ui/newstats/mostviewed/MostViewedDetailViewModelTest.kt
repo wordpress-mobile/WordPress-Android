@@ -132,7 +132,7 @@ class MostViewedDetailViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `when the fetch throws, then the error state carries the exception message`() = test {
+    fun `when the fetch throws, then the generic unknown error state is emitted`() = test {
         whenever(statsRepository.fetchReferrersDetail(any(), any()))
             .thenThrow(RuntimeException(EXCEPTION_MESSAGE))
 
@@ -141,7 +141,7 @@ class MostViewedDetailViewModelTest : BaseUnitTest() {
 
         val state = viewModel.uiState.value
         assertThat(state).isInstanceOf(MostViewedDetailUiState.Error::class.java)
-        assertThat((state as MostViewedDetailUiState.Error).message).isEqualTo(EXCEPTION_MESSAGE)
+        assertThat((state as MostViewedDetailUiState.Error).message).isEqualTo(UNKNOWN_ERROR)
     }
 
     @Test

@@ -20,8 +20,9 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -203,7 +204,11 @@ private fun LoadedContent(
                 val percentage = if (state.maxViewsForBar > 0) {
                     item.views.toFloat() / state.maxViewsForBar.toFloat()
                 } else 0f
-                MostViewedItemRow(item = item, percentage = percentage, onChildClick = onChildClick)
+                // Key on the item id so the row's saved expanded state stays with its referrer
+                // (and resets to collapsed) when the list reloads after a period change.
+                key(item.id) {
+                    MostViewedItemRow(item = item, percentage = percentage, onChildClick = onChildClick)
+                }
                 if (index < state.items.lastIndex) {
                     Spacer(modifier = Modifier.height(4.dp))
                 }
@@ -294,9 +299,9 @@ private fun MostViewedItemRow(
 ) {
     val barColor = MaterialTheme.colorScheme.primary.copy(alpha = HIGHLIGHTED_ITEM_BACKGROUND_ALPHA)
     val hasChildren = item.children.isNotEmpty()
-    // Key the expanded state on the item id so it resets when the row is reused for a different
-    // referrer (e.g. after the period changes and the list reloads at the same position).
-    var expanded by remember(item.id) { mutableStateOf(false) }
+    // The caller wraps each row in key(item.id), so this saved state is scoped to (and resets with)
+    // the referrer, and survives configuration changes (e.g. rotation) via rememberSaveable.
+    var expanded by rememberSaveable { mutableStateOf(false) }
 
     Column {
         Box(
