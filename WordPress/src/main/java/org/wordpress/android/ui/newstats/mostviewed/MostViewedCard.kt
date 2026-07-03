@@ -294,7 +294,9 @@ private fun MostViewedItemRow(
 ) {
     val barColor = MaterialTheme.colorScheme.primary.copy(alpha = HIGHLIGHTED_ITEM_BACKGROUND_ALPHA)
     val hasChildren = item.children.isNotEmpty()
-    var expanded by remember { mutableStateOf(false) }
+    // Key the expanded state on the item id so it resets when the row is reused for a different
+    // referrer (e.g. after the period changes and the list reloads at the same position).
+    var expanded by remember(item.id) { mutableStateOf(false) }
 
     Column {
         Box(
