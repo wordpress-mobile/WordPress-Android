@@ -344,16 +344,15 @@ private fun MostViewedItemRow(
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Column(horizontalAlignment = Alignment.End) {
                         Row(verticalAlignment = Alignment.CenterVertically) {
+                            if (hasChildren) {
+                                ExpandChevron(expanded = expanded)
+                                Spacer(modifier = Modifier.width(4.dp))
+                            }
                             Text(
                                 text = formatStatValue(item.views),
                                 style = MaterialTheme.typography.bodyLarge,
                                 fontWeight = FontWeight.SemiBold,
                                 color = MaterialTheme.colorScheme.onSurface
-                            )
-                            Spacer(modifier = Modifier.width(4.dp))
-                            ExpandChevron(
-                                hasChildren = hasChildren,
-                                expanded = expanded
                             )
                         }
                         ChangeIndicator(change = item.change)
@@ -382,20 +381,12 @@ private fun MostViewedItemRow(
 }
 
 @Composable
-private fun ExpandChevron(hasChildren: Boolean, expanded: Boolean) {
-    val imageVector = when {
-        !hasChildren -> Icons.Default.ChevronRight
-        expanded -> Icons.Default.KeyboardArrowUp
-        else -> Icons.Default.KeyboardArrowDown
-    }
-    val contentDescription = if (hasChildren) {
-        stringResource(
-            if (expanded) R.string.stats_collapse_group else R.string.stats_expand_group
-        )
-    } else null
+private fun ExpandChevron(expanded: Boolean) {
     Icon(
-        imageVector = imageVector,
-        contentDescription = contentDescription,
+        imageVector = if (expanded) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown,
+        contentDescription = stringResource(
+            if (expanded) R.string.stats_collapse_group else R.string.stats_expand_group
+        ),
         modifier = Modifier.size(16.dp),
         tint = MaterialTheme.colorScheme.onSurfaceVariant
     )
@@ -409,7 +400,8 @@ private fun MostViewedChildRow(
 ) {
     val barColor = MaterialTheme.colorScheme.primary.copy(alpha = HIGHLIGHTED_ITEM_BACKGROUND_ALPHA)
     val url = child.url
-    val clickModifier = if (!url.isNullOrBlank()) {
+    val isClickable = !url.isNullOrBlank()
+    val clickModifier = if (isClickable) {
         Modifier.clickable { onChildClick(url) }
     } else Modifier
 
@@ -447,6 +439,15 @@ private fun MostViewedChildRow(
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurface
             )
+            if (isClickable) {
+                Spacer(modifier = Modifier.width(4.dp))
+                Icon(
+                    imageVector = Icons.Default.ChevronRight,
+                    contentDescription = null,
+                    modifier = Modifier.size(16.dp),
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
         }
     }
 }

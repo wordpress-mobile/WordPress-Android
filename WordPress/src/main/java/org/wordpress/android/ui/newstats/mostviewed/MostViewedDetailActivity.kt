@@ -295,15 +295,14 @@ private fun DetailItemRow(
 
                 Column(horizontalAlignment = Alignment.End) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
+                        if (hasChildren) {
+                            DetailExpandChevron(expanded = expanded)
+                            Spacer(modifier = Modifier.width(4.dp))
+                        }
                         Text(
                             text = formatStatValue(item.views),
                             style = MaterialTheme.typography.bodyLarge,
                             fontWeight = FontWeight.SemiBold
-                        )
-                        Spacer(modifier = Modifier.width(4.dp))
-                        DetailExpandChevron(
-                            hasChildren = hasChildren,
-                            expanded = expanded
                         )
                     }
                     ChangeIndicator(change = item.change)
@@ -331,20 +330,12 @@ private fun DetailItemRow(
 }
 
 @Composable
-private fun DetailExpandChevron(hasChildren: Boolean, expanded: Boolean) {
-    val imageVector = when {
-        !hasChildren -> Icons.Default.ChevronRight
-        expanded -> Icons.Default.KeyboardArrowUp
-        else -> Icons.Default.KeyboardArrowDown
-    }
-    val contentDescription = if (hasChildren) {
-        stringResource(
-            if (expanded) R.string.stats_collapse_group else R.string.stats_expand_group
-        )
-    } else null
+private fun DetailExpandChevron(expanded: Boolean) {
     Icon(
-        imageVector = imageVector,
-        contentDescription = contentDescription,
+        imageVector = if (expanded) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown,
+        contentDescription = stringResource(
+            if (expanded) R.string.stats_collapse_group else R.string.stats_expand_group
+        ),
         modifier = Modifier.size(16.dp),
         tint = MaterialTheme.colorScheme.onSurfaceVariant
     )
@@ -360,7 +351,8 @@ private fun DetailChildRow(
         alpha = HIGHLIGHTED_ITEM_BACKGROUND_ALPHA
     )
     val url = child.url
-    val clickModifier = if (!url.isNullOrBlank()) {
+    val isClickable = !url.isNullOrBlank()
+    val clickModifier = if (isClickable) {
         Modifier.clickable { onChildClick(url) }
     } else Modifier
 
@@ -397,6 +389,15 @@ private fun DetailChildRow(
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurface
             )
+            if (isClickable) {
+                Spacer(modifier = Modifier.width(4.dp))
+                Icon(
+                    imageVector = Icons.Default.ChevronRight,
+                    contentDescription = null,
+                    modifier = Modifier.size(16.dp),
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
         }
     }
 }
