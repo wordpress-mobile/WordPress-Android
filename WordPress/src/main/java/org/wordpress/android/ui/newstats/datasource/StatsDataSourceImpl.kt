@@ -210,14 +210,14 @@ class StatsDataSourceImpl @Inject constructor(
                 period = StatsReferrersPeriod.DAY,
                 date = dateRange.date,
                 num = dateRange.num.toUInt(),
-                max = max.coerceAtLeast(1).toUInt(),
+                max = max.coerceAtLeast(0).toUInt(),
                 locale = wpComLanguage
             )
             is StatsDateRange.Custom -> StatsReferrersParams(
                 period = StatsReferrersPeriod.DAY,
                 date = dateRange.date,
                 startDate = dateRange.startDate,
-                max = max.coerceAtLeast(1).toUInt(),
+                max = max.coerceAtLeast(0).toUInt(),
                 locale = wpComLanguage
             )
         }
