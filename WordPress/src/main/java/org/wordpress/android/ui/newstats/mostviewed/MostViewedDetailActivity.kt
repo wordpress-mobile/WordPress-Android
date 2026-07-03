@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.compose.setContent
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -18,16 +17,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.ChevronRight
-import androidx.compose.material.icons.filled.KeyboardArrowDown
-import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -250,7 +245,6 @@ private fun DetailItemRow(
     )
     val hasChildren = item.children.isNotEmpty()
     var expanded by remember { mutableStateOf(false) }
-    val maxChildViews = item.children.maxOfOrNull { it.views } ?: 0L
 
     Column {
         Box(
@@ -296,7 +290,7 @@ private fun DetailItemRow(
                 Column(horizontalAlignment = Alignment.End) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         if (hasChildren) {
-                            DetailExpandChevron(expanded = expanded)
+                            MostViewedExpandChevron(expanded = expanded)
                             Spacer(modifier = Modifier.width(4.dp))
                         }
                         Text(
@@ -310,98 +304,12 @@ private fun DetailItemRow(
             }
         }
 
-        if (hasChildren) {
-            AnimatedVisibility(visible = expanded) {
-                Column(
-                    modifier = Modifier.padding(start = 32.dp, top = 4.dp),
-                    verticalArrangement = Arrangement.spacedBy(4.dp)
-                ) {
-                    item.children.forEach { child ->
-                        val childPercentage = if (maxChildViews > 0) {
-                            child.views.toFloat() / maxChildViews.toFloat()
-                        } else 0f
-                        DetailChildRow(
-                            child = child,
-                            percentage = childPercentage,
-                            onChildClick = onChildClick
-                        )
-                    }
-                }
-            }
-        }
-    }
-}
-
-@Composable
-private fun DetailExpandChevron(expanded: Boolean) {
-    Icon(
-        imageVector = if (expanded) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown,
-        contentDescription = stringResource(
-            if (expanded) R.string.stats_collapse_group else R.string.stats_expand_group
-        ),
-        modifier = Modifier.size(16.dp),
-        tint = MaterialTheme.colorScheme.onSurfaceVariant
-    )
-}
-
-@Composable
-private fun DetailChildRow(
-    child: MostViewedChildItem,
-    percentage: Float,
-    onChildClick: (String) -> Unit
-) {
-    val barColor = MaterialTheme.colorScheme.primary.copy(
-        alpha = HIGHLIGHTED_ITEM_BACKGROUND_ALPHA
-    )
-    val url = child.url
-    val isClickable = !url.isNullOrBlank()
-    val clickModifier = if (isClickable) {
-        Modifier.clickable { onChildClick(url) }
-    } else Modifier
-
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(IntrinsicSize.Min)
-            .clip(RoundedCornerShape(8.dp))
-            .then(clickModifier)
-    ) {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth(fraction = percentage)
-                .fillMaxHeight()
-                .background(barColor)
+        MostViewedExpandableChildren(
+            children = item.children,
+            expanded = expanded,
+            startPadding = 32.dp,
+            onChildClick = onChildClick
         )
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 10.dp, horizontal = 16.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                text = child.name,
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurface,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-                modifier = Modifier.weight(1f)
-            )
-            Spacer(modifier = Modifier.width(8.dp))
-            Text(
-                text = formatStatValue(child.views),
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurface
-            )
-            if (isClickable) {
-                Spacer(modifier = Modifier.width(4.dp))
-                Icon(
-                    imageVector = Icons.Default.ChevronRight,
-                    contentDescription = null,
-                    modifier = Modifier.size(16.dp),
-                    tint = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-            }
-        }
     }
 }
 

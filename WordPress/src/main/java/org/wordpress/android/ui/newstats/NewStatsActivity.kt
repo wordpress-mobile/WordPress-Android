@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.newstats
 
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -139,6 +138,9 @@ class NewStatsActivity : BaseAppCompatActivity() {
     @Inject
     lateinit var newStatsFeatureConfig: NewStatsFeatureConfig
 
+    @Inject
+    lateinit var activityNavigator: ActivityNavigator
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val shouldShowIntro =
@@ -155,6 +157,9 @@ class NewStatsActivity : BaseAppCompatActivity() {
                     onIntroDismissed = {
                         appPrefsWrapper
                             .setNewStatsIntroShown(true)
+                    },
+                    onReferrerChildClick = { url ->
+                        activityNavigator.openInCustomTab(this, url)
                     }
                 )
             }
@@ -230,7 +235,8 @@ private fun NewStatsScreen(
     showSwitchToOldStats: Boolean = false,
     onSwitchToOldStats: () -> Unit = {},
     showIntroBottomSheet: Boolean = false,
-    onIntroDismissed: () -> Unit = {}
+    onIntroDismissed: () -> Unit = {},
+    onReferrerChildClick: (String) -> Unit = {}
 ) {
     val viewsStatsViewModel: ViewsStatsViewModel = viewModel()
     val selectedPeriod by viewsStatsViewModel.selectedPeriod.collectAsState()
@@ -372,7 +378,8 @@ private fun NewStatsScreen(
             ) { page ->
                 StatsTabContent(
                     tab = tabs[page],
-                    viewsStatsViewModel = viewsStatsViewModel
+                    viewsStatsViewModel = viewsStatsViewModel,
+                    onReferrerChildClick = onReferrerChildClick
                 )
             }
         }
@@ -382,11 +389,13 @@ private fun NewStatsScreen(
 @Composable
 private fun StatsTabContent(
     tab: StatsTab,
-    viewsStatsViewModel: ViewsStatsViewModel
+    viewsStatsViewModel: ViewsStatsViewModel,
+    onReferrerChildClick: (String) -> Unit = {}
 ) {
     when (tab) {
         StatsTab.TRAFFIC -> TrafficTabContent(
-            viewsStatsViewModel = viewsStatsViewModel
+            viewsStatsViewModel = viewsStatsViewModel,
+            onReferrerChildClick = onReferrerChildClick
         )
         StatsTab.INSIGHTS -> InsightsTabContent()
         StatsTab.SUBSCRIBERS -> SubscribersTabContent()
@@ -408,13 +417,10 @@ private fun TrafficTabContent(
     fileDownloadsViewModel: FileDownloadsViewModel = viewModel(),
     devicesViewModel: DevicesViewModel = viewModel(),
     utmViewModel: UtmViewModel = viewModel(),
-    newStatsViewModel: NewStatsViewModel = viewModel()
+    newStatsViewModel: NewStatsViewModel = viewModel(),
+    onReferrerChildClick: (String) -> Unit = {}
 ) {
     val context = LocalContext.current
-    val activityNavigator = remember { ActivityNavigator() }
-    val onReferrerChildClick: (String) -> Unit = { url ->
-        (context as? Activity)?.let { activityNavigator.openInCustomTab(it, url) }
-    }
     val todaysStatsUiState by todaysStatsViewModel.uiState.collectAsState()
     val viewsStatsUiState by viewsStatsViewModel.uiState.collectAsState()
     val postsUiState by mostViewedViewModel.postsUiState.collectAsState()
