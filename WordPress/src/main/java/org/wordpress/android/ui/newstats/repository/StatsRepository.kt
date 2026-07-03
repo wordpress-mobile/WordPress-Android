@@ -662,8 +662,11 @@ class StatsRepository @Inject constructor(
         currentDateRange: StatsDateRange,
         previousDateRange: StatsDateRange
     ): MostViewedResult = coroutineScope {
-        val currentDeferred = async { statsDataSource.fetchReferrers(siteId, currentDateRange) }
-        val previousDeferred = async { statsDataSource.fetchReferrers(siteId, previousDateRange) }
+        // Request all referrers (max = 0 = unlimited) so the detail screen can show more than the
+        // card. The server defaults to 10 when max is unset, so an explicit 0 is sent instead. The
+        // card itself still shows only the first CARD_MAX_ITEMS entries.
+        val currentDeferred = async { statsDataSource.fetchReferrers(siteId, currentDateRange, max = 0) }
+        val previousDeferred = async { statsDataSource.fetchReferrers(siteId, previousDateRange, max = 0) }
 
         val currentResult = currentDeferred.await()
         val previousResult = previousDeferred.await()
