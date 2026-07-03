@@ -5,9 +5,6 @@ import org.wordpress.android.ui.newstats.StatsPeriod
 import org.wordpress.android.ui.newstats.datasource.CommentsDataPoint
 import org.wordpress.android.ui.newstats.datasource.LikesDataPoint
 import org.wordpress.android.ui.newstats.datasource.PostsDataPoint
-import org.wordpress.android.ui.newstats.datasource.ReferrerChildDataItem
-import org.wordpress.android.ui.newstats.datasource.ReferrerDataItem
-import org.wordpress.android.ui.newstats.datasource.ReferrersDataResult
 import org.wordpress.android.ui.newstats.datasource.StatsDataSource
 import org.wordpress.android.ui.newstats.datasource.StatsErrorType
 import org.wordpress.android.ui.newstats.datasource.StatsUnit
@@ -548,76 +545,6 @@ class StatsRepositoryTest : BaseUnitTest() {
         }
 
     @Test
-    fun `given successful response, when fetchMostViewed with REFERRERS, then success result is returned`() = test {
-        whenever(statsDataSource.fetchReferrers(any(), any(), any()))
-            .thenReturn(ReferrersDataResult.Success(createReferrersData()))
-
-        val result = repository.fetchMostViewed(
-            TEST_SITE_ID,
-            StatsPeriod.Last7Days,
-            MostViewedDataSource.REFERRERS
-        )
-
-        assertThat(result).isInstanceOf(MostViewedResult.Success::class.java)
-        val success = result as MostViewedResult.Success
-        assertThat(success.items).hasSize(2)
-        assertThat(success.items[0].title).isEqualTo(TEST_REFERRER_NAME_1)
-        assertThat(success.items[0].views).isEqualTo(TEST_REFERRER_VIEWS_1)
-        assertThat(success.items[1].title).isEqualTo(TEST_REFERRER_NAME_2)
-        assertThat(success.items[1].views).isEqualTo(TEST_REFERRER_VIEWS_2)
-    }
-
-    @Test
-    fun `given referrer group with children, when fetchMostViewed with REFERRERS, then children propagate`() = test {
-        val referrersData = listOf(
-            ReferrerDataItem(
-                name = "Search Engines",
-                views = 23,
-                children = listOf(
-                    ReferrerChildDataItem(name = "Google Search", url = "http://google.com/", views = 23)
-                )
-            )
-        )
-        whenever(statsDataSource.fetchReferrers(any(), any(), any()))
-            .thenReturn(ReferrersDataResult.Success(referrersData))
-
-        val result = repository.fetchMostViewed(
-            TEST_SITE_ID,
-            StatsPeriod.Last7Days,
-            MostViewedDataSource.REFERRERS
-        )
-
-        assertThat(result).isInstanceOf(MostViewedResult.Success::class.java)
-        val success = result as MostViewedResult.Success
-        assertThat(success.items[0].children).hasSize(1)
-        assertThat(success.items[0].children[0].name).isEqualTo("Google Search")
-        assertThat(success.items[0].children[0].url).isEqualTo("http://google.com/")
-        assertThat(success.items[0].children[0].views).isEqualTo(23)
-    }
-
-    @Test
-    fun `when fetchMostViewed with REFERRERS, then card-sized max is requested`() = test {
-        whenever(statsDataSource.fetchReferrers(any(), any(), any()))
-            .thenReturn(ReferrersDataResult.Success(createReferrersData()))
-
-        repository.fetchMostViewed(TEST_SITE_ID, StatsPeriod.Last7Days, MostViewedDataSource.REFERRERS)
-
-        // Card request is bounded (current + previous period).
-        verify(statsDataSource, times(2)).fetchReferrers(any(), any(), eq(REFERRERS_CARD_MAX))
-    }
-
-    @Test
-    fun `when fetchReferrersDetail, then unlimited max is requested`() = test {
-        whenever(statsDataSource.fetchReferrers(any(), any(), any()))
-            .thenReturn(ReferrersDataResult.Success(createReferrersData()))
-
-        repository.fetchReferrersDetail(TEST_SITE_ID, StatsPeriod.Last7Days)
-
-        // Detail request asks for all referrers (max = 0), for current + previous period.
-        verify(statsDataSource, times(2)).fetchReferrers(any(), any(), eq(REFERRERS_DETAIL_MAX))
-    }
-
-    @Test
     fun `given successful response, when fetchMostViewed, then totalViews is calculated correctly`() = test {
         whenever(statsDataSource.fetchTopPostsAndPages(any(), any(), any()))
             .thenReturn(TopPostsDataResult.Success(createTopPostsData()))
@@ -671,21 +598,6 @@ class StatsRepositoryTest : BaseUnitTest() {
             TEST_SITE_ID,
             StatsPeriod.Last7Days,
             MostViewedDataSource.POSTS_AND_PAGES
-        )
-
-        assertThat(result).isInstanceOf(MostViewedResult.Error::class.java)
-        assertThat((result as MostViewedResult.Error).message).isEqualTo(TEST_ERROR_TYPE.name)
-    }
-
-    @Test
-    fun `given error response, when fetchMostViewed with REFERRERS, then error result is returned`() = test {
-        whenever(statsDataSource.fetchReferrers(any(), any(), any()))
-            .thenReturn(ReferrersDataResult.Error(TEST_ERROR_TYPE))
-
-        val result = repository.fetchMostViewed(
-            TEST_SITE_ID,
-            StatsPeriod.Last7Days,
-            MostViewedDataSource.REFERRERS
         )
 
         assertThat(result).isInstanceOf(MostViewedResult.Error::class.java)
@@ -800,21 +712,12 @@ class StatsRepositoryTest : BaseUnitTest() {
         TopPostDataItem(id = 1, title = TEST_POST_TITLE_1, views = TEST_POST_VIEWS_1),
         TopPostDataItem(id = 2, title = TEST_POST_TITLE_2, views = TEST_POST_VIEWS_2)
     )
-
-    private fun createReferrersData() = listOf(
-        ReferrerDataItem(name = TEST_REFERRER_NAME_1, views = TEST_REFERRER_VIEWS_1),
-        ReferrerDataItem(name = TEST_REFERRER_NAME_2, views = TEST_REFERRER_VIEWS_2)
-    )
     // endregion
 
     companion object {
         private const val TEST_SITE_ID = 123L
         private const val TEST_ACCESS_TOKEN = "test_access_token"
         private val TEST_ERROR_TYPE = StatsErrorType.NETWORK_ERROR
-
-        // Mirrors StatsRepository's private referrer max values (card vs. detail).
-        private const val REFERRERS_CARD_MAX = 10
-        private const val REFERRERS_DETAIL_MAX = 0
 
         private const val TEST_PERIOD_1 = "2024-01-15"
         private const val TEST_PERIOD_2 = "2024-01-16"
@@ -840,10 +743,5 @@ class StatsRepositoryTest : BaseUnitTest() {
         private const val TEST_POST_TITLE_2 = "Test Post 2"
         private const val TEST_POST_VIEWS_1 = 500L
         private const val TEST_POST_VIEWS_2 = 300L
-
-        private const val TEST_REFERRER_NAME_1 = "google.com"
-        private const val TEST_REFERRER_NAME_2 = "twitter.com"
-        private const val TEST_REFERRER_VIEWS_1 = 200L
-        private const val TEST_REFERRER_VIEWS_2 = 150L
     }
 }
