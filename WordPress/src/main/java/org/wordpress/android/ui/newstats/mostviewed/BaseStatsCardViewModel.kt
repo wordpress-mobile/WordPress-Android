@@ -137,6 +137,12 @@ abstract class BaseStatsCardViewModel(
         loadData()
     }
 
+    /**
+     * The period currently selected for this card. The detail screen self-fetches its own (unbounded)
+     * data for this period rather than receiving the full list via the Intent.
+     */
+    fun getCurrentPeriod(): StatsPeriod = currentPeriod
+
     fun getDetailData(): MostViewedDetailData {
         return MostViewedDetailData(
             cardType = cardType,

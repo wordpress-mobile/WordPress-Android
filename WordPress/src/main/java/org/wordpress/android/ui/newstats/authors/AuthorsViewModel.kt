@@ -107,6 +107,12 @@ class AuthorsViewModel @Inject constructor(
         loadData()
     }
 
+    /**
+     * The period currently selected for the authors card. The authors detail screen self-fetches its
+     * own (unbounded) data for this period rather than receiving the full list via the Intent.
+     */
+    fun getCurrentPeriod(): StatsPeriod = currentPeriod
+
     fun getDetailData(): AuthorsDetailData {
         return AuthorsDetailData(
             authors = allAuthors,
@@ -140,14 +146,7 @@ class AuthorsViewModel @Inject constructor(
                             hasMoreItems = false
                         )
                     } else {
-                        val authors = result.authors.map { author ->
-                            AuthorUiItem(
-                                name = author.name,
-                                avatarUrl = author.avatarUrl,
-                                views = author.views,
-                                change = author.toStatsViewChange()
-                            )
-                        }
+                        val authors = result.authors.map { it.toAuthorUiItem() }
 
                         allAuthors = authors
 
@@ -178,14 +177,22 @@ class AuthorsViewModel @Inject constructor(
         }
     }
 
-    private fun TopAuthorItemData.toStatsViewChange(): StatsViewChange {
-        return when {
-            viewsChange > 0 -> StatsViewChange.Positive(viewsChange, abs(viewsChangePercent))
-            viewsChange < 0 -> StatsViewChange.Negative(abs(viewsChange), abs(viewsChangePercent))
-            else -> StatsViewChange.NoChange
-        }
-    }
 }
+
+/**
+ * Maps a repository [TopAuthorItemData] to the parcelable [AuthorUiItem] shown by the card and the
+ * detail screen. Shared by [AuthorsViewModel] and [AuthorsDetailViewModel].
+ */
+internal fun TopAuthorItemData.toAuthorUiItem() = AuthorUiItem(
+    name = name,
+    avatarUrl = avatarUrl,
+    views = views,
+    change = when {
+        viewsChange > 0 -> StatsViewChange.Positive(viewsChange, abs(viewsChangePercent))
+        viewsChange < 0 -> StatsViewChange.Negative(abs(viewsChange), abs(viewsChangePercent))
+        else -> StatsViewChange.NoChange
+    }
+)
 
 data class AuthorsDetailData(
     val authors: List<AuthorUiItem>,
