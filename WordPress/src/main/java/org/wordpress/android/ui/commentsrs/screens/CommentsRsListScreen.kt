@@ -41,6 +41,7 @@ fun CommentsRsListScreen(
     tabStates: Map<CommentsRsListTab, CommentsTabUiState>,
     snackbarMessages: Flow<SnackbarMessage> = emptyFlow(),
     onInitTab: (CommentsRsListTab) -> Unit,
+    onTabChanged: (CommentsRsListTab) -> Unit,
     onRefreshTab: (CommentsRsListTab) -> Unit,
     onLoadMore: (CommentsRsListTab) -> Unit,
     onNavigateBack: () -> Unit,
@@ -99,6 +100,7 @@ fun CommentsRsListScreen(
             LaunchedEffect(pagerState) {
                 snapshotFlow { pagerState.settledPage }.collect { page ->
                     onInitTab(tabs[page])
+                    onTabChanged(tabs[page])
                 }
             }
 

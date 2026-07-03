@@ -60,10 +60,18 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
     private val _uiState = MutableLiveData<CommentDetailsUiState>()
     private val _uiActionEvent = MutableLiveData<Event<CommentDetailsActionEvent>>()
     private val _onSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
+    private val _commentChanged = MutableLiveData<Event<Unit>>()
 
     val uiState: LiveData<CommentDetailsUiState> = _uiState
     val uiActionEvent: LiveData<Event<CommentDetailsActionEvent>> = _uiActionEvent
     val onSnackbarMessage: LiveData<Event<SnackbarMessageHolder>> = _onSnackbarMessage
+
+    /**
+     * Fires when the comment was changed on the server (moderated, replied to, edited or
+     * deleted) — NOT on like, which the list doesn't render. The host activity reports it as
+     * its result so the rs list only refreshes when there's something new to show.
+     */
+    val commentChanged: LiveData<Event<Unit>> = _commentChanged
 
     private var isStarted = false
     private lateinit var site: SiteModel
@@ -83,10 +91,12 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
     }
 
     /**
-     * Reloads the comment. Used after returning from the edit screen so any edits are reflected.
+     * The edit screen reported saved changes: mark the comment as changed and reload it so the
+     * edits are reflected.
      */
-    fun refreshComment() {
+    fun onCommentEdited() {
         if (!isStarted) return
+        _commentChanged.value = Event(Unit)
         loadComment()
     }
 
@@ -100,16 +110,32 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
             if (!isRefresh) {
                 _uiState.value = CommentDetailsUiState(showProgress = true)
             }
-            val (rsComment, cached) = withContext(bgDispatcher) {
+            val (rsComment, cached, fallbackPostTitle) = withContext(bgDispatcher) {
                 val rs = commentsRsDataSource.getComment(site, remoteCommentId)
-                val local = commentsStore.getCommentByLocalSiteAndRemoteId(site.id, remoteCommentId).firstOrNull()
-                rs to local
+                var local = commentsStore.getCommentByLocalSiteAndRemoteId(site.id, remoteCommentId).firstOrNull()
+                // Opened from the rs list the FluxC cache may not have this comment at all (the
+                // legacy list guaranteed a row before the detail could open). Fetch it so the
+                // post title, like state and the edit screen's local id are available — WP.com
+                // only, since FluxC has no application-password transport.
+                if (local == null && site.isUsingWpComRestApi) {
+                    commentsStore.fetchComment(site, remoteCommentId, null)
+                    local = commentsStore.getCommentByLocalSiteAndRemoteId(site.id, remoteCommentId).firstOrNull()
+                }
+                // Still no title (self-hosted application-password site, or the fetch failed):
+                // resolve it the way the rs list does — usually a free hit on the shared title
+                // cache the list populated moments earlier.
+                val fallbackTitle = if (local?.postTitle.isNullOrBlank() && rs != null && rs.postId > 0) {
+                    commentsRsDataSource.fetchPostTitles(site, listOf(rs.postId))[rs.postId].orEmpty()
+                } else {
+                    ""
+                }
+                Triple(rs, local, fallbackTitle)
             }
             when {
                 rsComment != null -> {
                     loadedComment = rsComment
                     localCommentId = cached?.id?.toInt() ?: 0
-                    _uiState.value = rsComment.toUiState(cached)
+                    _uiState.value = rsComment.toUiState(cached, fallbackPostTitle)
                 }
                 isRefresh -> showSnackbar(R.string.error_load_comment)
                 else -> _onSnackbarMessage.value = Event(
@@ -205,6 +231,7 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
             if (result is RsResult.Error) {
                 showError(result.message, R.string.error_generic)
             } else {
+                _commentChanged.value = Event(Unit)
                 // Replying to an unapproved comment implicitly approves it, matching legacy behaviour
                 if (currentStatus() == UNAPPROVED) {
                     approveAfterReply()
@@ -236,8 +263,11 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
             if (result is RsResult.Error) {
                 _uiState.value = _uiState.value?.copy(status = previousStatus)
                 showError(result.message, R.string.error_moderate_comment)
-            } else if (closeOnSuccess) {
-                _uiActionEvent.value = Event(Close)
+            } else {
+                _commentChanged.value = Event(Unit)
+                if (closeOnSuccess) {
+                    _uiActionEvent.value = Event(Close)
+                }
             }
         }
     }
@@ -284,14 +314,14 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
         _onSnackbarMessage.value = Event(SnackbarMessageHolder(uiMessage))
     }
 
-    private fun RsComment.toUiState(cached: CommentEntity?) = CommentDetailsUiState(
+    private fun RsComment.toUiState(cached: CommentEntity?, fallbackPostTitle: String) = CommentDetailsUiState(
         showProgress = false,
         contentVisible = true,
         authorName = authorName,
         authorAvatarUrl = authorAvatarUrl,
         datePublished = dateTimeUtilsWrapper.javaDateToTimeSpan(dateGmt),
         commentText = contentHtml,
-        postTitle = cached?.postTitle ?: "",
+        postTitle = cached?.postTitle?.takeIf { it.isNotBlank() } ?: fallbackPostTitle,
         commentUrl = url,
         status = status,
         isLiked = cached?.iLike ?: false

@@ -95,12 +95,17 @@ private fun CommentListContent(
 ) {
     val listState = rememberLazyListState()
 
-    LaunchedEffect(canLoadMore) {
+    // Also keyed on the list size: a refresh that truncates the list (or an appended page) restarts
+    // the flow, so a `true` latched by distinctUntilChanged before the change can't suppress the
+    // re-fire needed to resume paging. The ViewModel's busy/cursor guards make re-fires safe.
+    LaunchedEffect(canLoadMore, comments.size) {
         if (!canLoadMore) return@LaunchedEffect
         snapshotFlow {
+            // total > 0 keeps the pre-layout pass (empty layoutInfo, 0 >= -threshold) from
+            // triggering a load of the next page before the user has scrolled at all.
             val lastVisible = listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index ?: 0
             val total = listState.layoutInfo.totalItemsCount
-            lastVisible >= total - LOAD_MORE_THRESHOLD
+            total > 0 && lastVisible >= total - LOAD_MORE_THRESHOLD
         }.distinctUntilChanged().collect { shouldLoad ->
             if (shouldLoad) onLoadMore()
         }

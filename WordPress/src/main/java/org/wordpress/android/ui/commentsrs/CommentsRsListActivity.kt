@@ -23,12 +23,15 @@ import org.wordpress.android.util.extensions.setContent
 class CommentsRsListActivity : BaseAppCompatActivity() {
     private val viewModel: CommentsRsListViewModel by viewModels()
 
-    // The detail can moderate, reply, edit or delete, and doesn't report a result — refresh
-    // unconditionally on return so the list reflects whatever happened there.
+    // The detail reports RESULT_OK when it changed the comment (moderation, reply, edit,
+    // delete); only then refresh, so a view-only visit keeps the paged lists and scroll
+    // position intact.
     private val detailLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
-    ) {
-        viewModel.refreshAllTabs()
+    ) { result ->
+        if (result.resultCode == RESULT_OK) {
+            viewModel.refreshAllTabs()
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -43,6 +46,7 @@ class CommentsRsListActivity : BaseAppCompatActivity() {
                     tabStates = tabStates,
                     snackbarMessages = viewModel.snackbarMessages,
                     onInitTab = viewModel::initTab,
+                    onTabChanged = viewModel::onTabChanged,
                     onRefreshTab = { tab -> viewModel.refreshTab(tab, isUserRefresh = true) },
                     onLoadMore = viewModel::loadMore,
                     onNavigateBack = { onBackPressedDispatcher.onBackPressed() },

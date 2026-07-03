@@ -42,28 +42,19 @@ class CommentsRsDataSource @Inject constructor(
     // whose title can't be resolved (custom post types, non-published posts).
     private val postTitleCache = ConcurrentHashMap<Pair<Int, Long>, String>()
 
-    // Bumped by [clearUnresolvedPostTitles]: a fetch already in flight when the user cleared
-    // would otherwise re-poison the cache with its pre-clear "not found" results.
+    // Bumped by [clearPostTitles]: a fetch already in flight when the user cleared would
+    // otherwise re-poison the cache with its pre-clear "not found" results.
     @Volatile
     private var unresolvedCacheGeneration = 0
 
+    /** A comment mapped from [CommentWithViewContext], shared by the detail and list screens. */
     data class RsComment(
-        val authorName: String,
-        val authorAvatarUrl: String,
-        val dateGmt: Date,
-        val contentHtml: String,
-        val url: String,
-        val postId: Long,
-        val status: CommentStatus
-    )
-
-    /** One comment list row, mapped from [CommentWithViewContext]. */
-    data class RsCommentListItem(
         val remoteCommentId: Long,
         val authorName: String,
         val authorAvatarUrl: String,
         val dateGmt: Date,
         val contentHtml: String,
+        val url: String,
         val postId: Long,
         val status: CommentStatus
     )
@@ -77,7 +68,7 @@ class CommentsRsDataSource @Inject constructor(
     /** Result of fetching one page of the comment list. */
     sealed interface RsCommentsPageResult {
         data class Success(
-            val comments: List<RsCommentListItem>,
+            val comments: List<RsComment>,
             /** Ready-made params for the next page; null when this was the last page. */
             val nextPageParams: CommentListParams?
         ) : RsCommentsPageResult
@@ -106,7 +97,7 @@ class CommentsRsDataSource @Inject constructor(
             val client = wpApiClientProvider.getWpApiClient(site)
             when (val result = client.request { it.comments().listWithViewContext(params) }) {
                 is WpRequestResult.Success -> RsCommentsPageResult.Success(
-                    comments = result.response.data.map { it.toRsCommentListItem() },
+                    comments = result.response.data.map { it.toRsComment() },
                     nextPageParams = result.response.nextPageParams
                 )
                 is WpRequestResult.WpError -> RsCommentsPageResult.Error(result.errorMessage)
@@ -164,12 +155,14 @@ class CommentsRsDataSource @Inject constructor(
     }
 
     /**
-     * Forgets negative-cached (unresolvable) titles for [site] so they're retried, e.g. on a
-     * user-initiated refresh — a post that wasn't published when first seen may be by now.
+     * Forgets all cached titles for [site] so they're re-fetched, e.g. on a user-initiated
+     * refresh — a post that wasn't published when first seen may be by now, and a resolved
+     * title may have been renamed since it was cached. Fetches are batched, so re-resolving a
+     * page of titles costs a single request.
      */
-    fun clearUnresolvedPostTitles(site: SiteModel) {
+    fun clearPostTitles(site: SiteModel) {
         unresolvedCacheGeneration++
-        postTitleCache.entries.removeIf { it.key.first == site.id && it.value.isEmpty() }
+        postTitleCache.entries.removeIf { it.key.first == site.id }
     }
 
     /**
@@ -245,30 +238,21 @@ class CommentsRsDataSource @Inject constructor(
         errorValue
     }
 
-    private fun CommentWithViewContext.toRsComment() = RsComment(
-        authorName = authorName,
-        authorAvatarUrl = pickAvatarUrl(),
-        // dateGmt is a UTC java.util.Date (an absolute instant), so relative-time formatting is
-        // correct regardless of the site's timezone — unlike the offset-less local `date` field.
-        dateGmt = dateGmt,
-        contentHtml = content.rendered,
-        url = link,
-        postId = post,
-        status = status.toAppCommentStatus()
-    )
-
     companion object {
         internal const val COMMENTS_PAGE_SIZE = 30u
         private const val MAX_TITLES_PER_REQUEST = 100
     }
 }
 
-internal fun CommentWithViewContext.toRsCommentListItem() = CommentsRsDataSource.RsCommentListItem(
+internal fun CommentWithViewContext.toRsComment() = CommentsRsDataSource.RsComment(
     remoteCommentId = id,
     authorName = authorName,
     authorAvatarUrl = pickAvatarUrl(),
+    // dateGmt is a UTC java.util.Date (an absolute instant), so relative-time formatting is
+    // correct regardless of the site's timezone — unlike the offset-less local `date` field.
     dateGmt = dateGmt,
     contentHtml = content.rendered,
+    url = link,
     postId = post,
     status = status.toAppCommentStatus()
 )

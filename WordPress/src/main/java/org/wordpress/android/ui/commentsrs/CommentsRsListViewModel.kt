@@ -14,10 +14,11 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
+import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.comments.unified.CommentsRsDataSource
-import org.wordpress.android.ui.comments.unified.CommentsRsDataSource.RsCommentListItem
+import org.wordpress.android.ui.comments.unified.CommentsRsDataSource.RsComment
 import org.wordpress.android.ui.comments.unified.CommentsRsDataSource.RsCommentsPageResult
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.postsrs.PostRsErrorUtils
@@ -26,6 +27,7 @@ import org.wordpress.android.util.DateTimeUtilsWrapper
 import org.wordpress.android.util.HtmlUtils
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.WPAvatarUtilsWrapper
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
 import uniffi.wp_api.CommentListParams
 import javax.inject.Inject
@@ -44,6 +46,7 @@ class CommentsRsListViewModel @Inject constructor(
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     private val dateTimeUtilsWrapper: DateTimeUtilsWrapper,
     private val avatarUtilsWrapper: WPAvatarUtilsWrapper,
+    private val analyticsTracker: AnalyticsTrackerWrapper,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) : ViewModel() {
     private val _tabStates = MutableStateFlow<Map<CommentsRsListTab, CommentsTabUiState>>(emptyMap())
@@ -61,7 +64,11 @@ class CommentsRsListViewModel @Inject constructor(
     // Bumped whenever a first page is applied. A load-more result whose fetch started before the
     // bump paged from a cursor that predates the new page 1, so it's stale and gets discarded.
     private val pageGenerations = mutableMapOf<CommentsRsListTab, Int>()
-    private val initializingTabs = mutableSetOf<CommentsRsListTab>()
+
+    // The in-flight first-page fetch per tab, so overlapping refreshes don't duplicate it.
+    private val firstPageJobs = mutableMapOf<CommentsRsListTab, Job>()
+
+    private var lastTrackedTab: CommentsRsListTab? = null
 
     // The in-flight title-resolve job per tab, with the ids it's resolving so an identical
     // request isn't cancelled and re-fired when an applied page adds nothing new.
@@ -78,13 +85,14 @@ class CommentsRsListViewModel @Inject constructor(
         }
     }
 
-    /** Loads the first page for [tab] unless it's already initialized or initializing. */
+    /** Loads the first page for [tab] unless it's already initialized. */
     @MainThread
     fun initTab(tab: CommentsRsListTab) {
-        if (_tabStates.value.containsKey(tab) || initializingTabs.contains(tab)) return
-        initializingTabs.add(tab)
+        // updateTabUiState inserts the tab synchronously, so this also blocks re-entry while
+        // the first fetch is in flight.
+        if (_tabStates.value.containsKey(tab)) return
         updateTabUiState(tab) { copy(isLoading = true) }
-        fetchFirstPage(tab) { initializingTabs.remove(tab) }
+        fetchFirstPage(tab)
     }
 
     /**
@@ -95,17 +103,21 @@ class CommentsRsListViewModel @Inject constructor(
     @MainThread
     fun refreshTab(tab: CommentsRsListTab, isUserRefresh: Boolean = false) {
         if (!_tabStates.value.containsKey(tab)) return
+        // A first page is already on its way (initial load or another refresh); a second fetch
+        // would only duplicate the request and double-bump the page generation.
+        if (firstPageJobs[tab]?.isActive == true) return
         if (isUserRefresh) {
-            // An explicit refresh also retries post titles that previously resolved as
-            // unresolvable — e.g. a post that has been published since it was first seen.
-            commentsRsDataSource.clearUnresolvedPostTitles(site)
-            // A resolve job that started before the clear may apply pre-clear "not found"
-            // titles; cancel it so the post-refresh pass fetches fresh results instead of
-            // deferring to it via the identical-ids guard.
+            // An explicit refresh retries every post title for the site: ones that previously
+            // resolved as unresolvable (e.g. a post published since it was first seen) and ones
+            // that may have gone stale (e.g. a post renamed since it was cached).
+            commentsRsDataSource.clearPostTitles(site)
+            // A resolve job that started before the clear may apply pre-clear titles; cancel it
+            // so the post-refresh pass fetches fresh results instead of deferring to it via the
+            // identical-ids guard.
             resolveTitleJobs[tab]?.first?.cancel()
         }
         updateTabUiState(tab) { copy(isRefreshing = isUserRefresh, error = null) }
-        fetchFirstPage(tab)
+        fetchFirstPage(tab, showErrorSnackbar = isUserRefresh)
     }
 
     /** Refreshes every initialized tab; comments move between tabs when moderated. */
@@ -172,15 +184,28 @@ class CommentsRsListViewModel @Inject constructor(
         _events.trySend(CommentsRsListEvent.OpenCommentDetail(site, remoteCommentId))
     }
 
-    private fun fetchFirstPage(tab: CommentsRsListTab, onComplete: () -> Unit = {}) {
-        viewModelScope.launch {
+    /**
+     * Tracks the tab the pager settled on — the same COMMENT_FILTER_CHANGED event (including the
+     * initial selection) the legacy list emits, so filter metrics stay comparable.
+     */
+    @MainThread
+    fun onTabChanged(tab: CommentsRsListTab) {
+        if (tab == lastTrackedTab) return
+        lastTrackedTab = tab
+        analyticsTracker.track(
+            Stat.COMMENT_FILTER_CHANGED,
+            mapOf(SELECTED_FILTER_PROPERTY to resourceProvider.getString(tab.trackingLabelResId))
+        )
+    }
+
+    private fun fetchFirstPage(tab: CommentsRsListTab, showErrorSnackbar: Boolean = true) {
+        firstPageJobs[tab] = viewModelScope.launch {
             val params = commentsRsDataSource.firstPageParams(status = tab.queryStatus)
             val result = withContext(bgDispatcher) { commentsRsDataSource.fetchCommentsPage(site, params) }
             when (result) {
                 is RsCommentsPageResult.Success -> applyPage(tab, result, append = false)
-                is RsCommentsPageResult.Error -> onFirstPageError(tab, result.message)
+                is RsCommentsPageResult.Error -> onFirstPageError(tab, result.message, showErrorSnackbar)
             }
-            onComplete()
         }
     }
 
@@ -194,42 +219,42 @@ class CommentsRsListViewModel @Inject constructor(
         nextPageParams[tab] = result.nextPageParams
         val newRows = result.comments.map { it.toUiModel() }
         updateTabUiState(tab) {
-            if (append) {
-                copy(
-                    // A comment can shift pages if the list changed server-side between
-                    // requests, so dedupe on append.
-                    comments = (comments + newRows).distinctBy { it.remoteCommentId },
-                    isLoadingMore = false,
-                    canLoadMore = result.nextPageParams != null
-                )
-            } else {
-                copy(
-                    comments = newRows,
-                    isLoading = false,
-                    isRefreshing = false,
-                    canLoadMore = result.nextPageParams != null,
-                    error = null
-                )
-            }
+            copy(
+                // A comment can shift pages if the list changed server-side between requests,
+                // so dedupe on append.
+                comments = if (append) (comments + newRows).distinctBy { it.remoteCommentId } else newRows,
+                isLoading = false,
+                isRefreshing = false,
+                // A replacing page must clear isLoadingMore too: a load-more in flight when the
+                // refresh landed is discarded by the generation check, so nothing else resets
+                // the flag promptly and paging would stay blocked behind the isBusy guard.
+                isLoadingMore = false,
+                canLoadMore = result.nextPageParams != null,
+                error = null
+            )
         }
         resolvePostTitles(tab)
     }
 
     /**
      * First-page failure: when the tab already shows comments keep them and offer a retry
-     * snackbar; when it's empty, show the full-screen error state.
+     * snackbar; when it's empty, show the full-screen error state. Silent refreshes (returning
+     * from the detail) skip the snackbar — a failed background refresh shouldn't interrupt a
+     * user who's still looking at a perfectly good list.
      */
-    private fun onFirstPageError(tab: CommentsRsListTab, message: String?) {
+    private fun onFirstPageError(tab: CommentsRsListTab, message: String?, showErrorSnackbar: Boolean) {
         val friendly = errorMessage(message)
         if (getTabUiState(tab).comments.isNotEmpty()) {
             updateTabUiState(tab) { copy(isLoading = false, isRefreshing = false, error = null) }
-            _snackbarMessages.trySend(
-                SnackbarMessage(
-                    message = friendly,
-                    actionLabel = resourceProvider.getString(R.string.retry),
-                    onAction = { refreshTab(tab) }
+            if (showErrorSnackbar) {
+                _snackbarMessages.trySend(
+                    SnackbarMessage(
+                        message = friendly,
+                        actionLabel = resourceProvider.getString(R.string.retry),
+                        onAction = { refreshTab(tab, isUserRefresh = true) }
+                    )
                 )
-            )
+            }
         } else {
             updateTabUiState(tab) {
                 copy(comments = emptyList(), isLoading = false, isRefreshing = false, error = friendly)
@@ -269,7 +294,7 @@ class CommentsRsListViewModel @Inject constructor(
         serverMessage?.takeIf { it.isNotBlank() }
             ?: PostRsErrorUtils.friendlyErrorMessage(null, null, resourceProvider, networkUtilsWrapper)
 
-    private fun RsCommentListItem.toUiModel() = CommentRsUiModel(
+    private fun RsComment.toUiModel() = CommentRsUiModel(
         remoteCommentId = remoteCommentId,
         authorName = authorName.ifBlank { resourceProvider.getString(R.string.anonymous) },
         avatarUrl = avatarUtilsWrapper.rewriteAvatarUrlWithResource(authorAvatarUrl, R.dimen.avatar_sz_medium),
@@ -290,5 +315,8 @@ class CommentsRsListViewModel @Inject constructor(
         // How many extra pages a single load-more may fetch unattended when applied pages
         // add no rows, before waiting for the next user scroll.
         private const val MAX_AUTO_ADVANCE_PAGES = 3
+
+        // Same property key as the legacy list's tracking (UnifiedCommentsActivity).
+        private const val SELECTED_FILTER_PROPERTY = "selected_filter"
     }
 }

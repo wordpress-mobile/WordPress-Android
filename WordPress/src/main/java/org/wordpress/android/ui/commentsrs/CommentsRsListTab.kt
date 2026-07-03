@@ -18,31 +18,38 @@ import uniffi.wp_api.CommentStatus as RsCommentStatus
 enum class CommentsRsListTab(
     @StringRes val labelResId: Int,
     @StringRes val emptyMessageResId: Int,
+    /** The `selected_filter` property value for COMMENT_FILTER_CHANGED, matching the legacy list. */
+    @StringRes val trackingLabelResId: Int,
     val queryStatus: RsCommentStatus
 ) {
     ALL(
         R.string.comment_status_all,
         R.string.comments_empty_list,
+        R.string.comment_tracker_label_all,
         RsCommentStatus.Custom("all")
     ),
     PENDING(
         R.string.comment_status_unapproved,
         R.string.comments_empty_list_filtered_pending,
+        R.string.comment_tracker_label_pending,
         RsCommentStatus.Hold
     ),
     APPROVED(
         R.string.comment_status_approved,
         R.string.comments_empty_list_filtered_approved,
+        R.string.comment_tracker_label_approved,
         RsCommentStatus.Custom("approve")
     ),
     SPAM(
         R.string.comment_status_spam,
         R.string.comments_empty_list_filtered_spam,
+        R.string.comment_tracker_label_spam,
         RsCommentStatus.Spam
     ),
     TRASHED(
         R.string.comment_status_trash,
         R.string.comments_empty_list_filtered_trashed,
+        R.string.comment_tracker_label_trashed,
         RsCommentStatus.Trash
     )
 }
