@@ -363,7 +363,10 @@ private fun MostViewedItemRow(
 
         if (hasChildren) {
             AnimatedVisibility(visible = expanded) {
-                Column(modifier = Modifier.padding(start = 24.dp, top = 4.dp)) {
+                Column(
+                    modifier = Modifier.padding(start = 24.dp, top = 4.dp),
+                    verticalArrangement = Arrangement.spacedBy(4.dp)
+                ) {
                     item.children.forEach { child ->
                         val childPercentage = if (maxChildViews > 0) {
                             child.views.toFloat() / maxChildViews.toFloat()
