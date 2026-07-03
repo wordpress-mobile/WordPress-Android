@@ -36,7 +36,6 @@ sealed interface PendingConfirmation {
 
 data class ConfirmationDialogState(
     val pending: PendingConfirmation? = null,
-    val onConfirm: () -> Unit = {},
     val onDismiss: () -> Unit = {}
 )
 
