@@ -152,6 +152,7 @@ end
 ########################################################################
 import 'lanes/build.rb'
 import 'lanes/localization.rb'
+import 'lanes/promote.rb'
 import 'lanes/release.rb'
 import 'lanes/screenshots.rb'
 import 'lanes/test.rb'
