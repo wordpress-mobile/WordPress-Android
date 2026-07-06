@@ -120,7 +120,7 @@ class UnifiedCommentDetailsViewModelTest : BaseUnitTest() {
         viewModel.start(site, REMOTE_COMMENT_ID)
         whenever(commentsRsDataSource.getComment(site, REMOTE_COMMENT_ID)).thenReturn(null)
 
-        viewModel.refreshComment()
+        viewModel.onCommentEdited()
 
         assertThat(uiStates.last().contentVisible).isTrue
         assertThat(uiStates.last().status).isEqualTo(APPROVED)
@@ -135,7 +135,7 @@ class UnifiedCommentDetailsViewModelTest : BaseUnitTest() {
             delay(LOAD_DELAY_MS)
             RS_COMMENT
         }
-        viewModel.refreshComment()
+        viewModel.onCommentEdited()
 
         viewModel.onApproveClicked()
         advanceUntilIdle()
@@ -376,6 +376,7 @@ class UnifiedCommentDetailsViewModelTest : BaseUnitTest() {
         private const val LOAD_DELAY_MS = 1000L
 
         private val RS_COMMENT = RsComment(
+            remoteCommentId = REMOTE_COMMENT_ID,
             authorName = "authorName",
             authorAvatarUrl = "",
             dateGmt = Date(0),

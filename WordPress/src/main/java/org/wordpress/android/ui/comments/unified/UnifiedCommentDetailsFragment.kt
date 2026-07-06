@@ -102,7 +102,7 @@ class UnifiedCommentDetailsFragment :
     private val editCommentLauncher: ActivityResultLauncher<Intent> =
         registerForActivityResult(StartActivityForResult()) { result ->
             if (result.resultCode == AppCompatActivity.RESULT_OK) {
-                viewModel.refreshComment()
+                viewModel.onCommentEdited()
             }
         }
 
@@ -234,6 +234,12 @@ class UnifiedCommentDetailsFragment :
         }
 
         viewModel.onSnackbarMessage.observeEvent(viewLifecycleOwner) { showSnackbar(it) }
+
+        // Report the change to the launching screen (the rs comments list only refreshes when
+        // the result says something actually changed).
+        viewModel.commentChanged.observeEvent(viewLifecycleOwner) {
+            requireActivity().setResult(AppCompatActivity.RESULT_OK)
+        }
     }
 
     private fun clearReplyInput() {
