@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.commentsrs
 
+import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.CommentStatus
@@ -35,21 +36,29 @@ sealed interface PendingConfirmation {
 }
 
 /**
- * Batch moderation actions offered in selection mode. Each maps to a target [CommentStatus]
- * applied to every selected comment (except [DELETE], which deletes permanently).
+ * Batch moderation actions offered in selection mode, rendered as icon buttons in the contextual
+ * action bar (mirroring the legacy list's action mode). Each maps to a target [CommentStatus]
+ * applied to every selected comment (except [DELETE], which deletes permanently); [labelResId]
+ * doubles as the icon's content description.
  */
 enum class CommentsRsBatchAction(
     @StringRes val labelResId: Int,
+    @DrawableRes val iconResId: Int,
     val targetStatus: CommentStatus,
     val isDestructive: Boolean = false
 ) {
-    APPROVE(R.string.mnu_comment_approve, CommentStatus.APPROVED),
-    UNAPPROVE(R.string.mnu_comment_unapprove, CommentStatus.UNAPPROVED),
-    SPAM(R.string.mnu_comment_spam, CommentStatus.SPAM),
-    NOT_SPAM(R.string.mnu_comment_unspam, CommentStatus.APPROVED),
-    TRASH(R.string.mnu_comment_trash, CommentStatus.TRASH, isDestructive = true),
-    UNTRASH(R.string.mnu_comment_untrash, CommentStatus.APPROVED),
-    DELETE(R.string.mnu_comment_delete_permanently, CommentStatus.DELETED, isDestructive = true)
+    APPROVE(R.string.mnu_comment_approve, R.drawable.ic_thumbs_up_white_24dp, CommentStatus.APPROVED),
+    UNAPPROVE(R.string.mnu_comment_unapprove, R.drawable.ic_thumbs_down_white_24dp, CommentStatus.UNAPPROVED),
+    SPAM(R.string.mnu_comment_spam, R.drawable.ic_spam_white_24dp, CommentStatus.SPAM),
+    NOT_SPAM(R.string.mnu_comment_unspam, R.drawable.ic_spam_white_24dp, CommentStatus.APPROVED),
+    TRASH(R.string.mnu_comment_trash, R.drawable.ic_trash_white_24dp, CommentStatus.TRASH, isDestructive = true),
+    UNTRASH(R.string.mnu_comment_untrash, R.drawable.ic_trash_white_24dp, CommentStatus.APPROVED),
+    DELETE(
+        R.string.mnu_comment_delete_permanently,
+        R.drawable.ic_trash_white_24dp,
+        CommentStatus.DELETED,
+        isDestructive = true
+    )
 }
 
 /** The batch actions offered for a tab's selection, mirroring the legacy action mode. */
