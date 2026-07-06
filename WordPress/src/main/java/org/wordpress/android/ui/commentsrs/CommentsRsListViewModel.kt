@@ -209,6 +209,12 @@ class CommentsRsListViewModel @Inject constructor(
         _selectedIds.value = emptySet()
     }
 
+    /** Selects every loaded comment on [tab]. */
+    @MainThread
+    fun onSelectAll(tab: CommentsRsListTab) {
+        _selectedIds.value = getTabUiState(tab).comments.map { it.remoteCommentId }.toSet()
+    }
+
     /**
      * Runs [action] on the selected comments, first asking for confirmation for the destructive
      * ones (trash, delete) like the legacy list.

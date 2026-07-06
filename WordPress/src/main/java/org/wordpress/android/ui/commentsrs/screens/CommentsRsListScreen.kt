@@ -1,18 +1,22 @@
 package org.wordpress.android.ui.commentsrs.screens
 
 import androidx.annotation.StringRes
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.DoneAll
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -71,12 +75,15 @@ fun CommentsRsListScreen(
     onCommentClick: (Long) -> Unit,
     onCommentLongClick: (Long) -> Unit,
     onClearSelection: () -> Unit,
+    onSelectAll: (CommentsRsListTab) -> Unit,
     onBatchAction: (CommentsRsBatchAction, CommentsRsListTab) -> Unit,
     onConfirmPendingAction: (CommentsRsListTab) -> Unit
 ) {
     val tabs = CommentsRsListTab.entries
     val pagerState = rememberPagerState(pageCount = { tabs.size })
     val coroutineScope = rememberCoroutineScope()
+    // Hoisted so a re-tap on the active tab can scroll its list back to the top.
+    val listStates = remember { tabs.associateWith { LazyListState() } }
     val activeTab = tabs[pagerState.settledPage]
     val snackbarHostState = remember { SnackbarHostState() }
     // Statuses of the selected comments that live on the active tab. This is empty during a tab
@@ -104,26 +111,29 @@ fun CommentsRsListScreen(
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
-            if (isSelectionActive) {
-                SelectionTopBar(
-                    selectedCount = selectedIds.size,
-                    actions = activeTab.batchActions(),
-                    selectedStatuses = selectedStatuses,
-                    onClearSelection = onClearSelection,
-                    onBatchAction = { action -> onBatchAction(action, activeTab) }
-                )
-            } else {
-                TopAppBar(
-                    title = { Text(text = stringResource(R.string.comments)) },
-                    navigationIcon = {
-                        IconButton(onClick = onNavigateBack) {
-                            Icon(
-                                Icons.AutoMirrored.Filled.ArrowBack,
-                                contentDescription = stringResource(R.string.back)
-                            )
+            AnimatedContent(targetState = isSelectionActive, label = "topBar") { selectionActive ->
+                if (selectionActive) {
+                    SelectionTopBar(
+                        selectedCount = selectedIds.size,
+                        actions = activeTab.batchActions(),
+                        selectedStatuses = selectedStatuses,
+                        onClearSelection = onClearSelection,
+                        onSelectAll = { onSelectAll(activeTab) },
+                        onBatchAction = { action -> onBatchAction(action, activeTab) }
+                    )
+                } else {
+                    TopAppBar(
+                        title = { Text(text = stringResource(R.string.comments)) },
+                        navigationIcon = {
+                            IconButton(onClick = onNavigateBack) {
+                                Icon(
+                                    Icons.AutoMirrored.Filled.ArrowBack,
+                                    contentDescription = stringResource(R.string.back)
+                                )
+                            }
                         }
-                    }
-                )
+                    )
+                }
             }
         }
     ) { contentPadding ->
@@ -136,7 +146,14 @@ fun CommentsRsListScreen(
                     Tab(
                         selected = pagerState.settledPage == index,
                         onClick = {
-                            coroutineScope.launch { pagerState.animateScrollToPage(index) }
+                            coroutineScope.launch {
+                                if (pagerState.settledPage == index) {
+                                    // Re-tapping the active tab scrolls its list back to the top.
+                                    listStates.getValue(tab).animateScrollToItem(0)
+                                } else {
+                                    pagerState.animateScrollToPage(index)
+                                }
+                            }
                         },
                         unselectedContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
                         text = { Text(text = stringResource(tab.labelResId)) }
@@ -162,6 +179,7 @@ fun CommentsRsListScreen(
                     state = tabState,
                     emptyMessageResId = tab.emptyMessageResId,
                     selectedIds = selectedIds,
+                    listState = listStates.getValue(tab),
                     onRefresh = { onRefreshTab(tab) },
                     onLoadMore = { onLoadMore(tab) },
                     onCommentClick = onCommentClick,
@@ -207,6 +225,7 @@ private fun SelectionTopBar(
     actions: List<CommentsRsBatchAction>,
     selectedStatuses: Set<CommentStatus>,
     onClearSelection: () -> Unit,
+    onSelectAll: () -> Unit,
     onBatchAction: (CommentsRsBatchAction) -> Unit
 ) {
     // Like the legacy action mode, approve/unapprove sit in the bar as icons and everything else
@@ -238,7 +257,11 @@ private fun SelectionTopBar(
                 }
             }
             if (menuActions.isNotEmpty()) {
-                BatchActionsOverflowMenu(actions = menuActions, onBatchAction = onBatchAction)
+                BatchActionsOverflowMenu(
+                    actions = menuActions,
+                    onSelectAll = onSelectAll,
+                    onBatchAction = onBatchAction
+                )
             }
         }
     )
@@ -247,6 +270,7 @@ private fun SelectionTopBar(
 @Composable
 private fun BatchActionsOverflowMenu(
     actions: List<CommentsRsBatchAction>,
+    onSelectAll: () -> Unit,
     onBatchAction: (CommentsRsBatchAction) -> Unit
 ) {
     var expanded by remember { mutableStateOf(false) }
@@ -254,6 +278,17 @@ private fun BatchActionsOverflowMenu(
         Icon(Icons.Default.MoreVert, contentDescription = stringResource(R.string.more))
     }
     DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
+        DropdownMenuItem(
+            text = { Text(text = stringResource(R.string.select_all)) },
+            leadingIcon = {
+                Icon(Icons.Default.DoneAll, contentDescription = null)
+            },
+            onClick = {
+                expanded = false
+                onSelectAll()
+            }
+        )
+        HorizontalDivider()
         actions.forEach { action ->
             val color = if (action.confirmation != null) {
                 MaterialTheme.colorScheme.error
