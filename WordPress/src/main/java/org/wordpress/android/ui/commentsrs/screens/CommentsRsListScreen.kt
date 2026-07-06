@@ -9,7 +9,10 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -25,8 +28,11 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -200,6 +206,9 @@ private fun SelectionTopBar(
     onClearSelection: () -> Unit,
     onBatchAction: (CommentsRsBatchAction) -> Unit
 ) {
+    // Like the legacy action mode, approve/unapprove sit in the bar as icons and everything else
+    // falls into the overflow menu, keeping the selection count on a single line.
+    val (iconActions, menuActions) = actions.partition { it.showAsIcon }
     TopAppBar(
         title = { Text(text = stringResource(R.string.cab_selected, selectedCount)) },
         navigationIcon = {
@@ -211,21 +220,54 @@ private fun SelectionTopBar(
             }
         },
         actions = {
-            actions.forEach { action ->
+            iconActions.forEach { action ->
                 IconButton(onClick = { onBatchAction(action) }) {
                     Icon(
                         painter = painterResource(action.iconResId),
                         contentDescription = stringResource(action.labelResId),
-                        tint = if (action.isDestructive) {
-                            MaterialTheme.colorScheme.error
-                        } else {
-                            MaterialTheme.colorScheme.onSurfaceVariant
-                        }
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
             }
+            if (menuActions.isNotEmpty()) {
+                BatchActionsOverflowMenu(actions = menuActions, onBatchAction = onBatchAction)
+            }
         }
     )
+}
+
+@Composable
+private fun BatchActionsOverflowMenu(
+    actions: List<CommentsRsBatchAction>,
+    onBatchAction: (CommentsRsBatchAction) -> Unit
+) {
+    var expanded by remember { mutableStateOf(false) }
+    IconButton(onClick = { expanded = true }) {
+        Icon(Icons.Default.MoreVert, contentDescription = stringResource(R.string.more))
+    }
+    DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
+        actions.forEach { action ->
+            val color = if (action.isDestructive) {
+                MaterialTheme.colorScheme.error
+            } else {
+                MaterialTheme.colorScheme.onSurface
+            }
+            DropdownMenuItem(
+                text = { Text(text = stringResource(action.labelResId), color = color) },
+                leadingIcon = {
+                    Icon(
+                        painter = painterResource(action.iconResId),
+                        contentDescription = null,
+                        tint = color
+                    )
+                },
+                onClick = {
+                    expanded = false
+                    onBatchAction(action)
+                }
+            )
+        }
+    }
 }
 
 @Composable

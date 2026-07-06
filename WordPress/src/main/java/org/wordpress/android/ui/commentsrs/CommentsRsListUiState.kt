@@ -36,19 +36,31 @@ sealed interface PendingConfirmation {
 }
 
 /**
- * Batch moderation actions offered in selection mode, rendered as icon buttons in the contextual
- * action bar (mirroring the legacy list's action mode). Each maps to a target [CommentStatus]
+ * Batch moderation actions offered in selection mode. Each maps to a target [CommentStatus]
  * applied to every selected comment (except [DELETE], which deletes permanently); [labelResId]
- * doubles as the icon's content description.
+ * doubles as the icon's content description. Mirroring the legacy list's action mode, only the
+ * [showAsIcon] actions (approve/unapprove) appear as top-bar icon buttons; the rest fall into the
+ * overflow menu.
  */
 enum class CommentsRsBatchAction(
     @StringRes val labelResId: Int,
     @DrawableRes val iconResId: Int,
     val targetStatus: CommentStatus,
-    val isDestructive: Boolean = false
+    val isDestructive: Boolean = false,
+    val showAsIcon: Boolean = false
 ) {
-    APPROVE(R.string.mnu_comment_approve, R.drawable.ic_thumbs_up_white_24dp, CommentStatus.APPROVED),
-    UNAPPROVE(R.string.mnu_comment_unapprove, R.drawable.ic_thumbs_down_white_24dp, CommentStatus.UNAPPROVED),
+    APPROVE(
+        R.string.mnu_comment_approve,
+        R.drawable.ic_thumbs_up_white_24dp,
+        CommentStatus.APPROVED,
+        showAsIcon = true
+    ),
+    UNAPPROVE(
+        R.string.mnu_comment_unapprove,
+        R.drawable.ic_thumbs_down_white_24dp,
+        CommentStatus.UNAPPROVED,
+        showAsIcon = true
+    ),
     SPAM(R.string.mnu_comment_spam, R.drawable.ic_spam_white_24dp, CommentStatus.SPAM),
     NOT_SPAM(R.string.mnu_comment_unspam, R.drawable.ic_spam_white_24dp, CommentStatus.APPROVED),
     TRASH(R.string.mnu_comment_trash, R.drawable.ic_trash_white_24dp, CommentStatus.TRASH, isDestructive = true),
