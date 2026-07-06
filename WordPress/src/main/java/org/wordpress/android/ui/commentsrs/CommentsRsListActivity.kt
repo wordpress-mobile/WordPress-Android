@@ -58,7 +58,6 @@ class CommentsRsListActivity : BaseAppCompatActivity() {
                     onCommentClick = viewModel::onCommentClick,
                     onCommentLongClick = viewModel::onCommentLongClick,
                     onClearSelection = viewModel::onClearSelection,
-                    onSelectAll = viewModel::onSelectAll,
                     onBatchAction = viewModel::onBatchAction,
                     onConfirmPendingAction = viewModel::onConfirmPendingAction
                 )

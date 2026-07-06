@@ -11,12 +11,10 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.DoneAll
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -75,7 +73,6 @@ fun CommentsRsListScreen(
     onCommentClick: (Long) -> Unit,
     onCommentLongClick: (Long) -> Unit,
     onClearSelection: () -> Unit,
-    onSelectAll: (CommentsRsListTab) -> Unit,
     onBatchAction: (CommentsRsBatchAction, CommentsRsListTab) -> Unit,
     onConfirmPendingAction: (CommentsRsListTab) -> Unit
 ) {
@@ -118,7 +115,6 @@ fun CommentsRsListScreen(
                         actions = activeTab.batchActions(),
                         selectedStatuses = selectedStatuses,
                         onClearSelection = onClearSelection,
-                        onSelectAll = { onSelectAll(activeTab) },
                         onBatchAction = { action -> onBatchAction(action, activeTab) }
                     )
                 } else {
@@ -225,7 +221,6 @@ private fun SelectionTopBar(
     actions: List<CommentsRsBatchAction>,
     selectedStatuses: Set<CommentStatus>,
     onClearSelection: () -> Unit,
-    onSelectAll: () -> Unit,
     onBatchAction: (CommentsRsBatchAction) -> Unit
 ) {
     // Like the legacy action mode, approve/unapprove sit in the bar as icons and everything else
@@ -257,11 +252,7 @@ private fun SelectionTopBar(
                 }
             }
             if (menuActions.isNotEmpty()) {
-                BatchActionsOverflowMenu(
-                    actions = menuActions,
-                    onSelectAll = onSelectAll,
-                    onBatchAction = onBatchAction
-                )
+                BatchActionsOverflowMenu(actions = menuActions, onBatchAction = onBatchAction)
             }
         }
     )
@@ -270,7 +261,6 @@ private fun SelectionTopBar(
 @Composable
 private fun BatchActionsOverflowMenu(
     actions: List<CommentsRsBatchAction>,
-    onSelectAll: () -> Unit,
     onBatchAction: (CommentsRsBatchAction) -> Unit
 ) {
     var expanded by remember { mutableStateOf(false) }
@@ -278,17 +268,6 @@ private fun BatchActionsOverflowMenu(
         Icon(Icons.Default.MoreVert, contentDescription = stringResource(R.string.more))
     }
     DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
-        DropdownMenuItem(
-            text = { Text(text = stringResource(R.string.select_all)) },
-            leadingIcon = {
-                Icon(Icons.Default.DoneAll, contentDescription = null)
-            },
-            onClick = {
-                expanded = false
-                onSelectAll()
-            }
-        )
-        HorizontalDivider()
         actions.forEach { action ->
             val color = if (action.confirmation != null) {
                 MaterialTheme.colorScheme.error
