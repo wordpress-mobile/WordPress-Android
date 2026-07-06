@@ -217,7 +217,7 @@ class CommentsRsListViewModel @Inject constructor(
     fun onBatchAction(action: CommentsRsBatchAction, tab: CommentsRsListTab) {
         val ids = _selectedIds.value.toList()
         if (ids.isEmpty()) return
-        if (action.isDestructive) {
+        if (action.confirmation != null) {
             _pendingConfirmation.value = PendingConfirmation(action, ids)
         } else {
             performBatchModeration(ids, action.targetStatus, tab)

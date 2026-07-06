@@ -79,7 +79,15 @@ fun CommentsRsListScreen(
     val coroutineScope = rememberCoroutineScope()
     val activeTab = tabs[pagerState.settledPage]
     val snackbarHostState = remember { SnackbarHostState() }
-    val isSelectionActive = selectedIds.isNotEmpty()
+    // Statuses of the selected comments that live on the active tab. This is empty during a tab
+    // swipe (the selection still belongs to the previous tab and is about to be cleared), so gating
+    // the contextual bar on it keeps it from flashing the next tab's actions mid-transition.
+    val selectedStatuses = tabStates[activeTab]?.comments
+        .orEmpty()
+        .filter { it.remoteCommentId in selectedIds }
+        .map { it.status }
+        .toSet()
+    val isSelectionActive = selectedStatuses.isNotEmpty()
 
     LaunchedEffect(snackbarMessages) {
         snackbarMessages.collect { msg ->
@@ -97,11 +105,6 @@ fun CommentsRsListScreen(
         snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
             if (isSelectionActive) {
-                val selectedStatuses = tabStates[activeTab]?.comments
-                    .orEmpty()
-                    .filter { it.remoteCommentId in selectedIds }
-                    .map { it.status }
-                    .toSet()
                 SelectionTopBar(
                     selectedCount = selectedIds.size,
                     actions = activeTab.batchActions(),
@@ -183,32 +186,18 @@ private fun BatchConfirmationDialogs(
     onConfirm: (CommentsRsListTab) -> Unit,
     onDismiss: () -> Unit
 ) {
-    if (pending == null) return
-    when (pending.action) {
-        CommentsRsBatchAction.TRASH -> ConfirmationDialog(
-            titleResId = R.string.trash,
-            message = stringResource(R.string.dlg_confirm_trash_comments),
-            confirmTextResId = R.string.dlg_confirm_action_trash,
-            isDestructive = true,
-            onConfirm = { onConfirm(activeTab) },
-            onDismiss = onDismiss
-        )
-        CommentsRsBatchAction.DELETE -> ConfirmationDialog(
-            titleResId = R.string.delete,
-            message = stringResource(
-                if (pending.commentIds.size > 1) {
-                    R.string.dlg_sure_to_delete_comments
-                } else {
-                    R.string.dlg_sure_to_delete_comment
-                }
-            ),
-            confirmTextResId = R.string.delete,
-            isDestructive = true,
-            onConfirm = { onConfirm(activeTab) },
-            onDismiss = onDismiss
-        )
-        else -> {}
-    }
+    // Every action that reaches confirmation carries its copy (see onBatchAction), so any
+    // destructive action renders a dialog rather than silently stranding the selection.
+    val copy = pending?.action?.confirmation ?: return
+    val messageResId = if (pending.commentIds.size > 1) copy.messagePluralResId else copy.messageResId
+    ConfirmationDialog(
+        titleResId = copy.titleResId,
+        message = stringResource(messageResId),
+        confirmTextResId = copy.confirmButtonResId,
+        isDestructive = true,
+        onConfirm = { onConfirm(activeTab) },
+        onDismiss = onDismiss
+    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -266,7 +255,7 @@ private fun BatchActionsOverflowMenu(
     }
     DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
         actions.forEach { action ->
-            val color = if (action.isDestructive) {
+            val color = if (action.confirmation != null) {
                 MaterialTheme.colorScheme.error
             } else {
                 MaterialTheme.colorScheme.onSurface

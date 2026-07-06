@@ -33,18 +33,30 @@ data class CommentsTabUiState(
 data class PendingConfirmation(val action: CommentsRsBatchAction, val commentIds: List<Long>)
 
 /**
+ * Confirmation-dialog copy for a destructive batch action. [messagePluralResId] is shown when more
+ * than one comment is selected, otherwise [messageResId].
+ */
+data class ConfirmationCopy(
+    @StringRes val titleResId: Int,
+    @StringRes val confirmButtonResId: Int,
+    @StringRes val messageResId: Int,
+    @StringRes val messagePluralResId: Int = messageResId
+)
+
+/**
  * Batch moderation actions offered in selection mode. Each maps to a target [CommentStatus]
  * applied to every selected comment (except [DELETE], which deletes permanently); [labelResId]
  * doubles as the icon's content description. Mirroring the legacy list's action mode, only the
  * [showAsIcon] actions (approve/unapprove) appear as top-bar icon buttons; the rest fall into the
- * overflow menu.
+ * overflow menu. An action with [confirmation] copy is destructive: it asks before running and is
+ * tinted accordingly.
  */
 enum class CommentsRsBatchAction(
     @StringRes val labelResId: Int,
     @DrawableRes val iconResId: Int,
     val targetStatus: CommentStatus,
-    val isDestructive: Boolean = false,
-    val showAsIcon: Boolean = false
+    val showAsIcon: Boolean = false,
+    val confirmation: ConfirmationCopy? = null
 ) {
     APPROVE(
         R.string.mnu_comment_approve,
@@ -60,13 +72,27 @@ enum class CommentsRsBatchAction(
     ),
     SPAM(R.string.mnu_comment_spam, R.drawable.ic_spam_white_24dp, CommentStatus.SPAM),
     NOT_SPAM(R.string.mnu_comment_unspam, R.drawable.ic_spam_white_24dp, CommentStatus.APPROVED),
-    TRASH(R.string.mnu_comment_trash, R.drawable.ic_trash_white_24dp, CommentStatus.TRASH, isDestructive = true),
+    TRASH(
+        R.string.mnu_comment_trash,
+        R.drawable.ic_trash_white_24dp,
+        CommentStatus.TRASH,
+        confirmation = ConfirmationCopy(
+            titleResId = R.string.trash,
+            confirmButtonResId = R.string.dlg_confirm_action_trash,
+            messageResId = R.string.dlg_confirm_trash_comments
+        )
+    ),
     UNTRASH(R.string.mnu_comment_untrash, R.drawable.ic_trash_white_24dp, CommentStatus.APPROVED),
     DELETE(
         R.string.mnu_comment_delete_permanently,
         R.drawable.ic_trash_white_24dp,
         CommentStatus.DELETED,
-        isDestructive = true
+        confirmation = ConfirmationCopy(
+            titleResId = R.string.delete,
+            confirmButtonResId = R.string.delete,
+            messageResId = R.string.dlg_sure_to_delete_comment,
+            messagePluralResId = R.string.dlg_sure_to_delete_comments
+        )
     )
 }
 
