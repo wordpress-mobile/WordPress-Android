@@ -42,8 +42,23 @@ data class MostViewedItem(
     val id: Long,
     val title: String,
     val views: Long,
-    val change: MostViewedChange
+    val change: MostViewedChange,
+    val children: List<MostViewedChildItem> = emptyList()
 )
+
+/**
+ * A child item nested under a Most Viewed item (e.g. a referrer under a referrer group).
+ *
+ * @param name The name of the child item
+ * @param url The URL opened when the child row is tapped (null if not linkable)
+ * @param views The number of views
+ */
+@Parcelize
+data class MostViewedChildItem(
+    val name: String,
+    val url: String?,
+    val views: Long
+) : Parcelable
 
 /**
  * Represents the change in views compared to the previous period.
@@ -84,5 +99,6 @@ data class MostViewedDetailItem(
     val id: Long,
     val title: String,
     val views: Long,
-    val change: MostViewedChange
+    val change: MostViewedChange,
+    val children: List<MostViewedChildItem> = emptyList()
 ) : Parcelable

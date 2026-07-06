@@ -1026,8 +1026,8 @@
     <string name="new_stats_intro_footer">You can turn off New Stats from the overflow menu in the Stats screen.</string>
     <string name="experimental_rs_pages_list">New Pages List</string>
     <string name="experimental_rs_pages_list_description">Show pages list in a more modern UI for WordPress.com and self-hosted sites with application passwords</string>
-    <string name="experimental_rs_unified_comments">RS Unified Comment Detail</string>
-    <string name="experimental_rs_unified_comments_description">Show the comment detail in a more modern UI for WordPress.com and self-hosted sites with application passwords</string>
+    <string name="experimental_rs_comments">RS Unified Comments</string>
+    <string name="experimental_rs_comments_description">Show comments in a more modern UI for WordPress.com and self-hosted sites with application passwords</string>
     <string name="post_rs_failed_to_load">Failed to load post</string>
     <string name="page_rs_failed_to_load">Failed to load page</string>
     <string name="page_rs_copy_url">Copy URL</string>
@@ -1586,6 +1586,7 @@
     <string name="stats_tag_type_tag">Tag</string>
     <string name="stats_expand_group">Expand</string>
     <string name="stats_collapse_group">Collapse</string>
+    <string name="stats_open_referrer_link">Open link</string>
     <string name="stats_insights_latest_post_empty">Check back when you\'ve published your first post!</string>
     <string name="stats_insights_latest_post_with_no_engagement">It\'s been %1$s since %2$s was published. Get the ball rolling and increase your post views by sharing your post:</string>
     <string name="stats_insights_latest_post_message">It’s been %1$s since %2$s was published. Here’s how the post performed so far:</string>
