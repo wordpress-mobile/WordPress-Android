@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.commentsrs.screens
 
+import androidx.activity.compose.BackHandler
 import androidx.annotation.StringRes
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.layout.Column
@@ -28,6 +29,7 @@ import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -92,6 +94,13 @@ fun CommentsRsListScreen(
         .map { it.status }
         .toSet()
     val isSelectionActive = selectedStatuses.isNotEmpty()
+
+    // Like the legacy action mode: the first back press dismisses the selection, the next one
+    // leaves the screen. Enabled on selectedIds (not selectedStatuses) so any live selection is
+    // cleared, including during the brief tab-swipe window before it clears itself.
+    BackHandler(enabled = selectedIds.isNotEmpty()) {
+        onClearSelection()
+    }
 
     LaunchedEffect(snackbarMessages) {
         snackbarMessages.collect { msg ->
@@ -227,6 +236,10 @@ private fun SelectionTopBar(
     // falls into the overflow menu, keeping the selection count on a single line.
     val (iconActions, menuActions) = actions.partition { it.showAsIcon }
     TopAppBar(
+        // A distinct container color so selection mode visibly reads as a mode change.
+        colors = TopAppBarDefaults.topAppBarColors(
+            containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
+        ),
         title = { Text(text = stringResource(R.string.cab_selected, selectedCount)) },
         navigationIcon = {
             IconButton(onClick = onClearSelection) {

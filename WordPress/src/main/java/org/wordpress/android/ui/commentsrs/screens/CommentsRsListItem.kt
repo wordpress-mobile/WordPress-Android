@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.commentsrs.screens
 
+import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -118,29 +119,31 @@ fun CommentsRsListItem(
 
 @Composable
 private fun CommentAvatar(comment: CommentRsUiModel, isSelected: Boolean, onClick: () -> Unit) {
-    if (isSelected) {
-        Icon(
-            imageVector = Icons.Filled.CheckCircle,
-            contentDescription = stringResource(R.string.comment_checkmark_desc),
-            tint = MaterialTheme.colorScheme.primary,
-            modifier = Modifier
-                .size(AVATAR_SIZE)
-                .clip(CircleShape)
-                .clickable(onClick = onClick)
-        )
-    } else {
-        val fallback = rememberVectorPainter(Icons.Filled.Person)
-        AsyncImage(
-            model = comment.avatarUrl.ifBlank { null },
-            contentDescription = null,
-            contentScale = ContentScale.Crop,
-            fallback = fallback,
-            error = fallback,
-            modifier = Modifier
-                .size(AVATAR_SIZE)
-                .clip(CircleShape)
-                .clickable(onClick = onClick)
-        )
+    Crossfade(targetState = isSelected, label = "avatar") { selected ->
+        if (selected) {
+            Icon(
+                imageVector = Icons.Filled.CheckCircle,
+                contentDescription = stringResource(R.string.comment_checkmark_desc),
+                tint = MaterialTheme.colorScheme.primary,
+                modifier = Modifier
+                    .size(AVATAR_SIZE)
+                    .clip(CircleShape)
+                    .clickable(onClick = onClick)
+            )
+        } else {
+            val fallback = rememberVectorPainter(Icons.Filled.Person)
+            AsyncImage(
+                model = comment.avatarUrl.ifBlank { null },
+                contentDescription = null,
+                contentScale = ContentScale.Crop,
+                fallback = fallback,
+                error = fallback,
+                modifier = Modifier
+                    .size(AVATAR_SIZE)
+                    .clip(CircleShape)
+                    .clickable(onClick = onClick)
+            )
+        }
     }
 }
 
