@@ -42,12 +42,18 @@ import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
+import org.wordpress.android.fluxc.model.CommentStatus
 import org.wordpress.android.ui.commentsrs.CommentsRsBatchAction
 import org.wordpress.android.ui.commentsrs.CommentsRsListTab
 import org.wordpress.android.ui.commentsrs.CommentsTabUiState
 import org.wordpress.android.ui.commentsrs.PendingConfirmation
 import org.wordpress.android.ui.commentsrs.batchActions
+import org.wordpress.android.ui.commentsrs.isEnabledFor
 import org.wordpress.android.ui.postsrs.SnackbarMessage
+
+// Material's disabled-content alpha, used to dim batch-action icons that can't apply to the
+// current selection while keeping them visible.
+private const val DISABLED_ICON_ALPHA = 0.38f
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -91,9 +97,15 @@ fun CommentsRsListScreen(
         snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
             if (isSelectionActive) {
+                val selectedStatuses = tabStates[activeTab]?.comments
+                    .orEmpty()
+                    .filter { it.remoteCommentId in selectedIds }
+                    .map { it.status }
+                    .toSet()
                 SelectionTopBar(
                     selectedCount = selectedIds.size,
                     actions = activeTab.batchActions(),
+                    selectedStatuses = selectedStatuses,
                     onClearSelection = onClearSelection,
                     onBatchAction = { action -> onBatchAction(action, activeTab) }
                 )
@@ -204,6 +216,7 @@ private fun BatchConfirmationDialogs(
 private fun SelectionTopBar(
     selectedCount: Int,
     actions: List<CommentsRsBatchAction>,
+    selectedStatuses: Set<CommentStatus>,
     onClearSelection: () -> Unit,
     onBatchAction: (CommentsRsBatchAction) -> Unit
 ) {
@@ -222,11 +235,16 @@ private fun SelectionTopBar(
         },
         actions = {
             iconActions.forEach { action ->
-                IconButton(onClick = { onBatchAction(action) }) {
+                // An action that would be a no-op for the selection (e.g. approve when nothing is
+                // unapproved) stays visible but disabled.
+                val enabled = action.isEnabledFor(selectedStatuses)
+                IconButton(onClick = { onBatchAction(action) }, enabled = enabled) {
                     Icon(
                         painter = painterResource(action.iconResId),
                         contentDescription = stringResource(action.labelResId),
-                        tint = MaterialTheme.colorScheme.onSurfaceVariant
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(
+                            alpha = if (enabled) 1f else DISABLED_ICON_ALPHA
+                        )
                     )
                 }
             }

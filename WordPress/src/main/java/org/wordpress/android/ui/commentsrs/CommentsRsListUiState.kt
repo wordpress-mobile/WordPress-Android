@@ -97,3 +97,15 @@ internal fun CommentsRsListTab.batchActions(): List<CommentsRsBatchAction> = whe
         CommentsRsBatchAction.DELETE
     )
 }
+
+/**
+ * Whether [this] action can act on a selection whose comments have [selectedStatuses]. Approve and
+ * unapprove are disabled when they would be a no-op — nothing unapproved to approve, or nothing
+ * approved to unapprove; every other action is always enabled.
+ */
+internal fun CommentsRsBatchAction.isEnabledFor(selectedStatuses: Set<CommentStatus>): Boolean =
+    when (this) {
+        CommentsRsBatchAction.APPROVE -> CommentStatus.UNAPPROVED in selectedStatuses
+        CommentsRsBatchAction.UNAPPROVE -> CommentStatus.APPROVED in selectedStatuses
+        else -> true
+    }
