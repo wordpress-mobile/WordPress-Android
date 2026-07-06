@@ -29,11 +29,8 @@ data class CommentsTabUiState(
     val error: String? = null
 )
 
-/** Destructive batch actions awaiting user confirmation. */
-sealed interface PendingConfirmation {
-    data class Trash(val commentIds: List<Long>) : PendingConfirmation
-    data class Delete(val commentIds: List<Long>) : PendingConfirmation
-}
+/** A destructive batch [action] awaiting user confirmation, to be applied to [commentIds]. */
+data class PendingConfirmation(val action: CommentsRsBatchAction, val commentIds: List<Long>)
 
 /**
  * Batch moderation actions offered in selection mode. Each maps to a target [CommentStatus]

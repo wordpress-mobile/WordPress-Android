@@ -13,6 +13,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
@@ -216,22 +217,16 @@ class CommentsRsListViewModel @Inject constructor(
     fun onBatchAction(action: CommentsRsBatchAction, tab: CommentsRsListTab) {
         val ids = _selectedIds.value.toList()
         if (ids.isEmpty()) return
-        when (action) {
-            CommentsRsBatchAction.TRASH -> _pendingConfirmation.value = PendingConfirmation.Trash(ids)
-            CommentsRsBatchAction.DELETE -> _pendingConfirmation.value = PendingConfirmation.Delete(ids)
-            else -> performBatchModeration(ids, action.targetStatus, tab)
+        if (action.isDestructive) {
+            _pendingConfirmation.value = PendingConfirmation(action, ids)
+        } else {
+            performBatchModeration(ids, action.targetStatus, tab)
         }
     }
 
     @MainThread
     fun onConfirmPendingAction(tab: CommentsRsListTab) {
-        when (val confirmation = _pendingConfirmation.value) {
-            is PendingConfirmation.Trash ->
-                performBatchModeration(confirmation.commentIds, CommentStatus.TRASH, tab)
-            is PendingConfirmation.Delete ->
-                performBatchModeration(confirmation.commentIds, CommentStatus.DELETED, tab)
-            null -> Unit
-        }
+        _pendingConfirmation.value?.let { performBatchModeration(it.commentIds, it.action.targetStatus, tab) }
         _pendingConfirmation.value = null
     }
 
@@ -241,10 +236,8 @@ class CommentsRsListViewModel @Inject constructor(
     }
 
     private fun toggleSelection(remoteCommentId: Long) {
-        _selectedIds.value = if (remoteCommentId in _selectedIds.value) {
-            _selectedIds.value - remoteCommentId
-        } else {
-            _selectedIds.value + remoteCommentId
+        _selectedIds.update { ids ->
+            if (remoteCommentId in ids) ids - remoteCommentId else ids + remoteCommentId
         }
     }
 

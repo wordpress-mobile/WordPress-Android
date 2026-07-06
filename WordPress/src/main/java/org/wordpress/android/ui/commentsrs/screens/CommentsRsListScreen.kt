@@ -171,8 +171,9 @@ private fun BatchConfirmationDialogs(
     onConfirm: (CommentsRsListTab) -> Unit,
     onDismiss: () -> Unit
 ) {
-    when (pending) {
-        is PendingConfirmation.Trash -> ConfirmationDialog(
+    if (pending == null) return
+    when (pending.action) {
+        CommentsRsBatchAction.TRASH -> ConfirmationDialog(
             titleResId = R.string.trash,
             message = stringResource(R.string.dlg_confirm_trash_comments),
             confirmTextResId = R.string.dlg_confirm_action_trash,
@@ -180,7 +181,7 @@ private fun BatchConfirmationDialogs(
             onConfirm = { onConfirm(activeTab) },
             onDismiss = onDismiss
         )
-        is PendingConfirmation.Delete -> ConfirmationDialog(
+        CommentsRsBatchAction.DELETE -> ConfirmationDialog(
             titleResId = R.string.delete,
             message = stringResource(
                 if (pending.commentIds.size > 1) {
@@ -194,7 +195,7 @@ private fun BatchConfirmationDialogs(
             onConfirm = { onConfirm(activeTab) },
             onDismiss = onDismiss
         )
-        null -> {}
+        else -> {}
     }
 }
 
