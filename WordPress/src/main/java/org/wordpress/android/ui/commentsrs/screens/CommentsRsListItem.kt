@@ -1,7 +1,9 @@
 package org.wordpress.android.ui.commentsrs.screens
 
+import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -78,7 +80,9 @@ fun CommentsRsListItem(
                     )
             )
             Row(modifier = Modifier.padding(start = 12.dp, top = 16.dp, end = 16.dp, bottom = 16.dp)) {
-                CommentAvatar(comment = comment, isSelected = isSelected)
+                // Tapping the avatar toggles selection (the discoverable path into selection
+                // mode); long-press anywhere on the row does the same.
+                CommentAvatar(comment = comment, isSelected = isSelected, onClick = onLongClick)
                 Column(
                     modifier = Modifier
                         .padding(start = 16.dp)
@@ -114,26 +118,32 @@ fun CommentsRsListItem(
 }
 
 @Composable
-private fun CommentAvatar(comment: CommentRsUiModel, isSelected: Boolean) {
-    if (isSelected) {
-        Icon(
-            imageVector = Icons.Filled.CheckCircle,
-            contentDescription = stringResource(R.string.comment_checkmark_desc),
-            tint = MaterialTheme.colorScheme.primary,
-            modifier = Modifier.size(AVATAR_SIZE)
-        )
-    } else {
-        val fallback = rememberVectorPainter(Icons.Filled.Person)
-        AsyncImage(
-            model = comment.avatarUrl.ifBlank { null },
-            contentDescription = null,
-            contentScale = ContentScale.Crop,
-            fallback = fallback,
-            error = fallback,
-            modifier = Modifier
-                .size(AVATAR_SIZE)
-                .clip(CircleShape)
-        )
+private fun CommentAvatar(comment: CommentRsUiModel, isSelected: Boolean, onClick: () -> Unit) {
+    Crossfade(targetState = isSelected, label = "avatar") { selected ->
+        if (selected) {
+            Icon(
+                imageVector = Icons.Filled.CheckCircle,
+                contentDescription = stringResource(R.string.comment_checkmark_desc),
+                tint = MaterialTheme.colorScheme.primary,
+                modifier = Modifier
+                    .size(AVATAR_SIZE)
+                    .clip(CircleShape)
+                    .clickable(onClick = onClick)
+            )
+        } else {
+            val fallback = rememberVectorPainter(Icons.Filled.Person)
+            AsyncImage(
+                model = comment.avatarUrl.ifBlank { null },
+                contentDescription = null,
+                contentScale = ContentScale.Crop,
+                fallback = fallback,
+                error = fallback,
+                modifier = Modifier
+                    .size(AVATAR_SIZE)
+                    .clip(CircleShape)
+                    .clickable(onClick = onClick)
+            )
+        }
     }
 }
 

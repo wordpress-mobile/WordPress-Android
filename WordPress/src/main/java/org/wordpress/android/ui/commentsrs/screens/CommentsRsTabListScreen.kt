@@ -11,7 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -45,6 +45,7 @@ fun CommentsRsTabListScreen(
     state: CommentsTabUiState,
     emptyMessageResId: Int,
     selectedIds: Set<Long>,
+    listState: LazyListState,
     onRefresh: () -> Unit,
     onLoadMore: () -> Unit,
     onCommentClick: (Long) -> Unit,
@@ -79,6 +80,7 @@ fun CommentsRsTabListScreen(
             else -> CommentListContent(
                 comments = state.comments,
                 selectedIds = selectedIds,
+                listState = listState,
                 isLoadingMore = state.isLoadingMore,
                 canLoadMore = state.canLoadMore,
                 onLoadMore = onLoadMore,
@@ -93,14 +95,13 @@ fun CommentsRsTabListScreen(
 private fun CommentListContent(
     comments: List<CommentRsUiModel>,
     selectedIds: Set<Long>,
+    listState: LazyListState,
     isLoadingMore: Boolean,
     canLoadMore: Boolean,
     onLoadMore: () -> Unit,
     onCommentClick: (Long) -> Unit,
     onCommentLongClick: (Long) -> Unit
 ) {
-    val listState = rememberLazyListState()
-
     // Also keyed on the list size: a refresh that truncates the list (or an appended page) restarts
     // the flow, so a `true` latched by distinctUntilChanged before the change can't suppress the
     // re-fire needed to resume paging. The ViewModel's busy/cursor guards make re-fires safe.

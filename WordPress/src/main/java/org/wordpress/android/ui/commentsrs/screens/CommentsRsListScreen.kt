@@ -1,9 +1,12 @@
 package org.wordpress.android.ui.commentsrs.screens
 
+import androidx.activity.compose.BackHandler
 import androidx.annotation.StringRes
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.icons.Icons
@@ -26,6 +29,7 @@ import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -77,6 +81,8 @@ fun CommentsRsListScreen(
     val tabs = CommentsRsListTab.entries
     val pagerState = rememberPagerState(pageCount = { tabs.size })
     val coroutineScope = rememberCoroutineScope()
+    // Hoisted so a re-tap on the active tab can scroll its list back to the top.
+    val listStates = remember { tabs.associateWith { LazyListState() } }
     val activeTab = tabs[pagerState.settledPage]
     val snackbarHostState = remember { SnackbarHostState() }
     // Statuses of the selected comments that live on the active tab. This is empty during a tab
@@ -88,6 +94,13 @@ fun CommentsRsListScreen(
         .map { it.status }
         .toSet()
     val isSelectionActive = selectedStatuses.isNotEmpty()
+
+    // Like the legacy action mode: the first back press dismisses the selection, the next one
+    // leaves the screen. Enabled on selectedIds (not selectedStatuses) so any live selection is
+    // cleared, including during the brief tab-swipe window before it clears itself.
+    BackHandler(enabled = selectedIds.isNotEmpty()) {
+        onClearSelection()
+    }
 
     LaunchedEffect(snackbarMessages) {
         snackbarMessages.collect { msg ->
@@ -104,26 +117,28 @@ fun CommentsRsListScreen(
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
-            if (isSelectionActive) {
-                SelectionTopBar(
-                    selectedCount = selectedIds.size,
-                    actions = activeTab.batchActions(),
-                    selectedStatuses = selectedStatuses,
-                    onClearSelection = onClearSelection,
-                    onBatchAction = { action -> onBatchAction(action, activeTab) }
-                )
-            } else {
-                TopAppBar(
-                    title = { Text(text = stringResource(R.string.comments)) },
-                    navigationIcon = {
-                        IconButton(onClick = onNavigateBack) {
-                            Icon(
-                                Icons.AutoMirrored.Filled.ArrowBack,
-                                contentDescription = stringResource(R.string.back)
-                            )
+            AnimatedContent(targetState = isSelectionActive, label = "topBar") { selectionActive ->
+                if (selectionActive) {
+                    SelectionTopBar(
+                        selectedCount = selectedIds.size,
+                        actions = activeTab.batchActions(),
+                        selectedStatuses = selectedStatuses,
+                        onClearSelection = onClearSelection,
+                        onBatchAction = { action -> onBatchAction(action, activeTab) }
+                    )
+                } else {
+                    TopAppBar(
+                        title = { Text(text = stringResource(R.string.comments)) },
+                        navigationIcon = {
+                            IconButton(onClick = onNavigateBack) {
+                                Icon(
+                                    Icons.AutoMirrored.Filled.ArrowBack,
+                                    contentDescription = stringResource(R.string.back)
+                                )
+                            }
                         }
-                    }
-                )
+                    )
+                }
             }
         }
     ) { contentPadding ->
@@ -136,7 +151,14 @@ fun CommentsRsListScreen(
                     Tab(
                         selected = pagerState.settledPage == index,
                         onClick = {
-                            coroutineScope.launch { pagerState.animateScrollToPage(index) }
+                            coroutineScope.launch {
+                                if (pagerState.settledPage == index) {
+                                    // Re-tapping the active tab scrolls its list back to the top.
+                                    listStates.getValue(tab).animateScrollToItem(0)
+                                } else {
+                                    pagerState.animateScrollToPage(index)
+                                }
+                            }
                         },
                         unselectedContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
                         text = { Text(text = stringResource(tab.labelResId)) }
@@ -162,6 +184,7 @@ fun CommentsRsListScreen(
                     state = tabState,
                     emptyMessageResId = tab.emptyMessageResId,
                     selectedIds = selectedIds,
+                    listState = listStates.getValue(tab),
                     onRefresh = { onRefreshTab(tab) },
                     onLoadMore = { onLoadMore(tab) },
                     onCommentClick = onCommentClick,
@@ -213,6 +236,10 @@ private fun SelectionTopBar(
     // falls into the overflow menu, keeping the selection count on a single line.
     val (iconActions, menuActions) = actions.partition { it.showAsIcon }
     TopAppBar(
+        // A distinct container color so selection mode visibly reads as a mode change.
+        colors = TopAppBarDefaults.topAppBarColors(
+            containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
+        ),
         title = { Text(text = stringResource(R.string.cab_selected, selectedCount)) },
         navigationIcon = {
             IconButton(onClick = onClearSelection) {
