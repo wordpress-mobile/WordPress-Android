@@ -1,0 +1,20 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/buildkite/pipeline-schema/main/schema.json
+---
+
+# Beta promotion picker — run by a Buildkite schedule, or manually via the `PIPELINE` env var.
+# Lists the promotable builds, opens a block step to choose one, and promotes it to the beta track.
+
+agents:
+  queue: "android"
+
+steps:
+  - label: ":android: Gather builds to promote to beta"
+    command: ".buildkite/commands/gather-beta-candidates.sh"
+    plugins: [$CI_TOOLKIT]
+
+# Backstop: the gather lane posts its own failures to Slack, but a setup failure (gems/secrets)
+# under `set -e` aborts before fastlane runs and bypasses that rescue. A build-level failure
+# notification ensures a broken run still reaches the channel.
+notify:
+  - slack: "#build-and-ship"
+    if: build.state == "failed"
