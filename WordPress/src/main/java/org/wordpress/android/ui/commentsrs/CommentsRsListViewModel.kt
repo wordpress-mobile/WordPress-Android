@@ -118,6 +118,11 @@ class CommentsRsListViewModel @Inject constructor(
         // would only duplicate the request and double-bump the page generation.
         if (firstPageJobs[tab]?.isActive == true) return
         if (isUserRefresh) {
+            // A refresh can remove selected comments from the list (they changed server-side),
+            // which would leave the global selection out of sync with the visible checkmarks —
+            // batch actions acting on off-screen comments, back presses that appear to do
+            // nothing. Ending selection mode keeps the two in agreement.
+            onClearSelection()
             // An explicit refresh retries every post title for the site: ones that previously
             // resolved as unresolvable (e.g. a post published since it was first seen) and ones
             // that may have gone stale (e.g. a post renamed since it was cached).
@@ -262,13 +267,20 @@ class CommentsRsListViewModel @Inject constructor(
                     }
                 }.awaitAll()
             }
-            val failures = results.count { it is RsResult.Error }
-            if (failures > 0) {
-                _snackbarMessages.trySend(
-                    SnackbarMessage(
-                        resourceProvider.getString(R.string.comments_rs_moderation_failed, failures, ids.size)
+            // awaitAll preserves order, so results line up with ids.
+            val failedIds = ids.filterIndexed { index, _ -> results[index] is RsResult.Error }
+            if (failedIds.isNotEmpty()) {
+                val message = if (ids.size == 1) {
+                    resourceProvider.getString(R.string.comments_rs_moderation_failed_single)
+                } else {
+                    resourceProvider.getString(
+                        R.string.comments_rs_moderation_failed_multiple, failedIds.size, ids.size
                     )
-                )
+                }
+                _snackbarMessages.trySend(SnackbarMessage(message))
+                // Failed comments kept their status and place in the list, so re-selecting them
+                // lets the user retry immediately instead of hunting them down again.
+                _selectedIds.value = failedIds.toSet()
             }
             refreshAllTabs()
         }

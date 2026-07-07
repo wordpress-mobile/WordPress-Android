@@ -6,7 +6,7 @@ import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.icons.Icons
@@ -81,8 +81,16 @@ fun CommentsRsListScreen(
     val tabs = CommentsRsListTab.entries
     val pagerState = rememberPagerState(pageCount = { tabs.size })
     val coroutineScope = rememberCoroutineScope()
-    // Hoisted so a re-tap on the active tab can scroll its list back to the top.
-    val listStates = remember { tabs.associateWith { LazyListState() } }
+    // Hoisted so a re-tap on the active tab can scroll its list back to the top. Listed
+    // explicitly (rememberLazyListState can't be called in an associateWith lambda) so each
+    // state is saveable and scroll positions survive rotation; keep in sync with the enum.
+    val listStates = mapOf(
+        CommentsRsListTab.ALL to rememberLazyListState(),
+        CommentsRsListTab.PENDING to rememberLazyListState(),
+        CommentsRsListTab.APPROVED to rememberLazyListState(),
+        CommentsRsListTab.SPAM to rememberLazyListState(),
+        CommentsRsListTab.TRASHED to rememberLazyListState()
+    )
     val activeTab = tabs[pagerState.settledPage]
     val snackbarHostState = remember { SnackbarHostState() }
     // Statuses of the selected comments that live on the active tab. This is empty during a tab
