@@ -416,7 +416,6 @@ private fun SearchTopBar(
             }
         }
     )
-
 }
 
 @Composable
