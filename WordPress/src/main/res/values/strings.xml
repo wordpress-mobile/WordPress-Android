@@ -434,6 +434,8 @@
     <string name="comments_empty_list_filtered_unreplied">No unreplied comments</string>
     <string name="comments_empty_list_filtered_spam">No spam comments</string>
     <string name="comments_empty_list_filtered_trashed">No trashed comments</string>
+    <string name="comments_rs_moderation_failed_single">The comment couldn\'t be updated</string>
+    <string name="comments_rs_moderation_failed_multiple">%1$d of %2$d comments couldn\'t be updated</string>
     <string name="comment_reply_to_user">Reply to %s</string>
     <string name="comment_trashed">Comment trashed</string>
     <string name="comment_spammed">Comment marked as spam</string>

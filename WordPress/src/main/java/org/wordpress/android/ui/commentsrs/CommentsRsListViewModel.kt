@@ -6,20 +6,25 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
+import org.wordpress.android.fluxc.model.CommentStatus
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.comments.unified.CommentsRsDataSource
 import org.wordpress.android.ui.comments.unified.CommentsRsDataSource.RsComment
 import org.wordpress.android.ui.comments.unified.CommentsRsDataSource.RsCommentsPageResult
+import org.wordpress.android.ui.comments.unified.CommentsRsDataSource.RsResult
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.postsrs.PostRsErrorUtils
 import org.wordpress.android.ui.postsrs.SnackbarMessage
@@ -57,6 +62,13 @@ class CommentsRsListViewModel @Inject constructor(
 
     private val _snackbarMessages = Channel<SnackbarMessage>(Channel.BUFFERED)
     val snackbarMessages = _snackbarMessages.receiveAsFlow()
+
+    // Selection mode is active while this is non-empty.
+    private val _selectedIds = MutableStateFlow<Set<Long>>(emptySet())
+    val selectedIds: StateFlow<Set<Long>> = _selectedIds.asStateFlow()
+
+    private val _pendingConfirmation = MutableStateFlow<PendingConfirmation?>(null)
+    val pendingConfirmation: StateFlow<PendingConfirmation?> = _pendingConfirmation.asStateFlow()
 
     // Pagination cursors: the next-page params returned with each fetched page, per tab.
     private val nextPageParams = mutableMapOf<CommentsRsListTab, CommentListParams?>()
@@ -96,8 +108,8 @@ class CommentsRsListViewModel @Inject constructor(
 
     /**
      * Re-fetches the first page for [tab]. The pull-to-refresh indicator is only shown for a
-     * user-initiated refresh; silent refreshes (returning from the detail) keep the current
-     * list on screen until the new page arrives.
+     * user-initiated refresh; silent refreshes (after moderation, returning from the detail)
+     * keep the current list on screen until the new page arrives.
      */
     @MainThread
     fun refreshTab(tab: CommentsRsListTab, isUserRefresh: Boolean = false) {
@@ -106,6 +118,11 @@ class CommentsRsListViewModel @Inject constructor(
         // would only duplicate the request and double-bump the page generation.
         if (firstPageJobs[tab]?.isActive == true) return
         if (isUserRefresh) {
+            // A refresh can remove selected comments from the list (they changed server-side),
+            // which would leave the global selection out of sync with the visible checkmarks —
+            // batch actions acting on off-screen comments, back presses that appear to do
+            // nothing. Ending selection mode keeps the two in agreement.
+            onClearSelection()
             // An explicit refresh retries every post title for the site: ones that previously
             // resolved as unresolvable (e.g. a post published since it was first seen) and ones
             // that may have gone stale (e.g. a post renamed since it was cached).
@@ -176,18 +193,129 @@ class CommentsRsListViewModel @Inject constructor(
         }
     }
 
-    /** Opens the rs comment detail for the tapped row. */
+    /** Opens the rs comment detail for the tapped row, or toggles it while selecting. */
     @MainThread
     fun onCommentClick(remoteCommentId: Long) {
-        _events.trySend(CommentsRsListEvent.OpenCommentDetail(site, remoteCommentId))
+        if (_selectedIds.value.isNotEmpty()) {
+            toggleSelection(remoteCommentId)
+        } else {
+            _events.trySend(CommentsRsListEvent.OpenCommentDetail(site, remoteCommentId))
+        }
+    }
+
+    /** Enters selection mode with the long-pressed row selected. */
+    @MainThread
+    fun onCommentLongClick(remoteCommentId: Long) {
+        toggleSelection(remoteCommentId)
+    }
+
+    @MainThread
+    fun onClearSelection() {
+        _selectedIds.value = emptySet()
     }
 
     /**
-     * Tracks the tab the pager settled on — the same COMMENT_FILTER_CHANGED event (including the
-     * initial selection) the legacy list emits, so filter metrics stay comparable.
+     * Runs [action] on the selected comments, first asking for confirmation for the destructive
+     * ones (trash, delete) like the legacy list.
+     */
+    @MainThread
+    fun onBatchAction(action: CommentsRsBatchAction, tab: CommentsRsListTab) {
+        val ids = _selectedIds.value.toList()
+        if (ids.isEmpty()) return
+        if (action.confirmation != null) {
+            _pendingConfirmation.value = PendingConfirmation(action, ids)
+        } else {
+            performBatchModeration(ids, action.targetStatus, tab)
+        }
+    }
+
+    @MainThread
+    fun onConfirmPendingAction(tab: CommentsRsListTab) {
+        _pendingConfirmation.value?.let { performBatchModeration(it.commentIds, it.action.targetStatus, tab) }
+        _pendingConfirmation.value = null
+    }
+
+    @MainThread
+    fun onDismissPendingAction() {
+        _pendingConfirmation.value = null
+    }
+
+    private fun toggleSelection(remoteCommentId: Long) {
+        _selectedIds.update { ids ->
+            if (remoteCommentId in ids) ids - remoteCommentId else ids + remoteCommentId
+        }
+    }
+
+    /**
+     * Applies [newStatus] to every comment in [ids] in parallel, then refreshes all initialized
+     * tabs (moderated comments move between tabs). Failures are aggregated into one snackbar.
+     */
+    private fun performBatchModeration(ids: List<Long>, newStatus: CommentStatus, tab: CommentsRsListTab) {
+        if (!checkNetwork()) return
+        trackBatchModeration(newStatus)
+        onClearSelection()
+        updateTabUiState(tab) { copy(isRefreshing = true) }
+        viewModelScope.launch {
+            val results = withContext(bgDispatcher) {
+                ids.map { commentId ->
+                    async {
+                        if (newStatus == CommentStatus.DELETED) {
+                            commentsRsDataSource.delete(site, commentId)
+                        } else {
+                            commentsRsDataSource.updateStatus(site, commentId, newStatus)
+                        }
+                    }
+                }.awaitAll()
+            }
+            // awaitAll preserves order, so results line up with ids.
+            val failedIds = ids.filterIndexed { index, _ -> results[index] is RsResult.Error }
+            if (failedIds.isNotEmpty()) {
+                val message = if (ids.size == 1) {
+                    resourceProvider.getString(R.string.comments_rs_moderation_failed_single)
+                } else {
+                    resourceProvider.getString(
+                        R.string.comments_rs_moderation_failed_multiple, failedIds.size, ids.size
+                    )
+                }
+                _snackbarMessages.trySend(SnackbarMessage(message))
+                // Failed comments kept their status and place in the list, so re-selecting them
+                // lets the user retry immediately instead of hunting them down again.
+                _selectedIds.value = failedIds.toSet()
+            }
+            refreshAllTabs()
+        }
+    }
+
+    private fun trackBatchModeration(newStatus: CommentStatus) {
+        val stat = when (newStatus) {
+            CommentStatus.APPROVED -> Stat.COMMENT_BATCH_APPROVED
+            CommentStatus.UNAPPROVED -> Stat.COMMENT_BATCH_UNAPPROVED
+            CommentStatus.SPAM -> Stat.COMMENT_BATCH_SPAMMED
+            CommentStatus.TRASH -> Stat.COMMENT_BATCH_TRASHED
+            CommentStatus.DELETED -> Stat.COMMENT_BATCH_DELETED
+            else -> return
+        }
+        analyticsTracker.track(stat)
+    }
+
+    private fun checkNetwork(): Boolean {
+        if (!networkUtilsWrapper.isNetworkAvailable()) {
+            _snackbarMessages.trySend(
+                SnackbarMessage(resourceProvider.getString(R.string.no_network_message))
+            )
+            return false
+        }
+        return true
+    }
+
+    /**
+     * The pager settled on a new tab: clears any active selection (like the legacy action mode)
+     * and tracks the same COMMENT_FILTER_CHANGED event (including the initial selection) the
+     * legacy list emits, so filter metrics stay comparable.
      */
     @MainThread
     fun onTabChanged(tab: CommentsRsListTab) {
+        onClearSelection()
         if (tab == lastTrackedTab) return
         lastTrackedTab = tab
         analyticsTracker.track(

@@ -41,16 +41,25 @@ class CommentsRsListActivity : BaseAppCompatActivity() {
 
         setContent {
             val tabStates by viewModel.tabStates.collectAsState()
+            val selectedIds by viewModel.selectedIds.collectAsState()
+            val confirmation by viewModel.pendingConfirmation.collectAsState()
             AppThemeM3 {
                 CommentsRsListScreen(
                     tabStates = tabStates,
+                    selectedIds = selectedIds,
+                    pendingConfirmation = confirmation,
+                    onDismissConfirmation = viewModel::onDismissPendingAction,
                     snackbarMessages = viewModel.snackbarMessages,
                     onInitTab = viewModel::initTab,
                     onTabChanged = viewModel::onTabChanged,
                     onRefreshTab = { tab -> viewModel.refreshTab(tab, isUserRefresh = true) },
                     onLoadMore = viewModel::loadMore,
                     onNavigateBack = { onBackPressedDispatcher.onBackPressed() },
-                    onCommentClick = viewModel::onCommentClick
+                    onCommentClick = viewModel::onCommentClick,
+                    onCommentLongClick = viewModel::onCommentLongClick,
+                    onClearSelection = viewModel::onClearSelection,
+                    onBatchAction = viewModel::onBatchAction,
+                    onConfirmPendingAction = viewModel::onConfirmPendingAction
                 )
             }
         }
