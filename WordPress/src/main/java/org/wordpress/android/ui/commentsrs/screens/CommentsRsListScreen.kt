@@ -123,10 +123,21 @@ fun CommentsRsListScreen(
         .toSet()
     val isSelectionActive = selectedStatuses.isNotEmpty()
     val focusRequester = remember { FocusRequester() }
+    // Focus (and the keyboard) is requested once per search open, not every time SearchTopBar
+    // re-enters composition — a selection round-trip over active search must not pop the keyboard.
+    var searchFocusPending by remember { mutableStateOf(false) }
     val topBarMode = when {
         isSelectionActive -> TopBarMode.SELECTION
         isSearchActive -> TopBarMode.SEARCH
         else -> TopBarMode.NORMAL
+    }
+    val trimmedQueryLength = searchQuery.trim().length
+
+    // Search opening, closing, or changing the query replaces each tab's content wholesale; reset
+    // the scroll so page 1 renders at the top. The hoisted list states otherwise keep their old
+    // deep offsets, clamping the short new list to its end and tripping the load-more trigger.
+    LaunchedEffect(isSearchActive, searchQuery) {
+        listStates.values.forEach { it.scrollToItem(0) }
     }
 
     // Like the legacy action mode: the first back press dismisses the selection, the next one
@@ -167,6 +178,8 @@ fun CommentsRsListScreen(
                     TopBarMode.SEARCH -> SearchTopBar(
                         searchQuery = searchQuery,
                         focusRequester = focusRequester,
+                        requestFocus = searchFocusPending,
+                        onFocusHandled = { searchFocusPending = false },
                         onQueryChanged = { query -> onSearchQueryChanged(query, activeTab) },
                         onClose = { onSearchClose(activeTab) }
                     )
@@ -181,7 +194,10 @@ fun CommentsRsListScreen(
                             }
                         },
                         actions = {
-                            IconButton(onClick = onSearchOpen) {
+                            IconButton(onClick = {
+                                searchFocusPending = true
+                                onSearchOpen()
+                            }) {
                                 Icon(
                                     Icons.Default.Search,
                                     contentDescription = stringResource(R.string.comments_rs_search_prompt)
@@ -194,28 +210,30 @@ fun CommentsRsListScreen(
         }
     ) { contentPadding ->
         Column(modifier = Modifier.fillMaxSize().padding(contentPadding)) {
-            if (!isSearchActive) {
-                PrimaryScrollableTabRow(
-                    selectedTabIndex = pagerState.settledPage,
-                    edgePadding = 0.dp
-                ) {
-                    tabs.forEachIndexed { index, tab ->
-                        Tab(
-                            selected = pagerState.settledPage == index,
-                            onClick = {
-                                coroutineScope.launch {
-                                    if (pagerState.settledPage == index) {
-                                        // Re-tapping the active tab scrolls its list back to the top.
-                                        listStates.getValue(tab).animateScrollToItem(0)
-                                    } else {
-                                        pagerState.animateScrollToPage(index)
-                                    }
+            // The tab row stays visible while searching: the comments endpoint only accepts a
+            // single status per request (unlike posts, which search across all statuses), so a
+            // search is always scoped to one tab — keeping the tabs on screen makes that scope
+            // visible and lets the user re-run the query against another status.
+            PrimaryScrollableTabRow(
+                selectedTabIndex = pagerState.settledPage,
+                edgePadding = 0.dp
+            ) {
+                tabs.forEachIndexed { index, tab ->
+                    Tab(
+                        selected = pagerState.settledPage == index,
+                        onClick = {
+                            coroutineScope.launch {
+                                if (pagerState.settledPage == index) {
+                                    // Re-tapping the active tab scrolls its list back to the top.
+                                    listStates.getValue(tab).animateScrollToItem(0)
+                                } else {
+                                    pagerState.animateScrollToPage(index)
                                 }
-                            },
-                            unselectedContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
-                            text = { Text(text = stringResource(tab.labelResId)) }
-                        )
-                    }
+                            }
+                        },
+                        unselectedContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                        text = { Text(text = stringResource(tab.labelResId)) }
+                    )
                 }
             }
 
@@ -228,8 +246,7 @@ fun CommentsRsListScreen(
 
             HorizontalPager(
                 state = pagerState,
-                modifier = Modifier.weight(1f),
-                userScrollEnabled = !isSearchActive
+                modifier = Modifier.weight(1f)
             ) { page ->
                 val tab = tabs[page]
                 val tabState = tabStates[tab] ?: CommentsTabUiState(isLoading = true)
@@ -239,8 +256,8 @@ fun CommentsRsListScreen(
                     emptyMessageResId = tab.emptyMessageResId,
                     selectedIds = selectedIds,
                     listState = listStates.getValue(tab),
-                    isSearchIdle = isSearchActive && searchQuery.length < MIN_SEARCH_QUERY_LENGTH,
-                    isSearching = isSearchActive && searchQuery.length >= MIN_SEARCH_QUERY_LENGTH,
+                    isSearchIdle = isSearchActive && trimmedQueryLength < MIN_SEARCH_QUERY_LENGTH,
+                    isSearching = isSearchActive && trimmedQueryLength >= MIN_SEARCH_QUERY_LENGTH,
                     onRefresh = { onRefreshTab(tab) },
                     onLoadMore = { onLoadMore(tab) },
                     onCommentClick = onCommentClick,
@@ -329,13 +346,17 @@ private fun SelectionTopBar(
 
 /**
  * Search mode: an inline query field replaces the title, the navigation icon closes the search,
- * and a clear button empties a non-blank query (like the rs posts list search).
+ * and a clear button empties a non-blank query (like the rs posts list search). Focus is only
+ * requested when [requestFocus] is set (once per search open) so re-entering composition — e.g.
+ * returning from the selection top bar — doesn't pop the keyboard uninvited.
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun SearchTopBar(
     searchQuery: String,
     focusRequester: FocusRequester,
+    requestFocus: Boolean,
+    onFocusHandled: () -> Unit,
     onQueryChanged: (String) -> Unit,
     onClose: () -> Unit
 ) {
@@ -378,7 +399,12 @@ private fun SearchTopBar(
         }
     )
 
-    LaunchedEffect(Unit) { focusRequester.requestFocus() }
+    LaunchedEffect(requestFocus) {
+        if (requestFocus) {
+            focusRequester.requestFocus()
+            onFocusHandled()
+        }
+    }
 }
 
 @Composable

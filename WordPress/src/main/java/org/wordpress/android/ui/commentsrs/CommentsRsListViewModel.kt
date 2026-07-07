@@ -90,6 +90,11 @@ class CommentsRsListViewModel @Inject constructor(
     // The in-flight first-page fetch per tab, so overlapping refreshes don't duplicate it.
     private val firstPageJobs = mutableMapOf<CommentsRsListTab, Job>()
 
+    // The in-flight load-more fetch per tab, so clearTabs() can cancel it: a load-more that
+    // survived a clear could otherwise land on a reset page-generation counter and append its
+    // stale rows into the freshly fetched list.
+    private val loadMoreJobs = mutableMapOf<CommentsRsListTab, Job>()
+
     private var lastTrackedTab: CommentsRsListTab? = null
 
     // The in-flight title-resolve job per tab.
@@ -108,7 +113,10 @@ class CommentsRsListViewModel @Inject constructor(
             viewModelScope.launch {
                 _searchQuery
                     .debounce(SEARCH_DEBOUNCE_MS)
-                    .filter { it.length >= MIN_SEARCH_QUERY_LENGTH }
+                    // Trimmed: fetchFirstPage maps a blank query to "no search", so a
+                    // whitespace-only query passing a raw length check would fetch (and present)
+                    // the full unfiltered list as search results.
+                    .filter { it.trim().length >= MIN_SEARCH_QUERY_LENGTH }
                     .collect {
                         clearTabs()
                         initTab(activeSearchTab)
@@ -126,14 +134,16 @@ class CommentsRsListViewModel @Inject constructor(
     }
 
     /**
-     * Updates the search query. Non-blank queries are debounced before triggering an API call.
-     * Blank queries immediately clear results so the idle state appears without delay.
+     * Updates the search query. Searchable queries are debounced before triggering an API call.
+     * A query below the searchable minimum clears immediately: the previous query's results
+     * must not flash as matches for the next query in the debounce window after the user types
+     * back up to the minimum.
      */
     @MainThread
     fun onSearchQueryChanged(query: String, activeTab: CommentsRsListTab) {
         activeSearchTab = activeTab
         _searchQuery.value = query
-        if (query.isBlank()) clearTabs()
+        if (query.trim().length < MIN_SEARCH_QUERY_LENGTH && _tabStates.value.isNotEmpty()) clearTabs()
     }
 
     /**
@@ -151,13 +161,15 @@ class CommentsRsListViewModel @Inject constructor(
 
     /**
      * Drops every tab's rows and pagination bookkeeping so tabs re-initialize from scratch
-     * (entering, changing, or leaving a search). Cancelling the in-flight jobs keeps a fetch
-     * started before the clear from resurrecting a stale tab afterwards; a load-more in flight
-     * is discarded by the page-generation check once its generation entry is gone.
+     * (entering, changing, or leaving a search). Every in-flight fetch is cancelled: a fetch
+     * started before the clear must not resurrect a stale tab, and a surviving load-more would
+     * land on a reset generation counter and mix its stale page into the fresh list.
      */
     private fun clearTabs() {
         firstPageJobs.values.forEach { it.cancel() }
         firstPageJobs.clear()
+        loadMoreJobs.values.forEach { it.cancel() }
+        loadMoreJobs.clear()
         resolveTitleJobs.values.forEach { it.cancel() }
         resolveTitleJobs.clear()
         nextPageParams.clear()
@@ -171,6 +183,10 @@ class CommentsRsListViewModel @Inject constructor(
         // updateTabUiState inserts the tab synchronously, so this also blocks re-entry while
         // the first fetch is in flight.
         if (_tabStates.value.containsKey(tab)) return
+        // While a search is open with a below-minimum query, the screen shows the idle state and
+        // the debounce collector hasn't fired — an init here (pager settle, Activity recreation)
+        // would fetch unfiltered or below-minimum results behind the idle screen.
+        if (_isSearchActive.value && _searchQuery.value.trim().length < MIN_SEARCH_QUERY_LENGTH) return
         updateTabUiState(tab) { copy(isLoading = true) }
         fetchFirstPage(tab)
     }
@@ -224,12 +240,16 @@ class CommentsRsListViewModel @Inject constructor(
 
         updateTabUiState(tab) { copy(isLoadingMore = true) }
         val generation = pageGenerations[tab]
-        viewModelScope.launch {
+        loadMoreJobs[tab] = viewModelScope.launch {
             val result = withContext(bgDispatcher) { commentsRsDataSource.fetchCommentsPage(site, params) }
             if (pageGenerations[tab] != generation) {
                 // A refresh replaced the list while this page was in flight, so its cursor is
                 // stale; appending it would mix old and new pages and corrupt the cursor chain.
-                updateTabUiState(tab) { copy(isLoadingMore = false) }
+                // Only touch tabs that still exist: writing through updateTabUiState after a
+                // clearTabs() would resurrect the tab as a ghost entry that blocks initTab.
+                if (_tabStates.value.containsKey(tab)) {
+                    updateTabUiState(tab) { copy(isLoadingMore = false) }
+                }
                 return@launch
             }
             when (result) {
@@ -384,8 +404,10 @@ class CommentsRsListViewModel @Inject constructor(
      */
     @MainThread
     fun onTabChanged(tab: CommentsRsListTab) {
-        onClearSelection()
+        // A re-emission of the same tab (Activity recreation restarting the pager's settled-page
+        // flow) is not a tab change: it must neither re-track nor clear an active selection.
         if (tab == lastTrackedTab) return
+        onClearSelection()
         lastTrackedTab = tab
         analyticsTracker.track(
             Stat.COMMENT_FILTER_CHANGED,
