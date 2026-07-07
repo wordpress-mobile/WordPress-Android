@@ -436,7 +436,8 @@
     <string name="comments_empty_list_filtered_trashed">No trashed comments</string>
     <string name="comments_rs_search_prompt">Search comments</string>
     <string name="comments_rs_search_nothing_found">No comments matching your search</string>
-    <string name="comments_rs_moderation_failed">%1$d of %2$d comments couldn\'t be updated</string>
+    <string name="comments_rs_moderation_failed_single">The comment couldn\'t be updated</string>
+    <string name="comments_rs_moderation_failed_multiple">%1$d of %2$d comments couldn\'t be updated</string>
     <string name="comment_reply_to_user">Reply to %s</string>
     <string name="comment_trashed">Comment trashed</string>
     <string name="comment_spammed">Comment marked as spam</string>
@@ -1589,6 +1590,7 @@
     <string name="stats_tag_type_tag">Tag</string>
     <string name="stats_expand_group">Expand</string>
     <string name="stats_collapse_group">Collapse</string>
+    <string name="stats_open_referrer_link">Open link</string>
     <string name="stats_insights_latest_post_empty">Check back when you\'ve published your first post!</string>
     <string name="stats_insights_latest_post_with_no_engagement">It\'s been %1$s since %2$s was published. Get the ball rolling and increase your post views by sharing your post:</string>
     <string name="stats_insights_latest_post_message">It’s been %1$s since %2$s was published. Here’s how the post performed so far:</string>

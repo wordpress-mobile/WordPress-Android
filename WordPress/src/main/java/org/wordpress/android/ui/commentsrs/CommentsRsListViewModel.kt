@@ -16,6 +16,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
@@ -116,6 +117,54 @@ class CommentsRsListViewModel @Inject constructor(
         }
     }
 
+    /** Clears all tab states so the list appears empty while the user types a query. */
+    @MainThread
+    fun onSearchOpen() {
+        onClearSelection()
+        _isSearchActive.value = true
+        clearTabs()
+    }
+
+    /**
+     * Updates the search query. Non-blank queries are debounced before triggering an API call.
+     * Blank queries immediately clear results so the idle state appears without delay.
+     */
+    @MainThread
+    fun onSearchQueryChanged(query: String, activeTab: CommentsRsListTab) {
+        activeSearchTab = activeTab
+        _searchQuery.value = query
+        if (query.isBlank()) clearTabs()
+    }
+
+    /**
+     * Closes search mode: clears the query and immediately re-initializes [activeTab] so the
+     * normal tab content appears without debounce delay.
+     */
+    @MainThread
+    fun onSearchClose(activeTab: CommentsRsListTab) {
+        onClearSelection()
+        _isSearchActive.value = false
+        _searchQuery.value = ""
+        clearTabs()
+        initTab(activeTab)
+    }
+
+    /**
+     * Drops every tab's rows and pagination bookkeeping so tabs re-initialize from scratch
+     * (entering, changing, or leaving a search). Cancelling the in-flight jobs keeps a fetch
+     * started before the clear from resurrecting a stale tab afterwards; a load-more in flight
+     * is discarded by the page-generation check once its generation entry is gone.
+     */
+    private fun clearTabs() {
+        firstPageJobs.values.forEach { it.cancel() }
+        firstPageJobs.clear()
+        resolveTitleJobs.values.forEach { it.cancel() }
+        resolveTitleJobs.clear()
+        nextPageParams.clear()
+        pageGenerations.clear()
+        _tabStates.value = emptyMap()
+    }
+
     /** Loads the first page for [tab] unless it's already initialized. */
     @MainThread
     fun initTab(tab: CommentsRsListTab) {
@@ -138,6 +187,11 @@ class CommentsRsListViewModel @Inject constructor(
         // would only duplicate the request and double-bump the page generation.
         if (firstPageJobs[tab]?.isActive == true) return
         if (isUserRefresh) {
+            // A refresh can remove selected comments from the list (they changed server-side),
+            // which would leave the global selection out of sync with the visible checkmarks —
+            // batch actions acting on off-screen comments, back presses that appear to do
+            // nothing. Ending selection mode keeps the two in agreement.
+            onClearSelection()
             // An explicit refresh retries every post title for the site: ones that previously
             // resolved as unresolvable (e.g. a post published since it was first seen) and ones
             // that may have gone stale (e.g. a post renamed since it was cached).
@@ -237,22 +291,16 @@ class CommentsRsListViewModel @Inject constructor(
     fun onBatchAction(action: CommentsRsBatchAction, tab: CommentsRsListTab) {
         val ids = _selectedIds.value.toList()
         if (ids.isEmpty()) return
-        when (action) {
-            CommentsRsBatchAction.TRASH -> _pendingConfirmation.value = PendingConfirmation.Trash(ids)
-            CommentsRsBatchAction.DELETE -> _pendingConfirmation.value = PendingConfirmation.Delete(ids)
-            else -> performBatchModeration(ids, action.targetStatus, tab)
+        if (action.confirmation != null) {
+            _pendingConfirmation.value = PendingConfirmation(action, ids)
+        } else {
+            performBatchModeration(ids, action.targetStatus, tab)
         }
     }
 
     @MainThread
     fun onConfirmPendingAction(tab: CommentsRsListTab) {
-        when (val confirmation = _pendingConfirmation.value) {
-            is PendingConfirmation.Trash ->
-                performBatchModeration(confirmation.commentIds, CommentStatus.TRASH, tab)
-            is PendingConfirmation.Delete ->
-                performBatchModeration(confirmation.commentIds, CommentStatus.DELETED, tab)
-            null -> Unit
-        }
+        _pendingConfirmation.value?.let { performBatchModeration(it.commentIds, it.action.targetStatus, tab) }
         _pendingConfirmation.value = null
     }
 
@@ -262,10 +310,8 @@ class CommentsRsListViewModel @Inject constructor(
     }
 
     private fun toggleSelection(remoteCommentId: Long) {
-        _selectedIds.value = if (remoteCommentId in _selectedIds.value) {
-            _selectedIds.value - remoteCommentId
-        } else {
-            _selectedIds.value + remoteCommentId
+        _selectedIds.update { ids ->
+            if (remoteCommentId in ids) ids - remoteCommentId else ids + remoteCommentId
         }
     }
 
@@ -290,13 +336,20 @@ class CommentsRsListViewModel @Inject constructor(
                     }
                 }.awaitAll()
             }
-            val failures = results.count { it is RsResult.Error }
-            if (failures > 0) {
-                _snackbarMessages.trySend(
-                    SnackbarMessage(
-                        resourceProvider.getString(R.string.comments_rs_moderation_failed, failures, ids.size)
+            // awaitAll preserves order, so results line up with ids.
+            val failedIds = ids.filterIndexed { index, _ -> results[index] is RsResult.Error }
+            if (failedIds.isNotEmpty()) {
+                val message = if (ids.size == 1) {
+                    resourceProvider.getString(R.string.comments_rs_moderation_failed_single)
+                } else {
+                    resourceProvider.getString(
+                        R.string.comments_rs_moderation_failed_multiple, failedIds.size, ids.size
                     )
-                )
+                }
+                _snackbarMessages.trySend(SnackbarMessage(message))
+                // Failed comments kept their status and place in the list, so re-selecting them
+                // lets the user retry immediately instead of hunting them down again.
+                _selectedIds.value = failedIds.toSet()
             }
             refreshAllTabs()
         }
@@ -338,38 +391,6 @@ class CommentsRsListViewModel @Inject constructor(
             Stat.COMMENT_FILTER_CHANGED,
             mapOf(SELECTED_FILTER_PROPERTY to resourceProvider.getString(tab.trackingLabelResId))
         )
-    }
-
-    /** Clears all tab states so the list appears empty while the user types a query. */
-    @MainThread
-    fun onSearchOpen() {
-        onClearSelection()
-        _isSearchActive.value = true
-        clearTabs()
-    }
-
-    /**
-     * Updates the search query. Non-blank queries are debounced before triggering an API call.
-     * Blank queries immediately clear results so the idle state appears without delay.
-     */
-    @MainThread
-    fun onSearchQueryChanged(query: String, activeTab: CommentsRsListTab) {
-        activeSearchTab = activeTab
-        _searchQuery.value = query
-        if (query.isBlank()) clearTabs()
-    }
-
-    /**
-     * Closes search mode: clears the query and immediately re-initializes [activeTab] so the
-     * normal tab content appears without debounce delay.
-     */
-    @MainThread
-    fun onSearchClose(activeTab: CommentsRsListTab) {
-        onClearSelection()
-        _isSearchActive.value = false
-        _searchQuery.value = ""
-        clearTabs()
-        initTab(activeTab)
     }
 
     private fun fetchFirstPage(tab: CommentsRsListTab, showErrorSnackbar: Boolean = true) {
@@ -460,18 +481,6 @@ class CommentsRsListViewModel @Inject constructor(
                 copy(comments = comments.map { it.copy(postTitle = titles[it.postId] ?: it.postTitle) })
             }
         }
-    }
-
-    private fun clearTabs() {
-        nextPageParams.clear()
-        pageGenerations.clear()
-        // Cancel in-flight fetches so a page requested before the clear can't repopulate the
-        // emptied tabs with pre-search (or pre-close) content.
-        firstPageJobs.values.forEach { it.cancel() }
-        firstPageJobs.clear()
-        resolveTitleJobs.values.forEach { it.cancel() }
-        resolveTitleJobs.clear()
-        _tabStates.value = emptyMap()
     }
 
     /** The server message when it sent one, otherwise a friendly offline/generic message. */

@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.commentsrs
 
+import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.CommentStatus
@@ -28,34 +29,71 @@ data class CommentsTabUiState(
     val error: String? = null
 )
 
-/** Destructive batch actions awaiting user confirmation. */
-sealed interface PendingConfirmation {
-    data class Trash(val commentIds: List<Long>) : PendingConfirmation
-    data class Delete(val commentIds: List<Long>) : PendingConfirmation
-}
+/** A destructive batch [action] awaiting user confirmation, to be applied to [commentIds]. */
+data class PendingConfirmation(val action: CommentsRsBatchAction, val commentIds: List<Long>)
 
-data class ConfirmationDialogState(
-    val pending: PendingConfirmation? = null,
-    val onConfirm: () -> Unit = {},
-    val onDismiss: () -> Unit = {}
+/**
+ * Confirmation-dialog copy for a destructive batch action. [messagePluralResId] is shown when more
+ * than one comment is selected, otherwise [messageResId].
+ */
+data class ConfirmationCopy(
+    @StringRes val titleResId: Int,
+    @StringRes val confirmButtonResId: Int,
+    @StringRes val messageResId: Int,
+    @StringRes val messagePluralResId: Int = messageResId
 )
 
 /**
  * Batch moderation actions offered in selection mode. Each maps to a target [CommentStatus]
- * applied to every selected comment (except [DELETE], which deletes permanently).
+ * applied to every selected comment (except [DELETE], which deletes permanently); [labelResId]
+ * doubles as the icon's content description. Mirroring the legacy list's action mode, only the
+ * [showAsIcon] actions (approve/unapprove) appear as top-bar icon buttons; the rest fall into the
+ * overflow menu. An action with [confirmation] copy is destructive: it asks before running and is
+ * tinted accordingly.
  */
 enum class CommentsRsBatchAction(
     @StringRes val labelResId: Int,
+    @DrawableRes val iconResId: Int,
     val targetStatus: CommentStatus,
-    val isDestructive: Boolean = false
+    val showAsIcon: Boolean = false,
+    val confirmation: ConfirmationCopy? = null
 ) {
-    APPROVE(R.string.mnu_comment_approve, CommentStatus.APPROVED),
-    UNAPPROVE(R.string.mnu_comment_unapprove, CommentStatus.UNAPPROVED),
-    SPAM(R.string.mnu_comment_spam, CommentStatus.SPAM),
-    NOT_SPAM(R.string.mnu_comment_unspam, CommentStatus.APPROVED),
-    TRASH(R.string.mnu_comment_trash, CommentStatus.TRASH, isDestructive = true),
-    UNTRASH(R.string.mnu_comment_untrash, CommentStatus.APPROVED),
-    DELETE(R.string.mnu_comment_delete_permanently, CommentStatus.DELETED, isDestructive = true);
+    APPROVE(
+        R.string.mnu_comment_approve,
+        R.drawable.ic_thumbs_up_white_24dp,
+        CommentStatus.APPROVED,
+        showAsIcon = true
+    ),
+    UNAPPROVE(
+        R.string.mnu_comment_unapprove,
+        R.drawable.ic_thumbs_down_white_24dp,
+        CommentStatus.UNAPPROVED,
+        showAsIcon = true
+    ),
+    SPAM(R.string.mnu_comment_spam, R.drawable.ic_spam_white_24dp, CommentStatus.SPAM),
+    NOT_SPAM(R.string.mnu_comment_unspam, R.drawable.ic_spam_white_24dp, CommentStatus.APPROVED),
+    TRASH(
+        R.string.mnu_comment_trash,
+        R.drawable.ic_trash_white_24dp,
+        CommentStatus.TRASH,
+        confirmation = ConfirmationCopy(
+            titleResId = R.string.trash,
+            confirmButtonResId = R.string.dlg_confirm_action_trash,
+            messageResId = R.string.dlg_confirm_trash_comments
+        )
+    ),
+    UNTRASH(R.string.mnu_comment_untrash, R.drawable.ic_trash_white_24dp, CommentStatus.APPROVED),
+    DELETE(
+        R.string.mnu_comment_delete_permanently,
+        R.drawable.ic_trash_white_24dp,
+        CommentStatus.DELETED,
+        confirmation = ConfirmationCopy(
+            titleResId = R.string.delete,
+            confirmButtonResId = R.string.delete,
+            messageResId = R.string.dlg_sure_to_delete_comment,
+            messagePluralResId = R.string.dlg_sure_to_delete_comments
+        )
+    )
 }
 
 /** The batch actions offered for a tab's selection, mirroring the legacy action mode. */
@@ -85,3 +123,15 @@ internal fun CommentsRsListTab.batchActions(): List<CommentsRsBatchAction> = whe
         CommentsRsBatchAction.DELETE
     )
 }
+
+/**
+ * Whether [this] action can act on a selection whose comments have [selectedStatuses]. Approve and
+ * unapprove are disabled when they would be a no-op — nothing unapproved to approve, or nothing
+ * approved to unapprove; every other action is always enabled.
+ */
+internal fun CommentsRsBatchAction.isEnabledFor(selectedStatuses: Set<CommentStatus>): Boolean =
+    when (this) {
+        CommentsRsBatchAction.APPROVE -> CommentStatus.UNAPPROVED in selectedStatuses
+        CommentsRsBatchAction.UNAPPROVE -> CommentStatus.APPROVED in selectedStatuses
+        else -> true
+    }
