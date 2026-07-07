@@ -11,11 +11,15 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -65,7 +69,15 @@ class CommentsRsListViewModel @Inject constructor(
 
     private val _searchQuery = MutableStateFlow("")
     val searchQuery: StateFlow<String> = _searchQuery.asStateFlow()
-    private var activeSearchTab = CommentsRsListTab.ALL
+
+    /**
+     * Whether the current query is long enough to search. The single owner of the minimum-length
+     * policy — the debounce filter, the [initTab] guard, and the screen's idle state all derive
+     * from it rather than re-implementing the trim-and-compare rule.
+     */
+    val isQuerySearchable: StateFlow<Boolean> = _searchQuery
+        .map { isSearchable(it) }
+        .stateIn(viewModelScope, SharingStarted.Eagerly, false)
 
     private val _events = Channel<CommentsRsListEvent>(Channel.BUFFERED)
     val events = _events.receiveAsFlow()
@@ -112,14 +124,20 @@ class CommentsRsListViewModel @Inject constructor(
             @OptIn(FlowPreview::class)
             viewModelScope.launch {
                 _searchQuery
+                    // Trim + dedupe first so whitespace-only edits ("abc" -> "abc ") neither
+                    // restart the debounce nor refetch a semantically identical query; trimming
+                    // also keeps a whitespace-only query from passing the length filter and
+                    // fetching (and presenting) the full unfiltered list as search results.
+                    .map { it.trim() }
+                    .distinctUntilChanged()
                     .debounce(SEARCH_DEBOUNCE_MS)
-                    // Trimmed: fetchFirstPage maps a blank query to "no search", so a
-                    // whitespace-only query passing a raw length check would fetch (and present)
-                    // the full unfiltered list as search results.
-                    .filter { it.trim().length >= MIN_SEARCH_QUERY_LENGTH }
+                    .filter { isSearchable(it) }
                     .collect {
                         clearTabs()
-                        initTab(activeSearchTab)
+                        // lastTrackedTab follows the pager (updated on every settle), so this
+                        // targets the tab the user is actually looking at even when they switch
+                        // tabs inside the debounce window.
+                        initTab(lastTrackedTab ?: CommentsRsListTab.ALL)
                     }
             }
         }
@@ -135,15 +153,16 @@ class CommentsRsListViewModel @Inject constructor(
 
     /**
      * Updates the search query. Searchable queries are debounced before triggering an API call.
-     * A query below the searchable minimum clears immediately: the previous query's results
-     * must not flash as matches for the next query in the debounce window after the user types
-     * back up to the minimum.
+     * Any change to the trimmed query clears the current rows immediately: displayed comments
+     * always belong to the last executed search, and must not linger as apparent matches for a
+     * different query — whether the user deleted below the minimum or replaced the whole query
+     * at once (select-all + paste, a keyboard suggestion, voice input).
      */
     @MainThread
-    fun onSearchQueryChanged(query: String, activeTab: CommentsRsListTab) {
-        activeSearchTab = activeTab
+    fun onSearchQueryChanged(query: String) {
+        val previous = _searchQuery.value
         _searchQuery.value = query
-        if (query.trim().length < MIN_SEARCH_QUERY_LENGTH && _tabStates.value.isNotEmpty()) clearTabs()
+        if (query.trim() != previous.trim()) clearTabs()
     }
 
     /**
@@ -186,7 +205,7 @@ class CommentsRsListViewModel @Inject constructor(
         // While a search is open with a below-minimum query, the screen shows the idle state and
         // the debounce collector hasn't fired — an init here (pager settle, Activity recreation)
         // would fetch unfiltered or below-minimum results behind the idle screen.
-        if (_isSearchActive.value && _searchQuery.value.trim().length < MIN_SEARCH_QUERY_LENGTH) return
+        if (_isSearchActive.value && !isSearchable(_searchQuery.value)) return
         updateTabUiState(tab) { copy(isLoading = true) }
         fetchFirstPage(tab)
     }
@@ -368,8 +387,13 @@ class CommentsRsListViewModel @Inject constructor(
                 }
                 _snackbarMessages.trySend(SnackbarMessage(message))
                 // Failed comments kept their status and place in the list, so re-selecting them
-                // lets the user retry immediately instead of hunting them down again.
-                _selectedIds.value = failedIds.toSet()
+                // lets the user retry immediately instead of hunting them down again — unless a
+                // search was opened while the batch ran: this job outlives clearTabs(), and
+                // re-selecting rows that are no longer displayed would leave an invisible
+                // selection intercepting back presses and row taps.
+                if (!_isSearchActive.value) {
+                    _selectedIds.value = failedIds.toSet()
+                }
             }
             refreshAllTabs()
         }
@@ -419,7 +443,7 @@ class CommentsRsListViewModel @Inject constructor(
         firstPageJobs[tab] = viewModelScope.launch {
             val params = commentsRsDataSource.firstPageParams(
                 status = tab.queryStatus,
-                search = _searchQuery.value.ifBlank { null }
+                search = _searchQuery.value.trim().ifBlank { null }
             )
             val result = withContext(bgDispatcher) { commentsRsDataSource.fetchCommentsPage(site, params) }
             when (result) {
@@ -520,6 +544,8 @@ class CommentsRsListViewModel @Inject constructor(
         postId = postId
     )
 
+    private fun isSearchable(query: String) = query.trim().length >= MIN_SEARCH_QUERY_LENGTH
+
     private fun getTabUiState(tab: CommentsRsListTab): CommentsTabUiState =
         _tabStates.value[tab] ?: CommentsTabUiState(isLoading = true)
 
@@ -536,6 +562,6 @@ class CommentsRsListViewModel @Inject constructor(
         private const val SELECTED_FILTER_PROPERTY = "selected_filter"
 
         private const val SEARCH_DEBOUNCE_MS = 250L
-        internal const val MIN_SEARCH_QUERY_LENGTH = 3
+        private const val MIN_SEARCH_QUERY_LENGTH = 3
     }
 }

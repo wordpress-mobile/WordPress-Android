@@ -42,6 +42,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
@@ -54,12 +55,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.CommentStatus
 import org.wordpress.android.ui.commentsrs.CommentsRsBatchAction
 import org.wordpress.android.ui.commentsrs.CommentsRsListTab
-import org.wordpress.android.ui.commentsrs.CommentsRsListViewModel.Companion.MIN_SEARCH_QUERY_LENGTH
 import org.wordpress.android.ui.commentsrs.CommentsTabUiState
 import org.wordpress.android.ui.commentsrs.PendingConfirmation
 import org.wordpress.android.ui.commentsrs.batchActions
@@ -82,10 +83,11 @@ fun CommentsRsListScreen(
     pendingConfirmation: PendingConfirmation?,
     isSearchActive: Boolean,
     searchQuery: String,
+    isQuerySearchable: Boolean,
     onDismissConfirmation: () -> Unit,
     snackbarMessages: Flow<SnackbarMessage>,
     onSearchOpen: () -> Unit,
-    onSearchQueryChanged: (String, CommentsRsListTab) -> Unit,
+    onSearchQueryChanged: (String) -> Unit,
     onSearchClose: (CommentsRsListTab) -> Unit,
     onInitTab: (CommentsRsListTab) -> Unit,
     onTabChanged: (CommentsRsListTab) -> Unit,
@@ -131,13 +133,25 @@ fun CommentsRsListScreen(
         isSearchActive -> TopBarMode.SEARCH
         else -> TopBarMode.NORMAL
     }
-    val trimmedQueryLength = searchQuery.trim().length
 
-    // Search opening, closing, or changing the query replaces each tab's content wholesale; reset
-    // the scroll so page 1 renders at the top. The hoisted list states otherwise keep their old
-    // deep offsets, clamping the short new list to its end and tripping the load-more trigger.
-    LaunchedEffect(isSearchActive, searchQuery) {
-        listStates.values.forEach { it.scrollToItem(0) }
+    // Search opening, closing, or changing the trimmed query replaces each tab's content
+    // wholesale; reset the scroll so page 1 renders at the top. The hoisted list states otherwise
+    // keep their old deep offsets, clamping the short new list to its end and tripping the
+    // load-more trigger. drop(1) skips the initial emission: an Activity recreation must not
+    // discard the scroll positions the saveable list states just restored. The at-top check
+    // avoids scrollToItem's forced remeasure (and fling cancellation) when there's nothing to do.
+    val currentSearchActive by rememberUpdatedState(isSearchActive)
+    val currentQuery by rememberUpdatedState(searchQuery)
+    LaunchedEffect(Unit) {
+        snapshotFlow { currentSearchActive to currentQuery.trim() }
+            .drop(1)
+            .collect {
+                listStates.values.forEach { state ->
+                    if (state.firstVisibleItemIndex > 0 || state.firstVisibleItemScrollOffset > 0) {
+                        state.scrollToItem(0)
+                    }
+                }
+            }
     }
 
     // Like the legacy action mode: the first back press dismisses the selection, the next one
@@ -180,7 +194,7 @@ fun CommentsRsListScreen(
                         focusRequester = focusRequester,
                         requestFocus = searchFocusPending,
                         onFocusHandled = { searchFocusPending = false },
-                        onQueryChanged = { query -> onSearchQueryChanged(query, activeTab) },
+                        onQueryChanged = onSearchQueryChanged,
                         onClose = { onSearchClose(activeTab) }
                     )
                     TopBarMode.NORMAL -> TopAppBar(
@@ -256,8 +270,8 @@ fun CommentsRsListScreen(
                     emptyMessageResId = tab.emptyMessageResId,
                     selectedIds = selectedIds,
                     listState = listStates.getValue(tab),
-                    isSearchIdle = isSearchActive && trimmedQueryLength < MIN_SEARCH_QUERY_LENGTH,
-                    isSearching = isSearchActive && trimmedQueryLength >= MIN_SEARCH_QUERY_LENGTH,
+                    isSearchIdle = isSearchActive && !isQuerySearchable,
+                    isSearching = isSearchActive && isQuerySearchable,
                     onRefresh = { onRefreshTab(tab) },
                     onLoadMore = { onLoadMore(tab) },
                     onCommentClick = onCommentClick,
