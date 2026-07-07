@@ -16,8 +16,10 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
@@ -107,10 +109,19 @@ class CommentsRsListViewModel @Inject constructor(
     // stale rows into the freshly fetched list.
     private val loadMoreJobs = mutableMapOf<CommentsRsListTab, Job>()
 
+    // The tab the pager last settled on. Kept separate from [lastTrackedTab] (the analytics
+    // dedupe key) so changes to tracking behavior can't silently change which tab a debounced
+    // search targets.
+    private var currentTab: CommentsRsListTab? = null
+
     private var lastTrackedTab: CommentsRsListTab? = null
 
     // The in-flight title-resolve job per tab.
     private val resolveTitleJobs = mutableMapOf<CommentsRsListTab, Job>()
+
+    // Bumped by clearTabs(). Long-lived jobs (batch moderation) capture it at launch and skip
+    // their completion-time state writes when it moved: the rows they refer to are gone.
+    private var clearGeneration = 0
 
     private val _site: SiteModel? = selectedSiteRepository.getSelectedSite()
     private val site: SiteModel
@@ -124,20 +135,30 @@ class CommentsRsListViewModel @Inject constructor(
             @OptIn(FlowPreview::class)
             viewModelScope.launch {
                 _searchQuery
-                    // Trim + dedupe first so whitespace-only edits ("abc" -> "abc ") neither
-                    // restart the debounce nor refetch a semantically identical query; trimming
-                    // also keeps a whitespace-only query from passing the length filter and
-                    // fetching (and presenting) the full unfiltered list as search results.
+                    // One shared normalization decides both halves of the search policy below:
+                    // trim + dedupe so whitespace-only edits ("abc" -> "abc ") neither clear nor
+                    // refetch, and so a whitespace-only query can't pass the length filter and
+                    // fetch (and present) the full unfiltered list as search results.
                     .map { it.trim() }
                     .distinctUntilChanged()
+                    // Skip the initial "" so opening the screen doesn't clear the loading tabs.
+                    .drop(1)
+                    // Clear immediately on any change: displayed rows always belong to the last
+                    // executed search and must not linger as apparent matches for a different
+                    // query — whether edited below the minimum or replaced wholesale (select-all
+                    // + paste, a keyboard suggestion, voice input). The isSearchActive guard
+                    // keeps the close transition intact: onSearchClose resets the query itself
+                    // and rebuilds the tabs synchronously.
+                    .onEach { if (_isSearchActive.value) clearTabs() }
                     .debounce(SEARCH_DEBOUNCE_MS)
                     .filter { isSearchable(it) }
                     .collect {
-                        clearTabs()
-                        // lastTrackedTab follows the pager (updated on every settle), so this
-                        // targets the tab the user is actually looking at even when they switch
-                        // tabs inside the debounce window.
-                        initTab(lastTrackedTab ?: CommentsRsListTab.ALL)
+                        // No clear here: every mutation path cleared at mutation time, so any
+                        // surviving tab content was already fetched with this query (e.g. by a
+                        // pager settle inside the debounce window) and initTab's containsKey
+                        // guard keeps it. currentTab follows the pager, so this targets the tab
+                        // the user is actually looking at.
+                        initTab(currentTab ?: CommentsRsListTab.ALL)
                     }
             }
         }
@@ -152,17 +173,12 @@ class CommentsRsListViewModel @Inject constructor(
     }
 
     /**
-     * Updates the search query. Searchable queries are debounced before triggering an API call.
-     * Any change to the trimmed query clears the current rows immediately: displayed comments
-     * always belong to the last executed search, and must not linger as apparent matches for a
-     * different query — whether the user deleted below the minimum or replaced the whole query
-     * at once (select-all + paste, a keyboard suggestion, voice input).
+     * Updates the search query. The pipeline in `init` reacts to it: an immediate clear on any
+     * trimmed change, then a debounced fetch once the query is searchable.
      */
     @MainThread
     fun onSearchQueryChanged(query: String) {
-        val previous = _searchQuery.value
         _searchQuery.value = query
-        if (query.trim() != previous.trim()) clearTabs()
     }
 
     /**
@@ -185,6 +201,7 @@ class CommentsRsListViewModel @Inject constructor(
      * land on a reset generation counter and mix its stale page into the fresh list.
      */
     private fun clearTabs() {
+        clearGeneration++
         firstPageJobs.values.forEach { it.cancel() }
         firstPageJobs.clear()
         loadMoreJobs.values.forEach { it.cancel() }
@@ -363,6 +380,7 @@ class CommentsRsListViewModel @Inject constructor(
         trackBatchModeration(newStatus)
         onClearSelection()
         updateTabUiState(tab) { copy(isRefreshing = true) }
+        val generationAtStart = clearGeneration
         viewModelScope.launch {
             val results = withContext(bgDispatcher) {
                 ids.map { commentId ->
@@ -387,11 +405,13 @@ class CommentsRsListViewModel @Inject constructor(
                 }
                 _snackbarMessages.trySend(SnackbarMessage(message))
                 // Failed comments kept their status and place in the list, so re-selecting them
-                // lets the user retry immediately instead of hunting them down again — unless a
-                // search was opened while the batch ran: this job outlives clearTabs(), and
-                // re-selecting rows that are no longer displayed would leave an invisible
-                // selection intercepting back presses and row taps.
-                if (!_isSearchActive.value) {
+                // lets the user retry immediately instead of hunting them down again — unless
+                // clearTabs() ran while the batch was in flight (search opened, closed, or query
+                // changed): this job outlives the clear, and re-selecting rows that may no longer
+                // be displayed would leave an invisible selection intercepting back presses and
+                // row taps. A batch run inside an unchanged search keeps the affordance: its
+                // failed rows are still in the refreshed results.
+                if (clearGeneration == generationAtStart) {
                     _selectedIds.value = failedIds.toSet()
                 }
             }
@@ -428,6 +448,7 @@ class CommentsRsListViewModel @Inject constructor(
      */
     @MainThread
     fun onTabChanged(tab: CommentsRsListTab) {
+        currentTab = tab
         // A re-emission of the same tab (Activity recreation restarting the pager's settled-page
         // flow) is not a tab change: it must neither re-track nor clear an active selection.
         if (tab == lastTrackedTab) return

@@ -189,14 +189,21 @@ fun CommentsRsListScreen(
                         onClearSelection = onClearSelection,
                         onBatchAction = { action -> onBatchAction(action, activeTab) }
                     )
-                    TopBarMode.SEARCH -> SearchTopBar(
-                        searchQuery = searchQuery,
-                        focusRequester = focusRequester,
-                        requestFocus = searchFocusPending,
-                        onFocusHandled = { searchFocusPending = false },
-                        onQueryChanged = onSearchQueryChanged,
-                        onClose = { onSearchClose(activeTab) }
-                    )
+                    TopBarMode.SEARCH -> {
+                        SearchTopBar(
+                            searchQuery = searchQuery,
+                            focusRequester = focusRequester,
+                            onQueryChanged = onSearchQueryChanged,
+                            onClose = { onSearchClose(activeTab) }
+                        )
+                        // Runs after SearchTopBar is composed, so the requester is attached.
+                        LaunchedEffect(searchFocusPending) {
+                            if (searchFocusPending) {
+                                focusRequester.requestFocus()
+                                searchFocusPending = false
+                            }
+                        }
+                    }
                     TopBarMode.NORMAL -> TopAppBar(
                         title = { Text(text = stringResource(R.string.comments)) },
                         navigationIcon = {
@@ -263,15 +270,14 @@ fun CommentsRsListScreen(
                 modifier = Modifier.weight(1f)
             ) { page ->
                 val tab = tabs[page]
-                val tabState = tabStates[tab] ?: CommentsTabUiState(isLoading = true)
 
                 CommentsRsTabListScreen(
-                    state = tabState,
+                    state = tabStates[tab],
                     emptyMessageResId = tab.emptyMessageResId,
                     selectedIds = selectedIds,
                     listState = listStates.getValue(tab),
-                    isSearchIdle = isSearchActive && !isQuerySearchable,
-                    isSearching = isSearchActive && isQuerySearchable,
+                    isSearchActive = isSearchActive,
+                    isQuerySearchable = isQuerySearchable,
                     onRefresh = { onRefreshTab(tab) },
                     onLoadMore = { onLoadMore(tab) },
                     onCommentClick = onCommentClick,
@@ -360,17 +366,15 @@ private fun SelectionTopBar(
 
 /**
  * Search mode: an inline query field replaces the title, the navigation icon closes the search,
- * and a clear button empties a non-blank query (like the rs posts list search). Focus is only
- * requested when [requestFocus] is set (once per search open) so re-entering composition — e.g.
- * returning from the selection top bar — doesn't pop the keyboard uninvited.
+ * and a clear button empties a non-blank query (like the rs posts list search). The caller owns
+ * the once-per-open focus request so re-entering composition — e.g. returning from the selection
+ * top bar — doesn't pop the keyboard uninvited.
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun SearchTopBar(
     searchQuery: String,
     focusRequester: FocusRequester,
-    requestFocus: Boolean,
-    onFocusHandled: () -> Unit,
     onQueryChanged: (String) -> Unit,
     onClose: () -> Unit
 ) {
@@ -413,12 +417,6 @@ private fun SearchTopBar(
         }
     )
 
-    LaunchedEffect(requestFocus) {
-        if (requestFocus) {
-            focusRequester.requestFocus()
-            onFocusHandled()
-        }
-    }
 }
 
 @Composable
