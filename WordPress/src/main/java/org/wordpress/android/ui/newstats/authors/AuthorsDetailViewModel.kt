@@ -3,6 +3,7 @@ package org.wordpress.android.ui.newstats.authors
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -14,6 +15,7 @@ import org.wordpress.android.ui.newstats.StatsPeriod
 import org.wordpress.android.ui.newstats.repository.StatsRepository
 import org.wordpress.android.ui.newstats.repository.TopAuthorsResult
 import org.wordpress.android.ui.newstats.util.toDateRangeString
+import org.wordpress.android.util.AppLog
 import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
 
@@ -83,10 +85,11 @@ class AuthorsDetailViewModel @Inject constructor(
                     resourceProvider.getString(result.messageResId)
                 )
             }
+        } catch (e: CancellationException) {
+            throw e
         } catch (e: Exception) {
-            AuthorsDetailUiState.Error(
-                e.message ?: resourceProvider.getString(R.string.stats_error_unknown)
-            )
+            AppLog.e(AppLog.T.STATS, "Error fetching authors detail: ${e.message}", e)
+            AuthorsDetailUiState.Error(resourceProvider.getString(R.string.stats_error_unknown))
         }
 }
 
