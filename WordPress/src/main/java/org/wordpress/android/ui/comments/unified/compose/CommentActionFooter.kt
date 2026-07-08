@@ -59,29 +59,18 @@ fun CommentActionFooter(
     modifier: Modifier = Modifier
 ) {
     Row(modifier = modifier.fillMaxWidth()) {
-        when (status) {
-            APPROVED -> ActionButton(
-                iconRes = R.drawable.ic_checkmark_white_24dp,
-                labelRes = R.string.comment_status_approved,
-                isOn = true,
-                onClick = onModerateClick,
-                modifier = Modifier.weight(1f)
-            )
-            TRASH -> ActionButton(
-                iconRes = R.drawable.ic_undo_white_24dp,
-                labelRes = R.string.mnu_comment_untrash,
-                isOn = false,
-                onClick = onModerateClick,
-                modifier = Modifier.weight(1f)
-            )
-            else -> ActionButton(
-                iconRes = R.drawable.ic_checkmark_white_24dp,
-                labelRes = R.string.mnu_comment_approve,
-                isOn = false,
-                onClick = onModerateClick,
-                modifier = Modifier.weight(1f)
-            )
+        val (moderateIconRes, moderateLabelRes, moderateIsOn) = when (status) {
+            APPROVED -> Triple(R.drawable.ic_checkmark_white_24dp, R.string.comment_status_approved, true)
+            TRASH -> Triple(R.drawable.ic_undo_white_24dp, R.string.mnu_comment_untrash, false)
+            else -> Triple(R.drawable.ic_checkmark_white_24dp, R.string.mnu_comment_approve, false)
         }
+        ActionButton(
+            iconRes = moderateIconRes,
+            labelRes = moderateLabelRes,
+            isOn = moderateIsOn,
+            onClick = onModerateClick,
+            modifier = Modifier.weight(1f)
+        )
 
         ActionButton(
             iconRes = R.drawable.ic_spam_white_24dp,

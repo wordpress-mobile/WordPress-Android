@@ -138,6 +138,7 @@ fun FullScreenReplyDialog(
     onCollapseClick: () -> Unit
 ) {
     val focusRequester = remember { FocusRequester() }
+    val canSend = replyText.text.isNotBlank() && !isReplyInProgress
     Dialog(
         onDismissRequest = onCollapseClick,
         properties = DialogProperties(usePlatformDefaultWidth = false)
@@ -155,10 +156,7 @@ fun FullScreenReplyDialog(
                         }
                     },
                     actions = {
-                        TextButton(
-                            onClick = onSendClick,
-                            enabled = replyText.text.isNotBlank() && !isReplyInProgress
-                        ) {
+                        TextButton(onClick = onSendClick, enabled = canSend) {
                             Text(stringResource(R.string.send))
                         }
                     }
@@ -168,7 +166,7 @@ fun FullScreenReplyDialog(
                     onReplyTextChange = onReplyTextChange,
                     hint = hint,
                     enabled = !isReplyInProgress,
-                    canSend = replyText.text.isNotBlank() && !isReplyInProgress,
+                    canSend = canSend,
                     onSendClick = onSendClick,
                     singleLineHeight = false,
                     modifier = Modifier
@@ -237,38 +235,36 @@ private fun MentionSuggestionPanel(
     val filtered = filterMentionSuggestions(suggestions, token.query)
     if (filtered.isEmpty()) return
 
-    Column {
-        HorizontalDivider()
-        LazyColumn(modifier = Modifier.heightIn(max = 200.dp)) {
-            items(filtered, key = { it.value }) { suggestion ->
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable {
-                            onReplyTextChange(applyMentionSuggestion(replyText, token, suggestion))
-                        }
-                        .padding(horizontal = 16.dp, vertical = 8.dp)
-                ) {
-                    RemoteImage(
-                        imageUrl = suggestion.avatarUrl,
-                        fallbackImageRes = R.drawable.ic_user_placeholder_primary_24,
-                        modifier = Modifier
-                            .size(32.dp)
-                            .clip(CircleShape)
-                    )
-                    Column(modifier = Modifier.padding(start = 12.dp)) {
-                        Text(
-                            text = "@${suggestion.value}",
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = MaterialTheme.colorScheme.onSurface
-                        )
-                        Text(
-                            text = suggestion.displayValue,
-                            fontSize = 12.sp,
-                            color = MaterialTheme.colorScheme.onSurface.copy(alpha = MEDIUM_EMPHASIS_ALPHA)
-                        )
+    HorizontalDivider()
+    LazyColumn(modifier = Modifier.heightIn(max = 200.dp)) {
+        items(filtered, key = { it.value }) { suggestion ->
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable {
+                        onReplyTextChange(applyMentionSuggestion(replyText, token, suggestion))
                     }
+                    .padding(horizontal = 16.dp, vertical = 8.dp)
+            ) {
+                RemoteImage(
+                    imageUrl = suggestion.avatarUrl,
+                    fallbackImageRes = R.drawable.ic_user_placeholder_primary_24,
+                    modifier = Modifier
+                        .size(32.dp)
+                        .clip(CircleShape)
+                )
+                Column(modifier = Modifier.padding(start = 12.dp)) {
+                    Text(
+                        text = "@${suggestion.value}",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+                    Text(
+                        text = suggestion.displayValue,
+                        fontSize = 12.sp,
+                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = MEDIUM_EMPHASIS_ALPHA)
+                    )
                 }
             }
         }

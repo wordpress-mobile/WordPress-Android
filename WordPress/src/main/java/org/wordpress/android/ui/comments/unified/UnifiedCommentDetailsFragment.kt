@@ -133,7 +133,7 @@ class UnifiedCommentDetailsFragment : Fragment() {
                         showLikeButton = SiteUtils.isAccessedViaWPComRest(site),
                         focusReplyFieldOnLaunch = focusReplyField,
                         snackbarHostState = snackbarHostState,
-                        actions = actions()
+                        actions = actions
                     )
                 }
             }
@@ -151,18 +151,21 @@ class UnifiedCommentDetailsFragment : Fragment() {
         viewModel.start(site, remoteCommentId, noteId)
     }
 
-    private fun actions() = CommentDetailsActions(
-        onModerateClick = { viewModel.onApproveClicked() },
-        onSpamClick = { viewModel.onSpamClicked() },
-        onLikeClick = { viewModel.onLikeClicked() },
-        onEditClick = { viewModel.onEditClicked() },
-        onTrashClick = { viewModel.onTrashClicked() },
-        onDeletePermanentlyClick = { viewModel.onDeletePermanentlyClicked() },
-        onCopyLinkClick = { copyLink(viewModel.uiState.value?.commentUrl.orEmpty()) },
-        onShareLinkClick = { shareLink(viewModel.uiState.value?.commentUrl.orEmpty()) },
-        onPostTitleClick = { viewModel.onPostTitleClicked() },
-        onSendReply = { viewModel.onReplyClicked(it) }
-    )
+    // A single instance for the fragment's lifetime, so recompositions see a stable parameter
+    private val actions by lazy {
+        CommentDetailsActions(
+            onModerateClick = { viewModel.onApproveClicked() },
+            onSpamClick = { viewModel.onSpamClicked() },
+            onLikeClick = { viewModel.onLikeClicked() },
+            onEditClick = { viewModel.onEditClicked() },
+            onTrashClick = { viewModel.onTrashClicked() },
+            onDeletePermanentlyClick = { viewModel.onDeletePermanentlyClicked() },
+            onCopyLinkClick = { copyLink(viewModel.uiState.value?.commentUrl.orEmpty()) },
+            onShareLinkClick = { shareLink(viewModel.uiState.value?.commentUrl.orEmpty()) },
+            onPostTitleClick = { viewModel.onPostTitleClicked() },
+            onSendReply = { viewModel.onReplyClicked(it) }
+        )
+    }
 
     private fun setupObservers() {
         viewModel.uiActionEvent.observeEvent(viewLifecycleOwner) { event ->
