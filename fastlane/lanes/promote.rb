@@ -26,8 +26,10 @@ PROMOTION_BLOCK_STEP_KEY = 'promote_to_beta_block'
 # Written verbatim into the generated steps so `buildkite-agent pipeline upload` interpolates it.
 CI_TOOLKIT_PLUGIN_REF = '$CI_TOOLKIT'
 
-# Where the gather lane writes the generated block + promote steps (gitignored `build/`).
-PROMOTION_STEPS_FILE = File.join(PROJECT_ROOT_FOLDER, 'build', 'promote-steps.yml')
+# Where the gather lane writes the generated block + promote steps (gitignored `build/`). The
+# relative form is what `buildkite-agent pipeline upload` receives (it runs from PROJECT_ROOT_FOLDER).
+PROMOTION_STEPS_RELATIVE_PATH = File.join('build', 'promote-steps.yml')
+PROMOTION_STEPS_FILE = File.join(PROJECT_ROOT_FOLDER, PROMOTION_STEPS_RELATIVE_PATH)
 
 # Buildkite coordinates, used to build the block step's unblock-dialog deep link.
 BUILDKITE_ORGANIZATION = 'automattic'
@@ -264,7 +266,7 @@ platform :android do
 
   # Source `shared-pipeline-vars` first so `$CI_TOOLKIT` is interpolated.
   def upload_promotion_steps
-    sh('bash', '-c', "cd '#{PROJECT_ROOT_FOLDER}' && source .buildkite/shared-pipeline-vars && buildkite-agent pipeline upload build/promote-steps.yml")
+    sh('bash', '-c', "cd '#{PROJECT_ROOT_FOLDER}' && source .buildkite/shared-pipeline-vars && buildkite-agent pipeline upload '#{PROMOTION_STEPS_RELATIVE_PATH}'")
   end
 
   def candidate_label(candidate)
