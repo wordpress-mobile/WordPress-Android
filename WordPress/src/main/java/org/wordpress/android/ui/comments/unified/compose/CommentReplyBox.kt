@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.comments.unified.compose
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -284,22 +283,18 @@ internal data class MentionToken(val start: Int, val query: String)
  * cursor isn't in a mention (or a selection is active).
  */
 internal fun findMentionToken(value: TextFieldValue): MentionToken? {
-    if (!value.selection.collapsed) return null
     val cursor = value.selection.end
     val text = value.text
-    if (cursor > text.length) return null
-    for (i in cursor - 1 downTo 0) {
-        val c = text[i]
-        if (c == '@') {
-            return if (i == 0 || text[i - 1].isWhitespace()) {
-                MentionToken(start = i, query = text.substring(i + 1, cursor))
-            } else {
-                null
-            }
-        }
-        if (c.isWhitespace()) return null
+    if (!value.selection.collapsed || cursor > text.length) return null
+    // The candidate token is whatever sits between the last whitespace and the cursor
+    val beforeCursor = text.substring(0, cursor)
+    val tokenStart = beforeCursor.indexOfLast { it.isWhitespace() } + 1
+    val candidate = beforeCursor.substring(tokenStart)
+    return if (candidate.startsWith('@')) {
+        MentionToken(start = tokenStart, query = candidate.substring(1))
+    } else {
+        null
     }
-    return null
 }
 
 /** Same matching as the legacy SuggestionAdapter: user login or display name prefix, per word. */

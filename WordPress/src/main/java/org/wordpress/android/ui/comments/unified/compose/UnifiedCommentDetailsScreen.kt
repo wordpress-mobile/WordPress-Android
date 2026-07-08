@@ -47,21 +47,6 @@ import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.dataview.compose.RemoteImage
 import org.wordpress.android.ui.suggestion.Suggestion
 
-/** The comment detail screen's callbacks, implemented by the hosting fragment's ViewModel. */
-@Suppress("LongParameterList")
-class CommentDetailsActions(
-    val onModerateClick: () -> Unit,
-    val onSpamClick: () -> Unit,
-    val onLikeClick: () -> Unit,
-    val onEditClick: () -> Unit,
-    val onTrashClick: () -> Unit,
-    val onDeletePermanentlyClick: () -> Unit,
-    val onCopyLinkClick: () -> Unit,
-    val onShareLinkClick: () -> Unit,
-    val onPostTitleClick: () -> Unit,
-    val onSendReply: (String) -> Unit
-)
-
 /**
  * The unified (wordpress-rs) comment detail screen: comment content in a weighted scrollable
  * region so the action footer and reply box stay pinned to the bottom while loading, plus the
