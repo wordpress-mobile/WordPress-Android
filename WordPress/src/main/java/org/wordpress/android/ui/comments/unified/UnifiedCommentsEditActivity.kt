@@ -118,10 +118,10 @@ class UnifiedCommentsEditActivity : BaseAppCompatActivity() {
         editedComment = CommentEssentials(),
         editErrorStrings = EditErrorStrings(),
         inputSettings = InputSettings(
-            enableEditName = false,
-            enableEditUrl = false,
-            enableEditEmail = false,
-            enableEditComment = false
+            enableEditName = true,
+            enableEditUrl = true,
+            enableEditEmail = true,
+            enableEditComment = true
         )
     )
 

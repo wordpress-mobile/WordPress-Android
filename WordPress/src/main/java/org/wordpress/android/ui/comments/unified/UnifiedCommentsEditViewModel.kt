@@ -163,7 +163,7 @@ class UnifiedCommentsEditViewModel @Inject constructor(
             originalComment = CommentEssentials(),
             editedComment = CommentEssentials(),
             editErrorStrings = EditErrorStrings(),
-            inputSettings = mapInputSettings(CommentEssentials())
+            inputSettings = mapInputSettings()
         )
 
         withContext(mainDispatcher) {
@@ -220,7 +220,7 @@ class UnifiedCommentsEditViewModel @Inject constructor(
                         originalComment = commentEssentials,
                         editedComment = commentEssentials,
                         editErrorStrings = EditErrorStrings(),
-                        inputSettings = mapInputSettings(commentEssentials)
+                        inputSettings = mapInputSettings()
                     )
             } else {
                 _onSnackbarMessage.value = Event(SnackbarMessageHolder(
@@ -374,10 +374,17 @@ class UnifiedCommentsEditViewModel @Inject constructor(
         }
     }
 
-    private fun mapInputSettings(commentEssentials: CommentEssentials) = InputSettings(
-        enableEditName = !commentEssentials.isFromRegisteredUser,
-        enableEditUrl = !commentEssentials.isFromRegisteredUser,
-        enableEditEmail = !commentEssentials.isFromRegisteredUser,
+    /**
+     * All fields are editable, matching wp-admin. This used to disable the author fields for
+     * comments from registered users, but the check keyed off the FluxC row's authorId, which the
+     * legacy flows always left as 0 — so in practice the fields were always editable. The rs
+     * detail now caches comments with real author ids, which would have enabled that dormant
+     * gating for the first time; keep the long-observed behaviour instead.
+     */
+    private fun mapInputSettings() = InputSettings(
+        enableEditName = true,
+        enableEditUrl = true,
+        enableEditEmail = true,
         enableEditComment = true
     )
 
