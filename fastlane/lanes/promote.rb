@@ -76,6 +76,7 @@ platform :android do
 
     version_code = version_code.to_s.strip
     UI.user_error!('`version_code` is required, e.g. `version_code:269027172`') if version_code.empty?
+    UI.user_error!("`version_code` must be an integer, got #{version_code.inspect}") unless version_code.match?(/\A\d+\z/)
 
     UI.important("Promoting version code #{version_code} to the beta track for WordPress and Jetpack")
 
@@ -116,7 +117,7 @@ platform :android do
     end
 
     common = available_per_app.reduce(:&) || []
-    codes = common.select { |code| combined_floor.nil? || code > combined_floor }.sort.reverse.first(PROMOTION_CANDIDATE_LIMIT)
+    codes = common.select { |code| combined_floor.nil? || code > combined_floor }.max(PROMOTION_CANDIDATE_LIMIT)
 
     codes.map { |code| candidate_for(code) }
   end
