@@ -36,10 +36,8 @@ BUILDKITE_ORGANIZATION = 'automattic'
 BUILDKITE_PIPELINE = 'wordpress-android'
 
 platform :android do
-  # Lists the promotable builds and opens a Buildkite block step for a developer to pick one.
-  # A build is promotable when its version code is present in both apps' Play libraries and higher
-  # than the current `beta` release. Uploads the block + promote steps here (not from the CI
-  # script) so it can read back the block step's job id for the Slack unblock-dialog link.
+  # Lists the promotable builds — version codes in both apps' Play libraries above the current
+  # `beta` release — and opens a Buildkite block step for a developer to pick one.
   #
   # @called_by CI (`.buildkite/commands/gather-beta-candidates.sh`)
   desc 'Gather promotable beta candidates and open the promotion block step'
@@ -142,14 +140,12 @@ platform :android do
       json_key: UPLOAD_TO_PLAY_STORE_JSON_KEY
     )
   rescue StandardError => e
-    # Fail loudly: swallowing this into [] would let a transient failure read as "nothing to
-    # promote" (the intersection collapses) or "promote everything" (the floor becomes nil).
+    # Raise rather than return []: an errored lookup must not read as an empty beta track.
     UI.user_error!("Unable to read the beta track version codes for #{package_name}: #{e.message}")
   end
 
   # Lists every AAB version code uploaded for the given package (the Play "app bundle explorer"),
   # as an array of integers. Opens a throwaway Play edit and aborts it, so this only reads.
-  # Returns an empty array if the lookup fails.
   def available_aab_version_codes(package_name:)
     require 'supply'
     require 'supply/options'
@@ -170,7 +166,7 @@ platform :android do
       end
     Array(codes).compact.map(&:to_i)
   rescue StandardError => e
-    # Fail loudly, like beta_track_version_codes: a swallowed [] collapses the candidate set.
+    # Raise rather than return [], as in beta_track_version_codes.
     UI.user_error!("Unable to list the available AAB version codes for #{package_name}: #{e.message}")
   end
 
@@ -220,8 +216,7 @@ platform :android do
             {
               'select' => 'Build to promote',
               'key' => PROMOTION_META_DATA_KEY,
-              # No default, and required: an un-actioned unblock must not silently promote
-              # whatever sorted newest — force an explicit human choice.
+              # Required, no default: an un-actioned unblock can't silently promote a build.
               'required' => true,
               'options' => options
             }
@@ -255,8 +250,8 @@ platform :android do
   # Slack
   #################################################
 
-  # Posts the candidate list. Links straight to the unblock dialog when we resolved the block
-  # step's job id; otherwise points at the build so a degraded link isn't mistaken for the picker.
+  # Posts the candidate list, linking to the unblock dialog when the job id resolved, otherwise to
+  # the build so a degraded link isn't mistaken for the picker.
   def post_candidates_to_slack(candidates:, pick_url: nil)
     build_url = ENV.fetch('BUILDKITE_BUILD_URL', nil)
 
@@ -365,8 +360,7 @@ platform :android do
 
     manual_jobs = JSON.parse(response.body).fetch('jobs', []).select { |job| job['type'] == 'manual' }
 
-    # Match on the stable step key the block was generated with; fall back to the label only if the
-    # API didn't surface a step key, so a second manual step whose label contains ours can't shadow it.
+    # Prefer the stable step key; fall back to the label only if the API doesn't surface it.
     manual_jobs.find { |job| job['step_key'] == PROMOTION_BLOCK_STEP_KEY } ||
       manual_jobs.find { |job| job['label'].to_s.include?(PROMOTION_BLOCK_LABEL) }
   end

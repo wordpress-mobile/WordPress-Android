@@ -12,9 +12,7 @@ steps:
     command: ".buildkite/commands/gather-beta-candidates.sh"
     plugins: [$CI_TOOLKIT]
 
-# Backstop: the gather lane posts its own failures to Slack, but a setup failure (gems/secrets)
-# under `set -e` aborts before fastlane runs and bypasses that rescue. A build-level failure
-# notification ensures a broken run still reaches the channel.
+# Backstop for setup failures (gems/secrets) that abort before the lane's own Slack rescue runs.
 notify:
   - slack: "#test-wpmobile-slack-integration"
     if: build.state == "failed"
