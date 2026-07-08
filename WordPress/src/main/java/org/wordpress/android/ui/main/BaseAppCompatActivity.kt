@@ -17,6 +17,7 @@ import org.wordpress.android.ui.jetpackoverlay.JetpackStaticPosterActivity
 import org.wordpress.android.ui.main.feedbackform.FeedbackFormActivity
 import org.wordpress.android.ui.media.MediaPreviewActivity
 import org.wordpress.android.ui.media.MediaSettingsActivity
+import org.wordpress.android.ui.comments.unified.UnifiedCommentsEditActivity
 import org.wordpress.android.ui.commentsrs.CommentsRsListActivity
 import org.wordpress.android.ui.mysite.menu.MenuActivity
 import org.wordpress.android.ui.mysite.personalization.PersonalizationActivity
@@ -105,6 +106,7 @@ private val excludedActivities = listOf(
     SiteMonitorParentActivity::class.java.name,
     SubscribersActivity::class.java.name,
     TermsDataViewActivity::class.java.name,
+    UnifiedCommentsEditActivity::class.java.name,
     ApplicationPasswordsListActivity::class.java.name,
 
     // these are excluded because they explicitly enable edge-to-edge
