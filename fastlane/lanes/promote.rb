@@ -131,7 +131,7 @@ platform :android do
   end
 
   # Reads the version codes currently on the given package's `beta` track, as an array of integers.
-  # Returns an empty array if the track has no releases or the lookup fails.
+  # Returns an empty array only when the track legitimately has no releases; a lookup error raises.
   def beta_track_version_codes(package_name:)
     google_play_track_version_codes(
       package_name: package_name,
@@ -139,8 +139,9 @@ platform :android do
       json_key: UPLOAD_TO_PLAY_STORE_JSON_KEY
     )
   rescue StandardError => e
-    UI.error("Failed to fetch beta track version codes for #{package_name}: #{e.message}")
-    []
+    # Fail loudly: swallowing this into [] would let a transient failure read as "nothing to
+    # promote" (the intersection collapses) or "promote everything" (the floor becomes nil).
+    UI.user_error!("Unable to read the beta track version codes for #{package_name}: #{e.message}")
   end
 
   # Lists every AAB version code uploaded for the given package (the Play "app bundle explorer"),
@@ -157,12 +158,17 @@ platform :android do
 
     client = Supply::Client.make_from_config
     client.begin_edit(package_name: package_name)
-    codes = client.aab_version_codes
-    client.abort_current_edit
+    codes =
+      begin
+        client.aab_version_codes
+      ensure
+        # Always discard the throwaway edit, even if the read raises.
+        client.abort_current_edit
+      end
     Array(codes).compact.map(&:to_i)
   rescue StandardError => e
-    UI.error("Failed to list available AAB version codes for #{package_name}: #{e.message}")
-    []
+    # Fail loudly, like beta_track_version_codes: a swallowed [] collapses the candidate set.
+    UI.user_error!("Unable to list the available AAB version codes for #{package_name}: #{e.message}")
   end
 
   #################################################
