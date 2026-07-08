@@ -745,7 +745,7 @@ public class ActivityLauncher {
 
     public static void viewUnifiedComments(Context context, SiteModel site) {
         Intent intent;
-        if (shouldUseRsCommentsList(context, site)) {
+        if (shouldUseRsComments(context, site)) {
             intent = CommentsRsListActivity.Companion.createIntent(context);
         } else {
             intent = new Intent(context, UnifiedCommentsActivity.class);
@@ -755,9 +755,13 @@ public class ActivityLauncher {
         AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_COMMENTS, site);
     }
 
-    private static boolean shouldUseRsCommentsList(@NonNull Context context, @NonNull SiteModel site) {
+    /**
+     * Whether the wordpress-rs comments screens (list, and the notification-hosted detail) should
+     * be used for {@code site} instead of the legacy (FluxC) ones.
+     */
+    public static boolean shouldUseRsComments(@NonNull Context context, @NonNull SiteModel site) {
         // The rs client can only authenticate WP.com-accessed sites or self-hosted sites with an
-        // application password; everywhere else keep the legacy (FluxC) comments list.
+        // application password; everywhere else keep the legacy (FluxC) comments screens.
         if (!site.isUsingWpComRestApi() && !site.hasApplicationPassword()) {
             return false;
         }
