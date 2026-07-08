@@ -37,11 +37,13 @@ import org.wordpress.android.fluxc.model.CommentStatus.UNAPPROVED
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.CollapseFullScreenDialogFragment
 import org.wordpress.android.ui.CommentFullScreenDialogFragment
+import org.wordpress.android.ui.ScrollableViewInitializedListener
 import org.wordpress.android.ui.comments.unified.CommentDetailsActionEvent.Close
 import org.wordpress.android.ui.comments.unified.CommentDetailsActionEvent.LaunchEditComment
 import org.wordpress.android.ui.comments.unified.CommentDetailsActionEvent.OpenPostInReader
 import org.wordpress.android.ui.comments.unified.CommentDetailsActionEvent.ReplySent
 import org.wordpress.android.ui.comments.unified.UnifiedCommentDetailsViewModel.CommentDetailsUiState
+import org.wordpress.android.ui.notifications.NotificationsListFragment
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.reader.ReaderActivityLauncher
 import org.wordpress.android.ui.suggestion.util.SuggestionServiceConnectionManager
@@ -57,6 +59,7 @@ import org.wordpress.android.util.SnackbarItem.Info
 import org.wordpress.android.util.SnackbarSequencer
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.WPLinkMovementMethod
+import org.wordpress.android.util.extensions.focusAndShowKeyboard
 import org.wordpress.android.util.extensions.getColorFromAttribute
 import org.wordpress.android.util.extensions.getColorResIdFromAttribute
 import org.wordpress.android.util.extensions.getSerializableCompat
@@ -89,7 +92,12 @@ class UnifiedCommentDetailsFragment :
 
     private lateinit var site: SiteModel
     private var remoteCommentId: Long = 0
+    private var noteId: String? = null
     private var suggestionServiceConnectionManager: SuggestionServiceConnectionManager? = null
+
+    // The result reported to the launching screen, accumulated across observers: moderation adds
+    // the note extras the notifications list uses to update the moderated note's row.
+    private val resultIntent = Intent()
 
     // The comment HTML currently rendered, so transient state changes (like/reply progress/status)
     // don't re-parse the body — which is expensive and resets the user's text selection.
@@ -117,16 +125,20 @@ class UnifiedCommentDetailsFragment :
 
         site = requireNotNull(arguments?.getSerializableCompat<SiteModel>(WordPress.SITE))
         remoteCommentId = requireArguments().getLong(KEY_REMOTE_COMMENT_ID)
+        noteId = arguments?.getString(KEY_NOTE_ID)
 
         UnifiedCommentDetailsFragmentBinding.bind(view).apply {
             binding = this
             setupClickListeners()
-            layoutCommentBox.setupReplyBox()
+            layoutCommentBox.setupReplyBox(isFreshView = savedInstanceState == null)
             layoutCommentBox.setupSuggestions()
             setupObservers()
+            // Lets the notifications host lift its app bar with the comment's scroll position;
+            // the rs comments list host doesn't implement the listener, so this is a no-op there.
+            (activity as? ScrollableViewInitializedListener)?.onScrollableViewInitialized(scrollView.id)
         }
 
-        viewModel.start(site, remoteCommentId)
+        viewModel.start(site, remoteCommentId, noteId)
     }
 
     private fun UnifiedCommentDetailsFragmentBinding.setupClickListeners() {
@@ -144,7 +156,7 @@ class UnifiedCommentDetailsFragment :
             if (SiteUtils.isAccessedViaWPComRest(site)) View.VISIBLE else View.GONE
     }
 
-    private fun ReaderIncludeCommentBoxBinding.setupReplyBox() {
+    private fun ReaderIncludeCommentBoxBinding.setupReplyBox(isFreshView: Boolean) {
         layoutContainer.visibility = View.VISIBLE
         editComment.initializeWithPrefix('@')
         editComment.doAfterTextChanged { btnSubmitReply.isEnabled = !it.isNullOrBlank() }
@@ -154,6 +166,16 @@ class UnifiedCommentDetailsFragment :
         // application-password sites, which would collide drafts across sites.
         editComment.autoSaveTextHelper.uniqueId = "${site.id}-$remoteCommentId"
         editComment.autoSaveTextHelper.loadString(editComment)
+        // Prefill from the notification's inline-reply text, but never clobber an autosaved draft.
+        val prefill = arguments?.getString(KEY_PREFILL_REPLY_TEXT)
+        if (editComment.text.isNullOrEmpty() && !prefill.isNullOrEmpty()) {
+            editComment.setText(prefill)
+        }
+        // Opened via the notification's "reply" action: focus the reply field right away, like the
+        // legacy detail. Only on the first creation — not again after a rotation.
+        if (isFreshView && arguments?.getBoolean(KEY_FOCUS_REPLY_FIELD) == true) {
+            editComment.focusAndShowKeyboard()
+        }
     }
 
     private fun ReaderIncludeCommentBoxBinding.setupSuggestions() {
@@ -238,7 +260,17 @@ class UnifiedCommentDetailsFragment :
         // Report the change to the launching screen (the rs comments list only refreshes when
         // the result says something actually changed).
         viewModel.commentChanged.observeEvent(viewLifecycleOwner) {
-            requireActivity().setResult(AppCompatActivity.RESULT_OK)
+            requireActivity().setResult(AppCompatActivity.RESULT_OK, resultIntent)
+        }
+
+        // Note mode: attach the extras the notifications list uses to update the moderated
+        // note's row without waiting for its next refresh.
+        viewModel.commentModerated.observeEvent(viewLifecycleOwner) { status ->
+            noteId?.let { id ->
+                resultIntent.putExtra(NotificationsListFragment.NOTE_MODERATE_ID_EXTRA, id)
+                resultIntent.putExtra(NotificationsListFragment.NOTE_MODERATE_STATUS_EXTRA, status.toString())
+                requireActivity().setResult(AppCompatActivity.RESULT_OK, resultIntent)
+            }
         }
     }
 
@@ -491,12 +523,38 @@ class UnifiedCommentDetailsFragment :
 
     companion object {
         private const val KEY_REMOTE_COMMENT_ID = "key_remote_comment_id"
+        private const val KEY_NOTE_ID = "key_note_id"
+        private const val KEY_PREFILL_REPLY_TEXT = "key_prefill_reply_text"
+        private const val KEY_FOCUS_REPLY_FIELD = "key_focus_reply_field"
 
+        @JvmStatic
         fun newInstance(site: SiteModel, remoteCommentId: Long): UnifiedCommentDetailsFragment {
             return UnifiedCommentDetailsFragment().apply {
                 arguments = Bundle().apply {
                     putSerializable(WordPress.SITE, site)
                     putLong(KEY_REMOTE_COMMENT_ID, remoteCommentId)
+                }
+            }
+        }
+
+        /**
+         * Factory for the notifications host: [noteId] puts the screen in note mode (see
+         * [UnifiedCommentDetailsViewModel]), [prefillReplyText] carries the notification's
+         * inline-reply text and [focusReplyField] opens the keyboard on the reply field.
+         */
+        @JvmStatic
+        fun newInstance(
+            site: SiteModel,
+            remoteCommentId: Long,
+            noteId: String,
+            prefillReplyText: String?,
+            focusReplyField: Boolean
+        ): UnifiedCommentDetailsFragment {
+            return newInstance(site, remoteCommentId).apply {
+                requireArguments().apply {
+                    putString(KEY_NOTE_ID, noteId)
+                    putString(KEY_PREFILL_REPLY_TEXT, prefillReplyText)
+                    putBoolean(KEY_FOCUS_REPLY_FIELD, focusReplyField)
                 }
             }
         }
