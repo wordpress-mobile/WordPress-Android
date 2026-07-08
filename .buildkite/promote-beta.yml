@@ -16,5 +16,5 @@ steps:
 # under `set -e` aborts before fastlane runs and bypasses that rescue. A build-level failure
 # notification ensures a broken run still reaches the channel.
 notify:
-  - slack: "#build-and-ship"
+  - slack: "#test-wpmobile-slack-integration"
     if: build.state == "failed"

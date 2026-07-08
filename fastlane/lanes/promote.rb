@@ -313,7 +313,7 @@ platform :android do
   end
 
   # Sends a Slack message to the given channel via the incoming webhook.
-  def send_slack_message(message:, channel: '#build-and-ship')
+  def send_slack_message(message:, channel: '#test-wpmobile-slack-integration')
     slack(
       username: 'WordPress Release Bot',
       icon_url: 'https://s.w.org/style/images/about/WordPress-logotype-wmark.png',
