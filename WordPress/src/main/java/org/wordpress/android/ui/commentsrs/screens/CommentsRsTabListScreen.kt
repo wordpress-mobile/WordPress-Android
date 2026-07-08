@@ -42,7 +42,8 @@ import org.wordpress.android.ui.compose.components.ShimmerBox
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CommentsRsTabListScreen(
-    state: CommentsTabUiState,
+    /** Null when the tab isn't initialized: first composition, or cleared awaiting a search. */
+    state: CommentsTabUiState?,
     emptyMessageResId: Int,
     selectedIds: Set<Long>,
     listState: LazyListState,
@@ -50,39 +51,55 @@ fun CommentsRsTabListScreen(
     onLoadMore: () -> Unit,
     onCommentClick: (Long) -> Unit,
     onCommentLongClick: (Long) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    isSearchActive: Boolean = false,
+    isQuerySearchable: Boolean = false
 ) {
+    // While searching, a missing tab state means "cleared, waiting for the debounced fetch"
+    // (initTab inserts an isLoading state the moment it actually fetches) — show the same blank
+    // idle screen as a below-minimum query rather than flashing the animated shimmer on every
+    // keystroke. Outside search, a missing state is the pre-init first composition: shimmer.
+    val isSearchIdle = isSearchActive && (!isQuerySearchable || state == null)
+    val isSearching = isSearchActive && isQuerySearchable
+    val tabState = state ?: CommentsTabUiState(isLoading = true)
     val pullToRefreshState = rememberPullToRefreshState()
 
     PullToRefreshBox(
         modifier = modifier.fillMaxSize(),
-        isRefreshing = state.isRefreshing,
+        isRefreshing = tabState.isRefreshing,
         state = pullToRefreshState,
         onRefresh = onRefresh,
         indicator = {
             PullToRefreshDefaults.Indicator(
                 state = pullToRefreshState,
-                isRefreshing = state.isRefreshing,
+                isRefreshing = tabState.isRefreshing,
                 color = MaterialTheme.colorScheme.primary,
                 modifier = Modifier.align(Alignment.TopCenter)
             )
         }
     ) {
         when {
-            state.isLoading -> ShimmerList()
-            state.error != null && state.comments.isEmpty() -> ErrorContent(
-                error = state.error,
+            // Search is open but the query is still below the minimum length: show nothing
+            // rather than a misleading "no comments" state.
+            isSearchIdle -> Box(Modifier.fillMaxSize())
+            tabState.isLoading -> ShimmerList()
+            tabState.error != null && tabState.comments.isEmpty() -> ErrorContent(
+                error = tabState.error,
                 onRetry = onRefresh
             )
-            state.comments.isEmpty() && !state.isRefreshing -> EmptyContent(
-                emptyMessageResId = emptyMessageResId
+            tabState.comments.isEmpty() && !tabState.isRefreshing -> EmptyContent(
+                emptyMessageResId = if (isSearching) {
+                    R.string.comments_rs_search_nothing_found
+                } else {
+                    emptyMessageResId
+                }
             )
             else -> CommentListContent(
-                comments = state.comments,
+                comments = tabState.comments,
                 selectedIds = selectedIds,
                 listState = listState,
-                isLoadingMore = state.isLoadingMore,
-                canLoadMore = state.canLoadMore,
+                isLoadingMore = tabState.isLoadingMore,
+                canLoadMore = tabState.canLoadMore,
                 onLoadMore = onLoadMore,
                 onCommentClick = onCommentClick,
                 onCommentLongClick = onCommentLongClick

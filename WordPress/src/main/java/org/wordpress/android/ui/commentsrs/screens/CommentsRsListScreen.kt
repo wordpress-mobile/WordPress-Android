@@ -5,14 +5,18 @@ import androidx.annotation.StringRes
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -28,6 +32,8 @@ import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -36,14 +42,20 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.CommentStatus
@@ -59,14 +71,24 @@ import org.wordpress.android.ui.postsrs.SnackbarMessage
 // current selection while keeping them visible.
 private const val DISABLED_ICON_ALPHA = 0.38f
 
+/** Which of the mutually exclusive top bars is showing: selection wins over search. */
+private enum class TopBarMode { SELECTION, SEARCH, NORMAL }
+
+@Suppress("LongMethod")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CommentsRsListScreen(
     tabStates: Map<CommentsRsListTab, CommentsTabUiState>,
     selectedIds: Set<Long>,
     pendingConfirmation: PendingConfirmation?,
+    isSearchActive: Boolean,
+    searchQuery: String,
+    isQuerySearchable: Boolean,
     onDismissConfirmation: () -> Unit,
     snackbarMessages: Flow<SnackbarMessage>,
+    onSearchOpen: () -> Unit,
+    onSearchQueryChanged: (String) -> Unit,
+    onSearchClose: (CommentsRsListTab) -> Unit,
     onInitTab: (CommentsRsListTab) -> Unit,
     onTabChanged: (CommentsRsListTab) -> Unit,
     onRefreshTab: (CommentsRsListTab) -> Unit,
@@ -102,12 +124,45 @@ fun CommentsRsListScreen(
         .map { it.status }
         .toSet()
     val isSelectionActive = selectedStatuses.isNotEmpty()
+    val focusRequester = remember { FocusRequester() }
+    // Focus (and the keyboard) is requested once per search open, not every time SearchTopBar
+    // re-enters composition — a selection round-trip over active search must not pop the keyboard.
+    var searchFocusPending by remember { mutableStateOf(false) }
+    val topBarMode = when {
+        isSelectionActive -> TopBarMode.SELECTION
+        isSearchActive -> TopBarMode.SEARCH
+        else -> TopBarMode.NORMAL
+    }
+
+    // Search opening, closing, or changing the trimmed query replaces each tab's content
+    // wholesale; reset the scroll so page 1 renders at the top. The hoisted list states otherwise
+    // keep their old deep offsets, clamping the short new list to its end and tripping the
+    // load-more trigger. drop(1) skips the initial emission: an Activity recreation must not
+    // discard the scroll positions the saveable list states just restored. The at-top check
+    // avoids scrollToItem's forced remeasure (and fling cancellation) when there's nothing to do.
+    val currentSearchActive by rememberUpdatedState(isSearchActive)
+    val currentQuery by rememberUpdatedState(searchQuery)
+    LaunchedEffect(Unit) {
+        snapshotFlow { currentSearchActive to currentQuery.trim() }
+            .drop(1)
+            .collect {
+                listStates.values.forEach { state ->
+                    if (state.firstVisibleItemIndex > 0 || state.firstVisibleItemScrollOffset > 0) {
+                        state.scrollToItem(0)
+                    }
+                }
+            }
+    }
 
     // Like the legacy action mode: the first back press dismisses the selection, the next one
     // leaves the screen. Enabled on selectedIds (not selectedStatuses) so any live selection is
     // cleared, including during the brief tab-swipe window before it clears itself.
     BackHandler(enabled = selectedIds.isNotEmpty()) {
         onClearSelection()
+    }
+    // Similarly, a back press while searching closes the search before leaving the screen.
+    BackHandler(enabled = isSearchActive && selectedIds.isEmpty()) {
+        onSearchClose(activeTab)
     }
 
     LaunchedEffect(snackbarMessages) {
@@ -125,23 +180,48 @@ fun CommentsRsListScreen(
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
-            AnimatedContent(targetState = isSelectionActive, label = "topBar") { selectionActive ->
-                if (selectionActive) {
-                    SelectionTopBar(
+            AnimatedContent(targetState = topBarMode, label = "topBar") { mode ->
+                when (mode) {
+                    TopBarMode.SELECTION -> SelectionTopBar(
                         selectedCount = selectedIds.size,
                         actions = activeTab.batchActions(),
                         selectedStatuses = selectedStatuses,
                         onClearSelection = onClearSelection,
                         onBatchAction = { action -> onBatchAction(action, activeTab) }
                     )
-                } else {
-                    TopAppBar(
+                    TopBarMode.SEARCH -> {
+                        SearchTopBar(
+                            searchQuery = searchQuery,
+                            focusRequester = focusRequester,
+                            onQueryChanged = onSearchQueryChanged,
+                            onClose = { onSearchClose(activeTab) }
+                        )
+                        // Runs after SearchTopBar is composed, so the requester is attached.
+                        LaunchedEffect(searchFocusPending) {
+                            if (searchFocusPending) {
+                                focusRequester.requestFocus()
+                                searchFocusPending = false
+                            }
+                        }
+                    }
+                    TopBarMode.NORMAL -> TopAppBar(
                         title = { Text(text = stringResource(R.string.comments)) },
                         navigationIcon = {
                             IconButton(onClick = onNavigateBack) {
                                 Icon(
                                     Icons.AutoMirrored.Filled.ArrowBack,
                                     contentDescription = stringResource(R.string.back)
+                                )
+                            }
+                        },
+                        actions = {
+                            IconButton(onClick = {
+                                searchFocusPending = true
+                                onSearchOpen()
+                            }) {
+                                Icon(
+                                    Icons.Default.Search,
+                                    contentDescription = stringResource(R.string.comments_rs_search_prompt)
                                 )
                             }
                         }
@@ -151,6 +231,10 @@ fun CommentsRsListScreen(
         }
     ) { contentPadding ->
         Column(modifier = Modifier.fillMaxSize().padding(contentPadding)) {
+            // The tab row stays visible while searching: the comments endpoint only accepts a
+            // single status per request (unlike posts, which search across all statuses), so a
+            // search is always scoped to one tab — keeping the tabs on screen makes that scope
+            // visible and lets the user re-run the query against another status.
             PrimaryScrollableTabRow(
                 selectedTabIndex = pagerState.settledPage,
                 edgePadding = 0.dp
@@ -186,13 +270,14 @@ fun CommentsRsListScreen(
                 modifier = Modifier.weight(1f)
             ) { page ->
                 val tab = tabs[page]
-                val tabState = tabStates[tab] ?: CommentsTabUiState(isLoading = true)
 
                 CommentsRsTabListScreen(
-                    state = tabState,
+                    state = tabStates[tab],
                     emptyMessageResId = tab.emptyMessageResId,
                     selectedIds = selectedIds,
                     listState = listStates.getValue(tab),
+                    isSearchActive = isSearchActive,
+                    isQuerySearchable = isQuerySearchable,
                     onRefresh = { onRefreshTab(tab) },
                     onLoadMore = { onLoadMore(tab) },
                     onCommentClick = onCommentClick,
@@ -274,6 +359,60 @@ private fun SelectionTopBar(
             }
             if (menuActions.isNotEmpty()) {
                 BatchActionsOverflowMenu(actions = menuActions, onBatchAction = onBatchAction)
+            }
+        }
+    )
+}
+
+/**
+ * Search mode: an inline query field replaces the title, the navigation icon closes the search,
+ * and a clear button empties a non-blank query (like the rs posts list search). The caller owns
+ * the once-per-open focus request so re-entering composition — e.g. returning from the selection
+ * top bar — doesn't pop the keyboard uninvited.
+ */
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun SearchTopBar(
+    searchQuery: String,
+    focusRequester: FocusRequester,
+    onQueryChanged: (String) -> Unit,
+    onClose: () -> Unit
+) {
+    val focusManager = LocalFocusManager.current
+    TopAppBar(
+        title = {
+            TextField(
+                value = searchQuery,
+                onValueChange = onQueryChanged,
+                placeholder = { Text(stringResource(R.string.comments_rs_search_prompt)) },
+                singleLine = true,
+                keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Search),
+                keyboardActions = KeyboardActions(onSearch = { focusManager.clearFocus() }),
+                colors = TextFieldDefaults.colors(
+                    focusedContainerColor = Color.Transparent,
+                    unfocusedContainerColor = Color.Transparent,
+                    focusedIndicatorColor = Color.Transparent,
+                    unfocusedIndicatorColor = Color.Transparent
+                ),
+                modifier = Modifier.fillMaxWidth().focusRequester(focusRequester)
+            )
+        },
+        navigationIcon = {
+            IconButton(onClick = onClose) {
+                Icon(
+                    Icons.AutoMirrored.Filled.ArrowBack,
+                    contentDescription = stringResource(R.string.back)
+                )
+            }
+        },
+        actions = {
+            if (searchQuery.isNotEmpty()) {
+                IconButton(onClick = { onQueryChanged("") }) {
+                    Icon(
+                        Icons.Default.Close,
+                        contentDescription = stringResource(R.string.clear)
+                    )
+                }
             }
         }
     )
