@@ -396,7 +396,10 @@ platform :android do
   def buildkite_api_get(uri)
     request = Net::HTTP::Get.new(uri)
     request['Authorization'] = "Bearer #{buildkite_api_token}"
-    Net::HTTP.start(uri.hostname, uri.port, use_ssl: true) { |http| http.request(request) }
+    # Bound the request so a hung response can't stall the gather lane across all 5 poll attempts.
+    Net::HTTP.start(uri.hostname, uri.port, use_ssl: true, open_timeout: 10, read_timeout: 10) do |http|
+      http.request(request)
+    end
   end
 
   # A Buildkite API token with `read_builds` scope — `BUILDKITE_API_TOKEN` on CI, `BUILDKITE_TOKEN`
