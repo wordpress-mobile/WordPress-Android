@@ -35,6 +35,11 @@ APP_SPECIFIC_VALUES = {
 
 UPLOAD_TO_PLAY_STORE_JSON_KEY = File.join(Dir.home, '.configure', 'wordpress-android', 'secrets', 'google-upload-credentials.json')
 
+# Version codes pinned in the Play Store that must never be dropped from a track. Every release to a
+# track has to retain these (see `upload_build_to_play_store` in build.rb and the beta promotion in
+# promote.rb).
+RETAINED_VERSION_CODES = [1440].freeze
+
 PROTOTYPE_BUILD_TYPE = 'Debug'
 
 PROJECT_ROOT_FOLDER = File.dirname(File.expand_path(__dir__))

@@ -178,48 +178,25 @@ platform :android do
   #################################################
 
   # Promotes a version code to beta for each app, returning a per-app `{ ok:, error: }` result.
-  # A failure for one app doesn't stop the other.
+  # A failure for one app doesn't stop the other. Reuses upload_build_to_play_store (build.rb),
+  # which owns the actual Play upload — the retry, the pinned retained codes, and the skip flags.
   def distribute_to_beta(version_code:)
     %i[wordpress jetpack].to_h do |app|
-      package_name = APP_SPECIFIC_VALUES[app][:package_name]
       result =
         begin
-          promote_version_code_to_beta(package_name: package_name, version_code: version_code)
+          upload_build_to_play_store(
+            app: app.to_s,
+            track: BETA_TRACK,
+            version_code: version_code,
+            # TODO: switch to 'completed' once the feature is ready to distribute to beta testers.
+            release_status: 'draft'
+          )
           { ok: true }
         rescue StandardError => e
           UI.error("Failed to promote #{app} (#{version_code}): #{e.message}")
           { ok: false, error: e.message }
         end
       [app, result]
-    end
-  end
-
-  # Creates a `beta` release referencing an existing bundle (no rebuild, no re-upload). Retries
-  # once on the intermittent Google API edit error, mirroring `upload_build_to_play_store`.
-  def promote_version_code_to_beta(package_name:, version_code:)
-    retry_count = 2
-    begin
-      upload_to_play_store(
-        package_name: package_name,
-        version_code: Integer(version_code),
-        track: BETA_TRACK,
-        skip_upload_aab: true,
-        skip_upload_apk: true,
-        skip_upload_metadata: true,
-        skip_upload_images: true,
-        skip_upload_screenshots: true,
-        skip_upload_changelogs: true,
-        # TODO: switch to 'completed' once the feature is ready to distribute to beta testers.
-        release_status: 'draft',
-        json_key: UPLOAD_TO_PLAY_STORE_JSON_KEY
-      )
-    rescue FastlaneCore::Interface::FastlaneError => e
-      if e.message.start_with?('Google Api Error') && (retry_count -= 1).positive?
-        UI.error('Promotion failed with Google API error. Retrying in 2mn...')
-        sleep(120)
-        retry
-      end
-      raise
     end
   end
 
