@@ -43,6 +43,7 @@ class MostViewedDetailViewModelTest : BaseUnitTest() {
         id = 1
         siteId = TEST_SITE_ID
         name = "Test Site"
+        adminUrl = TEST_ADMIN_URL
     }
 
     @Before
@@ -161,6 +162,28 @@ class MostViewedDetailViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `when the fetch returns an auth error, then the error state carries the auth flag`() = test {
+        whenever(statsRepository.fetchClicks(any(), any())).thenReturn(
+            org.wordpress.android.ui.newstats.repository.ClicksResult.Error(
+                R.string.stats_error_api,
+                isAuthError = true
+            )
+        )
+
+        viewModel.load(MostViewedDetailSource.CLICKS, StatsPeriod.Last7Days)
+        advanceUntilIdle()
+
+        val state = viewModel.uiState.value as MostViewedDetailUiState.Error
+        assertThat(state.message).isEqualTo(API_ERROR)
+        assertThat(state.isAuthError).isTrue()
+    }
+
+    @Test
+    fun `when getAdminUrl is called, then the selected site's admin url is returned`() {
+        assertThat(viewModel.getAdminUrl()).isEqualTo(TEST_ADMIN_URL)
+    }
+
+    @Test
     fun `when the fetch throws, then the generic unknown error state is emitted`() = test {
         whenever(statsRepository.fetchReferrersDetail(any(), any()))
             .thenThrow(RuntimeException(EXCEPTION_MESSAGE))
@@ -218,6 +241,7 @@ class MostViewedDetailViewModelTest : BaseUnitTest() {
     companion object {
         private const val TEST_SITE_ID = 123L
         private const val TEST_ACCESS_TOKEN = "test_access_token"
+        private const val TEST_ADMIN_URL = "https://example.com/wp-admin"
         private const val DATE_RANGE = "Last 7 days"
         private const val API_ERROR = "Failed to load stats"
         private const val UNKNOWN_ERROR = "Something went wrong"

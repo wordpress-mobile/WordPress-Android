@@ -50,6 +50,12 @@ class AuthorsDetailViewModel @Inject constructor(
 
     fun retry() = fetch()
 
+    /**
+     * The WP-Admin URL of the selected site, used to offer a re-authentication action when the
+     * fetch fails with an auth error (mirrors the authors card and the Most Viewed detail screen).
+     */
+    fun getAdminUrl(): String? = selectedSiteRepository.getSelectedSite()?.adminUrl
+
     private fun fetch() {
         val period = period ?: return
         val site = selectedSiteRepository.getSelectedSite()
@@ -82,7 +88,8 @@ class AuthorsDetailViewModel @Inject constructor(
                     )
                 }
                 is TopAuthorsResult.Error -> AuthorsDetailUiState.Error(
-                    resourceProvider.getString(result.messageResId)
+                    message = resourceProvider.getString(result.messageResId),
+                    isAuthError = result.isAuthError
                 )
             }
         } catch (e: CancellationException) {
@@ -105,5 +112,8 @@ sealed interface AuthorsDetailUiState {
         val dateRange: String
     ) : AuthorsDetailUiState
 
-    data class Error(val message: String) : AuthorsDetailUiState
+    data class Error(
+        val message: String,
+        val isAuthError: Boolean = false
+    ) : AuthorsDetailUiState
 }

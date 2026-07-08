@@ -35,6 +35,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
+import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.main.BaseAppCompatActivity
 import org.wordpress.android.ui.newstats.StatsPeriod
@@ -63,7 +64,10 @@ class AuthorsDetailActivity : BaseAppCompatActivity() {
                 AuthorsDetailScreen(
                     uiState = uiState,
                     onBackPressed = onBackPressedDispatcher::onBackPressed,
-                    onRetry = { viewModel.retry() }
+                    onRetry = { viewModel.retry() },
+                    onOpenWpAdmin = {
+                        viewModel.getAdminUrl()?.let { ActivityLauncher.openUrlExternal(this, it) }
+                    }
                 )
             }
         }
@@ -103,7 +107,8 @@ class AuthorsDetailActivity : BaseAppCompatActivity() {
 private fun AuthorsDetailScreen(
     uiState: AuthorsDetailUiState,
     onBackPressed: () -> Unit,
-    onRetry: () -> Unit = {}
+    onRetry: () -> Unit = {},
+    onOpenWpAdmin: () -> Unit = {}
 ) {
     Scaffold(
         topBar = {
@@ -125,7 +130,12 @@ private fun AuthorsDetailScreen(
             .padding(contentPadding)
         when (uiState) {
             is AuthorsDetailUiState.Loading -> AuthorsLoadingContent(contentModifier)
-            is AuthorsDetailUiState.Error -> AuthorsErrorContent(uiState.message, onRetry, contentModifier)
+            is AuthorsDetailUiState.Error -> AuthorsErrorContent(
+                message = uiState.message,
+                onRetry = onRetry,
+                onOpenWpAdmin = if (uiState.isAuthError) onOpenWpAdmin else null,
+                modifier = contentModifier
+            )
             is AuthorsDetailUiState.Loaded -> AuthorsLoadedContent(uiState, contentModifier)
         }
     }
@@ -186,7 +196,8 @@ private fun AuthorsLoadingContent(modifier: Modifier = Modifier) {
 private fun AuthorsErrorContent(
     message: String,
     onRetry: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onOpenWpAdmin: (() -> Unit)? = null
 ) {
     Column(
         modifier = modifier.padding(16.dp),
@@ -199,8 +210,14 @@ private fun AuthorsErrorContent(
             color = MaterialTheme.colorScheme.error
         )
         Spacer(modifier = Modifier.height(16.dp))
-        Button(onClick = onRetry) {
-            Text(text = stringResource(R.string.retry))
+        if (onOpenWpAdmin != null) {
+            Button(onClick = onOpenWpAdmin) {
+                Text(text = stringResource(R.string.my_site_btn_wp_admin))
+            }
+        } else {
+            Button(onClick = onRetry) {
+                Text(text = stringResource(R.string.retry))
+            }
         }
     }
 }

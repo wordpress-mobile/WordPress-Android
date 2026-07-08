@@ -15,7 +15,6 @@ import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
-import org.wordpress.android.ui.newstats.StatsCardType
 import org.wordpress.android.ui.newstats.StatsPeriod
 import org.wordpress.android.ui.newstats.mostviewed.MostViewedCardUiState
 import org.wordpress.android.ui.newstats.mostviewed.MostViewedChange
@@ -265,33 +264,6 @@ class SearchTermsViewModelTest : BaseUnitTest() {
         verify(statsRepository, times(2))
             .fetchSearchTerms(any(), any())
     }
-    // endregion
-
-    // region getDetailData
-    @Test
-    fun `when getDetailData is called, then returns cached data`() =
-        test {
-            whenever(statsRepository.fetchSearchTerms(any(), any()))
-                .thenReturn(createSuccessResult())
-            whenever(
-                resourceProvider.getString(
-                    R.string.stats_period_last_7_days
-                )
-            ).thenReturn("Last 7 days")
-
-            initViewModel()
-            advanceUntilIdle()
-
-            val detailData = viewModel.getDetailData()
-
-            assertThat(detailData.cardType)
-                .isEqualTo(StatsCardType.SEARCH_TERMS)
-            assertThat(detailData.items).hasSize(2)
-            assertThat(detailData.totalViews)
-                .isEqualTo(TEST_TOTAL_VIEWS)
-            assertThat(detailData.totalViewsChange)
-                .isEqualTo(TEST_TOTAL_VIEWS_CHANGE)
-        }
     // endregion
 
     // region Change calculations

@@ -51,9 +51,16 @@ class MostViewedDetailViewModel @Inject constructor(
 
     fun retry() = fetch()
 
+    /**
+     * The WP-Admin URL of the selected site, used to offer a re-authentication action when the
+     * fetch fails with an auth error (mirrors the cards and the UTM detail screen).
+     */
+    fun getAdminUrl(): String? = selectedSiteRepository.getSelectedSite()?.adminUrl
+
     private fun fetch() {
-        val source = source ?: return
-        val period = period ?: return
+        val source = source
+        val period = period
+        if (source == null || period == null) return
         val site = selectedSiteRepository.getSelectedSite()
         val accessToken = accountStore.accessToken
         if (site == null || accessToken.isNullOrEmpty()) {
@@ -78,14 +85,15 @@ class MostViewedDetailViewModel @Inject constructor(
             when (val result = detailFetcher.fetch(source, siteId, period, accessToken)) {
                 is StatsCardFetchResult.Success -> MostViewedDetailUiState.Loaded(
                     items = result.items,
-                    maxViewsForBar = result.items.firstOrNull()?.views ?: 1L,
+                    maxViewsForBar = result.items.firstOrNull()?.views ?: 0L,
                     totalViews = result.totalValue,
                     totalViewsChange = result.totalValueChange,
                     totalViewsChangePercent = result.totalValueChangePercent,
                     dateRange = period.toDateRangeString(resourceProvider)
                 )
                 is StatsCardFetchResult.Error -> MostViewedDetailUiState.Error(
-                    resourceProvider.getString(result.messageResId)
+                    message = resourceProvider.getString(result.messageResId),
+                    isAuthError = result.isAuthError
                 )
             }
         } catch (e: CancellationException) {
@@ -108,5 +116,8 @@ sealed interface MostViewedDetailUiState {
         val dateRange: String
     ) : MostViewedDetailUiState
 
-    data class Error(val message: String) : MostViewedDetailUiState
+    data class Error(
+        val message: String,
+        val isAuthError: Boolean = false
+    ) : MostViewedDetailUiState
 }

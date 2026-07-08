@@ -39,6 +39,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
+import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.ActivityNavigator
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.main.BaseAppCompatActivity
@@ -97,6 +98,9 @@ class MostViewedDetailActivity : BaseAppCompatActivity() {
                     valueHeaderResId = valueHeaderResId,
                     onBackPressed = onBackPressedDispatcher::onBackPressed,
                     onRetry = { viewModel.retry() },
+                    onOpenWpAdmin = {
+                        viewModel.getAdminUrl()?.let { ActivityLauncher.openUrlExternal(this, it) }
+                    },
                     onChildClick = { url -> activityNavigator.openInCustomTab(this, url) }
                 )
             }
@@ -108,8 +112,9 @@ class MostViewedDetailActivity : BaseAppCompatActivity() {
      * passed via the Intent (e.g. posts).
      */
     private fun readSelfFetchArgs(): SelfFetchArgs? {
-        val sourceName = intent.getStringExtra(EXTRA_DETAIL_SOURCE) ?: return null
-        val periodType = intent.getStringExtra(EXTRA_PERIOD_TYPE) ?: return null
+        val sourceName = intent.getStringExtra(EXTRA_DETAIL_SOURCE)
+        val periodType = intent.getStringExtra(EXTRA_PERIOD_TYPE)
+        if (sourceName == null || periodType == null) return null
         val customStart = intent.getLongExtra(EXTRA_PERIOD_CUSTOM_START, NO_EPOCH_DAY)
         val customEnd = intent.getLongExtra(EXTRA_PERIOD_CUSTOM_END, NO_EPOCH_DAY)
         val period = StatsPeriod.fromTypeString(
@@ -128,7 +133,7 @@ class MostViewedDetailActivity : BaseAppCompatActivity() {
         return MostViewedDetailUiState.Loaded(
             items = items,
             // Calculate maxViewsForBar once (list is sorted by views descending)
-            maxViewsForBar = items.firstOrNull()?.views ?: 1L,
+            maxViewsForBar = items.firstOrNull()?.views ?: 0L,
             totalViews = getLongExtra(EXTRA_TOTAL_VIEWS, 0L),
             totalViewsChange = getLongExtra(EXTRA_TOTAL_VIEWS_CHANGE, 0L),
             totalViewsChangePercent = getDoubleExtra(EXTRA_TOTAL_VIEWS_CHANGE_PERCENT, 0.0),
@@ -200,6 +205,7 @@ private fun MostViewedDetailScreen(
     valueHeaderResId: Int = R.string.stats_views,
     onBackPressed: () -> Unit,
     onRetry: () -> Unit = {},
+    onOpenWpAdmin: () -> Unit = {},
     onChildClick: (String) -> Unit = {}
 ) {
     val title = stringResource(cardType.displayNameResId)
@@ -224,7 +230,12 @@ private fun MostViewedDetailScreen(
             .padding(contentPadding)
         when (uiState) {
             is MostViewedDetailUiState.Loading -> DetailLoadingContent(contentModifier)
-            is MostViewedDetailUiState.Error -> DetailErrorContent(uiState.message, onRetry, contentModifier)
+            is MostViewedDetailUiState.Error -> DetailErrorContent(
+                message = uiState.message,
+                onRetry = onRetry,
+                onOpenWpAdmin = if (uiState.isAuthError) onOpenWpAdmin else null,
+                modifier = contentModifier
+            )
             is MostViewedDetailUiState.Loaded -> DetailLoadedContent(
                 state = uiState,
                 valueHeaderResId = valueHeaderResId,
@@ -303,7 +314,8 @@ private fun DetailLoadingContent(modifier: Modifier = Modifier) {
 private fun DetailErrorContent(
     message: String,
     onRetry: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onOpenWpAdmin: (() -> Unit)? = null
 ) {
     Column(
         modifier = modifier.padding(16.dp),
@@ -316,8 +328,14 @@ private fun DetailErrorContent(
             color = MaterialTheme.colorScheme.error
         )
         Spacer(modifier = Modifier.height(16.dp))
-        Button(onClick = onRetry) {
-            Text(text = stringResource(R.string.retry))
+        if (onOpenWpAdmin != null) {
+            Button(onClick = onOpenWpAdmin) {
+                Text(text = stringResource(R.string.my_site_btn_wp_admin))
+            }
+        } else {
+            Button(onClick = onRetry) {
+                Text(text = stringResource(R.string.retry))
+            }
         }
     }
 }
