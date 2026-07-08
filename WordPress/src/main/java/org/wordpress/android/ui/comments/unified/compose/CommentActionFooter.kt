@@ -121,7 +121,10 @@ private fun MoreActionButton(
             iconRes = R.drawable.ic_more_horiz_white_24dp,
             labelRes = R.string.more,
             isOn = false,
-            onClick = { isMenuExpanded = true }
+            onClick = { isMenuExpanded = true },
+            // Fill the Box (which carries this button's share of the row) so the icon centres in
+            // its slot like the sibling buttons, instead of hugging the slot's start edge
+            modifier = Modifier.fillMaxWidth()
         )
         DropdownMenu(
             expanded = isMenuExpanded,
