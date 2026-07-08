@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.comments.unified.compose
 
-import android.text.style.URLSpan
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -11,7 +10,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CircularProgressIndicator
@@ -24,28 +22,20 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.rememberNestedScrollInteropConnection
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.AnnotatedString
-import androidx.compose.ui.text.LinkAnnotation
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
-import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.text.HtmlCompat
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.CommentStatus
 import org.wordpress.android.fluxc.model.CommentStatus.APPROVED
@@ -54,7 +44,6 @@ import org.wordpress.android.fluxc.model.CommentStatus.TRASH
 import org.wordpress.android.fluxc.model.CommentStatus.UNAPPROVED
 import org.wordpress.android.ui.comments.unified.UnifiedCommentDetailsViewModel.CommentDetailsUiState
 import org.wordpress.android.ui.compose.theme.AppThemeM3
-import org.wordpress.android.ui.compose.utils.toAnnotatedString
 import org.wordpress.android.ui.dataview.compose.RemoteImage
 import org.wordpress.android.ui.suggestion.Suggestion
 
@@ -248,18 +237,10 @@ private fun CommentDetailsContent(
             )
         }
 
-        val linkColor = MaterialTheme.colorScheme.primary
-        val commentBody = remember(uiState.commentText, linkColor) {
-            commentHtmlToAnnotatedString(uiState.commentText, linkColor)
-        }
-        SelectionContainer {
-            Text(
-                text = commentBody,
-                color = MaterialTheme.colorScheme.onSurface,
-                fontSize = 16.sp,
-                modifier = Modifier.padding(top = 16.dp)
-            )
-        }
+        CommentHtmlBody(
+            html = uiState.commentText,
+            modifier = Modifier.padding(top = 16.dp)
+        )
     }
 }
 
@@ -301,30 +282,6 @@ private fun ConfirmDialog(
             TextButton(onClick = onDismiss) { Text(stringResource(R.string.cancel)) }
         }
     )
-}
-
-/**
- * Renders the comment's HTML body as an [AnnotatedString] with tappable, link-styled URLs and
- * trimmed surrounding whitespace. Unlike the legacy CommentUtils.displayHtmlComment renderer it
- * doesn't download inline images; image tags render as placeholders.
- */
-internal fun commentHtmlToAnnotatedString(html: String, linkColor: Color): AnnotatedString {
-    val spanned = HtmlCompat.fromHtml(html, HtmlCompat.FROM_HTML_MODE_LEGACY)
-    val withLinks = buildAnnotatedString {
-        append(spanned.toAnnotatedString())
-        spanned.getSpans(0, spanned.length, URLSpan::class.java).forEach { span ->
-            val start = spanned.getSpanStart(span)
-            val end = spanned.getSpanEnd(span)
-            addStyle(SpanStyle(color = linkColor, textDecoration = TextDecoration.Underline), start, end)
-            addLink(LinkAnnotation.Url(span.url), start, end)
-        }
-    }
-    // HtmlCompat pads block elements with trailing newlines; trim without breaking span offsets
-    val text = withLinks.text
-    val start = text.indexOfFirst { !it.isWhitespace() }
-    if (start == -1) return AnnotatedString("")
-    val end = text.indexOfLast { !it.isWhitespace() } + 1
-    return if (start == 0 && end == text.length) withLinks else withLinks.subSequence(start, end)
 }
 
 @Preview(showBackground = true)
