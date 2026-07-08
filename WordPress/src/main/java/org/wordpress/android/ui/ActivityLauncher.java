@@ -46,7 +46,7 @@ import org.wordpress.android.ui.blaze.PostUIModel;
 import org.wordpress.android.ui.blaze.blazepromote.BlazePromoteParentActivity;
 import org.wordpress.android.ui.bloggingprompts.promptslist.BloggingPromptsListActivity;
 import org.wordpress.android.ui.comments.unified.UnifiedCommentsActivity;
-import org.wordpress.android.ui.comments.unified.UnifiedCommentsDetailsActivity;
+import org.wordpress.android.ui.commentsrs.CommentsRsListActivity;
 import org.wordpress.android.ui.debug.cookies.DebugCookiesActivity;
 import org.wordpress.android.ui.debug.preferences.DebugSharedPreferenceFlagsActivity;
 import org.wordpress.android.ui.domains.DomainRegistrationActivity;
@@ -744,15 +744,28 @@ public class ActivityLauncher {
     }
 
     public static void viewUnifiedComments(Context context, SiteModel site) {
-        Intent intent = new Intent(context, UnifiedCommentsActivity.class);
-        intent.putExtra(WordPress.SITE, site);
+        Intent intent;
+        if (shouldUseRsCommentsList(context, site)) {
+            intent = CommentsRsListActivity.Companion.createIntent(context);
+        } else {
+            intent = new Intent(context, UnifiedCommentsActivity.class);
+            intent.putExtra(WordPress.SITE, site);
+        }
         context.startActivity(intent);
         AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_COMMENTS, site);
     }
 
-    public static void viewUnifiedCommentsDetails(Context context, SiteModel site, long remoteCommentId) {
-        Intent intent = UnifiedCommentsDetailsActivity.createIntent(context, site, remoteCommentId);
-        context.startActivity(intent);
+    private static boolean shouldUseRsCommentsList(@NonNull Context context, @NonNull SiteModel site) {
+        // The rs client can only authenticate WP.com-accessed sites or self-hosted sites with an
+        // application password; everywhere else keep the legacy (FluxC) comments list.
+        if (!site.isUsingWpComRestApi() && !site.hasApplicationPassword()) {
+            return false;
+        }
+        ActivityLauncherEntryPoint entryPoint = EntryPointAccessors.fromApplication(
+                context.getApplicationContext(),
+                ActivityLauncherEntryPoint.class
+        );
+        return entryPoint.experimentalFeatures().isEnabled(Feature.RS_UNIFIED_COMMENTS);
     }
 
     public static void viewCurrentBlogThemes(Context context, SiteModel site) {

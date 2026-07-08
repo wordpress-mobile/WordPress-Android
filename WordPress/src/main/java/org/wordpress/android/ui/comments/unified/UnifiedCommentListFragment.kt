@@ -15,7 +15,6 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.UnifiedCommentListFragmentBinding
 import org.wordpress.android.fluxc.model.CommentStatus
-import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.comments.unified.CommentDetailsActivityContract.CommentDetailsActivityRequest
 import org.wordpress.android.ui.comments.unified.CommentDetailsActivityContract.CommentDetailsActivityResponse
 import org.wordpress.android.ui.comments.unified.CommentListUiModelHelper.ActionModeUiModel
@@ -25,8 +24,6 @@ import org.wordpress.android.ui.comments.unified.CommentListUiModelHelper.Commen
 import org.wordpress.android.ui.comments.unified.CommentListUiModelHelper.ConfirmationDialogUiModel
 import org.wordpress.android.ui.comments.unified.CommentListUiModelHelper.ConfirmationDialogUiModel.Visible
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
-import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures
-import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures.Feature
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.SnackbarItem
@@ -53,9 +50,6 @@ class UnifiedCommentListFragment : Fragment(R.layout.unified_comment_list_fragme
 
     @Inject
     lateinit var networkUtilsWrapper: NetworkUtilsWrapper
-
-    @Inject
-    lateinit var experimentalFeatures: ExperimentalFeatures
 
     private lateinit var viewModel: UnifiedCommentListViewModel
     private lateinit var activityViewModel: UnifiedCommentActivityViewModel
@@ -166,25 +160,16 @@ class UnifiedCommentListFragment : Fragment(R.layout.unified_comment_list_fragme
 
     private fun showCommentDetails(commentId: Long, commentStatus: CommentStatus) {
         currentSnackbar?.dismiss()
-        val site = selectedSiteRepository.getSelectedSite()
-        // The rs detail can only authenticate WP.com-accessed or application-password sites, so
-        // fall back to the legacy detail elsewhere (same gating as the rs pages/posts screens).
-        val siteSupportsRs = site != null && (site.isUsingWpComRestApi || site.hasApplicationPassword())
-        if (siteSupportsRs && experimentalFeatures.isEnabled(Feature.RS_UNIFIED_COMMENTS)) {
-            ActivityLauncher.viewUnifiedCommentsDetails(
-                context,
-                site,
-                commentId
+        // This legacy list is only reached when the RS_UNIFIED_COMMENTS flag is off or the site
+        // can't use wordpress-rs (see ActivityLauncher.viewUnifiedComments), so it always pairs
+        // with the legacy detail; the rs list launches the rs detail itself.
+        commentDetails.launch(
+            CommentDetailsActivityRequest(
+                commentId,
+                commentStatus,
+                selectedSiteRepository.getSelectedSite()!!
             )
-        } else {
-            commentDetails.launch(
-                CommentDetailsActivityRequest(
-                    commentId,
-                    commentStatus,
-                    selectedSiteRepository.getSelectedSite()!!
-                )
-            )
-        }
+        )
     }
 
     val commentDetails = registerForActivityResult(

@@ -47,8 +47,8 @@ class ExperimentalFeatures @Inject constructor(
         ),
         RS_UNIFIED_COMMENTS(
             "rs_unified_comments",
-            R.string.experimental_rs_unified_comments,
-            R.string.experimental_rs_unified_comments_description
+            R.string.experimental_rs_comments,
+            R.string.experimental_rs_comments_description
         );
     }
 }
