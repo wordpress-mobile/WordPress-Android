@@ -96,8 +96,8 @@ platform :android do
   # Candidate discovery
   #################################################
 
-  # The promotable builds: version codes present in both apps' Play libraries and above the
-  # current beta release, newest first, capped to PROMOTION_CANDIDATE_LIMIT.
+  # The promotable version codes: present in both apps' Play libraries and above the current beta
+  # release, newest first, capped to PROMOTION_CANDIDATE_LIMIT.
   def beta_promotion_candidates
     apps = %i[wordpress jetpack]
 
@@ -115,20 +115,7 @@ platform :android do
     end
 
     common = available_per_app.reduce(:&) || []
-    codes = common.select { |code| combined_floor.nil? || code > combined_floor }.max(PROMOTION_CANDIDATE_LIMIT)
-
-    codes.map { |code| candidate_for(code) }
-  end
-
-  # Builds a candidate hash from a version code, decoding the version name and build number the
-  # continuous formatter encoded: `versionCode = (major * 10 + minor) * 1_000_000 + build_number`.
-  def candidate_for(version_code)
-    prefix = version_code / 1_000_000
-    {
-      version_code: version_code,
-      version_name: "#{prefix / 10}.#{prefix % 10}",
-      build_number: version_code % 1_000_000
-    }
+    common.select { |code| combined_floor.nil? || code > combined_floor }.max(PROMOTION_CANDIDATE_LIMIT)
   end
 
   # Reads the version codes currently on the given package's `beta` track, as an array of integers.
@@ -202,7 +189,7 @@ platform :android do
   #################################################
 
   def write_promotion_steps_file(candidates:)
-    options = candidates.map { |candidate| { 'label' => candidate_label(candidate), 'value' => candidate[:version_code].to_s } }
+    options = candidates.map { |code| { 'label' => code.to_s, 'value' => code.to_s } }
 
     steps = {
       'steps' => [
@@ -242,10 +229,6 @@ platform :android do
     sh('bash', '-c', "cd '#{PROJECT_ROOT_FOLDER}' && source .buildkite/shared-pipeline-vars && buildkite-agent pipeline upload '#{PROMOTION_STEPS_RELATIVE_PATH}'")
   end
 
-  def candidate_label(candidate)
-    "#{candidate[:version_name]} (#{candidate[:version_code]}) · build ##{candidate[:build_number]}"
-  end
-
   #################################################
   # Slack
   #################################################
@@ -255,7 +238,7 @@ platform :android do
   def post_candidates_to_slack(candidates:, pick_url: nil)
     build_url = ENV.fetch('BUILDKITE_BUILD_URL', nil)
 
-    candidate_lines = candidates.map { |candidate| slack_candidate_line(candidate) }
+    candidate_lines = candidates.map { |code| "• `#{code}`" }
 
     choose_line =
       if pick_url
@@ -276,10 +259,6 @@ platform :android do
     )
   end
 
-  def slack_candidate_line(candidate)
-    "• `#{candidate[:version_code]}` — #{candidate[:version_name]} · build ##{candidate[:build_number]}"
-  end
-
   # Posts the per-app outcome of a promotion.
   def post_promotion_result_to_slack(version_code:, results:)
     status_lines = results.map do |app, result|
@@ -297,25 +276,6 @@ platform :android do
 
         #{status_lines.join("\n")}
       MSG
-    )
-  end
-
-  # Posts to Slack without letting a webhook hiccup abort the caller.
-  def notify_slack(message)
-    send_slack_message(message: message)
-  rescue StandardError => e
-    UI.important("Slack notification failed (#{e.message}); continuing without it.")
-  end
-
-  # Sends a Slack message to the given channel via the incoming webhook.
-  def send_slack_message(message:, channel: '#test-wpmobile-slack-integration')
-    slack(
-      username: 'WordPress Release Bot',
-      icon_url: 'https://s.w.org/style/images/about/WordPress-logotype-wmark.png',
-      slack_url: get_required_env('SLACK_WEBHOOK'),
-      channel: channel,
-      message: message,
-      default_payloads: []
     )
   end
 
@@ -369,7 +329,7 @@ platform :android do
     request = Net::HTTP::Get.new(uri)
     request['Authorization'] = "Bearer #{buildkite_api_token}"
     # Bound the request so a hung response can't stall the gather lane across all 5 poll attempts.
-    Net::HTTP.start(uri.hostname, uri.port, use_ssl: true, open_timeout: 10, read_timeout: 10) do |http|
+    Net::HTTP.start(uri.hostname, uri.port, use_ssl: true, open_timeout: 30, read_timeout: 30) do |http|
       http.request(request)
     end
   end
@@ -393,11 +353,5 @@ platform :android do
     return if branch == DEFAULT_BRANCH
 
     UI.user_error!("Promotion only runs on `#{DEFAULT_BRANCH}` (current branch: #{branch.empty? ? 'none' : "`#{branch}`"}). Refusing to proceed.")
-  end
-
-  # Returns an env var's value, failing loudly if it's unset.
-  def get_required_env(key)
-    UI.user_error!("Environment variable '#{key}' is not set.") unless ENV.key?(key)
-    ENV.fetch(key, nil)
   end
 end
