@@ -12,48 +12,55 @@ import org.wordpress.android.R
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.newstats.StatsPeriod
-import org.wordpress.android.ui.newstats.repository.MostViewedResult
-import org.wordpress.android.ui.newstats.repository.StatsRepository
 import org.wordpress.android.ui.newstats.util.toDateRangeString
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
 
 /**
- * Backs [MostViewedDetailActivity] when it self-fetches its data (currently the referrers detail
- * screen). The referrers card is bounded to [StatsRepository]'s card max, so the detail screen
- * re-requests the full, unbounded list (max = 0) instead of receiving it through the Intent — this
- * keeps the card request small and avoids passing a large parcelable list across the process
- * boundary (which could exceed the Binder transaction limit).
+ * Backs [MostViewedDetailActivity] when it self-fetches its data. The cards these sources belong to
+ * only show the first N items, so the detail screen re-requests the full, unbounded list (max = 0)
+ * itself — via [MostViewedDetailFetcher] — instead of receiving it through the Intent, which could
+ * exceed the Binder transaction limit for sources with many entries.
  */
 @HiltViewModel
 class MostViewedDetailViewModel @Inject constructor(
     private val selectedSiteRepository: SelectedSiteRepository,
     private val accountStore: AccountStore,
-    private val statsRepository: StatsRepository,
+    private val detailFetcher: MostViewedDetailFetcher,
     private val resourceProvider: ResourceProvider
 ) : ViewModel() {
     private val _uiState = MutableStateFlow<MostViewedDetailUiState>(MostViewedDetailUiState.Loading)
     val uiState: StateFlow<MostViewedDetailUiState> = _uiState.asStateFlow()
 
+    private var source: MostViewedDetailSource? = null
     private var period: StatsPeriod? = null
     private var hasStartedLoading = false
 
     /**
-     * Loads the referrers detail data for [period]. Safe to call on every [MostViewedDetailActivity]
-     * creation: the fetch only runs once (subsequent calls after e.g. a rotation are ignored while a
-     * result is already present). Use [retry] to force a reload.
+     * Loads the detail data for [source] and [period]. Safe to call on every
+     * [MostViewedDetailActivity] creation: the fetch only runs once (subsequent calls after e.g. a
+     * rotation are ignored while a result is already present). Use [retry] to force a reload.
      */
-    fun loadReferrers(period: StatsPeriod) {
+    fun load(source: MostViewedDetailSource, period: StatsPeriod) {
+        this.source = source
         this.period = period
         if (hasStartedLoading) return
-        load()
+        fetch()
     }
 
-    fun retry() = load()
+    fun retry() = fetch()
 
-    private fun load() {
-        val period = period ?: return
+    /**
+     * The WP-Admin URL of the selected site, used to offer a re-authentication action when the
+     * fetch fails with an auth error (mirrors the cards and the UTM detail screen).
+     */
+    fun getAdminUrl(): String? = selectedSiteRepository.getSelectedSite()?.adminUrl
+
+    private fun fetch() {
+        val source = source
+        val period = period
+        if (source == null || period == null) return
         val site = selectedSiteRepository.getSelectedSite()
         val accessToken = accountStore.accessToken
         if (site == null || accessToken.isNullOrEmpty()) {
@@ -61,31 +68,32 @@ class MostViewedDetailViewModel @Inject constructor(
             return
         }
         hasStartedLoading = true
-        statsRepository.init(accessToken)
         _uiState.value = MostViewedDetailUiState.Loading
         viewModelScope.launch {
-            _uiState.value = fetchReferrers(site.siteId, period)
+            _uiState.value = fetchDetail(source, site.siteId, period, accessToken)
         }
     }
 
     @Suppress("TooGenericExceptionCaught")
-    private suspend fun fetchReferrers(siteId: Long, period: StatsPeriod): MostViewedDetailUiState =
+    private suspend fun fetchDetail(
+        source: MostViewedDetailSource,
+        siteId: Long,
+        period: StatsPeriod,
+        accessToken: String
+    ): MostViewedDetailUiState =
         try {
-            val result = statsRepository.fetchReferrersDetail(siteId = siteId, period = period)
-            when (result) {
-                is MostViewedResult.Success -> {
-                    val items = result.items.map { it.toDetailItem() }
-                    MostViewedDetailUiState.Loaded(
-                        items = items,
-                        maxViewsForBar = items.firstOrNull()?.views ?: 1L,
-                        totalViews = result.totalViews,
-                        totalViewsChange = result.totalViewsChange,
-                        totalViewsChangePercent = result.totalViewsChangePercent,
-                        dateRange = period.toDateRangeString(resourceProvider)
-                    )
-                }
-                is MostViewedResult.Error -> MostViewedDetailUiState.Error(
-                    resourceProvider.getString(R.string.stats_error_api)
+            when (val result = detailFetcher.fetch(source, siteId, period, accessToken)) {
+                is StatsCardFetchResult.Success -> MostViewedDetailUiState.Loaded(
+                    items = result.items,
+                    maxViewsForBar = result.items.firstOrNull()?.views ?: 0L,
+                    totalViews = result.totalValue,
+                    totalViewsChange = result.totalValueChange,
+                    totalViewsChangePercent = result.totalValueChangePercent,
+                    dateRange = period.toDateRangeString(resourceProvider)
+                )
+                is StatsCardFetchResult.Error -> MostViewedDetailUiState.Error(
+                    message = resourceProvider.getString(result.messageResId),
+                    isAuthError = result.isAuthError
                 )
             }
         } catch (e: CancellationException) {
@@ -108,5 +116,8 @@ sealed interface MostViewedDetailUiState {
         val dateRange: String
     ) : MostViewedDetailUiState
 
-    data class Error(val message: String) : MostViewedDetailUiState
+    data class Error(
+        val message: String,
+        val isAuthError: Boolean = false
+    ) : MostViewedDetailUiState
 }

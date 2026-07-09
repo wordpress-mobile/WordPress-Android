@@ -39,6 +39,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
+import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.ActivityNavigator
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.main.BaseAppCompatActivity
@@ -57,9 +58,10 @@ private const val EXTRA_TOTAL_VIEWS_CHANGE_PERCENT = "extra_total_views_change_p
 private const val EXTRA_DATE_RANGE = "extra_date_range"
 private const val EXTRA_VALUE_HEADER_RES_ID = "extra_value_header_res_id"
 
-// Self-fetch mode (referrers): the detail screen re-fetches its own unbounded data for this period
+// Self-fetch mode: the detail screen re-fetches its own unbounded data for this source/period
 // instead of receiving the item list through the Intent. When these are absent the screen renders
-// the items passed via EXTRA_ITEMS (posts, clicks, search terms, etc.).
+// the items passed via EXTRA_ITEMS (e.g. posts, which fetch a bounded list).
+private const val EXTRA_DETAIL_SOURCE = "extra_detail_source"
 private const val EXTRA_PERIOD_TYPE = "extra_period_type"
 private const val EXTRA_PERIOD_CUSTOM_START = "extra_period_custom_start"
 private const val EXTRA_PERIOD_CUSTOM_END = "extra_period_custom_end"
@@ -77,15 +79,15 @@ class MostViewedDetailActivity : BaseAppCompatActivity() {
         val cardType = intent.extras?.getSerializableCompat<StatsCardType>(EXTRA_CARD_TYPE)
             ?: StatsCardType.MOST_VIEWED_POSTS_AND_PAGES
         val valueHeaderResId = intent.getIntExtra(EXTRA_VALUE_HEADER_RES_ID, R.string.stats_views)
-        val selfFetchPeriod = readSelfFetchPeriod()
+        val selfFetch = readSelfFetchArgs()
 
-        if (selfFetchPeriod != null) {
-            viewModel.loadReferrers(selfFetchPeriod)
+        if (selfFetch != null) {
+            viewModel.load(selfFetch.source, selfFetch.period)
         }
 
         setContent {
             AppThemeM3 {
-                val uiState = if (selfFetchPeriod != null) {
+                val uiState = if (selfFetch != null) {
                     viewModel.uiState.collectAsState().value
                 } else {
                     remember { intent.toPassedItemsState() }
@@ -96,6 +98,9 @@ class MostViewedDetailActivity : BaseAppCompatActivity() {
                     valueHeaderResId = valueHeaderResId,
                     onBackPressed = onBackPressedDispatcher::onBackPressed,
                     onRetry = { viewModel.retry() },
+                    onOpenWpAdmin = {
+                        viewModel.getAdminUrl()?.let { ActivityLauncher.openUrlExternal(this, it) }
+                    },
                     onChildClick = { url -> activityNavigator.openInCustomTab(this, url) }
                 )
             }
@@ -103,19 +108,24 @@ class MostViewedDetailActivity : BaseAppCompatActivity() {
     }
 
     /**
-     * Reads the period for self-fetch mode, or null when the screen should render the items passed
-     * via the Intent (posts, clicks, search terms, etc.).
+     * Reads the source + period for self-fetch mode, or null when the screen should render the items
+     * passed via the Intent (e.g. posts).
      */
-    private fun readSelfFetchPeriod(): StatsPeriod? {
-        val periodType = intent.getStringExtra(EXTRA_PERIOD_TYPE) ?: return null
+    private fun readSelfFetchArgs(): SelfFetchArgs? {
+        val sourceName = intent.getStringExtra(EXTRA_DETAIL_SOURCE)
+        val periodType = intent.getStringExtra(EXTRA_PERIOD_TYPE)
+        if (sourceName == null || periodType == null) return null
         val customStart = intent.getLongExtra(EXTRA_PERIOD_CUSTOM_START, NO_EPOCH_DAY)
         val customEnd = intent.getLongExtra(EXTRA_PERIOD_CUSTOM_END, NO_EPOCH_DAY)
-        return StatsPeriod.fromTypeString(
+        val period = StatsPeriod.fromTypeString(
             type = periodType,
             customStartEpochDay = customStart.takeIf { it != NO_EPOCH_DAY },
             customEndEpochDay = customEnd.takeIf { it != NO_EPOCH_DAY }
         )
+        return SelfFetchArgs(MostViewedDetailSource.valueOf(sourceName), period)
     }
+
+    private data class SelfFetchArgs(val source: MostViewedDetailSource, val period: StatsPeriod)
 
     private fun Intent.toPassedItemsState(): MostViewedDetailUiState.Loaded {
         val items = extras?.getParcelableArrayListCompat<MostViewedDetailItem>(EXTRA_ITEMS)
@@ -123,7 +133,7 @@ class MostViewedDetailActivity : BaseAppCompatActivity() {
         return MostViewedDetailUiState.Loaded(
             items = items,
             // Calculate maxViewsForBar once (list is sorted by views descending)
-            maxViewsForBar = items.firstOrNull()?.views ?: 1L,
+            maxViewsForBar = items.firstOrNull()?.views ?: 0L,
             totalViews = getLongExtra(EXTRA_TOTAL_VIEWS, 0L),
             totalViewsChange = getLongExtra(EXTRA_TOTAL_VIEWS_CHANGE, 0L),
             totalViewsChangePercent = getDoubleExtra(EXTRA_TOTAL_VIEWS_CHANGE_PERCENT, 0.0),
@@ -161,12 +171,21 @@ class MostViewedDetailActivity : BaseAppCompatActivity() {
         }
 
         /**
-         * Launches the referrers detail screen in self-fetch mode: only the [period] is passed and
-         * the screen re-fetches the full referrer list itself (see [MostViewedDetailViewModel]).
+         * Launches the detail screen in self-fetch mode: only the [source], [period] and header are
+         * passed and the screen re-fetches the full (unbounded) list itself, instead of receiving it
+         * through the Intent (see [MostViewedDetailViewModel]).
          */
-        fun startReferrers(context: Context, period: StatsPeriod) {
+        fun startSelfFetch(
+            context: Context,
+            cardType: StatsCardType,
+            source: MostViewedDetailSource,
+            period: StatsPeriod,
+            valueHeaderResId: Int = R.string.stats_views
+        ) {
             val intent = Intent(context, MostViewedDetailActivity::class.java).apply {
-                putExtra(EXTRA_CARD_TYPE, StatsCardType.MOST_VIEWED_REFERRERS)
+                putExtra(EXTRA_CARD_TYPE, cardType)
+                putExtra(EXTRA_DETAIL_SOURCE, source.name)
+                putExtra(EXTRA_VALUE_HEADER_RES_ID, valueHeaderResId)
                 putExtra(EXTRA_PERIOD_TYPE, period.toTypeString())
                 if (period is StatsPeriod.Custom) {
                     putExtra(EXTRA_PERIOD_CUSTOM_START, period.startDate.toEpochDay())
@@ -186,6 +205,7 @@ private fun MostViewedDetailScreen(
     valueHeaderResId: Int = R.string.stats_views,
     onBackPressed: () -> Unit,
     onRetry: () -> Unit = {},
+    onOpenWpAdmin: () -> Unit = {},
     onChildClick: (String) -> Unit = {}
 ) {
     val title = stringResource(cardType.displayNameResId)
@@ -210,7 +230,12 @@ private fun MostViewedDetailScreen(
             .padding(contentPadding)
         when (uiState) {
             is MostViewedDetailUiState.Loading -> DetailLoadingContent(contentModifier)
-            is MostViewedDetailUiState.Error -> DetailErrorContent(uiState.message, onRetry, contentModifier)
+            is MostViewedDetailUiState.Error -> DetailErrorContent(
+                message = uiState.message,
+                onRetry = onRetry,
+                onOpenWpAdmin = if (uiState.isAuthError) onOpenWpAdmin else null,
+                modifier = contentModifier
+            )
             is MostViewedDetailUiState.Loaded -> DetailLoadedContent(
                 state = uiState,
                 valueHeaderResId = valueHeaderResId,
@@ -289,7 +314,8 @@ private fun DetailLoadingContent(modifier: Modifier = Modifier) {
 private fun DetailErrorContent(
     message: String,
     onRetry: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onOpenWpAdmin: (() -> Unit)? = null
 ) {
     Column(
         modifier = modifier.padding(16.dp),
@@ -302,8 +328,14 @@ private fun DetailErrorContent(
             color = MaterialTheme.colorScheme.error
         )
         Spacer(modifier = Modifier.height(16.dp))
-        Button(onClick = onRetry) {
-            Text(text = stringResource(R.string.retry))
+        if (onOpenWpAdmin != null) {
+            Button(onClick = onOpenWpAdmin) {
+                Text(text = stringResource(R.string.my_site_btn_wp_admin))
+            }
+        } else {
+            Button(onClick = onRetry) {
+                Text(text = stringResource(R.string.retry))
+            }
         }
     }
 }
