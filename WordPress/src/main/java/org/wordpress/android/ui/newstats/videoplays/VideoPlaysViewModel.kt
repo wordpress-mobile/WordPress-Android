@@ -49,7 +49,8 @@ class VideoPlaysViewModel @Inject constructor(
             is VideoPlaysResult.Error -> {
                 StatsCardFetchResult.Error(
                     messageResId = result.messageResId,
-                    isAuthError = result.isAuthError
+                    isAuthError = result.isAuthError,
+                    isNotAvailable = result.isNotAvailable
                 )
             }
         }

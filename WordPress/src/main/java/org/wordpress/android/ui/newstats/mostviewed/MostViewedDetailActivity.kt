@@ -36,6 +36,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
@@ -234,6 +235,7 @@ private fun MostViewedDetailScreen(
                 message = uiState.message,
                 onRetry = onRetry,
                 onOpenWpAdmin = if (uiState.isAuthError) onOpenWpAdmin else null,
+                showRetry = !uiState.isNotAvailable,
                 modifier = contentModifier
             )
             is MostViewedDetailUiState.Loaded -> DetailLoadedContent(
@@ -315,6 +317,7 @@ private fun DetailErrorContent(
     message: String,
     onRetry: () -> Unit,
     modifier: Modifier = Modifier,
+    showRetry: Boolean = true,
     onOpenWpAdmin: (() -> Unit)? = null
 ) {
     Column(
@@ -325,14 +328,16 @@ private fun DetailErrorContent(
         Text(
             text = message,
             style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.error
+            color = MaterialTheme.colorScheme.error,
+            textAlign = TextAlign.Center
         )
-        Spacer(modifier = Modifier.height(16.dp))
         if (onOpenWpAdmin != null) {
+            Spacer(modifier = Modifier.height(16.dp))
             Button(onClick = onOpenWpAdmin) {
                 Text(text = stringResource(R.string.my_site_btn_wp_admin))
             }
-        } else {
+        } else if (showRetry) {
+            Spacer(modifier = Modifier.height(16.dp))
             Button(onClick = onRetry) {
                 Text(text = stringResource(R.string.retry))
             }

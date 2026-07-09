@@ -93,7 +93,8 @@ class MostViewedDetailViewModel @Inject constructor(
                 )
                 is StatsCardFetchResult.Error -> MostViewedDetailUiState.Error(
                     message = resourceProvider.getString(result.messageResId),
-                    isAuthError = result.isAuthError
+                    isAuthError = result.isAuthError,
+                    isNotAvailable = result.isNotAvailable
                 )
             }
         } catch (e: CancellationException) {
@@ -118,6 +119,7 @@ sealed interface MostViewedDetailUiState {
 
     data class Error(
         val message: String,
-        val isAuthError: Boolean = false
+        val isAuthError: Boolean = false,
+        val isNotAvailable: Boolean = false
     ) : MostViewedDetailUiState
 }

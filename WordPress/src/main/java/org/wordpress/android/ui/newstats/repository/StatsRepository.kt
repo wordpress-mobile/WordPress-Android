@@ -1140,8 +1140,8 @@ class StatsRepository @Inject constructor(
                 items, total, change, pct
             )
         },
-        buildError = { resId, isAuth ->
-            ClicksResult.Error(resId, isAuth)
+        buildError = { resId, isAuth, isNotAvailable ->
+            ClicksResult.Error(resId, isAuth, isNotAvailable)
         },
         logLabel = "clicks"
     )
@@ -1171,8 +1171,8 @@ class StatsRepository @Inject constructor(
                 items, total, change, pct
             )
         },
-        buildError = { resId, isAuth ->
-            SearchTermsResult.Error(resId, isAuth)
+        buildError = { resId, isAuth, isNotAvailable ->
+            SearchTermsResult.Error(resId, isAuth, isNotAvailable)
         },
         logLabel = "search terms"
     )
@@ -1202,8 +1202,8 @@ class StatsRepository @Inject constructor(
                 items, total, change, pct
             )
         },
-        buildError = { resId, isAuth ->
-            VideoPlaysResult.Error(resId, isAuth)
+        buildError = { resId, isAuth, isNotAvailable ->
+            VideoPlaysResult.Error(resId, isAuth, isNotAvailable)
         },
         logLabel = "video plays"
     )
@@ -1235,8 +1235,8 @@ class StatsRepository @Inject constructor(
                 items, total, change, pct
             )
         },
-        buildError = { resId, isAuth ->
-            FileDownloadsResult.Error(resId, isAuth)
+        buildError = { resId, isAuth, isNotAvailable ->
+            FileDownloadsResult.Error(resId, isAuth, isNotAvailable)
         },
         logLabel = "file downloads"
     )
@@ -1411,7 +1411,7 @@ class StatsRepository @Inject constructor(
         metricOf: (Raw) -> Long,
         mapItem: (Raw, Long) -> Output,
         buildSuccess: (List<Output>, Long, Long, Double) -> R,
-        buildError: (Int, Boolean) -> R,
+        buildError: (Int, Boolean, Boolean) -> R,
         logLabel: String
     ): R = withContext(ioDispatcher) {
         val (curRange, prevRange) =
@@ -1455,7 +1455,9 @@ class StatsRepository @Inject constructor(
                 buildError(
                     curResult.errorType.messageResId,
                     curResult.errorType ==
-                        StatsErrorType.AUTH_ERROR
+                        StatsErrorType.AUTH_ERROR,
+                    curResult.errorType ==
+                        StatsErrorType.NOT_AVAILABLE
                 )
             }
         }
@@ -2053,7 +2055,8 @@ sealed class ClicksResult {
     ) : ClicksResult()
     data class Error(
         @StringRes val messageResId: Int,
-        val isAuthError: Boolean = false
+        val isAuthError: Boolean = false,
+        val isNotAvailable: Boolean = false
     ) : ClicksResult()
 }
 
@@ -2076,7 +2079,8 @@ sealed class SearchTermsResult {
     ) : SearchTermsResult()
     data class Error(
         @StringRes val messageResId: Int,
-        val isAuthError: Boolean = false
+        val isAuthError: Boolean = false,
+        val isNotAvailable: Boolean = false
     ) : SearchTermsResult()
 }
 
@@ -2099,7 +2103,8 @@ sealed class VideoPlaysResult {
     ) : VideoPlaysResult()
     data class Error(
         @StringRes val messageResId: Int,
-        val isAuthError: Boolean = false
+        val isAuthError: Boolean = false,
+        val isNotAvailable: Boolean = false
     ) : VideoPlaysResult()
 }
 
@@ -2122,7 +2127,8 @@ sealed class FileDownloadsResult {
     ) : FileDownloadsResult()
     data class Error(
         @StringRes val messageResId: Int,
-        val isAuthError: Boolean = false
+        val isAuthError: Boolean = false,
+        val isNotAvailable: Boolean = false
     ) : FileDownloadsResult()
 }
 
