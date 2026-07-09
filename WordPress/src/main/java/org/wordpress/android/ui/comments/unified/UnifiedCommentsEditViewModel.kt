@@ -320,9 +320,11 @@ class UnifiedCommentsEditViewModel @Inject constructor(
             site = site,
             commentId = commentIdentifier.remoteCommentId,
             content = editedCommentEssentials.commentText,
-            authorName = editedCommentEssentials.userName,
-            authorEmail = editedCommentEssentials.userEmail,
-            authorUrl = editedCommentEssentials.userUrl
+            author = CommentsRsDataSource.CommentAuthor(
+                name = editedCommentEssentials.userName,
+                email = editedCommentEssentials.userEmail,
+                url = editedCommentEssentials.userUrl
+            )
         )
         if (result is RsResult.Error) return false
         // Local-only cache write (isError = false persists the entity without a network round-trip).

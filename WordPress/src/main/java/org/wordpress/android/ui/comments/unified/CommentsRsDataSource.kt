@@ -206,26 +206,23 @@ class CommentsRsDataSource @Inject constructor(
     suspend fun updateStatus(site: SiteModel, commentId: Long, status: CommentStatus): RsResult =
         write(site) { it.comments().update(commentId, CommentUpdateParams(status = status.toRsCommentStatus())) }
 
-    /**
-     * Edits a comment's body and, for anonymous comments, its author identity. Author fields are
-     * left null (unchanged) for comments from registered users — the `/wp/v2/comments` endpoint
-     * only honours author name/email/url for guest comments.
-     */
+    /** Editable author-identity fields; the endpoint applies them only to guest comments. */
+    data class CommentAuthor(val name: String, val email: String, val url: String)
+
+    /** Edits a comment's body and author identity. */
     suspend fun updateComment(
         site: SiteModel,
         commentId: Long,
         content: String,
-        authorName: String?,
-        authorEmail: String?,
-        authorUrl: String?
+        author: CommentAuthor
     ): RsResult = write(site) {
         it.comments().update(
             commentId,
             CommentUpdateParams(
                 content = content,
-                authorName = authorName,
-                authorEmail = authorEmail,
-                authorUrl = authorUrl
+                authorName = author.name,
+                authorEmail = author.email,
+                authorUrl = author.url
             )
         )
     }

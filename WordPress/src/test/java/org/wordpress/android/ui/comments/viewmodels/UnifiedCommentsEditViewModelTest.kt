@@ -8,7 +8,6 @@ import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
 import org.mockito.kotlin.any
-import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
@@ -237,7 +236,7 @@ class UnifiedCommentsEditViewModelTest : BaseUnitTest() {
         whenever(getCommentUseCase.execute(rsSite, remoteCommentId)).thenReturn(COMMENT_ENTITY)
         whenever(commentsStore.getCommentByLocalSiteAndRemoteId(rsSite.id, remoteCommentId))
             .thenReturn(listOf(COMMENT_ENTITY))
-        whenever(commentsRsDataSource.updateComment(any(), any(), any(), anyOrNull(), anyOrNull(), anyOrNull()))
+        whenever(commentsRsDataSource.updateComment(any(), any(), any(), any()))
             .thenReturn(RsResult.Success)
 
         viewModel.start(rsSite, siteCommentIdentifier)
@@ -249,9 +248,13 @@ class UnifiedCommentsEditViewModelTest : BaseUnitTest() {
             eq(rsSite),
             eq(remoteCommentId),
             eq(COMMENT_ENTITY.content!!),
-            eq(COMMENT_ENTITY.authorName!!),
-            eq(COMMENT_ENTITY.authorEmail!!),
-            eq(COMMENT_ENTITY.authorUrl!!)
+            eq(
+                CommentsRsDataSource.CommentAuthor(
+                    name = COMMENT_ENTITY.authorName!!,
+                    email = COMMENT_ENTITY.authorEmail!!,
+                    url = COMMENT_ENTITY.authorUrl!!
+                )
+            )
         )
         // Mirrored into the FluxC cache without the network updateEditComment path.
         verify(commentsStore).updateComment(eq(false), eq(COMMENT_ENTITY.id), any())
@@ -265,7 +268,7 @@ class UnifiedCommentsEditViewModelTest : BaseUnitTest() {
         whenever(getCommentUseCase.execute(rsSite, remoteCommentId)).thenReturn(COMMENT_ENTITY)
         whenever(commentsStore.getCommentByLocalSiteAndRemoteId(rsSite.id, remoteCommentId))
             .thenReturn(listOf(COMMENT_ENTITY))
-        whenever(commentsRsDataSource.updateComment(any(), any(), any(), anyOrNull(), anyOrNull(), anyOrNull()))
+        whenever(commentsRsDataSource.updateComment(any(), any(), any(), any()))
             .thenReturn(RsResult.Error("boom"))
 
         viewModel.start(rsSite, siteCommentIdentifier)
