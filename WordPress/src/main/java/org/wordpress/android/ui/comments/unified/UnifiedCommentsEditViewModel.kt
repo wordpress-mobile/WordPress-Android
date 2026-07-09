@@ -283,7 +283,7 @@ class UnifiedCommentsEditViewModel @Inject constructor(
         // Fall back to FluxC for sites rs can't serve — e.g. XML-RPC-only self-hosted comments
         // still reachable through the legacy detail/reader launch points.
         return if (canUseRs()) {
-            updateCommentViaRs(comment, editedCommentEssentials, updatedComment)
+            updateCommentViaRs(editedCommentEssentials, updatedComment)
         } else {
             !commentsStore.updateEditComment(site, updatedComment).isError
         }
@@ -297,7 +297,6 @@ class UnifiedCommentsEditViewModel @Inject constructor(
      * the unified comment detail uses for moderation.
      */
     private suspend fun updateCommentViaRs(
-        comment: CommentEntity,
         editedCommentEssentials: CommentEssentials,
         updatedComment: CommentEntity
     ): Boolean {
@@ -315,7 +314,7 @@ class UnifiedCommentsEditViewModel @Inject constructor(
         )
         if (result is RsResult.Error) return false
         // Local-only cache write (isError = false persists the entity without a network round-trip).
-        commentsStore.updateComment(isError = false, commentId = comment.id, comment = updatedComment)
+        commentsStore.updateComment(isError = false, commentId = updatedComment.id, comment = updatedComment)
         return true
     }
 
