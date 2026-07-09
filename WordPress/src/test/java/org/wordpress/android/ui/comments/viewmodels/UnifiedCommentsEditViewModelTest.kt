@@ -8,8 +8,10 @@ import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
 import org.mockito.kotlin.any
+import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
+import org.mockito.kotlin.never
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
@@ -27,6 +29,8 @@ import org.wordpress.android.fluxc.store.CommentsStore.CommentsData.CommentsActi
 import org.wordpress.android.models.ReaderComment
 import org.wordpress.android.models.usecases.LocalCommentCacheUpdateHandler
 import org.wordpress.android.ui.comments.unified.CommentEssentials
+import org.wordpress.android.ui.comments.unified.CommentsRsDataSource
+import org.wordpress.android.ui.comments.unified.CommentsRsDataSource.RsResult
 import org.wordpress.android.ui.comments.unified.CommentIdentifier.NotificationCommentIdentifier
 import org.wordpress.android.ui.comments.unified.CommentIdentifier.ReaderCommentIdentifier
 import org.wordpress.android.ui.comments.unified.CommentIdentifier.SiteCommentIdentifier
@@ -51,6 +55,9 @@ import org.wordpress.android.viewmodel.ResourceProvider
 class UnifiedCommentsEditViewModelTest : BaseUnitTest() {
     @Mock
     lateinit var commentsStore: CommentsStore
+
+    @Mock
+    lateinit var commentsRsDataSource: CommentsRsDataSource
 
     @Mock
     lateinit var resourceProvider: ResourceProvider
@@ -84,6 +91,13 @@ class UnifiedCommentsEditViewModelTest : BaseUnitTest() {
         siteId = REMOTE_SITE_ID
     }
 
+    // A WP.com site is served by wordpress-rs (isUsingWpComRestApi() is true), unlike [site].
+    private val rsSite = SiteModel().apply {
+        id = LOCAL_SITE_ID
+        siteId = REMOTE_SITE_ID
+        setIsWPCom(true)
+    }
+
     private val localCommentId = 1000
     private val remoteCommentId = 4321L
     private val postId = 678L
@@ -106,6 +120,7 @@ class UnifiedCommentsEditViewModelTest : BaseUnitTest() {
             mainDispatcher = testDispatcher(),
             bgDispatcher = testDispatcher(),
             commentsStore = commentsStore,
+            commentsRsDataSource = commentsRsDataSource,
             resourceProvider = resourceProvider,
             networkUtilsWrapper = networkUtilsWrapper,
             localCommentCacheUpdateHandler = localCommentCacheUpdateHandler,
@@ -218,6 +233,50 @@ class UnifiedCommentsEditViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `onActionMenuClicked saves via wordpress-rs and mirrors to cache for rs-capable site`() = test {
+        whenever(getCommentUseCase.execute(rsSite, remoteCommentId)).thenReturn(COMMENT_ENTITY)
+        whenever(commentsStore.getCommentByLocalSiteAndRemoteId(rsSite.id, remoteCommentId))
+            .thenReturn(listOf(COMMENT_ENTITY))
+        whenever(commentsRsDataSource.updateComment(any(), any(), any(), anyOrNull(), anyOrNull(), anyOrNull()))
+            .thenReturn(RsResult.Success)
+
+        viewModel.start(rsSite, siteCommentIdentifier)
+        viewModel.onActionMenuClicked()
+
+        // Content and author fields are all sent, matching the legacy POST (server ignores author
+        // identity for registered users).
+        verify(commentsRsDataSource).updateComment(
+            eq(rsSite),
+            eq(remoteCommentId),
+            eq(COMMENT_ENTITY.content!!),
+            eq(COMMENT_ENTITY.authorName!!),
+            eq(COMMENT_ENTITY.authorEmail!!),
+            eq(COMMENT_ENTITY.authorUrl!!)
+        )
+        // Mirrored into the FluxC cache without the network updateEditComment path.
+        verify(commentsStore).updateComment(eq(false), eq(COMMENT_ENTITY.id), any())
+        verify(commentsStore, never()).updateEditComment(any(), any())
+        assertThat(uiActionEvent.firstOrNull()).isEqualTo(DONE)
+        verify(localCommentCacheUpdateHandler).requestCommentsUpdate()
+    }
+
+    @Test
+    fun `onActionMenuClicked surfaces error and skips DONE when wordpress-rs update fails`() = test {
+        whenever(getCommentUseCase.execute(rsSite, remoteCommentId)).thenReturn(COMMENT_ENTITY)
+        whenever(commentsStore.getCommentByLocalSiteAndRemoteId(rsSite.id, remoteCommentId))
+            .thenReturn(listOf(COMMENT_ENTITY))
+        whenever(commentsRsDataSource.updateComment(any(), any(), any(), anyOrNull(), anyOrNull(), anyOrNull()))
+            .thenReturn(RsResult.Error("boom"))
+
+        viewModel.start(rsSite, siteCommentIdentifier)
+        viewModel.onActionMenuClicked()
+
+        assertThat(onSnackbarMessage.firstOrNull()).isNotNull
+        assertThat(uiActionEvent).doesNotContain(DONE)
+        verify(commentsStore, never()).updateComment(any(), any(), any())
+    }
+
+    @Test
     fun `onBackPressed triggers CLOSE when no edits`() {
         viewModel.start(site, siteCommentIdentifier)
         viewModel.onBackPressed()
@@ -246,9 +305,9 @@ class UnifiedCommentsEditViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `Should DISABLE edit name for a comment from registered user`() = test {
+    fun `Should ENABLE edit name for a comment from registered user`() = test {
         viewModel.start(site, siteCommentIdentifier)
-        assertThat(uiState.first().inputSettings.enableEditName).isFalse
+        assertThat(uiState.last().inputSettings.enableEditName).isTrue
     }
 
     @Test
@@ -261,9 +320,9 @@ class UnifiedCommentsEditViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `Should DISABLE edit URL for a comment from registered user`() = test {
+    fun `Should ENABLE edit URL for a comment from registered user`() = test {
         viewModel.start(site, siteCommentIdentifier)
-        assertThat(uiState.last().inputSettings.enableEditUrl).isFalse
+        assertThat(uiState.last().inputSettings.enableEditUrl).isTrue
     }
 
     @Test
@@ -276,9 +335,9 @@ class UnifiedCommentsEditViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `Should DISABLE edit email for a comment from registered user`() = test {
+    fun `Should ENABLE edit email for a comment from registered user`() = test {
         viewModel.start(site, siteCommentIdentifier)
-        assertThat(uiState.last().inputSettings.enableEditEmail).isFalse
+        assertThat(uiState.last().inputSettings.enableEditEmail).isTrue
     }
 
     @Test

@@ -14,6 +14,7 @@ import org.wordpress.android.fluxc.persistence.comments.CommentsDao.CommentEntit
 import org.wordpress.android.fluxc.store.CommentsStore
 import org.wordpress.android.models.usecases.LocalCommentCacheUpdateHandler
 import org.wordpress.android.modules.BG_THREAD
+import org.wordpress.android.ui.comments.unified.CommentsRsDataSource.RsResult
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.comments.unified.CommentIdentifier.NotificationCommentIdentifier
 import org.wordpress.android.ui.comments.unified.CommentIdentifier.ReaderCommentIdentifier
@@ -49,6 +50,7 @@ class UnifiedCommentsEditViewModel @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     private val commentsStore: CommentsStore,
+    private val commentsRsDataSource: CommentsRsDataSource,
     private val resourceProvider: ResourceProvider,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     private val localCommentCacheUpdateHandler: LocalCommentCacheUpdateHandler,
@@ -163,7 +165,7 @@ class UnifiedCommentsEditViewModel @Inject constructor(
             originalComment = CommentEssentials(),
             editedComment = CommentEssentials(),
             editErrorStrings = EditErrorStrings(),
-            inputSettings = mapInputSettings(CommentEssentials())
+            inputSettings = mapInputSettings()
         )
 
         withContext(mainDispatcher) {
@@ -220,7 +222,7 @@ class UnifiedCommentsEditViewModel @Inject constructor(
                         originalComment = commentEssentials,
                         editedComment = commentEssentials,
                         editErrorStrings = EditErrorStrings(),
-                        inputSettings = mapInputSettings(commentEssentials)
+                        inputSettings = mapInputSettings()
                     )
             } else {
                 _onSnackbarMessage.value = Event(SnackbarMessageHolder(
@@ -289,8 +291,43 @@ class UnifiedCommentsEditViewModel @Inject constructor(
             content = editedCommentEssentials.commentText
         )
 
-        val result = commentsStore.updateEditComment(site, updatedComment)
-        return !result.isError
+        // Prefer wordpress-rs, which can edit comments on both WP.com and self-hosted
+        // application-password sites (FluxC's updateEditComment can't reach app-password sites).
+        // Fall back to FluxC for sites rs can't serve — e.g. XML-RPC-only self-hosted comments
+        // still reachable through the legacy detail/reader launch points.
+        return if (canUseRs()) {
+            updateCommentViaRs(comment, editedCommentEssentials, updatedComment)
+        } else {
+            !commentsStore.updateEditComment(site, updatedComment).isError
+        }
+    }
+
+    private fun canUseRs(): Boolean = site.isUsingWpComRestApi || site.hasApplicationPassword()
+
+    /**
+     * Saves the edit through wordpress-rs and, on success, mirrors it into the FluxC cache so the
+     * still-FluxC comment list/notifications reflect the change — the same save-then-mirror pattern
+     * the unified comment detail uses for moderation.
+     */
+    private suspend fun updateCommentViaRs(
+        comment: CommentEntity,
+        editedCommentEssentials: CommentEssentials,
+        updatedComment: CommentEntity
+    ): Boolean {
+        // Send the author fields for every comment, matching the legacy FluxC POST. The endpoint
+        // applies them for anonymous comments and ignores them for registered users.
+        val result = commentsRsDataSource.updateComment(
+            site = site,
+            commentId = commentIdentifier.remoteCommentId,
+            content = editedCommentEssentials.commentText,
+            authorName = editedCommentEssentials.userName,
+            authorEmail = editedCommentEssentials.userEmail,
+            authorUrl = editedCommentEssentials.userUrl
+        )
+        if (result is RsResult.Error) return false
+        // Local-only cache write (isError = false persists the entity without a network round-trip).
+        commentsStore.updateComment(isError = false, commentId = comment.id, comment = updatedComment)
+        return true
     }
 
     private suspend fun updateNotificationEntity() {
@@ -374,10 +411,12 @@ class UnifiedCommentsEditViewModel @Inject constructor(
         }
     }
 
-    private fun mapInputSettings(commentEssentials: CommentEssentials) = InputSettings(
-        enableEditName = !commentEssentials.isFromRegisteredUser,
-        enableEditUrl = !commentEssentials.isFromRegisteredUser,
-        enableEditEmail = !commentEssentials.isFromRegisteredUser,
+    // Every field is editable for every comment, matching the legacy editor (which also POSTs
+    // author name/email/url for all comments).
+    private fun mapInputSettings() = InputSettings(
+        enableEditName = true,
+        enableEditUrl = true,
+        enableEditEmail = true,
         enableEditComment = true
     )
 
