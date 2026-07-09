@@ -1675,6 +1675,7 @@
     <string name="stats_error_not_authenticated">Not authenticated</string>
     <string name="stats_error_network">Network error. Please check your connection and try again</string>
     <string name="stats_error_parsing">There was a problem loading the data. Please try again</string>
+    <string name="stats_error_not_available">These stats aren\'t available for this site</string>
     <string name="stats_error_admin_url_unavailable">Unable to open WP Admin for this site</string>
 
     <!-- stats ring chart accessibility -->

@@ -971,13 +971,13 @@ class StatsDataSourceImpl @Inject constructor(
     ): Pair<String, StatsErrorType> = when (result) {
         is WpRequestResult.WpError -> {
             val statusCode = result.statusCode.toInt()
-            val errorType = if (
+            val errorType = when {
+                isStatsUnavailableForSite(result.response) ->
+                    StatsErrorType.NOT_AVAILABLE
                 statusCode == HTTP_FORBIDDEN ||
-                statusCode == HTTP_UNAUTHORIZED
-            ) {
-                StatsErrorType.AUTH_ERROR
-            } else {
-                StatsErrorType.API_ERROR
+                    statusCode == HTTP_UNAUTHORIZED ->
+                    StatsErrorType.AUTH_ERROR
+                else -> StatsErrorType.API_ERROR
             }
             "StatsDataSourceImpl: $methodName WpError " +
                 "(status=$statusCode) - ${result.errorMessage}" to
@@ -1007,6 +1007,18 @@ class StatsDataSourceImpl @Inject constructor(
             "StatsDataSourceImpl: $methodName " +
                 "InvalidHttpStatusCode - " +
                 "${result.statusCode}" to StatsErrorType.API_ERROR
+        }
+        is WpRequestResult.UnknownError<*> -> {
+            val errorType = if (
+                isStatsUnavailableForSite(result.response)
+            ) {
+                StatsErrorType.NOT_AVAILABLE
+            } else {
+                StatsErrorType.UNKNOWN
+            }
+            "StatsDataSourceImpl: $methodName UnknownError " +
+                "(status=${result.statusCode}) - " +
+                "${result.response}" to errorType
         }
         else -> {
             "StatsDataSourceImpl: $methodName " +

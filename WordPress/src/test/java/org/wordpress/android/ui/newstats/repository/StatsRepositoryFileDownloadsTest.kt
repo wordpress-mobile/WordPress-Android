@@ -370,6 +370,32 @@ class StatsRepositoryFileDownloadsTest : BaseUnitTest() {
         }
 
     @Test
+    fun `given not available error, when fetchFileDownloads, then correct message is returned`() =
+        test {
+            whenever(
+                statsDataSource.fetchFileDownloads(
+                    any(), any(), any()
+                )
+            ).thenReturn(
+                FileDownloadsDataResult.Error(
+                    StatsErrorType.NOT_AVAILABLE
+                )
+            )
+
+            val result = repository.fetchFileDownloads(
+                TEST_SITE_ID, StatsPeriod.Last7Days
+            )
+
+            assertThat(result).isInstanceOf(
+                FileDownloadsResult.Error::class.java
+            )
+            val error = result as FileDownloadsResult.Error
+            assertThat(error.messageResId)
+                .isEqualTo(R.string.stats_error_not_available)
+            assertThat(error.isAuthError).isFalse()
+        }
+
+    @Test
     fun `given unknown error, when fetchFileDownloads, then correct message is returned`() =
         test {
             whenever(

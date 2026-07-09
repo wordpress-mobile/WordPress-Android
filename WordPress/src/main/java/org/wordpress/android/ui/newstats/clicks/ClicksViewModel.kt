@@ -49,7 +49,8 @@ class ClicksViewModel @Inject constructor(
             is ClicksResult.Error -> {
                 StatsCardFetchResult.Error(
                     messageResId = result.messageResId,
-                    isAuthError = result.isAuthError
+                    isAuthError = result.isAuthError,
+                    isNotAvailable = result.isNotAvailable
                 )
             }
         }

@@ -24,6 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
@@ -365,10 +366,11 @@ private fun ErrorContent(
             Text(
                 text = state.message,
                 style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.error
+                color = MaterialTheme.colorScheme.error,
+                textAlign = TextAlign.Center
             )
-            Spacer(modifier = Modifier.height(16.dp))
             if (onOpenWpAdmin != null) {
+                Spacer(modifier = Modifier.height(16.dp))
                 Button(onClick = onOpenWpAdmin) {
                     Text(
                         text = stringResource(
@@ -376,7 +378,8 @@ private fun ErrorContent(
                         )
                     )
                 }
-            } else {
+            } else if (!state.isNotAvailable) {
+                Spacer(modifier = Modifier.height(16.dp))
                 Button(onClick = onRetry) {
                     Text(text = stringResource(R.string.retry))
                 }
