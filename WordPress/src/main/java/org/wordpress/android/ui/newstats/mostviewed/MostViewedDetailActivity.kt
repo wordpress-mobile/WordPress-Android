@@ -235,7 +235,6 @@ private fun MostViewedDetailScreen(
                 message = uiState.message,
                 onRetry = onRetry,
                 onOpenWpAdmin = if (uiState.isAuthError) onOpenWpAdmin else null,
-                showRetry = !uiState.isNotAvailable,
                 modifier = contentModifier
             )
             is MostViewedDetailUiState.Loaded -> DetailLoadedContent(
@@ -317,7 +316,6 @@ private fun DetailErrorContent(
     message: String,
     onRetry: () -> Unit,
     modifier: Modifier = Modifier,
-    showRetry: Boolean = true,
     onOpenWpAdmin: (() -> Unit)? = null
 ) {
     Column(
@@ -331,13 +329,12 @@ private fun DetailErrorContent(
             color = MaterialTheme.colorScheme.error,
             textAlign = TextAlign.Center
         )
+        Spacer(modifier = Modifier.height(16.dp))
         if (onOpenWpAdmin != null) {
-            Spacer(modifier = Modifier.height(16.dp))
             Button(onClick = onOpenWpAdmin) {
                 Text(text = stringResource(R.string.my_site_btn_wp_admin))
             }
-        } else if (showRetry) {
-            Spacer(modifier = Modifier.height(16.dp))
+        } else {
             Button(onClick = onRetry) {
                 Text(text = stringResource(R.string.retry))
             }

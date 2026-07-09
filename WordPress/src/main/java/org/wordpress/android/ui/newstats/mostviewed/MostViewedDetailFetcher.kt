@@ -70,7 +70,7 @@ class MostViewedDetailFetcher @Inject constructor(
             totalValueChange = totalClicksChange,
             totalValueChangePercent = totalClicksChangePercent
         )
-        is ClicksResult.Error -> StatsCardFetchResult.Error(messageResId, isAuthError, isNotAvailable)
+        is ClicksResult.Error -> StatsCardFetchResult.Error(messageResId, isAuthError)
     }
 
     private fun SearchTermsResult.toFetchResult() = when (this) {
@@ -80,7 +80,7 @@ class MostViewedDetailFetcher @Inject constructor(
             totalValueChange = totalViewsChange,
             totalValueChangePercent = totalViewsChangePercent
         )
-        is SearchTermsResult.Error -> StatsCardFetchResult.Error(messageResId, isAuthError, isNotAvailable)
+        is SearchTermsResult.Error -> StatsCardFetchResult.Error(messageResId, isAuthError)
     }
 
     private fun VideoPlaysResult.toFetchResult() = when (this) {
@@ -90,7 +90,7 @@ class MostViewedDetailFetcher @Inject constructor(
             totalValueChange = totalViewsChange,
             totalValueChangePercent = totalViewsChangePercent
         )
-        is VideoPlaysResult.Error -> StatsCardFetchResult.Error(messageResId, isAuthError, isNotAvailable)
+        is VideoPlaysResult.Error -> StatsCardFetchResult.Error(messageResId, isAuthError)
     }
 
     private fun FileDownloadsResult.toFetchResult() = when (this) {
@@ -100,7 +100,7 @@ class MostViewedDetailFetcher @Inject constructor(
             totalValueChange = totalDownloadsChange,
             totalValueChangePercent = totalDownloadsChangePercent
         )
-        is FileDownloadsResult.Error -> StatsCardFetchResult.Error(messageResId, isAuthError, isNotAvailable)
+        is FileDownloadsResult.Error -> StatsCardFetchResult.Error(messageResId, isAuthError)
     }
 
     private fun ClickItemData.toDetailItem(id: Long) = MostViewedDetailItem(
