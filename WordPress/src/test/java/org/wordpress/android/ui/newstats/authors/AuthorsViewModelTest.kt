@@ -20,7 +20,6 @@ import org.wordpress.android.ui.newstats.components.StatsViewChange
 import org.wordpress.android.ui.newstats.repository.StatsRepository
 import org.wordpress.android.ui.newstats.repository.TopAuthorItemData
 import org.wordpress.android.ui.newstats.repository.TopAuthorsResult
-import org.wordpress.android.viewmodel.ResourceProvider
 
 @ExperimentalCoroutinesApi
 class AuthorsViewModelTest : BaseUnitTest() {
@@ -32,9 +31,6 @@ class AuthorsViewModelTest : BaseUnitTest() {
 
     @Mock
     private lateinit var statsRepository: StatsRepository
-
-    @Mock
-    private lateinit var resourceProvider: ResourceProvider
 
     private lateinit var viewModel: AuthorsViewModel
 
@@ -54,8 +50,7 @@ class AuthorsViewModelTest : BaseUnitTest() {
         viewModel = AuthorsViewModel(
             selectedSiteRepository,
             accountStore,
-            statsRepository,
-            resourceProvider
+            statsRepository
         )
         viewModel.onPeriodChanged(StatsPeriod.Last7Days)
     }
@@ -340,57 +335,6 @@ class AuthorsViewModelTest : BaseUnitTest() {
 
         // Called twice: once during init, once during retry
         verify(statsRepository, times(2)).fetchTopAuthors(any(), any())
-    }
-    // endregion
-
-    // region getDetailData
-    @Test
-    fun `when getDetailData is called, then returns cached data`() = test {
-        whenever(statsRepository.fetchTopAuthors(any(), any()))
-            .thenReturn(createSuccessResult())
-        whenever(resourceProvider.getString(R.string.stats_period_last_7_days))
-            .thenReturn("Last 7 days")
-
-        initViewModel()
-        advanceUntilIdle()
-
-        val detailData = viewModel.getDetailData()
-
-        assertThat(detailData.authors).hasSize(2)
-        assertThat(detailData.totalViews).isEqualTo(TEST_TOTAL_VIEWS)
-        assertThat(detailData.totalViewsChange).isEqualTo(TEST_TOTAL_VIEWS_CHANGE)
-        assertThat(detailData.totalViewsChangePercent).isEqualTo(TEST_TOTAL_VIEWS_CHANGE_PERCENT)
-        assertThat(detailData.dateRange).isEqualTo("Last 7 days")
-    }
-
-    @Test
-    fun `when getDetailData is called, then all authors are returned not just card items`() = test {
-        val manyAuthors = (1..15).map { index ->
-            TopAuthorItemData(
-                name = "Author $index",
-                avatarUrl = "https://example.com/avatar$index.jpg",
-                views = (100 - index).toLong(),
-                previousViews = (90 - index).toLong()
-            )
-        }
-        whenever(resourceProvider.getString(R.string.stats_period_last_7_days))
-            .thenReturn("Last 7 days")
-        whenever(statsRepository.fetchTopAuthors(any(), any()))
-            .thenReturn(
-                TopAuthorsResult.Success(
-                    authors = manyAuthors,
-                    totalViews = 1000,
-                    totalViewsChange = 100,
-                    totalViewsChangePercent = 10.0
-                )
-            )
-
-        initViewModel()
-        advanceUntilIdle()
-
-        val detailData = viewModel.getDetailData()
-        // Card shows max 10, but detail data should have all 15
-        assertThat(detailData.authors).hasSize(15)
     }
     // endregion
 

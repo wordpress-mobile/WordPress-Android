@@ -36,12 +36,14 @@ class MostViewedDetailViewModelTest : BaseUnitTest() {
     @Mock
     private lateinit var resourceProvider: ResourceProvider
 
+    private lateinit var detailFetcher: MostViewedDetailFetcher
     private lateinit var viewModel: MostViewedDetailViewModel
 
     private val testSite = SiteModel().apply {
         id = 1
         siteId = TEST_SITE_ID
         name = "Test Site"
+        adminUrl = TEST_ADMIN_URL
     }
 
     @Before
@@ -51,19 +53,20 @@ class MostViewedDetailViewModelTest : BaseUnitTest() {
         whenever(resourceProvider.getString(R.string.stats_period_last_7_days)).thenReturn(DATE_RANGE)
         whenever(resourceProvider.getString(R.string.stats_error_api)).thenReturn(API_ERROR)
         whenever(resourceProvider.getString(R.string.stats_error_unknown)).thenReturn(UNKNOWN_ERROR)
+        detailFetcher = MostViewedDetailFetcher(statsRepository)
         viewModel = MostViewedDetailViewModel(
             selectedSiteRepository,
             accountStore,
-            statsRepository,
+            detailFetcher,
             resourceProvider
         )
     }
 
     @Test
-    fun `when loadReferrers succeeds, then loaded state with items and totals is emitted`() = test {
+    fun `when load succeeds, then loaded state with items and totals is emitted`() = test {
         whenever(statsRepository.fetchReferrersDetail(any(), any())).thenReturn(createSuccessResult())
 
-        viewModel.loadReferrers(StatsPeriod.Last7Days)
+        viewModel.load(MostViewedDetailSource.REFERRERS, StatsPeriod.Last7Days)
         advanceUntilIdle()
 
         val state = viewModel.uiState.value
@@ -79,10 +82,10 @@ class MostViewedDetailViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `when loadReferrers succeeds, then child items propagate to the loaded state`() = test {
+    fun `when load succeeds, then child items propagate to the loaded state`() = test {
         whenever(statsRepository.fetchReferrersDetail(any(), any())).thenReturn(createSuccessResult())
 
-        viewModel.loadReferrers(StatsPeriod.Last7Days)
+        viewModel.load(MostViewedDetailSource.REFERRERS, StatsPeriod.Last7Days)
         advanceUntilIdle()
 
         val loaded = viewModel.uiState.value as MostViewedDetailUiState.Loaded
@@ -93,10 +96,37 @@ class MostViewedDetailViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `when the source is clicks, then the clicks fetch backs the loaded state`() = test {
+        whenever(statsRepository.fetchClicks(any(), any())).thenReturn(
+            org.wordpress.android.ui.newstats.repository.ClicksResult.Success(
+                items = listOf(
+                    org.wordpress.android.ui.newstats.repository.ClickItemData(
+                        name = "example.com",
+                        clicks = TEST_VIEWS,
+                        previousClicks = TEST_PREVIOUS_VIEWS
+                    )
+                ),
+                totalClicks = TEST_TOTAL_VIEWS,
+                totalClicksChange = TEST_TOTAL_VIEWS_CHANGE,
+                totalClicksChangePercent = TEST_TOTAL_VIEWS_CHANGE_PERCENT
+            )
+        )
+
+        viewModel.load(MostViewedDetailSource.CLICKS, StatsPeriod.Last7Days)
+        advanceUntilIdle()
+
+        val loaded = viewModel.uiState.value as MostViewedDetailUiState.Loaded
+        assertThat(loaded.items).hasSize(1)
+        assertThat(loaded.items[0].title).isEqualTo("example.com")
+        assertThat(loaded.totalViews).isEqualTo(TEST_TOTAL_VIEWS)
+        verify(statsRepository, never()).fetchReferrersDetail(any(), any())
+    }
+
+    @Test
     fun `when no site is selected, then error state is emitted and no fetch happens`() = test {
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(null)
 
-        viewModel.loadReferrers(StatsPeriod.Last7Days)
+        viewModel.load(MostViewedDetailSource.REFERRERS, StatsPeriod.Last7Days)
         advanceUntilIdle()
 
         val state = viewModel.uiState.value
@@ -109,7 +139,7 @@ class MostViewedDetailViewModelTest : BaseUnitTest() {
     fun `when access token is empty, then error state is emitted and no fetch happens`() = test {
         whenever(accountStore.accessToken).thenReturn("")
 
-        viewModel.loadReferrers(StatsPeriod.Last7Days)
+        viewModel.load(MostViewedDetailSource.REFERRERS, StatsPeriod.Last7Days)
         advanceUntilIdle()
 
         val state = viewModel.uiState.value
@@ -123,7 +153,7 @@ class MostViewedDetailViewModelTest : BaseUnitTest() {
         whenever(statsRepository.fetchReferrersDetail(any(), any()))
             .thenReturn(MostViewedResult.Error("Network error"))
 
-        viewModel.loadReferrers(StatsPeriod.Last7Days)
+        viewModel.load(MostViewedDetailSource.REFERRERS, StatsPeriod.Last7Days)
         advanceUntilIdle()
 
         val state = viewModel.uiState.value
@@ -132,11 +162,33 @@ class MostViewedDetailViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `when the fetch returns an auth error, then the error state carries the auth flag`() = test {
+        whenever(statsRepository.fetchClicks(any(), any())).thenReturn(
+            org.wordpress.android.ui.newstats.repository.ClicksResult.Error(
+                R.string.stats_error_api,
+                isAuthError = true
+            )
+        )
+
+        viewModel.load(MostViewedDetailSource.CLICKS, StatsPeriod.Last7Days)
+        advanceUntilIdle()
+
+        val state = viewModel.uiState.value as MostViewedDetailUiState.Error
+        assertThat(state.message).isEqualTo(API_ERROR)
+        assertThat(state.isAuthError).isTrue()
+    }
+
+    @Test
+    fun `when getAdminUrl is called, then the selected site's admin url is returned`() {
+        assertThat(viewModel.getAdminUrl()).isEqualTo(TEST_ADMIN_URL)
+    }
+
+    @Test
     fun `when the fetch throws, then the generic unknown error state is emitted`() = test {
         whenever(statsRepository.fetchReferrersDetail(any(), any()))
             .thenThrow(RuntimeException(EXCEPTION_MESSAGE))
 
-        viewModel.loadReferrers(StatsPeriod.Last7Days)
+        viewModel.load(MostViewedDetailSource.REFERRERS, StatsPeriod.Last7Days)
         advanceUntilIdle()
 
         val state = viewModel.uiState.value
@@ -145,12 +197,12 @@ class MostViewedDetailViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `when loadReferrers is called twice, then the data is fetched only once`() = test {
+    fun `when load is called twice, then the data is fetched only once`() = test {
         whenever(statsRepository.fetchReferrersDetail(any(), any())).thenReturn(createSuccessResult())
 
-        viewModel.loadReferrers(StatsPeriod.Last7Days)
+        viewModel.load(MostViewedDetailSource.REFERRERS, StatsPeriod.Last7Days)
         advanceUntilIdle()
-        viewModel.loadReferrers(StatsPeriod.Last7Days)
+        viewModel.load(MostViewedDetailSource.REFERRERS, StatsPeriod.Last7Days)
         advanceUntilIdle()
 
         verify(statsRepository, times(1)).fetchReferrersDetail(any(), any())
@@ -160,7 +212,7 @@ class MostViewedDetailViewModelTest : BaseUnitTest() {
     fun `when retry is called after a load, then the data is fetched again`() = test {
         whenever(statsRepository.fetchReferrersDetail(any(), any())).thenReturn(createSuccessResult())
 
-        viewModel.loadReferrers(StatsPeriod.Last7Days)
+        viewModel.load(MostViewedDetailSource.REFERRERS, StatsPeriod.Last7Days)
         advanceUntilIdle()
         viewModel.retry()
         advanceUntilIdle()
@@ -189,6 +241,7 @@ class MostViewedDetailViewModelTest : BaseUnitTest() {
     companion object {
         private const val TEST_SITE_ID = 123L
         private const val TEST_ACCESS_TOKEN = "test_access_token"
+        private const val TEST_ADMIN_URL = "https://example.com/wp-admin"
         private const val DATE_RANGE = "Last 7 days"
         private const val API_ERROR = "Failed to load stats"
         private const val UNKNOWN_ERROR = "Something went wrong"
