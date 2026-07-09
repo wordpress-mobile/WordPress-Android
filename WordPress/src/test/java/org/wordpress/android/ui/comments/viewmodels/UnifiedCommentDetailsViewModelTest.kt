@@ -10,10 +10,14 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.atLeastOnce
 import org.mockito.kotlin.doSuspendableAnswer
 import org.mockito.kotlin.eq
+import org.mockito.kotlin.mock
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
+import org.mockito.kotlin.verifyNoInteractions
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
+import org.wordpress.android.datasets.wrappers.NotificationsTableWrapper
+import org.wordpress.android.fluxc.model.CommentStatus
 import org.wordpress.android.fluxc.model.CommentStatus.APPROVED
 import org.wordpress.android.fluxc.model.CommentStatus.SPAM
 import org.wordpress.android.fluxc.model.CommentStatus.TRASH
@@ -23,18 +27,21 @@ import org.wordpress.android.fluxc.persistence.comments.CommentsDao.CommentEntit
 import org.wordpress.android.fluxc.store.CommentsStore
 import org.wordpress.android.fluxc.store.CommentsStore.CommentsActionPayload
 import org.wordpress.android.fluxc.store.CommentsStore.CommentsData.CommentsActionData
+import org.wordpress.android.models.Note
 import org.wordpress.android.models.usecases.LocalCommentCacheUpdateHandler
 import org.wordpress.android.ui.comments.unified.CommentDetailsActionEvent
 import org.wordpress.android.ui.comments.unified.CommentDetailsActionEvent.Close
 import org.wordpress.android.ui.comments.unified.CommentDetailsActionEvent.LaunchEditComment
 import org.wordpress.android.ui.comments.unified.CommentDetailsActionEvent.OpenPostInReader
 import org.wordpress.android.ui.comments.unified.CommentDetailsActionEvent.ReplySent
+import org.wordpress.android.ui.comments.unified.CommentIdentifier.NotificationCommentIdentifier
 import org.wordpress.android.ui.comments.unified.CommentIdentifier.SiteCommentIdentifier
 import org.wordpress.android.ui.comments.unified.CommentsRsDataSource
 import org.wordpress.android.ui.comments.unified.CommentsRsDataSource.RsComment
 import org.wordpress.android.ui.comments.unified.CommentsRsDataSource.RsResult
 import org.wordpress.android.ui.comments.unified.UnifiedCommentDetailsViewModel
 import org.wordpress.android.ui.comments.unified.UnifiedCommentDetailsViewModel.CommentDetailsUiState
+import org.wordpress.android.ui.notifications.utils.NotificationsActionsWrapper
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.DateTimeUtilsWrapper
@@ -58,11 +65,18 @@ class UnifiedCommentDetailsViewModelTest : BaseUnitTest() {
     @Mock
     lateinit var dateTimeUtilsWrapper: DateTimeUtilsWrapper
 
+    @Mock
+    lateinit var notificationsActionsWrapper: NotificationsActionsWrapper
+
+    @Mock
+    lateinit var notificationsTableWrapper: NotificationsTableWrapper
+
     private lateinit var viewModel: UnifiedCommentDetailsViewModel
 
     private val uiStates = mutableListOf<CommentDetailsUiState>()
     private val uiActionEvents = mutableListOf<CommentDetailsActionEvent>()
     private val snackbarMessages = mutableListOf<SnackbarMessageHolder>()
+    private val moderatedStatuses = mutableListOf<CommentStatus>()
 
     private val site = SiteModel().apply {
         id = LOCAL_SITE_ID
@@ -81,6 +95,7 @@ class UnifiedCommentDetailsViewModelTest : BaseUnitTest() {
         whenever(commentsStore.likeComment(eq(site), eq(REMOTE_COMMENT_ID), eq(null), any()))
             .thenReturn(successPayload())
         whenever(dateTimeUtilsWrapper.javaDateToTimeSpan(any())).thenReturn("2 hours ago")
+        whenever(notificationsActionsWrapper.downloadNoteAndUpdateDB(any())).thenReturn(true)
 
         viewModel = UnifiedCommentDetailsViewModel(
             mainDispatcher = testDispatcher(),
@@ -89,7 +104,9 @@ class UnifiedCommentDetailsViewModelTest : BaseUnitTest() {
             commentsStore = commentsStore,
             localCommentCacheUpdateHandler = localCommentCacheUpdateHandler,
             networkUtilsWrapper = networkUtilsWrapper,
-            dateTimeUtilsWrapper = dateTimeUtilsWrapper
+            dateTimeUtilsWrapper = dateTimeUtilsWrapper,
+            notificationsActionsWrapper = notificationsActionsWrapper,
+            notificationsTableWrapper = notificationsTableWrapper
         )
 
         setupObservers()
@@ -355,14 +372,94 @@ class UnifiedCommentDetailsViewModelTest : BaseUnitTest() {
         assertThat(uiStates.last().status).isEqualTo(APPROVED)
     }
 
+    @Test
+    fun `onEditClicked uses the note identifier in note mode`() = test {
+        viewModel.start(site, REMOTE_COMMENT_ID, NOTE_ID)
+
+        viewModel.onEditClicked()
+
+        val event = uiActionEvents.last()
+        assertThat((event as LaunchEditComment).commentIdentifier)
+            .isEqualTo(NotificationCommentIdentifier(NOTE_ID, REMOTE_COMMENT_ID))
+    }
+
+    @Test
+    fun `moderation in note mode refreshes the note and fires commentModerated`() = test {
+        viewModel.start(site, REMOTE_COMMENT_ID, NOTE_ID)
+
+        viewModel.onApproveClicked()
+
+        verify(notificationsActionsWrapper).downloadNoteAndUpdateDB(NOTE_ID)
+        assertThat(moderatedStatuses).containsExactly(UNAPPROVED)
+    }
+
+    @Test
+    fun `failed moderation in note mode neither refreshes the note nor fires commentModerated`() = test {
+        whenever(commentsRsDataSource.updateStatus(eq(site), eq(REMOTE_COMMENT_ID), any()))
+            .thenReturn(RsResult.Error("nope"))
+        viewModel.start(site, REMOTE_COMMENT_ID, NOTE_ID)
+
+        viewModel.onApproveClicked()
+
+        verifyNoInteractions(notificationsActionsWrapper)
+        assertThat(moderatedStatuses).isEmpty()
+    }
+
+    @Test
+    fun `moderation without a note does not touch the notification wrappers`() = test {
+        viewModel.start(site, REMOTE_COMMENT_ID)
+
+        viewModel.onApproveClicked()
+
+        verifyNoInteractions(notificationsActionsWrapper)
+        verifyNoInteractions(notificationsTableWrapper)
+        assertThat(moderatedStatuses).isEmpty()
+    }
+
+    @Test
+    fun `like in note mode refreshes the note`() = test {
+        viewModel.start(site, REMOTE_COMMENT_ID, NOTE_ID)
+
+        viewModel.onLikeClicked()
+
+        verify(notificationsActionsWrapper).downloadNoteAndUpdateDB(NOTE_ID)
+    }
+
+    @Test
+    fun `replying to an unapproved comment in note mode fires commentModerated with approved`() = test {
+        whenever(commentsRsDataSource.getComment(site, REMOTE_COMMENT_ID)).thenReturn(UNAPPROVED_RS_COMMENT)
+        viewModel.start(site, REMOTE_COMMENT_ID, NOTE_ID)
+
+        viewModel.onReplyClicked("nice post")
+
+        assertThat(moderatedStatuses).containsExactly(APPROVED)
+    }
+
+    @Test
+    fun `like state falls back to the note when the comment has no cache row`() = test {
+        val note = mock<Note>()
+        whenever(note.hasLikedComment()).thenReturn(true)
+        whenever(notificationsTableWrapper.getNoteById(NOTE_ID)).thenReturn(note)
+        whenever(commentsStore.getCommentByLocalSiteAndRemoteId(LOCAL_SITE_ID, REMOTE_COMMENT_ID))
+            .thenReturn(emptyList())
+        whenever(commentsRsDataSource.fetchPostTitles(site, listOf(REMOTE_POST_ID)))
+            .thenReturn(emptyMap())
+
+        viewModel.start(site, REMOTE_COMMENT_ID, NOTE_ID)
+
+        assertThat(uiStates.last().isLiked).isTrue
+    }
+
     private fun setupObservers() {
         uiStates.clear()
         uiActionEvents.clear()
         snackbarMessages.clear()
+        moderatedStatuses.clear()
 
         viewModel.uiState.observeForever { uiStates.add(it) }
         viewModel.uiActionEvent.observeForever { it.applyIfNotHandled { uiActionEvents.add(this) } }
         viewModel.onSnackbarMessage.observeForever { it.applyIfNotHandled { snackbarMessages.add(this) } }
+        viewModel.commentModerated.observeForever { it.applyIfNotHandled { moderatedStatuses.add(this) } }
     }
 
     private fun successPayload() = CommentsActionPayload(CommentsActionData(emptyList(), 0))
@@ -374,6 +471,7 @@ class UnifiedCommentDetailsViewModelTest : BaseUnitTest() {
         private const val REMOTE_COMMENT_ID = 4321L
         private const val REMOTE_POST_ID = 99L
         private const val LOAD_DELAY_MS = 1000L
+        private const val NOTE_ID = "note_5555"
 
         private val RS_COMMENT = RsComment(
             remoteCommentId = REMOTE_COMMENT_ID,
