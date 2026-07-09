@@ -133,16 +133,6 @@ class UnifiedCommentsEditViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `watchers are init on view recreation`() {
-        viewModel.start(site, siteCommentIdentifier)
-
-        viewModel.start(site, siteCommentIdentifier)
-
-        assertThat(uiState.first().shouldInitWatchers).isFalse
-        assertThat(uiState.last().shouldInitWatchers).isTrue
-    }
-
-    @Test
     fun `Should display error SnackBar if mapped CommentEssentials is NOT VALID`() = test {
         whenever(getCommentUseCase.execute(site, remoteCommentId))
             .thenReturn(null)

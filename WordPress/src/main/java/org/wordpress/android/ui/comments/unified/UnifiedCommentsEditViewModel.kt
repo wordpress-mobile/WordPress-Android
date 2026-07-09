@@ -80,15 +80,20 @@ class UnifiedCommentsEditViewModel @Inject constructor(
     )
 
     data class EditCommentUiState(
-        val canSaveChanges: Boolean,
-        val shouldInitComment: Boolean,
-        val shouldInitWatchers: Boolean,
+        val canSaveChanges: Boolean = false,
         val showProgress: Boolean = false,
         val progressText: UiString? = null,
-        val originalComment: CommentEssentials,
-        val editedComment: CommentEssentials,
-        val editErrorStrings: EditErrorStrings,
-        val inputSettings: InputSettings
+        val originalComment: CommentEssentials = CommentEssentials(),
+        val editedComment: CommentEssentials = CommentEssentials(),
+        val editErrorStrings: EditErrorStrings = EditErrorStrings(),
+        // Every field is editable for every comment, matching the legacy editor (which also POSTs
+        // author name/email/url for all comments).
+        val inputSettings: InputSettings = InputSettings(
+            enableEditName = true,
+            enableEditUrl = true,
+            enableEditEmail = true,
+            enableEditComment = true
+        )
     )
 
     data class InputSettings(
@@ -141,12 +146,7 @@ class UnifiedCommentsEditViewModel @Inject constructor(
     }
 
     fun start(site: SiteModel, commentIdentifier: CommentIdentifier) {
-        if (isStarted) {
-            // If we are here, the fragment view was recreated (like in a configuration change)
-            // so we reattach the watchers.
-            _uiState.value = _uiState.value?.copy(shouldInitWatchers = true)
-            return
-        }
+        if (isStarted) return
         isStarted = true
 
         this.site = site
@@ -156,17 +156,9 @@ class UnifiedCommentsEditViewModel @Inject constructor(
     }
 
     private suspend fun setLoadingState(state: ProgressState) {
-        val uiState = _uiState.value ?: EditCommentUiState(
-            canSaveChanges = false,
-            shouldInitComment = false,
-            shouldInitWatchers = false,
-            showProgress = LOADING.show,
-            progressText = LOADING.progressText,
-            originalComment = CommentEssentials(),
-            editedComment = CommentEssentials(),
-            editErrorStrings = EditErrorStrings(),
-            inputSettings = mapInputSettings()
-        )
+        // showProgress/progressText are overwritten by the copy below, so the fallback only needs
+        // the default field values.
+        val uiState = _uiState.value ?: EditCommentUiState()
 
         withContext(mainDispatcher) {
             _uiState.value = uiState.copy(
@@ -214,15 +206,10 @@ class UnifiedCommentsEditViewModel @Inject constructor(
             if (commentEssentials.isValid()) {
                 _uiState.value =
                     EditCommentUiState(
-                        canSaveChanges = false,
-                        shouldInitComment = true,
-                        shouldInitWatchers = true,
                         showProgress = LOADING.show,
                         progressText = LOADING.progressText,
                         originalComment = commentEssentials,
-                        editedComment = commentEssentials,
-                        editErrorStrings = EditErrorStrings(),
-                        inputSettings = mapInputSettings()
+                        editedComment = commentEssentials
                     )
             } else {
                 _onSnackbarMessage.value = Event(SnackbarMessageHolder(
@@ -405,22 +392,11 @@ class UnifiedCommentsEditViewModel @Inject constructor(
 
             _uiState.value = it.copy(
                 canSaveChanges = editedComment.isNotEqualTo(it.originalComment) && !errors.hasError(),
-                shouldInitComment = false,
-                shouldInitWatchers = false,
                 editedComment = editedComment,
                 editErrorStrings = errors
             )
         }
     }
-
-    // Every field is editable for every comment, matching the legacy editor (which also POSTs
-    // author name/email/url for all comments).
-    private fun mapInputSettings() = InputSettings(
-        enableEditName = true,
-        enableEditUrl = true,
-        enableEditEmail = true,
-        enableEditComment = true
-    )
 
     private fun EditErrorStrings.hasError(): Boolean {
         return listOf(

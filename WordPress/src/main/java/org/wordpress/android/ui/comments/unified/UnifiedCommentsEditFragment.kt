@@ -73,23 +73,7 @@ class UnifiedCommentsEditFragment : Fragment() {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
             setContent {
                 AppThemeM3 {
-                    val uiState by viewModel.uiState.observeAsState(
-                        EditCommentUiState(
-                            canSaveChanges = false,
-                            shouldInitComment = false,
-                            shouldInitWatchers = false,
-                            showProgress = true,
-                            originalComment = CommentEssentials(),
-                            editedComment = CommentEssentials(),
-                            editErrorStrings = UnifiedCommentsEditViewModel.EditErrorStrings(),
-                            inputSettings = UnifiedCommentsEditViewModel.InputSettings(
-                                enableEditName = false,
-                                enableEditUrl = false,
-                                enableEditEmail = false,
-                                enableEditComment = false
-                            )
-                        )
-                    )
+                    val uiState by viewModel.uiState.observeAsState(EditCommentUiState(showProgress = true))
                     UnifiedCommentEditScreen(
                         uiState = uiState,
                         snackbarHostState = snackbarHostState,
