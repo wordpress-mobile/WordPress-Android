@@ -290,21 +290,26 @@ class UnifiedCommentDetailsFragment : Fragment() {
         val message = uiHelpers.getTextOfUiString(context, holder.message).toString()
         val actionLabel = holder.buttonTitle?.let { uiHelpers.getTextOfUiString(context, it).toString() }
         viewLifecycleOwner.lifecycleScope.launch {
-            val result = snackbarHostState.showSnackbar(
-                message = message,
-                actionLabel = actionLabel,
-                duration = holder.duration.toSnackbarDuration()
-            )
-            // Forward the real dismiss reason to onDismissAction so holders that branch on the
-            // event code (e.g. an undo that only commits when the message times out) behave like
-            // the legacy Snackbar callback.
-            val dismissEvent = if (result == SnackbarResult.ActionPerformed) {
-                holder.buttonAction()
-                BaseCallback.DISMISS_EVENT_ACTION
-            } else {
-                BaseCallback.DISMISS_EVENT_TIMEOUT
+            // MANUAL is reported when the view is torn down (e.g. rotation) while the snackbar is
+            // still showing: cancellation skips the try body, but the finally block still fires
+            // onDismissAction, matching the legacy Snackbar callback which fired on view detach.
+            // That matters for the load-error snackbar, whose dismiss action closes the screen.
+            var dismissEvent = BaseCallback.DISMISS_EVENT_MANUAL
+            try {
+                val result = snackbarHostState.showSnackbar(
+                    message = message,
+                    actionLabel = actionLabel,
+                    duration = holder.duration.toSnackbarDuration()
+                )
+                dismissEvent = if (result == SnackbarResult.ActionPerformed) {
+                    holder.buttonAction()
+                    BaseCallback.DISMISS_EVENT_ACTION
+                } else {
+                    BaseCallback.DISMISS_EVENT_TIMEOUT
+                }
+            } finally {
+                holder.onDismissAction(dismissEvent)
             }
-            holder.onDismissAction(dismissEvent)
         }
     }
 

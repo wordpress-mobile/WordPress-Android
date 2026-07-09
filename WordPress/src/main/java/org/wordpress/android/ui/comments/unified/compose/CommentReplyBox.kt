@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -27,17 +26,20 @@ import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextRange
-import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
@@ -67,10 +69,15 @@ fun CommentReplyBox(
     modifier: Modifier = Modifier
 ) {
     val focusRequester = remember { FocusRequester() }
+    var isReplyFieldFocused by remember { mutableStateOf(false) }
     val canSend = replyText.text.isNotBlank() && !isReplyInProgress
 
     Column(modifier = modifier.fillMaxWidth()) {
-        MentionSuggestionPanel(replyText, suggestions, onReplyTextChange)
+        // Only suggest mentions while the field is focused, so a restored draft that happens to
+        // end in an @-token doesn't pop the panel the moment the screen opens.
+        if (isReplyFieldFocused) {
+            MentionSuggestionPanel(replyText, suggestions, onReplyTextChange)
+        }
         HorizontalDivider()
         Row(verticalAlignment = Alignment.CenterVertically) {
             IconButton(onClick = onExpandClick) {
@@ -85,11 +92,10 @@ fun CommentReplyBox(
                 onReplyTextChange = onReplyTextChange,
                 hint = hint,
                 enabled = !isReplyInProgress,
-                canSend = canSend,
-                onSendClick = onSendClick,
                 modifier = Modifier
                     .weight(1f)
                     .focusRequester(focusRequester)
+                    .onFocusChanged { isReplyFieldFocused = it.isFocused }
             )
             if (isReplyInProgress) {
                 CircularProgressIndicator(
@@ -138,6 +144,7 @@ fun FullScreenReplyDialog(
     onCollapseClick: () -> Unit
 ) {
     val focusRequester = remember { FocusRequester() }
+    var isReplyFieldFocused by remember { mutableStateOf(false) }
     val canSend = replyText.text.isNotBlank() && !isReplyInProgress
     Dialog(
         onDismissRequest = onCollapseClick,
@@ -166,15 +173,16 @@ fun FullScreenReplyDialog(
                     onReplyTextChange = onReplyTextChange,
                     hint = hint,
                     enabled = !isReplyInProgress,
-                    canSend = canSend,
-                    onSendClick = onSendClick,
                     singleLineHeight = false,
                     modifier = Modifier
                         .fillMaxWidth()
                         .weight(1f)
                         .focusRequester(focusRequester)
+                        .onFocusChanged { isReplyFieldFocused = it.isFocused }
                 )
-                MentionSuggestionPanel(replyText, suggestions, onReplyTextChange)
+                if (isReplyFieldFocused) {
+                    MentionSuggestionPanel(replyText, suggestions, onReplyTextChange)
+                }
             }
         }
     }
@@ -184,14 +192,11 @@ fun FullScreenReplyDialog(
 }
 
 @Composable
-@Suppress("LongParameterList")
 private fun ReplyTextField(
     replyText: TextFieldValue,
     onReplyTextChange: (TextFieldValue) -> Unit,
     hint: String,
     enabled: Boolean,
-    canSend: Boolean,
-    onSendClick: () -> Unit,
     modifier: Modifier = Modifier,
     singleLineHeight: Boolean = true
 ) {
@@ -203,11 +208,9 @@ private fun ReplyTextField(
         textStyle = MaterialTheme.typography.bodyLarge,
         minLines = if (singleLineHeight) 1 else 2,
         maxLines = if (singleLineHeight) 4 else Int.MAX_VALUE,
-        keyboardOptions = KeyboardOptions(
-            capitalization = KeyboardCapitalization.Sentences,
-            imeAction = ImeAction.Send
-        ),
-        keyboardActions = KeyboardActions(onSend = { if (canSend) onSendClick() }),
+        // No IME send action: the legacy field was textMultiLine, so the enter key inserts a
+        // newline and sending stays on the dedicated send button.
+        keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences),
         colors = TextFieldDefaults.colors(
             focusedContainerColor = Color.Transparent,
             unfocusedContainerColor = Color.Transparent,
