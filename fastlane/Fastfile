@@ -148,7 +148,17 @@ def next_build_code
 end
 
 #####################################################################################
-# Slack / Env helpers
+# Environment helpers
+#####################################################################################
+
+# Use this instead of getting values from ENV directly. It will throw an error if the requested value is missing.
+def get_required_env(key)
+  UI.user_error!("Environment variable '#{key}' is not set. Have you setup #{USER_ENV_FILE_PATH} correctly?") unless ENV.key?(key)
+  ENV.fetch(key, nil)
+end
+
+#####################################################################################
+# Slack helpers
 #####################################################################################
 
 # Sends a Slack message to the given channel via the incoming webhook.
@@ -168,12 +178,6 @@ def notify_slack(message)
   send_slack_message(message: message)
 rescue StandardError => e
   UI.important("Slack notification failed (#{e.message}); continuing without it.")
-end
-
-# Returns an env var's value, failing loudly if it's unset.
-def get_required_env(key)
-  UI.user_error!("Environment variable '#{key}' is not set.") unless ENV.key?(key)
-  ENV.fetch(key, nil)
 end
 
 ########################################################################

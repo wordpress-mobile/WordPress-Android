@@ -327,19 +327,13 @@ platform :android do
 
   def buildkite_api_get(uri)
     request = Net::HTTP::Get.new(uri)
-    request['Authorization'] = "Bearer #{buildkite_api_token}"
+    # `BUILDKITE_TOKEN` needs the `read_builds` scope. It's only used for the Slack deep link, so a
+    # missing token just degrades to linking the build (see `block_step_job_id`'s rescue).
+    request['Authorization'] = "Bearer #{get_required_env('BUILDKITE_TOKEN')}"
     # Bound the request so a hung response can't stall the gather lane across all 5 poll attempts.
     Net::HTTP.start(uri.hostname, uri.port, use_ssl: true, open_timeout: 30, read_timeout: 30) do |http|
       http.request(request)
     end
-  end
-
-  # A Buildkite API token with `read_builds` scope — `BUILDKITE_API_TOKEN` on CI, `BUILDKITE_TOKEN`
-  # locally. Only needed for the Slack deep link; the flow still works without it (links to the build).
-  def buildkite_api_token
-    token = ENV.fetch('BUILDKITE_API_TOKEN', nil) || ENV.fetch('BUILDKITE_TOKEN', nil)
-    UI.user_error!('No Buildkite API token found. Set `BUILDKITE_API_TOKEN` (or `BUILDKITE_TOKEN`).') if token.to_s.empty?
-    token
   end
 
   #################################################
