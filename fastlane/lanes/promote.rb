@@ -162,18 +162,14 @@ platform :android do
   #################################################
 
   # Promotes a version code to beta for each app, returning a per-app `{ ok:, error: }` result.
-  # A failure for one app doesn't stop the other. Reuses upload_build_to_play_store (build.rb),
-  # which owns the actual Play upload — the retry, the pinned retained codes, and the skip flags.
+  # A failure for one app doesn't stop the other.
   def distribute_to_beta(version_code:)
     %i[wordpress jetpack].to_h do |app|
       result =
         begin
-          upload_build_to_play_store(
-            app: app.to_s,
-            track: BETA_TRACK,
-            version_code: version_code,
-            # TODO: switch to 'completed' once the feature is ready to distribute to beta testers.
-            release_status: 'draft'
+          promote_version_code_to_beta(
+            package_name: APP_SPECIFIC_VALUES[app][:package_name],
+            version_code: version_code
           )
           { ok: true }
         rescue StandardError => e
@@ -181,6 +177,43 @@ platform :android do
           { ok: false, error: e.message }
         end
       [app, result]
+    end
+  end
+
+  # Creates a draft `beta` release referencing an already-uploaded version code, via the Play API.
+  #
+  # `upload_to_play_store` can't do this: it only builds a track release from binaries uploaded in
+  # the same run, so a bare `version_code:` with `skip_upload_aab` commits an empty edit. We create
+  # the release directly instead, mirroring supply's own `update_track`.
+  def promote_version_code_to_beta(package_name:, version_code:)
+    require 'supply'
+    require 'supply/options'
+
+    Supply.config = FastlaneCore::Configuration.create(
+      Supply::Options.available_options,
+      { json_key: UPLOAD_TO_PLAY_STORE_JSON_KEY, package_name: package_name, track: BETA_TRACK }
+    )
+
+    client = Supply::Client.make_from_config
+    client.begin_edit(package_name: package_name)
+
+    committed = false
+    begin
+      release = AndroidPublisher::TrackRelease.new(
+        # TODO: switch to 'completed' once the feature is ready to distribute to beta testers.
+        status: 'draft',
+        # Keep the pinned legacy code on the track, matching the AAB-upload path's version_codes_to_retain.
+        version_codes: [Integer(version_code), 1440]
+      )
+      track = client.tracks(BETA_TRACK).first || AndroidPublisher::Track.new(track: BETA_TRACK)
+      track.releases = [release]
+
+      client.update_track(BETA_TRACK, track)
+      client.commit_current_edit!
+      committed = true
+    ensure
+      # Discard the edit if we bailed before committing (a committed edit can't be aborted).
+      client.abort_current_edit unless committed
     end
   end
 

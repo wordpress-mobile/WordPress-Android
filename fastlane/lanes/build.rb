@@ -186,65 +186,43 @@ platform :android do
     package_name = APP_SPECIFIC_VALUES[app.to_sym][:package_name]
     metadata_dir = File.join(FASTLANE_FOLDER, APP_SPECIFIC_VALUES[app.to_sym][:metadata_dir], 'android')
 
-    track = options[:track]
-    version_code = options[:version_code]
+    version_name = options[:version_name]
 
-    # Params shared by both modes.
-    params = {
-      package_name: package_name,
-      track: track,
-      release_status: options[:release_status] || 'draft',
-      skip_upload_images: true,
-      skip_upload_screenshots: true,
-      json_key: UPLOAD_TO_PLAY_STORE_JSON_KEY,
-      version_codes_to_retain: [1440]
-    }
-
-    if version_code
-      # Promotion: put a build that's already in the store onto this track by its version code —
-      # no rebuild, no re-upload, no metadata.
-      params.merge!(
-        version_code: Integer(version_code),
-        skip_upload_aab: true,
-        skip_upload_apk: true,
-        skip_upload_metadata: true,
-        skip_upload_changelogs: true
-      )
-    else
-      # Upload a freshly built AAB for the given version.
-      version_name = options[:version_name]
-      if version_name.nil?
-        UI.message("No version available for #{track} track for #{app}")
-        next
-      end
-
-      aab_file_path = bundle_file_path(app, version_name)
-      unless File.exist?(aab_file_path)
-        UI.error("Unable to find a build artifact at #{aab_file_path}")
-        next
-      end
-
-      params.merge!(
-        aab: aab_file_path,
-        metadata_path: metadata_dir,
-        # Only update app title/description/etc. for Production; skip for beta tracks.
-        skip_upload_metadata: (track != 'production'),
-        skip_upload_changelogs: false
-      )
+    if version_name.nil?
+      UI.message("No version available for #{options[:track]} track for #{app}")
+      next
     end
 
-    retry_count = 2
-    begin
-      upload_to_play_store(**params)
-    rescue FastlaneCore::Interface::FastlaneError => e
-      # Sometimes the upload fails randomly with "Google Api Error: Invalid request - This Edit has
-      # been deleted." — likely a race when multiple edits run at once (WP beta, JP beta). Retry.
-      if e.message.start_with?('Google Api Error') && (retry_count -= 1).positive?
-        UI.error 'Upload failed with Google API error. Retrying in 2mn...'
-        sleep(120)
-        retry
+    aab_file_path = bundle_file_path(app, version_name)
+
+    if File.exist? aab_file_path
+      retry_count = 2
+      begin
+        upload_to_play_store(
+          package_name: package_name,
+          aab: aab_file_path,
+          track: options[:track],
+          release_status: 'draft',
+          metadata_path: metadata_dir,
+          skip_upload_metadata: (options[:track] != 'production'), # Only update app title/description/etc. if uploading for Production, skip for beta tracks
+          skip_upload_changelogs: false,
+          skip_upload_images: true,
+          skip_upload_screenshots: true,
+          json_key: UPLOAD_TO_PLAY_STORE_JSON_KEY,
+          version_codes_to_retain: [1440]
+        )
+      rescue FastlaneCore::Interface::FastlaneError => e
+        # Sometimes the upload fails randomly with a "Google Api Error: Invalid request - This Edit has been deleted.".
+        # It seems one reason might be a race condition when we do multiple edits at the exact same time (WP beta, JP beta). Retrying usually fixes it
+        if e.message.start_with?('Google Api Error') && (retry_count -= 1).positive?
+          UI.error 'Upload failed with Google API error. Retrying in 2mn...'
+          sleep(120)
+          retry
+        end
+        raise
       end
-      raise
+    else
+      UI.error("Unable to find a build artifact at #{aab_file_path}")
     end
   end
 
