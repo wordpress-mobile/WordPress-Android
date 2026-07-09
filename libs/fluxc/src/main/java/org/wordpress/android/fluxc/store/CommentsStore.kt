@@ -472,6 +472,40 @@ class CommentsStore @Inject constructor(
         ))
     }
 
+    /**
+     * Applies an edit (content + author fields) to the local cache only, without a network request.
+     * Used to mirror an edit already made server-side through another client (e.g. wordpress-rs).
+     * No-ops when the comment isn't cached — e.g. self-hosted application-password sites, which the
+     * FluxC comment cache doesn't hold anyway.
+     */
+    @Suppress("LongParameterList")
+    suspend fun updateEditCommentLocally(
+        site: SiteModel,
+        remoteCommentId: Long,
+        content: String,
+        authorName: String,
+        authorEmail: String,
+        authorUrl: String
+    ): CommentsActionPayload<CommentsActionData> {
+        val comment = commentsDao.getCommentsByLocalSiteAndRemoteCommentId(
+                site.id,
+                remoteCommentId
+        ).firstOrNull() ?: return CommentsActionPayload(CommentsActionData(comments = emptyList(), rowsAffected = 0))
+
+        val commentToUpdate = comment.copy(
+                content = content,
+                authorName = authorName,
+                authorEmail = authorEmail,
+                authorUrl = authorUrl
+        )
+        val cachedCommentAsList = commentsDao.insertOrUpdateCommentForResult(commentToUpdate)
+
+        return CommentsActionPayload(CommentsActionData(
+                comments = cachedCommentAsList,
+                rowsAffected = cachedCommentAsList.size
+        ))
+    }
+
     suspend fun getCommentByLocalId(localId: Long) = commentsDao.getCommentById(localId)
 
     suspend fun getCommentByLocalSiteAndRemoteId(localSiteId: Int, remoteCommentId: Long) =

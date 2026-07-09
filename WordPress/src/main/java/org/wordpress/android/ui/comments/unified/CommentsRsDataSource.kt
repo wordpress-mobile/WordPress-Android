@@ -11,6 +11,7 @@ import uniffi.wp_api.CommentDeleteParams
 import uniffi.wp_api.CommentListParams
 import uniffi.wp_api.CommentRetrieveParams
 import uniffi.wp_api.CommentUpdateParams
+import uniffi.wp_api.CommentWithEditContext
 import uniffi.wp_api.CommentWithViewContext
 import uniffi.wp_api.PostEndpointType
 import uniffi.wp_api.PostListParams
@@ -59,6 +60,18 @@ class CommentsRsDataSource @Inject constructor(
         val status: CommentStatus
     )
 
+    /**
+     * A comment's editable fields, loaded with the edit context so the author email (absent from
+     * the view context) and the raw (unrendered) content are available for the edit form.
+     */
+    data class RsCommentEdit(
+        val remoteCommentId: Long,
+        val content: String,
+        val authorName: String,
+        val authorEmail: String,
+        val authorUrl: String
+    )
+
     /** Result of a write request, carrying the server error message when one is available. */
     sealed interface RsResult {
         object Success : RsResult
@@ -87,6 +100,24 @@ class CommentsRsDataSource @Inject constructor(
             else -> null
         }
     }
+
+    /**
+     * Loads a comment's editable fields with the edit context. Unlike [getComment] (view context)
+     * this includes the author email and the raw content the edit form needs, and works on the
+     * self-hosted application-password sites the FluxC edit path can't reach.
+     */
+    suspend fun getCommentForEdit(site: SiteModel, commentId: Long): RsCommentEdit? =
+        safe(errorValue = null) {
+            val client = wpApiClientProvider.getWpApiClient(site)
+            when (
+                val result = client.request {
+                    it.comments().retrieveWithEditContext(commentId, CommentRetrieveParams())
+                }
+            ) {
+                is WpRequestResult.Success -> result.response.data.toRsCommentEdit()
+                else -> null
+            }
+        }
 
     /**
      * Fetches one page of the site's comments. Pass [firstPageParams] for the first page and the
@@ -206,6 +237,31 @@ class CommentsRsDataSource @Inject constructor(
     suspend fun updateStatus(site: SiteModel, commentId: Long, status: CommentStatus): RsResult =
         write(site) { it.comments().update(commentId, CommentUpdateParams(status = status.toRsCommentStatus())) }
 
+    /**
+     * Edits a comment's content and author fields. [CommentUpdateParams] is an all-nullable PATCH,
+     * so only these four fields are sent — status/parent/etc. are left untouched. Named arguments
+     * are required: the constructor's positional order differs from this field list.
+     */
+    @Suppress("LongParameterList")
+    suspend fun editComment(
+        site: SiteModel,
+        commentId: Long,
+        content: String,
+        authorName: String,
+        authorEmail: String,
+        authorUrl: String
+    ): RsResult = write(site) {
+        it.comments().update(
+            commentId,
+            CommentUpdateParams(
+                content = content,
+                authorName = authorName,
+                authorEmail = authorEmail,
+                authorUrl = authorUrl
+            )
+        )
+    }
+
     suspend fun delete(site: SiteModel, commentId: Long): RsResult =
         write(site) { it.comments().delete(commentId, CommentDeleteParams()) }
 
@@ -255,6 +311,15 @@ internal fun CommentWithViewContext.toRsComment() = CommentsRsDataSource.RsComme
     url = link,
     postId = post,
     status = status.toAppCommentStatus()
+)
+
+internal fun CommentWithEditContext.toRsCommentEdit() = CommentsRsDataSource.RsCommentEdit(
+    remoteCommentId = id,
+    // Raw (unrendered) content is the editable source, matching wp-admin's comment editor.
+    content = content.raw,
+    authorName = authorName,
+    authorEmail = authorEmail,
+    authorUrl = authorUrl
 )
 
 internal fun CommentWithViewContext.pickAvatarUrl(): String =

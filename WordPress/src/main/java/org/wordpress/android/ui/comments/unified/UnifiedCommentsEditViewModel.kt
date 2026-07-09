@@ -32,6 +32,8 @@ import org.wordpress.android.ui.comments.unified.extension.isNotEqualTo
 import org.wordpress.android.ui.comments.unified.usecase.GetCommentUseCase
 import org.wordpress.android.ui.notifications.utils.NotificationsActionsWrapper
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
+import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures
+import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures.Feature.RS_UNIFIED_COMMENTS
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.NetworkUtilsWrapper
@@ -55,7 +57,9 @@ class UnifiedCommentsEditViewModel @Inject constructor(
     private val getCommentUseCase: GetCommentUseCase,
     private val notificationActionsWrapper: NotificationsActionsWrapper,
     private val readerCommentTableWrapper: ReaderCommentTableWrapper,
-    private val analyticsUtilsWrapper: AnalyticsUtilsWrapper
+    private val analyticsUtilsWrapper: AnalyticsUtilsWrapper,
+    private val commentsRsDataSource: CommentsRsDataSource,
+    private val experimentalFeatures: ExperimentalFeatures
 ) : ScopedViewModel(mainDispatcher) {
     private val _uiState = MutableLiveData<EditCommentUiState>()
     private val _uiActionEvent = MutableLiveData<Event<EditCommentActionEvent>>()
@@ -233,7 +237,18 @@ class UnifiedCommentsEditViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Site comments on rs-capable sites edit through wordpress-rs; everything else (notification and
+     * reader comments, and non-rs-capable or flag-off sites) keeps the FluxC path. Gating here on
+     * the same conditions as [org.wordpress.android.ui.ActivityLauncher.shouldUseRsComments].
+     */
+    private fun shouldUseRs(): Boolean =
+        commentIdentifier is SiteCommentIdentifier &&
+                (site.isUsingWpComRestApi || site.hasApplicationPassword()) &&
+                experimentalFeatures.isEnabled(RS_UNIFIED_COMMENTS)
+
     private suspend fun mapCommentEssentials(): CommentEssentials {
+        if (shouldUseRs()) return mapCommentEssentialsFromRs()
         val commentEntity = getCommentUseCase.execute(site, commentIdentifier.remoteCommentId)
         return if (commentEntity != null) {
             CommentEssentials(
@@ -249,7 +264,29 @@ class UnifiedCommentsEditViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Loads the editable fields through wordpress-rs (edit context), which supplies the author
+     * email and raw content the view context lacks and works on the application-password sites the
+     * FluxC fetch can't reach.
+     */
+    private suspend fun mapCommentEssentialsFromRs(): CommentEssentials {
+        val rsComment = commentsRsDataSource.getCommentForEdit(site, commentIdentifier.remoteCommentId)
+            ?: return CommentEssentials()
+        return CommentEssentials(
+            // The rs write keys off commentIdentifier, not this id; the remote id keeps isValid() true.
+            commentId = commentIdentifier.remoteCommentId,
+            userName = rsComment.authorName,
+            commentText = rsComment.content,
+            userUrl = rsComment.authorUrl,
+            userEmail = rsComment.authorEmail
+        )
+    }
+
     private suspend fun updateComment(editedCommentEssentials: CommentEssentials) {
+        if (shouldUseRs()) {
+            updateCommentViaRs(editedCommentEssentials)
+            return
+        }
         val commentEntity =
             commentsStore.getCommentByLocalSiteAndRemoteId(site.id, commentIdentifier.remoteCommentId).firstOrNull()
         commentEntity?.run {
@@ -276,6 +313,42 @@ class UnifiedCommentsEditViewModel @Inject constructor(
                 showUpdateCommentError()
             }
         } ?: showUpdateCommentError()
+    }
+
+    /**
+     * Saves a site comment's edits through wordpress-rs, then mirrors them into the FluxC cache so
+     * any FluxC-backed consumer stays consistent (a no-op on application-password sites, which the
+     * cache doesn't hold — the detail's rs reload is the source of truth there). Only reached for
+     * [SiteCommentIdentifier]; the notification/reader post-save steps don't apply.
+     */
+    private suspend fun updateCommentViaRs(editedCommentEssentials: CommentEssentials) {
+        val result = commentsRsDataSource.editComment(
+            site = site,
+            commentId = commentIdentifier.remoteCommentId,
+            content = editedCommentEssentials.commentText,
+            authorName = editedCommentEssentials.userName,
+            authorEmail = editedCommentEssentials.userEmail,
+            authorUrl = editedCommentEssentials.userUrl
+        )
+        if (result is CommentsRsDataSource.RsResult.Success) {
+            analyticsUtilsWrapper.trackCommentActionWithSiteDetails(
+                COMMENT_EDITED,
+                commentIdentifier.toCommentActionSource(),
+                site
+            )
+            commentsStore.updateEditCommentLocally(
+                site = site,
+                remoteCommentId = commentIdentifier.remoteCommentId,
+                content = editedCommentEssentials.commentText,
+                authorName = editedCommentEssentials.userName,
+                authorEmail = editedCommentEssentials.userEmail,
+                authorUrl = editedCommentEssentials.userUrl
+            )
+            _uiActionEvent.postValue(Event(DONE))
+            localCommentCacheUpdateHandler.requestCommentsUpdate()
+        } else {
+            showUpdateCommentError()
+        }
     }
 
     private suspend fun updateCommentEntity(

@@ -40,6 +40,7 @@ import org.wordpress.android.fluxc.tools.initCoroutineEngine
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 
 @RunWith(MockitoJUnitRunner::class)
+@Suppress("LargeClass")
 class CommentsStoreTest {
     @Mock lateinit var restClient: CommentsRestClient
     @Mock lateinit var xmlRpcClient: CommentsXMLRPCClient
@@ -701,6 +702,51 @@ class CommentsStoreTest {
         )
 
         assertThat(result.isError).isTrue
+    }
+
+    @Test
+    fun `updateEditCommentLocally copies edited fields into the cache`() = test {
+        val comment = getDefaultComment()
+        whenever(commentsDao.getCommentsByLocalSiteAndRemoteCommentId(anyInt(), anyLong()))
+                .thenReturn(listOf(comment))
+        whenever(commentsDao.insertOrUpdateCommentForResult(any())).thenReturn(listOf(comment))
+
+        commentsStore.updateEditCommentLocally(
+                site = site,
+                remoteCommentId = 10,
+                content = "new content",
+                authorName = "new name",
+                authorEmail = "new@email.com",
+                authorUrl = "https://new.example.com"
+        )
+
+        verify(commentsDao, times(1)).insertOrUpdateCommentForResult(
+                comment.copy(
+                        content = "new content",
+                        authorName = "new name",
+                        authorEmail = "new@email.com",
+                        authorUrl = "https://new.example.com"
+                )
+        )
+    }
+
+    @Test
+    fun `updateEditCommentLocally no-ops when the comment is not cached`() = test {
+        whenever(commentsDao.getCommentsByLocalSiteAndRemoteCommentId(anyInt(), anyLong()))
+                .thenReturn(emptyList())
+
+        val result = commentsStore.updateEditCommentLocally(
+                site = site,
+                remoteCommentId = 10,
+                content = "new content",
+                authorName = "new name",
+                authorEmail = "new@email.com",
+                authorUrl = "https://new.example.com"
+        )
+
+        verify(commentsDao, times(0)).insertOrUpdateCommentForResult(any())
+        assertThat(result.isError).isFalse
+        assertThat((result.data as CommentsActionData).rowsAffected).isEqualTo(0)
     }
 
     private fun getDefaultComment() = CommentEntity(

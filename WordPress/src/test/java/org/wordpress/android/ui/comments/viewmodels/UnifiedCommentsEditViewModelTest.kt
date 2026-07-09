@@ -10,6 +10,7 @@ import org.mockito.Mock
 import org.mockito.kotlin.any
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
+import org.mockito.kotlin.never
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
@@ -30,6 +31,9 @@ import org.wordpress.android.ui.comments.unified.CommentEssentials
 import org.wordpress.android.ui.comments.unified.CommentIdentifier.NotificationCommentIdentifier
 import org.wordpress.android.ui.comments.unified.CommentIdentifier.ReaderCommentIdentifier
 import org.wordpress.android.ui.comments.unified.CommentIdentifier.SiteCommentIdentifier
+import org.wordpress.android.ui.comments.unified.CommentsRsDataSource
+import org.wordpress.android.ui.comments.unified.CommentsRsDataSource.RsCommentEdit
+import org.wordpress.android.ui.comments.unified.CommentsRsDataSource.RsResult
 import org.wordpress.android.ui.comments.unified.UnifiedCommentsEditViewModel
 import org.wordpress.android.ui.comments.unified.UnifiedCommentsEditViewModel.EditCommentActionEvent
 import org.wordpress.android.ui.comments.unified.UnifiedCommentsEditViewModel.EditCommentActionEvent.CANCEL_EDIT_CONFIRM
@@ -40,6 +44,8 @@ import org.wordpress.android.ui.comments.unified.UnifiedCommentsEditViewModel.Fi
 import org.wordpress.android.ui.comments.unified.UnifiedCommentsEditViewModel.FieldType.USER_EMAIL
 import org.wordpress.android.ui.comments.unified.usecase.GetCommentUseCase
 import org.wordpress.android.ui.notifications.utils.NotificationsActionsWrapper
+import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures
+import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures.Feature.RS_UNIFIED_COMMENTS
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.NetworkUtilsWrapper
@@ -73,6 +79,12 @@ class UnifiedCommentsEditViewModelTest : BaseUnitTest() {
     @Mock
     lateinit var analyticsUtilsWrapper: AnalyticsUtilsWrapper
 
+    @Mock
+    lateinit var commentsRsDataSource: CommentsRsDataSource
+
+    @Mock
+    lateinit var experimentalFeatures: ExperimentalFeatures
+
     private lateinit var viewModel: UnifiedCommentsEditViewModel
 
     private var uiState: MutableList<EditCommentUiState> = mutableListOf()
@@ -82,6 +94,13 @@ class UnifiedCommentsEditViewModelTest : BaseUnitTest() {
     private val site = SiteModel().apply {
         id = LOCAL_SITE_ID
         siteId = REMOTE_SITE_ID
+    }
+
+    // An rs-capable site (WP.com), so shouldUseRs() passes once the flag is enabled.
+    private val rsSite = SiteModel().apply {
+        id = LOCAL_SITE_ID
+        siteId = REMOTE_SITE_ID
+        setIsWPCom(true)
     }
 
     private val localCommentId = 1000
@@ -112,7 +131,9 @@ class UnifiedCommentsEditViewModelTest : BaseUnitTest() {
             getCommentUseCase = getCommentUseCase,
             notificationActionsWrapper = notificationActionsWrapper,
             readerCommentTableWrapper = readerCommentTableWrapper,
-            analyticsUtilsWrapper
+            analyticsUtilsWrapper = analyticsUtilsWrapper,
+            commentsRsDataSource = commentsRsDataSource,
+            experimentalFeatures = experimentalFeatures
         )
 
         setupObservers()
@@ -246,9 +267,10 @@ class UnifiedCommentsEditViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `Should DISABLE edit name for a comment from registered user`() = test {
+    fun `Should ENABLE edit name for a comment from registered user`() = test {
+        // Author fields are always editable now (matching wp-admin), regardless of registration
         viewModel.start(site, siteCommentIdentifier)
-        assertThat(uiState.first().inputSettings.enableEditName).isFalse
+        assertThat(uiState.last().inputSettings.enableEditName).isTrue
     }
 
     @Test
@@ -261,9 +283,9 @@ class UnifiedCommentsEditViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `Should DISABLE edit URL for a comment from registered user`() = test {
+    fun `Should ENABLE edit URL for a comment from registered user`() = test {
         viewModel.start(site, siteCommentIdentifier)
-        assertThat(uiState.last().inputSettings.enableEditUrl).isFalse
+        assertThat(uiState.last().inputSettings.enableEditUrl).isTrue
     }
 
     @Test
@@ -276,9 +298,9 @@ class UnifiedCommentsEditViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `Should DISABLE edit email for a comment from registered user`() = test {
+    fun `Should ENABLE edit email for a comment from registered user`() = test {
         viewModel.start(site, siteCommentIdentifier)
-        assertThat(uiState.last().inputSettings.enableEditEmail).isFalse
+        assertThat(uiState.last().inputSettings.enableEditEmail).isTrue
     }
 
     @Test
@@ -478,6 +500,105 @@ class UnifiedCommentsEditViewModelTest : BaseUnitTest() {
         )
     }
 
+    // --- wordpress-rs edit path (Site comments on rs-capable sites, flag on) ---
+
+    @Test
+    fun `Should load edit fields from rs when rs enabled for SiteCommentIdentifier`() = test {
+        enableRs()
+        whenever(commentsRsDataSource.getCommentForEdit(rsSite, remoteCommentId))
+            .thenReturn(RS_COMMENT_EDIT)
+
+        viewModel.start(rsSite, siteCommentIdentifier)
+        advanceUntilIdle()
+
+        assertThat(uiState[1].editedComment).isEqualTo(
+            CommentEssentials(
+                commentId = remoteCommentId,
+                userName = RS_COMMENT_EDIT.authorName,
+                commentText = RS_COMMENT_EDIT.content,
+                userUrl = RS_COMMENT_EDIT.authorUrl,
+                userEmail = RS_COMMENT_EDIT.authorEmail
+            )
+        )
+        verify(getCommentUseCase, never()).execute(any(), any())
+    }
+
+    @Test
+    fun `Should save via rs and mirror locally on success when rs enabled`() = test {
+        enableRs()
+        whenever(commentsRsDataSource.getCommentForEdit(rsSite, remoteCommentId))
+            .thenReturn(RS_COMMENT_EDIT)
+        whenever(commentsRsDataSource.editComment(eq(rsSite), eq(remoteCommentId), any(), any(), any(), any()))
+            .thenReturn(RsResult.Success)
+
+        viewModel.start(rsSite, siteCommentIdentifier)
+        viewModel.onActionMenuClicked()
+        advanceUntilIdle()
+
+        assertThat(uiActionEvent.firstOrNull()).isEqualTo(DONE)
+        verify(localCommentCacheUpdateHandler).requestCommentsUpdate()
+        verify(commentsStore).updateEditCommentLocally(
+            eq(rsSite), eq(remoteCommentId), any(), any(), any(), any()
+        )
+        verify(analyticsUtilsWrapper).trackCommentActionWithSiteDetails(
+            Stat.COMMENT_EDITED, AnalyticsCommentActionSource.SITE_COMMENTS, rsSite
+        )
+        verify(commentsStore, never()).updateEditComment(any(), any())
+    }
+
+    @Test
+    fun `Should show error and not finish when rs save fails`() = test {
+        enableRs()
+        whenever(commentsRsDataSource.getCommentForEdit(rsSite, remoteCommentId))
+            .thenReturn(RS_COMMENT_EDIT)
+        whenever(commentsRsDataSource.editComment(eq(rsSite), eq(remoteCommentId), any(), any(), any(), any()))
+            .thenReturn(RsResult.Error("boom"))
+
+        viewModel.start(rsSite, siteCommentIdentifier)
+        viewModel.onActionMenuClicked()
+        advanceUntilIdle()
+
+        assertThat(onSnackbarMessage.firstOrNull()).isNotNull
+        assertThat(uiActionEvent.firstOrNull()).isNull()
+    }
+
+    @Test
+    fun `Should keep FluxC save path when rs flag is off`() = test {
+        whenever(commentsStore.getCommentByLocalSiteAndRemoteId(rsSite.id, remoteCommentId))
+            .thenReturn(listOf(COMMENT_ENTITY))
+        whenever(commentsStore.updateEditComment(eq(rsSite), any()))
+            .thenReturn(CommentsActionPayload(CommentsActionData(emptyList(), 0)))
+
+        viewModel.start(rsSite, siteCommentIdentifier)
+        viewModel.onActionMenuClicked()
+        advanceUntilIdle()
+
+        verify(commentsStore).updateEditComment(eq(rsSite), any())
+        verify(commentsRsDataSource, never()).editComment(any(), any(), any(), any(), any(), any())
+    }
+
+    @Test
+    fun `Should keep FluxC save path for NotificationCommentIdentifier even when rs enabled`() = test {
+        enableRs()
+        whenever(commentsStore.getCommentByLocalSiteAndRemoteId(rsSite.id, remoteCommentId))
+            .thenReturn(listOf(COMMENT_ENTITY))
+        whenever(commentsStore.updateEditComment(eq(rsSite), any()))
+            .thenReturn(CommentsActionPayload(CommentsActionData(emptyList(), 0)))
+        whenever(notificationActionsWrapper.downloadNoteAndUpdateDB(noteId))
+            .thenReturn(true)
+
+        viewModel.start(rsSite, notificationCommentIdentifier)
+        viewModel.onActionMenuClicked()
+        advanceUntilIdle()
+
+        verify(commentsStore).updateEditComment(eq(rsSite), any())
+        verify(commentsRsDataSource, never()).editComment(any(), any(), any(), any(), any(), any())
+    }
+
+    private fun enableRs() {
+        whenever(experimentalFeatures.isEnabled(RS_UNIFIED_COMMENTS)).thenReturn(true)
+    }
+
     private fun setupObservers() {
         uiState.clear()
         uiActionEvent.clear()
@@ -562,6 +683,14 @@ class UnifiedCommentsEditViewModelTest : BaseUnitTest() {
             commentText = COMMENT_ENTITY.content!!,
             userUrl = COMMENT_ENTITY.authorUrl!!,
             userEmail = COMMENT_ENTITY.authorEmail!!
+        )
+
+        private val RS_COMMENT_EDIT = RsCommentEdit(
+            remoteCommentId = 4321L,
+            content = "rs content",
+            authorName = "rs author",
+            authorEmail = "rs@email.com",
+            authorUrl = "https://rs.example.com"
         )
     }
 }
