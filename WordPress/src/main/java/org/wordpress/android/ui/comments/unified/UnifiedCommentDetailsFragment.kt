@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
 import androidx.compose.runtime.getValue
@@ -23,6 +24,8 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import com.google.android.material.snackbar.BaseTransientBottomBar.BaseCallback
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -115,7 +118,9 @@ class UnifiedCommentDetailsFragment : Fragment() {
         val focusReplyField =
             savedInstanceState == null && arguments?.getBoolean(KEY_FOCUS_REPLY_FIELD) == true
         return ComposeView(requireContext()).apply {
-            id = View.generateViewId()
+            // A stable id (not View.generateViewId()) lets the fragment restore the ComposeView's
+            // saved state across rotation, so rememberSaveable dialog flags survive config changes.
+            id = R.id.comment_detail_compose_view
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
             setContent {
                 AppThemeM3 {
@@ -285,12 +290,30 @@ class UnifiedCommentDetailsFragment : Fragment() {
         val message = uiHelpers.getTextOfUiString(context, holder.message).toString()
         val actionLabel = holder.buttonTitle?.let { uiHelpers.getTextOfUiString(context, it).toString() }
         viewLifecycleOwner.lifecycleScope.launch {
-            val result = snackbarHostState.showSnackbar(message, actionLabel)
-            if (result == SnackbarResult.ActionPerformed) {
+            val result = snackbarHostState.showSnackbar(
+                message = message,
+                actionLabel = actionLabel,
+                duration = holder.duration.toSnackbarDuration()
+            )
+            // Forward the real dismiss reason to onDismissAction so holders that branch on the
+            // event code (e.g. an undo that only commits when the message times out) behave like
+            // the legacy Snackbar callback.
+            val dismissEvent = if (result == SnackbarResult.ActionPerformed) {
                 holder.buttonAction()
+                BaseCallback.DISMISS_EVENT_ACTION
+            } else {
+                BaseCallback.DISMISS_EVENT_TIMEOUT
             }
-            holder.onDismissAction(0)
+            holder.onDismissAction(dismissEvent)
         }
+    }
+
+    // Compose SnackbarDuration ignores the millisecond-style Snackbar length constants the holders
+    // carry, so map them explicitly to preserve the legacy LENGTH_LONG display time.
+    private fun Int.toSnackbarDuration(): SnackbarDuration = when (this) {
+        Snackbar.LENGTH_SHORT -> SnackbarDuration.Short
+        Snackbar.LENGTH_INDEFINITE -> SnackbarDuration.Indefinite
+        else -> SnackbarDuration.Long
     }
 
     private fun copyLink(url: String) {

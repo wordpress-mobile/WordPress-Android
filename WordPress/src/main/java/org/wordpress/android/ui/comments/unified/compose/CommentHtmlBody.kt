@@ -22,9 +22,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.text.HtmlCompat
-import coil.compose.AsyncImage
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.compose.utils.toAnnotatedString
+import org.wordpress.android.ui.dataview.compose.RemoteImage
 import org.wordpress.android.util.EmoticonsUtils
 
 /**
@@ -54,9 +54,11 @@ fun CommentHtmlBody(html: String, modifier: Modifier = Modifier) {
                             )
                         }
                     }
-                    is CommentBodySegment.Image -> AsyncImage(
-                        model = segment.url,
-                        contentDescription = null,
+                    // Route through the shared RemoteImage wrapper for consistency with the
+                    // avatars in this screen. No fallback: a failed inline image renders nothing
+                    // (a person/broken-image placeholder would be wrong for body content).
+                    is CommentBodySegment.Image -> RemoteImage(
+                        imageUrl = segment.url,
                         contentScale = ContentScale.Inside,
                         alignment = Alignment.TopStart,
                         modifier = Modifier.fillMaxWidth()
