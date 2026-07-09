@@ -26,7 +26,8 @@ sealed class MostViewedCardUiState {
 
     data class Error(
         val message: String,
-        val isAuthError: Boolean = false
+        val isAuthError: Boolean = false,
+        val isNotAvailable: Boolean = false
     ) : MostViewedCardUiState()
 }
 

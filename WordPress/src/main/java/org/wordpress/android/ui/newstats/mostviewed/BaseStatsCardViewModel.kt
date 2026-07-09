@@ -170,7 +170,8 @@ abstract class BaseStatsCardViewModel(
                         message = resourceProvider.getString(
                             result.messageResId
                         ),
-                        isAuthError = result.isAuthError
+                        isAuthError = result.isAuthError,
+                        isNotAvailable = result.isNotAvailable
                     )
                 }
             }
@@ -207,6 +208,7 @@ sealed class StatsCardFetchResult {
 
     data class Error(
         @StringRes val messageResId: Int,
-        val isAuthError: Boolean = false
+        val isAuthError: Boolean = false,
+        val isNotAvailable: Boolean = false
     ) : StatsCardFetchResult()
 }

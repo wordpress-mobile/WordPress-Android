@@ -49,7 +49,8 @@ class SearchTermsViewModel @Inject constructor(
             is SearchTermsResult.Error -> {
                 StatsCardFetchResult.Error(
                     messageResId = result.messageResId,
-                    isAuthError = result.isAuthError
+                    isAuthError = result.isAuthError,
+                    isNotAvailable = result.isNotAvailable
                 )
             }
         }

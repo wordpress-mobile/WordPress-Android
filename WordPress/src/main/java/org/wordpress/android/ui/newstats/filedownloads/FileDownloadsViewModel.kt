@@ -50,7 +50,8 @@ class FileDownloadsViewModel @Inject constructor(
             is FileDownloadsResult.Error -> {
                 StatsCardFetchResult.Error(
                     messageResId = result.messageResId,
-                    isAuthError = result.isAuthError
+                    isAuthError = result.isAuthError,
+                    isNotAvailable = result.isNotAvailable
                 )
             }
         }
