@@ -91,6 +91,10 @@ class UnifiedCommentsEditViewModel @Inject constructor(
         // Lives in ui state (not a one-shot event) so the dialog survives configuration changes,
         // like the DialogFragment it replaced.
         val showDiscardDialog: Boolean = false,
+        // Author identity is only editable for guest comments — the endpoint ignores those fields
+        // for registered users, so offering to edit them would silently no-op. The body is always
+        // editable.
+        val canEditAuthorFields: Boolean = false,
         val originalComment: CommentEssentials = CommentEssentials(),
         val editedComment: CommentEssentials = CommentEssentials(),
         val editErrorStrings: EditErrorStrings = EditErrorStrings()
@@ -214,6 +218,7 @@ class UnifiedCommentsEditViewModel @Inject constructor(
                     EditCommentUiState(
                         showProgress = LOADING.show,
                         progressText = LOADING.progressText,
+                        canEditAuthorFields = !commentEssentials.isFromRegisteredUser,
                         originalComment = commentEssentials,
                         editedComment = commentEssentials
                     )
@@ -236,7 +241,8 @@ class UnifiedCommentsEditViewModel @Inject constructor(
                 userName = commentEntity.authorName ?: "",
                 commentText = commentEntity.content ?: "",
                 userUrl = commentEntity.authorUrl ?: "",
-                userEmail = commentEntity.authorEmail ?: ""
+                userEmail = commentEntity.authorEmail ?: "",
+                isFromRegisteredUser = commentEntity.authorId > 0
             )
         } else {
             CommentEssentials()
