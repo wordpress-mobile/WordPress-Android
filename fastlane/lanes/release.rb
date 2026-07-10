@@ -319,8 +319,6 @@ platform :android do
 
     configure_apply(force: is_ci)
 
-    release_branch = "release/#{current_release_version}"
-
     # Don't check translation coverage for now since we are finalizing the release in CI
     # check_translations_coverage
     download_translations
@@ -342,8 +340,6 @@ platform :android do
     trigger_release_build(branch_to_build: "release/#{version_name}")
 
     create_backmerge_pr
-
-    remove_branch_protection(repository: GITHUB_REPO, branch: release_branch)
 
     # Close milestone
     begin
