@@ -104,18 +104,7 @@ class UnifiedCommentDetailsViewModelTest : BaseUnitTest() {
         whenever(dateTimeUtilsWrapper.javaDateToTimeSpan(any())).thenReturn("2 hours ago")
         whenever(notificationsActionsWrapper.downloadNoteAndUpdateDB(any())).thenReturn(true)
 
-        viewModel = UnifiedCommentDetailsViewModel(
-            mainDispatcher = testDispatcher(),
-            bgDispatcher = testDispatcher(),
-            commentsRsDataSource = commentsRsDataSource,
-            commentsStore = commentsStore,
-            localCommentCacheUpdateHandler = localCommentCacheUpdateHandler,
-            networkUtilsWrapper = networkUtilsWrapper,
-            dateTimeUtilsWrapper = dateTimeUtilsWrapper,
-            notificationsActionsWrapper = notificationsActionsWrapper,
-            notificationsTableWrapper = notificationsTableWrapper,
-            analyticsUtilsWrapper = analyticsUtilsWrapper
-        )
+        viewModel = createViewModel()
 
         setupObservers()
     }
