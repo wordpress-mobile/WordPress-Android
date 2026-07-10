@@ -5,11 +5,14 @@ import android.content.Intent
 import android.os.Bundle
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.databinding.UnifiedCommentsDetailsActivityBinding
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.main.BaseAppCompatActivity
 import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.ToastUtils
+import org.wordpress.android.util.analytics.AnalyticsUtils
+import org.wordpress.android.util.analytics.AnalyticsUtils.AnalyticsCommentActionSource
 import org.wordpress.android.util.extensions.getSerializableExtraCompat
 
 class UnifiedCommentsDetailsActivity : BaseAppCompatActivity() {
@@ -32,6 +35,14 @@ class UnifiedCommentsDetailsActivity : BaseAppCompatActivity() {
 
         val site = requireNotNull(intent.getSerializableExtraCompat<SiteModel>(WordPress.SITE))
         val remoteCommentId = intent.getLongExtra(KEY_REMOTE_COMMENT_ID, 0)
+
+        if (savedInstanceState == null) {
+            // Match the legacy site-comments host: track the initial comment view. The
+            // notifications host tracks its own COMMENT_VIEWED, so only the site path fires here.
+            AnalyticsUtils.trackCommentActionWithSiteDetails(
+                Stat.COMMENT_VIEWED, AnalyticsCommentActionSource.SITE_COMMENTS, site
+            )
+        }
 
         val fm = supportFragmentManager
         if (fm.findFragmentByTag(TAG_UNIFIED_COMMENT_DETAILS_FRAGMENT) == null) {

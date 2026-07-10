@@ -5,6 +5,7 @@ import android.content.Intent
 import android.net.Uri
 import dagger.Reusable
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
+import org.wordpress.android.fluxc.model.CommentModel
 import org.wordpress.android.fluxc.model.PostImmutableModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.models.ReaderPost
@@ -114,4 +115,11 @@ class AnalyticsUtilsWrapper @Inject constructor(
         actionSource: AnalyticsCommentActionSource,
         site: SiteModel
     ) = AnalyticsUtils.trackCommentActionWithSiteDetails(stat, actionSource, site)
+
+    fun trackCommentReplyWithDetails(
+        isQuickReply: Boolean,
+        site: SiteModel,
+        comment: CommentModel,
+        actionSource: AnalyticsCommentActionSource
+    ) = AnalyticsUtils.trackCommentReplyWithDetails(isQuickReply, site, comment, actionSource)
 }
