@@ -20,6 +20,8 @@ import org.wordpress.android.fluxc.model.stats.time.VisitsAndViewsModel
 import org.wordpress.android.fluxc.model.stats.time.VisitsAndViewsModel.PeriodData
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.modules.UI_THREAD
+import org.wordpress.android.ui.newstats.NewStatsActivity
+import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.stats.StatsTimeframe
 import org.wordpress.android.ui.stats.refresh.StatsActivity
 import org.wordpress.android.ui.stats.refresh.lists.widget.IS_WIDE_VIEW_KEY
@@ -30,6 +32,7 @@ import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsCo
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsColorSelectionViewModel.Color.LIGHT
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsWidgetConfigureFragment.WidgetType
 import org.wordpress.android.ui.stats.refresh.utils.StatsLaunchedFrom
+import org.wordpress.android.util.config.NewStatsFeatureConfig
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType.ICON
 import org.wordpress.android.viewmodel.ResourceProvider
@@ -47,7 +50,9 @@ private const val ICON_MAX_DIMENSION = 100
 class WidgetUtils
 @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
-    val imageManager: ImageManager
+    val imageManager: ImageManager,
+    private val newStatsFeatureConfig: NewStatsFeatureConfig,
+    private val appPrefsWrapper: AppPrefsWrapper
 ) {
     private val coroutineScope = CoroutineScope(mainDispatcher)
     fun isWidgetWiderThanLimit(
@@ -176,12 +181,24 @@ class WidgetUtils
         statsTimeframe: StatsTimeframe,
         granularity: StatsGranularity? = null
     ): PendingIntent {
-        val intent = Intent(context, StatsActivity::class.java)
+        val intent = if (isNewStatsEnabled()) {
+            Intent(context, NewStatsActivity::class.java).apply {
+                putExtra(WordPress.LOCAL_SITE_ID, localSiteId)
+                // Mirror the row-tap (template) path: CLEAR_TOP forces an already-running
+                // NewStatsActivity to be recreated so onCreate re-reads LOCAL_SITE_ID and renders
+                // the tapped widget's site. With NEW_TASK alone, Android would just bring the
+                // existing instance forward, keeping the previously selected site (multi-site bug).
+                addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            }
+        } else {
+            Intent(context, StatsActivity::class.java).apply {
+                putExtra(WordPress.LOCAL_SITE_ID, localSiteId)
+                putExtra(StatsActivity.ARG_DESIRED_TIMEFRAME, statsTimeframe)
+                putExtra(StatsActivity.ARG_LAUNCHED_FROM, StatsLaunchedFrom.WIDGET)
+                putExtra(StatsActivity.ARG_GRANULARITY, granularity)
+            }
+        }
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        intent.putExtra(WordPress.LOCAL_SITE_ID, localSiteId)
-        intent.putExtra(StatsActivity.ARG_DESIRED_TIMEFRAME, statsTimeframe)
-        intent.putExtra(StatsActivity.ARG_LAUNCHED_FROM, StatsLaunchedFrom.WIDGET)
-        intent.putExtra(StatsActivity.ARG_GRANULARITY, granularity)
         return PendingIntent.getActivity(
             context,
             getRandomId(),
@@ -191,7 +208,14 @@ class WidgetUtils
     }
 
     private fun getPendingTemplate(context: Context): PendingIntent {
-        val intent = Intent(context, StatsActivity::class.java)
+        // The per-row fill-in intents already carry the LOCAL_SITE_ID extra, which is merged into
+        // whichever component this template targets, so New Stats receives the tapped row's site.
+        val targetActivity = if (isNewStatsEnabled()) {
+            NewStatsActivity::class.java
+        } else {
+            StatsActivity::class.java
+        }
+        val intent = Intent(context, targetActivity)
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
         // Before SDK 31, this was mutable by default, but this condition is still needed to satisfy lint rules :)
         val templateFlags = if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S)
@@ -210,6 +234,11 @@ class WidgetUtils
     private fun getRandomId(): Int {
         return Random(Date().time).nextInt()
     }
+
+    // Mirrors the routing used by the My Site menu (ListItemActionHandler): open New Stats when the
+    // remote flag is on (rollout) or the user has opted in locally.
+    private fun isNewStatsEnabled(): Boolean =
+        newStatsFeatureConfig.isEnabled() || appPrefsWrapper.getNewStatsUserOptedIn()
 
     fun getLastWeekPeriodData(visitsAndViewsModel: VisitsAndViewsModel): PeriodData? {
         val currentDateForSite = WeeklyRoundupUtils.parseStandardDate(visitsAndViewsModel.period) ?: return null
