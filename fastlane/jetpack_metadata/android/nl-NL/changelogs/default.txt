@@ -1,2 +1,6 @@
-26.8:
-Het is bijna zomer en dat betekent bugs. Maak je geen zorgen, we zijn hard aan het werk geweest om ze te verpletteren, met verschillende oplossingen om de app nog mooier te maken om te gebruiken. Deze release bevat de gloednieuwe blok-editor — probeer het op elke site via Site-instellingen.
+26.9:
+- Nieuwe paginalijst met bijgewerkte functies ingeschakeld
+- Stel de nieuwe berichtenlijst in als standaard voor sites met een applicatiewachtwoord
+- Gecombineerde bot-/Happiness Engineer-chats in Support
+- Crash opgelost bij het openen van media terwijl je de editor verlaat
+- Beta-badge verwijderd uit menu's op Mijn site

@@ -9,7 +9,9 @@ import com.automattic.encryptedlogging.EncryptedLogging;
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.network.UserAgent;
+import org.wordpress.android.fluxc.network.rest.wpapi.taxonomy.TaxonomiesRestApiMigrationConfig;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AppSecrets;
+import org.wordpress.android.util.config.TaxonomiesRestApiMigrationFeatureConfig;
 
 import javax.inject.Singleton;
 
@@ -32,6 +34,12 @@ public class AppConfigModule {
     @Provides
     public UserAgent provideUserAgent(@ApplicationContext Context appContext) {
         return new UserAgent(appContext, WordPress.USER_AGENT_APPNAME);
+    }
+
+    @Provides
+    public TaxonomiesRestApiMigrationConfig provideTaxonomiesRestApiMigrationConfig(
+            TaxonomiesRestApiMigrationFeatureConfig featureConfig) {
+        return featureConfig::isEnabled;
     }
 
     @Provides

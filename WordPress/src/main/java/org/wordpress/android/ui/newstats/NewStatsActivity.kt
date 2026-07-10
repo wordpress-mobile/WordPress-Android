@@ -64,6 +64,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.ui.ActivityLauncher
+import org.wordpress.android.ui.ActivityNavigator
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.main.BaseAppCompatActivity
 import org.wordpress.android.ui.newstats.components.AddCardBottomSheet
@@ -76,6 +77,7 @@ import org.wordpress.android.ui.newstats.locations.LocationsViewModel
 import org.wordpress.android.ui.newstats.mostviewed.MostViewedCard
 import org.wordpress.android.ui.newstats.mostviewed.MostViewedCardUiState
 import org.wordpress.android.ui.newstats.mostviewed.MostViewedDetailActivity
+import org.wordpress.android.ui.newstats.mostviewed.MostViewedDetailSource
 import org.wordpress.android.ui.newstats.mostviewed.MostViewedViewModel
 import org.wordpress.android.ui.newstats.todaysstats.TodaysStatsCard
 import org.wordpress.android.ui.newstats.todaysstats.TodaysStatsViewModel
@@ -137,6 +139,9 @@ class NewStatsActivity : BaseAppCompatActivity() {
     @Inject
     lateinit var newStatsFeatureConfig: NewStatsFeatureConfig
 
+    @Inject
+    lateinit var activityNavigator: ActivityNavigator
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val shouldShowIntro =
@@ -153,6 +158,9 @@ class NewStatsActivity : BaseAppCompatActivity() {
                     onIntroDismissed = {
                         appPrefsWrapper
                             .setNewStatsIntroShown(true)
+                    },
+                    onReferrerChildClick = { url ->
+                        activityNavigator.openInCustomTab(this, url)
                     }
                 )
             }
@@ -228,7 +236,8 @@ private fun NewStatsScreen(
     showSwitchToOldStats: Boolean = false,
     onSwitchToOldStats: () -> Unit = {},
     showIntroBottomSheet: Boolean = false,
-    onIntroDismissed: () -> Unit = {}
+    onIntroDismissed: () -> Unit = {},
+    onReferrerChildClick: (String) -> Unit = {}
 ) {
     val viewsStatsViewModel: ViewsStatsViewModel = viewModel()
     val selectedPeriod by viewsStatsViewModel.selectedPeriod.collectAsState()
@@ -370,7 +379,8 @@ private fun NewStatsScreen(
             ) { page ->
                 StatsTabContent(
                     tab = tabs[page],
-                    viewsStatsViewModel = viewsStatsViewModel
+                    viewsStatsViewModel = viewsStatsViewModel,
+                    onReferrerChildClick = onReferrerChildClick
                 )
             }
         }
@@ -380,11 +390,13 @@ private fun NewStatsScreen(
 @Composable
 private fun StatsTabContent(
     tab: StatsTab,
-    viewsStatsViewModel: ViewsStatsViewModel
+    viewsStatsViewModel: ViewsStatsViewModel,
+    onReferrerChildClick: (String) -> Unit = {}
 ) {
     when (tab) {
         StatsTab.TRAFFIC -> TrafficTabContent(
-            viewsStatsViewModel = viewsStatsViewModel
+            viewsStatsViewModel = viewsStatsViewModel,
+            onReferrerChildClick = onReferrerChildClick
         )
         StatsTab.INSIGHTS -> InsightsTabContent()
         StatsTab.SUBSCRIBERS -> SubscribersTabContent()
@@ -406,7 +418,8 @@ private fun TrafficTabContent(
     fileDownloadsViewModel: FileDownloadsViewModel = viewModel(),
     devicesViewModel: DevicesViewModel = viewModel(),
     utmViewModel: UtmViewModel = viewModel(),
-    newStatsViewModel: NewStatsViewModel = viewModel()
+    newStatsViewModel: NewStatsViewModel = viewModel(),
+    onReferrerChildClick: (String) -> Unit = {}
 ) {
     val context = LocalContext.current
     val todaysStatsUiState by todaysStatsViewModel.uiState.collectAsState()
@@ -679,15 +692,13 @@ private fun TrafficTabContent(
                         uiState = referrersUiState,
                         cardType = cardType,
                         onShowAllClick = {
-                            val detailData = mostViewedViewModel.getReferrersDetailData()
-                            MostViewedDetailActivity.start(
+                            // The referrers detail screen self-fetches the full (unbounded) list, so
+                            // only the source + period are passed instead of the whole item list.
+                            MostViewedDetailActivity.startSelfFetch(
                                 context = context,
-                                cardType = detailData.cardType,
-                                items = detailData.items,
-                                totalViews = detailData.totalViews,
-                                totalViewsChange = detailData.totalViewsChange,
-                                totalViewsChangePercent = detailData.totalViewsChangePercent,
-                                dateRange = detailData.dateRange
+                                cardType = StatsCardType.MOST_VIEWED_REFERRERS,
+                                source = MostViewedDetailSource.REFERRERS,
+                                period = mostViewedViewModel.getCurrentPeriod()
                             )
                         },
                         onRetry = mostViewedViewModel::onRetryReferrers,
@@ -696,7 +707,8 @@ private fun TrafficTabContent(
                         onMoveUp = { newStatsViewModel.moveCardUp(cardType) },
                         onMoveToTop = { newStatsViewModel.moveCardToTop(cardType) },
                         onMoveDown = { newStatsViewModel.moveCardDown(cardType) },
-                        onMoveToBottom = { newStatsViewModel.moveCardToBottom(cardType) }
+                        onMoveToBottom = { newStatsViewModel.moveCardToBottom(cardType) },
+                        onChildClick = onReferrerChildClick
                     )
                     StatsCardType.LOCATIONS -> LocationsCard(
                         uiState = locationsUiState,
@@ -797,14 +809,11 @@ private fun TrafficTabContent(
                     StatsCardType.AUTHORS -> AuthorsCard(
                         uiState = authorsUiState,
                         onShowAllClick = {
-                            val detailData = authorsViewModel.getDetailData()
-                            AuthorsDetailActivity.start(
+                            // The authors detail screen self-fetches the full (unbounded) list, so
+                            // only the selected period is passed instead of the whole item list.
+                            AuthorsDetailActivity.startSelfFetch(
                                 context = context,
-                                authors = detailData.authors,
-                                totalViews = detailData.totalViews,
-                                totalViewsChange = detailData.totalViewsChange,
-                                totalViewsChangePercent = detailData.totalViewsChangePercent,
-                                dateRange = detailData.dateRange
+                                period = authorsViewModel.getCurrentPeriod()
                             )
                         },
                         onRetry = authorsViewModel::onRetry,
@@ -826,16 +835,11 @@ private fun TrafficTabContent(
                         uiState = clicksUiState,
                         cardType = cardType,
                         onShowAllClick = {
-                            val detailData = clicksViewModel.getDetailData()
-                            MostViewedDetailActivity.start(
+                            MostViewedDetailActivity.startSelfFetch(
                                 context = context,
-                                cardType = detailData.cardType,
-                                items = detailData.items,
-                                totalViews = detailData.totalViews,
-                                totalViewsChange = detailData.totalViewsChange,
-                                totalViewsChangePercent =
-                                    detailData.totalViewsChangePercent,
-                                dateRange = detailData.dateRange,
+                                cardType = StatsCardType.CLICKS,
+                                source = MostViewedDetailSource.CLICKS,
+                                period = clicksViewModel.getCurrentPeriod(),
                                 valueHeaderResId = R.string.stats_clicks_label
                             )
                         },
@@ -866,17 +870,11 @@ private fun TrafficTabContent(
                         uiState = searchTermsUiState,
                         cardType = cardType,
                         onShowAllClick = {
-                            val detailData =
-                                searchTermsViewModel.getDetailData()
-                            MostViewedDetailActivity.start(
+                            MostViewedDetailActivity.startSelfFetch(
                                 context = context,
-                                cardType = detailData.cardType,
-                                items = detailData.items,
-                                totalViews = detailData.totalViews,
-                                totalViewsChange = detailData.totalViewsChange,
-                                totalViewsChangePercent =
-                                    detailData.totalViewsChangePercent,
-                                dateRange = detailData.dateRange
+                                cardType = StatsCardType.SEARCH_TERMS,
+                                source = MostViewedDetailSource.SEARCH_TERMS,
+                                period = searchTermsViewModel.getCurrentPeriod()
                             )
                         },
                         onRetry = searchTermsViewModel::onRetry,
@@ -907,17 +905,11 @@ private fun TrafficTabContent(
                         uiState = videoPlaysUiState,
                         cardType = cardType,
                         onShowAllClick = {
-                            val detailData =
-                                videoPlaysViewModel.getDetailData()
-                            MostViewedDetailActivity.start(
+                            MostViewedDetailActivity.startSelfFetch(
                                 context = context,
-                                cardType = detailData.cardType,
-                                items = detailData.items,
-                                totalViews = detailData.totalViews,
-                                totalViewsChange = detailData.totalViewsChange,
-                                totalViewsChangePercent =
-                                    detailData.totalViewsChangePercent,
-                                dateRange = detailData.dateRange
+                                cardType = StatsCardType.VIDEO_PLAYS,
+                                source = MostViewedDetailSource.VIDEO_PLAYS,
+                                period = videoPlaysViewModel.getCurrentPeriod()
                             )
                         },
                         onRetry = videoPlaysViewModel::onRetry,
@@ -948,17 +940,11 @@ private fun TrafficTabContent(
                         uiState = fileDownloadsUiState,
                         cardType = cardType,
                         onShowAllClick = {
-                            val detailData =
-                                fileDownloadsViewModel.getDetailData()
-                            MostViewedDetailActivity.start(
+                            MostViewedDetailActivity.startSelfFetch(
                                 context = context,
-                                cardType = detailData.cardType,
-                                items = detailData.items,
-                                totalViews = detailData.totalViews,
-                                totalViewsChange = detailData.totalViewsChange,
-                                totalViewsChangePercent =
-                                    detailData.totalViewsChangePercent,
-                                dateRange = detailData.dateRange,
+                                cardType = StatsCardType.FILE_DOWNLOADS,
+                                source = MostViewedDetailSource.FILE_DOWNLOADS,
+                                period = fileDownloadsViewModel.getCurrentPeriod(),
                                 valueHeaderResId =
                                     R.string.stats_file_downloads_value_label
                             )

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/menu_edit"
+        android:title="@string/edit" />
+
+    <item
+        android:id="@+id/menu_trash"
+        android:title="@string/mnu_comment_trash" />
+
+    <item
+        android:id="@+id/menu_copy_link"
+        android:title="@string/copy_link_address" />
+
+    <item
+        android:id="@+id/menu_share_link"
+        android:title="@string/share_link" />
+
+    <item
+        android:id="@+id/menu_delete_permanently"
+        android:title="@string/mnu_comment_delete_permanently" />
+
+</menu>

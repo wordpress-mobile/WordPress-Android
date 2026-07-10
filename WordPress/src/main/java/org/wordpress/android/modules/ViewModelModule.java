@@ -9,6 +9,7 @@ import org.wordpress.android.ui.activitylog.list.filter.ActivityLogTypeFilterVie
 import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboardingViewModel;
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewModel;
 import org.wordpress.android.ui.comments.unified.UnifiedCommentActivityViewModel;
+import org.wordpress.android.ui.comments.unified.UnifiedCommentDetailsViewModel;
 import org.wordpress.android.ui.comments.unified.UnifiedCommentListViewModel;
 import org.wordpress.android.ui.comments.unified.UnifiedCommentsEditViewModel;
 import org.wordpress.android.ui.debug.DebugSettingsViewModel;
@@ -474,6 +475,11 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(UnifiedCommentsEditViewModel.class)
     abstract ViewModel unifiedCommentsEditViewModel(UnifiedCommentsEditViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(UnifiedCommentDetailsViewModel.class)
+    abstract ViewModel unifiedCommentDetailsViewModel(UnifiedCommentDetailsViewModel viewModel);
 
     @Binds
     @IntoMap

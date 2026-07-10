@@ -1,2 +1,6 @@
-26.8:
-Es ist fast Sommer und das bedeutet die Bugs sind nicht weit. Keine Sorge, wir haben hart daran gearbeitet, ihnen Herr zu werden, beispielsweise mit verschiedenen Fehlerbehebungen, durch die die App noch benutzerfreundlicher werden soll. Diese Version enthält den brandneuen Block-Editor. Teste ihn auf jeder Website in den Website-Einstellungen.
+26.9:
+- Neue Seitenliste mit aktualisierten Funktionen aktiviert
+- Neue Beitragsliste für Websites mit Anwendungspasswort auf Standard setzen
+- Kombinierte Bot-/Support-Mitarbeiter-Chats im Support
+- Absturz beim Öffnen von Medien behoben, wenn der Editor verlassen wurde
+- Beta-Badge aus Menüs auf „Meine Website“ entfernt

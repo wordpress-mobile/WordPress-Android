@@ -1,2 +1,7 @@
-26.8:
-Ini hampir musim panas, dan itu berarti ancaman bug. Jangan khawatir, kami telah bekerja keras untuk membasminya, dengan beragam perbaikan untuk membuat aplikasi lebih baik lagi untuk digunakan. Rilis ini berisi editor blok baru — silakan coba di situs mana pun dari Pengaturan Situs.
+26.9:
+- Mengaktifkan daftar Halaman baru dengan fitur terbaru
+- Menetapkan daftar Pos baru menjadi default untuk situs dengan kata sandi aplikasi
+- Mempercepat login WordPress.com
+- Kombinasi obrolan bot/Happiness Engineer dalam Dukungan
+- Memperbaiki crash saat membuka media ketika keluar dari editor
+- Menghapus lencana beta dari Menu di Situs Saya

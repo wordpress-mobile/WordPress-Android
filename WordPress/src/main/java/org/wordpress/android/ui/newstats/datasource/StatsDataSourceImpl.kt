@@ -14,6 +14,7 @@ import uniffi.wp_api.StatsFileDownloadsParams
 import uniffi.wp_api.StatsFileDownloadsPeriod
 import uniffi.wp_api.StatsReferrersParams
 import uniffi.wp_api.StatsReferrersPeriod
+import uniffi.wp_api.StatsReferrersResults
 import uniffi.wp_api.StatsRegionViewsParams
 import uniffi.wp_api.StatsRegionViewsPeriod
 import uniffi.wp_api.StatsDevicesParams
@@ -204,19 +205,22 @@ class StatsDataSourceImpl @Inject constructor(
         dateRange: StatsDateRange,
         max: Int
     ): ReferrersDataResult {
+        // Referrers-specific max semantics: the server treats max=0 as "all" but an unset max as
+        // "default 10", so 0 is sent explicitly (unlike other endpoints that map 0 -> null).
+        val maxParam = max.coerceAtLeast(0).toUInt()
         val params = when (dateRange) {
             is StatsDateRange.Preset -> StatsReferrersParams(
                 period = StatsReferrersPeriod.DAY,
                 date = dateRange.date,
                 num = dateRange.num.toUInt(),
-                max = max.coerceAtLeast(1).toUInt(),
+                max = maxParam,
                 locale = wpComLanguage
             )
             is StatsDateRange.Custom -> StatsReferrersParams(
                 period = StatsReferrersPeriod.DAY,
                 date = dateRange.date,
                 startDate = dateRange.startDate,
-                max = max.coerceAtLeast(1).toUInt(),
+                max = maxParam,
                 locale = wpComLanguage
             )
         }
@@ -238,7 +242,8 @@ class StatsDataSourceImpl @Inject constructor(
                     groups.map { group ->
                         ReferrerDataItem(
                             name = group.name.orEmpty(),
-                            views = group.total?.toLong() ?: 0L
+                            views = group.total?.toLong() ?: 0L,
+                            children = group.results.toChildren()
                         )
                     }
                 )
@@ -248,6 +253,18 @@ class StatsDataSourceImpl @Inject constructor(
             }
         }
     }
+
+    private fun StatsReferrersResults?.toChildren(): List<ReferrerChildDataItem> =
+        when (this) {
+            is StatsReferrersResults.Referrers -> v1.map { child ->
+                ReferrerChildDataItem(
+                    name = child.name.orEmpty(),
+                    url = child.url,
+                    views = child.views?.toLong() ?: 0L
+                )
+            }
+            else -> emptyList()
+        }
 
     private fun buildCountryViewsParams(dateRange: StatsDateRange, max: Int) = when (dateRange) {
         is StatsDateRange.Preset -> StatsCountryViewsParams(
@@ -954,13 +971,13 @@ class StatsDataSourceImpl @Inject constructor(
     ): Pair<String, StatsErrorType> = when (result) {
         is WpRequestResult.WpError -> {
             val statusCode = result.statusCode.toInt()
-            val errorType = if (
+            val errorType = when {
+                isStatsUnavailableForSite(result.response) ->
+                    StatsErrorType.NOT_AVAILABLE
                 statusCode == HTTP_FORBIDDEN ||
-                statusCode == HTTP_UNAUTHORIZED
-            ) {
-                StatsErrorType.AUTH_ERROR
-            } else {
-                StatsErrorType.API_ERROR
+                    statusCode == HTTP_UNAUTHORIZED ->
+                    StatsErrorType.AUTH_ERROR
+                else -> StatsErrorType.API_ERROR
             }
             "StatsDataSourceImpl: $methodName WpError " +
                 "(status=$statusCode) - ${result.errorMessage}" to
@@ -990,6 +1007,18 @@ class StatsDataSourceImpl @Inject constructor(
             "StatsDataSourceImpl: $methodName " +
                 "InvalidHttpStatusCode - " +
                 "${result.statusCode}" to StatsErrorType.API_ERROR
+        }
+        is WpRequestResult.UnknownError<*> -> {
+            val errorType = if (
+                isStatsUnavailableForSite(result.response)
+            ) {
+                StatsErrorType.NOT_AVAILABLE
+            } else {
+                StatsErrorType.UNKNOWN
+            }
+            "StatsDataSourceImpl: $methodName UnknownError " +
+                "(status=${result.statusCode}) - " +
+                "${result.response}" to errorType
         }
         else -> {
             "StatsDataSourceImpl: $methodName " +

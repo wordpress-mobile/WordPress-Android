@@ -314,6 +314,11 @@
             android:launchMode="singleTop"
             android:label="@string/comments"/>
         <activity
+            android:name=".ui.commentsrs.CommentsRsListActivity"
+            android:theme="@style/WordPress.NoActionBar"
+            android:launchMode="singleTop"
+            android:label="@string/comments"/>
+        <activity
             android:name=".ui.comments.unified.UnifiedCommentsEditActivity"
             android:theme="@style/WordPress.NoActionBar"
             android:label="@string/edit_comment"/>

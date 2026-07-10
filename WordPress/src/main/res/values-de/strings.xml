@@ -1,15 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2026-06-13 02:37:09+0000
+Translation-Revision-Date: 2026-06-29 22:24:07+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.3
 Language: de
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="support_screen_unified_support_description">Erhalte jederzeit Antworten von unserem Support-Team</string>
+    <string name="support_screen_unified_support_title">Hilfe erhalten</string>
+    <string name="unified_support_attachment_match_score">%1$d %% Übereinstimmung</string>
+    <string name="unified_support_status_bot">Oddie-Bot</string>
+    <string name="unified_support_bot_typing_content_description">Der Support-Bot schreibt gerade</string>
+    <string name="unified_support_message_input_placeholder">Schreib eine Nachricht …</string>
+    <string name="unified_support_conversations_title">Hilfe erhalten</string>
+    <string name="page_rs_move_trashed_page_to_draft_dialog_message">Seiten im Papierkorb können nicht bearbeitet werden. Möchtest du den Status dieser Seite auf „Entwurf“ ändern, um sie bearbeiten zu können?</string>
+    <string name="page_rs_move_trashed_page_to_draft_dialog_title">Seite zu Entwürfen verschieben?</string>
+    <string name="page_rs_confirm_trash_message">Möchtest du diese Seite wirklich in den Papierkorb verschieben?</string>
+    <string name="page_rs_copy_url">URL kopieren</string>
+    <string name="page_rs_failed_to_load">Die Seite konnte nicht geladen werden</string>
+    <string name="page_not_found">Beim Laden der Seite ist ein Fehler aufgetreten. Lade deine Seiten neu und versuche es erneut.</string>
     <string name="xmlrpc_disabled_bottom_sheet_body">Einige Funktionen der App erfordern XML-RPC. Aktiviere es auf deiner Website, um das Problem zu beheben.</string>
     <string name="xmlrpc_disabled_bottom_sheet_title">XML-RPC deaktiviert</string>
     <string name="xmlrpc_disabled_card_text">XML-RPC ist deaktiviert\nEinige Funktionen sind möglicherweise eingeschränkt</string>
-    <string name="application_password_reauthentication_banner">Deine Website-Anmeldedaten sind ungültig. Zum erneuten Authentifizieren tippen.</string>
+    <string name="application_password_reauthentication_banner">Deine Website-Anmeldedaten sind ungültig. Tippe, um dich erneut zu authentifizieren.</string>
     <string name="application_password_app_name_wordpress">WordPress-Android-App auf %s</string>
     <string name="application_password_app_name_jetpack">Jetpack-Android-App auf %s</string>
     <string name="application_password_authorization_cancelled">Autorisierung abgebrochen</string>
@@ -62,9 +75,9 @@ Language: de
     <string name="activity_log_mcp_agent_label">über %1$s</string>
     <string name="post_rs_settings_show_password">Passwort anzeigen</string>
     <string name="post_rs_settings_hide_password">Passwort ausblenden</string>
-    <string name="post_rs_settings_saving">Wird gespeichert \u2026</string>
+    <string name="post_rs_settings_saving">Wird gespeichert …</string>
     <string name="post_rs_settings_search_no_results">Keine Ergebnisse gefunden</string>
-    <string name="post_rs_settings_load_more">Mehr laden \u2026</string>
+    <string name="post_rs_settings_load_more">Mehr laden …</string>
     <string name="post_rs_settings_term_create_error">Begriff konnte nicht erstellt werden</string>
     <string name="post_rs_settings_search_authors">Autoren suchen</string>
     <string name="post_rs_settings_search_terms">Suchen</string>
@@ -165,7 +178,7 @@ Language: de
     <string name="menu_item_saved">Menüeintrag gespeichert</string>
     <string name="menu_item_description_label">Beschreibung</string>
     <string name="menu_item_target_label">Linkziel</string>
-    <string name="menu_item_no_parent">Keines (oberste Ebene)</string>
+    <string name="menu_item_no_parent">Keiner (oberste Ebene)</string>
     <string name="menu_item_parent_label">Übergeordnet</string>
     <string name="menu_item_url_label">URL</string>
     <string name="menu_item_title_label">Titel</string>
@@ -179,8 +192,8 @@ Language: de
     <string name="delete_menu_confirmation_title">Menü löschen</string>
     <string name="menu_deleted">Menü gelöscht</string>
     <string name="menu_saved">Menü gespeichert</string>
-    <string name="menu_display_locations">Positionen anzeigen</string>
-    <string name="menu_auto_add_pages">Neue Seiten der höchsten Ebene automatisch hinzufügen</string>
+    <string name="menu_display_locations">Anzeigepositionen</string>
+    <string name="menu_auto_add_pages">Neue Seiten der obersten Ebene automatisch hinzufügen</string>
     <string name="menu_description_label">Beschreibung</string>
     <string name="menu_name_label">Name</string>
     <string name="edit_items">Einträge bearbeiten</string>
@@ -241,8 +254,10 @@ Language: de
     <string name="post_rs_deleted">Beitrag endgültig gelöscht</string>
     <string name="post_rs_trashed">Beitrag in den Papierkorb verschoben</string>
     <string name="post_rs_confirm_delete_message">Dadurch wird dieser Beitrag endgültig gelöscht. Diese Aktion kann nicht rückgängig gemacht werden.</string>
-    <string name="post_rs_confirm_trash_message">Möchtest du wirklich diesen Beitrag in den Papierkorb verschieben?</string>
+    <string name="post_rs_confirm_trash_message">Möchtest du diesen Beitrag wirklich in den Papierkorb verschieben?</string>
     <string name="post_rs_failed_to_load">Beitrag konnte nicht geladen werden</string>
+    <string name="experimental_rs_pages_list_description">Seitenliste in einer moderneren Benutzeroberfläche für WordPress.com und selbst gehostete Websites mit Anwendungspasswörtern anzeigen</string>
+    <string name="experimental_rs_pages_list">Neue Seitenliste</string>
     <string name="stats_error_admin_url_unavailable">WP Admin kann für diese Website nicht geöffnet werden</string>
     <string name="stats_error_parsing">Beim Laden der Daten ist ein Problem aufgetreten. Bitte erneut versuchen</string>
     <string name="stats_error_network">Netzwerkfehler. Bitte überprüfe deine Verbindung und versuche es erneut</string>
@@ -255,12 +270,12 @@ Language: de
     <string name="pages_empty_published_subtitle">Erstelle doch einfach eine!</string>
     <string name="people_empty_list_filtered_users_button">Benutzer hinzufügen</string>
     <string name="people_empty_list_filtered_users_subtitle">Füge doch einen hinzu!</string>
-    <string name="error_fetching_account">Konto konnte nicht abgerufen werden: %s“</string>
+    <string name="error_fetching_account">Konto konnte nicht abgerufen werden: %s</string>
     <string name="reader_empty_subscriptions">Du hast noch keine Blogs abonniert</string>
     <string name="reader_open_in_browser">Im Browser öffnen</string>
-    <string name="reader_err_get_post_not_authorized_signin_fallback">Du hast nicht die erforderlichen Rechte, um diesen Beitrag anzusehen. Versuche zuerst, dich auf WordPress.com anzumelden.</string>
+    <string name="reader_err_get_post_not_authorized_signin_fallback">Du bist nicht berechtigt, diesen Beitrag anzuzeigen. Melde dich zuerst bei WordPress.com an.</string>
     <string name="reader_err_get_post_not_authorized_fallback">Du hast nicht die erforderlichen Rechte, diesen Beitrag anzusehen</string>
-    <string name="reader_toast_err_blog_not_found">Fehler: Blog kann nicht gefunden werden</string>
+    <string name="reader_toast_err_blog_not_found">Fehler: Der Blog konnte nicht gefunden werden</string>
     <string name="error_browser_no_network">Diese Seite kann nicht geladen werden</string>
     <string name="history_empty_subtitle_post">Du siehst den Verlauf dieses Beitrags, wenn du Änderungen daran vornimmst</string>
     <string name="history_empty_subtitle_page">Du siehst den Verlauf dieser Seite, wenn du Änderungen daran vornimmst</string>
@@ -304,11 +319,11 @@ Language: de
     <string name="he_support_status_closed">Geschlossen</string>
     <string name="he_support_status_solved">Gelöst</string>
     <string name="he_support_status_waiting_for_user">Wartet auf Benutzer</string>
-    <string name="he_support_status_waiting_for_support">Warten auf Support</string>
+    <string name="he_support_status_waiting_for_support">Wartet auf Support</string>
     <string name="he_support_select_attachments">Anhänge auswählen</string>
     <string name="he_support_download_attachment">Anhang herunterladen</string>
     <string name="he_support_include_logs_description">Das Hinzufügen von Protokollen kann unserem Team helfen, Probleme zu untersuchen. Protokolle können aktuelle App-Aktivitäten enthalten.</string>
-    <string name="he_support_include_logs_title">Anwendungsprotokolle einbeziehen</string>
+    <string name="he_support_include_logs_title">Anwendungsprotokolle anhängen</string>
     <string name="he_support_app_logs_label">Anwendungsprotokolle (optional)</string>
     <string name="he_support_skipped_files_header">Übersprungene Dateien: %1$s</string>
     <string name="he_support_attachment_size_label">Anhangslimit: %1$s von %2$s</string>
@@ -317,8 +332,8 @@ Language: de
     <string name="he_support_add_screenshots_button">Screenshots hinzufügen</string>
     <string name="he_support_screenshots_description">Das Hinzufügen von Screenshots kann uns helfen, dein Problem schneller zu verstehen und zu lösen.</string>
     <string name="he_support_screenshots_label">Screenshots (optional)</string>
-    <string name="he_support_failed_to_load_image">Laden des Bilds fehlgeschlagen</string>
-    <string name="he_support_attachment_image">Anhangsbild</string>
+    <string name="he_support_failed_to_load_image">Bild konnte nicht geladen werden</string>
+    <string name="he_support_attachment_image">Bildanhang</string>
     <string name="he_support_loading_image">Bild wird geladen</string>
     <string name="he_support_downloading_attachment">%1$s wird heruntergeladen …</string>
     <string name="he_support_message_label">Nachricht</string>
@@ -328,9 +343,11 @@ Language: de
     <string name="he_support_empty_conversations_button">Unterhaltung starten</string>
     <string name="he_support_empty_conversations_message">Starte eine Unterhaltung mit unserem Support-Team, um Hilfe bei deinen Fragen zu erhalten.</string>
     <string name="he_support_empty_conversations_title">Noch keine Unterhaltungen</string>
+    <string name="unified_support_new_conversation_content_description">Neue Unterhaltung</string>
     <string name="ai_bot_time_just_now">Gerade eben</string>
     <string name="ai_bot_welcome_message">Ich bin dein persönlicher KI-Assistent. Ich kann dich bei allen Fragen zu deiner Website oder deinem Konto unterstützen.</string>
-    <string name="ai_bot_welcome_greeting">Hallo %1$s 👋</string>
+    <string name="ai_bot_welcome_greeting">Willkommen, %1$s 👋</string>
+    <string name="unified_support_generic_error">Es ist ein Fehler aufgetreten. Bitte versuche es später erneut.</string>
     <string name="create">Erstellen</string>
     <string name="logs_screen_general_error">Es ist ein Fehler aufgetreten …</string>
     <string name="logs_screen_empty_state">Keine Protokolle verfügbar</string>
@@ -354,7 +371,7 @@ Language: de
     <string name="term_delete_confirmation_title">Begriff löschen</string>
     <string name="term_sort_by_count">Anzahl</string>
     <string name="term_sort_by_name">Name</string>
-    <string name="term_parent_none">Kein</string>
+    <string name="term_parent_none">Keiner</string>
     <string name="term_parent_label">Übergeordnet:</string>
     <string name="term_count">Anzahl: %1$d</string>
     <string name="term_description_label">Beschreibung:</string>
@@ -394,8 +411,8 @@ Language: de
     <string name="application_password_info_title">Anwendungspasswörter</string>
     <string name="application_password_invalid_description">Dein Anwendungspasswort existiert nicht mehr. Bitte melde dich erneut an, um ein neues Anwendungspasswort zu erstellen.</string>
     <string name="subscribers_delete_failed">Abonnent konnte nicht gelöscht werden</string>
-    <string name="subscribers_delete_success_message">Der Abonnent wurde gelöscht, aber es kann eine Minute dauern, bis die Löschung wirksam wird</string>
-    <string name="subscribers_delete_success_title">Abonnent wurde gelöscht</string>
+    <string name="subscribers_delete_success_message">Der Abonnent wurde gelöscht, aber es kann eine Minute dauern, bis die Löschung übernommen wird</string>
+    <string name="subscribers_delete_success_title">Abonnent gelöscht</string>
     <string name="subscribers_delete_confirmation_message">Möchtest du wirklich diesen Abonnenten löschen?</string>
     <string name="subscribers_delete_confirmation_title">Abonnenten löschen</string>
     <string name="subscribers_sort_name">Name</string>
@@ -414,10 +431,10 @@ Language: de
     <string name="descending">Absteigend</string>
     <string name="ascending">Aufsteigend</string>
     <string name="application_password_invalid">Ungültiges Anwendungspasswort</string>
-    <string name="application_password_credentials_storing_error">Beim Speichern der Anmeldedaten für %1$s ist ein Fehler aufgetreten</string>
+    <string name="application_password_credentials_storing_error">Beim Speichern der Anwendungspasswort-Anmeldedaten für %1$s ist ein Fehler aufgetreten</string>
     <string name="subscribers_add_failed">Das Hinzufügen der Abonnenten ist fehlgeschlagen</string>
     <string name="subscribers_add_success">Die Abonnenten wurden erfolgreich hinzugefügt</string>
-    <string name="subscribers_add_disclosure">\nMit einem Klick auf „Senden“ bestätigst du, dass du die entsprechende Einwilligung eingeholt hast, um diesen Personen eine E-Mail zu senden. Spam-Beschwerden oder eine hohe Zustellfehlerrate von deinen Abonnenten können dazu führen, dass wir Maßnahmen gegen dein Konto ergreifen.\n    </string>
+    <string name="subscribers_add_disclosure">\n        Mit einem Klick auf „Senden“ bestätigst du, dass du die entsprechende Einwilligung eingeholt hast, um diesen Personen eine E-Mail zu senden. Spam-Beschwerden oder eine hohe Zustellfehlerrate von deinen Abonnenten können dazu führen, dass wir Maßnahmen gegen dein Konto ergreifen.\n    </string>
     <string name="subscribers_add_email_hint">name@example.com</string>
     <string name="subscribers_add_subscribers">Abonnenten hinzufügen</string>
     <string name="subscribers_gift_content_description">Geschenk</string>
@@ -463,9 +480,9 @@ Language: de
     <string name="me_email_verification_resend">Verifizierungslink erneut senden</string>
     <string name="me_email_verification_sent_description">Prüfe deinen Posteingang unter %s auf die Bestätigungs-E-Mail</string>
     <string name="me_email_verification_sent">E-Mail gesendet</string>
-    <string name="me_email_verification_sending_description">Bestätigungslink wird gesendet</string>
+    <string name="me_email_verification_sending_description">Verifizierungslink wird gesendet</string>
     <string name="me_email_verification_sending">Wird gesendet …</string>
-    <string name="me_email_verification_verify_email_send_link">Bestätigungslink senden</string>
+    <string name="me_email_verification_verify_email_send_link">Verifizierungslink senden</string>
     <string name="me_email_verification_verify_email_description">Bitte bestätige deine E-Mail-Adresse, um dein Konto zu sichern und alle Funktionen freizuschalten</string>
     <string name="me_email_verification_verify_email">E-Mail-Adresse bestätigen</string>
     <string name="experimental_features_feedback_dialog_decline">Jetzt nicht</string>
@@ -476,7 +493,7 @@ Language: de
     <string name="avatar_update_email_unverified">Um deinen Avatar zu aktualisieren, musst du zuerst deine E-Mail-Adresse verifizieren.</string>
     <string name="feedback_form_note_link_wordpress">Community-Foren.</string>
     <string name="default_web_client_id" a8c-src-lib="module:login">Platzhalter</string>
-    <string name="personalization_screen_shortcuts_accessibility_label">%s-Tastaturkürzel umschalten</string>
+    <string name="personalization_screen_shortcuts_accessibility_label">%s-Verknüpfung umschalten</string>
     <string name="personalization_screen_card_accessibility_label">%s-Karte umschalten</string>
     <string name="user_avatar_content_description">Avatar des Benutzers %s</string>
     <string name="user_row_content_description">Details für Benutzer %s anzeigen</string>
@@ -500,7 +517,7 @@ Language: de
     <string name="more_content_description_promote_blaze">Blaze ‒ mehr</string>
     <string name="reader_toast_success_undo">Blockierung des Blogs aufgehoben</string>
     <string name="feedback_form_note_link_jetpack">Ansicht „Support kontaktieren“.</string>
-    <string name="feedback_form_note_text">Bitte beachte, dass dies kein Supportformular ist. Wir können daher auf deine Anfrage nicht antworten. Wenn du Hilfe benötigst, nutze bitte unseren „</string>
+    <string name="feedback_form_note_text">Bitte beachte, dass dies kein Supportformular ist. Wir können daher nicht auf deine Anfrage antworten. Wenn du Hilfe benötigst, nutze bitte die </string>
     <string name="experimental_block_editor">Experimenteller Block-Editor</string>
     <string name="experimental_features_screen_title">Experimentelle Funktionen</string>
     <string name="back">Zurück</string>
@@ -632,7 +649,7 @@ Language: de
     <string name="reader_preferences_screen_preview_title">Lesepräferenzen</string>
     <string name="reader_filter_empty_tags_action_follow">Einem Schlagwort folgen</string>
     <string name="button_read">Lesen</string>
-    <string name="gutenberg_native_you_can_copy_your_post_text_in_case_your_content_is_impacted_copy" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Du kannst den Text deines Beitrags kopieren, falls dein Inhalt betroffen ist. Kopiere die Fehlerdetails zur Fehlerbehebung und teile sie dem Support mit.</string>
+    <string name="gutenberg_native_you_can_copy_your_post_text_in_case_your_content_is_impacted_copy" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Du kannst den Text deines Beitrags kopieren, falls dein Inhalt betroffen ist. Kopiere die Fehlerdetails zur Fehlerbehebung und teile sie mit dem Support.</string>
     <string name="gutenberg_native_the_editor_has_encountered_an_unexpected_error" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Im Editor ist ein unerwarteter Fehler aufgetreten</string>
     <string name="gutenberg_native_tap_here_to_copy_post_text" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Hier tippen, um den Beitragstext zu kopieren</string>
     <string name="gutenberg_native_tap_here_to_copy_error_details" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Hier tippen, um die Fehlerdetails zu kopieren</string>
@@ -696,7 +713,7 @@ Language: de
     <string name="reader_dropdown_menu_subscriptions">Abonnements</string>
     <string name="reader_dropdown_menu_discover">Entdecken</string>
     <string name="reader_search_content_description">Suche</string>
-    <string name="reader_discover_no_posts_button_tags_text_follow">Schlagwörter abonnieren</string>
+    <string name="reader_discover_no_posts_button_tags_text_follow">Schlagwörtern folgen</string>
     <string name="reader_filter_empty_tags_action_suggested">Vorgeschlagene Schlagwörter</string>
     <string name="reader_filter_empty_blogs_action_search">Suche nach einem Blog</string>
     <string name="reader_filter_empty_tags_list_follow_text">Abonniere ein Schlagwort und du siehst hier die besten Beiträge dazu.</string>
@@ -722,8 +739,8 @@ Language: de
     <string name="domains_primary_site_domain_chip">Hauptdomain</string>
     <string name="domains_site_domain">%s</string>
     <string name="bloganuary_dashboard_nudge_title_january">Der Bloganuary ist da!</string>
-    <string name="bloganuary_dashboard_nudge_overlay_action_dismiss">Los geht’s</string>
-    <string name="bloganuary_dashboard_nudge_overlay_action_turn_on_prompts">Blog-Schreibanregungen aktivieren</string>
+    <string name="bloganuary_dashboard_nudge_overlay_action_dismiss">Los geht’s!</string>
+    <string name="bloganuary_dashboard_nudge_overlay_action_turn_on_prompts">Schreibanregungen aktivieren</string>
     <string name="bloganuary_dashboard_nudge_overlay_note_prompts_enabled">Im Rahmen des Bloganuary werden dir über die täglichen Blog-Schreibanregungen Themen für den Januar geschickt.</string>
     <string name="bloganuary_dashboard_nudge_overlay_note_prompts_disabled">Im Rahmen des Bloganuary werden dir über die täglichen Blog-Schreibanregungen Themen für den Januar geschickt. Blog-Schreibanregungen sind in deinen Einstellungen derzeit deaktiviert.</string>
     <string name="bloganuary_dashboard_nudge_overlay_text_three">Lies die Antworten anderer Blogger, um dich inspirieren zu lassen und neue Kontakte zu knüpfen.</string>
@@ -731,7 +748,7 @@ Language: de
     <string name="bloganuary_dashboard_nudge_overlay_text_one">Lasse dich jeden Tag von einer neuen Schreibanregung inspirieren.</string>
     <string name="bloganuary_dashboard_nudge_overlay_title">Mach mit bei unserer einmonatigen Schreib-Challenge</string>
     <string name="bloganuary_dashboard_nudge_overlay_icon_content_description">Bloganuary</string>
-    <string name="bloganuary_dashboard_nudge_text">Im Januar erhältst du Blog-Schreibanregungen vom Bloganuary, unserer Community-Challenge. Diese soll dir helfen, Bloggen im neuen Jahr zur Gewohnheit zu machen.</string>
+    <string name="bloganuary_dashboard_nudge_text">Im Januar erhältst du Blog-Schreibanregungen vom Bloganuary, unserer Community-Challenge. Diese soll dir dabei helfen, im neuen Jahr eine Schreibroutine zu entwickeln.</string>
     <string name="bloganuary_dashboard_nudge_title_december">Der Bloganuary kommt!</string>
     <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_your_web_bro" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Aus diesem Grund empfehlen wir, den Block in deinem Webbrowser zu bearbeiten.</string>
     <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_the_web_edit" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Aus diesem Grund empfehlen wir, den Block im Webeditor zu bearbeiten.</string>
@@ -745,7 +762,7 @@ Language: de
     <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Blöcke, die tiefer als %d Ebenen verschachtelt sind, werden im mobilen Editor möglicherweise nicht richtig dargestellt.</string>
     <string name="jp_migration_lets_go_button">Los geht’s</string>
     <string name="jp_migration_done_no_sites_message">Es ist an der Zeit, deine WordPress-Reise in der Jetpack-App fortzusetzen.</string>
-    <string name="domain_management_clear_search">Suche löschen</string>
+    <string name="domain_management_clear_search">Suche leeren</string>
     <string name="media_encoder_quality_very_high">Sehr hoch</string>
     <string name="notification_security_key_needed" a8c-src-lib="module:login">Bitte gib deinen Sicherheitsschlüssel an, um fortzufahren.</string>
     <string name="login_error_security_key" a8c-src-lib="module:login">Es gab einige Probleme mit der Anmeldung per Sicherheitsschlüssel</string>
@@ -767,9 +784,9 @@ Language: de
     <string name="post_list_toggle_author_filter">Nach Autor filtern</string>
     <string name="gutenberg_native_s_block_converted_to_blocks" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Block „%s“ in Blöcke umgewandelt</string>
     <string name="gutenberg_native_alternatively_you_can_convert_the_content_to_blocks" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Alternativ kannst du den Inhalt in Blöcke umwandeln.</string>
-    <string name="personalization_screen_tab_shortcuts_inactive_shortcuts">Inaktive Tastaturkürzel</string>
-    <string name="personalization_screen_tab_shortcuts_active_shortcuts">Aktive Tastaturkürzel</string>
-    <string name="personalization_screen_shortcuts_tab_title">Tastaturkürzel</string>
+    <string name="personalization_screen_tab_shortcuts_inactive_shortcuts">Inaktive Verknüpfungen</string>
+    <string name="personalization_screen_tab_shortcuts_active_shortcuts">Aktive Verknüpfungen</string>
+    <string name="personalization_screen_shortcuts_tab_title">Verknüpfungen</string>
     <string name="personalization_screen_cards_tab_title">Karten</string>
     <string name="purchase_domain_screen_discount_notice">* Bei allen kostenpflichtigen Jahrestarifen ist ein Jahr lang eine kostenlose Domain enthalten.</string>
     <string name="purchase_domain_screen_existing_domain_card_button">Website auswählen</string>
@@ -833,7 +850,7 @@ Language: de
     <string name="my_site_post_card_menu_view_all_drafts">Alle Entwürfe anzeigen</string>
     <string name="my_site_todays_stats_menu_view_stats">Statistiken ansehen</string>
     <string name="my_site_dashboard_card_more_menu_hide_card">Ausblenden</string>
-    <string name="contact_support_first_message_hint">Falls ich deine Frage nicht beantworten kann, helfe ich dir dabei, ein Support-Ticket bei unserem Team zu öffnen!</string>
+    <string name="contact_support_first_message_hint">Falls ich deine Frage nicht beantworten kann, helfe ich dir dabei, ein Support-Ticket bei unserem Team zu erstellen!</string>
     <string name="contact_support_first_message_hi">Hallo, ich bin der Jetpack AI Assistant.</string>
     <string name="gutenberg_native_access_this_paywall_block_on_your_web_browser_for_advanced_settin" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Greife über deinen Webbrowser auf diesen Paywall-Block zu, um zu den erweiterten Einstellungen zu gelangen.</string>
     <string name="contact_support_bot_ticket_comment_answer">Antwort:</string>
@@ -848,7 +865,7 @@ Language: de
     <string name="post_settings_jetpack_social_share_message_clear">Leeren</string>
     <string name="jetpack_social_social_shares_remaining">Noch %1$d-mal teilen in sozialen Medien möglich</string>
     <string name="missing_splits_dialog_button">SCHLIEẞEN</string>
-    <string name="missing_splits_dialog_message">Der WordPress-App fehlen erforderliche Komponenten. Die App muss erneut aus dem Google Play Store installiert werden.</string>
+    <string name="missing_splits_dialog_message">Der WordPress-App fehlen erforderliche Komponenten. Die App muss über den Google Play Store neu installiert werden.</string>
     <string name="missing_splits_dialog_title">Installation fehlgeschlagen</string>
     <string name="campaign_detail_error_title">Es ist ein Fehler aufgetreten</string>
     <string name="campaign_listing_page_error_title">Es ist ein Fehler aufgetreten</string>
@@ -857,10 +874,10 @@ Language: de
     <string name="prepublishing_nudges_toolbar_title_social">Social Sharing</string>
     <string name="prepublishing_nudges_social_action">Social Sharing</string>
     <string name="sharing">Soziale Netzwerke</string>
-    <string name="jetpack_social_social_shares_title_all_accounts">Mit %1$d Konten teilen</string>
-    <string name="jetpack_social_social_shares_title_part_of_the_accounts">Mit %1$d von %2$d Konten teilen</string>
-    <string name="jetpack_social_social_shares_title_single_account">Mit %1$s teilen</string>
-    <string name="jetpack_social_social_shares_title_not_sharing">Wird mit keinen Social-Media-Konten geteilt</string>
+    <string name="jetpack_social_social_shares_title_all_accounts">Wird auf %1$d Konten geteilt</string>
+    <string name="jetpack_social_social_shares_title_part_of_the_accounts">Wird auf %1$d von %2$d Konten geteilt</string>
+    <string name="jetpack_social_social_shares_title_single_account">Wird auf %1$s geteilt</string>
+    <string name="jetpack_social_social_shares_title_not_sharing">Wird auf keinen Social-Media-Konten geteilt</string>
     <string name="post_settings_jetpack_social_share_message_description">Passe die Nachricht an, die du teilen möchtest. Wenn du hier keinen eigenen Text hinzufügst, verwenden wir den Beitragstitel als Nachricht.</string>
     <string name="post_settings_jetpack_social_share_message_title">Nachrichten anpassen</string>
     <string name="post_settings_jetpack_social_connect_not_now_button">Jetzt nicht</string>
@@ -876,7 +893,7 @@ Language: de
     <string name="blaze_campaigns_page_title">Blaze-Kampagnen</string>
     <string name="budget_campaign_stats">Budget</string>
     <string name="clicks_campaign_stats">Klicks</string>
-    <string name="impressions_campaign_stats">Aufrufe</string>
+    <string name="impressions_campaign_stats">Impressionen</string>
     <string name="campaign_status_scheduled">GEPLANT</string>
     <string name="campaign_status_in_moderation">IN PRÜFUNG</string>
     <string name="campaign_status_canceled">ABGEBROCHEN</string>
@@ -907,12 +924,12 @@ Language: de
     <string name="social_item_message_title">Nachricht</string>
     <string name="gutenberg_native_block_ungrouped" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Gruppierung des Blocks aufgehoben</string>
     <string name="gutenberg_native_block_grouped" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Block gruppiert</string>
-    <string name="dashboard_card_plans_checkout_success_info">Es kann bis zu 30 Minuten dauern, bis deine Domain richtig funktioniert.</string>
+    <string name="dashboard_card_plans_checkout_success_info">Es kann bis zu 30 Minuten dauern, bis deine Domain vollständig erreichbar ist.</string>
     <string name="dashboard_card_plans_checkout_success_subtitle">Deine neue Domain &lt;b&gt;%s&lt;/b&gt; wird eingerichtet.</string>
     <string name="dashboard_card_plans_checkout_success_title">Fertig!</string>
     <string name="dashboard_card_plans_sub_title">Hol dir eine im ersten Jahr kostenlose Domain, entferne Werbung von deiner Website und erweitere deinen Speicherplatz.</string>
     <string name="dashboard_card_plans_title">Kostenlose Domain zum Jahrestarif</string>
-    <string name="virtual_homepage_learn_more">Erfahre mehr über Templates</string>
+    <string name="virtual_homepage_learn_more">Mehr über Templates erfahren</string>
     <string name="virtual_homepage_subtitle">Deine Homepage verwendet ein Theme-Template und wird im Webeditor geöffnet.</string>
     <string name="virtual_homepage_title">Homepage</string>
     <string name="account_closure_dialog_success_message">Konto geschlossen.</string>
@@ -924,7 +941,7 @@ Language: de
     <string name="account_closure_dialog_error_unauthorized">Du bist nicht autorisiert, dieses Konto zu schließen.</string>
     <string name="account_closure_dialog_error_title">Konto konnte nicht automatisch geschlossen werden!</string>
     <string name="account_closure_dialog_title">Schließen des Kontos bestätigen …</string>
-    <string name="account_closure_dialog_message">Bitte gib den Benutzernamen vor dem Schließen erneut an, um den Vorgang zu bestätigen.</string>
+    <string name="account_closure_dialog_message">Bitte gib deinen Benutzernamen vor dem Schließen erneut an, um den Vorgang zu bestätigen.</string>
     <string name="close_account">Konto schließen</string>
     <string name="sharing_twitter_deprecation_notice_find_out_more">Mehr erfahren</string>
     <string name="sharing_twitter_deprecation_notice_description">Das automatische Teilen auf Twitter ist aufgrund von Änderungen der Bedingungen und der Preisgestaltung von Twitter nicht länger verfügbar.</string>
@@ -940,8 +957,8 @@ Language: de
     <string name="site_creation_domain_search_input_hint">Mit Stichwörtern suchen</string>
     <string name="site_creation_domain_header_subtitle">Suche nach einer kurzen und einprägsamen Domain, damit Personen deine Website leicht finden und besuchen können.</string>
     <string name="site_creation_domain_cost_sale">für das erste Jahr</string>
-    <string name="site_creation_error_cart_subtitle">Deine Website wurde erfolgreich erstellt, wir haben jedoch ein Problem festgestellt, als wir deine individuelle Domain für den Bezahlvorgang vorbereitet haben. Bitte versuche es erneut oder kontaktiere den Support, um Hilfe zu erhalten.</string>
-    <string name="new_site_creation_preview_caption_paid">Es kann bis zu 30 Minuten dauern, bis deine individuelle Domain funktioniert.</string>
+    <string name="site_creation_error_cart_subtitle">Deine Website wurde erfolgreich erstellt. Wir haben jedoch ein Problem festgestellt, als wir deine individuelle Domain für den Bezahlvorgang vorbereitet haben. Bitte versuche es erneut oder kontaktiere den Support, um Hilfe zu erhalten.</string>
+    <string name="new_site_creation_preview_caption_paid">Es kann bis zu 30 Minuten dauern, bis deine individuelle Domain vollständig erreichbar ist.</string>
     <string name="new_site_creation_preview_subtitle_paid">Wir haben dir deinen Beleg per E-Mail gesendet. %s</string>
     <string name="notifications_disabled_permission_dialog">Anwendungsbenachrichtigungen wurden deaktiviert. Tippe hier, um sie zu aktivieren.</string>
     <string name="jp_migration_done_delete_wp_message">Wir empfehlen dir, &lt;b&gt;die WordPress-App auf deinem Gerät zu deinstallieren&lt;/b&gt;, um Datenkonflikte zu vermeiden.</string>
@@ -962,11 +979,11 @@ Language: de
     <string name="permission_images_video_audio">Fotos, Videos, Musik und Audio</string>
     <string name="permission_audio">Musik und Audio</string>
     <string name="permission_images">Fotos und Videos</string>
-    <string name="photo_picker_soft_ask_audios_label">%s benötigt Rechte, um auf deine Audiodateien zuzugreifen</string>
-    <string name="photo_picker_soft_ask_videos_label">%s benötigt Rechte, um auf deine Videos zuzugreifen</string>
-    <string name="photo_picker_soft_ask_photos_label">%s benötigt Rechte, um auf deine Fotos zuzugreifen</string>
-    <string name="photo_picker_soft_ask_photos_videos_label">%s benötigt Rechte, um auf deine Fotos und Videos zuzugreifen</string>
-    <string name="photo_picker_soft_ask_photos_videos_audio_label">%s benötigt Rechte, um auf deine Musik, Audiodateien, Fotos und Videos zuzugreifen</string>
+    <string name="photo_picker_soft_ask_audios_label">%s benötigt die Berechtigung, auf deine Audiodateien zuzugreifen</string>
+    <string name="photo_picker_soft_ask_videos_label">%s benötigt die Berechtigung, auf deine Videos zuzugreifen</string>
+    <string name="photo_picker_soft_ask_photos_label">%s benötigt die Berechtigung, auf deine Fotos zuzugreifen</string>
+    <string name="photo_picker_soft_ask_photos_videos_label">%s benötigt die Berechtigung, auf deine Fotos und Videos zuzugreifen</string>
+    <string name="photo_picker_soft_ask_photos_videos_audio_label">%s benötigt die Berechtigung, auf deine Musik, Audiodateien, Fotos und Videos zuzugreifen</string>
     <string name="notifications_permission_bottom_sheet_button">Benachrichtigungen aktivieren</string>
     <string name="notifications_permission_bottom_sheet_description_2">Gehe zu Einstellungen → Benachrichtigungen → App-Einstellungen und aktiviere %1$s, um sofort benachrichtigt zu werden.</string>
     <string name="notifications_permission_bottom_sheet_description_1">Du musst die App öffnen, um Benachrichtigungen anzuzeigen.</string>
@@ -1002,14 +1019,14 @@ Language: de
     <string name="blaze_overlay_post_promotional_button">Diesen Beitrag mit Blaze bewerben</string>
     <string name="blaze_promotional_subtitle_3">Verfolge die Performance, starte und beende Blaze jederzeit.</string>
     <string name="blaze_promotional_subtitle_2">Deine Inhalte werden auf Millionen von WordPress- und Tumblr-Websites angezeigt.</string>
-    <string name="blaze_promotional_subtitle_1">Bewirb innerhalb von Minuten und für lediglich ein paar Dollar pro Tag jeden beliebigen Beitrag und jede Seite.</string>
+    <string name="blaze_promotional_subtitle_1">Bewirb innerhalb von Minuten und für lediglich ein paar Dollar pro Tag jeden beliebigen Beitrag oder Seite.</string>
     <string name="blaze_promotional_text">Leite mit Blaze mehr Traffic auf deine Website</string>
     <string name="blaze_activity_title">Blaze</string>
     <string name="site_creation_domain_tag_unavailable">Diese Domain ist bereits registriert</string>
     <string name="site_creation_domain_tag_sale">Angebot</string>
     <string name="site_creation_domain_tag_recommended">Empfohlen</string>
     <string name="site_creation_domain_tag_best_alternative">Beste Alternative</string>
-    <string name="support_faq_caption">In unseren FAQ findest du Antworten auf häufige Fragen, die du dir vielleicht auch stellst.</string>
+    <string name="support_faq_caption">In unseren FAQ findest du Antworten auf häufig gestellte Fragen.</string>
     <string name="support_faq_title">Danke für deinen Wechsel zur Jetpack-App!</string>
     <string name="logs_button">Protokolle</string>
     <string name="tickets">Tickets</string>
@@ -1105,7 +1122,7 @@ Language: de
     <string name="blogging_prompts_list_answered_prompt">✓ Beantwortet</string>
     <string name="blogging_prompts_list_title">Schreibanregungen</string>
     <string name="close_desc">Schließen</string>
-    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_this_block_separately_by_ta" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Alternativ kannst du diesen Block trennen und separat bearbeiten, indem du auf „Loslösen“ tippst.</string>
+    <string name="gutenberg_native_alternatively_you_can_detach_and_edit_this_block_separately_by_ta" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Alternativ kannst du diesen Block loslösen und separat bearbeiten, indem du auf „Loslösen“ tippst.</string>
     <string name="dlg_confirm_delete_category">Kategorie „%s“ dauerhaft löschen?</string>
     <string name="deleting_cat_success">Kategorie erfolgreich gelöscht</string>
     <string name="deleting_cat_failed">Löschen der Kategorie fehlgeschlagen</string>
@@ -1127,11 +1144,11 @@ Language: de
     <string name="wp_jetpack_feature_removal_overlay_phase_one_title_notifications">Benachrichtigungen in der Jetpack-App erhalten</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_one_title_reader">Mit der Jetpack-App beliebigen Websites folgen</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_one_title_stats">Statistiken in der neuen Jetpack-App ansehen</string>
-    <string name="preference_open_links_in_jetpack_setting_change_disable_error">Die Option „Links öffnen“ konnte in Jetpack nicht deaktiviert werden</string>
-    <string name="preference_open_links_in_jetpack_setting_change_enable_error">Die Option „Links öffnen“ konnte in Jetpack nicht aktiviert werden</string>
+    <string name="preference_open_links_in_jetpack_setting_change_disable_error">Die Option „Links in Jetpack öffnen“ konnte nicht deaktiviert werden</string>
+    <string name="preference_open_links_in_jetpack_setting_change_enable_error">Die Option „Links in Jetpack öffnen“ konnte nicht aktiviert werden</string>
     <string name="preference_open_links_in_jetpack">Links in Jetpack öffnen</string>
     <string name="jp_migration_network_error_message">Wir können deine Daten und Einstellungen ohne Netzwerkverbindung nicht übertragen.</string>
-    <string name="jp_migration_network_error_subtitle">Bitte vergewissere dich, dass eine Netzwerkverbindung besteht, und versuch es erneut.</string>
+    <string name="jp_migration_network_error_subtitle">Bitte vergewissere dich, dass eine Netzwerkverbindung besteht, und versuche es erneut.</string>
     <string name="jp_migration_network_error_title">Es kann keine Internetverbindung hergestellt werden.</string>
     <string name="jp_migration_generic_error_message">Kontaktiere den Support oder versuche es später erneut.</string>
     <string name="jp_migration_generic_error_subtitle">Es tut uns leid, aber es ist ein Fehler aufgetreten. Deine Daten sind sicher, aber wir können sie derzeit nicht übertragen.</string>
@@ -1202,7 +1219,7 @@ Language: de
     <string name="qrcode_auth_flow_done_subtitle">Tippe auf „Verwerfen“ und navigiere zu deinem Webbrowser zurück, um fortzufahren.</string>
     <string name="qrcode_auth_flow_done_title">Du bist angemeldet!</string>
     <string name="qrcode_auth_flow_validated_primary_action">Ja, melde mich an</string>
-    <string name="qrcode_auth_flow_validated_subtitle">Scanne nur QR-Codes, die direkt von deinem Webbrowser kommen. Scanne niemals einen Code, der dir von jemand anderem geschickt wurde.</string>
+    <string name="qrcode_auth_flow_validated_subtitle">Scanne nur QR-Codes, die direkt in deinem Webbrowser angezeigt werden. Scanne niemals einen Code, der dir von jemand anderem geschickt wurde.</string>
     <string name="qrcode_auth_flow_validated_default_title">Versuchst du dich in der Nähe von %1$s in deinem Webbrowser anzumelden?</string>
     <string name="qrcode_auth_flow_validated_title">Versuchst du dich in der Nähe von %2$s in %1$s anzumelden?</string>
     <string name="stats_insights_subscribers_guide_card">💡Kommentare auf anderen Blogs sind ideal, um Aufmerksamkeit zu generieren und neue Abonnenten zu gewinnen.</string>
@@ -1222,7 +1239,7 @@ Language: de
     <string name="my_site_blogging_prompt_card_skipped_snackbar">Heutigen Blog-Vorschlag übersprungen</string>
     <string name="my_site_blogging_prompt_card_menu_learn_more">Mehr erfahren</string>
     <string name="stats_follower_types_pie_chart_total_label">Gesamt</string>
-    <string name="stats_referrers_pie_chart_others">Sonstiges</string>
+    <string name="stats_referrers_pie_chart_others">Sonstige</string>
     <string name="stats_referrers_pie_chart_search">Suche</string>
     <string name="stats_referrers_pie_chart_wordpress">WordPress</string>
     <string name="stats_referrers_pie_chart_total_label">Aufrufe</string>
@@ -1259,10 +1276,10 @@ Language: de
     <string name="stats_view_total_comments">Kommentare gesamt</string>
     <string name="stats_view_total_likes">Likes gesamt</string>
     <string name="blogging_prompts_notification_dismiss">Verwerfen</string>
-    <string name="blogging_prompts_answer_prompt_notification_answer_action">Antwort</string>
-    <string name="blogging_prompts_answer_prompt_notification_title">Tägliche Aufforderung</string>
+    <string name="blogging_prompts_answer_prompt_notification_answer_action">Antworten</string>
+    <string name="blogging_prompts_answer_prompt_notification_title">Tägliche Schreibanregung</string>
     <string name="blogging_prompts_onboarding_got_it">Verstanden</string>
-    <string name="blogging_reminders_prompt_help_button_desc">Weitere Informationen zu den Aufforderungen</string>
+    <string name="blogging_reminders_prompt_help_button_desc">Mehr über Schreibanregungen erfahren</string>
     <string name="photo_picker_video_thumbnail_unselected">Video nicht ausgewählt</string>
     <string name="photo_picker_video_thumbnail_selected">Video ausgewählt</string>
     <string name="photo_picker_media_thumbnail_content_description">Medien-Vorschaubild</string>
@@ -1274,8 +1291,8 @@ Language: de
     <string name="locale_picker_current_language">Aktuelle Sprache:</string>
     <string name="hpp_choose_and_create_site">Website erstellen</string>
     <string name="blogging_prompts_onboarding_notification_action">Mehr erfahren</string>
-    <string name="blogging_prompts_onboarding_notification_text">Verbessere deine Schreibkünste, indem du deinen eigenen Schreibstil entwickelst. Tippe, um mehr zu erfahren.</string>
-    <string name="blogging_prompts_onboarding_notification_title">Neu in der mobilen WordPress-App: Themenvorschläge</string>
+    <string name="blogging_prompts_onboarding_notification_text">Werde durch eine Schreibroutine zu einem besseren Autor. Tippe, um mehr zu erfahren.</string>
+    <string name="blogging_prompts_onboarding_notification_title">Neu in der mobilen WordPress-App: Schreibanregungen</string>
     <string name="new_site_creation_site_name_header_subtitle">Ein guter Name ist kurz und einprägsam.\nDu kannst ihn später jederzeit ändern.</string>
     <string name="new_site_creation_site_name_header_title">Gib deiner %s-Website einen Namen</string>
     <string name="new_site_creation_site_name_title">Name der Website</string>
@@ -1311,12 +1328,12 @@ Language: de
     <string name="blogging_prompts_onboarding_try_it_now">Jetzt ausprobieren</string>
     <string name="blogging_prompts_onboarding_content_note_title">Hinweis:</string>
     <string name="blogging_prompts_onboarding_content_bottom">Wir zeigen dir jeden Tag einen neuen Themenvorschlag in deinem Dashboard, um deine Kreativität anzuregen!</string>
-    <string name="blogging_prompts_onboarding_content_top">Wenn du deine Schreibkünste verbessern willst, kreiere deinen eigenen Schreibstil und teile ihn mit anderen – und dabei helfen dir unsere Themenvorschläge!</string>
+    <string name="blogging_prompts_onboarding_content_top">Der beste Weg, ein besserer Autor zu werden, ist der Aufbau einer Schreibroutine und der Austausch mit anderen – und genau hier helfen dir unsere Schreibanregungen!</string>
     <string name="blogging_prompts_onboarding_header_title">Einführung\nBlog-Schreibanregungen</string>
     <string name="blogging_prompt_set_reminders">Erinnerungen festlegen</string>
     <string name="blogging_reminders_prompt_title">Eine Blog-Schreibanregung einschließen</string>
     <string name="post_publishing_set_up_blogging_prompts_message">Durch regelmäßiges Veröffentlichen von Beiträgen gewinnst du neue Leser. Sag uns, wann du etwas schreiben möchtest. Dann senden wir dir eine Erinnerung!</string>
-    <string name="set_your_blogging_prompts_title">Verbessere deine Schreibkünste, indem du deinen eigenen Schreibstil entwickelst</string>
+    <string name="set_your_blogging_prompts_title">Durch eine Schreibroutine zu einem besseren Autor werden</string>
     <string name="site_creation_intent_writing_poetry">Kreatives Schreiben und Poesie</string>
     <string name="site_creation_intent_travel">Reisen</string>
     <string name="site_creation_intent_technology">Technologie</string>
@@ -1350,11 +1367,11 @@ Language: de
     <string name="new_site_creation_intents_input_hint">z. B. Mode, Poesie, Politik</string>
     <string name="new_site_creation_intents_title">Website-Thema</string>
     <string name="my_site_blogging_prompt_card_menu_skip">Für heute überspringen</string>
-    <string name="my_site_blogging_prompt_card_menu_view_more">Mehr Themenvorschläge anzeigen</string>
+    <string name="my_site_blogging_prompt_card_menu_view_more">Weitere Schreibanregungen anzeigen</string>
     <string name="my_site_blogging_prompt_card_share_chooser_title">Blog-Vorschlag teilen</string>
     <string name="my_site_blogging_prompt_card_answered_prompt">✓ Beantwortet</string>
     <string name="my_site_blogging_prompt_card_answer_prompt">Auf Themenvorschlag antworten</string>
-    <string name="my_site_blogging_prompt_card_title">Themenvorschläge</string>
+    <string name="my_site_blogging_prompt_card_title">Schreibanregungen</string>
     <string name="my_site_all_tab_title">Alle</string>
     <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a_a31656b3" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Diese Farbkombination ist unter Umständen für manche Menschen schwer lesbar. Wähle eine hellere Hintergrundfarbe und/oder eine dunklere Textfarbe.</string>
     <string name="gutenberg_native_this_color_combination_may_be_hard_for_people_to_read_try_using_a" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Diese Farbkombination ist unter Umständen für manche Menschen schwer lesbar. Wähle eine dunklere Hintergrundfarbe und/oder eine hellere Textfarbe.</string>
@@ -1379,7 +1396,7 @@ Language: de
     <string name="reader_comment_menu_trash">In den Papierkorb verschieben</string>
     <string name="reader_comment_menu_spam">Als Spam markieren</string>
     <string name="reader_comment_menu_unapprove">Zurückweisen</string>
-    <string name="gutenberg_native_tiled_gallery_settings" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Einstellungen für gekachelte Galerien</string>
+    <string name="gutenberg_native_tiled_gallery_settings" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Einstellungen der Kachel-Galerie</string>
     <string name="gutenberg_native_navigates_to_layout_selection_screen" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Navigiert zur Layout-Auswahlansicht</string>
     <string name="gutenberg_native_gallery_style" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Galerie-Stil</string>
     <string name="sharing_connect_via_web_warning_message">Du kannst dein %s-Konto auf der WordPress.com-Website verbinden. Wenn du fertig bist, kehre zur App zurück, um deine Social-Einstellungen zu ändern.</string>
@@ -1412,7 +1429,7 @@ Language: de
     <string name="gutenberg_native_add_media" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">MEDIEN HINZUFÜGEN</string>
     <string name="my_site_error_card_subtitle">Wir haben momentan Probleme, die Daten deiner Website zu laden.</string>
     <string name="my_site_error_card_title">Einige Daten wurden nicht geladen</string>
-    <string name="my_site_dashboard_stale_message">Das Dashboard wird nicht aktualisiert. Bitte überprüfe deine Internetverbindung und ziehe die Ansicht zum Aktualisieren nach unten.</string>
+    <string name="my_site_dashboard_stale_message">Das Dashboard wurde nicht aktualisiert. Bitte überprüfe deine Internetverbindung und ziehe die Ansicht zum Aktualisieren nach unten.</string>
     <string name="my_site_dashboard_update_error">Das Dashboard konnte nicht aktualisiert werden.</string>
     <string name="error_media_video_duration_exceeds_limit">Das Video wurde nicht hochgeladen! Für das Hochladen von Videos, die länger als 5 Minuten dauern, ist ein kostenpflichtiger Tarif erforderlich.</string>
     <string name="about_automattic_acknowledgements_item_title" tools:ignore="UnusedResources" a8c-src-lib="about">Danksagungen</string>
@@ -1437,7 +1454,7 @@ Language: de
     <string name="reader_comments_fetch_failure">Beim Abrufen der Kommentare ist ein Fehler aufgetreten</string>
     <string name="reader_btn_follow_conversation_settings">Einstellungen für „Unterhaltung folgen“</string>
     <string name="gutenberg_native_from_clipboard" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Aus der Zwischenablage</string>
-    <string name="gutenberg_native_copy_url_from_the_clipboard_s" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Kopiere die URL aus der Zwischenablage: %s</string>
+    <string name="gutenberg_native_copy_url_from_the_clipboard_s" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">URL aus der Zwischenablage kopieren: %s</string>
     <string name="me_btn_about">Über WordPress</string>
     <string name="menu_visual_mode_switched_notice">Zum visuellen Editor gewechselt</string>
     <string name="menu_html_mode_switched_notice">Zum Code-Editor gewechselt</string>
@@ -1469,14 +1486,14 @@ Language: de
     <string name="domains_paid_plan_claim_your_domain_caption">In deinem Tarif ist eine kostenlose Domain-Registrierung für ein Jahr enthalten</string>
     <string name="domains_paid_plan_claim_your_domain_title">Kostenlose Domain in Anspruch nehmen</string>
     <string name="domains_add_a_domain">Domain hinzufügen</string>
-    <string name="domains_site_domain_expires_soon">&lt;span style=\"color:#d63638;\"&gt;Läuft ab am %s&lt;/span&gt;</string>
-    <string name="domains_site_domain_expires">Läuft ab am %s</string>
+    <string name="domains_site_domain_expires_soon">&lt;span style=\"color:#d63638;\"&gt;Läuft am %s ab&lt;/span&gt;</string>
+    <string name="domains_site_domain_expires">Läuft am %s ab</string>
     <string name="domain_suggestions_list_item_cost_on_sale">&lt;span style=\"color:#B26200;\"&gt;%1$s für das erste Jahr &lt;/span&gt;&lt;span style=\"color:#50575e;\"&gt;&lt;s&gt;%2$s/Jahr&lt;/s&gt;&lt;/span&gt;</string>
     <string name="domain_suggestions_list_item_cost">%s&lt;span style=\"color:#50575e;\"&gt; /Jahr&lt;/span&gt;</string>
     <string name="comment_edit_cancel_dialog_message">Möchtest du sie verwerfen?</string>
     <string name="comment_edit_cancel_dialog_title">Es sind nicht gespeicherte Änderungen vorhanden</string>
     <string name="comment_edit_comment_error">Kommentar darf nicht leer sein</string>
-    <string name="comment_edit_user_email_error">Benutzer-E-Mail-Adresse ist ungültig</string>
+    <string name="comment_edit_user_email_error">E-Mail-Adresse des Benutzers ist ungültig</string>
     <string name="comment_edit_web_address_error">Web-Adresse ist ungültig</string>
     <string name="comment_edit_user_name_error">Benutzername darf nicht leer sein</string>
     <string name="comment_edit_email_address">E-Mail-Adresse</string>
@@ -1564,7 +1581,7 @@ Language: de
     <string name="blogging_reminders_n_a_week">%s pro Woche</string>
     <string name="set_your_blogging_reminders_button">Erinnerungen festlegen</string>
     <string name="set_up_blogging_reminders_message">Richte Blog-Erinnerungen für die Tage ein, an denen du einen Beitrag erstellen möchtest.</string>
-    <string name="post_publishing_set_up_blogging_reminders_message">Dein Beitrag wird veröffentlicht. In der Zwischenzeit kannst du Blog-Erinnerungen für Tage einrichten, an denen du einen Beitrag erstellen möchtest.</string>
+    <string name="post_publishing_set_up_blogging_reminders_message">Dein Beitrag wird veröffentlicht … In der Zwischenzeit kannst du Blog-Erinnerungen für Tage einrichten, an denen du einen Beitrag erstellen möchtest.</string>
     <string name="set_your_blogging_reminders_title">Festlegen deiner Blog-Erinnerungen</string>
     <string name="blogging_reminders_notification_text">Dies ist deine Erinnerung, heute kreativ zu sein</string>
     <string name="blogging_reminders_notification_title">Am %s ist es Zeit, einen Beitrag zu veröffentlichen</string>
@@ -1590,7 +1607,7 @@ Language: de
     <string name="gutenberg_native_slash_inserter_results" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Ergebnisse der Schrägstrich-Eingabe</string>
     <string name="gutenberg_native_s_has_url_set" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Für %s wurde eine URL festgelegt</string>
     <string name="gutenberg_native_s_has_no_url_set" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Für %s wurde keine URL festgelegt</string>
-    <string name="gutenberg_native_s_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Block %s</string>
+    <string name="gutenberg_native_s_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">%s-Block</string>
     <string name="gutenberg_native_opacity" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Deckkraft</string>
     <string name="gutenberg_native_media_options" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Medien-Optionen</string>
     <string name="gutenberg_native_invalid_url_audio_file_not_found" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Ungültige URL. Audiodatei nicht gefunden.</string>
@@ -1605,9 +1622,9 @@ Language: de
     <string name="gutenberg_native_add_link_text" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Linktext hinzufügen</string>
     <string name="error_media_path_is_directory">Der angegebene Pfad führt zu einem Verzeichnis statt einer Mediendatei</string>
     <string name="error_media_could_not_find_media_in_path">Keine Mediendatei im Pfad gefunden</string>
-    <string name="error_media_unexpected_empty_media_file_path">Unerwarteter leerer Dateipfad für Medien</string>
+    <string name="error_media_unexpected_empty_media_file_path">Unerwartet leerer Dateipfad für Medien</string>
     <string name="error_media_file_type_not_allowed">Dieser Dateityp ist nicht zulässig</string>
-    <string name="error_media_unexpected_null_value">Medien waren leer</string>
+    <string name="error_media_unexpected_null_value">Medium war leer</string>
     <string name="threat_fix_enter_server_creds_msg_plural">&lt;a href=\"%1$s\"&gt;Gib deine Server-Anmeldedaten ein&lt;/a&gt;, um Bedrohungen zu beheben.</string>
     <string name="threat_fix_enter_server_creds_msg_singular">&lt;a href=\"%1$s\"&gt;Gib deine Server-Anmeldedaten ein&lt;/a&gt;, um die Bedrohung zu beheben.</string>
     <string name="gutenberg_native_double_tap_to_add_a_link" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Zum Hinzufügen eines Links zweimal tippen.</string>
@@ -1674,7 +1691,7 @@ Language: de
     <string name="gutenberg_native_double_tap_to_edit_button_text" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Zum Bearbeiten des Button-Texts zweimal tippen</string>
     <string name="gutenberg_native_double_tap_to_change_unit" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Zum Wechseln der Einheit zweimal tippen</string>
     <string name="gutenberg_native_current_placeholder_text_is" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Aktueller Platzhaltertext ist</string>
-    <string name="gutenberg_native_clear_search" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Suche löschen</string>
+    <string name="gutenberg_native_clear_search" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Suche leeren</string>
     <string name="gutenberg_native_cancel_search" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Suche abbrechen</string>
     <string name="gutenberg_native_button_position" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Button-Position</string>
     <string name="gutenberg_native_1_s_2_s_is_3_s_4_s" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">%1$s. %2$s ist %3$s %4$s.</string>
@@ -1706,7 +1723,7 @@ Language: de
     <string name="invite_links_cannot_get_role_data_error">Beim Abrufen von Daten für Rolle %1$s ist ein Fehler aufgetreten</string>
     <string name="invite_links_cannot_get_roles_error">Beim Abrufen von Rollen ist ein Fehler aufgetreten</string>
     <string name="invite_links_generic_get_data_error">Unbekannter Fehler beim Abrufen von Daten zu Einladungs-Links</string>
-    <string name="invite_links_helper_text">Verwende diesen Link, um deine Teammitglieder einzuladen. Jeder, der diese URL besucht, kann sich bei deiner Organisation registrieren, auch wenn er oder sie den Link von jemand anderem erhalten hat. Teile ihn also nur mit vertrauenswürdigen Personen.</string>
+    <string name="invite_links_helper_text">Über diesen Link kannst du deine Teammitglieder einbinden, ohne sie einzeln einladen zu müssen. Jeder, der diese URL aufruft, kann sich bei deiner Organisation registrieren – auch wenn er den Link von jemand anderem erhalten hat. Teile ihn daher bitte nur mit vertrauenswürdigen Personen.</string>
     <string name="invite_links_expire_date">Läuft ab %1$s</string>
     <string name="invite_links_disable_invite_link">Einladungslink deaktivieren</string>
     <string name="invite_links_share_invite_link">Einladungs-Link teilen</string>
@@ -1721,7 +1738,7 @@ Language: de
     <string name="scan_fixing_threats_title_singular">Bedrohung wird behoben</string>
     <string name="disable">Deaktivieren</string>
     <string name="backup_download_status_failure_bullet2">Wir versuchen weiterhin, deine Backup-Datei zum Herunterladen zu erstellen.</string>
-    <string name="backup_download_status_failure_bullet1">Wir konnten den Status nicht finden, der angibt, wie lange dein Backup zum Herunterladen dauert.</string>
+    <string name="backup_download_status_failure_bullet1">Wir konnten den Status nicht finden, der angibt, wie lange dein Backup-Download dauert.</string>
     <string name="backup_download_status_failure_heading">Wir konnten den Status deines Backups zum Herunterladen leider nicht finden.</string>
     <string name="restore_status_bullet_checkmark_icon_content_desc">Häkchen-Icon</string>
     <string name="restore_status_bullet_clock_icon_content_desc">Uhr-Icon</string>
@@ -1745,7 +1762,7 @@ Language: de
     <string name="gutenberg_native_open" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">ÖFFNEN</string>
     <string name="gutenberg_native_no_application_can_handle_this_request" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Diese Anfrage kann von keiner Anwendung verarbeitet werden.</string>
     <string name="gutenberg_native_lock_icon" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Schloss-Icon</string>
-    <string name="gutenberg_native_failed_to_insert_audio_file_please_tap_for_options" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Audiodatei kann nicht eingefügt werden. Für Optionen hier tippen.</string>
+    <string name="gutenberg_native_failed_to_insert_audio_file_please_tap_for_options" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Audiodatei konnte nicht eingefügt werden. Für Optionen tippen.</string>
     <string name="gutenberg_native_double_tap_to_select_an_audio_file" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Zum Auswählen einer Audiodatei zweimal tippen</string>
     <string name="gutenberg_native_double_tap_to_listen_the_audio_file" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Zum Anhören der Audiodatei zweimal tippen</string>
     <string name="gutenberg_native_choose_audio" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Audio auswählen</string>
@@ -1764,14 +1781,14 @@ Language: de
     <string name="scan_here_to_help">hier, um zu helfen</string>
     <string name="scan_idle_threats_description_singular">Beim Scan wurde eine mögliche Bedrohung bei %1$s gefunden. Prüfe die Bedrohung bitte unten und führe die erforderliche Aktion aus oder tippe auf den Button „Alle beheben“. Wir sind %2$s, wenn du uns brauchst.</string>
     <string name="scan_idle_manual_scan_description">Um deine Website noch einmal zu prüfen, führe einen manuellen Scan aus oder warte, bis deine Website heute zu einem späteren Zeitpunkt von Jetpack gescannt wird.</string>
-    <string name="scan_provisioning_description">Willkommen bei Jetpack Scan! Wir bereiten gerade einen vollständigen Scan vor und sehen uns deine Website genau an. Wir geben dir Bescheid, wenn wir etwas sehen, das den Scan beeinträchtigen könnte. Anschließend beginnt dein erster vollständiger Scan.</string>
+    <string name="scan_provisioning_description">Willkommen bei Jetpack Scan! Wir bereiten gerade einen vollständigen Scan vor und sehen uns deine Website genau an. Wir geben dir Bescheid, wenn wir Probleme feststellen, die den Scan beeinträchtigen könnten. Anschließend beginnt dein erster vollständiger Scan.</string>
     <string name="scan_scanning_is_initial_description">Willkommen bei Jetpack Scan! Wir sehen uns deine Website jetzt an und teilen dir die Ergebnisse bald mit.</string>
     <string name="scan_fixing_threats_description_singular">Wir arbeiten im Hintergrund daran, die Bedrohung zu beheben. In der Zwischenzeit kannst du deine Website ganz normal verwenden und jederzeit nachsehen, wie weit der Scan schon ist.</string>
     <string name="scan_scanning_description">Du erhältst eine Benachrichtigung, wenn eine Bedrohung gefunden wird. In der Zwischenzeit kannst du deine Website ganz normal verwenden und jederzeit nachsehen, wie weit der Scan schon ist.</string>
     <string name="scan_fixing_threats_title_plural">Bedrohungen werden behoben</string>
     <string name="scan_request_failed_title">Es ist ein Fehler aufgetreten</string>
-    <string name="activity_log_currently_backing_up_message_no_dates">Erstellung eines Backups der Website</string>
-    <string name="activity_log_currently_backing_up_message">Erstellung eines Backups der Website von %1$s %2$s</string>
+    <string name="activity_log_currently_backing_up_message_no_dates">Backup der Website wird erstellt</string>
+    <string name="activity_log_currently_backing_up_message">Backup der Website von %1$s %2$s wird erstellt</string>
     <string name="activity_log_currently_backing_up_title">Erstellung eines herunterladbaren Backups</string>
     <string name="activity_log_backup_finished_snackbar_message_no_dates">Deine Website wurde erfolgreich gesichert</string>
     <string name="activity_log_backup_finished_snackbar_message">Deine Website wurde erfolgreich gesichert\nBackup erstellt von %1$s %2$s</string>
@@ -1785,7 +1802,7 @@ Language: de
     <string name="restore_complete_done_button_content_description">Fertig-Button</string>
     <string name="restore_complete_icon_content_description">Wiederherstellen-Icon</string>
     <string name="restore_complete_visit_site_action_button">Website aufrufen</string>
-    <string name="restore_complete_description_with_two_parameters">Alle deine ausgewählten Elemente werden jetzt auf den Stand von %1$s %2$s wiederhergestellt.</string>
+    <string name="restore_complete_description_with_two_parameters">Alle deine ausgewählten Elemente wurden jetzt auf den Stand von %1$s %2$s wiederhergestellt.</string>
     <string name="restore_complete_header">Deine Website wurde wiederhergestellt</string>
     <string name="restore_progress_footnote">Du brauchst nicht zu warten. Wir benachrichtigen dich, wenn deine Website wiederhergestellt wurde.</string>
     <string name="restore_progress_icon_content_description">Icon „Website wiederherstellen“</string>
@@ -1797,7 +1814,7 @@ Language: de
     <string name="restore_details_action_button_content_description">Button für Websitewiederherstellung</string>
     <string name="restore_details_icon_content_description">Wiederherstellen-Icon</string>
     <string name="restore_details_action_button">Website wiederherstellen</string>
-    <string name="restore_details_description_with_two_parameters">%1$s %2$s ist der ausgewählten Punkt für deine Wiederherstellung.</string>
+    <string name="restore_details_description_with_two_parameters">%1$s %2$s ist der ausgewählte Punkt für deine Wiederherstellung.</string>
     <string name="restore_details_header">Website wiederherstellen</string>
     <string name="restore_details_choose_items_header">Auswahl der Elemente zur Wiederherstellung:</string>
     <string name="restore">Wiederherstellen</string>
@@ -1810,9 +1827,9 @@ Language: de
     <string name="reader_menu_mark_as_unseen">Als nicht gesehen markieren</string>
     <string name="reader_menu_mark_as_seen">Als gesehen markieren</string>
     <string name="error_media_upload_failed_for_reason">Medien-Upload fehlgeschlagen.\n%1$s</string>
-    <string name="error_media_not_enough_storage">Nicht genügend verfügbarer Websitespeicher</string>
+    <string name="error_media_not_enough_storage">Nicht genügend Speicherplatz auf der Website verfügbar</string>
     <string name="reader_error_changing_seen_status_of_unsupported_post">Gesehen-Status dieses Beitrags kann nicht umgeschaltet werden</string>
-    <string name="reader_marked_post_as_unseen">Als nicht gesehen markiert</string>
+    <string name="reader_marked_post_as_unseen">Beitrag als nicht gesehen markiert</string>
     <string name="reader_marked_post_as_seen">Beitrag als gesehen markiert</string>
     <string name="threat_fix_all_status_error_message">Fehler beim Abrufen des Behebungsstatus. Bitte kontaktiere den Support.</string>
     <string name="threat_fix_all_status_success_message_singular">Die Bedrohung wurde erfolgreich behoben.</string>
@@ -1827,7 +1844,7 @@ Language: de
     <string name="threat_item_sub_header_status_fixed_on">Bedrohung behoben am %s</string>
     <string name="threat_fixing">Bedrohung wird behoben</string>
     <string name="scan_history_ignored_threats_tab">Ignoriert</string>
-    <string name="scan_history_no_threats_found">Keine Elemente gefunden</string>
+    <string name="scan_history_no_threats_found">Keine Einträge gefunden</string>
     <string name="scan_history_fixed_threats_tab">Behoben</string>
     <string name="scan_history_all_threats_tab">Alle</string>
     <string name="scan_scanning_title">Dateien werden gescannt</string>
@@ -2041,8 +2058,8 @@ Language: de
     <string name="gutenberg_native_block_removed" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Block entfernt</string>
     <string name="enter_your_site_address">Gib deine bestehende Website-Adresse ein</string>
     <string name="signup_confirmation_title" a8c-src-lib="module:login">Registrierungsbestätigung</string>
-    <string name="continue_with_google_terms_of_service_text" a8c-src-lib="module:login">Wenn du mit Google fortfährst und noch kein WordPress.com-Konto hast, erstellst du damit ein Konto und stimmst unseren %1$sGeschäftsbedingungen%2$s zu.</string>
-    <string name="continue_terms_of_service_text" a8c-src-lib="module:login">Wenn du fortfährst, stimmst du unseren %1$sGeschäftsbedingungen%2$s zu.</string>
+    <string name="continue_with_google_terms_of_service_text" a8c-src-lib="module:login">Wenn du mit Google fortfährst und noch kein WordPress.com-Konto hast, erstellst du damit ein Konto und stimmst unseren %1$sNutzungsbedingungen%2$s zu.</string>
+    <string name="continue_terms_of_service_text" a8c-src-lib="module:login">Wenn du fortfährst, stimmst du unseren %1$sNutzungsbedingungen%2$s zu.</string>
     <string name="signup_confirmation_message" a8c-src-lib="module:login">Wir werden diese E-Mail-Adresse verwenden, um dein neues WordPress.com-Konto zu erstellen.</string>
     <string name="signup_magic_link_message" a8c-src-lib="module:login">Wir haben dir einen Anmeldelink per E-Mail gesendet, um dein neues WordPress.com-Konto zu erstellen. Überprüfe deine E-Mails auf diesem Gerät und tippe auf den Link in der E-Mail, die du von WordPress.com erhalten hast.</string>
     <string name="enter_account_info_for_site" a8c-src-lib="module:login">Gib deine Kontodetails für %1$s ein.</string>
@@ -2125,7 +2142,7 @@ Language: de
     <string name="suggestion_invalid">%1$s ist kein gültiger %2$s</string>
     <string name="site_settings_select_page">Seite auswählen</string>
     <string name="site_settings_posts_page">Beitragsseite</string>
-    <string name="site_settings_static_homepage">Statische Seite</string>
+    <string name="site_settings_static_homepage">Statische Homepage</string>
     <string name="site_settings_classic_blog">Klassischer Blog</string>
     <string name="site_settings_page_for_posts_and_homepage_cannot_be_equal">Die ausgewählte Homepage und die Seite für Beiträge können nicht identisch sein.</string>
     <string name="site_settings_failed_update_homepage_settings">Aktualisierung der Homepage-Einstellungen fehlgeschlagen, überprüfe deine Internetverbindung</string>
@@ -2140,8 +2157,8 @@ Language: de
     <string name="page_posts_page_successfully_updated">Beitragsseite wurde erfolgreich aktualisiert</string>
     <string name="page_homepage_update_failed">Aktualisierung der Homepage fehlgeschlagen</string>
     <string name="page_homepage_successfully_updated">Homepage wurde erfolgreich aktualisiert</string>
-    <string name="page_cannot_set_posts_page">Um eine Beitragsseite festzulegen, aktiviere „Statische Seite“ in den Website-Einstellungen</string>
-    <string name="page_cannot_set_homepage">Um eine Homepage festzulegen, aktiviere „Statische Seite“ in den Website-Einstellungen</string>
+    <string name="page_cannot_set_posts_page">Um eine Beitragsseite festzulegen, aktiviere „Statische Homepage“ in den Website-Einstellungen</string>
+    <string name="page_cannot_set_homepage">Um eine Homepage festzulegen, aktiviere „Statische Homepage“ in den Website-Einstellungen</string>
     <string name="gutenberg_native_select_a_color" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Farbe auswählen</string>
     <string name="gutenberg_native_double_tap_to_go_to_color_settings" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Zum Wechseln zu den Farbeinstellungen zweimal tippen</string>
     <string name="feature_announcement_find_out_mode">Mehr erfahren</string>
@@ -2216,15 +2233,15 @@ Language: de
     <string name="error_publish_page_no_network">Das Gerät ist offline. Die Seite wurde lokal gespeichert.</string>
     <string name="local_page_autosave_revision_available">Du hast nicht gespeicherte Änderungen an dieser Seite vorgenommen</string>
     <string name="editor_uploading_page">Deine Seite wird hochgeladen</string>
-    <string name="editor_page_saved_locally_failed_media">Es befinden sich nicht fertiggestellte Medien-Uploads in der Seite; sie wurde lokal gespeichert.</string>
+    <string name="editor_page_saved_locally_failed_media">Die Seite enthält fehlgeschlagene Medien-Uploads und wurde lokal gespeichert</string>
     <string name="editor_page_saved_locally">Die Seite wurde auf dem Gerät gespeichert</string>
     <string name="editor_page_saved_online">Die Seite wurde online gespeichert</string>
-    <string name="quickpress_shortcut_activity_label">Blog für QuickPress-Tastenkombination auswählen</string>
-    <string name="app_theme_default">Festgelegt durch Batterieschoner</string>
+    <string name="quickpress_shortcut_activity_label">Blog für QuickPress-Verknüpfung auswählen</string>
+    <string name="app_theme_default">Vom Energiesparmodus festgelegt</string>
     <string name="app_theme_dark">Dunkel</string>
     <string name="app_theme_light">Hell</string>
     <string name="app_theme">Design</string>
-    <string name="dialog_confirm_autosave_body_first_part_for_page">Du hast kürzlich Änderungen an dieser Seite vorgenommen, diese aber nicht gespeichert. Wähle eine Version aus, die geladen wird:\n\n</string>
+    <string name="dialog_confirm_autosave_body_first_part_for_page">Du hast kürzlich Änderungen an dieser Seite vorgenommen, diese aber nicht gespeichert. Wähle eine zu ladende Version aus:\n\n</string>
     <string name="gutenberg_native_warning_message" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Warnmeldung</string>
     <string name="gutenberg_native_show_post_content" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Beitragsinhalt anzeigen</string>
     <string name="gutenberg_native_only_show_excerpt" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Nur Textauszug anzeigen</string>
@@ -2271,7 +2288,7 @@ Language: de
     <string name="stats_posting_activity_empty_description">Es gibt keine Statistiken für diesen Zeitraum.</string>
     <string name="stats_posting_activity_label_content_description">Beitragsaktivität für %1$s</string>
     <string name="stats_posting_activity_content_description">Tage mit %1$s Aufrufen von %2$s: %2$s %3$s. Tippe für weitere Informationen.</string>
-    <string name="stats_posting_activity_action">Navigiere zu allen Statistiken für diesen Zeitraum</string>
+    <string name="stats_posting_activity_action">Zu allen Statistiken für diesen Zeitraum navigieren</string>
     <string name="stats_box_type_very_high">sehr hoch</string>
     <string name="stats_box_type_high">hoch</string>
     <string name="stats_box_type_medium">mittel</string>
@@ -2323,7 +2340,7 @@ Language: de
     <string name="gutenberg_native_take_a_video" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Ein Video aufnehmen</string>
     <string name="gutenberg_native_take_a_photo" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Ein Foto aufnehmen</string>
     <string name="gutenberg_native_start_writing" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Beginne zu schreiben …</string>
-    <string name="gutenberg_native_s_block_this_block_has_invalid_content" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Block %s. Dieser Block hat ungültigen Inhalt</string>
+    <string name="gutenberg_native_s_block_this_block_has_invalid_content" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Block %s. Dieser Block enthält ungültigen Inhalt</string>
     <string name="gutenberg_native_s_block_empty" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Block %s. Leer</string>
     <string name="gutenberg_native_cut_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Block ausschneiden</string>
     <string name="gutenberg_native_problem_opening_the_video" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Problem beim Öffnen des Videos</string>
@@ -2396,7 +2413,7 @@ Language: de
     <string name="post_preview_remote_auto_saving_post">Vorschau wird erstellt …</string>
     <string name="post_preview_saving_draft">Wird gespeichert …</string>
     <string name="local_post_autosave_revision_available">Du hast nicht gespeicherte Änderungen an diesem Beitrag vorgenommen</string>
-    <string name="dialog_confirm_autosave_body_second_part">Von dieser App\nGespeichert auf %1$s\n\nVon einem anderen Gerät\nGespeichert auf %2$s\n</string>
+    <string name="dialog_confirm_autosave_body_second_part">Von dieser App\nGespeichert am %1$s\n\nVon einem anderen Gerät\nGespeichert am %2$s\n</string>
     <string name="dialog_confirm_autosave_body_first_part">Du hast kürzlich Änderungen an diesem Beitrag vorgenommen, diese aber nicht gespeichert. Wähle eine zu ladende Version aus:\n</string>
     <string name="dialog_confirm_autosave_title">Welche Version möchtest du gerne bearbeiten?</string>
     <string name="button_delete_permanently">Endgültig löschen</string>
@@ -2446,7 +2463,7 @@ Language: de
     <string name="navigate_back_desc">Zurück</string>
     <string name="navigate_forward_desc">Weiter</string>
     <string name="calendar_scheduled_post_description">„%1$s“ ist für die Veröffentlichung am „%2$s“ in deiner %3$s-App geplant \n %4$s</string>
-    <string name="calendar_scheduled_post_title">Von WordPress geplanter Beitrag: „%s“</string>
+    <string name="calendar_scheduled_post_title">Geplanter WordPress-Beitrag: „%s“</string>
     <string name="notification_post_will_be_published_in_ten_minutes">„%s“ wird in 10 Minuten veröffentlicht</string>
     <string name="notification_post_will_be_published_in_one_hour">„%s“ wird in 1 Stunde veröffentlicht</string>
     <string name="notification_post_has_been_published">„%s“ wurde veröffentlicht</string>
@@ -2462,7 +2479,7 @@ Language: de
     <string name="post_settings_notification">Benachrichtigung</string>
     <string name="post_settings_time_and_date">Datum und Uhrzeit</string>
     <string name="login_invalid_site_url" a8c-src-lib="module:login">Bitte gib eine vollständige Website-Adresse ein, wie zum Beispiel example.com.</string>
-    <string name="enter_email_for_site" a8c-src-lib="module:login">Meld dich mit WordPress.com an, um dich mit %1$s zu verbinden.</string>
+    <string name="enter_email_for_site" a8c-src-lib="module:login">Melde dich mit WordPress.com an, um dich mit %1$s zu verbinden.</string>
     <string name="stats_post_views_label">Aufrufe</string>
     <string name="stats_post_label">Beitrag</string>
     <string name="stats_list_item_description">%1$s: %2$s, %3$s: %4$s</string>
@@ -2471,14 +2488,14 @@ Language: de
     <string name="stats_collapse_content_description">Einklappen</string>
     <string name="stats_expand_content_description">Erweitern</string>
     <string name="stats_graph_updated">Diagramm aktualisiert.</string>
-    <string name="stats_overview_content_description">%1$s %2$s für den Zeitraum: %3$s, Veränderung gegenüber dem Vorzeitraum: - %4$s</string>
+    <string name="stats_overview_content_description">%1$s %2$s für den Zeitraum: %3$s, Veränderung gegenüber dem Vorzeitraum: %4$s</string>
     <string name="stats_loading_card">Laden der ausgewählten Kartendaten</string>
     <string name="site_settings_editor">Editor</string>
     <string name="description_expand">Erweitern</string>
     <string name="description_collapse">Einklappen</string>
     <string name="my_site_verify_your_email_without_email">Prüfe deinen Posteingang – eine Anleitung wurde an deine E-Mail-Adresse gesendet</string>
     <string name="my_site_verify_your_email">Prüfe deinen Posteingang – eine Anleitung wurde an %s gesendet</string>
-    <string name="post_settings_retry_featured_image">Hochladen erneut starten</string>
+    <string name="post_settings_retry_featured_image">Erneut hochladen</string>
     <string name="post_settings_featured_image_uploading_tap_for_options">Medien werden hochgeladen.\nFür Optionen bitte hier tippen.</string>
     <string name="link_open_new_window">Link in neuem Fenster/Tab öffnen</string>
     <string name="stats_widget_error_no_access_token">Um deine Statistiken anzuzeigen, melde dich beim WordPress.com-Konto an.</string>
@@ -2486,12 +2503,12 @@ Language: de
     <string name="post_list_search_prompt">Beiträge durchsuchen</string>
     <string name="domains_suggestions_intro_description">Hier finden dich andere im Internet.</string>
     <string name="domains_suggestions_intro_title">Wähle einen individuellen Domainnamen</string>
-    <string name="my_site_custom_domain_name">Alle Tarife auf WordPress.com enthalten einen individuellen Domainnamen. Registriere dir jetzt deine kostenlose Domain.</string>
+    <string name="my_site_custom_domain_name">Alle Jahrestarife auf WordPress.com enthalten einen individuellen Domainnamen. Registriere jetzt deine kostenlose Domain.</string>
     <string name="stats_widget_minified_name">Auf einen Blick</string>
     <string name="stats_widget_today_insights_name">Heute</string>
-    <string name="stats_widget_all_time_insights_name">Gesamter Zeitraum</string>
+    <string name="stats_widget_all_time_insights_name">Insgesamt</string>
     <string name="stats_widget_weekly_views_name">Aufrufe diese Woche</string>
-    <string name="stats_widget_log_in_message">Bitte melde dich an, um ein Widget hinzuzufügen.</string>
+    <string name="stats_widget_log_in_message">Bitte melde dich in der WordPress-App an, um ein Widget hinzuzufügen.</string>
     <string name="stats_widget_error_no_network">Kein Netzwerk verfügbar</string>
     <string name="stats_widget_error_no_data">Daten konnten nicht geladen werden</string>
     <string name="stats_widget_select_type">Art</string>
@@ -2502,26 +2519,26 @@ Language: de
     <string name="stats_widget_color">Farbe</string>
     <string name="stats_widget_site_caption">Website auswählen</string>
     <string name="stats_widget_site">Website</string>
-    <string name="stats_widget_all_time_title">Gesamter Zeitraum</string>
+    <string name="stats_widget_all_time_title">Insgesamt</string>
     <string name="stats_widget_views_title">Aufrufe diese Woche</string>
     <string name="stats_widget_add">Widget hinzufügen</string>
     <string name="plugin_fetching_error_after_at">Es dauert länger als üblich, die Details des Plugins zu aktualisieren. Bitte versuche es später erneut.</string>
     <string name="plugin_install_site_ineligible_default_error">Falls du kürzlich einen Domainnamen registriert hast, warte bitte ab, bis dieser fertig eingerichtet ist und versuche es erneut.\n\nFalls nicht, scheint etwas schiefgegangen zu sein und die Plugin-Funktion ist möglicherweise für diese Website nicht verfügbar.</string>
-    <string name="domain_contact_information_state_not_available_hint">Status (nicht verfügbar)</string>
+    <string name="domain_contact_information_state_not_available_hint">Bundesland (nicht verfügbar)</string>
     <string name="domain_registration_privacy_protection_tos">Mit der Registrierung dieser Domain stimmst du unseren %1$sAllgemeinen Geschäftsbedingungen%2$s zu</string>
     <string name="error_network_connection">Prüfe deine Netzwerkverbindung und versuche es erneut</string>
     <string name="error_disabled_apis">Die Einstellungen konnten nicht abgerufen werden: Einige APIs sind für diese OAuth-App-ID + Konto-Kombination nicht verfügbar.</string>
-    <string name="jetpack_connection_terms_and_conditions">Mit der Einrichtung von Jetpack erklärst du dich mit unseren %1$sAllgemeinen Geschäftsbedingungen%2$s einverstanden.</string>
+    <string name="jetpack_connection_terms_and_conditions">Mit der Einrichtung von Jetpack erklärst du dich mit unseren %1$sAllgemeinen Geschäftsbedingungen%2$s einverstanden</string>
     <string name="site_settings_disconnected_toast">Keine Verbindung. Die Bearbeitung ist deaktiviert.</string>
     <string name="site_settings_update_password_message">Um die App wieder mit deiner selbst gehosteten Website zu verbinden, gib hier das neue Passwort der Website ein.</string>
     <string name="site_settings_password_updated">Passwort aktualisiert</string>
     <string name="site_settings_password_dialog_title">Passwort aktualisieren</string>
     <string name="domain_registration_registering_domain_name_progress_dialog_message">Domainname wird registriert …</string>
-    <string name="domain_registration_state_picker_dialog_title">Bundesstaat auswählen</string>
+    <string name="domain_registration_state_picker_dialog_title">Bundesland auswählen</string>
     <string name="domain_registration_country_picker_dialog_title">Land auswählen</string>
     <string name="domain_contact_information_register_domain_button">Domain registrieren</string>
     <string name="domain_contact_information_postal_code_hint">Postleitzahl</string>
-    <string name="domain_contact_information_state_hint">Bundesstaat</string>
+    <string name="domain_contact_information_state_hint">Bundesland</string>
     <string name="domain_contact_information_city_hint">Stadt</string>
     <string name="domain_contact_information_address_hint_two">Adresszusatz</string>
     <string name="domain_contact_information_address_hint">Adresse</string>
@@ -2532,7 +2549,7 @@ Language: de
     <string name="domain_contact_information_description">Wir haben bereits deine WordPress.com-\n Kontaktinformationen für dich ausgefüllt. Überprüfe bitte, ob wir die Informationen, die du für diese Domain verwenden möchtest, korrekt eingegeben haben.</string>
     <string name="domain_contact_information_title">Domain-Kontaktdaten</string>
     <string name="domain_privacy_option_off_title">Öffentlich registrieren</string>
-    <string name="domain_privacy_option_on_title">Privat mit Datenschutz registrieren</string>
+    <string name="domain_privacy_option_on_title">Vertraulich mit Datenschutz registrieren</string>
     <string name="domain_registration_privacy_protection_description">Domain-Eigentümer müssen ihre Kontaktinformationen in einer öffentlichen Datenbank aller Domains veröffentlichen.\n        Durch den Datenschutz veröffentlichen wir unsere eigenen Informationen anstatt deiner und leiten sämtliche Kommunikation vertraulich an dich weiter.</string>
     <string name="domain_registration_privacy_protection_title">Datenschutz</string>
     <string name="domain_registration_contact_form_input_error">Bitte gib ein gültiges %s ein</string>
@@ -2561,7 +2578,7 @@ Language: de
     <string name="post_restoring">Beitrag wird wiederhergestellt</string>
     <string name="post_restored">Beitrag wiederhergestellt</string>
     <string name="post_trashing">Beitrag wird in den Papierkorb verschoben</string>
-    <string name="dialog_confirm_trash_losing_unsaved_changes_message">Wenn dieser Beitrag in den Papierkorb verschoben wird, werden ungespeicherte Änderungen verworfen. Möchtest du wirklich fortfahren?</string>
+    <string name="dialog_confirm_trash_losing_unsaved_changes_message">Wenn du diesen Beitrag in den Papierkorb verschiebst, werden auch ungespeicherte Änderungen verworfen. Möchtest du wirklich fortfahren?</string>
     <string name="dialog_confirm_trash_losing_local_changes_title">Lokale Änderungen</string>
     <string name="button_move_to_draft">In Entwurf verschieben</string>
     <string name="posts_trashed_empty">Du hast keine Beiträge im Papierkorb</string>
@@ -2604,11 +2621,11 @@ Language: de
     <string name="stats_site_not_loaded_yet">Website noch nicht geladen</string>
     <string name="stats_more_posts">Mehr Beiträge</string>
     <string name="stats_fewer_posts">Weniger Beiträge</string>
-    <string name="new_site_creation_preview_back_pressed_warning">Du kannst deinen Fortschritt verlieren. Bist du sicher, dass du abbrechen willst?</string>
+    <string name="new_site_creation_preview_back_pressed_warning">Dein Fortschritt könnte verloren gehen. Möchtest du wirklich abbrechen?</string>
     <string name="menu_switch_to_gutenberg_editor">Zum Block-Editor wechseln</string>
     <string name="stats_loading_block_error">Beim Laden deiner Daten ist ein Problem aufgetreten. Aktualisiere deine Seite, um es erneut zu versuchen.</string>
     <string name="stats_loading_error">Daten nicht geladen</string>
-    <string name="site_settings_gutenberg_default_for_new_posts_summary">Bearbeite neue Beiträge und Seiten mit dem Block-Editor.</string>
+    <string name="site_settings_gutenberg_default_for_new_posts_summary">Bearbeite neue Beiträge und Seiten mit dem Block-Editor</string>
     <string name="site_settings_gutenberg_default_for_new_posts">Block-Editor verwenden</string>
     <string name="exit">beenden</string>
     <string name="notification_channel_reminder_title">Erinnerung</string>
@@ -2621,7 +2638,7 @@ Language: de
     <string name="new_site_creation_site_preview_content_description">Vorschau der Website anzeigen</string>
     <string name="new_site_creation_clear_all_content_description">Löschen</string>
     <string name="site_created_but_not_fetched_snackbar_message">Es scheint, als ob du eine langsame Verbindung hast. Wenn du deine neue Website nicht in der Liste siehst, versuch sie zu aktualisieren.</string>
-    <string name="cancel_new_site_wizard_content_description">Assistent zum Erstellen von Websites abbrechen</string>
+    <string name="cancel_new_site_wizard_content_description">Assistenten zum Erstellen von Websites abbrechen</string>
     <string name="notification_new_site_creation_creating_site_subtitle">Wir erstellen deine neue Website.</string>
     <string name="notification_new_site_creation_failed">Es ist ein Problem aufgetreten</string>
     <string name="notification_new_site_creation_title">Website erstellen</string>
@@ -2643,7 +2660,7 @@ Language: de
     <string name="snackbar_conflict_local_version_discarded">Lokale Version verworfen</string>
     <string name="dialog_confirm_load_remote_post_discard_web">Web verwerfen</string>
     <string name="dialog_confirm_load_remote_post_discard_local">Lokal verwerfen</string>
-    <string name="dialog_confirm_load_remote_post_body_2">Lokal\nGespeichert auf %1$s\n\nWeb\nGespeichert auf %2$s\n</string>
+    <string name="dialog_confirm_load_remote_post_body_2">Lokal\nGespeichert am %1$s\n\nWeb\nGespeichert am %2$s\n</string>
     <string name="dialog_confirm_load_remote_post_body">Dieser Beitrag hat zwei Versionen, die im Konflikt stehen. Wähle die Version aus, die du verwerfen möchtest.\n\n</string>
     <string name="dialog_confirm_load_remote_post_title">Synchronisierungskonflikt lösen</string>
     <string name="stats_no_data_for_period">Keine Daten für diesen Zeitraum</string>
@@ -2680,7 +2697,7 @@ Language: de
     <string name="stats_insights_latest_post_message">%2$s wurde vor %1$s veröffentlicht. Hier siehst du, wie der Beitrag bislang abschneidet:</string>
     <string name="stats_insights_latest_post_with_no_engagement">%2$s wurde vor %1$s veröffentlicht. Erhalte mehr Aufrufe deines Beitrags, indem du ihn teilst:</string>
     <string name="stats_insights_tags_and_categories">Schlagwörter und Kategorien</string>
-    <string name="stats_insights_all_time_stats">Gesamte Zeit</string>
+    <string name="stats_insights_all_time_stats">Insgesamt</string>
     <string name="stats_from_to_dates_in_week_label">%1$s - %2$s</string>
     <string name="stats_publicize_service_label">Dienst</string>
     <string name="stats_category_folded_name">%1$s | %2$s</string>
@@ -2741,7 +2758,7 @@ Language: de
     <string name="pages_scheduled">Geplant</string>
     <string name="pages_drafts">Entwürfe</string>
     <string name="pages_published">Veröffentlicht</string>
-    <string name="login_error_sms_throttled" a8c-src-lib="module:login">Wir haben zu viele Versuche unternommen, einen SMS-Verifizierungscode zu senden – atme kurz durch und fordere in einer Minute einen neuen an.</string>
+    <string name="login_error_sms_throttled" a8c-src-lib="module:login">Wir haben zu viele Versuche unternommen, einen SMS-Verifizierungscode zu senden – warte einen Moment und fordere in einer Minute einen neuen an.</string>
     <string name="login_error_email_not_found_v2" a8c-src-lib="module:login">Kein WordPress.com-Konto stimmt mit diesem Google-Konto überein.</string>
     <string name="site_picker_remove_site_empty">Keine Websites entsprechen deiner Suche</string>
     <string name="reader_no_followed_blogs_search_title">Keine Blogs entsprechen deiner Suche</string>
@@ -2779,7 +2796,7 @@ Language: de
     <string name="reader_empty_posts_liked_title">Noch nichts mit „Gefällt mir“ markiert</string>
     <string name="reader_no_followed_blogs_button_discover">Blogs entdecken</string>
     <string name="notifications_empty_likes">Noch keine Likes</string>
-    <string name="activity_log_limited_content_on_free_plan">Da du einen kostenlosen Tarif hast, siehst du nur begrenzte Ereignisse in deiner Aktivität.</string>
+    <string name="activity_log_limited_content_on_free_plan">Da du einen kostenlosen Tarif nutzt, werden dir Aktivitäten nur eingeschränkt angezeigt.</string>
     <string name="activity_log_empty_subtitle">Wenn du Änderungen an deiner Website vornimmst, kannst du hier deinen Aktivitätsverlauf sehen</string>
     <string name="activity_log_empty_title">Noch keine Aktivität</string>
     <string name="posts_empty_list_button">Einen Beitrag erstellen</string>
@@ -2814,11 +2831,11 @@ Language: de
     <string name="reader_empty_search_title">Keine Ergebnisse gefunden</string>
     <string name="comment_read_source_post">Den ursprünglichen Beitrag lesen</string>
     <string name="sites">Websites</string>
-    <string name="signup_magic_link_title" a8c-src-lib="module:login">Magischer Link gesendet</string>
+    <string name="signup_magic_link_title" a8c-src-lib="module:login">Anmeldelink gesendet</string>
     <string name="verification_2fa_screen_title" a8c-src-lib="module:login">Code-Verifizierung</string>
     <string name="selfhosted_site_login_title" a8c-src-lib="module:login">Anmeldedaten</string>
-    <string name="magic_link_sent_login_title" a8c-src-lib="module:login">Magischer Link gesendet</string>
-    <string name="magic_link_login_title" a8c-src-lib="module:login">Magischer Link – Login</string>
+    <string name="magic_link_sent_login_title" a8c-src-lib="module:login">Anmeldelink gesendet</string>
+    <string name="magic_link_login_title" a8c-src-lib="module:login">Anmeldelink</string>
     <string name="site_address_login_title" a8c-src-lib="module:login">Website-Adresse – Login</string>
     <string name="email_address_login_title" a8c-src-lib="module:login">E-Mail-Adresse – Login</string>
     <string name="reader_empty_saved_posts_description">Tippe auf %s, um einen Beitrag in deiner Liste zu speichern.</string>
@@ -2884,13 +2901,13 @@ Language: de
     <string name="content_description_person_reading_device_notification">Person, die Benachrichtigungen auf einem Gerät durchliest</string>
     <string name="content_description_people_looking_charts">Personen, die auf Diagramme und Grafiken schauen</string>
     <string name="comment_title">%1$s auf %2$s</string>
-    <string name="dialog_confirm_delete_permanently_post">Möchtest du wirklich diesen Beitrag endgültig löschen?</string>
+    <string name="dialog_confirm_delete_permanently_post">Möchtest du diesen Beitrag wirklich endgültig löschen?</string>
     <string name="notification_channel_important_title">Wichtig</string>
     <string name="notification_channel_general_title">Allgemein</string>
     <string name="photo_picker_use_photo">Dieses Foto verwenden</string>
     <string name="media_preview_title">%1$d von %2$d</string>
     <string name="stock_media_picker_initial_empty_subtext">Fotos bereitgestellt von %s</string>
-    <string name="stock_media_picker_initial_empty_text">Durchsuchen, um kostenlose Fotos zu finden, die du deiner Mediathek hinzufügen kannst</string>
+    <string name="stock_media_picker_initial_empty_text">Suche nach kostenlosen Fotos, um sie deiner Mediathek hinzuzufügen</string>
     <string name="stock_media_picker_search_hint">Durchsuche die kostenlose Fotobibliothek</string>
     <string name="photo_picker_stock_media">Wähle aus der kostenlosen Fotobibliothek aus</string>
     <string name="error_save_empty_draft">Ein leerer Entwurf kann nicht gespeichert werden</string>
@@ -2909,7 +2926,7 @@ Language: de
     <string name="plugin_detail_banner_desc">Plugin-Banner</string>
     <string name="photo_picker_wpmedia_desc">aus WordPress-Medien auswählen</string>
     <string name="photo_picker_camera_desc">Kamera öffnen</string>
-    <string name="photo_picker_device_desc">von Gerät auswählen</string>
+    <string name="photo_picker_device_desc">vom Gerät auswählen</string>
     <string name="people_invite_role_info_desc">Rolleninfo</string>
     <string name="media_settings_play">Wiedergeben</string>
     <string name="media_settings_image_preview_desc">Bildvorschau</string>
@@ -2934,10 +2951,10 @@ Language: de
     <string name="file_size_in_kilobytes">%s KB</string>
     <string name="file_size_in_bytes">%s B</string>
     <string name="site_settings_quota_space_value">%1$s von %2$s</string>
-    <string name="site_settings_quota_space_hint">Wenn du mehr Speicherplatz brauchst, solltest du darüber nachdenken, deinen WordPress-Tarif aufzurüsten.</string>
+    <string name="site_settings_quota_space_hint">Wenn du mehr Speicherplatz brauchst, solltest du darüber nachdenken, deinen WordPress-Tarif hochzustufen.</string>
     <string name="site_settings_quota_space_title">Belegter Speicherplatz</string>
     <string name="site_settings_quota_header">Medien</string>
-    <string name="comment_unspam_talkback">Kommentar wurde nicht als Spam markiert</string>
+    <string name="comment_unspam_talkback">Kommentar als „Kein Spam“ markiert</string>
     <string name="comment_spam_talkback">Kommentar wurde als Spam markiert</string>
     <string name="comment_delete_talkback">Kommentar gelöscht</string>
     <string name="comment_untrash_talkback">Kommentar wiederhergestellt</string>
@@ -3379,7 +3396,7 @@ Language: de
     <string name="photo_picker_title">Foto auswählen</string>
     <string name="error_publish_no_network">Das Gerät ist offline. Der Beitrag wurde lokal gespeichert.</string>
     <string name="editor_post_saved_online">Der Beitrag wurde online gespeichert</string>
-    <string name="site_settings_image_quality_hint">Qualität der Bilder. Höhere Werte bedeuten bessere Bilder.</string>
+    <string name="site_settings_image_quality_hint">Die Qualität der Bilder. Höhere Werte bedeuten Bilder in besserer Qualität.</string>
     <string name="site_settings_optimize_images_summary">Aktivieren, um die Größe von Bildern zu ändern und sie zu komprimieren</string>
     <string name="media_encoder_quality_maximum">Maximum</string>
     <string name="media_encoder_quality_high">Hoch</string>
@@ -3418,7 +3435,7 @@ Language: de
     <string name="pending_draft_one_day_1">Du hast gestern „%1$s“ geschrieben. Vergiss nicht, ihn zu veröffentlichen!</string>
     <string name="reader_label_visit">Website aufrufen</string>
     <string name="swipe_for_more">Wischen für mehr</string>
-    <string name="reader_err_get_post_not_authorized_signin">Du hast nicht die erforderlichen Rechte, um diesen Beitrag anzusehen. Versuche zuerst, dich auf WordPress.com anzumelden.</string>
+    <string name="reader_err_get_post_not_authorized_signin">Du bist nicht berechtigt, diesen Beitrag anzuzeigen. Melde dich zuerst bei WordPress.com an.</string>
     <string name="reader_snackbar_err_cannot_like_post_logged_out">„Gefällt mir“ funktioniert nur, wenn du bei WordPress.com angemeldet bist.</string>
     <string name="reader_toast_err_already_liked">Du hast diesen Kommentar bereits geliked</string>
     <string name="reader_toast_err_comment_not_found">Kommentar nicht gefunden!</string>
@@ -3567,7 +3584,7 @@ Language: de
     <string name="days_quantity_one">1 Tag</string>
     <string name="web_address">Webadresse</string>
     <string name="primary_site">Primäre Website</string>
-    <string name="pending_email_change_snackbar">Tippe auf den Bestätigungslink in der E-Mail, die an %1$s gesendet wurde, um deine neue Adresse zu bestätigen</string>
+    <string name="pending_email_change_snackbar">Tippe auf den Verifizierungslink in der E-Mail, die an %1$s gesendet wurde, um deine neue Adresse zu bestätigen</string>
     <string name="editor_toast_uploading_please_wait">Medien werden hochgeladen … Bitte warte, bis der Vorgang abgeschlossen ist.</string>
     <string name="error_refresh_comments_showing_older">Die Kommentare konnten nicht aktualisiert werden. Es werden ältere Kommentare angezeigt.</string>
     <string name="post_settings_set_featured_image">Beitragsbild festlegen</string>
@@ -3910,7 +3927,7 @@ Language: de
     <string name="share_link">Link teilen</string>
     <string name="reader_empty_posts_in_tag_updating">Beiträge werden abgerufen …</string>
     <string name="reader_likes_you_and_multi">Dir und %,d anderen gefällt dies</string>
-    <string name="reader_likes_multi">%,d Leuten gefällt dies</string>
+    <string name="reader_likes_multi">%,d Leuten gefällt das</string>
     <string name="comment_spammed">Kommentar als Spam markiert</string>
     <string name="comment_unapproved">Kommentar zurückgewiesen</string>
     <string name="reader_toast_err_get_post">Beitrag konnte nicht geladen werden</string>
@@ -3985,9 +4002,9 @@ Language: de
     <string name="untitled">Ohne Titel</string>
     <string name="edit">Bearbeiten</string>
     <string name="immediately">Sofort</string>
-    <string name="quickpress_add_alert_title">Namen für Tastaturkürzel festlegen</string>
+    <string name="quickpress_add_alert_title">Namen für Verknüpfung festlegen</string>
     <string name="settings">Einstellungen</string>
-    <string name="quickpress_add_error">Name des Tastaturkürzel darf nicht leer sein</string>
+    <string name="quickpress_add_error">Der Name der Verknüpfung darf nicht leer sein</string>
     <string name="pages_private">Privat</string>
     <string name="title">Titel</string>
     <string name="tags_separate_with_commas">Schlagwörter durch Kommas trennen</string>

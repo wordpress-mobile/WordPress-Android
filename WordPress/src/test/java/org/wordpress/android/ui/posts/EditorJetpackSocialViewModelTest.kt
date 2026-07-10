@@ -100,6 +100,7 @@ class EditorJetpackSocialViewModelTest : BaseUnitTest() {
         )
 
         whenever(postSocialSharingModelMapper.map(any(), any())).thenReturn(FAKE_SOCIAL_SHARING_MODEL)
+        whenever(editPostRepository.hasPost()).thenReturn(true)
 
         classToTest.jetpackSocialContainerVisibility.observeForever(showJetpackSocialContainerObserver)
         classToTest.jetpackSocialUiState.observeForever(jetpackSocialUiStateObserver)
@@ -109,6 +110,14 @@ class EditorJetpackSocialViewModelTest : BaseUnitTest() {
     @Test
     fun `Should NOT load jetpack social if post is page`() = test {
         whenever(editPostRepository.isPage).thenReturn(true)
+        classToTest.start(FAKE_SITE_MODEL, editPostRepository)
+        verify(getPublicizeConnectionsForUserUseCase, never()).execute(any(), any(), any())
+    }
+
+    @Test
+    fun `Should NOT load jetpack social if repository has no post`() = test {
+        // Guards against an NPE when the repository's post is null (e.g. config change / process death).
+        whenever(editPostRepository.hasPost()).thenReturn(false)
         classToTest.start(FAKE_SITE_MODEL, editPostRepository)
         verify(getPublicizeConnectionsForUserUseCase, never()).execute(any(), any(), any())
     }

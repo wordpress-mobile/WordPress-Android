@@ -12,10 +12,8 @@ import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
-import org.wordpress.android.ui.newstats.StatsCardType
 import org.wordpress.android.ui.newstats.StatsPeriod
 import org.wordpress.android.ui.newstats.repository.StatsRepository
-import org.wordpress.android.ui.newstats.util.toDateRangeString
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.viewmodel.ResourceProvider
 
@@ -26,7 +24,6 @@ private const val CARD_MAX_ITEMS = 10
  * the same loading/refresh/period/error handling pattern.
  *
  * Subclasses only need to provide:
- * - [cardType]: the [StatsCardType] for detail navigation
  * - [logTag]: a label for error logging
  * - [fetchStats]: the suspend function that calls the
  *   repository and maps the result to [StatsCardFetchResult]
@@ -51,13 +48,6 @@ abstract class BaseStatsCardViewModel(
     private var loadingPeriod: StatsPeriod? = null
     private var loadedPeriod: StatsPeriod? = null
     private var fetchJob: Job? = null
-
-    private var allItems: List<MostViewedDetailItem> = emptyList()
-    private var cachedTotalValue: Long = 0L
-    private var cachedTotalValueChange: Long = 0L
-    private var cachedTotalValueChangePercent: Double = 0.0
-
-    protected abstract val cardType: StatsCardType
     protected abstract val logTag: String
 
     protected abstract suspend fun fetchStats(
@@ -137,19 +127,11 @@ abstract class BaseStatsCardViewModel(
         loadData()
     }
 
-    fun getDetailData(): MostViewedDetailData {
-        return MostViewedDetailData(
-            cardType = cardType,
-            items = allItems,
-            totalViews = cachedTotalValue,
-            totalViewsChange = cachedTotalValueChange,
-            totalViewsChangePercent =
-                cachedTotalValueChangePercent,
-            dateRange = currentPeriod.toDateRangeString(
-                resourceProvider
-            )
-        )
-    }
+    /**
+     * The period currently selected for this card. The detail screen self-fetches its own (unbounded)
+     * data for this period rather than receiving the full list via the Intent.
+     */
+    fun getCurrentPeriod(): StatsPeriod = currentPeriod
 
     @Suppress("TooGenericExceptionCaught")
     private suspend fun fetchAndProcess(site: SiteModel) {
@@ -161,21 +143,14 @@ abstract class BaseStatsCardViewModel(
             ) {
                 is StatsCardFetchResult.Success -> {
                     loadedPeriod = currentPeriod
-                    cachedTotalValue = result.totalValue
-                    cachedTotalValueChange =
-                        result.totalValueChange
-                    cachedTotalValueChangePercent =
-                        result.totalValueChangePercent
 
                     if (result.items.isEmpty()) {
-                        allItems = emptyList()
                         _uiState.value =
                             MostViewedCardUiState.Loaded(
                                 items = emptyList(),
                                 maxViewsForBar = 0
                             )
                     } else {
-                        allItems = result.items
                         val cardItems = result.items
                             .take(CARD_MAX_ITEMS)
                         val maxForBar =
@@ -195,7 +170,8 @@ abstract class BaseStatsCardViewModel(
                         message = resourceProvider.getString(
                             result.messageResId
                         ),
-                        isAuthError = result.isAuthError
+                        isAuthError = result.isAuthError,
+                        isNotAvailable = result.isNotAvailable
                     )
                 }
             }
@@ -232,6 +208,7 @@ sealed class StatsCardFetchResult {
 
     data class Error(
         @StringRes val messageResId: Int,
-        val isAuthError: Boolean = false
+        val isAuthError: Boolean = false,
+        val isNotAvailable: Boolean = false
     ) : StatsCardFetchResult()
 }

@@ -39,9 +39,10 @@ internal class ExperimentalFeaturesViewModel @Inject constructor(
     }
 
     private fun shouldShowFeature(feature: Feature): Boolean {
-        // This feature is only shown in debug builds
+        // These features are only shown in debug builds
         return when (feature) {
-            Feature.EXPERIMENTAL_POST_TYPES -> BuildConfig.DEBUG
+            Feature.EXPERIMENTAL_POST_TYPES,
+            Feature.RS_UNIFIED_COMMENTS -> BuildConfig.DEBUG
             else -> true
         }
     }

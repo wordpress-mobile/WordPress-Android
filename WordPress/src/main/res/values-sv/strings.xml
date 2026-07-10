@@ -1,11 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2026-06-03 09:54:41+0000
+Translation-Revision-Date: 2026-06-24 20:54:52+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.3
 Language: sv_SE
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="support_screen_unified_support_description">Få svar från vårt supportteam när som helst</string>
+    <string name="support_screen_unified_support_title">Skaffa hjälp</string>
+    <string name="unified_support_attachment_match_score">%1$d%% matcha</string>
+    <string name="unified_support_status_bot">Oddie-bot</string>
+    <string name="unified_support_bot_typing_content_description">Supportroboten skriver</string>
+    <string name="unified_support_message_input_placeholder">Skriv ett meddelande …</string>
+    <string name="unified_support_conversations_title">Skaffa hjälp</string>
+    <string name="page_rs_move_trashed_page_to_draft_dialog_message">Borttagna sidor kan inte redigeras. Vill du ändra statusen för denna sida till “utkast“ så att du kan arbeta med det?</string>
+    <string name="page_rs_move_trashed_page_to_draft_dialog_title">Flytta sidan till utkast?</string>
+    <string name="page_rs_confirm_trash_message">Är det säkert att du vill lägga denna sida i papperskorgen?</string>
+    <string name="page_rs_copy_url">Kopiera URL</string>
+    <string name="page_rs_failed_to_load">Det gick inte att läsa in sidan</string>
+    <string name="page_not_found">Ett fel uppstod vid inläsningen av sidan. Uppdatera dina sidor och försök igen.</string>
     <string name="xmlrpc_disabled_bottom_sheet_body">Vissa funktioner i appen kräver XML-RPC. Aktivera det på din webbplats för att lösa detta.</string>
     <string name="xmlrpc_disabled_bottom_sheet_title">XML-RPC inaktiverat</string>
     <string name="xmlrpc_disabled_card_text">XML-RPC inaktiverat\nVissa funktioner kan vara begränsade</string>
@@ -239,6 +252,8 @@ Language: sv_SE
     <string name="post_rs_confirm_delete_message">Inlägget tas då bort permanent. Denna åtgärd kan inte ångras.</string>
     <string name="post_rs_confirm_trash_message">Är du säker på att du vill flytta det här inlägget till papperskorgen?</string>
     <string name="post_rs_failed_to_load">Det gick inte att hämta inlägg</string>
+    <string name="experimental_rs_pages_list_description">Visa sidlista i ett modernare gränssnitt för WordPress.com och webbplatser med applikationslösenord som drivs på egen server</string>
+    <string name="experimental_rs_pages_list">Ny sidlista</string>
     <string name="stats_error_admin_url_unavailable">Det gick inte att öppna WP Admin för den här webbplatsen</string>
     <string name="stats_error_parsing">Det uppstod ett problem när datan hämtades. Försök igen</string>
     <string name="stats_error_network">Nätverksfel. Kontrollera anslutningen och försök igen</string>
@@ -324,9 +339,11 @@ Language: sv_SE
     <string name="he_support_empty_conversations_button">Starta konversation</string>
     <string name="he_support_empty_conversations_message">Starta en konversation med vårt supportteam för att få hjälp med dina frågor.</string>
     <string name="he_support_empty_conversations_title">Inga konversationer ännu</string>
+    <string name="unified_support_new_conversation_content_description">Ny konversation</string>
     <string name="ai_bot_time_just_now">Just nu</string>
     <string name="ai_bot_welcome_message">Jag är din personliga AI-assistent. Jag kan hjälpa till med frågor om din webbplats eller ditt konto.</string>
     <string name="ai_bot_welcome_greeting">Hej %1$s 👋</string>
+    <string name="unified_support_generic_error">Något gick fel. Försök igen senare.</string>
     <string name="create">Skapa</string>
     <string name="logs_screen_general_error">Något gick fel …</string>
     <string name="logs_screen_empty_state">Inga loggar tillgängliga</string>

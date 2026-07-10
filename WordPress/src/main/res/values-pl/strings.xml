@@ -1,11 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2026-06-04 13:37:29+0000
+Translation-Revision-Date: 2026-06-22 11:15:57+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/4.0.3
 Language: pl
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="support_screen_unified_support_description">Uzyskaj odpowiedzi od naszego zespołu pomocy technicznej – o każdej porze</string>
+    <string name="support_screen_unified_support_title">Uzyskaj pomoc</string>
+    <string name="unified_support_attachment_match_score">%1$d%% pasuje</string>
+    <string name="unified_support_status_bot">Dziwny bot</string>
+    <string name="unified_support_bot_typing_content_description">Bot pomocy technicznej pisze</string>
+    <string name="unified_support_message_input_placeholder">Wpisz wiadomość…</string>
+    <string name="unified_support_conversations_title">Uzyskaj pomoc</string>
+    <string name="page_rs_move_trashed_page_to_draft_dialog_message">Strony w koszu nie można edytować. Czy chcesz zmienić jej status na „wersja robocza”, żeby móc nad nią popracować?</string>
+    <string name="page_rs_move_trashed_page_to_draft_dialog_title">Zmienić status strony na szkic?</string>
+    <string name="page_rs_confirm_trash_message">Przenieść stronę do kosza?</string>
+    <string name="page_rs_copy_url">Skopiuj adres URL</string>
+    <string name="page_rs_failed_to_load">Nie załadowano strony</string>
+    <string name="page_not_found">Podczas ładowania strony wystąpił błąd. Odśwież stronę i spróbuj jeszcze raz.</string>
     <string name="xmlrpc_disabled_bottom_sheet_body">Niektóre funkcje w aplikacji wymagają XML-RPC. Włącz je w swojej witrynie, aby rozwiązać ten problem.</string>
     <string name="xmlrpc_disabled_bottom_sheet_title">XML-RPC jest wyłączone</string>
     <string name="xmlrpc_disabled_card_text">XML-RPC jest wyłączone\nNiektóre funkcje mogą być ograniczone</string>
@@ -241,8 +254,10 @@ Language: pl
     <string name="post_rs_deleted">Wpis trwale usunięty</string>
     <string name="post_rs_trashed">Wpis przeniesiony do kosza</string>
     <string name="post_rs_confirm_delete_message">Spowoduje to trwałe usunięcie tego wpisu. Tej akcji nie można cofnąć.</string>
-    <string name="post_rs_confirm_trash_message">Czy na pewno chcesz przenieść ten wpis do kosza?</string>
+    <string name="post_rs_confirm_trash_message">Przenieść wpis do kosza?</string>
     <string name="post_rs_failed_to_load">Nie udało się wczytać wpisu</string>
+    <string name="experimental_rs_pages_list_description">Wyświetl listę stron w nowoczesnym interfejsie użytkownika dla WordPress.com i witryn z własnym hostingiem z hasłami aplikacji</string>
+    <string name="experimental_rs_pages_list">Lista nowych stron</string>
     <string name="stats_error_admin_url_unavailable">Nie można otworzyć WP Admin dla tej witryny</string>
     <string name="stats_error_parsing">Wystąpił problem z wczytywaniem danych. Spróbuj ponownie.</string>
     <string name="stats_error_network">Błąd sieci. Sprawdź połączenie i spróbuj ponownie</string>
@@ -328,9 +343,11 @@ Language: pl
     <string name="he_support_empty_conversations_button">Rozpocznij rozmowę</string>
     <string name="he_support_empty_conversations_message">Rozpocznij rozmowę z naszym zespołem pomocy technicznej, aby uzyskać odpowiedź na swoje pytania.</string>
     <string name="he_support_empty_conversations_title">Brak rozmów</string>
+    <string name="unified_support_new_conversation_content_description">Nowa rozmowa</string>
     <string name="ai_bot_time_just_now">Przed chwilą</string>
     <string name="ai_bot_welcome_message">Jestem twoim osobistym asystentem SI. Mogę pomóc z wszelkimi pytaniami dotyczącymi twojej witryny lub konta.</string>
     <string name="ai_bot_welcome_greeting">Cześć %1$s 👋</string>
+    <string name="unified_support_generic_error">Coś poszło nie tak. Spróbuj ponownie później.</string>
     <string name="create">Utwórz</string>
     <string name="logs_screen_general_error">Coś poszło nie tak…</string>
     <string name="logs_screen_empty_state">Brak dostępnych dzienników</string>
@@ -2823,7 +2840,7 @@ Language: pl
     <string name="email_address_login_title" a8c-src-lib="module:login">Logowanie adresem email</string>
     <string name="reader_empty_saved_posts_description">Stuknij %s aby zapisać wpis na swojej liście.</string>
     <string name="reader_empty_saved_posts_title">Nie zapisano jeszcze żadnych wpisów!</string>
-    <string name="reader_bookmark_snack_title">Wpis zapisano</string>
+    <string name="reader_bookmark_snack_title">Zapisano wpis</string>
     <string name="reader_bookmark_snack_btn">Zobacz wszystko</string>
     <string name="reader_remove_bookmark">Usuń z zapisanych wpisów</string>
     <string name="reader_add_bookmark">Dodaj do zapisanych wpisów</string>

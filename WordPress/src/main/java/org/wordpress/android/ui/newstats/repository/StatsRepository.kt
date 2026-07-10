@@ -81,6 +81,11 @@ internal fun calculateItemChangePercent(
 private const val NUM_DAYS_TODAY = 1
 private const val SUBSCRIBERS_DEFAULT_MAX = 10
 
+// Number of referrers requested for the card. The detail screen requests all of them (max = 0,
+// which the server treats as "unlimited").
+private const val REFERRERS_CARD_MAX = 10
+private const val REFERRERS_DETAIL_MAX = 0
+
 /**
  * Repository for fetching stats data using the wordpress-rs API.
  * Handles hourly visits/views data for the Today's Stats card chart.
@@ -590,9 +595,22 @@ class StatsRepository @Inject constructor(
                 fetchTopPostsWithComparison(siteId, currentDateRange, previousDateRange)
             }
             MostViewedDataSource.REFERRERS -> {
-                fetchReferrersWithComparison(siteId, currentDateRange, previousDateRange)
+                fetchReferrersWithComparison(siteId, currentDateRange, previousDateRange, REFERRERS_CARD_MAX)
             }
         }
+    }
+
+    /**
+     * Fetches the full referrer list (max = 0 = unlimited) for the referrers detail screen. Kept
+     * separate from [fetchMostViewed] (which bounds the card to [REFERRERS_CARD_MAX]) so the detail
+     * screen can show more entries than the card without inflating the card request.
+     */
+    suspend fun fetchReferrersDetail(
+        siteId: Long,
+        period: StatsPeriod
+    ): MostViewedResult = withContext(ioDispatcher) {
+        val (currentDateRange, previousDateRange) = calculateComparisonDateRanges(period)
+        fetchReferrersWithComparison(siteId, currentDateRange, previousDateRange, REFERRERS_DETAIL_MAX)
     }
 
     private suspend fun fetchTopPostsWithComparison(
@@ -660,10 +678,15 @@ class StatsRepository @Inject constructor(
     private suspend fun fetchReferrersWithComparison(
         siteId: Long,
         currentDateRange: StatsDateRange,
-        previousDateRange: StatsDateRange
+        previousDateRange: StatsDateRange,
+        max: Int
     ): MostViewedResult = coroutineScope {
-        val currentDeferred = async { statsDataSource.fetchReferrers(siteId, currentDateRange) }
-        val previousDeferred = async { statsDataSource.fetchReferrers(siteId, previousDateRange) }
+        // The card requests REFERRERS_CARD_MAX items; the detail screen requests all of them by
+        // passing max = 0 (the server treats 0 as "unlimited", vs. an unset max that defaults to 10).
+        // Fetching all only when the detail screen opens keeps the card request small and avoids
+        // passing a large list across the process boundary.
+        val currentDeferred = async { statsDataSource.fetchReferrers(siteId, currentDateRange, max = max) }
+        val previousDeferred = async { statsDataSource.fetchReferrers(siteId, previousDateRange, max = max) }
 
         val currentResult = currentDeferred.await()
         val previousResult = previousDeferred.await()
@@ -690,7 +713,14 @@ class StatsRepository @Inject constructor(
                         title = item.name,
                         views = item.views,
                         previousViews = previousViews,
-                        isFirst = index == 0
+                        isFirst = index == 0,
+                        children = item.children.map { child ->
+                            MostViewedChildData(
+                                name = child.name,
+                                url = child.url,
+                                views = child.views
+                            )
+                        }
                     )
                 },
                 totalViews = totalViews,
@@ -1110,8 +1140,8 @@ class StatsRepository @Inject constructor(
                 items, total, change, pct
             )
         },
-        buildError = { resId, isAuth ->
-            ClicksResult.Error(resId, isAuth)
+        buildError = { resId, isAuth, isNotAvailable ->
+            ClicksResult.Error(resId, isAuth, isNotAvailable)
         },
         logLabel = "clicks"
     )
@@ -1141,8 +1171,8 @@ class StatsRepository @Inject constructor(
                 items, total, change, pct
             )
         },
-        buildError = { resId, isAuth ->
-            SearchTermsResult.Error(resId, isAuth)
+        buildError = { resId, isAuth, isNotAvailable ->
+            SearchTermsResult.Error(resId, isAuth, isNotAvailable)
         },
         logLabel = "search terms"
     )
@@ -1172,8 +1202,8 @@ class StatsRepository @Inject constructor(
                 items, total, change, pct
             )
         },
-        buildError = { resId, isAuth ->
-            VideoPlaysResult.Error(resId, isAuth)
+        buildError = { resId, isAuth, isNotAvailable ->
+            VideoPlaysResult.Error(resId, isAuth, isNotAvailable)
         },
         logLabel = "video plays"
     )
@@ -1205,8 +1235,8 @@ class StatsRepository @Inject constructor(
                 items, total, change, pct
             )
         },
-        buildError = { resId, isAuth ->
-            FileDownloadsResult.Error(resId, isAuth)
+        buildError = { resId, isAuth, isNotAvailable ->
+            FileDownloadsResult.Error(resId, isAuth, isNotAvailable)
         },
         logLabel = "file downloads"
     )
@@ -1381,7 +1411,7 @@ class StatsRepository @Inject constructor(
         metricOf: (Raw) -> Long,
         mapItem: (Raw, Long) -> Output,
         buildSuccess: (List<Output>, Long, Long, Double) -> R,
-        buildError: (Int, Boolean) -> R,
+        buildError: (Int, Boolean, Boolean) -> R,
         logLabel: String
     ): R = withContext(ioDispatcher) {
         val (curRange, prevRange) =
@@ -1425,7 +1455,9 @@ class StatsRepository @Inject constructor(
                 buildError(
                     curResult.errorType.messageResId,
                     curResult.errorType ==
-                        StatsErrorType.AUTH_ERROR
+                        StatsErrorType.AUTH_ERROR,
+                    curResult.errorType ==
+                        StatsErrorType.NOT_AVAILABLE
                 )
             }
         }
@@ -1869,12 +1901,22 @@ data class MostViewedItemData(
     val title: String,
     val views: Long,
     val previousViews: Long,
-    val isFirst: Boolean
+    val isFirst: Boolean,
+    val children: List<MostViewedChildData> = emptyList()
 ) {
     val viewsChange: Long get() = views - previousViews
     val viewsChangePercent: Double
         get() = calculateItemChangePercent(views, previousViews)
 }
+
+/**
+ * A child item nested under a most viewed item (e.g. a referrer under a referrer group).
+ */
+data class MostViewedChildData(
+    val name: String,
+    val url: String?,
+    val views: Long
+)
 
 /**
  * Result wrapper for country views fetch operation.
@@ -2013,7 +2055,8 @@ sealed class ClicksResult {
     ) : ClicksResult()
     data class Error(
         @StringRes val messageResId: Int,
-        val isAuthError: Boolean = false
+        val isAuthError: Boolean = false,
+        val isNotAvailable: Boolean = false
     ) : ClicksResult()
 }
 
@@ -2036,7 +2079,8 @@ sealed class SearchTermsResult {
     ) : SearchTermsResult()
     data class Error(
         @StringRes val messageResId: Int,
-        val isAuthError: Boolean = false
+        val isAuthError: Boolean = false,
+        val isNotAvailable: Boolean = false
     ) : SearchTermsResult()
 }
 
@@ -2059,7 +2103,8 @@ sealed class VideoPlaysResult {
     ) : VideoPlaysResult()
     data class Error(
         @StringRes val messageResId: Int,
-        val isAuthError: Boolean = false
+        val isAuthError: Boolean = false,
+        val isNotAvailable: Boolean = false
     ) : VideoPlaysResult()
 }
 
@@ -2082,7 +2127,8 @@ sealed class FileDownloadsResult {
     ) : FileDownloadsResult()
     data class Error(
         @StringRes val messageResId: Int,
-        val isAuthError: Boolean = false
+        val isAuthError: Boolean = false,
+        val isNotAvailable: Boolean = false
     ) : FileDownloadsResult()
 }
 

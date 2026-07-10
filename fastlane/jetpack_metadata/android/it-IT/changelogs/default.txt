@@ -1,2 +1,6 @@
-26,8:
-È quasi estate, e questo significa insetti. Non preoccuparti, abbiamo lavorato sodo per schiacciarli, con correzioni assortite per rendere l'app ancora più bella da usare. Questa versione contiene il nuovissimo editor a blocchi: provalo su qualsiasi sito dalle Impostazioni del sito.
+26.9:
+- Abilitato nuovo elenco delle pagine con funzionalità aggiornate
+- Imposta il nuovo elenco degli articoli come predefinito per i siti con password dell'applicazione
+- Chat combinate tra bot e Happiness Engineer nell'assistenza
+- Risolto il crash che si verificava all'apertura di un file multimediale durante l'uscita dall'editor
+- Rimosso il badge beta dai menu su Il mio sito

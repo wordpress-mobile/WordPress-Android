@@ -1,11 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2026-06-03 17:42:24+0000
+Translation-Revision-Date: 2026-06-18 10:19:42+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.3
 Language: nl
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="support_screen_unified_support_description">Je kunt altijd antwoorden krijgen van ons ondersteuningsteam</string>
+    <string name="support_screen_unified_support_title">Krijg hulp</string>
+    <string name="unified_support_attachment_match_score">%1$d%% overeenkomst</string>
+    <string name="unified_support_status_bot">Oddie bot</string>
+    <string name="unified_support_bot_typing_content_description">De ondersteuningsbot is aan het typen</string>
+    <string name="unified_support_message_input_placeholder">Typ een bericht in…</string>
+    <string name="unified_support_conversations_title">Krijg hulp</string>
+    <string name="page_rs_move_trashed_page_to_draft_dialog_message">Berichten in prullenbak kunnen niet bewerkt worden. Wil je de status van dit bericht wijzigen naar \"concept\" zodat je er aan kan werken?</string>
+    <string name="page_rs_move_trashed_page_to_draft_dialog_title">Pagina naar ‘Concepten’ verplaatsen?</string>
+    <string name="page_rs_confirm_trash_message">Weet je zeker dat je deze pagina naar de prullenbak wil verplaatsen?</string>
+    <string name="page_rs_copy_url">URL kopiëren</string>
+    <string name="page_rs_failed_to_load">De pagina kon niet worden geladen</string>
+    <string name="page_not_found">Er is een fout opgetreden bij het laden van de pagina. Ververs de pagina en probeer het nog eens.</string>
     <string name="xmlrpc_disabled_bottom_sheet_body">Sommige functies in de app hebben XML RPC nodig. Schakel het in op je site om dit op te lossen.</string>
     <string name="xmlrpc_disabled_bottom_sheet_title">XML RPC uitgeschakeld</string>
     <string name="xmlrpc_disabled_card_text">XML RPC uitgeschakeld\nSommige functies zijn mogelijk beperkt</string>
@@ -243,6 +256,8 @@ Language: nl
     <string name="post_rs_confirm_delete_message">Dit zal permanent dit bericht verwijderen. Deze actie kan niet ongedaan worden gemaakt.</string>
     <string name="post_rs_confirm_trash_message">Weet je zeker dat je dit bericht naar de prullenbak wil verplaatsen?</string>
     <string name="post_rs_failed_to_load">Bericht laden is mislukt</string>
+    <string name="experimental_rs_pages_list_description">Berichten weergeven in een modernere UI voor WordPress.com en zelf gehoste sites met applicatie wachtwoorden</string>
+    <string name="experimental_rs_pages_list">Lijst met nieuwe pagina\'s</string>
     <string name="stats_error_admin_url_unavailable">Kan WP Admin voor deze site niet openen</string>
     <string name="stats_error_parsing">Er is een probleem opgetreden bij het laden van de gegevens. Probeer het opnieuw</string>
     <string name="stats_error_network">Netwerkfout. Controleer je verbinding en probeer het nogmaals</string>
@@ -328,9 +343,11 @@ Language: nl
     <string name="he_support_empty_conversations_button">Start conversatie</string>
     <string name="he_support_empty_conversations_message">Begin een conversatie met ons ondersteuningsteam om hulp te krijgen bij je vragen.</string>
     <string name="he_support_empty_conversations_title">Nog geen conversaties</string>
+    <string name="unified_support_new_conversation_content_description">Nieuwe conversatie</string>
     <string name="ai_bot_time_just_now">Net</string>
     <string name="ai_bot_welcome_message">Ik ben je persoonlijke AI assistent. Ik kan je helpen met al je vragen over je site of account.</string>
     <string name="ai_bot_welcome_greeting">Hallo %1$s 👋</string>
+    <string name="unified_support_generic_error">Er is iets fout gegaan. Probeer het later nog eens.</string>
     <string name="create">Maken</string>
     <string name="logs_screen_general_error">Er is iets fout gegaan…</string>
     <string name="logs_screen_empty_state">Geen logs beschikbaar</string>

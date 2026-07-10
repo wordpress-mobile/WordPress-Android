@@ -1,2 +1,7 @@
-p26.8:
-Het is bijna zomer en dat betekent bugs. Maak je geen zorgen, we hebben hard gewerkt aan het verpletteren ervan, met allerlei oplossingen om de app nog leuker te maken om te gebruiken. Deze release bevat de geheel nieuwe blok-editor — Probeer het op elke site vanuit site instellingen.
+26.9:
+- Nieuwe pagina's lijst ingeschakeld met geüpdatete functies
+- Nieuwe berichten lijst ingesteld als standaard voor sites met applicatie wachtwoord
+- WordPress.com login versneld
+- Gecombineerde bot/Happiness Engineer chats in ondersteuning
+- Opgelost crash bij het openen van media terwijl de editor wordt verlaten
+- Verwijderd bèta badge uit Menu's in mijn site

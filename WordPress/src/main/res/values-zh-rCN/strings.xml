@@ -1,11 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2026-06-02 15:56:23+0000
+Translation-Revision-Date: 2026-06-25 11:54:22+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.3
 Language: zh_CN
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="support_screen_unified_support_description">随时向我们的支持团队寻求解答</string>
+    <string name="support_screen_unified_support_title">获取帮助</string>
+    <string name="unified_support_attachment_match_score">%1$d%% 匹配</string>
+    <string name="unified_support_status_bot">Oddie 机器人</string>
+    <string name="unified_support_bot_typing_content_description">支持机器人正在输入</string>
+    <string name="unified_support_message_input_placeholder">输入消息…</string>
+    <string name="unified_support_conversations_title">获取帮助</string>
+    <string name="page_rs_move_trashed_page_to_draft_dialog_message">无法编辑已移至回收站的页面。 是否要将此页面的状态更改为“草稿”以便对其进行编辑？</string>
+    <string name="page_rs_move_trashed_page_to_draft_dialog_title">将页面移至“草稿”？</string>
+    <string name="page_rs_confirm_trash_message">是否确定要将此页面移至回收站？</string>
+    <string name="page_rs_copy_url">复制 URL</string>
+    <string name="page_rs_failed_to_load">页面加载失败</string>
+    <string name="page_not_found">加载该页面时出现错误。 刷新您的页面并重试。</string>
     <string name="xmlrpc_disabled_bottom_sheet_body">该应用程序中的某些功能需要 XML-RPC。 请在您的站点上将其启用以解决此问题。</string>
     <string name="xmlrpc_disabled_bottom_sheet_title">XML-RPC 已禁用</string>
     <string name="xmlrpc_disabled_card_text">XML-RPC 已禁用\n某些功能可能会受到限制</string>
@@ -241,6 +254,8 @@ Language: zh_CN
     <string name="post_rs_confirm_delete_message">这将永久删除此文章。 此操作无法撤销。</string>
     <string name="post_rs_confirm_trash_message">是否确定要将此文章移至回收站？</string>
     <string name="post_rs_failed_to_load">加载文章失败</string>
+    <string name="experimental_rs_pages_list_description">为 WordPress.com 和使用应用程序密码的自托管站点提供更现代化的 UI 来显示页面列表</string>
+    <string name="experimental_rs_pages_list">新页面列表</string>
     <string name="stats_error_admin_url_unavailable">无法为此站点打开 WP Admin</string>
     <string name="stats_error_parsing">加载数据时出现问题。 请重试</string>
     <string name="stats_error_network">网络错误。 请检查您的连接，然后重试</string>
@@ -325,6 +340,7 @@ Language: zh_CN
     <string name="he_support_empty_conversations_button">开始对话</string>
     <string name="he_support_empty_conversations_message">与我们的支持团队开始对话，获取解决问题所需的帮助。</string>
     <string name="he_support_empty_conversations_title">尚无对话</string>
+    <string name="unified_support_new_conversation_content_description">新会话</string>
     <string name="ai_bot_time_just_now">刚才</string>
     <string name="ai_bot_welcome_message">我是您的个人 AI 助手。 我可以协助解答关于您站点或账户的任何问题。</string>
     <string name="ai_bot_welcome_greeting">您好，%1$s 👋</string>

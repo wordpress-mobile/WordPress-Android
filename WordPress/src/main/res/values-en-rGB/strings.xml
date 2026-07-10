@@ -1,11 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2026-06-01 13:20:50+0000
+Translation-Revision-Date: 2026-06-18 19:14:02+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.3
 Language: en_GB
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="support_screen_unified_support_description">Get answers from our support team, anytime</string>
+    <string name="support_screen_unified_support_title">Get help</string>
+    <string name="unified_support_attachment_match_score">%1$d%% match</string>
+    <string name="unified_support_status_bot">Oddie bot</string>
+    <string name="unified_support_bot_typing_content_description">Support bot is typing</string>
+    <string name="unified_support_message_input_placeholder">Type a message…</string>
+    <string name="unified_support_conversations_title">Get help</string>
+    <string name="page_rs_move_trashed_page_to_draft_dialog_message">Binned pages can\'t be edited. Do you want to change the status of this page to \"draft\" so you can work on it?</string>
+    <string name="page_rs_move_trashed_page_to_draft_dialog_title">Move page to Drafts?</string>
+    <string name="page_rs_confirm_trash_message">Are you sure you want to bin this page?</string>
+    <string name="page_rs_copy_url">Copy URL</string>
+    <string name="page_rs_failed_to_load">Failed to load page</string>
+    <string name="page_not_found">An error occurred when loading the page. Refresh your pages and try again.</string>
     <string name="xmlrpc_disabled_bottom_sheet_body">Some features in the app require XML-RPC. Enable it on your site to resolve this.</string>
     <string name="xmlrpc_disabled_bottom_sheet_title">XML-RPC Disabled</string>
     <string name="xmlrpc_disabled_card_text">XML-RPC Disabled\nSome features may be limited</string>
@@ -243,6 +256,8 @@ Language: en_GB
     <string name="post_rs_confirm_delete_message">This will permanently delete this post. This action cannot be undone.</string>
     <string name="post_rs_confirm_trash_message">Are you sure you want to bin this post?</string>
     <string name="post_rs_failed_to_load">Failed to load post</string>
+    <string name="experimental_rs_pages_list_description">Show pages list in a more modern UI for WordPress.com and self-hosted sites with application passwords</string>
+    <string name="experimental_rs_pages_list">New Pages List</string>
     <string name="stats_error_admin_url_unavailable">Unable to open WP Admin for this site</string>
     <string name="stats_error_parsing">There was a problem loading the data. Please try again</string>
     <string name="stats_error_network">Network error. Please check your connection and try again</string>
@@ -328,9 +343,11 @@ Language: en_GB
     <string name="he_support_empty_conversations_button">Start Conversation</string>
     <string name="he_support_empty_conversations_message">Start a conversation with our support team to get help with your questions.</string>
     <string name="he_support_empty_conversations_title">No conversations yet</string>
+    <string name="unified_support_new_conversation_content_description">New conversation</string>
     <string name="ai_bot_time_just_now">Just now</string>
     <string name="ai_bot_welcome_message">I\'m your personal AI assistant. I can help with any questions about your site or account.</string>
     <string name="ai_bot_welcome_greeting">Hi %1$s 👋</string>
+    <string name="unified_support_generic_error">Something went wrong. Please try again later.</string>
     <string name="create">Create</string>
     <string name="logs_screen_general_error">Something went wrong…</string>
     <string name="logs_screen_empty_state">No logs available</string>
