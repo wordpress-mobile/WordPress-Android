@@ -326,21 +326,6 @@ class UnifiedCommentsEditViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `Should DISABLE author fields for a comment from a registered user`() = test {
-        viewModel.start(site, siteCommentIdentifier)
-        assertThat(uiState.last().canEditAuthorFields).isFalse
-    }
-
-    @Test
-    fun `Should ENABLE author fields for a comment from an unregistered user`() = test {
-        whenever(getCommentUseCase.execute(site, remoteCommentId))
-            .thenReturn(UNREGISTERED_COMMENT_ENTITY)
-
-        viewModel.start(site, siteCommentIdentifier)
-        assertThat(uiState.last().canEditAuthorFields).isTrue
-    }
-
-    @Test
     fun `Should update notification entity on save if NotificationCommentIdentifier`() = test {
         whenever(commentsStore.getCommentByLocalSiteAndRemoteId(site.id, remoteCommentId))
             .thenReturn(listOf(COMMENT_ENTITY))
@@ -560,8 +545,6 @@ class UnifiedCommentsEditViewModelTest : BaseUnitTest() {
             parentId = 0,
             iLike = false
         )
-
-        private val UNREGISTERED_COMMENT_ENTITY = COMMENT_ENTITY.copy(authorId = 0)
 
         private val READER_COMMENT_ENTITY = ReaderComment().apply {
             blogId = REMOTE_SITE_ID

@@ -206,14 +206,13 @@ class CommentsRsDataSource @Inject constructor(
     suspend fun updateStatus(site: SiteModel, commentId: Long, status: CommentStatus): RsResult =
         write(site) { it.comments().update(commentId, CommentUpdateParams(status = status.toRsCommentStatus())) }
 
-    /** Editable author-identity fields; the endpoint applies them only to guest comments. */
+    /** Editable author-identity fields, applied to the comment record for any comment. */
     data class CommentAuthor(val name: String, val email: String, val url: String)
 
     /**
      * The server's post-save state of an edited comment. Mirroring this (rather than the values
-     * that were sent) into the FluxC cache keeps the cache faithful when the server rejects or
-     * normalises fields — author identity is ignored for registered users, and content passes
-     * through KSES filtering.
+     * that were sent) into the FluxC cache keeps the cache faithful when the server normalises
+     * fields — e.g. content passes through KSES filtering.
      */
     data class RsEditedComment(
         val authorName: String,

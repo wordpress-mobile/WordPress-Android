@@ -150,7 +150,6 @@ private fun EditFields(
         EditField(
             value = edited.userName,
             labelRes = R.string.comment_edit_user_name,
-            enabled = uiState.canEditAuthorFields,
             error = errors.userNameError,
             keyboardOptions = KeyboardOptions(autoCorrectEnabled = false),
             onValueChange = { onFieldChange(it, USER_NAME) }
@@ -158,7 +157,6 @@ private fun EditFields(
         EditField(
             value = edited.userUrl,
             labelRes = R.string.comment_edit_web_address,
-            enabled = uiState.canEditAuthorFields,
             error = errors.userUrlError,
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Uri, autoCorrectEnabled = false),
             onValueChange = { onFieldChange(it, WEB_ADDRESS) }
@@ -166,7 +164,6 @@ private fun EditFields(
         EditField(
             value = edited.userEmail,
             labelRes = R.string.comment_edit_email_address,
-            enabled = uiState.canEditAuthorFields,
             error = errors.userEmailError,
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email, autoCorrectEnabled = false),
             onValueChange = { onFieldChange(it, USER_EMAIL) }
@@ -190,13 +187,11 @@ private fun EditField(
     error: String?,
     keyboardOptions: KeyboardOptions,
     onValueChange: (String) -> Unit,
-    enabled: Boolean = true,
     singleLine: Boolean = true
 ) {
     OutlinedTextField(
         value = value,
         onValueChange = onValueChange,
-        enabled = enabled,
         isError = error != null,
         singleLine = singleLine,
         minLines = if (singleLine) 1 else COMMENT_FIELD_MIN_LINES,

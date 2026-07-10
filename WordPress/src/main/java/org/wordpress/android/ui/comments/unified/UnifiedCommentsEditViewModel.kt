@@ -91,10 +91,6 @@ class UnifiedCommentsEditViewModel @Inject constructor(
         // Lives in ui state (not a one-shot event) so the dialog survives configuration changes,
         // like the DialogFragment it replaced.
         val showDiscardDialog: Boolean = false,
-        // Author identity is only editable for guest comments — the endpoint ignores those fields
-        // for registered users, so offering to edit them would silently no-op. The body is always
-        // editable.
-        val canEditAuthorFields: Boolean = false,
         val originalComment: CommentEssentials = CommentEssentials(),
         val editedComment: CommentEssentials = CommentEssentials(),
         val editErrorStrings: EditErrorStrings = EditErrorStrings()
@@ -218,7 +214,6 @@ class UnifiedCommentsEditViewModel @Inject constructor(
                     EditCommentUiState(
                         showProgress = LOADING.show,
                         progressText = LOADING.progressText,
-                        canEditAuthorFields = !commentEssentials.isFromRegisteredUser,
                         originalComment = commentEssentials,
                         editedComment = commentEssentials
                     )
@@ -241,8 +236,7 @@ class UnifiedCommentsEditViewModel @Inject constructor(
                 userName = commentEntity.authorName ?: "",
                 commentText = commentEntity.content ?: "",
                 userUrl = commentEntity.authorUrl ?: "",
-                userEmail = commentEntity.authorEmail ?: "",
-                isFromRegisteredUser = commentEntity.authorId > 0
+                userEmail = commentEntity.authorEmail ?: ""
             )
         } else {
             CommentEssentials()
@@ -305,16 +299,16 @@ class UnifiedCommentsEditViewModel @Inject constructor(
      * Saves the edit through wordpress-rs and, on success, mirrors the SERVER's resulting state
      * into the FluxC cache so the still-FluxC comment list/notifications reflect the change —
      * the same save-then-mirror pattern the unified comment detail uses for moderation. The
-     * server echo (not the values that were sent) is what's cached, because the endpoint ignores
-     * author identity for registered users and KSES-filters content; the legacy FluxC path also
+     * server echo (not the values that were sent) is what's cached so server-side normalisation
+     * (e.g. KSES content filtering) can't diverge from the cache; the legacy FluxC path also
      * cached the server response.
      */
     private suspend fun updateCommentViaRs(
         comment: CommentEntity,
         editedCommentEssentials: CommentEssentials
     ): Boolean {
-        // Send the author fields for every comment, matching the legacy FluxC POST. The endpoint
-        // applies them for anonymous comments and ignores them for registered users.
+        // The endpoint applies author fields to the comment record for any comment (registered
+        // author or not), same as the legacy FluxC POST and wp-admin's comment editor.
         val result = commentsRsDataSource.updateComment(
             site = site,
             commentId = commentIdentifier.remoteCommentId,
