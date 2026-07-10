@@ -290,8 +290,13 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
         val result = withContext(bgDispatcher) { moderate(APPROVED) }
         if (result is RsResult.Error) {
             _uiState.value = _uiState.value?.copy(status = UNAPPROVED)
-        } else if (noteId != null) {
-            _commentModerated.value = Event(APPROVED)
+        } else {
+            // Match the legacy screen, which tracks the implicit approve when replying to an
+            // unapproved comment (this path is only reached from an unapproved comment).
+            trackCommentAction(Stat.COMMENT_APPROVED)
+            if (noteId != null) {
+                _commentModerated.value = Event(APPROVED)
+            }
         }
     }
 

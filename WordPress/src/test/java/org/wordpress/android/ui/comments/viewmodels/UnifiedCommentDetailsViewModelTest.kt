@@ -554,6 +554,29 @@ class UnifiedCommentDetailsViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `replying to an unapproved comment tracks the implicit approve`() = test {
+        whenever(commentsRsDataSource.getComment(site, REMOTE_COMMENT_ID)).thenReturn(UNAPPROVED_RS_COMMENT)
+        viewModel.start(site, REMOTE_COMMENT_ID)
+
+        viewModel.onReplyClicked("nice post")
+
+        verify(analyticsUtilsWrapper).trackCommentActionWithSiteDetails(
+            Stat.COMMENT_APPROVED, AnalyticsCommentActionSource.SITE_COMMENTS, site
+        )
+    }
+
+    @Test
+    fun `a note-mode reply tracks with the notifications source`() = test {
+        viewModel.start(site, REMOTE_COMMENT_ID, NOTE_ID)
+
+        viewModel.onReplyClicked("nice post")
+
+        verify(analyticsUtilsWrapper).trackCommentReplyWithDetails(
+            eq(false), eq(site), any(), eq(AnalyticsCommentActionSource.NOTIFICATIONS)
+        )
+    }
+
+    @Test
     fun `note-mode actions track with the notifications source`() = test {
         viewModel.start(site, REMOTE_COMMENT_ID, NOTE_ID)
 
