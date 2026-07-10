@@ -8,7 +8,6 @@ import androidx.appcompat.app.AppCompatActivity.RESULT_OK
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.Fragment
@@ -20,12 +19,12 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.ActivityId
 import org.wordpress.android.ui.ActivityId.COMMENT_EDITOR
-import org.wordpress.android.ui.comments.unified.UnifiedCommentsEditViewModel.EditCommentActionEvent.CANCEL_EDIT_CONFIRM
 import org.wordpress.android.ui.comments.unified.UnifiedCommentsEditViewModel.EditCommentActionEvent.CLOSE
 import org.wordpress.android.ui.comments.unified.UnifiedCommentsEditViewModel.EditCommentActionEvent.DONE
 import org.wordpress.android.ui.comments.unified.UnifiedCommentsEditViewModel.EditCommentUiState
 import org.wordpress.android.ui.comments.unified.compose.UnifiedCommentEditScreen
 import org.wordpress.android.ui.compose.theme.AppThemeM3
+import org.wordpress.android.ui.compose.utils.showMessage
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.extensions.getParcelableCompat
@@ -45,7 +44,6 @@ class UnifiedCommentsEditFragment : Fragment() {
     private lateinit var commentIdentifier: CommentIdentifier
 
     private val snackbarHostState = SnackbarHostState()
-    private val showDiscardDialog = mutableStateOf(false)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -73,15 +71,11 @@ class UnifiedCommentsEditFragment : Fragment() {
                     UnifiedCommentEditScreen(
                         uiState = uiState,
                         snackbarHostState = snackbarHostState,
-                        showDiscardDialog = showDiscardDialog.value,
                         onFieldChange = { value, fieldType -> viewModel.onValidateField(value, fieldType) },
                         onSaveClick = { viewModel.onActionMenuClicked() },
                         onNavigateBack = { viewModel.onBackPressed() },
-                        onDiscardConfirm = {
-                            showDiscardDialog.value = false
-                            viewModel.onConfirmEditingDiscard()
-                        },
-                        onDiscardDismiss = { showDiscardDialog.value = false }
+                        onDiscardConfirm = { viewModel.onConfirmEditingDiscard() },
+                        onDiscardDismiss = { viewModel.onDiscardDialogDismissed() }
                     )
                 }
             }
@@ -102,7 +96,6 @@ class UnifiedCommentsEditFragment : Fragment() {
                     setResult(RESULT_OK)
                     finish()
                 }
-                CANCEL_EDIT_CONFIRM -> showDiscardDialog.value = true
             }
         }
         viewModel.onSnackbarMessage.observeEvent(viewLifecycleOwner) { showSnackbar(it) }

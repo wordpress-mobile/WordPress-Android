@@ -14,12 +14,11 @@ import org.wordpress.android.fluxc.persistence.comments.CommentsDao.CommentEntit
 import org.wordpress.android.fluxc.store.CommentsStore
 import org.wordpress.android.models.usecases.LocalCommentCacheUpdateHandler
 import org.wordpress.android.modules.BG_THREAD
-import org.wordpress.android.ui.comments.unified.CommentsRsDataSource.RsResult
+import org.wordpress.android.ui.comments.unified.CommentsRsDataSource.RsEditResult
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.comments.unified.CommentIdentifier.NotificationCommentIdentifier
 import org.wordpress.android.ui.comments.unified.CommentIdentifier.ReaderCommentIdentifier
 import org.wordpress.android.ui.comments.unified.CommentIdentifier.SiteCommentIdentifier
-import org.wordpress.android.ui.comments.unified.UnifiedCommentsEditViewModel.EditCommentActionEvent.CANCEL_EDIT_CONFIRM
 import org.wordpress.android.ui.comments.unified.UnifiedCommentsEditViewModel.EditCommentActionEvent.CLOSE
 import org.wordpress.android.ui.comments.unified.UnifiedCommentsEditViewModel.EditCommentActionEvent.DONE
 import org.wordpress.android.ui.comments.unified.UnifiedCommentsEditViewModel.FieldType.COMMENT
@@ -68,6 +67,12 @@ class UnifiedCommentsEditViewModel @Inject constructor(
     val onSnackbarMessage: LiveData<Event<SnackbarMessageHolder>> = _onSnackbarMessage
 
     private var isStarted = false
+
+    // Written on the main thread in onActionMenuClicked and cleared by the save coroutine;
+    // @Volatile covers the cross-thread clear.
+    @Volatile
+    private var isSaving = false
+
     private lateinit var site: SiteModel
 
     private lateinit var commentIdentifier: CommentIdentifier
@@ -83,6 +88,9 @@ class UnifiedCommentsEditViewModel @Inject constructor(
         val canSaveChanges: Boolean = false,
         val showProgress: Boolean = false,
         val progressText: UiString? = null,
+        // Lives in ui state (not a one-shot event) so the dialog survives configuration changes,
+        // like the DialogFragment it replaced.
+        val showDiscardDialog: Boolean = false,
         val originalComment: CommentEssentials = CommentEssentials(),
         val editedComment: CommentEssentials = CommentEssentials(),
         val editErrorStrings: EditErrorStrings = EditErrorStrings()
@@ -126,8 +134,7 @@ class UnifiedCommentsEditViewModel @Inject constructor(
 
     enum class EditCommentActionEvent {
         CLOSE,
-        DONE,
-        CANCEL_EDIT_CONFIRM
+        DONE
     }
 
     fun start(site: SiteModel, commentIdentifier: CommentIdentifier) {
@@ -154,15 +161,24 @@ class UnifiedCommentsEditViewModel @Inject constructor(
     }
 
     fun onActionMenuClicked() {
+        // Set on the main thread before the save launches, so this check-then-set is race-free:
+        // it closes the window where a second tap lands before the SAVING state disables the
+        // Save button.
+        if (isSaving) return
         if (!networkUtilsWrapper.isNetworkAvailable()) {
             _onSnackbarMessage.value = Event(SnackbarMessageHolder(UiStringRes(R.string.no_network_message)))
             return
         }
         _uiState.value?.let { uiState ->
             val editedCommentEssentials = uiState.editedComment
+            isSaving = true
             launch(bgDispatcher) {
-                setLoadingState(SAVING)
-                updateComment(editedCommentEssentials)
+                try {
+                    setLoadingState(SAVING)
+                    updateComment(editedCommentEssentials)
+                } finally {
+                    isSaving = false
+                }
             }
         }
     }
@@ -170,14 +186,19 @@ class UnifiedCommentsEditViewModel @Inject constructor(
     fun onBackPressed() {
         _uiState.value?.let {
             if (it.editedComment.isNotEqualTo(it.originalComment)) {
-                _uiActionEvent.value = Event(CANCEL_EDIT_CONFIRM)
+                _uiState.value = it.copy(showDiscardDialog = true)
             } else {
                 _uiActionEvent.value = Event(CLOSE)
             }
         }
     }
 
+    fun onDiscardDialogDismissed() {
+        _uiState.value?.let { _uiState.value = it.copy(showDiscardDialog = false) }
+    }
+
     fun onConfirmEditingDiscard() {
+        _uiState.value?.let { _uiState.value = it.copy(showDiscardDialog = false) }
         _uiActionEvent.value = Event(CLOSE)
     }
 
@@ -255,20 +276,19 @@ class UnifiedCommentsEditViewModel @Inject constructor(
         comment: CommentEntity,
         editedCommentEssentials: CommentEssentials
     ): Boolean {
-        val updatedComment = comment.copy(
-            authorUrl = editedCommentEssentials.userUrl,
-            authorName = editedCommentEssentials.userName,
-            authorEmail = editedCommentEssentials.userEmail,
-            content = editedCommentEssentials.commentText
-        )
-
         // Prefer wordpress-rs, which can edit comments on both WP.com and self-hosted
         // application-password sites (FluxC's updateEditComment can't reach app-password sites).
         // Fall back to FluxC for sites rs can't serve — e.g. XML-RPC-only self-hosted comments
         // still reachable through the legacy detail/reader launch points.
         return if (canUseRs()) {
-            updateCommentViaRs(editedCommentEssentials, updatedComment)
+            updateCommentViaRs(comment, editedCommentEssentials)
         } else {
+            val updatedComment = comment.copy(
+                authorUrl = editedCommentEssentials.userUrl,
+                authorName = editedCommentEssentials.userName,
+                authorEmail = editedCommentEssentials.userEmail,
+                content = editedCommentEssentials.commentText
+            )
             !commentsStore.updateEditComment(site, updatedComment).isError
         }
     }
@@ -276,13 +296,16 @@ class UnifiedCommentsEditViewModel @Inject constructor(
     private fun canUseRs(): Boolean = site.isUsingWpComRestApi || site.hasApplicationPassword()
 
     /**
-     * Saves the edit through wordpress-rs and, on success, mirrors it into the FluxC cache so the
-     * still-FluxC comment list/notifications reflect the change — the same save-then-mirror pattern
-     * the unified comment detail uses for moderation.
+     * Saves the edit through wordpress-rs and, on success, mirrors the SERVER's resulting state
+     * into the FluxC cache so the still-FluxC comment list/notifications reflect the change —
+     * the same save-then-mirror pattern the unified comment detail uses for moderation. The
+     * server echo (not the values that were sent) is what's cached, because the endpoint ignores
+     * author identity for registered users and KSES-filters content; the legacy FluxC path also
+     * cached the server response.
      */
     private suspend fun updateCommentViaRs(
-        editedCommentEssentials: CommentEssentials,
-        updatedComment: CommentEntity
+        comment: CommentEntity,
+        editedCommentEssentials: CommentEssentials
     ): Boolean {
         // Send the author fields for every comment, matching the legacy FluxC POST. The endpoint
         // applies them for anonymous comments and ignores them for registered users.
@@ -296,9 +319,15 @@ class UnifiedCommentsEditViewModel @Inject constructor(
                 url = editedCommentEssentials.userUrl
             )
         )
-        if (result is RsResult.Error) return false
+        if (result !is RsEditResult.Success) return false
+        val serverComment = comment.copy(
+            authorName = result.comment.authorName,
+            authorEmail = result.comment.authorEmail,
+            authorUrl = result.comment.authorUrl,
+            content = result.comment.contentRaw
+        )
         // Local-only cache write (isError = false persists the entity without a network round-trip).
-        commentsStore.updateComment(isError = false, commentId = updatedComment.id, comment = updatedComment)
+        commentsStore.updateComment(isError = false, commentId = serverComment.id, comment = serverComment)
         return true
     }
 

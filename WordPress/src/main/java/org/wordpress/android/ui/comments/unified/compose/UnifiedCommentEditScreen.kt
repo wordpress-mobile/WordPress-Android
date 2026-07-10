@@ -1,6 +1,8 @@
 package org.wordpress.android.ui.comments.unified.compose
 
 import androidx.activity.compose.BackHandler
+import androidx.annotation.StringRes
+import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -37,7 +39,7 @@ import org.wordpress.android.ui.comments.unified.UnifiedCommentsEditViewModel.Fi
 import org.wordpress.android.ui.comments.unified.UnifiedCommentsEditViewModel.FieldType.USER_EMAIL
 import org.wordpress.android.ui.comments.unified.UnifiedCommentsEditViewModel.FieldType.USER_NAME
 import org.wordpress.android.ui.comments.unified.UnifiedCommentsEditViewModel.FieldType.WEB_ADDRESS
-import org.wordpress.android.ui.utils.UiString.UiStringRes
+import org.wordpress.android.ui.compose.utils.uiStringText
 
 /**
  * Compose editor for a comment's author identity and body, replacing the legacy XML
@@ -49,7 +51,6 @@ import org.wordpress.android.ui.utils.UiString.UiStringRes
 fun UnifiedCommentEditScreen(
     uiState: EditCommentUiState,
     snackbarHostState: SnackbarHostState,
-    showDiscardDialog: Boolean,
     onFieldChange: (String, FieldType) -> Unit,
     onSaveClick: () -> Unit,
     onNavigateBack: () -> Unit,
@@ -58,6 +59,8 @@ fun UnifiedCommentEditScreen(
     modifier: Modifier = Modifier
 ) {
     BackHandler(onBack = onNavigateBack)
+    // Hoisted above the progress swap below so the scroll position survives a failed save.
+    val scrollState = rememberScrollState()
     Scaffold(
         topBar = {
             TopAppBar(
@@ -95,20 +98,20 @@ fun UnifiedCommentEditScreen(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     CircularProgressIndicator()
-                    (uiState.progressText as? UiStringRes)?.let {
+                    uiState.progressText?.let {
                         Text(
-                            text = stringResource(it.stringRes),
+                            text = uiStringText(it),
                             modifier = Modifier.padding(top = 16.dp)
                         )
                     }
                 }
             } else {
-                EditFields(uiState, onFieldChange)
+                EditFields(uiState, onFieldChange, scrollState)
             }
         }
     }
 
-    if (showDiscardDialog) {
+    if (uiState.showDiscardDialog) {
         AlertDialog(
             onDismissRequest = onDiscardDismiss,
             title = { Text(stringResource(R.string.comment_edit_cancel_dialog_title)) },
@@ -130,46 +133,48 @@ fun UnifiedCommentEditScreen(
 @Composable
 private fun EditFields(
     uiState: EditCommentUiState,
-    onFieldChange: (String, FieldType) -> Unit
+    onFieldChange: (String, FieldType) -> Unit,
+    scrollState: ScrollState
 ) {
     val edited = uiState.editedComment
     val errors = uiState.editErrorStrings
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .verticalScroll(rememberScrollState())
+            .verticalScroll(scrollState)
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
+        // Autocorrect stays off for the author-identity fields — the legacy XML only opted the
+        // comment body into textAutoCorrect, and autocorrecting proper nouns corrupts names.
         EditField(
             value = edited.userName,
             labelRes = R.string.comment_edit_user_name,
             error = errors.userNameError,
-            keyboardType = KeyboardType.Text,
+            keyboardOptions = KeyboardOptions(autoCorrectEnabled = false),
             onValueChange = { onFieldChange(it, USER_NAME) }
         )
         EditField(
             value = edited.userUrl,
             labelRes = R.string.comment_edit_web_address,
             error = errors.userUrlError,
-            keyboardType = KeyboardType.Uri,
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Uri, autoCorrectEnabled = false),
             onValueChange = { onFieldChange(it, WEB_ADDRESS) }
         )
         EditField(
             value = edited.userEmail,
             labelRes = R.string.comment_edit_email_address,
             error = errors.userEmailError,
-            keyboardType = KeyboardType.Email,
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email, autoCorrectEnabled = false),
             onValueChange = { onFieldChange(it, USER_EMAIL) }
         )
         EditField(
             value = edited.commentText,
             labelRes = R.string.comment_edit_comment,
             error = errors.commentTextError,
-            keyboardType = KeyboardType.Text,
             singleLine = false,
-            // The comment body auto-capitalizes sentences, matching the legacy field and the reply box.
-            capitalization = KeyboardCapitalization.Sentences,
+            // Sentence capitalization + autocorrect, matching the legacy field and the reply box.
+            keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences),
             onValueChange = { onFieldChange(it, COMMENT) }
         )
     }
@@ -178,12 +183,11 @@ private fun EditFields(
 @Composable
 private fun EditField(
     value: String,
-    labelRes: Int,
+    @StringRes labelRes: Int,
     error: String?,
-    keyboardType: KeyboardType,
+    keyboardOptions: KeyboardOptions,
     onValueChange: (String) -> Unit,
-    singleLine: Boolean = true,
-    capitalization: KeyboardCapitalization = KeyboardCapitalization.None
+    singleLine: Boolean = true
 ) {
     OutlinedTextField(
         value = value,
@@ -193,7 +197,7 @@ private fun EditField(
         minLines = if (singleLine) 1 else COMMENT_FIELD_MIN_LINES,
         label = { Text(stringResource(labelRes)) },
         supportingText = error?.let { { Text(it) } },
-        keyboardOptions = KeyboardOptions(keyboardType = keyboardType, capitalization = capitalization),
+        keyboardOptions = keyboardOptions,
         modifier = Modifier.fillMaxWidth()
     )
 }

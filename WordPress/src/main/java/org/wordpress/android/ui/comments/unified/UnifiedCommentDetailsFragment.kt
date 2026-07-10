@@ -39,6 +39,7 @@ import org.wordpress.android.ui.comments.unified.UnifiedCommentDetailsViewModel.
 import org.wordpress.android.ui.comments.unified.compose.CommentDetailsActions
 import org.wordpress.android.ui.comments.unified.compose.UnifiedCommentDetailsScreen
 import org.wordpress.android.ui.compose.theme.AppThemeM3
+import org.wordpress.android.ui.compose.utils.showMessage
 import org.wordpress.android.ui.notifications.NotificationsListFragment
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.reader.ReaderActivityLauncher

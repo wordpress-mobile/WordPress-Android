@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.comments.unified
+package org.wordpress.android.ui.compose.utils
 
 import android.content.Context
 import androidx.compose.material3.SnackbarDuration

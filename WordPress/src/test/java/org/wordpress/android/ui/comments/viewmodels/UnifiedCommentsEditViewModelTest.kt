@@ -8,6 +8,7 @@ import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
 import org.mockito.kotlin.any
+import org.mockito.kotlin.check
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
@@ -29,13 +30,13 @@ import org.wordpress.android.models.ReaderComment
 import org.wordpress.android.models.usecases.LocalCommentCacheUpdateHandler
 import org.wordpress.android.ui.comments.unified.CommentEssentials
 import org.wordpress.android.ui.comments.unified.CommentsRsDataSource
-import org.wordpress.android.ui.comments.unified.CommentsRsDataSource.RsResult
+import org.wordpress.android.ui.comments.unified.CommentsRsDataSource.RsEditResult
+import org.wordpress.android.ui.comments.unified.CommentsRsDataSource.RsEditedComment
 import org.wordpress.android.ui.comments.unified.CommentIdentifier.NotificationCommentIdentifier
 import org.wordpress.android.ui.comments.unified.CommentIdentifier.ReaderCommentIdentifier
 import org.wordpress.android.ui.comments.unified.CommentIdentifier.SiteCommentIdentifier
 import org.wordpress.android.ui.comments.unified.UnifiedCommentsEditViewModel
 import org.wordpress.android.ui.comments.unified.UnifiedCommentsEditViewModel.EditCommentActionEvent
-import org.wordpress.android.ui.comments.unified.UnifiedCommentsEditViewModel.EditCommentActionEvent.CANCEL_EDIT_CONFIRM
 import org.wordpress.android.ui.comments.unified.UnifiedCommentsEditViewModel.EditCommentActionEvent.CLOSE
 import org.wordpress.android.ui.comments.unified.UnifiedCommentsEditViewModel.EditCommentActionEvent.DONE
 import org.wordpress.android.ui.comments.unified.UnifiedCommentsEditViewModel.EditCommentUiState
@@ -227,7 +228,7 @@ class UnifiedCommentsEditViewModelTest : BaseUnitTest() {
         whenever(commentsStore.getCommentByLocalSiteAndRemoteId(rsSite.id, remoteCommentId))
             .thenReturn(listOf(COMMENT_ENTITY))
         whenever(commentsRsDataSource.updateComment(any(), any(), any(), any()))
-            .thenReturn(RsResult.Success)
+            .thenReturn(RsEditResult.Success(SERVER_EDITED_COMMENT))
 
         viewModel.start(rsSite, siteCommentIdentifier)
         viewModel.onActionMenuClicked()
@@ -246,8 +247,18 @@ class UnifiedCommentsEditViewModelTest : BaseUnitTest() {
                 )
             )
         )
-        // Mirrored into the FluxC cache without the network updateEditComment path.
-        verify(commentsStore).updateComment(eq(false), eq(COMMENT_ENTITY.id), any())
+        // The SERVER's resulting state (not the sent values) is mirrored into the FluxC cache,
+        // without the network updateEditComment path.
+        verify(commentsStore).updateComment(
+            eq(false),
+            eq(COMMENT_ENTITY.id),
+            check {
+                assertThat(it.authorName).isEqualTo(SERVER_EDITED_COMMENT.authorName)
+                assertThat(it.authorEmail).isEqualTo(SERVER_EDITED_COMMENT.authorEmail)
+                assertThat(it.authorUrl).isEqualTo(SERVER_EDITED_COMMENT.authorUrl)
+                assertThat(it.content).isEqualTo(SERVER_EDITED_COMMENT.contentRaw)
+            }
+        )
         verify(commentsStore, never()).updateEditComment(any(), any())
         assertThat(uiActionEvent.firstOrNull()).isEqualTo(DONE)
         verify(localCommentCacheUpdateHandler).requestCommentsUpdate()
@@ -259,7 +270,7 @@ class UnifiedCommentsEditViewModelTest : BaseUnitTest() {
         whenever(commentsStore.getCommentByLocalSiteAndRemoteId(rsSite.id, remoteCommentId))
             .thenReturn(listOf(COMMENT_ENTITY))
         whenever(commentsRsDataSource.updateComment(any(), any(), any(), any()))
-            .thenReturn(RsResult.Error("boom"))
+            .thenReturn(RsEditResult.Error("boom"))
 
         viewModel.start(rsSite, siteCommentIdentifier)
         viewModel.onActionMenuClicked()
@@ -277,7 +288,7 @@ class UnifiedCommentsEditViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `onBackPressed triggers CANCEL_EDIT_CONFIRM when edits are present`() {
+    fun `onBackPressed shows the discard dialog when edits are present`() {
         val emailFieldType: FieldType = mock()
         whenever(emailFieldType.matches(USER_EMAIL))
             .thenReturn(true)
@@ -288,7 +299,24 @@ class UnifiedCommentsEditViewModelTest : BaseUnitTest() {
         viewModel.onValidateField("edited user email", emailFieldType)
         viewModel.onBackPressed()
 
-        assertThat(uiActionEvent.firstOrNull()).isEqualTo(CANCEL_EDIT_CONFIRM)
+        assertThat(uiActionEvent).isEmpty()
+        assertThat(uiState.last().showDiscardDialog).isTrue
+    }
+
+    @Test
+    fun `onDiscardDialogDismissed hides the discard dialog`() {
+        val emailFieldType: FieldType = mock()
+        whenever(emailFieldType.matches(USER_EMAIL))
+            .thenReturn(true)
+        whenever(emailFieldType.isValid)
+            .thenReturn { true }
+
+        viewModel.start(site, siteCommentIdentifier)
+        viewModel.onValidateField("edited user email", emailFieldType)
+        viewModel.onBackPressed()
+        viewModel.onDiscardDialogDismissed()
+
+        assertThat(uiState.last().showDiscardDialog).isFalse
     }
 
     @Test
@@ -532,6 +560,15 @@ class UnifiedCommentsEditViewModelTest : BaseUnitTest() {
             commentText = COMMENT_ENTITY.content!!,
             userUrl = COMMENT_ENTITY.authorUrl!!,
             userEmail = COMMENT_ENTITY.authorEmail!!
+        )
+
+        // Deliberately differs from what the editor sends, standing in for server-side
+        // normalisation (ignored author fields, KSES-filtered content).
+        private val SERVER_EDITED_COMMENT = RsEditedComment(
+            authorName = "server authorName",
+            authorEmail = "server authorEmail",
+            authorUrl = "server authorUrl",
+            contentRaw = "server content"
         )
     }
 }
