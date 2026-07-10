@@ -85,22 +85,7 @@ class UnifiedCommentsEditViewModel @Inject constructor(
         val progressText: UiString? = null,
         val originalComment: CommentEssentials = CommentEssentials(),
         val editedComment: CommentEssentials = CommentEssentials(),
-        val editErrorStrings: EditErrorStrings = EditErrorStrings(),
-        // Every field is editable for every comment, matching the legacy editor (which also POSTs
-        // author name/email/url for all comments).
-        val inputSettings: InputSettings = InputSettings(
-            enableEditName = true,
-            enableEditUrl = true,
-            enableEditEmail = true,
-            enableEditComment = true
-        )
-    )
-
-    data class InputSettings(
-        val enableEditName: Boolean,
-        val enableEditUrl: Boolean,
-        val enableEditEmail: Boolean,
-        val enableEditComment: Boolean
+        val editErrorStrings: EditErrorStrings = EditErrorStrings()
     )
 
     enum class ProgressState(val show: Boolean, val progressText: UiString?) {
@@ -230,8 +215,7 @@ class UnifiedCommentsEditViewModel @Inject constructor(
                 userName = commentEntity.authorName ?: "",
                 commentText = commentEntity.content ?: "",
                 userUrl = commentEntity.authorUrl ?: "",
-                userEmail = commentEntity.authorEmail ?: "",
-                isFromRegisteredUser = commentEntity.authorId > 0
+                userEmail = commentEntity.authorEmail ?: ""
             )
         } else {
             CommentEssentials()

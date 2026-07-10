@@ -11,9 +11,7 @@ import android.view.ViewGroup
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.SnackbarResult
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
@@ -24,8 +22,6 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-import com.google.android.material.snackbar.BaseTransientBottomBar.BaseCallback
-import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -287,38 +283,9 @@ class UnifiedCommentDetailsFragment : Fragment() {
 
     private fun showSnackbar(holder: SnackbarMessageHolder) {
         val context = context ?: return
-        val message = uiHelpers.getTextOfUiString(context, holder.message).toString()
-        val actionLabel = holder.buttonTitle?.let { uiHelpers.getTextOfUiString(context, it).toString() }
         viewLifecycleOwner.lifecycleScope.launch {
-            // MANUAL is reported when the view is torn down (e.g. rotation) while the snackbar is
-            // still showing: cancellation skips the try body, but the finally block still fires
-            // onDismissAction, matching the legacy Snackbar callback which fired on view detach.
-            // That matters for the load-error snackbar, whose dismiss action closes the screen.
-            var dismissEvent = BaseCallback.DISMISS_EVENT_MANUAL
-            try {
-                val result = snackbarHostState.showSnackbar(
-                    message = message,
-                    actionLabel = actionLabel,
-                    duration = holder.duration.toSnackbarDuration()
-                )
-                dismissEvent = if (result == SnackbarResult.ActionPerformed) {
-                    holder.buttonAction()
-                    BaseCallback.DISMISS_EVENT_ACTION
-                } else {
-                    BaseCallback.DISMISS_EVENT_TIMEOUT
-                }
-            } finally {
-                holder.onDismissAction(dismissEvent)
-            }
+            snackbarHostState.showMessage(holder, context, uiHelpers)
         }
-    }
-
-    // Compose SnackbarDuration ignores the millisecond-style Snackbar length constants the holders
-    // carry, so map them explicitly to preserve the legacy LENGTH_LONG display time.
-    private fun Int.toSnackbarDuration(): SnackbarDuration = when (this) {
-        Snackbar.LENGTH_SHORT -> SnackbarDuration.Short
-        Snackbar.LENGTH_INDEFINITE -> SnackbarDuration.Indefinite
-        else -> SnackbarDuration.Long
     }
 
     private fun copyLink(url: String) {

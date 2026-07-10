@@ -27,6 +27,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
@@ -70,7 +71,11 @@ fun UnifiedCommentEditScreen(
                     }
                 },
                 actions = {
-                    TextButton(onClick = onSaveClick, enabled = uiState.canSaveChanges) {
+                    // Disable while saving/loading so a second tap can't fire a duplicate save.
+                    TextButton(
+                        onClick = onSaveClick,
+                        enabled = uiState.canSaveChanges && !uiState.showProgress
+                    ) {
                         Text(stringResource(R.string.comment_edit_menu_done))
                     }
                 }
@@ -129,7 +134,6 @@ private fun EditFields(
 ) {
     val edited = uiState.editedComment
     val errors = uiState.editErrorStrings
-    val settings = uiState.inputSettings
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -140,7 +144,6 @@ private fun EditFields(
         EditField(
             value = edited.userName,
             labelRes = R.string.comment_edit_user_name,
-            enabled = settings.enableEditName,
             error = errors.userNameError,
             keyboardType = KeyboardType.Text,
             onValueChange = { onFieldChange(it, USER_NAME) }
@@ -148,7 +151,6 @@ private fun EditFields(
         EditField(
             value = edited.userUrl,
             labelRes = R.string.comment_edit_web_address,
-            enabled = settings.enableEditUrl,
             error = errors.userUrlError,
             keyboardType = KeyboardType.Uri,
             onValueChange = { onFieldChange(it, WEB_ADDRESS) }
@@ -156,7 +158,6 @@ private fun EditFields(
         EditField(
             value = edited.userEmail,
             labelRes = R.string.comment_edit_email_address,
-            enabled = settings.enableEditEmail,
             error = errors.userEmailError,
             keyboardType = KeyboardType.Email,
             onValueChange = { onFieldChange(it, USER_EMAIL) }
@@ -164,10 +165,11 @@ private fun EditFields(
         EditField(
             value = edited.commentText,
             labelRes = R.string.comment_edit_comment,
-            enabled = settings.enableEditComment,
             error = errors.commentTextError,
             keyboardType = KeyboardType.Text,
             singleLine = false,
+            // The comment body auto-capitalizes sentences, matching the legacy field and the reply box.
+            capitalization = KeyboardCapitalization.Sentences,
             onValueChange = { onFieldChange(it, COMMENT) }
         )
     }
@@ -177,22 +179,21 @@ private fun EditFields(
 private fun EditField(
     value: String,
     labelRes: Int,
-    enabled: Boolean,
     error: String?,
     keyboardType: KeyboardType,
     onValueChange: (String) -> Unit,
-    singleLine: Boolean = true
+    singleLine: Boolean = true,
+    capitalization: KeyboardCapitalization = KeyboardCapitalization.None
 ) {
     OutlinedTextField(
         value = value,
         onValueChange = onValueChange,
-        enabled = enabled,
-        isError = !error.isNullOrEmpty(),
+        isError = error != null,
         singleLine = singleLine,
         minLines = if (singleLine) 1 else COMMENT_FIELD_MIN_LINES,
         label = { Text(stringResource(labelRes)) },
-        supportingText = error?.takeIf { it.isNotEmpty() }?.let { { Text(it) } },
-        keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
+        supportingText = error?.let { { Text(it) } },
+        keyboardOptions = KeyboardOptions(keyboardType = keyboardType, capitalization = capitalization),
         modifier = Modifier.fillMaxWidth()
     )
 }

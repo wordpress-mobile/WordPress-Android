@@ -298,66 +298,6 @@ class UnifiedCommentsEditViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `Should ENABLE edit name for a comment from registered user`() = test {
-        viewModel.start(site, siteCommentIdentifier)
-        assertThat(uiState.last().inputSettings.enableEditName).isTrue
-    }
-
-    @Test
-    fun `Should ENABLE edit name for a comment from unregistered user`() = test {
-        whenever(getCommentUseCase.execute(site, remoteCommentId))
-            .thenReturn(UNREGISTERED_COMMENT_ENTITY)
-
-        viewModel.start(site, siteCommentIdentifier)
-        assertThat(uiState.last().inputSettings.enableEditName).isTrue
-    }
-
-    @Test
-    fun `Should ENABLE edit URL for a comment from registered user`() = test {
-        viewModel.start(site, siteCommentIdentifier)
-        assertThat(uiState.last().inputSettings.enableEditUrl).isTrue
-    }
-
-    @Test
-    fun `Should ENABLE edit URL for a comment from unregistered user`() = test {
-        whenever(getCommentUseCase.execute(site, remoteCommentId))
-            .thenReturn(UNREGISTERED_COMMENT_ENTITY)
-
-        viewModel.start(site, siteCommentIdentifier)
-        assertThat(uiState.last().inputSettings.enableEditUrl).isTrue
-    }
-
-    @Test
-    fun `Should ENABLE edit email for a comment from registered user`() = test {
-        viewModel.start(site, siteCommentIdentifier)
-        assertThat(uiState.last().inputSettings.enableEditEmail).isTrue
-    }
-
-    @Test
-    fun `Should ENABLE edit email for a comment from unregistered user`() = test {
-        whenever(getCommentUseCase.execute(site, remoteCommentId))
-            .thenReturn(UNREGISTERED_COMMENT_ENTITY)
-
-        viewModel.start(site, siteCommentIdentifier)
-        assertThat(uiState.last().inputSettings.enableEditEmail).isTrue
-    }
-
-    @Test
-    fun `Should ENABLE edit comment content for a comment from registered user`() = test {
-        viewModel.start(site, siteCommentIdentifier)
-        assertThat(uiState.last().inputSettings.enableEditComment).isTrue
-    }
-
-    @Test
-    fun `Should ENABLE edit comment content for a comment from unregistered user`() = test {
-        whenever(getCommentUseCase.execute(site, remoteCommentId))
-            .thenReturn(UNREGISTERED_COMMENT_ENTITY)
-
-        viewModel.start(site, siteCommentIdentifier)
-        assertThat(uiState.last().inputSettings.enableEditComment).isTrue
-    }
-
-    @Test
     fun `Should update notification entity on save if NotificationCommentIdentifier`() = test {
         whenever(commentsStore.getCommentByLocalSiteAndRemoteId(site.id, remoteCommentId))
             .thenReturn(listOf(COMMENT_ENTITY))
@@ -561,28 +501,6 @@ class UnifiedCommentsEditViewModelTest : BaseUnitTest() {
             remoteCommentId = 0,
             remotePostId = 0,
             authorId = 4,
-            localSiteId = LOCAL_SITE_ID,
-            remoteSiteId = REMOTE_SITE_ID,
-            authorUrl = "authorUrl",
-            authorName = "authorName",
-            authorEmail = "authorEmail",
-            authorProfileImageUrl = null,
-            postTitle = null,
-            status = null,
-            datePublished = null,
-            publishedTimestamp = 0,
-            content = "content",
-            url = null,
-            hasParent = false,
-            parentId = 0,
-            iLike = false
-        )
-
-        private val UNREGISTERED_COMMENT_ENTITY = CommentEntity(
-            id = 1000,
-            remoteCommentId = 0,
-            remotePostId = 0,
-            authorId = 0,
             localSiteId = LOCAL_SITE_ID,
             remoteSiteId = REMOTE_SITE_ID,
             authorUrl = "authorUrl",

@@ -5,9 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity.RESULT_OK
-import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.SnackbarResult
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
@@ -16,8 +14,6 @@ import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-import com.google.android.material.snackbar.BaseTransientBottomBar.BaseCallback
-import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
@@ -114,34 +110,9 @@ class UnifiedCommentsEditFragment : Fragment() {
 
     private fun showSnackbar(holder: SnackbarMessageHolder) {
         val context = context ?: return
-        val message = uiHelpers.getTextOfUiString(context, holder.message).toString()
-        val actionLabel = holder.buttonTitle?.let { uiHelpers.getTextOfUiString(context, it).toString() }
         viewLifecycleOwner.lifecycleScope.launch {
-            // Fire onDismissAction from a finally so it still runs if the view is torn down while
-            // the snackbar is showing (the load-error holder closes the screen on dismiss).
-            var dismissEvent = BaseCallback.DISMISS_EVENT_MANUAL
-            try {
-                val result = snackbarHostState.showSnackbar(
-                    message = message,
-                    actionLabel = actionLabel,
-                    duration = holder.duration.toSnackbarDuration()
-                )
-                dismissEvent = if (result == SnackbarResult.ActionPerformed) {
-                    holder.buttonAction()
-                    BaseCallback.DISMISS_EVENT_ACTION
-                } else {
-                    BaseCallback.DISMISS_EVENT_TIMEOUT
-                }
-            } finally {
-                holder.onDismissAction(dismissEvent)
-            }
+            snackbarHostState.showMessage(holder, context, uiHelpers)
         }
-    }
-
-    private fun Int.toSnackbarDuration(): SnackbarDuration = when (this) {
-        Snackbar.LENGTH_SHORT -> SnackbarDuration.Short
-        Snackbar.LENGTH_INDEFINITE -> SnackbarDuration.Indefinite
-        else -> SnackbarDuration.Long
     }
 
     companion object {
