@@ -184,6 +184,11 @@ class WidgetUtils
         val intent = if (isNewStatsEnabled()) {
             Intent(context, NewStatsActivity::class.java).apply {
                 putExtra(WordPress.LOCAL_SITE_ID, localSiteId)
+                // Mirror the row-tap (template) path: CLEAR_TOP forces an already-running
+                // NewStatsActivity to be recreated so onCreate re-reads LOCAL_SITE_ID and renders
+                // the tapped widget's site. With NEW_TASK alone, Android would just bring the
+                // existing instance forward, keeping the previously selected site (multi-site bug).
+                addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
             }
         } else {
             Intent(context, StatsActivity::class.java).apply {
