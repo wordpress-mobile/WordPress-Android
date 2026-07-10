@@ -68,7 +68,7 @@ class CommentsRsDataSourceTest {
                     perPage = params.perPage
                 )
                 // The payload is decided by the request-level stub below; this value is unused.
-                mock<PostsRequestFilterListWithViewContextResponse>()
+                PostsRequestFilterListWithViewContextResponse(emptyList(), mock(), null, null)
             }
         }
         wpApiClient.stub {
