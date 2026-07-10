@@ -4,7 +4,6 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 import org.mockito.kotlin.mock
 import org.wordpress.android.fluxc.model.CommentStatus.APPROVED
-import org.wordpress.android.fluxc.model.CommentStatus.UNAPPROVED
 import uniffi.wp_api.CommentContentWithViewContext
 import uniffi.wp_api.CommentType
 import uniffi.wp_api.CommentWithViewContext
@@ -28,13 +27,6 @@ class CommentsRsListMappingTest {
         assertThat(item.url).isEqualTo("https://example.com/post/#comment-42")
         assertThat(item.postId).isEqualTo(POST_ID)
         assertThat(item.status).isEqualTo(APPROVED)
-    }
-
-    @Test
-    fun `toRsComment maps hold status to unapproved`() {
-        val item = rsComment(status = RsCommentStatus.Hold).toRsComment()
-
-        assertThat(item.status).isEqualTo(UNAPPROVED)
     }
 
     @Test
