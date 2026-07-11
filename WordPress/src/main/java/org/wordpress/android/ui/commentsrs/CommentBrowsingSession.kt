@@ -70,22 +70,17 @@ class CommentBrowsingSession @Inject constructor(
 
     private suspend fun fetchUntilNewIds(site: SiteModel): Boolean {
         var attempts = 0
-        var addedNew = false
-        var keepGoing = true
-        while (keepGoing && !addedNew && attempts < MAX_AUTO_ADVANCE_PAGES) {
+        while (attempts < MAX_AUTO_ADVANCE_PAGES) {
             val result = nextPageParams?.let { commentsRsDataSource.fetchCommentsPage(site, it) }
-            if (result is RsCommentsPageResult.Success) {
-                attempts++
-                nextPageParams = result.nextPageParams
-                val before = _commentIds.value
-                _commentIds.value = (before + result.comments.map { it.remoteCommentId }).distinct()
-                addedNew = _commentIds.value.size > before.size
-            } else {
-                // Null cursor (no more pages) or a fetch error: stop advancing.
-                keepGoing = false
-            }
+            // Null cursor (no more pages) or a fetch error: stop advancing.
+            if (result !is RsCommentsPageResult.Success) break
+            attempts++
+            nextPageParams = result.nextPageParams
+            val before = _commentIds.value
+            _commentIds.value = (before + result.comments.map { it.remoteCommentId }).distinct()
+            if (_commentIds.value.size > before.size) return true
         }
-        return addedNew
+        return false
     }
 
     /** Clears the session so a later single-comment open (e.g. from a notification) doesn't inherit it. */
