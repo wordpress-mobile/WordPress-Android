@@ -202,8 +202,8 @@ platform :android do
       release = AndroidPublisher::TrackRelease.new(
         # TODO: switch to 'completed' once the feature is ready to distribute to beta testers.
         status: 'draft',
-        # Keep the pinned legacy code on the track, matching the AAB-upload path's version_codes_to_retain.
-        version_codes: [Integer(version_code), 1440]
+        # Keep the pinned legacy code(s) on the track, same as the AAB-upload path.
+        version_codes: [Integer(version_code), *PLAY_STORE_VERSION_CODES_TO_RETAIN]
       )
       track = client.tracks(BETA_TRACK).first || AndroidPublisher::Track.new(track: BETA_TRACK)
       track.releases = [release]

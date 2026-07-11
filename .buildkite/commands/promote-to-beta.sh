@@ -1,4 +1,6 @@
-#!/bin/bash -eu
+#!/usr/bin/env bash
+
+set -eu
 
 # Promotes the build chosen in the preceding block step to the beta track. No build — just gems + secrets.
 

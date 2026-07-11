@@ -1,4 +1,6 @@
-#!/bin/bash -eu
+#!/usr/bin/env bash
+
+set -eu
 
 # Lists the promotable builds, opens the "choose a build" block step, and posts the
 # candidate list to Slack. No build — just gems + secrets.

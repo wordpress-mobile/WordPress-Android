@@ -35,6 +35,10 @@ APP_SPECIFIC_VALUES = {
 
 UPLOAD_TO_PLAY_STORE_JSON_KEY = File.join(Dir.home, '.configure', 'wordpress-android', 'secrets', 'google-upload-credentials.json')
 
+# Legacy version code pinned in the Play Store — it must never drop from a track, so every path that
+# writes a track release (AAB upload or beta promotion) keeps it in the release's version codes.
+PLAY_STORE_VERSION_CODES_TO_RETAIN = [1440].freeze
+
 PROTOTYPE_BUILD_TYPE = 'Debug'
 
 PROJECT_ROOT_FOLDER = File.dirname(File.expand_path(__dir__))
@@ -162,6 +166,9 @@ end
 #####################################################################################
 
 # Sends a Slack message to the given channel via the incoming webhook.
+#
+# The default is intentionally the test channel while the continuous-release process is being built
+# out; it moves to #build-and-ship once the flow ships to real testers.
 def send_slack_message(message:, channel: '#test-wpmobile-slack-integration')
   slack(
     username: 'WordPress Release Bot',
