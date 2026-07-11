@@ -61,6 +61,7 @@ class CommentsRsListViewModel @Inject constructor(
     private val dateTimeUtilsWrapper: DateTimeUtilsWrapper,
     private val avatarUtilsWrapper: WPAvatarUtilsWrapper,
     private val analyticsTracker: AnalyticsTrackerWrapper,
+    private val commentBrowsingSession: CommentBrowsingSession,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) : ViewModel() {
     private val _tabStates = MutableStateFlow<Map<CommentsRsListTab, CommentsTabUiState>>(emptyMap())
@@ -324,6 +325,11 @@ class CommentsRsListViewModel @Inject constructor(
         if (_selectedIds.value.isNotEmpty()) {
             toggleSelection(remoteCommentId)
         } else {
+            // Seed the detail's swipe pager with the current tab's comments and paging cursor so
+            // it can swipe between them and keep loading more (the cursor can't cross an Intent).
+            val tab = currentTab ?: CommentsRsListTab.ALL
+            val ids = _tabStates.value[tab]?.comments?.map { it.remoteCommentId } ?: listOf(remoteCommentId)
+            commentBrowsingSession.start(site, ids, nextPageParams[tab])
             _events.trySend(CommentsRsListEvent.OpenCommentDetail(site, remoteCommentId))
         }
     }
