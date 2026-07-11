@@ -128,29 +128,33 @@ platform :android do
   # bundle exec fastlane build_and_upload_trunk_internal [skip_confirm:<true|false>] [skip_prechecks:<true|false>]
   #####################################################################################
   desc 'Build WordPress & Jetpack from trunk and upload them to the Play Store internal track'
-  lane :build_and_upload_trunk_internal do |options|
+  lane :build_and_upload_trunk_internal do |skip_prechecks: false, skip_confirm: false|
     version_name = current_release_version
 
-    unless options[:skip_prechecks]
+    unless skip_prechecks
       ensure_git_branch(branch: DEFAULT_BRANCH) unless is_ci
 
       ensure_git_status_clean unless is_ci
 
       UI.important("Building #{version_name} for upload to the Play Store internal track")
 
-      UI.user_error!('Aborted by user request') unless options[:skip_confirm] || UI.confirm('Do you want to continue?')
+      UI.user_error!('Aborted by user request') unless skip_confirm || UI.confirm('Do you want to continue?')
 
       android_build_preflight
+    end
+
+    build_number = ENV.fetch('BUILDKITE_BUILD_NUMBER') do
+      UI.user_error!('BUILDKITE_BUILD_NUMBER is not set; the versionCode derives from it (Buildkite only).')
     end
 
     version = VERSION_FORMATTER.parse(version_name)
     build_code = Fastlane::Wpmreleasetoolkit::Versioning::ContinuousBuildCodeFormatter.new.build_code(
       major: version.major,
       minor: version.minor,
-      build_number: Integer(ENV.fetch('BUILDKITE_BUILD_NUMBER'))
+      build_number: Integer(build_number)
     )
 
-    UI.important("Building trunk internal build: #{version_name} (#{build_code})")
+    UI.important("Building #{DEFAULT_BRANCH} internal build: #{version_name} (#{build_code})")
 
     # Set the version for this build only. We deliberately do not commit this change.
     VERSION_FILE.write_version(version_name: version_name, version_code: build_code)
