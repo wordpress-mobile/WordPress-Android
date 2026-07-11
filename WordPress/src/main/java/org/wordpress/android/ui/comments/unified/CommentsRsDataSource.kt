@@ -206,6 +206,63 @@ class CommentsRsDataSource @Inject constructor(
     suspend fun updateStatus(site: SiteModel, commentId: Long, status: CommentStatus): RsResult =
         write(site) { it.comments().update(commentId, CommentUpdateParams(status = status.toRsCommentStatus())) }
 
+    /** Editable author-identity fields, applied to the comment record for any comment. */
+    data class CommentAuthor(val name: String, val email: String, val url: String)
+
+    /**
+     * The server's post-save state of an edited comment. Mirroring this (rather than the values
+     * that were sent) into the FluxC cache keeps the cache faithful when the server normalises
+     * fields — e.g. content passes through KSES filtering.
+     */
+    data class RsEditedComment(
+        val authorName: String,
+        val authorEmail: String,
+        val authorUrl: String,
+        val contentRaw: String
+    )
+
+    /** Result of editing a comment, carrying the server's resulting state on success. */
+    sealed interface RsEditResult {
+        data class Success(val comment: RsEditedComment) : RsEditResult
+        data class Error(val message: String?) : RsEditResult
+    }
+
+    /** Edits a comment's body and author identity, returning the state the server stored. */
+    suspend fun updateComment(
+        site: SiteModel,
+        commentId: Long,
+        content: String,
+        author: CommentAuthor
+    ): RsEditResult = safe(errorValue = RsEditResult.Error(null)) {
+        val client = wpApiClientProvider.getWpApiClient(site)
+        val result = client.request {
+            it.comments().update(
+                commentId,
+                CommentUpdateParams(
+                    content = content,
+                    authorName = author.name,
+                    authorEmail = author.email,
+                    authorUrl = author.url
+                )
+            )
+        }
+        when (result) {
+            is WpRequestResult.Success -> {
+                val serverComment = result.response.data
+                RsEditResult.Success(
+                    RsEditedComment(
+                        authorName = serverComment.authorName,
+                        authorEmail = serverComment.authorEmail,
+                        authorUrl = serverComment.authorUrl,
+                        contentRaw = serverComment.content.raw
+                    )
+                )
+            }
+            is WpRequestResult.WpError -> RsEditResult.Error(result.errorMessage)
+            else -> RsEditResult.Error(null)
+        }
+    }
+
     suspend fun delete(site: SiteModel, commentId: Long): RsResult =
         write(site) { it.comments().delete(commentId, CommentDeleteParams()) }
 

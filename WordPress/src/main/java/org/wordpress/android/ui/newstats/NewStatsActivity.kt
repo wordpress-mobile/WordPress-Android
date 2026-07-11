@@ -63,6 +63,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
+import org.wordpress.android.WordPress
+import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.ActivityNavigator
 import org.wordpress.android.ui.compose.theme.AppThemeM3
@@ -134,6 +136,9 @@ class NewStatsActivity : BaseAppCompatActivity() {
     lateinit var selectedSiteRepository: SelectedSiteRepository
 
     @Inject
+    lateinit var siteStore: SiteStore
+
+    @Inject
     lateinit var analyticsTracker: AnalyticsTrackerWrapper
 
     @Inject
@@ -144,6 +149,9 @@ class NewStatsActivity : BaseAppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        // New Stats always shows the currently selected site, so when launched for a specific
+        // site (e.g. from a stats widget) we select that site before rendering the screen.
+        selectSiteFromIntentIfNeeded()
         val shouldShowIntro =
             !appPrefsWrapper.getNewStatsIntroShown()
         val canSwitchToOldStats = !newStatsFeatureConfig.isEnabled()
@@ -163,6 +171,15 @@ class NewStatsActivity : BaseAppCompatActivity() {
                         activityNavigator.openInCustomTab(this, url)
                     }
                 )
+            }
+        }
+    }
+
+    private fun selectSiteFromIntentIfNeeded() {
+        val localSiteId = intent?.getIntExtra(WordPress.LOCAL_SITE_ID, 0) ?: 0
+        if (localSiteId != 0 && localSiteId != selectedSiteRepository.getSelectedSiteLocalId()) {
+            siteStore.getSiteByLocalId(localSiteId)?.let { site ->
+                selectedSiteRepository.updateSite(site)
             }
         }
     }
