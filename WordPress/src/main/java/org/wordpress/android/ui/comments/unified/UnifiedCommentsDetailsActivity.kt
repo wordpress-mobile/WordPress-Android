@@ -30,7 +30,6 @@ import javax.inject.Inject
 class UnifiedCommentsDetailsActivity : BaseAppCompatActivity() {
     @Inject lateinit var browsingSession: CommentBrowsingSession
 
-    private var pagerAdapter: CommentPagerAdapter? = null
     private var lastSelectedPosition = -1
     private var skipNextPageTrack = false
 
@@ -64,7 +63,6 @@ class UnifiedCommentsDetailsActivity : BaseAppCompatActivity() {
         val initialIds = if (useSession) sessionIds else listOf(initialCommentId)
 
         val adapter = CommentPagerAdapter(this, site).also { it.submit(initialIds) }
-        pagerAdapter = adapter
         pager.adapter = adapter
 
         if (isFirstCreate) {
@@ -72,7 +70,7 @@ class UnifiedCommentsDetailsActivity : BaseAppCompatActivity() {
             pager.setCurrentItem(startIndex, false)
             lastSelectedPosition = startIndex
             trackCommentViewed(site) // initial view; onPageSelected covers each later swipe
-            maybeLoadMore(startIndex)
+            maybeLoadMore(startIndex, adapter)
         } else {
             // ViewPager2 restores the user's page itself; don't re-track that restore as a view.
             skipNextPageTrack = true
@@ -80,7 +78,7 @@ class UnifiedCommentsDetailsActivity : BaseAppCompatActivity() {
 
         pager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
-                maybeLoadMore(position)
+                maybeLoadMore(position, adapter)
                 if (skipNextPageTrack) {
                     skipNextPageTrack = false
                     lastSelectedPosition = position
@@ -102,10 +100,9 @@ class UnifiedCommentsDetailsActivity : BaseAppCompatActivity() {
         }
     }
 
-    private fun maybeLoadMore(position: Int) {
+    private fun maybeLoadMore(position: Int, adapter: CommentPagerAdapter) {
         if (!browsingSession.isActive || !browsingSession.canLoadMore) return
-        val count = pagerAdapter?.itemCount ?: return
-        if (position >= count - LOAD_MORE_THRESHOLD) {
+        if (position >= adapter.itemCount - LOAD_MORE_THRESHOLD) {
             lifecycleScope.launch { browsingSession.loadMore() }
         }
     }
