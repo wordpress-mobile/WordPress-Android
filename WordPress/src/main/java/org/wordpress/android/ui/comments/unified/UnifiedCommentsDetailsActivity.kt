@@ -21,20 +21,21 @@ import org.wordpress.android.ui.commentsrs.CommentBrowsingSession
 import org.wordpress.android.ui.main.BaseAppCompatActivity
 import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.ToastUtils
-import org.wordpress.android.util.analytics.AnalyticsUtils
 import org.wordpress.android.util.analytics.AnalyticsUtils.AnalyticsCommentActionSource
+import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
 import org.wordpress.android.util.extensions.getSerializableExtraCompat
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class UnifiedCommentsDetailsActivity : BaseAppCompatActivity() {
     @Inject lateinit var browsingSession: CommentBrowsingSession
+    @Inject lateinit var analyticsUtilsWrapper: AnalyticsUtilsWrapper
 
     private var lastSelectedPosition = -1
-    private var skipNextPageTrack = false
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        lastSelectedPosition = savedInstanceState?.getInt(KEY_LAST_SELECTED_POSITION, -1) ?: -1
 
         // The comment is loaded from the network (wordpress-rs), so bail out with a toast rather
         // than showing an empty screen when there's no connection. Only on first launch: a
@@ -71,19 +72,13 @@ class UnifiedCommentsDetailsActivity : BaseAppCompatActivity() {
             lastSelectedPosition = startIndex
             trackCommentViewed(site) // initial view; onPageSelected covers each later swipe
             maybeLoadMore(startIndex, adapter)
-        } else {
-            // ViewPager2 restores the user's page itself; don't re-track that restore as a view.
-            skipNextPageTrack = true
         }
+        // On recreation ViewPager2 restores the page itself; lastSelectedPosition was restored from
+        // savedInstanceState, so the position guard below keeps that restore from re-tracking.
 
         pager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
                 maybeLoadMore(position, adapter)
-                if (skipNextPageTrack) {
-                    skipNextPageTrack = false
-                    lastSelectedPosition = position
-                    return
-                }
                 if (position == lastSelectedPosition) return
                 lastSelectedPosition = position
                 trackCommentViewed(site)
@@ -91,10 +86,12 @@ class UnifiedCommentsDetailsActivity : BaseAppCompatActivity() {
         })
 
         if (useSession) {
-            // Appended ids (from load-more) grow the pager without recreating existing pages.
+            // Appended ids (from load-more) grow the pager without recreating existing pages. An
+            // empty emission can only mean another instance cleared the shared session (e.g. in
+            // multi-window); ignore it rather than collapse this pager to zero pages.
             lifecycleScope.launch {
                 repeatOnLifecycle(Lifecycle.State.STARTED) {
-                    browsingSession.commentIds.collect { adapter.submit(it) }
+                    browsingSession.commentIds.collect { if (it.isNotEmpty()) adapter.submit(it) }
                 }
             }
         }
@@ -109,7 +106,7 @@ class UnifiedCommentsDetailsActivity : BaseAppCompatActivity() {
 
     private fun trackCommentViewed(site: SiteModel) {
         // Site-comments host only; the notifications host tracks its own COMMENT_VIEWED.
-        AnalyticsUtils.trackCommentActionWithSiteDetails(
+        analyticsUtilsWrapper.trackCommentActionWithSiteDetails(
             Stat.COMMENT_VIEWED, AnalyticsCommentActionSource.SITE_COMMENTS, site
         )
     }
@@ -126,6 +123,11 @@ class UnifiedCommentsDetailsActivity : BaseAppCompatActivity() {
     override fun onSupportNavigateUp(): Boolean {
         onBackPressedDispatcher.onBackPressed()
         return true
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putInt(KEY_LAST_SELECTED_POSITION, lastSelectedPosition)
     }
 
     override fun onDestroy() {
@@ -170,6 +172,7 @@ class UnifiedCommentsDetailsActivity : BaseAppCompatActivity() {
             }
 
         private const val KEY_REMOTE_COMMENT_ID = "key_remote_comment_id"
+        private const val KEY_LAST_SELECTED_POSITION = "key_last_selected_position"
 
         // Prefetch the next page when within this many pages of the end.
         private const val LOAD_MORE_THRESHOLD = 2

@@ -92,6 +92,8 @@ class CommentBrowsingSession @Inject constructor(
     }
 
     companion object {
-        private const val MAX_AUTO_ADVANCE_PAGES = 3
+        // How many pages a single load-more may fetch unattended when pages dedupe away to
+        // nothing. Shared with CommentsRsListViewModel so both auto-advance loops stay in step.
+        internal const val MAX_AUTO_ADVANCE_PAGES = 3
     }
 }

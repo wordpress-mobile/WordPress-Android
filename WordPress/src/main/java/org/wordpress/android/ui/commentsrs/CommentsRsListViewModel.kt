@@ -300,7 +300,7 @@ class CommentsRsListViewModel @Inject constructor(
                     // page param) from firing unbounded unattended requests.
                     if (getTabUiState(tab).comments.size == sizeBefore &&
                         nextPageParams[tab] != null &&
-                        autoAdvanceDepth < MAX_AUTO_ADVANCE_PAGES
+                        autoAdvanceDepth < CommentBrowsingSession.MAX_AUTO_ADVANCE_PAGES
                     ) {
                         loadMoreInternal(tab, autoAdvanceDepth + 1)
                     }
@@ -581,10 +581,6 @@ class CommentsRsListViewModel @Inject constructor(
     }
 
     companion object {
-        // How many extra pages a single load-more may fetch unattended when applied pages
-        // add no rows, before waiting for the next user scroll.
-        private const val MAX_AUTO_ADVANCE_PAGES = 3
-
         // Same property key as the legacy list's tracking (UnifiedCommentsActivity).
         private const val SELECTED_FILTER_PROPERTY = "selected_filter"
 
