@@ -8,10 +8,15 @@ import kotlinx.coroutines.launch
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.XPostsResult
 import org.wordpress.android.fluxc.store.XPostsStore
+import org.wordpress.android.fluxc.utils.CurrentTimeProvider
+import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class XPostsCapabilityChecker @Inject constructor(
-    private val xPostsStore: XPostsStore
+    private val xPostsStore: XPostsStore,
+    private val appPrefsWrapper: AppPrefsWrapper,
+    private val currentTimeProvider: CurrentTimeProvider
 ) {
     @Suppress("GlobalCoroutineUsage")
     @OptIn(DelicateCoroutinesApi::class)
@@ -33,17 +38,34 @@ class XPostsCapabilityChecker @Inject constructor(
     suspend fun isCapable(site: SiteModel): Boolean =
         // Check db first in order to reduce unnecessary network calls
         when (val saved = xPostsStore.getXPostsFromDb(site)) {
-            is XPostsResult.Result ->
-                // A persisted result is definitive: a non-empty list means the site has xposts, and an
-                // empty list is the stored "no xposts" marker from a previous backend response. Trust the
-                // cache either way rather than re-fetching on every editor open. Re-fetching on the empty
-                // case fired a request each time the editor opened on sites without xposts, which for
-                // non-P2 sites is rejected with a recurring `xposts_require_o2_enabled` (HTTP 400). We
-                // accept that a site which gains or loses all its xposts may be briefly stale, matching
-                // the staleness we already tolerate for the non-empty case.
-                saved.xPosts.isNotEmpty()
-            is XPostsResult.Unknown ->
-                // We have never gotten a response for this site, so make the api call to try to find out
-                fetchingReturnsXposts(site)
+            // A non-empty persisted list means the site has xposts. We keep trusting this even if the
+            // site later loses them, to avoid an expensive fetch on every editor open.
+            is XPostsResult.Result -> if (saved.xPosts.isNotEmpty()) true else recheckIfStale(site)
+            // We have never gotten a response for this site, so make the api call to try to find out.
+            is XPostsResult.Unknown -> recheckIfStale(site)
         }
+
+    /**
+     * Called when the cache says the site has no xposts (or we have never checked). We avoid re-fetching
+     * on every editor open — for non-P2 sites that request is rejected with a recurring
+     * `xposts_require_o2_enabled` (HTTP 400). But a site can gain xposts later (e.g. o2 gets enabled), so
+     * we re-query once the last confirmed "no xposts" result is older than [NO_XPOSTS_TTL_MS], and record
+     * a fresh timestamp whenever the site still has none.
+     */
+    private suspend fun recheckIfStale(site: SiteModel): Boolean {
+        val lastChecked = appPrefsWrapper.getXPostsNoResultCheckedTimestamp(site)
+        val now = currentTimeProvider.currentDate().time
+        if (lastChecked != 0L && now - lastChecked < NO_XPOSTS_TTL_MS) {
+            return false
+        }
+        val capable = fetchingReturnsXposts(site)
+        if (!capable) {
+            appPrefsWrapper.setXPostsNoResultCheckedTimestamp(site, now)
+        }
+        return capable
+    }
+
+    companion object {
+        private val NO_XPOSTS_TTL_MS = TimeUnit.DAYS.toMillis(1)
+    }
 }

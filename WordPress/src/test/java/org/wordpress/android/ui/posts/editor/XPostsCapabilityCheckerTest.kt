@@ -16,6 +16,10 @@ import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.XPostsResult
 import org.wordpress.android.fluxc.store.XPostsStore
+import org.wordpress.android.fluxc.utils.CurrentTimeProvider
+import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import java.util.Date
+import java.util.concurrent.TimeUnit
 
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
@@ -26,49 +30,87 @@ class XPostsCapabilityCheckerTest : BaseUnitTest() {
     @Mock
     lateinit var mockSite: SiteModel
 
+    @Mock
+    lateinit var appPrefsWrapper: AppPrefsWrapper
+
+    @Mock
+    lateinit var currentTimeProvider: CurrentTimeProvider
+
     @InjectMocks
     lateinit var xPostsCapabilityChecker: XPostsCapabilityChecker
 
     @Test
-    fun `if has xposts in db, is capable`() = test {
-        testCapability(XPostsResult.dbResult(listOf(mock())), null, true)
-    }
+    fun `if has xposts in db, is capable without re-fetching`() = test {
+        whenever(mockXPostsStore.getXPostsFromDb(mockSite)).thenReturn(XPostsResult.dbResult(listOf(mock())))
 
-    @Test
-    fun `if db has the no-xposts marker, is not capable and does not re-fetch`() = test {
-        whenever(mockXPostsStore.getXPostsFromDb(mockSite)).thenReturn(XPostsResult.dbResult(emptyList()))
-
-        val actualCapability = xPostsCapabilityChecker.isCapable(mockSite)
-
-        assertEquals(false, actualCapability)
+        assertEquals(true, xPostsCapabilityChecker.isCapable(mockSite))
         verify(mockXPostsStore, never()).fetchXPosts(any())
     }
 
     @Test
-    fun `if unknown xposts in db and xposts in api response, is capable`() = test {
-        testCapability(XPostsResult.Unknown, XPostsResult.apiResult(listOf(mock())), true)
+    fun `if the no-xposts marker was confirmed within the TTL, is not capable without re-fetching`() = test {
+        whenever(mockXPostsStore.getXPostsFromDb(mockSite)).thenReturn(XPostsResult.dbResult(emptyList()))
+        whenever(currentTimeProvider.currentDate()).thenReturn(Date(NOW))
+        whenever(appPrefsWrapper.getXPostsNoResultCheckedTimestamp(mockSite)).thenReturn(NOW - ONE_HOUR_MS)
+
+        assertEquals(false, xPostsCapabilityChecker.isCapable(mockSite))
+        verify(mockXPostsStore, never()).fetchXPosts(any())
     }
 
     @Test
-    fun `if unknown xposts in db and api response shows no xposts, is not capable`() = test {
-        testCapability(XPostsResult.Unknown, XPostsResult.apiResult(emptyList()), false)
+    fun `if the no-xposts marker is stale, re-fetches and reflects the new api result`() = test {
+        whenever(mockXPostsStore.getXPostsFromDb(mockSite)).thenReturn(XPostsResult.dbResult(emptyList()))
+        whenever(currentTimeProvider.currentDate()).thenReturn(Date(NOW))
+        whenever(appPrefsWrapper.getXPostsNoResultCheckedTimestamp(mockSite)).thenReturn(NOW - TWO_DAYS_MS)
+        whenever(mockXPostsStore.fetchXPosts(mockSite)).thenReturn(XPostsResult.apiResult(listOf(mock())))
+
+        assertEquals(true, xPostsCapabilityChecker.isCapable(mockSite))
+        verify(mockXPostsStore).fetchXPosts(mockSite)
     }
 
     @Test
-    fun `if unknown xposts in db and unknown xposts api response, is capable`() = test {
-        testCapability(XPostsResult.Unknown, XPostsResult.Unknown, true)
+    fun `if no xposts and never checked, re-fetches and records the timestamp when still empty`() = test {
+        whenever(mockXPostsStore.getXPostsFromDb(mockSite)).thenReturn(XPostsResult.dbResult(emptyList()))
+        whenever(currentTimeProvider.currentDate()).thenReturn(Date(NOW))
+        // getXPostsNoResultCheckedTimestamp defaults to 0 (never checked)
+        whenever(mockXPostsStore.fetchXPosts(mockSite)).thenReturn(XPostsResult.apiResult(emptyList()))
+
+        assertEquals(false, xPostsCapabilityChecker.isCapable(mockSite))
+        verify(appPrefsWrapper).setXPostsNoResultCheckedTimestamp(mockSite, NOW)
     }
 
-    private suspend fun testCapability(
-        dbResponse: XPostsResult,
-        apiResponse: XPostsResult?,
-        expectedCapability: Boolean
-    ) {
-        whenever(mockXPostsStore.getXPostsFromDb(mockSite)).thenReturn(dbResponse)
-        if (apiResponse != null) {
-            whenever(mockXPostsStore.fetchXPosts(mockSite)).thenReturn(apiResponse)
-        }
-        val actualCapability = xPostsCapabilityChecker.isCapable(mockSite)
-        assertEquals(expectedCapability, actualCapability)
+    @Test
+    fun `if unknown in db and xposts in api response, is capable`() = test {
+        whenever(mockXPostsStore.getXPostsFromDb(mockSite)).thenReturn(XPostsResult.Unknown)
+        whenever(currentTimeProvider.currentDate()).thenReturn(Date(NOW))
+        whenever(mockXPostsStore.fetchXPosts(mockSite)).thenReturn(XPostsResult.apiResult(listOf(mock())))
+
+        assertEquals(true, xPostsCapabilityChecker.isCapable(mockSite))
+    }
+
+    @Test
+    fun `if unknown in db and api response shows no xposts, is not capable and records timestamp`() = test {
+        whenever(mockXPostsStore.getXPostsFromDb(mockSite)).thenReturn(XPostsResult.Unknown)
+        whenever(currentTimeProvider.currentDate()).thenReturn(Date(NOW))
+        whenever(mockXPostsStore.fetchXPosts(mockSite)).thenReturn(XPostsResult.apiResult(emptyList()))
+
+        assertEquals(false, xPostsCapabilityChecker.isCapable(mockSite))
+        verify(appPrefsWrapper).setXPostsNoResultCheckedTimestamp(mockSite, NOW)
+    }
+
+    @Test
+    fun `if unknown in db and unknown api response, is capable and records no timestamp`() = test {
+        whenever(mockXPostsStore.getXPostsFromDb(mockSite)).thenReturn(XPostsResult.Unknown)
+        whenever(currentTimeProvider.currentDate()).thenReturn(Date(NOW))
+        whenever(mockXPostsStore.fetchXPosts(mockSite)).thenReturn(XPostsResult.Unknown)
+
+        assertEquals(true, xPostsCapabilityChecker.isCapable(mockSite))
+        verify(appPrefsWrapper, never()).setXPostsNoResultCheckedTimestamp(any(), any())
+    }
+
+    companion object {
+        private const val NOW = 1_000_000_000_000L
+        private val ONE_HOUR_MS = TimeUnit.HOURS.toMillis(1)
+        private val TWO_DAYS_MS = TimeUnit.DAYS.toMillis(2)
     }
 }
