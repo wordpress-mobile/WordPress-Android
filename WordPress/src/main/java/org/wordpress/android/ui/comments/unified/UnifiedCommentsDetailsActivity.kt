@@ -72,7 +72,7 @@ class UnifiedCommentsDetailsActivity : BaseAppCompatActivity() {
         pager.setPageTransformer(WPViewPager2Transformer(TransformType.SlideOver))
 
         if (isFirstCreate) {
-            val startIndex = initialIds.indexOf(initialCommentId).coerceAtLeast(0)
+            val startIndex = initialIds.indexOf(initialCommentId)
             pager.setCurrentItem(startIndex, false)
             lastSelectedPosition = startIndex
             trackCommentViewed(site) // initial view; onPageSelected covers each later swipe
