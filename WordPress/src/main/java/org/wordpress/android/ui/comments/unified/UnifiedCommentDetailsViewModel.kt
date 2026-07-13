@@ -5,7 +5,9 @@ import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
+import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.datasets.wrappers.NotificationsTableWrapper
+import org.wordpress.android.fluxc.model.CommentModel
 import org.wordpress.android.fluxc.model.CommentStatus
 import org.wordpress.android.fluxc.model.CommentStatus.APPROVED
 import org.wordpress.android.fluxc.model.CommentStatus.DELETED
@@ -33,6 +35,8 @@ import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.DateTimeUtilsWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
+import org.wordpress.android.util.analytics.AnalyticsUtils.AnalyticsCommentActionSource
+import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
@@ -64,7 +68,8 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     private val dateTimeUtilsWrapper: DateTimeUtilsWrapper,
     private val notificationsActionsWrapper: NotificationsActionsWrapper,
-    private val notificationsTableWrapper: NotificationsTableWrapper
+    private val notificationsTableWrapper: NotificationsTableWrapper,
+    private val analyticsUtilsWrapper: AnalyticsUtilsWrapper
 ) : ScopedViewModel(mainDispatcher) {
     private val _uiState = MutableLiveData<CommentDetailsUiState>()
     private val _uiActionEvent = MutableLiveData<Event<CommentDetailsActionEvent>>()
@@ -215,6 +220,7 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
                 _uiState.value = _uiState.value?.copy(isLiked = !isLike)
                 showSnackbar(R.string.error_generic)
             } else {
+                trackCommentAction(if (isLike) Stat.COMMENT_LIKED else Stat.COMMENT_UNLIKED)
                 withContext(bgDispatcher) {
                     localCommentCacheUpdateHandler.requestCommentsUpdate()
                     refreshNote()
@@ -226,6 +232,7 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
 
     fun onEditClicked() {
         if (loadedComment == null) return
+        trackCommentAction(Stat.COMMENT_EDITOR_OPENED)
         // In note mode edit through the note identifier so the edit screen refreshes the note DB
         // after saving, keeping the notifications list consistent with the edited comment.
         val identifier = noteId?.let { NotificationCommentIdentifier(it, remoteCommentId) }
@@ -266,6 +273,7 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
             if (result is RsResult.Error) {
                 showError(result.message, R.string.error_generic)
             } else {
+                trackCommentReply(comment)
                 _commentChanged.value = Event(Unit)
                 // Replying to an unapproved comment implicitly approves it, matching legacy behaviour
                 if (currentStatus() == UNAPPROVED) {
@@ -282,8 +290,13 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
         val result = withContext(bgDispatcher) { moderate(APPROVED) }
         if (result is RsResult.Error) {
             _uiState.value = _uiState.value?.copy(status = UNAPPROVED)
-        } else if (noteId != null) {
-            _commentModerated.value = Event(APPROVED)
+        } else {
+            // Match the legacy screen, which tracks the implicit approve when replying to an
+            // unapproved comment (this path is only reached from an unapproved comment).
+            trackCommentAction(Stat.COMMENT_APPROVED)
+            if (noteId != null) {
+                _commentModerated.value = Event(APPROVED)
+            }
         }
     }
 
@@ -301,6 +314,7 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
                 _uiState.value = _uiState.value?.copy(status = previousStatus)
                 showError(result.message, R.string.error_moderate_comment)
             } else {
+                moderationStat(previousStatus, newStatus)?.let { trackCommentAction(it) }
                 _commentChanged.value = Event(Unit)
                 if (noteId != null) {
                     _commentModerated.value = Event(newStatus)
@@ -346,6 +360,42 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
     }
 
     private fun currentStatus(): CommentStatus = _uiState.value?.status ?: CommentStatus.ALL
+
+    /** The analytics source the legacy screen used: notifications when opened from a note, else site comments. */
+    private fun commentActionSource(): AnalyticsCommentActionSource =
+        if (noteId != null) AnalyticsCommentActionSource.NOTIFICATIONS else AnalyticsCommentActionSource.SITE_COMMENTS
+
+    private fun trackCommentAction(stat: Stat) =
+        analyticsUtilsWrapper.trackCommentActionWithSiteDetails(stat, commentActionSource(), site)
+
+    /** Mirrors the legacy reply tracking, which carries the post and comment ids as event properties. */
+    private fun trackCommentReply(comment: RsComment) {
+        val model = CommentModel()
+        model.remotePostId = comment.postId
+        model.remoteCommentId = remoteCommentId
+        analyticsUtilsWrapper.trackCommentReplyWithDetails(
+            isQuickReply = false,
+            site = site,
+            comment = model,
+            actionSource = commentActionSource()
+        )
+    }
+
+    /**
+     * Maps a moderation to the matching analytics event, mirroring the legacy detail screen:
+     * restoring from spam/trash to approved tracks the specific un-spam/un-trash action rather than
+     * a generic approve.
+     */
+    private fun moderationStat(previousStatus: CommentStatus, newStatus: CommentStatus): Stat? = when {
+        previousStatus == SPAM && newStatus == APPROVED -> Stat.COMMENT_UNSPAMMED
+        previousStatus == TRASH && newStatus == APPROVED -> Stat.COMMENT_UNTRASHED
+        newStatus == APPROVED -> Stat.COMMENT_APPROVED
+        newStatus == UNAPPROVED -> Stat.COMMENT_UNAPPROVED
+        newStatus == SPAM -> Stat.COMMENT_SPAMMED
+        newStatus == TRASH -> Stat.COMMENT_TRASHED
+        newStatus == DELETED -> Stat.COMMENT_DELETED
+        else -> null
+    }
 
     private fun isOffline(): Boolean {
         if (networkUtilsWrapper.isNetworkAvailable()) return false

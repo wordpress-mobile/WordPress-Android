@@ -8,6 +8,7 @@ import org.junit.Test
 import org.mockito.Mock
 import org.mockito.kotlin.any
 import org.mockito.kotlin.atLeastOnce
+import org.mockito.kotlin.check
 import org.mockito.kotlin.doSuspendableAnswer
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
@@ -16,6 +17,7 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.verifyNoInteractions
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
+import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.datasets.wrappers.NotificationsTableWrapper
 import org.wordpress.android.fluxc.model.CommentStatus
 import org.wordpress.android.fluxc.model.CommentStatus.APPROVED
@@ -46,6 +48,8 @@ import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.DateTimeUtilsWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
+import org.wordpress.android.util.analytics.AnalyticsUtils.AnalyticsCommentActionSource
+import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
 import java.util.Date
 
 @ExperimentalCoroutinesApi
@@ -70,6 +74,9 @@ class UnifiedCommentDetailsViewModelTest : BaseUnitTest() {
 
     @Mock
     lateinit var notificationsTableWrapper: NotificationsTableWrapper
+
+    @Mock
+    lateinit var analyticsUtilsWrapper: AnalyticsUtilsWrapper
 
     private lateinit var viewModel: UnifiedCommentDetailsViewModel
 
@@ -97,17 +104,7 @@ class UnifiedCommentDetailsViewModelTest : BaseUnitTest() {
         whenever(dateTimeUtilsWrapper.javaDateToTimeSpan(any())).thenReturn("2 hours ago")
         whenever(notificationsActionsWrapper.downloadNoteAndUpdateDB(any())).thenReturn(true)
 
-        viewModel = UnifiedCommentDetailsViewModel(
-            mainDispatcher = testDispatcher(),
-            bgDispatcher = testDispatcher(),
-            commentsRsDataSource = commentsRsDataSource,
-            commentsStore = commentsStore,
-            localCommentCacheUpdateHandler = localCommentCacheUpdateHandler,
-            networkUtilsWrapper = networkUtilsWrapper,
-            dateTimeUtilsWrapper = dateTimeUtilsWrapper,
-            notificationsActionsWrapper = notificationsActionsWrapper,
-            notificationsTableWrapper = notificationsTableWrapper
-        )
+        viewModel = createViewModel()
 
         setupObservers()
     }
@@ -449,6 +446,170 @@ class UnifiedCommentDetailsViewModelTest : BaseUnitTest() {
 
         assertThat(uiStates.last().isLiked).isTrue
     }
+
+    @Test
+    fun `approving an unapproved comment tracks COMMENT_APPROVED for site comments`() = test {
+        whenever(commentsRsDataSource.getComment(site, REMOTE_COMMENT_ID)).thenReturn(UNAPPROVED_RS_COMMENT)
+        viewModel.start(site, REMOTE_COMMENT_ID)
+
+        viewModel.onApproveClicked()
+
+        verify(analyticsUtilsWrapper)
+            .trackCommentActionWithSiteDetails(Stat.COMMENT_APPROVED, AnalyticsCommentActionSource.SITE_COMMENTS, site)
+    }
+
+    @Test
+    fun `unapproving an approved comment tracks COMMENT_UNAPPROVED`() = test {
+        viewModel.start(site, REMOTE_COMMENT_ID)
+
+        viewModel.onApproveClicked()
+
+        verify(analyticsUtilsWrapper).trackCommentActionWithSiteDetails(
+            Stat.COMMENT_UNAPPROVED, AnalyticsCommentActionSource.SITE_COMMENTS, site
+        )
+    }
+
+    @Test
+    fun `spamming tracks COMMENT_SPAMMED and un-spamming tracks COMMENT_UNSPAMMED`() = test {
+        viewModel.start(site, REMOTE_COMMENT_ID)
+        viewModel.onSpamClicked()
+        verify(analyticsUtilsWrapper)
+            .trackCommentActionWithSiteDetails(Stat.COMMENT_SPAMMED, AnalyticsCommentActionSource.SITE_COMMENTS, site)
+
+        whenever(commentsRsDataSource.getComment(site, REMOTE_COMMENT_ID)).thenReturn(RS_COMMENT.copy(status = SPAM))
+        val spammedViewModel = createViewModel()
+        spammedViewModel.start(site, REMOTE_COMMENT_ID)
+        spammedViewModel.onSpamClicked()
+        verify(analyticsUtilsWrapper)
+            .trackCommentActionWithSiteDetails(Stat.COMMENT_UNSPAMMED, AnalyticsCommentActionSource.SITE_COMMENTS, site)
+    }
+
+    @Test
+    fun `trashing tracks COMMENT_TRASHED and un-trashing tracks COMMENT_UNTRASHED`() = test {
+        viewModel.start(site, REMOTE_COMMENT_ID)
+        viewModel.onTrashClicked()
+        verify(analyticsUtilsWrapper)
+            .trackCommentActionWithSiteDetails(Stat.COMMENT_TRASHED, AnalyticsCommentActionSource.SITE_COMMENTS, site)
+
+        whenever(commentsRsDataSource.getComment(site, REMOTE_COMMENT_ID)).thenReturn(RS_COMMENT.copy(status = TRASH))
+        val trashedViewModel = createViewModel()
+        trashedViewModel.start(site, REMOTE_COMMENT_ID)
+        trashedViewModel.onTrashClicked()
+        verify(analyticsUtilsWrapper)
+            .trackCommentActionWithSiteDetails(Stat.COMMENT_UNTRASHED, AnalyticsCommentActionSource.SITE_COMMENTS, site)
+    }
+
+    @Test
+    fun `deleting permanently tracks COMMENT_DELETED`() = test {
+        viewModel.start(site, REMOTE_COMMENT_ID)
+
+        viewModel.onDeletePermanentlyClicked()
+
+        verify(analyticsUtilsWrapper)
+            .trackCommentActionWithSiteDetails(Stat.COMMENT_DELETED, AnalyticsCommentActionSource.SITE_COMMENTS, site)
+    }
+
+    @Test
+    fun `liking tracks COMMENT_LIKED and unliking tracks COMMENT_UNLIKED`() = test {
+        viewModel.start(site, REMOTE_COMMENT_ID)
+        viewModel.onLikeClicked()
+        verify(analyticsUtilsWrapper)
+            .trackCommentActionWithSiteDetails(Stat.COMMENT_LIKED, AnalyticsCommentActionSource.SITE_COMMENTS, site)
+
+        whenever(commentsStore.getCommentByLocalSiteAndRemoteId(LOCAL_SITE_ID, REMOTE_COMMENT_ID))
+            .thenReturn(listOf(CACHED_COMMENT.copy(iLike = true)))
+        val likedViewModel = createViewModel()
+        likedViewModel.start(site, REMOTE_COMMENT_ID)
+        likedViewModel.onLikeClicked()
+        verify(analyticsUtilsWrapper)
+            .trackCommentActionWithSiteDetails(Stat.COMMENT_UNLIKED, AnalyticsCommentActionSource.SITE_COMMENTS, site)
+    }
+
+    @Test
+    fun `opening the editor tracks COMMENT_EDITOR_OPENED`() = test {
+        viewModel.start(site, REMOTE_COMMENT_ID)
+
+        viewModel.onEditClicked()
+
+        verify(analyticsUtilsWrapper).trackCommentActionWithSiteDetails(
+            Stat.COMMENT_EDITOR_OPENED, AnalyticsCommentActionSource.SITE_COMMENTS, site
+        )
+    }
+
+    @Test
+    fun `a successful reply tracks the reply with the post and comment ids`() = test {
+        viewModel.start(site, REMOTE_COMMENT_ID)
+
+        viewModel.onReplyClicked("nice post")
+
+        verify(analyticsUtilsWrapper).trackCommentReplyWithDetails(
+            eq(false),
+            eq(site),
+            check {
+                assertThat(it.remotePostId).isEqualTo(REMOTE_POST_ID)
+                assertThat(it.remoteCommentId).isEqualTo(REMOTE_COMMENT_ID)
+            },
+            eq(AnalyticsCommentActionSource.SITE_COMMENTS)
+        )
+    }
+
+    @Test
+    fun `replying to an unapproved comment tracks the implicit approve`() = test {
+        whenever(commentsRsDataSource.getComment(site, REMOTE_COMMENT_ID)).thenReturn(UNAPPROVED_RS_COMMENT)
+        viewModel.start(site, REMOTE_COMMENT_ID)
+
+        viewModel.onReplyClicked("nice post")
+
+        verify(analyticsUtilsWrapper).trackCommentActionWithSiteDetails(
+            Stat.COMMENT_APPROVED, AnalyticsCommentActionSource.SITE_COMMENTS, site
+        )
+    }
+
+    @Test
+    fun `a note-mode reply tracks with the notifications source`() = test {
+        viewModel.start(site, REMOTE_COMMENT_ID, NOTE_ID)
+
+        viewModel.onReplyClicked("nice post")
+
+        verify(analyticsUtilsWrapper).trackCommentReplyWithDetails(
+            eq(false), eq(site), any(), eq(AnalyticsCommentActionSource.NOTIFICATIONS)
+        )
+    }
+
+    @Test
+    fun `note-mode actions track with the notifications source`() = test {
+        viewModel.start(site, REMOTE_COMMENT_ID, NOTE_ID)
+
+        viewModel.onApproveClicked()
+
+        verify(analyticsUtilsWrapper).trackCommentActionWithSiteDetails(
+            Stat.COMMENT_UNAPPROVED, AnalyticsCommentActionSource.NOTIFICATIONS, site
+        )
+    }
+
+    @Test
+    fun `a failed moderation does not track an analytics event`() = test {
+        whenever(commentsRsDataSource.updateStatus(eq(site), eq(REMOTE_COMMENT_ID), any()))
+            .thenReturn(RsResult.Error("nope"))
+        viewModel.start(site, REMOTE_COMMENT_ID)
+
+        viewModel.onApproveClicked()
+
+        verifyNoInteractions(analyticsUtilsWrapper)
+    }
+
+    private fun createViewModel() = UnifiedCommentDetailsViewModel(
+        mainDispatcher = testDispatcher(),
+        bgDispatcher = testDispatcher(),
+        commentsRsDataSource = commentsRsDataSource,
+        commentsStore = commentsStore,
+        localCommentCacheUpdateHandler = localCommentCacheUpdateHandler,
+        networkUtilsWrapper = networkUtilsWrapper,
+        dateTimeUtilsWrapper = dateTimeUtilsWrapper,
+        notificationsActionsWrapper = notificationsActionsWrapper,
+        notificationsTableWrapper = notificationsTableWrapper,
+        analyticsUtilsWrapper = analyticsUtilsWrapper
+    )
 
     private fun setupObservers() {
         uiStates.clear()
