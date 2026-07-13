@@ -19,13 +19,6 @@ class XPostsStore
 ) {
     suspend fun fetchXPosts(site: SiteModel): XPostsResult =
             coroutineEngine.withDefaultContext(AppLog.T.API, this, "fetchXPosts") {
-                // XPosts are an o2/P2 (WP for Teams) feature. Non-teams sites always fail the
-                // request with `xposts_require_o2_enabled` (HTTP 400), so skip the network call
-                // entirely and record the definitive "no xposts" state.
-                if (!site.isWpForTeamsSite) {
-                    xPostsSqlUtils.persistNoXpostsForSite(site)
-                    return@withDefaultContext XPostsResult.apiResult(emptyList())
-                }
                 return@withDefaultContext when (val response = xPostsRestClient.fetch(site)) {
                     is Response.Success -> {
                         val xPosts = response.data.toList()

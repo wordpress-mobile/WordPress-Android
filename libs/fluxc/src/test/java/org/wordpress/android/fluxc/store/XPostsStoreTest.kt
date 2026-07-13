@@ -5,8 +5,6 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.kotlin.inOrder
 import org.mockito.kotlin.mock
-import org.mockito.kotlin.verify
-import org.mockito.kotlin.verifyNoInteractions
 import org.mockito.kotlin.whenever
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
@@ -31,9 +29,6 @@ class XPostsStoreTest {
     @Before
     fun setup() {
         store = XPostsStore(initCoroutineEngine(), restClient, sqlUtils)
-        // Default to a WP for Teams site so tests exercise the rest-client path; the
-        // non-teams short-circuit is covered by its own test.
-        whenever(site.isWpForTeamsSite).thenReturn(true)
     }
 
     @Test
@@ -78,19 +73,6 @@ class XPostsStoreTest {
             verify(restClient).fetch(site)
             verify(sqlUtils).persistNoXpostsForSite(site)
         }
-
-        val expected = XPostsResult.apiResult(emptyList())
-        assertEquals(expected, result)
-    }
-
-    @Test
-    fun `fetchXPosts skips the network call for non-WP-for-Teams sites`() = test {
-        whenever(site.isWpForTeamsSite).thenReturn(false)
-
-        val result = store.fetchXPosts(site)
-
-        verify(sqlUtils).persistNoXpostsForSite(site)
-        verifyNoInteractions(restClient)
 
         val expected = XPostsResult.apiResult(emptyList())
         assertEquals(expected, result)
