@@ -70,6 +70,8 @@ class UnifiedCommentsDetailsActivity : BaseAppCompatActivity() {
         val adapter = CommentPagerAdapter(this, site).also { it.submit(initialIds) }
         pager.adapter = adapter
         pager.setPageTransformer(WPViewPager2Transformer(TransformType.SlideOver))
+        // Preload adjacent comments so swipes land on ready content
+        pager.offscreenPageLimit = OFFSCREEN_PAGE_LIMIT
 
         if (isFirstCreate) {
             val startIndex = initialIds.indexOf(initialCommentId)
@@ -187,5 +189,8 @@ class UnifiedCommentsDetailsActivity : BaseAppCompatActivity() {
 
         // Prefetch the next page when within this many pages of the end.
         private const val LOAD_MORE_THRESHOLD = 2
+
+        // How many pages to preload on each side of the current one
+        private const val OFFSCREEN_PAGE_LIMIT = 1
     }
 }
