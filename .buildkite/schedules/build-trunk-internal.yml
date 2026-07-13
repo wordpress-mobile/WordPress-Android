@@ -1,0 +1,16 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/buildkite/pipeline-schema/main/schema.json
+---
+
+# Builds WordPress & Jetpack from `trunk` and uploads them to the Play Store `internal` testing
+# track, to validate the "release from trunk" model. Runs on a schedule (configured in the
+# Buildkite UI); also triggerable manually via the `PIPELINE` env var for testing.
+
+agents:
+  queue: "android"
+
+steps:
+  - label: ":android: Build trunk → Play internal"
+    command: .buildkite/commands/build-trunk-internal.sh
+    plugins: [$CI_TOOLKIT]
+    notify:
+      - slack: "#build-and-ship"

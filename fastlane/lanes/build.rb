@@ -112,6 +112,63 @@ platform :android do
   end
 
   #####################################################################################
+  # build_and_upload_trunk_internal
+  # -----------------------------------------------------------------------------------
+  # Builds WordPress & Jetpack from the current commit and uploads them to the Play Store
+  # `internal` testing track. Intended to run from `trunk` (manually or on a schedule) to
+  # validate the "release from trunk" model.
+  #
+  # The version is computed on the fly and written to `version.properties` for the build
+  # only — it is NOT committed:
+  #   - versionName: the planned release version (without the `-rc-N` suffix)
+  #   - versionCode: via release-toolkit's `ContinuousBuildCodeFormatter`,
+  #                  i.e. `(major * 10 + minor) * 1_000_000 + BUILDKITE_BUILD_NUMBER`
+  # -----------------------------------------------------------------------------------
+  # Usage:
+  # bundle exec fastlane build_and_upload_trunk_internal [skip_confirm:<true|false>] [skip_prechecks:<true|false>]
+  #####################################################################################
+  desc 'Build WordPress & Jetpack from trunk and upload them to the Play Store internal track'
+  lane :build_and_upload_trunk_internal do |skip_prechecks: false, skip_confirm: false|
+    version_name = current_release_version
+
+    unless skip_prechecks
+      ensure_git_branch(branch: DEFAULT_BRANCH) unless is_ci
+
+      ensure_git_status_clean unless is_ci
+
+      UI.important("Building #{version_name} for upload to the Play Store internal track")
+
+      UI.user_error!('Aborted by user request') unless skip_confirm || UI.confirm('Do you want to continue?')
+
+      android_build_preflight
+    end
+
+    build_number = ENV.fetch('BUILDKITE_BUILD_NUMBER') do
+      UI.user_error!('BUILDKITE_BUILD_NUMBER is not set; the versionCode derives from it (Buildkite only).')
+    end
+
+    version = VERSION_FORMATTER.parse(version_name)
+    build_code = Fastlane::Wpmreleasetoolkit::Versioning::ContinuousBuildCodeFormatter.new.build_code(
+      major: version.major,
+      minor: version.minor,
+      build_number: Integer(build_number)
+    )
+
+    UI.important("Building #{DEFAULT_BRANCH} internal build: #{version_name} (#{build_code})")
+
+    # Set the version for this build only. We deliberately do not commit this change.
+    VERSION_FILE.write_version(version_name: version_name, version_code: build_code)
+
+    %i[wordpress jetpack].each do |app|
+      build_bundle(app: app, version_name: version_name, build_code: build_code, buildType: 'Release')
+      upload_build_to_play_store(app: app, version_name: version_name, track: 'internal')
+      # `upload_gutenberg_sourcemaps` builds a file path from the app name, so it needs a String
+      # (a Symbol can't be passed to `File.join`).
+      upload_gutenberg_sourcemaps(app: app.to_s, release_version: version_name)
+    end
+  end
+
+  #####################################################################################
   # upload_build_to_play_store
   # -----------------------------------------------------------------------------------
   # This lane uploads the build to Play Store for the given version to the given track
