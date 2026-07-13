@@ -8,12 +8,12 @@ import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.any
-import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.XPostSiteModel
 import org.wordpress.android.fluxc.store.XPostsResult
 import org.wordpress.android.fluxc.store.XPostsStore
 import org.wordpress.android.fluxc.utils.CurrentTimeProvider
@@ -41,7 +41,7 @@ class XPostsCapabilityCheckerTest : BaseUnitTest() {
 
     @Test
     fun `if has xposts in db, is capable without re-fetching`() = test {
-        whenever(mockXPostsStore.getXPostsFromDb(mockSite)).thenReturn(XPostsResult.dbResult(listOf(mock())))
+        whenever(mockXPostsStore.getXPostsFromDb(mockSite)).thenReturn(XPostsResult.dbResult(listOf(XPostSiteModel())))
 
         assertEquals(true, xPostsCapabilityChecker.isCapable(mockSite))
         verify(mockXPostsStore, never()).fetchXPosts(any())
@@ -62,7 +62,7 @@ class XPostsCapabilityCheckerTest : BaseUnitTest() {
         whenever(mockXPostsStore.getXPostsFromDb(mockSite)).thenReturn(XPostsResult.dbResult(emptyList()))
         whenever(currentTimeProvider.currentDate()).thenReturn(Date(NOW))
         whenever(appPrefsWrapper.getXPostsNoResultCheckedTimestamp(mockSite)).thenReturn(NOW - TWO_DAYS_MS)
-        whenever(mockXPostsStore.fetchXPosts(mockSite)).thenReturn(XPostsResult.apiResult(listOf(mock())))
+        whenever(mockXPostsStore.fetchXPosts(mockSite)).thenReturn(XPostsResult.apiResult(listOf(XPostSiteModel())))
 
         assertEquals(true, xPostsCapabilityChecker.isCapable(mockSite))
         verify(mockXPostsStore).fetchXPosts(mockSite)
@@ -96,7 +96,7 @@ class XPostsCapabilityCheckerTest : BaseUnitTest() {
         whenever(mockXPostsStore.getXPostsFromDb(mockSite)).thenReturn(XPostsResult.dbResult(emptyList()))
         whenever(currentTimeProvider.currentDate()).thenReturn(Date(NOW))
         whenever(appPrefsWrapper.getXPostsNoResultCheckedTimestamp(mockSite)).thenReturn(NOW + ONE_HOUR_MS)
-        whenever(mockXPostsStore.fetchXPosts(mockSite)).thenReturn(XPostsResult.apiResult(listOf(mock())))
+        whenever(mockXPostsStore.fetchXPosts(mockSite)).thenReturn(XPostsResult.apiResult(listOf(XPostSiteModel())))
 
         assertEquals(true, xPostsCapabilityChecker.isCapable(mockSite))
         verify(mockXPostsStore).fetchXPosts(mockSite)
@@ -106,7 +106,7 @@ class XPostsCapabilityCheckerTest : BaseUnitTest() {
     fun `if unknown in db and xposts in api response, is capable`() = test {
         whenever(mockXPostsStore.getXPostsFromDb(mockSite)).thenReturn(XPostsResult.Unknown)
         whenever(currentTimeProvider.currentDate()).thenReturn(Date(NOW))
-        whenever(mockXPostsStore.fetchXPosts(mockSite)).thenReturn(XPostsResult.apiResult(listOf(mock())))
+        whenever(mockXPostsStore.fetchXPosts(mockSite)).thenReturn(XPostsResult.apiResult(listOf(XPostSiteModel())))
 
         assertEquals(true, xPostsCapabilityChecker.isCapable(mockSite))
     }
