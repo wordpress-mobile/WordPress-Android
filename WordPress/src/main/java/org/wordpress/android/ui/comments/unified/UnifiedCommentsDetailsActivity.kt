@@ -19,11 +19,15 @@ import org.wordpress.android.databinding.UnifiedCommentsDetailsActivityBinding
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.commentsrs.CommentBrowsingSession
 import org.wordpress.android.ui.main.BaseAppCompatActivity
+import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.analytics.AnalyticsUtils.AnalyticsCommentActionSource
 import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
 import org.wordpress.android.util.extensions.getSerializableExtraCompat
+import org.wordpress.android.widgets.WPSwipeSnackbar
+import org.wordpress.android.widgets.WPViewPager2Transformer
+import org.wordpress.android.widgets.WPViewPager2Transformer.TransformType
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -65,6 +69,7 @@ class UnifiedCommentsDetailsActivity : BaseAppCompatActivity() {
 
         val adapter = CommentPagerAdapter(this, site).also { it.submit(initialIds) }
         pager.adapter = adapter
+        pager.setPageTransformer(WPViewPager2Transformer(TransformType.SlideOver))
 
         if (isFirstCreate) {
             val startIndex = initialIds.indexOf(initialCommentId).coerceAtLeast(0)
@@ -72,6 +77,11 @@ class UnifiedCommentsDetailsActivity : BaseAppCompatActivity() {
             lastSelectedPosition = startIndex
             trackCommentViewed(site) // initial view; onPageSelected covers each later swipe
             maybeLoadMore(startIndex, adapter)
+            // One-time hint that comments can be swiped through, matching the reader's pager
+            if (adapter.itemCount > 1 && !AppPrefs.isCommentsSwipeToNavigateShown()) {
+                WPSwipeSnackbar.show(pager)
+                AppPrefs.setCommentsSwipeToNavigateShown(true)
+            }
         }
         // On recreation ViewPager2 restores the page itself; lastSelectedPosition was restored from
         // savedInstanceState, so the position guard below keeps that restore from re-tracking.
@@ -86,9 +96,10 @@ class UnifiedCommentsDetailsActivity : BaseAppCompatActivity() {
         })
 
         if (useSession) {
-            // Appended ids (from load-more) grow the pager without recreating existing pages. An
-            // empty emission can only mean another instance cleared the shared session (e.g. in
-            // multi-window); ignore it rather than collapse this pager to zero pages.
+            // Appended ids (from load-more) grow the pager without recreating existing pages. As
+            // currently seeded, an empty emission means another instance cleared the shared
+            // session (e.g. in multi-window); ignore it rather than collapse this pager to zero
+            // pages. If the session ever legitimately seeds empty, revisit this guard.
             lifecycleScope.launch {
                 repeatOnLifecycle(Lifecycle.State.STARTED) {
                     browsingSession.commentIds.collect { if (it.isNotEmpty()) adapter.submit(it) }
