@@ -7,12 +7,14 @@ import org.junit.runner.RunWith
 import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
+import org.mockito.kotlin.any
 import org.mockito.kotlin.mock
+import org.mockito.kotlin.never
+import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.XPostsResult
-import org.wordpress.android.fluxc.store.XPostsResult.Companion
 import org.wordpress.android.fluxc.store.XPostsStore
 
 @ExperimentalCoroutinesApi
@@ -33,18 +35,13 @@ class XPostsCapabilityCheckerTest : BaseUnitTest() {
     }
 
     @Test
-    fun `if no xposts in db and xposts in api response, is capable`() = test {
-        testCapability(XPostsResult.dbResult(emptyList()), Companion.apiResult(listOf(mock())), true)
-    }
+    fun `if db has the no-xposts marker, is not capable and does not re-fetch`() = test {
+        whenever(mockXPostsStore.getXPostsFromDb(mockSite)).thenReturn(XPostsResult.dbResult(emptyList()))
 
-    @Test
-    fun `if no xposts in db and api response shows no xposts, is not capable`() = test {
-        testCapability(XPostsResult.dbResult(emptyList()), XPostsResult.apiResult(emptyList()), false)
-    }
+        val actualCapability = xPostsCapabilityChecker.isCapable(mockSite)
 
-    @Test
-    fun `if no xposts in db and unknown xposts api response, capable`() = test {
-        testCapability(XPostsResult.dbResult(emptyList()), XPostsResult.Unknown, true)
+        assertEquals(false, actualCapability)
+        verify(mockXPostsStore, never()).fetchXPosts(any())
     }
 
     @Test

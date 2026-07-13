@@ -34,23 +34,16 @@ class XPostsCapabilityChecker @Inject constructor(
         // Check db first in order to reduce unnecessary network calls
         when (val saved = xPostsStore.getXPostsFromDb(site)) {
             is XPostsResult.Result ->
-                if (saved.xPosts.isEmpty()) {
-                    // Db was empty, so let's make the api call and ensure there aren't any new xpost suggestions.
-                    // This call will be made every time the editor opens on sites that don't have any xpost
-                    // suggestions, but because the response will almost always be empty, it's not an expensive
-                    // call.
-                    fetchingReturnsXposts(site)
-                } else {
-                    // We have xposts saved in the db, so set capability to true even though
-                    // it is possible that the site no longer has any xpost suggestions. We're doing
-                    // this because it is an edge case for a site to have removed all its xpost
-                    // suggestions since the last time we checked, and by not making the call here
-                    // we avoid making an expensive call that probably will return many xpost suggestions
-                    // every time the editor is opened.
-                    true
-                }
+                // A persisted result is definitive: a non-empty list means the site has xposts, and an
+                // empty list is the stored "no xposts" marker from a previous backend response. Trust the
+                // cache either way rather than re-fetching on every editor open. Re-fetching on the empty
+                // case fired a request each time the editor opened on sites without xposts, which for
+                // non-P2 sites is rejected with a recurring `xposts_require_o2_enabled` (HTTP 400). We
+                // accept that a site which gains or loses all its xposts may be briefly stale, matching
+                // the staleness we already tolerate for the non-empty case.
+                saved.xPosts.isNotEmpty()
             is XPostsResult.Unknown ->
-                // We don't know whether the site has any xposts, so make the api call to try to find out
+                // We have never gotten a response for this site, so make the api call to try to find out
                 fetchingReturnsXposts(site)
         }
 }
