@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.comments.unified
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -70,7 +71,10 @@ class UnifiedCommentsDetailsActivity : BaseAppCompatActivity() {
         val adapter = CommentPagerAdapter(this, site).also { it.submit(initialIds) }
         pager.adapter = adapter
         pager.setPageTransformer(WPViewPager2Transformer(TransformType.SlideOver))
-        // Preload adjacent comments so swipes land on ready content
+        // Preload adjacent comments so swipes land on ready content. Lint wrongly rejects any
+        // value other than the named OFFSCREEN_PAGE_LIMIT_DEFAULT constant (same quirk as the
+        // reader's pager), so suppress it.
+        @SuppressLint("WrongConstant")
         pager.offscreenPageLimit = OFFSCREEN_PAGE_LIMIT
 
         if (isFirstCreate) {
