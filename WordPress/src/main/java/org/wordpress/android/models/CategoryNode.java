@@ -11,6 +11,11 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 
 public class CategoryNode {
+    // Separator between a category name and its id in the children-map key. A non-printable
+    // character is used because it cannot appear in a category name (keeping keys unique) and it
+    // sorts before any real character, leaving the alphabetical-by-name ordering intact.
+    private static final String CHILD_KEY_SEPARATOR = "\u0000";
+
     private long mCategoryId;
     private String mName;
     private long mParentId;
@@ -95,10 +100,22 @@ public class CategoryNode {
             }
             CategoryNode childNode = categoryMap.get(category.getCategoryId());
             if (childNode != null) {
-                currentRootNode.mChildren.put(category.getName(), childNode);
+                currentRootNode.mChildren.put(childMapKey(category), childNode);
             }
         }
         return rootCategory;
+    }
+
+    /**
+     * Builds the key used to store a category among its siblings. The children map sorts
+     * case-insensitively by name, which means two categories whose names differ only in case
+     * (e.g. "TECH" and "tech") would otherwise map to the same key and overwrite each other,
+     * dropping one from the list. Appending the unique category id keeps such names distinct
+     * while preserving the alphabetical ordering: the id suffix only breaks ties between names
+     * that are equal ignoring case.
+     */
+    private static String childMapKey(CategoryNode category) {
+        return category.getName() + CHILD_KEY_SEPARATOR + category.getCategoryId();
     }
 
     private static void preOrderTreeTraversal(CategoryNode node, int level, ArrayList<CategoryNode> returnValue) {
