@@ -7,6 +7,7 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.XPostsResult
+import org.wordpress.android.fluxc.store.XPostsSource
 import org.wordpress.android.fluxc.store.XPostsStore
 import org.wordpress.android.fluxc.utils.CurrentTimeProvider
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
@@ -27,14 +28,6 @@ class XPostsCapabilityChecker @Inject constructor(
         }
     }
 
-    private suspend fun fetchingReturnsXposts(site: SiteModel): Boolean =
-        when (val fetched = xPostsStore.fetchXPosts(site)) {
-            is XPostsResult.Result -> fetched.xPosts.isNotEmpty()
-            is XPostsResult.Unknown ->
-                // We don't know whether the site has any xposts, so default to true
-                true
-        }
-
     suspend fun isCapable(site: SiteModel): Boolean =
         // Check db first in order to reduce unnecessary network calls
         when (val saved = xPostsStore.getXPostsFromDb(site)) {
@@ -49,20 +42,31 @@ class XPostsCapabilityChecker @Inject constructor(
      * Called when the cache says the site has no xposts (or we have never checked). We avoid re-fetching
      * on every editor open — for non-P2 sites that request is rejected with a recurring
      * `xposts_require_o2_enabled` (HTTP 400). But a site can gain xposts later (e.g. o2 gets enabled), so
-     * we re-query once the last confirmed "no xposts" result is older than [NO_XPOSTS_TTL_MS], and record
-     * a fresh timestamp whenever the site still has none.
+     * we re-query once the last confirmed "no xposts" result is older than [NO_XPOSTS_TTL_MS].
      */
     private suspend fun recheckIfStale(site: SiteModel): Boolean {
         val lastChecked = appPrefsWrapper.getXPostsNoResultCheckedTimestamp(site)
         val now = currentTimeProvider.currentDate().time
-        if (lastChecked != 0L && now - lastChecked < NO_XPOSTS_TTL_MS) {
+        // The `now >= lastChecked` guard treats a timestamp from the future (device clock moved
+        // backwards) as stale, so a site can't get stuck as not-capable until the clock catches up.
+        if (lastChecked != 0L && now >= lastChecked && now - lastChecked < NO_XPOSTS_TTL_MS) {
             return false
         }
-        val capable = fetchingReturnsXposts(site)
-        if (!capable) {
-            appPrefsWrapper.setXPostsNoResultCheckedTimestamp(site, now)
+        return when (val fetched = xPostsStore.fetchXPosts(site)) {
+            is XPostsResult.Result -> {
+                val hasXposts = fetched.xPosts.isNotEmpty()
+                // Only throttle when the server actually confirmed there are no xposts. An empty result
+                // sourced from the db means the network call failed and fell back to the cache; treating
+                // that as a confirmation would delay picking up xposts a site enabled in the meantime.
+                if (!hasXposts && fetched.source == XPostsSource.REST_API) {
+                    appPrefsWrapper.setXPostsNoResultCheckedTimestamp(site, now)
+                }
+                hasXposts
+            }
+            // We don't know whether the site has any xposts (e.g. a network error with no cached data),
+            // so default to capable and record nothing, so that we re-check next time.
+            is XPostsResult.Unknown -> true
         }
-        return capable
     }
 
     companion object {

@@ -2068,16 +2068,16 @@ public class AppPrefs {
         ).apply();
     }
 
+    private static String xPostsNoResultCheckedTimestampKey(@NonNull SiteModel site) {
+        return DeletablePrefKey.XPOSTS_NO_RESULT_CHECKED_TIMESTAMP.name() + site.getId();
+    }
+
     public static long getXPostsNoResultCheckedTimestamp(@NonNull SiteModel site) {
-        return prefs().getLong(
-                DeletablePrefKey.XPOSTS_NO_RESULT_CHECKED_TIMESTAMP.name() + site.getId(), 0
-        );
+        return prefs().getLong(xPostsNoResultCheckedTimestampKey(site), 0);
     }
 
     public static void setXPostsNoResultCheckedTimestamp(@NonNull SiteModel site, long timestamp) {
-        prefs().edit().putLong(
-                DeletablePrefKey.XPOSTS_NO_RESULT_CHECKED_TIMESTAMP.name() + site.getId(), timestamp
-        ).apply();
+        prefs().edit().putLong(xPostsNoResultCheckedTimestampKey(site), timestamp).apply();
     }
 
     /**

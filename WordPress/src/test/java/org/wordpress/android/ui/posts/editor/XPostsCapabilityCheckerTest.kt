@@ -80,6 +80,29 @@ class XPostsCapabilityCheckerTest : BaseUnitTest() {
     }
 
     @Test
+    fun `if the recheck falls back to cached data, is not capable but records no timestamp`() = test {
+        whenever(mockXPostsStore.getXPostsFromDb(mockSite)).thenReturn(XPostsResult.dbResult(emptyList()))
+        whenever(currentTimeProvider.currentDate()).thenReturn(Date(NOW))
+        // An empty result sourced from the db means the network call failed and fell back to the cache,
+        // so it must not be recorded as a confirmed "no xposts".
+        whenever(mockXPostsStore.fetchXPosts(mockSite)).thenReturn(XPostsResult.dbResult(emptyList()))
+
+        assertEquals(false, xPostsCapabilityChecker.isCapable(mockSite))
+        verify(appPrefsWrapper, never()).setXPostsNoResultCheckedTimestamp(any(), any())
+    }
+
+    @Test
+    fun `if the stored timestamp is in the future, treats it as stale and re-fetches`() = test {
+        whenever(mockXPostsStore.getXPostsFromDb(mockSite)).thenReturn(XPostsResult.dbResult(emptyList()))
+        whenever(currentTimeProvider.currentDate()).thenReturn(Date(NOW))
+        whenever(appPrefsWrapper.getXPostsNoResultCheckedTimestamp(mockSite)).thenReturn(NOW + ONE_HOUR_MS)
+        whenever(mockXPostsStore.fetchXPosts(mockSite)).thenReturn(XPostsResult.apiResult(listOf(mock())))
+
+        assertEquals(true, xPostsCapabilityChecker.isCapable(mockSite))
+        verify(mockXPostsStore).fetchXPosts(mockSite)
+    }
+
+    @Test
     fun `if unknown in db and xposts in api response, is capable`() = test {
         whenever(mockXPostsStore.getXPostsFromDb(mockSite)).thenReturn(XPostsResult.Unknown)
         whenever(currentTimeProvider.currentDate()).thenReturn(Date(NOW))
