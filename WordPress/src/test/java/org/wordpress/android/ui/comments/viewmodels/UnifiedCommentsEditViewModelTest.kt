@@ -98,10 +98,9 @@ class UnifiedCommentsEditViewModelTest : BaseUnitTest() {
         setIsWPCom(true)
     }
 
-    private val localCommentId = 1000
     private val remoteCommentId = 4321L
     private val postId = 678L
-    private val siteCommentIdentifier = SiteCommentIdentifier(localCommentId, remoteCommentId)
+    private val siteCommentIdentifier = SiteCommentIdentifier(remoteCommentId)
     private val noteId = "noteId"
     private val notificationCommentIdentifier = NotificationCommentIdentifier(noteId, remoteCommentId)
     private val readerCommentIdentifier = ReaderCommentIdentifier(REMOTE_SITE_ID, postId, remoteCommentId)
@@ -344,6 +343,23 @@ class UnifiedCommentsEditViewModelTest : BaseUnitTest() {
 
         verify(notificationActionsWrapper).downloadNoteAndUpdateDB(noteId)
         assertThat(uiActionEvent.firstOrNull()).isEqualTo(DONE)
+    }
+
+    // Reader comments live on WP.com blogs, so real-world reader edits take the rs path.
+    @Test
+    fun `Should update reader entity on wordpress-rs save if ReaderCommentIdentifier`() = test {
+        whenever(commentsRsDataSource.getCommentForEdit(rsSite, remoteCommentId)).thenReturn(RS_COMMENT_FOR_EDIT)
+        whenever(commentsStore.getCommentByLocalSiteAndRemoteId(rsSite.id, remoteCommentId))
+            .thenReturn(emptyList())
+        whenever(commentsRsDataSource.updateComment(any(), any(), any(), any()))
+            .thenReturn(RsEditResult.Success(SERVER_EDITED_COMMENT))
+
+        viewModel.start(rsSite, readerCommentIdentifier)
+        viewModel.onActionMenuClicked()
+
+        verify(readerCommentTableWrapper).addOrUpdateComment(any())
+        assertThat(uiActionEvent.firstOrNull()).isEqualTo(DONE)
+        verify(commentsStore, never()).updateEditComment(any(), any())
     }
 
     @Test

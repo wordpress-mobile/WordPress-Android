@@ -101,10 +101,6 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
     private var loadedComment: RsComment? = null
     private var isLikeInProgress = false
 
-    // From the FluxC cache row: kept only to fill SiteCommentIdentifier's shape for the shared
-    // edit screen, which no longer reads it (it loads and saves via wordpress-rs on rs sites).
-    private var localCommentId: Int = 0
-
     fun start(site: SiteModel, remoteCommentId: Long, noteId: String? = null) {
         if (isStarted) return
         isStarted = true
@@ -165,7 +161,6 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
             when {
                 loaded.rsComment != null -> {
                     loadedComment = loaded.rsComment
-                    localCommentId = loaded.cached?.id?.toInt() ?: 0
                     _uiState.value = loaded.rsComment.toUiState(
                         loaded.cached,
                         loaded.fallbackPostTitle,
@@ -236,7 +231,7 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
         // In note mode edit through the note identifier so the edit screen refreshes the note DB
         // after saving, keeping the notifications list consistent with the edited comment.
         val identifier = noteId?.let { NotificationCommentIdentifier(it, remoteCommentId) }
-            ?: SiteCommentIdentifier(localCommentId, remoteCommentId)
+            ?: SiteCommentIdentifier(remoteCommentId)
         _uiActionEvent.value = Event(LaunchEditComment(site, identifier))
     }
 

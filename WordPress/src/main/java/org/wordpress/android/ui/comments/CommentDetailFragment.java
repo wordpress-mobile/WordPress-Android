@@ -705,7 +705,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
         switch (mCommentSource) {
             case SITE_COMMENTS:
                 if (mComment != null) {
-                    return new SiteCommentIdentifier(mComment.getId(), mComment.getRemoteCommentId());
+                    return new SiteCommentIdentifier(mComment.getRemoteCommentId());
                 } else {
                     return null;
                 }

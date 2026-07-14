@@ -230,36 +230,33 @@ class UnifiedCommentsEditViewModel @Inject constructor(
     private suspend fun mapCommentEssentials(): CommentEssentials {
         // A failed load returns default CommentEssentials, which fails isValid() and surfaces
         // the load-error snackbar in initViews().
-        return if (canUseRs()) {
-            // Edit context returns the raw (unrendered) content the editor must show — the same
-            // thing the FluxC entity stored — plus the author email the view context omits.
-            val rsComment = commentsRsDataSource.getCommentForEdit(site, commentIdentifier.remoteCommentId)
-            if (rsComment != null) {
-                CommentEssentials(
-                    commentId = commentIdentifier.remoteCommentId,
-                    userName = rsComment.authorName,
-                    commentText = rsComment.contentRaw,
-                    userUrl = rsComment.authorUrl,
-                    userEmail = rsComment.authorEmail
-                )
-            } else {
-                CommentEssentials()
-            }
-        } else {
-            val commentEntity = getCommentUseCase.execute(site, commentIdentifier.remoteCommentId)
-            if (commentEntity != null) {
-                CommentEssentials(
-                    commentId = commentEntity.id,
-                    userName = commentEntity.authorName ?: "",
-                    commentText = commentEntity.content ?: "",
-                    userUrl = commentEntity.authorUrl ?: "",
-                    userEmail = commentEntity.authorEmail ?: ""
-                )
-            } else {
-                CommentEssentials()
-            }
-        }
+        val essentials = if (canUseRs()) loadCommentViaRs() else loadCommentViaFluxC()
+        return essentials ?: CommentEssentials()
     }
+
+    // Edit context returns the raw (unrendered) content the editor must show — the same
+    // thing the FluxC entity stored — plus the author email the view context omits.
+    private suspend fun loadCommentViaRs(): CommentEssentials? =
+        commentsRsDataSource.getCommentForEdit(site, commentIdentifier.remoteCommentId)?.let { rsComment ->
+            CommentEssentials(
+                commentId = commentIdentifier.remoteCommentId,
+                userName = rsComment.authorName,
+                commentText = rsComment.contentRaw,
+                userUrl = rsComment.authorUrl,
+                userEmail = rsComment.authorEmail
+            )
+        }
+
+    private suspend fun loadCommentViaFluxC(): CommentEssentials? =
+        getCommentUseCase.execute(site, commentIdentifier.remoteCommentId)?.let { commentEntity ->
+            CommentEssentials(
+                commentId = commentEntity.id,
+                userName = commentEntity.authorName ?: "",
+                commentText = commentEntity.content ?: "",
+                userUrl = commentEntity.authorUrl ?: "",
+                userEmail = commentEntity.authorEmail ?: ""
+            )
+        }
 
     private suspend fun updateComment(editedCommentEssentials: CommentEssentials) {
         // Prefer wordpress-rs, which can edit comments on both WP.com and self-hosted
