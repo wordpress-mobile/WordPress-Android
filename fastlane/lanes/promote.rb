@@ -136,6 +136,24 @@ platform :android do
     UI.user_error!("Unable to read the beta track version codes for #{package_name}: #{e.message}")
   end
 
+  # Play intermittently 400s a call with "Google Api Error: ... This Edit has been deleted." Neither
+  # the google-apis transport (400s aren't retried) nor supply's call_google_api recovers, and
+  # recovery needs a fresh edit — so retry the whole begin_edit…commit/read block, not the single
+  # call. Also guards against a concurrent Play edit from another job invalidating ours.
+  def with_play_edit_retries(description, attempts: 3, wait: 15)
+    tries = 0
+    begin
+      yield
+    rescue FastlaneCore::Interface::FastlaneError => e
+      tries += 1
+      raise unless e.message.start_with?('Google Api Error') && tries < attempts
+
+      UI.error("#{description} failed (#{e.message}); retrying with a fresh edit (#{tries}/#{attempts - 1}) in #{wait}s")
+      sleep(wait)
+      retry
+    end
+  end
+
   # Lists every AAB version code uploaded for the given package (the Play "app bundle explorer"),
   # as an array of integers. Opens a throwaway Play edit and aborts it, so this only reads.
   def available_aab_version_codes(package_name:)
@@ -147,15 +165,16 @@ platform :android do
       { json_key: UPLOAD_TO_PLAY_STORE_JSON_KEY, package_name: package_name }
     )
 
-    client = Supply::Client.make_from_config
-    client.begin_edit(package_name: package_name)
-    codes =
+    codes = with_play_edit_retries("Listing AAB version codes for #{package_name}") do
+      client = Supply::Client.make_from_config
+      client.begin_edit(package_name: package_name)
       begin
         client.aab_version_codes
       ensure
         # Always discard the throwaway edit, even if the read raises.
         client.abort_current_edit
       end
+    end
     Array(codes).compact.map(&:to_i)
   rescue StandardError => e
     # Raise rather than return [], as in beta_track_version_codes.
@@ -199,26 +218,28 @@ platform :android do
       { json_key: UPLOAD_TO_PLAY_STORE_JSON_KEY, package_name: package_name, track: BETA_TRACK }
     )
 
-    client = Supply::Client.make_from_config
-    client.begin_edit(package_name: package_name)
+    with_play_edit_retries("Promoting #{version_code} to beta for #{package_name}") do
+      client = Supply::Client.make_from_config
+      client.begin_edit(package_name: package_name)
 
-    committed = false
-    begin
-      release = AndroidPublisher::TrackRelease.new(
-        # TODO: switch to 'completed' once the feature is ready to distribute to beta testers.
-        status: 'draft',
-        # Keep the pinned legacy code(s) on the track, same as the AAB-upload path.
-        version_codes: [Integer(version_code), *PLAY_STORE_VERSION_CODES_TO_RETAIN]
-      )
-      track = client.tracks(BETA_TRACK).first || AndroidPublisher::Track.new(track: BETA_TRACK)
-      track.releases = [release]
+      committed = false
+      begin
+        release = AndroidPublisher::TrackRelease.new(
+          # TODO: switch to 'completed' once the feature is ready to distribute to beta testers.
+          status: 'draft',
+          # Keep the pinned legacy code(s) on the track, same as the AAB-upload path.
+          version_codes: [Integer(version_code), *PLAY_STORE_VERSION_CODES_TO_RETAIN]
+        )
+        track = client.tracks(BETA_TRACK).first || AndroidPublisher::Track.new(track: BETA_TRACK)
+        track.releases = [release]
 
-      client.update_track(BETA_TRACK, track)
-      client.commit_current_edit!
-      committed = true
-    ensure
-      # Discard the edit if we bailed before committing (a committed edit can't be aborted).
-      client.abort_current_edit unless committed
+        client.update_track(BETA_TRACK, track)
+        client.commit_current_edit!
+        committed = true
+      ensure
+        # Discard the edit if we bailed before committing (a committed edit can't be aborted).
+        client.abort_current_edit unless committed
+      end
     end
   end
 
