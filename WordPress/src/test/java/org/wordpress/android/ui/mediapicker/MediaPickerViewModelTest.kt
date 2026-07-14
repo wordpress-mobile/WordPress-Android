@@ -162,7 +162,8 @@ class MediaPickerViewModelTest : BaseUnitTest() {
             localeManagerWrapper,
             mediaUtilsWrapper,
             mediaStore,
-            resourceProvider
+            resourceProvider,
+            SystemPickerResolver(mediaUtilsWrapper)
         )
         uiStates.clear()
         val identifier1 = LocalUri(uriWrapper1)

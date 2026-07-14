@@ -13,7 +13,6 @@ import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.MediaStore
-import org.wordpress.android.fluxc.utils.MimeTypes
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.mediapicker.MediaItem.Identifier
@@ -22,7 +21,6 @@ import org.wordpress.android.ui.mediapicker.MediaNavigationEvent.Exit
 import org.wordpress.android.ui.mediapicker.MediaNavigationEvent.IconClickEvent
 import org.wordpress.android.ui.mediapicker.MediaNavigationEvent.PreviewMedia
 import org.wordpress.android.ui.mediapicker.MediaNavigationEvent.PreviewUrl
-import org.wordpress.android.ui.mediapicker.MediaPickerFragment.ChooserContext
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerAction
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerAction.OpenCameraForPhotos
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerAction.OpenSystemPicker
@@ -79,7 +77,8 @@ class MediaPickerViewModel @Inject constructor(
     private val localeManagerWrapper: LocaleManagerWrapper,
     private val mediaUtilsWrapper: MediaUtilsWrapper,
     private val mediaStore: MediaStore,
-    private val resourceProvider: ResourceProvider
+    private val resourceProvider: ResourceProvider,
+    private val systemPickerResolver: SystemPickerResolver
 ) : ScopedViewModel(mainDispatcher) {
     private lateinit var mediaLoader: MediaLoader
     private lateinit var mediaInsertHandler: MediaInsertHandler
@@ -504,7 +503,9 @@ class MediaPickerViewModel @Inject constructor(
         // When the device picker allows both visual media and other files, the actual library isn't
         // opened yet: we first show a type-disambiguation menu. Defer tracking the "device library
         // opened" event until the user picks a category (see onSystemPickerTypeChosen).
-        if (icon is ChooseFromAndroidDevice && icon.allowedTypes.isAmbiguousMediaAndFileSelection()) {
+        if (icon is ChooseFromAndroidDevice &&
+            systemPickerResolver.isAmbiguousMediaAndFileSelection(icon.allowedTypes)
+        ) {
             _onNavigate.postValue(Event(IconClickEvent(ShowSystemPickerTypeMenu)))
             return
         }
@@ -523,15 +524,6 @@ class MediaPickerViewModel @Inject constructor(
         _onNavigate.postValue(Event(populateIconClickEvent(icon, mediaPickerSetup.canMultiselect)))
     }
 
-    // The device selection allows both visual media (images/videos) and non-visual files
-    // (audio/documents). Android's Photo Picker only surfaces visual media, so the user is asked
-    // which kind they want before a picker is opened.
-    private fun Set<MediaType>.isAmbiguousMediaAndFileSelection(): Boolean {
-        val hasVisualMedia = any { it == IMAGE || it == VIDEO }
-        val hasOtherFiles = any { it == AUDIO || it == DOCUMENT }
-        return hasVisualMedia && hasOtherFiles
-    }
-
     private fun clickOnCamera() {
         when (mediaPickerSetup.cameraSetup) {
             ENABLED -> clickIcon(CapturePhoto)
@@ -544,38 +536,8 @@ class MediaPickerViewModel @Inject constructor(
     private fun populateIconClickEvent(icon: MediaPickerIcon, canMultiselect: Boolean): IconClickEvent {
         val action: MediaPickerAction = when (icon) {
             is ChooseFromAndroidDevice -> {
-                val allowedTypes = icon.allowedTypes
-                val (context, types) = when {
-                    listOf(IMAGE).containsAll(allowedTypes) -> {
-                        Pair(ChooserContext.PHOTO, MimeTypes().getImageTypesOnly())
-                    }
-                    listOf(VIDEO).containsAll(allowedTypes) -> {
-                        Pair(ChooserContext.VIDEO, MimeTypes().getVideoTypesOnly())
-                    }
-                    listOf(IMAGE, VIDEO).containsAll(allowedTypes) -> {
-                        Pair(ChooserContext.PHOTO_OR_VIDEO, MimeTypes().getVideoAndImageTypesOnly())
-                    }
-                    listOf(AUDIO).containsAll(allowedTypes) -> {
-                        Pair(
-                            ChooserContext.AUDIO,
-                            MimeTypes().getAudioTypesOnly(mediaUtilsWrapper.getSitePlanForMimeTypes(site))
-                        )
-                    }
-                    allowedTypes == setOf(AUDIO, DOCUMENT) -> {
-                        val plan = mediaUtilsWrapper.getSitePlanForMimeTypes(site)
-                        Pair(
-                            ChooserContext.MEDIA_FILE,
-                            MimeTypes().getAudioTypesOnly(plan) + MimeTypes().getDocumentTypesOnly(plan)
-                        )
-                    }
-                    else -> {
-                        Pair(
-                            ChooserContext.MEDIA_FILE,
-                            MimeTypes().getAllTypes(mediaUtilsWrapper.getSitePlanForMimeTypes(site))
-                        )
-                    }
-                }
-                OpenSystemPicker(context, types.toList(), canMultiselect)
+                val chooserTypes = systemPickerResolver.resolveChooserContext(icon.allowedTypes, site)
+                OpenSystemPicker(chooserTypes.context, chooserTypes.mimeTypes, canMultiselect)
             }
             is CapturePhoto -> OpenCameraForPhotos
             is SwitchSource -> {
