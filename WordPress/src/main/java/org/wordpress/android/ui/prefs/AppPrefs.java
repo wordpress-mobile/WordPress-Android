@@ -249,6 +249,9 @@ public class AppPrefs {
         // Same as above but for the reader
         SWIPE_TO_NAVIGATE_READER,
 
+        // Same as above but for the comment detail
+        SWIPE_TO_NAVIGATE_COMMENTS,
+
         // smart toast counters
         SMART_TOAST_COMMENTS_LONG_PRESS_USAGE_COUNTER,
         SMART_TOAST_COMMENTS_LONG_PRESS_TOAST_COUNTER,
@@ -663,6 +666,14 @@ public class AppPrefs {
 
     public static void setReaderSwipeToNavigateShown(boolean alreadyShown) {
         setBoolean(UndeletablePrefKey.SWIPE_TO_NAVIGATE_READER, alreadyShown);
+    }
+
+    public static boolean isCommentsSwipeToNavigateShown() {
+        return getBoolean(UndeletablePrefKey.SWIPE_TO_NAVIGATE_COMMENTS, false);
+    }
+
+    public static void setCommentsSwipeToNavigateShown(boolean alreadyShown) {
+        setBoolean(UndeletablePrefKey.SWIPE_TO_NAVIGATE_COMMENTS, alreadyShown);
     }
 
     public static boolean isImageOptimize() {
