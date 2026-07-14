@@ -292,6 +292,17 @@ class UnifiedCommentDetailsViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `onEditClicked shows snackbar and does not open the editor when offline`() = test {
+        viewModel.start(site, REMOTE_COMMENT_ID)
+        whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(false)
+
+        viewModel.onEditClicked()
+
+        assertThat(uiActionEvents.filterIsInstance<LaunchEditComment>()).isEmpty()
+        assertThat(snackbarMessages).isNotEmpty
+    }
+
+    @Test
     fun `onPostTitleClicked emits open post in reader event`() = test {
         viewModel.start(site, REMOTE_COMMENT_ID)
 

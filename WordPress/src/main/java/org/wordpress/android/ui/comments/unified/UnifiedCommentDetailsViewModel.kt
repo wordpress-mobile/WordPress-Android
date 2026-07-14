@@ -227,6 +227,8 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
 
     fun onEditClicked() {
         if (loadedComment == null) return
+        // The editor loads the comment from the network, so don't open it offline.
+        if (isOffline()) return
         trackCommentAction(Stat.COMMENT_EDITOR_OPENED)
         // In note mode edit through the note identifier so the edit screen refreshes the note DB
         // after saving, keeping the notifications list consistent with the edited comment.
