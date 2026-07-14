@@ -210,6 +210,20 @@ class UnifiedCommentsEditViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `onActionMenuClicked triggers snackbar and skips DONE when FluxC row is missing at save time`() = test {
+        whenever(commentsStore.getCommentByLocalSiteAndRemoteId(site.id, remoteCommentId))
+            .thenReturn(emptyList())
+
+        viewModel.start(site, siteCommentIdentifier)
+        viewModel.onActionMenuClicked()
+
+        assertThat(onSnackbarMessage.firstOrNull()).isNotNull
+        assertThat(uiActionEvent).isEmpty()
+        verify(commentsStore, never()).updateEditComment(any(), any())
+        verify(analyticsUtilsWrapper, never()).trackCommentActionWithSiteDetails(any(), any(), any())
+    }
+
+    @Test
     fun `onActionMenuClicked triggers DONE action if comment update successfully`() = test {
         whenever(commentsStore.getCommentByLocalSiteAndRemoteId(site.id, remoteCommentId))
             .thenReturn(listOf(COMMENT_ENTITY))
