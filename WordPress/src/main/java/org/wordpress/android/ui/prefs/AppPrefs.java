@@ -217,6 +217,9 @@ public class AppPrefs {
         SITE_SUPPORTS_EDITOR_SETTINGS,
         SITE_SUPPORTS_EDITOR_ASSETS,
         SITE_THEME_IS_BLOCK_THEME,
+        // Timestamp (millis) of the last time we confirmed a site has no xposts, used to throttle
+        // re-checks so a site that later enables xposts (o2) is eventually picked up.
+        XPOSTS_NO_RESULT_CHECKED_TIMESTAMP,
 
         // Login flow preserved across OAuth Custom Tabs redirect
         PENDING_LOGIN_FLOW,
@@ -2074,6 +2077,18 @@ public class AppPrefs {
                 DeletablePrefKey.SITE_THEME_IS_BLOCK_THEME.name()
                         + site.getId(), isBlockTheme
         ).apply();
+    }
+
+    private static String xPostsNoResultCheckedTimestampKey(@NonNull SiteModel site) {
+        return DeletablePrefKey.XPOSTS_NO_RESULT_CHECKED_TIMESTAMP.name() + site.getId();
+    }
+
+    public static long getXPostsNoResultCheckedTimestamp(@NonNull SiteModel site) {
+        return prefs().getLong(xPostsNoResultCheckedTimestampKey(site), 0);
+    }
+
+    public static void setXPostsNoResultCheckedTimestamp(@NonNull SiteModel site, long timestamp) {
+        prefs().edit().putLong(xPostsNoResultCheckedTimestampKey(site), timestamp).apply();
     }
 
     /**
