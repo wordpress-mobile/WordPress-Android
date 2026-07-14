@@ -261,7 +261,13 @@ class MediaPickerActivity : BaseAppCompatActivity(), MediaPickerListener {
             true
         }
         popup.menu.add(R.string.photo_picker_choose_other_files).setOnMenuItemClickListener {
-            pickerFragment?.onSystemPickerTypeChosen(setOf(MediaType.AUDIO, MediaType.DOCUMENT))
+            // "Other files" opens the document browser (ACTION_OPEN_DOCUMENT) with all accepted types,
+            // matching the pre-disambiguation file picker. This keeps non-visual files reachable while
+            // still allowing an image/video to be picked by browsing the filesystem (e.g. a freshly
+            // downloaded image in Downloads that the Photo Picker may not surface yet).
+            pickerFragment?.onSystemPickerTypeChosen(
+                setOf(MediaType.IMAGE, MediaType.VIDEO, MediaType.AUDIO, MediaType.DOCUMENT)
+            )
             true
         }
         popup.show()

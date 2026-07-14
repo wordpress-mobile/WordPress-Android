@@ -640,7 +640,7 @@ class MediaPickerViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `choosing other files from the disambiguation menu opens the file picker`() = test {
+    fun `choosing other files from the disambiguation menu opens the file picker for all accepted types`() = test {
         setupViewModel(listOf(), multiSelectFilePickerSetup, true)
 
         val iconClickEvents = mutableListOf<IconClickEvent>()
@@ -653,7 +653,9 @@ class MediaPickerViewModelTest : BaseUnitTest() {
             }
         }
 
-        viewModel.onSystemPickerTypeChosen(setOf(AUDIO, DOCUMENT))
+        // "Other files" opens the document browser with all accepted types, so an image or video can
+        // still be selected by browsing the filesystem (matching the pre-disambiguation file picker).
+        viewModel.onSystemPickerTypeChosen(setOf(IMAGE, VIDEO, AUDIO, DOCUMENT))
 
         assertThat(iconClickEvents).hasSize(1)
         assertThat(iconClickEvents[0].action is OpenSystemPicker).isTrue()

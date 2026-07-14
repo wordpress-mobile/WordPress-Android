@@ -48,10 +48,6 @@ class SystemPickerResolver @Inject constructor(
             listOf(AUDIO).containsAll(allowedTypes) -> {
                 ChooserContext.AUDIO to mimeTypes.getAudioTypesOnly(planFor(site))
             }
-            allowedTypes == setOf(AUDIO, DOCUMENT) -> {
-                val plan = planFor(site)
-                ChooserContext.MEDIA_FILE to (mimeTypes.getAudioTypesOnly(plan) + mimeTypes.getDocumentTypesOnly(plan))
-            }
             else -> {
                 ChooserContext.MEDIA_FILE to mimeTypes.getAllTypes(planFor(site))
             }
