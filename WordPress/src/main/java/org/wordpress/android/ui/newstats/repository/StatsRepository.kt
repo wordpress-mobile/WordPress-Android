@@ -418,10 +418,10 @@ class StatsRepository @Inject constructor(
 
         val (currentResult, previousResult) = coroutineScope {
             val currentDeferred = async {
-                fetchBottomStatsVisits(siteId, bottomRange, bottomRange.currentStart, bottomRange.currentEnd)
+                fetchBottomStatsVisits(siteId, bottomRange, bottomRange.currentEnd)
             }
             val previousDeferred = async {
-                fetchBottomStatsVisits(siteId, bottomRange, bottomRange.previousStart, bottomRange.previousEnd)
+                fetchBottomStatsVisits(siteId, bottomRange, bottomRange.previousEnd)
             }
             currentDeferred.await() to previousDeferred.await()
         }
@@ -436,23 +436,26 @@ class StatsRepository @Inject constructor(
     }
 
     /**
-     * Fetches the dedicated bottom-row stats for the given window, restricting the
+     * Fetches the dedicated bottom-row stats for the window ending at [endDate], restricting the
      * response to the metrics shown in the bottom row.
+     *
+     * No `startDate` is sent — the window is defined by unit + quantity + endDate, exactly like the
+     * chart's [fetchStatsForPeriod]. A mid-bucket startDate makes the API truncate the first
+     * month/year bucket's views (an additive metric) while leaving visitors (a per-bucket unique) at
+     * the full-bucket value, so the bottom row's Views would under-count and disagree with the header.
      */
     @Suppress("TooGenericExceptionCaught")
     private suspend fun fetchBottomStatsVisits(
         siteId: Long,
         bottomRange: PeriodDateRange,
-        start: LocalDate,
-        end: LocalDate
+        endDate: LocalDate
     ): StatsVisitsDataResult? {
         return try {
             statsDataSource.fetchStatsVisits(
                 siteId = siteId,
                 unit = bottomRange.unit,
                 quantity = bottomRange.quantity,
-                endDate = end.format(dateFormatter),
-                startDate = start.format(dateFormatter),
+                endDate = endDate.format(dateFormatter),
                 statFields = BOTTOM_STAT_FIELDS
             )
         } catch (e: CancellationException) {

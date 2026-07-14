@@ -654,6 +654,26 @@ class StatsRepositoryTest : BaseUnitTest() {
     }
 
     @Test
+    fun `given Last12Months, when fetchBottomStats, then no startDate is sent so the first bucket is full`() = test {
+        whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any(), anyOrNull(), anyOrNull()))
+            .thenReturn(StatsVisitsDataResult.Success(createWeeklyStatsVisitsData()))
+
+        repository.fetchBottomStats(TEST_SITE_ID, StatsPeriod.Last12Months)
+
+        // A mid-bucket startDate would make the API truncate the first month bucket's views (additive)
+        // while leaving visitors (unique) at the full-month value, so the bottom row's Views would
+        // under-count and disagree with the chart header. Mirror the chart: unit + quantity + endDate.
+        verify(statsDataSource, times(2)).fetchStatsVisits(
+            siteId = eq(TEST_SITE_ID),
+            unit = eq(StatsUnit.MONTH),
+            quantity = eq(12),
+            endDate = any(),
+            startDate = isNull(),
+            statFields = eq(EXPECTED_BOTTOM_STAT_FIELDS)
+        )
+    }
+
+    @Test
     fun `given Last6Months, when fetching chart and bottom, then both compare against the same windows`() = test {
         // Record every data-source window so the chart's and the bottom row's can be compared. The
         // chart carries no bottom stat fields; the bottom row's dedicated calls do.
