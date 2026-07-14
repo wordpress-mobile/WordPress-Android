@@ -26,6 +26,7 @@ import org.wordpress.android.ui.mediapicker.MediaPickerFragment.ChooserContext
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerAction
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerAction.OpenCameraForPhotos
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerAction.OpenSystemPicker
+import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerAction.ShowSystemPickerTypeMenu
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerAction.SwitchMediaPicker
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerIcon
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerIcon.CapturePhoto
@@ -500,6 +501,13 @@ class MediaPickerViewModel @Inject constructor(
     fun clickOnLastTappedIcon() = clickIcon(lastTappedIcon!!)
 
     private fun clickIcon(icon: MediaPickerIcon) {
+        // When the device picker allows both visual media and other files, the actual library isn't
+        // opened yet: we first show a type-disambiguation menu. Defer tracking the "device library
+        // opened" event until the user picks a category (see onSystemPickerTypeChosen).
+        if (icon is ChooseFromAndroidDevice && icon.allowedTypes.isAmbiguousMediaAndFileSelection()) {
+            _onNavigate.postValue(Event(IconClickEvent(ShowSystemPickerTypeMenu)))
+            return
+        }
         mediaPickerTracker.trackIconClick(icon, mediaPickerSetup)
         navigateForIcon(icon)
     }
@@ -513,6 +521,15 @@ class MediaPickerViewModel @Inject constructor(
             }
         }
         _onNavigate.postValue(Event(populateIconClickEvent(icon, mediaPickerSetup.canMultiselect)))
+    }
+
+    // The device selection allows both visual media (images/videos) and non-visual files
+    // (audio/documents). Android's Photo Picker only surfaces visual media, so the user is asked
+    // which kind they want before a picker is opened.
+    private fun Set<MediaType>.isAmbiguousMediaAndFileSelection(): Boolean {
+        val hasVisualMedia = any { it == IMAGE || it == VIDEO }
+        val hasOtherFiles = any { it == AUDIO || it == DOCUMENT }
+        return hasVisualMedia && hasOtherFiles
     }
 
     private fun clickOnCamera() {
@@ -558,7 +575,7 @@ class MediaPickerViewModel @Inject constructor(
                         )
                     }
                 }
-                OpenSystemPicker(context, types.toList(), canMultiselect, allowedTypes)
+                OpenSystemPicker(context, types.toList(), canMultiselect)
             }
             is CapturePhoto -> OpenCameraForPhotos
             is SwitchSource -> {
@@ -616,13 +633,15 @@ class MediaPickerViewModel @Inject constructor(
     }
 
     /**
-     * Re-triggers the system picker with a narrowed set of allowed types. Used when the user picks
-     * a category (e.g. "Photos and videos" vs "Other files") from the disambiguation menu shown for
-     * flows that allow both visual and non-visual media. The device-library open was already tracked
-     * when the disambiguation menu was first shown, so this does not track again.
+     * Opens the system picker with a narrowed set of allowed types after the user picks a category
+     * (e.g. "Photos and videos" vs "Other files") from the disambiguation menu. This is the point at
+     * which the device library is actually opened, so the open is tracked here rather than when the
+     * disambiguation menu was shown.
      */
     fun onSystemPickerTypeChosen(allowedTypes: Set<MediaType>) {
-        navigateForIcon(ChooseFromAndroidDevice(allowedTypes))
+        val icon = ChooseFromAndroidDevice(allowedTypes)
+        mediaPickerTracker.trackIconClick(icon, mediaPickerSetup)
+        navigateForIcon(icon)
     }
 
     private fun getRequiredPermissionsNames(): String {

@@ -111,9 +111,12 @@ class MediaPickerFragment : Fragment(), MenuProvider {
         data class OpenSystemPicker(
             val chooserContext: ChooserContext,
             val mimeTypes: List<String>,
-            val allowMultipleSelection: Boolean,
-            val allowedTypes: Set<MediaType> = emptySet()
+            val allowMultipleSelection: Boolean
         ) : MediaPickerAction()
+
+        // Shown when the flow allows both visual media and other files: the system Photo Picker only
+        // surfaces visual media, so we let the user pick a category before opening a picker.
+        object ShowSystemPickerTypeMenu : MediaPickerAction()
 
         object OpenCameraForPhotos : MediaPickerAction()
         data class SwitchMediaPicker(val mediaPickerSetup: MediaPickerSetup) : MediaPickerAction()
