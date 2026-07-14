@@ -452,7 +452,7 @@ class ViewsStatsViewModel @Inject constructor(
             ),
             chartData = ViewsStatsChartData(currentPeriod = currentDataPoints, previousPeriod = previousDataPoints),
             periodAverage = average,
-            bottomStats = buildBottomStats(currentStats, previousStats),
+            bottomStats = buildBottomStats(result.bottomCurrentAggregates, result.bottomPreviousAggregates),
             chartType = currentChartType
         )
     }

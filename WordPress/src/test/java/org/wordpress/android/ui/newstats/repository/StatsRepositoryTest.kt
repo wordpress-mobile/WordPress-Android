@@ -8,6 +8,7 @@ import org.wordpress.android.ui.newstats.datasource.PostsDataPoint
 import org.wordpress.android.ui.newstats.datasource.StatsDataSource
 import org.wordpress.android.ui.newstats.datasource.StatsErrorType
 import org.wordpress.android.ui.newstats.datasource.StatsUnit
+import org.wordpress.android.ui.newstats.datasource.StatsVisitField
 import org.wordpress.android.ui.newstats.datasource.StatsVisitsData
 import org.wordpress.android.ui.newstats.datasource.StatsVisitsDataResult
 import org.wordpress.android.ui.newstats.datasource.TopPostDataItem
@@ -20,8 +21,10 @@ import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
 import org.mockito.kotlin.any
+import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.argThat
 import org.mockito.kotlin.eq
+import org.mockito.kotlin.isNull
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
@@ -60,7 +63,7 @@ class StatsRepositoryTest : BaseUnitTest() {
     // region fetchTodayAggregates
     @Test
     fun `given successful response, when fetchTodayAggregates is called, then success result is returned`() = test {
-        whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any()))
+        whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any(), anyOrNull(), anyOrNull()))
             .thenReturn(StatsVisitsDataResult.Success(createStatsVisitsData()))
 
         val result = repository.fetchTodayAggregates(TEST_SITE_ID)
@@ -76,7 +79,7 @@ class StatsRepositoryTest : BaseUnitTest() {
     @Test
     fun `given successful response, when fetchTodayAggregates is called, then data source is called with DAY unit`() =
         test {
-            whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any()))
+            whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any(), anyOrNull(), anyOrNull()))
                 .thenReturn(StatsVisitsDataResult.Success(createStatsVisitsData()))
 
             repository.fetchTodayAggregates(TEST_SITE_ID)
@@ -85,13 +88,15 @@ class StatsRepositoryTest : BaseUnitTest() {
                 siteId = eq(TEST_SITE_ID),
                 unit = eq(StatsUnit.DAY),
                 quantity = eq(1),
-                endDate = any()
+                endDate = any(),
+                startDate = anyOrNull(),
+                statFields = anyOrNull()
             )
         }
 
     @Test
     fun `given empty data, when fetchTodayAggregates is called, then zeros are returned`() = test {
-        whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any()))
+        whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any(), anyOrNull(), anyOrNull()))
             .thenReturn(StatsVisitsDataResult.Success(createEmptyStatsVisitsData()))
 
         val result = repository.fetchTodayAggregates(TEST_SITE_ID)
@@ -106,7 +111,7 @@ class StatsRepositoryTest : BaseUnitTest() {
 
     @Test
     fun `given error response, when fetchTodayAggregates is called, then error result is returned`() = test {
-        whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any()))
+        whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any(), anyOrNull(), anyOrNull()))
             .thenReturn(StatsVisitsDataResult.Error(TEST_ERROR_TYPE))
 
         val result = repository.fetchTodayAggregates(TEST_SITE_ID)
@@ -119,7 +124,7 @@ class StatsRepositoryTest : BaseUnitTest() {
     // region fetchHourlyViews
     @Test
     fun `given successful response, when fetchHourlyViews is called, then success result is returned`() = test {
-        whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any()))
+        whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any(), anyOrNull(), anyOrNull()))
             .thenReturn(StatsVisitsDataResult.Success(createHourlyStatsVisitsData()))
 
         val result = repository.fetchHourlyViews(TEST_SITE_ID)
@@ -136,7 +141,7 @@ class StatsRepositoryTest : BaseUnitTest() {
     @Test
     fun `given successful response, when fetchHourlyViews is called, then data source is called with HOUR unit`() =
         test {
-            whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any()))
+            whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any(), anyOrNull(), anyOrNull()))
                 .thenReturn(StatsVisitsDataResult.Success(createHourlyStatsVisitsData()))
 
             repository.fetchHourlyViews(TEST_SITE_ID)
@@ -145,13 +150,15 @@ class StatsRepositoryTest : BaseUnitTest() {
                 siteId = eq(TEST_SITE_ID),
                 unit = eq(StatsUnit.HOUR),
                 quantity = eq(24),
-                endDate = any()
+                endDate = any(),
+                startDate = anyOrNull(),
+                statFields = anyOrNull()
             )
         }
 
     @Test
     fun `given error response, when fetchHourlyViews is called, then error result is returned`() = test {
-        whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any()))
+        whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any(), anyOrNull(), anyOrNull()))
             .thenReturn(StatsVisitsDataResult.Error(TEST_ERROR_TYPE))
 
         val result = repository.fetchHourlyViews(TEST_SITE_ID)
@@ -162,7 +169,7 @@ class StatsRepositoryTest : BaseUnitTest() {
 
     @Test
     fun `given offset days, when fetchHourlyViews is called, then data source is called`() = test {
-        whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any()))
+        whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any(), anyOrNull(), anyOrNull()))
             .thenReturn(StatsVisitsDataResult.Success(createHourlyStatsVisitsData()))
 
         repository.fetchHourlyViews(TEST_SITE_ID, offsetDays = 1)
@@ -171,7 +178,9 @@ class StatsRepositoryTest : BaseUnitTest() {
             siteId = eq(TEST_SITE_ID),
             unit = eq(StatsUnit.HOUR),
             quantity = eq(24),
-            endDate = any()
+            endDate = any(),
+            startDate = anyOrNull(),
+            statFields = anyOrNull()
         )
     }
     // endregion
@@ -179,7 +188,7 @@ class StatsRepositoryTest : BaseUnitTest() {
     // region fetchWeeklyStats
     @Test
     fun `given successful response, when fetchWeeklyStats is called, then success result is returned`() = test {
-        whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any()))
+        whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any(), anyOrNull(), anyOrNull()))
             .thenReturn(StatsVisitsDataResult.Success(createWeeklyStatsVisitsData()))
 
         val result = repository.fetchWeeklyStats(TEST_SITE_ID)
@@ -196,7 +205,7 @@ class StatsRepositoryTest : BaseUnitTest() {
     @Test
     fun `given successful response, when fetchWeeklyStats is called, then data source is called with DAY unit`() =
         test {
-            whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any()))
+            whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any(), anyOrNull(), anyOrNull()))
                 .thenReturn(StatsVisitsDataResult.Success(createWeeklyStatsVisitsData()))
 
             repository.fetchWeeklyStats(TEST_SITE_ID)
@@ -205,13 +214,15 @@ class StatsRepositoryTest : BaseUnitTest() {
                 siteId = eq(TEST_SITE_ID),
                 unit = eq(StatsUnit.DAY),
                 quantity = eq(7),
-                endDate = any()
+                endDate = any(),
+                startDate = anyOrNull(),
+                statFields = anyOrNull()
             )
         }
 
     @Test
     fun `given error response, when fetchWeeklyStats is called, then error result is returned`() = test {
-        whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any()))
+        whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any(), anyOrNull(), anyOrNull()))
             .thenReturn(StatsVisitsDataResult.Error(TEST_ERROR_TYPE))
 
         val result = repository.fetchWeeklyStats(TEST_SITE_ID)
@@ -222,7 +233,7 @@ class StatsRepositoryTest : BaseUnitTest() {
 
     @Test
     fun `given weeks ago parameter, when fetchWeeklyStats is called, then data source is called`() = test {
-        whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any()))
+        whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any(), anyOrNull(), anyOrNull()))
             .thenReturn(StatsVisitsDataResult.Success(createWeeklyStatsVisitsData()))
 
         repository.fetchWeeklyStats(TEST_SITE_ID, weeksAgo = 1)
@@ -231,7 +242,9 @@ class StatsRepositoryTest : BaseUnitTest() {
             siteId = eq(TEST_SITE_ID),
             unit = eq(StatsUnit.DAY),
             quantity = eq(7),
-            endDate = any()
+            endDate = any(),
+            startDate = anyOrNull(),
+            statFields = anyOrNull()
         )
     }
     // endregion
@@ -239,7 +252,7 @@ class StatsRepositoryTest : BaseUnitTest() {
     // region fetchDailyViewsForWeek
     @Test
     fun `given successful response, when fetchDailyViewsForWeek is called, then success result is returned`() = test {
-        whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any()))
+        whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any(), anyOrNull(), anyOrNull()))
             .thenReturn(StatsVisitsDataResult.Success(createWeeklyStatsVisitsData()))
 
         val result = repository.fetchDailyViewsForWeek(TEST_SITE_ID)
@@ -256,7 +269,7 @@ class StatsRepositoryTest : BaseUnitTest() {
     @Test
     fun `given successful response, when fetchDailyViewsForWeek is called, then data source is called with DAY unit`() =
         test {
-            whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any()))
+            whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any(), anyOrNull(), anyOrNull()))
                 .thenReturn(StatsVisitsDataResult.Success(createWeeklyStatsVisitsData()))
 
             repository.fetchDailyViewsForWeek(TEST_SITE_ID)
@@ -265,13 +278,15 @@ class StatsRepositoryTest : BaseUnitTest() {
                 siteId = eq(TEST_SITE_ID),
                 unit = eq(StatsUnit.DAY),
                 quantity = eq(7),
-                endDate = any()
+                endDate = any(),
+                startDate = anyOrNull(),
+                statFields = anyOrNull()
             )
         }
 
     @Test
     fun `given error response, when fetchDailyViewsForWeek is called, then error result is returned`() = test {
-        whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any()))
+        whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any(), anyOrNull(), anyOrNull()))
             .thenReturn(StatsVisitsDataResult.Error(TEST_ERROR_TYPE))
 
         val result = repository.fetchDailyViewsForWeek(TEST_SITE_ID)
@@ -285,7 +300,7 @@ class StatsRepositoryTest : BaseUnitTest() {
     @Test
     fun `given successful response, when fetchWeeklyStatsWithDailyData is called, then success result is returned`() =
         test {
-            whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any()))
+            whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any(), anyOrNull(), anyOrNull()))
                 .thenReturn(StatsVisitsDataResult.Success(createWeeklyStatsVisitsData()))
 
             val result = repository.fetchWeeklyStatsWithDailyData(TEST_SITE_ID)
@@ -309,7 +324,7 @@ class StatsRepositoryTest : BaseUnitTest() {
     @Test
     fun `given successful response, when fetchWeeklyStatsWithDailyData is called, data source is called correctly`() =
         test {
-            whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any()))
+            whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any(), anyOrNull(), anyOrNull()))
                 .thenReturn(StatsVisitsDataResult.Success(createWeeklyStatsVisitsData()))
 
             repository.fetchWeeklyStatsWithDailyData(TEST_SITE_ID)
@@ -318,13 +333,15 @@ class StatsRepositoryTest : BaseUnitTest() {
                 siteId = eq(TEST_SITE_ID),
                 unit = eq(StatsUnit.DAY),
                 quantity = eq(7),
-                endDate = any()
+                endDate = any(),
+                startDate = anyOrNull(),
+                statFields = anyOrNull()
             )
         }
 
     @Test
     fun `given error response, when fetchWeeklyStatsWithDailyData is called, then error result is returned`() = test {
-        whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any()))
+        whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any(), anyOrNull(), anyOrNull()))
             .thenReturn(StatsVisitsDataResult.Error(TEST_ERROR_TYPE))
 
         val result = repository.fetchWeeklyStatsWithDailyData(TEST_SITE_ID)
@@ -336,7 +353,7 @@ class StatsRepositoryTest : BaseUnitTest() {
     @Test
     fun `given weeks ago parameter, when fetchWeeklyStatsWithDailyData is called, then data source is called`() =
         test {
-            whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any()))
+            whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any(), anyOrNull(), anyOrNull()))
                 .thenReturn(StatsVisitsDataResult.Success(createWeeklyStatsVisitsData()))
 
             repository.fetchWeeklyStatsWithDailyData(TEST_SITE_ID, weeksAgo = 2)
@@ -345,7 +362,9 @@ class StatsRepositoryTest : BaseUnitTest() {
                 siteId = eq(TEST_SITE_ID),
                 unit = eq(StatsUnit.DAY),
                 quantity = eq(7),
-                endDate = any()
+                endDate = any(),
+                startDate = anyOrNull(),
+                statFields = anyOrNull()
             )
         }
     // endregion
@@ -354,7 +373,7 @@ class StatsRepositoryTest : BaseUnitTest() {
     @Test
     fun `given successful response, when fetchStatsForPeriod with Last7Days, then success result is returned`() =
         test {
-            whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any()))
+            whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any(), anyOrNull(), anyOrNull()))
                 .thenReturn(StatsVisitsDataResult.Success(createWeeklyStatsVisitsData()))
 
             val result = repository.fetchStatsForPeriod(TEST_SITE_ID, StatsPeriod.Last7Days)
@@ -370,7 +389,7 @@ class StatsRepositoryTest : BaseUnitTest() {
     @Test
     fun `given successful response, when fetchStatsForPeriod with Last7Days, then data source called with DAY unit`() =
         test {
-            whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any()))
+            whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any(), anyOrNull(), anyOrNull()))
                 .thenReturn(StatsVisitsDataResult.Success(createWeeklyStatsVisitsData()))
 
             repository.fetchStatsForPeriod(TEST_SITE_ID, StatsPeriod.Last7Days)
@@ -380,14 +399,16 @@ class StatsRepositoryTest : BaseUnitTest() {
                 siteId = eq(TEST_SITE_ID),
                 unit = eq(StatsUnit.DAY),
                 quantity = eq(7),
-                endDate = any()
+                endDate = any(),
+                startDate = anyOrNull(),
+                statFields = anyOrNull()
             )
         }
 
     @Test
     fun `given successful response, when fetchStatsForPeriod with Last30Days, then data source called with DAY unit`() =
         test {
-            whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any()))
+            whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any(), anyOrNull(), anyOrNull()))
                 .thenReturn(StatsVisitsDataResult.Success(createWeeklyStatsVisitsData()))
 
             repository.fetchStatsForPeriod(TEST_SITE_ID, StatsPeriod.Last30Days)
@@ -397,14 +418,16 @@ class StatsRepositoryTest : BaseUnitTest() {
                 siteId = eq(TEST_SITE_ID),
                 unit = eq(StatsUnit.DAY),
                 quantity = eq(30),
-                endDate = any()
+                endDate = any(),
+                startDate = anyOrNull(),
+                statFields = anyOrNull()
             )
         }
 
     @Test
     fun `given successful response, when fetchStatsForPeriod with Last6Months, then data source called with MONTH`() =
         test {
-            whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any()))
+            whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any(), anyOrNull(), anyOrNull()))
                 .thenReturn(StatsVisitsDataResult.Success(createWeeklyStatsVisitsData()))
 
             repository.fetchStatsForPeriod(TEST_SITE_ID, StatsPeriod.Last6Months)
@@ -414,14 +437,16 @@ class StatsRepositoryTest : BaseUnitTest() {
                 siteId = eq(TEST_SITE_ID),
                 unit = eq(StatsUnit.MONTH),
                 quantity = eq(6),
-                endDate = any()
+                endDate = any(),
+                startDate = anyOrNull(),
+                statFields = anyOrNull()
             )
         }
 
     @Test
     fun `given successful response, when fetchStatsForPeriod with Last12Months, then data source called with MONTH`() =
         test {
-            whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any()))
+            whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any(), anyOrNull(), anyOrNull()))
                 .thenReturn(StatsVisitsDataResult.Success(createWeeklyStatsVisitsData()))
 
             repository.fetchStatsForPeriod(TEST_SITE_ID, StatsPeriod.Last12Months)
@@ -431,14 +456,16 @@ class StatsRepositoryTest : BaseUnitTest() {
                 siteId = eq(TEST_SITE_ID),
                 unit = eq(StatsUnit.MONTH),
                 quantity = eq(12),
-                endDate = any()
+                endDate = any(),
+                startDate = anyOrNull(),
+                statFields = anyOrNull()
             )
         }
 
     @Test
     fun `given successful response, when fetchStatsForPeriod with Today, then data source called with HOUR unit`() =
         test {
-            whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any()))
+            whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any(), anyOrNull(), anyOrNull()))
                 .thenReturn(StatsVisitsDataResult.Success(createHourlyStatsVisitsData()))
 
             repository.fetchStatsForPeriod(TEST_SITE_ID, StatsPeriod.Today)
@@ -448,13 +475,15 @@ class StatsRepositoryTest : BaseUnitTest() {
                 siteId = eq(TEST_SITE_ID),
                 unit = eq(StatsUnit.HOUR),
                 quantity = eq(24),
-                endDate = any()
+                endDate = any(),
+                startDate = anyOrNull(),
+                statFields = anyOrNull()
             )
         }
 
     @Test
     fun `given error response, when fetchStatsForPeriod is called, then error result is returned`() = test {
-        whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any()))
+        whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any(), anyOrNull(), anyOrNull()))
             .thenReturn(StatsVisitsDataResult.Error(TEST_ERROR_TYPE))
 
         val result = repository.fetchStatsForPeriod(TEST_SITE_ID, StatsPeriod.Last7Days)
@@ -466,7 +495,7 @@ class StatsRepositoryTest : BaseUnitTest() {
     @Test
     fun `given custom period, when fetchStatsForPeriod is called, then data source called with correct quantity`() =
         test {
-            whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any()))
+            whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any(), anyOrNull(), anyOrNull()))
                 .thenReturn(StatsVisitsDataResult.Success(createWeeklyStatsVisitsData()))
 
             val customPeriod = StatsPeriod.Custom(
@@ -480,14 +509,16 @@ class StatsRepositoryTest : BaseUnitTest() {
                 siteId = eq(TEST_SITE_ID),
                 unit = eq(StatsUnit.DAY),
                 quantity = eq(10),
-                endDate = any()
+                endDate = any(),
+                startDate = anyOrNull(),
+                statFields = anyOrNull()
             )
         }
 
     @Test
     fun `given long custom period, when fetchStatsForPeriod is called, then data source called with MONTH unit`() =
         test {
-            whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any()))
+            whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any(), anyOrNull(), anyOrNull()))
                 .thenReturn(StatsVisitsDataResult.Success(createWeeklyStatsVisitsData()))
 
             val customPeriod = StatsPeriod.Custom(
@@ -501,13 +532,15 @@ class StatsRepositoryTest : BaseUnitTest() {
                 siteId = eq(TEST_SITE_ID),
                 unit = eq(StatsUnit.MONTH),
                 quantity = argThat { this > 0 },
-                endDate = any()
+                endDate = any(),
+                startDate = anyOrNull(),
+                statFields = anyOrNull()
             )
         }
 
     @Test
     fun `given parallel fetch, when fetchStatsForPeriod is called, then both periods are fetched`() = test {
-        whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any()))
+        whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any(), anyOrNull(), anyOrNull()))
             .thenReturn(StatsVisitsDataResult.Success(createWeeklyStatsVisitsData()))
 
         repository.fetchStatsForPeriod(TEST_SITE_ID, StatsPeriod.Last7Days)
@@ -517,7 +550,69 @@ class StatsRepositoryTest : BaseUnitTest() {
             siteId = eq(TEST_SITE_ID),
             unit = any(),
             quantity = any(),
-            endDate = any()
+            endDate = any(),
+            startDate = anyOrNull(),
+            statFields = anyOrNull()
+        )
+    }
+
+    @Test
+    fun `given Last7Days, when fetchStatsForPeriod, then no dedicated bottom call is made`() = test {
+        whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any(), anyOrNull(), anyOrNull()))
+            .thenReturn(StatsVisitsDataResult.Success(createWeeklyStatsVisitsData()))
+
+        repository.fetchStatsForPeriod(TEST_SITE_ID, StatsPeriod.Last7Days)
+
+        // The bottom unit matches the chart unit (DAY), so the totals are reused and no call
+        // carries the bottom stat fields.
+        verify(statsDataSource, times(2)).fetchStatsVisits(
+            siteId = eq(TEST_SITE_ID),
+            unit = any(),
+            quantity = any(),
+            endDate = any(),
+            startDate = anyOrNull(),
+            statFields = isNull()
+        )
+    }
+
+    @Test
+    fun `given Today, when fetchStatsForPeriod, then dedicated bottom call uses DAY unit and stat fields`() = test {
+        whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any(), anyOrNull(), anyOrNull()))
+            .thenReturn(StatsVisitsDataResult.Success(createStatsVisitsData()))
+
+        repository.fetchStatsForPeriod(TEST_SITE_ID, StatsPeriod.Today)
+
+        // Today's chart is hourly, so the bottom row uses a dedicated daily call (current + previous)
+        // restricted to the bottom stat fields.
+        verify(statsDataSource, times(2)).fetchStatsVisits(
+            siteId = eq(TEST_SITE_ID),
+            unit = eq(StatsUnit.DAY),
+            quantity = eq(1),
+            endDate = any(),
+            startDate = anyOrNull(),
+            statFields = eq(EXPECTED_BOTTOM_STAT_FIELDS)
+        )
+    }
+
+    @Test
+    fun `given custom range over two years, when fetchStatsForPeriod, then bottom call uses YEAR unit`() = test {
+        whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any(), anyOrNull(), anyOrNull()))
+            .thenReturn(StatsVisitsDataResult.Success(createWeeklyStatsVisitsData()))
+
+        val customPeriod = StatsPeriod.Custom(
+            startDate = LocalDate.of(2022, 1, 1),
+            endDate = LocalDate.of(2025, 1, 1)
+        )
+        repository.fetchStatsForPeriod(TEST_SITE_ID, customPeriod)
+
+        // Beyond two years the chart uses MONTH, so the bottom row uses a dedicated yearly call.
+        verify(statsDataSource, times(2)).fetchStatsVisits(
+            siteId = eq(TEST_SITE_ID),
+            unit = eq(StatsUnit.YEAR),
+            quantity = any(),
+            endDate = any(),
+            startDate = anyOrNull(),
+            statFields = eq(EXPECTED_BOTTOM_STAT_FIELDS)
         )
     }
     // endregion
@@ -718,6 +813,13 @@ class StatsRepositoryTest : BaseUnitTest() {
         private const val TEST_SITE_ID = 123L
         private const val TEST_ACCESS_TOKEN = "test_access_token"
         private val TEST_ERROR_TYPE = StatsErrorType.NETWORK_ERROR
+        private val EXPECTED_BOTTOM_STAT_FIELDS = listOf(
+            StatsVisitField.VIEWS,
+            StatsVisitField.VISITORS,
+            StatsVisitField.LIKES,
+            StatsVisitField.COMMENTS,
+            StatsVisitField.POSTS
+        )
 
         private const val TEST_PERIOD_1 = "2024-01-15"
         private const val TEST_PERIOD_2 = "2024-01-16"

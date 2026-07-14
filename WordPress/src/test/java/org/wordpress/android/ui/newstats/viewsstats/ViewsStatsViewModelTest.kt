@@ -741,7 +741,9 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
             currentAggregates = currentAggregates,
             previousAggregates = previousAggregates,
             currentPeriodData = currentPeriodData,
-            previousPeriodData = previousPeriodData
+            previousPeriodData = previousPeriodData,
+            bottomCurrentAggregates = currentAggregates,
+            bottomPreviousAggregates = previousAggregates
         )
     }
 
