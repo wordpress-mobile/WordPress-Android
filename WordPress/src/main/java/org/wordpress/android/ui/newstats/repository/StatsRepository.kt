@@ -571,11 +571,24 @@ class StatsRepository @Inject constructor(
      * Computes the date range and API unit for the bottom-row totals. Uses a coarser unit than the
      * chart (day up to a month, month up to two years, year beyond) so the API de-duplicates visitor
      * uniques per bucket before the totals are summed.
+     *
+     * The previous-period window MUST match the chart's ([calculatePeriodDates]) so the header's Views
+     * % change (chart fetch) and the bottom row's Views % change (this fetch) never disagree on the
+     * same card. The fixed standard periods align the previous window to whole days/months, so they
+     * reuse the chart's config-based window; only Today and Custom mirror the exact day span — which
+     * matches their chart paths' Views totals.
      */
     private fun calculateBottomStatsRange(period: StatsPeriod): PeriodDateRange {
         val (currentStart, currentEnd) = currentPeriodWindow(period)
         val (unit, quantity) = unitAndQuantityFor(currentStart, currentEnd, allowYear = true)
-        val (previousStart, previousEnd) = previousWindowMirror(currentStart, currentEnd)
+        val (previousStart, previousEnd) = when (period) {
+            is StatsPeriod.Last7Days,
+            is StatsPeriod.Last30Days,
+            is StatsPeriod.Last6Months,
+            is StatsPeriod.Last12Months -> previousWindowForConfig(currentStart, getPeriodConfig(period))
+            is StatsPeriod.Today,
+            is StatsPeriod.Custom -> previousWindowMirror(currentStart, currentEnd)
+        }
         return PeriodDateRange(currentStart, currentEnd, previousStart, previousEnd, quantity, unit)
     }
 
@@ -602,15 +615,28 @@ class StatsRepository @Inject constructor(
     }
 
     /**
-     * The immediately-preceding window that mirrors [start]..[end]'s exact day span. Deriving the
-     * previous window per-unit padded the YEAR case out to full calendar years and skewed the change
-     * comparison against a partial current bucket; an exact day-span mirror keeps current vs previous
-     * symmetric for every unit.
+     * The immediately-preceding window that mirrors [start]..[end]'s exact day span. Used only where
+     * the chart itself compares against an exact day span (Today and Custom): for those paths the day
+     * boundaries line up with the chart, so the Views % change stays consistent. Standard month-unit
+     * periods instead align the previous window to whole months via [previousWindowForConfig], matching
+     * the chart — a day-span mirror there would produce a different previous window and a contradictory
+     * % change.
      */
     private fun previousWindowMirror(start: LocalDate, end: LocalDate): Pair<LocalDate, LocalDate> {
         val daysBetween = ChronoUnit.DAYS.between(start, end).toInt() + 1
         val previousEnd = start.minusDays(1)
         val previousStart = previousEnd.minusDays((daysBetween - 1).toLong())
+        return previousStart to previousEnd
+    }
+
+    /**
+     * The previous window aligned to whole [PeriodConfig.dateUnit] steps (the chart's rule in
+     * [calculatePeriodDates]): the previous window ends one unit before [currentStart] and spans
+     * `quantity` units back. Shared so the chart and the bottom-row totals derive it identically.
+     */
+    private fun previousWindowForConfig(currentStart: LocalDate, config: PeriodConfig): Pair<LocalDate, LocalDate> {
+        val previousEnd = subtractFromDate(currentStart, 1, config.dateUnit)
+        val previousStart = subtractFromDate(previousEnd, config.quantity - 1, config.dateUnit)
         return previousStart to previousEnd
     }
 
@@ -621,8 +647,7 @@ class StatsRepository @Inject constructor(
 
         val config = getPeriodConfig(period)
         val (currentStart, currentEnd) = currentPeriodWindow(period)
-        val previousEnd = subtractFromDate(currentStart, 1, config.dateUnit)
-        val previousStart = subtractFromDate(previousEnd, config.quantity - 1, config.dateUnit)
+        val (previousStart, previousEnd) = previousWindowForConfig(currentStart, config)
 
         return PeriodDateRange(currentStart, currentEnd, previousStart, previousEnd, config.quantity, config.unit)
     }

@@ -654,6 +654,34 @@ class StatsRepositoryTest : BaseUnitTest() {
     }
 
     @Test
+    fun `given Last6Months, when fetching chart and bottom, then both compare against the same windows`() = test {
+        // Record every data-source window so the chart's and the bottom row's can be compared. The
+        // chart carries no bottom stat fields; the bottom row's dedicated calls do.
+        data class VisitsWindow(val endDate: String, val isBottom: Boolean)
+        val windows = mutableListOf<VisitsWindow>()
+        whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any(), anyOrNull(), anyOrNull()))
+            .thenAnswer { invocation ->
+                windows.add(
+                    VisitsWindow(
+                        endDate = invocation.getArgument(3),
+                        isBottom = invocation.getArgument<List<StatsVisitField>?>(5) != null
+                    )
+                )
+                StatsVisitsDataResult.Success(createWeeklyStatsVisitsData())
+            }
+
+        repository.fetchStatsForPeriod(TEST_SITE_ID, StatsPeriod.Last6Months)
+        repository.fetchBottomStats(TEST_SITE_ID, StatsPeriod.Last6Months)
+
+        // A month-unit period's previous window ends one whole month (not one day) before the current
+        // window starts. If the bottom row mirrored the exact day span instead, its previous endDate
+        // would differ from the chart's and the header and row would show contradictory % change.
+        val chartEndDates = windows.filter { !it.isBottom }.map { it.endDate }.sorted()
+        val bottomEndDates = windows.filter { it.isBottom }.map { it.endDate }.sorted()
+        assertThat(bottomEndDates).isEqualTo(chartEndDates)
+    }
+
+    @Test
     fun `given successful response, when fetchBottomStats, then totals are summed`() = test {
         whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any(), anyOrNull(), anyOrNull()))
             .thenReturn(StatsVisitsDataResult.Success(createWeeklyStatsVisitsData()))
