@@ -501,6 +501,10 @@ class MediaPickerViewModel @Inject constructor(
 
     private fun clickIcon(icon: MediaPickerIcon) {
         mediaPickerTracker.trackIconClick(icon, mediaPickerSetup)
+        navigateForIcon(icon)
+    }
+
+    private fun navigateForIcon(icon: MediaPickerIcon) {
         if (icon is CapturePhoto) {
             if (!permissionsHandler.hasPermissionsToTakePhoto()) {
                 _onCameraPermissionsRequested.value = Event(Unit)
@@ -508,8 +512,6 @@ class MediaPickerViewModel @Inject constructor(
                 return
             }
         }
-        // Do we need tracking here?; review tracking need.
-
         _onNavigate.postValue(Event(populateIconClickEvent(icon, mediaPickerSetup.canMultiselect)))
     }
 
@@ -542,7 +544,7 @@ class MediaPickerViewModel @Inject constructor(
                             MimeTypes().getAudioTypesOnly(mediaUtilsWrapper.getSitePlanForMimeTypes(site))
                         )
                     }
-                    listOf(AUDIO, DOCUMENT).containsAll(allowedTypes) -> {
+                    allowedTypes == setOf(AUDIO, DOCUMENT) -> {
                         val plan = mediaUtilsWrapper.getSitePlanForMimeTypes(site)
                         Pair(
                             ChooserContext.MEDIA_FILE,
@@ -616,10 +618,11 @@ class MediaPickerViewModel @Inject constructor(
     /**
      * Re-triggers the system picker with a narrowed set of allowed types. Used when the user picks
      * a category (e.g. "Photos and videos" vs "Other files") from the disambiguation menu shown for
-     * flows that allow both visual and non-visual media.
+     * flows that allow both visual and non-visual media. The device-library open was already tracked
+     * when the disambiguation menu was first shown, so this does not track again.
      */
     fun onSystemPickerTypeChosen(allowedTypes: Set<MediaType>) {
-        clickIcon(ChooseFromAndroidDevice(allowedTypes))
+        navigateForIcon(ChooseFromAndroidDevice(allowedTypes))
     }
 
     private fun getRequiredPermissionsNames(): String {
