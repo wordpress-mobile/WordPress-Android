@@ -224,7 +224,7 @@ class UnifiedCommentsEditViewModelTest : BaseUnitTest() {
 
     @Test
     fun `onActionMenuClicked saves via wordpress-rs and mirrors to cache for rs-capable site`() = test {
-        whenever(getCommentUseCase.execute(rsSite, remoteCommentId)).thenReturn(COMMENT_ENTITY)
+        whenever(commentsRsDataSource.getCommentForEdit(rsSite, remoteCommentId)).thenReturn(RS_COMMENT_FOR_EDIT)
         whenever(commentsStore.getCommentByLocalSiteAndRemoteId(rsSite.id, remoteCommentId))
             .thenReturn(listOf(COMMENT_ENTITY))
         whenever(commentsRsDataSource.updateComment(any(), any(), any(), any()))
@@ -266,9 +266,7 @@ class UnifiedCommentsEditViewModelTest : BaseUnitTest() {
 
     @Test
     fun `onActionMenuClicked surfaces error and skips DONE when wordpress-rs update fails`() = test {
-        whenever(getCommentUseCase.execute(rsSite, remoteCommentId)).thenReturn(COMMENT_ENTITY)
-        whenever(commentsStore.getCommentByLocalSiteAndRemoteId(rsSite.id, remoteCommentId))
-            .thenReturn(listOf(COMMENT_ENTITY))
+        whenever(commentsRsDataSource.getCommentForEdit(rsSite, remoteCommentId)).thenReturn(RS_COMMENT_FOR_EDIT)
         whenever(commentsRsDataSource.updateComment(any(), any(), any(), any()))
             .thenReturn(RsEditResult.Error("boom"))
 
@@ -278,6 +276,74 @@ class UnifiedCommentsEditViewModelTest : BaseUnitTest() {
         assertThat(onSnackbarMessage.firstOrNull()).isNotNull
         assertThat(uiActionEvent).doesNotContain(DONE)
         verify(commentsStore, never()).updateComment(any(), any(), any())
+    }
+
+    @Test
+    fun `Should load comment via wordpress-rs for rs-capable site`() = test {
+        whenever(commentsRsDataSource.getCommentForEdit(rsSite, remoteCommentId)).thenReturn(RS_COMMENT_FOR_EDIT)
+
+        viewModel.start(rsSite, siteCommentIdentifier)
+
+        assertThat(uiState[1].editedComment).isEqualTo(
+            CommentEssentials(
+                commentId = remoteCommentId,
+                userName = RS_COMMENT_FOR_EDIT.authorName,
+                commentText = RS_COMMENT_FOR_EDIT.contentRaw,
+                userUrl = RS_COMMENT_FOR_EDIT.authorUrl,
+                userEmail = RS_COMMENT_FOR_EDIT.authorEmail
+            )
+        )
+        verify(getCommentUseCase, never()).execute(any(), any())
+    }
+
+    @Test
+    fun `Should display error SnackBar when wordpress-rs load fails`() = test {
+        whenever(commentsRsDataSource.getCommentForEdit(rsSite, remoteCommentId)).thenReturn(null)
+
+        viewModel.start(rsSite, siteCommentIdentifier)
+
+        val expected = UiStringRes(R.string.error_load_comment)
+        assertEquals(expected, onSnackbarMessage.first().message)
+        verify(getCommentUseCase, never()).execute(any(), any())
+    }
+
+    @Test
+    fun `onActionMenuClicked saves via wordpress-rs without a FluxC row and skips the mirror`() = test {
+        whenever(commentsRsDataSource.getCommentForEdit(rsSite, remoteCommentId)).thenReturn(RS_COMMENT_FOR_EDIT)
+        whenever(commentsStore.getCommentByLocalSiteAndRemoteId(rsSite.id, remoteCommentId))
+            .thenReturn(emptyList())
+        whenever(commentsRsDataSource.updateComment(any(), any(), any(), any()))
+            .thenReturn(RsEditResult.Success(SERVER_EDITED_COMMENT))
+
+        viewModel.start(rsSite, siteCommentIdentifier)
+        viewModel.onActionMenuClicked()
+
+        assertThat(uiActionEvent.firstOrNull()).isEqualTo(DONE)
+        verify(localCommentCacheUpdateHandler).requestCommentsUpdate()
+        verify(analyticsUtilsWrapper).trackCommentActionWithSiteDetails(
+            Stat.COMMENT_EDITED,
+            AnalyticsCommentActionSource.SITE_COMMENTS,
+            rsSite
+        )
+        verify(commentsStore, never()).updateComment(any(), any(), any())
+        verify(commentsStore, never()).updateEditComment(any(), any())
+    }
+
+    @Test
+    fun `Should update notification entity on wordpress-rs save if NotificationCommentIdentifier`() = test {
+        whenever(commentsRsDataSource.getCommentForEdit(rsSite, remoteCommentId)).thenReturn(RS_COMMENT_FOR_EDIT)
+        whenever(commentsStore.getCommentByLocalSiteAndRemoteId(rsSite.id, remoteCommentId))
+            .thenReturn(emptyList())
+        whenever(commentsRsDataSource.updateComment(any(), any(), any(), any()))
+            .thenReturn(RsEditResult.Success(SERVER_EDITED_COMMENT))
+        whenever(notificationActionsWrapper.downloadNoteAndUpdateDB(noteId))
+            .thenReturn(true)
+
+        viewModel.start(rsSite, notificationCommentIdentifier)
+        viewModel.onActionMenuClicked()
+
+        verify(notificationActionsWrapper).downloadNoteAndUpdateDB(noteId)
+        assertThat(uiActionEvent.firstOrNull()).isEqualTo(DONE)
     }
 
     @Test
@@ -569,6 +635,15 @@ class UnifiedCommentsEditViewModelTest : BaseUnitTest() {
             authorEmail = "server authorEmail",
             authorUrl = "server authorUrl",
             contentRaw = "server content"
+        )
+
+        // Pre-fill fixture for rs loads, mirroring COMMENT_ENTITY's editable fields so save-path
+        // verifications match regardless of which transport loaded the comment.
+        private val RS_COMMENT_FOR_EDIT = RsEditedComment(
+            authorName = COMMENT_ENTITY.authorName!!,
+            authorEmail = COMMENT_ENTITY.authorEmail!!,
+            authorUrl = COMMENT_ENTITY.authorUrl!!,
+            contentRaw = COMMENT_ENTITY.content!!
         )
     }
 }

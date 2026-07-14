@@ -50,8 +50,7 @@ import javax.inject.Named
  *  - **Liking** (wordpress-rs has no comment like action).
  *  - **Keeping the FluxC-backed comment list in sync**: after each rs write we mirror the change
  *    into the local comment cache and poke [LocalCommentCacheUpdateHandler] so the (still FluxC)
- *    list reflects it. The cache row is also the source of the post title, like state and local id
- *    used to launch the (still FluxC) edit screen.
+ *    list reflects it. The cache row is also the source of the post title and like state.
  *
  * **Note mode**: when [start] receives a `noteId` the comment was opened from a notification.
  * Every successful write then also refreshes the note DB (so the notifications list stays fresh)
@@ -102,7 +101,8 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
     private var loadedComment: RsComment? = null
     private var isLikeInProgress = false
 
-    // From the FluxC cache row: the local id used to launch the (still FluxC) edit screen.
+    // From the FluxC cache row: kept only to fill SiteCommentIdentifier's shape for the shared
+    // edit screen, which no longer reads it (it loads and saves via wordpress-rs on rs sites).
     private var localCommentId: Int = 0
 
     fun start(site: SiteModel, remoteCommentId: Long, noteId: String? = null) {
@@ -139,8 +139,8 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
                 var local = commentsStore.getCommentByLocalSiteAndRemoteId(site.id, remoteCommentId).firstOrNull()
                 // Opened from the rs list the FluxC cache may not have this comment at all (the
                 // legacy list guaranteed a row before the detail could open). Fetch it so the
-                // post title, like state and the edit screen's local id are available — WP.com
-                // only, since FluxC has no application-password transport.
+                // post title and like state are available — WP.com only, since FluxC has no
+                // application-password transport.
                 if (local == null && site.isUsingWpComRestApi) {
                     commentsStore.fetchComment(site, remoteCommentId, null)
                     local = commentsStore.getCommentByLocalSiteAndRemoteId(site.id, remoteCommentId).firstOrNull()
