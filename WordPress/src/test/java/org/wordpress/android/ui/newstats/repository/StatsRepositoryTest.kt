@@ -394,14 +394,15 @@ class StatsRepositoryTest : BaseUnitTest() {
 
             repository.fetchStatsForPeriod(TEST_SITE_ID, StatsPeriod.Last7Days)
 
-            // Called twice: once for current period, once for previous period
+            // The chart is fetched twice (current + previous); the bottom row adds its own
+            // dedicated calls, distinguished here by carrying no bottom stat fields.
             verify(statsDataSource, times(2)).fetchStatsVisits(
                 siteId = eq(TEST_SITE_ID),
                 unit = eq(StatsUnit.DAY),
                 quantity = eq(7),
                 endDate = any(),
                 startDate = anyOrNull(),
-                statFields = anyOrNull()
+                statFields = isNull()
             )
         }
 
@@ -413,14 +414,15 @@ class StatsRepositoryTest : BaseUnitTest() {
 
             repository.fetchStatsForPeriod(TEST_SITE_ID, StatsPeriod.Last30Days)
 
-            // Called twice: once for current period, once for previous period
+            // The chart is fetched twice (current + previous); the dedicated bottom calls carry no
+            // bottom stat fields, so they are excluded from this verification.
             verify(statsDataSource, times(2)).fetchStatsVisits(
                 siteId = eq(TEST_SITE_ID),
                 unit = eq(StatsUnit.DAY),
                 quantity = eq(30),
                 endDate = any(),
                 startDate = anyOrNull(),
-                statFields = anyOrNull()
+                statFields = isNull()
             )
         }
 
@@ -432,14 +434,15 @@ class StatsRepositoryTest : BaseUnitTest() {
 
             repository.fetchStatsForPeriod(TEST_SITE_ID, StatsPeriod.Last6Months)
 
-            // Called twice: once for current period, once for previous period
+            // The chart is fetched twice (current + previous); the dedicated bottom calls carry no
+            // bottom stat fields, so they are excluded from this verification.
             verify(statsDataSource, times(2)).fetchStatsVisits(
                 siteId = eq(TEST_SITE_ID),
                 unit = eq(StatsUnit.MONTH),
                 quantity = eq(6),
                 endDate = any(),
                 startDate = anyOrNull(),
-                statFields = anyOrNull()
+                statFields = isNull()
             )
         }
 
@@ -451,14 +454,15 @@ class StatsRepositoryTest : BaseUnitTest() {
 
             repository.fetchStatsForPeriod(TEST_SITE_ID, StatsPeriod.Last12Months)
 
-            // Called twice: once for current period, once for previous period
+            // The chart is fetched twice (current + previous); the dedicated bottom calls carry no
+            // bottom stat fields, so they are excluded from this verification.
             verify(statsDataSource, times(2)).fetchStatsVisits(
                 siteId = eq(TEST_SITE_ID),
                 unit = eq(StatsUnit.MONTH),
                 quantity = eq(12),
                 endDate = any(),
                 startDate = anyOrNull(),
-                statFields = anyOrNull()
+                statFields = isNull()
             )
         }
 
@@ -504,14 +508,15 @@ class StatsRepositoryTest : BaseUnitTest() {
             )
             repository.fetchStatsForPeriod(TEST_SITE_ID, customPeriod)
 
-            // 10 days custom period should use DAY unit with quantity 10
+            // 10 days custom period should use DAY unit with quantity 10 for the two chart calls;
+            // the dedicated bottom calls carry bottom stat fields and are excluded here.
             verify(statsDataSource, times(2)).fetchStatsVisits(
                 siteId = eq(TEST_SITE_ID),
                 unit = eq(StatsUnit.DAY),
                 quantity = eq(10),
                 endDate = any(),
                 startDate = anyOrNull(),
-                statFields = anyOrNull()
+                statFields = isNull()
             )
         }
 
@@ -527,14 +532,15 @@ class StatsRepositoryTest : BaseUnitTest() {
             )
             repository.fetchStatsForPeriod(TEST_SITE_ID, customPeriod)
 
-            // Long custom period (>30 days) should use MONTH unit
+            // Long custom period (>30 days) should use MONTH unit for the two chart calls; the
+            // dedicated bottom calls carry bottom stat fields and are excluded here.
             verify(statsDataSource, times(2)).fetchStatsVisits(
                 siteId = eq(TEST_SITE_ID),
                 unit = eq(StatsUnit.MONTH),
                 quantity = argThat { this > 0 },
                 endDate = any(),
                 startDate = anyOrNull(),
-                statFields = anyOrNull()
+                statFields = isNull()
             )
         }
 
@@ -545,26 +551,8 @@ class StatsRepositoryTest : BaseUnitTest() {
 
         repository.fetchStatsForPeriod(TEST_SITE_ID, StatsPeriod.Last7Days)
 
-        // Verify data source is called twice (current and previous period)
-        verify(statsDataSource, times(2)).fetchStatsVisits(
-            siteId = eq(TEST_SITE_ID),
-            unit = any(),
-            quantity = any(),
-            endDate = any(),
-            startDate = anyOrNull(),
-            statFields = anyOrNull()
-        )
-    }
-
-    @Test
-    fun `given Last7Days, when fetchStatsForPeriod, then no dedicated bottom call is made`() = test {
-        whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any(), anyOrNull(), anyOrNull()))
-            .thenReturn(StatsVisitsDataResult.Success(createWeeklyStatsVisitsData()))
-
-        repository.fetchStatsForPeriod(TEST_SITE_ID, StatsPeriod.Last7Days)
-
-        // The bottom unit matches the chart unit (DAY), so the totals are reused and no call
-        // carries the bottom stat fields.
+        // Verify the chart periods are fetched (current and previous); the chart calls carry no
+        // bottom stat fields, unlike the dedicated bottom calls.
         verify(statsDataSource, times(2)).fetchStatsVisits(
             siteId = eq(TEST_SITE_ID),
             unit = any(),
@@ -572,6 +560,25 @@ class StatsRepositoryTest : BaseUnitTest() {
             endDate = any(),
             startDate = anyOrNull(),
             statFields = isNull()
+        )
+    }
+
+    @Test
+    fun `given Last7Days, when fetchStatsForPeriod, then a dedicated bottom call is made`() = test {
+        whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any(), anyOrNull(), anyOrNull()))
+            .thenReturn(StatsVisitsDataResult.Success(createWeeklyStatsVisitsData()))
+
+        repository.fetchStatsForPeriod(TEST_SITE_ID, StatsPeriod.Last7Days)
+
+        // The bottom row always comes from a dedicated call (current + previous) restricted to the
+        // bottom stat fields, even when its unit matches the chart's.
+        verify(statsDataSource, times(2)).fetchStatsVisits(
+            siteId = eq(TEST_SITE_ID),
+            unit = any(),
+            quantity = any(),
+            endDate = any(),
+            startDate = anyOrNull(),
+            statFields = eq(EXPECTED_BOTTOM_STAT_FIELDS)
         )
     }
 

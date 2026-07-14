@@ -458,9 +458,12 @@ class ViewsStatsViewModel @Inject constructor(
     }
 
     private fun buildBottomStats(
-        currentPeriod: PeriodAggregates,
-        previousPeriod: PeriodAggregates
-    ): List<StatItem> {
+        currentPeriod: PeriodAggregates?,
+        previousPeriod: PeriodAggregates?
+    ): List<StatItem>? {
+        // The bottom row is fed by a dedicated call that can fail or come back empty; when either the
+        // current or the previous aggregates are missing we hide the row instead of guessing.
+        if (currentPeriod == null || previousPeriod == null) return null
         return listOf(
             StatItem(
                 label = resourceProvider.getString(R.string.stats_views),

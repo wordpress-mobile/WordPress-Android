@@ -272,9 +272,40 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
 
         val state = viewModel.uiState.value as ViewsStatsCardUiState.Loaded
         assertThat(state.bottomStats).hasSize(5)
-        assertThat(state.bottomStats.map { it.label }).containsExactly(
+        assertThat(state.bottomStats!!.map { it.label }).containsExactly(
             "Views", "Visitors", "Likes", "Comments", "Posts"
         )
+    }
+
+    @Test
+    fun `when bottom aggregates are missing, then the bottom row is hidden`() = test {
+        val result = createPeriodStatsResult().copy(
+            bottomCurrentAggregates = null,
+            bottomPreviousAggregates = null
+        )
+
+        whenever(statsRepository.fetchStatsForPeriod(any(), any()))
+            .thenReturn(result)
+
+        initViewModel()
+        advanceUntilIdle()
+
+        val state = viewModel.uiState.value as ViewsStatsCardUiState.Loaded
+        assertThat(state.bottomStats).isNull()
+    }
+
+    @Test
+    fun `when only the previous bottom aggregate is missing, then the bottom row is hidden`() = test {
+        val result = createPeriodStatsResult().copy(bottomPreviousAggregates = null)
+
+        whenever(statsRepository.fetchStatsForPeriod(any(), any()))
+            .thenReturn(result)
+
+        initViewModel()
+        advanceUntilIdle()
+
+        val state = viewModel.uiState.value as ViewsStatsCardUiState.Loaded
+        assertThat(state.bottomStats).isNull()
     }
 
     @Test
@@ -288,7 +319,7 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
         advanceUntilIdle()
 
         val state = viewModel.uiState.value as ViewsStatsCardUiState.Loaded
-        val viewsStat = state.bottomStats.first { it.label == "Views" }
+        val viewsStat = state.bottomStats!!.first { it.label == "Views" }
         assertThat(viewsStat.change).isInstanceOf(StatChange.Positive::class.java)
         assertThat((viewsStat.change as StatChange.Positive).percentage).isEqualTo(25.0)
     }
@@ -304,7 +335,7 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
         advanceUntilIdle()
 
         val state = viewModel.uiState.value as ViewsStatsCardUiState.Loaded
-        val viewsStat = state.bottomStats.first { it.label == "Views" }
+        val viewsStat = state.bottomStats!!.first { it.label == "Views" }
         assertThat(viewsStat.change).isInstanceOf(StatChange.Negative::class.java)
         assertThat((viewsStat.change as StatChange.Negative).percentage).isEqualTo(20.0)
     }
@@ -320,7 +351,7 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
         advanceUntilIdle()
 
         val state = viewModel.uiState.value as ViewsStatsCardUiState.Loaded
-        val viewsStat = state.bottomStats.first { it.label == "Views" }
+        val viewsStat = state.bottomStats!!.first { it.label == "Views" }
         assertThat(viewsStat.change).isInstanceOf(StatChange.NoChange::class.java)
     }
 

@@ -294,9 +294,11 @@ private fun LoadedContent(
                 chartType = state.chartType,
                 onBarTapped = onBarTapped
             )
-            Spacer(modifier = Modifier.height(16.dp))
-            // Bottom Stats Row
-            BottomStatsRow(stats = state.bottomStats)
+            // Bottom Stats Row — hidden when the dedicated bottom-stats call failed or was empty
+            state.bottomStats?.let { bottomStats ->
+                Spacer(modifier = Modifier.height(16.dp))
+                BottomStatsRow(stats = bottomStats)
+            }
         }
         if (state.isLoadingNewPeriod) {
             CircularProgressIndicator(
