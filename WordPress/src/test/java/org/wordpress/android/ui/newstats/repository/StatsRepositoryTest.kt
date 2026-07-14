@@ -27,6 +27,7 @@ import org.mockito.kotlin.eq
 import org.mockito.kotlin.isNull
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
+import org.mockito.kotlin.verifyNoMoreInteractions
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.utils.AppLogWrapper
@@ -395,15 +396,15 @@ class StatsRepositoryTest : BaseUnitTest() {
 
             repository.fetchStatsForPeriod(TEST_SITE_ID, StatsPeriod.Last7Days)
 
-            // The chart is fetched twice (current + previous); the bottom row adds its own
-            // dedicated calls, distinguished here by carrying no bottom stat fields.
+            // The chart is fetched twice (current + previous), each requesting the card's stat fields
+            // so the same response can also fill the bottom row.
             verify(statsDataSource, times(2)).fetchStatsVisits(
                 siteId = eq(TEST_SITE_ID),
                 unit = eq(StatsUnit.DAY),
                 quantity = eq(7),
                 endDate = any(),
                 startDate = anyOrNull(),
-                statFields = isNull()
+                statFields = eq(EXPECTED_CARD_STAT_FIELDS)
             )
         }
 
@@ -415,15 +416,15 @@ class StatsRepositoryTest : BaseUnitTest() {
 
             repository.fetchStatsForPeriod(TEST_SITE_ID, StatsPeriod.Last30Days)
 
-            // The chart is fetched twice (current + previous); the dedicated bottom calls carry no
-            // bottom stat fields, so they are excluded from this verification.
+            // The chart is fetched twice (current + previous), each requesting the card's stat fields
+            // so the same response can also fill the bottom row.
             verify(statsDataSource, times(2)).fetchStatsVisits(
                 siteId = eq(TEST_SITE_ID),
                 unit = eq(StatsUnit.DAY),
                 quantity = eq(30),
                 endDate = any(),
                 startDate = anyOrNull(),
-                statFields = isNull()
+                statFields = eq(EXPECTED_CARD_STAT_FIELDS)
             )
         }
 
@@ -435,15 +436,15 @@ class StatsRepositoryTest : BaseUnitTest() {
 
             repository.fetchStatsForPeriod(TEST_SITE_ID, StatsPeriod.Last6Months)
 
-            // The chart is fetched twice (current + previous); the dedicated bottom calls carry no
-            // bottom stat fields, so they are excluded from this verification.
+            // The chart is fetched twice (current + previous), each requesting the card's stat fields
+            // so the same response can also fill the bottom row.
             verify(statsDataSource, times(2)).fetchStatsVisits(
                 siteId = eq(TEST_SITE_ID),
                 unit = eq(StatsUnit.MONTH),
                 quantity = eq(6),
                 endDate = any(),
                 startDate = anyOrNull(),
-                statFields = isNull()
+                statFields = eq(EXPECTED_CARD_STAT_FIELDS)
             )
         }
 
@@ -455,15 +456,15 @@ class StatsRepositoryTest : BaseUnitTest() {
 
             repository.fetchStatsForPeriod(TEST_SITE_ID, StatsPeriod.Last12Months)
 
-            // The chart is fetched twice (current + previous); the dedicated bottom calls carry no
-            // bottom stat fields, so they are excluded from this verification.
+            // The chart is fetched twice (current + previous), each requesting the card's stat fields
+            // so the same response can also fill the bottom row.
             verify(statsDataSource, times(2)).fetchStatsVisits(
                 siteId = eq(TEST_SITE_ID),
                 unit = eq(StatsUnit.MONTH),
                 quantity = eq(12),
                 endDate = any(),
                 startDate = anyOrNull(),
-                statFields = isNull()
+                statFields = eq(EXPECTED_CARD_STAT_FIELDS)
             )
         }
 
@@ -539,15 +540,15 @@ class StatsRepositoryTest : BaseUnitTest() {
             )
             repository.fetchStatsForPeriod(TEST_SITE_ID, customPeriod)
 
-            // 10 days custom period should use DAY unit with quantity 10 for the two chart calls;
-            // the dedicated bottom calls carry bottom stat fields and are excluded here.
+            // 10 days custom period should use DAY unit with quantity 10 for the two chart calls,
+            // each requesting the card's stat fields.
             verify(statsDataSource, times(2)).fetchStatsVisits(
                 siteId = eq(TEST_SITE_ID),
                 unit = eq(StatsUnit.DAY),
                 quantity = eq(10),
                 endDate = any(),
                 startDate = anyOrNull(),
-                statFields = isNull()
+                statFields = eq(EXPECTED_CARD_STAT_FIELDS)
             )
         }
 
@@ -563,15 +564,15 @@ class StatsRepositoryTest : BaseUnitTest() {
             )
             repository.fetchStatsForPeriod(TEST_SITE_ID, customPeriod)
 
-            // Long custom period (>30 days) should use MONTH unit for the two chart calls; the
-            // dedicated bottom calls carry bottom stat fields and are excluded here.
+            // Long custom period (>30 days) should use MONTH unit for the two chart calls, each
+            // requesting the card's stat fields.
             verify(statsDataSource, times(2)).fetchStatsVisits(
                 siteId = eq(TEST_SITE_ID),
                 unit = eq(StatsUnit.MONTH),
                 quantity = argThat { this > 0 },
                 endDate = any(),
                 startDate = anyOrNull(),
-                statFields = isNull()
+                statFields = eq(EXPECTED_CARD_STAT_FIELDS)
             )
         }
 
@@ -582,43 +583,36 @@ class StatsRepositoryTest : BaseUnitTest() {
 
         repository.fetchStatsForPeriod(TEST_SITE_ID, StatsPeriod.Last7Days)
 
-        // Verify the chart periods are fetched (current and previous); the chart calls carry no
-        // bottom stat fields, unlike the dedicated bottom calls.
+        // Verify the chart periods are fetched (current and previous), each requesting the card's
+        // stat fields.
         verify(statsDataSource, times(2)).fetchStatsVisits(
             siteId = eq(TEST_SITE_ID),
             unit = any(),
             quantity = any(),
             endDate = any(),
             startDate = anyOrNull(),
-            statFields = isNull()
+            statFields = eq(EXPECTED_CARD_STAT_FIELDS)
         )
     }
 
     @Test
-    fun `given Last7Days, when fetchStatsForPeriod, then it makes only the two chart calls`() = test {
+    fun `given Last7Days, when fetchStatsForPeriod, then it makes exactly the two chart calls`() = test {
         whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any(), anyOrNull(), anyOrNull()))
             .thenReturn(StatsVisitsDataResult.Success(createWeeklyStatsVisitsData()))
 
         repository.fetchStatsForPeriod(TEST_SITE_ID, StatsPeriod.Last7Days)
 
-        // The chart fetch is now independent of the bottom row: exactly the two chart calls, and no
-        // dedicated bottom calls (which carry the bottom stat fields).
+        // fetchStatsForPeriod issues exactly the current + previous chart calls, each requesting the
+        // card's stat fields so the same response can also fill the bottom row (non-hourly periods).
         verify(statsDataSource, times(2)).fetchStatsVisits(
             siteId = eq(TEST_SITE_ID),
             unit = any(),
             quantity = any(),
             endDate = any(),
             startDate = anyOrNull(),
-            statFields = isNull()
+            statFields = eq(EXPECTED_CARD_STAT_FIELDS)
         )
-        verify(statsDataSource, times(0)).fetchStatsVisits(
-            siteId = eq(TEST_SITE_ID),
-            unit = any(),
-            quantity = any(),
-            endDate = any(),
-            startDate = anyOrNull(),
-            statFields = eq(EXPECTED_BOTTOM_STAT_FIELDS)
-        )
+        verifyNoMoreInteractions(statsDataSource)
     }
     // endregion
 
@@ -638,7 +632,7 @@ class StatsRepositoryTest : BaseUnitTest() {
             quantity = any(),
             endDate = any(),
             startDate = anyOrNull(),
-            statFields = eq(EXPECTED_BOTTOM_STAT_FIELDS)
+            statFields = eq(EXPECTED_CARD_STAT_FIELDS)
         )
     }
 
@@ -657,7 +651,7 @@ class StatsRepositoryTest : BaseUnitTest() {
             quantity = eq(1),
             endDate = any(),
             startDate = anyOrNull(),
-            statFields = eq(EXPECTED_BOTTOM_STAT_FIELDS)
+            statFields = eq(EXPECTED_CARD_STAT_FIELDS)
         )
     }
 
@@ -679,7 +673,7 @@ class StatsRepositoryTest : BaseUnitTest() {
             quantity = any(),
             endDate = any(),
             startDate = anyOrNull(),
-            statFields = eq(EXPECTED_BOTTOM_STAT_FIELDS)
+            statFields = eq(EXPECTED_CARD_STAT_FIELDS)
         )
     }
 
@@ -699,36 +693,8 @@ class StatsRepositoryTest : BaseUnitTest() {
             quantity = eq(12),
             endDate = any(),
             startDate = isNull(),
-            statFields = eq(EXPECTED_BOTTOM_STAT_FIELDS)
+            statFields = eq(EXPECTED_CARD_STAT_FIELDS)
         )
-    }
-
-    @Test
-    fun `given Last6Months, when fetching chart and bottom, then both compare against the same windows`() = test {
-        // Record every data-source window so the chart's and the bottom row's can be compared. The
-        // chart carries no bottom stat fields; the bottom row's dedicated calls do.
-        data class VisitsWindow(val endDate: String, val isBottom: Boolean)
-        val windows = mutableListOf<VisitsWindow>()
-        whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any(), anyOrNull(), anyOrNull()))
-            .thenAnswer { invocation ->
-                windows.add(
-                    VisitsWindow(
-                        endDate = invocation.getArgument(3),
-                        isBottom = invocation.getArgument<List<StatsVisitField>?>(5) != null
-                    )
-                )
-                StatsVisitsDataResult.Success(createWeeklyStatsVisitsData())
-            }
-
-        repository.fetchStatsForPeriod(TEST_SITE_ID, StatsPeriod.Last6Months)
-        repository.fetchBottomStats(TEST_SITE_ID, StatsPeriod.Last6Months)
-
-        // A month-unit period's previous window ends one whole month (not one day) before the current
-        // window starts. If the bottom row mirrored the exact day span instead, its previous endDate
-        // would differ from the chart's and the header and row would show contradictory % change.
-        val chartEndDates = windows.filter { !it.isBottom }.map { it.endDate }.sorted()
-        val bottomEndDates = windows.filter { it.isBottom }.map { it.endDate }.sorted()
-        assertThat(bottomEndDates).isEqualTo(chartEndDates)
     }
 
     @Test
@@ -771,7 +737,7 @@ class StatsRepositoryTest : BaseUnitTest() {
     @Test
     fun `given only the previous call errors, when fetchBottomStats, then error is returned`() = test {
         whenever(
-            statsDataSource.fetchStatsVisits(any(), any(), any(), any(), anyOrNull(), eq(EXPECTED_BOTTOM_STAT_FIELDS))
+            statsDataSource.fetchStatsVisits(any(), any(), any(), any(), anyOrNull(), eq(EXPECTED_CARD_STAT_FIELDS))
         )
             .thenReturn(StatsVisitsDataResult.Success(createWeeklyStatsVisitsData()))
             .thenReturn(StatsVisitsDataResult.Error(TEST_ERROR_TYPE))
@@ -979,7 +945,7 @@ class StatsRepositoryTest : BaseUnitTest() {
         private const val TEST_SITE_ID = 123L
         private const val TEST_ACCESS_TOKEN = "test_access_token"
         private val TEST_ERROR_TYPE = StatsErrorType.NETWORK_ERROR
-        private val EXPECTED_BOTTOM_STAT_FIELDS = listOf(
+        private val EXPECTED_CARD_STAT_FIELDS = listOf(
             StatsVisitField.VIEWS,
             StatsVisitField.VISITORS,
             StatsVisitField.LIKES,

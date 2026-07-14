@@ -62,7 +62,11 @@ private const val MONTHS_IN_6_MONTHS = 6
 private const val MONTHS_IN_12_MONTHS = 12
 private const val MAX_DAYS_IN_MONTH = 31
 private const val MAX_DAYS_IN_2_YEARS = 731
-private val BOTTOM_STAT_FIELDS = listOf(
+// The metrics the Views card needs from a stats/visits call: `views` drives the chart line and the
+// header total; the rest fill the bottom-row totals. For non-hourly periods a single [fetchStatsForPeriod]
+// call returns all of them, so the card needs no separate bottom-row request. Hourly (single-day)
+// responses only populate `views`, so those periods fetch the bottom row from a dedicated day-level call.
+private val CARD_STAT_FIELDS = listOf(
     StatsVisitField.VIEWS,
     StatsVisitField.VISITORS,
     StatsVisitField.LIKES,
@@ -371,14 +375,18 @@ class StatsRepository @Inject constructor(
         val currentEndString = formatApiEndDate(periodRange.currentEnd, periodRange.unit)
         val previousEndString = formatApiEndDate(periodRange.previousEnd, periodRange.unit)
 
-        // Fetch the current and previous chart periods in parallel
+        // Fetch the current and previous chart periods in parallel. Both request [CARD_STAT_FIELDS] so
+        // a single call powers the chart (views) and, for non-hourly periods, the bottom-row totals
+        // too — letting the card avoid a separate bottom-row request. Hourly responses only populate
+        // `views`; those (single-day) periods source the bottom row from a dedicated day-level call.
         val (currentResult, previousResult) = coroutineScope {
             val currentDeferred = async {
                 statsDataSource.fetchStatsVisits(
                     siteId = siteId,
                     unit = periodRange.unit,
                     quantity = periodRange.quantity,
-                    endDate = currentEndString
+                    endDate = currentEndString,
+                    statFields = CARD_STAT_FIELDS
                 )
             }
             val previousDeferred = async {
@@ -386,7 +394,8 @@ class StatsRepository @Inject constructor(
                     siteId = siteId,
                     unit = periodRange.unit,
                     quantity = periodRange.quantity,
-                    endDate = previousEndString
+                    endDate = previousEndString,
+                    statFields = CARD_STAT_FIELDS
                 )
             }
             currentDeferred.await() to previousDeferred.await()
@@ -412,9 +421,11 @@ class StatsRepository @Inject constructor(
     }
 
     /**
-     * Fetches the bottom-row totals for a period from a dedicated call that uses a coarser (or equal)
-     * unit than the chart so the API de-duplicates visitor uniques per bucket before we sum. Loads
-     * independently of [fetchStatsForPeriod] so a slow or failed bottom call never blocks the chart.
+     * Fetches the bottom-row totals from a dedicated call. Used for single-day periods (Today and
+     * single-day Custom), whose chart is hourly: hourly responses only populate `views`, so the bottom
+     * row can't be derived from [fetchStatsForPeriod] and instead comes from this day-level call.
+     * (Non-hourly periods fill the bottom row straight from the chart's own [fetchStatsForPeriod]
+     * response, so they don't call this.)
      *
      * Returns [BottomStatsResult.Error] (the row is hidden) only when a call errors or throws; a
      * successful-but-empty response is summed to a legitimate all-zero row so a genuine zero-traffic
@@ -470,7 +481,7 @@ class StatsRepository @Inject constructor(
                 unit = bottomRange.unit,
                 quantity = bottomRange.quantity,
                 endDate = endDate.format(dateFormatter),
-                statFields = BOTTOM_STAT_FIELDS
+                statFields = CARD_STAT_FIELDS
             )
         } catch (e: CancellationException) {
             throw e
