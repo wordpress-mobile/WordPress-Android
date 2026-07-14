@@ -1,11 +1,5 @@
 package org.wordpress.android.ui.newstats.viewsstats
 
-import androidx.compose.animation.core.LinearEasing
-import androidx.compose.animation.core.RepeatMode
-import androidx.compose.animation.core.animateFloat
-import androidx.compose.animation.core.infiniteRepeatable
-import androidx.compose.animation.core.rememberInfiniteTransition
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -47,7 +41,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import org.wordpress.android.ui.newstats.StatsColors
@@ -87,6 +80,7 @@ import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.newstats.components.CardPosition
 import org.wordpress.android.ui.newstats.components.StatsCardMenu
 import org.wordpress.android.ui.newstats.util.formatStatValue
+import org.wordpress.android.ui.newstats.util.rememberShimmerBrush
 import java.util.Locale
 import kotlin.math.abs
 
@@ -150,36 +144,6 @@ fun ViewsStatsCard(
             )
         }
     }
-}
-
-/**
- * Remembers an animated shimmer brush shared by the full-card loading state and the per-region
- * placeholders, so the chart and bottom-row placeholders animate identically.
- */
-@Composable
-private fun rememberShimmerBrush(): Brush {
-    val shimmerColors = listOf(
-        MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f),
-        MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.6f),
-        MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f)
-    )
-
-    val transition = rememberInfiniteTransition(label = "shimmer")
-    val translateAnimation = transition.animateFloat(
-        initialValue = 0f,
-        targetValue = 1000f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(durationMillis = 1200, easing = LinearEasing),
-            repeatMode = RepeatMode.Restart
-        ),
-        label = "shimmer_translate"
-    )
-
-    return Brush.linearGradient(
-        colors = shimmerColors,
-        start = Offset(translateAnimation.value - 500f, 0f),
-        end = Offset(translateAnimation.value, 0f)
-    )
 }
 
 @Composable

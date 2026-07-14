@@ -574,27 +574,44 @@ class StatsRepository @Inject constructor(
      */
     private fun calculateBottomStatsRange(period: StatsPeriod): PeriodDateRange {
         val (currentStart, currentEnd) = currentPeriodWindow(period)
+        val (unit, quantity) = unitAndQuantityFor(currentStart, currentEnd, allowYear = true)
+        val (previousStart, previousEnd) = previousWindowMirror(currentStart, currentEnd)
+        return PeriodDateRange(currentStart, currentEnd, previousStart, previousEnd, quantity, unit)
+    }
 
-        val daysBetween = ChronoUnit.DAYS.between(currentStart, currentEnd).toInt() + 1
+    /**
+     * Chooses the API [StatsUnit] and its quantity for the inclusive real-calendar [start]..[end]
+     * window, coarsening the bucket as the span grows: day up to a full month, month up to two years,
+     * and — only when [allowYear] is set (bottom-row totals) — year beyond that. Shared by the bottom-row
+     * range and the custom-period chart window so the day/month threshold and the `MONTHS.between + 1`
+     * quantity live in one place.
+     */
+    private fun unitAndQuantityFor(start: LocalDate, end: LocalDate, allowYear: Boolean): Pair<StatsUnit, Int> {
+        val daysBetween = ChronoUnit.DAYS.between(start, end).toInt() + 1
         val unit = when {
             daysBetween <= MAX_DAYS_IN_MONTH -> StatsUnit.DAY
-            daysBetween <= MAX_DAYS_IN_2_YEARS -> StatsUnit.MONTH
-            else -> StatsUnit.YEAR
+            allowYear && daysBetween > MAX_DAYS_IN_2_YEARS -> StatsUnit.YEAR
+            else -> StatsUnit.MONTH
         }
         val quantity = when (unit) {
-            StatsUnit.MONTH -> (ChronoUnit.MONTHS.between(currentStart, currentEnd).toInt() + 1).coerceAtLeast(1)
-            StatsUnit.YEAR -> (ChronoUnit.YEARS.between(currentStart, currentEnd).toInt() + 1).coerceAtLeast(1)
+            StatsUnit.MONTH -> (ChronoUnit.MONTHS.between(start, end).toInt() + 1).coerceAtLeast(1)
+            StatsUnit.YEAR -> (ChronoUnit.YEARS.between(start, end).toInt() + 1).coerceAtLeast(1)
             else -> daysBetween
         }
+        return unit to quantity
+    }
 
-        val previousEnd = currentStart.minusDays(1)
-        // Mirror the current window's exact day span for the previous window (same as the chart's
-        // comparison window). Deriving it per-unit from `quantity` padded the YEAR case out to full
-        // calendar years, which skewed the change comparison against a partial current last-year
-        // bucket; an exact day-span mirror keeps current vs previous symmetric for every unit.
+    /**
+     * The immediately-preceding window that mirrors [start]..[end]'s exact day span. Deriving the
+     * previous window per-unit padded the YEAR case out to full calendar years and skewed the change
+     * comparison against a partial current bucket; an exact day-span mirror keeps current vs previous
+     * symmetric for every unit.
+     */
+    private fun previousWindowMirror(start: LocalDate, end: LocalDate): Pair<LocalDate, LocalDate> {
+        val daysBetween = ChronoUnit.DAYS.between(start, end).toInt() + 1
+        val previousEnd = start.minusDays(1)
         val previousStart = previousEnd.minusDays((daysBetween - 1).toLong())
-
-        return PeriodDateRange(currentStart, currentEnd, previousStart, previousEnd, quantity, unit)
+        return previousStart to previousEnd
     }
 
     @Suppress("ReturnCount")
@@ -683,22 +700,10 @@ class StatsRepository @Inject constructor(
             )
         }
 
-        val previousEnd = startDate.minusDays(1)
-        val previousStart = previousEnd.minusDays(daysBetween.toLong() - 1)
-
-        // Determine unit based on range — use daily for up to a full
-        // month (31 days), monthly beyond that
-        val unit = when {
-            daysBetween <= MAX_DAYS_IN_MONTH -> StatsUnit.DAY
-            else -> StatsUnit.MONTH
-        }
-
-        val quantity = if (unit == StatsUnit.MONTH) {
-            val monthsBetween = ChronoUnit.MONTHS.between(startDate, endDate).toInt() + 1
-            monthsBetween.coerceAtLeast(1)
-        } else {
-            daysBetween
-        }
+        // Daily up to a full month (31 days), monthly beyond that. The chart never coarsens to the
+        // YEAR bucket, so year granularity is disabled here (unlike the bottom-row totals).
+        val (unit, quantity) = unitAndQuantityFor(startDate, endDate, allowYear = false)
+        val (previousStart, previousEnd) = previousWindowMirror(startDate, endDate)
 
         return PeriodDateRange(
             currentStart = startDate,
