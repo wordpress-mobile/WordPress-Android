@@ -2,6 +2,7 @@
 
 27.0
 -----
+* [*] You can now browse Google Photos (albums, collections, and search) when adding photos or videos from your device.
 
 
 26.9
