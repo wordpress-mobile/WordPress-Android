@@ -293,7 +293,7 @@ class EditorPhotoPicker(
             }
             is MediaPickerAction.ShowSystemPickerTypeMenu -> {
                 // Only reachable when a flow allows both visual media and other files; the editor's
-                // embedded picker is image/video only, so this never fires here.
+                // embedded picker relies upon other flows, so this never fires here.
             }
         }
     }
