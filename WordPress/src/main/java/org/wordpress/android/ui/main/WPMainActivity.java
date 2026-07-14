@@ -1466,7 +1466,10 @@ public class WPMainActivity extends BaseAppCompatActivity implements
     public void onAccountChanged(OnAccountChanged event) {
         // Sign-out is handled in `handleSiteRemoved`, no need to show the signup flow here
         if (mAccountStore.hasAccessToken()) {
-            if (mBottomNav != null) mBottomNav.showNoteBadge(mAccountStore.getAccount().getHasUnseenNotes());
+            if (mBottomNav != null) {
+                mBottomNav.showNoteBadge(mAccountStore.getAccount().getHasUnseenNotes());
+                mBottomNav.refreshGravatar();
+            }
         }
     }
 
