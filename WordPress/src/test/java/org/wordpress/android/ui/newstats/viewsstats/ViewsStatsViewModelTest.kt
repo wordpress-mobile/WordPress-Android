@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.newstats.viewsstats
 
 import androidx.lifecycle.SavedStateHandle
+import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -8,6 +9,7 @@ import org.junit.Test
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.any
+import org.mockito.kotlin.doSuspendableAnswer
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
@@ -323,6 +325,27 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `when bottom stats fail transiently, then the next visibility retries and recovers the row`() = test {
+        whenever(statsRepository.fetchStatsForPeriod(any(), any()))
+            .thenReturn(createPeriodStatsResult())
+        // First attempt fails (row hidden); the retry on next visibility succeeds.
+        whenever(statsRepository.fetchBottomStats(any(), any()))
+            .thenReturn(BottomStatsResult.Error)
+            .thenReturn(createBottomStatsResult())
+
+        initViewModel()
+        advanceUntilIdle()
+        assertThat(viewModel.uiState.value.bottomState()).isEqualTo(BottomStatsUiState.Hidden)
+
+        // The card becoming visible again must retry, since the period was not fully loaded.
+        viewModel.loadDataIfNeeded()
+        advanceUntilIdle()
+
+        assertThat(viewModel.uiState.value.bottomState()).isInstanceOf(BottomStatsUiState.Loaded::class.java)
+        verify(statsRepository, times(2)).fetchBottomStats(any(), any())
+    }
+
+    @Test
     fun `when stat increases, then positive change is calculated`() = test {
         whenever(statsRepository.fetchStatsForPeriod(any(), any()))
             .thenReturn(createPeriodStatsResult())
@@ -466,6 +489,9 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
 
         whenever(statsRepository.fetchStatsForPeriod(any(), any()))
             .thenReturn(result)
+        // Both regions must succeed for the period to be treated as fully loaded (and thus skipped).
+        whenever(statsRepository.fetchBottomStats(any(), any()))
+            .thenReturn(createBottomStatsResult())
 
         initViewModel()
         advanceUntilIdle()
@@ -652,6 +678,10 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
                 fetchCount++
                 createPeriodStatsResult()
             }
+        // Both regions must succeed so the drill-down period is treated as fully loaded, otherwise
+        // the later loadDataIfNeeded would retry and inflate the fetch count.
+        whenever(statsRepository.fetchBottomStats(any(), any()))
+            .thenReturn(createBottomStatsResult())
 
         initViewModel()
         advanceUntilIdle()
@@ -730,6 +760,42 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
             assertThat(endDate).isEqualTo(LocalDate.of(2024, 3, 31))
         }
     }
+
+    @Test
+    fun `when drilling down and the chart finishes first, then the card stays dimmed until bottom stats finish`() =
+        test {
+            whenever(statsRepository.fetchStatsForPeriod(any(), any()))
+                .thenReturn(createPeriodStatsResult())
+            // Gate the (slower, dedicated) bottom-stats call so the chart always resolves first.
+            var bottomGate = CompletableDeferred<Unit>()
+            whenever(statsRepository.fetchBottomStats(any(), any())).doSuspendableAnswer {
+                bottomGate.await()
+                createBottomStatsResult()
+            }
+
+            initViewModel()
+            bottomGate.complete(Unit)
+            advanceUntilIdle()
+
+            // Fresh gate for the drill-down load; leave it pending so only the chart completes.
+            bottomGate = CompletableDeferred()
+            viewModel.onChartTypeChanged(ChartType.BAR)
+            viewModel.onBarTapped(0)
+            advanceUntilIdle()
+
+            // Chart has resolved for the new period, but the card must remain dimmed because the
+            // bottom row still holds the previous period's totals.
+            val dimmedState = viewModel.uiState.value as ViewsStatsCardUiState.Content
+            assertThat(dimmedState.chart).isInstanceOf(ChartUiState.Loaded::class.java)
+            assertThat(dimmedState.isLoadingNewPeriod).isTrue
+
+            // Once the bottom row resolves for the new period, the card un-dims.
+            bottomGate.complete(Unit)
+            advanceUntilIdle()
+
+            val finalState = viewModel.uiState.value as ViewsStatsCardUiState.Content
+            assertThat(finalState.isLoadingNewPeriod).isFalse
+        }
 
     // endregion
 

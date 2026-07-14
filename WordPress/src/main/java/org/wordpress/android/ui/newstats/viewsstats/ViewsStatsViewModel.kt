@@ -4,6 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -387,22 +388,49 @@ class ViewsStatsViewModel @Inject constructor(
      * appear before (or without) the bottom row and vice versa.
      */
     private suspend fun loadDataInternal(site: SiteModel) {
+        val targetPeriod = currentPeriod
         try {
-            coroutineScope {
-                launch { loadChart(site) }
-                launch { loadBottomStats(site) }
+            val (chartLoaded, bottomLoaded) = coroutineScope {
+                val chart = async { loadChart(site) }
+                val bottom = async { loadBottomStats(site) }
+                chart.await() to bottom.await()
+            }
+            // Only treat the period as fully loaded when both regions succeeded. Otherwise a transient
+            // bottom-stats failure (which merely hides the row) would leave loadedPeriod set, making
+            // loadDataIfNeeded short-circuit forever with no recovery short of a manual refresh or a
+            // period change. Leaving loadedPeriod unset lets the next visibility retry the load.
+            if (chartLoaded && bottomLoaded) {
+                loadedPeriod = targetPeriod
             }
         } finally {
             loadingPeriod = null
+            clearLoadingNewPeriod()
+        }
+    }
+
+    /**
+     * Clears the card-level [ViewsStatsCardUiState.Content.isLoadingNewPeriod] dim flag once both the
+     * chart and the (independently, and often slower) bottom-row calls have completed. Clearing it here
+     * rather than when the chart alone finishes prevents the previous period's bottom-row totals from
+     * being shown un-dimmed as if they belonged to the new period.
+     */
+    private fun clearLoadingNewPeriod() {
+        _uiState.update { current ->
+            if (current is ViewsStatsCardUiState.Content && current.isLoadingNewPeriod) {
+                current.copy(isLoadingNewPeriod = false)
+            } else {
+                current
+            }
         }
     }
 
     @Suppress("TooGenericExceptionCaught")
-    private suspend fun loadChart(site: SiteModel) {
+    private suspend fun loadChart(site: SiteModel): Boolean {
+        var success = false
         val chartState = try {
             when (val result = statsRepository.fetchStatsForPeriod(site.siteId, currentPeriod)) {
                 is PeriodStatsResult.Success -> {
-                    loadedPeriod = currentPeriod
+                    success = true
                     buildChartLoaded(result)
                 }
                 is PeriodStatsResult.Error -> ChartUiState.Error
@@ -414,14 +442,18 @@ class ViewsStatsViewModel @Inject constructor(
             ChartUiState.Error
         }
         updateChart(chartState)
+        return success
     }
 
     @Suppress("TooGenericExceptionCaught")
-    private suspend fun loadBottomStats(site: SiteModel) {
+    private suspend fun loadBottomStats(site: SiteModel): Boolean {
+        var success = false
         val bottomState = try {
             when (val result = statsRepository.fetchBottomStats(site.siteId, currentPeriod)) {
-                is BottomStatsResult.Success ->
+                is BottomStatsResult.Success -> {
+                    success = true
                     BottomStatsUiState.Loaded(buildStatItems(result.current, result.previous))
+                }
                 is BottomStatsResult.Error -> BottomStatsUiState.Hidden
             }
         } catch (e: CancellationException) {
@@ -431,16 +463,18 @@ class ViewsStatsViewModel @Inject constructor(
             BottomStatsUiState.Hidden
         }
         updateBottom(bottomState)
+        return success
     }
 
     /**
-     * Applies a chart-region update, preserving the current bottom-row state. Clears
-     * [ViewsStatsCardUiState.Content.isLoadingNewPeriod] because the chart is the primary content.
+     * Applies a chart-region update, preserving the current bottom-row state. The card-level
+     * [ViewsStatsCardUiState.Content.isLoadingNewPeriod] dim flag is intentionally left untouched here;
+     * it is cleared by [clearLoadingNewPeriod] only once both regions have finished loading.
      */
     private fun updateChart(chart: ChartUiState) {
         _uiState.update { current ->
             when (current) {
-                is ViewsStatsCardUiState.Content -> current.copy(chart = chart, isLoadingNewPeriod = false)
+                is ViewsStatsCardUiState.Content -> current.copy(chart = chart)
                 else -> ViewsStatsCardUiState.Content(chart = chart, bottomStats = BottomStatsUiState.Loading)
             }
         }
