@@ -71,7 +71,8 @@ class CommentsRsDataSourceTest {
         whenever(uniffiClient.posts()).thenReturn(postsExecutor)
         whenever(uniffiClient.comments()).thenReturn(commentsExecutor)
         commentsExecutor.stub {
-            // The payload is decided by the request-level stub below; this value is unused.
+            // Must return non-null to satisfy the mock's suspend contract; the payload each test
+            // actually sees comes from the request-level stub below.
             on { retrieveWithEditContext(any(), any()) } doReturn
                 CommentsRequestRetrieveWithEditContextResponse(editContextComment(), mock())
         }
