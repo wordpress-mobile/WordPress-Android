@@ -33,6 +33,7 @@ import org.wordpress.android.fluxc.utils.AppLogWrapper
 import java.time.LocalDate
 
 @ExperimentalCoroutinesApi
+@Suppress("LargeClass")
 class StatsRepositoryTest : BaseUnitTest() {
     @Mock
     private lateinit var statsDataSource: StatsDataSource
@@ -564,14 +565,43 @@ class StatsRepositoryTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given Last7Days, when fetchStatsForPeriod, then a dedicated bottom call is made`() = test {
+    fun `given Last7Days, when fetchStatsForPeriod, then it makes only the two chart calls`() = test {
         whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any(), anyOrNull(), anyOrNull()))
             .thenReturn(StatsVisitsDataResult.Success(createWeeklyStatsVisitsData()))
 
         repository.fetchStatsForPeriod(TEST_SITE_ID, StatsPeriod.Last7Days)
 
-        // The bottom row always comes from a dedicated call (current + previous) restricted to the
-        // bottom stat fields, even when its unit matches the chart's.
+        // The chart fetch is now independent of the bottom row: exactly the two chart calls, and no
+        // dedicated bottom calls (which carry the bottom stat fields).
+        verify(statsDataSource, times(2)).fetchStatsVisits(
+            siteId = eq(TEST_SITE_ID),
+            unit = any(),
+            quantity = any(),
+            endDate = any(),
+            startDate = anyOrNull(),
+            statFields = isNull()
+        )
+        verify(statsDataSource, times(0)).fetchStatsVisits(
+            siteId = eq(TEST_SITE_ID),
+            unit = any(),
+            quantity = any(),
+            endDate = any(),
+            startDate = anyOrNull(),
+            statFields = eq(EXPECTED_BOTTOM_STAT_FIELDS)
+        )
+    }
+    // endregion
+
+    // region fetchBottomStats
+    @Test
+    fun `given Last7Days, when fetchBottomStats, then a dedicated bottom call is made`() = test {
+        whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any(), anyOrNull(), anyOrNull()))
+            .thenReturn(StatsVisitsDataResult.Success(createWeeklyStatsVisitsData()))
+
+        repository.fetchBottomStats(TEST_SITE_ID, StatsPeriod.Last7Days)
+
+        // The bottom row comes from a dedicated call (current + previous) restricted to the bottom
+        // stat fields, even when its unit matches the chart's.
         verify(statsDataSource, times(2)).fetchStatsVisits(
             siteId = eq(TEST_SITE_ID),
             unit = any(),
@@ -583,11 +613,11 @@ class StatsRepositoryTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given Today, when fetchStatsForPeriod, then dedicated bottom call uses DAY unit and stat fields`() = test {
+    fun `given Today, when fetchBottomStats, then dedicated bottom call uses DAY unit and stat fields`() = test {
         whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any(), anyOrNull(), anyOrNull()))
             .thenReturn(StatsVisitsDataResult.Success(createStatsVisitsData()))
 
-        repository.fetchStatsForPeriod(TEST_SITE_ID, StatsPeriod.Today)
+        repository.fetchBottomStats(TEST_SITE_ID, StatsPeriod.Today)
 
         // Today's chart is hourly, so the bottom row uses a dedicated daily call (current + previous)
         // restricted to the bottom stat fields.
@@ -602,7 +632,7 @@ class StatsRepositoryTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given custom range over two years, when fetchStatsForPeriod, then bottom call uses YEAR unit`() = test {
+    fun `given custom range over two years, when fetchBottomStats, then bottom call uses YEAR unit`() = test {
         whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any(), anyOrNull(), anyOrNull()))
             .thenReturn(StatsVisitsDataResult.Success(createWeeklyStatsVisitsData()))
 
@@ -610,7 +640,7 @@ class StatsRepositoryTest : BaseUnitTest() {
             startDate = LocalDate.of(2022, 1, 1),
             endDate = LocalDate.of(2025, 1, 1)
         )
-        repository.fetchStatsForPeriod(TEST_SITE_ID, customPeriod)
+        repository.fetchBottomStats(TEST_SITE_ID, customPeriod)
 
         // Beyond two years the chart uses MONTH, so the bottom row uses a dedicated yearly call.
         verify(statsDataSource, times(2)).fetchStatsVisits(
@@ -621,6 +651,57 @@ class StatsRepositoryTest : BaseUnitTest() {
             startDate = anyOrNull(),
             statFields = eq(EXPECTED_BOTTOM_STAT_FIELDS)
         )
+    }
+
+    @Test
+    fun `given successful response, when fetchBottomStats, then totals are summed`() = test {
+        whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any(), anyOrNull(), anyOrNull()))
+            .thenReturn(StatsVisitsDataResult.Success(createWeeklyStatsVisitsData()))
+
+        val result = repository.fetchBottomStats(TEST_SITE_ID, StatsPeriod.Last7Days)
+
+        assertThat(result).isInstanceOf(BottomStatsResult.Success::class.java)
+        val success = result as BottomStatsResult.Success
+        assertThat(success.current.views).isEqualTo(TEST_VIEWS_1 + TEST_VIEWS_2)
+        assertThat(success.previous.views).isEqualTo(TEST_VIEWS_1 + TEST_VIEWS_2)
+    }
+
+    @Test
+    fun `given empty but successful response, when fetchBottomStats, then a zero-valued row is returned`() = test {
+        whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any(), anyOrNull(), anyOrNull()))
+            .thenReturn(StatsVisitsDataResult.Success(createEmptyStatsVisitsData()))
+
+        val result = repository.fetchBottomStats(TEST_SITE_ID, StatsPeriod.Last7Days)
+
+        // A genuine zero-traffic period shows zeros rather than hiding the row.
+        assertThat(result).isInstanceOf(BottomStatsResult.Success::class.java)
+        val success = result as BottomStatsResult.Success
+        assertThat(success.current.views).isEqualTo(0L)
+        assertThat(success.previous.views).isEqualTo(0L)
+    }
+
+    @Test
+    fun `given error response, when fetchBottomStats, then error is returned so the row is hidden`() = test {
+        whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any(), anyOrNull(), anyOrNull()))
+            .thenReturn(StatsVisitsDataResult.Error(TEST_ERROR_TYPE))
+
+        val result = repository.fetchBottomStats(TEST_SITE_ID, StatsPeriod.Last7Days)
+
+        assertThat(result).isEqualTo(BottomStatsResult.Error)
+    }
+
+    @Test
+    fun `given only the previous call errors, when fetchBottomStats, then error is returned`() = test {
+        whenever(
+            statsDataSource.fetchStatsVisits(any(), any(), any(), any(), anyOrNull(), eq(EXPECTED_BOTTOM_STAT_FIELDS))
+        )
+            .thenReturn(StatsVisitsDataResult.Success(createWeeklyStatsVisitsData()))
+            .thenReturn(StatsVisitsDataResult.Error(TEST_ERROR_TYPE))
+
+        val result = repository.fetchBottomStats(TEST_SITE_ID, StatsPeriod.Last7Days)
+
+        // The current and previous windows must both succeed; if either errors the row is hidden.
+        assertThat(result).isEqualTo(BottomStatsResult.Error)
     }
     // endregion
 
