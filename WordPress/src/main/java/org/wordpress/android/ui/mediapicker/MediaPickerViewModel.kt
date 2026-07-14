@@ -542,6 +542,13 @@ class MediaPickerViewModel @Inject constructor(
                             MimeTypes().getAudioTypesOnly(mediaUtilsWrapper.getSitePlanForMimeTypes(site))
                         )
                     }
+                    listOf(AUDIO, DOCUMENT).containsAll(allowedTypes) -> {
+                        val plan = mediaUtilsWrapper.getSitePlanForMimeTypes(site)
+                        Pair(
+                            ChooserContext.MEDIA_FILE,
+                            MimeTypes().getAudioTypesOnly(plan) + MimeTypes().getDocumentTypesOnly(plan)
+                        )
+                    }
                     else -> {
                         Pair(
                             ChooserContext.MEDIA_FILE,
@@ -549,7 +556,7 @@ class MediaPickerViewModel @Inject constructor(
                         )
                     }
                 }
-                OpenSystemPicker(context, types.toList(), canMultiselect)
+                OpenSystemPicker(context, types.toList(), canMultiselect, allowedTypes)
             }
             is CapturePhoto -> OpenCameraForPhotos
             is SwitchSource -> {
@@ -604,6 +611,15 @@ class MediaPickerViewModel @Inject constructor(
             BrowseAction.SYSTEM_PICKER -> ChooseFromAndroidDevice(mediaPickerSetup.allowedTypes)
         }
         clickIcon(icon)
+    }
+
+    /**
+     * Re-triggers the system picker with a narrowed set of allowed types. Used when the user picks
+     * a category (e.g. "Photos and videos" vs "Other files") from the disambiguation menu shown for
+     * flows that allow both visual and non-visual media.
+     */
+    fun onSystemPickerTypeChosen(allowedTypes: Set<MediaType>) {
+        clickIcon(ChooseFromAndroidDevice(allowedTypes))
     }
 
     private fun getRequiredPermissionsNames(): String {

@@ -7,6 +7,8 @@ import android.net.Uri
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.MenuItem
+import android.view.View
+import androidx.appcompat.widget.PopupMenu
 import androidx.fragment.app.FragmentTransaction
 import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
@@ -248,6 +250,31 @@ class MediaPickerActivity : BaseAppCompatActivity(), MediaPickerListener {
         WPMediaUtils.launchChooserWithContext(this, openSystemPicker, uiHelpers, MEDIA_LIBRARY)
     }
 
+    // The selection allows both visual media (images/videos) and non-visual files (audio/documents).
+    // Android's Photo Picker only surfaces visual media, so we ask the user which kind they want
+    // before deciding whether to open the Photo Picker or the document/file chooser.
+    private fun Set<MediaType>.isAmbiguousMediaAndFileSelection(): Boolean {
+        val hasVisualMedia = any { it == MediaType.IMAGE || it == MediaType.VIDEO }
+        val hasOtherFiles = any { it == MediaType.AUDIO || it == MediaType.DOCUMENT }
+        return hasVisualMedia && hasOtherFiles
+    }
+
+    private fun showSystemPickerTypeMenu() {
+        // Anchor to the "Choose from device" action-bar item so the menu appears attached to it;
+        // fall back to the toolbar if the item is currently in the overflow and has no own view.
+        val anchor = findViewById<View>(R.id.mnu_browse_item) ?: findViewById(R.id.toolbar_main)
+        val popup = PopupMenu(this, anchor)
+        popup.menu.add(R.string.photo_picker_choose_photo_or_video).setOnMenuItemClickListener {
+            pickerFragment?.onSystemPickerTypeChosen(setOf(MediaType.IMAGE, MediaType.VIDEO))
+            true
+        }
+        popup.menu.add(R.string.photo_picker_choose_other_files).setOnMenuItemClickListener {
+            pickerFragment?.onSystemPickerTypeChosen(setOf(MediaType.AUDIO, MediaType.DOCUMENT))
+            true
+        }
+        popup.show()
+    }
+
     private fun Intent.putUris(
         mediaUris: List<Uri>
     ) {
@@ -309,7 +336,11 @@ class MediaPickerActivity : BaseAppCompatActivity(), MediaPickerListener {
     override fun onIconClicked(action: MediaPickerAction) {
         when (action) {
             is OpenSystemPicker -> {
-                launchChooserWithContext(action, uiHelpers)
+                if (action.allowedTypes.isAmbiguousMediaAndFileSelection()) {
+                    showSystemPickerTypeMenu()
+                } else {
+                    launchChooserWithContext(action, uiHelpers)
+                }
             }
             is SwitchMediaPicker -> {
                 startActivityForResult(buildIntent(this, action.mediaPickerSetup, site, localPostId), PHOTO_PICKER)

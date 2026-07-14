@@ -111,7 +111,8 @@ class MediaPickerFragment : Fragment(), MenuProvider {
         data class OpenSystemPicker(
             val chooserContext: ChooserContext,
             val mimeTypes: List<String>,
-            val allowMultipleSelection: Boolean
+            val allowMultipleSelection: Boolean,
+            val allowedTypes: Set<MediaType> = emptySet()
         ) : MediaPickerAction()
 
         object OpenCameraForPhotos : MediaPickerAction()
@@ -400,6 +401,10 @@ class MediaPickerFragment : Fragment(), MenuProvider {
 
     fun urisSelectedFromSystemPicker(uris: List<Uri>) {
         viewModel.urisSelectedFromSystemPicker(uris.map { UriWrapper(it) })
+    }
+
+    fun onSystemPickerTypeChosen(allowedTypes: Set<MediaType>) {
+        viewModel.onSystemPickerTypeChosen(allowedTypes)
     }
 
     private fun initializeSearchView(actionMenuItem: MenuItem) {
