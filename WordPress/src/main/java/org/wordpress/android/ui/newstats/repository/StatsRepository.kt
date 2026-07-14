@@ -47,6 +47,10 @@ import javax.inject.Named
 import kotlin.coroutines.cancellation.CancellationException
 
 private const val HOURLY_QUANTITY = 24
+// Hourly queries end at an exact hour. "<day> 23:00:00" makes the 24-hour window cover that calendar
+// day's 00:00–23:00 buckets; a date-only value (00:00) shifts the window back an hour and drops the
+// day's 00:00 bucket.
+private const val HOURLY_END_TIME = "23:00:00"
 private const val DAILY_QUANTITY = 1
 private const val WEEKLY_QUANTITY = 7
 private const val DAYS_BEFORE_END_DATE = -6
@@ -364,8 +368,8 @@ class StatsRepository @Inject constructor(
     ): PeriodStatsResult = withContext(ioDispatcher) {
         val periodRange = calculatePeriodDates(period)
 
-        val currentEndString = periodRange.currentEnd.format(dateFormatter)
-        val previousEndString = periodRange.previousEnd.format(dateFormatter)
+        val currentEndString = formatApiEndDate(periodRange.currentEnd, periodRange.unit)
+        val previousEndString = formatApiEndDate(periodRange.previousEnd, periodRange.unit)
 
         // Fetch the current and previous chart periods in parallel
         val (currentResult, previousResult) = coroutineScope {
@@ -395,6 +399,16 @@ class StatsRepository @Inject constructor(
         } else {
             buildPeriodStatsError(currentResult, previousResult)
         }
+    }
+
+    /**
+     * Formats the API `date` (window end) for [date] at [unit]. Hourly windows end at an exact hour
+     * ("<day> 23:00:00") so the 24 buckets cover that calendar day's 00:00–23:00; all coarser units use
+     * the plain date. See [HOURLY_END_TIME].
+     */
+    private fun formatApiEndDate(date: LocalDate, unit: StatsUnit): String {
+        val dateString = date.format(dateFormatter)
+        return if (unit == StatsUnit.HOUR) "$dateString $HOURLY_END_TIME" else dateString
     }
 
     /**
@@ -661,7 +675,7 @@ class StatsRepository @Inject constructor(
      * current window is never derived from two different code paths.
      *
      * Note: [calculatePeriodDates] handles the hourly cases (Today and single-day Custom) separately
-     * before reaching here, so those apply their own exclusive-end offset on top of this window.
+     * before reaching here, so those build their own window ending at "<day> 23:00:00".
      */
     private fun currentPeriodWindow(period: StatsPeriod): Pair<LocalDate, LocalDate> {
         val today = LocalDate.now()
@@ -691,18 +705,18 @@ class StatsRepository @Inject constructor(
     }
 
     /**
-     * Calculates period dates for TODAY (hourly data).
-     * The API's endDate is exclusive for hourly queries, so we use tomorrow as end date for today's hours.
+     * Calculates period dates for TODAY (hourly data). The hourly window ends at the day itself
+     * ([formatApiEndDate] appends "23:00:00"), so the 24 buckets cover today's 00:00–23:00 and the
+     * previous window covers yesterday's — matching the day-level totals shown in the bottom row.
      */
     private fun calculateTodayPeriodDates(): PeriodDateRange {
         val today = LocalDate.now()
-        val tomorrow = today.plusDays(1)
         val yesterday = today.minusDays(1)
         return PeriodDateRange(
             currentStart = today,
-            currentEnd = tomorrow,
+            currentEnd = today,
             previousStart = yesterday,
-            previousEnd = today,
+            previousEnd = yesterday,
             quantity = HOURLY_QUANTITY,
             unit = StatsUnit.HOUR,
             currentDisplayDate = today,
@@ -713,14 +727,15 @@ class StatsRepository @Inject constructor(
     private fun calculateCustomPeriodDates(startDate: LocalDate, endDate: LocalDate): PeriodDateRange {
         val daysBetween = ChronoUnit.DAYS.between(startDate, endDate).toInt() + 1
 
-        // Single day → hourly granularity (like Today)
+        // Single day → hourly granularity (like Today). The hourly window ends at the day itself
+        // ([formatApiEndDate] appends "23:00:00"), so the 24 buckets cover that day's 00:00–23:00.
         if (daysBetween == 1) {
             val previousDate = startDate.minusDays(1)
             return PeriodDateRange(
                 currentStart = startDate,
-                currentEnd = startDate.plusDays(1),
+                currentEnd = startDate,
                 previousStart = previousDate,
-                previousEnd = startDate,
+                previousEnd = previousDate,
                 quantity = HOURLY_QUANTITY,
                 unit = StatsUnit.HOUR,
                 currentDisplayDate = startDate,

@@ -487,6 +487,36 @@ class StatsRepositoryTest : BaseUnitTest() {
         }
 
     @Test
+    fun `given Today, when fetchStatsForPeriod, then hourly window ends at 23-00-00 of the calendar day`() = test {
+        whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any(), anyOrNull(), anyOrNull()))
+            .thenReturn(StatsVisitsDataResult.Success(createHourlyStatsVisitsData()))
+
+        repository.fetchStatsForPeriod(TEST_SITE_ID, StatsPeriod.Today)
+
+        val today = LocalDate.now()
+        val yesterday = today.minusDays(1)
+        // The hourly window must end at "<day> 23:00:00" so its 24 buckets cover 00:00–23:00 of that
+        // calendar day. Using the next day at 00:00 shifted the window an hour, dropping the day's
+        // 00:00 bucket and making the chart total under-count vs the day-level bottom row.
+        verify(statsDataSource).fetchStatsVisits(
+            siteId = eq(TEST_SITE_ID),
+            unit = eq(StatsUnit.HOUR),
+            quantity = eq(24),
+            endDate = eq("$today 23:00:00"),
+            startDate = anyOrNull(),
+            statFields = anyOrNull()
+        )
+        verify(statsDataSource).fetchStatsVisits(
+            siteId = eq(TEST_SITE_ID),
+            unit = eq(StatsUnit.HOUR),
+            quantity = eq(24),
+            endDate = eq("$yesterday 23:00:00"),
+            startDate = anyOrNull(),
+            statFields = anyOrNull()
+        )
+    }
+
+    @Test
     fun `given error response, when fetchStatsForPeriod is called, then error result is returned`() = test {
         whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any(), anyOrNull(), anyOrNull()))
             .thenReturn(StatsVisitsDataResult.Error(TEST_ERROR_TYPE))
