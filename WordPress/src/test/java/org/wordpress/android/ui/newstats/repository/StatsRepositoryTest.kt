@@ -577,6 +577,30 @@ class StatsRepositoryTest : BaseUnitTest() {
         }
 
     @Test
+    fun `given custom period over two years, when fetchStatsForPeriod, then chart uses YEAR unit`() =
+        test {
+            whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any(), anyOrNull(), anyOrNull()))
+                .thenReturn(StatsVisitsDataResult.Success(createWeeklyStatsVisitsData()))
+
+            val customPeriod = StatsPeriod.Custom(
+                startDate = LocalDate.of(2022, 1, 1),
+                endDate = LocalDate.of(2025, 1, 1)
+            )
+            repository.fetchStatsForPeriod(TEST_SITE_ID, customPeriod)
+
+            // Beyond two years the chart coarsens to YEAR — the same unit the bottom-row totals use —
+            // so the header's Views and the bottom row's Views (and their visitor de-dup) always agree.
+            verify(statsDataSource, times(2)).fetchStatsVisits(
+                siteId = eq(TEST_SITE_ID),
+                unit = eq(StatsUnit.YEAR),
+                quantity = argThat { this > 0 },
+                endDate = any(),
+                startDate = anyOrNull(),
+                statFields = eq(EXPECTED_CARD_STAT_FIELDS)
+            )
+        }
+
+    @Test
     fun `given parallel fetch, when fetchStatsForPeriod is called, then both periods are fetched`() = test {
         whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any(), anyOrNull(), anyOrNull()))
             .thenReturn(StatsVisitsDataResult.Success(createWeeklyStatsVisitsData()))

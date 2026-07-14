@@ -618,9 +618,9 @@ class StatsRepository @Inject constructor(
     /**
      * Chooses the API [StatsUnit] and its quantity for the inclusive real-calendar [start]..[end]
      * window, coarsening the bucket as the span grows: day up to a full month, month up to two years,
-     * and — only when [allowYear] is set (bottom-row totals) — year beyond that. Shared by the bottom-row
-     * range and the custom-period chart window so the day/month threshold and the `MONTHS.between + 1`
-     * quantity live in one place.
+     * and — only when [allowYear] is set — year beyond that. Shared by the bottom-row range and the
+     * custom-period chart window (both pass `allowYear = true`) so the thresholds and the
+     * `MONTHS.between + 1` quantity live in one place and the two always agree.
      */
     private fun unitAndQuantityFor(start: LocalDate, end: LocalDate, allowYear: Boolean): Pair<StatsUnit, Int> {
         val daysBetween = ChronoUnit.DAYS.between(start, end).toInt() + 1
@@ -749,9 +749,11 @@ class StatsRepository @Inject constructor(
             )
         }
 
-        // Daily up to a full month (31 days), monthly beyond that. The chart never coarsens to the
-        // YEAR bucket, so year granularity is disabled here (unlike the bottom-row totals).
-        val (unit, quantity) = unitAndQuantityFor(startDate, endDate, allowYear = false)
+        // Daily up to a full month (31 days), monthly up to two years, yearly beyond. Coarsening the
+        // chart to YEAR past two years (the same rule the bottom-row totals use) keeps the chart and
+        // the bottom row on one unit, so the header's Views and the bottom row's Views — and their
+        // visitor de-duplication — always agree for long Custom ranges.
+        val (unit, quantity) = unitAndQuantityFor(startDate, endDate, allowYear = true)
         val (previousStart, previousEnd) = previousWindowMirror(startDate, endDate)
 
         return PeriodDateRange(
