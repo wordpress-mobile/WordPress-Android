@@ -43,6 +43,9 @@ platform :android do
   desc 'Gather promotable beta candidates and open the promotion block step'
   lane :gather_beta_candidates do
     ensure_promotion_on_trunk!
+    # Fail loudly up front if Slack isn't configured: every step here reports to Slack, and
+    # notify_slack otherwise swallows a missing SLACK_WEBHOOK as if it were a transient hiccup.
+    get_required_env('SLACK_WEBHOOK')
 
     candidates = beta_promotion_candidates
 
@@ -71,6 +74,8 @@ platform :android do
     # Set once the per-app result has been posted, so the rescue doesn't double-report it.
     result_posted = false
     ensure_promotion_on_trunk!
+    # Fail loudly up front if Slack isn't configured (see gather_beta_candidates).
+    get_required_env('SLACK_WEBHOOK')
 
     version_code = version_code.to_s.strip
     UI.user_error!('`version_code` is required, e.g. `version_code:269027172`') if version_code.empty?
