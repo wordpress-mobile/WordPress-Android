@@ -390,12 +390,17 @@ class ViewsStatsViewModel @Inject constructor(
     private suspend fun loadDataInternal(site: SiteModel) {
         val targetPeriod = currentPeriod
         try {
-            val loaded = if (isSingleDayPeriod(targetPeriod)) {
-                // Single-day periods (Today, single-day Custom) render an HOURLY chart, and the hourly
-                // API response only populates `views` — visitors/likes/comments/posts come back null.
-                // So the bottom row cannot be derived from the chart data; it is fetched from a
-                // dedicated day-level call (run in parallel with the chart), the same way the web app
-                // does it. These periods therefore still issue the chart + bottom calls separately.
+            val loaded = if (fillsBottomFromChart(targetPeriod)) {
+                // Fixed periods use a daily/monthly chart whose response already carries all five
+                // bottom-row metrics per bucket, so the bottom row is filled from that same fetch. This
+                // makes the card issue 2 network calls instead of 4.
+                loadChart(site, fillBottomFromChart = true)
+            } else {
+                // Today and Custom fetch the bottom row from a dedicated call (run in parallel with the
+                // chart), the same way the web app does it. Today's chart is hourly and its response
+                // only populates `views`; a Custom range can span beyond two years, where the bottom
+                // row needs coarser (yearly) visitor de-duplication than the chart's monthly buckets
+                // give. Either way the chart response can't fill the row, so these issue both calls.
                 coroutineScope {
                     val chart = async { loadChart(site, fillBottomFromChart = false) }
                     val bottom = async { loadBottomStats(site) }
@@ -403,11 +408,6 @@ class ViewsStatsViewModel @Inject constructor(
                     val bottomLoaded = bottom.await()
                     chartLoaded && bottomLoaded
                 }
-            } else {
-                // Every other period uses a daily/monthly chart whose response already carries all five
-                // bottom-row metrics per bucket, so the bottom row is filled from that same fetch. This
-                // makes the card issue 2 network calls instead of 4.
-                loadChart(site, fillBottomFromChart = true)
             }
             // Treat the period as loaded only when everything shown succeeded; otherwise a transient
             // failure would leave loadedPeriod set and make loadDataIfNeeded short-circuit forever.
@@ -439,7 +439,7 @@ class ViewsStatsViewModel @Inject constructor(
     /**
      * Loads the chart for [currentPeriod]. When [fillBottomFromChart] is true the bottom row is filled
      * from the same response (its per-bucket data already carries all five metrics); when false the
-     * bottom row is left untouched here because a dedicated call populates it (single-day periods).
+     * bottom row is left untouched here because a dedicated call populates it (Today and Custom).
      */
     @Suppress("TooGenericExceptionCaught")
     private suspend fun loadChart(site: SiteModel, fillBottomFromChart: Boolean): Boolean {
@@ -470,19 +470,24 @@ class ViewsStatsViewModel @Inject constructor(
     }
 
     /**
-     * Single-day periods (Today, single-day Custom) render an hourly chart whose response only carries
-     * `views` — the other bottom-row metrics come back null — so their bottom row must come from a
-     * dedicated day-level call instead of the chart's own data.
+     * Whether the bottom row can be filled from the chart's own response. True for the fixed periods
+     * (Last7Days/Last30Days/Last6Months/Last12Months), whose chart bucket already matches the unit the
+     * bottom row needs and whose response carries all five metrics. False for Today (hourly chart →
+     * only `views`) and Custom (a range beyond two years needs yearly visitor de-duplication the
+     * monthly chart can't give); those fetch the bottom row from a dedicated call instead.
      */
-    private fun isSingleDayPeriod(period: StatsPeriod): Boolean = when (period) {
-        is StatsPeriod.Today -> true
-        is StatsPeriod.Custom -> period.startDate == period.endDate
-        else -> false
+    private fun fillsBottomFromChart(period: StatsPeriod): Boolean = when (period) {
+        is StatsPeriod.Last7Days,
+        is StatsPeriod.Last30Days,
+        is StatsPeriod.Last6Months,
+        is StatsPeriod.Last12Months -> true
+        is StatsPeriod.Today,
+        is StatsPeriod.Custom -> false
     }
 
     /**
-     * Maps the chart's period aggregates (which already carry all five metrics for non-single-day
-     * periods) into the bottom-row stat items, so no dedicated bottom-stats call is needed.
+     * Maps the chart's period aggregates (which already carry all five metrics for the fixed periods)
+     * into the bottom-row stat items, so no dedicated bottom-stats call is needed.
      */
     private fun PeriodStatsResult.Success.toBottomStatItems(): List<StatItem> = buildStatItems(
         BottomStatsAggregates(
@@ -501,7 +506,7 @@ class ViewsStatsViewModel @Inject constructor(
         )
     )
 
-    /** Fetches the bottom row from a dedicated call. Used only for single-day (hourly-chart) periods. */
+    /** Fetches the bottom row from a dedicated call. Used for Today and Custom (see [fillsBottomFromChart]). */
     @Suppress("TooGenericExceptionCaught")
     private suspend fun loadBottomStats(site: SiteModel): Boolean {
         var success = false

@@ -618,20 +618,21 @@ class StatsRepositoryTest : BaseUnitTest() {
 
     // region fetchBottomStats
     @Test
-    fun `given Last7Days, when fetchBottomStats, then a dedicated bottom call is made`() = test {
+    fun `given single-day Custom, when fetchBottomStats, then a dedicated day-level call is made`() = test {
         whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any(), anyOrNull(), anyOrNull()))
-            .thenReturn(StatsVisitsDataResult.Success(createWeeklyStatsVisitsData()))
+            .thenReturn(StatsVisitsDataResult.Success(createStatsVisitsData()))
 
-        repository.fetchBottomStats(TEST_SITE_ID, StatsPeriod.Last7Days)
+        val day = LocalDate.of(2024, 3, 10)
+        repository.fetchBottomStats(TEST_SITE_ID, StatsPeriod.Custom(startDate = day, endDate = day))
 
-        // The bottom row comes from a dedicated call (current + previous) restricted to the bottom
-        // stat fields, even when its unit matches the chart's.
+        // A single-day Custom range renders an hourly chart, so its bottom row comes from a dedicated
+        // day-level call (current day + previous day) restricted to the card's stat fields.
         verify(statsDataSource, times(2)).fetchStatsVisits(
             siteId = eq(TEST_SITE_ID),
-            unit = any(),
-            quantity = any(),
+            unit = eq(StatsUnit.DAY),
+            quantity = eq(1),
             endDate = any(),
-            startDate = anyOrNull(),
+            startDate = isNull(),
             statFields = eq(EXPECTED_CARD_STAT_FIELDS)
         )
     }
@@ -666,36 +667,44 @@ class StatsRepositoryTest : BaseUnitTest() {
         )
         repository.fetchBottomStats(TEST_SITE_ID, customPeriod)
 
-        // Beyond two years the chart uses MONTH, so the bottom row uses a dedicated yearly call.
+        // Beyond two years the chart's monthly buckets would over-count unique visitors (a visitor
+        // active across several months counts once per month), so the bottom row uses a dedicated YEAR
+        // call to de-duplicate per year. No startDate is sent, so the first year bucket isn't truncated.
         verify(statsDataSource, times(2)).fetchStatsVisits(
             siteId = eq(TEST_SITE_ID),
             unit = eq(StatsUnit.YEAR),
             quantity = any(),
             endDate = any(),
-            startDate = anyOrNull(),
+            startDate = isNull(),
             statFields = eq(EXPECTED_CARD_STAT_FIELDS)
         )
     }
 
     @Test
-    fun `given Last12Months, when fetchBottomStats, then no startDate is sent so the first bucket is full`() = test {
-        whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any(), anyOrNull(), anyOrNull()))
-            .thenReturn(StatsVisitsDataResult.Success(createWeeklyStatsVisitsData()))
+    fun `given multi-month Custom, when fetchBottomStats, then no startDate is sent`() =
+        test {
+            whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any(), anyOrNull(), anyOrNull()))
+                .thenReturn(StatsVisitsDataResult.Success(createWeeklyStatsVisitsData()))
 
-        repository.fetchBottomStats(TEST_SITE_ID, StatsPeriod.Last12Months)
+            val customPeriod = StatsPeriod.Custom(
+                startDate = LocalDate.of(2024, 1, 1),
+                endDate = LocalDate.of(2024, 6, 30)
+            )
+            repository.fetchBottomStats(TEST_SITE_ID, customPeriod)
 
-        // A mid-bucket startDate would make the API truncate the first month bucket's views (additive)
-        // while leaving visitors (unique) at the full-month value, so the bottom row's Views would
-        // under-count and disagree with the chart header. Mirror the chart: unit + quantity + endDate.
-        verify(statsDataSource, times(2)).fetchStatsVisits(
-            siteId = eq(TEST_SITE_ID),
-            unit = eq(StatsUnit.MONTH),
-            quantity = eq(12),
-            endDate = any(),
-            startDate = isNull(),
-            statFields = eq(EXPECTED_CARD_STAT_FIELDS)
-        )
-    }
+            // A mid-bucket startDate would make the API truncate the first month bucket's views
+            // (additive) while leaving visitors (unique) at the full-month value, so the bottom row's
+            // Views would under-count and disagree with the chart header. Mirror the chart: no
+            // startDate, just unit + quantity + endDate.
+            verify(statsDataSource, times(2)).fetchStatsVisits(
+                siteId = eq(TEST_SITE_ID),
+                unit = eq(StatsUnit.MONTH),
+                quantity = eq(6),
+                endDate = any(),
+                startDate = isNull(),
+                statFields = eq(EXPECTED_CARD_STAT_FIELDS)
+            )
+        }
 
     @Test
     fun `given successful response, when fetchBottomStats, then totals are summed`() = test {

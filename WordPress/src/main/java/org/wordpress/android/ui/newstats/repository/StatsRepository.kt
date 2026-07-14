@@ -596,27 +596,22 @@ class StatsRepository @Inject constructor(
     private data class PeriodConfig(val quantity: Int, val unit: StatsUnit, val dateUnit: DateUnit)
 
     /**
-     * Computes the date range and API unit for the bottom-row totals. Uses a coarser unit than the
-     * chart (day up to a month, month up to two years, year beyond) so the API de-duplicates visitor
-     * uniques per bucket before the totals are summed.
+     * Computes the date range and API unit for the bottom-row totals. Coarsens the unit as the span
+     * grows (day up to a month, month up to two years, year beyond) so the API de-duplicates visitor
+     * uniques per bucket before the totals are summed — notably a Custom range beyond two years
+     * de-duplicates visitors per year, which the chart's monthly buckets don't.
      *
-     * The previous-period window MUST match the chart's ([calculatePeriodDates]) so the header's Views
-     * % change (chart fetch) and the bottom row's Views % change (this fetch) never disagree on the
-     * same card. The fixed standard periods align the previous window to whole days/months, so they
-     * reuse the chart's config-based window; only Today and Custom mirror the exact day span — which
-     * matches their chart paths' Views totals.
+     * Only Today and Custom reach here: the fixed periods (Last7Days/Last30Days/Last6Months/
+     * Last12Months) reuse their chart response for the bottom row and never call this. Both remaining
+     * paths mirror the chart's exact day
+     * span for the previous window ([previousWindowMirror], exactly as [calculateTodayPeriodDates] and
+     * [calculateCustomPeriodDates] do), so the header's and the bottom row's Views % change compare
+     * against identical windows and never disagree.
      */
     private fun calculateBottomStatsRange(period: StatsPeriod): PeriodDateRange {
         val (currentStart, currentEnd) = currentPeriodWindow(period)
         val (unit, quantity) = unitAndQuantityFor(currentStart, currentEnd, allowYear = true)
-        val (previousStart, previousEnd) = when (period) {
-            is StatsPeriod.Last7Days,
-            is StatsPeriod.Last30Days,
-            is StatsPeriod.Last6Months,
-            is StatsPeriod.Last12Months -> previousWindowForConfig(currentStart, getPeriodConfig(period))
-            is StatsPeriod.Today,
-            is StatsPeriod.Custom -> previousWindowMirror(currentStart, currentEnd)
-        }
+        val (previousStart, previousEnd) = previousWindowMirror(currentStart, currentEnd)
         return PeriodDateRange(currentStart, currentEnd, previousStart, previousEnd, quantity, unit)
     }
 

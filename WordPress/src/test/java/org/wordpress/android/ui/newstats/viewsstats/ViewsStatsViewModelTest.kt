@@ -83,8 +83,8 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
     private suspend fun initViewModel(periodType: String? = null) {
         whenever(cardsConfigurationRepository.getConfiguration(any()))
             .thenReturn(StatsCardsConfiguration())
-        // Default period is Last7Days (a multi-day period). Pass "today" to exercise the single-day
-        // path, which fetches the bottom row from a dedicated call rather than the chart's response.
+        // Default period is Last7Days (a fixed period that fills the bottom row from the chart). Pass
+        // "today" to exercise the dedicated-bottom-call path (also used by Custom periods).
         val savedState = periodType?.let { SavedStateHandle(mapOf("period_type" to it)) } ?: SavedStateHandle()
         viewModel = ViewsStatsViewModel(
             selectedSiteRepository,
@@ -268,8 +268,9 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `when a multi-day period loads, then the bottom row is built from the chart response`() = test {
-        // Multi-day periods fill the bottom row from the chart's own call (no dedicated bottom fetch).
+    fun `when a fixed period loads, then the bottom row is built from the chart response`() = test {
+        // Fixed periods (default: Last7Days) fill the bottom row from the chart's own call — no
+        // dedicated bottom fetch.
         whenever(statsRepository.fetchStatsForPeriod(any(), any()))
             .thenReturn(createPeriodStatsResult())
 
@@ -285,8 +286,8 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `when a multi-day chart fetch fails, then both the chart and the bottom row are hidden`() = test {
-        // Multi-day periods source the bottom row from the chart, so a chart failure hides both.
+    fun `when a fixed-period chart fetch fails, then both the chart and the bottom row are hidden`() = test {
+        // Fixed periods source the bottom row from the chart, so a chart failure hides both.
         whenever(statsRepository.fetchStatsForPeriod(any(), any()))
             .thenReturn(PeriodStatsResult.Error("Network error"))
 
@@ -354,7 +355,7 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
 
     @Test
     fun `when stat increases, then positive change is calculated`() = test {
-        // The multi-day bottom row comes from the chart aggregates, so drive the change via them.
+        // For fixed periods the bottom row comes from the chart aggregates, so drive the change via them.
         whenever(statsRepository.fetchStatsForPeriod(any(), any()))
             .thenReturn(createPeriodStatsResult(currentViews = 1000L, previousViews = 800L))
 
@@ -461,6 +462,9 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
 
         whenever(statsRepository.fetchStatsForPeriod(any(), any()))
             .thenReturn(result)
+        // Custom periods fetch the bottom row from a dedicated call.
+        whenever(statsRepository.fetchBottomStats(any(), any()))
+            .thenReturn(createBottomStatsResult())
 
         initViewModel()
         advanceUntilIdle()
@@ -489,7 +493,7 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
     fun `when loadDataIfNeeded is called multiple times, then data is only loaded once`() = test {
         val result = createPeriodStatsResult()
 
-        // Multi-day: the chart call succeeds and fills the bottom row, so the period is fully loaded
+        // Fixed period: the chart call succeeds and fills the bottom row, so the period is fully loaded
         // and subsequent loadDataIfNeeded calls short-circuit.
         whenever(statsRepository.fetchStatsForPeriod(any(), any()))
             .thenReturn(result)
@@ -623,6 +627,9 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
         )
         whenever(statsRepository.fetchStatsForPeriod(any(), any()))
             .thenReturn(result)
+        // Drilling into a month yields a Custom period, which fetches the bottom row via a dedicated call.
+        whenever(statsRepository.fetchBottomStats(any(), any()))
+            .thenReturn(createBottomStatsResult())
 
         initViewModel()
         advanceUntilIdle()
@@ -736,6 +743,9 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
         )
         whenever(statsRepository.fetchStatsForPeriod(any(), any()))
             .thenReturn(result)
+        // Custom periods fetch the bottom row from a dedicated call.
+        whenever(statsRepository.fetchBottomStats(any(), any()))
+            .thenReturn(createBottomStatsResult())
 
         initViewModel()
         advanceUntilIdle()
