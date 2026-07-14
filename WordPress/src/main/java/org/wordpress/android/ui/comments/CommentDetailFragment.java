@@ -675,6 +675,10 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
         if (!isAdded()) {
             return;
         }
+        // The editor loads and saves the comment over the network, so don't open it offline.
+        if (!NetworkUtils.checkConnection(getActivity())) {
+            return;
+        }
         if (mCommentSource != null) {
             AnalyticsUtils.trackCommentActionWithSiteDetails(
                     Stat.COMMENT_EDITOR_OPENED,

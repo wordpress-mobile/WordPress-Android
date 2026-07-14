@@ -605,6 +605,10 @@ class ReaderCommentListActivity : BaseAppCompatActivity(),
         comment: ReaderComment,
         postSite: SiteModel
     ) {
+        // The editor loads and saves the comment over the network, so don't open it offline.
+        if (!NetworkUtils.checkConnection(this)) {
+            return
+        }
         val intent = createIntent(
             this,
             ReaderCommentIdentifier(comment.blogId, comment.postId, comment.commentId),
