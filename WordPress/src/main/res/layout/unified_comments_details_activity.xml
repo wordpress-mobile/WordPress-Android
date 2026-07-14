@@ -18,8 +18,8 @@
             app:theme="@style/WordPress.ActionBar" />
     </com.google.android.material.appbar.AppBarLayout>
 
-    <FrameLayout
-        android:id="@+id/fragment_container"
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/comments_pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />

@@ -78,6 +78,7 @@ class CommentsRsListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
         dateTimeUtilsWrapper = dateTimeUtilsWrapper,
         avatarUtilsWrapper = avatarUtilsWrapper,
         analyticsTracker = analyticsTracker,
+        commentBrowsingSession = CommentBrowsingSession(commentsRsDataSource),
         bgDispatcher = testDispatcher()
     ).also { activeViewModel = it }
 
