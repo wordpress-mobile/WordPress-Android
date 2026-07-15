@@ -185,6 +185,36 @@ class StatsRepositoryTest : BaseUnitTest() {
             statFields = anyOrNull()
         )
     }
+
+    @Test
+    fun `given offsetDays, when fetchHourlyViews, then the window ends at 23-00-00 of that calendar day`() = test {
+        whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any(), anyOrNull(), anyOrNull()))
+            .thenReturn(StatsVisitsDataResult.Success(createHourlyStatsVisitsData()))
+
+        repository.fetchHourlyViews(TEST_SITE_ID, offsetDays = 0)
+        repository.fetchHourlyViews(TEST_SITE_ID, offsetDays = 1)
+
+        // The 24 hourly buckets must cover 00:00–23:00 of the requested day. Passing the *next* day's
+        // date ended the window at 00:00, shifting it back an hour: the day's own 00:00 bucket was
+        // dropped in favour of the following day's.
+        val today = LocalDate.now()
+        verify(statsDataSource).fetchStatsVisits(
+            siteId = eq(TEST_SITE_ID),
+            unit = eq(StatsUnit.HOUR),
+            quantity = eq(24),
+            endDate = eq("$today 23:00:00"),
+            startDate = anyOrNull(),
+            statFields = anyOrNull()
+        )
+        verify(statsDataSource).fetchStatsVisits(
+            siteId = eq(TEST_SITE_ID),
+            unit = eq(StatsUnit.HOUR),
+            quantity = eq(24),
+            endDate = eq("${today.minusDays(1)} 23:00:00"),
+            startDate = anyOrNull(),
+            statFields = anyOrNull()
+        )
+    }
     // endregion
 
     // region fetchWeeklyStats
@@ -577,6 +607,55 @@ class StatsRepositoryTest : BaseUnitTest() {
         }
 
     @Test
+    fun `given custom period ending early in the month, when fetchStatsForPeriod, then every month is fetched`() =
+        test {
+            whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any(), anyOrNull(), anyOrNull()))
+                .thenReturn(StatsVisitsDataResult.Success(createWeeklyStatsVisitsData()))
+
+            val customPeriod = StatsPeriod.Custom(
+                startDate = LocalDate.of(2024, 1, 15),
+                endDate = LocalDate.of(2024, 3, 5)
+            )
+            repository.fetchStatsForPeriod(TEST_SITE_ID, customPeriod)
+
+            // The quantity counts the calendar months the range spans (Jan, Feb, Mar), not the whole
+            // months elapsed between its endpoints (1). The API returns `quantity` buckets ending at
+            // March, so a quantity of 2 would silently drop January from the chart and the header total.
+            verify(statsDataSource, times(2)).fetchStatsVisits(
+                siteId = eq(TEST_SITE_ID),
+                unit = eq(StatsUnit.MONTH),
+                quantity = eq(3),
+                endDate = any(),
+                startDate = anyOrNull(),
+                statFields = eq(EXPECTED_CARD_STAT_FIELDS)
+            )
+        }
+
+    @Test
+    fun `given custom period ending early in the year, when fetchStatsForPeriod, then every year is fetched`() =
+        test {
+            whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any(), anyOrNull(), anyOrNull()))
+                .thenReturn(StatsVisitsDataResult.Success(createWeeklyStatsVisitsData()))
+
+            val customPeriod = StatsPeriod.Custom(
+                startDate = LocalDate.of(2023, 12, 31),
+                endDate = LocalDate.of(2026, 1, 1)
+            )
+            repository.fetchStatsForPeriod(TEST_SITE_ID, customPeriod)
+
+            // Spans four calendar years (2023–2026) though only two whole years elapse between the
+            // endpoints; a quantity of 3 would drop 2023 entirely.
+            verify(statsDataSource, times(2)).fetchStatsVisits(
+                siteId = eq(TEST_SITE_ID),
+                unit = eq(StatsUnit.YEAR),
+                quantity = eq(4),
+                endDate = any(),
+                startDate = anyOrNull(),
+                statFields = eq(EXPECTED_CARD_STAT_FIELDS)
+            )
+        }
+
+    @Test
     fun `given custom period over two years, when fetchStatsForPeriod, then chart uses YEAR unit`() =
         test {
             whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any(), anyOrNull(), anyOrNull()))
@@ -703,6 +782,30 @@ class StatsRepositoryTest : BaseUnitTest() {
             statFields = eq(EXPECTED_CARD_STAT_FIELDS)
         )
     }
+
+    @Test
+    fun `given Custom ending early in the month, when fetchBottomStats, then every month is fetched`() =
+        test {
+            whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any(), anyOrNull(), anyOrNull()))
+                .thenReturn(StatsVisitsDataResult.Success(createWeeklyStatsVisitsData()))
+
+            val customPeriod = StatsPeriod.Custom(
+                startDate = LocalDate.of(2024, 1, 15),
+                endDate = LocalDate.of(2024, 3, 5)
+            )
+            repository.fetchBottomStats(TEST_SITE_ID, customPeriod)
+
+            // Same calendar-span rule as the chart, so the bottom row's totals cover January too and
+            // keep agreeing with the header.
+            verify(statsDataSource, times(2)).fetchStatsVisits(
+                siteId = eq(TEST_SITE_ID),
+                unit = eq(StatsUnit.MONTH),
+                quantity = eq(3),
+                endDate = any(),
+                startDate = isNull(),
+                statFields = eq(EXPECTED_CARD_STAT_FIELDS)
+            )
+        }
 
     @Test
     fun `given multi-month Custom, when fetchBottomStats, then no startDate is sent`() =

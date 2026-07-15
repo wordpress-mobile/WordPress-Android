@@ -164,6 +164,11 @@ class StatsRepository @Inject constructor(
     /**
      * Fetches hourly views data for the specified date.
      *
+     * The window ends at the target day itself ([formatApiEndDate] appends "23:00:00"), so its 24
+     * buckets cover that calendar day's 00:00–23:00. Passing the next day's date instead would end the
+     * window at 00:00, shifting it back an hour: the day's own 00:00 bucket would be dropped in favour
+     * of the following day's.
+     *
      * @param siteId The WordPress.com site ID
      * @param offsetDays Number of days to offset from today (0 = today, 1 = yesterday, etc.)
      * @return List of hourly views data points, or empty list if fetch fails
@@ -172,17 +177,13 @@ class StatsRepository @Inject constructor(
         siteId: Long,
         offsetDays: Int = 0
     ): HourlyViewsResult = withContext(ioDispatcher) {
-        // The API's endDate is exclusive for hourly queries, so we need to add 1 day to get
-        // the target day's hours. Formula: 1 (for exclusive end) - offsetDays (0=today, 1=yesterday)
-        // Examples: offsetDays=0 → tomorrow's date → fetches today's hours
-        //           offsetDays=1 → today's date → fetches yesterday's hours
-        val dateString = LocalDate.now().plusDays((1 - offsetDays).toLong()).format(dateFormatter)
+        val day = LocalDate.now().minusDays(offsetDays.toLong())
 
         val result = statsDataSource.fetchStatsVisits(
             siteId = siteId,
             unit = StatsUnit.HOUR,
             quantity = HOURLY_QUANTITY,
-            endDate = dateString
+            endDate = formatApiEndDate(day, StatsUnit.HOUR)
         )
 
         when (result) {
@@ -421,11 +422,15 @@ class StatsRepository @Inject constructor(
     }
 
     /**
-     * Fetches the bottom-row totals from a dedicated call. Used for single-day periods (Today and
-     * single-day Custom), whose chart is hourly: hourly responses only populate `views`, so the bottom
-     * row can't be derived from [fetchStatsForPeriod] and instead comes from this day-level call.
-     * (Non-hourly periods fill the bottom row straight from the chart's own [fetchStatsForPeriod]
-     * response, so they don't call this.)
+     * Fetches the bottom-row totals from a dedicated call. Used by Today and every Custom range; the
+     * fixed periods (Last7Days/Last30Days/Last6Months/Last12Months) instead fill the row straight from
+     * the chart's own [fetchStatsForPeriod] response and never call this.
+     *
+     * Single-day periods (Today, single-day Custom) genuinely need this call: their chart is hourly and
+     * an hourly response only populates `views`. Multi-day Custom ranges do not — since the custom chart
+     * window started sharing this range's unit and quantity ([unitAndQuantityFor] with `allowYear`),
+     * their two calls here duplicate the chart's own. The routing lives in the view model's
+     * `fillsBottomFromChart`.
      *
      * Returns [BottomStatsResult.Error] (the row is hidden) only when a call errors or throws; a
      * successful-but-empty response is summed to a legitimate all-zero row so a genuine zero-traffic
@@ -619,8 +624,13 @@ class StatsRepository @Inject constructor(
      * Chooses the API [StatsUnit] and its quantity for the inclusive real-calendar [start]..[end]
      * window, coarsening the bucket as the span grows: day up to a full month, month up to two years,
      * and — only when [allowYear] is set — year beyond that. Shared by the bottom-row range and the
-     * custom-period chart window (both pass `allowYear = true`) so the thresholds and the
-     * `MONTHS.between + 1` quantity live in one place and the two always agree.
+     * custom-period chart window (both pass `allowYear = true`) so the thresholds and the quantity
+     * rule live in one place and the two always agree.
+     *
+     * The quantity counts the calendar buckets the window *spans*, not the whole units elapsed
+     * between its endpoints: the API returns `quantity` buckets ending at the bucket holding the end
+     * date, so counting elapsed units drops the window's first bucket whenever the end's day-of-month
+     * falls before the start's (Jan 15..Mar 5 elapses 1 whole month but spans 3: Jan, Feb, Mar).
      */
     private fun unitAndQuantityFor(start: LocalDate, end: LocalDate, allowYear: Boolean): Pair<StatsUnit, Int> {
         val daysBetween = ChronoUnit.DAYS.between(start, end).toInt() + 1
@@ -630,8 +640,10 @@ class StatsRepository @Inject constructor(
             else -> StatsUnit.MONTH
         }
         val quantity = when (unit) {
-            StatsUnit.MONTH -> (ChronoUnit.MONTHS.between(start, end).toInt() + 1).coerceAtLeast(1)
-            StatsUnit.YEAR -> (ChronoUnit.YEARS.between(start, end).toInt() + 1).coerceAtLeast(1)
+            StatsUnit.MONTH ->
+                (ChronoUnit.MONTHS.between(start.withDayOfMonth(1), end.withDayOfMonth(1)).toInt() + 1)
+                    .coerceAtLeast(1)
+            StatsUnit.YEAR -> (end.year - start.year + 1).coerceAtLeast(1)
             else -> daysBetween
         }
         return unit to quantity
