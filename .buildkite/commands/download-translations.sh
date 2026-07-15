@@ -1,9 +1,11 @@
-#!/bin/bash -eu
+#!/usr/bin/env bash
+
+set -eu
 
 echo "--- :robot_face: Use bot for git operations"
 source use-bot-for-git
 
-echo "--- :ruby: Setup Ruby Tools"
+echo "--- :rubygems: Setting up Gems"
 install_gems
 
 echo "--- :globe_with_meridians: Download translations and open/update the PR"
