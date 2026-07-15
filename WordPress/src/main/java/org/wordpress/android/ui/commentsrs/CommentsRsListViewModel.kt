@@ -61,6 +61,7 @@ class CommentsRsListViewModel @Inject constructor(
     private val dateTimeUtilsWrapper: DateTimeUtilsWrapper,
     private val avatarUtilsWrapper: WPAvatarUtilsWrapper,
     private val analyticsTracker: AnalyticsTrackerWrapper,
+    private val commentBrowsingSession: CommentBrowsingSession,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) : ViewModel() {
     private val _tabStates = MutableStateFlow<Map<CommentsRsListTab, CommentsTabUiState>>(emptyMap())
@@ -299,7 +300,7 @@ class CommentsRsListViewModel @Inject constructor(
                     // page param) from firing unbounded unattended requests.
                     if (getTabUiState(tab).comments.size == sizeBefore &&
                         nextPageParams[tab] != null &&
-                        autoAdvanceDepth < MAX_AUTO_ADVANCE_PAGES
+                        autoAdvanceDepth < CommentBrowsingSession.MAX_AUTO_ADVANCE_PAGES
                     ) {
                         loadMoreInternal(tab, autoAdvanceDepth + 1)
                     }
@@ -324,6 +325,11 @@ class CommentsRsListViewModel @Inject constructor(
         if (_selectedIds.value.isNotEmpty()) {
             toggleSelection(remoteCommentId)
         } else {
+            // Seed the detail's swipe pager with the current tab's comments and paging cursor so
+            // it can swipe between them and keep loading more (the cursor can't cross an Intent).
+            val tab = currentTab ?: CommentsRsListTab.ALL
+            val ids = _tabStates.value[tab]?.comments?.map { it.remoteCommentId } ?: listOf(remoteCommentId)
+            commentBrowsingSession.start(site, ids, nextPageParams[tab])
             _events.trySend(CommentsRsListEvent.OpenCommentDetail(site, remoteCommentId))
         }
     }
@@ -575,10 +581,6 @@ class CommentsRsListViewModel @Inject constructor(
     }
 
     companion object {
-        // How many extra pages a single load-more may fetch unattended when applied pages
-        // add no rows, before waiting for the next user scroll.
-        private const val MAX_AUTO_ADVANCE_PAGES = 3
-
         // Same property key as the legacy list's tracking (UnifiedCommentsActivity).
         private const val SELECTED_FILTER_PROPERTY = "selected_filter"
 

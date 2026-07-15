@@ -217,6 +217,9 @@ public class AppPrefs {
         SITE_SUPPORTS_EDITOR_SETTINGS,
         SITE_SUPPORTS_EDITOR_ASSETS,
         SITE_THEME_IS_BLOCK_THEME,
+        // Timestamp (millis) of the last time we confirmed a site has no xposts, used to throttle
+        // re-checks so a site that later enables xposts (o2) is eventually picked up.
+        XPOSTS_NO_RESULT_CHECKED_TIMESTAMP,
 
         // Login flow preserved across OAuth Custom Tabs redirect
         PENDING_LOGIN_FLOW,
@@ -248,6 +251,9 @@ public class AppPrefs {
 
         // Same as above but for the reader
         SWIPE_TO_NAVIGATE_READER,
+
+        // Same as above but for the comment detail
+        SWIPE_TO_NAVIGATE_COMMENTS,
 
         // smart toast counters
         SMART_TOAST_COMMENTS_LONG_PRESS_USAGE_COUNTER,
@@ -663,6 +669,14 @@ public class AppPrefs {
 
     public static void setReaderSwipeToNavigateShown(boolean alreadyShown) {
         setBoolean(UndeletablePrefKey.SWIPE_TO_NAVIGATE_READER, alreadyShown);
+    }
+
+    public static boolean isCommentsSwipeToNavigateShown() {
+        return getBoolean(UndeletablePrefKey.SWIPE_TO_NAVIGATE_COMMENTS, false);
+    }
+
+    public static void setCommentsSwipeToNavigateShown(boolean alreadyShown) {
+        setBoolean(UndeletablePrefKey.SWIPE_TO_NAVIGATE_COMMENTS, alreadyShown);
     }
 
     public static boolean isImageOptimize() {
@@ -2063,6 +2077,18 @@ public class AppPrefs {
                 DeletablePrefKey.SITE_THEME_IS_BLOCK_THEME.name()
                         + site.getId(), isBlockTheme
         ).apply();
+    }
+
+    private static String xPostsNoResultCheckedTimestampKey(@NonNull SiteModel site) {
+        return DeletablePrefKey.XPOSTS_NO_RESULT_CHECKED_TIMESTAMP.name() + site.getId();
+    }
+
+    public static long getXPostsNoResultCheckedTimestamp(@NonNull SiteModel site) {
+        return prefs().getLong(xPostsNoResultCheckedTimestampKey(site), 0);
+    }
+
+    public static void setXPostsNoResultCheckedTimestamp(@NonNull SiteModel site, long timestamp) {
+        prefs().edit().putLong(xPostsNoResultCheckedTimestampKey(site), timestamp).apply();
     }
 
     /**
