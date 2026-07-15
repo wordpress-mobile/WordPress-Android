@@ -161,7 +161,7 @@ platform :android do
 
     %i[wordpress jetpack].each do |app|
       build_bundle(app: app, version_name: version_name, build_code: build_code, buildType: 'Release')
-      upload_build_to_play_store(app: app, version_name: version_name, track: 'internal')
+      upload_build_to_play_store(app: app, version_name: version_name, track: 'internal', release_status: 'completed')
       # `upload_gutenberg_sourcemaps` builds a file path from the app name, so it needs a String
       # (a Symbol can't be passed to `File.join`).
       upload_gutenberg_sourcemaps(app: app.to_s, release_version: version_name)
@@ -202,14 +202,14 @@ platform :android do
           package_name: package_name,
           aab: aab_file_path,
           track: options[:track],
-          release_status: 'draft',
+          release_status: options[:release_status] || 'draft',
           metadata_path: metadata_dir,
           skip_upload_metadata: (options[:track] != 'production'), # Only update app title/description/etc. if uploading for Production, skip for beta tracks
           skip_upload_changelogs: false,
           skip_upload_images: true,
           skip_upload_screenshots: true,
           json_key: UPLOAD_TO_PLAY_STORE_JSON_KEY,
-          version_codes_to_retain: [1440]
+          version_codes_to_retain: PLAY_STORE_VERSION_CODES_TO_RETAIN
         )
       rescue FastlaneCore::Interface::FastlaneError => e
         # Sometimes the upload fails randomly with a "Google Api Error: Invalid request - This Edit has been deleted.".
