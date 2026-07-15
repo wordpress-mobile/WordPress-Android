@@ -28,6 +28,7 @@ import rs.wordpress.api.kotlin.ApiDiscoveryResult
 import rs.wordpress.api.kotlin.WpLoginClient
 import uniffi.wp_api.AutoDiscoveryAttemptSuccess
 import uniffi.wp_api.DiscoveredAuthenticationMechanism
+import uniffi.wp_api.OAuth2Endpoints
 import uniffi.wp_api.ParseUrlException
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
@@ -360,9 +361,10 @@ class ApplicationPasswordLoginHelperTest : BaseUnitTest() {
 
     @Test
     fun `given a WP_com site, when api discovery returns OAuth2, then return WpComSite`() = runTest {
-        val autoDiscoveryAttemptSuccess = AutoDiscoveryAttemptSuccess(
-            mock(), mock(), mock(), DiscoveredAuthenticationMechanism.OAuth2(mock())
+        val oAuth2 = DiscoveredAuthenticationMechanism.OAuth2(
+            OAuth2Endpoints(authorizationUrl = TEST_URL, tokenUrl = TEST_URL)
         )
+        val autoDiscoveryAttemptSuccess = AutoDiscoveryAttemptSuccess(mock(), mock(), mock(), oAuth2)
         val apiDiscoveryResult = ApiDiscoveryResult.Success(autoDiscoveryAttemptSuccess)
         whenever(wpLoginClient.apiDiscovery(eq(TEST_URL))).thenReturn(apiDiscoveryResult)
         whenever(discoverSuccessWrapper.isWpComSite(eq(apiDiscoveryResult))).thenReturn(true)
