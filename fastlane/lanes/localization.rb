@@ -392,7 +392,11 @@ platform :android do
   # bundle exec fastlane update_translations
   #####################################################################################
   lane :update_translations do
-    Fastlane::Helper::GitHelper.checkout_and_pull(DEFAULT_BRANCH)
+    # `checkout_and_pull` swallows git errors and only signals failure through its return value, so
+    # abort explicitly rather than silently building the sync branch from a stale/wrong `trunk`.
+    unless Fastlane::Helper::GitHelper.checkout_and_pull(DEFAULT_BRANCH)
+      UI.user_error!("Could not check out and pull #{DEFAULT_BRANCH}; aborting translation sync.")
+    end
 
     # Reset the rolling branch to the tip of `trunk` so each run produces a clean delta against it.
     Fastlane::Helper::GitHelper.delete_local_branch_if_exists!(TRANSLATIONS_SYNC_BRANCH)
