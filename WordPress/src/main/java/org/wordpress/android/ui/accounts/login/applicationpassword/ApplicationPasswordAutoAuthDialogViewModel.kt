@@ -152,6 +152,10 @@ class ApplicationPasswordAutoAuthDialogViewModel @Inject constructor(
             when (val result = applicationPasswordLoginHelper.getAuthorizationUrlComplete(siteUrl)) {
                 is ApplicationPasswordLoginHelper.DiscoveryResult.Authorized ->
                     _navigationEvent.emit(NavigationEvent.FallbackToManualLogin(result.authorizationUrl))
+                is ApplicationPasswordLoginHelper.DiscoveryResult.WpComSite -> {
+                    appLogWrapper.e(AppLog.T.API, "A_P: $siteUrl is a WordPress.com site")
+                    _navigationEvent.emit(NavigationEvent.Error)
+                }
                 is ApplicationPasswordLoginHelper.DiscoveryResult.Failed -> {
                     appLogWrapper.e(
                         AppLog.T.API,

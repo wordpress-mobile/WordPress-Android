@@ -359,6 +359,21 @@ class ApplicationPasswordLoginHelperTest : BaseUnitTest() {
     }
 
     @Test
+    fun `given a WP_com site, when api discovery returns OAuth2, then return WpComSite`() = runTest {
+        val autoDiscoveryAttemptSuccess = AutoDiscoveryAttemptSuccess(
+            mock(), mock(), mock(), DiscoveredAuthenticationMechanism.OAuth2(mock())
+        )
+        val apiDiscoveryResult = ApiDiscoveryResult.Success(autoDiscoveryAttemptSuccess)
+        whenever(wpLoginClient.apiDiscovery(eq(TEST_URL))).thenReturn(apiDiscoveryResult)
+        whenever(discoverSuccessWrapper.isWpComSite(eq(apiDiscoveryResult))).thenReturn(true)
+
+        val result = applicationPasswordLoginHelper.getAuthorizationUrlComplete(TEST_URL)
+
+        assertEquals(ApplicationPasswordLoginHelper.DiscoveryResult.WpComSite, result)
+        verify(wpLoginClient).apiDiscovery(eq(TEST_URL))
+    }
+
+    @Test
     fun `given login scenario, when api discovery throws, then return Failed`() = runTest {
         whenever(wpLoginClient.apiDiscovery(eq(TEST_URL))).doThrow(RuntimeException("API discovery failed"))
 
