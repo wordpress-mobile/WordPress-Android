@@ -22,6 +22,9 @@
         <!-- GCM -->
         <ignore path="**/generated/ksp/**/org/wordpress/android/push/Hilt_GCMMessageService.java" />
     </issue>
+    <!-- The NonNullableMutableLiveDataDetector shipped with AGP 9.3.0 crashes (NPE) when analyzing the
+         anonymous MutableLiveData subclass in LoginPrologueRevampedViewModel. Disable until the lint bug is fixed. -->
+    <issue id="NullSafeMutableLiveData" severity="ignore" />
     <issue id="AndroidGradlePluginVersion" severity="ignore" /> <!-- The AGP update is done manually -->
     <issue id="GradleDependency" severity="ignore" /> <!-- Dependabot will take care of this -->
     <issue id="MissingNullAnnotationOnField" severity="ignore" />
