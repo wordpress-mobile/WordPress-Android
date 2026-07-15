@@ -6,6 +6,7 @@ import org.junit.Before
 import org.junit.Test
 import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
+import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.doSuspendableAnswer
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.stub
@@ -14,6 +15,12 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpApiClientProvider
 import rs.wordpress.api.kotlin.WpApiClient
 import rs.wordpress.api.kotlin.WpRequestResult
+import uniffi.wp_api.CommentContentWithEditContext
+import uniffi.wp_api.CommentStatus
+import uniffi.wp_api.CommentType
+import uniffi.wp_api.CommentWithEditContext
+import uniffi.wp_api.CommentsRequestExecutor
+import uniffi.wp_api.CommentsRequestRetrieveWithEditContextResponse
 import uniffi.wp_api.PostEndpointType
 import uniffi.wp_api.PostListParams
 import uniffi.wp_api.PostsRequestExecutor
@@ -23,10 +30,12 @@ import uniffi.wp_api.SparseAnyPostWithViewContext
 import uniffi.wp_api.SparsePostTitleWithViewContext
 import uniffi.wp_api.UniffiWpApiClient
 import uniffi.wp_api.WpErrorCode
+import java.util.Date
 
 /**
- * Tests for [CommentsRsDataSource.fetchPostTitles]: the per-site title cache, the posts→pages
- * endpoint fallback, negative caching of unresolvable ids, and request chunking.
+ * Tests for [CommentsRsDataSource.fetchPostTitles] — the per-site title cache, the posts→pages
+ * endpoint fallback, negative caching of unresolvable ids, and request chunking — and for
+ * [CommentsRsDataSource.getCommentForEdit]'s edit-context mapping and error handling.
  *
  * The [wpApiClient] stub executes each request's builder lambda against a mocked
  * [UniffiWpApiClient], recording the endpoint and paging params actually sent — so the tests
@@ -43,6 +52,7 @@ class CommentsRsDataSourceTest {
     private val wpApiClient: WpApiClient = mock()
     private val uniffiClient: UniffiWpApiClient = mock()
     private val postsExecutor: PostsRequestExecutor = mock()
+    private val commentsExecutor: CommentsRequestExecutor = mock()
     private lateinit var dataSource: CommentsRsDataSource
 
     private val recordedRequests = mutableListOf<RecordedRequest>()
@@ -59,6 +69,13 @@ class CommentsRsDataSourceTest {
         dataSource = CommentsRsDataSource(wpApiClientProvider)
         whenever(wpApiClientProvider.getWpApiClient(any(), anyOrNull())).thenReturn(wpApiClient)
         whenever(uniffiClient.posts()).thenReturn(postsExecutor)
+        whenever(uniffiClient.comments()).thenReturn(commentsExecutor)
+        commentsExecutor.stub {
+            // Must return non-null to satisfy the mock's suspend contract; the payload each test
+            // actually sees comes from the request-level stub below.
+            on { retrieveWithEditContext(any(), any()) } doReturn
+                CommentsRequestRetrieveWithEditContextResponse(editContextComment(), mock())
+        }
         postsExecutor.stub {
             on { filterListWithViewContext(any(), any(), any()) } doSuspendableAnswer { invocation ->
                 val params = invocation.getArgument<PostListParams>(1)
@@ -231,6 +248,70 @@ class CommentsRsDataSourceTest {
                 Triple(PostEndpointType.Posts, 1, 1u)
             )
     }
+
+    @Test
+    fun `getCommentForEdit maps the edit-context response`() = runTest {
+        val serverComment = editContextComment(
+            authorName = "author",
+            authorEmail = "author@example.com",
+            authorUrl = "https://example.com",
+            contentRaw = "raw content"
+        )
+        stubRequests(WpRequestResult.Success(CommentsRequestRetrieveWithEditContextResponse(serverComment, mock())))
+
+        val result = dataSource.getCommentForEdit(siteA, 42L)
+
+        assertThat(result).isEqualTo(
+            CommentsRsDataSource.RsEditedComment(
+                authorName = "author",
+                authorEmail = "author@example.com",
+                authorUrl = "https://example.com",
+                contentRaw = "raw content"
+            )
+        )
+    }
+
+    @Test
+    fun `getCommentForEdit returns null on a server error`() = runTest {
+        stubRequests(wpError())
+
+        assertThat(dataSource.getCommentForEdit(siteA, 42L)).isNull()
+    }
+
+    @Test
+    fun `getCommentForEdit returns null when the request throws`() = runTest {
+        wpApiClient.stub {
+            on { request<Any>(any()) } doSuspendableAnswer { throw IllegalStateException("boom") }
+        }
+
+        assertThat(dataSource.getCommentForEdit(siteA, 42L)).isNull()
+    }
+
+    // An edit-context comment with the four fields the editor consumes; everything else dummy.
+    private fun editContextComment(
+        authorName: String = "",
+        authorEmail: String = "",
+        authorUrl: String = "",
+        contentRaw: String = ""
+    ) = CommentWithEditContext(
+        id = 42L,
+        author = 1L,
+        authorEmail = authorEmail,
+        authorIp = "",
+        authorName = authorName,
+        authorUrl = authorUrl,
+        authorUserAgent = "",
+        content = CommentContentWithEditContext(raw = contentRaw, rendered = ""),
+        date = "",
+        dateGmt = Date(0),
+        link = "",
+        parent = 0L,
+        post = 0L,
+        status = CommentStatus.Approved,
+        commentType = CommentType.Comment,
+        authorAvatarUrls = emptyMap(),
+        additionalFields = mock()
+    )
 
     // A sparse post as returned by the id+title sparse-field request: everything else null.
     private fun sparsePost(id: Long, title: String) = SparseAnyPostWithViewContext(
