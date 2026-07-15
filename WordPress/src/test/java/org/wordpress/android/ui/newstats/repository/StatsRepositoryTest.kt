@@ -24,6 +24,7 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.argThat
 import org.mockito.kotlin.eq
+import org.mockito.kotlin.isNotNull
 import org.mockito.kotlin.isNull
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
@@ -467,13 +468,14 @@ class StatsRepositoryTest : BaseUnitTest() {
             repository.fetchStatsForPeriod(TEST_SITE_ID, StatsPeriod.Last6Months)
 
             // The chart is fetched twice (current + previous), each requesting the card's stat fields
-            // so the same response can also fill the bottom row.
+            // so the same response can also fill the bottom row. start_date stays null: it is a
+            // YEAR-only workaround and must not leak into the fixed periods, which work as they are.
             verify(statsDataSource, times(2)).fetchStatsVisits(
                 siteId = eq(TEST_SITE_ID),
                 unit = eq(StatsUnit.MONTH),
                 quantity = eq(6),
                 endDate = any(),
-                startDate = anyOrNull(),
+                startDate = isNull(),
                 statFields = eq(EXPECTED_CARD_STAT_FIELDS)
             )
         }
@@ -487,13 +489,14 @@ class StatsRepositoryTest : BaseUnitTest() {
             repository.fetchStatsForPeriod(TEST_SITE_ID, StatsPeriod.Last12Months)
 
             // The chart is fetched twice (current + previous), each requesting the card's stat fields
-            // so the same response can also fill the bottom row.
+            // so the same response can also fill the bottom row. start_date stays null: it is a
+            // YEAR-only workaround and must not leak into the fixed periods, which work as they are.
             verify(statsDataSource, times(2)).fetchStatsVisits(
                 siteId = eq(TEST_SITE_ID),
                 unit = eq(StatsUnit.MONTH),
                 quantity = eq(12),
                 endDate = any(),
-                startDate = anyOrNull(),
+                startDate = isNull(),
                 statFields = eq(EXPECTED_CARD_STAT_FIELDS)
             )
         }
@@ -645,12 +648,117 @@ class StatsRepositoryTest : BaseUnitTest() {
 
             // Spans four calendar years (2023–2026) though only two whole years elapse between the
             // endpoints; a quantity of 3 would drop 2023 entirely.
-            verify(statsDataSource, times(2)).fetchStatsVisits(
+            verify(statsDataSource).fetchStatsVisits(
                 siteId = eq(TEST_SITE_ID),
                 unit = eq(StatsUnit.YEAR),
                 quantity = eq(4),
+                endDate = eq("2026-01-01"),
+                startDate = eq("2023-12-31"),
+                statFields = eq(EXPECTED_CARD_STAT_FIELDS)
+            )
+            // The previous window mirrors the current one's day span, landing on 2021-12-28..2023-12-30
+            // — three calendar years, not four. Reusing the current window's quantity here would make
+            // the API return 2020–2023 and fold an extra year into the previous total, inflating it and
+            // skewing the % change.
+            verify(statsDataSource).fetchStatsVisits(
+                siteId = eq(TEST_SITE_ID),
+                unit = eq(StatsUnit.YEAR),
+                quantity = eq(3),
+                endDate = eq("2023-12-30"),
+                startDate = eq("2021-12-28"),
+                statFields = eq(EXPECTED_CARD_STAT_FIELDS)
+            )
+        }
+
+    @Test
+    fun `given Custom range over two years, when fetchStatsForPeriod, then YEAR calls send start_date`() =
+        test {
+            whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any(), anyOrNull(), anyOrNull()))
+                .thenReturn(StatsVisitsDataResult.Success(createWeeklyStatsVisitsData()))
+
+            val customPeriod = StatsPeriod.Custom(
+                startDate = LocalDate.of(2024, 1, 1),
+                endDate = LocalDate.of(2026, 6, 29)
+            )
+            repository.fetchStatsForPeriod(TEST_SITE_ID, customPeriod)
+
+            // Byte-identical to the web app's request for the same range:
+            // unit=year&date=2026-06-29&start_date=2024-01-01&quantity=3. Without start_date the API
+            // does not anchor its year buckets to the window, and every number on the card is wrong.
+            verify(statsDataSource).fetchStatsVisits(
+                siteId = eq(TEST_SITE_ID),
+                unit = eq(StatsUnit.YEAR),
+                quantity = eq(3),
+                endDate = eq("2026-06-29"),
+                startDate = eq("2024-01-01"),
+                statFields = eq(EXPECTED_CARD_STAT_FIELDS)
+            )
+            // The previous window mirrors the current 911-day span and sends its own real start, so its
+            // total covers exactly that span too — keeping the % change a like-for-like comparison.
+            verify(statsDataSource).fetchStatsVisits(
+                siteId = eq(TEST_SITE_ID),
+                unit = eq(StatsUnit.YEAR),
+                quantity = eq(3),
+                endDate = eq("2023-12-31"),
+                startDate = eq("2021-07-04"),
+                statFields = eq(EXPECTED_CARD_STAT_FIELDS)
+            )
+        }
+
+    @Test
+    fun `given MONTH Custom whose mirror spans fewer months, when fetchStatsForPeriod, then quantities differ`() =
+        test {
+            whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any(), anyOrNull(), anyOrNull()))
+                .thenReturn(StatsVisitsDataResult.Success(createWeeklyStatsVisitsData()))
+
+            val customPeriod = StatsPeriod.Custom(
+                startDate = LocalDate.of(2024, 5, 31),
+                endDate = LocalDate.of(2024, 7, 2)
+            )
+            repository.fetchStatsForPeriod(TEST_SITE_ID, customPeriod)
+
+            // The current window spans May, Jun, Jul (3). MONTH sends no start_date — it is already
+            // correct from unit + quantity + endDate.
+            verify(statsDataSource).fetchStatsVisits(
+                siteId = eq(TEST_SITE_ID),
+                unit = eq(StatsUnit.MONTH),
+                quantity = eq(3),
+                endDate = eq("2024-07-02"),
+                startDate = isNull(),
+                statFields = eq(EXPECTED_CARD_STAT_FIELDS)
+            )
+            // Its mirror 2024-04-28..2024-05-30 spans only Apr and May (2). Sending the current
+            // window's 3 would return Mar–May, folding March into the previous total.
+            verify(statsDataSource).fetchStatsVisits(
+                siteId = eq(TEST_SITE_ID),
+                unit = eq(StatsUnit.MONTH),
+                quantity = eq(2),
+                endDate = eq("2024-05-30"),
+                startDate = isNull(),
+                statFields = eq(EXPECTED_CARD_STAT_FIELDS)
+            )
+        }
+
+    @Test
+    fun `given DAY Custom, when fetchStatsForPeriod, then no start_date is sent and both windows match`() =
+        test {
+            whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any(), anyOrNull(), anyOrNull()))
+                .thenReturn(StatsVisitsDataResult.Success(createWeeklyStatsVisitsData()))
+
+            val customPeriod = StatsPeriod.Custom(
+                startDate = LocalDate.of(2024, 1, 1),
+                endDate = LocalDate.of(2024, 1, 10)
+            )
+            repository.fetchStatsForPeriod(TEST_SITE_ID, customPeriod)
+
+            // start_date is a YEAR-only workaround: a DAY window is correct without one, and the mirror
+            // preserves the day span, so both windows request the same 10 buckets.
+            verify(statsDataSource, times(2)).fetchStatsVisits(
+                siteId = eq(TEST_SITE_ID),
+                unit = eq(StatsUnit.DAY),
+                quantity = eq(10),
                 endDate = any(),
-                startDate = anyOrNull(),
+                startDate = isNull(),
                 statFields = eq(EXPECTED_CARD_STAT_FIELDS)
             )
         }
@@ -669,12 +777,13 @@ class StatsRepositoryTest : BaseUnitTest() {
 
             // Beyond two years the chart coarsens to YEAR — the same unit the bottom-row totals use —
             // so the header's Views and the bottom row's Views (and their visitor de-dup) always agree.
+            // Both YEAR windows must carry a start_date; without one the API misanchors the buckets.
             verify(statsDataSource, times(2)).fetchStatsVisits(
                 siteId = eq(TEST_SITE_ID),
                 unit = eq(StatsUnit.YEAR),
                 quantity = argThat { this > 0 },
                 endDate = any(),
-                startDate = anyOrNull(),
+                startDate = isNotNull(),
                 statFields = eq(EXPECTED_CARD_STAT_FIELDS)
             )
         }
@@ -772,13 +881,13 @@ class StatsRepositoryTest : BaseUnitTest() {
 
         // Beyond two years the chart's monthly buckets would over-count unique visitors (a visitor
         // active across several months counts once per month), so the bottom row uses a dedicated YEAR
-        // call to de-duplicate per year. No startDate is sent, so the first year bucket isn't truncated.
+        // call to de-duplicate per year. A YEAR window carries its own start_date, matching the chart.
         verify(statsDataSource, times(2)).fetchStatsVisits(
             siteId = eq(TEST_SITE_ID),
             unit = eq(StatsUnit.YEAR),
             quantity = any(),
             endDate = any(),
-            startDate = isNull(),
+            startDate = isNotNull(),
             statFields = eq(EXPECTED_CARD_STAT_FIELDS)
         )
     }
