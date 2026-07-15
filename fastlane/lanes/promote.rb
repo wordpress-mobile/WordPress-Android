@@ -227,9 +227,7 @@ platform :android do
     end
     return nil if codes.all?(&:nil?)
 
-    unless codes.uniq.one?
-      UI.user_error!("WordPress and Jetpack #{label} version codes differ (#{codes.inspect}); reconcile by hand before releasing.")
-    end
+    UI.user_error!("WordPress and Jetpack #{label} version codes differ (#{codes.inspect}); reconcile by hand before releasing.") unless codes.uniq.one?
     codes.first
   end
 
