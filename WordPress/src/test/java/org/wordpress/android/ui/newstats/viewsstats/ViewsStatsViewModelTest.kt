@@ -21,6 +21,7 @@ import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.newstats.StatsPeriod
 import org.wordpress.android.ui.newstats.StatsCardsConfiguration
+import org.wordpress.android.ui.newstats.datasource.StatsUnit
 import org.wordpress.android.ui.newstats.repository.ViewsDataPoint
 import org.wordpress.android.ui.newstats.repository.StatsRepository
 import org.wordpress.android.ui.newstats.repository.StatsCardsConfigurationRepository
@@ -159,6 +160,85 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
             assertThat(chartData.currentPeriod).isEmpty()
             assertThat(chartData.previousPeriod).isEmpty()
         }
+    }
+
+    @Test
+    fun `given YEAR unit, when chart loads, then labels show the year rather than the month`() = test {
+        val result = createPeriodStatsResult(
+            unit = StatsUnit.YEAR,
+            currentPeriodData = listOf(
+                ViewsDataPoint(period = "2024-01-01", views = 1000L),
+                ViewsDataPoint(period = "2025-01-01", views = 1500L),
+                ViewsDataPoint(period = "2026-01-01", views = 2000L)
+            ),
+            previousPeriodData = emptyList()
+        )
+        whenever(statsRepository.fetchStatsForPeriod(any(), any())).thenReturn(result)
+
+        initViewModel()
+        advanceUntilIdle()
+
+        val labels = viewModel.uiState.value.chartLoaded().chartData.currentPeriod.map { it.label }
+        assertThat(labels).containsExactly("2024", "2025", "2026")
+    }
+
+    @Test
+    fun `given YEAR unit, when chart loads, then the legend shows a year span`() = test {
+        val result = createPeriodStatsResult(unit = StatsUnit.YEAR)
+        whenever(statsRepository.fetchStatsForPeriod(any(), any())).thenReturn(result)
+
+        initViewModel()
+        advanceUntilIdle()
+
+        // Aggregates are stubbed as 2024-01-14..2024-01-20, a span inside a single year.
+        assertThat(viewModel.uiState.value.chartLoaded().currentPeriodDateRange).isEqualTo("2024")
+    }
+
+    @Test
+    fun `given DAY unit, when chart loads, then labels are not coarsened to the year`() = test {
+        val result = createPeriodStatsResult(unit = StatsUnit.DAY)
+        whenever(statsRepository.fetchStatsForPeriod(any(), any())).thenReturn(result)
+
+        initViewModel()
+        advanceUntilIdle()
+
+        // Locale-independent contract lock: the YEAR pattern must not leak into the DAY path. A
+        // bare four-digit label would mean it had.
+        val labels = viewModel.uiState.value.chartLoaded().chartData.currentPeriod.map { it.label }
+        assertThat(labels).isNotEmpty
+        assertThat(labels).noneMatch { it.matches(Regex("""\d{4}""")) }
+    }
+
+    @Test
+    fun `given MONTH unit, when chart loads, then labels are not coarsened to the year`() = test {
+        val result = createPeriodStatsResult(unit = StatsUnit.MONTH)
+        whenever(statsRepository.fetchStatsForPeriod(any(), any())).thenReturn(result)
+
+        initViewModel()
+        advanceUntilIdle()
+
+        val labels = viewModel.uiState.value.chartLoaded().chartData.currentPeriod.map { it.label }
+        assertThat(labels).isNotEmpty
+        assertThat(labels).noneMatch { it.matches(Regex("""\d{4}""")) }
+    }
+
+    @Test
+    fun `given HOUR unit, when chart loads, then labels show the hour`() = test {
+        val result = createPeriodStatsResult(
+            unit = StatsUnit.HOUR,
+            currentPeriodData = listOf(
+                ViewsDataPoint(period = "2024-01-14 14:00:00", views = 10L),
+                ViewsDataPoint(period = "2024-01-14 15:00:00", views = 20L)
+            ),
+            previousPeriodData = emptyList()
+        )
+        whenever(statsRepository.fetchStatsForPeriod(any(), any())).thenReturn(result)
+
+        initViewModel()
+        advanceUntilIdle()
+
+        val labels = viewModel.uiState.value.chartLoaded().chartData.currentPeriod.map { it.label }
+        assertThat(labels).containsExactly("14:00", "15:00")
     }
 
     @Test
@@ -871,7 +951,8 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
         previousComments: Long = TEST_PREVIOUS_PERIOD_COMMENTS,
         previousPosts: Long = TEST_PREVIOUS_PERIOD_POSTS,
         currentPeriodData: List<ViewsDataPoint> = createDefaultDataPoints(),
-        previousPeriodData: List<ViewsDataPoint> = createDefaultDataPoints()
+        previousPeriodData: List<ViewsDataPoint> = createDefaultDataPoints(),
+        unit: StatsUnit = StatsUnit.DAY
     ): PeriodStatsResult.Success {
         val currentAggregates = PeriodAggregates(
             views = currentViews,
@@ -895,7 +976,8 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
             currentAggregates = currentAggregates,
             previousAggregates = previousAggregates,
             currentPeriodData = currentPeriodData,
-            previousPeriodData = previousPeriodData
+            previousPeriodData = previousPeriodData,
+            unit = unit
         )
     }
 

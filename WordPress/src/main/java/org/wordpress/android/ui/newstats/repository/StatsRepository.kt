@@ -563,7 +563,8 @@ class StatsRepository @Inject constructor(
             currentAggregates = currentAggregates,
             previousAggregates = previousAggregates,
             currentPeriodData = currentPeriodData,
-            previousPeriodData = previousPeriodData
+            previousPeriodData = previousPeriodData,
+            unit = periodRange.unit
         )
     }
 
@@ -2163,13 +2164,19 @@ sealed class WeeklyStatsWithDailyDataResult {
 /**
  * Result wrapper for period stats fetch operation.
  * Contains aggregated stats and data points for both current and previous periods.
+ *
+ * [unit] is the granularity the buckets in [currentPeriodData]/[previousPeriodData] were requested
+ * at. It is carried here because the bucket's [ViewsDataPoint.period] string alone cannot express it
+ * — the API returns a full ISO date for DAY, MONTH and YEAR buckets alike, so a YEAR bucket is
+ * indistinguishable from a day without this.
  */
 sealed class PeriodStatsResult {
     data class Success(
         val currentAggregates: PeriodAggregates,
         val previousAggregates: PeriodAggregates,
         val currentPeriodData: List<ViewsDataPoint>,
-        val previousPeriodData: List<ViewsDataPoint>
+        val previousPeriodData: List<ViewsDataPoint>,
+        val unit: StatsUnit
     ) : PeriodStatsResult()
     data class Error(val message: String) : PeriodStatsResult()
 }

@@ -16,6 +16,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.newstats.StatsPeriod
+import org.wordpress.android.ui.newstats.datasource.StatsUnit
 import org.wordpress.android.ui.newstats.repository.BottomStatsAggregates
 import org.wordpress.android.ui.newstats.repository.BottomStatsResult
 import org.wordpress.android.ui.newstats.repository.PeriodStatsResult
@@ -561,7 +562,7 @@ class ViewsStatsViewModel @Inject constructor(
         val currentDataPoints = result.currentPeriodData
             .map {
                 ChartDataPoint(
-                    formatDataPointLabel(it.period, currentPeriod),
+                    formatDataPointLabel(it.period, result.unit),
                     it.views,
                     it.period
                 )
@@ -569,7 +570,7 @@ class ViewsStatsViewModel @Inject constructor(
         val previousDataPoints = result.previousPeriodData
             .map {
                 ChartDataPoint(
-                    formatDataPointLabel(it.period, currentPeriod),
+                    formatDataPointLabel(it.period, result.unit),
                     it.views,
                     it.period
                 )
@@ -595,12 +596,14 @@ class ViewsStatsViewModel @Inject constructor(
             currentPeriodDateRange = formatDateRangeForPeriod(
                 currentStats.startDate,
                 currentStats.endDate,
-                currentPeriod
+                currentPeriod,
+                result.unit
             ),
             previousPeriodDateRange = formatDateRangeForPeriod(
                 previousStats.startDate,
                 previousStats.endDate,
-                currentPeriod
+                currentPeriod,
+                result.unit
             ),
             chartData = ViewsStatsChartData(currentPeriod = currentDataPoints, previousPeriod = previousDataPoints),
             periodAverage = average,
@@ -657,17 +660,33 @@ class ViewsStatsViewModel @Inject constructor(
         return ((current - previous).toDouble() / previous) * PERCENTAGE_BASE
     }
 
-    private fun formatDataPointLabel(period: String, statsPeriod: StatsPeriod): String {
-        val isMonthlyPeriod = statsPeriod is StatsPeriod.Last6Months ||
-            statsPeriod is StatsPeriod.Last12Months ||
-            (statsPeriod is StatsPeriod.Custom && isCustomPeriodMonthly(statsPeriod))
+    /**
+     * Formats one chart bucket's axis label. The output granularity comes from [unit] — the
+     * granularity the buckets were actually requested at — not from the [period] string, which is a
+     * full ISO date for DAY, MONTH and YEAR buckets alike and so cannot be told apart on its own.
+     * The string's shape still decides how to *parse* it, since the API returns "yyyy-MM" for some
+     * month buckets and "yyyy-MM-dd" for others.
+     */
+    private fun formatDataPointLabel(period: String, unit: StatsUnit): String {
+        if (period.matches(HOURLY_FORMAT_REGEX)) return formatHourlyLabel(period)
+        val date = parsePeriodDate(period) ?: return period
+        return date.format(DateTimeFormatter.ofPattern(labelPatternFor(unit), Locale.getDefault()))
+    }
 
-        return when {
-            period.matches(HOURLY_FORMAT_REGEX) -> formatHourlyLabel(period)
-            period.matches(DAILY_FORMAT_REGEX) -> formatDailyLabel(period, isMonthlyPeriod)
-            period.matches(MONTHLY_FORMAT_REGEX) -> formatMonthlyLabel(period)
-            else -> period
+    private fun labelPatternFor(unit: StatsUnit): String = when (unit) {
+        StatsUnit.YEAR -> "yyyy"
+        StatsUnit.MONTH -> "MMM"
+        else -> "MMM d"
+    }
+
+    /** Parses a bucket's period string, tolerating both the "yyyy-MM" and "yyyy-MM-dd" shapes. */
+    private fun parsePeriodDate(period: String): LocalDate? = when {
+        period.matches(DAILY_FORMAT_REGEX) -> LocalDate.parse(period, DateTimeFormatter.ISO_LOCAL_DATE)
+        period.matches(MONTHLY_FORMAT_REGEX) -> {
+            val parts = period.split("-")
+            LocalDate.of(parts[0].toInt(), parts[1].toInt(), 1)
         }
+        else -> null
     }
 
     private fun formatHourlyLabel(period: String): String {
@@ -676,24 +695,23 @@ class ViewsStatsViewModel @Inject constructor(
         return LocalDateTime.parse(period, inputFormat).format(outputFormat)
     }
 
-    private fun formatDailyLabel(period: String, showMonthOnly: Boolean): String {
-        val date = LocalDate.parse(period, DateTimeFormatter.ISO_LOCAL_DATE)
-        val pattern = if (showMonthOnly) "MMM" else "MMM d"
-        return date.format(DateTimeFormatter.ofPattern(pattern, Locale.getDefault()))
-    }
-
-    private fun formatMonthlyLabel(period: String): String {
-        val parts = period.split("-")
-        val date = LocalDate.of(parts[0].toInt(), parts[1].toInt(), 1)
-        return date.format(DateTimeFormatter.ofPattern("MMM", Locale.getDefault()))
-    }
-
     private fun isCustomPeriodMonthly(custom: StatsPeriod.Custom): Boolean {
         val daysBetween = ChronoUnit.DAYS.between(custom.startDate, custom.endDate) + 1
         return daysBetween > DAYS_THRESHOLD_FOR_MONTHLY_DISPLAY
     }
 
-    private fun formatDateRangeForPeriod(startDate: String, endDate: String, period: StatsPeriod): String {
+    /**
+     * Formats the legend's date range. A YEAR-unit window is decided by [unit] rather than by
+     * [period], because a Custom range long enough to be charted in years would otherwise fall into
+     * the month branch and render a span like "Jan - Jun" for 2024→2026.
+     */
+    private fun formatDateRangeForPeriod(
+        startDate: String,
+        endDate: String,
+        period: StatsPeriod,
+        unit: StatsUnit
+    ): String {
+        if (unit == StatsUnit.YEAR) return formatYearRange(startDate, endDate)
         return when (period) {
             is StatsPeriod.Today -> formatSingleDayRange(endDate)
             is StatsPeriod.Last6Months, is StatsPeriod.Last12Months -> formatMonthRange(startDate, endDate)
@@ -705,23 +723,23 @@ class ViewsStatsViewModel @Inject constructor(
         }
     }
 
-    private fun parseDate(dateString: String): LocalDate? {
-        return if (dateString.matches(DAILY_FORMAT_REGEX)) {
-            LocalDate.parse(dateString, DateTimeFormatter.ISO_LOCAL_DATE)
-        } else {
-            null
-        }
-    }
-
     private fun formatSingleDayRange(date: String): String {
-        val parsedDate = parseDate(date) ?: return date
+        val parsedDate = parsePeriodDate(date) ?: return date
         return parsedDate.format(DateTimeFormatter.ofPattern("d MMM", Locale.getDefault()))
     }
 
     @Suppress("ReturnCount")
+    private fun formatYearRange(startDate: String, endDate: String): String {
+        val start = parsePeriodDate(startDate) ?: return "$startDate - $endDate"
+        val end = parsePeriodDate(endDate) ?: return "$startDate - $endDate"
+
+        return if (start.year == end.year) "${start.year}" else "${start.year} - ${end.year}"
+    }
+
+    @Suppress("ReturnCount")
     private fun formatMonthRange(startDate: String, endDate: String): String {
-        val start = parseDate(startDate) ?: return "$startDate - $endDate"
-        val end = parseDate(endDate) ?: return "$startDate - $endDate"
+        val start = parsePeriodDate(startDate) ?: return "$startDate - $endDate"
+        val end = parsePeriodDate(endDate) ?: return "$startDate - $endDate"
         val monthFormat = DateTimeFormatter.ofPattern("MMM", Locale.getDefault())
 
         return if (start.month == end.month && start.year == end.year) {
@@ -733,8 +751,8 @@ class ViewsStatsViewModel @Inject constructor(
 
     @Suppress("ReturnCount")
     private fun formatDayRange(startDate: String, endDate: String): String {
-        val start = parseDate(startDate) ?: return "$startDate - $endDate"
-        val end = parseDate(endDate) ?: return "$startDate - $endDate"
+        val start = parsePeriodDate(startDate) ?: return "$startDate - $endDate"
+        val end = parsePeriodDate(endDate) ?: return "$startDate - $endDate"
         val dayFormat = DateTimeFormatter.ofPattern("d", Locale.getDefault())
         val dayMonthFormat = DateTimeFormatter.ofPattern("d MMM", Locale.getDefault())
 
