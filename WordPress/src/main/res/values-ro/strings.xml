@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2026-06-18 14:02:22+0000
+Translation-Revision-Date: 2026-07-07 14:02:08+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n == 0 || n % 100 >= 2 && n % 100 <= 19) ? 1 : 2);
 Generator: GlotPress/4.0.3
 Language: ro
@@ -2442,9 +2442,9 @@ Language: ro
     <string name="site_settings_ad_free_video_hosting">Găzduire video fără reclame</string>
     <string name="site_settings_media">Media</string>
     <string name="site_settings_improved_search">Căutare îmbunătățită</string>
-    <string name="site_settings_jetpack_search">Căutare Jetpack</string>
     <string name="site_settings_improved_search_summary">Înlocuiește căutarea nativă din WordPress cu o experiență de căutare îmbunătățită</string>
     <string name="site_settings_more">Mai multe</string>
+    <string name="site_settings_jetpack_search">Jetpack Search</string>
     <string name="site_settings_performance">Performanță</string>
     <string name="site_settings_site_accelerator_on">Pornit</string>
     <string name="site_settings_site_accelerator">Accelerator de site-uri</string>
