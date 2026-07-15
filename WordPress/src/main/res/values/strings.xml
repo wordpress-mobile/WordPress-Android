@@ -4621,6 +4621,8 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="application_password_authorization_cancelled">Authorization cancelled</string>
     <string name="application_password_title">Authenticate using Application Password</string>
     <string name="application_password_not_supported_error" a8c-src-lib="module:login">The provided site does not support Application Password authentication.</string>
+    <string name="login_site_is_wpcom_message" a8c-src-lib="module:login">This site is connected to WordPress.com. Please log in with your WordPress.com account instead.</string>
+    <string name="login_continue_with_wpcom" a8c-src-lib="module:login">Continue with WordPress.com</string>
     <string name="application_password_invalid">Invalid Application Password</string>
     <string name="application_password_invalid_description">Your application password no longer exists. Please sign in again to create a new application password.</string>
     <string name="application_password_required">Application Password Required</string>
