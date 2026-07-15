@@ -426,7 +426,12 @@ platform :android do
     pr_url = find_or_create_pull_request(
       repository: GITHUB_REPO,
       title: 'Update translations',
-      body: 'Automated daily translation sync from GlotPress. Opened by the `download-translations` scheduled pipeline.',
+      body: <<~BODY,
+        Automated daily translation sync from GlotPress. Opened by the `download-translations` scheduled pipeline.
+
+        ⚠️ This branch is reset to `trunk` and force-pushed daily — do not push commits here;
+        they will be overwritten. Fix translations in GlotPress instead.
+      BODY
       head: TRANSLATIONS_SYNC_BRANCH,
       base: DEFAULT_BRANCH,
       labels: ['Localization']
