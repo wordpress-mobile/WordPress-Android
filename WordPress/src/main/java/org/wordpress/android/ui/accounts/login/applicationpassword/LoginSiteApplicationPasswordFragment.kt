@@ -14,7 +14,6 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
@@ -118,7 +117,12 @@ class LoginSiteApplicationPasswordFragment : Fragment() {
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.wpComDetected.collect { showWpComRedirectDialog() }
+                viewModel.wpComDetected.collect {
+                    // WP.com sites can't use application passwords; send them to the OAuth flow,
+                    // same as the up-front WPUrlUtils.isWordPressCom() check does.
+                    analyticsListener.trackConnectedSiteInfoSucceeded(mapOf("is_wpcom" to true))
+                    loginActivity?.showWPcomLoginScreen(requireContext())
+                }
             }
         }
     }
@@ -141,17 +145,6 @@ class LoginSiteApplicationPasswordFragment : Fragment() {
         analyticsListener.trackSubmitClicked()
         analyticsListener.trackConnectedSiteInfoRequested(cleanedUrl)
         viewModel.runApiDiscovery(cleanedUrl)
-    }
-
-    private fun showWpComRedirectDialog() {
-        analyticsListener.trackConnectedSiteInfoSucceeded(mapOf("is_wpcom" to true))
-        MaterialAlertDialogBuilder(requireContext())
-            .setMessage(R.string.login_site_is_wpcom_message)
-            .setPositiveButton(R.string.login_continue_with_wpcom) { _, _ ->
-                loginActivity?.showWPcomLoginScreen(requireContext())
-            }
-            .setNegativeButton(R.string.cancel, null)
-            .show()
     }
 
     companion object {
