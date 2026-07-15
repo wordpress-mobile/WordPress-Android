@@ -403,7 +403,6 @@ class ReaderCommentListActivity : BaseAppCompatActivity(),
                 } else if (!show && bottomSheet != null) {
                     bottomSheet.dismiss()
                 }
-                Unit
             }
         }
 
