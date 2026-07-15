@@ -36,26 +36,36 @@ class SystemPickerResolver @Inject constructor(
      */
     fun resolveChooserContext(allowedTypes: Set<MediaType>, site: SiteModel?): ChooserTypes {
         val (context, types) = when {
+            // Visual-media contexts use broad wildcards rather than our explicit accepted-subtype
+            // list: on Android 13+ these route to the system Photo Picker, which filters album/cloud
+            // contents by an exact match against EXTRA_MIME_TYPES. An explicit list (image/jpeg,
+            // image/heic, ...) makes Google Photos albums appear empty because cloud items may not
+            // report a matching subtype, so image/* and video/* are used to show all visual media.
             listOf(IMAGE).containsAll(allowedTypes) -> {
-                ChooserContext.PHOTO to mimeTypes.getImageTypesOnly()
+                ChooserContext.PHOTO to listOf(MIME_TYPE_IMAGE_ALL)
             }
             listOf(VIDEO).containsAll(allowedTypes) -> {
-                ChooserContext.VIDEO to mimeTypes.getVideoTypesOnly()
+                ChooserContext.VIDEO to listOf(MIME_TYPE_VIDEO_ALL)
             }
             listOf(IMAGE, VIDEO).containsAll(allowedTypes) -> {
-                ChooserContext.PHOTO_OR_VIDEO to mimeTypes.getVideoAndImageTypesOnly()
+                ChooserContext.PHOTO_OR_VIDEO to listOf(MIME_TYPE_IMAGE_ALL, MIME_TYPE_VIDEO_ALL)
             }
             listOf(AUDIO).containsAll(allowedTypes) -> {
-                ChooserContext.AUDIO to mimeTypes.getAudioTypesOnly(planFor(site))
+                ChooserContext.AUDIO to mimeTypes.getAudioTypesOnly(planFor(site)).toList()
             }
             else -> {
-                ChooserContext.MEDIA_FILE to mimeTypes.getAllTypes(planFor(site))
+                ChooserContext.MEDIA_FILE to mimeTypes.getAllTypes(planFor(site)).toList()
             }
         }
-        return ChooserTypes(context, types.toList())
+        return ChooserTypes(context, types)
     }
 
     private fun planFor(site: SiteModel?) = mediaUtilsWrapper.getSitePlanForMimeTypes(site)
 
     data class ChooserTypes(val context: ChooserContext, val mimeTypes: List<String>)
+
+    companion object {
+        private const val MIME_TYPE_IMAGE_ALL = "image/*"
+        private const val MIME_TYPE_VIDEO_ALL = "video/*"
+    }
 }

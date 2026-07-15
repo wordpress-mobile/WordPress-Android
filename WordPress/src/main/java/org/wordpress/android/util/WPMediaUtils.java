@@ -284,33 +284,11 @@ public class WPMediaUtils {
         ChooserContext chooserContext = openSystemPicker.getChooserContext();
         Intent intent = new Intent(chooserContext.getIntentAction());
         intent.setType(chooserContext.getMediaTypeFilter());
-        intent.putExtra(Intent.EXTRA_MIME_TYPES, getMimeTypesForChooser(chooserContext, openSystemPicker));
+        intent.putExtra(Intent.EXTRA_MIME_TYPES, openSystemPicker.getMimeTypes().toArray(new String[0]));
         if (openSystemPicker.getAllowMultipleSelection()) {
             intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
         }
         return Intent.createChooser(intent, uiHelpers.getTextOfUiString(context, chooserContext.getTitle()));
-    }
-
-    /**
-     * For visual-media contexts, Android 13+ routes ACTION_GET_CONTENT to the system Photo Picker,
-     * which filters album/cloud contents by an exact match against EXTRA_MIME_TYPES. Passing our
-     * explicit list of accepted subtypes (e.g. image/jpeg, image/heic, ...) causes Google Photos
-     * albums to appear empty ("No photos yet") because cloud items may not report a matching subtype.
-     * Using a broad type (image/* and/or video/*) lets the picker show all visual media, matching how
-     * other apps behave. Audio and document flows use the document browser and keep the explicit list.
-     */
-    private static String[] getMimeTypesForChooser(ChooserContext chooserContext,
-                                                   OpenSystemPicker openSystemPicker) {
-        switch (chooserContext) {
-            case PHOTO:
-                return new String[]{"image/*"};
-            case VIDEO:
-                return new String[]{"video/*"};
-            case PHOTO_OR_VIDEO:
-                return new String[]{"image/*", "video/*"};
-            default:
-                return openSystemPicker.getMimeTypes().toArray(new String[0]);
-        }
     }
 
     public static void launchVideoCamera(Activity activity) {

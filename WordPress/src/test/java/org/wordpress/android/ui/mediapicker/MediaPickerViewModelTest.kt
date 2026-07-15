@@ -528,7 +528,9 @@ class MediaPickerViewModelTest : BaseUnitTest() {
         )
         assertThat(iconClickEvents).hasSize(1)
         assertThat(iconClickEvents[0].action is OpenSystemPicker).isTrue()
-        assertThat((iconClickEvents[0].action as OpenSystemPicker).chooserContext).isEqualTo(ChooserContext.PHOTO)
+        val action = iconClickEvents[0].action as OpenSystemPicker
+        assertThat(action.chooserContext).isEqualTo(ChooserContext.PHOTO)
+        assertThat(action.mimeTypes).containsExactly("image/*")
     }
 
     @Test
@@ -635,8 +637,11 @@ class MediaPickerViewModelTest : BaseUnitTest() {
 
         assertThat(iconClickEvents).hasSize(1)
         assertThat(iconClickEvents[0].action is OpenSystemPicker).isTrue()
-        assertThat((iconClickEvents[0].action as OpenSystemPicker).chooserContext)
-            .isEqualTo(ChooserContext.PHOTO_OR_VIDEO)
+        val action = iconClickEvents[0].action as OpenSystemPicker
+        assertThat(action.chooserContext).isEqualTo(ChooserContext.PHOTO_OR_VIDEO)
+        // Visual-media contexts use broad wildcards so the system Photo Picker shows all album/cloud
+        // media rather than filtering by an explicit accepted-subtype list.
+        assertThat(action.mimeTypes).containsExactly("image/*", "video/*")
     }
 
     @Test
