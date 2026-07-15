@@ -391,16 +391,14 @@ class ViewsStatsViewModel @Inject constructor(
         val targetPeriod = currentPeriod
         try {
             val loaded = if (fillsBottomFromChart(targetPeriod)) {
-                // Fixed periods use a daily/monthly chart whose response already carries all five
-                // bottom-row metrics per bucket, so the bottom row is filled from that same fetch. This
-                // makes the card issue 2 network calls instead of 4.
+                // Every non-hourly period uses a daily/monthly/yearly chart whose response already
+                // carries all five bottom-row metrics per bucket, so the bottom row is filled from that
+                // same fetch. This makes the card issue 2 network calls instead of 4.
                 loadChart(site, fillBottomFromChart = true)
             } else {
-                // Today and Custom fetch the bottom row from a dedicated call (run in parallel with the
-                // chart), the same way the web app does it. Today's chart is hourly and its response
-                // only populates `views`; a Custom range can span beyond two years, where the bottom
-                // row needs coarser (yearly) visitor de-duplication than the chart's monthly buckets
-                // give. Either way the chart response can't fill the row, so these issue both calls.
+                // Single-day periods fetch the bottom row from a dedicated day-level call (run in
+                // parallel with the chart), the same way the web app does it: their chart is hourly and
+                // an hourly response only populates `views`, so it can't fill the row.
                 coroutineScope {
                     val chart = async { loadChart(site, fillBottomFromChart = false) }
                     val bottom = async { loadBottomStats(site) }
@@ -470,19 +468,24 @@ class ViewsStatsViewModel @Inject constructor(
     }
 
     /**
-     * Whether the bottom row can be filled from the chart's own response. True for the fixed periods
-     * (Last7Days/Last30Days/Last6Months/Last12Months), whose chart bucket already matches the unit the
-     * bottom row needs and whose response carries all five metrics. False for Today (hourly chart →
-     * only `views`) and Custom (a range beyond two years needs yearly visitor de-duplication the
-     * monthly chart can't give); those fetch the bottom row from a dedicated call instead.
+     * Whether the bottom row can be filled from the chart's own response, which is true whenever the
+     * chart isn't hourly: a non-hourly `stats/visits` response carries all five bottom-row metrics per
+     * bucket, and the chart requests the same unit, quantity and windows the row needs.
+     *
+     * Only the single-day periods (Today, and a Custom range whose start and end are the same day)
+     * render an hourly chart, and an hourly response populates `views` alone — so those fetch the row
+     * from a dedicated day-level call instead.
      */
     private fun fillsBottomFromChart(period: StatsPeriod): Boolean = when (period) {
         is StatsPeriod.Last7Days,
         is StatsPeriod.Last30Days,
         is StatsPeriod.Last6Months,
         is StatsPeriod.Last12Months -> true
-        is StatsPeriod.Today,
-        is StatsPeriod.Custom -> false
+        // A multi-day Custom chart shares the bottom row's unit and quantity (both derive from the
+        // repository's span-based rule, year-coarsening included), so its response already holds the
+        // row's totals — including visitor uniques de-duplicated at the same granularity.
+        is StatsPeriod.Custom -> period.startDate != period.endDate
+        is StatsPeriod.Today -> false
     }
 
     /**

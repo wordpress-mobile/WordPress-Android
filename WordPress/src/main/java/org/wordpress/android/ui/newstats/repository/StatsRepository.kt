@@ -422,15 +422,13 @@ class StatsRepository @Inject constructor(
     }
 
     /**
-     * Fetches the bottom-row totals from a dedicated call. Used by Today and every Custom range; the
-     * fixed periods (Last7Days/Last30Days/Last6Months/Last12Months) instead fill the row straight from
-     * the chart's own [fetchStatsForPeriod] response and never call this.
+     * Fetches the bottom-row totals from a dedicated call, for the single-day periods only: Today and a
+     * Custom range whose start and end are the same day. Their chart is hourly and an hourly response
+     * only populates `views`, so the row can't be derived from [fetchStatsForPeriod].
      *
-     * Single-day periods (Today, single-day Custom) genuinely need this call: their chart is hourly and
-     * an hourly response only populates `views`. Multi-day Custom ranges do not — since the custom chart
-     * window started sharing this range's unit and quantity ([unitAndQuantityFor] with `allowYear`),
-     * their two calls here duplicate the chart's own. The routing lives in the view model's
-     * `fillsBottomFromChart`.
+     * Every other period fills the row straight from the chart's own [fetchStatsForPeriod] response —
+     * it requests the same unit, quantity and windows — and never calls this. The routing lives in the
+     * view model's `fillsBottomFromChart`.
      *
      * Returns [BottomStatsResult.Error] (the row is hidden) only when a call errors or throws; a
      * successful-but-empty response is summed to a legitimate all-zero row so a genuine zero-traffic
@@ -601,17 +599,17 @@ class StatsRepository @Inject constructor(
     private data class PeriodConfig(val quantity: Int, val unit: StatsUnit, val dateUnit: DateUnit)
 
     /**
-     * Computes the date range and API unit for the bottom-row totals. Coarsens the unit as the span
-     * grows (day up to a month, month up to two years, year beyond) so the API de-duplicates visitor
-     * uniques per bucket before the totals are summed — notably a Custom range beyond two years
-     * de-duplicates visitors per year, which the chart's monthly buckets don't.
-     *
-     * Only Today and Custom reach here: the fixed periods (Last7Days/Last30Days/Last6Months/
-     * Last12Months) reuse their chart response for the bottom row and never call this. Both remaining
-     * paths mirror the chart's exact day
-     * span for the previous window ([previousWindowMirror], exactly as [calculateTodayPeriodDates] and
+     * Computes the date range and API unit for a dedicated bottom-row fetch, coarsening the unit as the
+     * span grows (day up to a month, month up to two years, year beyond) so the API de-duplicates
+     * visitor uniques per bucket before the totals are summed. The previous window mirrors the current
+     * one's exact day span ([previousWindowMirror], exactly as [calculateTodayPeriodDates] and
      * [calculateCustomPeriodDates] do), so the header's and the bottom row's Views % change compare
      * against identical windows and never disagree.
+     *
+     * In practice only the single-day periods reach here (see [fetchBottomStats]), so the coarser units
+     * are currently unreachable from the card — every longer period fills its row from the chart. The
+     * span-based rule is kept so a caller that does need a standalone total for a longer window gets a
+     * correct one rather than a silently wrong bucket.
      */
     private fun calculateBottomStatsRange(period: StatsPeriod): PeriodDateRange {
         val (currentStart, currentEnd) = currentPeriodWindow(period)
