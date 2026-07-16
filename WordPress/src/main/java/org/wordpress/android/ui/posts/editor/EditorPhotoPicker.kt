@@ -291,6 +291,10 @@ class EditorPhotoPicker(
                     else -> { /* Device is handled by OpenSystemPicker */ }
                 }
             }
+            is MediaPickerAction.ShowSystemPickerTypeMenu -> {
+                // Only reachable when a flow allows both visual media and other files; the editor's
+                // embedded picker relies upon other flows, so this never fires here.
+            }
         }
     }
 
