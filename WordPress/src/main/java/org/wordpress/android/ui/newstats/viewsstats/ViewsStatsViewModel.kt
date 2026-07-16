@@ -19,6 +19,7 @@ import org.wordpress.android.ui.newstats.StatsPeriod
 import org.wordpress.android.ui.newstats.datasource.StatsUnit
 import org.wordpress.android.ui.newstats.repository.BottomStatsAggregates
 import org.wordpress.android.ui.newstats.repository.BottomStatsResult
+import org.wordpress.android.ui.newstats.repository.PeriodAggregates
 import org.wordpress.android.ui.newstats.repository.PeriodStatsResult
 import org.wordpress.android.ui.newstats.repository.StatsCardsConfigurationRepository
 import org.wordpress.android.ui.newstats.repository.StatsRepository
@@ -260,9 +261,8 @@ class ViewsStatsViewModel @Inject constructor(
         currentChartType = chartType
         saveChartType(chartType)
         _uiState.update { current ->
-            val chart = (current as? ViewsStatsCardUiState.Content)?.chart
-            if (current is ViewsStatsCardUiState.Content && chart is ChartUiState.Loaded) {
-                current.copy(chart = chart.copy(chartType = chartType))
+            if (current is ViewsStatsCardUiState.Content && current.chart is ChartUiState.Loaded) {
+                current.copy(chart = current.chart.copy(chartType = chartType))
             } else {
                 current
             }
@@ -493,21 +493,15 @@ class ViewsStatsViewModel @Inject constructor(
      * Maps the chart's period aggregates (which already carry all five metrics for the fixed periods)
      * into the bottom-row stat items, so no dedicated bottom-stats call is needed.
      */
-    private fun PeriodStatsResult.Success.toBottomStatItems(): List<StatItem> = buildStatItems(
-        BottomStatsAggregates(
-            views = currentAggregates.views,
-            visitors = currentAggregates.visitors,
-            likes = currentAggregates.likes,
-            comments = currentAggregates.comments,
-            posts = currentAggregates.posts
-        ),
-        BottomStatsAggregates(
-            views = previousAggregates.views,
-            visitors = previousAggregates.visitors,
-            likes = previousAggregates.likes,
-            comments = previousAggregates.comments,
-            posts = previousAggregates.posts
-        )
+    private fun PeriodStatsResult.Success.toBottomStatItems(): List<StatItem> =
+        buildStatItems(currentAggregates.toBottomAggregates(), previousAggregates.toBottomAggregates())
+
+    private fun PeriodAggregates.toBottomAggregates() = BottomStatsAggregates(
+        views = views,
+        visitors = visitors,
+        likes = likes,
+        comments = comments,
+        posts = posts
     )
 
     /** Fetches the bottom row from a dedicated call. Used for Today and Custom (see [fillsBottomFromChart]). */
@@ -667,10 +661,11 @@ class ViewsStatsViewModel @Inject constructor(
      * The string's shape still decides how to *parse* it, since the API returns "yyyy-MM" for some
      * month buckets and "yyyy-MM-dd" for others.
      */
-    private fun formatDataPointLabel(period: String, unit: StatsUnit): String {
-        if (period.matches(HOURLY_FORMAT_REGEX)) return formatHourlyLabel(period)
-        val date = parsePeriodDate(period) ?: return period
-        return date.format(DateTimeFormatter.ofPattern(labelPatternFor(unit), Locale.getDefault()))
+    private fun formatDataPointLabel(period: String, unit: StatsUnit): String = when {
+        period.matches(HOURLY_FORMAT_REGEX) -> formatHourlyLabel(period)
+        else -> parsePeriodDate(period)
+            ?.format(DateTimeFormatter.ofPattern(labelPatternFor(unit), Locale.getDefault()))
+            ?: period
     }
 
     private fun labelPatternFor(unit: StatsUnit): String = when (unit) {

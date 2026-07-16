@@ -1089,9 +1089,7 @@ class StatsRepository @Inject constructor(
                     StatsDateRange.Preset(num = DAYS_IN_12_MONTHS, date = previousEndString)
             }
             is StatsPeriod.Custom -> {
-                val daysBetween = ChronoUnit.DAYS.between(period.startDate, period.endDate).toInt() + 1
-                val previousEnd = period.startDate.minusDays(1)
-                val previousStart = previousEnd.minusDays(daysBetween.toLong() - 1)
+                val (previousStart, previousEnd) = previousWindowMirror(period.startDate, period.endDate)
                 StatsDateRange.Custom(
                     startDate = period.startDate.format(dateFormatter),
                     date = period.endDate.format(dateFormatter)
