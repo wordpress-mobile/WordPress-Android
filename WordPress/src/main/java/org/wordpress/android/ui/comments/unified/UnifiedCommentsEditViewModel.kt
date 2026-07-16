@@ -10,7 +10,6 @@ import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.COMMENT_EDITED
 import org.wordpress.android.datasets.wrappers.ReaderCommentTableWrapper
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.persistence.comments.CommentsDao.CommentEntity
 import org.wordpress.android.fluxc.store.CommentsStore
 import org.wordpress.android.models.usecases.LocalCommentCacheUpdateHandler
 import org.wordpress.android.modules.BG_THREAD
@@ -229,8 +228,27 @@ class UnifiedCommentsEditViewModel @Inject constructor(
     }
 
     private suspend fun mapCommentEssentials(): CommentEssentials {
-        val commentEntity = getCommentUseCase.execute(site, commentIdentifier.remoteCommentId)
-        return if (commentEntity != null) {
+        // A failed load returns default CommentEssentials, which fails isValid() and surfaces
+        // the load-error snackbar in initViews().
+        val essentials = if (canUseRs()) loadCommentViaRs() else loadCommentViaFluxC()
+        return essentials ?: CommentEssentials()
+    }
+
+    // Edit context returns the raw (unrendered) content the editor must show — the same
+    // thing the FluxC entity stored — plus the author email the view context omits.
+    private suspend fun loadCommentViaRs(): CommentEssentials? =
+        commentsRsDataSource.getCommentForEdit(site, commentIdentifier.remoteCommentId)?.let { rsComment ->
+            CommentEssentials(
+                commentId = commentIdentifier.remoteCommentId,
+                userName = rsComment.authorName,
+                commentText = rsComment.contentRaw,
+                userUrl = rsComment.authorUrl,
+                userEmail = rsComment.authorEmail
+            )
+        }
+
+    private suspend fun loadCommentViaFluxC(): CommentEssentials? =
+        getCommentUseCase.execute(site, commentIdentifier.remoteCommentId)?.let { commentEntity ->
             CommentEssentials(
                 commentId = commentEntity.id,
                 userName = commentEntity.authorName ?: "",
@@ -238,59 +256,52 @@ class UnifiedCommentsEditViewModel @Inject constructor(
                 userUrl = commentEntity.authorUrl ?: "",
                 userEmail = commentEntity.authorEmail ?: ""
             )
-        } else {
-            CommentEssentials()
         }
-    }
 
     private suspend fun updateComment(editedCommentEssentials: CommentEssentials) {
-        val commentEntity =
-            commentsStore.getCommentByLocalSiteAndRemoteId(site.id, commentIdentifier.remoteCommentId).firstOrNull()
-        commentEntity?.run {
-            val isCommentEntityUpdated = updateCommentEntity(this, editedCommentEssentials)
-            if (isCommentEntityUpdated) {
-                analyticsUtilsWrapper.trackCommentActionWithSiteDetails(
-                    COMMENT_EDITED,
-                    commentIdentifier.toCommentActionSource(),
-                    site
-                )
-                when (commentIdentifier) {
-                    is NotificationCommentIdentifier -> {
-                        updateNotificationEntity()
-                    }
-                    is ReaderCommentIdentifier -> {
-                        updateReaderEntity(editedCommentEssentials)
-                    }
-                    else -> {
-                        _uiActionEvent.postValue(Event(DONE))
-                        localCommentCacheUpdateHandler.requestCommentsUpdate()
-                    }
-                }
-            } else {
-                showUpdateCommentError()
-            }
-        } ?: showUpdateCommentError()
-    }
-
-    private suspend fun updateCommentEntity(
-        comment: CommentEntity,
-        editedCommentEssentials: CommentEssentials
-    ): Boolean {
         // Prefer wordpress-rs, which can edit comments on both WP.com and self-hosted
         // application-password sites (FluxC's updateEditComment can't reach app-password sites).
         // Fall back to FluxC for sites rs can't serve — e.g. XML-RPC-only self-hosted comments
         // still reachable through the legacy detail/reader launch points.
-        return if (canUseRs()) {
-            updateCommentViaRs(comment, editedCommentEssentials)
+        val saved = if (canUseRs()) {
+            updateCommentViaRs(editedCommentEssentials)
         } else {
-            val updatedComment = comment.copy(
-                authorUrl = editedCommentEssentials.userUrl,
-                authorName = editedCommentEssentials.userName,
-                authorEmail = editedCommentEssentials.userEmail,
-                content = editedCommentEssentials.commentText
-            )
-            !commentsStore.updateEditComment(site, updatedComment).isError
+            updateCommentViaFluxC(editedCommentEssentials)
         }
+        if (saved) {
+            analyticsUtilsWrapper.trackCommentActionWithSiteDetails(
+                COMMENT_EDITED,
+                commentIdentifier.toCommentActionSource(),
+                site
+            )
+            when (commentIdentifier) {
+                is NotificationCommentIdentifier -> {
+                    updateNotificationEntity()
+                }
+                is ReaderCommentIdentifier -> {
+                    updateReaderEntity(editedCommentEssentials)
+                }
+                else -> {
+                    _uiActionEvent.postValue(Event(DONE))
+                    localCommentCacheUpdateHandler.requestCommentsUpdate()
+                }
+            }
+        } else {
+            showUpdateCommentError()
+        }
+    }
+
+    private suspend fun updateCommentViaFluxC(editedCommentEssentials: CommentEssentials): Boolean {
+        val comment = commentsStore
+            .getCommentByLocalSiteAndRemoteId(site.id, commentIdentifier.remoteCommentId)
+            .firstOrNull() ?: return false
+        val updatedComment = comment.copy(
+            authorUrl = editedCommentEssentials.userUrl,
+            authorName = editedCommentEssentials.userName,
+            authorEmail = editedCommentEssentials.userEmail,
+            content = editedCommentEssentials.commentText
+        )
+        return !commentsStore.updateEditComment(site, updatedComment).isError
     }
 
     private fun canUseRs(): Boolean = site.isUsingWpComRestApi || site.hasApplicationPassword()
@@ -302,11 +313,12 @@ class UnifiedCommentsEditViewModel @Inject constructor(
      * server echo (not the values that were sent) is what's cached so server-side normalisation
      * (e.g. KSES content filtering) can't diverge from the cache; the legacy FluxC path also
      * cached the server response.
+     *
+     * The mirror is best-effort: comments opened from the rs list on an application-password
+     * site may have no FluxC row (FluxC can't fetch there), and the rs screens read the server,
+     * not the cache.
      */
-    private suspend fun updateCommentViaRs(
-        comment: CommentEntity,
-        editedCommentEssentials: CommentEssentials
-    ): Boolean {
+    private suspend fun updateCommentViaRs(editedCommentEssentials: CommentEssentials): Boolean {
         // The endpoint applies author fields to the comment record for any comment (registered
         // author or not), same as the legacy FluxC POST and wp-admin's comment editor.
         val result = commentsRsDataSource.updateComment(
@@ -320,14 +332,19 @@ class UnifiedCommentsEditViewModel @Inject constructor(
             )
         )
         if (result !is RsEditResult.Success) return false
-        val serverComment = comment.copy(
-            authorName = result.comment.authorName,
-            authorEmail = result.comment.authorEmail,
-            authorUrl = result.comment.authorUrl,
-            content = result.comment.contentRaw
-        )
-        // Local-only cache write (isError = false persists the entity without a network round-trip).
-        commentsStore.updateComment(isError = false, commentId = serverComment.id, comment = serverComment)
+        commentsStore
+            .getCommentByLocalSiteAndRemoteId(site.id, commentIdentifier.remoteCommentId)
+            .firstOrNull()?.let { cached ->
+                val serverComment = cached.copy(
+                    authorName = result.comment.authorName,
+                    authorEmail = result.comment.authorEmail,
+                    authorUrl = result.comment.authorUrl,
+                    content = result.comment.contentRaw
+                )
+                // Local-only cache write (isError = false persists the entity without a network
+                // round-trip).
+                commentsStore.updateComment(isError = false, commentId = serverComment.id, comment = serverComment)
+            }
         return true
     }
 
