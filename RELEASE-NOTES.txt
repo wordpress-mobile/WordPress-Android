@@ -3,6 +3,7 @@
 27.0
 -----
 * [*] You can now browse Google Photos (albums, collections, and search) when adding photos or videos from your device.
+* [*] Stats now refresh when you return to the screen, so your latest data appears without a manual pull-to-refresh. [https://github.com/wordpress-mobile/WordPress-Android/pull/23112]
 
 
 26.9
