@@ -99,7 +99,7 @@ class StatsDataSourceImpl @Inject constructor(
             quantity = quantity.toUInt(),
             endDate = endDate,
             startDate = startDate,
-            statFields = statFields?.map { it.toApiField() },
+            statFields = statFields?.map { it.toApiField() } ?: emptyList(),
         )
 
         val result = getOrCreateClient().request { requestBuilder ->
