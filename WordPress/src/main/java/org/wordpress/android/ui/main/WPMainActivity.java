@@ -1468,7 +1468,9 @@ public class WPMainActivity extends BaseAppCompatActivity implements
         if (mAccountStore.hasAccessToken()) {
             if (mBottomNav != null) {
                 mBottomNav.showNoteBadge(mAccountStore.getAccount().getHasUnseenNotes());
-                mBottomNav.refreshGravatar();
+                if (event.causeOfChange == AccountAction.FETCH_ACCOUNT) {
+                    mBottomNav.refreshGravatar();
+                }
             }
         }
     }
