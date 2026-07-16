@@ -16,14 +16,19 @@ interface StatsDataSource {
      * @param siteId The WordPress.com site ID
      * @param unit The time unit for the stats (HOUR, DAY, etc.)
      * @param quantity The number of data points to fetch
-     * @param endDate The end date for the stats period (format: yyyy-MM-dd)
+     * @param endDate The end date for the stats period (format: yyyy-MM-dd), sent as the `date` query param
+     * @param startDate Optional start date for the stats period (format: yyyy-MM-dd)
+     * @param statFields Optional list of stat fields to restrict the response to. When null the API
+     * returns its default set of fields.
      * @return Result containing the stats data or an error
      */
     suspend fun fetchStatsVisits(
         siteId: Long,
         unit: StatsUnit,
         quantity: Int,
-        endDate: String
+        endDate: String,
+        startDate: String? = null,
+        statFields: List<StatsVisitField>? = null
     ): StatsVisitsDataResult
 
     /**
@@ -325,7 +330,21 @@ enum class StatsUnit {
     HOUR,
     DAY,
     WEEK,
-    MONTH
+    MONTH,
+    YEAR
+}
+
+/**
+ * A stat field that can be requested from the stats visits endpoint.
+ * Mirrors the fields exposed by the response accessors.
+ */
+enum class StatsVisitField {
+    VIEWS,
+    VISITORS,
+    LIKES,
+    REBLOGS,
+    COMMENTS,
+    POSTS
 }
 
 /**

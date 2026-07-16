@@ -675,6 +675,10 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
         if (!isAdded()) {
             return;
         }
+        // The editor loads and saves the comment over the network, so don't open it offline.
+        if (!NetworkUtils.checkConnection(getActivity())) {
+            return;
+        }
         if (mCommentSource != null) {
             AnalyticsUtils.trackCommentActionWithSiteDetails(
                     Stat.COMMENT_EDITOR_OPENED,
@@ -705,7 +709,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
         switch (mCommentSource) {
             case SITE_COMMENTS:
                 if (mComment != null) {
-                    return new SiteCommentIdentifier(mComment.getId(), mComment.getRemoteCommentId());
+                    return new SiteCommentIdentifier(mComment.getRemoteCommentId());
                 } else {
                     return null;
                 }

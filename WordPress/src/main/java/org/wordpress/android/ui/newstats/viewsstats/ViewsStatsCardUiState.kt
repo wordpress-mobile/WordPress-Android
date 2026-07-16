@@ -2,9 +2,31 @@ package org.wordpress.android.ui.newstats.viewsstats
 
 /**
  * UI State for the Views Stats card in the new stats screen.
+ *
+ * The chart region and the bottom-stats row load from independent calls, so once the card is past
+ * the initial [Loading] frame it holds a [Content] whose two sub-states advance on their own. This
+ * lets the chart render while the bottom row is still loading (and vice versa), and lets either one
+ * fail without hiding the other. [Error] is reserved for fatal cases where nothing can be fetched
+ * (no site selected, missing access token).
  */
 sealed class ViewsStatsCardUiState {
     data object Loading : ViewsStatsCardUiState()
+
+    data class Content(
+        val chart: ChartUiState,
+        val bottomStats: BottomStatsUiState,
+        val isLoadingNewPeriod: Boolean = false
+    ) : ViewsStatsCardUiState()
+
+    data class Error(val message: String) : ViewsStatsCardUiState()
+}
+
+/**
+ * State of the chart region (header totals + chart). Loads from the two chart calls, independently
+ * of the bottom row. [Error] renders a compact retry affordance while the bottom row stays visible.
+ */
+sealed class ChartUiState {
+    data object Loading : ChartUiState()
 
     data class Loaded(
         val currentPeriodViews: Long,
@@ -15,12 +37,20 @@ sealed class ViewsStatsCardUiState {
         val previousPeriodDateRange: String,
         val chartData: ViewsStatsChartData,
         val periodAverage: Long,
-        val bottomStats: List<StatItem>,
-        val chartType: ChartType = ChartType.LINE,
-        val isLoadingNewPeriod: Boolean = false
-    ) : ViewsStatsCardUiState()
+        val chartType: ChartType = ChartType.LINE
+    ) : ChartUiState()
 
-    data class Error(val message: String) : ViewsStatsCardUiState()
+    data object Error : ChartUiState()
+}
+
+/**
+ * State of the bottom-stats row. Loads from a dedicated call, independently of the chart. [Hidden]
+ * means the dedicated call failed, so the row is dropped rather than shown with missing data.
+ */
+sealed class BottomStatsUiState {
+    data object Loading : BottomStatsUiState()
+    data class Loaded(val stats: List<StatItem>) : BottomStatsUiState()
+    data object Hidden : BottomStatsUiState()
 }
 
 /**

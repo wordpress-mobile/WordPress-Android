@@ -280,7 +280,7 @@ class UnifiedCommentDetailsViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `onEditClicked emits launch edit event with local id from cache`() = test {
+    fun `onEditClicked emits launch edit event with site comment identifier`() = test {
         viewModel.start(site, REMOTE_COMMENT_ID)
 
         viewModel.onEditClicked()
@@ -288,7 +288,18 @@ class UnifiedCommentDetailsViewModelTest : BaseUnitTest() {
         val event = uiActionEvents.last()
         assertThat(event).isInstanceOf(LaunchEditComment::class.java)
         assertThat((event as LaunchEditComment).commentIdentifier)
-            .isEqualTo(SiteCommentIdentifier(LOCAL_COMMENT_ID, REMOTE_COMMENT_ID))
+            .isEqualTo(SiteCommentIdentifier(REMOTE_COMMENT_ID))
+    }
+
+    @Test
+    fun `onEditClicked shows snackbar and does not open the editor when offline`() = test {
+        viewModel.start(site, REMOTE_COMMENT_ID)
+        whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(false)
+
+        viewModel.onEditClicked()
+
+        assertThat(uiActionEvents.filterIsInstance<LaunchEditComment>()).isEmpty()
+        assertThat(snackbarMessages).isNotEmpty
     }
 
     @Test

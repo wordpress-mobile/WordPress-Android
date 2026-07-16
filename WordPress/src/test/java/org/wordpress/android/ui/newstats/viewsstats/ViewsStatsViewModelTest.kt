@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.newstats.viewsstats
 
 import androidx.lifecycle.SavedStateHandle
+import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -8,6 +9,7 @@ import org.junit.Test
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.any
+import org.mockito.kotlin.doSuspendableAnswer
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
@@ -22,6 +24,8 @@ import org.wordpress.android.ui.newstats.StatsCardsConfiguration
 import org.wordpress.android.ui.newstats.repository.ViewsDataPoint
 import org.wordpress.android.ui.newstats.repository.StatsRepository
 import org.wordpress.android.ui.newstats.repository.StatsCardsConfigurationRepository
+import org.wordpress.android.ui.newstats.repository.BottomStatsAggregates
+import org.wordpress.android.ui.newstats.repository.BottomStatsResult
 import org.wordpress.android.ui.newstats.repository.PeriodAggregates
 import org.wordpress.android.ui.newstats.repository.PeriodStatsResult
 import org.wordpress.android.viewmodel.ResourceProvider
@@ -116,15 +120,15 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
         advanceUntilIdle()
 
         val state = viewModel.uiState.value
-        assertThat(state).isInstanceOf(ViewsStatsCardUiState.Loaded::class.java)
-        with(state as ViewsStatsCardUiState.Loaded) {
+        assertThat(state).isInstanceOf(ViewsStatsCardUiState.Content::class.java)
+        with(state.chartLoaded()) {
             assertThat(currentPeriodViews).isEqualTo(TEST_CURRENT_PERIOD_VIEWS)
             assertThat(previousPeriodViews).isEqualTo(TEST_PREVIOUS_PERIOD_VIEWS)
         }
     }
 
     @Test
-    fun `when period stats fetch fails, then error state is emitted`() = test {
+    fun `when period stats fetch fails, then chart region shows an error but the card stays`() = test {
         whenever(statsRepository.fetchStatsForPeriod(any(), any()))
             .thenReturn(PeriodStatsResult.Error("Network error"))
 
@@ -132,12 +136,12 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
         advanceUntilIdle()
 
         val state = viewModel.uiState.value
-        assertThat(state).isInstanceOf(ViewsStatsCardUiState.Error::class.java)
-        assertThat((state as ViewsStatsCardUiState.Error).message).isEqualTo(FAILED_TO_LOAD_ERROR)
+        assertThat(state).isInstanceOf(ViewsStatsCardUiState.Content::class.java)
+        assertThat((state as ViewsStatsCardUiState.Content).chart).isEqualTo(ChartUiState.Error)
     }
 
     @Test
-    fun `when period data is empty, then chart data is empty but state is loaded`() = test {
+    fun `when period data is empty, then chart data is empty but chart is loaded`() = test {
         val result = createPeriodStatsResult(currentPeriodData = emptyList(), previousPeriodData = emptyList())
 
         whenever(statsRepository.fetchStatsForPeriod(any(), any()))
@@ -147,8 +151,8 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
         advanceUntilIdle()
 
         val state = viewModel.uiState.value
-        assertThat(state).isInstanceOf(ViewsStatsCardUiState.Loaded::class.java)
-        with(state as ViewsStatsCardUiState.Loaded) {
+        assertThat(state).isInstanceOf(ViewsStatsCardUiState.Content::class.java)
+        with(state.chartLoaded()) {
             assertThat(chartData.currentPeriod).isEmpty()
             assertThat(chartData.previousPeriod).isEmpty()
         }
@@ -198,7 +202,7 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
         initViewModel()
         advanceUntilIdle()
 
-        val state = viewModel.uiState.value as ViewsStatsCardUiState.Loaded
+        val state = viewModel.uiState.value.chartLoaded()
         assertThat(state.viewsDifference).isEqualTo(-1000L)
     }
 
@@ -212,7 +216,7 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
         initViewModel()
         advanceUntilIdle()
 
-        val state = viewModel.uiState.value as ViewsStatsCardUiState.Loaded
+        val state = viewModel.uiState.value.chartLoaded()
         assertThat(state.viewsPercentageChange).isEqualTo(-10.0)
     }
 
@@ -226,7 +230,7 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
         initViewModel()
         advanceUntilIdle()
 
-        val state = viewModel.uiState.value as ViewsStatsCardUiState.Loaded
+        val state = viewModel.uiState.value.chartLoaded()
         assertThat(state.viewsPercentageChange).isEqualTo(100.0)
     }
 
@@ -262,65 +266,126 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
 
     @Test
     fun `when bottom stats are built, then they contain all stat types`() = test {
-        val result = createPeriodStatsResult()
-
         whenever(statsRepository.fetchStatsForPeriod(any(), any()))
-            .thenReturn(result)
+            .thenReturn(createPeriodStatsResult())
+        whenever(statsRepository.fetchBottomStats(any(), any()))
+            .thenReturn(createBottomStatsResult())
 
         initViewModel()
         advanceUntilIdle()
 
-        val state = viewModel.uiState.value as ViewsStatsCardUiState.Loaded
-        assertThat(state.bottomStats).hasSize(5)
-        assertThat(state.bottomStats.map { it.label }).containsExactly(
+        val stats = viewModel.uiState.value.bottomStatsOrNull()
+        assertThat(stats).hasSize(5)
+        assertThat(stats!!.map { it.label }).containsExactly(
             "Views", "Visitors", "Likes", "Comments", "Posts"
         )
     }
 
     @Test
-    fun `when stat increases, then positive change is calculated`() = test {
-        val result = createPeriodStatsResult(currentViews = 1000L, previousViews = 800L)
-
+    fun `when the bottom stats fetch fails, then the bottom row is hidden`() = test {
         whenever(statsRepository.fetchStatsForPeriod(any(), any()))
-            .thenReturn(result)
+            .thenReturn(createPeriodStatsResult())
+        whenever(statsRepository.fetchBottomStats(any(), any()))
+            .thenReturn(BottomStatsResult.Error)
 
         initViewModel()
         advanceUntilIdle()
 
-        val state = viewModel.uiState.value as ViewsStatsCardUiState.Loaded
-        val viewsStat = state.bottomStats.first { it.label == "Views" }
+        assertThat(viewModel.uiState.value.bottomState()).isEqualTo(BottomStatsUiState.Hidden)
+    }
+
+    @Test
+    fun `when the bottom stats fetch fails, then the chart still loads`() = test {
+        whenever(statsRepository.fetchStatsForPeriod(any(), any()))
+            .thenReturn(createPeriodStatsResult())
+        whenever(statsRepository.fetchBottomStats(any(), any()))
+            .thenReturn(BottomStatsResult.Error)
+
+        initViewModel()
+        advanceUntilIdle()
+
+        // The chart region is independent of the bottom row, so it stays loaded.
+        assertThat(viewModel.uiState.value.chartLoaded().currentPeriodViews)
+            .isEqualTo(TEST_CURRENT_PERIOD_VIEWS)
+    }
+
+    @Test
+    fun `when the chart fetch fails, then the bottom row still loads`() = test {
+        whenever(statsRepository.fetchStatsForPeriod(any(), any()))
+            .thenReturn(PeriodStatsResult.Error("Network error"))
+        whenever(statsRepository.fetchBottomStats(any(), any()))
+            .thenReturn(createBottomStatsResult())
+
+        initViewModel()
+        advanceUntilIdle()
+
+        val state = viewModel.uiState.value as ViewsStatsCardUiState.Content
+        assertThat(state.chart).isEqualTo(ChartUiState.Error)
+        assertThat(state.bottomStats).isInstanceOf(BottomStatsUiState.Loaded::class.java)
+    }
+
+    @Test
+    fun `when bottom stats fail transiently, then the next visibility retries and recovers the row`() = test {
+        whenever(statsRepository.fetchStatsForPeriod(any(), any()))
+            .thenReturn(createPeriodStatsResult())
+        // First attempt fails (row hidden); the retry on next visibility succeeds.
+        whenever(statsRepository.fetchBottomStats(any(), any()))
+            .thenReturn(BottomStatsResult.Error)
+            .thenReturn(createBottomStatsResult())
+
+        initViewModel()
+        advanceUntilIdle()
+        assertThat(viewModel.uiState.value.bottomState()).isEqualTo(BottomStatsUiState.Hidden)
+
+        // The card becoming visible again must retry, since the period was not fully loaded.
+        viewModel.loadDataIfNeeded()
+        advanceUntilIdle()
+
+        assertThat(viewModel.uiState.value.bottomState()).isInstanceOf(BottomStatsUiState.Loaded::class.java)
+        verify(statsRepository, times(2)).fetchBottomStats(any(), any())
+    }
+
+    @Test
+    fun `when stat increases, then positive change is calculated`() = test {
+        whenever(statsRepository.fetchStatsForPeriod(any(), any()))
+            .thenReturn(createPeriodStatsResult())
+        whenever(statsRepository.fetchBottomStats(any(), any()))
+            .thenReturn(createBottomStatsResult(currentViews = 1000L, previousViews = 800L))
+
+        initViewModel()
+        advanceUntilIdle()
+
+        val viewsStat = viewModel.uiState.value.bottomStatsOrNull()!!.first { it.label == "Views" }
         assertThat(viewsStat.change).isInstanceOf(StatChange.Positive::class.java)
         assertThat((viewsStat.change as StatChange.Positive).percentage).isEqualTo(25.0)
     }
 
     @Test
     fun `when stat decreases, then negative change is calculated`() = test {
-        val result = createPeriodStatsResult(currentViews = 800L, previousViews = 1000L)
-
         whenever(statsRepository.fetchStatsForPeriod(any(), any()))
-            .thenReturn(result)
+            .thenReturn(createPeriodStatsResult())
+        whenever(statsRepository.fetchBottomStats(any(), any()))
+            .thenReturn(createBottomStatsResult(currentViews = 800L, previousViews = 1000L))
 
         initViewModel()
         advanceUntilIdle()
 
-        val state = viewModel.uiState.value as ViewsStatsCardUiState.Loaded
-        val viewsStat = state.bottomStats.first { it.label == "Views" }
+        val viewsStat = viewModel.uiState.value.bottomStatsOrNull()!!.first { it.label == "Views" }
         assertThat(viewsStat.change).isInstanceOf(StatChange.Negative::class.java)
         assertThat((viewsStat.change as StatChange.Negative).percentage).isEqualTo(20.0)
     }
 
     @Test
     fun `when stat is unchanged, then no change is calculated`() = test {
-        val result = createPeriodStatsResult(currentViews = 1000L, previousViews = 1000L)
-
         whenever(statsRepository.fetchStatsForPeriod(any(), any()))
-            .thenReturn(result)
+            .thenReturn(createPeriodStatsResult())
+        whenever(statsRepository.fetchBottomStats(any(), any()))
+            .thenReturn(createBottomStatsResult(currentViews = 1000L, previousViews = 1000L))
 
         initViewModel()
         advanceUntilIdle()
 
-        val state = viewModel.uiState.value as ViewsStatsCardUiState.Loaded
-        val viewsStat = state.bottomStats.first { it.label == "Views" }
+        val viewsStat = viewModel.uiState.value.bottomStatsOrNull()!!.first { it.label == "Views" }
         assertThat(viewsStat.change).isInstanceOf(StatChange.NoChange::class.java)
     }
 
@@ -334,13 +399,13 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
         initViewModel()
         advanceUntilIdle()
 
-        val state = viewModel.uiState.value as ViewsStatsCardUiState.Loaded
+        val state = viewModel.uiState.value.chartLoaded()
         // 7000 views / 2 data points = 3500 average
         assertThat(state.periodAverage).isEqualTo(3500L)
     }
 
     @Test
-    fun `when exception is thrown during fetch, then error state is emitted`() = test {
+    fun `when exception is thrown during chart fetch, then chart region shows an error`() = test {
         whenever(statsRepository.fetchStatsForPeriod(any(), any()))
             .thenThrow(RuntimeException("Test exception"))
 
@@ -348,8 +413,8 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
         advanceUntilIdle()
 
         val state = viewModel.uiState.value
-        assertThat(state).isInstanceOf(ViewsStatsCardUiState.Error::class.java)
-        assertThat((state as ViewsStatsCardUiState.Error).message).isEqualTo("Test exception")
+        assertThat(state).isInstanceOf(ViewsStatsCardUiState.Content::class.java)
+        assertThat((state as ViewsStatsCardUiState.Content).chart).isEqualTo(ChartUiState.Error)
     }
 
     @Test
@@ -424,6 +489,9 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
 
         whenever(statsRepository.fetchStatsForPeriod(any(), any()))
             .thenReturn(result)
+        // Both regions must succeed for the period to be treated as fully loaded (and thus skipped).
+        whenever(statsRepository.fetchBottomStats(any(), any()))
+            .thenReturn(createBottomStatsResult())
 
         initViewModel()
         advanceUntilIdle()
@@ -450,7 +518,7 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
 
         viewModel.onChartTypeChanged(ChartType.BAR)
 
-        val state = viewModel.uiState.value as ViewsStatsCardUiState.Loaded
+        val state = viewModel.uiState.value.chartLoaded()
         assertThat(state.chartType).isEqualTo(ChartType.BAR)
     }
 
@@ -491,7 +559,7 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
         viewModel.loadDataIfNeeded()
         advanceUntilIdle()
 
-        val state = viewModel.uiState.value as ViewsStatsCardUiState.Loaded
+        val state = viewModel.uiState.value.chartLoaded()
         assertThat(state.chartType).isEqualTo(ChartType.BAR)
     }
 
@@ -513,7 +581,7 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
         viewModel.loadDataIfNeeded()
         advanceUntilIdle()
 
-        val state = viewModel.uiState.value as ViewsStatsCardUiState.Loaded
+        val state = viewModel.uiState.value.chartLoaded()
         assertThat(state.chartType).isEqualTo(ChartType.BAR)
     }
 
@@ -610,6 +678,10 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
                 fetchCount++
                 createPeriodStatsResult()
             }
+        // Both regions must succeed so the drill-down period is treated as fully loaded, otherwise
+        // the later loadDataIfNeeded would retry and inflate the fetch count.
+        whenever(statsRepository.fetchBottomStats(any(), any()))
+            .thenReturn(createBottomStatsResult())
 
         initViewModel()
         advanceUntilIdle()
@@ -689,6 +761,42 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
         }
     }
 
+    @Test
+    fun `when drilling down and the chart finishes first, then the card stays dimmed until bottom stats finish`() =
+        test {
+            whenever(statsRepository.fetchStatsForPeriod(any(), any()))
+                .thenReturn(createPeriodStatsResult())
+            // Gate the (slower, dedicated) bottom-stats call so the chart always resolves first.
+            var bottomGate = CompletableDeferred<Unit>()
+            whenever(statsRepository.fetchBottomStats(any(), any())).doSuspendableAnswer {
+                bottomGate.await()
+                createBottomStatsResult()
+            }
+
+            initViewModel()
+            bottomGate.complete(Unit)
+            advanceUntilIdle()
+
+            // Fresh gate for the drill-down load; leave it pending so only the chart completes.
+            bottomGate = CompletableDeferred()
+            viewModel.onChartTypeChanged(ChartType.BAR)
+            viewModel.onBarTapped(0)
+            advanceUntilIdle()
+
+            // Chart has resolved for the new period, but the card must remain dimmed because the
+            // bottom row still holds the previous period's totals.
+            val dimmedState = viewModel.uiState.value as ViewsStatsCardUiState.Content
+            assertThat(dimmedState.chart).isInstanceOf(ChartUiState.Loaded::class.java)
+            assertThat(dimmedState.isLoadingNewPeriod).isTrue
+
+            // Once the bottom row resolves for the new period, the card un-dims.
+            bottomGate.complete(Unit)
+            advanceUntilIdle()
+
+            val finalState = viewModel.uiState.value as ViewsStatsCardUiState.Content
+            assertThat(finalState.isLoadingNewPeriod).isFalse
+        }
+
     // endregion
 
     // region ChartType storage key
@@ -744,6 +852,43 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
             previousPeriodData = previousPeriodData
         )
     }
+
+    private fun createBottomStatsResult(
+        currentViews: Long = TEST_CURRENT_PERIOD_VIEWS,
+        currentVisitors: Long = TEST_CURRENT_PERIOD_VISITORS,
+        currentLikes: Long = TEST_CURRENT_PERIOD_LIKES,
+        currentComments: Long = TEST_CURRENT_PERIOD_COMMENTS,
+        currentPosts: Long = TEST_CURRENT_PERIOD_POSTS,
+        previousViews: Long = TEST_PREVIOUS_PERIOD_VIEWS,
+        previousVisitors: Long = TEST_PREVIOUS_PERIOD_VISITORS,
+        previousLikes: Long = TEST_PREVIOUS_PERIOD_LIKES,
+        previousComments: Long = TEST_PREVIOUS_PERIOD_COMMENTS,
+        previousPosts: Long = TEST_PREVIOUS_PERIOD_POSTS
+    ): BottomStatsResult.Success = BottomStatsResult.Success(
+        current = BottomStatsAggregates(
+            views = currentViews,
+            visitors = currentVisitors,
+            likes = currentLikes,
+            comments = currentComments,
+            posts = currentPosts
+        ),
+        previous = BottomStatsAggregates(
+            views = previousViews,
+            visitors = previousVisitors,
+            likes = previousLikes,
+            comments = previousComments,
+            posts = previousPosts
+        )
+    )
+
+    private fun ViewsStatsCardUiState.chartLoaded(): ChartUiState.Loaded =
+        (this as ViewsStatsCardUiState.Content).chart as ChartUiState.Loaded
+
+    private fun ViewsStatsCardUiState.bottomState(): BottomStatsUiState =
+        (this as ViewsStatsCardUiState.Content).bottomStats
+
+    private fun ViewsStatsCardUiState.bottomStatsOrNull(): List<StatItem>? =
+        (bottomState() as? BottomStatsUiState.Loaded)?.stats
 
     private fun createDefaultDataPoints() = listOf(
         ViewsDataPoint(

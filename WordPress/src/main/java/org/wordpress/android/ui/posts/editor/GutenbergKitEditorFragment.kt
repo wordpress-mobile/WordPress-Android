@@ -202,7 +202,6 @@ class GutenbergKitEditorFragment : GutenbergKitEditorFragmentBase() {
                 intent: Intent?, requestCode: Int? ->
             @Suppress("DEPRECATION")
             startActivityForResult(intent!!, requestCode!!)
-            null
         }
         gutenbergView.setContentChangeListener(object : ContentChangeListener {
             override fun onContentChanged() {
