@@ -4,19 +4,23 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.newstats.StatsPeriod
+import org.wordpress.android.ui.newstats.repository.BottomStatsAggregates
+import org.wordpress.android.ui.newstats.repository.BottomStatsResult
 import org.wordpress.android.ui.newstats.repository.PeriodStatsResult
 import org.wordpress.android.ui.newstats.repository.StatsCardsConfigurationRepository
 import org.wordpress.android.ui.newstats.repository.StatsRepository
-import org.wordpress.android.ui.newstats.repository.PeriodAggregates
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.viewmodel.ResourceProvider
 import java.time.LocalDate
@@ -25,6 +29,7 @@ import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
 import java.util.Locale
 import javax.inject.Inject
+import kotlin.coroutines.cancellation.CancellationException
 import kotlin.math.abs
 
 private const val PERCENTAGE_BASE = 100.0
@@ -253,22 +258,25 @@ class ViewsStatsViewModel @Inject constructor(
     fun onChartTypeChanged(chartType: ChartType) {
         currentChartType = chartType
         saveChartType(chartType)
-        val currentState = _uiState.value
-        if (currentState is ViewsStatsCardUiState.Loaded) {
-            _uiState.value = currentState.copy(chartType = chartType)
+        _uiState.update { current ->
+            val chart = (current as? ViewsStatsCardUiState.Content)?.chart
+            if (current is ViewsStatsCardUiState.Content && chart is ChartUiState.Loaded) {
+                current.copy(chart = chart.copy(chartType = chartType))
+            } else {
+                current
+            }
         }
     }
 
     @Suppress("ReturnCount")
     fun onBarTapped(index: Int) {
-        val state = _uiState.value as? ViewsStatsCardUiState.Loaded
-            ?: return
-        if (state.isLoadingNewPeriod) return
-        val dataPoint = state.chartData.currentPeriod.getOrNull(index)
-            ?: return
+        val content = _uiState.value as? ViewsStatsCardUiState.Content ?: return
+        if (content.isLoadingNewPeriod) return
+        val chart = content.chart as? ChartUiState.Loaded ?: return
+        val dataPoint = chart.chartData.currentPeriod.getOrNull(index) ?: return
         val rawPeriod = dataPoint.rawPeriod
         val newPeriod = drillDownPeriod(rawPeriod) ?: return
-        _uiState.value = state.copy(isLoadingNewPeriod = true)
+        _uiState.value = content.copy(isLoadingNewPeriod = true)
         onPeriodChanged(newPeriod)
         loadingPeriod = newPeriod
         loadData()
@@ -360,10 +368,13 @@ class ViewsStatsViewModel @Inject constructor(
 
         statsRepository.init(accessToken)
         val current = _uiState.value
-        if (current !is ViewsStatsCardUiState.Loaded ||
-            !current.isLoadingNewPeriod
-        ) {
-            _uiState.value = ViewsStatsCardUiState.Loading
+        // While switching to a new period we keep the previous content on screen (dimmed, with a
+        // spinner) instead of resetting to placeholders; otherwise show per-region placeholders.
+        if (current !is ViewsStatsCardUiState.Content || !current.isLoadingNewPeriod) {
+            _uiState.value = ViewsStatsCardUiState.Content(
+                chart = ChartUiState.Loading,
+                bottomStats = BottomStatsUiState.Loading
+            )
         }
 
         viewModelScope.launch {
@@ -371,39 +382,115 @@ class ViewsStatsViewModel @Inject constructor(
         }
     }
 
-    @Suppress("TooGenericExceptionCaught")
+    /**
+     * Loads the chart and the bottom-stats row concurrently and independently. Each updates only its
+     * own region of the [ViewsStatsCardUiState.Content] state as it completes, so the chart can
+     * appear before (or without) the bottom row and vice versa.
+     */
     private suspend fun loadDataInternal(site: SiteModel) {
+        val targetPeriod = currentPeriod
         try {
-            val result = statsRepository.fetchStatsForPeriod(
-                site.siteId,
-                currentPeriod
-            )
-            when (result) {
-                is PeriodStatsResult.Success -> {
-                    loadedPeriod = currentPeriod
-                    _uiState.value = buildLoadedState(result)
-                }
-                is PeriodStatsResult.Error -> {
-                    _uiState.value = ViewsStatsCardUiState.Error(
-                        message = resourceProvider.getString(
-                            R.string.stats_error_api
-                        )
-                    )
-                }
+            val (chartLoaded, bottomLoaded) = coroutineScope {
+                val chart = async { loadChart(site) }
+                val bottom = async { loadBottomStats(site) }
+                chart.await() to bottom.await()
             }
-        } catch (e: Exception) {
-            _uiState.value = ViewsStatsCardUiState.Error(
-                message = e.message
-                    ?: resourceProvider.getString(
-                        R.string.stats_error_unknown
-                    )
-            )
+            // Only treat the period as fully loaded when both regions succeeded. Otherwise a transient
+            // bottom-stats failure (which merely hides the row) would leave loadedPeriod set, making
+            // loadDataIfNeeded short-circuit forever with no recovery short of a manual refresh or a
+            // period change. Leaving loadedPeriod unset lets the next visibility retry the load.
+            if (chartLoaded && bottomLoaded) {
+                loadedPeriod = targetPeriod
+            }
         } finally {
             loadingPeriod = null
+            clearLoadingNewPeriod()
         }
     }
 
-    private fun buildLoadedState(result: PeriodStatsResult.Success): ViewsStatsCardUiState.Loaded {
+    /**
+     * Clears the card-level [ViewsStatsCardUiState.Content.isLoadingNewPeriod] dim flag once both the
+     * chart and the (independently, and often slower) bottom-row calls have completed. Clearing it here
+     * rather than when the chart alone finishes prevents the previous period's bottom-row totals from
+     * being shown un-dimmed as if they belonged to the new period.
+     */
+    private fun clearLoadingNewPeriod() {
+        _uiState.update { current ->
+            if (current is ViewsStatsCardUiState.Content && current.isLoadingNewPeriod) {
+                current.copy(isLoadingNewPeriod = false)
+            } else {
+                current
+            }
+        }
+    }
+
+    @Suppress("TooGenericExceptionCaught")
+    private suspend fun loadChart(site: SiteModel): Boolean {
+        var success = false
+        val chartState = try {
+            when (val result = statsRepository.fetchStatsForPeriod(site.siteId, currentPeriod)) {
+                is PeriodStatsResult.Success -> {
+                    success = true
+                    buildChartLoaded(result)
+                }
+                is PeriodStatsResult.Error -> ChartUiState.Error
+            }
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            AppLog.e(AppLog.T.STATS, "Error loading views chart", e)
+            ChartUiState.Error
+        }
+        updateChart(chartState)
+        return success
+    }
+
+    @Suppress("TooGenericExceptionCaught")
+    private suspend fun loadBottomStats(site: SiteModel): Boolean {
+        var success = false
+        val bottomState = try {
+            when (val result = statsRepository.fetchBottomStats(site.siteId, currentPeriod)) {
+                is BottomStatsResult.Success -> {
+                    success = true
+                    BottomStatsUiState.Loaded(buildStatItems(result.current, result.previous))
+                }
+                is BottomStatsResult.Error -> BottomStatsUiState.Hidden
+            }
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            AppLog.e(AppLog.T.STATS, "Error loading bottom stats", e)
+            BottomStatsUiState.Hidden
+        }
+        updateBottom(bottomState)
+        return success
+    }
+
+    /**
+     * Applies a chart-region update, preserving the current bottom-row state. The card-level
+     * [ViewsStatsCardUiState.Content.isLoadingNewPeriod] dim flag is intentionally left untouched here;
+     * it is cleared by [clearLoadingNewPeriod] only once both regions have finished loading.
+     */
+    private fun updateChart(chart: ChartUiState) {
+        _uiState.update { current ->
+            when (current) {
+                is ViewsStatsCardUiState.Content -> current.copy(chart = chart)
+                else -> ViewsStatsCardUiState.Content(chart = chart, bottomStats = BottomStatsUiState.Loading)
+            }
+        }
+    }
+
+    /** Applies a bottom-row update, preserving the current chart state. */
+    private fun updateBottom(bottom: BottomStatsUiState) {
+        _uiState.update { current ->
+            when (current) {
+                is ViewsStatsCardUiState.Content -> current.copy(bottomStats = bottom)
+                else -> ViewsStatsCardUiState.Content(chart = ChartUiState.Loading, bottomStats = bottom)
+            }
+        }
+    }
+
+    private fun buildChartLoaded(result: PeriodStatsResult.Success): ChartUiState.Loaded {
         val currentStats = result.currentAggregates
         val previousStats = result.previousAggregates
         val currentDataPoints = result.currentPeriodData
@@ -435,7 +522,7 @@ class ViewsStatsViewModel @Inject constructor(
             0L
         }
 
-        return ViewsStatsCardUiState.Loaded(
+        return ChartUiState.Loaded(
             currentPeriodViews = currentStats.views,
             previousPeriodViews = previousStats.views,
             viewsDifference = currentStats.views - previousStats.views,
@@ -452,14 +539,13 @@ class ViewsStatsViewModel @Inject constructor(
             ),
             chartData = ViewsStatsChartData(currentPeriod = currentDataPoints, previousPeriod = previousDataPoints),
             periodAverage = average,
-            bottomStats = buildBottomStats(currentStats, previousStats),
             chartType = currentChartType
         )
     }
 
-    private fun buildBottomStats(
-        currentPeriod: PeriodAggregates,
-        previousPeriod: PeriodAggregates
+    private fun buildStatItems(
+        currentPeriod: BottomStatsAggregates,
+        previousPeriod: BottomStatsAggregates
     ): List<StatItem> {
         return listOf(
             StatItem(

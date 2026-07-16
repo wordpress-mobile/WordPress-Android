@@ -135,6 +135,7 @@ class WpApiClientProvider @Inject constructor(
                 }
             })
             .apply { interceptors.forEach { addInterceptor(it) } }
+            .applyWpRsTimeouts()
             .build()
 
         val httpClient = WpHttpClient.CustomOkHttpClient(okHttpClient)
