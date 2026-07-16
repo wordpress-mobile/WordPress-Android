@@ -11,6 +11,7 @@ import uniffi.wp_api.CommentDeleteParams
 import uniffi.wp_api.CommentListParams
 import uniffi.wp_api.CommentRetrieveParams
 import uniffi.wp_api.CommentUpdateParams
+import uniffi.wp_api.CommentWithEditContext
 import uniffi.wp_api.CommentWithViewContext
 import uniffi.wp_api.PostEndpointType
 import uniffi.wp_api.PostListParams
@@ -84,6 +85,24 @@ class CommentsRsDataSource @Inject constructor(
             }
         ) {
             is WpRequestResult.Success -> result.response.data.toRsComment()
+            else -> null
+        }
+    }
+
+    /**
+     * Fetches a comment's editable state for pre-filling the edit screen. Uses the edit context —
+     * unlike the view context, it returns the raw (unrendered) content and the author email.
+     * Requires the `edit_comment` capability; a denial returns null, which the editor surfaces
+     * as its load-error snackbar.
+     */
+    suspend fun getCommentForEdit(site: SiteModel, commentId: Long): RsEditedComment? = safe(errorValue = null) {
+        val client = wpApiClientProvider.getWpApiClient(site)
+        when (
+            val result = client.request {
+                it.comments().retrieveWithEditContext(commentId, CommentRetrieveParams())
+            }
+        ) {
+            is WpRequestResult.Success -> result.response.data.toRsEditedComment()
             else -> null
         }
     }
@@ -210,9 +229,10 @@ class CommentsRsDataSource @Inject constructor(
     data class CommentAuthor(val name: String, val email: String, val url: String)
 
     /**
-     * The server's post-save state of an edited comment. Mirroring this (rather than the values
-     * that were sent) into the FluxC cache keeps the cache faithful when the server normalises
-     * fields — e.g. content passes through KSES filtering.
+     * A comment's editable state (edit context): the edit screen's pre-fill and the server's
+     * post-save echo. Mirroring the echo (rather than the values that were sent) into the FluxC
+     * cache keeps the cache faithful when the server normalises fields — e.g. content passes
+     * through KSES filtering.
      */
     data class RsEditedComment(
         val authorName: String,
@@ -247,21 +267,18 @@ class CommentsRsDataSource @Inject constructor(
             )
         }
         when (result) {
-            is WpRequestResult.Success -> {
-                val serverComment = result.response.data
-                RsEditResult.Success(
-                    RsEditedComment(
-                        authorName = serverComment.authorName,
-                        authorEmail = serverComment.authorEmail,
-                        authorUrl = serverComment.authorUrl,
-                        contentRaw = serverComment.content.raw
-                    )
-                )
-            }
+            is WpRequestResult.Success -> RsEditResult.Success(result.response.data.toRsEditedComment())
             is WpRequestResult.WpError -> RsEditResult.Error(result.errorMessage)
             else -> RsEditResult.Error(null)
         }
     }
+
+    private fun CommentWithEditContext.toRsEditedComment() = RsEditedComment(
+        authorName = authorName,
+        authorEmail = authorEmail,
+        authorUrl = authorUrl,
+        contentRaw = content.raw
+    )
 
     suspend fun delete(site: SiteModel, commentId: Long): RsResult =
         write(site) { it.comments().delete(commentId, CommentDeleteParams()) }

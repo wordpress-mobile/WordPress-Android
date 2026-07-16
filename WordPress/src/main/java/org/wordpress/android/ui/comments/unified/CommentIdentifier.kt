@@ -8,7 +8,6 @@ sealed class CommentIdentifier : Parcelable {
 
     @Parcelize
     data class SiteCommentIdentifier(
-        val localCommentId: Int,
         override val remoteCommentId: Long
     ) : CommentIdentifier()
 
