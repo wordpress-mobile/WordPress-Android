@@ -261,8 +261,12 @@ public class WPMediaUtils {
     }
 
     private static Intent prepareMediaLibraryIntent(Context context, boolean multiSelect) {
+        // Use broad wildcards rather than our explicit accepted-subtype list: on Android 13+ this
+        // ACTION_GET_CONTENT routes to the system Photo Picker, which filters album/cloud contents by
+        // an exact match against EXTRA_MIME_TYPES. An explicit list (image/jpeg, image/heic, ...) makes
+        // Google Photos albums appear empty because cloud items may not report a matching subtype.
         return prepareIntent(context, multiSelect, Intent.ACTION_GET_CONTENT, "*/*",
-                new MimeTypes().getVideoAndImageTypesOnly(), R.string.pick_media);
+                new String[]{"image/*", "video/*"}, R.string.pick_media);
     }
 
     private static Intent prepareIntent(Context context, boolean multiSelect, String action, String intentType,

@@ -21,6 +21,7 @@ import org.wordpress.android.ui.newstats.datasource.StatsSummaryDataResult
 import org.wordpress.android.ui.newstats.datasource.StatsSummaryData
 import org.wordpress.android.ui.newstats.datasource.StatsDateRange
 import org.wordpress.android.ui.newstats.datasource.StatsUnit
+import org.wordpress.android.ui.newstats.datasource.StatsVisitField
 import org.wordpress.android.ui.newstats.datasource.StatsVisitsData
 import org.wordpress.android.ui.newstats.datasource.StatsVisitsDataResult
 import org.wordpress.android.ui.newstats.datasource.TopAuthorsDataResult
@@ -56,6 +57,14 @@ private const val DAYS_IN_12_MONTHS = 365
 private const val MONTHS_IN_6_MONTHS = 6
 private const val MONTHS_IN_12_MONTHS = 12
 private const val MAX_DAYS_IN_MONTH = 31
+private const val MAX_DAYS_IN_2_YEARS = 731
+private val BOTTOM_STAT_FIELDS = listOf(
+    StatsVisitField.VIEWS,
+    StatsVisitField.VISITORS,
+    StatsVisitField.LIKES,
+    StatsVisitField.COMMENTS,
+    StatsVisitField.POSTS
+)
 private const val PERCENTAGE_MULTIPLIER = 100.0
 private const val PERCENTAGE_NO_CHANGE = 0.0
 
@@ -339,11 +348,15 @@ class StatsRepository @Inject constructor(
     }
 
     /**
-     * Fetches stats data for a specific period with comparison to the previous period.
+     * Fetches the chart data for a specific period with comparison to the previous period.
+     *
+     * Only the two chart windows (current + previous) are fetched here. The bottom-row totals load
+     * separately via [fetchBottomStats] so the chart can render as soon as its own calls return,
+     * independently of the bottom row (a slow or failed bottom call never blocks the chart).
      *
      * @param siteId The WordPress.com site ID
      * @param period The stats period to fetch
-     * @return Combined stats for current and previous periods or error
+     * @return Chart stats for current and previous periods or error
      */
     suspend fun fetchStatsForPeriod(
         siteId: Long,
@@ -354,7 +367,7 @@ class StatsRepository @Inject constructor(
         val currentEndString = periodRange.currentEnd.format(dateFormatter)
         val previousEndString = periodRange.previousEnd.format(dateFormatter)
 
-        // Fetch both periods in parallel for better performance
+        // Fetch the current and previous chart periods in parallel
         val (currentResult, previousResult) = coroutineScope {
             val currentDeferred = async {
                 statsDataSource.fetchStatsVisits(
@@ -381,6 +394,74 @@ class StatsRepository @Inject constructor(
             buildPeriodStatsSuccess(currentResult.data, previousResult.data, periodRange)
         } else {
             buildPeriodStatsError(currentResult, previousResult)
+        }
+    }
+
+    /**
+     * Fetches the bottom-row totals for a period from a dedicated call that uses a coarser (or equal)
+     * unit than the chart so the API de-duplicates visitor uniques per bucket before we sum. Loads
+     * independently of [fetchStatsForPeriod] so a slow or failed bottom call never blocks the chart.
+     *
+     * Returns [BottomStatsResult.Error] (the row is hidden) only when a call errors or throws; a
+     * successful-but-empty response is summed to a legitimate all-zero row so a genuine zero-traffic
+     * period still shows totals.
+     *
+     * @param siteId The WordPress.com site ID
+     * @param period The stats period to fetch
+     * @return Bottom-row totals for current and previous periods, or error
+     */
+    suspend fun fetchBottomStats(
+        siteId: Long,
+        period: StatsPeriod
+    ): BottomStatsResult = withContext(ioDispatcher) {
+        val bottomRange = calculateBottomStatsRange(period)
+
+        val (currentResult, previousResult) = coroutineScope {
+            val currentDeferred = async {
+                fetchBottomStatsVisits(siteId, bottomRange, bottomRange.currentStart, bottomRange.currentEnd)
+            }
+            val previousDeferred = async {
+                fetchBottomStatsVisits(siteId, bottomRange, bottomRange.previousStart, bottomRange.previousEnd)
+            }
+            currentDeferred.await() to previousDeferred.await()
+        }
+
+        val current = bottomAggregatesOrNull(currentResult)
+        val previous = bottomAggregatesOrNull(previousResult)
+        if (current != null && previous != null) {
+            BottomStatsResult.Success(current, previous)
+        } else {
+            BottomStatsResult.Error
+        }
+    }
+
+    /**
+     * Fetches the dedicated bottom-row stats for the given window, restricting the
+     * response to the metrics shown in the bottom row.
+     */
+    @Suppress("TooGenericExceptionCaught")
+    private suspend fun fetchBottomStatsVisits(
+        siteId: Long,
+        bottomRange: PeriodDateRange,
+        start: LocalDate,
+        end: LocalDate
+    ): StatsVisitsDataResult? {
+        return try {
+            statsDataSource.fetchStatsVisits(
+                siteId = siteId,
+                unit = bottomRange.unit,
+                quantity = bottomRange.quantity,
+                endDate = end.format(dateFormatter),
+                startDate = start.format(dateFormatter),
+                statFields = BOTTOM_STAT_FIELDS
+            )
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            // A bottom-stats failure must not cancel the sibling chart fetches or fail the whole
+            // card; swallow it here and let the bottom row be hidden instead.
+            appLogWrapper.e(AppLog.T.STATS, "Exception fetching bottom stats: ${e.message}")
+            null
         }
     }
 
@@ -415,6 +496,25 @@ class StatsRepository @Inject constructor(
             currentPeriodData = currentPeriodData,
             previousPeriodData = previousPeriodData
         )
+    }
+
+    /**
+     * Builds the bottom-row totals from a dedicated call result, or null when the row should be
+     * hidden. Only a failed or thrown call (null result or error) hides the row; a successful
+     * response is summed as-is, so a successful-but-empty response yields a legitimate all-zero row.
+     */
+    private fun bottomAggregatesOrNull(
+        result: StatsVisitsDataResult?
+    ): BottomStatsAggregates? = if (result is StatsVisitsDataResult.Success) {
+        BottomStatsAggregates(
+            views = result.data.visits.sumOf { it.visits },
+            visitors = result.data.visitors.sumOf { it.visitors },
+            likes = result.data.likes.sumOf { it.likes },
+            comments = result.data.comments.sumOf { it.comments },
+            posts = result.data.posts.sumOf { it.posts }
+        )
+    } else {
+        null
     }
 
     private fun buildPeriodStatsError(
@@ -467,18 +567,84 @@ class StatsRepository @Inject constructor(
 
     private data class PeriodConfig(val quantity: Int, val unit: StatsUnit, val dateUnit: DateUnit)
 
+    /**
+     * Computes the date range and API unit for the bottom-row totals. Uses a coarser unit than the
+     * chart (day up to a month, month up to two years, year beyond) so the API de-duplicates visitor
+     * uniques per bucket before the totals are summed.
+     */
+    private fun calculateBottomStatsRange(period: StatsPeriod): PeriodDateRange {
+        val (currentStart, currentEnd) = currentPeriodWindow(period)
+        val (unit, quantity) = unitAndQuantityFor(currentStart, currentEnd, allowYear = true)
+        val (previousStart, previousEnd) = previousWindowMirror(currentStart, currentEnd)
+        return PeriodDateRange(currentStart, currentEnd, previousStart, previousEnd, quantity, unit)
+    }
+
+    /**
+     * Chooses the API [StatsUnit] and its quantity for the inclusive real-calendar [start]..[end]
+     * window, coarsening the bucket as the span grows: day up to a full month, month up to two years,
+     * and — only when [allowYear] is set (bottom-row totals) — year beyond that. Shared by the bottom-row
+     * range and the custom-period chart window so the day/month threshold and the `MONTHS.between + 1`
+     * quantity live in one place.
+     */
+    private fun unitAndQuantityFor(start: LocalDate, end: LocalDate, allowYear: Boolean): Pair<StatsUnit, Int> {
+        val daysBetween = ChronoUnit.DAYS.between(start, end).toInt() + 1
+        val unit = when {
+            daysBetween <= MAX_DAYS_IN_MONTH -> StatsUnit.DAY
+            allowYear && daysBetween > MAX_DAYS_IN_2_YEARS -> StatsUnit.YEAR
+            else -> StatsUnit.MONTH
+        }
+        val quantity = when (unit) {
+            StatsUnit.MONTH -> (ChronoUnit.MONTHS.between(start, end).toInt() + 1).coerceAtLeast(1)
+            StatsUnit.YEAR -> (ChronoUnit.YEARS.between(start, end).toInt() + 1).coerceAtLeast(1)
+            else -> daysBetween
+        }
+        return unit to quantity
+    }
+
+    /**
+     * The immediately-preceding window that mirrors [start]..[end]'s exact day span. Deriving the
+     * previous window per-unit padded the YEAR case out to full calendar years and skewed the change
+     * comparison against a partial current bucket; an exact day-span mirror keeps current vs previous
+     * symmetric for every unit.
+     */
+    private fun previousWindowMirror(start: LocalDate, end: LocalDate): Pair<LocalDate, LocalDate> {
+        val daysBetween = ChronoUnit.DAYS.between(start, end).toInt() + 1
+        val previousEnd = start.minusDays(1)
+        val previousStart = previousEnd.minusDays((daysBetween - 1).toLong())
+        return previousStart to previousEnd
+    }
+
     @Suppress("ReturnCount")
     private fun calculatePeriodDates(period: StatsPeriod): PeriodDateRange {
         if (period is StatsPeriod.Today) return calculateTodayPeriodDates()
         if (period is StatsPeriod.Custom) return calculateCustomPeriodDates(period.startDate, period.endDate)
 
         val config = getPeriodConfig(period)
-        val currentEnd = LocalDate.now()
-        val currentStart = subtractFromDate(currentEnd, config.quantity - 1, config.dateUnit)
+        val (currentStart, currentEnd) = currentPeriodWindow(period)
         val previousEnd = subtractFromDate(currentStart, 1, config.dateUnit)
         val previousStart = subtractFromDate(previousEnd, config.quantity - 1, config.dateUnit)
 
         return PeriodDateRange(currentStart, currentEnd, previousStart, previousEnd, config.quantity, config.unit)
+    }
+
+    /**
+     * The inclusive real-calendar current window (start..end) for a period. Shared by both the chart
+     * window ([calculatePeriodDates]) and the bottom-row window ([calculateBottomStatsRange]) so the
+     * current window is never derived from two different code paths.
+     *
+     * Note: [calculatePeriodDates] handles the hourly cases (Today and single-day Custom) separately
+     * before reaching here, so those apply their own exclusive-end offset on top of this window.
+     */
+    private fun currentPeriodWindow(period: StatsPeriod): Pair<LocalDate, LocalDate> {
+        val today = LocalDate.now()
+        return when (period) {
+            is StatsPeriod.Today -> today to today
+            is StatsPeriod.Last7Days -> today.minusDays((DAYS_IN_7_DAYS - 1).toLong()) to today
+            is StatsPeriod.Last30Days -> today.minusDays((DAYS_IN_30_DAYS - 1).toLong()) to today
+            is StatsPeriod.Last6Months -> today.minusMonths((MONTHS_IN_6_MONTHS - 1).toLong()) to today
+            is StatsPeriod.Last12Months -> today.minusMonths((MONTHS_IN_12_MONTHS - 1).toLong()) to today
+            is StatsPeriod.Custom -> period.startDate to period.endDate
+        }
     }
 
     private fun subtractFromDate(date: LocalDate, amount: Int, unit: DateUnit): LocalDate {
@@ -534,22 +700,10 @@ class StatsRepository @Inject constructor(
             )
         }
 
-        val previousEnd = startDate.minusDays(1)
-        val previousStart = previousEnd.minusDays(daysBetween.toLong() - 1)
-
-        // Determine unit based on range — use daily for up to a full
-        // month (31 days), monthly beyond that
-        val unit = when {
-            daysBetween <= MAX_DAYS_IN_MONTH -> StatsUnit.DAY
-            else -> StatsUnit.MONTH
-        }
-
-        val quantity = if (unit == StatsUnit.MONTH) {
-            val monthsBetween = ChronoUnit.MONTHS.between(startDate, endDate).toInt() + 1
-            monthsBetween.coerceAtLeast(1)
-        } else {
-            daysBetween
-        }
+        // Daily up to a full month (31 days), monthly beyond that. The chart never coarsens to the
+        // YEAR bucket, so year granularity is disabled here (unlike the bottom-row totals).
+        val (unit, quantity) = unitAndQuantityFor(startDate, endDate, allowYear = false)
+        val (previousStart, previousEnd) = previousWindowMirror(startDate, endDate)
 
         return PeriodDateRange(
             currentStart = startDate,
@@ -1878,6 +2032,30 @@ sealed class PeriodStatsResult {
         val previousPeriodData: List<ViewsDataPoint>
     ) : PeriodStatsResult()
     data class Error(val message: String) : PeriodStatsResult()
+}
+
+/**
+ * Bottom-row totals for a period. Unlike [PeriodAggregates] it carries no date fields, because the
+ * bottom row renders only the counts and the current-vs-previous change.
+ */
+data class BottomStatsAggregates(
+    val views: Long,
+    val visitors: Long,
+    val likes: Long,
+    val comments: Long,
+    val posts: Long
+)
+
+/**
+ * Result wrapper for the dedicated bottom-row totals fetch. [Error] means the row should be hidden
+ * (a call failed or threw); a successful-but-empty response is still a [Success] with zero counts.
+ */
+sealed class BottomStatsResult {
+    data class Success(
+        val current: BottomStatsAggregates,
+        val previous: BottomStatsAggregates
+    ) : BottomStatsResult()
+    data object Error : BottomStatsResult()
 }
 
 /**

@@ -13,7 +13,6 @@ import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.MediaStore
-import org.wordpress.android.fluxc.utils.MimeTypes
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.mediapicker.MediaItem.Identifier
@@ -22,10 +21,10 @@ import org.wordpress.android.ui.mediapicker.MediaNavigationEvent.Exit
 import org.wordpress.android.ui.mediapicker.MediaNavigationEvent.IconClickEvent
 import org.wordpress.android.ui.mediapicker.MediaNavigationEvent.PreviewMedia
 import org.wordpress.android.ui.mediapicker.MediaNavigationEvent.PreviewUrl
-import org.wordpress.android.ui.mediapicker.MediaPickerFragment.ChooserContext
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerAction
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerAction.OpenCameraForPhotos
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerAction.OpenSystemPicker
+import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerAction.ShowSystemPickerTypeMenu
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerAction.SwitchMediaPicker
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerIcon
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerIcon.CapturePhoto
@@ -78,7 +77,8 @@ class MediaPickerViewModel @Inject constructor(
     private val localeManagerWrapper: LocaleManagerWrapper,
     private val mediaUtilsWrapper: MediaUtilsWrapper,
     private val mediaStore: MediaStore,
-    private val resourceProvider: ResourceProvider
+    private val resourceProvider: ResourceProvider,
+    private val systemPickerResolver: SystemPickerResolver
 ) : ScopedViewModel(mainDispatcher) {
     private lateinit var mediaLoader: MediaLoader
     private lateinit var mediaInsertHandler: MediaInsertHandler
@@ -500,7 +500,20 @@ class MediaPickerViewModel @Inject constructor(
     fun clickOnLastTappedIcon() = clickIcon(lastTappedIcon!!)
 
     private fun clickIcon(icon: MediaPickerIcon) {
+        // When the device picker allows both visual media and other files, the actual library isn't
+        // opened yet: we first show a type-disambiguation menu. Defer tracking the "device library
+        // opened" event until the user picks a category (see onSystemPickerTypeChosen).
+        if (icon is ChooseFromAndroidDevice &&
+            systemPickerResolver.isAmbiguousMediaAndFileSelection(icon.allowedTypes)
+        ) {
+            _onNavigate.postValue(Event(IconClickEvent(ShowSystemPickerTypeMenu)))
+            return
+        }
         mediaPickerTracker.trackIconClick(icon, mediaPickerSetup)
+        navigateForIcon(icon)
+    }
+
+    private fun navigateForIcon(icon: MediaPickerIcon) {
         if (icon is CapturePhoto) {
             if (!permissionsHandler.hasPermissionsToTakePhoto()) {
                 _onCameraPermissionsRequested.value = Event(Unit)
@@ -508,8 +521,6 @@ class MediaPickerViewModel @Inject constructor(
                 return
             }
         }
-        // Do we need tracking here?; review tracking need.
-
         _onNavigate.postValue(Event(populateIconClickEvent(icon, mediaPickerSetup.canMultiselect)))
     }
 
@@ -525,31 +536,8 @@ class MediaPickerViewModel @Inject constructor(
     private fun populateIconClickEvent(icon: MediaPickerIcon, canMultiselect: Boolean): IconClickEvent {
         val action: MediaPickerAction = when (icon) {
             is ChooseFromAndroidDevice -> {
-                val allowedTypes = icon.allowedTypes
-                val (context, types) = when {
-                    listOf(IMAGE).containsAll(allowedTypes) -> {
-                        Pair(ChooserContext.PHOTO, MimeTypes().getImageTypesOnly())
-                    }
-                    listOf(VIDEO).containsAll(allowedTypes) -> {
-                        Pair(ChooserContext.VIDEO, MimeTypes().getVideoTypesOnly())
-                    }
-                    listOf(IMAGE, VIDEO).containsAll(allowedTypes) -> {
-                        Pair(ChooserContext.PHOTO_OR_VIDEO, MimeTypes().getVideoAndImageTypesOnly())
-                    }
-                    listOf(AUDIO).containsAll(allowedTypes) -> {
-                        Pair(
-                            ChooserContext.AUDIO,
-                            MimeTypes().getAudioTypesOnly(mediaUtilsWrapper.getSitePlanForMimeTypes(site))
-                        )
-                    }
-                    else -> {
-                        Pair(
-                            ChooserContext.MEDIA_FILE,
-                            MimeTypes().getAllTypes(mediaUtilsWrapper.getSitePlanForMimeTypes(site))
-                        )
-                    }
-                }
-                OpenSystemPicker(context, types.toList(), canMultiselect)
+                val chooserTypes = systemPickerResolver.resolveChooserContext(icon.allowedTypes, site)
+                OpenSystemPicker(chooserTypes.context, chooserTypes.mimeTypes, canMultiselect)
             }
             is CapturePhoto -> OpenCameraForPhotos
             is SwitchSource -> {
@@ -604,6 +592,18 @@ class MediaPickerViewModel @Inject constructor(
             BrowseAction.SYSTEM_PICKER -> ChooseFromAndroidDevice(mediaPickerSetup.allowedTypes)
         }
         clickIcon(icon)
+    }
+
+    /**
+     * Opens the system picker with a narrowed set of allowed types after the user picks a category
+     * (e.g. "Photos and videos" vs "Other files") from the disambiguation menu. This is the point at
+     * which the device library is actually opened, so the open is tracked here rather than when the
+     * disambiguation menu was shown.
+     */
+    fun onSystemPickerTypeChosen(allowedTypes: Set<MediaType>) {
+        val icon = ChooseFromAndroidDevice(allowedTypes)
+        mediaPickerTracker.trackIconClick(icon, mediaPickerSetup)
+        navigateForIcon(icon)
     }
 
     private fun getRequiredPermissionsNames(): String {

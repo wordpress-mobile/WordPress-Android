@@ -1,11 +1,5 @@
 package org.wordpress.android.ui.newstats.viewsstats
 
-import androidx.compose.animation.core.LinearEasing
-import androidx.compose.animation.core.RepeatMode
-import androidx.compose.animation.core.animateFloat
-import androidx.compose.animation.core.infiniteRepeatable
-import androidx.compose.animation.core.rememberInfiniteTransition
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -47,7 +41,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import org.wordpress.android.ui.newstats.StatsColors
@@ -87,6 +80,7 @@ import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.newstats.components.CardPosition
 import org.wordpress.android.ui.newstats.components.StatsCardMenu
 import org.wordpress.android.ui.newstats.util.formatStatValue
+import org.wordpress.android.ui.newstats.util.rememberShimmerBrush
 import java.util.Locale
 import kotlin.math.abs
 
@@ -140,8 +134,8 @@ fun ViewsStatsCard(
     ) {
         when (uiState) {
             is ViewsStatsCardUiState.Loading -> LoadingContent()
-            is ViewsStatsCardUiState.Loaded -> LoadedContent(
-                uiState, onChartTypeChanged, onBarTapped, onRemoveCard,
+            is ViewsStatsCardUiState.Content -> ContentCard(
+                uiState, onChartTypeChanged, onBarTapped, onRetry, onRemoveCard,
                 cardPosition, onMoveUp, onMoveToTop, onMoveDown, onMoveToBottom
             )
             is ViewsStatsCardUiState.Error -> ErrorContent(
@@ -154,28 +148,7 @@ fun ViewsStatsCard(
 
 @Composable
 private fun LoadingContent() {
-    val shimmerColors = listOf(
-        MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f),
-        MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.6f),
-        MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f)
-    )
-
-    val transition = rememberInfiniteTransition(label = "shimmer")
-    val translateAnimation = transition.animateFloat(
-        initialValue = 0f,
-        targetValue = 1000f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(durationMillis = 1200, easing = LinearEasing),
-            repeatMode = RepeatMode.Restart
-        ),
-        label = "shimmer_translate"
-    )
-
-    val shimmerBrush = Brush.linearGradient(
-        colors = shimmerColors,
-        start = Offset(translateAnimation.value - 500f, 0f),
-        end = Offset(translateAnimation.value, 0f)
-    )
+    val shimmerBrush = rememberShimmerBrush()
 
     Column(
         modifier = Modifier
@@ -191,6 +164,18 @@ private fun LoadingContent() {
                 .background(shimmerBrush)
         )
         Spacer(modifier = Modifier.height(12.dp))
+        ChartRegionPlaceholder(shimmerBrush)
+        Spacer(modifier = Modifier.height(16.dp))
+        BottomStatsPlaceholder(shimmerBrush)
+    }
+}
+
+/**
+ * Placeholder for the chart region (totals row + chart area) while the chart calls are in flight.
+ */
+@Composable
+private fun ChartRegionPlaceholder(shimmerBrush: Brush) {
+    Column(modifier = Modifier.fillMaxWidth()) {
         Row(modifier = Modifier.fillMaxWidth()) {
             Column {
                 Box(
@@ -229,7 +214,6 @@ private fun LoadingContent() {
             }
         }
         Spacer(modifier = Modifier.height(16.dp))
-        // Chart shimmer
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -237,30 +221,34 @@ private fun LoadingContent() {
                 .clip(RoundedCornerShape(8.dp))
                 .background(shimmerBrush)
         )
-        Spacer(modifier = Modifier.height(16.dp))
-        // Bottom stats shimmer
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(16.dp)
-        ) {
-            repeat(4) {
-                Box(
-                    modifier = Modifier
-                        .width(70.dp)
-                        .height(60.dp)
-                        .clip(RoundedCornerShape(4.dp))
-                        .background(shimmerBrush)
-                )
-            }
+    }
+}
+
+/** Placeholder for the bottom-stats row while the dedicated bottom call is in flight. */
+@Composable
+private fun BottomStatsPlaceholder(shimmerBrush: Brush) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+        repeat(4) {
+            Box(
+                modifier = Modifier
+                    .width(70.dp)
+                    .height(60.dp)
+                    .clip(RoundedCornerShape(4.dp))
+                    .background(shimmerBrush)
+            )
         }
     }
 }
 
 @Composable
-private fun LoadedContent(
-    state: ViewsStatsCardUiState.Loaded,
+private fun ContentCard(
+    state: ViewsStatsCardUiState.Content,
     onChartTypeChanged: (ChartType) -> Unit,
     onBarTapped: (Int) -> Unit,
+    onRetry: () -> Unit,
     onRemoveCard: () -> Unit,
     cardPosition: CardPosition?,
     onMoveUp: (() -> Unit)?,
@@ -268,6 +256,7 @@ private fun LoadedContent(
     onMoveDown: (() -> Unit)?,
     onMoveToBottom: (() -> Unit)?
 ) {
+    val chart = state.chart
     Box(modifier = Modifier.fillMaxWidth()) {
         Column(
             modifier = Modifier
@@ -275,10 +264,14 @@ private fun LoadedContent(
                 .padding(CardPadding)
                 .alpha(if (state.isLoadingNewPeriod) 0.5f else 1f)
         ) {
-            // Header Section
-            HeaderSection(
-                state = state,
-                onChartTypeChanged = onChartTypeChanged,
+            // Title + menu are always shown so the card controls stay reachable in every state.
+            // Chart-type options only make sense once the chart has loaded.
+            CardTitleRow(
+                chartTypeMenu = if (chart is ChartUiState.Loaded) {
+                    { ChartTypeMenuItems(chart.chartType, onChartTypeChanged) }
+                } else {
+                    null
+                },
                 onRemoveCard = onRemoveCard,
                 cardPosition = cardPosition,
                 onMoveUp = onMoveUp,
@@ -287,16 +280,33 @@ private fun LoadedContent(
                 onMoveToBottom = onMoveToBottom
             )
             Spacer(modifier = Modifier.height(8.dp))
-            // Chart Section
-            ViewsStatsChart(
-                chartData = state.chartData,
-                periodAverage = state.periodAverage,
-                chartType = state.chartType,
-                onBarTapped = onBarTapped
-            )
-            Spacer(modifier = Modifier.height(16.dp))
-            // Bottom Stats Row
-            BottomStatsRow(stats = state.bottomStats)
+            // Chart region — loads independently of the bottom row
+            when (chart) {
+                is ChartUiState.Loading -> ChartRegionPlaceholder(rememberShimmerBrush())
+                is ChartUiState.Loaded -> {
+                    HeaderStats(chart)
+                    Spacer(modifier = Modifier.height(8.dp))
+                    ViewsStatsChart(
+                        chartData = chart.chartData,
+                        periodAverage = chart.periodAverage,
+                        chartType = chart.chartType,
+                        onBarTapped = onBarTapped
+                    )
+                }
+                is ChartUiState.Error -> ChartErrorBox(onRetry = onRetry)
+            }
+            // Bottom Stats Row — loads independently; hidden when its dedicated call failed
+            when (val bottom = state.bottomStats) {
+                is BottomStatsUiState.Loading -> {
+                    Spacer(modifier = Modifier.height(16.dp))
+                    BottomStatsPlaceholder(rememberShimmerBrush())
+                }
+                is BottomStatsUiState.Loaded -> {
+                    Spacer(modifier = Modifier.height(16.dp))
+                    BottomStatsRow(stats = bottom.stats)
+                }
+                is BottomStatsUiState.Hidden -> Unit
+            }
         }
         if (state.isLoadingNewPeriod) {
             CircularProgressIndicator(
@@ -308,9 +318,8 @@ private fun LoadedContent(
 }
 
 @Composable
-private fun HeaderSection(
-    state: ViewsStatsCardUiState.Loaded,
-    onChartTypeChanged: (ChartType) -> Unit,
+private fun CardTitleRow(
+    chartTypeMenu: @Composable (() -> Unit)?,
     onRemoveCard: () -> Unit,
     cardPosition: CardPosition?,
     onMoveUp: (() -> Unit)?,
@@ -318,75 +327,99 @@ private fun HeaderSection(
     onMoveDown: (() -> Unit)?,
     onMoveToBottom: (() -> Unit)?
 ) {
-    Column(modifier = Modifier.fillMaxWidth()) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                text = stringResource(R.string.stats_views),
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Bold
-            )
-            StatsCardMenu(
-                onRemoveClick = onRemoveCard,
-                cardPosition = cardPosition,
-                onMoveUp = onMoveUp,
-                onMoveToTop = onMoveToTop,
-                onMoveDown = onMoveDown,
-                onMoveToBottom = onMoveToBottom,
-                additionalContent = {
-                    ChartTypeMenuItems(
-                        currentChartType = state.chartType,
-                        onChartTypeSelected = onChartTypeChanged
-                    )
-                }
-            )
-        }
-        Spacer(modifier = Modifier.height(4.dp))
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.Top
-        ) {
-            // Left: Current and previous period totals with difference
-            Column {
-                Row {
-                    Text(
-                        text = formatStatValue(state.currentPeriodViews),
-                        style = MaterialTheme.typography.headlineLarge,
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.onSurface,
-                        modifier = Modifier.alignByBaseline()
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text(
-                        text = formatStatValue(state.previousPeriodViews),
-                        style = MaterialTheme.typography.titleMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        modifier = Modifier.alignByBaseline()
-                    )
-                }
-                Spacer(modifier = Modifier.height(4.dp))
-                DifferenceRow(
-                    difference = state.viewsDifference,
-                    percentageChange = state.viewsPercentageChange
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            text = stringResource(R.string.stats_views),
+            style = MaterialTheme.typography.titleMedium,
+            fontWeight = FontWeight.Bold
+        )
+        StatsCardMenu(
+            onRemoveClick = onRemoveCard,
+            cardPosition = cardPosition,
+            onMoveUp = onMoveUp,
+            onMoveToTop = onMoveToTop,
+            onMoveDown = onMoveDown,
+            onMoveToBottom = onMoveToBottom,
+            additionalContent = chartTypeMenu
+        )
+    }
+}
+
+@Composable
+private fun HeaderStats(chart: ChartUiState.Loaded) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.Top
+    ) {
+        // Left: Current and previous period totals with difference
+        Column {
+            Row {
+                Text(
+                    text = formatStatValue(chart.currentPeriodViews),
+                    style = MaterialTheme.typography.headlineLarge,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onSurface,
+                    modifier = Modifier.alignByBaseline()
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(
+                    text = formatStatValue(chart.previousPeriodViews),
+                    style = MaterialTheme.typography.titleMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.alignByBaseline()
                 )
             }
-            // Right: Date ranges with colored dots and average
-            Column(horizontalAlignment = Alignment.End) {
-                DateRangeWithDot(
-                    dateRange = state.currentPeriodDateRange,
-                    dotColor = MaterialTheme.colorScheme.primary
-                )
-                Spacer(modifier = Modifier.height(4.dp))
-                DateRangeWithDot(
-                    dateRange = state.previousPeriodDateRange,
-                    dotColor = MaterialTheme.colorScheme.outline
-                )
-                Spacer(modifier = Modifier.height(4.dp))
-                AverageRow(average = state.periodAverage)
+            Spacer(modifier = Modifier.height(4.dp))
+            DifferenceRow(
+                difference = chart.viewsDifference,
+                percentageChange = chart.viewsPercentageChange
+            )
+        }
+        // Right: Date ranges with colored dots and average
+        Column(horizontalAlignment = Alignment.End) {
+            DateRangeWithDot(
+                dateRange = chart.currentPeriodDateRange,
+                dotColor = MaterialTheme.colorScheme.primary
+            )
+            Spacer(modifier = Modifier.height(4.dp))
+            DateRangeWithDot(
+                dateRange = chart.previousPeriodDateRange,
+                dotColor = MaterialTheme.colorScheme.outline
+            )
+            Spacer(modifier = Modifier.height(4.dp))
+            AverageRow(average = chart.periodAverage)
+        }
+    }
+}
+
+/**
+ * Compact error shown in place of the header + chart when the chart calls fail. The bottom-stats
+ * row is rendered separately, so it stays visible even while this is shown.
+ */
+@Composable
+private fun ChartErrorBox(onRetry: () -> Unit) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(ChartHeight)
+            .clip(RoundedCornerShape(8.dp))
+            .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f)),
+        contentAlignment = Alignment.Center
+    ) {
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            Text(
+                text = stringResource(R.string.stats_error_api),
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.error
+            )
+            Spacer(modifier = Modifier.height(12.dp))
+            Button(onClick = onRetry) {
+                Text(text = stringResource(R.string.retry))
             }
         }
     }
@@ -929,32 +962,36 @@ private fun ViewsStatsCardLoadingPreview() {
     }
 }
 
-private fun sampleLoadedState(): ViewsStatsCardUiState.Loaded {
+private fun sampleLoadedState(): ViewsStatsCardUiState.Content {
     val currentPeriodLabels = listOf("Jan 14", "Jan 15", "Jan 16", "Jan 17", "Jan 18", "Jan 19", "Jan 20")
     val previousPeriodLabels = listOf("Jan 7", "Jan 8", "Jan 9", "Jan 10", "Jan 11", "Jan 12", "Jan 13")
 
-    return ViewsStatsCardUiState.Loaded(
-        currentPeriodViews = SAMPLE_CURRENT_VIEWS,
-        previousPeriodViews = SAMPLE_PREVIOUS_VIEWS,
-        viewsDifference = SAMPLE_VIEWS_DIFFERENCE,
-        viewsPercentageChange = SAMPLE_VIEWS_PERCENTAGE,
-        currentPeriodDateRange = "14-20 Jan",
-        previousPeriodDateRange = "7-13 Jan",
-        chartData = ViewsStatsChartData(
-            currentPeriod = currentPeriodLabels.zip(SAMPLE_CURRENT_PERIOD_DATA) { label, views ->
-                ChartDataPoint(label, views)
-            },
-            previousPeriod = previousPeriodLabels.zip(SAMPLE_PREVIOUS_PERIOD_DATA) { label, views ->
-                ChartDataPoint(label, views)
-            }
+    return ViewsStatsCardUiState.Content(
+        chart = ChartUiState.Loaded(
+            currentPeriodViews = SAMPLE_CURRENT_VIEWS,
+            previousPeriodViews = SAMPLE_PREVIOUS_VIEWS,
+            viewsDifference = SAMPLE_VIEWS_DIFFERENCE,
+            viewsPercentageChange = SAMPLE_VIEWS_PERCENTAGE,
+            currentPeriodDateRange = "14-20 Jan",
+            previousPeriodDateRange = "7-13 Jan",
+            chartData = ViewsStatsChartData(
+                currentPeriod = currentPeriodLabels.zip(SAMPLE_CURRENT_PERIOD_DATA) { label, views ->
+                    ChartDataPoint(label, views)
+                },
+                previousPeriod = previousPeriodLabels.zip(SAMPLE_PREVIOUS_PERIOD_DATA) { label, views ->
+                    ChartDataPoint(label, views)
+                }
+            ),
+            periodAverage = SAMPLE_PERIOD_AVERAGE
         ),
-        periodAverage = SAMPLE_PERIOD_AVERAGE,
-        bottomStats = listOf(
-            StatItem("Views", SAMPLE_CURRENT_VIEWS, StatChange.Negative(SAMPLE_VIEWS_PERCENTAGE)),
-            StatItem("Visitors", SAMPLE_VISITORS, StatChange.Negative(SAMPLE_VISITORS_PERCENTAGE)),
-            StatItem("Likes", 0, StatChange.NoChange),
-            StatItem("Comments", 0, StatChange.NoChange),
-            StatItem("Posts", SAMPLE_POSTS, StatChange.Positive(SAMPLE_POSTS_PERCENTAGE))
+        bottomStats = BottomStatsUiState.Loaded(
+            listOf(
+                StatItem("Views", SAMPLE_CURRENT_VIEWS, StatChange.Negative(SAMPLE_VIEWS_PERCENTAGE)),
+                StatItem("Visitors", SAMPLE_VISITORS, StatChange.Negative(SAMPLE_VISITORS_PERCENTAGE)),
+                StatItem("Likes", 0, StatChange.NoChange),
+                StatItem("Comments", 0, StatChange.NoChange),
+                StatItem("Posts", SAMPLE_POSTS, StatChange.Positive(SAMPLE_POSTS_PERCENTAGE))
+            )
         )
     )
 }
