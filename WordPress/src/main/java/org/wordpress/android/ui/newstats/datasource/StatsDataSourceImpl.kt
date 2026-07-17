@@ -29,6 +29,7 @@ import uniffi.wp_api.StatsTopPostsParams
 import uniffi.wp_api.StatsTopPostsPeriod
 import uniffi.wp_api.StatsVideoPlaysParams
 import uniffi.wp_api.StatsVideoPlaysPeriod
+import uniffi.wp_api.StatsVisitsField
 import uniffi.wp_api.StatsVisitsParams
 import uniffi.wp_api.StatsVisitsUnit
 import uniffi.wp_api.WpComLanguage
@@ -89,12 +90,16 @@ class StatsDataSourceImpl @Inject constructor(
         siteId: Long,
         unit: StatsUnit,
         quantity: Int,
-        endDate: String
+        endDate: String,
+        startDate: String?,
+        statFields: List<StatsVisitField>?
     ): StatsVisitsDataResult {
         val params = StatsVisitsParams(
             unit = unit.toApiUnit(),
             quantity = quantity.toUInt(),
             endDate = endDate,
+            startDate = startDate,
+            statFields = statFields?.map { it.toApiField() } ?: emptyList(),
         )
 
         val result = getOrCreateClient().request { requestBuilder ->
@@ -142,6 +147,16 @@ class StatsDataSourceImpl @Inject constructor(
         StatsUnit.DAY -> StatsVisitsUnit.DAY
         StatsUnit.WEEK -> StatsVisitsUnit.WEEK
         StatsUnit.MONTH -> StatsVisitsUnit.MONTH
+        StatsUnit.YEAR -> StatsVisitsUnit.YEAR
+    }
+
+    private fun StatsVisitField.toApiField(): StatsVisitsField = when (this) {
+        StatsVisitField.VIEWS -> StatsVisitsField.VIEWS
+        StatsVisitField.VISITORS -> StatsVisitsField.VISITORS
+        StatsVisitField.LIKES -> StatsVisitsField.LIKES
+        StatsVisitField.REBLOGS -> StatsVisitsField.REBLOGS
+        StatsVisitField.COMMENTS -> StatsVisitsField.COMMENTS
+        StatsVisitField.POSTS -> StatsVisitsField.POSTS
     }
 
     private val wpComLanguage: WpComLanguage?

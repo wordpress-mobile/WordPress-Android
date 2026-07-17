@@ -114,6 +114,10 @@ class MediaPickerFragment : Fragment(), MenuProvider {
             val allowMultipleSelection: Boolean
         ) : MediaPickerAction()
 
+        // Shown when the flow allows both visual media and other files: the system Photo Picker only
+        // surfaces visual media, so we let the user pick a category before opening a picker.
+        object ShowSystemPickerTypeMenu : MediaPickerAction()
+
         object OpenCameraForPhotos : MediaPickerAction()
         data class SwitchMediaPicker(val mediaPickerSetup: MediaPickerSetup) : MediaPickerAction()
     }
@@ -400,6 +404,10 @@ class MediaPickerFragment : Fragment(), MenuProvider {
 
     fun urisSelectedFromSystemPicker(uris: List<Uri>) {
         viewModel.urisSelectedFromSystemPicker(uris.map { UriWrapper(it) })
+    }
+
+    fun onSystemPickerTypeChosen(allowedTypes: Set<MediaType>) {
+        viewModel.onSystemPickerTypeChosen(allowedTypes)
     }
 
     private fun initializeSearchView(actionMenuItem: MenuItem) {
