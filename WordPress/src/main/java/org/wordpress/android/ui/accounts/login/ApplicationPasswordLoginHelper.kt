@@ -20,6 +20,7 @@ import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.UrlUtils
+import org.wordpress.android.util.WPUrlUtils
 import org.wordpress.android.util.crashlogging.sendReportWithTag
 import rs.wordpress.api.kotlin.ApiDiscoveryResult
 import rs.wordpress.api.kotlin.WpLoginClient
@@ -424,10 +425,16 @@ class ApplicationPasswordLoginHelper @Inject constructor(
 
         /**
          * WordPress.com sites advertise OAuth2 as their authentication mechanism during API
-         * discovery (self-hosted sites advertise Application Passwords).
+         * discovery (self-hosted sites advertise Application Passwords). Self-hosted sites can
+         * also expose OAuth2 via plugins, so we additionally require the advertised OAuth2
+         * authorization endpoint to be hosted on wordpress.com. Otherwise a malicious site could
+         * pose as WordPress.com to hijack our login flow.
          */
-        fun isWpComSite(successObject: ApiDiscoveryResult.Success): Boolean =
-            successObject.success.authentication is DiscoveredAuthenticationMechanism.OAuth2
+        fun isWpComSite(successObject: ApiDiscoveryResult.Success): Boolean {
+            val authentication = successObject.success.authentication
+            return authentication is DiscoveredAuthenticationMechanism.OAuth2 &&
+                    WPUrlUtils.isWordPressCom(authentication.endpoints.authorizationUrl)
+        }
 
         fun getApplicationPasswordsAuthenticationUrl(
             successObject: ApiDiscoveryResult.Success
