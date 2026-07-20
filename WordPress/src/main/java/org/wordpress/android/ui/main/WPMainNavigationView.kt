@@ -452,6 +452,13 @@ class WPMainNavigationView @JvmOverloads constructor(
         showBadge(getPosition(NOTIFS), showBadge)
     }
 
+    fun refreshGravatar() {
+        val imgIcon = getImageViewForPosition(getPosition(ME))
+        if (imgIcon != null) {
+            loadGravatar(imgIcon, accountStore.account?.avatarUrl.orEmpty())
+        }
+    }
+
     /*
      * show or hide the badge on the 'pageId' icon in the bottom bar
      */

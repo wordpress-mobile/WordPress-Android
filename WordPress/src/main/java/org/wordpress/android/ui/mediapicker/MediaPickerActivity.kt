@@ -7,6 +7,8 @@ import android.net.Uri
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.MenuItem
+import android.view.View
+import androidx.appcompat.widget.PopupMenu
 import androidx.fragment.app.FragmentTransaction
 import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
@@ -28,6 +30,7 @@ import org.wordpress.android.ui.mediapicker.MediaPickerFragment.Companion.newIns
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerAction
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerAction.OpenCameraForPhotos
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerAction.OpenSystemPicker
+import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerAction.ShowSystemPickerTypeMenu
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerAction.SwitchMediaPicker
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerListener
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource
@@ -248,6 +251,28 @@ class MediaPickerActivity : BaseAppCompatActivity(), MediaPickerListener {
         WPMediaUtils.launchChooserWithContext(this, openSystemPicker, uiHelpers, MEDIA_LIBRARY)
     }
 
+    private fun showSystemPickerTypeMenu() {
+        // Anchor to the "Choose from device" action-bar item so the menu appears attached to it;
+        // fall back to the toolbar if the item is currently in the overflow and has no own view.
+        val anchor = findViewById<View>(R.id.mnu_browse_item) ?: findViewById(R.id.toolbar_main)
+        val popup = PopupMenu(this, anchor)
+        popup.menu.add(R.string.photo_picker_choose_photo_or_video).setOnMenuItemClickListener {
+            pickerFragment?.onSystemPickerTypeChosen(setOf(MediaType.IMAGE, MediaType.VIDEO))
+            true
+        }
+        popup.menu.add(R.string.photo_picker_choose_other_files).setOnMenuItemClickListener {
+            // "Other files" opens the document browser (ACTION_OPEN_DOCUMENT) with all accepted types,
+            // matching the pre-disambiguation file picker. This keeps non-visual files reachable while
+            // still allowing an image/video to be picked by browsing the filesystem (e.g. a freshly
+            // downloaded image in Downloads that the Photo Picker may not surface yet).
+            pickerFragment?.onSystemPickerTypeChosen(
+                setOf(MediaType.IMAGE, MediaType.VIDEO, MediaType.AUDIO, MediaType.DOCUMENT)
+            )
+            true
+        }
+        popup.show()
+    }
+
     private fun Intent.putUris(
         mediaUris: List<Uri>
     ) {
@@ -310,6 +335,9 @@ class MediaPickerActivity : BaseAppCompatActivity(), MediaPickerListener {
         when (action) {
             is OpenSystemPicker -> {
                 launchChooserWithContext(action, uiHelpers)
+            }
+            ShowSystemPickerTypeMenu -> {
+                showSystemPickerTypeMenu()
             }
             is SwitchMediaPicker -> {
                 startActivityForResult(buildIntent(this, action.mediaPickerSetup, site, localPostId), PHOTO_PICKER)
