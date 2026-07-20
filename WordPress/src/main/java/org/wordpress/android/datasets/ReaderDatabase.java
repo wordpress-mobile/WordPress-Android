@@ -188,6 +188,17 @@ public class ReaderDatabase extends SQLiteOpenHelper {
     }
 
     @Override
+    public void onConfigure(SQLiteDatabase db) {
+        super.onConfigure(db);
+        // Enable Write-Ahead Logging so reads and a single writer can run concurrently. Without WAL,
+        // Android caps the connection pool at a single connection for the whole reader DB, which
+        // serializes every read/write across all threads. That serialization causes ANRs when a
+        // main-thread read (e.g. reloading Reader tags in onStart) blocks behind a background write
+        // such as purge()/reset()/addOrUpdatePosts(). See ReaderTagTable.getTagFromEndpoint ANR.
+        db.enableWriteAheadLogging();
+    }
+
+    @Override
     public void onCreate(SQLiteDatabase db) {
         createAllTables(db);
     }
