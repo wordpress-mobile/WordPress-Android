@@ -183,6 +183,9 @@ class UnifiedCommentsEditViewModel @Inject constructor(
     }
 
     fun onBackPressed() {
+        // A save already in flight can't be discarded — the edit has been dispatched and will
+        // land server-side regardless — so ignore back until it completes (and closes the screen).
+        if (isSaving) return
         _uiState.value?.let {
             if (it.editedComment.isNotEqualTo(it.originalComment)) {
                 _uiState.value = it.copy(showDiscardDialog = true)
@@ -216,14 +219,16 @@ class UnifiedCommentsEditViewModel @Inject constructor(
                         originalComment = commentEssentials,
                         editedComment = commentEssentials
                     )
+                delay(LOADING_DELAY_MS)
+                setLoadingState(NOT_VISIBLE)
             } else {
+                // The comment couldn't be loaded. Keep the progress state up (never revealing an
+                // empty, editable form) and let the snackbar's dismiss action close the screen.
                 _onSnackbarMessage.value = Event(SnackbarMessageHolder(
                     message = UiStringRes(R.string.error_load_comment),
                     onDismissAction = { _uiActionEvent.value = Event(CLOSE) }
                 ))
             }
-            delay(LOADING_DELAY_MS)
-            setLoadingState(NOT_VISIBLE)
         }
     }
 

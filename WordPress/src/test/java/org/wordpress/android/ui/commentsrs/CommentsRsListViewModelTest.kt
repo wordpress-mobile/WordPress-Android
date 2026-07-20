@@ -106,6 +106,19 @@ class CommentsRsListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
     }
 
     @Test
+    fun `initTab does not fetch or crash when no site is selected`() = test {
+        // The Compose pager fires its init effect while init() races its async Finish; the fetch
+        // must bail rather than dereference the (null) site and crash.
+        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(null)
+        val viewModel = createViewModel()
+
+        viewModel.initTab(CommentsRsListTab.ALL)
+        advanceUntilIdle()
+
+        verify(commentsRsDataSource, never()).fetchCommentsPage(any(), any())
+    }
+
+    @Test
     fun `initTab loads the first page and maps rows`() = test {
         givenPage(listOf(rsItem(id = 1), rsItem(id = 2)), nextPageParams = NEXT_PAGE)
         val viewModel = createViewModel()

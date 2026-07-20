@@ -280,6 +280,23 @@ class UnifiedCommentDetailsViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `onApproveClicked ignores a second tap while a moderation is in flight`() = test {
+        whenever(commentsRsDataSource.updateStatus(eq(site), eq(REMOTE_COMMENT_ID), any()))
+            .doSuspendableAnswer {
+                delay(LOAD_DELAY_MS)
+                RsResult.Success
+            }
+        viewModel.start(site, REMOTE_COMMENT_ID)
+
+        viewModel.onApproveClicked()
+        viewModel.onApproveClicked()
+        advanceUntilIdle()
+
+        verify(commentsRsDataSource, times(1)).updateStatus(site, REMOTE_COMMENT_ID, UNAPPROVED)
+        verify(commentsRsDataSource, times(0)).updateStatus(site, REMOTE_COMMENT_ID, APPROVED)
+    }
+
+    @Test
     fun `onEditClicked emits launch edit event with site comment identifier`() = test {
         viewModel.start(site, REMOTE_COMMENT_ID)
 

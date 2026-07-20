@@ -467,6 +467,10 @@ class CommentsRsListViewModel @Inject constructor(
     }
 
     private fun fetchFirstPage(tab: CommentsRsListTab, showErrorSnackbar: Boolean = true) {
+        // init already queued a toast + Finish when there's no selected site, but the Compose
+        // pager still fires its init effect while that finish races. Bail before launching so the
+        // site getter (requireNotNull) can't throw inside the coroutine.
+        if (_site == null) return
         firstPageJobs[tab] = viewModelScope.launch {
             val params = commentsRsDataSource.firstPageParams(
                 status = tab.queryStatus,
