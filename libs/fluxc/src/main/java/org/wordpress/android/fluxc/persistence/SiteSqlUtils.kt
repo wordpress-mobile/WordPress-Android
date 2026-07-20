@@ -404,6 +404,17 @@ class SiteSqlUtils
         return updateApplicationPasswordCredentials(localId, usernamePlain, passwordPlain)
     }
 
+    /**
+     * URL-keyed variant of [updateXmlRpcUrl] for ORIGIN_WPAPI sites fetched without a local id. Used when an
+     * application-password site falls back to the WPAPI fetch even though XML-RPC discovery already verified a
+     * working xmlrpc.php endpoint, so the verified endpoint is recorded rather than lost. See
+     * [updateWpApiRestUrlForWPAPISite].
+     */
+    fun updateXmlRpcUrlForWPAPISite(siteUrl: String, xmlRpcUrl: String): Int {
+        val localId = wpApiSiteLocalIdByUrl(siteUrl) ?: return 0
+        return updateXmlRpcUrl(localId, xmlRpcUrl)
+    }
+
     private fun wpApiSiteLocalIdByUrl(siteUrl: String): Int? =
         WellSql.select(SiteModel::class.java)
                 .where().beginGroup()
