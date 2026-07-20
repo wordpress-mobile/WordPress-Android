@@ -3,6 +3,7 @@
 27.0
 -----
 * [*] You can now browse Google Photos (albums, collections, and search) when adding photos or videos from your device.
+* [**] Fixed media uploads and the Media Library failing on Jetpack-connected self-hosted sites that have Application Passwords disabled.
 
 
 26.9
