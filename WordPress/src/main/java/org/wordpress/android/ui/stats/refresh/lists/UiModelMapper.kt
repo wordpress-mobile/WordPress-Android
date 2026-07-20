@@ -31,7 +31,9 @@ class UiModelMapper
                         )
                         LOADING -> StatsBlock.Loading(
                             useCaseModel.type,
-                            useCaseModel.stateData ?: useCaseModel.data ?: listOf()
+                            // Keep already-loaded rows visible during a refresh; fall back to the
+                            // loading placeholder only on first load (no data yet).
+                            useCaseModel.data ?: useCaseModel.stateData ?: listOf()
                         )
                         EMPTY -> StatsBlock.EmptyBlock(
                             useCaseModel.type,
@@ -70,9 +72,12 @@ class UiModelMapper
         } else if (!allFailing && !allFailingWithoutData) {
             val data = useCaseModels.mapNotNull { useCaseModel ->
                 when (useCaseModel.state) {
-                    LOADING -> useCaseModel.stateData?.let {
-                        StatsBlock.Loading(useCaseModel.type, useCaseModel.stateData)
-                    }
+                    // Keep already-loaded rows visible during a refresh; fall back to the loading
+                    // placeholder only on first load (no data yet).
+                    LOADING -> StatsBlock.Loading(
+                        useCaseModel.type,
+                        useCaseModel.data ?: useCaseModel.stateData ?: listOf()
+                    )
 
                     SUCCESS -> StatsBlock.Success(useCaseModel.type, useCaseModel.data ?: listOf())
                     ERROR -> useCaseModel.stateData?.let {
@@ -114,9 +119,12 @@ class UiModelMapper
                 UiModel.Success(
                     useCaseModels.mapNotNull { useCaseModel ->
                         when {
-                            useCaseModel.state == LOADING -> useCaseModel.stateData?.let {
-                                StatsBlock.Loading(useCaseModel.type, useCaseModel.stateData)
-                            }
+                            // Keep already-loaded rows visible during a refresh; fall back to the
+                            // loading placeholder only on first load (no data yet).
+                            useCaseModel.state == LOADING -> StatsBlock.Loading(
+                                useCaseModel.type,
+                                useCaseModel.data ?: useCaseModel.stateData ?: listOf()
+                            )
 
                             useCaseModel.type == overViewType && useCaseModel.data != null -> StatsBlock.Success(
                                 useCaseModel.type,
