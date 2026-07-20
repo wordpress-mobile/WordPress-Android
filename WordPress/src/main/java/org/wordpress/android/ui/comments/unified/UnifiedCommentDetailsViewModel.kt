@@ -298,6 +298,7 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
         }
     }
 
+    @Suppress("ReturnCount")
     private fun moderateComment(newStatus: CommentStatus, closeOnSuccess: Boolean) {
         // The action footer stays visible while the comment loads, so ignore taps until then:
         // before the load completes the ui state holds a default status and the toggle handlers
