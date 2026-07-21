@@ -19,6 +19,7 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.mockito.kotlin.mock
+import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.SitesModel
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
@@ -424,14 +425,16 @@ class ApplicationPasswordViewModelSliceTest : BaseUnitTest() {
         }
 
     @Test
-    fun `given xmlRpc rediscovery fails, then do not persist`() =
+    fun `given xmlRpc rediscovery fails with a definitive negative, then show the disabled card`() =
         runTest {
             siteTest.xmlRpcUrl = null
             whenever(
                 selfHostedEndpointFinder
                     .verifyOrDiscoverXMLRPCEndpoint(TEST_URL)
             ).thenThrow(
-                mock<SelfHostedEndpointFinder.DiscoveryException>()
+                SelfHostedEndpointFinder.DiscoveryException(
+                    SelfHostedEndpointFinder.DiscoveryError.NO_SITE_ERROR, TEST_URL
+                )
             )
 
             applicationPasswordViewModelSlice
@@ -441,5 +444,33 @@ class ApplicationPasswordViewModelSliceTest : BaseUnitTest() {
                 .verifyOrDiscoverXMLRPCEndpoint(TEST_URL)
             verify(siteStore, never()).persistXmlRpcUrl(any(), any())
             assert(siteTest.xmlRpcUrl.isNullOrEmpty())
+            val card = applicationPasswordCard
+            assertNotNull(card)
+            assert(card is MySiteCardAndItem.Item.SingleActionCard)
+            assert(
+                (card as MySiteCardAndItem.Item.SingleActionCard).textResource ==
+                    R.string.xmlrpc_disabled_card_text
+            )
+        }
+
+    @Test
+    fun `given xmlRpc rediscovery fails transiently with rate limiting, then keep the card hidden`() =
+        runTest {
+            siteTest.xmlRpcUrl = null
+            whenever(
+                selfHostedEndpointFinder
+                    .verifyOrDiscoverXMLRPCEndpoint(TEST_URL)
+            ).thenThrow(
+                SelfHostedEndpointFinder.DiscoveryException(
+                    SelfHostedEndpointFinder.DiscoveryError.RATE_LIMITED, TEST_URL
+                )
+            )
+
+            applicationPasswordViewModelSlice
+                .attemptXmlRpcRediscovery(siteTest)
+
+            verify(siteStore, never()).persistXmlRpcUrl(any(), any())
+            assert(siteTest.xmlRpcUrl.isNullOrEmpty())
+            assertNull(applicationPasswordCard)
         }
 }

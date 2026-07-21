@@ -136,6 +136,41 @@ class SiteSqlUtilsTest {
     }
 
     @Test
+    fun `updateXmlRpcUrlForWPAPISite updates the matching WPAPI site by url`() {
+        WellSql.insert(SiteModel().apply {
+            url = "https://selfhosted.test"
+            origin = SiteModel.ORIGIN_WPAPI
+            xmlRpcUrl = null
+        }).execute()
+
+        val rows = siteSqlUtils.updateXmlRpcUrlForWPAPISite(
+                siteUrl = "https://selfhosted.test",
+                xmlRpcUrl = "https://selfhosted.test/xmlrpc.php"
+        )
+
+        assertThat(rows).isEqualTo(1)
+        assertThat(siteSqlUtils.getSites().single().xmlRpcUrl)
+                .isEqualTo("https://selfhosted.test/xmlrpc.php")
+    }
+
+    @Test
+    fun `updateXmlRpcUrlForWPAPISite leaves a non-WPAPI site with the same url untouched`() {
+        WellSql.insert(SiteModel().apply {
+            url = "https://shared.test"
+            origin = SiteModel.ORIGIN_WPCOM_REST
+            xmlRpcUrl = null
+        }).execute()
+
+        val rows = siteSqlUtils.updateXmlRpcUrlForWPAPISite(
+                siteUrl = "https://shared.test",
+                xmlRpcUrl = "https://shared.test/xmlrpc.php"
+        )
+
+        assertThat(rows).isEqualTo(0)
+        assertThat(siteSqlUtils.getSites().single().xmlRpcUrl).isNull()
+    }
+
+    @Test
     fun `updateWpApiRestUrlForWPAPISite leaves a non-WPAPI site with the same url untouched`() {
         WellSql.insert(SiteModel().apply {
             url = "https://shared.test"
