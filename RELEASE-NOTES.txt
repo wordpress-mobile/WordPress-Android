@@ -4,6 +4,7 @@
 -----
 * [*] You can now browse Google Photos (albums, collections, and search) when adding photos or videos from your device.
 * [*] Stats now refresh when you return to the screen, so your latest data appears without a manual pull-to-refresh. [https://github.com/wordpress-mobile/WordPress-Android/pull/23112]
+* [*] Links from emails that open outside the app now show a clear message when no browser is available, instead of closing the app.
 
 
 26.9
