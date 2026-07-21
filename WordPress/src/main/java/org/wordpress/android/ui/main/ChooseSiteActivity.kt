@@ -502,8 +502,11 @@ class ChooseSiteActivity : BaseAppCompatActivity() {
             adapter.setActionMode(ActionMode.from(actionMode))
         }
 
-        // restore the expanded add-site menu (the menu can't be open while pinning)
-        if (savedInstanceState.getBoolean(KEY_ADD_SITE_MENU_OPEN) && adapter.mode != ActionMode.Pin) {
+        // restore the expanded add-site menu (the menu only exists in DEFAULT mode and can't be
+        // open while pinning)
+        if (savedInstanceState.getBoolean(KEY_ADD_SITE_MENU_OPEN) &&
+            mode == SitePickerMode.DEFAULT && adapter.mode != ActionMode.Pin
+        ) {
             expandAddSiteMenuInstantly()
         }
     }
