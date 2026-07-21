@@ -100,6 +100,7 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
     private var noteId: String? = null
     private var loadedComment: RsComment? = null
     private var isLikeInProgress = false
+    private var isModerationInProgress = false
 
     fun start(site: SiteModel, remoteCommentId: Long, noteId: String? = null) {
         if (isStarted) return
@@ -283,42 +284,62 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
     }
 
     private suspend fun approveAfterReply() {
-        _uiState.value = _uiState.value?.copy(status = APPROVED)
-        val result = withContext(bgDispatcher) { moderate(APPROVED) }
-        if (result is RsResult.Error) {
-            _uiState.value = _uiState.value?.copy(status = UNAPPROVED)
-        } else {
-            // Match the legacy screen, which tracks the implicit approve when replying to an
-            // unapproved comment (this path is only reached from an unapproved comment).
-            trackCommentAction(Stat.COMMENT_APPROVED)
-            if (noteId != null) {
-                _commentModerated.value = Event(APPROVED)
+        // Hold the same guard moderateComment uses so this implicit approve can't race a user
+        // moderation: skip if one is already in flight, and keep the flag set across our own
+        // (multi-second) network call so an approve/spam/trash tapped during it is ignored rather
+        // than firing a second, conflicting updateStatus that would desync the UI and server.
+        if (isModerationInProgress) return
+        isModerationInProgress = true
+        try {
+            _uiState.value = _uiState.value?.copy(status = APPROVED)
+            val result = withContext(bgDispatcher) { moderate(APPROVED) }
+            if (result is RsResult.Error) {
+                _uiState.value = _uiState.value?.copy(status = UNAPPROVED)
+            } else {
+                // Match the legacy screen, which tracks the implicit approve when replying to an
+                // unapproved comment (this path is only reached from an unapproved comment).
+                trackCommentAction(Stat.COMMENT_APPROVED)
+                if (noteId != null) {
+                    _commentModerated.value = Event(APPROVED)
+                }
             }
+        } finally {
+            isModerationInProgress = false
         }
     }
 
+    @Suppress("ReturnCount")
     private fun moderateComment(newStatus: CommentStatus, closeOnSuccess: Boolean) {
         // The action footer stays visible while the comment loads, so ignore taps until then:
         // before the load completes the ui state holds a default status and the toggle handlers
         // would compute (and apply server-side) the wrong target status.
         if (loadedComment == null) return
         if (isOffline()) return
+        // Guard against a second moderation while one is in flight (fast double-tap): the target
+        // status is derived from the optimistic ui state, so racing requests could compute (and
+        // apply server-side) conflicting statuses and leave the UI and server out of sync.
+        if (isModerationInProgress) return
         val previousStatus = currentStatus()
+        isModerationInProgress = true
         launch {
-            _uiState.value = _uiState.value?.copy(status = newStatus)
-            val result = withContext(bgDispatcher) { moderate(newStatus) }
-            if (result is RsResult.Error) {
-                _uiState.value = _uiState.value?.copy(status = previousStatus)
-                showError(result.message, R.string.error_moderate_comment)
-            } else {
-                moderationStat(previousStatus, newStatus)?.let { trackCommentAction(it) }
-                _commentChanged.value = Event(Unit)
-                if (noteId != null) {
-                    _commentModerated.value = Event(newStatus)
+            try {
+                _uiState.value = _uiState.value?.copy(status = newStatus)
+                val result = withContext(bgDispatcher) { moderate(newStatus) }
+                if (result is RsResult.Error) {
+                    _uiState.value = _uiState.value?.copy(status = previousStatus)
+                    showError(result.message, R.string.error_moderate_comment)
+                } else {
+                    moderationStat(previousStatus, newStatus)?.let { trackCommentAction(it) }
+                    _commentChanged.value = Event(Unit)
+                    if (noteId != null) {
+                        _commentModerated.value = Event(newStatus)
+                    }
+                    if (closeOnSuccess) {
+                        _uiActionEvent.value = Event(Close)
+                    }
                 }
-                if (closeOnSuccess) {
-                    _uiActionEvent.value = Event(Close)
-                }
+            } finally {
+                isModerationInProgress = false
             }
         }
     }

@@ -280,6 +280,59 @@ class UnifiedCommentDetailsViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `onApproveClicked ignores a second tap while a moderation is in flight`() = test {
+        whenever(commentsRsDataSource.updateStatus(eq(site), eq(REMOTE_COMMENT_ID), any()))
+            .doSuspendableAnswer {
+                delay(LOAD_DELAY_MS)
+                RsResult.Success
+            }
+        viewModel.start(site, REMOTE_COMMENT_ID)
+
+        viewModel.onApproveClicked()
+        viewModel.onApproveClicked()
+        advanceUntilIdle()
+
+        verify(commentsRsDataSource, times(1)).updateStatus(site, REMOTE_COMMENT_ID, UNAPPROVED)
+        verify(commentsRsDataSource, times(0)).updateStatus(site, REMOTE_COMMENT_ID, APPROVED)
+    }
+
+    @Test
+    fun `a moderation tapped during the auto-approve after a reply is ignored`() = test {
+        // Replying to an unapproved comment fires an implicit moderate(APPROVED). A moderation
+        // tapped while that (suspended) approve is in flight must not race a second write.
+        whenever(commentsRsDataSource.getComment(site, REMOTE_COMMENT_ID)).thenReturn(UNAPPROVED_RS_COMMENT)
+        whenever(commentsRsDataSource.updateStatus(eq(site), eq(REMOTE_COMMENT_ID), any()))
+            .doSuspendableAnswer {
+                delay(LOAD_DELAY_MS)
+                RsResult.Success
+            }
+        viewModel.start(site, REMOTE_COMMENT_ID)
+
+        viewModel.onReplyClicked("nice post")
+        // The reply has completed and the auto-approve's moderate(APPROVED) is now suspended.
+        viewModel.onApproveClicked()
+        advanceUntilIdle()
+
+        verify(commentsRsDataSource, times(1)).updateStatus(site, REMOTE_COMMENT_ID, APPROVED)
+        verify(commentsRsDataSource, times(0)).updateStatus(site, REMOTE_COMMENT_ID, UNAPPROVED)
+    }
+
+    @Test
+    fun `a second moderation is allowed once the first has completed`() = test {
+        // Guards against the in-flight flag getting stuck true (e.g. a dropped finally reset), which
+        // would silently ignore every later moderation. The first call completes before the second.
+        viewModel.start(site, REMOTE_COMMENT_ID)
+
+        viewModel.onApproveClicked()
+        advanceUntilIdle()
+        viewModel.onApproveClicked()
+        advanceUntilIdle()
+
+        verify(commentsRsDataSource).updateStatus(site, REMOTE_COMMENT_ID, UNAPPROVED)
+        verify(commentsRsDataSource).updateStatus(site, REMOTE_COMMENT_ID, APPROVED)
+    }
+
+    @Test
     fun `onEditClicked emits launch edit event with site comment identifier`() = test {
         viewModel.start(site, REMOTE_COMMENT_ID)
 

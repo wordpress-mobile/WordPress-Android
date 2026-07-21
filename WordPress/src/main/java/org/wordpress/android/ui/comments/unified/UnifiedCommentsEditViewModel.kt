@@ -71,6 +71,9 @@ class UnifiedCommentsEditViewModel @Inject constructor(
     // @Volatile covers the cross-thread clear.
     @Volatile
     private var isSaving = false
+    // Guards against queuing a stack of identical "saving" snackbars on repeated back-presses
+    // during a single in-flight save; reset when a new save starts.
+    private var savingBackNoticeShown = false
 
     private lateinit var site: SiteModel
 
@@ -86,6 +89,9 @@ class UnifiedCommentsEditViewModel @Inject constructor(
     data class EditCommentUiState(
         val canSaveChanges: Boolean = false,
         val showProgress: Boolean = false,
+        // A terminal "couldn't load the comment" state: the screen shows an error (not the form),
+        // held in retained state so a dropped snackbar/close event can't strand it on a spinner.
+        val loadFailed: Boolean = false,
         val progressText: UiString? = null,
         // Lives in ui state (not a one-shot event) so the dialog survives configuration changes,
         // like the DialogFragment it replaced.
@@ -171,6 +177,7 @@ class UnifiedCommentsEditViewModel @Inject constructor(
         _uiState.value?.let { uiState ->
             val editedCommentEssentials = uiState.editedComment
             isSaving = true
+            savingBackNoticeShown = false
             launch(bgDispatcher) {
                 try {
                     setLoadingState(SAVING)
@@ -183,6 +190,17 @@ class UnifiedCommentsEditViewModel @Inject constructor(
     }
 
     fun onBackPressed() {
+        // A save already in flight can't be discarded — the edit has been dispatched and will land
+        // server-side regardless. Surface that instead of silently swallowing the press, so a save
+        // that stalls to a network timeout doesn't leave the screen feeling frozen with no feedback.
+        // Only once per save, so repeated presses don't queue a stack of identical snackbars.
+        if (isSaving) {
+            if (!savingBackNoticeShown) {
+                savingBackNoticeShown = true
+                _onSnackbarMessage.value = Event(SnackbarMessageHolder(UiStringRes(R.string.saving_changes)))
+            }
+            return
+        }
         _uiState.value?.let {
             if (it.editedComment.isNotEqualTo(it.originalComment)) {
                 _uiState.value = it.copy(showDiscardDialog = true)
@@ -216,14 +234,20 @@ class UnifiedCommentsEditViewModel @Inject constructor(
                         originalComment = commentEssentials,
                         editedComment = commentEssentials
                     )
+                delay(LOADING_DELAY_MS)
+                setLoadingState(NOT_VISIBLE)
             } else {
-                _onSnackbarMessage.value = Event(SnackbarMessageHolder(
-                    message = UiStringRes(R.string.error_load_comment),
-                    onDismissAction = { _uiActionEvent.value = Event(CLOSE) }
-                ))
+                // The comment couldn't be loaded. Record the failure in the retained ui state
+                // (not just a one-shot event): showSnackbar bails when the fragment has no context,
+                // and the snackbar/close Events don't survive an Activity recreation — either would
+                // otherwise strand the screen on a spinner forever. The screen renders a terminal
+                // error from this state (never the empty form), which the user backs out of normally.
+                _uiState.value = (_uiState.value ?: EditCommentUiState()).copy(
+                    showProgress = false,
+                    loadFailed = true
+                )
+                _onSnackbarMessage.value = Event(SnackbarMessageHolder(UiStringRes(R.string.error_load_comment)))
             }
-            delay(LOADING_DELAY_MS)
-            setLoadingState(NOT_VISIBLE)
         }
     }
 

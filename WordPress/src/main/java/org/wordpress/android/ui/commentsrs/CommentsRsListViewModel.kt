@@ -216,7 +216,12 @@ class CommentsRsListViewModel @Inject constructor(
 
     /** Loads the first page for [tab] unless it's already initialized. */
     @MainThread
+    @Suppress("ReturnCount")
     fun initTab(tab: CommentsRsListTab) {
+        // No selected site: init already queued a toast + Finish. Bail before registering the tab
+        // so we neither strand a permanently-loading tab nor let a later refreshTab reach the
+        // site getter (requireNotNull) via clearPostTitles.
+        if (_site == null) return
         // updateTabUiState inserts the tab synchronously, so this also blocks re-entry while
         // the first fetch is in flight.
         if (_tabStates.value.containsKey(tab)) return
@@ -234,7 +239,11 @@ class CommentsRsListViewModel @Inject constructor(
      * keep the current list on screen until the new page arrives.
      */
     @MainThread
+    @Suppress("ReturnCount")
     fun refreshTab(tab: CommentsRsListTab, isUserRefresh: Boolean = false) {
+        // As in initTab: with no selected site the clearPostTitles(site) call below would hit the
+        // requireNotNull. Guard the entry point rather than deeper down.
+        if (_site == null) return
         if (!_tabStates.value.containsKey(tab)) return
         // A first page is already on its way (initial load or another refresh); a second fetch
         // would only duplicate the request and double-bump the page generation.
@@ -467,6 +476,7 @@ class CommentsRsListViewModel @Inject constructor(
     }
 
     private fun fetchFirstPage(tab: CommentsRsListTab, showErrorSnackbar: Boolean = true) {
+        // Callers (initTab, refreshTab) guard against a null site, so the site getter below is safe.
         firstPageJobs[tab] = viewModelScope.launch {
             val params = commentsRsDataSource.firstPageParams(
                 status = tab.queryStatus,
