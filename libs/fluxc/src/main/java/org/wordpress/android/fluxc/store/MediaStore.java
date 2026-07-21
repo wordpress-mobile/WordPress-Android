@@ -4,6 +4,7 @@ import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.VisibleForTesting;
 
 import com.wellsql.generated.MediaModelTable;
 
@@ -894,6 +895,44 @@ public class MediaStore extends Store {
     // Helper methods that choose the appropriate network client to perform an action
     //
 
+    /**
+     * Identifies which network client should handle media requests for a given site.
+     */
+    public enum MediaRestClientType {
+        WPCOM_REST,
+        SELF_HOSTED_RS,
+        JETPACK_CP,
+        APPLICATION_PASSWORDS,
+        XMLRPC
+    }
+
+    /**
+     * Resolves the network client to use for media requests for the given site.
+     *
+     * IMPORTANT: {@link SiteModel#isUsingWpComRestApi()} must be checked before
+     * {@link SiteModel#isUsingSelfHostedRestApi()}. A Jetpack-connected site can have Application
+     * Password credentials stored (e.g. auto-generated for taxonomies or navigation menus), which
+     * makes {@code isUsingSelfHostedRestApi()} return {@code true}. Such sites must still route media
+     * through the WP.com REST API (the Jetpack tunnel) rather than talking to the self-hosted REST API
+     * directly, otherwise uploads and the Media Library fail on sites that have Application Passwords
+     * disabled (see CMM-2114).
+     */
+    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+    public MediaRestClientType getMediaRestClientType(@NonNull SiteModel site) {
+        if (site.isUsingWpComRestApi()) {
+            return MediaRestClientType.WPCOM_REST;
+        } else if (site.isUsingSelfHostedRestApi()) {
+            return MediaRestClientType.SELF_HOSTED_RS;
+        } else if (site.isJetpackCPConnected()) {
+            return MediaRestClientType.JETPACK_CP;
+        } else if (site.getOrigin() == SiteModel.ORIGIN_WPAPI
+                   && mApplicationPasswordsConfiguration.isEnabled()) {
+            return MediaRestClientType.APPLICATION_PASSWORDS;
+        } else {
+            return MediaRestClientType.XMLRPC;
+        }
+    }
+
     private void performPushMedia(@NonNull MediaPayload payload) {
         if (payload.media == null) {
             // null or empty media list -or- list contains a null value
@@ -905,12 +944,16 @@ public class MediaStore extends Store {
             return;
         }
 
-        if (payload.site.isUsingSelfHostedRestApi()) {
-            mMediaRSApiRestClient.pushMedia(payload.site, payload.media);
-        } else if (payload.site.isUsingWpComRestApi()) {
-            mMediaRestClient.pushMedia(payload.site, payload.media);
-        } else {
-            mMediaXmlrpcClient.pushMedia(payload.site, payload.media);
+        switch (getMediaRestClientType(payload.site)) {
+            case WPCOM_REST:
+                mMediaRestClient.pushMedia(payload.site, payload.media);
+                break;
+            case SELF_HOSTED_RS:
+                mMediaRSApiRestClient.pushMedia(payload.site, payload.media);
+                break;
+            default:
+                mMediaXmlrpcClient.pushMedia(payload.site, payload.media);
+                break;
         }
     }
 
@@ -958,17 +1001,22 @@ public class MediaStore extends Store {
             MediaUtils.stripLocation(payload.media.getFilePath());
         }
 
-        if (payload.site.isUsingSelfHostedRestApi()) {
-            mMediaRSApiRestClient.uploadMedia(payload.site, payload.media);
-        } else if (payload.site.isUsingWpComRestApi()) {
-            mMediaRestClient.uploadMedia(payload.site, payload.media);
-        } else if (payload.site.isJetpackCPConnected()) {
-            mWPComV2MediaRestClient.uploadMedia(payload.site, payload.media);
-        } else if (payload.site.getOrigin() == SiteModel.ORIGIN_WPAPI
-                   && mApplicationPasswordsConfiguration.isEnabled()) {
-            mApplicationPasswordsMediaRestClient.uploadMedia(payload.site, payload.media);
-        } else {
-            mMediaXmlrpcClient.uploadMedia(payload.site, payload.media);
+        switch (getMediaRestClientType(payload.site)) {
+            case WPCOM_REST:
+                mMediaRestClient.uploadMedia(payload.site, payload.media);
+                break;
+            case SELF_HOSTED_RS:
+                mMediaRSApiRestClient.uploadMedia(payload.site, payload.media);
+                break;
+            case JETPACK_CP:
+                mWPComV2MediaRestClient.uploadMedia(payload.site, payload.media);
+                break;
+            case APPLICATION_PASSWORDS:
+                mApplicationPasswordsMediaRestClient.uploadMedia(payload.site, payload.media);
+                break;
+            default:
+                mMediaXmlrpcClient.uploadMedia(payload.site, payload.media);
+                break;
         }
     }
 
@@ -984,21 +1032,26 @@ public class MediaStore extends Store {
                 offset = MediaSqlUtils.getMediaWithStates(payload.site, list).size();
             }
         }
-        if (payload.site.isUsingSelfHostedRestApi()) {
-            mMediaRSApiRestClient.fetchMediaList(
-                    payload.site, payload.number, offset, payload.mimeType, payload.searchTerm);
-        } else if (payload.site.isUsingWpComRestApi()) {
-            mMediaRestClient.fetchMediaList(
-                    payload.site, payload.number, offset, payload.mimeType, payload.searchTerm);
-        } else if (payload.site.isJetpackCPConnected()) {
-            mWPComV2MediaRestClient.fetchMediaList(
-                    payload.site, payload.number, offset, payload.mimeType, payload.searchTerm);
-        } else if (payload.site.getOrigin() == SiteModel.ORIGIN_WPAPI
-                   && mApplicationPasswordsConfiguration.isEnabled()) {
-            mApplicationPasswordsMediaRestClient.fetchMediaList(
-                    payload.site, payload.number, offset, payload.mimeType, payload.searchTerm);
-        } else {
-            mMediaXmlrpcClient.fetchMediaList(payload.site, payload.number, offset, payload.mimeType);
+        switch (getMediaRestClientType(payload.site)) {
+            case WPCOM_REST:
+                mMediaRestClient.fetchMediaList(
+                        payload.site, payload.number, offset, payload.mimeType, payload.searchTerm);
+                break;
+            case SELF_HOSTED_RS:
+                mMediaRSApiRestClient.fetchMediaList(
+                        payload.site, payload.number, offset, payload.mimeType, payload.searchTerm);
+                break;
+            case JETPACK_CP:
+                mWPComV2MediaRestClient.fetchMediaList(
+                        payload.site, payload.number, offset, payload.mimeType, payload.searchTerm);
+                break;
+            case APPLICATION_PASSWORDS:
+                mApplicationPasswordsMediaRestClient.fetchMediaList(
+                        payload.site, payload.number, offset, payload.mimeType, payload.searchTerm);
+                break;
+            default:
+                mMediaXmlrpcClient.fetchMediaList(payload.site, payload.number, offset, payload.mimeType);
+                break;
         }
     }
 
@@ -1009,14 +1062,19 @@ public class MediaStore extends Store {
             return;
         }
 
-        if (payload.site.isUsingSelfHostedRestApi()) {
-            mMediaRSApiRestClient.fetchMedia(payload.site, payload.media);
-        } else if (payload.site.isUsingWpComRestApi()) {
-            mMediaRestClient.fetchMedia(payload.site, payload.media);
-        } else if (payload.site.isJetpackCPConnected()) {
-            mWPComV2MediaRestClient.fetchMedia(payload.site, payload.media);
-        } else {
-            mMediaXmlrpcClient.fetchMedia(payload.site, payload.media);
+        switch (getMediaRestClientType(payload.site)) {
+            case WPCOM_REST:
+                mMediaRestClient.fetchMedia(payload.site, payload.media);
+                break;
+            case SELF_HOSTED_RS:
+                mMediaRSApiRestClient.fetchMedia(payload.site, payload.media);
+                break;
+            case JETPACK_CP:
+                mWPComV2MediaRestClient.fetchMedia(payload.site, payload.media);
+                break;
+            default:
+                mMediaXmlrpcClient.fetchMedia(payload.site, payload.media);
+                break;
         }
     }
 
@@ -1026,12 +1084,16 @@ public class MediaStore extends Store {
             return;
         }
 
-        if (payload.site.isUsingSelfHostedRestApi()) {
-            mMediaRSApiRestClient.deleteMedia(payload.site, payload.media);
-        } else if (payload.site.isUsingWpComRestApi()) {
-            mMediaRestClient.deleteMedia(payload.site, payload.media);
-        } else {
-            mMediaXmlrpcClient.deleteMedia(payload.site, payload.media);
+        switch (getMediaRestClientType(payload.site)) {
+            case WPCOM_REST:
+                mMediaRestClient.deleteMedia(payload.site, payload.media);
+                break;
+            case SELF_HOSTED_RS:
+                mMediaRSApiRestClient.deleteMedia(payload.site, payload.media);
+                break;
+            default:
+                mMediaXmlrpcClient.deleteMedia(payload.site, payload.media);
+                break;
         }
     }
 
@@ -1044,17 +1106,22 @@ public class MediaStore extends Store {
             MediaSqlUtils.insertOrUpdateMedia(media);
         }
 
-        if (payload.site.isUsingSelfHostedRestApi()) {
-            mMediaRSApiRestClient.cancelUpload(payload.media);
-        } else if (payload.site.isUsingWpComRestApi()) {
-            mMediaRestClient.cancelUpload(media);
-        } else if (payload.site.isJetpackCPConnected()) {
-            mWPComV2MediaRestClient.cancelUpload(media);
-        } else if (payload.site.getOrigin() == SiteModel.ORIGIN_WPAPI
-                   && mApplicationPasswordsConfiguration.isEnabled()) {
-            mApplicationPasswordsMediaRestClient.cancelUpload(media);
-        } else {
-            mMediaXmlrpcClient.cancelUpload(media);
+        switch (getMediaRestClientType(payload.site)) {
+            case WPCOM_REST:
+                mMediaRestClient.cancelUpload(media);
+                break;
+            case SELF_HOSTED_RS:
+                mMediaRSApiRestClient.cancelUpload(payload.media);
+                break;
+            case JETPACK_CP:
+                mWPComV2MediaRestClient.cancelUpload(media);
+                break;
+            case APPLICATION_PASSWORDS:
+                mApplicationPasswordsMediaRestClient.cancelUpload(media);
+                break;
+            default:
+                mMediaXmlrpcClient.cancelUpload(media);
+                break;
         }
     }
 
