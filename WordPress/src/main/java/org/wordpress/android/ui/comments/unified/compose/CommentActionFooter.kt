@@ -38,8 +38,10 @@ import org.wordpress.android.ui.compose.theme.AppThemeM3
 /**
  * The row of comment actions pinned above the reply box: moderate (approve/unapprove/untrash),
  * spam, like and a "more" overflow menu (edit, trash, copy/share link, delete permanently).
- * Mirrors the legacy comment_action_footer layout: equal-width icon+label buttons, accent colour
- * at full opacity when a toggle is on, on-surface at medium opacity when off.
+ * Mirrors the legacy comment_action_footer layout: equal-width icon+label buttons in on-surface
+ * at medium emphasis. An enabled on toggle (approved or liked) is highlighted with the accent
+ * colour at full opacity; once disabled it dims to on-surface at the reduced disabled opacity, so
+ * a moderation action the user can't perform no longer shows a tappable-looking tint.
  *
  * When [canModerate] is false (the current user lacks the moderate_comments capability) the
  * moderation controls — moderate, spam, edit, trash and delete permanently — stay visible but are
@@ -65,15 +67,15 @@ fun CommentActionFooter(
     modifier: Modifier = Modifier
 ) {
     Row(modifier = modifier.fillMaxWidth()) {
-        val (moderateIconRes, moderateLabelRes, moderateIsOn) = when (status) {
-            APPROVED -> Triple(R.drawable.ic_checkmark_white_24dp, R.string.comment_status_approved, true)
-            TRASH -> Triple(R.drawable.ic_undo_white_24dp, R.string.mnu_comment_untrash, false)
-            else -> Triple(R.drawable.ic_checkmark_white_24dp, R.string.mnu_comment_approve, false)
+        val (moderateIconRes, moderateLabelRes) = when (status) {
+            APPROVED -> Pair(R.drawable.ic_checkmark_white_24dp, R.string.comment_status_approved)
+            TRASH -> Pair(R.drawable.ic_undo_white_24dp, R.string.mnu_comment_untrash)
+            else -> Pair(R.drawable.ic_checkmark_white_24dp, R.string.mnu_comment_approve)
         }
         ActionButton(
             iconRes = moderateIconRes,
             labelRes = moderateLabelRes,
-            isOn = moderateIsOn,
+            isOn = status == APPROVED,
             enabled = canModerate,
             onClick = onModerateClick,
             modifier = Modifier.weight(1f)
@@ -82,7 +84,6 @@ fun CommentActionFooter(
         ActionButton(
             iconRes = R.drawable.ic_spam_white_24dp,
             labelRes = if (status == SPAM) R.string.mnu_comment_unspam else R.string.mnu_comment_spam,
-            isOn = false,
             enabled = canModerate,
             onClick = onSpamClick,
             modifier = Modifier.weight(1f)
@@ -132,7 +133,6 @@ private fun MoreActionButton(
         ActionButton(
             iconRes = R.drawable.ic_more_horiz_white_24dp,
             labelRes = R.string.more,
-            isOn = false,
             onClick = { isMenuExpanded = true },
             // Fill the Box (which carries this button's share of the row) so the icon centres in
             // its slot like the sibling buttons, instead of hugging the slot's start edge
@@ -186,7 +186,9 @@ private fun MoreMenuItem(
     onClick: () -> Unit
 ) {
     DropdownMenuItem(
-        text = { Text(text = stringResource(labelRes), color = color) },
+        // Only apply the explicit colour (e.g. the destructive red) while enabled; when disabled,
+        // defer to the menu item's disabled content colour so it greys out instead of staying red.
+        text = { Text(text = stringResource(labelRes), color = if (enabled) color else Color.Unspecified) },
         enabled = enabled,
         onClick = onClick
     )
@@ -196,14 +198,15 @@ private fun MoreMenuItem(
 private fun ActionButton(
     @DrawableRes iconRes: Int,
     @StringRes labelRes: Int,
-    isOn: Boolean,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
-    enabled: Boolean = true
+    enabled: Boolean = true,
+    isOn: Boolean = false
 ) {
-    val color = if (isOn) MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.onSurface
-    // A disabled button reads as unavailable at the same reduced opacity Material uses for
-    // disabled content; enabled buttons keep the footer's on/off emphasis.
+    // An on toggle (approved or liked) is highlighted with the accent colour at full opacity, but
+    // only while it's actionable; once disabled it drops to on-surface at the reduced disabled
+    // opacity so a moderation action the user can't perform no longer shows a tappable-looking tint.
+    val color = if (isOn && enabled) MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.onSurface
     val alpha = when {
         !enabled -> DISABLED_EMPHASIS_ALPHA
         isOn -> 1f
@@ -231,7 +234,7 @@ private fun ActionButton(
     }
 }
 
-/** Matches material_emphasis_medium, used by the legacy footer for "off" action buttons. */
+/** Matches material_emphasis_medium, used by the footer for enabled "off" action buttons. */
 internal const val MEDIUM_EMPHASIS_ALPHA = 0.6f
 
 /** Material's disabled-content opacity, used to dim moderation buttons the user can't use. */
