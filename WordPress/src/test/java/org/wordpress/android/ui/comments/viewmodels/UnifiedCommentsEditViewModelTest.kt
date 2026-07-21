@@ -174,26 +174,30 @@ class UnifiedCommentsEditViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `Should keep progress and not reveal an empty form if CommentIdentifier comment not found`() = test {
+    fun `Should show a terminal load-failed state and not an empty form if comment not found`() = test {
         whenever(getCommentUseCase.execute(site, remoteCommentId))
             .thenReturn(null)
         viewModel.start(site, siteCommentIdentifier)
         advanceUntilIdle()
 
-        // On load failure the empty, editable form must never be revealed: progress stays up
-        // until the snackbar's dismiss action closes the screen.
-        assertThat(uiState).isNotEmpty
-        assertThat(uiState.none { !it.showProgress }).isTrue
+        // On load failure the screen shows a terminal error (retained state), never the empty,
+        // editable form, and the spinner is cleared so it can't strand.
+        val last = uiState.last()
+        assertThat(last.loadFailed).isTrue
+        assertThat(last.showProgress).isFalse
+        assertThat(last.editedComment).isEqualTo(CommentEssentials())
         assertThat(onSnackbarMessage.firstOrNull()).isNotNull
     }
 
     @Test
-    fun `Should keep progress and not reveal an empty form if CommentIdentifier not handled`() = test {
+    fun `Should show a terminal load-failed state if CommentIdentifier not handled`() = test {
         // ReaderCommentIdentifier is not supported by this class yet
         viewModel.start(site, ReaderCommentIdentifier(0L, 0L, 0L))
         advanceUntilIdle()
 
-        assertThat(uiState.none { !it.showProgress }).isTrue
+        val last = uiState.last()
+        assertThat(last.loadFailed).isTrue
+        assertThat(last.showProgress).isFalse
         assertThat(onSnackbarMessage.firstOrNull()).isNotNull
     }
 
@@ -448,8 +452,11 @@ class UnifiedCommentsEditViewModelTest : BaseUnitTest() {
         viewModel.onActionMenuClicked()
         viewModel.onBackPressed()
 
+        // Back is swallowed (no discard dialog, no close) but now surfaces a "saving" message
+        // instead of silently doing nothing.
         assertThat(uiState.last().showDiscardDialog).isFalse
         assertThat(uiActionEvent).doesNotContain(CLOSE)
+        assertThat(onSnackbarMessage.last().message).isEqualTo(UiStringRes(R.string.saving_changes))
 
         advanceUntilIdle()
     }

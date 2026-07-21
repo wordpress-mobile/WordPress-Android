@@ -106,15 +106,19 @@ class CommentsRsListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
     }
 
     @Test
-    fun `initTab does not fetch or crash when no site is selected`() = test {
-        // The Compose pager fires its init effect while init() races its async Finish; the fetch
-        // must bail rather than dereference the (null) site and crash.
+    fun `no-site initTab and refreshTab bail without registering a tab, fetching, or crashing`() = test {
+        // The Compose pager fires its init effect while init() races its async Finish. initTab must
+        // bail before registering the tab (no stranded spinner), and a pull-to-refresh landing in
+        // the same window must not reach clearPostTitles(site) — the requireNotNull this guards.
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(null)
         val viewModel = createViewModel()
 
         viewModel.initTab(CommentsRsListTab.ALL)
+        viewModel.refreshTab(CommentsRsListTab.ALL, isUserRefresh = true)
         advanceUntilIdle()
 
+        assertThat(viewModel.tabStates.value).isEmpty()
+        verify(commentsRsDataSource, never()).clearPostTitles(any())
         verify(commentsRsDataSource, never()).fetchCommentsPage(any(), any())
     }
 
