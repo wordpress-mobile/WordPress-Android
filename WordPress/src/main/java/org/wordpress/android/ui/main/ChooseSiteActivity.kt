@@ -118,7 +118,7 @@ class ChooseSiteActivity : BaseAppCompatActivity() {
             // when the user is signed in and can add a self-hosted site there are two choices, so
             // expand the FAB menu; otherwise there's only one action, so trigger it directly
             if (accountStore.hasAccessToken() && BuildConfig.ENABLE_ADD_SELF_HOSTED_SITE) {
-                toggleAddSiteMenu()
+                if (isAddSiteMenuOpen) closeAddSiteMenu() else openAddSiteMenu()
             } else {
                 AddSiteHandler.addSite(this, accountStore.hasAccessToken(), SiteCreationSource.MY_SITE)
             }
@@ -151,10 +151,6 @@ class ChooseSiteActivity : BaseAppCompatActivity() {
                 onBackPressedDispatcher.onBackPressed()
             }
         }
-    }
-
-    private fun toggleAddSiteMenu() {
-        if (isAddSiteMenuOpen) closeAddSiteMenu() else openAddSiteMenu()
     }
 
     private fun openAddSiteMenu() {
