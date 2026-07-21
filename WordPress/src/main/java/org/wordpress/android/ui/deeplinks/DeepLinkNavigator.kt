@@ -130,6 +130,9 @@ class DeepLinkNavigator
      * Opens the uri with an external browser. The device may have no app able to handle a web link (no browser
      * installed, browser disabled or restricted by a work profile), so the missing handler is reported to the user
      * instead of crashing the deep link entry point.
+     *
+     * The receiver activity has no UI of its own, so it is finished when the hand-off fails. Otherwise the user is
+     * left on an empty screen after the toast. The toast still shows, since it does not depend on the activity.
      */
     private fun openInBrowser(activity: AppCompatActivity, uri: UriWrapper) {
         @SuppressWarnings("UnsafeImplicitIntentLaunch")
@@ -139,6 +142,7 @@ class DeepLinkNavigator
         } catch (e: ActivityNotFoundException) {
             ToastUtils.showToast(activity, R.string.cant_open_url, ToastUtils.Duration.LONG)
             AppLog.e(UTILS, "No app available on the device to open the deep link: $uri", e)
+            activity.finish()
         }
     }
 
