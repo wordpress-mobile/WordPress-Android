@@ -147,7 +147,10 @@ class ApplicationPasswordViewModelSlice @Inject constructor(
         // Only true self-hosted sites need the XML-RPC fallback path — Atomic and Jetpack-WPCom-REST
         // sites talk REST end-to-end and don't need XML-RPC.
         if (!site.isUsingWpComRestApi && site.xmlRpcUrl.isNullOrEmpty()) {
-            buildXmlRpcDisabledCard(site)
+            // A missing xmlRpcUrl doesn't mean XML-RPC is disabled — the login fetch may have fallen back to
+            // WPAPI on a transient error (e.g. a 429 rate-limit). Keep the card hidden and let rediscovery
+            // decide; it only surfaces the warning on a definitive negative.
+            uiModelMutable.postValue(null)
             attemptXmlRpcRediscovery(site)
         } else {
             uiModelMutable.postValue(null)
@@ -235,38 +238,56 @@ class ApplicationPasswordViewModelSlice @Inject constructor(
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
     internal fun attemptXmlRpcRediscovery(site: SiteModel) {
         scope.launch {
-            try {
-                val xmlRpcEndpoint = withContext(ioDispatcher) {
+            val xmlRpcEndpoint = try {
+                withContext(ioDispatcher) {
                     selfHostedEndpointFinder
                         .verifyOrDiscoverXMLRPCEndpoint(site.url)
                 }
-
-                // Verify with an authenticated call
-                val result = withContext(ioDispatcher) {
-                    siteXMLRPCClient.fetchSites(
-                        xmlRpcEndpoint,
-                        site.apiRestUsernamePlain,
-                        site.apiRestPasswordPlain
+            } catch (e: SelfHostedEndpointFinder.DiscoveryException) {
+                // Only surface the "XML-RPC Disabled" warning on a definitive negative. A transient failure
+                // (e.g. a 429 rate-limit) leaves the state unknown, so keep the card hidden and re-check on the
+                // next refresh rather than wrongly claiming XML-RPC is off.
+                if (e.discoveryError.indicatesXmlRpcUnavailable()) {
+                    buildXmlRpcDisabledCard(site)
+                } else {
+                    uiModelMutable.postValue(null)
+                    appLogWrapper.d(
+                        AppLog.T.MAIN,
+                        "A_P: XML-RPC rediscovery inconclusive for ${site.url} " +
+                            "(${e.discoveryError}) - hiding card"
                     )
                 }
-                if (result.isError) {
-                    return@launch
-                }
+                return@launch
+            }
 
+            // Discovery verified a working xmlrpc.php, so XML-RPC is enabled. Confirm the credentials with an
+            // authenticated call before persisting the endpoint, but keep the card hidden either way.
+            val result = withContext(ioDispatcher) {
+                siteXMLRPCClient.fetchSites(
+                    xmlRpcEndpoint,
+                    site.apiRestUsernamePlain,
+                    site.apiRestPasswordPlain
+                )
+            }
+            if (!result.isError) {
                 site.xmlRpcUrl = xmlRpcEndpoint
                 // Persist only the rediscovered column — mirrors healApiRestUrlIfMissing. A full-row
                 // updateSite would rewrite ~80 columns from this in-memory model for a one-field change
                 // (risking clobbering other out-of-band values), so write just xmlRpcUrl.
                 siteStore.persistXmlRpcUrl(site.id, xmlRpcEndpoint)
-                buildCard(site)
-            } catch (
-                @Suppress("SwallowedException")
-                e: SelfHostedEndpointFinder.DiscoveryException
-            ) {
-                // XML-RPC rediscovery failed; card remains visible
             }
+            uiModelMutable.postValue(null)
         }
     }
+
+    // A missing/unusable XML-RPC endpoint is only a genuine "disabled" signal when discovery reaches a
+    // definitive conclusion. Transient errors (RATE_LIMITED, GENERIC_ERROR) and unrelated conditions
+    // (auth/SSL/invalid URL) must not surface the warning, to avoid false positives on throttled sites.
+    private fun SelfHostedEndpointFinder.DiscoveryError.indicatesXmlRpcUnavailable(): Boolean =
+        this == SelfHostedEndpointFinder.DiscoveryError.NO_SITE_ERROR ||
+            this == SelfHostedEndpointFinder.DiscoveryError.MISSING_XMLRPC_METHOD ||
+            this == SelfHostedEndpointFinder.DiscoveryError.XMLRPC_BLOCKED ||
+            this == SelfHostedEndpointFinder.DiscoveryError.XMLRPC_FORBIDDEN
 
     private fun onClick(site: SiteModel, alternativeUrl: String) {
         _onNavigation.postValue(
