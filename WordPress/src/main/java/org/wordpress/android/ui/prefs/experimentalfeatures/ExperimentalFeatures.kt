@@ -40,11 +40,6 @@ class ExperimentalFeatures @Inject constructor(
             R.string.experimental_post_types,
             R.string.experimental_post_types_description
         ),
-        RS_PAGES_LIST(
-            "rs_pages_list",
-            R.string.experimental_rs_pages_list,
-            R.string.experimental_rs_pages_list_description
-        ),
         RS_UNIFIED_COMMENTS(
             "rs_unified_comments",
             R.string.experimental_rs_comments,
