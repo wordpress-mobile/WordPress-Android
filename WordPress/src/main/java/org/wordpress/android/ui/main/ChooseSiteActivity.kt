@@ -285,8 +285,15 @@ class ChooseSiteActivity : BaseAppCompatActivity() {
         val fab = binding.fabAddSite
         // FloatingActionButton.show() only plays its entrance animation once the view is laid out.
         // setupMenuVisibility() runs from onPrepareOptionsMenu during the first layout pass, before
-        // the FAB is laid out, so post the initial reveal to guarantee the animation.
-        if (fab.isLaidOut) fab.show() else fab.post { fab.show() }
+        // the FAB is laid out, so post the initial reveal to guarantee the animation. Re-check state
+        // when the posted reveal runs: a search may have been expanded in the meantime (e.g. a search
+        // restored after rotation), in which case the FAB must stay hidden.
+        if (fab.isLaidOut) fab.show() else fab.post { if (shouldShowAddSiteFab()) fab.show() }
+    }
+
+    private fun shouldShowAddSiteFab(): Boolean {
+        val searchExpanded = ::menuSearch.isInitialized && menuSearch.isActionViewExpanded
+        return mode == SitePickerMode.DEFAULT && adapter.mode != ActionMode.Pin && !searchExpanded
     }
 
     private fun setupSearchView() {
