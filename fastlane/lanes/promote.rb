@@ -607,47 +607,17 @@ platform :android do
     UI.message("Wrote promotion steps for #{candidates.count} build(s) to #{PROMOTION_STEPS_FILE}")
   end
 
-  # Writes the confirmation block step + the release step. There's no picker — the candidate is baked
-  # into the release command; the block step only gates on a Yes/No confirmation.
+  # Writes the confirm → promote → finalize steps. There's no picker — the candidate is baked into the
+  # commands; the block step only gates on a Yes/No confirmation.
   def write_production_release_steps_file(version_code:)
     steps = {
       'steps' => [
-        {
-          'block' => PRODUCTION_BLOCK_LABEL,
-          'key' => PRODUCTION_BLOCK_STEP_KEY,
-          'prompt' => "Release build #{version_code} to production? This releases the matching WordPress and Jetpack builds.",
-          # Keep the build "running" (not green) while it waits for a human.
-          'blocked_state' => 'running',
-          'fields' => [
-            {
-              'select' => 'Release to production?',
-              'key' => PRODUCTION_CONFIRM_META_DATA_KEY,
-              # Required, no default: an un-actioned unblock can't silently release a build.
-              'required' => true,
-              'options' => [
-                { 'label' => 'Yes', 'value' => 'yes' },
-                { 'label' => 'No', 'value' => 'no' }
-              ]
-            }
-          ]
-        },
-        {
-          'label' => ':rocket: Release build to production',
-          # The candidate rides along as an argument; the confirmation Yes/No comes from meta-data.
-          'command' => ".buildkite/commands/promote-to-production.sh #{version_code}",
-          'plugins' => [CI_TOOLKIT_PLUGIN_REF],
-          'agents' => { 'queue' => 'android' }
-        },
+        production_confirm_block_step(version_code: version_code),
+        promote_to_production_step(version_code: version_code),
         # Barrier: finalize only after the promote step succeeds — a failed promote halts the build
         # here. On a "no" confirmation the promote step no-ops and finalize's own guard no-ops too.
         'wait',
-        {
-          'label' => ':android: Finalize promoted release',
-          # Draft GitHub release + trunk version-bump PR. Runs on mac-metal for the git push identity.
-          'command' => ".buildkite/commands/finalize-promoted-release.sh #{version_code}",
-          'plugins' => [CI_TOOLKIT_PLUGIN_REF],
-          'agents' => { 'queue' => 'mac-metal' }
-        }
+        finalize_promoted_release_step(version_code: version_code)
       ]
     }
 
@@ -655,6 +625,51 @@ platform :android do
     # `line_width: -1` keeps each label on one line (no YAML folding).
     File.write(PROMOTION_STEPS_FILE, steps.to_yaml(line_width: -1))
     UI.message("Wrote production release steps for build #{version_code} to #{PROMOTION_STEPS_FILE}")
+  end
+
+  # The Yes/No confirmation block step that gates the production release.
+  def production_confirm_block_step(version_code:)
+    {
+      'block' => PRODUCTION_BLOCK_LABEL,
+      'key' => PRODUCTION_BLOCK_STEP_KEY,
+      'prompt' => "Release build #{version_code} to production? This releases the matching WordPress and Jetpack builds.",
+      # Keep the build "running" (not green) while it waits for a human.
+      'blocked_state' => 'running',
+      'fields' => [
+        {
+          'select' => 'Release to production?',
+          'key' => PRODUCTION_CONFIRM_META_DATA_KEY,
+          # Required, no default: an un-actioned unblock can't silently release a build.
+          'required' => true,
+          'options' => [
+            { 'label' => 'Yes', 'value' => 'yes' },
+            { 'label' => 'No', 'value' => 'no' }
+          ]
+        }
+      ]
+    }
+  end
+
+  # The command step that promotes the confirmed build to production (WordPress + Jetpack).
+  def promote_to_production_step(version_code:)
+    {
+      'label' => ':rocket: Release build to production',
+      # The candidate rides along as an argument; the confirmation Yes/No comes from meta-data.
+      'command' => ".buildkite/commands/promote-to-production.sh #{version_code}",
+      'plugins' => [CI_TOOLKIT_PLUGIN_REF],
+      'agents' => { 'queue' => 'android' }
+    }
+  end
+
+  # The command step that finalizes the release (draft GitHub release + trunk version-bump PR). Runs
+  # on mac-metal for the git push identity.
+  def finalize_promoted_release_step(version_code:)
+    {
+      'label' => ':android: Finalize promoted release',
+      'command' => ".buildkite/commands/finalize-promoted-release.sh #{version_code}",
+      'plugins' => [CI_TOOLKIT_PLUGIN_REF],
+      'agents' => { 'queue' => 'mac-metal' }
+    }
   end
 
   # Source `shared-pipeline-vars` first so `$CI_TOOLKIT` is interpolated.
