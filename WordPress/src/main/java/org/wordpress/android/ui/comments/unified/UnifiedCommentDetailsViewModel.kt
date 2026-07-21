@@ -121,8 +121,7 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
 
     private fun loadModerationCapability() {
         launch {
-            val canModerate = withContext(bgDispatcher) { siteCapabilityChecker.canModerateComments(site) }
-            this@UnifiedCommentDetailsViewModel.canModerate = canModerate
+            canModerate = withContext(bgDispatcher) { siteCapabilityChecker.canModerateComments(site) }
             _uiState.value?.let { _uiState.value = it.copy(canModerate = canModerate) }
         }
     }
