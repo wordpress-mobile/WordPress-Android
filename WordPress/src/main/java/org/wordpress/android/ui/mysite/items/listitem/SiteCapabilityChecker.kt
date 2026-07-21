@@ -6,6 +6,7 @@ import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.util.AppLog
 import rs.wordpress.api.kotlin.WpRequestResult
 import uniffi.wp_api.UserCapability
+import java.util.concurrent.ConcurrentHashMap
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -22,7 +23,9 @@ class SiteCapabilityChecker @Inject constructor(
 ) {
     // Keyed by the local site id (site.id), not site.siteId: the latter (the WP.com blog id) is 0
     // for every self-hosted application-password site, which would collide their capabilities.
-    private val capabilityCache = mutableMapOf<Int, CapabilityCache>()
+    // Concurrent because it's a @Singleton read/written from multiple screens' ViewModels on the
+    // multi-threaded default dispatcher.
+    private val capabilityCache = ConcurrentHashMap<Int, CapabilityCache>()
 
     /**
      * Checks if the current user has the edit_theme_options capability for the given site.
@@ -41,13 +44,14 @@ class SiteCapabilityChecker @Inject constructor(
 
     private suspend fun capabilities(site: SiteModel): CapabilityCache {
         capabilityCache[site.id]?.let { return it }
-        val fetched = fetchCapabilities(site)
-        capabilityCache[site.id] = fetched
-        return fetched
+        // Only a successful fetch is cached. On failure fall back to a fail-closed value for this
+        // call but don't cache it, so a transient error doesn't disable the capability for the
+        // whole session — the next call retries (the comments screens never clear this cache).
+        return fetchCapabilities(site)?.also { capabilityCache[site.id] = it } ?: CapabilityCache()
     }
 
     @Suppress("TooGenericExceptionCaught")
-    private suspend fun fetchCapabilities(site: SiteModel): CapabilityCache {
+    private suspend fun fetchCapabilities(site: SiteModel): CapabilityCache? {
         return try {
             val client = wpApiClientProvider.getWpApiClient(site)
             val response = client.request { requestBuilder ->
@@ -61,13 +65,13 @@ class SiteCapabilityChecker @Inject constructor(
                         canModerateComments = capabilities.hasCap(UserCapability.ModerateComments)
                     )
                 }
-                // Fail closed: an unresolved capability disables the guarded action rather than
-                // offering it and letting the server reject the request after the fact.
-                else -> CapabilityCache()
+                // Return null (not cached) so the next call retries rather than locking in a
+                // fail-closed result from a transient error.
+                else -> null
             }
         } catch (e: Exception) {
             appLogWrapper.e(AppLog.T.API, "Failed to fetch user capabilities: ${e.message}")
-            CapabilityCache()
+            null
         }
     }
 

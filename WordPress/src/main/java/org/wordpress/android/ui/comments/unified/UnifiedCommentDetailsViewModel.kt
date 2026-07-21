@@ -294,9 +294,12 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
                 trackCommentReply(comment)
                 _commentChanged.value = Event(Unit)
                 // Replying to an unapproved comment implicitly approves it, matching legacy
-                // behaviour — but only for moderators; a non-moderator can reply without gaining
-                // the right to approve, so skip the implicit approve the server would reject.
-                if (currentStatus() == UNAPPROVED && canModerate) {
+                // behaviour. Always attempt it rather than gating on canModerate: that flag is
+                // fetched asynchronously and may still be unresolved when a moderator replies
+                // (e.g. from a notification, reply field pre-focused), which would silently drop
+                // the approve. approveAfterReply() flips the status optimistically and reverts if
+                // the server rejects it, so a non-moderator's reply self-heals either way.
+                if (currentStatus() == UNAPPROVED) {
                     approveAfterReply()
                 }
                 _uiActionEvent.value = Event(ReplySent)
