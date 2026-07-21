@@ -43,6 +43,7 @@ import org.wordpress.android.ui.comments.unified.CommentsRsDataSource.RsComment
 import org.wordpress.android.ui.comments.unified.CommentsRsDataSource.RsResult
 import org.wordpress.android.ui.comments.unified.UnifiedCommentDetailsViewModel
 import org.wordpress.android.ui.comments.unified.UnifiedCommentDetailsViewModel.CommentDetailsUiState
+import org.wordpress.android.ui.mysite.items.listitem.SiteCapabilityChecker
 import org.wordpress.android.ui.notifications.utils.NotificationsActionsWrapper
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.utils.UiString.UiStringText
@@ -59,6 +60,9 @@ class UnifiedCommentDetailsViewModelTest : BaseUnitTest() {
 
     @Mock
     lateinit var commentsStore: CommentsStore
+
+    @Mock
+    lateinit var siteCapabilityChecker: SiteCapabilityChecker
 
     @Mock
     lateinit var localCommentCacheUpdateHandler: LocalCommentCacheUpdateHandler
@@ -103,6 +107,8 @@ class UnifiedCommentDetailsViewModelTest : BaseUnitTest() {
             .thenReturn(successPayload())
         whenever(dateTimeUtilsWrapper.javaDateToTimeSpan(any())).thenReturn("2 hours ago")
         whenever(notificationsActionsWrapper.downloadNoteAndUpdateDB(any())).thenReturn(true)
+        // Default to allowed for any site; the restricted-capability tests override for [site].
+        whenever(siteCapabilityChecker.canModerateComments(any())).thenReturn(true)
 
         viewModel = createViewModel()
 
@@ -198,6 +204,44 @@ class UnifiedCommentDetailsViewModelTest : BaseUnitTest() {
         verify(commentsRsDataSource).delete(site, REMOTE_COMMENT_ID)
         verify(commentsStore).removeCommentByRemoteId(site, REMOTE_COMMENT_ID)
         assertThat(uiActionEvents).contains(Close)
+    }
+
+    @Test
+    fun `ui state exposes canModerate from the capability checker`() = test {
+        viewModel.start(site, REMOTE_COMMENT_ID)
+
+        assertThat(uiStates.last().canModerate).isTrue
+    }
+
+    @Test
+    fun `canModerate is false and moderation is a no-op without the capability`() = test {
+        whenever(siteCapabilityChecker.canModerateComments(site)).thenReturn(false)
+        val restrictedViewModel = createViewModel()
+        val restrictedStates = mutableListOf<CommentDetailsUiState>()
+        restrictedViewModel.uiState.observeForever { restrictedStates.add(it) }
+
+        restrictedViewModel.start(site, REMOTE_COMMENT_ID)
+        restrictedViewModel.onApproveClicked()
+        restrictedViewModel.onSpamClicked()
+        restrictedViewModel.onTrashClicked()
+        restrictedViewModel.onDeletePermanentlyClicked()
+
+        assertThat(restrictedStates.last().canModerate).isFalse
+        verify(commentsRsDataSource, times(0)).updateStatus(eq(site), eq(REMOTE_COMMENT_ID), any())
+        verify(commentsRsDataSource, times(0)).delete(site, REMOTE_COMMENT_ID)
+    }
+
+    @Test
+    fun `edit is a no-op without the moderate capability`() = test {
+        whenever(siteCapabilityChecker.canModerateComments(site)).thenReturn(false)
+        val restrictedViewModel = createViewModel()
+        val restrictedEvents = mutableListOf<CommentDetailsActionEvent>()
+        restrictedViewModel.uiActionEvent.observeForever { it.applyIfNotHandled { restrictedEvents.add(this) } }
+
+        restrictedViewModel.start(site, REMOTE_COMMENT_ID)
+        restrictedViewModel.onEditClicked()
+
+        assertThat(restrictedEvents.filterIsInstance<LaunchEditComment>()).isEmpty()
     }
 
     @Test
@@ -667,6 +711,7 @@ class UnifiedCommentDetailsViewModelTest : BaseUnitTest() {
         bgDispatcher = testDispatcher(),
         commentsRsDataSource = commentsRsDataSource,
         commentsStore = commentsStore,
+        siteCapabilityChecker = siteCapabilityChecker,
         localCommentCacheUpdateHandler = localCommentCacheUpdateHandler,
         networkUtilsWrapper = networkUtilsWrapper,
         dateTimeUtilsWrapper = dateTimeUtilsWrapper,
