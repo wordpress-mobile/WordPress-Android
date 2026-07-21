@@ -202,6 +202,24 @@ class ChooseSiteActivity : BaseAppCompatActivity() {
         }
     }
 
+    /**
+     * Restores the expanded menu after a configuration change by jumping straight to the open
+     * end state — no entrance animation and no analytics, both of which belong to a user-initiated
+     * open. Setting the FAB visible directly (rather than via show()) skips its scale animation.
+     */
+    private fun expandAddSiteMenuInstantly() {
+        isAddSiteMenuOpen = true
+        binding.fabAddSite.isVisible = true
+        binding.fabAddSite.rotation = FAB_ICON_ROTATION
+        binding.fabMenuScrim.isVisible = true
+        binding.fabMenuScrim.alpha = SCRIM_ALPHA
+        addSiteMenuItems.forEach { item ->
+            item.isVisible = true
+            item.alpha = 1f
+            item.translationY = 0f
+        }
+    }
+
     override fun onStart() {
         super.onStart()
         dispatcher.register(this)
@@ -472,6 +490,7 @@ class ChooseSiteActivity : BaseAppCompatActivity() {
         super.onSaveInstanceState(outState)
         outState.putString(KEY_SEARCH_KEYWORD, searchKeyword)
         outState.putString(KEY_ACTION_MODE, adapter.mode.value)
+        outState.putBoolean(KEY_ADD_SITE_MENU_OPEN, isAddSiteMenuOpen)
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
@@ -481,6 +500,11 @@ class ChooseSiteActivity : BaseAppCompatActivity() {
 
         savedInstanceState.getString(KEY_ACTION_MODE)?.let { actionMode ->
             adapter.setActionMode(ActionMode.from(actionMode))
+        }
+
+        // restore the expanded add-site menu (the menu can't be open while pinning)
+        if (savedInstanceState.getBoolean(KEY_ADD_SITE_MENU_OPEN) && adapter.mode != ActionMode.Pin) {
+            expandAddSiteMenuInstantly()
         }
     }
 
@@ -493,6 +517,7 @@ class ChooseSiteActivity : BaseAppCompatActivity() {
         const val KEY_SITE_CREATED_BUT_NOT_FETCHED = "key_site_created_but_not_fetched"
         const val KEY_SEARCH_KEYWORD = "key_search_keyword"
         const val KEY_ACTION_MODE = "key_action_mode"
+        const val KEY_ADD_SITE_MENU_OPEN = "key_add_site_menu_open"
         private const val TRACK_PROPERTY_STATE = "state"
         private const val TRACK_PROPERTY_STATE_EDIT = "edit"
         private const val TRACK_PROPERTY_STATE_DONE = "done"
