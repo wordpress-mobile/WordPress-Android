@@ -206,7 +206,8 @@ platform :android do
     version_code = version_code.to_s.strip
     UI.user_error!('`version_code` is required, e.g. `version_code:270084231`') if version_code.empty?
     UI.user_error!("`version_code` must be an integer, got #{version_code.inspect}") unless version_code.match?(/\A\d+\z/)
-    version_code = Integer(version_code)
+    # Base 10 so a value with a leading zero (e.g. `0270084231`) isn't parsed as octal.
+    version_code = Integer(version_code, 10)
 
     released_version = marketing_version_for(version_code: version_code)
     UI.important("Finalizing promoted release #{released_version} (build #{version_code})")
