@@ -273,11 +273,24 @@ class ChooseSiteActivity : BaseAppCompatActivity() {
     private fun setupMenuVisibility() {
         if (mode == SitePickerMode.DEFAULT) {
             menuEditPin.isVisible = true
-            binding.fabAddSite.show()
+            // hide the FAB while editing pins, otherwise reveal it
+            if (adapter.mode == ActionMode.Pin) {
+                binding.fabAddSite.hide()
+            } else {
+                showAddSiteFab()
+            }
         } else {
             menuEditPin.isVisible = false
             binding.fabAddSite.hide()
         }
+    }
+
+    private fun showAddSiteFab() {
+        val fab = binding.fabAddSite
+        // FloatingActionButton.show() only plays its entrance animation once the view is laid out.
+        // setupMenuVisibility() runs from onPrepareOptionsMenu during the first layout pass, before
+        // the FAB is laid out, so post the initial reveal to guarantee the animation.
+        if (fab.isLaidOut) fab.show() else fab.post { fab.show() }
     }
 
     private fun setupSearchView() {
@@ -357,6 +370,8 @@ class ChooseSiteActivity : BaseAppCompatActivity() {
         menuEditPin.setIcon(null)
         menuEditPin.title = getString(R.string.label_done_button)
         adapter.setActionMode(ActionMode.Pin)
+        closeAddSiteMenu()
+        binding.fabAddSite.hide()
     }
 
     /**
@@ -367,6 +382,7 @@ class ChooseSiteActivity : BaseAppCompatActivity() {
         menuEditPin.setIcon(R.drawable.pin_filled)
         menuEditPin.title = getString(R.string.site_picker_edit_pins)
         adapter.setActionMode(ActionMode.None)
+        showAddSiteFab()
     }
 
     private fun setupRecycleView() {

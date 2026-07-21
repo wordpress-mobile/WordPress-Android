@@ -154,7 +154,7 @@
             android:layout_height="wrap_content"
             android:contentDescription="@string/site_picker_add_a_site"
             android:src="@drawable/ic_plus_white_24dp"
-            android:visibility="gone"
+            android:visibility="invisible"
             app:borderWidth="0dp"
             tools:visibility="visible" />
     </LinearLayout>
