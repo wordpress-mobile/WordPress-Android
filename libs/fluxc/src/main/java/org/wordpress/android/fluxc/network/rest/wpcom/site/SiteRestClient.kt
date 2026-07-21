@@ -1087,8 +1087,11 @@ class SiteRestClient @Inject constructor(
             site.hasWooCommerce = from.options.woocommerce_is_active
             site.adminUrl = from.options.admin_url
             site.loginUrl = from.options.login_url
-            site.timezone = if (!from.options.timezone_string.isNullOrEmpty()) {
-                from.options.timezone_string
+            // Prefer the named Olson timezone (e.g. "Europe/Madrid") over the numeric gmt_offset so
+            // DST is handled correctly. The numeric offset reflects only the offset at fetch time and
+            // goes stale across DST transitions, which shifts the stats "day" boundary by an hour.
+            site.timezone = if (!from.options.timezone.isNullOrEmpty()) {
+                from.options.timezone
             } else {
                 from.options.gmt_offset
             }
