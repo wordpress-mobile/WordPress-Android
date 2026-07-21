@@ -31,14 +31,21 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.verifyNoMoreInteractions
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
+import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import java.time.LocalDate
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 
 @ExperimentalCoroutinesApi
 @Suppress("LargeClass")
 class StatsRepositoryTest : BaseUnitTest() {
     @Mock
     private lateinit var statsDataSource: StatsDataSource
+
+    @Mock
+    private lateinit var siteStore: SiteStore
 
     @Mock
     private lateinit var appLogWrapper: AppLogWrapper
@@ -49,9 +56,16 @@ class StatsRepositoryTest : BaseUnitTest() {
     fun setUp() {
         repository = StatsRepository(
             statsDataSource = statsDataSource,
+            siteStore = siteStore,
             appLogWrapper = appLogWrapper,
             ioDispatcher = testDispatcher()
         )
+    }
+
+    /** Makes the repository resolve [TEST_SITE_ID] to a site configured with [timezone]. */
+    private fun stubSiteTimezone(timezone: String) {
+        whenever(siteStore.getSiteBySiteId(TEST_SITE_ID))
+            .thenReturn(SiteModel().apply { setTimezone(timezone) })
     }
 
     // region init
@@ -122,6 +136,30 @@ class StatsRepositoryTest : BaseUnitTest() {
         assertThat(result).isInstanceOf(TodayAggregatesResult.Error::class.java)
         assertThat((result as TodayAggregatesResult.Error).message).isEqualTo(TEST_ERROR_TYPE.name)
     }
+
+    @Test
+    fun `given a site in another timezone, when fetchTodayAggregates, then endDate is the site-timezone day`() =
+        test {
+            // Stats are bucketed by the site's timezone, not the device's. A far-east offset (UTC+14)
+            // gives the site a calendar day that is reliably distinct from UTC, so the endDate the
+            // repository sends must be the site-timezone day, never LocalDate.now() on the device.
+            val siteZone = "Pacific/Kiritimati"
+            stubSiteTimezone(siteZone)
+            whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any(), anyOrNull(), anyOrNull()))
+                .thenReturn(StatsVisitsDataResult.Success(createStatsVisitsData()))
+
+            repository.fetchTodayAggregates(TEST_SITE_ID)
+
+            val expected = LocalDate.now(ZoneId.of(siteZone)).format(DateTimeFormatter.ISO_LOCAL_DATE)
+            verify(statsDataSource).fetchStatsVisits(
+                siteId = eq(TEST_SITE_ID),
+                unit = eq(StatsUnit.DAY),
+                quantity = eq(1),
+                endDate = eq(expected),
+                startDate = anyOrNull(),
+                statFields = anyOrNull()
+            )
+        }
     // endregion
 
     // region fetchHourlyViews
@@ -189,6 +227,7 @@ class StatsRepositoryTest : BaseUnitTest() {
 
     @Test
     fun `given offsetDays, when fetchHourlyViews, then the window ends at 23-00-00 of that calendar day`() = test {
+        stubSiteTimezone(TEST_SITE_TIMEZONE)
         whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any(), anyOrNull(), anyOrNull()))
             .thenReturn(StatsVisitsDataResult.Success(createHourlyStatsVisitsData()))
 
@@ -197,8 +236,8 @@ class StatsRepositoryTest : BaseUnitTest() {
 
         // The 24 hourly buckets must cover 00:00–23:00 of the requested day. Passing the *next* day's
         // date ended the window at 00:00, shifting it back an hour: the day's own 00:00 bucket was
-        // dropped in favour of the following day's.
-        val today = LocalDate.now()
+        // dropped in favour of the following day's. "Today" is the site-timezone day, not the device's.
+        val today = LocalDate.now(TEST_SITE_ZONE)
         verify(statsDataSource).fetchStatsVisits(
             siteId = eq(TEST_SITE_ID),
             unit = eq(StatsUnit.HOUR),
@@ -522,12 +561,14 @@ class StatsRepositoryTest : BaseUnitTest() {
 
     @Test
     fun `given Today, when fetchStatsForPeriod, then hourly window ends at 23-00-00 of the calendar day`() = test {
+        stubSiteTimezone(TEST_SITE_TIMEZONE)
         whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any(), anyOrNull(), anyOrNull()))
             .thenReturn(StatsVisitsDataResult.Success(createHourlyStatsVisitsData()))
 
         repository.fetchStatsForPeriod(TEST_SITE_ID, StatsPeriod.Today)
 
-        val today = LocalDate.now()
+        // "Today"/"yesterday" are the site-timezone calendar days, not the device's.
+        val today = LocalDate.now(TEST_SITE_ZONE)
         val yesterday = today.minusDays(1)
         // The hourly window must end at "<day> 23:00:00" so its 24 buckets cover 00:00–23:00 of that
         // calendar day. Using the next day at 00:00 shifted the window an hour, dropping the day's
@@ -1189,6 +1230,10 @@ class StatsRepositoryTest : BaseUnitTest() {
     companion object {
         private const val TEST_SITE_ID = 123L
         private const val TEST_ACCESS_TOKEN = "test_access_token"
+        // A named site timezone that observes DST, distinct from the device's, so the tests exercise
+        // the site-timezone path deterministically rather than the device clock.
+        private const val TEST_SITE_TIMEZONE = "America/Los_Angeles"
+        private val TEST_SITE_ZONE: ZoneId = ZoneId.of(TEST_SITE_TIMEZONE)
         private val TEST_ERROR_TYPE = StatsErrorType.NETWORK_ERROR
         private val EXPECTED_CARD_STAT_FIELDS = listOf(
             StatsVisitField.VIEWS,

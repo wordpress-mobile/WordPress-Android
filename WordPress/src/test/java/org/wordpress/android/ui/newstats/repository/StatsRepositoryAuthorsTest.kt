@@ -12,6 +12,7 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
+import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.ui.newstats.StatsPeriod
 import org.wordpress.android.ui.newstats.datasource.StatsDataSource
@@ -26,6 +27,9 @@ class StatsRepositoryAuthorsTest : BaseUnitTest() {
     private lateinit var statsDataSource: StatsDataSource
 
     @Mock
+    private lateinit var siteStore: SiteStore
+
+    @Mock
     private lateinit var appLogWrapper: AppLogWrapper
 
     private lateinit var repository: StatsRepository
@@ -34,6 +38,7 @@ class StatsRepositoryAuthorsTest : BaseUnitTest() {
     fun setUp() {
         repository = StatsRepository(
             statsDataSource = statsDataSource,
+            siteStore = siteStore,
             appLogWrapper = appLogWrapper,
             ioDispatcher = testDispatcher()
         )

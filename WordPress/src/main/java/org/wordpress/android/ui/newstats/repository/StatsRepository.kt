@@ -33,13 +33,16 @@ import org.wordpress.android.ui.newstats.datasource.StatsEmailsSummaryDataResult
 import org.wordpress.android.ui.newstats.datasource.UtmDataResult
 import org.wordpress.android.ui.newstats.mostviewed.MostViewedDataSource
 import kotlinx.coroutines.withContext
+import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.utils.AppLogWrapper
+import org.wordpress.android.fluxc.utils.SiteUtils
 import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.ui.newstats.StatsPeriod
 import androidx.annotation.StringRes
 import org.wordpress.android.ui.newstats.datasource.StatsErrorType
 import org.wordpress.android.util.AppLog
 import java.time.LocalDate
+import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
 import javax.inject.Inject
@@ -110,6 +113,7 @@ private const val REFERRERS_DETAIL_MAX = 0
 @Suppress("LargeClass")
 class StatsRepository @Inject constructor(
     private val statsDataSource: StatsDataSource,
+    private val siteStore: SiteStore,
     private val appLogWrapper: AppLogWrapper,
     @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher,
 ) {
@@ -119,13 +123,26 @@ class StatsRepository @Inject constructor(
     }
 
     /**
+     * The site's timezone as a [ZoneId]. Stats are bucketed by the *site's* timezone, not the
+     * device's, so every "today"/range calculation below is anchored here (mirroring the legacy stats
+     * path, which converts via [SiteUtils.getNormalizedTimezone]). Resolves the site from its .COM
+     * [siteId]; falls back to GMT when the site or its timezone is unknown, exactly as the legacy
+     * normalization does.
+     */
+    private fun siteZoneId(siteId: Long): ZoneId =
+        SiteUtils.getNormalizedTimezone(siteStore.getSiteBySiteId(siteId)?.timezone).toZoneId()
+
+    /** The current calendar day in the site's timezone (see [siteZoneId]). */
+    private fun siteToday(siteId: Long): LocalDate = LocalDate.now(siteZoneId(siteId))
+
+    /**
      * Fetches today's aggregated stats (views, visitors, likes, comments).
      *
      * @param siteId The WordPress.com site ID
      * @return Today's aggregated stats or error
      */
     suspend fun fetchTodayAggregates(siteId: Long): TodayAggregatesResult = withContext(ioDispatcher) {
-        val dateString = LocalDate.now().format(dateFormatter)
+        val dateString = siteToday(siteId).format(dateFormatter)
 
         val result = statsDataSource.fetchStatsVisits(
             siteId = siteId,
@@ -177,7 +194,7 @@ class StatsRepository @Inject constructor(
         siteId: Long,
         offsetDays: Int = 0
     ): HourlyViewsResult = withContext(ioDispatcher) {
-        val day = LocalDate.now().minusDays(offsetDays.toLong())
+        val day = siteToday(siteId).minusDays(offsetDays.toLong())
 
         val result = statsDataSource.fetchStatsVisits(
             siteId = siteId,
@@ -213,7 +230,7 @@ class StatsRepository @Inject constructor(
      */
     suspend fun fetchWeeklyStats(siteId: Long, weeksAgo: Int = 0): WeeklyStatsResult =
         withContext(ioDispatcher) {
-            val (startDate, endDate) = calculateWeekDateRange(weeksAgo)
+            val (startDate, endDate) = calculateWeekDateRange(siteToday(siteId), weeksAgo)
             val endDateString = endDate.format(dateFormatter)
 
             val result = statsDataSource.fetchStatsVisits(
@@ -265,7 +282,7 @@ class StatsRepository @Inject constructor(
      */
     suspend fun fetchDailyViewsForWeek(siteId: Long, weeksAgo: Int = 0): DailyViewsResult =
         withContext(ioDispatcher) {
-            val (_, endDate) = calculateWeekDateRange(weeksAgo)
+            val (_, endDate) = calculateWeekDateRange(siteToday(siteId), weeksAgo)
             val endDateString = endDate.format(dateFormatter)
 
             val result = statsDataSource.fetchStatsVisits(
@@ -305,7 +322,7 @@ class StatsRepository @Inject constructor(
         siteId: Long,
         weeksAgo: Int = 0
     ): WeeklyStatsWithDailyDataResult = withContext(ioDispatcher) {
-        val (startDate, endDate) = calculateWeekDateRange(weeksAgo)
+        val (startDate, endDate) = calculateWeekDateRange(siteToday(siteId), weeksAgo)
         val endDateString = endDate.format(dateFormatter)
 
         val result = statsDataSource.fetchStatsVisits(
@@ -371,7 +388,7 @@ class StatsRepository @Inject constructor(
         siteId: Long,
         period: StatsPeriod
     ): PeriodStatsResult = withContext(ioDispatcher) {
-        val periodRange = calculatePeriodDates(period)
+        val periodRange = calculatePeriodDates(siteToday(siteId), period)
 
         val currentEndString = formatApiEndDate(periodRange.currentEnd, periodRange.unit)
         val previousEndString = formatApiEndDate(periodRange.previousEnd, periodRange.unit)
@@ -462,7 +479,7 @@ class StatsRepository @Inject constructor(
         siteId: Long,
         period: StatsPeriod
     ): BottomStatsResult = withContext(ioDispatcher) {
-        val bottomRange = calculateBottomStatsRange(period)
+        val bottomRange = calculateBottomStatsRange(siteToday(siteId), period)
 
         val (currentResult, previousResult) = coroutineScope {
             val currentDeferred = async {
@@ -661,8 +678,8 @@ class StatsRepository @Inject constructor(
      * span-based rule is kept so a caller that does need a standalone total for a longer window gets a
      * correct one rather than a silently wrong bucket.
      */
-    private fun calculateBottomStatsRange(period: StatsPeriod): PeriodDateRange {
-        val (currentStart, currentEnd) = currentPeriodWindow(period)
+    private fun calculateBottomStatsRange(today: LocalDate, period: StatsPeriod): PeriodDateRange {
+        val (currentStart, currentEnd) = currentPeriodWindow(today, period)
         val (unit, currentQuantity) = unitAndQuantityFor(currentStart, currentEnd)
         val (previousStart, previousEnd) = previousWindowMirror(currentStart, currentEnd)
         val (_, previousQuantity) = unitAndQuantityFor(previousStart, previousEnd)
@@ -739,12 +756,12 @@ class StatsRepository @Inject constructor(
     }
 
     @Suppress("ReturnCount")
-    private fun calculatePeriodDates(period: StatsPeriod): PeriodDateRange {
-        if (period is StatsPeriod.Today) return calculateTodayPeriodDates()
+    private fun calculatePeriodDates(today: LocalDate, period: StatsPeriod): PeriodDateRange {
+        if (period is StatsPeriod.Today) return calculateTodayPeriodDates(today)
         if (period is StatsPeriod.Custom) return calculateCustomPeriodDates(period.startDate, period.endDate)
 
         val config = getPeriodConfig(period)
-        val (currentStart, currentEnd) = currentPeriodWindow(period)
+        val (currentStart, currentEnd) = currentPeriodWindow(today, period)
         val (previousStart, previousEnd) = previousWindowForConfig(currentStart, config)
 
         // [previousWindowForConfig] spans exactly config.quantity units back, so both windows request
@@ -767,9 +784,10 @@ class StatsRepository @Inject constructor(
      *
      * Note: [calculatePeriodDates] handles the hourly cases (Today and single-day Custom) separately
      * before reaching here, so those build their own window ending at "<day> 23:00:00".
+     *
+     * @param today The current calendar day in the site's timezone (see [siteToday]).
      */
-    private fun currentPeriodWindow(period: StatsPeriod): Pair<LocalDate, LocalDate> {
-        val today = LocalDate.now()
+    private fun currentPeriodWindow(today: LocalDate, period: StatsPeriod): Pair<LocalDate, LocalDate> {
         return when (period) {
             is StatsPeriod.Today -> today to today
             is StatsPeriod.Last7Days -> today.minusDays((DAYS_IN_7_DAYS - 1).toLong()) to today
@@ -799,9 +817,10 @@ class StatsRepository @Inject constructor(
      * Calculates period dates for TODAY (hourly data). The hourly window ends at the day itself
      * ([formatApiEndDate] appends "23:00:00"), so the 24 buckets cover today's 00:00–23:00 and the
      * previous window covers yesterday's — matching the day-level totals shown in the bottom row.
+     *
+     * @param today The current calendar day in the site's timezone (see [siteToday]).
      */
-    private fun calculateTodayPeriodDates(): PeriodDateRange {
-        val today = LocalDate.now()
+    private fun calculateTodayPeriodDates(today: LocalDate): PeriodDateRange {
         val yesterday = today.minusDays(1)
         return PeriodDateRange(
             currentStart = today,
@@ -859,11 +878,12 @@ class StatsRepository @Inject constructor(
     /**
      * Calculates the start and end dates for a given week.
      *
+     * @param today The current calendar day in the site's timezone (see [siteToday]).
      * @param weeksAgo Number of weeks to go back (0 = current week, 1 = previous week)
      * @return Pair of (startDate, endDate) LocalDates representing the 7-day period
      */
-    private fun calculateWeekDateRange(weeksAgo: Int): Pair<LocalDate, LocalDate> {
-        val endDate = LocalDate.now().minusWeeks(weeksAgo.toLong())
+    private fun calculateWeekDateRange(today: LocalDate, weeksAgo: Int): Pair<LocalDate, LocalDate> {
+        val endDate = today.minusWeeks(weeksAgo.toLong())
         val startDate = endDate.plusDays(DAYS_BEFORE_END_DATE.toLong())
         return startDate to endDate
     }
@@ -883,7 +903,7 @@ class StatsRepository @Inject constructor(
         period: StatsPeriod,
         dataSource: MostViewedDataSource
     ): MostViewedResult = withContext(ioDispatcher) {
-        val (currentDateRange, previousDateRange) = calculateComparisonDateRanges(period)
+        val (currentDateRange, previousDateRange) = calculateComparisonDateRanges(siteToday(siteId), period)
 
         when (dataSource) {
             MostViewedDataSource.POSTS_AND_PAGES -> {
@@ -904,7 +924,7 @@ class StatsRepository @Inject constructor(
         siteId: Long,
         period: StatsPeriod
     ): MostViewedResult = withContext(ioDispatcher) {
-        val (currentDateRange, previousDateRange) = calculateComparisonDateRanges(period)
+        val (currentDateRange, previousDateRange) = calculateComparisonDateRanges(siteToday(siteId), period)
         fetchReferrersWithComparison(siteId, currentDateRange, previousDateRange, REFERRERS_DETAIL_MAX)
     }
 
@@ -1036,8 +1056,7 @@ class StatsRepository @Inject constructor(
      * Calculates current and previous date ranges for comparison stats.
      * Used by multiple stats types (MostViewed, Countries, etc.)
      */
-    private fun calculateCurrentDateRange(period: StatsPeriod): StatsDateRange {
-        val today = LocalDate.now()
+    private fun calculateCurrentDateRange(today: LocalDate, period: StatsPeriod): StatsDateRange {
         val todayString = today.format(dateFormatter)
         return when (period) {
             is StatsPeriod.Today ->
@@ -1058,8 +1077,10 @@ class StatsRepository @Inject constructor(
         }
     }
 
-    private fun calculateComparisonDateRanges(period: StatsPeriod): Pair<StatsDateRange, StatsDateRange> {
-        val today = LocalDate.now()
+    private fun calculateComparisonDateRanges(
+        today: LocalDate,
+        period: StatsPeriod
+    ): Pair<StatsDateRange, StatsDateRange> {
         val todayString = today.format(dateFormatter)
 
         return when (period) {
@@ -1112,7 +1133,7 @@ class StatsRepository @Inject constructor(
         siteId: Long,
         period: StatsPeriod
     ): CountryViewsResult = withContext(ioDispatcher) {
-        val (currentDateRange, previousDateRange) = calculateComparisonDateRanges(period)
+        val (currentDateRange, previousDateRange) = calculateComparisonDateRanges(siteToday(siteId), period)
 
         // Fetch both periods in parallel
         val (currentResult, previousResult) = coroutineScope {
@@ -1184,7 +1205,7 @@ class StatsRepository @Inject constructor(
         period: StatsPeriod
     ): RegionViewsResult = withContext(ioDispatcher) {
         val (currentDateRange, previousDateRange) =
-            calculateComparisonDateRanges(period)
+            calculateComparisonDateRanges(siteToday(siteId), period)
 
         val (currentResult, previousResult) = coroutineScope {
             val currentDeferred = async {
@@ -1267,7 +1288,7 @@ class StatsRepository @Inject constructor(
         period: StatsPeriod
     ): CityViewsResult = withContext(ioDispatcher) {
         val (currentDateRange, previousDateRange) =
-            calculateComparisonDateRanges(period)
+            calculateComparisonDateRanges(siteToday(siteId), period)
 
         val (currentResult, previousResult) = coroutineScope {
             val currentDeferred = async {
@@ -1351,7 +1372,7 @@ class StatsRepository @Inject constructor(
         siteId: Long,
         period: StatsPeriod
     ): TopAuthorsResult = withContext(ioDispatcher) {
-        val (currentDateRange, previousDateRange) = calculateComparisonDateRanges(period)
+        val (currentDateRange, previousDateRange) = calculateComparisonDateRanges(siteToday(siteId), period)
 
         // Fetch both periods in parallel
         val (currentResult, previousResult) = coroutineScope {
@@ -1412,6 +1433,7 @@ class StatsRepository @Inject constructor(
         siteId: Long,
         period: StatsPeriod
     ): ClicksResult = fetchWithComparison(
+        siteId = siteId,
         period = period,
         fetch = { dateRange ->
             when (val r = statsDataSource.fetchClicks(
@@ -1443,6 +1465,7 @@ class StatsRepository @Inject constructor(
         siteId: Long,
         period: StatsPeriod
     ): SearchTermsResult = fetchWithComparison(
+        siteId = siteId,
         period = period,
         fetch = { dateRange ->
             when (val r = statsDataSource.fetchSearchTerms(
@@ -1474,6 +1497,7 @@ class StatsRepository @Inject constructor(
         siteId: Long,
         period: StatsPeriod
     ): VideoPlaysResult = fetchWithComparison(
+        siteId = siteId,
         period = period,
         fetch = { dateRange ->
             when (val r = statsDataSource.fetchVideoPlays(
@@ -1505,6 +1529,7 @@ class StatsRepository @Inject constructor(
         siteId: Long,
         period: StatsPeriod
     ): FileDownloadsResult = fetchWithComparison(
+        siteId = siteId,
         period = period,
         fetch = { dateRange ->
             when (val r = statsDataSource.fetchFileDownloads(
@@ -1541,7 +1566,7 @@ class StatsRepository @Inject constructor(
         siteId: Long,
         period: StatsPeriod
     ): DevicesResult = withContext(ioDispatcher) {
-        val dateRange = calculateCurrentDateRange(period)
+        val dateRange = calculateCurrentDateRange(siteToday(siteId), period)
         fetchDevicesData { statsDataSource.fetchDevicesScreensize(siteId, dateRange) }
     }
 
@@ -1552,7 +1577,7 @@ class StatsRepository @Inject constructor(
         siteId: Long,
         period: StatsPeriod
     ): DevicesResult = withContext(ioDispatcher) {
-        val dateRange = calculateCurrentDateRange(period)
+        val dateRange = calculateCurrentDateRange(siteToday(siteId), period)
         fetchDevicesData { statsDataSource.fetchDevicesBrowser(siteId, dateRange) }
     }
 
@@ -1563,7 +1588,7 @@ class StatsRepository @Inject constructor(
         siteId: Long,
         period: StatsPeriod
     ): DevicesResult = withContext(ioDispatcher) {
-        val dateRange = calculateCurrentDateRange(period)
+        val dateRange = calculateCurrentDateRange(siteToday(siteId), period)
         fetchDevicesData { statsDataSource.fetchDevicesPlatform(siteId, dateRange) }
     }
 
@@ -1605,7 +1630,7 @@ class StatsRepository @Inject constructor(
         period: StatsPeriod
     ): UtmResult = withContext(ioDispatcher) {
         val curRange =
-            calculateCurrentDateRange(period)
+            calculateCurrentDateRange(siteToday(siteId), period)
         val curResult = statsDataSource.fetchUtm(
             siteId, keys,
             curRange.dateString(),
@@ -1698,6 +1723,7 @@ class StatsRepository @Inject constructor(
      */
     @Suppress("LongParameterList")
     private suspend fun <Raw, Output, R> fetchWithComparison(
+        siteId: Long,
         period: StatsPeriod,
         fetch: suspend (StatsDateRange) -> DataSourceResult<Raw>,
         keyOf: (Raw) -> String,
@@ -1708,7 +1734,7 @@ class StatsRepository @Inject constructor(
         logLabel: String
     ): R = withContext(ioDispatcher) {
         val (curRange, prevRange) =
-            calculateComparisonDateRanges(period)
+            calculateComparisonDateRanges(siteToday(siteId), period)
 
         val (curResult, prevResult) = coroutineScope {
             val c = async { fetch(curRange) }
@@ -1869,7 +1895,7 @@ class StatsRepository @Inject constructor(
     private suspend fun fetchAllTimeResults(
         siteId: Long
     ): List<StatsSubscribersDataResult> {
-        val today = java.time.LocalDate.now()
+        val today = LocalDate.now(siteZoneId(siteId))
         val dateFormat =
             java.time.format.DateTimeFormatter
                 .ISO_LOCAL_DATE

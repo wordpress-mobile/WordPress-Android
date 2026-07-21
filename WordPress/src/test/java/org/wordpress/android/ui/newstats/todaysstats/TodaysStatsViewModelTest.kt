@@ -567,6 +567,33 @@ class TodaysStatsViewModelTest : BaseUnitTest() {
         }
 
     @Test
+    fun `when site timezone is behind the device, then trimming uses the site's current hour`() =
+        test {
+            // The site is America/New_York (UTC-5 in January). The clock reads 14:30 UTC, so the
+            // site's local hour is 9 — every bucket (12–16) lies in the site's future and must be
+            // trimmed. Trimming against the device's 14:00 hour instead would wrongly keep three.
+            testSite.setTimezone("America/New_York")
+            val aggregates = createTodayAggregates()
+            val hourlyData = createHourlyViewsResultWithHours()
+
+            whenever(statsRepository.fetchTodayAggregates(any()))
+                .thenReturn(TodayAggregatesResult.Success(aggregates))
+            whenever(
+                statsRepository.fetchHourlyViews(eq(TEST_SITE_ID), eq(0))
+            ).thenReturn(hourlyData)
+            whenever(
+                statsRepository.fetchHourlyViews(eq(TEST_SITE_ID), eq(1))
+            ).thenReturn(hourlyData)
+
+            initViewModelWithClock(CLOCK_HOUR)
+            advanceUntilIdle()
+
+            val state =
+                viewModel.uiState.value as TodaysStatsCardUiState.Loaded
+            assertThat(state.chartData.currentPeriod).isEmpty()
+        }
+
+    @Test
     fun `when previous period, then future hours are not filtered`() =
         test {
             val aggregates = createTodayAggregates()

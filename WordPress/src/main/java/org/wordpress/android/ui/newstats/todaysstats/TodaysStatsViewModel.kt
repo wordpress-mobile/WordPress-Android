@@ -12,6 +12,7 @@ import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
+import org.wordpress.android.fluxc.utils.SiteUtils
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.newstats.repository.HourlyViewsDataPoint
 import org.wordpress.android.ui.newstats.repository.HourlyViewsResult
@@ -172,7 +173,7 @@ class TodaysStatsViewModel @Inject constructor(
         return when (result) {
             is HourlyViewsResult.Success -> {
                 val dataPoints = if (offsetDays == 0) {
-                    trimFutureHours(result.dataPoints)
+                    trimFutureHours(result.dataPoints, site)
                 } else {
                     result.dataPoints
                 }
@@ -190,12 +191,18 @@ class TodaysStatsViewModel @Inject constructor(
     /**
      * Filters out data points for hours after the current hour
      * to avoid showing a misleading drop to zero in the sparkline.
+     *
+     * "Current hour" is resolved in the *site's* timezone, not the device's: the hourly buckets are
+     * the site's calendar hours, so trimming against the device clock would cut the wrong hours
+     * whenever the two timezones differ.
      */
     @Suppress("TooGenericExceptionCaught", "SwallowedException")
     private fun trimFutureHours(
-        dataPoints: List<HourlyViewsDataPoint>
+        dataPoints: List<HourlyViewsDataPoint>,
+        site: SiteModel
     ): List<HourlyViewsDataPoint> {
-        val currentHour = LocalDateTime.now(clock).hour
+        val siteZone = SiteUtils.getNormalizedTimezone(site.timezone).toZoneId()
+        val currentHour = LocalDateTime.now(clock.withZone(siteZone)).hour
         return dataPoints.filter { dataPoint ->
             try {
                 val dateTime = LocalDateTime.parse(
