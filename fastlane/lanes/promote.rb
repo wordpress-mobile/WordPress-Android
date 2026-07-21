@@ -471,10 +471,17 @@ platform :android do
   # came from. It stays a draft for now — a developer publishes it from the GitHub UI until the whole
   # flow is switched to publishing outright (mirrors the draft Play release). GitHub creates the tag
   # from `target` when the draft is published. The Play-signed universal APKs are attached
-  # best-effort. Returns the release URL.
+  # best-effort. Reuses an existing release for the same commit rather than creating a second draft on
+  # a re-run. Returns the release URL.
   def create_draft_github_release(version_code:, version_name:)
     build_number = version_code % VERSION_CODE_BUILD_MODULO
     sha = commit_sha_for_build_number(build_number: build_number)
+
+    existing_url = existing_github_release_url(commit_sha: sha)
+    if existing_url
+      UI.important("A GitHub release already targets #{sha} (#{existing_url}); skipping creation.")
+      return existing_url
+    end
 
     create_github_release(
       repository: GITHUB_REPO,
@@ -484,6 +491,16 @@ platform :android do
       prerelease: false,
       is_draft: true
     )
+  end
+
+  # The URL of an existing GitHub release targeting the given commit, or nil — so a re-run reuses the
+  # release for this exact build instead of creating a second draft. Matches on the commit (the build's
+  # identity) rather than the marketing version, which many builds share. `client.releases` includes
+  # drafts (whose `target_commitish` is the commit we set).
+  def existing_github_release_url(commit_sha:)
+    github = Fastlane::Helper::GithubHelper.new(github_token: get_required_env('GITHUB_TOKEN'))
+    release = github.client.releases(GITHUB_REPO).find { |candidate| candidate.target_commitish == commit_sha }
+    release&.html_url
   end
 
   # Resolves the trunk commit a continuous build ran against, via the Buildkite build whose number is
