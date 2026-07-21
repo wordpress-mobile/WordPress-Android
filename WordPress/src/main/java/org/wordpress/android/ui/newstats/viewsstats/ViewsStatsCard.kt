@@ -80,6 +80,7 @@ import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.newstats.components.CardPosition
 import org.wordpress.android.ui.newstats.components.StatsCardMenu
 import org.wordpress.android.ui.newstats.util.formatStatValue
+import org.wordpress.android.ui.newstats.util.ShimmerBox
 import org.wordpress.android.ui.newstats.util.rememberShimmerBrush
 import java.util.Locale
 import kotlin.math.abs
@@ -148,25 +149,21 @@ fun ViewsStatsCard(
 
 @Composable
 private fun LoadingContent() {
-    val shimmerBrush = rememberShimmerBrush()
-
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .padding(CardPadding)
     ) {
         // Header shimmer
-        Box(
+        ShimmerBox(
             modifier = Modifier
                 .width(60.dp)
                 .height(24.dp)
-                .clip(RoundedCornerShape(4.dp))
-                .background(shimmerBrush)
         )
         Spacer(modifier = Modifier.height(12.dp))
-        ChartRegionPlaceholder(shimmerBrush)
+        ChartRegionPlaceholder()
         Spacer(modifier = Modifier.height(16.dp))
-        BottomStatsPlaceholder(shimmerBrush)
+        BottomStatsPlaceholder()
     }
 }
 
@@ -174,43 +171,19 @@ private fun LoadingContent() {
  * Placeholder for the chart region (totals row + chart area) while the chart calls are in flight.
  */
 @Composable
-private fun ChartRegionPlaceholder(shimmerBrush: Brush) {
+private fun ChartRegionPlaceholder() {
     Column(modifier = Modifier.fillMaxWidth()) {
         Row(modifier = Modifier.fillMaxWidth()) {
             Column {
-                Box(
-                    modifier = Modifier
-                        .width(80.dp)
-                        .height(32.dp)
-                        .clip(RoundedCornerShape(4.dp))
-                        .background(shimmerBrush)
-                )
+                ShimmerBox(modifier = Modifier.width(80.dp).height(32.dp))
                 Spacer(modifier = Modifier.height(4.dp))
-                Box(
-                    modifier = Modifier
-                        .width(100.dp)
-                        .height(16.dp)
-                        .clip(RoundedCornerShape(4.dp))
-                        .background(shimmerBrush)
-                )
+                ShimmerBox(modifier = Modifier.width(100.dp).height(16.dp))
             }
             Spacer(modifier = Modifier.weight(1f))
             Column(horizontalAlignment = Alignment.End) {
-                Box(
-                    modifier = Modifier
-                        .width(80.dp)
-                        .height(16.dp)
-                        .clip(RoundedCornerShape(4.dp))
-                        .background(shimmerBrush)
-                )
+                ShimmerBox(modifier = Modifier.width(80.dp).height(16.dp))
                 Spacer(modifier = Modifier.height(4.dp))
-                Box(
-                    modifier = Modifier
-                        .width(80.dp)
-                        .height(16.dp)
-                        .clip(RoundedCornerShape(4.dp))
-                        .background(shimmerBrush)
-                )
+                ShimmerBox(modifier = Modifier.width(80.dp).height(16.dp))
             }
         }
         Spacer(modifier = Modifier.height(16.dp))
@@ -219,25 +192,23 @@ private fun ChartRegionPlaceholder(shimmerBrush: Brush) {
                 .fillMaxWidth()
                 .height(ChartHeight)
                 .clip(RoundedCornerShape(8.dp))
-                .background(shimmerBrush)
+                .background(rememberShimmerBrush())
         )
     }
 }
 
 /** Placeholder for the bottom-stats row while the dedicated bottom call is in flight. */
 @Composable
-private fun BottomStatsPlaceholder(shimmerBrush: Brush) {
+private fun BottomStatsPlaceholder() {
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         repeat(4) {
-            Box(
+            ShimmerBox(
                 modifier = Modifier
                     .width(70.dp)
                     .height(60.dp)
-                    .clip(RoundedCornerShape(4.dp))
-                    .background(shimmerBrush)
             )
         }
     }
@@ -282,7 +253,7 @@ private fun ContentCard(
             Spacer(modifier = Modifier.height(8.dp))
             // Chart region — loads independently of the bottom row
             when (chart) {
-                is ChartUiState.Loading -> ChartRegionPlaceholder(rememberShimmerBrush())
+                is ChartUiState.Loading -> ChartRegionPlaceholder()
                 is ChartUiState.Loaded -> {
                     HeaderStats(chart)
                     Spacer(modifier = Modifier.height(8.dp))
@@ -299,7 +270,7 @@ private fun ContentCard(
             when (val bottom = state.bottomStats) {
                 is BottomStatsUiState.Loading -> {
                     Spacer(modifier = Modifier.height(16.dp))
-                    BottomStatsPlaceholder(rememberShimmerBrush())
+                    BottomStatsPlaceholder()
                 }
                 is BottomStatsUiState.Loaded -> {
                     Spacer(modifier = Modifier.height(16.dp))
