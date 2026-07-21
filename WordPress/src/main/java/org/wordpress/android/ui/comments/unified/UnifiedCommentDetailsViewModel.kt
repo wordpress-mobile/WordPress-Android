@@ -284,17 +284,27 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
     }
 
     private suspend fun approveAfterReply() {
-        _uiState.value = _uiState.value?.copy(status = APPROVED)
-        val result = withContext(bgDispatcher) { moderate(APPROVED) }
-        if (result is RsResult.Error) {
-            _uiState.value = _uiState.value?.copy(status = UNAPPROVED)
-        } else {
-            // Match the legacy screen, which tracks the implicit approve when replying to an
-            // unapproved comment (this path is only reached from an unapproved comment).
-            trackCommentAction(Stat.COMMENT_APPROVED)
-            if (noteId != null) {
-                _commentModerated.value = Event(APPROVED)
+        // Hold the same guard moderateComment uses so this implicit approve can't race a user
+        // moderation: skip if one is already in flight, and keep the flag set across our own
+        // (multi-second) network call so an approve/spam/trash tapped during it is ignored rather
+        // than firing a second, conflicting updateStatus that would desync the UI and server.
+        if (isModerationInProgress) return
+        isModerationInProgress = true
+        try {
+            _uiState.value = _uiState.value?.copy(status = APPROVED)
+            val result = withContext(bgDispatcher) { moderate(APPROVED) }
+            if (result is RsResult.Error) {
+                _uiState.value = _uiState.value?.copy(status = UNAPPROVED)
+            } else {
+                // Match the legacy screen, which tracks the implicit approve when replying to an
+                // unapproved comment (this path is only reached from an unapproved comment).
+                trackCommentAction(Stat.COMMENT_APPROVED)
+                if (noteId != null) {
+                    _commentModerated.value = Event(APPROVED)
+                }
             }
+        } finally {
+            isModerationInProgress = false
         }
     }
 
