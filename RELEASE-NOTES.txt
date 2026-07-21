@@ -4,7 +4,7 @@
 -----
 * [*] You can now browse Google Photos (albums, collections, and search) when adding photos or videos from your device.
 * [**] Fixed media uploads and the Media Library failing on Jetpack-connected self-hosted sites that have Application Passwords disabled.
-
+* [*] Stats now refresh when you return to the screen, so your latest data appears without a manual pull-to-refresh. [https://github.com/wordpress-mobile/WordPress-Android/pull/23112]
 
 26.9
 -----

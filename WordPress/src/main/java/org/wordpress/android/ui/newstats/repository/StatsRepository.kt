@@ -47,6 +47,10 @@ import javax.inject.Named
 import kotlin.coroutines.cancellation.CancellationException
 
 private const val HOURLY_QUANTITY = 24
+// Hourly queries end at an exact hour. "<day> 23:00:00" makes the 24-hour window cover that calendar
+// day's 00:00–23:00 buckets; a date-only value (00:00) shifts the window back an hour and drops the
+// day's 00:00 bucket.
+private const val HOURLY_END_TIME = "23:00:00"
 private const val DAILY_QUANTITY = 1
 private const val WEEKLY_QUANTITY = 7
 private const val DAYS_BEFORE_END_DATE = -6
@@ -58,7 +62,11 @@ private const val MONTHS_IN_6_MONTHS = 6
 private const val MONTHS_IN_12_MONTHS = 12
 private const val MAX_DAYS_IN_MONTH = 31
 private const val MAX_DAYS_IN_2_YEARS = 731
-private val BOTTOM_STAT_FIELDS = listOf(
+// The metrics the Views card needs from a stats/visits call: `views` drives the chart line and the
+// header total; the rest fill the bottom-row totals. For non-hourly periods a single [fetchStatsForPeriod]
+// call returns all of them, so the card needs no separate bottom-row request. Hourly (single-day)
+// responses only populate `views`, so those periods fetch the bottom row from a dedicated day-level call.
+private val CARD_STAT_FIELDS = listOf(
     StatsVisitField.VIEWS,
     StatsVisitField.VISITORS,
     StatsVisitField.LIKES,
@@ -156,6 +164,11 @@ class StatsRepository @Inject constructor(
     /**
      * Fetches hourly views data for the specified date.
      *
+     * The window ends at the target day itself ([formatApiEndDate] appends "23:00:00"), so its 24
+     * buckets cover that calendar day's 00:00–23:00. Passing the next day's date instead would end the
+     * window at 00:00, shifting it back an hour: the day's own 00:00 bucket would be dropped in favour
+     * of the following day's.
+     *
      * @param siteId The WordPress.com site ID
      * @param offsetDays Number of days to offset from today (0 = today, 1 = yesterday, etc.)
      * @return List of hourly views data points, or empty list if fetch fails
@@ -164,17 +177,13 @@ class StatsRepository @Inject constructor(
         siteId: Long,
         offsetDays: Int = 0
     ): HourlyViewsResult = withContext(ioDispatcher) {
-        // The API's endDate is exclusive for hourly queries, so we need to add 1 day to get
-        // the target day's hours. Formula: 1 (for exclusive end) - offsetDays (0=today, 1=yesterday)
-        // Examples: offsetDays=0 → tomorrow's date → fetches today's hours
-        //           offsetDays=1 → today's date → fetches yesterday's hours
-        val dateString = LocalDate.now().plusDays((1 - offsetDays).toLong()).format(dateFormatter)
+        val day = LocalDate.now().minusDays(offsetDays.toLong())
 
         val result = statsDataSource.fetchStatsVisits(
             siteId = siteId,
             unit = StatsUnit.HOUR,
             quantity = HOURLY_QUANTITY,
-            endDate = dateString
+            endDate = formatApiEndDate(day, StatsUnit.HOUR)
         )
 
         when (result) {
@@ -364,25 +373,32 @@ class StatsRepository @Inject constructor(
     ): PeriodStatsResult = withContext(ioDispatcher) {
         val periodRange = calculatePeriodDates(period)
 
-        val currentEndString = periodRange.currentEnd.format(dateFormatter)
-        val previousEndString = periodRange.previousEnd.format(dateFormatter)
+        val currentEndString = formatApiEndDate(periodRange.currentEnd, periodRange.unit)
+        val previousEndString = formatApiEndDate(periodRange.previousEnd, periodRange.unit)
 
-        // Fetch the current and previous chart periods in parallel
+        // Fetch the current and previous chart periods in parallel. Both request [CARD_STAT_FIELDS] so
+        // a single call powers the chart (views) and, for non-hourly periods, the bottom-row totals
+        // too — letting the card avoid a separate bottom-row request. Hourly responses only populate
+        // `views`; those (single-day) periods source the bottom row from a dedicated day-level call.
         val (currentResult, previousResult) = coroutineScope {
             val currentDeferred = async {
                 statsDataSource.fetchStatsVisits(
                     siteId = siteId,
                     unit = periodRange.unit,
-                    quantity = periodRange.quantity,
-                    endDate = currentEndString
+                    quantity = periodRange.currentQuantity,
+                    endDate = currentEndString,
+                    startDate = apiStartDateOrNull(periodRange.currentStart, periodRange.unit),
+                    statFields = CARD_STAT_FIELDS
                 )
             }
             val previousDeferred = async {
                 statsDataSource.fetchStatsVisits(
                     siteId = siteId,
                     unit = periodRange.unit,
-                    quantity = periodRange.quantity,
-                    endDate = previousEndString
+                    quantity = periodRange.previousQuantity,
+                    endDate = previousEndString,
+                    startDate = apiStartDateOrNull(periodRange.previousStart, periodRange.unit),
+                    statFields = CARD_STAT_FIELDS
                 )
             }
             currentDeferred.await() to previousDeferred.await()
@@ -398,9 +414,41 @@ class StatsRepository @Inject constructor(
     }
 
     /**
-     * Fetches the bottom-row totals for a period from a dedicated call that uses a coarser (or equal)
-     * unit than the chart so the API de-duplicates visitor uniques per bucket before we sum. Loads
-     * independently of [fetchStatsForPeriod] so a slow or failed bottom call never blocks the chart.
+     * Formats the API `date` (window end) for [date] at [unit]. Hourly windows end at an exact hour
+     * ("<day> 23:00:00") so the 24 buckets cover that calendar day's 00:00–23:00; all coarser units use
+     * the plain date. See [HOURLY_END_TIME].
+     */
+    private fun formatApiEndDate(date: LocalDate, unit: StatsUnit): String {
+        val dateString = date.format(dateFormatter)
+        return if (unit == StatsUnit.HOUR) "$dateString $HOURLY_END_TIME" else dateString
+    }
+
+    /**
+     * The API `start_date` for a window starting at [start] at [unit], or null when the window must not
+     * send one.
+     *
+     * Only YEAR windows send it. Without a `start_date` the API does not anchor its year buckets to the
+     * requested window, so a range over two years comes back with the wrong buckets and every number on
+     * the card — chart, header total, % change and bottom row alike — is wrong. Sending the window's own
+     * real start also truncates its first bucket to the range actually asked for, which is what keeps
+     * the current and previous totals comparable: each then covers exactly its own day span. This
+     * mirrors the web app, which requests `unit=year&date=<end>&start_date=<start>&quantity=<n>`.
+     *
+     * DAY and MONTH windows deliberately send none: they are already correct from unit + quantity +
+     * endDate, and a mid-bucket start_date there truncates the first bucket's `views` (an additive
+     * metric) while leaving `visitors` (a per-bucket unique) at the full-bucket value.
+     */
+    private fun apiStartDateOrNull(start: LocalDate, unit: StatsUnit): String? =
+        if (unit == StatsUnit.YEAR) start.format(dateFormatter) else null
+
+    /**
+     * Fetches the bottom-row totals from a dedicated call, for the single-day periods only: Today and a
+     * Custom range whose start and end are the same day. Their chart is hourly and an hourly response
+     * only populates `views`, so the row can't be derived from [fetchStatsForPeriod].
+     *
+     * Every other period fills the row straight from the chart's own [fetchStatsForPeriod] response —
+     * it requests the same unit, quantity and windows — and never calls this. The routing lives in the
+     * view model's `fillsBottomFromChart`.
      *
      * Returns [BottomStatsResult.Error] (the row is hidden) only when a call errors or throws; a
      * successful-but-empty response is summed to a legitimate all-zero row so a genuine zero-traffic
@@ -418,10 +466,22 @@ class StatsRepository @Inject constructor(
 
         val (currentResult, previousResult) = coroutineScope {
             val currentDeferred = async {
-                fetchBottomStatsVisits(siteId, bottomRange, bottomRange.currentStart, bottomRange.currentEnd)
+                fetchBottomStatsVisits(
+                    siteId = siteId,
+                    unit = bottomRange.unit,
+                    quantity = bottomRange.currentQuantity,
+                    startDate = bottomRange.currentStart,
+                    endDate = bottomRange.currentEnd
+                )
             }
             val previousDeferred = async {
-                fetchBottomStatsVisits(siteId, bottomRange, bottomRange.previousStart, bottomRange.previousEnd)
+                fetchBottomStatsVisits(
+                    siteId = siteId,
+                    unit = bottomRange.unit,
+                    quantity = bottomRange.previousQuantity,
+                    startDate = bottomRange.previousStart,
+                    endDate = bottomRange.previousEnd
+                )
             }
             currentDeferred.await() to previousDeferred.await()
         }
@@ -436,24 +496,33 @@ class StatsRepository @Inject constructor(
     }
 
     /**
-     * Fetches the dedicated bottom-row stats for the given window, restricting the
+     * Fetches the dedicated bottom-row stats for the [startDate]..[endDate] window, restricting the
      * response to the metrics shown in the bottom row.
+     *
+     * Takes the window explicitly rather than a [PeriodDateRange] so the current and previous calls
+     * cannot accidentally share one window's quantity — they can span different bucket counts.
+     *
+     * The request mirrors the chart's [fetchStatsForPeriod] exactly, [apiStartDateOrNull] included: a
+     * DAY or MONTH window is defined by unit + quantity + endDate alone, because a mid-bucket startDate
+     * there makes the API truncate the first bucket's views (an additive metric) while leaving visitors
+     * (a per-bucket unique) at the full-bucket value. A YEAR window must send its start.
      */
     @Suppress("TooGenericExceptionCaught")
     private suspend fun fetchBottomStatsVisits(
         siteId: Long,
-        bottomRange: PeriodDateRange,
-        start: LocalDate,
-        end: LocalDate
+        unit: StatsUnit,
+        quantity: Int,
+        startDate: LocalDate,
+        endDate: LocalDate
     ): StatsVisitsDataResult? {
         return try {
             statsDataSource.fetchStatsVisits(
                 siteId = siteId,
-                unit = bottomRange.unit,
-                quantity = bottomRange.quantity,
-                endDate = end.format(dateFormatter),
-                startDate = start.format(dateFormatter),
-                statFields = BOTTOM_STAT_FIELDS
+                unit = unit,
+                quantity = quantity,
+                endDate = endDate.format(dateFormatter),
+                startDate = apiStartDateOrNull(startDate, unit),
+                statFields = CARD_STAT_FIELDS
             )
         } catch (e: CancellationException) {
             throw e
@@ -494,7 +563,8 @@ class StatsRepository @Inject constructor(
             currentAggregates = currentAggregates,
             previousAggregates = previousAggregates,
             currentPeriodData = currentPeriodData,
-            previousPeriodData = previousPeriodData
+            previousPeriodData = previousPeriodData,
+            unit = periodRange.unit
         )
     }
 
@@ -551,12 +621,22 @@ class StatsRepository @Inject constructor(
         )
     }
 
+    /**
+     * The two windows a card region compares, and the API bucket [unit] both are fetched at.
+     *
+     * Each window carries its own quantity. They are equal for every period except a Custom range
+     * coarsened to MONTH or YEAR: the previous window mirrors the current one's exact *day* span (see
+     * [previousWindowMirror]), which always resolves to the same unit but not always to the same number
+     * of calendar buckets. Sending the current window's quantity on the previous request would make the
+     * API return an extra leading bucket and fold it into the previous total, skewing the % change.
+     */
     private data class PeriodDateRange(
         val currentStart: LocalDate,
         val currentEnd: LocalDate,
         val previousStart: LocalDate,
         val previousEnd: LocalDate,
-        val quantity: Int,
+        val currentQuantity: Int,
+        val previousQuantity: Int,
         val unit: StatsUnit,
         // Display dates for the legend (may differ from API dates for hourly queries)
         val currentDisplayDate: LocalDate = currentEnd,
@@ -568,49 +648,93 @@ class StatsRepository @Inject constructor(
     private data class PeriodConfig(val quantity: Int, val unit: StatsUnit, val dateUnit: DateUnit)
 
     /**
-     * Computes the date range and API unit for the bottom-row totals. Uses a coarser unit than the
-     * chart (day up to a month, month up to two years, year beyond) so the API de-duplicates visitor
-     * uniques per bucket before the totals are summed.
+     * Computes the date range and API unit for a dedicated bottom-row fetch, coarsening the unit as the
+     * span grows (day up to a month, month up to two years, year beyond) so the API de-duplicates
+     * visitor uniques per bucket before the totals are summed. The previous window mirrors the current
+     * one's exact day span ([previousWindowMirror], exactly as [calculateTodayPeriodDates] and
+     * [calculateCustomPeriodDates] do), so the header's and the bottom row's Views % change compare
+     * against identical windows and never disagree. Each window's quantity is derived from its own span
+     * — the mirror can cover a different number of buckets.
+     *
+     * In practice only the single-day periods reach here (see [fetchBottomStats]), so the coarser units
+     * are currently unreachable from the card — every longer period fills its row from the chart. The
+     * span-based rule is kept so a caller that does need a standalone total for a longer window gets a
+     * correct one rather than a silently wrong bucket.
      */
     private fun calculateBottomStatsRange(period: StatsPeriod): PeriodDateRange {
         val (currentStart, currentEnd) = currentPeriodWindow(period)
-        val (unit, quantity) = unitAndQuantityFor(currentStart, currentEnd, allowYear = true)
+        val (unit, currentQuantity) = unitAndQuantityFor(currentStart, currentEnd)
         val (previousStart, previousEnd) = previousWindowMirror(currentStart, currentEnd)
-        return PeriodDateRange(currentStart, currentEnd, previousStart, previousEnd, quantity, unit)
+        val (_, previousQuantity) = unitAndQuantityFor(previousStart, previousEnd)
+        return PeriodDateRange(
+            currentStart = currentStart,
+            currentEnd = currentEnd,
+            previousStart = previousStart,
+            previousEnd = previousEnd,
+            currentQuantity = currentQuantity,
+            previousQuantity = previousQuantity,
+            unit = unit
+        )
     }
 
     /**
      * Chooses the API [StatsUnit] and its quantity for the inclusive real-calendar [start]..[end]
      * window, coarsening the bucket as the span grows: day up to a full month, month up to two years,
-     * and — only when [allowYear] is set (bottom-row totals) — year beyond that. Shared by the bottom-row
-     * range and the custom-period chart window so the day/month threshold and the `MONTHS.between + 1`
-     * quantity live in one place.
+     * year beyond that. Shared by the bottom-row range and the custom-period chart window so the
+     * thresholds and the quantity rule live in one place and the two always agree.
+     *
+     * Call it once per window — the quantity describes the window it was given, and a window and its
+     * [previousWindowMirror] can span different numbers of buckets.
+     *
+     * The quantity counts the calendar buckets the window *spans*, not the whole units elapsed
+     * between its endpoints: the API returns `quantity` buckets ending at the bucket holding the end
+     * date, so counting elapsed units drops the window's first bucket whenever the end's day-of-month
+     * falls before the start's (Jan 15..Mar 5 elapses 1 whole month but spans 3: Jan, Feb, Mar).
      */
-    private fun unitAndQuantityFor(start: LocalDate, end: LocalDate, allowYear: Boolean): Pair<StatsUnit, Int> {
+    private fun unitAndQuantityFor(start: LocalDate, end: LocalDate): Pair<StatsUnit, Int> {
         val daysBetween = ChronoUnit.DAYS.between(start, end).toInt() + 1
         val unit = when {
             daysBetween <= MAX_DAYS_IN_MONTH -> StatsUnit.DAY
-            allowYear && daysBetween > MAX_DAYS_IN_2_YEARS -> StatsUnit.YEAR
+            daysBetween > MAX_DAYS_IN_2_YEARS -> StatsUnit.YEAR
             else -> StatsUnit.MONTH
         }
         val quantity = when (unit) {
-            StatsUnit.MONTH -> (ChronoUnit.MONTHS.between(start, end).toInt() + 1).coerceAtLeast(1)
-            StatsUnit.YEAR -> (ChronoUnit.YEARS.between(start, end).toInt() + 1).coerceAtLeast(1)
+            StatsUnit.MONTH ->
+                (ChronoUnit.MONTHS.between(start.withDayOfMonth(1), end.withDayOfMonth(1)).toInt() + 1)
+                    .coerceAtLeast(1)
+            StatsUnit.YEAR -> (end.year - start.year + 1).coerceAtLeast(1)
             else -> daysBetween
         }
         return unit to quantity
     }
 
     /**
-     * The immediately-preceding window that mirrors [start]..[end]'s exact day span. Deriving the
-     * previous window per-unit padded the YEAR case out to full calendar years and skewed the change
-     * comparison against a partial current bucket; an exact day-span mirror keeps current vs previous
-     * symmetric for every unit.
+     * The immediately-preceding window that mirrors [start]..[end]'s exact day span. Used only where
+     * the chart itself compares against an exact day span (Today and Custom): for those paths the day
+     * boundaries line up with the chart, so the Views % change stays consistent. Standard month-unit
+     * periods instead align the previous window to whole months via [previousWindowForConfig], matching
+     * the chart — a day-span mirror there would produce a different previous window and a contradictory
+     * % change.
+     *
+     * The mirror preserves the day span, so [unitAndQuantityFor] always resolves it to the same unit as
+     * the window it mirrors — but not necessarily to the same bucket count, so its quantity must be
+     * derived from the mirror itself (2023-12-31..2026-01-01 spans 4 years; its mirror spans 3).
      */
     private fun previousWindowMirror(start: LocalDate, end: LocalDate): Pair<LocalDate, LocalDate> {
         val daysBetween = ChronoUnit.DAYS.between(start, end).toInt() + 1
         val previousEnd = start.minusDays(1)
         val previousStart = previousEnd.minusDays((daysBetween - 1).toLong())
+        return previousStart to previousEnd
+    }
+
+    /**
+     * The previous window aligned to whole [PeriodConfig.dateUnit] steps (the chart's rule in
+     * [calculatePeriodDates]): the previous window ends one unit before [currentStart] and spans
+     * `quantity` units back. Shared so the chart and the bottom-row totals derive it identically.
+     */
+    private fun previousWindowForConfig(currentStart: LocalDate, config: PeriodConfig): Pair<LocalDate, LocalDate> {
+        val previousEnd = subtractFromDate(currentStart, 1, config.dateUnit)
+        val previousStart = subtractFromDate(previousEnd, config.quantity - 1, config.dateUnit)
         return previousStart to previousEnd
     }
 
@@ -621,10 +745,19 @@ class StatsRepository @Inject constructor(
 
         val config = getPeriodConfig(period)
         val (currentStart, currentEnd) = currentPeriodWindow(period)
-        val previousEnd = subtractFromDate(currentStart, 1, config.dateUnit)
-        val previousStart = subtractFromDate(previousEnd, config.quantity - 1, config.dateUnit)
+        val (previousStart, previousEnd) = previousWindowForConfig(currentStart, config)
 
-        return PeriodDateRange(currentStart, currentEnd, previousStart, previousEnd, config.quantity, config.unit)
+        // [previousWindowForConfig] spans exactly config.quantity units back, so both windows request
+        // the same number of buckets by construction.
+        return PeriodDateRange(
+            currentStart = currentStart,
+            currentEnd = currentEnd,
+            previousStart = previousStart,
+            previousEnd = previousEnd,
+            currentQuantity = config.quantity,
+            previousQuantity = config.quantity,
+            unit = config.unit
+        )
     }
 
     /**
@@ -633,7 +766,7 @@ class StatsRepository @Inject constructor(
      * current window is never derived from two different code paths.
      *
      * Note: [calculatePeriodDates] handles the hourly cases (Today and single-day Custom) separately
-     * before reaching here, so those apply their own exclusive-end offset on top of this window.
+     * before reaching here, so those build their own window ending at "<day> 23:00:00".
      */
     private fun currentPeriodWindow(period: StatsPeriod): Pair<LocalDate, LocalDate> {
         val today = LocalDate.now()
@@ -663,19 +796,20 @@ class StatsRepository @Inject constructor(
     }
 
     /**
-     * Calculates period dates for TODAY (hourly data).
-     * The API's endDate is exclusive for hourly queries, so we use tomorrow as end date for today's hours.
+     * Calculates period dates for TODAY (hourly data). The hourly window ends at the day itself
+     * ([formatApiEndDate] appends "23:00:00"), so the 24 buckets cover today's 00:00–23:00 and the
+     * previous window covers yesterday's — matching the day-level totals shown in the bottom row.
      */
     private fun calculateTodayPeriodDates(): PeriodDateRange {
         val today = LocalDate.now()
-        val tomorrow = today.plusDays(1)
         val yesterday = today.minusDays(1)
         return PeriodDateRange(
             currentStart = today,
-            currentEnd = tomorrow,
+            currentEnd = today,
             previousStart = yesterday,
-            previousEnd = today,
-            quantity = HOURLY_QUANTITY,
+            previousEnd = yesterday,
+            currentQuantity = HOURLY_QUANTITY,
+            previousQuantity = HOURLY_QUANTITY,
             unit = StatsUnit.HOUR,
             currentDisplayDate = today,
             previousDisplayDate = yesterday
@@ -685,32 +819,39 @@ class StatsRepository @Inject constructor(
     private fun calculateCustomPeriodDates(startDate: LocalDate, endDate: LocalDate): PeriodDateRange {
         val daysBetween = ChronoUnit.DAYS.between(startDate, endDate).toInt() + 1
 
-        // Single day → hourly granularity (like Today)
+        // Single day → hourly granularity (like Today). The hourly window ends at the day itself
+        // ([formatApiEndDate] appends "23:00:00"), so the 24 buckets cover that day's 00:00–23:00.
         if (daysBetween == 1) {
             val previousDate = startDate.minusDays(1)
             return PeriodDateRange(
                 currentStart = startDate,
-                currentEnd = startDate.plusDays(1),
+                currentEnd = startDate,
                 previousStart = previousDate,
-                previousEnd = startDate,
-                quantity = HOURLY_QUANTITY,
+                previousEnd = previousDate,
+                currentQuantity = HOURLY_QUANTITY,
+                previousQuantity = HOURLY_QUANTITY,
                 unit = StatsUnit.HOUR,
                 currentDisplayDate = startDate,
                 previousDisplayDate = previousDate
             )
         }
 
-        // Daily up to a full month (31 days), monthly beyond that. The chart never coarsens to the
-        // YEAR bucket, so year granularity is disabled here (unlike the bottom-row totals).
-        val (unit, quantity) = unitAndQuantityFor(startDate, endDate, allowYear = false)
+        // Daily up to a full month (31 days), monthly up to two years, yearly beyond. Coarsening the
+        // chart to YEAR past two years (the same rule the bottom-row totals use) keeps the chart and
+        // the bottom row on one unit, so the header's Views and the bottom row's Views — and their
+        // visitor de-duplication — always agree for long Custom ranges. A YEAR window also sends its
+        // own start to the API (see [apiStartDateOrNull]).
+        val (unit, currentQuantity) = unitAndQuantityFor(startDate, endDate)
         val (previousStart, previousEnd) = previousWindowMirror(startDate, endDate)
+        val (_, previousQuantity) = unitAndQuantityFor(previousStart, previousEnd)
 
         return PeriodDateRange(
             currentStart = startDate,
             currentEnd = endDate,
             previousStart = previousStart,
             previousEnd = previousEnd,
-            quantity = quantity,
+            currentQuantity = currentQuantity,
+            previousQuantity = previousQuantity,
             unit = unit
         )
     }
@@ -948,9 +1089,7 @@ class StatsRepository @Inject constructor(
                     StatsDateRange.Preset(num = DAYS_IN_12_MONTHS, date = previousEndString)
             }
             is StatsPeriod.Custom -> {
-                val daysBetween = ChronoUnit.DAYS.between(period.startDate, period.endDate).toInt() + 1
-                val previousEnd = period.startDate.minusDays(1)
-                val previousStart = previousEnd.minusDays(daysBetween.toLong() - 1)
+                val (previousStart, previousEnd) = previousWindowMirror(period.startDate, period.endDate)
                 StatsDateRange.Custom(
                     startDate = period.startDate.format(dateFormatter),
                     date = period.endDate.format(dateFormatter)
@@ -2023,13 +2162,19 @@ sealed class WeeklyStatsWithDailyDataResult {
 /**
  * Result wrapper for period stats fetch operation.
  * Contains aggregated stats and data points for both current and previous periods.
+ *
+ * [unit] is the granularity the buckets in [currentPeriodData]/[previousPeriodData] were requested
+ * at. It is carried here because the bucket's [ViewsDataPoint.period] string alone cannot express it
+ * — the API returns a full ISO date for DAY, MONTH and YEAR buckets alike, so a YEAR bucket is
+ * indistinguishable from a day without this.
  */
 sealed class PeriodStatsResult {
     data class Success(
         val currentAggregates: PeriodAggregates,
         val previousAggregates: PeriodAggregates,
         val currentPeriodData: List<ViewsDataPoint>,
-        val previousPeriodData: List<ViewsDataPoint>
+        val previousPeriodData: List<ViewsDataPoint>,
+        val unit: StatsUnit
     ) : PeriodStatsResult()
     data class Error(val message: String) : PeriodStatsResult()
 }
