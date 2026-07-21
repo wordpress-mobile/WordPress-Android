@@ -71,6 +71,9 @@ class UnifiedCommentsEditViewModel @Inject constructor(
     // @Volatile covers the cross-thread clear.
     @Volatile
     private var isSaving = false
+    // Guards against queuing a stack of identical "saving" snackbars on repeated back-presses
+    // during a single in-flight save; reset when a new save starts.
+    private var savingBackNoticeShown = false
 
     private lateinit var site: SiteModel
 
@@ -174,6 +177,7 @@ class UnifiedCommentsEditViewModel @Inject constructor(
         _uiState.value?.let { uiState ->
             val editedCommentEssentials = uiState.editedComment
             isSaving = true
+            savingBackNoticeShown = false
             launch(bgDispatcher) {
                 try {
                     setLoadingState(SAVING)
@@ -189,8 +193,12 @@ class UnifiedCommentsEditViewModel @Inject constructor(
         // A save already in flight can't be discarded — the edit has been dispatched and will land
         // server-side regardless. Surface that instead of silently swallowing the press, so a save
         // that stalls to a network timeout doesn't leave the screen feeling frozen with no feedback.
+        // Only once per save, so repeated presses don't queue a stack of identical snackbars.
         if (isSaving) {
-            _onSnackbarMessage.value = Event(SnackbarMessageHolder(UiStringRes(R.string.saving_changes)))
+            if (!savingBackNoticeShown) {
+                savingBackNoticeShown = true
+                _onSnackbarMessage.value = Event(SnackbarMessageHolder(UiStringRes(R.string.saving_changes)))
+            }
             return
         }
         _uiState.value?.let {

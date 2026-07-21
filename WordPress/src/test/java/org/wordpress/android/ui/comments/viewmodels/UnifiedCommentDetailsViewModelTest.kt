@@ -297,6 +297,21 @@ class UnifiedCommentDetailsViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `a second moderation is allowed once the first has completed`() = test {
+        // Guards against the in-flight flag getting stuck true (e.g. a dropped finally reset), which
+        // would silently ignore every later moderation. The first call completes before the second.
+        viewModel.start(site, REMOTE_COMMENT_ID)
+
+        viewModel.onApproveClicked()
+        advanceUntilIdle()
+        viewModel.onApproveClicked()
+        advanceUntilIdle()
+
+        verify(commentsRsDataSource).updateStatus(site, REMOTE_COMMENT_ID, UNAPPROVED)
+        verify(commentsRsDataSource).updateStatus(site, REMOTE_COMMENT_ID, APPROVED)
+    }
+
+    @Test
     fun `onEditClicked emits launch edit event with site comment identifier`() = test {
         viewModel.start(site, REMOTE_COMMENT_ID)
 

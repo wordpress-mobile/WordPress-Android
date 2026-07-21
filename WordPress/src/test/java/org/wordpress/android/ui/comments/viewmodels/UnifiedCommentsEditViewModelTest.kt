@@ -451,12 +451,13 @@ class UnifiedCommentsEditViewModelTest : BaseUnitTest() {
         // The save is in flight (suspended), so isSaving is still true when back is pressed.
         viewModel.onActionMenuClicked()
         viewModel.onBackPressed()
+        viewModel.onBackPressed()
 
-        // Back is swallowed (no discard dialog, no close) but now surfaces a "saving" message
-        // instead of silently doing nothing.
+        // Back is swallowed (no discard dialog, no close) but surfaces a "saving" message instead
+        // of silently doing nothing — and only once, so repeated presses don't queue duplicates.
         assertThat(uiState.last().showDiscardDialog).isFalse
         assertThat(uiActionEvent).doesNotContain(CLOSE)
-        assertThat(onSnackbarMessage.last().message).isEqualTo(UiStringRes(R.string.saving_changes))
+        assertThat(onSnackbarMessage.filter { it.message == UiStringRes(R.string.saving_changes) }).hasSize(1)
 
         advanceUntilIdle()
     }
