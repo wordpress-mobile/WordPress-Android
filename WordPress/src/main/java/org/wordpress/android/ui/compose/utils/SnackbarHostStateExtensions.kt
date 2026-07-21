@@ -13,7 +13,7 @@ import org.wordpress.android.ui.utils.UiHelpers
  * Shows a [SnackbarMessageHolder] on a Compose [SnackbarHostState], bridging the View-world Snackbar
  * length constants and dismiss-event codes the holder carries. onDismissAction fires from a finally
  * so it still runs if the coroutine is cancelled (e.g. the view is torn down while the snackbar is
- * showing) — the load-error holder relies on this to close the screen.
+ * showing) — the comment-detail load-error holder relies on this to close the screen.
  *
  * Call from the caller's own coroutine scope, e.g.
  * `viewLifecycleOwner.lifecycleScope.launch { snackbarHostState.showMessage(holder, context, uiHelpers) }`.

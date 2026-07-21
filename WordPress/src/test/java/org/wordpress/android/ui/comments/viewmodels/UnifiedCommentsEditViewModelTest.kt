@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.comments.viewmodels
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.test.advanceUntilIdle
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Assert.assertEquals
@@ -9,6 +10,7 @@ import org.junit.Test
 import org.mockito.Mock
 import org.mockito.kotlin.any
 import org.mockito.kotlin.check
+import org.mockito.kotlin.doSuspendableAnswer
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
@@ -172,22 +174,31 @@ class UnifiedCommentsEditViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `Should map CommentIdentifier to default CommentEssentials if CommentIdentifier comment not found`() = test {
+    fun `Should show a terminal load-failed state and not an empty form if comment not found`() = test {
         whenever(getCommentUseCase.execute(site, remoteCommentId))
             .thenReturn(null)
         viewModel.start(site, siteCommentIdentifier)
         advanceUntilIdle()
 
-        assertThat(uiState[1].editedComment).isEqualTo(CommentEssentials())
+        // On load failure the screen shows a terminal error (retained state), never the empty,
+        // editable form, and the spinner is cleared so it can't strand.
+        val last = uiState.last()
+        assertThat(last.loadFailed).isTrue
+        assertThat(last.showProgress).isFalse
+        assertThat(last.editedComment).isEqualTo(CommentEssentials())
+        assertThat(onSnackbarMessage.firstOrNull()).isNotNull
     }
 
     @Test
-    fun `Should map CommentIdentifier to default CommentEssentials if CommentIdentifier not handled`() = test {
+    fun `Should show a terminal load-failed state if CommentIdentifier not handled`() = test {
         // ReaderCommentIdentifier is not supported by this class yet
         viewModel.start(site, ReaderCommentIdentifier(0L, 0L, 0L))
         advanceUntilIdle()
 
-        assertThat(uiState[1].editedComment).isEqualTo(CommentEssentials())
+        val last = uiState.last()
+        assertThat(last.loadFailed).isTrue
+        assertThat(last.showProgress).isFalse
+        assertThat(onSnackbarMessage.firstOrNull()).isNotNull
     }
 
     @Test
@@ -422,6 +433,36 @@ class UnifiedCommentsEditViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `onBackPressed is ignored while a save is in flight`() = test {
+        whenever(commentsStore.getCommentByLocalSiteAndRemoteId(site.id, remoteCommentId))
+            .thenReturn(listOf(COMMENT_ENTITY))
+        // A suspending save keeps isSaving true across the back press.
+        whenever(commentsStore.updateEditComment(eq(site), any())).doSuspendableAnswer {
+            delay(SAVE_DELAY_MS)
+            CommentsActionPayload(CommentsActionData(emptyList(), 0))
+        }
+        val emailFieldType: FieldType = mock()
+        whenever(emailFieldType.matches(USER_EMAIL)).thenReturn(true)
+        whenever(emailFieldType.isValid).thenReturn { true }
+
+        viewModel.start(site, siteCommentIdentifier)
+        // Make an edit so that, without the guard, back would open the discard dialog.
+        viewModel.onValidateField("edited user email", emailFieldType)
+        // The save is in flight (suspended), so isSaving is still true when back is pressed.
+        viewModel.onActionMenuClicked()
+        viewModel.onBackPressed()
+        viewModel.onBackPressed()
+
+        // Back is swallowed (no discard dialog, no close) but surfaces a "saving" message instead
+        // of silently doing nothing — and only once, so repeated presses don't queue duplicates.
+        assertThat(uiState.last().showDiscardDialog).isFalse
+        assertThat(uiActionEvent).doesNotContain(CLOSE)
+        assertThat(onSnackbarMessage.filter { it.message == UiStringRes(R.string.saving_changes) }).hasSize(1)
+
+        advanceUntilIdle()
+    }
+
+    @Test
     fun `Should update notification entity on save if NotificationCommentIdentifier`() = test {
         whenever(commentsStore.getCommentByLocalSiteAndRemoteId(site.id, remoteCommentId))
             .thenReturn(listOf(COMMENT_ENTITY))
@@ -619,6 +660,7 @@ class UnifiedCommentsEditViewModelTest : BaseUnitTest() {
     companion object {
         private const val LOCAL_SITE_ID = 123
         private const val REMOTE_SITE_ID = 456L
+        private const val SAVE_DELAY_MS = 1000L
 
         private val COMMENT_ENTITY = CommentEntity(
             id = 1000,

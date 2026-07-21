@@ -105,6 +105,14 @@ fun UnifiedCommentEditScreen(
                         )
                     }
                 }
+            } else if (uiState.loadFailed) {
+                // Terminal load-error state: show the reason instead of an empty, editable form.
+                Text(
+                    text = stringResource(R.string.error_load_comment),
+                    modifier = Modifier
+                        .align(Alignment.Center)
+                        .padding(16.dp)
+                )
             } else {
                 EditFields(uiState, onFieldChange, scrollState)
             }
