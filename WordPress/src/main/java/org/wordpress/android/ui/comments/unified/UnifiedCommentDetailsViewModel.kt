@@ -242,6 +242,7 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
         }
     }
 
+    @Suppress("ReturnCount")
     fun onEditClicked() {
         if (loadedComment == null) return
         // Editing a comment needs moderation rights; the button is disabled without them, but guard
