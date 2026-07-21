@@ -802,6 +802,61 @@ public class MediaStoreTest {
         assertEquals(MediaStore.MediaErrorType.GENERIC_ERROR, MediaStore.MediaErrorType.fromHttpStatusCode(600));
     }
 
+    // CMM-2114: a Jetpack-connected site can have Application Password credentials stored (making
+    // isUsingSelfHostedRestApi() true) but must still route media through the WP.com REST API, otherwise
+    // uploads and the Media Library fail on sites that have Application Passwords disabled.
+    @Test
+    public void testJetpackConnectedSiteWithAppPasswordUsesWpComRestApiForMedia() {
+        SiteModel site = new SiteModel();
+        site.setIsWPCom(false);
+        site.setIsJetpackConnected(true);
+        site.setOrigin(SiteModel.ORIGIN_WPCOM_REST);
+        site.setApiRestUsernamePlain("username");
+        site.setApiRestPasswordPlain("app-password");
+
+        // Sanity check: this is exactly the ambiguous case where both predicates are true.
+        assertTrue(site.isUsingWpComRestApi());
+        assertTrue(site.isUsingSelfHostedRestApi());
+
+        assertEquals(MediaStore.MediaRestClientType.WPCOM_REST, mMediaStore.getMediaRestClientType(site));
+    }
+
+    @Test
+    public void testSelfHostedSiteWithAppPasswordUsesSelfHostedRestApiForMedia() {
+        SiteModel site = new SiteModel();
+        site.setIsWPCom(false);
+        site.setIsJetpackConnected(false);
+        site.setOrigin(SiteModel.ORIGIN_WPAPI);
+        site.setApiRestUsernamePlain("username");
+        site.setApiRestPasswordPlain("app-password");
+
+        assertFalse(site.isUsingWpComRestApi());
+        assertTrue(site.isUsingSelfHostedRestApi());
+
+        assertEquals(MediaStore.MediaRestClientType.SELF_HOSTED_RS, mMediaStore.getMediaRestClientType(site));
+    }
+
+    @Test
+    public void testWpComSiteUsesWpComRestApiForMedia() {
+        SiteModel site = new SiteModel();
+        site.setIsWPCom(true);
+
+        assertEquals(MediaStore.MediaRestClientType.WPCOM_REST, mMediaStore.getMediaRestClientType(site));
+    }
+
+    @Test
+    public void testXmlRpcSiteUsesXmlRpcForMedia() {
+        SiteModel site = new SiteModel();
+        site.setIsWPCom(false);
+        site.setIsJetpackConnected(false);
+        site.setOrigin(SiteModel.ORIGIN_XMLRPC);
+
+        assertFalse(site.isUsingWpComRestApi());
+        assertFalse(site.isUsingSelfHostedRestApi());
+
+        assertEquals(MediaStore.MediaRestClientType.XMLRPC, mMediaStore.getMediaRestClientType(site));
+    }
+
     private MediaModel getBasicMedia() {
         return generateMedia("Test Title", "Test Description", "Test Caption", "Test Alt");
     }
