@@ -37,6 +37,7 @@ import org.wordpress.android.util.DeviceUtils
 import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.WPSwipeToRefreshHelper
+import org.wordpress.android.util.extensions.redirectContextClickToLongPressListener
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 import org.wordpress.android.widgets.WPDialogSnackbar
 import javax.inject.Inject
@@ -78,10 +79,15 @@ class ChooseSiteActivity : BaseAppCompatActivity() {
             AnalyticsTracker.track(Stat.SITE_SWITCHER_DISMISSED)
             finish()
         }
-        binding.buttonAddSite.setOnClickListener {
+        binding.fabAddSite.setOnClickListener {
             AnalyticsTracker.track(Stat.SITE_SWITCHER_ADD_SITE_TAPPED)
             AddSiteHandler.addSite(this, accountStore.hasAccessToken(), SiteCreationSource.MY_SITE)
         }
+        binding.fabAddSite.setOnLongClickListener {
+            ToastUtils.showToast(this, R.string.site_picker_add_a_site, ToastUtils.Duration.SHORT)
+            true
+        }
+        binding.fabAddSite.redirectContextClickToLongPressListener()
         binding.progress.isVisible = !appPrefsWrapper.hasFetchedSites
         setupRecycleView()
 
@@ -172,10 +178,10 @@ class ChooseSiteActivity : BaseAppCompatActivity() {
     private fun setupMenuVisibility() {
         if (mode == SitePickerMode.DEFAULT) {
             menuEditPin.isVisible = true
-            binding.layoutAddSite.isVisible = true
+            binding.fabAddSite.show()
         } else {
             menuEditPin.isVisible = false
-            binding.layoutAddSite.isVisible = false
+            binding.fabAddSite.hide()
         }
     }
 
@@ -184,7 +190,7 @@ class ChooseSiteActivity : BaseAppCompatActivity() {
         searchView.maxWidth = Integer.MAX_VALUE
         menuSearch.setOnActionExpandListener(object : MenuItem.OnActionExpandListener {
             override fun onMenuItemActionExpand(item: MenuItem): Boolean {
-                binding.layoutAddSite.isVisible = false
+                binding.fabAddSite.hide()
                 searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
                     override fun onQueryTextSubmit(query: String): Boolean {
                         if (!DeviceUtils.getInstance().hasHardwareKeyboard(this@ChooseSiteActivity)) {
