@@ -63,7 +63,9 @@ class MySitesPage {
 
     fun startNewSite() {
         switchSite()
-        WPSupportUtils.clickOn(R.id.button_add_site)
+        // the add-site FAB expands a menu; pick "Create WordPress.com site" to start creation
+        WPSupportUtils.clickOn(R.id.fab_add_site)
+        WPSupportUtils.clickOn(R.id.fab_wpcom)
     }
 
     fun goToSettings() {
