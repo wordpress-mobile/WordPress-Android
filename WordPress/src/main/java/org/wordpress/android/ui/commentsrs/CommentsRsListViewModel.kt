@@ -508,14 +508,13 @@ class CommentsRsListViewModel @Inject constructor(
     private fun fetchFirstPage(tab: CommentsRsListTab, showErrorSnackbar: Boolean = true) {
         // Callers (initTab, refreshTab) guard against a null site, so the site getter below is safe.
         firstPageJobs[tab] = viewModelScope.launch {
-            val params = commentsRsDataSource.firstPageParams(
+            val base = commentsRsDataSource.firstPageParams(
                 status = tab.queryStatus,
                 search = _searchQuery.value.trim().ifBlank { null }
-            ).let {
-                // Unreplied over-fetches (like the legacy list) since client-side threading discards
-                // most of each page, so a single page still yields visible rows.
-                if (tab == CommentsRsListTab.UNREPLIED) it.copy(perPage = UNREPLIED_PAGE_SIZE) else it
-            }
+            )
+            // Unreplied over-fetches (like the legacy list) since client-side threading discards
+            // most of each page, so a single page still yields visible rows.
+            val params = if (tab == CommentsRsListTab.UNREPLIED) base.copy(perPage = UNREPLIED_PAGE_SIZE) else base
             val result = withContext(bgDispatcher) { commentsRsDataSource.fetchCommentsPage(site, params) }
             when (result) {
                 is RsCommentsPageResult.Success -> applyPage(tab, result, append = false)
