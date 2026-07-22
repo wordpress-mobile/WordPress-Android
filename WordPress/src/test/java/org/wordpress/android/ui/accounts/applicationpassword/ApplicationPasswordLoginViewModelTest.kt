@@ -715,8 +715,10 @@ class ApplicationPasswordLoginViewModelTest : BaseUnitTest() {
     @Test
     fun `given SiteNotFound with empty fetch params, then emit error without Sentry report`() =
         runTest {
-            // Given — helper returns a login still missing apiRootUrl, so fetchSites can't proceed.
-            val incompleteLogin = urlLogin.copy(apiRootUrl = "")
+            // Given — helper returns a login with an empty siteUrl, so fetchSites can't proceed.
+            // (An empty apiRootUrl would be rejected as BadData before ever reaching SiteNotFound;
+            // siteUrl is only guarded against null in the helper, so an empty string slips through.)
+            val incompleteLogin = urlLogin.copy(siteUrl = "")
             whenever(applicationPasswordLoginHelper.getSiteUrlLoginFromRawData(rawData))
                 .thenReturn(incompleteLogin)
             whenever(
