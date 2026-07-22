@@ -15,6 +15,9 @@
     <dimen name="fab_margin">@dimen/fab_margin_default</dimen>
     <dimen name="fab_margin_default">16dp</dimen>
     <dimen name="fab_margin_tablet">24dp</dimen>
+    <!-- The site picker has no bottom navigation bar, so lift its FAB to match the create FAB on
+         the My Site screen, which floats above the bottom nav (bottom nav height + fab_margin). -->
+    <dimen name="site_picker_fab_margin_bottom">72dp</dimen>
 
     <item name="primary_button_disabled_alpha" format="float" type="dimen">
         @dimen/disabled_alpha

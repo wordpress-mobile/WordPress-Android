@@ -1,11 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2026-06-02 11:58:41+0000
+Translation-Revision-Date: 2026-07-16 20:25:24+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.3
 Language: id
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="support_screen_unified_support_description">Dapatkan jawaban dari tim dukungan kami, kapan saja</string>
+    <string name="support_screen_unified_support_title">Dapatkan bantuan</string>
+    <string name="unified_support_attachment_match_score">%1$d%% pertandingan</string>
+    <string name="unified_support_status_bot">Bot Oddie</string>
+    <string name="unified_support_bot_typing_content_description">Bot dukungan sedang mengetik</string>
+    <string name="unified_support_message_input_placeholder">Ketik pesan…</string>
+    <string name="unified_support_conversations_title">Dapatkan bantuan</string>
+    <string name="page_rs_move_trashed_page_to_draft_dialog_message">Pos yang dihapus tidak dapat diedit. Apakah Anda ingin mengubah status halaman ini menjadi \"konsep\" agar dapat Anda edit?</string>
+    <string name="page_rs_move_trashed_page_to_draft_dialog_title">Pindahkan pos ke Konsep?</string>
+    <string name="page_rs_confirm_trash_message">Apakah Anda ingin menghapus halaman ini?</string>
+    <string name="page_rs_copy_url">Salin URL</string>
+    <string name="page_rs_failed_to_load">Gagal memuat halaman</string>
+    <string name="page_not_found">Terjadi error saat membuat halaman. Segarkan halaman dan coba lagi.</string>
     <string name="xmlrpc_disabled_bottom_sheet_body">Beberapa fitur di aplikasi memerlukan XML-RPC. Aktifkan di situs Anda untuk mengatasi masalah ini.</string>
     <string name="xmlrpc_disabled_bottom_sheet_title">XML-RPC Dinonaktifkan</string>
     <string name="xmlrpc_disabled_card_text">XML-RPC Dinonaktifkan\nBeberapa fitur mungkin terbatas</string>
@@ -236,6 +249,8 @@ Language: id
     <string name="post_rs_confirm_delete_message">Tindakan ini akan menghapus pos secara permanen. Tindakan ini tidak dapat dibatalkan.</string>
     <string name="post_rs_confirm_trash_message">Anda yakin ingin membuang pos ini?</string>
     <string name="post_rs_failed_to_load">Gagal memuat pos</string>
+    <string name="experimental_rs_pages_list_description">Tampilkan daftar halaman di UI yang lebih modern untuk WordPress.com dan situs yang dihosting sendiri dengan kata sandi aplikasi</string>
+    <string name="experimental_rs_pages_list">Daftar Halaman Baru</string>
     <string name="stats_error_admin_url_unavailable">Tidak dapat membuka WP Admin untuk situs ini</string>
     <string name="stats_error_parsing">Terjadi masalah saat memuat data. Coba lagi</string>
     <string name="stats_error_network">Error jaringan. Periksa koneksi Anda dan coba lagi</string>

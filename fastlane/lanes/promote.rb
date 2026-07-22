@@ -37,6 +37,14 @@ PRODUCTION_CONFIRM_META_DATA_KEY = 'production_ready_to_release'
 PRODUCTION_BLOCK_LABEL = ':android: Promote to production'
 PRODUCTION_BLOCK_STEP_KEY = 'promote_to_production_block'
 
+# Promoted-release finalize (the git ceremony after the Play submit).
+# A continuous build's versionCode packs the Buildkite build number in its low 6 digits (via
+# release-toolkit's ContinuousBuildCodeFormatter, build_digits: 6):
+#   versionCode = (major * 10 + minor) * 1_000_000 + BUILDKITE_BUILD_NUMBER
+# so `versionCode % MODULO` recovers the build number and `versionCode / MODULO` the `major*10+minor`.
+# TODO: could move next to ContinuousBuildCodeFormatter in release-toolkit later; fine here for now.
+VERSION_CODE_BUILD_MODULO = 1_000_000
+
 # Written verbatim into the generated steps so `buildkite-agent pipeline upload` interpolates it.
 CI_TOOLKIT_PLUGIN_REF = '$CI_TOOLKIT'
 
@@ -174,6 +182,45 @@ platform :android do
     UI.success("Promoted #{version_code} to production for: #{results.keys.join(', ')}")
   rescue StandardError => e
     notify_slack(":x: *Production release* failed — #{e.message}") unless result_posted
+    raise
+  end
+
+  # Finalizes a promoted release after the Play submit: creates a draft GitHub release tagged at the
+  # commit the build came from, and opens the trunk version-name bump PR. Runs as the mac-metal step
+  # the promote-to-production pipeline appends after `promote_to_production` (git writes need the bot
+  # identity), and is safe to re-run by hand with the same version code.
+  #
+  # @param [String] version_code The version code that was released, e.g. `270084231`.
+  # @called_by CI (`.buildkite/commands/finalize-promoted-release.sh`)
+  desc 'Finalize a promoted release: draft GitHub release + trunk version-name bump PR'
+  lane :finalize_promoted_release do |version_code: nil|
+    ensure_promotion_on_trunk!
+    # Fail loudly up front if the environment isn't configured. SLACK_WEBHOOK backs only the failure
+    # notification (the rescue below — there's no success post). BUILDKITE_TOKEN is required, not a
+    # degradable deep-link nicety: the released commit is resolved from the Buildkite build, and the
+    # GitHub release can't be tagged without it.
+    get_required_env('SLACK_WEBHOOK')
+    get_required_env('GITHUB_TOKEN')
+    get_required_env('BUILDKITE_TOKEN')
+
+    version_code = version_code.to_s.strip
+    UI.user_error!('`version_code` is required, e.g. `version_code:270084231`') if version_code.empty?
+    UI.user_error!("`version_code` must be an integer, got #{version_code.inspect}") unless version_code.match?(/\A\d+\z/)
+    # Base 10 so a value with a leading zero (e.g. `0270084231`) isn't parsed as octal.
+    version_code = Integer(version_code, 10)
+
+    released_version = marketing_version_for(version_code: version_code)
+    UI.important("Finalizing promoted release #{released_version} (build #{version_code})")
+
+    release_url = create_draft_github_release(version_code: version_code, version_name: released_version)
+    bump_url = open_version_bump_pull_request(released_version: released_version)
+
+    # No success post to Slack on purpose: the Play-submit step already announced the release, the
+    # draft GitHub release is published later, and the version-bump PR pings its reviewers itself.
+    # Only failures notify (the rescue below) — anything else would just be noise.
+    UI.success("Finalized #{released_version}: release #{release_url}; version bump #{bump_url || 'skipped'}")
+  rescue StandardError => e
+    notify_slack(":x: *Promoted-release finalize* failed — #{e.message}")
     raise
   end
 
@@ -409,6 +456,136 @@ platform :android do
   end
 
   #################################################
+  # Promoted-release finalize
+  #################################################
+
+  # The marketing version (e.g. `26.9`) encoded in a continuous build's versionCode — `major.minor`,
+  # read straight from the packed `major*10 + minor` prefix. Hotfix patch numbers aren't encoded, but
+  # hotfixes don't flow through this trunk-only path, so `major.minor` is exact here.
+  def marketing_version_for(version_code:)
+    prefix = version_code / VERSION_CODE_BUILD_MODULO
+    "#{prefix / 10}.#{prefix % 10}"
+  end
+
+  # Creates a DRAFT GitHub release for the released marketing version, tagged at the commit the build
+  # came from. It stays a draft for now — a developer publishes it from the GitHub UI until the whole
+  # flow is switched to publishing outright (mirrors the draft Play release). GitHub creates the tag
+  # from `target` when the draft is published. The Play-signed universal APKs are attached
+  # best-effort. Reuses an existing release for the same commit rather than creating a second draft on
+  # a re-run. Returns the release URL.
+  def create_draft_github_release(version_code:, version_name:)
+    build_number = version_code % VERSION_CODE_BUILD_MODULO
+    sha = commit_sha_for_build_number(build_number: build_number)
+
+    existing_url = existing_github_release_url(commit_sha: sha)
+    if existing_url
+      UI.important("A GitHub release already targets #{sha} (#{existing_url}); skipping creation.")
+      return existing_url
+    end
+
+    create_github_release(
+      repository: GITHUB_REPO,
+      version: version_name,
+      target: sha,
+      release_assets: signed_universal_apks(version_code: version_code, version_name: version_name),
+      prerelease: false,
+      is_draft: true
+    )
+  end
+
+  # The URL of an existing GitHub release targeting the given commit, or nil — so a re-run reuses the
+  # release for this exact build instead of creating a second draft. Matches on the commit (the build's
+  # identity) rather than the marketing version, which many builds share. `client.releases` includes
+  # drafts (whose `target_commitish` is the commit we set).
+  def existing_github_release_url(commit_sha:)
+    github = Fastlane::Helper::GithubHelper.new(github_token: get_required_env('GITHUB_TOKEN'))
+    release = github.client.releases(GITHUB_REPO).find { |candidate| candidate.target_commitish == commit_sha }
+    release&.html_url
+  end
+
+  # Resolves the trunk commit a continuous build ran against, via the Buildkite build whose number is
+  # packed into the versionCode. Raises rather than returns nil — the GitHub release needs a target.
+  def commit_sha_for_build_number(build_number:)
+    org = ENV.fetch('BUILDKITE_ORGANIZATION_SLUG', BUILDKITE_ORGANIZATION)
+    pipeline = ENV.fetch('BUILDKITE_PIPELINE_SLUG', BUILDKITE_PIPELINE)
+    uri = URI("https://api.buildkite.com/v2/organizations/#{org}/pipelines/#{pipeline}/builds/#{build_number}")
+
+    response = buildkite_api_get(uri)
+    UI.user_error!("Unable to look up Buildkite build ##{build_number} (HTTP #{response.code}).") unless response.is_a?(Net::HTTPSuccess)
+
+    build = JSON.parse(response.body)
+    sha = build['commit']
+    UI.user_error!("Buildkite build ##{build_number} has no commit SHA.") if sha.nil? || sha.to_s.empty?
+
+    UI.message("Build ##{build_number} → #{sha} (branch #{build['branch'].inspect})")
+    sha
+  end
+
+  # Downloads the Play-signed universal APK for each app at the given version code, best-effort. The
+  # original AAB was built in a past CI job and is long gone, but Play still serves a generated
+  # universal APK by version code. A download failure just yields fewer/no assets rather than aborting
+  # the release. Returns the paths that downloaded.
+  def signed_universal_apks(version_code:, version_name:)
+    %i[wordpress jetpack].filter_map do |app|
+      destination = signed_apk_path(app.to_s, version_name)
+      download_universal_apk_from_google_play(
+        package_name: APP_SPECIFIC_VALUES[app][:package_name],
+        version_code: version_code,
+        destination: destination,
+        json_key: UPLOAD_TO_PLAY_STORE_JSON_KEY
+      )
+      File.exist?(destination) ? destination : nil
+    rescue StandardError => e
+      UI.important("Could not download the #{app} universal APK for #{version_code}: #{e.message}; the release will omit it.")
+      nil
+    end
+  end
+
+  # Opens (or reuses) a PR bumping trunk's marketing version to the next line after the released one —
+  # e.g. after releasing `26.9`, trunk moves to `27.0` so later builds carry the new line. No-ops when
+  # trunk is already at or past that line (a re-run, or a release of an older line). Returns the PR
+  # URL, or nil when skipped.
+  def open_version_bump_pull_request(released_version:)
+    next_version = VERSION_FORMATTER.release_version(
+      VERSION_CALCULATOR.next_release_version(version: VERSION_FORMATTER.parse(released_version))
+    )
+
+    UI.user_error!("Could not check out and pull #{DEFAULT_BRANCH}.") unless Fastlane::Helper::GitHelper.checkout_and_pull(DEFAULT_BRANCH)
+
+    if version_at_or_past?(current_version_name, next_version)
+      UI.important("Trunk is already at #{current_version_name}; skipping the bump to #{next_version}.")
+      return nil
+    end
+
+    branch = "release/version-bump-#{next_version}"
+    Fastlane::Helper::GitHelper.delete_local_branch_if_exists!(branch)
+    Fastlane::Helper::GitHelper.create_branch(branch, from: DEFAULT_BRANCH)
+
+    # Only the marketing name advances; the (legacy, unused-on-trunk) version code is written back as-is.
+    VERSION_FILE.write_version(version_name: next_version, version_code: current_build_code)
+    Fastlane::Helper::GitHelper.commit(message: "Bump version name to #{next_version}", files: VERSION_PROPERTIES_PATH)
+
+    push_to_git_remote(remote_branch: branch, tags: false, force: true, set_upstream: true)
+
+    find_or_create_pull_request(
+      repository: GITHUB_REPO,
+      title: "Bump version name to #{next_version}",
+      body: "Advances the marketing version on `#{DEFAULT_BRANCH}` to `#{next_version}`, following the `#{released_version}` production release.",
+      head: branch,
+      base: DEFAULT_BRANCH,
+      labels: ['Releases']
+    )
+  end
+
+  # Whether `current_name` is at or past `target_name`, compared on `major.minor` (Array#<=> is
+  # element-wise; Array has no `>=`, so compare the spaceship result).
+  def version_at_or_past?(current_name, target_name)
+    current = VERSION_FORMATTER.parse(current_name)
+    target = VERSION_FORMATTER.parse(target_name)
+    ([current.major, current.minor] <=> [target.major, target.minor]) >= 0
+  end
+
+  #################################################
   # Buildkite block step
   #################################################
 
@@ -448,37 +625,17 @@ platform :android do
     UI.message("Wrote promotion steps for #{candidates.count} build(s) to #{PROMOTION_STEPS_FILE}")
   end
 
-  # Writes the confirmation block step + the release step. There's no picker — the candidate is baked
-  # into the release command; the block step only gates on a Yes/No confirmation.
+  # Writes the confirm → promote → finalize steps. There's no picker — the candidate is baked into the
+  # commands; the block step only gates on a Yes/No confirmation.
   def write_production_release_steps_file(version_code:)
     steps = {
       'steps' => [
-        {
-          'block' => PRODUCTION_BLOCK_LABEL,
-          'key' => PRODUCTION_BLOCK_STEP_KEY,
-          'prompt' => "Release build #{version_code} to production? This releases the matching WordPress and Jetpack builds.",
-          # Keep the build "running" (not green) while it waits for a human.
-          'blocked_state' => 'running',
-          'fields' => [
-            {
-              'select' => 'Release to production?',
-              'key' => PRODUCTION_CONFIRM_META_DATA_KEY,
-              # Required, no default: an un-actioned unblock can't silently release a build.
-              'required' => true,
-              'options' => [
-                { 'label' => 'Yes', 'value' => 'yes' },
-                { 'label' => 'No', 'value' => 'no' }
-              ]
-            }
-          ]
-        },
-        {
-          'label' => ':rocket: Release build to production',
-          # The candidate rides along as an argument; the confirmation Yes/No comes from meta-data.
-          'command' => ".buildkite/commands/promote-to-production.sh #{version_code}",
-          'plugins' => [CI_TOOLKIT_PLUGIN_REF],
-          'agents' => { 'queue' => 'android' }
-        }
+        production_confirm_block_step(version_code: version_code),
+        promote_to_production_step(version_code: version_code),
+        # Barrier: finalize only after the promote step succeeds — a failed promote halts the build
+        # here. On a "no" confirmation the promote step no-ops and finalize's own guard no-ops too.
+        'wait',
+        finalize_promoted_release_step(version_code: version_code)
       ]
     }
 
@@ -486,6 +643,51 @@ platform :android do
     # `line_width: -1` keeps each label on one line (no YAML folding).
     File.write(PROMOTION_STEPS_FILE, steps.to_yaml(line_width: -1))
     UI.message("Wrote production release steps for build #{version_code} to #{PROMOTION_STEPS_FILE}")
+  end
+
+  # The Yes/No confirmation block step that gates the production release.
+  def production_confirm_block_step(version_code:)
+    {
+      'block' => PRODUCTION_BLOCK_LABEL,
+      'key' => PRODUCTION_BLOCK_STEP_KEY,
+      'prompt' => "Release build #{version_code} to production? This releases the matching WordPress and Jetpack builds.",
+      # Keep the build "running" (not green) while it waits for a human.
+      'blocked_state' => 'running',
+      'fields' => [
+        {
+          'select' => 'Release to production?',
+          'key' => PRODUCTION_CONFIRM_META_DATA_KEY,
+          # Required, no default: an un-actioned unblock can't silently release a build.
+          'required' => true,
+          'options' => [
+            { 'label' => 'Yes', 'value' => 'yes' },
+            { 'label' => 'No', 'value' => 'no' }
+          ]
+        }
+      ]
+    }
+  end
+
+  # The command step that promotes the confirmed build to production (WordPress + Jetpack).
+  def promote_to_production_step(version_code:)
+    {
+      'label' => ':rocket: Release build to production',
+      # The candidate rides along as an argument; the confirmation Yes/No comes from meta-data.
+      'command' => ".buildkite/commands/promote-to-production.sh #{version_code}",
+      'plugins' => [CI_TOOLKIT_PLUGIN_REF],
+      'agents' => { 'queue' => 'android' }
+    }
+  end
+
+  # The command step that finalizes the release (draft GitHub release + trunk version-bump PR). Runs
+  # on mac-metal for the git push identity.
+  def finalize_promoted_release_step(version_code:)
+    {
+      'label' => ':android: Finalize promoted release',
+      'command' => ".buildkite/commands/finalize-promoted-release.sh #{version_code}",
+      'plugins' => [CI_TOOLKIT_PLUGIN_REF],
+      'agents' => { 'queue' => 'mac-metal' }
+    }
   end
 
   # Source `shared-pipeline-vars` first so `$CI_TOOLKIT` is interpolated.

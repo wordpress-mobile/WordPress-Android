@@ -1,11 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2026-06-16 16:54:34+0000
+Translation-Revision-Date: 2026-07-16 20:24:24+0000
 Plural-Forms: nplurals=6; plural=(n == 0) ? 0 : ((n == 1) ? 1 : ((n == 2) ? 2 : ((n % 100 >= 3 && n % 100 <= 10) ? 3 : ((n % 100 >= 11 && n % 100 <= 99) ? 4 : 5))));
 Generator: GlotPress/4.0.3
 Language: ar
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="unified_support_message_input_placeholder">جارٍ كتابة رسالة…</string>
+    <string name="unified_support_bot_typing_content_description">روبوت الدعم يكتب</string>
+    <string name="unified_support_status_bot">روبوت Oddie</string>
+    <string name="unified_support_attachment_match_score">%1$d%% تطابق</string>
+    <string name="support_screen_unified_support_title">الحصول على مساعدة</string>
+    <string name="support_screen_unified_support_description">احصل على إجابات من فريق الدعم لدينا في أي وقت</string>
+    <string name="page_rs_failed_to_load">تعذّر تحميل الصفحة</string>
+    <string name="page_rs_copy_url">نسخ عنوان الموقع</string>
+    <string name="page_rs_confirm_trash_message">هل أنت متأكد من رغبتك في نقل هذه الصفحة إلى سلة المهملات؟</string>
+    <string name="page_rs_move_trashed_page_to_draft_dialog_title">هل تريد النقل إلى المسودات؟</string>
+    <string name="page_rs_move_trashed_page_to_draft_dialog_message">لا يمكن تحرير الصفحات الموجودة في سلة المهملات. هل تريد تغيير حالة هذه الصفحة إلى \"مسودة\" حتى تتمكن من العمل عليها؟</string>
+    <string name="unified_support_conversations_title">الحصول على مساعدة</string>
+    <string name="page_not_found">حدث خطأ أثناء تحميل الصفحة. حدّث قائمة صفحاتك وحاول مرة أخرى.</string>
     <string name="application_password_app_name_wordpress">تطبيق ووردبريس لنظام Android على %s</string>
     <string name="application_password_reauthentication_banner">بيانات اعتماد موقعك غير صالحة. انقر لإعادة المصادقة.</string>
     <string name="xmlrpc_disabled_card_text">تم تعطيل XML-RPC\nقد تكون بعض الميزات محدودة</string>
@@ -241,6 +254,8 @@ Language: ar
     <string name="scan_start_request_failed_subtitle">تعذر على Jetpack Scan إكمال فحص موقعك. يرجى التحقق لمعرفة ما إذا كان موقعك معطلاً أم لا.</string>
     <string name="stats_timeframe_hours">ساعات</string>
     <string name="post_rs_failed_to_load">فشل تحميل التدوينة</string>
+    <string name="experimental_rs_pages_list">قائمة الصفحات الجديدة</string>
+    <string name="experimental_rs_pages_list_description">إظهار قائمة الصفحات في واجهة مستخدم أكثر حداثة لموقع WordPress.com والمواقع المستضافة ذاتيًا باستخدام كلمات مرور التطبيقات</string>
     <string name="stats_error_no_site">لم يتم تحديد أي موقع</string>
     <string name="stats_error_api">فشل تحميل الإحصاءات</string>
     <string name="stats_error_unknown">حدث خطأ غير متوقع</string>
