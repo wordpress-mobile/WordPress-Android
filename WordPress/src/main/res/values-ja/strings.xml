@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2026-06-25 09:57:43+0000
+Translation-Revision-Date: 2026-07-01 09:59:20+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.3
 Language: ja_JP
@@ -591,6 +591,7 @@ Language: ja_JP
     <string name="stats_name_label">名前</string>
     <string name="stats_publicize_subscribers_label">購読者</string>
     <string name="stats_subscriber_label">購読者</string>
+    <string name="stats_subscribers_count_message">%1$s 購読者総数: %2$s</string>
     <string name="page_upload_conflict_error">このページにはより最近のリビジョンがあります</string>
     <string name="editor_updating_content">コンテンツを更新しています</string>
     <string name="stats_subscribers">購読者</string>

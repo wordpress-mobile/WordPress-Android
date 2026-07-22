@@ -1,11 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2026-06-15 04:34:33+0000
+Translation-Revision-Date: 2026-07-08 01:34:27+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.3
 Language: es_CO
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="unified_support_message_input_placeholder">Escribe un mensaje…</string>
+    <string name="support_screen_unified_support_description">Consigue respuestas de nuestro equipo de atención al cliente en cualquier momento</string>
+    <string name="unified_support_attachment_match_score">%1$d%% coincidencia</string>
+    <string name="unified_support_status_bot">Oddie bot</string>
+    <string name="unified_support_bot_typing_content_description">El bot de asistencia está escribiendo</string>
+    <string name="support_screen_unified_support_title">Obtén ayuda</string>
+    <string name="page_rs_copy_url">Copiar URL</string>
+    <string name="page_rs_move_trashed_page_to_draft_dialog_message">Las páginas eliminadas no se pueden editar. ¿Quieres cambiar el estado de esta página a «borrador» para poder trabajar en ella?</string>
+    <string name="page_rs_move_trashed_page_to_draft_dialog_title">¿Mover la página a «Borradores»?</string>
+    <string name="page_rs_confirm_trash_message">¿Seguro que quieres enviar esta página a la papelera de reciclaje?</string>
+    <string name="page_rs_failed_to_load">No se ha podido cargar la página</string>
+    <string name="unified_support_conversations_title">Obtén ayuda</string>
+    <string name="page_not_found">Se ha producido un error al cargar la página. Actualiza la página e inténtalo de nuevo.</string>
     <string name="xmlrpc_disabled_bottom_sheet_body">Algunas funciones de la aplicación necesitan XML-RPC. Actívalo en tu sitio web para solucionar este problema.</string>
     <string name="xmlrpc_disabled_bottom_sheet_title">XML-RPC desactivado</string>
     <string name="xmlrpc_disabled_card_text">XML-RPC desactivado\nEs posible que algunas funciones estén limitadas</string>
@@ -243,6 +256,8 @@ Language: es_CO
     <string name="post_rs_confirm_delete_message">Esto eliminará permanentemente esta entrada. Esta acción no se puede deshacer.</string>
     <string name="post_rs_confirm_trash_message">¿Seguro que quieres enviar a la papelera esta entrada?</string>
     <string name="post_rs_failed_to_load">No se ha podido cargar la entrada</string>
+    <string name="experimental_rs_pages_list_description">Mostrar la lista de páginas con una interfaz de usuario más moderna para WordPress.com y sitios autoalojados con contraseñas de aplicación</string>
+    <string name="experimental_rs_pages_list">Lista de páginas nuevas</string>
     <string name="stats_error_admin_url_unavailable">No se puede abrir WP Admin para este sitio</string>
     <string name="stats_error_parsing">Se ha producido un problema al cargar los datos. Inténtalo de nuevo.</string>
     <string name="stats_error_network">Error de red. Comprueba la conexión e inténtalo de nuevo</string>
@@ -331,6 +346,8 @@ Language: es_CO
     <string name="he_support_empty_conversations_title">Aún no hay conversaciones</string>
     <string name="ai_bot_welcome_message">Soy tu asistente personal de IA. Puedo ayudarte con preguntas sobre tu sitio o tu cuenta.</string>
     <string name="ai_bot_welcome_greeting">¡Hola, %1$s! 👋</string>
+    <string name="unified_support_new_conversation_content_description">Nueva conversación</string>
+    <string name="unified_support_generic_error">Algo ha ido mal. Por favor, inténtalo de nuevo más tarde.</string>
     <string name="create">Crear</string>
     <string name="logs_screen_general_error">Algo ha salido mal…</string>
     <string name="support_screen_user_avatar_content_description">Avatar del usuario</string>
