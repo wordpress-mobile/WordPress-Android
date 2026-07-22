@@ -89,7 +89,7 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
             val urlLogin = applicationPasswordLoginHelper.getSiteUrlLoginFromRawData(rawData)
             currentUrlLogin = urlLogin
             // Store credentials if the site already exists
-            when (storeCredentials(urlLogin)) {
+            when (val storeResult = storeCredentials(urlLogin)) {
                 is StoreCredentialsResult.Success -> {
                     _onFinishedEvent.emit(
                         NavigationActionData(
@@ -102,11 +102,14 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
                 }
                 is StoreCredentialsResult.SiteNotFound -> {
                     waitingForFetchedSite = true
+                    // Use the effective login returned by the helper: it carries any apiRootUrl
+                    // recovered via fallback discovery, which the original urlLogin may still lack.
+                    val effectiveLogin = storeResult.urlLogin
                     fetchSites(
-                        urlLogin.user.orEmpty(),
-                        urlLogin.password.orEmpty(),
-                        urlLogin.siteUrl.orEmpty(),
-                        urlLogin.apiRootUrl.orEmpty()
+                        effectiveLogin.user.orEmpty(),
+                        effectiveLogin.password.orEmpty(),
+                        effectiveLogin.siteUrl.orEmpty(),
+                        effectiveLogin.apiRootUrl.orEmpty()
                     )
                 }
                 is StoreCredentialsResult.BadData -> {
@@ -186,9 +189,12 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
                 applicationPasswordLoginHelper.trackStoringFailed(
                     siteUrl, "empty_fetch_params", creationSource
                 )
+                // User-recoverable data condition (missing callback params), not a bug — the
+                // reason is preserved in analytics + AppLog above, so don't report it to Sentry.
                 emitError(
                     siteUrl = siteUrl,
-                    errorMessage = "empty_fetch_params"
+                    errorMessage = "empty_fetch_params",
+                    reportToSentry = false,
                 )
             } else {
                 discoverAndDispatchFetchSite(
