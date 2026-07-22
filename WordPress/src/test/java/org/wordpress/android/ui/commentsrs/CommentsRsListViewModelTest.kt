@@ -24,11 +24,14 @@ import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.model.CommentStatus.APPROVED
+import org.wordpress.android.fluxc.model.CommentStatus.SPAM
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.comments.unified.CommentsRsDataSource
 import org.wordpress.android.ui.comments.unified.CommentsRsDataSource.RsComment
 import org.wordpress.android.ui.comments.unified.CommentsRsDataSource.RsCommentsPageResult
+import org.wordpress.android.ui.comments.unified.CommentsRsDataSource.RsResult
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
+import org.wordpress.android.ui.mysite.items.listitem.SiteCapabilityChecker
 import org.wordpress.android.util.DateTimeUtilsWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.WPAvatarUtilsWrapper
@@ -41,6 +44,7 @@ import java.util.Date
 class CommentsRsListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
     @Mock lateinit var selectedSiteRepository: SelectedSiteRepository
     @Mock lateinit var commentsRsDataSource: CommentsRsDataSource
+    @Mock lateinit var siteCapabilityChecker: SiteCapabilityChecker
     @Mock lateinit var resourceProvider: ResourceProvider
     @Mock lateinit var networkUtilsWrapper: NetworkUtilsWrapper
     @Mock lateinit var dateTimeUtilsWrapper: DateTimeUtilsWrapper
@@ -57,6 +61,7 @@ class CommentsRsListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
             siteId = 123L
         }
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
+        whenever(siteCapabilityChecker.canModerateComments(site)).thenReturn(true)
         whenever(resourceProvider.getString(any())).thenReturn("string")
         whenever(dateTimeUtilsWrapper.javaDateToTimeSpan(any())).thenReturn("2 hours ago")
         whenever(avatarUtilsWrapper.rewriteAvatarUrlWithResource(any(), any())).thenAnswer { it.arguments[0] }
@@ -73,6 +78,7 @@ class CommentsRsListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
     private fun createViewModel() = CommentsRsListViewModel(
         selectedSiteRepository = selectedSiteRepository,
         commentsRsDataSource = commentsRsDataSource,
+        siteCapabilityChecker = siteCapabilityChecker,
         resourceProvider = resourceProvider,
         networkUtilsWrapper = networkUtilsWrapper,
         dateTimeUtilsWrapper = dateTimeUtilsWrapper,
@@ -494,6 +500,47 @@ class CommentsRsListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
 
         val state = viewModel.tabStates.value.getValue(CommentsRsListTab.ALL)
         assertThat(state.comments.map { it.postTitle }).containsExactly("First post", "Second post")
+    }
+
+    @Test
+    fun `canModerate reflects the capability checker`() = test {
+        val viewModel = createViewModel()
+        advanceUntilIdle()
+
+        assertThat(viewModel.canModerate.value).isTrue()
+    }
+
+    @Test
+    fun `batch moderation applies the new status to the selection when the user can moderate`() = test {
+        whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
+        whenever(commentsRsDataSource.updateStatus(eq(site), any(), any())).thenReturn(RsResult.Success)
+        givenPage(listOf(rsItem(id = 1)), nextPageParams = null)
+        val viewModel = createViewModel()
+        viewModel.initTab(CommentsRsListTab.ALL)
+        advanceUntilIdle()
+
+        viewModel.onCommentLongClick(1)
+        viewModel.onBatchAction(CommentsRsBatchAction.SPAM, CommentsRsListTab.ALL)
+        advanceUntilIdle()
+
+        verify(commentsRsDataSource).updateStatus(site, 1, SPAM)
+    }
+
+    @Test
+    fun `batch moderation is a no-op without the moderate capability`() = test {
+        // No network stub needed: the capability guard short-circuits before the network check.
+        whenever(siteCapabilityChecker.canModerateComments(site)).thenReturn(false)
+        givenPage(listOf(rsItem(id = 1)), nextPageParams = null)
+        val viewModel = createViewModel()
+        viewModel.initTab(CommentsRsListTab.ALL)
+        advanceUntilIdle()
+
+        viewModel.onCommentLongClick(1)
+        viewModel.onBatchAction(CommentsRsBatchAction.SPAM, CommentsRsListTab.ALL)
+        advanceUntilIdle()
+
+        assertThat(viewModel.canModerate.value).isFalse()
+        verify(commentsRsDataSource, never()).updateStatus(eq(site), any(), any())
     }
 
     private fun rsItem(id: Long, postId: Long = 99L) = RsComment(

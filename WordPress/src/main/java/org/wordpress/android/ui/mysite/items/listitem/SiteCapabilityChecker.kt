@@ -6,41 +6,52 @@ import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.util.AppLog
 import rs.wordpress.api.kotlin.WpRequestResult
 import uniffi.wp_api.UserCapability
+import java.util.concurrent.ConcurrentHashMap
 import javax.inject.Inject
 import javax.inject.Singleton
 
 /**
  * Checks user capabilities for a site using the WordPress REST API via wordpress-rs.
- * Results are cached per site to avoid redundant network requests. For now we only
- * handle the edit_theme_options capability but this can be expanded later.
+ * Results are cached per site to avoid redundant network requests. The full set of the
+ * current user's capabilities is fetched once and the flags we care about are cached
+ * together, so screens needing more than one capability don't trigger extra requests.
  */
 @Singleton
 class SiteCapabilityChecker @Inject constructor(
     private val wpApiClientProvider: WpApiClientProvider,
     private val appLogWrapper: AppLogWrapper
 ) {
-    private val capabilityCache = mutableMapOf<Long, CapabilityCache>()
+    // Keyed by the local site id (site.id), not site.siteId: the latter (the WP.com blog id) is 0
+    // for every self-hosted application-password site, which would collide their capabilities.
+    // Concurrent because it's a @Singleton read/written from multiple screens' ViewModels on the
+    // multi-threaded default dispatcher.
+    private val capabilityCache = ConcurrentHashMap<Int, CapabilityCache>()
 
     /**
      * Checks if the current user has the edit_theme_options capability for the given site.
-     * Results are cached per site ID.
+     * Results are cached per site.
      */
-    suspend fun hasEditThemeOptionsCapability(site: SiteModel): Boolean {
-        val siteId = site.siteId
+    suspend fun hasEditThemeOptionsCapability(site: SiteModel): Boolean =
+        capabilities(site).hasEditThemeOptions
 
-        // Return cached value if available
-        capabilityCache[siteId]?.let { cache ->
-            return cache.hasEditThemeOptions
-        }
+    /**
+     * Checks if the current user has the moderate_comments capability for the given site — i.e.
+     * whether they may approve/unapprove, spam, trash, delete or edit comments. Results are
+     * cached per site.
+     */
+    suspend fun canModerateComments(site: SiteModel): Boolean =
+        capabilities(site).canModerateComments
 
-        // Fetch from API and cache
-        val hasCapability = fetchEditThemeOptionsCapability(site)
-        capabilityCache[siteId] = CapabilityCache(hasEditThemeOptions = hasCapability)
-        return hasCapability
+    private suspend fun capabilities(site: SiteModel): CapabilityCache {
+        capabilityCache[site.id]?.let { return it }
+        // Only a successful fetch is cached. On failure fall back to a fail-closed value for this
+        // call but don't cache it, so a transient error doesn't disable the capability for the
+        // whole session — the next call retries (the comments screens never clear this cache).
+        return fetchCapabilities(site)?.also { capabilityCache[site.id] = it } ?: CapabilityCache()
     }
 
     @Suppress("TooGenericExceptionCaught")
-    private suspend fun fetchEditThemeOptionsCapability(site: SiteModel): Boolean {
+    private suspend fun fetchCapabilities(site: SiteModel): CapabilityCache? {
         return try {
             val client = wpApiClientProvider.getWpApiClient(site)
             val response = client.request { requestBuilder ->
@@ -48,25 +59,31 @@ class SiteCapabilityChecker @Inject constructor(
             }
             when (response) {
                 is WpRequestResult.Success -> {
-                    response.response.data.capabilities
-                        .hasCap(UserCapability.EditThemeOptions)
+                    val capabilities = response.response.data.capabilities
+                    CapabilityCache(
+                        hasEditThemeOptions = capabilities.hasCap(UserCapability.EditThemeOptions),
+                        canModerateComments = capabilities.hasCap(UserCapability.ModerateComments)
+                    )
                 }
-                else -> false
+                // Return null (not cached) so the next call retries rather than locking in a
+                // fail-closed result from a transient error.
+                else -> null
             }
         } catch (e: Exception) {
-            appLogWrapper.e(AppLog.T.API, "Failed to fetch edit_theme_options capability: ${e.message}")
-            false
+            appLogWrapper.e(AppLog.T.API, "Failed to fetch user capabilities: ${e.message}")
+            null
         }
     }
 
     /**
      * Clears the cached capabilities for a specific site.
      */
-    fun clearCacheForSite(siteId: Long) {
-        capabilityCache.remove(siteId)
+    fun clearCacheForSite(site: SiteModel) {
+        capabilityCache.remove(site.id)
     }
 
     private data class CapabilityCache(
-        val hasEditThemeOptions: Boolean
+        val hasEditThemeOptions: Boolean = false,
+        val canModerateComments: Boolean = false
     )
 }

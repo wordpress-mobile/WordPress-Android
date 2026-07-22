@@ -125,13 +125,17 @@ internal fun CommentsRsListTab.batchActions(): List<CommentsRsBatchAction> = whe
 }
 
 /**
- * Whether [this] action can act on a selection whose comments have [selectedStatuses]. Approve and
- * unapprove are disabled when they would be a no-op — nothing unapproved to approve, or nothing
- * approved to unapprove; every other action is always enabled.
+ * Whether [this] action can act on a selection whose comments have [selectedStatuses]. Every batch
+ * action requires [canModerate] (the moderate_comments capability) — without it they stay visible
+ * but disabled, mirroring the detail screen's footer. Approve and unapprove are additionally
+ * disabled when they would be a no-op — nothing unapproved to approve, or nothing approved to
+ * unapprove; every other action is enabled whenever the user can moderate.
  */
-internal fun CommentsRsBatchAction.isEnabledFor(selectedStatuses: Set<CommentStatus>): Boolean =
-    when (this) {
-        CommentsRsBatchAction.APPROVE -> CommentStatus.UNAPPROVED in selectedStatuses
-        CommentsRsBatchAction.UNAPPROVE -> CommentStatus.APPROVED in selectedStatuses
-        else -> true
-    }
+internal fun CommentsRsBatchAction.isEnabledFor(
+    selectedStatuses: Set<CommentStatus>,
+    canModerate: Boolean
+): Boolean = canModerate && when (this) {
+    CommentsRsBatchAction.APPROVE -> CommentStatus.UNAPPROVED in selectedStatuses
+    CommentsRsBatchAction.UNAPPROVE -> CommentStatus.APPROVED in selectedStatuses
+    else -> true
+}

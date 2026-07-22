@@ -753,9 +753,10 @@ public class ActivityLauncher {
      * be used for {@code site} instead of the legacy (FluxC) ones.
      */
     public static boolean shouldUseRsComments(@NonNull Context context, @NonNull SiteModel site) {
-        // The rs client can only authenticate WP.com-accessed sites or self-hosted sites with an
-        // application password; everywhere else keep the legacy (FluxC) comments screens.
-        if (!site.isUsingWpComRestApi() && !site.hasApplicationPassword()) {
+        // Match the RS posts/pages gate: use the rs comments screens only for self-hosted sites
+        // with an application password, and keep the legacy (FluxC) comments screens everywhere
+        // else (including WP.com-accessed sites).
+        if (!site.hasApplicationPassword()) {
             return false;
         }
         ActivityLauncherEntryPoint entryPoint = EntryPointAccessors.fromApplication(

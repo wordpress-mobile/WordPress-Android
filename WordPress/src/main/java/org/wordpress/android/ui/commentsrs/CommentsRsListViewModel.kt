@@ -35,6 +35,7 @@ import org.wordpress.android.ui.comments.unified.CommentsRsDataSource.RsComment
 import org.wordpress.android.ui.comments.unified.CommentsRsDataSource.RsCommentsPageResult
 import org.wordpress.android.ui.comments.unified.CommentsRsDataSource.RsResult
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
+import org.wordpress.android.ui.mysite.items.listitem.SiteCapabilityChecker
 import org.wordpress.android.ui.postsrs.PostRsErrorUtils
 import org.wordpress.android.ui.postsrs.SnackbarMessage
 import org.wordpress.android.util.DateTimeUtilsWrapper
@@ -56,6 +57,7 @@ import javax.inject.Named
 class CommentsRsListViewModel @Inject constructor(
     selectedSiteRepository: SelectedSiteRepository,
     private val commentsRsDataSource: CommentsRsDataSource,
+    private val siteCapabilityChecker: SiteCapabilityChecker,
     private val resourceProvider: ResourceProvider,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     private val dateTimeUtilsWrapper: DateTimeUtilsWrapper,
@@ -95,6 +97,12 @@ class CommentsRsListViewModel @Inject constructor(
     private val _pendingConfirmation = MutableStateFlow<PendingConfirmation?>(null)
     val pendingConfirmation: StateFlow<PendingConfirmation?> = _pendingConfirmation.asStateFlow()
 
+    // Whether the current user may moderate comments on this site (moderate_comments capability).
+    // Fetched once on init; false until it resolves so the batch actions start disabled and enable
+    // once confirmed, rather than briefly offering actions the server would reject.
+    private val _canModerate = MutableStateFlow(false)
+    val canModerate: StateFlow<Boolean> = _canModerate.asStateFlow()
+
     // Pagination cursors: the next-page params returned with each fetched page, per tab.
     private val nextPageParams = mutableMapOf<CommentsRsListTab, CommentListParams?>()
 
@@ -133,6 +141,9 @@ class CommentsRsListViewModel @Inject constructor(
             _events.trySend(CommentsRsListEvent.ShowToast(R.string.blog_not_found))
             _events.trySend(CommentsRsListEvent.Finish)
         } else {
+            viewModelScope.launch {
+                _canModerate.value = withContext(bgDispatcher) { siteCapabilityChecker.canModerateComments(site) }
+            }
             @OptIn(FlowPreview::class)
             viewModelScope.launch {
                 _searchQuery
@@ -391,6 +402,9 @@ class CommentsRsListViewModel @Inject constructor(
      * tabs (moderated comments move between tabs). Failures are aggregated into one snackbar.
      */
     private fun performBatchModeration(ids: List<Long>, newStatus: CommentStatus, tab: CommentsRsListTab) {
+        // Batch actions are disabled without moderation rights; guard here too so nothing can reach
+        // the server with a request it would only reject with a 403.
+        if (!_canModerate.value) return
         if (!checkNetwork()) return
         trackBatchModeration(newStatus)
         onClearSelection()
