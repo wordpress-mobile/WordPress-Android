@@ -53,6 +53,7 @@ class CommentsRsListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
     @Mock lateinit var analyticsTracker: AnalyticsTrackerWrapper
 
     private lateinit var site: SiteModel
+    private lateinit var commentBrowsingSession: CommentBrowsingSession
     private var activeViewModel: CommentsRsListViewModel? = null
 
     @Before
@@ -68,6 +69,7 @@ class CommentsRsListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
         whenever(avatarUtilsWrapper.rewriteAvatarUrlWithResource(any(), any())).thenAnswer { it.arguments[0] }
         whenever(commentsRsDataSource.firstPageParams(any(), anyOrNull())).thenReturn(FIRST_PAGE)
         whenever(commentsRsDataSource.fetchPostTitles(any(), any())).thenReturn(emptyMap())
+        commentBrowsingSession = CommentBrowsingSession(commentsRsDataSource)
     }
 
     @After
@@ -85,7 +87,7 @@ class CommentsRsListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
         dateTimeUtilsWrapper = dateTimeUtilsWrapper,
         avatarUtilsWrapper = avatarUtilsWrapper,
         analyticsTracker = analyticsTracker,
-        commentBrowsingSession = CommentBrowsingSession(commentsRsDataSource),
+        commentBrowsingSession = commentBrowsingSession,
         bgDispatcher = testDispatcher()
     ).also { activeViewModel = it }
 
@@ -577,6 +579,41 @@ class CommentsRsListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
         val params = argumentCaptor<CommentListParams>()
         verify(commentsRsDataSource).fetchCommentsPage(eq(site), params.capture())
         assertThat(params.firstValue.perPage).isEqualTo(100u)
+    }
+
+    @Test
+    fun `unreplied tab pages past a first page that filters to nothing`() = test {
+        whenever(siteCapabilityChecker.currentUserId(site)).thenReturn(ME)
+        // Page 1 is 100 raw comments that all thread away (here: authored by me), but a next page
+        // exists; page 2 carries the actual unreplied comment. Without auto-advancing, the tab
+        // would sit on a false empty state and never reach it.
+        whenever(commentsRsDataSource.fetchCommentsPage(eq(site), any())).thenReturn(
+            RsCommentsPageResult.Success(listOf(rsItem(id = 1, authorId = ME)), NEXT_PAGE),
+            RsCommentsPageResult.Success(listOf(rsItem(id = 2, authorId = OTHER)), null)
+        )
+        val viewModel = createViewModel()
+
+        viewModel.initTab(CommentsRsListTab.UNREPLIED)
+        advanceUntilIdle()
+
+        val state = viewModel.tabStates.value.getValue(CommentsRsListTab.UNREPLIED)
+        assertThat(state.comments.map { it.remoteCommentId }).containsExactly(2L)
+    }
+
+    @Test
+    fun `tapping an unreplied comment seeds the swipe session without a paging cursor`() = test {
+        whenever(siteCapabilityChecker.currentUserId(site)).thenReturn(ME)
+        givenPage(listOf(rsItem(id = 1, authorId = OTHER)), nextPageParams = NEXT_PAGE)
+        val viewModel = createViewModel()
+        viewModel.onTabChanged(CommentsRsListTab.UNREPLIED)
+        viewModel.initTab(CommentsRsListTab.UNREPLIED)
+        advanceUntilIdle()
+
+        viewModel.onCommentClick(1L)
+
+        // A cursor would let the detail pager page the raw stream into the replied-to and own
+        // comments the tab filters out; Unreplied must seed only the visible ids.
+        assertThat(commentBrowsingSession.canLoadMore).isFalse()
     }
 
     private fun rsItem(id: Long, postId: Long = 99L, authorId: Long = 0L, parentId: Long = 0L) = RsComment(

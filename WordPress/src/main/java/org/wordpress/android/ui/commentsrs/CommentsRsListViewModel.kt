@@ -365,7 +365,11 @@ class CommentsRsListViewModel @Inject constructor(
             // it can swipe between them and keep loading more (the cursor can't cross an Intent).
             val tab = currentTab ?: CommentsRsListTab.ALL
             val ids = _tabStates.value[tab]?.comments?.map { it.remoteCommentId } ?: listOf(remoteCommentId)
-            commentBrowsingSession.start(site, ids, nextPageParams[tab])
+            // Unreplied's rows are a client-side-threaded subset of the raw stream; the session
+            // pages the raw stream, so handing it the cursor would let the pager swipe into the
+            // replied-to and own comments the tab hides. Seed only the visible ids, no cursor.
+            val cursor = if (tab == CommentsRsListTab.UNREPLIED) null else nextPageParams[tab]
+            commentBrowsingSession.start(site, ids, cursor)
             _events.trySend(CommentsRsListEvent.OpenCommentDetail(site, remoteCommentId))
         }
     }
@@ -517,7 +521,10 @@ class CommentsRsListViewModel @Inject constructor(
             val params = if (tab == CommentsRsListTab.UNREPLIED) base.copy(perPage = UNREPLIED_PAGE_SIZE) else base
             val result = withContext(bgDispatcher) { commentsRsDataSource.fetchCommentsPage(site, params) }
             when (result) {
-                is RsCommentsPageResult.Success -> applyPage(tab, result, append = false)
+                is RsCommentsPageResult.Success -> {
+                    applyPage(tab, result, append = false)
+                    advanceIfFilteredEmpty(tab)
+                }
                 is RsCommentsPageResult.Error -> onFirstPageError(tab, result.message, showErrorSnackbar)
             }
         }
@@ -562,15 +569,42 @@ class CommentsRsListViewModel @Inject constructor(
      * comments as-is.
      */
     private fun displayRows(tab: CommentsRsListTab, raw: List<RsComment>): List<CommentRsUiModel> {
+        // Rows are rebuilt from title-less RsComments, so carry over any post titles already
+        // resolved for the tab (keyed by post — a title is the same for every comment on a post).
+        // Without this, each rebuild (load-more, re-thread) would blank titles until resolvePostTitles
+        // re-fetches them, and re-thread — which never re-resolves — would lose them for good.
+        val knownTitles = getTabUiState(tab).comments
+            .filter { it.postTitle != null }
+            .associate { it.postId to it.postTitle }
         val visible = if (tab == CommentsRsListTab.UNREPLIED) filterUnreplied(raw, currentUserId) else raw
-        return visible.map { it.toUiModel() }
+        return visible.map { it.toUiModel().copy(postTitle = knownTitles[it.postId]) }
     }
 
     /** Re-derives the Unreplied tab's rows from its raw comments (e.g. once [currentUserId] resolves). */
     private fun rethreadUnreplied() {
         val tab = CommentsRsListTab.UNREPLIED
         val raw = rawComments[tab] ?: return
-        updateTabUiState(tab) { copy(comments = displayRows(tab, raw)) }
+        val rows = displayRows(tab, raw)
+        updateTabUiState(tab) { copy(comments = rows) }
+        // Re-threading can drop rows that were over-reported while currentUserId was still null;
+        // clear any selection for comments no longer shown so an off-screen id can't intercept
+        // back presses or target a batch action (the same hazard refreshTab guards against).
+        val visibleIds = rows.mapTo(mutableSetOf()) { it.remoteCommentId }
+        _selectedIds.update { it intersect visibleIds }
+        // Re-threading with the now-known id can empty a page that previously over-reported, so
+        // keep paging rather than stranding matches behind a false empty state.
+        advanceIfFilteredEmpty(tab)
+    }
+
+    /**
+     * Keeps paging while a filtered tab (Unreplied) shows no rows but the raw stream has more:
+     * a full page can thread away to nothing, and the list's load-more trigger only fires once
+     * rows are on screen. Bounded by the same auto-advance cap as load-more.
+     */
+    private fun advanceIfFilteredEmpty(tab: CommentsRsListTab) {
+        if (getTabUiState(tab).comments.isEmpty() && nextPageParams[tab] != null) {
+            loadMoreInternal(tab, autoAdvanceDepth = 0)
+        }
     }
 
     /**
