@@ -103,6 +103,16 @@ class CommentsRsListViewModel @Inject constructor(
     private val _canModerate = MutableStateFlow(false)
     val canModerate: StateFlow<Boolean> = _canModerate.asStateFlow()
 
+    // The current user's WP user id, resolved once on init (from the same "me" fetch as
+    // canModerate); null until then, or if it couldn't be fetched. Used only to tell the user's
+    // own replies apart when threading the Unreplied tab. Read and written only on the main thread.
+    private var currentUserId: Long? = null
+
+    // Raw comments fetched per tab, accumulated across pages. The Unreplied tab derives its
+    // displayed rows from this via client-side threading, so a reply and the parent it answers can
+    // arrive on different pages and still be matched.
+    private val rawComments = mutableMapOf<CommentsRsListTab, List<RsComment>>()
+
     // Pagination cursors: the next-page params returned with each fetched page, per tab.
     private val nextPageParams = mutableMapOf<CommentsRsListTab, CommentListParams?>()
 
@@ -142,7 +152,12 @@ class CommentsRsListViewModel @Inject constructor(
             _events.trySend(CommentsRsListEvent.Finish)
         } else {
             viewModelScope.launch {
+                // Both values come from the same cached "me" fetch inside SiteCapabilityChecker.
                 _canModerate.value = withContext(bgDispatcher) { siteCapabilityChecker.canModerateComments(site) }
+                currentUserId = withContext(bgDispatcher) { siteCapabilityChecker.currentUserId(site) }
+                // If the Unreplied tab loaded before the id resolved, re-thread it now that the
+                // user's own replies can be identified.
+                rethreadUnreplied()
             }
             @OptIn(FlowPreview::class)
             viewModelScope.launch {
@@ -220,6 +235,7 @@ class CommentsRsListViewModel @Inject constructor(
         loadMoreJobs.clear()
         resolveTitleJobs.values.forEach { it.cancel() }
         resolveTitleJobs.clear()
+        rawComments.clear()
         nextPageParams.clear()
         pageGenerations.clear()
         _tabStates.value = emptyMap()
@@ -495,7 +511,11 @@ class CommentsRsListViewModel @Inject constructor(
             val params = commentsRsDataSource.firstPageParams(
                 status = tab.queryStatus,
                 search = _searchQuery.value.trim().ifBlank { null }
-            )
+            ).let {
+                // Unreplied over-fetches (like the legacy list) since client-side threading discards
+                // most of each page, so a single page still yields visible rows.
+                if (tab == CommentsRsListTab.UNREPLIED) it.copy(perPage = UNREPLIED_PAGE_SIZE) else it
+            }
             val result = withContext(bgDispatcher) { commentsRsDataSource.fetchCommentsPage(site, params) }
             when (result) {
                 is RsCommentsPageResult.Success -> applyPage(tab, result, append = false)
@@ -512,12 +532,18 @@ class CommentsRsListViewModel @Inject constructor(
     private fun applyPage(tab: CommentsRsListTab, result: RsCommentsPageResult.Success, append: Boolean) {
         if (!append) pageGenerations[tab] = (pageGenerations[tab] ?: 0) + 1
         nextPageParams[tab] = result.nextPageParams
-        val newRows = result.comments.map { it.toUiModel() }
+        // A comment can shift pages if the list changed server-side between requests, so dedupe
+        // the accumulated raw set on append. Displayed rows are always derived from this raw set,
+        // which lets Unreplied thread a reply against a parent fetched on an earlier page.
+        val raw = if (append) {
+            (rawComments[tab].orEmpty() + result.comments).distinctBy { it.remoteCommentId }
+        } else {
+            result.comments
+        }
+        rawComments[tab] = raw
         updateTabUiState(tab) {
             copy(
-                // A comment can shift pages if the list changed server-side between requests,
-                // so dedupe on append.
-                comments = if (append) (comments + newRows).distinctBy { it.remoteCommentId } else newRows,
+                comments = displayRows(tab, raw),
                 isLoading = false,
                 isRefreshing = false,
                 // A replacing page must clear isLoadingMore too: a load-more in flight when the
@@ -529,6 +555,23 @@ class CommentsRsListViewModel @Inject constructor(
             )
         }
         resolvePostTitles(tab)
+    }
+
+    /**
+     * Maps a tab's accumulated raw comments to displayed rows. The Unreplied tab is threaded
+     * client-side to only the comments the user hasn't replied to; every other tab shows its
+     * comments as-is.
+     */
+    private fun displayRows(tab: CommentsRsListTab, raw: List<RsComment>): List<CommentRsUiModel> {
+        val visible = if (tab == CommentsRsListTab.UNREPLIED) filterUnreplied(raw, currentUserId) else raw
+        return visible.map { it.toUiModel() }
+    }
+
+    /** Re-derives the Unreplied tab's rows from its raw comments (e.g. once [currentUserId] resolves). */
+    private fun rethreadUnreplied() {
+        val tab = CommentsRsListTab.UNREPLIED
+        val raw = rawComments[tab] ?: return
+        updateTabUiState(tab) { copy(comments = displayRows(tab, raw)) }
     }
 
     /**
@@ -610,5 +653,9 @@ class CommentsRsListViewModel @Inject constructor(
 
         private const val SEARCH_DEBOUNCE_MS = 250L
         private const val MIN_SEARCH_QUERY_LENGTH = 3
+
+        // Larger page for the Unreplied tab (matching the legacy list) to offset the rows that
+        // client-side threading filters out.
+        private const val UNREPLIED_PAGE_SIZE = 100u
     }
 }

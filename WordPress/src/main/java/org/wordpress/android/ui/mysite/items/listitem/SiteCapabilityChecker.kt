@@ -42,6 +42,14 @@ class SiteCapabilityChecker @Inject constructor(
     suspend fun canModerateComments(site: SiteModel): Boolean =
         capabilities(site).canModerateComments
 
+    /**
+     * The current user's WP user id for the given site, or null if it couldn't be resolved. Read
+     * from the same "me" fetch as the capabilities above (no extra request). The rs comments list
+     * uses it to tell the user's own replies apart when computing the Unreplied filter.
+     */
+    suspend fun currentUserId(site: SiteModel): Long? =
+        capabilities(site).currentUserId
+
     private suspend fun capabilities(site: SiteModel): CapabilityCache {
         capabilityCache[site.id]?.let { return it }
         // Only a successful fetch is cached. On failure fall back to a fail-closed value for this
@@ -59,10 +67,11 @@ class SiteCapabilityChecker @Inject constructor(
             }
             when (response) {
                 is WpRequestResult.Success -> {
-                    val capabilities = response.response.data.capabilities
+                    val user = response.response.data
                     CapabilityCache(
-                        hasEditThemeOptions = capabilities.hasCap(UserCapability.EditThemeOptions),
-                        canModerateComments = capabilities.hasCap(UserCapability.ModerateComments)
+                        hasEditThemeOptions = user.capabilities.hasCap(UserCapability.EditThemeOptions),
+                        canModerateComments = user.capabilities.hasCap(UserCapability.ModerateComments),
+                        currentUserId = user.id
                     )
                 }
                 // Return null (not cached) so the next call retries rather than locking in a
@@ -84,6 +93,7 @@ class SiteCapabilityChecker @Inject constructor(
 
     private data class CapabilityCache(
         val hasEditThemeOptions: Boolean = false,
-        val canModerateComments: Boolean = false
+        val canModerateComments: Boolean = false,
+        val currentUserId: Long? = null
     )
 }

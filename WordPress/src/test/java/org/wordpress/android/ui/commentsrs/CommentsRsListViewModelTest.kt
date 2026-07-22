@@ -14,6 +14,7 @@ import org.junit.Test
 import org.mockito.Mock
 import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
+import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.doSuspendableAnswer
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.never
@@ -543,8 +544,45 @@ class CommentsRsListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
         verify(commentsRsDataSource, never()).updateStatus(eq(site), any(), any())
     }
 
-    private fun rsItem(id: Long, postId: Long = 99L) = RsComment(
+    @Test
+    fun `unreplied tab shows only top-level comments the current user has not replied to`() = test {
+        whenever(siteCapabilityChecker.currentUserId(site)).thenReturn(ME)
+        // id=1 top-level by someone else, answered by me (id=2) -> dropped.
+        // id=2 is my reply -> never a candidate. id=3 top-level by someone else, unanswered -> kept.
+        givenPage(
+            listOf(
+                rsItem(id = 1, authorId = OTHER),
+                rsItem(id = 2, authorId = ME, parentId = 1),
+                rsItem(id = 3, authorId = OTHER)
+            )
+        )
+        val viewModel = createViewModel()
+
+        viewModel.initTab(CommentsRsListTab.UNREPLIED)
+        advanceUntilIdle()
+
+        val state = viewModel.tabStates.value.getValue(CommentsRsListTab.UNREPLIED)
+        assertThat(state.comments.map { it.remoteCommentId }).containsExactly(3L)
+    }
+
+    @Test
+    fun `unreplied tab over-fetches a larger page`() = test {
+        whenever(siteCapabilityChecker.currentUserId(site)).thenReturn(ME)
+        givenPage(emptyList())
+        val viewModel = createViewModel()
+
+        viewModel.initTab(CommentsRsListTab.UNREPLIED)
+        advanceUntilIdle()
+
+        val params = argumentCaptor<CommentListParams>()
+        verify(commentsRsDataSource).fetchCommentsPage(eq(site), params.capture())
+        assertThat(params.firstValue.perPage).isEqualTo(100u)
+    }
+
+    private fun rsItem(id: Long, postId: Long = 99L, authorId: Long = 0L, parentId: Long = 0L) = RsComment(
         remoteCommentId = id,
+        authorId = authorId,
+        parentId = parentId,
         authorName = "Jane",
         authorAvatarUrl = "https://example.com/avatar.png",
         dateGmt = Date(0),
@@ -555,6 +593,8 @@ class CommentsRsListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
     )
 
     companion object {
+        private const val ME = 7L
+        private const val OTHER = 42L
         private val FIRST_PAGE = CommentListParams()
         private val NEXT_PAGE = CommentListParams(page = 2u)
         private val THIRD_PAGE = CommentListParams(page = 3u)

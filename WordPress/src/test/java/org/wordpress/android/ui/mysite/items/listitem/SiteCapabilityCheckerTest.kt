@@ -55,6 +55,13 @@ class SiteCapabilityCheckerTest : BaseUnitTest() {
     }
 
     @Test
+    fun `currentUserId is null when the me fetch fails`() = test {
+        whenever(wpApiClientProvider.getWpApiClient(site)).thenThrow(RuntimeException("boom"))
+
+        assertThat(checker.currentUserId(site)).isNull()
+    }
+
+    @Test
     fun `a failed fetch is not cached and is retried on the next call`() = test {
         whenever(wpApiClientProvider.getWpApiClient(site)).thenThrow(RuntimeException("boom"))
 
