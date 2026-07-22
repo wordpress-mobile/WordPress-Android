@@ -687,7 +687,7 @@ public class ActivityLauncher {
     }
 
     public static void viewCurrentBlogPages(@NonNull Context context, @NonNull SiteModel site) {
-        if (shouldUseNewPagesList(context, site)) {
+        if (shouldUseNewPagesList(site)) {
             context.startActivity(PagesRsListActivity.Companion.createIntent(context));
             AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_PAGES, site);
             return;
@@ -698,15 +698,8 @@ public class ActivityLauncher {
         AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_PAGES, site);
     }
 
-    private static boolean shouldUseNewPagesList(@NonNull Context context, @NonNull SiteModel site) {
-        if (!site.hasApplicationPassword()) {
-            return false;
-        }
-        ActivityLauncherEntryPoint entryPoint = EntryPointAccessors.fromApplication(
-                context.getApplicationContext(),
-                ActivityLauncherEntryPoint.class
-        );
-        return entryPoint.experimentalFeatures().isEnabled(Feature.RS_PAGES_LIST);
+    private static boolean shouldUseNewPagesList(@Nullable SiteModel site) {
+        return site != null && site.hasApplicationPassword();
     }
 
     public static void viewPostTypes(@NonNull Context context, @NonNull SiteModel site) {
