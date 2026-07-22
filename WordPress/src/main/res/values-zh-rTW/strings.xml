@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2026-06-25 21:59:17+0000
+Translation-Revision-Date: 2026-07-16 22:57:30+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.3
 Language: zh_TW
@@ -54,6 +54,7 @@ Language: zh_TW
     <string name="stats_utm_source">來源</string>
     <string name="stats_utm_campaign_source_medium">行銷活動/來源/媒介</string>
     <string name="stats_utm_source_medium">來源/媒介</string>
+    <string name="stats_utm_title">UTM</string>
     <string name="stats_error_not_authenticated">未驗證</string>
     <string name="stats_collapse_group">收合</string>
     <string name="stats_expand_group">展開</string>
