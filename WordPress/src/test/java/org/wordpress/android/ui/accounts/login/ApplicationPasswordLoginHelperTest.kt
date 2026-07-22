@@ -185,6 +185,25 @@ class ApplicationPasswordLoginHelperTest : BaseUnitTest() {
     }
 
     @Test
+    fun `storeApplicationPasswordCredentialsFrom returns SiteNotFound carrying the recovered apiRootUrl`() = runTest {
+        // Given — apiRootUrl is missing and recovered via discovery, but the site is not found
+        // locally. The recovered value must be carried on SiteNotFound so the caller can fetch.
+        val autoDiscoveryAttemptSuccess = AutoDiscoveryAttemptSuccess(
+            mock(), mock(), mock(), DiscoveredAuthenticationMechanism.ApplicationPasswords(mock())
+        )
+        val apiDiscoveryResult = ApiDiscoveryResult.Success(autoDiscoveryAttemptSuccess)
+        whenever(wpLoginClient.apiDiscovery(any())).thenReturn(apiDiscoveryResult)
+        whenever(discoverSuccessWrapper.getApiRootUrl(eq(apiDiscoveryResult))).thenReturn(TEST_API_ROOT_URL)
+        whenever(siteStore.sites).thenReturn(listOf())
+
+        val loginWithoutApiRoot = UriLogin(TEST_URL, TEST_USER, TEST_PASSWORD, null)
+        val result = applicationPasswordLoginHelper.storeApplicationPasswordCredentialsFrom(loginWithoutApiRoot)
+
+        assertIs<StoreCredentialsResult.SiteNotFound>(result)
+        assertEquals(TEST_API_ROOT_URL, result.urlLogin.apiRootUrl)
+    }
+
+    @Test
     fun `storeApplicationPasswordCredentialsFrom does not run discovery when apiRootUrl is present`() = runTest {
         val siteModel = SiteModel().apply { url = TEST_URL }
         whenever(siteStore.sites).thenReturn(listOf(siteModel))
