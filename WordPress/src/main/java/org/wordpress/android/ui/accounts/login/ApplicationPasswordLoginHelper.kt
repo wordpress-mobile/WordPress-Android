@@ -102,7 +102,9 @@ class ApplicationPasswordLoginHelper @Inject constructor(
 
     sealed class StoreCredentialsResult {
         object Success : StoreCredentialsResult()
-        object SiteNotFound : StoreCredentialsResult()
+        // Carries the effective login (with any recovered apiRootUrl) so the caller can fetch
+        // the site with valid params instead of the original, possibly-incomplete, urlLogin.
+        data class SiteNotFound(val urlLogin: UriLogin) : StoreCredentialsResult()
         object BadData : StoreCredentialsResult()
     }
 
@@ -156,7 +158,7 @@ class ApplicationPasswordLoginHelper @Inject constructor(
                 StoreCredentialsResult.Success
             } else {
                 logSiteNotFound(effectiveUrlLogin.siteUrl, normalizedUrl, sites)
-                StoreCredentialsResult.SiteNotFound
+                StoreCredentialsResult.SiteNotFound(effectiveUrlLogin)
             }
         }
     }
