@@ -253,7 +253,7 @@ class MediaPickerViewModel @Inject constructor(
                     clickAction = clickAction
                 )
                 AUDIO, DOCUMENT -> MediaPickerUiItem.FileItem(
-                    fileName = it.name ?: "",
+                    fileName = it.name ?: resourceProvider.getString(R.string.unknown),
                     fileExtension = fileExtension,
                     identifier = it.identifier,
                     isSelected = isSelected,
