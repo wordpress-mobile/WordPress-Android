@@ -69,8 +69,7 @@ class NetworkConnectionMonitor @Inject constructor() {
      */
     private fun hasActiveConnection(): Boolean {
         val manager = connectivityManager ?: return false
-        val activeNetwork = manager.activeNetwork ?: return false
-        val capabilities = manager.getNetworkCapabilities(activeNetwork) ?: return false
-        return capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+        val capabilities = manager.activeNetwork?.let { manager.getNetworkCapabilities(it) }
+        return capabilities?.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) == true
     }
 }
