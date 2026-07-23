@@ -20,6 +20,8 @@ class CommentsRsListMappingTest {
         val item = rsComment().toRsComment()
 
         assertThat(item.remoteCommentId).isEqualTo(COMMENT_ID)
+        assertThat(item.authorId).isEqualTo(7L)
+        assertThat(item.parentId).isEqualTo(0L)
         assertThat(item.authorName).isEqualTo("Jane")
         assertThat(item.authorAvatarUrl).isEqualTo("https://example.com/avatar96.png")
         assertThat(item.dateGmt).isEqualTo(DATE_GMT)
@@ -27,6 +29,11 @@ class CommentsRsListMappingTest {
         assertThat(item.url).isEqualTo("https://example.com/post/#comment-42")
         assertThat(item.postId).isEqualTo(POST_ID)
         assertThat(item.status).isEqualTo(APPROVED)
+    }
+
+    @Test
+    fun `toRsComment carries the parent id used for Unreplied threading`() {
+        assertThat(rsComment(parent = 42L).toRsComment().parentId).isEqualTo(42L)
     }
 
     @Test
@@ -73,6 +80,7 @@ class CommentsRsListMappingTest {
 
     private fun rsComment(
         status: RsCommentStatus = RsCommentStatus.Approved,
+        parent: Long = 0L,
         avatarUrls: Map<UserAvatarSize, String> = mapOf(
             UserAvatarSize.Size96 to "https://example.com/avatar96.png"
         )
@@ -85,7 +93,7 @@ class CommentsRsListMappingTest {
         date = "2026-07-01T12:00:00",
         dateGmt = DATE_GMT,
         link = "https://example.com/post/#comment-42",
-        parent = 0L,
+        parent = parent,
         post = POST_ID,
         status = status,
         commentType = CommentType.Comment,

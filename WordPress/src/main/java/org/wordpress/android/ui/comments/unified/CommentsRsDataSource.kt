@@ -51,6 +51,11 @@ class CommentsRsDataSource @Inject constructor(
     /** A comment mapped from [CommentWithViewContext], shared by the detail and list screens. */
     data class RsComment(
         val remoteCommentId: Long,
+        // The commenter's WP user id (0 when anonymous), and the parent comment id (0 when
+        // top-level). Both feed the Unreplied tab's client-side threading — the view context has
+        // no author email, so "is this reply mine?" is a user-id comparison.
+        val authorId: Long = 0,
+        val parentId: Long = 0,
         val authorName: String,
         val authorAvatarUrl: String,
         val dateGmt: Date,
@@ -320,6 +325,8 @@ class CommentsRsDataSource @Inject constructor(
 
 internal fun CommentWithViewContext.toRsComment() = CommentsRsDataSource.RsComment(
     remoteCommentId = id,
+    authorId = author,
+    parentId = parent,
     authorName = authorName,
     authorAvatarUrl = pickAvatarUrl(),
     // dateGmt is a UTC java.util.Date (an absolute instant), so relative-time formatting is
