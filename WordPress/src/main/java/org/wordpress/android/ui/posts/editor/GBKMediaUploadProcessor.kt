@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.posts.editor
 
 import android.content.Context
-import android.net.Uri
 import android.webkit.MimeTypeMap
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
@@ -79,7 +78,7 @@ class GBKMediaUploadProcessor(
     }
 
     private suspend fun processVideo(file: File, filename: String): ProcessedProxyFile {
-        if (mediaUtilsWrapper.isProhibitedVideoDuration(appContext, site, Uri.fromFile(file))) {
+        if (mediaUtilsWrapper.isProhibitedVideoDuration(appContext, site, file)) {
             throw GBKMediaUploadException(
                 appContext.getString(R.string.error_media_video_duration_exceeds_limit)
             )

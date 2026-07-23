@@ -8,6 +8,7 @@ import org.wordpress.android.editor.EditorMediaUtils
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.utils.MimeTypes.Plan
 import org.wordpress.android.util.AppLog.T
+import java.io.File
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -62,6 +63,9 @@ class MediaUtilsWrapper @Inject constructor(private val appContext: Context) {
 
     fun isVideoFile(mediaUri: Uri): Boolean =
         isVideo(mediaUri) || isVideoMimeType(getMimeType(mediaUri))
+
+    fun isProhibitedVideoDuration(context: Context, site: SiteModel, file: File): Boolean =
+        isProhibitedVideoDuration(context, site, Uri.fromFile(file))
 
     fun isProhibitedVideoDuration(context: Context, site: SiteModel, uri: Uri): Boolean {
         if (isVideoFile(uri) && site.hasFreePlan && !site.isActiveModuleEnabled("videopress")) {
