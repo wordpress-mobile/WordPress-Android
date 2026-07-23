@@ -7,6 +7,7 @@ import android.net.NetworkCapabilities
 import android.net.NetworkRequest
 import android.os.Handler
 import android.os.HandlerThread
+import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import org.wordpress.android.util.AppLog
@@ -46,20 +47,26 @@ class NetworkConnectionMonitor @Inject constructor() {
 
         val thread = HandlerThread("NetworkConnectionMonitor").apply { start() }
         val callback = object : ConnectivityManager.NetworkCallback() {
-            override fun onAvailable(network: Network) {
-                availableNetworks.add(network)
-                onConnectivityChanged(availableNetworks.isNotEmpty())
-            }
-            override fun onLost(network: Network) {
-                availableNetworks.remove(network)
-                onConnectivityChanged(availableNetworks.isNotEmpty())
-            }
+            override fun onAvailable(network: Network) = onNetworkAvailable(network)
+            override fun onLost(network: Network) = onNetworkLost(network)
         }
         val request = NetworkRequest.Builder()
             .addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
             .build()
         manager.registerNetworkCallback(request, callback, Handler(thread.looper))
         started = true
+    }
+
+    @VisibleForTesting
+    internal fun onNetworkAvailable(network: Network) {
+        availableNetworks.add(network)
+        onConnectivityChanged(availableNetworks.isNotEmpty())
+    }
+
+    @VisibleForTesting
+    internal fun onNetworkLost(network: Network) {
+        availableNetworks.remove(network)
+        onConnectivityChanged(availableNetworks.isNotEmpty())
     }
 
     /**
