@@ -148,7 +148,7 @@ private fun CommentListContent(
             items = rows,
             key = { row ->
                 when (row) {
-                    is CommentsRsListRow.DateHeader -> "header_${row.keyId}"
+                    is CommentsRsListRow.DateHeader -> "header_${row.label}"
                     is CommentsRsListRow.Item -> row.comment.remoteCommentId
                 }
             },

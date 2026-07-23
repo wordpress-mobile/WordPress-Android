@@ -17,7 +17,7 @@ class CommentsRsListRowTest {
         val comment = comment(id = 1, date = "Today")
 
         assertThat(withDateHeaders(listOf(comment))).containsExactly(
-            DateHeader("Today", keyId = 1),
+            DateHeader("Today"),
             Item(comment)
         )
     }
@@ -28,7 +28,7 @@ class CommentsRsListRowTest {
         val b = comment(id = 2, date = "Today")
 
         assertThat(withDateHeaders(listOf(a, b))).containsExactly(
-            DateHeader("Today", keyId = 1),
+            DateHeader("Today"),
             Item(a),
             Item(b)
         )
@@ -42,26 +42,26 @@ class CommentsRsListRowTest {
         val d = comment(id = 4, date = "January 8")
 
         assertThat(withDateHeaders(listOf(a, b, c, d))).containsExactly(
-            DateHeader("Today", keyId = 1),
+            DateHeader("Today"),
             Item(a),
             Item(b),
-            DateHeader("Yesterday", keyId = 3),
+            DateHeader("Yesterday"),
             Item(c),
-            DateHeader("January 8", keyId = 4),
+            DateHeader("January 8"),
             Item(d)
         )
     }
 
     @Test
-    fun `each header is keyed by the first comment in its group`() {
-        val rows = withDateHeaders(
-            listOf(
-                comment(id = 10, date = "Today"),
-                comment(id = 11, date = "Yesterday")
-            )
-        )
+    fun `a header stays identical when a newer comment is prepended into its group`() {
+        // The header is keyed by its label, so adding a same-day comment at the top of the group
+        // must not change the header's identity (which would make it re-animate on refresh).
+        val before = withDateHeaders(listOf(comment(id = 1, date = "Today")))
+        val after = withDateHeaders(listOf(comment(id = 2, date = "Today"), comment(id = 1, date = "Today")))
 
-        assertThat(rows.filterIsInstance<DateHeader>().map { it.keyId }).containsExactly(10, 11)
+        val beforeHeader = before.filterIsInstance<DateHeader>().single()
+        val afterHeader = after.filterIsInstance<DateHeader>().single()
+        assertThat(afterHeader).isEqualTo(beforeHeader)
     }
 
     private fun comment(id: Long, date: String) = CommentRsUiModel(

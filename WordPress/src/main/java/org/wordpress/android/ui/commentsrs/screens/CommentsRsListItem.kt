@@ -39,6 +39,7 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import org.wordpress.android.R
 import org.wordpress.android.ui.commentsrs.CommentRsUiModel
+import java.util.Locale
 
 private val AVATAR_SIZE = 40.dp
 private val PENDING_INDICATOR_WIDTH = 4.dp
@@ -178,7 +179,9 @@ private fun AnnotatedString.Builder.boldRange(formatted: String, part: String) {
 @Composable
 fun CommentsRsDateHeader(label: String, modifier: Modifier = Modifier) {
     Text(
-        text = label.uppercase(),
+        // Locale-aware uppercase, like the legacy subheader's android:textAllCaps (Kotlin's no-arg
+        // uppercase() is Locale.ROOT and would mis-case e.g. Turkish month names).
+        text = label.uppercase(Locale.getDefault()),
         style = MaterialTheme.typography.labelMedium,
         color = MaterialTheme.colorScheme.onSurfaceVariant,
         maxLines = 1,
