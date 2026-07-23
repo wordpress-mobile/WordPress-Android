@@ -252,6 +252,19 @@ class PostUploadNotifier {
         return false;
     }
 
+    /**
+     * Clears the outstanding foreground notification and resets its state. Called when the service is
+     * force-stopped (e.g. a foreground-service timeout) outside the normal "all uploads complete" path,
+     * so the next upload starts a fresh foreground notification via startForeground().
+     */
+    void resetForegroundNotificationState() {
+        if (sNotificationData.mNotificationId != 0) {
+            mNotificationManager.cancel(sNotificationData.mNotificationId);
+            sNotificationData.mNotificationId = 0;
+        }
+        resetNotificationCounters();
+    }
+
     private void resetNotificationCounters() {
         sNotificationData.mCurrentPostItem = 0;
         sNotificationData.mCurrentMediaItem = 0;
