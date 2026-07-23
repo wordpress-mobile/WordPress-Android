@@ -28,8 +28,6 @@ class NetworkConnectionMonitor @Inject constructor() {
     private var isFirstCallback = true
 
     private var connectivityManager: ConnectivityManager? = null
-    private var handlerThread: HandlerThread? = null
-    private var networkCallback: ConnectivityManager.NetworkCallback? = null
 
     class ConnectionChangeEvent(val isConnected: Boolean)
 
@@ -41,29 +39,14 @@ class NetworkConnectionMonitor @Inject constructor() {
         connectivityManager = manager
 
         val thread = HandlerThread("NetworkConnectionMonitor").apply { start() }
-        handlerThread = thread
-
         val callback = object : ConnectivityManager.NetworkCallback() {
             override fun onAvailable(network: Network) = onConnectivityChanged(true)
             // onLost fires for the network that was lost, but during a handover (e.g. Wi-Fi -> cellular) the
             // new default has already arrived via onAvailable, so re-query rather than assuming we're offline.
             override fun onLost(network: Network) = onConnectivityChanged(hasActiveConnection())
         }
-        networkCallback = callback
-
         manager.registerDefaultNetworkCallback(callback, Handler(thread.looper))
         started = true
-    }
-
-    @Synchronized
-    fun stop() {
-        if (!started) return
-        networkCallback?.let { connectivityManager?.unregisterNetworkCallback(it) }
-        handlerThread?.quitSafely()
-        networkCallback = null
-        handlerThread = null
-        connectivityManager = null
-        started = false
     }
 
     /**
