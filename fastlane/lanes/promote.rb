@@ -57,6 +57,21 @@ PROMOTION_STEPS_FILE = File.join(PROJECT_ROOT_FOLDER, PROMOTION_STEPS_RELATIVE_P
 BUILDKITE_ORGANIZATION = 'automattic'
 BUILDKITE_PIPELINE = 'wordpress-android'
 
+# Production staged-rollout growth (scheduled bump job).
+# The rollout ladder the scheduled job walks — it advances the live production rollout to the next
+# step each run. These are a starting point (Play accepts any fraction); adjust freely. "Next step" is
+# the smallest value strictly above the current fraction, so an off-ladder manual % still moves
+# forward. Past the top step the release is finalized to 100% (status `completed`).
+PRODUCTION_ROLLOUT_STEPS = [0.01, 0.02, 0.05, 0.10, 0.20, 0.50].freeze
+
+# Play `TrackRelease.status` values. A paused rollout — the Play Console "pause", or a Play auto-halt
+# (newer draft upload, policy/vitals) — is `halted`; there is no separate "paused" status. The growth
+# job only ever advances an `inProgress` release, so a scheduled run can never resume a paused one.
+ROLLOUT_STATUS_IN_PROGRESS = 'inProgress'
+ROLLOUT_STATUS_HALTED = 'halted'
+ROLLOUT_STATUS_DRAFT = 'draft'
+ROLLOUT_STATUS_COMPLETED = 'completed'
+
 platform :android do
   # Lists the promotable builds — version codes in both apps' Play libraries above the current
   # `beta` release — and opens a Buildkite block step for a developer to pick one.
@@ -221,6 +236,71 @@ platform :android do
     UI.success("Finalized #{released_version}: release #{release_url}; version bump #{bump_url || 'skipped'}")
   rescue StandardError => e
     notify_slack(":x: *Promoted-release finalize* failed — #{e.message}")
+    raise
+  end
+
+  # Advances the live production staged rollout one step — reads the current rollout percentage back
+  # from Play and bumps WordPress + Jetpack to the next ladder step, finalizing to 100% once past the
+  # top. Runs on a daily schedule; stateless (one step per run). Pause-safe: it only ever advances an
+  # `inProgress` release, so it never resumes a rollout a developer paused (a paused rollout is
+  # `halted`). WordPress and Jetpack must be in the same rollout state — a mismatch stops for a
+  # developer to reconcile rather than guessing.
+  #
+  # @called_by CI (`.buildkite/commands/advance-production-rollout.sh`)
+  desc 'Advance the production staged rollout one step (WordPress + Jetpack)'
+  lane :advance_production_rollout do
+    # Set once the per-app result has been posted, so the rescue doesn't double-report it.
+    result_posted = false
+    ensure_promotion_on_trunk!
+    # Fail loudly up front if Slack isn't configured (see gather_beta_candidates).
+    get_required_env('SLACK_WEBHOOK')
+
+    states = %i[wordpress jetpack].to_h do |app|
+      [app, current_production_rollout(package_name: APP_SPECIFIC_VALUES[app][:package_name])]
+    end
+    UI.message("Production rollout states: #{states.inspect}")
+
+    # Both apps promote together, so they must be in the same rollout state. A mismatch means a prior
+    # step only half-applied, or one app's rollout was paused/changed — stop and reconcile by hand.
+    unless rollout_signature(states[:wordpress]) == rollout_signature(states[:jetpack])
+      UI.user_error!(
+        'WordPress and Jetpack production rollouts differ ' \
+        "(WP=#{states[:wordpress].inspect}, JP=#{states[:jetpack].inspect}); reconcile by hand."
+      )
+    end
+
+    # Both apps share this state now; act on either.
+    state = states[:wordpress]
+
+    if state.nil?
+      UI.important('No production rollout in flight (the track is at steady state); nothing to advance.')
+      next
+    end
+
+    unless state[:status] == ROLLOUT_STATUS_IN_PROGRESS
+      # `draft` = not started yet; `halted` = paused (by a developer or auto-halted). Either way, leave
+      # it — advancing a non-`inProgress` release is the footgun we refuse (it would resume a pause).
+      UI.important("Production rollout is `#{state[:status]}` (not in progress); leaving it untouched.")
+      next
+    end
+
+    target = next_production_rollout_target(current_fraction: state[:user_fraction].to_f)
+    UI.important(
+      "Advancing production rollout #{state[:version_code]} from #{state[:user_fraction]} " \
+      "to #{rollout_target_label(target)}"
+    )
+
+    results = distribute_rollout_advance(target: target)
+
+    post_rollout_result_to_slack(version_code: state[:version_code], target: target, results: results)
+    result_posted = true
+
+    failed = results.reject { |_, result| result[:ok] }.keys
+    UI.user_error!("Production rollout advance failed for: #{failed.join(', ')}") unless failed.empty?
+
+    UI.success("Advanced production rollout #{state[:version_code]} to #{rollout_target_label(target)}")
+  rescue StandardError => e
+    notify_slack(":x: *Production rollout* failed — #{e.message}") unless result_posted
     raise
   end
 
@@ -453,6 +533,172 @@ platform :android do
         client.abort_current_edit unless committed
       end
     end
+  end
+
+  #################################################
+  # Production rollout growth
+  #################################################
+
+  # Reads the in-flight production release for one app — the release still rolling out (`inProgress`,
+  # `halted`, or `draft`), or nil when the track is in steady state (only a `completed` release, or
+  # none). Opens a throwaway Play edit and aborts it, so this only reads. Returns
+  # `{ status:, user_fraction:, version_code: }`.
+  def current_production_rollout(package_name:)
+    require 'supply'
+    require 'supply/options'
+
+    Supply.config = FastlaneCore::Configuration.create(
+      Supply::Options.available_options,
+      { json_key: UPLOAD_TO_PLAY_STORE_JSON_KEY, package_name: package_name, track: PRODUCTION_TRACK }
+    )
+
+    release = with_play_edit_retries("Reading the production rollout for #{package_name}") do
+      client = Supply::Client.make_from_config
+      client.begin_edit(package_name: package_name)
+      begin
+        in_flight_release(client.tracks(PRODUCTION_TRACK).first)
+      ensure
+        # Always discard the throwaway edit, even if the read raises.
+        client.abort_current_edit
+      end
+    end
+    return nil if release.nil?
+
+    {
+      status: release.status,
+      user_fraction: release.user_fraction,
+      # The real code is the largest; `.max` ignores the pinned legacy code kept on the release.
+      version_code: Array(release.version_codes).map(&:to_i).max
+    }
+  rescue StandardError => e
+    # Raise rather than return nil: an errored read must not read as "nothing rolling out".
+    UI.user_error!("Unable to read the production rollout for #{package_name}: #{e.message}")
+  end
+
+  # The release still rolling out on a track — preferring `inProgress`, then a paused `halted`, then a
+  # `draft`. nil when the track has only a `completed` release (steady state) or no releases.
+  def in_flight_release(track)
+    releases = track&.releases || []
+    [ROLLOUT_STATUS_IN_PROGRESS, ROLLOUT_STATUS_HALTED, ROLLOUT_STATUS_DRAFT]
+      .filter_map { |status| releases.find { |release| release.status == status } }
+      .first
+  end
+
+  # A comparable signature of an app's rollout state, so WordPress and Jetpack can be checked for
+  # lockstep. nil (no in-flight release) collapses to `:steady`; the fraction is rounded so a float
+  # round-tripping through JSON can't spuriously fail the comparison.
+  def rollout_signature(state)
+    return :steady if state.nil?
+
+    [state[:status], state[:version_code], state[:user_fraction]&.round(4)]
+  end
+
+  # The next rollout target from the current fraction: the smallest ladder step strictly above it as an
+  # `inProgress` bump, or a finalize to 100% (`completed`, no `user_fraction`) once past the top step.
+  def next_production_rollout_target(current_fraction:)
+    next_step = PRODUCTION_ROLLOUT_STEPS.find { |step| step > current_fraction }
+    return { status: ROLLOUT_STATUS_IN_PROGRESS, user_fraction: next_step } if next_step
+
+    { status: ROLLOUT_STATUS_COMPLETED, user_fraction: nil }
+  end
+
+  # A readable percentage label for a rollout target, for logs and Slack (e.g. `5%`, `100% (complete)`).
+  def rollout_target_label(target)
+    return '100% (complete)' if target[:status] == ROLLOUT_STATUS_COMPLETED
+
+    percent = (target[:user_fraction] * 100).round(2)
+    percent = percent.to_i if percent == percent.to_i
+    "#{percent}%"
+  end
+
+  # Applies `target` to each app's in-flight production release, returning a per-app `{ ok:, error: }`
+  # result. A failure for one app doesn't stop the other (mirrors distribute_to_production).
+  def distribute_rollout_advance(target:)
+    %i[wordpress jetpack].to_h do |app|
+      result =
+        begin
+          set_production_rollout(package_name: APP_SPECIFIC_VALUES[app][:package_name], target: target)
+          { ok: true }
+        rescue StandardError => e
+          UI.error("Failed to advance #{app} rollout: #{e.message}")
+          { ok: false, error: e.message }
+        end
+      [app, result]
+    end
+  end
+
+  # Applies `target` to the app's in-flight production release via the Play API. Re-reads the track
+  # inside the edit and mutates the `inProgress` release: a bump only raises `user_fraction`, leaving
+  # the rest of the track (the previous version still serving the rollout remainder) intact; a finalize
+  # replaces the releases with the single `completed` one, which supersedes the previous version. Bails
+  # without committing if the rollout is no longer `inProgress` (e.g. paused between read and write) —
+  # never resurrecting a paused rollout.
+  def set_production_rollout(package_name:, target:)
+    require 'supply'
+    require 'supply/options'
+
+    Supply.config = FastlaneCore::Configuration.create(
+      Supply::Options.available_options,
+      { json_key: UPLOAD_TO_PLAY_STORE_JSON_KEY, package_name: package_name, track: PRODUCTION_TRACK }
+    )
+
+    with_play_edit_retries("Advancing #{package_name} production rollout") do
+      client = Supply::Client.make_from_config
+      client.begin_edit(package_name: package_name)
+
+      committed = false
+      begin
+        track = client.tracks(PRODUCTION_TRACK).first
+        release = (track&.releases || []).find { |candidate| candidate.status == ROLLOUT_STATUS_IN_PROGRESS }
+        UI.user_error!("#{package_name} has no in-progress production rollout to advance.") if release.nil?
+
+        if target[:status] == ROLLOUT_STATUS_COMPLETED
+          # Finalize to 100%: a single `completed` release supersedes the previous version.
+          release.status = ROLLOUT_STATUS_COMPLETED
+          release.user_fraction = nil
+          track.releases = [release]
+        else
+          # Bump: only raise the fraction; leave the rest of the track (the remainder) intact.
+          release.user_fraction = target[:user_fraction]
+        end
+
+        client.update_track(PRODUCTION_TRACK, track)
+        client.commit_current_edit!
+        committed = true
+      ensure
+        # Discard the edit if we bailed before committing (a committed edit can't be aborted).
+        client.abort_current_edit unless committed
+      end
+    end
+  end
+
+  # Posts the per-app outcome of a rollout advance.
+  def post_rollout_result_to_slack(version_code:, target:, results:)
+    label = rollout_target_label(target)
+    status_lines = results.map do |app, result|
+      next "• #{app}: :x: #{result[:error]}" unless result[:ok]
+
+      "• #{app}: :white_check_mark: rollout at #{label}"
+    end
+
+    all_ok = results.values.all? { |result| result[:ok] }
+    completed = target[:status] == ROLLOUT_STATUS_COMPLETED
+    header =
+      if all_ok && completed
+        ':checkered_flag: *Production rollout complete — now at 100%*'
+      elsif all_ok
+        ":chart_with_upwards_trend: *Production rollout advanced to #{label}*"
+      else
+        ':warning: *Production rollout advance finished with errors*'
+      end
+
+    notify_slack(
+      <<~MSG
+        #{header} — `#{version_code}`
+
+        #{status_lines.join("\n")}
+      MSG
+    )
   end
 
   #################################################
