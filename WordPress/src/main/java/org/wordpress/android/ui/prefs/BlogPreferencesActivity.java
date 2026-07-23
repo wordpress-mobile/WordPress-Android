@@ -43,7 +43,7 @@ public class BlogPreferencesActivity extends BaseAppCompatActivity {
     @Inject Dispatcher mDispatcher;
     @Inject NetworkConnectionMonitor mNetworkConnectionMonitor;
 
-    private Boolean mLastConnected;
+    private boolean mLastConnected;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -124,7 +124,7 @@ public class BlogPreferencesActivity extends BaseAppCompatActivity {
         if (siteSettingsFragment != null) {
             // Toast only on a genuine transition to disconnected, so LiveData replay on re-foregrounding
             // doesn't spuriously toast.
-            if (!connected && mLastConnected != null && mLastConnected) {
+            if (!connected && mLastConnected) {
                 ToastUtils.showToast(this, getString(R.string.site_settings_disconnected_toast), Duration.LONG);
             }
             siteSettingsFragment.setEditingEnabled(connected);

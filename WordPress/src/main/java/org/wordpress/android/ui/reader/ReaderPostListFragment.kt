@@ -208,7 +208,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
     @Inject
     lateinit var networkConnectionMonitor: NetworkConnectionMonitor
 
-    private var lastConnected: Boolean? = null
+    private var lastConnected = false
 
     private var readerPostAdapter: ReaderPostAdapter? = null
     private var siteSearchAdapter: ReaderSiteSearchAdapter? = null
@@ -581,7 +581,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
         networkConnectionMonitor.isConnected.observe(viewLifecycleOwner) { connected ->
             // Only resubmit the search when connectivity actually transitions to connected, so LiveData replay
             // on re-foregrounding doesn't re-fire the search.
-            if (connected && lastConnected != connected) {
+            if (connected && !lastConnected) {
                 currentSearchQuery?.let { submitSearchQuery(it) }
             }
             lastConnected = connected
