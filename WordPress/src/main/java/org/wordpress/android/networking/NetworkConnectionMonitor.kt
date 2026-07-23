@@ -23,9 +23,9 @@ import javax.inject.Singleton
  * `onEventMainThread` subscribers back onto the main thread.
  *
  * Connectivity is tracked as the set of currently-available internet-capable networks rather than a single
- * network. During a handover (e.g. Wi-Fi -> cellular) the replacement is added before the old one is removed,
- * so the set never empties and the handover is not misreported as a disconnection; a genuine disconnect
- * empties the set and is reported reliably.
+ * network. During a handover (e.g. Wi-Fi -> cellular) where the replacement is already up, it is added before
+ * the old one is removed, so the set doesn't empty and the handover isn't misreported as a disconnection; a
+ * genuine disconnect empties the set and is reported reliably.
  */
 @Singleton
 class NetworkConnectionMonitor @Inject constructor() {
