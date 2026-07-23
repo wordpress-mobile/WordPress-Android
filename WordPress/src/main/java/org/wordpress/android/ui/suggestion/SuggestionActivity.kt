@@ -10,14 +10,11 @@ import android.text.TextWatcher
 import android.view.KeyEvent
 import android.view.inputmethod.EditorInfo
 import androidx.activity.addCallback
-import org.greenrobot.eventbus.EventBus
-import org.greenrobot.eventbus.Subscribe
-import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.SuggestUsersActivityBinding
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.networking.NetworkConnectionMonitor.ConnectionChangeEvent
+import org.wordpress.android.networking.NetworkConnectionMonitor
 import org.wordpress.android.ui.main.BaseAppCompatActivity
 import org.wordpress.android.ui.suggestion.FinishAttempt.NotExactlyOneAvailable
 import org.wordpress.android.ui.suggestion.FinishAttempt.OnlyOneAvailable
@@ -36,6 +33,9 @@ class SuggestionActivity : BaseAppCompatActivity() {
 
     @Inject
     lateinit var viewModel: SuggestionViewModel
+
+    @Inject
+    lateinit var networkConnectionMonitor: NetworkConnectionMonitor
     private lateinit var binding: SuggestUsersActivityBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -178,6 +178,11 @@ class SuggestionActivity : BaseAppCompatActivity() {
 
             updateEmptyView()
         })
+
+        networkConnectionMonitor.isConnected.observe(this) { connected ->
+            viewModel.onConnectionChanged(connected)
+            updateEmptyView()
+        }
     }
 
     private fun exitIfOnlyOneMatchingUser() {
@@ -250,21 +255,9 @@ class SuggestionActivity : BaseAppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        EventBus.getDefault().register(this)
         if (binding.autocompleteText.isAttachedToWindow) {
             binding.autocompleteText.showDropDown()
         }
-    }
-
-    override fun onPause() {
-        EventBus.getDefault().unregister(this)
-        super.onPause()
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onEventMainThread(event: ConnectionChangeEvent) {
-        viewModel.onConnectionChanged(event)
-        updateEmptyView()
     }
 
     companion object {

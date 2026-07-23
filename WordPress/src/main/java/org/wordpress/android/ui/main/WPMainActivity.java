@@ -279,6 +279,8 @@ public class WPMainActivity extends BaseAppCompatActivity implements
 
     @Inject WpAppNotifierHandler mWpAppNotifierHandler;
 
+    @Inject NetworkConnectionMonitor mNetworkConnectionMonitor;
+
     /*
      * fragments implement this if their contents can be scrolled, called when user
      * requests to scroll to the top
@@ -413,6 +415,8 @@ public class WPMainActivity extends BaseAppCompatActivity implements
         // We need to register the dispatcher here otherwise it won't trigger if for example Site Picker is present
         mDispatcher.register(this);
         EventBus.getDefault().register(this);
+
+        mNetworkConnectionMonitor.isConnected().observe(this, this::updateConnectionBar);
 
         if (authTokenToSet != null) {
             // Save Token to the AccountStore. This will trigger a onAuthenticationChanged.
@@ -1486,12 +1490,6 @@ public class WPMainActivity extends BaseAppCompatActivity implements
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventMainThread(NotificationEvents.NotificationsUnseenStatus event) {
         if (mBottomNav != null) mBottomNav.showNoteBadge(event.hasUnseenNotes);
-    }
-
-    @SuppressWarnings("unused")
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEventMainThread(NetworkConnectionMonitor.ConnectionChangeEvent event) {
-        updateConnectionBar(event.isConnected());
     }
 
     private void checkConnection() {
