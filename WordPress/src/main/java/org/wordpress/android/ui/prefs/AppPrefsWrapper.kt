@@ -49,6 +49,18 @@ class AppPrefsWrapper @Inject constructor(val buildConfigWrapper: BuildConfigWra
         get() = AppPrefs.isAztecEditorEnabled()
         set(enabled) = AppPrefs.setAztecEditorEnabled(enabled)
 
+    val isVideoOptimize: Boolean
+        get() = AppPrefs.isVideoOptimize()
+
+    val videoOptimizeWidth: Int
+        get() = AppPrefs.getVideoOptimizeWidth()
+
+    val videoOptimizeQuality: Int
+        get() = AppPrefs.getVideoOptimizeQuality()
+
+    val isStripImageLocation: Boolean
+        get() = AppPrefs.isStripImageLocation()
+
     var postListAuthorSelection: AuthorFilterSelection
         get() = AppPrefs.getAuthorFilterSelection()
         set(value) = AppPrefs.setAuthorFilterSelection(value)
