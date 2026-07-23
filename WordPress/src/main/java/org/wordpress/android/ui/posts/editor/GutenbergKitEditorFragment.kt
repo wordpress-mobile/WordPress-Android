@@ -39,6 +39,7 @@ import org.wordpress.gutenberg.GutenbergView.LogJsExceptionListener
 import org.wordpress.gutenberg.GutenbergView.OpenMediaLibraryListener
 import org.wordpress.gutenberg.GutenbergView.TitleAndContentCallback
 import org.wordpress.gutenberg.Media
+import org.wordpress.gutenberg.MediaUploadDelegate
 import org.wordpress.gutenberg.model.EditorConfiguration
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
@@ -61,6 +62,7 @@ class GutenbergKitEditorFragment : GutenbergKitEditorFragmentBase() {
     private var onLogJsExceptionListener: LogJsExceptionListener? = null
     private var modalDialogStateListener: GutenbergView.ModalDialogStateListener? = null
     private var networkRequestListener: GutenbergView.NetworkRequestListener? = null
+    private var mediaUploadDelegate: MediaUploadDelegate? = null
     private var rootView: View? = null
     private var isXPostsEnabled: Boolean = false
 
@@ -224,6 +226,9 @@ class GutenbergKitEditorFragment : GutenbergKitEditorFragmentBase() {
         networkRequestListener?.let(
             gutenbergView::setNetworkRequestListener
         )
+        mediaUploadDelegate?.let {
+            gutenbergView.mediaUploadDelegate = it
+        }
 
         // Set up content provider for WebView refresh recovery
         gutenbergView.setLatestContentProvider(
@@ -550,6 +555,11 @@ class GutenbergKitEditorFragment : GutenbergKitEditorFragmentBase() {
     ) {
         networkRequestListener = listener
         gutenbergView?.setNetworkRequestListener(listener)
+    }
+
+    fun setMediaUploadDelegate(delegate: MediaUploadDelegate) {
+        mediaUploadDelegate = delegate
+        gutenbergView?.mediaUploadDelegate = delegate
     }
 
     override fun onUndoPressed() {
