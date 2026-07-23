@@ -601,6 +601,28 @@ class CommentsRsListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
     }
 
     @Test
+    fun `unreplied load-more keeps paging when a page threads the visible list down to empty`() = test {
+        whenever(siteCapabilityChecker.currentUserId(site)).thenReturn(ME)
+        // Page 1: one visible unreplied comment (A). Page 2: the user's reply to A and nothing new,
+        // so filtering drops A and the visible count shrinks 1 -> 0. Page 3 carries a real unreplied
+        // comment. Without advancing on the shrink, the tab would sit on a false empty state.
+        whenever(commentsRsDataSource.fetchCommentsPage(eq(site), any())).thenReturn(
+            RsCommentsPageResult.Success(listOf(rsItem(id = 1, authorId = OTHER)), NEXT_PAGE),
+            RsCommentsPageResult.Success(listOf(rsItem(id = 2, authorId = ME, parentId = 1)), THIRD_PAGE),
+            RsCommentsPageResult.Success(listOf(rsItem(id = 3, authorId = OTHER)), null)
+        )
+        val viewModel = createViewModel()
+        viewModel.initTab(CommentsRsListTab.UNREPLIED)
+        advanceUntilIdle()
+
+        viewModel.loadMore(CommentsRsListTab.UNREPLIED)
+        advanceUntilIdle()
+
+        val state = viewModel.tabStates.value.getValue(CommentsRsListTab.UNREPLIED)
+        assertThat(state.comments.map { it.remoteCommentId }).containsExactly(3L)
+    }
+
+    @Test
     fun `tapping an unreplied comment seeds the swipe session without a paging cursor`() = test {
         whenever(siteCapabilityChecker.currentUserId(site)).thenReturn(ME)
         givenPage(listOf(rsItem(id = 1, authorId = OTHER)), nextPageParams = NEXT_PAGE)

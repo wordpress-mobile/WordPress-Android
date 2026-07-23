@@ -329,12 +329,14 @@ class CommentsRsListViewModel @Inject constructor(
                 is RsCommentsPageResult.Success -> {
                     val sizeBefore = getTabUiState(tab).comments.size
                     applyPage(tab, result, append = true)
-                    // When a page adds no rows (it deduped away after a server-side shift, or
-                    // came back empty mid-shrink), the scroll position hasn't changed so the
-                    // load-more trigger won't re-fire; advance to the next page directly. The
-                    // depth cap keeps a pathological cursor chain (e.g. a proxy ignoring the
+                    // When a page doesn't grow the visible list, the scroll position hasn't moved
+                    // so the load-more trigger won't re-fire; advance to the next page directly.
+                    // `<=` (not `==`) also covers the shrink-to-empty case: an Unreplied page can
+                    // carry the user's reply to the last visible comment, dropping the visible
+                    // count to zero — with no rows there's no scroll trigger left to resume paging.
+                    // The depth cap keeps a pathological cursor chain (e.g. a proxy ignoring the
                     // page param) from firing unbounded unattended requests.
-                    if (getTabUiState(tab).comments.size == sizeBefore &&
+                    if (getTabUiState(tab).comments.size <= sizeBefore &&
                         nextPageParams[tab] != null &&
                         autoAdvanceDepth < CommentBrowsingSession.MAX_AUTO_ADVANCE_PAGES
                     ) {
