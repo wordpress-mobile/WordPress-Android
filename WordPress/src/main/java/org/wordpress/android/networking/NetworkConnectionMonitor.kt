@@ -7,7 +7,8 @@ import android.net.NetworkCapabilities
 import android.net.NetworkRequest
 import android.os.Handler
 import android.os.HandlerThread
-import org.greenrobot.eventbus.EventBus
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import javax.inject.Inject
@@ -18,9 +19,9 @@ import javax.inject.Singleton
  *
  * Uses [ConnectivityManager.NetworkCallback] registered on a background [HandlerThread] rather than the
  * deprecated CONNECTIVITY_ACTION broadcast. Because a NetworkCallback is not a broadcast it is not subject to
- * background-broadcast ANR timeouts, and all connectivity work runs off the main thread. A
- * [ConnectionChangeEvent] is posted on EventBus whenever the connected state changes; EventBus marshals the
- * `onEventMainThread` subscribers back onto the main thread.
+ * background-broadcast ANR timeouts, and all connectivity work runs off the main thread. The connected state
+ * is exposed as [isConnected]; observers are notified on the main thread via LiveData whenever the connected
+ * state changes.
  *
  * Connectivity is tracked as the set of currently-available internet-capable networks rather than a single
  * network. During a handover (e.g. Wi-Fi -> cellular) where the replacement is already up, it is added before
@@ -34,7 +35,8 @@ class NetworkConnectionMonitor @Inject constructor() {
     private var isFirstCallback = true
     private val availableNetworks = mutableSetOf<Network>()
 
-    class ConnectionChangeEvent(val isConnected: Boolean)
+    private val _isConnected = MutableLiveData<Boolean>()
+    val isConnected: LiveData<Boolean> = _isConnected
 
     @Synchronized
     fun start(context: Context) {
@@ -61,15 +63,15 @@ class NetworkConnectionMonitor @Inject constructor() {
     }
 
     /**
-     * Called on the monitor's background thread. Posts a [ConnectionChangeEvent] on the first callback and
-     * whenever the connected state actually changes, so subscribers aren't spammed while connectivity churns.
+     * Called on the monitor's background thread. Updates [isConnected] on the first callback and whenever the
+     * connected state actually changes, so observers aren't spammed while connectivity churns.
      */
     private fun onConnectivityChanged(isConnected: Boolean) {
         if (isFirstCallback || isConnected != wasConnected) {
             isFirstCallback = false
             wasConnected = isConnected
             AppLog.i(T.UTILS, "Connection status changed, isConnected=$isConnected")
-            EventBus.getDefault().post(ConnectionChangeEvent(isConnected))
+            _isConnected.postValue(isConnected)
         }
     }
 }
