@@ -173,3 +173,19 @@ private fun AnnotatedString.Builder.boldRange(formatted: String, part: String) {
         addStyle(SpanStyle(fontWeight = FontWeight.Bold), start, start + part.length)
     }
 }
+
+/** A date-group subheader row, matching the legacy list's all-caps overline separators. */
+@Composable
+fun CommentsRsDateHeader(label: String, modifier: Modifier = Modifier) {
+    Text(
+        text = label.uppercase(),
+        style = MaterialTheme.typography.labelMedium,
+        color = MaterialTheme.colorScheme.onSurfaceVariant,
+        maxLines = 1,
+        overflow = TextOverflow.Ellipsis,
+        modifier = modifier
+            .fillMaxWidth()
+            .background(MaterialTheme.colorScheme.surface)
+            .padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 8.dp)
+    )
+}
