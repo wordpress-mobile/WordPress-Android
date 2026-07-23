@@ -641,7 +641,10 @@ public class GCMMessageHandler {
                     if (largeIconBitmap != null && shouldCircularizeIcon) {
                         largeIconBitmap = ImageUtils.getCircularBitmap(largeIconBitmap);
                     }
-                } catch (UnsupportedEncodingException e) {
+                } catch (UnsupportedEncodingException | IllegalArgumentException e) {
+                    // IllegalArgumentException is thrown by ImageUtils.downloadBitmap when the icon URL
+                    // contains illegal characters (e.g. an unencoded space). In that case just skip the
+                    // large icon instead of crashing the whole push notification handler.
                     AppLog.e(T.NOTIFS, e);
                 }
             }
