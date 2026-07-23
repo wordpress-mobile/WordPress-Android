@@ -109,6 +109,13 @@ internal fun CommentsRsListTab.batchActions(): List<CommentsRsBatchAction> = whe
         CommentsRsBatchAction.SPAM,
         CommentsRsBatchAction.TRASH
     )
+    // Unreplied rows are approved or pending comments, so offer the same actions as ALL.
+    CommentsRsListTab.UNREPLIED -> listOf(
+        CommentsRsBatchAction.APPROVE,
+        CommentsRsBatchAction.UNAPPROVE,
+        CommentsRsBatchAction.SPAM,
+        CommentsRsBatchAction.TRASH
+    )
     CommentsRsListTab.APPROVED -> listOf(
         CommentsRsBatchAction.UNAPPROVE,
         CommentsRsBatchAction.SPAM,

@@ -110,6 +110,7 @@ fun CommentsRsListScreen(
     val listStates = mapOf(
         CommentsRsListTab.ALL to rememberLazyListState(),
         CommentsRsListTab.PENDING to rememberLazyListState(),
+        CommentsRsListTab.UNREPLIED to rememberLazyListState(),
         CommentsRsListTab.APPROVED to rememberLazyListState(),
         CommentsRsListTab.SPAM to rememberLazyListState(),
         CommentsRsListTab.TRASHED to rememberLazyListState()
