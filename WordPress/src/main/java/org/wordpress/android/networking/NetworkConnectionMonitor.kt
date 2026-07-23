@@ -3,6 +3,7 @@ package org.wordpress.android.networking
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.Network
+import android.net.NetworkCapabilities
 import android.os.Handler
 import android.os.HandlerThread
 import org.greenrobot.eventbus.EventBus
@@ -44,7 +45,9 @@ class NetworkConnectionMonitor @Inject constructor() {
 
         val callback = object : ConnectivityManager.NetworkCallback() {
             override fun onAvailable(network: Network) = onConnectivityChanged(true)
-            override fun onLost(network: Network) = onConnectivityChanged(false)
+            // onLost fires for the network that was lost, but during a handover (e.g. Wi-Fi -> cellular) the
+            // new default has already arrived via onAvailable, so re-query rather than assuming we're offline.
+            override fun onLost(network: Network) = onConnectivityChanged(hasActiveConnection())
         }
         networkCallback = callback
 
@@ -75,5 +78,16 @@ class NetworkConnectionMonitor @Inject constructor() {
             AppLog.i(T.UTILS, "Connection status changed, isConnected=$isConnected")
             EventBus.getDefault().post(ConnectionChangeEvent(isConnected))
         }
+    }
+
+    /**
+     * Whether there is currently a default network capable of reaching the internet. Used to distinguish a
+     * true disconnection from a handover between networks, where the replacement is already the default.
+     */
+    private fun hasActiveConnection(): Boolean {
+        val manager = connectivityManager ?: return false
+        val activeNetwork = manager.activeNetwork ?: return false
+        val capabilities = manager.getNetworkCapabilities(activeNetwork) ?: return false
+        return capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
     }
 }

@@ -12,6 +12,7 @@ import android.view.inputmethod.EditorInfo
 import androidx.activity.addCallback
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.SuggestUsersActivityBinding
@@ -260,7 +261,7 @@ class SuggestionActivity : BaseAppCompatActivity() {
         super.onPause()
     }
 
-    @Subscribe
+    @Subscribe(threadMode = ThreadMode.MAIN)
     fun onEventMainThread(event: ConnectionChangeEvent) {
         viewModel.onConnectionChanged(event)
         updateEmptyView()
