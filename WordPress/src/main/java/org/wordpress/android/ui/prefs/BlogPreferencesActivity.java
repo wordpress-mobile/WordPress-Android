@@ -22,7 +22,7 @@ import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteDeleted;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteRemoved;
-import org.wordpress.android.networking.ConnectionChangeReceiver;
+import org.wordpress.android.networking.NetworkConnectionMonitor;
 import org.wordpress.android.ui.main.BaseAppCompatActivity;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -119,7 +119,7 @@ public class BlogPreferencesActivity extends BaseAppCompatActivity {
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEventMainThread(ConnectionChangeReceiver.ConnectionChangeEvent event) {
+    public void onEventMainThread(NetworkConnectionMonitor.ConnectionChangeEvent event) {
         SiteSettingsFragment siteSettingsFragment = getSettingsFragment();
         if (siteSettingsFragment != null) {
             if (!event.isConnected()) {

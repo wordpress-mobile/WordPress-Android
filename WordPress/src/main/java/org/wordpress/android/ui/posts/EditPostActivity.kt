@@ -119,7 +119,7 @@ import org.wordpress.android.fluxc.store.bloggingprompts.BloggingPromptsStore
 import org.wordpress.android.fluxc.tools.FluxCImageLoader
 import org.wordpress.android.imageeditor.preview.PreviewImageFragment
 import org.wordpress.android.imageeditor.preview.PreviewImageFragment.Companion.EditImageData.InputData
-import org.wordpress.android.networking.ConnectionChangeReceiver.ConnectionChangeEvent
+import org.wordpress.android.networking.NetworkConnectionMonitor.ConnectionChangeEvent
 import org.wordpress.android.support.ZendeskHelper
 import org.wordpress.android.ui.ActivityId
 import org.wordpress.android.ui.ActivityLauncher

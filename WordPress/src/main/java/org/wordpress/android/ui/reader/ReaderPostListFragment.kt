@@ -69,7 +69,7 @@ import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.models.ReaderPostDiscoverData
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.ReaderTagType
-import org.wordpress.android.networking.ConnectionChangeReceiver.ConnectionChangeEvent
+import org.wordpress.android.networking.NetworkConnectionMonitor.ConnectionChangeEvent
 import org.wordpress.android.ui.ActionableEmptyView
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.EmptyViewMessageType

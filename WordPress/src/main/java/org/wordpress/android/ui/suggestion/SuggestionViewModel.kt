@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.networking.ConnectionChangeReceiver.ConnectionChangeEvent
+import org.wordpress.android.networking.NetworkConnectionMonitor.ConnectionChangeEvent
 import org.wordpress.android.ui.suggestion.FinishAttempt.NotExactlyOneAvailable
 import org.wordpress.android.ui.suggestion.FinishAttempt.OnlyOneAvailable
 import org.wordpress.android.ui.suggestion.SuggestionType.Users

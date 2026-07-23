@@ -16,7 +16,7 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.SuggestUsersActivityBinding
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.networking.ConnectionChangeReceiver.ConnectionChangeEvent
+import org.wordpress.android.networking.NetworkConnectionMonitor.ConnectionChangeEvent
 import org.wordpress.android.ui.main.BaseAppCompatActivity
 import org.wordpress.android.ui.suggestion.FinishAttempt.NotExactlyOneAvailable
 import org.wordpress.android.ui.suggestion.FinishAttempt.OnlyOneAvailable
