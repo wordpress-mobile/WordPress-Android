@@ -77,6 +77,7 @@ class GBKMediaUploadProcessor(
         }
     }
 
+    @Suppress("ReturnCount")
     private suspend fun processVideo(file: File, filename: String): ProcessedProxyFile {
         if (mediaUtilsWrapper.isProhibitedVideoDuration(appContext, site, file)) {
             throw GBKMediaUploadException(
@@ -163,6 +164,7 @@ class GBKMediaUploadProcessor(
         composer.start()
     }
 
+    @Suppress("ReturnCount")
     private fun processImage(file: File, mimeType: String, filename: String): ProcessedProxyFile {
         // getOptimizedMedia returns null when optimization is disabled or a no-op. It can also
         // return the *input* path unchanged (GIF-like skips, decode failures inside
