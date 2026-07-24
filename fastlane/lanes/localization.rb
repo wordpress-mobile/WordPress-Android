@@ -148,6 +148,15 @@ platform :android do
       }
     end
 
+    # The beta-promotion picker's "what's new" options. Stable keys (no version suffix) so each is
+    # translated once, unlike the per-version `release_note_*` keys.
+    STATIC_RELEASE_NOTE_OPTIONS.each do |option|
+      files[:"release_note_static_#{option[:key]}"] = {
+        path: File.join(metadata_folder, 'release_notes_static', "#{option[:key]}.txt"),
+        comment: 'translators: Generic "what\'s new" text shown in the Play Store. Limit to 500 characters including spaces.'
+      }
+    end
+
     update_po_file_for_metadata_localization(
       po_path: File.join(metadata_folder, 'PlayStoreStrings.po'),
       sources: files,
@@ -264,6 +273,52 @@ platform :android do
       message = "Update #{app_values[:display_name]} metadata translations"
       message += " for #{version}" unless version.nil?
       git_commit(path: metadata_download_path, message: message, allow_nothing_to_commit: true)
+    end
+  end
+
+  # Downloads the translated "what's new" options from GlotPress into the per-locale
+  # `release_notes_static/<option>.txt` files. Not part of the release path; run it whenever an
+  # option's copy changes.
+  #
+  # @param [Symbol|String] app The app to download for. If nil, does both WordPress and Jetpack.
+  # @param [Boolean] skip_commit If true, skips the `git add`/`git commit`. Default false.
+  #
+  lane :download_static_release_notes do |app: nil, skip_commit: false|
+    apps = app.nil? ? %i[wordpress jetpack] : Array(app.to_s.downcase.to_sym)
+
+    apps.each do |current_app|
+      app_values = APP_SPECIFIC_VALUES[current_app]
+      source_dir = File.join(PROJECT_ROOT_FOLDER, 'WordPress', app_values[:metadata_dir], 'release_notes_static')
+      download_path = File.join(FASTLANE_FOLDER, app_values[:metadata_dir], 'android')
+      locales = { wordpress: WP_RELEASE_NOTES_LOCALES, jetpack: JP_RELEASE_NOTES_LOCALES }[current_app]
+
+      target_files = STATIC_RELEASE_NOTE_OPTIONS.to_h do |option|
+        [
+          "release_note_static_#{option[:key]}",
+          { desc: File.join('release_notes_static', "#{option[:key]}.txt"), max_size: 500 }
+        ]
+      end
+
+      UI.header("Downloading static release notes for #{app_values[:display_name]}")
+      gp_downloadmetadata(
+        project_url: app_values[:glotpress_metadata_project],
+        target_files: target_files,
+        locales: locales,
+        download_path: download_path
+      )
+
+      # en-US is the source language and isn't exported from GlotPress; copy each source verbatim.
+      en_us_dir = File.join(download_path, 'en-US', 'release_notes_static')
+      FileUtils.mkdir_p(en_us_dir)
+      STATIC_RELEASE_NOTE_OPTIONS.each do |option|
+        FileUtils.cp(File.join(source_dir, "#{option[:key]}.txt"), File.join(en_us_dir, "#{option[:key]}.txt"))
+      end
+
+      next if skip_commit
+
+      git_add(path: download_path)
+      message = "Update #{app_values[:display_name]} static release notes translations"
+      git_commit(path: download_path, message: message, allow_nothing_to_commit: true)
     end
   end
 
