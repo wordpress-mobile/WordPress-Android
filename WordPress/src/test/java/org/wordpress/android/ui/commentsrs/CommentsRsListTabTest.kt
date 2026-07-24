@@ -18,6 +18,20 @@ class CommentsRsListTabTest {
     }
 
     @Test
+    fun `unreplied tab queries status all and is threaded client-side`() {
+        // Unreplied has no server status: it fetches everything (approved + hold, like ALL) and
+        // filterUnreplied() narrows it to comments the user hasn't replied to.
+        assertThat(CommentsRsListTab.UNREPLIED.queryStatus).isEqualTo(RsCommentStatus.Custom("all"))
+    }
+
+    @Test
+    fun `unreplied tab sits between pending and approved, matching the legacy order`() {
+        assertThat(CommentsRsListTab.entries.map { it.name }).containsExactly(
+            "ALL", "PENDING", "UNREPLIED", "APPROVED", "SPAM", "TRASHED"
+        )
+    }
+
+    @Test
     fun `remaining tabs use the built-in statuses`() {
         assertThat(CommentsRsListTab.PENDING.queryStatus).isEqualTo(RsCommentStatus.Hold)
         assertThat(CommentsRsListTab.SPAM.queryStatus).isEqualTo(RsCommentStatus.Spam)

@@ -35,6 +35,7 @@ import org.wordpress.android.ui.comments.unified.CommentsRsDataSource.RsComment
 import org.wordpress.android.ui.comments.unified.CommentsRsDataSource.RsCommentsPageResult
 import org.wordpress.android.ui.comments.unified.CommentsRsDataSource.RsResult
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
+import org.wordpress.android.ui.mysite.items.listitem.SiteCapabilityChecker
 import org.wordpress.android.ui.postsrs.PostRsErrorUtils
 import org.wordpress.android.ui.postsrs.SnackbarMessage
 import org.wordpress.android.util.DateTimeUtilsWrapper
@@ -56,6 +57,7 @@ import javax.inject.Named
 class CommentsRsListViewModel @Inject constructor(
     selectedSiteRepository: SelectedSiteRepository,
     private val commentsRsDataSource: CommentsRsDataSource,
+    private val siteCapabilityChecker: SiteCapabilityChecker,
     private val resourceProvider: ResourceProvider,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     private val dateTimeUtilsWrapper: DateTimeUtilsWrapper,
@@ -95,6 +97,22 @@ class CommentsRsListViewModel @Inject constructor(
     private val _pendingConfirmation = MutableStateFlow<PendingConfirmation?>(null)
     val pendingConfirmation: StateFlow<PendingConfirmation?> = _pendingConfirmation.asStateFlow()
 
+    // Whether the current user may moderate comments on this site (moderate_comments capability).
+    // Fetched once on init; false until it resolves so the batch actions start disabled and enable
+    // once confirmed, rather than briefly offering actions the server would reject.
+    private val _canModerate = MutableStateFlow(false)
+    val canModerate: StateFlow<Boolean> = _canModerate.asStateFlow()
+
+    // The current user's WP user id, resolved once on init (from the same "me" fetch as
+    // canModerate); null until then, or if it couldn't be fetched. Used only to tell the user's
+    // own replies apart when threading the Unreplied tab. Read and written only on the main thread.
+    private var currentUserId: Long? = null
+
+    // Raw comments fetched per tab, accumulated across pages. The Unreplied tab derives its
+    // displayed rows from this via client-side threading, so a reply and the parent it answers can
+    // arrive on different pages and still be matched.
+    private val rawComments = mutableMapOf<CommentsRsListTab, List<RsComment>>()
+
     // Pagination cursors: the next-page params returned with each fetched page, per tab.
     private val nextPageParams = mutableMapOf<CommentsRsListTab, CommentListParams?>()
 
@@ -133,6 +151,14 @@ class CommentsRsListViewModel @Inject constructor(
             _events.trySend(CommentsRsListEvent.ShowToast(R.string.blog_not_found))
             _events.trySend(CommentsRsListEvent.Finish)
         } else {
+            viewModelScope.launch {
+                // Both values come from the same cached "me" fetch inside SiteCapabilityChecker.
+                _canModerate.value = withContext(bgDispatcher) { siteCapabilityChecker.canModerateComments(site) }
+                currentUserId = withContext(bgDispatcher) { siteCapabilityChecker.currentUserId(site) }
+                // If the Unreplied tab loaded before the id resolved, re-thread it now that the
+                // user's own replies can be identified.
+                rethreadUnreplied()
+            }
             @OptIn(FlowPreview::class)
             viewModelScope.launch {
                 _searchQuery
@@ -209,6 +235,7 @@ class CommentsRsListViewModel @Inject constructor(
         loadMoreJobs.clear()
         resolveTitleJobs.values.forEach { it.cancel() }
         resolveTitleJobs.clear()
+        rawComments.clear()
         nextPageParams.clear()
         pageGenerations.clear()
         _tabStates.value = emptyMap()
@@ -216,7 +243,12 @@ class CommentsRsListViewModel @Inject constructor(
 
     /** Loads the first page for [tab] unless it's already initialized. */
     @MainThread
+    @Suppress("ReturnCount")
     fun initTab(tab: CommentsRsListTab) {
+        // No selected site: init already queued a toast + Finish. Bail before registering the tab
+        // so we neither strand a permanently-loading tab nor let a later refreshTab reach the
+        // site getter (requireNotNull) via clearPostTitles.
+        if (_site == null) return
         // updateTabUiState inserts the tab synchronously, so this also blocks re-entry while
         // the first fetch is in flight.
         if (_tabStates.value.containsKey(tab)) return
@@ -234,7 +266,11 @@ class CommentsRsListViewModel @Inject constructor(
      * keep the current list on screen until the new page arrives.
      */
     @MainThread
+    @Suppress("ReturnCount")
     fun refreshTab(tab: CommentsRsListTab, isUserRefresh: Boolean = false) {
+        // As in initTab: with no selected site the clearPostTitles(site) call below would hit the
+        // requireNotNull. Guard the entry point rather than deeper down.
+        if (_site == null) return
         if (!_tabStates.value.containsKey(tab)) return
         // A first page is already on its way (initial load or another refresh); a second fetch
         // would only duplicate the request and double-bump the page generation.
@@ -293,12 +329,14 @@ class CommentsRsListViewModel @Inject constructor(
                 is RsCommentsPageResult.Success -> {
                     val sizeBefore = getTabUiState(tab).comments.size
                     applyPage(tab, result, append = true)
-                    // When a page adds no rows (it deduped away after a server-side shift, or
-                    // came back empty mid-shrink), the scroll position hasn't changed so the
-                    // load-more trigger won't re-fire; advance to the next page directly. The
-                    // depth cap keeps a pathological cursor chain (e.g. a proxy ignoring the
+                    // When a page doesn't grow the visible list, the scroll position hasn't moved
+                    // so the load-more trigger won't re-fire; advance to the next page directly.
+                    // `<=` (not `==`) also covers the shrink-to-empty case: an Unreplied page can
+                    // carry the user's reply to the last visible comment, dropping the visible
+                    // count to zero — with no rows there's no scroll trigger left to resume paging.
+                    // The depth cap keeps a pathological cursor chain (e.g. a proxy ignoring the
                     // page param) from firing unbounded unattended requests.
-                    if (getTabUiState(tab).comments.size == sizeBefore &&
+                    if (getTabUiState(tab).comments.size <= sizeBefore &&
                         nextPageParams[tab] != null &&
                         autoAdvanceDepth < CommentBrowsingSession.MAX_AUTO_ADVANCE_PAGES
                     ) {
@@ -329,7 +367,11 @@ class CommentsRsListViewModel @Inject constructor(
             // it can swipe between them and keep loading more (the cursor can't cross an Intent).
             val tab = currentTab ?: CommentsRsListTab.ALL
             val ids = _tabStates.value[tab]?.comments?.map { it.remoteCommentId } ?: listOf(remoteCommentId)
-            commentBrowsingSession.start(site, ids, nextPageParams[tab])
+            // Unreplied's rows are a client-side-threaded subset of the raw stream; the session
+            // pages the raw stream, so handing it the cursor would let the pager swipe into the
+            // replied-to and own comments the tab hides. Seed only the visible ids, no cursor.
+            val cursor = if (tab == CommentsRsListTab.UNREPLIED) null else nextPageParams[tab]
+            commentBrowsingSession.start(site, ids, cursor)
             _events.trySend(CommentsRsListEvent.OpenCommentDetail(site, remoteCommentId))
         }
     }
@@ -382,6 +424,9 @@ class CommentsRsListViewModel @Inject constructor(
      * tabs (moderated comments move between tabs). Failures are aggregated into one snackbar.
      */
     private fun performBatchModeration(ids: List<Long>, newStatus: CommentStatus, tab: CommentsRsListTab) {
+        // Batch actions are disabled without moderation rights; guard here too so nothing can reach
+        // the server with a request it would only reject with a 403.
+        if (!_canModerate.value) return
         if (!checkNetwork()) return
         trackBatchModeration(newStatus)
         onClearSelection()
@@ -467,14 +512,21 @@ class CommentsRsListViewModel @Inject constructor(
     }
 
     private fun fetchFirstPage(tab: CommentsRsListTab, showErrorSnackbar: Boolean = true) {
+        // Callers (initTab, refreshTab) guard against a null site, so the site getter below is safe.
         firstPageJobs[tab] = viewModelScope.launch {
-            val params = commentsRsDataSource.firstPageParams(
+            val base = commentsRsDataSource.firstPageParams(
                 status = tab.queryStatus,
                 search = _searchQuery.value.trim().ifBlank { null }
             )
+            // Unreplied over-fetches (like the legacy list) since client-side threading discards
+            // most of each page, so a single page still yields visible rows.
+            val params = if (tab == CommentsRsListTab.UNREPLIED) base.copy(perPage = UNREPLIED_PAGE_SIZE) else base
             val result = withContext(bgDispatcher) { commentsRsDataSource.fetchCommentsPage(site, params) }
             when (result) {
-                is RsCommentsPageResult.Success -> applyPage(tab, result, append = false)
+                is RsCommentsPageResult.Success -> {
+                    applyPage(tab, result, append = false)
+                    advanceIfFilteredEmpty(tab)
+                }
                 is RsCommentsPageResult.Error -> onFirstPageError(tab, result.message, showErrorSnackbar)
             }
         }
@@ -488,12 +540,18 @@ class CommentsRsListViewModel @Inject constructor(
     private fun applyPage(tab: CommentsRsListTab, result: RsCommentsPageResult.Success, append: Boolean) {
         if (!append) pageGenerations[tab] = (pageGenerations[tab] ?: 0) + 1
         nextPageParams[tab] = result.nextPageParams
-        val newRows = result.comments.map { it.toUiModel() }
+        // A comment can shift pages if the list changed server-side between requests, so dedupe
+        // the accumulated raw set on append. Displayed rows are always derived from this raw set,
+        // which lets Unreplied thread a reply against a parent fetched on an earlier page.
+        val raw = if (append) {
+            (rawComments[tab].orEmpty() + result.comments).distinctBy { it.remoteCommentId }
+        } else {
+            result.comments
+        }
+        rawComments[tab] = raw
         updateTabUiState(tab) {
             copy(
-                // A comment can shift pages if the list changed server-side between requests,
-                // so dedupe on append.
-                comments = if (append) (comments + newRows).distinctBy { it.remoteCommentId } else newRows,
+                comments = displayRows(tab, raw),
                 isLoading = false,
                 isRefreshing = false,
                 // A replacing page must clear isLoadingMore too: a load-more in flight when the
@@ -505,6 +563,50 @@ class CommentsRsListViewModel @Inject constructor(
             )
         }
         resolvePostTitles(tab)
+    }
+
+    /**
+     * Maps a tab's accumulated raw comments to displayed rows. The Unreplied tab is threaded
+     * client-side to only the comments the user hasn't replied to; every other tab shows its
+     * comments as-is.
+     */
+    private fun displayRows(tab: CommentsRsListTab, raw: List<RsComment>): List<CommentRsUiModel> {
+        // Rows are rebuilt from title-less RsComments, so carry over any post titles already
+        // resolved for the tab (keyed by post — a title is the same for every comment on a post).
+        // Without this, each rebuild (load-more, re-thread) would blank titles until resolvePostTitles
+        // re-fetches them, and re-thread — which never re-resolves — would lose them for good.
+        val knownTitles = getTabUiState(tab).comments
+            .filter { it.postTitle != null }
+            .associate { it.postId to it.postTitle }
+        val visible = if (tab == CommentsRsListTab.UNREPLIED) filterUnreplied(raw, currentUserId) else raw
+        return visible.map { it.toUiModel().copy(postTitle = knownTitles[it.postId]) }
+    }
+
+    /** Re-derives the Unreplied tab's rows from its raw comments (e.g. once [currentUserId] resolves). */
+    private fun rethreadUnreplied() {
+        val tab = CommentsRsListTab.UNREPLIED
+        val raw = rawComments[tab] ?: return
+        val rows = displayRows(tab, raw)
+        updateTabUiState(tab) { copy(comments = rows) }
+        // Re-threading can drop rows that were over-reported while currentUserId was still null;
+        // clear any selection for comments no longer shown so an off-screen id can't intercept
+        // back presses or target a batch action (the same hazard refreshTab guards against).
+        val visibleIds = rows.mapTo(mutableSetOf()) { it.remoteCommentId }
+        _selectedIds.update { it intersect visibleIds }
+        // Re-threading with the now-known id can empty a page that previously over-reported, so
+        // keep paging rather than stranding matches behind a false empty state.
+        advanceIfFilteredEmpty(tab)
+    }
+
+    /**
+     * Keeps paging while a filtered tab (Unreplied) shows no rows but the raw stream has more:
+     * a full page can thread away to nothing, and the list's load-more trigger only fires once
+     * rows are on screen. Bounded by the same auto-advance cap as load-more.
+     */
+    private fun advanceIfFilteredEmpty(tab: CommentsRsListTab) {
+        if (getTabUiState(tab).comments.isEmpty() && nextPageParams[tab] != null) {
+            loadMoreInternal(tab, autoAdvanceDepth = 0)
+        }
     }
 
     /**
@@ -586,5 +688,9 @@ class CommentsRsListViewModel @Inject constructor(
 
         private const val SEARCH_DEBOUNCE_MS = 250L
         private const val MIN_SEARCH_QUERY_LENGTH = 3
+
+        // Larger page for the Unreplied tab (matching the legacy list) to offset the rows that
+        // client-side threading filters out.
+        private const val UNREPLIED_PAGE_SIZE = 100u
     }
 }

@@ -21,6 +21,7 @@ import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.newstats.StatsPeriod
 import org.wordpress.android.ui.newstats.StatsCardsConfiguration
+import org.wordpress.android.ui.newstats.datasource.StatsUnit
 import org.wordpress.android.ui.newstats.repository.ViewsDataPoint
 import org.wordpress.android.ui.newstats.repository.StatsRepository
 import org.wordpress.android.ui.newstats.repository.StatsCardsConfigurationRepository
@@ -80,15 +81,18 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
             .thenReturn("Posts")
     }
 
-    private suspend fun initViewModel() {
+    private suspend fun initViewModel(periodType: String? = null) {
         whenever(cardsConfigurationRepository.getConfiguration(any()))
             .thenReturn(StatsCardsConfiguration())
+        // Default period is Last7Days (a fixed period that fills the bottom row from the chart). Pass
+        // "today" to exercise the dedicated-bottom-call path (also used by Custom periods).
+        val savedState = periodType?.let { SavedStateHandle(mapOf("period_type" to it)) } ?: SavedStateHandle()
         viewModel = ViewsStatsViewModel(
             selectedSiteRepository,
             accountStore,
             statsRepository,
             resourceProvider,
-            SavedStateHandle(),
+            savedState,
             cardsConfigurationRepository
         )
         viewModel.loadDataIfNeeded()
@@ -156,6 +160,85 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
             assertThat(chartData.currentPeriod).isEmpty()
             assertThat(chartData.previousPeriod).isEmpty()
         }
+    }
+
+    @Test
+    fun `given YEAR unit, when chart loads, then labels show the year rather than the month`() = test {
+        val result = createPeriodStatsResult(
+            unit = StatsUnit.YEAR,
+            currentPeriodData = listOf(
+                ViewsDataPoint(period = "2024-01-01", views = 1000L),
+                ViewsDataPoint(period = "2025-01-01", views = 1500L),
+                ViewsDataPoint(period = "2026-01-01", views = 2000L)
+            ),
+            previousPeriodData = emptyList()
+        )
+        whenever(statsRepository.fetchStatsForPeriod(any(), any())).thenReturn(result)
+
+        initViewModel()
+        advanceUntilIdle()
+
+        val labels = viewModel.uiState.value.chartLoaded().chartData.currentPeriod.map { it.label }
+        assertThat(labels).containsExactly("2024", "2025", "2026")
+    }
+
+    @Test
+    fun `given YEAR unit, when chart loads, then the legend shows a year span`() = test {
+        val result = createPeriodStatsResult(unit = StatsUnit.YEAR)
+        whenever(statsRepository.fetchStatsForPeriod(any(), any())).thenReturn(result)
+
+        initViewModel()
+        advanceUntilIdle()
+
+        // Aggregates are stubbed as 2024-01-14..2024-01-20, a span inside a single year.
+        assertThat(viewModel.uiState.value.chartLoaded().currentPeriodDateRange).isEqualTo("2024")
+    }
+
+    @Test
+    fun `given DAY unit, when chart loads, then labels are not coarsened to the year`() = test {
+        val result = createPeriodStatsResult(unit = StatsUnit.DAY)
+        whenever(statsRepository.fetchStatsForPeriod(any(), any())).thenReturn(result)
+
+        initViewModel()
+        advanceUntilIdle()
+
+        // Locale-independent contract lock: the YEAR pattern must not leak into the DAY path. A
+        // bare four-digit label would mean it had.
+        val labels = viewModel.uiState.value.chartLoaded().chartData.currentPeriod.map { it.label }
+        assertThat(labels).isNotEmpty
+        assertThat(labels).noneMatch { it.matches(Regex("""\d{4}""")) }
+    }
+
+    @Test
+    fun `given MONTH unit, when chart loads, then labels are not coarsened to the year`() = test {
+        val result = createPeriodStatsResult(unit = StatsUnit.MONTH)
+        whenever(statsRepository.fetchStatsForPeriod(any(), any())).thenReturn(result)
+
+        initViewModel()
+        advanceUntilIdle()
+
+        val labels = viewModel.uiState.value.chartLoaded().chartData.currentPeriod.map { it.label }
+        assertThat(labels).isNotEmpty
+        assertThat(labels).noneMatch { it.matches(Regex("""\d{4}""")) }
+    }
+
+    @Test
+    fun `given HOUR unit, when chart loads, then labels show the hour`() = test {
+        val result = createPeriodStatsResult(
+            unit = StatsUnit.HOUR,
+            currentPeriodData = listOf(
+                ViewsDataPoint(period = "2024-01-14 14:00:00", views = 10L),
+                ViewsDataPoint(period = "2024-01-14 15:00:00", views = 20L)
+            ),
+            previousPeriodData = emptyList()
+        )
+        whenever(statsRepository.fetchStatsForPeriod(any(), any())).thenReturn(result)
+
+        initViewModel()
+        advanceUntilIdle()
+
+        val labels = viewModel.uiState.value.chartLoaded().chartData.currentPeriod.map { it.label }
+        assertThat(labels).containsExactly("14:00", "15:00")
     }
 
     @Test
@@ -265,11 +348,11 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `when bottom stats are built, then they contain all stat types`() = test {
+    fun `when a fixed period loads, then the bottom row is built from the chart response`() = test {
+        // Fixed periods (default: Last7Days) fill the bottom row from the chart's own call — no
+        // dedicated bottom fetch.
         whenever(statsRepository.fetchStatsForPeriod(any(), any()))
             .thenReturn(createPeriodStatsResult())
-        whenever(statsRepository.fetchBottomStats(any(), any()))
-            .thenReturn(createBottomStatsResult())
 
         initViewModel()
         advanceUntilIdle()
@@ -279,44 +362,91 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
         assertThat(stats!!.map { it.label }).containsExactly(
             "Views", "Visitors", "Likes", "Comments", "Posts"
         )
+        verify(statsRepository, times(0)).fetchBottomStats(any(), any())
     }
 
     @Test
-    fun `when the bottom stats fetch fails, then the bottom row is hidden`() = test {
+    fun `when a multi-day Custom loads, then the bottom row is built from the chart response`() = test {
+        // A multi-day Custom chart shares the bottom row's unit, quantity and windows, so its response
+        // already carries the row's totals — no dedicated call, 2 network calls instead of 4.
+        whenever(statsRepository.fetchStatsForPeriod(any(), any()))
+            .thenReturn(createPeriodStatsResult())
+
+        initViewModel()
+        advanceUntilIdle()
+
+        viewModel.onPeriodChanged(
+            StatsPeriod.Custom(startDate = LocalDate.of(2024, 1, 1), endDate = LocalDate.of(2024, 3, 5))
+        )
+        viewModel.loadDataIfNeeded()
+        advanceUntilIdle()
+
+        val stats = viewModel.uiState.value.bottomStatsOrNull()
+        assertThat(stats).hasSize(5)
+        assertThat(stats!!.map { it.label }).containsExactly(
+            "Views", "Visitors", "Likes", "Comments", "Posts"
+        )
+        verify(statsRepository, times(0)).fetchBottomStats(any(), any())
+    }
+
+    @Test
+    fun `when a single-day Custom loads, then the bottom row comes from the dedicated call`() = test {
+        // Its chart is hourly and an hourly response only populates `views`, so the row can't come
+        // from the chart.
+        whenever(statsRepository.fetchStatsForPeriod(any(), any()))
+            .thenReturn(createPeriodStatsResult())
+        whenever(statsRepository.fetchBottomStats(any(), any()))
+            .thenReturn(createBottomStatsResult())
+
+        initViewModel()
+        advanceUntilIdle()
+
+        val day = LocalDate.of(2024, 1, 14)
+        viewModel.onPeriodChanged(StatsPeriod.Custom(startDate = day, endDate = day))
+        viewModel.loadDataIfNeeded()
+        advanceUntilIdle()
+
+        verify(statsRepository, times(1)).fetchBottomStats(any(), any())
+    }
+
+    @Test
+    fun `when a fixed-period chart fetch fails, then both the chart and the bottom row are hidden`() = test {
+        // Fixed periods source the bottom row from the chart, so a chart failure hides both.
+        whenever(statsRepository.fetchStatsForPeriod(any(), any()))
+            .thenReturn(PeriodStatsResult.Error("Network error"))
+
+        initViewModel()
+        advanceUntilIdle()
+
+        val state = viewModel.uiState.value as ViewsStatsCardUiState.Content
+        assertThat(state.chart).isEqualTo(ChartUiState.Error)
+        assertThat(state.bottomStats).isEqualTo(BottomStatsUiState.Hidden)
+    }
+
+    @Test
+    fun `when a single-day bottom fetch fails, then the row is hidden but the chart still loads`() = test {
+        // Single-day periods (Today) load the hourly chart and the bottom row independently.
         whenever(statsRepository.fetchStatsForPeriod(any(), any()))
             .thenReturn(createPeriodStatsResult())
         whenever(statsRepository.fetchBottomStats(any(), any()))
             .thenReturn(BottomStatsResult.Error)
 
-        initViewModel()
+        initViewModel(periodType = "today")
         advanceUntilIdle()
 
-        assertThat(viewModel.uiState.value.bottomState()).isEqualTo(BottomStatsUiState.Hidden)
+        val state = viewModel.uiState.value as ViewsStatsCardUiState.Content
+        assertThat(state.bottomStats).isEqualTo(BottomStatsUiState.Hidden)
+        assertThat((state.chart as ChartUiState.Loaded).currentPeriodViews).isEqualTo(TEST_CURRENT_PERIOD_VIEWS)
     }
 
     @Test
-    fun `when the bottom stats fetch fails, then the chart still loads`() = test {
-        whenever(statsRepository.fetchStatsForPeriod(any(), any()))
-            .thenReturn(createPeriodStatsResult())
-        whenever(statsRepository.fetchBottomStats(any(), any()))
-            .thenReturn(BottomStatsResult.Error)
-
-        initViewModel()
-        advanceUntilIdle()
-
-        // The chart region is independent of the bottom row, so it stays loaded.
-        assertThat(viewModel.uiState.value.chartLoaded().currentPeriodViews)
-            .isEqualTo(TEST_CURRENT_PERIOD_VIEWS)
-    }
-
-    @Test
-    fun `when the chart fetch fails, then the bottom row still loads`() = test {
+    fun `when a single-day chart fetch fails, then the bottom row still loads from its dedicated call`() = test {
         whenever(statsRepository.fetchStatsForPeriod(any(), any()))
             .thenReturn(PeriodStatsResult.Error("Network error"))
         whenever(statsRepository.fetchBottomStats(any(), any()))
             .thenReturn(createBottomStatsResult())
 
-        initViewModel()
+        initViewModel(periodType = "today")
         advanceUntilIdle()
 
         val state = viewModel.uiState.value as ViewsStatsCardUiState.Content
@@ -325,7 +455,9 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `when bottom stats fail transiently, then the next visibility retries and recovers the row`() = test {
+    fun `when a single-day bottom fetch fails transiently, then the next visibility retries and recovers`() = test {
+        // The dedicated bottom call is used for single-day periods; a transient failure must not leave
+        // the period marked loaded, so the next visibility retries it.
         whenever(statsRepository.fetchStatsForPeriod(any(), any()))
             .thenReturn(createPeriodStatsResult())
         // First attempt fails (row hidden); the retry on next visibility succeeds.
@@ -333,7 +465,7 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
             .thenReturn(BottomStatsResult.Error)
             .thenReturn(createBottomStatsResult())
 
-        initViewModel()
+        initViewModel(periodType = "today")
         advanceUntilIdle()
         assertThat(viewModel.uiState.value.bottomState()).isEqualTo(BottomStatsUiState.Hidden)
 
@@ -347,10 +479,9 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
 
     @Test
     fun `when stat increases, then positive change is calculated`() = test {
+        // For fixed periods the bottom row comes from the chart aggregates, so drive the change via them.
         whenever(statsRepository.fetchStatsForPeriod(any(), any()))
-            .thenReturn(createPeriodStatsResult())
-        whenever(statsRepository.fetchBottomStats(any(), any()))
-            .thenReturn(createBottomStatsResult(currentViews = 1000L, previousViews = 800L))
+            .thenReturn(createPeriodStatsResult(currentViews = 1000L, previousViews = 800L))
 
         initViewModel()
         advanceUntilIdle()
@@ -363,9 +494,7 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
     @Test
     fun `when stat decreases, then negative change is calculated`() = test {
         whenever(statsRepository.fetchStatsForPeriod(any(), any()))
-            .thenReturn(createPeriodStatsResult())
-        whenever(statsRepository.fetchBottomStats(any(), any()))
-            .thenReturn(createBottomStatsResult(currentViews = 800L, previousViews = 1000L))
+            .thenReturn(createPeriodStatsResult(currentViews = 800L, previousViews = 1000L))
 
         initViewModel()
         advanceUntilIdle()
@@ -378,9 +507,7 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
     @Test
     fun `when stat is unchanged, then no change is calculated`() = test {
         whenever(statsRepository.fetchStatsForPeriod(any(), any()))
-            .thenReturn(createPeriodStatsResult())
-        whenever(statsRepository.fetchBottomStats(any(), any()))
-            .thenReturn(createBottomStatsResult(currentViews = 1000L, previousViews = 1000L))
+            .thenReturn(createPeriodStatsResult(currentViews = 1000L, previousViews = 1000L))
 
         initViewModel()
         advanceUntilIdle()
@@ -487,11 +614,10 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
     fun `when loadDataIfNeeded is called multiple times, then data is only loaded once`() = test {
         val result = createPeriodStatsResult()
 
+        // Fixed period: the chart call succeeds and fills the bottom row, so the period is fully loaded
+        // and subsequent loadDataIfNeeded calls short-circuit.
         whenever(statsRepository.fetchStatsForPeriod(any(), any()))
             .thenReturn(result)
-        // Both regions must succeed for the period to be treated as fully loaded (and thus skipped).
-        whenever(statsRepository.fetchBottomStats(any(), any()))
-            .thenReturn(createBottomStatsResult())
 
         initViewModel()
         advanceUntilIdle()
@@ -825,7 +951,8 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
         previousComments: Long = TEST_PREVIOUS_PERIOD_COMMENTS,
         previousPosts: Long = TEST_PREVIOUS_PERIOD_POSTS,
         currentPeriodData: List<ViewsDataPoint> = createDefaultDataPoints(),
-        previousPeriodData: List<ViewsDataPoint> = createDefaultDataPoints()
+        previousPeriodData: List<ViewsDataPoint> = createDefaultDataPoints(),
+        unit: StatsUnit = StatsUnit.DAY
     ): PeriodStatsResult.Success {
         val currentAggregates = PeriodAggregates(
             views = currentViews,
@@ -849,7 +976,8 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
             currentAggregates = currentAggregates,
             previousAggregates = previousAggregates,
             currentPeriodData = currentPeriodData,
-            previousPeriodData = previousPeriodData
+            previousPeriodData = previousPeriodData,
+            unit = unit
         )
     }
 

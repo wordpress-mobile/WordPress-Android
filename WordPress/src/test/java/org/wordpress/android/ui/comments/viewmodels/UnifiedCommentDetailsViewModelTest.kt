@@ -43,6 +43,7 @@ import org.wordpress.android.ui.comments.unified.CommentsRsDataSource.RsComment
 import org.wordpress.android.ui.comments.unified.CommentsRsDataSource.RsResult
 import org.wordpress.android.ui.comments.unified.UnifiedCommentDetailsViewModel
 import org.wordpress.android.ui.comments.unified.UnifiedCommentDetailsViewModel.CommentDetailsUiState
+import org.wordpress.android.ui.mysite.items.listitem.SiteCapabilityChecker
 import org.wordpress.android.ui.notifications.utils.NotificationsActionsWrapper
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.utils.UiString.UiStringText
@@ -59,6 +60,9 @@ class UnifiedCommentDetailsViewModelTest : BaseUnitTest() {
 
     @Mock
     lateinit var commentsStore: CommentsStore
+
+    @Mock
+    lateinit var siteCapabilityChecker: SiteCapabilityChecker
 
     @Mock
     lateinit var localCommentCacheUpdateHandler: LocalCommentCacheUpdateHandler
@@ -103,6 +107,8 @@ class UnifiedCommentDetailsViewModelTest : BaseUnitTest() {
             .thenReturn(successPayload())
         whenever(dateTimeUtilsWrapper.javaDateToTimeSpan(any())).thenReturn("2 hours ago")
         whenever(notificationsActionsWrapper.downloadNoteAndUpdateDB(any())).thenReturn(true)
+        // Default to allowed for any site; the restricted-capability tests override for [site].
+        whenever(siteCapabilityChecker.canModerateComments(any())).thenReturn(true)
 
         viewModel = createViewModel()
 
@@ -201,6 +207,44 @@ class UnifiedCommentDetailsViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `ui state exposes canModerate from the capability checker`() = test {
+        viewModel.start(site, REMOTE_COMMENT_ID)
+
+        assertThat(uiStates.last().canModerate).isTrue
+    }
+
+    @Test
+    fun `canModerate is false and moderation is a no-op without the capability`() = test {
+        whenever(siteCapabilityChecker.canModerateComments(site)).thenReturn(false)
+        val restrictedViewModel = createViewModel()
+        val restrictedStates = mutableListOf<CommentDetailsUiState>()
+        restrictedViewModel.uiState.observeForever { restrictedStates.add(it) }
+
+        restrictedViewModel.start(site, REMOTE_COMMENT_ID)
+        restrictedViewModel.onApproveClicked()
+        restrictedViewModel.onSpamClicked()
+        restrictedViewModel.onTrashClicked()
+        restrictedViewModel.onDeletePermanentlyClicked()
+
+        assertThat(restrictedStates.last().canModerate).isFalse
+        verify(commentsRsDataSource, times(0)).updateStatus(eq(site), eq(REMOTE_COMMENT_ID), any())
+        verify(commentsRsDataSource, times(0)).delete(site, REMOTE_COMMENT_ID)
+    }
+
+    @Test
+    fun `edit is a no-op without the moderate capability`() = test {
+        whenever(siteCapabilityChecker.canModerateComments(site)).thenReturn(false)
+        val restrictedViewModel = createViewModel()
+        val restrictedEvents = mutableListOf<CommentDetailsActionEvent>()
+        restrictedViewModel.uiActionEvent.observeForever { it.applyIfNotHandled { restrictedEvents.add(this) } }
+
+        restrictedViewModel.start(site, REMOTE_COMMENT_ID)
+        restrictedViewModel.onEditClicked()
+
+        assertThat(restrictedEvents.filterIsInstance<LaunchEditComment>()).isEmpty()
+    }
+
+    @Test
     fun `moderation reverts status and surfaces the server error message`() = test {
         whenever(commentsRsDataSource.updateStatus(eq(site), eq(REMOTE_COMMENT_ID), any()))
             .thenReturn(RsResult.Error("Sorry, you are not allowed to edit this comment."))
@@ -277,6 +321,59 @@ class UnifiedCommentDetailsViewModelTest : BaseUnitTest() {
 
         verify(commentsStore, times(1)).likeComment(site, REMOTE_COMMENT_ID, null, true)
         verify(commentsStore, times(0)).likeComment(site, REMOTE_COMMENT_ID, null, false)
+    }
+
+    @Test
+    fun `onApproveClicked ignores a second tap while a moderation is in flight`() = test {
+        whenever(commentsRsDataSource.updateStatus(eq(site), eq(REMOTE_COMMENT_ID), any()))
+            .doSuspendableAnswer {
+                delay(LOAD_DELAY_MS)
+                RsResult.Success
+            }
+        viewModel.start(site, REMOTE_COMMENT_ID)
+
+        viewModel.onApproveClicked()
+        viewModel.onApproveClicked()
+        advanceUntilIdle()
+
+        verify(commentsRsDataSource, times(1)).updateStatus(site, REMOTE_COMMENT_ID, UNAPPROVED)
+        verify(commentsRsDataSource, times(0)).updateStatus(site, REMOTE_COMMENT_ID, APPROVED)
+    }
+
+    @Test
+    fun `a moderation tapped during the auto-approve after a reply is ignored`() = test {
+        // Replying to an unapproved comment fires an implicit moderate(APPROVED). A moderation
+        // tapped while that (suspended) approve is in flight must not race a second write.
+        whenever(commentsRsDataSource.getComment(site, REMOTE_COMMENT_ID)).thenReturn(UNAPPROVED_RS_COMMENT)
+        whenever(commentsRsDataSource.updateStatus(eq(site), eq(REMOTE_COMMENT_ID), any()))
+            .doSuspendableAnswer {
+                delay(LOAD_DELAY_MS)
+                RsResult.Success
+            }
+        viewModel.start(site, REMOTE_COMMENT_ID)
+
+        viewModel.onReplyClicked("nice post")
+        // The reply has completed and the auto-approve's moderate(APPROVED) is now suspended.
+        viewModel.onApproveClicked()
+        advanceUntilIdle()
+
+        verify(commentsRsDataSource, times(1)).updateStatus(site, REMOTE_COMMENT_ID, APPROVED)
+        verify(commentsRsDataSource, times(0)).updateStatus(site, REMOTE_COMMENT_ID, UNAPPROVED)
+    }
+
+    @Test
+    fun `a second moderation is allowed once the first has completed`() = test {
+        // Guards against the in-flight flag getting stuck true (e.g. a dropped finally reset), which
+        // would silently ignore every later moderation. The first call completes before the second.
+        viewModel.start(site, REMOTE_COMMENT_ID)
+
+        viewModel.onApproveClicked()
+        advanceUntilIdle()
+        viewModel.onApproveClicked()
+        advanceUntilIdle()
+
+        verify(commentsRsDataSource).updateStatus(site, REMOTE_COMMENT_ID, UNAPPROVED)
+        verify(commentsRsDataSource).updateStatus(site, REMOTE_COMMENT_ID, APPROVED)
     }
 
     @Test
@@ -614,6 +711,7 @@ class UnifiedCommentDetailsViewModelTest : BaseUnitTest() {
         bgDispatcher = testDispatcher(),
         commentsRsDataSource = commentsRsDataSource,
         commentsStore = commentsStore,
+        siteCapabilityChecker = siteCapabilityChecker,
         localCommentCacheUpdateHandler = localCommentCacheUpdateHandler,
         networkUtilsWrapper = networkUtilsWrapper,
         dateTimeUtilsWrapper = dateTimeUtilsWrapper,

@@ -174,7 +174,7 @@ class MySiteViewModel @Inject constructor(
         if (isPullToRefresh) analyticsTrackerWrapper.track(Stat.MY_SITE_PULL_TO_REFRESH)
         selectedSiteRepository.getSelectedSite()?.let { site ->
             if (isPullToRefresh) {
-                siteCapabilityChecker.clearCacheForSite(site.siteId)
+                siteCapabilityChecker.clearCacheForSite(site)
             }
             buildDashboardOrSiteItems(site, forceRefresh = isPullToRefresh)
             siteConnectivityBannerViewModelSlice.fetchCapabilities(

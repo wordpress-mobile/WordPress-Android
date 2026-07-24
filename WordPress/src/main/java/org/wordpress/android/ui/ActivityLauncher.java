@@ -687,7 +687,7 @@ public class ActivityLauncher {
     }
 
     public static void viewCurrentBlogPages(@NonNull Context context, @NonNull SiteModel site) {
-        if (shouldUseNewPagesList(context, site)) {
+        if (shouldUseNewPagesList(site)) {
             context.startActivity(PagesRsListActivity.Companion.createIntent(context));
             AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_PAGES, site);
             return;
@@ -698,15 +698,8 @@ public class ActivityLauncher {
         AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_PAGES, site);
     }
 
-    private static boolean shouldUseNewPagesList(@NonNull Context context, @NonNull SiteModel site) {
-        if (!site.hasApplicationPassword()) {
-            return false;
-        }
-        ActivityLauncherEntryPoint entryPoint = EntryPointAccessors.fromApplication(
-                context.getApplicationContext(),
-                ActivityLauncherEntryPoint.class
-        );
-        return entryPoint.experimentalFeatures().isEnabled(Feature.RS_PAGES_LIST);
+    private static boolean shouldUseNewPagesList(@Nullable SiteModel site) {
+        return site != null && site.hasApplicationPassword();
     }
 
     public static void viewPostTypes(@NonNull Context context, @NonNull SiteModel site) {
@@ -760,9 +753,10 @@ public class ActivityLauncher {
      * be used for {@code site} instead of the legacy (FluxC) ones.
      */
     public static boolean shouldUseRsComments(@NonNull Context context, @NonNull SiteModel site) {
-        // The rs client can only authenticate WP.com-accessed sites or self-hosted sites with an
-        // application password; everywhere else keep the legacy (FluxC) comments screens.
-        if (!site.isUsingWpComRestApi() && !site.hasApplicationPassword()) {
+        // Match the RS posts/pages gate: use the rs comments screens only for self-hosted sites
+        // with an application password, and keep the legacy (FluxC) comments screens everywhere
+        // else (including WP.com-accessed sites).
+        if (!site.hasApplicationPassword()) {
             return false;
         }
         ActivityLauncherEntryPoint entryPoint = EntryPointAccessors.fromApplication(

@@ -28,6 +28,7 @@ import org.wordpress.android.ui.comments.unified.CommentIdentifier.NotificationC
 import org.wordpress.android.ui.comments.unified.CommentIdentifier.SiteCommentIdentifier
 import org.wordpress.android.ui.comments.unified.CommentsRsDataSource.RsComment
 import org.wordpress.android.ui.comments.unified.CommentsRsDataSource.RsResult
+import org.wordpress.android.ui.mysite.items.listitem.SiteCapabilityChecker
 import org.wordpress.android.ui.notifications.utils.NotificationsActionsWrapper
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.utils.UiString
@@ -63,6 +64,7 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     private val commentsRsDataSource: CommentsRsDataSource,
     private val commentsStore: CommentsStore,
+    private val siteCapabilityChecker: SiteCapabilityChecker,
     private val localCommentCacheUpdateHandler: LocalCommentCacheUpdateHandler,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     private val dateTimeUtilsWrapper: DateTimeUtilsWrapper,
@@ -100,6 +102,12 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
     private var noteId: String? = null
     private var loadedComment: RsComment? = null
     private var isLikeInProgress = false
+    private var isModerationInProgress = false
+
+    // Whether the current user may moderate comments on this site (moderate_comments capability).
+    // Fetched asynchronously in [start]; false until it resolves so the moderation controls start
+    // disabled and enable once confirmed, rather than flashing enabled then greying out.
+    private var canModerate = false
 
     fun start(site: SiteModel, remoteCommentId: Long, noteId: String? = null) {
         if (isStarted) return
@@ -108,6 +116,14 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
         this.remoteCommentId = remoteCommentId
         this.noteId = noteId
         loadComment()
+        loadModerationCapability()
+    }
+
+    private fun loadModerationCapability() {
+        launch {
+            canModerate = withContext(bgDispatcher) { siteCapabilityChecker.canModerateComments(site) }
+            _uiState.value?.let { _uiState.value = it.copy(canModerate = canModerate) }
+        }
     }
 
     /**
@@ -225,8 +241,12 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
         }
     }
 
+    @Suppress("ReturnCount")
     fun onEditClicked() {
         if (loadedComment == null) return
+        // Editing a comment needs moderation rights; the button is disabled without them, but guard
+        // the action too so nothing (e.g. a stale recomposition) can slip past the disabled UI.
+        if (!canModerate) return
         // The editor loads the comment from the network, so don't open it offline.
         if (isOffline()) return
         trackCommentAction(Stat.COMMENT_EDITOR_OPENED)
@@ -272,7 +292,12 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
             } else {
                 trackCommentReply(comment)
                 _commentChanged.value = Event(Unit)
-                // Replying to an unapproved comment implicitly approves it, matching legacy behaviour
+                // Replying to an unapproved comment implicitly approves it, matching legacy
+                // behaviour. Always attempt it rather than gating on canModerate: that flag is
+                // fetched asynchronously and may still be unresolved when a moderator replies
+                // (e.g. from a notification, reply field pre-focused), which would silently drop
+                // the approve. approveAfterReply() flips the status optimistically and reverts if
+                // the server rejects it, so a non-moderator's reply self-heals either way.
                 if (currentStatus() == UNAPPROVED) {
                     approveAfterReply()
                 }
@@ -283,42 +308,65 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
     }
 
     private suspend fun approveAfterReply() {
-        _uiState.value = _uiState.value?.copy(status = APPROVED)
-        val result = withContext(bgDispatcher) { moderate(APPROVED) }
-        if (result is RsResult.Error) {
-            _uiState.value = _uiState.value?.copy(status = UNAPPROVED)
-        } else {
-            // Match the legacy screen, which tracks the implicit approve when replying to an
-            // unapproved comment (this path is only reached from an unapproved comment).
-            trackCommentAction(Stat.COMMENT_APPROVED)
-            if (noteId != null) {
-                _commentModerated.value = Event(APPROVED)
+        // Hold the same guard moderateComment uses so this implicit approve can't race a user
+        // moderation: skip if one is already in flight, and keep the flag set across our own
+        // (multi-second) network call so an approve/spam/trash tapped during it is ignored rather
+        // than firing a second, conflicting updateStatus that would desync the UI and server.
+        if (isModerationInProgress) return
+        isModerationInProgress = true
+        try {
+            _uiState.value = _uiState.value?.copy(status = APPROVED)
+            val result = withContext(bgDispatcher) { moderate(APPROVED) }
+            if (result is RsResult.Error) {
+                _uiState.value = _uiState.value?.copy(status = UNAPPROVED)
+            } else {
+                // Match the legacy screen, which tracks the implicit approve when replying to an
+                // unapproved comment (this path is only reached from an unapproved comment).
+                trackCommentAction(Stat.COMMENT_APPROVED)
+                if (noteId != null) {
+                    _commentModerated.value = Event(APPROVED)
+                }
             }
+        } finally {
+            isModerationInProgress = false
         }
     }
 
+    @Suppress("ReturnCount")
     private fun moderateComment(newStatus: CommentStatus, closeOnSuccess: Boolean) {
         // The action footer stays visible while the comment loads, so ignore taps until then:
         // before the load completes the ui state holds a default status and the toggle handlers
         // would compute (and apply server-side) the wrong target status.
         if (loadedComment == null) return
+        // Moderation controls are disabled without the capability; guard the action too so a stale
+        // recomposition can't fire a request the server would only reject with a 403.
+        if (!canModerate) return
         if (isOffline()) return
+        // Guard against a second moderation while one is in flight (fast double-tap): the target
+        // status is derived from the optimistic ui state, so racing requests could compute (and
+        // apply server-side) conflicting statuses and leave the UI and server out of sync.
+        if (isModerationInProgress) return
         val previousStatus = currentStatus()
+        isModerationInProgress = true
         launch {
-            _uiState.value = _uiState.value?.copy(status = newStatus)
-            val result = withContext(bgDispatcher) { moderate(newStatus) }
-            if (result is RsResult.Error) {
-                _uiState.value = _uiState.value?.copy(status = previousStatus)
-                showError(result.message, R.string.error_moderate_comment)
-            } else {
-                moderationStat(previousStatus, newStatus)?.let { trackCommentAction(it) }
-                _commentChanged.value = Event(Unit)
-                if (noteId != null) {
-                    _commentModerated.value = Event(newStatus)
+            try {
+                _uiState.value = _uiState.value?.copy(status = newStatus)
+                val result = withContext(bgDispatcher) { moderate(newStatus) }
+                if (result is RsResult.Error) {
+                    _uiState.value = _uiState.value?.copy(status = previousStatus)
+                    showError(result.message, R.string.error_moderate_comment)
+                } else {
+                    moderationStat(previousStatus, newStatus)?.let { trackCommentAction(it) }
+                    _commentChanged.value = Event(Unit)
+                    if (noteId != null) {
+                        _commentModerated.value = Event(newStatus)
+                    }
+                    if (closeOnSuccess) {
+                        _uiActionEvent.value = Event(Close)
+                    }
                 }
-                if (closeOnSuccess) {
-                    _uiActionEvent.value = Event(Close)
-                }
+            } finally {
+                isModerationInProgress = false
             }
         }
     }
@@ -424,7 +472,8 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
         postTitle = cached?.postTitle?.takeIf { it.isNotBlank() } ?: fallbackPostTitle,
         commentUrl = url,
         status = status,
-        isLiked = cached?.iLike ?: fallbackIsLiked
+        isLiked = cached?.iLike ?: fallbackIsLiked,
+        canModerate = canModerate
     )
 
     private data class CommentLoadResult(
@@ -445,7 +494,8 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
         val commentUrl: String = "",
         val status: CommentStatus = CommentStatus.ALL,
         val isLiked: Boolean = false,
-        val isReplyInProgress: Boolean = false
+        val isReplyInProgress: Boolean = false,
+        val canModerate: Boolean = false
     )
 }
 

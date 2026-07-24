@@ -104,6 +104,7 @@ fun UnifiedCommentDetailsScreen(
                     isLiked = uiState.isLiked,
                     showLikeButton = showLikeButton,
                     showCommentUrlActions = uiState.commentUrl.isNotEmpty(),
+                    canModerate = uiState.canModerate,
                     onModerateClick = actions.onModerateClick,
                     onSpamClick = actions.onSpamClick,
                     onLikeClick = actions.onLikeClick,
@@ -281,7 +282,8 @@ private fun UnifiedCommentDetailsScreenPreview() {
                 commentText = "This is a <b>great</b> post, thanks for sharing!",
                 postTitle = "My first post",
                 commentUrl = "https://example.com/post#comment-1",
-                status = UNAPPROVED
+                status = UNAPPROVED,
+                canModerate = true
             ),
             replyText = TextFieldValue(""),
             onReplyTextChange = {},

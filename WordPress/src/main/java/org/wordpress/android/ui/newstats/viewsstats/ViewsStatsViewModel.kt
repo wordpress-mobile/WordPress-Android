@@ -16,8 +16,10 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.newstats.StatsPeriod
+import org.wordpress.android.ui.newstats.datasource.StatsUnit
 import org.wordpress.android.ui.newstats.repository.BottomStatsAggregates
 import org.wordpress.android.ui.newstats.repository.BottomStatsResult
+import org.wordpress.android.ui.newstats.repository.PeriodAggregates
 import org.wordpress.android.ui.newstats.repository.PeriodStatsResult
 import org.wordpress.android.ui.newstats.repository.StatsCardsConfigurationRepository
 import org.wordpress.android.ui.newstats.repository.StatsRepository
@@ -259,9 +261,8 @@ class ViewsStatsViewModel @Inject constructor(
         currentChartType = chartType
         saveChartType(chartType)
         _uiState.update { current ->
-            val chart = (current as? ViewsStatsCardUiState.Content)?.chart
-            if (current is ViewsStatsCardUiState.Content && chart is ChartUiState.Loaded) {
-                current.copy(chart = chart.copy(chartType = chartType))
+            if (current is ViewsStatsCardUiState.Content && current.chart is ChartUiState.Loaded) {
+                current.copy(chart = current.chart.copy(chartType = chartType))
             } else {
                 current
             }
@@ -390,16 +391,26 @@ class ViewsStatsViewModel @Inject constructor(
     private suspend fun loadDataInternal(site: SiteModel) {
         val targetPeriod = currentPeriod
         try {
-            val (chartLoaded, bottomLoaded) = coroutineScope {
-                val chart = async { loadChart(site) }
-                val bottom = async { loadBottomStats(site) }
-                chart.await() to bottom.await()
+            val loaded = if (fillsBottomFromChart(targetPeriod)) {
+                // Every non-hourly period uses a daily/monthly/yearly chart whose response already
+                // carries all five bottom-row metrics per bucket, so the bottom row is filled from that
+                // same fetch. This makes the card issue 2 network calls instead of 4.
+                loadChart(site, fillBottomFromChart = true)
+            } else {
+                // Single-day periods fetch the bottom row from a dedicated day-level call (run in
+                // parallel with the chart), the same way the web app does it: their chart is hourly and
+                // an hourly response only populates `views`, so it can't fill the row.
+                coroutineScope {
+                    val chart = async { loadChart(site, fillBottomFromChart = false) }
+                    val bottom = async { loadBottomStats(site) }
+                    val chartLoaded = chart.await()
+                    val bottomLoaded = bottom.await()
+                    chartLoaded && bottomLoaded
+                }
             }
-            // Only treat the period as fully loaded when both regions succeeded. Otherwise a transient
-            // bottom-stats failure (which merely hides the row) would leave loadedPeriod set, making
-            // loadDataIfNeeded short-circuit forever with no recovery short of a manual refresh or a
-            // period change. Leaving loadedPeriod unset lets the next visibility retry the load.
-            if (chartLoaded && bottomLoaded) {
+            // Treat the period as loaded only when everything shown succeeded; otherwise a transient
+            // failure would leave loadedPeriod set and make loadDataIfNeeded short-circuit forever.
+            if (loaded) {
                 loadedPeriod = targetPeriod
             }
         } finally {
@@ -424,27 +435,76 @@ class ViewsStatsViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Loads the chart for [currentPeriod]. When [fillBottomFromChart] is true the bottom row is filled
+     * from the same response (its per-bucket data already carries all five metrics); when false the
+     * bottom row is left untouched here because a dedicated call populates it (Today and Custom).
+     */
     @Suppress("TooGenericExceptionCaught")
-    private suspend fun loadChart(site: SiteModel): Boolean {
+    private suspend fun loadChart(site: SiteModel, fillBottomFromChart: Boolean): Boolean {
         var success = false
         val chartState = try {
             when (val result = statsRepository.fetchStatsForPeriod(site.siteId, currentPeriod)) {
                 is PeriodStatsResult.Success -> {
                     success = true
+                    if (fillBottomFromChart) {
+                        updateBottom(BottomStatsUiState.Loaded(result.toBottomStatItems()))
+                    }
                     buildChartLoaded(result)
                 }
-                is PeriodStatsResult.Error -> ChartUiState.Error
+                is PeriodStatsResult.Error -> {
+                    if (fillBottomFromChart) updateBottom(BottomStatsUiState.Hidden)
+                    ChartUiState.Error
+                }
             }
         } catch (e: CancellationException) {
             throw e
         } catch (e: Exception) {
             AppLog.e(AppLog.T.STATS, "Error loading views chart", e)
+            if (fillBottomFromChart) updateBottom(BottomStatsUiState.Hidden)
             ChartUiState.Error
         }
         updateChart(chartState)
         return success
     }
 
+    /**
+     * Whether the bottom row can be filled from the chart's own response, which is true whenever the
+     * chart isn't hourly: a non-hourly `stats/visits` response carries all five bottom-row metrics per
+     * bucket, and the chart requests the same unit, quantity and windows the row needs.
+     *
+     * Only the single-day periods (Today, and a Custom range whose start and end are the same day)
+     * render an hourly chart, and an hourly response populates `views` alone — so those fetch the row
+     * from a dedicated day-level call instead.
+     */
+    private fun fillsBottomFromChart(period: StatsPeriod): Boolean = when (period) {
+        is StatsPeriod.Last7Days,
+        is StatsPeriod.Last30Days,
+        is StatsPeriod.Last6Months,
+        is StatsPeriod.Last12Months -> true
+        // A multi-day Custom chart shares the bottom row's unit and quantity (both derive from the
+        // repository's span-based rule, year-coarsening included), so its response already holds the
+        // row's totals — including visitor uniques de-duplicated at the same granularity.
+        is StatsPeriod.Custom -> period.startDate != period.endDate
+        is StatsPeriod.Today -> false
+    }
+
+    /**
+     * Maps the chart's period aggregates (which already carry all five metrics for the fixed periods)
+     * into the bottom-row stat items, so no dedicated bottom-stats call is needed.
+     */
+    private fun PeriodStatsResult.Success.toBottomStatItems(): List<StatItem> =
+        buildStatItems(currentAggregates.toBottomAggregates(), previousAggregates.toBottomAggregates())
+
+    private fun PeriodAggregates.toBottomAggregates() = BottomStatsAggregates(
+        views = views,
+        visitors = visitors,
+        likes = likes,
+        comments = comments,
+        posts = posts
+    )
+
+    /** Fetches the bottom row from a dedicated call. Used for Today and Custom (see [fillsBottomFromChart]). */
     @Suppress("TooGenericExceptionCaught")
     private suspend fun loadBottomStats(site: SiteModel): Boolean {
         var success = false
@@ -496,7 +556,7 @@ class ViewsStatsViewModel @Inject constructor(
         val currentDataPoints = result.currentPeriodData
             .map {
                 ChartDataPoint(
-                    formatDataPointLabel(it.period, currentPeriod),
+                    formatDataPointLabel(it.period, result.unit),
                     it.views,
                     it.period
                 )
@@ -504,7 +564,7 @@ class ViewsStatsViewModel @Inject constructor(
         val previousDataPoints = result.previousPeriodData
             .map {
                 ChartDataPoint(
-                    formatDataPointLabel(it.period, currentPeriod),
+                    formatDataPointLabel(it.period, result.unit),
                     it.views,
                     it.period
                 )
@@ -530,12 +590,14 @@ class ViewsStatsViewModel @Inject constructor(
             currentPeriodDateRange = formatDateRangeForPeriod(
                 currentStats.startDate,
                 currentStats.endDate,
-                currentPeriod
+                currentPeriod,
+                result.unit
             ),
             previousPeriodDateRange = formatDateRangeForPeriod(
                 previousStats.startDate,
                 previousStats.endDate,
-                currentPeriod
+                currentPeriod,
+                result.unit
             ),
             chartData = ViewsStatsChartData(currentPeriod = currentDataPoints, previousPeriod = previousDataPoints),
             periodAverage = average,
@@ -592,17 +654,34 @@ class ViewsStatsViewModel @Inject constructor(
         return ((current - previous).toDouble() / previous) * PERCENTAGE_BASE
     }
 
-    private fun formatDataPointLabel(period: String, statsPeriod: StatsPeriod): String {
-        val isMonthlyPeriod = statsPeriod is StatsPeriod.Last6Months ||
-            statsPeriod is StatsPeriod.Last12Months ||
-            (statsPeriod is StatsPeriod.Custom && isCustomPeriodMonthly(statsPeriod))
+    /**
+     * Formats one chart bucket's axis label. The output granularity comes from [unit] — the
+     * granularity the buckets were actually requested at — not from the [period] string, which is a
+     * full ISO date for DAY, MONTH and YEAR buckets alike and so cannot be told apart on its own.
+     * The string's shape still decides how to *parse* it, since the API returns "yyyy-MM" for some
+     * month buckets and "yyyy-MM-dd" for others.
+     */
+    private fun formatDataPointLabel(period: String, unit: StatsUnit): String = when {
+        period.matches(HOURLY_FORMAT_REGEX) -> formatHourlyLabel(period)
+        else -> parsePeriodDate(period)
+            ?.format(DateTimeFormatter.ofPattern(labelPatternFor(unit), Locale.getDefault()))
+            ?: period
+    }
 
-        return when {
-            period.matches(HOURLY_FORMAT_REGEX) -> formatHourlyLabel(period)
-            period.matches(DAILY_FORMAT_REGEX) -> formatDailyLabel(period, isMonthlyPeriod)
-            period.matches(MONTHLY_FORMAT_REGEX) -> formatMonthlyLabel(period)
-            else -> period
+    private fun labelPatternFor(unit: StatsUnit): String = when (unit) {
+        StatsUnit.YEAR -> "yyyy"
+        StatsUnit.MONTH -> "MMM"
+        else -> "MMM d"
+    }
+
+    /** Parses a bucket's period string, tolerating both the "yyyy-MM" and "yyyy-MM-dd" shapes. */
+    private fun parsePeriodDate(period: String): LocalDate? = when {
+        period.matches(DAILY_FORMAT_REGEX) -> LocalDate.parse(period, DateTimeFormatter.ISO_LOCAL_DATE)
+        period.matches(MONTHLY_FORMAT_REGEX) -> {
+            val parts = period.split("-")
+            LocalDate.of(parts[0].toInt(), parts[1].toInt(), 1)
         }
+        else -> null
     }
 
     private fun formatHourlyLabel(period: String): String {
@@ -611,24 +690,23 @@ class ViewsStatsViewModel @Inject constructor(
         return LocalDateTime.parse(period, inputFormat).format(outputFormat)
     }
 
-    private fun formatDailyLabel(period: String, showMonthOnly: Boolean): String {
-        val date = LocalDate.parse(period, DateTimeFormatter.ISO_LOCAL_DATE)
-        val pattern = if (showMonthOnly) "MMM" else "MMM d"
-        return date.format(DateTimeFormatter.ofPattern(pattern, Locale.getDefault()))
-    }
-
-    private fun formatMonthlyLabel(period: String): String {
-        val parts = period.split("-")
-        val date = LocalDate.of(parts[0].toInt(), parts[1].toInt(), 1)
-        return date.format(DateTimeFormatter.ofPattern("MMM", Locale.getDefault()))
-    }
-
     private fun isCustomPeriodMonthly(custom: StatsPeriod.Custom): Boolean {
         val daysBetween = ChronoUnit.DAYS.between(custom.startDate, custom.endDate) + 1
         return daysBetween > DAYS_THRESHOLD_FOR_MONTHLY_DISPLAY
     }
 
-    private fun formatDateRangeForPeriod(startDate: String, endDate: String, period: StatsPeriod): String {
+    /**
+     * Formats the legend's date range. A YEAR-unit window is decided by [unit] rather than by
+     * [period], because a Custom range long enough to be charted in years would otherwise fall into
+     * the month branch and render a span like "Jan - Jun" for 2024→2026.
+     */
+    private fun formatDateRangeForPeriod(
+        startDate: String,
+        endDate: String,
+        period: StatsPeriod,
+        unit: StatsUnit
+    ): String {
+        if (unit == StatsUnit.YEAR) return formatYearRange(startDate, endDate)
         return when (period) {
             is StatsPeriod.Today -> formatSingleDayRange(endDate)
             is StatsPeriod.Last6Months, is StatsPeriod.Last12Months -> formatMonthRange(startDate, endDate)
@@ -640,23 +718,23 @@ class ViewsStatsViewModel @Inject constructor(
         }
     }
 
-    private fun parseDate(dateString: String): LocalDate? {
-        return if (dateString.matches(DAILY_FORMAT_REGEX)) {
-            LocalDate.parse(dateString, DateTimeFormatter.ISO_LOCAL_DATE)
-        } else {
-            null
-        }
-    }
-
     private fun formatSingleDayRange(date: String): String {
-        val parsedDate = parseDate(date) ?: return date
+        val parsedDate = parsePeriodDate(date) ?: return date
         return parsedDate.format(DateTimeFormatter.ofPattern("d MMM", Locale.getDefault()))
     }
 
     @Suppress("ReturnCount")
+    private fun formatYearRange(startDate: String, endDate: String): String {
+        val start = parsePeriodDate(startDate) ?: return "$startDate - $endDate"
+        val end = parsePeriodDate(endDate) ?: return "$startDate - $endDate"
+
+        return if (start.year == end.year) "${start.year}" else "${start.year} - ${end.year}"
+    }
+
+    @Suppress("ReturnCount")
     private fun formatMonthRange(startDate: String, endDate: String): String {
-        val start = parseDate(startDate) ?: return "$startDate - $endDate"
-        val end = parseDate(endDate) ?: return "$startDate - $endDate"
+        val start = parsePeriodDate(startDate) ?: return "$startDate - $endDate"
+        val end = parsePeriodDate(endDate) ?: return "$startDate - $endDate"
         val monthFormat = DateTimeFormatter.ofPattern("MMM", Locale.getDefault())
 
         return if (start.month == end.month && start.year == end.year) {
@@ -668,8 +746,8 @@ class ViewsStatsViewModel @Inject constructor(
 
     @Suppress("ReturnCount")
     private fun formatDayRange(startDate: String, endDate: String): String {
-        val start = parseDate(startDate) ?: return "$startDate - $endDate"
-        val end = parseDate(endDate) ?: return "$startDate - $endDate"
+        val start = parsePeriodDate(startDate) ?: return "$startDate - $endDate"
+        val end = parsePeriodDate(endDate) ?: return "$startDate - $endDate"
         val dayFormat = DateTimeFormatter.ofPattern("d", Locale.getDefault())
         val dayMonthFormat = DateTimeFormatter.ofPattern("d MMM", Locale.getDefault())
 

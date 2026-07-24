@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2026-06-25 21:59:17+0000
+Translation-Revision-Date: 2026-07-16 22:57:30+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.3
 Language: zh_TW
@@ -54,6 +54,7 @@ Language: zh_TW
     <string name="stats_utm_source">來源</string>
     <string name="stats_utm_campaign_source_medium">行銷活動/來源/媒介</string>
     <string name="stats_utm_source_medium">來源/媒介</string>
+    <string name="stats_utm_title">UTM</string>
     <string name="stats_error_not_authenticated">未驗證</string>
     <string name="stats_collapse_group">收合</string>
     <string name="stats_expand_group">展開</string>
@@ -255,8 +256,6 @@ Language: zh_TW
     <string name="post_rs_confirm_delete_message">這將會永久刪除此文章。 此動作無法復原。</string>
     <string name="post_rs_confirm_trash_message">你確定要將這篇文章移至垃圾桶嗎？</string>
     <string name="post_rs_failed_to_load">無法載入文章</string>
-    <string name="experimental_rs_pages_list_description">以更現代的 UI 顯示頁面清單，適用於 WordPress.com 和使用應用程式密碼的自助託管網站</string>
-    <string name="experimental_rs_pages_list">全新頁面清單</string>
     <string name="stats_error_admin_url_unavailable">無法開啟此網站的 WP 管理員</string>
     <string name="stats_error_parsing">載入資料時發生問題。 請再試一次</string>
     <string name="stats_error_network">網路錯誤。 請檢查你的連線並再試一次</string>

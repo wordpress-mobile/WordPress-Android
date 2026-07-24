@@ -14,6 +14,7 @@ import org.junit.Test
 import org.mockito.Mock
 import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
+import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.doSuspendableAnswer
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.never
@@ -24,11 +25,14 @@ import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.model.CommentStatus.APPROVED
+import org.wordpress.android.fluxc.model.CommentStatus.SPAM
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.comments.unified.CommentsRsDataSource
 import org.wordpress.android.ui.comments.unified.CommentsRsDataSource.RsComment
 import org.wordpress.android.ui.comments.unified.CommentsRsDataSource.RsCommentsPageResult
+import org.wordpress.android.ui.comments.unified.CommentsRsDataSource.RsResult
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
+import org.wordpress.android.ui.mysite.items.listitem.SiteCapabilityChecker
 import org.wordpress.android.util.DateTimeUtilsWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.WPAvatarUtilsWrapper
@@ -41,6 +45,7 @@ import java.util.Date
 class CommentsRsListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
     @Mock lateinit var selectedSiteRepository: SelectedSiteRepository
     @Mock lateinit var commentsRsDataSource: CommentsRsDataSource
+    @Mock lateinit var siteCapabilityChecker: SiteCapabilityChecker
     @Mock lateinit var resourceProvider: ResourceProvider
     @Mock lateinit var networkUtilsWrapper: NetworkUtilsWrapper
     @Mock lateinit var dateTimeUtilsWrapper: DateTimeUtilsWrapper
@@ -48,6 +53,7 @@ class CommentsRsListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
     @Mock lateinit var analyticsTracker: AnalyticsTrackerWrapper
 
     private lateinit var site: SiteModel
+    private lateinit var commentBrowsingSession: CommentBrowsingSession
     private var activeViewModel: CommentsRsListViewModel? = null
 
     @Before
@@ -57,11 +63,13 @@ class CommentsRsListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
             siteId = 123L
         }
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
+        whenever(siteCapabilityChecker.canModerateComments(site)).thenReturn(true)
         whenever(resourceProvider.getString(any())).thenReturn("string")
         whenever(dateTimeUtilsWrapper.javaDateToTimeSpan(any())).thenReturn("2 hours ago")
         whenever(avatarUtilsWrapper.rewriteAvatarUrlWithResource(any(), any())).thenAnswer { it.arguments[0] }
         whenever(commentsRsDataSource.firstPageParams(any(), anyOrNull())).thenReturn(FIRST_PAGE)
         whenever(commentsRsDataSource.fetchPostTitles(any(), any())).thenReturn(emptyMap())
+        commentBrowsingSession = CommentBrowsingSession(commentsRsDataSource)
     }
 
     @After
@@ -73,12 +81,13 @@ class CommentsRsListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
     private fun createViewModel() = CommentsRsListViewModel(
         selectedSiteRepository = selectedSiteRepository,
         commentsRsDataSource = commentsRsDataSource,
+        siteCapabilityChecker = siteCapabilityChecker,
         resourceProvider = resourceProvider,
         networkUtilsWrapper = networkUtilsWrapper,
         dateTimeUtilsWrapper = dateTimeUtilsWrapper,
         avatarUtilsWrapper = avatarUtilsWrapper,
         analyticsTracker = analyticsTracker,
-        commentBrowsingSession = CommentBrowsingSession(commentsRsDataSource),
+        commentBrowsingSession = commentBrowsingSession,
         bgDispatcher = testDispatcher()
     ).also { activeViewModel = it }
 
@@ -103,6 +112,23 @@ class CommentsRsListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
             assertThat(awaitItem()).isEqualTo(CommentsRsListEvent.Finish)
             cancelAndIgnoreRemainingEvents()
         }
+    }
+
+    @Test
+    fun `no-site initTab and refreshTab bail without registering a tab, fetching, or crashing`() = test {
+        // The Compose pager fires its init effect while init() races its async Finish. initTab must
+        // bail before registering the tab (no stranded spinner), and a pull-to-refresh landing in
+        // the same window must not reach clearPostTitles(site) — the requireNotNull this guards.
+        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(null)
+        val viewModel = createViewModel()
+
+        viewModel.initTab(CommentsRsListTab.ALL)
+        viewModel.refreshTab(CommentsRsListTab.ALL, isUserRefresh = true)
+        advanceUntilIdle()
+
+        assertThat(viewModel.tabStates.value).isEmpty()
+        verify(commentsRsDataSource, never()).clearPostTitles(any())
+        verify(commentsRsDataSource, never()).fetchCommentsPage(any(), any())
     }
 
     @Test
@@ -479,8 +505,143 @@ class CommentsRsListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
         assertThat(state.comments.map { it.postTitle }).containsExactly("First post", "Second post")
     }
 
-    private fun rsItem(id: Long, postId: Long = 99L) = RsComment(
+    @Test
+    fun `canModerate reflects the capability checker`() = test {
+        val viewModel = createViewModel()
+        advanceUntilIdle()
+
+        assertThat(viewModel.canModerate.value).isTrue()
+    }
+
+    @Test
+    fun `batch moderation applies the new status to the selection when the user can moderate`() = test {
+        whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
+        whenever(commentsRsDataSource.updateStatus(eq(site), any(), any())).thenReturn(RsResult.Success)
+        givenPage(listOf(rsItem(id = 1)), nextPageParams = null)
+        val viewModel = createViewModel()
+        viewModel.initTab(CommentsRsListTab.ALL)
+        advanceUntilIdle()
+
+        viewModel.onCommentLongClick(1)
+        viewModel.onBatchAction(CommentsRsBatchAction.SPAM, CommentsRsListTab.ALL)
+        advanceUntilIdle()
+
+        verify(commentsRsDataSource).updateStatus(site, 1, SPAM)
+    }
+
+    @Test
+    fun `batch moderation is a no-op without the moderate capability`() = test {
+        // No network stub needed: the capability guard short-circuits before the network check.
+        whenever(siteCapabilityChecker.canModerateComments(site)).thenReturn(false)
+        givenPage(listOf(rsItem(id = 1)), nextPageParams = null)
+        val viewModel = createViewModel()
+        viewModel.initTab(CommentsRsListTab.ALL)
+        advanceUntilIdle()
+
+        viewModel.onCommentLongClick(1)
+        viewModel.onBatchAction(CommentsRsBatchAction.SPAM, CommentsRsListTab.ALL)
+        advanceUntilIdle()
+
+        assertThat(viewModel.canModerate.value).isFalse()
+        verify(commentsRsDataSource, never()).updateStatus(eq(site), any(), any())
+    }
+
+    @Test
+    fun `unreplied tab shows only top-level comments the current user has not replied to`() = test {
+        whenever(siteCapabilityChecker.currentUserId(site)).thenReturn(ME)
+        // id=1 top-level by someone else, answered by me (id=2) -> dropped.
+        // id=2 is my reply -> never a candidate. id=3 top-level by someone else, unanswered -> kept.
+        givenPage(
+            listOf(
+                rsItem(id = 1, authorId = OTHER),
+                rsItem(id = 2, authorId = ME, parentId = 1),
+                rsItem(id = 3, authorId = OTHER)
+            )
+        )
+        val viewModel = createViewModel()
+
+        viewModel.initTab(CommentsRsListTab.UNREPLIED)
+        advanceUntilIdle()
+
+        val state = viewModel.tabStates.value.getValue(CommentsRsListTab.UNREPLIED)
+        assertThat(state.comments.map { it.remoteCommentId }).containsExactly(3L)
+    }
+
+    @Test
+    fun `unreplied tab over-fetches a larger page`() = test {
+        whenever(siteCapabilityChecker.currentUserId(site)).thenReturn(ME)
+        givenPage(emptyList())
+        val viewModel = createViewModel()
+
+        viewModel.initTab(CommentsRsListTab.UNREPLIED)
+        advanceUntilIdle()
+
+        val params = argumentCaptor<CommentListParams>()
+        verify(commentsRsDataSource).fetchCommentsPage(eq(site), params.capture())
+        assertThat(params.firstValue.perPage).isEqualTo(100u)
+    }
+
+    @Test
+    fun `unreplied tab pages past a first page that filters to nothing`() = test {
+        whenever(siteCapabilityChecker.currentUserId(site)).thenReturn(ME)
+        // Page 1 is 100 raw comments that all thread away (here: authored by me), but a next page
+        // exists; page 2 carries the actual unreplied comment. Without auto-advancing, the tab
+        // would sit on a false empty state and never reach it.
+        whenever(commentsRsDataSource.fetchCommentsPage(eq(site), any())).thenReturn(
+            RsCommentsPageResult.Success(listOf(rsItem(id = 1, authorId = ME)), NEXT_PAGE),
+            RsCommentsPageResult.Success(listOf(rsItem(id = 2, authorId = OTHER)), null)
+        )
+        val viewModel = createViewModel()
+
+        viewModel.initTab(CommentsRsListTab.UNREPLIED)
+        advanceUntilIdle()
+
+        val state = viewModel.tabStates.value.getValue(CommentsRsListTab.UNREPLIED)
+        assertThat(state.comments.map { it.remoteCommentId }).containsExactly(2L)
+    }
+
+    @Test
+    fun `unreplied load-more keeps paging when a page threads the visible list down to empty`() = test {
+        whenever(siteCapabilityChecker.currentUserId(site)).thenReturn(ME)
+        // Page 1: one visible unreplied comment (A). Page 2: the user's reply to A and nothing new,
+        // so filtering drops A and the visible count shrinks 1 -> 0. Page 3 carries a real unreplied
+        // comment. Without advancing on the shrink, the tab would sit on a false empty state.
+        whenever(commentsRsDataSource.fetchCommentsPage(eq(site), any())).thenReturn(
+            RsCommentsPageResult.Success(listOf(rsItem(id = 1, authorId = OTHER)), NEXT_PAGE),
+            RsCommentsPageResult.Success(listOf(rsItem(id = 2, authorId = ME, parentId = 1)), THIRD_PAGE),
+            RsCommentsPageResult.Success(listOf(rsItem(id = 3, authorId = OTHER)), null)
+        )
+        val viewModel = createViewModel()
+        viewModel.initTab(CommentsRsListTab.UNREPLIED)
+        advanceUntilIdle()
+
+        viewModel.loadMore(CommentsRsListTab.UNREPLIED)
+        advanceUntilIdle()
+
+        val state = viewModel.tabStates.value.getValue(CommentsRsListTab.UNREPLIED)
+        assertThat(state.comments.map { it.remoteCommentId }).containsExactly(3L)
+    }
+
+    @Test
+    fun `tapping an unreplied comment seeds the swipe session without a paging cursor`() = test {
+        whenever(siteCapabilityChecker.currentUserId(site)).thenReturn(ME)
+        givenPage(listOf(rsItem(id = 1, authorId = OTHER)), nextPageParams = NEXT_PAGE)
+        val viewModel = createViewModel()
+        viewModel.onTabChanged(CommentsRsListTab.UNREPLIED)
+        viewModel.initTab(CommentsRsListTab.UNREPLIED)
+        advanceUntilIdle()
+
+        viewModel.onCommentClick(1L)
+
+        // A cursor would let the detail pager page the raw stream into the replied-to and own
+        // comments the tab filters out; Unreplied must seed only the visible ids.
+        assertThat(commentBrowsingSession.canLoadMore).isFalse()
+    }
+
+    private fun rsItem(id: Long, postId: Long = 99L, authorId: Long = 0L, parentId: Long = 0L) = RsComment(
         remoteCommentId = id,
+        authorId = authorId,
+        parentId = parentId,
         authorName = "Jane",
         authorAvatarUrl = "https://example.com/avatar.png",
         dateGmt = Date(0),
@@ -491,6 +652,8 @@ class CommentsRsListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
     )
 
     companion object {
+        private const val ME = 7L
+        private const val OTHER = 42L
         private val FIRST_PAGE = CommentListParams()
         private val NEXT_PAGE = CommentListParams(page = 2u)
         private val THIRD_PAGE = CommentListParams(page = 3u)

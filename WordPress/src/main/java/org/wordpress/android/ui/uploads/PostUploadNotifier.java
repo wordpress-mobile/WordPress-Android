@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.collection.SparseArrayCompat;
 import androidx.core.app.NotificationCompat;
+import androidx.core.app.ServiceCompat;
 import androidx.core.app.TaskStackBuilder;
 
 import org.greenrobot.eventbus.EventBus;
@@ -128,9 +129,7 @@ class PostUploadNotifier {
     }
 
     private synchronized void startOrUpdateForegroundNotification(@Nullable PostImmutableModel post) {
-        boolean isTotalPostsAndMediaItemsCountZero = sNotificationData.mTotalPostItems == 0
-                                                     && sNotificationData.mTotalMediaItems == 0;
-        if (isTotalPostsAndMediaItemsCountZero) {
+        if (hasNoForegroundItemsTracked()) {
             return;
         }
         updateNotificationBuilder(post);
@@ -214,6 +213,12 @@ class PostUploadNotifier {
     }
 
     void incrementUploadedPostCountFromForegroundNotification(@NonNull PostImmutableModel post, boolean force) {
+        // Ignore stale completion callbacks that arrive after the foreground state was reset (e.g.
+        // cancellations dispatched during a foreground-service timeout). With nothing being tracked,
+        // counting them would push the current counters past the zeroed totals and corrupt the state.
+        if (hasNoForegroundItemsTracked()) {
+            return;
+        }
         // first we need to check that we only count this post once as "ended" (either successfully or with error)
         // for every error we get. We'll then try to increment the Post count as it's been cancelled/failed because the
         // related media was cancelled or has failed too (i.e. we can't upload a Post with failed media, therefore
@@ -232,6 +237,11 @@ class PostUploadNotifier {
     }
 
     void incrementUploadedMediaCountFromProgressNotification(int mediaId) {
+        // Ignore stale completion callbacks that arrive after the foreground state was reset (see
+        // incrementUploadedPostCountFromForegroundNotification above).
+        if (hasNoForegroundItemsTracked()) {
+            return;
+        }
         sNotificationData.mCurrentMediaItem++;
         if (!removeNotificationAndStopForegroundServiceIfNoItemsInQueue()) {
             // update Notification now
@@ -242,14 +252,30 @@ class PostUploadNotifier {
     private boolean removeNotificationAndStopForegroundServiceIfNoItemsInQueue() {
         if (sNotificationData.mCurrentPostItem == sNotificationData.mTotalPostItems
             && sNotificationData.mCurrentMediaItem == sNotificationData.mTotalMediaItems) {
-            mNotificationManager.cancel(sNotificationData.mNotificationId);
-            // reset the notification id so a new one is generated next time the service is started
-            sNotificationData.mNotificationId = 0;
-            resetNotificationCounters();
-            mService.stopForeground(true);
+            resetForegroundNotificationState();
+            ServiceCompat.stopForeground(mService, ServiceCompat.STOP_FOREGROUND_REMOVE);
             return true;
         }
         return false;
+    }
+
+    private boolean hasNoForegroundItemsTracked() {
+        return sNotificationData.mTotalPostItems == 0 && sNotificationData.mTotalMediaItems == 0;
+    }
+
+    /**
+     * Clears the outstanding foreground notification and resets its state. Called both when all
+     * uploads complete and when the service is force-stopped (e.g. a foreground-service timeout),
+     * so the next upload starts a fresh foreground notification via startForeground().
+     */
+    void resetForegroundNotificationState() {
+        if (sNotificationData.mNotificationId != 0) {
+            // cancel the outstanding notification and reset the id so a new one is generated next
+            // time the service is started
+            mNotificationManager.cancel(sNotificationData.mNotificationId);
+            sNotificationData.mNotificationId = 0;
+        }
+        resetNotificationCounters();
     }
 
     private void resetNotificationCounters() {

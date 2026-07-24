@@ -201,7 +201,7 @@ class ApplicationPasswordLoginViewModelTest : BaseUnitTest() {
                 errorMessage = null
             )
             whenever(applicationPasswordLoginHelper.storeApplicationPasswordCredentialsFrom(eq(urlLogin), any()))
-                .thenReturn(StoreCredentialsResult.SiteNotFound)
+                .thenReturn(StoreCredentialsResult.SiteNotFound(urlLogin))
             whenever(selfHostedEndpointFinder.verifyOrDiscoverXMLRPCEndpoint(any())).thenThrow(RuntimeException())
 
             // When
@@ -224,7 +224,7 @@ class ApplicationPasswordLoginViewModelTest : BaseUnitTest() {
             whenever(
                 applicationPasswordLoginHelper
                     .storeApplicationPasswordCredentialsFrom(eq(urlLogin), any())
-            ).thenReturn(StoreCredentialsResult.SiteNotFound)
+            ).thenReturn(StoreCredentialsResult.SiteNotFound(urlLogin))
             whenever(
                 selfHostedEndpointFinder
                     .verifyOrDiscoverXMLRPCEndpoint(urlLogin.siteUrl!!)
@@ -266,7 +266,7 @@ class ApplicationPasswordLoginViewModelTest : BaseUnitTest() {
             whenever(siteStore.hasSite()).thenReturn(true)
             whenever(siteStore.sites).thenReturn(listOf(testSite))
             whenever(applicationPasswordLoginHelper.storeApplicationPasswordCredentialsFrom(eq(urlLogin), any()))
-                .thenReturn(StoreCredentialsResult.SiteNotFound)
+                .thenReturn(StoreCredentialsResult.SiteNotFound(urlLogin))
             whenever(selfHostedEndpointFinder.verifyOrDiscoverXMLRPCEndpoint(urlLogin.siteUrl!!))
                 .thenReturn(xmlRpcEndpoint)
 
@@ -304,7 +304,7 @@ class ApplicationPasswordLoginViewModelTest : BaseUnitTest() {
             whenever(siteStore.hasSite()).thenReturn(false)
             whenever(siteStore.sites).thenReturn(listOf(testSite))
             whenever(applicationPasswordLoginHelper.storeApplicationPasswordCredentialsFrom(eq(urlLogin), any()))
-                .thenReturn(StoreCredentialsResult.SiteNotFound)
+                .thenReturn(StoreCredentialsResult.SiteNotFound(urlLogin))
             whenever(selfHostedEndpointFinder.verifyOrDiscoverXMLRPCEndpoint(urlLogin.siteUrl!!))
                 .thenReturn(xmlRpcEndpoint)
 
@@ -344,7 +344,7 @@ class ApplicationPasswordLoginViewModelTest : BaseUnitTest() {
             whenever(
                 applicationPasswordLoginHelper
                     .storeApplicationPasswordCredentialsFrom(eq(urlLogin), any())
-            ).thenReturn(StoreCredentialsResult.SiteNotFound)
+            ).thenReturn(StoreCredentialsResult.SiteNotFound(urlLogin))
             whenever(
                 selfHostedEndpointFinder
                     .verifyOrDiscoverXMLRPCEndpoint(urlLogin.siteUrl!!)
@@ -594,7 +594,7 @@ class ApplicationPasswordLoginViewModelTest : BaseUnitTest() {
         whenever(
             applicationPasswordLoginHelper
                 .storeApplicationPasswordCredentialsFrom(eq(urlLogin), any())
-        ).thenReturn(StoreCredentialsResult.SiteNotFound)
+        ).thenReturn(StoreCredentialsResult.SiteNotFound(urlLogin))
         whenever(selfHostedEndpointFinder.verifyOrDiscoverXMLRPCEndpoint(any()))
             .thenThrow(RuntimeException("wrapped", IOException("offline")))
 
@@ -626,7 +626,7 @@ class ApplicationPasswordLoginViewModelTest : BaseUnitTest() {
         whenever(
             applicationPasswordLoginHelper
                 .storeApplicationPasswordCredentialsFrom(eq(urlLogin), any())
-        ).thenReturn(StoreCredentialsResult.SiteNotFound)
+        ).thenReturn(StoreCredentialsResult.SiteNotFound(urlLogin))
         whenever(selfHostedEndpointFinder.verifyOrDiscoverXMLRPCEndpoint(any()))
             .thenReturn("https://example.com/xmlrpc.php")
 
@@ -656,7 +656,7 @@ class ApplicationPasswordLoginViewModelTest : BaseUnitTest() {
                     .storeApplicationPasswordCredentialsFrom(
                         eq(urlLogin), any()
                     )
-            ).thenReturn(StoreCredentialsResult.SiteNotFound)
+            ).thenReturn(StoreCredentialsResult.SiteNotFound(urlLogin))
             whenever(
                 selfHostedEndpointFinder
                     .verifyOrDiscoverXMLRPCEndpoint(any())
@@ -679,12 +679,73 @@ class ApplicationPasswordLoginViewModelTest : BaseUnitTest() {
             }
         }
 
+    @Test
+    fun `given SiteNotFound with recovered apiRootUrl, then fetchSites uses recovered login and dispatches`() =
+        runTest {
+            // Given — the parsed login is missing apiRootUrl (cache miss), but the helper
+            // recovers it and returns it via SiteNotFound. The ViewModel must fetch with the
+            // recovered login, not the original empty one, otherwise it aborts with empty_fetch_params.
+            val parsedLogin = urlLogin.copy(apiRootUrl = "")
+            val recoveredLogin = urlLogin.copy(apiRootUrl = "https://example.com/json")
+            whenever(applicationPasswordLoginHelper.getSiteUrlLoginFromRawData(rawData))
+                .thenReturn(parsedLogin)
+            whenever(
+                applicationPasswordLoginHelper
+                    .storeApplicationPasswordCredentialsFrom(eq(parsedLogin), any())
+            ).thenReturn(StoreCredentialsResult.SiteNotFound(recoveredLogin))
+            whenever(selfHostedEndpointFinder.verifyOrDiscoverXMLRPCEndpoint(any()))
+                .thenReturn("https://example.com/xmlrpc.php")
+
+            // When
+            viewModel.onFinishedEvent.test {
+                viewModel.setupSite(rawData)
+
+                // Then — no error emitted, fetch is dispatched with the recovered params
+                expectNoEvents()
+                verify(dispatcher, times(1)).dispatch(
+                    argThat {
+                        type == SiteAction.FETCH_SITES_XML_RPC_FROM_APPLICATION_PASSWORD
+                    }
+                )
+                verify(crashLogging, never()).sendReport(any(), any(), any())
+                cancelAndIgnoreRemainingEvents()
+            }
+        }
+
+    @Test
+    fun `given SiteNotFound with empty fetch params, then emit error without Sentry report`() =
+        runTest {
+            // Given — helper returns a login with an empty siteUrl, so fetchSites can't proceed.
+            // (An empty apiRootUrl would be rejected as BadData before ever reaching SiteNotFound;
+            // siteUrl is only guarded against null in the helper, so an empty string slips through.)
+            val incompleteLogin = urlLogin.copy(siteUrl = "")
+            whenever(applicationPasswordLoginHelper.getSiteUrlLoginFromRawData(rawData))
+                .thenReturn(incompleteLogin)
+            whenever(
+                applicationPasswordLoginHelper
+                    .storeApplicationPasswordCredentialsFrom(eq(incompleteLogin), any())
+            ).thenReturn(StoreCredentialsResult.SiteNotFound(incompleteLogin))
+
+            // When
+            viewModel.onFinishedEvent.test {
+                viewModel.setupSite(rawData)
+
+                // Then — user-recoverable data condition surfaces in UI but is not noised into Sentry
+                val result = awaitItem()
+                assertTrue(result.isError)
+                assertEquals("empty_fetch_params", result.errorMessage)
+                verify(crashLogging, never()).sendReport(any(), any(), any())
+                verify(selfHostedEndpointFinder, never()).verifyOrDiscoverXMLRPCEndpoint(any())
+                cancelAndIgnoreRemainingEvents()
+            }
+        }
+
     private suspend fun setupFetchSitesFlow() {
         val xmlRpcEndpoint = "https://example.com/xmlrpc.php"
         whenever(
             applicationPasswordLoginHelper
                 .storeApplicationPasswordCredentialsFrom(eq(urlLogin), any())
-        ).thenReturn(StoreCredentialsResult.SiteNotFound)
+        ).thenReturn(StoreCredentialsResult.SiteNotFound(urlLogin))
         whenever(
             selfHostedEndpointFinder
                 .verifyOrDiscoverXMLRPCEndpoint(urlLogin.siteUrl!!)

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2026-06-18 14:02:22+0000
+Translation-Revision-Date: 2026-07-07 14:02:08+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n == 0 || n % 100 >= 2 && n % 100 <= 19) ? 1 : 2);
 Generator: GlotPress/4.0.3
 Language: ro
@@ -256,8 +256,6 @@ Language: ro
     <string name="post_rs_confirm_trash_message">Sigur vrei să arunci la gunoi acest articol?</string>
     <string name="scan_start_request_failed_subtitle">Scanare Jetpack nu a putut să finalizeze o scanare a site-ului tău. Verifică dacă site-ul tău este funcțional.</string>
     <string name="post_rs_failed_to_load">Încărcarea articolului a eșuat</string>
-    <string name="experimental_rs_pages_list">Listă cu pagini noi</string>
-    <string name="experimental_rs_pages_list_description">Afișezi lista cu pagini într-o interfață mai modernă pentru WordPress.com și site-urile auto-găzduite cu parole pentru aplicații</string>
     <string name="stats_error_admin_url_unavailable">Nu pot să deschid administrarea WP pentru acest site</string>
     <string name="stats_error_parsing">A fost o problemă la încărcarea datelor. Te rog să încerci din nou</string>
     <string name="stats_error_network">Eroare în rețea. Te rog să verifici conexiunea și să încerci din nou.</string>
@@ -2442,9 +2440,9 @@ Language: ro
     <string name="site_settings_ad_free_video_hosting">Găzduire video fără reclame</string>
     <string name="site_settings_media">Media</string>
     <string name="site_settings_improved_search">Căutare îmbunătățită</string>
-    <string name="site_settings_jetpack_search">Căutare Jetpack</string>
     <string name="site_settings_improved_search_summary">Înlocuiește căutarea nativă din WordPress cu o experiență de căutare îmbunătățită</string>
     <string name="site_settings_more">Mai multe</string>
+    <string name="site_settings_jetpack_search">Jetpack Search</string>
     <string name="site_settings_performance">Performanță</string>
     <string name="site_settings_site_accelerator_on">Pornit</string>
     <string name="site_settings_site_accelerator">Accelerator de site-uri</string>

@@ -593,6 +593,53 @@ class SiteStoreTest {
         }
 
     @Test
+    fun `fetchSitesXmlRpc AP fallback persists verified xmlrpc endpoint on WPAPI site`() =
+        test {
+            org.mockito.Mockito.mockStatic(
+                org.wordpress.android.util.AppLog::class.java
+            ).use {
+                // Given: XML-RPC discovery already verified this endpoint (that's the only reason this action
+                // is dispatched), but the authenticated XML-RPC fetch fails transiently (e.g. a 429 rate-limit).
+                val xmlRpcEndpoint = "https://example.com/xmlrpc.php"
+                val payload =
+                    SiteStore.RefreshSitesXMLRPCApplicationPasswordCredentialsPayload(
+                        username = "appUser",
+                        password = "appPass",
+                        url = xmlRpcEndpoint,
+                        apiRootUrl = "https://example.com/wp-json/",
+                    )
+                val erroredSites = SitesModel().apply { error = BaseNetworkError(PARSE_ERROR) }
+                whenever(
+                    siteXMLRPCClient.fetchSitesFromApplicationPassword(
+                        payload.url,
+                        payload.apiRootUrl,
+                        payload.username,
+                        payload.password
+                    )
+                ).thenReturn(erroredSites)
+                val fetchedSite = SiteModel().apply {
+                    name = "Test Site"
+                    origin = SiteModel.ORIGIN_WPAPI
+                    url = "https://example.com"
+                }
+                whenever(siteWPAPIClient.fetchWPAPISite(any<SiteStore.FetchWPAPISitePayload>()))
+                    .thenReturn(fetchedSite)
+                whenever(siteSqlUtils.insertOrUpdateSite(fetchedSite)).thenReturn(1)
+
+                // When
+                val result = siteStore.fetchSitesXmlRpcFromApplicationPassword(payload)
+
+                // Then: the WPAPI fallback stored the site, and the verified xmlrpc endpoint is recorded so the
+                // "XML-RPC Disabled" card isn't shown for a site that actually supports XML-RPC.
+                assertThat(result.isError).isFalse()
+                verify(siteSqlUtils).updateXmlRpcUrlForWPAPISite(
+                    "https://example.com",
+                    xmlRpcEndpoint
+                )
+            }
+        }
+
+    @Test
     fun `updateApplicationPassword persists credentials and wpApiRestUrl via targeted writers`() {
         val existing = SiteModel().apply {
             id = 3

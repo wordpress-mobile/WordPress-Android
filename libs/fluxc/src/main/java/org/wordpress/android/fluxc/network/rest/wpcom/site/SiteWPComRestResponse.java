@@ -23,7 +23,9 @@ public class SiteWPComRestResponse implements Response {
         public String admin_url;
         public String login_url;
         public String gmt_offset;
-        public String timezone_string;
+        // The site info endpoints (/me/sites, /sites/$id) expose the Olson timezone under "timezone"
+        // (e.g. "Europe/Madrid"). Note the site *settings* endpoint uses "timezone_string" instead.
+        public String timezone;
         public String frame_nonce;
         public String unmapped_url;
         public String max_upload_size;

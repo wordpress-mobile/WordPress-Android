@@ -42,6 +42,7 @@ class CommentsRsListActivity : BaseAppCompatActivity() {
         setContent {
             val tabStates by viewModel.tabStates.collectAsState()
             val selectedIds by viewModel.selectedIds.collectAsState()
+            val canModerate by viewModel.canModerate.collectAsState()
             val confirmation by viewModel.pendingConfirmation.collectAsState()
             val isSearchActive by viewModel.isSearchActive.collectAsState()
             val searchQuery by viewModel.searchQuery.collectAsState()
@@ -50,6 +51,7 @@ class CommentsRsListActivity : BaseAppCompatActivity() {
                 CommentsRsListScreen(
                     tabStates = tabStates,
                     selectedIds = selectedIds,
+                    canModerate = canModerate,
                     pendingConfirmation = confirmation,
                     isSearchActive = isSearchActive,
                     searchQuery = searchQuery,

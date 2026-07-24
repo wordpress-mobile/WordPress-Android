@@ -80,6 +80,7 @@ private enum class TopBarMode { SELECTION, SEARCH, NORMAL }
 fun CommentsRsListScreen(
     tabStates: Map<CommentsRsListTab, CommentsTabUiState>,
     selectedIds: Set<Long>,
+    canModerate: Boolean,
     pendingConfirmation: PendingConfirmation?,
     isSearchActive: Boolean,
     searchQuery: String,
@@ -109,6 +110,7 @@ fun CommentsRsListScreen(
     val listStates = mapOf(
         CommentsRsListTab.ALL to rememberLazyListState(),
         CommentsRsListTab.PENDING to rememberLazyListState(),
+        CommentsRsListTab.UNREPLIED to rememberLazyListState(),
         CommentsRsListTab.APPROVED to rememberLazyListState(),
         CommentsRsListTab.SPAM to rememberLazyListState(),
         CommentsRsListTab.TRASHED to rememberLazyListState()
@@ -186,6 +188,7 @@ fun CommentsRsListScreen(
                         selectedCount = selectedIds.size,
                         actions = activeTab.batchActions(),
                         selectedStatuses = selectedStatuses,
+                        canModerate = canModerate,
                         onClearSelection = onClearSelection,
                         onBatchAction = { action -> onBatchAction(action, activeTab) }
                     )
@@ -322,6 +325,7 @@ private fun SelectionTopBar(
     selectedCount: Int,
     actions: List<CommentsRsBatchAction>,
     selectedStatuses: Set<CommentStatus>,
+    canModerate: Boolean,
     onClearSelection: () -> Unit,
     onBatchAction: (CommentsRsBatchAction) -> Unit
 ) {
@@ -345,8 +349,9 @@ private fun SelectionTopBar(
         actions = {
             iconActions.forEach { action ->
                 // An action that would be a no-op for the selection (e.g. approve when nothing is
-                // unapproved) stays visible but disabled.
-                val enabled = action.isEnabledFor(selectedStatuses)
+                // unapproved), or that the user lacks the capability to perform, stays visible but
+                // disabled.
+                val enabled = action.isEnabledFor(selectedStatuses, canModerate)
                 IconButton(onClick = { onBatchAction(action) }, enabled = enabled) {
                     Icon(
                         painter = painterResource(action.iconResId),
@@ -358,7 +363,12 @@ private fun SelectionTopBar(
                 }
             }
             if (menuActions.isNotEmpty()) {
-                BatchActionsOverflowMenu(actions = menuActions, onBatchAction = onBatchAction)
+                BatchActionsOverflowMenu(
+                    actions = menuActions,
+                    selectedStatuses = selectedStatuses,
+                    canModerate = canModerate,
+                    onBatchAction = onBatchAction
+                )
             }
         }
     )
@@ -421,6 +431,8 @@ private fun SearchTopBar(
 @Composable
 private fun BatchActionsOverflowMenu(
     actions: List<CommentsRsBatchAction>,
+    selectedStatuses: Set<CommentStatus>,
+    canModerate: Boolean,
     onBatchAction: (CommentsRsBatchAction) -> Unit
 ) {
     var expanded by remember { mutableStateOf(false) }
@@ -429,13 +441,18 @@ private fun BatchActionsOverflowMenu(
     }
     DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
         actions.forEach { action ->
-            val color = if (action.confirmation != null) {
+            // Without moderation rights the items stay visible but disabled, matching the icon
+            // actions in the bar and the detail screen's overflow.
+            val enabled = action.isEnabledFor(selectedStatuses, canModerate)
+            val baseColor = if (action.confirmation != null) {
                 MaterialTheme.colorScheme.error
             } else {
                 MaterialTheme.colorScheme.onSurface
             }
+            val color = if (enabled) baseColor else baseColor.copy(alpha = DISABLED_ICON_ALPHA)
             DropdownMenuItem(
                 text = { Text(text = stringResource(action.labelResId), color = color) },
+                enabled = enabled,
                 leadingIcon = {
                     Icon(
                         painter = painterResource(action.iconResId),

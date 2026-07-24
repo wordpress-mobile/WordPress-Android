@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import androidx.activity.addCallback
 import androidx.activity.viewModels
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.isVisible
@@ -14,6 +15,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
@@ -26,6 +28,7 @@ import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteRemoved
 import org.wordpress.android.ui.ActivityId
+import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
@@ -37,6 +40,7 @@ import org.wordpress.android.util.DeviceUtils
 import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.WPSwipeToRefreshHelper
+import org.wordpress.android.util.extensions.redirectContextClickToLongPressListener
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 import org.wordpress.android.widgets.WPDialogSnackbar
 import javax.inject.Inject
@@ -52,6 +56,12 @@ class ChooseSiteActivity : BaseAppCompatActivity() {
     private lateinit var menuEditPin: MenuItem
     private lateinit var refreshHelper: SwipeToRefreshHelper
     private var searchKeyword: String? = null
+    private var isAddSiteMenuOpen = false
+    private val addSiteMenuItems by lazy {
+        // ordered bottom-to-top so the stagger animates upward from the main FAB
+        listOf(binding.fabMenuItemSelfHosted, binding.fabMenuItemWpcom)
+    }
+    private val fabMenuItemOffset by lazy { resources.getDimension(R.dimen.margin_extra_large) }
 
     @Inject
     lateinit var accountStore: AccountStore
@@ -78,10 +88,7 @@ class ChooseSiteActivity : BaseAppCompatActivity() {
             AnalyticsTracker.track(Stat.SITE_SWITCHER_DISMISSED)
             finish()
         }
-        binding.buttonAddSite.setOnClickListener {
-            AnalyticsTracker.track(Stat.SITE_SWITCHER_ADD_SITE_TAPPED)
-            AddSiteHandler.addSite(this, accountStore.hasAccessToken(), SiteCreationSource.MY_SITE)
-        }
+        setupAddSiteFab()
         binding.progress.isVisible = !appPrefsWrapper.hasFetchedSites
         setupRecycleView()
 
@@ -103,6 +110,114 @@ class ChooseSiteActivity : BaseAppCompatActivity() {
         }
 
         viewModel.loadSites(mode)
+    }
+
+    private fun setupAddSiteFab() {
+        binding.fabAddSite.setOnClickListener {
+            AnalyticsTracker.track(Stat.SITE_SWITCHER_ADD_SITE_TAPPED)
+            // when the user is signed in and can add a self-hosted site there are two choices, so
+            // expand the FAB menu; otherwise there's only one action, so trigger it directly
+            if (accountStore.hasAccessToken() && BuildConfig.ENABLE_ADD_SELF_HOSTED_SITE) {
+                if (isAddSiteMenuOpen) closeAddSiteMenu() else openAddSiteMenu()
+            } else {
+                AddSiteHandler.addSite(this, accountStore.hasAccessToken(), SiteCreationSource.MY_SITE)
+            }
+        }
+        binding.fabAddSite.setOnLongClickListener {
+            ToastUtils.showToast(this, R.string.site_picker_add_a_site, ToastUtils.Duration.SHORT)
+            true
+        }
+        binding.fabAddSite.redirectContextClickToLongPressListener()
+
+        binding.fabMenuScrim.setOnClickListener { closeAddSiteMenu() }
+        val createWpcomSite = {
+            closeAddSiteMenu()
+            ActivityLauncher.newBlogForResult(this, SiteCreationSource.MY_SITE)
+        }
+        val addSelfHostedSite = {
+            closeAddSiteMenu()
+            ActivityLauncher.addSelfHostedSiteForResult(this)
+        }
+        binding.fabWpcom.setOnClickListener { createWpcomSite() }
+        binding.fabMenuItemWpcom.setOnClickListener { createWpcomSite() }
+        binding.fabSelfHosted.setOnClickListener { addSelfHostedSite() }
+        binding.fabMenuItemSelfHosted.setOnClickListener { addSelfHostedSite() }
+
+        onBackPressedDispatcher.addCallback(this) {
+            if (isAddSiteMenuOpen) {
+                closeAddSiteMenu()
+            } else {
+                isEnabled = false
+                onBackPressedDispatcher.onBackPressed()
+            }
+        }
+    }
+
+    private fun openAddSiteMenu() {
+        if (isAddSiteMenuOpen) return
+        isAddSiteMenuOpen = true
+        AnalyticsTracker.track(
+            Stat.ADD_SITE_ALERT_DISPLAYED,
+            mapOf(KEY_SOURCE to SiteCreationSource.MY_SITE.label)
+        )
+
+        binding.fabMenuScrim.animate().cancel()
+        binding.fabMenuScrim.isVisible = true
+        binding.fabMenuScrim.animate().alpha(SCRIM_ALPHA).setDuration(FAB_MENU_ANIM_DURATION).start()
+        binding.fabAddSite.animate().rotation(FAB_ICON_ROTATION).setDuration(FAB_MENU_ANIM_DURATION).start()
+
+        addSiteMenuItems.forEachIndexed { index, item ->
+            item.animate().cancel()
+            item.alpha = 0f
+            item.translationY = fabMenuItemOffset
+            item.isVisible = true
+            item.animate()
+                .alpha(1f)
+                .translationY(0f)
+                .setStartDelay(index * FAB_MENU_STAGGER)
+                .setDuration(FAB_MENU_ANIM_DURATION)
+                .withEndAction(null)
+                .start()
+        }
+    }
+
+    private fun closeAddSiteMenu() {
+        if (!isAddSiteMenuOpen) return
+        isAddSiteMenuOpen = false
+
+        binding.fabMenuScrim.animate().cancel()
+        binding.fabMenuScrim.animate().alpha(0f).setDuration(FAB_MENU_ANIM_DURATION)
+            .withEndAction { binding.fabMenuScrim.isVisible = false }.start()
+        binding.fabAddSite.animate().rotation(0f).setDuration(FAB_MENU_ANIM_DURATION).start()
+
+        addSiteMenuItems.forEachIndexed { index, item ->
+            item.animate().cancel()
+            item.animate()
+                .alpha(0f)
+                .translationY(fabMenuItemOffset)
+                .setStartDelay(index * FAB_MENU_STAGGER)
+                .setDuration(FAB_MENU_ANIM_DURATION)
+                .withEndAction { item.isVisible = false }
+                .start()
+        }
+    }
+
+    /**
+     * Restores the expanded menu after a configuration change by jumping straight to the open
+     * end state — no entrance animation and no analytics, both of which belong to a user-initiated
+     * open. Setting the FAB visible directly (rather than via show()) skips its scale animation.
+     */
+    private fun expandAddSiteMenuInstantly() {
+        isAddSiteMenuOpen = true
+        binding.fabAddSite.isVisible = true
+        binding.fabAddSite.rotation = FAB_ICON_ROTATION
+        binding.fabMenuScrim.isVisible = true
+        binding.fabMenuScrim.alpha = SCRIM_ALPHA
+        addSiteMenuItems.forEach { item ->
+            item.isVisible = true
+            item.alpha = 1f
+            item.translationY = 0f
+        }
     }
 
     override fun onStart() {
@@ -172,11 +287,31 @@ class ChooseSiteActivity : BaseAppCompatActivity() {
     private fun setupMenuVisibility() {
         if (mode == SitePickerMode.DEFAULT) {
             menuEditPin.isVisible = true
-            binding.layoutAddSite.isVisible = true
+            // hide the FAB while editing pins, otherwise reveal it
+            if (adapter.mode == ActionMode.Pin) {
+                binding.fabAddSite.hide()
+            } else {
+                showAddSiteFab()
+            }
         } else {
             menuEditPin.isVisible = false
-            binding.layoutAddSite.isVisible = false
+            binding.fabAddSite.hide()
         }
+    }
+
+    private fun showAddSiteFab() {
+        val fab = binding.fabAddSite
+        // FloatingActionButton.show() only plays its entrance animation once the view is laid out.
+        // setupMenuVisibility() runs from onPrepareOptionsMenu during the first layout pass, before
+        // the FAB is laid out, so post the initial reveal to guarantee the animation. Re-check state
+        // when the posted reveal runs: a search may have been expanded in the meantime (e.g. a search
+        // restored after rotation), in which case the FAB must stay hidden.
+        if (fab.isLaidOut) fab.show() else fab.post { if (shouldShowAddSiteFab()) fab.show() }
+    }
+
+    private fun shouldShowAddSiteFab(): Boolean {
+        val searchExpanded = ::menuSearch.isInitialized && menuSearch.isActionViewExpanded
+        return mode == SitePickerMode.DEFAULT && adapter.mode != ActionMode.Pin && !searchExpanded
     }
 
     private fun setupSearchView() {
@@ -184,7 +319,8 @@ class ChooseSiteActivity : BaseAppCompatActivity() {
         searchView.maxWidth = Integer.MAX_VALUE
         menuSearch.setOnActionExpandListener(object : MenuItem.OnActionExpandListener {
             override fun onMenuItemActionExpand(item: MenuItem): Boolean {
-                binding.layoutAddSite.isVisible = false
+                closeAddSiteMenu()
+                binding.fabAddSite.hide()
                 searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
                     override fun onQueryTextSubmit(query: String): Boolean {
                         if (!DeviceUtils.getInstance().hasHardwareKeyboard(this@ChooseSiteActivity)) {
@@ -255,6 +391,8 @@ class ChooseSiteActivity : BaseAppCompatActivity() {
         menuEditPin.setIcon(null)
         menuEditPin.title = getString(R.string.label_done_button)
         adapter.setActionMode(ActionMode.Pin)
+        closeAddSiteMenu()
+        binding.fabAddSite.hide()
     }
 
     /**
@@ -265,6 +403,7 @@ class ChooseSiteActivity : BaseAppCompatActivity() {
         menuEditPin.setIcon(R.drawable.pin_filled)
         menuEditPin.title = getString(R.string.site_picker_edit_pins)
         adapter.setActionMode(ActionMode.None)
+        showAddSiteFab()
     }
 
     private fun setupRecycleView() {
@@ -351,6 +490,7 @@ class ChooseSiteActivity : BaseAppCompatActivity() {
         super.onSaveInstanceState(outState)
         outState.putString(KEY_SEARCH_KEYWORD, searchKeyword)
         outState.putString(KEY_ACTION_MODE, adapter.mode.value)
+        outState.putBoolean(KEY_ADD_SITE_MENU_OPEN, isAddSiteMenuOpen)
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
@@ -360,6 +500,14 @@ class ChooseSiteActivity : BaseAppCompatActivity() {
 
         savedInstanceState.getString(KEY_ACTION_MODE)?.let { actionMode ->
             adapter.setActionMode(ActionMode.from(actionMode))
+        }
+
+        // restore the expanded add-site menu (the menu only exists in DEFAULT mode and can't be
+        // open while pinning)
+        if (savedInstanceState.getBoolean(KEY_ADD_SITE_MENU_OPEN) &&
+            mode == SitePickerMode.DEFAULT && adapter.mode != ActionMode.Pin
+        ) {
+            expandAddSiteMenuInstantly()
         }
     }
 
@@ -372,10 +520,15 @@ class ChooseSiteActivity : BaseAppCompatActivity() {
         const val KEY_SITE_CREATED_BUT_NOT_FETCHED = "key_site_created_but_not_fetched"
         const val KEY_SEARCH_KEYWORD = "key_search_keyword"
         const val KEY_ACTION_MODE = "key_action_mode"
+        const val KEY_ADD_SITE_MENU_OPEN = "key_add_site_menu_open"
         private const val TRACK_PROPERTY_STATE = "state"
         private const val TRACK_PROPERTY_STATE_EDIT = "edit"
         private const val TRACK_PROPERTY_STATE_DONE = "done"
         private const val TRACK_PROPERTY_SECTION = "section"
+        private const val SCRIM_ALPHA = 0.4f
+        private const val FAB_ICON_ROTATION = 45f
+        private const val FAB_MENU_ANIM_DURATION = 200L
+        private const val FAB_MENU_STAGGER = 40L
 
         @JvmStatic
         var isRunning = false
