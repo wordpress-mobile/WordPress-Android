@@ -38,6 +38,8 @@ class SuggestionActivity : BaseAppCompatActivity() {
     lateinit var networkConnectionMonitor: NetworkConnectionMonitor
     private lateinit var binding: SuggestUsersActivityBinding
 
+    private var lastConnected = true
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (application as WordPress).component().inject(this)
@@ -180,7 +182,12 @@ class SuggestionActivity : BaseAppCompatActivity() {
         })
 
         networkConnectionMonitor.isConnected.observe(this) { connected ->
-            viewModel.onConnectionChanged(connected)
+            // Only refresh on a genuine offline->online transition; the initial LiveData replay would
+            // otherwise trigger a redundant fetch on top of the one already started in viewModel.init().
+            if (connected && !lastConnected) {
+                viewModel.onConnectionChanged(connected)
+            }
+            lastConnected = connected
             updateEmptyView()
         }
     }

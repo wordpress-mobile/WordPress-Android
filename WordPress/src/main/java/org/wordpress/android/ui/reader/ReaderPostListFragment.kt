@@ -208,7 +208,9 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
     @Inject
     lateinit var networkConnectionMonitor: NetworkConnectionMonitor
 
-    private var lastConnected = false
+    // Initialised to true so the first LiveData replay of "connected" (e.g. on a freshly restored fragment
+    // with an active search) doesn't re-fire the search; only a genuine offline->online transition should.
+    private var lastConnected = true
 
     private var readerPostAdapter: ReaderPostAdapter? = null
     private var siteSearchAdapter: ReaderSiteSearchAdapter? = null
