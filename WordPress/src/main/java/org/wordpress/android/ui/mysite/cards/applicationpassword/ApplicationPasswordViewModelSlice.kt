@@ -170,6 +170,13 @@ class ApplicationPasswordViewModelSlice @Inject constructor(
                 )
                 appLogWrapper.d(AppLog.T.MAIN, "A_P: Showing reauthentication card for ${site.url}")
             }
+            is ApplicationPasswordLoginHelper.DiscoveryResult.WpComSite -> {
+                uiModelMutable.postValue(null)
+                appLogWrapper.d(
+                    AppLog.T.MAIN,
+                    "A_P: Hiding reauthentication card for ${site.url} - WordPress.com site"
+                )
+            }
             is ApplicationPasswordLoginHelper.DiscoveryResult.Failed -> {
                 // TODO follow-up: surface result.userFacingMessage in the card (issue #22884).
                 uiModelMutable.postValue(null)
@@ -185,6 +192,10 @@ class ApplicationPasswordViewModelSlice @Inject constructor(
         when (val result = applicationPasswordLoginHelper.getAuthorizationUrlComplete(site.url)) {
             is ApplicationPasswordLoginHelper.DiscoveryResult.Authorized -> {
                 showApplicationPasswordCreateCard(site, result.authorizationUrl)
+            }
+            is ApplicationPasswordLoginHelper.DiscoveryResult.WpComSite -> {
+                uiModelMutable.postValue(null)
+                appLogWrapper.d(AppLog.T.MAIN, "A_P: Hiding card for ${site.url} - WordPress.com site")
             }
             is ApplicationPasswordLoginHelper.DiscoveryResult.Failed -> {
                 // TODO follow-up: surface result.userFacingMessage in the card (issue #22884).

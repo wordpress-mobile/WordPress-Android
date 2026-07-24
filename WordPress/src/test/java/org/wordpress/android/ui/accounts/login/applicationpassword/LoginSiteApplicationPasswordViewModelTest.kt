@@ -16,6 +16,7 @@ import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.ui.accounts.login.ApplicationPasswordLoginHelper
 import kotlin.test.assertEquals
+import kotlin.test.assertNull
 
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
@@ -62,5 +63,59 @@ class LoginSiteApplicationPasswordViewModelTest : BaseUnitTest() {
         assertEquals(false, viewModel.loadingStateFlow.value)
 
         job.cancel() // Clean up the collector job
+    }
+
+    @Test
+    fun `Given a WP_com site, when running discovery, then wpComDetected emits the url`() = test {
+        // Given
+        val siteUrl = "https://example.com"
+        whenever(applicationPasswordLoginHelper.getAuthorizationUrlComplete(siteUrl))
+            .thenReturn(ApplicationPasswordLoginHelper.DiscoveryResult.WpComSite)
+
+        var detectedUrl: String? = null
+        val job = launch {
+            viewModel.wpComDetected.first { url ->
+                detectedUrl = url
+                true
+            }
+        }
+
+        // When
+        viewModel.runApiDiscovery(siteUrl)
+        advanceUntilIdle()
+
+        // Then
+        assertEquals(siteUrl, detectedUrl)
+        assertNull(viewModel.errorMessage.value)
+        assertEquals(false, viewModel.loadingStateFlow.value)
+
+        job.cancel()
+    }
+
+    @Test
+    fun `Given discovery fails, when running discovery, then the generic error is shown`() = test {
+        // Given
+        val siteUrl = "https://example.com"
+        val errorMessage = "not supported"
+        whenever(applicationPasswordLoginHelper.getAuthorizationUrlComplete(siteUrl))
+            .thenReturn(ApplicationPasswordLoginHelper.DiscoveryResult.Failed(errorMessage))
+
+        var wpComDetected = false
+        val wpComJob = launch { viewModel.wpComDetected.first { wpComDetected = true; true } }
+
+        var collectedUrl: String? = null
+        val discoveryJob = launch { viewModel.discoveryURL.first { collectedUrl = it; true } }
+
+        // When
+        viewModel.runApiDiscovery(siteUrl)
+        advanceUntilIdle()
+
+        // Then
+        assertEquals(errorMessage, viewModel.errorMessage.value)
+        assertEquals("", collectedUrl)
+        assertEquals(false, wpComDetected)
+
+        wpComJob.cancel()
+        discoveryJob.cancel()
     }
 }

@@ -20,9 +20,11 @@ import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.UrlUtils
+import org.wordpress.android.util.WPUrlUtils
 import org.wordpress.android.util.crashlogging.sendReportWithTag
 import rs.wordpress.api.kotlin.ApiDiscoveryResult
 import rs.wordpress.api.kotlin.WpLoginClient
+import uniffi.wp_api.DiscoveredAuthenticationMechanism
 import uniffi.wp_api.applicationPasswordsUrl
 import java.net.URI
 import javax.inject.Inject
@@ -53,6 +55,12 @@ class ApplicationPasswordLoginHelper @Inject constructor(
     sealed class DiscoveryResult {
         data class Authorized(val authorizationUrl: String) : DiscoveryResult()
         data class Failed(val userFacingMessage: String) : DiscoveryResult()
+
+        /**
+         * The site is hosted on WordPress.com: API discovery reported OAuth2 as the authentication
+         * mechanism, so it can't use Application Passwords and should log in via WordPress.com.
+         */
+        object WpComSite : DiscoveryResult()
     }
 
     @Suppress("TooGenericExceptionCaught")
@@ -67,21 +75,29 @@ class ApplicationPasswordLoginHelper @Inject constructor(
         withContext(bgDispatcher) {
             when (val urlDiscoveryResult = wpLoginClient.apiDiscovery(siteUrl)) {
                 is ApiDiscoveryResult.Success -> {
-                    val authorizationUrl =
-                        discoverSuccessWrapper.getApplicationPasswordsAuthenticationUrl(urlDiscoveryResult)
-                    val apiRootUrl = discoverSuccessWrapper.getApiRootUrl(urlDiscoveryResult)
-                    if (apiRootUrl.isNotEmpty()) {
-                        // Store the ApiRootUrl for use it after the login
-                        apiRootUrlCache.put(UrlUtils.normalizeUrl(siteUrl), apiRootUrl)
+                    if (discoverSuccessWrapper.isWpComSite(urlDiscoveryResult)) {
+                        // WordPress.com sites report OAuth2 as the authentication mechanism; they
+                        // can't use Application Passwords and must log in via WordPress.com.
+                        appLogWrapper.d(AppLog.T.API, "A_P: $siteUrl is a WordPress.com site (OAuth2)")
+                        AnalyticsTracker.track(Stat.BACKGROUND_REST_AUTODISCOVERY_SUCCESSFUL)
+                        DiscoveryResult.WpComSite
+                    } else {
+                        val authorizationUrl =
+                            discoverSuccessWrapper.getApplicationPasswordsAuthenticationUrl(urlDiscoveryResult)
+                        val apiRootUrl = discoverSuccessWrapper.getApiRootUrl(urlDiscoveryResult)
+                        if (apiRootUrl.isNotEmpty()) {
+                            // Store the ApiRootUrl for use it after the login
+                            apiRootUrlCache.put(UrlUtils.normalizeUrl(siteUrl), apiRootUrl)
+                        }
+                        val authorizationUrlComplete =
+                            uriLoginWrapper.appendParamsToRestAuthorizationUrl(authorizationUrl)
+                        appLogWrapper.d(
+                            AppLog.T.API,
+                            "A_P: Found authorization for $siteUrl URL: $authorizationUrlComplete " +
+                                    "API_ROOT_URL $apiRootUrl")
+                        AnalyticsTracker.track(Stat.BACKGROUND_REST_AUTODISCOVERY_SUCCESSFUL)
+                        DiscoveryResult.Authorized(authorizationUrlComplete)
                     }
-                    val authorizationUrlComplete =
-                        uriLoginWrapper.appendParamsToRestAuthorizationUrl(authorizationUrl)
-                    appLogWrapper.d(
-                        AppLog.T.API,
-                        "A_P: Found authorization for $siteUrl URL: $authorizationUrlComplete " +
-                                "API_ROOT_URL $apiRootUrl")
-                    AnalyticsTracker.track(Stat.BACKGROUND_REST_AUTODISCOVERY_SUCCESSFUL)
-                    DiscoveryResult.Authorized(authorizationUrlComplete)
                 }
 
                 is ApiDiscoveryResult.FailureFetchAndParseApiRoot,
@@ -408,6 +424,19 @@ class ApplicationPasswordLoginHelper @Inject constructor(
 
     class DiscoverSuccessWrapper @Inject constructor() {
         fun getApiRootUrl(successObject: ApiDiscoveryResult.Success) = successObject.success.apiRootUrl.url()
+
+        /**
+         * WordPress.com sites advertise OAuth2 as their authentication mechanism during API
+         * discovery (self-hosted sites advertise Application Passwords). Self-hosted sites can
+         * also expose OAuth2 via plugins, so we additionally require the advertised OAuth2
+         * authorization endpoint to be hosted on wordpress.com. Otherwise a malicious site could
+         * pose as WordPress.com to hijack our login flow.
+         */
+        fun isWpComSite(successObject: ApiDiscoveryResult.Success): Boolean {
+            val authentication = successObject.success.authentication
+            return authentication is DiscoveredAuthenticationMechanism.OAuth2 &&
+                    WPUrlUtils.isWordPressCom(authentication.endpoints.authorizationUrl)
+        }
 
         fun getApplicationPasswordsAuthenticationUrl(
             successObject: ApiDiscoveryResult.Success
