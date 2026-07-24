@@ -26,6 +26,7 @@ import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -36,7 +37,9 @@ import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.flow.distinctUntilChanged
 import org.wordpress.android.R
 import org.wordpress.android.ui.commentsrs.CommentRsUiModel
+import org.wordpress.android.ui.commentsrs.CommentsRsListRow
 import org.wordpress.android.ui.commentsrs.CommentsTabUiState
+import org.wordpress.android.ui.commentsrs.withDateHeaders
 import org.wordpress.android.ui.compose.components.ShimmerBox
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -135,21 +138,35 @@ private fun CommentListContent(
         }
     }
 
+    // Interleave date subheaders once per comment-list change, like the legacy list.
+    val rows = remember(comments) { withDateHeaders(comments) }
     LazyColumn(
         state = listState,
         modifier = Modifier.fillMaxSize()
     ) {
         items(
-            items = comments,
-            key = { it.remoteCommentId }
-        ) { comment ->
-            CommentsRsListItem(
-                comment = comment,
-                isSelected = comment.remoteCommentId in selectedIds,
-                onClick = { onCommentClick(comment.remoteCommentId) },
-                onLongClick = { onCommentLongClick(comment.remoteCommentId) },
-                modifier = Modifier.animateItem()
-            )
+            items = rows,
+            key = { row ->
+                when (row) {
+                    is CommentsRsListRow.DateHeader -> row.key
+                    is CommentsRsListRow.Item -> row.comment.remoteCommentId
+                }
+            },
+            contentType = { it::class }
+        ) { row ->
+            when (row) {
+                is CommentsRsListRow.DateHeader -> CommentsRsDateHeader(
+                    label = row.label,
+                    modifier = Modifier.animateItem()
+                )
+                is CommentsRsListRow.Item -> CommentsRsListItem(
+                    comment = row.comment,
+                    isSelected = row.comment.remoteCommentId in selectedIds,
+                    onClick = { onCommentClick(row.comment.remoteCommentId) },
+                    onLongClick = { onCommentLongClick(row.comment.remoteCommentId) },
+                    modifier = Modifier.animateItem()
+                )
+            }
         }
 
         if (isLoadingMore) {
