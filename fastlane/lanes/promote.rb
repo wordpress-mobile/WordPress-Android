@@ -874,23 +874,7 @@ platform :android do
           'prompt' => 'Choose the build to release to beta testers. This promotes the matching WordPress and Jetpack builds.',
           # Keep the build "running" (not green) while it waits for a human.
           'blocked_state' => 'running',
-          'fields' => [
-            {
-              'select' => 'Build to promote',
-              'key' => BETA_META_DATA_KEY,
-              # Required, no default: an un-actioned unblock can't silently promote a build.
-              'required' => true,
-              'options' => options
-            },
-            {
-              'select' => 'Release notes',
-              'key' => BETA_RELEASE_NOTES_META_DATA_KEY,
-              'hint' => 'Which "what\'s new" text to publish. Carries through to production.',
-              # Required, no default: the notes are a deliberate choice, not a silent fallback.
-              'required' => true,
-              'options' => STATIC_RELEASE_NOTE_OPTIONS.map { |o| { 'label' => o[:label], 'value' => o[:key] } }
-            }
-          ]
+          'fields' => beta_promotion_block_fields(options: options)
         },
         {
           'label' => ':rocket: Promote selected build to beta',
@@ -905,6 +889,27 @@ platform :android do
     # `line_width: -1` keeps each label on one line (no YAML folding).
     File.write(PROMOTION_STEPS_FILE, steps.to_yaml(line_width: -1))
     UI.message("Wrote promotion steps for #{candidates.count} build(s) to #{PROMOTION_STEPS_FILE}")
+  end
+
+  # The block step's input fields: pick a build, and pick the release note to publish with it.
+  def beta_promotion_block_fields(options:)
+    [
+      {
+        'select' => 'Build to promote',
+        'key' => BETA_META_DATA_KEY,
+        # Required, no default: an un-actioned unblock can't silently promote a build.
+        'required' => true,
+        'options' => options
+      },
+      {
+        'select' => 'Release notes',
+        'key' => BETA_RELEASE_NOTES_META_DATA_KEY,
+        'hint' => 'Which "what\'s new" text to publish. Carries through to production.',
+        # Required, no default: the notes are a deliberate choice, not a silent fallback.
+        'required' => true,
+        'options' => STATIC_RELEASE_NOTE_OPTIONS.map { |o| { 'label' => o[:label], 'value' => o[:key] } }
+      }
+    ]
   end
 
   # Writes the confirm → promote → finalize steps. There's no picker — the candidate is baked into the
