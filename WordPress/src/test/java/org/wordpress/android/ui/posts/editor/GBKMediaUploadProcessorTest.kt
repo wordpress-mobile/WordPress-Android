@@ -120,6 +120,36 @@ class GBKMediaUploadProcessorTest : BaseUnitTest() {
     }
 
     @Test
+    fun `png gps is stripped onto a copy when strip enabled and optimization off`() = test {
+        val pngStaged = tempFolder.newFile("art.png")
+        whenever(mediaUtilsWrapper.getOptimizedMedia(pngStaged.absolutePath, false)).thenReturn(null)
+        whenever(appPrefsWrapper.isStripImageLocation).thenReturn(true)
+
+        // androidx ExifInterface can write PNG, so PNG must take the copy-and-strip branch.
+        val result = createProcessor(wpComSite()).processFile(pngStaged, "image/png", "art.png")
+
+        assertThat(result).isInstanceOf(ProcessedProxyFile.Processed::class.java)
+        result as ProcessedProxyFile.Processed
+        assertThat(result.file.absolutePath).isNotEqualTo(pngStaged.absolutePath)
+        verify(mediaUtilsWrapper).stripImageLocation(result.file.absolutePath)
+        result.file.delete()
+    }
+
+    @Test
+    fun `heic passes through when strip enabled and optimization off`() = test {
+        val heicStaged = tempFolder.newFile("photo.heic")
+        whenever(mediaUtilsWrapper.getOptimizedMedia(heicStaged.absolutePath, false)).thenReturn(null)
+        whenever(appPrefsWrapper.isStripImageLocation).thenReturn(true)
+
+        // androidx ExifInterface cannot write HEIF, so copy-and-strip would silently fail and
+        // upload a still-geotagged copy — HEIC must not take the strip branch.
+        val result = createProcessor(wpComSite()).processFile(heicStaged, "image/heic", "photo.heic")
+
+        assertThat(result).isEqualTo(ProcessedProxyFile.Original)
+        verify(mediaUtilsWrapper, never()).stripImageLocation(any())
+    }
+
+    @Test
     fun `heic reports jpeg mime type and extension after optimization`() = test {
         val heicStaged = tempFolder.newFile("photo.heic")
         val optimized = tempFolder.newFile("optimized.heic")

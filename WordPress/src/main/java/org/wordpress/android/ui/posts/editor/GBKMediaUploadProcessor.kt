@@ -240,8 +240,13 @@ class GBKMediaUploadProcessor(
         private const val MIME_MP4 = "video/mp4"
         private const val MIME_OCTET_STREAM = "application/octet-stream"
 
-        /** Image formats that can carry EXIF GPS metadata. */
-        private val EXIF_MIME_TYPES = setOf(MIME_JPEG, "image/heic", "image/heif", "image/webp")
+        /**
+         * Formats androidx ExifInterface can actually strip GPS from: saveAttributes() supports
+         * only JPEG, PNG, and WebP. HEIC/HEIF are deliberately excluded — the library throws an
+         * IOException (swallowed by stripLocation), so listing them would make a doomed copy and
+         * upload a still-geotagged file while appearing to honor the strip-location setting.
+         */
+        private val EXIF_MIME_TYPES = setOf(MIME_JPEG, MIME_PNG, "image/webp")
     }
 }
 
