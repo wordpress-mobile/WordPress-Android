@@ -114,6 +114,18 @@ class LoginSiteApplicationPasswordFragment : Fragment() {
                 }
             }
         }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.wpComDetected.collect {
+                    // WP.com sites can't use application passwords; send them to the OAuth flow.
+                    // Discovery already ran here (unlike the up-front WPUrlUtils.isWordPressCom()
+                    // check), so record that it resolved to a WordPress.com site.
+                    analyticsListener.trackConnectedSiteInfoSucceeded(mapOf("is_wpcom" to true))
+                    loginActivity?.showWPcomLoginScreen(requireContext())
+                }
+            }
+        }
     }
 
     override fun onResume() {
