@@ -29,6 +29,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
@@ -36,9 +37,11 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.core.os.ConfigurationCompat
 import coil.compose.AsyncImage
 import org.wordpress.android.R
 import org.wordpress.android.ui.commentsrs.CommentRsUiModel
+import java.util.Locale
 
 private val AVATAR_SIZE = 40.dp
 private val PENDING_INDICATOR_WIDTH = 4.dp
@@ -172,4 +175,24 @@ private fun AnnotatedString.Builder.boldRange(formatted: String, part: String) {
     if (start >= 0) {
         addStyle(SpanStyle(fontWeight = FontWeight.Bold), start, start + part.length)
     }
+}
+
+/** A date-group subheader row, matching the legacy list's all-caps overline separators. */
+@Composable
+fun CommentsRsDateHeader(label: String, modifier: Modifier = Modifier) {
+    // Locale-aware uppercase, like the legacy subheader's android:textAllCaps (Kotlin's no-arg
+    // uppercase() is Locale.ROOT and would mis-case e.g. Turkish month names). Read the locale
+    // observably from the composition so it tracks locale changes.
+    val locale = ConfigurationCompat.getLocales(LocalConfiguration.current)[0] ?: Locale.ROOT
+    Text(
+        text = label.uppercase(locale),
+        style = MaterialTheme.typography.labelMedium,
+        color = MaterialTheme.colorScheme.onSurfaceVariant,
+        maxLines = 1,
+        overflow = TextOverflow.Ellipsis,
+        modifier = modifier
+            .fillMaxWidth()
+            .background(MaterialTheme.colorScheme.surface)
+            .padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 8.dp)
+    )
 }
