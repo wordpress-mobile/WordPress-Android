@@ -10,7 +10,6 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.Toolbar;
 
 import org.apache.commons.text.StringEscapeUtils;
-import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
@@ -22,7 +21,7 @@ import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteDeleted;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteRemoved;
-import org.wordpress.android.networking.ConnectionChangeReceiver;
+import org.wordpress.android.networking.NetworkConnectionMonitor;
 import org.wordpress.android.ui.main.BaseAppCompatActivity;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -42,6 +41,9 @@ public class BlogPreferencesActivity extends BaseAppCompatActivity {
     @Inject AccountStore mAccountStore;
     @Inject SiteStore mSiteStore;
     @Inject Dispatcher mDispatcher;
+    @Inject NetworkConnectionMonitor mNetworkConnectionMonitor;
+
+    private boolean mLastConnected;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -84,19 +86,19 @@ public class BlogPreferencesActivity extends BaseAppCompatActivity {
                            .replace(R.id.fragment_container, siteSettingsFragment, KEY_SETTINGS_FRAGMENT)
                            .commit();
         }
+
+        mNetworkConnectionMonitor.isConnected().observe(this, this::onConnectionChanged);
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        EventBus.getDefault().register(this);
         mDispatcher.register(this);
     }
 
     @Override
     protected void onStop() {
         mDispatcher.unregister(this);
-        EventBus.getDefault().unregister(this);
         super.onStop();
     }
 
@@ -117,21 +119,22 @@ public class BlogPreferencesActivity extends BaseAppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    @SuppressWarnings("unused")
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEventMainThread(ConnectionChangeReceiver.ConnectionChangeEvent event) {
+    private void onConnectionChanged(boolean connected) {
         SiteSettingsFragment siteSettingsFragment = getSettingsFragment();
         if (siteSettingsFragment != null) {
-            if (!event.isConnected()) {
+            // Toast only on a genuine transition to disconnected, so LiveData replay on re-foregrounding
+            // doesn't spuriously toast.
+            if (!connected && mLastConnected) {
                 ToastUtils.showToast(this, getString(R.string.site_settings_disconnected_toast), Duration.LONG);
             }
-            siteSettingsFragment.setEditingEnabled(event.isConnected());
+            siteSettingsFragment.setEditingEnabled(connected);
 
             // TODO: add this back when delete blog is back
             // https://github.com/wordpress-mobile/WordPress-Android/commit/6a90e3fe46e24ee40abdc4a7f8f0db06f157900c
             // Checks for stats widgets that were synched with a blog that could be gone now.
             // StatsWidgetProvider.updateWidgetsOnLogout(this);
         }
+        mLastConnected = connected;
     }
 
     @SuppressWarnings("unused")
