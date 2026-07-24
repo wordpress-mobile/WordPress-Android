@@ -61,8 +61,14 @@ class GBKMediaUploadProcessor(
     ): ProcessedProxyFile = withContext(ioDispatcher) {
         val resolvedMimeType = resolveMimeType(mimeType, filename)
 
-        // Reject types the site's plan doesn't allow (e.g. audio on free WP.com plans) with a
-        // localized message instead of an opaque server-side error.
+        // Fallback plan check. GutenbergKit's editor validates uploads in the WebView against the
+        // site's allowedMimeTypes (from /wp-block-editor/v1/settings) before the request reaches
+        // this delegate, so for most disallowed types the editor rejects with its own localized
+        // message first. Those settings are cached on disk and reused on later opens, so GB
+        // validates against whatever mime list was cached — not necessarily the site's current
+        // one. This check still fires when GB's list is absent (cache miss where editor settings
+        // resolve to undefined) or when the app's static MimeTypes table is stricter than the
+        // server's list — in which case it can over-reject a type the server would accept.
         if (!mediaUtilsWrapper.isMimeTypeSupportedBySitePlan(site, resolvedMimeType)) {
             throw GBKMediaUploadException(appContext.getString(R.string.error_media_file_type_not_allowed))
         }
