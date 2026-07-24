@@ -108,7 +108,7 @@ class GBKMediaUploadProcessor(
      * [org.wordpress.android.ui.uploads.VideoOptimizer] semantics: any failure (no composer,
      * m4m error) resolves to null so the caller falls back to uploading the original.
      */
-    @Suppress("TooGenericExceptionCaught", "SwallowedException")
+    @Suppress("TooGenericExceptionCaught")
     private suspend fun transcodeVideo(input: File): File? = suspendCancellableCoroutine { continuation ->
         val output = File(appContext.cacheDir, MediaUtils.generateTimeStampedFileName(MIME_MP4))
         val listener = object : IProgressListener {
