@@ -348,8 +348,17 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
         });
 
         mViewModel.getOpenExternalBrowser().observe(this, unit -> {
-            ReaderActivityLauncher.openUrl(WPWebViewActivity.this, mWebView.getUrl(),
-                    ReaderActivityLauncher.OpenUrlType.EXTERNAL);
+            // Prefer the currently loaded URL, but fall back to the requested URL when the page
+            // hasn't finished loading yet (mWebView.getUrl() is null before the first load).
+            String urlToOpen = mWebView.getUrl();
+            if (TextUtils.isEmpty(urlToOpen)) {
+                Bundle extras = getIntent().getExtras();
+                urlToOpen = extras != null ? extras.getString(URL_TO_LOAD) : null;
+            }
+            if (!TextUtils.isEmpty(urlToOpen)) {
+                ReaderActivityLauncher.openUrl(WPWebViewActivity.this, urlToOpen,
+                        ReaderActivityLauncher.OpenUrlType.EXTERNAL);
+            }
         });
 
         mViewModel.getPreviewModeSelector().observe(this, previewModelSelectorStatus -> {

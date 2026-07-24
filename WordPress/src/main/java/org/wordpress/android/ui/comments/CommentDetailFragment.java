@@ -831,7 +831,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
         updateStatusViews(binding, actionBinding, site, comment, note);
 
         // navigate to author's blog when avatar or name clicked
-        if (comment.getAuthorUrl() != null) {
+        if (!TextUtils.isEmpty(comment.getAuthorUrl())) {
             View.OnClickListener authorListener =
                     v -> ReaderActivityLauncher.openUrl(getActivity(), comment.getAuthorUrl());
             binding.imageAvatar.setOnClickListener(authorListener);
