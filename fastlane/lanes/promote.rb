@@ -496,12 +496,12 @@ platform :android do
   # `release_notes_static/<option>.txt` file. Missing locales fall back to Play's default language.
   def static_release_notes(app:, option:)
     metadata_dir = File.join(FASTLANE_FOLDER, APP_SPECIFIC_VALUES[app][:metadata_dir], 'android')
-    notes = Dir.glob(File.join(metadata_dir, '*', 'release_notes_static', "#{option}.txt")).sort.filter_map do |path|
+    notes = Dir.glob(File.join(metadata_dir, '*', 'release_notes_static', "#{option}.txt")).filter_map do |path|
       text = File.read(path).strip
       next if text.empty?
 
       # Path is <metadata_dir>/<locale>/release_notes_static/<option>.txt; the locale is two dirs up.
-      locale = File.basename(File.dirname(File.dirname(path)))
+      locale = File.basename(File.dirname(path, 2))
       AndroidPublisher::LocalizedText.new(language: locale, text: text)
     end
     UI.important("No static release notes found for option #{option.inspect} (#{app}).") if notes.empty?
