@@ -3,6 +3,7 @@ package org.wordpress.android.ui.posts.prepublishing.home
 import android.content.Context
 import android.os.Bundle
 import android.view.View
+import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -100,6 +101,11 @@ class PrepublishingHomeFragment : Fragment(R.layout.post_prepublishing_home_frag
 
         viewModel.onSubmitButtonClicked.observeEvent(viewLifecycleOwner) { publishPost ->
             actionClickedListener?.onSubmitButtonClicked(publishPost)
+        }
+
+        viewModel.dismissSheet.observeEvent(viewLifecycleOwner) {
+            // allowing state loss because this can run while the host activity is already finishing
+            (parentFragment as? DialogFragment)?.dismissAllowingStateLoss()
         }
 
         viewModel.start(getEditPostRepository(), getSite())

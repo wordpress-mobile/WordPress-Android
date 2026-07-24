@@ -23,6 +23,7 @@ import org.wordpress.android.ui.posts.prepublishing.home.usecases.GetButtonUiSta
 import org.wordpress.android.ui.posts.trackPrepublishingNudges
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
+import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.StringUtils
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.merge
@@ -49,6 +50,9 @@ class PrepublishingHomeViewModel @Inject constructor(
     private val _onSubmitButtonClicked = MutableLiveData<Event<PublishPost>>()
     val onSubmitButtonClicked: LiveData<Event<PublishPost>> = _onSubmitButtonClicked
 
+    private val _dismissSheet = MutableLiveData<Event<Unit>>()
+    val dismissSheet: LiveData<Event<Unit>> = _dismissSheet
+
     private val _uiState = MutableLiveData<List<PrepublishingHomeItemUiState>>()
     private var _socialUiState: MutableLiveData<SocialUiState> = MutableLiveData(SocialUiState.Hidden)
 
@@ -68,6 +72,14 @@ class PrepublishingHomeViewModel @Inject constructor(
     fun start(editPostRepository: EditPostRepository, site: SiteModel) {
         this.editPostRepository = editPostRepository
         if (isStarted) return
+        // The sheet is a DialogFragment, so the FragmentManager can restore it after a config
+        // change or process death before the host activity has loaded a post. Close the sheet
+        // rather than building its UI against an empty repository.
+        if (!editPostRepository.hasPost()) {
+            AppLog.e(AppLog.T.POSTS, "Prepublishing sheet opened without a post; dismissing.")
+            _dismissSheet.postValue(Event(Unit))
+            return
+        }
         isStarted = true
 
         setupHomeUiState(editPostRepository, site)
