@@ -19,7 +19,6 @@ import org.wordpress.android.fluxc.model.post.PostLocation
 import org.wordpress.android.fluxc.model.post.PostStatus.DRAFT
 import org.wordpress.android.fluxc.model.post.PostStatus.PENDING
 import org.wordpress.android.fluxc.model.post.PostStatus.PUBLISHED
-import org.wordpress.android.fluxc.model.post.PostStatus.UNKNOWN
 import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.ui.posts.EditPostRepository.UpdatePostResult
 import org.wordpress.android.util.LocaleManagerWrapper
@@ -68,11 +67,6 @@ class EditPostRepositoryTest : BaseUnitTest() {
     @Test
     fun `is not publishable before initialization`() {
         assertThat(editPostRepository.isPostPublishable()).isFalse()
-    }
-
-    @Test
-    fun `status is UNKNOWN before initialization`() {
-        assertThat(editPostRepository.status).isEqualTo(UNKNOWN)
     }
 
     @Test

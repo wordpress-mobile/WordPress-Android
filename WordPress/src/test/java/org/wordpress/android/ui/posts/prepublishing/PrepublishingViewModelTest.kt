@@ -55,6 +55,30 @@ class PrepublishingViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `when viewModel start is called without a post, dismiss the sheet instead of navigating`() {
+        var dismissEvent: Event<Unit>? = null
+        var navigationEvent: Event<PrepublishingNavigationTarget>? = null
+        viewModel.dismissBottomSheet.observeForever { dismissEvent = it }
+        viewModel.navigationTarget.observeForever { navigationEvent = it }
+
+        // TAGS rather than HOME because a restored sheet can land on any screen
+        viewModel.start(mock(), TAGS, hasPost = false)
+
+        assertThat(dismissEvent).isNotNull
+        assertThat(navigationEvent).isNull()
+    }
+
+    @Test
+    fun `when viewModel start is called with a post, don't dismiss the sheet`() {
+        var dismissEvent: Event<Unit>? = null
+        viewModel.dismissBottomSheet.observeForever { dismissEvent = it }
+
+        viewModel.start(mock(), TAGS, hasPost = true)
+
+        assertThat(dismissEvent).isNull()
+    }
+
+    @Test
     fun `when onBackClicked is pressed and currentScreen isn't HOME, navigate to HOME`() {
         val expectedScreen = HOME
 

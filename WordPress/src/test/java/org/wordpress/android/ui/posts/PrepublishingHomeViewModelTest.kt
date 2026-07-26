@@ -399,7 +399,7 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given a repository with no post, when the viewModel is started, then the sheet is dismissed`() {
+    fun `given a repository with no post, when the viewModel is started, then no ui state is built`() {
         // arrange
         whenever(editPostRepository.hasPost()).thenReturn(false)
 
@@ -407,8 +407,21 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
         viewModel.start(editPostRepository, site)
 
         // assert
-        assertThat(viewModel.dismissSheet.value?.peekContent()).isNotNull
         assertThat(viewModel.uiState.value).isNull()
+    }
+
+    @Test
+    fun `given a start with no post, when started again once the post loads, then the ui state is built`() {
+        // arrange
+        whenever(editPostRepository.hasPost()).thenReturn(false)
+        viewModel.start(editPostRepository, site)
+
+        // act - the guard must not latch isStarted, or the sheet would stay empty forever
+        whenever(editPostRepository.hasPost()).thenReturn(true)
+        viewModel.start(editPostRepository, site)
+
+        // assert
+        assertThat(viewModel.uiState.value).isNotNull
     }
 
     private fun getHeaderUiState() = viewModel.uiState.value?.filterIsInstance(HeaderUiState::class.java)?.first()

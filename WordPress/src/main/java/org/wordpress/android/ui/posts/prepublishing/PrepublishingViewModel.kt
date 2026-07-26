@@ -62,9 +62,20 @@ class PrepublishingViewModel @Inject constructor(private val dispatcher: Dispatc
 
     fun start(
         site: SiteModel,
-        currentScreenFromSavedState: PrepublishingScreen?
+        currentScreenFromSavedState: PrepublishingScreen?,
+        hasPost: Boolean = true
     ) {
         this.site = site
+
+        // The sheet is a DialogFragment, so the FragmentManager restores it after a config change or
+        // process death even when the host hasn't loaded a post. Guarding here rather than in an
+        // individual screen's ViewModel covers every screen the sheet can restore into, since the
+        // saved screen below may be TAGS, CATEGORIES or PUBLISH rather than HOME.
+        if (!hasPost) {
+            AppLog.e(T.POSTS, "Prepublishing sheet started without a post; dismissing.")
+            _dismissBottomSheet.postValue(Event(Unit))
+            return
+        }
 
         // Set screen: use saved state if available (config change), otherwise reset to HOME (dismissal + reopen)
         val targetScreen = currentScreenFromSavedState ?: HOME

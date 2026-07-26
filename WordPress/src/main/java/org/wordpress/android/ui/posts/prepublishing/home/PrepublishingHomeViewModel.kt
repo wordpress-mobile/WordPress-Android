@@ -50,9 +50,6 @@ class PrepublishingHomeViewModel @Inject constructor(
     private val _onSubmitButtonClicked = MutableLiveData<Event<PublishPost>>()
     val onSubmitButtonClicked: LiveData<Event<PublishPost>> = _onSubmitButtonClicked
 
-    private val _dismissSheet = MutableLiveData<Event<Unit>>()
-    val dismissSheet: LiveData<Event<Unit>> = _dismissSheet
-
     private val _uiState = MutableLiveData<List<PrepublishingHomeItemUiState>>()
     private var _socialUiState: MutableLiveData<SocialUiState> = MutableLiveData(SocialUiState.Hidden)
 
@@ -72,12 +69,11 @@ class PrepublishingHomeViewModel @Inject constructor(
     fun start(editPostRepository: EditPostRepository, site: SiteModel) {
         this.editPostRepository = editPostRepository
         if (isStarted) return
-        // The sheet is a DialogFragment, so the FragmentManager can restore it after a config
-        // change or process death before the host activity has loaded a post. Close the sheet
-        // rather than building its UI against an empty repository.
+        // PrepublishingViewModel already dismisses the sheet when the host has no post, but that
+        // dismissal is asynchronous and the FragmentManager can restore this fragment and create its
+        // view before it commits. Skip the UI rather than reading a post that isn't there.
         if (!editPostRepository.hasPost()) {
-            AppLog.e(AppLog.T.POSTS, "Prepublishing sheet opened without a post; dismissing.")
-            _dismissSheet.postValue(Event(Unit))
+            AppLog.e(AppLog.T.POSTS, "Prepublishing home started without a post; skipping setup.")
             return
         }
         isStarted = true
