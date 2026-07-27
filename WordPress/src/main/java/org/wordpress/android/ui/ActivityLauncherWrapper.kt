@@ -11,6 +11,7 @@ import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.PostImmutableModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.posts.RemotePreviewLogicHelper.RemotePreviewType
+import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.UrlUtils
 import javax.inject.Inject
 
@@ -75,10 +76,23 @@ class ActivityLauncherWrapper @Inject constructor() {
      * user can't press Back to return to it — completing the "switch over" flow in one direction. Only invoked
      * when the target app was already installed; if it wasn't, we leave the source app intact so the user can
      * return after visiting the Play Store.
+     *
+     * [Activity.finishAffinity] throws IllegalStateException when the Activity still has a result to deliver
+     * (its result code isn't RESULT_CANCELED, or it has result data). This is reachable here because
+     * openPlayStoreLink() is called from fragments hosted by a wide range of activities, several of which
+     * set a result — so we can't assume the host has none.
      */
     private fun preventBackNavigation(activity: Activity, shouldPrevent: Boolean) {
-        if (shouldPrevent && !activity.isFinishing && !activity.isDestroyed) {
+        if (!shouldPrevent || activity.isFinishing || activity.isDestroyed) return
+        // We're finishing the whole task to hand the user over to the target app, so the Activity that would
+        // have received this result is being torn down too — clearing it is safe here.
+        activity.setResult(Activity.RESULT_CANCELED, null)
+        try {
             activity.finishAffinity()
+        } catch (e: IllegalStateException) {
+            // The only remaining throw path is an embedded (ActivityGroup) child activity.
+            AppLog.e(AppLog.T.UTILS, "finishAffinity failed, finishing the activity only", e)
+            activity.finish()
         }
     }
 

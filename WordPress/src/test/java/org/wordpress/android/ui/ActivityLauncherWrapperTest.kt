@@ -11,6 +11,9 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.any
+import org.mockito.kotlin.anyOrNull
+import org.mockito.kotlin.doThrow
+import org.mockito.kotlin.inOrder
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
@@ -36,6 +39,7 @@ class ActivityLauncherWrapperTest {
         classToTest.openPlayStoreLink(activity, "packageName")
 
         verify(activity, never()).finishAffinity()
+        verify(activity, never()).setResult(any(), anyOrNull())
     }
 
     @Test
@@ -48,6 +52,31 @@ class ActivityLauncherWrapperTest {
     }
 
     @Test
+    fun `openPlayStoreLink, when target app is preinstalled, should clear the pending result before finishing`() {
+        val activity = mockAppPreinstalled(true)
+
+        classToTest.openPlayStoreLink(activity, "packageName")
+
+        // finishAffinity() throws if the Activity still has a result to deliver, so the result
+        // has to be cleared first.
+        inOrder(activity) {
+            verify(activity).setResult(Activity.RESULT_CANCELED, null)
+            verify(activity).finishAffinity()
+        }
+    }
+
+    @Test
+    fun `openPlayStoreLink, when finishAffinity throws, should finish the activity instead of crashing`() {
+        val activity = mockAppPreinstalled(true)
+        doThrow(IllegalStateException("Can not be called to deliver a result"))
+            .whenever(activity).finishAffinity()
+
+        classToTest.openPlayStoreLink(activity, "packageName")
+
+        verify(activity).finish()
+    }
+
+    @Test
     fun `openPlayStoreLink, when activity is finishing, should not call finishAffinity`() {
         val activity = mockAppPreinstalled(true)
         whenever(activity.isFinishing).thenReturn(true)
@@ -55,6 +84,7 @@ class ActivityLauncherWrapperTest {
         classToTest.openPlayStoreLink(activity, "packageName")
 
         verify(activity, never()).finishAffinity()
+        verify(activity, never()).setResult(any(), anyOrNull())
     }
 
     @Test
@@ -65,6 +95,7 @@ class ActivityLauncherWrapperTest {
         classToTest.openPlayStoreLink(activity, "packageName")
 
         verify(activity, never()).finishAffinity()
+        verify(activity, never()).setResult(any(), anyOrNull())
     }
 
     @Test
