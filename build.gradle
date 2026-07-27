@@ -4,6 +4,18 @@ import com.automattic.android.measure.reporters.SlowSlowTasksMetricsReporter
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
+buildscript {
+    dependencies {
+        // TODO: Remove once dependency-analysis-gradle-plugin isolates its kotlin-metadata-jvm
+        //  dependency onto its own worker classpath, making this override moot (see PR below).
+        //  Interim workaround, endorsed by the plugin author, for reading Kotlin metadata newer
+        //  than DAGP's own bundled reader supports. Tracks this project's own Kotlin version.
+        //  https://github.com/autonomousapps/dependency-analysis-gradle-plugin/issues/1661
+        //  https://github.com/autonomousapps/dependency-analysis-gradle-plugin/pull/1719
+        classpath(libs.kotlin.metadata.jvm)
+    }
+}
+
 plugins {
     alias(libs.plugins.detekt)
     alias(libs.plugins.automattic.measure.builds)
