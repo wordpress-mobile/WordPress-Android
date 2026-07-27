@@ -23,6 +23,7 @@ import org.wordpress.android.ui.posts.prepublishing.home.usecases.GetButtonUiSta
 import org.wordpress.android.ui.posts.trackPrepublishingNudges
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
+import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.StringUtils
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.merge
@@ -68,6 +69,13 @@ class PrepublishingHomeViewModel @Inject constructor(
     fun start(editPostRepository: EditPostRepository, site: SiteModel) {
         this.editPostRepository = editPostRepository
         if (isStarted) return
+        // PrepublishingViewModel already dismisses the sheet when the host has no post, but that
+        // dismissal is asynchronous and the FragmentManager can restore this fragment and create its
+        // view before it commits. Skip the UI rather than reading a post that isn't there.
+        if (!editPostRepository.hasPost()) {
+            AppLog.e(AppLog.T.POSTS, "Prepublishing home started without a post; skipping setup.")
+            return
+        }
         isStarted = true
 
         setupHomeUiState(editPostRepository, site)

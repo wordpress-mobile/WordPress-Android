@@ -71,6 +71,7 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
         ).doAnswer {
             PublishButtonUiState(it.arguments[2] as (PublishPost) -> Unit)
         }
+        whenever(editPostRepository.hasPost()).thenReturn(true)
         whenever(editPostRepository.getEditablePost()).thenReturn(PostModel())
         whenever(postSettingsUtils.getPublishDateLabel(any())).thenReturn((""))
         whenever(site.name).thenReturn("")
@@ -86,7 +87,7 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
         val expectedActionsAmount = 3
 
         // act
-        viewModel.start(mock(), site)
+        viewModel.start(editPostRepository, site)
 
         // assert
         assertThat(viewModel.uiState.value?.filterIsInstance(HomeUiState::class.java)?.size).isEqualTo(
@@ -163,7 +164,7 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
         val expectedActionsAmount = 1
 
         // act
-        viewModel.start(mock(), site)
+        viewModel.start(editPostRepository, site)
 
         // assert
         assertThat(viewModel.uiState.value?.filterIsInstance(HeaderUiState::class.java)?.size).isEqualTo(
@@ -177,7 +178,7 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
         val expectedActionsAmount = 1
 
         // act
-        viewModel.start(mock(), site)
+        viewModel.start(editPostRepository, site)
 
         // assert
         assertThat(viewModel.uiState.value?.filterIsInstance(ButtonUiState::class.java)?.size).isEqualTo(
@@ -191,7 +192,7 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
         val expectedActionType = PrepublishingScreenNavigation.Publish
 
         // act
-        viewModel.start(mock(), site)
+        viewModel.start(editPostRepository, site)
         val publishAction = getHomeUiState(expectedActionType)
         publishAction?.onNavigationActionClicked?.invoke(expectedActionType)
 
@@ -205,7 +206,7 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
         val expectedActionType = PrepublishingScreenNavigation.Tags
 
         // act
-        viewModel.start(mock(), site)
+        viewModel.start(editPostRepository, site)
         val tagsAction = getHomeUiState(expectedActionType)
         tagsAction?.onNavigationActionClicked?.invoke(expectedActionType)
 
@@ -395,6 +396,32 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
         // assert
         val uiSocialState = viewModel.uiState.value!!.find { it is SocialUiState }
         assertThat(uiSocialState).isEqualTo(SocialUiState.Hidden)
+    }
+
+    @Test
+    fun `given a repository with no post, when the viewModel is started, then no ui state is built`() {
+        // arrange
+        whenever(editPostRepository.hasPost()).thenReturn(false)
+
+        // act
+        viewModel.start(editPostRepository, site)
+
+        // assert
+        assertThat(viewModel.uiState.value).isNull()
+    }
+
+    @Test
+    fun `given a start with no post, when started again once the post loads, then the ui state is built`() {
+        // arrange
+        whenever(editPostRepository.hasPost()).thenReturn(false)
+        viewModel.start(editPostRepository, site)
+
+        // act - the guard must not latch isStarted, or the sheet would stay empty forever
+        whenever(editPostRepository.hasPost()).thenReturn(true)
+        viewModel.start(editPostRepository, site)
+
+        // assert
+        assertThat(viewModel.uiState.value).isNotNull
     }
 
     private fun getHeaderUiState() = viewModel.uiState.value?.filterIsInstance(HeaderUiState::class.java)?.first()
