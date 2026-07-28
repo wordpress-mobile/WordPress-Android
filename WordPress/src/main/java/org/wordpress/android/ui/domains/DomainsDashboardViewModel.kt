@@ -242,7 +242,7 @@ class DomainsDashboardViewModel @Inject constructor(
     private fun onDomainClick(allDomainItem: AllDomainItem) {
         _onNavigation.value = Event(
             OpenDomainManagement(
-                allDomainItem.domain.ifEmpty { return },
+                allDomainItem.domain,
                 allDomainItem.getDomainDetailsUrl() ?: return
             )
         )
