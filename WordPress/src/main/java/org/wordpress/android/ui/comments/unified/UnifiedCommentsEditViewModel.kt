@@ -10,15 +10,14 @@ import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.COMMENT_EDITED
 import org.wordpress.android.datasets.wrappers.ReaderCommentTableWrapper
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.persistence.comments.CommentsDao.CommentEntity
 import org.wordpress.android.fluxc.store.CommentsStore
 import org.wordpress.android.models.usecases.LocalCommentCacheUpdateHandler
 import org.wordpress.android.modules.BG_THREAD
+import org.wordpress.android.ui.comments.unified.CommentsRsDataSource.RsEditResult
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.comments.unified.CommentIdentifier.NotificationCommentIdentifier
 import org.wordpress.android.ui.comments.unified.CommentIdentifier.ReaderCommentIdentifier
 import org.wordpress.android.ui.comments.unified.CommentIdentifier.SiteCommentIdentifier
-import org.wordpress.android.ui.comments.unified.UnifiedCommentsEditViewModel.EditCommentActionEvent.CANCEL_EDIT_CONFIRM
 import org.wordpress.android.ui.comments.unified.UnifiedCommentsEditViewModel.EditCommentActionEvent.CLOSE
 import org.wordpress.android.ui.comments.unified.UnifiedCommentsEditViewModel.EditCommentActionEvent.DONE
 import org.wordpress.android.ui.comments.unified.UnifiedCommentsEditViewModel.FieldType.COMMENT
@@ -49,6 +48,7 @@ class UnifiedCommentsEditViewModel @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     private val commentsStore: CommentsStore,
+    private val commentsRsDataSource: CommentsRsDataSource,
     private val resourceProvider: ResourceProvider,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     private val localCommentCacheUpdateHandler: LocalCommentCacheUpdateHandler,
@@ -66,6 +66,15 @@ class UnifiedCommentsEditViewModel @Inject constructor(
     val onSnackbarMessage: LiveData<Event<SnackbarMessageHolder>> = _onSnackbarMessage
 
     private var isStarted = false
+
+    // Written on the main thread in onActionMenuClicked and cleared by the save coroutine;
+    // @Volatile covers the cross-thread clear.
+    @Volatile
+    private var isSaving = false
+    // Guards against queuing a stack of identical "saving" snackbars on repeated back-presses
+    // during a single in-flight save; reset when a new save starts.
+    private var savingBackNoticeShown = false
+
     private lateinit var site: SiteModel
 
     private lateinit var commentIdentifier: CommentIdentifier
@@ -78,22 +87,18 @@ class UnifiedCommentsEditViewModel @Inject constructor(
     )
 
     data class EditCommentUiState(
-        val canSaveChanges: Boolean,
-        val shouldInitComment: Boolean,
-        val shouldInitWatchers: Boolean,
+        val canSaveChanges: Boolean = false,
         val showProgress: Boolean = false,
+        // A terminal "couldn't load the comment" state: the screen shows an error (not the form),
+        // held in retained state so a dropped snackbar/close event can't strand it on a spinner.
+        val loadFailed: Boolean = false,
         val progressText: UiString? = null,
-        val originalComment: CommentEssentials,
-        val editedComment: CommentEssentials,
-        val editErrorStrings: EditErrorStrings,
-        val inputSettings: InputSettings
-    )
-
-    data class InputSettings(
-        val enableEditName: Boolean,
-        val enableEditUrl: Boolean,
-        val enableEditEmail: Boolean,
-        val enableEditComment: Boolean
+        // Lives in ui state (not a one-shot event) so the dialog survives configuration changes,
+        // like the DialogFragment it replaced.
+        val showDiscardDialog: Boolean = false,
+        val originalComment: CommentEssentials = CommentEssentials(),
+        val editedComment: CommentEssentials = CommentEssentials(),
+        val editErrorStrings: EditErrorStrings = EditErrorStrings()
     )
 
     enum class ProgressState(val show: Boolean, val progressText: UiString?) {
@@ -134,17 +139,11 @@ class UnifiedCommentsEditViewModel @Inject constructor(
 
     enum class EditCommentActionEvent {
         CLOSE,
-        DONE,
-        CANCEL_EDIT_CONFIRM
+        DONE
     }
 
     fun start(site: SiteModel, commentIdentifier: CommentIdentifier) {
-        if (isStarted) {
-            // If we are here, the fragment view was recreated (like in a configuration change)
-            // so we reattach the watchers.
-            _uiState.value = _uiState.value?.copy(shouldInitWatchers = true)
-            return
-        }
+        if (isStarted) return
         isStarted = true
 
         this.site = site
@@ -154,17 +153,9 @@ class UnifiedCommentsEditViewModel @Inject constructor(
     }
 
     private suspend fun setLoadingState(state: ProgressState) {
-        val uiState = _uiState.value ?: EditCommentUiState(
-            canSaveChanges = false,
-            shouldInitComment = false,
-            shouldInitWatchers = false,
-            showProgress = LOADING.show,
-            progressText = LOADING.progressText,
-            originalComment = CommentEssentials(),
-            editedComment = CommentEssentials(),
-            editErrorStrings = EditErrorStrings(),
-            inputSettings = mapInputSettings(CommentEssentials())
-        )
+        // showProgress/progressText are overwritten by the copy below, so the fallback only needs
+        // the default field values.
+        val uiState = _uiState.value ?: EditCommentUiState()
 
         withContext(mainDispatcher) {
             _uiState.value = uiState.copy(
@@ -175,30 +166,56 @@ class UnifiedCommentsEditViewModel @Inject constructor(
     }
 
     fun onActionMenuClicked() {
+        // Set on the main thread before the save launches, so this check-then-set is race-free:
+        // it closes the window where a second tap lands before the SAVING state disables the
+        // Save button.
+        if (isSaving) return
         if (!networkUtilsWrapper.isNetworkAvailable()) {
             _onSnackbarMessage.value = Event(SnackbarMessageHolder(UiStringRes(R.string.no_network_message)))
             return
         }
         _uiState.value?.let { uiState ->
             val editedCommentEssentials = uiState.editedComment
+            isSaving = true
+            savingBackNoticeShown = false
             launch(bgDispatcher) {
-                setLoadingState(SAVING)
-                updateComment(editedCommentEssentials)
+                try {
+                    setLoadingState(SAVING)
+                    updateComment(editedCommentEssentials)
+                } finally {
+                    isSaving = false
+                }
             }
         }
     }
 
     fun onBackPressed() {
+        // A save already in flight can't be discarded — the edit has been dispatched and will land
+        // server-side regardless. Surface that instead of silently swallowing the press, so a save
+        // that stalls to a network timeout doesn't leave the screen feeling frozen with no feedback.
+        // Only once per save, so repeated presses don't queue a stack of identical snackbars.
+        if (isSaving) {
+            if (!savingBackNoticeShown) {
+                savingBackNoticeShown = true
+                _onSnackbarMessage.value = Event(SnackbarMessageHolder(UiStringRes(R.string.saving_changes)))
+            }
+            return
+        }
         _uiState.value?.let {
             if (it.editedComment.isNotEqualTo(it.originalComment)) {
-                _uiActionEvent.value = Event(CANCEL_EDIT_CONFIRM)
+                _uiState.value = it.copy(showDiscardDialog = true)
             } else {
                 _uiActionEvent.value = Event(CLOSE)
             }
         }
     }
 
+    fun onDiscardDialogDismissed() {
+        _uiState.value?.let { _uiState.value = it.copy(showDiscardDialog = false) }
+    }
+
     fun onConfirmEditingDiscard() {
+        _uiState.value?.let { _uiState.value = it.copy(showDiscardDialog = false) }
         _uiActionEvent.value = Event(CLOSE)
     }
 
@@ -212,85 +229,147 @@ class UnifiedCommentsEditViewModel @Inject constructor(
             if (commentEssentials.isValid()) {
                 _uiState.value =
                     EditCommentUiState(
-                        canSaveChanges = false,
-                        shouldInitComment = true,
-                        shouldInitWatchers = true,
                         showProgress = LOADING.show,
                         progressText = LOADING.progressText,
                         originalComment = commentEssentials,
-                        editedComment = commentEssentials,
-                        editErrorStrings = EditErrorStrings(),
-                        inputSettings = mapInputSettings(commentEssentials)
+                        editedComment = commentEssentials
                     )
+                delay(LOADING_DELAY_MS)
+                setLoadingState(NOT_VISIBLE)
             } else {
-                _onSnackbarMessage.value = Event(SnackbarMessageHolder(
-                    message = UiStringRes(R.string.error_load_comment),
-                    onDismissAction = { _uiActionEvent.value = Event(CLOSE) }
-                ))
+                // The comment couldn't be loaded. Record the failure in the retained ui state
+                // (not just a one-shot event): showSnackbar bails when the fragment has no context,
+                // and the snackbar/close Events don't survive an Activity recreation — either would
+                // otherwise strand the screen on a spinner forever. The screen renders a terminal
+                // error from this state (never the empty form), which the user backs out of normally.
+                _uiState.value = (_uiState.value ?: EditCommentUiState()).copy(
+                    showProgress = false,
+                    loadFailed = true
+                )
+                _onSnackbarMessage.value = Event(SnackbarMessageHolder(UiStringRes(R.string.error_load_comment)))
             }
-            delay(LOADING_DELAY_MS)
-            setLoadingState(NOT_VISIBLE)
         }
     }
 
     private suspend fun mapCommentEssentials(): CommentEssentials {
-        val commentEntity = getCommentUseCase.execute(site, commentIdentifier.remoteCommentId)
-        return if (commentEntity != null) {
+        // A failed load returns default CommentEssentials, which fails isValid() and surfaces
+        // the load-error snackbar in initViews().
+        val essentials = if (canUseRs()) loadCommentViaRs() else loadCommentViaFluxC()
+        return essentials ?: CommentEssentials()
+    }
+
+    // Edit context returns the raw (unrendered) content the editor must show — the same
+    // thing the FluxC entity stored — plus the author email the view context omits.
+    private suspend fun loadCommentViaRs(): CommentEssentials? =
+        commentsRsDataSource.getCommentForEdit(site, commentIdentifier.remoteCommentId)?.let { rsComment ->
+            CommentEssentials(
+                commentId = commentIdentifier.remoteCommentId,
+                userName = rsComment.authorName,
+                commentText = rsComment.contentRaw,
+                userUrl = rsComment.authorUrl,
+                userEmail = rsComment.authorEmail
+            )
+        }
+
+    private suspend fun loadCommentViaFluxC(): CommentEssentials? =
+        getCommentUseCase.execute(site, commentIdentifier.remoteCommentId)?.let { commentEntity ->
             CommentEssentials(
                 commentId = commentEntity.id,
                 userName = commentEntity.authorName ?: "",
                 commentText = commentEntity.content ?: "",
                 userUrl = commentEntity.authorUrl ?: "",
-                userEmail = commentEntity.authorEmail ?: "",
-                isFromRegisteredUser = commentEntity.authorId > 0
+                userEmail = commentEntity.authorEmail ?: ""
             )
+        }
+
+    private suspend fun updateComment(editedCommentEssentials: CommentEssentials) {
+        // Prefer wordpress-rs, which can edit comments on both WP.com and self-hosted
+        // application-password sites (FluxC's updateEditComment can't reach app-password sites).
+        // Fall back to FluxC for sites rs can't serve — e.g. XML-RPC-only self-hosted comments
+        // still reachable through the legacy detail/reader launch points.
+        val saved = if (canUseRs()) {
+            updateCommentViaRs(editedCommentEssentials)
         } else {
-            CommentEssentials()
+            updateCommentViaFluxC(editedCommentEssentials)
+        }
+        if (saved) {
+            analyticsUtilsWrapper.trackCommentActionWithSiteDetails(
+                COMMENT_EDITED,
+                commentIdentifier.toCommentActionSource(),
+                site
+            )
+            when (commentIdentifier) {
+                is NotificationCommentIdentifier -> {
+                    updateNotificationEntity()
+                }
+                is ReaderCommentIdentifier -> {
+                    updateReaderEntity(editedCommentEssentials)
+                }
+                else -> {
+                    _uiActionEvent.postValue(Event(DONE))
+                    localCommentCacheUpdateHandler.requestCommentsUpdate()
+                }
+            }
+        } else {
+            showUpdateCommentError()
         }
     }
 
-    private suspend fun updateComment(editedCommentEssentials: CommentEssentials) {
-        val commentEntity =
-            commentsStore.getCommentByLocalSiteAndRemoteId(site.id, commentIdentifier.remoteCommentId).firstOrNull()
-        commentEntity?.run {
-            val isCommentEntityUpdated = updateCommentEntity(this, editedCommentEssentials)
-            if (isCommentEntityUpdated) {
-                analyticsUtilsWrapper.trackCommentActionWithSiteDetails(
-                    COMMENT_EDITED,
-                    commentIdentifier.toCommentActionSource(),
-                    site
-                )
-                when (commentIdentifier) {
-                    is NotificationCommentIdentifier -> {
-                        updateNotificationEntity()
-                    }
-                    is ReaderCommentIdentifier -> {
-                        updateReaderEntity(editedCommentEssentials)
-                    }
-                    else -> {
-                        _uiActionEvent.postValue(Event(DONE))
-                        localCommentCacheUpdateHandler.requestCommentsUpdate()
-                    }
-                }
-            } else {
-                showUpdateCommentError()
-            }
-        } ?: showUpdateCommentError()
-    }
-
-    private suspend fun updateCommentEntity(
-        comment: CommentEntity,
-        editedCommentEssentials: CommentEssentials
-    ): Boolean {
+    private suspend fun updateCommentViaFluxC(editedCommentEssentials: CommentEssentials): Boolean {
+        val comment = commentsStore
+            .getCommentByLocalSiteAndRemoteId(site.id, commentIdentifier.remoteCommentId)
+            .firstOrNull() ?: return false
         val updatedComment = comment.copy(
             authorUrl = editedCommentEssentials.userUrl,
             authorName = editedCommentEssentials.userName,
             authorEmail = editedCommentEssentials.userEmail,
             content = editedCommentEssentials.commentText
         )
+        return !commentsStore.updateEditComment(site, updatedComment).isError
+    }
 
-        val result = commentsStore.updateEditComment(site, updatedComment)
-        return !result.isError
+    private fun canUseRs(): Boolean = site.isUsingWpComRestApi || site.hasApplicationPassword()
+
+    /**
+     * Saves the edit through wordpress-rs and, on success, mirrors the SERVER's resulting state
+     * into the FluxC cache so the still-FluxC comment list/notifications reflect the change —
+     * the same save-then-mirror pattern the unified comment detail uses for moderation. The
+     * server echo (not the values that were sent) is what's cached so server-side normalisation
+     * (e.g. KSES content filtering) can't diverge from the cache; the legacy FluxC path also
+     * cached the server response.
+     *
+     * The mirror is best-effort: comments opened from the rs list on an application-password
+     * site may have no FluxC row (FluxC can't fetch there), and the rs screens read the server,
+     * not the cache.
+     */
+    private suspend fun updateCommentViaRs(editedCommentEssentials: CommentEssentials): Boolean {
+        // The endpoint applies author fields to the comment record for any comment (registered
+        // author or not), same as the legacy FluxC POST and wp-admin's comment editor.
+        val result = commentsRsDataSource.updateComment(
+            site = site,
+            commentId = commentIdentifier.remoteCommentId,
+            content = editedCommentEssentials.commentText,
+            author = CommentsRsDataSource.CommentAuthor(
+                name = editedCommentEssentials.userName,
+                email = editedCommentEssentials.userEmail,
+                url = editedCommentEssentials.userUrl
+            )
+        )
+        if (result !is RsEditResult.Success) return false
+        commentsStore
+            .getCommentByLocalSiteAndRemoteId(site.id, commentIdentifier.remoteCommentId)
+            .firstOrNull()?.let { cached ->
+                val serverComment = cached.copy(
+                    authorName = result.comment.authorName,
+                    authorEmail = result.comment.authorEmail,
+                    authorUrl = result.comment.authorUrl,
+                    content = result.comment.contentRaw
+                )
+                // Local-only cache write (isError = false persists the entity without a network
+                // round-trip).
+                commentsStore.updateComment(isError = false, commentId = serverComment.id, comment = serverComment)
+            }
+        return true
     }
 
     private suspend fun updateNotificationEntity() {
@@ -366,20 +445,11 @@ class UnifiedCommentsEditViewModel @Inject constructor(
 
             _uiState.value = it.copy(
                 canSaveChanges = editedComment.isNotEqualTo(it.originalComment) && !errors.hasError(),
-                shouldInitComment = false,
-                shouldInitWatchers = false,
                 editedComment = editedComment,
                 editErrorStrings = errors
             )
         }
     }
-
-    private fun mapInputSettings(commentEssentials: CommentEssentials) = InputSettings(
-        enableEditName = !commentEssentials.isFromRegisteredUser,
-        enableEditUrl = !commentEssentials.isFromRegisteredUser,
-        enableEditEmail = !commentEssentials.isFromRegisteredUser,
-        enableEditComment = true
-    )
 
     private fun EditErrorStrings.hasError(): Boolean {
         return listOf(

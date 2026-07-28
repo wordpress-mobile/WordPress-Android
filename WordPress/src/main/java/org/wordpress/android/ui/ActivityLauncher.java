@@ -46,7 +46,7 @@ import org.wordpress.android.ui.blaze.PostUIModel;
 import org.wordpress.android.ui.blaze.blazepromote.BlazePromoteParentActivity;
 import org.wordpress.android.ui.bloggingprompts.promptslist.BloggingPromptsListActivity;
 import org.wordpress.android.ui.comments.unified.UnifiedCommentsActivity;
-import org.wordpress.android.ui.comments.unified.UnifiedCommentsDetailsActivity;
+import org.wordpress.android.ui.commentsrs.CommentsRsListActivity;
 import org.wordpress.android.ui.debug.cookies.DebugCookiesActivity;
 import org.wordpress.android.ui.debug.preferences.DebugSharedPreferenceFlagsActivity;
 import org.wordpress.android.ui.domains.DomainRegistrationActivity;
@@ -687,7 +687,7 @@ public class ActivityLauncher {
     }
 
     public static void viewCurrentBlogPages(@NonNull Context context, @NonNull SiteModel site) {
-        if (shouldUseNewPagesList(context, site)) {
+        if (shouldUseNewPagesList(site)) {
             context.startActivity(PagesRsListActivity.Companion.createIntent(context));
             AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_PAGES, site);
             return;
@@ -698,15 +698,8 @@ public class ActivityLauncher {
         AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_PAGES, site);
     }
 
-    private static boolean shouldUseNewPagesList(@NonNull Context context, @NonNull SiteModel site) {
-        if (!site.hasApplicationPassword()) {
-            return false;
-        }
-        ActivityLauncherEntryPoint entryPoint = EntryPointAccessors.fromApplication(
-                context.getApplicationContext(),
-                ActivityLauncherEntryPoint.class
-        );
-        return entryPoint.experimentalFeatures().isEnabled(Feature.RS_PAGES_LIST);
+    private static boolean shouldUseNewPagesList(@Nullable SiteModel site) {
+        return site != null && site.hasApplicationPassword();
     }
 
     public static void viewPostTypes(@NonNull Context context, @NonNull SiteModel site) {
@@ -744,16 +737,33 @@ public class ActivityLauncher {
     }
 
     public static void viewUnifiedComments(Context context, SiteModel site) {
-        Intent intent = new Intent(context, UnifiedCommentsActivity.class);
-        intent.putExtra(WordPress.SITE, site);
+        Intent intent;
+        if (shouldUseRsComments(context, site)) {
+            intent = CommentsRsListActivity.Companion.createIntent(context);
+        } else {
+            intent = new Intent(context, UnifiedCommentsActivity.class);
+            intent.putExtra(WordPress.SITE, site);
+        }
         context.startActivity(intent);
         AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_COMMENTS, site);
     }
 
-    public static void viewUnifiedCommentsDetails(Context context, SiteModel site) {
-        Intent intent = new Intent(context, UnifiedCommentsDetailsActivity.class);
-        intent.putExtra(WordPress.SITE, site);
-        context.startActivity(intent);
+    /**
+     * Whether the wordpress-rs comments screens (list, and the notification-hosted detail) should
+     * be used for {@code site} instead of the legacy (FluxC) ones.
+     */
+    public static boolean shouldUseRsComments(@NonNull Context context, @NonNull SiteModel site) {
+        // Match the RS posts/pages gate: use the rs comments screens only for self-hosted sites
+        // with an application password, and keep the legacy (FluxC) comments screens everywhere
+        // else (including WP.com-accessed sites).
+        if (!site.hasApplicationPassword()) {
+            return false;
+        }
+        ActivityLauncherEntryPoint entryPoint = EntryPointAccessors.fromApplication(
+                context.getApplicationContext(),
+                ActivityLauncherEntryPoint.class
+        );
+        return entryPoint.experimentalFeatures().isEnabled(Feature.RS_UNIFIED_COMMENTS);
     }
 
     public static void viewCurrentBlogThemes(Context context, SiteModel site) {

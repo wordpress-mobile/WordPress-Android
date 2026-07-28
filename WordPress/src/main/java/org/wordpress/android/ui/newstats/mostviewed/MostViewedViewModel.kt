@@ -53,11 +53,6 @@ class MostViewedViewModel @Inject constructor(
     private var postsCachedTotalViewsChange: Long = 0L
     private var postsCachedTotalViewsChangePercent: Double = 0.0
 
-    private var referrersAllItems: List<MostViewedDetailItem> = emptyList()
-    private var referrersCachedTotalViews: Long = 0L
-    private var referrersCachedTotalViewsChange: Long = 0L
-    private var referrersCachedTotalViewsChangePercent: Double = 0.0
-
     fun onPeriodChanged(period: StatsPeriod) {
         currentPeriod = period
         onPeriodChangedPosts(period)
@@ -144,16 +139,11 @@ class MostViewedViewModel @Inject constructor(
         )
     }
 
-    fun getReferrersDetailData(): MostViewedDetailData {
-        return MostViewedDetailData(
-            cardType = StatsCardType.MOST_VIEWED_REFERRERS,
-            items = referrersAllItems,
-            totalViews = referrersCachedTotalViews,
-            totalViewsChange = referrersCachedTotalViewsChange,
-            totalViewsChangePercent = referrersCachedTotalViewsChangePercent,
-            dateRange = currentPeriod.toDateRangeString(resourceProvider)
-        )
-    }
+    /**
+     * The period currently selected for the referrers card. The referrers detail screen re-fetches
+     * its own (unbounded) data for this period rather than receiving the full list via the Intent.
+     */
+    fun getCurrentPeriod(): StatsPeriod = currentPeriod
 
     fun loadData() {
         loadPosts()
@@ -236,7 +226,8 @@ class MostViewedViewModel @Inject constructor(
                     id = item.id,
                     title = item.title,
                     views = item.views,
-                    change = item.change
+                    change = item.change,
+                    children = item.children
                 )
             },
             maxViewsForBar = cardItems.firstOrNull()?.views ?: 1L
@@ -259,10 +250,8 @@ class MostViewedViewModel @Inject constructor(
                 _postsUiState.value = loadedState
             }
             MostViewedDataSource.REFERRERS -> {
-                referrersAllItems = allItems
-                referrersCachedTotalViews = result.totalViews
-                referrersCachedTotalViewsChange = result.totalViewsChange
-                referrersCachedTotalViewsChangePercent = result.totalViewsChangePercent
+                // The referrers detail screen self-fetches (see MostViewedDetailViewModel), so unlike
+                // posts we don't cache the full item list / totals here.
                 _referrersUiState.value = loadedState
             }
         }
@@ -336,11 +325,19 @@ data class MostViewedDetailData(
     val dateRange: String
 )
 
-private fun MostViewedItemData.toDetailItem(): MostViewedDetailItem {
+internal fun MostViewedItemData.toDetailItem(): MostViewedDetailItem {
     val change = when {
         viewsChange > 0 -> MostViewedChange.Positive(viewsChange, abs(viewsChangePercent))
         viewsChange < 0 -> MostViewedChange.Negative(abs(viewsChange), abs(viewsChangePercent))
         else -> MostViewedChange.NoChange
     }
-    return MostViewedDetailItem(id = id, title = title, views = views, change = change)
+    return MostViewedDetailItem(
+        id = id,
+        title = title,
+        views = views,
+        change = change,
+        children = children.map { child ->
+            MostViewedChildItem(name = child.name, url = child.url, views = child.views)
+        }
+    )
 }

@@ -39,6 +39,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.fluxc.Dispatcher;
+import org.wordpress.android.fluxc.action.AccountAction;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.model.PostModel;
@@ -61,7 +62,7 @@ import org.wordpress.android.fluxc.store.SiteStore.OnSiteRemoved;
 import org.wordpress.android.inappupdate.IInAppUpdateManager;
 import org.wordpress.android.inappupdate.InAppUpdateListener;
 import org.wordpress.android.ui.accounts.login.LoginAnalyticsListener;
-import org.wordpress.android.networking.ConnectionChangeReceiver;
+import org.wordpress.android.networking.NetworkConnectionMonitor;
 import org.wordpress.android.push.GCMMessageHandler;
 import org.wordpress.android.push.GCMMessageService;
 import org.wordpress.android.push.GCMRegistrationScheduler;
@@ -278,6 +279,8 @@ public class WPMainActivity extends BaseAppCompatActivity implements
 
     @Inject WpAppNotifierHandler mWpAppNotifierHandler;
 
+    @Inject NetworkConnectionMonitor mNetworkConnectionMonitor;
+
     /*
      * fragments implement this if their contents can be scrolled, called when user
      * requests to scroll to the top
@@ -412,6 +415,8 @@ public class WPMainActivity extends BaseAppCompatActivity implements
         // We need to register the dispatcher here otherwise it won't trigger if for example Site Picker is present
         mDispatcher.register(this);
         EventBus.getDefault().register(this);
+
+        mNetworkConnectionMonitor.isConnected().observe(this, this::updateConnectionBar);
 
         if (authTokenToSet != null) {
             // Save Token to the AccountStore. This will trigger a onAuthenticationChanged.
@@ -1466,7 +1471,12 @@ public class WPMainActivity extends BaseAppCompatActivity implements
     public void onAccountChanged(OnAccountChanged event) {
         // Sign-out is handled in `handleSiteRemoved`, no need to show the signup flow here
         if (mAccountStore.hasAccessToken()) {
-            if (mBottomNav != null) mBottomNav.showNoteBadge(mAccountStore.getAccount().getHasUnseenNotes());
+            if (mBottomNav != null) {
+                mBottomNav.showNoteBadge(mAccountStore.getAccount().getHasUnseenNotes());
+                if (event.causeOfChange == AccountAction.FETCH_ACCOUNT) {
+                    mBottomNav.refreshGravatar();
+                }
+            }
         }
     }
 
@@ -1480,12 +1490,6 @@ public class WPMainActivity extends BaseAppCompatActivity implements
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventMainThread(NotificationEvents.NotificationsUnseenStatus event) {
         if (mBottomNav != null) mBottomNav.showNoteBadge(event.hasUnseenNotes);
-    }
-
-    @SuppressWarnings("unused")
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEventMainThread(ConnectionChangeReceiver.ConnectionChangeEvent event) {
-        updateConnectionBar(event.isConnected());
     }
 
     private void checkConnection() {

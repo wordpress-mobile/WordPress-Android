@@ -777,6 +777,86 @@ public class MediaStoreTest {
         assertEquals(0, mMediaStore.getSiteMediaCount(testSite2));
     }
 
+    @Test
+    public void testMediaErrorTypeFromHttpStatusCode() {
+        assertEquals(MediaStore.MediaErrorType.BAD_REQUEST, MediaStore.MediaErrorType.fromHttpStatusCode(400));
+        assertEquals(MediaStore.MediaErrorType.AUTHORIZATION_REQUIRED,
+                MediaStore.MediaErrorType.fromHttpStatusCode(401));
+        assertEquals(MediaStore.MediaErrorType.NOT_AUTHENTICATED, MediaStore.MediaErrorType.fromHttpStatusCode(403));
+        assertEquals(MediaStore.MediaErrorType.NOT_FOUND, MediaStore.MediaErrorType.fromHttpStatusCode(404));
+        assertEquals(MediaStore.MediaErrorType.REQUEST_TOO_LARGE, MediaStore.MediaErrorType.fromHttpStatusCode(413));
+    }
+
+    @Test
+    public void testMediaErrorTypeFromHttpStatusCodeServerErrorRange() {
+        // any 5xx should be treated as a server error, not just 500
+        assertEquals(MediaStore.MediaErrorType.SERVER_ERROR, MediaStore.MediaErrorType.fromHttpStatusCode(500));
+        assertEquals(MediaStore.MediaErrorType.SERVER_ERROR, MediaStore.MediaErrorType.fromHttpStatusCode(502));
+        assertEquals(MediaStore.MediaErrorType.SERVER_ERROR, MediaStore.MediaErrorType.fromHttpStatusCode(503));
+        assertEquals(MediaStore.MediaErrorType.SERVER_ERROR, MediaStore.MediaErrorType.fromHttpStatusCode(599));
+    }
+
+    @Test
+    public void testMediaErrorTypeFromHttpStatusCodeUnmappedIsGeneric() {
+        assertEquals(MediaStore.MediaErrorType.GENERIC_ERROR, MediaStore.MediaErrorType.fromHttpStatusCode(418));
+        assertEquals(MediaStore.MediaErrorType.GENERIC_ERROR, MediaStore.MediaErrorType.fromHttpStatusCode(600));
+    }
+
+    // CMM-2114: a Jetpack-connected site can have Application Password credentials stored (making
+    // isUsingSelfHostedRestApi() true) but must still route media through the WP.com REST API, otherwise
+    // uploads and the Media Library fail on sites that have Application Passwords disabled.
+    @Test
+    public void testJetpackConnectedSiteWithAppPasswordUsesWpComRestApiForMedia() {
+        SiteModel site = new SiteModel();
+        site.setIsWPCom(false);
+        site.setIsJetpackConnected(true);
+        site.setOrigin(SiteModel.ORIGIN_WPCOM_REST);
+        site.setApiRestUsernamePlain("username");
+        site.setApiRestPasswordPlain("app-password");
+
+        // Sanity check: this is exactly the ambiguous case where both predicates are true.
+        assertTrue(site.isUsingWpComRestApi());
+        assertTrue(site.isUsingSelfHostedRestApi());
+
+        assertEquals(MediaStore.MediaRestClientType.WPCOM_REST, mMediaStore.getMediaRestClientType(site));
+    }
+
+    @Test
+    public void testSelfHostedSiteWithAppPasswordUsesSelfHostedRestApiForMedia() {
+        SiteModel site = new SiteModel();
+        site.setIsWPCom(false);
+        site.setIsJetpackConnected(false);
+        site.setOrigin(SiteModel.ORIGIN_WPAPI);
+        site.setApiRestUsernamePlain("username");
+        site.setApiRestPasswordPlain("app-password");
+
+        assertFalse(site.isUsingWpComRestApi());
+        assertTrue(site.isUsingSelfHostedRestApi());
+
+        assertEquals(MediaStore.MediaRestClientType.SELF_HOSTED_RS, mMediaStore.getMediaRestClientType(site));
+    }
+
+    @Test
+    public void testWpComSiteUsesWpComRestApiForMedia() {
+        SiteModel site = new SiteModel();
+        site.setIsWPCom(true);
+
+        assertEquals(MediaStore.MediaRestClientType.WPCOM_REST, mMediaStore.getMediaRestClientType(site));
+    }
+
+    @Test
+    public void testXmlRpcSiteUsesXmlRpcForMedia() {
+        SiteModel site = new SiteModel();
+        site.setIsWPCom(false);
+        site.setIsJetpackConnected(false);
+        site.setOrigin(SiteModel.ORIGIN_XMLRPC);
+
+        assertFalse(site.isUsingWpComRestApi());
+        assertFalse(site.isUsingSelfHostedRestApi());
+
+        assertEquals(MediaStore.MediaRestClientType.XMLRPC, mMediaStore.getMediaRestClientType(site));
+    }
+
     private MediaModel getBasicMedia() {
         return generateMedia("Test Title", "Test Description", "Test Caption", "Test Alt");
     }

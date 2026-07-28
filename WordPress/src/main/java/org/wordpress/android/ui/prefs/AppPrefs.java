@@ -43,6 +43,9 @@ public class AppPrefs {
 
     private static final int THEME_IMAGE_SIZE_WIDTH_DEFAULT = 400;
 
+    // Legacy experimental-features pref key for New Stats, kept only for one-time opt-in migration.
+    private static final String LEGACY_NEW_STATS_EXPERIMENTAL_KEY = "new_stats";
+
     // store twice as many recent sites as we show
     private static final int MAX_RECENTLY_PICKED_SITES_TO_SHOW = 8;
     private static final int MAX_RECENTLY_PICKED_SITES_TO_SAVE = MAX_RECENTLY_PICKED_SITES_TO_SHOW * 2;
@@ -63,6 +66,8 @@ public class AppPrefs {
         LAST_ACTIVITY_STR,
 
         NEW_STATS_INTRO_SHOWN,
+
+        NEW_STATS_USER_OPTED_IN,
 
         STATS_NEW_STATS_SUGGESTION_SHOWN,
 
@@ -212,6 +217,9 @@ public class AppPrefs {
         SITE_SUPPORTS_EDITOR_SETTINGS,
         SITE_SUPPORTS_EDITOR_ASSETS,
         SITE_THEME_IS_BLOCK_THEME,
+        // Timestamp (millis) of the last time we confirmed a site has no xposts, used to throttle
+        // re-checks so a site that later enables xposts (o2) is eventually picked up.
+        XPOSTS_NO_RESULT_CHECKED_TIMESTAMP,
 
         // Login flow preserved across OAuth Custom Tabs redirect
         PENDING_LOGIN_FLOW,
@@ -243,6 +251,9 @@ public class AppPrefs {
 
         // Same as above but for the reader
         SWIPE_TO_NAVIGATE_READER,
+
+        // Same as above but for the comment detail
+        SWIPE_TO_NAVIGATE_COMMENTS,
 
         // smart toast counters
         SMART_TOAST_COMMENTS_LONG_PRESS_USAGE_COUNTER,
@@ -658,6 +669,14 @@ public class AppPrefs {
 
     public static void setReaderSwipeToNavigateShown(boolean alreadyShown) {
         setBoolean(UndeletablePrefKey.SWIPE_TO_NAVIGATE_READER, alreadyShown);
+    }
+
+    public static boolean isCommentsSwipeToNavigateShown() {
+        return getBoolean(UndeletablePrefKey.SWIPE_TO_NAVIGATE_COMMENTS, false);
+    }
+
+    public static void setCommentsSwipeToNavigateShown(boolean alreadyShown) {
+        setBoolean(UndeletablePrefKey.SWIPE_TO_NAVIGATE_COMMENTS, alreadyShown);
     }
 
     public static boolean isImageOptimize() {
@@ -2060,6 +2079,18 @@ public class AppPrefs {
         ).apply();
     }
 
+    private static String xPostsNoResultCheckedTimestampKey(@NonNull SiteModel site) {
+        return DeletablePrefKey.XPOSTS_NO_RESULT_CHECKED_TIMESTAMP.name() + site.getId();
+    }
+
+    public static long getXPostsNoResultCheckedTimestamp(@NonNull SiteModel site) {
+        return prefs().getLong(xPostsNoResultCheckedTimestampKey(site), 0);
+    }
+
+    public static void setXPostsNoResultCheckedTimestamp(@NonNull SiteModel site, long timestamp) {
+        prefs().edit().putLong(xPostsNoResultCheckedTimestampKey(site), timestamp).apply();
+    }
+
     /**
      * Returns whether network request tracking (Chucker) is enabled.
      * This is a device-level preference that persists across logout/login cycles
@@ -2114,6 +2145,32 @@ public class AppPrefs {
 
     public static void setNewStatsIntroShown(boolean shown) {
         setBoolean(DeletablePrefKey.NEW_STATS_INTRO_SHOWN, shown);
+    }
+
+    public static boolean getNewStatsUserOptedIn() {
+        migrateLegacyNewStatsOptIn();
+        return getBoolean(DeletablePrefKey.NEW_STATS_USER_OPTED_IN, false);
+    }
+
+    public static void setNewStatsUserOptedIn(boolean optedIn) {
+        setBoolean(DeletablePrefKey.NEW_STATS_USER_OPTED_IN, optedIn);
+    }
+
+    /**
+     * One-time migration for users who enabled New Stats via the old experimental-features toggle,
+     * before it was replaced by the remote flag + local opt-in preference. Without this, those users
+     * would be silently reverted to old Stats. Runs once: after the new key is written the legacy
+     * value is dropped, so this is a no-op on every subsequent read.
+     */
+    private static void migrateLegacyNewStatsOptIn() {
+        if (keyExists(DeletablePrefKey.NEW_STATS_USER_OPTED_IN)) {
+            return;
+        }
+        String legacyKey = getExperimentalFeatureConfigKey(LEGACY_NEW_STATS_EXPERIMENTAL_KEY);
+        if (prefs().contains(legacyKey)) {
+            setNewStatsUserOptedIn(prefs().getBoolean(legacyKey, false));
+            prefs().edit().remove(legacyKey).apply();
+        }
     }
 
     public static boolean getStatsNewStatsSuggestionShown() {

@@ -69,7 +69,7 @@ import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.models.ReaderPostDiscoverData
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.ReaderTagType
-import org.wordpress.android.networking.ConnectionChangeReceiver.ConnectionChangeEvent
+import org.wordpress.android.networking.NetworkConnectionMonitor
 import org.wordpress.android.ui.ActionableEmptyView
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.EmptyViewMessageType
@@ -204,6 +204,13 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
 
     @Inject
     lateinit var displayUtilsWrapper: DisplayUtilsWrapper
+
+    @Inject
+    lateinit var networkConnectionMonitor: NetworkConnectionMonitor
+
+    // Initialised to true so the first LiveData replay of "connected" (e.g. on a freshly restored fragment
+    // with an active search) doesn't re-fire the search; only a genuine offline->online transition should.
+    private var lastConnected = true
 
     private var readerPostAdapter: ReaderPostAdapter? = null
     private var siteSearchAdapter: ReaderSiteSearchAdapter? = null
@@ -571,6 +578,15 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
                     pendingScrollToBlogId = blogId
                 }
             }
+        }
+
+        networkConnectionMonitor.isConnected.observe(viewLifecycleOwner) { connected ->
+            // Only resubmit the search when connectivity actually transitions to connected, so LiveData replay
+            // on re-foregrounding doesn't re-fire the search.
+            if (connected && !lastConnected) {
+                currentSearchQuery?.let { submitSearchQuery(it) }
+            }
+            lastConnected = connected
         }
     }
 
@@ -1368,15 +1384,6 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
             false
         )
         dispatcher.dispatch(ReaderActionBuilder.newReaderSearchSitesAction(payload))
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onEventMainThread(event: ConnectionChangeEvent) {
-        if (event.isConnected) {
-            if (currentSearchQuery != null) {
-                submitSearchQuery(currentSearchQuery!!)
-            }
-        }
     }
 
     private fun submitSearchQuery(query: String) {

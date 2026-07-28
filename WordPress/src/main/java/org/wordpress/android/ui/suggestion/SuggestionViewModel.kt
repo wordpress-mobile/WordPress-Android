@@ -6,7 +6,6 @@ import androidx.lifecycle.ViewModel
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.networking.ConnectionChangeReceiver.ConnectionChangeEvent
 import org.wordpress.android.ui.suggestion.FinishAttempt.NotExactlyOneAvailable
 import org.wordpress.android.ui.suggestion.FinishAttempt.OnlyOneAvailable
 import org.wordpress.android.ui.suggestion.SuggestionType.Users
@@ -59,8 +58,8 @@ class SuggestionViewModel @Inject constructor(
 
     private fun supportsSuggestions(site: SiteModel): Boolean = SiteUtils.isAccessedViaWPComRest(site)
 
-    fun onConnectionChanged(event: ConnectionChangeEvent) {
-        if (event.isConnected) {
+    fun onConnectionChanged(isConnected: Boolean) {
+        if (isConnected) {
             suggestionSource.refreshSuggestions()
         }
     }

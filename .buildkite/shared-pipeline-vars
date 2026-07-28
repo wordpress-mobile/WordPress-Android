@@ -5,4 +5,4 @@
 
 export CI_TOOLKIT="automattic/a8c-ci-toolkit#5.3.1"
 export TEST_COLLECTOR="test-collector#v1.10.1"
-export CLAUDE_PLUGIN="iangmaia/claude-summarize#iangmaia/add-build-log-mode"
+export CLAUDE_PLUGIN="iangmaia/claude-summarize#ce99c67dd57cdf236c3daca82b86a335fd5e9cc2"

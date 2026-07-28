@@ -3,7 +3,6 @@ package org.wordpress.android.ui.newstats.filedownloads
 import dagger.hilt.android.lifecycle.HiltViewModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
-import org.wordpress.android.ui.newstats.StatsCardType
 import org.wordpress.android.ui.newstats.StatsPeriod
 import org.wordpress.android.ui.newstats.mostviewed.BaseStatsCardViewModel
 import org.wordpress.android.ui.newstats.mostviewed.MostViewedChange
@@ -25,7 +24,6 @@ class FileDownloadsViewModel @Inject constructor(
     selectedSiteRepository, accountStore,
     statsRepository, resourceProvider
 ) {
-    override val cardType = StatsCardType.FILE_DOWNLOADS
     override val logTag = "file downloads"
 
     override suspend fun fetchStats(
@@ -52,7 +50,8 @@ class FileDownloadsViewModel @Inject constructor(
             is FileDownloadsResult.Error -> {
                 StatsCardFetchResult.Error(
                     messageResId = result.messageResId,
-                    isAuthError = result.isAuthError
+                    isAuthError = result.isAuthError,
+                    isNotAvailable = result.isNotAvailable
                 )
             }
         }

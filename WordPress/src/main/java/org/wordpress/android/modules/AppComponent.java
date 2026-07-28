@@ -16,7 +16,6 @@ import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboar
 import org.wordpress.android.ui.bloggingreminders.BloggingReminderBottomSheetFragment;
 import org.wordpress.android.ui.bloggingreminders.BloggingReminderTimePicker;
 import org.wordpress.android.ui.comments.CommentDetailFragment;
-import org.wordpress.android.ui.comments.unified.EditCancelDialogFragment;
 import org.wordpress.android.ui.comments.unified.UnifiedCommentDetailsFragment;
 import org.wordpress.android.ui.comments.unified.UnifiedCommentListAdapter;
 import org.wordpress.android.ui.comments.unified.UnifiedCommentListFragment;
@@ -488,8 +487,6 @@ public interface AppComponent {
     void inject(UnifiedCommentListAdapter object);
 
     void inject(UnifiedCommentsEditFragment object);
-
-    void inject(EditCancelDialogFragment object);
 
     void inject(BloggingReminderBottomSheetFragment object);
 

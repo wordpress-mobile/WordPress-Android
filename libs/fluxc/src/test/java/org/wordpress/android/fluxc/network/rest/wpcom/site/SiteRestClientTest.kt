@@ -99,6 +99,38 @@ class SiteRestClientTest {
     }
 
     @Test
+    fun `maps named Olson timezone from options timezone field`() = test {
+        val response = SiteWPComRestResponse()
+        response.ID = siteId
+        response.URL = "site.com"
+        response.options = SiteWPComRestResponse.Options().apply {
+            timezone = "Europe/Madrid"
+            gmt_offset = "1"
+        }
+
+        initSiteResponse(response)
+
+        val responseModel = restClient.fetchSite(site)
+        assertThat(responseModel.timezone).isEqualTo("Europe/Madrid")
+    }
+
+    @Test
+    fun `falls back to gmt_offset when options timezone is empty`() = test {
+        val response = SiteWPComRestResponse()
+        response.ID = siteId
+        response.URL = "site.com"
+        response.options = SiteWPComRestResponse.Options().apply {
+            timezone = ""
+            gmt_offset = "-5"
+        }
+
+        initSiteResponse(response)
+
+        val responseModel = restClient.fetchSite(site)
+        assertThat(responseModel.timezone).isEqualTo("-5")
+    }
+
+    @Test
     fun `fetchSite returns error when API call fails`() = test {
         val errorMessage = "message"
         initSiteResponse(

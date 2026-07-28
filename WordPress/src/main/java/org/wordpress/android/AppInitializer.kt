@@ -11,12 +11,9 @@ import android.app.NotificationManager
 import android.app.SyncNotedAppOp
 import android.content.ComponentCallbacks2
 import android.content.Context
-import android.content.ContextWrapper
-import android.content.IntentFilter
 import android.content.res.Configuration
 import android.database.SQLException
 import android.database.sqlite.SQLiteException
-import android.net.ConnectivityManager
 import android.net.http.HttpResponseCache
 import android.os.Build
 import android.os.Build.VERSION_CODES
@@ -67,7 +64,7 @@ import org.wordpress.android.fluxc.store.StatsStore
 import org.wordpress.android.fluxc.tools.FluxCImageLoader
 import org.wordpress.android.fluxc.utils.ErrorUtils.OnUnexpectedError
 import org.wordpress.android.modules.APPLICATION_SCOPE
-import org.wordpress.android.networking.ConnectionChangeReceiver
+import org.wordpress.android.networking.NetworkConnectionMonitor
 import org.wordpress.android.networking.OAuthAuthenticator
 import org.wordpress.android.networking.RestClientUtils
 import org.wordpress.android.push.GCMRegistrationScheduler
@@ -92,7 +89,6 @@ import org.wordpress.android.ui.uploads.UploadService
 import org.wordpress.android.ui.uploads.UploadStarter
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
-import org.wordpress.android.util.AppLog.T.MAIN
 import org.wordpress.android.util.AppThemeUtils
 import org.wordpress.android.util.BitmapLruCache
 import org.wordpress.android.util.BuildConfigWrapper
@@ -147,6 +143,9 @@ class AppInitializer @Inject constructor(
 
     @Inject
     lateinit var uploadStarter: UploadStarter
+
+    @Inject
+    lateinit var networkConnectionMonitor: NetworkConnectionMonitor
 
     @Inject
     lateinit var statsWidgetUpdaters: StatsWidgetUpdaters
@@ -338,6 +337,11 @@ class AppInitializer @Inject constructor(
 
         // Make the UploadStarter observe the app process so it can auto-start uploads
         uploadStarter.activateAutoUploading(ProcessLifecycleOwner.get() as ProcessLifecycleOwner)
+
+        // Monitor default-network connectivity for the whole process lifetime. Uses a NetworkCallback on a
+        // background thread instead of the deprecated CONNECTIVITY_ACTION broadcast, so it can't cause a
+        // background ANR. start() is idempotent, so it's safe if init() runs more than once.
+        networkConnectionMonitor.start(application)
 
         initAnalytics(SystemClock.elapsedRealtime() - startDate)
 
@@ -792,7 +796,6 @@ class AppInitializer @Inject constructor(
     inner class ApplicationLifecycleMonitor {
         private var lastPingDate: Date? = null
         private var applicationOpenedDate: Date? = null
-        private var connectionReceiverRegistered = false
         var firstActivityResumed = true
 
         private val isPushNotificationPingNeeded: Boolean
@@ -845,18 +848,6 @@ class AppInitializer @Inject constructor(
 
             AnalyticsTracker.track(Stat.APPLICATION_CLOSED, properties)
             AnalyticsTracker.endSession(false)
-            // Methods onAppComesFromBackground and onAppGoesToBackground are only workarounds to track when the app
-            // goes to or comes from background. The workarounds are not 100% reliable, so avoid unregistering the
-            // receiver twice.
-            if (connectionReceiverRegistered) {
-                connectionReceiverRegistered = false
-                try {
-                    application.unregisterReceiver(ConnectionChangeReceiver.getInstance())
-                    AppLog.d(MAIN, "ConnectionChangeReceiver successfully unregistered")
-                } catch (e: IllegalArgumentException) {
-                    AppLog.e(MAIN, "ConnectionChangeReceiver was already unregistered")
-                }
-            }
 
             // Disable the widgets if needed
             disableWidgetReceiversIfNeeded()
@@ -876,25 +867,6 @@ class AppInitializer @Inject constructor(
             }
             WordPress.appIsInTheBackground = false
 
-            // https://developer.android.com/reference/android/net/ConnectivityManager.html
-            // Apps targeting Android 7.0 (API level 24) and higher do not receive this broadcast if the broadcast
-            // receiver is declared in their manifest. Apps will still receive broadcasts if BroadcastReceiver is
-            // registered with Context.registerReceiver() and that context is still valid.
-            if (!connectionReceiverRegistered) {
-                connectionReceiverRegistered = true
-                if (Build.VERSION.SDK_INT >= VERSION_CODES.UPSIDE_DOWN_CAKE) {
-                    application.registerReceiver(
-                        ConnectionChangeReceiver.getInstance(),
-                        IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION),
-                        ContextWrapper.RECEIVER_EXPORTED
-                    )
-                } else {
-                    application.registerReceiver(
-                        ConnectionChangeReceiver.getInstance(),
-                        IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
-                    )
-                }
-            }
             AnalyticsUtils.refreshMetadata(accountStore, siteStore)
             applicationOpenedDate = Date()
             // This stat is part of a funnel that provides critical information. Before making ANY modification to this

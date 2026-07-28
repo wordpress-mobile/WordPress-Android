@@ -1,7 +1,9 @@
 package org.wordpress.android.ui.deeplinks
 
+import android.content.ActivityNotFoundException
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
+import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.ActivityNavigator
@@ -34,6 +36,9 @@ import org.wordpress.android.ui.sitecreation.misc.SiteCreationSource.DEEP_LINK
 import org.wordpress.android.ui.sitemonitor.SiteMonitorType
 import org.wordpress.android.ui.stats.StatsTimeframe
 import org.wordpress.android.ui.stats.refresh.utils.StatsLaunchedFrom
+import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.AppLog.T.UTILS
+import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.UriWrapper
 import javax.inject.Inject
 
@@ -52,11 +57,7 @@ class DeepLinkNavigator
                 activity,
                 navigateAction.site
             )
-            is OpenInBrowser -> {
-                @SuppressWarnings("UnsafeImplicitIntentLaunch")
-                val browserIntent = Intent(Intent.ACTION_VIEW, navigateAction.uri.uri)
-                activity.startActivity(browserIntent)
-            }
+            is OpenInBrowser -> openInBrowser(activity, navigateAction.uri)
             is OpenEditorForPost -> ActivityLauncher.openEditorForPostInNewStack(
                 activity,
                 navigateAction.site,
@@ -121,6 +122,26 @@ class DeepLinkNavigator
             )
         }
         if (navigateAction != LoginForResult) {
+            activity.finish()
+        }
+    }
+
+    /**
+     * Opens the uri with an external browser. The device may have no app able to handle a web link (no browser
+     * installed, browser disabled or restricted by a work profile), so the missing handler is reported to the user
+     * instead of crashing the deep link entry point.
+     *
+     * The receiver activity has no UI of its own, so it is finished when the hand-off fails. Otherwise the user is
+     * left on an empty screen after the toast. The toast still shows, since it does not depend on the activity.
+     */
+    private fun openInBrowser(activity: AppCompatActivity, uri: UriWrapper) {
+        @SuppressWarnings("UnsafeImplicitIntentLaunch")
+        val browserIntent = Intent(Intent.ACTION_VIEW, uri.uri)
+        try {
+            activity.startActivity(browserIntent)
+        } catch (e: ActivityNotFoundException) {
+            ToastUtils.showToast(activity, R.string.cant_open_url, ToastUtils.Duration.LONG)
+            AppLog.e(UTILS, "No app available on the device to open the deep link: $uri", e)
             activity.finish()
         }
     }

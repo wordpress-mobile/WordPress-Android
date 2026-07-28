@@ -28,6 +28,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.site.GutenbergLayoutCatego
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.DB
 import org.wordpress.android.util.UrlUtils
+import java.security.GeneralSecurityException
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -403,6 +404,17 @@ class SiteSqlUtils
         return updateApplicationPasswordCredentials(localId, usernamePlain, passwordPlain)
     }
 
+    /**
+     * URL-keyed variant of [updateXmlRpcUrl] for ORIGIN_WPAPI sites fetched without a local id. Used when an
+     * application-password site falls back to the WPAPI fetch even though XML-RPC discovery already verified a
+     * working xmlrpc.php endpoint, so the verified endpoint is recorded rather than lost. See
+     * [updateWpApiRestUrlForWPAPISite].
+     */
+    fun updateXmlRpcUrlForWPAPISite(siteUrl: String, xmlRpcUrl: String): Int {
+        val localId = wpApiSiteLocalIdByUrl(siteUrl) ?: return 0
+        return updateXmlRpcUrl(localId, xmlRpcUrl)
+    }
+
     private fun wpApiSiteLocalIdByUrl(siteUrl: String): Int? =
         WellSql.select(SiteModel::class.java)
                 .where().beginGroup()
@@ -728,8 +740,18 @@ class SiteSqlUtils
             apiRestUsernameIV.isNullOrEmpty() || apiRestPasswordIV.isNullOrEmpty()) {
             return this
         }
-        apiRestUsernamePlain = encryptionUtils.decrypt(apiRestUsernameEncrypted, apiRestUsernameIV)
-        apiRestPasswordPlain = encryptionUtils.decrypt(apiRestPasswordEncrypted, apiRestPasswordIV)
+        // Decryption relies on the AndroidKeyStore, which can fail on some devices (e.g. an invalidated
+        // key or an unavailable secure element). Because this runs inside the hot getSites() path, a
+        // thrown KeyStoreException would crash the whole app, so we swallow it and leave the credentials
+        // unset — the site simply behaves as if it has no stored REST credentials and can re-fetch them.
+        try {
+            apiRestUsernamePlain = encryptionUtils.decrypt(apiRestUsernameEncrypted, apiRestUsernameIV)
+            apiRestPasswordPlain = encryptionUtils.decrypt(apiRestPasswordEncrypted, apiRestPasswordIV)
+        } catch (e: GeneralSecurityException) {
+            AppLog.e(DB, "Failed to decrypt API REST credentials for site $id", e)
+            apiRestUsernamePlain = null
+            apiRestPasswordPlain = null
+        }
         return this
     }
 }

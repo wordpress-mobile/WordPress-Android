@@ -35,6 +35,10 @@ APP_SPECIFIC_VALUES = {
 
 UPLOAD_TO_PLAY_STORE_JSON_KEY = File.join(Dir.home, '.configure', 'wordpress-android', 'secrets', 'google-upload-credentials.json')
 
+# Legacy version code pinned in the Play Store — it must never drop from a track, so every path that
+# writes a track release (AAB upload or beta promotion) keeps it in the release's version codes.
+PLAY_STORE_VERSION_CODES_TO_RETAIN = [1440].freeze
+
 PROTOTYPE_BUILD_TYPE = 'Debug'
 
 PROJECT_ROOT_FOLDER = File.dirname(File.expand_path(__dir__))
@@ -147,11 +151,48 @@ def next_build_code
   BUILD_CODE_FORMATTER.build_code(build_code: next_build_code)
 end
 
+#####################################################################################
+# Environment helpers
+#####################################################################################
+
+# Use this instead of getting values from ENV directly. It will throw an error if the requested value is missing.
+def get_required_env(key)
+  UI.user_error!("Environment variable '#{key}' is not set. Have you setup #{USER_ENV_FILE_PATH} correctly?") unless ENV.key?(key)
+  ENV.fetch(key, nil)
+end
+
+#####################################################################################
+# Slack helpers
+#####################################################################################
+
+# Sends a Slack message to the given channel via the incoming webhook.
+#
+# The default is intentionally the test channel while the continuous-release process is being built
+# out; it moves to #build-and-ship once the flow ships to real testers.
+def send_slack_message(message:, channel: '#test-wpmobile-slack-integration')
+  slack(
+    username: 'WordPress Release Bot',
+    icon_url: 'https://s.w.org/style/images/about/WordPress-logotype-wmark.png',
+    slack_url: get_required_env('SLACK_WEBHOOK'),
+    channel: channel,
+    message: message,
+    default_payloads: []
+  )
+end
+
+# Posts to Slack without letting a webhook hiccup abort the caller.
+def notify_slack(message)
+  send_slack_message(message: message)
+rescue StandardError => e
+  UI.important("Slack notification failed (#{e.message}); continuing without it.")
+end
+
 ########################################################################
 # Import domain-specific lanes
 ########################################################################
 import 'lanes/build.rb'
 import 'lanes/localization.rb'
+import 'lanes/promote.rb'
 import 'lanes/release.rb'
 import 'lanes/screenshots.rb'
 import 'lanes/test.rb'

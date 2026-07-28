@@ -244,9 +244,14 @@ class PostListMainViewModel @Inject constructor(
         currentBottomSheetPostId: LocalId,
         editPostRepository: EditPostRepository
     ) {
+        // The activity is recreated on rotation with a freshly injected EditPostRepository while this
+        // ViewModel survives, so rebind on every start rather than only the first. Otherwise the
+        // restored Prepublishing sheet reads an empty repository and this ViewModel goes on writing
+        // to the previous activity's, which breaks publishing for the rest of the activity's life.
+        bindEditPostRepository(editPostRepository, site, currentBottomSheetPostId)
+
         if (isStarted) return
         this.site = site
-        this.editPostRepository = editPostRepository
 
         val authorFilterSelection: AuthorFilterSelection = if (isFilteringByAuthorSupported) {
             prefs.postListAuthorSelection
@@ -289,23 +294,34 @@ class PostListMainViewModel @Inject constructor(
         )
         _previewState.value = _previewState.value ?: initPreviewState
 
-        currentBottomSheetPostId.let { postId ->
-            if (postId.value != 0) {
-                editPostRepository.loadPostByLocalPostId(postId.value)
-            }
-        }
-
         lifecycleOwner.lifecycleRegistry.currentState = Lifecycle.State.STARTED
 
         uploadStarter.queueUploadFromSite(site)
 
-        editPostRepository.run {
-            postChanged.observe(lifecycleOwner, Observer {
-                savePostToDbUseCase.savePostToDb(editPostRepository, site)
-            })
+        isStarted = true
+    }
+
+    private fun bindEditPostRepository(
+        repository: EditPostRepository,
+        site: SiteModel,
+        bottomSheetPostId: LocalId
+    ) {
+        if (this::editPostRepository.isInitialized) {
+            if (this.editPostRepository === repository) return
+            // drop the previous activity's repository, or its observer would pin it for our lifetime
+            this.editPostRepository.postChanged.removeObservers(lifecycleOwner)
+        }
+        this.editPostRepository = repository
+
+        if (bottomSheetPostId.value != 0) {
+            // keep the field in sync so onSaveInstanceState can round-trip it again
+            currentBottomSheetPostId = bottomSheetPostId
+            repository.loadPostByLocalPostId(bottomSheetPostId.value)
         }
 
-        isStarted = true
+        repository.postChanged.observe(lifecycleOwner, Observer {
+            savePostToDbUseCase.savePostToDb(repository, site)
+        })
     }
 
     override fun onCleared() {

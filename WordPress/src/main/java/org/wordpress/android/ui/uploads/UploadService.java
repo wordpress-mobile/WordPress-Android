@@ -9,6 +9,7 @@ import android.os.IBinder;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+import androidx.core.app.ServiceCompat;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -176,26 +177,45 @@ public class UploadService extends Service {
     @Override
     public void onTimeout(int startId) {
         super.onTimeout(startId);
-        stopSelf(startId);
-        AppLog.i(T.MAIN, "UploadService > timed out");
+        handleForegroundServiceTimeout();
     }
 
     // Android 15+ enforces a 6-hour-per-24h cap on dataSync foreground services. The system calls
-    // this two-arg overload before throwing ForegroundServiceDidNotStopInTimeException; we have a
-    // few seconds to stop. Cancel in-flight uploads eagerly so onDestroy() finishes within budget.
+    // this two-arg overload before throwing ForegroundServiceDidNotStopInTimeException.
     @Override
     @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
     public void onTimeout(int startId, int fgsType) {
         super.onTimeout(startId, fgsType);
-        AppLog.w(T.MAIN, "UploadService > foreground service timeout reached (type=" + fgsType
-                         + "); stopping service");
+        AppLog.w(T.MAIN, "UploadService > foreground service timeout reached (type=" + fgsType + ")");
+        handleForegroundServiceTimeout();
+    }
+
+    /**
+     * Stops the service after the system signals a foreground-service timeout, in the few seconds we
+     * have before {@link android.app.RemoteServiceException.ForegroundServiceDidNotStopInTimeException}
+     * is thrown.
+     *
+     * We intentionally do NOT use {@code stopSelf(startId)} here: that overload only stops the service
+     * when {@code startId} matches the most recent start, but the service is started once per queued
+     * upload, so the id delivered to onTimeout() is usually stale and the call would be a no-op. We
+     * also leave the foreground state right away rather than relying on onDestroy() finishing within
+     * the timeout budget.
+     */
+    private void handleForegroundServiceTimeout() {
         if (mMediaUploadHandler != null) {
             mMediaUploadHandler.cancelInProgressUploads();
         }
         if (mPostUploadHandler != null) {
             mPostUploadHandler.cancelInProgressUploads();
         }
-        stopSelf(startId);
+        // Leave the foreground state immediately so the system's timeout window is satisfied, and
+        // reset the notifier so the next upload re-enters the foreground via startForeground().
+        if (mPostUploadNotifier != null) {
+            mPostUploadNotifier.resetForegroundNotificationState();
+        }
+        ServiceCompat.stopForeground(this, ServiceCompat.STOP_FOREGROUND_REMOVE);
+        stopSelf();
+        AppLog.i(T.MAIN, "UploadService > stopped after foreground service timeout");
     }
 
     private void unpackMediaIntent(@NonNull Intent intent) {

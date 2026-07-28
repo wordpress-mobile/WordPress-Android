@@ -22,6 +22,14 @@ class GCMRegistrationWorker(
     val zendeskHelper: ZendeskHelper,
     workerParameters: WorkerParameters
 ) : CoroutineWorker(appContext, workerParameters) {
+    // FirebaseMessaging.getToken() was soft-deprecated in firebase-messaging 25.1.0 in favor of
+    // register(). However, register() is part of an opt-in "V1 registration" backend gated by the
+    // manifest flag "firebase_messaging_installation_id_enabled"; without that flag (our current
+    // setup) register() throws at runtime while getToken() remains the only functional token API.
+    // Suppressing the deprecation until we deliberately migrate to push-based token delivery via
+    // the register()/onNewToken() registration model (which requires the manifest opt-in and
+    // reworking the on-demand registration call sites to stop fetching the token directly).
+    @Suppress("DEPRECATION")
     override suspend fun doWork(): Result {
         return try {
             FirebaseMessaging

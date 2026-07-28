@@ -9,9 +9,12 @@ import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.store.StatsStore.InsightType.TOTAL_FOLLOWERS
 import org.wordpress.android.fluxc.store.StatsStore.ManagementType
+import org.wordpress.android.fluxc.store.StatsStore.SubscriberType.EMAILS
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.UiModel
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel.UseCaseState.LOADING
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel.UseCaseState.SUCCESS
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.util.NetworkUtilsWrapper
 
 @ExperimentalCoroutinesApi
@@ -65,5 +68,35 @@ import org.wordpress.android.util.NetworkUtilsWrapper
         assertThat(model.subtitle).isEqualTo(R.string.stats_insights_management_title)
         assertThat(model.showButton).isTrue()
         assertThat(error).isNull()
+    }
+
+    @Test
+    fun `mapSubscribers keeps loaded rows visible while a block is refreshing`() {
+        val dataRows = listOf(BlockListItem.Divider)
+        val loadingPlaceholder = listOf(BlockListItem.Divider)
+
+        val uiModel = mapper.mapSubscribers(
+            listOf(UseCaseModel(EMAILS, data = dataRows, stateData = loadingPlaceholder, state = LOADING))
+        ) {}
+
+        val model = uiModel as UiModel.Success
+        assertThat(model.data).hasSize(1)
+        assertThat(model.data[0].type).isEqualTo(StatsBlock.Type.LOADING)
+        // The already-loaded rows stay on screen during the refresh, not the loading placeholder.
+        assertThat(model.data[0].data).isSameAs(dataRows)
+    }
+
+    @Test
+    fun `mapSubscribers shows the loading placeholder on first load when there is no data yet`() {
+        val loadingPlaceholder = listOf(BlockListItem.Divider)
+
+        val uiModel = mapper.mapSubscribers(
+            listOf(UseCaseModel(EMAILS, data = null, stateData = loadingPlaceholder, state = LOADING))
+        ) {}
+
+        val model = uiModel as UiModel.Success
+        assertThat(model.data).hasSize(1)
+        assertThat(model.data[0].type).isEqualTo(StatsBlock.Type.LOADING)
+        assertThat(model.data[0].data).isSameAs(loadingPlaceholder)
     }
 }

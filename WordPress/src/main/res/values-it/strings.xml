@@ -1,11 +1,112 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2026-04-02 09:55:54+0000
+Translation-Revision-Date: 2026-06-28 16:12:19+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.3
 Language: it
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="support_screen_unified_support_description">Ottieni risposte dal nostro team di supporto, in qualsiasi momento</string>
+    <string name="support_screen_unified_support_title">Richiedi supporto</string>
+    <string name="unified_support_attachment_match_score">corrispondenza al %1$d%%</string>
+    <string name="unified_support_status_bot">Oddie bot</string>
+    <string name="unified_support_bot_typing_content_description">Il bot di supporto sta digitando</string>
+    <string name="unified_support_message_input_placeholder">Invia un messaggio…</string>
+    <string name="unified_support_conversations_title">Richiedi supporto</string>
+    <string name="page_rs_move_trashed_page_to_draft_dialog_message">Le pagine eliminate non possono essere modificate. Vuoi modificare lo stato di questa pagina in \"bozza\" in modo da poterla modificare?</string>
+    <string name="page_rs_move_trashed_page_to_draft_dialog_title">Spostare la pagina in bozze?</string>
+    <string name="page_rs_confirm_trash_message">Desideri spostare questa pagina nel cestino?</string>
+    <string name="page_rs_copy_url">Copia URL</string>
+    <string name="page_rs_failed_to_load">Impossibile caricare la pagina</string>
+    <string name="page_not_found">Si è verificato un errore durante il caricamento della pagina. Aggiorna le pagine e riprova.</string>
+    <string name="xmlrpc_disabled_bottom_sheet_body">Alcune funzionalità dell\'app richiedono XML-RPC. Attivalo sul sito per risolvere questo problema.</string>
+    <string name="xmlrpc_disabled_bottom_sheet_title">XML-RPC disattivato</string>
+    <string name="xmlrpc_disabled_card_text">XML-RPC disattivato\nAlcune funzionalità potrebbero essere limitate</string>
+    <string name="application_password_reauthentication_banner">Le credenziali del sito non sono valide. Tocca per rieseguire l\'autenticazione.</string>
+    <string name="application_password_app_name_wordpress">App WordPress per Android su %s</string>
+    <string name="application_password_app_name_jetpack">App Jetpack per Android su %s</string>
+    <string name="application_password_authorization_cancelled">Autorizzazione annullata</string>
+    <string name="reader_label_view">Visualizza il sito</string>
+    <string name="reader_excerpt_view_more">Visualizza altro</string>
+    <string name="reader_reading_time">%s min di lettura</string>
+    <string name="reader_discover_tab_latest">Più recenti</string>
+    <string name="reader_discover_tab_recommended">Consigliati</string>
+    <string name="stats_subscriber_years_and_days">%1$s, %2$s</string>
+    <string name="stats_subscriber_since_today">oggi</string>
+    <string name="stats_subscribers_graph_years">Anni</string>
+    <string name="stats_subscribers_graph_months">Mesi</string>
+    <string name="stats_subscribers_graph_weeks">Settimane</string>
+    <string name="stats_subscribers_graph_days">Giorni</string>
+    <string name="stats_emails_clicks_header">Clic</string>
+    <string name="stats_emails_opens_header">Aperture</string>
+    <string name="stats_emails_latest_header">Ultime e-mail</string>
+    <string name="stats_subscribers_since_header">A partire da</string>
+    <string name="stats_subscribers_90_days_ago">90 giorni fa</string>
+    <string name="stats_subscribers_60_days_ago">60 giorni fa</string>
+    <string name="stats_subscribers_30_days_ago">30 giorni fa</string>
+    <string name="stats_subscribers_current">Attuale</string>
+    <string name="stats_subscribers_emails">E-mail</string>
+    <string name="stats_subscribers_list">Iscritti</string>
+    <string name="stats_subscribers_graph">Grafico iscritti</string>
+    <string name="stats_subscribers_all_time">Iscritti di sempre</string>
+    <string name="stats_utm_campaign">Campagna</string>
+    <string name="stats_utm_medium">Media</string>
+    <string name="stats_utm_source">Origine</string>
+    <string name="stats_utm_campaign_source_medium">Campagna / Origine / Medium</string>
+    <string name="stats_utm_source_medium">Origine / Medium</string>
+    <string name="stats_utm_title">UTM</string>
+    <string name="stats_error_not_authenticated">Non autenticato</string>
+    <string name="stats_collapse_group">Comprimi</string>
+    <string name="stats_expand_group">Espandi</string>
+    <string name="stats_tag_type_tag">Tag</string>
+    <string name="stats_tag_type_category">Categoria</string>
+    <string name="stats_insights_tags_empty">Nessun tag o categoria trovati</string>
+    <string name="stats_insights_views_percent">%1$s%% di visualizzazioni</string>
+    <string name="stats_insights_most_popular_day_label">Giorno</string>
+    <string name="stats_insights_all_time_stats_title">Statistiche di sempre</string>
+    <string name="stats_insights_year_in_review_title">Panoramica di fine anno %s</string>
+    <string name="stats_insights_year_in_review">Panoramica di fine anno</string>
+    <string name="stats_insights_avg_words_per_post">Media parole per articolo</string>
+    <string name="stats_insights_avg_likes_per_post">Media \"Mi piace\" per articolo</string>
+    <string name="stats_insights_avg_comments_per_post">Media commenti per articolo</string>
+    <string name="stats_insights_total_posts">Articoli totali</string>
+    <string name="stats_insights_likes">Mi piace</string>
+    <string name="stats_insights_words">Parole</string>
+    <string name="activity_log_mcp_agent_label">tramite %1$s</string>
+    <string name="post_rs_settings_show_password">Mostra password</string>
+    <string name="post_rs_settings_hide_password">Nascondi password</string>
+    <string name="post_rs_settings_saving">Salvataggio\u2026</string>
+    <string name="post_rs_settings_search_no_results">Nessun risultato trovato</string>
+    <string name="post_rs_settings_load_more">Carica altro\u2026</string>
+    <string name="post_rs_settings_term_create_error">Impossibile creare il termine</string>
+    <string name="post_rs_settings_search_authors">Cerca autori</string>
+    <string name="post_rs_settings_search_terms">Cerca</string>
+    <string name="post_rs_settings_no_parent">Nessuno</string>
+    <string name="post_rs_settings_parent_category">Categoria principale</string>
+    <string name="post_rs_settings_term_name_hint">Nome</string>
+    <string name="post_rs_settings_add_term">Aggiungi</string>
+    <string name="post_rs_settings_choose_from_device">Scegli da dispositivo</string>
+    <string name="post_rs_settings_choose_from_wp_media">Scegli dagli elementi multimediali di WP</string>
+    <string name="stats_new_stats_suggestion_negative">Forse dopo</string>
+    <string name="stats_new_stats_suggestion_positive">Prova</string>
+    <string name="stats_new_stats_suggestion_message">Abbiamo creato una nuova esperienza di Statistiche. Vuoi provare? Puoi sempre tornare alla versione precedente dal menu Statistiche.</string>
+    <string name="stats_new_stats_suggestion_title">Una nuova esperienza di Statistiche</string>
+    <string name="gutenberg_kit_announcement_learn_more">Scopri di più</string>
+    <string name="gutenberg_kit_announcement_maybe_later">Forse dopo</string>
+    <string name="gutenberg_kit_announcement_activate">Attiva</string>
+    <string name="gutenberg_kit_announcement_body_deadline">Entro la fine di giugno 2026 diventerà l\'editor predefinito per tutti. %1$s</string>
+    <string name="gutenberg_kit_announcement_body_intro">L\'editor a blocchi di nuova generazione è pronto e offre nuove funzionalità.</string>
+    <string name="gutenberg_kit_announcement_title">Sta arrivando un editor a blocchi migliore</string>
+    <string name="site_settings_gutenberg_kit_enabled_unsupported">Per provare il nuovo editor, passa prima all\'editor a blocchi.</string>
+    <string name="site_settings_gutenberg_kit_enabled_summary">Accedi all\'editor a blocchi di nuova generazione per questo sito</string>
+    <string name="site_settings_gutenberg_kit_enabled">Prova il nuovo editor</string>
+    <string name="site_connectivity_banner_text">Impossibile connettersi al tuo sito. Alcune funzionalità potrebbero essere limitate.</string>
+    <string name="site_settings_use_third_party_blocks_unsupported">Il tuo sito non supporta il caricamento di blocchi di terze parti nell\'editor.</string>
+    <string name="site_settings_use_third_party_blocks_summary">Carica blocchi di terze parti dai plugin installati sul tuo sito.</string>
+    <string name="site_settings_use_third_party_blocks">Usa blocchi di terze parti (Beta)</string>
+    <string name="site_settings_use_theme_styles_not_block_theme">Il tuo sito non usa un tema a blocchi. L\'editor potrebbe non corrispondere ai contenuti. Se qualcosa non va, disattiva questa impostazione.</string>
+    <string name="site_settings_use_theme_styles_unsupported">Installa il plugin Gutenberg sul tuo sito per attivare il supporto degli stili del tema.</string>
+    <string name="new_stats_intro_footer">Puoi disattivare le Nuove statistiche dal menu di overflow nella schermata Statistiche.</string>
     <string name="new_stats_intro_trends_desc">Ogni indicatore mostra l\'andamento rispetto al periodo precedente, così saprai sempre se stai crescendo.</string>
     <string name="new_stats_intro_trends_title">Tendenze a colpo d\'occhio</string>
     <string name="new_stats_intro_on_par_desc">Dispositivi, UTM, posizioni, WordAds (in arrivo): gli stessi dati di WordPress.com.</string>
@@ -19,6 +120,7 @@ Language: it
     <string name="stats_devices_percentage_header">Percentuale</string>
     <string name="stats_devices_device_header">Dispositivo</string>
     <string name="stats_devices_platform">Piattaforma</string>
+    <string name="stats_devices_browser">Browser</string>
     <string name="stats_devices_screensize">Dimensione</string>
     <string name="stats_devices_title">Dispositivi</string>
     <string name="show_less">Mostra meno</string>
@@ -47,6 +149,7 @@ Language: it
     <string name="post_rs_sync_failed">Sincronizzazione non riuscita</string>
     <string name="post_rs_error_auth">L\'autenticazione è scaduta. Ripeti l\'accesso.</string>
     <string name="post_rs_error_load_more">Impossibile caricare altri articoli</string>
+    <string name="stats_ring_chart_entry_description">%1$s: %2$s</string>
     <string name="menu_item_accessibility_description">Livello %1$d, %2$s, %3$s</string>
     <string name="menu_item_reorder_failed">Impossibile riordinare l\'elemento del menu</string>
     <string name="menu_item_invalid_url">Inserisci un URL valido</string>
@@ -174,6 +277,7 @@ Language: it
     <string name="error_browser_no_network">Impossibile caricare questa pagina</string>
     <string name="history_empty_subtitle_post">Vedrai la cronologia di questo articolo quando apporti modifiche</string>
     <string name="history_empty_subtitle_page">Vedrai la cronologia di questa pagina quando apporti modifiche</string>
+    <string name="reader_discover_tab_freshly_pressed">Pubblicato di recente</string>
     <string name="notifications_empty_action_comments">Unisciti a una conversazione! Commenta gli articoli nel Reader.</string>
     <string name="notifications_empty_action_all">Impegnati! Commenta gli articoli nel Reader.</string>
     <string name="more_options">Altre opzioni</string>
@@ -181,8 +285,6 @@ Language: it
     <string name="stats_chart_type_bars">Barre</string>
     <string name="stats_chart_type_lines">Linee</string>
     <string name="post_types_screen_title">Tipi di articolo</string>
-    <string name="experimental_new_stats_description">Mostra le statistiche in un\'interfaccia utente più moderna e avanzata</string>
-    <string name="experimental_new_stats">Nuove statistiche</string>
     <string name="experimental_post_types_description">Attiva la schermata dei tipi di articoli sperimentali</string>
     <string name="experimental_post_types">Tipi di articolo</string>
     <string name="network_requests_disable">Disabilita</string>
@@ -207,23 +309,6 @@ Language: it
     <string name="media_empty_list_subtitle">Perché non caricare qualcosa?</string>
     <string name="confirm_remove_site">Rimuovere \"%s\" dall\'app?</string>
     <string name="he_support_forbidden_error">Non hai i permessi per eseguire questa azione.</string>
-    <string name="he_support_generic_error">Si è verificato un errore. Riprova più tardi.</string>
-    <string name="he_support_send_ticket_button">Invia</string>
-    <string name="he_support_contact_email_message">Ti invieremo un\'e-mail a questo indirizzo.</string>
-    <string name="he_support_contact_information">Informazioni di contatto</string>
-    <string name="he_support_site_address_placeholder">https://yoursite.com</string>
-    <string name="he_support_site_address_label">Indirizzo del sito (opzionale)</string>
-    <string name="he_support_subject_placeholder">Breve riassunto del problema</string>
-    <string name="he_support_subject_label">Oggetto</string>
-    <string name="he_support_issue_details">Dettagli del problema</string>
-    <string name="he_support_category_other">Altro</string>
-    <string name="he_support_category_technical_issues">Problemi tecnici</string>
-    <string name="he_support_category_billing">Fatturazione e abbonamenti</string>
-    <string name="he_support_category_site_management">Gestione siti</string>
-    <string name="he_support_category_jetpack_connection">Connessione a Jetpack</string>
-    <string name="he_support_category_application">Applicazione</string>
-    <string name="he_support_need_help_with">Ho bisogno di aiuto con</string>
-    <string name="he_support_contact_support_title">Contatta il supporto</string>
     <string name="he_support_download_video_button">Scarica video</string>
     <string name="he_support_video_playback_error_message">Questo video non può essere riprodotto in linea. Scaricalo per visualizzarlo.</string>
     <string name="he_support_video_playback_error_title">Impossibile riprodurre il video</string>
@@ -256,19 +341,11 @@ Language: it
     <string name="he_support_empty_conversations_button">Avvia conversazione</string>
     <string name="he_support_empty_conversations_message">Inizia una conversazione con il nostro team di supporto per ricevere aiuto con le tue domande.</string>
     <string name="he_support_empty_conversations_title">Ancora nessuna conversazione</string>
-    <string name="he_support_new_conversation_content_description">Nuova conversazione</string>
-    <string name="he_support_conversations_title">Conversazioni di supporto</string>
+    <string name="unified_support_new_conversation_content_description">Nuova conversazione</string>
     <string name="ai_bot_time_just_now">In questo momento</string>
     <string name="ai_bot_welcome_message">Sono il tuo assistente IA personale. Posso aiutarti in caso tu abbia domande sul tuo sito o sul tuo account.</string>
     <string name="ai_bot_welcome_greeting">Ciao, %1$s 👋</string>
-    <string name="ai_bot_message_input_placeholder">Invia un messaggio…</string>
-    <string name="ai_bot_send_button_content_description">Invia</string>
-    <string name="ai_bot_support_bot">Bot di supporto</string>
-    <string name="ai_bot_you">Tu</string>
-    <string name="ai_bot_generic_error">Si è verificato un problema. Riprova più tardi.</string>
-    <string name="ai_bot_new_conversation_content_description">Nuova conversazione</string>
-    <string name="ai_bot_back_button_content_description">Indietro</string>
-    <string name="ai_bot_conversations_title">Conversazioni</string>
+    <string name="unified_support_generic_error">Qualcosa è andato storto. Riprova più tardi.</string>
     <string name="create">Crea</string>
     <string name="logs_screen_general_error">Si è verificato un problema…</string>
     <string name="logs_screen_empty_state">Nessun log disponibile</string>
@@ -276,9 +353,6 @@ Language: it
     <string name="support_screen_application_logs_description">Strumento avanzato per il debug dei problemi</string>
     <string name="support_screen_application_logs_title">Log applicazione</string>
     <string name="support_screen_diagnostics_section_title">Diagnostica</string>
-    <string name="support_screen_ask_happiness_engineers_description">Per domande difficili. Risponderemo via e-mail</string>
-    <string name="support_screen_ask_happiness_engineers_title">Chiedi agli Happiness Engineer</string>
-    <string name="support_screen_ask_bots_description">Ottieni risposte veloci alle domande comuni</string>
     <string name="support_screen_help_center_description">Documentazione e tutorial per aiutarti a iniziare</string>
     <string name="support_screen_help_center_title">Centro assistenza</string>
     <string name="support_screen_how_can_we_help_title">Come possiamo aiutarti?</string>
@@ -286,6 +360,7 @@ Language: it
     <string name="support_screen_title">Supporto</string>
     <string name="modern_support_description">Attiva la nuova esperienza di supporto moderna</string>
     <string name="modern_support">Supporto moderno</string>
+    <string name="site_settings_use_theme_styles_summary">Rendi l\'editor a blocchi simile al tuo tema.</string>
     <string name="site_settings_use_theme_styles">Usa gli stili del tema</string>
     <string name="error_deleting_term">Si è verificato un errore durante l\'eliminazione del termine</string>
     <string name="error_saving_term">Si è verificato un errore durante il salvataggio del termine</string>
@@ -395,6 +470,7 @@ Language: it
     <string name="application_password_not_supported_error" a8c-src-lib="module:login">Il sito fornito non supporta l\'autenticazione tramite password dell\'applicazione.</string>
     <string name="application_password_title">Effettua l\'autenticazione usando la password dell\'applicazione</string>
     <string name="application_password_credentials_stored">Credenziali di accesso dell\'applicazione memorizzate per %1$s</string>
+    <string name="qrcode_auth_flow_timeout_subtitle">Il rilevamento del codice ha richiesto troppo tempo. Riprova o usa l\'app fotocamera per scansionare il codice.</string>
     <string name="qrcode_auth_flow_timeout_title">Timeout scansione</string>
     <string name="invite_users">Invita gli utenti</string>
     <string name="cant_share_no_blog">Non è possibile condividere su WordPress senza un blog</string>
@@ -424,6 +500,7 @@ Language: it
     <string name="about_the_user">Aggiungi utente</string>
     <string name="website">Sito web</string>
     <string name="contact_info">Informazioni di contatto</string>
+    <string name="nickname">Nickname</string>
     <string name="name">Nome</string>
     <string name="no_users">Nessun utente</string>
     <string name="users">Utenti</string>
@@ -437,6 +514,7 @@ Language: it
     <string name="more_content_description_blogging_prompts">Leggi tutto sui prompt</string>
     <string name="more_content_description_promote_blaze">Diffondi altro</string>
     <string name="reader_toast_success_undo">Blog sbloccato</string>
+    <string name="feedback_form_note_link_jetpack">Schermata Contatta il supporto.</string>
     <string name="feedback_form_note_text">Questo non è un modulo di supporto e non potremo risponderti. Se hai bisogno di assistenza utilizza \"</string>
     <string name="experimental_block_editor">Editor a blocchi sperimentale</string>
     <string name="experimental_features_screen_title">Funzionalità sperimentali</string>
@@ -444,6 +522,7 @@ Language: it
     <string name="dialog_confirm_autosave_dont_restore_button">Da quest\'app</string>
     <string name="dialog_confirm_autosave_restore_button">Da un altro dispositivo</string>
     <string name="item_selected">Selezionato</string>
+    <string name="send_feedback">Invia feedback</string>
     <string name="media_pager_remove_item_content_description">Rimuovi elemento %1$d</string>
     <string name="feedback_form_add_attachments">Aggiungi allegati</string>
     <string name="feedback_form_attachment_already_added">Allegato già aggiunto</string>
@@ -454,6 +533,7 @@ Language: it
     <string name="feedback_form_success">Grazie per il tuo feedback!</string>
     <string name="feedback_form_discard">Elimina feedback?</string>
     <string name="feedback_form_message_hint">Il tuo feedback è apprezzato!</string>
+    <string name="feedback_form_title">Feedback</string>
     <string name="submit">Invia</string>
     <string name="close">Chiudi</string>
     <string name="sending">Invio in corso</string>
@@ -524,6 +604,7 @@ Language: it
     <string name="page_upload_conflict_error">C\'è una revisione di questa pagina che è più recente</string>
     <string name="editor_updating_content">Aggiornamento del contenuto</string>
     <string name="stats_subscribers">Abbonati</string>
+    <string name="stats_subscribers_subscriber_header">Iscritto</string>
     <string name="weekly_roundup_notification_text_views_and_comment">L\'ultima settimana hai avuto %1$s visualizzazioni e 1 commento</string>
     <string name="weekly_roundup_notification_text_views_and_like">L\'ultima settimana hai avuto %1$s visualizzazioni e 1 Mi piace</string>
     <string name="weekly_roundup_notification_text_views_like_comment">L\'ultima settimana hai avuto %1$s visualizzazioni, 1 Mi piace e 1 commento.</string>
@@ -630,6 +711,7 @@ Language: it
     <string name="reader_dropdown_menu_subscriptions">Abbonamenti</string>
     <string name="reader_dropdown_menu_discover">Scopri</string>
     <string name="reader_search_content_description">Cerca</string>
+    <string name="reader_discover_no_posts_button_tags_text_follow">Segui tag</string>
     <string name="reader_filter_empty_tags_action_suggested">Tag suggeriti</string>
     <string name="reader_filter_empty_blogs_action_search">Cerca un blog</string>
     <string name="reader_filter_empty_tags_list_follow_text">Segui un tag e potrai vedere qui i migliori articoli correlati.</string>
@@ -664,6 +746,7 @@ Language: it
     <string name="bloganuary_dashboard_nudge_overlay_text_one">Ricevi un nuovo suggerimento per ottenere ispirazione ogni giorno.</string>
     <string name="bloganuary_dashboard_nudge_overlay_title">Prendi parte alla nostra sfida di scrittura: dura un mese.</string>
     <string name="bloganuary_dashboard_nudge_overlay_icon_content_description">Bloganuary</string>
+    <string name="bloganuary_dashboard_nudge_text">Per il mese di gennaio, le richieste di blogging arriveranno da Bloganuary: la sfida della nostra community per creare delle abitudini di blogging per il nuovo anno.</string>
     <string name="bloganuary_dashboard_nudge_title_december">Bloganuary sta arrivando!</string>
     <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_your_web_bro" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Per questo motivo consigliamo di modificare il blocco tramite il browser web.</string>
     <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_the_web_edit" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Per questo motivo consigliamo di modificare il blocco tramite l\'editor web.</string>
@@ -689,6 +772,7 @@ Language: it
     <string name="new_domain_search_screen_transfer_domain_description">Vuoi trasferire un dominio che già possiedi?</string>
     <string name="new_domain_search_screen_input_placeholder">Digita per ottenere ulteriori suggerimenti</string>
     <string name="new_domain_search_screen_title">Cerca un dominio</string>
+    <string name="purchase_domain_screen_error_button_title">OK</string>
     <string name="purchase_domain_screen_error_subtitle">Si è verificato un errore durante l\'aggiunta del dominio al carrello. Assicurati di essere online e riprova.</string>
     <string name="purchase_domain_screen_error_title">Errore</string>
     <string name="domain_management_site_domains_button">Tutti</string>
@@ -748,6 +832,7 @@ Language: it
     <string name="personalization_screen_draft_posts_card_title">Articoli in bozza</string>
     <string name="personalization_screen_stats_card_description">Visualizzazioni, visitatori e mi piace</string>
     <string name="personalization_screen_tab_cards_footer_cards">Le schede possono mostrare contenuti diversi a seconda di ciò che sta accadendo nel sito</string>
+    <string name="personalization_screen_tab_cards_description">Aggiungi o nascondi schede</string>
     <string name="personalization_screen_title"> Personalizza la scheda home</string>
     <string name="personalize_card_content_description">Tocca per personalizzare la scheda home</string>
     <string name="personalize_card_text">Personalizza la scheda home</string>
@@ -2043,6 +2128,7 @@ Language: it
     <string name="ccpa_privacy_notice_header">Nota sulla privacy per utenti in California</string>
     <string name="status_and_visibility">Stato e visibilità</string>
     <string name="update_now">Aggiorna ora</string>
+    <string name="pages_item_subtitle">%1$s ·</string>
     <string name="gutenberg_native_open_block_actions_menu" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Apri menu azioni del blocco</string>
     <string name="gutenberg_native_move_to_top" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Sposta in alto</string>
     <string name="gutenberg_native_insert_mention" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Inserisci riferimento</string>
@@ -2154,6 +2240,7 @@ Language: it
     <string name="app_theme_light">Chiaro</string>
     <string name="app_theme">Aspetto</string>
     <string name="dialog_confirm_autosave_body_first_part_for_page">Di recente hai apportato modifiche a questa pagina ma non le hai salvate. Scegli una versione da caricare:\n\n</string>
+    <string name="gutenberg_native_warning_message" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Messaggio di avviso</string>
     <string name="gutenberg_native_show_post_content" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Mostra contenuti articolo</string>
     <string name="gutenberg_native_only_show_excerpt" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Mostra solo riassunto</string>
     <string name="gutenberg_native_link_to" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Link a</string>
@@ -2388,6 +2475,7 @@ Language: it
     <string name="post_notification_off">Disattivato</string>
     <string name="post_settings_add_to_calendar">Aggiungi a calendario</string>
     <string name="post_settings_notification">Notifica</string>
+    <string name="post_settings_time_and_date">Data e ora</string>
     <string name="login_invalid_site_url" a8c-src-lib="module:login">Inserisci un indirizzo di sito web completo, come example.com.</string>
     <string name="enter_email_for_site" a8c-src-lib="module:login">Accedi con WordPress.com per collegarti a %1$s</string>
     <string name="stats_post_views_label">Visualizzazioni</string>
@@ -3308,6 +3396,10 @@ Language: it
     <string name="editor_post_saved_online">L\'articolo è stato salvato online</string>
     <string name="site_settings_image_quality_hint">Qualità delle immagini. Valori più elevati indicano una migliore qualità delle immagini.</string>
     <string name="site_settings_optimize_images_summary">Consenti di ridimensionare e comprimere le immagini</string>
+    <string name="media_encoder_quality_maximum">Massima</string>
+    <string name="media_encoder_quality_high">Alta</string>
+    <string name="media_encoder_quality_medium">Media</string>
+    <string name="media_encoder_quality_low">Bassa</string>
     <string name="media_upload_state_uploaded">Caricato</string>
     <string name="media_upload_state_failed">Caricamento fallito</string>
     <string name="media_upload_state_deleted">Eliminato</string>
@@ -3680,6 +3772,7 @@ Language: it
     <string name="push_auth_expired">La richiesta è scaduta. Accedi a WordPress.com per riprovare.</string>
     <string name="ignore">Ignora</string>
     <string name="stats_insights_best_ever">Le migliore visualizzazioni di sempre</string>
+    <string name="stats_insights_most_popular_time">Ora più popolare</string>
     <string name="stats_insights_most_popular_day">Giorno più popolare.</string>
     <string name="stats_insights_today">Statistiche odierne</string>
     <string name="stats_insights_all_time">Articoli, visualizzazioni e visitatori dall\'inizio</string>
@@ -3738,6 +3831,7 @@ Language: it
     <string name="browse_our_faq_button">Scorri le nostre FAQ</string>
     <string name="reader_empty_comments">Ancora nessun commento</string>
     <string name="reader_label_like">Like</string>
+    <string name="reader_label_view_original">Visualizza originale</string>
     <string name="reader_label_comments_closed">I commenti sono chiusi</string>
     <string name="reader_title_photo_viewer">%1$d di %2$d</string>
     <string name="error_publish_empty_post">Non è possibile pubblicare un articolo vuoto</string>

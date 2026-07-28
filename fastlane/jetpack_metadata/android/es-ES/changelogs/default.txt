@@ -1,0 +1,6 @@
+26.9:
+- Se ha activado la nueva lista de páginas con funciones actualizadas
+- Se ha establecido la nueva lista de entradas por defecto para los sitios con contraseña de aplicación
+- Chats combinados de bot y Happiness Engineer en Soporte
+- Se ha corregido un fallo al abrir medios al salir del editor
+- Se ha eliminado la insignia beta de los menús de Mi sitio

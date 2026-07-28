@@ -124,8 +124,8 @@ android {
         buildConfigField "String", "PUSH_NOTIFICATIONS_APP_KEY", '"org.wordpress.android"'
         buildConfigField "boolean", "MP4_COMPOSER_VIDEO_OPTIMIZATION", "false"
         buildConfigField "boolean", "MANAGE_CATEGORIES", "false"
+        buildConfigField "boolean", "TAXONOMIES_REST_API_MIGRATION", "false"
         buildConfigField "boolean", "RECOMMEND_THE_APP", "false"
-        buildConfigField "boolean", "UNIFIED_COMMENTS_DETAILS", "false"
         buildConfigField "boolean", "COMMENTS_SNIPPET", "false"
         buildConfigField "boolean", "READER_COMMENTS_MODERATION", "false"
         buildConfigField "boolean", "SITE_NAME", "false"
@@ -158,6 +158,7 @@ android {
         buildConfigField "boolean", "BLOGANUARY_DASHBOARD_NUDGE", "false"
         buildConfigField "boolean", "DYNAMIC_DASHBOARD_CARDS", "false"
         buildConfigField "boolean", "STATS_TRAFFIC_SUBSCRIBERS_TABS", "false"
+        buildConfigField "boolean", "NEW_STATS", "false"
         buildConfigField "boolean", "READER_READING_PREFERENCES", "false"
         buildConfigField "boolean", "READER_READING_PREFERENCES_FEEDBACK", "false"
         buildConfigField "boolean", "READER_TAGS_FEED", "false"
@@ -252,6 +253,12 @@ android {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard.cfg'
             buildConfigField "boolean", "ENABLE_DEBUG_SETTINGS", "false"
+
+            // Bundle native debug symbols into the AAB so Play Console can symbolicate
+            // native crashes and ANRs from the .so libraries shipped by our dependencies.
+            ndk {
+                debugSymbolLevel 'SYMBOL_TABLE'
+            }
         }
 
         debug {

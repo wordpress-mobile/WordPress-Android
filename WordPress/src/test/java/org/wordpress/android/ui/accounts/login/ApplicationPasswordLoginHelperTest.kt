@@ -28,6 +28,7 @@ import rs.wordpress.api.kotlin.ApiDiscoveryResult
 import rs.wordpress.api.kotlin.WpLoginClient
 import uniffi.wp_api.AutoDiscoveryAttemptSuccess
 import uniffi.wp_api.DiscoveredAuthenticationMechanism
+import uniffi.wp_api.OAuth2Endpoints
 import uniffi.wp_api.ParseUrlException
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
@@ -182,6 +183,25 @@ class ApplicationPasswordLoginHelperTest : BaseUnitTest() {
         assertIs<StoreCredentialsResult.Success>(result)
         verify(wpLoginClient, times(1)).apiDiscovery(any())
         verify(dispatcherWrapper).updateApplicationPassword(eq(siteModel))
+    }
+
+    @Test
+    fun `storeApplicationPasswordCredentialsFrom returns SiteNotFound carrying the recovered apiRootUrl`() = runTest {
+        // Given — apiRootUrl is missing and recovered via discovery, but the site is not found
+        // locally. The recovered value must be carried on SiteNotFound so the caller can fetch.
+        val autoDiscoveryAttemptSuccess = AutoDiscoveryAttemptSuccess(
+            mock(), mock(), mock(), DiscoveredAuthenticationMechanism.ApplicationPasswords(mock())
+        )
+        val apiDiscoveryResult = ApiDiscoveryResult.Success(autoDiscoveryAttemptSuccess)
+        whenever(wpLoginClient.apiDiscovery(any())).thenReturn(apiDiscoveryResult)
+        whenever(discoverSuccessWrapper.getApiRootUrl(eq(apiDiscoveryResult))).thenReturn(TEST_API_ROOT_URL)
+        whenever(siteStore.sites).thenReturn(listOf())
+
+        val loginWithoutApiRoot = UriLogin(TEST_URL, TEST_USER, TEST_PASSWORD, null)
+        val result = applicationPasswordLoginHelper.storeApplicationPasswordCredentialsFrom(loginWithoutApiRoot)
+
+        assertIs<StoreCredentialsResult.SiteNotFound>(result)
+        assertEquals(TEST_API_ROOT_URL, result.urlLogin.apiRootUrl)
     }
 
     @Test
@@ -355,6 +375,22 @@ class ApplicationPasswordLoginHelperTest : BaseUnitTest() {
             ApplicationPasswordLoginHelper.DiscoveryResult.Authorized("$TEST_URL_AUTH$TEST_URL_AUTH_SUFFIX"),
             result
         )
+        verify(wpLoginClient).apiDiscovery(eq(TEST_URL))
+    }
+
+    @Test
+    fun `given a WP_com site, when api discovery returns OAuth2, then return WpComSite`() = runTest {
+        val oAuth2 = DiscoveredAuthenticationMechanism.OAuth2(
+            OAuth2Endpoints(authorizationUrl = TEST_URL, tokenUrl = TEST_URL)
+        )
+        val autoDiscoveryAttemptSuccess = AutoDiscoveryAttemptSuccess(mock(), mock(), mock(), oAuth2)
+        val apiDiscoveryResult = ApiDiscoveryResult.Success(autoDiscoveryAttemptSuccess)
+        whenever(wpLoginClient.apiDiscovery(eq(TEST_URL))).thenReturn(apiDiscoveryResult)
+        whenever(discoverSuccessWrapper.isWpComSite(eq(apiDiscoveryResult))).thenReturn(true)
+
+        val result = applicationPasswordLoginHelper.getAuthorizationUrlComplete(TEST_URL)
+
+        assertEquals(ApplicationPasswordLoginHelper.DiscoveryResult.WpComSite, result)
         verify(wpLoginClient).apiDiscovery(eq(TEST_URL))
     }
 

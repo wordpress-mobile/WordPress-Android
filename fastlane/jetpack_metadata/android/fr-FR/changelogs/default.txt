@@ -1,0 +1,6 @@
+26.9 :
+- Nouvelle liste des pages activée avec les fonctionnalités mises à jour
+- Nouvelle liste d’articles définie par défaut pour les sites avec mot de passe d’application
+- Assistance combinée par chat avec le bot et les Happiness Engineers
+- Plantage résolu lors de l’ouverture de média en quittant l’éditeur
+- Badge bêta supprimé des menus de Mon site

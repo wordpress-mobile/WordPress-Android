@@ -1,0 +1,7 @@
+26.9:
+- Udostępniono nową listę stron z ulepszonymi funkcjami
+- Ustawiono nową listę wpisów jako domyślną dla stron korzystających z hasła aplikacyjnego
+- Przyspieszono logowanie do WordPress.com
+- Połączono czaty z botami i inżynierami ds. zadowolenia użytkowników w sekcji Pomoc techniczna
+- Naprawiono awarię podczas otwierania multimediów przy wychodzeniu z edytora
+- Usunięto oznaczenie „beta” z menu w sekcji „Moja strona”

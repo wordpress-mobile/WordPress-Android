@@ -3,7 +3,6 @@ package org.wordpress.android.ui.newstats.clicks
 import dagger.hilt.android.lifecycle.HiltViewModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
-import org.wordpress.android.ui.newstats.StatsCardType
 import org.wordpress.android.ui.newstats.StatsPeriod
 import org.wordpress.android.ui.newstats.mostviewed.BaseStatsCardViewModel
 import org.wordpress.android.ui.newstats.mostviewed.MostViewedChange
@@ -25,7 +24,6 @@ class ClicksViewModel @Inject constructor(
     selectedSiteRepository, accountStore,
     statsRepository, resourceProvider
 ) {
-    override val cardType = StatsCardType.CLICKS
     override val logTag = "clicks"
 
     override suspend fun fetchStats(
@@ -51,7 +49,8 @@ class ClicksViewModel @Inject constructor(
             is ClicksResult.Error -> {
                 StatsCardFetchResult.Error(
                     messageResId = result.messageResId,
-                    isAuthError = result.isAuthError
+                    isAuthError = result.isAuthError,
+                    isNotAvailable = result.isNotAvailable
                 )
             }
         }

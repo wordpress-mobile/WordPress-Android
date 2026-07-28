@@ -375,6 +375,72 @@ platform :android do
     )
   end
 
+  TRANSLATIONS_SYNC_BRANCH = 'translations/daily-update'
+
+  #####################################################################################
+  # update_translations
+  # -----------------------------------------------------------------------------------
+  # Downloads the latest WordPress & Jetpack translations from GlotPress and opens (or
+  # refreshes) a single rolling Pull Request, so `trunk` stays continuously localized.
+  # Intended to run on a daily schedule.
+  #
+  # Each run resets `translations/daily-update` to `trunk` and re-downloads, so the PR
+  # always shows the complete current translation delta against `trunk` (no accumulation).
+  # If GlotPress has nothing new, no commit is made and the lane exits without a PR.
+  # -----------------------------------------------------------------------------------
+  # Usage:
+  # bundle exec fastlane update_translations
+  #####################################################################################
+  lane :update_translations do
+    # `checkout_and_pull` swallows git errors and only signals failure through its return value, so
+    # abort explicitly rather than silently building the sync branch from a stale/wrong `trunk`.
+    UI.user_error!("Could not check out and pull #{DEFAULT_BRANCH}; aborting translation sync.") unless Fastlane::Helper::GitHelper.checkout_and_pull(DEFAULT_BRANCH)
+
+    # Reset the rolling branch to the tip of `trunk` so each run produces a clean delta against it.
+    Fastlane::Helper::GitHelper.delete_local_branch_if_exists!(TRANSLATIONS_SYNC_BRANCH)
+    Fastlane::Helper::GitHelper.create_branch(TRANSLATIONS_SYNC_BRANCH, from: DEFAULT_BRANCH)
+
+    download_translations
+
+    # `download_translations` commits when GlotPress has updates; if nothing changed, HEAD still
+    # points at `trunk` and there is nothing to open a PR for.
+    if Fastlane::Helper::GitHelper.point_to_same_commit?(DEFAULT_BRANCH, 'HEAD')
+      UI.important('No new translations from GlotPress today; nothing to sync.')
+      next
+    end
+
+    # Prune translations whose key is no longer in the source strings (GlotPress can still serve them),
+    # which would otherwise fail Lint's `ExtraTranslation` check. Done as a separate commit on top of the
+    # download so the PR shows exactly what was pruned vs. what was downloaded.
+    main_res = File.join('WordPress', 'src', 'main', 'res')
+    jetpack_res = File.join('WordPress', 'src', 'jetpack', 'res')
+    android_prune_orphaned_translations(res_dir: main_res)
+    android_prune_orphaned_translations(
+      res_dir: jetpack_res,
+      additional_source_strings_paths: [File.join(main_res, 'values', 'strings.xml')]
+    )
+    Fastlane::Helper::GitHelper.commit(message: 'Prune orphaned translations', files: :all)
+
+    push_to_git_remote(remote_branch: TRANSLATIONS_SYNC_BRANCH, tags: false, force: true, set_upstream: true)
+
+    # `find_or_create_pull_request` resolves the GitHub token the standard way (GITHUB_TOKEN) and only
+    # opens a PR when none is already open; the force-push above already refreshed any existing one.
+    pr_url = find_or_create_pull_request(
+      repository: GITHUB_REPO,
+      title: 'Update translations',
+      body: <<~BODY,
+        Automated daily translation sync from GlotPress. Opened by the `download-translations` scheduled pipeline.
+
+        ⚠️ This branch is reset to `trunk` and force-pushed daily — do not push commits here;
+        they will be overwritten. Fix translations in GlotPress instead.
+      BODY
+      head: TRANSLATIONS_SYNC_BRANCH,
+      base: DEFAULT_BRANCH,
+      labels: ['Localization']
+    )
+    UI.success("Translations PR: #{pr_url}")
+  end
+
   # Updates the `.po` file at the given `po_path` using the content of the `sources` files,
   # interpolating `release_version` where appropriate.
   # Internally, this calls the `gp_update_metadata_source` release toolkit action and adds Git management to it.

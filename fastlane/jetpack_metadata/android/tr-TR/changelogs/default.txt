@@ -1,0 +1,6 @@
+26.9:
+- Güncellenmiş özellikler içeren yeni sayfa listesi etkinleştirildi
+- Uygulama şifresi olan siteler için yeni gönderi listesi varsayılana ayarlandı
+- Destek bölümünde robot/Mutluluk Mühendisi sohbetleri birleştirildi
+- Düzenleyiciden ayrılırken ortam açılırken oluşan çökme sorunu düzeltildi
+- Sitem'deki Menülerden beta rozeti kaldırıldı

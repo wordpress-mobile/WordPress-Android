@@ -15,7 +15,6 @@ import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
-import org.wordpress.android.ui.newstats.StatsCardType
 import org.wordpress.android.ui.newstats.StatsPeriod
 import org.wordpress.android.ui.newstats.mostviewed.MostViewedCardUiState
 import org.wordpress.android.ui.newstats.mostviewed.MostViewedChange
@@ -295,67 +294,6 @@ class ClicksViewModelTest : BaseUnitTest() {
         verify(statsRepository, times(2))
             .fetchClicks(any(), any())
     }
-    // endregion
-
-    // region getDetailData
-    @Test
-    fun `when getDetailData is called, then returns cached data`() =
-        test {
-            whenever(statsRepository.fetchClicks(any(), any()))
-                .thenReturn(createSuccessResult())
-            whenever(
-                resourceProvider.getString(
-                    R.string.stats_period_last_7_days
-                )
-            ).thenReturn("Last 7 days")
-
-            initViewModel()
-            advanceUntilIdle()
-
-            val detailData = viewModel.getDetailData()
-
-            assertThat(detailData.cardType)
-                .isEqualTo(StatsCardType.CLICKS)
-            assertThat(detailData.items).hasSize(2)
-            assertThat(detailData.totalViews)
-                .isEqualTo(TEST_TOTAL_CLICKS)
-            assertThat(detailData.totalViewsChange)
-                .isEqualTo(TEST_TOTAL_CLICKS_CHANGE)
-            assertThat(detailData.totalViewsChangePercent)
-                .isEqualTo(TEST_TOTAL_CLICKS_CHANGE_PERCENT)
-        }
-
-    @Test
-    fun `when getDetailData called, then all items returned not just card items`() =
-        test {
-            val manyItems = (1..15).map { index ->
-                ClickItemData(
-                    name = "Link $index",
-                    clicks = (100 - index).toLong(),
-                    previousClicks = (90 - index).toLong()
-                )
-            }
-            whenever(
-                resourceProvider.getString(
-                    R.string.stats_period_last_7_days
-                )
-            ).thenReturn("Last 7 days")
-            whenever(statsRepository.fetchClicks(any(), any()))
-                .thenReturn(
-                    ClicksResult.Success(
-                        items = manyItems,
-                        totalClicks = 1000,
-                        totalClicksChange = 100,
-                        totalClicksChangePercent = 10.0
-                    )
-                )
-
-            initViewModel()
-            advanceUntilIdle()
-
-            val detailData = viewModel.getDetailData()
-            assertThat(detailData.items).hasSize(15)
-        }
     // endregion
 
     // region Change calculations

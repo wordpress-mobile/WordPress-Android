@@ -160,6 +160,33 @@ class PostListMainViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `when the activity is recreated, then the new EditPostRepository is rebound and reloaded`() {
+        // arrange - the activity is recreated on rotation with a freshly injected repository
+        val bottomSheetPostId = LocalId(2)
+        viewModel.start(site, PostListRemotePreviewState.NONE, bottomSheetPostId, editPostRepository)
+        val recreatedRepository = mock<EditPostRepository>()
+        whenever(recreatedRepository.postChanged).thenReturn(MutableLiveData(Event(PostModel())))
+
+        // act - start() runs again on the surviving ViewModel
+        viewModel.start(site, PostListRemotePreviewState.NONE, bottomSheetPostId, recreatedRepository)
+
+        // assert - the second repository must be loaded too, or the restored sheet reads an empty one
+        verify(recreatedRepository, times(1)).loadPostByLocalPostId(bottomSheetPostId.value)
+    }
+
+    @Test
+    fun `given a restored bottom sheet post id, when started, then the id is kept for the next save`() {
+        // arrange
+        val bottomSheetPostId = LocalId(2)
+
+        // act
+        viewModel.start(site, PostListRemotePreviewState.NONE, bottomSheetPostId, editPostRepository)
+
+        // assert - onSaveInstanceState reads this field, so it has to survive a restore round-trip
+        assertThat(viewModel.currentBottomSheetPostId).isEqualTo(bottomSheetPostId)
+    }
+
+    @Test
     fun `if post in EditPostRepository is modified then the savePostToDbUseCase should update the post`() {
         // arrange
         val editPostRepository = EditPostRepository(

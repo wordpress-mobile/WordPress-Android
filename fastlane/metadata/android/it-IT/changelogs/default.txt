@@ -1,0 +1,7 @@
+26.9:
+- Abilitato nuovo elenco delle pagine con funzionalità aggiornate
+- Imposta il nuovo elenco degli articoli come predefinito per i siti con password dell'applicazione
+- Accesso a WordPress.com velocizzato
+- Chat combinate tra bot e Happiness Engineer nell'assistenza
+- Risolto il crash che si verificava all'apertura di un file multimediale durante l'uscita dall'editor
+- Rimosso il badge beta dai menu su Il mio sito
