@@ -29,8 +29,6 @@ import uniffi.wp_api.AllDomainItem
 import uniffi.wp_api.DomainListItemStatus
 import uniffi.wp_api.DomainListItemStatusType
 import java.time.LocalDate
-import java.time.ZoneId
-import java.util.Date
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -168,7 +166,7 @@ sealed class DomainCardUiState {
                 statusText = domain.domainStatus.statusText,
                 textColor = domain.domainStatus.textColor,
                 isBold = domain.domainStatus.isBold,
-                expiry = domain.expiry?.toLocalDate(),
+                expiry = domain.expiry?.toLocalDateOrNull(),
             )
         )
     }
@@ -185,8 +183,9 @@ sealed class StatusRowUiState {
     ) : StatusRowUiState()
 }
 
-private fun Date.toLocalDate(zoneId: ZoneId = ZoneId.systemDefault()) =
-    toInstant().atZone(zoneId).toLocalDate()
+// `AllDomainItem.expiry` is an unvalidated API string in "YYYY-MM-DD" form.
+private fun String.toLocalDateOrNull() =
+    runCatching { LocalDate.parse(this) }.getOrNull()
 
 val DomainListItemStatus.indicatorColor
     @Composable

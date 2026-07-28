@@ -31,9 +31,6 @@ import uniffi.wp_api.DomainListItemStatusId
 import uniffi.wp_api.DomainListItemStatusType
 import uniffi.wp_api.DomainSubtype
 import uniffi.wp_api.DomainSubtypeId
-import java.time.LocalDate
-import java.time.ZoneId
-import java.util.Date
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -120,7 +117,7 @@ fun DomainListCard(
 )
 @Composable
 fun DomainListCardPreview() {
-    val expiry = LocalDate.of(2024, 8, 15).asLegacyDate()
+    val expiry = "2024-08-15"
 
     AppThemeM3 {
         Column(
@@ -156,7 +153,7 @@ private fun previewDomain(
     blogName: String = "A cool website",
     status: DomainListItemStatusType = DomainListItemStatusType.Success,
     statusLabel: String = "Active",
-    expiry: Date? = null,
+    expiry: String? = null,
 ) = AllDomainItem(
     domain = domain,
     subtype = DomainSubtype(
@@ -182,7 +179,3 @@ private fun previewDomain(
     subscriptionId = null,
     tags = emptyList(),
 )
-
-private fun LocalDate.asLegacyDate(
-    zoneId: ZoneId = ZoneId.systemDefault()
-) = Date.from(atStartOfDay(zoneId).toInstant())
