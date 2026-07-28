@@ -69,7 +69,6 @@ class FetchAllDomainsUseCaseTest : BaseUnitTest() {
             }
         }
 
-    @Suppress("UNCHECKED_CAST")
     @Test
     fun `given all-domains returns error, when execute, returns error`() =
         test {

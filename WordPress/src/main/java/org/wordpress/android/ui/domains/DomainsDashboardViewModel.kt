@@ -13,8 +13,6 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAIN_CREDIT_REDEM
 import org.wordpress.android.fluxc.model.PlanModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.rest.wpcom.site.Domain
-import uniffi.wp_api.AllDomainItem
-import uniffi.wp_api.DomainListItemStatusType
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.domains.DomainsDashboardItem.AddDomain
@@ -44,6 +42,8 @@ import org.wordpress.android.util.UrlUtils
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
+import uniffi.wp_api.AllDomainItem
+import uniffi.wp_api.DomainListItemStatusType
 import javax.inject.Inject
 import javax.inject.Named
 
