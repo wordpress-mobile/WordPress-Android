@@ -200,6 +200,7 @@ class MediaPickerFragment : Fragment(), MenuProvider {
     private lateinit var viewModel: MediaPickerViewModel
     private var binding: MediaPickerFragmentBinding? = null
     private lateinit var mediaPickerSetup: MediaPickerSetup
+    private var isEmbedded: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -222,7 +223,12 @@ class MediaPickerFragment : Fragment(), MenuProvider {
     @Suppress("LongMethod")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        requireActivity().addMenuProvider(this, viewLifecycleOwner)
+        isEmbedded = requireArguments().getBoolean(KEY_EMBEDDED, false)
+        // an embedded picker must not add its items to the host's toolbar - the host surfaces the
+        // other media sources itself
+        if (!isEmbedded) {
+            requireActivity().addMenuProvider(this, viewLifecycleOwner)
+        }
 
         mediaPickerSetup = MediaPickerSetup.fromBundle(requireArguments())
         val site = requireArguments().getSerializableCompat<SiteModel>(WordPress.SITE)
@@ -732,16 +738,24 @@ class MediaPickerFragment : Fragment(), MenuProvider {
         private const val KEY_LAST_TAPPED_ICON_DATA_SOURCE = "last_tapped_icon_data_source"
         private const val KEY_SELECTED_IDS = "selected_ids"
         private const val KEY_LIST_STATE = "list_state"
+        private const val KEY_EMBEDDED = "key_embedded"
         const val NUM_COLUMNS = 3
 
+        /**
+         * @param isEmbedded pass true when the picker is hosted inside a screen that owns its own
+         * toolbar menu (ex: the editor's media picker). Embedded pickers don't contribute to the
+         * host's options menu, so the host is responsible for surfacing the other media sources.
+         */
         @JvmStatic
         fun newInstance(
             listener: MediaPickerListener,
             mediaPickerSetup: MediaPickerSetup,
-            site: SiteModel?
+            site: SiteModel?,
+            isEmbedded: Boolean = false
         ): MediaPickerFragment {
             val args = Bundle()
             mediaPickerSetup.toBundle(args)
+            args.putBoolean(KEY_EMBEDDED, isEmbedded)
             if (site != null) {
                 args.putSerializable(WordPress.SITE, site)
             }
