@@ -751,9 +751,10 @@ public class ActivityLauncher {
      * be used for {@code site} instead of the legacy (FluxC) ones.
      */
     public static boolean shouldUseRsComments(@Nullable SiteModel site) {
-        // Match the RS posts/pages gate: use the rs comments screens only for sites with an
-        // application password, and keep the legacy (FluxC) comments screens everywhere else
-        // (including WP.com-accessed sites).
+        // Match the RS posts/pages gate: use the rs comments screens for any site with an
+        // application password. That includes WP.com-accessed sites, since Atomic and Jetpack
+        // sites can hold one (only simple WP.com sites can't). Everything else keeps the
+        // legacy (FluxC) comments screens.
         return site != null && site.hasApplicationPassword();
     }
 
