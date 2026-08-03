@@ -40,13 +40,17 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
+import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.ActivityNavigator
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.main.BaseAppCompatActivity
+import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.newstats.StatsCardType
 import org.wordpress.android.ui.newstats.StatsPeriod
 import org.wordpress.android.ui.newstats.components.StatsSummaryCard
+import org.wordpress.android.ui.stats.refresh.lists.detail.StatsDetailActivity
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.extensions.getParcelableArrayListCompat
 import org.wordpress.android.util.extensions.getSerializableCompat
 import javax.inject.Inject
@@ -71,6 +75,10 @@ private const val NO_EPOCH_DAY = -1L
 @AndroidEntryPoint
 class MostViewedDetailActivity : BaseAppCompatActivity() {
     @Inject lateinit var activityNavigator: ActivityNavigator
+
+    @Inject lateinit var selectedSiteRepository: SelectedSiteRepository
+
+    @Inject lateinit var analyticsTracker: AnalyticsTrackerWrapper
 
     private val viewModel: MostViewedDetailViewModel by viewModels()
 
@@ -102,10 +110,28 @@ class MostViewedDetailActivity : BaseAppCompatActivity() {
                     onOpenWpAdmin = {
                         viewModel.getAdminUrl()?.let { ActivityLauncher.openUrlExternal(this, it) }
                     },
-                    onChildClick = { url -> activityNavigator.openInCustomTab(this, url) }
+                    onChildClick = { url -> activityNavigator.openInCustomTab(this, url) },
+                    onItemClick = if (cardType == StatsCardType.MOST_VIEWED_POSTS_AND_PAGES) {
+                        ::openPostDetailStats
+                    } else {
+                        null
+                    }
                 )
             }
         }
+    }
+
+    private fun openPostDetailStats(item: MostViewedDetailItem) {
+        val site = selectedSiteRepository.getSelectedSite() ?: return
+        analyticsTracker.track(Stat.STATS_POSTS_AND_PAGES_ITEM_TAPPED)
+        StatsDetailActivity.start(
+            context = this,
+            site = site,
+            postId = item.id,
+            postType = statsDetailItemType(item.postType),
+            postTitle = item.title,
+            postUrl = item.url
+        )
     }
 
     /**
@@ -207,7 +233,8 @@ private fun MostViewedDetailScreen(
     onBackPressed: () -> Unit,
     onRetry: () -> Unit = {},
     onOpenWpAdmin: () -> Unit = {},
-    onChildClick: (String) -> Unit = {}
+    onChildClick: (String) -> Unit = {},
+    onItemClick: ((MostViewedDetailItem) -> Unit)? = null
 ) {
     val title = stringResource(cardType.displayNameResId)
 
@@ -241,6 +268,7 @@ private fun MostViewedDetailScreen(
                 state = uiState,
                 valueHeaderResId = valueHeaderResId,
                 onChildClick = onChildClick,
+                onItemClick = onItemClick,
                 modifier = contentModifier
             )
         }
@@ -252,6 +280,7 @@ private fun DetailLoadedContent(
     state: MostViewedDetailUiState.Loaded,
     valueHeaderResId: Int,
     onChildClick: (String) -> Unit,
+    onItemClick: ((MostViewedDetailItem) -> Unit)?,
     modifier: Modifier = Modifier
 ) {
     LazyColumn(
@@ -290,6 +319,7 @@ private fun DetailLoadedContent(
                 children = item.children,
                 percentage = percentage,
                 onChildClick = onChildClick,
+                onItemClick = onItemClick?.let { { it(item) } },
                 position = index + 1,
                 childStartPadding = 32.dp
             )

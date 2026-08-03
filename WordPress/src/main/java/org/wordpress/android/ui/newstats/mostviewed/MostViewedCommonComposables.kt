@@ -48,6 +48,8 @@ import org.wordpress.android.ui.newstats.util.formatStatValue
  * @param children The child rows revealed when expanded (empty = no chevron, not expandable)
  * @param percentage Bar fill percentage (0f..1f)
  * @param onChildClick Invoked with a child's URL when a linkable child row is tapped
+ * @param onItemClick Invoked when a childless row is tapped (e.g. opens a post's detail stats);
+ * rows with children keep their expand/collapse tap behavior
  * @param position Optional 1-based position number shown on the detail screen
  * @param childStartPadding Indent applied to the expanded child rows
  */
@@ -59,12 +61,17 @@ internal fun MostViewedExpandableRow(
     children: List<MostViewedChildItem>,
     percentage: Float,
     onChildClick: (String) -> Unit,
+    onItemClick: (() -> Unit)? = null,
     position: Int? = null,
     childStartPadding: Dp = 24.dp
 ) {
     val hasChildren = children.isNotEmpty()
     var expanded by rememberSaveable { mutableStateOf(false) }
-    val clickModifier = if (hasChildren) Modifier.clickable { expanded = !expanded } else Modifier
+    val clickModifier = when {
+        hasChildren -> Modifier.clickable { expanded = !expanded }
+        onItemClick != null -> Modifier.clickable { onItemClick() }
+        else -> Modifier
+    }
 
     Column {
         StatsListRowContainer(percentage = percentage, modifier = clickModifier) {

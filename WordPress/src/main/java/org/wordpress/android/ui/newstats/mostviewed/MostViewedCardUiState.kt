@@ -3,6 +3,7 @@ package org.wordpress.android.ui.newstats.mostviewed
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 import org.wordpress.android.R
+import org.wordpress.android.ui.stats.StatsConstants
 
 /**
  * Represents the available data source types for the Most Viewed card.
@@ -38,13 +39,17 @@ sealed class MostViewedCardUiState {
  * @param title The title/name of the item (post title or referrer name)
  * @param views The number of views
  * @param change The percentage change compared to previous period
+ * @param url The item's URL (posts only, null for referrers)
+ * @param postType The API post type, e.g. "post"/"page" (posts only)
  */
 data class MostViewedItem(
     val id: Long,
     val title: String,
     val views: Long,
     val change: MostViewedChange,
-    val children: List<MostViewedChildItem> = emptyList()
+    val children: List<MostViewedChildItem> = emptyList(),
+    val url: String? = null,
+    val postType: String? = null
 )
 
 /**
@@ -92,6 +97,15 @@ sealed class MostViewedChange : Parcelable {
 }
 
 /**
+ * Maps the API post type of a Posts & Pages item to the item type expected by the post detail
+ * stats screen, mirroring the old stats mapping (pages and the homepage share one detail layout).
+ */
+internal fun statsDetailItemType(postType: String?): String = when (postType) {
+    StatsConstants.ITEM_TYPE_POST, StatsConstants.ITEM_TYPE_ATTACHMENT -> postType
+    else -> StatsConstants.ITEM_TYPE_HOME_PAGE
+}
+
+/**
  * Data class for passing items to the detail screen via Intent.
  * Implements Parcelable for efficient Intent extras.
  */
@@ -101,5 +115,7 @@ data class MostViewedDetailItem(
     val title: String,
     val views: Long,
     val change: MostViewedChange,
-    val children: List<MostViewedChildItem> = emptyList()
+    val children: List<MostViewedChildItem> = emptyList(),
+    val url: String? = null,
+    val postType: String? = null
 ) : Parcelable
