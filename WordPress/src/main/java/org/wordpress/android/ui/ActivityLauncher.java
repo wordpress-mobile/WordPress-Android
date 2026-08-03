@@ -728,13 +728,10 @@ public class ActivityLauncher {
     }
 
     public static void viewUnifiedComments(Context context, SiteModel site) {
-        Intent intent;
-        if (SiteUtils.canUseWpRs(site)) {
-            intent = CommentsRsListActivity.Companion.createIntent(context);
-        } else {
-            intent = new Intent(context, UnifiedCommentsActivity.class);
-            intent.putExtra(WordPress.SITE, site);
-        }
+        // Neither screen reads the site from the Intent; both resolve it from SelectedSiteRepository.
+        Intent intent = SiteUtils.canUseWpRs(site)
+                ? CommentsRsListActivity.Companion.createIntent(context)
+                : new Intent(context, UnifiedCommentsActivity.class);
         context.startActivity(intent);
         AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_COMMENTS, site);
     }
