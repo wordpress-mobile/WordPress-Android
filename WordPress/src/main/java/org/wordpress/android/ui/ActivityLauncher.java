@@ -132,6 +132,7 @@ import org.wordpress.android.ui.themes.ThemeBrowserActivity;
 import org.wordpress.android.ui.utils.PreMigrationDeepLinkData;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UriWrapper;
 import org.wordpress.android.util.UrlUtils;
@@ -644,12 +645,8 @@ public class ActivityLauncher {
         context.startActivity(intent);
     }
 
-    private static boolean shouldUseNewPostList(@Nullable SiteModel site) {
-        return site != null && site.hasApplicationPassword();
-    }
-
     public static void viewCurrentBlogPosts(Context context, SiteModel site) {
-        if (shouldUseNewPostList(site)) {
+        if (SiteUtils.canUseWpRs(site)) {
             context.startActivity(PostRsListActivity.Companion.createIntent(context));
             return;
         }
@@ -685,7 +682,7 @@ public class ActivityLauncher {
     }
 
     public static void viewCurrentBlogPages(@NonNull Context context, @NonNull SiteModel site) {
-        if (shouldUseNewPagesList(site)) {
+        if (SiteUtils.canUseWpRs(site)) {
             context.startActivity(PagesRsListActivity.Companion.createIntent(context));
             AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_PAGES, site);
             return;
@@ -694,10 +691,6 @@ public class ActivityLauncher {
         intent.putExtra(WordPress.SITE, site);
         context.startActivity(intent);
         AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_PAGES, site);
-    }
-
-    private static boolean shouldUseNewPagesList(@Nullable SiteModel site) {
-        return site != null && site.hasApplicationPassword();
     }
 
     public static void viewPostTypes(@NonNull Context context, @NonNull SiteModel site) {
@@ -736,7 +729,7 @@ public class ActivityLauncher {
 
     public static void viewUnifiedComments(Context context, SiteModel site) {
         Intent intent;
-        if (shouldUseRsComments(site)) {
+        if (SiteUtils.canUseWpRs(site)) {
             intent = CommentsRsListActivity.Companion.createIntent(context);
         } else {
             intent = new Intent(context, UnifiedCommentsActivity.class);
@@ -744,18 +737,6 @@ public class ActivityLauncher {
         }
         context.startActivity(intent);
         AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_COMMENTS, site);
-    }
-
-    /**
-     * Whether the wordpress-rs comments screens (list, and the notification-hosted detail) should
-     * be used for {@code site} instead of the legacy (FluxC) ones.
-     */
-    public static boolean shouldUseRsComments(@Nullable SiteModel site) {
-        // Match the RS posts/pages gate: use the rs comments screens for any site with an
-        // application password. That includes WP.com-accessed sites, since Atomic and Jetpack
-        // sites can hold one (only simple WP.com sites can't). Everything else keeps the
-        // legacy (FluxC) comments screens.
-        return site != null && site.hasApplicationPassword();
     }
 
     public static void viewCurrentBlogThemes(Context context, SiteModel site) {
