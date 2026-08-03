@@ -33,10 +33,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -65,6 +62,7 @@ import com.patrykandpatrick.vico.compose.cartesian.layer.LineCartesianLayer
 import com.patrykandpatrick.vico.compose.cartesian.layer.rememberColumnCartesianLayer
 import com.patrykandpatrick.vico.compose.cartesian.layer.rememberLineCartesianLayer
 import com.patrykandpatrick.vico.compose.cartesian.marker.CartesianMarker
+import com.patrykandpatrick.vico.compose.cartesian.marker.CartesianMarkerController
 import com.patrykandpatrick.vico.compose.cartesian.marker.CartesianMarkerVisibilityListener
 import com.patrykandpatrick.vico.compose.cartesian.marker.DefaultCartesianMarker
 import com.patrykandpatrick.vico.compose.cartesian.marker.rememberDefaultCartesianMarker
@@ -682,25 +680,20 @@ private fun ViewsStatsChart(
             )
         }
         ChartType.BAR -> {
-            var lastShownIndex by remember { mutableIntStateOf(-1) }
+            // Drill down only on a deliberate tap. The marker controller decides which pointer
+            // interactions toggle the marker, and `rememberToggleOnTap` reacts solely to
+            // `Interaction.Tap`, which Vico validates against touch slop and the long-press
+            // timeout. The default (show-on-press) controller instead shows the marker on
+            // pointer-down and hides it on pointer-up, so a vertical scroll that started on the
+            // chart ended in a "hidden" callback that was indistinguishable from a tap and
+            // silently changed the selected period.
             val barTapListener = remember(onBarTapped) {
                 object : CartesianMarkerVisibilityListener {
                     override fun onShown(
                         marker: CartesianMarker,
                         targets: List<CartesianMarker.Target>
                     ) {
-                        lastShownIndex = targets.firstOrNull()
-                            ?.x?.toInt() ?: -1
-                    }
-
-                    override fun onHidden(
-                        marker: CartesianMarker
-                    ) {
-                        val index = lastShownIndex
-                        if (index >= 0) {
-                            lastShownIndex = -1
-                            onBarTapped(index)
-                        }
+                        targets.firstOrNull()?.x?.toInt()?.let(onBarTapped)
                     }
                 }
             }
@@ -742,7 +735,8 @@ private fun ViewsStatsChart(
                     ),
                     marker = marker,
                     markerVisibilityListener = barTapListener,
-                    decorations = listOf(averageLine)
+                    decorations = listOf(averageLine),
+                    markerController = CartesianMarkerController.rememberToggleOnTap()
                 ),
                 modelProducer = modelProducer,
                 scrollState = rememberVicoScrollState(
