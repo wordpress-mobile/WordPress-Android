@@ -160,9 +160,9 @@ class UnifiedCommentListFragment : Fragment(R.layout.unified_comment_list_fragme
 
     private fun showCommentDetails(commentId: Long, commentStatus: CommentStatus) {
         currentSnackbar?.dismiss()
-        // This legacy list is only reached when the RS_UNIFIED_COMMENTS flag is off or the site
-        // can't use wordpress-rs (see ActivityLauncher.viewUnifiedComments), so it always pairs
-        // with the legacy detail; the rs list launches the rs detail itself.
+        // This legacy list is only reached when the site can't use wordpress-rs (see
+        // ActivityLauncher.viewUnifiedComments), so it always pairs with the legacy detail;
+        // the rs list launches the rs detail itself.
         commentDetails.launch(
             CommentDetailsActivityRequest(
                 commentId,

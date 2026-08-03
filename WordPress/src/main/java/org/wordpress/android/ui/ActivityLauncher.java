@@ -146,8 +146,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import dagger.hilt.android.EntryPointAccessors;
-
 import static org.wordpress.android.analytics.AnalyticsTracker.ACTIVITY_LOG_ACTIVITY_ID_KEY;
 import static org.wordpress.android.analytics.AnalyticsTracker.Stat.POST_LIST_ACCESS_ERROR;
 import static org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_ARTICLE_DETAIL_REBLOGGED;
@@ -738,7 +736,7 @@ public class ActivityLauncher {
 
     public static void viewUnifiedComments(Context context, SiteModel site) {
         Intent intent;
-        if (shouldUseRsComments(context, site)) {
+        if (shouldUseRsComments(site)) {
             intent = CommentsRsListActivity.Companion.createIntent(context);
         } else {
             intent = new Intent(context, UnifiedCommentsActivity.class);
@@ -752,18 +750,11 @@ public class ActivityLauncher {
      * Whether the wordpress-rs comments screens (list, and the notification-hosted detail) should
      * be used for {@code site} instead of the legacy (FluxC) ones.
      */
-    public static boolean shouldUseRsComments(@NonNull Context context, @NonNull SiteModel site) {
-        // Match the RS posts/pages gate: use the rs comments screens only for self-hosted sites
-        // with an application password, and keep the legacy (FluxC) comments screens everywhere
-        // else (including WP.com-accessed sites).
-        if (!site.hasApplicationPassword()) {
-            return false;
-        }
-        ActivityLauncherEntryPoint entryPoint = EntryPointAccessors.fromApplication(
-                context.getApplicationContext(),
-                ActivityLauncherEntryPoint.class
-        );
-        return entryPoint.experimentalFeatures().isEnabled(Feature.RS_UNIFIED_COMMENTS);
+    public static boolean shouldUseRsComments(@Nullable SiteModel site) {
+        // Match the RS posts/pages gate: use the rs comments screens only for sites with an
+        // application password, and keep the legacy (FluxC) comments screens everywhere else
+        // (including WP.com-accessed sites).
+        return site != null && site.hasApplicationPassword();
     }
 
     public static void viewCurrentBlogThemes(Context context, SiteModel site) {

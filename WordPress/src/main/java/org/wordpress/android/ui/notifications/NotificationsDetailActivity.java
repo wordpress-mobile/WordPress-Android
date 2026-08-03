@@ -407,7 +407,7 @@ public class NotificationsDetailActivity extends BaseAppCompatActivity implement
             SiteModel site = mSiteStore.getSiteBySiteId(note.getSiteId());
             // The rs detail needs a real site from the SiteStore; the legacy fragment can fall
             // back to a dummy WP.com site built from the note, so it stays the catch-all.
-            if (site != null && note.getCommentId() != 0 && ActivityLauncher.shouldUseRsComments(this, site)) {
+            if (site != null && note.getCommentId() != 0 && ActivityLauncher.shouldUseRsComments(site)) {
                 fragment = UnifiedCommentDetailsFragment.newInstance(
                         site,
                         note.getCommentId(),
