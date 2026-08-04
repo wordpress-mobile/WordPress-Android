@@ -132,6 +132,7 @@ import org.wordpress.android.ui.themes.ThemeBrowserActivity;
 import org.wordpress.android.ui.utils.PreMigrationDeepLinkData;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UriWrapper;
 import org.wordpress.android.util.UrlUtils;
@@ -145,8 +146,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import dagger.hilt.android.EntryPointAccessors;
 
 import static org.wordpress.android.analytics.AnalyticsTracker.ACTIVITY_LOG_ACTIVITY_ID_KEY;
 import static org.wordpress.android.analytics.AnalyticsTracker.Stat.POST_LIST_ACCESS_ERROR;
@@ -646,12 +645,8 @@ public class ActivityLauncher {
         context.startActivity(intent);
     }
 
-    private static boolean shouldUseNewPostList(@Nullable SiteModel site) {
-        return site != null && site.hasApplicationPassword();
-    }
-
     public static void viewCurrentBlogPosts(Context context, SiteModel site) {
-        if (shouldUseNewPostList(site)) {
+        if (SiteUtils.canUseWpRs(site)) {
             context.startActivity(PostRsListActivity.Companion.createIntent(context));
             return;
         }
@@ -687,7 +682,7 @@ public class ActivityLauncher {
     }
 
     public static void viewCurrentBlogPages(@NonNull Context context, @NonNull SiteModel site) {
-        if (shouldUseNewPagesList(site)) {
+        if (SiteUtils.canUseWpRs(site)) {
             context.startActivity(PagesRsListActivity.Companion.createIntent(context));
             AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_PAGES, site);
             return;
@@ -696,10 +691,6 @@ public class ActivityLauncher {
         intent.putExtra(WordPress.SITE, site);
         context.startActivity(intent);
         AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_PAGES, site);
-    }
-
-    private static boolean shouldUseNewPagesList(@Nullable SiteModel site) {
-        return site != null && site.hasApplicationPassword();
     }
 
     public static void viewPostTypes(@NonNull Context context, @NonNull SiteModel site) {
@@ -737,33 +728,12 @@ public class ActivityLauncher {
     }
 
     public static void viewUnifiedComments(Context context, SiteModel site) {
-        Intent intent;
-        if (shouldUseRsComments(context, site)) {
-            intent = CommentsRsListActivity.Companion.createIntent(context);
-        } else {
-            intent = new Intent(context, UnifiedCommentsActivity.class);
-            intent.putExtra(WordPress.SITE, site);
-        }
+        // Neither screen reads the site from the Intent; both resolve it from SelectedSiteRepository.
+        Intent intent = SiteUtils.canUseWpRs(site)
+                ? CommentsRsListActivity.Companion.createIntent(context)
+                : new Intent(context, UnifiedCommentsActivity.class);
         context.startActivity(intent);
         AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_COMMENTS, site);
-    }
-
-    /**
-     * Whether the wordpress-rs comments screens (list, and the notification-hosted detail) should
-     * be used for {@code site} instead of the legacy (FluxC) ones.
-     */
-    public static boolean shouldUseRsComments(@NonNull Context context, @NonNull SiteModel site) {
-        // Match the RS posts/pages gate: use the rs comments screens only for self-hosted sites
-        // with an application password, and keep the legacy (FluxC) comments screens everywhere
-        // else (including WP.com-accessed sites).
-        if (!site.hasApplicationPassword()) {
-            return false;
-        }
-        ActivityLauncherEntryPoint entryPoint = EntryPointAccessors.fromApplication(
-                context.getApplicationContext(),
-                ActivityLauncherEntryPoint.class
-        );
-        return entryPoint.experimentalFeatures().isEnabled(Feature.RS_UNIFIED_COMMENTS);
     }
 
     public static void viewCurrentBlogThemes(Context context, SiteModel site) {
