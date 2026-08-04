@@ -42,9 +42,6 @@ private val HOURLY_FORMAT_REGEX = Regex("""\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}""
 private val DAILY_FORMAT_REGEX = Regex("""\d{4}-\d{2}-\d{2}""")
 private val MONTHLY_FORMAT_REGEX = Regex("""\d{4}-\d{2}""")
 
-private const val KEY_PERIOD_TYPE = "period_type"
-private const val KEY_CUSTOM_START_DATE = "custom_start_date"
-private const val KEY_CUSTOM_END_DATE = "custom_end_date"
 private const val KEY_CHART_TYPE = "chart_type"
 
 private const val PERIOD_TODAY = "today"
@@ -760,5 +757,16 @@ class ViewsStatsViewModel @Inject constructor(
 
     fun onRetry() {
         loadData()
+    }
+
+    companion object {
+        /**
+         * Keys used to restore the selected period. They double as Intent extras: Hilt seeds the
+         * [SavedStateHandle] from the launching Intent, so an entry point can open New Stats on a
+         * specific period without persisting it as the user's preference.
+         */
+        const val KEY_PERIOD_TYPE = "period_type"
+        const val KEY_CUSTOM_START_DATE = "custom_start_date"
+        const val KEY_CUSTOM_END_DATE = "custom_end_date"
     }
 }

@@ -16,8 +16,7 @@ import org.wordpress.android.ui.blaze.blazecampaigns.campaignlisting.CampaignLis
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
 import org.wordpress.android.ui.mysite.SiteNavigationAction
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction
-import org.wordpress.android.ui.prefs.AppPrefsWrapper
-import org.wordpress.android.util.config.NewStatsFeatureConfig
+import org.wordpress.android.ui.newstats.NewStatsFeatureUtils
 import kotlin.test.assertEquals
 
 @ExperimentalCoroutinesApi
@@ -33,10 +32,7 @@ class ListItemActionHandlerTest: BaseUnitTest() {
     lateinit var blazeFeatureUtils: BlazeFeatureUtils
 
     @Mock
-    lateinit var newStatsFeatureConfig: NewStatsFeatureConfig
-
-    @Mock
-    lateinit var appPrefsWrapper: AppPrefsWrapper
+    lateinit var newStatsFeatureUtils: NewStatsFeatureUtils
 
     private val site = SiteModel()
 
@@ -48,8 +44,7 @@ class ListItemActionHandlerTest: BaseUnitTest() {
             accountStore,
             jetpackFeatureRemovalPhaseHelper,
             blazeFeatureUtils,
-            newStatsFeatureConfig,
-            appPrefsWrapper
+            newStatsFeatureUtils
         )
     }
 
@@ -167,9 +162,9 @@ class ListItemActionHandlerTest: BaseUnitTest() {
     }
 
     @Test
-    fun `stats item click emits OpenNewStats when NEW_STATS feature is enabled and site is WPCom`() {
+    fun `stats item click emits OpenNewStats when new stats is enabled and site is WPCom`() {
         site.setIsWPCom(true)
-        whenever(newStatsFeatureConfig.isEnabled()).thenReturn(true)
+        whenever(newStatsFeatureUtils.isNewStatsEnabled()).thenReturn(true)
 
         val navigationAction = invokeItemClickAction(action = ListItemAction.STATS)
 
@@ -177,11 +172,11 @@ class ListItemActionHandlerTest: BaseUnitTest() {
     }
 
     @Test
-    fun `stats item click emits OpenNewStats when NEW_STATS feature is enabled and site is Jetpack`() {
+    fun `stats item click emits OpenNewStats when new stats is enabled and site is Jetpack`() {
         site.setIsJetpackConnected(true)
         site.setIsWPCom(true)
         whenever(accountStore.hasAccessToken()).thenReturn(true)
-        whenever(newStatsFeatureConfig.isEnabled()).thenReturn(true)
+        whenever(newStatsFeatureUtils.isNewStatsEnabled()).thenReturn(true)
 
         val navigationAction = invokeItemClickAction(action = ListItemAction.STATS)
 
@@ -189,21 +184,9 @@ class ListItemActionHandlerTest: BaseUnitTest() {
     }
 
     @Test
-    fun `stats item click emits OpenNewStats when user opted in even if NEW_STATS feature is disabled`() {
+    fun `stats item click emits OpenStats when new stats is disabled`() {
         site.setIsWPCom(true)
-        whenever(newStatsFeatureConfig.isEnabled()).thenReturn(false)
-        whenever(appPrefsWrapper.getNewStatsUserOptedIn()).thenReturn(true)
-
-        val navigationAction = invokeItemClickAction(action = ListItemAction.STATS)
-
-        assertEquals(SiteNavigationAction.OpenNewStats, navigationAction)
-    }
-
-    @Test
-    fun `stats item click emits OpenStats when NEW_STATS feature is disabled and user has not opted in`() {
-        site.setIsWPCom(true)
-        whenever(newStatsFeatureConfig.isEnabled()).thenReturn(false)
-        whenever(appPrefsWrapper.getNewStatsUserOptedIn()).thenReturn(false)
+        whenever(newStatsFeatureUtils.isNewStatsEnabled()).thenReturn(false)
 
         val navigationAction = invokeItemClickAction(action = ListItemAction.STATS)
 
