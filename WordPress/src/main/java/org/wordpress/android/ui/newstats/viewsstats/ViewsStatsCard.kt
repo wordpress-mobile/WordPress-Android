@@ -688,6 +688,9 @@ private fun ViewsStatsChart(
             // callbacks cannot tell a tap from the start of a scroll. Track which bar the
             // pointer is over here, and drill down only once detectTapGestures confirms the
             // gesture was a tap -- an enclosing scroll consumes the drag, which cancels it.
+            // onHidden clears the index so that a tap landing outside the plotted area (the
+            // axis labels are inside this composable but outside the chart's layer bounds)
+            // can't drill into whichever bar happened to be pressed last.
             var pressedIndex by remember { mutableIntStateOf(-1) }
             val barTapListener = remember {
                 object : CartesianMarkerVisibilityListener {
@@ -703,6 +706,10 @@ private fun ViewsStatsChart(
                         targets: List<CartesianMarker.Target>
                     ) {
                         pressedIndex = targets.firstOrNull()?.x?.toInt() ?: -1
+                    }
+
+                    override fun onHidden(marker: CartesianMarker) {
+                        pressedIndex = -1
                     }
                 }
             }
