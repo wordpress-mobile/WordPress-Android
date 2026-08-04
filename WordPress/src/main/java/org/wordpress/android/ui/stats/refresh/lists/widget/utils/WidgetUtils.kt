@@ -21,7 +21,7 @@ import org.wordpress.android.fluxc.model.stats.time.VisitsAndViewsModel.PeriodDa
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.newstats.NewStatsActivity
-import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.ui.newstats.NewStatsRouting
 import org.wordpress.android.ui.stats.StatsTimeframe
 import org.wordpress.android.ui.stats.refresh.StatsActivity
 import org.wordpress.android.ui.stats.refresh.lists.widget.IS_WIDE_VIEW_KEY
@@ -32,7 +32,6 @@ import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsCo
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsColorSelectionViewModel.Color.LIGHT
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsWidgetConfigureFragment.WidgetType
 import org.wordpress.android.ui.stats.refresh.utils.StatsLaunchedFrom
-import org.wordpress.android.util.config.NewStatsFeatureConfig
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType.ICON
 import org.wordpress.android.viewmodel.ResourceProvider
@@ -51,8 +50,7 @@ class WidgetUtils
 @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     val imageManager: ImageManager,
-    private val newStatsFeatureConfig: NewStatsFeatureConfig,
-    private val appPrefsWrapper: AppPrefsWrapper
+    private val newStatsRouting: NewStatsRouting
 ) {
     private val coroutineScope = CoroutineScope(mainDispatcher)
     fun isWidgetWiderThanLimit(
@@ -235,10 +233,7 @@ class WidgetUtils
         return Random(Date().time).nextInt()
     }
 
-    // Mirrors the routing used by the My Site menu (ListItemActionHandler): open New Stats when the
-    // remote flag is on (rollout) or the user has opted in locally.
-    private fun isNewStatsEnabled(): Boolean =
-        newStatsFeatureConfig.isEnabled() || appPrefsWrapper.getNewStatsUserOptedIn()
+    private fun isNewStatsEnabled(): Boolean = newStatsRouting.isNewStatsEnabled()
 
     fun getLastWeekPeriodData(visitsAndViewsModel: VisitsAndViewsModel): PeriodData? {
         val currentDateForSite = WeeklyRoundupUtils.parseStandardDate(visitsAndViewsModel.period) ?: return null

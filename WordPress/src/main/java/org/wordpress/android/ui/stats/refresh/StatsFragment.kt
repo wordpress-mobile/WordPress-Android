@@ -35,6 +35,7 @@ import org.wordpress.android.ui.jetpackoverlay.JetpackOverlayConnectedFeature
 import org.wordpress.android.ui.main.WPMainNavigationView.PageType.MY_SITE
 import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredBottomSheetFragment
 import org.wordpress.android.ui.newstats.NewStatsActivity
+import org.wordpress.android.ui.newstats.NewStatsRouting
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.stats.refresh.StatsViewModel.StatsModuleUiModel
@@ -86,6 +87,9 @@ class StatsFragment : Fragment(R.layout.stats_fragment), ScrollableViewInitializ
 
     @Inject
     lateinit var appPrefsWrapper: AppPrefsWrapper
+
+    @Inject
+    lateinit var newStatsRouting: NewStatsRouting
 
     @Inject
     lateinit var jetpackFeatureRemovalOverlayUtil: JetpackFeatureRemovalOverlayUtil
@@ -155,7 +159,7 @@ class StatsFragment : Fragment(R.layout.stats_fragment), ScrollableViewInitializ
     private fun switchToNewStats() {
         if (!isAdded) return
         analyticsTracker.track(Stat.STATS_NEW_STATS_ENABLED)
-        appPrefsWrapper.setNewStatsUserOptedIn(true)
+        newStatsRouting.optIn()
         NewStatsActivity.start(requireContext())
         requireActivity().finish()
     }
@@ -163,6 +167,8 @@ class StatsFragment : Fragment(R.layout.stats_fragment), ScrollableViewInitializ
     @Suppress("ReturnCount")
     private fun maybeShowNewStatsSuggestion() {
         if (appPrefsWrapper.getStatsNewStatsSuggestionShown()) return
+        // Don't nag users who deliberately switched back to old Stats.
+        if (newStatsRouting.hasOptedOut()) return
         // Avoid stacking on top of the Jetpack-powered bottom sheet or the feature-removal overlay,
         // both of which may show on a fresh Stats activity launch.
         if (jetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()) return
