@@ -39,6 +39,10 @@ import org.wordpress.android.ui.newstats.util.formatStatValue
  * screen ([MostViewedDetailActivity]); they differ only by the leading [position] number (detail
  * only) and the child [childStartPadding] indent.
  *
+ * A row either expands or opens a link, never both: a row with [children] expands, and a row
+ * without them opens its [url] when it has one. This matches the old stats screen, where a
+ * referrer group's header only expanded and a standalone referrer opened its link.
+ *
  * The caller is expected to wrap this row in a `key(...)` so the [rememberSaveable] expanded state
  * is scoped to the item and survives configuration changes (e.g. rotation).
  *
@@ -47,7 +51,8 @@ import org.wordpress.android.ui.newstats.util.formatStatValue
  * @param change The change badge shown under the views
  * @param children The child rows revealed when expanded (empty = no chevron, not expandable)
  * @param percentage Bar fill percentage (0f..1f)
- * @param onChildClick Invoked with a child's URL when a linkable child row is tapped
+ * @param onUrlClick Invoked with the URL when a linkable row (this row or a child) is tapped
+ * @param url The URL opened when this row is tapped, ignored when the row has [children]
  * @param position Optional 1-based position number shown on the detail screen
  * @param childStartPadding Indent applied to the expanded child rows
  */
@@ -58,13 +63,19 @@ internal fun MostViewedExpandableRow(
     change: MostViewedChange,
     children: List<MostViewedChildItem>,
     percentage: Float,
-    onChildClick: (String) -> Unit,
+    onUrlClick: (String) -> Unit,
+    url: String? = null,
     position: Int? = null,
     childStartPadding: Dp = 24.dp
 ) {
     val hasChildren = children.isNotEmpty()
+    val linkUrl = url?.takeIf { !hasChildren && it.isNotBlank() }
     var expanded by rememberSaveable { mutableStateOf(false) }
-    val clickModifier = if (hasChildren) Modifier.clickable { expanded = !expanded } else Modifier
+    val clickModifier = when {
+        hasChildren -> Modifier.clickable { expanded = !expanded }
+        linkUrl != null -> Modifier.clickable { onUrlClick(linkUrl) }
+        else -> Modifier
+    }
 
     Column {
         StatsListRowContainer(percentage = percentage, modifier = clickModifier) {
@@ -97,6 +108,9 @@ internal fun MostViewedExpandableRow(
                         if (hasChildren) {
                             MostViewedExpandChevron(expanded = expanded)
                             Spacer(modifier = Modifier.width(4.dp))
+                        } else if (linkUrl != null) {
+                            MostViewedOpenLinkIcon()
+                            Spacer(modifier = Modifier.width(4.dp))
                         }
                         Text(
                             text = formatStatValue(views),
@@ -114,9 +128,22 @@ internal fun MostViewedExpandableRow(
             children = children,
             expanded = expanded,
             startPadding = childStartPadding,
-            onChildClick = onChildClick
+            onUrlClick = onUrlClick
         )
     }
+}
+
+/**
+ * "Opens a link" affordance shown on a Most Viewed row that navigates to a URL when tapped.
+ */
+@Composable
+internal fun MostViewedOpenLinkIcon() {
+    Icon(
+        imageVector = Icons.AutoMirrored.Filled.OpenInNew,
+        contentDescription = stringResource(R.string.stats_open_referrer_link),
+        modifier = Modifier.size(16.dp),
+        tint = MaterialTheme.colorScheme.onSurfaceVariant
+    )
 }
 
 /**
@@ -144,7 +171,7 @@ internal fun MostViewedExpandableChildren(
     children: List<MostViewedChildItem>,
     expanded: Boolean,
     startPadding: Dp,
-    onChildClick: (String) -> Unit
+    onUrlClick: (String) -> Unit
 ) {
     AnimatedVisibility(visible = expanded) {
         val maxChildViews = children.maxOfOrNull { it.views } ?: 0L
@@ -156,7 +183,7 @@ internal fun MostViewedExpandableChildren(
                 val childPercentage = if (maxChildViews > 0) {
                     child.views.toFloat() / maxChildViews.toFloat()
                 } else 0f
-                MostViewedChildRow(child = child, percentage = childPercentage, onChildClick = onChildClick)
+                MostViewedChildRow(child = child, percentage = childPercentage, onUrlClick = onUrlClick)
             }
         }
     }
@@ -166,11 +193,11 @@ internal fun MostViewedExpandableChildren(
 private fun MostViewedChildRow(
     child: MostViewedChildItem,
     percentage: Float,
-    onChildClick: (String) -> Unit
+    onUrlClick: (String) -> Unit
 ) {
     val url = child.url
     val isClickable = !url.isNullOrBlank()
-    val clickModifier = if (isClickable) Modifier.clickable { onChildClick(url) } else Modifier
+    val clickModifier = if (isClickable) Modifier.clickable { onUrlClick(url) } else Modifier
 
     StatsListRowContainer(percentage = percentage, modifier = clickModifier) {
         Row(
@@ -195,12 +222,7 @@ private fun MostViewedChildRow(
             )
             if (isClickable) {
                 Spacer(modifier = Modifier.width(4.dp))
-                Icon(
-                    imageVector = Icons.AutoMirrored.Filled.OpenInNew,
-                    contentDescription = stringResource(R.string.stats_open_referrer_link),
-                    modifier = Modifier.size(16.dp),
-                    tint = MaterialTheme.colorScheme.onSurfaceVariant
-                )
+                MostViewedOpenLinkIcon()
             }
         }
     }

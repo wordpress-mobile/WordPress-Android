@@ -56,7 +56,7 @@ fun MostViewedCard(
     onMoveDown: (() -> Unit)? = null,
     onMoveToBottom: (() -> Unit)? = null,
     onOpenWpAdmin: (() -> Unit)? = null,
-    onChildClick: (String) -> Unit = {}
+    onUrlClick: (String) -> Unit = {}
 ) {
     val borderColor = MaterialTheme.colorScheme.outlineVariant
 
@@ -77,7 +77,7 @@ fun MostViewedCard(
             is MostViewedCardUiState.Loaded -> LoadedContent(
                 uiState, cardType, onShowAllClick, onRemoveCard,
                 cardPosition, onMoveUp, onMoveToTop, onMoveDown, onMoveToBottom,
-                onChildClick
+                onUrlClick
             )
             is MostViewedCardUiState.Error -> ErrorContent(
                 uiState, cardType, onRetry, onRemoveCard,
@@ -171,7 +171,7 @@ private fun LoadedContent(
     onMoveToTop: (() -> Unit)?,
     onMoveDown: (() -> Unit)?,
     onMoveToBottom: (() -> Unit)?,
-    onChildClick: (String) -> Unit
+    onUrlClick: (String) -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -208,7 +208,8 @@ private fun LoadedContent(
                         change = item.change,
                         children = item.children,
                         percentage = percentage,
-                        onChildClick = onChildClick
+                        onUrlClick = onUrlClick,
+                        url = item.url
                     )
                 }
                 if (index < state.items.lastIndex) {

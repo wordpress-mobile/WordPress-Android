@@ -434,9 +434,13 @@ sealed class ReferrersDataResult {
 
 /**
  * A single referrer item from the API.
+ *
+ * @param url The referrer's link, null for grouped referrers that have no link of their own
+ * (e.g. "Search Engines", whose links live on its [children]).
  */
 data class ReferrerDataItem(
     val name: String,
+    val url: String?,
     val views: Long,
     val children: List<ReferrerChildDataItem> = emptyList()
 )

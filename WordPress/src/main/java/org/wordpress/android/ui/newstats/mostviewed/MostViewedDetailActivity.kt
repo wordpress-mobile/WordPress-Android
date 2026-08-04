@@ -102,7 +102,7 @@ class MostViewedDetailActivity : BaseAppCompatActivity() {
                     onOpenWpAdmin = {
                         viewModel.getAdminUrl()?.let { ActivityLauncher.openUrlExternal(this, it) }
                     },
-                    onChildClick = { url -> activityNavigator.openInCustomTab(this, url) }
+                    onUrlClick = { url -> activityNavigator.openInCustomTab(this, url) }
                 )
             }
         }
@@ -207,7 +207,7 @@ private fun MostViewedDetailScreen(
     onBackPressed: () -> Unit,
     onRetry: () -> Unit = {},
     onOpenWpAdmin: () -> Unit = {},
-    onChildClick: (String) -> Unit = {}
+    onUrlClick: (String) -> Unit = {}
 ) {
     val title = stringResource(cardType.displayNameResId)
 
@@ -240,7 +240,7 @@ private fun MostViewedDetailScreen(
             is MostViewedDetailUiState.Loaded -> DetailLoadedContent(
                 state = uiState,
                 valueHeaderResId = valueHeaderResId,
-                onChildClick = onChildClick,
+                onUrlClick = onUrlClick,
                 modifier = contentModifier
             )
         }
@@ -251,7 +251,7 @@ private fun MostViewedDetailScreen(
 private fun DetailLoadedContent(
     state: MostViewedDetailUiState.Loaded,
     valueHeaderResId: Int,
-    onChildClick: (String) -> Unit,
+    onUrlClick: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     LazyColumn(
@@ -289,7 +289,8 @@ private fun DetailLoadedContent(
                 change = item.change,
                 children = item.children,
                 percentage = percentage,
-                onChildClick = onChildClick,
+                onUrlClick = onUrlClick,
+                url = item.url,
                 position = index + 1,
                 childStartPadding = 32.dp
             )

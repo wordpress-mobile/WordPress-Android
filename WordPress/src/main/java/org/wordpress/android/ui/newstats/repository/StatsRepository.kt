@@ -1015,7 +1015,8 @@ class StatsRepository @Inject constructor(
                                 url = child.url,
                                 views = child.views
                             )
-                        }
+                        },
+                        url = item.url
                     )
                 },
                 totalViews = totalViews,
@@ -2218,6 +2219,8 @@ sealed class MostViewedResult {
 
 /**
  * Data for a single most viewed item from the repository layer.
+ *
+ * @param url The link opened when the row is tapped; only referrers have one.
  */
 data class MostViewedItemData(
     val id: Long,
@@ -2225,7 +2228,8 @@ data class MostViewedItemData(
     val views: Long,
     val previousViews: Long,
     val isFirst: Boolean,
-    val children: List<MostViewedChildData> = emptyList()
+    val children: List<MostViewedChildData> = emptyList(),
+    val url: String? = null
 ) {
     val viewsChange: Long get() = views - previousViews
     val viewsChangePercent: Double

@@ -257,6 +257,7 @@ class StatsDataSourceImpl @Inject constructor(
                     groups.map { group ->
                         ReferrerDataItem(
                             name = group.name.orEmpty(),
+                            url = group.url,
                             views = group.total?.toLong() ?: 0L,
                             children = group.results.toChildren()
                         )
