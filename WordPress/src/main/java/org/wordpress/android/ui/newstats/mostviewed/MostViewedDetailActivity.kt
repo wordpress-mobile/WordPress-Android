@@ -40,17 +40,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
-import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.ActivityNavigator
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.main.BaseAppCompatActivity
-import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.newstats.StatsCardType
 import org.wordpress.android.ui.newstats.StatsPeriod
 import org.wordpress.android.ui.newstats.components.StatsSummaryCard
-import org.wordpress.android.ui.stats.refresh.lists.detail.StatsDetailActivity
-import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.extensions.getParcelableArrayListCompat
 import org.wordpress.android.util.extensions.getSerializableCompat
 import javax.inject.Inject
@@ -75,10 +71,6 @@ private const val NO_EPOCH_DAY = -1L
 @AndroidEntryPoint
 class MostViewedDetailActivity : BaseAppCompatActivity() {
     @Inject lateinit var activityNavigator: ActivityNavigator
-
-    @Inject lateinit var selectedSiteRepository: SelectedSiteRepository
-
-    @Inject lateinit var analyticsTracker: AnalyticsTrackerWrapper
 
     private val viewModel: MostViewedDetailViewModel by viewModels()
 
@@ -122,16 +114,7 @@ class MostViewedDetailActivity : BaseAppCompatActivity() {
     }
 
     private fun openPostDetailStats(item: MostViewedDetailItem) {
-        val site = selectedSiteRepository.getSelectedSite() ?: return
-        analyticsTracker.track(Stat.STATS_POSTS_AND_PAGES_ITEM_TAPPED)
-        StatsDetailActivity.start(
-            context = this,
-            site = site,
-            postId = item.id,
-            postType = statsDetailItemType(item.postType),
-            postTitle = item.title,
-            postUrl = item.url
-        )
+        activityNavigator.openPostDetailStats(this, item.id, item.postType, item.title, item.url)
     }
 
     /**

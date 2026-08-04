@@ -3,7 +3,6 @@ package org.wordpress.android.ui.newstats.mostviewed
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 import org.wordpress.android.R
-import org.wordpress.android.ui.stats.StatsConstants
 
 /**
  * Represents the available data source types for the Most Viewed card.
@@ -94,15 +93,6 @@ sealed class MostViewedChange : Parcelable {
             else -> NoChange
         }
     }
-}
-
-/**
- * Maps the API post type of a Posts & Pages item to the item type expected by the post detail
- * stats screen, mirroring the old stats mapping (pages and the homepage share one detail layout).
- */
-internal fun statsDetailItemType(postType: String?): String = when (postType) {
-    StatsConstants.ITEM_TYPE_POST, StatsConstants.ITEM_TYPE_ATTACHMENT -> postType
-    else -> StatsConstants.ITEM_TYPE_HOME_PAGE
 }
 
 /**

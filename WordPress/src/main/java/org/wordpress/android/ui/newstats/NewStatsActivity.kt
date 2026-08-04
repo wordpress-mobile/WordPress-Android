@@ -82,7 +82,6 @@ import org.wordpress.android.ui.newstats.mostviewed.MostViewedDetailActivity
 import org.wordpress.android.ui.newstats.mostviewed.MostViewedDetailSource
 import org.wordpress.android.ui.newstats.mostviewed.MostViewedItem
 import org.wordpress.android.ui.newstats.mostviewed.MostViewedViewModel
-import org.wordpress.android.ui.newstats.mostviewed.statsDetailItemType
 import org.wordpress.android.ui.newstats.todaysstats.TodaysStatsCard
 import org.wordpress.android.ui.newstats.todaysstats.TodaysStatsViewModel
 import org.wordpress.android.ui.newstats.authors.AuthorsCard
@@ -122,7 +121,6 @@ import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.newstats.components.NewStatsIntroBottomSheet
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.stats.refresh.StatsActivity
-import org.wordpress.android.ui.stats.refresh.lists.detail.StatsDetailActivity
 import org.wordpress.android.ui.stats.refresh.utils.StatsLaunchedFrom
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.util.AppLog
@@ -189,16 +187,7 @@ class NewStatsActivity : BaseAppCompatActivity() {
     }
 
     private fun openPostDetailStats(item: MostViewedItem) {
-        val site = selectedSiteRepository.getSelectedSite() ?: return
-        analyticsTracker.track(Stat.STATS_POSTS_AND_PAGES_ITEM_TAPPED)
-        StatsDetailActivity.start(
-            context = this,
-            site = site,
-            postId = item.id,
-            postType = statsDetailItemType(item.postType),
-            postTitle = item.title,
-            postUrl = item.url
-        )
+        activityNavigator.openPostDetailStats(this, item.id, item.postType, item.title, item.url)
     }
 
     private fun switchToOldStats() {
