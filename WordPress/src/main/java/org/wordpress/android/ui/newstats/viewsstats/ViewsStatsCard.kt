@@ -2,6 +2,7 @@ package org.wordpress.android.ui.newstats.viewsstats
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -43,6 +44,7 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
 import org.wordpress.android.ui.newstats.StatsColors
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
@@ -682,25 +684,31 @@ private fun ViewsStatsChart(
             )
         }
         ChartType.BAR -> {
-            var lastShownIndex by remember { mutableIntStateOf(-1) }
-            val barTapListener = remember(onBarTapped) {
+            // The marker shows on pointer-down and hides on pointer-up, so its visibility
+            // callbacks cannot tell a tap from the start of a scroll. Track which bar the
+            // pointer is over here, and drill down only once detectTapGestures confirms the
+            // gesture was a tap -- an enclosing scroll consumes the drag, which cancels it.
+            // Hit-testing is horizontal only, so a tap anywhere in this box selects the
+            // nearest bar, matching the marker's existing behavior.
+            var pressedIndex by remember { mutableIntStateOf(-1) }
+            val barTapListener = remember {
                 object : CartesianMarkerVisibilityListener {
                     override fun onShown(
                         marker: CartesianMarker,
                         targets: List<CartesianMarker.Target>
                     ) {
-                        lastShownIndex = targets.firstOrNull()
-                            ?.x?.toInt() ?: -1
+                        pressedIndex = targets.firstOrNull()?.x?.toInt() ?: -1
                     }
 
-                    override fun onHidden(
-                        marker: CartesianMarker
+                    override fun onUpdated(
+                        marker: CartesianMarker,
+                        targets: List<CartesianMarker.Target>
                     ) {
-                        val index = lastShownIndex
-                        if (index >= 0) {
-                            lastShownIndex = -1
-                            onBarTapped(index)
-                        }
+                        pressedIndex = targets.firstOrNull()?.x?.toInt() ?: -1
+                    }
+
+                    override fun onHidden(marker: CartesianMarker) {
+                        pressedIndex = -1
                     }
                 }
             }
@@ -751,6 +759,11 @@ private fun ViewsStatsChart(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(ChartHeight)
+                    .pointerInput(onBarTapped) {
+                        detectTapGestures {
+                            if (pressedIndex >= 0) onBarTapped(pressedIndex)
+                        }
+                    }
             )
         }
     }
