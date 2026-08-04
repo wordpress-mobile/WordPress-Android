@@ -5,6 +5,8 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
+import org.mockito.kotlin.any
+import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
@@ -59,9 +61,18 @@ class NewStatsRoutingTest {
 
     /** Without this, a user who opted out could never get back into New Stats. */
     @Test
-    fun `opting in clears a previous opt-out`() {
+    fun `opting in clears a previous opt-out and re-arms the intro`() {
         newStatsRouting.optIn()
 
         verify(appPrefsWrapper).setNewStatsUserOptedOut(false)
+        verify(appPrefsWrapper).setNewStatsIntroShown(false)
+    }
+
+    /** Re-arming it here would make the intro sheet reappear if New Stats is recreated. */
+    @Test
+    fun `opting out leaves the intro flag alone`() {
+        newStatsRouting.optOut()
+
+        verify(appPrefsWrapper, never()).setNewStatsIntroShown(any())
     }
 }

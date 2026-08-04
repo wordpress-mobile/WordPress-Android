@@ -25,13 +25,14 @@ class NewStatsRouting @Inject constructor(
     fun optIn() {
         appPrefsWrapper.setNewStatsUserOptedOut(false)
         appPrefsWrapper.setNewStatsUserOptedIn(true)
+        // Reintroduce New Stats on the way in. Resetting this on opt-out instead would re-arm the
+        // intro sheet while NewStatsActivity is still on screen, so it reappears on recreation.
+        appPrefsWrapper.setNewStatsIntroShown(false)
     }
 
     fun optOut() {
         appPrefsWrapper.setNewStatsUserOptedOut(true)
         appPrefsWrapper.setNewStatsUserOptedIn(false)
-        // Show the intro again if the user later opts back in.
-        appPrefsWrapper.setNewStatsIntroShown(false)
     }
 
     fun hasOptedOut(): Boolean = appPrefsWrapper.getNewStatsUserOptedOut()
