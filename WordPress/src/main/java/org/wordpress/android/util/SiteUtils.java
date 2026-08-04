@@ -261,6 +261,18 @@ public class SiteUtils {
         return site.getOrigin() == SiteModel.ORIGIN_WPCOM_REST;
     }
 
+    /**
+     * Whether the wordpress-rs screens (posts, pages, comments) should be used for {@code site}
+     * instead of the legacy (FluxC) ones. Keep this as the single definition so those screens
+     * can't drift apart for the same site.
+     * <p>
+     * An application password is the requirement. That includes WP.com-accessed sites, since
+     * Atomic and Jetpack sites can hold one (only simple WP.com sites can't).
+     */
+    public static boolean canUseWpRs(@Nullable SiteModel site) {
+        return site != null && site.hasApplicationPassword();
+    }
+
     public static String getSiteIconUrl(SiteModel site, int size) {
         return PhotonUtils.getPhotonImageUrl(site.getIconUrl(), size, size, PhotonUtils.Quality.HIGH,
                 site.isPrivateWPComAtomic());

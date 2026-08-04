@@ -59,6 +59,7 @@ import org.wordpress.android.ui.reader.tracker.ReaderTracker;
 import org.wordpress.android.ui.stats.StatsViewType;
 import org.wordpress.android.ui.stats.refresh.utils.StatsLaunchedFrom;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
@@ -407,7 +408,7 @@ public class NotificationsDetailActivity extends BaseAppCompatActivity implement
             SiteModel site = mSiteStore.getSiteBySiteId(note.getSiteId());
             // The rs detail needs a real site from the SiteStore; the legacy fragment can fall
             // back to a dummy WP.com site built from the note, so it stays the catch-all.
-            if (site != null && note.getCommentId() != 0 && ActivityLauncher.shouldUseRsComments(this, site)) {
+            if (site != null && note.getCommentId() != 0 && SiteUtils.canUseWpRs(site)) {
                 fragment = UnifiedCommentDetailsFragment.newInstance(
                         site,
                         note.getCommentId(),
