@@ -179,7 +179,7 @@ class WidgetUtils
         statsTimeframe: StatsTimeframe,
         granularity: StatsGranularity? = null
     ): PendingIntent {
-        val intent = if (isNewStatsEnabled()) {
+        val intent = if (newStatsRouting.isNewStatsEnabled()) {
             Intent(context, NewStatsActivity::class.java).apply {
                 putExtra(WordPress.LOCAL_SITE_ID, localSiteId)
                 // Mirror the row-tap (template) path: CLEAR_TOP forces an already-running
@@ -208,7 +208,7 @@ class WidgetUtils
     private fun getPendingTemplate(context: Context): PendingIntent {
         // The per-row fill-in intents already carry the LOCAL_SITE_ID extra, which is merged into
         // whichever component this template targets, so New Stats receives the tapped row's site.
-        val targetActivity = if (isNewStatsEnabled()) {
+        val targetActivity = if (newStatsRouting.isNewStatsEnabled()) {
             NewStatsActivity::class.java
         } else {
             StatsActivity::class.java
@@ -232,8 +232,6 @@ class WidgetUtils
     private fun getRandomId(): Int {
         return Random(Date().time).nextInt()
     }
-
-    private fun isNewStatsEnabled(): Boolean = newStatsRouting.isNewStatsEnabled()
 
     fun getLastWeekPeriodData(visitsAndViewsModel: VisitsAndViewsModel): PeriodData? {
         val currentDateForSite = WeeklyRoundupUtils.parseStandardDate(visitsAndViewsModel.period) ?: return null
