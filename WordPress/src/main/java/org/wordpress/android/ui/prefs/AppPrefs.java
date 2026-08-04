@@ -69,8 +69,6 @@ public class AppPrefs {
 
         NEW_STATS_USER_OPTED_IN,
 
-        NEW_STATS_USER_OPTED_OUT,
-
         STATS_NEW_STATS_SUGGESTION_SHOWN,
 
         STATS_NEW_STATS_SUGGESTION_LAST_DISMISSED_AT,
@@ -247,6 +245,11 @@ public class AppPrefs {
         AZTEC_EDITOR_TOOLBAR_EXPANDED,
 
         BOOKMARKS_SAVED_LOCALLY_DIALOG_SHOWN,
+
+        // Set when the user explicitly turns New Stats off. Undeletable so the choice survives
+        // sign-out - it is the only thing that can override the android_new_stats rollout flag,
+        // so erasing it would silently push the user back into New Stats.
+        NEW_STATS_USER_OPTED_OUT,
 
         // When we need to show the snackbar indicating how notifications can be navigated through
         SWIPE_TO_NAVIGATE_NOTIFICATIONS,
@@ -2159,11 +2162,11 @@ public class AppPrefs {
     }
 
     public static boolean getNewStatsUserOptedOut() {
-        return getBoolean(DeletablePrefKey.NEW_STATS_USER_OPTED_OUT, false);
+        return getBoolean(UndeletablePrefKey.NEW_STATS_USER_OPTED_OUT, false);
     }
 
     public static void setNewStatsUserOptedOut(boolean optedOut) {
-        setBoolean(DeletablePrefKey.NEW_STATS_USER_OPTED_OUT, optedOut);
+        setBoolean(UndeletablePrefKey.NEW_STATS_USER_OPTED_OUT, optedOut);
     }
 
     /**

@@ -212,12 +212,16 @@ class NewStatsActivity : BaseAppCompatActivity() {
     }
 
     private fun leaveNewStats(sendFeedback: Boolean) {
-        val site = selectedSiteRepository.getSelectedSite() ?: return
-        StatsActivity.start(
-            this,
-            site,
-            launchedFrom = StatsLaunchedFrom.STATS_TOGGLE
-        )
+        // The opt-out is already persisted, so always finish - bailing out here would strand the
+        // user on a screen the rest of the app no longer routes them to. Old Stats needs a site,
+        // but without one we can still leave and fall back to whatever is underneath.
+        selectedSiteRepository.getSelectedSite()?.let { site ->
+            StatsActivity.start(
+                this,
+                site,
+                launchedFrom = StatsLaunchedFrom.STATS_TOGGLE
+            )
+        }
         // Started after old Stats so the form sits on top of it and backs out to it.
         if (sendFeedback) {
             ActivityLauncher.viewFeedbackForm(this, FEEDBACK_PREFIX_STATS)
