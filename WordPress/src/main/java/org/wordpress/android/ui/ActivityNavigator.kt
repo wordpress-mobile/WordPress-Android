@@ -279,10 +279,13 @@ class ActivityNavigator @Inject constructor(
 
     /**
      * Opens the per-post stats detail screen for a Posts & Pages item tapped in the new stats.
-     * No-ops when no site is selected.
+     * Shows an error toast when no site is selected.
      */
     fun openPostDetailStats(context: Context, postId: Long, postType: String?, postTitle: String, postUrl: String?) {
-        val site = selectedSiteRepository.getSelectedSite() ?: return
+        val site = selectedSiteRepository.getSelectedSite() ?: run {
+            ToastUtils.showToast(context, R.string.blog_not_found, ToastUtils.Duration.SHORT)
+            return
+        }
         AnalyticsTracker.track(AnalyticsTracker.Stat.STATS_POSTS_AND_PAGES_ITEM_TAPPED)
         StatsDetailActivity.start(
             context = context,
