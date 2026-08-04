@@ -30,6 +30,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
 import org.wordpress.android.ui.newstats.components.StatsListRowContainer
+import org.wordpress.android.ui.newstats.components.StatsOpenLinkIcon
 import org.wordpress.android.ui.newstats.util.formatStatValue
 
 private const val VERTICAL_LINE_ALPHA = 0.3f
@@ -71,14 +72,22 @@ fun TagGroupRow(
     isExpandable: Boolean,
     isExpanded: Boolean,
     onClick: (() -> Unit)?,
+    onUrlClick: (String) -> Unit = {},
     position: Int? = null
 ) {
+    // A group of several tags expands (onClick); a lone tag has no children to reveal, so it
+    // opens its archive page instead. Never both — this mirrors old stats.
+    val linkUrl = item.link
     StatsListRowContainer(
         percentage = percentage,
-        modifier = if (onClick != null) {
-            Modifier.clickable(onClick = onClick)
-        } else {
-            Modifier
+        modifier = when {
+            onClick != null ->
+                Modifier.clickable(onClick = onClick)
+            linkUrl != null ->
+                Modifier.clickable {
+                    onUrlClick(linkUrl)
+                }
+            else -> Modifier
         }
     ) {
         Row(
@@ -146,6 +155,12 @@ fun TagGroupRow(
                         modifier =
                             Modifier.width(4.dp)
                     )
+                } else if (linkUrl != null) {
+                    StatsOpenLinkIcon()
+                    Spacer(
+                        modifier =
+                            Modifier.width(4.dp)
+                    )
                 }
                 Text(
                     text = item.name,
@@ -175,6 +190,7 @@ fun TagGroupRow(
 @Composable
 fun ExpandedTagsSection(
     tags: List<TagUiItem>,
+    onUrlClick: (String) -> Unit = {},
     startPadding: Dp = 24.dp
 ) {
     val lineColor = MaterialTheme.colorScheme.primary
@@ -188,9 +204,20 @@ fun ExpandedTagsSection(
         )
     ) {
         tags.forEachIndexed { index, tag ->
+            val linkUrl = tag.link
+                .takeIf { it.isNotBlank() }
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
+                    .then(
+                        if (linkUrl != null) {
+                            Modifier.clickable {
+                                onUrlClick(linkUrl)
+                            }
+                        } else {
+                            Modifier
+                        }
+                    )
                     .padding(vertical = 4.dp),
                 verticalAlignment =
                     Alignment.CenterVertically
@@ -219,6 +246,13 @@ fun ExpandedTagsSection(
                     color = MaterialTheme.colorScheme
                         .onSurface
                 )
+                if (linkUrl != null) {
+                    Spacer(
+                        modifier =
+                            Modifier.width(4.dp)
+                    )
+                    StatsOpenLinkIcon()
+                }
             }
             if (index < tags.lastIndex) {
                 Spacer(

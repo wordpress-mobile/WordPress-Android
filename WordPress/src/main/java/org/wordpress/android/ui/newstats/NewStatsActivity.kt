@@ -415,7 +415,9 @@ private fun StatsTabContent(
             viewsStatsViewModel = viewsStatsViewModel,
             onStatsUrlClick = onStatsUrlClick
         )
-        StatsTab.INSIGHTS -> InsightsTabContent()
+        StatsTab.INSIGHTS -> InsightsTabContent(
+            onStatsUrlClick = onStatsUrlClick
+        )
         StatsTab.SUBSCRIBERS -> SubscribersTabContent()
     }
 }
@@ -1064,7 +1066,8 @@ private fun InsightsTabContent(
     mostPopularDayViewModel: MostPopularDayViewModel = viewModel(),
     mostPopularTimeViewModel: MostPopularTimeViewModel = viewModel(),
     tagsAndCategoriesViewModel: TagsAndCategoriesViewModel = viewModel(),
-    insightsViewModel: InsightsViewModel = viewModel()
+    insightsViewModel: InsightsViewModel = viewModel(),
+    onStatsUrlClick: (String) -> Unit = {}
 ) {
     val context = LocalContext.current
     val yearInReviewUiState by yearInReviewViewModel.uiState.collectAsState()
@@ -1251,7 +1254,8 @@ private fun InsightsTabContent(
                             onMoveUp = { insightsViewModel.moveCardUp(cardType) },
                             onMoveToTop = { insightsViewModel.moveCardToTop(cardType) },
                             onMoveDown = { insightsViewModel.moveCardDown(cardType) },
-                            onMoveToBottom = { insightsViewModel.moveCardToBottom(cardType) }
+                            onMoveToBottom = { insightsViewModel.moveCardToBottom(cardType) },
+                            onUrlClick = onStatsUrlClick
                         )
                     }
                 }

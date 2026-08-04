@@ -1188,7 +1188,8 @@ class StatsDataSourceImpl @Inject constructor(
                     tags = group.tags.map { tag ->
                         TagData(
                             tagType = tag.tagType,
-                            name = tag.name
+                            name = tag.name,
+                            link = tag.link
                         )
                     },
                     views = group.views.toLong()

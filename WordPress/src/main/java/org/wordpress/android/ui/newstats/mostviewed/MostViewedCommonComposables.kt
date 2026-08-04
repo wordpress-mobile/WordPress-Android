@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.OpenInNew
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.Icon
@@ -31,6 +30,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
 import org.wordpress.android.ui.newstats.components.StatsListRowContainer
+import org.wordpress.android.ui.newstats.components.StatsOpenLinkIcon
 import org.wordpress.android.ui.newstats.util.formatStatValue
 
 /**
@@ -109,7 +109,7 @@ internal fun MostViewedExpandableRow(
                             MostViewedExpandChevron(expanded = expanded)
                             Spacer(modifier = Modifier.width(4.dp))
                         } else if (linkUrl != null) {
-                            MostViewedOpenLinkIcon()
+                            StatsOpenLinkIcon()
                             Spacer(modifier = Modifier.width(4.dp))
                         }
                         Text(
@@ -131,16 +131,6 @@ internal fun MostViewedExpandableRow(
             onUrlClick = onUrlClick
         )
     }
-}
-
-@Composable
-internal fun MostViewedOpenLinkIcon() {
-    Icon(
-        imageVector = Icons.AutoMirrored.Filled.OpenInNew,
-        contentDescription = stringResource(R.string.stats_open_referrer_link),
-        modifier = Modifier.size(16.dp),
-        tint = MaterialTheme.colorScheme.onSurfaceVariant
-    )
 }
 
 /**
@@ -219,7 +209,7 @@ private fun MostViewedChildRow(
             )
             if (isClickable) {
                 Spacer(modifier = Modifier.width(4.dp))
-                MostViewedOpenLinkIcon()
+                StatsOpenLinkIcon()
             }
         }
     }

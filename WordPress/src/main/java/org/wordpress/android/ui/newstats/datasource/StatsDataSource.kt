@@ -753,11 +753,12 @@ data class TagGroupData(
 )
 
 /**
- * A single tag or category item.
+ * A single tag or category item. [link] is the tag's archive page, opened when the row is tapped.
  */
 data class TagData(
     val tagType: String,
-    val name: String
+    val name: String,
+    val link: String = ""
 )
 
 /**
