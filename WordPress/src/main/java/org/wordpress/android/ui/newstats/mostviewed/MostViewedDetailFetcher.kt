@@ -2,7 +2,7 @@ package org.wordpress.android.ui.newstats.mostviewed
 
 import org.wordpress.android.R
 import org.wordpress.android.ui.newstats.StatsPeriod
-import org.wordpress.android.ui.newstats.repository.ClickItemData
+import org.wordpress.android.ui.newstats.clicks.toDetailItem
 import org.wordpress.android.ui.newstats.repository.ClicksResult
 import org.wordpress.android.ui.newstats.repository.FileDownloadItemData
 import org.wordpress.android.ui.newstats.repository.FileDownloadsResult
@@ -102,13 +102,6 @@ class MostViewedDetailFetcher @Inject constructor(
         )
         is FileDownloadsResult.Error -> StatsCardFetchResult.Error(messageResId, isAuthError)
     }
-
-    private fun ClickItemData.toDetailItem(id: Long) = MostViewedDetailItem(
-        id = id,
-        title = name,
-        views = clicks,
-        change = MostViewedChange.fromChange(clicksChange, clicksChangePercent)
-    )
 
     private fun SearchTermItemData.toDetailItem(id: Long) = MostViewedDetailItem(
         id = id,

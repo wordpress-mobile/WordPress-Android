@@ -167,7 +167,7 @@ class NewStatsActivity : BaseAppCompatActivity() {
                         appPrefsWrapper
                             .setNewStatsIntroShown(true)
                     },
-                    onReferrerUrlClick = { url ->
+                    onStatsUrlClick = { url ->
                         activityNavigator.openInCustomTab(this, url)
                     }
                 )
@@ -254,7 +254,7 @@ private fun NewStatsScreen(
     onSwitchToOldStats: () -> Unit = {},
     showIntroBottomSheet: Boolean = false,
     onIntroDismissed: () -> Unit = {},
-    onReferrerUrlClick: (String) -> Unit = {}
+    onStatsUrlClick: (String) -> Unit = {}
 ) {
     val viewsStatsViewModel: ViewsStatsViewModel = viewModel()
     val selectedPeriod by viewsStatsViewModel.selectedPeriod.collectAsState()
@@ -397,7 +397,7 @@ private fun NewStatsScreen(
                 StatsTabContent(
                     tab = tabs[page],
                     viewsStatsViewModel = viewsStatsViewModel,
-                    onReferrerUrlClick = onReferrerUrlClick
+                    onStatsUrlClick = onStatsUrlClick
                 )
             }
         }
@@ -408,12 +408,12 @@ private fun NewStatsScreen(
 private fun StatsTabContent(
     tab: StatsTab,
     viewsStatsViewModel: ViewsStatsViewModel,
-    onReferrerUrlClick: (String) -> Unit = {}
+    onStatsUrlClick: (String) -> Unit = {}
 ) {
     when (tab) {
         StatsTab.TRAFFIC -> TrafficTabContent(
             viewsStatsViewModel = viewsStatsViewModel,
-            onReferrerUrlClick = onReferrerUrlClick
+            onStatsUrlClick = onStatsUrlClick
         )
         StatsTab.INSIGHTS -> InsightsTabContent()
         StatsTab.SUBSCRIBERS -> SubscribersTabContent()
@@ -436,7 +436,7 @@ private fun TrafficTabContent(
     devicesViewModel: DevicesViewModel = viewModel(),
     utmViewModel: UtmViewModel = viewModel(),
     newStatsViewModel: NewStatsViewModel = viewModel(),
-    onReferrerUrlClick: (String) -> Unit = {}
+    onStatsUrlClick: (String) -> Unit = {}
 ) {
     val context = LocalContext.current
     val todaysStatsUiState by todaysStatsViewModel.uiState.collectAsState()
@@ -725,7 +725,7 @@ private fun TrafficTabContent(
                         onMoveToTop = { newStatsViewModel.moveCardToTop(cardType) },
                         onMoveDown = { newStatsViewModel.moveCardDown(cardType) },
                         onMoveToBottom = { newStatsViewModel.moveCardToBottom(cardType) },
-                        onUrlClick = onReferrerUrlClick
+                        onUrlClick = onStatsUrlClick
                     )
                     StatsCardType.LOCATIONS -> LocationsCard(
                         uiState = locationsUiState,
@@ -881,7 +881,8 @@ private fun TrafficTabContent(
                                 ?.isAuthError == true,
                             getAdminUrl = clicksViewModel::getAdminUrl,
                             context = context
-                        )
+                        ),
+                        onUrlClick = onStatsUrlClick
                     )
                     StatsCardType.SEARCH_TERMS -> MostViewedCard(
                         uiState = searchTermsUiState,

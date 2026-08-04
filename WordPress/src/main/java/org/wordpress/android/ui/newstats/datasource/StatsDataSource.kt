@@ -576,9 +576,23 @@ sealed class ClicksDataResult {
 
 /**
  * A single click item from the API.
+ *
+ * @param url The clicked link, null for grouped sources that have no link of their own
+ * (their links live on the [children]).
  */
 data class ClickDataItem(
     val name: String,
+    val url: String?,
+    val clicks: Long,
+    val children: List<ClickChildDataItem> = emptyList()
+)
+
+/**
+ * A child link nested under a click group (e.g. one URL of a grouped click source).
+ */
+data class ClickChildDataItem(
+    val name: String,
+    val url: String?,
     val clicks: Long
 )
 

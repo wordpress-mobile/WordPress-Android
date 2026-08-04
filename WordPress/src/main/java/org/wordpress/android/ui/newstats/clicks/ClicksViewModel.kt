@@ -6,6 +6,7 @@ import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.newstats.StatsPeriod
 import org.wordpress.android.ui.newstats.mostviewed.BaseStatsCardViewModel
 import org.wordpress.android.ui.newstats.mostviewed.MostViewedChange
+import org.wordpress.android.ui.newstats.mostviewed.MostViewedChildItem
 import org.wordpress.android.ui.newstats.mostviewed.MostViewedDetailItem
 import org.wordpress.android.ui.newstats.mostviewed.StatsCardFetchResult
 import org.wordpress.android.ui.newstats.repository.ClickItemData
@@ -55,15 +56,27 @@ class ClicksViewModel @Inject constructor(
             }
         }
     }
-
-    private fun ClickItemData.toDetailItem(
-        id: Long
-    ) = MostViewedDetailItem(
-        id = id,
-        title = name,
-        views = clicks,
-        change = MostViewedChange.fromChange(
-            clicksChange, clicksChangePercent
-        )
-    )
 }
+
+/**
+ * Shared by the clicks card ([ClicksViewModel]) and the detail screen's fetcher, so the two
+ * cannot drift apart.
+ */
+internal fun ClickItemData.toDetailItem(
+    id: Long
+) = MostViewedDetailItem(
+    id = id,
+    title = name,
+    views = clicks,
+    change = MostViewedChange.fromChange(
+        clicksChange, clicksChangePercent
+    ),
+    children = children.map { child ->
+        MostViewedChildItem(
+            name = child.name,
+            url = child.url,
+            views = child.views
+        )
+    },
+    url = url
+)

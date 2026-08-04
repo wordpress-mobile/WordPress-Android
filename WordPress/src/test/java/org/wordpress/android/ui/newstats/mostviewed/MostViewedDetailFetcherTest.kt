@@ -15,6 +15,7 @@ import org.wordpress.android.ui.newstats.repository.ClickItemData
 import org.wordpress.android.ui.newstats.repository.ClicksResult
 import org.wordpress.android.ui.newstats.repository.FileDownloadItemData
 import org.wordpress.android.ui.newstats.repository.FileDownloadsResult
+import org.wordpress.android.ui.newstats.repository.MostViewedChildData
 import org.wordpress.android.ui.newstats.repository.MostViewedItemData
 import org.wordpress.android.ui.newstats.repository.MostViewedResult
 import org.wordpress.android.ui.newstats.repository.SearchTermItemData
@@ -115,6 +116,46 @@ class MostViewedDetailFetcherTest : BaseUnitTest() {
         assertThat(success.totalValue).isEqualTo(60L)
         assertThat(success.totalValueChange).isEqualTo(30L)
         assertThat(success.totalValueChangePercent).isEqualTo(100.0)
+    }
+
+    @Test
+    fun `fetch clicks carries the url and children onto the detail items`() = test {
+        whenever(statsRepository.fetchClicks(any(), any())).thenReturn(
+            ClicksResult.Success(
+                items = listOf(
+                    ClickItemData(
+                        name = "example.com",
+                        clicks = 50L,
+                        previousClicks = 20L,
+                        url = "https://example.com/"
+                    ),
+                    ClickItemData(
+                        name = "Grouped source",
+                        clicks = 10L,
+                        previousClicks = 10L,
+                        children = listOf(
+                            MostViewedChildData(
+                                name = "Child link",
+                                url = "https://example.com/child",
+                                views = 10L
+                            )
+                        )
+                    )
+                ),
+                totalClicks = 60L,
+                totalClicksChange = 30L,
+                totalClicksChangePercent = 100.0
+            )
+        )
+
+        val result = fetcher.fetch(MostViewedDetailSource.CLICKS, SITE_ID, PERIOD, ACCESS_TOKEN)
+
+        val success = result as StatsCardFetchResult.Success
+        assertThat(success.items[0].url).isEqualTo("https://example.com/")
+        assertThat(success.items[0].children).isEmpty()
+        assertThat(success.items[1].url).isNull()
+        assertThat(success.items[1].children).hasSize(1)
+        assertThat(success.items[1].children[0].url).isEqualTo("https://example.com/child")
     }
 
     @Test
