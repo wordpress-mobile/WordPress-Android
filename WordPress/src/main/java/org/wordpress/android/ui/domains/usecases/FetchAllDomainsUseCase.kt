@@ -8,6 +8,7 @@ import rs.wordpress.api.kotlin.WpRequestResult
 import rs.wordpress.api.kotlin.toLogErrorString
 import uniffi.wp_api.AllDomainItem
 import uniffi.wp_api.AllDomainsParams
+import uniffi.wp_api.DomainSubtypeId
 import javax.inject.Inject
 
 class FetchAllDomainsUseCase @Inject constructor(
@@ -26,12 +27,28 @@ class FetchAllDomainsUseCase @Inject constructor(
                 .also { wpComApiClient = it }
     }
 
+    /**
+     * Fetches every domain across the account's sites, excluding the free
+     * WordPress.com site addresses.
+     *
+     * The v1.1 endpoint took a `no_wpcom` query parameter for this. The v1.2
+     * endpoint used here declares only `garden`, and the API framework
+     * intersects the query string with the declared parameters before the
+     * callback runs, so `no_wpcom` would be discarded. The exclusion therefore
+     * happens client-side.
+     *
+     * `DefaultAddress` is the exact equivalent rather than an approximation:
+     * the server assigns that subtype to precisely the domains `no_wpcom`
+     * removed — free `*.wordpress.com` addresses along with staging, garden,
+     * managed, and partner subdomains.
+     */
     suspend fun execute(): AllDomains {
         val result = getOrCreateClient()
             .request { it.domains().allDomains(AllDomainsParams()).data }
         return when (result) {
             is WpRequestResult.Success -> {
                 val domains = result.response.domains
+                    .filterNot { it.subtype.id is DomainSubtypeId.DefaultAddress }
                 if (domains.isEmpty()) {
                     AllDomains.Empty
                 } else {

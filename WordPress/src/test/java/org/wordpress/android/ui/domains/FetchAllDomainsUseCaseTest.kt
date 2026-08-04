@@ -18,6 +18,7 @@ import org.wordpress.android.ui.domains.usecases.FetchAllDomainsUseCase
 import rs.wordpress.api.kotlin.WpComApiClient
 import rs.wordpress.api.kotlin.WpRequestResult
 import uniffi.wp_api.AllDomainsResponse
+import uniffi.wp_api.DomainSubtypeId
 import uniffi.wp_api.RequestMethod
 
 @ExperimentalCoroutinesApi
@@ -95,6 +96,63 @@ class FetchAllDomainsUseCaseTest : BaseUnitTest() {
                 .thenReturn(
                     WpRequestResult.Success(
                         AllDomainsResponse(emptyList())
+                    ) as WpRequestResult<Any>
+                )
+
+            val result = useCase.execute()
+
+            assertThat(result).isInstanceOf(AllDomains.Empty::class.java)
+        }
+
+    @Suppress("UNCHECKED_CAST")
+    @Test
+    fun `given free site addresses, when execute, they are excluded`() =
+        test {
+            val domains = listOf(
+                testDomainItem(
+                    domain = "free.wordpress.com",
+                    subtypeId = DomainSubtypeId.DefaultAddress,
+                ),
+                testDomainItem(
+                    domain = "registered.domain",
+                    subtypeId = DomainSubtypeId.DomainRegistration,
+                ),
+            )
+            whenever(wpComApiClient.request<Any>(any()))
+                .thenReturn(
+                    WpRequestResult.Success(
+                        AllDomainsResponse(domains)
+                    ) as WpRequestResult<Any>
+                )
+
+            val result = useCase.execute()
+
+            assertThat(result).isInstanceOf(AllDomains.Success::class.java)
+            with(result as AllDomains.Success) {
+                assertThat(this.domains).hasSize(1)
+                assertThat(this.domains[0].domain)
+                    .isEqualTo("registered.domain")
+            }
+        }
+
+    @Suppress("UNCHECKED_CAST")
+    @Test
+    fun `given only free site addresses, when execute, returns empty`() =
+        test {
+            val domains = listOf(
+                testDomainItem(
+                    domain = "free.wordpress.com",
+                    subtypeId = DomainSubtypeId.DefaultAddress,
+                ),
+                testDomainItem(
+                    domain = "staging.wpcomstaging.com",
+                    subtypeId = DomainSubtypeId.DefaultAddress,
+                ),
+            )
+            whenever(wpComApiClient.request<Any>(any()))
+                .thenReturn(
+                    WpRequestResult.Success(
+                        AllDomainsResponse(domains)
                     ) as WpRequestResult<Any>
                 )
 
