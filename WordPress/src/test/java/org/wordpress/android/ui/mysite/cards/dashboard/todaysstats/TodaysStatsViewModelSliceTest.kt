@@ -91,7 +91,7 @@ class TodaysStatsViewModelSliceTest : BaseUnitTest() {
         test {
             whenever(newStatsFeatureUtils.isNewStatsEnabled()).thenReturn(true)
 
-            val params = todaysStatsViewModelSlice.getTodaysStatsBuilderParams(mock())
+            val params = todaysStatsViewModelSlice.getTodaysStatsBuilderParams(null)
 
             params.onTodaysStatsCardClick()
 
@@ -107,7 +107,7 @@ class TodaysStatsViewModelSliceTest : BaseUnitTest() {
         test {
             whenever(newStatsFeatureUtils.isNewStatsEnabled()).thenReturn(true)
 
-            val params = todaysStatsViewModelSlice.getTodaysStatsBuilderParams(mock())
+            val params = todaysStatsViewModelSlice.getTodaysStatsBuilderParams(null)
 
             params.moreMenuClickParams.onViewStatsMenuItemClick.invoke()
 
@@ -119,7 +119,7 @@ class TodaysStatsViewModelSliceTest : BaseUnitTest() {
         test {
             whenever(jetpackFeatureRemovalPhaseHelper.shouldShowStaticPage()).thenReturn(true)
 
-            val params = todaysStatsViewModelSlice.getTodaysStatsBuilderParams(mock())
+            val params = todaysStatsViewModelSlice.getTodaysStatsBuilderParams(null)
 
             params.onTodaysStatsCardClick()
 
