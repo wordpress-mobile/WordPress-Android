@@ -133,9 +133,6 @@ internal fun MostViewedExpandableRow(
     }
 }
 
-/**
- * "Opens a link" affordance shown on a Most Viewed row that navigates to a URL when tapped.
- */
 @Composable
 internal fun MostViewedOpenLinkIcon() {
     Icon(

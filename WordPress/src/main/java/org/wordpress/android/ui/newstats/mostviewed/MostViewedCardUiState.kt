@@ -38,8 +38,7 @@ sealed class MostViewedCardUiState {
  * @param title The title/name of the item (post title or referrer name)
  * @param views The number of views
  * @param change The percentage change compared to previous period
- * @param url The URL opened when the row is tapped (null if not linkable). Only referrers that
- * have no [children] are linkable; a group's own row expands instead of opening a link.
+ * @param url The URL opened when the row is tapped, null if not linkable
  */
 data class MostViewedItem(
     val id: Long,

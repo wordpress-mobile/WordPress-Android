@@ -58,10 +58,7 @@ class ClicksViewModel @Inject constructor(
     }
 }
 
-/**
- * Shared by the clicks card ([ClicksViewModel]) and the detail screen's fetcher, so the two
- * cannot drift apart.
- */
+/** Shared by the clicks card and the detail screen's fetcher, so the two cannot drift apart. */
 internal fun ClickItemData.toDetailItem(
     id: Long
 ) = MostViewedDetailItem(

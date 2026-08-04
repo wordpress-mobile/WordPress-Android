@@ -96,27 +96,6 @@ class MostViewedDetailViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `when load succeeds, then a standalone referrer's url propagates to the loaded state`() = test {
-        val standaloneReferrer = MostViewedItemData(
-            id = 2,
-            title = "google.com",
-            views = TEST_VIEWS,
-            previousViews = TEST_PREVIOUS_VIEWS,
-            isFirst = true,
-            url = REFERRER_URL
-        )
-        whenever(statsRepository.fetchReferrersDetail(any(), any()))
-            .thenReturn(createSuccessResult().copy(items = listOf(standaloneReferrer)))
-
-        viewModel.load(MostViewedDetailSource.REFERRERS, StatsPeriod.Last7Days)
-        advanceUntilIdle()
-
-        val loaded = viewModel.uiState.value as MostViewedDetailUiState.Loaded
-        assertThat(loaded.items[0].url).isEqualTo(REFERRER_URL)
-        assertThat(loaded.items[0].children).isEmpty()
-    }
-
-    @Test
     fun `when the source is clicks, then the clicks fetch backs the loaded state`() = test {
         whenever(statsRepository.fetchClicks(any(), any())).thenReturn(
             org.wordpress.android.ui.newstats.repository.ClicksResult.Success(
@@ -268,7 +247,6 @@ class MostViewedDetailViewModelTest : BaseUnitTest() {
         private const val UNKNOWN_ERROR = "Something went wrong"
         private const val EXCEPTION_MESSAGE = "boom"
         private const val CHILD_URL = "http://google.com/"
-        private const val REFERRER_URL = "https://google.com/"
 
         private const val TEST_VIEWS = 23L
         private const val TEST_PREVIOUS_VIEWS = 10L

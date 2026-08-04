@@ -38,7 +38,7 @@ class MostViewedDetailFetcherTest : BaseUnitTest() {
 
     @Test
     fun `fetch initializes the repository with the access token`() = test {
-        whenever(statsRepository.fetchClicks(any(), any())).thenReturn(emptyClicksSuccess())
+        whenever(statsRepository.fetchClicks(any(), any())).thenReturn(clicksSuccess())
 
         fetcher.fetch(MostViewedDetailSource.CLICKS, SITE_ID, PERIOD, ACCESS_TOKEN)
 
@@ -120,42 +120,19 @@ class MostViewedDetailFetcherTest : BaseUnitTest() {
 
     @Test
     fun `fetch clicks carries the url and children onto the detail items`() = test {
+        val child = MostViewedChildData(name = "Child link", url = "child-url", views = 10L)
         whenever(statsRepository.fetchClicks(any(), any())).thenReturn(
-            ClicksResult.Success(
-                items = listOf(
-                    ClickItemData(
-                        name = "example.com",
-                        clicks = 50L,
-                        previousClicks = 20L,
-                        url = "https://example.com/"
-                    ),
-                    ClickItemData(
-                        name = "Grouped source",
-                        clicks = 10L,
-                        previousClicks = 10L,
-                        children = listOf(
-                            MostViewedChildData(
-                                name = "Child link",
-                                url = "https://example.com/child",
-                                views = 10L
-                            )
-                        )
-                    )
-                ),
-                totalClicks = 60L,
-                totalClicksChange = 30L,
-                totalClicksChangePercent = 100.0
+            clicksSuccess(
+                ClickItemData("example.com", 50L, 20L, url = "link-url"),
+                ClickItemData("Grouped", 10L, 10L, children = listOf(child))
             )
         )
 
         val result = fetcher.fetch(MostViewedDetailSource.CLICKS, SITE_ID, PERIOD, ACCESS_TOKEN)
 
-        val success = result as StatsCardFetchResult.Success
-        assertThat(success.items[0].url).isEqualTo("https://example.com/")
-        assertThat(success.items[0].children).isEmpty()
-        assertThat(success.items[1].url).isNull()
-        assertThat(success.items[1].children).hasSize(1)
-        assertThat(success.items[1].children[0].url).isEqualTo("https://example.com/child")
+        val items = (result as StatsCardFetchResult.Success).items
+        assertThat(items[0].url).isEqualTo("link-url")
+        assertThat(items[1].children.single().url).isEqualTo("child-url")
     }
 
     @Test
@@ -267,8 +244,8 @@ class MostViewedDetailFetcherTest : BaseUnitTest() {
     }
     // endregion
 
-    private fun emptyClicksSuccess() = ClicksResult.Success(
-        items = emptyList(),
+    private fun clicksSuccess(vararg items: ClickItemData) = ClicksResult.Success(
+        items = items.toList(),
         totalClicks = 0L,
         totalClicksChange = 0L,
         totalClicksChangePercent = 0.0

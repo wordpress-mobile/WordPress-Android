@@ -433,10 +433,8 @@ sealed class ReferrersDataResult {
 }
 
 /**
- * A single referrer item from the API.
- *
- * @param url The referrer's link, null for grouped referrers that have no link of their own
- * (e.g. "Search Engines", whose links live on its [children]).
+ * A single referrer item from the API. [url] is null for a group with no link of its own
+ * (e.g. "Search Engines"), whose links live on its [children].
  */
 data class ReferrerDataItem(
     val name: String,
@@ -575,10 +573,8 @@ sealed class ClicksDataResult {
 }
 
 /**
- * A single click item from the API.
- *
- * @param url The clicked link, null for grouped sources that have no link of their own
- * (their links live on the [children]).
+ * A single click item from the API. [url] is null for a grouped source, whose links live on
+ * its [children].
  */
 data class ClickDataItem(
     val name: String,
@@ -587,9 +583,6 @@ data class ClickDataItem(
     val children: List<ClickChildDataItem> = emptyList()
 )
 
-/**
- * A child link nested under a click group (e.g. one URL of a grouped click source).
- */
 data class ClickChildDataItem(
     val name: String,
     val url: String?,

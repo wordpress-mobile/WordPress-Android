@@ -2231,8 +2231,6 @@ sealed class MostViewedResult {
 
 /**
  * Data for a single most viewed item from the repository layer.
- *
- * @param url The link opened when the row is tapped; only referrers have one.
  */
 data class MostViewedItemData(
     val id: Long,
