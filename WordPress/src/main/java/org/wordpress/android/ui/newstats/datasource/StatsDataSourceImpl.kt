@@ -205,7 +205,9 @@ class StatsDataSourceImpl @Inject constructor(
                         TopPostDataItem(
                             id = post.id.toLong(),
                             title = post.title.orEmpty(),
-                            views = post.views?.toLong() ?: 0L
+                            views = post.views?.toLong() ?: 0L,
+                            url = post.href,
+                            postType = post.postType
                         )
                     }
                 )

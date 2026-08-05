@@ -191,6 +191,25 @@ class MostViewedViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `when data loads, then url and post type are passed to card and detail items`() = test {
+        whenever(statsRepository.fetchMostViewed(any(), any(), any()))
+            .thenReturn(createSuccessResult())
+        whenever(resourceProvider.getString(R.string.stats_period_last_7_days))
+            .thenReturn("Last 7 days")
+
+        initViewModel()
+        advanceUntilIdle()
+
+        val state = viewModel.postsUiState.value as MostViewedCardUiState.Loaded
+        assertThat(state.items[0].url).isEqualTo(TEST_POST_URL_1)
+        assertThat(state.items[0].postType).isEqualTo(TEST_POST_TYPE_1)
+
+        val detailItems = viewModel.getPostsDetailData().items
+        assertThat(detailItems[0].url).isEqualTo(TEST_POST_URL_1)
+        assertThat(detailItems[0].postType).isEqualTo(TEST_POST_TYPE_1)
+    }
+
+    @Test
     fun `when data loads with more than 10 items, then only 10 are shown in card`() = test {
         val manyItems = (1..15).mapIndexed { idx, index ->
             MostViewedItemData(
@@ -661,7 +680,9 @@ class MostViewedViewModelTest : BaseUnitTest() {
                 title = TEST_POST_TITLE_1,
                 views = TEST_POST_VIEWS_1,
                 previousViews = TEST_POST_PREVIOUS_VIEWS_1,
-                isFirst = true
+                isFirst = true,
+                url = TEST_POST_URL_1,
+                postType = TEST_POST_TYPE_1
             ),
             MostViewedItemData(
                 id = 2,
@@ -685,6 +706,8 @@ class MostViewedViewModelTest : BaseUnitTest() {
 
         private const val TEST_POST_TITLE_1 = "Test Post 1"
         private const val TEST_POST_TITLE_2 = "Test Post 2"
+        private const val TEST_POST_URL_1 = "https://example.com/test-post-1"
+        private const val TEST_POST_TYPE_1 = "post"
         private const val TEST_POST_VIEWS_1 = 500L
         private const val TEST_POST_VIEWS_2 = 300L
         private const val TEST_REFERRER_URL = "https://google.com/"

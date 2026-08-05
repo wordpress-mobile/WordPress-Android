@@ -52,7 +52,10 @@ import org.wordpress.android.ui.newstats.util.formatStatValue
  * @param children The child rows revealed when expanded (empty = no chevron, not expandable)
  * @param percentage Bar fill percentage (0f..1f)
  * @param onUrlClick Invoked with the URL when a linkable row (this row or a child) is tapped
- * @param url The URL opened when this row is tapped, ignored when the row has [children]
+ * @param url The URL opened in a Custom Tab when this row is tapped; ignored when the row has
+ * [children] or an [onItemClick]
+ * @param onItemClick Invoked when a childless row is tapped (e.g. opens a post's detail stats).
+ * Takes precedence over [url], so posts navigate to their stats rather than opening a browser
  * @param position Optional 1-based position number shown on the detail screen
  * @param childStartPadding Indent applied to the expanded child rows
  */
@@ -65,14 +68,18 @@ internal fun MostViewedExpandableRow(
     percentage: Float,
     onUrlClick: (String) -> Unit,
     url: String? = null,
+    onItemClick: (() -> Unit)? = null,
     position: Int? = null,
     childStartPadding: Dp = 24.dp
 ) {
     val hasChildren = children.isNotEmpty()
-    val linkUrl = url?.takeIf { !hasChildren && it.isNotBlank() }
+    // onItemClick wins over url: a post row navigates to its detail stats instead of opening
+    // the post in a browser, so it also gets no "open link" affordance.
+    val linkUrl = url?.takeIf { !hasChildren && onItemClick == null && it.isNotBlank() }
     var expanded by rememberSaveable { mutableStateOf(false) }
     val clickModifier = when {
         hasChildren -> Modifier.clickable { expanded = !expanded }
+        onItemClick != null -> Modifier.clickable { onItemClick() }
         linkUrl != null -> Modifier.clickable { onUrlClick(linkUrl) }
         else -> Modifier
     }
