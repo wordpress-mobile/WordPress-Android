@@ -238,6 +238,26 @@ class MostViewedViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `given a referrer with a url, when data loads, then the url reaches the card item`() = test {
+        val referrer = MostViewedItemData(
+            id = 1,
+            title = "google.com",
+            views = TEST_POST_VIEWS_1,
+            previousViews = TEST_POST_PREVIOUS_VIEWS_1,
+            isFirst = true,
+            url = TEST_REFERRER_URL
+        )
+        whenever(statsRepository.fetchMostViewed(any(), any(), any()))
+            .thenReturn(createSuccessResult().copy(items = listOf(referrer)))
+
+        initViewModel()
+        advanceUntilIdle()
+
+        val state = viewModel.referrersUiState.value as MostViewedCardUiState.Loaded
+        assertThat(state.items[0].url).isEqualTo(TEST_REFERRER_URL)
+    }
+
+    @Test
     fun `when init, then both data sources are fetched in parallel`() = test {
         whenever(statsRepository.fetchMostViewed(any(), any(), any()))
             .thenReturn(createSuccessResult())
@@ -690,6 +710,8 @@ class MostViewedViewModelTest : BaseUnitTest() {
         private const val TEST_POST_TYPE_1 = "post"
         private const val TEST_POST_VIEWS_1 = 500L
         private const val TEST_POST_VIEWS_2 = 300L
+        private const val TEST_REFERRER_URL = "https://google.com/"
+
         private const val TEST_POST_PREVIOUS_VIEWS_1 = 400L
         private const val TEST_POST_PREVIOUS_VIEWS_2 = 250L
 

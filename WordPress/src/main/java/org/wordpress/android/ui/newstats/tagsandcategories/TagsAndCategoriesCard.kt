@@ -47,7 +47,8 @@ fun TagsAndCategoriesCard(
     onMoveUp: (() -> Unit)? = null,
     onMoveToTop: (() -> Unit)? = null,
     onMoveDown: (() -> Unit)? = null,
-    onMoveToBottom: (() -> Unit)? = null
+    onMoveToBottom: (() -> Unit)? = null,
+    onUrlClick: (String) -> Unit = {}
 ) {
     StatsCardContainer(modifier = modifier) {
         when (uiState) {
@@ -71,7 +72,8 @@ fun TagsAndCategoriesCard(
                     onMoveUp,
                     onMoveToTop,
                     onMoveDown,
-                    onMoveToBottom
+                    onMoveToBottom,
+                    onUrlClick
                 )
             is TagsAndCategoriesCardUiState.Error ->
                 ErrorContent(
@@ -187,7 +189,8 @@ private fun LoadedContent(
     onMoveUp: (() -> Unit)?,
     onMoveToTop: (() -> Unit)?,
     onMoveDown: (() -> Unit)?,
-    onMoveToBottom: (() -> Unit)?
+    onMoveToBottom: (() -> Unit)?,
+    onUrlClick: (String) -> Unit
 ) {
     val expandedGroups = remember(state.items) {
         mutableStateMapOf<Int, Boolean>()
@@ -233,16 +236,11 @@ private fun LoadedContent(
             TagGroupRow(
                 item = item,
                 percentage = percentage,
-                isExpandable = item.isExpandable,
                 isExpanded = isExpanded,
-                onClick = if (item.isExpandable) {
-                    {
-                        expandedGroups[index] =
-                            !isExpanded
-                    }
-                } else {
-                    null
-                }
+                onExpandToggle = {
+                    expandedGroups[index] = !isExpanded
+                },
+                onUrlClick = onUrlClick
             )
             if (item.isExpandable) {
                 AnimatedVisibility(
@@ -251,7 +249,8 @@ private fun LoadedContent(
                     exit = shrinkVertically()
                 ) {
                     ExpandedTagsSection(
-                        tags = item.tags
+                        tags = item.tags,
+                        onUrlClick = onUrlClick
                     )
                 }
             }

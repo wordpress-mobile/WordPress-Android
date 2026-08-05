@@ -435,10 +435,12 @@ sealed class ReferrersDataResult {
 }
 
 /**
- * A single referrer item from the API.
+ * A single referrer item from the API. [url] is null for a group with no link of its own
+ * (e.g. "Search Engines"), whose links live on its [children].
  */
 data class ReferrerDataItem(
     val name: String,
+    val url: String?,
     val views: Long,
     val children: List<ReferrerChildDataItem> = emptyList()
 )
@@ -573,10 +575,19 @@ sealed class ClicksDataResult {
 }
 
 /**
- * A single click item from the API.
+ * A single click item from the API. [url] is null for a grouped source with no link of its own,
+ * whose links live on its [children].
  */
 data class ClickDataItem(
     val name: String,
+    val url: String?,
+    val clicks: Long,
+    val children: List<ClickChildDataItem> = emptyList()
+)
+
+data class ClickChildDataItem(
+    val name: String,
+    val url: String?,
     val clicks: Long
 )
 
@@ -744,11 +755,13 @@ data class TagGroupData(
 )
 
 /**
- * A single tag or category item.
+ * A single tag or category item. [link] is the tag's archive page, opened when the row is tapped,
+ * and is null when the tag has none.
  */
 data class TagData(
     val tagType: String,
-    val name: String
+    val name: String,
+    val link: String? = null
 )
 
 /**

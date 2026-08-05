@@ -15,6 +15,7 @@ import org.wordpress.android.ui.newstats.repository.ClickItemData
 import org.wordpress.android.ui.newstats.repository.ClicksResult
 import org.wordpress.android.ui.newstats.repository.FileDownloadItemData
 import org.wordpress.android.ui.newstats.repository.FileDownloadsResult
+import org.wordpress.android.ui.newstats.repository.MostViewedChildData
 import org.wordpress.android.ui.newstats.repository.MostViewedItemData
 import org.wordpress.android.ui.newstats.repository.MostViewedResult
 import org.wordpress.android.ui.newstats.repository.SearchTermItemData
@@ -37,7 +38,7 @@ class MostViewedDetailFetcherTest : BaseUnitTest() {
 
     @Test
     fun `fetch initializes the repository with the access token`() = test {
-        whenever(statsRepository.fetchClicks(any(), any())).thenReturn(emptyClicksSuccess())
+        whenever(statsRepository.fetchClicks(any(), any())).thenReturn(clicksSuccess())
 
         fetcher.fetch(MostViewedDetailSource.CLICKS, SITE_ID, PERIOD, ACCESS_TOKEN)
 
@@ -115,6 +116,23 @@ class MostViewedDetailFetcherTest : BaseUnitTest() {
         assertThat(success.totalValue).isEqualTo(60L)
         assertThat(success.totalValueChange).isEqualTo(30L)
         assertThat(success.totalValueChangePercent).isEqualTo(100.0)
+    }
+
+    @Test
+    fun `fetch clicks carries the url and children onto the detail items`() = test {
+        val child = MostViewedChildData(name = "Child link", url = "child-url", views = 10L)
+        whenever(statsRepository.fetchClicks(any(), any())).thenReturn(
+            clicksSuccess(
+                ClickItemData("example.com", 50L, 20L, url = "link-url"),
+                ClickItemData("Grouped", 10L, 10L, children = listOf(child))
+            )
+        )
+
+        val result = fetcher.fetch(MostViewedDetailSource.CLICKS, SITE_ID, PERIOD, ACCESS_TOKEN)
+
+        val items = (result as StatsCardFetchResult.Success).items
+        assertThat(items[0].url).isEqualTo("link-url")
+        assertThat(items[1].children.single().url).isEqualTo("child-url")
     }
 
     @Test
@@ -226,8 +244,8 @@ class MostViewedDetailFetcherTest : BaseUnitTest() {
     }
     // endregion
 
-    private fun emptyClicksSuccess() = ClicksResult.Success(
-        items = emptyList(),
+    private fun clicksSuccess(vararg items: ClickItemData) = ClicksResult.Success(
+        items = items.toList(),
         totalClicks = 0L,
         totalClicksChange = 0L,
         totalClicksChangePercent = 0.0

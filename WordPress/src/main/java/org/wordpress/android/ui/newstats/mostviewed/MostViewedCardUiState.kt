@@ -38,7 +38,8 @@ sealed class MostViewedCardUiState {
  * @param title The title/name of the item (post title or referrer name)
  * @param views The number of views
  * @param change The percentage change compared to previous period
- * @param url The item's URL (posts only, null for referrers)
+ * @param url The item's URL. Posts open it as detail stats; referrers and clicks open it in a
+ * Custom Tab. Null when the item has no link of its own.
  * @param postType The API post type, e.g. "post"/"page" (posts only)
  */
 data class MostViewedItem(

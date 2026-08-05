@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.OpenInNew
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.Icon
@@ -31,6 +30,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
 import org.wordpress.android.ui.newstats.components.StatsListRowContainer
+import org.wordpress.android.ui.newstats.components.StatsOpenLinkIcon
 import org.wordpress.android.ui.newstats.util.formatStatValue
 
 /**
@@ -38,6 +38,9 @@ import org.wordpress.android.ui.newstats.util.formatStatValue
  * chevron that reveals indented child rows). Shared by the card ([MostViewedCard]) and the detail
  * screen ([MostViewedDetailActivity]); they differ only by the leading [position] number (detail
  * only) and the child [childStartPadding] indent.
+ *
+ * What a tap does — expand, open a link, or hand off to the caller — is decided by
+ * [statsRowAction]; see there for the precedence and why it matters.
  *
  * The caller is expected to wrap this row in a `key(...)` so the [rememberSaveable] expanded state
  * is scoped to the item and survives configuration changes (e.g. rotation).
@@ -47,9 +50,9 @@ import org.wordpress.android.ui.newstats.util.formatStatValue
  * @param change The change badge shown under the views
  * @param children The child rows revealed when expanded (empty = no chevron, not expandable)
  * @param percentage Bar fill percentage (0f..1f)
- * @param onChildClick Invoked with a child's URL when a linkable child row is tapped
- * @param onItemClick Invoked when a childless row is tapped (e.g. opens a post's detail stats);
- * rows with children keep their expand/collapse tap behavior
+ * @param onUrlClick Invoked with the URL when a linkable row (this row or a child) is tapped
+ * @param url The URL passed to [onUrlClick] when this row is tapped
+ * @param onItemClick Invoked when a childless row is tapped, e.g. opens a post's detail stats
  * @param position Optional 1-based position number shown on the detail screen
  * @param childStartPadding Indent applied to the expanded child rows
  */
@@ -60,17 +63,21 @@ internal fun MostViewedExpandableRow(
     change: MostViewedChange,
     children: List<MostViewedChildItem>,
     percentage: Float,
-    onChildClick: (String) -> Unit,
+    onUrlClick: (String) -> Unit,
+    url: String? = null,
     onItemClick: (() -> Unit)? = null,
     position: Int? = null,
     childStartPadding: Dp = 24.dp
 ) {
     val hasChildren = children.isNotEmpty()
+    val action = statsRowAction(hasChildren, url, onItemClick)
+    val linkUrl = (action as? StatsRowAction.OpenUrl)?.url
     var expanded by rememberSaveable { mutableStateOf(false) }
-    val clickModifier = when {
-        hasChildren -> Modifier.clickable { expanded = !expanded }
-        onItemClick != null -> Modifier.clickable { onItemClick() }
-        else -> Modifier
+    val clickModifier = when (action) {
+        StatsRowAction.Expand -> Modifier.clickable { expanded = !expanded }
+        is StatsRowAction.Item -> Modifier.clickable { action.onClick() }
+        is StatsRowAction.OpenUrl -> Modifier.clickable { onUrlClick(action.url) }
+        StatsRowAction.None -> Modifier
     }
 
     Column {
@@ -104,6 +111,9 @@ internal fun MostViewedExpandableRow(
                         if (hasChildren) {
                             MostViewedExpandChevron(expanded = expanded)
                             Spacer(modifier = Modifier.width(4.dp))
+                        } else if (linkUrl != null) {
+                            StatsOpenLinkIcon()
+                            Spacer(modifier = Modifier.width(4.dp))
                         }
                         Text(
                             text = formatStatValue(views),
@@ -121,7 +131,7 @@ internal fun MostViewedExpandableRow(
             children = children,
             expanded = expanded,
             startPadding = childStartPadding,
-            onChildClick = onChildClick
+            onUrlClick = onUrlClick
         )
     }
 }
@@ -151,7 +161,7 @@ internal fun MostViewedExpandableChildren(
     children: List<MostViewedChildItem>,
     expanded: Boolean,
     startPadding: Dp,
-    onChildClick: (String) -> Unit
+    onUrlClick: (String) -> Unit
 ) {
     AnimatedVisibility(visible = expanded) {
         val maxChildViews = children.maxOfOrNull { it.views } ?: 0L
@@ -163,7 +173,7 @@ internal fun MostViewedExpandableChildren(
                 val childPercentage = if (maxChildViews > 0) {
                     child.views.toFloat() / maxChildViews.toFloat()
                 } else 0f
-                MostViewedChildRow(child = child, percentage = childPercentage, onChildClick = onChildClick)
+                MostViewedChildRow(child = child, percentage = childPercentage, onUrlClick = onUrlClick)
             }
         }
     }
@@ -173,11 +183,11 @@ internal fun MostViewedExpandableChildren(
 private fun MostViewedChildRow(
     child: MostViewedChildItem,
     percentage: Float,
-    onChildClick: (String) -> Unit
+    onUrlClick: (String) -> Unit
 ) {
     val url = child.url
     val isClickable = !url.isNullOrBlank()
-    val clickModifier = if (isClickable) Modifier.clickable { onChildClick(url) } else Modifier
+    val clickModifier = if (isClickable) Modifier.clickable { onUrlClick(url) } else Modifier
 
     StatsListRowContainer(percentage = percentage, modifier = clickModifier) {
         Row(
@@ -202,12 +212,7 @@ private fun MostViewedChildRow(
             )
             if (isClickable) {
                 Spacer(modifier = Modifier.width(4.dp))
-                Icon(
-                    imageVector = Icons.AutoMirrored.Filled.OpenInNew,
-                    contentDescription = stringResource(R.string.stats_open_referrer_link),
-                    modifier = Modifier.size(16.dp),
-                    tint = MaterialTheme.colorScheme.onSurfaceVariant
-                )
+                StatsOpenLinkIcon()
             }
         }
     }

@@ -5,10 +5,8 @@ import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.newstats.StatsPeriod
 import org.wordpress.android.ui.newstats.mostviewed.BaseStatsCardViewModel
-import org.wordpress.android.ui.newstats.mostviewed.MostViewedChange
-import org.wordpress.android.ui.newstats.mostviewed.MostViewedDetailItem
 import org.wordpress.android.ui.newstats.mostviewed.StatsCardFetchResult
-import org.wordpress.android.ui.newstats.repository.ClickItemData
+import org.wordpress.android.ui.newstats.mostviewed.toDetailItem
 import org.wordpress.android.ui.newstats.repository.ClicksResult
 import org.wordpress.android.ui.newstats.repository.StatsRepository
 import org.wordpress.android.viewmodel.ResourceProvider
@@ -55,15 +53,4 @@ class ClicksViewModel @Inject constructor(
             }
         }
     }
-
-    private fun ClickItemData.toDetailItem(
-        id: Long
-    ) = MostViewedDetailItem(
-        id = id,
-        title = name,
-        views = clicks,
-        change = MostViewedChange.fromChange(
-            clicksChange, clicksChangePercent
-        )
-    )
 }

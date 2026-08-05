@@ -186,7 +186,7 @@ class NewStatsActivity : BaseAppCompatActivity() {
                         appPrefsWrapper
                             .setNewStatsIntroShown(true)
                     },
-                    onReferrerChildClick = { url ->
+                    onStatsUrlClick = { url ->
                         activityNavigator.openInCustomTab(this, url)
                     },
                     onPostItemClick = ::openPostDetailStats
@@ -305,7 +305,7 @@ private fun NewStatsScreen(
     onSwitchToOldStats: () -> Unit = {},
     showIntroBottomSheet: Boolean = false,
     onIntroDismissed: () -> Unit = {},
-    onReferrerChildClick: (String) -> Unit = {},
+    onStatsUrlClick: (String) -> Unit = {},
     onPostItemClick: (MostViewedItem) -> Unit = {}
 ) {
     val viewsStatsViewModel: ViewsStatsViewModel = viewModel()
@@ -447,7 +447,7 @@ private fun NewStatsScreen(
                 StatsTabContent(
                     tab = tabs[page],
                     viewsStatsViewModel = viewsStatsViewModel,
-                    onReferrerChildClick = onReferrerChildClick,
+                    onStatsUrlClick = onStatsUrlClick,
                     onPostItemClick = onPostItemClick
                 )
             }
@@ -459,16 +459,18 @@ private fun NewStatsScreen(
 private fun StatsTabContent(
     tab: StatsTab,
     viewsStatsViewModel: ViewsStatsViewModel,
-    onReferrerChildClick: (String) -> Unit = {},
+    onStatsUrlClick: (String) -> Unit = {},
     onPostItemClick: (MostViewedItem) -> Unit = {}
 ) {
     when (tab) {
         StatsTab.TRAFFIC -> TrafficTabContent(
             viewsStatsViewModel = viewsStatsViewModel,
-            onReferrerChildClick = onReferrerChildClick,
+            onStatsUrlClick = onStatsUrlClick,
             onPostItemClick = onPostItemClick
         )
-        StatsTab.INSIGHTS -> InsightsTabContent()
+        StatsTab.INSIGHTS -> InsightsTabContent(
+            onStatsUrlClick = onStatsUrlClick
+        )
         StatsTab.SUBSCRIBERS -> SubscribersTabContent()
     }
 }
@@ -489,7 +491,7 @@ private fun TrafficTabContent(
     devicesViewModel: DevicesViewModel = viewModel(),
     utmViewModel: UtmViewModel = viewModel(),
     newStatsViewModel: NewStatsViewModel = viewModel(),
-    onReferrerChildClick: (String) -> Unit = {},
+    onStatsUrlClick: (String) -> Unit = {},
     onPostItemClick: (MostViewedItem) -> Unit = {}
 ) {
     val context = LocalContext.current
@@ -780,7 +782,7 @@ private fun TrafficTabContent(
                         onMoveToTop = { newStatsViewModel.moveCardToTop(cardType) },
                         onMoveDown = { newStatsViewModel.moveCardDown(cardType) },
                         onMoveToBottom = { newStatsViewModel.moveCardToBottom(cardType) },
-                        onChildClick = onReferrerChildClick
+                        onUrlClick = onStatsUrlClick
                     )
                     StatsCardType.LOCATIONS -> LocationsCard(
                         uiState = locationsUiState,
@@ -936,7 +938,8 @@ private fun TrafficTabContent(
                                 ?.isAuthError == true,
                             getAdminUrl = clicksViewModel::getAdminUrl,
                             context = context
-                        )
+                        ),
+                        onUrlClick = onStatsUrlClick
                     )
                     StatsCardType.SEARCH_TERMS -> MostViewedCard(
                         uiState = searchTermsUiState,
@@ -1118,7 +1121,8 @@ private fun InsightsTabContent(
     mostPopularDayViewModel: MostPopularDayViewModel = viewModel(),
     mostPopularTimeViewModel: MostPopularTimeViewModel = viewModel(),
     tagsAndCategoriesViewModel: TagsAndCategoriesViewModel = viewModel(),
-    insightsViewModel: InsightsViewModel = viewModel()
+    insightsViewModel: InsightsViewModel = viewModel(),
+    onStatsUrlClick: (String) -> Unit = {}
 ) {
     val context = LocalContext.current
     val yearInReviewUiState by yearInReviewViewModel.uiState.collectAsState()
@@ -1305,7 +1309,8 @@ private fun InsightsTabContent(
                             onMoveUp = { insightsViewModel.moveCardUp(cardType) },
                             onMoveToTop = { insightsViewModel.moveCardToTop(cardType) },
                             onMoveDown = { insightsViewModel.moveCardDown(cardType) },
-                            onMoveToBottom = { insightsViewModel.moveCardToBottom(cardType) }
+                            onMoveToBottom = { insightsViewModel.moveCardToBottom(cardType) },
+                            onUrlClick = onStatsUrlClick
                         )
                     }
                 }
