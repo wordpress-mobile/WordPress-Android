@@ -284,13 +284,8 @@ private fun DetailLoadedContent(
                 percentage = percentage,
                 position = index + 1,
                 isExpanded = isExpanded,
-                onClick = if (item.isExpandable) {
-                    {
-                        expandedGroups[index] =
-                            !isExpanded
-                    }
-                } else {
-                    null
+                onExpandToggle = {
+                    expandedGroups[index] = !isExpanded
                 },
                 onUrlClick = onUrlClick
             )

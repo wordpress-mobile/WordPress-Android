@@ -237,13 +237,8 @@ private fun LoadedContent(
                 item = item,
                 percentage = percentage,
                 isExpanded = isExpanded,
-                onClick = if (item.isExpandable) {
-                    {
-                        expandedGroups[index] =
-                            !isExpanded
-                    }
-                } else {
-                    null
+                onExpandToggle = {
+                    expandedGroups[index] = !isExpanded
                 },
                 onUrlClick = onUrlClick
             )

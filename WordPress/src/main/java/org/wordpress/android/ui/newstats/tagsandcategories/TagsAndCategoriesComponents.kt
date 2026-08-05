@@ -65,16 +65,19 @@ fun TagTypeIcon(
 }
 
 /**
- * A tag group row. Follows the same expand-or-navigate rule as the Most Viewed rows (see
- * `statsRowAction`), derived from [item] rather than passed in so the chevron and the tap action
- * can't disagree.
+ * A tag group row, following the same expand-or-navigate rule as the Most Viewed rows (see
+ * `statsRowAction`): a group of several tags expands, a lone tag opens its archive page, never
+ * both.
+ *
+ * Which one applies is decided here from [item], not by the caller. [onExpandToggle] says *how*
+ * to toggle, not *whether* to — so the chevron and the tap action are guaranteed to agree.
  */
 @Composable
 fun TagGroupRow(
     item: TagGroupUiItem,
     percentage: Float,
     isExpanded: Boolean,
-    onClick: (() -> Unit)?,
+    onExpandToggle: () -> Unit,
     onUrlClick: (String) -> Unit = {},
     position: Int? = null
 ) {
@@ -83,8 +86,10 @@ fun TagGroupRow(
     StatsListRowContainer(
         percentage = percentage,
         modifier = when {
-            onClick != null ->
-                Modifier.clickable(onClick = onClick)
+            isExpandable ->
+                Modifier.clickable {
+                    onExpandToggle()
+                }
             linkUrl != null ->
                 Modifier.clickable {
                     onUrlClick(linkUrl)
