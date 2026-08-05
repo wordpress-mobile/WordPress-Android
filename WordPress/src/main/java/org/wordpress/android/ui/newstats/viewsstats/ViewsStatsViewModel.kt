@@ -230,7 +230,7 @@ class ViewsStatsViewModel @Inject constructor(
     private fun restoreChartTypeFromSavedState(): ChartType {
         return ChartType.fromStorageKey(
             savedStateHandle.get<String>(KEY_CHART_TYPE)
-        ) ?: ChartType.LINE
+        ) ?: ChartType.DEFAULT
     }
 
     private suspend fun restoreChartTypeFromPreferences(): ChartType? {
