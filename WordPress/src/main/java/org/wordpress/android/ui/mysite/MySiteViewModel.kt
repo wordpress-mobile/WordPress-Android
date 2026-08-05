@@ -28,7 +28,7 @@ import org.wordpress.android.ui.mysite.MySiteViewModel.State.SiteSelected
 import org.wordpress.android.ui.mysite.cards.DashboardCardsViewModelSlice
 import org.wordpress.android.ui.mysite.cards.siteinfo.SiteInfoHeaderCardViewModelSlice
 import org.wordpress.android.ui.mysite.items.DashboardItemsViewModelSlice
-import org.wordpress.android.ui.newstats.NewStatsFeatureUtils
+import org.wordpress.android.ui.newstats.NewStatsRouting
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.mediapicker.MediaPickerActivity
 import org.wordpress.android.ui.posts.BasicDialogViewModel
@@ -71,7 +71,7 @@ class MySiteViewModel @Inject constructor(
     private val gutenbergEditorPreloader: GutenbergEditorPreloader,
     private val siteConnectivityBannerViewModelSlice: SiteConnectivityBannerViewModelSlice,
     private val gutenbergKitAnnouncementController: GutenbergKitAnnouncementController,
-    private val newStatsFeatureUtils: NewStatsFeatureUtils,
+    private val newStatsRouting: NewStatsRouting,
 ) : ScopedViewModel(mainDispatcher) {
     private val _onSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
     private val _onNavigation = MutableLiveData<Event<SiteNavigationAction>>()
@@ -245,7 +245,7 @@ class MySiteViewModel @Inject constructor(
     fun handleSuccessfulLoginResult() {
         selectedSiteRepository.getSelectedSite()?.let { site ->
             _onNavigation.value = Event(
-                if (newStatsFeatureUtils.isNewStatsEnabled()) {
+                if (newStatsRouting.isNewStatsEnabled()) {
                     SiteNavigationAction.OpenNewStats
                 } else {
                     SiteNavigationAction.OpenStats(site)

@@ -582,6 +582,11 @@ class AppPrefsWrapper @Inject constructor(val buildConfigWrapper: BuildConfigWra
     fun setNewStatsUserOptedIn(optedIn: Boolean) =
         AppPrefs.setNewStatsUserOptedIn(optedIn)
 
+    fun getNewStatsUserOptedOut(): Boolean = AppPrefs.getNewStatsUserOptedOut()
+
+    fun setNewStatsUserOptedOut(optedOut: Boolean) =
+        AppPrefs.setNewStatsUserOptedOut(optedOut)
+
     fun getStatsNewStatsSuggestionShown(): Boolean =
         AppPrefs.getStatsNewStatsSuggestionShown()
 

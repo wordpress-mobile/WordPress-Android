@@ -21,7 +21,7 @@ import org.wordpress.android.fluxc.model.stats.time.VisitsAndViewsModel.PeriodDa
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.newstats.NewStatsActivity
-import org.wordpress.android.ui.newstats.NewStatsFeatureUtils
+import org.wordpress.android.ui.newstats.NewStatsRouting
 import org.wordpress.android.ui.stats.StatsTimeframe
 import org.wordpress.android.ui.stats.refresh.StatsActivity
 import org.wordpress.android.ui.stats.refresh.lists.widget.IS_WIDE_VIEW_KEY
@@ -50,7 +50,7 @@ class WidgetUtils
 @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     val imageManager: ImageManager,
-    private val newStatsFeatureUtils: NewStatsFeatureUtils
+    private val newStatsRouting: NewStatsRouting
 ) {
     private val coroutineScope = CoroutineScope(mainDispatcher)
     fun isWidgetWiderThanLimit(
@@ -179,7 +179,7 @@ class WidgetUtils
         statsTimeframe: StatsTimeframe,
         granularity: StatsGranularity? = null
     ): PendingIntent {
-        val intent = if (newStatsFeatureUtils.isNewStatsEnabled()) {
+        val intent = if (newStatsRouting.isNewStatsEnabled()) {
             Intent(context, NewStatsActivity::class.java).apply {
                 putExtra(WordPress.LOCAL_SITE_ID, localSiteId)
                 // Mirror the row-tap (template) path: CLEAR_TOP forces an already-running
@@ -208,7 +208,7 @@ class WidgetUtils
     private fun getPendingTemplate(context: Context): PendingIntent {
         // The per-row fill-in intents already carry the LOCAL_SITE_ID extra, which is merged into
         // whichever component this template targets, so New Stats receives the tapped row's site.
-        val targetActivity = if (newStatsFeatureUtils.isNewStatsEnabled()) {
+        val targetActivity = if (newStatsRouting.isNewStatsEnabled()) {
             NewStatsActivity::class.java
         } else {
             StatsActivity::class.java

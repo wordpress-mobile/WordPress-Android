@@ -9,7 +9,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.TodaysStat
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.SiteNavigationAction
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker
-import org.wordpress.android.ui.newstats.NewStatsFeatureUtils
+import org.wordpress.android.ui.newstats.NewStatsRouting
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.viewmodel.Event
 import javax.inject.Inject
@@ -20,7 +20,7 @@ class TodaysStatsViewModelSlice @Inject constructor(
     private val jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper,
     private val appPrefsWrapper: AppPrefsWrapper,
     private val todaysStatsCardBuilder: TodaysStatsCardBuilder,
-    private val newStatsFeatureUtils: NewStatsFeatureUtils
+    private val newStatsRouting: NewStatsRouting
 ) {
     private val _uiModel = MutableLiveData<MySiteCardAndItem.Card.TodaysStatsCard?>()
     val uiModel = _uiModel as LiveData<MySiteCardAndItem.Card.TodaysStatsCard?>
@@ -92,7 +92,7 @@ class TodaysStatsViewModelSlice @Inject constructor(
             jetpackFeatureRemovalPhaseHelper.shouldShowStaticPage() ->
                 SiteNavigationAction.ShowJetpackRemovalStaticPostersView
 
-            newStatsFeatureUtils.isNewStatsEnabled() -> SiteNavigationAction.OpenNewStatsForToday
+            newStatsRouting.isNewStatsEnabled() -> SiteNavigationAction.OpenNewStatsForToday
 
             else -> SiteNavigationAction.OpenStatsByDay(requireNotNull(selectedSiteRepository.getSelectedSite()))
         }

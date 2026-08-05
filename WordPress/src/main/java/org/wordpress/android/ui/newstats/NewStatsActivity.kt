@@ -49,6 +49,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -67,6 +68,7 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.ActivityNavigator
+import org.wordpress.android.ui.compose.components.FeedbackDialog
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.main.BaseAppCompatActivity
 import org.wordpress.android.ui.newstats.components.AddCardBottomSheet
@@ -125,7 +127,6 @@ import org.wordpress.android.ui.stats.refresh.utils.StatsLaunchedFrom
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
-import org.wordpress.android.util.config.NewStatsFeatureConfig
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -143,7 +144,7 @@ class NewStatsActivity : BaseAppCompatActivity() {
     lateinit var analyticsTracker: AnalyticsTrackerWrapper
 
     @Inject
-    lateinit var newStatsFeatureConfig: NewStatsFeatureConfig
+    lateinit var newStatsRouting: NewStatsRouting
 
     @Inject
     lateinit var activityNavigator: ActivityNavigator
@@ -155,14 +156,31 @@ class NewStatsActivity : BaseAppCompatActivity() {
         selectSiteFromIntentIfNeeded()
         val shouldShowIntro =
             !appPrefsWrapper.getNewStatsIntroShown()
-        val canSwitchToOldStats = !newStatsFeatureConfig.isEnabled()
         setContent {
             AppThemeM3 {
+                var showFeedbackDialog by rememberSaveable { mutableStateOf(false) }
+
+                if (showFeedbackDialog) {
+                    FeedbackDialog(
+                        message = stringResource(R.string.stats_new_stats_feedback_dialog_message),
+                        onDismiss = {
+                            showFeedbackDialog = false
+                            leaveNewStats(sendFeedback = false)
+                        },
+                        onSendFeedback = {
+                            showFeedbackDialog = false
+                            leaveNewStats(sendFeedback = true)
+                        }
+                    )
+                }
+
                 NewStatsScreen(
                     onBackPressed =
                         onBackPressedDispatcher::onBackPressed,
-                    showSwitchToOldStats = canSwitchToOldStats,
-                    onSwitchToOldStats = ::switchToOldStats,
+                    onSwitchToOldStats = {
+                        switchToOldStats()
+                        showFeedbackDialog = true
+                    },
                     showIntroBottomSheet = shouldShowIntro,
                     onIntroDismissed = {
                         appPrefsWrapper
@@ -190,21 +208,36 @@ class NewStatsActivity : BaseAppCompatActivity() {
         activityNavigator.openPostDetailStats(this, item.id, item.postType, item.title, item.url)
     }
 
+    /**
+     * Records the opt-out. Navigation is deferred until the feedback dialog is answered, since
+     * finishing this activity straight away would tear the dialog down with it.
+     */
     private fun switchToOldStats() {
         analyticsTracker.track(Stat.STATS_NEW_STATS_DISABLED)
-        appPrefsWrapper.setNewStatsUserOptedIn(false)
-        appPrefsWrapper.setNewStatsIntroShown(false)
+        newStatsRouting.optOut()
+    }
+
+    private fun leaveNewStats(sendFeedback: Boolean) {
+        // The opt-out is already persisted, so always finish - bailing out here would strand the
+        // user on a screen the rest of the app no longer routes them to. Old Stats needs a site,
+        // but without one we can still leave and fall back to whatever is underneath.
         selectedSiteRepository.getSelectedSite()?.let { site ->
             StatsActivity.start(
                 this,
                 site,
                 launchedFrom = StatsLaunchedFrom.STATS_TOGGLE
             )
-            finish()
         }
+        // Started after old Stats so the form sits on top of it and backs out to it.
+        if (sendFeedback) {
+            ActivityLauncher.viewFeedbackForm(this, FEEDBACK_PREFIX_STATS)
+        }
+        finish()
     }
 
     companion object {
+        private const val FEEDBACK_PREFIX_STATS = "Stats"
+
         /**
          * Opens New Stats, optionally on a specific [period]. The period is passed as an Intent
          * extra that seeds [ViewsStatsViewModel]'s SavedStateHandle, so it takes precedence over the
@@ -269,7 +302,6 @@ private fun StatsOverflowMenu(
 @Composable
 private fun NewStatsScreen(
     onBackPressed: () -> Unit,
-    showSwitchToOldStats: Boolean = false,
     onSwitchToOldStats: () -> Unit = {},
     showIntroBottomSheet: Boolean = false,
     onIntroDismissed: () -> Unit = {},
@@ -374,11 +406,9 @@ private fun NewStatsScreen(
                             )
                         }
                     }
-                    if (showSwitchToOldStats) {
-                        StatsOverflowMenu(
-                            onSwitchToOldStats = onSwitchToOldStats
-                        )
-                    }
+                    StatsOverflowMenu(
+                        onSwitchToOldStats = onSwitchToOldStats
+                    )
                 }
             )
         }

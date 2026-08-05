@@ -17,7 +17,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.SiteNavigationAction
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker
-import org.wordpress.android.ui.newstats.NewStatsFeatureUtils
+import org.wordpress.android.ui.newstats.NewStatsRouting
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 
 @ExperimentalCoroutinesApi
@@ -39,7 +39,7 @@ class TodaysStatsViewModelSliceTest : BaseUnitTest() {
     lateinit var todaysStatsCardBuilder: TodaysStatsCardBuilder
 
     @Mock
-    lateinit var newStatsFeatureUtils: NewStatsFeatureUtils
+    lateinit var newStatsRouting: NewStatsRouting
 
     private lateinit var todaysStatsViewModelSlice: TodaysStatsViewModelSlice
 
@@ -57,7 +57,7 @@ class TodaysStatsViewModelSliceTest : BaseUnitTest() {
             jetpackFeatureRemovalPhaseHelper,
             appPrefsWrapper,
             todaysStatsCardBuilder,
-            newStatsFeatureUtils
+            newStatsRouting
         )
         navigationActions = mutableListOf()
         todaysStatsViewModelSlice.onNavigation.observeForever { event ->
@@ -89,7 +89,7 @@ class TodaysStatsViewModelSliceTest : BaseUnitTest() {
     @Test
     fun `given new stats enabled, when card item is clicked, then new stats is opened for today`() =
         test {
-            whenever(newStatsFeatureUtils.isNewStatsEnabled()).thenReturn(true)
+            whenever(newStatsRouting.isNewStatsEnabled()).thenReturn(true)
 
             val params = todaysStatsViewModelSlice.getTodaysStatsBuilderParams(null)
 
@@ -105,7 +105,7 @@ class TodaysStatsViewModelSliceTest : BaseUnitTest() {
     @Test
     fun `given new stats enabled, when more menu item view stats is clicked, then new stats is opened for today`() =
         test {
-            whenever(newStatsFeatureUtils.isNewStatsEnabled()).thenReturn(true)
+            whenever(newStatsRouting.isNewStatsEnabled()).thenReturn(true)
 
             val params = todaysStatsViewModelSlice.getTodaysStatsBuilderParams(null)
 
