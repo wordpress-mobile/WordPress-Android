@@ -82,6 +82,7 @@ import org.wordpress.android.ui.newstats.mostviewed.MostViewedCard
 import org.wordpress.android.ui.newstats.mostviewed.MostViewedCardUiState
 import org.wordpress.android.ui.newstats.mostviewed.MostViewedDetailActivity
 import org.wordpress.android.ui.newstats.mostviewed.MostViewedDetailSource
+import org.wordpress.android.ui.newstats.mostviewed.MostViewedItem
 import org.wordpress.android.ui.newstats.mostviewed.MostViewedViewModel
 import org.wordpress.android.ui.newstats.todaysstats.TodaysStatsCard
 import org.wordpress.android.ui.newstats.todaysstats.TodaysStatsViewModel
@@ -187,7 +188,8 @@ class NewStatsActivity : BaseAppCompatActivity() {
                     },
                     onReferrerChildClick = { url ->
                         activityNavigator.openInCustomTab(this, url)
-                    }
+                    },
+                    onPostItemClick = ::openPostDetailStats
                 )
             }
         }
@@ -200,6 +202,10 @@ class NewStatsActivity : BaseAppCompatActivity() {
                 selectedSiteRepository.updateSite(site)
             }
         }
+    }
+
+    private fun openPostDetailStats(item: MostViewedItem) {
+        activityNavigator.openPostDetailStats(this, item.id, item.postType, item.title, item.url)
     }
 
     /**
@@ -286,7 +292,8 @@ private fun NewStatsScreen(
     onSwitchToOldStats: () -> Unit = {},
     showIntroBottomSheet: Boolean = false,
     onIntroDismissed: () -> Unit = {},
-    onReferrerChildClick: (String) -> Unit = {}
+    onReferrerChildClick: (String) -> Unit = {},
+    onPostItemClick: (MostViewedItem) -> Unit = {}
 ) {
     val viewsStatsViewModel: ViewsStatsViewModel = viewModel()
     val selectedPeriod by viewsStatsViewModel.selectedPeriod.collectAsState()
@@ -427,7 +434,8 @@ private fun NewStatsScreen(
                 StatsTabContent(
                     tab = tabs[page],
                     viewsStatsViewModel = viewsStatsViewModel,
-                    onReferrerChildClick = onReferrerChildClick
+                    onReferrerChildClick = onReferrerChildClick,
+                    onPostItemClick = onPostItemClick
                 )
             }
         }
@@ -438,12 +446,14 @@ private fun NewStatsScreen(
 private fun StatsTabContent(
     tab: StatsTab,
     viewsStatsViewModel: ViewsStatsViewModel,
-    onReferrerChildClick: (String) -> Unit = {}
+    onReferrerChildClick: (String) -> Unit = {},
+    onPostItemClick: (MostViewedItem) -> Unit = {}
 ) {
     when (tab) {
         StatsTab.TRAFFIC -> TrafficTabContent(
             viewsStatsViewModel = viewsStatsViewModel,
-            onReferrerChildClick = onReferrerChildClick
+            onReferrerChildClick = onReferrerChildClick,
+            onPostItemClick = onPostItemClick
         )
         StatsTab.INSIGHTS -> InsightsTabContent()
         StatsTab.SUBSCRIBERS -> SubscribersTabContent()
@@ -466,7 +476,8 @@ private fun TrafficTabContent(
     devicesViewModel: DevicesViewModel = viewModel(),
     utmViewModel: UtmViewModel = viewModel(),
     newStatsViewModel: NewStatsViewModel = viewModel(),
-    onReferrerChildClick: (String) -> Unit = {}
+    onReferrerChildClick: (String) -> Unit = {},
+    onPostItemClick: (MostViewedItem) -> Unit = {}
 ) {
     val context = LocalContext.current
     val todaysStatsUiState by todaysStatsViewModel.uiState.collectAsState()
@@ -733,7 +744,8 @@ private fun TrafficTabContent(
                         onMoveUp = { newStatsViewModel.moveCardUp(cardType) },
                         onMoveToTop = { newStatsViewModel.moveCardToTop(cardType) },
                         onMoveDown = { newStatsViewModel.moveCardDown(cardType) },
-                        onMoveToBottom = { newStatsViewModel.moveCardToBottom(cardType) }
+                        onMoveToBottom = { newStatsViewModel.moveCardToBottom(cardType) },
+                        onItemClick = onPostItemClick
                     )
                     StatsCardType.MOST_VIEWED_REFERRERS -> MostViewedCard(
                         uiState = referrersUiState,

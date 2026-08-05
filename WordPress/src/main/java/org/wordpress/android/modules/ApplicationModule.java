@@ -16,7 +16,6 @@ import org.wordpress.android.inappupdate.IInAppUpdateManager;
 import org.wordpress.android.inappupdate.InAppUpdateAnalyticsTracker;
 import org.wordpress.android.inappupdate.InAppUpdateManagerImpl;
 import org.wordpress.android.inappupdate.InAppUpdateManagerNoop;
-import org.wordpress.android.ui.ActivityNavigator;
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadStep;
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadStepsProvider;
 import org.wordpress.android.ui.jetpack.restore.RestoreStep;
@@ -115,11 +114,6 @@ public abstract class ApplicationModule {
                 System::currentTimeMillis
         )
                 : new InAppUpdateManagerNoop();
-    }
-
-    @Provides
-    public static ActivityNavigator provideActivityNavigator(@ApplicationContext Context context) {
-        return new ActivityNavigator();
     }
 
     @Provides

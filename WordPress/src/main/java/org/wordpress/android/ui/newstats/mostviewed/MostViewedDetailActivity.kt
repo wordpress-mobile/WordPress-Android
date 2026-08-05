@@ -102,10 +102,19 @@ class MostViewedDetailActivity : BaseAppCompatActivity() {
                     onOpenWpAdmin = {
                         viewModel.getAdminUrl()?.let { ActivityLauncher.openUrlExternal(this, it) }
                     },
-                    onChildClick = { url -> activityNavigator.openInCustomTab(this, url) }
+                    onChildClick = { url -> activityNavigator.openInCustomTab(this, url) },
+                    onItemClick = if (cardType == StatsCardType.MOST_VIEWED_POSTS_AND_PAGES) {
+                        ::openPostDetailStats
+                    } else {
+                        null
+                    }
                 )
             }
         }
+    }
+
+    private fun openPostDetailStats(item: MostViewedDetailItem) {
+        activityNavigator.openPostDetailStats(this, item.id, item.postType, item.title, item.url)
     }
 
     /**
@@ -207,7 +216,8 @@ private fun MostViewedDetailScreen(
     onBackPressed: () -> Unit,
     onRetry: () -> Unit = {},
     onOpenWpAdmin: () -> Unit = {},
-    onChildClick: (String) -> Unit = {}
+    onChildClick: (String) -> Unit = {},
+    onItemClick: ((MostViewedDetailItem) -> Unit)? = null
 ) {
     val title = stringResource(cardType.displayNameResId)
 
@@ -241,6 +251,7 @@ private fun MostViewedDetailScreen(
                 state = uiState,
                 valueHeaderResId = valueHeaderResId,
                 onChildClick = onChildClick,
+                onItemClick = onItemClick,
                 modifier = contentModifier
             )
         }
@@ -252,6 +263,7 @@ private fun DetailLoadedContent(
     state: MostViewedDetailUiState.Loaded,
     valueHeaderResId: Int,
     onChildClick: (String) -> Unit,
+    onItemClick: ((MostViewedDetailItem) -> Unit)?,
     modifier: Modifier = Modifier
 ) {
     LazyColumn(
@@ -290,6 +302,7 @@ private fun DetailLoadedContent(
                 children = item.children,
                 percentage = percentage,
                 onChildClick = onChildClick,
+                onItemClick = onItemClick?.let { { it(item) } },
                 position = index + 1,
                 childStartPadding = 32.dp
             )
