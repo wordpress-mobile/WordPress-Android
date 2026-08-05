@@ -103,13 +103,6 @@ class MostViewedDetailFetcher @Inject constructor(
         is FileDownloadsResult.Error -> StatsCardFetchResult.Error(messageResId, isAuthError)
     }
 
-    private fun ClickItemData.toDetailItem(id: Long) = MostViewedDetailItem(
-        id = id,
-        title = name,
-        views = clicks,
-        change = MostViewedChange.fromChange(clicksChange, clicksChangePercent)
-    )
-
     private fun SearchTermItemData.toDetailItem(id: Long) = MostViewedDetailItem(
         id = id,
         title = name,
@@ -131,3 +124,15 @@ class MostViewedDetailFetcher @Inject constructor(
         change = MostViewedChange.fromChange(downloadsChange, downloadsChangePercent)
     )
 }
+
+/** Maps a clicks item onto the shared detail shape. Shared by the clicks card and this fetcher. */
+internal fun ClickItemData.toDetailItem(id: Long) = MostViewedDetailItem(
+    id = id,
+    title = name,
+    views = clicks,
+    change = MostViewedChange.fromChange(clicksChange, clicksChangePercent),
+    children = children.map { child ->
+        MostViewedChildItem(name = child.name, url = child.url, views = child.views)
+    },
+    url = url
+)

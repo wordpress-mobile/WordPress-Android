@@ -102,7 +102,7 @@ class MostViewedDetailActivity : BaseAppCompatActivity() {
                     onOpenWpAdmin = {
                         viewModel.getAdminUrl()?.let { ActivityLauncher.openUrlExternal(this, it) }
                     },
-                    onChildClick = { url -> activityNavigator.openInCustomTab(this, url) },
+                    onUrlClick = { url -> activityNavigator.openInCustomTab(this, url) },
                     onItemClick = if (cardType == StatsCardType.MOST_VIEWED_POSTS_AND_PAGES) {
                         ::openPostDetailStats
                     } else {
@@ -216,7 +216,7 @@ private fun MostViewedDetailScreen(
     onBackPressed: () -> Unit,
     onRetry: () -> Unit = {},
     onOpenWpAdmin: () -> Unit = {},
-    onChildClick: (String) -> Unit = {},
+    onUrlClick: (String) -> Unit = {},
     onItemClick: ((MostViewedDetailItem) -> Unit)? = null
 ) {
     val title = stringResource(cardType.displayNameResId)
@@ -250,7 +250,7 @@ private fun MostViewedDetailScreen(
             is MostViewedDetailUiState.Loaded -> DetailLoadedContent(
                 state = uiState,
                 valueHeaderResId = valueHeaderResId,
-                onChildClick = onChildClick,
+                onUrlClick = onUrlClick,
                 onItemClick = onItemClick,
                 modifier = contentModifier
             )
@@ -262,7 +262,7 @@ private fun MostViewedDetailScreen(
 private fun DetailLoadedContent(
     state: MostViewedDetailUiState.Loaded,
     valueHeaderResId: Int,
-    onChildClick: (String) -> Unit,
+    onUrlClick: (String) -> Unit,
     onItemClick: ((MostViewedDetailItem) -> Unit)?,
     modifier: Modifier = Modifier
 ) {
@@ -301,7 +301,8 @@ private fun DetailLoadedContent(
                 change = item.change,
                 children = item.children,
                 percentage = percentage,
-                onChildClick = onChildClick,
+                onUrlClick = onUrlClick,
+                url = item.url,
                 onItemClick = onItemClick?.let { { it(item) } },
                 position = index + 1,
                 childStartPadding = 32.dp

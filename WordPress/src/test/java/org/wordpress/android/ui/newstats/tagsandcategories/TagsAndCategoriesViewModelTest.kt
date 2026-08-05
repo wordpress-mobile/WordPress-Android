@@ -212,6 +212,65 @@ class TagsAndCategoriesViewModelTest : BaseUnitTest() {
         }
 
     @Test
+    fun `when a group holds one tag, then the group exposes that tag's link`() =
+        test {
+            whenever(
+                statsTagsUseCase(any(), any(), any())
+            ).thenReturn(createSuccessResult())
+
+            initViewModel()
+            viewModel.loadData()
+            advanceUntilIdle()
+
+            val state = viewModel.uiState.value
+                as TagsAndCategoriesCardUiState.Loaded
+            assertThat(state.items[0].tags[0].link)
+                .isEqualTo(TEST_CATEGORY_LINK)
+            assertThat(state.items[0].link)
+                .isEqualTo(TEST_CATEGORY_LINK)
+        }
+
+    @Test
+    fun `when a group holds several tags, then the group has no link of its own`() =
+        test {
+            val group = TagGroupData(
+                tags = listOf(
+                    TagData(
+                        tagType = "tag",
+                        name = "Tag1",
+                        link = "https://example.com/tag1"
+                    ),
+                    TagData(
+                        tagType = "tag",
+                        name = "Tag2",
+                        link = "https://example.com/tag2"
+                    )
+                ),
+                views = 50
+            )
+            whenever(
+                statsTagsUseCase(any(), any(), any())
+            ).thenReturn(
+                TagsResult.Success(
+                    StatsTagsData(
+                        tagGroups = listOf(group)
+                    )
+                )
+            )
+
+            initViewModel()
+            viewModel.loadData()
+            advanceUntilIdle()
+
+            val state = viewModel.uiState.value
+                as TagsAndCategoriesCardUiState.Loaded
+            // The row expands instead of navigating, but each child keeps its own link.
+            assertThat(state.items[0].link).isNull()
+            assertThat(state.items[0].tags[1].link)
+                .isEqualTo("https://example.com/tag2")
+        }
+
+    @Test
     fun `when fetch succeeds, then maxViewsForBar is first item views`() =
         test {
             whenever(
@@ -537,7 +596,8 @@ class TagsAndCategoriesViewModelTest : BaseUnitTest() {
                         tags = listOf(
                             TagData(
                                 tagType = "category",
-                                name = TEST_CATEGORY_NAME
+                                name = TEST_CATEGORY_NAME,
+                                link = TEST_CATEGORY_LINK
                             )
                         ),
                         views = TEST_CATEGORY_VIEWS
@@ -566,6 +626,8 @@ class TagsAndCategoriesViewModelTest : BaseUnitTest() {
 
         private const val TEST_CATEGORY_NAME =
             "Uncategorized"
+        private const val TEST_CATEGORY_LINK =
+            "https://example.com/category/uncategorized"
         private const val TEST_CATEGORY_VIEWS = 83L
         private const val TEST_TAG_NAME = "snaps"
         private const val TEST_TAG_VIEWS = 15L

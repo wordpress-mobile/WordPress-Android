@@ -211,7 +211,8 @@ class StatsRepositoryTagsTest : BaseUnitTest() {
                         tags = listOf(
                             TagData(
                                 tagType = "tag",
-                                name = "Alpha"
+                                name = "Alpha",
+                                link = ALPHA_LINK
                             ),
                             TagData(
                                 tagType = "category",
@@ -243,6 +244,8 @@ class StatsRepositoryTagsTest : BaseUnitTest() {
                 .isEqualTo("Alpha")
             assertThat(group.tags[1].name)
                 .isEqualTo("Beta")
+            assertThat(group.tags[0].link)
+                .isEqualTo(ALPHA_LINK)
         }
 
     private fun createTestTagsData() = StatsTagsData(
@@ -270,6 +273,8 @@ class StatsRepositoryTagsTest : BaseUnitTest() {
 
     companion object {
         private const val TEST_SITE_ID = 123L
+        private const val ALPHA_LINK =
+            "https://example.com/tag/alpha"
         private const val TEST_CATEGORY_NAME =
             "Uncategorized"
         private const val TEST_CATEGORY_VIEWS = 83L

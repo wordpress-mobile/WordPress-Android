@@ -6,6 +6,7 @@ import rs.wordpress.api.kotlin.WpComApiClient
 import rs.wordpress.api.kotlin.WpRequestResult
 import uniffi.wp_api.StatsCityViewsParams
 import uniffi.wp_api.StatsCityViewsPeriod
+import uniffi.wp_api.StatsClicksChild
 import uniffi.wp_api.StatsClicksParams
 import uniffi.wp_api.StatsClicksPeriod
 import uniffi.wp_api.StatsCountryViewsParams
@@ -259,6 +260,7 @@ class StatsDataSourceImpl @Inject constructor(
                     groups.map { group ->
                         ReferrerDataItem(
                             name = group.name.orEmpty(),
+                            url = group.url,
                             views = group.total?.toLong() ?: 0L,
                             children = group.results.toChildren()
                         )
@@ -632,8 +634,10 @@ class StatsDataSourceImpl @Inject constructor(
                     clicks.map { entry ->
                         ClickDataItem(
                             name = entry.name.orEmpty(),
+                            url = entry.url,
                             clicks = entry.views?.toLong()
-                                ?: 0L
+                                ?: 0L,
+                            children = entry.children.toClickChildren()
                         )
                     }
                 )
@@ -645,6 +649,15 @@ class StatsDataSourceImpl @Inject constructor(
             }
         }
     }
+
+    private fun List<StatsClicksChild>?.toClickChildren(): List<ClickChildDataItem> =
+        orEmpty().map { child ->
+            ClickChildDataItem(
+                name = child.name.orEmpty(),
+                url = child.url,
+                clicks = child.views?.toLong() ?: 0L
+            )
+        }
 
     override suspend fun fetchDevicesScreensize(
         siteId: Long,
@@ -1177,7 +1190,8 @@ class StatsDataSourceImpl @Inject constructor(
                     tags = group.tags.map { tag ->
                         TagData(
                             tagType = tag.tagType,
-                            name = tag.name
+                            name = tag.name,
+                            link = tag.link
                         )
                     },
                     views = group.views.toLong()

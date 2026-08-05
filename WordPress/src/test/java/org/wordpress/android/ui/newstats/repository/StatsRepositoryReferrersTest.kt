@@ -64,6 +64,7 @@ class StatsRepositoryReferrersTest : BaseUnitTest() {
         val referrersData = listOf(
             ReferrerDataItem(
                 name = "Search Engines",
+                url = null,
                 views = 23,
                 children = listOf(
                     ReferrerChildDataItem(name = "Google Search", url = "http://google.com/", views = 23)
@@ -85,6 +86,22 @@ class StatsRepositoryReferrersTest : BaseUnitTest() {
         assertThat(success.items[0].children[0].name).isEqualTo("Google Search")
         assertThat(success.items[0].children[0].url).isEqualTo("http://google.com/")
         assertThat(success.items[0].children[0].views).isEqualTo(23)
+    }
+
+    @Test
+    fun `given referrer with a url, when fetchMostViewed with REFERRERS, then the url propagates`() = test {
+        whenever(statsDataSource.fetchReferrers(any(), any(), any()))
+            .thenReturn(ReferrersDataResult.Success(createReferrersData()))
+
+        val result = repository.fetchMostViewed(
+            TEST_SITE_ID,
+            StatsPeriod.Last7Days,
+            MostViewedDataSource.REFERRERS
+        )
+
+        val success = result as MostViewedResult.Success
+        assertThat(success.items[0].url).isEqualTo(TEST_REFERRER_URL_1)
+        assertThat(success.items[1].url).isEqualTo(TEST_REFERRER_URL_2)
     }
 
     @Test
@@ -125,8 +142,8 @@ class StatsRepositoryReferrersTest : BaseUnitTest() {
     }
 
     private fun createReferrersData() = listOf(
-        ReferrerDataItem(name = TEST_REFERRER_NAME_1, views = TEST_REFERRER_VIEWS_1),
-        ReferrerDataItem(name = TEST_REFERRER_NAME_2, views = TEST_REFERRER_VIEWS_2)
+        ReferrerDataItem(name = TEST_REFERRER_NAME_1, url = TEST_REFERRER_URL_1, views = TEST_REFERRER_VIEWS_1),
+        ReferrerDataItem(name = TEST_REFERRER_NAME_2, url = TEST_REFERRER_URL_2, views = TEST_REFERRER_VIEWS_2)
     )
 
     companion object {
@@ -139,6 +156,8 @@ class StatsRepositoryReferrersTest : BaseUnitTest() {
 
         private const val TEST_REFERRER_NAME_1 = "google.com"
         private const val TEST_REFERRER_NAME_2 = "twitter.com"
+        private const val TEST_REFERRER_URL_1 = "https://google.com/"
+        private const val TEST_REFERRER_URL_2 = "https://twitter.com/"
         private const val TEST_REFERRER_VIEWS_1 = 200L
         private const val TEST_REFERRER_VIEWS_2 = 150L
     }
