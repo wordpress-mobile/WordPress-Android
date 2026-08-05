@@ -37,7 +37,7 @@ sealed class ChartUiState {
         val previousPeriodDateRange: String,
         val chartData: ViewsStatsChartData,
         val periodAverage: Long,
-        val chartType: ChartType = ChartType.LINE
+        val chartType: ChartType = ChartType.BAR
     ) : ChartUiState()
 
     data object Error : ChartUiState()
