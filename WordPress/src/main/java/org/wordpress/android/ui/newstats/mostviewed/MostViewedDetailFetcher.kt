@@ -2,7 +2,7 @@ package org.wordpress.android.ui.newstats.mostviewed
 
 import org.wordpress.android.R
 import org.wordpress.android.ui.newstats.StatsPeriod
-import org.wordpress.android.ui.newstats.clicks.toDetailItem
+import org.wordpress.android.ui.newstats.repository.ClickItemData
 import org.wordpress.android.ui.newstats.repository.ClicksResult
 import org.wordpress.android.ui.newstats.repository.FileDownloadItemData
 import org.wordpress.android.ui.newstats.repository.FileDownloadsResult
@@ -124,3 +124,19 @@ class MostViewedDetailFetcher @Inject constructor(
         change = MostViewedChange.fromChange(downloadsChange, downloadsChangePercent)
     )
 }
+
+/**
+ * Maps a clicks item onto the shared Most Viewed detail shape. Lives here rather than in the
+ * clicks package because both the clicks card ([ClicksViewModel]) and this fetcher use it, and
+ * they would otherwise drift apart.
+ */
+internal fun ClickItemData.toDetailItem(id: Long) = MostViewedDetailItem(
+    id = id,
+    title = name,
+    views = clicks,
+    change = MostViewedChange.fromChange(clicksChange, clicksChangePercent),
+    children = children.map { child ->
+        MostViewedChildItem(name = child.name, url = child.url, views = child.views)
+    },
+    url = url
+)

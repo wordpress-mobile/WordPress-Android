@@ -236,7 +236,6 @@ private fun LoadedContent(
             TagGroupRow(
                 item = item,
                 percentage = percentage,
-                isExpandable = item.isExpandable,
                 isExpanded = isExpanded,
                 onClick = if (item.isExpandable) {
                     {

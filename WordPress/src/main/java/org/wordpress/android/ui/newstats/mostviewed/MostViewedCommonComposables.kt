@@ -73,15 +73,14 @@ internal fun MostViewedExpandableRow(
     childStartPadding: Dp = 24.dp
 ) {
     val hasChildren = children.isNotEmpty()
-    // onItemClick wins over url: a post row navigates to its detail stats instead of opening
-    // the post in a browser, so it also gets no "open link" affordance.
-    val linkUrl = url?.takeIf { !hasChildren && onItemClick == null && it.isNotBlank() }
+    val action = statsRowAction(hasChildren, url, onItemClick != null)
+    val linkUrl = (action as? StatsRowAction.OpenUrl)?.url
     var expanded by rememberSaveable { mutableStateOf(false) }
-    val clickModifier = when {
-        hasChildren -> Modifier.clickable { expanded = !expanded }
-        onItemClick != null -> Modifier.clickable { onItemClick() }
-        linkUrl != null -> Modifier.clickable { onUrlClick(linkUrl) }
-        else -> Modifier
+    val clickModifier = when (action) {
+        StatsRowAction.Expand -> Modifier.clickable { expanded = !expanded }
+        StatsRowAction.Item -> Modifier.clickable { onItemClick?.invoke() }
+        is StatsRowAction.OpenUrl -> Modifier.clickable { onUrlClick(action.url) }
+        StatsRowAction.None -> Modifier
     }
 
     Column {

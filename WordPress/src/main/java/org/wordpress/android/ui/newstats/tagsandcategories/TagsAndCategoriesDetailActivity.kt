@@ -283,7 +283,6 @@ private fun DetailLoadedContent(
                 item = item,
                 percentage = percentage,
                 position = index + 1,
-                isExpandable = item.isExpandable,
                 isExpanded = isExpanded,
                 onClick = if (item.isExpandable) {
                     {

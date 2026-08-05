@@ -64,19 +64,22 @@ fun TagTypeIcon(
     )
 }
 
+/**
+ * A tag group row. Whether it expands or opens a link is derived from [item] rather than passed
+ * in, so the chevron and the tap action can't disagree: a group of several tags expands, and a
+ * lone tag has nothing to reveal so it opens its archive page instead. Never both — this mirrors
+ * old stats.
+ */
 @Composable
-@Suppress("LongParameterList")
 fun TagGroupRow(
     item: TagGroupUiItem,
     percentage: Float,
-    isExpandable: Boolean,
     isExpanded: Boolean,
     onClick: (() -> Unit)?,
     onUrlClick: (String) -> Unit = {},
     position: Int? = null
 ) {
-    // A group of several tags expands (onClick); a lone tag has no children to reveal, so it
-    // opens its archive page instead. Never both — this mirrors old stats.
+    val isExpandable = item.isExpandable
     val linkUrl = item.link
     StatsListRowContainer(
         percentage = percentage,
@@ -205,7 +208,7 @@ fun ExpandedTagsSection(
     ) {
         tags.forEachIndexed { index, tag ->
             val linkUrl = tag.link
-                .takeIf { it.isNotBlank() }
+                ?.takeIf { it.isNotBlank() }
             Row(
                 modifier = Modifier
                     .fillMaxWidth()

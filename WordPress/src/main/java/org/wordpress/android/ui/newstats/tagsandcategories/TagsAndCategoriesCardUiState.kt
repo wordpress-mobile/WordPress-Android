@@ -37,12 +37,12 @@ data class TagGroupUiItem(
 }
 
 /**
- * A single tag within a tag group. [link] is the tag's archive page.
+ * A single tag within a tag group. [link] is the tag's archive page, null when it has none.
  */
 data class TagUiItem(
     val name: String,
     val tagType: String,
-    val link: String = ""
+    val link: String? = null
 )
 
 /**

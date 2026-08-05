@@ -1,0 +1,42 @@
+package org.wordpress.android.ui.newstats.mostviewed
+
+/**
+ * What tapping a stats list row should do. A row does exactly one of these — never both expand
+ * and navigate — which is what the old stats screen did.
+ */
+internal sealed interface StatsRowAction {
+    /** Reveal or hide the row's children. */
+    data object Expand : StatsRowAction
+
+    /** Hand the tap to the caller, e.g. a post row opening its detail stats. */
+    data object Item : StatsRowAction
+
+    /** Open [url], e.g. a referrer, click or tag opening its page in a Custom Tab. */
+    data class OpenUrl(val url: String) : StatsRowAction
+
+    /** The row is inert. */
+    data object None : StatsRowAction
+}
+
+/**
+ * Decides what a stats row does when tapped.
+ *
+ * Precedence matters and is the reason this lives in a testable function rather than inline in a
+ * composable:
+ *
+ * 1. A row with children **expands** — a group header never navigates, matching old stats.
+ * 2. [hasItemClick] wins over [url], so a post row opens its detail stats rather than opening the
+ *    post in a browser. Posts and referrers both carry a `url`, so without this a post row would
+ *    navigate to the wrong place and show a misleading "open link" affordance.
+ * 3. Otherwise a non-blank [url] opens.
+ */
+internal fun statsRowAction(
+    hasChildren: Boolean,
+    url: String?,
+    hasItemClick: Boolean
+): StatsRowAction = when {
+    hasChildren -> StatsRowAction.Expand
+    hasItemClick -> StatsRowAction.Item
+    !url.isNullOrBlank() -> StatsRowAction.OpenUrl(url)
+    else -> StatsRowAction.None
+}
