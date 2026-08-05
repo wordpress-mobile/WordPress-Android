@@ -199,11 +199,16 @@ private fun LoadedContent(
                 val percentage = if (state.maxViewsForBar > 0) {
                     item.views.toFloat() / state.maxViewsForBar.toFloat()
                 } else 0f
-                // Key on the index plus the item id: the index guarantees uniqueness (referrer ids
-                // are derived from name.hashCode() and can collide on empty/duplicate names), while
-                // the id resets the row's saved expanded state when a different referrer lands at
-                // this position after a period reload. rememberSaveable keeps it across rotation.
-                key(index, item.id) {
+                // Key on the index plus the title: the index guarantees uniqueness (titles can
+                // repeat), while the title resets the row's saved expanded state when a different
+                // entry lands at this position after a reload. rememberSaveable keeps it across
+                // rotation.
+                //
+                // Deliberately not item.id — that only tracks content for some card types. Posts
+                // use the backend id and referrers a name hash, but clicks, search terms, video
+                // plays and file downloads number their items by position, so the id would never
+                // change and a refresh could leave a row expanded onto whatever replaced it.
+                key(index, item.title) {
                     MostViewedExpandableRow(
                         title = item.title,
                         views = item.views,

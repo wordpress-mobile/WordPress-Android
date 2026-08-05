@@ -244,7 +244,7 @@ fun StatsListHeader(
 fun StatsOpenLinkIcon() {
     Icon(
         imageVector = Icons.AutoMirrored.Filled.OpenInNew,
-        contentDescription = stringResource(R.string.stats_open_referrer_link),
+        contentDescription = stringResource(R.string.stats_open_link),
         modifier = Modifier.size(16.dp),
         tint = MaterialTheme.colorScheme.onSurfaceVariant
     )
