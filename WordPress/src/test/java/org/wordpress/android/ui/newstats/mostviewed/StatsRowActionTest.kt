@@ -6,28 +6,28 @@ import org.junit.Test
 class StatsRowActionTest {
     @Test
     fun `given children, when the row is tapped, then it expands`() {
-        val action = statsRowAction(hasChildren = true, url = null, hasItemClick = false)
+        val action = statsRowAction(hasChildren = true, url = null, onItemClick = null)
 
         assertThat(action).isEqualTo(StatsRowAction.Expand)
     }
 
     @Test
     fun `given children and a url, then it still expands rather than navigating`() {
-        val action = statsRowAction(hasChildren = true, url = URL, hasItemClick = false)
+        val action = statsRowAction(hasChildren = true, url = URL, onItemClick = null)
 
         assertThat(action).isEqualTo(StatsRowAction.Expand)
     }
 
     @Test
     fun `given children and an item click, then it still expands`() {
-        val action = statsRowAction(hasChildren = true, url = null, hasItemClick = true)
+        val action = statsRowAction(hasChildren = true, url = null, onItemClick = {})
 
         assertThat(action).isEqualTo(StatsRowAction.Expand)
     }
 
     @Test
     fun `given no children and a url, then it opens the url`() {
-        val action = statsRowAction(hasChildren = false, url = URL, hasItemClick = false)
+        val action = statsRowAction(hasChildren = false, url = URL, onItemClick = null)
 
         assertThat(action).isEqualTo(StatsRowAction.OpenUrl(URL))
     }
@@ -38,35 +38,43 @@ class StatsRowActionTest {
      */
     @Test
     fun `given both a url and an item click, then the item click wins`() {
-        val action = statsRowAction(hasChildren = false, url = URL, hasItemClick = true)
+        var invoked = false
 
-        assertThat(action).isEqualTo(StatsRowAction.Item)
+        val action = statsRowAction(hasChildren = false, url = URL, onItemClick = { invoked = true })
+
+        assertThat(action).isInstanceOf(StatsRowAction.Item::class.java)
+        (action as StatsRowAction.Item).onClick()
+        assertThat(invoked).isTrue()
     }
 
     @Test
-    fun `given an item click and no url, then the item click is used`() {
-        val action = statsRowAction(hasChildren = false, url = null, hasItemClick = true)
+    fun `given an item click and no url, then the item click is carried through`() {
+        var invoked = false
 
-        assertThat(action).isEqualTo(StatsRowAction.Item)
+        val action = statsRowAction(hasChildren = false, url = null, onItemClick = { invoked = true })
+
+        assertThat(action).isInstanceOf(StatsRowAction.Item::class.java)
+        (action as StatsRowAction.Item).onClick()
+        assertThat(invoked).isTrue()
     }
 
     @Test
     fun `given nothing to act on, then the row is inert`() {
-        val action = statsRowAction(hasChildren = false, url = null, hasItemClick = false)
+        val action = statsRowAction(hasChildren = false, url = null, onItemClick = null)
 
         assertThat(action).isEqualTo(StatsRowAction.None)
     }
 
     @Test
     fun `given a blank url, then the row is inert`() {
-        val action = statsRowAction(hasChildren = false, url = "   ", hasItemClick = false)
+        val action = statsRowAction(hasChildren = false, url = "   ", onItemClick = null)
 
         assertThat(action).isEqualTo(StatsRowAction.None)
     }
 
     @Test
     fun `given an empty url, then the row is inert`() {
-        val action = statsRowAction(hasChildren = false, url = "", hasItemClick = false)
+        val action = statsRowAction(hasChildren = false, url = "", onItemClick = null)
 
         assertThat(action).isEqualTo(StatsRowAction.None)
     }

@@ -70,12 +70,12 @@ internal fun MostViewedExpandableRow(
     childStartPadding: Dp = 24.dp
 ) {
     val hasChildren = children.isNotEmpty()
-    val action = statsRowAction(hasChildren, url, onItemClick != null)
+    val action = statsRowAction(hasChildren, url, onItemClick)
     val linkUrl = (action as? StatsRowAction.OpenUrl)?.url
     var expanded by rememberSaveable { mutableStateOf(false) }
     val clickModifier = when (action) {
         StatsRowAction.Expand -> Modifier.clickable { expanded = !expanded }
-        StatsRowAction.Item -> Modifier.clickable { onItemClick?.invoke() }
+        is StatsRowAction.Item -> Modifier.clickable { action.onClick() }
         is StatsRowAction.OpenUrl -> Modifier.clickable { onUrlClick(action.url) }
         StatsRowAction.None -> Modifier
     }
