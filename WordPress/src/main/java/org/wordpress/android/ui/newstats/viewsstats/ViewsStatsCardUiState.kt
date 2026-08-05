@@ -37,7 +37,7 @@ sealed class ChartUiState {
         val previousPeriodDateRange: String,
         val chartData: ViewsStatsChartData,
         val periodAverage: Long,
-        val chartType: ChartType = ChartType.LINE
+        val chartType: ChartType
     ) : ChartUiState()
 
     data object Error : ChartUiState()
@@ -61,6 +61,11 @@ enum class ChartType(val storageKey: String) {
     BAR("bar");
 
     companion object {
+        /**
+         * Used when the user has never picked a chart type for the site.
+         */
+        val DEFAULT = BAR
+
         fun fromStorageKey(key: String?): ChartType? =
             entries.firstOrNull { it.storageKey == key }
     }

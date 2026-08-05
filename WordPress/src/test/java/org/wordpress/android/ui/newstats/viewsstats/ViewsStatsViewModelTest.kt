@@ -642,10 +642,10 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
         initViewModel()
         advanceUntilIdle()
 
-        viewModel.onChartTypeChanged(ChartType.BAR)
+        viewModel.onChartTypeChanged(ChartType.LINE)
 
         val state = viewModel.uiState.value.chartLoaded()
-        assertThat(state.chartType).isEqualTo(ChartType.BAR)
+        assertThat(state.chartType).isEqualTo(ChartType.LINE)
     }
 
     // region Chart type persistence
@@ -668,9 +668,29 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `when SavedStateHandle has bar chart type, then it is restored`() = test {
+    fun `when no chart type is stored, then it defaults to bar`() = test {
+        whenever(cardsConfigurationRepository.getConfiguration(any()))
+            .thenReturn(StatsCardsConfiguration())
+        val result = createPeriodStatsResult()
+        whenever(statsRepository.fetchStatsForPeriod(any(), any()))
+            .thenReturn(result)
+
+        viewModel = ViewsStatsViewModel(
+            selectedSiteRepository, accountStore, statsRepository,
+            resourceProvider, SavedStateHandle(),
+            cardsConfigurationRepository
+        )
+        viewModel.loadDataIfNeeded()
+        advanceUntilIdle()
+
+        val state = viewModel.uiState.value.chartLoaded()
+        assertThat(state.chartType).isEqualTo(ChartType.BAR)
+    }
+
+    @Test
+    fun `when SavedStateHandle has line chart type, then it is restored`() = test {
         val savedState = SavedStateHandle(
-            mapOf("chart_type" to "bar")
+            mapOf("chart_type" to "line")
         )
         whenever(cardsConfigurationRepository.getConfiguration(any()))
             .thenReturn(StatsCardsConfiguration())
@@ -686,14 +706,14 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
         advanceUntilIdle()
 
         val state = viewModel.uiState.value.chartLoaded()
-        assertThat(state.chartType).isEqualTo(ChartType.BAR)
+        assertThat(state.chartType).isEqualTo(ChartType.LINE)
     }
 
     @Test
-    fun `when preferences has bar chart type, then it is restored`() = test {
+    fun `when preferences has line chart type, then it is restored`() = test {
         whenever(cardsConfigurationRepository.getConfiguration(any()))
             .thenReturn(
-                StatsCardsConfiguration(selectedChartType = "bar")
+                StatsCardsConfiguration(selectedChartType = "line")
             )
         val result = createPeriodStatsResult()
         whenever(statsRepository.fetchStatsForPeriod(any(), any()))
@@ -708,7 +728,7 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
         advanceUntilIdle()
 
         val state = viewModel.uiState.value.chartLoaded()
-        assertThat(state.chartType).isEqualTo(ChartType.BAR)
+        assertThat(state.chartType).isEqualTo(ChartType.LINE)
     }
 
     // endregion
