@@ -6,6 +6,7 @@
 * [**] Fixed media uploads and the Media Library failing on Jetpack-connected self-hosted sites that have Application Passwords disabled.
 * [*] Stats now refresh when you return to the screen, so your latest data appears without a manual pull-to-refresh. [https://github.com/wordpress-mobile/WordPress-Android/pull/23112]
 * [*] Links from emails that open outside the app now show a clear message when no browser is available, instead of closing the app.
+* [*] Switching between the old and new Stats screen is available from the Stats overflow menu while we continue iterating on the new Stats design.
 
 26.9
 -----
