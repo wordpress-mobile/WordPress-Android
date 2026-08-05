@@ -30,8 +30,11 @@ import org.wordpress.android.ui.domains.management.purchasedomain.PurchaseDomain
 import org.wordpress.android.ui.main.WPMainActivity
 import org.wordpress.android.ui.media.MediaBrowserActivity
 import org.wordpress.android.ui.media.MediaBrowserType
+import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.menu.MenuActivity
 import org.wordpress.android.ui.mysite.personalization.PersonalizationActivity
+import org.wordpress.android.ui.stats.StatsConstants
+import org.wordpress.android.ui.stats.refresh.lists.detail.StatsDetailActivity
 import org.wordpress.android.ui.sitemonitor.SiteMonitorParentActivity
 import org.wordpress.android.ui.sitemonitor.SiteMonitorType
 import org.wordpress.android.util.AppLog
@@ -41,7 +44,9 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class ActivityNavigator @Inject constructor() {
+class ActivityNavigator @Inject constructor(
+    private val selectedSiteRepository: SelectedSiteRepository
+) {
     fun navigateToCampaignListingPage(context: Context, campaignListingPageSource: CampaignListingPageSource) {
         context.startActivity(
             Intent(context, BlazeCampaignParentActivity::class.java).apply {
@@ -272,6 +277,26 @@ class ActivityNavigator @Inject constructor() {
             .build()
     }
 
+    /**
+     * Opens the per-post stats detail screen for a Posts & Pages item tapped in the new stats.
+     * Shows an error toast when no site is selected.
+     */
+    fun openPostDetailStats(context: Context, postId: Long, postType: String?, postTitle: String, postUrl: String?) {
+        val site = selectedSiteRepository.getSelectedSite() ?: run {
+            ToastUtils.showToast(context, R.string.blog_not_found, ToastUtils.Duration.SHORT)
+            return
+        }
+        AnalyticsTracker.track(AnalyticsTracker.Stat.STATS_POSTS_AND_PAGES_ITEM_TAPPED)
+        StatsDetailActivity.start(
+            context = context,
+            site = site,
+            postId = postId,
+            postType = statsDetailItemType(postType),
+            postTitle = postTitle,
+            postUrl = postUrl
+        )
+    }
+
     fun navigateToApplicationPasswordReauthentication(activity: Activity, authenticationUrl: String) {
         val intent = Intent(activity, ApplicationPasswordReauthenticateDialogActivity::class.java)
         intent.putExtra(ApplicationPasswordDialogActivity.EXTRA_SITE_URL, authenticationUrl)
@@ -283,4 +308,13 @@ class ActivityNavigator @Inject constructor() {
             ApplicationPasswordRequiredDialogActivity.createIntent(activity, site, featureName)
         )
     }
+}
+
+/**
+ * Maps the API post type of a Posts & Pages item to the item type expected by the post detail
+ * stats screen, mirroring the old stats mapping (pages and the homepage share one detail layout).
+ */
+internal fun statsDetailItemType(postType: String?): String = when (postType) {
+    StatsConstants.ITEM_TYPE_POST, StatsConstants.ITEM_TYPE_ATTACHMENT -> postType
+    else -> StatsConstants.ITEM_TYPE_HOME_PAGE
 }
