@@ -65,10 +65,9 @@ fun TagTypeIcon(
 }
 
 /**
- * A tag group row. Whether it expands or opens a link is derived from [item] rather than passed
- * in, so the chevron and the tap action can't disagree: a group of several tags expands, and a
- * lone tag has nothing to reveal so it opens its archive page instead. Never both — this mirrors
- * old stats.
+ * A tag group row. Follows the same expand-or-navigate rule as the Most Viewed rows (see
+ * `statsRowAction`), derived from [item] rather than passed in so the chevron and the tap action
+ * can't disagree.
  */
 @Composable
 fun TagGroupRow(

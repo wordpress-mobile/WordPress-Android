@@ -575,8 +575,8 @@ sealed class ClicksDataResult {
 }
 
 /**
- * A single click item from the API. [url] is null for a grouped source, whose links live on
- * its [children].
+ * A single click item from the API. [url] is null for a grouped source with no link of its own,
+ * whose links live on its [children].
  */
 data class ClickDataItem(
     val name: String,

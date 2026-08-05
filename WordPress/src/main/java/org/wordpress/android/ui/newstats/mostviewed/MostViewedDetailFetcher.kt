@@ -125,11 +125,7 @@ class MostViewedDetailFetcher @Inject constructor(
     )
 }
 
-/**
- * Maps a clicks item onto the shared Most Viewed detail shape. Lives here rather than in the
- * clicks package because both the clicks card ([ClicksViewModel]) and this fetcher use it, and
- * they would otherwise drift apart.
- */
+/** Maps a clicks item onto the shared detail shape. Shared by the clicks card and this fetcher. */
 internal fun ClickItemData.toDetailItem(id: Long) = MostViewedDetailItem(
     id = id,
     title = name,

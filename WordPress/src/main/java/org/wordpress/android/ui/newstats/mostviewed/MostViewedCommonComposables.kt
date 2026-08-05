@@ -39,9 +39,8 @@ import org.wordpress.android.ui.newstats.util.formatStatValue
  * screen ([MostViewedDetailActivity]); they differ only by the leading [position] number (detail
  * only) and the child [childStartPadding] indent.
  *
- * A row either expands or opens a link, never both: a row with [children] expands, and a row
- * without them opens its [url] when it has one. This matches the old stats screen, where a
- * referrer group's header only expanded and a standalone referrer opened its link.
+ * What a tap does — expand, open a link, or hand off to the caller — is decided by
+ * [statsRowAction]; see there for the precedence and why it matters.
  *
  * The caller is expected to wrap this row in a `key(...)` so the [rememberSaveable] expanded state
  * is scoped to the item and survives configuration changes (e.g. rotation).
@@ -52,10 +51,8 @@ import org.wordpress.android.ui.newstats.util.formatStatValue
  * @param children The child rows revealed when expanded (empty = no chevron, not expandable)
  * @param percentage Bar fill percentage (0f..1f)
  * @param onUrlClick Invoked with the URL when a linkable row (this row or a child) is tapped
- * @param url The URL opened in a Custom Tab when this row is tapped; ignored when the row has
- * [children] or an [onItemClick]
- * @param onItemClick Invoked when a childless row is tapped (e.g. opens a post's detail stats).
- * Takes precedence over [url], so posts navigate to their stats rather than opening a browser
+ * @param url The URL passed to [onUrlClick] when this row is tapped
+ * @param onItemClick Invoked when a childless row is tapped, e.g. opens a post's detail stats
  * @param position Optional 1-based position number shown on the detail screen
  * @param childStartPadding Indent applied to the expanded child rows
  */
