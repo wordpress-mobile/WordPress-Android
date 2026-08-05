@@ -946,7 +946,7 @@ private fun ViewsStatsCardLoadingPreview() {
     }
 }
 
-private fun sampleLoadedState(): ViewsStatsCardUiState.Content {
+private fun sampleLoadedState(chartType: ChartType): ViewsStatsCardUiState.Content {
     val currentPeriodLabels = listOf("Jan 14", "Jan 15", "Jan 16", "Jan 17", "Jan 18", "Jan 19", "Jan 20")
     val previousPeriodLabels = listOf("Jan 7", "Jan 8", "Jan 9", "Jan 10", "Jan 11", "Jan 12", "Jan 13")
 
@@ -966,7 +966,8 @@ private fun sampleLoadedState(): ViewsStatsCardUiState.Content {
                     ChartDataPoint(label, views)
                 }
             ),
-            periodAverage = SAMPLE_PERIOD_AVERAGE
+            periodAverage = SAMPLE_PERIOD_AVERAGE,
+            chartType = chartType
         ),
         bottomStats = BottomStatsUiState.Loaded(
             listOf(
@@ -985,7 +986,21 @@ private fun sampleLoadedState(): ViewsStatsCardUiState.Content {
 private fun ViewsStatsCardLoadedPreview() {
     AppThemeM3 {
         ViewsStatsCard(
-            uiState = sampleLoadedState(),
+            uiState = sampleLoadedState(ChartType.BAR),
+            onChartTypeChanged = {},
+            onBarTapped = {},
+            onRetry = {},
+            onRemoveCard = {}
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun ViewsStatsCardLoadedLineChartPreview() {
+    AppThemeM3 {
+        ViewsStatsCard(
+            uiState = sampleLoadedState(ChartType.LINE),
             onChartTypeChanged = {},
             onBarTapped = {},
             onRetry = {},
@@ -1015,7 +1030,7 @@ private fun ViewsStatsCardErrorPreview() {
 private fun ViewsStatsCardLoadedDarkPreview() {
     AppThemeM3 {
         ViewsStatsCard(
-            uiState = sampleLoadedState(),
+            uiState = sampleLoadedState(ChartType.BAR),
             onChartTypeChanged = {},
             onBarTapped = {},
             onRetry = {},
