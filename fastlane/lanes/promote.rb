@@ -497,42 +497,30 @@ platform :android do
     end
   end
 
-  # Creates a `production` release referencing an already-uploaded version code, via the Play API —
-  # the same approach as promote_version_code_to_beta (see there for why upload_to_play_store can't).
+  # Promotes the existing beta build to production — the scripted equivalent of the Play Console
+  # "Promote" button. `track_promote_to` extends the already-reviewed beta release to the production
+  # track (same versionCode, no new binary): supply reuses that beta TrackRelease, so its release
+  # notes and name carry over automatically, and its version codes (incl. the retained legacy code)
+  # come along too.
   def promote_version_code_to_production(package_name:, version_code:)
-    require 'supply'
-    require 'supply/options'
-
-    Supply.config = FastlaneCore::Configuration.create(
-      Supply::Options.available_options,
-      { json_key: UPLOAD_TO_PLAY_STORE_JSON_KEY, package_name: package_name, track: PRODUCTION_TRACK }
+    upload_to_play_store(
+      package_name: package_name,
+      json_key: UPLOAD_TO_PLAY_STORE_JSON_KEY,
+      track: BETA_TRACK,
+      track_promote_to: PRODUCTION_TRACK,
+      version_code: Integer(version_code),
+      # Promote as a live staged rollout: a `rollout` in (0, 1) makes supply set the promoted
+      # release to `inProgress` at that user fraction. Starting tiny (0.1%) exercises the full
+      # production flow end to end; `advance_production_rollout` grows it from there.
+      rollout: '0.001',
+      # Promotion touches only the track release, never a binary — skip every upload path.
+      skip_upload_apk: true,
+      skip_upload_aab: true,
+      skip_upload_metadata: true,
+      skip_upload_changelogs: true,
+      skip_upload_images: true,
+      skip_upload_screenshots: true
     )
-
-    with_play_edit_retries("Promoting #{version_code} to production for #{package_name}") do
-      client = Supply::Client.make_from_config
-      client.begin_edit(package_name: package_name)
-
-      committed = false
-      begin
-        release = AndroidPublisher::TrackRelease.new(
-          # TODO: swap `draft` for the staged rollout below once the full production flow is ready;
-          # until then it ships as a draft a human starts from the Play Console.
-          status: 'draft',
-          # status: 'inProgress',
-          # user_fraction: 0.001,
-          version_codes: [Integer(version_code), *PLAY_STORE_VERSION_CODES_TO_RETAIN]
-        )
-        track = client.tracks(PRODUCTION_TRACK).first || AndroidPublisher::Track.new(track: PRODUCTION_TRACK)
-        track.releases = [release]
-
-        client.update_track(PRODUCTION_TRACK, track)
-        client.commit_current_edit!
-        committed = true
-      ensure
-        # Discard the edit if we bailed before committing (a committed edit can't be aborted).
-        client.abort_current_edit unless committed
-      end
-    end
   end
 
   #################################################
