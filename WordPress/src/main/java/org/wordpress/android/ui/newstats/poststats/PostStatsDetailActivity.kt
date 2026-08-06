@@ -57,7 +57,6 @@ import org.wordpress.android.ui.newstats.datasource.PostViewsData
 import org.wordpress.android.ui.newstats.datasource.PostViewsWeek
 import org.wordpress.android.ui.newstats.util.ShimmerBox
 import org.wordpress.android.ui.newstats.util.formatChangePercentage
-import org.wordpress.android.ui.newstats.util.formatStatAverage
 import org.wordpress.android.ui.newstats.util.TEN_THOUSAND
 import org.wordpress.android.ui.newstats.util.formatStatValue
 import org.wordpress.android.ui.newstats.util.formatStatsDate
@@ -295,7 +294,7 @@ private fun LoadedContent(
         ) {
             DetailRow(
                 label = it.year,
-                value = formatStatAverage(it.overall)
+                value = formatStatValue(it.overall)
             )
         }
     }

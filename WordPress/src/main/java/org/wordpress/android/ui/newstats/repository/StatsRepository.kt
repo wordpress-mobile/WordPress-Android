@@ -956,8 +956,7 @@ class StatsRepository @Inject constructor(
                         views = item.views,
                         previousViews = previousViews,
                         isFirst = index == 0,
-                        url = item.url,
-                        postType = item.postType
+                        url = item.url
                     )
                 },
                 totalViews = totalViews,
@@ -2272,8 +2271,7 @@ data class MostViewedItemData(
     val previousViews: Long,
     val isFirst: Boolean,
     val children: List<MostViewedChildData> = emptyList(),
-    val url: String? = null,
-    val postType: String? = null
+    val url: String? = null
 ) {
     val viewsChange: Long get() = views - previousViews
     val viewsChangePercent: Double

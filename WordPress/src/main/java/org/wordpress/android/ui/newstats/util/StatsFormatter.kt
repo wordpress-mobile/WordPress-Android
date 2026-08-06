@@ -96,15 +96,6 @@ fun formatChangePercentage(fraction: Double): String =
         .apply { maximumFractionDigits = 0 }
         .format(fraction)
 
-/**
- * Formats an average for a detail list, keeping one decimal place when there is one.
- */
-fun formatStatAverage(value: Double): String =
-    NumberFormat.getInstance(Locale.getDefault()).apply {
-        maximumFractionDigits = 1
-        minimumFractionDigits = 0
-    }.format(value)
-
 private const val FORMAT_DECIMAL = "%.1f"
 
 fun formatStatValue(value: Double): String {

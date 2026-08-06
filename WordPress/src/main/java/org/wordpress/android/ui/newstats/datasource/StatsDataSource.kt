@@ -434,8 +434,7 @@ data class TopPostDataItem(
     val id: Long,
     val title: String,
     val views: Long,
-    val url: String? = null,
-    val postType: String? = null
+    val url: String? = null
 )
 
 /**

@@ -209,8 +209,7 @@ class StatsDataSourceImpl @Inject constructor(
                             id = post.id.toLong(),
                             title = post.title.orEmpty(),
                             views = post.views?.toLong() ?: 0L,
-                            url = post.href,
-                            postType = post.postType
+                            url = post.href
                         )
                     }
                 )
