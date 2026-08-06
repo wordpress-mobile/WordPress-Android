@@ -504,7 +504,7 @@ platform :android do
       locale = File.basename(File.dirname(path, 2))
       AndroidPublisher::LocalizedText.new(language: locale, text: text)
     end
-    UI.important("No static release notes found for option #{option.inspect} (#{app}).") if notes.empty?
+    UI.user_error!("No static release notes found for option #{option.inspect} (#{app}).") if notes.empty?
     notes
   end
 
