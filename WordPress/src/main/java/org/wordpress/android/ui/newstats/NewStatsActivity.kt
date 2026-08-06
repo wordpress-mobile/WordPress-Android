@@ -238,8 +238,21 @@ class NewStatsActivity : BaseAppCompatActivity() {
     companion object {
         private const val FEEDBACK_PREFIX_STATS = "Stats"
 
-        fun start(context: Context) {
-            context.startActivity(Intent(context, NewStatsActivity::class.java))
+        /**
+         * Opens New Stats, optionally on a specific [period]. The period is passed as an Intent
+         * extra that seeds [ViewsStatsViewModel]'s SavedStateHandle, so it takes precedence over the
+         * persisted period without overwriting it.
+         */
+        fun start(context: Context, period: StatsPeriod? = null) {
+            val intent = Intent(context, NewStatsActivity::class.java)
+            period?.let {
+                intent.putExtra(ViewsStatsViewModel.KEY_PERIOD_TYPE, it.toTypeString())
+                if (it is StatsPeriod.Custom) {
+                    intent.putExtra(ViewsStatsViewModel.KEY_CUSTOM_START_DATE, it.startDate.toEpochDay())
+                    intent.putExtra(ViewsStatsViewModel.KEY_CUSTOM_END_DATE, it.endDate.toEpochDay())
+                }
+            }
+            context.startActivity(intent)
         }
     }
 }

@@ -52,6 +52,7 @@ sealed class SiteNavigationAction {
     data class EditDraftPost(val site: SiteModel, val postId: Int) : SiteNavigationAction()
     data class EditScheduledPost(val site: SiteModel, val postId: Int) : SiteNavigationAction()
     data class OpenStatsByDay(val site: SiteModel) : SiteNavigationAction()
+    object OpenNewStatsForToday : SiteNavigationAction()
     data class OpenExternalUrl(val url: String) : SiteNavigationAction()
     data class OpenUrlInWebView(val url: String) : SiteNavigationAction()
     data class OpenDeepLink(val url: String) : SiteNavigationAction()

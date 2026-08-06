@@ -38,6 +38,7 @@ import org.wordpress.android.ui.mysite.cards.DashboardCardsViewModelSlice
 import org.wordpress.android.ui.mysite.cards.applicationpassword.ApplicationPasswordViewModelSlice
 import org.wordpress.android.ui.mysite.cards.siteinfo.SiteInfoHeaderCardViewModelSlice
 import org.wordpress.android.ui.mysite.items.DashboardItemsViewModelSlice
+import org.wordpress.android.ui.newstats.NewStatsRouting
 import org.wordpress.android.ui.mysite.items.listitem.SiteCapabilityChecker
 import org.wordpress.android.ui.mysite.cards.connectivity.SiteConnectivityBannerViewModelSlice
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
@@ -111,6 +112,9 @@ class MySiteViewModelTest : BaseUnitTest() {
     lateinit var gutenbergKitAnnouncementController:
             org.wordpress.android.ui.posts.GutenbergKitAnnouncementController
 
+    @Mock
+    lateinit var newStatsRouting: NewStatsRouting
+
     private lateinit var viewModel: MySiteViewModel
     private lateinit var uiModels: MutableList<MySiteViewModel.State>
     private lateinit var snackbars: MutableList<SnackbarMessageHolder>
@@ -169,6 +173,7 @@ class MySiteViewModelTest : BaseUnitTest() {
             gutenbergEditorPreloader,
             siteConnectivityBannerViewModelSlice,
             gutenbergKitAnnouncementController,
+            newStatsRouting,
         )
         uiModels = mutableListOf()
         snackbars = mutableListOf()

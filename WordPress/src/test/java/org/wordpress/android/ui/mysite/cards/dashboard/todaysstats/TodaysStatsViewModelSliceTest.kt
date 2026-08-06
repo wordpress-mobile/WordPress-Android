@@ -17,6 +17,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.SiteNavigationAction
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker
+import org.wordpress.android.ui.newstats.NewStatsRouting
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 
 @ExperimentalCoroutinesApi
@@ -37,6 +38,9 @@ class TodaysStatsViewModelSliceTest : BaseUnitTest() {
     @Mock
     lateinit var todaysStatsCardBuilder: TodaysStatsCardBuilder
 
+    @Mock
+    lateinit var newStatsRouting: NewStatsRouting
+
     private lateinit var todaysStatsViewModelSlice: TodaysStatsViewModelSlice
 
     private lateinit var navigationActions: MutableList<SiteNavigationAction>
@@ -52,7 +56,8 @@ class TodaysStatsViewModelSliceTest : BaseUnitTest() {
             selectedSiteRepository,
             jetpackFeatureRemovalPhaseHelper,
             appPrefsWrapper,
-            todaysStatsCardBuilder
+            todaysStatsCardBuilder,
+            newStatsRouting
         )
         navigationActions = mutableListOf()
         todaysStatsViewModelSlice.onNavigation.observeForever { event ->
@@ -79,6 +84,46 @@ class TodaysStatsViewModelSliceTest : BaseUnitTest() {
                 CardsTracker.Type.STATS.label,
                 CardsTracker.StatsSubtype.TODAYS_STATS.label
             )
+        }
+
+    @Test
+    fun `given new stats enabled, when card item is clicked, then new stats is opened for today`() =
+        test {
+            whenever(newStatsRouting.isNewStatsEnabled()).thenReturn(true)
+
+            val params = todaysStatsViewModelSlice.getTodaysStatsBuilderParams(null)
+
+            params.onTodaysStatsCardClick()
+
+            assertThat(navigationActions).containsOnly(SiteNavigationAction.OpenNewStatsForToday)
+            verify(cardsTracker).trackCardItemClicked(
+                CardsTracker.Type.STATS.label,
+                CardsTracker.StatsSubtype.TODAYS_STATS.label
+            )
+        }
+
+    @Test
+    fun `given new stats enabled, when more menu item view stats is clicked, then new stats is opened for today`() =
+        test {
+            whenever(newStatsRouting.isNewStatsEnabled()).thenReturn(true)
+
+            val params = todaysStatsViewModelSlice.getTodaysStatsBuilderParams(null)
+
+            params.moreMenuClickParams.onViewStatsMenuItemClick.invoke()
+
+            assertThat(navigationActions).containsOnly(SiteNavigationAction.OpenNewStatsForToday)
+        }
+
+    @Test
+    fun `given static posters phase, when card item is clicked, then static posters view is shown`() =
+        test {
+            whenever(jetpackFeatureRemovalPhaseHelper.shouldShowStaticPage()).thenReturn(true)
+
+            val params = todaysStatsViewModelSlice.getTodaysStatsBuilderParams(null)
+
+            params.onTodaysStatsCardClick()
+
+            assertThat(navigationActions).containsOnly(SiteNavigationAction.ShowJetpackRemovalStaticPostersView)
         }
 
     @Test

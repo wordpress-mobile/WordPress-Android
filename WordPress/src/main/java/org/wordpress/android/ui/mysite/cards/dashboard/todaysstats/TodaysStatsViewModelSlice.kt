@@ -9,6 +9,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.TodaysStat
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.SiteNavigationAction
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker
+import org.wordpress.android.ui.newstats.NewStatsRouting
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.viewmodel.Event
 import javax.inject.Inject
@@ -18,7 +19,8 @@ class TodaysStatsViewModelSlice @Inject constructor(
     private val selectedSiteRepository: SelectedSiteRepository,
     private val jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper,
     private val appPrefsWrapper: AppPrefsWrapper,
-    private val todaysStatsCardBuilder: TodaysStatsCardBuilder
+    private val todaysStatsCardBuilder: TodaysStatsCardBuilder,
+    private val newStatsRouting: NewStatsRouting
 ) {
     private val _uiModel = MutableLiveData<MySiteCardAndItem.Card.TodaysStatsCard?>()
     val uiModel = _uiModel as LiveData<MySiteCardAndItem.Card.TodaysStatsCard?>
@@ -86,12 +88,15 @@ class TodaysStatsViewModelSlice @Inject constructor(
     }
 
     private fun navigateToTodaysStats() {
-        val selectedSite = requireNotNull(selectedSiteRepository.getSelectedSite())
-        if (jetpackFeatureRemovalPhaseHelper.shouldShowStaticPage()) {
-            _onNavigation.value = Event(SiteNavigationAction.ShowJetpackRemovalStaticPostersView)
-        } else {
-            _onNavigation.value = Event(SiteNavigationAction.OpenStatsByDay(selectedSite))
+        val navigationAction = when {
+            jetpackFeatureRemovalPhaseHelper.shouldShowStaticPage() ->
+                SiteNavigationAction.ShowJetpackRemovalStaticPostersView
+
+            newStatsRouting.isNewStatsEnabled() -> SiteNavigationAction.OpenNewStatsForToday
+
+            else -> SiteNavigationAction.OpenStatsByDay(requireNotNull(selectedSiteRepository.getSelectedSite()))
         }
+        _onNavigation.value = Event(navigationAction)
     }
 
     fun clearValue() {

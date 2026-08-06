@@ -55,6 +55,7 @@ import org.wordpress.android.ui.posts.PostUtils
 import org.wordpress.android.ui.reader.ReaderActivityLauncher
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.newstats.NewStatsActivity
+import org.wordpress.android.ui.newstats.StatsPeriod
 import org.wordpress.android.ui.stats.StatsTimeframe
 import org.wordpress.android.ui.stats.refresh.utils.StatsLaunchedFrom
 import org.wordpress.android.ui.uploads.UploadService
@@ -647,6 +648,8 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
             StatsTimeframe.DAY,
             StatsLaunchedFrom.TODAY_STATS_CARD
         )
+
+        is SiteNavigationAction.OpenNewStatsForToday -> NewStatsActivity.start(requireContext(), StatsPeriod.Today)
 
         is SiteNavigationAction.OpenExternalUrl ->
             ActivityLauncher.openUrlExternal(requireActivity(), action.url)
