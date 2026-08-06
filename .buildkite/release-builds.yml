@@ -13,7 +13,7 @@ steps:
   #################
   - label: "Gradle Wrapper Validation"
     command: |
-      .buildkite/commands/checkout-release-branch.sh "$RELEASE_VERSION"
+      checkout_release_branch "$RELEASE_VERSION"
       validate_gradle_wrapper
     priority: 1
     plugins: [$CI_TOOLKIT]
@@ -30,7 +30,7 @@ steps:
       - label: "🕵️ Lint WordPress"
         key: wplint
         command: |
-          .buildkite/commands/checkout-release-branch.sh "$RELEASE_VERSION"
+          checkout_release_branch "$RELEASE_VERSION"
           .buildkite/commands/lint.sh wordpress
         priority: 1
         plugins: [$CI_TOOLKIT]
@@ -40,7 +40,7 @@ steps:
       - label: "🕵️ Lint Jetpack"
         key: jplint
         command: |
-          .buildkite/commands/checkout-release-branch.sh "$RELEASE_VERSION"
+          checkout_release_branch "$RELEASE_VERSION"
           .buildkite/commands/lint.sh jetpack
         priority: 1
         plugins: [$CI_TOOLKIT]
@@ -56,7 +56,7 @@ steps:
       - label: ":wordpress: :android: Release Build"
         key: wpbuild
         command: |
-          .buildkite/commands/checkout-release-branch.sh "$RELEASE_VERSION"
+          checkout_release_branch "$RELEASE_VERSION"
           .buildkite/commands/release-build.sh wordpress
         priority: 1
         depends_on: wplint
@@ -72,7 +72,7 @@ steps:
       - label: ":jetpack: :android: Release Build"
         key: jpbuild
         command: |
-          .buildkite/commands/checkout-release-branch.sh "$RELEASE_VERSION"
+          checkout_release_branch "$RELEASE_VERSION"
           .buildkite/commands/release-build.sh jetpack
         priority: 1
         depends_on: jplint
@@ -93,7 +93,7 @@ steps:
       - wpbuild
       - jpbuild
     command: |
-      .buildkite/commands/checkout-release-branch.sh "$RELEASE_VERSION"
+      checkout_release_branch "$RELEASE_VERSION"
       .buildkite/commands/create-github-release.sh
     priority: 1
     plugins: [$CI_TOOLKIT]
