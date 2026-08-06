@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2026-07-01 09:59:20+0000
+Translation-Revision-Date: 2026-07-29 09:58:00+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.3
 Language: ja_JP
@@ -148,6 +148,7 @@ Language: ja_JP
     <string name="post_rs_sync_failed">同期に失敗</string>
     <string name="post_rs_error_auth">認証の有効期限が切れています。 再度ログインしてください。</string>
     <string name="post_rs_error_load_more">これ以上投稿を読み込めませんでした</string>
+    <string name="stats_ring_chart_entry_description">%1$s: %2$s</string>
     <string name="menu_item_accessibility_description">レベル%1$d、%2$s、%3$s</string>
     <string name="menu_item_reorder_failed">メニュー項目を並べ替えられませんでした</string>
     <string name="menu_item_invalid_url">有効な URL を入力してください</string>

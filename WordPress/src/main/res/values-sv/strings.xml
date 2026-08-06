@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2026-06-24 20:54:52+0000
+Translation-Revision-Date: 2026-07-29 19:54:44+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.3
 Language: sv_SE
@@ -66,6 +66,10 @@ Language: sv_SE
     <string name="stats_insights_all_time_stats_title">Statistik sedan starten</string>
     <string name="stats_insights_year_in_review_title">Återblick för %s</string>
     <string name="stats_insights_year_in_review">Återblick för året</string>
+    <string name="stats_insights_avg_words_per_post">Genomsnittligt antal ord per inlägg</string>
+    <string name="stats_insights_avg_likes_per_post">Genomsnittligt antal gilla-markeringar per inlägg</string>
+    <string name="stats_insights_avg_comments_per_post">Genomsnittligt antal kommentarer per inlägg</string>
+    <string name="stats_insights_total_posts">Totalt antal inlägg</string>
     <string name="stats_insights_likes">Gilla-markeringar</string>
     <string name="stats_insights_words">Ord</string>
     <string name="activity_log_mcp_agent_label">via %1$s</string>
