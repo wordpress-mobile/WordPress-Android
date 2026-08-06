@@ -11,6 +11,7 @@ gradle.ext.aztecAndroidPicassoLoaderPath = "org.wordpress.aztec:picasso-loader"
 gradle.ext.aboutAutomatticBinaryPath = "com.automattic:about"
 gradle.ext.gravatarBinaryPath = "com.gravatar:gravatar"
 gradle.ext.gravatarQuickEditorBinaryPath = "com.gravatar:gravatar-quickeditor"
+gradle.ext.wordpressRsBinaryPath = "rs.wordpress.api:android"
 
 def localBuilds = new File("${rootDir}/local-builds.gradle")
 if (localBuilds.exists()) {
@@ -83,6 +84,15 @@ if (localBuilds.exists()) {
             dependencySubstitution {
                 println "Substituting Gravatar-Android with the local build"
                 substitute module("$gradle.ext.gravatarBinaryPath") using project(':gravatar')
+            }
+        }
+    }
+
+    if (ext.has("localWordPressRsPath")) {
+        includeBuild("$ext.localWordPressRsPath/native/kotlin") {
+            dependencySubstitution {
+                println "Substituting wordpress-rs with the local build"
+                substitute module("$gradle.ext.wordpressRsBinaryPath") using project(':api:android')
             }
         }
     }

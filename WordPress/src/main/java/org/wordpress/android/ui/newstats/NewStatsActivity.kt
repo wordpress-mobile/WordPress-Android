@@ -67,6 +67,7 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.ui.ActivityLauncher
+import org.wordpress.android.ui.PagePostCreationSourcesDetail
 import org.wordpress.android.ui.ActivityNavigator
 import org.wordpress.android.ui.compose.components.FeedbackDialog
 import org.wordpress.android.ui.compose.theme.AppThemeM3
@@ -108,8 +109,11 @@ import org.wordpress.android.ui.newstats.subscribers.SubscribersTabContent
 import android.widget.Toast
 import org.wordpress.android.ui.newstats.alltimestats.AllTimeStatsCard
 import org.wordpress.android.ui.newstats.alltimestats.AllTimeStatsViewModel
+import org.wordpress.android.ui.newstats.latestpost.LatestPostCard
+import org.wordpress.android.ui.newstats.latestpost.LatestPostViewModel
 import org.wordpress.android.ui.newstats.mostpopularday.MostPopularDayCard
 import org.wordpress.android.ui.newstats.mostpopularday.MostPopularDayViewModel
+import org.wordpress.android.ui.newstats.poststats.PostStatsDetailActivity
 import org.wordpress.android.ui.newstats.mostpopulartime.MostPopularTimeCard
 import org.wordpress.android.ui.newstats.mostpopulartime.MostPopularTimeViewModel
 import org.wordpress.android.ui.newstats.yearinreview.YearInReviewCard
@@ -189,7 +193,8 @@ class NewStatsActivity : BaseAppCompatActivity() {
                     onStatsUrlClick = { url ->
                         activityNavigator.openInCustomTab(this, url)
                     },
-                    onPostItemClick = ::openPostDetailStats
+                    onPostItemClick = ::openPostDetailStats,
+                    onCreatePostClick = ::createNewPost
                 )
             }
         }
@@ -206,6 +211,19 @@ class NewStatsActivity : BaseAppCompatActivity() {
 
     private fun openPostDetailStats(item: MostViewedItem) {
         activityNavigator.openPostDetailStats(this, item.id, item.postType, item.title, item.url)
+    }
+
+    private fun createNewPost() {
+        selectedSiteRepository.getSelectedSite()?.let { site ->
+            ActivityLauncher.addNewPostForResult(
+                this,
+                site,
+                false,
+                PagePostCreationSourcesDetail.POST_FROM_STATS,
+                -1,
+                null
+            )
+        }
     }
 
     /**
@@ -306,7 +324,8 @@ private fun NewStatsScreen(
     showIntroBottomSheet: Boolean = false,
     onIntroDismissed: () -> Unit = {},
     onStatsUrlClick: (String) -> Unit = {},
-    onPostItemClick: (MostViewedItem) -> Unit = {}
+    onPostItemClick: (MostViewedItem) -> Unit = {},
+    onCreatePostClick: () -> Unit = {}
 ) {
     val viewsStatsViewModel: ViewsStatsViewModel = viewModel()
     val selectedPeriod by viewsStatsViewModel.selectedPeriod.collectAsState()
@@ -448,7 +467,8 @@ private fun NewStatsScreen(
                     tab = tabs[page],
                     viewsStatsViewModel = viewsStatsViewModel,
                     onStatsUrlClick = onStatsUrlClick,
-                    onPostItemClick = onPostItemClick
+                    onPostItemClick = onPostItemClick,
+                    onCreatePostClick = onCreatePostClick
                 )
             }
         }
@@ -460,7 +480,8 @@ private fun StatsTabContent(
     tab: StatsTab,
     viewsStatsViewModel: ViewsStatsViewModel,
     onStatsUrlClick: (String) -> Unit = {},
-    onPostItemClick: (MostViewedItem) -> Unit = {}
+    onPostItemClick: (MostViewedItem) -> Unit = {},
+    onCreatePostClick: () -> Unit = {}
 ) {
     when (tab) {
         StatsTab.TRAFFIC -> TrafficTabContent(
@@ -469,7 +490,8 @@ private fun StatsTabContent(
             onPostItemClick = onPostItemClick
         )
         StatsTab.INSIGHTS -> InsightsTabContent(
-            onStatsUrlClick = onStatsUrlClick
+            onStatsUrlClick = onStatsUrlClick,
+            onCreatePostClick = onCreatePostClick
         )
         StatsTab.SUBSCRIBERS -> SubscribersTabContent()
     }
@@ -1121,8 +1143,10 @@ private fun InsightsTabContent(
     mostPopularDayViewModel: MostPopularDayViewModel = viewModel(),
     mostPopularTimeViewModel: MostPopularTimeViewModel = viewModel(),
     tagsAndCategoriesViewModel: TagsAndCategoriesViewModel = viewModel(),
+    latestPostViewModel: LatestPostViewModel = viewModel(),
     insightsViewModel: InsightsViewModel = viewModel(),
-    onStatsUrlClick: (String) -> Unit = {}
+    onStatsUrlClick: (String) -> Unit = {},
+    onCreatePostClick: () -> Unit = {}
 ) {
     val context = LocalContext.current
     val yearInReviewUiState by yearInReviewViewModel.uiState.collectAsState()
@@ -1130,6 +1154,7 @@ private fun InsightsTabContent(
     val mostPopularDayUiState by mostPopularDayViewModel.uiState.collectAsState()
     val mostPopularTimeUiState by mostPopularTimeViewModel.uiState.collectAsState()
     val tagsAndCategoriesUiState by tagsAndCategoriesViewModel.uiState.collectAsState()
+    val latestPostUiState by latestPostViewModel.uiState.collectAsState()
     val isRefreshing by insightsViewModel.isDataRefreshing.collectAsState()
     val pullToRefreshState = rememberPullToRefreshState()
 
@@ -1144,6 +1169,9 @@ private fun InsightsTabContent(
         insightsViewModel.loadDataIfNeeded()
         if (InsightsCardType.TAGS_AND_CATEGORIES in cardsToLoad) {
             tagsAndCategoriesViewModel.loadData()
+        }
+        if (InsightsCardType.LATEST_POST in cardsToLoad) {
+            latestPostViewModel.loadData()
         }
     }
 
@@ -1218,6 +1246,11 @@ private fun InsightsTabContent(
             ) {
                 tagsAndCategoriesViewModel.refresh()
             }
+            if (InsightsCardType.LATEST_POST
+                in visibleCards
+            ) {
+                latestPostViewModel.refresh()
+            }
         },
         indicator = {
             PullToRefreshDefaults.Indicator(
@@ -1263,6 +1296,20 @@ private fun InsightsTabContent(
                             uiState = allTimeStatsUiState,
                             onRemoveCard = { insightsViewModel.removeCard(cardType) },
                             onRetry = { allTimeStatsViewModel.showLoading(); onRetryData() },
+                            cardPosition = pos,
+                            onMoveUp = { insightsViewModel.moveCardUp(cardType) },
+                            onMoveToTop = { insightsViewModel.moveCardToTop(cardType) },
+                            onMoveDown = { insightsViewModel.moveCardDown(cardType) },
+                            onMoveToBottom = { insightsViewModel.moveCardToBottom(cardType) }
+                        )
+                        InsightsCardType.LATEST_POST -> LatestPostCard(
+                            uiState = latestPostUiState,
+                            onRemoveCard = { insightsViewModel.removeCard(cardType) },
+                            onRetry = { latestPostViewModel.refresh() },
+                            onPostClick = { postId ->
+                                PostStatsDetailActivity.start(context, postId)
+                            },
+                            onCreatePostClick = onCreatePostClick,
                             cardPosition = pos,
                             onMoveUp = { insightsViewModel.moveCardUp(cardType) },
                             onMoveToTop = { insightsViewModel.moveCardToTop(cardType) },

@@ -21,6 +21,9 @@ import uniffi.wp_api.StatsRegionViewsPeriod
 import uniffi.wp_api.StatsDevicesParams
 import uniffi.wp_api.StatsDevicesPeriod
 import uniffi.wp_api.StatsInsightsParams
+import uniffi.wp_api.StatsPostChange
+import uniffi.wp_api.StatsPostResponse
+import uniffi.wp_api.StatsPostWeek
 import uniffi.wp_api.StatsTagsParams
 import uniffi.wp_api.StatsSearchTermsParams
 import uniffi.wp_api.StatsSearchTermsPeriod
@@ -1242,6 +1245,101 @@ class StatsDataSourceImpl @Inject constructor(
             }
         }
     }
+
+    override suspend fun fetchPostViews(
+        siteId: Long,
+        postId: Long,
+        recentDays: Int
+    ): PostViewsDataResult {
+        // The endpoint takes no query params -- num, date and period are silently ignored -- so
+        // the trailing window is applied to the response instead.
+        val result = getOrCreateClient()
+            .request { requestBuilder ->
+                requestBuilder.statsPost()
+                    .getStatsPost(
+                        wpComSiteId = siteId.toULong(),
+                        postId = postId
+                    )
+            }
+
+        logResultType("fetchPostViews", result)
+
+        return when (result) {
+            is WpRequestResult.Success -> {
+                AppLog.d(
+                    T.STATS,
+                    "StatsDataSourceImpl: " +
+                        "fetchPostViews success"
+                )
+                PostViewsDataResult.Success(
+                    mapToPostViewsData(
+                        result.response.data,
+                        recentDays
+                    )
+                )
+            }
+            else -> logErrorAndReturn(
+                "fetchPostViews",
+                result
+            ) {
+                PostViewsDataResult.Error(it)
+            }
+        }
+    }
+
+    private fun mapToPostViewsData(
+        response: StatsPostResponse,
+        recentDays: Int
+    ): PostViewsData = PostViewsData(
+        postId = response.post.id,
+        postTitle = response.post.title,
+        postDate = response.post.date,
+        totalViews = response.views.toLong(),
+        likeCount = response.likeCount.toLong(),
+        commentCount = response.discussion
+            .commentCount.toLong(),
+        // dailyViews is the post's whole history --
+        // thousands of entries for an old post -- so only
+        // the trailing window is mapped.
+        recentDailyViews = response.dailyViews
+            .takeLast(recentDays)
+            .map { it.views.toLong() },
+        // The API sends weeks oldest first; the UI lists
+        // the most recent week at the top.
+        weeks = response.weeks
+            .map { it.toPostViewsWeek() }
+            .reversed(),
+        years = response.years
+            .map { (year, value) ->
+                PostViewsYear(
+                    year = year,
+                    total = value.total.toLong()
+                )
+            }
+            .sortedByDescending { it.year },
+        averages = response.averages
+            .map { (year, value) ->
+                PostViewsYearAverage(
+                    year = year,
+                    overall = value.overall
+                )
+            }
+            .sortedByDescending { it.year }
+    )
+
+    private fun StatsPostWeek.toPostViewsWeek() =
+        PostViewsWeek(
+            startDay = days.firstOrNull()?.day.orEmpty(),
+            endDay = days.lastOrNull()?.day.orEmpty(),
+            total = total.toLong(),
+            change = when (val change = change) {
+                is StatsPostChange.Percentage ->
+                    PostViewsChange.Percentage(change.value)
+                is StatsPostChange.Infinite ->
+                    PostViewsChange.Infinite
+                null -> PostViewsChange.None
+            }
+        )
 
     override suspend fun fetchStatsSubscribers(
         siteId: Long,

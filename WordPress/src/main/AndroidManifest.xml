@@ -143,6 +143,11 @@
             android:exported="false" />
 
         <activity
+            android:name=".ui.newstats.poststats.PostStatsDetailActivity"
+            android:theme="@style/WordPress.NoActionBar"
+            android:exported="false" />
+
+        <activity
             android:name=".ui.newstats.subscribers.subscriberslist.SubscribersListDetailActivity"
             android:theme="@style/WordPress.NoActionBar"
             android:exported="false" />

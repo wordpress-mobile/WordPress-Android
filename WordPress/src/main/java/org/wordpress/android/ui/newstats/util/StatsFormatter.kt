@@ -2,7 +2,11 @@ package org.wordpress.android.ui.newstats.util
 
 import org.wordpress.android.R
 import org.wordpress.android.ui.newstats.StatsPeriod
+import org.wordpress.android.util.AppLog
 import org.wordpress.android.viewmodel.ResourceProvider
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import java.util.Locale
 
 private const val THOUSAND = 1_000
@@ -10,6 +14,47 @@ private const val MILLION = 1_000_000
 private const val FORMAT_MILLION = "%.1fM"
 private const val FORMAT_THOUSAND = "%.1fK"
 private const val MONTH_ABBREVIATION_LENGTH = 3
+
+private const val DISPLAY_DATE_PATTERN = "MMM d, yyyy"
+private val API_DATE_TIME_FORMAT = DateTimeFormatter
+    .ofPattern("yyyy-MM-dd HH:mm:ss", Locale.US)
+
+/**
+ * Formats an API timestamp ("yyyy-MM-dd HH:mm:ss", site timezone) for display, e.g. "Aug 4, 2026".
+ * Returns the input unchanged if it can't be parsed.
+ */
+fun formatStatsDateTime(dateTime: String): String = parseOrLog(dateTime) {
+    LocalDateTime.parse(it, API_DATE_TIME_FORMAT)
+        .format(displayDateFormat())
+}
+
+/**
+ * Formats an API day ("yyyy-MM-dd") for display, e.g. "Aug 4, 2026". Returns the input unchanged
+ * if it can't be parsed.
+ */
+fun formatStatsDate(date: String): String = parseOrLog(date) {
+    LocalDate.parse(it, DateTimeFormatter.ISO_LOCAL_DATE)
+        .format(displayDateFormat())
+}
+
+private fun displayDateFormat() = DateTimeFormatter.ofPattern(
+    DISPLAY_DATE_PATTERN,
+    Locale.getDefault()
+)
+
+@Suppress("TooGenericExceptionCaught")
+private inline fun parseOrLog(
+    value: String,
+    format: (String) -> String
+): String = try {
+    format(value)
+} catch (e: Exception) {
+    AppLog.w(
+        AppLog.T.STATS,
+        "Failed to parse stats date '$value': ${e.message}"
+    )
+    value
+}
 
 /**
  * Formats a stat value for display, using K/M suffixes for large numbers.

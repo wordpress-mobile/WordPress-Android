@@ -17,4 +17,5 @@ ext {
     //localGutenbergKitPath = "../GutenbergKit"
     //localAztecAndroidPath = "../AztecEditor-Android"
     //localGravatarAndroidPath = "../Gravatar-SDK-Android"
+    //localWordPressRsPath = "../wordpress-rs"
 }
