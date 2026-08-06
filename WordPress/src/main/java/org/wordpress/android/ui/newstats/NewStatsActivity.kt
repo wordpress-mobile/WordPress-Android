@@ -65,6 +65,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.ActivityNavigator
@@ -127,6 +128,7 @@ import org.wordpress.android.ui.stats.refresh.utils.StatsLaunchedFrom
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.util.extensions.getSerializableExtraCompat
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -156,6 +158,7 @@ class NewStatsActivity : BaseAppCompatActivity() {
         selectSiteFromIntentIfNeeded()
         val shouldShowIntro =
             !appPrefsWrapper.getNewStatsIntroShown()
+        val initialTab = intent?.getSerializableExtraCompat<StatsTab>(KEY_INITIAL_TAB) ?: StatsTab.TRAFFIC
         setContent {
             AppThemeM3 {
                 var showFeedbackDialog by rememberSaveable { mutableStateOf(false) }
@@ -175,6 +178,7 @@ class NewStatsActivity : BaseAppCompatActivity() {
                 }
 
                 NewStatsScreen(
+                    initialTab = initialTab,
                     onBackPressed =
                         onBackPressedDispatcher::onBackPressed,
                     onSwitchToOldStats = {
@@ -238,29 +242,39 @@ class NewStatsActivity : BaseAppCompatActivity() {
     companion object {
         private const val FEEDBACK_PREFIX_STATS = "Stats"
 
+        private const val KEY_INITIAL_TAB = "initial_tab"
+
         /**
          * Opens New Stats, optionally on a specific [period]. The period is passed as an Intent
          * extra that seeds [ViewsStatsViewModel]'s SavedStateHandle, so it takes precedence over the
          * persisted period without overwriting it.
          */
         fun start(context: Context, period: StatsPeriod? = null) {
-            val intent = Intent(context, NewStatsActivity::class.java)
+            context.startActivity(buildIntent(context, period = period))
+        }
+
+        /**
+         * New Stats always renders the currently selected site, so [site] travels as the same
+         * LOCAL_SITE_ID extra the stats widgets use and is applied by [selectSiteFromIntentIfNeeded]
+         * before the screen is composed.
+         */
+        fun buildIntent(
+            context: Context,
+            tab: StatsTab = StatsTab.TRAFFIC,
+            period: StatsPeriod? = null,
+            site: SiteModel? = null
+        ): Intent = Intent(context, NewStatsActivity::class.java).apply {
+            site?.let { putExtra(WordPress.LOCAL_SITE_ID, it.id) }
+            putExtra(KEY_INITIAL_TAB, tab)
             period?.let {
-                intent.putExtra(ViewsStatsViewModel.KEY_PERIOD_TYPE, it.toTypeString())
+                putExtra(ViewsStatsViewModel.KEY_PERIOD_TYPE, it.toTypeString())
                 if (it is StatsPeriod.Custom) {
-                    intent.putExtra(ViewsStatsViewModel.KEY_CUSTOM_START_DATE, it.startDate.toEpochDay())
-                    intent.putExtra(ViewsStatsViewModel.KEY_CUSTOM_END_DATE, it.endDate.toEpochDay())
+                    putExtra(ViewsStatsViewModel.KEY_CUSTOM_START_DATE, it.startDate.toEpochDay())
+                    putExtra(ViewsStatsViewModel.KEY_CUSTOM_END_DATE, it.endDate.toEpochDay())
                 }
             }
-            context.startActivity(intent)
         }
     }
-}
-
-private enum class StatsTab(val titleResId: Int) {
-    TRAFFIC(R.string.stats_traffic),
-    INSIGHTS(R.string.stats_insights),
-    SUBSCRIBERS(R.string.subscribers)
 }
 
 @Composable
@@ -302,6 +316,7 @@ private fun StatsOverflowMenu(
 @Composable
 private fun NewStatsScreen(
     onBackPressed: () -> Unit,
+    initialTab: StatsTab = StatsTab.TRAFFIC,
     onSwitchToOldStats: () -> Unit = {},
     showIntroBottomSheet: Boolean = false,
     onIntroDismissed: () -> Unit = {},
@@ -312,7 +327,7 @@ private fun NewStatsScreen(
     val selectedPeriod by viewsStatsViewModel.selectedPeriod.collectAsState()
 
     val tabs = StatsTab.entries
-    val pagerState = rememberPagerState(pageCount = { tabs.size })
+    val pagerState = rememberPagerState(initialPage = initialTab.ordinal, pageCount = { tabs.size })
     val coroutineScope = rememberCoroutineScope()
     var showPeriodMenu by remember { mutableStateOf(false) }
     var showIntro by remember { mutableStateOf(showIntroBottomSheet) }
