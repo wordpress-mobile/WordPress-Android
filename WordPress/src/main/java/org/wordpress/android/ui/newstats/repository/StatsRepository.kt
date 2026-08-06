@@ -1850,21 +1850,15 @@ class StatsRepository @Inject constructor(
     }
 
     /**
-     * Fetches view stats for a single post.
-     *
-     * @param recentDays How many trailing days of the daily
-     * view history to keep. The card shows a week, the
-     * detail screen a month.
+     * Fetches view stats for a single post, or for the site's home page when [postId] is 0.
      */
     suspend fun fetchPostViews(
         siteId: Long,
-        postId: Long,
-        recentDays: Int
+        postId: Long
     ): PostViewsResult = withContext(ioDispatcher) {
         val result = statsDataSource.fetchPostViews(
             siteId = siteId,
-            postId = postId,
-            recentDays = recentDays
+            postId = postId
         )
         when (result) {
             is PostViewsDataResult.Success ->

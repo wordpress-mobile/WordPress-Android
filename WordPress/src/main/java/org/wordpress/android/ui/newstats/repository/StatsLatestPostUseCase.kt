@@ -41,8 +41,7 @@ class StatsLatestPostUseCase @Inject constructor(
                     val views = statsRepository
                         .fetchPostViews(
                             siteId = site.siteId,
-                            postId = lookup.postId,
-                            recentDays = CARD_RECENT_DAYS
+                            postId = lookup.postId
                         )
                 ) {
                     is PostViewsResult.Success ->
@@ -51,11 +50,6 @@ class StatsLatestPostUseCase @Inject constructor(
                         LatestPostResult.Error(views.message)
                 }
         }
-    }
-
-    companion object {
-        // A week of daily views is all the card charts.
-        private const val CARD_RECENT_DAYS = 7
     }
 }
 

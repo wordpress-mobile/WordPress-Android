@@ -1248,11 +1248,9 @@ class StatsDataSourceImpl @Inject constructor(
 
     override suspend fun fetchPostViews(
         siteId: Long,
-        postId: Long,
-        recentDays: Int
+        postId: Long
     ): PostViewsDataResult {
-        // The endpoint takes no query params -- num, date and period are silently ignored -- so
-        // the trailing window is applied to the response instead.
+        // The endpoint takes no query params -- num, date and period are silently ignored.
         val result = getOrCreateClient()
             .request { requestBuilder ->
                 requestBuilder.statsPost()
@@ -1274,8 +1272,7 @@ class StatsDataSourceImpl @Inject constructor(
                 PostViewsDataResult.Success(
                     mapToPostViewsData(
                         result.response.data,
-                        postId,
-                        recentDays
+                        postId
                     )
                 )
             }
@@ -1290,18 +1287,18 @@ class StatsDataSourceImpl @Inject constructor(
 
     private fun mapToPostViewsData(
         response: StatsPostResponse,
-        postId: Long,
-        recentDays: Int
+        postId: Long
     ): PostViewsData = PostViewsData(
         // The home page has no post row to read an id from, so the requested id is authoritative.
         postId = response.post?.id ?: postId,
         totalViews = response.views.toLong(),
-        // dailyViews is the post's whole history --
-        // thousands of entries for an old post -- so only
-        // the trailing window is mapped.
-        recentDailyViews = response.dailyViews
-            .takeLast(recentDays)
-            .map { it.views.toLong() },
+        dailyViews = response.dailyViews
+            .map {
+                PostViewsDailyView(
+                    day = it.period,
+                    views = it.views.toLong()
+                )
+            },
         // The API sends weeks oldest first; the UI lists
         // the most recent week at the top.
         weeks = response.weeks

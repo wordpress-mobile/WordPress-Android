@@ -249,15 +249,12 @@ interface StatsDataSource {
      * Fetches view stats for a single post.
      *
      * @param siteId The WordPress.com site ID
-     * @param postId The post ID
-     * @param recentDays How many trailing days of the daily view history to return. The endpoint
-     * returns the post's entire history, which can be thousands of entries for a long-lived post.
+     * @param postId The post ID; 0 is the site's home page
      * @return Result containing the post's view data or an error
      */
     suspend fun fetchPostViews(
         siteId: Long,
-        postId: Long,
-        recentDays: Int
+        postId: Long
     ): PostViewsDataResult
 
     /**
@@ -800,8 +797,8 @@ sealed class PostViewsDataResult {
 data class PostViewsData(
     val postId: Long,
     val totalViews: Long,
-    /** Daily view counts for the trailing window, oldest first. */
-    val recentDailyViews: List<Long>,
+    /** The post's complete daily view history, oldest first. */
+    val dailyViews: List<PostViewsDailyView>,
     /** The most recent weeks of daily views, most recent first. */
     val weeks: List<PostViewsWeek>,
     /** Yearly totals, most recent year first. */
@@ -810,6 +807,15 @@ data class PostViewsData(
     val averages: List<PostViewsYearAverage>,
     /** The post these stats belong to, or null for the site's home page. */
     val post: PostViewsPost?
+)
+
+/**
+ * A single day's view count. The day is kept so the chart can label its range.
+ */
+data class PostViewsDailyView(
+    /** The day the views were recorded on (format: yyyy-MM-dd). */
+    val day: String,
+    val views: Long
 )
 
 /**

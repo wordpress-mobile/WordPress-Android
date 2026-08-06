@@ -4,6 +4,7 @@ import org.wordpress.android.R
 import org.wordpress.android.ui.newstats.StatsPeriod
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.viewmodel.ResourceProvider
+import java.text.NumberFormat
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -67,6 +68,37 @@ fun formatStatValue(value: Long): String {
         else -> value.toString()
     }
 }
+
+private const val TEN_THOUSAND = 10_000
+
+/**
+ * Formats a stat value for a detail list, where precision matters more than width: grouped in full
+ * up to 10,000 ("1,986"), abbreviated above it ("74.3K"). Matches the thresholds the old stats
+ * screens use; [formatStatValue] is the compact form for cards.
+ */
+fun formatStatCount(value: Long): String = if (value < TEN_THOUSAND) {
+    NumberFormat.getIntegerInstance(Locale.getDefault())
+        .format(value)
+} else {
+    formatStatValue(value)
+}
+
+/**
+ * Formats a fractional change as a percentage, e.g. -0.25 -> "-25%".
+ */
+fun formatChangePercentage(fraction: Double): String =
+    NumberFormat.getPercentInstance(Locale.getDefault())
+        .apply { maximumFractionDigits = 0 }
+        .format(fraction)
+
+/**
+ * Formats an average for a detail list, keeping one decimal place when there is one.
+ */
+fun formatStatAverage(value: Double): String =
+    NumberFormat.getInstance(Locale.getDefault()).apply {
+        maximumFractionDigits = 1
+        minimumFractionDigits = 0
+    }.format(value)
 
 private const val FORMAT_DECIMAL = "%.1f"
 

@@ -115,7 +115,9 @@ class LatestPostViewModel @Inject constructor(
                         views = views.totalViews,
                         likes = post.likeCount,
                         comments = post.commentCount,
-                        recentViews = views.recentDailyViews
+                        recentViews = views.dailyViews
+                            .takeLast(CARD_CHART_DAYS)
+                            .map { it.views }
                     )
                 }
             }
@@ -124,5 +126,10 @@ class LatestPostViewModel @Inject constructor(
             is LatestPostResult.Error ->
                 LatestPostCardUiState.Error
         }
+    }
+
+    companion object {
+        // A week of daily views is all the card charts.
+        private const val CARD_CHART_DAYS = 7
     }
 }

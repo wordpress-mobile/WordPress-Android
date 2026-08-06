@@ -20,8 +20,11 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -41,15 +44,19 @@ import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.main.BaseAppCompatActivity
-import org.wordpress.android.ui.newstats.components.StatsBarChart
+import org.wordpress.android.ui.newstats.StatsColors
+import org.wordpress.android.ui.newstats.components.StatsDayViewsChart
 import org.wordpress.android.ui.newstats.components.StatsChangeIndicator
+import org.wordpress.android.ui.newstats.components.StatsListHeader
 import org.wordpress.android.ui.newstats.components.StatsLabeledValue
 import org.wordpress.android.ui.newstats.components.StatsViewChange
 import org.wordpress.android.ui.newstats.datasource.PostViewsChange
 import org.wordpress.android.ui.newstats.datasource.PostViewsData
 import org.wordpress.android.ui.newstats.datasource.PostViewsWeek
 import org.wordpress.android.ui.newstats.util.ShimmerBox
-import org.wordpress.android.ui.newstats.util.formatStatValue
+import org.wordpress.android.ui.newstats.util.formatChangePercentage
+import org.wordpress.android.ui.newstats.util.formatStatAverage
+import org.wordpress.android.ui.newstats.util.formatStatCount
 import org.wordpress.android.ui.newstats.util.formatStatsDate
 import org.wordpress.android.ui.newstats.util.formatStatsDateTime
 
@@ -84,7 +91,9 @@ class PostStatsDetailActivity : BaseAppCompatActivity() {
                     onBackPressed =
                         onBackPressedDispatcher
                             ::onBackPressed,
-                    onRetry = { viewModel.loadData(postId) }
+                    onRetry = { viewModel.loadData(postId) },
+                    onPreviousDay = viewModel::selectPreviousDay,
+                    onNextDay = viewModel::selectNextDay
                 )
             }
         }
@@ -118,11 +127,14 @@ class PostStatsDetailActivity : BaseAppCompatActivity() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
+@Suppress("LongParameterList")
 private fun PostStatsDetailScreen(
     uiState: PostStatsDetailUiState,
     postTitle: String,
     onBackPressed: () -> Unit,
-    onRetry: () -> Unit
+    onRetry: () -> Unit,
+    onPreviousDay: () -> Unit,
+    onNextDay: () -> Unit
 ) {
     Scaffold(
         topBar = {
@@ -161,7 +173,12 @@ private fun PostStatsDetailScreen(
                 is PostStatsDetailUiState.Error ->
                     ErrorContent(uiState.message, onRetry)
                 is PostStatsDetailUiState.Loaded ->
-                    LoadedContent(uiState.data, postTitle)
+                    LoadedContent(
+                        state = uiState,
+                        fallbackTitle = postTitle,
+                        onPreviousDay = onPreviousDay,
+                        onNextDay = onNextDay
+                    )
             }
         }
     }
@@ -214,9 +231,12 @@ private fun ErrorContent(
 
 @Composable
 private fun LoadedContent(
-    data: PostViewsData,
-    fallbackTitle: String
+    state: PostStatsDetailUiState.Loaded,
+    fallbackTitle: String,
+    onPreviousDay: () -> Unit,
+    onNextDay: () -> Unit
 ) {
+    val data = state.data
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
         contentPadding = PaddingValues(ScreenPadding)
@@ -224,13 +244,15 @@ private fun LoadedContent(
         item { PostHeader(data, fallbackTitle) }
         item { Spacer(modifier = Modifier.height(24.dp)) }
 
-        if (data.recentDailyViews.any { it > 0L }) {
+        if (state.selectedDay != null) {
             item {
-                SectionTitle(R.string.stats_views)
-                StatsBarChart(
-                    values = data.recentDailyViews,
-                    height = ChartHeight
+                DaySelector(
+                    state = state,
+                    onPreviousDay = onPreviousDay,
+                    onNextDay = onNextDay
                 )
+                SelectedDayViews(state)
+                DayViewsChart(state)
                 Spacer(
                     modifier = Modifier.height(24.dp)
                 )
@@ -248,7 +270,7 @@ private fun LoadedContent(
         ) {
             DetailRow(
                 label = it.year,
-                value = formatStatValue(it.total)
+                value = formatStatCount(it.total)
             )
         }
 
@@ -258,7 +280,7 @@ private fun LoadedContent(
         ) {
             DetailRow(
                 label = it.year,
-                value = formatStatValue(it.overall)
+                value = formatStatAverage(it.overall)
             )
         }
     }
@@ -273,8 +295,19 @@ private fun <T> LazyListScope.statsSection(
     row: @Composable (T) -> Unit
 ) {
     if (items.isEmpty()) return
-    item { SectionTitle(titleResId) }
-    items(items.size) { index -> row(items[index]) }
+    item {
+        SectionTitle(titleResId)
+        StatsListHeader(
+            leftHeaderResId =
+                R.string.stats_months_and_years_period_label,
+            rightHeaderResId =
+                R.string.stats_months_and_years_views_label
+        )
+    }
+    items(items.size) { index ->
+        if (index > 0) HorizontalDivider()
+        row(items[index])
+    }
     item { Spacer(modifier = Modifier.height(24.dp)) }
 }
 
@@ -326,6 +359,140 @@ private fun PostHeader(data: PostViewsData, fallbackTitle: String) {
     }
 }
 
+/**
+ * The selected day with arrows to step through the history, mirroring the old stats date bar.
+ */
+@Composable
+private fun DaySelector(
+    state: PostStatsDetailUiState.Loaded,
+    onPreviousDay: () -> Unit,
+    onNextDay: () -> Unit
+) {
+    val day = state.selectedDay ?: return
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            text = formatStatsDate(day.day),
+            style = MaterialTheme.typography.titleMedium,
+            fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colorScheme.onSurface,
+            modifier = Modifier.weight(1f)
+        )
+        IconButton(
+            onClick = onPreviousDay,
+            enabled = state.hasPreviousDay
+        ) {
+            Icon(
+                imageVector = Icons.AutoMirrored
+                    .Filled.KeyboardArrowLeft,
+                contentDescription = stringResource(
+                    R.string.stats_previous_day
+                )
+            )
+        }
+        IconButton(
+            onClick = onNextDay,
+            enabled = state.hasNextDay
+        ) {
+            Icon(
+                imageVector = Icons.AutoMirrored
+                    .Filled.KeyboardArrowRight,
+                contentDescription = stringResource(
+                    R.string.stats_next_day
+                )
+            )
+        }
+    }
+}
+
+/**
+ * The selected day's views and how they compare with the day before.
+ */
+@Composable
+private fun SelectedDayViews(
+    state: PostStatsDetailUiState.Loaded
+) {
+    val views = state.selectedDay?.views ?: return
+    val previous = state.previousDay?.views
+
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 8.dp),
+        verticalAlignment = Alignment.Bottom
+    ) {
+        Text(
+            text = formatStatCount(views),
+            style = MaterialTheme.typography.headlineMedium,
+            fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colorScheme.onSurface
+        )
+        Text(
+            text = stringResource(R.string.stats_views),
+            style = MaterialTheme.typography.bodyLarge,
+            color = MaterialTheme.colorScheme
+                .onSurfaceVariant,
+            modifier = Modifier
+                .padding(start = 8.dp, bottom = 2.dp)
+                .weight(1f)
+        )
+        if (previous != null) {
+            DayChangeLabel(views = views, previous = previous)
+        }
+    }
+}
+
+@Composable
+private fun DayChangeLabel(views: Long, previous: Long) {
+    val difference = views - previous
+    val percentage = when {
+        previous == views -> "0%"
+        previous == 0L -> INFINITY
+        else -> formatChangePercentage(
+            difference.toDouble() / previous
+        )
+    }
+    val positive = difference >= 0
+    Text(
+        text = stringResource(
+            if (positive) {
+                R.string.stats_traffic_increase
+            } else {
+                R.string.stats_traffic_change
+            },
+            formatStatCount(difference),
+            percentage
+        ),
+        style = MaterialTheme.typography.bodyMedium,
+        color = if (positive) {
+            StatsColors.ChangeBadgePositive
+        } else {
+            StatsColors.ChangeBadgeNegative
+        }
+    )
+}
+
+@Composable
+private fun DayViewsChart(
+    state: PostStatsDetailUiState.Loaded
+) {
+    val days = state.chartDays
+    if (days.isEmpty()) return
+    StatsDayViewsChart(
+        values = days.map { it.views },
+        selectedIndex = days.lastIndex,
+        height = ChartHeight,
+        bottomAxisLabel = { index ->
+            days.getOrNull(index)?.day
+                ?.let(::formatStatsDate)
+                ?: days.last().day.let(::formatStatsDate)
+        },
+        modifier = Modifier.padding(top = 8.dp)
+    )
+}
+
 @Composable
 private fun SectionTitle(titleResId: Int) {
     Text(
@@ -341,7 +508,7 @@ private fun SectionTitle(titleResId: Int) {
 private fun WeekRow(week: PostViewsWeek) {
     DetailRow(
         label = weekLabel(week),
-        value = formatStatValue(week.total)
+        value = formatStatCount(week.total)
     ) {
         when (val change = week.change) {
             is PostViewsChange.Infinite -> Text(
