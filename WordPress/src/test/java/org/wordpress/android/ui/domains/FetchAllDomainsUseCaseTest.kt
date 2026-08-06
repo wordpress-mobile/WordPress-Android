@@ -160,4 +160,22 @@ class FetchAllDomainsUseCaseTest : BaseUnitTest() {
 
             assertThat(result).isInstanceOf(AllDomains.Empty::class.java)
         }
+
+    @Test
+    fun `given no access token, when execute, returns error`() = test {
+        whenever(accountStore.accessToken).thenReturn(null)
+
+        val result = useCase.execute()
+
+        assertThat(result).isInstanceOf(AllDomains.Error::class.java)
+    }
+
+    @Test
+    fun `given a blank access token, when execute, returns error`() = test {
+        whenever(accountStore.accessToken).thenReturn("")
+
+        val result = useCase.execute()
+
+        assertThat(result).isInstanceOf(AllDomains.Error::class.java)
+    }
 }

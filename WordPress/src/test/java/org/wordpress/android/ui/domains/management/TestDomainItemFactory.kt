@@ -7,7 +7,6 @@ import uniffi.wp_api.DomainListItemStatusType
 import uniffi.wp_api.DomainSubtype
 import uniffi.wp_api.DomainSubtypeId
 
-@Suppress("LongParameterList")
 fun testDomainItem(
     domain: String = "",
     siteSlug: String = "",

@@ -18,10 +18,8 @@ class FetchAllDomainsUseCase @Inject constructor(
     private var wpComApiClient: WpComApiClient? = null
 
     @Synchronized
-    private fun getOrCreateClient(): WpComApiClient {
-        val token = requireNotNull(accountStore.accessToken) {
-            "WP.com access token is required"
-        }
+    private fun getOrCreateClient(): WpComApiClient? {
+        val token = accountStore.accessToken?.takeIf { it.isNotEmpty() } ?: return null
         return wpComApiClient
             ?: wpComApiClientProvider.getWpComApiClient(token)
                 .also { wpComApiClient = it }
@@ -43,7 +41,14 @@ class FetchAllDomainsUseCase @Inject constructor(
      * managed, and partner subdomains.
      */
     suspend fun execute(): AllDomains {
-        val result = getOrCreateClient()
+        val client = getOrCreateClient() ?: run {
+            AppLog.e(
+                AppLog.T.API,
+                "Cannot fetch all domains without a WP.com access token"
+            )
+            return AllDomains.Error
+        }
+        val result = client
             .request { it.domains().allDomains(AllDomainsParams()).data }
         return when (result) {
             is WpRequestResult.Success -> {

@@ -147,21 +147,18 @@ fun DomainListCardPreview() {
     }
 }
 
-@Suppress("LongParameterList")
 private fun previewDomain(
-    domain: String = "domain.cool",
-    blogName: String = "A cool website",
-    status: DomainListItemStatusType = DomainListItemStatusType.Success,
-    statusLabel: String = "Active",
-    expiry: String? = null,
+    status: DomainListItemStatusType,
+    statusLabel: String,
+    expiry: String?,
 ) = AllDomainItem(
-    domain = domain,
+    domain = "domain.cool",
     subtype = DomainSubtype(
         id = DomainSubtypeId.DomainRegistration,
         label = "Domain name registration"
     ),
     blogId = 0u,
-    blogName = blogName,
+    blogName = "A cool website",
     siteSlug = "domain.wordpress.com",
     autoRenewing = false,
     currentUserIsOwner = true,

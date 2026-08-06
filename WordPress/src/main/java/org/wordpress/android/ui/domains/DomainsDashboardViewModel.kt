@@ -150,7 +150,10 @@ class DomainsDashboardViewModel @Inject constructor(
         is DomainListItemStatusType.Premium -> R.color.jetpack_green_50
         is DomainListItemStatusType.Neutral -> R.color.gray_50
         is DomainListItemStatusType.Warning -> R.color.orange_50
-        else -> R.color.red_50
+        is DomainListItemStatusType.Alert,
+        is DomainListItemStatusType.Error,
+        is DomainListItemStatusType.Other,
+        null -> R.color.red_50
     }
 
     private fun buildCtaItems(

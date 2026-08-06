@@ -100,53 +100,38 @@ private val LocalDate.mediumFormat
     )
 
 private val previewStatusTypes = listOf(
-    DomainListItemStatusType.Success,
-    DomainListItemStatusType.Warning,
-    DomainListItemStatusType.Error,
-    DomainListItemStatusType.Alert,
-    DomainListItemStatusType.Neutral,
-    DomainListItemStatusType.Premium,
+    DomainListItemStatusType.Success to "Success",
+    DomainListItemStatusType.Warning to "Warning",
+    DomainListItemStatusType.Error to "Error",
+    DomainListItemStatusType.Alert to "Alert",
+    DomainListItemStatusType.Neutral to "Neutral",
+    DomainListItemStatusType.Premium to "Premium",
 )
 
 class PreviewStatusProvider :
     PreviewParameterProvider<Pair<DomainListItemStatus, LocalDate?>?> {
     override val values
         get() = previewStatusTypes.asSequence()
-            .map { statusType ->
+            .map { (statusType, label) ->
                 Pair(
-                    DomainListItemStatus(
-                        id = DomainListItemStatusId.Active,
-                        label = statusType.previewLabel,
-                        statusType = statusType,
-                        cta = null,
-                    ),
+                    previewStatus(label = label, statusType = statusType),
                     LocalDate.of(2024, 8, 15),
                 )
             } +
-                sequenceOf(
-                    Pair(
-                        DomainListItemStatus(
-                            id = DomainListItemStatusId.Active,
-                            label = "",
-                            statusType = DomainListItemStatusType.Success,
-                            cta = null,
-                        ),
-                        null
-                    )
-                ) +
+                // A blank label falls back to the generic error string.
+                sequenceOf(Pair(previewStatus(label = ""), null)) +
                 sequenceOf(null)
 }
 
-private val DomainListItemStatusType.previewLabel: String
-    get() = when (this) {
-        is DomainListItemStatusType.Success -> "Success"
-        is DomainListItemStatusType.Warning -> "Warning"
-        is DomainListItemStatusType.Error -> "Error"
-        is DomainListItemStatusType.Alert -> "Alert"
-        is DomainListItemStatusType.Neutral -> "Neutral"
-        is DomainListItemStatusType.Premium -> "Premium"
-        is DomainListItemStatusType.Other -> "Other"
-    }
+private fun previewStatus(
+    label: String,
+    statusType: DomainListItemStatusType = DomainListItemStatusType.Success,
+) = DomainListItemStatus(
+    id = DomainListItemStatusId.Active,
+    label = label,
+    statusType = statusType,
+    cta = null,
+)
 
 @Preview(showBackground = true, widthDp = 296)
 @Preview(
