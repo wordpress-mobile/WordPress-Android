@@ -110,7 +110,6 @@ import android.widget.Toast
 import org.wordpress.android.ui.newstats.alltimestats.AllTimeStatsCard
 import org.wordpress.android.ui.newstats.alltimestats.AllTimeStatsViewModel
 import org.wordpress.android.ui.newstats.latestpost.LatestPostCard
-import org.wordpress.android.ui.newstats.latestpost.LatestPostCardUiState
 import org.wordpress.android.ui.newstats.latestpost.LatestPostViewModel
 import org.wordpress.android.ui.newstats.mostpopularday.MostPopularDayCard
 import org.wordpress.android.ui.newstats.mostpopularday.MostPopularDayViewModel
@@ -1308,13 +1307,11 @@ private fun InsightsTabContent(
                             uiState = latestPostUiState,
                             onRemoveCard = { insightsViewModel.removeCard(cardType) },
                             onRetry = { latestPostViewModel.refresh() },
-                            onPostClick = { postId ->
+                            onPostClick = { postId, title ->
                                 PostStatsDetailActivity.start(
                                     context,
                                     postId,
-                                    (latestPostUiState as?
-                                        LatestPostCardUiState.Loaded)
-                                        ?.postTitle.orEmpty()
+                                    title
                                 )
                             },
                             onCreatePostClick = onCreatePostClick,

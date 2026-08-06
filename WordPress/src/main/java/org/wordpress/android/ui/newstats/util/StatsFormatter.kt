@@ -10,7 +10,7 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 
-private const val THOUSAND = 1_000
+const val THOUSAND = 1_000
 private const val MILLION = 1_000_000
 private const val FORMAT_MILLION = "%.1fM"
 private const val FORMAT_THOUSAND = "%.1fK"
@@ -58,30 +58,35 @@ private inline fun parseOrLog(
 }
 
 /**
- * Formats a stat value for display, using K/M suffixes for large numbers.
- * Examples: 1500 -> "1.5K", 2500000 -> "2.5M", 500 -> "500"
+ * Formats a stat value for display, grouped in full below [abbreviateFrom] and with a K/M suffix
+ * at or above it. Examples at the default threshold: 500 -> "500", 1500 -> "1.5K",
+ * 2500000 -> "2.5M"; at [TEN_THOUSAND]: 1986 -> "1,986".
+ *
+ * Cards are width-constrained and abbreviate early; detail screens pass [TEN_THOUSAND] so figures
+ * stay exact for longer, which is the threshold the old stats screens use.
  */
-fun formatStatValue(value: Long): String {
-    return when {
-        value >= MILLION -> String.format(Locale.getDefault(), FORMAT_MILLION, value / MILLION.toDouble())
-        value >= THOUSAND -> String.format(Locale.getDefault(), FORMAT_THOUSAND, value / THOUSAND.toDouble())
-        else -> value.toString()
-    }
-}
-
-private const val TEN_THOUSAND = 10_000
-
-/**
- * Formats a stat value for a detail list, where precision matters more than width: grouped in full
- * up to 10,000 ("1,986"), abbreviated above it ("74.3K"). Matches the thresholds the old stats
- * screens use; [formatStatValue] is the compact form for cards.
- */
-fun formatStatCount(value: Long): String = if (value < TEN_THOUSAND) {
-    NumberFormat.getIntegerInstance(Locale.getDefault())
+fun formatStatValue(
+    value: Long,
+    abbreviateFrom: Int = THOUSAND
+): String = when {
+    value >= MILLION -> String.format(
+        Locale.getDefault(),
+        FORMAT_MILLION,
+        value / MILLION.toDouble()
+    )
+    value >= abbreviateFrom.coerceAtLeast(THOUSAND) ->
+        String.format(
+            Locale.getDefault(),
+            FORMAT_THOUSAND,
+            value / THOUSAND.toDouble()
+        )
+    else -> NumberFormat
+        .getIntegerInstance(Locale.getDefault())
         .format(value)
-} else {
-    formatStatValue(value)
 }
+
+/** Threshold for detail screens, which favour exact figures over width. */
+const val TEN_THOUSAND = 10_000
 
 /**
  * Formats a fractional change as a percentage, e.g. -0.25 -> "-25%".

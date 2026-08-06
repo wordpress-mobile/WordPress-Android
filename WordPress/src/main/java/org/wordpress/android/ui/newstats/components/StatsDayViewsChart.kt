@@ -30,17 +30,17 @@ private val BarThickness = 16.dp
 /**
  * A daily-views bar chart with value and date axes, highlighting one bar as the selected day.
  *
- * The highlight is drawn as a second stacked series that is zero everywhere except the selected
- * index, which is how [org.wordpress.android.ui.newstats.viewsstats.ViewsStatsCard] layers its
- * columns too -- Vico colours a series, not an individual bar.
+ * Vico colours a series rather than an individual bar, so the highlight is a second stacked series
+ * that is zero everywhere except the selected index.
  */
 @Composable
 fun StatsDayViewsChart(
     values: List<Long>,
     selectedIndex: Int,
     height: Dp,
-    modifier: Modifier = Modifier,
-    bottomAxisLabel: (Int) -> String = { it.toString() }
+    startLabel: String,
+    endLabel: String,
+    modifier: Modifier = Modifier
 ) {
     if (values.isEmpty()) return
 
@@ -63,17 +63,36 @@ fun StatsDayViewsChart(
         }
     }
 
-    val barShape = RoundedCornerShape(
-        topStartPercent = BAR_CORNER_PERCENT,
-        topEndPercent = BAR_CORNER_PERCENT
-    )
     val barColor = MaterialTheme.colorScheme.primary
-    // Vico rejects blank labels; only the first and last x get one, via the item placer.
-    val bottomAxisValueFormatter = remember(bottomAxisLabel) {
-        CartesianValueFormatter { _, x, _ ->
-            bottomAxisLabel(x.toInt())
-        }
+    val highlightColor = StatsColors.ChartSelectedBar
+    // These are remember() keys for the layer and the chart, so rebuilding them every
+    // recomposition would rebuild the whole chart with them.
+    val columnProvider = remember(barColor, highlightColor) {
+        val barShape = RoundedCornerShape(
+            topStartPercent = BAR_CORNER_PERCENT,
+            topEndPercent = BAR_CORNER_PERCENT
+        )
+        ColumnCartesianLayer.ColumnProvider.series(
+            LineComponent(
+                fill = Fill(barColor),
+                thickness = BarThickness,
+                shape = barShape
+            ),
+            LineComponent(
+                fill = Fill(highlightColor),
+                thickness = BarThickness,
+                shape = barShape
+            )
+        )
     }
+    // Vico rejects blank labels, so the item placer -- not the formatter -- decides that only
+    // the two ends are labelled.
+    val bottomAxisValueFormatter =
+        remember(startLabel, endLabel) {
+            CartesianValueFormatter { _, x, _ ->
+                if (x <= 0.0) startLabel else endLabel
+            }
+        }
     val endsOnlyItemPlacer = remember(values.size) {
         HorizontalAxis.ItemPlacer.aligned(
             spacing = { values.lastIndex.coerceAtLeast(1) }
@@ -83,21 +102,7 @@ fun StatsDayViewsChart(
     CartesianChartHost(
         chart = rememberCartesianChart(
             rememberColumnCartesianLayer(
-                columnProvider = ColumnCartesianLayer
-                    .ColumnProvider.series(
-                        LineComponent(
-                            fill = Fill(barColor),
-                            thickness = BarThickness,
-                            shape = barShape
-                        ),
-                        LineComponent(
-                            fill = Fill(
-                                StatsColors.ChangeBadgeNegative
-                            ),
-                            thickness = BarThickness,
-                            shape = barShape
-                        )
-                    ),
+                columnProvider = columnProvider,
                 mergeMode = {
                     ColumnCartesianLayer.MergeMode.Stacked
                 }

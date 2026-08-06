@@ -39,7 +39,7 @@ fun LatestPostCard(
     uiState: LatestPostCardUiState,
     onRemoveCard: () -> Unit,
     onRetry: () -> Unit,
-    onPostClick: (Long) -> Unit,
+    onPostClick: (postId: Long, title: String) -> Unit,
     onCreatePostClick: () -> Unit,
     modifier: Modifier = Modifier,
     cardPosition: CardPosition? = null,
@@ -180,7 +180,7 @@ private fun NoDataContent(
 @Composable
 private fun LoadedContent(
     state: LatestPostCardUiState.Loaded,
-    onPostClick: (Long) -> Unit,
+    onPostClick: (postId: Long, title: String) -> Unit,
     onRemoveCard: () -> Unit,
     cardPosition: CardPosition?,
     onMoveUp: (() -> Unit)?,
@@ -191,7 +191,12 @@ private fun LoadedContent(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable { onPostClick(state.postId) }
+            .clickable {
+                onPostClick(
+                    state.postId,
+                    state.postTitle
+                )
+            }
             .padding(CardPadding)
     ) {
         StatsCardHeader(
@@ -270,7 +275,7 @@ private fun LatestPostCardLoadedPreview() {
             ),
             onRemoveCard = {},
             onRetry = {},
-            onPostClick = {},
+            onPostClick = { _, _ -> },
             onCreatePostClick = {}
         )
     }
@@ -284,7 +289,7 @@ private fun LatestPostCardErrorPreview() {
             uiState = LatestPostCardUiState.Error,
             onRemoveCard = {},
             onRetry = {},
-            onPostClick = {},
+            onPostClick = { _, _ -> },
             onCreatePostClick = {}
         )
     }

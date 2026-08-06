@@ -34,6 +34,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -51,12 +52,14 @@ import org.wordpress.android.ui.newstats.components.StatsListHeader
 import org.wordpress.android.ui.newstats.components.StatsLabeledValue
 import org.wordpress.android.ui.newstats.components.StatsViewChange
 import org.wordpress.android.ui.newstats.datasource.PostViewsChange
+import org.wordpress.android.ui.newstats.datasource.PostViewsDailyView
 import org.wordpress.android.ui.newstats.datasource.PostViewsData
 import org.wordpress.android.ui.newstats.datasource.PostViewsWeek
 import org.wordpress.android.ui.newstats.util.ShimmerBox
 import org.wordpress.android.ui.newstats.util.formatChangePercentage
 import org.wordpress.android.ui.newstats.util.formatStatAverage
-import org.wordpress.android.ui.newstats.util.formatStatCount
+import org.wordpress.android.ui.newstats.util.TEN_THOUSAND
+import org.wordpress.android.ui.newstats.util.formatStatValue
 import org.wordpress.android.ui.newstats.util.formatStatsDate
 import org.wordpress.android.ui.newstats.util.formatStatsDateTime
 
@@ -72,7 +75,8 @@ class PostStatsDetailActivity : BaseAppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val postId = intent.getLongExtra(ARG_POST_ID, 0L)
+        // 0 is a real id (the home page), so it can't stand in for a missing extra.
+        val postId = intent.getLongExtra(ARG_POST_ID, NO_POST_ID)
         val postTitle = intent
             .getStringExtra(ARG_POST_TITLE).orEmpty()
         // The view model survives recreation, so only the first creation kicks off the fetch --
@@ -101,6 +105,7 @@ class PostStatsDetailActivity : BaseAppCompatActivity() {
 
     companion object {
         private const val ARG_POST_ID = "post_id"
+        private const val NO_POST_ID = -1L
         private const val ARG_POST_TITLE = "post_title"
 
         /**
@@ -244,15 +249,25 @@ private fun LoadedContent(
         item { PostHeader(data, fallbackTitle) }
         item { Spacer(modifier = Modifier.height(24.dp)) }
 
-        if (state.selectedDay != null) {
+        val selectedDay = state.selectedDay
+        if (selectedDay != null) {
             item {
                 DaySelector(
-                    state = state,
+                    day = selectedDay,
+                    hasPreviousDay =
+                        state.previousDay != null,
+                    hasNextDay = state.hasNextDay,
                     onPreviousDay = onPreviousDay,
                     onNextDay = onNextDay
                 )
-                SelectedDayViews(state)
-                DayViewsChart(state)
+                SelectedDayViews(
+                    views = selectedDay.views,
+                    previousViews = state.previousDay?.views
+                )
+                DayViewsChart(
+                    days = state.chartDays,
+                    selectedIndex = state.selectedChartIndex
+                )
                 Spacer(
                     modifier = Modifier.height(24.dp)
                 )
@@ -270,7 +285,7 @@ private fun LoadedContent(
         ) {
             DetailRow(
                 label = it.year,
-                value = formatStatCount(it.total)
+                value = formatStatValue(it.total, TEN_THOUSAND)
             )
         }
 
@@ -343,16 +358,19 @@ private fun PostHeader(data: PostViewsData, fallbackTitle: String) {
         ) {
             StatsLabeledValue(
                 labelResId = R.string.stats_views,
-                value = data.totalViews
+                value = data.totalViews,
+                abbreviateFrom = TEN_THOUSAND
             )
             if (post != null) {
                 StatsLabeledValue(
                     labelResId = R.string.stats_likes,
-                    value = post.likeCount
+                    value = post.likeCount,
+                    abbreviateFrom = TEN_THOUSAND
                 )
                 StatsLabeledValue(
                     labelResId = R.string.stats_comments,
-                    value = post.commentCount
+                    value = post.commentCount,
+                    abbreviateFrom = TEN_THOUSAND
                 )
             }
         }
@@ -364,11 +382,12 @@ private fun PostHeader(data: PostViewsData, fallbackTitle: String) {
  */
 @Composable
 private fun DaySelector(
-    state: PostStatsDetailUiState.Loaded,
+    day: PostViewsDailyView,
+    hasPreviousDay: Boolean,
+    hasNextDay: Boolean,
     onPreviousDay: () -> Unit,
     onNextDay: () -> Unit
 ) {
-    val day = state.selectedDay ?: return
     Row(
         modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically
@@ -382,7 +401,7 @@ private fun DaySelector(
         )
         IconButton(
             onClick = onPreviousDay,
-            enabled = state.hasPreviousDay
+            enabled = hasPreviousDay
         ) {
             Icon(
                 imageVector = Icons.AutoMirrored
@@ -394,7 +413,7 @@ private fun DaySelector(
         }
         IconButton(
             onClick = onNextDay,
-            enabled = state.hasNextDay
+            enabled = hasNextDay
         ) {
             Icon(
                 imageVector = Icons.AutoMirrored
@@ -412,11 +431,9 @@ private fun DaySelector(
  */
 @Composable
 private fun SelectedDayViews(
-    state: PostStatsDetailUiState.Loaded
+    views: Long,
+    previousViews: Long?
 ) {
-    val views = state.selectedDay?.views ?: return
-    val previous = state.previousDay?.views
-
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -424,7 +441,7 @@ private fun SelectedDayViews(
         verticalAlignment = Alignment.Bottom
     ) {
         Text(
-            text = formatStatCount(views),
+            text = formatStatValue(views, TEN_THOUSAND),
             style = MaterialTheme.typography.headlineMedium,
             fontWeight = FontWeight.Bold,
             color = MaterialTheme.colorScheme.onSurface
@@ -438,8 +455,11 @@ private fun SelectedDayViews(
                 .padding(start = 8.dp, bottom = 2.dp)
                 .weight(1f)
         )
-        if (previous != null) {
-            DayChangeLabel(views = views, previous = previous)
+        if (previousViews != null) {
+            DayChangeLabel(
+                views = views,
+                previous = previousViews
+            )
         }
     }
 }
@@ -448,7 +468,7 @@ private fun SelectedDayViews(
 private fun DayChangeLabel(views: Long, previous: Long) {
     val difference = views - previous
     val percentage = when {
-        previous == views -> "0%"
+        previous == views -> formatChangePercentage(0.0)
         previous == 0L -> INFINITY
         else -> formatChangePercentage(
             difference.toDouble() / previous
@@ -462,7 +482,7 @@ private fun DayChangeLabel(views: Long, previous: Long) {
             } else {
                 R.string.stats_traffic_change
             },
-            formatStatCount(difference),
+            formatStatValue(difference, TEN_THOUSAND),
             percentage
         ),
         style = MaterialTheme.typography.bodyMedium,
@@ -476,19 +496,24 @@ private fun DayChangeLabel(views: Long, previous: Long) {
 
 @Composable
 private fun DayViewsChart(
-    state: PostStatsDetailUiState.Loaded
+    days: List<PostViewsDailyView>,
+    selectedIndex: Int
 ) {
-    val days = state.chartDays
-    if (days.isEmpty()) return
+    // Derived once per window so the chart's remember() keys stay stable across recompositions,
+    // and so no date parsing happens on Vico's measure/draw path.
+    val values = remember(days) { days.map { it.views } }
+    val startLabel = remember(days) {
+        formatStatsDate(days.first().day)
+    }
+    val endLabel = remember(days) {
+        formatStatsDate(days.last().day)
+    }
     StatsDayViewsChart(
-        values = days.map { it.views },
-        selectedIndex = days.lastIndex,
+        values = values,
+        selectedIndex = selectedIndex,
         height = ChartHeight,
-        bottomAxisLabel = { index ->
-            days.getOrNull(index)?.day
-                ?.let(::formatStatsDate)
-                ?: days.last().day.let(::formatStatsDate)
-        },
+        startLabel = startLabel,
+        endLabel = endLabel,
         modifier = Modifier.padding(top = 8.dp)
     )
 }
@@ -508,7 +533,7 @@ private fun SectionTitle(titleResId: Int) {
 private fun WeekRow(week: PostViewsWeek) {
     DetailRow(
         label = weekLabel(week),
-        value = formatStatCount(week.total)
+        value = formatStatValue(week.total, TEN_THOUSAND)
     ) {
         when (val change = week.change) {
             is PostViewsChange.Infinite -> Text(

@@ -28,8 +28,8 @@ private const val MIN_BAR_FRACTION = 0.02f
 fun StatsBarChart(
     values: List<Long>,
     height: Dp,
-    modifier: Modifier = Modifier,
-    barSpacing: Dp = 2.dp
+    barSpacing: Dp,
+    modifier: Modifier = Modifier
 ) {
     val maxValue = values.maxOrNull() ?: 0L
     if (maxValue <= 0L) return

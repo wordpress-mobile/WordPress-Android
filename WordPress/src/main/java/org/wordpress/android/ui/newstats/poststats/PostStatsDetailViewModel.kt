@@ -105,7 +105,7 @@ class PostStatsDetailViewModel @Inject constructor(
                 return@update state
             }
             val target = state.selectedDayIndex + offset
-            if (target in state.data.dailyViews.indices) {
+            if (target in state.chartRange) {
                 state.copy(selectedDayIndex = target)
             } else {
                 state
@@ -122,38 +122,42 @@ sealed class PostStatsDetailUiState {
         /** Index into [PostViewsData.dailyViews]; -1 when the post has no history. */
         val selectedDayIndex: Int
     ) : PostStatsDetailUiState() {
-        val selectedDay: PostViewsDailyView?
-            get() = data.dailyViews
-                .getOrNull(selectedDayIndex)
+        /**
+         * The days the chart draws: a fixed trailing window, so stepping through days moves the
+         * highlight within a stable set of bars rather than sliding the whole chart. This is the
+         * framing the old stats screen uses, and it bounds how far back the arrows can go.
+         */
+        val chartDays: List<PostViewsDailyView> =
+            data.dailyViews.subList(
+                (data.dailyViews.size - CHART_DAYS)
+                    .coerceAtLeast(0),
+                data.dailyViews.size
+            )
+
+        /** Indices of [PostViewsData.dailyViews] the chart covers, i.e. what the arrows can reach. */
+        val chartRange: IntRange =
+            data.dailyViews.size - chartDays.size until
+                data.dailyViews.size
+
+        /** Position of the selected day within [chartDays]. */
+        val selectedChartIndex: Int =
+            selectedDayIndex - chartRange.first
+
+        val selectedDay: PostViewsDailyView? =
+            data.dailyViews.getOrNull(selectedDayIndex)
 
         /** The day before the selected one, which the change is measured against. */
-        val previousDay: PostViewsDailyView?
-            get() = data.dailyViews
-                .getOrNull(selectedDayIndex - 1)
+        val previousDay: PostViewsDailyView? =
+            data.dailyViews.getOrNull(selectedDayIndex - 1)
 
-        val hasPreviousDay: Boolean
-            get() = selectedDayIndex > 0
-
-        val hasNextDay: Boolean
-            get() = selectedDayIndex <
-                data.dailyViews.lastIndex
-
-        /**
-         * The window of days the chart draws, ending at the selected day so it is always the
-         * rightmost bar -- the same framing the old stats screen uses.
-         */
-        val chartDays: List<PostViewsDailyView>
-            get() = data.dailyViews
-                .take(selectedDayIndex + 1)
-                .takeLast(CHART_DAYS)
+        val hasNextDay: Boolean =
+            selectedDayIndex < chartRange.last
     }
 
     data class Error(
         val message: String
     ) : PostStatsDetailUiState()
-
-    companion object {
-        // Two weeks of bars, matching the old stats post detail chart.
-        const val CHART_DAYS = 14
-    }
 }
+
+// Two weeks of bars, matching the old stats post detail chart.
+private const val CHART_DAYS = 14
