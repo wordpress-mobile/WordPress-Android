@@ -44,13 +44,6 @@ private val MONTHLY_FORMAT_REGEX = Regex("""\d{4}-\d{2}""")
 
 private const val KEY_CHART_TYPE = "chart_type"
 
-private const val PERIOD_TODAY = "today"
-private const val PERIOD_LAST_7_DAYS = "last_7_days"
-private const val PERIOD_LAST_30_DAYS = "last_30_days"
-private const val PERIOD_LAST_6_MONTHS = "last_6_months"
-private const val PERIOD_LAST_12_MONTHS = "last_12_months"
-private const val PERIOD_CUSTOM = "custom"
-
 @HiltViewModel
 class ViewsStatsViewModel @Inject constructor(
     private val selectedSiteRepository: SelectedSiteRepository,
@@ -129,31 +122,17 @@ class ViewsStatsViewModel @Inject constructor(
 
     private fun savePeriod(period: StatsPeriod) {
         // Save to SavedStateHandle for immediate restoration
-        when (period) {
-            is StatsPeriod.Today -> savedStateHandle[KEY_PERIOD_TYPE] = PERIOD_TODAY
-            is StatsPeriod.Last7Days -> savedStateHandle[KEY_PERIOD_TYPE] = PERIOD_LAST_7_DAYS
-            is StatsPeriod.Last30Days -> savedStateHandle[KEY_PERIOD_TYPE] = PERIOD_LAST_30_DAYS
-            is StatsPeriod.Last6Months -> savedStateHandle[KEY_PERIOD_TYPE] = PERIOD_LAST_6_MONTHS
-            is StatsPeriod.Last12Months -> savedStateHandle[KEY_PERIOD_TYPE] = PERIOD_LAST_12_MONTHS
-            is StatsPeriod.Custom -> {
-                savedStateHandle[KEY_PERIOD_TYPE] = PERIOD_CUSTOM
-                savedStateHandle[KEY_CUSTOM_START_DATE] = period.startDate.toEpochDay()
-                savedStateHandle[KEY_CUSTOM_END_DATE] = period.endDate.toEpochDay()
-            }
+        savedStateHandle[KEY_PERIOD_TYPE] = period.toTypeString()
+        if (period is StatsPeriod.Custom) {
+            savedStateHandle[KEY_CUSTOM_START_DATE] = period.startDate.toEpochDay()
+            savedStateHandle[KEY_CUSTOM_END_DATE] = period.endDate.toEpochDay()
         }
 
         // Persist to preferences for cross-session restoration
         val siteId = selectedSiteRepository.getSelectedSite()?.siteId ?: return
         viewModelScope.launch {
             val config = cardsConfigurationRepository.getConfiguration(siteId)
-            val periodType = when (period) {
-                is StatsPeriod.Today -> PERIOD_TODAY
-                is StatsPeriod.Last7Days -> PERIOD_LAST_7_DAYS
-                is StatsPeriod.Last30Days -> PERIOD_LAST_30_DAYS
-                is StatsPeriod.Last6Months -> PERIOD_LAST_6_MONTHS
-                is StatsPeriod.Last12Months -> PERIOD_LAST_12_MONTHS
-                is StatsPeriod.Custom -> PERIOD_CUSTOM
-            }
+            val periodType = period.toTypeString()
             val customStart = (period as? StatsPeriod.Custom)?.startDate?.toEpochDay()
             val customEnd = (period as? StatsPeriod.Custom)?.endDate?.toEpochDay()
             cardsConfigurationRepository.saveConfiguration(
@@ -173,26 +152,11 @@ class ViewsStatsViewModel @Inject constructor(
      */
     private fun restorePeriodFromSavedState(): StatsPeriod {
         val savedPeriodType = savedStateHandle.get<String>(KEY_PERIOD_TYPE) ?: return StatsPeriod.Last7Days
-        return when (savedPeriodType) {
-            PERIOD_TODAY -> StatsPeriod.Today
-            PERIOD_LAST_7_DAYS -> StatsPeriod.Last7Days
-            PERIOD_LAST_30_DAYS -> StatsPeriod.Last30Days
-            PERIOD_LAST_6_MONTHS -> StatsPeriod.Last6Months
-            PERIOD_LAST_12_MONTHS -> StatsPeriod.Last12Months
-            PERIOD_CUSTOM -> {
-                val startEpochDay = savedStateHandle.get<Long>(KEY_CUSTOM_START_DATE)
-                val endEpochDay = savedStateHandle.get<Long>(KEY_CUSTOM_END_DATE)
-                if (startEpochDay != null && endEpochDay != null) {
-                    StatsPeriod.Custom(
-                        LocalDate.ofEpochDay(startEpochDay),
-                        LocalDate.ofEpochDay(endEpochDay)
-                    )
-                } else {
-                    StatsPeriod.Last7Days
-                }
-            }
-            else -> StatsPeriod.Last7Days
-        }
+        return StatsPeriod.fromTypeString(
+            type = savedPeriodType,
+            customStartEpochDay = savedStateHandle.get<Long>(KEY_CUSTOM_START_DATE),
+            customEndEpochDay = savedStateHandle.get<Long>(KEY_CUSTOM_END_DATE)
+        )
     }
 
     /**
@@ -202,26 +166,12 @@ class ViewsStatsViewModel @Inject constructor(
     private suspend fun restorePeriodFromPreferences(): StatsPeriod? {
         val siteId = selectedSiteRepository.getSelectedSite()?.siteId ?: return null
         val config = cardsConfigurationRepository.getConfiguration(siteId)
-        return when (config.selectedPeriodType) {
-            PERIOD_TODAY -> StatsPeriod.Today
-            PERIOD_LAST_7_DAYS -> StatsPeriod.Last7Days
-            PERIOD_LAST_30_DAYS -> StatsPeriod.Last30Days
-            PERIOD_LAST_6_MONTHS -> StatsPeriod.Last6Months
-            PERIOD_LAST_12_MONTHS -> StatsPeriod.Last12Months
-            PERIOD_CUSTOM -> {
-                val startEpochDay = config.customPeriodStartDate
-                val endEpochDay = config.customPeriodEndDate
-                if (startEpochDay != null && endEpochDay != null) {
-                    StatsPeriod.Custom(
-                        LocalDate.ofEpochDay(startEpochDay),
-                        LocalDate.ofEpochDay(endEpochDay)
-                    )
-                } else {
-                    null
-                }
-            }
-            else -> null
-        }
+        val periodType = config.selectedPeriodType ?: return null
+        return StatsPeriod.fromTypeString(
+            type = periodType,
+            customStartEpochDay = config.customPeriodStartDate,
+            customEndEpochDay = config.customPeriodEndDate
+        )
     }
 
     private fun restoreChartTypeFromSavedState(): ChartType {
