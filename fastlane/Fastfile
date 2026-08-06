@@ -39,6 +39,14 @@ UPLOAD_TO_PLAY_STORE_JSON_KEY = File.join(Dir.home, '.configure', 'wordpress-and
 # writes a track release (AAB upload or beta promotion) keeps it in the release's version codes.
 PLAY_STORE_VERSION_CODES_TO_RETAIN = [1440].freeze
 
+# The "what's new" options shown in the beta-promotion picker. The picked one is set on the beta
+# release and carried to production by the promote. `key` names the source file
+# (`release_notes_static/<key>.txt`) and the GlotPress string (`release_note_static_<key>`); `label`
+# is shown in the picker. Add entries to offer more options.
+STATIC_RELEASE_NOTE_OPTIONS = [
+  { key: 'serious', label: 'Serious' }
+].freeze
+
 PROTOTYPE_BUILD_TYPE = 'Debug'
 
 PROJECT_ROOT_FOLDER = File.dirname(File.expand_path(__dir__))

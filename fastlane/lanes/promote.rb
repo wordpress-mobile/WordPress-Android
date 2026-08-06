@@ -24,6 +24,10 @@ BETA_CANDIDATE_LIMIT = 12
 # NOTE: `.buildkite/commands/promote-to-beta.sh` reads this same key as a bare string literal
 # (`meta-data get "beta_build_to_promote"`) — keep the two in sync.
 BETA_META_DATA_KEY = 'beta_build_to_promote'
+# The block step also writes the chosen release-note option here; the promote step reads it back.
+# NOTE: `.buildkite/commands/promote-to-beta.sh` reads this same key as a bare string literal
+# (`meta-data get "beta_release_notes_option"`) — keep the two in sync.
+BETA_RELEASE_NOTES_META_DATA_KEY = 'beta_release_notes_option'
 # Matched via the Buildkite API to find the block step's job and build its unblock URL.
 BETA_BLOCK_LABEL = ':android: Promote to beta'
 BETA_BLOCK_STEP_KEY = 'promote_to_beta_block'
@@ -110,7 +114,7 @@ platform :android do
   # @param [String] version_code The version code to promote, e.g. `269027172`.
   # @called_by CI (`.buildkite/commands/promote-to-beta.sh`)
   desc 'Promote an existing build to the beta track (WordPress + Jetpack)'
-  lane :promote_to_beta do |version_code: nil|
+  lane :promote_to_beta do |version_code: nil, release_notes_option: nil|
     # Set once the per-app result has been posted, so the rescue doesn't double-report it.
     result_posted = false
     ensure_promotion_on_trunk!
@@ -121,9 +125,11 @@ platform :android do
     UI.user_error!('`version_code` is required, e.g. `version_code:269027172`') if version_code.empty?
     UI.user_error!("`version_code` must be an integer, got #{version_code.inspect}") unless version_code.match?(/\A\d+\z/)
 
+    release_notes_option = validated_release_notes_option(release_notes_option)
+
     UI.important("Promoting version code #{version_code} to the beta track for WordPress and Jetpack")
 
-    results = distribute_to_beta(version_code: version_code)
+    results = distribute_to_beta(version_code: version_code, release_notes_option: release_notes_option)
 
     post_beta_result_to_slack(version_code: version_code, results: results)
     result_posted = true
@@ -422,13 +428,15 @@ platform :android do
 
   # Promotes a version code to beta for each app, returning a per-app `{ ok:, error: }` result.
   # A failure for one app doesn't stop the other.
-  def distribute_to_beta(version_code:)
+  def distribute_to_beta(version_code:, release_notes_option:)
     %i[wordpress jetpack].to_h do |app|
       result =
         begin
           promote_version_code_to_beta(
+            app: app,
             package_name: APP_SPECIFIC_VALUES[app][:package_name],
-            version_code: version_code
+            version_code: version_code,
+            release_notes_option: release_notes_option
           )
           { ok: true }
         rescue StandardError => e
@@ -444,7 +452,7 @@ platform :android do
   # `upload_to_play_store` can't do this: it only builds a track release from binaries uploaded in
   # the same run, so a bare `version_code:` with `skip_upload_aab` commits an empty edit. We create
   # the release directly instead, mirroring supply's own `update_track`.
-  def promote_version_code_to_beta(package_name:, version_code:)
+  def promote_version_code_to_beta(app:, package_name:, version_code:, release_notes_option:)
     require 'supply'
     require 'supply/options'
 
@@ -452,6 +460,10 @@ platform :android do
       Supply::Options.available_options,
       { json_key: UPLOAD_TO_PLAY_STORE_JSON_KEY, package_name: package_name, track: BETA_TRACK }
     )
+
+    # The picked release notes (needs supply loaded, above). nil when the option has no files.
+    release_notes = static_release_notes(app: app, option: release_notes_option)
+    release_notes = nil if release_notes.empty?
 
     with_play_edit_retries("Promoting #{version_code} to beta for #{package_name}") do
       client = Supply::Client.make_from_config
@@ -463,7 +475,9 @@ platform :android do
           # TODO: switch to 'completed' once the feature is ready to distribute to beta testers.
           status: 'draft',
           # Keep the pinned legacy code(s) on the track, same as the AAB-upload path.
-          version_codes: [Integer(version_code), *PLAY_STORE_VERSION_CODES_TO_RETAIN]
+          version_codes: [Integer(version_code), *PLAY_STORE_VERSION_CODES_TO_RETAIN],
+          # Carried to production automatically by the promote.
+          release_notes: release_notes
         )
         track = client.tracks(BETA_TRACK).first || AndroidPublisher::Track.new(track: BETA_TRACK)
         track.releases = [release]
@@ -476,6 +490,32 @@ platform :android do
         client.abort_current_edit unless committed
       end
     end
+  end
+
+  # The picked option's notes as Play `LocalizedText`, one per locale that has a
+  # `release_notes_static/<option>.txt` file. Missing locales fall back to Play's default language.
+  def static_release_notes(app:, option:)
+    metadata_dir = File.join(FASTLANE_FOLDER, APP_SPECIFIC_VALUES[app][:metadata_dir], 'android')
+    notes = Dir.glob(File.join(metadata_dir, '*', 'release_notes_static', "#{option}.txt")).filter_map do |path|
+      text = File.read(path).strip
+      next if text.empty?
+
+      # Path is <metadata_dir>/<locale>/release_notes_static/<option>.txt; the locale is two dirs up.
+      locale = File.basename(File.dirname(path, 2))
+      AndroidPublisher::LocalizedText.new(language: locale, text: text)
+    end
+    UI.user_error!("No static release notes found for option #{option.inspect} (#{app}).") if notes.empty?
+    notes
+  end
+
+  # Validates the picked option against the registry, raising on anything unknown.
+  def validated_release_notes_option(option)
+    option = option.to_s.strip
+    valid = STATIC_RELEASE_NOTE_OPTIONS.map { |o| o[:key] }
+    UI.user_error!("`release_notes_option` is required, one of: #{valid.join(', ')}") if option.empty?
+    return option if valid.include?(option)
+
+    UI.user_error!("Unknown `release_notes_option` #{option.inspect}; expected one of: #{valid.join(', ')}")
   end
 
   # Promotes a version code to production for each app, returning a per-app `{ ok:, error: }` result.
@@ -834,15 +874,7 @@ platform :android do
           'prompt' => 'Choose the build to release to beta testers. This promotes the matching WordPress and Jetpack builds.',
           # Keep the build "running" (not green) while it waits for a human.
           'blocked_state' => 'running',
-          'fields' => [
-            {
-              'select' => 'Build to promote',
-              'key' => BETA_META_DATA_KEY,
-              # Required, no default: an un-actioned unblock can't silently promote a build.
-              'required' => true,
-              'options' => options
-            }
-          ]
+          'fields' => beta_promotion_block_fields(options: options)
         },
         {
           'label' => ':rocket: Promote selected build to beta',
@@ -857,6 +889,27 @@ platform :android do
     # `line_width: -1` keeps each label on one line (no YAML folding).
     File.write(PROMOTION_STEPS_FILE, steps.to_yaml(line_width: -1))
     UI.message("Wrote promotion steps for #{candidates.count} build(s) to #{PROMOTION_STEPS_FILE}")
+  end
+
+  # The block step's input fields: pick a build, and pick the release note to publish with it.
+  def beta_promotion_block_fields(options:)
+    [
+      {
+        'select' => 'Build to promote',
+        'key' => BETA_META_DATA_KEY,
+        # Required, no default: an un-actioned unblock can't silently promote a build.
+        'required' => true,
+        'options' => options
+      },
+      {
+        'select' => 'Release notes',
+        'key' => BETA_RELEASE_NOTES_META_DATA_KEY,
+        'hint' => 'Which "what\'s new" text to publish. Carries through to production.',
+        # Required, no default: the notes are a deliberate choice, not a silent fallback.
+        'required' => true,
+        'options' => STATIC_RELEASE_NOTE_OPTIONS.map { |o| { 'label' => o[:label], 'value' => o[:key] } }
+      }
+    ]
   end
 
   # Writes the confirm → promote → finalize steps. There's no picker — the candidate is baked into the
