@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2026-05-01 17:37:07+0000
+Translation-Revision-Date: 2026-08-01 10:08:51+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.3
 Language: gl_ES
@@ -258,6 +258,7 @@ Language: gl_ES
     <string name="page_upload_conflict_error">Hai unha revisión máis recente desta páxina</string>
     <string name="editor_updating_content">Actualizando o contido</string>
     <string name="stats_subscribers">Subscritores</string>
+    <string name="stats_subscribers_subscriber_header">Subscritor</string>
     <string name="weekly_roundup_notification_text_views_and_like">A semana pasada tiveches %1$s visitas e 1 Gústame</string>
     <string name="weekly_roundup_notification_text_views_and_comment">A semana pasada tiveches %1$s visitas e 1 comentario</string>
     <string name="weekly_roundup_notification_text_views_like_comment">A semana pasada tiveches %1$s visitas, 1 Gústame e 1 comentario.</string>
@@ -3425,6 +3426,7 @@ Language: gl_ES
     <string name="push_auth_expired">A solicitude expirou. Inicia sesión en WordPress.com para tentalo de novo.</string>
     <string name="ignore">Ignorar</string>
     <string name="stats_insights_best_ever">A mellor de todas</string>
+    <string name="stats_insights_most_popular_time">Hora máis popular</string>
     <string name="stats_insights_most_popular_day">Día máis popular</string>
     <string name="stats_insights_today">Estatísticas de hoxe</string>
     <string name="stats_insights_all_time">Entradas, visitas e lectores desde o comezo.</string>
@@ -3499,6 +3501,7 @@ Language: gl_ES
     <string name="browse_our_faq_button">Ves as FAQ</string>
     <string name="signing_out">Saíndo…</string>
     <string name="help_and_support">Axuda e soporte</string>
+    <string name="reader_label_view_original">Ver orixinal</string>
     <string name="reader_toast_err_generic">Non foi posible realizar esta acción</string>
     <string name="update_verb">Actualizar</string>
     <string name="schedule_verb">Programar</string>
