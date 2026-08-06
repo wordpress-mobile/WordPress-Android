@@ -94,17 +94,30 @@ class LatestPostViewModel @Inject constructor(
         _uiState.value = when (result) {
             is LatestPostResult.Success -> {
                 val views = result.data
-                LatestPostCardUiState.Loaded(
-                    postId = views.postId,
-                    postTitle = views.postTitle,
-                    postDate = formatStatsDateTime(
-                        views.postDate
-                    ),
-                    views = views.totalViews,
-                    likes = views.likeCount,
-                    comments = views.commentCount,
-                    recentViews = views.recentDailyViews
-                )
+                val post = views.post
+                // The card always asks for a published post, so a missing post row means the
+                // response wasn't what we asked for -- treat it as an error rather than
+                // rendering a card with no title.
+                if (post == null) {
+                    AppLog.w(
+                        AppLog.T.STATS,
+                        "Latest post stats had no post row " +
+                            "for id ${views.postId}"
+                    )
+                    LatestPostCardUiState.Error
+                } else {
+                    LatestPostCardUiState.Loaded(
+                        postId = views.postId,
+                        postTitle = post.title,
+                        postDate = formatStatsDateTime(
+                            post.date
+                        ),
+                        views = views.totalViews,
+                        likes = post.likeCount,
+                        comments = post.commentCount,
+                        recentViews = views.recentDailyViews
+                    )
+                }
             }
             is LatestPostResult.NoPosts ->
                 LatestPostCardUiState.NoData

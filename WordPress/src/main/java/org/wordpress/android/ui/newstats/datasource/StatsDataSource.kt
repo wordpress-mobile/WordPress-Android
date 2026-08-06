@@ -794,15 +794,12 @@ sealed class PostViewsDataResult {
 /**
  * View stats for a single post, along with the post's own metadata. The API returns both in one
  * response, so no separate post fetch is needed.
+ *
+ * Post ID 0 is the site's home page, which isn't a post -- it has view stats but no [post].
  */
 data class PostViewsData(
     val postId: Long,
-    val postTitle: String,
-    /** Publication date in the site's timezone (format: yyyy-MM-dd HH:mm:ss). */
-    val postDate: String,
     val totalViews: Long,
-    val likeCount: Long,
-    val commentCount: Long,
     /** Daily view counts for the trailing window, oldest first. */
     val recentDailyViews: List<Long>,
     /** The most recent weeks of daily views, most recent first. */
@@ -810,7 +807,20 @@ data class PostViewsData(
     /** Yearly totals, most recent year first. */
     val years: List<PostViewsYear>,
     /** Yearly averages, most recent year first. */
-    val averages: List<PostViewsYearAverage>
+    val averages: List<PostViewsYearAverage>,
+    /** The post these stats belong to, or null for the site's home page. */
+    val post: PostViewsPost?
+)
+
+/**
+ * The editorial metadata of the post whose stats were fetched.
+ */
+data class PostViewsPost(
+    val title: String,
+    /** Publication date in the site's timezone (format: yyyy-MM-dd HH:mm:ss). */
+    val date: String,
+    val likeCount: Long,
+    val commentCount: Long
 )
 
 /**

@@ -1274,6 +1274,7 @@ class StatsDataSourceImpl @Inject constructor(
                 PostViewsDataResult.Success(
                     mapToPostViewsData(
                         result.response.data,
+                        postId,
                         recentDays
                     )
                 )
@@ -1289,15 +1290,12 @@ class StatsDataSourceImpl @Inject constructor(
 
     private fun mapToPostViewsData(
         response: StatsPostResponse,
+        postId: Long,
         recentDays: Int
     ): PostViewsData = PostViewsData(
-        postId = response.post.id,
-        postTitle = response.post.title,
-        postDate = response.post.date,
+        // The home page has no post row to read an id from, so the requested id is authoritative.
+        postId = response.post?.id ?: postId,
         totalViews = response.views.toLong(),
-        likeCount = response.likeCount.toLong(),
-        commentCount = response.discussion
-            .commentCount.toLong(),
         // dailyViews is the post's whole history --
         // thousands of entries for an old post -- so only
         // the trailing window is mapped.
@@ -1324,7 +1322,18 @@ class StatsDataSourceImpl @Inject constructor(
                     overall = value.overall
                 )
             }
-            .sortedByDescending { it.year }
+            .sortedByDescending { it.year },
+        // Null for the home page, which has view stats but no post metadata, likes or comments.
+        post = response.post?.let { post ->
+            PostViewsPost(
+                title = post.title,
+                date = post.date,
+                likeCount = response.likeCount
+                    ?.toLong() ?: 0L,
+                commentCount = response.discussion
+                    ?.commentCount?.toLong() ?: 0L
+            )
+        }
     )
 
     private fun StatsPostWeek.toPostViewsWeek() =

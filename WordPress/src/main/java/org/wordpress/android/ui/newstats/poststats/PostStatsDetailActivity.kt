@@ -66,6 +66,8 @@ class PostStatsDetailActivity : BaseAppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         val postId = intent.getLongExtra(ARG_POST_ID, 0L)
+        val postTitle = intent
+            .getStringExtra(ARG_POST_TITLE).orEmpty()
         // The view model survives recreation, so only the first creation kicks off the fetch --
         // otherwise every rotation or theme change refetches the post's whole view history.
         if (savedInstanceState == null) {
@@ -78,6 +80,7 @@ class PostStatsDetailActivity : BaseAppCompatActivity() {
                     .collectAsState()
                 PostStatsDetailScreen(
                     uiState = uiState,
+                    postTitle = postTitle,
                     onBackPressed =
                         onBackPressedDispatcher
                             ::onBackPressed,
@@ -89,13 +92,25 @@ class PostStatsDetailActivity : BaseAppCompatActivity() {
 
     companion object {
         private const val ARG_POST_ID = "post_id"
+        private const val ARG_POST_TITLE = "post_title"
 
-        fun start(context: Context, postId: Long) {
+        /**
+         * @param postId the post to show stats for; 0 is the site's home page
+         * @param postTitle shown until the response arrives, and kept as the title for the home
+         * page, whose stats carry no post metadata
+         */
+        fun start(
+            context: Context,
+            postId: Long,
+            postTitle: String
+        ) {
             context.startActivity(
                 Intent(
                     context,
                     PostStatsDetailActivity::class.java
-                ).putExtra(ARG_POST_ID, postId)
+                )
+                    .putExtra(ARG_POST_ID, postId)
+                    .putExtra(ARG_POST_TITLE, postTitle)
             )
         }
     }
@@ -105,6 +120,7 @@ class PostStatsDetailActivity : BaseAppCompatActivity() {
 @Composable
 private fun PostStatsDetailScreen(
     uiState: PostStatsDetailUiState,
+    postTitle: String,
     onBackPressed: () -> Unit,
     onRetry: () -> Unit
 ) {
@@ -145,7 +161,7 @@ private fun PostStatsDetailScreen(
                 is PostStatsDetailUiState.Error ->
                     ErrorContent(uiState.message, onRetry)
                 is PostStatsDetailUiState.Loaded ->
-                    LoadedContent(uiState.data)
+                    LoadedContent(uiState.data, postTitle)
             }
         }
     }
@@ -197,12 +213,15 @@ private fun ErrorContent(
 }
 
 @Composable
-private fun LoadedContent(data: PostViewsData) {
+private fun LoadedContent(
+    data: PostViewsData,
+    fallbackTitle: String
+) {
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
         contentPadding = PaddingValues(ScreenPadding)
     ) {
-        item { PostHeader(data) }
+        item { PostHeader(data, fallbackTitle) }
         item { Spacer(modifier = Modifier.height(24.dp)) }
 
         if (data.recentDailyViews.any { it > 0L }) {
@@ -259,22 +278,30 @@ private fun <T> LazyListScope.statsSection(
     item { Spacer(modifier = Modifier.height(24.dp)) }
 }
 
+/**
+ * The title, date and engagement counts belong to the post. The home page has none of them, so it
+ * falls back to the title the caller supplied and shows views alone.
+ */
 @Composable
-private fun PostHeader(data: PostViewsData) {
+private fun PostHeader(data: PostViewsData, fallbackTitle: String) {
+    val post = data.post
     Column {
         Text(
-            text = data.postTitle,
+            text = post?.title?.takeIf { it.isNotBlank() }
+                ?: fallbackTitle,
             style = MaterialTheme.typography.titleLarge,
             fontWeight = FontWeight.Bold,
             color = MaterialTheme.colorScheme.onSurface
         )
-        Spacer(modifier = Modifier.height(4.dp))
-        Text(
-            text = formatStatsDateTime(data.postDate),
-            style = MaterialTheme.typography.bodySmall,
-            color = MaterialTheme.colorScheme
-                .onSurfaceVariant
-        )
+        if (post != null) {
+            Spacer(modifier = Modifier.height(4.dp))
+            Text(
+                text = formatStatsDateTime(post.date),
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme
+                    .onSurfaceVariant
+            )
+        }
         Spacer(modifier = Modifier.height(16.dp))
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -285,14 +312,16 @@ private fun PostHeader(data: PostViewsData) {
                 labelResId = R.string.stats_views,
                 value = data.totalViews
             )
-            StatsLabeledValue(
-                labelResId = R.string.stats_likes,
-                value = data.likeCount
-            )
-            StatsLabeledValue(
-                labelResId = R.string.stats_comments,
-                value = data.commentCount
-            )
+            if (post != null) {
+                StatsLabeledValue(
+                    labelResId = R.string.stats_likes,
+                    value = post.likeCount
+                )
+                StatsLabeledValue(
+                    labelResId = R.string.stats_comments,
+                    value = post.commentCount
+                )
+            }
         }
     }
 }

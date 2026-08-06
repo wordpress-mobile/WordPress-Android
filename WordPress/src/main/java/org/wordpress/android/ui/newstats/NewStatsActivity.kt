@@ -110,6 +110,7 @@ import android.widget.Toast
 import org.wordpress.android.ui.newstats.alltimestats.AllTimeStatsCard
 import org.wordpress.android.ui.newstats.alltimestats.AllTimeStatsViewModel
 import org.wordpress.android.ui.newstats.latestpost.LatestPostCard
+import org.wordpress.android.ui.newstats.latestpost.LatestPostCardUiState
 import org.wordpress.android.ui.newstats.latestpost.LatestPostViewModel
 import org.wordpress.android.ui.newstats.mostpopularday.MostPopularDayCard
 import org.wordpress.android.ui.newstats.mostpopularday.MostPopularDayViewModel
@@ -210,7 +211,8 @@ class NewStatsActivity : BaseAppCompatActivity() {
     }
 
     private fun openPostDetailStats(item: MostViewedItem) {
-        activityNavigator.openPostDetailStats(this, item.id, item.postType, item.title, item.url)
+        analyticsTracker.track(Stat.STATS_POSTS_AND_PAGES_ITEM_TAPPED)
+        PostStatsDetailActivity.start(this, item.id, item.title)
     }
 
     private fun createNewPost() {
@@ -1307,7 +1309,13 @@ private fun InsightsTabContent(
                             onRemoveCard = { insightsViewModel.removeCard(cardType) },
                             onRetry = { latestPostViewModel.refresh() },
                             onPostClick = { postId ->
-                                PostStatsDetailActivity.start(context, postId)
+                                PostStatsDetailActivity.start(
+                                    context,
+                                    postId,
+                                    (latestPostUiState as?
+                                        LatestPostCardUiState.Loaded)
+                                        ?.postTitle.orEmpty()
+                                )
                             },
                             onCreatePostClick = onCreatePostClick,
                             cardPosition = pos,
