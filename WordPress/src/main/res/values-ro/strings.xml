@@ -256,8 +256,6 @@ Language: ro
     <string name="post_rs_confirm_trash_message">Sigur vrei să arunci la gunoi acest articol?</string>
     <string name="scan_start_request_failed_subtitle">Scanare Jetpack nu a putut să finalizeze o scanare a site-ului tău. Verifică dacă site-ul tău este funcțional.</string>
     <string name="post_rs_failed_to_load">Încărcarea articolului a eșuat</string>
-    <string name="experimental_rs_pages_list">Listă cu pagini noi</string>
-    <string name="experimental_rs_pages_list_description">Afișezi lista cu pagini într-o interfață mai modernă pentru WordPress.com și site-urile auto-găzduite cu parole pentru aplicații</string>
     <string name="stats_error_admin_url_unavailable">Nu pot să deschid administrarea WP pentru acest site</string>
     <string name="stats_error_parsing">A fost o problemă la încărcarea datelor. Te rog să încerci din nou</string>
     <string name="stats_error_network">Eroare în rețea. Te rog să verifici conexiunea și să încerci din nou.</string>

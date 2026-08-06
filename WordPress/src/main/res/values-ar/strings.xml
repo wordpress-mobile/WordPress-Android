@@ -254,8 +254,6 @@ Language: ar
     <string name="scan_start_request_failed_subtitle">تعذر على Jetpack Scan إكمال فحص موقعك. يرجى التحقق لمعرفة ما إذا كان موقعك معطلاً أم لا.</string>
     <string name="stats_timeframe_hours">ساعات</string>
     <string name="post_rs_failed_to_load">فشل تحميل التدوينة</string>
-    <string name="experimental_rs_pages_list">قائمة الصفحات الجديدة</string>
-    <string name="experimental_rs_pages_list_description">إظهار قائمة الصفحات في واجهة مستخدم أكثر حداثة لموقع WordPress.com والمواقع المستضافة ذاتيًا باستخدام كلمات مرور التطبيقات</string>
     <string name="stats_error_no_site">لم يتم تحديد أي موقع</string>
     <string name="stats_error_api">فشل تحميل الإحصاءات</string>
     <string name="stats_error_unknown">حدث خطأ غير متوقع</string>
