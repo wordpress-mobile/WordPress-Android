@@ -166,12 +166,13 @@ class ViewsStatsViewModel @Inject constructor(
     private suspend fun restorePeriodFromPreferences(): StatsPeriod? {
         val siteId = selectedSiteRepository.getSelectedSite()?.siteId ?: return null
         val config = cardsConfigurationRepository.getConfiguration(siteId)
-        val periodType = config.selectedPeriodType ?: return null
-        return StatsPeriod.fromTypeString(
-            type = periodType,
-            customStartEpochDay = config.customPeriodStartDate,
-            customEndEpochDay = config.customPeriodEndDate
-        )
+        return config.selectedPeriodType?.let { periodType ->
+            StatsPeriod.fromTypeString(
+                type = periodType,
+                customStartEpochDay = config.customPeriodStartDate,
+                customEndEpochDay = config.customPeriodEndDate
+            )
+        }
     }
 
     private fun restoreChartTypeFromSavedState(): ChartType {
