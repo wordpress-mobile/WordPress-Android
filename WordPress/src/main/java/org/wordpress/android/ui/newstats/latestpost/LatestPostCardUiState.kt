@@ -14,7 +14,9 @@ sealed class LatestPostCardUiState {
         val likes: Long,
         val comments: Long,
         /** Daily views for the trailing week, oldest first. */
-        val recentViews: List<Long>
+        val recentViews: List<Long>,
+        /** Null when the post has no featured image. */
+        val featuredImageUrl: String?
     ) : LatestPostCardUiState()
 
     /**

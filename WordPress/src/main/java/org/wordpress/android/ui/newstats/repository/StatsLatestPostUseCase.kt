@@ -45,7 +45,11 @@ class StatsLatestPostUseCase @Inject constructor(
                         )
                 ) {
                     is PostViewsResult.Success ->
-                        LatestPostResult.Success(views.data)
+                        LatestPostResult.Success(
+                            data = views.data,
+                            featuredImageUrl =
+                                lookup.featuredImageUrl
+                        )
                     is PostViewsResult.Error ->
                         LatestPostResult.Error(views.message)
                 }
@@ -58,7 +62,9 @@ class StatsLatestPostUseCase @Inject constructor(
  */
 sealed class LatestPostResult {
     data class Success(
-        val data: PostViewsData
+        val data: PostViewsData,
+        /** Null when the post has no featured image. */
+        val featuredImageUrl: String?
     ) : LatestPostResult()
 
     data object NoPosts : LatestPostResult()

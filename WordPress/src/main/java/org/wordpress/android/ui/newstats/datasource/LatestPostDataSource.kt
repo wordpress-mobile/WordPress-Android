@@ -4,11 +4,14 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpApiClientProvider
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
+import rs.wordpress.api.kotlin.WpApiClient
 import rs.wordpress.api.kotlin.WpRequestResult
+import uniffi.wp_api.MediaId
 import uniffi.wp_api.PostEndpointType
 import uniffi.wp_api.PostListParams
 import uniffi.wp_api.PostStatus
 import uniffi.wp_api.SparseAnyPostFieldWithViewContext
+import uniffi.wp_api.SparseMediaFieldWithViewContext
 import uniffi.wp_api.WpApiParamOrder
 import uniffi.wp_api.WpApiParamPostsOrderBy
 import javax.inject.Inject
@@ -36,31 +39,37 @@ class LatestPostDataSource @Inject constructor(
             status = listOf(PostStatus.Publish)
         )
 
-        // Only the ID is needed; without the field filter the response carries the post's whole
-        // rendered content, excerpt and taxonomy payload.
-        val result = wpApiClientProvider
-            .getWpApiClient(site)
-            .request { requestBuilder ->
-                requestBuilder.posts()
-                    .filterListWithViewContext(
-                        postEndpointType =
-                            PostEndpointType.Posts,
-                        params = params,
-                        fields = listOf(
-                            SparseAnyPostFieldWithViewContext
-                                .ID
-                        )
+        // Only the id and featured image are needed; without the field filter the response
+        // carries the post's whole rendered content, excerpt and taxonomy payload.
+        val client = wpApiClientProvider.getWpApiClient(site)
+        val result = client.request { requestBuilder ->
+            requestBuilder.posts()
+                .filterListWithViewContext(
+                    postEndpointType =
+                        PostEndpointType.Posts,
+                    params = params,
+                    fields = listOf(
+                        SparseAnyPostFieldWithViewContext.ID,
+                        SparseAnyPostFieldWithViewContext
+                            .FEATURED_MEDIA
                     )
-            }
+                )
+        }
 
         return when (result) {
-            is WpRequestResult.Success ->
-                result.response.data
-                    .firstOrNull()?.id
-                    ?.let {
-                        LatestPostLookupResult.Success(it)
-                    }
-                    ?: LatestPostLookupResult.NoPosts
+            is WpRequestResult.Success -> {
+                val post = result.response.data.firstOrNull()
+                val postId = post?.id
+                if (postId == null) {
+                    LatestPostLookupResult.NoPosts
+                } else {
+                    LatestPostLookupResult.Success(
+                        postId = postId,
+                        featuredImageUrl = post.featuredMedia
+                            ?.let { fetchImageUrl(client, it) }
+                    )
+                }
+            }
             else -> {
                 val message = (
                     result as? WpRequestResult.WpError<*>
@@ -76,6 +85,39 @@ class LatestPostDataSource @Inject constructor(
             }
         }
     }
+
+    /**
+     * Resolves a featured image's URL. The post carries only the attachment id, so this is a
+     * second call -- made only when there is an image. A failure here costs the thumbnail, not
+     * the card, so it degrades to null rather than propagating.
+     */
+    private suspend fun fetchImageUrl(
+        client: WpApiClient,
+        mediaId: MediaId
+    ): String? {
+        val result = client.request { requestBuilder ->
+            requestBuilder.media()
+                .filterRetrieveWithViewContext(
+                    mediaId = mediaId,
+                    fields = listOf(
+                        SparseMediaFieldWithViewContext
+                            .SOURCE_URL
+                    )
+                )
+        }
+        return when (result) {
+            is WpRequestResult.Success ->
+                result.response.data.sourceUrl
+            else -> {
+                AppLog.w(
+                    T.STATS,
+                    "LatestPostDataSource: could not " +
+                        "resolve featured image $mediaId"
+                )
+                null
+            }
+        }
+    }
 }
 
 /**
@@ -84,7 +126,9 @@ class LatestPostDataSource @Inject constructor(
  */
 sealed class LatestPostLookupResult {
     data class Success(
-        val postId: Long
+        val postId: Long,
+        /** Null when the post has no featured image, or when resolving its URL failed. */
+        val featuredImageUrl: String?
     ) : LatestPostLookupResult()
 
     data object NoPosts : LatestPostLookupResult()

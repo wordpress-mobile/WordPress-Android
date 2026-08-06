@@ -117,7 +117,9 @@ class LatestPostViewModel @Inject constructor(
                         comments = post.commentCount,
                         recentViews = views.dailyViews
                             .takeLast(CARD_CHART_DAYS)
-                            .map { it.views }
+                            .map { it.views },
+                        featuredImageUrl =
+                            result.featuredImageUrl
                     )
                 }
             }
