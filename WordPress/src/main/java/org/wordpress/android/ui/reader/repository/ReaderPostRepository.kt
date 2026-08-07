@@ -1,13 +1,17 @@
 package org.wordpress.android.ui.reader.repository
 
+import com.android.volley.DefaultRetryPolicy
+import com.android.volley.RetryPolicy
 import com.android.volley.VolleyError
 import com.wordpress.rest.RestRequest
 import dagger.Reusable
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
+import kotlinx.coroutines.withTimeout
 import org.json.JSONException
 import org.json.JSONObject
 import org.wordpress.android.WordPress
@@ -56,18 +60,28 @@ class ReaderPostRepository @Inject constructor(
      * It always fetches the most recent posts, saves them to the local DB and returns the latest from that cache.
      */
     suspend fun fetchNewerPostsForTag(tag: ReaderTag, maxPosts: Int = 10): ReaderPostList = withContext(ioDispatcher) {
-        suspendCancellableCoroutine { cont ->
-            val resultListener = UpdateResultListener { result ->
-                if (result == ReaderActions.UpdateResult.FAILED) {
-                    cont.resumeWithException(
-                        ReaderPostFetchException("Failed to fetch newer posts for tag: ${tag.tagSlug}")
-                    )
-                } else {
-                    val posts = ReaderPostTable.getPostsWithTag(tag, maxPosts, false)
-                    cont.resume(posts)
+        // the listener is driven by a Volley callback, so bound the wait - without this a request
+        // that never completes leaves the caller (the Tags Feed) suspended and spinning forever.
+        // Surface a timeout as ReaderPostFetchException so callers show their normal error state.
+        try {
+            withTimeout(FETCH_TIMEOUT_MS) {
+                suspendCancellableCoroutine { cont ->
+                    val resultListener = UpdateResultListener { result ->
+                        if (result == ReaderActions.UpdateResult.FAILED) {
+                            cont.resumeWithException(
+                                ReaderPostFetchException("Failed to fetch newer posts for tag: ${tag.tagSlug}")
+                            )
+                        } else {
+                            val posts = ReaderPostTable.getPostsWithTag(tag, maxPosts, false)
+                            cont.resume(posts)
+                        }
+                    }
+                    requestPostsWithTag(tag, ReaderPostServiceStarter.UpdateAction.REQUEST_NEWER, resultListener)
                 }
             }
-            requestPostsWithTag(tag, ReaderPostServiceStarter.UpdateAction.REQUEST_NEWER, resultListener)
+        } catch (e: TimeoutCancellationException) {
+            AppLog.e(AppLog.T.READER, "timed out fetching posts for tag: ${tag.tagSlug}", e)
+            throw ReaderPostFetchException("Timed out fetching newer posts for tag: ${tag.tagSlug}")
         }
     }
 
@@ -126,7 +140,7 @@ class ReaderPostRepository @Inject constructor(
             resultListener.onUpdateResult(ReaderActions.UpdateResult.FAILED)
         }
 
-        getRestClientUtilsV1_2().get(sb.toString(), null, null, listener, errorListener)
+        getRestClientUtilsV1_2().get(sb.toString(), null, retryPolicy(), listener, errorListener)
     }
 
     fun requestPostsForBlog(
@@ -151,7 +165,7 @@ class ReaderPostRepository @Inject constructor(
             resultListener.onUpdateResult(ReaderActions.UpdateResult.FAILED)
         }
         AppLog.d(AppLog.T.READER, "updating posts in blog $blogId")
-        getRestClientUtilsV1_2().getWithLocale(path, null, null, listener, errorListener)
+        getRestClientUtilsV1_2().getWithLocale(path, null, retryPolicy(), listener, errorListener)
     }
 
     fun requestPostsForFeed(
@@ -174,7 +188,7 @@ class ReaderPostRepository @Inject constructor(
             resultListener.onUpdateResult(ReaderActions.UpdateResult.FAILED)
         }
         AppLog.d(AppLog.T.READER, "updating posts in feed $feedId")
-        getRestClientUtilsV1_2().getWithLocale(path, null, null, listener, errorListener)
+        getRestClientUtilsV1_2().getWithLocale(path, null, retryPolicy(), listener, errorListener)
     }
 
     /**
@@ -184,6 +198,7 @@ class ReaderPostRepository @Inject constructor(
      *        because the API response may not include feed_ID for external feeds, but we need it
      *        to properly query posts later.
      */
+    @Suppress("TooGenericExceptionCaught")
     private fun handleUpdatePostsResponse(
         tag: ReaderTag?,
         jsonObject: JSONObject?,
@@ -200,17 +215,24 @@ class ReaderPostRepository @Inject constructor(
         // it difficult to use coroutines. This should be refactored to use coroutines when possible.
         object : Thread() {
             override fun run() {
-                val serverPosts = ReaderPostList.fromJson(jsonObject)
-                // For feed requests, always set the feedId on all posts to the requested feedId.
-                // The API response may not include feed_ID, or may include a different value,
-                // but we need the feedId to match what we'll query for later.
-                if (requestedFeedId != null && requestedFeedId != 0L) {
-                    serverPosts.forEach { post ->
-                        post.feedId = requestedFeedId
+                // the listener must always be called - if it isn't, ReaderPostLogic never posts
+                // UpdatePostsEnded and the Reader is left showing a spinner with no way out
+                try {
+                    val serverPosts = ReaderPostList.fromJson(jsonObject)
+                    // For feed requests, always set the feedId on all posts to the requested feedId.
+                    // The API response may not include feed_ID, or may include a different value,
+                    // but we need the feedId to match what we'll query for later.
+                    if (requestedFeedId != null && requestedFeedId != 0L) {
+                        serverPosts.forEach { post ->
+                            post.feedId = requestedFeedId
+                        }
                     }
+                    val updateResult = localSource.saveUpdatedPosts(serverPosts, updateAction, tag)
+                    resultListener.onUpdateResult(updateResult)
+                } catch (e: Exception) {
+                    AppLog.e(AppLog.T.READER, "failed to save updated posts", e)
+                    resultListener.onUpdateResult(ReaderActions.UpdateResult.FAILED)
                 }
-                val updateResult = localSource.saveUpdatedPosts(serverPosts, updateAction, tag)
-                resultListener.onUpdateResult(updateResult)
             }
         }.start()
     }
@@ -303,7 +325,7 @@ class ReaderPostRepository @Inject constructor(
                 WordPress.getRestClientUtilsV2().get(
                     tag.endpoint,
                     params,
-                    null,
+                    retryPolicy(),
                     listener,
                     errorListener
                 )
@@ -364,7 +386,7 @@ class ReaderPostRepository @Inject constructor(
                 WordPress.getRestClientUtilsV2().get(
                     tag.endpoint,
                     params,
-                    null,
+                    retryPolicy(),
                     listener,
                     errorListener
                 )
@@ -383,6 +405,7 @@ class ReaderPostRepository @Inject constructor(
      *
      * Must be called from a coroutine on [ioDispatcher] (it does blocking DB work).
      */
+    @Suppress("TooGenericExceptionCaught")
     private fun handleDiscoverStreamResponse(
         tag: ReaderTag,
         jsonObject: JSONObject?,
@@ -416,7 +439,9 @@ class ReaderPostRepository @Inject constructor(
 
             val updateResult = localSource.saveUpdatedPosts(serverPosts, updateAction, tag)
             resultListener.onUpdateResult(updateResult)
-        } catch (e: JSONException) {
+        } catch (e: Exception) {
+            // catching broadly on purpose: this runs inside applicationScope.launch, so an escaping
+            // throwable would cancel the scope and silently no-op every later stream request
             AppLog.e(AppLog.T.READER, e)
             resultListener.onUpdateResult(ReaderActions.UpdateResult.FAILED)
         }
@@ -543,6 +568,23 @@ class ReaderPostRepository @Inject constructor(
 
     companion object {
         private const val MILLIS_PER_SECOND = 1000L
+
+        private const val REQUEST_TIMEOUT_MS = 30_000
+        private const val MAX_RETRIES = 1
+        private const val BACKOFF_MULT = 1f
+
+        // slightly longer than the worst case of the retry policy below (30s + 60s)
+        private const val FETCH_TIMEOUT_MS = 100_000L
+
+        /**
+         * Reader post fetches are interactive and the user is staring at a spinner while they run,
+         * so they must fail fast. RestClientUtils' default policy retries 3 times with a 2x backoff,
+         * and Volley grows the timeout by `timeout * multiplier` on each retry - so the attempts run
+         * for 30s, 90s, 270s and 810s, leaving the Reader spinning for up to 20 minutes before the
+         * error listener fires. A single retry with a 1x multiplier caps that at 30s + 60s.
+         */
+        private fun retryPolicy(): RetryPolicy =
+            DefaultRetryPolicy(REQUEST_TIMEOUT_MS, MAX_RETRIES, BACKOFF_MULT)
 
         private fun formatRelativeEndpointForTag(tagSlug: String): String {
             return String.format(Locale.US, "read/tags/%s/posts", ReaderUtils.sanitizeWithDashes(tagSlug))

@@ -715,6 +715,10 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
 
         if (onlyOnChanges && !changesDetected) return
 
+        // see the comment in the currentTag setter - updates in flight for the previous
+        // tag/blog/feed will never be matched once we switch, so don't leave them pending
+        clearCurrentUpdateActions()
+
         if (readerModeInfo.tag != null) {
             currentReaderTag = readerModeInfo.tag
         }
@@ -1058,17 +1062,19 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
                 ReaderPostServiceStarter.UpdateAction.REQUEST_REFRESH
             else
                 ReaderPostServiceStarter.UpdateAction.REQUEST_NEWER
-            when (getPostListType()) {
-                ReaderPostListType.TAG_FOLLOWED, ReaderPostListType.TAG_PREVIEW -> updatePostsWithTag(
-                    currentTag, updateAction
-                )
+            // only show the swipe-to-refresh progress for the list types that actually start a
+            // request - SEARCH_RESULTS and TAGS_FEED don't, so there'd be no UpdatePostsEnded to
+            // stop the spinner again
+            val requestStarted = when (getPostListType()) {
+                ReaderPostListType.TAG_FOLLOWED, ReaderPostListType.TAG_PREVIEW ->
+                    updatePostsWithTag(currentTag, updateAction)
 
                 ReaderPostListType.BLOG_PREVIEW -> updatePostsInCurrentBlogOrFeed(updateAction)
-                ReaderPostListType.SEARCH_RESULTS -> {}
-                ReaderPostListType.TAGS_FEED -> {}
+                ReaderPostListType.SEARCH_RESULTS -> false
+                ReaderPostListType.TAGS_FEED -> false
             }
             // make sure swipe-to-refresh progress shows since this is a manual refresh
-            recyclerView.isRefreshing = true
+            recyclerView.isRefreshing = requestStarted
         }
         if (currentTag != null && currentTag!!.isBookmarked) {
             ReaderPostTable.purgeUnbookmarkedPostsWithBookmarkTag()
@@ -2152,6 +2158,12 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
                 return
             }
 
+            // any update still in flight was requested for the previous tag, so its
+            // UpdatePostsEnded will be discarded by the tag check in onEventMainThread - drop the
+            // pending actions now or they'd keep isUpdating true forever, which leaves the
+            // spinner running and blocks infinite scroll
+            clearCurrentUpdateActions()
+
             currentReaderTag = tag
 
             if (isFilterableScreen) {
@@ -2295,21 +2307,24 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
     }
 
     /*
-     * get posts for the current blog from the server
+     * get posts for the current blog from the server - returns true if an update was started
      */
-    private fun updatePostsInCurrentBlogOrFeed(updateAction: ReaderPostServiceStarter.UpdateAction) {
+    private fun updatePostsInCurrentBlogOrFeed(
+        updateAction: ReaderPostServiceStarter.UpdateAction
+    ): Boolean {
         if (!NetworkUtils.isNetworkAvailable(activity)) {
             AppLog.i(
                 AppLog.T.READER,
                 "reader post list > network unavailable, canceled blog update"
             )
-            return
+            return false
         }
         if (currentFeedId != 0L) {
             ReaderPostServiceStarter.startServiceForFeed(activity, currentFeedId, updateAction)
         } else {
             ReaderPostServiceStarter.startServiceForBlog(activity, currentBlogId, updateAction)
         }
+        return true
     }
 
     @Suppress("unused")
@@ -2377,14 +2392,14 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
     }
 
     /*
-     * get latest posts for this tag from the server
+     * get latest posts for this tag from the server - returns true if an update was started
      */
     private fun updatePostsWithTag(
         tag: ReaderTag?,
         updateAction: ReaderPostServiceStarter.UpdateAction
-    ) {
+    ): Boolean {
         if (!isAdded) {
-            return
+            return false
         }
 
         if (!NetworkUtils.isNetworkAvailable(activity)) {
@@ -2397,7 +2412,9 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
                 "reader post list > updating tag " + tag.tagNameForLog + ", updateAction=" + updateAction.name
             )
             ReaderPostServiceStarter.startServiceForTag(activity, tag, updateAction)
+            return true
         }
+        return false
     }
 
     private fun updateCurrentTag() {
@@ -2472,13 +2489,17 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
         updateAction: ReaderPostServiceStarter.UpdateAction
     ) {
         if (!isAdded) return
-        val isUiUpdateNeeded = if (isUpdating) {
+        if (isUpdating) {
             currentUpdateActions.add(updateAction)
         } else {
             currentUpdateActions.remove(updateAction)
         }
 
-        if (isUiUpdateNeeded) updateProgressIndicators()
+        // always refresh the indicators rather than only when the set changed - UpdatePostsStarted
+        // is posted twice per request (ReaderPostJobService and ReaderPostLogic) against a single
+        // UpdatePostsEnded, and other paths turn the spinner on without registering an action, so
+        // gating on the set changing can leave the spinner running with nothing left to stop it
+        updateProgressIndicators()
     }
 
     private fun updateProgressIndicators() {
