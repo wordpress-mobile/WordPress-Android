@@ -111,6 +111,7 @@ class QuickLinksItemViewModelSlice @Inject constructor(
         val siteId = site.siteId
         val activeListItems = listItems.filterIsInstance(MySiteCardAndItem.Item.ListItem::class.java)
             .filter { isActiveQuickLink(it.listItemAction, siteId = siteId) }
+            .sortedByQuickLinkOrder { it.listItemAction }
 
         // Only fetch the capabilities if the user has activity and back up quick link is active
         if (!capabilitiesFetched) {
@@ -175,7 +176,7 @@ class QuickLinksItemViewModelSlice @Inject constructor(
 
     private fun isActiveQuickLink(listItemAction: ListItemAction, siteId: Long): Boolean {
         return when (listItemAction) {
-            in defaultShortcuts() -> {
+            in DEFAULT_QUICK_LINKS -> {
                 appPrefsWrapper.getShouldShowDefaultQuickLink(
                     listItemAction.toString(), siteId
                 )
@@ -187,14 +188,6 @@ class QuickLinksItemViewModelSlice @Inject constructor(
                 )
             }
         }
-    }
-
-    private fun defaultShortcuts(): List<ListItemAction> {
-        return listOf(
-            ListItemAction.POSTS,
-            ListItemAction.PAGES,
-            ListItemAction.STATS
-        )
     }
 
     fun clearValue() {
