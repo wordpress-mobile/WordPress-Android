@@ -129,6 +129,23 @@ class QuickLinksItemViewModelSliceTest : BaseUnitTest() {
         )
     }
 
+    @Test
+    fun `a default the user turned off is left out of the card`() = test {
+        givenBuilderReturnsMenuItems()
+        whenever(appPrefsWrapper.getShouldShowDefaultQuickLink(any(), any())).thenReturn(true)
+        whenever(appPrefsWrapper.getShouldShowDefaultQuickLink(ListItemAction.MEDIA.toString(), SITE_ID))
+            .thenReturn(false)
+
+        viewModelSlice.buildCard(site)
+
+        assertThat(uiState!!.quickLinkItems.map { it.label }).containsExactly(
+            UiString.UiStringRes(R.string.stats),
+            UiString.UiStringRes(R.string.my_site_btn_blog_posts),
+            UiString.UiStringRes(R.string.my_site_btn_site_pages),
+            UiString.UiStringRes(R.string.more)
+        )
+    }
+
     // Mirrors the Content-then-Traffic order SiteItemsBuilder produces, with Stats after Comments.
     private suspend fun givenBuilderReturnsMenuItems() {
         whenever(siteItemsBuilder.build(any())).thenReturn(
