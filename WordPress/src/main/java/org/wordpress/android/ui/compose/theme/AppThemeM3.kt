@@ -85,9 +85,13 @@ private fun getColorScheme(
     }
 }
 
+// The surfaceContainer* roles are what M3 uses for menu, dialog and card containers. Any role left unset here
+// falls back to the M3 baseline palette, which is purple-tinted, so these are derived from the Color Studio grays.
 private val colorSchemeJPLight = lightColorScheme(
     primary = AppColor.JetpackGreen50,
     secondary = AppColor.JetpackGreen30,
+    primaryContainer = AppColor.JetpackGreen5,
+    onPrimaryContainer = AppColor.JetpackGreen90,
     background = AppColor.White,
     surface = AppColor.White,
     error = AppColor.Red50,
@@ -95,12 +99,19 @@ private val colorSchemeJPLight = lightColorScheme(
     onSecondary = AppColor.White,
     onBackground = AppColor.Black,
     onSurface = AppColor.Black,
-    onError = AppColor.White
+    onError = AppColor.White,
+    surfaceContainerLowest = AppColor.White,
+    surfaceContainerLow = AppColor.Gray0,
+    surfaceContainer = AppColor.Gray2,
+    surfaceContainerHigh = AppColor.Gray3,
+    surfaceContainerHighest = AppColor.Gray5
 )
 
 private val colorSchemeJPDark = darkColorScheme(
     primary = AppColor.JetpackGreen30,
     secondary = AppColor.JetpackGreen50,
+    primaryContainer = AppColor.JetpackGreen70,
+    onPrimaryContainer = AppColor.JetpackGreen5,
     background = AppColor.DarkGray,
     surface = AppColor.DarkGray,
     error = AppColor.Red30,
@@ -108,7 +119,12 @@ private val colorSchemeJPDark = darkColorScheme(
     onSecondary = AppColor.White,
     onBackground = AppColor.White,
     onSurface = AppColor.White,
-    onError = AppColor.Black
+    onError = AppColor.Black,
+    surfaceContainerLowest = AppColor.Gray100,
+    surfaceContainerLow = AppColor.Gray95,
+    surfaceContainer = AppColor.Gray90,
+    surfaceContainerHigh = AppColor.Gray85,
+    surfaceContainerHighest = AppColor.Gray80
 )
 
 private val colorSchemeWPLight = lightColorScheme(
@@ -123,7 +139,12 @@ private val colorSchemeWPLight = lightColorScheme(
     onSecondary = AppColor.White,
     onBackground = AppColor.Black,
     onSurface = AppColor.Black,
-    onError = AppColor.White
+    onError = AppColor.White,
+    surfaceContainerLowest = AppColor.White,
+    surfaceContainerLow = AppColor.Gray0,
+    surfaceContainer = AppColor.Gray2,
+    surfaceContainerHigh = AppColor.Gray3,
+    surfaceContainerHighest = AppColor.Gray5
 )
 
 private val colorSchemeWPDark = darkColorScheme(
@@ -138,7 +159,12 @@ private val colorSchemeWPDark = darkColorScheme(
     onSecondary = AppColor.White,
     onBackground = AppColor.White,
     onSurface = AppColor.White,
-    onError = AppColor.Black
+    onError = AppColor.Black,
+    surfaceContainerLowest = AppColor.Gray100,
+    surfaceContainerLow = AppColor.Gray95,
+    surfaceContainer = AppColor.Gray90,
+    surfaceContainerHigh = AppColor.Gray85,
+    surfaceContainerHighest = AppColor.Gray80
 )
 
 // Provide extra semantic colors
