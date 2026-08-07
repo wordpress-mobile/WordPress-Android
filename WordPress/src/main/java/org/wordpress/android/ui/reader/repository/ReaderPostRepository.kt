@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.reader.repository
 
 import com.android.volley.DefaultRetryPolicy
-import com.android.volley.RetryPolicy
 import com.android.volley.VolleyError
 import com.wordpress.rest.RestRequest
 import dagger.Reusable
@@ -570,8 +569,6 @@ class ReaderPostRepository @Inject constructor(
         private const val MILLIS_PER_SECOND = 1000L
 
         private const val REQUEST_TIMEOUT_MS = 30_000
-        private const val MAX_RETRIES = 1
-        private const val BACKOFF_MULT = 1f
 
         // slightly longer than the worst case of the retry policy below (30s + 60s)
         private const val FETCH_TIMEOUT_MS = 100_000L
@@ -581,10 +578,14 @@ class ReaderPostRepository @Inject constructor(
          * so they must fail fast. RestClientUtils' default policy retries 3 times with a 2x backoff,
          * and Volley grows the timeout by `timeout * multiplier` on each retry - so the attempts run
          * for 30s, 90s, 270s and 810s, leaving the Reader spinning for up to 20 minutes before the
-         * error listener fires. A single retry with a 1x multiplier caps that at 30s + 60s.
+         * error listener fires. Volley's own retry defaults (1 retry, 1x multiplier) cap that at
+         * 30s + 60s, so the socket timeout is the only value worth overriding here.
          */
-        private fun retryPolicy(): RetryPolicy =
-            DefaultRetryPolicy(REQUEST_TIMEOUT_MS, MAX_RETRIES, BACKOFF_MULT)
+        private fun retryPolicy() = DefaultRetryPolicy(
+            REQUEST_TIMEOUT_MS,
+            DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+            DefaultRetryPolicy.DEFAULT_BACKOFF_MULT
+        )
 
         private fun formatRelativeEndpointForTag(tagSlug: String): String {
             return String.format(Locale.US, "read/tags/%s/posts", ReaderUtils.sanitizeWithDashes(tagSlug))

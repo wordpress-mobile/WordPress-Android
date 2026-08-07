@@ -2404,17 +2404,19 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
 
         if (!NetworkUtils.isNetworkAvailable(activity)) {
             AppLog.i(AppLog.T.READER, "reader post list > network unavailable, canceled tag update")
-        } else if (tag == null) {
-            AppLog.w(AppLog.T.READER, "null tag passed to updatePostsWithTag")
-        } else {
-            AppLog.d(
-                AppLog.T.READER,
-                "reader post list > updating tag " + tag.tagNameForLog + ", updateAction=" + updateAction.name
-            )
-            ReaderPostServiceStarter.startServiceForTag(activity, tag, updateAction)
-            return true
+            return false
         }
-        return false
+        if (tag == null) {
+            AppLog.w(AppLog.T.READER, "null tag passed to updatePostsWithTag")
+            return false
+        }
+
+        AppLog.d(
+            AppLog.T.READER,
+            "reader post list > updating tag " + tag.tagNameForLog + ", updateAction=" + updateAction.name
+        )
+        ReaderPostServiceStarter.startServiceForTag(activity, tag, updateAction)
+        return true
     }
 
     private fun updateCurrentTag() {
