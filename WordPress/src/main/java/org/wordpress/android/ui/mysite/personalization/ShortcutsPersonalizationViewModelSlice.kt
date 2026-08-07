@@ -168,7 +168,7 @@ class ShortcutsPersonalizationViewModelSlice @Inject constructor(
             inactiveShortcuts.add(updatedState)
         }
         _uiState.value = ShortcutsState(
-            activeShortCuts = activeShortcuts,
+            activeShortCuts = activeShortcuts.sortedByQuickLinkOrder { it.listItemAction },
             inactiveShortCuts = inactiveShortcuts
         )
     }

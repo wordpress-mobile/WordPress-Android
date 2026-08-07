@@ -25,6 +25,7 @@ import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.MEDIA
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.PAGES
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.POSTS
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.STATS
+import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.SUBSCRIBERS
 import org.wordpress.android.ui.mysite.items.listitem.SiteItemsBuilder
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.utils.ListItemInteraction
@@ -101,15 +102,17 @@ class QuickLinksItemViewModelSliceTest : BaseUnitTest() {
     }
 
     @Test
-    fun `an enabled non default keeps its builder position behind the defaults`() = test {
+    fun `enabled non defaults follow the defaults, keeping their order relative to each other`() = test {
         givenMenuWithDefaultsOn()
         whenever(appPrefsWrapper.getShouldShowSiteItemAsQuickLink(COMMENTS.toString(), SITE_ID)).thenReturn(true)
+        whenever(appPrefsWrapper.getShouldShowSiteItemAsQuickLink(SUBSCRIBERS.toString(), SITE_ID)).thenReturn(true)
 
         viewModelSlice.buildCard(site)
 
+        // Comments precedes Subscribers in the builder order and must stay that way behind the defaults.
         assertThat(cardLabels())
             .containsExactly(R.string.stats, R.string.my_site_btn_blog_posts, R.string.my_site_btn_site_pages,
-                R.string.media, R.string.my_site_btn_comments, R.string.more)
+                R.string.media, R.string.my_site_btn_comments, R.string.subscribers, R.string.more)
     }
 
     @Test
@@ -133,7 +136,8 @@ class QuickLinksItemViewModelSliceTest : BaseUnitTest() {
             PAGES to R.string.my_site_btn_site_pages,
             MEDIA to R.string.media,
             COMMENTS to R.string.my_site_btn_comments,
-            STATS to R.string.stats
+            STATS to R.string.stats,
+            SUBSCRIBERS to R.string.subscribers
         )
         whenever(siteItemsBuilder.build(any())).thenReturn(
             menu.map { (action, label) -> listItem(action, label) }
