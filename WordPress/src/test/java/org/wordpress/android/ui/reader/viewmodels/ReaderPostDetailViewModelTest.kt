@@ -481,6 +481,45 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
             .isEqualTo(ErrorUiState(UiStringRes(R.string.reader_err_get_post_not_found)))
     }
 
+    /* SHOW POST - LOAD ALWAYS TERMINATES (CMM-2254) */
+    @Test
+    fun `given cached post has no body, when show post is triggered, then loading state is shown`() = test {
+        val bodylessPost = createDummyReaderPost(readerPost.postId).apply { text = null }
+        whenever(readerGetPostUseCase.get(anyLong(), anyLong(), anyBoolean())).thenReturn(Pair(bodylessPost, false))
+        val observers = init(showPost = false)
+
+        viewModel.onShowPost(blogId = bodylessPost.blogId, postId = bodylessPost.postId)
+
+        assertThat(observers.uiStates.first()).isEqualTo(LoadingUiState)
+    }
+
+    @Test
+    fun `given cached post has no body and fetch fails, when show post is triggered, then error is shown`() = test {
+        val bodylessPost = createDummyReaderPost(readerPost.postId).apply { text = null }
+        whenever(readerGetPostUseCase.get(anyLong(), anyLong(), anyBoolean())).thenReturn(Pair(bodylessPost, false))
+        whenever(readerFetchPostUseCase.fetchPost(anyLong(), anyLong(), anyBoolean()))
+            .thenReturn(Failed.RequestFailed)
+        val observers = init(showPost = false)
+
+        viewModel.onShowPost(blogId = bodylessPost.blogId, postId = bodylessPost.postId)
+
+        assertThat(observers.uiStates.last())
+            .isEqualTo(ErrorUiState(UiStringRes(R.string.reader_err_get_post_generic)))
+    }
+
+    @Test
+    fun `given fetch succeeds but post is still missing, when show post is triggered, then error is shown`() =
+        testWithoutLocalPost {
+            whenever(readerFetchPostUseCase.fetchPost(anyLong(), anyLong(), anyBoolean()))
+                .thenReturn(FetchReaderPostState.Success)
+            val observers = init(showPost = false)
+
+            viewModel.onShowPost(blogId = readerPost.blogId, postId = readerPost.postId)
+
+            assertThat(observers.uiStates.last())
+                .isEqualTo(ErrorUiState(UiStringRes(R.string.reader_err_get_post_generic)))
+        }
+
     @Test
     fun `given unauthorised, when post is fetched, then error ui is shown`() = testWithoutLocalPost {
         whenever(readerFetchPostUseCase.fetchPost(readerPost.blogId, readerPost.postId, viewModel.isFeed))
@@ -1241,6 +1280,7 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
             this.blogId = id * 100
             this.feedId = id * 1000
             this.title = "DummyPost"
+            this.text = "<p>Dummy post content</p>"
             this.featuredVideo = id.toString()
             this.featuredImage = "/featured_image/$id/url"
             this.isExternal = !isWpComPost

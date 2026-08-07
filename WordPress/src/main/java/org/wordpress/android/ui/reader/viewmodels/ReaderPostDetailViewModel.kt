@@ -391,9 +391,11 @@ class ReaderPostDetailViewModel @Inject constructor(
     private suspend fun getOrFetchReaderPost(blogId: Long, postId: Long) {
         getReaderPostFromDb(blogId = blogId, postId = postId)
 
-        // Show cached content immediately if available, otherwise show loading
-        val hasCachedPost = post != null
-        if (hasCachedPost) {
+        // Only render the cached copy immediately if it actually has body content. A
+        // header-only post (whose body hasn't been fetched yet) would otherwise leave the
+        // user staring at a blank article, so keep the loading state until the fetch lands.
+        val hasRenderableContent = post?.hasText() == true
+        if (hasRenderableContent) {
             updatePostDetailsUi()
         } else {
             _uiState.value = LoadingUiState
@@ -404,39 +406,43 @@ class ReaderPostDetailViewModel @Inject constructor(
         when (readerFetchPostUseCase.fetchPost(blogId = blogId, postId = postId, isFeed = isFeed)) {
             FetchReaderPostState.Success -> {
                 getReaderPostFromDb(blogId, postId)
-                // Update UI if content changed, or we didn't have cached content
-                if (!hasCachedPost || post?.text != oldPostText) {
+                if (post == null) {
+                    // The fetch reported success but produced no post to render; surface an
+                    // error instead of leaving the loading spinner up forever.
+                    _uiState.value = ErrorUiState(UiStringRes(R.string.reader_err_get_post_generic))
+                } else if (!hasRenderableContent || post?.text != oldPostText) {
+                    // Update UI if content changed, or we didn't already have renderable content
                     updatePostDetailsUi()
                 }
             }
 
             FetchReaderPostState.AlreadyRunning -> {
-                if (!hasCachedPost) {
+                if (!hasRenderableContent) {
                     AppLog.i(T.READER, "reader post detail > fetch post already running")
                     _uiState.value = ErrorUiState(null)
                 }
             }
 
             FetchReaderPostState.Failed.NoNetwork -> {
-                if (!hasCachedPost) {
+                if (!hasRenderableContent) {
                     _uiState.value = ErrorUiState(UiStringRes(R.string.no_network_message))
                 }
             }
 
             FetchReaderPostState.Failed.RequestFailed -> {
-                if (!hasCachedPost) {
+                if (!hasRenderableContent) {
                     _uiState.value = ErrorUiState(UiStringRes(R.string.reader_err_get_post_generic))
                 }
             }
 
             FetchReaderPostState.Failed.NotAuthorised -> {
-                if (!hasCachedPost) {
+                if (!hasRenderableContent) {
                     trackAndUpdateNotAuthorisedErrorState()
                 }
             }
 
             FetchReaderPostState.Failed.PostNotFound -> {
-                if (!hasCachedPost) {
+                if (!hasRenderableContent) {
                     _uiState.value = ErrorUiState(UiStringRes(R.string.reader_err_get_post_not_found))
                 }
             }
