@@ -10,5 +10,13 @@ import org.wordpress.android.R
 enum class StatsTab(@StringRes val titleResId: Int) {
     TRAFFIC(R.string.stats_traffic),
     INSIGHTS(R.string.stats_insights),
-    SUBSCRIBERS(R.string.subscribers)
+    SUBSCRIBERS(R.string.subscribers);
+
+    companion object {
+        /**
+         * Resolves a tab from the [name] written into the Intent extra, falling back to [TRAFFIC]
+         * for anything unknown so a malformed extra can't leave the screen without a tab.
+         */
+        fun fromName(name: String?): StatsTab = entries.firstOrNull { it.name == name } ?: TRAFFIC
+    }
 }

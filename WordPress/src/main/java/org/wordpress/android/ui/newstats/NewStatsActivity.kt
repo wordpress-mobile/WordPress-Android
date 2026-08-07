@@ -128,7 +128,6 @@ import org.wordpress.android.ui.stats.refresh.utils.trackStatsAccessed
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
-import org.wordpress.android.util.extensions.getSerializableExtraCompat
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -163,7 +162,7 @@ class NewStatsActivity : BaseAppCompatActivity() {
         }
         val shouldShowIntro =
             !appPrefsWrapper.getNewStatsIntroShown()
-        val initialTab = intent?.getSerializableExtraCompat<StatsTab>(KEY_INITIAL_TAB) ?: StatsTab.TRAFFIC
+        val initialTab = StatsTab.fromName(intent?.getStringExtra(KEY_INITIAL_TAB))
         setContent {
             AppThemeM3 {
                 var showFeedbackDialog by rememberSaveable { mutableStateOf(false) }
@@ -210,8 +209,11 @@ class NewStatsActivity : BaseAppCompatActivity() {
      * site reported is the one about to render.
      */
     private fun trackStatsAccessed() {
+        // No selected site means nothing to attribute the open to, so skip rather than report a
+        // half-formed event. Old Stats toasts here instead, from ActivityLauncher.
         val site = selectedSiteRepository.getSelectedSite() ?: return
-        val launchedFrom = intent?.getSerializableExtraCompat<StatsLaunchedFrom>(KEY_LAUNCHED_FROM)
+        val name = intent?.getStringExtra(KEY_LAUNCHED_FROM)
+        val launchedFrom = StatsLaunchedFrom.entries.firstOrNull { it.name == name }
         analyticsTracker.trackStatsAccessed(site, tapSource = launchedFrom?.value.orEmpty())
     }
 
@@ -286,8 +288,12 @@ class NewStatsActivity : BaseAppCompatActivity() {
             localSiteId: Int? = null
         ): Intent = Intent(context, NewStatsActivity::class.java).apply {
             localSiteId?.let { putExtra(WordPress.LOCAL_SITE_ID, it) }
-            putExtra(KEY_LAUNCHED_FROM, launchedFrom)
-            putExtra(KEY_INITIAL_TAB, tab)
+            // Enums travel by name, not as Serializable. WidgetUtils uses this Intent as a
+            // setPendingIntentTemplate target, and the per-row fill-in is merged by system_server,
+            // which has no classloader for our types - Intent.fillIn would swallow the resulting
+            // exception and silently drop the row's LOCAL_SITE_ID, opening the wrong site.
+            putExtra(KEY_LAUNCHED_FROM, launchedFrom.name)
+            putExtra(KEY_INITIAL_TAB, tab.name)
             period?.let {
                 putExtra(ViewsStatsViewModel.KEY_PERIOD_TYPE, it.toTypeString())
                 if (it is StatsPeriod.Custom) {
