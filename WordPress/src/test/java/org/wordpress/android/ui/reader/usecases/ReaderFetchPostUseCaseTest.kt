@@ -1,6 +1,8 @@
 package org.wordpress.android.ui.reader.usecases
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.cancelAndJoin
+import kotlinx.coroutines.launch
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -13,6 +15,7 @@ import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.ui.reader.actions.ReaderActions
 import org.wordpress.android.ui.reader.actions.ReaderPostActionsWrapper
+import org.wordpress.android.ui.reader.usecases.ReaderFetchPostUseCase.FetchReaderPostState.AlreadyRunning
 import org.wordpress.android.ui.reader.usecases.ReaderFetchPostUseCase.FetchReaderPostState.Failed
 import org.wordpress.android.ui.reader.usecases.ReaderFetchPostUseCase.FetchReaderPostState.Success
 import org.wordpress.android.util.NetworkUtilsWrapper
@@ -131,5 +134,24 @@ class ReaderFetchPostUseCaseTest : BaseUnitTest() {
         val result = useCase.fetchPost(postId = postId, blogId = blogId, isFeed = false)
 
         assertThat(result).isEqualTo(Failed.RequestFailed)
+    }
+
+    @Test
+    fun `given the request never responds, when reader post is fetched, then request failed is returned`() = test {
+        // The request mock never invokes its listener, so resolution relies on the timeout
+        val result = useCase.fetchPost(postId = postId, blogId = blogId, isFeed = false)
+
+        assertThat(result).isEqualTo(Failed.RequestFailed)
+    }
+
+    @Test
+    fun `given a request for the same post is running, when fetched again, then already running is returned`() = test {
+        // The first request stays in flight because its listener is never invoked
+        val firstRequest = launch { useCase.fetchPost(postId = postId, blogId = blogId, isFeed = false) }
+
+        val secondResult = useCase.fetchPost(postId = postId, blogId = blogId, isFeed = false)
+
+        assertThat(secondResult).isEqualTo(AlreadyRunning)
+        firstRequest.cancelAndJoin()
     }
 }
