@@ -16,7 +16,6 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.SiteNavigationAction
 import org.wordpress.android.ui.mysite.cards.ListItemActionHandler
-import org.wordpress.android.ui.mysite.cards.quicklinksitem.QuickLinkDefaults.sortedByQuickLinkOrder
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction
 import org.wordpress.android.ui.mysite.items.listitem.SiteItemsBuilder
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
@@ -177,7 +176,7 @@ class QuickLinksItemViewModelSlice @Inject constructor(
 
     private fun isActiveQuickLink(listItemAction: ListItemAction, siteId: Long): Boolean {
         return when (listItemAction) {
-            in QuickLinkDefaults.DEFAULT_SHORTCUTS -> {
+            in DEFAULT_QUICK_LINKS -> {
                 appPrefsWrapper.getShouldShowDefaultQuickLink(
                     listItemAction.toString(), siteId
                 )
