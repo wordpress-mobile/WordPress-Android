@@ -32,33 +32,22 @@ object RsDateFormatter {
     fun format(dateGmt: Date, nowLabel: String, isScheduled: Boolean = false): String {
         val millis = dateGmt.time
         val now = System.currentTimeMillis()
-        val secondsSince = (now - millis) / MILLIS_PER_SECOND
         // The server's date can sit slightly ahead of the device clock, so treat a sub-minute
         // gap in either direction as "now" rather than letting it read "In 0 minutes".
-        val isNow = !isScheduled && abs(secondsSince) < SECONDS_PER_MINUTE
-        val useRelative = !isScheduled && abs(secondsSince) < SECONDS_PER_WEEK
+        val secondsSince = abs((now - millis) / MILLIS_PER_SECOND)
 
         return when {
-            isNow -> nowLabel
-            useRelative -> DateUtils.getRelativeTimeSpanString(
-                millis,
-                now,
-                DateUtils.MINUTE_IN_MILLIS
-            ).toString()
             isScheduled -> formatAbbrDateTime(millis)
+            secondsSince < SECONDS_PER_MINUTE -> nowLabel
+            secondsSince < SECONDS_PER_WEEK ->
+                DateUtils.getRelativeTimeSpanString(millis, now, DateUtils.MINUTE_IN_MILLIS).toString()
             else -> formatAbbrDate(millis)
         }
     }
 
-    private fun formatAbbrDate(millis: Long): String {
-        val dateFormat =
-            DateFormat.getDateInstance(DateFormat.MEDIUM)
-        return dateFormat.format(Date(millis))
-    }
+    private fun formatAbbrDate(millis: Long) =
+        DateFormat.getDateInstance(DateFormat.MEDIUM).format(Date(millis))
 
-    private fun formatAbbrDateTime(millis: Long): String {
-        val dateFormat =
-            DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT)
-        return dateFormat.format(Date(millis))
-    }
+    private fun formatAbbrDateTime(millis: Long) =
+        DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT).format(Date(millis))
 }

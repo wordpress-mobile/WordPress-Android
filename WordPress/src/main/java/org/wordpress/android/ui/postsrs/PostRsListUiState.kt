@@ -125,17 +125,9 @@ fun PostItemState.toUiModel(
         is PostItemState.Stale ->
             data.toUiModel(showStatus, nowLabel)
         is PostItemState.FetchingWithData ->
-            data.toUiModel(
-                showStatus,
-                nowLabel,
-                PostDisplayState.FETCHING_WITH_DATA
-            )
+            data.toUiModel(showStatus, nowLabel, PostDisplayState.FETCHING_WITH_DATA)
         is PostItemState.FailedWithData ->
-            data.toUiModel(
-                showStatus,
-                nowLabel,
-                PostDisplayState.FAILED_WITH_DATA
-            )
+            data.toUiModel(showStatus, nowLabel, PostDisplayState.FAILED_WITH_DATA)
         is PostItemState.Missing,
         is PostItemState.Fetching -> PostRsUiModel(
             remotePostId = postId,
@@ -170,11 +162,7 @@ private fun FullEntityAnyPostWithEditContext.toUiModel(
                 ?: post.excerpt?.rendered
                 ?: ""
             ).let { HtmlUtils.fastStripHtml(it).trim() },
-        date = RsDateFormatter.format(
-            post.dateGmt,
-            nowLabel,
-            isScheduled = post.status is PostStatus.Future
-        ),
+        date = RsDateFormatter.format(post.dateGmt, nowLabel, isScheduled = post.status is PostStatus.Future),
         lastModified = DateTimeUtils.iso8601UTCFromDate(
             post.modifiedGmt
         ),

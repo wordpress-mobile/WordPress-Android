@@ -3,8 +3,8 @@ package org.wordpress.android.ui.pagesrs
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import org.wordpress.android.R
-import org.wordpress.android.ui.rs.RsDateFormatter
 import org.wordpress.android.ui.postsrs.toLabel
+import org.wordpress.android.ui.rs.RsDateFormatter
 import org.wordpress.android.util.DateTimeUtils
 import org.wordpress.android.util.HtmlUtils
 import uniffi.wp_api.AnyPostWithEditContext
@@ -182,11 +182,7 @@ private fun FullEntityAnyPostWithEditContext.toPageUiModel(
                 ?: page.excerpt?.rendered
                 ?: ""
             ).let { HtmlUtils.fastStripHtml(it).trim() },
-        date = RsDateFormatter.format(
-            page.dateGmt,
-            nowLabel,
-            isScheduled = page.status is PostStatus.Future
-        ),
+        date = RsDateFormatter.format(page.dateGmt, nowLabel, isScheduled = page.status is PostStatus.Future),
         lastModified = DateTimeUtils.iso8601UTCFromDate(page.modifiedGmt),
         link = page.link,
         hasPassword = !page.password.isNullOrEmpty(),

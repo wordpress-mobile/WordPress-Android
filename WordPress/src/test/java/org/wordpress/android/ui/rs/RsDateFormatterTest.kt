@@ -36,25 +36,23 @@ class RsDateFormatterTest {
         }
     }
 
+    // The two now-label cases return the label verbatim without reaching DateFormat, so unlike
+    // the others they don't need withFixedLocaleAndZone.
     @Test
     fun `date seconds in the past shows the now label`() {
-        withFixedLocaleAndZone {
-            // Without this the relative formatter renders a just-published post as "0 minutes ago".
-            val date = Date(System.currentTimeMillis() - FIVE_SECONDS_MILLIS)
+        // Without this the relative formatter renders a just-published post as "0 minutes ago".
+        val date = Date(System.currentTimeMillis() - THIRTY_SECONDS_MILLIS)
 
-            assertThat(RsDateFormatter.format(date, NOW_LABEL)).isEqualTo(NOW_LABEL)
-        }
+        assertThat(RsDateFormatter.format(date, NOW_LABEL)).isEqualTo(NOW_LABEL)
     }
 
     @Test
     fun `date seconds in the future shows the now label`() {
-        withFixedLocaleAndZone {
-            // The server's date can sit just ahead of the device clock; that shouldn't read
-            // "In 0 minutes".
-            val date = Date(System.currentTimeMillis() + THIRTY_SECONDS_MILLIS)
+        // The server's date can sit just ahead of the device clock; that shouldn't read
+        // "In 0 minutes".
+        val date = Date(System.currentTimeMillis() + THIRTY_SECONDS_MILLIS)
 
-            assertThat(RsDateFormatter.format(date, NOW_LABEL)).isEqualTo(NOW_LABEL)
-        }
+        assertThat(RsDateFormatter.format(date, NOW_LABEL)).isEqualTo(NOW_LABEL)
     }
 
     @Test
@@ -87,7 +85,6 @@ class RsDateFormatterTest {
         // A fixed instant so the formatted output is deterministic under the pinned locale/zone.
         private const val FIXED_MILLIS = 1_765_792_800_000L
         private const val THIRTY_DAYS_MILLIS = 30L * 24 * 60 * 60 * 1000
-        private const val FIVE_SECONDS_MILLIS = 5L * 1000
         private const val THIRTY_SECONDS_MILLIS = 30L * 1000
 
         // Stands in for R.string.rs_date_now, which the ViewModels resolve before mapping.
