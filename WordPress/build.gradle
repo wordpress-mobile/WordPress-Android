@@ -64,7 +64,11 @@ static String pathForSmartFlankGcsPath(String app) {
     return "gs://fladle/wordpress-android/${app}/smart-flank/JUnitReport.xml"
 }
 
+def sentryAuthToken = providers.environmentVariable("SENTRY_AUTH_TOKEN")
+
 sentry {
+    authToken = sentryAuthToken.getOrNull()
+
     tracingInstrumentation {
         enabled = true
         features = [InstrumentationFeature.DATABASE]
@@ -81,6 +85,18 @@ sentry {
     */
     ignoredBuildTypes = ["debug"]
     telemetry = false
+}
+
+// The upload task only exists when includeProguardMapping is on, so this fires exactly when a
+// mapping upload is expected — fail there rather than ship a release we can't deobfuscate.
+tasks.matching { it.name.startsWith("uploadSentryProguardMappings") }.configureEach {
+    doFirst {
+        if (!sentryAuthToken.isPresent()) {
+            throw new GradleException(
+                "SENTRY_AUTH_TOKEN is not set. Export it to upload ProGuard mappings."
+            )
+        }
+    }
 }
 
 allOpen {
