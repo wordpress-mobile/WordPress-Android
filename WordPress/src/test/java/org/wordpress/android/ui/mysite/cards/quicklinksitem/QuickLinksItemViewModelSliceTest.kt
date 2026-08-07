@@ -20,6 +20,11 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.cards.ListItemActionHandler
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction
+import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.COMMENTS
+import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.MEDIA
+import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.PAGES
+import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.POSTS
+import org.wordpress.android.ui.mysite.items.listitem.ListItemAction.STATS
 import org.wordpress.android.ui.mysite.items.listitem.SiteItemsBuilder
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.utils.ListItemInteraction
@@ -73,90 +78,67 @@ class QuickLinksItemViewModelSliceTest : BaseUnitTest() {
     }
 
     @Test
-    fun `media is read from the default quick link pref`() = test {
-        givenBuilderReturnsMenuItems()
-        whenever(appPrefsWrapper.getShouldShowDefaultQuickLink(any(), any())).thenReturn(true)
+    fun `defaults are read from the default pref and everything else from the site item pref`() = test {
+        givenMenuWithDefaultsOn()
 
         viewModelSlice.buildCard(site)
 
-        verify(appPrefsWrapper).getShouldShowDefaultQuickLink(ListItemAction.MEDIA.toString(), SITE_ID)
-        verify(appPrefsWrapper, never()).getShouldShowSiteItemAsQuickLink(ListItemAction.MEDIA.toString(), SITE_ID)
-    }
-
-    @Test
-    fun `a non default action is read from the site item quick link pref`() = test {
-        givenBuilderReturnsMenuItems()
-        whenever(appPrefsWrapper.getShouldShowDefaultQuickLink(any(), any())).thenReturn(true)
-
-        viewModelSlice.buildCard(site)
-
-        verify(appPrefsWrapper).getShouldShowSiteItemAsQuickLink(ListItemAction.COMMENTS.toString(), SITE_ID)
-        verify(appPrefsWrapper, never()).getShouldShowDefaultQuickLink(ListItemAction.COMMENTS.toString(), SITE_ID)
+        verify(appPrefsWrapper).getShouldShowDefaultQuickLink(MEDIA.toString(), SITE_ID)
+        verify(appPrefsWrapper, never()).getShouldShowSiteItemAsQuickLink(MEDIA.toString(), SITE_ID)
+        verify(appPrefsWrapper).getShouldShowSiteItemAsQuickLink(COMMENTS.toString(), SITE_ID)
+        verify(appPrefsWrapper, never()).getShouldShowDefaultQuickLink(COMMENTS.toString(), SITE_ID)
     }
 
     @Test
     fun `card leads with stats and keeps more last`() = test {
-        givenBuilderReturnsMenuItems()
-        whenever(appPrefsWrapper.getShouldShowDefaultQuickLink(any(), any())).thenReturn(true)
+        givenMenuWithDefaultsOn()
 
         viewModelSlice.buildCard(site)
 
-        assertThat(uiState!!.quickLinkItems.map { it.label }).containsExactly(
-            UiString.UiStringRes(R.string.stats),
-            UiString.UiStringRes(R.string.my_site_btn_blog_posts),
-            UiString.UiStringRes(R.string.my_site_btn_site_pages),
-            UiString.UiStringRes(R.string.media),
-            UiString.UiStringRes(R.string.more)
-        )
+        assertThat(cardLabels())
+            .containsExactly(R.string.stats, R.string.my_site_btn_blog_posts, R.string.my_site_btn_site_pages,
+                R.string.media, R.string.more)
     }
 
     @Test
-    fun `an enabled non default action keeps its builder position behind the defaults`() = test {
-        givenBuilderReturnsMenuItems()
-        whenever(appPrefsWrapper.getShouldShowDefaultQuickLink(any(), any())).thenReturn(true)
-        whenever(appPrefsWrapper.getShouldShowSiteItemAsQuickLink(ListItemAction.COMMENTS.toString(), SITE_ID))
-            .thenReturn(true)
+    fun `an enabled non default keeps its builder position behind the defaults`() = test {
+        givenMenuWithDefaultsOn()
+        whenever(appPrefsWrapper.getShouldShowSiteItemAsQuickLink(COMMENTS.toString(), SITE_ID)).thenReturn(true)
 
         viewModelSlice.buildCard(site)
 
-        assertThat(uiState!!.quickLinkItems.map { it.label }).containsExactly(
-            UiString.UiStringRes(R.string.stats),
-            UiString.UiStringRes(R.string.my_site_btn_blog_posts),
-            UiString.UiStringRes(R.string.my_site_btn_site_pages),
-            UiString.UiStringRes(R.string.media),
-            UiString.UiStringRes(R.string.my_site_btn_comments),
-            UiString.UiStringRes(R.string.more)
-        )
+        assertThat(cardLabels())
+            .containsExactly(R.string.stats, R.string.my_site_btn_blog_posts, R.string.my_site_btn_site_pages,
+                R.string.media, R.string.my_site_btn_comments, R.string.more)
     }
 
     @Test
     fun `a default the user turned off is left out of the card`() = test {
-        givenBuilderReturnsMenuItems()
-        whenever(appPrefsWrapper.getShouldShowDefaultQuickLink(any(), any())).thenReturn(true)
-        whenever(appPrefsWrapper.getShouldShowDefaultQuickLink(ListItemAction.MEDIA.toString(), SITE_ID))
-            .thenReturn(false)
+        givenMenuWithDefaultsOn()
+        whenever(appPrefsWrapper.getShouldShowDefaultQuickLink(MEDIA.toString(), SITE_ID)).thenReturn(false)
 
         viewModelSlice.buildCard(site)
 
-        assertThat(uiState!!.quickLinkItems.map { it.label }).containsExactly(
-            UiString.UiStringRes(R.string.stats),
-            UiString.UiStringRes(R.string.my_site_btn_blog_posts),
-            UiString.UiStringRes(R.string.my_site_btn_site_pages),
-            UiString.UiStringRes(R.string.more)
-        )
+        assertThat(cardLabels())
+            .containsExactly(R.string.stats, R.string.my_site_btn_blog_posts, R.string.my_site_btn_site_pages,
+                R.string.more)
     }
 
-    // Mirrors the Content-then-Traffic order SiteItemsBuilder produces, with Stats after Comments.
-    private suspend fun givenBuilderReturnsMenuItems() {
-        whenever(siteItemsBuilder.build(any())).thenReturn(
-            listOf(
-                listItem(ListItemAction.POSTS, R.string.my_site_btn_blog_posts),
-                listItem(ListItemAction.PAGES, R.string.my_site_btn_site_pages),
-                listItem(ListItemAction.MEDIA, R.string.media),
-                listItem(ListItemAction.COMMENTS, R.string.my_site_btn_comments),
-                listItem(ListItemAction.STATS, R.string.stats)
-            )
+    private fun cardLabels() = uiState!!.quickLinkItems.map { it.label.stringRes }
+
+    // Content then Traffic, the order SiteItemsBuilder produces, with every default turned on.
+    private suspend fun givenMenuWithDefaultsOn() {
+        val menu = listOf(
+            POSTS to R.string.my_site_btn_blog_posts,
+            PAGES to R.string.my_site_btn_site_pages,
+            MEDIA to R.string.media,
+            COMMENTS to R.string.my_site_btn_comments,
+            STATS to R.string.stats
         )
+        whenever(siteItemsBuilder.build(any())).thenReturn(
+            menu.map { (action, label) -> listItem(action, label) }
+        )
+        whenever(appPrefsWrapper.getShouldShowDefaultQuickLink(any(), any())).thenReturn(true)
     }
 
     private fun listItem(action: ListItemAction, labelRes: Int) = MySiteCardAndItem.Item.ListItem(

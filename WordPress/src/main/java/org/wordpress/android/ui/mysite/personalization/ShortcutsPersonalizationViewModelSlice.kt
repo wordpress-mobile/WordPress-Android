@@ -43,10 +43,6 @@ class ShortcutsPersonalizationViewModelSlice @Inject constructor(
 
     val uiState: StateFlow<ShortcutsState> = _uiState
 
-    // Every shortcut in the order [SiteItemsBuilder] produced, so toggling one can rebuild both
-    // lists in that order rather than appending it wherever it happens to land.
-    private var allShortcuts: List<ShortcutState> = emptyList()
-
     fun start(site: SiteModel) {
         scope.launch(bgDispatcher) {
             convertToShortCutsState(
@@ -68,7 +64,7 @@ class ShortcutsPersonalizationViewModelSlice @Inject constructor(
 
     private fun convertToShortCutsState(items: List<MySiteCardAndItem>, siteId: Long) {
         val listItems = items.filterIsInstance(MySiteCardAndItem.Item.ListItem::class.java)
-        allShortcuts = listItems.map { listItem ->
+        val shortcuts = listItems.map { listItem ->
             ShortcutState(
                 icon = listItem.primaryIcon,
                 label = listItem.primaryText as UiString.UiStringRes,
@@ -77,7 +73,7 @@ class ShortcutsPersonalizationViewModelSlice @Inject constructor(
                 listItemAction = listItem.listItemAction
             )
         }
-        groupByActiveAndInactiveShortcuts(allShortcuts)
+        groupByActiveAndInactiveShortcuts(shortcuts)
     }
 
     private fun groupByActiveAndInactiveShortcuts(shortcuts: List<ShortcutState>) {
@@ -159,10 +155,22 @@ class ShortcutsPersonalizationViewModelSlice @Inject constructor(
     }
 
     private fun updateUiState(shortcutState: ShortcutState, isActive: Boolean) {
-        allShortcuts = allShortcuts.map {
-            if (it.listItemAction == shortcutState.listItemAction) it.copy(isActive = isActive) else it
+        // is active means changed to active from inactive
+        val currentState = _uiState.value
+        val updatedState = shortcutState.copy(isActive = isActive)
+        val activeShortcuts = currentState.activeShortCuts.toMutableList()
+        val inactiveShortcuts = currentState.inactiveShortCuts.toMutableList()
+        if (isActive) {
+            inactiveShortcuts.remove(shortcutState)
+            activeShortcuts.add(updatedState)
+        } else {
+            activeShortcuts.remove(shortcutState)
+            inactiveShortcuts.add(updatedState)
         }
-        groupByActiveAndInactiveShortcuts(allShortcuts)
+        _uiState.value = ShortcutsState(
+            activeShortCuts = activeShortcuts,
+            inactiveShortCuts = inactiveShortcuts
+        )
     }
 
     private fun updateVisibilityOfListItem(listItemAction: ListItemAction, siteId: Long, shouldShow: Boolean) {
