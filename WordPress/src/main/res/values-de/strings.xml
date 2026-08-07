@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2026-07-23 20:20:31+0000
+Translation-Revision-Date: 2026-08-05 17:44:38+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.3
 Language: de
@@ -2613,7 +2613,7 @@ Language: de
     <string name="stats_insights_today_stats">Heute</string>
     <string name="stats_insights_best_hour">Beste Uhrzeit</string>
     <string name="stats_insights_best_day">Bester Tag</string>
-    <string name="showing_stats_for">Anzeigen von Statistiken für:</string>
+    <string name="showing_stats_for">Statistiken für:</string>
     <string name="editor_post_converted_back_to_draft">Beitrag zurück auf Entwurf geändert</string>
     <string name="stats_insights_posting_activity">Beitrags-Aktivität</string>
     <string name="stats_site_not_loaded_yet">Website noch nicht geladen</string>
