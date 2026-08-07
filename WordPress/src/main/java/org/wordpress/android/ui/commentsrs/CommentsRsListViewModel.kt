@@ -38,7 +38,7 @@ import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.items.listitem.SiteCapabilityChecker
 import org.wordpress.android.ui.postsrs.PostRsErrorUtils
 import org.wordpress.android.ui.postsrs.SnackbarMessage
-import org.wordpress.android.util.DateTimeUtilsWrapper
+import org.wordpress.android.ui.rs.RsDateFormatter
 import org.wordpress.android.util.HtmlUtils
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.WPAvatarUtilsWrapper
@@ -60,7 +60,6 @@ class CommentsRsListViewModel @Inject constructor(
     private val siteCapabilityChecker: SiteCapabilityChecker,
     private val resourceProvider: ResourceProvider,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
-    private val dateTimeUtilsWrapper: DateTimeUtilsWrapper,
     private val avatarUtilsWrapper: WPAvatarUtilsWrapper,
     private val analyticsTracker: AnalyticsTrackerWrapper,
     private val commentBrowsingSession: CommentBrowsingSession,
@@ -668,7 +667,7 @@ class CommentsRsListViewModel @Inject constructor(
         authorName = authorName.ifBlank { resourceProvider.getString(R.string.anonymous) },
         avatarUrl = avatarUtilsWrapper.rewriteAvatarUrlWithResource(authorAvatarUrl, R.dimen.avatar_sz_medium),
         snippet = HtmlUtils.fastStripHtml(contentHtml).trim(),
-        relativeDate = dateTimeUtilsWrapper.javaDateToTimeSpan(dateGmt),
+        relativeDate = RsDateFormatter.format(dateGmt, resourceProvider.getString(R.string.now)),
         status = status,
         postId = postId
     )

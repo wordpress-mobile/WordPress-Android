@@ -33,7 +33,6 @@ import org.wordpress.android.ui.comments.unified.CommentsRsDataSource.RsComments
 import org.wordpress.android.ui.comments.unified.CommentsRsDataSource.RsResult
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.items.listitem.SiteCapabilityChecker
-import org.wordpress.android.util.DateTimeUtilsWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.WPAvatarUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
@@ -48,7 +47,6 @@ class CommentsRsListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
     @Mock lateinit var siteCapabilityChecker: SiteCapabilityChecker
     @Mock lateinit var resourceProvider: ResourceProvider
     @Mock lateinit var networkUtilsWrapper: NetworkUtilsWrapper
-    @Mock lateinit var dateTimeUtilsWrapper: DateTimeUtilsWrapper
     @Mock lateinit var avatarUtilsWrapper: WPAvatarUtilsWrapper
     @Mock lateinit var analyticsTracker: AnalyticsTrackerWrapper
 
@@ -65,7 +63,6 @@ class CommentsRsListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
         whenever(siteCapabilityChecker.canModerateComments(site)).thenReturn(true)
         whenever(resourceProvider.getString(any())).thenReturn("string")
-        whenever(dateTimeUtilsWrapper.javaDateToTimeSpan(any())).thenReturn("2 hours ago")
         whenever(avatarUtilsWrapper.rewriteAvatarUrlWithResource(any(), any())).thenAnswer { it.arguments[0] }
         whenever(commentsRsDataSource.firstPageParams(any(), anyOrNull())).thenReturn(FIRST_PAGE)
         whenever(commentsRsDataSource.fetchPostTitles(any(), any())).thenReturn(emptyMap())
@@ -84,7 +81,6 @@ class CommentsRsListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
         siteCapabilityChecker = siteCapabilityChecker,
         resourceProvider = resourceProvider,
         networkUtilsWrapper = networkUtilsWrapper,
-        dateTimeUtilsWrapper = dateTimeUtilsWrapper,
         avatarUtilsWrapper = avatarUtilsWrapper,
         analyticsTracker = analyticsTracker,
         commentBrowsingSession = commentBrowsingSession,
