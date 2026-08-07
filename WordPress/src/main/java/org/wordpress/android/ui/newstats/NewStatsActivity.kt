@@ -65,7 +65,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
-import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.ActivityNavigator
@@ -125,6 +124,7 @@ import org.wordpress.android.ui.newstats.components.NewStatsIntroBottomSheet
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.stats.refresh.StatsActivity
 import org.wordpress.android.ui.stats.refresh.utils.StatsLaunchedFrom
+import org.wordpress.android.ui.stats.refresh.utils.trackStatsAccessed
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
@@ -156,6 +156,11 @@ class NewStatsActivity : BaseAppCompatActivity() {
         // New Stats always shows the currently selected site, so when launched for a specific
         // site (e.g. from a stats widget) we select that site before rendering the screen.
         selectSiteFromIntentIfNeeded()
+        // Only on a fresh launch - a rotation or process death recreates the activity from the same
+        // Intent, and re-tracking there would inflate the count against whichever source opened it.
+        if (savedInstanceState == null) {
+            trackStatsAccessed()
+        }
         val shouldShowIntro =
             !appPrefsWrapper.getNewStatsIntroShown()
         val initialTab = intent?.getSerializableExtraCompat<StatsTab>(KEY_INITIAL_TAB) ?: StatsTab.TRAFFIC
@@ -197,6 +202,17 @@ class NewStatsActivity : BaseAppCompatActivity() {
                 )
             }
         }
+    }
+
+    /**
+     * Mirrors what old Stats reports from StatsViewModel, so the two screens stay comparable in
+     * analytics for the length of the rollout. Called after [selectSiteFromIntentIfNeeded] so the
+     * site reported is the one about to render.
+     */
+    private fun trackStatsAccessed() {
+        val site = selectedSiteRepository.getSelectedSite() ?: return
+        val launchedFrom = intent?.getSerializableExtraCompat<StatsLaunchedFrom>(KEY_LAUNCHED_FROM)
+        analyticsTracker.trackStatsAccessed(site, tapSource = launchedFrom?.value.orEmpty())
     }
 
     private fun selectSiteFromIntentIfNeeded() {
@@ -243,28 +259,34 @@ class NewStatsActivity : BaseAppCompatActivity() {
         private const val FEEDBACK_PREFIX_STATS = "Stats"
 
         private const val KEY_INITIAL_TAB = "initial_tab"
+        private const val KEY_LAUNCHED_FROM = "launched_from"
 
         /**
          * Opens New Stats, optionally on a specific [period]. The period is passed as an Intent
          * extra that seeds [ViewsStatsViewModel]'s SavedStateHandle, so it takes precedence over the
          * persisted period without overwriting it.
          */
-        fun start(context: Context, period: StatsPeriod? = null) {
-            context.startActivity(buildIntent(context, period = period))
+        fun start(context: Context, launchedFrom: StatsLaunchedFrom, period: StatsPeriod? = null) {
+            context.startActivity(buildIntent(context, launchedFrom, period = period))
         }
 
         /**
-         * New Stats always renders the currently selected site, so [site] travels as the same
+         * [launchedFrom] is required rather than defaulted so a new entry point can't quietly ship
+         * without a tap source - New Stats reports STATS_ACCESSED the same way old Stats does.
+         *
+         * New Stats always renders the currently selected site, so [localSiteId] travels as the same
          * LOCAL_SITE_ID extra the stats widgets use and is applied by [selectSiteFromIntentIfNeeded]
          * before the screen is composed.
          */
         fun buildIntent(
             context: Context,
+            launchedFrom: StatsLaunchedFrom,
             tab: StatsTab = StatsTab.TRAFFIC,
             period: StatsPeriod? = null,
-            site: SiteModel? = null
+            localSiteId: Int? = null
         ): Intent = Intent(context, NewStatsActivity::class.java).apply {
-            site?.let { putExtra(WordPress.LOCAL_SITE_ID, it.id) }
+            localSiteId?.let { putExtra(WordPress.LOCAL_SITE_ID, it) }
+            putExtra(KEY_LAUNCHED_FROM, launchedFrom)
             putExtra(KEY_INITIAL_TAB, tab)
             period?.let {
                 putExtra(ViewsStatsViewModel.KEY_PERIOD_TYPE, it.toTypeString())

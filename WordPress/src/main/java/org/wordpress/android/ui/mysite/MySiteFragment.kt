@@ -602,7 +602,8 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
             StatsLaunchedFrom.QUICK_ACTIONS
         )
 
-        is SiteNavigationAction.OpenNewStats -> NewStatsActivity.start(requireContext())
+        is SiteNavigationAction.OpenNewStats ->
+            NewStatsActivity.start(requireContext(), StatsLaunchedFrom.QUICK_ACTIONS)
 
         is SiteNavigationAction.ConnectJetpackForStats ->
             ActivityLauncher.viewConnectJetpackForStats(activity, action.site)
@@ -649,7 +650,8 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
             StatsLaunchedFrom.TODAY_STATS_CARD
         )
 
-        is SiteNavigationAction.OpenNewStatsForToday -> NewStatsActivity.start(requireContext(), StatsPeriod.Today)
+        is SiteNavigationAction.OpenNewStatsForToday ->
+            NewStatsActivity.start(requireContext(), StatsLaunchedFrom.TODAY_STATS_CARD, StatsPeriod.Today)
 
         is SiteNavigationAction.OpenExternalUrl ->
             ActivityLauncher.openUrlExternal(requireActivity(), action.url)

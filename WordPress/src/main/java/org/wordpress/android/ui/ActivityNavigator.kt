@@ -63,7 +63,9 @@ class ActivityNavigator @Inject constructor(
     fun openStats(context: Context, site: SiteModel?, statsTimeframe: StatsTimeframe? = null) {
         if (site != null && newStatsRouting.isNewStatsEnabled()) {
             val (tab, period) = statsTimeframe.toNewStatsTarget()
-            context.startActivity(NewStatsActivity.buildIntent(context, tab, period, site))
+            context.startActivity(
+                NewStatsActivity.buildIntent(context, StatsLaunchedFrom.LINK, tab, period, site.id)
+            )
         } else {
             ActivityLauncher.viewBlogStatsForTimeframe(context, site, statsTimeframe, StatsLaunchedFrom.LINK)
         }
@@ -81,7 +83,7 @@ class ActivityNavigator @Inject constructor(
         val (tab, period) = statsTimeframe.toNewStatsTarget()
         TaskStackBuilder.create(context)
             .addNextIntent(getMainActivityInNewStack(context))
-            .addNextIntent(NewStatsActivity.buildIntent(context, tab, period, site))
+            .addNextIntent(NewStatsActivity.buildIntent(context, StatsLaunchedFrom.LINK, tab, period, site.id))
             .startActivities()
     }
 
