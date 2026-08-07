@@ -578,7 +578,8 @@ class CommentsRsListViewModel @Inject constructor(
             .filter { it.postTitle != null }
             .associate { it.postId to it.postTitle }
         val visible = if (tab == CommentsRsListTab.UNREPLIED) filterUnreplied(raw, currentUserId) else raw
-        return visible.map { it.toUiModel().copy(postTitle = knownTitles[it.postId]) }
+        val nowLabel = resourceProvider.getString(R.string.rs_date_now)
+        return visible.map { it.toUiModel(nowLabel).copy(postTitle = knownTitles[it.postId]) }
     }
 
     /** Re-derives the Unreplied tab's rows from its raw comments (e.g. once [currentUserId] resolves). */
@@ -662,12 +663,12 @@ class CommentsRsListViewModel @Inject constructor(
         serverMessage?.takeIf { it.isNotBlank() }
             ?: PostRsErrorUtils.friendlyErrorMessage(null, null, resourceProvider, networkUtilsWrapper)
 
-    private fun RsComment.toUiModel() = CommentRsUiModel(
+    private fun RsComment.toUiModel(nowLabel: String) = CommentRsUiModel(
         remoteCommentId = remoteCommentId,
         authorName = authorName.ifBlank { resourceProvider.getString(R.string.anonymous) },
         avatarUrl = avatarUtilsWrapper.rewriteAvatarUrlWithResource(authorAvatarUrl, R.dimen.avatar_sz_medium),
         snippet = HtmlUtils.fastStripHtml(contentHtml).trim(),
-        relativeDate = RsDateFormatter.format(dateGmt, resourceProvider.getString(R.string.now)),
+        relativeDate = RsDateFormatter.format(dateGmt, nowLabel),
         status = status,
         postId = postId
     )

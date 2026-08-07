@@ -90,7 +90,7 @@ class RsDateFormatterTest {
         private const val FIVE_SECONDS_MILLIS = 5L * 1000
         private const val THIRTY_SECONDS_MILLIS = 30L * 1000
 
-        // Stands in for R.string.now, which the ViewModels resolve before mapping.
+        // Stands in for R.string.rs_date_now, which the ViewModels resolve before mapping.
         private const val NOW_LABEL = "Now"
     }
 }
