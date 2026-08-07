@@ -454,7 +454,7 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given request already running, when post is fetched, then no error is shown`() =
+    fun `given request already running, when post is fetched, then loading is kept and no error is shown`() =
         testWithoutLocalPost {
             whenever(readerFetchPostUseCase.fetchPost(readerPost.blogId, readerPost.postId, viewModel.isFeed))
                 .thenReturn(FetchReaderPostState.Success)
@@ -464,7 +464,9 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
 
             viewModel.onShowPost(blogId = readerPost.blogId, postId = readerPost.postId)
 
-            assertThat(observers.uiStates.filterIsInstance<ErrorUiState>().last().message).isNull()
+            // A sibling fetch is still in flight, so we stay on loading rather than showing
+            // a (message-less) error that would blank the screen mid-load.
+            assertThat(observers.uiStates.last()).isEqualTo(LoadingUiState)
         }
 
     @Test
@@ -519,6 +521,36 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
             assertThat(observers.uiStates.last())
                 .isEqualTo(ErrorUiState(UiStringRes(R.string.reader_err_get_post_generic)))
         }
+
+    @Test
+    fun `given fetch succeeds but body is empty, when show post is triggered, then error is shown`() = test {
+        val bodylessPost = createDummyReaderPost(readerPost.postId).apply { text = null }
+        whenever(readerGetPostUseCase.get(anyLong(), anyLong(), anyBoolean())).thenReturn(Pair(bodylessPost, false))
+        whenever(readerFetchPostUseCase.fetchPost(anyLong(), anyLong(), anyBoolean()))
+            .thenReturn(FetchReaderPostState.Success)
+        val observers = init(showPost = false)
+
+        viewModel.onShowPost(blogId = bodylessPost.blogId, postId = bodylessPost.postId)
+
+        assertThat(observers.uiStates.last())
+            .isEqualTo(ErrorUiState(UiStringRes(R.string.reader_err_get_post_generic)))
+    }
+
+    @Test
+    fun `given rendered post and empty refetch, when show post is triggered, then content is kept`() = test {
+        val bodylessPost = createDummyReaderPost(readerPost.postId).apply { text = null }
+        whenever(readerGetPostUseCase.get(anyLong(), anyLong(), anyBoolean()))
+            .thenReturn(Pair(readerPost, false))
+            .thenReturn(Pair(bodylessPost, false))
+        whenever(readerFetchPostUseCase.fetchPost(anyLong(), anyLong(), anyBoolean()))
+            .thenReturn(FetchReaderPostState.Success)
+        val observers = init(showPost = false)
+
+        viewModel.onShowPost(blogId = readerPost.blogId, postId = readerPost.postId)
+
+        assertThat(observers.uiStates.last()).isInstanceOf(ReaderPostDetailsUiState::class.java)
+        assertThat(observers.uiStates.none { it is ErrorUiState }).isTrue
+    }
 
     @Test
     fun `given unauthorised, when post is fetched, then error ui is shown`() = testWithoutLocalPost {

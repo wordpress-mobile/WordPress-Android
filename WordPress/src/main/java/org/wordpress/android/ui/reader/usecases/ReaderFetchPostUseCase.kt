@@ -24,6 +24,7 @@ class ReaderFetchPostUseCase @Inject constructor(
     // AlreadyRunning. Synchronized because the request callbacks fire on a background thread.
     private val inFlightRequests = Collections.synchronizedSet(mutableSetOf<FetchPostRequestParams>())
 
+    @Suppress("ReturnCount") // early guard clauses (no network / already in flight) read cleaner than nesting
     suspend fun fetchPost(blogId: Long, postId: Long, isFeed: Boolean): FetchReaderPostState {
         if (!networkUtilsWrapper.isNetworkAvailable()) {
             return NoNetwork
