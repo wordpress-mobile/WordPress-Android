@@ -47,10 +47,10 @@ import org.wordpress.android.ui.mysite.items.listitem.SiteCapabilityChecker
 import org.wordpress.android.ui.notifications.utils.NotificationsActionsWrapper
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.utils.UiString.UiStringText
-import org.wordpress.android.util.DateTimeUtilsWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsUtils.AnalyticsCommentActionSource
 import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
+import org.wordpress.android.viewmodel.ResourceProvider
 import java.util.Date
 
 @ExperimentalCoroutinesApi
@@ -71,7 +71,7 @@ class UnifiedCommentDetailsViewModelTest : BaseUnitTest() {
     lateinit var networkUtilsWrapper: NetworkUtilsWrapper
 
     @Mock
-    lateinit var dateTimeUtilsWrapper: DateTimeUtilsWrapper
+    lateinit var resourceProvider: ResourceProvider
 
     @Mock
     lateinit var notificationsActionsWrapper: NotificationsActionsWrapper
@@ -105,7 +105,7 @@ class UnifiedCommentDetailsViewModelTest : BaseUnitTest() {
         whenever(commentsRsDataSource.createReply(eq(site), any(), any(), any())).thenReturn(RsResult.Success)
         whenever(commentsStore.likeComment(eq(site), eq(REMOTE_COMMENT_ID), eq(null), any()))
             .thenReturn(successPayload())
-        whenever(dateTimeUtilsWrapper.javaDateToTimeSpan(any())).thenReturn("2 hours ago")
+        whenever(resourceProvider.getString(any())).thenReturn("Now")
         whenever(notificationsActionsWrapper.downloadNoteAndUpdateDB(any())).thenReturn(true)
         // Default to allowed for any site; the restricted-capability tests override for [site].
         whenever(siteCapabilityChecker.canModerateComments(any())).thenReturn(true)
@@ -714,7 +714,7 @@ class UnifiedCommentDetailsViewModelTest : BaseUnitTest() {
         siteCapabilityChecker = siteCapabilityChecker,
         localCommentCacheUpdateHandler = localCommentCacheUpdateHandler,
         networkUtilsWrapper = networkUtilsWrapper,
-        dateTimeUtilsWrapper = dateTimeUtilsWrapper,
+        resourceProvider = resourceProvider,
         notificationsActionsWrapper = notificationsActionsWrapper,
         notificationsTableWrapper = notificationsTableWrapper,
         analyticsUtilsWrapper = analyticsUtilsWrapper
