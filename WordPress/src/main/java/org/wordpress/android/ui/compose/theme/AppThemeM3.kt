@@ -106,6 +106,9 @@ private val baseLightScheme = lightColorScheme(
     outlineVariant = AppColor.Gray10,
     inverseSurface = AppColor.Gray90,
     inverseOnSurface = AppColor.Gray0,
+    // Matching surface cancels the tonal elevation blend, so elevated surfaces stay neutral and rely on their
+    // shadow instead of picking up a brand-colored wash.
+    surfaceTint = AppColor.White,
     onPrimary = AppColor.White,
     onSecondary = AppColor.White,
     error = AppColor.Red50,
@@ -130,6 +133,7 @@ private val baseDarkScheme = darkColorScheme(
     outlineVariant = AppColor.Gray70,
     inverseSurface = AppColor.Gray5,
     inverseOnSurface = AppColor.Gray90,
+    surfaceTint = AppColor.DarkGray,
     onPrimary = AppColor.Black,
     onSecondary = AppColor.White,
     error = AppColor.Red30,
@@ -143,8 +147,7 @@ private val colorSchemeJPLight = baseLightScheme.copy(
     secondary = AppColor.JetpackGreen30,
     primaryContainer = AppColor.JetpackGreen5,
     onPrimaryContainer = AppColor.JetpackGreen90,
-    inversePrimary = AppColor.JetpackGreen30,
-    surfaceTint = AppColor.JetpackGreen50
+    inversePrimary = AppColor.JetpackGreen30
 )
 
 private val colorSchemeJPDark = baseDarkScheme.copy(
@@ -152,8 +155,7 @@ private val colorSchemeJPDark = baseDarkScheme.copy(
     secondary = AppColor.JetpackGreen50,
     primaryContainer = AppColor.JetpackGreen70,
     onPrimaryContainer = AppColor.JetpackGreen5,
-    inversePrimary = AppColor.JetpackGreen70,
-    surfaceTint = AppColor.JetpackGreen30
+    inversePrimary = AppColor.JetpackGreen70
 )
 
 private val colorSchemeWPLight = baseLightScheme.copy(
@@ -161,8 +163,7 @@ private val colorSchemeWPLight = baseLightScheme.copy(
     secondary = AppColor.Blue30,
     primaryContainer = AppColor.Blue5,
     onPrimaryContainer = AppColor.Blue80,
-    inversePrimary = AppColor.Blue30,
-    surfaceTint = AppColor.Blue50
+    inversePrimary = AppColor.Blue30
 )
 
 private val colorSchemeWPDark = baseDarkScheme.copy(
@@ -170,8 +171,7 @@ private val colorSchemeWPDark = baseDarkScheme.copy(
     secondary = AppColor.Blue50,
     primaryContainer = AppColor.Blue70,
     onPrimaryContainer = AppColor.Blue5,
-    inversePrimary = AppColor.Blue70,
-    surfaceTint = AppColor.Blue30
+    inversePrimary = AppColor.Blue70
 )
 
 // Provide extra semantic colors
