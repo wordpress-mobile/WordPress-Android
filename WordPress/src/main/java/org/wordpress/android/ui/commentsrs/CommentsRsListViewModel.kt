@@ -38,7 +38,7 @@ import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.items.listitem.SiteCapabilityChecker
 import org.wordpress.android.ui.postsrs.PostRsErrorUtils
 import org.wordpress.android.ui.postsrs.SnackbarMessage
-import org.wordpress.android.util.DateTimeUtilsWrapper
+import org.wordpress.android.ui.rs.RsDateFormatter
 import org.wordpress.android.util.HtmlUtils
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.WPAvatarUtilsWrapper
@@ -60,7 +60,6 @@ class CommentsRsListViewModel @Inject constructor(
     private val siteCapabilityChecker: SiteCapabilityChecker,
     private val resourceProvider: ResourceProvider,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
-    private val dateTimeUtilsWrapper: DateTimeUtilsWrapper,
     private val avatarUtilsWrapper: WPAvatarUtilsWrapper,
     private val analyticsTracker: AnalyticsTrackerWrapper,
     private val commentBrowsingSession: CommentBrowsingSession,
@@ -579,7 +578,8 @@ class CommentsRsListViewModel @Inject constructor(
             .filter { it.postTitle != null }
             .associate { it.postId to it.postTitle }
         val visible = if (tab == CommentsRsListTab.UNREPLIED) filterUnreplied(raw, currentUserId) else raw
-        return visible.map { it.toUiModel().copy(postTitle = knownTitles[it.postId]) }
+        val nowLabel = resourceProvider.getString(R.string.rs_date_now)
+        return visible.map { it.toUiModel(nowLabel).copy(postTitle = knownTitles[it.postId]) }
     }
 
     /** Re-derives the Unreplied tab's rows from its raw comments (e.g. once [currentUserId] resolves). */
@@ -663,12 +663,12 @@ class CommentsRsListViewModel @Inject constructor(
         serverMessage?.takeIf { it.isNotBlank() }
             ?: PostRsErrorUtils.friendlyErrorMessage(null, null, resourceProvider, networkUtilsWrapper)
 
-    private fun RsComment.toUiModel() = CommentRsUiModel(
+    private fun RsComment.toUiModel(nowLabel: String) = CommentRsUiModel(
         remoteCommentId = remoteCommentId,
         authorName = authorName.ifBlank { resourceProvider.getString(R.string.anonymous) },
         avatarUrl = avatarUtilsWrapper.rewriteAvatarUrlWithResource(authorAvatarUrl, R.dimen.avatar_sz_medium),
         snippet = HtmlUtils.fastStripHtml(contentHtml).trim(),
-        relativeDate = dateTimeUtilsWrapper.javaDateToTimeSpan(dateGmt),
+        relativeDate = RsDateFormatter.format(dateGmt, nowLabel),
         status = status,
         postId = postId
     )

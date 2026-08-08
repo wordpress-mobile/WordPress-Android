@@ -31,14 +31,15 @@ import org.wordpress.android.ui.comments.unified.CommentsRsDataSource.RsResult
 import org.wordpress.android.ui.mysite.items.listitem.SiteCapabilityChecker
 import org.wordpress.android.ui.notifications.utils.NotificationsActionsWrapper
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
+import org.wordpress.android.ui.rs.RsDateFormatter
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
-import org.wordpress.android.util.DateTimeUtilsWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsUtils.AnalyticsCommentActionSource
 import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
 import org.wordpress.android.viewmodel.Event
+import org.wordpress.android.viewmodel.ResourceProvider
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
 import javax.inject.Named
@@ -67,7 +68,7 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
     private val siteCapabilityChecker: SiteCapabilityChecker,
     private val localCommentCacheUpdateHandler: LocalCommentCacheUpdateHandler,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
-    private val dateTimeUtilsWrapper: DateTimeUtilsWrapper,
+    private val resourceProvider: ResourceProvider,
     private val notificationsActionsWrapper: NotificationsActionsWrapper,
     private val notificationsTableWrapper: NotificationsTableWrapper,
     private val analyticsUtilsWrapper: AnalyticsUtilsWrapper
@@ -467,7 +468,8 @@ class UnifiedCommentDetailsViewModel @Inject constructor(
         contentVisible = true,
         authorName = authorName,
         authorAvatarUrl = authorAvatarUrl,
-        datePublished = dateTimeUtilsWrapper.javaDateToTimeSpan(dateGmt),
+        // Same formatter as the rs comments list, so the date doesn't change when you open a comment.
+        datePublished = RsDateFormatter.format(dateGmt, resourceProvider.getString(R.string.rs_date_now)),
         commentText = contentHtml,
         postTitle = cached?.postTitle?.takeIf { it.isNotBlank() } ?: fallbackPostTitle,
         commentUrl = url,

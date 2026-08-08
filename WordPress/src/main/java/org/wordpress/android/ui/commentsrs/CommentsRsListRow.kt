@@ -10,8 +10,8 @@ sealed interface CommentsRsListRow {
 /**
  * Interleaves date subheaders into [comments] (already in display order), mirroring the legacy
  * list: a header before the first comment and before every comment whose date label differs from
- * the previous one. The label is the row's own [CommentRsUiModel.relativeDate] — the same
- * javaDateToTimeSpan value the legacy list groups by — so no extra date handling is needed here.
+ * the previous one. The label is the row's own [CommentRsUiModel.relativeDate], the shared
+ * RsDateFormatter value already shown on the row, so no extra date handling is needed here.
  *
  * Each header carries a unique [CommentsRsListRow.DateHeader.key] for the LazyColumn. Comments are
  * date-sorted, so a label normally maps to one contiguous group and the key is just the label —
