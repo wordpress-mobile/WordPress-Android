@@ -26,13 +26,13 @@ object AppColor {
     @Stable
     val Gray0 = Color(0xFFF6F7F7)
 
-    // Gray2/Gray3/Gray85/Gray95 are evenly interpolated between adjacent Color Studio stops. They exist only to
-    // fill the 5-step M3 surfaceContainer ramp, which the published ramp is too coarse to cover.
+    // Grays tagged "interpolated" below sit evenly between adjacent Color Studio stops. They exist only to fill
+    // the 5-step M3 surfaceContainer ramp, which the published ramp is too coarse to cover on its own.
     @Stable
-    val Gray2 = Color(0xFFEDEEEF)
+    val Gray2 = Color(0xFFEDEEEF) // interpolated
 
     @Stable
-    val Gray3 = Color(0xFFE5E5E7)
+    val Gray3 = Color(0xFFE5E5E6) // interpolated
 
     @Stable
     val Gray5 = Color(0xFFDCDCDE)
@@ -59,13 +59,13 @@ object AppColor {
     val Gray80 = Color(0xFF2C3338)
 
     @Stable
-    val Gray85 = Color(0xFF252B30)
+    val Gray85 = Color(0xFF252B30) // interpolated
 
     @Stable
     val Gray90 = Color(0xFF1D2327)
 
     @Stable
-    val Gray95 = Color(0xFF171C1F)
+    val Gray95 = Color(0xFF171C1F) // interpolated
 
     @Stable
     val Gray100 = Color(0xFF101517)
