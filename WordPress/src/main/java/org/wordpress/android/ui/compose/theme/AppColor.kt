@@ -50,6 +50,12 @@ object AppColor {
     val Gray50 = Color(0xFF646970)
 
     @Stable
+    val Gray60 = Color(0xFF50575E)
+
+    @Stable
+    val Gray70 = Color(0xFF3C434A)
+
+    @Stable
     val Gray80 = Color(0xFF2C3338)
 
     @Stable
