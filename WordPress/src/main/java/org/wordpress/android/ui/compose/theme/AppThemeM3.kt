@@ -147,6 +147,8 @@ private val colorSchemeJPLight = baseLightScheme.copy(
     secondary = AppColor.JetpackGreen30,
     primaryContainer = AppColor.JetpackGreen5,
     onPrimaryContainer = AppColor.JetpackGreen90,
+    secondaryContainer = AppColor.JetpackGreen5,
+    onSecondaryContainer = AppColor.JetpackGreen90,
     inversePrimary = AppColor.JetpackGreen30
 )
 
@@ -155,6 +157,8 @@ private val colorSchemeJPDark = baseDarkScheme.copy(
     secondary = AppColor.JetpackGreen50,
     primaryContainer = AppColor.JetpackGreen70,
     onPrimaryContainer = AppColor.JetpackGreen5,
+    secondaryContainer = AppColor.JetpackGreen70,
+    onSecondaryContainer = AppColor.JetpackGreen5,
     inversePrimary = AppColor.JetpackGreen70
 )
 
@@ -163,6 +167,8 @@ private val colorSchemeWPLight = baseLightScheme.copy(
     secondary = AppColor.Blue30,
     primaryContainer = AppColor.Blue5,
     onPrimaryContainer = AppColor.Blue80,
+    secondaryContainer = AppColor.Blue5,
+    onSecondaryContainer = AppColor.Blue80,
     inversePrimary = AppColor.Blue30
 )
 
@@ -171,6 +177,8 @@ private val colorSchemeWPDark = baseDarkScheme.copy(
     secondary = AppColor.Blue50,
     primaryContainer = AppColor.Blue70,
     onPrimaryContainer = AppColor.Blue5,
+    secondaryContainer = AppColor.Blue70,
+    onSecondaryContainer = AppColor.Blue5,
     inversePrimary = AppColor.Blue70
 )
 
