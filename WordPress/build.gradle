@@ -87,13 +87,13 @@ sentry {
     telemetry = false
 }
 
-// The upload task only exists when includeProguardMapping is on, so this fires exactly when a
-// mapping upload is expected — fail there rather than ship a release we can't deobfuscate.
-tasks.matching { it.name.startsWith("uploadSentryProguardMappings") }.configureEach {
+tasks.matching {
+    it.name.startsWith("uploadSentryProguardMappings") || it.name.startsWith("sentryUploadSourceBundle")
+}.configureEach {
     doFirst {
         if (!sentryAuthToken.isPresent()) {
             throw new GradleException(
-                "SENTRY_AUTH_TOKEN is not set. Export it to upload ProGuard mappings."
+                "SENTRY_AUTH_TOKEN is not set. Export it to upload ProGuard mappings and source bundles."
             )
         }
     }
