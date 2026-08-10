@@ -57,7 +57,7 @@ fun StatsDateRangePickerDialog(
                 .fillMaxWidth()
                 .padding(16.dp),
             shape = MaterialTheme.shapes.extraLarge,
-            tonalElevation = 6.dp
+            color = MaterialTheme.colorScheme.surfaceContainerHigh
         ) {
             DateRangePickerContent(
                 state = dateRangePickerState,
