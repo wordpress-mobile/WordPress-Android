@@ -1,19 +1,11 @@
 package org.wordpress.android.ui.newstats
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.DatePickerDefaults
+import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.DateRangePicker
-import androidx.compose.material3.DateRangePickerState
 import androidx.compose.material3.DisplayMode
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.SelectableDates
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDateRangePickerState
@@ -21,8 +13,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Dialog
-import androidx.compose.ui.window.DialogProperties
 import org.wordpress.android.R
 import java.time.Instant
 import java.time.LocalDate
@@ -48,102 +38,69 @@ fun StatsDateRangePickerDialog(
         }
     )
 
-    Dialog(
+    val isConfirmEnabled = dateRangePickerState.selectedStartDateMillis != null &&
+        dateRangePickerState.selectedEndDateMillis != null
+
+    // DatePickerDialog pins its surface to the 360dp width the calendar grid is designed for.
+    // Sizing it any other way misaligns the range highlight against the day circles, since
+    // DateRangePicker's highlight and its day cells only agree at that width. See CMM-2264.
+    DatePickerDialog(
         onDismissRequest = onDismiss,
-        properties = DialogProperties(usePlatformDefaultWidth = false)
-    ) {
-        Surface(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            shape = MaterialTheme.shapes.extraLarge,
-            color = MaterialTheme.colorScheme.surfaceContainerHigh
-        ) {
-            DateRangePickerContent(
-                state = dateRangePickerState,
-                onDismiss = onDismiss,
-                onConfirm = {
-                    val startMillis = dateRangePickerState.selectedStartDateMillis
-                    val endMillis = dateRangePickerState.selectedEndDateMillis
-                    if (startMillis != null && endMillis != null) {
-                        val startDate = Instant.ofEpochMilli(startMillis)
-                            .atZone(ZoneId.systemDefault())
-                            .toLocalDate()
-                        val endDate = Instant.ofEpochMilli(endMillis)
-                            .atZone(ZoneId.systemDefault())
-                            .toLocalDate()
-                        // Ensure start date is before or equal to end date, swap if needed
-                        if (startDate.isAfter(endDate)) {
-                            onDateRangeSelected(endDate, startDate)
-                        } else {
-                            onDateRangeSelected(startDate, endDate)
-                        }
-                    }
+        confirmButton = {
+            TextButton(
+                onClick = {
+                    onConfirmDateRange(
+                        startMillis = dateRangePickerState.selectedStartDateMillis,
+                        endMillis = dateRangePickerState.selectedEndDateMillis,
+                        onDateRangeSelected = onDateRangeSelected
+                    )
                     onDismiss()
-                }
-            )
+                },
+                enabled = isConfirmEnabled
+            ) {
+                Text(stringResource(R.string.ok))
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text(stringResource(R.string.cancel))
+            }
         }
-    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-private fun DateRangePickerContent(
-    state: DateRangePickerState,
-    onDismiss: () -> Unit,
-    onConfirm: () -> Unit
-) {
-    val isConfirmEnabled = state.selectedStartDateMillis != null &&
-        state.selectedEndDateMillis != null
-
-    Column {
+    ) {
         DateRangePicker(
-            state = state,
-            modifier = Modifier.heightIn(max = 500.dp),
-            title = {
+            state = dateRangePickerState,
+            // Our label goes in the headline slot rather than the title slot so that it shares a
+            // row with the mode toggle. The default headline is replaced rather than merely hidden
+            // because its start/end placeholders overflow in long locales, e.g. Spanish (CMM-2127).
+            title = null,
+            headline = {
                 Text(
                     text = stringResource(R.string.stats_select_date_range),
-                    modifier = Modifier.padding(start = 24.dp, end = 12.dp, top = 16.dp)
+                    modifier = Modifier.padding(start = 24.dp, end = 12.dp, top = 16.dp, bottom = 12.dp)
                 )
             },
-            // Omit the default headline: in long locales (e.g. Spanish) its start/end
-            // placeholder texts overflow and wrap one character per line. The title above
-            // already labels the dialog, so the headline is redundant. See CMM-2127.
-            headline = null,
-            showModeToggle = true,
-            colors = DatePickerDefaults.colors(
-                containerColor = MaterialTheme.colorScheme.surface
-            )
-        )
-
-        DialogButtons(
-            onDismiss = onDismiss,
-            onConfirm = onConfirm,
-            isConfirmEnabled = isConfirmEnabled
+            showModeToggle = true
         )
     }
 }
 
-@Composable
-private fun DialogButtons(
-    onDismiss: () -> Unit,
-    onConfirm: () -> Unit,
-    isConfirmEnabled: Boolean
+private fun onConfirmDateRange(
+    startMillis: Long?,
+    endMillis: Long?,
+    onDateRangeSelected: (startDate: LocalDate, endDate: LocalDate) -> Unit
 ) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(start = 12.dp, end = 12.dp, bottom = 12.dp),
-        horizontalArrangement = Arrangement.End
-    ) {
-        TextButton(onClick = onDismiss) {
-            Text(stringResource(R.string.cancel))
-        }
-        TextButton(
-            onClick = onConfirm,
-            enabled = isConfirmEnabled
-        ) {
-            Text(stringResource(R.string.ok))
-        }
+    if (startMillis == null || endMillis == null) return
+
+    val startDate = Instant.ofEpochMilli(startMillis)
+        .atZone(ZoneId.systemDefault())
+        .toLocalDate()
+    val endDate = Instant.ofEpochMilli(endMillis)
+        .atZone(ZoneId.systemDefault())
+        .toLocalDate()
+    // Ensure start date is before or equal to end date, swap if needed
+    if (startDate.isAfter(endDate)) {
+        onDateRangeSelected(endDate, startDate)
+    } else {
+        onDateRangeSelected(startDate, endDate)
     }
 }
