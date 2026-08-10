@@ -737,10 +737,11 @@ class PostRsListViewModel @Inject constructor(
             try {
                 withContext(Dispatchers.IO) { collection.refresh() }
                 fetchedTabs.add(tab)
-                // Read the fetched items and end the loading state here rather than relying
+                userRefreshingTabs.remove(tab)
+                // Read the fetched items and end both progress states here rather than relying
                 // on the collection observers, which aren't guaranteed to fire for a refresh.
                 loadItemsForTab(tab)
-                updateTabUiState(tab) { copy(isLoading = false) }
+                updateTabUiState(tab) { copy(isLoading = false, isRefreshing = false) }
             } catch (e: Exception) {
                 AppLog.e(AppLog.T.POSTS, "Failed to refresh tab $tab", e)
                 userRefreshingTabs.remove(tab)
