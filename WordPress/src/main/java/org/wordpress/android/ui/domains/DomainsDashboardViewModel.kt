@@ -12,9 +12,7 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAINS_DASHBOARD_V
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAIN_CREDIT_REDEMPTION_TAPPED
 import org.wordpress.android.fluxc.model.PlanModel
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.network.rest.wpcom.site.AllDomainsDomain
 import org.wordpress.android.fluxc.network.rest.wpcom.site.Domain
-import org.wordpress.android.fluxc.network.rest.wpcom.site.StatusType
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.domains.DomainsDashboardItem.AddDomain
@@ -44,6 +42,8 @@ import org.wordpress.android.util.UrlUtils
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
+import uniffi.wp_api.AllDomainItem
+import uniffi.wp_api.DomainListItemStatusType
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -110,7 +110,7 @@ class DomainsDashboardViewModel @Inject constructor(
         site: SiteModel,
         plans: List<PlanModel>,
         domains: List<Domain>,
-        allDomains: List<AllDomainsDomain>
+        allDomains: List<AllDomainItem>
     ) {
         val listItems = mutableListOf<DomainsDashboardItem>()
 
@@ -124,7 +124,7 @@ class DomainsDashboardViewModel @Inject constructor(
             UiStringText(freeDomainUrl),
             freeDomainIsPrimary,
             UiStringRes(R.string.active),
-            getStatusColor(StatusType.SUCCESS),
+            getStatusColor(DomainListItemStatusType.Success),
             UiStringRes(R.string.domains_site_domain_never_expires)
         )
 
@@ -143,11 +143,17 @@ class DomainsDashboardViewModel @Inject constructor(
         _uiModel.postValue(listItems)
     }
 
-    private fun getStatusColor(statusType: StatusType?) = when (statusType) {
-        StatusType.SUCCESS -> R.color.jetpack_green_50
-        StatusType.NEUTRAL -> R.color.gray_50
-        StatusType.WARNING -> R.color.orange_50
-        else -> R.color.red_50
+    private fun getStatusColor(
+        statusType: DomainListItemStatusType?
+    ) = when (statusType) {
+        is DomainListItemStatusType.Success,
+        is DomainListItemStatusType.Premium -> R.color.jetpack_green_50
+        is DomainListItemStatusType.Neutral -> R.color.gray_50
+        is DomainListItemStatusType.Warning -> R.color.orange_50
+        is DomainListItemStatusType.Alert,
+        is DomainListItemStatusType.Error,
+        is DomainListItemStatusType.Other,
+        null -> R.color.red_50
     }
 
     private fun buildCtaItems(
@@ -189,7 +195,7 @@ class DomainsDashboardViewModel @Inject constructor(
     private fun buildCustomDomainItems(
         site: SiteModel,
         customDomains: List<Domain>,
-        allDomains: List<AllDomainsDomain>
+        allDomains: List<AllDomainItem>
     ): List<DomainsDashboardItem> {
         val listItems = mutableListOf<DomainsDashboardItem>()
         listItems += SiteDomainsHeader(
@@ -199,15 +205,17 @@ class DomainsDashboardViewModel @Inject constructor(
             )
         )
         listItems += customDomains.map {
-            val allDomainsDomain = allDomains.find { allDomainsItem -> it.domain == allDomainsItem.domain }
+            val allDomainItem = allDomains.find { item ->
+                it.domain == item.domain
+            }
 
             SiteDomains(
                 UiStringText(it.domain.orEmpty()),
                 it.primaryDomain,
-                allDomainsDomain?.domainStatus?.status?.let { status ->
-                    UiStringText(status)
+                allDomainItem?.domainStatus?.label?.let { label ->
+                    UiStringText(label)
                 } ?: UiStringRes(R.string.error),
-                getStatusColor(allDomainsDomain?.domainStatus?.statusType),
+                getStatusColor(allDomainItem?.domainStatus?.statusType),
                 if (!it.hasRegistration) {
                     null
                 } else if (it.expirySoon) {
@@ -223,19 +231,22 @@ class DomainsDashboardViewModel @Inject constructor(
                         listOf(UiStringText(it.expiry.orEmpty()))
                     )
                 },
-                allDomainsDomain?.let { ListItemInteraction.create(allDomainsDomain, this::onDomainClick) }
+                allDomainItem?.let {
+                    ListItemInteraction.create(allDomainItem, this::onDomainClick)
+                }
             )
         }
         return listItems
     }
 
-    private fun getCleanUrl(url: String?) = StringUtils.removeTrailingSlash(UrlUtils.removeScheme(url))
+    private fun getCleanUrl(url: String?) =
+        StringUtils.removeTrailingSlash(UrlUtils.removeScheme(url))
 
-    private fun onDomainClick(allDomainsDomain: AllDomainsDomain) {
+    private fun onDomainClick(allDomainItem: AllDomainItem) {
         _onNavigation.value = Event(
             OpenDomainManagement(
-                allDomainsDomain.domain ?: return,
-                allDomainsDomain.getDomainDetailsUrl() ?: return
+                allDomainItem.domain,
+                allDomainItem.getDomainDetailsUrl() ?: return
             )
         )
     }

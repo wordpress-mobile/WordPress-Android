@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2026-07-07 14:02:08+0000
+Translation-Revision-Date: 2026-08-04 18:08:25+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n == 0 || n % 100 >= 2 && n % 100 <= 19) ? 1 : 2);
 Generator: GlotPress/4.0.3
 Language: ro
@@ -53,7 +53,6 @@ Language: ro
     <string name="stats_utm_medium">Medie</string>
     <string name="stats_utm_source">Sursă</string>
     <string name="stats_utm_campaign_source_medium">Campanie/sursă/medie</string>
-    <string name="stats_utm_source_medium">Sursă/medie</string>
     <string name="stats_utm_title">UTM</string>
     <string name="stats_error_not_authenticated">Neautentificat</string>
     <string name="stats_collapse_group">Restrânge</string>
@@ -61,6 +60,7 @@ Language: ro
     <string name="stats_tag_type_tag">Etichetă</string>
     <string name="stats_tag_type_category">Categorie</string>
     <string name="stats_insights_tags_empty">Nu am găsit nicio etichetă sau categorie</string>
+    <string name="stats_utm_source_medium">Sursă/mediu</string>
     <string name="stats_insights_views_percent">%1$s%% din vizualizări</string>
     <string name="stats_insights_most_popular_day_label">Zi</string>
     <string name="stats_insights_all_time_stats_title">Total general statistici</string>
@@ -1750,10 +1750,10 @@ Language: ro
     <string name="backup_item_sqls_hint">(SQL)</string>
     <string name="backup_item_content_hint">(exclude teme, module și încărcări)</string>
     <string name="restore_warning_description_with_two_parameters">Sigur vrei să-ți restaurezi site-ul înapoi la %1$s pe %2$s?\n        Toate modificările pe care le-ai făcut de atunci se vor pierde.</string>
-    <string name="backup_item_contents">Directorul wp-content</string>
     <string name="backup_item_roots">Rădăcină WordPress</string>
     <string name="backup_download_details_choose_items_header">Elemente incluse în această descărcare</string>
     <string name="gutenberg_native_uploading" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Încarc…</string>
+    <string name="backup_item_contents">Director wp-content</string>
     <string name="gutenberg_native_double_tap_to_select_an_audio_file" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Atinge de două ori pentru a selecta un fișier audio</string>
     <string name="gutenberg_native_replace_file" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Înlocuiește fișierul</string>
     <string name="gutenberg_native_replace_audio" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Înlocuiește fișierul audio</string>

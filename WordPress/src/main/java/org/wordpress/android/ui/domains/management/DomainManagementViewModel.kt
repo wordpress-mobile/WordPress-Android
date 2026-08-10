@@ -16,9 +16,6 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
-import org.wordpress.android.fluxc.network.rest.wpcom.site.AllDomainsDomain
-import org.wordpress.android.fluxc.network.rest.wpcom.site.DomainStatus
-import org.wordpress.android.fluxc.network.rest.wpcom.site.StatusType
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.domains.management.util.DomainLocalSearchEngine
 import org.wordpress.android.ui.domains.usecases.AllDomains
@@ -28,9 +25,10 @@ import org.wordpress.android.ui.compose.theme.success
 import org.wordpress.android.ui.compose.theme.warning
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.ScopedViewModel
+import uniffi.wp_api.AllDomainItem
+import uniffi.wp_api.DomainListItemStatus
+import uniffi.wp_api.DomainListItemStatusType
 import java.time.LocalDate
-import java.time.ZoneId
-import java.util.Date
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -44,7 +42,8 @@ class DomainManagementViewModel @Inject constructor(
     private val _actionEvents = MutableSharedFlow<ActionEvent>()
     val actionEvents: Flow<ActionEvent> = _actionEvents
 
-    private val _uiStateFlow: MutableStateFlow<UiState> = MutableStateFlow(UiState.PopulatedList.Initial)
+    private val _uiStateFlow: MutableStateFlow<UiState> =
+        MutableStateFlow(UiState.PopulatedList.Initial)
     val uiStateFlow = _uiStateFlow.asStateFlow()
 
     private val searchQuery = MutableStateFlow("")
@@ -66,7 +65,8 @@ class DomainManagementViewModel @Inject constructor(
             _uiStateFlow.value = when (it) {
                 AllDomains.Empty -> UiState.Empty
                 AllDomains.Error -> UiState.Error
-                is AllDomains.Success -> UiState.PopulatedList.Loaded.Complete(it.domains)
+                is AllDomains.Success ->
+                    UiState.PopulatedList.Loaded.Complete(it.domains)
             }
         }
     }
@@ -119,102 +119,108 @@ class DomainManagementViewModel @Inject constructor(
     }
 
     sealed class ActionEvent {
-        data class DomainTapped(val domain: String, val detailUrl: String): ActionEvent()
-        object AddDomainTapped: ActionEvent()
-        object NavigateBackTapped: ActionEvent()
+        data class DomainTapped(
+            val domain: String,
+            val detailUrl: String
+        ) : ActionEvent()
+        object AddDomainTapped : ActionEvent()
+        object NavigateBackTapped : ActionEvent()
     }
 
     sealed class UiState {
-        sealed class PopulatedList: UiState() {
-            object Initial: PopulatedList()
+        sealed class PopulatedList : UiState() {
+            object Initial : PopulatedList()
             sealed class Loaded : PopulatedList() {
-                abstract val allDomains: List<AllDomainsDomain>
+                abstract val allDomains: List<AllDomainItem>
                 data class Complete(
-                    override val allDomains: List<AllDomainsDomain>
-                ): Loaded()
+                    override val allDomains: List<AllDomainItem>
+                ) : Loaded()
                 data class Filtered(
-                    override val allDomains: List<AllDomainsDomain>,
-                    val filtered: List<AllDomainsDomain>
+                    override val allDomains: List<AllDomainItem>,
+                    val filtered: List<AllDomainItem>
                 ) : Loaded()
             }
         }
-        object Empty: UiState()
-        object Error: UiState()
+        object Empty : UiState()
+        object Error : UiState()
     }
 }
 
 sealed class DomainCardUiState {
-    object Initial: DomainCardUiState()
+    object Initial : DomainCardUiState()
     data class Loaded(
-        val domain: String?,
-        val title: String?,
+        val domain: String,
+        val title: String,
         val detailUrl: String?,
         val statusUiState: StatusRowUiState,
-    ): DomainCardUiState()
+    ) : DomainCardUiState()
 
     companion object {
         @Composable
-        fun fromDomain(domain: AllDomainsDomain?) = (domain ?: AllDomainsDomain()).let {
-            val domainStatus = it.domainStatus ?: DomainStatus()
-            Loaded(
-                domain = it.domain,
-                title = it.blogName,
-                detailUrl = it.getDomainDetailsUrl(),
-                statusUiState = StatusRowUiState.Loaded(
-                    indicatorColor = domainStatus.indicatorColor,
-                    statusText = domainStatus.statusText,
-                    textColor = domainStatus.textColor,
-                    isBold = domainStatus.isBold,
-                    expiry = it.expiry?.toLocalDate(),
-                )
+        fun fromDomain(domain: AllDomainItem) = Loaded(
+            domain = domain.domain,
+            title = domain.blogName,
+            detailUrl = domain.getDomainDetailsUrl(),
+            statusUiState = StatusRowUiState.Loaded(
+                indicatorColor = domain.domainStatus.indicatorColor,
+                statusText = domain.domainStatus.statusText,
+                textColor = domain.domainStatus.textColor,
+                isBold = domain.domainStatus.isBold,
+                expiry = domain.expiry?.toLocalDateOrNull(),
             )
-        }
+        )
     }
 }
 
 sealed class StatusRowUiState {
-    object Initial: StatusRowUiState()
+    object Initial : StatusRowUiState()
     data class Loaded(
         val indicatorColor: Color,
         val statusText: String,
         val textColor: Color,
         val isBold: Boolean = false,
         val expiry: LocalDate?,
-    ): StatusRowUiState()
+    ) : StatusRowUiState()
 }
 
-private fun Date.toLocalDate(zoneId: ZoneId = ZoneId.systemDefault()) =
-    toInstant().atZone(zoneId).toLocalDate()
-val DomainStatus.indicatorColor
+// `AllDomainItem.expiry` is an unvalidated API string in "YYYY-MM-DD" form.
+private fun String.toLocalDateOrNull() =
+    runCatching { LocalDate.parse(this) }.getOrNull()
+
+val DomainListItemStatus.indicatorColor
     @Composable
     get() = when (statusType) {
-        StatusType.SUCCESS -> MaterialTheme.colorScheme.success
-        StatusType.NEUTRAL -> MaterialTheme.colorScheme.neutral
-        StatusType.ALERT -> MaterialTheme.colorScheme.error
-        StatusType.WARNING -> MaterialTheme.colorScheme.warning
-        StatusType.ERROR -> MaterialTheme.colorScheme.error
-        StatusType.UNKNOWN -> MaterialTheme.colorScheme.error
-        null ->  MaterialTheme.colorScheme.error
+        is DomainListItemStatusType.Success,
+        is DomainListItemStatusType.Premium ->
+            MaterialTheme.colorScheme.success
+        is DomainListItemStatusType.Neutral ->
+            MaterialTheme.colorScheme.neutral
+        is DomainListItemStatusType.Alert ->
+            MaterialTheme.colorScheme.error
+        is DomainListItemStatusType.Warning ->
+            MaterialTheme.colorScheme.warning
+        is DomainListItemStatusType.Error,
+        is DomainListItemStatusType.Other ->
+            MaterialTheme.colorScheme.error
     }
 
-val DomainStatus.statusText
+val DomainListItemStatus.statusText
     @Composable
-    get() = status ?: stringResource(id = R.string.error)
+    get() = label.ifEmpty { stringResource(id = R.string.error) }
 
-val DomainStatus.textColor
+val DomainListItemStatus.textColor
     @Composable
     get() = when (statusType) {
-        StatusType.ERROR,
-        StatusType.UNKNOWN,
-        null -> MaterialTheme.colorScheme.error
+        is DomainListItemStatusType.Error,
+        is DomainListItemStatusType.Other ->
+            MaterialTheme.colorScheme.error
         else -> LocalTextStyle.current.color
     }
 
-val DomainStatus.isBold
+val DomainListItemStatus.isBold
     @Composable
     get() = when (statusType) {
-        StatusType.ERROR,
-        StatusType.UNKNOWN,
-        null -> true
+        is DomainListItemStatusType.Error,
+        is DomainListItemStatusType.Other -> true
         else -> false
     }

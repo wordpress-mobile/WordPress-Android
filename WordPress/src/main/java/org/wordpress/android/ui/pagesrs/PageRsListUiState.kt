@@ -3,8 +3,8 @@ package org.wordpress.android.ui.pagesrs
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import org.wordpress.android.R
-import org.wordpress.android.ui.postsrs.PostRsDateFormatter
 import org.wordpress.android.ui.postsrs.toLabel
+import org.wordpress.android.ui.rs.RsDateFormatter
 import org.wordpress.android.util.DateTimeUtils
 import org.wordpress.android.util.HtmlUtils
 import uniffi.wp_api.AnyPostWithEditContext
@@ -139,14 +139,15 @@ internal enum class PageRsMenuAction(
 
 internal fun PostItemState.toPageUiModel(
     pageId: Long,
+    nowLabel: String,
     showStatus: Boolean = false
 ): PageRsUiModel = when (this) {
-    is PostItemState.Fresh -> data.toPageUiModel(showStatus)
-    is PostItemState.Stale -> data.toPageUiModel(showStatus)
+    is PostItemState.Fresh -> data.toPageUiModel(showStatus, nowLabel)
+    is PostItemState.Stale -> data.toPageUiModel(showStatus, nowLabel)
     is PostItemState.FetchingWithData ->
-        data.toPageUiModel(showStatus, PageRsDisplayState.FETCHING_WITH_DATA)
+        data.toPageUiModel(showStatus, nowLabel, PageRsDisplayState.FETCHING_WITH_DATA)
     is PostItemState.FailedWithData ->
-        data.toPageUiModel(showStatus, PageRsDisplayState.FAILED_WITH_DATA)
+        data.toPageUiModel(showStatus, nowLabel, PageRsDisplayState.FAILED_WITH_DATA)
     is PostItemState.Missing,
     is PostItemState.Fetching -> PageRsUiModel(
         remotePageId = pageId,
@@ -166,6 +167,7 @@ internal fun PostItemState.toPageUiModel(
 
 private fun FullEntityAnyPostWithEditContext.toPageUiModel(
     showStatus: Boolean,
+    nowLabel: String,
     displayState: PageRsDisplayState = PageRsDisplayState.NORMAL
 ): PageRsUiModel {
     val page: AnyPostWithEditContext = data
@@ -180,7 +182,7 @@ private fun FullEntityAnyPostWithEditContext.toPageUiModel(
                 ?: page.excerpt?.rendered
                 ?: ""
             ).let { HtmlUtils.fastStripHtml(it).trim() },
-        date = PostRsDateFormatter.format(page.dateGmt, page.status),
+        date = RsDateFormatter.format(page.dateGmt, nowLabel, isScheduled = page.status is PostStatus.Future),
         lastModified = DateTimeUtils.iso8601UTCFromDate(page.modifiedGmt),
         link = page.link,
         hasPassword = !page.password.isNullOrEmpty(),
