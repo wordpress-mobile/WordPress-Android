@@ -124,6 +124,7 @@ import org.wordpress.android.ui.newstats.components.NewStatsIntroBottomSheet
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.stats.refresh.StatsActivity
 import org.wordpress.android.ui.stats.refresh.utils.StatsLaunchedFrom
+import org.wordpress.android.ui.stats.refresh.utils.trackStatsAccessed
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
@@ -154,8 +155,14 @@ class NewStatsActivity : BaseAppCompatActivity() {
         // New Stats always shows the currently selected site, so when launched for a specific
         // site (e.g. from a stats widget) we select that site before rendering the screen.
         selectSiteFromIntentIfNeeded()
+        // Only on a fresh launch - a rotation or process death recreates the activity from the same
+        // Intent, and re-tracking there would inflate the count against whichever source opened it.
+        if (savedInstanceState == null) {
+            trackStatsAccessed()
+        }
         val shouldShowIntro =
             !appPrefsWrapper.getNewStatsIntroShown()
+        val initialTab = StatsTab.fromName(intent?.getStringExtra(KEY_INITIAL_TAB))
         setContent {
             AppThemeM3 {
                 var showFeedbackDialog by rememberSaveable { mutableStateOf(false) }
@@ -175,6 +182,7 @@ class NewStatsActivity : BaseAppCompatActivity() {
                 }
 
                 NewStatsScreen(
+                    initialTab = initialTab,
                     onBackPressed =
                         onBackPressedDispatcher::onBackPressed,
                     onSwitchToOldStats = {
@@ -193,6 +201,20 @@ class NewStatsActivity : BaseAppCompatActivity() {
                 )
             }
         }
+    }
+
+    /**
+     * Mirrors what old Stats reports from StatsViewModel, so the two screens stay comparable in
+     * analytics for the length of the rollout. Called after [selectSiteFromIntentIfNeeded] so the
+     * site reported is the one about to render.
+     */
+    private fun trackStatsAccessed() {
+        // No selected site means nothing to attribute the open to, so skip rather than report a
+        // half-formed event. Old Stats toasts here instead, from ActivityLauncher.
+        val site = selectedSiteRepository.getSelectedSite() ?: return
+        val name = intent?.getStringExtra(KEY_LAUNCHED_FROM)
+        val launchedFrom = StatsLaunchedFrom.entries.firstOrNull { it.name == name }
+        analyticsTracker.trackStatsAccessed(site, tapSource = launchedFrom?.value.orEmpty())
     }
 
     private fun selectSiteFromIntentIfNeeded() {
@@ -238,29 +260,49 @@ class NewStatsActivity : BaseAppCompatActivity() {
     companion object {
         private const val FEEDBACK_PREFIX_STATS = "Stats"
 
+        private const val KEY_INITIAL_TAB = "initial_tab"
+        private const val KEY_LAUNCHED_FROM = "launched_from"
+
         /**
          * Opens New Stats, optionally on a specific [period]. The period is passed as an Intent
          * extra that seeds [ViewsStatsViewModel]'s SavedStateHandle, so it takes precedence over the
          * persisted period without overwriting it.
          */
-        fun start(context: Context, period: StatsPeriod? = null) {
-            val intent = Intent(context, NewStatsActivity::class.java)
+        fun start(context: Context, launchedFrom: StatsLaunchedFrom, period: StatsPeriod? = null) {
+            context.startActivity(buildIntent(context, launchedFrom, period = period))
+        }
+
+        /**
+         * [launchedFrom] is required rather than defaulted so a new entry point can't quietly ship
+         * without a tap source - New Stats reports STATS_ACCESSED the same way old Stats does.
+         *
+         * New Stats always renders the currently selected site, so [localSiteId] travels as the same
+         * LOCAL_SITE_ID extra the stats widgets use and is applied by [selectSiteFromIntentIfNeeded]
+         * before the screen is composed.
+         */
+        fun buildIntent(
+            context: Context,
+            launchedFrom: StatsLaunchedFrom,
+            tab: StatsTab = StatsTab.TRAFFIC,
+            period: StatsPeriod? = null,
+            localSiteId: Int? = null
+        ): Intent = Intent(context, NewStatsActivity::class.java).apply {
+            localSiteId?.let { putExtra(WordPress.LOCAL_SITE_ID, it) }
+            // Enums travel by name, not as Serializable. WidgetUtils uses this Intent as a
+            // setPendingIntentTemplate target, and the per-row fill-in is merged by system_server,
+            // which has no classloader for our types - Intent.fillIn would swallow the resulting
+            // exception and silently drop the row's LOCAL_SITE_ID, opening the wrong site.
+            putExtra(KEY_LAUNCHED_FROM, launchedFrom.name)
+            putExtra(KEY_INITIAL_TAB, tab.name)
             period?.let {
-                intent.putExtra(ViewsStatsViewModel.KEY_PERIOD_TYPE, it.toTypeString())
+                putExtra(ViewsStatsViewModel.KEY_PERIOD_TYPE, it.toTypeString())
                 if (it is StatsPeriod.Custom) {
-                    intent.putExtra(ViewsStatsViewModel.KEY_CUSTOM_START_DATE, it.startDate.toEpochDay())
-                    intent.putExtra(ViewsStatsViewModel.KEY_CUSTOM_END_DATE, it.endDate.toEpochDay())
+                    putExtra(ViewsStatsViewModel.KEY_CUSTOM_START_DATE, it.startDate.toEpochDay())
+                    putExtra(ViewsStatsViewModel.KEY_CUSTOM_END_DATE, it.endDate.toEpochDay())
                 }
             }
-            context.startActivity(intent)
         }
     }
-}
-
-private enum class StatsTab(val titleResId: Int) {
-    TRAFFIC(R.string.stats_traffic),
-    INSIGHTS(R.string.stats_insights),
-    SUBSCRIBERS(R.string.subscribers)
 }
 
 @Composable
@@ -302,6 +344,7 @@ private fun StatsOverflowMenu(
 @Composable
 private fun NewStatsScreen(
     onBackPressed: () -> Unit,
+    initialTab: StatsTab = StatsTab.TRAFFIC,
     onSwitchToOldStats: () -> Unit = {},
     showIntroBottomSheet: Boolean = false,
     onIntroDismissed: () -> Unit = {},
@@ -312,7 +355,7 @@ private fun NewStatsScreen(
     val selectedPeriod by viewsStatsViewModel.selectedPeriod.collectAsState()
 
     val tabs = StatsTab.entries
-    val pagerState = rememberPagerState(pageCount = { tabs.size })
+    val pagerState = rememberPagerState(initialPage = initialTab.ordinal, pageCount = { tabs.size })
     val coroutineScope = rememberCoroutineScope()
     var showPeriodMenu by remember { mutableStateOf(false) }
     var showIntro by remember { mutableStateOf(showIntroBottomSheet) }
