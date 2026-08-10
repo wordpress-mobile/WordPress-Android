@@ -76,6 +76,9 @@ class PostRsListViewModel @Inject constructor(
     private val collections = mutableMapOf<PostRsListTab, ObservableMetadataCollection>()
     private val initializingTabs = mutableSetOf<PostRsListTab>()
     private val userRefreshingTabs = mutableSetOf<PostRsListTab>()
+
+    /** Tabs whose collection has completed at least one fetch, so an empty list means empty. */
+    private val fetchedTabs = mutableSetOf<PostRsListTab>()
     private val resolveImageJobs = mutableMapOf<PostRsListTab, Job>()
     private val resolveAuthorJobs = mutableMapOf<PostRsListTab, Job>()
     private var lastTrackedTab: PostRsListTab? = null
@@ -626,6 +629,7 @@ class PostRsListViewModel @Inject constructor(
         collections.clear()
         initializingTabs.clear()
         userRefreshingTabs.clear()
+        fetchedTabs.clear()
         resolveImageJobs.values.forEach { it.cancel() }
         resolveImageJobs.clear()
         resolveAuthorJobs.values.forEach { it.cancel() }
@@ -717,15 +721,22 @@ class PostRsListViewModel @Inject constructor(
             userRefreshingTabs.add(tab)
             updateTabUiState(tab) { copy(isRefreshing = true, error = null) }
         } else {
-            // Nothing cached to show yet, so keep the placeholders visible while the first
-            // page is fetched - otherwise the empty message appears before posts can load.
-            updateTabUiState(tab) { copy(isLoading = posts.isEmpty(), error = null) }
+            // With nothing to show and no fetch behind us we can't know whether the tab is
+            // empty, so keep the placeholders up rather than claiming there are no posts.
+            updateTabUiState(tab) {
+                copy(isLoading = posts.isEmpty() && tab !in fetchedTabs, error = null)
+            }
         }
 
         viewModelScope.launch {
             @Suppress("TooGenericExceptionCaught")
             try {
                 withContext(Dispatchers.IO) { collection.refresh() }
+                fetchedTabs.add(tab)
+                // Read the fetched items and end the loading state here rather than relying
+                // on the collection observers, which aren't guaranteed to fire for a refresh.
+                loadItemsForTab(tab)
+                updateTabUiState(tab) { copy(isLoading = false) }
             } catch (e: Exception) {
                 AppLog.e(AppLog.T.POSTS, "Failed to refresh tab $tab", e)
                 userRefreshingTabs.remove(tab)
@@ -818,9 +829,9 @@ class PostRsListViewModel @Inject constructor(
                     }
                 )
             }
-            // Only stop loading once there's something to show. An empty cache read during
-            // a fetch must not flip the tab to its empty message; updateListInfoForTab
-            // clears the loading state when the fetch finishes.
+            // Only stop loading once there's something to show, so an empty cache read
+            // mid-fetch can't flip the tab to its empty message. refreshTab ends the
+            // loading state once the fetch it started has resolved.
             updateTabUiState(tab) {
                 copy(posts = uiModels, isLoading = isLoading && uiModels.isEmpty(), error = null)
             }
