@@ -482,9 +482,12 @@ platform :android do
     # Load Sentry properties
     sentry_path = File.join(PROJECT_ROOT_FOLDER, 'WordPress', 'src', app.downcase, 'sentry.properties')
     sentry_properties = JavaProperties.load(sentry_path)
-    sentry_token = sentry_properties[:'auth.token']
     project_slug = sentry_properties[:'defaults.project']
     org_slug = sentry_properties[:'defaults.org']
+
+    sentry_token = ENV.fetch('SENTRY_AUTH_TOKEN') do
+      UI.user_error!('SENTRY_AUTH_TOKEN is not set; it is required to upload source maps to Sentry.')
+    end
 
     # Bundle and source map files are copied to a specific folder as part of the build process.
     bundle_source_map_path = File.join(PROJECT_ROOT_FOLDER, 'WordPress', 'build', 'react-native-bundle-source-map')
