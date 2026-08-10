@@ -41,9 +41,6 @@ fun StatsDateRangePickerDialog(
     val isConfirmEnabled = dateRangePickerState.selectedStartDateMillis != null &&
         dateRangePickerState.selectedEndDateMillis != null
 
-    // DatePickerDialog pins its surface to the 360dp width the calendar grid is designed for.
-    // Sizing it any other way misaligns the range highlight against the day circles, since
-    // DateRangePicker's highlight and its day cells only agree at that width. See CMM-2264.
     DatePickerDialog(
         onDismissRequest = onDismiss,
         confirmButton = {
@@ -69,9 +66,8 @@ fun StatsDateRangePickerDialog(
     ) {
         DateRangePicker(
             state = dateRangePickerState,
-            // Our label goes in the headline slot rather than the title slot so that it shares a
-            // row with the mode toggle. The default headline is replaced rather than merely hidden
-            // because its start/end placeholders overflow in long locales, e.g. Spanish (CMM-2127).
+            // Replace the default headline: in long locales (e.g. Spanish) its start/end
+            // placeholder texts overflow and wrap one character per line. See CMM-2127.
             title = null,
             headline = {
                 Text(
