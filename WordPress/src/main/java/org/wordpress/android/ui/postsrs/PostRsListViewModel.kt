@@ -717,7 +717,9 @@ class PostRsListViewModel @Inject constructor(
             userRefreshingTabs.add(tab)
             updateTabUiState(tab) { copy(isRefreshing = true, error = null) }
         } else {
-            updateTabUiState(tab) { copy(error = null) }
+            // Nothing cached to show yet, so keep the placeholders visible while the first
+            // page is fetched - otherwise the empty message appears before posts can load.
+            updateTabUiState(tab) { copy(isLoading = posts.isEmpty(), error = null) }
         }
 
         viewModelScope.launch {
@@ -816,7 +818,12 @@ class PostRsListViewModel @Inject constructor(
                     }
                 )
             }
-            updateTabUiState(tab) { copy(posts = uiModels, isLoading = false, error = null) }
+            // Only stop loading once there's something to show. An empty cache read during
+            // a fetch must not flip the tab to its empty message; updateListInfoForTab
+            // clears the loading state when the fetch finishes.
+            updateTabUiState(tab) {
+                copy(posts = uiModels, isLoading = isLoading && uiModels.isEmpty(), error = null)
+            }
             resolveFeaturedImages(tab, uiModels)
             resolveAuthorNames(tab, uiModels)
         } catch (e: Exception) {
