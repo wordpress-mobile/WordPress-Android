@@ -100,3 +100,6 @@ msgid ""
 "- Removed beta badge from Menus in My Site\n"
 msgstr ""
 
+msgctxt "release_note_static_serious"
+msgid "We're focused on making Jetpack more stable and dependable with every release. This update continues that work with ongoing improvements and fixes. Have feedback or need help? Reach us any time from Help & Support. Thank you for using Jetpack."
+msgstr ""

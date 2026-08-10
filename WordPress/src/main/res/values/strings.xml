@@ -1029,6 +1029,8 @@
     <string name="new_stats_intro_trends_title">Trends at a Glance</string>
     <string name="new_stats_intro_trends_desc">Every metric shows how it\'s trending compared to the previous period, so you always know if you\'re growing.</string>
     <string name="new_stats_intro_footer">You can turn off New Stats from the overflow menu in the Stats screen.</string>
+    <!-- Timespan shown in the rs posts, pages and comments lists for anything under a minute old -->
+    <string name="rs_date_now">Now</string>
     <string name="post_rs_failed_to_load">Failed to load post</string>
     <string name="page_rs_failed_to_load">Failed to load page</string>
     <string name="page_rs_copy_url">Copy URL</string>

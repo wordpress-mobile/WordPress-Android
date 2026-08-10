@@ -728,8 +728,9 @@ internal class PagesRsListViewModel @Inject constructor(
         val collection = parentPickerCollection ?: return
         @Suppress("TooGenericExceptionCaught")
         try {
+            val nowLabel = resourceProvider.getString(R.string.rs_date_now)
             val (items, listInfo) = withContext(Dispatchers.IO) {
-                collection.loadItems().map { it.state.toPageUiModel(it.id) } to collection.listInfo()
+                collection.loadItems().map { it.state.toPageUiModel(it.id, nowLabel) } to collection.listInfo()
             }
             val candidates = items
                 .filter { it.remotePageId !in parentPickerExcludedIds }
@@ -1158,9 +1159,10 @@ internal class PagesRsListViewModel @Inject constructor(
         @Suppress("TooGenericExceptionCaught")
         try {
             val isSearch = _searchQuery.value.isNotBlank()
+            val nowLabel = resourceProvider.getString(R.string.rs_date_now)
             val items = withContext(Dispatchers.IO) {
                 collection.loadItems().map { item ->
-                    item.state.toPageUiModel(item.id, showStatus = isSearch)
+                    item.state.toPageUiModel(item.id, nowLabel, showStatus = isSearch)
                 }
             }
             val uiModels = mergeCachedFields(tab, items)
