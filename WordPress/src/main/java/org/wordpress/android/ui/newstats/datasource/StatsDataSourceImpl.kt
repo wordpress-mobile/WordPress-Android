@@ -23,6 +23,7 @@ import uniffi.wp_api.StatsDevicesPeriod
 import uniffi.wp_api.StatsInsightsParams
 import uniffi.wp_api.StatsPostChange
 import uniffi.wp_api.StatsPostResponse
+import uniffi.wp_api.StatsPostTarget
 import uniffi.wp_api.StatsPostWeek
 import uniffi.wp_api.StatsTagsParams
 import uniffi.wp_api.StatsSearchTermsParams
@@ -1250,12 +1251,18 @@ class StatsDataSourceImpl @Inject constructor(
         postId: Long
     ): PostViewsDataResult {
         // The endpoint takes no query params -- num, date and period are silently ignored.
+        // The API addresses the home page as post 0, which the target models explicitly.
+        val target = if (postId == HOME_PAGE_POST_ID) {
+            StatsPostTarget.HomePage
+        } else {
+            StatsPostTarget.Post(postId)
+        }
         val result = getOrCreateClient()
             .request { requestBuilder ->
                 requestBuilder.statsPost()
                     .getStatsPost(
                         wpComSiteId = siteId.toULong(),
-                        postId = postId
+                        statsPostTarget = target
                     )
             }
 
@@ -1315,7 +1322,7 @@ class StatsDataSourceImpl @Inject constructor(
             .map { (year, value) ->
                 PostViewsYearAverage(
                     year = year,
-                    overall = value.overall
+                    overall = value.overall.toLong()
                 )
             }
             .sortedByDescending { it.year },
@@ -1586,6 +1593,8 @@ class StatsDataSourceImpl @Inject constructor(
         }
 
     companion object {
+        // The API addresses the site's home page as post 0.
+        private const val HOME_PAGE_POST_ID = 0L
         private const val HTTP_UNAUTHORIZED = 401
         private const val HTTP_FORBIDDEN = 403
     }

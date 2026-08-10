@@ -869,7 +869,7 @@ data class PostViewsYear(
  */
 data class PostViewsYearAverage(
     val year: String,
-    val overall: Double
+    val overall: Long
 )
 
 /**

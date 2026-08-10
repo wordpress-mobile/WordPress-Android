@@ -294,7 +294,7 @@ private fun LoadedContent(
         ) {
             DetailRow(
                 label = it.year,
-                value = formatStatValue(it.overall)
+                value = formatStatValue(it.overall, TEN_THOUSAND)
             )
         }
     }
