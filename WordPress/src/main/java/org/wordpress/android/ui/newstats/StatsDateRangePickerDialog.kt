@@ -73,6 +73,10 @@ fun StatsDateRangePickerDialog(
     ) {
         DateRangePicker(
             state = dateRangePickerState,
+            // Dropping the title also drops the header's min height, leaving the headline
+            // crowded against the top edge. Restore the inset outside the header row, so the
+            // headline stays vertically centred on the mode toggle.
+            modifier = Modifier.padding(top = 16.dp),
             // Replace the default headline: in long locales (e.g. Spanish) its start/end
             // placeholder texts overflow and wrap one character per line. See CMM-2127.
             title = null,
