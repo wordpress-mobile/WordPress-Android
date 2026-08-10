@@ -721,10 +721,14 @@ class PostRsListViewModel @Inject constructor(
             userRefreshingTabs.add(tab)
             updateTabUiState(tab) { copy(isRefreshing = true, error = null) }
         } else {
-            // With nothing to show and no fetch behind us we can't know whether the tab is
-            // empty, so keep the placeholders up rather than claiming there are no posts.
             updateTabUiState(tab) {
-                copy(isLoading = posts.isEmpty() && tab !in fetchedTabs, error = null)
+                copy(
+                    isLoading = PostRsTabLoading.onRefreshStarted(
+                        hasPosts = posts.isNotEmpty(),
+                        hasFetched = tab in fetchedTabs
+                    ),
+                    error = null
+                )
             }
         }
 
@@ -829,11 +833,15 @@ class PostRsListViewModel @Inject constructor(
                     }
                 )
             }
-            // Only stop loading once there's something to show, so an empty cache read
-            // mid-fetch can't flip the tab to its empty message. refreshTab ends the
-            // loading state once the fetch it started has resolved.
             updateTabUiState(tab) {
-                copy(posts = uiModels, isLoading = isLoading && uiModels.isEmpty(), error = null)
+                copy(
+                    posts = uiModels,
+                    isLoading = PostRsTabLoading.onItemsLoaded(
+                        wasLoading = isLoading,
+                        hasItems = uiModels.isNotEmpty()
+                    ),
+                    error = null
+                )
             }
             resolveFeaturedImages(tab, uiModels)
             resolveAuthorNames(tab, uiModels)
@@ -959,7 +967,10 @@ class PostRsListViewModel @Inject constructor(
         } else {
             updateTabUiState(tab) {
                 copy(
-                    isLoading = isLoading && fetchingFirstPage,
+                    isLoading = PostRsTabLoading.onListInfoChanged(
+                        wasLoading = isLoading,
+                        isFetchingFirstPage = fetchingFirstPage
+                    ),
                     isRefreshing = isUserRefresh && fetchingFirstPage,
                     isLoadingMore = listInfo?.state
                         == ListState.FETCHING_NEXT_PAGE,
