@@ -122,7 +122,6 @@ import org.wordpress.android.ui.reader.services.update.ReaderUpdateServiceStarte
 import org.wordpress.android.ui.reader.tracker.ReaderTracker;
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationSource;
 import org.wordpress.android.ui.stats.StatsTimeframe;
-import org.wordpress.android.ui.stats.refresh.utils.StatsLaunchedFrom;
 import org.wordpress.android.ui.uploads.UploadActionUseCase;
 import org.wordpress.android.ui.uploads.UploadUtils;
 import org.wordpress.android.ui.uploads.UploadUtilsWrapper;
@@ -860,13 +859,8 @@ public class WPMainActivity extends BaseAppCompatActivity implements
                         ActivityLauncher.showJetpackStaticPoster(this);
                         break;
                     }
-                    if (intent.hasExtra(ARG_STATS_TIMEFRAME)) {
-                        ActivityLauncher.viewBlogStatsForTimeframe(this, getSelectedSite(),
-                                (StatsTimeframe) intent.getSerializableExtra(ARG_STATS_TIMEFRAME),
-                                StatsLaunchedFrom.LINK);
-                    } else {
-                        ActivityLauncher.viewBlogStats(this, getSelectedSite(), StatsLaunchedFrom.LINK);
-                    }
+                    mActivityNavigator.openStats(this, getSelectedSite(),
+                            (StatsTimeframe) intent.getSerializableExtra(ARG_STATS_TIMEFRAME));
                     break;
                 case ARG_PAGES:
                     if (!mSelectedSiteRepository.hasSelectedSite()) {

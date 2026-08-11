@@ -11,11 +11,9 @@ import org.wordpress.android.fluxc.Payload
 import org.wordpress.android.fluxc.action.SiteAction
 import org.wordpress.android.fluxc.action.SiteAction.CHECKED_AUTOMATED_TRANSFER_ELIGIBILITY
 import org.wordpress.android.fluxc.action.SiteAction.CHECKED_AUTOMATED_TRANSFER_STATUS
-import org.wordpress.android.fluxc.action.SiteAction.CHECKED_DOMAIN_AVAILABILITY
 import org.wordpress.android.fluxc.action.SiteAction.CHECKED_IS_WPCOM_URL
 import org.wordpress.android.fluxc.action.SiteAction.CHECK_AUTOMATED_TRANSFER_ELIGIBILITY
 import org.wordpress.android.fluxc.action.SiteAction.CHECK_AUTOMATED_TRANSFER_STATUS
-import org.wordpress.android.fluxc.action.SiteAction.CHECK_DOMAIN_AVAILABILITY
 import org.wordpress.android.fluxc.action.SiteAction.COMPLETED_QUICK_START
 import org.wordpress.android.fluxc.action.SiteAction.COMPLETE_QUICK_START
 import org.wordpress.android.fluxc.action.SiteAction.CREATE_NEW_SITE
@@ -30,7 +28,6 @@ import org.wordpress.android.fluxc.action.SiteAction.EXPORTED_SITE
 import org.wordpress.android.fluxc.action.SiteAction.EXPORT_SITE
 import org.wordpress.android.fluxc.action.SiteAction.FETCHED_BLOCK_LAYOUTS
 import org.wordpress.android.fluxc.action.SiteAction.FETCHED_CONNECT_SITE_INFO
-import org.wordpress.android.fluxc.action.SiteAction.FETCHED_DOMAIN_SUPPORTED_COUNTRIES
 import org.wordpress.android.fluxc.action.SiteAction.FETCHED_DOMAIN_SUPPORTED_STATES
 import org.wordpress.android.fluxc.action.SiteAction.FETCHED_JETPACK_CAPABILITIES
 import org.wordpress.android.fluxc.action.SiteAction.FETCHED_PLANS
@@ -41,7 +38,6 @@ import org.wordpress.android.fluxc.action.SiteAction.FETCHED_USER_ROLES
 import org.wordpress.android.fluxc.action.SiteAction.FETCHED_WPCOM_SITE_BY_URL
 import org.wordpress.android.fluxc.action.SiteAction.FETCH_BLOCK_LAYOUTS
 import org.wordpress.android.fluxc.action.SiteAction.FETCH_CONNECT_SITE_INFO
-import org.wordpress.android.fluxc.action.SiteAction.FETCH_DOMAIN_SUPPORTED_COUNTRIES
 import org.wordpress.android.fluxc.action.SiteAction.FETCH_DOMAIN_SUPPORTED_STATES
 import org.wordpress.android.fluxc.action.SiteAction.FETCH_JETPACK_CAPABILITIES
 import org.wordpress.android.fluxc.action.SiteAction.FETCH_PLANS
@@ -85,7 +81,6 @@ import org.wordpress.android.fluxc.model.jetpacksocial.JetpackSocialMapper
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
 import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType
 import org.wordpress.android.fluxc.network.rest.wpapi.WPAPINetworkError
-import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIResponse
 import org.wordpress.android.fluxc.network.rest.wpapi.applicationpasswords.ApplicationPasswordCreationResult
 import org.wordpress.android.fluxc.network.rest.wpapi.applicationpasswords.ApplicationPasswordCredentials
 import org.wordpress.android.fluxc.network.rest.wpapi.applicationpasswords.ApplicationPasswordDeletionResult
@@ -95,9 +90,7 @@ import org.wordpress.android.fluxc.network.rest.wpapi.site.SiteWPAPIRestClient
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Response.Error
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Response.Success
-import org.wordpress.android.fluxc.network.rest.wpcom.site.AllDomainsDomain
 import org.wordpress.android.fluxc.network.rest.wpcom.site.Domain
-import org.wordpress.android.fluxc.network.rest.wpcom.site.DomainPriceResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.site.DomainSuggestionResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.site.GutenbergLayout
 import org.wordpress.android.fluxc.network.rest.wpcom.site.GutenbergLayoutCategory
@@ -109,7 +102,6 @@ import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient.Export
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient.FetchWPComSiteResponsePayload
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient.IsWPComResponsePayload
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient.NewSiteResponsePayload
-import org.wordpress.android.fluxc.network.rest.wpcom.site.SupportedCountryResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SupportedStateResponse
 import org.wordpress.android.fluxc.network.xmlrpc.site.SiteXMLRPCClient
 import org.wordpress.android.fluxc.persistence.JetpackCPConnectedSiteModel
@@ -124,7 +116,6 @@ import org.wordpress.android.fluxc.store.SiteStore.AccessCookieErrorType.INVALID
 import org.wordpress.android.fluxc.store.SiteStore.AccessCookieErrorType.NON_PRIVATE_AT_SITE
 import org.wordpress.android.fluxc.store.SiteStore.AccessCookieErrorType.SITE_MISSING_FROM_STORE
 import org.wordpress.android.fluxc.store.SiteStore.DeleteSiteErrorType.INVALID_SITE
-import org.wordpress.android.fluxc.store.SiteStore.DomainAvailabilityErrorType.INVALID_DOMAIN_NAME
 import org.wordpress.android.fluxc.store.SiteStore.DomainSupportedStatesErrorType.INVALID_COUNTRY_CODE
 import org.wordpress.android.fluxc.store.SiteStore.ExportSiteErrorType.GENERIC_ERROR
 import org.wordpress.android.fluxc.store.SiteStore.LaunchSiteErrorType.ALREADY_LAUNCHED
@@ -482,16 +473,6 @@ open class SiteStore @Inject constructor(
         }
     }
 
-    data class DomainAvailabilityResponsePayload(
-        @JvmField val status: DomainAvailabilityStatus? = null,
-        @JvmField val mappable: DomainMappabilityStatus? = null,
-        @JvmField val supportsPrivacy: Boolean = false
-    ) : Payload<DomainAvailabilityError>() {
-        constructor(error: DomainAvailabilityError) : this() {
-            this.error = error
-        }
-    }
-
     data class DomainSupportedStatesResponsePayload(
         @JvmField val supportedStates: List<SupportedStateResponse>? = null
     ) : Payload<DomainSupportedStatesError>() {
@@ -499,19 +480,6 @@ open class SiteStore @Inject constructor(
             this.error = error
         }
     }
-
-    data class DomainSupportedCountriesResponsePayload(
-        @JvmField val supportedCountries: List<SupportedCountryResponse>? = null
-    ) : Payload<DomainSupportedCountriesError>() {
-        constructor(error: DomainSupportedCountriesError) : this() {
-            this.error = error
-        }
-    }
-
-    data class AllDomainsError @JvmOverloads constructor(
-        @JvmField val type: AllDomainsErrorType,
-        @JvmField val message: String? = null,
-    ) : OnChangedError
 
     data class SiteError @JvmOverloads constructor(
         @JvmField val type: SiteErrorType,
@@ -552,23 +520,11 @@ open class SiteStore @Inject constructor(
         constructor(type: String, message: String) : this(AutomatedTransferErrorType.fromString(type), message)
     }
 
-    data class DomainAvailabilityError
-    @JvmOverloads
-    constructor(
-        @JvmField val type: DomainAvailabilityErrorType,
-        @JvmField val message: String? = null
-    ) : OnChangedError
-
     data class DomainSupportedStatesError
     @JvmOverloads
     constructor(
         @JvmField val type: DomainSupportedStatesErrorType,
         @JvmField val message: String? = null
-    ) : OnChangedError
-
-    data class DomainSupportedCountriesError(
-        @JvmField val type: DomainSupportedCountriesErrorType,
-        @JvmField val message: String?
     ) : OnChangedError
 
     data class QuickStartError(@JvmField val type: QuickStartErrorType, @JvmField val message: String?) : OnChangedError
@@ -705,61 +661,6 @@ open class SiteStore @Inject constructor(
         @JvmField val suggestions: List<DomainSuggestionResponse>
     ) : OnChanged<SuggestDomainError>()
 
-    data class OnDomainAvailabilityChecked(
-        @JvmField val status: DomainAvailabilityStatus?,
-        @JvmField val mappable: DomainMappabilityStatus?,
-        @JvmField val supportsPrivacy: Boolean
-    ) : OnChanged<DomainAvailabilityError>() {
-        constructor(
-            status: DomainAvailabilityStatus?,
-            mappable: DomainMappabilityStatus?,
-            supportsPrivacy: Boolean,
-            error: DomainAvailabilityError?
-        ) : this(status, mappable, supportsPrivacy) {
-            this.error = error
-        }
-    }
-
-    enum class DomainAvailabilityStatus {
-        BLACKLISTED_DOMAIN,
-        INVALID_TLD,
-        INVALID_DOMAIN,
-        TLD_NOT_SUPPORTED,
-        TRANSFERRABLE_DOMAIN,
-        AVAILABLE,
-        UNKNOWN_STATUS;
-
-        companion object {
-            @JvmStatic fun fromString(string: String): DomainAvailabilityStatus {
-                if (!TextUtils.isEmpty(string)) {
-                    for (v in values()) {
-                        if (string.equals(v.name, ignoreCase = true)) {
-                            return v
-                        }
-                    }
-                }
-                return UNKNOWN_STATUS
-            }
-        }
-    }
-
-    enum class DomainMappabilityStatus {
-        BLACKLISTED_DOMAIN, INVALID_TLD, INVALID_DOMAIN, MAPPABLE_DOMAIN, UNKNOWN_STATUS;
-
-        companion object {
-            @JvmStatic fun fromString(string: String): DomainMappabilityStatus {
-                if (!TextUtils.isEmpty(string)) {
-                    for (v in values()) {
-                        if (string.equals(v.name, ignoreCase = true)) {
-                            return v
-                        }
-                    }
-                }
-                return UNKNOWN_STATUS
-            }
-        }
-    }
-
     data class OnDomainSupportedStatesFetched(
         @JvmField val supportedStates: List<SupportedStateResponse>?
     ) : OnChanged<DomainSupportedStatesError>() {
@@ -767,23 +668,6 @@ open class SiteStore @Inject constructor(
             supportedStates: List<SupportedStateResponse>?,
             error: DomainSupportedStatesError?
         ) : this(supportedStates) {
-            this.error = error
-        }
-    }
-
-    class OnDomainSupportedCountriesFetched(
-        @JvmField val supportedCountries: List<SupportedCountryResponse>?,
-        error: DomainSupportedCountriesError?
-    ) : OnChanged<DomainSupportedCountriesError>() {
-        init {
-            this.error = error
-        }
-    }
-
-    data class FetchedAllDomainsPayload(
-        @JvmField val domains: List<AllDomainsDomain>? = null
-    ) : Payload<AllDomainsError>() {
-        constructor(error: AllDomainsError) : this() {
             this.error = error
         }
     }
@@ -943,10 +827,6 @@ open class SiteStore @Inject constructor(
         INVALID_SITE, UNKNOWN_SITE, DUPLICATE_SITE, INVALID_RESPONSE, UNAUTHORIZED, NOT_AUTHENTICATED, GENERIC_ERROR
     }
 
-    enum class AllDomainsErrorType {
-        UNAUTHORIZED, GENERIC_ERROR
-    }
-
     enum class SuggestDomainErrorType {
         EMPTY_RESULTS, EMPTY_QUERY, INVALID_MINIMUM_QUANTITY, INVALID_MAXIMUM_QUANTITY, INVALID_QUERY, GENERIC_ERROR;
 
@@ -1086,10 +966,6 @@ open class SiteStore @Inject constructor(
         }
     }
 
-    enum class DomainAvailabilityErrorType {
-        INVALID_DOMAIN_NAME, GENERIC_ERROR
-    }
-
     enum class DomainSupportedStatesErrorType {
         INVALID_COUNTRY_CODE, INVALID_QUERY, GENERIC_ERROR;
 
@@ -1105,10 +981,6 @@ open class SiteStore @Inject constructor(
                 return GENERIC_ERROR
             }
         }
-    }
-
-    enum class DomainSupportedCountriesErrorType {
-        GENERIC_ERROR
     }
 
     enum class QuickStartErrorType {
@@ -1458,17 +1330,9 @@ open class SiteStore @Inject constructor(
             SUGGESTED_DOMAINS -> handleSuggestedDomains(action.payload as SuggestDomainsResponsePayload)
             FETCH_PLANS -> fetchPlans(action.payload as SiteModel)
             FETCHED_PLANS -> handleFetchedPlans(action.payload as FetchedPlansPayload)
-            CHECK_DOMAIN_AVAILABILITY -> checkDomainAvailability(action.payload as String)
-            CHECKED_DOMAIN_AVAILABILITY -> handleCheckedDomainAvailability(
-                    action.payload as DomainAvailabilityResponsePayload
-            )
             FETCH_DOMAIN_SUPPORTED_STATES -> fetchSupportedStates(action.payload as String)
             FETCHED_DOMAIN_SUPPORTED_STATES -> handleFetchedSupportedStates(
                     action.payload as DomainSupportedStatesResponsePayload
-            )
-            FETCH_DOMAIN_SUPPORTED_COUNTRIES -> siteRestClient.fetchSupportedCountries()
-            FETCHED_DOMAIN_SUPPORTED_COUNTRIES -> handleFetchedSupportedCountries(
-                    action.payload as DomainSupportedCountriesResponsePayload
             )
             CHECK_AUTOMATED_TRANSFER_ELIGIBILITY -> checkAutomatedTransferEligibility(action.payload as SiteModel)
             INITIATE_AUTOMATED_TRANSFER -> initiateAutomatedTransfer(action.payload as InitiateAutomatedTransferPayload)
@@ -2255,26 +2119,6 @@ open class SiteStore @Inject constructor(
         emitChange(OnPlansFetched(payload.site, payload.plans, payload.error))
     }
 
-    private fun checkDomainAvailability(domainName: String) {
-        if (TextUtils.isEmpty(domainName)) {
-            val error = DomainAvailabilityError(INVALID_DOMAIN_NAME)
-            handleCheckedDomainAvailability(DomainAvailabilityResponsePayload(error))
-        } else {
-            siteRestClient.checkDomainAvailability(domainName)
-        }
-    }
-
-    private fun handleCheckedDomainAvailability(payload: DomainAvailabilityResponsePayload) {
-        emitChange(
-                OnDomainAvailabilityChecked(
-                        payload.status,
-                        payload.mappable,
-                        payload.supportsPrivacy,
-                        payload.error
-                )
-        )
-    }
-
     private fun fetchSupportedStates(countryCode: String) {
         if (TextUtils.isEmpty(countryCode)) {
             val error = DomainSupportedStatesError(INVALID_COUNTRY_CODE)
@@ -2286,10 +2130,6 @@ open class SiteStore @Inject constructor(
 
     private fun handleFetchedSupportedStates(payload: DomainSupportedStatesResponsePayload) {
         emitChange(OnDomainSupportedStatesFetched(payload.supportedStates, payload.error))
-    }
-
-    private fun handleFetchedSupportedCountries(payload: DomainSupportedCountriesResponsePayload) {
-        emitChange(OnDomainSupportedCountriesFetched(payload.supportedCountries, payload.error))
     }
 
     private fun handleFetchedBlockLayouts(payload: FetchedBlockLayoutsResponsePayload) {
@@ -2380,27 +2220,6 @@ open class SiteStore @Inject constructor(
         emitChange(event)
     }
 
-    suspend fun fetchAllDomains(
-        noWpCom: Boolean = true,
-        resolveStatus: Boolean = true
-    ): FetchedAllDomainsPayload =
-        coroutineEngine.withDefaultContext(T.API, this, "Fetch all domains") {
-            return@withDefaultContext when (val response =
-                siteRestClient.fetchAllDomains(noWpCom, resolveStatus)) {
-                is Success -> {
-                    val domains = response.data.domains
-                    FetchedAllDomainsPayload(domains)
-                }
-                is Error -> {
-                    val errorType = when (response.error.apiError) {
-                        "authorization_required" -> AllDomainsErrorType.UNAUTHORIZED
-                        else -> AllDomainsErrorType.GENERIC_ERROR
-                    }
-                    val domainsError = AllDomainsError(errorType, response.error.message)
-                    FetchedAllDomainsPayload(domainsError)
-                }
-            }
-        }
     suspend fun fetchSiteDomains(siteModel: SiteModel): FetchedDomainsPayload =
             coroutineEngine.withDefaultContext(T.API, this, "Fetch site domains") {
                 return@withDefaultContext when (val response =
@@ -2541,44 +2360,6 @@ open class SiteStore @Inject constructor(
             apiRestPasswordIV = ""
         }
         emitChange(updateApplicationPassword(site))
-    }
-
-    suspend fun fetchSitePlans(siteModel: SiteModel): FetchedPlansPayload {
-        return if (siteModel.isUsingWpComRestApi) {
-            coroutineEngine.withDefaultContext(T.API, this, "Fetch site plans") {
-                return@withDefaultContext when (val response =
-                    siteRestClient.fetchSitePlans(siteModel)) {
-                    is Success -> {
-                        FetchedPlansPayload(siteModel, response.data.plansList)
-                    }
-                    is Error -> {
-                        val siteErrorType = when (response.error.apiError) {
-                            "unauthorized" -> PlansErrorType.UNAUTHORIZED
-                            "unknown_blog" -> PlansErrorType.UNKNOWN_BLOG
-                            else -> PlansErrorType.GENERIC_ERROR
-                        }
-                        val plansError = PlansError(siteErrorType, response.error.message)
-                        FetchedPlansPayload(siteModel, plansError)
-                    }
-                }
-            }
-        } else {
-            FetchedPlansPayload(siteModel, PlansError(NOT_AVAILABLE))
-        }
-    }
-
-    suspend fun fetchDomainPrice(domainName: String): WPAPIResponse<DomainPriceResponse> {
-        return coroutineEngine.withDefaultContext(T.API, this, "Fetch domain price") {
-            when (val response =
-                siteRestClient.fetchDomainPrice(domainName)) {
-                is Success -> {
-                    WPAPIResponse.Success(response.data)
-                }
-                is Error -> {
-                    WPAPIResponse.Error(WPAPINetworkError(response.error))
-                }
-            }
-        }
     }
 
     suspend fun launchSite(site: SiteModel): OnSiteLaunched {

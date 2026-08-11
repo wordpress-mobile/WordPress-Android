@@ -54,6 +54,7 @@ import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSect
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.TRAFFIC
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.WEEKS
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.YEARS
+import org.wordpress.android.ui.stats.refresh.utils.StatsLaunchedFrom
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider.SiteUpdateResult
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.JetpackBrandingUtils
@@ -160,7 +161,7 @@ class StatsFragment : Fragment(R.layout.stats_fragment), ScrollableViewInitializ
         if (!isAdded) return
         analyticsTracker.track(Stat.STATS_NEW_STATS_ENABLED)
         newStatsRouting.optIn()
-        NewStatsActivity.start(requireContext())
+        NewStatsActivity.start(requireContext(), StatsLaunchedFrom.STATS_TOGGLE)
         requireActivity().finish()
     }
 

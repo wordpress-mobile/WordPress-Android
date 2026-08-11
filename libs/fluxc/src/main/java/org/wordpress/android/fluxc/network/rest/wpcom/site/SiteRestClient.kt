@@ -40,14 +40,6 @@ import org.wordpress.android.fluxc.store.SiteStore.DesignateMobileEditorForAllSi
 import org.wordpress.android.fluxc.store.SiteStore.DesignatePrimaryDomainError
 import org.wordpress.android.fluxc.store.SiteStore.DesignatePrimaryDomainErrorType
 import org.wordpress.android.fluxc.store.SiteStore.DesignatedPrimaryDomainPayload
-import org.wordpress.android.fluxc.store.SiteStore.DomainAvailabilityError
-import org.wordpress.android.fluxc.store.SiteStore.DomainAvailabilityErrorType
-import org.wordpress.android.fluxc.store.SiteStore.DomainAvailabilityResponsePayload
-import org.wordpress.android.fluxc.store.SiteStore.DomainAvailabilityStatus
-import org.wordpress.android.fluxc.store.SiteStore.DomainMappabilityStatus
-import org.wordpress.android.fluxc.store.SiteStore.DomainSupportedCountriesError
-import org.wordpress.android.fluxc.store.SiteStore.DomainSupportedCountriesErrorType
-import org.wordpress.android.fluxc.store.SiteStore.DomainSupportedCountriesResponsePayload
 import org.wordpress.android.fluxc.store.SiteStore.DomainSupportedStatesError
 import org.wordpress.android.fluxc.store.SiteStore.DomainSupportedStatesErrorType
 import org.wordpress.android.fluxc.store.SiteStore.DomainSupportedStatesResponsePayload
@@ -758,31 +750,6 @@ class SiteRestClient @Inject constructor(
     }
 
     /**
-     * Performs an HTTP GET call to v1.3 /domains/$domainName/is-available/ endpoint. Upon receiving a response
-     * (success or error) a [SiteAction.CHECKED_DOMAIN_AVAILABILITY] action is dispatched with a
-     * payload of type [DomainAvailabilityResponsePayload].
-     *
-     * [DomainAvailabilityResponsePayload.isError] can be used to check the request result.
-     */
-    fun checkDomainAvailability(domainName: String) {
-        val url = WPCOMREST.domains.domainName(domainName).is_available.urlV1_3
-        val request = WPComGsonRequest.buildGetRequest(url, null, DomainAvailabilityResponse::class.java,
-                { response ->
-                    val payload = responseToDomainAvailabilityPayload(response)
-                    mDispatcher.dispatch(SiteActionBuilder.newCheckedDomainAvailabilityAction(payload))
-                }
-        ) { error -> // Domain availability API should always return a response for a valid,
-            // authenticated user. Therefore, only GENERIC_ERROR is identified here.
-            val domainAvailabilityError = DomainAvailabilityError(
-                    DomainAvailabilityErrorType.GENERIC_ERROR, error.message
-            )
-            val payload = DomainAvailabilityResponsePayload(domainAvailabilityError)
-            mDispatcher.dispatch(SiteActionBuilder.newCheckedDomainAvailabilityAction(payload))
-        }
-        add(request)
-    }
-
-    /**
      * Performs an HTTP GET call to v1.1 /domains/supported-states/$countryCode endpoint. Upon receiving a response
      * (success or error) a [SiteAction.FETCHED_DOMAIN_SUPPORTED_STATES] action is dispatched with a
      * payload of type [DomainSupportedStatesResponsePayload].
@@ -807,58 +774,9 @@ class SiteRestClient @Inject constructor(
         add(request)
     }
 
-    /**
-     * Performs an HTTP GET call to v1.1 /domains/supported-countries/ endpoint. Upon receiving a response
-     * (success or error) a [SiteAction.FETCHED_DOMAIN_SUPPORTED_COUNTRIES] action is dispatched with a
-     * payload of type [DomainSupportedCountriesResponsePayload].
-     *
-     * [DomainSupportedCountriesResponsePayload.isError] can be used to check the request result.
-     */
-    fun fetchSupportedCountries() {
-        val url = WPCOMREST.domains.supported_countries.urlV1_1
-        val request = WPComGsonRequest.buildGetRequest<List<SupportedCountryResponse>>(url, null,
-                object : TypeToken<List<SupportedCountryResponse>>() {}.type,
-                { response ->
-                    val payload = DomainSupportedCountriesResponsePayload(response)
-                    mDispatcher.dispatch(
-                            SiteActionBuilder.newFetchedDomainSupportedCountriesAction(payload)
-                    )
-                },
-                { error -> // Supported Countries API should always return a response for a valid,
-                    // authenticated user. Therefore, only GENERIC_ERROR is identified here.
-                    val domainSupportedCountriesError = DomainSupportedCountriesError(
-                            DomainSupportedCountriesErrorType.GENERIC_ERROR,
-                            error.message
-                    )
-                    val payload = DomainSupportedCountriesResponsePayload(domainSupportedCountriesError)
-                    mDispatcher.dispatch(
-                            SiteActionBuilder.newFetchedDomainSupportedCountriesAction(payload)
-                    )
-                })
-        add(request)
-    }
-
-    suspend fun fetchAllDomains(noWpCom: Boolean = true, resolveStatus: Boolean = true): Response<AllDomainsResponse> {
-        val url = WPCOMREST.all_domains.urlV1_1
-        val params = mapOf(
-            "no_wpcom" to noWpCom.toString(),
-            "resolve_status" to resolveStatus.toString()
-        )
-        return wpComGsonRequestBuilder.syncGetRequest(this, url, params, AllDomainsResponse::class.java)
-    }
     suspend fun fetchSiteDomains(site: SiteModel): Response<DomainsResponse> {
         val url = WPCOMREST.sites.site(site.siteId).domains.urlV1_1
         return wpComGsonRequestBuilder.syncGetRequest(this, url, mapOf(), DomainsResponse::class.java)
-    }
-
-    suspend fun fetchSitePlans(site: SiteModel): Response<PlansResponse> {
-        val url = WPCOMREST.sites.site(site.siteId).plans.urlV1_3
-        return wpComGsonRequestBuilder.syncGetRequest(this, url, mapOf(), PlansResponse::class.java)
-    }
-
-    suspend fun fetchDomainPrice(domainName: String): Response<DomainPriceResponse> {
-        val url = WPCOMREST.domains.domainName(domainName).price.urlV1_1
-        return wpComGsonRequestBuilder.syncGetRequest(this, url, mapOf(), DomainPriceResponse::class.java)
     }
 
     fun designatePrimaryDomain(site: SiteModel, domain: String) {
@@ -1248,15 +1166,6 @@ class SiteRestClient @Inject constructor(
                 response.isWordPressDotCom, // CHECKSTYLE IGNORE
                 response.urlAfterRedirects
         )
-    }
-
-    private fun responseToDomainAvailabilityPayload(
-        response: DomainAvailabilityResponse
-    ): DomainAvailabilityResponsePayload {
-        val status = DomainAvailabilityStatus.fromString(response.status!!)
-        val mappable = DomainMappabilityStatus.fromString(response.mappable!!)
-        val supportsPrivacy = response.supports_privacy
-        return DomainAvailabilityResponsePayload(status, mappable, supportsPrivacy)
     }
 
     private fun responseToJetpackCapabilitiesPayload(
