@@ -91,16 +91,12 @@ sentry {
     telemetry = false
 }
 
-// SentryCliExecTask is the base of every task that shells out to sentry-cli with the auth token
-// (ProGuard mappings and source bundles here). Those tasks only exist when the upload flags are
-// on, so this fires exactly when an upload is expected — fail there rather than ship a release
-// we can't deobfuscate.
 tasks.withType(SentryCliExecTask).configureEach {
     doFirst {
         if (sentryAuthToken == null) {
             throw new GradleException(
                 "SENTRY_AUTH_TOKEN is not set (or is blank). " +
-                    "Export it to upload debug files to Sentry."
+                    "Set it to upload debug files to Sentry."
             )
         }
     }
