@@ -13,7 +13,6 @@ import androidx.activity.addCallback
 import androidx.activity.viewModels
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.SearchView
-import androidx.core.animation.doOnEnd
 import androidx.core.view.AccessibilityDelegateCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.accessibility.AccessibilityNodeInfoCompat
@@ -79,7 +78,6 @@ class ChooseSiteActivity : BaseAppCompatActivity() {
     private val fabMenuItemOffset by lazy { resources.getDimension(R.dimen.margin_extra_large) }
     private var fabCornerAnimator: ValueAnimator? = null
     private var currentFabCornerSize = FAB_CORNER_FRACTION_RESTING
-    private var fabIconAnimator: ValueAnimator? = null
 
     @Inject
     lateinit var accountStore: AccountStore
@@ -185,7 +183,7 @@ class ChooseSiteActivity : BaseAppCompatActivity() {
         binding.fabMenuScrim.animate().cancel()
         binding.fabMenuScrim.isVisible = true
         binding.fabMenuScrim.animate().alpha(SCRIM_ALPHA).setDuration(FAB_MENU_ANIM_DURATION).start()
-        animateFabIcon(isOpen = true)
+        applyFabIcon(isOpen = true)
         animateFabCornerSize(FAB_CORNER_FRACTION_OPEN)
         applyFabColors(isOpen = true)
 
@@ -217,7 +215,7 @@ class ChooseSiteActivity : BaseAppCompatActivity() {
         binding.fabMenuScrim.animate().cancel()
         binding.fabMenuScrim.animate().alpha(0f).setDuration(FAB_MENU_ANIM_DURATION)
             .withEndAction { binding.fabMenuScrim.isVisible = false }.start()
-        animateFabIcon(isOpen = false)
+        applyFabIcon(isOpen = false)
         animateFabCornerSize(FAB_CORNER_FRACTION_RESTING)
         applyFabColors(isOpen = false)
 
@@ -368,30 +366,10 @@ class ChooseSiteActivity : BaseAppCompatActivity() {
     }
 
     /**
-     * Cross-fades the FAB's plus into a close icon, which is how Material 3 transforms a FAB into
-     * the close button of its menu. The icon is swapped at the midpoint of a fade through
-     * transparent, so neither glyph is visible while the other is drawn.
+     * Swaps the FAB's plus for a close icon outright. Material 3's own FAB menus cut between the two
+     * glyphs rather than transitioning them, leaving the container's shape and color change to carry
+     * the motion.
      */
-    private fun animateFabIcon(isOpen: Boolean) {
-        fabIconAnimator?.cancel()
-        val fab = binding.fabAddSite
-        fabIconAnimator = ValueAnimator.ofFloat(fab.alpha, 0f).apply {
-            duration = FAB_MENU_ANIM_DURATION / 2
-            addUpdateListener { fab.imageAlpha = ((it.animatedValue as Float) * MAX_ALPHA).toInt() }
-            doOnEnd {
-                applyFabIcon(isOpen)
-                fabIconAnimator = ValueAnimator.ofFloat(0f, 1f).apply {
-                    duration = FAB_MENU_ANIM_DURATION / 2
-                    addUpdateListener {
-                        fab.imageAlpha = ((it.animatedValue as Float) * MAX_ALPHA).toInt()
-                    }
-                    start()
-                }
-            }
-            start()
-        }
-    }
-
     private fun applyFabIcon(isOpen: Boolean) {
         binding.fabAddSite.setImageResource(
             if (isOpen) R.drawable.ic_close_white_24dp else R.drawable.ic_plus_white_24dp
@@ -463,8 +441,6 @@ class ChooseSiteActivity : BaseAppCompatActivity() {
     override fun onDestroy() {
         fabCornerAnimator?.cancel()
         fabCornerAnimator = null
-        fabIconAnimator?.cancel()
-        fabIconAnimator = null
         super.onDestroy()
     }
 
@@ -766,7 +742,6 @@ class ChooseSiteActivity : BaseAppCompatActivity() {
         private const val SCRIM_ALPHA = 0.4f
         private const val FAB_MENU_ANIM_DURATION = 200L
         private const val FAB_MENU_STAGGER = 40L
-        private const val MAX_ALPHA = 255
         // Items grow in from a little under full size rather than from nothing, so the menu reads as
         // expanding out of the FAB instead of popping into place.
         private const val FAB_MENU_ITEM_COLLAPSED_SCALE = 0.8f
