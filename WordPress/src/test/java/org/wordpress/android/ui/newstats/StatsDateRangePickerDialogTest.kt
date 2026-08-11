@@ -25,7 +25,7 @@ class StatsDateRangePickerDialogTest {
         ZONES.forEach { zone ->
             TimeZone.setDefault(TimeZone.getTimeZone(zone))
 
-            assertThat(TEST_DATE_UTC_MILLIS.toSelectedDate())
+            assertThat(TEST_DATE_UTC_MILLIS.toPickerDate())
                 .describedAs("selection read in %s", zone)
                 .isEqualTo(TEST_DATE)
         }
@@ -36,7 +36,7 @@ class StatsDateRangePickerDialogTest {
         ZONES.forEach { zone ->
             TimeZone.setDefault(TimeZone.getTimeZone(zone))
 
-            assertThat(TEST_DATE.toUtcMillis())
+            assertThat(TEST_DATE.toPickerMillis())
                 .describedAs("date converted in %s", zone)
                 .isEqualTo(TEST_DATE_UTC_MILLIS)
         }
@@ -51,7 +51,7 @@ class StatsDateRangePickerDialogTest {
             // from epoch days, so this fails if todayMillis ever drifts back to local midnight.
             val today = LocalDate.now()
 
-            assertThat(today.toUtcMillis())
+            assertThat(today.toPickerMillis())
                 .describedAs("today's cell in %s", zone)
                 .isEqualTo(today.toEpochDay() * MILLIS_PER_DAY)
         }
