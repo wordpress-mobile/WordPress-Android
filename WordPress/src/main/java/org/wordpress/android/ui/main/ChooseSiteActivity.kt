@@ -78,6 +78,9 @@ class ChooseSiteActivity : BaseAppCompatActivity() {
     private val fabMenuItemOffset by lazy { resources.getDimension(R.dimen.margin_extra_large) }
     private var fabCornerAnimator: ValueAnimator? = null
     private var currentFabCornerSize = FAB_CORNER_FRACTION_RESTING
+    // Bumped on every open and close so a menu transition that is still waiting on a layout pass can
+    // tell it has been superseded and drop its animation.
+    private var addSiteMenuGeneration = 0
 
     @Inject
     lateinit var accountStore: AccountStore
@@ -187,6 +190,7 @@ class ChooseSiteActivity : BaseAppCompatActivity() {
         animateFabCornerSize(FAB_CORNER_FRACTION_OPEN)
         applyFabColors(isOpen = true)
 
+        val generation = ++addSiteMenuGeneration
         addSiteMenuItems.forEachIndexed { index, item ->
             item.animate().cancel()
             item.alpha = 0f
@@ -195,6 +199,7 @@ class ChooseSiteActivity : BaseAppCompatActivity() {
             // Make the item visible first so it gets measured, then pivot from its trailing edge.
             item.isVisible = true
             setMenuItemTransformOrigin(item) {
+                if (generation != addSiteMenuGeneration) return@setMenuItemTransformOrigin
                 item.animate()
                     .alpha(1f)
                     .scaleX(1f)
@@ -221,9 +226,17 @@ class ChooseSiteActivity : BaseAppCompatActivity() {
         animateFabCornerSize(FAB_CORNER_FRACTION_RESTING)
         applyFabColors(isOpen = false)
 
+        val generation = ++addSiteMenuGeneration
         addSiteMenuItems.forEachIndexed { index, item ->
             item.animate().cancel()
+            // An item that has not been laid out yet cannot animate out, and its pending open was
+            // just superseded, so collapse it outright rather than leaving it on screen.
+            if (item.width == 0 || item.height == 0) {
+                collapseMenuItem(item)
+                return@forEachIndexed
+            }
             setMenuItemTransformOrigin(item) {
+                if (generation != addSiteMenuGeneration) return@setMenuItemTransformOrigin
                 item.animate()
                     .alpha(0f)
                     .scaleX(FAB_MENU_ITEM_COLLAPSED_SCALE)
@@ -235,6 +248,13 @@ class ChooseSiteActivity : BaseAppCompatActivity() {
                     .start()
             }
         }
+    }
+
+    private fun collapseMenuItem(item: View) {
+        item.isVisible = false
+        item.alpha = 0f
+        item.scaleX = FAB_MENU_ITEM_COLLAPSED_SCALE
+        item.scaleY = FAB_MENU_ITEM_COLLAPSED_SCALE
     }
 
     /**
@@ -429,7 +449,11 @@ class ChooseSiteActivity : BaseAppCompatActivity() {
         applyFabAccessibilityState()
         binding.fabMenuScrim.isVisible = true
         binding.fabMenuScrim.alpha = SCRIM_ALPHA
+        // Supersede any transition still waiting on a layout pass, so it cannot animate over the
+        // end state being restored here.
+        addSiteMenuGeneration++
         addSiteMenuItems.forEach { item ->
+            item.animate().cancel()
             item.isVisible = true
             item.alpha = 1f
             item.scaleX = 1f
