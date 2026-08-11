@@ -5,12 +5,14 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpApiClientProvider
 import org.wordpress.android.ui.postsrs.AuthorInfo
+import org.wordpress.android.ui.reader.utils.ReaderUtils
 import org.wordpress.android.util.AppLog
-import org.wordpress.android.util.PhotonUtils
 import org.wordpress.android.util.SiteUtils
 import rs.wordpress.api.kotlin.WpRequestResult
 import uniffi.wp_api.AnyTermWithViewContext
+import uniffi.wp_api.MediaDetailsPayload
 import uniffi.wp_api.MediaListParams
+import uniffi.wp_api.MediaWithEditContext
 import uniffi.wp_api.PostFormat
 import uniffi.wp_api.TermCreateParams
 import uniffi.wp_api.TermEndpointType
@@ -31,12 +33,21 @@ data class AuthorPage(
     val nextPageParams: UserListParams?,
 )
 
+/** One of the renders WordPress generated for an image at upload time. */
+private data class ScaledSize(val width: Int, val url: String)
+
+private data class MediaImage(
+    val sourceUrl: String,
+    /** Renders from `media_details.sizes`, ascending by width. Empty for non-images. */
+    val sizes: List<ScaledSize>,
+)
+
 @Singleton
 class PostRsRestClient @Inject constructor(
     @ApplicationContext private val context: Context,
     private val wpApiClientProvider: WpApiClientProvider,
 ) {
-    private val mediaUrlCache = ConcurrentHashMap<Long, String>()
+    private val mediaUrlCache = ConcurrentHashMap<Long, MediaImage>()
     private val userNameCache = ConcurrentHashMap<Long, String>()
     private val categoryNameCache = ConcurrentHashMap<Long, String>()
     private val tagNameCache = ConcurrentHashMap<Long, String>()
@@ -51,11 +62,11 @@ class PostRsRestClient @Inject constructor(
     /**
      * Fetches media source URLs for the given [mediaIds] in a single
      * network call using the `include` parameter, returning a map of
-     * media ID to Photon-optimized URL. IDs already in the local cache
-     * are returned immediately without a network round-trip.
+     * media ID to a URL sized for display. IDs already in the local
+     * cache are returned immediately without a network round-trip.
      *
-     * @param widthDp target display width in dp for Photon resizing.
-     *     Pass 0 to use the full screen width.
+     * @param widthDp target display width in dp. Pass 0 to use the
+     *     full screen width.
      */
     suspend fun fetchMediaUrls(
         site: SiteModel,
@@ -73,7 +84,7 @@ class PostRsRestClient @Inject constructor(
         for (id in mediaIds) {
             val cached = mediaUrlCache[id]
             if (cached != null) {
-                result[id] = toPhotonUrl(site, cached, widthPx)
+                result[id] = toDisplayUrl(site, cached, widthPx)
             } else {
                 uncached.add(id)
             }
@@ -89,9 +100,10 @@ class PostRsRestClient @Inject constructor(
         when (response) {
             is WpRequestResult.Success -> {
                 for (media in response.response.data) {
-                    mediaUrlCache[media.id] = media.sourceUrl
-                    result[media.id] = toPhotonUrl(
-                        site, media.sourceUrl, widthPx
+                    val image = media.toMediaImage()
+                    mediaUrlCache[media.id] = image
+                    result[media.id] = toDisplayUrl(
+                        site, image, widthPx
                     )
                 }
             }
@@ -400,19 +412,52 @@ class PostRsRestClient @Inject constructor(
     private fun slugToPostFormat(slug: String): PostFormat =
         SLUG_TO_FORMAT[slug] ?: PostFormat.Custom(slug)
 
-    private fun toPhotonUrl(
+    /**
+     * Reads the source URL and the available renders off [this]. The
+     * `mediaDetails` handle is owned by the response, so this has to be
+     * called while the response is still alive.
+     */
+    private fun MediaWithEditContext.toMediaImage(): MediaImage {
+        val image = mediaDetails.parseAsMimeType(mimeType)
+            as? MediaDetailsPayload.Image
+        val sizes = image?.v1?.sizes.orEmpty()
+            .map { (_, size) ->
+                ScaledSize(size.width.toInt(), size.sourceUrl)
+            }
+            .sortedBy { it.width }
+        return MediaImage(sourceUrl, sizes)
+    }
+
+    /**
+     * Picks a URL to display [image] at [widthPx] (0 means full screen
+     * width). Photon-capable sites resize the original server-side.
+     * Everywhere else - self-hosted sites in particular, which ignore
+     * the `?w=` param - we ask for the smallest render WordPress
+     * already generated that's at least as wide as we need, so a 64dp
+     * thumbnail doesn't pull down the full-size upload. Never picks a
+     * render narrower than the target, so images can't end up
+     * pixelated.
+     */
+    private fun toDisplayUrl(
         site: SiteModel,
-        sourceUrl: String,
+        image: MediaImage,
         widthPx: Int = 0,
     ): String {
-        if (!SiteUtils.isPhotonCapable(site)) return sourceUrl
         val width = if (widthPx > 0) {
             widthPx
         } else {
             context.resources.displayMetrics.widthPixels
         }
-        return PhotonUtils.getPhotonImageUrl(
-            sourceUrl, width, 0, site.isPrivateWPComAtomic
+        val accessibilityInfo =
+            SiteUtils.getAccessibilityInfoFromSite(site)
+        val url = if (accessibilityInfo.isPhotonCapable) {
+            image.sourceUrl
+        } else {
+            image.sizes.firstOrNull { it.width >= width }?.url
+                ?: image.sourceUrl
+        }
+        return ReaderUtils.getResizedImageUrl(
+            url, width, 0, accessibilityInfo
         )
     }
 
