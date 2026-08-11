@@ -1,32 +1,29 @@
 package org.wordpress.android.ui.newstats
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.DatePickerDefaults
+import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.DateRangePicker
-import androidx.compose.material3.DateRangePickerState
 import androidx.compose.material3.DisplayMode
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.SelectableDates
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDateRangePickerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.LiveRegionMode
+import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.liveRegion
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Dialog
-import androidx.compose.ui.window.DialogProperties
 import org.wordpress.android.R
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
+import java.time.format.DateTimeFormatter
+import java.time.format.FormatStyle
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -48,102 +45,102 @@ fun StatsDateRangePickerDialog(
         }
     )
 
-    Dialog(
+    val isConfirmEnabled = dateRangePickerState.selectedStartDateMillis != null &&
+        dateRangePickerState.selectedEndDateMillis != null
+
+    DatePickerDialog(
         onDismissRequest = onDismiss,
-        properties = DialogProperties(usePlatformDefaultWidth = false)
-    ) {
-        Surface(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            shape = MaterialTheme.shapes.extraLarge,
-            color = MaterialTheme.colorScheme.surfaceContainerHigh
-        ) {
-            DateRangePickerContent(
-                state = dateRangePickerState,
-                onDismiss = onDismiss,
-                onConfirm = {
-                    val startMillis = dateRangePickerState.selectedStartDateMillis
-                    val endMillis = dateRangePickerState.selectedEndDateMillis
-                    if (startMillis != null && endMillis != null) {
-                        val startDate = Instant.ofEpochMilli(startMillis)
-                            .atZone(ZoneId.systemDefault())
-                            .toLocalDate()
-                        val endDate = Instant.ofEpochMilli(endMillis)
-                            .atZone(ZoneId.systemDefault())
-                            .toLocalDate()
-                        // Ensure start date is before or equal to end date, swap if needed
-                        if (startDate.isAfter(endDate)) {
-                            onDateRangeSelected(endDate, startDate)
-                        } else {
-                            onDateRangeSelected(startDate, endDate)
-                        }
-                    }
+        confirmButton = {
+            TextButton(
+                onClick = {
+                    onConfirmDateRange(
+                        startMillis = dateRangePickerState.selectedStartDateMillis,
+                        endMillis = dateRangePickerState.selectedEndDateMillis,
+                        onDateRangeSelected = onDateRangeSelected
+                    )
                     onDismiss()
-                }
-            )
+                },
+                enabled = isConfirmEnabled
+            ) {
+                Text(stringResource(R.string.ok))
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text(stringResource(R.string.cancel))
+            }
         }
-    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-private fun DateRangePickerContent(
-    state: DateRangePickerState,
-    onDismiss: () -> Unit,
-    onConfirm: () -> Unit
-) {
-    val isConfirmEnabled = state.selectedStartDateMillis != null &&
-        state.selectedEndDateMillis != null
-
-    Column {
+    ) {
         DateRangePicker(
-            state = state,
-            modifier = Modifier.heightIn(max = 500.dp),
-            title = {
+            state = dateRangePickerState,
+            // Dropping the title also drops the header's min height, leaving the headline
+            // crowded against the top edge. Restore the inset outside the header row, so the
+            // headline stays vertically centred on the mode toggle.
+            modifier = Modifier.padding(top = 16.dp),
+            // Replace the default headline: in long locales (e.g. Spanish) its start/end
+            // placeholder texts overflow and wrap one character per line. See CMM-2127.
+            title = null,
+            headline = {
+                // The default headline we replaced is a polite live region announcing the
+                // selection, so carry that over here or screen readers lose it. See CMM-2264.
+                val description = rememberSelectionDescription(
+                    startMillis = dateRangePickerState.selectedStartDateMillis,
+                    endMillis = dateRangePickerState.selectedEndDateMillis
+                )
                 Text(
                     text = stringResource(R.string.stats_select_date_range),
-                    modifier = Modifier.padding(start = 24.dp, end = 12.dp, top = 16.dp)
+                    modifier = Modifier
+                        .padding(start = 24.dp, end = 12.dp, bottom = 12.dp)
+                        .clearAndSetSemantics {
+                            liveRegion = LiveRegionMode.Polite
+                            contentDescription = description
+                        }
                 )
             },
-            // Omit the default headline: in long locales (e.g. Spanish) its start/end
-            // placeholder texts overflow and wrap one character per line. The title above
-            // already labels the dialog, so the headline is redundant. See CMM-2127.
-            headline = null,
-            showModeToggle = true,
-            colors = DatePickerDefaults.colors(
-                containerColor = MaterialTheme.colorScheme.surface
-            )
-        )
-
-        DialogButtons(
-            onDismiss = onDismiss,
-            onConfirm = onConfirm,
-            isConfirmEnabled = isConfirmEnabled
+            showModeToggle = true
         )
     }
 }
 
+/**
+ * Builds what a screen reader announces for the headline: the dialog title, plus whichever
+ * endpoints have been chosen. Uses the same conversion as [onConfirmDateRange] so the spoken
+ * dates always match the ones the dialog goes on to apply.
+ */
 @Composable
-private fun DialogButtons(
-    onDismiss: () -> Unit,
-    onConfirm: () -> Unit,
-    isConfirmEnabled: Boolean
+private fun rememberSelectionDescription(startMillis: Long?, endMillis: Long?): String {
+    val title = stringResource(R.string.stats_select_date_range)
+    val startLabel = stringResource(R.string.subscribers_start_date)
+    val endLabel = stringResource(R.string.subscribers_end_date)
+    return remember(title, startLabel, endLabel, startMillis, endMillis) {
+        listOfNotNull(
+            title,
+            startMillis?.let { "$startLabel: ${it.toSelectedDate().formatForSpeech()}" },
+            endMillis?.let { "$endLabel: ${it.toSelectedDate().formatForSpeech()}" }
+        ).joinToString(", ")
+    }
+}
+
+private fun Long.toSelectedDate(): LocalDate = Instant.ofEpochMilli(this)
+    .atZone(ZoneId.systemDefault())
+    .toLocalDate()
+
+private fun LocalDate.formatForSpeech(): String =
+    format(DateTimeFormatter.ofLocalizedDate(FormatStyle.FULL))
+
+private fun onConfirmDateRange(
+    startMillis: Long?,
+    endMillis: Long?,
+    onDateRangeSelected: (startDate: LocalDate, endDate: LocalDate) -> Unit
 ) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(start = 12.dp, end = 12.dp, bottom = 12.dp),
-        horizontalArrangement = Arrangement.End
-    ) {
-        TextButton(onClick = onDismiss) {
-            Text(stringResource(R.string.cancel))
-        }
-        TextButton(
-            onClick = onConfirm,
-            enabled = isConfirmEnabled
-        ) {
-            Text(stringResource(R.string.ok))
-        }
+    if (startMillis == null || endMillis == null) return
+
+    val startDate = startMillis.toSelectedDate()
+    val endDate = endMillis.toSelectedDate()
+    // Ensure start date is before or equal to end date, swap if needed
+    if (startDate.isAfter(endDate)) {
+        onDateRangeSelected(endDate, startDate)
+    } else {
+        onDateRangeSelected(startDate, endDate)
     }
 }
