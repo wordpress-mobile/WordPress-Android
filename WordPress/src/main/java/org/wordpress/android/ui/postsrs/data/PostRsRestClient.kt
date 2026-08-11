@@ -6,6 +6,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpApiClientProvider
 import org.wordpress.android.ui.postsrs.AuthorInfo
 import org.wordpress.android.ui.reader.utils.ReaderUtils
+import org.wordpress.android.ui.reader.utils.SiteAccessibilityInfo
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.SiteUtils
 import rs.wordpress.api.kotlin.WpRequestResult
@@ -458,6 +459,26 @@ class PostRsRestClient @Inject constructor(
         }
         return ReaderUtils.getResizedImageUrl(
             url, width, 0, accessibilityInfo
+        ).also { logImageChoice(image, accessibilityInfo, width, it) }
+    }
+
+    /**
+     * TODO CMM-2276: temporary review aid, remove before merge. Lets a
+     * reviewer confirm the right render is picked without a proxy.
+     */
+    private fun logImageChoice(
+        image: MediaImage,
+        accessibilityInfo: SiteAccessibilityInfo,
+        width: Int,
+        chosenUrl: String,
+    ) {
+        AppLog.d(
+            AppLog.T.POSTS,
+            "CMM-2276 want=${width}px " +
+                "photon=${accessibilityInfo.isPhotonCapable} " +
+                "renders=${image.sizes.map { it.width }} " +
+                "chose=${chosenUrl.substringAfterLast('/')} " +
+                "original=${image.sourceUrl.substringAfterLast('/')}"
         )
     }
 
