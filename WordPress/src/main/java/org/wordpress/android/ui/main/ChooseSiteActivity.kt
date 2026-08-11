@@ -8,7 +8,6 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.view.ViewGroup
 import androidx.activity.addCallback
 import androidx.activity.viewModels
 import androidx.appcompat.content.res.AppCompatResources
@@ -75,7 +74,6 @@ class ChooseSiteActivity : BaseAppCompatActivity() {
         // ordered bottom-to-top so the stagger animates upward from the main FAB
         listOf(binding.fabMenuItemSelfHosted, binding.fabMenuItemWpcom)
     }
-    private val fabMenuItemOffset by lazy { resources.getDimension(R.dimen.margin_extra_large) }
     private var fabCornerAnimator: ValueAnimator? = null
     private var currentFabCornerSize = FAB_CORNER_FRACTION_RESTING
     // Bumped on every open and close so a menu transition that is still waiting on a layout pass can
