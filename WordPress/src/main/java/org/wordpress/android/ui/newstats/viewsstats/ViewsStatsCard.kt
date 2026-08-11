@@ -51,9 +51,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import org.wordpress.android.ui.newstats.StatsColors
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.os.ConfigurationCompat
@@ -826,8 +828,12 @@ private fun BoxScope.EdgeFade(
     )
     if (alpha == 0f) return
     val isStart = alignment == Alignment.CenterStart
+    val isRtl = LocalLayoutDirection.current == LayoutDirection.Rtl
+    // horizontalGradient works in physical left->right space, so mirror it for RTL: the opaque end
+    // must sit against the aligned (physical) edge that CenterStart/CenterEnd already mirror for us.
+    val opaqueOnLeft = isStart != isRtl
     val brush = Brush.horizontalGradient(
-        colors = if (isStart) {
+        colors = if (opaqueOnLeft) {
             listOf(surfaceColor, Color.Transparent)
         } else {
             listOf(Color.Transparent, surfaceColor)
