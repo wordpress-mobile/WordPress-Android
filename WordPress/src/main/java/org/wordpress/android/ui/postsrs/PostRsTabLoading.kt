@@ -26,9 +26,17 @@ internal object PostRsTabLoading {
     fun onItemsLoaded(wasLoading: Boolean, hasItems: Boolean): Boolean = wasLoading && !hasItems
 
     /**
-     * Whether a tab stays loading after its list info changes. The fetch is over once the
-     * collection is no longer fetching the first page.
+     * Whether a tab stays loading after its list info changes.
+     *
+     * The fetch is over once the collection is no longer fetching the first page, but list info
+     * can resolve ahead of the data it describes - both observers hop to a background thread and
+     * reading list info is cheaper than reading every item. So a tab with nothing to show and no
+     * completed fetch keeps waiting rather than briefly claiming to be empty.
      */
-    fun onListInfoChanged(wasLoading: Boolean, isFetchingFirstPage: Boolean): Boolean =
-        wasLoading && isFetchingFirstPage
+    fun onListInfoChanged(
+        wasLoading: Boolean,
+        isFetchingFirstPage: Boolean,
+        hasPosts: Boolean,
+        hasFetched: Boolean
+    ): Boolean = wasLoading && (isFetchingFirstPage || (!hasPosts && !hasFetched))
 }

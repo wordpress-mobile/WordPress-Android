@@ -970,7 +970,9 @@ class PostRsListViewModel @Inject constructor(
                 copy(
                     isLoading = PostRsTabLoading.onListInfoChanged(
                         wasLoading = isLoading,
-                        isFetchingFirstPage = fetchingFirstPage
+                        isFetchingFirstPage = fetchingFirstPage,
+                        hasPosts = posts.isNotEmpty(),
+                        hasFetched = tab in fetchedTabs
                     ),
                     isRefreshing = isUserRefresh && fetchingFirstPage,
                     isLoadingMore = listInfo?.state
