@@ -21,7 +21,7 @@ import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
 import java.time.Instant
 import java.time.LocalDate
-import java.time.ZoneId
+import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 
@@ -31,8 +31,11 @@ fun StatsDateRangePickerDialog(
     onDismiss: () -> Unit,
     onDateRangeSelected: (startDate: LocalDate, endDate: LocalDate) -> Unit
 ) {
+    // Today as the device sees it, expressed as UTC midnight so it can be compared against the
+    // utcTimeMillis the picker passes to isSelectableDate. Using local midnight here leaves today
+    // unselectable east of UTC. See CMM-2271.
     val todayMillis = LocalDate.now()
-        .atStartOfDay(ZoneId.systemDefault())
+        .atStartOfDay(ZoneOffset.UTC)
         .toInstant()
         .toEpochMilli()
 
@@ -121,8 +124,13 @@ private fun rememberSelectionDescription(startMillis: Long?, endMillis: Long?): 
     }
 }
 
+/**
+ * The picker hands back the start of the selected day in UTC, so the millis have to be read back in
+ * that same frame. Reading them in the device zone lands on the previous day west of UTC, which
+ * silently queries a range one day earlier than the one tapped. See CMM-2271.
+ */
 private fun Long.toSelectedDate(): LocalDate = Instant.ofEpochMilli(this)
-    .atZone(ZoneId.systemDefault())
+    .atZone(ZoneOffset.UTC)
     .toLocalDate()
 
 private fun LocalDate.formatForSpeech(): String =
