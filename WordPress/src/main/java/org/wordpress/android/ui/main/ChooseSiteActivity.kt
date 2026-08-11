@@ -189,20 +189,22 @@ class ChooseSiteActivity : BaseAppCompatActivity() {
 
         addSiteMenuItems.forEachIndexed { index, item ->
             item.animate().cancel()
-            setMenuItemTransformOrigin(item)
             item.alpha = 0f
             item.scaleX = FAB_MENU_ITEM_COLLAPSED_SCALE
             item.scaleY = FAB_MENU_ITEM_COLLAPSED_SCALE
+            // Make the item visible first so it gets measured, then pivot from its trailing edge.
             item.isVisible = true
-            item.animate()
-                .alpha(1f)
-                .scaleX(1f)
-                .scaleY(1f)
-                .setStartDelay(index * FAB_MENU_STAGGER)
-                .setDuration(FAB_MENU_ANIM_DURATION)
-                .setInterpolator(FastOutSlowInInterpolator())
-                .withEndAction(null)
-                .start()
+            setMenuItemTransformOrigin(item) {
+                item.animate()
+                    .alpha(1f)
+                    .scaleX(1f)
+                    .scaleY(1f)
+                    .setStartDelay(index * FAB_MENU_STAGGER)
+                    .setDuration(FAB_MENU_ANIM_DURATION)
+                    .setInterpolator(FastOutSlowInInterpolator())
+                    .withEndAction(null)
+                    .start()
+            }
         }
     }
 
@@ -221,16 +223,17 @@ class ChooseSiteActivity : BaseAppCompatActivity() {
 
         addSiteMenuItems.forEachIndexed { index, item ->
             item.animate().cancel()
-            setMenuItemTransformOrigin(item)
-            item.animate()
-                .alpha(0f)
-                .scaleX(FAB_MENU_ITEM_COLLAPSED_SCALE)
-                .scaleY(FAB_MENU_ITEM_COLLAPSED_SCALE)
-                .setStartDelay(index * FAB_MENU_STAGGER)
-                .setDuration(FAB_MENU_ANIM_DURATION)
-                .setInterpolator(FastOutSlowInInterpolator())
-                .withEndAction { item.isVisible = false }
-                .start()
+            setMenuItemTransformOrigin(item) {
+                item.animate()
+                    .alpha(0f)
+                    .scaleX(FAB_MENU_ITEM_COLLAPSED_SCALE)
+                    .scaleY(FAB_MENU_ITEM_COLLAPSED_SCALE)
+                    .setStartDelay(index * FAB_MENU_STAGGER)
+                    .setDuration(FAB_MENU_ANIM_DURATION)
+                    .setInterpolator(FastOutSlowInInterpolator())
+                    .withEndAction { item.isVisible = false }
+                    .start()
+            }
         }
     }
 
@@ -379,10 +382,24 @@ class ChooseSiteActivity : BaseAppCompatActivity() {
     /**
      * Material 3 grows the menu out of the FAB's top trailing corner, so each item scales from the
      * corner nearest the FAB rather than from its own centre.
+     *
+     * The items start out gone, so on the first open they have not been measured yet and their width
+     * is still zero. Deferring to the next layout pass means the pivot lands on the trailing edge
+     * rather than the leading one, which would otherwise make that first expansion grow the wrong
+     * way across.
      */
-    private fun setMenuItemTransformOrigin(item: View) {
-        item.pivotX = item.width.toFloat()
-        item.pivotY = item.height.toFloat()
+    private fun setMenuItemTransformOrigin(item: View, onReady: () -> Unit) {
+        if (item.width > 0 && item.height > 0) {
+            item.pivotX = item.width.toFloat()
+            item.pivotY = item.height.toFloat()
+            onReady()
+            return
+        }
+        item.doOnLayout {
+            it.pivotX = it.width.toFloat()
+            it.pivotY = it.height.toFloat()
+            onReady()
+        }
     }
 
     /**
