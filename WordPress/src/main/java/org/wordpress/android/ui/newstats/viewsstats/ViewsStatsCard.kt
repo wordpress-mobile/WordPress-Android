@@ -3,10 +3,10 @@ package org.wordpress.android.ui.newstats.viewsstats
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -14,8 +14,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -79,6 +78,7 @@ import com.patrykandpatrick.vico.compose.common.component.rememberShapeComponent
 import com.patrykandpatrick.vico.compose.common.component.rememberTextComponent
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.theme.AppThemeM3
+import org.wordpress.android.ui.compose.utils.horizontalFadingEdges
 import org.wordpress.android.ui.newstats.components.CardPosition
 import org.wordpress.android.ui.newstats.components.StatsCardMenu
 import org.wordpress.android.ui.newstats.util.formatStatValue
@@ -771,14 +771,18 @@ private fun ViewsStatsChart(
 
 @Composable
 private fun BottomStatsRow(stats: List<StatItem>) {
-    LazyRow(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
-        contentPadding = PaddingValues(horizontal = 0.dp)
+    // A plain scrollable Row plus the shared fading-edges modifier hints at off-screen items. The
+    // modifier erases content with BlendMode.DstOut (background-agnostic) and is already RTL-aware,
+    // and it grows/shrinks the fade with the actual scroll offset.
+    val scrollState = rememberScrollState()
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .horizontalScroll(scrollState)
+            .horizontalFadingEdges(scrollState),
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        items(stats) { stat ->
-            StatItemCard(stat)
-        }
+        stats.forEach { StatItemCard(it) }
     }
 }
 
@@ -1028,6 +1032,21 @@ private fun ViewsStatsCardErrorPreview() {
 @Preview(showBackground = true, uiMode = android.content.res.Configuration.UI_MODE_NIGHT_YES)
 @Composable
 private fun ViewsStatsCardLoadedDarkPreview() {
+    AppThemeM3 {
+        ViewsStatsCard(
+            uiState = sampleLoadedState(ChartType.BAR),
+            onChartTypeChanged = {},
+            onBarTapped = {},
+            onRetry = {},
+            onRemoveCard = {}
+        )
+    }
+}
+
+// RTL preview to verify the bottom-stats fading edges mirror correctly.
+@Preview(showBackground = true, locale = "ar")
+@Composable
+private fun ViewsStatsCardLoadedRtlPreview() {
     AppThemeM3 {
         ViewsStatsCard(
             uiState = sampleLoadedState(ChartType.BAR),

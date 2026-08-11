@@ -8,7 +8,6 @@ import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -219,7 +218,6 @@ private fun LoadedContent(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable(onClick = state.onCardClick)
             .padding(CardPadding)
     ) {
         // Header: Title on left, sparkline in middle, menu on right
@@ -538,8 +536,7 @@ private fun TodaysStatsCardLoadedPreview() {
                         ViewsDataPoint("4pm", 140),
                         ViewsDataPoint("8pm", 200)
                     )
-                ),
-                onCardClick = {}
+                )
             ),
             onRemoveCard = {}
         )
@@ -587,8 +584,7 @@ private fun TodaysStatsCardLoadedDarkPreview() {
                         ViewsDataPoint("4pm", 140),
                         ViewsDataPoint("8pm", 200)
                     )
-                ),
-                onCardClick = {}
+                )
             ),
             onRemoveCard = {}
         )

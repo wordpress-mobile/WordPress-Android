@@ -455,24 +455,6 @@ class TodaysStatsViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `when loaded state is shown, then onCardClick callback can be invoked`() = test {
-        val aggregates = createTodayAggregates()
-
-        whenever(statsRepository.fetchTodayAggregates(any()))
-            .thenReturn(TodayAggregatesResult.Success(aggregates))
-        whenever(statsRepository.fetchHourlyViews(any(), any()))
-            .thenReturn(createHourlyViewsResult())
-
-        initViewModel()
-        advanceUntilIdle()
-
-        val state = viewModel.uiState.value as TodaysStatsCardUiState.Loaded
-        // Verify onCardClick callback can be invoked without error
-        state.onCardClick()
-        // If we reached here, the callback is present and invocable
-    }
-
-    @Test
     fun `when loadDataIfNeeded is called multiple times, then data is only loaded once`() = test {
         val aggregates = createTodayAggregates()
 
