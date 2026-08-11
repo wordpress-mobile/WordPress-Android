@@ -6,6 +6,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.ArgumentMatchers.anyLong
+import org.mockito.Mockito.lenient
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.KArgumentCaptor
 import org.mockito.kotlin.any
@@ -307,6 +308,9 @@ class FeaturedImageHelperTest {
 
         val media: MediaModel = mock()
         whenever(media.url).thenReturn("https://testing.com/url.jpg")
+        // lenient(): the helper no longer reads thumbnailUrl, but it has to be set for this test
+        // to fail against the old behavior of preferring the thumbnail over the full-size url
+        lenient().`when`(media.thumbnailUrl).thenReturn("https://testing.com/thumbnail.jpg")
         whenever(mediaStore.getSiteMediaWithId(anyOrNull(), anyLong())).thenReturn(media)
 
         val site = createSiteModel().apply {
