@@ -85,78 +85,38 @@
         android:gravity="end"
         android:orientation="vertical">
 
-        <LinearLayout
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/fab_menu_item_wpcom"
+            style="@style/WordPress.FabMenuItem"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/margin_large"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
+            android:layout_marginBottom="@dimen/fab_menu_item_spacing"
+            android:text="@string/site_picker_create_wpcom"
             android:visibility="gone"
-            tools:visibility="visible">
+            app:icon="@drawable/ic_wordpress_white_24dp"
+            tools:visibility="visible" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/bg_fab_menu_label"
-                android:elevation="@dimen/margin_small"
-                android:paddingHorizontal="@dimen/margin_large"
-                android:paddingVertical="@dimen/margin_medium"
-                android:text="@string/site_picker_create_wpcom"
-                android:textAppearance="@style/TextAppearance.Material3.LabelLarge" />
-
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/fab_wpcom"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/margin_large"
-                android:layout_marginEnd="@dimen/margin_medium"
-                android:contentDescription="@string/site_picker_create_wpcom"
-                android:src="@drawable/ic_wordpress_white_24dp"
-                app:borderWidth="0dp"
-                app:fabSize="mini" />
-        </LinearLayout>
-
-        <LinearLayout
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/fab_menu_item_self_hosted"
+            style="@style/WordPress.FabMenuItem"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/margin_large"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
+            android:layout_marginBottom="@dimen/fab_menu_close_button_spacing"
+            android:text="@string/site_picker_add_self_hosted"
             android:visibility="gone"
-            tools:visibility="visible">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/bg_fab_menu_label"
-                android:elevation="@dimen/margin_small"
-                android:paddingHorizontal="@dimen/margin_large"
-                android:paddingVertical="@dimen/margin_medium"
-                android:text="@string/site_picker_add_self_hosted"
-                android:textAppearance="@style/TextAppearance.Material3.LabelLarge" />
-
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/fab_self_hosted"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/margin_large"
-                android:layout_marginEnd="@dimen/margin_medium"
-                android:contentDescription="@string/site_picker_add_self_hosted"
-                android:src="@drawable/ic_globe_white_24dp"
-                app:borderWidth="0dp"
-                app:fabSize="mini" />
-        </LinearLayout>
+            app:icon="@drawable/ic_globe_white_24dp"
+            tools:visibility="visible" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fab_add_site"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/fab_menu_close_button_size"
+            android:layout_height="@dimen/fab_menu_close_button_size"
             android:contentDescription="@string/site_picker_add_a_site"
             android:src="@drawable/ic_plus_white_24dp"
             android:visibility="invisible"
             app:borderWidth="0dp"
+            app:maxImageSize="@dimen/fab_menu_close_button_icon_size"
+            app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.WordPress.FloatingActionButton"
             tools:visibility="visible" />
     </LinearLayout>
 

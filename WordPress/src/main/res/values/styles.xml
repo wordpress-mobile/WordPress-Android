@@ -296,10 +296,49 @@
         <item name="android:navigationBarColor">@color/black</item>"
     </style>
 
+    <!--
+        The app's base theme is Theme.MaterialComponents (Material 2), which does not define the
+        ?attr/shapeCornerFamily that the Material3.* shape styles resolve against, so the corner
+        family and size are declared explicitly here rather than inherited.
+    -->
     <style name="WordPress.FloatingActionButton" parent="Widget.MaterialComponents.FloatingActionButton">
-        <item name="shapeAppearanceOverlay">@style/ShapeAppearanceOverlay.Material3.FloatingActionButton</item>
+        <item name="shapeAppearanceOverlay">@style/ShapeAppearanceOverlay.WordPress.FloatingActionButton</item>
         <item name="android:backgroundTint">@color/fab_container</item>
         <item name="tint">@color/fab_on_container</item>
+    </style>
+
+    <style name="ShapeAppearanceOverlay.WordPress.FloatingActionButton" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">@dimen/fab_corner_size_resting</item>
+    </style>
+
+    <style name="ShapeAppearanceOverlay.WordPress.FabMenuItem" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item>
+    </style>
+
+    <!--
+        A single Material 3 FAB menu item: one tonal container holding both the icon and the label,
+        rather than a separate mini FAB sitting next to a label chip. Uses the same tonal color roles
+        as the FAB it expands from so the menu reads as one family. Parented to the Material 2 button
+        widget to match the app's base theme; see the note on the FAB style above.
+    -->
+    <style name="WordPress.FabMenuItem" parent="Widget.MaterialComponents.Button">
+        <item name="shapeAppearanceOverlay">@style/ShapeAppearanceOverlay.WordPress.FabMenuItem</item>
+        <item name="backgroundTint">@color/fab_container</item>
+        <item name="iconTint">@color/fab_on_container</item>
+        <item name="android:textColor">@color/fab_on_container</item>
+        <item name="rippleColor">@color/fab_on_container</item>
+        <item name="android:textAppearance">@style/TextAppearance.Material3.TitleMedium</item>
+        <item name="textAllCaps">false</item>
+        <item name="android:minHeight">@dimen/fab_menu_item_height</item>
+        <item name="iconPadding">@dimen/fab_menu_item_icon_label_space</item>
+        <item name="iconSize">@dimen/fab_menu_item_icon_size</item>
+        <item name="android:paddingStart">@dimen/fab_menu_item_horizontal_space</item>
+        <item name="android:paddingEnd">@dimen/fab_menu_item_horizontal_space</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="elevation">@dimen/fab_menu_item_elevation</item>
     </style>
 
     <style name="NumberPickerTheme" parent="WordPress">

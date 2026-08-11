@@ -18,6 +18,22 @@
     <!-- The site picker has no bottom navigation bar, so lift its FAB to match the create FAB on
          the My Site screen, which floats above the bottom nav (bottom nav height + fab_margin). -->
     <dimen name="site_picker_fab_margin_bottom">72dp</dimen>
+    <!-- Material 3 FAB menu measurements, from m3.material.io/components/fab-menu/specs -->
+    <dimen name="fab_menu_item_height">56dp</dimen>
+    <dimen name="fab_menu_item_icon_size">24dp</dimen>
+    <dimen name="fab_menu_item_elevation">3dp</dimen>
+    <!-- Leading and trailing space are both 24dp; the icon and label sit 8dp apart. -->
+    <dimen name="fab_menu_item_horizontal_space">24dp</dimen>
+    <dimen name="fab_menu_item_icon_label_space">8dp</dimen>
+    <!-- Menu items are 4dp apart, but the close button sits 8dp below the nearest item. -->
+    <dimen name="fab_menu_item_spacing">4dp</dimen>
+    <dimen name="fab_menu_close_button_spacing">8dp</dimen>
+    <!-- The close button is always 56dp with a 20dp icon. The FAB rests as a 16dp-corner squircle
+         and morphs to a full circle (half of the 56dp container) while the menu is open. -->
+    <dimen name="fab_menu_close_button_size">56dp</dimen>
+    <dimen name="fab_menu_close_button_icon_size">20dp</dimen>
+    <dimen name="fab_corner_size_resting">16dp</dimen>
+    <dimen name="fab_corner_size_open">28dp</dimen>
 
     <item name="primary_button_disabled_alpha" format="float" type="dimen">
         @dimen/disabled_alpha

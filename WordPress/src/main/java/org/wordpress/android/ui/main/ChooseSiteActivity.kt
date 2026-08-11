@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.main
 
+import android.animation.ValueAnimator
 import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
@@ -8,6 +9,7 @@ import android.view.MenuItem
 import android.view.View
 import androidx.activity.addCallback
 import androidx.activity.viewModels
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.AccessibilityDelegateCompat
 import androidx.core.view.ViewCompat
@@ -15,6 +17,7 @@ import androidx.core.view.accessibility.AccessibilityNodeInfoCompat
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.shape.CornerFamily
 import dagger.hilt.android.AndroidEntryPoint
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -67,6 +70,12 @@ class ChooseSiteActivity : BaseAppCompatActivity() {
         listOf(binding.fabMenuItemSelfHosted, binding.fabMenuItemWpcom)
     }
     private val fabMenuItemOffset by lazy { resources.getDimension(R.dimen.margin_extra_large) }
+    private val fabCornerSizeResting by lazy { resources.getDimension(R.dimen.fab_corner_size_resting) }
+    private val fabCornerSizeOpen by lazy { resources.getDimension(R.dimen.fab_corner_size_open) }
+    private var fabCornerAnimator: ValueAnimator? = null
+    private var currentFabCornerSize = 0f
+    private var fabIconAnimator: ValueAnimator? = null
+    private var currentFabIconRotation = 0f
 
     @Inject
     lateinit var accountStore: AccountStore
@@ -118,6 +127,7 @@ class ChooseSiteActivity : BaseAppCompatActivity() {
     }
 
     private fun setupAddSiteFab() {
+        currentFabCornerSize = fabCornerSizeResting
         setupFabAccessibility()
         applyFabAccessibilityState()
         binding.fabAddSite.setOnClickListener {
@@ -145,9 +155,7 @@ class ChooseSiteActivity : BaseAppCompatActivity() {
             closeAddSiteMenu()
             ActivityLauncher.addSelfHostedSiteForResult(this)
         }
-        binding.fabWpcom.setOnClickListener { createWpcomSite() }
         binding.fabMenuItemWpcom.setOnClickListener { createWpcomSite() }
-        binding.fabSelfHosted.setOnClickListener { addSelfHostedSite() }
         binding.fabMenuItemSelfHosted.setOnClickListener { addSelfHostedSite() }
 
         onBackPressedDispatcher.addCallback(this) {
@@ -173,7 +181,9 @@ class ChooseSiteActivity : BaseAppCompatActivity() {
         binding.fabMenuScrim.animate().cancel()
         binding.fabMenuScrim.isVisible = true
         binding.fabMenuScrim.animate().alpha(SCRIM_ALPHA).setDuration(FAB_MENU_ANIM_DURATION).start()
-        binding.fabAddSite.animate().rotation(FAB_ICON_ROTATION).setDuration(FAB_MENU_ANIM_DURATION).start()
+        animateFabIconRotation(FAB_ICON_ROTATION)
+        animateFabCornerSize(fabCornerSizeOpen)
+        applyFabColors(isOpen = true)
 
         addSiteMenuItems.forEachIndexed { index, item ->
             item.animate().cancel()
@@ -199,7 +209,9 @@ class ChooseSiteActivity : BaseAppCompatActivity() {
         binding.fabMenuScrim.animate().cancel()
         binding.fabMenuScrim.animate().alpha(0f).setDuration(FAB_MENU_ANIM_DURATION)
             .withEndAction { binding.fabMenuScrim.isVisible = false }.start()
-        binding.fabAddSite.animate().rotation(0f).setDuration(FAB_MENU_ANIM_DURATION).start()
+        animateFabIconRotation(0f)
+        animateFabCornerSize(fabCornerSizeResting)
+        applyFabColors(isOpen = false)
 
         addSiteMenuItems.forEachIndexed { index, item ->
             item.animate().cancel()
@@ -299,6 +311,68 @@ class ChooseSiteActivity : BaseAppCompatActivity() {
     }
 
     /**
+     * Morphs the FAB between its resting squircle and the full circle Material 3 uses while a FAB
+     * menu is open.
+     *
+     * TODO: the corner size reaches half the FAB's height (a circle geometrically) but
+     * MaterialShapeDrawable still draws a rounded square, so the open state is not yet a circle.
+     */
+    private fun animateFabCornerSize(targetSize: Float) {
+        fabCornerAnimator?.cancel()
+        fabCornerAnimator = ValueAnimator.ofFloat(currentFabCornerSize, targetSize).apply {
+            duration = FAB_MENU_ANIM_DURATION
+            addUpdateListener { animator ->
+                val size = animator.animatedValue as Float
+                currentFabCornerSize = size
+                applyFabCornerSize(size)
+            }
+            start()
+        }
+    }
+
+    private fun applyFabCornerSize(size: Float) {
+        binding.fabAddSite.shapeAppearanceModel = binding.fabAddSite.shapeAppearanceModel
+            .toBuilder()
+            .setAllCorners(CornerFamily.ROUNDED, size)
+            .build()
+    }
+
+    /**
+     * Spins the plus icon into a close icon.
+     */
+    private fun animateFabIconRotation(target: Float) {
+        fabIconAnimator?.cancel()
+        fabIconAnimator = ValueAnimator.ofFloat(currentFabIconRotation, target).apply {
+            duration = FAB_MENU_ANIM_DURATION
+            addUpdateListener { animator ->
+                currentFabIconRotation = animator.animatedValue as Float
+                applyFabIconRotation(currentFabIconRotation)
+            }
+            start()
+        }
+    }
+
+    /**
+     * TODO: this rotates the whole view, so the container spins with the icon. That is only
+     * invisible once the container is a true circle; while it stays a rounded square the 45 degree
+     * turn reads as a diamond.
+     */
+    private fun applyFabIconRotation(degrees: Float) {
+        binding.fabAddSite.rotation = degrees
+    }
+
+    /**
+     * Swaps the FAB between its resting tonal colors and the inverted close-button colors Material 3
+     * uses while the menu is open, so the close button reads as distinct from the tonal menu items.
+     */
+    private fun applyFabColors(isOpen: Boolean) {
+        val container = if (isOpen) R.color.fab_close_container else R.color.fab_container
+        val onContainer = if (isOpen) R.color.fab_close_on_container else R.color.fab_on_container
+        binding.fabAddSite.supportBackgroundTintList = AppCompatResources.getColorStateList(this, container)
+        binding.fabAddSite.supportImageTintList = AppCompatResources.getColorStateList(this, onContainer)
+    }
+
+    /**
      * Restores the expanded menu after a configuration change by jumping straight to the open
      * end state — no entrance animation and no analytics, both of which belong to a user-initiated
      * open. Setting the FAB visible directly (rather than via show()) skips its scale animation.
@@ -306,7 +380,11 @@ class ChooseSiteActivity : BaseAppCompatActivity() {
     private fun expandAddSiteMenuInstantly() {
         isAddSiteMenuOpen = true
         binding.fabAddSite.isVisible = true
-        binding.fabAddSite.rotation = FAB_ICON_ROTATION
+        currentFabIconRotation = FAB_ICON_ROTATION
+        applyFabIconRotation(FAB_ICON_ROTATION)
+        currentFabCornerSize = fabCornerSizeOpen
+        applyFabCornerSize(fabCornerSizeOpen)
+        applyFabColors(isOpen = true)
         setContentBehindMenuAccessible(false)
         applyFabAccessibilityState()
         binding.fabMenuScrim.isVisible = true
@@ -334,6 +412,14 @@ class ChooseSiteActivity : BaseAppCompatActivity() {
         dispatcher.unregister(this)
         isRunning = false
         super.onStop()
+    }
+
+    override fun onDestroy() {
+        fabCornerAnimator?.cancel()
+        fabCornerAnimator = null
+        fabIconAnimator?.cancel()
+        fabIconAnimator = null
+        super.onDestroy()
     }
 
     @Suppress("unused")

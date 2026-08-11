@@ -11,4 +11,6 @@
 
     <color name="fab_container">@color/blue_70</color>
     <color name="fab_on_container">@color/blue_5</color>
+    <color name="fab_close_container">@color/blue_5</color>
+    <color name="fab_close_on_container">@color/blue_80</color>
 </resources>
