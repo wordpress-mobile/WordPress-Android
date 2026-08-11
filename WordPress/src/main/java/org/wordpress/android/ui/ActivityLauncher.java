@@ -483,10 +483,6 @@ public class ActivityLauncher {
         addNewPostForResult(editorIntent, activity, site, false, reblogSource, -1, null);
     }
 
-    public static void viewStatsInNewStack(Context context, SiteModel site, @NonNull StatsLaunchedFrom launchedFrom) {
-        viewStatsInNewStack(context, site, null, launchedFrom);
-    }
-
     public static void viewStatsInNewStack(Context context, SiteModel site, @Nullable StatsTimeframe statsTimeframe,
                                            @NonNull StatsLaunchedFrom launchedFrom) {
         viewStatsInNewStack(context, site, statsTimeframe, null, launchedFrom);

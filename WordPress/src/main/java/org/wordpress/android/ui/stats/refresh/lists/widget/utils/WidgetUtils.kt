@@ -180,8 +180,11 @@ class WidgetUtils
         granularity: StatsGranularity? = null
     ): PendingIntent {
         val intent = if (newStatsRouting.isNewStatsEnabled()) {
-            Intent(context, NewStatsActivity::class.java).apply {
-                putExtra(WordPress.LOCAL_SITE_ID, localSiteId)
+            NewStatsActivity.buildIntent(
+                context,
+                launchedFrom = StatsLaunchedFrom.WIDGET,
+                localSiteId = localSiteId
+            ).apply {
                 // Mirror the row-tap (template) path: CLEAR_TOP forces an already-running
                 // NewStatsActivity to be recreated so onCreate re-reads LOCAL_SITE_ID and renders
                 // the tapped widget's site. With NEW_TASK alone, Android would just bring the
@@ -208,12 +211,11 @@ class WidgetUtils
     private fun getPendingTemplate(context: Context): PendingIntent {
         // The per-row fill-in intents already carry the LOCAL_SITE_ID extra, which is merged into
         // whichever component this template targets, so New Stats receives the tapped row's site.
-        val targetActivity = if (newStatsRouting.isNewStatsEnabled()) {
-            NewStatsActivity::class.java
+        val intent = if (newStatsRouting.isNewStatsEnabled()) {
+            NewStatsActivity.buildIntent(context, launchedFrom = StatsLaunchedFrom.WIDGET)
         } else {
-            StatsActivity::class.java
+            Intent(context, StatsActivity::class.java)
         }
-        val intent = Intent(context, targetActivity)
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
         // Before SDK 31, this was mutable by default, but this condition is still needed to satisfy lint rules :)
         val templateFlags = if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S)

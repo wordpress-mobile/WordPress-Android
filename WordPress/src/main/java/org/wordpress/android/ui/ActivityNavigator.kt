@@ -33,8 +33,13 @@ import org.wordpress.android.ui.media.MediaBrowserType
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.menu.MenuActivity
 import org.wordpress.android.ui.mysite.personalization.PersonalizationActivity
+import org.wordpress.android.ui.newstats.NewStatsActivity
+import org.wordpress.android.ui.newstats.NewStatsRouting
+import org.wordpress.android.ui.newstats.toNewStatsTarget
 import org.wordpress.android.ui.stats.StatsConstants
+import org.wordpress.android.ui.stats.StatsTimeframe
 import org.wordpress.android.ui.stats.refresh.lists.detail.StatsDetailActivity
+import org.wordpress.android.ui.stats.refresh.utils.StatsLaunchedFrom
 import org.wordpress.android.ui.sitemonitor.SiteMonitorParentActivity
 import org.wordpress.android.ui.sitemonitor.SiteMonitorType
 import org.wordpress.android.util.AppLog
@@ -45,8 +50,43 @@ import javax.inject.Singleton
 
 @Singleton
 class ActivityNavigator @Inject constructor(
-    private val selectedSiteRepository: SelectedSiteRepository
+    private val selectedSiteRepository: SelectedSiteRepository,
+    private val newStatsRouting: NewStatsRouting
 ) {
+    /**
+     * Opens Stats for [site], honouring the New Stats rollout. The old-stats [statsTimeframe] the
+     * deep links carry is mapped onto the closest New Stats tab and period.
+     *
+     * A null [site] falls through to the old path on purpose - it reports STATS_ACCESS_ERROR and
+     * toasts, which New Stats has no equivalent for.
+     */
+    fun openStats(context: Context, site: SiteModel?, statsTimeframe: StatsTimeframe? = null) {
+        if (site != null && newStatsRouting.isNewStatsEnabled()) {
+            val (tab, period) = statsTimeframe.toNewStatsTarget()
+            context.startActivity(
+                NewStatsActivity.buildIntent(context, StatsLaunchedFrom.LINK, tab, period, site.id)
+            )
+        } else {
+            ActivityLauncher.viewBlogStatsForTimeframe(context, site, statsTimeframe, StatsLaunchedFrom.LINK)
+        }
+    }
+
+    /**
+     * Same as [openStats], but stacked over the main activity so backing out of Stats lands on My
+     * Site rather than leaving the app. Used by the deep links that name a site.
+     */
+    fun openStatsInNewStack(context: Context, site: SiteModel, statsTimeframe: StatsTimeframe? = null) {
+        if (!newStatsRouting.isNewStatsEnabled()) {
+            ActivityLauncher.viewStatsInNewStack(context, site, statsTimeframe, StatsLaunchedFrom.LINK)
+            return
+        }
+        val (tab, period) = statsTimeframe.toNewStatsTarget()
+        TaskStackBuilder.create(context)
+            .addNextIntent(getMainActivityInNewStack(context))
+            .addNextIntent(NewStatsActivity.buildIntent(context, StatsLaunchedFrom.LINK, tab, period, site.id))
+            .startActivities()
+    }
+
     fun navigateToCampaignListingPage(context: Context, campaignListingPageSource: CampaignListingPageSource) {
         context.startActivity(
             Intent(context, BlazeCampaignParentActivity::class.java).apply {

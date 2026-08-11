@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.mysite.cards.compose
 
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -116,8 +115,7 @@ private fun CardDropDownMenu(
 
         DropdownMenu(
             expanded = isExpanded,
-            onDismissRequest = { isExpanded = false },
-            modifier = Modifier.background(MaterialTheme.colorScheme.surface)
+            onDismissRequest = { isExpanded = false }
         ) {
             contextMenuItems.map { item ->
                 when (item) {

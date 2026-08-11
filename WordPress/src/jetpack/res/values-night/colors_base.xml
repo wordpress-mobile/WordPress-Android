@@ -9,6 +9,6 @@
 
     <color name="nav_bar">@color/white</color>
 
-    <color name="fab_container">#4F378B</color>
-    <color name="fab_on_container">#EADDFF</color>
+    <color name="fab_container">@color/jetpack_green_70</color>
+    <color name="fab_on_container">@color/jetpack_green_5</color>
 </resources>
