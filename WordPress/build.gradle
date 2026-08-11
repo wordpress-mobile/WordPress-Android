@@ -91,9 +91,10 @@ tasks.matching {
     it.name.startsWith("uploadSentryProguardMappings") || it.name.startsWith("sentryUploadSourceBundle")
 }.configureEach {
     doFirst {
-        if (!sentryAuthToken.isPresent()) {
+        if (!sentryAuthToken.getOrNull()?.trim()) {
             throw new GradleException(
-                "SENTRY_AUTH_TOKEN is not set. Export it to upload ProGuard mappings and source bundles."
+                "SENTRY_AUTH_TOKEN is not set (or is blank). " +
+                    "Export it to upload ProGuard mappings and source bundles."
             )
         }
     }
