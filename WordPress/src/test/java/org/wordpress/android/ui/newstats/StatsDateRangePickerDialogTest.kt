@@ -22,64 +22,46 @@ class StatsDateRangePickerDialogTest {
 
     @Test
     fun `when reading the picker selection, then the tapped day survives every device zone`() {
-        val tappedCell = Instant.parse("2026-08-02T00:00:00Z").toEpochMilli()
-
         ZONES.forEach { zone ->
             TimeZone.setDefault(TimeZone.getTimeZone(zone))
 
-            assertThat(tappedCell.toSelectedDate())
+            assertThat(TEST_DATE_UTC_MILLIS.toSelectedDate())
                 .describedAs("selection read in %s", zone)
-                .isEqualTo(LocalDate.of(2026, 8, 2))
+                .isEqualTo(TEST_DATE)
         }
     }
 
     @Test
     fun `when converting a date for the picker, then it lands on UTC midnight in every device zone`() {
-        val expected = Instant.parse("2026-08-02T00:00:00Z").toEpochMilli()
-
         ZONES.forEach { zone ->
             TimeZone.setDefault(TimeZone.getTimeZone(zone))
 
-            assertThat(LocalDate.of(2026, 8, 2).toUtcMillis())
+            assertThat(TEST_DATE.toUtcMillis())
                 .describedAs("date converted in %s", zone)
-                .isEqualTo(expected)
+                .isEqualTo(TEST_DATE_UTC_MILLIS)
         }
     }
 
     @Test
-    fun `when guarding future dates, then today is selectable and tomorrow is not in every zone`() {
+    fun `when guarding future dates, then today's cell matches the picker frame in every zone`() {
         ZONES.forEach { zone ->
             TimeZone.setDefault(TimeZone.getTimeZone(zone))
 
-            // The guard in StatsDateRangePickerDialog. Cells are derived independently from epoch
-            // days, so this fails if todayMillis ever drifts back to local midnight.
+            // The guard in StatsDateRangePickerDialog. The expected cell is derived independently
+            // from epoch days, so this fails if todayMillis ever drifts back to local midnight.
             val today = LocalDate.now()
-            val todayMillis = today.toUtcMillis()
 
-            assertThat(todayMillis)
+            assertThat(today.toUtcMillis())
                 .describedAs("today's cell in %s", zone)
                 .isEqualTo(today.toEpochDay() * MILLIS_PER_DAY)
-            assertThat(today.plusDays(1).toEpochDay() * MILLIS_PER_DAY <= todayMillis)
-                .describedAs("tomorrow selectable in %s", zone)
-                .isFalse()
-        }
-    }
-
-    @Test
-    fun `when a selection round trips, then the date is unchanged`() {
-        val date = LocalDate.of(2026, 8, 2)
-
-        ZONES.forEach { zone ->
-            TimeZone.setDefault(TimeZone.getTimeZone(zone))
-
-            assertThat(date.toUtcMillis().toSelectedDate())
-                .describedAs("round trip in %s", zone)
-                .isEqualTo(date)
         }
     }
 
     companion object {
         private const val MILLIS_PER_DAY = 86_400_000L
+
+        private val TEST_DATE: LocalDate = LocalDate.of(2026, 8, 2)
+        private val TEST_DATE_UTC_MILLIS: Long = Instant.parse("2026-08-02T00:00:00Z").toEpochMilli()
 
         // Spans both sides of UTC, including the half-hour offset of Asia/Kolkata.
         private val ZONES = listOf(
