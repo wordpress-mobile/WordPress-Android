@@ -152,11 +152,9 @@ class FeaturedImageHelper @Inject constructor(
             null
         )
 
-        // Get max width/height for photon thumbnail - we load a smaller image so it's loaded quickly
+        // Resize from the full-size media URL so it loads quickly without being pixelated.
+        // MediaModel.thumbnailUrl is WP.com's 150px render and Photon can't upscale it.
         val maxDimen = resourceProvider.getDimensionPixelSize(R.dimen.post_settings_featured_image_height_max)
-
-        // Always resize from the full-size media URL. MediaModel.thumbnailUrl is WP.com's 150px
-        // render, and Photon can't upscale it, so using it here produces a pixelated image.
         val mediaUri = StringUtils.notNullStr(media.url)
 
         val photonUrl = if (site.isSelfHostedAdmin) {
