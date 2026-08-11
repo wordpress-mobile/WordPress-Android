@@ -300,13 +300,12 @@ class FeaturedImageHelperTest {
     }
 
     @Test
-    fun `createCurrent-State uses media url when thumbnailUrl is empty`() {
+    fun `createCurrent-State resizes the full-size media url, not the thumbnail`() {
         // Arrange
         val post: PostImmutableModel = mock()
         whenever(post.hasFeaturedImage()).thenReturn(true)
 
         val media: MediaModel = mock()
-        whenever(media.thumbnailUrl).thenReturn(null)
         whenever(media.url).thenReturn("https://testing.com/url.jpg")
         whenever(mediaStore.getSiteMediaWithId(anyOrNull(), anyLong())).thenReturn(media)
 
@@ -319,33 +318,6 @@ class FeaturedImageHelperTest {
         // Assert
         verify(readerUtilsWrapper).getResizedImageUrl(
             eq("https://testing.com/url.jpg"),
-            anyInt(),
-            anyInt(),
-            eq(siteAccessibilityInfo)
-        )
-    }
-
-    @Test
-    fun `createCurrent-State uses thumbnailUrl if it is not empty`() {
-        // Arrange
-        val post: PostImmutableModel = mock()
-        whenever(post.hasFeaturedImage()).thenReturn(true)
-
-        val media: MediaModel = mock()
-        whenever(media.thumbnailUrl).thenReturn("https://testing.com/thumbnail.jpg")
-        whenever(mediaStore.getSiteMediaWithId(anyOrNull(), anyLong())).thenReturn(media)
-
-        val site = createSiteModel().apply {
-            origin = SiteModel.ORIGIN_WPCOM_REST
-        }
-
-        // Act
-        featuredImageHelper.createCurrentFeaturedImageState(site, post)
-        // Assert
-        verify(readerUtilsWrapper).getResizedImageUrl(
-            eq(
-                "https://testing.com/thumbnail.jpg"
-            ),
             anyInt(),
             anyInt(),
             eq(siteAccessibilityInfo)

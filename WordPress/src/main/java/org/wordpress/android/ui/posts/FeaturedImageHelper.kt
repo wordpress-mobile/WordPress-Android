@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.posts
 
 import android.net.Uri
-import android.text.TextUtils
 import dagger.Reusable
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
@@ -156,13 +155,9 @@ class FeaturedImageHelper @Inject constructor(
         // Get max width/height for photon thumbnail - we load a smaller image so it's loaded quickly
         val maxDimen = resourceProvider.getDimensionPixelSize(R.dimen.post_settings_featured_image_height_max)
 
-        val mediaUri = StringUtils.notNullStr(
-            if (site.isSelfHostedAdmin || TextUtils.isEmpty(media.thumbnailUrl)) {
-                media.url
-            } else {
-                media.thumbnailUrl
-            }
-        )
+        // Always resize from the full-size media URL. MediaModel.thumbnailUrl is WP.com's 150px
+        // render, and Photon can't upscale it, so using it here produces a pixelated image.
+        val mediaUri = StringUtils.notNullStr(media.url)
 
         val photonUrl = if (site.isSelfHostedAdmin) {
             mediaUri
