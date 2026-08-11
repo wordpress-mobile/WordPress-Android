@@ -76,6 +76,9 @@ class PostRsListViewModel @Inject constructor(
     private val collections = mutableMapOf<PostRsListTab, ObservableMetadataCollection>()
     private val initializingTabs = mutableSetOf<PostRsListTab>()
     private val userRefreshingTabs = mutableSetOf<PostRsListTab>()
+
+    /** Tabs whose collection has completed at least one fetch, so an empty list means empty. */
+    private val fetchedTabs = mutableSetOf<PostRsListTab>()
     private val resolveImageJobs = mutableMapOf<PostRsListTab, Job>()
     private val resolveAuthorJobs = mutableMapOf<PostRsListTab, Job>()
     private var lastTrackedTab: PostRsListTab? = null
@@ -626,6 +629,7 @@ class PostRsListViewModel @Inject constructor(
         collections.clear()
         initializingTabs.clear()
         userRefreshingTabs.clear()
+        fetchedTabs.clear()
         resolveImageJobs.values.forEach { it.cancel() }
         resolveImageJobs.clear()
         resolveAuthorJobs.values.forEach { it.cancel() }
@@ -717,13 +721,27 @@ class PostRsListViewModel @Inject constructor(
             userRefreshingTabs.add(tab)
             updateTabUiState(tab) { copy(isRefreshing = true, error = null) }
         } else {
-            updateTabUiState(tab) { copy(error = null) }
+            updateTabUiState(tab) {
+                copy(
+                    isLoading = PostRsTabLoading.onRefreshStarted(
+                        hasPosts = posts.isNotEmpty(),
+                        hasFetched = tab in fetchedTabs
+                    ),
+                    error = null
+                )
+            }
         }
 
         viewModelScope.launch {
             @Suppress("TooGenericExceptionCaught")
             try {
                 withContext(Dispatchers.IO) { collection.refresh() }
+                fetchedTabs.add(tab)
+                userRefreshingTabs.remove(tab)
+                // Read the fetched items and end both progress states here rather than relying
+                // on the collection observers, which aren't guaranteed to fire for a refresh.
+                loadItemsForTab(tab)
+                updateTabUiState(tab) { copy(isLoading = false, isRefreshing = false) }
             } catch (e: Exception) {
                 AppLog.e(AppLog.T.POSTS, "Failed to refresh tab $tab", e)
                 userRefreshingTabs.remove(tab)
@@ -816,7 +834,16 @@ class PostRsListViewModel @Inject constructor(
                     }
                 )
             }
-            updateTabUiState(tab) { copy(posts = uiModels, isLoading = false, error = null) }
+            updateTabUiState(tab) {
+                copy(
+                    posts = uiModels,
+                    isLoading = PostRsTabLoading.onItemsLoaded(
+                        wasLoading = isLoading,
+                        hasItems = uiModels.isNotEmpty()
+                    ),
+                    error = null
+                )
+            }
             resolveFeaturedImages(tab, uiModels)
             resolveAuthorNames(tab, uiModels)
         } catch (e: Exception) {
@@ -941,7 +968,12 @@ class PostRsListViewModel @Inject constructor(
         } else {
             updateTabUiState(tab) {
                 copy(
-                    isLoading = isLoading && fetchingFirstPage,
+                    isLoading = PostRsTabLoading.onListInfoChanged(
+                        wasLoading = isLoading,
+                        isFetchingFirstPage = fetchingFirstPage,
+                        hasPosts = posts.isNotEmpty(),
+                        hasFetched = tab in fetchedTabs
+                    ),
                     isRefreshing = isUserRefresh && fetchingFirstPage,
                     isLoadingMore = listInfo?.state
                         == ListState.FETCHING_NEXT_PAGE,
