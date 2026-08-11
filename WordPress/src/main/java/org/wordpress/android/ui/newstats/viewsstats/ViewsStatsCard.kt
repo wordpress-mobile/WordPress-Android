@@ -1,25 +1,20 @@
 package org.wordpress.android.ui.newstats.viewsstats
 
-import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -51,11 +46,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import org.wordpress.android.ui.newstats.StatsColors
 import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.os.ConfigurationCompat
@@ -85,6 +78,7 @@ import com.patrykandpatrick.vico.compose.common.component.rememberShapeComponent
 import com.patrykandpatrick.vico.compose.common.component.rememberTextComponent
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.theme.AppThemeM3
+import org.wordpress.android.ui.compose.utils.horizontalFadingEdges
 import org.wordpress.android.ui.newstats.components.CardPosition
 import org.wordpress.android.ui.newstats.components.StatsCardMenu
 import org.wordpress.android.ui.newstats.util.formatStatValue
@@ -99,7 +93,6 @@ private val CardMargin = 16.dp
 private val ChartHeight = 180.dp
 private val StatItemWidth = 100.dp
 private val BadgeCornerRadius = 4.dp
-private val EdgeFadeWidth = 24.dp
 
 // Preview sample data constants
 private const val SAMPLE_CURRENT_VIEWS = 7467L
@@ -778,75 +771,19 @@ private fun ViewsStatsChart(
 
 @Composable
 private fun BottomStatsRow(stats: List<StatItem>) {
-    val listState = rememberLazyListState()
-    val surfaceColor = MaterialTheme.colorScheme.surface
-
-    Box(modifier = Modifier.fillMaxWidth()) {
-        LazyRow(
-            state = listState,
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            contentPadding = PaddingValues(horizontal = 0.dp)
-        ) {
-            items(stats) { stat ->
-                StatItemCard(stat)
-            }
-        }
-        // Overlay matches the row's resolved size so the edge strips have a bounded height to fill;
-        // the outer Box wraps the LazyRow height, which leaves fillMaxHeight unbounded on its own.
-        Box(modifier = Modifier.matchParentSize()) {
-            // Fade the start edge whenever there are items scrolled off to the left.
-            EdgeFade(
-                visible = listState.canScrollBackward,
-                surfaceColor = surfaceColor,
-                alignment = Alignment.CenterStart
-            )
-            // Fade the end edge whenever there are more items to reveal to the right.
-            EdgeFade(
-                visible = listState.canScrollForward,
-                surfaceColor = surfaceColor,
-                alignment = Alignment.CenterEnd
-            )
-        }
-    }
-}
-
-/**
- * A narrow gradient strip anchored to one edge of the scrollable [BottomStatsRow] that hints there
- * is more content in that direction. Fades between the card surface color and transparent, and
- * animates in/out as the row is scrolled to or away from the edge.
- */
-@Composable
-private fun BoxScope.EdgeFade(
-    visible: Boolean,
-    surfaceColor: Color,
-    alignment: Alignment
-) {
-    val alpha by animateFloatAsState(
-        targetValue = if (visible) 1f else 0f,
-        label = "EdgeFadeAlpha"
-    )
-    if (alpha == 0f) return
-    val isStart = alignment == Alignment.CenterStart
-    val isRtl = LocalLayoutDirection.current == LayoutDirection.Rtl
-    // horizontalGradient works in physical left->right space, so mirror it for RTL: the opaque end
-    // must sit against the aligned (physical) edge that CenterStart/CenterEnd already mirror for us.
-    val opaqueOnLeft = isStart != isRtl
-    val brush = Brush.horizontalGradient(
-        colors = if (opaqueOnLeft) {
-            listOf(surfaceColor, Color.Transparent)
-        } else {
-            listOf(Color.Transparent, surfaceColor)
-        }
-    )
-    Box(
+    // A plain scrollable Row plus the shared fading-edges modifier hints at off-screen items. The
+    // modifier erases content with BlendMode.DstOut (background-agnostic) and is already RTL-aware,
+    // and it grows/shrinks the fade with the actual scroll offset.
+    val scrollState = rememberScrollState()
+    Row(
         modifier = Modifier
-            .align(alignment)
-            .fillMaxHeight()
-            .width(EdgeFadeWidth)
-            .alpha(alpha)
-            .background(brush)
-    )
+            .fillMaxWidth()
+            .horizontalScroll(scrollState)
+            .horizontalFadingEdges(scrollState),
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        stats.forEach { StatItemCard(it) }
+    }
 }
 
 @Composable
@@ -1095,6 +1032,21 @@ private fun ViewsStatsCardErrorPreview() {
 @Preview(showBackground = true, uiMode = android.content.res.Configuration.UI_MODE_NIGHT_YES)
 @Composable
 private fun ViewsStatsCardLoadedDarkPreview() {
+    AppThemeM3 {
+        ViewsStatsCard(
+            uiState = sampleLoadedState(ChartType.BAR),
+            onChartTypeChanged = {},
+            onBarTapped = {},
+            onRetry = {},
+            onRemoveCard = {}
+        )
+    }
+}
+
+// RTL preview to verify the bottom-stats fading edges mirror correctly.
+@Preview(showBackground = true, locale = "ar")
+@Composable
+private fun ViewsStatsCardLoadedRtlPreview() {
     AppThemeM3 {
         ViewsStatsCard(
             uiState = sampleLoadedState(ChartType.BAR),
