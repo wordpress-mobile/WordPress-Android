@@ -11,6 +11,9 @@
 
     <color name="fab_container">@color/jetpack_green_70</color>
     <color name="fab_on_container">@color/jetpack_green_5</color>
+    <!-- The expanded FAB deliberately matches its light counterpart: green_30 already reads as an
+         accent against the dark green menu items, and it is the only step on this ramp that clears
+         3:1 against a legible icon in both themes. -->
     <color name="fab_close_container">@color/jetpack_green_30</color>
     <color name="fab_close_on_container">@color/jetpack_green_90</color>
 </resources>

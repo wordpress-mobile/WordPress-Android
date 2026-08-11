@@ -21,6 +21,6 @@
 
     <color name="fab_container">@color/jetpack_green_5</color>
     <color name="fab_on_container">@color/jetpack_green_90</color>
-    <color name="fab_close_container">@color/jetpack_green_40</color>
-    <color name="fab_close_on_container">@color/white</color>
+    <color name="fab_close_container">@color/jetpack_green_30</color>
+    <color name="fab_close_on_container">@color/jetpack_green_90</color>
 </resources>
