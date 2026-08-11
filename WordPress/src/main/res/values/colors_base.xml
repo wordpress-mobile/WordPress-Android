@@ -23,6 +23,6 @@
     <color name="fab_on_container">@color/blue_80</color>
     <!-- While the FAB menu is open the FAB becomes a close button, which Material 3 renders as a
          filled container inverted against the tonal menu items. -->
-    <color name="fab_close_container">@color/blue_70</color>
-    <color name="fab_close_on_container">@color/blue_5</color>
+    <color name="fab_close_container">@color/blue_50</color>
+    <color name="fab_close_on_container">@color/white</color>
 </resources>

@@ -22,6 +22,8 @@
     <dimen name="fab_menu_item_height">56dp</dimen>
     <dimen name="fab_menu_item_icon_size">24dp</dimen>
     <dimen name="fab_menu_item_elevation">3dp</dimen>
+    <item name="fab_menu_item_ripple_alpha" format="float" type="dimen">0.08</item>
+    <item name="fab_menu_item_ripple_pressed_alpha" format="float" type="dimen">0.16</item>
     <!-- Leading and trailing space are both 24dp; the icon and label sit 8dp apart. -->
     <dimen name="fab_menu_item_horizontal_space">24dp</dimen>
     <dimen name="fab_menu_item_icon_label_space">8dp</dimen>

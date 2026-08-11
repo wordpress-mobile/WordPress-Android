@@ -328,7 +328,7 @@
         <item name="backgroundTint">@color/fab_container</item>
         <item name="iconTint">@color/fab_on_container</item>
         <item name="android:textColor">@color/fab_on_container</item>
-        <item name="rippleColor">@color/fab_on_container</item>
+        <item name="rippleColor">@color/fab_menu_item_ripple</item>
         <item name="android:textAppearance">@style/TextAppearance.Material3.TitleMedium</item>
         <item name="textAllCaps">false</item>
         <item name="android:minHeight">@dimen/fab_menu_item_height</item>
