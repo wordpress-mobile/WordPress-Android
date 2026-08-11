@@ -34,10 +34,7 @@ fun StatsDateRangePickerDialog(
     // Today as the device sees it, expressed as UTC midnight so it can be compared against the
     // utcTimeMillis the picker passes to isSelectableDate. Using local midnight here leaves today
     // unselectable east of UTC. See CMM-2271.
-    val todayMillis = LocalDate.now()
-        .atStartOfDay(ZoneOffset.UTC)
-        .toInstant()
-        .toEpochMilli()
+    val todayMillis = LocalDate.now().toUtcMillis()
 
     val dateRangePickerState = rememberDateRangePickerState(
         initialDisplayMode = DisplayMode.Picker,
@@ -129,9 +126,14 @@ private fun rememberSelectionDescription(startMillis: Long?, endMillis: Long?): 
  * that same frame. Reading them in the device zone lands on the previous day west of UTC, which
  * silently queries a range one day earlier than the one tapped. See CMM-2271.
  */
-private fun Long.toSelectedDate(): LocalDate = Instant.ofEpochMilli(this)
+internal fun Long.toSelectedDate(): LocalDate = Instant.ofEpochMilli(this)
     .atZone(ZoneOffset.UTC)
     .toLocalDate()
+
+/**
+ * Inverse of [toSelectedDate]: the start of this day in the frame the picker compares against.
+ */
+internal fun LocalDate.toUtcMillis(): Long = atStartOfDay(ZoneOffset.UTC).toInstant().toEpochMilli()
 
 private fun LocalDate.formatForSpeech(): String =
     format(DateTimeFormatter.ofLocalizedDate(FormatStyle.FULL))
