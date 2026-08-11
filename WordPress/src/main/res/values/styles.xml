@@ -332,6 +332,11 @@
         <item name="android:textAppearance">@style/TextAppearance.Material3.TitleMedium</item>
         <item name="textAllCaps">false</item>
         <item name="android:minHeight">@dimen/fab_menu_item_height</item>
+        <!-- Widget.AppCompat.Button carries an 88dp minimum width, which would stretch short labels
+             past the content-sized pill Material 3 specifies. -->
+        <item name="android:minWidth">0dp</item>
+        <item name="android:insetLeft">0dp</item>
+        <item name="android:insetRight">0dp</item>
         <item name="iconPadding">@dimen/fab_menu_item_icon_label_space</item>
         <item name="iconSize">@dimen/fab_menu_item_icon_size</item>
         <item name="android:paddingStart">@dimen/fab_menu_item_horizontal_space</item>

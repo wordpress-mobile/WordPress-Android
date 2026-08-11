@@ -28,12 +28,17 @@
     <!-- Menu items are 4dp apart, but the close button sits 8dp below the nearest item. -->
     <dimen name="fab_menu_item_spacing">4dp</dimen>
     <dimen name="fab_menu_close_button_spacing">8dp</dimen>
-    <!-- The close button is always 56dp with a 20dp icon. The FAB rests as a 16dp-corner squircle
-         and morphs to a full circle (half of the 56dp container) while the menu is open. -->
+    <!-- The close button is 56dp (the default FAB size) with a 20dp icon. The FAB rests as a
+         16dp-corner squircle; the morph to a full circle is animated in ChooseSiteActivity. -->
     <dimen name="fab_menu_close_button_size">56dp</dimen>
     <dimen name="fab_menu_close_button_icon_size">20dp</dimen>
+    <!-- The FAB reserves ~6dp around itself for its elevation shadow, so its view is larger than the
+         56dp container it draws. Negative margins pull that overhang back in so the visible circle
+         lines up with the menu items' trailing edge, and the top margin nets out to the spec's 8dp
+         gap above the close button. -->
+    <dimen name="fab_shadow_overhang_negative">-3dp</dimen>
+    <dimen name="fab_menu_close_button_top_margin">6dp</dimen>
     <dimen name="fab_corner_size_resting">16dp</dimen>
-    <dimen name="fab_corner_size_open">28dp</dimen>
 
     <item name="primary_button_disabled_alpha" format="float" type="dimen">
         @dimen/disabled_alpha
