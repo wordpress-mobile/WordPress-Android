@@ -3,6 +3,10 @@ package org.wordpress.android.ui.main
 import android.animation.ValueAnimator
 import android.content.DialogInterface
 import android.content.Intent
+import android.content.res.ColorStateList
+import android.graphics.drawable.Drawable
+import android.graphics.drawable.InsetDrawable
+import android.graphics.drawable.LayerDrawable
 import android.graphics.drawable.RippleDrawable
 import android.os.Bundle
 import android.view.Menu
@@ -76,6 +80,8 @@ class ChooseSiteActivity : BaseAppCompatActivity() {
     }
     private var fabCornerAnimator: ValueAnimator? = null
     private var currentFabCornerSize = FAB_CORNER_FRACTION_RESTING
+    private var fabColorAnimator: ValueAnimator? = null
+    private var currentFabContainerColor = 0
     // Bumped on every open and close so a menu transition that is still waiting on a layout pass can
     // tell it has been superseded and drop its animation.
     private var addSiteMenuGeneration = 0
@@ -131,6 +137,7 @@ class ChooseSiteActivity : BaseAppCompatActivity() {
 
     private fun setupAddSiteFab() {
         currentFabCornerSize = FAB_CORNER_FRACTION_RESTING
+        currentFabContainerColor = getColor(R.color.fab_container)
         setupFabAccessibility()
         applyFabAccessibilityState()
         binding.fabAddSite.setOnClickListener {
@@ -343,9 +350,6 @@ class ChooseSiteActivity : BaseAppCompatActivity() {
     /**
      * Morphs the FAB between its resting squircle and the full circle Material 3 uses while a FAB
      * menu is open.
-     *
-     * TODO: the corner size reaches half the FAB's height (a circle geometrically) but
-     * MaterialShapeDrawable still draws a rounded square, so the open state is not yet a circle.
      */
     private fun animateFabCornerSize(targetSize: Float) {
         fabCornerAnimator?.cancel()
@@ -367,23 +371,28 @@ class ChooseSiteActivity : BaseAppCompatActivity() {
             .setAllCornerSizes(RelativeCornerSize(fraction))
             .build()
         binding.fabAddSite.shapeAppearanceModel = model
-        // The FAB's background is a RippleDrawable wrapping the MaterialShapeDrawable that actually
-        // paints the container; updating the view's model alone leaves that drawable unchanged.
-        val background = binding.fabAddSite.background
-        if (background is RippleDrawable) {
-            for (index in 0 until background.numberOfLayers) {
-                val layer = background.getDrawable(index) as? MaterialShapeDrawable ?: continue
-                layer.shapeAppearanceModel = model
-                // Rewriting the shape drops the drawable's tint, so restore it for the current state.
-                layer.setTintList(AppCompatResources.getColorStateList(this, fabContainerColor()))
-            }
-        }
+        // Assigning the model on the FAB alone leaves the container it actually paints at its old
+        // shape, so push the same model onto the MaterialShapeDrawable inside its background.
+        forEachFabShapeDrawable { it.shapeAppearanceModel = model }
     }
 
-    private fun fabContainerColor() = if (isAddSiteMenuOpen) {
-        R.color.fab_close_container
-    } else {
-        R.color.fab_container
+    /**
+     * Walks the FAB's background for the MaterialShapeDrawable that paints its container. That
+     * drawable is normally the content layer of a RippleDrawable, but useCompatPadding wraps the
+     * ripple in an InsetDrawable and a border adds another layer, so the search handles nesting
+     * rather than assuming a flat RippleDrawable.
+     */
+    private fun forEachFabShapeDrawable(action: (MaterialShapeDrawable) -> Unit) {
+        fun visit(drawable: Drawable?) {
+            when (drawable) {
+                is MaterialShapeDrawable -> action(drawable)
+                is InsetDrawable -> visit(drawable.drawable)
+                is LayerDrawable -> (0 until drawable.numberOfLayers)
+                    .forEach { visit(drawable.getDrawable(it)) }
+                else -> Unit
+            }
+        }
+        visit(binding.fabAddSite.background)
     }
 
     /**
@@ -424,11 +433,27 @@ class ChooseSiteActivity : BaseAppCompatActivity() {
      * Swaps the FAB between its resting tonal colors and the inverted close-button colors Material 3
      * uses while the menu is open, so the close button reads as distinct from the tonal menu items.
      */
-    private fun applyFabColors(isOpen: Boolean) {
+    private fun applyFabColors(isOpen: Boolean, animate: Boolean = true) {
         val onContainer = if (isOpen) R.color.fab_close_on_container else R.color.fab_on_container
         binding.fabAddSite.imageTintList = AppCompatResources.getColorStateList(this, onContainer)
-        // The container color rides along with the shape, which is rewritten on every animation frame.
-        applyFabCornerSize(currentFabCornerSize)
+
+        val target = getColor(if (isOpen) R.color.fab_close_container else R.color.fab_container)
+        fabColorAnimator?.cancel()
+        if (!animate) {
+            applyFabContainerColor(target)
+            return
+        }
+        fabColorAnimator = ValueAnimator.ofArgb(currentFabContainerColor, target).apply {
+            duration = FAB_MENU_ANIM_DURATION
+            addUpdateListener { applyFabContainerColor(it.animatedValue as Int) }
+            start()
+        }
+    }
+
+    private fun applyFabContainerColor(color: Int) {
+        currentFabContainerColor = color
+        val tint = ColorStateList.valueOf(color)
+        forEachFabShapeDrawable { it.setTintList(tint) }
     }
 
     /**
@@ -442,7 +467,7 @@ class ChooseSiteActivity : BaseAppCompatActivity() {
         applyFabIcon(isOpen = true)
         currentFabCornerSize = FAB_CORNER_FRACTION_OPEN
         applyFabCornerSize(FAB_CORNER_FRACTION_OPEN)
-        applyFabColors(isOpen = true)
+        applyFabColors(isOpen = true, animate = false)
         setContentBehindMenuAccessible(false)
         applyFabAccessibilityState()
         binding.fabMenuScrim.isVisible = true
@@ -480,6 +505,8 @@ class ChooseSiteActivity : BaseAppCompatActivity() {
     override fun onDestroy() {
         fabCornerAnimator?.cancel()
         fabCornerAnimator = null
+        fabColorAnimator?.cancel()
+        fabColorAnimator = null
         super.onDestroy()
     }
 
