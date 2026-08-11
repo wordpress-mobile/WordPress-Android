@@ -1,14 +1,17 @@
 package org.wordpress.android.ui.newstats.viewsstats
 
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -16,6 +19,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -93,6 +97,7 @@ private val CardMargin = 16.dp
 private val ChartHeight = 180.dp
 private val StatItemWidth = 100.dp
 private val BadgeCornerRadius = 4.dp
+private val EdgeFadeWidth = 24.dp
 
 // Preview sample data constants
 private const val SAMPLE_CURRENT_VIEWS = 7467L
@@ -771,15 +776,71 @@ private fun ViewsStatsChart(
 
 @Composable
 private fun BottomStatsRow(stats: List<StatItem>) {
-    LazyRow(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
-        contentPadding = PaddingValues(horizontal = 0.dp)
-    ) {
-        items(stats) { stat ->
-            StatItemCard(stat)
+    val listState = rememberLazyListState()
+    val surfaceColor = MaterialTheme.colorScheme.surface
+
+    Box(modifier = Modifier.fillMaxWidth()) {
+        LazyRow(
+            state = listState,
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            contentPadding = PaddingValues(horizontal = 0.dp)
+        ) {
+            items(stats) { stat ->
+                StatItemCard(stat)
+            }
+        }
+        // Overlay matches the row's resolved size so the edge strips have a bounded height to fill;
+        // the outer Box wraps the LazyRow height, which leaves fillMaxHeight unbounded on its own.
+        Box(modifier = Modifier.matchParentSize()) {
+            // Fade the start edge whenever there are items scrolled off to the left.
+            EdgeFade(
+                visible = listState.canScrollBackward,
+                surfaceColor = surfaceColor,
+                alignment = Alignment.CenterStart
+            )
+            // Fade the end edge whenever there are more items to reveal to the right.
+            EdgeFade(
+                visible = listState.canScrollForward,
+                surfaceColor = surfaceColor,
+                alignment = Alignment.CenterEnd
+            )
         }
     }
+}
+
+/**
+ * A narrow gradient strip anchored to one edge of the scrollable [BottomStatsRow] that hints there
+ * is more content in that direction. Fades between the card surface color and transparent, and
+ * animates in/out as the row is scrolled to or away from the edge.
+ */
+@Composable
+private fun BoxScope.EdgeFade(
+    visible: Boolean,
+    surfaceColor: Color,
+    alignment: Alignment
+) {
+    val alpha by animateFloatAsState(
+        targetValue = if (visible) 1f else 0f,
+        label = "EdgeFadeAlpha"
+    )
+    if (alpha == 0f) return
+    val isStart = alignment == Alignment.CenterStart
+    val brush = Brush.horizontalGradient(
+        colors = if (isStart) {
+            listOf(surfaceColor, Color.Transparent)
+        } else {
+            listOf(Color.Transparent, surfaceColor)
+        }
+    )
+    Box(
+        modifier = Modifier
+            .align(alignment)
+            .fillMaxHeight()
+            .width(EdgeFadeWidth)
+            .alpha(alpha)
+            .background(brush)
+    )
 }
 
 @Composable
