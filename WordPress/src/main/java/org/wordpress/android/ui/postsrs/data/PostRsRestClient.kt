@@ -78,7 +78,7 @@ class PostRsRestClient @Inject constructor(
             (widthDp * context.resources.displayMetrics.density)
                 .toInt()
         } else {
-            0
+            context.resources.displayMetrics.widthPixels
         }
         val result = mutableMapOf<Long, String>()
         val uncached = mutableListOf<Long>()
@@ -414,9 +414,9 @@ class PostRsRestClient @Inject constructor(
         SLUG_TO_FORMAT[slug] ?: PostFormat.Custom(slug)
 
     /**
-     * Reads the source URL and the available renders off [this]. The
-     * `mediaDetails` handle is owned by the response, so this has to be
-     * called while the response is still alive.
+     * Reads the source URL and the available renders off the media
+     * object. The `mediaDetails` handle is owned by the response, so
+     * this has to be called while the response is still alive.
      */
     private fun MediaWithEditContext.toMediaImage(): MediaImage {
         val image = mediaDetails.parseAsMimeType(mimeType)
@@ -430,36 +430,30 @@ class PostRsRestClient @Inject constructor(
     }
 
     /**
-     * Picks a URL to display [image] at [widthPx] (0 means full screen
-     * width). Photon-capable sites resize the original server-side.
-     * Everywhere else - self-hosted sites in particular, which ignore
-     * the `?w=` param - we ask for the smallest render WordPress
-     * already generated that's at least as wide as we need, so a 64dp
-     * thumbnail doesn't pull down the full-size upload. Never picks a
-     * render narrower than the target, so images can't end up
-     * pixelated.
+     * Picks a URL to display [image] at [widthPx]. Photon-capable
+     * sites resize the original server-side. Everywhere else -
+     * self-hosted sites in particular, which ignore the `?w=` param -
+     * we ask for the smallest render WordPress already generated
+     * that's at least as wide as we need, so a 64dp thumbnail doesn't
+     * pull down the full-size upload. Never picks a render narrower
+     * than the target, so images can't end up pixelated.
      */
     private fun toDisplayUrl(
         site: SiteModel,
         image: MediaImage,
-        widthPx: Int = 0,
+        widthPx: Int,
     ): String {
-        val width = if (widthPx > 0) {
-            widthPx
-        } else {
-            context.resources.displayMetrics.widthPixels
-        }
         val accessibilityInfo =
             SiteUtils.getAccessibilityInfoFromSite(site)
         val url = if (accessibilityInfo.isPhotonCapable) {
             image.sourceUrl
         } else {
-            image.sizes.firstOrNull { it.width >= width }?.url
+            image.sizes.firstOrNull { it.width >= widthPx }?.url
                 ?: image.sourceUrl
         }
         return ReaderUtils.getResizedImageUrl(
-            url, width, 0, accessibilityInfo
-        ).also { logImageChoice(image, accessibilityInfo, width, it) }
+            url, widthPx, 0, accessibilityInfo
+        ).also { logImageChoice(image, accessibilityInfo, widthPx, it) }
     }
 
     /**
