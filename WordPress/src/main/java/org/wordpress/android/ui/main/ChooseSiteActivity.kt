@@ -13,11 +13,13 @@ import androidx.activity.addCallback
 import androidx.activity.viewModels
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.SearchView
+import androidx.core.animation.doOnEnd
 import androidx.core.view.AccessibilityDelegateCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.accessibility.AccessibilityNodeInfoCompat
 import androidx.core.view.doOnLayout
 import androidx.core.view.isVisible
+import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.shape.CornerFamily
@@ -78,7 +80,6 @@ class ChooseSiteActivity : BaseAppCompatActivity() {
     private var fabCornerAnimator: ValueAnimator? = null
     private var currentFabCornerSize = FAB_CORNER_FRACTION_RESTING
     private var fabIconAnimator: ValueAnimator? = null
-    private var currentFabIconRotation = 0f
 
     @Inject
     lateinit var accountStore: AccountStore
@@ -184,20 +185,24 @@ class ChooseSiteActivity : BaseAppCompatActivity() {
         binding.fabMenuScrim.animate().cancel()
         binding.fabMenuScrim.isVisible = true
         binding.fabMenuScrim.animate().alpha(SCRIM_ALPHA).setDuration(FAB_MENU_ANIM_DURATION).start()
-        animateFabIconRotation(FAB_ICON_ROTATION)
+        animateFabIcon(isOpen = true)
         animateFabCornerSize(FAB_CORNER_FRACTION_OPEN)
         applyFabColors(isOpen = true)
 
         addSiteMenuItems.forEachIndexed { index, item ->
             item.animate().cancel()
+            setMenuItemTransformOrigin(item)
             item.alpha = 0f
-            item.translationY = fabMenuItemOffset
+            item.scaleX = FAB_MENU_ITEM_COLLAPSED_SCALE
+            item.scaleY = FAB_MENU_ITEM_COLLAPSED_SCALE
             item.isVisible = true
             item.animate()
                 .alpha(1f)
-                .translationY(0f)
+                .scaleX(1f)
+                .scaleY(1f)
                 .setStartDelay(index * FAB_MENU_STAGGER)
                 .setDuration(FAB_MENU_ANIM_DURATION)
+                .setInterpolator(FastOutSlowInInterpolator())
                 .withEndAction(null)
                 .start()
         }
@@ -212,17 +217,20 @@ class ChooseSiteActivity : BaseAppCompatActivity() {
         binding.fabMenuScrim.animate().cancel()
         binding.fabMenuScrim.animate().alpha(0f).setDuration(FAB_MENU_ANIM_DURATION)
             .withEndAction { binding.fabMenuScrim.isVisible = false }.start()
-        animateFabIconRotation(0f)
+        animateFabIcon(isOpen = false)
         animateFabCornerSize(FAB_CORNER_FRACTION_RESTING)
         applyFabColors(isOpen = false)
 
         addSiteMenuItems.forEachIndexed { index, item ->
             item.animate().cancel()
+            setMenuItemTransformOrigin(item)
             item.animate()
                 .alpha(0f)
-                .translationY(fabMenuItemOffset)
+                .scaleX(FAB_MENU_ITEM_COLLAPSED_SCALE)
+                .scaleY(FAB_MENU_ITEM_COLLAPSED_SCALE)
                 .setStartDelay(index * FAB_MENU_STAGGER)
                 .setDuration(FAB_MENU_ANIM_DURATION)
+                .setInterpolator(FastOutSlowInInterpolator())
                 .withEndAction { item.isVisible = false }
                 .start()
         }
@@ -360,27 +368,43 @@ class ChooseSiteActivity : BaseAppCompatActivity() {
     }
 
     /**
-     * Spins the plus icon into a close icon.
+     * Cross-fades the FAB's plus into a close icon, which is how Material 3 transforms a FAB into
+     * the close button of its menu. The icon is swapped at the midpoint of a fade through
+     * transparent, so neither glyph is visible while the other is drawn.
      */
-    private fun animateFabIconRotation(target: Float) {
+    private fun animateFabIcon(isOpen: Boolean) {
         fabIconAnimator?.cancel()
-        fabIconAnimator = ValueAnimator.ofFloat(currentFabIconRotation, target).apply {
-            duration = FAB_MENU_ANIM_DURATION
-            addUpdateListener { animator ->
-                currentFabIconRotation = animator.animatedValue as Float
-                applyFabIconRotation(currentFabIconRotation)
+        val fab = binding.fabAddSite
+        fabIconAnimator = ValueAnimator.ofFloat(fab.alpha, 0f).apply {
+            duration = FAB_MENU_ANIM_DURATION / 2
+            addUpdateListener { fab.imageAlpha = ((it.animatedValue as Float) * MAX_ALPHA).toInt() }
+            doOnEnd {
+                applyFabIcon(isOpen)
+                fabIconAnimator = ValueAnimator.ofFloat(0f, 1f).apply {
+                    duration = FAB_MENU_ANIM_DURATION / 2
+                    addUpdateListener {
+                        fab.imageAlpha = ((it.animatedValue as Float) * MAX_ALPHA).toInt()
+                    }
+                    start()
+                }
             }
             start()
         }
     }
 
+    private fun applyFabIcon(isOpen: Boolean) {
+        binding.fabAddSite.setImageResource(
+            if (isOpen) R.drawable.ic_close_white_24dp else R.drawable.ic_plus_white_24dp
+        )
+    }
+
     /**
-     * TODO: this rotates the whole view, so the container spins with the icon. That is only
-     * invisible once the container is a true circle; while it stays a rounded square the 45 degree
-     * turn reads as a diamond.
+     * Material 3 grows the menu out of the FAB's top trailing corner, so each item scales from the
+     * corner nearest the FAB rather than from its own centre.
      */
-    private fun applyFabIconRotation(degrees: Float) {
-        binding.fabAddSite.rotation = degrees
+    private fun setMenuItemTransformOrigin(item: View) {
+        item.pivotX = item.width.toFloat()
+        item.pivotY = item.height.toFloat()
     }
 
     /**
@@ -402,8 +426,7 @@ class ChooseSiteActivity : BaseAppCompatActivity() {
     private fun expandAddSiteMenuInstantly() {
         isAddSiteMenuOpen = true
         binding.fabAddSite.isVisible = true
-        currentFabIconRotation = FAB_ICON_ROTATION
-        applyFabIconRotation(FAB_ICON_ROTATION)
+        applyFabIcon(isOpen = true)
         currentFabCornerSize = FAB_CORNER_FRACTION_OPEN
         applyFabCornerSize(FAB_CORNER_FRACTION_OPEN)
         applyFabColors(isOpen = true)
@@ -414,7 +437,8 @@ class ChooseSiteActivity : BaseAppCompatActivity() {
         addSiteMenuItems.forEach { item ->
             item.isVisible = true
             item.alpha = 1f
-            item.translationY = 0f
+            item.scaleX = 1f
+            item.scaleY = 1f
         }
     }
 
@@ -740,9 +764,12 @@ class ChooseSiteActivity : BaseAppCompatActivity() {
         private const val TRACK_PROPERTY_STATE_DONE = "done"
         private const val TRACK_PROPERTY_SECTION = "section"
         private const val SCRIM_ALPHA = 0.4f
-        private const val FAB_ICON_ROTATION = 45f
         private const val FAB_MENU_ANIM_DURATION = 200L
         private const val FAB_MENU_STAGGER = 40L
+        private const val MAX_ALPHA = 255
+        // Items grow in from a little under full size rather than from nothing, so the menu reads as
+        // expanding out of the FAB instead of popping into place.
+        private const val FAB_MENU_ITEM_COLLAPSED_SCALE = 0.8f
 
         // Corner sizes as a fraction of the FAB's height. MaterialShapeDrawable renders a relative
         // corner size correctly where an absolute one is capped short of a full circle, so the morph
