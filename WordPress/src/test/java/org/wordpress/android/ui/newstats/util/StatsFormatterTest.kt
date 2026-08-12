@@ -1,14 +1,23 @@
 package org.wordpress.android.ui.newstats.util
 
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.Before
 import org.junit.Test
 import org.mockito.kotlin.mock
 import org.wordpress.android.ui.newstats.StatsPeriod
 import org.wordpress.android.viewmodel.ResourceProvider
 import java.time.LocalDate
+import java.util.Locale
 
 class StatsFormatterTest {
     private val resourceProvider = mock<ResourceProvider>()
+
+    @Before
+    fun setUp() {
+        // toDateRangeString formats months with Locale.getDefault(), so the "Jul"/"Aug"/... month
+        // abbreviations these tests assert are locale-sensitive. Pin the locale for determinism.
+        Locale.setDefault(Locale.US)
+    }
 
     @Test
     fun `toDateRangeString for a single-day range renders one date`() {
