@@ -24,9 +24,7 @@ import androidx.core.view.isVisible
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.google.android.material.shape.CornerFamily
 import com.google.android.material.shape.MaterialShapeDrawable
-import com.google.android.material.shape.RelativeCornerSize
 import dagger.hilt.android.AndroidEntryPoint
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -78,8 +76,11 @@ class ChooseSiteActivity : BaseAppCompatActivity() {
         // ordered bottom-to-top so the stagger animates upward from the main FAB
         listOf(binding.fabMenuItemSelfHosted, binding.fabMenuItemWpcom)
     }
+    private val fabRestingCornerSize by lazy {
+        resources.getDimension(R.dimen.fab_corner_size_resting)
+    }
     private var fabCornerAnimator: ValueAnimator? = null
-    private var currentFabCornerSize = FAB_CORNER_FRACTION_RESTING
+    private var currentFabCornerSize = 0f
     private var fabColorAnimator: ValueAnimator? = null
     private var currentFabContainerColor = 0
     // Bumped on every open and close so a menu transition that is still waiting on a layout pass can
@@ -136,7 +137,7 @@ class ChooseSiteActivity : BaseAppCompatActivity() {
     }
 
     private fun setupAddSiteFab() {
-        currentFabCornerSize = FAB_CORNER_FRACTION_RESTING
+        currentFabCornerSize = fabRestingCornerSize
         currentFabContainerColor = getColor(R.color.fab_container)
         setupFabAccessibility()
         applyFabAccessibilityState()
@@ -192,7 +193,7 @@ class ChooseSiteActivity : BaseAppCompatActivity() {
         binding.fabMenuScrim.isVisible = true
         binding.fabMenuScrim.animate().alpha(SCRIM_ALPHA).setDuration(FAB_MENU_ANIM_DURATION).start()
         applyFabIcon(isOpen = true)
-        animateFabCornerSize(FAB_CORNER_FRACTION_OPEN)
+        animateFabCornerSize(fabOpenCornerSize())
         applyFabColors(isOpen = true)
 
         val generation = ++addSiteMenuGeneration
@@ -228,7 +229,7 @@ class ChooseSiteActivity : BaseAppCompatActivity() {
         binding.fabMenuScrim.animate().alpha(0f).setDuration(FAB_MENU_ANIM_DURATION)
             .withEndAction { binding.fabMenuScrim.isVisible = false }.start()
         applyFabIcon(isOpen = false)
-        animateFabCornerSize(FAB_CORNER_FRACTION_RESTING)
+        animateFabCornerSize(fabRestingCornerSize)
         applyFabColors(isOpen = false)
 
         val generation = ++addSiteMenuGeneration
@@ -364,16 +365,17 @@ class ChooseSiteActivity : BaseAppCompatActivity() {
         }
     }
 
-    private fun applyFabCornerSize(fraction: Float) {
-        val model = binding.fabAddSite.shapeAppearanceModel
-            .toBuilder()
-            .setAllCorners(CornerFamily.ROUNDED, 0f)
-            .setAllCornerSizes(RelativeCornerSize(fraction))
-            .build()
-        binding.fabAddSite.shapeAppearanceModel = model
-        // Assigning the model on the FAB alone leaves the container it actually paints at its old
-        // shape, so push the same model onto the MaterialShapeDrawable inside its background.
-        forEachFabShapeDrawable { it.shapeAppearanceModel = model }
+    private fun applyFabCornerSize(size: Float) {
+        // setCornerSize updates the drawable's existing model in place, so the corner animates
+        // without rebuilding a ShapeAppearanceModel on every frame.
+        forEachFabShapeDrawable { it.setCornerSize(size) }
+    }
+
+    /** Half the FAB's height is a circle; falls back to the resting corner before it is measured. */
+    private fun fabOpenCornerSize() = if (binding.fabAddSite.height > 0) {
+        binding.fabAddSite.height / 2f
+    } else {
+        fabRestingCornerSize
     }
 
     /**
@@ -472,8 +474,8 @@ class ChooseSiteActivity : BaseAppCompatActivity() {
         isAddSiteMenuOpen = true
         binding.fabAddSite.isVisible = true
         applyFabIcon(isOpen = true)
-        currentFabCornerSize = FAB_CORNER_FRACTION_OPEN
-        applyFabCornerSize(FAB_CORNER_FRACTION_OPEN)
+        currentFabCornerSize = fabOpenCornerSize()
+        applyFabCornerSize(currentFabCornerSize)
         applyFabColors(isOpen = true, animate = false)
         setContentBehindMenuAccessible(false)
         applyFabAccessibilityState()
@@ -823,8 +825,6 @@ class ChooseSiteActivity : BaseAppCompatActivity() {
         // corner size correctly where an absolute one is capped short of a full circle, so the morph
         // interpolates fractions: 16dp of the 56dp container at rest, half of it (a circle) when the
         // menu is open.
-        private const val FAB_CORNER_FRACTION_RESTING = 16f / 56f
-        private const val FAB_CORNER_FRACTION_OPEN = 0.5f
 
         @JvmStatic
         var isRunning = false
