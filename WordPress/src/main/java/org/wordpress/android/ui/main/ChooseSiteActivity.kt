@@ -829,11 +829,6 @@ class ChooseSiteActivity : BaseAppCompatActivity() {
         // expanding out of the FAB instead of popping into place.
         private const val FAB_MENU_ITEM_COLLAPSED_SCALE = 0.8f
 
-        // Corner sizes as a fraction of the FAB's height. MaterialShapeDrawable renders a relative
-        // corner size correctly where an absolute one is capped short of a full circle, so the morph
-        // interpolates fractions: 16dp of the 56dp container at rest, half of it (a circle) when the
-        // menu is open.
-
         @JvmStatic
         var isRunning = false
     }
