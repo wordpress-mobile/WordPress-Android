@@ -15,6 +15,7 @@ import uniffi.wp_api.CommentWithEditContext
 import uniffi.wp_api.CommentWithViewContext
 import uniffi.wp_api.PostEndpointType
 import uniffi.wp_api.PostListParams
+import uniffi.wp_api.RequestExecutionErrorReason
 import uniffi.wp_api.SparseAnyPostFieldWithViewContext
 import uniffi.wp_api.UniffiWpApiClient
 import uniffi.wp_api.UserAvatarSize
@@ -79,7 +80,15 @@ class CommentsRsDataSource @Inject constructor(
             val nextPageParams: CommentListParams?
         ) : RsCommentsPageResult
 
-        data class Error(val message: String?) : RsCommentsPageResult
+        /**
+         * [reason] is set when the request failed before a response came back (offline, DNS,
+         * TLS, rejected credentials). It lets the caller classify the failure the same way the
+         * post and page lists do from a thrown exception.
+         */
+        data class Error(
+            val message: String?,
+            val reason: RequestExecutionErrorReason? = null
+        ) : RsCommentsPageResult
     }
 
     suspend fun getComment(site: SiteModel, commentId: Long): RsComment? = safe(errorValue = null) {
@@ -125,6 +134,10 @@ class CommentsRsDataSource @Inject constructor(
                     nextPageParams = result.response.nextPageParams
                 )
                 is WpRequestResult.WpError -> RsCommentsPageResult.Error(result.errorMessage)
+                is WpRequestResult.RequestExecutionFailed -> RsCommentsPageResult.Error(
+                    message = null,
+                    reason = result.reason
+                )
                 else -> RsCommentsPageResult.Error(null)
             }
         }

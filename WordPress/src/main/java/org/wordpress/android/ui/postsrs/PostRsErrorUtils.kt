@@ -27,21 +27,32 @@ internal object PostRsErrorUtils {
      */
     fun isAuthError(e: Exception?): Boolean {
         val api = unwrapException(e)
-        val reason =
-            (api as? WpApiException.RequestExecutionFailed)
-                ?.reason
         val errorCode =
             (api as? WpApiException.WpException)?.errorCode
-        return reason is RequestExecutionErrorReason
-            .HttpAuthenticationRejectedError ||
-            reason is RequestExecutionErrorReason
-                .HttpAuthenticationRequiredError ||
+        return isAuthErrorReason(failureReason(e)) ||
             errorCode is WpErrorCode.Unauthorized ||
             errorCode is WpErrorCode
                 .ApplicationPasswordNotFound ||
             errorCode is WpErrorCode
                 .NoAuthenticatedAppPassword
     }
+
+    /**
+     * The auth half of [isAuthError] for callers holding a
+     * [uniffi.wp_api.WpRequestResult.RequestExecutionFailed]
+     * rather than a thrown exception: the rs client reports
+     * the failure as a result variant, so there is nothing
+     * to unwrap.
+     */
+    fun isAuthErrorReason(reason: RequestExecutionErrorReason?): Boolean =
+        reason is RequestExecutionErrorReason
+            .HttpAuthenticationRejectedError ||
+            reason is RequestExecutionErrorReason
+                .HttpAuthenticationRequiredError
+
+    private fun failureReason(e: Exception?): RequestExecutionErrorReason? =
+        (unwrapException(e) as? WpApiException.RequestExecutionFailed)
+            ?.reason
 
     /**
      * Returns a user-friendly error string based on the
@@ -53,19 +64,18 @@ internal object PostRsErrorUtils {
         defaultResId: Int? = null,
         resourceProvider: ResourceProvider,
         networkUtilsWrapper: NetworkUtilsWrapper,
+        reason: RequestExecutionErrorReason? = null,
     ): String {
-        val api = unwrapException(e)
-        val reason =
-            (api as? WpApiException.RequestExecutionFailed)
-                ?.reason
+        val failureReason = reason ?: failureReason(e)
 
         val resId = when {
-            reason is RequestExecutionErrorReason
+            failureReason is RequestExecutionErrorReason
                 .DeviceIsOfflineError ||
                 !networkUtilsWrapper.isNetworkAvailable() ->
                 R.string.error_generic_network
 
-            isAuthError(e) -> R.string.post_rs_error_auth
+            isAuthError(e) || isAuthErrorReason(reason) ->
+                R.string.post_rs_error_auth
 
             defaultResId != null -> defaultResId
 

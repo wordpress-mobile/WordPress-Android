@@ -38,6 +38,7 @@ import org.wordpress.android.util.WPAvatarUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
 import uniffi.wp_api.CommentListParams
+import uniffi.wp_api.RequestExecutionErrorReason
 import java.util.Date
 
 @ExperimentalCoroutinesApi
@@ -180,6 +181,48 @@ class CommentsRsListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
         val state = viewModel.tabStates.value.getValue(CommentsRsListTab.ALL)
         assertThat(state.error).isEqualTo("server said no")
         assertThat(state.isLoading).isFalse()
+    }
+
+    @Test
+    fun `initTab offline with no content shows the network message`() = test {
+        // The rs client reports offline as a result variant rather than a thrown exception, so
+        // the reason has to survive the trip out of the data source for this to be classified.
+        whenever(resourceProvider.getString(R.string.error_generic_network)).thenReturn("no network")
+        whenever(commentsRsDataSource.fetchCommentsPage(eq(site), any())).thenReturn(
+            RsCommentsPageResult.Error(
+                message = null,
+                reason = RequestExecutionErrorReason.DeviceIsOfflineError(errorMessage = "off")
+            )
+        )
+        val viewModel = createViewModel()
+
+        viewModel.initTab(CommentsRsListTab.ALL)
+        advanceUntilIdle()
+
+        val state = viewModel.tabStates.value.getValue(CommentsRsListTab.ALL)
+        assertThat(state.error).isEqualTo("no network")
+        assertThat(state.isAuthError).isFalse()
+        assertThat(state.isLoading).isFalse()
+    }
+
+    @Test
+    fun `initTab auth failure flags the tab so the retry is withheld`() = test {
+        whenever(commentsRsDataSource.fetchCommentsPage(eq(site), any())).thenReturn(
+            RsCommentsPageResult.Error(
+                message = null,
+                reason = RequestExecutionErrorReason.HttpAuthenticationRejectedError(
+                    hostname = "example.com",
+                    method = null
+                )
+            )
+        )
+        val viewModel = createViewModel()
+
+        viewModel.initTab(CommentsRsListTab.ALL)
+        advanceUntilIdle()
+
+        // Retrying rejected credentials just fails again, so the screen drops the retry button.
+        assertThat(viewModel.tabStates.value.getValue(CommentsRsListTab.ALL).isAuthError).isTrue()
     }
 
     @Test

@@ -88,7 +88,7 @@ fun CommentsRsTabListScreen(
             tabState.isLoading -> ShimmerList()
             tabState.error != null && tabState.comments.isEmpty() -> ErrorContent(
                 error = tabState.error,
-                onRetry = onRefresh
+                onRetry = if (tabState.isAuthError) null else onRefresh
             )
             // isLoadingMore matters here because the Unreplied tab auto-advances: a page can
             // thread away to nothing and the next one is already on its way, so an empty list
@@ -224,7 +224,7 @@ private fun PlaceholderItem() {
 }
 
 @Composable
-private fun ErrorContent(error: String, onRetry: () -> Unit) {
+private fun ErrorContent(error: String, onRetry: (() -> Unit)?) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -244,9 +244,11 @@ private fun ErrorContent(error: String, onRetry: () -> Unit) {
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             textAlign = TextAlign.Center
         )
-        Spacer(modifier = Modifier.height(16.dp))
-        Button(onClick = onRetry) {
-            Text(text = stringResource(R.string.retry))
+        if (onRetry != null) {
+            Spacer(modifier = Modifier.height(16.dp))
+            Button(onClick = onRetry) {
+                Text(text = stringResource(R.string.retry))
+            }
         }
     }
 }

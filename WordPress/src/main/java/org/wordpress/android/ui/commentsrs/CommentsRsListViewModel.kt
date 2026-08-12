@@ -45,6 +45,7 @@ import org.wordpress.android.util.WPAvatarUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
 import uniffi.wp_api.CommentListParams
+import uniffi.wp_api.RequestExecutionErrorReason
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -346,7 +347,7 @@ class CommentsRsListViewModel @Inject constructor(
                     updateTabUiState(tab) { copy(isLoadingMore = false) }
                     _snackbarMessages.trySend(
                         SnackbarMessage(
-                            message = errorMessage(result.message),
+                            message = errorMessage(result.message, result.reason),
                             actionLabel = resourceProvider.getString(R.string.retry),
                             onAction = { loadMore(tab) }
                         )
@@ -526,7 +527,8 @@ class CommentsRsListViewModel @Inject constructor(
                     applyPage(tab, result, append = false)
                     advanceIfFilteredEmpty(tab)
                 }
-                is RsCommentsPageResult.Error -> onFirstPageError(tab, result.message, showErrorSnackbar)
+                is RsCommentsPageResult.Error ->
+                    onFirstPageError(tab, result.message, result.reason, showErrorSnackbar)
             }
         }
     }
@@ -615,22 +617,39 @@ class CommentsRsListViewModel @Inject constructor(
      * from the detail) skip the snackbar — a failed background refresh shouldn't interrupt a
      * user who's still looking at a perfectly good list.
      */
-    private fun onFirstPageError(tab: CommentsRsListTab, message: String?, showErrorSnackbar: Boolean) {
-        val friendly = errorMessage(message)
+    private fun onFirstPageError(
+        tab: CommentsRsListTab,
+        message: String?,
+        reason: RequestExecutionErrorReason?,
+        showErrorSnackbar: Boolean
+    ) {
+        val friendly = errorMessage(message, reason)
+        val authError = PostRsErrorUtils.isAuthErrorReason(reason)
         if (getTabUiState(tab).comments.isNotEmpty()) {
-            updateTabUiState(tab) { copy(isLoading = false, isRefreshing = false, error = null) }
+            updateTabUiState(tab) {
+                copy(isLoading = false, isRefreshing = false, error = null, isAuthError = authError)
+            }
+            // Retrying an auth failure just fails again, so offer the message without the action.
             if (showErrorSnackbar) {
                 _snackbarMessages.trySend(
                     SnackbarMessage(
                         message = friendly,
-                        actionLabel = resourceProvider.getString(R.string.retry),
-                        onAction = { refreshTab(tab, isUserRefresh = true) }
+                        actionLabel = if (authError) null
+                            else resourceProvider.getString(R.string.retry),
+                        onAction = if (authError) null
+                            else ({ refreshTab(tab, isUserRefresh = true) })
                     )
                 )
             }
         } else {
             updateTabUiState(tab) {
-                copy(comments = emptyList(), isLoading = false, isRefreshing = false, error = friendly)
+                copy(
+                    comments = emptyList(),
+                    isLoading = false,
+                    isRefreshing = false,
+                    error = friendly,
+                    isAuthError = authError
+                )
             }
         }
     }
@@ -658,10 +677,17 @@ class CommentsRsListViewModel @Inject constructor(
         }
     }
 
-    /** The server message when it sent one, otherwise a friendly offline/generic message. */
-    private fun errorMessage(serverMessage: String?): String =
+    /** The server message when it sent one, otherwise a friendly offline/auth/generic message. */
+    private fun errorMessage(
+        serverMessage: String?,
+        reason: RequestExecutionErrorReason? = null
+    ): String =
         serverMessage?.takeIf { it.isNotBlank() }
-            ?: PostRsErrorUtils.friendlyErrorMessage(null, null, resourceProvider, networkUtilsWrapper)
+            ?: PostRsErrorUtils.friendlyErrorMessage(
+                resourceProvider = resourceProvider,
+                networkUtilsWrapper = networkUtilsWrapper,
+                reason = reason
+            )
 
     private fun RsComment.toUiModel(nowLabel: String) = CommentRsUiModel(
         remoteCommentId = remoteCommentId,
