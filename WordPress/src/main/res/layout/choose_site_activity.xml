@@ -79,7 +79,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_marginEnd="@dimen/fab_margin"
-        android:layout_marginBottom="@dimen/site_picker_fab_margin_bottom"
+        android:layout_marginBottom="@dimen/fab_margin"
         android:clipChildren="false"
         android:clipToPadding="false"
         android:gravity="end"
