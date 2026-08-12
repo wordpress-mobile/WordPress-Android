@@ -57,6 +57,8 @@ class ChooseSiteActivity : BaseAppCompatActivity() {
     private lateinit var refreshHelper: SwipeToRefreshHelper
     private var searchKeyword: String? = null
     private var isAddSiteMenuOpen = false
+    // Accessibility importance each covered view had before the menu hid it, keyed by view id.
+    private val contentAccessibilityImportance = mutableMapOf<Int, Int>()
     private val addSiteMenuItems by lazy {
         // ordered bottom-to-top so the stagger animates upward from the main FAB
         listOf(binding.fabMenuItemSelfHosted, binding.fabMenuItemWpcom)
@@ -161,6 +163,7 @@ class ChooseSiteActivity : BaseAppCompatActivity() {
             mapOf(KEY_SOURCE to SiteCreationSource.MY_SITE.label)
         )
 
+        setContentBehindMenuAccessible(false)
         binding.fabMenuScrim.animate().cancel()
         binding.fabMenuScrim.isVisible = true
         binding.fabMenuScrim.animate().alpha(SCRIM_ALPHA).setDuration(FAB_MENU_ANIM_DURATION).start()
@@ -185,6 +188,7 @@ class ChooseSiteActivity : BaseAppCompatActivity() {
         if (!isAddSiteMenuOpen) return
         isAddSiteMenuOpen = false
 
+        setContentBehindMenuAccessible(true)
         binding.fabMenuScrim.animate().cancel()
         binding.fabMenuScrim.animate().alpha(0f).setDuration(FAB_MENU_ANIM_DURATION)
             .withEndAction { binding.fabMenuScrim.isVisible = false }.start()
@@ -203,6 +207,35 @@ class ChooseSiteActivity : BaseAppCompatActivity() {
     }
 
     /**
+     * The scrim blocks touches but leaves the views behind it in the accessibility tree, so a
+     * screen reader can still reach and activate site rows hidden under the open menu. Mark them as
+     * inert while it is open, remembering each view's own importance so reopening restores what it
+     * had rather than assuming AUTO.
+     */
+    private fun setContentBehindMenuAccessible(isAccessible: Boolean) {
+        val covered = listOf(
+            binding.appbarMain,
+            binding.ptrLayout,
+            binding.actionableEmptyView,
+            binding.progress
+        )
+        if (isAccessible) {
+            covered.forEach { view ->
+                view.importantForAccessibility = contentAccessibilityImportance.getOrDefault(
+                    view.id,
+                    View.IMPORTANT_FOR_ACCESSIBILITY_AUTO
+                )
+            }
+            contentAccessibilityImportance.clear()
+        } else {
+            covered.forEach { view ->
+                contentAccessibilityImportance.getOrPut(view.id) { view.importantForAccessibility }
+                view.importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO_HIDE_DESCENDANTS
+            }
+        }
+    }
+
+    /**
      * Restores the expanded menu after a configuration change by jumping straight to the open
      * end state — no entrance animation and no analytics, both of which belong to a user-initiated
      * open. Setting the FAB visible directly (rather than via show()) skips its scale animation.
@@ -211,6 +244,7 @@ class ChooseSiteActivity : BaseAppCompatActivity() {
         isAddSiteMenuOpen = true
         binding.fabAddSite.isVisible = true
         binding.fabAddSite.rotation = FAB_ICON_ROTATION
+        setContentBehindMenuAccessible(false)
         binding.fabMenuScrim.isVisible = true
         binding.fabMenuScrim.alpha = SCRIM_ALPHA
         addSiteMenuItems.forEach { item ->
