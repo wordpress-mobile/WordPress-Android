@@ -387,8 +387,9 @@ class ChooseSiteActivity : BaseAppCompatActivity() {
             when (drawable) {
                 is MaterialShapeDrawable -> action(drawable)
                 is InsetDrawable -> visit(drawable.drawable)
-                is LayerDrawable -> (0 until drawable.numberOfLayers)
-                    .forEach { visit(drawable.getDrawable(it)) }
+                is LayerDrawable -> for (index in 0 until drawable.numberOfLayers) {
+                    visit(drawable.getDrawable(index))
+                }
                 else -> Unit
             }
         }
