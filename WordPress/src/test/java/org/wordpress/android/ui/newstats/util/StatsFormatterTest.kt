@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.newstats.util
 
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.mockito.kotlin.mock
@@ -11,12 +12,20 @@ import java.util.Locale
 
 class StatsFormatterTest {
     private val resourceProvider = mock<ResourceProvider>()
+    private lateinit var originalLocale: Locale
 
     @Before
     fun setUp() {
         // toDateRangeString formats months with Locale.getDefault(), so the "Jul"/"Aug"/... month
-        // abbreviations these tests assert are locale-sensitive. Pin the locale for determinism.
+        // abbreviations these tests assert are locale-sensitive. Pin the locale for determinism, and
+        // restore it in tearDown so this global mutation doesn't leak into other tests in the runner.
+        originalLocale = Locale.getDefault()
         Locale.setDefault(Locale.US)
+    }
+
+    @After
+    fun tearDown() {
+        Locale.setDefault(originalLocale)
     }
 
     @Test

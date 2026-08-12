@@ -133,7 +133,9 @@ import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import javax.inject.Inject
 
-// Opacity of the forward-navigation control when it is disabled at the present edge (iOS parity).
+// Opacity of a navigation control (forward at the present edge, back at the year floor) when it is
+// disabled. Set explicitly to 50% so it isn't compounded with M3's default 38% disabled alpha (which
+// would leave it near-invisible at ~19%), keeping the two controls visually consistent (iOS parity).
 private const val DISABLED_CONTROL_ALPHA = 0.5f
 
 @AndroidEntryPoint
@@ -412,7 +414,11 @@ private fun NewStatsScreen(
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             IconButton(
                                 onClick = { viewsStatsViewModel.onNavigatePrevious() },
-                                enabled = canNavigateBackward
+                                enabled = canNavigateBackward,
+                                colors = IconButtonDefaults.iconButtonColors(
+                                    disabledContentColor = MaterialTheme.colorScheme.onSurface
+                                        .copy(alpha = DISABLED_CONTROL_ALPHA)
+                                )
                             ) {
                                 Icon(
                                     imageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
@@ -469,9 +475,8 @@ private fun NewStatsScreen(
                                 )
                             }
                             // Forward stays visible but dimmed at the present edge (there is no later
-                            // period to page to) rather than disappearing, matching iOS. The disabled
-                            // color is set explicitly to 50% so it isn't compounded with M3's default
-                            // 38% disabled alpha (which would leave it near-invisible at ~19%).
+                            // period to page to) rather than disappearing, matching iOS. See
+                            // DISABLED_CONTROL_ALPHA for why the disabled color is set explicitly.
                             IconButton(
                                 onClick = { viewsStatsViewModel.onNavigateNext() },
                                 enabled = canNavigateForward,
