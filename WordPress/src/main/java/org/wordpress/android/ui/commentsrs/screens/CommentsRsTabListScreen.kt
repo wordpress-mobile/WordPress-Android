@@ -90,7 +90,10 @@ fun CommentsRsTabListScreen(
                 error = tabState.error,
                 onRetry = onRefresh
             )
-            tabState.comments.isEmpty() && !tabState.isRefreshing -> EmptyContent(
+            // isLoadingMore matters here because the Unreplied tab auto-advances: a page can
+            // thread away to nothing and the next one is already on its way, so an empty list
+            // mid-walk isn't an empty tab.
+            tabState.comments.isEmpty() && !tabState.isRefreshing && !tabState.isLoadingMore -> EmptyContent(
                 emptyMessageResId = if (isSearching) {
                     R.string.comments_rs_search_nothing_found
                 } else {

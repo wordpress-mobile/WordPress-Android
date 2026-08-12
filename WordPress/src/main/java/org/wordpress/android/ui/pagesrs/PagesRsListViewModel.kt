@@ -48,6 +48,7 @@ import org.wordpress.android.ui.postsrs.SnackbarMessage
 import org.wordpress.android.ui.postsrs.data.PostRsRestClient
 import org.wordpress.android.ui.postsrs.data.WpServiceProvider
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.ui.rs.RsTabLoading
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
@@ -101,6 +102,9 @@ internal class PagesRsListViewModel @Inject constructor(
     private var collectionsScope = createCollectionsScope()
     private val initializingTabs = mutableSetOf<PageRsListTab>()
     private val userRefreshingTabs = mutableSetOf<PageRsListTab>()
+
+    /** Tabs whose collection has completed at least one fetch, so an empty list means empty. */
+    private val fetchedTabs = mutableSetOf<PageRsListTab>()
     private val resolveImageJobs = mutableMapOf<PageRsListTab, Job>()
     private val resolveAuthorJobs = mutableMapOf<PageRsListTab, Job>()
     private var lastTrackedTab: PageRsListTab? = null
@@ -420,13 +424,27 @@ internal class PagesRsListViewModel @Inject constructor(
             userRefreshingTabs.add(tab)
             updateTabUiState(tab) { copy(isRefreshing = true, error = null) }
         } else {
-            updateTabUiState(tab) { copy(error = null) }
+            updateTabUiState(tab) {
+                copy(
+                    isLoading = RsTabLoading.onRefreshStarted(
+                        hasItems = pages.isNotEmpty(),
+                        hasFetched = tab in fetchedTabs
+                    ),
+                    error = null
+                )
+            }
         }
 
         launchCollectionJob {
             @Suppress("TooGenericExceptionCaught")
             try {
                 withContext(Dispatchers.IO) { collection.refresh() }
+                fetchedTabs.add(tab)
+                userRefreshingTabs.remove(tab)
+                // Read the fetched items and end both progress states here rather than relying
+                // on the collection observers, which aren't guaranteed to fire for a refresh.
+                loadItemsForTab(tab)
+                updateTabUiState(tab) { copy(isLoading = false, isRefreshing = false) }
             } catch (e: CancellationException) {
                 throw e
             } catch (e: Exception) {
@@ -1182,14 +1200,12 @@ internal class PagesRsListViewModel @Inject constructor(
                 showSiteEditorHomepage = showSiteEditorHomepage
             ).map { row -> row.withMenuActions(currentSite) }
             updateTabUiState(tab) {
-                // Only clear the loading flag once we actually have rows. While the first page
-                // is still being fetched (e.g. a fresh search collection with no cache), rows is
-                // empty; keeping isLoading lets the shimmer show instead of flashing the
-                // "No matches" empty state. updateListInfoForTab() flips isLoading off once the
-                // fetch genuinely completes, at which point an empty result is real.
                 copy(
                     pages = rows,
-                    isLoading = isLoading && rows.isEmpty(),
+                    isLoading = RsTabLoading.onItemsLoaded(
+                        wasLoading = isLoading,
+                        hasItems = rows.isNotEmpty()
+                    ),
                     error = null,
                     isAuthError = false
                 )
@@ -1385,7 +1401,12 @@ internal class PagesRsListViewModel @Inject constructor(
         } else {
             updateTabUiState(tab) {
                 copy(
-                    isLoading = isLoading && fetchingFirstPage,
+                    isLoading = RsTabLoading.onListInfoChanged(
+                        wasLoading = isLoading,
+                        isFetchingFirstPage = fetchingFirstPage,
+                        hasItems = pages.isNotEmpty(),
+                        hasFetched = tab in fetchedTabs
+                    ),
                     isRefreshing = isUserRefresh && fetchingFirstPage,
                     isLoadingMore = listInfo?.state == ListState.FETCHING_NEXT_PAGE,
                     canLoadMore = morePages,
@@ -1415,6 +1436,7 @@ internal class PagesRsListViewModel @Inject constructor(
         collections.clear()
         initializingTabs.clear()
         userRefreshingTabs.clear()
+        fetchedTabs.clear()
         resolveImageJobs.values.forEach { it.cancel() }
         resolveImageJobs.clear()
         resolveAuthorJobs.values.forEach { it.cancel() }

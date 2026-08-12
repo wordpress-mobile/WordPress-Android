@@ -68,7 +68,7 @@ internal fun PageRsTabListScreen(
         when {
             isSearchIdle -> Box(Modifier.fillMaxSize())
             state.isLoading -> ShimmerList()
-            state.error != null -> {
+            state.error != null && state.pages.isEmpty() -> {
                 ErrorContent(
                     error = state.error,
                     onRetry = if (state.isAuthError) null else onRefresh

@@ -29,6 +29,7 @@ import org.wordpress.android.ui.posts.AuthorFilterSelection
 import org.wordpress.android.ui.postsrs.data.PostRsRestClient
 import org.wordpress.android.ui.postsrs.data.WpServiceProvider
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.ui.rs.RsTabLoading
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.SiteUtils
@@ -723,8 +724,8 @@ class PostRsListViewModel @Inject constructor(
         } else {
             updateTabUiState(tab) {
                 copy(
-                    isLoading = PostRsTabLoading.onRefreshStarted(
-                        hasPosts = posts.isNotEmpty(),
+                    isLoading = RsTabLoading.onRefreshStarted(
+                        hasItems = posts.isNotEmpty(),
                         hasFetched = tab in fetchedTabs
                     ),
                     error = null
@@ -837,7 +838,7 @@ class PostRsListViewModel @Inject constructor(
             updateTabUiState(tab) {
                 copy(
                     posts = uiModels,
-                    isLoading = PostRsTabLoading.onItemsLoaded(
+                    isLoading = RsTabLoading.onItemsLoaded(
                         wasLoading = isLoading,
                         hasItems = uiModels.isNotEmpty()
                     ),
@@ -969,10 +970,10 @@ class PostRsListViewModel @Inject constructor(
         } else {
             updateTabUiState(tab) {
                 copy(
-                    isLoading = PostRsTabLoading.onListInfoChanged(
+                    isLoading = RsTabLoading.onListInfoChanged(
                         wasLoading = isLoading,
                         isFetchingFirstPage = fetchingFirstPage,
-                        hasPosts = posts.isNotEmpty(),
+                        hasItems = posts.isNotEmpty(),
                         hasFetched = tab in fetchedTabs
                     ),
                     isRefreshing = isUserRefresh && fetchingFirstPage,
