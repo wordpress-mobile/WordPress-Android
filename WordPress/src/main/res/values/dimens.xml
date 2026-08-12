@@ -22,25 +22,27 @@
     <dimen name="fab_menu_item_height">56dp</dimen>
     <dimen name="fab_menu_item_icon_size">24dp</dimen>
     <dimen name="fab_menu_item_elevation">3dp</dimen>
-    <item name="fab_menu_item_ripple_alpha" format="float" type="dimen">0.08</item>
-    <item name="fab_menu_item_ripple_pressed_alpha" format="float" type="dimen">0.16</item>
     <!-- Leading and trailing space are both 24dp; the icon and label sit 8dp apart. -->
     <dimen name="fab_menu_item_horizontal_space">24dp</dimen>
     <dimen name="fab_menu_item_icon_label_space">8dp</dimen>
     <!-- Menu items are 4dp apart, but the close button sits 8dp below the nearest item. -->
     <dimen name="fab_menu_item_spacing">4dp</dimen>
     <dimen name="fab_menu_close_button_spacing">8dp</dimen>
-    <!-- The close button is 56dp (the default FAB size) with a 20dp icon. The FAB rests as a
-         16dp-corner squircle; the morph to a full circle is animated in ChooseSiteActivity. -->
-    <dimen name="fab_menu_close_button_size">56dp</dimen>
+    <!-- The close button keeps the FAB's own size, so only its icon is specified here. -->
     <dimen name="fab_menu_close_button_icon_size">20dp</dimen>
-    <!-- The FAB reserves ~6dp around itself for its elevation shadow, so its view is larger than the
-         56dp container it draws. Negative margins pull that overhang back in so the visible circle
-         lines up with the menu items' trailing edge, and the top margin nets out to the spec's 8dp
-         gap above the close button. -->
+    <!-- The FAB reserves room around itself for its elevation shadow, so its view is larger than the
+         container it draws. Negative margins pull that overhang back in so the visible circle lines
+         up with the menu items' trailing edge, and the top margin nets out to the spec's 8dp gap
+         above the close button. Both are tuned against the drawn container rather than derived, so
+         re-measure them if the FAB's size or elevation changes. -->
     <dimen name="fab_shadow_overhang_negative">-3dp</dimen>
     <dimen name="fab_menu_close_button_top_margin">6dp</dimen>
+    <!-- The FAB rests as a 16dp-corner squircle; the morph to a circle is animated in
+         ChooseSiteActivity, which interpolates a fraction of the FAB's height. -->
     <dimen name="fab_corner_size_resting">16dp</dimen>
+    <!-- Standard Material 3 state layer opacities, not part of the FAB menu spec. -->
+    <item name="fab_menu_item_ripple_alpha" format="float" type="dimen">0.08</item>
+    <item name="fab_menu_item_ripple_pressed_alpha" format="float" type="dimen">0.16</item>
 
     <item name="primary_button_disabled_alpha" format="float" type="dimen">
         @dimen/disabled_alpha
