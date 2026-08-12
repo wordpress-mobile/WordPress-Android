@@ -64,6 +64,8 @@ class CommentsRsListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
         whenever(siteCapabilityChecker.canModerateComments(site)).thenReturn(true)
         whenever(resourceProvider.getString(any())).thenReturn("string")
+        // Fetches short-circuit when offline, so the default has to be a connected device.
+        whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
         whenever(avatarUtilsWrapper.rewriteAvatarUrlWithResource(any(), any())).thenAnswer { it.arguments[0] }
         whenever(commentsRsDataSource.firstPageParams(any(), anyOrNull())).thenReturn(FIRST_PAGE)
         whenever(commentsRsDataSource.fetchPostTitles(any(), any())).thenReturn(emptyMap())
@@ -202,6 +204,21 @@ class CommentsRsListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
         val state = viewModel.tabStates.value.getValue(CommentsRsListTab.ALL)
         assertThat(state.error).isEqualTo("no network")
         assertThat(state.isAuthError).isFalse()
+        assertThat(state.isLoading).isFalse()
+    }
+
+    @Test
+    fun `initTab offline shows the error without hitting the network`() = test {
+        whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(false)
+        whenever(resourceProvider.getString(R.string.error_generic_network)).thenReturn("no network")
+        val viewModel = createViewModel()
+
+        viewModel.initTab(CommentsRsListTab.ALL)
+        advanceUntilIdle()
+
+        verify(commentsRsDataSource, never()).fetchCommentsPage(any(), any())
+        val state = viewModel.tabStates.value.getValue(CommentsRsListTab.ALL)
+        assertThat(state.error).isEqualTo("no network")
         assertThat(state.isLoading).isFalse()
     }
 

@@ -733,6 +733,12 @@ class PostRsListViewModel @Inject constructor(
             }
         }
 
+        // A refresh with no connection can only fail, so report it without the round trip.
+        if (!networkUtilsWrapper.isNetworkAvailable()) {
+            onRefreshFailed(tab, e = null)
+            return
+        }
+
         viewModelScope.launch {
             @Suppress("TooGenericExceptionCaught")
             try {
@@ -744,32 +750,44 @@ class PostRsListViewModel @Inject constructor(
                 loadItemsForTab(tab)
                 updateTabUiState(tab) { copy(isLoading = false, isRefreshing = false) }
             } catch (e: Exception) {
-                AppLog.e(AppLog.T.POSTS, "Failed to refresh tab $tab", e)
-                userRefreshingTabs.remove(tab)
-                val message = friendlyErrorMessage(e)
-                if (getTabUiState(tab).posts.isNotEmpty()) {
-                    updateTabUiState(tab) {
-                        copy(isLoading = false, isRefreshing = false, error = null)
-                    }
-                    val authError = PostRsErrorUtils.isAuthError(e)
-                    _snackbarMessages.trySend(
-                        SnackbarMessage(
-                            message = message,
-                            actionLabel = if (authError) null
-                                else resourceProvider.getString(R.string.retry),
-                            onAction = if (authError) null
-                                else ({ refreshTab(tab) })
-                        )
-                    )
-                } else {
-                    updateTabUiState(tab) {
-                        copy(
-                            isLoading = false, isRefreshing = false,
-                            error = message,
-                            isAuthError = PostRsErrorUtils.isAuthError(e)
-                        )
-                    }
-                }
+                onRefreshFailed(tab, e)
+            }
+        }
+    }
+
+    /**
+     * A tab that already has posts on screen keeps them and offers a retry snackbar; an empty one
+     * shows the full-screen error state.
+     *
+     * [e] is null when no request was made because the device is offline. The message is the same
+     * either way - [friendlyErrorMessage] reports the network error whenever the device is offline,
+     * regardless of what failed.
+     */
+    private fun onRefreshFailed(tab: PostRsListTab, e: Exception?) {
+        e?.let { AppLog.e(AppLog.T.POSTS, "Failed to refresh tab $tab", it) }
+        userRefreshingTabs.remove(tab)
+        val message = friendlyErrorMessage(e)
+        val authError = PostRsErrorUtils.isAuthError(e)
+        if (getTabUiState(tab).posts.isNotEmpty()) {
+            updateTabUiState(tab) {
+                copy(isLoading = false, isRefreshing = false, error = null)
+            }
+            _snackbarMessages.trySend(
+                SnackbarMessage(
+                    message = message,
+                    actionLabel = if (authError) null
+                        else resourceProvider.getString(R.string.retry),
+                    onAction = if (authError) null
+                        else ({ refreshTab(tab) })
+                )
+            )
+        } else {
+            updateTabUiState(tab) {
+                copy(
+                    isLoading = false, isRefreshing = false,
+                    error = message,
+                    isAuthError = authError
+                )
             }
         }
     }

@@ -435,6 +435,12 @@ internal class PagesRsListViewModel @Inject constructor(
             }
         }
 
+        // A refresh with no connection can only fail, so report it without the round trip.
+        if (!networkUtilsWrapper.isNetworkAvailable()) {
+            onRefreshFailed(tab, e = null)
+            return
+        }
+
         launchCollectionJob {
             @Suppress("TooGenericExceptionCaught")
             try {
@@ -456,9 +462,13 @@ internal class PagesRsListViewModel @Inject constructor(
     /**
      * A tab that already has pages on screen keeps them and offers a retry snackbar; an empty
      * one shows the full-screen error state instead.
+     *
+     * [e] is null when no request was made because the device is offline. The message is the same
+     * either way - [friendlyErrorMessage] reports the network error whenever the device is offline,
+     * regardless of what failed.
      */
-    private fun onRefreshFailed(tab: PageRsListTab, e: Exception) {
-        AppLog.e(AppLog.T.PAGES, "Failed to refresh tab $tab", e)
+    private fun onRefreshFailed(tab: PageRsListTab, e: Exception?) {
+        e?.let { AppLog.e(AppLog.T.PAGES, "Failed to refresh tab $tab", it) }
         userRefreshingTabs.remove(tab)
         val message = friendlyErrorMessage(e)
         val authError = PostRsErrorUtils.isAuthError(e)
@@ -1173,7 +1183,7 @@ internal class PagesRsListViewModel @Inject constructor(
     }
 
     private fun friendlyErrorMessage(
-        e: Exception,
+        e: Exception?,
         defaultResId: Int? = null,
     ): String = PostRsErrorUtils.friendlyErrorMessage(
         e, defaultResId, resourceProvider, networkUtilsWrapper

@@ -310,6 +310,11 @@ class CommentsRsListViewModel @Inject constructor(
         val params = nextPageParams[tab]
         val isBusy = current.isLoading || current.isRefreshing || current.isLoadingMore
         if (params == null || isBusy) return
+        // As in fetchFirstPage: don't start a page request that can't reach the server.
+        if (!networkUtilsWrapper.isNetworkAvailable()) {
+            onLoadMoreError(tab, message = null, reason = null)
+            return
+        }
 
         updateTabUiState(tab) { copy(isLoadingMore = true) }
         val generation = pageGenerations[tab]
@@ -343,16 +348,7 @@ class CommentsRsListViewModel @Inject constructor(
                         loadMoreInternal(tab, autoAdvanceDepth + 1)
                     }
                 }
-                is RsCommentsPageResult.Error -> {
-                    updateTabUiState(tab) { copy(isLoadingMore = false) }
-                    _snackbarMessages.trySend(
-                        SnackbarMessage(
-                            message = errorMessage(result.message, result.reason),
-                            actionLabel = resourceProvider.getString(R.string.retry),
-                            onAction = { loadMore(tab) }
-                        )
-                    )
-                }
+                is RsCommentsPageResult.Error -> onLoadMoreError(tab, result.message, result.reason)
             }
         }
     }
@@ -512,6 +508,11 @@ class CommentsRsListViewModel @Inject constructor(
     }
 
     private fun fetchFirstPage(tab: CommentsRsListTab, showErrorSnackbar: Boolean = true) {
+        // A fetch with no connection can only fail, so report it without the round trip.
+        if (!networkUtilsWrapper.isNetworkAvailable()) {
+            onFirstPageError(tab, message = null, reason = null, showErrorSnackbar = showErrorSnackbar)
+            return
+        }
         // Callers (initTab, refreshTab) guard against a null site, so the site getter below is safe.
         firstPageJobs[tab] = viewModelScope.launch {
             val base = commentsRsDataSource.firstPageParams(
@@ -609,6 +610,25 @@ class CommentsRsListViewModel @Inject constructor(
         if (getTabUiState(tab).comments.isEmpty() && nextPageParams[tab] != null) {
             loadMoreInternal(tab, autoAdvanceDepth = 0)
         }
+    }
+
+    /**
+     * A page that didn't arrive leaves the list as it is and offers a retry snackbar. A null
+     * [message] and [reason] mean no request was made because the device is offline.
+     */
+    private fun onLoadMoreError(
+        tab: CommentsRsListTab,
+        message: String?,
+        reason: RequestExecutionErrorReason?
+    ) {
+        updateTabUiState(tab) { copy(isLoadingMore = false) }
+        _snackbarMessages.trySend(
+            SnackbarMessage(
+                message = errorMessage(message, reason),
+                actionLabel = resourceProvider.getString(R.string.retry),
+                onAction = { loadMore(tab) }
+            )
+        )
     }
 
     /**
