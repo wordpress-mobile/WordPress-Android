@@ -448,38 +448,46 @@ internal class PagesRsListViewModel @Inject constructor(
             } catch (e: CancellationException) {
                 throw e
             } catch (e: Exception) {
-                AppLog.e(AppLog.T.PAGES, "Failed to refresh tab $tab", e)
-                userRefreshingTabs.remove(tab)
-                val message = friendlyErrorMessage(e)
-                val authError = PostRsErrorUtils.isAuthError(e)
-                if (getTabUiState(tab).pages.isNotEmpty()) {
-                    updateTabUiState(tab) {
-                        copy(
-                            isLoading = false,
-                            isRefreshing = false,
-                            error = null,
-                            isAuthError = authError
-                        )
-                    }
-                    _snackbarMessages.trySend(
-                        SnackbarMessage(
-                            message = message,
-                            actionLabel = if (authError) null
-                                else resourceProvider.getString(R.string.retry),
-                            onAction = if (authError) null
-                                else ({ refreshTab(tab) })
-                        )
-                    )
-                } else {
-                    updateTabUiState(tab) {
-                        copy(
-                            isLoading = false,
-                            isRefreshing = false,
-                            error = message,
-                            isAuthError = authError
-                        )
-                    }
-                }
+                onRefreshFailed(tab, e)
+            }
+        }
+    }
+
+    /**
+     * A tab that already has pages on screen keeps them and offers a retry snackbar; an empty
+     * one shows the full-screen error state instead.
+     */
+    private fun onRefreshFailed(tab: PageRsListTab, e: Exception) {
+        AppLog.e(AppLog.T.PAGES, "Failed to refresh tab $tab", e)
+        userRefreshingTabs.remove(tab)
+        val message = friendlyErrorMessage(e)
+        val authError = PostRsErrorUtils.isAuthError(e)
+        if (getTabUiState(tab).pages.isNotEmpty()) {
+            updateTabUiState(tab) {
+                copy(
+                    isLoading = false,
+                    isRefreshing = false,
+                    error = null,
+                    isAuthError = authError
+                )
+            }
+            _snackbarMessages.trySend(
+                SnackbarMessage(
+                    message = message,
+                    actionLabel = if (authError) null
+                        else resourceProvider.getString(R.string.retry),
+                    onAction = if (authError) null
+                        else ({ refreshTab(tab) })
+                )
+            )
+        } else {
+            updateTabUiState(tab) {
+                copy(
+                    isLoading = false,
+                    isRefreshing = false,
+                    error = message,
+                    isAuthError = authError
+                )
             }
         }
     }
