@@ -474,11 +474,19 @@ class ChooseSiteActivity : BaseAppCompatActivity() {
         isAddSiteMenuOpen = true
         binding.fabAddSite.isVisible = true
         applyFabIcon(isOpen = true)
-        currentFabCornerSize = fabOpenCornerSize()
-        applyFabCornerSize(currentFabCornerSize)
-        applyFabColors(isOpen = true, animate = false)
+        // This runs before the first layout pass, so the FAB has no height to halve yet and the
+        // background it paints has not been built. Wait for layout before writing the shape and the
+        // container color, or the restored FAB stays a resting squircle in its resting color while
+        // the menu is open.
+        binding.fabAddSite.doOnLayout {
+            if (!isAddSiteMenuOpen) return@doOnLayout
+            currentFabCornerSize = fabOpenCornerSize()
+            applyFabCornerSize(currentFabCornerSize)
+            applyFabColors(isOpen = true, animate = false)
+        }
         setContentBehindMenuAccessible(false)
         applyFabAccessibilityState()
+        binding.fabMenuScrim.animate().cancel()
         binding.fabMenuScrim.isVisible = true
         binding.fabMenuScrim.alpha = SCRIM_ALPHA
         // Supersede any transition still waiting on a layout pass, so it cannot animate over the
