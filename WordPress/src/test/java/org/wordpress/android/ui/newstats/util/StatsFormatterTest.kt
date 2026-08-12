@@ -2,8 +2,35 @@ package org.wordpress.android.ui.newstats.util
 
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
+import org.mockito.kotlin.mock
+import org.wordpress.android.ui.newstats.StatsPeriod
+import org.wordpress.android.viewmodel.ResourceProvider
+import java.time.LocalDate
 
 class StatsFormatterTest {
+    private val resourceProvider = mock<ResourceProvider>()
+
+    @Test
+    fun `toDateRangeString within one month renders shared month`() {
+        val period = StatsPeriod.Custom(LocalDate.of(2026, 7, 28), LocalDate.of(2026, 7, 30))
+
+        assertThat(period.toDateRangeString(resourceProvider)).isEqualTo("28-30 Jul")
+    }
+
+    @Test
+    fun `toDateRangeString across a month boundary renders month on both ends`() {
+        val period = StatsPeriod.Custom(LocalDate.of(2026, 7, 28), LocalDate.of(2026, 8, 3))
+
+        assertThat(period.toDateRangeString(resourceProvider)).isEqualTo("28 Jul - 3 Aug")
+    }
+
+    @Test
+    fun `toDateRangeString across a year boundary renders month on both ends`() {
+        val period = StatsPeriod.Custom(LocalDate.of(2025, 12, 30), LocalDate.of(2026, 1, 2))
+
+        assertThat(period.toDateRangeString(resourceProvider)).isEqualTo("30 Dec - 2 Jan")
+    }
+
     @Test
     fun `formatStatValue Long below 1000 returns raw number`() {
         assertThat(formatStatValue(500L)).isEqualTo("500")
