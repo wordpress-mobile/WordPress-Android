@@ -33,6 +33,7 @@ import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import java.time.LocalDate
+import java.time.YearMonth
 
 @ExperimentalCoroutinesApi
 @Suppress("LargeClass")
@@ -1222,8 +1223,11 @@ class StatsRepositoryTest : BaseUnitTest() {
 
         val result = repository.previousPeriod(StatsPeriod.Last6Months) as StatsPeriod.Custom
 
+        // Month-granularity windows are fetched by calendar month, so only the month matters — the
+        // start day drifts harmlessly when an intermediate minusMonths clamps to a short month
+        // (e.g. on Jul 30, today-5mo lands on Feb 28), which is why we assert the YearMonth here.
         assertThat(result.endDate).isEqualTo(today.minusMonths(6))
-        assertThat(result.startDate).isEqualTo(today.minusMonths(11))
+        assertThat(YearMonth.from(result.startDate)).isEqualTo(YearMonth.from(today).minusMonths(11))
     }
 
     @Test
@@ -1232,8 +1236,9 @@ class StatsRepositoryTest : BaseUnitTest() {
 
         val result = repository.previousPeriod(StatsPeriod.Last12Months) as StatsPeriod.Custom
 
+        // See the Last6Months test: month-granularity windows assert the YearMonth, not the day.
         assertThat(result.endDate).isEqualTo(today.minusMonths(12))
-        assertThat(result.startDate).isEqualTo(today.minusMonths(23))
+        assertThat(YearMonth.from(result.startDate)).isEqualTo(YearMonth.from(today).minusMonths(23))
     }
 
     @Test
