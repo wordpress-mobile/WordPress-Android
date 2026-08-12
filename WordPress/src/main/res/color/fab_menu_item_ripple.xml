@@ -8,7 +8,4 @@
         android:alpha="@dimen/fab_menu_item_ripple_pressed_alpha"
         android:color="@color/fab_on_container"
         android:state_pressed="true" />
-    <item
-        android:alpha="@dimen/fab_menu_item_ripple_alpha"
-        android:color="@color/fab_on_container" />
 </selector>

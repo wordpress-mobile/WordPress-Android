@@ -40,8 +40,7 @@
     <!-- The FAB rests as a 16dp-corner squircle; the morph to a circle is animated in
          ChooseSiteActivity, which interpolates a fraction of the FAB's height. -->
     <dimen name="fab_corner_size_resting">16dp</dimen>
-    <!-- Standard Material 3 state layer opacities, not part of the FAB menu spec. -->
-    <item name="fab_menu_item_ripple_alpha" format="float" type="dimen">0.08</item>
+    <!-- Standard Material 3 pressed state layer opacity, not part of the FAB menu spec. -->
     <item name="fab_menu_item_ripple_pressed_alpha" format="float" type="dimen">0.16</item>
 
     <item name="primary_button_disabled_alpha" format="float" type="dimen">
