@@ -40,17 +40,20 @@ fun formatEmailStat(value: Long): String {
     return if (value == 0L) "-" else formatStatValue(value)
 }
 
-private val DAY_FORMAT = DateTimeFormatter.ofPattern("d", Locale.getDefault())
-private val DAY_MONTH_FORMAT = DateTimeFormatter.ofPattern("d MMM", Locale.getDefault())
-
 /**
  * Converts a StatsPeriod to a human-readable date range string.
  *
  * A Custom range within one calendar month renders as "28-30 Jul"; one that crosses a month
  * boundary renders the month on both ends ("28 Jul - 3 Aug") so a span like Jul 28 - Aug 3 is no
  * longer mislabelled "28-3 Aug".
+ *
+ * The formatters are built per call (rather than as static fields) so they always honour the
+ * current [Locale.getDefault]; caching them in a top-level `val` captures the locale at class-load
+ * and trips Android Lint's ConstantLocale check.
  */
 fun StatsPeriod.toDateRangeString(resourceProvider: ResourceProvider): String {
+    val dayFormat = DateTimeFormatter.ofPattern("d", Locale.getDefault())
+    val dayMonthFormat = DateTimeFormatter.ofPattern("d MMM", Locale.getDefault())
     return when (this) {
         is StatsPeriod.Today -> resourceProvider.getString(R.string.stats_period_today)
         is StatsPeriod.Last7Days -> resourceProvider.getString(R.string.stats_period_last_7_days)
@@ -58,9 +61,9 @@ fun StatsPeriod.toDateRangeString(resourceProvider: ResourceProvider): String {
         is StatsPeriod.Last6Months -> resourceProvider.getString(R.string.stats_period_last_6_months)
         is StatsPeriod.Last12Months -> resourceProvider.getString(R.string.stats_period_last_12_months)
         is StatsPeriod.Custom -> if (startDate.month == endDate.month && startDate.year == endDate.year) {
-            "${startDate.format(DAY_FORMAT)}-${endDate.format(DAY_MONTH_FORMAT)}"
+            "${startDate.format(dayFormat)}-${endDate.format(dayMonthFormat)}"
         } else {
-            "${startDate.format(DAY_MONTH_FORMAT)} - ${endDate.format(DAY_MONTH_FORMAT)}"
+            "${startDate.format(dayMonthFormat)} - ${endDate.format(dayMonthFormat)}"
         }
     }
 }
