@@ -114,12 +114,6 @@
         <item name="android:navigationBarColor">?attr/colorSurface</item>
     </style>
 
-    <style name="WordPress.FloatingActionButton" parent="Widget.MaterialComponents.FloatingActionButton">
-        <item name="shapeAppearanceOverlay">@style/ShapeAppearanceOverlay.WordPress.FloatingActionButton</item>
-        <item name="android:backgroundTint">@color/fab_container</item>
-        <item name="tint">@color/fab_on_container</item>
-    </style>
-
     <style name="WordPress.Button.Primary" parent="Widget.MaterialComponents.Button">
         <item name="backgroundTint">@color/secondary_variant_disabled_selector</item>
         <item name="android:textColor">@color/on_surface_disabled_selector</item>
