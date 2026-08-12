@@ -384,10 +384,15 @@ class ChooseSiteActivity : BaseAppCompatActivity() {
      * Walks the FAB's background for the MaterialShapeDrawable that paints its container, which is
      * the content layer of a RippleDrawable today.
      *
-     * FloatingActionButton's own setShapeAppearanceModel and backgroundTintList do not reach that
-     * drawable: dropping this walk and relying on them leaves the container a rounded square in its
-     * resting color while the menu is open. Verified on device against Material 1.14.0. The search
-     * handles nesting so that a wrapped background does not silently stop the morph.
+     * FloatingActionButton does expose setShapeAppearanceModel and backgroundTintList, and both do
+     * reach this drawable, but they go through the impl's stored ShapeAppearanceModel rather than
+     * the live drawable. Its createShapeDrawable rebuilds the background from that stored model, so
+     * anything that reconstructs the background mid-morph resets the container to the resting
+     * squircle declared by the style and the animation snaps back to a rounded square. Mutating the
+     * drawable in place keeps the interpolated corner on the instance actually being drawn, and
+     * avoids rebuilding a whole model every frame. Verified on device against Material 1.14.0.
+     *
+     * The search handles nesting so that a wrapped background does not silently stop the morph.
      */
     private fun forEachFabShapeDrawable(action: (MaterialShapeDrawable) -> Unit) {
         fun visit(drawable: Drawable?) {
