@@ -36,10 +36,12 @@
     <!-- The FAB rests as a 16dp-corner squircle; the morph to a circle is animated in
          ChooseSiteActivity, which interpolates up to half the FAB's height. -->
     <dimen name="fab_corner_size_resting">16dp</dimen>
-    <!-- Standard Material 3 state layer opacities, not part of the FAB menu spec. The pressed
-         value is Material's dragged opacity rather than its lighter pressed one, so the press
-         reads clearly against the tonal container. -->
-    <item name="fab_menu_item_ripple_pressed_alpha" format="float" type="dimen">0.16</item>
+    <!-- Material 3 state layer opacities, mirroring m3_fab_ripple_color_selector. That selector
+         cannot be used directly: it is not a public resource, and it resolves ?attr/colorOnContainer
+         from a materialThemeOverlay that only the Material3 FAB styles apply, which the app's
+         Theme.MaterialComponents base theme does not supply. The values below are Material's own
+         m3_sys_state_* opacities; the default one is what a released ripple fades out to. -->
+    <item name="fab_menu_item_ripple_pressed_alpha" format="float" type="dimen">0.1</item>
     <item name="fab_menu_item_ripple_focused_alpha" format="float" type="dimen">0.1</item>
     <item name="fab_menu_item_ripple_hovered_alpha" format="float" type="dimen">0.08</item>
     <item name="fab_menu_item_ripple_alpha" format="float" type="dimen">0.16</item>
