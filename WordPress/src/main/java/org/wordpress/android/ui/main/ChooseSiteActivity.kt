@@ -86,6 +86,8 @@ class ChooseSiteActivity : BaseAppCompatActivity() {
     // Bumped on every open and close so a menu transition that is still waiting on a layout pass can
     // tell it has been superseded and drop its animation.
     private var addSiteMenuGeneration = 0
+    // FloatingActionButton exposes no getter for maxImageSize, so track what was last written.
+    private var currentFabImageSize = 0
 
     @Inject
     lateinit var accountStore: AccountStore
@@ -412,11 +414,16 @@ class ChooseSiteActivity : BaseAppCompatActivity() {
         )
         // The spec sizes the close glyph smaller than a regular FAB icon while keeping the same
         // container, so the size has to follow the icon rather than sit on the layout.
-        binding.fabAddSite.setMaxImageSize(
-            resources.getDimensionPixelSize(
-                if (isOpen) R.dimen.fab_menu_close_button_icon_size else R.dimen.fab_icon_size_resting
-            )
+        val imageSize = resources.getDimensionPixelSize(
+            if (isOpen) R.dimen.fab_menu_close_button_icon_size else R.dimen.fab_icon_size_resting
         )
+        if (currentFabImageSize == imageSize) return
+        currentFabImageSize = imageSize
+        binding.fabAddSite.setMaxImageSize(imageSize)
+        // setMaxImageSize rescales the image matrix immediately but leaves the padding that centres
+        // the drawable to the next measure pass, so the new glyph draws at the old offset until
+        // something else triggers one. Ask for it here instead of letting it land a frame later.
+        binding.fabAddSite.requestLayout()
     }
 
     /**
