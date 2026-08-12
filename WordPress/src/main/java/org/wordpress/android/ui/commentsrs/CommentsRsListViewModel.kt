@@ -649,8 +649,9 @@ class CommentsRsListViewModel @Inject constructor(
             updateTabUiState(tab) {
                 copy(isLoading = false, isRefreshing = false, error = null, isAuthError = authError)
             }
-            // Retrying an auth failure just fails again, so offer the message without the action.
             if (showErrorSnackbar) {
+                // Retrying an auth failure just fails again, so offer the message without
+                // the action.
                 _snackbarMessages.trySend(
                     SnackbarMessage(
                         message = friendly,
@@ -663,13 +664,7 @@ class CommentsRsListViewModel @Inject constructor(
             }
         } else {
             updateTabUiState(tab) {
-                copy(
-                    comments = emptyList(),
-                    isLoading = false,
-                    isRefreshing = false,
-                    error = friendly,
-                    isAuthError = authError
-                )
+                copy(isLoading = false, isRefreshing = false, error = friendly, isAuthError = authError)
             }
         }
     }

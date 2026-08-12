@@ -134,10 +134,7 @@ class CommentsRsDataSource @Inject constructor(
                     nextPageParams = result.response.nextPageParams
                 )
                 is WpRequestResult.WpError -> RsCommentsPageResult.Error(result.errorMessage)
-                is WpRequestResult.RequestExecutionFailed -> RsCommentsPageResult.Error(
-                    message = null,
-                    reason = result.reason
-                )
+                is WpRequestResult.RequestExecutionFailed -> RsCommentsPageResult.Error(null, result.reason)
                 else -> RsCommentsPageResult.Error(null)
             }
         }
