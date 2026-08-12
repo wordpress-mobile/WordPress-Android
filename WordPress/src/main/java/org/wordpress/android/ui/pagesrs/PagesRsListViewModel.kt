@@ -407,10 +407,20 @@ internal class PagesRsListViewModel @Inject constructor(
         restClient.clearCaches()
         val tabs = collections.keys.toList()
         if (!networkUtilsWrapper.isNetworkAvailable()) {
-            // Every tab would report the same connection failure, so let one message speak for
-            // all of them rather than queueing an identical snackbar per tab.
-            tabs.forEachIndexed { index, tab ->
-                onRefreshFailed(tab, e = null, showSnackbar = index == 0)
+            // Every tab would report the same connection failure, so record the failure on each
+            // and send one message for the whole fan-out. It has to be sent here rather than by
+            // a nominated tab: a tab only offers a snackbar when it has content to keep, so
+            // picking one that turned out to be empty would swallow the message entirely.
+            val anyTabKeepsItsPages = tabs.any { getTabUiState(it).pages.hasRealPages }
+            tabs.forEach { onRefreshFailed(it, e = null, showSnackbar = false) }
+            if (anyTabKeepsItsPages) {
+                _snackbarMessages.trySend(
+                    SnackbarMessage(
+                        message = friendlyErrorMessage(null),
+                        actionLabel = resourceProvider.getString(R.string.retry),
+                        onAction = { refreshAllTabs() }
+                    )
+                )
             }
             return
         }
