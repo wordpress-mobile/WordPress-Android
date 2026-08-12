@@ -82,10 +82,10 @@ class PostRsRestClient @Inject constructor(
     }
 
     /**
-     * Fetches media source URLs for the given [mediaIds] in a single
-     * network call using the `include` parameter, returning a map of
-     * media ID to a URL sized for display. IDs already in the local
-     * cache are returned immediately without a network round-trip.
+     * Fetches the given [mediaIds] in a single network call using the
+     * `include` parameter, returning a map of media ID to a URL sized
+     * for display. IDs already in the local cache are returned
+     * immediately without a network round-trip.
      *
      * @param widthDp target display width in dp. Pass 0 to use the
      *     full screen width.
@@ -475,23 +475,18 @@ class PostRsRestClient @Inject constructor(
      * default), and handing one of those to a screen that crops again
      * would quietly cut content out of the image.
      */
-    private fun MediaImage.renderAtLeast(targetWidth: Int): String? =
-        sizes.firstOrNull {
-            it.width >= targetWidth && it.matchesAspectOf(this)
+    private fun MediaImage.renderAtLeast(targetWidth: Int): String? {
+        if (sourceWidth <= 0 || sourceHeight <= 0) return null
+        val sourceRatio = sourceWidth.toFloat() / sourceHeight
+        return sizes.firstOrNull {
+            it.width >= targetWidth && it.matchesRatio(sourceRatio)
         }?.url
-
-    private fun ScaledSize.matchesAspectOf(image: MediaImage): Boolean {
-        if (height <= 0 ||
-            image.sourceWidth <= 0 ||
-            image.sourceHeight <= 0
-        ) {
-            return false
-        }
-        val sourceRatio =
-            image.sourceWidth.toFloat() / image.sourceHeight
-        val ratio = width.toFloat() / height
-        return abs(ratio - sourceRatio) <= sourceRatio * ASPECT_TOLERANCE
     }
+
+    private fun ScaledSize.matchesRatio(sourceRatio: Float): Boolean =
+        height > 0 &&
+            abs(width.toFloat() / height - sourceRatio) <=
+            sourceRatio * ASPECT_TOLERANCE
 
     /**
      * Picks a URL to display [image] at [widthPx]. Photon-capable
