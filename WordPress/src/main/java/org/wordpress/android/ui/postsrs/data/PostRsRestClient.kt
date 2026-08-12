@@ -89,11 +89,17 @@ class PostRsRestClient @Inject constructor(
      *
      * @param widthDp target display width in dp. Pass 0 to use the
      *     full screen width.
+     * @param displayAspect width/height the image will be displayed
+     *     at, when the caller crops to a fixed shape. Lets a render
+     *     WordPress cropped to that same shape be used - a square
+     *     thumbnail for a square slot, say. Leave null to accept only
+     *     renders that still match the original's proportions.
      */
     suspend fun fetchMediaUrls(
         site: SiteModel,
         mediaIds: List<Long>,
         widthDp: Int = 0,
+        displayAspect: Float? = null,
     ): Map<Long, String> {
         val widthPx = if (widthDp > 0) {
             (widthDp * context.resources.displayMetrics.density)
@@ -110,7 +116,8 @@ class PostRsRestClient @Inject constructor(
             val cached = mediaImageCache[mediaCacheKey(site, id)]
             if (cached != null) {
                 result[id] = toDisplayUrl(
-                    accessibilityInfo, isWpComRest, cached, widthPx
+                    accessibilityInfo, isWpComRest, cached, widthPx,
+                    displayAspect
                 )
             } else {
                 uncached.add(id)
@@ -131,7 +138,8 @@ class PostRsRestClient @Inject constructor(
                     mediaImageCache[mediaCacheKey(site, media.id)] =
                         image
                     result[media.id] = toDisplayUrl(
-                        accessibilityInfo, isWpComRest, image, widthPx
+                        accessibilityInfo, isWpComRest, image, widthPx,
+                        displayAspect
                     )
                 }
             }
@@ -469,17 +477,25 @@ class PostRsRestClient @Inject constructor(
     }
 
     /**
-     * The smallest render at least [targetWidth] wide, ignoring any
-     * whose aspect ratio no longer matches the original. Themes can
-     * register hard-cropped sizes (WordPress crops `thumbnail` by
-     * default), and handing one of those to a screen that crops again
-     * would quietly cut content out of the image.
+     * The smallest render at least [targetWidth] wide that we can use
+     * without losing content. Themes register hard-cropped sizes
+     * (WordPress crops `thumbnail` by default), and handing one of
+     * those to a screen that crops again would quietly cut the image
+     * down twice - so a render only qualifies if it still matches the
+     * original's proportions, or if it was cropped to the very shape
+     * the caller is about to display it at ([displayAspect]).
      */
-    private fun MediaImage.renderAtLeast(targetWidth: Int): String? {
+    private fun MediaImage.renderAtLeast(
+        targetWidth: Int,
+        displayAspect: Float?,
+    ): String? {
         if (sourceWidth <= 0 || sourceHeight <= 0) return null
         val sourceRatio = sourceWidth.toFloat() / sourceHeight
         return sizes.firstOrNull {
-            it.width >= targetWidth && it.matchesRatio(sourceRatio)
+            it.width >= targetWidth && (
+                it.matchesRatio(sourceRatio) ||
+                    (displayAspect != null && it.matchesRatio(displayAspect))
+                )
         }?.url
     }
 
@@ -502,11 +518,13 @@ class PostRsRestClient @Inject constructor(
         isWpComRest: Boolean,
         image: MediaImage,
         widthPx: Int,
+        displayAspect: Float?,
     ): String {
         val url = if (accessibilityInfo.isPhotonCapable) {
             image.sourceUrl
         } else {
-            image.renderAtLeast(widthPx) ?: image.sourceUrl
+            image.renderAtLeast(widthPx, displayAspect)
+                ?: image.sourceUrl
         }
         // Only WP.com-hosted media honors ?w=, and only Photon needs
         // the rewrite. Self-hosted ignores the param, and rewriting
