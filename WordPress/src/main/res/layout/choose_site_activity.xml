@@ -119,7 +119,6 @@
             android:visibility="invisible"
             app:borderWidth="0dp"
             app:maxImageSize="@dimen/fab_menu_close_button_icon_size"
-            app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.WordPress.FloatingActionButton"
             tools:visibility="visible" />
     </LinearLayout>
 
