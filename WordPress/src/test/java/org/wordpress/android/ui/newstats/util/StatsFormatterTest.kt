@@ -11,6 +11,13 @@ class StatsFormatterTest {
     private val resourceProvider = mock<ResourceProvider>()
 
     @Test
+    fun `toDateRangeString for a single-day range renders one date`() {
+        val period = StatsPeriod.Custom(LocalDate.of(2026, 8, 11), LocalDate.of(2026, 8, 11))
+
+        assertThat(period.toDateRangeString(resourceProvider)).isEqualTo("11 Aug")
+    }
+
+    @Test
     fun `toDateRangeString within one month renders shared month`() {
         val period = StatsPeriod.Custom(LocalDate.of(2026, 7, 28), LocalDate.of(2026, 7, 30))
 

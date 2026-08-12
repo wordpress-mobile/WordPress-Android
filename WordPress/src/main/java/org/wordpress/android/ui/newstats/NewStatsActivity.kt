@@ -1448,7 +1448,13 @@ private fun StatsPeriod.getDisplayLabel(): String {
     return when (this) {
         is StatsPeriod.Custom -> {
             val formatter = java.time.format.DateTimeFormatter.ofPattern("MMM d")
-            "${startDate.format(formatter)} - ${endDate.format(formatter)}"
+            // A single-day range (day-level paging back from Today) reads as one date rather than
+            // repeating it as "Aug 11 - Aug 11".
+            if (startDate == endDate) {
+                startDate.format(formatter)
+            } else {
+                "${startDate.format(formatter)} - ${endDate.format(formatter)}"
+            }
         }
         else -> stringResource(id = labelResId)
     }
