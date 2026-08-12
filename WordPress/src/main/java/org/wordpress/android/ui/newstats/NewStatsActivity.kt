@@ -135,8 +135,8 @@ import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import javax.inject.Inject
 
 // Opacity of a navigation control (forward at the present edge, back at the year floor) when it is
-// disabled. Set explicitly to 50% so it isn't compounded with M3's default 38% disabled alpha (which
-// would leave it near-invisible at ~19%), keeping the two controls visually consistent (iOS parity).
+// disabled. The enabled controls use full onSurface, so 50% reads as clearly dimmed against them
+// while still staying visible (rather than disappearing) at the edge, matching iOS parity.
 private const val DISABLED_CONTROL_ALPHA = 0.5f
 
 @AndroidEntryPoint
@@ -417,6 +417,7 @@ private fun NewStatsScreen(
                                 onClick = { viewsStatsViewModel.onNavigatePrevious() },
                                 enabled = canNavigateBackward,
                                 colors = IconButtonDefaults.iconButtonColors(
+                                    contentColor = MaterialTheme.colorScheme.onSurface,
                                     disabledContentColor = MaterialTheme.colorScheme.onSurface
                                         .copy(alpha = DISABLED_CONTROL_ALPHA)
                                 )
@@ -482,6 +483,7 @@ private fun NewStatsScreen(
                                 onClick = { viewsStatsViewModel.onNavigateNext() },
                                 enabled = canNavigateForward,
                                 colors = IconButtonDefaults.iconButtonColors(
+                                    contentColor = MaterialTheme.colorScheme.onSurface,
                                     disabledContentColor = MaterialTheme.colorScheme.onSurface
                                         .copy(alpha = DISABLED_CONTROL_ALPHA)
                                 )
