@@ -382,13 +382,16 @@ class ChooseSiteActivity : BaseAppCompatActivity() {
      * Walks the FAB's background for the MaterialShapeDrawable that paints its container, which is
      * the content layer of a RippleDrawable today.
      *
-     * FloatingActionButton does expose setShapeAppearanceModel and backgroundTintList, and both do
-     * reach this drawable, but they go through the impl's stored ShapeAppearanceModel rather than
-     * the live drawable. Its createShapeDrawable rebuilds the background from that stored model, so
-     * anything that reconstructs the background mid-morph resets the container to the resting
-     * squircle declared by the style and the animation snaps back to a rounded square. Mutating the
-     * drawable in place keeps the interpolated corner on the instance actually being drawn, and
-     * avoids rebuilding a whole model every frame. Verified on device against Material 1.14.0.
+     * Driving the morph through FloatingActionButton's own setShapeAppearanceModel instead left the
+     * container a rounded square while the menu was open, reproducibly, on device against Material
+     * 1.14.0. Do not swap this walk for the public setter without checking that again.
+     *
+     * Why is not fully pinned down. Both public setters do reach this drawable, so the earlier note
+     * here claiming they do not was wrong. The likely explanation is that they write through the
+     * impl's stored ShapeAppearanceModel, which createShapeDrawable rebuilds the background from:
+     * any rebuild mid-morph would restore the resting squircle the style declares and lose the
+     * interpolated corner. Mutating the live drawable keeps the corner on the instance being drawn
+     * either way, and avoids rebuilding a whole model every frame.
      *
      * The search handles nesting so that a wrapped background does not silently stop the morph.
      */
