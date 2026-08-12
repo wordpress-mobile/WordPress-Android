@@ -26,9 +26,12 @@
     <dimen name="fab_menu_item_spacing">4dp</dimen>
     <dimen name="fab_menu_close_button_spacing">8dp</dimen>
     <!-- The close button keeps the FAB's 56dp container, but the spec gives its icon its own,
-         smaller size. Applied only while the menu is open; the resting plus uses the FAB's own
-         24dp icon size, which every other FAB in both apps inherits from Material. -->
+         smaller size. Applied only while the menu is open. -->
     <dimen name="fab_menu_close_button_icon_size">20dp</dimen>
+    <!-- Restores Material's own default icon size once the menu closes, since setMaxImageSize has
+         no way to fall back to the value the style supplied. Kept in step with
+         Widget.Design.FloatingActionButton's maxImageSize (design_fab_image_size), which is not a
+         public resource and so cannot be referenced directly. -->
     <dimen name="fab_icon_size_resting">24dp</dimen>
     <!-- The FAB rests as a 16dp-corner squircle; the morph to a circle is animated in
          ChooseSiteActivity, which interpolates up to half the FAB's height. -->
