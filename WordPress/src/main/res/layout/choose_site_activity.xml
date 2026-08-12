@@ -112,7 +112,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:contentDescription="@string/site_picker_add_a_site"
-            android:src="@drawable/ic_plus_white_24dp"
+            android:src="@drawable/ic_plus_fab_24dp"
             android:layout_marginTop="@dimen/fab_menu_close_button_spacing"
             android:visibility="invisible"
             app:borderWidth="0dp"
