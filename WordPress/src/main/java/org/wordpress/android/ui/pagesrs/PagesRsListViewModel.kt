@@ -427,7 +427,7 @@ internal class PagesRsListViewModel @Inject constructor(
             updateTabUiState(tab) {
                 copy(
                     isLoading = RsTabLoading.onRefreshStarted(
-                        hasItems = pages.isNotEmpty(),
+                        hasItems = pages.hasRealPages,
                         hasFetched = tab in fetchedTabs
                     ),
                     error = null
@@ -462,7 +462,7 @@ internal class PagesRsListViewModel @Inject constructor(
         userRefreshingTabs.remove(tab)
         val message = friendlyErrorMessage(e)
         val authError = PostRsErrorUtils.isAuthError(e)
-        if (getTabUiState(tab).pages.isNotEmpty()) {
+        if (getTabUiState(tab).pages.hasRealPages) {
             updateTabUiState(tab) {
                 copy(
                     isLoading = false,
@@ -1212,7 +1212,7 @@ internal class PagesRsListViewModel @Inject constructor(
                     pages = rows,
                     isLoading = RsTabLoading.onItemsLoaded(
                         wasLoading = isLoading,
-                        hasItems = rows.isNotEmpty()
+                        hasItems = rows.hasRealPages
                     ),
                     error = null,
                     isAuthError = false
@@ -1388,7 +1388,7 @@ internal class PagesRsListViewModel @Inject constructor(
         if (!fetchingFirstPage) userRefreshingTabs.remove(tab)
 
         val isError = listInfo?.state == ListState.ERROR
-        val hasPages = getTabUiState(tab).pages.isNotEmpty()
+        val hasPages = getTabUiState(tab).pages.hasRealPages
         val errorMessage = if (isError) {
             PostRsErrorUtils.friendlyErrorMessage(null, null, resourceProvider, networkUtilsWrapper)
         } else null
@@ -1412,7 +1412,7 @@ internal class PagesRsListViewModel @Inject constructor(
                     isLoading = RsTabLoading.onListInfoChanged(
                         wasLoading = isLoading,
                         isFetchingFirstPage = fetchingFirstPage,
-                        hasItems = pages.isNotEmpty(),
+                        hasItems = pages.hasRealPages,
                         hasFetched = tab in fetchedTabs
                     ),
                     isRefreshing = isUserRefresh && fetchingFirstPage,
