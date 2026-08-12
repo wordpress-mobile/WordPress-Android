@@ -176,7 +176,16 @@ class PostRsListViewModel @Inject constructor(
     @MainThread
     fun refreshAllTabs() {
         restClient.clearCaches()
-        collections.keys.toList().forEach { tab ->
+        val tabs = collections.keys.toList()
+        if (!networkUtilsWrapper.isNetworkAvailable()) {
+            // Every tab would report the same connection failure, so let one message speak for
+            // all of them rather than queueing an identical snackbar per tab.
+            tabs.forEachIndexed { index, tab ->
+                onRefreshFailed(tab, e = null, showSnackbar = index == 0)
+            }
+            return
+        }
+        tabs.forEach { tab ->
             refreshTab(tab)
         }
     }
@@ -761,9 +770,10 @@ class PostRsListViewModel @Inject constructor(
      *
      * [e] is null when no request was made because the device is offline. The message is the same
      * either way - [friendlyErrorMessage] reports the network error whenever the device is offline,
-     * regardless of what failed.
+     * regardless of what failed. [showSnackbar] is false when another tab is already reporting the
+     * same failure.
      */
-    private fun onRefreshFailed(tab: PostRsListTab, e: Exception?) {
+    private fun onRefreshFailed(tab: PostRsListTab, e: Exception?, showSnackbar: Boolean = true) {
         e?.let { AppLog.e(AppLog.T.POSTS, "Failed to refresh tab $tab", it) }
         userRefreshingTabs.remove(tab)
         val message = friendlyErrorMessage(e)
@@ -772,15 +782,17 @@ class PostRsListViewModel @Inject constructor(
             updateTabUiState(tab) {
                 copy(isLoading = false, isRefreshing = false, error = null)
             }
-            _snackbarMessages.trySend(
-                SnackbarMessage(
-                    message = message,
-                    actionLabel = if (authError) null
-                        else resourceProvider.getString(R.string.retry),
-                    onAction = if (authError) null
-                        else ({ refreshTab(tab) })
+            if (showSnackbar) {
+                _snackbarMessages.trySend(
+                    SnackbarMessage(
+                        message = message,
+                        actionLabel = if (authError) null
+                            else resourceProvider.getString(R.string.retry),
+                        onAction = if (authError) null
+                            else ({ refreshTab(tab) })
+                    )
                 )
-            )
+            }
         } else {
             updateTabUiState(tab) {
                 copy(
