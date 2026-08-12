@@ -116,7 +116,6 @@
             android:layout_marginTop="@dimen/fab_menu_close_button_spacing"
             android:visibility="invisible"
             app:borderWidth="0dp"
-            app:maxImageSize="@dimen/fab_menu_close_button_icon_size"
             tools:visibility="visible" />
     </LinearLayout>
 

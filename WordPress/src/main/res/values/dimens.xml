@@ -25,8 +25,11 @@
     <!-- Menu items are 4dp apart, but the close button sits 8dp below the nearest item. -->
     <dimen name="fab_menu_item_spacing">4dp</dimen>
     <dimen name="fab_menu_close_button_spacing">8dp</dimen>
-    <!-- The close button keeps the FAB's own size, so only its icon is specified here. -->
+    <!-- The close button keeps the FAB's 56dp container, but the spec gives its icon its own,
+         smaller size. Applied only while the menu is open; the resting plus uses the FAB's own
+         24dp icon size, which every other FAB in both apps inherits from Material. -->
     <dimen name="fab_menu_close_button_icon_size">20dp</dimen>
+    <dimen name="fab_icon_size_resting">24dp</dimen>
     <!-- The FAB rests as a 16dp-corner squircle; the morph to a circle is animated in
          ChooseSiteActivity, which interpolates up to half the FAB's height. -->
     <dimen name="fab_corner_size_resting">16dp</dimen>

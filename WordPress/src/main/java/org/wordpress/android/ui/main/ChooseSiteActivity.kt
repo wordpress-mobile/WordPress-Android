@@ -410,6 +410,13 @@ class ChooseSiteActivity : BaseAppCompatActivity() {
         binding.fabAddSite.setImageResource(
             if (isOpen) R.drawable.ic_close_white_24dp else R.drawable.ic_plus_white_24dp
         )
+        // The spec sizes the close glyph smaller than a regular FAB icon while keeping the same
+        // container, so the size has to follow the icon rather than sit on the layout.
+        binding.fabAddSite.setMaxImageSize(
+            resources.getDimensionPixelSize(
+                if (isOpen) R.dimen.fab_menu_close_button_icon_size else R.dimen.fab_icon_size_resting
+            )
+        )
     }
 
     /**
