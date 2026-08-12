@@ -4,6 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -66,6 +67,7 @@ class ViewsStatsViewModel @Inject constructor(
     private var currentPeriod: StatsPeriod = _selectedPeriod.value
     private var loadingPeriod: StatsPeriod? = null
     private var loadedPeriod: StatsPeriod? = null
+    private var loadJob: Job? = null
 
     private val _isPeriodInitialized = MutableStateFlow(false)
     val isPeriodInitialized: StateFlow<Boolean> = _isPeriodInitialized.asStateFlow()
@@ -373,7 +375,11 @@ class ViewsStatsViewModel @Inject constructor(
             )
         }
 
-        viewModelScope.launch {
+        // Rapid paging ("back five days quickly") fires overlapping loads. Cancel the in-flight one so
+        // only the latest period's request survives — otherwise a stale older coroutine can clear the
+        // dim/loadingPeriod mid-flight (flicker) or write a stale loadedPeriod (a redundant refetch).
+        loadJob?.cancel()
+        loadJob = viewModelScope.launch {
             loadDataInternal(site)
         }
     }
@@ -409,8 +415,13 @@ class ViewsStatsViewModel @Inject constructor(
                 loadedPeriod = targetPeriod
             }
         } finally {
-            loadingPeriod = null
-            clearLoadingNewPeriod()
+            // Only clear the flags if this load still owns them. A load superseded by rapid paging is
+            // cancelled and its finally runs after the newer load has already set loadingPeriod to the
+            // newer period, so clearing unconditionally here would wipe the newer load's dim.
+            if (loadingPeriod == targetPeriod) {
+                loadingPeriod = null
+                clearLoadingNewPeriod()
+            }
         }
     }
 
