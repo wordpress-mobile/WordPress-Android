@@ -2,10 +2,26 @@
 <!--
     Material 3 FAB menu items darken only slightly when pressed, rather than taking on the full
     on-container color. A low-alpha ripple keeps the label legible through the press.
+
+    The focused and hovered entries give keyboard and pointer users a state layer, and the
+    unqualified entry is what RippleDrawable fades out to when a press is released. Leaving it off
+    makes RippleUtils.sanitizeRippleDrawableColor fall back to transparent, which drops the focus
+    and hover layers and snaps the release animation.
 -->
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:alpha="@dimen/fab_menu_item_ripple_pressed_alpha"
         android:color="@color/fab_on_container"
         android:state_pressed="true" />
+    <item
+        android:alpha="@dimen/fab_menu_item_ripple_focused_alpha"
+        android:color="@color/fab_on_container"
+        android:state_focused="true" />
+    <item
+        android:alpha="@dimen/fab_menu_item_ripple_hovered_alpha"
+        android:color="@color/fab_on_container"
+        android:state_hovered="true" />
+    <item
+        android:alpha="@dimen/fab_menu_item_ripple_alpha"
+        android:color="@color/fab_on_container" />
 </selector>
