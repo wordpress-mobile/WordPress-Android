@@ -377,10 +377,13 @@ class ChooseSiteActivity : BaseAppCompatActivity() {
     }
 
     /**
-     * Walks the FAB's background for the MaterialShapeDrawable that paints its container. That
-     * drawable is normally the content layer of a RippleDrawable, but useCompatPadding wraps the
-     * ripple in an InsetDrawable and a border adds another layer, so the search handles nesting
-     * rather than assuming a flat RippleDrawable.
+     * Walks the FAB's background for the MaterialShapeDrawable that paints its container, which is
+     * the content layer of a RippleDrawable today.
+     *
+     * FloatingActionButton's own setShapeAppearanceModel and backgroundTintList do not reach that
+     * drawable: dropping this walk and relying on them leaves the container a rounded square in its
+     * resting color while the menu is open. Verified on device against Material 1.14.0. The search
+     * handles nesting so that a wrapped background does not silently stop the morph.
      */
     private fun forEachFabShapeDrawable(action: (MaterialShapeDrawable) -> Unit) {
         fun visit(drawable: Drawable?) {
@@ -436,7 +439,10 @@ class ChooseSiteActivity : BaseAppCompatActivity() {
      */
     private fun applyFabColors(isOpen: Boolean, animate: Boolean = true) {
         val onContainer = if (isOpen) R.color.fab_close_on_container else R.color.fab_on_container
-        binding.fabAddSite.imageTintList = AppCompatResources.getColorStateList(this, onContainer)
+        // setImageResource reapplies the FAB's own tint as a color filter, which takes precedence
+        // over imageTintList, so the icon color has to go through the support tint instead.
+        binding.fabAddSite.supportImageTintList =
+            AppCompatResources.getColorStateList(this, onContainer)
 
         val target = getColor(if (isOpen) R.color.fab_close_container else R.color.fab_container)
         fabColorAnimator?.cancel()
