@@ -122,6 +122,7 @@ import org.wordpress.android.ui.newstats.tagsandcategories.TagsAndCategoriesView
 import org.wordpress.android.ui.newstats.yearinreview.YearInReviewDetailActivity
 import org.wordpress.android.ui.newstats.yearinreview.YearInReviewViewModel
 import org.wordpress.android.ui.newstats.util.ProvideShimmerBrush
+import org.wordpress.android.ui.newstats.util.formatCustomDateRange
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.newstats.components.NewStatsIntroBottomSheet
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
@@ -1456,16 +1457,7 @@ private fun StatsPeriodMenu(
 @Composable
 private fun StatsPeriod.getDisplayLabel(): String {
     return when (this) {
-        is StatsPeriod.Custom -> {
-            val formatter = java.time.format.DateTimeFormatter.ofPattern("MMM d")
-            // A single-day range (day-level paging back from Today) reads as one date rather than
-            // repeating it as "Aug 11 - Aug 11".
-            if (startDate == endDate) {
-                startDate.format(formatter)
-            } else {
-                "${startDate.format(formatter)} - ${endDate.format(formatter)}"
-            }
-        }
+        is StatsPeriod.Custom -> formatCustomDateRange(startDate, endDate)
         else -> stringResource(id = labelResId)
     }
 }
