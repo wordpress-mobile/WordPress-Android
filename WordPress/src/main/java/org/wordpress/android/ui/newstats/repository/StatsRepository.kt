@@ -132,8 +132,11 @@ class StatsRepository @Inject constructor(
     fun previousPeriod(period: StatsPeriod): StatsPeriod = shiftPeriod(period, direction = -1)
 
     /**
-     * The concrete range immediately after [period], stepped by the period's own length. Clamped so
-     * the window never ends after today; callers gate the control with [canNavigateForward].
+     * The range immediately after [period], stepped by the period's own length. Clamped so the window
+     * never ends after today; callers gate the control with [canNavigateForward]. When the result
+     * lands exactly on a preset's own window it is returned as that preset (see [snapToPreset]), so
+     * paging forward onto the present edge restores the original label — Today → back → forward shows
+     * "Today", not today's date.
      */
     fun nextPeriod(period: StatsPeriod): StatsPeriod {
         val shifted = shiftPeriod(period, direction = 1)
@@ -141,12 +144,25 @@ class StatsRepository @Inject constructor(
         // exactly on the present edge. Clamp defensively in case a manually-picked range that isn't
         // aligned to today overshoots.
         val today = LocalDate.now()
-        return if (shifted.endDate > today) {
+        val result = if (shifted.endDate > today) {
             val span = ChronoUnit.DAYS.between(shifted.startDate, shifted.endDate)
             StatsPeriod.Custom(today.minusDays(span), today)
         } else {
             shifted
         }
+        return snapToPreset(result)
+    }
+
+    /**
+     * Returns the preset whose canonical window exactly equals [range], or [range] itself when none
+     * matches. Lets forward navigation that lands back on the present edge restore the preset label
+     * instead of an equivalent Custom range. Only forward can match — every preset window ends today.
+     * Day-based presets match exactly; a month preset whose window drifted by a short-month clamp
+     * stays Custom, a safe fallback (identical data, shown as dates rather than the preset name).
+     */
+    private fun snapToPreset(range: StatsPeriod.Custom): StatsPeriod {
+        val window = range.startDate to range.endDate
+        return StatsPeriod.presets().firstOrNull { currentPeriodWindow(it) == window } ?: range
     }
 
     /** Whether paging backward stays above the year-[NAVIGATION_FLOOR_YEAR] floor. */

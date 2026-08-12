@@ -1242,20 +1242,34 @@ class StatsRepositoryTest : BaseUnitTest() {
     }
 
     @Test
-    fun `nextPeriod of the day before Today returns Today's single day`() {
+    fun `nextPeriod onto the present edge snaps back to the Today preset`() {
         val today = LocalDate.now()
         val yesterday = StatsPeriod.Custom(today.minusDays(1), today.minusDays(1))
 
         val result = repository.nextPeriod(yesterday)
 
-        assertThat(result).isEqualTo(StatsPeriod.Custom(today, today))
+        // Landing on today's single-day window restores the preset label rather than a Custom range,
+        // so Today → back → forward shows "Today" again.
+        assertThat(result).isEqualTo(StatsPeriod.Today)
+    }
+
+    @Test
+    fun `nextPeriod onto a preset's own window snaps back to that preset`() {
+        val today = LocalDate.now()
+        // One seven-day window before Last 7 Days; forward lands exactly on the Last 7 Days window.
+        val previousWeek = StatsPeriod.Custom(today.minusDays(13), today.minusDays(7))
+
+        val result = repository.nextPeriod(previousWeek)
+
+        assertThat(result).isEqualTo(StatsPeriod.Last7Days)
     }
 
     @Test
     fun `nextPeriod clamps so the window never ends after today`() {
         val today = LocalDate.now()
-        // A range ending today: forward would overshoot into the future and must be clamped.
-        val endingToday = StatsPeriod.Custom(today.minusDays(6), today)
+        // A ten-day range ending today (no preset has this span, so it stays Custom): forward would
+        // overshoot into the future and must be clamped back to end on today.
+        val endingToday = StatsPeriod.Custom(today.minusDays(9), today)
 
         val result = repository.nextPeriod(endingToday) as StatsPeriod.Custom
 
