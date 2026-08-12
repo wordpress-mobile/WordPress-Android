@@ -1245,7 +1245,9 @@ internal class PagesRsListViewModel @Inject constructor(
         resolveImageJobs[tab]?.cancel()
         resolveImageJobs[tab] = viewModelScope.launch {
             val urls = withContext(Dispatchers.IO) {
-                restClient.fetchMediaUrls(site, unresolvedIds, THUMBNAIL_SIZE_DP)
+                restClient.fetchMediaUrls(
+                    site, unresolvedIds, THUMBNAIL_SIZE_DP, THUMBNAIL_ASPECT
+                )
             }
             if (urls.isEmpty()) return@launch
             updateTabUiState(tab) {
@@ -1436,6 +1438,9 @@ internal class PagesRsListViewModel @Inject constructor(
         private const val SITE_EDITOR_LAUNCH_DEBOUNCE_MS = 1000L
         internal const val MIN_SEARCH_QUERY_LENGTH = 3
         private const val THUMBNAIL_SIZE_DP = 64
+
+        /** Rows show the thumbnail in a square slot, cropped to fill. */
+        private const val THUMBNAIL_ASPECT = 1f
         private val ALL_STATUSES = PageRsListTab.entries.flatMap { it.statuses }.distinct()
 
         private const val TRACKS_SELECTED_TAB = "selected_tab"
