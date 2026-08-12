@@ -492,17 +492,33 @@ class PostRsRestClient @Inject constructor(
         if (sourceWidth <= 0 || sourceHeight <= 0) return null
         val sourceRatio = sourceWidth.toFloat() / sourceHeight
         return sizes.firstOrNull {
-            it.width >= targetWidth && (
+            it.usableWidthFor(displayAspect) >= targetWidth && (
                 it.matchesRatio(sourceRatio) ||
                     (displayAspect != null && it.matchesRatio(displayAspect))
                 )
         }?.url
     }
 
-    private fun ScaledSize.matchesRatio(sourceRatio: Float): Boolean =
+    /**
+     * How much of this render's width survives being cropped to
+     * [displayAspect]. Cropping to a shape narrower than the render
+     * is limited by its height, so a wide render carries far less
+     * detail into a square slot than its own width suggests - a
+     * 300x169 thumbnail of a 16:9 photo only has 169px to give.
+     */
+    private fun ScaledSize.usableWidthFor(displayAspect: Float?): Int {
+        if (displayAspect == null || height <= 0) return width
+        return if (width.toFloat() / height > displayAspect) {
+            (height * displayAspect).toInt()
+        } else {
+            width
+        }
+    }
+
+    private fun ScaledSize.matchesRatio(ratio: Float): Boolean =
         height > 0 &&
-            abs(width.toFloat() / height - sourceRatio) <=
-            sourceRatio * ASPECT_TOLERANCE
+            abs(width.toFloat() / height - ratio) <=
+            ratio * ASPECT_TOLERANCE
 
     /**
      * Picks a URL to display [image] at [widthPx]. Photon-capable
