@@ -22,6 +22,8 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.clickable
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.DateRange
@@ -53,6 +55,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
@@ -129,6 +132,9 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import javax.inject.Inject
+
+// Opacity of the forward-navigation control when it is disabled at the present edge (iOS parity).
+private const val DISABLED_CONTROL_ALPHA = 0.5f
 
 @AndroidEntryPoint
 class NewStatsActivity : BaseAppCompatActivity() {
@@ -353,6 +359,8 @@ private fun NewStatsScreen(
 ) {
     val viewsStatsViewModel: ViewsStatsViewModel = viewModel()
     val selectedPeriod by viewsStatsViewModel.selectedPeriod.collectAsState()
+    val canNavigateBackward by viewsStatsViewModel.canNavigateBackward.collectAsState()
+    val canNavigateForward by viewsStatsViewModel.canNavigateForward.collectAsState()
 
     val tabs = StatsTab.entries
     val pagerState = rememberPagerState(initialPage = initialTab.ordinal, pageCount = { tabs.size })
@@ -401,52 +409,79 @@ private fun NewStatsScreen(
                 actions = {
                     val currentTab = tabs[pagerState.currentPage]
                     if (currentTab == StatsTab.TRAFFIC) {
-                        Box {
-                            Row(
-                                verticalAlignment =
-                                    Alignment.CenterVertically,
-                                modifier = Modifier
-                                    .clickable {
-                                        showPeriodMenu = true
-                                    }
-                                    .padding(horizontal = 8.dp)
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            IconButton(
+                                onClick = { viewsStatsViewModel.onNavigatePrevious() },
+                                enabled = canNavigateBackward
                             ) {
-                                Text(
-                                    text = selectedPeriod
-                                        .getDisplayLabel(),
-                                    style = MaterialTheme
-                                        .typography.labelLarge,
-                                    color = MaterialTheme
-                                        .colorScheme.onSurface
-                                )
                                 Icon(
-                                    imageVector =
-                                        Icons.Default.DateRange,
-                                    contentDescription =
-                                        stringResource(
-                                            R.string
-                                                .stats_period_selector_content_description
-                                        ),
-                                    modifier = Modifier
-                                        .padding(start = 4.dp)
+                                    imageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
+                                    contentDescription = stringResource(
+                                        R.string.stats_period_previous_content_description
+                                    )
                                 )
                             }
-                            StatsPeriodMenu(
-                                expanded = showPeriodMenu,
-                                selectedPeriod = selectedPeriod,
-                                onDismiss = {
-                                    showPeriodMenu = false
-                                },
-                                onPresetSelected = { period ->
-                                    viewsStatsViewModel
-                                        .onPeriodChanged(period)
-                                    showPeriodMenu = false
-                                },
-                                onCustomSelected = {
-                                    showPeriodMenu = false
-                                    showDateRangePicker = true
+                            Box {
+                                Row(
+                                    verticalAlignment =
+                                        Alignment.CenterVertically,
+                                    modifier = Modifier
+                                        .clickable {
+                                            showPeriodMenu = true
+                                        }
+                                        .padding(horizontal = 8.dp)
+                                ) {
+                                    Text(
+                                        text = selectedPeriod
+                                            .getDisplayLabel(),
+                                        style = MaterialTheme
+                                            .typography.labelLarge,
+                                        color = MaterialTheme
+                                            .colorScheme.onSurface
+                                    )
+                                    Icon(
+                                        imageVector =
+                                            Icons.Default.DateRange,
+                                        contentDescription =
+                                            stringResource(
+                                                R.string
+                                                    .stats_period_selector_content_description
+                                            ),
+                                        modifier = Modifier
+                                            .padding(start = 4.dp)
+                                    )
                                 }
-                            )
+                                StatsPeriodMenu(
+                                    expanded = showPeriodMenu,
+                                    selectedPeriod = selectedPeriod,
+                                    onDismiss = {
+                                        showPeriodMenu = false
+                                    },
+                                    onPresetSelected = { period ->
+                                        viewsStatsViewModel
+                                            .onPeriodChanged(period)
+                                        showPeriodMenu = false
+                                    },
+                                    onCustomSelected = {
+                                        showPeriodMenu = false
+                                        showDateRangePicker = true
+                                    }
+                                )
+                            }
+                            // Forward stays visible but dimmed at the present edge (there is no later
+                            // period to page to) rather than disappearing, matching iOS.
+                            IconButton(
+                                onClick = { viewsStatsViewModel.onNavigateNext() },
+                                enabled = canNavigateForward,
+                                modifier = Modifier.alpha(if (canNavigateForward) 1f else DISABLED_CONTROL_ALPHA)
+                            ) {
+                                Icon(
+                                    imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                                    contentDescription = stringResource(
+                                        R.string.stats_period_next_content_description
+                                    )
+                                )
+                            }
                         }
                     }
                     StatsOverflowMenu(
