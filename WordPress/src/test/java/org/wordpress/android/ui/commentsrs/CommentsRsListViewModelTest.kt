@@ -39,6 +39,7 @@ import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
 import uniffi.wp_api.CommentListParams
 import uniffi.wp_api.RequestExecutionErrorReason
+import uniffi.wp_api.WpErrorCode
 import java.util.Date
 
 @ExperimentalCoroutinesApi
@@ -220,6 +221,28 @@ class CommentsRsListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
         val state = viewModel.tabStates.value.getValue(CommentsRsListTab.ALL)
         assertThat(state.error).isEqualTo("no network")
         assertThat(state.isLoading).isFalse()
+    }
+
+    @Test
+    fun `initTab auth failure carried as a WP error envelope is still an auth failure`() = test {
+        // A rejected credential can come back either as a transport reason or, when the server
+        // answers with a WP error body, as an error code. Only checking the reason let a 401 keep
+        // its Retry button and show the server's raw wording.
+        whenever(resourceProvider.getString(R.string.post_rs_error_auth)).thenReturn("check login")
+        whenever(commentsRsDataSource.fetchCommentsPage(eq(site), any())).thenReturn(
+            RsCommentsPageResult.Error(
+                message = "Sorry, you are not allowed to do that.",
+                errorCode = WpErrorCode.Unauthorized()
+            )
+        )
+        val viewModel = createViewModel()
+
+        viewModel.initTab(CommentsRsListTab.ALL)
+        advanceUntilIdle()
+
+        val state = viewModel.tabStates.value.getValue(CommentsRsListTab.ALL)
+        assertThat(state.isAuthError).isTrue()
+        assertThat(state.error).isEqualTo("check login")
     }
 
     @Test

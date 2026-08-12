@@ -46,6 +46,7 @@ import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
 import uniffi.wp_api.CommentListParams
 import uniffi.wp_api.RequestExecutionErrorReason
+import uniffi.wp_api.WpErrorCode
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -348,7 +349,8 @@ class CommentsRsListViewModel @Inject constructor(
                         loadMoreInternal(tab, autoAdvanceDepth + 1)
                     }
                 }
-                is RsCommentsPageResult.Error -> onLoadMoreError(tab, result.message, result.reason)
+                is RsCommentsPageResult.Error ->
+                    onLoadMoreError(tab, result.message, result.reason, result.errorCode)
             }
         }
     }
@@ -510,7 +512,13 @@ class CommentsRsListViewModel @Inject constructor(
     private fun fetchFirstPage(tab: CommentsRsListTab, showErrorSnackbar: Boolean = true) {
         // A fetch with no connection can only fail, so report it without the round trip.
         if (!networkUtilsWrapper.isNetworkAvailable()) {
-            onFirstPageError(tab, message = null, reason = null, showErrorSnackbar = showErrorSnackbar)
+            onFirstPageError(
+                tab,
+                message = null,
+                reason = null,
+                errorCode = null,
+                showErrorSnackbar = showErrorSnackbar
+            )
             return
         }
         // Callers (initTab, refreshTab) guard against a null site, so the site getter below is safe.
@@ -529,7 +537,7 @@ class CommentsRsListViewModel @Inject constructor(
                     advanceIfFilteredEmpty(tab)
                 }
                 is RsCommentsPageResult.Error ->
-                    onFirstPageError(tab, result.message, result.reason, showErrorSnackbar)
+                    onFirstPageError(tab, result.message, result.reason, result.errorCode, showErrorSnackbar)
             }
         }
     }
@@ -613,20 +621,22 @@ class CommentsRsListViewModel @Inject constructor(
     }
 
     /**
-     * A page that didn't arrive leaves the list as it is and offers a retry snackbar. A null
-     * [message] and [reason] mean no request was made because the device is offline.
+     * A page that didn't arrive leaves the list as it is and offers a retry snackbar. All-null
+     * failure details mean no request was made because the device is offline.
      */
     private fun onLoadMoreError(
         tab: CommentsRsListTab,
         message: String?,
-        reason: RequestExecutionErrorReason?
+        reason: RequestExecutionErrorReason?,
+        errorCode: WpErrorCode? = null
     ) {
+        val authError = PostRsErrorUtils.isAuthError(reason, errorCode)
         updateTabUiState(tab) { copy(isLoadingMore = false) }
         _snackbarMessages.trySend(
             SnackbarMessage(
-                message = errorMessage(message, reason),
-                actionLabel = resourceProvider.getString(R.string.retry),
-                onAction = { loadMore(tab) }
+                message = errorMessage(message, reason, errorCode),
+                actionLabel = if (authError) null else resourceProvider.getString(R.string.retry),
+                onAction = if (authError) null else ({ loadMore(tab) })
             )
         )
     }
@@ -641,10 +651,11 @@ class CommentsRsListViewModel @Inject constructor(
         tab: CommentsRsListTab,
         message: String?,
         reason: RequestExecutionErrorReason?,
+        errorCode: WpErrorCode?,
         showErrorSnackbar: Boolean
     ) {
-        val friendly = errorMessage(message, reason)
-        val authError = PostRsErrorUtils.isAuthErrorReason(reason)
+        val friendly = errorMessage(message, reason, errorCode)
+        val authError = PostRsErrorUtils.isAuthError(reason, errorCode)
         if (getTabUiState(tab).comments.isNotEmpty()) {
             updateTabUiState(tab) {
                 copy(isLoading = false, isRefreshing = false, error = null, isAuthError = authError)
@@ -692,16 +703,24 @@ class CommentsRsListViewModel @Inject constructor(
         }
     }
 
-    /** The server message when it sent one, otherwise a friendly offline/auth/generic message. */
+    /**
+     * The server message when it sent one, otherwise a friendly offline/auth/generic message.
+     *
+     * Auth failures ignore the server's wording: the retry action is withheld for those, so the
+     * message is all the user gets and a raw 401 body won't tell them their credentials are the
+     * problem. Posts and pages show the same string for the same failure.
+     */
     private fun errorMessage(
         serverMessage: String?,
-        reason: RequestExecutionErrorReason? = null
+        reason: RequestExecutionErrorReason? = null,
+        errorCode: WpErrorCode? = null
     ): String =
-        serverMessage?.takeIf { it.isNotBlank() }
+        serverMessage?.takeIf { it.isNotBlank() && !PostRsErrorUtils.isAuthError(reason, errorCode) }
             ?: PostRsErrorUtils.friendlyErrorMessage(
                 resourceProvider = resourceProvider,
                 networkUtilsWrapper = networkUtilsWrapper,
-                reason = reason
+                reason = reason,
+                errorCode = errorCode
             )
 
     private fun RsComment.toUiModel(nowLabel: String) = CommentRsUiModel(

@@ -25,34 +25,39 @@ internal object PostRsErrorUtils {
      * authentication failure (rejected credentials,
      * missing app-password, etc.).
      */
-    fun isAuthError(e: Exception?): Boolean {
-        val api = unwrapException(e)
-        val errorCode =
-            (api as? WpApiException.WpException)?.errorCode
-        return isAuthErrorReason(failureReason(e)) ||
+    fun isAuthError(e: Exception?): Boolean =
+        isAuthError(failureReason(e), errorCode(e))
+
+    /**
+     * The same check for callers holding a
+     * [uniffi.wp_api.WpRequestResult] rather than a thrown
+     * exception: the rs client reports these failures as
+     * result variants, so there is nothing to unwrap. A
+     * rejected credential arrives as a [reason] when the
+     * request never completed and as an [errorCode] when the
+     * server answered with a WP error envelope, so both have
+     * to be checked.
+     */
+    fun isAuthError(
+        reason: RequestExecutionErrorReason?,
+        errorCode: WpErrorCode?
+    ): Boolean =
+        reason is RequestExecutionErrorReason
+            .HttpAuthenticationRejectedError ||
+            reason is RequestExecutionErrorReason
+                .HttpAuthenticationRequiredError ||
             errorCode is WpErrorCode.Unauthorized ||
             errorCode is WpErrorCode
                 .ApplicationPasswordNotFound ||
             errorCode is WpErrorCode
                 .NoAuthenticatedAppPassword
-    }
-
-    /**
-     * The auth half of [isAuthError] for callers holding a
-     * [uniffi.wp_api.WpRequestResult.RequestExecutionFailed]
-     * rather than a thrown exception: the rs client reports
-     * the failure as a result variant, so there is nothing
-     * to unwrap.
-     */
-    fun isAuthErrorReason(reason: RequestExecutionErrorReason?): Boolean =
-        reason is RequestExecutionErrorReason
-            .HttpAuthenticationRejectedError ||
-            reason is RequestExecutionErrorReason
-                .HttpAuthenticationRequiredError
 
     private fun failureReason(e: Exception?): RequestExecutionErrorReason? =
         (unwrapException(e) as? WpApiException.RequestExecutionFailed)
             ?.reason
+
+    private fun errorCode(e: Exception?): WpErrorCode? =
+        (unwrapException(e) as? WpApiException.WpException)?.errorCode
 
     /**
      * Returns a user-friendly error string based on the
@@ -65,6 +70,7 @@ internal object PostRsErrorUtils {
         resourceProvider: ResourceProvider,
         networkUtilsWrapper: NetworkUtilsWrapper,
         reason: RequestExecutionErrorReason? = null,
+        errorCode: WpErrorCode? = null,
     ): String {
         val failureReason = reason ?: failureReason(e)
 
@@ -74,7 +80,7 @@ internal object PostRsErrorUtils {
                 !networkUtilsWrapper.isNetworkAvailable() ->
                 R.string.error_generic_network
 
-            isAuthError(e) || isAuthErrorReason(reason) ->
+            isAuthError(failureReason, errorCode ?: errorCode(e)) ->
                 R.string.post_rs_error_auth
 
             defaultResId != null -> defaultResId
