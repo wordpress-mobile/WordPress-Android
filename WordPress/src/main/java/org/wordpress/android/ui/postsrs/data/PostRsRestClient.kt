@@ -546,35 +546,13 @@ class PostRsRestClient @Inject constructor(
         // the rewrite. Self-hosted ignores the param, and rewriting
         // the URL there would drop any signed or CDN query string it
         // carries, breaking the image outright.
-        val displayUrl = if (isWpComRest) {
+        return if (isWpComRest) {
             ReaderUtils.getResizedImageUrl(
                 url, widthPx, 0, accessibilityInfo
             )
         } else {
             url
         }
-        logImageChoice(image, accessibilityInfo, widthPx, displayUrl)
-        return displayUrl
-    }
-
-    /**
-     * TODO CMM-2276: temporary review aid, remove before merge. Lets a
-     * reviewer confirm the right render is picked without a proxy.
-     */
-    private fun logImageChoice(
-        image: MediaImage,
-        accessibilityInfo: SiteAccessibilityInfo,
-        width: Int,
-        chosenUrl: String,
-    ) {
-        AppLog.d(
-            AppLog.T.POSTS,
-            "CMM-2276 want=${width}px " +
-                "photon=${accessibilityInfo.isPhotonCapable} " +
-                "renders=${image.sizes.map { it.width }} " +
-                "chose=${chosenUrl.substringAfterLast('/')} " +
-                "original=${image.sourceUrl.substringAfterLast('/')}"
-        )
     }
 
     private fun termCache(
