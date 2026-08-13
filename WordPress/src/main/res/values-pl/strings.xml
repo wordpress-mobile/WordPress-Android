@@ -1081,7 +1081,6 @@ Language: pl
     <string name="my_site_blogging_prompt_card_attribution_day_one">Od &lt;b&gt;Pierwszego Dnia&lt;/b&gt;</string>
     <string name="jetpack_feature_card_menu_item_remind_me_later">Przypomnij mi później</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_the_jetpack_app">Przejdź na aplikację Jetpack</string>
-    <string name="wp_jetpack_feature_removal_overlay_learn_more_migration_text">Dowiedz się więcej na jetpack.com</string>
     <string name="wp_jetpack_feature_removal_overlay_migration_helper_text">Przejście jest darmowe i zajmuje chwilę.</string>
     <string name="blogging_prompts_list_error_fetch_subtitle">Wystąpił błąd podczas wczytywania monitów.</string>
     <string name="blogging_prompts_list_error_fetch_title">Ups</string>

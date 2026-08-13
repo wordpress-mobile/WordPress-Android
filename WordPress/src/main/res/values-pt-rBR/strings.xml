@@ -775,7 +775,6 @@ Language: pt_BR
     <string name="my_site_blogging_prompt_card_attribution_day_one">Do &lt;b&gt;Day One&lt;/b&gt;</string>
     <string name="jetpack_feature_card_menu_item_remind_me_later">Lembre-me depois</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_the_jetpack_app">Mudar para o aplicativo do Jetpack</string>
-    <string name="wp_jetpack_feature_removal_overlay_learn_more_migration_text">Saiba mais em br.jetpack.com</string>
     <string name="wp_jetpack_feature_removal_overlay_migration_helper_text">A migração é gratuita e leva apenas um minuto.</string>
     <string name="blogging_prompts_list_error_fetch_subtitle">Ocorreu um erro ao carregar as sugestões.</string>
     <string name="blogging_prompts_list_error_fetch_title">Opa</string>

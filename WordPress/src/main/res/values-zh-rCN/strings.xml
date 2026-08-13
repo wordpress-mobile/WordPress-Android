@@ -1076,7 +1076,6 @@ Language: zh_CN
     <string name="my_site_blogging_prompt_card_attribution_day_one">来自 &lt;b&gt;Day One&lt;/b&gt;</string>
     <string name="jetpack_feature_card_menu_item_remind_me_later">稍后提醒我</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_the_jetpack_app">切换到 Jetpack 应用</string>
-    <string name="wp_jetpack_feature_removal_overlay_learn_more_migration_text">请访问 jetpack.com 以了解详情</string>
     <string name="wp_jetpack_feature_removal_overlay_migration_helper_text">切换免费，只需一会儿。</string>
     <string name="blogging_prompts_list_error_fetch_subtitle">加载提示时出错。</string>
     <string name="blogging_prompts_list_error_fetch_title">糟糕</string>
