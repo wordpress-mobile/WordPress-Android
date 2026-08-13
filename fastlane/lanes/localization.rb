@@ -432,6 +432,11 @@ platform :android do
 
   TRANSLATIONS_SYNC_BRANCH = 'translations/daily-update'
 
+  # Slug (no org prefix) of the GitHub team asked to review the translations PR. The team's
+  # "Code review assignments" setting picks a single member, so the request lands on one person
+  # rather than the whole team.
+  TRANSLATIONS_REVIEWER_TEAM = 'wpmobile-team'
+
   #####################################################################################
   # update_translations
   # -----------------------------------------------------------------------------------
@@ -491,7 +496,8 @@ platform :android do
       BODY
       head: TRANSLATIONS_SYNC_BRANCH,
       base: DEFAULT_BRANCH,
-      labels: ['Localization']
+      labels: ['Localization'],
+      team_reviewers: [TRANSLATIONS_REVIEWER_TEAM]
     )
     UI.success("Translations PR: #{pr_url}")
   end
