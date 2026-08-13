@@ -944,9 +944,6 @@ Language: nl
     <string name="sharing_twitter_deprecation_notice_description">Automatisch delen op Twitter is niet langer beschikbaar vanwege wijzigingen van de voorwaarden en prijzen van Twitter.</string>
     <string name="sharing_twitter_deprecation_notice_title">Automatisch delen op Twitter is niet langer beschikbaar</string>
     <string name="jp_migration_notifications_allow_title">Sta meldingen toe om op de hoogte te blijven van je site</string>
-    <string name="wp_jp_static_poster_message">De Jetpack app heeft alle functies van de WordPress app, en nu ook exclusieve toegang tot Statistieken, Reader, Meldingen en meer.</string>
-    <string name="wp_jp_static_poster_title_plural">Gebruik WordPress met %s in de Jetpack\u00A0app.</string>
-    <string name="wp_jp_static_poster_title">Gebruik WordPress met %s in de Jetpack\u00A0app.</string>
     <string name="gutenberg_native_unlabeled_color_s" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Niet-gelabelde kleur. %s</string>
     <string name="dashboard_activity_card_title">Recente activiteit</string>
     <string name="site_creation_search_domain_example_body">Net als in het voorbeeld hierboven kunnen mensen met een domein je site vinden en bezoeken vanuit hun webbrowser.</string>
@@ -1001,9 +998,6 @@ Language: nl
     <string name="jetpack_full_plugin_install_onboarding_description_this_site">Deze site</string>
     <string name="jetpack_full_plugin_install_concise_description_multiple">%1$s gebruikt %2$s. Deze ondersteunen nog niet alle functies van de app. Installeer de %3$s.</string>
     <string name="jetpack_full_plugin_install_concise_description_single">%1$s gebruikt %2$s. Deze ondersteunt nog niet alle functies van de app. Installeer de %3$s.</string>
-    <string name="wp_jp_static_poster_footnote">Overstappen is gratis en duurt maar een minuut.</string>
-    <string name="wp_jp_static_poster_button_secondary">Lees verder op Jetpack.com</string>
-    <string name="wp_jp_static_poster_button_primary">Schakel over naar de Jetpack-app</string>
     <string name="my_site_btn_wp_admin">WP Admin</string>
     <string name="my_site_header_manage">Beheren</string>
     <string name="my_site_header_traffic">Bezoekersaantallen</string>
@@ -1081,7 +1075,6 @@ Language: nl
     <string name="wp_jetpack_feature_removal_switch_to_jetpack_app_menu_title">Overstappen naar Jetpack </string>
     <string name="wp_jetpack_feature_removal_overlay_phase_four_all_features_description">Statistieken, Reader, meldingen en andere functies die door Jetpack aangedreven worden, zijn verwijderd uit de WordPress-app.</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_four_title_all_features">Jetpack functies zijn verplaatst.</string>
-    <string name="wp_jetpack_powered_phase_3_feature_is_moving_soon">%1$s wordt binnenkort verplaatst</string>
     <string name="my_site_blogging_prompt_card_view_answers">Alle reacties bekijken</string>
     <string name="stats_insights_total_stats_seven_days_negative">%1$s minder dan de vorige 7 dagen</string>
     <string name="stats_insights_total_stats_seven_days_positive">%1$s meer dan de vorige 7 dagen</string>
@@ -1093,7 +1086,6 @@ Language: nl
     <string name="stats_timeframe_last_seven_days">Afgelopen 7 dagen</string>
     <string name="my_site_blogging_prompt_card_attribution_day_one">Van &lt;b&gt;Day One&lt;/b&gt;</string>
     <string name="jetpack_feature_card_menu_item_remind_me_later">Herinner mij hier later aan</string>
-    <string name="jetpack_feature_card_content_phase_three">Statistieken, Lezer, Meldingen en andere functies worden binnenkort verplaatst naar de mobiele Jetpack-app.</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_the_jetpack_app">Schakel over naar de Jetpack-app</string>
     <string name="wp_jetpack_feature_removal_overlay_learn_more_migration_text">Lees verder op jetpack.com</string>
     <string name="wp_jetpack_feature_removal_overlay_migration_helper_text">Overstappen is gratis en duurt maar een minuut.</string>

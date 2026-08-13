@@ -851,10 +851,6 @@ public class WPMainActivity extends BaseAppCompatActivity implements
                         showJetpackFeatureOverlayAccessedInCorrectly(trackingProperties);
                         break;
                     }
-                    if (mJetpackFeatureRemovalPhaseHelper.shouldShowStaticPage()) {
-                        ActivityLauncher.showJetpackStaticPoster(this);
-                        break;
-                    }
                     mActivityNavigator.openStats(this, getSelectedSite(),
                             (StatsTimeframe) intent.getSerializableExtra(ARG_STATS_TIMEFRAME));
                     break;

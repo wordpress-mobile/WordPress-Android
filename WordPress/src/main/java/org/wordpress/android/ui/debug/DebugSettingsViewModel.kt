@@ -7,7 +7,6 @@ import org.wordpress.android.fluxc.persistence.FeatureFlagConfigDao
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.debug.DebugSettingsViewModel.NavigationAction.DebugCookies
-import org.wordpress.android.ui.debug.previews.PREVIEWS
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
 import org.wordpress.android.ui.notifications.NotificationManagerWrapper
 import org.wordpress.android.util.DebugUtils
@@ -57,13 +56,7 @@ class DebugSettingsViewModel
 
     private fun refresh(debugSettingsType: DebugSettingsType) {
         val uiItems: MutableList<UiItem> = when (debugSettingsType) {
-            DebugSettingsType.REMOTE_FEATURES -> buildRemoteFeatures().map {
-                it.apply {
-                    preview = { onFeaturePreviewClick(this.remoteKey) }.takeIf {
-                        state == UiItem.FeatureFlag.State.ENABLED && PREVIEWS.contains(remoteKey)
-                    }
-                }
-            }.toMutableList()
+            DebugSettingsType.REMOTE_FEATURES -> buildRemoteFeatures().toMutableList()
 
             DebugSettingsType.REMOTE_FIELD_CONFIGS -> buildRemoteFieldConfigs().toMutableList()
             DebugSettingsType.FEATURES_IN_DEVELOPMENT -> buildDevelopedFeatures().toMutableList()
@@ -73,10 +66,6 @@ class DebugSettingsViewModel
 
     fun onDebugCookiesClick() {
         _onNavigation.value = Event(DebugCookies)
-    }
-
-    private fun onFeaturePreviewClick(key: String) {
-        _onNavigation.value = Event(NavigationAction.PreviewFragment(key))
     }
 
     fun onForceShowWeeklyRoundupClick() = launch(bgDispatcher) {
@@ -160,6 +149,5 @@ class DebugSettingsViewModel
     sealed class NavigationAction {
         object DebugCookies : NavigationAction()
         object DebugFlags : NavigationAction()
-        data class PreviewFragment(val name: String) : NavigationAction()
     }
 }

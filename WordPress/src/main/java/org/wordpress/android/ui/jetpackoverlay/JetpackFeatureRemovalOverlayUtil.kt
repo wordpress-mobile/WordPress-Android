@@ -34,7 +34,6 @@ class JetpackFeatureRemovalOverlayUtil @Inject constructor(
             PhaseNewUsers, PhaseSelfHostedUsers ->
                 !jetpackFeatureOverlayShownTracker.getFeatureCollectionOverlayShown(phase)
             PhaseFour -> shouldShowPhaseFourFeatureCollectionOverlay()
-            else -> false
         }
     }
 

@@ -924,9 +924,6 @@ Language: ja_JP
     <string name="sharing_twitter_deprecation_notice_description">Twitter の自動共有機能は Twitter の規約と価格に変更があったため利用できなくなりました。</string>
     <string name="sharing_twitter_deprecation_notice_title">Twitter の自動共有機能は利用できなくなりました</string>
     <string name="jp_migration_notifications_allow_title">サイトを更新するよう通知を許可する</string>
-    <string name="wp_jp_static_poster_message">Jetpack アプリで WordPress アプリの全機能に加えて統計、Reader、通知などを特別に利用できるようになりました。</string>
-    <string name="wp_jp_static_poster_title_plural">Jetpack\u00A0app で WordPress と %sを利用できます。</string>
-    <string name="wp_jp_static_poster_title">Jetpack\u00A0app で WordPress と %sを利用できます。</string>
     <string name="gutenberg_native_unlabeled_color_s" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">ラベルない色。 %s</string>
     <string name="dashboard_activity_card_title">最近のアクティビティ</string>
     <string name="site_creation_search_domain_example_body">上記の例のように、ドメインを使用するとユーザーは、Web ブラウザーからサイトを見つけてアクセスできます。</string>
@@ -981,9 +978,6 @@ Language: ja_JP
     <string name="jetpack_full_plugin_install_onboarding_description_this_site">このサイト</string>
     <string name="jetpack_full_plugin_install_concise_description_multiple">%1$s が使用している %2$s は、まだアプリのすべての機能をサポートしていません。 %3$s をインストールしてください。</string>
     <string name="jetpack_full_plugin_install_concise_description_single">%1$s が使用している %2$s は、まだアプリのすべての機能をサポートしていません。 %3$s をインストールしてください。</string>
-    <string name="wp_jp_static_poster_footnote">切り替えは無料で、数分で終わります。</string>
-    <string name="wp_jp_static_poster_button_secondary">詳細は Jetpack.com をご覧ください</string>
-    <string name="wp_jp_static_poster_button_primary">Jetpack アプリに切り替える</string>
     <string name="my_site_btn_wp_admin">WP 管理画面</string>
     <string name="my_site_header_manage">管理</string>
     <string name="my_site_header_traffic">トラフィック</string>
@@ -1061,7 +1055,6 @@ Language: ja_JP
     <string name="wp_jetpack_feature_removal_switch_to_jetpack_app_menu_title">Jetpack に切り替える </string>
     <string name="wp_jetpack_feature_removal_overlay_phase_four_all_features_description">統計、Reader、通知などの Jetpack 機能は、WordPress アプリから削除されました。</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_four_title_all_features">Jetpack 機能が移動しました。</string>
-    <string name="wp_jetpack_powered_phase_3_feature_is_moving_soon">%1$s がまもなく移動します</string>
     <string name="my_site_blogging_prompt_card_view_answers">すべての回答を表示</string>
     <string name="stats_insights_total_stats_seven_days_negative">前の7日間と比べて%1$s 減少</string>
     <string name="stats_insights_total_stats_seven_days_positive">前の7日間と比べて%1$s 増加</string>
@@ -1073,7 +1066,6 @@ Language: ja_JP
     <string name="stats_timeframe_last_seven_days">過去7日間</string>
     <string name="my_site_blogging_prompt_card_attribution_day_one">&lt;b&gt;Day One&lt;/b&gt; から</string>
     <string name="jetpack_feature_card_menu_item_remind_me_later">後で再通知</string>
-    <string name="jetpack_feature_card_content_phase_three">統計、Reader、通知などの機能は、まもなく Jetpack モバイルアプリに移動します。</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_the_jetpack_app">Jetpack アプリに切り替える</string>
     <string name="wp_jetpack_feature_removal_overlay_learn_more_migration_text">詳細は jetpack.com をご覧ください</string>
     <string name="wp_jetpack_feature_removal_overlay_migration_helper_text">切り替えは無料で、数分で終わります。</string>

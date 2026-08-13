@@ -24,7 +24,6 @@ import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.config.JetpackFeatureRemovalNewUsersConfig
 import org.wordpress.android.util.config.JetpackFeatureRemovalPhaseFourConfig
 import org.wordpress.android.util.config.JetpackFeatureRemovalSelfHostedUsersConfig
-import org.wordpress.android.util.config.JetpackFeatureRemovalStaticPostersConfig
 import org.wordpress.android.util.config.PhaseFourOverlayFrequencyConfig
 
 @ExperimentalCoroutinesApi
@@ -43,9 +42,6 @@ class JetpackFeatureRemovalPhaseHelperTest : BaseUnitTest() {
     private lateinit var jetpackFeatureRemovalSelfHostedUsersConfig: JetpackFeatureRemovalSelfHostedUsersConfig
 
     @Mock
-    private lateinit var jetpackFeatureRemovalStaticPostersConfig: JetpackFeatureRemovalStaticPostersConfig
-
-    @Mock
     private lateinit var phaseFourOverlayFrequencyConfig: PhaseFourOverlayFrequencyConfig
 
     @Mock
@@ -60,7 +56,6 @@ class JetpackFeatureRemovalPhaseHelperTest : BaseUnitTest() {
             jetpackFeatureRemovalPhaseFourConfig,
             jetpackFeatureRemovalNewUsersConfig,
             jetpackFeatureRemovalSelfHostedUsersConfig,
-            jetpackFeatureRemovalStaticPostersConfig,
             phaseFourOverlayFrequencyConfig,
             analyticsTrackerWrapper
         )
@@ -104,44 +99,14 @@ class JetpackFeatureRemovalPhaseHelperTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given static posters config true, when current phase is fetched, then return static posters config`() {
-        whenever(jetpackFeatureRemovalStaticPostersConfig.isEnabled()).thenReturn(true)
-
-        val currentPhase = jetpackFeatureRemovalPhaseHelper.getCurrentPhase()
-
-        assertEquals(currentPhase, JetpackFeatureRemovalPhase.PhaseStaticPosters)
-    }
-
-    @Test
-    fun `given it is the Jetpack app, when we track reader accessed event, then the proper event is tracked`() {
-        whenever(buildConfigWrapper.isJetpackApp).thenReturn(true)
-
+    fun `when we track reader accessed event, then the proper event is tracked`() {
         jetpackFeatureRemovalPhaseHelper.trackPageAccessedEventIfNeeded(WPMainNavigationView.PageType.READER)
 
         verify(analyticsTrackerWrapper, times(1)).track(AnalyticsTracker.Stat.READER_ACCESSED)
     }
 
     @Test
-    fun `given we do not show static posters, when we track reader accessed event, then the proper event is tracked`() {
-        whenever(buildConfigWrapper.isJetpackApp).thenReturn(false)
-        whenever(jetpackFeatureRemovalStaticPostersConfig.isEnabled()).thenReturn(false)
-
-        jetpackFeatureRemovalPhaseHelper.trackPageAccessedEventIfNeeded(WPMainNavigationView.PageType.READER)
-
-        verify(analyticsTrackerWrapper, times(1)).track(AnalyticsTracker.Stat.READER_ACCESSED)
-    }
-
-    @Test
-    fun `given we do show static posters, when we track reader accessed event, then the event is not tracked`() {
-        whenever(jetpackFeatureRemovalStaticPostersConfig.isEnabled()).thenReturn(true)
-
-        jetpackFeatureRemovalPhaseHelper.trackPageAccessedEventIfNeeded(WPMainNavigationView.PageType.READER)
-
-        verify(analyticsTrackerWrapper, never()).track(AnalyticsTracker.Stat.READER_ACCESSED)
-    }
-
-    @Test
-    fun `given we show static posters, when we track my site accessed event, then the proper event is tracked`() {
+    fun `when we track my site accessed event, then the proper event is tracked`() {
         val site = SiteModel()
 
         jetpackFeatureRemovalPhaseHelper.trackPageAccessedEventIfNeeded(WPMainNavigationView.PageType.MY_SITE, site)

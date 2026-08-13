@@ -939,9 +939,6 @@ Language: zh_CN
     <string name="sharing_twitter_deprecation_notice_description">由于 Twitter 更改了条款和定价，Twitter 自动共享功能已无法使用。</string>
     <string name="sharing_twitter_deprecation_notice_title">Twitter 自动分享功能已无法使用</string>
     <string name="jp_migration_notifications_allow_title">允许通知，持续关注您的站点</string>
-    <string name="wp_jp_static_poster_message">Jetpack 应用拥有 WordPress 应用的所有功能，现在可以独家访问统计信息、阅读器、通知等功能。</string>
-    <string name="wp_jp_static_poster_title_plural">在 Jetpack\u00A0应用中结合使用 WordPress 和 %s。</string>
-    <string name="wp_jp_static_poster_title">在 Jetpack\u00A0应用中结合使用 WordPress 和 %s。</string>
     <string name="gutenberg_native_unlabeled_color_s" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">未标记的颜色 %s</string>
     <string name="dashboard_activity_card_title">近期的动态</string>
     <string name="site_creation_search_domain_example_body">如以上示例所示，域名允许访客从其 Web 浏览器查找和访问您的站点。</string>
@@ -996,9 +993,6 @@ Language: zh_CN
     <string name="jetpack_full_plugin_install_onboarding_description_this_site">此站点</string>
     <string name="jetpack_full_plugin_install_concise_description_multiple">%1$s 使用 %2$s，尚不支持该应用程序的全部功能。 请安装 %3$s。</string>
     <string name="jetpack_full_plugin_install_concise_description_single">%1$s 使用 %2$s，尚不支持该应用程序的全部功能。 请安装 %3$s。</string>
-    <string name="wp_jp_static_poster_footnote">切换免费，只需一会儿。</string>
-    <string name="wp_jp_static_poster_button_secondary">请访问 Jetpack.com 了解详情</string>
-    <string name="wp_jp_static_poster_button_primary">切换到 Jetpack 应用程序</string>
     <string name="my_site_btn_wp_admin">WP 管理</string>
     <string name="my_site_header_manage">管理</string>
     <string name="my_site_header_traffic">流量</string>
@@ -1076,7 +1070,6 @@ Language: zh_CN
     <string name="wp_jetpack_feature_removal_switch_to_jetpack_app_menu_title">切换至 Jetpack </string>
     <string name="wp_jetpack_feature_removal_overlay_phase_four_all_features_description">统计信息、阅读器、通知和其他由 Jetpack 提供支持的功能已从 WordPress 应用程序上删除。</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_four_title_all_features">Jetpack 功能已移动。</string>
-    <string name="wp_jetpack_powered_phase_3_feature_is_moving_soon">%1$s 即将移动</string>
     <string name="my_site_blogging_prompt_card_view_answers">查看所有回复</string>
     <string name="stats_insights_total_stats_seven_days_negative">比上一个 7 天低 %1$s</string>
     <string name="stats_insights_total_stats_seven_days_positive">比上一个 7 天高 %1$s</string>
@@ -1088,7 +1081,6 @@ Language: zh_CN
     <string name="stats_timeframe_last_seven_days">过去 7 天</string>
     <string name="my_site_blogging_prompt_card_attribution_day_one">来自 &lt;b&gt;Day One&lt;/b&gt;</string>
     <string name="jetpack_feature_card_menu_item_remind_me_later">稍后提醒我</string>
-    <string name="jetpack_feature_card_content_phase_three">统计信息、阅读器、通知和其他功能即将移至 Jetpack 移动应用。</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_the_jetpack_app">切换到 Jetpack 应用</string>
     <string name="wp_jetpack_feature_removal_overlay_learn_more_migration_text">请访问 jetpack.com 以了解详情</string>
     <string name="wp_jetpack_feature_removal_overlay_migration_helper_text">切换免费，只需一会儿。</string>

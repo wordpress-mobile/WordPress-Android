@@ -35,12 +35,7 @@ class StatsActivity : BaseAppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        if (jetpackFeatureRemovalPhaseHelper.shouldShowStaticPage()) {
-            ActivityLauncher.showJetpackStaticPoster(this)
-            finish()
-        } else {
-            setContentView(StatsListActivityBinding.inflate(layoutInflater).root)
-        }
+        setContentView(StatsListActivityBinding.inflate(layoutInflater).root)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

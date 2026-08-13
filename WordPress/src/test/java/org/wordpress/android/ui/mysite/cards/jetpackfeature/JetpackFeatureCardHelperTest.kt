@@ -62,15 +62,6 @@ class JetpackFeatureCardHelperTest {
     }
 
     @Test
-    fun `when static posters phase, then jetpack feature card should not show`() {
-        setTest(phase = JetpackFeatureRemovalPhase.PhaseStaticPosters)
-
-        val result = helper.shouldShowJetpackFeatureCard()
-
-        assertThat(result).isFalse
-    }
-
-    @Test
     fun `when hide card has been set, then jetpack feature card should not shown`() {
         setTest(isCardHiddenByUser = true)
 

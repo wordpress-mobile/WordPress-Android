@@ -39,8 +39,6 @@ sealed class JetpackFeatureOverlayComponentVisibility(
             override val closeButton: Boolean = false,
             override val migrationText: Boolean = true
         ) : FeatureCollectionPhase()
-
-        class Final(override val closeButton: Boolean = false) : FeatureCollectionPhase()
     }
 }
 

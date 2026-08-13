@@ -918,9 +918,6 @@ Language: fr
     <string name="sharing_twitter_deprecation_notice_description">Le partage automatique sur Twitter n’est plus disponible en raison de modifications des conditions générales et tarifaires de Twitter.</string>
     <string name="sharing_twitter_deprecation_notice_title">Le partage automatique sur Twitter n’est plus disponible</string>
     <string name="jp_migration_notifications_allow_title">Autoriser les notifications pour suivre l’évolution de votre site</string>
-    <string name="wp_jp_static_poster_message">L’application Jetpack dispose de toutes les fonctionnalités de l’application WordPress et inclut désormais un accès exclusif aux statistiques, au lecteur, aux notifications, et plus encore.</string>
-    <string name="wp_jp_static_poster_title_plural">Utilisez WordPress avec %s dans l’application Jetpack\u00A0.</string>
-    <string name="wp_jp_static_poster_title">Utilisez WordPress avec %s dans l’application Jetpack\u00A0.</string>
     <string name="gutenberg_native_unlabeled_color_s" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Couleur sans libellé. %s</string>
     <string name="dashboard_activity_card_title">Activité récente</string>
     <string name="site_creation_search_domain_example_body">Comme le montre l’exemple ci-dessus, un domaine permet aux internautes de trouver et de visiter votre site depuis leur navigateur Web.</string>
@@ -975,9 +972,6 @@ Language: fr
     <string name="jetpack_full_plugin_install_onboarding_description_this_site">Ce site</string>
     <string name="jetpack_full_plugin_install_concise_description_multiple">%1$s utilise des %2$s, qui ne prennent pas encore en charge toutes les fonctionnalités de l’application. Installez l’%3$s.</string>
     <string name="jetpack_full_plugin_install_concise_description_single">%1$s utilise une %2$s, qui ne prend pas encore en charge toutes les fonctionnalités de l’application. Installez l’%3$s.</string>
-    <string name="wp_jp_static_poster_footnote">Passer d’une application à l’autre est gratuit et ne prend qu’une minute.</string>
-    <string name="wp_jp_static_poster_button_secondary">Lire la suite sur Jetpack.com</string>
-    <string name="wp_jp_static_poster_button_primary">Passer à l’application Jetpack</string>
     <string name="my_site_btn_wp_admin">Administrateur WP</string>
     <string name="my_site_header_manage">Gérer</string>
     <string name="my_site_header_traffic">Trafic</string>
@@ -1055,7 +1049,6 @@ Language: fr
     <string name="wp_jetpack_feature_removal_switch_to_jetpack_app_menu_title">Passer à Jetpack </string>
     <string name="wp_jetpack_feature_removal_overlay_phase_four_all_features_description">Les statistiques, le lecteur, les notifications et d’autres fonctionnalités reposant sur Jetpack ont été supprimées de l’application WordPress.</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_four_title_all_features">Les fonctionnalités Jetpack ont été déplacées.</string>
-    <string name="wp_jetpack_powered_phase_3_feature_is_moving_soon">%1$s va bientôt être déplacée</string>
     <string name="my_site_blogging_prompt_card_view_answers">Consulter les réponses du formulaire</string>
     <string name="stats_insights_total_stats_seven_days_negative">inférieur de %1$s par rapport à la semaine précédente</string>
     <string name="stats_insights_total_stats_seven_days_positive">%1$s en hausse par rapport aux 7 jours précédents</string>
@@ -1067,7 +1060,6 @@ Language: fr
     <string name="stats_timeframe_last_seven_days">7 derniers jours</string>
     <string name="my_site_blogging_prompt_card_attribution_day_one">De &lt;b&gt;Day One&lt;/b&gt;</string>
     <string name="jetpack_feature_card_menu_item_remind_me_later">Me rappeler ultérieurement</string>
-    <string name="jetpack_feature_card_content_phase_three">Les statistiques, le lecteur, les notifications et d’autres fonctionnalités seront bientôt transférées vers l’application mobile Jetpack.</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_the_jetpack_app">Passer à l’application Jetpack</string>
     <string name="wp_jetpack_feature_removal_overlay_learn_more_migration_text">Lire la suite sur jetpack.com</string>
     <string name="wp_jetpack_feature_removal_overlay_migration_helper_text">Passer d’une application à l’autre est gratuit et ne prend qu’une minute.</string>

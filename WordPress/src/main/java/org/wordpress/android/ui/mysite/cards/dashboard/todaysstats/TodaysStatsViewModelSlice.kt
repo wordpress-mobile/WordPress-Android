@@ -55,15 +55,11 @@ class TodaysStatsViewModelSlice @Inject constructor(
             CardsTracker.Type.STATS.label,
             CardsTracker.StatsSubtype.TODAYS_STATS_NUDGE.label
         )
-        if (jetpackFeatureRemovalPhaseHelper.shouldShowStaticPage()) {
-            _onNavigation.value = Event(SiteNavigationAction.ShowJetpackRemovalStaticPostersView)
-        } else {
-            _onNavigation.value = Event(
-                SiteNavigationAction.OpenExternalUrl(
-                    TodaysStatsCardBuilder.URL_GET_MORE_VIEWS_AND_TRAFFIC
-                )
+        _onNavigation.value = Event(
+            SiteNavigationAction.OpenExternalUrl(
+                TodaysStatsCardBuilder.URL_GET_MORE_VIEWS_AND_TRAFFIC
             )
-        }
+        )
     }
 
     private fun onMoreMenuClick() {
@@ -89,9 +85,6 @@ class TodaysStatsViewModelSlice @Inject constructor(
 
     private fun navigateToTodaysStats() {
         val navigationAction = when {
-            jetpackFeatureRemovalPhaseHelper.shouldShowStaticPage() ->
-                SiteNavigationAction.ShowJetpackRemovalStaticPostersView
-
             newStatsRouting.isNewStatsEnabled() -> SiteNavigationAction.OpenNewStatsForToday
 
             else -> SiteNavigationAction.OpenStatsByDay(requireNotNull(selectedSiteRepository.getSelectedSite()))

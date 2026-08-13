@@ -837,9 +837,6 @@ Language: sq_AL
     <string name="sharing_twitter_deprecation_notice_description">Ndarja e automatizuar me të tjerë që nga Twitter s’mund të përdoret më, për shkak ndryshimesh në kushte dhe çmim nga ana e Twitter-it.</string>
     <string name="sharing_twitter_deprecation_notice_title">Ndarja e automatizuar me të tjerë që nga Twitter s’mund të përdoret më</string>
     <string name="jp_migration_notifications_allow_title">Lejoni njoftime, që të jeni në dijeni se ç’ndodh në sajtin tuaj</string>
-    <string name="wp_jp_static_poster_message">Aplikacioni Jetpack ka krejt anët e aplikacionit WordPress dhe tanimë edhe hyrje përjashtimore te Statistika, Lexues, Njoftime, etj.</string>
-    <string name="wp_jp_static_poster_title_plural">Përdorni WordPress-in me %s në Jetpack\u00A0app.</string>
-    <string name="wp_jp_static_poster_title">Përdorni WordPress-in me %s në Jetpack\u00A0app.</string>
     <string name="gutenberg_native_unlabeled_color_s" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Ngjyrë pa etiketë. %s</string>
     <string name="dashboard_activity_card_title">Veprimtari së fundi</string>
     <string name="site_creation_search_domain_example_body">Në ngjashmëri me shembullin më sipër, një përkatësi u lejon njerëzve të gjejnë dhe vizitojnë sajtin tuaj që nga shfletuesi.</string>
@@ -894,9 +891,6 @@ Language: sq_AL
     <string name="jetpack_full_plugin_install_onboarding_description_this_site">Këtë sajt</string>
     <string name="jetpack_full_plugin_install_concise_description_multiple">%1$s po përdor %2$s, të cilat nuk i mbulojnë ende krejt veçoritë e aplikacionit. Ju lutemi, instaloni %3$s.</string>
     <string name="jetpack_full_plugin_install_concise_description_single">%1$s po përdor %2$s, i cili nuk i mbulon ende krejt veçoritë e aplikacionit. Ju lutemi, instaloni %3$s.</string>
-    <string name="wp_jp_static_poster_footnote">Kalimi është falas dhe do vetëm një minutë.</string>
-    <string name="wp_jp_static_poster_button_secondary">Mësoni më tepër, te Jetpack.com</string>
-    <string name="wp_jp_static_poster_button_primary">Kaloni te aplikacioni Jetpack</string>
     <string name="my_site_btn_wp_admin">Përgjegjës WP-je</string>
     <string name="my_site_header_manage">Administrojini</string>
     <string name="my_site_header_traffic">Trafik</string>
@@ -973,7 +967,6 @@ Language: sq_AL
     <string name="wp_jetpack_feature_removal_switch_to_jetpack_app_menu_title">Kalo te Jetpack </string>
     <string name="wp_jetpack_feature_removal_overlay_phase_four_all_features_description">Statistikat, Lexuesi, Njoftimet dhe të tjera veçorit të fuqishme të Jetpack-ut janë hequr nga aplikacioni WordPress.</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_four_title_all_features">Veçori të Jetpack-ut janë lëvizur.</string>
-    <string name="wp_jetpack_powered_phase_3_feature_is_moving_soon">Së shpejti %1$s do të lëvizet</string>
     <string name="my_site_blogging_prompt_card_view_answers">Shihni krejt përgjigjet</string>
     <string name="stats_insights_total_stats_seven_days_negative">%1$s më poshtë se 7 ditët e mëparshme</string>
     <string name="stats_insights_total_stats_seven_days_positive">%1$s më sipër se 7 ditët e mëparshme</string>
@@ -985,7 +978,6 @@ Language: sq_AL
     <string name="stats_timeframe_last_seven_days">7 ditët e fundit</string>
     <string name="my_site_blogging_prompt_card_attribution_day_one">Nga &lt;b&gt;Dita e Parë&lt;/b&gt;</string>
     <string name="jetpack_feature_card_menu_item_remind_me_later">Kujtoma më vonë</string>
-    <string name="jetpack_feature_card_content_phase_three">Statistikat, Lexuesi, Njoftimet dhe të tjera veçorit të Jetpack-ut së shpejti do të kalohen te aplikacioni Jetpack për celular.</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_the_jetpack_app">Kaloni te aplikacioni Jetpack</string>
     <string name="wp_jetpack_feature_removal_overlay_learn_more_migration_text">Mësoni më tepër, te jetpack.com</string>
     <string name="wp_jetpack_feature_removal_overlay_migration_helper_text">Kalimi është falas dhe do vetëm një minutë.</string>

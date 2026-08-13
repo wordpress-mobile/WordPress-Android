@@ -599,9 +599,6 @@ Language: gl_ES
     <string name="sharing_twitter_deprecation_notice_title">A opción de compartir automaticamente en Twitter xa non está dispoñible</string>
     <string name="sharing_twitter_deprecation_notice_description">O uso compartido automático de Twitter xa non está disponible debido aos cambios de Twitter nos termos e prezos.</string>
     <string name="jp_migration_notifications_allow_title">Permitir avisos para estar ao día co teu sitio</string>
-    <string name="wp_jp_static_poster_message">A aplicación JetPack ten todas as funcionalidades da aplicación WordPress, e agora acceso exclusivo a Estatísticas, Lector, Avisos e máis.</string>
-    <string name="wp_jp_static_poster_title_plural">Usar WordPress con %s na aplicación\u00A0JetPack.</string>
-    <string name="wp_jp_static_poster_title">Usar WordPress con %s na aplicación\u00A0JetPack.</string>
     <string name="dashboard_activity_card_title">Actividade recente</string>
     <string name="site_creation_search_domain_example_title">ONomeDaTuaWeb.com</string>
     <string name="gutenberg_native_unlabeled_color_s" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Cor sen etiquetar. %s</string>
@@ -656,15 +653,12 @@ Language: gl_ES
     <string name="jetpack_full_plugin_install_onboarding_description_this_site">Este sitio</string>
     <string name="jetpack_full_plugin_install_concise_description_multiple">%1$s usa %2$s, que aínda non é compatible con todas as funcións da aplicación. Instala o %3$s.</string>
     <string name="jetpack_full_plugin_install_concise_description_single">%1$s usa %2$s, que aínda non é compatible con todas as funcións da aplicación. Instala o %3$s.</string>
-    <string name="wp_jp_static_poster_footnote">O cambio é gratuíto e só che levará un minuto.</string>
     <string name="jetpack_plugin_install_full_plugin_done_button">Feito</string>
     <string name="my_site_header_manage">Xestionar</string>
     <string name="jetpack_plugin_install_remote_plugin_done_button">Configurar</string>
     <string name="my_site_header_traffic">Tráfico</string>
     <string name="my_site_header_content">Contido</string>
     <string name="my_site_btn_wp_admin">WP Admin</string>
-    <string name="wp_jp_static_poster_button_secondary">Encontrarás máis información en Jetpack.com</string>
-    <string name="wp_jp_static_poster_button_primary">Cambia á aplicación de Jetpack</string>
     <string name="jetpack_plugin_install_remote_plugin_done_description">Agora que Jetpack está instalado, só tenemos que configuralo. Só che levará un minuto.</string>
     <string name="blaze_promotional_subtitle_3">Fai un seguimento do rendemento, inicia e para a actividade promocional de Blaze en calquera momento.</string>
     <string name="blaze_overlay_site_promotional_button">Promover unha entrada con Blaze agora</string>
@@ -733,7 +727,6 @@ Language: gl_ES
     <string name="support_forum_caption">Recibe axuda do noso grupo de voluntarios.</string>
     <string name="wp_jetpack_feature_removal_phase_four_secondary_text">Facelo máis tarde</string>
     <string name="wp_jetpack_feature_removal_switch_to_jetpack_app_menu_title">Cambiar a Jetpack </string>
-    <string name="wp_jetpack_powered_phase_3_feature_is_moving_soon">%1$s trasladarase pronto</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_four_title_all_features">As características de Jetpack trasladáronse.</string>
     <string name="install_play_store_to_get_jetpack">Por favor, instala a Google Play Store para obter a app de Jetpack</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_four_all_features_description">Algunhas características de Jetpack como Estatísticas, Lector ou Notificacións, entre outras, elimináronse da app de WordPress.</string>
@@ -751,7 +744,6 @@ Language: gl_ES
     <string name="wp_jetpack_feature_removal_overlay_switch_to_the_jetpack_app">Cambiar á aplicación de Jetpack</string>
     <string name="wp_jetpack_feature_removal_overlay_learn_more_migration_text">Máis información en jetpack.com</string>
     <string name="wp_jetpack_feature_removal_overlay_migration_helper_text">O cambio é gratuíto e só leva un minuto.</string>
-    <string name="jetpack_feature_card_content_phase_three">As estatísticas, o lector, as notificacións e outras características trasladaranse pronto á aplicación móbil de Jetpack.</string>
     <string name="blogging_prompts_list_error_fetch_title">Vaia!</string>
     <string name="blogging_prompts_list_number_of_answers_one">1 resposta</string>
     <string name="blogging_prompts_list_number_of_answers_zero">0 respostas</string>

@@ -115,18 +115,6 @@ class TodaysStatsViewModelSliceTest : BaseUnitTest() {
         }
 
     @Test
-    fun `given static posters phase, when card item is clicked, then static posters view is shown`() =
-        test {
-            whenever(jetpackFeatureRemovalPhaseHelper.shouldShowStaticPage()).thenReturn(true)
-
-            val params = todaysStatsViewModelSlice.getTodaysStatsBuilderParams(null)
-
-            params.onTodaysStatsCardClick()
-
-            assertThat(navigationActions).containsOnly(SiteNavigationAction.ShowJetpackRemovalStaticPostersView)
-        }
-
-    @Test
     fun `given today's stat card, when get more views url is clicked, then external link is opened`() =
         test {
             val params = todaysStatsViewModelSlice.getTodaysStatsBuilderParams(mock())

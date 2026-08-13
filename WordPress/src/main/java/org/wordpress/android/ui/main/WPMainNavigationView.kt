@@ -38,8 +38,6 @@ import org.wordpress.android.ui.main.WPMainNavigationView.PageType.ME
 import org.wordpress.android.ui.main.WPMainNavigationView.PageType.MY_SITE
 import org.wordpress.android.ui.main.WPMainNavigationView.PageType.NOTIFS
 import org.wordpress.android.ui.main.WPMainNavigationView.PageType.READER
-import org.wordpress.android.ui.main.jetpack.staticposter.JetpackStaticPosterFragment
-import org.wordpress.android.ui.main.jetpack.staticposter.UiData
 import org.wordpress.android.ui.main.utils.MeGravatarLoader
 import org.wordpress.android.ui.mysite.MySiteFragment
 import org.wordpress.android.ui.notifications.NotificationsListFragment
@@ -483,18 +481,11 @@ class WPMainNavigationView @JvmOverloads constructor(
     }
 
     private inner class NavAdapter {
-        private fun createFragment(pageType: PageType, helper: JetpackFeatureRemovalPhaseHelper): Fragment {
-            val shouldUseStaticPostersFragment = helper.shouldShowStaticPage()
+        private fun createFragment(pageType: PageType): Fragment {
             val fragment = when (pageType) {
                 MY_SITE -> MySiteFragment.newInstance()
-                READER -> if (shouldUseStaticPostersFragment)
-                    JetpackStaticPosterFragment.newInstance(UiData.READER)
-                else ReaderFragment()
-
-                NOTIFS -> if (shouldUseStaticPostersFragment)
-                    JetpackStaticPosterFragment.newInstance(UiData.NOTIFICATIONS)
-                else NotificationsListFragment.newInstance()
-
+                READER -> ReaderFragment()
+                NOTIFS -> NotificationsListFragment.newInstance()
                 ME -> MeFragment.newInstance()
             }
             fragmentManager?.beginTransaction()
@@ -506,32 +497,7 @@ class WPMainNavigationView @JvmOverloads constructor(
 
         fun getFragment(position: Int): Fragment? {
             return pages().getOrNull(position)?.let { pageType ->
-                val currentFragment = fragmentManager?.findFragmentByTag(getTagForPageType(pageType))
-                return currentFragment?.let {
-                    when (it) {
-                        is ReaderFragment, is NotificationsListFragment -> checkAndCreateForStaticPage(it, pageType)
-                        is JetpackStaticPosterFragment -> checkAndCreateForNonStaticPage(it, pageType)
-                        else -> it
-                    }
-                } ?: createFragment(pageType, jetpackFeatureRemovalPhaseHelper)
-            }
-        }
-
-        private fun checkAndCreateForStaticPage(fragment: Fragment, pageType: PageType): Fragment {
-            return if (jetpackFeatureRemovalPhaseHelper.shouldShowStaticPage()) {
-                fragmentManager?.beginTransaction()?.remove(fragment)?.commitNow()
-                createFragment(pageType, jetpackFeatureRemovalPhaseHelper)
-            } else {
-                fragment
-            }
-        }
-
-        private fun checkAndCreateForNonStaticPage(fragment: Fragment, pageType: PageType): Fragment {
-            return if (!jetpackFeatureRemovalPhaseHelper.shouldShowStaticPage()) {
-                fragmentManager?.beginTransaction()?.remove(fragment)?.commitNow()
-                createFragment(pageType, jetpackFeatureRemovalPhaseHelper)
-            } else {
-                fragment
+                fragmentManager?.findFragmentByTag(getTagForPageType(pageType)) ?: createFragment(pageType)
             }
         }
 

@@ -57,8 +57,6 @@ sealed class DebugSettingsItemViewHolder(
         }
         featureEnabled.setOnCheckedChangeListener { _, _ -> item.toggleAction.toggle() }
         itemView.setOnClickListener { item.toggleAction.toggle() }
-        previewIcon.isVisible = item.preview != null
-        previewIcon.setOnClickListener { item.preview?.invoke() }
     }
 
     class RemoteFieldConfigViewHolder(parent: ViewGroup) : DebugSettingsItemViewHolder(

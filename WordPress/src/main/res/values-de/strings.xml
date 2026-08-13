@@ -944,9 +944,6 @@ Language: de
     <string name="sharing_twitter_deprecation_notice_description">Das automatische Teilen auf Twitter ist aufgrund von Änderungen der Bedingungen und der Preisgestaltung von Twitter nicht länger verfügbar.</string>
     <string name="sharing_twitter_deprecation_notice_title">Das automatische Teilen auf Twitter ist nicht länger verfügbar</string>
     <string name="jp_migration_notifications_allow_title">Benachrichtigungen zulassen, um deine Website auf dem neusten Stand zu halten</string>
-    <string name="wp_jp_static_poster_message">Die Jetpack-App verfügt über alle Funktionen der WordPress-App und bietet ab sofort exklusiven Zugriff auf Statistiken, den Reader, Benachrichtigungen und mehr.</string>
-    <string name="wp_jp_static_poster_title_plural">Verwende WordPress mit %s in der Jetpack-App.</string>
-    <string name="wp_jp_static_poster_title">Verwende WordPress mit %s in der Jetpack-App.</string>
     <string name="gutenberg_native_unlabeled_color_s" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Unbenannte Farbe. %s</string>
     <string name="dashboard_activity_card_title">Letzte Aktivität</string>
     <string name="site_creation_search_domain_example_body">Wie im Beispiel oben ermöglicht eine Domain Personen, deine Website über ihren Webbrowser zu finden.</string>
@@ -1001,9 +998,6 @@ Language: de
     <string name="jetpack_full_plugin_install_onboarding_description_this_site">Diese Website</string>
     <string name="jetpack_full_plugin_install_concise_description_multiple">%1$s verwendet %2$s, die noch nicht alle Funktionen der App unterstützen. Bitte installiere das %3$s.</string>
     <string name="jetpack_full_plugin_install_concise_description_single">%1$s verwendet %2$s, das noch nicht alle Funktionen der App unterstützt. Bitte installiere das %3$s.</string>
-    <string name="wp_jp_static_poster_footnote">Der Wechsel ist kostenlos und dauert nur eine Minute.</string>
-    <string name="wp_jp_static_poster_button_secondary">Mehr erfahren auf Jetpack.com</string>
-    <string name="wp_jp_static_poster_button_primary">Zur Jetpack-App wechseln</string>
     <string name="my_site_btn_wp_admin">WP Admin</string>
     <string name="my_site_header_manage">Verwalten</string>
     <string name="my_site_header_traffic">Traffic</string>
@@ -1081,7 +1075,6 @@ Language: de
     <string name="wp_jetpack_feature_removal_switch_to_jetpack_app_menu_title">Zu Jetpack wechseln </string>
     <string name="wp_jetpack_feature_removal_overlay_phase_four_all_features_description">Statistiken, der Reader, Benachrichtigungen und weitere von Jetpack unterstützte Funktionen wurden aus der WordPress-App entfernt.</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_four_title_all_features">Jetpack-Funktionen wurden verschoben.</string>
-    <string name="wp_jetpack_powered_phase_3_feature_is_moving_soon">%1$s wird demnächst verschoben</string>
     <string name="my_site_blogging_prompt_card_view_answers">Alle Antworten anzeigen</string>
     <string name="stats_insights_total_stats_seven_days_negative">%1$s niedriger als in den vorherigen 7 Tagen</string>
     <string name="stats_insights_total_stats_seven_days_positive">%1$s höher als in den vorherigen 7 Tagen</string>
@@ -1093,7 +1086,6 @@ Language: de
     <string name="stats_timeframe_last_seven_days">Letzte 7 Tage</string>
     <string name="my_site_blogging_prompt_card_attribution_day_one">Von &lt;b&gt;Day One&lt;/b&gt;</string>
     <string name="jetpack_feature_card_menu_item_remind_me_later">Später daran erinnern</string>
-    <string name="jetpack_feature_card_content_phase_three">Die Statistiken, der Reader, die Benachrichtigungen und weitere Funktionen werden bald in die Jetpack-Mobil-App verschoben.</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_the_jetpack_app">Zur Jetpack-App wechseln</string>
     <string name="wp_jetpack_feature_removal_overlay_learn_more_migration_text">Mehr erfahren auf jetpack.com</string>
     <string name="wp_jetpack_feature_removal_overlay_migration_helper_text">Der Wechsel ist kostenlos und dauert nur eine Minute.</string>

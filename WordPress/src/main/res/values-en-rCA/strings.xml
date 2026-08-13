@@ -567,9 +567,6 @@ Language: en_CA
     <string name="sharing_twitter_deprecation_notice_title">Twitter auto-sharing is no longer available</string>
     <string name="sharing_twitter_deprecation_notice_description">Twitter auto-sharing is no longer available due to Twitter\'s changes in terms and pricing.</string>
     <string name="jp_migration_notifications_allow_title">Allow notifications to keep up with your site</string>
-    <string name="wp_jp_static_poster_message">The Jetpack app has all the WordPress app’s functionality, and now exclusive access to Stats, Reader, Notifications and more.</string>
-    <string name="wp_jp_static_poster_title_plural">Use WordPress with %s in the Jetpack\u00A0app.</string>
-    <string name="wp_jp_static_poster_title">Use WordPress with %s in the Jetpack\u00A0app.</string>
     <string name="gutenberg_native_unlabeled_color_s" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Unlabeled color. %s</string>
     <string name="dashboard_activity_card_title">Recent activity</string>
     <string name="site_creation_search_domain_example_body">Like the example above, a domain allows people to find and visit your site from their web browser.</string>
@@ -624,15 +621,12 @@ Language: en_CA
     <string name="jetpack_full_plugin_install_onboarding_description_this_site">This site</string>
     <string name="jetpack_full_plugin_install_concise_description_multiple">%1$s is using %2$s, which don’t support all features of the app yet. Please install the %3$s.</string>
     <string name="jetpack_full_plugin_install_concise_description_single">%1$s is using %2$s, which doesn’t support all features of the app yet. Please install the %3$s.</string>
-    <string name="wp_jp_static_poster_footnote">Switching is free and only takes a minute.</string>
     <string name="jetpack_plugin_install_full_plugin_done_button">Done</string>
     <string name="jetpack_plugin_install_remote_plugin_done_button">Set up</string>
     <string name="my_site_header_manage">Manage</string>
     <string name="my_site_header_content">Content</string>
     <string name="my_site_header_traffic">Traffic</string>
     <string name="my_site_btn_wp_admin">WP Admin</string>
-    <string name="wp_jp_static_poster_button_primary">Switch to the Jetpack app</string>
-    <string name="wp_jp_static_poster_button_secondary">Learn more at Jetpack.com</string>
     <string name="jetpack_plugin_install_remote_plugin_done_description">Now that Jetpack is installed, we just need to get you set up. This will only take a minute.</string>
     <string name="blaze_overlay_post_promotional_button">Blaze this Post</string>
     <string name="blaze_overlay_page_promotional_button">Blaze this Page</string>
@@ -704,7 +698,6 @@ Language: en_CA
     <string name="wp_jetpack_feature_removal_overlay_phase_four_title_all_features">Jetpack features have moved.</string>
     <string name="wp_jetpack_feature_removal_phase_four_secondary_text">Do this later</string>
     <string name="wp_jetpack_feature_removal_switch_to_jetpack_app_menu_title">Switch to Jetpack </string>
-    <string name="wp_jetpack_powered_phase_3_feature_is_moving_soon">%1$s is moving soon</string>
     <string name="my_site_blogging_prompt_card_view_answers">View all responses</string>
     <string name="stats_insights_total_stats_seven_days_negative">%1$s lower than the previous 7-days</string>
     <string name="stats_insights_total_stats_seven_days_positive">%1$s higher than the previous 7-days</string>
@@ -719,7 +712,6 @@ Language: en_CA
     <string name="wp_jetpack_feature_removal_overlay_learn_more_migration_text">Learn more at jetpack.com</string>
     <string name="wp_jetpack_feature_removal_overlay_migration_helper_text">Switching is free and only takes a minute.</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_the_jetpack_app">Switch to the Jetpack app</string>
-    <string name="jetpack_feature_card_content_phase_three">Stats, Reader, Notifications and other features will soon move to the Jetpack mobile app.</string>
     <string name="blogging_prompts_list_error_fetch_subtitle">There was an error loading prompts.</string>
     <string name="blogging_prompts_list_error_fetch_title">Oops</string>
     <string name="blogging_prompts_list_no_prompts">No prompts yet</string>

@@ -419,17 +419,10 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
             host = uri.host
         }
 
-        if (uri == null || jetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures()
-            || jetpackFeatureRemovalPhaseHelper.shouldShowStaticPage()
-        ) {
+        if (uri == null || jetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures()) {
             readerTracker.trackDeepLink(AnalyticsTracker.Stat.DEEP_LINKED, action!!, host!!, uri)
             // invalid uri so, just show the entry screen
-            if (jetpackFeatureRemovalPhaseHelper.shouldShowStaticPage()) {
-                val intent = Intent(this, WPMainActivity::class.java)
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
-                intent.putExtra(WPMainActivity.ARG_OPEN_PAGE, WPMainActivity.ARG_READER)
-                startActivity(intent)
-            } else {
+            run {
                 val intent = Intent(this, WPLaunchActivity::class.java)
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
                 intent.putExtra(WPMainActivity.ARG_OPEN_PAGE, WPMainActivity.ARG_READER)

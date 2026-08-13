@@ -33,11 +33,7 @@ public class ShortcutsNavigator {
             case OPEN_STATS:
                 AnalyticsTracker.track(AnalyticsTracker.Stat.SHORTCUT_STATS_CLICKED);
                 if (!mJetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures()) {
-                    if (mJetpackFeatureRemovalPhaseHelper.shouldShowStaticPage()) {
-                        ActivityLauncher.showJetpackStaticPoster(activity);
-                    } else {
-                        ActivityLauncher.viewBlogStats(activity, currentSite, StatsLaunchedFrom.SHORTCUT);
-                    }
+                    ActivityLauncher.viewBlogStats(activity, currentSite, StatsLaunchedFrom.SHORTCUT);
                 }
                 break;
             case CREATE_NEW_POST:

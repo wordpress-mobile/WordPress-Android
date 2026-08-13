@@ -13,8 +13,7 @@ class JetpackFeatureRemovalWidgetHelper @Inject constructor(
     )
 
     fun disableWidgetReceiversIfNeeded() {
-        if (jetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures() ||
-            jetpackFeatureRemovalPhaseHelper.shouldShowStaticPage()) {
+        if (jetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures()) {
             widgetReceivers.forEach { packageManagerWrapper.disableComponentEnabledSetting(it) }
         } else {
             widgetReceivers.forEach { packageManagerWrapper.enableComponentEnabledSetting(it) }

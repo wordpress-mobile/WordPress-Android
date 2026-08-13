@@ -920,9 +920,6 @@ Language: ar
     <string name="sharing_twitter_deprecation_notice_description">لا تتوافر ميزة المشاركة التلقائية على تويتر بعد الآن بسبب التغييرات التي أجرتها تويتر في الشروط والأسعار.</string>
     <string name="sharing_twitter_deprecation_notice_title">لا تتوافر ميزة المشاركة التلقائية في تويتر بعد الآن</string>
     <string name="jp_migration_notifications_allow_title">السماح بالتنبيهات بمواكبة موقعك</string>
-    <string name="wp_jp_static_poster_message">يحتوي تطبيق Jetpack على كل وظائف تطبيق ووردبريس، إلى جانب وصول حصري الآن إلى ميزات Stats وReader وNotifications والمزيد.</string>
-    <string name="wp_jp_static_poster_title_plural">استخدم ووردبريس مع %s في Jetpack\u00A0app.</string>
-    <string name="wp_jp_static_poster_title">استخدم ووردبريس مع %s في Jetpack\u00A0app.</string>
     <string name="gutenberg_native_unlabeled_color_s" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">لون غير مصنّف. %s</string>
     <string name="dashboard_activity_card_title">آخر نشاط</string>
     <string name="site_creation_search_domain_example_body">على غرار المثال أعلاه، يسمح النطاق للأشخاص بالعثور على موقعك وزيارته من متصفح الويب لديهم.</string>
@@ -977,9 +974,6 @@ Language: ar
     <string name="jetpack_full_plugin_install_onboarding_description_this_site">هذا الموقع</string>
     <string name="jetpack_full_plugin_install_concise_description_multiple">يستخدم ⁦%1$s⁩ ⁦%2$s⁩، التي لا تدعم كل ميزات التطبيق حتى الآن. Please install the %3$s.</string>
     <string name="jetpack_full_plugin_install_concise_description_single">يستخدم ⁦%1$s⁩ ⁦%2$s⁩، التي لا تدعم كل ميزات التطبيق حتى الآن. Please install the %3$s.</string>
-    <string name="wp_jp_static_poster_footnote">التبديل مجاني، ولا يستغرق سوى بضع دقائق.</string>
-    <string name="wp_jp_static_poster_button_secondary">معرفة المزيد على jetpack.com</string>
-    <string name="wp_jp_static_poster_button_primary">التبديل إلى تطبيق Jetpack</string>
     <string name="my_site_btn_wp_admin">مسؤول ووردبريس</string>
     <string name="my_site_header_manage">إدارة المحتويات</string>
     <string name="my_site_header_traffic">حركة المرور</string>
@@ -1057,7 +1051,6 @@ Language: ar
     <string name="wp_jetpack_feature_removal_switch_to_jetpack_app_menu_title">التبديل إلى Jetpack </string>
     <string name="wp_jetpack_feature_removal_overlay_phase_four_all_features_description">تمت إزالة ميزات الإحصاءات والقارئ والتنبيهات وغيرها من الميزات التي يدعمها Jetpack من تطبيق ووردبريس.</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_four_title_all_features">لقد انتقلت ميزات Jetpack.</string>
-    <string name="wp_jetpack_powered_phase_3_feature_is_moving_soon">سينتقل ⁦%1$s⁩ قريبًا</string>
     <string name="my_site_blogging_prompt_card_view_answers">عرض كل الردود</string>
     <string name="stats_insights_total_stats_seven_days_negative">⁦%1$s⁩ أقل من الأيام الـ 7 السابقة</string>
     <string name="stats_insights_total_stats_seven_days_positive">⁦%1$s⁩ أعلى من الأيام الـ 7 السابقة</string>
@@ -1072,7 +1065,6 @@ Language: ar
     <string name="wp_jetpack_feature_removal_overlay_switch_to_the_jetpack_app">التبديل إلى تطبيق Jetpack</string>
     <string name="wp_jetpack_feature_removal_overlay_learn_more_migration_text">معرفة المزيد على jetpack.com</string>
     <string name="wp_jetpack_feature_removal_overlay_migration_helper_text">التبديل مجاني، ولا يستغرق سوى بضع دقائق.</string>
-    <string name="jetpack_feature_card_content_phase_three">ستنتقل ميزات الإحصاءات والقارئ والتنبيهات وغيرها من الميزات قريبًا إلى تطبيق Jetpack للهاتف المحمول.</string>
     <string name="blogging_prompts_list_error_fetch_subtitle">حدث خطأ في أثناء تحميل المطالبات.</string>
     <string name="blogging_prompts_list_error_fetch_title">عذرًا</string>
     <string name="blogging_prompts_list_no_prompts">لا توجد مطالبات بعد</string>

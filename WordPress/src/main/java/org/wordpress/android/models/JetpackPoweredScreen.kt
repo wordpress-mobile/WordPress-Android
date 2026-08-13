@@ -14,13 +14,6 @@ sealed interface JetpackPoweredScreen {
         val isPlural: Boolean
     }
 
-    @Parcelize
-    enum class WithStaticPoster(val screen: WithDynamicText) : Parcelable {
-        STATS(screen = WithDynamicText.STATS),
-        READER(screen = WithDynamicText.READER),
-        NOTIFICATIONS(screen = WithDynamicText.NOTIFICATIONS),
-    }
-
     enum class WithStaticText(
         override val trackingName: String,
     ) : JetpackPoweredScreen {

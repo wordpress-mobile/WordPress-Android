@@ -673,9 +673,6 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
             action.source,
             action.shouldShowBlazeOverlay
         )
-        is SiteNavigationAction.ShowJetpackRemovalStaticPostersView -> {
-            ActivityLauncher.showJetpackStaticPoster(requireActivity())
-        }
         is SiteNavigationAction.OpenActivityLogDetail -> ActivityLauncher.viewActivityLogDetailFromDashboardCard(
             activity,
             action.site,

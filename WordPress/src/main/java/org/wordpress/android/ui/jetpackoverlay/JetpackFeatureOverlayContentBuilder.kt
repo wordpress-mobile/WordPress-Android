@@ -48,13 +48,11 @@ class JetpackFeatureOverlayContentBuilder @Inject constructor() {
             PhaseNewUsers -> JetpackFeatureOverlayComponentVisibility.FeatureCollectionPhase.PhaseNewUsers()
             PhaseSelfHostedUsers ->
                 JetpackFeatureOverlayComponentVisibility.FeatureCollectionPhase.PhaseSelfHostedUsers()
-            else -> JetpackFeatureOverlayComponentVisibility.FeatureCollectionPhase.Final()
         }
         val content = getContentForFeatureCollection(isRtl, blogPostLink, currentPhase)
         return JetpackFeatureOverlayUIState(componentVisibility, content)
     }
 
-    @Suppress("UseCheckOrError")
     private fun getContentForFeatureCollection(
         isRtl: Boolean,
         blogPostLink: String?,
@@ -64,9 +62,6 @@ class JetpackFeatureOverlayContentBuilder @Inject constructor() {
             is PhaseFour -> getJetpackFeatureOverlayContentForPhaseFour(isRtl, blogPostLink)
             is PhaseNewUsers -> getJetpackFeatureOverlayContentForNewUsers(isRtl)
             is PhaseSelfHostedUsers -> getJetpackFeatureOverlayContentForSelfHostedUsers(isRtl)
-            else -> {
-                throw IllegalStateException("Invalid phase for feature collection overlay")
-            }
         }
     }
 

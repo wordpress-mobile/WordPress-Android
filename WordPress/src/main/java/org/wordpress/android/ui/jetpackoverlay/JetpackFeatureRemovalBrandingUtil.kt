@@ -2,7 +2,6 @@ package org.wordpress.android.ui.jetpackoverlay
 
 import org.wordpress.android.R
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseFour
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseStaticPosters
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import javax.inject.Inject
@@ -14,7 +13,7 @@ class JetpackFeatureRemovalBrandingUtil @Inject constructor(
 
     fun shouldShowBranding(): Boolean {
         return when (jetpackFeatureRemovalPhaseHelper.getCurrentPhase()) {
-            PhaseStaticPosters, PhaseFour -> true
+            PhaseFour -> true
             else -> false
         }
     }

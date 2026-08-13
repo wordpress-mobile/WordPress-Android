@@ -481,10 +481,7 @@ Language: lv
     <string name="sharing_twitter_deprecation_notice_title">Automātiskā koplietošana pakalpojumā Twitter vairs nav pieejama</string>
     <string name="sharing_twitter_deprecation_notice_description">Twitter auto-dalīšanās vairs nav pieejama, jo Twitter ir veicis izmaiņas terminos un cenās.</string>
     <string name="sharing_twitter_deprecation_notice_find_out_more">Uzzināt vairāk</string>
-    <string name="wp_jp_static_poster_message">Jetpack lietotnei ir visi WordPress lietotnes funkcionalitātes, un tagad ekskluzīva piekļuve statistikai, lasītājam, paziņojumiem un citiem resursiem.</string>
     <string name="jp_migration_notifications_allow_title">Ļaujiet saņemt paziņojumus, lai sekotu līdzi jūsu vietnei</string>
-    <string name="wp_jp_static_poster_title">Izmantojiet WordPress ar %s Jetpack\u00A0app.</string>
-    <string name="wp_jp_static_poster_title_plural">Izmantojiet WordPress ar %s Jetpack\u00A0app.</string>
     <string name="site_creation_search_domain_example_title">YourSiteName.com</string>
     <string name="site_creation_search_domain_example_body">Līdzīgi kā iepriekš minētajā piemērā, domēns ļauj cilvēkiem atrast un apmeklēt jūsu vietni savā tīmekļa pārlūkprogrammā.</string>
     <string name="dashboard_activity_card_title">Pēdējā darbība</string>
@@ -539,7 +536,6 @@ Language: lv
     <string name="jetpack_full_plugin_install_concise_description_multiple">%1$s izmanto %2$s, kas vēl neatbalsta visas lietotnes funkcijas. Lūdzu, instalējiet %3$s.</string>
     <string name="jetpack_full_plugin_install_onboarding_description_this_site">Šī vietne</string>
     <string name="jetpack_full_plugin_install_concise_description_single">%1$s izmanto %2$s, kas vēl neatbalsta visas lietotnes funkcijas. Lūdzu, instalējiet %3$s.</string>
-    <string name="wp_jp_static_poster_footnote">Pārslēgšanās ir bezmaksas un aizņem tikai minūti.</string>
     <string name="jetpack_plugin_install_remote_plugin_done_description">Tagad, kad Jetpack ir instalēts, mums ir tikai jāveic iestatīšana. Tas prasīs tikai minūti.</string>
     <string name="jetpack_plugin_install_full_plugin_done_button">Gatavs</string>
     <string name="jetpack_plugin_install_remote_plugin_done_button">Uzstādīt</string>
@@ -547,8 +543,6 @@ Language: lv
     <string name="my_site_header_traffic">Satiksme</string>
     <string name="my_site_header_manage">Pārvaldīt</string>
     <string name="my_site_btn_wp_admin">WP administrators</string>
-    <string name="wp_jp_static_poster_button_primary">Pārslēdzieties uz Jetpack lietotni</string>
-    <string name="wp_jp_static_poster_button_secondary">Uzziniet vairāk vietnē Jetpack.com</string>
     <string name="blaze_promotional_subtitle_3">Sekojiet veiktspējai, iedarbiniet un apturiet savu Blaze jebkurā laikā.</string>
     <string name="blaze_overlay_post_promotional_button">Izgaismojiet šo ziņu</string>
     <string name="blaze_overlay_page_promotional_button">Izgaismojiet šo lapu</string>
@@ -614,7 +608,6 @@ Language: lv
     <string name="support_forum_title">Kopienas forumi</string>
     <string name="support_forum_caption">Saņemiet palīdzību no mūsu brīvprātīgo grupas.</string>
     <string name="my_site_blogging_prompt_card_menu_remove">Izslēgt uzvednes</string>
-    <string name="wp_jetpack_powered_phase_3_feature_is_moving_soon">%1$s drīzumā tiks pārvietots</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_four_title_all_features">Jetpack funkcijas ir pārvietotas.</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_four_all_features_description">Statistika, lasītājs, paziņojumi un citas Jetpack darbināmas funkcijas ir noņemtas no WordPress lietotnes.</string>
     <string name="wp_jetpack_feature_removal_switch_to_jetpack_app_menu_title">Pārslēdzieties uz Jetpack </string>
@@ -634,7 +627,6 @@ Language: lv
     <string name="wp_jetpack_feature_removal_overlay_learn_more_migration_text">Uzziniet vairāk vietnē jetpack.com</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_the_jetpack_app">Pārslēdzieties uz Jetpack lietotni</string>
     <string name="jetpack_feature_card_menu_item_remind_me_later">Atgādināt vēlāk</string>
-    <string name="jetpack_feature_card_content_phase_three">Statistika, Lasītājs, Paziņojumi un citi līdzekļi drīzumā tiks pārvietoti uz Jetpack mobilo lietotni.</string>
     <string name="blogging_prompts_list_number_of_answers_zero">0 atbildes</string>
     <string name="blogging_prompts_list_number_of_answers_one">1 atbilde</string>
     <string name="blogging_prompts_list_number_of_answers_other">%d atbildes</string>

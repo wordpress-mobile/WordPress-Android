@@ -2,11 +2,6 @@ package org.wordpress.android.ui.jetpackoverlay
 
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseFour
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseNewUsers
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseSelfHostedUsers
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseStaticPosters
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalSiteCreationPhase.PHASE_ONE
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalSiteCreationPhase.PHASE_TWO
 import org.wordpress.android.ui.main.WPMainNavigationView.PageType
 import org.wordpress.android.util.BuildConfigWrapper
@@ -14,7 +9,6 @@ import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.config.JetpackFeatureRemovalNewUsersConfig
 import org.wordpress.android.util.config.JetpackFeatureRemovalPhaseFourConfig
 import org.wordpress.android.util.config.JetpackFeatureRemovalSelfHostedUsersConfig
-import org.wordpress.android.util.config.JetpackFeatureRemovalStaticPostersConfig
 import org.wordpress.android.util.config.PhaseFourOverlayFrequencyConfig
 import javax.inject.Inject
 
@@ -25,34 +19,21 @@ class JetpackFeatureRemovalPhaseHelper @Inject constructor(
     private val jetpackFeatureRemovalPhaseFourConfig: JetpackFeatureRemovalPhaseFourConfig,
     private val jetpackFeatureRemovalNewUsersConfig: JetpackFeatureRemovalNewUsersConfig,
     private val jetpackFeatureRemovalSelfHostedUsersConfig: JetpackFeatureRemovalSelfHostedUsersConfig,
-    private val jetpackFeatureRemovalStaticPostersConfig: JetpackFeatureRemovalStaticPostersConfig,
     private val jetpackPhaseFourOverlayFrequencyConfig: PhaseFourOverlayFrequencyConfig,
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper
 ) {
     fun getCurrentPhase(): JetpackFeatureRemovalPhase? {
         return if (buildConfigWrapper.isJetpackApp) null
-        else if (jetpackFeatureRemovalSelfHostedUsersConfig.isEnabled()) PhaseSelfHostedUsers
-        else if (jetpackFeatureRemovalNewUsersConfig.isEnabled()) PhaseNewUsers
-        else if (jetpackFeatureRemovalPhaseFourConfig.isEnabled()) PhaseFour
-        else if (jetpackFeatureRemovalStaticPostersConfig.isEnabled()) PhaseStaticPosters
+        else if (jetpackFeatureRemovalSelfHostedUsersConfig.isEnabled()) JetpackFeatureRemovalPhase.PhaseSelfHostedUsers
+        else if (jetpackFeatureRemovalNewUsersConfig.isEnabled()) JetpackFeatureRemovalPhase.PhaseNewUsers
+        else if (jetpackFeatureRemovalPhaseFourConfig.isEnabled()) JetpackFeatureRemovalPhase.PhaseFour
         else null
     }
 
-    fun getDeepLinkPhase(): JetpackFeatureRemovalSiteCreationPhase? {
-        val currentPhase = getCurrentPhase() ?: return null
-        return when (currentPhase) {
-            is PhaseStaticPosters -> PHASE_ONE
-            is PhaseFour, PhaseNewUsers, PhaseSelfHostedUsers -> PHASE_TWO
-        }
-    }
+    fun getDeepLinkPhase(): JetpackFeatureRemovalSiteCreationPhase? =
+        getCurrentPhase()?.let { PHASE_TWO }
 
-    fun shouldRemoveJetpackFeatures(): Boolean {
-        val currentPhase = getCurrentPhase() ?: return false
-        return when (currentPhase) {
-            is PhaseFour, PhaseNewUsers, PhaseSelfHostedUsers -> true
-            is PhaseStaticPosters -> false
-        }
-    }
+    fun shouldRemoveJetpackFeatures(): Boolean = getCurrentPhase() != null
 
     fun shouldShowJetpackPoweredEditorFeatures(): Boolean = getCurrentPhase() == null
 
@@ -60,24 +41,12 @@ class JetpackFeatureRemovalPhaseHelper @Inject constructor(
 
     fun shouldShowPublishedPostStatsButton(): Boolean = getCurrentPhase() == null
 
-    fun shouldShowStaticPage(): Boolean = getCurrentPhase() is PhaseStaticPosters
-
     @JvmOverloads
     fun trackPageAccessedEventIfNeeded(pageType: PageType, site: SiteModel? = null) {
         when (pageType) {
             PageType.MY_SITE -> analyticsTrackerWrapper.track(AnalyticsTracker.Stat.MY_SITE_ACCESSED, site)
-            PageType.READER -> {
-                if (arePosterizedPagesVisible()) {
-                    analyticsTrackerWrapper.track(AnalyticsTracker.Stat.READER_ACCESSED)
-                }
-            }
-
-            PageType.NOTIFS -> {
-                if (arePosterizedPagesVisible()) {
-                    analyticsTrackerWrapper.track(AnalyticsTracker.Stat.NOTIFICATIONS_ACCESSED)
-                }
-            }
-
+            PageType.READER -> analyticsTrackerWrapper.track(AnalyticsTracker.Stat.READER_ACCESSED)
+            PageType.NOTIFS -> analyticsTrackerWrapper.track(AnalyticsTracker.Stat.NOTIFICATIONS_ACCESSED)
             PageType.ME -> analyticsTrackerWrapper.track(AnalyticsTracker.Stat.ME_ACCESSED)
         }
     }
@@ -89,19 +58,16 @@ class JetpackFeatureRemovalPhaseHelper @Inject constructor(
     fun getPhaseFourOverlayFrequency(): Int {
         return jetpackPhaseFourOverlayFrequencyConfig.getValue()
     }
-
-    private fun arePosterizedPagesVisible() = !shouldShowStaticPage()
 }
 
 sealed class JetpackFeatureRemovalPhase(val trackingName: String) {
-    object PhaseStaticPosters : JetpackFeatureRemovalPhase("static_posters")
     object PhaseFour : JetpackFeatureRemovalPhase("four")
     object PhaseNewUsers : JetpackFeatureRemovalPhase("new_users")
     object PhaseSelfHostedUsers : JetpackFeatureRemovalPhase("self_hosted")
 }
 
 enum class JetpackFeatureRemovalSiteCreationPhase(val trackingName: String) {
-    PHASE_ONE("one"), PHASE_TWO("two")
+    PHASE_TWO("two")
 }
 
 enum class JetpackDeepLinkPhase(val trackingName: String) {
