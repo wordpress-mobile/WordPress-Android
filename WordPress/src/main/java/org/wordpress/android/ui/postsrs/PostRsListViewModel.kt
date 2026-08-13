@@ -1004,16 +1004,22 @@ class PostRsListViewModel @Inject constructor(
                     error = null
                 )
             }
-            _snackbarMessages.trySend(
-                SnackbarMessage(
-                    message = errorMessage.orEmpty(),
-                    actionLabel = if (authError) null
-                        else resourceProvider.getString(R.string.retry),
-                    // As above: the user asked, so a second failure has to be reported.
-                    onAction = if (authError) null
-                        else ({ refreshTab(tab, isUserRefresh = true) })
+            // This observer reports the same failure the refresh's catch block does, so it needs
+            // the same rule: stay quiet unless the user asked for the refresh. Otherwise a
+            // background one (initTab, as the pager settles) interrupts with an error nobody
+            // provoked. The state above still syncs either way.
+            if (isUserRefresh) {
+                _snackbarMessages.trySend(
+                    SnackbarMessage(
+                        message = errorMessage.orEmpty(),
+                        actionLabel = if (authError) null
+                            else resourceProvider.getString(R.string.retry),
+                        // As above: the user asked, so a second failure has to be reported.
+                        onAction = if (authError) null
+                            else ({ refreshTab(tab, isUserRefresh = true) })
+                    )
                 )
-            )
+            }
         } else {
             updateTabUiState(tab) {
                 copy(
