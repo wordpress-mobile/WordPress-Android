@@ -40,7 +40,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.PrimaryScrollableTabRow
 import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
@@ -404,19 +404,11 @@ private fun NewStatsScreen(
 
     Scaffold(
         topBar = {
-            TopAppBar(
-                // Title intentionally left empty: the Traffic date selector needs the app-bar
-                // width, which the "Stats" title crowded out on small screens.
-                title = {},
-                navigationIcon = {
-                    IconButton(onClick = onBackPressed) {
-                        Icon(
-                            Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = stringResource(R.string.back)
-                        )
-                    }
-                },
-                actions = {
+            CenterAlignedTopAppBar(
+                // The Traffic date selector (with its paging arrows) lives in the centred title
+                // slot so it stays centred in the app bar now that there is no "Stats" title.
+                // Other tabs render an empty title. Only the overflow menu stays in actions.
+                title = {
                     val currentTab = tabs[pagerState.currentPage]
                     if (currentTab == StatsTab.TRAFFIC) {
                         Row(verticalAlignment = Alignment.CenterVertically) {
@@ -500,6 +492,16 @@ private fun NewStatsScreen(
                             }
                         }
                     }
+                },
+                navigationIcon = {
+                    IconButton(onClick = onBackPressed) {
+                        Icon(
+                            Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = stringResource(R.string.back)
+                        )
+                    }
+                },
+                actions = {
                     StatsOverflowMenu(
                         onSwitchToOldStats = onSwitchToOldStats
                     )
