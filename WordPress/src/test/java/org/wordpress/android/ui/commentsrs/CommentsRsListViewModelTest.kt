@@ -38,6 +38,8 @@ import org.wordpress.android.util.WPAvatarUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
 import uniffi.wp_api.CommentListParams
+import uniffi.wp_api.RequestExecutionErrorReason
+import uniffi.wp_api.WpErrorCode
 import java.util.Date
 
 @ExperimentalCoroutinesApi
@@ -63,6 +65,8 @@ class CommentsRsListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
         whenever(siteCapabilityChecker.canModerateComments(site)).thenReturn(true)
         whenever(resourceProvider.getString(any())).thenReturn("string")
+        // Fetches short-circuit when offline, so the default has to be a connected device.
+        whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
         whenever(avatarUtilsWrapper.rewriteAvatarUrlWithResource(any(), any())).thenAnswer { it.arguments[0] }
         whenever(commentsRsDataSource.firstPageParams(any(), anyOrNull())).thenReturn(FIRST_PAGE)
         whenever(commentsRsDataSource.fetchPostTitles(any(), any())).thenReturn(emptyMap())
@@ -180,6 +184,85 @@ class CommentsRsListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
         val state = viewModel.tabStates.value.getValue(CommentsRsListTab.ALL)
         assertThat(state.error).isEqualTo("server said no")
         assertThat(state.isLoading).isFalse()
+    }
+
+    @Test
+    fun `initTab offline with no content shows the network message`() = test {
+        // The rs client reports offline as a result variant rather than a thrown exception, so
+        // the reason has to survive the trip out of the data source for this to be classified.
+        whenever(resourceProvider.getString(R.string.error_generic_network)).thenReturn("no network")
+        whenever(commentsRsDataSource.fetchCommentsPage(eq(site), any())).thenReturn(
+            RsCommentsPageResult.Error(
+                message = null,
+                reason = RequestExecutionErrorReason.DeviceIsOfflineError(errorMessage = "off")
+            )
+        )
+        val viewModel = createViewModel()
+
+        viewModel.initTab(CommentsRsListTab.ALL)
+        advanceUntilIdle()
+
+        val state = viewModel.tabStates.value.getValue(CommentsRsListTab.ALL)
+        assertThat(state.error).isEqualTo("no network")
+        assertThat(state.isAuthError).isFalse()
+        assertThat(state.isLoading).isFalse()
+    }
+
+    @Test
+    fun `initTab offline shows the error without hitting the network`() = test {
+        whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(false)
+        whenever(resourceProvider.getString(R.string.error_generic_network)).thenReturn("no network")
+        val viewModel = createViewModel()
+
+        viewModel.initTab(CommentsRsListTab.ALL)
+        advanceUntilIdle()
+
+        verify(commentsRsDataSource, never()).fetchCommentsPage(any(), any())
+        val state = viewModel.tabStates.value.getValue(CommentsRsListTab.ALL)
+        assertThat(state.error).isEqualTo("no network")
+        assertThat(state.isLoading).isFalse()
+    }
+
+    @Test
+    fun `initTab auth failure carried as a WP error envelope is still an auth failure`() = test {
+        // A rejected credential can come back either as a transport reason or, when the server
+        // answers with a WP error body, as an error code. Only checking the reason let a 401 keep
+        // its Retry button and show the server's raw wording.
+        whenever(resourceProvider.getString(R.string.post_rs_error_auth)).thenReturn("check login")
+        whenever(commentsRsDataSource.fetchCommentsPage(eq(site), any())).thenReturn(
+            RsCommentsPageResult.Error(
+                message = "Sorry, you are not allowed to do that.",
+                errorCode = WpErrorCode.Unauthorized()
+            )
+        )
+        val viewModel = createViewModel()
+
+        viewModel.initTab(CommentsRsListTab.ALL)
+        advanceUntilIdle()
+
+        val state = viewModel.tabStates.value.getValue(CommentsRsListTab.ALL)
+        assertThat(state.isAuthError).isTrue()
+        assertThat(state.error).isEqualTo("check login")
+    }
+
+    @Test
+    fun `initTab auth failure flags the tab so the retry is withheld`() = test {
+        whenever(commentsRsDataSource.fetchCommentsPage(eq(site), any())).thenReturn(
+            RsCommentsPageResult.Error(
+                message = null,
+                reason = RequestExecutionErrorReason.HttpAuthenticationRejectedError(
+                    hostname = "example.com",
+                    method = null
+                )
+            )
+        )
+        val viewModel = createViewModel()
+
+        viewModel.initTab(CommentsRsListTab.ALL)
+        advanceUntilIdle()
+
+        // Retrying rejected credentials just fails again, so the screen drops the retry button.
+        assertThat(viewModel.tabStates.value.getValue(CommentsRsListTab.ALL).isAuthError).isTrue()
     }
 
     @Test

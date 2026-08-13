@@ -2777,6 +2777,14 @@
     <!-- site picker -->
     <string name="site_picker_title">Choose site</string>
     <string name="site_picker_add_a_site">Add a site</string>
+    <!-- translators: this is the accessibility label for the add site button's tap action while the menu is open, and the verb should likely be translated in the infinitive, here's the usage context in English: "Double tap to 'close the add site menu'." -->
+    <string name="site_picker_add_a_site_collapse">Close the add site menu</string>
+    <!-- translators: this is the accessibility label for the add site button's tap action while the menu is closed, and the verb should likely be translated in the infinitive, here's the usage context in English: "Double tap to 'show ways to add a site'." -->
+    <string name="site_picker_add_a_site_expand">Show ways to add a site</string>
+    <!-- translators: spoken by a screen reader to describe the add site button's current state, not an action the user can take. Announced after the menu closes. -->
+    <string name="site_picker_add_site_menu_collapsed">Add site menu collapsed</string>
+    <!-- translators: spoken by a screen reader to describe the add site button's current state, not an action the user can take. Announced after the menu opens. -->
+    <string name="site_picker_add_site_menu_expanded">Add site menu expanded</string>
     <string name="site_picker_add_self_hosted">Add self-hosted site</string>
     <string name="site_picker_create_wpcom">Create WordPress.com site</string>
     <string name="site_picker_remove_site_empty">No sites matching your search</string>

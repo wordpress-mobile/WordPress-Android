@@ -85,6 +85,17 @@ internal sealed interface PageRsListItem {
  */
 internal const val SITE_EDITOR_PAGE_ID = -1L
 
+/**
+ * Whether the tab holds anything the site actually owns.
+ *
+ * A block-theme site gets the synthetic SITE_EDITOR row prepended even when it has no pages at
+ * all, so row count alone can't answer "is this tab empty?" - and treating that row as content
+ * would suppress the loading placeholders and the full-screen error state. Every other row,
+ * including the HOMEPAGE and POSTS_PAGE virtuals, wraps a real page.
+ */
+internal val List<PageRsListItem>.hasRealPages: Boolean
+    get() = any { it.remotePageId != SITE_EDITOR_PAGE_ID }
+
 internal enum class PageRsDisplayState {
     NORMAL,
     FETCHING_WITH_DATA,

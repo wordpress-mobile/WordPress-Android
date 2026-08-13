@@ -1,44 +1,44 @@
-package org.wordpress.android.ui.postsrs
+package org.wordpress.android.ui.rs
 
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 
-class PostRsTabLoadingTest {
+class RsTabLoadingTest {
     @Test
-    fun `first visit shows placeholders until the fetch delivers posts`() {
+    fun `first visit shows placeholders until the fetch delivers items`() {
         // Nothing cached and no fetch behind us, so the refresh puts the tab into loading.
-        var isLoading = PostRsTabLoading.onRefreshStarted(hasPosts = false, hasFetched = false)
+        var isLoading = RsTabLoading.onRefreshStarted(hasItems = false, hasFetched = false)
         assertThat(isLoading).isTrue()
 
         // The cache is still empty while the fetch runs, so the placeholders stay up.
-        isLoading = PostRsTabLoading.onItemsLoaded(wasLoading = isLoading, hasItems = false)
+        isLoading = RsTabLoading.onItemsLoaded(wasLoading = isLoading, hasItems = false)
         assertThat(isLoading).isTrue()
 
-        // The fetch lands and the posts replace the placeholders.
-        isLoading = PostRsTabLoading.onItemsLoaded(wasLoading = isLoading, hasItems = true)
+        // The fetch lands and the items replace the placeholders.
+        isLoading = RsTabLoading.onItemsLoaded(wasLoading = isLoading, hasItems = true)
         assertThat(isLoading).isFalse()
     }
 
     @Test
     fun `an empty site stops loading once fetched and stays empty on later refreshes`() {
-        var isLoading = PostRsTabLoading.onRefreshStarted(hasPosts = false, hasFetched = false)
-        isLoading = PostRsTabLoading.onListInfoChanged(
+        var isLoading = RsTabLoading.onRefreshStarted(hasItems = false, hasFetched = false)
+        isLoading = RsTabLoading.onListInfoChanged(
             wasLoading = isLoading,
             isFetchingFirstPage = true,
-            hasPosts = false,
+            hasItems = false,
             hasFetched = false
         )
         assertThat(isLoading).isTrue()
 
-        isLoading = PostRsTabLoading.onListInfoChanged(
+        isLoading = RsTabLoading.onListInfoChanged(
             wasLoading = isLoading,
             isFetchingFirstPage = false,
-            hasPosts = false,
+            hasItems = false,
             hasFetched = true
         )
         assertThat(isLoading).isFalse()
 
-        assertThat(PostRsTabLoading.onRefreshStarted(hasPosts = false, hasFetched = true)).isFalse()
+        assertThat(RsTabLoading.onRefreshStarted(hasItems = false, hasFetched = true)).isFalse()
     }
 
     @Test
@@ -46,10 +46,10 @@ class PostRsTabLoadingTest {
         // The collection has stopped fetching but the items haven't been read yet, so the tab
         // waits instead of flashing its empty message for a frame.
         assertThat(
-            PostRsTabLoading.onListInfoChanged(
+            RsTabLoading.onListInfoChanged(
                 wasLoading = true,
                 isFetchingFirstPage = false,
-                hasPosts = false,
+                hasItems = false,
                 hasFetched = false
             )
         ).isTrue()
@@ -57,12 +57,12 @@ class PostRsTabLoadingTest {
 
     @Test
     fun `loading never resurrects once it has ended`() {
-        assertThat(PostRsTabLoading.onItemsLoaded(wasLoading = false, hasItems = false)).isFalse()
+        assertThat(RsTabLoading.onItemsLoaded(wasLoading = false, hasItems = false)).isFalse()
         assertThat(
-            PostRsTabLoading.onListInfoChanged(
+            RsTabLoading.onListInfoChanged(
                 wasLoading = false,
                 isFetchingFirstPage = true,
-                hasPosts = false,
+                hasItems = false,
                 hasFetched = false
             )
         ).isFalse()
