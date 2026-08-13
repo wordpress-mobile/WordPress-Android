@@ -408,9 +408,9 @@ private fun NewStatsScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = {
-                    Text(text = stringResource(id = R.string.stats))
-                },
+                // Title intentionally left empty: the Traffic date selector needs the app-bar
+                // width, which the "Stats" title crowded out on small screens.
+                title = {},
                 navigationIcon = {
                     IconButton(onClick = onBackPressed) {
                         Icon(
