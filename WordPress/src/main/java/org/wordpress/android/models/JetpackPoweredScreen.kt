@@ -18,10 +18,7 @@ sealed interface JetpackPoweredScreen {
         override val trackingName: String,
     ) : JetpackPoweredScreen {
         APP_SETTINGS(trackingName = "app_settings"),
-        HOME(trackingName = "home"),
         ME(trackingName = "me"),
-        PEOPLE(trackingName = "people"),
-        PERSON(trackingName = "person"),
     }
 
     enum class WithDynamicText(

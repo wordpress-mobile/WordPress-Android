@@ -20,12 +20,10 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.FullscreenErrorWithRetryBinding
 import org.wordpress.android.databinding.ScanHistoryFragmentBinding
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.models.JetpackPoweredScreen
 import org.wordpress.android.ui.ScrollableViewInitializedListener
 import org.wordpress.android.ui.jetpack.scan.history.ScanHistoryViewModel.TabUiState
 import org.wordpress.android.ui.jetpack.scan.history.ScanHistoryViewModel.UiState.ContentUiState
 import org.wordpress.android.ui.jetpack.scan.history.ScanHistoryViewModel.UiState.ErrorUiState
-import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredBottomSheetFragment
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.JetpackBrandingUtils
 import org.wordpress.android.util.extensions.getSerializableCompat
@@ -154,33 +152,6 @@ class ScanHistoryFragment : Fragment(R.layout.scan_history_fragment), MenuProvid
 
     override fun onScrollableViewInitialized(containerId: Int) {
         binding?.appbarMain?.liftOnScrollTargetViewId = containerId
-        initJetpackBanner(containerId)
     }
 
-    private fun initJetpackBanner(scrollableContainerId: Int) {
-        if (jetpackBrandingUtils.shouldShowJetpackBanner()) {
-            val screen = JetpackPoweredScreen.WithDynamicText.SCAN
-            binding?.root?.post {
-                val jetpackBannerView = binding?.jetpackBanner?.root ?: return@post
-                val scrollableView = binding?.root?.findViewById<View>(scrollableContainerId) as? RecyclerView
-                    ?: return@post
-
-                jetpackBrandingUtils.showJetpackBannerIfScrolledToTop(jetpackBannerView, scrollableView)
-                jetpackBrandingUtils.initJetpackBannerAnimation(jetpackBannerView, scrollableView)
-                binding?.jetpackBanner?.jetpackBannerText?.text = uiHelpers.getTextOfUiString(
-                    requireContext(),
-                    jetpackBrandingUtils.getBrandingText()
-                )
-
-                if (jetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()) {
-                    binding?.jetpackBanner?.root?.setOnClickListener {
-                        jetpackBrandingUtils.trackBannerTapped(screen)
-                        JetpackPoweredBottomSheetFragment
-                            .newInstance()
-                            .show(childFragmentManager, JetpackPoweredBottomSheetFragment.TAG)
-                    }
-                }
-            }
-        }
-    }
 }

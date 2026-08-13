@@ -29,10 +29,6 @@ class JetpackBrandingUtils @Inject constructor(
                 && !jetpackFeatureRemovalBrandingUtil.isInRemovalPhase()
     }
 
-    fun shouldShowJetpackBanner(): Boolean {
-        return shouldShowJetpackBranding() && jetpackFeatureRemovalBrandingUtil.shouldShowBranding()
-    }
-
     fun shouldShowJetpackPoweredBottomSheet(): Boolean {
         return isWpComSite() && jetpackPoweredBottomSheetFeatureConfig.isEnabled() && !buildConfigWrapper.isJetpackApp
     }
