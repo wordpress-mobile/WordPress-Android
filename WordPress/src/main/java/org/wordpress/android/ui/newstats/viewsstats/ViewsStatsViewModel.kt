@@ -4,6 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -66,9 +67,16 @@ class ViewsStatsViewModel @Inject constructor(
     private var currentPeriod: StatsPeriod = _selectedPeriod.value
     private var loadingPeriod: StatsPeriod? = null
     private var loadedPeriod: StatsPeriod? = null
+    private var loadJob: Job? = null
 
     private val _isPeriodInitialized = MutableStateFlow(false)
     val isPeriodInitialized: StateFlow<Boolean> = _isPeriodInitialized.asStateFlow()
+
+    private val _canNavigateBackward = MutableStateFlow(statsRepository.canNavigateBackward(currentPeriod))
+    val canNavigateBackward: StateFlow<Boolean> = _canNavigateBackward.asStateFlow()
+
+    private val _canNavigateForward = MutableStateFlow(statsRepository.canNavigateForward(currentPeriod))
+    val canNavigateForward: StateFlow<Boolean> = _canNavigateForward.asStateFlow()
 
     init {
         initializeWithPersistedPeriod()
@@ -88,6 +96,7 @@ class ViewsStatsViewModel @Inject constructor(
                 if (restoredPeriod != null) {
                     currentPeriod = restoredPeriod
                     _selectedPeriod.value = restoredPeriod
+                    updateNavigationState()
                 }
             }
             val savedChartType = savedStateHandle.get<String>(KEY_CHART_TYPE)
@@ -117,7 +126,47 @@ class ViewsStatsViewModel @Inject constructor(
         if (period == currentPeriod) return
         currentPeriod = period
         _selectedPeriod.value = period
+        updateNavigationState()
         savePeriod(period)
+    }
+
+    /**
+     * Pages the whole screen to the range immediately before the current one (see
+     * [StatsRepository.previousPeriod]). Guarded by the same floor the button's enabled state uses,
+     * so a stray tap on a disabled control is a no-op.
+     */
+    fun onNavigatePrevious() {
+        if (!statsRepository.canNavigateBackward(currentPeriod)) return
+        navigateTo(statsRepository.previousPeriod(currentPeriod))
+    }
+
+    /**
+     * Pages the whole screen to the range immediately after the current one (see
+     * [StatsRepository.nextPeriod]). Guarded so a tap while at the present edge is a no-op.
+     */
+    fun onNavigateNext() {
+        if (!statsRepository.canNavigateForward(currentPeriod)) return
+        navigateTo(statsRepository.nextPeriod(currentPeriod))
+    }
+
+    /**
+     * Applies a navigated period: dims the current content (if any) while the new range loads, then
+     * changes the period — which updates [selectedPeriod] so every other card reloads too — and
+     * reloads this card, mirroring [onBarTapped].
+     */
+    private fun navigateTo(newPeriod: StatsPeriod) {
+        if (newPeriod == currentPeriod) return
+        (_uiState.value as? ViewsStatsCardUiState.Content)?.let { content ->
+            _uiState.value = content.copy(isLoadingNewPeriod = true)
+        }
+        onPeriodChanged(newPeriod)
+        loadingPeriod = newPeriod
+        loadData()
+    }
+
+    private fun updateNavigationState() {
+        _canNavigateBackward.value = statsRepository.canNavigateBackward(currentPeriod)
+        _canNavigateForward.value = statsRepository.canNavigateForward(currentPeriod)
     }
 
     private fun savePeriod(period: StatsPeriod) {
@@ -326,7 +375,11 @@ class ViewsStatsViewModel @Inject constructor(
             )
         }
 
-        viewModelScope.launch {
+        // Rapid paging ("back five days quickly") fires overlapping loads. Cancel the in-flight one so
+        // only the latest period's request survives — otherwise a stale older coroutine can clear the
+        // dim/loadingPeriod mid-flight (flicker) or write a stale loadedPeriod (a redundant refetch).
+        loadJob?.cancel()
+        loadJob = viewModelScope.launch {
             loadDataInternal(site)
         }
     }
@@ -362,8 +415,13 @@ class ViewsStatsViewModel @Inject constructor(
                 loadedPeriod = targetPeriod
             }
         } finally {
-            loadingPeriod = null
-            clearLoadingNewPeriod()
+            // Only clear the flags if this load still owns them. A load superseded by rapid paging is
+            // cancelled and its finally runs after the newer load has already set loadingPeriod to the
+            // newer period, so clearing unconditionally here would wipe the newer load's dim.
+            if (loadingPeriod == targetPeriod) {
+                loadingPeriod = null
+                clearLoadingNewPeriod()
+            }
         }
     }
 
