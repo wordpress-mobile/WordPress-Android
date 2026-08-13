@@ -869,7 +869,8 @@ class PostRsListViewModel @Inject constructor(
         resolveImageJobs[tab] = viewModelScope.launch {
             val urls = withContext(Dispatchers.IO) {
                 restClient.fetchMediaUrls(
-                    site, unresolvedIds, THUMBNAIL_SIZE_DP
+                    site, unresolvedIds, THUMBNAIL_SIZE_DP,
+                    THUMBNAIL_ASPECT
                 )
             }
             if (urls.isEmpty()) return@launch
@@ -1004,6 +1005,9 @@ class PostRsListViewModel @Inject constructor(
         private const val SEARCH_DEBOUNCE_MS = 250L
         internal const val MIN_SEARCH_QUERY_LENGTH = 3
         private const val THUMBNAIL_SIZE_DP = 64
+
+        /** Rows show the thumbnail in a square slot, cropped to fill. */
+        private const val THUMBNAIL_ASPECT = 1f
         private val ALL_STATUSES = PostRsListTab.entries.flatMap { it.statuses }.distinct()
 
         private const val TRACKS_SELECTED_TAB = "selected_tab"
