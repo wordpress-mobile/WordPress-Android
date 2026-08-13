@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.newstats
 
+import androidx.annotation.VisibleForTesting
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.DateRangePicker
@@ -21,7 +22,7 @@ import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
 import java.time.Instant
 import java.time.LocalDate
-import java.time.ZoneId
+import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 
@@ -31,10 +32,10 @@ fun StatsDateRangePickerDialog(
     onDismiss: () -> Unit,
     onDateRangeSelected: (startDate: LocalDate, endDate: LocalDate) -> Unit
 ) {
-    val todayMillis = LocalDate.now()
-        .atStartOfDay(ZoneId.systemDefault())
-        .toInstant()
-        .toEpochMilli()
+    // Today as the device sees it, expressed as UTC midnight so it can be compared against the
+    // utcTimeMillis the picker passes to isSelectableDate. Using local midnight here leaves today
+    // unselectable east of UTC. See CMM-2271.
+    val todayMillis = LocalDate.now().toPickerMillis()
 
     val dateRangePickerState = rememberDateRangePickerState(
         initialDisplayMode = DisplayMode.Picker,
@@ -115,15 +116,29 @@ private fun rememberSelectionDescription(startMillis: Long?, endMillis: Long?): 
     return remember(title, startLabel, endLabel, startMillis, endMillis) {
         listOfNotNull(
             title,
-            startMillis?.let { "$startLabel: ${it.toSelectedDate().formatForSpeech()}" },
-            endMillis?.let { "$endLabel: ${it.toSelectedDate().formatForSpeech()}" }
+            startMillis?.let { "$startLabel: ${it.toPickerDate().formatForSpeech()}" },
+            endMillis?.let { "$endLabel: ${it.toPickerDate().formatForSpeech()}" }
         ).joinToString(", ")
     }
 }
 
-private fun Long.toSelectedDate(): LocalDate = Instant.ofEpochMilli(this)
-    .atZone(ZoneId.systemDefault())
+/**
+ * Reads picker millis as a date. The picker hands back the start of the selected day in UTC, so the
+ * millis have to be read back in that same frame. Reading them in the device zone lands on the
+ * previous day west of UTC, which silently queries a range one day earlier than the one tapped.
+ * See CMM-2271.
+ */
+@VisibleForTesting
+internal fun Long.toPickerDate(): LocalDate = Instant.ofEpochMilli(this)
+    .atZone(ZoneOffset.UTC)
     .toLocalDate()
+
+/**
+ * Inverse of [toPickerDate]: the start of this day as UTC midnight, the frame the picker compares
+ * against in [SelectableDates.isSelectableDate].
+ */
+@VisibleForTesting
+internal fun LocalDate.toPickerMillis(): Long = atStartOfDay(ZoneOffset.UTC).toInstant().toEpochMilli()
 
 private fun LocalDate.formatForSpeech(): String =
     format(DateTimeFormatter.ofLocalizedDate(FormatStyle.FULL))
@@ -135,8 +150,8 @@ private fun onConfirmDateRange(
 ) {
     if (startMillis == null || endMillis == null) return
 
-    val startDate = startMillis.toSelectedDate()
-    val endDate = endMillis.toSelectedDate()
+    val startDate = startMillis.toPickerDate()
+    val endDate = endMillis.toPickerDate()
     // Ensure start date is before or equal to end date, swap if needed
     if (startDate.isAfter(endDate)) {
         onDateRangeSelected(endDate, startDate)
