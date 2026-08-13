@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2026-07-22 07:23:26+0000
+Translation-Revision-Date: 2026-08-11 04:38:48+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/4.0.3
 Language: pl
@@ -255,6 +255,8 @@ Language: pl
     <string name="post_rs_confirm_delete_message">Spowoduje to trwałe usunięcie tego wpisu. Tej akcji nie można cofnąć.</string>
     <string name="post_rs_confirm_trash_message">Przenieść wpis do kosza?</string>
     <string name="post_rs_failed_to_load">Nie udało się wczytać wpisu</string>
+    <string name="experimental_rs_pages_list_description">Wyświetl listę stron w nowoczesnym interfejsie użytkownika dla WordPress.com i witryn z własnym hostingiem z hasłami aplikacji</string>
+    <string name="experimental_rs_pages_list">Lista nowych stron</string>
     <string name="stats_error_admin_url_unavailable">Nie można otworzyć WP Admin dla tej witryny</string>
     <string name="stats_error_parsing">Wystąpił problem z wczytywaniem danych. Spróbuj ponownie.</string>
     <string name="stats_error_network">Błąd sieci. Sprawdź połączenie i spróbuj ponownie</string>
@@ -626,7 +628,7 @@ Language: pl
     <string name="reader_preferences_font_size_normal">Normalna</string>
     <string name="reader_preferences_font_size_small">Mała</string>
     <string name="reader_preferences_font_size_extra_small">Bardzo mała</string>
-    <string name="reader_preferences_screen_font_size_label">Rozmiar czcionki</string>
+    <string name="reader_preferences_screen_font_size_label">Wielkość liter</string>
     <string name="reader_preferences_screen_font_family_label">Czcionka</string>
     <string name="reader_preferences_screen_theme_label">Schemat kolorów</string>
     <string name="experimental_badge">&lt;Eksperymentalna&gt;</string>
