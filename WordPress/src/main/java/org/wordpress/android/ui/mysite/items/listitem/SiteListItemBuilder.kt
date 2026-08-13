@@ -200,10 +200,8 @@ class SiteListItemBuilder @Inject constructor(
      * exactly the same condition WPMainActivity uses to hide it. Me is account-level, so site
      * capabilities deliberately play no part here.
      *
-     * There's no explicit Jetpack app check because there doesn't need to be one:
-     * [JetpackFeatureRemovalPhaseHelper.getCurrentPhase] returns null for the Jetpack app, so
-     * [JetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures] is always false there and the
-     * item is never built.
+     * No explicit Jetpack app check is needed: [JetpackFeatureRemovalPhaseHelper.getCurrentPhase]
+     * returns null there, so [shouldRemoveJetpackFeatures] is always false and the item never builds.
      */
     fun buildMeItemIfAvailable(onClick: (ListItemAction) -> Unit): ListItem? {
         return if (jetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures()) {
