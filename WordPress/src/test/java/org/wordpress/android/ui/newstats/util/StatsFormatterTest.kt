@@ -137,6 +137,41 @@ class StatsFormatterTest {
     }
 
     @Test
+    fun `toContentDescription of a single-line current-year range omits the separator`() {
+        val label = DateRangeLabel(RangeLine.Single("14-20 Jun"), null)
+
+        assertThat(label.toContentDescription(RANGE_TEMPLATE)).isEqualTo("14-20 Jun")
+    }
+
+    @Test
+    fun `toContentDescription of a single-line past-year range merges the year`() {
+        val label = DateRangeLabel(RangeLine.Single("14-20 Jun"), RangeLine.Single("2024"))
+
+        assertThat(label.toContentDescription(RANGE_TEMPLATE)).isEqualTo("14-20 Jun 2024")
+    }
+
+    @Test
+    fun `toContentDescription of a split current-year range spans both endpoints`() {
+        val label = DateRangeLabel(RangeLine.Split("28 Jul", "3 Aug"), null)
+
+        assertThat(label.toContentDescription(RANGE_TEMPLATE)).isEqualTo("28 Jul to 3 Aug")
+    }
+
+    @Test
+    fun `toContentDescription of a split past-year range merges the year onto the end`() {
+        val label = DateRangeLabel(RangeLine.Split("28 Jul", "3 Aug"), RangeLine.Single("2024"))
+
+        assertThat(label.toContentDescription(RANGE_TEMPLATE)).isEqualTo("28 Jul to 3 Aug 2024")
+    }
+
+    @Test
+    fun `toContentDescription of a cross-year range merges each year onto its endpoint`() {
+        val label = DateRangeLabel(RangeLine.Split("14 Jun", "14 Jun"), RangeLine.Split("2025", "2026"))
+
+        assertThat(label.toContentDescription(RANGE_TEMPLATE)).isEqualTo("14 Jun 2025 to 14 Jun 2026")
+    }
+
+    @Test
     fun `formatStatValue Long below 1000 returns raw number`() {
         assertThat(formatStatValue(500L)).isEqualTo("500")
     }
@@ -194,5 +229,10 @@ class StatsFormatterTest {
     @Test
     fun `formatStatValue Double negative whole number returns no decimals`() {
         assertThat(formatStatValue(-2.0)).isEqualTo("-2")
+    }
+
+    companion object {
+        // Mirrors R.string.stats_traffic_date_range_content_description ("%1$s to %2$s").
+        private const val RANGE_TEMPLATE = "%1\$s to %2\$s"
     }
 }

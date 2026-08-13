@@ -126,3 +126,23 @@ fun formatCustomDateRangeTwoLine(startDate: LocalDate, endDate: LocalDate, curre
     }
     return DateRangeLabel(primary, secondary)
 }
+
+/**
+ * The full range spoken as a single string for accessibility, with the year merged onto each
+ * endpoint so a screen reader reads it as one date range instead of the four-to-six separate text
+ * nodes the two-line layout renders. [rangeTemplate] is a "from – to" template (two `%s` args);
+ * labels that aren't a range (a single day, a within-month span) are returned as-is.
+ */
+fun DateRangeLabel.toContentDescription(rangeTemplate: String): String {
+    val p = primary
+    val s = secondary
+    return when {
+        p is RangeLine.Single && s is RangeLine.Single -> "${p.text} ${s.text}"
+        p is RangeLine.Split && s == null -> rangeTemplate.format(p.start, p.end)
+        p is RangeLine.Split && s is RangeLine.Single -> rangeTemplate.format(p.start, "${p.end} ${s.text}")
+        p is RangeLine.Split && s is RangeLine.Split ->
+            rangeTemplate.format("${p.start} ${s.start}", "${p.end} ${s.end}")
+        p is RangeLine.Single -> p.text
+        else -> rangeTemplate.format((p as RangeLine.Split).start, p.end)
+    }
+}

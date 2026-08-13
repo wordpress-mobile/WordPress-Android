@@ -59,6 +59,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.res.stringResource
@@ -130,6 +131,7 @@ import org.wordpress.android.ui.newstats.util.DateRangeLabel
 import org.wordpress.android.ui.newstats.util.ProvideShimmerBrush
 import org.wordpress.android.ui.newstats.util.RangeLine
 import org.wordpress.android.ui.newstats.util.formatCustomDateRangeTwoLine
+import org.wordpress.android.ui.newstats.util.toContentDescription
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.newstats.components.NewStatsIntroBottomSheet
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
@@ -1463,7 +1465,10 @@ private fun StatsPeriodMenu(
 @Composable
 private fun StatsPeriod.getDisplayLabel(): DateRangeLabel {
     return when (this) {
-        is StatsPeriod.Custom -> formatCustomDateRangeTwoLine(startDate, endDate, Year.now().value)
+        is StatsPeriod.Custom -> {
+            val currentYear = remember { Year.now().value }
+            formatCustomDateRangeTwoLine(startDate, endDate, currentYear)
+        }
         else -> DateRangeLabel(RangeLine.Single(stringResource(id = labelResId)), null)
     }
 }
@@ -1493,23 +1498,31 @@ private fun PeriodLabel(label: DateRangeLabel) {
     val density = LocalDensity.current
 
     // Only split lines have a "-" to align; give their start/end segments a shared column width
-    // (the max across both lines) so the separators land at the same x on both rows.
+    // (the max across both lines) so the separators land at the same x on both rows. Memoized so
+    // the text measurement doesn't re-run on every recomposition of the app bar.
     val primarySplit = label.primary as? RangeLine.Split
     val secondarySplit = secondary as? RangeLine.Split
-    val leftWidth = with(density) {
-        maxOf(
-            primarySplit?.let { measurer.measure(it.start, primaryStyle).size.width } ?: 0,
-            secondarySplit?.let { measurer.measure(it.start, secondaryStyle).size.width } ?: 0
-        ).toDp()
-    }
-    val rightWidth = with(density) {
-        maxOf(
-            primarySplit?.let { measurer.measure(it.end, primaryStyle).size.width } ?: 0,
-            secondarySplit?.let { measurer.measure(it.end, secondaryStyle).size.width } ?: 0
-        ).toDp()
+    val (leftWidth, rightWidth) = remember(label, primaryStyle, secondaryStyle, density) {
+        with(density) {
+            val left = maxOf(
+                primarySplit?.let { measurer.measure(it.start, primaryStyle).size.width } ?: 0,
+                secondarySplit?.let { measurer.measure(it.start, secondaryStyle).size.width } ?: 0
+            ).toDp()
+            val right = maxOf(
+                primarySplit?.let { measurer.measure(it.end, primaryStyle).size.width } ?: 0,
+                secondarySplit?.let { measurer.measure(it.end, secondaryStyle).size.width } ?: 0
+            ).toDp()
+            left to right
+        }
     }
 
-    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+    val rangeDescription = label.toContentDescription(
+        stringResource(R.string.stats_traffic_date_range_content_description)
+    )
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.clearAndSetSemantics { contentDescription = rangeDescription }
+    ) {
         RangeLineRow(
             line = label.primary,
             style = primaryStyle,
