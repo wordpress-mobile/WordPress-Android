@@ -48,6 +48,7 @@ import org.wordpress.android.ui.postsrs.SnackbarMessage
 import org.wordpress.android.ui.postsrs.data.PostRsRestClient
 import org.wordpress.android.ui.postsrs.data.WpServiceProvider
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.ui.rs.RsTabLoading
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
@@ -101,6 +102,9 @@ internal class PagesRsListViewModel @Inject constructor(
     private var collectionsScope = createCollectionsScope()
     private val initializingTabs = mutableSetOf<PageRsListTab>()
     private val userRefreshingTabs = mutableSetOf<PageRsListTab>()
+
+    /** Tabs whose collection has completed at least one fetch, so an empty list means empty. */
+    private val fetchedTabs = mutableSetOf<PageRsListTab>()
     private val resolveImageJobs = mutableMapOf<PageRsListTab, Job>()
     private val resolveAuthorJobs = mutableMapOf<PageRsListTab, Job>()
     private var lastTrackedTab: PageRsListTab? = null
@@ -401,7 +405,26 @@ internal class PagesRsListViewModel @Inject constructor(
     @MainThread
     fun refreshAllTabs() {
         restClient.clearCaches()
-        collections.keys.toList().forEach { tab ->
+        val tabs = collections.keys.toList()
+        if (!networkUtilsWrapper.isNetworkAvailable()) {
+            // Every tab would report the same connection failure, so record the failure on each
+            // and send one message for the whole fan-out. It has to be sent here rather than by
+            // a nominated tab: a tab only offers a snackbar when it has content to keep, so
+            // picking one that turned out to be empty would swallow the message entirely.
+            val anyTabKeepsItsPages = tabs.any { getTabUiState(it).pages.hasRealPages }
+            tabs.forEach { onRefreshFailed(it, e = null, showSnackbar = false) }
+            if (anyTabKeepsItsPages) {
+                _snackbarMessages.trySend(
+                    SnackbarMessage(
+                        message = friendlyErrorMessage(null),
+                        actionLabel = resourceProvider.getString(R.string.retry),
+                        onAction = { refreshAllTabs() }
+                    )
+                )
+            }
+            return
+        }
+        tabs.forEach { tab ->
             refreshTab(tab)
         }
     }
@@ -420,48 +443,89 @@ internal class PagesRsListViewModel @Inject constructor(
             userRefreshingTabs.add(tab)
             updateTabUiState(tab) { copy(isRefreshing = true, error = null) }
         } else {
-            updateTabUiState(tab) { copy(error = null) }
+            updateTabUiState(tab) {
+                copy(
+                    isLoading = RsTabLoading.onRefreshStarted(
+                        hasItems = pages.hasRealPages,
+                        hasFetched = tab in fetchedTabs
+                    ),
+                    error = null
+                )
+            }
+        }
+
+        // A refresh with no connection can only fail, so report it without the round trip.
+        if (!networkUtilsWrapper.isNetworkAvailable()) {
+            onRefreshFailed(tab, e = null, showSnackbar = isUserRefresh)
+            return
         }
 
         launchCollectionJob {
             @Suppress("TooGenericExceptionCaught")
             try {
                 withContext(Dispatchers.IO) { collection.refresh() }
+                fetchedTabs.add(tab)
+                userRefreshingTabs.remove(tab)
+                // Read the fetched items and end both progress states here rather than relying
+                // on the collection observers, which aren't guaranteed to fire for a refresh.
+                loadItemsForTab(tab)
+                updateTabUiState(tab) { copy(isLoading = false, isRefreshing = false) }
             } catch (e: CancellationException) {
                 throw e
             } catch (e: Exception) {
-                AppLog.e(AppLog.T.PAGES, "Failed to refresh tab $tab", e)
-                userRefreshingTabs.remove(tab)
-                val message = friendlyErrorMessage(e)
-                val authError = PostRsErrorUtils.isAuthError(e)
-                if (getTabUiState(tab).pages.isNotEmpty()) {
-                    updateTabUiState(tab) {
-                        copy(
-                            isLoading = false,
-                            isRefreshing = false,
-                            error = null,
-                            isAuthError = authError
-                        )
-                    }
-                    _snackbarMessages.trySend(
-                        SnackbarMessage(
-                            message = message,
-                            actionLabel = if (authError) null
-                                else resourceProvider.getString(R.string.retry),
-                            onAction = if (authError) null
-                                else ({ refreshTab(tab) })
-                        )
+                onRefreshFailed(tab, e, showSnackbar = isUserRefresh)
+            }
+        }
+    }
+
+    /**
+     * A tab that already has pages on screen keeps them and offers a retry snackbar; an empty
+     * one shows the full-screen error state instead.
+     *
+     * [e] is null when no request was made because the device is offline. The message is the same
+     * either way - [friendlyErrorMessage] reports the network error whenever the device is offline,
+     * regardless of what failed.
+     *
+     * [showSnackbar] is false when the user didn't ask for this refresh - [initTab] refreshes each
+     * tab as the pager settles on it, and interrupting someone browsing cached pages with an error
+     * they didn't provoke is noise. The full-screen error still covers a tab with nothing to show.
+     * It's also false when another tab is already reporting the same failure.
+     */
+    private fun onRefreshFailed(tab: PageRsListTab, e: Exception?, showSnackbar: Boolean = true) {
+        e?.let { AppLog.e(AppLog.T.PAGES, "Failed to refresh tab $tab", it) }
+        userRefreshingTabs.remove(tab)
+        val message = friendlyErrorMessage(e)
+        val authError = PostRsErrorUtils.isAuthError(e)
+        if (getTabUiState(tab).pages.hasRealPages) {
+            updateTabUiState(tab) {
+                copy(
+                    isLoading = false,
+                    isRefreshing = false,
+                    error = null,
+                    isAuthError = authError
+                )
+            }
+            if (showSnackbar) {
+                _snackbarMessages.trySend(
+                    SnackbarMessage(
+                        message = message,
+                        actionLabel = if (authError) null
+                            else resourceProvider.getString(R.string.retry),
+                        // Tapping retry is the user asking, so the result has to be reported -
+                        // a silent second failure looks like the button did nothing.
+                        onAction = if (authError) null
+                            else ({ refreshTab(tab, isUserRefresh = true) })
                     )
-                } else {
-                    updateTabUiState(tab) {
-                        copy(
-                            isLoading = false,
-                            isRefreshing = false,
-                            error = message,
-                            isAuthError = authError
-                        )
-                    }
-                }
+                )
+            }
+        } else {
+            updateTabUiState(tab) {
+                copy(
+                    isLoading = false,
+                    isRefreshing = false,
+                    error = message,
+                    isAuthError = authError
+                )
             }
         }
     }
@@ -1147,7 +1211,7 @@ internal class PagesRsListViewModel @Inject constructor(
     }
 
     private fun friendlyErrorMessage(
-        e: Exception,
+        e: Exception?,
         defaultResId: Int? = null,
     ): String = PostRsErrorUtils.friendlyErrorMessage(
         e, defaultResId, resourceProvider, networkUtilsWrapper
@@ -1182,14 +1246,12 @@ internal class PagesRsListViewModel @Inject constructor(
                 showSiteEditorHomepage = showSiteEditorHomepage
             ).map { row -> row.withMenuActions(currentSite) }
             updateTabUiState(tab) {
-                // Only clear the loading flag once we actually have rows. While the first page
-                // is still being fetched (e.g. a fresh search collection with no cache), rows is
-                // empty; keeping isLoading lets the shimmer show instead of flashing the
-                // "No matches" empty state. updateListInfoForTab() flips isLoading off once the
-                // fetch genuinely completes, at which point an empty result is real.
                 copy(
                     pages = rows,
-                    isLoading = isLoading && rows.isEmpty(),
+                    isLoading = RsTabLoading.onItemsLoaded(
+                        wasLoading = isLoading,
+                        hasItems = rows.hasRealPages
+                    ),
                     error = null,
                     isAuthError = false
                 )
@@ -1364,7 +1426,7 @@ internal class PagesRsListViewModel @Inject constructor(
         if (!fetchingFirstPage) userRefreshingTabs.remove(tab)
 
         val isError = listInfo?.state == ListState.ERROR
-        val hasPages = getTabUiState(tab).pages.isNotEmpty()
+        val hasPages = getTabUiState(tab).pages.hasRealPages
         val errorMessage = if (isError) {
             PostRsErrorUtils.friendlyErrorMessage(null, null, resourceProvider, networkUtilsWrapper)
         } else null
@@ -1385,7 +1447,12 @@ internal class PagesRsListViewModel @Inject constructor(
         } else {
             updateTabUiState(tab) {
                 copy(
-                    isLoading = isLoading && fetchingFirstPage,
+                    isLoading = RsTabLoading.onListInfoChanged(
+                        wasLoading = isLoading,
+                        isFetchingFirstPage = fetchingFirstPage,
+                        hasItems = pages.hasRealPages,
+                        hasFetched = tab in fetchedTabs
+                    ),
                     isRefreshing = isUserRefresh && fetchingFirstPage,
                     isLoadingMore = listInfo?.state == ListState.FETCHING_NEXT_PAGE,
                     canLoadMore = morePages,
@@ -1415,6 +1482,7 @@ internal class PagesRsListViewModel @Inject constructor(
         collections.clear()
         initializingTabs.clear()
         userRefreshingTabs.clear()
+        fetchedTabs.clear()
         resolveImageJobs.values.forEach { it.cancel() }
         resolveImageJobs.clear()
         resolveAuthorJobs.values.forEach { it.cancel() }

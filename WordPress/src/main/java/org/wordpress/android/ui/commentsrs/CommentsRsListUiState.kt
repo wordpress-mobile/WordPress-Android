@@ -26,7 +26,8 @@ data class CommentsTabUiState(
     val isRefreshing: Boolean = false,
     val isLoadingMore: Boolean = false,
     val canLoadMore: Boolean = false,
-    val error: String? = null
+    val error: String? = null,
+    val isAuthError: Boolean = false
 )
 
 /** A destructive batch [action] awaiting user confirmation, to be applied to [commentIds]. */
