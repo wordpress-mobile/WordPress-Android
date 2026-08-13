@@ -2,6 +2,9 @@ package org.wordpress.android.ui.jetpackoverlay
 
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseFour
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseNewUsers
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseSelfHostedUsers
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalSiteCreationPhase.PHASE_TWO
 import org.wordpress.android.ui.main.WPMainNavigationView.PageType
 import org.wordpress.android.util.BuildConfigWrapper
@@ -24,9 +27,9 @@ class JetpackFeatureRemovalPhaseHelper @Inject constructor(
 ) {
     fun getCurrentPhase(): JetpackFeatureRemovalPhase? {
         return if (buildConfigWrapper.isJetpackApp) null
-        else if (jetpackFeatureRemovalSelfHostedUsersConfig.isEnabled()) JetpackFeatureRemovalPhase.PhaseSelfHostedUsers
-        else if (jetpackFeatureRemovalNewUsersConfig.isEnabled()) JetpackFeatureRemovalPhase.PhaseNewUsers
-        else if (jetpackFeatureRemovalPhaseFourConfig.isEnabled()) JetpackFeatureRemovalPhase.PhaseFour
+        else if (jetpackFeatureRemovalSelfHostedUsersConfig.isEnabled()) PhaseSelfHostedUsers
+        else if (jetpackFeatureRemovalNewUsersConfig.isEnabled()) PhaseNewUsers
+        else if (jetpackFeatureRemovalPhaseFourConfig.isEnabled()) PhaseFour
         else null
     }
 

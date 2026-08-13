@@ -91,7 +91,6 @@ class ReaderViewModel @Inject constructor(
     private val _showJetpackPoweredBottomSheet = MutableLiveData<Event<Boolean>>()
     val showJetpackPoweredBottomSheet: LiveData<Event<Boolean>> = _showJetpackPoweredBottomSheet
 
-
     private var readerTagsList = ReaderTagList()
 
     init {

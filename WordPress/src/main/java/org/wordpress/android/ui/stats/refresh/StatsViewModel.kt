@@ -110,7 +110,6 @@ class StatsViewModel
     private val _showJetpackPoweredBottomSheet = MutableLiveData<Event<Boolean>>()
     val showJetpackPoweredBottomSheet: LiveData<Event<Boolean>> = _showJetpackPoweredBottomSheet
 
-
     fun start(intent: Intent, restart: Boolean = false) {
         val localSiteId = intent.getIntExtra(WordPress.LOCAL_SITE_ID, 0)
 

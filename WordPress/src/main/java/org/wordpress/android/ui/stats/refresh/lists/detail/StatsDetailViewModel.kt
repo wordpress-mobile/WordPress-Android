@@ -41,7 +41,6 @@ class StatsDetailViewModel
     )
     val showSnackbarMessage: LiveData<SnackbarMessageHolder> = _showSnackbarMessage
 
-
     fun init(
         postId: Long,
         postType: String,

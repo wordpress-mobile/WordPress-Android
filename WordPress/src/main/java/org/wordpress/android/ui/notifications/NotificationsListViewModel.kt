@@ -60,7 +60,6 @@ class NotificationsListViewModel @Inject constructor(
     private val _showJetpackPoweredBottomSheet = MutableLiveData<Event<Boolean>>()
     val showJetpackPoweredBottomSheet: LiveData<Event<Boolean>> = _showJetpackPoweredBottomSheet
 
-
     private val _updatedNote = MutableLiveData<Note>()
     val updatedNote: LiveData<Note> = _updatedNote
 

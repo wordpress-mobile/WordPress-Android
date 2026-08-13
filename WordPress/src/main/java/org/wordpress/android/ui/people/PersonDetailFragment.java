@@ -141,7 +141,6 @@ public class PersonDetailFragment extends Fragment {
             setHasOptionsMenu(true);
         }
 
-
         return rootView;
     }
 
