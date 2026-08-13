@@ -802,8 +802,10 @@ class PostRsListViewModel @Inject constructor(
                         message = message,
                         actionLabel = if (authError) null
                             else resourceProvider.getString(R.string.retry),
+                        // Tapping retry is the user asking, so the result has to be reported -
+                        // a silent second failure looks like the button did nothing.
                         onAction = if (authError) null
-                            else ({ refreshTab(tab) })
+                            else ({ refreshTab(tab, isUserRefresh = true) })
                     )
                 )
             }
@@ -1007,8 +1009,9 @@ class PostRsListViewModel @Inject constructor(
                     message = errorMessage.orEmpty(),
                     actionLabel = if (authError) null
                         else resourceProvider.getString(R.string.retry),
+                    // As above: the user asked, so a second failure has to be reported.
                     onAction = if (authError) null
-                        else ({ refreshTab(tab) })
+                        else ({ refreshTab(tab, isUserRefresh = true) })
                 )
             )
         } else {
