@@ -11,7 +11,6 @@ import android.os.Bundle
 import android.view.View
 import android.view.View.OnClickListener
 import androidx.annotation.StringRes
-import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.collectAsState
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -166,8 +165,9 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
     private fun MeFragmentBinding.setupViews() {
         // MeActivity hosts this fragment on its own, so it needs a toolbar; inside the bottom
         // navigation's pager the host activity already provides one.
-        if (requireActivity() is MeActivity) {
-            with(requireActivity() as AppCompatActivity) {
+        val meActivity = activity as? MeActivity
+        if (meActivity != null) {
+            with(meActivity) {
                 setSupportActionBar(toolbarMain)
                 supportActionBar?.apply {
                     setHomeButtonEnabled(true)

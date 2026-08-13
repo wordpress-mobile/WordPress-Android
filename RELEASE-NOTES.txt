@@ -1,9 +1,5 @@
 *** PLEASE FOLLOW THIS FORMAT: [<priority indicator, more stars = higher priority>] <description> [<PR URL>]
 
-27.1
------
-* [**] Fixed the Me screen being unreachable in the WordPress app after signing in to a self-hosted site with an application password.
-
 27.0
 -----
 * [*] You can now browse Google Photos (albums, collections, and search) when adding photos or videos from your device.

@@ -199,6 +199,11 @@ class SiteListItemBuilder @Inject constructor(
      * The Me item replaces the bottom navigation's Me tab when that nav is hidden, so it's gated on
      * exactly the same condition WPMainActivity uses to hide it. Me is account-level, so site
      * capabilities deliberately play no part here.
+     *
+     * There's no explicit Jetpack app check because there doesn't need to be one:
+     * [JetpackFeatureRemovalPhaseHelper.getCurrentPhase] returns null for the Jetpack app, so
+     * [JetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures] is always false there and the
+     * item is never built.
      */
     fun buildMeItemIfAvailable(onClick: (ListItemAction) -> Unit): ListItem? {
         return if (jetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures()) {
