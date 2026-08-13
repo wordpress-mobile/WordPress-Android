@@ -12,8 +12,6 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.StatsDetailFragmentBinding
 import org.wordpress.android.models.JetpackPoweredScreen
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureFullScreenOverlayFragment
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil
 import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredBottomSheetFragment
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
@@ -21,7 +19,6 @@ import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.JetpackBrandingUtils
 import org.wordpress.android.util.WPSwipeToRefreshHelper
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
-import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -53,7 +50,7 @@ class StatsDetailFragment : Fragment(R.layout.stats_detail_fragment) {
                     it.setDisplayHomeAsUpEnabled(true)
                 }
             }
-            initializeViewModels(nonNullActivity, savedInstanceState == null)
+            initializeViewModels(nonNullActivity)
             initializeViews()
             initJetpackBanner()
         }
@@ -91,7 +88,7 @@ class StatsDetailFragment : Fragment(R.layout.stats_detail_fragment) {
         }
     }
 
-    private fun initializeViewModels(activity: FragmentActivity,  isFirstStart: Boolean) {
+    private fun initializeViewModels(activity: FragmentActivity) {
         val siteId = activity.intent?.getIntExtra(WordPress.LOCAL_SITE_ID, 0) ?: 0
         statsSiteProvider.start(siteId)
 
@@ -109,10 +106,10 @@ class StatsDetailFragment : Fragment(R.layout.stats_detail_fragment) {
             postUrl
         )
 
-        setupObservers(viewModel, isFirstStart)
+        setupObservers(viewModel)
     }
 
-    private fun setupObservers(viewModel: StatsDetailViewModel, isFirstStart: Boolean) {
+    private fun setupObservers(viewModel: StatsDetailViewModel) {
         viewModel.isRefreshing.observe(viewLifecycleOwner) {
             it?.let { isRefreshing ->
                 swipeToRefreshHelper.isRefreshing = isRefreshing

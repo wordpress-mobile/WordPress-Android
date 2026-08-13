@@ -38,7 +38,6 @@ sealed class UiItem(open val type: DebugSettingsType) {
         )
 
         enum class State { ENABLED, DISABLED, UNKNOWN }
-
     }
 
     data class Field(val remoteFieldKey: String, val remoteFieldValue: String, val remoteFieldSource: String) :

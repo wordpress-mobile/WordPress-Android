@@ -9,7 +9,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 import com.google.android.material.tabs.TabLayout.Tab
@@ -153,5 +152,4 @@ class ScanHistoryFragment : Fragment(R.layout.scan_history_fragment), MenuProvid
     override fun onScrollableViewInitialized(containerId: Int) {
         binding?.appbarMain?.liftOnScrollTargetViewId = containerId
     }
-
 }

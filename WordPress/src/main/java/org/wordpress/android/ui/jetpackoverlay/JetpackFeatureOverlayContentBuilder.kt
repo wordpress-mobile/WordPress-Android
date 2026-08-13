@@ -100,5 +100,4 @@ class JetpackFeatureOverlayContentBuilder @Inject constructor() {
         primaryButtonText = R.string.wp_jetpack_feature_removal_overlay_switch_to_the_jetpack_app,
         secondaryButtonText = R.string.wp_jetpack_feature_removal_overlay_continue_without_jetpack
     )
-
 }

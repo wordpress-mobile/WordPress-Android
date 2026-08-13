@@ -5,7 +5,6 @@ import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.ui.blaze.BlazeFeatureUtils
 import org.wordpress.android.ui.blaze.BlazeFlowSource
 import org.wordpress.android.ui.blaze.blazecampaigns.campaignlisting.CampaignListingPageSource
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
 import org.wordpress.android.ui.mysite.SiteNavigationAction
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction
 import org.wordpress.android.ui.newstats.NewStatsRouting
@@ -13,7 +12,6 @@ import javax.inject.Inject
 
 class ListItemActionHandler @Inject constructor(
     private val accountStore: AccountStore,
-    private val jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper,
     private val blazeFeatureUtils: BlazeFeatureUtils,
     private val newStatsRouting: NewStatsRouting
 ) {

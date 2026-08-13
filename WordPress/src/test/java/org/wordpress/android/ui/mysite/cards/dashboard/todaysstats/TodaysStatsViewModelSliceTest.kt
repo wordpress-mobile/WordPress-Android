@@ -12,7 +12,6 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
 import org.wordpress.android.ui.mysite.MySiteCardAndItem
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.SiteNavigationAction
@@ -28,9 +27,6 @@ class TodaysStatsViewModelSliceTest : BaseUnitTest() {
 
     @Mock
     lateinit var selectedSiteRepository: SelectedSiteRepository
-
-    @Mock
-    lateinit var jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper
 
     @Mock
     lateinit var appPrefsWrapper: AppPrefsWrapper
@@ -54,7 +50,6 @@ class TodaysStatsViewModelSliceTest : BaseUnitTest() {
         todaysStatsViewModelSlice = TodaysStatsViewModelSlice(
             cardsTracker,
             selectedSiteRepository,
-            jetpackFeatureRemovalPhaseHelper,
             appPrefsWrapper,
             todaysStatsCardBuilder,
             newStatsRouting
