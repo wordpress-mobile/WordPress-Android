@@ -9,7 +9,6 @@ Language: zh_CN
     <string name="support_screen_unified_support_description">随时向我们的支持团队寻求解答</string>
     <string name="support_screen_unified_support_title">获取帮助</string>
     <string name="unified_support_attachment_match_score">%1$d%% 匹配</string>
-    <string name="unified_support_status_bot">Oddie 机器人</string>
     <string name="unified_support_bot_typing_content_description">支持机器人正在输入</string>
     <string name="unified_support_message_input_placeholder">输入消息…</string>
     <string name="unified_support_conversations_title">获取帮助</string>

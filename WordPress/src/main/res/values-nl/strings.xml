@@ -9,7 +9,6 @@ Language: nl
     <string name="support_screen_unified_support_description">Je kunt altijd antwoorden krijgen van ons ondersteuningsteam</string>
     <string name="support_screen_unified_support_title">Krijg hulp</string>
     <string name="unified_support_attachment_match_score">%1$d%% overeenkomst</string>
-    <string name="unified_support_status_bot">Oddie bot</string>
     <string name="unified_support_bot_typing_content_description">De ondersteuningsbot is aan het typen</string>
     <string name="unified_support_message_input_placeholder">Typ een bericht in…</string>
     <string name="unified_support_conversations_title">Krijg hulp</string>
