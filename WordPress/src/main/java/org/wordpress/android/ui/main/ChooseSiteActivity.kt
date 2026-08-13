@@ -323,14 +323,24 @@ class ChooseSiteActivity : BaseAppCompatActivity() {
             menuEditPin.isVisible = true
             // hide the FAB while editing pins, otherwise reveal it
             if (adapter.mode == ActionMode.Pin) {
-                binding.fabAddSite.hide()
+                hideAddSiteFab()
             } else {
                 showAddSiteFab()
             }
         } else {
             menuEditPin.isVisible = false
-            binding.fabAddSite.hide()
+            hideAddSiteFab()
         }
+    }
+
+    /**
+     * The FAB is the only way to dismiss its own menu apart from the scrim, so the menu has to come
+     * down with it. An open menu left behind would keep the scrim up and, now that the views behind
+     * it are marked inert, hide the toolbar and site list from screen readers with no way back.
+     */
+    private fun hideAddSiteFab() {
+        closeAddSiteMenu()
+        binding.fabAddSite.hide()
     }
 
     private fun showAddSiteFab() {
@@ -353,8 +363,7 @@ class ChooseSiteActivity : BaseAppCompatActivity() {
         searchView.maxWidth = Integer.MAX_VALUE
         menuSearch.setOnActionExpandListener(object : MenuItem.OnActionExpandListener {
             override fun onMenuItemActionExpand(item: MenuItem): Boolean {
-                closeAddSiteMenu()
-                binding.fabAddSite.hide()
+                hideAddSiteFab()
                 searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
                     override fun onQueryTextSubmit(query: String): Boolean {
                         if (!DeviceUtils.getInstance().hasHardwareKeyboard(this@ChooseSiteActivity)) {
@@ -425,8 +434,7 @@ class ChooseSiteActivity : BaseAppCompatActivity() {
         menuEditPin.setIcon(null)
         menuEditPin.title = getString(R.string.label_done_button)
         adapter.setActionMode(ActionMode.Pin)
-        closeAddSiteMenu()
-        binding.fabAddSite.hide()
+        hideAddSiteFab()
     }
 
     /**
