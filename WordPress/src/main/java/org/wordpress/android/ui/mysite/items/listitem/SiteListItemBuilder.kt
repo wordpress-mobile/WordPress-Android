@@ -201,7 +201,8 @@ class SiteListItemBuilder @Inject constructor(
      * capabilities deliberately play no part here.
      *
      * No explicit Jetpack app check is needed: [JetpackFeatureRemovalPhaseHelper.getCurrentPhase]
-     * returns null there, so [shouldRemoveJetpackFeatures] is always false and the item never builds.
+     * returns null there, so [JetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures] is
+     * always false and the item never builds.
      */
     fun buildMeItemIfAvailable(onClick: (ListItemAction) -> Unit): ListItem? {
         return if (jetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures()) {
