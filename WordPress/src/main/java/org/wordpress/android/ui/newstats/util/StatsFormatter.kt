@@ -43,7 +43,9 @@ fun formatEmailStat(value: Long): String {
 
 /**
  * Converts a StatsPeriod to a human-readable date range string. Custom ranges are formatted by the
- * shared [formatCustomDateRange] so this and the Traffic top-bar label never diverge.
+ * shared [formatCustomDateRange] (the compact, single-line, year-less form used on the detail-card
+ * subtitles). The Traffic top-bar selector instead uses the richer two-line [formatCustomDateRangeTwoLine]
+ * so it can show the year, so the two intentionally differ.
  */
 fun StatsPeriod.toDateRangeString(resourceProvider: ResourceProvider): String {
     return when (this) {
@@ -78,4 +80,49 @@ fun formatCustomDateRange(startDate: LocalDate, endDate: LocalDate): String {
             "${startDate.format(dayFormat)}-${endDate.format(dayMonthFormat)}"
         else -> "${startDate.format(dayMonthFormat)} - ${endDate.format(dayMonthFormat)}"
     }
+}
+
+/**
+ * One rendered line of a two-line date-range label. [Split] carries the two endpoints separately so
+ * the UI can align both lines on the "-" separator; [Single] is a standalone line (a single day, a
+ * within-a-month day span, or a single year) with nothing to align, so it is centered.
+ */
+sealed interface RangeLine {
+    data class Single(val text: String) : RangeLine
+    data class Split(val start: String, val end: String) : RangeLine
+}
+
+/**
+ * The Traffic top-bar selector's label for a Custom range, split across two lines so the full range
+ * (including the year) fits the cramped app-bar width: [primary] is the day-month range, [secondary]
+ * the year(s). Kept structured (rather than pre-joined) so the selector can align both lines on the
+ * "-" — see [RangeLine].
+ *
+ * [secondary] is null — so the label collapses to a single line — when the whole range falls within
+ * [currentYear], since the year adds nothing there. A range in a different (past) year shows that
+ * single year; a range that crosses years always shows both, even when one of them is the current
+ * year, because both are needed to read the span. [secondary] is likewise null for preset periods,
+ * which render as a single line.
+ *
+ * Formatters are built per call to honour the current [Locale.getDefault], matching
+ * [formatCustomDateRange]; caching them trips Android Lint's ConstantLocale check.
+ */
+data class DateRangeLabel(val primary: RangeLine, val secondary: RangeLine?)
+
+fun formatCustomDateRangeTwoLine(startDate: LocalDate, endDate: LocalDate, currentYear: Int): DateRangeLabel {
+    val dayFormat = DateTimeFormatter.ofPattern("d", Locale.getDefault())
+    val dayMonthFormat = DateTimeFormatter.ofPattern("d MMM", Locale.getDefault())
+    val sameYear = startDate.year == endDate.year
+    val primary = when {
+        startDate == endDate -> RangeLine.Single(startDate.format(dayMonthFormat))
+        startDate.month == endDate.month && sameYear ->
+            RangeLine.Single("${startDate.format(dayFormat)}-${endDate.format(dayMonthFormat)}")
+        else -> RangeLine.Split(startDate.format(dayMonthFormat), endDate.format(dayMonthFormat))
+    }
+    val secondary = when {
+        sameYear && startDate.year == currentYear -> null
+        sameYear -> RangeLine.Single("${startDate.year}")
+        else -> RangeLine.Split("${startDate.year}", "${endDate.year}")
+    }
+    return DateRangeLabel(primary, secondary)
 }

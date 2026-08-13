@@ -726,7 +726,7 @@ class ViewsStatsViewModel @Inject constructor(
 
     private fun formatSingleDayRange(date: String): String {
         val parsedDate = parsePeriodDate(date) ?: return date
-        return parsedDate.format(DateTimeFormatter.ofPattern("d MMM", Locale.getDefault()))
+        return parsedDate.format(DateTimeFormatter.ofPattern("d MMM yyyy", Locale.getDefault()))
     }
 
     @Suppress("ReturnCount")
@@ -742,11 +742,14 @@ class ViewsStatsViewModel @Inject constructor(
         val start = parsePeriodDate(startDate) ?: return "$startDate - $endDate"
         val end = parsePeriodDate(endDate) ?: return "$startDate - $endDate"
         val monthFormat = DateTimeFormatter.ofPattern("MMM", Locale.getDefault())
+        val monthYearFormat = DateTimeFormatter.ofPattern("MMM yyyy", Locale.getDefault())
 
-        return if (start.month == end.month && start.year == end.year) {
-            start.format(monthFormat)
-        } else {
-            "${start.format(monthFormat)} - ${end.format(monthFormat)}"
+        return when {
+            start.month == end.month && start.year == end.year -> start.format(monthYearFormat)
+            // Same year: show the year once, on the trailing month ("Jan - Jun 2024").
+            start.year == end.year -> "${start.format(monthFormat)} - ${end.format(monthYearFormat)}"
+            // Cross-year span: show the year on both ends ("Dec 2024 - Jan 2025").
+            else -> "${start.format(monthYearFormat)} - ${end.format(monthYearFormat)}"
         }
     }
 
@@ -756,11 +759,18 @@ class ViewsStatsViewModel @Inject constructor(
         val end = parsePeriodDate(endDate) ?: return "$startDate - $endDate"
         val dayFormat = DateTimeFormatter.ofPattern("d", Locale.getDefault())
         val dayMonthFormat = DateTimeFormatter.ofPattern("d MMM", Locale.getDefault())
+        val dayMonthYearFormat = DateTimeFormatter.ofPattern("d MMM yyyy", Locale.getDefault())
 
-        return if (start.month == end.month) {
-            "${start.format(dayFormat)}-${end.format(dayMonthFormat)}"
-        } else {
-            "${start.format(dayMonthFormat)} - ${end.format(dayMonthFormat)}"
+        return when {
+            // Same month and year: show the year once, on the trailing date ("14-20 Jan 2024").
+            start.month == end.month && start.year == end.year ->
+                "${start.format(dayFormat)}-${end.format(dayMonthYearFormat)}"
+            // Same year, different month: show the year once, on the trailing date ("28 Jul - 3 Aug 2024").
+            start.year == end.year ->
+                "${start.format(dayMonthFormat)} - ${end.format(dayMonthYearFormat)}"
+            // Cross-year span: show the year on both ends ("28 Dec 2024 - 3 Jan 2025").
+            else ->
+                "${start.format(dayMonthYearFormat)} - ${end.format(dayMonthYearFormat)}"
         }
     }
 

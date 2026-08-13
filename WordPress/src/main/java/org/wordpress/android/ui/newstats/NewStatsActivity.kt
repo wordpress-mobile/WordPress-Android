@@ -56,11 +56,16 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -121,8 +126,10 @@ import org.wordpress.android.ui.newstats.tagsandcategories.TagsAndCategoriesDeta
 import org.wordpress.android.ui.newstats.tagsandcategories.TagsAndCategoriesViewModel
 import org.wordpress.android.ui.newstats.yearinreview.YearInReviewDetailActivity
 import org.wordpress.android.ui.newstats.yearinreview.YearInReviewViewModel
+import org.wordpress.android.ui.newstats.util.DateRangeLabel
 import org.wordpress.android.ui.newstats.util.ProvideShimmerBrush
-import org.wordpress.android.ui.newstats.util.formatCustomDateRange
+import org.wordpress.android.ui.newstats.util.RangeLine
+import org.wordpress.android.ui.newstats.util.formatCustomDateRangeTwoLine
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.newstats.components.NewStatsIntroBottomSheet
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
@@ -132,6 +139,7 @@ import org.wordpress.android.ui.stats.refresh.utils.trackStatsAccessed
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import java.time.Year
 import javax.inject.Inject
 
 // Opacity of a navigation control (forward at the present edge, back at the year floor) when it is
@@ -439,13 +447,9 @@ private fun NewStatsScreen(
                                         }
                                         .padding(horizontal = 8.dp)
                                 ) {
-                                    Text(
-                                        text = selectedPeriod
-                                            .getDisplayLabel(),
-                                        style = MaterialTheme
-                                            .typography.labelLarge,
-                                        color = MaterialTheme
-                                            .colorScheme.onSurface
+                                    PeriodLabel(
+                                        label = selectedPeriod
+                                            .getDisplayLabel()
                                     )
                                     Icon(
                                         imageVector =
@@ -1457,11 +1461,102 @@ private fun StatsPeriodMenu(
 }
 
 @Composable
-private fun StatsPeriod.getDisplayLabel(): String {
+private fun StatsPeriod.getDisplayLabel(): DateRangeLabel {
     return when (this) {
-        is StatsPeriod.Custom -> formatCustomDateRange(startDate, endDate)
-        else -> stringResource(id = labelResId)
+        is StatsPeriod.Custom -> formatCustomDateRangeTwoLine(startDate, endDate, Year.now().value)
+        else -> DateRangeLabel(RangeLine.Single(stringResource(id = labelResId)), null)
     }
+}
+
+/**
+ * Renders the top-bar period label. Preset periods (and any single-line label) show one line; a
+ * Custom range shows the day-month range over the year(s), with the two lines aligned on their "-"
+ * separators so the range reads as a column. See [DateRangeLabel] / [RangeLine].
+ */
+@Composable
+private fun PeriodLabel(label: DateRangeLabel) {
+    val secondary = label.secondary
+    if (secondary == null) {
+        // Single line (preset period, or a Custom range whose year is hidden). A Split renders
+        // inline here since there is no second line to align its "-" against.
+        SingleRangeLine(
+            line = label.primary,
+            style = MaterialTheme.typography.labelLarge,
+            color = MaterialTheme.colorScheme.onSurface
+        )
+        return
+    }
+
+    val primaryStyle = MaterialTheme.typography.labelLarge
+    val secondaryStyle = MaterialTheme.typography.labelSmall
+    val measurer = rememberTextMeasurer()
+    val density = LocalDensity.current
+
+    // Only split lines have a "-" to align; give their start/end segments a shared column width
+    // (the max across both lines) so the separators land at the same x on both rows.
+    val primarySplit = label.primary as? RangeLine.Split
+    val secondarySplit = secondary as? RangeLine.Split
+    val leftWidth = with(density) {
+        maxOf(
+            primarySplit?.let { measurer.measure(it.start, primaryStyle).size.width } ?: 0,
+            secondarySplit?.let { measurer.measure(it.start, secondaryStyle).size.width } ?: 0
+        ).toDp()
+    }
+    val rightWidth = with(density) {
+        maxOf(
+            primarySplit?.let { measurer.measure(it.end, primaryStyle).size.width } ?: 0,
+            secondarySplit?.let { measurer.measure(it.end, secondaryStyle).size.width } ?: 0
+        ).toDp()
+    }
+
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        RangeLineRow(
+            line = label.primary,
+            style = primaryStyle,
+            color = MaterialTheme.colorScheme.onSurface,
+            leftWidth = leftWidth,
+            rightWidth = rightWidth
+        )
+        RangeLineRow(
+            line = secondary,
+            style = secondaryStyle,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            leftWidth = leftWidth,
+            rightWidth = rightWidth
+        )
+    }
+}
+
+@Composable
+private fun RangeLineRow(
+    line: RangeLine,
+    style: TextStyle,
+    color: Color,
+    leftWidth: Dp,
+    rightWidth: Dp
+) {
+    when (line) {
+        is RangeLine.Single -> Text(text = line.text, style = style, color = color, maxLines = 1)
+        is RangeLine.Split -> Row(verticalAlignment = Alignment.CenterVertically) {
+            Box(modifier = Modifier.width(leftWidth), contentAlignment = Alignment.CenterEnd) {
+                Text(text = line.start, style = style, color = color, maxLines = 1)
+            }
+            Text(text = " - ", style = style, color = color, maxLines = 1)
+            Box(modifier = Modifier.width(rightWidth), contentAlignment = Alignment.CenterStart) {
+                Text(text = line.end, style = style, color = color, maxLines = 1)
+            }
+        }
+    }
+}
+
+/** A range rendered on one line, with no cross-line "-" alignment: a Split becomes "start - end". */
+@Composable
+private fun SingleRangeLine(line: RangeLine, style: TextStyle, color: Color) {
+    val text = when (line) {
+        is RangeLine.Single -> line.text
+        is RangeLine.Split -> "${line.start} - ${line.end}"
+    }
+    Text(text = text, style = style, color = color, maxLines = 1)
 }
 
 private fun buildOpenWpAdminAction(
