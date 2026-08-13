@@ -15,9 +15,11 @@ import uniffi.wp_api.CommentWithEditContext
 import uniffi.wp_api.CommentWithViewContext
 import uniffi.wp_api.PostEndpointType
 import uniffi.wp_api.PostListParams
+import uniffi.wp_api.RequestExecutionErrorReason
 import uniffi.wp_api.SparseAnyPostFieldWithViewContext
 import uniffi.wp_api.UniffiWpApiClient
 import uniffi.wp_api.UserAvatarSize
+import uniffi.wp_api.WpErrorCode
 import uniffi.wp_api.WpApiParamCommentsOrderBy
 import uniffi.wp_api.WpApiParamOrder
 import java.util.Date
@@ -79,7 +81,17 @@ class CommentsRsDataSource @Inject constructor(
             val nextPageParams: CommentListParams?
         ) : RsCommentsPageResult
 
-        data class Error(val message: String?) : RsCommentsPageResult
+        /**
+         * [reason] is set when the request failed before a response came back (offline, DNS,
+         * TLS, rejected credentials); [errorCode] when the server answered with a WP error
+         * envelope. Together they let the caller classify the failure the same way the post and
+         * page lists do from a thrown exception - a rejected credential can arrive either way.
+         */
+        data class Error(
+            val message: String?,
+            val reason: RequestExecutionErrorReason? = null,
+            val errorCode: WpErrorCode? = null
+        ) : RsCommentsPageResult
     }
 
     suspend fun getComment(site: SiteModel, commentId: Long): RsComment? = safe(errorValue = null) {
@@ -124,7 +136,9 @@ class CommentsRsDataSource @Inject constructor(
                     comments = result.response.data.map { it.toRsComment() },
                     nextPageParams = result.response.nextPageParams
                 )
-                is WpRequestResult.WpError -> RsCommentsPageResult.Error(result.errorMessage)
+                is WpRequestResult.WpError ->
+                    RsCommentsPageResult.Error(result.errorMessage, errorCode = result.errorCode)
+                is WpRequestResult.RequestExecutionFailed -> RsCommentsPageResult.Error(null, result.reason)
                 else -> RsCommentsPageResult.Error(null)
             }
         }

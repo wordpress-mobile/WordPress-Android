@@ -9,7 +9,6 @@ Language: ja_JP
     <string name="support_screen_unified_support_description">いつでもサポートチームから回答を得られます</string>
     <string name="support_screen_unified_support_title">ヘルプ</string>
     <string name="unified_support_attachment_match_score">%1$d%% 一致</string>
-    <string name="unified_support_status_bot">Oddie ボット</string>
     <string name="unified_support_bot_typing_content_description">サポートボットが入力中</string>
     <string name="unified_support_message_input_placeholder">メッセージを入力…</string>
     <string name="unified_support_conversations_title">ヘルプ</string>

@@ -9,7 +9,6 @@ Language: en_GB
     <string name="support_screen_unified_support_description">Get answers from our support team, anytime</string>
     <string name="support_screen_unified_support_title">Get help</string>
     <string name="unified_support_attachment_match_score">%1$d%% match</string>
-    <string name="unified_support_status_bot">Oddie bot</string>
     <string name="unified_support_bot_typing_content_description">Support bot is typing</string>
     <string name="unified_support_message_input_placeholder">Type a message…</string>
     <string name="unified_support_conversations_title">Get help</string>
