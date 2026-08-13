@@ -58,15 +58,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -1475,89 +1472,55 @@ private fun StatsPeriod.getDisplayLabel(): DateRangeLabel {
 
 /**
  * Renders the top-bar period label. Preset periods (and any single-line label) show one line; a
- * Custom range shows the day-month range over the year(s), with the two lines aligned on their "-"
- * separators so the range reads as a column. See [DateRangeLabel] / [RangeLine].
+ * Custom range shows the day-month range over the year(s). When both lines are a start–end range
+ * (a cross-year span), the two "-" separators sit in their own centre column so they line up as a
+ * column regardless of the two text styles' widths — no text measuring needed. See [DateRangeLabel].
  */
 @Composable
 private fun PeriodLabel(label: DateRangeLabel) {
+    val primaryStyle = MaterialTheme.typography.labelLarge
+    val secondaryStyle = MaterialTheme.typography.labelSmall
+    val primaryColor = MaterialTheme.colorScheme.onSurface
+    val secondaryColor = MaterialTheme.colorScheme.onSurfaceVariant
+
     val secondary = label.secondary
     if (secondary == null) {
         // Single line (preset period, or a Custom range whose year is hidden). A Split renders
         // inline here since there is no second line to align its "-" against.
-        SingleRangeLine(
-            line = label.primary,
-            style = MaterialTheme.typography.labelLarge,
-            color = MaterialTheme.colorScheme.onSurface
-        )
+        SingleRangeLine(line = label.primary, style = primaryStyle, color = primaryColor)
         return
-    }
-
-    val primaryStyle = MaterialTheme.typography.labelLarge
-    val secondaryStyle = MaterialTheme.typography.labelSmall
-    val measurer = rememberTextMeasurer()
-    val density = LocalDensity.current
-
-    // Only split lines have a "-" to align; give their start/end segments a shared column width
-    // (the max across both lines) so the separators land at the same x on both rows. Memoized so
-    // the text measurement doesn't re-run on every recomposition of the app bar.
-    val primarySplit = label.primary as? RangeLine.Split
-    val secondarySplit = secondary as? RangeLine.Split
-    val (leftWidth, rightWidth) = remember(label, primaryStyle, secondaryStyle, density) {
-        with(density) {
-            val left = maxOf(
-                primarySplit?.let { measurer.measure(it.start, primaryStyle).size.width } ?: 0,
-                secondarySplit?.let { measurer.measure(it.start, secondaryStyle).size.width } ?: 0
-            ).toDp()
-            val right = maxOf(
-                primarySplit?.let { measurer.measure(it.end, primaryStyle).size.width } ?: 0,
-                secondarySplit?.let { measurer.measure(it.end, secondaryStyle).size.width } ?: 0
-            ).toDp()
-            left to right
-        }
     }
 
     val rangeDescription = label.toContentDescription(
         stringResource(R.string.stats_traffic_date_range_content_description)
     )
+    val primary = label.primary
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier.clearAndSetSemantics { contentDescription = rangeDescription }
     ) {
-        RangeLineRow(
-            line = label.primary,
-            style = primaryStyle,
-            color = MaterialTheme.colorScheme.onSurface,
-            leftWidth = leftWidth,
-            rightWidth = rightWidth
-        )
-        RangeLineRow(
-            line = secondary,
-            style = secondaryStyle,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-            leftWidth = leftWidth,
-            rightWidth = rightWidth
-        )
-    }
-}
-
-@Composable
-private fun RangeLineRow(
-    line: RangeLine,
-    style: TextStyle,
-    color: Color,
-    leftWidth: Dp,
-    rightWidth: Dp
-) {
-    when (line) {
-        is RangeLine.Single -> Text(text = line.text, style = style, color = color, maxLines = 1)
-        is RangeLine.Split -> Row(verticalAlignment = Alignment.CenterVertically) {
-            Box(modifier = Modifier.width(leftWidth), contentAlignment = Alignment.CenterEnd) {
-                Text(text = line.start, style = style, color = color, maxLines = 1)
+        if (primary is RangeLine.Split && secondary is RangeLine.Split) {
+            // The only case with a "-" on both lines (a cross-year span). Put the separators in
+            // their own centre column so they align on every row; the start/end columns hug it.
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Column(horizontalAlignment = Alignment.End) {
+                    Text(primary.start, style = primaryStyle, color = primaryColor, maxLines = 1)
+                    Text(secondary.start, style = secondaryStyle, color = secondaryColor, maxLines = 1)
+                }
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Text(text = " - ", style = primaryStyle, color = primaryColor, maxLines = 1)
+                    Text(text = " - ", style = secondaryStyle, color = secondaryColor, maxLines = 1)
+                }
+                Column(horizontalAlignment = Alignment.Start) {
+                    Text(primary.end, style = primaryStyle, color = primaryColor, maxLines = 1)
+                    Text(secondary.end, style = secondaryStyle, color = secondaryColor, maxLines = 1)
+                }
             }
-            Text(text = " - ", style = style, color = color, maxLines = 1)
-            Box(modifier = Modifier.width(rightWidth), contentAlignment = Alignment.CenterStart) {
-                Text(text = line.end, style = style, color = color, maxLines = 1)
-            }
+        } else {
+            // No "-" shared across the two lines (a Split range over a single year, or two Single
+            // lines): a plain centred column of the two lines.
+            SingleRangeLine(line = primary, style = primaryStyle, color = primaryColor)
+            SingleRangeLine(line = secondary, style = secondaryStyle, color = secondaryColor)
         }
     }
 }
