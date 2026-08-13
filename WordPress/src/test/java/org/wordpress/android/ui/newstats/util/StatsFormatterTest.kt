@@ -1,9 +1,61 @@
 package org.wordpress.android.ui.newstats.util
 
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.After
+import org.junit.Before
 import org.junit.Test
+import org.mockito.kotlin.mock
+import org.wordpress.android.ui.newstats.StatsPeriod
+import org.wordpress.android.viewmodel.ResourceProvider
+import java.time.LocalDate
+import java.util.Locale
 
 class StatsFormatterTest {
+    private val resourceProvider = mock<ResourceProvider>()
+    private lateinit var originalLocale: Locale
+
+    @Before
+    fun setUp() {
+        // toDateRangeString formats months with Locale.getDefault(), so the "Jul"/"Aug"/... month
+        // abbreviations these tests assert are locale-sensitive. Pin the locale for determinism, and
+        // restore it in tearDown so this global mutation doesn't leak into other tests in the runner.
+        originalLocale = Locale.getDefault()
+        Locale.setDefault(Locale.US)
+    }
+
+    @After
+    fun tearDown() {
+        Locale.setDefault(originalLocale)
+    }
+
+    @Test
+    fun `toDateRangeString for a single-day range renders one date`() {
+        val period = StatsPeriod.Custom(LocalDate.of(2026, 8, 11), LocalDate.of(2026, 8, 11))
+
+        assertThat(period.toDateRangeString(resourceProvider)).isEqualTo("11 Aug")
+    }
+
+    @Test
+    fun `toDateRangeString within one month renders shared month`() {
+        val period = StatsPeriod.Custom(LocalDate.of(2026, 7, 28), LocalDate.of(2026, 7, 30))
+
+        assertThat(period.toDateRangeString(resourceProvider)).isEqualTo("28-30 Jul")
+    }
+
+    @Test
+    fun `toDateRangeString across a month boundary renders month on both ends`() {
+        val period = StatsPeriod.Custom(LocalDate.of(2026, 7, 28), LocalDate.of(2026, 8, 3))
+
+        assertThat(period.toDateRangeString(resourceProvider)).isEqualTo("28 Jul - 3 Aug")
+    }
+
+    @Test
+    fun `toDateRangeString across a year boundary renders month on both ends`() {
+        val period = StatsPeriod.Custom(LocalDate.of(2025, 12, 30), LocalDate.of(2026, 1, 2))
+
+        assertThat(period.toDateRangeString(resourceProvider)).isEqualTo("30 Dec - 2 Jan")
+    }
+
     @Test
     fun `formatStatValue Long below 1000 returns raw number`() {
         assertThat(formatStatValue(500L)).isEqualTo("500")

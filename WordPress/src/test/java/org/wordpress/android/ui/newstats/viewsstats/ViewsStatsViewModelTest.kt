@@ -10,6 +10,7 @@ import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.any
 import org.mockito.kotlin.doSuspendableAnswer
+import org.mockito.kotlin.never
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
@@ -957,6 +958,65 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
         assertThat(ChartType.fromStorageKey(null)).isNull()
     }
 
+    // endregion
+
+    // region navigation
+    @Test
+    fun `onNavigatePrevious pages the whole screen to the previous range`() = test {
+        val previous = StatsPeriod.Custom(LocalDate.of(2026, 1, 1), LocalDate.of(2026, 1, 7))
+        whenever(statsRepository.canNavigateBackward(any())).thenReturn(true)
+        whenever(statsRepository.previousPeriod(any())).thenReturn(previous)
+        whenever(statsRepository.fetchStatsForPeriod(any(), any())).thenReturn(createPeriodStatsResult())
+        initViewModel()
+        advanceUntilIdle()
+
+        viewModel.onNavigatePrevious()
+        advanceUntilIdle()
+
+        assertThat(viewModel.selectedPeriod.value).isEqualTo(previous)
+    }
+
+    @Test
+    fun `onNavigateNext pages the whole screen to the next range`() = test {
+        val next = StatsPeriod.Custom(LocalDate.of(2026, 2, 1), LocalDate.of(2026, 2, 7))
+        whenever(statsRepository.canNavigateForward(any())).thenReturn(true)
+        whenever(statsRepository.nextPeriod(any())).thenReturn(next)
+        whenever(statsRepository.fetchStatsForPeriod(any(), any())).thenReturn(createPeriodStatsResult())
+        initViewModel()
+        advanceUntilIdle()
+
+        viewModel.onNavigateNext()
+        advanceUntilIdle()
+
+        assertThat(viewModel.selectedPeriod.value).isEqualTo(next)
+    }
+
+    @Test
+    fun `onNavigatePrevious is a no-op at the backward floor`() = test {
+        whenever(statsRepository.canNavigateBackward(any())).thenReturn(false)
+        whenever(statsRepository.fetchStatsForPeriod(any(), any())).thenReturn(createPeriodStatsResult())
+        initViewModel()
+        advanceUntilIdle()
+        val before = viewModel.selectedPeriod.value
+
+        viewModel.onNavigatePrevious()
+        advanceUntilIdle()
+
+        assertThat(viewModel.selectedPeriod.value).isEqualTo(before)
+        verify(statsRepository, never()).previousPeriod(any())
+    }
+
+    @Test
+    fun `navigation enablement flows reflect the repository`() = test {
+        whenever(statsRepository.canNavigateBackward(any())).thenReturn(true)
+        whenever(statsRepository.canNavigateForward(any())).thenReturn(false)
+        whenever(statsRepository.fetchStatsForPeriod(any(), any())).thenReturn(createPeriodStatsResult())
+        initViewModel()
+        advanceUntilIdle()
+
+        assertThat(viewModel.canNavigateBackward.value).isTrue()
+        assertThat(viewModel.canNavigateForward.value).isFalse()
+    }
     // endregion
 
     private fun createPeriodStatsResult(
