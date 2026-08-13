@@ -398,4 +398,4 @@ DEPENDENCIES
   rmagick (~> 7.1)
 
 BUNDLED WITH
-   2.6.8
+  4.0.18
