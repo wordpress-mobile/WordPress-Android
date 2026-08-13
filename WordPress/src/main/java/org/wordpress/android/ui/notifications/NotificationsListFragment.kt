@@ -46,7 +46,6 @@ import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.ScrollableViewInitializedListener
 import org.wordpress.android.ui.WPWebViewActivity
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureFullScreenOverlayFragment
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil.JetpackFeatureOverlayScreenType
 import org.wordpress.android.ui.jetpackrestconnection.JetpackRestConnectionActivity
 import org.wordpress.android.ui.jetpackrestconnection.JetpackRestConnectionViewModel
 import org.wordpress.android.ui.main.WPMainActivity
@@ -147,13 +146,6 @@ class NotificationsListFragment : Fragment(R.layout.notifications_list_fragment)
                 .newInstance(it, PageType.NOTIFS)
                 .show(childFragmentManager, JetpackPoweredBottomSheetFragment.TAG)
         }
-
-        viewModel.showJetpackOverlay.observeEvent(viewLifecycleOwner) {
-            if (savedInstanceState == null)
-                JetpackFeatureFullScreenOverlayFragment
-                    .newInstance(JetpackFeatureOverlayScreenType.NOTIFICATIONS)
-                    .show(childFragmentManager, JetpackFeatureFullScreenOverlayFragment.TAG)
-        }
     }
 
     override fun onDestroyView() {
@@ -179,7 +171,6 @@ class NotificationsListFragment : Fragment(R.layout.notifications_list_fragment)
             setSelectedTab(lastTabPosition)
             setNotificationPermissionWarning()
         }
-        viewModel.onResume()
     }
 
     private fun fetchRemoteNotes() {
@@ -420,7 +411,7 @@ class NotificationsListFragment : Fragment(R.layout.notifications_list_fragment)
                 jetpackBrandingUtils.initJetpackBannerAnimation(jetpackBannerView, scrollableView)
                 binding?.jetpackBanner?.jetpackBannerText?.text = uiHelpers.getTextOfUiString(
                     requireContext(),
-                    jetpackBrandingUtils.getBrandingTextForScreen(screen)
+                    jetpackBrandingUtils.getBrandingText()
                 )
 
                 if (jetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()) {

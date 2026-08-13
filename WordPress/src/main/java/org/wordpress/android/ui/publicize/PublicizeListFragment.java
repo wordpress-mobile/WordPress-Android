@@ -133,7 +133,7 @@ public class PublicizeListFragment extends PublicizeBaseFragment {
             jetpackBadge.setText(
                     mUiHelpers.getTextOfUiString(
                             requireContext(),
-                            mJetpackBrandingUtils.getBrandingTextForScreen(screen)
+                            mJetpackBrandingUtils.getBrandingText()
                     )
             );
 

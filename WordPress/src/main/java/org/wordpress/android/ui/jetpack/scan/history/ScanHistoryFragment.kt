@@ -158,7 +158,7 @@ class ScanHistoryFragment : Fragment(R.layout.scan_history_fragment), MenuProvid
     }
 
     private fun initJetpackBanner(scrollableContainerId: Int) {
-        if (jetpackBrandingUtils.shouldShowJetpackBrandingForPhaseOne()) {
+        if (jetpackBrandingUtils.shouldShowJetpackBanner()) {
             val screen = JetpackPoweredScreen.WithDynamicText.SCAN
             binding?.root?.post {
                 val jetpackBannerView = binding?.jetpackBanner?.root ?: return@post
@@ -169,7 +169,7 @@ class ScanHistoryFragment : Fragment(R.layout.scan_history_fragment), MenuProvid
                 jetpackBrandingUtils.initJetpackBannerAnimation(jetpackBannerView, scrollableView)
                 binding?.jetpackBanner?.jetpackBannerText?.text = uiHelpers.getTextOfUiString(
                     requireContext(),
-                    jetpackBrandingUtils.getBrandingTextForScreen(screen)
+                    jetpackBrandingUtils.getBrandingText()
                 )
 
                 if (jetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()) {

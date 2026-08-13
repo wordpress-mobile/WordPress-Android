@@ -9,7 +9,6 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.CATEGORY_HEADER_IT
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.DOMAIN_REGISTRATION_CARD
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.DYNAMIC_DASHBOARD_CARD
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.INFO_ITEM
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.JETPACK_BADGE
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.JETPACK_FEATURE_CARD
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.LIST_ITEM
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Type.QUICK_LINK_RIBBON
@@ -47,7 +46,6 @@ sealed class MySiteCardAndItem(open val type: Type) {
         PAGES_CARD_ERROR,
         PAGES_CARD,
         ACTIVITY_CARD,
-        JETPACK_BADGE,
         SINGLE_ACTION_CARD,
         JETPACK_FEATURE_CARD,
         JETPACK_SWITCH_CARD,
@@ -404,9 +402,4 @@ sealed class MySiteCardAndItem(open val type: Type) {
             val listItemAction: ListItemAction
         ) : Item(LIST_ITEM)
     }
-
-    data class JetpackBadge(
-        val text: UiString,
-        val onClick: ListItemInteraction? = null,
-    ) : MySiteCardAndItem(JETPACK_BADGE)
 }

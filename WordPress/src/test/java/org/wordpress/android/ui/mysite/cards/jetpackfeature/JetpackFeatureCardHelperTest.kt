@@ -62,21 +62,12 @@ class JetpackFeatureCardHelperTest {
     }
 
     @Test
-    fun `when not third phase, then jetpack feature card should not show`() {
-        setTest(phase = JetpackFeatureRemovalPhase.PhaseTwo)
+    fun `when static posters phase, then jetpack feature card should not show`() {
+        setTest(phase = JetpackFeatureRemovalPhase.PhaseStaticPosters)
 
         val result = helper.shouldShowJetpackFeatureCard()
 
         assertThat(result).isFalse
-    }
-
-    @Test
-    fun `when phase three, then jetpack feature card should show`() {
-        setTest(phase = JetpackFeatureRemovalPhase.PhaseThree)
-
-        val result = helper.shouldShowJetpackFeatureCard()
-
-        assertThat(result).isTrue
     }
 
     @Test
@@ -107,7 +98,7 @@ class JetpackFeatureCardHelperTest {
     }
 
     private fun setTest(
-        phase: JetpackFeatureRemovalPhase = JetpackFeatureRemovalPhase.PhaseThree,
+        phase: JetpackFeatureRemovalPhase = JetpackFeatureRemovalPhase.PhaseSelfHostedUsers,
         isJetpackApp: Boolean = false,
         isCardHiddenByUser: Boolean = false,
         lastShownTimestamp: Long = 0L

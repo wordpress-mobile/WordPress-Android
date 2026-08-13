@@ -26,7 +26,6 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.CategoryHeaderItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.InfoItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.ListItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.SingleActionCard
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.JetpackBadge
 
 @Suppress("ComplexMethod")
 object MySiteAdapterDiffCallback : DiffUtil.ItemCallback<MySiteCardAndItem>() {
@@ -52,7 +51,6 @@ object MySiteAdapterDiffCallback : DiffUtil.ItemCallback<MySiteCardAndItem>() {
             oldItem is DashboardPlansCard && updatedItem is DashboardPlansCard -> true
             oldItem is PagesCard && updatedItem is PagesCard -> true
             oldItem is ActivityCard && updatedItem is ActivityCard -> true
-            oldItem is JetpackBadge && updatedItem is JetpackBadge -> true
             oldItem is SingleActionCard && updatedItem is SingleActionCard -> {
                 oldItem.textResource == updatedItem.textResource
                         && oldItem.imageResource == updatedItem.imageResource

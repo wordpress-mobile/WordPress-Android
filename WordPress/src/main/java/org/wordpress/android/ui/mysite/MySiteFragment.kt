@@ -802,10 +802,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         source: JetpackFeatureRemovalOverlayUtil.JetpackFeatureCollectionOverlaySource
     ) {
         JetpackFeatureFullScreenOverlayFragment
-            .newInstance(
-                isFeatureCollectionOverlay = true,
-                featureCollectionOverlaySource = source
-            )
+            .newInstance(featureCollectionOverlaySource = source)
             .show(requireActivity().supportFragmentManager, JetpackFeatureFullScreenOverlayFragment.TAG)
     }
 

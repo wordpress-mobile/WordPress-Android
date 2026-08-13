@@ -144,14 +144,14 @@ public class PersonDetailFragment extends Fragment {
             setHasOptionsMenu(true);
         }
 
-        if (mJetpackBrandingUtils.shouldShowJetpackBrandingForPhaseTwo()) {
+        if (mJetpackBrandingUtils.shouldShowJetpackBanner()) {
             final JetpackPoweredScreen screen = JetpackPoweredScreen.WithStaticText.PERSON;
             View jetpackBadgeContainer = rootView.findViewById(R.id.jetpack_badge);
             TextView jetpackBadge = jetpackBadgeContainer.findViewById(R.id.jetpack_powered_badge);
             jetpackBadge.setText(
                     mUiHelpers.getTextOfUiString(
                             requireContext(),
-                            mJetpackBrandingUtils.getBrandingTextForScreen(screen))
+                            mJetpackBrandingUtils.getBrandingText())
             );
 
             jetpackBadgeContainer.setVisibility(View.VISIBLE);

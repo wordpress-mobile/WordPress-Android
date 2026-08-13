@@ -638,9 +638,7 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
 
         deepLinkOpenWebLinksWithJetpackHelper.onOverlayShown()
         newInstance(
-            null,
             isDeepLinkOverlay = true,
-            isFeatureCollectionOverlay = false,
             featureCollectionOverlaySource = JetpackFeatureCollectionOverlaySource.UNSPECIFIED
         )
             .show(supportFragmentManager, JetpackFeatureFullScreenOverlayFragment.TAG)

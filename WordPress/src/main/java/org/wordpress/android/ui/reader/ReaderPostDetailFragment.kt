@@ -819,7 +819,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             binding.jetpackBadge.root.isVisible = true
             binding.jetpackBadge.jetpackPoweredBadge.text = uiHelpers.getTextOfUiString(
                 requireContext(),
-                jetpackBrandingUtils.getBrandingTextForScreen(screen)
+                jetpackBrandingUtils.getBrandingText()
             )
             if (jetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()) {
                 binding.jetpackBadge.jetpackPoweredBadge.setOnClickListener {

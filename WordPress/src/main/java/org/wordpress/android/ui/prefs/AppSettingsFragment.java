@@ -265,7 +265,7 @@ public class AppSettingsFragment extends PreferenceFragment
             binding.footerJetpackBadge.jetpackPoweredBadge.setText(
                     mUiHelpers.getTextOfUiString(
                             getContext(),
-                            mJetpackBrandingUtils.getBrandingTextForScreen(screen)
+                            mJetpackBrandingUtils.getBrandingText()
                     )
             );
 

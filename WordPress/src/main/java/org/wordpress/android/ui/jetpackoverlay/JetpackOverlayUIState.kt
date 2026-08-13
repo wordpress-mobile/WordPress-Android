@@ -16,25 +16,11 @@ sealed class JetpackFeatureOverlayComponentVisibility(
     open val migrationInfoText: Boolean = false,
     open val newUsersContent: Boolean = false
 ) {
-    class PhaseOne : JetpackFeatureOverlayComponentVisibility()
-    class PhaseTwo(override val migrationInfoText: Boolean = true) : JetpackFeatureOverlayComponentVisibility()
-    class PhaseThree(
-        override val migrationInfoText: Boolean = true,
-        override val closeButton: Boolean = false,
-        override val migrationText: Boolean = true
-    ) : JetpackFeatureOverlayComponentVisibility()
-
     sealed class DeepLinkPhase : JetpackFeatureOverlayComponentVisibility() {
         class All : DeepLinkPhase()
     }
 
     sealed class FeatureCollectionPhase : JetpackFeatureOverlayComponentVisibility() {
-        class PhaseThree(
-            override val migrationInfoText: Boolean = true,
-            override val closeButton: Boolean = false,
-            override val migrationText: Boolean = true
-        ) : FeatureCollectionPhase()
-
         class PhaseFour(
             override val migrationInfoText: Boolean = true,
             override val closeButton: Boolean = false,

@@ -25,7 +25,6 @@ import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.ui.ScrollableViewInitializedListener
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureFullScreenOverlayFragment
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil.JetpackFeatureOverlayScreenType
 import org.wordpress.android.ui.main.WPMainActivity.OnScrollToTopListener
 import org.wordpress.android.ui.main.WPMainNavigationView.PageType.READER
 import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredBottomSheetFragment
@@ -284,8 +283,6 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), ScrollableView
                 .show(childFragmentManager, JetpackPoweredBottomSheetFragment.TAG)
         }
 
-        observeJetpackOverlayEvent(savedInstanceState)
-
         viewModel.start(savedInstanceState)
     }
 
@@ -331,15 +328,6 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), ScrollableView
                 viewModel.onTagChanged(uiState.selectedReaderTag)
             }
         }
-    }
-
-    private fun observeJetpackOverlayEvent(savedInstanceState: Bundle?) {
-        if (savedInstanceState == null)
-            viewModel.showJetpackOverlay.observeEvent(viewLifecycleOwner) {
-                JetpackFeatureFullScreenOverlayFragment
-                    .newInstance(JetpackFeatureOverlayScreenType.READER)
-                    .show(childFragmentManager, JetpackFeatureFullScreenOverlayFragment.TAG)
-            }
     }
 
     fun requestBookmarkTab() {
@@ -391,7 +379,7 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), ScrollableView
                 jetpackBrandingUtils.initJetpackBannerAnimation(jetpackBannerView, scrollableView)
                 binding?.jetpackBanner?.jetpackBannerText?.text = uiHelpers.getTextOfUiString(
                     requireContext(),
-                    jetpackBrandingUtils.getBrandingTextForScreen(screen)
+                    jetpackBrandingUtils.getBrandingText()
                 )
 
                 if (jetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()) {

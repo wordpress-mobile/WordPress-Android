@@ -29,26 +29,15 @@ class JetpackBrandingUtils @Inject constructor(
                 && !jetpackFeatureRemovalBrandingUtil.isInRemovalPhase()
     }
 
-    fun shouldShowJetpackBrandingInDashboard(): Boolean {
-        return isWpComSite() && jetpackPoweredFeatureConfig.isEnabled() && !buildConfigWrapper.isJetpackApp
-                && jetpackFeatureRemovalBrandingUtil.shouldShowBrandingInDashboard()
-    }
-
-    fun shouldShowJetpackBrandingForPhaseOne(): Boolean {
-        return shouldShowJetpackBranding() && jetpackFeatureRemovalBrandingUtil.shouldShowPhaseOneBranding()
-    }
-
-    fun shouldShowJetpackBrandingForPhaseTwo(): Boolean {
-        return shouldShowJetpackBranding() && jetpackFeatureRemovalBrandingUtil.shouldShowPhaseTwoBranding()
+    fun shouldShowJetpackBanner(): Boolean {
+        return shouldShowJetpackBranding() && jetpackFeatureRemovalBrandingUtil.shouldShowBranding()
     }
 
     fun shouldShowJetpackPoweredBottomSheet(): Boolean {
         return isWpComSite() && jetpackPoweredBottomSheetFeatureConfig.isEnabled() && !buildConfigWrapper.isJetpackApp
     }
 
-    fun getBrandingTextForScreen(screen: JetpackPoweredScreen): UiString {
-        return jetpackFeatureRemovalBrandingUtil.getBrandingTextByPhase(screen)
-    }
+    fun getBrandingText(): UiString = jetpackFeatureRemovalBrandingUtil.getBrandingText()
 
     fun showJetpackBannerIfScrolledToTop(banner: View, scrollableView: RecyclerView) {
         banner.isVisible = true

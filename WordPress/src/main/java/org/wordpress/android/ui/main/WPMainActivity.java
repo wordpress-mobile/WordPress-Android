@@ -521,9 +521,7 @@ public class WPMainActivity extends BaseAppCompatActivity implements
         mAnalyticsTrackerWrapper.track(
                 Stat.JETPACK_FEATURE_INCORRECTLY_ACCESSED, trackingProperties);
         JetpackFeatureFullScreenOverlayFragment.newInstance(
-                null,
                 false,
-                true,
                 JetpackFeatureCollectionOverlaySource.DISABLED_ENTRY_POINT
         ).show(getSupportFragmentManager(), JetpackFeatureFullScreenOverlayFragment.TAG);
     }
@@ -576,9 +574,7 @@ public class WPMainActivity extends BaseAppCompatActivity implements
     private void displayJetpackFeatureCollectionOverlayIfNeeded() {
         if (mJetpackFeatureRemovalOverlayUtil.shouldShowFeatureCollectionJetpackOverlayForFirstTime()) {
             JetpackFeatureFullScreenOverlayFragment.newInstance(
-                    null,
                     false,
-                    true,
                     JetpackFeatureCollectionOverlaySource.APP_OPEN
             ).show(getSupportFragmentManager(), JetpackFeatureFullScreenOverlayFragment.TAG);
         }

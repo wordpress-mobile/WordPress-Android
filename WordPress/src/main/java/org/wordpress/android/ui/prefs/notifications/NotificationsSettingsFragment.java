@@ -239,7 +239,7 @@ public class NotificationsSettingsFragment extends PreferenceFragment
             binding.footerJetpackBadge.jetpackPoweredBadge.setText(
                     mUiHelpers.getTextOfUiString(
                             context,
-                            mJetpackBrandingUtils.getBrandingTextForScreen(screen)
+                            mJetpackBrandingUtils.getBrandingText()
                     )
             );
             if (mJetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()) {

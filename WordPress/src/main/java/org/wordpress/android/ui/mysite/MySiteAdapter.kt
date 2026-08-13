@@ -30,7 +30,6 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.CategoryHeaderItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.InfoItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.ListItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.SingleActionCard
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.JetpackBadge
 import org.wordpress.android.ui.mysite.cards.blaze.BlazeCampaignsCardViewHolder
 import org.wordpress.android.ui.mysite.cards.blaze.PromoteWithBlazeCardViewHolder
 import org.wordpress.android.ui.mysite.cards.dashboard.activity.ActivityCardViewHolder
@@ -58,7 +57,6 @@ import org.wordpress.android.ui.mysite.items.categoryheader.MySiteCategoryItemVi
 import org.wordpress.android.ui.mysite.items.infoitem.MySiteInfoItemViewHolder
 import org.wordpress.android.ui.mysite.items.listitem.MySiteListItemViewHolder
 import org.wordpress.android.ui.mysite.items.singleactioncard.SingleActionCardViewHolder
-import org.wordpress.android.ui.mysite.jetpackbadge.MySiteJetpackBadgeViewHolder
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.HtmlCompatWrapper
 import org.wordpress.android.util.image.ImageManager
@@ -117,7 +115,6 @@ class MySiteAdapter(
             MySiteCardAndItem.Type.PAGES_CARD.ordinal -> PagesCardViewHolder(parent, uiHelpers)
             MySiteCardAndItem.Type.ACTIVITY_CARD.ordinal -> ActivityCardViewHolder(parent, uiHelpers)
 
-            MySiteCardAndItem.Type.JETPACK_BADGE.ordinal -> MySiteJetpackBadgeViewHolder(parent, uiHelpers)
             MySiteCardAndItem.Type.SINGLE_ACTION_CARD.ordinal -> SingleActionCardViewHolder(parent)
             MySiteCardAndItem.Type.JETPACK_FEATURE_CARD.ordinal -> JetpackFeatureCardViewHolder(parent, uiHelpers)
             MySiteCardAndItem.Type.JETPACK_SWITCH_CARD.ordinal -> SwitchToJetpackMenuCardViewHolder(parent)
@@ -142,7 +139,6 @@ class MySiteAdapter(
             is MySiteCategoryItemViewHolder -> holder.bind(getItem(position) as CategoryHeaderItem)
             is MySiteCategoryItemEmptyViewHolder -> holder.bind(getItem(position) as CategoryEmptyHeaderItem)
             is MySiteListItemViewHolder -> holder.bind(getItem(position) as ListItem)
-            is MySiteJetpackBadgeViewHolder -> holder.bind(getItem(position) as JetpackBadge)
             is ErrorCardViewHolder -> holder.bind(getItem(position)  as ErrorCard)
             is ErrorWithinCardViewHolder -> holder.bind(getItem(position)  as ErrorWithinCard)
             is TodaysStatsCardViewHolder -> holder.bind(getItem(position)  as TodaysStatsCardWithData)

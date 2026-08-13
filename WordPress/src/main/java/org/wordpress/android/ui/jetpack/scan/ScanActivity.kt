@@ -54,7 +54,7 @@ class ScanActivity : BaseAppCompatActivity(), ScrollableViewInitializedListener 
     }
 
     private fun initJetpackBanner(scrollableContainerId: Int) {
-        if (jetpackBrandingUtils.shouldShowJetpackBrandingForPhaseOne()) {
+        if (jetpackBrandingUtils.shouldShowJetpackBanner()) {
             val screen = JetpackPoweredScreen.WithDynamicText.SCAN
             binding?.root?.post {
                 val jetpackBannerView = binding?.jetpackBanner?.root ?: return@post
@@ -65,7 +65,7 @@ class ScanActivity : BaseAppCompatActivity(), ScrollableViewInitializedListener 
                 jetpackBrandingUtils.initJetpackBannerAnimation(jetpackBannerView, scrollableView)
                 binding?.jetpackBanner?.jetpackBannerText?.text = uiHelpers.getTextOfUiString(
                     this,
-                    jetpackBrandingUtils.getBrandingTextForScreen(screen)
+                    jetpackBrandingUtils.getBrandingText()
                 )
 
                 if (jetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()) {

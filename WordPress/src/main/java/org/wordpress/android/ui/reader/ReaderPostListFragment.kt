@@ -1303,7 +1303,7 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
                 jetpackBanner.findViewById<TextView>(R.id.jetpack_banner_text)
             jetpackBannerTextView.text = uiHelpers.getTextOfUiString(
                 requireContext(),
-                jetpackBrandingUtils.getBrandingTextForScreen(screen)
+                jetpackBrandingUtils.getBrandingText()
             )
 
             if (jetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()) {

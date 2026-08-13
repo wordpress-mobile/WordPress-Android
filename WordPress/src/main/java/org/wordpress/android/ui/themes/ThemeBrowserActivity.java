@@ -202,7 +202,7 @@ public class ThemeBrowserActivity extends BaseAppCompatActivity implements Theme
 
     @Override
     public void onScrollableViewInitialized(int containerId) {
-        if (mJetpackBrandingUtils.shouldShowJetpackBrandingForPhaseTwo()) {
+        if (mJetpackBrandingUtils.shouldShowJetpackBanner()) {
             final JetpackPoweredScreen screen = JetpackPoweredScreen.WithDynamicText.THEMES;
             findViewById(R.id.root_view).post(() -> {
                 View jetpackBannerView = findViewById(R.id.jetpack_banner);
@@ -210,7 +210,7 @@ public class ThemeBrowserActivity extends BaseAppCompatActivity implements Theme
                 jetpackBannerTextView.setText(
                         mUiHelpers.getTextOfUiString(
                                 this,
-                                mJetpackBrandingUtils.getBrandingTextForScreen(screen))
+                                mJetpackBrandingUtils.getBrandingText())
                 );
 
                 HeaderGridView scrollableView = findViewById(containerId);

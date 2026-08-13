@@ -364,7 +364,7 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
             jetpackBadge.isVisible = true
             jetpackBadge.text = uiHelpers.getTextOfUiString(
                 requireContext(),
-                jetpackBrandingUtils.getBrandingTextForScreen(screen)
+                jetpackBrandingUtils.getBrandingText()
             )
             if (jetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()) {
                 jetpackBadge.setOnClickListener {

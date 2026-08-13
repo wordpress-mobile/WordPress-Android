@@ -17,18 +17,12 @@ import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseFour
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseNewUsers
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseOne
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseThree
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseTwo
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseSelfHostedUsers
 import org.wordpress.android.ui.main.WPMainNavigationView
 import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.config.JetpackFeatureRemovalNewUsersConfig
 import org.wordpress.android.util.config.JetpackFeatureRemovalPhaseFourConfig
-import org.wordpress.android.util.config.JetpackFeatureRemovalPhaseOneConfig
-import org.wordpress.android.util.config.JetpackFeatureRemovalPhaseThreeConfig
-import org.wordpress.android.util.config.JetpackFeatureRemovalPhaseTwoConfig
 import org.wordpress.android.util.config.JetpackFeatureRemovalSelfHostedUsersConfig
 import org.wordpress.android.util.config.JetpackFeatureRemovalStaticPostersConfig
 import org.wordpress.android.util.config.PhaseFourOverlayFrequencyConfig
@@ -38,15 +32,6 @@ import org.wordpress.android.util.config.PhaseFourOverlayFrequencyConfig
 class JetpackFeatureRemovalPhaseHelperTest : BaseUnitTest() {
     @Mock
     private lateinit var buildConfigWrapper: BuildConfigWrapper
-
-    @Mock
-    private lateinit var jetpackFeatureRemovalPhaseOneConfig: JetpackFeatureRemovalPhaseOneConfig
-
-    @Mock
-    private lateinit var jetpackFeatureRemovalPhaseTwoConfig: JetpackFeatureRemovalPhaseTwoConfig
-
-    @Mock
-    private lateinit var jetpackFeatureRemovalPhaseThreeConfig: JetpackFeatureRemovalPhaseThreeConfig
 
     @Mock
     private lateinit var jetpackFeatureRemovalPhaseFourConfig: JetpackFeatureRemovalPhaseFourConfig
@@ -72,9 +57,6 @@ class JetpackFeatureRemovalPhaseHelperTest : BaseUnitTest() {
     fun setup() {
         jetpackFeatureRemovalPhaseHelper = JetpackFeatureRemovalPhaseHelper(
             buildConfigWrapper,
-            jetpackFeatureRemovalPhaseOneConfig,
-            jetpackFeatureRemovalPhaseTwoConfig,
-            jetpackFeatureRemovalPhaseThreeConfig,
             jetpackFeatureRemovalPhaseFourConfig,
             jetpackFeatureRemovalNewUsersConfig,
             jetpackFeatureRemovalSelfHostedUsersConfig,
@@ -92,33 +74,6 @@ class JetpackFeatureRemovalPhaseHelperTest : BaseUnitTest() {
         val currentPhase = jetpackFeatureRemovalPhaseHelper.getCurrentPhase()
 
         assertNull(currentPhase)
-    }
-
-    @Test
-    fun `given phase one config true, when current phase is fetched, then return phase one`() {
-        whenever(jetpackFeatureRemovalPhaseOneConfig.isEnabled()).thenReturn(true)
-
-        val currentPhase = jetpackFeatureRemovalPhaseHelper.getCurrentPhase()
-
-        assertEquals(currentPhase, PhaseOne)
-    }
-
-    @Test
-    fun `given phase two config true, when current phase is fetched, then return phase two`() {
-        whenever(jetpackFeatureRemovalPhaseTwoConfig.isEnabled()).thenReturn(true)
-
-        val currentPhase = jetpackFeatureRemovalPhaseHelper.getCurrentPhase()
-
-        assertEquals(currentPhase, PhaseTwo)
-    }
-
-    @Test
-    fun `given phase three config true, when current phase is fetched, then return phase three`() {
-        whenever(jetpackFeatureRemovalPhaseThreeConfig.isEnabled()).thenReturn(true)
-
-        val currentPhase = jetpackFeatureRemovalPhaseHelper.getCurrentPhase()
-
-        assertEquals(currentPhase, PhaseThree)
     }
 
     @Test

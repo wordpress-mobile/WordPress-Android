@@ -71,7 +71,7 @@ class StatsDetailFragment : Fragment(R.layout.stats_detail_fragment) {
                 jetpackBrandingUtils.initJetpackBannerAnimation(jetpackBannerView, scrollableView)
                 jetpackBanner.jetpackBannerText.text = uiHelpers.getTextOfUiString(
                     requireContext(),
-                    jetpackBrandingUtils.getBrandingTextForScreen(screen)
+                    jetpackBrandingUtils.getBrandingText()
                 )
 
                 if (jetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()) {
@@ -116,14 +116,6 @@ class StatsDetailFragment : Fragment(R.layout.stats_detail_fragment) {
         viewModel.isRefreshing.observe(viewLifecycleOwner) {
             it?.let { isRefreshing ->
                 swipeToRefreshHelper.isRefreshing = isRefreshing
-            }
-        }
-
-        viewModel.showJetpackOverlay.observeEvent(viewLifecycleOwner) {
-            if (isFirstStart) {
-                JetpackFeatureFullScreenOverlayFragment
-                    .newInstance(JetpackFeatureRemovalOverlayUtil.JetpackFeatureOverlayScreenType.STATS)
-                    .show(childFragmentManager, JetpackFeatureFullScreenOverlayFragment.TAG)
             }
         }
     }

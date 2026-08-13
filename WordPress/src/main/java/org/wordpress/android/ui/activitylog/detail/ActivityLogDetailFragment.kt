@@ -100,7 +100,7 @@ class ActivityLogDetailFragment : Fragment(R.layout.activity_log_item_detail) {
             jetpackBadge.root.isVisible = true
             jetpackBadge.jetpackPoweredBadge.text = uiHelpers.getTextOfUiString(
                 requireContext(),
-                jetpackBrandingUtils.getBrandingTextForScreen(screen)
+                jetpackBrandingUtils.getBrandingText()
             )
 
             if (jetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()) {

@@ -18,7 +18,6 @@ import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureOverlayActions.Forw
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureOverlayActions.OpenMigrationInfoLink
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureOverlayActions.OpenPlayStore
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil.JetpackFeatureCollectionOverlaySource
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil.JetpackFeatureOverlayScreenType
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.RtlUtils
 import org.wordpress.android.util.UrlUtils
@@ -54,9 +53,7 @@ class JetpackFeatureFullScreenOverlayFragment : BottomSheetDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel.init(
-            getSiteScreen(),
             getIfDeepLinkOverlay(),
-            getIfFeatureCollectionOverlay(),
             getFeatureCollectionOverlaysSource(),
             RtlUtils.isRtl(view.context)
         )
@@ -64,11 +61,7 @@ class JetpackFeatureFullScreenOverlayFragment : BottomSheetDialogFragment() {
         (dialog as? BottomSheetDialog)?.fillScreen()
     }
 
-    private fun getSiteScreen() = arguments?.getSerializableCompat<JetpackFeatureOverlayScreenType>(OVERLAY_SCREEN_TYPE)
-
     private fun getIfDeepLinkOverlay() = arguments?.getBoolean(IS_DEEP_LINK_OVERLAY) ?: false
-
-    private fun getIfFeatureCollectionOverlay() = arguments?.getBoolean(IS_FEATURE_COLLECTION_OVERLAY) ?: false
 
     private fun getFeatureCollectionOverlaysSource() = requireNotNull(
         arguments?.getSerializableCompat<JetpackFeatureCollectionOverlaySource>(FEATURE_COLLECTION_OVERLAY_SOURCE)
@@ -168,23 +161,17 @@ class JetpackFeatureFullScreenOverlayFragment : BottomSheetDialogFragment() {
 
     companion object {
         const val TAG = "JETPACK_POWERED_OVERLAY_FULL_SCREEN_FRAGMENT"
-        private const val OVERLAY_SCREEN_TYPE = "KEY_JETPACK_OVERLAY_SCREEN"
         private const val IS_DEEP_LINK_OVERLAY = "KEY_IS_DEEP_LINK_OVERLAY"
-        private const val IS_FEATURE_COLLECTION_OVERLAY = "KEY_IS_FEATURE_COLLECTION_OVERLAY"
         private const val FEATURE_COLLECTION_OVERLAY_SOURCE = "KEY_FEATURE_COLLECTION_OVERLAY_SOURCE"
 
         @JvmStatic
         fun newInstance(
-            jetpackFeatureOverlayScreenType: JetpackFeatureOverlayScreenType? = null,
             isDeepLinkOverlay: Boolean = false,
-            isFeatureCollectionOverlay: Boolean = false,
             featureCollectionOverlaySource: JetpackFeatureCollectionOverlaySource? =
                 JetpackFeatureCollectionOverlaySource.UNSPECIFIED
         ) = JetpackFeatureFullScreenOverlayFragment().apply {
             arguments = Bundle().apply {
-                putSerializable(OVERLAY_SCREEN_TYPE, jetpackFeatureOverlayScreenType)
                 putBoolean(IS_DEEP_LINK_OVERLAY, isDeepLinkOverlay)
-                putBoolean(IS_FEATURE_COLLECTION_OVERLAY, isFeatureCollectionOverlay)
                 putSerializable(FEATURE_COLLECTION_OVERLAY_SOURCE, featureCollectionOverlaySource)
             }
         }

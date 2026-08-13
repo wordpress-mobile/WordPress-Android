@@ -137,14 +137,14 @@ public class PeopleListFragment extends Fragment {
     }
 
     private void showJetpackBannerIfNeeded(final View rootView) {
-        if (mJetpackBrandingUtils.shouldShowJetpackBrandingForPhaseTwo()) {
+        if (mJetpackBrandingUtils.shouldShowJetpackBanner()) {
             final JetpackPoweredScreen screen = JetpackPoweredScreen.WithStaticText.PERSON;
             View jetpackBannerView = rootView.findViewById(R.id.jetpack_banner);
             TextView jetpackBannerTextView = jetpackBannerView.findViewById(R.id.jetpack_banner_text);
             jetpackBannerTextView.setText(
                     mUiHelpers.getTextOfUiString(
                             requireContext(),
-                            mJetpackBrandingUtils.getBrandingTextForScreen(screen))
+                            mJetpackBrandingUtils.getBrandingText())
             );
             RecyclerView scrollableView = mRecyclerView;
 

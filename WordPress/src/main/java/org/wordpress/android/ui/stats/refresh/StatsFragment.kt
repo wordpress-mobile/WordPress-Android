@@ -30,8 +30,6 @@ import org.wordpress.android.models.JetpackPoweredScreen
 import org.wordpress.android.ui.ScrollableViewInitializedListener
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureFullScreenOverlayFragment
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil.JetpackFeatureOverlayScreenType
-import org.wordpress.android.ui.jetpackoverlay.JetpackOverlayConnectedFeature
 import org.wordpress.android.ui.main.WPMainNavigationView.PageType.MY_SITE
 import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredBottomSheetFragment
 import org.wordpress.android.ui.newstats.NewStatsActivity
@@ -170,13 +168,9 @@ class StatsFragment : Fragment(R.layout.stats_fragment), ScrollableViewInitializ
         if (appPrefsWrapper.getStatsNewStatsSuggestionShown()) return
         // Don't nag users who deliberately switched back to old Stats.
         if (newStatsRouting.hasOptedOut()) return
-        // Avoid stacking on top of the Jetpack-powered bottom sheet or the feature-removal overlay,
-        // both of which may show on a fresh Stats activity launch.
+        // Avoid stacking on top of the Jetpack-powered bottom sheet, which may show on a fresh
+        // Stats activity launch.
         if (jetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()) return
-        if (jetpackFeatureRemovalOverlayUtil.shouldShowFeatureSpecificJetpackOverlay(
-                JetpackOverlayConnectedFeature.STATS
-            )
-        ) return
         val lastDismissedAt = appPrefsWrapper.getStatsNewStatsSuggestionLastDismissedAt()
         val isSecondAttempt = lastDismissedAt > 0L
         if (isSecondAttempt &&
@@ -262,14 +256,6 @@ class StatsFragment : Fragment(R.layout.stats_fragment), ScrollableViewInitializ
                 JetpackPoweredBottomSheetFragment
                     .newInstance(it, MY_SITE)
                     .show(childFragmentManager, JetpackPoweredBottomSheetFragment.TAG)
-            }
-        }
-
-        viewModel.showJetpackOverlay.observeEvent(viewLifecycleOwner) {
-            if (isFirstStart) {
-                JetpackFeatureFullScreenOverlayFragment
-                    .newInstance(JetpackFeatureOverlayScreenType.STATS)
-                    .show(childFragmentManager, JetpackFeatureFullScreenOverlayFragment.TAG)
             }
         }
     }
@@ -425,7 +411,7 @@ class StatsFragment : Fragment(R.layout.stats_fragment), ScrollableViewInitializ
                 jetpackBrandingUtils.initJetpackBannerAnimation(jetpackBannerView, scrollableView)
                 binding?.jetpackBanner?.jetpackBannerText?.text = uiHelpers.getTextOfUiString(
                     requireContext(),
-                    jetpackBrandingUtils.getBrandingTextForScreen(screen)
+                    jetpackBrandingUtils.getBrandingText()
                 )
 
                 if (jetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()) {
