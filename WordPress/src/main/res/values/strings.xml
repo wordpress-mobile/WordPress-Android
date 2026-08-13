@@ -2797,6 +2797,7 @@
     <string name="support_identity_input_dialog_name_label">Name</string>
     <string name="support_screen_title">Support</string>
     <string name="support_screen_login_button">Log into WordPress.com</string>
+    <string name="support_screen_login_description">Log into WordPress.com to access support chat.</string>
     <string name="support_screen_how_can_we_help_title">How can we help?</string>
     <string name="support_screen_help_center_title">Help Center</string>
     <string name="support_screen_help_center_description">Documentation and Tutorials to help you get started</string>
