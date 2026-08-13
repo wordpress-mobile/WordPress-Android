@@ -15,10 +15,8 @@ class JetpackFeatureOverlayShownTracker @Inject constructor(private val sharedPr
         sharedPrefs.getBoolean(KEY_FEATURE_COLLECTION_OVERLAY_SHOWN_KEY, false)
 
     companion object {
-        const val KEY_FEATURE_COLLECTION_OVERLAY_SHOWN = "KEY_FEATURE_COLLECTION_OVERLAY_SHOWN"
-
         // The phase name is part of the stored key; see JETPACK_REMOVAL_TRACKING_NAME.
         private const val KEY_FEATURE_COLLECTION_OVERLAY_SHOWN_KEY =
-            KEY_FEATURE_COLLECTION_OVERLAY_SHOWN + JETPACK_REMOVAL_TRACKING_NAME
+            "KEY_FEATURE_COLLECTION_OVERLAY_SHOWN" + JETPACK_REMOVAL_TRACKING_NAME
     }
 }

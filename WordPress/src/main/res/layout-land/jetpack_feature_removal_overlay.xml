@@ -107,22 +107,6 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/caption" />
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/migrationInfoText"
-                style="@style/OverlayMigrationHelperText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/jp_migration_full_screen_overlay_padding_horizontal"
-                android:layout_marginStart="@dimen/jp_migration_full_screen_overlay_padding_horizontal"
-                android:layout_marginTop="@dimen/jetpack_full_screen_overlay_margin_close_button"
-                app:icon="@drawable/ic_external_white_24dp"
-                android:text="@string/wp_jetpack_feature_removal_overlay_learn_more_migration_text"
-                android:textColor="@color/jetpack_green_50"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/migration_helper_text"
-                app:drawableEndCompat="@drawable/ic_external_white_24dp" />
 
             <Button
                 android:id="@+id/primary_button"
@@ -179,7 +163,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 app:barrierDirection="bottom"
-                app:constraint_referenced_ids="migrationInfoText,new_users_content_view_parent"/>
+                app:constraint_referenced_ids="new_users_content_view_parent"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>

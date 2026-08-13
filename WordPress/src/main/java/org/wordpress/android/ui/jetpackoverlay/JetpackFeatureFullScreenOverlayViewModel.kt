@@ -4,7 +4,6 @@ import androidx.lifecycle.LiveData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.modules.UI_THREAD
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureOverlayActions.OpenMigrationInfoLink
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil.JetpackFeatureCollectionOverlaySource
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil.JetpackOverlayDismissalType.CLOSE_BUTTON
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil.JetpackOverlayDismissalType.CONTINUE_BUTTON
@@ -76,14 +75,6 @@ class JetpackFeatureFullScreenOverlayViewModel @Inject constructor(
         featureCollectionOverlayOrigin = featureCollectionOverlaySource
         _uiState.postValue(jetpackFeatureOverlayContentBuilder.buildFeatureCollectionOverlayState(rtlLayout))
         jetpackFeatureRemovalOverlayUtil.onFeatureCollectionOverlayShown(featureCollectionOverlaySource)
-    }
-
-
-    fun openJetpackMigrationInfoLink(migrationInfoRedirectUrl: String) {
-        jetpackFeatureRemovalOverlayUtil.trackLearnMoreAboutMigrationClickedInFeatureCollectionOverlay(
-            featureCollectionOverlayOrigin
-        )
-        _action.value = OpenMigrationInfoLink(migrationInfoRedirectUrl)
     }
 }
 

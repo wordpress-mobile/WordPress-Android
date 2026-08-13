@@ -12,15 +12,12 @@ import org.wordpress.android.databinding.JetpackFeatureRemovalOverlayBinding
 import org.wordpress.android.ui.ActivityLauncherWrapper
 import org.wordpress.android.ui.ActivityLauncherWrapper.Companion.CAMPAIGN_JETPACK_OVERLAY
 import org.wordpress.android.ui.ActivityLauncherWrapper.Companion.JETPACK_PACKAGE_NAME
-import org.wordpress.android.ui.WPWebViewActivity
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureOverlayActions.DismissDialog
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureOverlayActions.ForwardToJetpack
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureOverlayActions.OpenMigrationInfoLink
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureOverlayActions.OpenPlayStore
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil.JetpackFeatureCollectionOverlaySource
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.RtlUtils
-import org.wordpress.android.util.UrlUtils
 import org.wordpress.android.util.extensions.exhaustive
 import org.wordpress.android.util.extensions.fillScreen
 import org.wordpress.android.util.extensions.getSerializableCompat
@@ -86,14 +83,6 @@ class JetpackFeatureFullScreenOverlayFragment : BottomSheetDialogFragment() {
                 is ForwardToJetpack -> {
                     dismiss()
                 }
-                is OpenMigrationInfoLink -> {
-                    activity?.let {
-                        WPWebViewActivity.openURL(
-                            requireContext(),
-                            UrlUtils.addUrlSchemeIfNeeded(action.url, true)
-                        )
-                    }
-                }
             }.exhaustive
         }
     }
@@ -103,26 +92,17 @@ class JetpackFeatureFullScreenOverlayFragment : BottomSheetDialogFragment() {
     ) {
         updateVisibility(jetpackPoweredOverlayUIState.componentVisibility)
         updateContent(jetpackPoweredOverlayUIState.overlayContent)
-        setClickListener(
-            jetpackPoweredOverlayUIState.componentVisibility,
-            jetpackPoweredOverlayUIState.overlayContent.migrationInfoUrl
-        )
+        setClickListener(jetpackPoweredOverlayUIState.componentVisibility)
     }
 
     private fun JetpackFeatureRemovalOverlayBinding.setClickListener(
-        componentVisibility: JetpackFeatureOverlayComponentVisibility,
-        migrationInfoRedirectUrl: String? = null
+        componentVisibility: JetpackFeatureOverlayComponentVisibility
     ) {
         primaryButton.setOnClickListener {
             viewModel.openJetpackAppDownloadLink()
         }
         if (componentVisibility.closeButton) closeButton.setOnClickListener { viewModel.closeBottomSheet() }
         if (componentVisibility.secondaryButton) secondaryButton.setOnClickListener { viewModel.continueToFeature() }
-        if (componentVisibility.migrationInfoText && !migrationInfoRedirectUrl.isNullOrEmpty()) {
-            migrationInfoText.setOnClickListener {
-                viewModel.openJetpackMigrationInfoLink(migrationInfoRedirectUrl)
-            }
-        }
     }
 
     private fun JetpackFeatureRemovalOverlayBinding.updateVisibility(
@@ -136,7 +116,6 @@ class JetpackFeatureFullScreenOverlayFragment : BottomSheetDialogFragment() {
             secondaryButton.setVisible(it.secondaryButton)
             migrationHelperText.setVisible(it.migrationText)
             closeButton.setVisible(it.closeButton)
-            migrationInfoText.setVisible(it.migrationInfoText)
             newUsersContentViewParent.newUsersContentView.setVisible(it.newUsersContent)
         }
     }
@@ -149,7 +128,6 @@ class JetpackFeatureFullScreenOverlayFragment : BottomSheetDialogFragment() {
             uiHelpers.setTextOrHide(caption, it.caption)
             primaryButton.text = getString(it.primaryButtonText)
             uiHelpers.setTextOrHide(migrationHelperText, it.migrationText)
-            uiHelpers.setTextOrHide(migrationInfoText, it.migrationInfoText)
             uiHelpers.setTextOrHide(secondaryButton, it.secondaryButtonText)
         }
     }

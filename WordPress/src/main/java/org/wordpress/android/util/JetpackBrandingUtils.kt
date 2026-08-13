@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.models.JetpackPoweredScreen
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalBrandingUtil
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
@@ -18,7 +18,7 @@ import javax.inject.Inject
 class JetpackBrandingUtils @Inject constructor(
     private val jetpackPoweredFeatureConfig: JetpackPoweredFeatureConfig,
     private val jetpackPoweredBottomSheetFeatureConfig: JetpackPoweredBottomSheetFeatureConfig,
-    private val jetpackFeatureRemovalBrandingUtil: JetpackFeatureRemovalBrandingUtil,
+    private val jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper,
     private val selectedSiteRepository: SelectedSiteRepository,
     private val siteUtilsWrapper: SiteUtilsWrapper,
     private val buildConfigWrapper: BuildConfigWrapper,
@@ -26,14 +26,14 @@ class JetpackBrandingUtils @Inject constructor(
 ) {
     fun shouldShowJetpackBranding(): Boolean {
         return isWpComSite() && jetpackPoweredFeatureConfig.isEnabled() && !buildConfigWrapper.isJetpackApp
-                && !jetpackFeatureRemovalBrandingUtil.isInRemovalPhase()
+                && !jetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures()
     }
 
     fun shouldShowJetpackPoweredBottomSheet(): Boolean {
         return isWpComSite() && jetpackPoweredBottomSheetFeatureConfig.isEnabled() && !buildConfigWrapper.isJetpackApp
     }
 
-    fun getBrandingText(): UiString = jetpackFeatureRemovalBrandingUtil.getBrandingText()
+    fun getBrandingText(): UiString = UiString.UiStringRes(R.string.wp_jetpack_powered)
 
     fun showJetpackBannerIfScrolledToTop(banner: View, scrollableView: RecyclerView) {
         banner.isVisible = true
