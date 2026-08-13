@@ -754,7 +754,7 @@ class PostRsListViewModel @Inject constructor(
 
         // A refresh with no connection can only fail, so report it without the round trip.
         if (!networkUtilsWrapper.isNetworkAvailable()) {
-            onRefreshFailed(tab, e = null)
+            onRefreshFailed(tab, e = null, showSnackbar = isUserRefresh)
             return
         }
 
@@ -769,7 +769,7 @@ class PostRsListViewModel @Inject constructor(
                 loadItemsForTab(tab)
                 updateTabUiState(tab) { copy(isLoading = false, isRefreshing = false) }
             } catch (e: Exception) {
-                onRefreshFailed(tab, e)
+                onRefreshFailed(tab, e, showSnackbar = isUserRefresh)
             }
         }
     }
@@ -780,8 +780,12 @@ class PostRsListViewModel @Inject constructor(
      *
      * [e] is null when no request was made because the device is offline. The message is the same
      * either way - [friendlyErrorMessage] reports the network error whenever the device is offline,
-     * regardless of what failed. [showSnackbar] is false when another tab is already reporting the
-     * same failure.
+     * regardless of what failed.
+     *
+     * [showSnackbar] is false when the user didn't ask for this refresh - [initTab] refreshes each
+     * tab as the pager settles on it, and interrupting someone browsing cached posts with an error
+     * they didn't provoke is noise. The full-screen error still covers a tab with nothing to show.
+     * It's also false when another tab is already reporting the same failure.
      */
     private fun onRefreshFailed(tab: PostRsListTab, e: Exception?, showSnackbar: Boolean = true) {
         e?.let { AppLog.e(AppLog.T.POSTS, "Failed to refresh tab $tab", it) }
