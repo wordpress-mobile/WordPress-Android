@@ -9,7 +9,6 @@ Language: pl
     <string name="support_screen_unified_support_description">Uzyskaj odpowiedzi od naszego zespołu pomocy technicznej – o każdej porze</string>
     <string name="support_screen_unified_support_title">Uzyskaj pomoc</string>
     <string name="unified_support_attachment_match_score">%1$d%% pasuje</string>
-    <string name="unified_support_status_bot">Dziwny bot</string>
     <string name="unified_support_bot_typing_content_description">Bot pomocy technicznej pisze</string>
     <string name="unified_support_message_input_placeholder">Wpisz wiadomość…</string>
     <string name="unified_support_conversations_title">Uzyskaj pomoc</string>

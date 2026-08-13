@@ -374,7 +374,7 @@ private fun MessageBubble(
     ) {
         if (!message.isUser) {
             Text(
-                text = stringResource(R.string.unified_support_status_bot),
+                text = stringResource(R.string.unified_support_status_ai_assistant),
                 style = MaterialTheme.typography.labelSmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.padding(bottom = 2.dp, start = 4.dp, end = 4.dp)

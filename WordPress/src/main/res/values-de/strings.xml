@@ -9,7 +9,6 @@ Language: de
     <string name="support_screen_unified_support_description">Erhalte jederzeit Antworten von unserem Support-Team</string>
     <string name="support_screen_unified_support_title">Hilfe erhalten</string>
     <string name="unified_support_attachment_match_score">%1$d %% Übereinstimmung</string>
-    <string name="unified_support_status_bot">Oddie-Bot</string>
     <string name="unified_support_bot_typing_content_description">Der Support-Bot schreibt gerade</string>
     <string name="unified_support_message_input_placeholder">Schreib eine Nachricht …</string>
     <string name="unified_support_conversations_title">Hilfe erhalten</string>
