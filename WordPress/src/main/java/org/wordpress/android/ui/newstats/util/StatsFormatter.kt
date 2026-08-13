@@ -83,6 +83,18 @@ fun formatCustomDateRange(startDate: LocalDate, endDate: LocalDate): String {
 }
 
 /**
+ * Where the year should be rendered on a start–end date range so the span reads unambiguously:
+ * [BOTH] endpoints when they fall in different calendar years, the [TRAILING] endpoint alone when
+ * they share a year (the leading endpoint inherits it, e.g. "28 Jul - 3 Aug 2024"). This is the
+ * single source of truth for that rule, shared by the Traffic top-bar label
+ * ([formatCustomDateRangeTwoLine]) and the Views-card legend, so the two can't drift.
+ */
+enum class RangeYearPlacement { TRAILING, BOTH }
+
+fun rangeYearPlacement(startYear: Int, endYear: Int): RangeYearPlacement =
+    if (startYear == endYear) RangeYearPlacement.TRAILING else RangeYearPlacement.BOTH
+
+/**
  * One rendered line of a two-line date-range label. [Split] carries the two endpoints separately so
  * the UI can align both lines on the "-" separator; [Single] is a standalone line (a single day, a
  * within-a-month day span, or a single year) with nothing to align, so it is centered.
@@ -119,10 +131,11 @@ fun formatCustomDateRangeTwoLine(startDate: LocalDate, endDate: LocalDate, curre
             RangeLine.Single("${startDate.format(dayFormat)}-${endDate.format(dayMonthFormat)}")
         else -> RangeLine.Split(startDate.format(dayMonthFormat), endDate.format(dayMonthFormat))
     }
-    val secondary = when {
-        sameYear && startDate.year == currentYear -> null
-        sameYear -> RangeLine.Single("${startDate.year}")
-        else -> RangeLine.Split("${startDate.year}", "${endDate.year}")
+    val secondary = when (rangeYearPlacement(startDate.year, endDate.year)) {
+        RangeYearPlacement.BOTH -> RangeLine.Split("${startDate.year}", "${endDate.year}")
+        // Same year: suppress it entirely within the current year, otherwise show it once.
+        RangeYearPlacement.TRAILING ->
+            if (startDate.year == currentYear) null else RangeLine.Single("${startDate.year}")
     }
     return DateRangeLabel(primary, secondary)
 }

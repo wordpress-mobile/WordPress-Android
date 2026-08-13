@@ -24,6 +24,8 @@ import org.wordpress.android.ui.newstats.repository.PeriodAggregates
 import org.wordpress.android.ui.newstats.repository.PeriodStatsResult
 import org.wordpress.android.ui.newstats.repository.StatsCardsConfigurationRepository
 import org.wordpress.android.ui.newstats.repository.StatsRepository
+import org.wordpress.android.ui.newstats.util.RangeYearPlacement
+import org.wordpress.android.ui.newstats.util.rangeYearPlacement
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.viewmodel.ResourceProvider
 import java.time.LocalDate
@@ -744,12 +746,13 @@ class ViewsStatsViewModel @Inject constructor(
         val monthFormat = DateTimeFormatter.ofPattern("MMM", Locale.getDefault())
         val monthYearFormat = DateTimeFormatter.ofPattern("MMM yyyy", Locale.getDefault())
 
-        return when {
-            start.month == end.month && start.year == end.year -> start.format(monthYearFormat)
-            // Same year: show the year once, on the trailing month ("Jan - Jun 2024").
-            start.year == end.year -> "${start.format(monthFormat)} - ${end.format(monthYearFormat)}"
+        return when (rangeYearPlacement(start.year, end.year)) {
             // Cross-year span: show the year on both ends ("Dec 2024 - Jan 2025").
-            else -> "${start.format(monthYearFormat)} - ${end.format(monthYearFormat)}"
+            RangeYearPlacement.BOTH -> "${start.format(monthYearFormat)} - ${end.format(monthYearFormat)}"
+            // Same year: show the year once, on the trailing month ("Jan - Jun 2024").
+            RangeYearPlacement.TRAILING ->
+                if (start.month == end.month) start.format(monthYearFormat)
+                else "${start.format(monthFormat)} - ${end.format(monthYearFormat)}"
         }
     }
 
@@ -761,16 +764,15 @@ class ViewsStatsViewModel @Inject constructor(
         val dayMonthFormat = DateTimeFormatter.ofPattern("d MMM", Locale.getDefault())
         val dayMonthYearFormat = DateTimeFormatter.ofPattern("d MMM yyyy", Locale.getDefault())
 
-        return when {
-            // Same month and year: show the year once, on the trailing date ("14-20 Jan 2024").
-            start.month == end.month && start.year == end.year ->
-                "${start.format(dayFormat)}-${end.format(dayMonthYearFormat)}"
-            // Same year, different month: show the year once, on the trailing date ("28 Jul - 3 Aug 2024").
-            start.year == end.year ->
-                "${start.format(dayMonthFormat)} - ${end.format(dayMonthYearFormat)}"
+        return when (rangeYearPlacement(start.year, end.year)) {
             // Cross-year span: show the year on both ends ("28 Dec 2024 - 3 Jan 2025").
-            else ->
+            RangeYearPlacement.BOTH ->
                 "${start.format(dayMonthYearFormat)} - ${end.format(dayMonthYearFormat)}"
+            // Same year: show the year once, on the trailing date. Collapse the leading month when
+            // both ends share it ("14-20 Jan 2024" vs "28 Jul - 3 Aug 2024").
+            RangeYearPlacement.TRAILING ->
+                if (start.month == end.month) "${start.format(dayFormat)}-${end.format(dayMonthYearFormat)}"
+                else "${start.format(dayMonthFormat)} - ${end.format(dayMonthYearFormat)}"
         }
     }
 
