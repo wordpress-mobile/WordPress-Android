@@ -7,6 +7,7 @@
 * [*] Stats now refresh when you return to the screen, so your latest data appears without a manual pull-to-refresh. [https://github.com/wordpress-mobile/WordPress-Android/pull/23112]
 * [*] Links from emails that open outside the app now show a clear message when no browser is available, instead of closing the app.
 * [*] Switching between the old and new Stats screen is available from the Stats overflow menu while we continue iterating on the new Stats design.
+* [*] Screen readers now announce the site picker's add site menu as an expandable menu and skip the content behind it. [https://github.com/wordpress-mobile/WordPress-Android/pull/23206]
 
 26.9
 -----
