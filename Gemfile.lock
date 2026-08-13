@@ -391,8 +391,7 @@ PLATFORMS
 
 DEPENDENCIES
   danger-dangermattic (~> 1.4)
-  faraday (~> 2.14)
-  fastlane (~> 2)
+  fastlane (~> 2.238)
   fastlane-plugin-firebase_app_distribution (~> 1.0)
   fastlane-plugin-sentry
   fastlane-plugin-wpmreleasetoolkit (~> 14.11.1)
