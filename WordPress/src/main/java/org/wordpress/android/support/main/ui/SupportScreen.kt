@@ -159,7 +159,7 @@ fun SupportScreen(
                     onClick = onLoginClick,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 16.dp, top = 24.dp)
+                        .padding(start = 16.dp, top = 24.dp, end = 16.dp)
                         .semantics { contentDescription = loginButtonText }
                 ) {
                     Text(text = loginButtonText)
@@ -171,7 +171,7 @@ fun SupportScreen(
                     textAlign = TextAlign.Center,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 16.dp, top = 8.dp, bottom = 24.dp)
+                        .padding(start = 16.dp, top = 8.dp, end = 16.dp, bottom = 24.dp)
                 )
             }
 
