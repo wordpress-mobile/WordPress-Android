@@ -4788,7 +4788,7 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="unified_support_message_input_placeholder">Type a message…</string>
     <string name="unified_support_bot_typing_content_description">Support bot is typing</string>
     <string name="unified_support_new_conversation_content_description">New conversation</string>
-    <string name="unified_support_status_bot">Oddie bot</string>
+    <string name="unified_support_status_ai_assistant">AI Assistant</string>
     <string name="unified_support_attachment_match_score">%1$d%% match</string>
     <string name="unified_support_attachment_link_content_description">Open link: %1$s</string>
     <string name="support_screen_unified_support_title">Get help</string>

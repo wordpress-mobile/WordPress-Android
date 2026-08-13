@@ -9,7 +9,6 @@ Language: es_CO
     <string name="unified_support_message_input_placeholder">Escribe un mensaje…</string>
     <string name="support_screen_unified_support_description">Consigue respuestas de nuestro equipo de atención al cliente en cualquier momento</string>
     <string name="unified_support_attachment_match_score">%1$d%% coincidencia</string>
-    <string name="unified_support_status_bot">Oddie bot</string>
     <string name="unified_support_bot_typing_content_description">El bot de asistencia está escribiendo</string>
     <string name="support_screen_unified_support_title">Obtén ayuda</string>
     <string name="page_rs_copy_url">Copiar URL</string>

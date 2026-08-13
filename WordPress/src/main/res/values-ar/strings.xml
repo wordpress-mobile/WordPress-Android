@@ -8,7 +8,6 @@ Language: ar
 <resources xmlns:tools="http://schemas.android.com/tools">
     <string name="unified_support_message_input_placeholder">جارٍ كتابة رسالة…</string>
     <string name="unified_support_bot_typing_content_description">روبوت الدعم يكتب</string>
-    <string name="unified_support_status_bot">روبوت Oddie</string>
     <string name="unified_support_attachment_match_score">%1$d%% تطابق</string>
     <string name="support_screen_unified_support_title">الحصول على مساعدة</string>
     <string name="support_screen_unified_support_description">احصل على إجابات من فريق الدعم لدينا في أي وقت</string>
