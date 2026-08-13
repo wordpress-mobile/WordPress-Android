@@ -1058,8 +1058,6 @@ Language: tr
     <string name="wp_jetpack_feature_removal_phase_new_users_reader_description">Beğendiğiniz siteleri ve toplulukları bulup takip edin ve içeriğinizi paylaşın.</string>
     <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_description">Yararlı bilgiler ve kapsamlı istatistiklerle trafiğinizin büyümesini izleyin.</string>
     <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_title">İstatistikler ve yönelimler</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_description">Jetpack, WordPress sitenizle daha fazlasını yapmanızı sağlar. Geçiş ücretsizdir ve yalnızca bir dakika sürer.</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_title">Jetpack ile WordPress\'e destek verin</string>
     <string name="blogging_prompts_onboarding_content_note_content">Blog istemlerini ve hatırlatıcılarını istediğiniz zaman Sitem &gt; Ayarlar &gt; Blog yazma bölümünden ayarlayabilirsiniz</string>
     <string name="blogging_reminders_prompt_subtitle">Bildirimde, ilham almak için bir sözcük veya kısa bir ifade bulunur</string>
     <string name="my_site_blogging_prompt_card_removed_snackbar_subtitle">Yeniden açmak için &lt;b&gt;Site ayarları&lt;/b&gt; bölümüne gidin</string>
@@ -1071,10 +1069,6 @@ Language: tr
     <string name="site_settings_blogging_prompts_title">İstemleri görüntüle</string>
     <string name="site_settings_blogging">Blog yazma</string>
     <string name="install_play_store_to_get_jetpack">Jetpack uygulamasını almak için Google Play mağazasını kurun</string>
-    <string name="wp_jetpack_feature_removal_phase_four_secondary_text">Bunu daha sonra yap</string>
-    <string name="wp_jetpack_feature_removal_switch_to_jetpack_app_menu_title">Jetpack kullanmaya geç </string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_four_all_features_description">İstatistikler, Okuyucu, Bildirimler ve Jetpack destekli diğer özellikler, yakında WordPress uygulamasından kaldırıldı.</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_four_title_all_features">Jetpack özellikleri taşındı.</string>
     <string name="my_site_blogging_prompt_card_view_answers">Tüm yanıtları görüntüle</string>
     <string name="stats_insights_total_stats_seven_days_negative">Son 7 güne göre %1$s daha düşük</string>
     <string name="stats_insights_total_stats_seven_days_positive">Son 7 güne göre %1$s daha yüksek</string>

@@ -13,7 +13,6 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.ErrorCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.ErrorWithinCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.JetpackFeatureCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.JetpackInstallFullPluginCard
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.JetpackSwitchMenu
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PagesCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PersonalizeCardModel
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard.PostCardWithPostItems
@@ -57,7 +56,6 @@ object MySiteAdapterDiffCallback : DiffUtil.ItemCallback<MySiteCardAndItem>() {
             }
 
             oldItem is JetpackFeatureCard && updatedItem is JetpackFeatureCard -> true
-            oldItem is JetpackSwitchMenu && updatedItem is JetpackSwitchMenu -> true
             oldItem is JetpackInstallFullPluginCard && updatedItem is JetpackInstallFullPluginCard -> true
             oldItem is MySiteCardAndItem.Card.NoCardsMessage && updatedItem is
                     MySiteCardAndItem.Card.NoCardsMessage -> true

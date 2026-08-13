@@ -1038,8 +1038,6 @@ Language: ja_JP
     <string name="wp_jetpack_feature_removal_phase_new_users_reader_description">お気に入りのサイトやコミュニティを見つけてフォローし、コンテンツを共有できます。</string>
     <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_description">便利な統計概要と包括的な統計情報で、トラフィックの成長を確認できます。</string>
     <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_title">統計情報と統計概要</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_description">Jetpack を使用すれば、WordPress でさらなる機能を利用できます。 切り替えは無料で、数分で終わります。</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_title">Jetpack で WordPress をレベルアップ</string>
     <string name="blogging_prompts_onboarding_content_note_content">ブログのプロンプトやリマインダーは、「My Site」 &gt; 「設定」 &gt; 「ブログ」でいつでもコントロールできます</string>
     <string name="blogging_reminders_prompt_subtitle">通知にはヒントになる言葉や短いフレーズが記載されます</string>
     <string name="my_site_blogging_prompt_card_removed_snackbar_subtitle">&lt;b&gt;「サイトの設定」&lt;/b&gt;に移動して表示をオンに戻す</string>
@@ -1051,10 +1049,6 @@ Language: ja_JP
     <string name="site_settings_blogging_prompts_title">プロンプトを表示</string>
     <string name="site_settings_blogging">ブログ</string>
     <string name="install_play_store_to_get_jetpack">Jetpack アプリを入手するには Google Play ストアをインストールしてください</string>
-    <string name="wp_jetpack_feature_removal_phase_four_secondary_text">後で実行する</string>
-    <string name="wp_jetpack_feature_removal_switch_to_jetpack_app_menu_title">Jetpack に切り替える </string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_four_all_features_description">統計、Reader、通知などの Jetpack 機能は、WordPress アプリから削除されました。</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_four_title_all_features">Jetpack 機能が移動しました。</string>
     <string name="my_site_blogging_prompt_card_view_answers">すべての回答を表示</string>
     <string name="stats_insights_total_stats_seven_days_negative">前の7日間と比べて%1$s 減少</string>
     <string name="stats_insights_total_stats_seven_days_positive">前の7日間と比べて%1$s 増加</string>

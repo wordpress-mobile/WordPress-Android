@@ -1058,8 +1058,6 @@ Language: nl
     <string name="wp_jetpack_feature_removal_phase_new_users_reader_description">Vind en volg je favoriete sites en community’s, en deel je content.</string>
     <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_description">Laat het aantal bezoekers van je site groeien via waardevolle inzichten en uitgebreide statistieken.</string>
     <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_title">Statistieken en inzichten</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_description">Met Jetpack kun je meer doen met je WordPress site. Overstappen is gratis en duurt maar een minuut.</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_title">Geef WordPress een boost met Jetpack</string>
     <string name="blogging_prompts_onboarding_content_note_content">Je kunt blogmeldingen en -herinneringen te allen tijde beheren via Mijn site &gt; Instellingen &gt; Bloggen</string>
     <string name="blogging_reminders_prompt_subtitle">Meldingen bevatten een woord of korte zin ter inspiratie</string>
     <string name="my_site_blogging_prompt_card_removed_snackbar_subtitle">Ga naar &lt;b&gt;Site-instellingen&lt;/b&gt; om weer in te schakelen</string>
@@ -1071,10 +1069,6 @@ Language: nl
     <string name="site_settings_blogging_prompts_title">Meldingen weergeven</string>
     <string name="site_settings_blogging">Bloggen</string>
     <string name="install_play_store_to_get_jetpack">Installeer Google Play Store om de Jetpack-app te downloaden</string>
-    <string name="wp_jetpack_feature_removal_phase_four_secondary_text">Doe dit later</string>
-    <string name="wp_jetpack_feature_removal_switch_to_jetpack_app_menu_title">Overstappen naar Jetpack </string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_four_all_features_description">Statistieken, Reader, meldingen en andere functies die door Jetpack aangedreven worden, zijn verwijderd uit de WordPress-app.</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_four_title_all_features">Jetpack functies zijn verplaatst.</string>
     <string name="my_site_blogging_prompt_card_view_answers">Alle reacties bekijken</string>
     <string name="stats_insights_total_stats_seven_days_negative">%1$s minder dan de vorige 7 dagen</string>
     <string name="stats_insights_total_stats_seven_days_positive">%1$s meer dan de vorige 7 dagen</string>

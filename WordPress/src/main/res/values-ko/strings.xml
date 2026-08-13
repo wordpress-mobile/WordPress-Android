@@ -1049,8 +1049,6 @@ Language: ko_KR
     <string name="wp_jetpack_feature_removal_phase_new_users_reader_description">즐겨 찾는 사이트와 커뮤니티를 찾아서 팔로우하고, 자신의 콘텐츠를 공유하세요.</string>
     <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_description">유용한 인사이트와 포괄적인 통계를 통해 트래픽 증가를 지켜보세요.</string>
     <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_title">통계 및 인사이트</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_description">젯팩을 통해 워드프레스 사이트에서 더 많은 작업을 수행할 수 있습니다. 전환은 무료이며 1분밖에 걸리지 않습니다.</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_title">젯팩으로 워드프레스 성능 향상</string>
     <string name="blogging_prompts_onboarding_content_note_content">언제든지 내 사이트 &gt; 설정 &gt; 블로깅에서 블로깅 프롬프트와 알림을 관리할 수 있습니다.</string>
     <string name="blogging_reminders_prompt_subtitle">영감을 주는 단어 또는 짧은 구문이 알림에 포함됩니다.</string>
     <string name="my_site_blogging_prompt_card_removed_snackbar_subtitle">&lt;b&gt;사이트 설정&lt;/b&gt;으로 이동하여 다시 켜기</string>
@@ -1062,10 +1060,6 @@ Language: ko_KR
     <string name="site_settings_blogging_prompts_title">프롬프트 표시</string>
     <string name="site_settings_blogging">블로깅</string>
     <string name="install_play_store_to_get_jetpack">젯팩 앱을 이용하려면 Google Play 스토어를 설치하세요.</string>
-    <string name="wp_jetpack_feature_removal_phase_four_secondary_text">나중에 하겠습니다.</string>
-    <string name="wp_jetpack_feature_removal_switch_to_jetpack_app_menu_title">젯팩으로 전환 </string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_four_all_features_description">통계, 리더, 알림 및 기타 젯팩에서 제공되는 기능이 워드프레스 앱에서 제거되었습니다.</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_four_title_all_features">젯팩 기능이 제거되었습니다.</string>
     <string name="my_site_blogging_prompt_card_view_answers">모든 응답 보기</string>
     <string name="stats_insights_total_stats_seven_days_negative">이전 7일보다 %1$s 적음</string>
     <string name="stats_insights_total_stats_seven_days_positive">이전 7일보다 %1$s 많음</string>

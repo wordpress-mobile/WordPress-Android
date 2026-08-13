@@ -8,7 +8,6 @@ import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureOverlayActions.Open
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil.JetpackFeatureCollectionOverlaySource
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil.JetpackOverlayDismissalType.CLOSE_BUTTON
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil.JetpackOverlayDismissalType.CONTINUE_BUTTON
-import org.wordpress.android.util.config.PhaseFourBlogPostLinkConfig
 import org.wordpress.android.viewmodel.ScopedViewModel
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import javax.inject.Inject
@@ -19,8 +18,7 @@ class JetpackFeatureFullScreenOverlayViewModel @Inject constructor(
     @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
     private val jetpackFeatureOverlayContentBuilder: JetpackFeatureOverlayContentBuilder,
     private val jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper,
-    private val jetpackFeatureRemovalOverlayUtil: JetpackFeatureRemovalOverlayUtil,
-    private val phaseFourBlogPostLinkConfig: PhaseFourBlogPostLinkConfig
+    private val jetpackFeatureRemovalOverlayUtil: JetpackFeatureRemovalOverlayUtil
 ) : ScopedViewModel(mainDispatcher) {
     private val _uiState = SingleLiveEvent<JetpackFeatureOverlayUIState>()
     val uiState: LiveData<JetpackFeatureOverlayUIState> = _uiState
@@ -72,33 +70,20 @@ class JetpackFeatureFullScreenOverlayViewModel @Inject constructor(
             return
         }
 
-        val currentPhase = getCurrentPhase()
-            ?: return _action.postValue(JetpackFeatureOverlayActions.DismissDialog)
+        if (!jetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures()) {
+            return _action.postValue(JetpackFeatureOverlayActions.DismissDialog)
+        }
         featureCollectionOverlayOrigin = featureCollectionOverlaySource
-        _uiState.postValue(
-            jetpackFeatureOverlayContentBuilder.buildFeatureCollectionOverlayState(
-                rtlLayout,
-                currentPhase,
-                getBlogPostLinkForTheCurrentPhase()
-            )
-        )
+        _uiState.postValue(jetpackFeatureOverlayContentBuilder.buildFeatureCollectionOverlayState(rtlLayout))
         jetpackFeatureRemovalOverlayUtil.onFeatureCollectionOverlayShown(featureCollectionOverlaySource)
     }
 
-    private fun getCurrentPhase() = jetpackFeatureRemovalPhaseHelper.getCurrentPhase()
 
     fun openJetpackMigrationInfoLink(migrationInfoRedirectUrl: String) {
         jetpackFeatureRemovalOverlayUtil.trackLearnMoreAboutMigrationClickedInFeatureCollectionOverlay(
             featureCollectionOverlayOrigin
         )
         _action.value = OpenMigrationInfoLink(migrationInfoRedirectUrl)
-    }
-
-    private fun getBlogPostLinkForTheCurrentPhase(): String? {
-        return when (getCurrentPhase()) {
-            JetpackFeatureRemovalPhase.PhaseFour -> phaseFourBlogPostLinkConfig.getValue()
-            else -> null
-        }
     }
 }
 

@@ -17,7 +17,6 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.ErrorCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.ErrorWithinCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.JetpackFeatureCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.JetpackInstallFullPluginCard
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.JetpackSwitchMenu
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PagesCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PersonalizeCardModel
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.PostCard
@@ -45,7 +44,6 @@ import org.wordpress.android.ui.mysite.cards.dashboard.todaysstats.TodaysStatsCa
 import org.wordpress.android.ui.mysite.cards.domainregistration.DomainRegistrationViewHolder
 import org.wordpress.android.ui.mysite.cards.dynamiccard.DynamicDashboardCardViewHolder
 import org.wordpress.android.ui.mysite.cards.jetpackfeature.JetpackFeatureCardViewHolder
-import org.wordpress.android.ui.mysite.cards.jetpackfeature.SwitchToJetpackMenuCardViewHolder
 import org.wordpress.android.ui.mysite.cards.jpfullplugininstall.JetpackInstallFullPluginCardViewHolder
 import org.wordpress.android.ui.mysite.cards.nocards.NoCardsMessageViewHolder
 import org.wordpress.android.ui.mysite.cards.personalize.PersonalizeCardViewHolder
@@ -117,7 +115,6 @@ class MySiteAdapter(
 
             MySiteCardAndItem.Type.SINGLE_ACTION_CARD.ordinal -> SingleActionCardViewHolder(parent)
             MySiteCardAndItem.Type.JETPACK_FEATURE_CARD.ordinal -> JetpackFeatureCardViewHolder(parent, uiHelpers)
-            MySiteCardAndItem.Type.JETPACK_SWITCH_CARD.ordinal -> SwitchToJetpackMenuCardViewHolder(parent)
             MySiteCardAndItem.Type.JETPACK_INSTALL_FULL_PLUGIN_CARD.ordinal -> JetpackInstallFullPluginCardViewHolder(
                 parent
             )
@@ -152,7 +149,6 @@ class MySiteAdapter(
             is ActivityCardViewHolder -> holder.bind(getItem(position)  as ActivityCard)
             is SingleActionCardViewHolder -> holder.bind(getItem(position) as SingleActionCard)
             is JetpackFeatureCardViewHolder -> holder.bind(getItem(position) as JetpackFeatureCard)
-            is SwitchToJetpackMenuCardViewHolder -> holder.bind(getItem(position) as JetpackSwitchMenu)
             is JetpackInstallFullPluginCardViewHolder -> holder.bind(getItem(position) as JetpackInstallFullPluginCard)
             is NoCardsMessageViewHolder -> holder.bind(getItem(position) as MySiteCardAndItem.Card.NoCardsMessage)
             is PersonalizeCardViewHolder -> holder.bind(getItem(position) as PersonalizeCardModel)

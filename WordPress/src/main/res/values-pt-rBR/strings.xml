@@ -752,8 +752,6 @@ Language: pt_BR
     <string name="wp_jetpack_feature_removal_phase_new_users_reader_description">Encontre e siga seus sites e comunidades favoritos, e compartilhe seu conteúdo.</string>
     <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_description">Acompanhe o crescimento de seu site com análises úteis e estatísticas fáceis de entender.</string>
     <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_title">Estatísticas e informações</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_description">O Jetpack permite que você faça ainda mais com seu site WordPress. A mudança é gratuita e leva apenas um minuto.</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_title">Melhore o WordPress com o Jetpack</string>
     <string name="blogging_prompts_onboarding_content_note_content">Você pode controlar as sugestões e os lembretes de publicação a qualquer momento em Meu site &gt; Configurações &gt; Blog</string>
     <string name="blogging_reminders_prompt_subtitle">A notificação incluirá uma palavra ou uma frase curta, para inspiração</string>
     <string name="my_site_blogging_prompt_card_removed_snackbar_subtitle">Vá às &lt;b&gt;configurações do site&lt;/b&gt; para reativar as sugestões</string>
@@ -765,10 +763,6 @@ Language: pt_BR
     <string name="site_settings_blogging_prompts_title">Mostrar sugestões</string>
     <string name="site_settings_blogging">Blog</string>
     <string name="install_play_store_to_get_jetpack">Instale o Google Play Store para obter o aplicativo Jetpack</string>
-    <string name="wp_jetpack_feature_removal_phase_four_secondary_text">Fazer isso depois</string>
-    <string name="wp_jetpack_feature_removal_switch_to_jetpack_app_menu_title">Mudar para o Jetpack </string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_four_all_features_description">Estatísticas, Leitor, Notificações e outras funcionalidades com tecnologia Jetpack foram removidas do aplicativo WordPress.</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_four_title_all_features">Recursos do Jetpack foram movidos.</string>
     <string name="my_site_blogging_prompt_card_view_answers">Ver todas as respostas</string>
     <string name="stats_insights_total_stats_seven_days_negative">%1$s menor do que nos sete dias anteriores</string>
     <string name="stats_insights_total_stats_seven_days_positive">%1$s maior do que nos sete dias anteriores</string>

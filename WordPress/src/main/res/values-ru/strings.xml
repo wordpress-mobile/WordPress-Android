@@ -1058,8 +1058,6 @@ Language: ru
     <string name="wp_jetpack_feature_removal_phase_new_users_reader_description">Находите интересные сайты и сообщества и подписывайтесь на них, а также публикуйте своё содержимое.</string>
     <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_description">Увеличивайте посещаемость с помощью полезной статистики и аналитики.</string>
     <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_title">Статистика и обзор</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_description">Jetpack открывает дополнительные возможности для сайтов WordPress. Переход бесплатен и занимает всего минуту.</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_title">Расширьте возможности WordPress с помощью Jetpack</string>
     <string name="blogging_prompts_onboarding_content_note_content">Настроить подсказки по ведению блога и напоминания можно в любое время в разделе Мой сайт &gt; Настройки &gt; Ведение блога.</string>
     <string name="blogging_reminders_prompt_subtitle">Напоминание будет содержать слово или короткую вдохновляющую фразу</string>
     <string name="my_site_blogging_prompt_card_removed_snackbar_subtitle">Перейдите в &lt;b&gt;настройки сайта&lt;/b&gt;, чтобы снова включить</string>
@@ -1071,10 +1069,6 @@ Language: ru
     <string name="site_settings_blogging_prompts_title">Показать подсказки</string>
     <string name="site_settings_blogging">Ведение блога</string>
     <string name="install_play_store_to_get_jetpack">Пожалуйста, установите Google Play Store, чтобы получить приложение Jetpack</string>
-    <string name="wp_jetpack_feature_removal_phase_four_secondary_text">Позже</string>
-    <string name="wp_jetpack_feature_removal_switch_to_jetpack_app_menu_title">Перейти на Jetpack </string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_four_all_features_description">Статистика, Чтиво, Уведомления и другие функции Jetpack удалены из приложения WordPress.</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_four_title_all_features">Возможности Jetpack переехали.</string>
     <string name="my_site_blogging_prompt_card_view_answers">Показать все ответы</string>
     <string name="stats_insights_total_stats_seven_days_negative">На %1$s меньше, чем в предыдущие 7 дней</string>
     <string name="stats_insights_total_stats_seven_days_positive">На %1$s больше, чем в предыдущие 7 дней</string>

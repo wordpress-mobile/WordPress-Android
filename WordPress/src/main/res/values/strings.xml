@@ -4244,16 +4244,10 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="preference_open_links_in_jetpack_setting_change_disable_error">Unable to disable open links in Jetpack</string>
 
     <!-- Jetpack feature overlay strings in WordPress App -->
-    <string name="wp_jetpack_feature_removal_overlay_phase_four_title_all_features">Jetpack features have moved.</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_four_all_features_description">Stats, Reader, Notifications and other Jetpack powered features have been removed from the WordPress app.</string>
     <string name="wp_jetpack_feature_removal_overlay_migration_helper_text">Switching is free and only takes a minute.</string>
     <string name="wp_jetpack_feature_removal_overlay_learn_more_migration_text">Learn more at jetpack.com</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_the_jetpack_app">Switch to the Jetpack app</string>
     <string name="wp_jetpack_feature_removal_overlay_continue_without_jetpack" translatable="false">@string/wp_jetpack_continue_without_jetpack</string>
-    <string name="wp_jetpack_feature_removal_switch_to_jetpack_app_menu_title">Switch to Jetpack </string>
-    <string name="wp_jetpack_feature_removal_phase_four_secondary_text">Do this later</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_title">Give WordPress a boost with Jetpack</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_description">Jetpack lets you do more with your WordPress site. Switching is free and only takes a minute.</string>
     <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_title">Stats &amp; Insights</string>
     <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_description">Watch your traffic grow with helpful insights and comprehensive stats.</string>
     <string name="wp_jetpack_feature_removal_phase_new_users_reader_title" translatable="false">@string/reader</string>

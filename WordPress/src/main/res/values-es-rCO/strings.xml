@@ -1058,8 +1058,6 @@ Language: es_CO
     <string name="wp_jetpack_feature_removal_phase_new_users_reader_description">Comparte tu contenido y busca tus comunidades y sitios favoritos para seguirlos.</string>
     <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_description">Consulta el crecimiento del tráfico a tu sitio con información útil y estadísticas completas.</string>
     <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_title">Estadísticas y datos clave</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_description">Con Jetpack sacarás más partido de tu sitio de WordPress. El cambio es gratuito y solo te llevará un minuto.</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_title">Dale un impulso a WordPress con Jetpack</string>
     <string name="blogging_prompts_onboarding_content_note_content">Puedes gestionar los recordatorios y estímulos para bloguear en cualquier momento desde Mi sitio &gt; Ajustes &gt; Bloguear.</string>
     <string name="blogging_reminders_prompt_subtitle">Cada notificación incluirá una palabra o una breve frase inspiradora.</string>
     <string name="my_site_blogging_prompt_card_removed_snackbar_subtitle">Ve a &lt;b&gt;Ajustes del sitio&lt;/b&gt; para reactivarlos.</string>
@@ -1071,10 +1069,6 @@ Language: es_CO
     <string name="site_settings_blogging_prompts_title">Mostrar estímulos</string>
     <string name="site_settings_blogging">Bloguear</string>
     <string name="install_play_store_to_get_jetpack">Por favor, instala la Google Play Store para obener al app Jetpack</string>
-    <string name="wp_jetpack_feature_removal_phase_four_secondary_text">Hacerlo más tarde</string>
-    <string name="wp_jetpack_feature_removal_switch_to_jetpack_app_menu_title">Cambiar a Jetpack </string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_four_all_features_description">Algunas características de Jetpack como Estadísticas, Lector o Notificaciones, entre otras, han sido eliminadas de la app de WordPress.</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_four_title_all_features">Las características de Jetpack se han trasladado.</string>
     <string name="my_site_blogging_prompt_card_view_answers">Ver todas las respuestas</string>
     <string name="stats_insights_total_stats_seven_days_negative">%1$s es menor que la semana anterior</string>
     <string name="stats_insights_total_stats_seven_days_positive">%1$s es mayor que la semana anterior</string>

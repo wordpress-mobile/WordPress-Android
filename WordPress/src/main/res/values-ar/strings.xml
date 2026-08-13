@@ -1034,8 +1034,6 @@ Language: ar
     <string name="wp_jetpack_feature_removal_phase_new_users_reader_description">اعثر على الموقع والمجتمعات التي تفضّلها وتابعها، ثم شارك محتواك.</string>
     <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_description">راقب الزيادة في حركة المرور لديك من خلال الرؤى المفيدة والإحصاءات الشاملة.</string>
     <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_title">الإحصاءات والرؤى</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_description">يتيح لك Jetpack القيام بالمزيد من خلال موقع ووردبريس الخاص بك. التبديل مجاني، ولا يستغرق سوى بضع دقائق.</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_title">تعزيز ووردبريس من خلال Jetpack</string>
     <string name="blogging_prompts_onboarding_content_note_content">يمكنك التحكم في مطالبات التدوين والتذكيرات في أي وقت ضمن موقعي &gt; الإعدادات &gt; التدوين</string>
     <string name="blogging_reminders_prompt_subtitle">سيتضمن التنبيه كلمة أو عبارة مختصرة كمصدر للإلهام</string>
     <string name="my_site_blogging_prompt_card_removed_snackbar_subtitle">زيارة &lt;b&gt;إعدادات الموقع&lt;/b&gt; لإعادة التشغيل</string>
@@ -1047,10 +1045,6 @@ Language: ar
     <string name="site_settings_blogging_prompts_title">إظهار المطالبات</string>
     <string name="site_settings_blogging">التدوين</string>
     <string name="install_play_store_to_get_jetpack">يرجى تثبيت متجر Google Play للحصول على تطبيق Jetpack</string>
-    <string name="wp_jetpack_feature_removal_phase_four_secondary_text">القيام بهذا لاحقًا</string>
-    <string name="wp_jetpack_feature_removal_switch_to_jetpack_app_menu_title">التبديل إلى Jetpack </string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_four_all_features_description">تمت إزالة ميزات الإحصاءات والقارئ والتنبيهات وغيرها من الميزات التي يدعمها Jetpack من تطبيق ووردبريس.</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_four_title_all_features">لقد انتقلت ميزات Jetpack.</string>
     <string name="my_site_blogging_prompt_card_view_answers">عرض كل الردود</string>
     <string name="stats_insights_total_stats_seven_days_negative">⁦%1$s⁩ أقل من الأيام الـ 7 السابقة</string>
     <string name="stats_insights_total_stats_seven_days_positive">⁦%1$s⁩ أعلى من الأيام الـ 7 السابقة</string>

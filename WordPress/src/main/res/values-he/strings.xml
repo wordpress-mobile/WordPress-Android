@@ -1045,8 +1045,6 @@ Language: he_IL
     <string name="wp_jetpack_feature_removal_phase_new_users_reader_description">למצוא את האתרים והקהילות המועדפים עליך, לעקוב אחריהם ולשתף את התוכן שלך.</string>
     <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_description">להגדיל את התעבורה לאתר בעזרת גישה לתובנות שימושיות ולנתונים סטטיסטיים מקיפים.</string>
     <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_title">נתונים סטטיסטיים ותובנות</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_description">השירות של Jetpack מאפשר לך להפיק את המרב מהאתר שלך ב-WordPress. ההחלפה היא חינמית ואורכת דקה בלבד.</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_title">לשפר את השירות של WordPress עם Jetpack</string>
     <string name="blogging_prompts_onboarding_content_note_content">אפשר לשלוט ב\'הצעות כתיבה בבלוג\' וב\'תזכורות\' בכל עת דרך \'האתר שלי\' &gt; \'הגדרות\' &gt; \'פרסום בבלוג\'</string>
     <string name="blogging_reminders_prompt_subtitle">ההודעה תכלול מילה או ביטוי קצר להשראה</string>
     <string name="my_site_blogging_prompt_card_removed_snackbar_subtitle">יש לעבור אל &lt;b&gt;הגדרות האתר&lt;/b&gt; כדי להפעיל אותן בחזרה</string>
@@ -1058,10 +1056,6 @@ Language: he_IL
     <string name="site_settings_blogging_prompts_title">להציג הצעות כתיבה</string>
     <string name="site_settings_blogging">פרסום בבלוג</string>
     <string name="install_play_store_to_get_jetpack">יש להתקין את Google Play Store כדי להוריד את האפליקציה של Jetpack</string>
-    <string name="wp_jetpack_feature_removal_phase_four_secondary_text">אפשר לחכות עם זה</string>
-    <string name="wp_jetpack_feature_removal_switch_to_jetpack_app_menu_title">לעבור ל-Jetpack </string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_four_all_features_description">נתונים סטטיסטיים, Reader, הודעות ואפשרויות אחרות שמופעלות על ידי Jetpack הוסרו מאפליקציית WordPress.</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_four_title_all_features">האפשרויות של Jetpack הועברו.</string>
     <string name="my_site_blogging_prompt_card_view_answers">להציג את כל התשובות</string>
     <string name="stats_insights_total_stats_seven_days_negative">⁦%1$s⁩ פחות לעומת שבעת הימים הקודמים</string>
     <string name="stats_insights_total_stats_seven_days_positive">⁦%1$s⁩ יותר משבעת הימים הקודמים</string>

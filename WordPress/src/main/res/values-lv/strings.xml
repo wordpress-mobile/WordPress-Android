@@ -599,8 +599,6 @@ Language: lv
     <string name="my_site_blogging_prompt_card_removed_snackbar_subtitle">Apmeklējiet &lt;b&gt;Vietnes iestatījumi&lt;/b&gt;, lai tos ieslēgtu atkal</string>
     <string name="blogging_reminders_prompt_subtitle">Paziņojumā būs iekļauts vārds vai īsa frāze iedvesmai</string>
     <string name="blogging_prompts_onboarding_content_note_content">Emuāru rakstīšanas uzvednes un atgādinājumus varat kontrolēt katrā laikā sadaļā Mana vietne &gt; Iestatījumi &gt; Emuāri</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_title">Sniedziet atbalstu WordPress ar Jetpack</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_description">Jetpack ļauj paveikt vairāk savā WordPress vietnē. Pārslēgšanās ir bezmaksas un aizņem tikai minūti.</string>
     <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_title">Statistika un ieskati</string>
     <string name="site_settings_blogging">Emuāru rakstīšana</string>
     <string name="site_settings_blogging_prompts_title">Rādīt uzvednes</string>
@@ -608,11 +606,7 @@ Language: lv
     <string name="support_forum_title">Kopienas forumi</string>
     <string name="support_forum_caption">Saņemiet palīdzību no mūsu brīvprātīgo grupas.</string>
     <string name="my_site_blogging_prompt_card_menu_remove">Izslēgt uzvednes</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_four_title_all_features">Jetpack funkcijas ir pārvietotas.</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_four_all_features_description">Statistika, lasītājs, paziņojumi un citas Jetpack darbināmas funkcijas ir noņemtas no WordPress lietotnes.</string>
-    <string name="wp_jetpack_feature_removal_switch_to_jetpack_app_menu_title">Pārslēdzieties uz Jetpack </string>
     <string name="install_play_store_to_get_jetpack">Lūdzu, instalējiet Google Play veikalu, lai iegūtu lietotni Jetpack</string>
-    <string name="wp_jetpack_feature_removal_phase_four_secondary_text">Dariet to vēlāk</string>
     <string name="stats_timeframe_last_seven_days">Pēdējās 7 dienas</string>
     <string name="stats_timeframe_previous_seven_days">Iepriekšējās 7 dienas</string>
     <string name="stats_insights_views_and_visitors_seven_days_views_positive">Jūsu skatījumu skaits pēdējo 7 dienu laikā ir par %1$s lielāks nekā iepriekšējās 7 dienās.</string>

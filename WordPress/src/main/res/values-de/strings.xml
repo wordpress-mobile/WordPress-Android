@@ -1058,8 +1058,6 @@ Language: de
     <string name="wp_jetpack_feature_removal_phase_new_users_reader_description">Suche deine Lieblingswebsites und -communities, folge ihnen und teile deine Inhalte.</string>
     <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_description">Beobachte dank hilfreicher Einblicke und umfassender Statistiken, wie dein Traffic wächst.</string>
     <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_title">Statistiken und Einblicke</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_description">Mit Jetpack kannst du mehr aus deiner WordPress-Website herausholen. Der Wechsel ist kostenlos und dauert nur eine Minute.</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_title">Gib WordPress einen Schub mit Jetpack</string>
     <string name="blogging_prompts_onboarding_content_note_content">Unter „Meine Website &gt; Einstellungen &gt; Bloggen“ kannst du jederzeit Einstellungen für Blog-Schreibanregungen und -Erinnerungen vornehmen</string>
     <string name="blogging_reminders_prompt_subtitle">Die Benachrichtigung beinhaltet ein Wort oder einen kurzen Satz zur Inspiration</string>
     <string name="my_site_blogging_prompt_card_removed_snackbar_subtitle">Wechsle zu den &lt;b&gt;Website-Einstellungen&lt;/b&gt;, um sie wieder zu aktivieren</string>
@@ -1071,10 +1069,6 @@ Language: de
     <string name="site_settings_blogging_prompts_title">Schreibanregungen anzeigen</string>
     <string name="site_settings_blogging">Bloggen</string>
     <string name="install_play_store_to_get_jetpack">Bitte installiere Google Play Store, um die Jetpack-App zu erhalten</string>
-    <string name="wp_jetpack_feature_removal_phase_four_secondary_text">Später erledigen</string>
-    <string name="wp_jetpack_feature_removal_switch_to_jetpack_app_menu_title">Zu Jetpack wechseln </string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_four_all_features_description">Statistiken, der Reader, Benachrichtigungen und weitere von Jetpack unterstützte Funktionen wurden aus der WordPress-App entfernt.</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_four_title_all_features">Jetpack-Funktionen wurden verschoben.</string>
     <string name="my_site_blogging_prompt_card_view_answers">Alle Antworten anzeigen</string>
     <string name="stats_insights_total_stats_seven_days_negative">%1$s niedriger als in den vorherigen 7 Tagen</string>
     <string name="stats_insights_total_stats_seven_days_positive">%1$s höher als in den vorherigen 7 Tagen</string>

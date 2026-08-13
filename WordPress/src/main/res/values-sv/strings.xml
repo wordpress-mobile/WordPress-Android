@@ -1058,8 +1058,6 @@ Language: sv_SE
     <string name="wp_jetpack_feature_removal_phase_new_users_reader_description">Hitta och följ dina favoritwebbplatser och -communities samt dela ditt innehåll.</string>
     <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_description">Se din trafik öka med användbara insikter och omfattande statistik.</string>
     <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_title">Statistik och insikter</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_description">Med Jetpack kan du göra mer med din WordPress-webbplats. Att byta är gratis och tar bara en minut.</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_title">Förbättra WordPress med Jetpack</string>
     <string name="blogging_prompts_onboarding_content_note_content">Du kan kontrollera bloggningsförslag och påminnelser när som helst i Min webbplats &gt; Inställningar &gt; Bloggande</string>
     <string name="blogging_reminders_prompt_subtitle">Aviseringen kommer att innehålla ett ord eller en kort fras för inspiration</string>
     <string name="my_site_blogging_prompt_card_removed_snackbar_subtitle">Gå till &lt;b&gt;Webbplatsinställningar&lt;/b&gt; för att aktivera igen</string>
@@ -1071,10 +1069,6 @@ Language: sv_SE
     <string name="site_settings_blogging_prompts_title">Visa förslag</string>
     <string name="site_settings_blogging">Bloggande</string>
     <string name="install_play_store_to_get_jetpack">Installera Google Play Store för att hämta Jetpack-appen</string>
-    <string name="wp_jetpack_feature_removal_phase_four_secondary_text">Gör detta senare</string>
-    <string name="wp_jetpack_feature_removal_switch_to_jetpack_app_menu_title">Byt till Jetpack </string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_four_all_features_description">Statistik, läsare, aviseringar och andra Jetpack-drivna funktioner har tagits bort från WordPress-appen.</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_four_title_all_features">Jetpack-funktioner har flyttat.</string>
     <string name="my_site_blogging_prompt_card_view_answers">Visa alla svar</string>
     <string name="stats_insights_total_stats_seven_days_negative">%1$s lägre än under de föregående 7 dagarna</string>
     <string name="stats_insights_total_stats_seven_days_positive">%1$s högre än under de föregående 7 dagarna</string>

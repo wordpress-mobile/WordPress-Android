@@ -1048,8 +1048,6 @@ Language: zh_TW
     <string name="wp_jetpack_feature_removal_phase_new_users_reader_description">尋找並追蹤你喜愛的網站和社群，並分享你的內容。</string>
     <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_description">取得實用洞察報告和全面的統計資料，帶你見證流量成長。</string>
     <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_title">統計資料和洞察報告</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_description">Jetpack 讓你更充分發揮 WordPress 網站潛能。 切換完全免費，只要 1 分鐘就能完成。</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_title">透過 Jetpack 提升 WordPress 成效</string>
     <string name="blogging_prompts_onboarding_content_note_content">你可以隨時前往「我的網站」&gt;「設定」&gt;「撰寫網誌」控制網誌提示和提醒</string>
     <string name="blogging_reminders_prompt_subtitle">通知會包含可啟發靈感的字詞或短語</string>
     <string name="my_site_blogging_prompt_card_removed_snackbar_subtitle">前往「&lt;b&gt;網站設定&lt;/b&gt;」以重新啟用</string>
@@ -1061,10 +1059,6 @@ Language: zh_TW
     <string name="site_settings_blogging_prompts_title">顯示提示</string>
     <string name="site_settings_blogging">撰寫網誌</string>
     <string name="install_play_store_to_get_jetpack">請安裝 Google Play 商店以取得 Jetpack 應用程式</string>
-    <string name="wp_jetpack_feature_removal_phase_four_secondary_text">稍後進行</string>
-    <string name="wp_jetpack_feature_removal_switch_to_jetpack_app_menu_title">切換至 Jetpack </string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_four_all_features_description">WordPress 應用程式已移除「統計資料」、「閱讀器」、「通知」和其他 Jetpack 提供的功能。</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_four_title_all_features">Jetpack 功能已經搬遷。</string>
     <string name="my_site_blogging_prompt_card_view_answers">檢視所有回應</string>
     <string name="stats_insights_total_stats_seven_days_negative">較先前 7 天低 %1$s</string>
     <string name="stats_insights_total_stats_seven_days_positive">較先前 7 天高 %1$s</string>

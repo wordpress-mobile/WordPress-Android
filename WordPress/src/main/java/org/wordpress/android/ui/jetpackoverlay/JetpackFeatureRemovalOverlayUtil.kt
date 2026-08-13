@@ -2,12 +2,7 @@ package org.wordpress.android.ui.jetpackoverlay
 
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil.JetpackFeatureCollectionOverlaySource.APP_OPEN
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseFour
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseNewUsers
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseSelfHostedUsers
-import org.wordpress.android.util.DateTimeUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
-import java.util.Date
 import javax.inject.Inject
 
 private const val CURRENT_PHASE_KEY = "phase"
@@ -17,7 +12,6 @@ private const val DISMISSAL_TYPE_KEY = "dismissal_type"
 class JetpackFeatureRemovalOverlayUtil @Inject constructor(
     private val jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper,
     private val jetpackFeatureOverlayShownTracker: JetpackFeatureOverlayShownTracker,
-    private val dateTimeUtilsWrapper: DateTimeUtilsWrapper,
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper
 ) {
     fun shouldHideJetpackFeatures(): Boolean {
@@ -25,36 +19,8 @@ class JetpackFeatureRemovalOverlayUtil @Inject constructor(
     }
 
     fun shouldShowFeatureCollectionJetpackOverlayForFirstTime(): Boolean {
-        val phase = jetpackFeatureRemovalPhaseHelper.getCurrentPhase() ?: return false
-        return shouldShowFeatureCollectionOverlayInCurrentPhase(phase)
-    }
-
-    private fun shouldShowFeatureCollectionOverlayInCurrentPhase(phase: JetpackFeatureRemovalPhase): Boolean {
-        return when (phase) {
-            PhaseNewUsers, PhaseSelfHostedUsers ->
-                !jetpackFeatureOverlayShownTracker.getFeatureCollectionOverlayShown(phase)
-            PhaseFour -> shouldShowPhaseFourFeatureCollectionOverlay()
-        }
-    }
-
-    // if the overlay is not shown, then show it
-    // if the overlay is shown and the remote config value is 0, then don't show
-    // if the overlay is shown and the remote config value is not 0, then check the frequency
-    @Suppress("ReturnCount")
-    private fun shouldShowPhaseFourFeatureCollectionOverlay(): Boolean {
-        val isOverlayShown = jetpackFeatureOverlayShownTracker.getFeatureCollectionOverlayShown(PhaseFour)
-        if (!isOverlayShown) return true
-        val phaseFourOverlayFrequency = jetpackFeatureRemovalPhaseHelper.getPhaseFourOverlayFrequency()
-        if (phaseFourOverlayFrequency == -1) return false
-        val overlayShownDate = jetpackFeatureOverlayShownTracker.getPhaseFourOverlayShownTimeStamp()
-        if (overlayShownDate != null) {
-            val daysPastOverlayShown = dateTimeUtilsWrapper.daysBetween(
-                Date(overlayShownDate),
-                dateTimeUtilsWrapper.getTodaysDate()
-            )
-            return daysPastOverlayShown >= phaseFourOverlayFrequency
-        }
-        return false
+        return jetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures() &&
+                !jetpackFeatureOverlayShownTracker.getFeatureCollectionOverlayShown()
     }
 
     fun trackDeepLinkOverlayShown() {
@@ -89,9 +55,7 @@ class JetpackFeatureRemovalOverlayUtil @Inject constructor(
 
     fun onFeatureCollectionOverlayShown(source: JetpackFeatureCollectionOverlaySource) {
         if (source == APP_OPEN) {
-            jetpackFeatureOverlayShownTracker.setFeatureCollectionOverlayShown(
-                jetpackFeatureRemovalPhaseHelper.getCurrentPhase()!!
-            )
+            jetpackFeatureOverlayShownTracker.setFeatureCollectionOverlayShown()
         }
         trackFeatureCollectionOverlayShown(source)
     }
@@ -100,7 +64,7 @@ class JetpackFeatureRemovalOverlayUtil @Inject constructor(
         analyticsTrackerWrapper.track(
             AnalyticsTracker.Stat.JETPACK_REMOVE_FEATURE_OVERLAY_DISPLAYED,
             mapOf(
-                CURRENT_PHASE_KEY to jetpackFeatureRemovalPhaseHelper.getCurrentPhase()?.trackingName,
+                CURRENT_PHASE_KEY to JETPACK_REMOVAL_TRACKING_NAME,
                 SCREEN_TYPE_KEY to source.label
             )
         )
@@ -113,7 +77,7 @@ class JetpackFeatureRemovalOverlayUtil @Inject constructor(
         analyticsTrackerWrapper.track(
             AnalyticsTracker.Stat.JETPACK_REMOVE_FEATURE_OVERLAY_DISMISSED,
             mapOf(
-                CURRENT_PHASE_KEY to jetpackFeatureRemovalPhaseHelper.getCurrentPhase()?.trackingName,
+                CURRENT_PHASE_KEY to JETPACK_REMOVAL_TRACKING_NAME,
                 SCREEN_TYPE_KEY to source.label,
                 DISMISSAL_TYPE_KEY to dismissalType.trackingName
             )
@@ -124,7 +88,7 @@ class JetpackFeatureRemovalOverlayUtil @Inject constructor(
         analyticsTrackerWrapper.track(
             AnalyticsTracker.Stat.JETPACK_REMOVE_FEATURE_OVERLAY_BUTTON_GET_JETPACK_APP_TAPPED,
             mapOf(
-                CURRENT_PHASE_KEY to jetpackFeatureRemovalPhaseHelper.getCurrentPhase()?.trackingName,
+                CURRENT_PHASE_KEY to JETPACK_REMOVAL_TRACKING_NAME,
                 SCREEN_TYPE_KEY to source.label
             )
         )
@@ -134,7 +98,7 @@ class JetpackFeatureRemovalOverlayUtil @Inject constructor(
         analyticsTrackerWrapper.track(
             AnalyticsTracker.Stat.JETPACK_REMOVE_FEATURE_OVERLAY_LEARN_MORE_TAPPED,
             mapOf(
-                CURRENT_PHASE_KEY to jetpackFeatureRemovalPhaseHelper.getCurrentPhase()?.trackingName,
+                CURRENT_PHASE_KEY to JETPACK_REMOVAL_TRACKING_NAME,
                 SCREEN_TYPE_KEY to source.label
             )
         )

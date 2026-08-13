@@ -1047,8 +1047,6 @@ Language: id
     <string name="wp_jetpack_feature_removal_phase_new_users_reader_description">Temukan dan ikuti situs dan komunitas favorit Anda, serta bagikan konten Anda.</string>
     <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_description">Amati peningkatan lalu lintas Anda lewat statistik lengkap dan wawasan penuh makna.</string>
     <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_title">Statistik &amp; Wawasan</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_description">Jetpack membuka jalan untuk lebih memberdayakan situs WordPress Anda. Beralihlah ke aplikasi—gratis dan prosesnya cepat!</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_title">Sempurnakan WordPress dengan Jetpack</string>
     <string name="blogging_prompts_onboarding_content_note_content">Anda dapat mengendalikan Prompt dan Pengingat Blogging kapan pun di Situs Saya &gt; Pengaturan &gt; Blogging</string>
     <string name="blogging_reminders_prompt_subtitle">Pemberitahuan akan mencakup kata atau frasa singkat sebagai inspirasi</string>
     <string name="my_site_blogging_prompt_card_removed_snackbar_subtitle">Buka &lt;b&gt;Pengaturan Situs&lt;/b&gt; untuk menyalakan kembali</string>
@@ -1060,10 +1058,6 @@ Language: id
     <string name="site_settings_blogging_prompts_title">Tampilkan prompt</string>
     <string name="site_settings_blogging">Penulisan Blog</string>
     <string name="install_play_store_to_get_jetpack">Silakan instal Google Play Store untuk mendapatkan aplikasi Jetpack</string>
-    <string name="wp_jetpack_feature_removal_phase_four_secondary_text">Lakukan ini nanti</string>
-    <string name="wp_jetpack_feature_removal_switch_to_jetpack_app_menu_title">Ganti ke Jetpack </string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_four_all_features_description">Statistik, Reader, Pemberitahuan, dan beragam fitur lain berbasis Jetpack telah dihapus dari aplikasi WordPress.</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_four_title_all_features">Fitur-fitur Jetpack telah berpindah.</string>
     <string name="my_site_blogging_prompt_card_view_answers">Lihat semua tanggapan</string>
     <string name="stats_insights_total_stats_seven_days_negative">%1$s lebih rendah dari 7 hari sebelumnya</string>
     <string name="stats_insights_total_stats_seven_days_positive">%1$s lebih tinggi dari 7 hari sebelumnya</string>

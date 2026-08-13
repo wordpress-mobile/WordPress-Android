@@ -1058,8 +1058,6 @@ Language: pl
     <string name="wp_jetpack_feature_removal_phase_new_users_reader_description">Znajdź i obserwuj swoje ulubione witryny i społeczności, a następnie udostępniaj swoje treści.</string>
     <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_description">Obserwuj, jak rośnie twój ruch dzięki pomocnym wskazówkom i szczegółowym statystykom.</string>
     <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_title">Statystyki i Wnioski</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_description">Jetpack pozwala ci robić więcej z twoją witryną WordPress. Przełączenie jest darmowe i zajmuje chwilę.</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_title">Daj WordPressowi kopa z Jetpackiem</string>
     <string name="blogging_prompts_onboarding_content_note_content">Możesz w dowolnym momencie kontrolować monity i przypomnienia dotyczące blogowania w sekcji Moja witryna &gt; Ustawienia &gt; Blogowanie</string>
     <string name="blogging_reminders_prompt_subtitle">Powiadomienie będzie zawierać słowo lub krótką frazę dla inspiracji</string>
     <string name="my_site_blogging_prompt_card_removed_snackbar_subtitle">Przejdź na &lt;b&gt;Ustawienia witryny&lt;/b&gt;, żeby włączyć z powrotem</string>
@@ -1071,10 +1069,6 @@ Language: pl
     <string name="site_settings_blogging_prompts_title">Pokaż monity</string>
     <string name="site_settings_blogging">Blogowanie</string>
     <string name="install_play_store_to_get_jetpack">Zainstaluj Google Play Store, żeby pobrać aplikację Jetpack</string>
-    <string name="wp_jetpack_feature_removal_phase_four_secondary_text">Zrób to później</string>
-    <string name="wp_jetpack_feature_removal_switch_to_jetpack_app_menu_title">Przejdź na Jetpack </string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_four_all_features_description">Statystyki, Czytnik, Powiadomienia i inne funkcje zasilane przez Jetpack zostały usunięte z aplikacji WordPress.</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_four_title_all_features">Funkcje jetpacka zostały przeniesione.</string>
     <string name="my_site_blogging_prompt_card_view_answers">Zobacz wszystkie odpowiedzi</string>
     <string name="stats_insights_total_stats_seven_days_negative">%1$s niższa niż w ciągu poprzednich 7 dni</string>
     <string name="stats_insights_total_stats_seven_days_positive">%1$s wyższa niż w ciągu poprzednich 7 dni</string>

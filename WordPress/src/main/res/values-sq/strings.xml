@@ -950,8 +950,6 @@ Language: sq_AL
     <string name="wp_jetpack_feature_removal_phase_new_users_reader_description">Gjeni dhe ndiqni sajtet dhe bashkësitë tuaja të parapëlqyera dhe ndani me të tjerë lëndën tuaj.</string>
     <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_description">Shiheni si rritet trafiku juaj, me prirje të dobishme dhe statistika të plota.</string>
     <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_title">Statistika &amp; Tendenca</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_description">Jetpack-u ju lejon të bëni më tepër gjëra me sajtin tuaj WordPress. Kalimi është falas dhe do vetëm një minutë.</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_title">Jepini WordPress-it një përforcim me Jetpack-un</string>
     <string name="blogging_prompts_onboarding_content_note_content">Cytjet dhe Kujtuesit për Blogim mund t’i kontrolloni në çfarëdo kohe që nga Sajti Im &gt; Rregullime &gt; Blogim</string>
     <string name="blogging_reminders_prompt_subtitle">Njoftimi do të përfshijë një fjalë, ose togfjalësh të shkurtër, për frymëzim</string>
     <string name="my_site_blogging_prompt_card_removed_snackbar_subtitle">Që ta riaktivizoni, vizitoni &lt;b&gt;Rregullime Sajti&lt;/b&gt;</string>
@@ -963,10 +961,6 @@ Language: sq_AL
     <string name="site_settings_blogging_prompts_title">Shfaq cytje</string>
     <string name="site_settings_blogging">Blogim</string>
     <string name="install_play_store_to_get_jetpack">Që të merrni aplikacionin Jetpack, ju lutemi, instaloni Google Play Store</string>
-    <string name="wp_jetpack_feature_removal_phase_four_secondary_text">Bëjeni më vonë</string>
-    <string name="wp_jetpack_feature_removal_switch_to_jetpack_app_menu_title">Kalo te Jetpack </string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_four_all_features_description">Statistikat, Lexuesi, Njoftimet dhe të tjera veçorit të fuqishme të Jetpack-ut janë hequr nga aplikacioni WordPress.</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_four_title_all_features">Veçori të Jetpack-ut janë lëvizur.</string>
     <string name="my_site_blogging_prompt_card_view_answers">Shihni krejt përgjigjet</string>
     <string name="stats_insights_total_stats_seven_days_negative">%1$s më poshtë se 7 ditët e mëparshme</string>
     <string name="stats_insights_total_stats_seven_days_positive">%1$s më sipër se 7 ditët e mëparshme</string>

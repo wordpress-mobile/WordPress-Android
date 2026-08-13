@@ -1058,8 +1058,6 @@ Language: cs_CZ
     <string name="wp_jetpack_feature_removal_phase_new_users_reader_description">Najděte a sledujte své oblíbené stránky a komunity a sdílejte svůj obsah.</string>
     <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_description">Sledujte, jak vaše návštěvnost roste, pomocí užitečných statistik a komplexních statistik.</string>
     <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_title">Statistiky a postřehy</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_description">Jetpack vám umožní udělat více s vaším webem WordPress. Přepínání je zdarma a trvá jen minutu.</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_title">Dejte WordPressu podporu s Jetpackem</string>
     <string name="blogging_prompts_onboarding_content_note_content">Předvolby pro návrhy a připomenutí psaní blogu můžete kdykoli nastavit v části Můj web &gt; Nastavení &gt; Blogování</string>
     <string name="blogging_reminders_prompt_subtitle">Oznámení bude obsahovat slovo nebo krátkou frázi pro inspiraci</string>
     <string name="my_site_blogging_prompt_card_removed_snackbar_subtitle">Navštivte &lt;b&gt;nastavení webu&lt;/b&gt; a znovu jej zapněte</string>
@@ -1071,10 +1069,6 @@ Language: cs_CZ
     <string name="site_settings_blogging_prompts_title">Zobrazit výzvy</string>
     <string name="site_settings_blogging">Blogování</string>
     <string name="install_play_store_to_get_jetpack">Chcete-li získat aplikaci Jetpack, nainstalujte si obchod Google Play</string>
-    <string name="wp_jetpack_feature_removal_phase_four_secondary_text">Odložit na později</string>
-    <string name="wp_jetpack_feature_removal_switch_to_jetpack_app_menu_title">Přejděte na Jetpack </string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_four_all_features_description">Statistiky, čtečka, upozornění a další funkce poháněné Jetpack byly z aplikace WordPress odstraněny.</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_four_title_all_features">Funkce Jetpacku se přesunuly</string>
     <string name="my_site_blogging_prompt_card_view_answers">Zobrazit všechny odpovědi</string>
     <string name="stats_insights_total_stats_seven_days_negative">%1$s méně než za předchozích 7 dní</string>
     <string name="stats_insights_total_stats_seven_days_positive">%1$s vyšší než za předchozích 7 dní</string>
