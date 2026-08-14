@@ -406,8 +406,9 @@ private fun NewStatsScreen(
         topBar = {
             CenterAlignedTopAppBar(
                 // The Traffic date selector (with its paging arrows) lives in the centred title
-                // slot so it stays centred in the app bar now that there is no "Stats" title.
-                // Other tabs render an empty title. Only the overflow menu stays in actions.
+                // slot so it stays centred in the app bar. The other tabs have no selector, so they
+                // fall back to a centred "Stats" title rather than leaving the bar empty. Only the
+                // overflow menu stays in actions.
                 title = {
                     val currentTab = tabs[pagerState.currentPage]
                     if (currentTab == StatsTab.TRAFFIC) {
@@ -491,6 +492,8 @@ private fun NewStatsScreen(
                                 )
                             }
                         }
+                    } else {
+                        Text(text = stringResource(id = R.string.stats))
                     }
                 },
                 navigationIcon = {
