@@ -1,8 +1,9 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/buildkite/pipeline-schema/main/schema.json
 ---
 
-# Production release — run manually via the `PIPELINE` env var. Determines the current beta build,
-# opens a block step to confirm the release, and releases it to the production track.
+# Production release — run by a weekly Buildkite schedule, or manually via the `PIPELINE` env var.
+# Determines the current beta build, opens a block step to confirm the release, and releases it to
+# the production track as a staged rollout that `advance-production-rollout.yml` then grows.
 
 agents:
   queue: "android"
@@ -14,7 +15,7 @@ steps:
 
 # Slack backstop for any failed build — its unique value is failures that abort before the lane runs
 # (gems/secrets) and can't self-report; on a lane failure it may also accompany the lane's own
-# message. Channel intentionally stays the test channel for now (see send_slack_message).
+# message.
 notify:
-  - slack: "#test-wpmobile-slack-integration"
+  - slack: "#build-and-ship"
     if: build.state == "failed"

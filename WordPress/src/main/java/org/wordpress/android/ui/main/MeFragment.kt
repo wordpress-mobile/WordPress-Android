@@ -11,7 +11,6 @@ import android.os.Bundle
 import android.view.View
 import android.view.View.OnClickListener
 import androidx.annotation.StringRes
-import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.collectAsState
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -52,7 +51,6 @@ import org.wordpress.android.ui.about.UnifiedAboutActivity
 import org.wordpress.android.ui.accounts.HelpActivity.Origin.ME_SCREEN_HELP
 import org.wordpress.android.ui.debug.DebugSettingsActivity
 import org.wordpress.android.ui.deeplinks.DeepLinkOpenWebLinksWithJetpackHelper
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil
 import org.wordpress.android.ui.main.MeViewModel.RecommendAppUiState
 import org.wordpress.android.ui.main.WPMainActivity.OnScrollToTopListener
 import org.wordpress.android.ui.main.emailverificationbanner.EmailVerificationBanner
@@ -130,9 +128,6 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
     lateinit var uiHelpers: UiHelpers
 
     @Inject
-    lateinit var jetpackFeatureRemovalUtils: JetpackFeatureRemovalOverlayUtil
-
-    @Inject
     lateinit var domainManagementFeatureConfig: DomainManagementFeatureConfig
 
     @Inject
@@ -168,8 +163,11 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
 
     @Suppress("LongMethod")
     private fun MeFragmentBinding.setupViews() {
-        if (!BuildConfig.IS_JETPACK_APP && jetpackFeatureRemovalUtils.shouldHideJetpackFeatures()) {
-            with(requireActivity() as AppCompatActivity) {
+        // MeActivity hosts this fragment on its own, so it needs a toolbar; inside the bottom
+        // navigation's pager the host activity already provides one.
+        val meActivity = activity as? MeActivity
+        if (meActivity != null) {
+            with(meActivity) {
                 setSupportActionBar(toolbarMain)
                 supportActionBar?.apply {
                     setHomeButtonEnabled(true)

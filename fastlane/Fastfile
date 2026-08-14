@@ -174,10 +174,7 @@ end
 #####################################################################################
 
 # Sends a Slack message to the given channel via the incoming webhook.
-#
-# The default is intentionally the test channel while the continuous-release process is being built
-# out; it moves to #build-and-ship once the flow ships to real testers.
-def send_slack_message(message:, channel: '#test-wpmobile-slack-integration')
+def send_slack_message(message:, channel: '#build-and-ship')
   slack(
     username: 'WordPress Release Bot',
     icon_url: 'https://s.w.org/style/images/about/WordPress-logotype-wmark.png',
