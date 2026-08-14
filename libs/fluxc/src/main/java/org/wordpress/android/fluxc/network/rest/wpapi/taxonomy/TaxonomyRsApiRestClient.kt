@@ -292,28 +292,26 @@ class TaxonomyRsApiRestClient @Inject constructor(
         }
         appLogWrapper.d(AppLog.T.POSTS, "Fetched $taxonomyName list: ${allTerms.size} (complete=${!hadError})")
         val termsResponsePayload = FetchTermsResponsePayload(
-            TermsModel(
-                allTerms.map { term ->
-                    TermModel(
-                        term.id.toInt(),
-                        site.id,
-                        term.id,
-                        taxonomyName,
-                        term.name,
-                        term.slug,
-                        term.description,
-                        term.parent ?: 0,
-                        term.parent != null,
-                        term.count.toInt()
-                    )
-                },
-            ),
+            TermsModel(allTerms.map { it.toTermModel(site, taxonomyName) }),
             site,
             taxonomyName,
             !hadError
         )
         dispatcher.dispatch(TaxonomyActionBuilder.newFetchedTermsAction(termsResponsePayload))
     }
+
+    private fun AnyTermWithEditContext.toTermModel(site: SiteModel, taxonomyName: String) = TermModel(
+        id.toInt(),
+        site.id,
+        id,
+        taxonomyName,
+        name,
+        slug,
+        description,
+        parent ?: 0,
+        parent != null,
+        count.toInt()
+    )
 
 
     private fun TermEndpointType.toTaxonomyName(): String = when (this) {
