@@ -195,14 +195,17 @@ class SiteListItemBuilder @Inject constructor(
         } else null
     }
 
-    @Suppress("ComplexCondition")
-    fun buildMeItemIfAvailable(site: SiteModel, onClick: (ListItemAction) -> Unit): ListItem? {
-        return if ((!buildConfigWrapper.isJetpackApp &&
-                    jetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures() &&
-                    site.hasCapabilityManageOptions) ||
-            (!buildConfigWrapper.isJetpackApp &&
-                    site.isSelfHostedAdmin)
-        ) {
+    /**
+     * The Me item replaces the bottom navigation's Me tab when that nav is hidden, so it's gated on
+     * exactly the same condition WPMainActivity uses to hide it. Me is account-level, so site
+     * capabilities deliberately play no part here.
+     *
+     * No explicit Jetpack app check is needed: [JetpackFeatureRemovalPhaseHelper.getCurrentPhase]
+     * returns null there, so [JetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures] is
+     * always false and the item never builds.
+     */
+    fun buildMeItemIfAvailable(onClick: (ListItemAction) -> Unit): ListItem? {
+        return if (jetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures()) {
             ListItem(
                 R.drawable.ic_user_primary_white_24,
                 UiStringRes(R.string.me),
