@@ -9,6 +9,7 @@ Language: zh_CN
     <string name="support_screen_unified_support_description">随时向我们的支持团队寻求解答</string>
     <string name="support_screen_unified_support_title">获取帮助</string>
     <string name="unified_support_attachment_match_score">%1$d%% 匹配</string>
+    <string name="unified_support_status_bot">Oddie 机器人</string>
     <string name="unified_support_bot_typing_content_description">支持机器人正在输入</string>
     <string name="unified_support_message_input_placeholder">输入消息…</string>
     <string name="unified_support_conversations_title">获取帮助</string>
@@ -253,6 +254,8 @@ Language: zh_CN
     <string name="post_rs_confirm_delete_message">这将永久删除此文章。 此操作无法撤销。</string>
     <string name="post_rs_confirm_trash_message">是否确定要将此文章移至回收站？</string>
     <string name="post_rs_failed_to_load">加载文章失败</string>
+    <string name="experimental_rs_pages_list_description">为 WordPress.com 和使用应用程序密码的自托管站点提供更现代化的 UI 来显示页面列表</string>
+    <string name="experimental_rs_pages_list">新页面列表</string>
     <string name="stats_error_admin_url_unavailable">无法为此站点打开 WP Admin</string>
     <string name="stats_error_parsing">加载数据时出现问题。 请重试</string>
     <string name="stats_error_network">网络错误。 请检查您的连接，然后重试</string>

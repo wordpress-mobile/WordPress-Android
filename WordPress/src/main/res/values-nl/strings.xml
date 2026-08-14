@@ -9,6 +9,7 @@ Language: nl
     <string name="support_screen_unified_support_description">Je kunt altijd antwoorden krijgen van ons ondersteuningsteam</string>
     <string name="support_screen_unified_support_title">Krijg hulp</string>
     <string name="unified_support_attachment_match_score">%1$d%% overeenkomst</string>
+    <string name="unified_support_status_bot">Oddie bot</string>
     <string name="unified_support_bot_typing_content_description">De ondersteuningsbot is aan het typen</string>
     <string name="unified_support_message_input_placeholder">Typ een bericht in…</string>
     <string name="unified_support_conversations_title">Krijg hulp</string>
@@ -255,6 +256,8 @@ Language: nl
     <string name="post_rs_confirm_delete_message">Dit zal permanent dit bericht verwijderen. Deze actie kan niet ongedaan worden gemaakt.</string>
     <string name="post_rs_confirm_trash_message">Weet je zeker dat je dit bericht naar de prullenbak wil verplaatsen?</string>
     <string name="post_rs_failed_to_load">Bericht laden is mislukt</string>
+    <string name="experimental_rs_pages_list_description">Berichten weergeven in een modernere UI voor WordPress.com en zelf gehoste sites met applicatie wachtwoorden</string>
+    <string name="experimental_rs_pages_list">Lijst met nieuwe pagina\'s</string>
     <string name="stats_error_admin_url_unavailable">Kan WP Admin voor deze site niet openen</string>
     <string name="stats_error_parsing">Er is een probleem opgetreden bij het laden van de gegevens. Probeer het opnieuw</string>
     <string name="stats_error_network">Netwerkfout. Controleer je verbinding en probeer het nogmaals</string>

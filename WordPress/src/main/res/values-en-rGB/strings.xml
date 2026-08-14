@@ -9,6 +9,7 @@ Language: en_GB
     <string name="support_screen_unified_support_description">Get answers from our support team, anytime</string>
     <string name="support_screen_unified_support_title">Get help</string>
     <string name="unified_support_attachment_match_score">%1$d%% match</string>
+    <string name="unified_support_status_bot">Oddie bot</string>
     <string name="unified_support_bot_typing_content_description">Support bot is typing</string>
     <string name="unified_support_message_input_placeholder">Type a message…</string>
     <string name="unified_support_conversations_title">Get help</string>
@@ -255,6 +256,8 @@ Language: en_GB
     <string name="post_rs_confirm_delete_message">This will permanently delete this post. This action cannot be undone.</string>
     <string name="post_rs_confirm_trash_message">Are you sure you want to bin this post?</string>
     <string name="post_rs_failed_to_load">Failed to load post</string>
+    <string name="experimental_rs_pages_list_description">Show pages list in a more modern UI for WordPress.com and self-hosted sites with application passwords</string>
+    <string name="experimental_rs_pages_list">New Pages List</string>
     <string name="stats_error_admin_url_unavailable">Unable to open WP Admin for this site</string>
     <string name="stats_error_parsing">There was a problem loading the data. Please try again</string>
     <string name="stats_error_network">Network error. Please check your connection and try again</string>

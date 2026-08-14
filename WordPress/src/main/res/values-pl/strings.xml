@@ -9,6 +9,7 @@ Language: pl
     <string name="support_screen_unified_support_description">Uzyskaj odpowiedzi od naszego zespołu pomocy technicznej – o każdej porze</string>
     <string name="support_screen_unified_support_title">Uzyskaj pomoc</string>
     <string name="unified_support_attachment_match_score">%1$d%% pasuje</string>
+    <string name="unified_support_status_bot">Dziwny bot</string>
     <string name="unified_support_bot_typing_content_description">Bot pomocy technicznej pisze</string>
     <string name="unified_support_message_input_placeholder">Wpisz wiadomość…</string>
     <string name="unified_support_conversations_title">Uzyskaj pomoc</string>
@@ -255,6 +256,8 @@ Language: pl
     <string name="post_rs_confirm_delete_message">Spowoduje to trwałe usunięcie tego wpisu. Tej akcji nie można cofnąć.</string>
     <string name="post_rs_confirm_trash_message">Przenieść wpis do kosza?</string>
     <string name="post_rs_failed_to_load">Nie udało się wczytać wpisu</string>
+    <string name="experimental_rs_pages_list_description">Wyświetl listę stron w nowoczesnym interfejsie użytkownika dla WordPress.com i witryn z własnym hostingiem z hasłami aplikacji</string>
+    <string name="experimental_rs_pages_list">Lista nowych stron</string>
     <string name="stats_error_admin_url_unavailable">Nie można otworzyć WP Admin dla tej witryny</string>
     <string name="stats_error_parsing">Wystąpił problem z wczytywaniem danych. Spróbuj ponownie.</string>
     <string name="stats_error_network">Błąd sieci. Sprawdź połączenie i spróbuj ponownie</string>
