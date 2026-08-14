@@ -6,8 +6,10 @@ import kotlinx.coroutines.test.TestCoroutineScheduler
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertNull
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -267,6 +269,8 @@ class TaxonomyRsApiRestClientTest {
         assertEquals(testSite, payload.site)
         assertEquals(5, payload.terms.terms.size)
         assertNull(payload.error)
+        // All pages retrieved, so the store is free to replace the cached list.
+        assertTrue(payload.complete)
     }
 
     @Test
@@ -299,6 +303,8 @@ class TaxonomyRsApiRestClientTest {
         assertEquals(testSite, payload.site)
         assertEquals(2, payload.terms.terms.size)
         assertNull(payload.error)
+        // Marked incomplete so the store keeps existing cached terms instead of clearing them.
+        assertFalse(payload.complete)
     }
 
     @Test

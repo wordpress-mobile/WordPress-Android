@@ -309,7 +309,8 @@ class TaxonomyRsApiRestClient @Inject constructor(
                 },
             ),
             site,
-            taxonomyName
+            taxonomyName,
+            !hadError
         )
         dispatcher.dispatch(TaxonomyActionBuilder.newFetchedTermsAction(termsResponsePayload))
     }
