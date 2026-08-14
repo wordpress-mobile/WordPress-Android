@@ -590,16 +590,12 @@ Language: lv
     <string name="jetpack_plugin_install_full_plugin_done_description">Gatavs šīs vietnes izmantošanai ar lietotni.</string>
     <string name="jetpack_plugin_install_initial_title">Instalēt Jetpack</string>
     <string name="jetpack_feature_card_content_phase_self_hosted_and_new_users">Atbrīvojiet visu savas vietnes potenciālu. Iegūstiet statistiku, paziņojumus un daudz ko citu, izmantojot Jetpack.</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_description">Vērojiet, kā jūsu datplūsma pieaug, izmantojot noderīgus ieskatus un visaptverošu statistiku.</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_reader_description">Atrodiet un sekojiet savām iecienītākajām vietnēm un kopienām, kā arī kopīgojiet savu saturu.</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_notifications_description">Saņemiet paziņojumus par jauniem komentāriem, atzīmēm Patīk, skatījumiem un daudz ko citu.</string>
     <string name="wp_jetpack_feature_removal_phase_self_hosted_users_description">Jetpack mobilā lietotne ir paredzēta darbam kopā ar Jetpack spraudni. Pārslēdziet tagad, lai piekļūtu statistikai, paziņojumiem, lasītājam un daudz kam citam.</string>
     <string name="wp_jetpack_feature_removal_phase_self_hosted_users_title">Jūsu vietnei ir spraudnis Jetpack</string>
     <string name="my_site_blogging_prompt_card_removed_snackbar_title">Emuāru rakstīšanas pamudinājumi slēpti</string>
     <string name="my_site_blogging_prompt_card_removed_snackbar_subtitle">Apmeklējiet &lt;b&gt;Vietnes iestatījumi&lt;/b&gt;, lai tos ieslēgtu atkal</string>
     <string name="blogging_reminders_prompt_subtitle">Paziņojumā būs iekļauts vārds vai īsa frāze iedvesmai</string>
     <string name="blogging_prompts_onboarding_content_note_content">Emuāru rakstīšanas uzvednes un atgādinājumus varat kontrolēt katrā laikā sadaļā Mana vietne &gt; Iestatījumi &gt; Emuāri</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_title">Statistika un ieskati</string>
     <string name="site_settings_blogging">Emuāru rakstīšana</string>
     <string name="site_settings_blogging_prompts_title">Rādīt uzvednes</string>
     <string name="site_settings_blogging_reminders_notification_title">Emuāru rakstīšanas atgādinājumi</string>
@@ -707,7 +703,6 @@ Language: lv
     <string name="weekly_roundup_notification_text_views_and_likes">Pagājušajā nedēļā jums bija %1$s skatījumi un %2$s atzīmes Patīk</string>
     <string name="weekly_roundup_notification_text_views_and_comments">Pagājušajā nedēļā jums bija %1$s skatījumi un %2$s komentāri</string>
     <string name="gutenberg_native_problem_displaying_block_tap_to_attempt_block_recovery" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Problēma, parādot bloku. \nPiesitiet, lai mēģinātu bloka atkopšanu.</string>
-    <string name="wp_jetpack_powered">Jetpack darbināms</string>
     <string name="qrcode_auth_flow_error_content_description">Attēls, kas norāda uz kļūdu</string>
     <string name="qrcode_auth_flow_content_description">Attēls, kas norāda, ka tiek skenēts pieteikšanās kods</string>
     <string name="qrcode_auth_flow_validated_default_title">Vai mēģināt pieteikties savā tīmekļa pārlūkprogrammā netālu no %1$s?</string>

@@ -1043,10 +1043,6 @@ Language: id
     <string name="jetpack_feature_card_content_phase_self_hosted_and_new_users">Maksimalkan potensi situs Anda. Dapatkan statistik, pemberitahuan, dan lainnya dengan Jetpack.</string>
     <string name="wp_jetpack_feature_removal_phase_self_hosted_users_title">Situs Anda memiliki plugin Jetpack</string>
     <string name="wp_jetpack_feature_removal_phase_self_hosted_users_description">Aplikasi seluler Jetpack didesain agar terintegrasi dengan plugin Jetpack. Beralih sekarang untuk mengakses statistik, pemberitahuan, pembaca dan lainnya.</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_notifications_description">Dapatkan notifikasi komentar, jumlah suka, jumlah pengunjung baru, dan lainnya.</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_reader_description">Temukan dan ikuti situs dan komunitas favorit Anda, serta bagikan konten Anda.</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_description">Amati peningkatan lalu lintas Anda lewat statistik lengkap dan wawasan penuh makna.</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_title">Statistik &amp; Wawasan</string>
     <string name="blogging_prompts_onboarding_content_note_content">Anda dapat mengendalikan Prompt dan Pengingat Blogging kapan pun di Situs Saya &gt; Pengaturan &gt; Blogging</string>
     <string name="blogging_reminders_prompt_subtitle">Pemberitahuan akan mencakup kata atau frasa singkat sebagai inspirasi</string>
     <string name="my_site_blogging_prompt_card_removed_snackbar_subtitle">Buka &lt;b&gt;Pengaturan Situs&lt;/b&gt; untuk menyalakan kembali</string>
@@ -1158,7 +1154,6 @@ Language: id
     <string name="weekly_roundup_notification_text_views_only">Minggu lalu Anda mendapatkan %1$s tayangan.</string>
     <string name="weekly_roundup_notification_text_all">Minggu lalu Anda mendapatkan %1$s tayangan, %2$s suka, dan %3$s komentar.</string>
     <string name="stats_insights_like_guide_card">⭐️ Artikel terbaru Anda %1$s telah menerima %2$s suka.</string>
-    <string name="wp_jetpack_powered">Didukung Jetpack</string>
     <string name="qrcode_auth_flow_content_description">Gambar menunjukkan pemindaian kode login sedang berlangsung</string>
     <string name="qrcode_auth_flow_error_content_description">Gambar menunjukkan terjadinya error</string>
     <string name="qrcode_auth_flow_error_auth_failed_title">Autentikasi Gagal</string>

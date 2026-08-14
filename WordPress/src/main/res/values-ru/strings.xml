@@ -1054,10 +1054,6 @@ Language: ru
     <string name="jetpack_feature_card_content_phase_self_hosted_and_new_users">Используйте возможности сайта максимально эффективно. Установите Jetpack и получите доступ к статистике, уведомлениям и другим функциям.</string>
     <string name="wp_jetpack_feature_removal_phase_self_hosted_users_title">На вашем сайте есть плагин Jetpack.</string>
     <string name="wp_jetpack_feature_removal_phase_self_hosted_users_description">Мобильное приложение Jetpack создано работать в паре с плагином Jetpack. Перейдите в приложение, чтобы использовать статистику, уведомления, Чтиво и другие возможности.</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_notifications_description">Получайте уведомления о новых комментариях, отметках «Нравится», просмотрах и других событиях.</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_reader_description">Находите интересные сайты и сообщества и подписывайтесь на них, а также публикуйте своё содержимое.</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_description">Увеличивайте посещаемость с помощью полезной статистики и аналитики.</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_title">Статистика и обзор</string>
     <string name="blogging_prompts_onboarding_content_note_content">Настроить подсказки по ведению блога и напоминания можно в любое время в разделе Мой сайт &gt; Настройки &gt; Ведение блога.</string>
     <string name="blogging_reminders_prompt_subtitle">Напоминание будет содержать слово или короткую вдохновляющую фразу</string>
     <string name="my_site_blogging_prompt_card_removed_snackbar_subtitle">Перейдите в &lt;b&gt;настройки сайта&lt;/b&gt;, чтобы снова включить</string>
@@ -1169,7 +1165,6 @@ Language: ru
     <string name="weekly_roundup_notification_text_views_only">Просмотров сайта за последнюю неделю — %1$s.</string>
     <string name="weekly_roundup_notification_text_all">За последнюю неделю: просмотров сайта — %1$s, отметок «Нравится» —%2$s, комментариев — %3$s.</string>
     <string name="stats_insights_like_guide_card">⭐️ На последней записи %1$s %2$s отметка «Нравится».</string>
-    <string name="wp_jetpack_powered">Работает с Jetpack</string>
     <string name="qrcode_auth_flow_content_description">Изображение процедуры сканирования кода для входа</string>
     <string name="qrcode_auth_flow_error_content_description">Изображение ошибки</string>
     <string name="qrcode_auth_flow_error_auth_failed_title">Сбой аутентификации</string>

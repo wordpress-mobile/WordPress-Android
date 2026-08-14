@@ -946,10 +946,6 @@ Language: sq_AL
     <string name="jetpack_feature_card_content_phase_self_hosted_and_new_users">Çlironi potencialin e plotë të sajtit tuaj. Merrni statistika, njoftime, etj, me Jetpack-un.</string>
     <string name="wp_jetpack_feature_removal_phase_self_hosted_users_title">Sajti juaj e ka shtojcën Jetpack</string>
     <string name="wp_jetpack_feature_removal_phase_self_hosted_users_description">Aplikacioni Jetpack për celular është menduar të punojë tok me shtojcën Jetpack. Kaloni që tani në të, që të mund të përdorni statistikat, njoftimet, lexuesin, etj.</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_notifications_description">Merrni njoftime për komente, pëlqime, parje të reja, etj.</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_reader_description">Gjeni dhe ndiqni sajtet dhe bashkësitë tuaja të parapëlqyera dhe ndani me të tjerë lëndën tuaj.</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_description">Shiheni si rritet trafiku juaj, me prirje të dobishme dhe statistika të plota.</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_title">Statistika &amp; Tendenca</string>
     <string name="blogging_prompts_onboarding_content_note_content">Cytjet dhe Kujtuesit për Blogim mund t’i kontrolloni në çfarëdo kohe që nga Sajti Im &gt; Rregullime &gt; Blogim</string>
     <string name="blogging_reminders_prompt_subtitle">Njoftimi do të përfshijë një fjalë, ose togfjalësh të shkurtër, për frymëzim</string>
     <string name="my_site_blogging_prompt_card_removed_snackbar_subtitle">Që ta riaktivizoni, vizitoni &lt;b&gt;Rregullime Sajti&lt;/b&gt;</string>
@@ -1061,7 +1057,6 @@ Language: sq_AL
     <string name="weekly_roundup_notification_text_views_only">Javën e kaluar patët %1$s parje.</string>
     <string name="weekly_roundup_notification_text_all">Javën e kaluar patët %1$s parje, %2$s pëlqime dhe %3$s komente.</string>
     <string name="stats_insights_like_guide_card">⭐️ Postimi juaj më i ri %1$s ka marrë %2$s pëlqime.</string>
-    <string name="wp_jetpack_powered">Bazuar në Jetpack</string>
     <string name="qrcode_auth_flow_content_description">Figurë që tregon skanim kodi hyrjeje në punë e sipër</string>
     <string name="qrcode_auth_flow_error_content_description">Figurë që tregon një gabim</string>
     <string name="qrcode_auth_flow_error_auth_failed_title">Mirëfilltësimi Dështoi</string>

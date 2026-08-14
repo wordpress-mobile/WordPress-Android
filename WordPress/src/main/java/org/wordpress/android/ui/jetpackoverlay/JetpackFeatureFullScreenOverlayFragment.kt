@@ -116,7 +116,6 @@ class JetpackFeatureFullScreenOverlayFragment : BottomSheetDialogFragment() {
             secondaryButton.setVisible(it.secondaryButton)
             migrationHelperText.setVisible(it.migrationText)
             closeButton.setVisible(it.closeButton)
-            newUsersContentViewParent.newUsersContentView.setVisible(it.newUsersContent)
         }
     }
 

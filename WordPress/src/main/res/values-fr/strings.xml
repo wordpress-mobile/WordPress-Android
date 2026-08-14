@@ -1028,10 +1028,6 @@ Language: fr
     <string name="jetpack_feature_card_content_phase_self_hosted_and_new_users">Libérez tout le potentiel de votre site. Profitez de statistiques, de notifications et de bien d’autres choses encore avec Jetpack.</string>
     <string name="wp_jetpack_feature_removal_phase_self_hosted_users_title">Votre site comporte l’extension Jetpack</string>
     <string name="wp_jetpack_feature_removal_phase_self_hosted_users_description">L’application mobile Jetpack est conçue pour compléter l’extension Jetpack. Effectuez le changement dès maintenant pour accéder aux statistiques, aux notifications, au lecteur et bien plus encore.</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_notifications_description">Recevez des notifications pour tout nouveau commentaire, mention J\'aime, vue, et plus encore.</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_reader_description">Trouvez et suivez vos sites et communautés préférés, et partagez votre contenu.</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_description">Suivez l’évolution de votre trafic avec des tendances utiles et des statistiques complètes.</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_title">Statistiques et tendances</string>
     <string name="blogging_prompts_onboarding_content_note_content">Vous pouvez contrôler les invites pour bloguer et les rappels à tout moment en accédant à Mon site &gt; Réglages &gt; Blogging</string>
     <string name="blogging_reminders_prompt_subtitle">La notification inclura un mot ou une phrase courte pour vous inspirer</string>
     <string name="my_site_blogging_prompt_card_removed_snackbar_subtitle">Consulter &lt;b&gt;les réglages du site&lt;/b&gt; pour réactiver</string>
@@ -1143,7 +1139,6 @@ Language: fr
     <string name="weekly_roundup_notification_text_views_only">La semaine dernière, vous avez eu %1$s vues.</string>
     <string name="weekly_roundup_notification_text_all">La semaine dernière, vous avez eu %1$s vues, %2$s mentions J’aime et %3$s commentaires.</string>
     <string name="stats_insights_like_guide_card">⭐️ Votre dernier article %1$s a reçu %2$s mentions J’aime.</string>
-    <string name="wp_jetpack_powered">Optimisé par Jetpack</string>
     <string name="qrcode_auth_flow_content_description">Image indiquant que le scan du code de connexion est en cours</string>
     <string name="qrcode_auth_flow_error_content_description">Image indiquant une erreur</string>
     <string name="qrcode_auth_flow_error_auth_failed_title">Échec de l’authentification</string>

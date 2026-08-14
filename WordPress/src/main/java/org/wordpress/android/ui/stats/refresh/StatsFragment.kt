@@ -26,7 +26,6 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.databinding.StatsFragmentBinding
-import org.wordpress.android.models.JetpackPoweredScreen
 import org.wordpress.android.ui.ScrollableViewInitializedListener
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil
 import org.wordpress.android.ui.main.WPMainNavigationView.PageType.MY_SITE
@@ -395,34 +394,6 @@ class StatsFragment : Fragment(R.layout.stats_fragment), ScrollableViewInitializ
 
     override fun onScrollableViewInitialized(containerId: Int) {
         StatsFragmentBinding.bind(requireView()).appBarLayout.liftOnScrollTargetViewId = containerId
-        initJetpackBanner(containerId)
-    }
-
-    private fun initJetpackBanner(scrollableContainerId: Int) {
-        if (jetpackBrandingUtils.shouldShowJetpackBranding()) {
-            val screen = JetpackPoweredScreen.WithDynamicText.STATS
-            binding?.root?.post {
-                val jetpackBannerView = binding?.jetpackBanner?.root ?: return@post
-                val scrollableView = binding?.root?.findViewById<View>(scrollableContainerId) as? RecyclerView
-                    ?: return@post
-
-                jetpackBrandingUtils.showJetpackBannerIfScrolledToTop(jetpackBannerView, scrollableView)
-                jetpackBrandingUtils.initJetpackBannerAnimation(jetpackBannerView, scrollableView)
-                binding?.jetpackBanner?.jetpackBannerText?.text = uiHelpers.getTextOfUiString(
-                    requireContext(),
-                    jetpackBrandingUtils.getBrandingText()
-                )
-
-                if (jetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()) {
-                    binding?.jetpackBanner?.root?.setOnClickListener {
-                        jetpackBrandingUtils.trackBannerTapped(screen)
-                        JetpackPoweredBottomSheetFragment
-                            .newInstance()
-                            .show(childFragmentManager, JetpackPoweredBottomSheetFragment.TAG)
-                    }
-                }
-            }
-        }
     }
 }
 

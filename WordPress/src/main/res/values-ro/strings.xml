@@ -1052,15 +1052,11 @@ Language: ro
     <string name="jetpack_plugin_install_full_plugin_done_description">Gata pentru a folosi acest site în aplicație.</string>
     <string name="jetpack_plugin_install_initial_description">Datele de conectare ale site-ului tău web nu vor fi stocate și sunt folosite numai cu scopul de a instala Jetpack.</string>
     <string name="jetpack_feature_card_content_phase_self_hosted_and_new_users">Deblochează întregul potențial al site-ului tău. Cu Jetpack, ai statistici, notificări și multe altele.</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_description">Urmărești creșterea traficului cu informații generale utile și statistici comprehensive.</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_reader_description">Găsește, urmărește site-urile și comunitățile preferate și partajează conținutul tău.</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_notifications_description">Primești notificări pentru comentarii noi, aprecieri, vizualizări și multe altele.</string>
     <string name="wp_jetpack_feature_removal_phase_self_hosted_users_title">Site-ul tău are modulul Jetpack</string>
     <string name="wp_jetpack_feature_removal_phase_self_hosted_users_description">Aplicația Jetpack pentru mobil este proiectată să funcționeze împreună cu modulul Jetpack. Comută acum pentru a avea acces la statistici, notificări, cititor și multe altele.</string>
     <string name="my_site_blogging_prompt_card_removed_snackbar_title">Îndemnuri pentru publicare ascunse</string>
     <string name="my_site_blogging_prompt_card_removed_snackbar_subtitle">Accesează&lt;b&gt;Setări site&lt;/b&gt; pentru a le reactiva</string>
     <string name="blogging_reminders_prompt_subtitle">Notificarea va include un cuvânt sau o frază scurtă pentru inspirație</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_title">Statistici și privire generală</string>
     <string name="blogging_prompts_onboarding_content_note_content">Poți controla în orice moment îndemnurile și reamintirile pentru publicare în Site-ul meu &gt; Setări &gt; Blogging</string>
     <string name="site_settings_blogging_prompts_title">Arată îndemnurile</string>
     <string name="support_forum_title">Forumuri pentru comunitate</string>
@@ -1169,7 +1165,6 @@ Language: ro
     <string name="weekly_roundup_notification_text_views_only">Săptămâna trecută ai avut %1$s de vizualizări.</string>
     <string name="weekly_roundup_notification_text_all">Săptămâna trecută ai avut %1$s de vizualizări, %2$s aprecieri și %3$s comentarii.</string>
     <string name="stats_insights_like_guide_card">⭐️ Ultimul tău articol %1$s a avut %2$s aprecieri.</string>
-    <string name="wp_jetpack_powered">Propulsat de Jetpack</string>
     <string name="qrcode_auth_flow_error_content_description">Imagine care indică o eroare</string>
     <string name="qrcode_auth_flow_content_description">Imagine care indică scanarea în desfășurare a codului de autentificare</string>
     <string name="qrcode_auth_flow_error_no_connection_subtitle">Pentru a scana codurile de autentificare, ai nevoie de o conexiune activă la internet</string>

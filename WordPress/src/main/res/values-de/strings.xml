@@ -1054,10 +1054,6 @@ Language: de
     <string name="jetpack_feature_card_content_phase_self_hosted_and_new_users">Entfalte das volle Potenzial deiner Website. Erhalte Statistiken, Benachrichtigungen und vieles mehr mit Jetpack.</string>
     <string name="wp_jetpack_feature_removal_phase_self_hosted_users_title">Deine Website hat das Jetpack-Plugin</string>
     <string name="wp_jetpack_feature_removal_phase_self_hosted_users_description">Die Jetpack-Mobil-App wurde entwickelt, um mit dem Jetpack-Plugin zusammenzuarbeiten. Wechsle jetzt, um u. a. Zugang zu Statistiken, Benachrichtigungen und dem Reader zu erhalten.</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_notifications_description">Erhalte Benachrichtigungen über neue Kommentare, Likes, Aufrufe und vieles mehr.</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_reader_description">Suche deine Lieblingswebsites und -communities, folge ihnen und teile deine Inhalte.</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_description">Beobachte dank hilfreicher Einblicke und umfassender Statistiken, wie dein Traffic wächst.</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_title">Statistiken und Einblicke</string>
     <string name="blogging_prompts_onboarding_content_note_content">Unter „Meine Website &gt; Einstellungen &gt; Bloggen“ kannst du jederzeit Einstellungen für Blog-Schreibanregungen und -Erinnerungen vornehmen</string>
     <string name="blogging_reminders_prompt_subtitle">Die Benachrichtigung beinhaltet ein Wort oder einen kurzen Satz zur Inspiration</string>
     <string name="my_site_blogging_prompt_card_removed_snackbar_subtitle">Wechsle zu den &lt;b&gt;Website-Einstellungen&lt;/b&gt;, um sie wieder zu aktivieren</string>
@@ -1169,7 +1165,6 @@ Language: de
     <string name="weekly_roundup_notification_text_views_only">Letzte Woche hattest du %1$s Aufrufe.</string>
     <string name="weekly_roundup_notification_text_all">Letzte Woche hattest du %1$s Aufrufe, %2$s Likes und %3$s Kommentare.</string>
     <string name="stats_insights_like_guide_card">⭐️ Dein neuester Beitrag %1$s hat %2$s Like erhalten.</string>
-    <string name="wp_jetpack_powered">Angetrieben von Jetpack</string>
     <string name="qrcode_auth_flow_content_description">Bild, das anzeigt, dass der Scan des Anmeldecodes läuft</string>
     <string name="qrcode_auth_flow_error_content_description">Bild, das einen Fehler anzeigt</string>
     <string name="qrcode_auth_flow_error_auth_failed_title">Authentifizierung fehlgeschlagen</string>

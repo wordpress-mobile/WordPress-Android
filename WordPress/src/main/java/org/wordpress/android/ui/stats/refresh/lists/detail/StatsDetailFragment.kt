@@ -11,12 +11,9 @@ import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.StatsDetailFragmentBinding
-import org.wordpress.android.models.JetpackPoweredScreen
-import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredBottomSheetFragment
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.ui.utils.UiHelpers
-import org.wordpress.android.util.JetpackBrandingUtils
 import org.wordpress.android.util.WPSwipeToRefreshHelper
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 import javax.inject.Inject
@@ -28,9 +25,6 @@ class StatsDetailFragment : Fragment(R.layout.stats_detail_fragment) {
 
     @Inject
     lateinit var statsSiteProvider: StatsSiteProvider
-
-    @Inject
-    lateinit var jetpackBrandingUtils: JetpackBrandingUtils
 
     @Inject
     lateinit var uiHelpers: UiHelpers
@@ -52,36 +46,9 @@ class StatsDetailFragment : Fragment(R.layout.stats_detail_fragment) {
             }
             initializeViewModels(nonNullActivity)
             initializeViews()
-            initJetpackBanner()
         }
     }
 
-    private fun StatsDetailFragmentBinding.initJetpackBanner() {
-        if (jetpackBrandingUtils.shouldShowJetpackBranding()) {
-            val screen = JetpackPoweredScreen.WithDynamicText.STATS
-            root.post {
-                val jetpackBannerView = jetpackBanner.root
-                val scrollableView = root.findViewById<View>(R.id.recyclerView) as? RecyclerView
-                    ?: return@post
-
-                jetpackBrandingUtils.showJetpackBannerIfScrolledToTop(jetpackBannerView, scrollableView)
-                jetpackBrandingUtils.initJetpackBannerAnimation(jetpackBannerView, scrollableView)
-                jetpackBanner.jetpackBannerText.text = uiHelpers.getTextOfUiString(
-                    requireContext(),
-                    jetpackBrandingUtils.getBrandingText()
-                )
-
-                if (jetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()) {
-                    jetpackBanner.root.setOnClickListener {
-                        jetpackBrandingUtils.trackBannerTapped(screen)
-                        JetpackPoweredBottomSheetFragment
-                            .newInstance()
-                            .show(childFragmentManager, JetpackPoweredBottomSheetFragment.TAG)
-                    }
-                }
-            }
-        }
-    }
     private fun StatsDetailFragmentBinding.initializeViews() {
         swipeToRefreshHelper = WPSwipeToRefreshHelper.buildSwipeToRefreshHelper(pullToRefresh) {
             viewModel.onPullToRefresh()

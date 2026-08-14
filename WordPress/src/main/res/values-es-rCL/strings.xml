@@ -570,16 +570,12 @@ Language: es_CL
     <string name="jetpack_plugin_install_installing_title">Instalando Jetpack</string>
     <string name="jetpack_plugin_install_jp_logo_content_description">Ícono de Jetpack</string>
     <string name="jetpack_feature_card_content_phase_self_hosted_and_new_users">Libera todo el potencial de tu sitio. Obtén estadísticas, notificaciones y más con Jetpack.</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_notifications_description">Recibe notificaciones por nuevos comentarios, Me gusta, visualizaciones, etc.</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_reader_description">Comparte tu contenido y busca tus comunidades y sitios favoritos para seguirlos.</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_description">Consulta el crecimiento del tráfico a tu sitio con información útil y estadísticas completas.</string>
     <string name="wp_jetpack_feature_removal_phase_self_hosted_users_description">La aplicación móvil Jetpack está diseñada para funcionar junto con el plugin de Jetpack. Haz el cambio ahora y obtén acceso a estadísticas, notificaciones o el lector, entre otras funciones.</string>
     <string name="wp_jetpack_feature_removal_phase_self_hosted_users_title">Tu sitio tiene el plugin de Jetpack</string>
     <string name="blogging_prompts_onboarding_content_note_content">Puedes gestionar los recordatorios y estímulos para bloguear en cualquier momento desde Mi sitio &gt; Ajustes &gt; Bloguear</string>
     <string name="blogging_reminders_prompt_subtitle">Cada notificación incluirá una palabra o una breve frase inspiradora</string>
     <string name="my_site_blogging_prompt_card_removed_snackbar_subtitle">Ve a &lt;b&gt;Ajustes del sitio&lt;/b&gt; para reactivarlos.</string>
     <string name="my_site_blogging_prompt_card_removed_snackbar_title">Se han ocultado los estímulos para bloguear.</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_title">Estadísticas y datos clave</string>
     <string name="my_site_blogging_prompt_card_menu_remove">Desactivar estímulos</string>
     <string name="site_settings_blogging">Bloguear</string>
     <string name="site_settings_blogging_prompts_title">Mostrar estímulos</string>
@@ -687,7 +683,6 @@ Language: es_CL
     <string name="weekly_roundup_notification_text_views_and_comments">La semana pasada tuviste %1$s visitas y %2$s comentarios</string>
     <string name="weekly_roundup_notification_text_views_and_likes">La semana pasada tuviste %1$s visitas y %2$s Me gusta</string>
     <string name="weekly_roundup_notification_text_views_only">La semana pasada tuviste %1$s visitas.</string>
-    <string name="wp_jetpack_powered">Funciona gracias a Jetpack</string>
     <string name="qrcode_auth_flow_content_description">Imagen que señala que el escaneo de código de acceso está en proceso</string>
     <string name="qrcode_auth_flow_error_content_description">Imagen que señala un error</string>
     <string name="qrcode_auth_flow_dismiss">Descartar</string>

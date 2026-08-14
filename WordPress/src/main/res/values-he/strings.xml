@@ -1041,10 +1041,6 @@ Language: he_IL
     <string name="jetpack_feature_card_content_phase_self_hosted_and_new_users">להתחיל לממש את מלוא הפוטנציאל של האתר. לקבל נתונים סטטיסטיים, לקרוא הודעות ועוד בעזרת Jetpack.</string>
     <string name="wp_jetpack_feature_removal_phase_self_hosted_users_title">באתר שלך מותקן תוסף של Jetpack</string>
     <string name="wp_jetpack_feature_removal_phase_self_hosted_users_description">האפליקציה לנייד של Jetpack נועדה לעבוד בשילוב עם התוסף של Jetpack. כדאי להחליף עכשיו כדי לגשת לנתונים סטטיסטיים, להודעות, ל-Reader ועוד.</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_notifications_description">לקבל הודעות על תגובות חדשות, לייקים, צפיות ועוד.</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_reader_description">למצוא את האתרים והקהילות המועדפים עליך, לעקוב אחריהם ולשתף את התוכן שלך.</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_description">להגדיל את התעבורה לאתר בעזרת גישה לתובנות שימושיות ולנתונים סטטיסטיים מקיפים.</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_title">נתונים סטטיסטיים ותובנות</string>
     <string name="blogging_prompts_onboarding_content_note_content">אפשר לשלוט ב\'הצעות כתיבה בבלוג\' וב\'תזכורות\' בכל עת דרך \'האתר שלי\' &gt; \'הגדרות\' &gt; \'פרסום בבלוג\'</string>
     <string name="blogging_reminders_prompt_subtitle">ההודעה תכלול מילה או ביטוי קצר להשראה</string>
     <string name="my_site_blogging_prompt_card_removed_snackbar_subtitle">יש לעבור אל &lt;b&gt;הגדרות האתר&lt;/b&gt; כדי להפעיל אותן בחזרה</string>
@@ -1156,7 +1152,6 @@ Language: he_IL
     <string name="weekly_roundup_notification_text_views_only">בשבוע הקודם היו לך ⁦%1$s⁩ צפיות.</string>
     <string name="weekly_roundup_notification_text_all">בשבוע הקודם היו לך ⁦%1$s⁩ צפיות, ⁦%2$s⁩ לייקים ו-⁦%3$s⁩ תגובות.</string>
     <string name="stats_insights_like_guide_card">⭐️ הפוסט האחרון שלך ⁦%1$s⁩ קיבל לייק ⁦%2$s⁩.</string>
-    <string name="wp_jetpack_powered">מופעל באמצעות Jetpack</string>
     <string name="qrcode_auth_flow_content_description">תמונה להמחשה שתהליך הסריקה של קוד ההתחברות החל</string>
     <string name="qrcode_auth_flow_error_content_description">תמונה להמחשה שאירעה שגיאה</string>
     <string name="qrcode_auth_flow_error_auth_failed_title">האימות נכשל</string>

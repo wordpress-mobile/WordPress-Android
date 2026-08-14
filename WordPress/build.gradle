@@ -132,7 +132,6 @@ android {
         buildConfigField "boolean", "LAND_ON_THE_EDITOR", "false"
         buildConfigField "boolean", "QRCODE_AUTH_FLOW", "false"
         buildConfigField "boolean", "BETA_SITE_DESIGNS", "false"
-        buildConfigField "boolean", "JETPACK_POWERED", "true"
         buildConfigField "boolean", "JETPACK_POWERED_BOTTOM_SHEET", "true"
         buildConfigField "boolean", "JETPACK_SHARED_LOGIN", "true"
         buildConfigField "boolean", "JETPACK_LOCAL_USER_FLAGS", "true"

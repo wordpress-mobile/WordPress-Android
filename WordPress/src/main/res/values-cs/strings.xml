@@ -1054,10 +1054,6 @@ Language: cs_CZ
     <string name="jetpack_feature_card_content_phase_self_hosted_and_new_users">Odemkněte plný potenciál svého webu. Získejte statistiky, upozornění a další s Jetpack.</string>
     <string name="wp_jetpack_feature_removal_phase_self_hosted_users_title">Vaše stránky mají plugin Jetpack</string>
     <string name="wp_jetpack_feature_removal_phase_self_hosted_users_description">Mobilní aplikace Jetpack je navržena tak, aby fungovala společně s pluginem Jetpack. Přepněte nyní a získejte přístup ke statistikám, oznámením, čtečce a dalším.</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_notifications_description">Dostávejte upozornění na nové komentáře, hodnocení Líbí se mi, zhlédnutí a další.</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_reader_description">Najděte a sledujte své oblíbené stránky a komunity a sdílejte svůj obsah.</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_description">Sledujte, jak vaše návštěvnost roste, pomocí užitečných statistik a komplexních statistik.</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_title">Statistiky a postřehy</string>
     <string name="blogging_prompts_onboarding_content_note_content">Předvolby pro návrhy a připomenutí psaní blogu můžete kdykoli nastavit v části Můj web &gt; Nastavení &gt; Blogování</string>
     <string name="blogging_reminders_prompt_subtitle">Oznámení bude obsahovat slovo nebo krátkou frázi pro inspiraci</string>
     <string name="my_site_blogging_prompt_card_removed_snackbar_subtitle">Navštivte &lt;b&gt;nastavení webu&lt;/b&gt; a znovu jej zapněte</string>
@@ -1169,7 +1165,6 @@ Language: cs_CZ
     <string name="weekly_roundup_notification_text_views_only">Minulý týden jste měli %1$s zhlédnutí.</string>
     <string name="weekly_roundup_notification_text_all">Minulý týden jste měli %1$s zhlédnutí, %2$s lajků a %3$s komentářů.</string>
     <string name="stats_insights_like_guide_card">⭐️ Vašemu poslednímu příspěvku %1$s se líbí %2$s.</string>
-    <string name="wp_jetpack_powered">Poháněno Jetpackem</string>
     <string name="qrcode_auth_flow_content_description">Obrázek označující probíhající skenování přihlašovacího kódu</string>
     <string name="qrcode_auth_flow_error_content_description">Obrázek označující chybu</string>
     <string name="qrcode_auth_flow_error_auth_failed_title">Autentikace se nezdařila</string>

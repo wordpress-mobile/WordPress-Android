@@ -1034,10 +1034,6 @@ Language: ja_JP
     <string name="jetpack_feature_card_content_phase_self_hosted_and_new_users">サイトの可能性を十分に引き出すことができます。 Jetpack で統計や通知などを利用できます。</string>
     <string name="wp_jetpack_feature_removal_phase_self_hosted_users_title">ご利用のサイトには Jetpack プラグインが設定されています</string>
     <string name="wp_jetpack_feature_removal_phase_self_hosted_users_description">Jetpack モバイルアプリは、Jetpack プラグインと連携させて利用できます。 今すぐ乗り換えて、統計、通知、Reader などをご利用ください。</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_notifications_description">新しいコメントや「いいね」、表示数などの通知を受信できます。</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_reader_description">お気に入りのサイトやコミュニティを見つけてフォローし、コンテンツを共有できます。</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_description">便利な統計概要と包括的な統計情報で、トラフィックの成長を確認できます。</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_title">統計情報と統計概要</string>
     <string name="blogging_prompts_onboarding_content_note_content">ブログのプロンプトやリマインダーは、「My Site」 &gt; 「設定」 &gt; 「ブログ」でいつでもコントロールできます</string>
     <string name="blogging_reminders_prompt_subtitle">通知にはヒントになる言葉や短いフレーズが記載されます</string>
     <string name="my_site_blogging_prompt_card_removed_snackbar_subtitle">&lt;b&gt;「サイトの設定」&lt;/b&gt;に移動して表示をオンに戻す</string>
@@ -1149,7 +1145,6 @@ Language: ja_JP
     <string name="weekly_roundup_notification_text_views_only">先週、%1$s件の表示がありました。</string>
     <string name="weekly_roundup_notification_text_all">先週、%1$s件の表示、%2$s件の「いいね」、%3$s件のコメントを受け取りました。</string>
     <string name="stats_insights_like_guide_card">⭐️最新の投稿 %1$s が%2$s回「いいね」されました。</string>
-    <string name="wp_jetpack_powered">Jetpack 提供</string>
     <string name="qrcode_auth_flow_content_description">ログインコードをスキャンしていることを示す画像</string>
     <string name="qrcode_auth_flow_error_content_description">エラーが発生していることを示す画像</string>
     <string name="qrcode_auth_flow_error_auth_failed_title">認証できませんでした</string>

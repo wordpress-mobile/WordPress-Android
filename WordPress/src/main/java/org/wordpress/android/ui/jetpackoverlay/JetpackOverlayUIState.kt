@@ -12,8 +12,7 @@ sealed class JetpackFeatureOverlayComponentVisibility(
     open val migrationText: Boolean = false,
     val primaryButton: Boolean = true,
     open val closeButton: Boolean = true,
-    open val secondaryButton: Boolean = true,
-    open val newUsersContent: Boolean = false
+    val secondaryButton: Boolean = true
 ) {
     class DeepLinkPhase : JetpackFeatureOverlayComponentVisibility()
 

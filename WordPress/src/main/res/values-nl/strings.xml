@@ -1054,10 +1054,6 @@ Language: nl
     <string name="jetpack_feature_card_content_phase_self_hosted_and_new_users">Ontgrendel de volledige functionaliteit van je site. Krijg Statistieken, Lezer, Meldingen en meer met Jetpack.</string>
     <string name="wp_jetpack_feature_removal_phase_self_hosted_users_title">Je site heeft de Jetpack plugin</string>
     <string name="wp_jetpack_feature_removal_phase_self_hosted_users_description">De Jetpack mobiele app is ontworpen om samen met de Jetpack plugin te werken. Stap nu over om toegang te krijgen tot Statistieken, Meldingen, Reader en meer.</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_notifications_description">Verkrijg meldingen over nieuwe reacties, vind-ik-leuks, weergaven en meer.</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_reader_description">Vind en volg je favoriete sites en community’s, en deel je content.</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_description">Laat het aantal bezoekers van je site groeien via waardevolle inzichten en uitgebreide statistieken.</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_title">Statistieken en inzichten</string>
     <string name="blogging_prompts_onboarding_content_note_content">Je kunt blogmeldingen en -herinneringen te allen tijde beheren via Mijn site &gt; Instellingen &gt; Bloggen</string>
     <string name="blogging_reminders_prompt_subtitle">Meldingen bevatten een woord of korte zin ter inspiratie</string>
     <string name="my_site_blogging_prompt_card_removed_snackbar_subtitle">Ga naar &lt;b&gt;Site-instellingen&lt;/b&gt; om weer in te schakelen</string>
@@ -1169,7 +1165,6 @@ Language: nl
     <string name="weekly_roundup_notification_text_views_only">Vorige week had je %1$s weergaven.</string>
     <string name="weekly_roundup_notification_text_all">Vorige week had je %1$s weergaven, %2$s vind-ik-leuks, en %3$s reacties.</string>
     <string name="stats_insights_like_guide_card">⭐️ Je nieuwste bericht %1$s heeft %2$s likes gekregen.</string>
-    <string name="wp_jetpack_powered">Door Jetpack aangedreven</string>
     <string name="qrcode_auth_flow_content_description">Afbeelding met vermelding van scan login code in proces</string>
     <string name="qrcode_auth_flow_error_content_description">Afbeelding waarop een fout staat weergegeven</string>
     <string name="qrcode_auth_flow_error_auth_failed_title">Authenticatie mislukt</string>

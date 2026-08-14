@@ -1030,10 +1030,6 @@ Language: ar
     <string name="jetpack_feature_card_content_phase_self_hosted_and_new_users">افتح إمكانات موقعك بالكامل. احصل على ميزات الإحصاءات والتنبيهات والمزيد من خلال Jetpack.</string>
     <string name="wp_jetpack_feature_removal_phase_self_hosted_users_title">يتضمن موقعك إضافة Jetpack</string>
     <string name="wp_jetpack_feature_removal_phase_self_hosted_users_description">تم تصميم تطبيق Jetpack للهاتف المحمول للعمل إلى جانب إضافة Jetpack. قم بالتبديل الآن لكي تحظى بإمكانية الوصول إلى ميزات الإحصاءات والتنبيهات والقارئ والمزيد.</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_notifications_description">تلقَّ تنبيهات بالتعليقات والإعجابات والمشاهدات الجديدة، والمزيد.</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_reader_description">اعثر على الموقع والمجتمعات التي تفضّلها وتابعها، ثم شارك محتواك.</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_description">راقب الزيادة في حركة المرور لديك من خلال الرؤى المفيدة والإحصاءات الشاملة.</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_title">الإحصاءات والرؤى</string>
     <string name="blogging_prompts_onboarding_content_note_content">يمكنك التحكم في مطالبات التدوين والتذكيرات في أي وقت ضمن موقعي &gt; الإعدادات &gt; التدوين</string>
     <string name="blogging_reminders_prompt_subtitle">سيتضمن التنبيه كلمة أو عبارة مختصرة كمصدر للإلهام</string>
     <string name="my_site_blogging_prompt_card_removed_snackbar_subtitle">زيارة &lt;b&gt;إعدادات الموقع&lt;/b&gt; لإعادة التشغيل</string>
@@ -1145,7 +1141,6 @@ Language: ar
     <string name="weekly_roundup_notification_text_views_only">كانت لديك الأسبوع الماضي ⁦%1$s⁩ من المشاهدات.</string>
     <string name="weekly_roundup_notification_text_all">كانت لديك الأسبوع الماضي ⁦%1$s⁩ من المشاهدات، و⁦%2$s⁩ من الإعجابات، و⁦%3$s⁩ من التعليقات.</string>
     <string name="stats_insights_like_guide_card">⭐️ لقد تلقت تدوينتك الأخيرة ⁦%1$s⁩ ⁦%2$s⁩ إعجاب.</string>
-    <string name="wp_jetpack_powered">مدعوم بواسطة Jetpack</string>
     <string name="qrcode_auth_flow_error_content_description">صورة تشير إلى وجود خطأ</string>
     <string name="qrcode_auth_flow_content_description">صورة تشير إلى مسح رمز تسجيل الدخول قيد التقدم</string>
     <string name="qrcode_auth_flow_error_no_connection_title">لا يوجد اتصال</string>

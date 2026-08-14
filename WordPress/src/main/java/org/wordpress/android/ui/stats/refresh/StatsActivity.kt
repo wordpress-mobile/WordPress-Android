@@ -16,7 +16,6 @@ import org.wordpress.android.ui.main.BaseAppCompatActivity
 import org.wordpress.android.ui.stats.StatsTimeframe
 import org.wordpress.android.ui.stats.refresh.utils.StatsLaunchedFrom
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
-import org.wordpress.android.util.JetpackBrandingUtils
 import javax.inject.Inject
 import android.R as AndroidR
 
@@ -24,9 +23,6 @@ import android.R as AndroidR
 class StatsActivity : BaseAppCompatActivity() {
     @Inject
     lateinit var statsSiteProvider: StatsSiteProvider
-
-    @Inject
-    lateinit var jetpackBrandingUtils: JetpackBrandingUtils
 
     @Inject
     lateinit var jetpackFeatureRemovalHelper: JetpackFeatureRemovalHelper

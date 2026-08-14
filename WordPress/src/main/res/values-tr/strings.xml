@@ -1054,10 +1054,6 @@ Language: tr
     <string name="jetpack_feature_card_content_phase_self_hosted_and_new_users">Sitenizin tüm potansiyelini ortaya çıkarın. Jetpack ile istatistikler, bildirimler ve daha fazlasını elde edin.</string>
     <string name="wp_jetpack_feature_removal_phase_self_hosted_users_title">Sitenizde Jetpack eklentisi var</string>
     <string name="wp_jetpack_feature_removal_phase_self_hosted_users_description">Jetpack mobil uygulaması, Jetpack eklentisi ile birlikte çalışacak şekilde tasarlanmıştır. İstatistikler, okuyucu, bildirimler ve daha fazlasına erişmek için şimdi geçiş yapın.</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_notifications_description">Yeni yorumlar, beğeniler, görüntülemeler ve diğerleri için bildirim alın.</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_reader_description">Beğendiğiniz siteleri ve toplulukları bulup takip edin ve içeriğinizi paylaşın.</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_description">Yararlı bilgiler ve kapsamlı istatistiklerle trafiğinizin büyümesini izleyin.</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_title">İstatistikler ve yönelimler</string>
     <string name="blogging_prompts_onboarding_content_note_content">Blog istemlerini ve hatırlatıcılarını istediğiniz zaman Sitem &gt; Ayarlar &gt; Blog yazma bölümünden ayarlayabilirsiniz</string>
     <string name="blogging_reminders_prompt_subtitle">Bildirimde, ilham almak için bir sözcük veya kısa bir ifade bulunur</string>
     <string name="my_site_blogging_prompt_card_removed_snackbar_subtitle">Yeniden açmak için &lt;b&gt;Site ayarları&lt;/b&gt; bölümüne gidin</string>
@@ -1169,7 +1165,6 @@ Language: tr
     <string name="weekly_roundup_notification_text_views_only">Geçen hafta %1$s görüntüleme aldınız.</string>
     <string name="weekly_roundup_notification_text_all">Geçen hafta %1$s görüntüleme, %2$s beğeni ve %3$s yorum aldınız.</string>
     <string name="stats_insights_like_guide_card">⭐️ Son yazınız (%1$s) %2$s beğeni aldı.</string>
-    <string name="wp_jetpack_powered">Jetpack destekli</string>
     <string name="qrcode_auth_flow_content_description">İşlem sırasında tarama oturum açma kodunu gösteren görsel</string>
     <string name="qrcode_auth_flow_error_content_description">Bir sorunu gösteren görsel</string>
     <string name="qrcode_auth_flow_error_auth_failed_title">Kimlik doğrulanamadı</string>

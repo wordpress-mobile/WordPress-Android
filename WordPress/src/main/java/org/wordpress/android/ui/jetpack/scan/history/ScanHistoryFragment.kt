@@ -24,7 +24,6 @@ import org.wordpress.android.ui.jetpack.scan.history.ScanHistoryViewModel.TabUiS
 import org.wordpress.android.ui.jetpack.scan.history.ScanHistoryViewModel.UiState.ContentUiState
 import org.wordpress.android.ui.jetpack.scan.history.ScanHistoryViewModel.UiState.ErrorUiState
 import org.wordpress.android.ui.utils.UiHelpers
-import org.wordpress.android.util.JetpackBrandingUtils
 import org.wordpress.android.util.extensions.getSerializableCompat
 import org.wordpress.android.util.extensions.getSerializableExtraCompat
 import javax.inject.Inject
@@ -35,8 +34,6 @@ class ScanHistoryFragment : Fragment(R.layout.scan_history_fragment), MenuProvid
     @Inject
     lateinit var uiHelpers: UiHelpers
 
-    @Inject
-    lateinit var jetpackBrandingUtils: JetpackBrandingUtils
     private val viewModel: ScanHistoryViewModel by activityViewModels()
     private var binding: ScanHistoryFragmentBinding? = null
 

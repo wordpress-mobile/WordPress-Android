@@ -1054,10 +1054,6 @@ Language: pl
     <string name="jetpack_feature_card_content_phase_self_hosted_and_new_users">Odblokuj pełny potencjał swojej witryny. Zdobądź statystyki, powiadomienia i więcej z Jetpackiem.</string>
     <string name="wp_jetpack_feature_removal_phase_self_hosted_users_title">Twoja witryna ma wtyczkę Jetpack</string>
     <string name="wp_jetpack_feature_removal_phase_self_hosted_users_description">Aplikacja mobilna Jetpack jest zaprojektowana do współpracy z wtyczką Jetpack. Przełącz się teraz, aby uzyskać dostęp do statystyk, powiadomień, czytnika i nie tylko.</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_notifications_description">Otrzymuj powiadomienia o nowych komentarzach, polubieniach, wyświetleniach, i nie tylko.</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_reader_description">Znajdź i obserwuj swoje ulubione witryny i społeczności, a następnie udostępniaj swoje treści.</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_description">Obserwuj, jak rośnie twój ruch dzięki pomocnym wskazówkom i szczegółowym statystykom.</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_title">Statystyki i Wnioski</string>
     <string name="blogging_prompts_onboarding_content_note_content">Możesz w dowolnym momencie kontrolować monity i przypomnienia dotyczące blogowania w sekcji Moja witryna &gt; Ustawienia &gt; Blogowanie</string>
     <string name="blogging_reminders_prompt_subtitle">Powiadomienie będzie zawierać słowo lub krótką frazę dla inspiracji</string>
     <string name="my_site_blogging_prompt_card_removed_snackbar_subtitle">Przejdź na &lt;b&gt;Ustawienia witryny&lt;/b&gt;, żeby włączyć z powrotem</string>
@@ -1169,7 +1165,6 @@ Language: pl
     <string name="weekly_roundup_notification_text_views_only">W zeszłym tygodniu było %1$s wyświetleń.</string>
     <string name="weekly_roundup_notification_text_all">W zeszłym tygodniu było %1$s wyświetleń %2$s polubień i %3$s komentarzy.</string>
     <string name="stats_insights_like_guide_card">⭐️ Twój ostatni wpis %1$s otrzymał %2$s polubień.</string>
-    <string name="wp_jetpack_powered">Obsługiwane przez Jetpack</string>
     <string name="qrcode_auth_flow_content_description">Obrazek wskazujący skanowanie kodu logowania w trakcie procesu</string>
     <string name="qrcode_auth_flow_error_content_description">Obrazek wskazujący na błąd</string>
     <string name="qrcode_auth_flow_error_auth_failed_title">Nieudane uwierzytelnianie</string>

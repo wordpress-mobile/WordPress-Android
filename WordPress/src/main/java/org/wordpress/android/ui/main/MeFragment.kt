@@ -43,7 +43,6 @@ import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged
 import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.utils.AppLogWrapper
-import org.wordpress.android.models.JetpackPoweredScreen
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.ActivityNavigator
 import org.wordpress.android.ui.accounts.login.WPcomLoginHelper
@@ -66,7 +65,6 @@ import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.MAIN
 import org.wordpress.android.util.FluxCUtils
-import org.wordpress.android.util.JetpackBrandingUtils
 import org.wordpress.android.util.PackageManagerWrapper
 import org.wordpress.android.util.SnackbarItem
 import org.wordpress.android.util.SnackbarItem.Info
@@ -114,9 +112,6 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
 
     @Inject
     lateinit var qrCodeAuthFlowFeatureConfig: QRCodeAuthFlowFeatureConfig
-
-    @Inject
-    lateinit var jetpackBrandingUtils: JetpackBrandingUtils
 
     @Inject
     lateinit var packageManagerWrapper: PackageManagerWrapper
@@ -179,8 +174,6 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
         } else {
             appbarMain.visibility = View.GONE
         }
-
-        addJetpackBadgeIfNeeded()
 
         val showPickerListener = OnClickListener {
             AnalyticsTracker.track(ME_GRAVATAR_TAPPED)
@@ -353,23 +346,6 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
             }
         } else {
             domainManagementContainer.visibility = View.GONE
-        }
-    }
-
-    private fun MeFragmentBinding.addJetpackBadgeIfNeeded() {
-        if (jetpackBrandingUtils.shouldShowJetpackBranding()) {
-            val screen = JetpackPoweredScreen.WithStaticText.ME
-            jetpackBadge.isVisible = true
-            jetpackBadge.text = uiHelpers.getTextOfUiString(
-                requireContext(),
-                jetpackBrandingUtils.getBrandingText()
-            )
-            if (jetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()) {
-                jetpackBadge.setOnClickListener {
-                    jetpackBrandingUtils.trackBadgeTapped(screen)
-                    viewModel.showJetpackPoweredBottomSheet()
-                }
-            }
         }
     }
 

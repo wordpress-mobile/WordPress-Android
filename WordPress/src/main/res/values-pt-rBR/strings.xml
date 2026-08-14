@@ -748,10 +748,6 @@ Language: pt_BR
     <string name="jetpack_feature_card_content_phase_self_hosted_and_new_users">Libere todo o potencial do seu site. Veja estatísticas, notificações e muito mais com o Jetpack.</string>
     <string name="wp_jetpack_feature_removal_phase_self_hosted_users_title">Seu site possui o plugin Jetpack</string>
     <string name="wp_jetpack_feature_removal_phase_self_hosted_users_description">O aplicativo Jetpack foi projetado para trabalhar junto ao plugin Jetpack. Mude agora e tenha acesso a estatísticas, notificações, leitor e muito mais.</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_notifications_description">Receba notificações sobre novos comentários, curtidas, visualizações, e muito mais.</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_reader_description">Encontre e siga seus sites e comunidades favoritos, e compartilhe seu conteúdo.</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_description">Acompanhe o crescimento de seu site com análises úteis e estatísticas fáceis de entender.</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_title">Estatísticas e informações</string>
     <string name="blogging_prompts_onboarding_content_note_content">Você pode controlar as sugestões e os lembretes de publicação a qualquer momento em Meu site &gt; Configurações &gt; Blog</string>
     <string name="blogging_reminders_prompt_subtitle">A notificação incluirá uma palavra ou uma frase curta, para inspiração</string>
     <string name="my_site_blogging_prompt_card_removed_snackbar_subtitle">Vá às &lt;b&gt;configurações do site&lt;/b&gt; para reativar as sugestões</string>
@@ -863,7 +859,6 @@ Language: pt_BR
     <string name="weekly_roundup_notification_text_views_only">Na semana passada, você recebeu %1$s visualizações.</string>
     <string name="weekly_roundup_notification_text_all">Na semana passada, você recebeu %1$s visualizações, %2$s curtidas e %3$s comentários.</string>
     <string name="stats_insights_like_guide_card">⭐️ Seu post mais recente, %1$s, recebeu %2$s curtida.</string>
-    <string name="wp_jetpack_powered">Recurso do Jetpack</string>
     <string name="qrcode_auth_flow_content_description">Imagem indicando que a verificação do código de acesso está em andamento</string>
     <string name="qrcode_auth_flow_error_content_description">Imagem indicando um erro</string>
     <string name="qrcode_auth_flow_error_auth_failed_title">Falha na autenticação</string>
