@@ -73,6 +73,15 @@ class SupportViewModel @Inject constructor(
     val networkTrackingState: StateFlow<NetworkTrackingState> = _networkTrackingState.asStateFlow()
 
     fun init() {
+        refreshLoginState()
+        initNetworkTrackingState()
+    }
+
+    /**
+     * Re-reads the account state so the screen reflects a login that happened after it was created
+     * (e.g. the user returning from the support login flow). See CMM-2297.
+     */
+    fun refreshLoginState() {
         val hasAccessToken = accountStore.hasAccessToken()
         _isLoggedIn.value = hasAccessToken
 
@@ -86,8 +95,6 @@ class SupportViewModel @Inject constructor(
         _optionsVisibility.value = SupportOptionsVisibility(
             showUnifiedSupport = hasAccessToken && BuildConfig.IS_JETPACK_APP,
         )
-
-        initNetworkTrackingState()
     }
 
     private fun initNetworkTrackingState() {

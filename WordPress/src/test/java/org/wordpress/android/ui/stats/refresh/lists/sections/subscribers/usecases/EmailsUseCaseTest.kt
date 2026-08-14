@@ -6,6 +6,8 @@ import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
 import org.mockito.kotlin.any
+import org.mockito.kotlin.never
+import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
@@ -18,6 +20,7 @@ import org.wordpress.android.fluxc.store.StatsStore.StatsError
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.GENERIC_ERROR
 import org.wordpress.android.fluxc.store.stats.subscribers.EmailsStore
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode.BLOCK
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode.VIEW_ALL
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel.UseCaseState
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
@@ -78,8 +81,8 @@ class EmailsUseCaseTest : BaseUnitTest() {
     fun `maps emails summary to UI model`() = test {
         val forced = false
         val model = PostsModel(listOf(firstPost, secondPost))
-        whenever(emailsStore.getEmails(site, LimitMode.Top(itemsToLoad), SortField.POST_ID)).thenReturn(model)
-        whenever(emailsStore.fetchEmails(site, LimitMode.Top(itemsToLoad), SortField.POST_ID, forced))
+        whenever(emailsStore.getEmails(site, LimitMode.Top(itemsToLoad), SortField.POST_DATE)).thenReturn(model)
+        whenever(emailsStore.fetchEmails(site, LimitMode.Top(itemsToLoad), SortField.POST_DATE, forced))
             .thenReturn(OnStatsFetched(model))
 
         val result = loadPosts(true, forced)
@@ -97,7 +100,7 @@ class EmailsUseCaseTest : BaseUnitTest() {
     @Test
     fun `maps empty posts to UI model`() = test {
         val forced = false
-        whenever(emailsStore.fetchEmails(site, LimitMode.Top(itemsToLoad), SortField.POST_ID, forced)).thenReturn(
+        whenever(emailsStore.fetchEmails(site, LimitMode.Top(itemsToLoad), SortField.POST_DATE, forced)).thenReturn(
             OnStatsFetched(PostsModel(listOf()))
         )
 
@@ -114,12 +117,37 @@ class EmailsUseCaseTest : BaseUnitTest() {
     fun `maps error item to UI model`() = test {
         val forced = false
         val message = "Generic error"
-        whenever(emailsStore.fetchEmails(site, LimitMode.Top(itemsToLoad), SortField.POST_ID, forced))
+        whenever(emailsStore.fetchEmails(site, LimitMode.Top(itemsToLoad), SortField.POST_DATE, forced))
             .thenReturn(OnStatsFetched(StatsError(GENERIC_ERROR, message)))
 
         val result = loadPosts(true, forced)
 
         assertThat(result.state).isEqualTo(UseCaseState.ERROR)
+    }
+
+    @Test
+    fun `view all list is sorted by post date, not opens`() = test {
+        val forced = false
+        val viewAllUseCase = EmailsUseCase(
+            testDispatcher(),
+            testDispatcher(),
+            emailsStore,
+            statsSiteProvider,
+            statsUtils,
+            contentDescriptionHelper,
+            tracker,
+            VIEW_ALL
+        )
+        whenever(emailsStore.fetchEmails(site, LimitMode.Top(itemsToLoad), SortField.POST_DATE, forced))
+            .thenReturn(OnStatsFetched(PostsModel(listOf(firstPost, secondPost))))
+
+        var result: UseCaseModel? = null
+        viewAllUseCase.liveData.observeForever { result = it }
+        viewAllUseCase.fetch(true, forced)
+        advanceUntilIdle()
+
+        verify(emailsStore).fetchEmails(site, LimitMode.Top(itemsToLoad), SortField.POST_DATE, forced)
+        verify(emailsStore, never()).fetchEmails(site, LimitMode.Top(itemsToLoad), SortField.OPENS, forced)
     }
 
     private fun assertTitle(item: BlockListItem) {

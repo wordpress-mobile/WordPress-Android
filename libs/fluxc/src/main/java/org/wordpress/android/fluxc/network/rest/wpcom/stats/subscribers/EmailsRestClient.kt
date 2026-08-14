@@ -37,8 +37,9 @@ class EmailsRestClient @Inject constructor(
         val url = WPCOMREST.sites.site(site.siteId).stats.emails.summary.urlV1_1
 
         val params = mapOf(
+            "period" to "alltime",
             "quantity" to quantity.toString(),
-            "sort_field" to sortField.toString(),
+            "sort_field" to sortField.sortField,
             "sort_order" to "desc"
         )
 
@@ -56,7 +57,7 @@ class EmailsRestClient @Inject constructor(
         }
     }
 
-    enum class SortField(val sortField: String) { POST_ID("post_id"), OPENS("opens") }
+    enum class SortField(val sortField: String) { POST_DATE("post_date"), OPENS("opens") }
 
     data class EmailsSummaryResponse(@SerializedName("posts") val posts: List<Post>) {
         data class Post(
