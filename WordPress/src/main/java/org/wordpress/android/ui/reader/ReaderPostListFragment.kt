@@ -15,10 +15,8 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.view.ViewGroup.MarginLayoutParams
 import android.view.animation.Animation
 import android.widget.ProgressBar
-import android.widget.TextView
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -1967,7 +1965,6 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
                 }
                 if (isSearching && !isSearchTabsShowing()) {
                     showSearchTabs()
-                } else if (isSearching) {
                 }
             }
             restorePosition = 0

@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.text.SpannableString
 import android.text.method.LinkMovementMethod
 import android.view.View
-import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.viewModels
@@ -15,7 +14,6 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.ActivityLogItemDetailBinding
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.ActivityLauncher
-import org.wordpress.android.ui.ActivityLauncher.BACKUP_TRACK_EVENT_PROPERTY_VALUE
 import org.wordpress.android.ui.ActivityLauncher.SOURCE_TRACK_EVENT_PROPERTY_KEY
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.activitylog.detail.ActivityLogDetailNavigationEvents.ShowBackupDownload
