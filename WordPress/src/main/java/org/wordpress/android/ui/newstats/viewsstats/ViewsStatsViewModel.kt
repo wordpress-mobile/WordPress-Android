@@ -24,6 +24,8 @@ import org.wordpress.android.ui.newstats.repository.PeriodAggregates
 import org.wordpress.android.ui.newstats.repository.PeriodStatsResult
 import org.wordpress.android.ui.newstats.repository.StatsCardsConfigurationRepository
 import org.wordpress.android.ui.newstats.repository.StatsRepository
+import org.wordpress.android.ui.newstats.util.RangeYearPlacement
+import org.wordpress.android.ui.newstats.util.rangeYearPlacement
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.viewmodel.ResourceProvider
 import java.time.LocalDate
@@ -726,7 +728,7 @@ class ViewsStatsViewModel @Inject constructor(
 
     private fun formatSingleDayRange(date: String): String {
         val parsedDate = parsePeriodDate(date) ?: return date
-        return parsedDate.format(DateTimeFormatter.ofPattern("d MMM", Locale.getDefault()))
+        return parsedDate.format(DateTimeFormatter.ofPattern("d MMM yyyy", Locale.getDefault()))
     }
 
     @Suppress("ReturnCount")
@@ -742,11 +744,15 @@ class ViewsStatsViewModel @Inject constructor(
         val start = parsePeriodDate(startDate) ?: return "$startDate - $endDate"
         val end = parsePeriodDate(endDate) ?: return "$startDate - $endDate"
         val monthFormat = DateTimeFormatter.ofPattern("MMM", Locale.getDefault())
+        val monthYearFormat = DateTimeFormatter.ofPattern("MMM yyyy", Locale.getDefault())
 
-        return if (start.month == end.month && start.year == end.year) {
-            start.format(monthFormat)
-        } else {
-            "${start.format(monthFormat)} - ${end.format(monthFormat)}"
+        return when (rangeYearPlacement(start.year, end.year)) {
+            // Cross-year span: show the year on both ends ("Dec 2024 - Jan 2025").
+            RangeYearPlacement.BOTH -> "${start.format(monthYearFormat)} - ${end.format(monthYearFormat)}"
+            // Same year: show the year once, on the trailing month ("Jan - Jun 2024").
+            RangeYearPlacement.TRAILING ->
+                if (start.month == end.month) start.format(monthYearFormat)
+                else "${start.format(monthFormat)} - ${end.format(monthYearFormat)}"
         }
     }
 
@@ -756,11 +762,17 @@ class ViewsStatsViewModel @Inject constructor(
         val end = parsePeriodDate(endDate) ?: return "$startDate - $endDate"
         val dayFormat = DateTimeFormatter.ofPattern("d", Locale.getDefault())
         val dayMonthFormat = DateTimeFormatter.ofPattern("d MMM", Locale.getDefault())
+        val dayMonthYearFormat = DateTimeFormatter.ofPattern("d MMM yyyy", Locale.getDefault())
 
-        return if (start.month == end.month) {
-            "${start.format(dayFormat)}-${end.format(dayMonthFormat)}"
-        } else {
-            "${start.format(dayMonthFormat)} - ${end.format(dayMonthFormat)}"
+        return when (rangeYearPlacement(start.year, end.year)) {
+            // Cross-year span: show the year on both ends ("28 Dec 2024 - 3 Jan 2025").
+            RangeYearPlacement.BOTH ->
+                "${start.format(dayMonthYearFormat)} - ${end.format(dayMonthYearFormat)}"
+            // Same year: show the year once, on the trailing date. Collapse the leading month when
+            // both ends share it ("14-20 Jan 2024" vs "28 Jul - 3 Aug 2024").
+            RangeYearPlacement.TRAILING ->
+                if (start.month == end.month) "${start.format(dayFormat)}-${end.format(dayMonthYearFormat)}"
+                else "${start.format(dayMonthFormat)} - ${end.format(dayMonthYearFormat)}"
         }
     }
 
