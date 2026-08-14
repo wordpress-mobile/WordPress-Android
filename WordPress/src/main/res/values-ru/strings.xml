@@ -9,7 +9,6 @@ Language: ru
     <string name="support_screen_unified_support_description">Получайте ответы от нашей службы поддержки в любое время</string>
     <string name="support_screen_unified_support_title">Справка</string>
     <string name="unified_support_attachment_match_score">Совпадение %1$d%%</string>
-    <string name="unified_support_status_bot">Бот Oddie</string>
     <string name="unified_support_bot_typing_content_description">Бот поддержки вводит текст</string>
     <string name="unified_support_message_input_placeholder">Написать сообщение…</string>
     <string name="unified_support_conversations_title">Справка</string>
@@ -256,8 +255,6 @@ Language: ru
     <string name="post_rs_confirm_delete_message">Эта запись будет удалена навсегда. Это действие нельзя отменить.</string>
     <string name="post_rs_confirm_trash_message">Вы действительно хотите удалить эту запись?</string>
     <string name="post_rs_failed_to_load">Ошибка при загрузке записи</string>
-    <string name="experimental_rs_pages_list_description">Показывать список записей WordPress.com и на автономных сайтах с паролями приложений в более современном интерфейсе</string>
-    <string name="experimental_rs_pages_list">Список новых записей</string>
     <string name="stats_error_admin_url_unavailable">Не возможно открыть WP Admin на этом сайте</string>
     <string name="stats_error_parsing">При загрузке данных возникла ошибка. Повторите попытку</string>
     <string name="stats_error_network">Ошибка сети. Проверьте подключение и повторите попытку</string>

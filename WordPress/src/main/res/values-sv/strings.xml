@@ -9,7 +9,6 @@ Language: sv_SE
     <string name="support_screen_unified_support_description">Få svar från vårt supportteam när som helst</string>
     <string name="support_screen_unified_support_title">Skaffa hjälp</string>
     <string name="unified_support_attachment_match_score">%1$d%% matcha</string>
-    <string name="unified_support_status_bot">Oddie-bot</string>
     <string name="unified_support_bot_typing_content_description">Supportroboten skriver</string>
     <string name="unified_support_message_input_placeholder">Skriv ett meddelande …</string>
     <string name="unified_support_conversations_title">Skaffa hjälp</string>
@@ -256,8 +255,6 @@ Language: sv_SE
     <string name="post_rs_confirm_delete_message">Inlägget tas då bort permanent. Denna åtgärd kan inte ångras.</string>
     <string name="post_rs_confirm_trash_message">Är du säker på att du vill flytta det här inlägget till papperskorgen?</string>
     <string name="post_rs_failed_to_load">Det gick inte att hämta inlägg</string>
-    <string name="experimental_rs_pages_list_description">Visa sidlista i ett modernare gränssnitt för WordPress.com och webbplatser med applikationslösenord som drivs på egen server</string>
-    <string name="experimental_rs_pages_list">Ny sidlista</string>
     <string name="stats_error_admin_url_unavailable">Det gick inte att öppna WP Admin för den här webbplatsen</string>
     <string name="stats_error_parsing">Det uppstod ett problem när datan hämtades. Försök igen</string>
     <string name="stats_error_network">Nätverksfel. Kontrollera anslutningen och försök igen</string>
