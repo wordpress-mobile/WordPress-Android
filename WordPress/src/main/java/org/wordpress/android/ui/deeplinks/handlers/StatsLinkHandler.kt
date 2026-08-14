@@ -16,7 +16,7 @@ import javax.inject.Inject
 
 class StatsLinkHandler
 @Inject constructor(
-    private val deepLinkUriUtils: DeepLinkUriUtils,
+    private val deepLinkUriUtils: DeepLinkUriUtils
 ) : DeepLinkHandler {
     /**
      * Builds navigate action from URL like:
