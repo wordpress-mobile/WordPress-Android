@@ -118,6 +118,23 @@ class ActivityLogRestClientTest {
     }
 
     @Test
+    fun fetchActivity_passesNotGroupParamsToBuildRequest() = test {
+        initFetchActivity()
+        val payload = FetchActivityLogPayload(
+                site,
+                false,
+                notGroups = listOf("rewind", "scan")
+        )
+
+        activityRestClient.fetchActivity(payload, number, offset)
+
+        with(paramsCaptor.firstValue) {
+            assertEquals("rewind", this["not_group[0]"])
+            assertEquals("scan", this["not_group[1]"])
+        }
+    }
+
+    @Test
     fun fetchActivity_passesOnlyNonEmptyParamsToBuildRequest() = test {
         initFetchActivity()
         val payload = FetchActivityLogPayload(
