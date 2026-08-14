@@ -113,6 +113,13 @@ val DOMAINS_ITEM = ListItem(
     onClick = ListItemInteraction.create(DOMAINS, SITE_ITEM_ACTION),
     listItemAction = DOMAINS
 )
+val ME_ITEM = ListItem(
+    R.drawable.ic_user_primary_white_24,
+    UiStringRes(R.string.me),
+    onClick = ListItemInteraction.create(ListItemAction.ME, SITE_ITEM_ACTION),
+    disablePrimaryIconTint = true,
+    listItemAction = ListItemAction.ME
+)
 val SITE_MONITORING_ITEM = ListItem(
     R.drawable.gb_ic_tool,
     UiStringRes(R.string.site_monitoring),
