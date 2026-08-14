@@ -40,7 +40,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.PrimaryScrollableTabRow
 import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
@@ -56,10 +56,13 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -121,8 +124,11 @@ import org.wordpress.android.ui.newstats.tagsandcategories.TagsAndCategoriesDeta
 import org.wordpress.android.ui.newstats.tagsandcategories.TagsAndCategoriesViewModel
 import org.wordpress.android.ui.newstats.yearinreview.YearInReviewDetailActivity
 import org.wordpress.android.ui.newstats.yearinreview.YearInReviewViewModel
+import org.wordpress.android.ui.newstats.util.DateRangeLabel
 import org.wordpress.android.ui.newstats.util.ProvideShimmerBrush
-import org.wordpress.android.ui.newstats.util.formatCustomDateRange
+import org.wordpress.android.ui.newstats.util.RangeLine
+import org.wordpress.android.ui.newstats.util.formatCustomDateRangeTwoLine
+import org.wordpress.android.ui.newstats.util.toContentDescription
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.newstats.components.NewStatsIntroBottomSheet
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
@@ -132,6 +138,7 @@ import org.wordpress.android.ui.stats.refresh.utils.trackStatsAccessed
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import java.time.Year
 import javax.inject.Inject
 
 // Opacity of a navigation control (forward at the present edge, back at the year floor) when it is
@@ -397,19 +404,12 @@ private fun NewStatsScreen(
 
     Scaffold(
         topBar = {
-            TopAppBar(
+            CenterAlignedTopAppBar(
+                // The Traffic date selector (with its paging arrows) lives in the centred title
+                // slot so it stays centred in the app bar. The other tabs have no selector, so they
+                // fall back to a centred "Stats" title rather than leaving the bar empty. Only the
+                // overflow menu stays in actions.
                 title = {
-                    Text(text = stringResource(id = R.string.stats))
-                },
-                navigationIcon = {
-                    IconButton(onClick = onBackPressed) {
-                        Icon(
-                            Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = stringResource(R.string.back)
-                        )
-                    }
-                },
-                actions = {
                     val currentTab = tabs[pagerState.currentPage]
                     if (currentTab == StatsTab.TRAFFIC) {
                         Row(verticalAlignment = Alignment.CenterVertically) {
@@ -439,13 +439,9 @@ private fun NewStatsScreen(
                                         }
                                         .padding(horizontal = 8.dp)
                                 ) {
-                                    Text(
-                                        text = selectedPeriod
-                                            .getDisplayLabel(),
-                                        style = MaterialTheme
-                                            .typography.labelLarge,
-                                        color = MaterialTheme
-                                            .colorScheme.onSurface
+                                    PeriodLabel(
+                                        label = selectedPeriod
+                                            .getDisplayLabel()
                                     )
                                     Icon(
                                         imageVector =
@@ -496,7 +492,19 @@ private fun NewStatsScreen(
                                 )
                             }
                         }
+                    } else {
+                        Text(text = stringResource(id = R.string.stats))
                     }
+                },
+                navigationIcon = {
+                    IconButton(onClick = onBackPressed) {
+                        Icon(
+                            Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = stringResource(R.string.back)
+                        )
+                    }
+                },
+                actions = {
                     StatsOverflowMenu(
                         onSwitchToOldStats = onSwitchToOldStats
                     )
@@ -1457,11 +1465,79 @@ private fun StatsPeriodMenu(
 }
 
 @Composable
-private fun StatsPeriod.getDisplayLabel(): String {
+private fun StatsPeriod.getDisplayLabel(): DateRangeLabel {
     return when (this) {
-        is StatsPeriod.Custom -> formatCustomDateRange(startDate, endDate)
-        else -> stringResource(id = labelResId)
+        is StatsPeriod.Custom -> {
+            val currentYear = remember { Year.now().value }
+            formatCustomDateRangeTwoLine(startDate, endDate, currentYear)
+        }
+        else -> DateRangeLabel(RangeLine.Single(stringResource(id = labelResId)), null)
     }
+}
+
+/**
+ * Renders the top-bar period label. Preset periods (and any single-line label) show one line; a
+ * Custom range shows the day-month range over the year(s). When both lines are a start–end range
+ * (a cross-year span), the two "-" separators sit in their own centre column so they line up as a
+ * column regardless of the two text styles' widths — no text measuring needed. See [DateRangeLabel].
+ */
+@Composable
+private fun PeriodLabel(label: DateRangeLabel) {
+    val primaryStyle = MaterialTheme.typography.labelLarge
+    val secondaryStyle = MaterialTheme.typography.labelSmall
+    val primaryColor = MaterialTheme.colorScheme.onSurface
+    val secondaryColor = MaterialTheme.colorScheme.onSurfaceVariant
+
+    val secondary = label.secondary
+    if (secondary == null) {
+        // Single line (preset period, or a Custom range whose year is hidden). A Split renders
+        // inline here since there is no second line to align its "-" against.
+        SingleRangeLine(line = label.primary, style = primaryStyle, color = primaryColor)
+        return
+    }
+
+    val rangeDescription = label.toContentDescription(
+        stringResource(R.string.stats_traffic_date_range_content_description)
+    )
+    val primary = label.primary
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.clearAndSetSemantics { contentDescription = rangeDescription }
+    ) {
+        if (primary is RangeLine.Split && secondary is RangeLine.Split) {
+            // The only case with a "-" on both lines (a cross-year span). Put the separators in
+            // their own centre column so they align on every row; the start/end columns hug it.
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Column(horizontalAlignment = Alignment.End) {
+                    Text(primary.start, style = primaryStyle, color = primaryColor, maxLines = 1)
+                    Text(secondary.start, style = secondaryStyle, color = secondaryColor, maxLines = 1)
+                }
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Text(text = " - ", style = primaryStyle, color = primaryColor, maxLines = 1)
+                    Text(text = " - ", style = secondaryStyle, color = secondaryColor, maxLines = 1)
+                }
+                Column(horizontalAlignment = Alignment.Start) {
+                    Text(primary.end, style = primaryStyle, color = primaryColor, maxLines = 1)
+                    Text(secondary.end, style = secondaryStyle, color = secondaryColor, maxLines = 1)
+                }
+            }
+        } else {
+            // No "-" shared across the two lines (a Split range over a single year, or two Single
+            // lines): a plain centred column of the two lines.
+            SingleRangeLine(line = primary, style = primaryStyle, color = primaryColor)
+            SingleRangeLine(line = secondary, style = secondaryStyle, color = secondaryColor)
+        }
+    }
+}
+
+/** A range rendered on one line, with no cross-line "-" alignment: a Split becomes "start - end". */
+@Composable
+private fun SingleRangeLine(line: RangeLine, style: TextStyle, color: Color) {
+    val text = when (line) {
+        is RangeLine.Single -> line.text
+        is RangeLine.Split -> "${line.start} - ${line.end}"
+    }
+    Text(text = text, style = style, color = color, maxLines = 1)
 }
 
 private fun buildOpenWpAdminAction(
