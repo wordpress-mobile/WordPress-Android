@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.models.JetpackPoweredScreen
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalHelper
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
@@ -18,7 +18,7 @@ import javax.inject.Inject
 class JetpackBrandingUtils @Inject constructor(
     private val jetpackPoweredFeatureConfig: JetpackPoweredFeatureConfig,
     private val jetpackPoweredBottomSheetFeatureConfig: JetpackPoweredBottomSheetFeatureConfig,
-    private val jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper,
+    private val jetpackFeatureRemovalHelper: JetpackFeatureRemovalHelper,
     private val selectedSiteRepository: SelectedSiteRepository,
     private val siteUtilsWrapper: SiteUtilsWrapper,
     private val buildConfigWrapper: BuildConfigWrapper,
@@ -26,7 +26,7 @@ class JetpackBrandingUtils @Inject constructor(
 ) {
     fun shouldShowJetpackBranding(): Boolean {
         return isWpComSite() && jetpackPoweredFeatureConfig.isEnabled() && !buildConfigWrapper.isJetpackApp
-                && !jetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures()
+                && !jetpackFeatureRemovalHelper.shouldRemoveJetpackFeatures()
     }
 
     fun shouldShowJetpackPoweredBottomSheet(): Boolean {

@@ -16,18 +16,18 @@ import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 
 @RunWith(MockitoJUnitRunner::class)
-class JetpackFeatureRemovalPhaseHelperTest {
+class JetpackFeatureRemovalHelperTest {
     @Mock
     private lateinit var buildConfigWrapper: BuildConfigWrapper
 
     @Mock
     private lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
 
-    private lateinit var helper: JetpackFeatureRemovalPhaseHelper
+    private lateinit var helper: JetpackFeatureRemovalHelper
 
     @Before
     fun setUp() {
-        helper = JetpackFeatureRemovalPhaseHelper(buildConfigWrapper, analyticsTrackerWrapper)
+        helper = JetpackFeatureRemovalHelper(buildConfigWrapper, analyticsTrackerWrapper)
     }
 
     // The removal is a build-flavor invariant: the WordPress app never has the Jetpack-powered
@@ -42,7 +42,7 @@ class JetpackFeatureRemovalPhaseHelperTest {
         assertThat(helper.shouldShowTemplateSelectionInPages()).isFalse
         assertThat(helper.shouldShowPublishedPostStatsButton()).isFalse
         assertThat(helper.shouldShowHelpAndSupportOnEditor()).isFalse
-        assertThat(helper.getDeepLinkPhase()).isEqualTo(JetpackFeatureRemovalSiteCreationPhase.PHASE_TWO)
+        assertThat(helper.getDeepLinkTrackingName()).isEqualTo(JETPACK_DEEPLINK_TRACKING_NAME)
     }
 
     @Test
@@ -55,7 +55,7 @@ class JetpackFeatureRemovalPhaseHelperTest {
         assertThat(helper.shouldShowTemplateSelectionInPages()).isTrue
         assertThat(helper.shouldShowPublishedPostStatsButton()).isTrue
         assertThat(helper.shouldShowHelpAndSupportOnEditor()).isTrue
-        assertThat(helper.getDeepLinkPhase()).isNull()
+        assertThat(helper.getDeepLinkTrackingName()).isNull()
     }
 
     @Test

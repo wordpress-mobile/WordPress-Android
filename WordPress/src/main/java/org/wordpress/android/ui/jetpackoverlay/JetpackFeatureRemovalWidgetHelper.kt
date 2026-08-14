@@ -4,7 +4,7 @@ import org.wordpress.android.util.PackageManagerWrapper
 import javax.inject.Inject
 
 class JetpackFeatureRemovalWidgetHelper @Inject constructor(
-    private val jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper,
+    private val jetpackFeatureRemovalHelper: JetpackFeatureRemovalHelper,
     private val packageManagerWrapper: PackageManagerWrapper
 ) {
     private val widgetReceivers = listOf(
@@ -13,7 +13,7 @@ class JetpackFeatureRemovalWidgetHelper @Inject constructor(
     )
 
     fun disableWidgetReceiversIfNeeded() {
-        if (jetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures()) {
+        if (jetpackFeatureRemovalHelper.shouldRemoveJetpackFeatures()) {
             widgetReceivers.forEach { packageManagerWrapper.disableComponentEnabledSetting(it) }
         } else {
             widgetReceivers.forEach { packageManagerWrapper.enableComponentEnabledSetting(it) }

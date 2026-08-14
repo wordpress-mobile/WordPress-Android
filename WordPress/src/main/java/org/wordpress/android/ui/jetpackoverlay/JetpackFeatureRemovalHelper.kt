@@ -2,7 +2,6 @@ package org.wordpress.android.ui.jetpackoverlay
 
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalSiteCreationPhase.PHASE_TWO
 import org.wordpress.android.ui.main.WPMainNavigationView.PageType
 import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
@@ -19,6 +18,13 @@ import javax.inject.Inject
 const val JETPACK_REMOVAL_TRACKING_NAME = "self_hosted"
 
 /**
+ * The value the deep-link overlay reports for the same Tracks `phase` property. It differs from
+ * [JETPACK_REMOVAL_TRACKING_NAME] because deep links were rolled out on their own schedule; both
+ * are kept verbatim so historic events stay comparable.
+ */
+const val JETPACK_DEEPLINK_TRACKING_NAME = "two"
+
+/**
  * The WordPress app does not ship the Jetpack-powered features (Reader, Stats, Notifications); the
  * Jetpack app does. That is now purely a build-flavor difference.
  *
@@ -28,7 +34,7 @@ const val JETPACK_REMOVAL_TRACKING_NAME = "self_hosted"
  * WordPress app until the next successful fetch. Deciding it from the build flavor removes that
  * whole class of bug.
  */
-class JetpackFeatureRemovalPhaseHelper @Inject constructor(
+class JetpackFeatureRemovalHelper @Inject constructor(
     private val buildConfigWrapper: BuildConfigWrapper,
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper
 ) {
@@ -44,8 +50,8 @@ class JetpackFeatureRemovalPhaseHelper @Inject constructor(
 
     fun shouldShowHelpAndSupportOnEditor(): Boolean = buildConfigWrapper.isJetpackApp
 
-    fun getDeepLinkPhase(): JetpackFeatureRemovalSiteCreationPhase? =
-        if (buildConfigWrapper.isJetpackApp) null else PHASE_TWO
+    fun getDeepLinkTrackingName(): String? =
+        if (buildConfigWrapper.isJetpackApp) null else JETPACK_DEEPLINK_TRACKING_NAME
 
     @JvmOverloads
     fun trackPageAccessedEventIfNeeded(pageType: PageType, site: SiteModel? = null) {
@@ -56,8 +62,4 @@ class JetpackFeatureRemovalPhaseHelper @Inject constructor(
             PageType.ME -> analyticsTrackerWrapper.track(AnalyticsTracker.Stat.ME_ACCESSED)
         }
     }
-}
-
-enum class JetpackFeatureRemovalSiteCreationPhase(val trackingName: String) {
-    PHASE_TWO("two")
 }

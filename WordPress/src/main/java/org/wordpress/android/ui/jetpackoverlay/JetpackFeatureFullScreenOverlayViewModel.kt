@@ -16,7 +16,7 @@ import javax.inject.Named
 class JetpackFeatureFullScreenOverlayViewModel @Inject constructor(
     @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
     private val jetpackFeatureOverlayContentBuilder: JetpackFeatureOverlayContentBuilder,
-    private val jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper,
+    private val jetpackFeatureRemovalHelper: JetpackFeatureRemovalHelper,
     private val jetpackFeatureRemovalOverlayUtil: JetpackFeatureRemovalOverlayUtil
 ) : ScopedViewModel(mainDispatcher) {
     private val _uiState = SingleLiveEvent<JetpackFeatureOverlayUIState>()
@@ -69,7 +69,7 @@ class JetpackFeatureFullScreenOverlayViewModel @Inject constructor(
             return
         }
 
-        if (!jetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures()) {
+        if (!jetpackFeatureRemovalHelper.shouldRemoveJetpackFeatures()) {
             return _action.postValue(JetpackFeatureOverlayActions.DismissDialog)
         }
         featureCollectionOverlayOrigin = featureCollectionOverlaySource

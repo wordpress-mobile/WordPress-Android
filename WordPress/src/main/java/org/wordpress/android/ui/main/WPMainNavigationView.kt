@@ -32,7 +32,7 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.datasets.ReaderDatabase
 import org.wordpress.android.fluxc.store.AccountStore
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalHelper
 import org.wordpress.android.ui.main.WPMainActivity.OnScrollToTopListener
 import org.wordpress.android.ui.main.WPMainNavigationView.PageType.ME
 import org.wordpress.android.ui.main.WPMainNavigationView.PageType.MY_SITE
@@ -70,7 +70,7 @@ class WPMainNavigationView @JvmOverloads constructor(
     private var fragmentManager: FragmentManager? = null
     private lateinit var pageListener: OnPageListener
     private var prevPosition = -1
-    private lateinit var jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper
+    private lateinit var jetpackFeatureRemovalHelper: JetpackFeatureRemovalHelper
     private val unselectedButtonAlpha = ResourcesCompat.getFloat(
         resources,
         MaterialR.dimen.material_emphasis_disabled
@@ -107,10 +107,10 @@ class WPMainNavigationView @JvmOverloads constructor(
         fun onNewPostButtonClicked(promptId: Int, origin: EntryPoint)
     }
 
-    fun init(fm: FragmentManager, listener: OnPageListener, helper: JetpackFeatureRemovalPhaseHelper) {
+    fun init(fm: FragmentManager, listener: OnPageListener, helper: JetpackFeatureRemovalHelper) {
         fragmentManager = fm
         pageListener = listener
-        jetpackFeatureRemovalPhaseHelper = helper
+        jetpackFeatureRemovalHelper = helper
 
         val inflater = LayoutInflater.from(context)
         inflater.inflate(R.layout.main_navigation_view, this, true)
@@ -213,7 +213,7 @@ class WPMainNavigationView @JvmOverloads constructor(
     }
 
     private fun getMainPageIndex(): Int {
-        return if (jetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures()) 0
+        return if (jetpackFeatureRemovalHelper.shouldRemoveJetpackFeatures()) 0
         else AppPrefs.getMainPageIndex(numPages() - 1)
     }
 
@@ -330,7 +330,7 @@ class WPMainNavigationView @JvmOverloads constructor(
 
         setImageViewSelected(position, true)
 
-        if (jetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures())
+        if (jetpackFeatureRemovalHelper.shouldRemoveJetpackFeatures())
             AppPrefs.setMainPageIndex(0)
         else AppPrefs.setMainPageIndex(position)
 

@@ -6,7 +6,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import org.wordpress.android.fluxc.store.AccountStore
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalHelper
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.AccountData
 import org.wordpress.android.util.BuildConfigWrapper
 import javax.inject.Inject
@@ -14,7 +14,7 @@ import javax.inject.Inject
 class AccountDataViewModelSlice @Inject constructor(
     private val accountStore: AccountStore,
     private val buildConfigWrapper: BuildConfigWrapper,
-    private val jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper
+    private val jetpackFeatureRemovalHelper: JetpackFeatureRemovalHelper
 ) {
     private lateinit var scope: CoroutineScope
 
@@ -56,6 +56,6 @@ class AccountDataViewModelSlice @Inject constructor(
 
     private fun shouldBuildCard(): Boolean {
         return (!buildConfigWrapper.isJetpackApp
-                && jetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures())
+                && jetpackFeatureRemovalHelper.shouldRemoveJetpackFeatures())
     }
 }

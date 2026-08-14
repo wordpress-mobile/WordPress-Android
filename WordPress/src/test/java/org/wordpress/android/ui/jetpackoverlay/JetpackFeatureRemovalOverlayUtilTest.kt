@@ -15,7 +15,7 @@ import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 @RunWith(MockitoJUnitRunner::class)
 class JetpackFeatureRemovalOverlayUtilTest {
     @Mock
-    private lateinit var phaseHelper: JetpackFeatureRemovalPhaseHelper
+    private lateinit var phaseHelper: JetpackFeatureRemovalHelper
 
     @Mock
     private lateinit var shownTracker: JetpackFeatureOverlayShownTracker

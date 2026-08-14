@@ -10,16 +10,16 @@ private const val SCREEN_TYPE_KEY = "source"
 private const val DISMISSAL_TYPE_KEY = "dismissal_type"
 
 class JetpackFeatureRemovalOverlayUtil @Inject constructor(
-    private val jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper,
+    private val jetpackFeatureRemovalHelper: JetpackFeatureRemovalHelper,
     private val jetpackFeatureOverlayShownTracker: JetpackFeatureOverlayShownTracker,
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper
 ) {
     fun shouldHideJetpackFeatures(): Boolean {
-        return jetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures()
+        return jetpackFeatureRemovalHelper.shouldRemoveJetpackFeatures()
     }
 
     fun shouldShowFeatureCollectionJetpackOverlayForFirstTime(): Boolean {
-        return jetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures() &&
+        return jetpackFeatureRemovalHelper.shouldRemoveJetpackFeatures() &&
                 !jetpackFeatureOverlayShownTracker.getFeatureCollectionOverlayShown()
     }
 
@@ -27,7 +27,7 @@ class JetpackFeatureRemovalOverlayUtil @Inject constructor(
         analyticsTrackerWrapper.track(
             AnalyticsTracker.Stat.JETPACK_DEEP_LINK_OVERLAY_DISPLAYED,
             mapOf(
-                CURRENT_PHASE_KEY to jetpackFeatureRemovalPhaseHelper.getDeepLinkPhase()?.trackingName
+                CURRENT_PHASE_KEY to jetpackFeatureRemovalHelper.getDeepLinkTrackingName()
             )
         )
     }
@@ -36,7 +36,7 @@ class JetpackFeatureRemovalOverlayUtil @Inject constructor(
         analyticsTrackerWrapper.track(
             AnalyticsTracker.Stat.JETPACK_DEEP_LINK_OVERLAY_BUTTON_OPEN_IN_JETPACK_APP_TAPPED,
             mapOf(
-                CURRENT_PHASE_KEY to jetpackFeatureRemovalPhaseHelper.getDeepLinkPhase()?.trackingName
+                CURRENT_PHASE_KEY to jetpackFeatureRemovalHelper.getDeepLinkTrackingName()
             )
         )
     }
@@ -47,7 +47,7 @@ class JetpackFeatureRemovalOverlayUtil @Inject constructor(
         analyticsTrackerWrapper.track(
             AnalyticsTracker.Stat.JETPACK_DEEP_LINK_OVERLAY_DISMISSED,
             mapOf(
-                CURRENT_PHASE_KEY to jetpackFeatureRemovalPhaseHelper.getDeepLinkPhase()?.trackingName,
+                CURRENT_PHASE_KEY to jetpackFeatureRemovalHelper.getDeepLinkTrackingName(),
                 DISMISSAL_TYPE_KEY to dismissalType.trackingName
             )
         )
