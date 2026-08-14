@@ -57,6 +57,121 @@ class StatsFormatterTest {
     }
 
     @Test
+    fun `formatCustomDateRangeTwoLine hides the year for a single day in the current year`() {
+        val label = formatCustomDateRangeTwoLine(
+            LocalDate.of(2025, 6, 14), LocalDate.of(2025, 6, 14), currentYear = 2025
+        )
+
+        assertThat(label.primary).isEqualTo(RangeLine.Single("14 Jun"))
+        assertThat(label.secondary).isNull()
+    }
+
+    @Test
+    fun `formatCustomDateRangeTwoLine shows the year for a single day in a past year`() {
+        val label = formatCustomDateRangeTwoLine(
+            LocalDate.of(2024, 6, 14), LocalDate.of(2024, 6, 14), currentYear = 2025
+        )
+
+        assertThat(label.primary).isEqualTo(RangeLine.Single("14 Jun"))
+        assertThat(label.secondary).isEqualTo(RangeLine.Single("2024"))
+    }
+
+    @Test
+    fun `formatCustomDateRangeTwoLine hides the year within one month of the current year`() {
+        val label = formatCustomDateRangeTwoLine(
+            LocalDate.of(2025, 6, 14), LocalDate.of(2025, 6, 20), currentYear = 2025
+        )
+
+        assertThat(label.primary).isEqualTo(RangeLine.Single("14-20 Jun"))
+        assertThat(label.secondary).isNull()
+    }
+
+    @Test
+    fun `formatCustomDateRangeTwoLine shows the year within one month of a past year`() {
+        val label = formatCustomDateRangeTwoLine(
+            LocalDate.of(2024, 6, 14), LocalDate.of(2024, 6, 20), currentYear = 2025
+        )
+
+        assertThat(label.primary).isEqualTo(RangeLine.Single("14-20 Jun"))
+        assertThat(label.secondary).isEqualTo(RangeLine.Single("2024"))
+    }
+
+    @Test
+    fun `formatCustomDateRangeTwoLine hides the year across a month boundary of the current year`() {
+        val label = formatCustomDateRangeTwoLine(
+            LocalDate.of(2025, 7, 28), LocalDate.of(2025, 8, 3), currentYear = 2025
+        )
+
+        assertThat(label.primary).isEqualTo(RangeLine.Split("28 Jul", "3 Aug"))
+        assertThat(label.secondary).isNull()
+    }
+
+    @Test
+    fun `formatCustomDateRangeTwoLine shows the year across a month boundary of a past year`() {
+        val label = formatCustomDateRangeTwoLine(
+            LocalDate.of(2024, 7, 28), LocalDate.of(2024, 8, 3), currentYear = 2025
+        )
+
+        assertThat(label.primary).isEqualTo(RangeLine.Split("28 Jul", "3 Aug"))
+        assertThat(label.secondary).isEqualTo(RangeLine.Single("2024"))
+    }
+
+    @Test
+    fun `formatCustomDateRangeTwoLine across years splits both lines even when one is the current year`() {
+        val label = formatCustomDateRangeTwoLine(
+            LocalDate.of(2025, 6, 14), LocalDate.of(2026, 6, 14), currentYear = 2026
+        )
+
+        assertThat(label.primary).isEqualTo(RangeLine.Split("14 Jun", "14 Jun"))
+        assertThat(label.secondary).isEqualTo(RangeLine.Split("2025", "2026"))
+    }
+
+    @Test
+    fun `formatCustomDateRangeTwoLine across a year boundary splits both lines`() {
+        val label = formatCustomDateRangeTwoLine(
+            LocalDate.of(2025, 12, 30), LocalDate.of(2026, 1, 2), currentYear = 2026
+        )
+
+        assertThat(label.primary).isEqualTo(RangeLine.Split("30 Dec", "2 Jan"))
+        assertThat(label.secondary).isEqualTo(RangeLine.Split("2025", "2026"))
+    }
+
+    @Test
+    fun `toContentDescription of a single-line current-year range omits the separator`() {
+        val label = DateRangeLabel(RangeLine.Single("14-20 Jun"), null)
+
+        assertThat(label.toContentDescription(RANGE_TEMPLATE)).isEqualTo("14-20 Jun")
+    }
+
+    @Test
+    fun `toContentDescription of a single-line past-year range merges the year`() {
+        val label = DateRangeLabel(RangeLine.Single("14-20 Jun"), RangeLine.Single("2024"))
+
+        assertThat(label.toContentDescription(RANGE_TEMPLATE)).isEqualTo("14-20 Jun 2024")
+    }
+
+    @Test
+    fun `toContentDescription of a split current-year range spans both endpoints`() {
+        val label = DateRangeLabel(RangeLine.Split("28 Jul", "3 Aug"), null)
+
+        assertThat(label.toContentDescription(RANGE_TEMPLATE)).isEqualTo("28 Jul to 3 Aug")
+    }
+
+    @Test
+    fun `toContentDescription of a split past-year range merges the year onto the end`() {
+        val label = DateRangeLabel(RangeLine.Split("28 Jul", "3 Aug"), RangeLine.Single("2024"))
+
+        assertThat(label.toContentDescription(RANGE_TEMPLATE)).isEqualTo("28 Jul to 3 Aug 2024")
+    }
+
+    @Test
+    fun `toContentDescription of a cross-year range merges each year onto its endpoint`() {
+        val label = DateRangeLabel(RangeLine.Split("14 Jun", "14 Jun"), RangeLine.Split("2025", "2026"))
+
+        assertThat(label.toContentDescription(RANGE_TEMPLATE)).isEqualTo("14 Jun 2025 to 14 Jun 2026")
+    }
+
+    @Test
     fun `formatStatValue Long below 1000 returns raw number`() {
         assertThat(formatStatValue(500L)).isEqualTo("500")
     }
@@ -114,5 +229,10 @@ class StatsFormatterTest {
     @Test
     fun `formatStatValue Double negative whole number returns no decimals`() {
         assertThat(formatStatValue(-2.0)).isEqualTo("-2")
+    }
+
+    companion object {
+        // Mirrors R.string.stats_traffic_date_range_content_description ("%1$s to %2$s").
+        private const val RANGE_TEMPLATE = "%1\$s to %2\$s"
     }
 }
