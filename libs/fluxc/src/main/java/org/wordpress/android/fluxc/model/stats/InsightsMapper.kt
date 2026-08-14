@@ -355,7 +355,7 @@ class InsightsMapper @Inject constructor(val statsUtils: StatsUtils) {
         }.map { post -> PostModel(post.id ?: 0, post.href ?: "", post.title ?: "", post.opens ?: 0, post.clicks ?: 0) }
             .sortedByDescending {
                 when (sortField) {
-                    SortField.POST_ID -> it.id
+                    SortField.POST_DATE -> it.id
                     SortField.OPENS -> it.opens.toLong()
                 }
             }

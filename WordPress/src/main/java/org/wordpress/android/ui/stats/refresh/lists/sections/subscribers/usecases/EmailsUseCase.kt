@@ -35,7 +35,7 @@ class EmailsUseCase @Inject constructor(
     private val useCaseMode: UseCaseMode
 ) : StatelessUseCase<PostsModel>(EMAILS, mainDispatcher, bgDispatcher) {
     private val itemsToShow = if (useCaseMode == VIEW_ALL) VIEW_ALL_ITEM_SIZE else BLOCK_ITEM_COUNT
-    private val sortField = if (useCaseMode == VIEW_ALL) SortField.OPENS else SortField.POST_ID
+    private val sortField = if (useCaseMode == VIEW_ALL) SortField.OPENS else SortField.POST_DATE
 
     override suspend fun fetchRemoteData(forced: Boolean): State<PostsModel> {
         val response = emailsStore.fetchEmails(

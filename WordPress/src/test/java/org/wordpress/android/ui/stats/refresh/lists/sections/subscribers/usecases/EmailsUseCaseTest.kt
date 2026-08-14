@@ -78,8 +78,8 @@ class EmailsUseCaseTest : BaseUnitTest() {
     fun `maps emails summary to UI model`() = test {
         val forced = false
         val model = PostsModel(listOf(firstPost, secondPost))
-        whenever(emailsStore.getEmails(site, LimitMode.Top(itemsToLoad), SortField.POST_ID)).thenReturn(model)
-        whenever(emailsStore.fetchEmails(site, LimitMode.Top(itemsToLoad), SortField.POST_ID, forced))
+        whenever(emailsStore.getEmails(site, LimitMode.Top(itemsToLoad), SortField.POST_DATE)).thenReturn(model)
+        whenever(emailsStore.fetchEmails(site, LimitMode.Top(itemsToLoad), SortField.POST_DATE, forced))
             .thenReturn(OnStatsFetched(model))
 
         val result = loadPosts(true, forced)
@@ -97,7 +97,7 @@ class EmailsUseCaseTest : BaseUnitTest() {
     @Test
     fun `maps empty posts to UI model`() = test {
         val forced = false
-        whenever(emailsStore.fetchEmails(site, LimitMode.Top(itemsToLoad), SortField.POST_ID, forced)).thenReturn(
+        whenever(emailsStore.fetchEmails(site, LimitMode.Top(itemsToLoad), SortField.POST_DATE, forced)).thenReturn(
             OnStatsFetched(PostsModel(listOf()))
         )
 
@@ -114,7 +114,7 @@ class EmailsUseCaseTest : BaseUnitTest() {
     fun `maps error item to UI model`() = test {
         val forced = false
         val message = "Generic error"
-        whenever(emailsStore.fetchEmails(site, LimitMode.Top(itemsToLoad), SortField.POST_ID, forced))
+        whenever(emailsStore.fetchEmails(site, LimitMode.Top(itemsToLoad), SortField.POST_DATE, forced))
             .thenReturn(OnStatsFetched(StatsError(GENERIC_ERROR, message)))
 
         val result = loadPosts(true, forced)
