@@ -48,11 +48,23 @@ public class TaxonomyStore extends Store {
         @NonNull public TermsModel terms;
         @NonNull public SiteModel site;
         @NonNull public String taxonomy; // This field is also included in error payload.
+        // True when the fetched list is exhaustive (all pages retrieved). When false, the list is
+        // partial (e.g. a mid-pagination failure) and existing cached terms must not be cleared.
+        public boolean complete = true;
 
         public FetchTermsResponsePayload(@NonNull TermsModel terms, @NonNull SiteModel site, @NonNull String taxonomy) {
             this.terms = terms;
             this.site = site;
             this.taxonomy = taxonomy;
+        }
+
+        public FetchTermsResponsePayload(
+                @NonNull TermsModel terms,
+                @NonNull SiteModel site,
+                @NonNull String taxonomy,
+                boolean complete) {
+            this(terms, site, taxonomy);
+            this.complete = complete;
         }
 
         public FetchTermsResponsePayload(@NonNull TaxonomyError error, @NonNull String taxonomy) {
@@ -361,11 +373,14 @@ public class TaxonomyStore extends Store {
             onTaxonomyChanged = new OnTaxonomyChanged(0, payload.taxonomy);
             onTaxonomyChanged.error = payload.error;
         } else {
-            // Clear existing terms for this taxonomy
-            // This is the simplest way of keeping our local terms in sync with their remote versions
-            // (in case of deletions,or if the user manually changed some term IDs)
-            // TODO: This may have to change when we support large numbers of terms and require multiple requests
-            TaxonomySqlUtils.clearTaxonomyForSite(payload.site, payload.taxonomy);
+            // Clear existing terms for this taxonomy before inserting the fresh list. This is the
+            // simplest way of keeping our local terms in sync with their remote versions (in case of
+            // deletions, or if the user manually changed some term IDs). We only do this for a
+            // complete fetch: a partial list (e.g. a mid-pagination failure) would otherwise wipe
+            // terms we still have cached and shrink the list the user sees.
+            if (payload.complete) {
+                TaxonomySqlUtils.clearTaxonomyForSite(payload.site, payload.taxonomy);
+            }
 
             int rowsAffected = 0;
             for (TermModel term : payload.terms.getTerms()) {

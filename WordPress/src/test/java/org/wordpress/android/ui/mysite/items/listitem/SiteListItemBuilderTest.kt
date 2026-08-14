@@ -14,6 +14,7 @@ import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
 import org.wordpress.android.ui.mysite.items.ACTIVITY_ITEM
 import org.wordpress.android.ui.mysite.items.ADMIN_ITEM
 import org.wordpress.android.ui.mysite.items.BACKUP_ITEM
+import org.wordpress.android.ui.mysite.items.ME_ITEM
 import org.wordpress.android.ui.mysite.items.PAGES_ITEM
 import org.wordpress.android.ui.mysite.items.PEOPLE_ITEM
 import org.wordpress.android.ui.mysite.items.PLUGINS_ITEM
@@ -333,6 +334,26 @@ class SiteListItemBuilderTest {
         setupSiteSettings(canManageOptions = false, isAccessedViaWPComRest = true)
 
         val item = siteListItemBuilder.buildSiteSettingsItemIfAvailable(siteModel, SITE_ITEM_ACTION)
+
+        assertThat(item).isNull()
+    }
+
+    // Me stands in for the bottom navigation once Jetpack features are removed, so it is built
+    // for every site regardless of capabilities.
+    @Test
+    fun `me item built when jetpack features are removed, regardless of site capabilities`() {
+        whenever(jetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures()).thenReturn(true)
+
+        val item = siteListItemBuilder.buildMeItemIfAvailable(SITE_ITEM_ACTION)
+
+        assertThat(item).isEqualTo(ME_ITEM)
+    }
+
+    @Test
+    fun `me item not built when jetpack features are not removed`() {
+        whenever(jetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures()).thenReturn(false)
+
+        val item = siteListItemBuilder.buildMeItemIfAvailable(SITE_ITEM_ACTION)
 
         assertThat(item).isNull()
     }

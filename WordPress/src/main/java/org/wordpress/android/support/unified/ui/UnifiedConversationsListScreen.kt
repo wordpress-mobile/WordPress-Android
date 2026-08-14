@@ -133,7 +133,7 @@ private fun UnifiedStatusBadge(
 ) {
     if (conversation.isBot) {
         Text(
-            text = stringResource(R.string.unified_support_status_bot),
+            text = stringResource(R.string.unified_support_status_ai_assistant),
             style = MaterialTheme.typography.labelSmall,
             color = MaterialTheme.colorScheme.onPrimaryContainer,
             modifier = modifier

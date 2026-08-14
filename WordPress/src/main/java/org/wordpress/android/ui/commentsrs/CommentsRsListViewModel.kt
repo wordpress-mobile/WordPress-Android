@@ -45,6 +45,8 @@ import org.wordpress.android.util.WPAvatarUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
 import uniffi.wp_api.CommentListParams
+import uniffi.wp_api.RequestExecutionErrorReason
+import uniffi.wp_api.WpErrorCode
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -309,6 +311,11 @@ class CommentsRsListViewModel @Inject constructor(
         val params = nextPageParams[tab]
         val isBusy = current.isLoading || current.isRefreshing || current.isLoadingMore
         if (params == null || isBusy) return
+        // As in fetchFirstPage: don't start a page request that can't reach the server.
+        if (!networkUtilsWrapper.isNetworkAvailable()) {
+            onLoadMoreError(tab, message = null, reason = null)
+            return
+        }
 
         updateTabUiState(tab) { copy(isLoadingMore = true) }
         val generation = pageGenerations[tab]
@@ -342,16 +349,8 @@ class CommentsRsListViewModel @Inject constructor(
                         loadMoreInternal(tab, autoAdvanceDepth + 1)
                     }
                 }
-                is RsCommentsPageResult.Error -> {
-                    updateTabUiState(tab) { copy(isLoadingMore = false) }
-                    _snackbarMessages.trySend(
-                        SnackbarMessage(
-                            message = errorMessage(result.message),
-                            actionLabel = resourceProvider.getString(R.string.retry),
-                            onAction = { loadMore(tab) }
-                        )
-                    )
-                }
+                is RsCommentsPageResult.Error ->
+                    onLoadMoreError(tab, result.message, result.reason, result.errorCode)
             }
         }
     }
@@ -511,6 +510,17 @@ class CommentsRsListViewModel @Inject constructor(
     }
 
     private fun fetchFirstPage(tab: CommentsRsListTab, showErrorSnackbar: Boolean = true) {
+        // A fetch with no connection can only fail, so report it without the round trip.
+        if (!networkUtilsWrapper.isNetworkAvailable()) {
+            onFirstPageError(
+                tab,
+                message = null,
+                reason = null,
+                errorCode = null,
+                showErrorSnackbar = showErrorSnackbar
+            )
+            return
+        }
         // Callers (initTab, refreshTab) guard against a null site, so the site getter below is safe.
         firstPageJobs[tab] = viewModelScope.launch {
             val base = commentsRsDataSource.firstPageParams(
@@ -526,7 +536,8 @@ class CommentsRsListViewModel @Inject constructor(
                     applyPage(tab, result, append = false)
                     advanceIfFilteredEmpty(tab)
                 }
-                is RsCommentsPageResult.Error -> onFirstPageError(tab, result.message, showErrorSnackbar)
+                is RsCommentsPageResult.Error ->
+                    onFirstPageError(tab, result.message, result.reason, result.errorCode, showErrorSnackbar)
             }
         }
     }
@@ -610,27 +621,61 @@ class CommentsRsListViewModel @Inject constructor(
     }
 
     /**
+     * A page that didn't arrive leaves the list as it is and offers a retry snackbar. All-null
+     * failure details mean no request was made because the device is offline.
+     */
+    private fun onLoadMoreError(
+        tab: CommentsRsListTab,
+        message: String?,
+        reason: RequestExecutionErrorReason?,
+        errorCode: WpErrorCode? = null
+    ) {
+        val authError = PostRsErrorUtils.isAuthError(reason, errorCode)
+        updateTabUiState(tab) { copy(isLoadingMore = false) }
+        _snackbarMessages.trySend(
+            SnackbarMessage(
+                message = errorMessage(message, reason, errorCode),
+                actionLabel = if (authError) null else resourceProvider.getString(R.string.retry),
+                onAction = if (authError) null else ({ loadMore(tab) })
+            )
+        )
+    }
+
+    /**
      * First-page failure: when the tab already shows comments keep them and offer a retry
      * snackbar; when it's empty, show the full-screen error state. Silent refreshes (returning
      * from the detail) skip the snackbar — a failed background refresh shouldn't interrupt a
      * user who's still looking at a perfectly good list.
      */
-    private fun onFirstPageError(tab: CommentsRsListTab, message: String?, showErrorSnackbar: Boolean) {
-        val friendly = errorMessage(message)
+    private fun onFirstPageError(
+        tab: CommentsRsListTab,
+        message: String?,
+        reason: RequestExecutionErrorReason?,
+        errorCode: WpErrorCode?,
+        showErrorSnackbar: Boolean
+    ) {
+        val friendly = errorMessage(message, reason, errorCode)
+        val authError = PostRsErrorUtils.isAuthError(reason, errorCode)
         if (getTabUiState(tab).comments.isNotEmpty()) {
-            updateTabUiState(tab) { copy(isLoading = false, isRefreshing = false, error = null) }
+            updateTabUiState(tab) {
+                copy(isLoading = false, isRefreshing = false, error = null, isAuthError = authError)
+            }
             if (showErrorSnackbar) {
+                // Retrying an auth failure just fails again, so offer the message without
+                // the action.
                 _snackbarMessages.trySend(
                     SnackbarMessage(
                         message = friendly,
-                        actionLabel = resourceProvider.getString(R.string.retry),
-                        onAction = { refreshTab(tab, isUserRefresh = true) }
+                        actionLabel = if (authError) null
+                            else resourceProvider.getString(R.string.retry),
+                        onAction = if (authError) null
+                            else ({ refreshTab(tab, isUserRefresh = true) })
                     )
                 )
             }
         } else {
             updateTabUiState(tab) {
-                copy(comments = emptyList(), isLoading = false, isRefreshing = false, error = friendly)
+                copy(isLoading = false, isRefreshing = false, error = friendly, isAuthError = authError)
             }
         }
     }
@@ -658,10 +703,25 @@ class CommentsRsListViewModel @Inject constructor(
         }
     }
 
-    /** The server message when it sent one, otherwise a friendly offline/generic message. */
-    private fun errorMessage(serverMessage: String?): String =
-        serverMessage?.takeIf { it.isNotBlank() }
-            ?: PostRsErrorUtils.friendlyErrorMessage(null, null, resourceProvider, networkUtilsWrapper)
+    /**
+     * The server message when it sent one, otherwise a friendly offline/auth/generic message.
+     *
+     * Auth failures ignore the server's wording: the retry action is withheld for those, so the
+     * message is all the user gets and a raw 401 body won't tell them their credentials are the
+     * problem. Posts and pages show the same string for the same failure.
+     */
+    private fun errorMessage(
+        serverMessage: String?,
+        reason: RequestExecutionErrorReason? = null,
+        errorCode: WpErrorCode? = null
+    ): String =
+        serverMessage?.takeIf { it.isNotBlank() && !PostRsErrorUtils.isAuthError(reason, errorCode) }
+            ?: PostRsErrorUtils.friendlyErrorMessage(
+                resourceProvider = resourceProvider,
+                networkUtilsWrapper = networkUtilsWrapper,
+                reason = reason,
+                errorCode = errorCode
+            )
 
     private fun RsComment.toUiModel(nowLabel: String) = CommentRsUiModel(
         remoteCommentId = remoteCommentId,

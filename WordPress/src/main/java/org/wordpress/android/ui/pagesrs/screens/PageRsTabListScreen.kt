@@ -34,6 +34,7 @@ import org.wordpress.android.R
 import org.wordpress.android.ui.pagesrs.PageRsListItem
 import org.wordpress.android.ui.pagesrs.PageRsMenuAction
 import org.wordpress.android.ui.pagesrs.PageTabUiState
+import org.wordpress.android.ui.pagesrs.hasRealPages
 import org.wordpress.android.ui.postsrs.screens.PlaceholderItem
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -68,7 +69,7 @@ internal fun PageRsTabListScreen(
         when {
             isSearchIdle -> Box(Modifier.fillMaxSize())
             state.isLoading -> ShimmerList()
-            state.error != null -> {
+            state.error != null && !state.pages.hasRealPages -> {
                 ErrorContent(
                     error = state.error,
                     onRetry = if (state.isAuthError) null else onRefresh

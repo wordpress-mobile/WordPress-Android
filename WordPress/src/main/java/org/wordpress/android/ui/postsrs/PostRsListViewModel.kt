@@ -29,6 +29,7 @@ import org.wordpress.android.ui.posts.AuthorFilterSelection
 import org.wordpress.android.ui.postsrs.data.PostRsRestClient
 import org.wordpress.android.ui.postsrs.data.WpServiceProvider
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.ui.rs.RsTabLoading
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.SiteUtils
@@ -175,7 +176,26 @@ class PostRsListViewModel @Inject constructor(
     @MainThread
     fun refreshAllTabs() {
         restClient.clearCaches()
-        collections.keys.toList().forEach { tab ->
+        val tabs = collections.keys.toList()
+        if (!networkUtilsWrapper.isNetworkAvailable()) {
+            // Every tab would report the same connection failure, so record the failure on each
+            // and send one message for the whole fan-out. It has to be sent here rather than by
+            // a nominated tab: a tab only offers a snackbar when it has content to keep, so
+            // picking one that turned out to be empty would swallow the message entirely.
+            val anyTabKeepsItsPosts = tabs.any { getTabUiState(it).posts.isNotEmpty() }
+            tabs.forEach { onRefreshFailed(it, e = null, showSnackbar = false) }
+            if (anyTabKeepsItsPosts) {
+                _snackbarMessages.trySend(
+                    SnackbarMessage(
+                        message = friendlyErrorMessage(null),
+                        actionLabel = resourceProvider.getString(R.string.retry),
+                        onAction = { refreshAllTabs() }
+                    )
+                )
+            }
+            return
+        }
+        tabs.forEach { tab ->
             refreshTab(tab)
         }
     }
@@ -723,13 +743,19 @@ class PostRsListViewModel @Inject constructor(
         } else {
             updateTabUiState(tab) {
                 copy(
-                    isLoading = PostRsTabLoading.onRefreshStarted(
-                        hasPosts = posts.isNotEmpty(),
+                    isLoading = RsTabLoading.onRefreshStarted(
+                        hasItems = posts.isNotEmpty(),
                         hasFetched = tab in fetchedTabs
                     ),
                     error = null
                 )
             }
+        }
+
+        // A refresh with no connection can only fail, so report it without the round trip.
+        if (!networkUtilsWrapper.isNetworkAvailable()) {
+            onRefreshFailed(tab, e = null, showSnackbar = isUserRefresh)
+            return
         }
 
         viewModelScope.launch {
@@ -743,32 +769,53 @@ class PostRsListViewModel @Inject constructor(
                 loadItemsForTab(tab)
                 updateTabUiState(tab) { copy(isLoading = false, isRefreshing = false) }
             } catch (e: Exception) {
-                AppLog.e(AppLog.T.POSTS, "Failed to refresh tab $tab", e)
-                userRefreshingTabs.remove(tab)
-                val message = friendlyErrorMessage(e)
-                if (getTabUiState(tab).posts.isNotEmpty()) {
-                    updateTabUiState(tab) {
-                        copy(isLoading = false, isRefreshing = false, error = null)
-                    }
-                    val authError = PostRsErrorUtils.isAuthError(e)
-                    _snackbarMessages.trySend(
-                        SnackbarMessage(
-                            message = message,
-                            actionLabel = if (authError) null
-                                else resourceProvider.getString(R.string.retry),
-                            onAction = if (authError) null
-                                else ({ refreshTab(tab) })
-                        )
+                onRefreshFailed(tab, e, showSnackbar = isUserRefresh)
+            }
+        }
+    }
+
+    /**
+     * A tab that already has posts on screen keeps them and offers a retry snackbar; an empty one
+     * shows the full-screen error state.
+     *
+     * [e] is null when no request was made because the device is offline. The message is the same
+     * either way - [friendlyErrorMessage] reports the network error whenever the device is offline,
+     * regardless of what failed.
+     *
+     * [showSnackbar] is false when the user didn't ask for this refresh - [initTab] refreshes each
+     * tab as the pager settles on it, and interrupting someone browsing cached posts with an error
+     * they didn't provoke is noise. The full-screen error still covers a tab with nothing to show.
+     * It's also false when another tab is already reporting the same failure.
+     */
+    private fun onRefreshFailed(tab: PostRsListTab, e: Exception?, showSnackbar: Boolean = true) {
+        e?.let { AppLog.e(AppLog.T.POSTS, "Failed to refresh tab $tab", it) }
+        userRefreshingTabs.remove(tab)
+        val message = friendlyErrorMessage(e)
+        val authError = PostRsErrorUtils.isAuthError(e)
+        if (getTabUiState(tab).posts.isNotEmpty()) {
+            updateTabUiState(tab) {
+                copy(isLoading = false, isRefreshing = false, error = null)
+            }
+            if (showSnackbar) {
+                _snackbarMessages.trySend(
+                    SnackbarMessage(
+                        message = message,
+                        actionLabel = if (authError) null
+                            else resourceProvider.getString(R.string.retry),
+                        // Tapping retry is the user asking, so the result has to be reported -
+                        // a silent second failure looks like the button did nothing.
+                        onAction = if (authError) null
+                            else ({ refreshTab(tab, isUserRefresh = true) })
                     )
-                } else {
-                    updateTabUiState(tab) {
-                        copy(
-                            isLoading = false, isRefreshing = false,
-                            error = message,
-                            isAuthError = PostRsErrorUtils.isAuthError(e)
-                        )
-                    }
-                }
+                )
+            }
+        } else {
+            updateTabUiState(tab) {
+                copy(
+                    isLoading = false, isRefreshing = false,
+                    error = message,
+                    isAuthError = authError
+                )
             }
         }
     }
@@ -837,7 +884,7 @@ class PostRsListViewModel @Inject constructor(
             updateTabUiState(tab) {
                 copy(
                     posts = uiModels,
-                    isLoading = PostRsTabLoading.onItemsLoaded(
+                    isLoading = RsTabLoading.onItemsLoaded(
                         wasLoading = isLoading,
                         hasItems = uiModels.isNotEmpty()
                     ),
@@ -957,22 +1004,29 @@ class PostRsListViewModel @Inject constructor(
                     error = null
                 )
             }
-            _snackbarMessages.trySend(
-                SnackbarMessage(
-                    message = errorMessage.orEmpty(),
-                    actionLabel = if (authError) null
-                        else resourceProvider.getString(R.string.retry),
-                    onAction = if (authError) null
-                        else ({ refreshTab(tab) })
+            // This observer reports the same failure the refresh's catch block does, so it needs
+            // the same rule: stay quiet unless the user asked for the refresh. Otherwise a
+            // background one (initTab, as the pager settles) interrupts with an error nobody
+            // provoked. The state above still syncs either way.
+            if (isUserRefresh) {
+                _snackbarMessages.trySend(
+                    SnackbarMessage(
+                        message = errorMessage.orEmpty(),
+                        actionLabel = if (authError) null
+                            else resourceProvider.getString(R.string.retry),
+                        // As above: the user asked, so a second failure has to be reported.
+                        onAction = if (authError) null
+                            else ({ refreshTab(tab, isUserRefresh = true) })
+                    )
                 )
-            )
+            }
         } else {
             updateTabUiState(tab) {
                 copy(
-                    isLoading = PostRsTabLoading.onListInfoChanged(
+                    isLoading = RsTabLoading.onListInfoChanged(
                         wasLoading = isLoading,
                         isFetchingFirstPage = fetchingFirstPage,
-                        hasPosts = posts.isNotEmpty(),
+                        hasItems = posts.isNotEmpty(),
                         hasFetched = tab in fetchedTabs
                     ),
                     isRefreshing = isUserRefresh && fetchingFirstPage,

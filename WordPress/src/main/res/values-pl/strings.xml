@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2026-07-22 07:23:26+0000
+Translation-Revision-Date: 2026-08-11 04:38:48+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/4.0.3
 Language: pl
@@ -9,7 +9,6 @@ Language: pl
     <string name="support_screen_unified_support_description">Uzyskaj odpowiedzi od naszego zespołu pomocy technicznej – o każdej porze</string>
     <string name="support_screen_unified_support_title">Uzyskaj pomoc</string>
     <string name="unified_support_attachment_match_score">%1$d%% pasuje</string>
-    <string name="unified_support_status_bot">Dziwny bot</string>
     <string name="unified_support_bot_typing_content_description">Bot pomocy technicznej pisze</string>
     <string name="unified_support_message_input_placeholder">Wpisz wiadomość…</string>
     <string name="unified_support_conversations_title">Uzyskaj pomoc</string>
@@ -627,7 +626,7 @@ Language: pl
     <string name="reader_preferences_font_size_normal">Normalna</string>
     <string name="reader_preferences_font_size_small">Mała</string>
     <string name="reader_preferences_font_size_extra_small">Bardzo mała</string>
-    <string name="reader_preferences_screen_font_size_label">Rozmiar czcionki</string>
+    <string name="reader_preferences_screen_font_size_label">Wielkość liter</string>
     <string name="reader_preferences_screen_font_family_label">Czcionka</string>
     <string name="reader_preferences_screen_theme_label">Schemat kolorów</string>
     <string name="experimental_badge">&lt;Eksperymentalna&gt;</string>

@@ -221,27 +221,39 @@ class PostRsRestClient @Inject constructor(
         if (uncached.isEmpty()) return result
 
         val client = wpApiClientProvider.getWpApiClient(site)
-        val response = client.request {
-            it.terms().listWithViewContext(
-                endpointType,
-                TermListParams(include = uncached)
-            )
-        }
-        when (response) {
-            is WpRequestResult.Success -> {
-                for (term in response.response.data) {
-                    cache[term.id] = term.name
-                    result[term.id] = term.name
-                }
-            }
-            else -> {
-                val msg =
-                    (response as? WpRequestResult.WpError<*>)
-                        ?.errorMessage
-                AppLog.w(
-                    AppLog.T.POSTS,
-                    "fetchTermNames failed: $msg"
+        // The REST API caps results per page (defaulting to 10), so request a larger page size
+        // and follow the pagination params until every requested term has been fetched.
+        // Otherwise a post with more than one page of assigned terms would lose the names past
+        // the first page.
+        var params: TermListParams? = TermListParams(
+            include = uncached,
+            perPage = PER_PAGE,
+        )
+        while (params != null) {
+            val currentParams = params
+            val response = client.request {
+                it.terms().listWithViewContext(
+                    endpointType, currentParams
                 )
+            }
+            when (response) {
+                is WpRequestResult.Success -> {
+                    for (term in response.response.data) {
+                        cache[term.id] = term.name
+                        result[term.id] = term.name
+                    }
+                    params = response.response.nextPageParams
+                }
+                else -> {
+                    val msg =
+                        (response as? WpRequestResult.WpError<*>)
+                            ?.errorMessage
+                    AppLog.w(
+                        AppLog.T.POSTS,
+                        "fetchTermNames failed: $msg"
+                    )
+                    params = null
+                }
             }
         }
         return result

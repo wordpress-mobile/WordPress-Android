@@ -9,7 +9,6 @@ Language: sv_SE
     <string name="support_screen_unified_support_description">Få svar från vårt supportteam när som helst</string>
     <string name="support_screen_unified_support_title">Skaffa hjälp</string>
     <string name="unified_support_attachment_match_score">%1$d%% matcha</string>
-    <string name="unified_support_status_bot">Oddie-bot</string>
     <string name="unified_support_bot_typing_content_description">Supportroboten skriver</string>
     <string name="unified_support_message_input_placeholder">Skriv ett meddelande …</string>
     <string name="unified_support_conversations_title">Skaffa hjälp</string>
