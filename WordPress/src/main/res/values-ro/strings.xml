@@ -10,7 +10,6 @@ Language: ro
     <string name="support_screen_unified_support_title">Primești ajutor</string>
     <string name="unified_support_message_input_placeholder">Scrie un mesaj…</string>
     <string name="unified_support_bot_typing_content_description">Botul pentru suport tastează</string>
-    <string name="unified_support_status_bot">Bot ciudat</string>
     <string name="unified_support_attachment_match_score">Potrivire %1$d%%</string>
     <string name="unified_support_conversations_title">Primești ajutor</string>
     <string name="page_rs_move_trashed_page_to_draft_dialog_message">Paginile aruncate la gunoi nu pot fi editate. Vrei să modifici starea acestei pagini în „ciornă” pentru a o putea edita?</string>

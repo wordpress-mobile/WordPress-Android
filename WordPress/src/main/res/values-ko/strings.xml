@@ -9,7 +9,6 @@ Language: ko_KR
     <string name="support_screen_unified_support_description">언제든지 지원팀의 답변 받기</string>
     <string name="support_screen_unified_support_title">도움말 이용</string>
     <string name="unified_support_attachment_match_score">%1$d%% 일치</string>
-    <string name="unified_support_status_bot">Oddie 봇</string>
     <string name="unified_support_bot_typing_content_description">지원 봇이 입력 중</string>
     <string name="unified_support_message_input_placeholder">메시지 입력…</string>
     <string name="unified_support_conversations_title">도움말 이용</string>

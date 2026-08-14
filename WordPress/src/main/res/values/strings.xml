@@ -1688,6 +1688,8 @@
     <string name="stats_period_last_12_months">Last 12 months</string>
     <string name="stats_period_custom">Custom</string>
     <string name="stats_period_selector_content_description">Select stats period</string>
+    <string name="stats_period_previous_content_description">Previous period</string>
+    <string name="stats_period_next_content_description">Next period</string>
     <string name="stats_select_date_range">Select date range</string>
 
     <!-- Most Viewed Stats Card -->
@@ -2775,6 +2777,14 @@
     <!-- site picker -->
     <string name="site_picker_title">Choose site</string>
     <string name="site_picker_add_a_site">Add a site</string>
+    <!-- translators: this is the accessibility label for the add site button's tap action while the menu is open, and the verb should likely be translated in the infinitive, here's the usage context in English: "Double tap to 'close the add site menu'." -->
+    <string name="site_picker_add_a_site_collapse">Close the add site menu</string>
+    <!-- translators: this is the accessibility label for the add site button's tap action while the menu is closed, and the verb should likely be translated in the infinitive, here's the usage context in English: "Double tap to 'show ways to add a site'." -->
+    <string name="site_picker_add_a_site_expand">Show ways to add a site</string>
+    <!-- translators: spoken by a screen reader to describe the add site button's current state, not an action the user can take. Announced after the menu closes. -->
+    <string name="site_picker_add_site_menu_collapsed">Add site menu collapsed</string>
+    <!-- translators: spoken by a screen reader to describe the add site button's current state, not an action the user can take. Announced after the menu opens. -->
+    <string name="site_picker_add_site_menu_expanded">Add site menu expanded</string>
     <string name="site_picker_add_self_hosted">Add self-hosted site</string>
     <string name="site_picker_create_wpcom">Create WordPress.com site</string>
     <string name="site_picker_remove_site_empty">No sites matching your search</string>
@@ -2795,6 +2805,7 @@
     <string name="support_identity_input_dialog_name_label">Name</string>
     <string name="support_screen_title">Support</string>
     <string name="support_screen_login_button">Log into WordPress.com</string>
+    <string name="support_screen_login_description">Log into WordPress.com to access support chat.</string>
     <string name="support_screen_how_can_we_help_title">How can we help?</string>
     <string name="support_screen_help_center_title">Help Center</string>
     <string name="support_screen_help_center_description">Documentation and Tutorials to help you get started</string>
@@ -4778,7 +4789,7 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="unified_support_message_input_placeholder">Type a message…</string>
     <string name="unified_support_bot_typing_content_description">Support bot is typing</string>
     <string name="unified_support_new_conversation_content_description">New conversation</string>
-    <string name="unified_support_status_bot">Oddie bot</string>
+    <string name="unified_support_status_ai_assistant">AI Assistant</string>
     <string name="unified_support_attachment_match_score">%1$d%% match</string>
     <string name="unified_support_attachment_link_content_description">Open link: %1$s</string>
     <string name="support_screen_unified_support_title">Get help</string>

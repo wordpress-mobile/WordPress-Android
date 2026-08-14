@@ -33,6 +33,7 @@ import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import java.time.LocalDate
+import java.time.YearMonth
 
 @ExperimentalCoroutinesApi
 @Suppress("LargeClass")
@@ -1184,6 +1185,122 @@ class StatsRepositoryTest : BaseUnitTest() {
         TopPostDataItem(id = 1, title = TEST_POST_TITLE_1, views = TEST_POST_VIEWS_1),
         TopPostDataItem(id = 2, title = TEST_POST_TITLE_2, views = TEST_POST_VIEWS_2)
     )
+    // endregion
+
+    // region navigation
+    @Test
+    fun `previousPeriod of Today is the single day before, rendered hourly-capable`() {
+        val today = LocalDate.now()
+
+        val result = repository.previousPeriod(StatsPeriod.Today)
+
+        assertThat(result).isEqualTo(StatsPeriod.Custom(today.minusDays(1), today.minusDays(1)))
+    }
+
+    @Test
+    fun `previousPeriod of Last7Days steps back seven days preserving the span`() {
+        val today = LocalDate.now()
+
+        val result = repository.previousPeriod(StatsPeriod.Last7Days) as StatsPeriod.Custom
+
+        assertThat(result.endDate).isEqualTo(today.minusDays(7))
+        assertThat(result.startDate).isEqualTo(today.minusDays(13))
+    }
+
+    @Test
+    fun `previousPeriod of Last30Days steps back thirty days preserving the span`() {
+        val today = LocalDate.now()
+
+        val result = repository.previousPeriod(StatsPeriod.Last30Days) as StatsPeriod.Custom
+
+        assertThat(result.endDate).isEqualTo(today.minusDays(30))
+        assertThat(result.startDate).isEqualTo(today.minusDays(59))
+    }
+
+    @Test
+    fun `previousPeriod of Last6Months steps back six calendar months at month granularity`() {
+        val today = LocalDate.now()
+
+        val result = repository.previousPeriod(StatsPeriod.Last6Months) as StatsPeriod.Custom
+
+        // Month-granularity windows are fetched by calendar month, so only the month matters — the
+        // start day drifts harmlessly when an intermediate minusMonths clamps to a short month
+        // (e.g. on Jul 30, today-5mo lands on Feb 28), which is why we assert the YearMonth here.
+        assertThat(result.endDate).isEqualTo(today.minusMonths(6))
+        assertThat(YearMonth.from(result.startDate)).isEqualTo(YearMonth.from(today).minusMonths(11))
+    }
+
+    @Test
+    fun `previousPeriod of Last12Months steps back twelve calendar months`() {
+        val today = LocalDate.now()
+
+        val result = repository.previousPeriod(StatsPeriod.Last12Months) as StatsPeriod.Custom
+
+        // See the Last6Months test: month-granularity windows assert the YearMonth, not the day.
+        assertThat(result.endDate).isEqualTo(today.minusMonths(12))
+        assertThat(YearMonth.from(result.startDate)).isEqualTo(YearMonth.from(today).minusMonths(23))
+    }
+
+    @Test
+    fun `nextPeriod onto the present edge snaps back to the Today preset`() {
+        val today = LocalDate.now()
+        val yesterday = StatsPeriod.Custom(today.minusDays(1), today.minusDays(1))
+
+        val result = repository.nextPeriod(yesterday)
+
+        // Landing on today's single-day window restores the preset label rather than a Custom range,
+        // so Today → back → forward shows "Today" again.
+        assertThat(result).isEqualTo(StatsPeriod.Today)
+    }
+
+    @Test
+    fun `nextPeriod onto a preset's own window snaps back to that preset`() {
+        val today = LocalDate.now()
+        // One seven-day window before Last 7 Days; forward lands exactly on the Last 7 Days window.
+        val previousWeek = StatsPeriod.Custom(today.minusDays(13), today.minusDays(7))
+
+        val result = repository.nextPeriod(previousWeek)
+
+        assertThat(result).isEqualTo(StatsPeriod.Last7Days)
+    }
+
+    @Test
+    fun `nextPeriod clamps so the window never ends after today`() {
+        val today = LocalDate.now()
+        // A ten-day range ending today (no preset has this span, so it stays Custom): forward would
+        // overshoot into the future and must be clamped back to end on today.
+        val endingToday = StatsPeriod.Custom(today.minusDays(9), today)
+
+        val result = repository.nextPeriod(endingToday) as StatsPeriod.Custom
+
+        assertThat(result.endDate).isEqualTo(today)
+    }
+
+    @Test
+    fun `canNavigateForward is false at the present edge and true in the past`() {
+        val today = LocalDate.now()
+
+        assertThat(repository.canNavigateForward(StatsPeriod.Today)).isFalse()
+        assertThat(repository.canNavigateForward(StatsPeriod.Last7Days)).isFalse()
+        assertThat(
+            repository.canNavigateForward(StatsPeriod.Custom(today.minusDays(1), today.minusDays(1)))
+        ).isTrue()
+    }
+
+    @Test
+    fun `canNavigateBackward stops at the year 2000 floor`() {
+        assertThat(repository.canNavigateBackward(StatsPeriod.Today)).isTrue()
+        assertThat(
+            repository.canNavigateBackward(
+                StatsPeriod.Custom(LocalDate.of(2001, 1, 1), LocalDate.of(2001, 1, 7))
+            )
+        ).isTrue()
+        assertThat(
+            repository.canNavigateBackward(
+                StatsPeriod.Custom(LocalDate.of(2000, 6, 1), LocalDate.of(2000, 6, 7))
+            )
+        ).isFalse()
+    }
     // endregion
 
     companion object {

@@ -22,6 +22,8 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.clickable
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.DateRange
@@ -31,6 +33,7 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
@@ -119,6 +122,7 @@ import org.wordpress.android.ui.newstats.tagsandcategories.TagsAndCategoriesView
 import org.wordpress.android.ui.newstats.yearinreview.YearInReviewDetailActivity
 import org.wordpress.android.ui.newstats.yearinreview.YearInReviewViewModel
 import org.wordpress.android.ui.newstats.util.ProvideShimmerBrush
+import org.wordpress.android.ui.newstats.util.formatCustomDateRange
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.newstats.components.NewStatsIntroBottomSheet
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
@@ -129,6 +133,11 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import javax.inject.Inject
+
+// Opacity of a navigation control (forward at the present edge, back at the year floor) when it is
+// disabled. The enabled controls use full onSurface, so 50% reads as clearly dimmed against them
+// while still staying visible (rather than disappearing) at the edge, matching iOS parity.
+private const val DISABLED_CONTROL_ALPHA = 0.5f
 
 @AndroidEntryPoint
 class NewStatsActivity : BaseAppCompatActivity() {
@@ -353,6 +362,8 @@ private fun NewStatsScreen(
 ) {
     val viewsStatsViewModel: ViewsStatsViewModel = viewModel()
     val selectedPeriod by viewsStatsViewModel.selectedPeriod.collectAsState()
+    val canNavigateBackward by viewsStatsViewModel.canNavigateBackward.collectAsState()
+    val canNavigateForward by viewsStatsViewModel.canNavigateForward.collectAsState()
 
     val tabs = StatsTab.entries
     val pagerState = rememberPagerState(initialPage = initialTab.ordinal, pageCount = { tabs.size })
@@ -401,52 +412,89 @@ private fun NewStatsScreen(
                 actions = {
                     val currentTab = tabs[pagerState.currentPage]
                     if (currentTab == StatsTab.TRAFFIC) {
-                        Box {
-                            Row(
-                                verticalAlignment =
-                                    Alignment.CenterVertically,
-                                modifier = Modifier
-                                    .clickable {
-                                        showPeriodMenu = true
-                                    }
-                                    .padding(horizontal = 8.dp)
-                            ) {
-                                Text(
-                                    text = selectedPeriod
-                                        .getDisplayLabel(),
-                                    style = MaterialTheme
-                                        .typography.labelLarge,
-                                    color = MaterialTheme
-                                        .colorScheme.onSurface
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            IconButton(
+                                onClick = { viewsStatsViewModel.onNavigatePrevious() },
+                                enabled = canNavigateBackward,
+                                colors = IconButtonDefaults.iconButtonColors(
+                                    contentColor = MaterialTheme.colorScheme.onSurface,
+                                    disabledContentColor = MaterialTheme.colorScheme.onSurface
+                                        .copy(alpha = DISABLED_CONTROL_ALPHA)
                                 )
+                            ) {
                                 Icon(
-                                    imageVector =
-                                        Icons.Default.DateRange,
-                                    contentDescription =
-                                        stringResource(
-                                            R.string
-                                                .stats_period_selector_content_description
-                                        ),
-                                    modifier = Modifier
-                                        .padding(start = 4.dp)
+                                    imageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
+                                    contentDescription = stringResource(
+                                        R.string.stats_period_previous_content_description
+                                    )
                                 )
                             }
-                            StatsPeriodMenu(
-                                expanded = showPeriodMenu,
-                                selectedPeriod = selectedPeriod,
-                                onDismiss = {
-                                    showPeriodMenu = false
-                                },
-                                onPresetSelected = { period ->
-                                    viewsStatsViewModel
-                                        .onPeriodChanged(period)
-                                    showPeriodMenu = false
-                                },
-                                onCustomSelected = {
-                                    showPeriodMenu = false
-                                    showDateRangePicker = true
+                            Box {
+                                Row(
+                                    verticalAlignment =
+                                        Alignment.CenterVertically,
+                                    modifier = Modifier
+                                        .clickable {
+                                            showPeriodMenu = true
+                                        }
+                                        .padding(horizontal = 8.dp)
+                                ) {
+                                    Text(
+                                        text = selectedPeriod
+                                            .getDisplayLabel(),
+                                        style = MaterialTheme
+                                            .typography.labelLarge,
+                                        color = MaterialTheme
+                                            .colorScheme.onSurface
+                                    )
+                                    Icon(
+                                        imageVector =
+                                            Icons.Default.DateRange,
+                                        contentDescription =
+                                            stringResource(
+                                                R.string
+                                                    .stats_period_selector_content_description
+                                            ),
+                                        modifier = Modifier
+                                            .padding(start = 4.dp)
+                                    )
                                 }
-                            )
+                                StatsPeriodMenu(
+                                    expanded = showPeriodMenu,
+                                    selectedPeriod = selectedPeriod,
+                                    onDismiss = {
+                                        showPeriodMenu = false
+                                    },
+                                    onPresetSelected = { period ->
+                                        viewsStatsViewModel
+                                            .onPeriodChanged(period)
+                                        showPeriodMenu = false
+                                    },
+                                    onCustomSelected = {
+                                        showPeriodMenu = false
+                                        showDateRangePicker = true
+                                    }
+                                )
+                            }
+                            // Forward stays visible but dimmed at the present edge (there is no later
+                            // period to page to) rather than disappearing, matching iOS. See
+                            // DISABLED_CONTROL_ALPHA for why the disabled color is set explicitly.
+                            IconButton(
+                                onClick = { viewsStatsViewModel.onNavigateNext() },
+                                enabled = canNavigateForward,
+                                colors = IconButtonDefaults.iconButtonColors(
+                                    contentColor = MaterialTheme.colorScheme.onSurface,
+                                    disabledContentColor = MaterialTheme.colorScheme.onSurface
+                                        .copy(alpha = DISABLED_CONTROL_ALPHA)
+                                )
+                            ) {
+                                Icon(
+                                    imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                                    contentDescription = stringResource(
+                                        R.string.stats_period_next_content_description
+                                    )
+                                )
+                            }
                         }
                     }
                     StatsOverflowMenu(
@@ -1411,10 +1459,7 @@ private fun StatsPeriodMenu(
 @Composable
 private fun StatsPeriod.getDisplayLabel(): String {
     return when (this) {
-        is StatsPeriod.Custom -> {
-            val formatter = java.time.format.DateTimeFormatter.ofPattern("MMM d")
-            "${startDate.format(formatter)} - ${endDate.format(formatter)}"
-        }
+        is StatsPeriod.Custom -> formatCustomDateRange(startDate, endDate)
         else -> stringResource(id = labelResId)
     }
 }

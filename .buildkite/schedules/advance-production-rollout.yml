@@ -4,8 +4,8 @@
 # Advances the live production staged rollout one step per run — reads the current rollout percentage
 # back from Play and bumps WordPress & Jetpack to the next step, finalizing to 100% past the top. Only
 # ever advances an `inProgress` rollout, so it never resumes one a developer paused (a paused rollout
-# is `halted`). Runs on a daily schedule (configured in the Buildkite UI); also triggerable manually
-# via the `PIPELINE` env var for testing.
+# is `halted`). Runs Tuesday–Friday on a schedule, so a Monday promotion reaches 100% within the
+# working week and no step lands on a weekend; also triggerable manually via the `PIPELINE` env var.
 
 agents:
   queue: "android"
@@ -17,7 +17,7 @@ steps:
 
 # Slack backstop for any failed build — its unique value is failures that abort before the lane runs
 # (gems/secrets) and can't self-report; on a lane failure it may also accompany the lane's own
-# message. Channel intentionally stays the test channel for now (see send_slack_message).
+# message.
 notify:
-  - slack: "#test-wpmobile-slack-integration"
+  - slack: "#build-and-ship"
     if: build.state == "failed"

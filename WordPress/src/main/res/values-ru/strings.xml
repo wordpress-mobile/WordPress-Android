@@ -9,7 +9,6 @@ Language: ru
     <string name="support_screen_unified_support_description">Получайте ответы от нашей службы поддержки в любое время</string>
     <string name="support_screen_unified_support_title">Справка</string>
     <string name="unified_support_attachment_match_score">Совпадение %1$d%%</string>
-    <string name="unified_support_status_bot">Бот Oddie</string>
     <string name="unified_support_bot_typing_content_description">Бот поддержки вводит текст</string>
     <string name="unified_support_message_input_placeholder">Написать сообщение…</string>
     <string name="unified_support_conversations_title">Справка</string>
