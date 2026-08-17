@@ -54,6 +54,36 @@ class GBKMediaUploadProcessor(
      */
     private val transcodeMutex = Mutex()
 
+    /**
+     * Metadata-only gate GutenbergKit consults before copying an upload to a temp file. Declining
+     * makes it relay the original request body straight to WordPress, skipping a copy this
+     * delegate would not have used: [processFile] returns [ProcessedProxyFile.Original] for GIFs
+     * and non-media, so today those pay a full byte-for-byte copy only to be passed through.
+     *
+     * This is an optimization hint, never the enforcement point. It sees only the client-supplied
+     * mime type and filename, which can disagree with the file's actual bytes, so the plan check
+     * inside [processFile] stays authoritative — the copy here is a fast path, not a replacement.
+     */
+    @Suppress("ReturnCount")
+    override fun handlesFile(mimeType: String, filename: String): Boolean {
+        val resolvedMimeType = resolveMimeType(mimeType, filename)
+
+        // Claim disallowed types so processFile still runs and throws the localized rejection.
+        // Declining would forward them to WordPress instead, spending a full upload on a file the
+        // site's plan won't accept and surfacing the server's untranslated error in place of ours.
+        if (!mediaUtilsWrapper.isMimeTypeSupportedBySitePlan(site, resolvedMimeType)) return true
+
+        return when {
+            // Never re-encoded; processFile always returns Original.
+            resolvedMimeType == MIME_GIF -> false
+            // Both the duration check and the optional transcode need the file itself.
+            mediaUtilsWrapper.isVideoMimeType(resolvedMimeType) -> true
+            resolvedMimeType.startsWith(MIME_IMAGE_PREFIX) -> true
+            // Non-media files (documents, archives, audio on paid plans) upload unchanged.
+            else -> false
+        }
+    }
+
     override suspend fun processFile(
         file: File,
         mimeType: String,
