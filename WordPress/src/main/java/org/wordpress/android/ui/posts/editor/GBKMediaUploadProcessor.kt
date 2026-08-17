@@ -217,7 +217,7 @@ class GBKMediaUploadProcessor(
             ?.takeIf { it != file.absolutePath }
 
         if (optimizedPath != null) {
-            return processedImage(File(optimizedPath), mimeType, filename)
+            return processedImage(File(optimizedPath), filename)
         }
 
         // With optimization off, WP.com rotates sideways-captured images server-side but
@@ -228,7 +228,7 @@ class GBKMediaUploadProcessor(
                 ?.path
                 ?.takeIf { it != file.absolutePath }
             if (rotatedPath != null) {
-                return processedImage(File(rotatedPath), mimeType, filename)
+                return processedImage(File(rotatedPath), filename)
             }
         }
 
@@ -250,10 +250,19 @@ class GBKMediaUploadProcessor(
     /**
      * Wraps an optimized/rotated image file, stripping GPS EXIF when enabled and correcting the
      * reported mime type and filename: ImageUtils re-encodes PNG to PNG and everything else
-     * (including HEIC/WebP) to JPEG bytes while keeping the original file extension, so the
-     * metadata sent to WordPress must reflect the actual output format.
+     * (including HEIC/WebP) to JPEG bytes, so the metadata sent to WordPress must reflect the
+     * actual output format.
+     *
+     * The format is read off the *output* file rather than predicted from the declared input mime
+     * type. ImageUtils picks its encoder from the extension it derives for the output
+     * (`resizeImageAndWriteToStream` writes PNG only when that extension is literally "png") and
+     * names the output file with the same extension, so the written name is a faithful record of
+     * the encode decision. The declared input mime is not: for an extensionless upload
+     * `MediaUtils.getMediaFileName` supplies an extension sniffed from the bytes, which can
+     * disagree with what the client declared. Labeling from the input therefore produced JPEG
+     * bytes tagged `image/png` (and the reverse) — a mislabel WordPress then stores permanently.
      */
-    private fun processedImage(output: File, inputMimeType: String, filename: String): ProcessedProxyFile {
+    private fun processedImage(output: File, filename: String): ProcessedProxyFile {
         if (appPrefsWrapper.isStripImageLocation) {
             // getOptimizedMedia copies the original's EXIF (including GPS) onto its output, so
             // the strip must run on the output — matching the legacy strip-at-upload behavior.
@@ -261,7 +270,7 @@ class GBKMediaUploadProcessor(
         }
 
         val basename = filename.substringBeforeLast('.')
-        return if (inputMimeType == MIME_PNG) {
+        return if (output.extension.lowercase() == EXTENSION_PNG) {
             ProcessedProxyFile.Processed(output, MIME_PNG, "$basename.png")
         } else {
             ProcessedProxyFile.Processed(output, MIME_JPEG, "$basename.jpg")
@@ -315,6 +324,9 @@ class GBKMediaUploadProcessor(
         private const val MIME_MP4 = "video/mp4"
         private const val MIME_OCTET_STREAM = "application/octet-stream"
         private const val MIME_TEXT_PLAIN = "text/plain"
+
+        /** The one extension ImageUtils treats as "encode as PNG"; everything else becomes JPEG. */
+        private const val EXTENSION_PNG = "png"
 
         /**
          * Mime types that carry no usable type information for an upload, so [resolveMimeType]

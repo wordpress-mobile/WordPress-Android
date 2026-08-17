@@ -182,6 +182,40 @@ class GBKMediaUploadProcessorTest : BaseUnitTest() {
     }
 
     @Test
+    fun `output format is read from the encoded file, not the declared mime type`() = test {
+        // ImageUtils picks its encoder from the extension it derives for the output, which for an
+        // extensionless upload comes from the file's sniffed bytes rather than the declared mime.
+        // Labeling from the declared type would tag these PNG bytes as image/jpeg, and WordPress
+        // would store that mislabel permanently.
+        val extensionless = tempFolder.newFile("screenshot")
+        val optimized = tempFolder.newFile("optimized-sniffed.png")
+        val optimizedUri = fileUri(optimized)
+        whenever(mediaUtilsWrapper.getOptimizedMedia(extensionless.absolutePath, false))
+            .thenReturn(optimizedUri)
+
+        val result = createProcessor().processFile(extensionless, "image/jpeg", "screenshot")
+
+        result as ProcessedProxyFile.Processed
+        assertThat(result.mimeType).isEqualTo("image/png")
+        assertThat(result.filename).isEqualTo("screenshot.png")
+    }
+
+    @Test
+    fun `jpeg output is labeled jpeg even when the input declared png`() = test {
+        val staged = tempFolder.newFile("mystery")
+        val optimized = tempFolder.newFile("optimized-sniffed.jpg")
+        val optimizedUri = fileUri(optimized)
+        whenever(mediaUtilsWrapper.getOptimizedMedia(staged.absolutePath, false))
+            .thenReturn(optimizedUri)
+
+        val result = createProcessor().processFile(staged, "image/png", "mystery")
+
+        result as ProcessedProxyFile.Processed
+        assertThat(result.mimeType).isEqualTo("image/jpeg")
+        assertThat(result.filename).isEqualTo("mystery.jpg")
+    }
+
+    @Test
     fun `gif passes through untouched`() = test {
         val gifStaged = tempFolder.newFile("anim.gif")
 
