@@ -4,6 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -23,6 +24,8 @@ import org.wordpress.android.ui.newstats.repository.PeriodAggregates
 import org.wordpress.android.ui.newstats.repository.PeriodStatsResult
 import org.wordpress.android.ui.newstats.repository.StatsCardsConfigurationRepository
 import org.wordpress.android.ui.newstats.repository.StatsRepository
+import org.wordpress.android.ui.newstats.util.RangeYearPlacement
+import org.wordpress.android.ui.newstats.util.rangeYearPlacement
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.viewmodel.ResourceProvider
 import java.time.LocalDate
@@ -66,9 +69,16 @@ class ViewsStatsViewModel @Inject constructor(
     private var currentPeriod: StatsPeriod = _selectedPeriod.value
     private var loadingPeriod: StatsPeriod? = null
     private var loadedPeriod: StatsPeriod? = null
+    private var loadJob: Job? = null
 
     private val _isPeriodInitialized = MutableStateFlow(false)
     val isPeriodInitialized: StateFlow<Boolean> = _isPeriodInitialized.asStateFlow()
+
+    private val _canNavigateBackward = MutableStateFlow(statsRepository.canNavigateBackward(currentPeriod))
+    val canNavigateBackward: StateFlow<Boolean> = _canNavigateBackward.asStateFlow()
+
+    private val _canNavigateForward = MutableStateFlow(statsRepository.canNavigateForward(currentPeriod))
+    val canNavigateForward: StateFlow<Boolean> = _canNavigateForward.asStateFlow()
 
     init {
         initializeWithPersistedPeriod()
@@ -88,6 +98,7 @@ class ViewsStatsViewModel @Inject constructor(
                 if (restoredPeriod != null) {
                     currentPeriod = restoredPeriod
                     _selectedPeriod.value = restoredPeriod
+                    updateNavigationState()
                 }
             }
             val savedChartType = savedStateHandle.get<String>(KEY_CHART_TYPE)
@@ -117,7 +128,47 @@ class ViewsStatsViewModel @Inject constructor(
         if (period == currentPeriod) return
         currentPeriod = period
         _selectedPeriod.value = period
+        updateNavigationState()
         savePeriod(period)
+    }
+
+    /**
+     * Pages the whole screen to the range immediately before the current one (see
+     * [StatsRepository.previousPeriod]). Guarded by the same floor the button's enabled state uses,
+     * so a stray tap on a disabled control is a no-op.
+     */
+    fun onNavigatePrevious() {
+        if (!statsRepository.canNavigateBackward(currentPeriod)) return
+        navigateTo(statsRepository.previousPeriod(currentPeriod))
+    }
+
+    /**
+     * Pages the whole screen to the range immediately after the current one (see
+     * [StatsRepository.nextPeriod]). Guarded so a tap while at the present edge is a no-op.
+     */
+    fun onNavigateNext() {
+        if (!statsRepository.canNavigateForward(currentPeriod)) return
+        navigateTo(statsRepository.nextPeriod(currentPeriod))
+    }
+
+    /**
+     * Applies a navigated period: dims the current content (if any) while the new range loads, then
+     * changes the period — which updates [selectedPeriod] so every other card reloads too — and
+     * reloads this card, mirroring [onBarTapped].
+     */
+    private fun navigateTo(newPeriod: StatsPeriod) {
+        if (newPeriod == currentPeriod) return
+        (_uiState.value as? ViewsStatsCardUiState.Content)?.let { content ->
+            _uiState.value = content.copy(isLoadingNewPeriod = true)
+        }
+        onPeriodChanged(newPeriod)
+        loadingPeriod = newPeriod
+        loadData()
+    }
+
+    private fun updateNavigationState() {
+        _canNavigateBackward.value = statsRepository.canNavigateBackward(currentPeriod)
+        _canNavigateForward.value = statsRepository.canNavigateForward(currentPeriod)
     }
 
     private fun savePeriod(period: StatsPeriod) {
@@ -326,7 +377,11 @@ class ViewsStatsViewModel @Inject constructor(
             )
         }
 
-        viewModelScope.launch {
+        // Rapid paging ("back five days quickly") fires overlapping loads. Cancel the in-flight one so
+        // only the latest period's request survives — otherwise a stale older coroutine can clear the
+        // dim/loadingPeriod mid-flight (flicker) or write a stale loadedPeriod (a redundant refetch).
+        loadJob?.cancel()
+        loadJob = viewModelScope.launch {
             loadDataInternal(site)
         }
     }
@@ -362,8 +417,13 @@ class ViewsStatsViewModel @Inject constructor(
                 loadedPeriod = targetPeriod
             }
         } finally {
-            loadingPeriod = null
-            clearLoadingNewPeriod()
+            // Only clear the flags if this load still owns them. A load superseded by rapid paging is
+            // cancelled and its finally runs after the newer load has already set loadingPeriod to the
+            // newer period, so clearing unconditionally here would wipe the newer load's dim.
+            if (loadingPeriod == targetPeriod) {
+                loadingPeriod = null
+                clearLoadingNewPeriod()
+            }
         }
     }
 
@@ -668,7 +728,7 @@ class ViewsStatsViewModel @Inject constructor(
 
     private fun formatSingleDayRange(date: String): String {
         val parsedDate = parsePeriodDate(date) ?: return date
-        return parsedDate.format(DateTimeFormatter.ofPattern("d MMM", Locale.getDefault()))
+        return parsedDate.format(DateTimeFormatter.ofPattern("d MMM yyyy", Locale.getDefault()))
     }
 
     @Suppress("ReturnCount")
@@ -684,11 +744,15 @@ class ViewsStatsViewModel @Inject constructor(
         val start = parsePeriodDate(startDate) ?: return "$startDate - $endDate"
         val end = parsePeriodDate(endDate) ?: return "$startDate - $endDate"
         val monthFormat = DateTimeFormatter.ofPattern("MMM", Locale.getDefault())
+        val monthYearFormat = DateTimeFormatter.ofPattern("MMM yyyy", Locale.getDefault())
 
-        return if (start.month == end.month && start.year == end.year) {
-            start.format(monthFormat)
-        } else {
-            "${start.format(monthFormat)} - ${end.format(monthFormat)}"
+        return when (rangeYearPlacement(start.year, end.year)) {
+            // Cross-year span: show the year on both ends ("Dec 2024 - Jan 2025").
+            RangeYearPlacement.BOTH -> "${start.format(monthYearFormat)} - ${end.format(monthYearFormat)}"
+            // Same year: show the year once, on the trailing month ("Jan - Jun 2024").
+            RangeYearPlacement.TRAILING ->
+                if (start.month == end.month) start.format(monthYearFormat)
+                else "${start.format(monthFormat)} - ${end.format(monthYearFormat)}"
         }
     }
 
@@ -698,11 +762,17 @@ class ViewsStatsViewModel @Inject constructor(
         val end = parsePeriodDate(endDate) ?: return "$startDate - $endDate"
         val dayFormat = DateTimeFormatter.ofPattern("d", Locale.getDefault())
         val dayMonthFormat = DateTimeFormatter.ofPattern("d MMM", Locale.getDefault())
+        val dayMonthYearFormat = DateTimeFormatter.ofPattern("d MMM yyyy", Locale.getDefault())
 
-        return if (start.month == end.month) {
-            "${start.format(dayFormat)}-${end.format(dayMonthFormat)}"
-        } else {
-            "${start.format(dayMonthFormat)} - ${end.format(dayMonthFormat)}"
+        return when (rangeYearPlacement(start.year, end.year)) {
+            // Cross-year span: show the year on both ends ("28 Dec 2024 - 3 Jan 2025").
+            RangeYearPlacement.BOTH ->
+                "${start.format(dayMonthYearFormat)} - ${end.format(dayMonthYearFormat)}"
+            // Same year: show the year once, on the trailing date. Collapse the leading month when
+            // both ends share it ("14-20 Jan 2024" vs "28 Jul - 3 Aug 2024").
+            RangeYearPlacement.TRAILING ->
+                if (start.month == end.month) "${start.format(dayFormat)}-${end.format(dayMonthYearFormat)}"
+                else "${start.format(dayMonthFormat)} - ${end.format(dayMonthYearFormat)}"
         }
     }
 

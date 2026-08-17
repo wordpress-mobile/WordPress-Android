@@ -155,6 +155,7 @@ import static org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_ACCESS
 import static org.wordpress.android.imageeditor.preview.PreviewImageFragment.ARG_EDIT_IMAGE_DATA;
 import static org.wordpress.android.ui.accounts.LoginFlow.PROLOGUE;
 import static org.wordpress.android.ui.accounts.LoginFlow.JETPACK_REST_CONNECT;
+import static org.wordpress.android.ui.accounts.LoginFlow.SUPPORT;
 import static org.wordpress.android.ui.accounts.LoginFlow.WPCOM_LOGIN;
 import static org.wordpress.android.push.NotificationsProcessingService.ARG_NOTIFICATION_TYPE;
 import static org.wordpress.android.ui.WPWebViewActivity.ENCODING_UTF8;
@@ -1498,6 +1499,17 @@ public class ActivityLauncher {
         Intent intent = new Intent(activity, LoginActivity.class);
         WPCOM_LOGIN.putInto(intent);
         activity.startActivityForResult(intent, RequestCodes.ADD_ACCOUNT);
+    }
+
+    /**
+     * Builds the intent for the WordPress.com login required to access support chat (Odie).
+     * Goes straight to WP.com OAuth and, once done, finishes back to the caller (the Support
+     * screen) instead of navigating to the main activity.
+     */
+    public static Intent createWpComSignInForSupportIntent(@NonNull Context context) {
+        Intent intent = new Intent(context, LoginActivity.class);
+        SUPPORT.putInto(intent);
+        return intent;
     }
 
     /**

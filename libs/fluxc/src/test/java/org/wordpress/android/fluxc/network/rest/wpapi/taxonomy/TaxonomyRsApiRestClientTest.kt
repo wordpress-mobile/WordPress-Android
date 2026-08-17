@@ -6,8 +6,10 @@ import kotlinx.coroutines.test.TestCoroutineScheduler
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertNull
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -267,10 +269,12 @@ class TaxonomyRsApiRestClientTest {
         assertEquals(testSite, payload.site)
         assertEquals(5, payload.terms.terms.size)
         assertNull(payload.error)
+        // All pages retrieved, so the store is free to replace the cached list.
+        assertTrue(payload.complete)
     }
 
     @Test
-    fun `fetchTerms categories with error on a later page dispatches single error action`() = runTest {
+    fun `fetchTerms categories with error on a later page keeps already-fetched terms`() = runTest {
         val firstPage = createListResponse(
             terms = List(2) { createTestAnyTermWithEditContext() },
             nextPageParams = TermListParams(perPage = 100u)
@@ -287,7 +291,37 @@ class TaxonomyRsApiRestClientTest {
 
         taxonomyClient.fetchTerms(testSite, testCategoryTaxonomyName)
 
-        // Only the error action should be dispatched - no partial success
+        // A transient failure mid-pagination degrades gracefully: the terms already fetched from
+        // the first page are dispatched as a success instead of the whole list being dropped.
+        val actionCaptor = ArgumentCaptor.forClass(Action::class.java)
+        verify(dispatcher).dispatch(actionCaptor.capture())
+
+        val capturedAction = actionCaptor.value
+        val payload = capturedAction.payload as FetchTermsResponsePayload
+        assertEquals(capturedAction.type, TaxonomyAction.FETCHED_TERMS)
+        assertEquals(testCategoryTaxonomyName, payload.taxonomy)
+        assertEquals(testSite, payload.site)
+        assertEquals(2, payload.terms.terms.size)
+        assertNull(payload.error)
+        // Marked incomplete so the store keeps existing cached terms instead of clearing them.
+        assertFalse(payload.complete)
+    }
+
+    @Test
+    fun `fetchTerms categories with error on the first page dispatches error action`() = runTest {
+        val errorResponse = WpRequestResult.UnknownError<TermsRequestListWithEditContextResponse>(
+            statusCode = 500u,
+            response = "Internal Server Error",
+            requestUrl = "",
+            requestMethod = RequestMethod.GET
+        )
+
+        whenever(wpApiClient.request<TermsRequestListWithEditContextResponse>(any()))
+            .thenReturn(errorResponse)
+
+        taxonomyClient.fetchTerms(testSite, testCategoryTaxonomyName)
+
+        // Nothing could be fetched, so the error is surfaced and the cached list is left untouched.
         val actionCaptor = ArgumentCaptor.forClass(Action::class.java)
         verify(dispatcher).dispatch(actionCaptor.capture())
 

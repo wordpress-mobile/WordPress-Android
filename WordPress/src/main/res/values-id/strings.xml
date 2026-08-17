@@ -9,7 +9,6 @@ Language: id
     <string name="support_screen_unified_support_description">Dapatkan jawaban dari tim dukungan kami, kapan saja</string>
     <string name="support_screen_unified_support_title">Dapatkan bantuan</string>
     <string name="unified_support_attachment_match_score">%1$d%% pertandingan</string>
-    <string name="unified_support_status_bot">Bot Oddie</string>
     <string name="unified_support_bot_typing_content_description">Bot dukungan sedang mengetik</string>
     <string name="unified_support_message_input_placeholder">Ketik pesan…</string>
     <string name="unified_support_conversations_title">Dapatkan bantuan</string>

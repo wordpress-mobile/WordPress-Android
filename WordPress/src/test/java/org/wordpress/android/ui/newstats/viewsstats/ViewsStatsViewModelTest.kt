@@ -10,6 +10,7 @@ import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.any
 import org.mockito.kotlin.doSuspendableAnswer
+import org.mockito.kotlin.never
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
@@ -192,6 +193,53 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
 
         // Aggregates are stubbed as 2024-01-14..2024-01-20, a span inside a single year.
         assertThat(viewModel.uiState.value.chartLoaded().currentPeriodDateRange).isEqualTo("2024")
+    }
+
+    @Test
+    fun `given DAY unit, when chart loads, then the legend date range includes the year`() = test {
+        // Default aggregates span 2024-01-14..2024-01-20 (a Last7Days range within one month).
+        val result = createPeriodStatsResult(unit = StatsUnit.DAY)
+        whenever(statsRepository.fetchStatsForPeriod(any(), any())).thenReturn(result)
+
+        initViewModel()
+        advanceUntilIdle()
+
+        assertThat(viewModel.uiState.value.chartLoaded().currentPeriodDateRange).isEqualTo("14-20 Jan 2024")
+    }
+
+    @Test
+    fun `given a cross-year DAY range, when chart loads, then both ends show the year`() = test {
+        val result = createPeriodStatsResult(
+            unit = StatsUnit.DAY,
+            currentStartDate = "2024-12-29",
+            currentEndDate = "2025-01-04"
+        )
+        whenever(statsRepository.fetchStatsForPeriod(any(), any())).thenReturn(result)
+
+        initViewModel()
+        advanceUntilIdle()
+
+        assertThat(viewModel.uiState.value.chartLoaded().currentPeriodDateRange)
+            .isEqualTo("29 Dec 2024 - 4 Jan 2025")
+    }
+
+    @Test
+    fun `given a MONTH range, when chart loads, then the legend date range includes the year`() = test {
+        val result = createPeriodStatsResult(
+            unit = StatsUnit.MONTH,
+            currentStartDate = "2024-01-01",
+            currentEndDate = "2024-06-01"
+        )
+        whenever(statsRepository.fetchStatsForPeriod(any(), any())).thenReturn(result)
+
+        initViewModel()
+        advanceUntilIdle()
+
+        viewModel.onPeriodChanged(StatsPeriod.Last6Months)
+        viewModel.loadDataIfNeeded()
+        advanceUntilIdle()
+
+        assertThat(viewModel.uiState.value.chartLoaded().currentPeriodDateRange).isEqualTo("Jan - Jun 2024")
     }
 
     @Test
@@ -959,6 +1007,65 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
 
     // endregion
 
+    // region navigation
+    @Test
+    fun `onNavigatePrevious pages the whole screen to the previous range`() = test {
+        val previous = StatsPeriod.Custom(LocalDate.of(2026, 1, 1), LocalDate.of(2026, 1, 7))
+        whenever(statsRepository.canNavigateBackward(any())).thenReturn(true)
+        whenever(statsRepository.previousPeriod(any())).thenReturn(previous)
+        whenever(statsRepository.fetchStatsForPeriod(any(), any())).thenReturn(createPeriodStatsResult())
+        initViewModel()
+        advanceUntilIdle()
+
+        viewModel.onNavigatePrevious()
+        advanceUntilIdle()
+
+        assertThat(viewModel.selectedPeriod.value).isEqualTo(previous)
+    }
+
+    @Test
+    fun `onNavigateNext pages the whole screen to the next range`() = test {
+        val next = StatsPeriod.Custom(LocalDate.of(2026, 2, 1), LocalDate.of(2026, 2, 7))
+        whenever(statsRepository.canNavigateForward(any())).thenReturn(true)
+        whenever(statsRepository.nextPeriod(any())).thenReturn(next)
+        whenever(statsRepository.fetchStatsForPeriod(any(), any())).thenReturn(createPeriodStatsResult())
+        initViewModel()
+        advanceUntilIdle()
+
+        viewModel.onNavigateNext()
+        advanceUntilIdle()
+
+        assertThat(viewModel.selectedPeriod.value).isEqualTo(next)
+    }
+
+    @Test
+    fun `onNavigatePrevious is a no-op at the backward floor`() = test {
+        whenever(statsRepository.canNavigateBackward(any())).thenReturn(false)
+        whenever(statsRepository.fetchStatsForPeriod(any(), any())).thenReturn(createPeriodStatsResult())
+        initViewModel()
+        advanceUntilIdle()
+        val before = viewModel.selectedPeriod.value
+
+        viewModel.onNavigatePrevious()
+        advanceUntilIdle()
+
+        assertThat(viewModel.selectedPeriod.value).isEqualTo(before)
+        verify(statsRepository, never()).previousPeriod(any())
+    }
+
+    @Test
+    fun `navigation enablement flows reflect the repository`() = test {
+        whenever(statsRepository.canNavigateBackward(any())).thenReturn(true)
+        whenever(statsRepository.canNavigateForward(any())).thenReturn(false)
+        whenever(statsRepository.fetchStatsForPeriod(any(), any())).thenReturn(createPeriodStatsResult())
+        initViewModel()
+        advanceUntilIdle()
+
+        assertThat(viewModel.canNavigateBackward.value).isTrue()
+        assertThat(viewModel.canNavigateForward.value).isFalse()
+    }
+    // endregion
+
     private fun createPeriodStatsResult(
         currentViews: Long = TEST_CURRENT_PERIOD_VIEWS,
         currentVisitors: Long = TEST_CURRENT_PERIOD_VISITORS,
@@ -972,7 +1079,9 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
         previousPosts: Long = TEST_PREVIOUS_PERIOD_POSTS,
         currentPeriodData: List<ViewsDataPoint> = createDefaultDataPoints(),
         previousPeriodData: List<ViewsDataPoint> = createDefaultDataPoints(),
-        unit: StatsUnit = StatsUnit.DAY
+        unit: StatsUnit = StatsUnit.DAY,
+        currentStartDate: String = "2024-01-14",
+        currentEndDate: String = "2024-01-20"
     ): PeriodStatsResult.Success {
         val currentAggregates = PeriodAggregates(
             views = currentViews,
@@ -980,8 +1089,8 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
             likes = currentLikes,
             comments = currentComments,
             posts = currentPosts,
-            startDate = "2024-01-14",
-            endDate = "2024-01-20"
+            startDate = currentStartDate,
+            endDate = currentEndDate
         )
         val previousAggregates = PeriodAggregates(
             views = previousViews,

@@ -9,7 +9,6 @@ Language: tr
     <string name="support_screen_unified_support_description">Destek ekibimizden dilediğiniz zaman yanıt alın</string>
     <string name="support_screen_unified_support_title">Yardım al</string>
     <string name="unified_support_attachment_match_score">%1$d%% eşleşme</string>
-    <string name="unified_support_status_bot">Esrarengiz robot</string>
     <string name="unified_support_bot_typing_content_description">Destek robotu yazıyor</string>
     <string name="unified_support_message_input_placeholder">Bir mesaj yazın…</string>
     <string name="unified_support_conversations_title">Yardım alın</string>

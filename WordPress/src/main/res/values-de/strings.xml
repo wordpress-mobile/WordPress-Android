@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2026-08-05 17:44:38+0000
+Translation-Revision-Date: 2026-08-10 00:57:58+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.3
 Language: de
@@ -9,7 +9,6 @@ Language: de
     <string name="support_screen_unified_support_description">Erhalte jederzeit Antworten von unserem Support-Team</string>
     <string name="support_screen_unified_support_title">Hilfe erhalten</string>
     <string name="unified_support_attachment_match_score">%1$d %% Übereinstimmung</string>
-    <string name="unified_support_status_bot">Oddie-Bot</string>
     <string name="unified_support_bot_typing_content_description">Der Support-Bot schreibt gerade</string>
     <string name="unified_support_message_input_placeholder">Schreib eine Nachricht …</string>
     <string name="unified_support_conversations_title">Hilfe erhalten</string>
@@ -485,7 +484,7 @@ Language: de
     <string name="me_email_verification_verify_email">E-Mail-Adresse bestätigen</string>
     <string name="experimental_features_feedback_dialog_decline">Jetzt nicht</string>
     <string name="experimental_features_feedback_dialog_message">Hättest du einen Moment Zeit, um uns Feedback zum experimentellen Editor zu geben?</string>
-    <string name="experimental_features_feedback_dialog_title">Feedback teilen</string>
+    <string name="experimental_features_feedback_dialog_title">Feedback geben</string>
     <string name="experimental_block_editor_description">Auf zusätzliche Blocktypen und -einstellungen zugreifen</string>
     <string name="experimental_block_editor_note">Der experimentelle Block-Editor wird in einer zukünftigen Version zum Standard. Die Möglichkeit, ihn zu deaktivieren, entfällt dann.</string>
     <string name="avatar_update_email_unverified">Um deinen Avatar zu aktualisieren, musst du zuerst deine E-Mail-Adresse verifizieren.</string>
@@ -1645,8 +1644,8 @@ Language: de
     <string name="gutenberg_native_s_social_icon" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Social-Media-Symbol für %s</string>
     <string name="gutenberg_native_mention" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Erwähnung</string>
     <string name="gutenberg_native_new" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">NEU</string>
-    <string name="gutenberg_native_preview_post" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Beitragsvorschau</string>
-    <string name="gutenberg_native_preview_page" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Seitenvorschau</string>
+    <string name="gutenberg_native_preview_post" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Beitrags-Vorschau anzeigen</string>
+    <string name="gutenberg_native_preview_page" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Seiten-Vorschau anzeigen</string>
     <string name="gutenberg_native_retry" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Erneut versuchen</string>
     <string name="gutenberg_native_gif" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">GIF</string>
     <string name="gutenberg_native_one" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Eins</string>
@@ -2811,7 +2810,7 @@ Language: de
     <string name="support_identity_input_dialog_email_label">E-Mail</string>
     <string name="support_identity_input_dialog_enter_email">Bitte gib deine E-Mail-Adresse ein</string>
     <string name="support_identity_input_dialog_enter_email_and_name">Bitte gib deine E-Mail-Adresse und deinen Namen ein, um fortzufahren.</string>
-    <string name="support_push_notification_message">Neue Nachricht von „Hilfe &amp; Support“</string>
+    <string name="support_push_notification_message">Neue Nachricht von „Hilfe und Support“</string>
     <string name="support_push_notification_title">WordPress</string>
     <string name="support_contact_email_not_set">Nicht festgelegt</string>
     <string name="support_contact_email">Kontakt-E-Mail-Adresse</string>

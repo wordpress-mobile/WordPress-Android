@@ -189,6 +189,44 @@ class PageRsTreeBuilderTest {
     }
 
     @Test
+    fun `a lone SITE_EDITOR row does not count as having pages`() {
+        // A block-theme site with nothing published still gets the synthetic row, and treating
+        // it as content would suppress the placeholders and the full-screen error state.
+        val rows = buildRows(
+            pages = emptyList(),
+            applyHierarchy = true,
+            pageOnFront = 0L,
+            pageForPosts = 0L,
+            showSiteEditorHomepage = true
+        )
+
+        assertThat(rows).hasSize(1)
+        assertThat(rows.hasRealPages).isFalse()
+    }
+
+    @Test
+    fun `rows that wrap a real page count as having pages`() {
+        val withRealPage = buildRows(
+            pages = listOf(page(1)),
+            applyHierarchy = true,
+            pageOnFront = 0L,
+            pageForPosts = 0L,
+            showSiteEditorHomepage = true
+        )
+        assertThat(withRealPage.hasRealPages).isTrue()
+
+        // The HOMEPAGE and POSTS_PAGE virtuals wrap real pages, unlike SITE_EDITOR.
+        val virtualsOnly = buildRows(
+            pages = listOf(page(1), page(2)),
+            applyHierarchy = true,
+            pageOnFront = 1L,
+            pageForPosts = 2L
+        )
+        assertThat(virtualsOnly).allMatch { it is PageRsListItem.Virtual }
+        assertThat(virtualsOnly.hasRealPages).isTrue()
+    }
+
+    @Test
     fun `showSiteEditorHomepage replaces the static HOMEPAGE row and hides its page`() {
         val pages = listOf(page(1), page(2), page(3))
 

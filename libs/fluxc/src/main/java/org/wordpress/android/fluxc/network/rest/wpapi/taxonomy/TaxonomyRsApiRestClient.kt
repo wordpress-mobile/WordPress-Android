@@ -254,6 +254,7 @@ class TaxonomyRsApiRestClient @Inject constructor(
         // follow the pagination params until all terms have been fetched (see CMM-2122).
         val allTerms = mutableListOf<AnyTermWithEditContext>()
         var params: TermListParams? = TermListParams(perPage = TERMS_PER_PAGE)
+        var hadError = false
         while (params != null) {
             val currentParams = params
             val termsResponse = client.request { requestBuilder ->
@@ -268,42 +269,49 @@ class TaxonomyRsApiRestClient @Inject constructor(
                     params = termsResponse.response.nextPageParams
                 }
                 else -> {
+                    // Keep any terms already fetched from earlier pages so a transient failure
+                    // mid-pagination degrades gracefully instead of dropping the whole list.
                     appLogWrapper.e(AppLog.T.POSTS, "Fetch $termEndpointType list failed: $termsResponse")
-                    dispatcher.dispatch(
-                        TaxonomyActionBuilder.newFetchedTermsAction(
-                            FetchTermsResponsePayload(
-                                TaxonomyError(TaxonomyErrorType.GENERIC_ERROR, ""),
-                                taxonomyName
-                            )
-                        )
-                    )
-                    return
+                    hadError = true
+                    break
                 }
             }
         }
-        appLogWrapper.d(AppLog.T.POSTS, "Fetched $taxonomyName list: ${allTerms.size}")
-        val termsResponsePayload = FetchTermsResponsePayload(
-            TermsModel(
-                allTerms.map { term ->
-                    TermModel(
-                        term.id.toInt(),
-                        site.id,
-                        term.id,
-                        taxonomyName,
-                        term.name,
-                        term.slug,
-                        term.description,
-                        term.parent ?: 0,
-                        term.parent != null,
-                        term.count.toInt()
+        // Only surface the error (leaving the cached list untouched) when nothing at all could be
+        // fetched; otherwise persist whatever pages we managed to retrieve.
+        if (hadError && allTerms.isEmpty()) {
+            dispatcher.dispatch(
+                TaxonomyActionBuilder.newFetchedTermsAction(
+                    FetchTermsResponsePayload(
+                        TaxonomyError(TaxonomyErrorType.GENERIC_ERROR, ""),
+                        taxonomyName
                     )
-                },
-            ),
+                )
+            )
+            return
+        }
+        appLogWrapper.d(AppLog.T.POSTS, "Fetched $taxonomyName list: ${allTerms.size} (complete=${!hadError})")
+        val termsResponsePayload = FetchTermsResponsePayload(
+            TermsModel(allTerms.map { it.toTermModel(site, taxonomyName) }),
             site,
-            taxonomyName
+            taxonomyName,
+            !hadError
         )
         dispatcher.dispatch(TaxonomyActionBuilder.newFetchedTermsAction(termsResponsePayload))
     }
+
+    private fun AnyTermWithEditContext.toTermModel(site: SiteModel, taxonomyName: String) = TermModel(
+        id.toInt(),
+        site.id,
+        id,
+        taxonomyName,
+        name,
+        slug,
+        description,
+        parent ?: 0,
+        parent != null,
+        count.toInt()
+    )
 
 
     private fun TermEndpointType.toTaxonomyName(): String = when (this) {
