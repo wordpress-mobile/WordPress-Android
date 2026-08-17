@@ -262,10 +262,31 @@ class GBKMediaUploadProcessor(
         }
     }
 
+    /**
+     * Normalizes the client-supplied mime type, falling back to the filename extension when it
+     * carries no usable information.
+     *
+     * The result feeds [MediaUtilsWrapper.isMimeTypeSupportedBySitePlan], which is an exact,
+     * case-sensitive match against a closed allowlist, so anything but a bare lowercase
+     * `type/subtype` is rejected outright. Two shapes reach us that the allowlist would miss:
+     * - Parameters and casing: `Content-Type` may legitimately carry parameters
+     *   (`image/jpeg; charset=binary`) and its casing is not significant (RFC 9110 §8.3).
+     * - Missing header: GutenbergKit's multipart parser defaults a part with no `Content-Type`
+     *   to `text/plain` (RFC 7578 §4.4), and it picks the file part by the presence of a
+     *   `filename` parameter, not by content type — so a real image can arrive labeled
+     *   `text/plain`. Treat that like the other placeholders and fall back to the extension.
+     */
     private fun resolveMimeType(mimeType: String, filename: String): String {
-        if (mimeType.isNotBlank() && mimeType != MIME_OCTET_STREAM) return mimeType
+        val normalized = mimeType.substringBefore(';').trim().lowercase()
+        if (normalized.isNotBlank() && normalized !in PLACEHOLDER_MIME_TYPES) return normalized
+
         val extension = filename.substringAfterLast('.', "").lowercase()
-        return MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension) ?: MIME_OCTET_STREAM
+        // Fall back to the declared type when the extension resolves to nothing: it is a
+        // placeholder, but a placeholder the plan check can still reject coherently, whereas an
+        // empty string is neither. getSingleton() is @NonNull on device but null under the unit
+        // test stubs, so it is treated as an unresolvable lookup rather than dereferenced.
+        val fromExtension = MimeTypeMap.getSingleton()?.getMimeTypeFromExtension(extension)
+        return fromExtension ?: normalized.ifBlank { MIME_OCTET_STREAM }
     }
 
     companion object {
@@ -275,6 +296,15 @@ class GBKMediaUploadProcessor(
         private const val MIME_JPEG = "image/jpeg"
         private const val MIME_MP4 = "video/mp4"
         private const val MIME_OCTET_STREAM = "application/octet-stream"
+        private const val MIME_TEXT_PLAIN = "text/plain"
+
+        /**
+         * Mime types that carry no usable type information for an upload, so [resolveMimeType]
+         * prefers the filename extension over them. `application/octet-stream` is the generic
+         * "unknown bytes" type; `text/plain` is the multipart default for a part that sent no
+         * `Content-Type` header at all.
+         */
+        private val PLACEHOLDER_MIME_TYPES = setOf(MIME_OCTET_STREAM, MIME_TEXT_PLAIN)
 
         /**
          * Formats androidx ExifInterface can actually strip GPS from: saveAttributes() supports

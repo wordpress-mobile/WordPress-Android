@@ -12,6 +12,7 @@ import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.doReturn
+import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
@@ -289,6 +290,57 @@ class GBKMediaUploadProcessorTest : BaseUnitTest() {
         whenever(mediaUtilsWrapper.isVideoMimeType("video/mp4")).thenReturn(true)
 
         assertThat(createProcessor().handlesFile("video/mp4", "movie.mp4")).isTrue()
+    }
+
+    @Test
+    fun `mime type parameters are stripped before the plan check`() = test {
+        // Content-Type may legitimately carry parameters. isMimeTypeSupportedBySitePlan is an
+        // exact match against a closed allowlist, so an unnormalized value hard-fails a valid
+        // image.
+        val optimized = tempFolder.newFile("optimized.jpg")
+        val optimizedUri = fileUri(optimized)
+        whenever(mediaUtilsWrapper.getOptimizedMedia(stagedFile.absolutePath, false))
+            .thenReturn(optimizedUri)
+
+        val result = createProcessor().processFile(stagedFile, "image/jpeg; charset=binary", "photo.jpg")
+
+        verify(mediaUtilsWrapper).isMimeTypeSupportedBySitePlan(anyOrNull(), eq("image/jpeg"))
+        result as ProcessedProxyFile.Processed
+        assertThat(result.mimeType).isEqualTo("image/jpeg")
+    }
+
+    @Test
+    fun `mime type casing is normalized before the plan check`() = test {
+        whenever(mediaUtilsWrapper.getOptimizedMedia(stagedFile.absolutePath, false)).thenReturn(null)
+        whenever(appPrefsWrapper.isStripImageLocation).thenReturn(false)
+
+        val result = createProcessor(wpComSite()).processFile(stagedFile, "IMAGE/JPEG", "photo.jpg")
+
+        verify(mediaUtilsWrapper).isMimeTypeSupportedBySitePlan(anyOrNull(), eq("image/jpeg"))
+        assertThat(result).isEqualTo(ProcessedProxyFile.Original)
+    }
+
+    @Test
+    fun `text plain is treated as a placeholder and resolved from the filename`() {
+        // GutenbergKit's multipart parser defaults a part with no Content-Type to text/plain
+        // (RFC 7578), and picks the file part by its filename parameter rather than its type — so
+        // a real image can arrive labeled text/plain and must not be rejected as a disallowed type.
+        //
+        // MimeTypeMap is a stub returning null under unit tests, so the extension lookup cannot
+        // resolve here; this asserts the surrounding contract instead — text/plain is not taken at
+        // face value, and an unresolvable lookup degrades to the declared type rather than "".
+        createProcessor().handlesFile("text/plain", "photo.jpg")
+
+        verify(mediaUtilsWrapper).isMimeTypeSupportedBySitePlan(anyOrNull(), eq("text/plain"))
+    }
+
+    @Test
+    fun `blank mime type never resolves to an empty string`() {
+        // An empty resolved type would be meaningless to the plan check; a placeholder it can
+        // reject coherently is the safe floor.
+        createProcessor().handlesFile("", "mystery")
+
+        verify(mediaUtilsWrapper).isMimeTypeSupportedBySitePlan(anyOrNull(), eq("application/octet-stream"))
     }
 
     @Test
