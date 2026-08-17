@@ -13,7 +13,6 @@ import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.util.AppLog
-import org.wordpress.android.util.MediaUtils
 import org.wordpress.android.util.MediaUtilsWrapper
 import org.wordpress.android.util.WPVideoUtils
 import org.wordpress.gutenberg.MediaUploadDelegate
@@ -47,13 +46,6 @@ class GBKMediaUploadProcessor(
     private val appPrefsWrapper: AppPrefsWrapper,
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) : MediaUploadDelegate {
-    /**
-     * Serializes video transcodes. GutenbergKit's upload server handles requests concurrently,
-     * but parallel m4m hardware transcodes are memory/codec-heavy; the legacy pipeline
-     * effectively serialized them through the upload queue.
-     */
-    private val transcodeMutex = Mutex()
-
     /**
      * Metadata-only gate GutenbergKit consults before copying an upload to a temp file. Declining
      * makes it relay the original request body straight to WordPress, skipping a copy this
@@ -146,7 +138,10 @@ class GBKMediaUploadProcessor(
      */
     @Suppress("TooGenericExceptionCaught")
     private suspend fun transcodeVideo(input: File): File? = suspendCancellableCoroutine { continuation ->
-        val output = File(appContext.cacheDir, MediaUtils.generateTimeStampedFileName(MIME_MP4))
+        // createTempFile rather than MediaUtils.generateTimeStampedFileName, which is only
+        // "wp-{currentTimeMillis}.mp4" and collides for two transcodes started in the same
+        // millisecond. Uniqueness comes from the filesystem, with no check-then-create race.
+        val output = File.createTempFile("wp-", ".mp4", appContext.cacheDir)
         val listener = object : IProgressListener {
             override fun onMediaStart() = Unit
             override fun onMediaProgress(progress: Float) = Unit
@@ -197,7 +192,18 @@ class GBKMediaUploadProcessor(
             output.delete()
         }
 
-        composer.start()
+        // m4m throws IllegalStateException from start() when it cannot set up the codec (codec
+        // unavailable, memory pressure, unsupported track config). Without this guard the
+        // exception escapes the coroutine and GutenbergKit's catch-all turns it into a 500 whose
+        // raw, untranslated m4m message is shown to the user — losing an upload the legacy
+        // pipeline would have completed with the original file. Guard it as VideoOptimizer does.
+        try {
+            composer.start()
+        } catch (e: IllegalStateException) {
+            AppLog.e(AppLog.T.MEDIA, "GBKMediaUploadProcessor > failed to start composer", e)
+            output.delete()
+            if (continuation.isActive) continuation.resume(null)
+        }
     }
 
     @Suppress("ReturnCount")
@@ -290,6 +296,18 @@ class GBKMediaUploadProcessor(
     }
 
     companion object {
+        /**
+         * Serializes video transcodes. GutenbergKit's upload server handles requests concurrently,
+         * but parallel m4m hardware transcodes are memory/codec-heavy; the legacy pipeline
+         * effectively serialized them through the upload queue.
+         *
+         * Process-wide rather than per-instance: a new processor is constructed for every editor
+         * fragment (see GutenbergKitActivity's SectionsPagerAdapter), and GutenbergKitActivity has
+         * no launchMode, so instances stack. A per-instance mutex would let two editors transcode
+         * in parallel — exactly what this exists to prevent.
+         */
+        private val transcodeMutex = Mutex()
+
         private const val MIME_IMAGE_PREFIX = "image/"
         private const val MIME_GIF = "image/gif"
         private const val MIME_PNG = "image/png"
