@@ -192,6 +192,14 @@ class GutenbergKitEditorFragment : GutenbergKitEditorFragmentBase() {
             context = requireContext()
         )
 
+        // Must be set before the editor loads: GutenbergKit captures the delegate when the page
+        // begins loading and throws from the setter afterward. The constructor already kicks off
+        // the load when dependencies are preloaded, so assign it here rather than alongside the
+        // listeners below.
+        mediaUploadDelegate?.let {
+            gutenbergView.mediaUploadDelegate = it
+        }
+
         gutenbergViewContainer.addView(
             gutenbergView,
             FrameLayout.LayoutParams(
@@ -226,9 +234,6 @@ class GutenbergKitEditorFragment : GutenbergKitEditorFragmentBase() {
         networkRequestListener?.let(
             gutenbergView::setNetworkRequestListener
         )
-        mediaUploadDelegate?.let {
-            gutenbergView.mediaUploadDelegate = it
-        }
 
         // Set up content provider for WebView refresh recovery
         gutenbergView.setLatestContentProvider(
@@ -557,9 +562,14 @@ class GutenbergKitEditorFragment : GutenbergKitEditorFragmentBase() {
         gutenbergView?.setNetworkRequestListener(listener)
     }
 
+    /**
+     * Sets the delegate that processes media before upload. Must be called before [onCreateView],
+     * which is the only place the delegate reaches the view: GutenbergKit captures it when the
+     * editor page begins loading and throws from its setter afterward, so pushing it into a live
+     * view here would crash. The field is the single source of truth.
+     */
     fun setMediaUploadDelegate(delegate: MediaUploadDelegate) {
         mediaUploadDelegate = delegate
-        gutenbergView?.mediaUploadDelegate = delegate
     }
 
     override fun onUndoPressed() {
