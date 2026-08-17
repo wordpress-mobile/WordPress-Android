@@ -73,8 +73,8 @@ google-play-review = '2.0.2'
 google-services = '4.5.0'
 gravatar = '2.5.0'
 greenrobot-eventbus = '3.3.1'
-# TODO: Swap to a tagged GutenbergKit release before merge (snapshot of wordpress-mobile/GutenbergKit#357)
-gutenberg-kit = '357-45219181e3aa60b5ce3119367758d90e6b6beb0b'
+# TODO: Swap to a tagged GutenbergKit release before merge (snapshot of GutenbergKit trunk)
+gutenberg-kit = 'trunk-16aceb17716dbef9fb2289d316e27dc812a569f6'
 gutenberg-mobile = 'v1.121.0'
 indexos-media-for-mobile = '43a9026f0973a2f0a74fa813132f6a16f7499c3a'
 jackson-databind = '2.12.7.1'
