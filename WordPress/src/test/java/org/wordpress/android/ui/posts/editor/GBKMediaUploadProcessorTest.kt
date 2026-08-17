@@ -269,6 +269,38 @@ class GBKMediaUploadProcessorTest : BaseUnitTest() {
         assertThat(result).isEqualTo(ProcessedProxyFile.Original)
     }
 
+    @Test
+    fun `handlesFile declines gif so the copy is skipped`() {
+        assertThat(createProcessor().handlesFile("image/gif", "anim.gif")).isFalse()
+    }
+
+    @Test
+    fun `handlesFile declines non-media so the copy is skipped`() {
+        assertThat(createProcessor().handlesFile("application/pdf", "doc.pdf")).isFalse()
+    }
+
+    @Test
+    fun `handlesFile claims images`() {
+        assertThat(createProcessor().handlesFile("image/jpeg", "photo.jpg")).isTrue()
+    }
+
+    @Test
+    fun `handlesFile claims videos`() {
+        whenever(mediaUtilsWrapper.isVideoMimeType("video/mp4")).thenReturn(true)
+
+        assertThat(createProcessor().handlesFile("video/mp4", "movie.mp4")).isTrue()
+    }
+
+    @Test
+    fun `handlesFile claims disallowed types so processFile can reject them locally`() {
+        // Declining would relay the file to WordPress instead, wasting a full upload and replacing
+        // our localized message with the server's. Pairs with the processFile rejection test above,
+        // which uses the same mime type.
+        whenever(mediaUtilsWrapper.isMimeTypeSupportedBySitePlan(anyOrNull(), any())).thenReturn(false)
+
+        assertThat(createProcessor().handlesFile("application/zip", "archive.zip")).isTrue()
+    }
+
     private fun fileUri(file: File): android.net.Uri = mock {
         on { path } doReturn file.absolutePath
     }
