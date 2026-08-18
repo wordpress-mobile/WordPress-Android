@@ -103,6 +103,10 @@ public class ShareIntentReceiverActivity extends BaseAppCompatActivity implement
     }
 
     private void downloadExternalMedia() {
+        // This activity is singleTask, so a second share reuses the same instance via onNewIntent().
+        // Start from an empty list, otherwise media from a previous, abandoned share is sent instead.
+        mLocalMediaUris.clear();
+
         boolean anyDownloadFailed = false;
         try {
             if (Intent.ACTION_SEND_MULTIPLE.equals(getIntent().getAction())) {
