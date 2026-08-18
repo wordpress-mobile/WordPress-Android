@@ -21,8 +21,6 @@ import org.wordpress.android.models.ReaderTagList
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.reader.views.compose.dropdown.JetpackMenuElementData
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil
-import org.wordpress.android.ui.jetpackoverlay.JetpackOverlayConnectedFeature.READER
 import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.reader.ReaderEvents
@@ -63,7 +61,6 @@ class ReaderViewModel @Inject constructor(
     private val readerTracker: ReaderTracker,
     private val accountStore: AccountStore,
     private val jetpackBrandingUtils: JetpackBrandingUtils,
-    private val jetpackFeatureRemovalOverlayUtil: JetpackFeatureRemovalOverlayUtil,
     private val readerTopBarMenuHelper: ReaderTopBarMenuHelper,
     private val urlUtilsWrapper: UrlUtilsWrapper,
     private val readerTagsFeedFeatureConfig: ReaderTagsFeedFeatureConfig,
@@ -93,9 +90,6 @@ class ReaderViewModel @Inject constructor(
 
     private val _showJetpackPoweredBottomSheet = MutableLiveData<Event<Boolean>>()
     val showJetpackPoweredBottomSheet: LiveData<Event<Boolean>> = _showJetpackPoweredBottomSheet
-
-    private val _showJetpackOverlay = MutableLiveData<Event<Boolean>>()
-    val showJetpackOverlay: LiveData<Event<Boolean>> = _showJetpackOverlay
 
     private var readerTagsList = ReaderTagList()
 
@@ -260,11 +254,6 @@ class ReaderViewModel @Inject constructor(
         appPrefsWrapper.getReaderTag()?.let {
             trackReaderTabShownIfNecessary(it)
         }
-        if (jetpackFeatureRemovalOverlayUtil.shouldShowFeatureSpecificJetpackOverlay(READER)) showJetpackOverlay()
-    }
-
-    private fun showJetpackOverlay() {
-        _showJetpackOverlay.value = Event(true)
     }
 
     @Suppress("UNUSED_PARAMETER")

@@ -26,7 +26,6 @@ import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.models.Note
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.push.GCMMessageHandler
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil
 import org.wordpress.android.ui.notifications.utils.NotificationsActionsWrapper
 import org.wordpress.android.ui.notifications.utils.NotificationsUtilsWrapper
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
@@ -43,9 +42,6 @@ private const val REQUEST_BLOG_LISTENER_PARAM_POSITION = 2
 class NotificationsListViewModelTest : BaseUnitTest() {
     @Mock
     private lateinit var appPrefsWrapper: AppPrefsWrapper
-
-    @Mock
-    private lateinit var jetpackFeatureRemovalOverlayUtil: JetpackFeatureRemovalOverlayUtil
 
     @Mock
     private lateinit var gcmMessageHandler: GCMMessageHandler
@@ -100,7 +96,6 @@ class NotificationsListViewModelTest : BaseUnitTest() {
             testDispatcher(),
             testDispatcher(),
             appPrefsWrapper,
-            jetpackFeatureRemovalOverlayUtil,
             gcmMessageHandler,
             networkUtilsWrapper,
             toastUtilsWrapper,

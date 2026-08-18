@@ -5,7 +5,6 @@ import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.ui.blaze.BlazeFeatureUtils
 import org.wordpress.android.ui.blaze.BlazeFlowSource
 import org.wordpress.android.ui.blaze.blazecampaigns.campaignlisting.CampaignListingPageSource
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
 import org.wordpress.android.ui.mysite.SiteNavigationAction
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction
 import org.wordpress.android.ui.newstats.NewStatsRouting
@@ -13,7 +12,6 @@ import javax.inject.Inject
 
 class ListItemActionHandler @Inject constructor(
     private val accountStore: AccountStore,
-    private val jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper,
     private val blazeFeatureUtils: BlazeFeatureUtils,
     private val newStatsRouting: NewStatsRouting
 ) {
@@ -50,10 +48,6 @@ class ListItemActionHandler @Inject constructor(
     }
 
     private fun getStatsNavigationActionForSite(site: SiteModel): SiteNavigationAction = when {
-        // if we are in static posters phase - we don't want to show any connection/login messages
-        jetpackFeatureRemovalPhaseHelper.shouldShowStaticPage() ->
-            SiteNavigationAction.ShowJetpackRemovalStaticPostersView
-
         // If the user is not logged in and the site is already connected to Jetpack, ask to login.
         !accountStore.hasAccessToken() && site.isJetpackConnected -> SiteNavigationAction.StartWPComLoginForJetpackStats
 

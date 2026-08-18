@@ -51,7 +51,7 @@ import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureFullScreenOverlayVi
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureOverlayActions
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureOverlayActions.ForwardToJetpack
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil.JetpackFeatureCollectionOverlaySource
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalHelper
 import org.wordpress.android.ui.main.BaseAppCompatActivity
 import org.wordpress.android.ui.main.WPMainActivity
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
@@ -205,7 +205,7 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
     lateinit var mAccountStore: AccountStore
 
     @Inject
-    lateinit var jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper
+    lateinit var jetpackFeatureRemovalHelper: JetpackFeatureRemovalHelper
 
     @Inject
     lateinit var getReadingPreferencesSyncUseCase: ReaderGetReadingPreferencesSyncUseCase
@@ -419,22 +419,13 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
             host = uri.host
         }
 
-        if (uri == null || jetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures()
-            || jetpackFeatureRemovalPhaseHelper.shouldShowStaticPage()
-        ) {
+        if (uri == null || jetpackFeatureRemovalHelper.shouldRemoveJetpackFeatures()) {
             readerTracker.trackDeepLink(AnalyticsTracker.Stat.DEEP_LINKED, action!!, host!!, uri)
             // invalid uri so, just show the entry screen
-            if (jetpackFeatureRemovalPhaseHelper.shouldShowStaticPage()) {
-                val intent = Intent(this, WPMainActivity::class.java)
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
-                intent.putExtra(WPMainActivity.ARG_OPEN_PAGE, WPMainActivity.ARG_READER)
-                startActivity(intent)
-            } else {
-                val intent = Intent(this, WPLaunchActivity::class.java)
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
-                intent.putExtra(WPMainActivity.ARG_OPEN_PAGE, WPMainActivity.ARG_READER)
-                startActivity(intent)
-            }
+            val intent = Intent(this, WPLaunchActivity::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
+            intent.putExtra(WPMainActivity.ARG_OPEN_PAGE, WPMainActivity.ARG_READER)
+            startActivity(intent)
             finish()
             return
         }
@@ -638,9 +629,7 @@ class ReaderPostPagerActivity : BaseAppCompatActivity() {
 
         deepLinkOpenWebLinksWithJetpackHelper.onOverlayShown()
         newInstance(
-            null,
             isDeepLinkOverlay = true,
-            isFeatureCollectionOverlay = false,
             featureCollectionOverlaySource = JetpackFeatureCollectionOverlaySource.UNSPECIFIED
         )
             .show(supportFragmentManager, JetpackFeatureFullScreenOverlayFragment.TAG)

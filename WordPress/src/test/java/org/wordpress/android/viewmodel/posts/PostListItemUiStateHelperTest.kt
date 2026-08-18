@@ -19,7 +19,7 @@ import org.wordpress.android.fluxc.store.PostStore.PostError
 import org.wordpress.android.fluxc.store.PostStore.PostErrorType
 import org.wordpress.android.fluxc.store.UploadStore.UploadError
 import org.wordpress.android.ui.blaze.BlazeFeatureUtils
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalHelper
 import org.wordpress.android.ui.posts.AuthorFilterSelection
 import org.wordpress.android.ui.posts.PostModelUploadStatusTracker
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
@@ -62,7 +62,7 @@ class PostListItemUiStateHelperTest {
     private lateinit var labelColorUseCase: PostPageListLabelColorUseCase
 
     @Mock
-    private lateinit var jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper
+    private lateinit var jetpackFeatureRemovalHelper: JetpackFeatureRemovalHelper
 
     @Mock
     private lateinit var blazeFeatureUtils: BlazeFeatureUtils
@@ -78,7 +78,7 @@ class PostListItemUiStateHelperTest {
             appPrefsWrapper,
             uploadUiStateUseCase,
             labelColorUseCase,
-            jetpackFeatureRemovalPhaseHelper,
+            jetpackFeatureRemovalHelper,
             blazeFeatureUtils,
             buildConfigWrapper
         )
@@ -254,7 +254,7 @@ class PostListItemUiStateHelperTest {
 
     @Test
     fun `given wordpress app, verify published post actions`() {
-        whenever(jetpackFeatureRemovalPhaseHelper.shouldShowPublishedPostStatsButton()).thenReturn(true)
+        whenever(jetpackFeatureRemovalHelper.shouldShowPublishedPostStatsButton()).thenReturn(true)
         whenever(buildConfigWrapper.isJetpackApp).thenReturn(false)
         val state = createPostListItemUiState(
             post = createPostModel(status = POST_STATE_PUBLISH)
@@ -273,7 +273,7 @@ class PostListItemUiStateHelperTest {
 
     @Test
     fun `given jetpack app, verify published post actions`() {
-        whenever(jetpackFeatureRemovalPhaseHelper.shouldShowPublishedPostStatsButton()).thenReturn(true)
+        whenever(jetpackFeatureRemovalHelper.shouldShowPublishedPostStatsButton()).thenReturn(true)
         whenever(buildConfigWrapper.isJetpackApp).thenReturn(true)
         val state = createPostListItemUiState(
             post = createPostModel(status = POST_STATE_PUBLISH)
@@ -330,7 +330,7 @@ class PostListItemUiStateHelperTest {
 
     @Test
     fun `given wordpress app, published post with stats access when jetpack removal phase then stats is in menu`() {
-        whenever(jetpackFeatureRemovalPhaseHelper.shouldShowPublishedPostStatsButton()).thenReturn(true)
+        whenever(jetpackFeatureRemovalHelper.shouldShowPublishedPostStatsButton()).thenReturn(true)
         whenever(buildConfigWrapper.isJetpackApp).thenReturn(false)
         val state = createPostListItemUiState(
             post = createPostModel(status = POST_STATE_PUBLISH)
@@ -349,7 +349,7 @@ class PostListItemUiStateHelperTest {
 
     @Test
     fun `given jetpack app, published post with stats access when jetpack removal phase then stats is in menu`() {
-        whenever(jetpackFeatureRemovalPhaseHelper.shouldShowPublishedPostStatsButton()).thenReturn(true)
+        whenever(jetpackFeatureRemovalHelper.shouldShowPublishedPostStatsButton()).thenReturn(true)
         whenever(buildConfigWrapper.isJetpackApp).thenReturn(true)
         val state = createPostListItemUiState(
             post = createPostModel(status = POST_STATE_PUBLISH)
@@ -369,7 +369,7 @@ class PostListItemUiStateHelperTest {
 
     @Test
     fun `given wordpress, published post with stats access when not jetpack removal phase then stats is not in menu`() {
-        whenever(jetpackFeatureRemovalPhaseHelper.shouldShowPublishedPostStatsButton()).thenReturn(false)
+        whenever(jetpackFeatureRemovalHelper.shouldShowPublishedPostStatsButton()).thenReturn(false)
         whenever(buildConfigWrapper.isJetpackApp).thenReturn(false)
         val state = createPostListItemUiState(
             post = createPostModel(status = POST_STATE_PUBLISH)
@@ -387,7 +387,7 @@ class PostListItemUiStateHelperTest {
 
     @Test
     fun `given jetpack, published post with stats access when not jetpack removal phase then stats is not in menu`() {
-        whenever(jetpackFeatureRemovalPhaseHelper.shouldShowPublishedPostStatsButton()).thenReturn(false)
+        whenever(jetpackFeatureRemovalHelper.shouldShowPublishedPostStatsButton()).thenReturn(false)
         whenever(buildConfigWrapper.isJetpackApp).thenReturn(true)
         val state = createPostListItemUiState(
             post = createPostModel(status = POST_STATE_PUBLISH)
