@@ -95,6 +95,10 @@ private val CardCornerRadius = 10.dp
 private val CardPadding = 16.dp
 private val CardMargin = 16.dp
 private val ChartHeight = 180.dp
+// Vertical space the loaded header occupies: headlineLarge line height (40dp) + 4dp + the difference
+// row's bodyMedium line height (20dp). Reserved in the Unavailable state so a metric switch on a
+// single-day period doesn't resize the card.
+private val ChartHeaderHeight = 64.dp
 private val StatItemWidth = 100.dp
 private val BadgeCornerRadius = 4.dp
 
@@ -274,7 +278,13 @@ private fun ContentCard(
                         onBarTapped = onBarTapped
                     )
                 }
-                is ChartUiState.Unavailable -> ChartUnavailableBox()
+                is ChartUiState.Unavailable -> {
+                    // Reserve the header's height (kept empty — an hourly response has no totals to
+                    // summarise) so switching to an unavailable metric doesn't resize the card.
+                    Spacer(modifier = Modifier.height(ChartHeaderHeight))
+                    Spacer(modifier = Modifier.height(8.dp))
+                    ChartUnavailableBox()
+                }
                 is ChartUiState.Error -> ChartErrorBox(onRetry = onRetry)
             }
             // Bottom Stats Row — loads independently; hidden when its dedicated call failed
@@ -421,7 +431,8 @@ private fun ChartErrorBox(onRetry: () -> Unit) {
 /**
  * Shown in place of the chart when the selected metric has no series for the current period (a
  * single-day/hourly response only carries views). The header is dropped too — there is nothing to
- * summarise — while the bottom row keeps showing all five values from its dedicated call.
+ * summarise — but its height is reserved by the caller so the card keeps the same size, while the
+ * bottom row keeps showing all five values from its dedicated call.
  */
 @Composable
 private fun ChartUnavailableBox() {
