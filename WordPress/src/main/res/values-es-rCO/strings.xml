@@ -944,9 +944,6 @@ Language: es_CO
     <string name="sharing_twitter_deprecation_notice_description">La opción de compartir automáticamente en Twitter ya no está disponible debido a las modificaciones que ha sufrido esta red social en lo que respecta a términos y precios.</string>
     <string name="sharing_twitter_deprecation_notice_title">La opción de compartir automáticamente en Twitter ya no está disponible</string>
     <string name="jp_migration_notifications_allow_title">Activa las notificaciones para estar al tanto de lo que sucede en tu sitio</string>
-    <string name="wp_jp_static_poster_message">La aplicación de Jetpack tiene todas las funciones de la aplicación de WordPress, y ahora ofrece acceso exclusivo a Estadísticas, Lector, Notificaciones y mucho más.</string>
-    <string name="wp_jp_static_poster_title_plural">Usa WordPress con %s en la\u00A0aplicación de Jetpack.</string>
-    <string name="wp_jp_static_poster_title">Usa WordPress con %s en la\u00A0aplicación de Jetpack.</string>
     <string name="gutenberg_native_unlabeled_color_s" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Color sin etiquetar. %s</string>
     <string name="dashboard_activity_card_title">Actividad reciente</string>
     <string name="site_creation_search_domain_example_body">Como en el ejemplo superior, un dominio le permite a la gente encontrar y visitar tu sitio desde su navegador.</string>
@@ -1001,9 +998,6 @@ Language: es_CO
     <string name="jetpack_full_plugin_install_onboarding_description_this_site">Este sitio</string>
     <string name="jetpack_full_plugin_install_concise_description_multiple">%1$s usa %2$s, que todavía no es compatible con todas las funciones de la aplicación. Instala el %3$s.</string>
     <string name="jetpack_full_plugin_install_concise_description_single">%1$s usa %2$s, que todavía no es compatible con todas las funciones de la aplicación. Instala el %3$s.</string>
-    <string name="wp_jp_static_poster_footnote">El cambio es gratuito y solo te llevará un minuto.</string>
-    <string name="wp_jp_static_poster_button_secondary">Encontrarás más información en Jetpack.com</string>
-    <string name="wp_jp_static_poster_button_primary">Cambiar a la aplicación de Jetpack</string>
     <string name="my_site_btn_wp_admin">WP Admin</string>
     <string name="my_site_header_manage">Gestionar</string>
     <string name="my_site_header_traffic">Tráfico</string>
@@ -1060,12 +1054,6 @@ Language: es_CO
     <string name="jetpack_feature_card_content_phase_self_hosted_and_new_users">Libera todo el potencial de tu sitio. Obtén estadísticas, notificaciones y más con Jetpack.</string>
     <string name="wp_jetpack_feature_removal_phase_self_hosted_users_title">Tu sitio tiene el plugin de Jetpack</string>
     <string name="wp_jetpack_feature_removal_phase_self_hosted_users_description">La aplicación móvil Jetpack está diseñada para funcionar junto con el plugin de Jetpack. Haz el cambio ahora y obtén acceso a estadísticas, notificaciones o el lector, entre otras funciones.</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_notifications_description">Recibe notificaciones por nuevos comentarios, Me gusta, visualizaciones, etc.</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_reader_description">Comparte tu contenido y busca tus comunidades y sitios favoritos para seguirlos.</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_description">Consulta el crecimiento del tráfico a tu sitio con información útil y estadísticas completas.</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_title">Estadísticas y datos clave</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_description">Con Jetpack sacarás más partido de tu sitio de WordPress. El cambio es gratuito y solo te llevará un minuto.</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_title">Dale un impulso a WordPress con Jetpack</string>
     <string name="blogging_prompts_onboarding_content_note_content">Puedes gestionar los recordatorios y estímulos para bloguear en cualquier momento desde Mi sitio &gt; Ajustes &gt; Bloguear.</string>
     <string name="blogging_reminders_prompt_subtitle">Cada notificación incluirá una palabra o una breve frase inspiradora.</string>
     <string name="my_site_blogging_prompt_card_removed_snackbar_subtitle">Ve a &lt;b&gt;Ajustes del sitio&lt;/b&gt; para reactivarlos.</string>
@@ -1077,15 +1065,6 @@ Language: es_CO
     <string name="site_settings_blogging_prompts_title">Mostrar estímulos</string>
     <string name="site_settings_blogging">Bloguear</string>
     <string name="install_play_store_to_get_jetpack">Por favor, instala la Google Play Store para obener al app Jetpack</string>
-    <string name="wp_jetpack_feature_removal_phase_four_secondary_text">Hacerlo más tarde</string>
-    <string name="wp_jetpack_feature_removal_switch_to_jetpack_app_menu_title">Cambiar a Jetpack </string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_four_all_features_description">Algunas características de Jetpack como Estadísticas, Lector o Notificaciones, entre otras, han sido eliminadas de la app de WordPress.</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_four_title_all_features">Las características de Jetpack se han trasladado.</string>
-    <string name="wp_jetpack_powered_phase_3_feature_are_moving_in">%1$s se trasladarán a %2$s</string>
-    <string name="wp_jetpack_powered_phase_3_feature_is_moving_in">%1$s se trasladará a %2$s</string>
-    <string name="wp_jetpack_powered_phase_3_feature_are_moving_soon">%1$s se trasladarán pronto</string>
-    <string name="wp_jetpack_powered_phase_3_feature_is_moving_soon">%1$s se trasladará pronto</string>
-    <string name="wp_jetpack_powered_phase_2">Obtén la aplicación de Jetpack</string>
     <string name="my_site_blogging_prompt_card_view_answers">Ver todas las respuestas</string>
     <string name="stats_insights_total_stats_seven_days_negative">%1$s es menor que la semana anterior</string>
     <string name="stats_insights_total_stats_seven_days_positive">%1$s es mayor que la semana anterior</string>
@@ -1095,21 +1074,10 @@ Language: es_CO
     <string name="stats_insights_views_and_visitors_seven_days_views_positive">Tus visitas en los últimos siete días son %1$s más que en los siete días anteriores.</string>
     <string name="stats_timeframe_previous_seven_days">Siete días anteriores</string>
     <string name="stats_timeframe_last_seven_days">Últimos siete días</string>
-    <string name="weeks_quantity_other">%d semanas</string>
-    <string name="weeks_quantity_one">1 semana</string>
     <string name="my_site_blogging_prompt_card_attribution_day_one">Desde &lt;b&gt;Day One&lt;/b&gt;</string>
     <string name="jetpack_feature_card_menu_item_remind_me_later">Recuérdamelo más tarde</string>
-    <string name="jetpack_feature_card_content_phase_three">Algunas funciones, como estadísticas, lector o avisos, se trasladarán pronto a la aplicación móvil de Jetpack.</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_the_jetpack_app">Cambiar a la aplicación de Jetpack</string>
-    <string name="wp_jetpack_feature_removal_overlay_learn_more_migration_text">Más información en jetpack.com</string>
     <string name="wp_jetpack_feature_removal_overlay_migration_helper_text">El cambio es gratuito y solo lleva un minuto.</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_description_without_deadline">Pronto se van a retirar de la aplicación de WordPress las estadísticas, lectura, avisos y otras funcionalidades de Jetpack.</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_description_with_deadline">Se van a retirar de la aplicación de WordPress las estadísticas, lectura, avisos y otras funcionalidades de Jetpack el %s.</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_all_features">Las funciones de Jetpack se trasladarán pronto.</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_notifications">Los avisos se están trasladando a la aplicación de Jetpack</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_reader">El lector se está trasladando a la aplicación de Jetpack</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_stats">La estadísticas se están trasladado a la aplicación de Jetpack</string>
-    <string name="wp_jetpack_feature_removal_overlay_switch_to_new_jetpack_app">Cambiar a la nueva aplicación de Jetpack</string>
     <string name="blogging_prompts_list_error_fetch_subtitle">Se ha producido un error al cargar las indicaciones.</string>
     <string name="blogging_prompts_list_error_fetch_title">¡Vaya!</string>
     <string name="blogging_prompts_list_no_prompts">Todavía no hay sugerencias</string>
@@ -1135,12 +1103,6 @@ Language: es_CO
     <string name="wp_jetpack_continue_without_jetpack">Continuar sin Jetpack</string>
     <string name="deep_linking_weblinks_alias_label">enlaces web</string>
     <string name="deep_linking_urilinks_alias_label">enlaces URI</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_one_description_notifications">Cambia a la aplicación de Jetpack para continuar recibiendo las notificaciones actualizadas en su dispositivo.</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_one_description_reader">Cambia a la aplicación de Jetpack para encontrar, seguir y poner like en todos sus sitios favoritos y posts con el Lector.</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_one_description_stats">Cambiar a la aplicación de Jetpack para ver el tráfico de su sitio crece con estadísticas y detalles.</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_one_title_notifications">Recibir sus notificaciones en la aplicación de Jetpack.</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_one_title_reader">Seguir cualquier sitio con la aplicación de Jetpack.</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_one_title_stats">Recibir sus estadísticas de la aplicación nuevo Jetpack.</string>
     <string name="preference_open_links_in_jetpack_setting_change_disable_error">No se puede deshabilitar las ligas abiertas en Jetpack.</string>
     <string name="preference_open_links_in_jetpack_setting_change_enable_error">No se puede activar las ligas abiertas en Jetpack.</string>
     <string name="preference_open_links_in_jetpack">Abrir las ligas en Jetpack.</string>
@@ -1203,7 +1165,6 @@ Language: es_CO
     <string name="stats_insights_like_guide_card">⭐️ Tu última entrada %1$s ha recibido %2$s Me gusta.</string>
     <string name="weekly_roundup_notification_text_all">La semana pasada tuviste %1$s visitas, %2$s Me gusta y %3$s comentarios.</string>
     <string name="gutenberg_native_problem_displaying_block_tap_to_attempt_block_recovery" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Problema al mostrar el bloque. \nToca para intentar la recuperación del bloque.</string>
-    <string name="wp_jetpack_powered">Funciona gracias a Jetpack</string>
     <string name="qrcode_auth_flow_error_content_description">Imagen que señala un error</string>
     <string name="qrcode_auth_flow_content_description">Imagen que señala que el escaneo de código de acceso está en proceso</string>
     <string name="qrcode_auth_flow_dismiss">Descartar</string>

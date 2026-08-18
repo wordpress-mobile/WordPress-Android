@@ -42,7 +42,7 @@ import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.ScrollableViewInitializedListener
 import org.wordpress.android.ui.WPWebViewActivity
 import org.wordpress.android.ui.blaze.BlazeFlowSource
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalHelper
 import org.wordpress.android.ui.mlp.ModalLayoutPickerFragment
 import org.wordpress.android.ui.mlp.ModalLayoutPickerFragment.Companion.MODAL_LAYOUT_PICKER_TAG
 import org.wordpress.android.ui.posts.EditorConstants
@@ -122,7 +122,7 @@ class PagesFragment : Fragment(R.layout.pages_fragment), ScrollableViewInitializ
     lateinit var uploadUtilsWrapper: UploadUtilsWrapper
 
     @Inject
-    lateinit var jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper
+    lateinit var jetpackFeatureRemovalHelper: JetpackFeatureRemovalHelper
 
     @Suppress("DEPRECATION")
     private var progressDialog: ProgressDialog? = null
@@ -375,7 +375,7 @@ class PagesFragment : Fragment(R.layout.pages_fragment), ScrollableViewInitializ
 
         viewModel.createNewPage.observe(viewLifecycleOwner) {
             if (mlpViewModel.canShowModalLayoutPicker()
-                && jetpackFeatureRemovalPhaseHelper.shouldShowTemplateSelectionInPages()
+                && jetpackFeatureRemovalHelper.shouldShowTemplateSelectionInPages()
             ) {
                 mlpViewModel.createPageFlowTriggered()
             } else {

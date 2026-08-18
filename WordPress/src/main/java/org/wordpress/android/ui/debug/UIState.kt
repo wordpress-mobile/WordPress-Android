@@ -38,9 +38,6 @@ sealed class UiItem(open val type: DebugSettingsType) {
         )
 
         enum class State { ENABLED, DISABLED, UNKNOWN }
-
-        @Suppress("DataClassShouldBeImmutable") // We're not in prod code or diffing here, the rule is moot
-        var preview: (() -> Unit)? = null
     }
 
     data class Field(val remoteFieldKey: String, val remoteFieldValue: String, val remoteFieldSource: String) :

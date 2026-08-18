@@ -32,7 +32,6 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
-import org.wordpress.android.databinding.JetpackBadgeFooterBinding;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.action.AccountAction;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
@@ -44,19 +43,15 @@ import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.WhatsNewStore.OnWhatsNewFetched;
 import org.wordpress.android.fluxc.store.WhatsNewStore.WhatsNewAppId;
 import org.wordpress.android.fluxc.store.WhatsNewStore.WhatsNewFetchPayload;
-import org.wordpress.android.models.JetpackPoweredScreen;
 import org.wordpress.android.ui.deeplinks.DeepLinkOpenWebLinksWithJetpackHelper;
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper;
-import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredBottomSheetFragment;
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalHelper;
 import org.wordpress.android.ui.prefs.language.LocalePickerBottomSheet;
 import org.wordpress.android.ui.prefs.language.LocalePickerBottomSheet.LocalePickerCallback;
-import org.wordpress.android.ui.utils.UiHelpers;
 import org.wordpress.android.ui.whatsnew.FeatureAnnouncementDialogFragment;
 import org.wordpress.android.ui.whatsnew.FeatureAnnouncementProvider;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppThemeUtils;
 import org.wordpress.android.util.BuildConfigWrapper;
-import org.wordpress.android.util.JetpackBrandingUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.PerAppLocaleManager;
 import org.wordpress.android.util.ToastUtils;
@@ -101,10 +96,8 @@ public class AppSettingsFragment extends PreferenceFragment
     @Inject ContextProvider mContextProvider;
     @Inject FeatureAnnouncementProvider mFeatureAnnouncementProvider;
     @Inject BuildConfigWrapper mBuildConfigWrapper;
-    @Inject JetpackBrandingUtils mJetpackBrandingUtils;
     @Inject DeepLinkOpenWebLinksWithJetpackHelper mOpenWebLinksWithJetpackHelper;
-    @Inject UiHelpers mUiHelpers;
-    @Inject JetpackFeatureRemovalPhaseHelper mJetpackFeatureRemovalPhaseHelper;
+    @Inject JetpackFeatureRemovalHelper mJetpackFeatureRemovalHelper;
     @Inject PerAppLocaleManager mPerAppLocaleManager;
 
     private static final String TRACK_STYLE = "style";
@@ -242,7 +235,6 @@ public class AppSettingsFragment extends PreferenceFragment
         final ListView listOfPreferences = view.findViewById(android.R.id.list);
         if (listOfPreferences != null) {
             ViewCompat.setNestedScrollingEnabled(listOfPreferences, true);
-            addJetpackBadgeAsFooterIfEnabled(inflater, listOfPreferences);
         }
 
         mLanguagePreference = (WPPreference) findPreference(getString(R.string.pref_key_language));
@@ -256,29 +248,6 @@ public class AppSettingsFragment extends PreferenceFragment
     @Override public void onViewStateRestored(Bundle savedInstanceState) {
         super.onViewStateRestored(savedInstanceState);
         addPrivacyToolbar();
-    }
-
-    private void addJetpackBadgeAsFooterIfEnabled(LayoutInflater inflater, ListView listView) {
-        if (mJetpackBrandingUtils.shouldShowJetpackBranding()) {
-            final JetpackPoweredScreen screen = JetpackPoweredScreen.WithStaticText.APP_SETTINGS;
-            final JetpackBadgeFooterBinding binding = JetpackBadgeFooterBinding.inflate(inflater);
-            binding.footerJetpackBadge.jetpackPoweredBadge.setText(
-                    mUiHelpers.getTextOfUiString(
-                            getContext(),
-                            mJetpackBrandingUtils.getBrandingTextForScreen(screen)
-                    )
-            );
-
-            if (mJetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()) {
-                binding.footerJetpackBadge.jetpackPoweredBadge.setOnClickListener(v -> {
-                    mJetpackBrandingUtils.trackBadgeTapped(screen);
-                    new JetpackPoweredBottomSheetFragment().show(
-                            ((AppCompatActivity) getActivity()).getSupportFragmentManager(),
-                            JetpackPoweredBottomSheetFragment.TAG);
-                });
-            }
-            listView.addFooterView(binding.getRoot(), null, false);
-        }
     }
 
     private void removeExperimentalCategory() {

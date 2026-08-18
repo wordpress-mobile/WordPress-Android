@@ -624,8 +624,6 @@
     <string name="newest_first">Newest first</string>
     <string name="days_quantity_one">1 day</string>
     <string name="days_quantity_other">%d days</string>
-    <string name="weeks_quantity_one">1 week</string>
-    <string name="weeks_quantity_other">%d weeks</string>
     <string name="https" translatable="false">https:\/\/</string>
     <string name="close">Close</string>
     <string name="submit">Submit</string>
@@ -4197,18 +4195,6 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="qrcode_auth_flow_content_description">Image indicating scan login code in process</string>
 
 
-    <!-- Jetpack Powered Banners and Badges -->
-    <string name="wp_jetpack_powered">Jetpack powered</string>
-    <string name="wp_jetpack_powered_phase_2">Get the Jetpack app</string>
-    <!-- translators: Jetpack branding text. %1$s: Feature Name, E.g.: Backup, Reader -->
-    <string name="wp_jetpack_powered_phase_3_feature_is_moving_soon">%1$s is moving soon</string>
-    <!-- translators: Jetpack branding text. %1$s: Plural Feature Name, E.g.: Stats, Themes -->
-    <string name="wp_jetpack_powered_phase_3_feature_are_moving_soon">%1$s are moving soon</string>
-    <!-- translators: Jetpack branding text. %1$s: Feature Name, E.g.: Backup, Reader; %2$s: "in n day(s) / week(s)"; Displayed as E.g.: "Reader is moving in 3 weeks" -->
-    <string name="wp_jetpack_powered_phase_3_feature_is_moving_in">%1$s is moving in %2$s</string>
-    <!-- translators: Jetpack branding text. %1$s: Plural Feature Name, E.g.: Stats, Themes; %2$s: "in n day(s) / week(s)"; Displayed as E.g.: "Stats are moving in 1 day" -->
-    <string name="wp_jetpack_powered_phase_3_feature_are_moving_in">%1$s are moving in %2$s</string>
-
     <!-- Jetpack awareness in WordPress App -->
     <string name="wp_jetpack_powered_better_with_jetpack">WordPress is better with Jetpack</string>
     <string name="wp_jetpack_powered_features">The new Jetpack app has Stats, Reader, Notifications, and more that make your WordPress better.</string>
@@ -4222,13 +4208,6 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="wp_jetpack_continue_to_reader">Continue to Reader</string>
     <string name="wp_jetpack_continue_to_stats">Continue to Stats</string>
     <string name="wp_jetpack_continue_to_notifications">Continue to Notifications</string>
-    <string name="wp_jp_static_poster_title">Use WordPress with %s in the Jetpack\u00A0app.</string>
-    <string name="wp_jp_static_poster_title_plural">Use WordPress with %s in the Jetpack\u00A0app.</string>
-    <string name="wp_jp_static_poster_button_primary">Switch to the Jetpack app</string>
-    <string name="wp_jp_static_poster_button_secondary">Learn more at Jetpack.com</string>
-    <string name="wp_jp_static_poster_message">The Jetpack app has all the WordPress app’s functionality, and now exclusive access to Stats, Reader, Notifications and more.</string>
-    <string name="wp_jp_static_poster_footnote">Switching is free and only takes a minute.</string>
-
     <!-- Jetpack Welcome Screen -->
     <string name="jp_migration_welcome_title">Welcome to Jetpack!</string>
     <string name="jp_migration_welcome_subtitle">It looks like you’re switching from the WordPress app.</string>
@@ -4261,36 +4240,9 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="preference_open_links_in_jetpack_setting_change_disable_error">Unable to disable open links in Jetpack</string>
 
     <!-- Jetpack feature overlay strings in WordPress App -->
-    <string name="wp_jetpack_feature_removal_overlay_phase_one_title_stats">Get your stats using the new Jetpack app</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_one_title_reader">Follow any site with the Jetpack app</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_one_title_notifications">Get your notifications with the Jetpack app</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_one_description_stats">Switch to the Jetpack app to watch your site’s traffic grow with stats and insights.</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_one_description_reader">Switch to the Jetpack app to find, follow, and like all your favorite sites and posts with Reader.</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_one_description_notifications">Switch to the Jetpack app to keep receiving  realtime notifications on your device.</string>
-    <string name="wp_jetpack_feature_removal_overlay_switch_to_new_jetpack_app">Switch to the new Jetpack app</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_stats">Your stats are moving to the Jetpack app</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_reader">Reader is moving to the Jetpack app</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_notifications">Notifications are moving to Jetpack</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_all_features">Jetpack features are moving soon.</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_four_title_all_features">Jetpack features have moved.</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_four_all_features_description">Stats, Reader, Notifications and other Jetpack powered features have been removed from the WordPress app.</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_description_with_deadline">Stats, Reader, Notifications and other Jetpack powered features will be removed from the WordPress app on %s.</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_description_without_deadline">Stats, Reader, Notifications and other Jetpack powered features will be removed from the WordPress app soon.</string>
     <string name="wp_jetpack_feature_removal_overlay_migration_helper_text">Switching is free and only takes a minute.</string>
-    <string name="wp_jetpack_feature_removal_overlay_learn_more_migration_text">Learn more at jetpack.com</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_the_jetpack_app">Switch to the Jetpack app</string>
     <string name="wp_jetpack_feature_removal_overlay_continue_without_jetpack" translatable="false">@string/wp_jetpack_continue_without_jetpack</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_three_all_features_description" translatable="false">@string/wp_jetpack_feature_removal_overlay_phase_two_and_three_description_without_deadline</string>
-    <string name="wp_jetpack_feature_removal_switch_to_jetpack_app_menu_title">Switch to Jetpack </string>
-    <string name="wp_jetpack_feature_removal_phase_four_secondary_text">Do this later</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_title">Give WordPress a boost with Jetpack</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_description">Jetpack lets you do more with your WordPress site. Switching is free and only takes a minute.</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_title">Stats &amp; Insights</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_description">Watch your traffic grow with helpful insights and comprehensive stats.</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_reader_title" translatable="false">@string/reader</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_reader_description">Find and follow your favorite sites and communities, and share you content.</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_notifications_title" translatable="false"> @string/notifications_screen_title</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_notifications_description">Get notifications for new comments, likes, views, and more.</string>
     <string name="wp_jetpack_feature_removal_phase_self_hosted_users_description">The Jetpack mobile app is designed to work in companion with the Jetpack plugin. Switch now to get access to stats, notifications, reader, and more.</string>
     <string name="wp_jetpack_feature_removal_phase_self_hosted_users_title">Your site has the Jetpack plugin</string>
 
@@ -4307,7 +4259,6 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="wp_jetpack_deep_link_open_in_wordpress">Open links in WordPress</string>
 
     <!-- Jetpack Feature Card -->
-    <string name="jetpack_feature_card_content_phase_three">Stats, Reader, Notifications and other features will soon move to the Jetpack mobile app.</string>
     <string name="jetpack_feature_card_content_phase_self_hosted_and_new_users">Unlock your site’s full potential. Get stats, notifications and more with Jetpack.</string>
     <string name="jetpack_feature_card_learn_more" translatable="false">@string/learn_more</string>
     <string name="jetpack_feature_card_menu_item_remind_me_later">Remind me later</string>

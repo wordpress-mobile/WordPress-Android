@@ -4,7 +4,7 @@ import android.app.Activity;
 
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.model.SiteModel;
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper;
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalHelper;
 import org.wordpress.android.ui.stats.refresh.utils.StatsLaunchedFrom;
 import org.wordpress.android.util.AppLog;
 
@@ -20,7 +20,7 @@ public class ShortcutsNavigator {
     @Inject ShortcutsNavigator() {
     }
 
-    @Inject JetpackFeatureRemovalPhaseHelper mJetpackFeatureRemovalPhaseHelper;
+    @Inject JetpackFeatureRemovalHelper mJetpackFeatureRemovalHelper;
 
     public void showTargetScreen(String action, Activity activity, SiteModel currentSite) {
         Shortcut shortcut = Shortcut.fromActionString(action);
@@ -32,12 +32,8 @@ public class ShortcutsNavigator {
         switch (shortcut) {
             case OPEN_STATS:
                 AnalyticsTracker.track(AnalyticsTracker.Stat.SHORTCUT_STATS_CLICKED);
-                if (!mJetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures()) {
-                    if (mJetpackFeatureRemovalPhaseHelper.shouldShowStaticPage()) {
-                        ActivityLauncher.showJetpackStaticPoster(activity);
-                    } else {
-                        ActivityLauncher.viewBlogStats(activity, currentSite, StatsLaunchedFrom.SHORTCUT);
-                    }
+                if (!mJetpackFeatureRemovalHelper.shouldRemoveJetpackFeatures()) {
+                    ActivityLauncher.viewBlogStats(activity, currentSite, StatsLaunchedFrom.SHORTCUT);
                 }
                 break;
             case CREATE_NEW_POST:
@@ -53,7 +49,7 @@ public class ShortcutsNavigator {
                 break;
             case OPEN_NOTIFICATIONS:
                 AnalyticsTracker.track(AnalyticsTracker.Stat.SHORTCUT_NOTIFICATIONS_CLICKED);
-                if (!mJetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures()) {
+                if (!mJetpackFeatureRemovalHelper.shouldRemoveJetpackFeatures()) {
                     ActivityLauncher.viewNotifications(activity);
                 }
                 break;
