@@ -481,6 +481,16 @@ platform :android do
     )
     Fastlane::Helper::GitHelper.commit(message: 'Prune orphaned translations', files: :all)
 
+    # The prune can remove exactly what the download added, when the only translations GlotPress has
+    # for us are for keys that no longer exist in the source strings. That leaves two commits whose
+    # combined diff against `trunk` is empty, so there is nothing to push or review. Compare trees
+    # rather than commit SHAs: HEAD is two commits ahead of `trunk` here even when the content matches.
+    trunk_tree, head_tree = [DEFAULT_BRANCH, 'HEAD'].map { |ref| sh('git', 'rev-parse', "#{ref}^{tree}").strip }
+    if trunk_tree == head_tree
+      UI.important('Every translation downloaded today was pruned as orphaned; nothing to sync.')
+      next
+    end
+
     push_to_git_remote(remote_branch: TRANSLATIONS_SYNC_BRANCH, tags: false, force: true, set_upstream: true)
 
     # `find_or_create_pull_request` resolves the GitHub token the standard way (GITHUB_TOKEN) and only

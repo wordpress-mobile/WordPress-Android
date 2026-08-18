@@ -9,7 +9,7 @@ import org.wordpress.android.ui.newstats.subscribers.BaseSubscribersCardViewMode
 import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
 
-private const val CARD_MAX_ITEMS = 5
+private const val CARD_MAX_ITEMS = 10
 
 @HiltViewModel
 class EmailsCardViewModel @Inject constructor(

@@ -1367,9 +1367,9 @@ class StatsDataSourceImpl @Inject constructor(
         quantity: Int
     ): StatsEmailsSummaryDataResult {
         val params = StatsEmailsSummaryParams(
-            period = StatsEmailsSummaryPeriod.MONTH,
+            period = StatsEmailsSummaryPeriod.ALL_TIME,
             quantity = quantity.toUInt(),
-            sortField = StatsEmailsSummarySortField.OPENS,
+            sortField = StatsEmailsSummarySortField.POST_DATE,
             sortOrder = WpApiParamOrder.DESC
         )
         val result = getOrCreateClient().request { requestBuilder ->
