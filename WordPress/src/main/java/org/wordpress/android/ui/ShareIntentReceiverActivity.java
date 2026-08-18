@@ -39,6 +39,9 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
+import static org.wordpress.android.fluxc.utils.MediaUtils.isImageMimeType;
+import static org.wordpress.android.fluxc.utils.MediaUtils.isVideoMimeType;
+
 /**
  * An activity to handle share intents, since there are multiple actions possible.
  * If the user is not logged in, redirects the user to the LoginFlow. When the user is logged in,
@@ -122,6 +125,13 @@ public class ShareIntentReceiverActivity extends BaseAppCompatActivity implement
     }
 
     private boolean isAllowedMediaType(@NonNull Uri uri) {
+        // Prefer the MIME type reported by the provider. Photo picker URIs have no file extension and
+        // no readable _data column, so the path-based check below can't recognise them.
+        String mimeType = getContentResolver().getType(uri);
+        if (mimeType != null) {
+            return isImageMimeType(mimeType) || isVideoMimeType(mimeType);
+        }
+
         String filePath = MediaUtils.getRealPathFromURI(this, uri);
         // For cases when getRealPathFromURI returns an empty string
         if (TextUtils.isEmpty(filePath)) {
