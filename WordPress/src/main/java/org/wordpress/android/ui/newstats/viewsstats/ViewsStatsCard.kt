@@ -283,7 +283,7 @@ private fun ContentCard(
                     // summarise) so switching to an unavailable metric doesn't resize the card.
                     Spacer(modifier = Modifier.height(ChartHeaderHeight))
                     Spacer(modifier = Modifier.height(8.dp))
-                    ChartUnavailableBox()
+                    ChartUnavailableBox(onShowViews = { onMetricSelected(StatsMetric.VIEWS) })
                 }
                 is ChartUiState.Error -> ChartErrorBox(onRetry = onRetry)
             }
@@ -435,7 +435,7 @@ private fun ChartErrorBox(onRetry: () -> Unit) {
  * bottom row keeps showing all five values from its dedicated call.
  */
 @Composable
-private fun ChartUnavailableBox() {
+private fun ChartUnavailableBox(onShowViews: () -> Unit) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -444,11 +444,19 @@ private fun ChartUnavailableBox() {
             .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f)),
         contentAlignment = Alignment.Center
     ) {
-        Text(
-            text = stringResource(R.string.stats_hourly_data_not_available),
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
+        // Text + CTA both sit inside the fixed-height box, so the card size is unaffected. The CTA is a
+        // one-tap escape back to Views, the one metric with an hourly series.
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            Text(
+                text = stringResource(R.string.stats_hourly_data_not_available),
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+            Spacer(modifier = Modifier.height(12.dp))
+            Button(onClick = onShowViews) {
+                Text(text = stringResource(R.string.stats_show_views))
+            }
+        }
     }
 }
 
