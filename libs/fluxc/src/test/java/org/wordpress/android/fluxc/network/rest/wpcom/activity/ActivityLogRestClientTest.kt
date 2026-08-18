@@ -60,6 +60,7 @@ import java.util.TimeZone
 private const val DATE_1_IN_MILLIS = 1578614400000L // 2020-01-10T00:00:00+00:00
 private const val DATE_2_IN_MILLIS = 1578787200000L // 2020-01-12T00:00:00+00:00
 
+@Suppress("LargeClass")
 @RunWith(MockitoJUnitRunner::class)
 class ActivityLogRestClientTest {
     @Mock private lateinit var dispatcher: Dispatcher
