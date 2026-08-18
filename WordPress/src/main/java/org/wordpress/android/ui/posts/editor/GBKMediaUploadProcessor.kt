@@ -98,7 +98,7 @@ class GBKMediaUploadProcessor(
         when {
             // Never re-encode GIFs — it would flatten animation. Passthrough skips even a copy.
             resolvedMimeType == MIME_GIF -> ProcessedProxyFile.Original
-            mediaUtilsWrapper.isVideoMimeType(resolvedMimeType) -> processVideo(file, filename)
+            mediaUtilsWrapper.isVideoMimeType(resolvedMimeType) -> processVideo(file, resolvedMimeType, filename)
             resolvedMimeType.startsWith(MIME_IMAGE_PREFIX) -> processImage(file, resolvedMimeType, filename)
             // Non-media files (documents, archives, audio on paid plans) upload unchanged.
             else -> ProcessedProxyFile.Original
@@ -106,8 +106,11 @@ class GBKMediaUploadProcessor(
     }
 
     @Suppress("ReturnCount")
-    private suspend fun processVideo(file: File, filename: String): ProcessedProxyFile {
-        if (mediaUtilsWrapper.isProhibitedVideoDuration(appContext, site, file)) {
+    private suspend fun processVideo(file: File, mimeType: String, filename: String): ProcessedProxyFile {
+        // Pass the resolved mime type rather than letting the check re-derive "is this a video"
+        // from the staged file: that path is an extension-only test, and GutenbergKit names the
+        // staged copy after the client-supplied filename, which need not carry one.
+        if (mediaUtilsWrapper.isProhibitedVideoDuration(appContext, site, file, mimeType)) {
             throw GBKMediaUploadException(
                 appContext.getString(R.string.error_media_video_duration_exceeds_limit)
             )

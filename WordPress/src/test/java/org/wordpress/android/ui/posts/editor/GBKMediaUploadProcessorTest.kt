@@ -242,7 +242,8 @@ class GBKMediaUploadProcessorTest : BaseUnitTest() {
     @Test
     fun `video exceeding duration limit throws with localized message`() = test {
         whenever(mediaUtilsWrapper.isVideoMimeType("video/mp4")).thenReturn(true)
-        whenever(mediaUtilsWrapper.isProhibitedVideoDuration(any(), any(), any<File>())).thenReturn(true)
+        whenever(mediaUtilsWrapper.isProhibitedVideoDuration(any(), any(), any<File>(), any()))
+            .thenReturn(true)
         val videoStaged = tempFolder.newFile("movie.mp4")
 
         val thrown = runCatching {
@@ -257,13 +258,35 @@ class GBKMediaUploadProcessorTest : BaseUnitTest() {
     @Test
     fun `video passes through when optimization disabled`() = test {
         whenever(mediaUtilsWrapper.isVideoMimeType("video/mp4")).thenReturn(true)
-        whenever(mediaUtilsWrapper.isProhibitedVideoDuration(any(), any(), any<File>())).thenReturn(false)
+        whenever(mediaUtilsWrapper.isProhibitedVideoDuration(any(), any(), any<File>(), any()))
+            .thenReturn(false)
         whenever(appPrefsWrapper.isVideoOptimize).thenReturn(false)
         val videoStaged = tempFolder.newFile("movie.mp4")
 
         val result = createProcessor().processFile(videoStaged, "video/mp4", "movie.mp4")
 
         assertThat(result).isEqualTo(ProcessedProxyFile.Original)
+    }
+
+    @Test
+    fun `duration check receives the resolved mime type, not the staged path`() = test {
+        // The staged file is named after the client-supplied filename, which need not carry an
+        // extension. Deriving "is this a video" from that path is an extension-only test, so the
+        // duration limit must be keyed off the resolved mime type instead.
+        whenever(mediaUtilsWrapper.isVideoMimeType("video/mp4")).thenReturn(true)
+        whenever(mediaUtilsWrapper.isProhibitedVideoDuration(any(), any(), any<File>(), any()))
+            .thenReturn(false)
+        whenever(appPrefsWrapper.isVideoOptimize).thenReturn(false)
+        val extensionlessVideo = tempFolder.newFile("upload")
+
+        createProcessor().processFile(extensionlessVideo, "video/mp4", "upload")
+
+        verify(mediaUtilsWrapper).isProhibitedVideoDuration(
+            any(),
+            any(),
+            eq(extensionlessVideo),
+            eq("video/mp4")
+        )
     }
 
     @Test
