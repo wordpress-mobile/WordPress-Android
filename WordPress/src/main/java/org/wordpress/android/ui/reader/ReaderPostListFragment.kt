@@ -136,7 +136,6 @@ import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.AniUtils
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.DisplayUtils
-import org.wordpress.android.util.DisplayUtilsWrapper
 import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.SnackbarItem
@@ -193,9 +192,6 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
 
     @Inject
     lateinit var snackbarSequencer: SnackbarSequencer
-
-    @Inject
-    lateinit var displayUtilsWrapper: DisplayUtilsWrapper
 
     @Inject
     lateinit var networkConnectionMonitor: NetworkConnectionMonitor
@@ -580,7 +576,6 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
             lastConnected = connected
         }
     }
-
 
     private fun setFollowStatusForBlog(readerData: FollowStatusChanged) {
         if (!hasPostAdapter()) {
@@ -1053,7 +1048,6 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
         progressBar = rootView.findViewById(R.id.progress_footer)
         progressBar.visibility = View.GONE
 
-
         if (savedInstanceState?.containsKey(ReaderConstants.KEY_CURRENT_UPDATE_ACTIONS) == true) {
             val actions =
                 BundleCompat.getSerializable(
@@ -1245,7 +1239,6 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
         val hasQuery = !isSearchViewEmpty
         val hasPerformedSearch = !TextUtils.isEmpty(currentSearchQuery)
 
-
         // prevents suggestions from being shown after the search view has been collapsed
         if (!isSearching) {
             return
@@ -1336,7 +1329,6 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
         currentSearchQuery = trimQuery
         updatePostsInCurrentSearch(0)
         updateSitesInCurrentSearch(0)
-
 
         // track that the user performed a search
         if (trimQuery != "") {

@@ -12,7 +12,6 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.StatsDetailFragmentBinding
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
-import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.WPSwipeToRefreshHelper
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 import javax.inject.Inject
@@ -24,9 +23,6 @@ class StatsDetailFragment : Fragment(R.layout.stats_detail_fragment) {
 
     @Inject
     lateinit var statsSiteProvider: StatsSiteProvider
-
-    @Inject
-    lateinit var uiHelpers: UiHelpers
 
     private lateinit var viewModel: StatsDetailViewModel
     private lateinit var swipeToRefreshHelper: SwipeToRefreshHelper

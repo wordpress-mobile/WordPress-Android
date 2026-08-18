@@ -8,7 +8,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
 import org.wordpress.android.databinding.ActivityLogListActivityBinding
 import org.wordpress.android.ui.RequestCodes
-import org.wordpress.android.ui.ScrollableViewInitializedListener
 import org.wordpress.android.ui.activitylog.detail.ActivityLogDetailActivity
 import org.wordpress.android.ui.jetpack.backup.download.KEY_BACKUP_DOWNLOAD_ACTION_STATE_ID
 import org.wordpress.android.ui.jetpack.backup.download.KEY_BACKUP_DOWNLOAD_DOWNLOAD_ID
@@ -17,18 +16,11 @@ import org.wordpress.android.ui.jetpack.common.JetpackBackupDownloadActionState
 import org.wordpress.android.ui.jetpack.restore.KEY_RESTORE_RESTORE_ID
 import org.wordpress.android.ui.jetpack.restore.KEY_RESTORE_REWIND_ID
 import org.wordpress.android.ui.main.BaseAppCompatActivity
-import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.viewmodel.activitylog.ACTIVITY_LOG_REWINDABLE_ONLY_KEY
-import javax.inject.Inject
 import android.R as AndroidR
 
 @AndroidEntryPoint
-class ActivityLogListActivity : BaseAppCompatActivity(), ScrollableViewInitializedListener {
-    @Inject
-    lateinit var uiHelpers: UiHelpers
-
-    private var binding: ActivityLogListActivityBinding? = null
-
+class ActivityLogListActivity : BaseAppCompatActivity() {
     private val isRewindableOnlyFromExtras by lazy {
         intent.getBooleanExtra(ACTIVITY_LOG_REWINDABLE_ONLY_KEY, false)
     }
@@ -37,7 +29,6 @@ class ActivityLogListActivity : BaseAppCompatActivity(), ScrollableViewInitializ
         super.onCreate(savedInstanceState)
         with(ActivityLogListActivityBinding.inflate(layoutInflater)) {
             setContentView(root)
-            binding = this
             checkAndUpdateUiToBackupScreen()
 
             setSupportActionBar(toolbarMain)
@@ -47,8 +38,6 @@ class ActivityLogListActivity : BaseAppCompatActivity(), ScrollableViewInitializ
             it.setDisplayHomeAsUpEnabled(true)
         }
     }
-
-    override fun onScrollableViewInitialized(containerId: Int) = Unit
 
     /**
      * It was decided to reuse the 'Activity Log' screen instead of creating a new 'Backup' screen. This was due to the

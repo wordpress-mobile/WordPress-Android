@@ -15,7 +15,7 @@ import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 @RunWith(MockitoJUnitRunner::class)
 class JetpackFeatureRemovalOverlayUtilTest {
     @Mock
-    private lateinit var phaseHelper: JetpackFeatureRemovalHelper
+    private lateinit var jetpackFeatureRemovalHelper: JetpackFeatureRemovalHelper
 
     @Mock
     private lateinit var shownTracker: JetpackFeatureOverlayShownTracker
@@ -27,19 +27,23 @@ class JetpackFeatureRemovalOverlayUtilTest {
 
     @Before
     fun setUp() {
-        overlayUtil = JetpackFeatureRemovalOverlayUtil(phaseHelper, shownTracker, analyticsTrackerWrapper)
+        overlayUtil = JetpackFeatureRemovalOverlayUtil(
+            jetpackFeatureRemovalHelper,
+            shownTracker,
+            analyticsTrackerWrapper
+        )
     }
 
     @Test
     fun `given the Jetpack app, when checking the feature collection overlay, then it is not shown`() {
-        whenever(phaseHelper.shouldRemoveJetpackFeatures()).thenReturn(false)
+        whenever(jetpackFeatureRemovalHelper.shouldRemoveJetpackFeatures()).thenReturn(false)
 
         assertThat(overlayUtil.shouldShowFeatureCollectionJetpackOverlayForFirstTime()).isFalse
     }
 
     @Test
     fun `given the WordPress app and the overlay was never shown, then it is shown`() {
-        whenever(phaseHelper.shouldRemoveJetpackFeatures()).thenReturn(true)
+        whenever(jetpackFeatureRemovalHelper.shouldRemoveJetpackFeatures()).thenReturn(true)
         whenever(shownTracker.getFeatureCollectionOverlayShown()).thenReturn(false)
 
         assertThat(overlayUtil.shouldShowFeatureCollectionJetpackOverlayForFirstTime()).isTrue
@@ -47,7 +51,7 @@ class JetpackFeatureRemovalOverlayUtilTest {
 
     @Test
     fun `given the WordPress app and the overlay was already shown, then it is not shown again`() {
-        whenever(phaseHelper.shouldRemoveJetpackFeatures()).thenReturn(true)
+        whenever(jetpackFeatureRemovalHelper.shouldRemoveJetpackFeatures()).thenReturn(true)
         whenever(shownTracker.getFeatureCollectionOverlayShown()).thenReturn(true)
 
         assertThat(overlayUtil.shouldShowFeatureCollectionJetpackOverlayForFirstTime()).isFalse
@@ -69,7 +73,7 @@ class JetpackFeatureRemovalOverlayUtilTest {
 
     @Test
     fun `shouldHideJetpackFeatures follows the removal state`() {
-        whenever(phaseHelper.shouldRemoveJetpackFeatures()).thenReturn(true)
+        whenever(jetpackFeatureRemovalHelper.shouldRemoveJetpackFeatures()).thenReturn(true)
 
         assertThat(overlayUtil.shouldHideJetpackFeatures()).isTrue
     }

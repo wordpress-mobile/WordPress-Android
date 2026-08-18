@@ -28,7 +28,6 @@ import org.wordpress.android.ui.publicize.PublicizeTwitterDeprecationNoticeAnaly
 import org.wordpress.android.ui.publicize.adapters.PublicizeServiceAdapter;
 import org.wordpress.android.ui.publicize.adapters.PublicizeServiceAdapter.OnAdapterLoadedListener;
 import org.wordpress.android.ui.publicize.adapters.PublicizeServiceAdapter.OnServiceClickListener;
-import org.wordpress.android.ui.utils.UiHelpers;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -54,7 +53,6 @@ public class PublicizeListFragment extends PublicizeBaseFragment {
     private View mNestedScrollView;
 
     @Inject AccountStore mAccountStore;
-    @Inject UiHelpers mUiHelpers;
     @Inject ImageManager mImageManager;
     @Inject ViewModelProvider.Factory mViewModelFactory;
     @Inject PublicizeTwitterDeprecationNoticeAnalyticsTracker mPublicizeTwitterDeprecationNoticeAnalyticsTracker;

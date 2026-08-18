@@ -4195,11 +4195,6 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="qrcode_auth_flow_content_description">Image indicating scan login code in process</string>
 
 
-    <!-- Jetpack Powered Banners and Badges -->
-    <!-- translators: Jetpack branding text. %1$s: Feature Name, E.g.: Backup, Reader -->
-    <!-- translators: Jetpack branding text. %1$s: Plural Feature Name, E.g.: Stats, Themes -->
-    <!-- translators: Jetpack branding text. %1$s: Feature Name, E.g.: Backup, Reader; %2$s: "in n day(s) / week(s)"; Displayed as E.g.: "Reader is moving in 3 weeks" -->
-    <!-- translators: Jetpack branding text. %1$s: Plural Feature Name, E.g.: Stats, Themes; %2$s: "in n day(s) / week(s)"; Displayed as E.g.: "Stats are moving in 1 day" -->
     <!-- Jetpack awareness in WordPress App -->
     <string name="wp_jetpack_powered_better_with_jetpack">WordPress is better with Jetpack</string>
     <string name="wp_jetpack_powered_features">The new Jetpack app has Stats, Reader, Notifications, and more that make your WordPress better.</string>

@@ -578,15 +578,6 @@ all sites have this option.
 </details>
 
 <details>
-    <summary>1. [WP] Jetpack Static Poster [JetpackStaticPoster.kt]</summary>
-
-- TODO
-- TODO
-- TODO
-
-</details>
-
-<details>
     <summary>1. [JP] Notifications Screen [NotificationsDetailListFragment.kt]</summary>
 
 - TODO

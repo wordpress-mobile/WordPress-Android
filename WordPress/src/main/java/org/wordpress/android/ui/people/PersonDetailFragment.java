@@ -27,7 +27,6 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.models.Person;
 import org.wordpress.android.models.RoleUtils;
-import org.wordpress.android.ui.utils.UiHelpers;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.WPAvatarUtils;
 import org.wordpress.android.util.image.ImageManager;
@@ -62,7 +61,6 @@ public class PersonDetailFragment extends Fragment {
 
     @Inject SiteStore mSiteStore;
     @Inject ImageManager mImageManager;
-    @Inject UiHelpers mUiHelpers;
 
     public static PersonDetailFragment newInstance(long currentUserId, long personId, int localTableBlogId,
                                                    Person.PersonType personType) {

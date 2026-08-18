@@ -59,7 +59,6 @@ import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredBottomSheetFra
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures
-import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.AppLog
@@ -118,9 +117,6 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
 
     @Inject
     lateinit var appPrefsWrapper: AppPrefsWrapper
-
-    @Inject
-    lateinit var uiHelpers: UiHelpers
 
     @Inject
     lateinit var domainManagementFeatureConfig: DomainManagementFeatureConfig

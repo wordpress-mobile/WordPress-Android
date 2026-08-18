@@ -10,16 +10,11 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.ScanActivityBinding
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.main.BaseAppCompatActivity
-import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.extensions.getSerializableExtraCompat
-import javax.inject.Inject
 import android.R as AndroidR
 
 @AndroidEntryPoint
 class ScanActivity : BaseAppCompatActivity() {
-    @Inject
-    lateinit var uiHelpers: UiHelpers
-
     private var binding: ScanActivityBinding? = null
 
     override fun onNewIntent(intent: Intent) {

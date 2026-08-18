@@ -57,7 +57,6 @@ import org.wordpress.android.ui.notifications.adapters.Filter
 import org.wordpress.android.ui.notifications.services.NotificationsUpdateServiceStarter
 import org.wordpress.android.ui.notifications.services.NotificationsUpdateServiceStarter.IS_TAPPED_ON_NOTIFICATION
 import org.wordpress.android.ui.stats.StatsConnectJetpackActivity
-import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.PermissionUtils
 import org.wordpress.android.util.WPPermissionUtils
 import org.wordpress.android.util.WPPermissionUtils.NOTIFICATIONS_PERMISSION_REQUEST_CODE
@@ -72,9 +71,6 @@ class NotificationsListFragment : Fragment(R.layout.notifications_list_fragment)
     OnScrollToTopListener {
     @Inject
     lateinit var accountStore: AccountStore
-
-    @Inject
-    lateinit var uiHelpers: UiHelpers
 
     @Inject
     lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
