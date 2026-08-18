@@ -1396,11 +1396,6 @@
             android:label="@string/blaze_campaigns_page_title"
             android:theme="@style/WordPress.NoActionBar" />
 
-        <activity android:name=".ui.jetpackoverlay.JetpackStaticPosterActivity"
-            android:exported="false"
-            android:label="@string/stats"
-            android:theme="@style/WordPress.NoActionBar"/>
-
         <activity android:name=".ui.mysite.personalization.PersonalizationActivity"
             android:exported="false"
             android:label="@string/stats"

@@ -13,7 +13,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
-import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.MarginPageTransformer
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -26,12 +25,7 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.databinding.StatsFragmentBinding
-import org.wordpress.android.models.JetpackPoweredScreen
 import org.wordpress.android.ui.ScrollableViewInitializedListener
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureFullScreenOverlayFragment
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil.JetpackFeatureOverlayScreenType
-import org.wordpress.android.ui.jetpackoverlay.JetpackOverlayConnectedFeature
 import org.wordpress.android.ui.main.WPMainNavigationView.PageType.MY_SITE
 import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredBottomSheetFragment
 import org.wordpress.android.ui.newstats.NewStatsActivity
@@ -91,9 +85,6 @@ class StatsFragment : Fragment(R.layout.stats_fragment), ScrollableViewInitializ
 
     @Inject
     lateinit var newStatsRouting: NewStatsRouting
-
-    @Inject
-    lateinit var jetpackFeatureRemovalOverlayUtil: JetpackFeatureRemovalOverlayUtil
 
     @Inject
     lateinit var mStatsTrafficSubscribersTabsFeatureConfig: StatsTrafficSubscribersTabsFeatureConfig
@@ -170,13 +161,9 @@ class StatsFragment : Fragment(R.layout.stats_fragment), ScrollableViewInitializ
         if (appPrefsWrapper.getStatsNewStatsSuggestionShown()) return
         // Don't nag users who deliberately switched back to old Stats.
         if (newStatsRouting.hasOptedOut()) return
-        // Avoid stacking on top of the Jetpack-powered bottom sheet or the feature-removal overlay,
-        // both of which may show on a fresh Stats activity launch.
+        // Avoid stacking on top of the Jetpack-powered bottom sheet, which may show on a fresh
+        // Stats activity launch.
         if (jetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()) return
-        if (jetpackFeatureRemovalOverlayUtil.shouldShowFeatureSpecificJetpackOverlay(
-                JetpackOverlayConnectedFeature.STATS
-            )
-        ) return
         val lastDismissedAt = appPrefsWrapper.getStatsNewStatsSuggestionLastDismissedAt()
         val isSecondAttempt = lastDismissedAt > 0L
         if (isSecondAttempt &&
@@ -262,14 +249,6 @@ class StatsFragment : Fragment(R.layout.stats_fragment), ScrollableViewInitializ
                 JetpackPoweredBottomSheetFragment
                     .newInstance(it, MY_SITE)
                     .show(childFragmentManager, JetpackPoweredBottomSheetFragment.TAG)
-            }
-        }
-
-        viewModel.showJetpackOverlay.observeEvent(viewLifecycleOwner) {
-            if (isFirstStart) {
-                JetpackFeatureFullScreenOverlayFragment
-                    .newInstance(JetpackFeatureOverlayScreenType.STATS)
-                    .show(childFragmentManager, JetpackFeatureFullScreenOverlayFragment.TAG)
             }
         }
     }
@@ -410,34 +389,6 @@ class StatsFragment : Fragment(R.layout.stats_fragment), ScrollableViewInitializ
 
     override fun onScrollableViewInitialized(containerId: Int) {
         StatsFragmentBinding.bind(requireView()).appBarLayout.liftOnScrollTargetViewId = containerId
-        initJetpackBanner(containerId)
-    }
-
-    private fun initJetpackBanner(scrollableContainerId: Int) {
-        if (jetpackBrandingUtils.shouldShowJetpackBranding()) {
-            val screen = JetpackPoweredScreen.WithDynamicText.STATS
-            binding?.root?.post {
-                val jetpackBannerView = binding?.jetpackBanner?.root ?: return@post
-                val scrollableView = binding?.root?.findViewById<View>(scrollableContainerId) as? RecyclerView
-                    ?: return@post
-
-                jetpackBrandingUtils.showJetpackBannerIfScrolledToTop(jetpackBannerView, scrollableView)
-                jetpackBrandingUtils.initJetpackBannerAnimation(jetpackBannerView, scrollableView)
-                binding?.jetpackBanner?.jetpackBannerText?.text = uiHelpers.getTextOfUiString(
-                    requireContext(),
-                    jetpackBrandingUtils.getBrandingTextForScreen(screen)
-                )
-
-                if (jetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()) {
-                    binding?.jetpackBanner?.root?.setOnClickListener {
-                        jetpackBrandingUtils.trackBannerTapped(screen)
-                        JetpackPoweredBottomSheetFragment
-                            .newInstance()
-                            .show(childFragmentManager, JetpackPoweredBottomSheetFragment.TAG)
-                    }
-                }
-            }
-        }
     }
 }
 

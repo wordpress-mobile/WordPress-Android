@@ -65,7 +65,7 @@ import org.wordpress.android.push.NotificationType;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityNavigator;
 import org.wordpress.android.ui.RequestCodes;
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper;
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalHelper;
 import org.wordpress.android.ui.main.BaseAppCompatActivity;
 import org.wordpress.android.ui.media.MediaGridFragment.MediaFilter;
 import org.wordpress.android.ui.media.MediaGridFragment.MediaGridListener;
@@ -127,7 +127,7 @@ public class MediaBrowserActivity extends BaseAppCompatActivity implements Media
     @Inject MediaPickerLauncher mMediaPickerLauncher;
     @Inject MediaUtilsWrapper mMediaUtilsWrapper;
     @Inject SelectedSiteRepository mSelectedSiteRepository;
-    @Inject JetpackFeatureRemovalPhaseHelper mJetpackFeatureRemovalPhaseHelper;
+    @Inject JetpackFeatureRemovalHelper mJetpackFeatureRemovalHelper;
     @Inject ActivityNavigator mActivityNavigator;
     @Inject WpAppNotifierHandler mWpAppNotifierHandler;
 
@@ -990,7 +990,7 @@ public class MediaBrowserActivity extends BaseAppCompatActivity implements Media
                 });
 
         if (mBrowserType.isBrowser() && mSite.isUsingWpComRestApi()
-            && !mJetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures()) {
+            && !mJetpackFeatureRemovalHelper.shouldRemoveJetpackFeatures()) {
             popup.getMenu().add(R.string.photo_picker_stock_media).setOnMenuItemClickListener(
                     item -> {
                         doAddMediaItemClicked(AddMenuItem.ITEM_CHOOSE_STOCK_MEDIA);

@@ -37,7 +37,6 @@ import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
 import org.hamcrest.TypeSafeMatcher;
-import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.util.image.ImageType;
 
@@ -815,25 +814,6 @@ public class WPSupportUtils {
         while (!isElementCompletelyDisplayed(objectToScrollTo) && swipeCount < 20) {
             swipeUpOnView(scrollableContainerID, yFactor);
             swipeCount += 1;
-        }
-    }
-
-    public static void dismissJetpackAdIfPresent() {
-        if (BuildConfig.IS_JETPACK_APP) {
-            return;
-        }
-
-        String jetpackAdText = "Stats, Reader, Notifications, and other features are powered by Jetpack.";
-        ViewInteraction jetpackBanner = onView(withText(jetpackAdText));
-
-        // Dismiss Jetpack ad that might be shown after Sign-Up or after opening Stats
-        if (isElementDisplayed(jetpackBanner)) {
-            clickOn(onView(withId(R.id.secondary_button)));
-            waitForElementToNotBeDisplayed(jetpackBanner);
-
-            // Account for potential Emulator slowness on CI: the case of banner text
-            // being already hidden, but top part of banner still sliding away
-            idleFor(1000);
         }
     }
 }
