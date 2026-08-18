@@ -69,9 +69,9 @@ class ViewsStatsViewModel @Inject constructor(
 
     private var currentChartType: ChartType = restoreChartTypeFromSavedState()
 
-    // The user's persisted metric preference. Kept across single-day periods even though the chart is
-    // clamped to Views there (see [chartedMetric]), so the preference is restored when the user
-    // returns to a multi-day period.
+    // The user's persisted metric preference. On single-day periods a non-views selection shows the
+    // "hourly data not available" empty state instead of a chart (see [chartAvailableFor]); the
+    // preference is kept so the chart returns when the user goes back to a multi-day period.
     private var currentSelectedMetric: StatsMetric = restoreMetricFromSavedState()
 
     // The last successful chart result for the current period, cached so a metric switch can re-plot
@@ -319,23 +319,23 @@ class ViewsStatsViewModel @Inject constructor(
 
     /**
      * Selects a metric to chart and list. Re-plots the chart from the cached period result (no network
-     * call) and persists the choice. Ignored on single-day periods, where only Views is selectable
-     * (the card disables the other tabs) — see [chartedMetric].
+     * call) and persists the choice. On single-day (hourly) periods only [StatsMetric.VIEWS] has a
+     * series, so selecting another metric shows the "hourly data not available" empty state rather than
+     * a chart — see [chartAvailableFor].
      */
     fun onMetricSelected(metric: StatsMetric) {
-        if (!fillsBottomFromChart(currentPeriod)) return
         if (metric == currentSelectedMetric) return
         currentSelectedMetric = metric
         saveMetric(metric)
         val cached = lastChartResult
         _uiState.update { current ->
             if (current is ViewsStatsCardUiState.Content &&
-                current.chart is ChartUiState.Loaded &&
+                current.chart.isPlotted() &&
                 cached != null
             ) {
                 current.copy(
-                    chart = buildChartLoaded(cached),
-                    selectedMetric = chartedMetric(currentPeriod)
+                    chart = buildChartState(cached),
+                    selectedMetric = metric
                 )
             } else {
                 current
@@ -343,13 +343,17 @@ class ViewsStatsViewModel @Inject constructor(
         }
     }
 
+    /** Whether the chart region currently shows plotted content (as opposed to loading/error). */
+    private fun ChartUiState.isPlotted(): Boolean =
+        this is ChartUiState.Loaded || this is ChartUiState.Unavailable
+
     /**
-     * The metric actually charted for [period]. On multi-day periods this is the user's selection; on
-     * single-day (hourly) periods the response only carries a views series, so it clamps to
-     * [StatsMetric.VIEWS] while [currentSelectedMetric] preserves the user's preference.
+     * Whether [metric] has a chartable series for [currentPeriod]. Every metric is chartable on
+     * multi-day periods; on single-day (hourly) periods the response only carries a views series, so
+     * only [StatsMetric.VIEWS] is chartable there.
      */
-    private fun chartedMetric(period: StatsPeriod): StatsMetric =
-        if (fillsBottomFromChart(period)) currentSelectedMetric else StatsMetric.VIEWS
+    private fun chartAvailableFor(metric: StatsMetric): Boolean =
+        metric == StatsMetric.VIEWS || fillsBottomFromChart(currentPeriod)
 
     private fun PeriodAggregates.valueFor(metric: StatsMetric): Long = when (metric) {
         StatsMetric.VIEWS -> views
@@ -473,8 +477,7 @@ class ViewsStatsViewModel @Inject constructor(
             _uiState.value = ViewsStatsCardUiState.Content(
                 chart = ChartUiState.Loading,
                 bottomStats = BottomStatsUiState.Loading,
-                selectedMetric = chartedMetric(currentPeriod),
-                metricsSelectable = fillsBottomFromChart(currentPeriod)
+                selectedMetric = currentSelectedMetric
             )
         }
 
@@ -560,7 +563,7 @@ class ViewsStatsViewModel @Inject constructor(
                     if (fillBottomFromChart) {
                         updateBottom(BottomStatsUiState.Loaded(result.toBottomStatItems()))
                     }
-                    buildChartLoaded(result)
+                    buildChartState(result)
                 }
                 is PeriodStatsResult.Error -> {
                     if (fillBottomFromChart) updateBottom(BottomStatsUiState.Hidden)
@@ -642,17 +645,14 @@ class ViewsStatsViewModel @Inject constructor(
      * it is cleared by [clearLoadingNewPeriod] only once both regions have finished loading.
      */
     private fun updateChart(chart: ChartUiState) {
-        val metric = chartedMetric(currentPeriod)
-        val selectable = fillsBottomFromChart(currentPeriod)
         _uiState.update { current ->
             when (current) {
                 is ViewsStatsCardUiState.Content ->
-                    current.copy(chart = chart, selectedMetric = metric, metricsSelectable = selectable)
+                    current.copy(chart = chart, selectedMetric = currentSelectedMetric)
                 else -> ViewsStatsCardUiState.Content(
                     chart = chart,
                     bottomStats = BottomStatsUiState.Loading,
-                    selectedMetric = metric,
-                    metricsSelectable = selectable
+                    selectedMetric = currentSelectedMetric
                 )
             }
         }
@@ -660,24 +660,29 @@ class ViewsStatsViewModel @Inject constructor(
 
     /** Applies a bottom-row update, preserving the current chart state. */
     private fun updateBottom(bottom: BottomStatsUiState) {
-        val metric = chartedMetric(currentPeriod)
-        val selectable = fillsBottomFromChart(currentPeriod)
         _uiState.update { current ->
             when (current) {
                 is ViewsStatsCardUiState.Content ->
-                    current.copy(bottomStats = bottom, selectedMetric = metric, metricsSelectable = selectable)
+                    current.copy(bottomStats = bottom, selectedMetric = currentSelectedMetric)
                 else -> ViewsStatsCardUiState.Content(
                     chart = ChartUiState.Loading,
                     bottomStats = bottom,
-                    selectedMetric = metric,
-                    metricsSelectable = selectable
+                    selectedMetric = currentSelectedMetric
                 )
             }
         }
     }
 
+    /**
+     * Builds the chart-region state for [result] and the current selection: the plotted chart when the
+     * selected metric has a series for this period, or [ChartUiState.Unavailable] when it doesn't (a
+     * non-views metric on a single-day/hourly period) — see [chartAvailableFor].
+     */
+    private fun buildChartState(result: PeriodStatsResult.Success): ChartUiState =
+        if (chartAvailableFor(currentSelectedMetric)) buildChartLoaded(result) else ChartUiState.Unavailable
+
     private fun buildChartLoaded(result: PeriodStatsResult.Success): ChartUiState.Loaded {
-        val metric = chartedMetric(currentPeriod)
+        val metric = currentSelectedMetric
         val currentStats = result.currentAggregates
         val previousStats = result.previousAggregates
         val currentValue = currentStats.valueFor(metric)
@@ -712,10 +717,10 @@ class ViewsStatsViewModel @Inject constructor(
         }
 
         return ChartUiState.Loaded(
-            currentPeriodViews = currentValue,
-            previousPeriodViews = previousValue,
-            viewsDifference = currentValue - previousValue,
-            viewsPercentageChange = calculatePercentageChange(currentValue, previousValue),
+            currentPeriodTotal = currentValue,
+            previousPeriodTotal = previousValue,
+            difference = currentValue - previousValue,
+            percentageChange = calculatePercentageChange(currentValue, previousValue),
             currentPeriodDateRange = formatDateRangeForPeriod(
                 currentStats.startDate,
                 currentStats.endDate,

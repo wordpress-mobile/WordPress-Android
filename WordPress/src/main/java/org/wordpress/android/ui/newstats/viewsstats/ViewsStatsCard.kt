@@ -243,6 +243,7 @@ private fun ContentCard(
             // Title + menu are always shown so the card controls stay reachable in every state.
             // Chart-type options only make sense once the chart has loaded.
             CardTitleRow(
+                title = stringResource(state.selectedMetric.labelRes),
                 chartTypeMenu = if (chart is ChartUiState.Loaded) {
                     { ChartTypeMenuItems(chart.chartType, onChartTypeChanged) }
                 } else {
@@ -270,6 +271,7 @@ private fun ContentCard(
                         onBarTapped = onBarTapped
                     )
                 }
+                is ChartUiState.Unavailable -> ChartUnavailableBox()
                 is ChartUiState.Error -> ChartErrorBox(onRetry = onRetry)
             }
             // Bottom Stats Row — loads independently; hidden when its dedicated call failed
@@ -299,6 +301,7 @@ private fun ContentCard(
 
 @Composable
 private fun CardTitleRow(
+    title: String,
     chartTypeMenu: @Composable (() -> Unit)?,
     onRemoveCard: () -> Unit,
     cardPosition: CardPosition?,
@@ -313,7 +316,7 @@ private fun CardTitleRow(
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
-            text = stringResource(R.string.stats_views),
+            text = title,
             style = MaterialTheme.typography.titleMedium,
             fontWeight = FontWeight.Bold
         )
@@ -347,7 +350,7 @@ private fun HeaderStats(chart: ChartUiState.Loaded, selectedMetric: StatsMetric)
         Column {
             Row {
                 Text(
-                    text = formatStatValue(chart.currentPeriodViews),
+                    text = formatStatValue(chart.currentPeriodTotal),
                     style = MaterialTheme.typography.headlineLarge,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onSurface,
@@ -355,7 +358,7 @@ private fun HeaderStats(chart: ChartUiState.Loaded, selectedMetric: StatsMetric)
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
-                    text = formatStatValue(chart.previousPeriodViews),
+                    text = formatStatValue(chart.previousPeriodTotal),
                     style = MaterialTheme.typography.titleMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.alignByBaseline()
@@ -363,8 +366,8 @@ private fun HeaderStats(chart: ChartUiState.Loaded, selectedMetric: StatsMetric)
             }
             Spacer(modifier = Modifier.height(4.dp))
             DifferenceRow(
-                difference = chart.viewsDifference,
-                percentageChange = chart.viewsPercentageChange
+                difference = chart.difference,
+                percentageChange = chart.percentageChange
             )
         }
         // Right: Date ranges with colored dots and average
@@ -409,6 +412,29 @@ private fun ChartErrorBox(onRetry: () -> Unit) {
                 Text(text = stringResource(R.string.retry))
             }
         }
+    }
+}
+
+/**
+ * Shown in place of the chart when the selected metric has no series for the current period (a
+ * single-day/hourly response only carries views). The header is dropped too — there is nothing to
+ * summarise — while the bottom row keeps showing all five values from its dedicated call.
+ */
+@Composable
+private fun ChartUnavailableBox() {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(ChartHeight)
+            .clip(RoundedCornerShape(8.dp))
+            .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f)),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = stringResource(R.string.stats_hourly_data_not_available),
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
     }
 }
 
@@ -793,7 +819,8 @@ private fun BottomStatsRow(
     // A plain scrollable Row plus the shared fading-edges modifier hints at off-screen items. The
     // modifier erases content with BlendMode.DstOut (background-agnostic) and is already RTL-aware,
     // and it grows/shrinks the fade with the actual scroll offset. Each item doubles as the chart's
-    // metric selector (tapping it re-plots the chart), but keeps its plain appearance.
+    // metric selector (tapping it re-plots the chart, or shows the hourly-unavailable state), but
+    // keeps its plain appearance.
     val scrollState = rememberScrollState()
     Row(
         modifier = Modifier
@@ -982,10 +1009,10 @@ private fun sampleLoadedState(chartType: ChartType): ViewsStatsCardUiState.Conte
 
     return ViewsStatsCardUiState.Content(
         chart = ChartUiState.Loaded(
-            currentPeriodViews = SAMPLE_CURRENT_VIEWS,
-            previousPeriodViews = SAMPLE_PREVIOUS_VIEWS,
-            viewsDifference = SAMPLE_VIEWS_DIFFERENCE,
-            viewsPercentageChange = SAMPLE_VIEWS_PERCENTAGE,
+            currentPeriodTotal = SAMPLE_CURRENT_VIEWS,
+            previousPeriodTotal = SAMPLE_PREVIOUS_VIEWS,
+            difference = SAMPLE_VIEWS_DIFFERENCE,
+            percentageChange = SAMPLE_VIEWS_PERCENTAGE,
             currentPeriodDateRange = "14-20 Jan",
             previousPeriodDateRange = "7-13 Jan",
             chartData = ViewsStatsChartData(

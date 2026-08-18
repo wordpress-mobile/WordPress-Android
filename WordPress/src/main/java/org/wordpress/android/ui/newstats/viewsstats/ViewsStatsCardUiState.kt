@@ -21,7 +21,6 @@ sealed class ViewsStatsCardUiState {
         val chart: ChartUiState,
         val bottomStats: BottomStatsUiState,
         val selectedMetric: StatsMetric = StatsMetric.DEFAULT,
-        val metricsSelectable: Boolean = true,
         val isLoadingNewPeriod: Boolean = false
     ) : ViewsStatsCardUiState()
 
@@ -31,21 +30,26 @@ sealed class ViewsStatsCardUiState {
 /**
  * State of the chart region (header totals + chart). Loads from the two chart calls, independently
  * of the bottom row. [Error] renders a compact retry affordance while the bottom row stays visible.
+ * [Unavailable] means the selected metric has no series for this period (a single-day/hourly response
+ * only carries views), so the chart region shows an empty state while the bottom row stays visible.
  */
 sealed class ChartUiState {
     data object Loading : ChartUiState()
 
+    // Header totals reflect the currently selected metric, not necessarily views.
     data class Loaded(
-        val currentPeriodViews: Long,
-        val previousPeriodViews: Long,
-        val viewsDifference: Long,
-        val viewsPercentageChange: Double,
+        val currentPeriodTotal: Long,
+        val previousPeriodTotal: Long,
+        val difference: Long,
+        val percentageChange: Double,
         val currentPeriodDateRange: String,
         val previousPeriodDateRange: String,
         val chartData: ViewsStatsChartData,
         val periodAverage: Long,
         val chartType: ChartType
     ) : ChartUiState()
+
+    data object Unavailable : ChartUiState()
 
     data object Error : ChartUiState()
 }
