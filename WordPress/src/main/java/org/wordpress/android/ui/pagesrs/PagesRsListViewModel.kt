@@ -38,7 +38,6 @@ import org.wordpress.android.fluxc.store.EditorThemeStore
 import org.wordpress.android.fluxc.store.EditorThemeStore.FetchEditorThemePayload
 import org.wordpress.android.fluxc.store.EditorThemeStore.OnEditorThemeChanged
 import org.wordpress.android.fluxc.store.PostStore
-import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded
 import org.wordpress.android.ui.blaze.BlazeFeatureUtils
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.pages.PageItem
@@ -48,6 +47,7 @@ import org.wordpress.android.ui.postsrs.SnackbarMessage
 import org.wordpress.android.ui.postsrs.data.PostRsRestClient
 import org.wordpress.android.ui.postsrs.data.WpServiceProvider
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.ui.rs.RsPostChangeListener
 import org.wordpress.android.ui.rs.RsTabLoading
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.NetworkUtilsWrapper
@@ -84,6 +84,7 @@ internal class PagesRsListViewModel @Inject constructor(
     private val analyticsTracker: AnalyticsTrackerWrapper,
     private val editorThemeStore: EditorThemeStore,
     private val siteEditorMVPFeatureConfig: SiteEditorMVPFeatureConfig,
+    private val changeListener: RsPostChangeListener,
 ) : ViewModel() {
     private val _tabStates = MutableStateFlow<Map<PageRsListTab, PageTabUiState>>(emptyMap())
     val tabStates: StateFlow<Map<PageRsListTab, PageTabUiState>> = _tabStates.asStateFlow()
@@ -182,7 +183,23 @@ internal class PagesRsListViewModel @Inject constructor(
                     .distinctUntilChanged()
                     .collect { query -> onParentPickerQueryDebounced(query) }
             }
+            changeListener.start(site, isPages = true)
+            viewModelScope.launch {
+                changeListener.changes.collect { onRemoteChangeDetected() }
+            }
         }
+    }
+
+    /**
+     * Refreshes the list after FluxC reported a change the rs collections can't see - a page saved
+     * in the editor, or a duplicated page that publishes after the editor closes.
+     *
+     * Skipped when offline: the refresh could only fail, and [refreshAllTabs] would then mark every
+     * tab with an error for something the user never asked for.
+     */
+    private fun onRemoteChangeDetected() {
+        if (!networkUtilsWrapper.isNetworkAvailable()) return
+        refreshAllTabs()
     }
 
     /**
@@ -361,20 +378,6 @@ internal class PagesRsListViewModel @Inject constructor(
     private fun createCollectionsScope() = CoroutineScope(
         viewModelScope.coroutineContext + SupervisorJob(viewModelScope.coroutineContext.job)
     )
-
-    /**
-     * Fired by FluxC when UploadService finishes uploading a post/page — e.g. publishing a
-     * duplicated page from the editor, which happens in the background after the editor
-     * closes. The wordpress-rs collections don't see FluxC uploads, so refresh the tabs to
-     * pick up the change.
-     */
-    @Suppress("unused")
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onPostUploaded(event: OnPostUploaded) {
-        val post = event.post ?: return
-        if (!post.isPage || post.localSiteId != site?.id || event.isError) return
-        refreshAllTabs()
-    }
 
     /** Seeds [isBlockBasedTheme] from the local cache and dispatches a remote refresh. */
     private fun refreshEditorTheme(site: SiteModel) {
@@ -1496,6 +1499,7 @@ internal class PagesRsListViewModel @Inject constructor(
 
     public override fun onCleared() {
         super.onCleared()
+        changeListener.stop()
         dispatcher.unregister(this)
         clearCollections()
     }

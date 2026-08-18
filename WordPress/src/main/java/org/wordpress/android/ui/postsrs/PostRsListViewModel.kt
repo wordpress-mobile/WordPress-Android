@@ -29,6 +29,7 @@ import org.wordpress.android.ui.posts.AuthorFilterSelection
 import org.wordpress.android.ui.postsrs.data.PostRsRestClient
 import org.wordpress.android.ui.postsrs.data.WpServiceProvider
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.ui.rs.RsPostChangeListener
 import org.wordpress.android.ui.rs.RsTabLoading
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.NetworkUtilsWrapper
@@ -60,6 +61,7 @@ class PostRsListViewModel @Inject constructor(
     private val accountStore: AccountStore,
     private val appPrefsWrapper: AppPrefsWrapper,
     private val analyticsTracker: AnalyticsTrackerWrapper,
+    private val changeListener: RsPostChangeListener,
 ) : ViewModel() {
     private val _tabStates = MutableStateFlow<Map<PostRsListTab, PostTabUiState>>(emptyMap())
     val tabStates: StateFlow<Map<PostRsListTab, PostTabUiState>> = _tabStates.asStateFlow()
@@ -134,7 +136,23 @@ class PostRsListViewModel @Inject constructor(
                         initTab(activeSearchTab)
                     }
             }
+            changeListener.start(site, isPages = false)
+            viewModelScope.launch {
+                changeListener.changes.collect { onRemoteChangeDetected() }
+            }
         }
+    }
+
+    /**
+     * Refreshes the list after FluxC reported a change the rs collections can't see - a post saved
+     * in the editor, for instance.
+     *
+     * Skipped when offline: the refresh could only fail, and [refreshAllTabs] would then mark every
+     * tab with an error for something the user never asked for.
+     */
+    private fun onRemoteChangeDetected() {
+        if (!networkUtilsWrapper.isNetworkAvailable()) return
+        refreshAllTabs()
     }
 
     /**
@@ -1051,6 +1069,7 @@ class PostRsListViewModel @Inject constructor(
 
     override fun onCleared() {
         super.onCleared()
+        changeListener.stop()
         collections.values.forEach { it.close() }
     }
 
