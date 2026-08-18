@@ -111,7 +111,7 @@ platform :android do
 
     UI.success("Prepared #{candidates.count} promotion candidate(s) and opened the block step.")
   rescue StandardError => e
-    notify_slack(":x: *Beta promotion* failed before the picker could open — #{e.message}")
+    notify_slack(":x: *Beta promotion* failed before the picker could open — #{e.message}", cc_release_managers: true)
     raise
   end
 
@@ -145,7 +145,7 @@ platform :android do
 
     UI.success("Promoted #{version_code} to beta for: #{results.keys.join(', ')}")
   rescue StandardError => e
-    notify_slack(":x: *Beta promotion* failed — #{e.message}") unless result_posted
+    notify_slack(":x: *Beta promotion* failed — #{e.message}", cc_release_managers: true) unless result_posted
     raise
   end
 
@@ -176,7 +176,10 @@ platform :android do
 
     UI.success("Prepared production release candidate #{version_code} and opened the block step.")
   rescue StandardError => e
-    notify_slack(":x: *Production release* failed before the confirmation could open — #{e.message}")
+    notify_slack(
+      ":x: *Production release* failed before the confirmation could open — #{e.message}",
+      cc_release_managers: true
+    )
     raise
   end
 
@@ -208,7 +211,7 @@ platform :android do
 
     UI.success("Promoted #{version_code} to production for: #{results.keys.join(', ')}")
   rescue StandardError => e
-    notify_slack(":x: *Production release* failed — #{e.message}") unless result_posted
+    notify_slack(":x: *Production release* failed — #{e.message}", cc_release_managers: true) unless result_posted
     raise
   end
 
@@ -247,7 +250,7 @@ platform :android do
     # Only failures notify (the rescue below) — anything else would just be noise.
     UI.success("Finalized #{released_version}: release #{release_url}; version bump #{bump_url || 'skipped'}")
   rescue StandardError => e
-    notify_slack(":x: *Promoted-release finalize* failed — #{e.message}")
+    notify_slack(":x: *Promoted-release finalize* failed — #{e.message}", cc_release_managers: true)
     raise
   end
 
@@ -312,7 +315,7 @@ platform :android do
 
     UI.success("Advanced production rollout #{state[:version_code]} to #{rollout_target_label(target)}")
   rescue StandardError => e
-    notify_slack(":x: *Production rollout* failed — #{e.message}") unless result_posted
+    notify_slack(":x: *Production rollout* failed — #{e.message}", cc_release_managers: true) unless result_posted
     raise
   end
 
@@ -727,11 +730,12 @@ platform :android do
       end
 
     notify_slack(
-      <<~MSG
+      <<~MSG,
         #{header} — `#{version_code}`
 
         #{status_lines.join("\n")}
       MSG
+      cc_release_managers: !all_ok
     )
   end
 
@@ -853,7 +857,8 @@ platform :android do
       body: "Advances the marketing version on `#{DEFAULT_BRANCH}` to `#{next_version}`, following the `#{released_version}` production release.",
       head: branch,
       base: DEFAULT_BRANCH,
-      labels: ['Releases']
+      labels: ['Releases'],
+      team_reviewers: [MOBILE_REVIEWER_TEAM]
     )
   end
 
@@ -1009,12 +1014,13 @@ platform :android do
       end
 
     notify_slack(
-      <<~MSG
+      <<~MSG,
         :android: *Beta promotion* — choose a build to release to beta testers (WordPress + Jetpack).#{choose_line}
 
         *Candidates:*
         #{candidate_lines.join("\n")}
       MSG
+      cc_release_managers: true
     )
   end
 
@@ -1030,11 +1036,12 @@ platform :android do
     header = all_ok ? ':rocket: *Promoted to beta*' : ':warning: *Beta promotion finished with errors*'
 
     notify_slack(
-      <<~MSG
+      <<~MSG,
         #{header} — `#{version_code}`
 
         #{status_lines.join("\n")}
       MSG
+      cc_release_managers: !all_ok
     )
   end
 
@@ -1053,29 +1060,46 @@ platform :android do
       end
 
     notify_slack(
-      <<~MSG
+      <<~MSG,
         :android: *Production release* — confirm releasing build `#{version_code}` to production (WordPress + Jetpack).#{confirm_line}
       MSG
+      cc_release_managers: true
     )
   end
 
-  # Posts the per-app outcome of a production release.
+  # Posts the per-app outcome of a production release, including the reminder that a submitted
+  # release still needs a manual Publish click once Play approves it (Managed Publishing).
   def post_production_result_to_slack(version_code:, results:)
+    rollout_label = rollout_target_label(
+      { status: ROLLOUT_STATUS_IN_PROGRESS, user_fraction: PRODUCTION_ROLLOUT_INITIAL_FRACTION.to_f }
+    )
+
     status_lines = results.map do |app, result|
       next "• #{app}: :x: #{result[:error]}" unless result[:ok]
 
-      "• #{app}: :white_check_mark: draft created on production"
+      "• #{app}: :white_check_mark: submitted to production at #{rollout_label}"
     end
 
     all_ok = results.values.all? { |result| result[:ok] }
-    header = all_ok ? ':rocket: *Production draft created*' : ':warning: *Production release finished with errors*'
+    header = all_ok ? ':rocket: *Promoted to production*' : ':warning: *Production release finished with errors*'
+
+    # Only worth saying when something actually landed on the track.
+    publish_note =
+      if results.values.any? { |result| result[:ok] }
+        "\n:warning: Managed Publishing is on, so nobody is being served this yet.\n" \
+          'Once Play approves the release, someone has to click *Publish* in the Play Console to start the rollout.'
+      else
+        ''
+      end
 
     notify_slack(
-      <<~MSG
+      <<~MSG,
         #{header} — `#{version_code}`
 
         #{status_lines.join("\n")}
+        #{publish_note}
       MSG
+      cc_release_managers: true
     )
   end
 
