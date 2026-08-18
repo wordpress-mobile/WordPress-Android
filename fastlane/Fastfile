@@ -73,6 +73,11 @@ GITHUB_REPO = 'wordpress-mobile/WordPress-Android'
 DEFAULT_BRANCH = 'trunk'
 REPOSITORY_NAME = 'WordPress-Android'
 
+# Slug (no org prefix) of the GitHub team asked to review the pull requests the automated flows open
+# (translation sync, version bump). The team's "Code review assignments" setting picks a single
+# member, so the request lands on one person rather than the whole team.
+MOBILE_REVIEWER_TEAM = 'wpmobile-team'
+
 # Used by Fastlane to work around the Google API random failures
 ENV['SUPPLY_UPLOAD_MAX_RETRIES'] = '5'
 
@@ -173,8 +178,12 @@ end
 # Slack helpers
 #####################################################################################
 
+# Slack handles cc'd on messages that need someone to act on them — the beta and production
+# confirmations, and any failure. A list so the roster can grow.
+RELEASE_MANAGERS = ['@oguzkocer'].freeze
+
 # Sends a Slack message to the given channel via the incoming webhook.
-def send_slack_message(message:, channel: '#build-and-ship')
+def send_slack_message(message:, channel: '#wpmobile-team')
   slack(
     username: 'WordPress Release Bot',
     icon_url: 'https://s.w.org/style/images/about/WordPress-logotype-wmark.png',
@@ -185,11 +194,18 @@ def send_slack_message(message:, channel: '#build-and-ship')
   )
 end
 
-# Posts to Slack without letting a webhook hiccup abort the caller.
-def notify_slack(message)
+# Posts to Slack without letting a webhook hiccup abort the caller. Pass `cc_release_managers: true`
+# for a message someone has to act on — it appends the release-manager cc line.
+def notify_slack(message, cc_release_managers: false)
+  message = "#{message.rstrip}\n\n#{release_managers_footer}" if cc_release_managers
   send_slack_message(message: message)
 rescue StandardError => e
   UI.important("Slack notification failed (#{e.message}); continuing without it.")
+end
+
+# The cc line appended to Slack messages that need someone to act on them.
+def release_managers_footer
+  "cc Release Managers: #{RELEASE_MANAGERS.join(', ')}"
 end
 
 ########################################################################
