@@ -14,16 +14,6 @@
       "encrypt": true
     },
     {
-      "file": "android/WPAndroid/wordpress-sentry.properties",
-      "destination": "WordPress/src/wordpress/sentry.properties",
-      "encrypt": true
-    },
-    {
-      "file": "android/WPAndroid/jetpack-sentry.properties",
-      "destination": "WordPress/src/jetpack/sentry.properties",
-      "encrypt": true
-    },
-    {
       "file": "android/debug.keystore",
       "destination": "~/.configure/wordpress-android/secrets/debug_a8c.keystore",
       "encrypt": true

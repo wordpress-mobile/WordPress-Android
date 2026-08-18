@@ -31,7 +31,6 @@ build.log
 google-services.json
 google-upload-credentials.json
 firebase.secrets.json
-sentry.properties
 
 # Gradle files
 gradle.properties
