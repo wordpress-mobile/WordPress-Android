@@ -133,15 +133,13 @@ data class ChartDataPoint(
 
 /**
  * A stat item for the bottom stats row. Also acts as the chart's metric selector, so it carries the
- * [metric] it represents (used for its icon, accent color and selected/disabled state).
+ * [metric] it represents, which drives its icon, label ([StatsMetric.labelRes]) and accent color.
  * @param metric The metric this item represents
- * @param label The display label (e.g., "Views", "Visitors")
  * @param value The stat value
  * @param change The change compared to previous period
  */
 data class StatItem(
     val metric: StatsMetric,
-    val label: String,
     val value: Long,
     val change: StatChange
 )

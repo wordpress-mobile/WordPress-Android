@@ -409,8 +409,8 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
 
         val stats = viewModel.uiState.value.bottomStatsOrNull()
         assertThat(stats).hasSize(5)
-        assertThat(stats!!.map { it.label }).containsExactly(
-            "Views", "Visitors", "Likes", "Comments", "Posts"
+        assertThat(stats!!.map { it.metric }).containsExactly(
+            StatsMetric.VIEWS, StatsMetric.VISITORS, StatsMetric.LIKES, StatsMetric.COMMENTS, StatsMetric.POSTS
         )
         verify(statsRepository, times(0)).fetchBottomStats(any(), any())
     }
@@ -433,8 +433,8 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
 
         val stats = viewModel.uiState.value.bottomStatsOrNull()
         assertThat(stats).hasSize(5)
-        assertThat(stats!!.map { it.label }).containsExactly(
-            "Views", "Visitors", "Likes", "Comments", "Posts"
+        assertThat(stats!!.map { it.metric }).containsExactly(
+            StatsMetric.VIEWS, StatsMetric.VISITORS, StatsMetric.LIKES, StatsMetric.COMMENTS, StatsMetric.POSTS
         )
         verify(statsRepository, times(0)).fetchBottomStats(any(), any())
     }
@@ -536,7 +536,7 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
         initViewModel()
         advanceUntilIdle()
 
-        val viewsStat = viewModel.uiState.value.bottomStatsOrNull()!!.first { it.label == "Views" }
+        val viewsStat = viewModel.uiState.value.bottomStatsOrNull()!!.first { it.metric == StatsMetric.VIEWS }
         assertThat(viewsStat.change).isInstanceOf(StatChange.Positive::class.java)
         assertThat((viewsStat.change as StatChange.Positive).percentage).isEqualTo(25.0)
     }
@@ -549,7 +549,7 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
         initViewModel()
         advanceUntilIdle()
 
-        val viewsStat = viewModel.uiState.value.bottomStatsOrNull()!!.first { it.label == "Views" }
+        val viewsStat = viewModel.uiState.value.bottomStatsOrNull()!!.first { it.metric == StatsMetric.VIEWS }
         assertThat(viewsStat.change).isInstanceOf(StatChange.Negative::class.java)
         assertThat((viewsStat.change as StatChange.Negative).percentage).isEqualTo(20.0)
     }
@@ -562,7 +562,7 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
         initViewModel()
         advanceUntilIdle()
 
-        val viewsStat = viewModel.uiState.value.bottomStatsOrNull()!!.first { it.label == "Views" }
+        val viewsStat = viewModel.uiState.value.bottomStatsOrNull()!!.first { it.metric == StatsMetric.VIEWS }
         assertThat(viewsStat.change).isInstanceOf(StatChange.NoChange::class.java)
     }
 

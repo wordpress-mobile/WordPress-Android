@@ -48,6 +48,9 @@ import androidx.compose.ui.input.pointer.pointerInput
 import org.wordpress.android.ui.newstats.StatsColors
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.role
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -846,11 +849,13 @@ private fun iconForMetric(metric: StatsMetric) = when (metric) {
 @Composable
 private fun StatItemCard(stat: StatItem, onClick: () -> Unit) {
     val icon = iconForMetric(stat.metric)
+    val label = stringResource(stat.metric.labelRes)
 
     Column(
         modifier = Modifier
             .width(StatItemWidth)
-            .clickable(onClick = onClick),
+            .clickable(onClick = onClick)
+            .semantics { role = Role.Button },
         horizontalAlignment = Alignment.Start
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
@@ -862,7 +867,7 @@ private fun StatItemCard(stat: StatItem, onClick: () -> Unit) {
             )
             Spacer(modifier = Modifier.width(4.dp))
             Text(
-                text = stat.label.uppercase(),
+                text = label.uppercase(),
                 style = MaterialTheme.typography.labelSmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
@@ -1029,17 +1034,17 @@ private fun sampleLoadedState(chartType: ChartType): ViewsStatsCardUiState.Conte
         bottomStats = BottomStatsUiState.Loaded(
             listOf(
                 StatItem(
-                    StatsMetric.VIEWS, "Views", SAMPLE_CURRENT_VIEWS,
+                    StatsMetric.VIEWS, SAMPLE_CURRENT_VIEWS,
                     StatChange.Negative(SAMPLE_VIEWS_PERCENTAGE)
                 ),
                 StatItem(
-                    StatsMetric.VISITORS, "Visitors", SAMPLE_VISITORS,
+                    StatsMetric.VISITORS, SAMPLE_VISITORS,
                     StatChange.Negative(SAMPLE_VISITORS_PERCENTAGE)
                 ),
-                StatItem(StatsMetric.LIKES, "Likes", 0, StatChange.NoChange),
-                StatItem(StatsMetric.COMMENTS, "Comments", 0, StatChange.NoChange),
+                StatItem(StatsMetric.LIKES, 0, StatChange.NoChange),
+                StatItem(StatsMetric.COMMENTS, 0, StatChange.NoChange),
                 StatItem(
-                    StatsMetric.POSTS, "Posts", SAMPLE_POSTS,
+                    StatsMetric.POSTS, SAMPLE_POSTS,
                     StatChange.Positive(SAMPLE_POSTS_PERCENTAGE)
                 )
             )

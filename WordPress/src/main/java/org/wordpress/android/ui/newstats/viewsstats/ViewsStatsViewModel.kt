@@ -146,6 +146,9 @@ class ViewsStatsViewModel @Inject constructor(
     fun onPeriodChanged(period: StatsPeriod) {
         if (period == currentPeriod) return
         currentPeriod = period
+        // Drop the previous period's cached chart result so a metric switch mid-load can't re-plot from
+        // stale data or evaluate availability against the wrong period; it is repopulated on next load.
+        lastChartResult = null
         _selectedPeriod.value = period
         updateNavigationState()
         savePeriod(period)
@@ -329,17 +332,17 @@ class ViewsStatsViewModel @Inject constructor(
         saveMetric(metric)
         val cached = lastChartResult
         _uiState.update { current ->
-            if (current is ViewsStatsCardUiState.Content &&
-                current.chart.isPlotted() &&
-                cached != null
-            ) {
-                current.copy(
-                    chart = buildChartState(cached),
-                    selectedMetric = metric
-                )
+            if (current !is ViewsStatsCardUiState.Content) return@update current
+            // Re-plot from the cached result when the chart is showing plotted content; otherwise keep
+            // the current chart region (loading/error) but still reflect the new selection so the title,
+            // header dot and icons update — the tap always has a visible effect, matching what was
+            // persisted.
+            val chart = if (current.chart.isPlotted() && cached != null) {
+                buildChartState(cached)
             } else {
-                current
+                current.chart
             }
+            current.copy(chart = chart, selectedMetric = metric)
         }
     }
 
@@ -746,31 +749,26 @@ class ViewsStatsViewModel @Inject constructor(
         return listOf(
             StatItem(
                 metric = StatsMetric.VIEWS,
-                label = resourceProvider.getString(R.string.stats_views),
                 value = currentPeriod.views,
                 change = calculateStatChange(currentPeriod.views, previousPeriod.views)
             ),
             StatItem(
                 metric = StatsMetric.VISITORS,
-                label = resourceProvider.getString(R.string.stats_visitors),
                 value = currentPeriod.visitors,
                 change = calculateStatChange(currentPeriod.visitors, previousPeriod.visitors)
             ),
             StatItem(
                 metric = StatsMetric.LIKES,
-                label = resourceProvider.getString(R.string.stats_likes),
                 value = currentPeriod.likes,
                 change = calculateStatChange(currentPeriod.likes, previousPeriod.likes)
             ),
             StatItem(
                 metric = StatsMetric.COMMENTS,
-                label = resourceProvider.getString(R.string.stats_comments),
                 value = currentPeriod.comments,
                 change = calculateStatChange(currentPeriod.comments, previousPeriod.comments)
             ),
             StatItem(
                 metric = StatsMetric.POSTS,
-                label = resourceProvider.getString(R.string.posts),
                 value = currentPeriod.posts,
                 change = calculateStatChange(currentPeriod.posts, previousPeriod.posts)
             )
