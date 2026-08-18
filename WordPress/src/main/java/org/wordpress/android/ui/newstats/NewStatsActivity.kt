@@ -828,6 +828,7 @@ private fun TrafficTabContent(
                     StatsCardType.VIEWS_STATS -> ViewsStatsCard(
                         uiState = viewsStatsUiState,
                         onChartTypeChanged = viewsStatsViewModel::onChartTypeChanged,
+                        onMetricSelected = viewsStatsViewModel::onMetricSelected,
                         onBarTapped = viewsStatsViewModel::onBarTapped,
                         onRetry = viewsStatsViewModel::onRetry,
                         onRemoveCard = { newStatsViewModel.removeCard(cardType) },

@@ -2,6 +2,7 @@ package org.wordpress.android.ui.newstats.viewsstats
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
@@ -111,6 +112,7 @@ private val SAMPLE_PREVIOUS_PERIOD_DATA = listOf(1000L, 1400L, 1150L, 1200L, 135
 fun ViewsStatsCard(
     uiState: ViewsStatsCardUiState,
     onChartTypeChanged: (ChartType) -> Unit,
+    onMetricSelected: (StatsMetric) -> Unit,
     onBarTapped: (Int) -> Unit,
     onRetry: () -> Unit,
     onRemoveCard: () -> Unit,
@@ -138,7 +140,7 @@ fun ViewsStatsCard(
         when (uiState) {
             is ViewsStatsCardUiState.Loading -> LoadingContent()
             is ViewsStatsCardUiState.Content -> ContentCard(
-                uiState, onChartTypeChanged, onBarTapped, onRetry, onRemoveCard,
+                uiState, onChartTypeChanged, onMetricSelected, onBarTapped, onRetry, onRemoveCard,
                 cardPosition, onMoveUp, onMoveToTop, onMoveDown, onMoveToBottom
             )
             is ViewsStatsCardUiState.Error -> ErrorContent(
@@ -220,6 +222,7 @@ private fun BottomStatsPlaceholder() {
 private fun ContentCard(
     state: ViewsStatsCardUiState.Content,
     onChartTypeChanged: (ChartType) -> Unit,
+    onMetricSelected: (StatsMetric) -> Unit,
     onBarTapped: (Int) -> Unit,
     onRetry: () -> Unit,
     onRemoveCard: () -> Unit,
@@ -257,12 +260,13 @@ private fun ContentCard(
             when (chart) {
                 is ChartUiState.Loading -> ChartRegionPlaceholder()
                 is ChartUiState.Loaded -> {
-                    HeaderStats(chart)
+                    HeaderStats(chart, selectedMetric = state.selectedMetric)
                     Spacer(modifier = Modifier.height(8.dp))
                     ViewsStatsChart(
                         chartData = chart.chartData,
                         periodAverage = chart.periodAverage,
                         chartType = chart.chartType,
+                        selectedMetric = state.selectedMetric,
                         onBarTapped = onBarTapped
                     )
                 }
@@ -276,7 +280,10 @@ private fun ContentCard(
                 }
                 is BottomStatsUiState.Loaded -> {
                     Spacer(modifier = Modifier.height(16.dp))
-                    BottomStatsRow(stats = bottom.stats)
+                    BottomStatsRow(
+                        stats = bottom.stats,
+                        onMetricSelected = onMetricSelected
+                    )
                 }
                 is BottomStatsUiState.Hidden -> Unit
             }
@@ -322,8 +329,15 @@ private fun CardTitleRow(
     }
 }
 
+/**
+ * Resolves a metric's chart accent color, falling back to the theme primary for Views so the default
+ * chart keeps its familiar blue in both light and dark themes.
+ */
 @Composable
-private fun HeaderStats(chart: ChartUiState.Loaded) {
+private fun metricColor(metric: StatsMetric): Color = metric.color ?: MaterialTheme.colorScheme.primary
+
+@Composable
+private fun HeaderStats(chart: ChartUiState.Loaded, selectedMetric: StatsMetric) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
@@ -357,7 +371,7 @@ private fun HeaderStats(chart: ChartUiState.Loaded) {
         Column(horizontalAlignment = Alignment.End) {
             DateRangeWithDot(
                 dateRange = chart.currentPeriodDateRange,
-                dotColor = MaterialTheme.colorScheme.primary
+                dotColor = metricColor(selectedMetric)
             )
             Spacer(modifier = Modifier.height(4.dp))
             DateRangeWithDot(
@@ -503,6 +517,7 @@ private fun ViewsStatsChart(
     chartData: ViewsStatsChartData,
     periodAverage: Long,
     chartType: ChartType,
+    selectedMetric: StatsMetric,
     onBarTapped: (Int) -> Unit = {}
 ) {
     // Key the model producer on chartType so it gets recreated when chart type changes
@@ -516,9 +531,9 @@ private fun ViewsStatsChart(
             when (chartType) {
                 ChartType.LINE -> modelProducer.runTransaction {
                     lineModel {
-                        series(chartData.currentPeriod.map { it.views })
+                        series(chartData.currentPeriod.map { it.value })
                         if (hasPreviousPeriod) {
-                            series(chartData.previousPeriod.map { it.views })
+                            series(chartData.previousPeriod.map { it.value })
                         }
                     }
                 }
@@ -531,8 +546,8 @@ private fun ViewsStatsChart(
                                 chartData.currentPeriod.zip(
                                     chartData.previousPeriod
                                 ) { current, previous ->
-                                    if (previous.views <= current.views)
-                                        current.views
+                                    if (previous.value <= current.value)
+                                        current.value
                                     else 0L
                                 }
                             )
@@ -542,8 +557,8 @@ private fun ViewsStatsChart(
                                 chartData.currentPeriod.zip(
                                     chartData.previousPeriod
                                 ) { current, previous ->
-                                    if (previous.views > current.views)
-                                        current.views
+                                    if (previous.value > current.value)
+                                        current.value
                                     else 0L
                                 }
                             )
@@ -554,14 +569,14 @@ private fun ViewsStatsChart(
                                 ) { current, previous ->
                                     maxOf(
                                         0L,
-                                        previous.views - current.views
+                                        previous.value - current.value
                                     )
                                 }
                             )
                         } else {
                             series(
                                 chartData.currentPeriod.map {
-                                    it.views
+                                    it.value
                                 }
                             )
                         }
@@ -589,7 +604,8 @@ private fun ViewsStatsChart(
         return
     }
 
-    val primaryColor = MaterialTheme.colorScheme.primary
+    // The current-period series recolours to the selected metric; the previous period stays muted.
+    val primaryColor = metricColor(selectedMetric)
     val secondaryColor = MaterialTheme.colorScheme.outline.copy(alpha = 0.5f)
 
     // X-axis labels from both series so the formatter covers the
@@ -770,10 +786,14 @@ private fun ViewsStatsChart(
 }
 
 @Composable
-private fun BottomStatsRow(stats: List<StatItem>) {
+private fun BottomStatsRow(
+    stats: List<StatItem>,
+    onMetricSelected: (StatsMetric) -> Unit
+) {
     // A plain scrollable Row plus the shared fading-edges modifier hints at off-screen items. The
     // modifier erases content with BlendMode.DstOut (background-agnostic) and is already RTL-aware,
-    // and it grows/shrinks the fade with the actual scroll offset.
+    // and it grows/shrinks the fade with the actual scroll offset. Each item doubles as the chart's
+    // metric selector (tapping it re-plots the chart), but keeps its plain appearance.
     val scrollState = rememberScrollState()
     Row(
         modifier = Modifier
@@ -782,23 +802,28 @@ private fun BottomStatsRow(stats: List<StatItem>) {
             .horizontalFadingEdges(scrollState),
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        stats.forEach { StatItemCard(it) }
+        stats.forEach { stat ->
+            StatItemCard(stat = stat, onClick = { onMetricSelected(stat.metric) })
+        }
     }
 }
 
+private fun iconForMetric(metric: StatsMetric) = when (metric) {
+    StatsMetric.VIEWS -> Icons.Outlined.Visibility
+    StatsMetric.VISITORS -> Icons.Default.PersonOutline
+    StatsMetric.LIKES -> Icons.Default.FavoriteBorder
+    StatsMetric.COMMENTS -> Icons.Default.ChatBubbleOutline
+    StatsMetric.POSTS -> Icons.Outlined.ModeEditOutline
+}
+
 @Composable
-private fun StatItemCard(stat: StatItem) {
-    val icon = when (stat.label) {
-        stringResource(R.string.stats_views) -> Icons.Outlined.Visibility
-        stringResource(R.string.stats_visitors) -> Icons.Default.PersonOutline
-        stringResource(R.string.stats_likes) -> Icons.Default.FavoriteBorder
-        stringResource(R.string.stats_comments) -> Icons.Default.ChatBubbleOutline
-        stringResource(R.string.posts) -> Icons.Outlined.ModeEditOutline
-        else -> Icons.Outlined.Visibility
-    }
+private fun StatItemCard(stat: StatItem, onClick: () -> Unit) {
+    val icon = iconForMetric(stat.metric)
 
     Column(
-        modifier = Modifier.width(StatItemWidth),
+        modifier = Modifier
+            .width(StatItemWidth)
+            .clickable(onClick = onClick),
         horizontalAlignment = Alignment.Start
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
@@ -943,6 +968,7 @@ private fun ViewsStatsCardLoadingPreview() {
         ViewsStatsCard(
             uiState = ViewsStatsCardUiState.Loading,
             onChartTypeChanged = {},
+            onMetricSelected = {},
             onBarTapped = {},
             onRetry = {},
             onRemoveCard = {}
@@ -975,11 +1001,20 @@ private fun sampleLoadedState(chartType: ChartType): ViewsStatsCardUiState.Conte
         ),
         bottomStats = BottomStatsUiState.Loaded(
             listOf(
-                StatItem("Views", SAMPLE_CURRENT_VIEWS, StatChange.Negative(SAMPLE_VIEWS_PERCENTAGE)),
-                StatItem("Visitors", SAMPLE_VISITORS, StatChange.Negative(SAMPLE_VISITORS_PERCENTAGE)),
-                StatItem("Likes", 0, StatChange.NoChange),
-                StatItem("Comments", 0, StatChange.NoChange),
-                StatItem("Posts", SAMPLE_POSTS, StatChange.Positive(SAMPLE_POSTS_PERCENTAGE))
+                StatItem(
+                    StatsMetric.VIEWS, "Views", SAMPLE_CURRENT_VIEWS,
+                    StatChange.Negative(SAMPLE_VIEWS_PERCENTAGE)
+                ),
+                StatItem(
+                    StatsMetric.VISITORS, "Visitors", SAMPLE_VISITORS,
+                    StatChange.Negative(SAMPLE_VISITORS_PERCENTAGE)
+                ),
+                StatItem(StatsMetric.LIKES, "Likes", 0, StatChange.NoChange),
+                StatItem(StatsMetric.COMMENTS, "Comments", 0, StatChange.NoChange),
+                StatItem(
+                    StatsMetric.POSTS, "Posts", SAMPLE_POSTS,
+                    StatChange.Positive(SAMPLE_POSTS_PERCENTAGE)
+                )
             )
         )
     )
@@ -992,6 +1027,7 @@ private fun ViewsStatsCardLoadedPreview() {
         ViewsStatsCard(
             uiState = sampleLoadedState(ChartType.BAR),
             onChartTypeChanged = {},
+            onMetricSelected = {},
             onBarTapped = {},
             onRetry = {},
             onRemoveCard = {}
@@ -1006,6 +1042,7 @@ private fun ViewsStatsCardLoadedLineChartPreview() {
         ViewsStatsCard(
             uiState = sampleLoadedState(ChartType.LINE),
             onChartTypeChanged = {},
+            onMetricSelected = {},
             onBarTapped = {},
             onRetry = {},
             onRemoveCard = {}
@@ -1022,6 +1059,7 @@ private fun ViewsStatsCardErrorPreview() {
                 message = stringResource(R.string.stats_error_api)
             ),
             onChartTypeChanged = {},
+            onMetricSelected = {},
             onBarTapped = {},
             onRetry = {},
             onRemoveCard = {}
@@ -1036,6 +1074,7 @@ private fun ViewsStatsCardLoadedDarkPreview() {
         ViewsStatsCard(
             uiState = sampleLoadedState(ChartType.BAR),
             onChartTypeChanged = {},
+            onMetricSelected = {},
             onBarTapped = {},
             onRetry = {},
             onRemoveCard = {}
@@ -1051,6 +1090,7 @@ private fun ViewsStatsCardLoadedRtlPreview() {
         ViewsStatsCard(
             uiState = sampleLoadedState(ChartType.BAR),
             onChartTypeChanged = {},
+            onMetricSelected = {},
             onBarTapped = {},
             onRetry = {},
             onRemoveCard = {}
@@ -1082,16 +1122,16 @@ private class ChartMarkerValueFormatter(
         if (!hasCurrent && !hasPrevious) return ""
 
         return buildString {
-            // Show current period with date and value
+            // Show current period with date and the selected metric's value
             if (hasCurrent) {
                 val current = currentPeriodData[x]
-                append("● ${current.label}: ${formatStatValue(current.views)}")
+                append("● ${current.label}: ${formatStatValue(current.value)}")
             }
-            // Show previous period with date and value
+            // Show previous period with date and the selected metric's value
             if (hasPrevious) {
                 if (hasCurrent) append("\n")
                 val previous = previousPeriodData[x]
-                append("○ ${previous.label}: ${formatStatValue(previous.views)}")
+                append("○ ${previous.label}: ${formatStatValue(previous.value)}")
             }
         }
     }
