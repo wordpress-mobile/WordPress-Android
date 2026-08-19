@@ -83,6 +83,9 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.ui.text.style.TextAlign
 import androidx.annotation.StringRes
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.repeatOnLifecycle
 import org.wordpress.android.R
 import org.wordpress.android.util.WPUrlUtils
 import org.wordpress.android.support.unified.util.formatRelativeTime
@@ -126,15 +129,20 @@ fun UnifiedConversationDetailScreen(
     val isBot = conversation.isBot
     val isBotTyping = isBot && isSendingReply
     val ctaLabelRes = replyCtaLabelRes(conversation)
+    val lifecycleOwner = LocalLifecycleOwner.current
 
     // Auto-refresh the open conversation every minute so replies from support appear without the
-    // user leaving the screen. Bots update locally, so we only poll HE conversations. Keying on the
-    // conversation id restarts the timer when a different conversation is opened.
+    // user leaving the screen. Bots update locally, so we only poll HE conversations. The poll is
+    // scoped to STARTED via repeatOnLifecycle so it pauses while the app is backgrounded (onStart
+    // already refreshes on return). Keying on the conversation id restarts the timer when a
+    // different conversation is opened.
     if (!isBot) {
-        LaunchedEffect(conversation.id) {
-            while (true) {
-                kotlinx.coroutines.delay(CONVERSATION_AUTO_REFRESH_INTERVAL_MS)
-                onAutoRefresh()
+        LaunchedEffect(conversation.id, lifecycleOwner) {
+            lifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                while (true) {
+                    kotlinx.coroutines.delay(CONVERSATION_AUTO_REFRESH_INTERVAL_MS)
+                    onAutoRefresh()
+                }
             }
         }
     }

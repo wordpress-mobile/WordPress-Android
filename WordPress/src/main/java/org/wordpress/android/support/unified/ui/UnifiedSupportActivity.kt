@@ -20,6 +20,7 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.core.net.toUri
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavHostController
@@ -177,12 +178,17 @@ class UnifiedSupportActivity : AppCompatActivity() {
                 composable(route = UnifiedScreen.List.name) {
                     val conversationsState by viewModel.conversationsState.collectAsState()
                     val conversations by viewModel.conversations.collectAsState()
+                    val lifecycleOwner = LocalLifecycleOwner.current
                     // Auto-refresh the list every minute while it's on screen so new or updated
-                    // conversations appear without the user pulling to refresh.
-                    LaunchedEffect(Unit) {
-                        while (true) {
-                            delay(CONVERSATIONS_LIST_AUTO_REFRESH_INTERVAL_MS)
-                            viewModel.refreshConversationsSilently()
+                    // conversations appear without the user pulling to refresh. Scoped to STARTED via
+                    // repeatOnLifecycle so the timer pauses while the app is backgrounded (onStart
+                    // already refreshes on return).
+                    LaunchedEffect(lifecycleOwner) {
+                        lifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                            while (true) {
+                                delay(CONVERSATIONS_LIST_AUTO_REFRESH_INTERVAL_MS)
+                                viewModel.refreshConversationsSilently()
+                            }
                         }
                     }
                     UnifiedConversationsListScreen(

@@ -4,12 +4,12 @@ import android.net.Uri
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.wordpress.android.fluxc.store.AccountStore
@@ -47,11 +47,13 @@ class UnifiedSupportViewModel @Inject constructor(
     private val _isSendingReply = MutableStateFlow(false)
     val isSendingReply: StateFlow<Boolean> = _isSendingReply.asStateFlow()
 
-    // One-shot event emitted after a Happiness Engineer ticket reply is successfully sent, so the UI
-    // can confirm it to the user. Not emitted for bot chat sends (they reply in-thread instantly and
-    // have no email follow-up).
-    private val _replySentEvents = MutableSharedFlow<Unit>()
-    val replySentEvents: SharedFlow<Unit> = _replySentEvents.asSharedFlow()
+    // Consumable one-shot event emitted after a Happiness Engineer ticket reply is successfully sent,
+    // so the UI can confirm it to the user (not emitted for bot chat sends — they reply in-thread and
+    // have no email follow-up). A CONFLATED channel buffers the event when no collector is attached
+    // (e.g. the composition-restart gap during rotation) so it isn't dropped, and trySend never
+    // suspends, so emitting it can't stall the reply's finally block.
+    private val _replySentEvents = Channel<Unit>(Channel.CONFLATED)
+    val replySentEvents: Flow<Unit> = _replySentEvents.receiveAsFlow()
 
     // Reply form state for HE-style conversations (survives configuration changes)
     private val _replyFormState = MutableStateFlow(ConversationReplyFormState())
@@ -245,9 +247,10 @@ class UnifiedSupportViewModel @Inject constructor(
                     } else {
                         replaceInList(updated)
                     }
-                    // Confirm HE ticket replies only; bot chat sends need no confirmation.
+                    // Confirm HE ticket replies only; bot chat sends need no confirmation. trySend is
+                    // non-suspending, so it never delays the finally block below.
                     if (!conversation.isBot) {
-                        _replySentEvents.emit(Unit)
+                        _replySentEvents.trySend(Unit)
                     }
                 } else {
                     rollbackOptimisticMessage(conversation, optimisticMessage.id)
