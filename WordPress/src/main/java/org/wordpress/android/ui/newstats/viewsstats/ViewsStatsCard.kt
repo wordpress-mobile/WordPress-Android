@@ -50,6 +50,7 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.role
+import androidx.compose.ui.semantics.selected
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -100,6 +101,7 @@ private val ChartHeight = 180.dp
 // single-day period doesn't resize the card.
 private val ChartHeaderHeight = 64.dp
 private val StatItemWidth = 100.dp
+private val StatItemIndicatorHeight = 3.dp
 private val BadgeCornerRadius = 4.dp
 
 // Preview sample data constants
@@ -297,6 +299,7 @@ private fun ContentCard(
                     Spacer(modifier = Modifier.height(16.dp))
                     BottomStatsRow(
                         stats = bottom.stats,
+                        selectedMetric = state.selectedMetric,
                         onMetricSelected = onMetricSelected
                     )
                 }
@@ -836,13 +839,14 @@ private fun ViewsStatsChart(
 @Composable
 private fun BottomStatsRow(
     stats: List<StatItem>,
+    selectedMetric: StatsMetric,
     onMetricSelected: (StatsMetric) -> Unit
 ) {
     // A plain scrollable Row plus the shared fading-edges modifier hints at off-screen items. The
     // modifier erases content with BlendMode.DstOut (background-agnostic) and is already RTL-aware,
-    // and it grows/shrinks the fade with the actual scroll offset. Each item doubles as the chart's
-    // metric selector (tapping it re-plots the chart, or shows the hourly-unavailable state), but
-    // keeps its plain appearance.
+    // and it grows/shrinks the fade with the actual scroll offset. The items act like a tab strip:
+    // each is a metric selector (tapping it re-plots the chart, or shows the hourly-unavailable
+    // state), and the selected one shows a bottom indicator line.
     val scrollState = rememberScrollState()
     Row(
         modifier = Modifier
@@ -852,7 +856,11 @@ private fun BottomStatsRow(
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         stats.forEach { stat ->
-            StatItemCard(stat = stat, onClick = { onMetricSelected(stat.metric) })
+            StatItemCard(
+                stat = stat,
+                isSelected = stat.metric == selectedMetric,
+                onClick = { onMetricSelected(stat.metric) }
+            )
         }
     }
 }
@@ -866,15 +874,20 @@ private fun iconForMetric(metric: StatsMetric) = when (metric) {
 }
 
 @Composable
-private fun StatItemCard(stat: StatItem, onClick: () -> Unit) {
+private fun StatItemCard(stat: StatItem, isSelected: Boolean, onClick: () -> Unit) {
     val icon = iconForMetric(stat.metric)
     val label = stringResource(stat.metric.labelRes)
+    // The selected tab's indicator uses the metric's accent color so it matches the recoloured chart.
+    val indicatorColor = if (isSelected) metricColor(stat.metric) else Color.Transparent
 
     Column(
         modifier = Modifier
             .width(StatItemWidth)
             .clickable(onClick = onClick)
-            .semantics { role = Role.Button },
+            .semantics {
+                role = Role.Tab
+                selected = isSelected
+            },
         horizontalAlignment = Alignment.Start
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
@@ -900,6 +913,16 @@ private fun StatItemCard(stat: StatItem, onClick: () -> Unit) {
         )
         Spacer(modifier = Modifier.height(4.dp))
         ChangeBadge(change = stat.change)
+        // Tab-style bottom indicator; always laid out (transparent when unselected) so the row height
+        // stays constant as the selection moves.
+        Spacer(modifier = Modifier.height(6.dp))
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(StatItemIndicatorHeight)
+                .clip(RoundedCornerShape(percent = 50))
+                .background(indicatorColor)
+        )
     }
 }
 
