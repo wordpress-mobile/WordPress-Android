@@ -71,6 +71,16 @@ class GBKMediaUploadProcessorTest : BaseUnitTest() {
         whenever(siteUtilsWrapper.onFreePlan(any())).thenReturn(true)
     }
 
+    /**
+     * A site subject to the free-plan video duration limit. Note this is [SiteModel.hasFreePlan]
+     * (the API's `plan.is_free`), which gates the duration check, and is distinct from
+     * [SiteUtilsWrapper.onFreePlan] (a plan-id match) used for the mime allowlist.
+     */
+    private fun freePlanSite() = SiteModel().apply {
+        setIsWPCom(true)
+        setHasFreePlan(true)
+    }
+
     @Test
     fun `image is optimized when optimization produces a new file`() = test {
         val optimized = tempFolder.newFile("optimized.jpg")
@@ -407,15 +417,74 @@ class GBKMediaUploadProcessorTest : BaseUnitTest() {
     }
 
     @Test
-    fun `handlesFile claims images`() {
+    fun `handlesFile claims images when optimization is on`() {
+        whenever(appPrefsWrapper.isImageOptimize).thenReturn(true)
+
         assertThat(createProcessor().handlesFile("image/jpeg", "photo.jpg")).isTrue()
     }
 
     @Test
-    fun `handlesFile claims videos`() {
+    fun `handlesFile claims images when the location strip applies`() {
+        whenever(appPrefsWrapper.isStripImageLocation).thenReturn(true)
+
+        assertThat(createProcessor().handlesFile("image/jpeg", "photo.jpg")).isTrue()
+    }
+
+    @Test
+    fun `handlesFile claims images on self-hosted for the rotation fallback`() {
+        // Issue #5737: self-hosted sites are not rotated server-side, so processImage still needs
+        // the file even with every optimization pref off.
+        assertThat(createProcessor(selfHostedSite()).handlesFile("image/jpeg", "photo.jpg")).isTrue()
+    }
+
+    @Test
+    fun `handlesFile declines images when nothing would touch the file`() {
+        // WP.com, optimization off, strip off: processImage returns Original without reading the
+        // file, so claiming it would cost a full copy for nothing.
+        assertThat(createProcessor(wpComSite()).handlesFile("image/jpeg", "photo.jpg")).isFalse()
+    }
+
+    @Test
+    fun `handlesFile declines images whose format cannot be exif-stripped`() {
+        // androidx ExifInterface cannot rewrite HEIC, so the strip is a no-op for it and the file
+        // is never read — see EXIF_MIME_TYPES.
+        whenever(appPrefsWrapper.isStripImageLocation).thenReturn(true)
+
+        assertThat(createProcessor(wpComSite()).handlesFile("image/heic", "photo.heic")).isFalse()
+    }
+
+    @Test
+    fun `handlesFile claims videos when optimization is on`() {
         whenever(mediaUtilsWrapper.isVideoMimeType("video/mp4")).thenReturn(true)
+        whenever(appPrefsWrapper.isVideoOptimize).thenReturn(true)
 
         assertThat(createProcessor().handlesFile("video/mp4", "movie.mp4")).isTrue()
+    }
+
+    @Test
+    fun `handlesFile claims videos on a free plan for the duration check`() {
+        whenever(mediaUtilsWrapper.isVideoMimeType("video/mp4")).thenReturn(true)
+
+        assertThat(createProcessor(freePlanSite()).handlesFile("video/mp4", "movie.mp4")).isTrue()
+    }
+
+    @Test
+    fun `handlesFile declines videos when nothing would touch the file`() {
+        // Paid plan with video optimization off — a common configuration, since optimization is
+        // opt-in. Claiming here copies the whole video to cache for a guaranteed passthrough.
+        whenever(mediaUtilsWrapper.isVideoMimeType("video/mp4")).thenReturn(true)
+
+        assertThat(createProcessor(wpComSite()).handlesFile("video/mp4", "movie.mp4")).isFalse()
+    }
+
+    @Test
+    fun `handlesFile declines videos on a free plan with VideoPress enabled`() {
+        // VideoPress lifts the duration limit, so the check does not measure and nothing else
+        // reads the file with optimization off.
+        whenever(mediaUtilsWrapper.isVideoMimeType("video/mp4")).thenReturn(true)
+        val site = freePlanSite().apply { activeModules = "videopress" }
+
+        assertThat(createProcessor(site).handlesFile("video/mp4", "movie.mp4")).isFalse()
     }
 
     @Test
@@ -481,6 +550,15 @@ class GBKMediaUploadProcessorTest : BaseUnitTest() {
         whenever(mediaUtilsWrapper.isMimeTypeSupportedBySitePlan(anyOrNull(), any())).thenReturn(false)
 
         assertThat(createProcessor().handlesFile("application/zip", "archive.zip")).isTrue()
+    }
+
+    @Test
+    fun `handlesFile declines documents that are not plan-rejected`() {
+        // On a paid plan there is nothing for processFile to say about a document, so claiming it
+        // would cost a full byte-for-byte copy for a guaranteed passthrough. The plan test
+        // short-circuits before the type is even classified.
+        assertThat(createProcessor().handlesFile("application/zip", "archive.zip")).isFalse()
+        verify(mediaUtilsWrapper, never()).isMimeTypeSupportedBySitePlan(anyOrNull(), any())
     }
 
     private fun fileUri(file: File): android.net.Uri = mock {

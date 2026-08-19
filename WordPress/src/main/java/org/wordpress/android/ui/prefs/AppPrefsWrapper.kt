@@ -49,6 +49,9 @@ class AppPrefsWrapper @Inject constructor(val buildConfigWrapper: BuildConfigWra
         get() = AppPrefs.isAztecEditorEnabled()
         set(enabled) = AppPrefs.setAztecEditorEnabled(enabled)
 
+    val isImageOptimize: Boolean
+        get() = AppPrefs.isImageOptimize()
+
     val isVideoOptimize: Boolean
         get() = AppPrefs.isVideoOptimize()
 

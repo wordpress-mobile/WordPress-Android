@@ -51,8 +51,12 @@ class GBKMediaUploadProcessor(
     /**
      * Metadata-only gate GutenbergKit consults before copying an upload to a temp file. Declining
      * makes it relay the original request body straight to WordPress, skipping a copy this
-     * delegate would not have used: [processFile] returns [ProcessedProxyFile.Original] for GIFs
-     * and non-media, so today those pay a full byte-for-byte copy only to be passed through.
+     * delegate would not have used — GIFs, non-media, and any media whose processing is switched
+     * off would otherwise pay a full byte-for-byte copy only to be passed through.
+     *
+     * The media branches mirror the decisions [processVideo] and [processImage] actually make
+     * (see [needsVideoFile] / [needsImageFile]) rather than claiming every image and video, so a
+     * site with optimization off does not copy uploads it will never touch.
      *
      * This is an optimization hint, never the enforcement point. It sees only the client-supplied
      * mime type and filename, which can disagree with the file's actual bytes, so the free-plan
@@ -71,12 +75,41 @@ class GBKMediaUploadProcessor(
         return when {
             // Never re-encoded; processFile always returns Original.
             resolvedMimeType == MIME_GIF -> false
-            // Both the duration check and the optional transcode need the file itself.
-            mediaUtilsWrapper.isVideoMimeType(resolvedMimeType) -> true
-            resolvedMimeType.startsWith(MIME_IMAGE_PREFIX) -> true
+            mediaUtilsWrapper.isVideoMimeType(resolvedMimeType) -> needsVideoFile()
+            resolvedMimeType.startsWith(MIME_IMAGE_PREFIX) -> needsImageFile(resolvedMimeType)
             // Non-media files (documents, archives, audio on paid plans) upload unchanged.
             else -> false
         }
+    }
+
+    /**
+     * Whether [processVideo] would actually read the staged file, mirroring its two exits:
+     * the duration check (which only measures on a free plan without VideoPress — see
+     * [MediaUtilsWrapper.isProhibitedVideoDuration]) and the transcode.
+     *
+     * With video optimization off on a paid or self-hosted site — a common configuration, since
+     * optimization is opt-in — the method returns [ProcessedProxyFile.Original] without touching
+     * the file, so claiming it would make GutenbergKit write a full byte-for-byte copy of the
+     * upload to the cache dir for nothing. For a multi-gigabyte video that is gigabytes of I/O
+     * and a plausible ENOSPC.
+     */
+    private fun needsVideoFile(): Boolean {
+        val durationCheckApplies = site.hasFreePlan && !site.isActiveModuleEnabled(VIDEOPRESS_MODULE)
+        return durationCheckApplies || appPrefsWrapper.isVideoOptimize
+    }
+
+    /**
+     * Whether [processImage] would actually read the staged file, mirroring its three exits:
+     * optimization ([WPMediaUtils.getOptimizedMedia] short-circuits when the pref is off),
+     * the self-hosted rotation fallback for issue #5737, and the EXIF location strip (which only
+     * copies for the formats androidx ExifInterface can rewrite — see [EXIF_MIME_TYPES]).
+     *
+     * All three must be inapplicable to decline. Dropping the rotation term would regress #5737
+     * parity on self-hosted sites, where the server does not rotate for us.
+     */
+    private fun needsImageFile(resolvedMimeType: String): Boolean {
+        val stripsLocation = appPrefsWrapper.isStripImageLocation && resolvedMimeType in EXIF_MIME_TYPES
+        return appPrefsWrapper.isImageOptimize || !site.isWPCom || stripsLocation
     }
 
     override suspend fun processFile(
@@ -347,6 +380,9 @@ class GBKMediaUploadProcessor(
          * in parallel — exactly what this exists to prevent.
          */
         private val transcodeMutex = Mutex()
+
+        /** Site module that lifts the free-plan video duration limit. */
+        private const val VIDEOPRESS_MODULE = "videopress"
 
         private const val MIME_IMAGE_PREFIX = "image/"
         private const val MIME_GIF = "image/gif"
