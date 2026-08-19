@@ -4,8 +4,11 @@ import android.net.Uri
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -43,6 +46,12 @@ class UnifiedSupportViewModel @Inject constructor(
 ) : ConversationsSupportViewModel<UnifiedConversation>(accountStore, appLogWrapper, networkUtilsWrapper) {
     private val _isSendingReply = MutableStateFlow(false)
     val isSendingReply: StateFlow<Boolean> = _isSendingReply.asStateFlow()
+
+    // One-shot event emitted after a Happiness Engineer ticket reply is successfully sent, so the UI
+    // can confirm it to the user. Not emitted for bot chat sends (they reply in-thread instantly and
+    // have no email follow-up).
+    private val _replySentEvents = MutableSharedFlow<Unit>()
+    val replySentEvents: SharedFlow<Unit> = _replySentEvents.asSharedFlow()
 
     // Reply form state for HE-style conversations (survives configuration changes)
     private val _replyFormState = MutableStateFlow(ConversationReplyFormState())
@@ -231,6 +240,10 @@ class UnifiedSupportViewModel @Inject constructor(
                         _conversations.value = listOf(updated.copy(messages = emptyList())) + _conversations.value
                     } else {
                         replaceInList(updated)
+                    }
+                    // Confirm HE ticket replies only; bot chat sends need no confirmation.
+                    if (!conversation.isBot) {
+                        _replySentEvents.emit(Unit)
                     }
                 } else {
                     rollbackOptimisticMessage(conversation, optimisticMessage.id)

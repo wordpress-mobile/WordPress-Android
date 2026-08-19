@@ -139,6 +139,17 @@ class UnifiedSupportActivity : AppCompatActivity() {
         val scope = rememberCoroutineScope()
         val errorMessage by viewModel.errorMessage.collectAsState()
 
+        // Confirm a successful HE ticket reply with a transient snackbar. The event is one-shot, so
+        // it never re-shows on recomposition or configuration change.
+        LaunchedEffect(Unit) {
+            viewModel.replySentEvents.collect {
+                snackbarHostState.showSnackbar(
+                    message = getString(R.string.he_support_reply_sent_confirmation),
+                    duration = SnackbarDuration.Long
+                )
+            }
+        }
+
         val errorType = errorMessage
         if (errorType != null) {
             val message = when (errorType) {

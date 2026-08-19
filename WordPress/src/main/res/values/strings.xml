@@ -4709,6 +4709,7 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="he_support_reply_button">Reply</string>
     <string name="he_support_add_more_info_button">Add more info</string>
     <string name="he_support_send_button">Send</string>
+    <string name="he_support_reply_sent_confirmation">Your reply has been sent. Check your email for updates.</string>
     <string name="he_support_message_label">Message</string>
     <string name="he_support_downloading_attachment">Downloading %1$s…</string>
     <string name="he_support_loading_image">Loading image</string>
