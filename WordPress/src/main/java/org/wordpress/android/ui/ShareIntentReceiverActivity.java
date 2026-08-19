@@ -5,7 +5,6 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.webkit.MimeTypeMap;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -42,6 +41,7 @@ import java.util.Map;
 import javax.inject.Inject;
 
 import static org.wordpress.android.fluxc.utils.MediaUtils.getExtension;
+import static org.wordpress.android.fluxc.utils.MediaUtils.getMimeTypeForExtension;
 import static org.wordpress.android.fluxc.utils.MediaUtils.isSupportedImageMimeType;
 import static org.wordpress.android.fluxc.utils.MediaUtils.isSupportedVideoMimeType;
 
@@ -180,14 +180,15 @@ public class ShareIntentReceiverActivity extends BaseAppCompatActivity implement
             return localUri;
         }
 
-        // getExtensionForMimeType() never fails: when the MIME type is unknown to MimeTypeMap it
-        // returns the subtype, so "application/octet-stream" would name the file ".octet-stream".
-        // That reads as a real extension downstream and suppresses the image/jpeg fallback in
+        // getExtensionForMimeType() never fails: when the MIME type is unknown it returns the
+        // subtype, so "application/octet-stream" would name the file ".octet-stream". That reads as
+        // a real extension downstream and suppresses the image/jpeg fallback in
         // FluxCUtils.mediaModelFromLocalUri() that would otherwise have made the upload work, so
-        // only rename when the extension maps back to a MIME type.
+        // only rename when the extension maps back to a MIME type. Check that against the same
+        // table isAllowedMediaType() accepts from, rather than MimeTypeMap, whose coverage of
+        // heic/heif/ogv/3g2 varies by API level.
         String extension = MediaUtils.getExtensionForMimeType(mimeType);
-        if (TextUtils.isEmpty(extension)
-                || MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension) == null) {
+        if (TextUtils.isEmpty(extension) || getMimeTypeForExtension(extension) == null) {
             return localUri;
         }
 
