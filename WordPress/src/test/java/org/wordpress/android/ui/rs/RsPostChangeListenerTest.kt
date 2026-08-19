@@ -212,6 +212,17 @@ class RsPostChangeListenerTest : BaseUnitTest(StandardTestDispatcher()) {
     }
 
     @Test
+    fun `a removed post is ignored`() {
+        val emissions = countEmissions {
+            listener.onPostChanged(
+                changed(CauseOfOnPostChanged.RemovePost(LOCAL_POST_ID, REMOTE_POST_ID))
+            )
+        }
+
+        assertThat(emissions).isZero()
+    }
+
+    @Test
     fun `a list fetch is ignored`() {
         val emissions = countEmissions {
             listener.onPostChanged(changed(CauseOfOnPostChanged.FetchPosts))

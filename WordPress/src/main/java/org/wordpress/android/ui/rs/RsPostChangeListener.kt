@@ -34,11 +34,10 @@ class RsPostChangeListener @Inject constructor(
     private val postStore: PostStore,
 ) {
     // Written on the caller's thread but read by handlers that EventBus may deliver on a
-    // background one, so both have to be published safely.
+    // background one, so all of it has to be published safely.
     @Volatile private var localSiteId: Int? = null
     @Volatile private var isPages: Boolean = false
-
-    private var isStarted = false
+    @Volatile private var isStarted = false
 
     private val _changes = MutableSharedFlow<Unit>(
         extraBufferCapacity = 1,
@@ -92,7 +91,9 @@ class RsPostChangeListener @Inject constructor(
      * copy changed are of interest - the rs list renders the server copy and nothing else.
      *
      * Delivered on a background thread because deciding whether the post belongs to this list
-     * reads it back out of the database, and this fires on every write FluxC makes.
+     * reads it back out of the database, and this fires on every write FluxC makes. Keep the work
+     * here to that one lookup - EventBus runs every BACKGROUND subscriber of this bus on a single
+     * shared queue, so anything slow here delays the rest of them.
      */
     @Suppress("unused")
     @Subscribe(threadMode = ThreadMode.BACKGROUND)

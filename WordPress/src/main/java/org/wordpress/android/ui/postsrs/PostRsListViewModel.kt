@@ -31,6 +31,7 @@ import org.wordpress.android.ui.postsrs.data.WpServiceProvider
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.rs.RsPostChangeListener
 import org.wordpress.android.ui.rs.RsTabLoading
+import org.wordpress.android.ui.rs.RsTabRefreshJobs
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.SiteUtils
@@ -79,6 +80,10 @@ class PostRsListViewModel @Inject constructor(
     private val collections = mutableMapOf<PostRsListTab, ObservableMetadataCollection>()
     private val initializingTabs = mutableSetOf<PostRsListTab>()
     private val userRefreshingTabs = mutableSetOf<PostRsListTab>()
+    private val refreshJobs = RsTabRefreshJobs<PostRsListTab>()
+
+    private var isScreenVisible = false
+    private var hasDeferredChange = false
 
     /** Tabs whose collection has completed at least one fetch, so an empty list means empty. */
     private val fetchedTabs = mutableSetOf<PostRsListTab>()
@@ -145,15 +150,43 @@ class PostRsListViewModel @Inject constructor(
         }
     }
 
+    /** Called when the screen becomes visible, and again whenever it returns from the background. */
+    @MainThread
+    fun onScreenVisible() {
+        isScreenVisible = true
+        if (hasDeferredChange) refreshForRemoteChange()
+    }
+
+    @MainThread
+    fun onScreenHidden() {
+        isScreenVisible = false
+    }
+
     /**
-     * Refreshes the list after FluxC reported a change the rs collections can't see - a post saved
-     * in the editor, for instance.
+     * Records a change FluxC reported that the rs collections can't see - a post saved in the
+     * editor, for instance.
      *
-     * Skipped when offline: the refresh could only fail, and [refreshAllTabs] would then mark every
-     * tab with an error for something the user never asked for.
+     * Most of these arrive while the editor is covering the list, and refreshing a screen nobody
+     * is looking at spends a request per open tab for a result that may be superseded before it is
+     * seen. So a hidden list only remembers that it is out of date, however many changes arrive,
+     * and refreshes once in [onScreenVisible].
      */
     private fun onRemoteChangeDetected() {
+        if (!isScreenVisible) {
+            hasDeferredChange = true
+            return
+        }
+        refreshForRemoteChange()
+    }
+
+    /**
+     * Skipped when offline: the refresh could only fail, and [refreshAllTabs] would then mark every
+     * tab with an error for something the user never asked for. The change stays deferred so the
+     * list still catches up the next time it is shown with a connection.
+     */
+    private fun refreshForRemoteChange() {
         if (!networkUtilsWrapper.isNetworkAvailable()) return
+        hasDeferredChange = false
         refreshAllTabs()
     }
 
@@ -669,6 +702,7 @@ class PostRsListViewModel @Inject constructor(
         collections.clear()
         initializingTabs.clear()
         userRefreshingTabs.clear()
+        refreshJobs.clear()
         fetchedTabs.clear()
         resolveImageJobs.values.forEach { it.cancel() }
         resolveImageJobs.clear()
@@ -772,13 +806,26 @@ class PostRsListViewModel @Inject constructor(
             }
         }
 
-        // A refresh with no connection can only fail, so report it without the round trip.
-        if (!networkUtilsWrapper.isNetworkAvailable()) {
-            onRefreshFailed(tab, e = null, showSnackbar = isUserRefresh)
-            return
-        }
+        when {
+            // A refresh with no connection can only fail, so report it without the round trip.
+            !networkUtilsWrapper.isNetworkAvailable() ->
+                onRefreshFailed(tab, e = null, showSnackbar = isUserRefresh)
 
-        viewModelScope.launch {
+            // The tab is already refreshing. Its progress state is set above either way, and
+            // the request is replayed by [startRefresh] once the running one finishes.
+            refreshJobs.deferIfRunning(tab) -> Unit
+
+            else -> startRefresh(tab, collection, isUserRefresh)
+        }
+    }
+
+    /** Runs the one refresh a tab is allowed at a time, then replays any request it deferred. */
+    private fun startRefresh(
+        tab: PostRsListTab,
+        collection: ObservableMetadataCollection,
+        isUserRefresh: Boolean
+    ) {
+        val job = viewModelScope.launch {
             @Suppress("TooGenericExceptionCaught")
             try {
                 withContext(Dispatchers.IO) { collection.refresh() }
@@ -788,10 +835,14 @@ class PostRsListViewModel @Inject constructor(
                 // on the collection observers, which aren't guaranteed to fire for a refresh.
                 loadItemsForTab(tab)
                 updateTabUiState(tab) { copy(isLoading = false, isRefreshing = false) }
+            } catch (e: CancellationException) {
+                throw e
             } catch (e: Exception) {
                 onRefreshFailed(tab, e, showSnackbar = isUserRefresh)
             }
+            if (refreshJobs.onFinished(tab)) refreshTab(tab)
         }
+        refreshJobs.onStarted(tab, job)
     }
 
     /**
@@ -1069,7 +1120,7 @@ class PostRsListViewModel @Inject constructor(
         _tabStates.value += (tab to getTabUiState(tab).update())
     }
 
-    override fun onCleared() {
+    public override fun onCleared() {
         super.onCleared()
         changeListener.stop()
         collections.values.forEach { it.close() }

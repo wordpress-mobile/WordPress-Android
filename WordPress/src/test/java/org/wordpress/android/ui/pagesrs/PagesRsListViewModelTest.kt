@@ -362,7 +362,8 @@ internal class PagesRsListViewModelTest : BaseUnitTest(StandardTestDispatcher())
 
     @Test
     fun `a page changed through FluxC refreshes the list`() = test {
-        createViewModel()
+        val viewModel = createViewModel()
+        viewModel.onScreenVisible()
         advanceUntilIdle()
 
         changeListener.onPostUploaded(OnPostUploaded(pageUpload(), false))
@@ -374,13 +375,39 @@ internal class PagesRsListViewModelTest : BaseUnitTest(StandardTestDispatcher())
     @Test
     fun `a page changed through FluxC does not refresh the list while offline`() = test {
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(false)
-        createViewModel()
+        val viewModel = createViewModel()
+        viewModel.onScreenVisible()
         advanceUntilIdle()
 
         changeListener.onPostUploaded(OnPostUploaded(pageUpload(), false))
         advanceUntilIdle()
 
         verify(restClient, never()).clearCaches()
+    }
+
+    @Test
+    fun `changes while the screen is hidden are refreshed once when it is shown`() = test {
+        val viewModel = createViewModel()
+        viewModel.onScreenVisible()
+        viewModel.onScreenHidden()
+        advanceUntilIdle()
+
+        changeListener.onPostUploaded(OnPostUploaded(pageUpload(), false))
+        advanceUntilIdle()
+        changeListener.onPostUploaded(OnPostUploaded(pageUpload(), false))
+        advanceUntilIdle()
+        verify(restClient, never()).clearCaches()
+
+        viewModel.onScreenVisible()
+
+        verify(restClient).clearCaches()
+    }
+
+    @Test
+    fun `clearing the view model stops the change listener`() {
+        createViewModel().onCleared()
+
+        verify(dispatcher).unregister(changeListener)
     }
 
     private fun pageUpload() = PostModel().apply {
