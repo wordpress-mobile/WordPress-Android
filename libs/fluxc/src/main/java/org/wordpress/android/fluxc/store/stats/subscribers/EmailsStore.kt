@@ -26,7 +26,7 @@ class EmailsStore @Inject constructor(
         sortField: EmailsRestClient.SortField,
         forced: Boolean = false
     ) = coroutineEngine.withDefaultContext(STATS, this, "fetchEmails") {
-        if (!forced && sqlUtils.hasFreshRequest(siteModel, limitMode.limit)) {
+        if (!forced && sqlUtils.hasFreshRequest(siteModel, limitMode.limit, cacheKey = sortField.sortField)) {
             return@withDefaultContext OnStatsFetched(getEmails(siteModel, limitMode, sortField), cached = true)
         }
 
@@ -34,7 +34,12 @@ class EmailsStore @Inject constructor(
         return@withDefaultContext when {
             response.isError -> OnStatsFetched(response.error)
             response.response != null -> {
-                sqlUtils.insert(siteModel, response.response, requestedItems = limitMode.limit)
+                sqlUtils.insert(
+                    siteModel,
+                    response.response,
+                    requestedItems = limitMode.limit,
+                    cacheKey = sortField.sortField
+                )
                 OnStatsFetched(insightsMapper.map(response.response, limitMode, sortField))
             }
 
@@ -47,6 +52,6 @@ class EmailsStore @Inject constructor(
         cacheMode: LimitMode,
         sortField: EmailsRestClient.SortField
     ) = coroutineEngine.run(STATS, this, "getEmails") {
-        sqlUtils.select(site)?.let { insightsMapper.map(it, cacheMode, sortField) }
+        sqlUtils.select(site, cacheKey = sortField.sortField)?.let { insightsMapper.map(it, cacheMode, sortField) }
     }
 }

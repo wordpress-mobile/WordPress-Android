@@ -10,10 +10,11 @@ import org.mockito.kotlin.whenever
 import org.wordpress.android.fluxc.model.AccountModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalHelper
 import org.wordpress.android.ui.mysite.items.ACTIVITY_ITEM
 import org.wordpress.android.ui.mysite.items.ADMIN_ITEM
 import org.wordpress.android.ui.mysite.items.BACKUP_ITEM
+import org.wordpress.android.ui.mysite.items.ME_ITEM
 import org.wordpress.android.ui.mysite.items.PAGES_ITEM
 import org.wordpress.android.ui.mysite.items.PEOPLE_ITEM
 import org.wordpress.android.ui.mysite.items.PLUGINS_ITEM
@@ -50,7 +51,7 @@ class SiteListItemBuilderTest {
     lateinit var siteModel: SiteModel
 
     @Mock
-    lateinit var jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper
+    lateinit var jetpackFeatureRemovalHelper: JetpackFeatureRemovalHelper
 
     @Mock
     lateinit var siteMonitoringFeatureConfig: SiteMonitoringFeatureConfig
@@ -71,7 +72,7 @@ class SiteListItemBuilderTest {
             siteUtilsWrapper,
             buildConfigWrapper,
             themeBrowserUtils,
-            jetpackFeatureRemovalPhaseHelper,
+            jetpackFeatureRemovalHelper,
             siteMonitoringFeatureConfig,
             selfHostedUsersFeatureConfig,
             siteCapabilityChecker
@@ -333,6 +334,26 @@ class SiteListItemBuilderTest {
         setupSiteSettings(canManageOptions = false, isAccessedViaWPComRest = true)
 
         val item = siteListItemBuilder.buildSiteSettingsItemIfAvailable(siteModel, SITE_ITEM_ACTION)
+
+        assertThat(item).isNull()
+    }
+
+    // Me stands in for the bottom navigation once Jetpack features are removed, so it is built
+    // for every site regardless of capabilities.
+    @Test
+    fun `me item built when jetpack features are removed, regardless of site capabilities`() {
+        whenever(jetpackFeatureRemovalHelper.shouldRemoveJetpackFeatures()).thenReturn(true)
+
+        val item = siteListItemBuilder.buildMeItemIfAvailable(SITE_ITEM_ACTION)
+
+        assertThat(item).isEqualTo(ME_ITEM)
+    }
+
+    @Test
+    fun `me item not built when jetpack features are not removed`() {
+        whenever(jetpackFeatureRemovalHelper.shouldRemoveJetpackFeatures()).thenReturn(false)
+
+        val item = siteListItemBuilder.buildMeItemIfAvailable(SITE_ITEM_ACTION)
 
         assertThat(item).isNull()
     }

@@ -104,8 +104,8 @@ class EmailsCardViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `when data loads successfully, then loaded state has items truncated to 5`() = test {
-        val items = (1..10).map {
+    fun `when data loads successfully, then loaded state has items truncated to 10`() = test {
+        val items = (1..15).map {
             EmailItemData(
                 title = "Email $it",
                 opens = it.toLong() * 100,
@@ -120,11 +120,11 @@ class EmailsCardViewModelTest : BaseUnitTest() {
 
         val state = viewModel.uiState.value
         assertThat(state).isInstanceOf(EmailsCardUiState.Loaded::class.java)
-        assertThat((state as EmailsCardUiState.Loaded).items).hasSize(5)
+        assertThat((state as EmailsCardUiState.Loaded).items).hasSize(10)
     }
 
     @Test
-    fun `when data has fewer than 5 items, then all items are shown`() = test {
+    fun `when data has fewer than 10 items, then all items are shown`() = test {
         val items = (1..3).map {
             EmailItemData(
                 title = "Email $it",

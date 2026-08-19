@@ -20,7 +20,7 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagType;
 import org.wordpress.android.ui.ActivityId;
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase;
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalHelperKt;
 import org.wordpress.android.ui.mysite.SelectedSiteRepository;
 import org.wordpress.android.ui.mysite.tabs.MySiteTabType;
 import org.wordpress.android.ui.posts.AuthorFilterSelection;
@@ -179,8 +179,6 @@ public class AppPrefs {
         OPEN_WEB_LINKS_WITH_JETPACK,
         SHOULD_HIDE_JETPACK_FEATURE_CARD,
         JETPACK_FEATURE_CARD_LAST_SHOWN_TIMESTAMP,
-        SWITCH_TO_JETPACK_MENU_CARD_SHOWN_TIMESTAMP,
-        SHOULD_HIDE_SWITCH_TO_JETPACK_MENU_CARD,
         SHOULD_HIDE_JETPACK_INSTALL_FULL_PLUGIN_CARD,
         SHOULD_SHOW_JETPACK_FULL_PLUGIN_INSTALL_ONBOARDING,
         SHOULD_HIDE_PROMOTE_WITH_BLAZE_CARD,
@@ -1641,51 +1639,31 @@ public class AppPrefs {
         setBoolean(DeletablePrefKey.OPEN_WEB_LINKS_WITH_JETPACK, isOpenWebLinksWithJetpack);
     }
 
-    public static Boolean getShouldHideJetpackFeatureCard(JetpackFeatureRemovalPhase phase) {
-        return prefs().getBoolean(getHideJetpackFeatureCardWithPhaseKey(phase), false);
+    public static Boolean getShouldHideJetpackFeatureCard() {
+        return prefs().getBoolean(getHideJetpackFeatureCardWithPhaseKey(), false);
     }
 
-    public static void setShouldHideJetpackFeatureCard(JetpackFeatureRemovalPhase phase, final boolean isHidden) {
-        prefs().edit().putBoolean(getHideJetpackFeatureCardWithPhaseKey(phase), isHidden).apply();
+    public static void setShouldHideJetpackFeatureCard(final boolean isHidden) {
+        prefs().edit().putBoolean(getHideJetpackFeatureCardWithPhaseKey(), isHidden).apply();
     }
 
-    public static Long getJetpackFeatureCardLastShownTimestamp(JetpackFeatureRemovalPhase jetpackFeatureRemovalPhase) {
-        return prefs().getLong(getJetpackFeatureCardLastShownTimeStampWithPhaseKey(jetpackFeatureRemovalPhase), 0L);
+    public static Long getJetpackFeatureCardLastShownTimestamp() {
+        return prefs().getLong(getJetpackFeatureCardLastShownTimeStampWithPhaseKey(), 0L);
     }
 
-    public static void setJetpackFeatureCardLastShownTimestamp(JetpackFeatureRemovalPhase jetpackFeatureRemovalPhase,
-                                                               final Long lastShownTimestamp) {
-        prefs().edit().putLong(getJetpackFeatureCardLastShownTimeStampWithPhaseKey(jetpackFeatureRemovalPhase),
-                lastShownTimestamp).apply();
+    public static void setJetpackFeatureCardLastShownTimestamp(final Long lastShownTimestamp) {
+        prefs().edit().putLong(getJetpackFeatureCardLastShownTimeStampWithPhaseKey(), lastShownTimestamp).apply();
     }
 
-    @NonNull private static String getHideJetpackFeatureCardWithPhaseKey(JetpackFeatureRemovalPhase phase) {
-        return DeletablePrefKey.SHOULD_HIDE_JETPACK_FEATURE_CARD.name() + phase.getTrackingName();
+    @NonNull private static String getHideJetpackFeatureCardWithPhaseKey() {
+        return DeletablePrefKey.SHOULD_HIDE_JETPACK_FEATURE_CARD.name()
+               + JetpackFeatureRemovalHelperKt.JETPACK_REMOVAL_TRACKING_NAME;
     }
 
     @NonNull
-    private static String getJetpackFeatureCardLastShownTimeStampWithPhaseKey(JetpackFeatureRemovalPhase phase) {
-        return DeletablePrefKey.JETPACK_FEATURE_CARD_LAST_SHOWN_TIMESTAMP.name() + phase.getTrackingName();
-    }
-
-    public static Long getSwitchToJetpackMenuCardLastShownTimestamp() {
-        return getLong(DeletablePrefKey.SWITCH_TO_JETPACK_MENU_CARD_SHOWN_TIMESTAMP, 0L);
-    }
-
-    public static void setSwitchToJetpackMenuCardLastShownTimestamp(final Long lastShownTimestamp) {
-        setLong(DeletablePrefKey.SWITCH_TO_JETPACK_MENU_CARD_SHOWN_TIMESTAMP, lastShownTimestamp);
-    }
-
-    public static Boolean getShouldHideSwitchToJetpackMenuCard(JetpackFeatureRemovalPhase phase) {
-        return prefs().getBoolean(getHideSwitchToJetpackMenuCardWithPhaseKey(phase), false);
-    }
-
-    public static void setShouldHideSwitchToJetpackMenuCard(JetpackFeatureRemovalPhase phase, final boolean isHidden) {
-        prefs().edit().putBoolean(getHideSwitchToJetpackMenuCardWithPhaseKey(phase), isHidden).apply();
-    }
-
-    @NonNull private static String getHideSwitchToJetpackMenuCardWithPhaseKey(JetpackFeatureRemovalPhase phase) {
-        return DeletablePrefKey.SHOULD_HIDE_SWITCH_TO_JETPACK_MENU_CARD.name() + phase.getTrackingName();
+    private static String getJetpackFeatureCardLastShownTimeStampWithPhaseKey() {
+        return DeletablePrefKey.JETPACK_FEATURE_CARD_LAST_SHOWN_TIMESTAMP.name()
+               + JetpackFeatureRemovalHelperKt.JETPACK_REMOVAL_TRACKING_NAME;
     }
 
     public static Boolean getShouldHideJetpackInstallFullPluginCard(int siteId) {

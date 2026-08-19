@@ -196,6 +196,53 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `given DAY unit, when chart loads, then the legend date range includes the year`() = test {
+        // Default aggregates span 2024-01-14..2024-01-20 (a Last7Days range within one month).
+        val result = createPeriodStatsResult(unit = StatsUnit.DAY)
+        whenever(statsRepository.fetchStatsForPeriod(any(), any())).thenReturn(result)
+
+        initViewModel()
+        advanceUntilIdle()
+
+        assertThat(viewModel.uiState.value.chartLoaded().currentPeriodDateRange).isEqualTo("14-20 Jan 2024")
+    }
+
+    @Test
+    fun `given a cross-year DAY range, when chart loads, then both ends show the year`() = test {
+        val result = createPeriodStatsResult(
+            unit = StatsUnit.DAY,
+            currentStartDate = "2024-12-29",
+            currentEndDate = "2025-01-04"
+        )
+        whenever(statsRepository.fetchStatsForPeriod(any(), any())).thenReturn(result)
+
+        initViewModel()
+        advanceUntilIdle()
+
+        assertThat(viewModel.uiState.value.chartLoaded().currentPeriodDateRange)
+            .isEqualTo("29 Dec 2024 - 4 Jan 2025")
+    }
+
+    @Test
+    fun `given a MONTH range, when chart loads, then the legend date range includes the year`() = test {
+        val result = createPeriodStatsResult(
+            unit = StatsUnit.MONTH,
+            currentStartDate = "2024-01-01",
+            currentEndDate = "2024-06-01"
+        )
+        whenever(statsRepository.fetchStatsForPeriod(any(), any())).thenReturn(result)
+
+        initViewModel()
+        advanceUntilIdle()
+
+        viewModel.onPeriodChanged(StatsPeriod.Last6Months)
+        viewModel.loadDataIfNeeded()
+        advanceUntilIdle()
+
+        assertThat(viewModel.uiState.value.chartLoaded().currentPeriodDateRange).isEqualTo("Jan - Jun 2024")
+    }
+
+    @Test
     fun `given DAY unit, when chart loads, then labels are not coarsened to the year`() = test {
         val result = createPeriodStatsResult(unit = StatsUnit.DAY)
         whenever(statsRepository.fetchStatsForPeriod(any(), any())).thenReturn(result)
@@ -1032,7 +1079,9 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
         previousPosts: Long = TEST_PREVIOUS_PERIOD_POSTS,
         currentPeriodData: List<ViewsDataPoint> = createDefaultDataPoints(),
         previousPeriodData: List<ViewsDataPoint> = createDefaultDataPoints(),
-        unit: StatsUnit = StatsUnit.DAY
+        unit: StatsUnit = StatsUnit.DAY,
+        currentStartDate: String = "2024-01-14",
+        currentEndDate: String = "2024-01-20"
     ): PeriodStatsResult.Success {
         val currentAggregates = PeriodAggregates(
             views = currentViews,
@@ -1040,8 +1089,8 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
             likes = currentLikes,
             comments = currentComments,
             posts = currentPosts,
-            startDate = "2024-01-14",
-            endDate = "2024-01-20"
+            startDate = currentStartDate,
+            endDate = currentEndDate
         )
         val previousAggregates = PeriodAggregates(
             views = previousViews,

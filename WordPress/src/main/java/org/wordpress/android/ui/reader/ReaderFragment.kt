@@ -16,16 +16,12 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
-import androidx.recyclerview.widget.RecyclerView
 import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
 import org.wordpress.android.databinding.ReaderFragmentLayoutBinding
-import org.wordpress.android.models.JetpackPoweredScreen
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.ui.ScrollableViewInitializedListener
 import org.wordpress.android.ui.compose.theme.AppThemeM3
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureFullScreenOverlayFragment
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil.JetpackFeatureOverlayScreenType
 import org.wordpress.android.ui.main.WPMainActivity.OnScrollToTopListener
 import org.wordpress.android.ui.main.WPMainNavigationView.PageType.READER
 import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredBottomSheetFragment
@@ -52,7 +48,6 @@ import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.ReaderUiState.
 import org.wordpress.android.ui.reader.views.compose.ReaderTopAppBar
 import org.wordpress.android.ui.reader.views.compose.filter.ReaderFilterType
 import org.wordpress.android.ui.utils.UiHelpers
-import org.wordpress.android.util.JetpackBrandingUtils
 import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.SnackbarSequencer
 import org.wordpress.android.viewmodel.Event
@@ -69,9 +64,6 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), ScrollableView
 
     @Inject
     lateinit var uiHelpers: UiHelpers
-
-    @Inject
-    lateinit var jetpackBrandingUtils: JetpackBrandingUtils
 
     @Inject
     lateinit var snackbarSequencer: SnackbarSequencer
@@ -284,8 +276,6 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), ScrollableView
                 .show(childFragmentManager, JetpackPoweredBottomSheetFragment.TAG)
         }
 
-        observeJetpackOverlayEvent(savedInstanceState)
-
         viewModel.start(savedInstanceState)
     }
 
@@ -333,15 +323,6 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), ScrollableView
         }
     }
 
-    private fun observeJetpackOverlayEvent(savedInstanceState: Bundle?) {
-        if (savedInstanceState == null)
-            viewModel.showJetpackOverlay.observeEvent(viewLifecycleOwner) {
-                JetpackFeatureFullScreenOverlayFragment
-                    .newInstance(JetpackFeatureOverlayScreenType.READER)
-                    .show(childFragmentManager, JetpackFeatureFullScreenOverlayFragment.TAG)
-            }
-    }
-
     fun requestBookmarkTab() {
         if (!::viewModel.isInitialized) {
             viewModel = ViewModelProvider(this@ReaderFragment, viewModelFactory)[ReaderViewModel::class.java]
@@ -380,30 +361,6 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), ScrollableView
 
     override fun onScrollableViewInitialized(containerId: Int) {
         binding?.appBar?.liftOnScrollTargetViewId = containerId
-        if (jetpackBrandingUtils.shouldShowJetpackBranding()) {
-            val screen = JetpackPoweredScreen.WithDynamicText.READER
-            binding?.root?.post {
-                // post is used to create a minimal delay here. containerId changes just before
-                // onScrollableViewInitialized is called, and findViewById can't find the new id before the delay.
-                val jetpackBannerView = binding?.jetpackBanner?.root ?: return@post
-                val scrollableView = binding?.root?.findViewById<View>(containerId) as? RecyclerView ?: return@post
-                jetpackBrandingUtils.showJetpackBannerIfScrolledToTop(jetpackBannerView, scrollableView)
-                jetpackBrandingUtils.initJetpackBannerAnimation(jetpackBannerView, scrollableView)
-                binding?.jetpackBanner?.jetpackBannerText?.text = uiHelpers.getTextOfUiString(
-                    requireContext(),
-                    jetpackBrandingUtils.getBrandingTextForScreen(screen)
-                )
-
-                if (jetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()) {
-                    jetpackBannerView.setOnClickListener {
-                        jetpackBrandingUtils.trackBannerTapped(screen)
-                        JetpackPoweredBottomSheetFragment
-                            .newInstance()
-                            .show(childFragmentManager, JetpackPoweredBottomSheetFragment.TAG)
-                    }
-                }
-            }
-        }
     }
 
     private fun getCurrentFeedFragment(): Fragment? {

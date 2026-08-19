@@ -67,7 +67,6 @@ import org.wordpress.android.ui.jetpack.restore.RestoreActivity;
 import org.wordpress.android.ui.jetpack.scan.ScanActivity;
 import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsActivity;
 import org.wordpress.android.ui.jetpack.scan.history.ScanHistoryActivity;
-import org.wordpress.android.ui.jetpackoverlay.JetpackStaticPosterActivity;
 import org.wordpress.android.ui.jetpackplugininstall.remoteplugin.JetpackRemoteInstallActivity;
 import org.wordpress.android.ui.main.ChooseSiteActivity;
 import org.wordpress.android.ui.main.MeActivity;
@@ -155,6 +154,7 @@ import static org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_ACCESS
 import static org.wordpress.android.imageeditor.preview.PreviewImageFragment.ARG_EDIT_IMAGE_DATA;
 import static org.wordpress.android.ui.accounts.LoginFlow.PROLOGUE;
 import static org.wordpress.android.ui.accounts.LoginFlow.JETPACK_REST_CONNECT;
+import static org.wordpress.android.ui.accounts.LoginFlow.SUPPORT;
 import static org.wordpress.android.ui.accounts.LoginFlow.WPCOM_LOGIN;
 import static org.wordpress.android.push.NotificationsProcessingService.ARG_NOTIFICATION_TYPE;
 import static org.wordpress.android.ui.WPWebViewActivity.ENCODING_UTF8;
@@ -1501,6 +1501,17 @@ public class ActivityLauncher {
     }
 
     /**
+     * Builds the intent for the WordPress.com login required to access support chat (Odie).
+     * Goes straight to WP.com OAuth and, once done, finishes back to the caller (the Support
+     * screen) instead of navigating to the main activity.
+     */
+    public static Intent createWpComSignInForSupportIntent(@NonNull Context context) {
+        Intent intent = new Intent(context, LoginActivity.class);
+        SUPPORT.putInto(intent);
+        return intent;
+    }
+
+    /**
      * Sign in to WordPress.com from the Jetpack REST connection flow.
      * This method is specifically for the Jetpack connection process where
      * we need to authenticate with WordPress.com to establish the connection
@@ -1847,11 +1858,6 @@ public class ActivityLauncher {
                 null);
         intent.putExtra(ARG_EXTRA_BLAZE_UI_MODEL, pageUIModel);
         intent.putExtra(ARG_BLAZE_FLOW_SOURCE, source);
-        context.startActivity(intent);
-    }
-
-    public static void showJetpackStaticPoster(@NonNull Context context) {
-        Intent intent = new Intent(context, JetpackStaticPosterActivity.class);
         context.startActivity(intent);
     }
 

@@ -11,7 +11,6 @@ import android.os.Bundle
 import android.view.View
 import android.view.View.OnClickListener
 import androidx.annotation.StringRes
-import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.collectAsState
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -44,7 +43,6 @@ import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged
 import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.utils.AppLogWrapper
-import org.wordpress.android.models.JetpackPoweredScreen
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.ActivityNavigator
 import org.wordpress.android.ui.accounts.login.WPcomLoginHelper
@@ -52,7 +50,6 @@ import org.wordpress.android.ui.about.UnifiedAboutActivity
 import org.wordpress.android.ui.accounts.HelpActivity.Origin.ME_SCREEN_HELP
 import org.wordpress.android.ui.debug.DebugSettingsActivity
 import org.wordpress.android.ui.deeplinks.DeepLinkOpenWebLinksWithJetpackHelper
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil
 import org.wordpress.android.ui.main.MeViewModel.RecommendAppUiState
 import org.wordpress.android.ui.main.WPMainActivity.OnScrollToTopListener
 import org.wordpress.android.ui.main.emailverificationbanner.EmailVerificationBanner
@@ -62,13 +59,11 @@ import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredBottomSheetFra
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures
-import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.MAIN
 import org.wordpress.android.util.FluxCUtils
-import org.wordpress.android.util.JetpackBrandingUtils
 import org.wordpress.android.util.PackageManagerWrapper
 import org.wordpress.android.util.SnackbarItem
 import org.wordpress.android.util.SnackbarItem.Info
@@ -118,19 +113,10 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
     lateinit var qrCodeAuthFlowFeatureConfig: QRCodeAuthFlowFeatureConfig
 
     @Inject
-    lateinit var jetpackBrandingUtils: JetpackBrandingUtils
-
-    @Inject
     lateinit var packageManagerWrapper: PackageManagerWrapper
 
     @Inject
     lateinit var appPrefsWrapper: AppPrefsWrapper
-
-    @Inject
-    lateinit var uiHelpers: UiHelpers
-
-    @Inject
-    lateinit var jetpackFeatureRemovalUtils: JetpackFeatureRemovalOverlayUtil
 
     @Inject
     lateinit var domainManagementFeatureConfig: DomainManagementFeatureConfig
@@ -168,8 +154,11 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
 
     @Suppress("LongMethod")
     private fun MeFragmentBinding.setupViews() {
-        if (!BuildConfig.IS_JETPACK_APP && jetpackFeatureRemovalUtils.shouldHideJetpackFeatures()) {
-            with(requireActivity() as AppCompatActivity) {
+        // MeActivity hosts this fragment on its own, so it needs a toolbar; inside the bottom
+        // navigation's pager the host activity already provides one.
+        val meActivity = activity as? MeActivity
+        if (meActivity != null) {
+            with(meActivity) {
                 setSupportActionBar(toolbarMain)
                 supportActionBar?.apply {
                     setHomeButtonEnabled(true)
@@ -181,8 +170,6 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
         } else {
             appbarMain.visibility = View.GONE
         }
-
-        addJetpackBadgeIfNeeded()
 
         val showPickerListener = OnClickListener {
             AnalyticsTracker.track(ME_GRAVATAR_TAPPED)
@@ -355,23 +342,6 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
             }
         } else {
             domainManagementContainer.visibility = View.GONE
-        }
-    }
-
-    private fun MeFragmentBinding.addJetpackBadgeIfNeeded() {
-        if (jetpackBrandingUtils.shouldShowJetpackBranding()) {
-            val screen = JetpackPoweredScreen.WithStaticText.ME
-            jetpackBadge.isVisible = true
-            jetpackBadge.text = uiHelpers.getTextOfUiString(
-                requireContext(),
-                jetpackBrandingUtils.getBrandingTextForScreen(screen)
-            )
-            if (jetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()) {
-                jetpackBadge.setOnClickListener {
-                    jetpackBrandingUtils.trackBadgeTapped(screen)
-                    viewModel.showJetpackPoweredBottomSheet()
-                }
-            }
         }
     }
 

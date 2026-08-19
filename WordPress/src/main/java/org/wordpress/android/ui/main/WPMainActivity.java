@@ -88,7 +88,7 @@ import org.wordpress.android.ui.deeplinks.DeepLinkOpenWebLinksWithJetpackHelper;
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureFullScreenOverlayFragment;
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil;
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil.JetpackFeatureCollectionOverlaySource;
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper;
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalHelper;
 import org.wordpress.android.ui.main.MainActionListItem.ActionType;
 import org.wordpress.android.ui.main.WPMainNavigationView.OnPageListener;
 import org.wordpress.android.ui.main.WPMainNavigationView.PageType;
@@ -262,7 +262,7 @@ public class WPMainActivity extends BaseAppCompatActivity implements
     @Inject OpenWebLinksWithJetpackFlowFeatureConfig mOpenWebLinksWithJetpackFlowFeatureConfig;
     @Inject QRCodeAuthFlowFeatureConfig mQrCodeAuthFlowFeatureConfig;
     @Inject JetpackFeatureRemovalOverlayUtil mJetpackFeatureRemovalOverlayUtil;
-    @Inject JetpackFeatureRemovalPhaseHelper mJetpackFeatureRemovalPhaseHelper;
+    @Inject JetpackFeatureRemovalHelper mJetpackFeatureRemovalHelper;
 
     @Inject BuildConfigWrapper mBuildConfigWrapper;
 
@@ -323,7 +323,7 @@ public class WPMainActivity extends BaseAppCompatActivity implements
         String authTokenToSet = null;
 
         mBottomNav = findViewById(R.id.bottom_navigation);
-        mBottomNav.init(getSupportFragmentManager(), this, mJetpackFeatureRemovalPhaseHelper);
+        mBottomNav.init(getSupportFragmentManager(), this, mJetpackFeatureRemovalHelper);
 
         if (savedInstanceState == null) {
             if (!AppPrefs.isInstallationReferrerObtained()) {
@@ -521,9 +521,7 @@ public class WPMainActivity extends BaseAppCompatActivity implements
         mAnalyticsTrackerWrapper.track(
                 Stat.JETPACK_FEATURE_INCORRECTLY_ACCESSED, trackingProperties);
         JetpackFeatureFullScreenOverlayFragment.newInstance(
-                null,
                 false,
-                true,
                 JetpackFeatureCollectionOverlaySource.DISABLED_ENTRY_POINT
         ).show(getSupportFragmentManager(), JetpackFeatureFullScreenOverlayFragment.TAG);
     }
@@ -576,9 +574,7 @@ public class WPMainActivity extends BaseAppCompatActivity implements
     private void displayJetpackFeatureCollectionOverlayIfNeeded() {
         if (mJetpackFeatureRemovalOverlayUtil.shouldShowFeatureCollectionJetpackOverlayForFirstTime()) {
             JetpackFeatureFullScreenOverlayFragment.newInstance(
-                    null,
                     false,
-                    true,
                     JetpackFeatureCollectionOverlaySource.APP_OPEN
             ).show(getSupportFragmentManager(), JetpackFeatureFullScreenOverlayFragment.TAG);
         }
@@ -763,7 +759,7 @@ public class WPMainActivity extends BaseAppCompatActivity implements
 
     private void triggerCreatePageFlow(ActionType actionType) {
         if (mMLPViewModel.canShowModalLayoutPicker()
-            && mJetpackFeatureRemovalPhaseHelper.shouldShowTemplateSelectionInPages()) {
+            && mJetpackFeatureRemovalHelper.shouldShowTemplateSelectionInPages()) {
             mMLPViewModel.createPageFlowTriggered(getCreatePageDashboardSourceFromActionType(actionType));
         } else {
             if (actionType == ActionType.CREATE_NEW_PAGE_FROM_PAGES_CARD) {
@@ -812,7 +808,7 @@ public class WPMainActivity extends BaseAppCompatActivity implements
                     break;
                 case ARG_NOTIFICATIONS:
                     setUpMainView();
-                    if (mJetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures()) {
+                    if (mJetpackFeatureRemovalHelper.shouldRemoveJetpackFeatures()) {
                         Map<String, String> trackingProperties = new HashMap<>();
                         trackingProperties.put("calling_function", "deeplink_notifications");
                         showJetpackFeatureOverlayAccessedInCorrectly(trackingProperties);
@@ -822,7 +818,7 @@ public class WPMainActivity extends BaseAppCompatActivity implements
                     break;
                 case ARG_READER:
                     setUpMainView();
-                    if (mJetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures()) {
+                    if (mJetpackFeatureRemovalHelper.shouldRemoveJetpackFeatures()) {
                         Map<String, String> trackingProperties = new HashMap<>();
                         trackingProperties.put("calling_function", "deeplink_reader");
                         showJetpackFeatureOverlayAccessedInCorrectly(trackingProperties);
@@ -849,14 +845,10 @@ public class WPMainActivity extends BaseAppCompatActivity implements
                     if (!mSelectedSiteRepository.hasSelectedSite()) {
                         initSelectedSite();
                     }
-                    if (mJetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures()) {
+                    if (mJetpackFeatureRemovalHelper.shouldRemoveJetpackFeatures()) {
                         Map<String, String> trackingProperties = new HashMap<>();
                         trackingProperties.put("calling_function", "deeplink_stats");
                         showJetpackFeatureOverlayAccessedInCorrectly(trackingProperties);
-                        break;
-                    }
-                    if (mJetpackFeatureRemovalPhaseHelper.shouldShowStaticPage()) {
-                        ActivityLauncher.showJetpackStaticPoster(this);
                         break;
                     }
                     mActivityNavigator.openStats(this, getSelectedSite(),
@@ -1218,19 +1210,19 @@ public class WPMainActivity extends BaseAppCompatActivity implements
         switch (pageType) {
             case MY_SITE:
                 ActivityId.trackLastActivity(ActivityId.MY_SITE);
-                mJetpackFeatureRemovalPhaseHelper.trackPageAccessedEventIfNeeded(PageType.MY_SITE, getSelectedSite());
+                mJetpackFeatureRemovalHelper.trackPageAccessedEventIfNeeded(PageType.MY_SITE, getSelectedSite());
                 break;
             case READER:
                 ActivityId.trackLastActivity(ActivityId.READER);
-                mJetpackFeatureRemovalPhaseHelper.trackPageAccessedEventIfNeeded(PageType.READER);
+                mJetpackFeatureRemovalHelper.trackPageAccessedEventIfNeeded(PageType.READER);
                 break;
             case NOTIFS:
                 ActivityId.trackLastActivity(ActivityId.NOTIFICATIONS);
-                mJetpackFeatureRemovalPhaseHelper.trackPageAccessedEventIfNeeded(PageType.NOTIFS);
+                mJetpackFeatureRemovalHelper.trackPageAccessedEventIfNeeded(PageType.NOTIFS);
                 break;
             case ME:
                 ActivityId.trackLastActivity(ActivityId.ME);
-                mJetpackFeatureRemovalPhaseHelper.trackPageAccessedEventIfNeeded(PageType.ME);
+                mJetpackFeatureRemovalHelper.trackPageAccessedEventIfNeeded(PageType.ME);
                 break;
             default:
                 break;

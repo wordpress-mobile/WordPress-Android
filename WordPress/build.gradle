@@ -1,4 +1,5 @@
 import io.sentry.android.gradle.extensions.InstrumentationFeature
+import io.sentry.android.gradle.tasks.SentryCliExecTask
 
 plugins {
     alias(libs.plugins.android.application)
@@ -64,7 +65,14 @@ static String pathForSmartFlankGcsPath(String app) {
     return "gs://fladle/wordpress-android/${app}/smart-flank/JUnitReport.xml"
 }
 
+// A secret-injection step that resolves to nothing exports an empty SENTRY_AUTH_TOKEN rather
+// than leaving it unset, so treat blank as missing — otherwise the guard below passes and
+// sentry-cli fails mid-upload with an opaque auth error.
+def sentryAuthToken = providers.environmentVariable("SENTRY_AUTH_TOKEN").orNull?.trim() ?: null
+
 sentry {
+    authToken = sentryAuthToken
+
     tracingInstrumentation {
         enabled = true
         features = [InstrumentationFeature.DATABASE]
@@ -81,6 +89,17 @@ sentry {
     */
     ignoredBuildTypes = ["debug"]
     telemetry = false
+}
+
+tasks.withType(SentryCliExecTask).configureEach {
+    doFirst {
+        if (sentryAuthToken == null) {
+            throw new GradleException(
+                "SENTRY_AUTH_TOKEN is not set (or is blank). " +
+                    "Set it to upload debug files to Sentry."
+            )
+        }
+    }
 }
 
 allOpen {
@@ -132,7 +151,6 @@ android {
         buildConfigField "boolean", "LAND_ON_THE_EDITOR", "false"
         buildConfigField "boolean", "QRCODE_AUTH_FLOW", "false"
         buildConfigField "boolean", "BETA_SITE_DESIGNS", "false"
-        buildConfigField "boolean", "JETPACK_POWERED", "true"
         buildConfigField "boolean", "JETPACK_POWERED_BOTTOM_SHEET", "true"
         buildConfigField "boolean", "JETPACK_SHARED_LOGIN", "true"
         buildConfigField "boolean", "JETPACK_LOCAL_USER_FLAGS", "true"
@@ -140,13 +158,6 @@ android {
         buildConfigField "boolean", "JETPACK_READER_SAVED_POSTS", "true"
         buildConfigField "boolean", "JETPACK_PROVIDER_SYNC", "true"
         buildConfigField "boolean", "JETPACK_MIGRATION_FLOW", "false"
-        buildConfigField "boolean", "JETPACK_FEATURE_REMOVAL_PHASE_ONE", "false"
-        buildConfigField "boolean", "JETPACK_FEATURE_REMOVAL_PHASE_TWO", "false"
-        buildConfigField "boolean", "JETPACK_FEATURE_REMOVAL_PHASE_THREE", "false"
-        buildConfigField "boolean", "JETPACK_FEATURE_REMOVAL_PHASE_FOUR", "false"
-        buildConfigField "boolean", "JETPACK_FEATURE_REMOVAL_NEW_USERS", "false"
-        buildConfigField "boolean", "JETPACK_FEATURE_REMOVAL_STATIC_POSTERS", "false"
-        buildConfigField "boolean", "JETPACK_FEATURE_REMOVAL_SELF_HOSTED_USERS", "false"
         buildConfigField "boolean", "PREVENT_DUPLICATE_NOTIFS_REMOTE_FIELD", "false"
         buildConfigField "boolean", "OPEN_WEB_LINKS_WITH_JETPACK_FLOW", "false"
         buildConfigField "boolean", "ENABLE_BLAZE_FEATURE", "false"

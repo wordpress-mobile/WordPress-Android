@@ -16,5 +16,5 @@ steps:
 # (gems/secrets) and can't self-report; on a lane failure it may also accompany the lane's own
 # message.
 notify:
-  - slack: "#build-and-ship"
+  - slack: "#wpmobile-team"
     if: build.state == "failed"

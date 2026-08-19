@@ -13,7 +13,7 @@ import org.wordpress.android.R
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.push.NotificationType.CREATE_SITE
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalHelper
 import org.wordpress.android.ui.notifications.SystemNotificationsTracker
 import org.wordpress.android.viewmodel.ResourceProvider
 
@@ -26,7 +26,7 @@ class CreateSiteNotificationHandlerTest {
     private val accountStore: AccountStore = mock()
     private val siteStore: SiteStore = mock()
     private val notificationsTracker: SystemNotificationsTracker = mock()
-    private val jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper = mock()
+    private val jetpackFeatureRemovalHelper: JetpackFeatureRemovalHelper = mock()
 
     @Before
     fun setUp() {
@@ -38,7 +38,7 @@ class CreateSiteNotificationHandlerTest {
             accountStore,
             siteStore,
             notificationsTracker,
-            jetpackFeatureRemovalPhaseHelper
+            jetpackFeatureRemovalHelper
         )
     }
 
@@ -92,7 +92,7 @@ class CreateSiteNotificationHandlerTest {
             )
         ).thenReturn(true)
         whenever(accountStore.hasAccessToken()).thenReturn(true)
-        whenever(jetpackFeatureRemovalPhaseHelper.shouldShowNotifications()).thenReturn(true)
+        whenever(jetpackFeatureRemovalHelper.shouldShowNotifications()).thenReturn(true)
 
         assertThat(createSiteNotificationHandler.shouldShowNotification()).isTrue
     }
@@ -107,7 +107,7 @@ class CreateSiteNotificationHandlerTest {
         ).thenReturn(true)
         whenever(accountStore.hasAccessToken()).thenReturn(true)
         whenever(siteStore.hasSite()).thenReturn(false)
-        whenever(jetpackFeatureRemovalPhaseHelper.shouldShowNotifications()).thenReturn(true)
+        whenever(jetpackFeatureRemovalHelper.shouldShowNotifications()).thenReturn(true)
 
         assertThat(createSiteNotificationHandler.shouldShowNotification()).isTrue
     }
