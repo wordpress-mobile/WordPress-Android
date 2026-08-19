@@ -24,6 +24,14 @@ class EditorUnitFunctionsTest {
     }
 
     @Test
+    fun `rejects a uri whose extension is not media even when the intent type is`() {
+        // the URI wins whenever it resolves: the intent type is only a fallback for when it doesn't
+        val intent = Intent().apply { type = "image/jpeg" }
+
+        assertThat(EditorUnitFunctions.isMediaTypeIntent(intent, "file:///cache/notes.pdf".toUri())).isFalse()
+    }
+
+    @Test
     fun `falls back to the intent type when the name contains a space`() {
         // getFileExtensionFromUrl() returns an empty string for names containing a space
         val intent = Intent().apply { type = "image/jpeg" }

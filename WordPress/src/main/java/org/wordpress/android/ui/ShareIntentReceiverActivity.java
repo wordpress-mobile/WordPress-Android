@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.webkit.MimeTypeMap;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -179,8 +180,14 @@ public class ShareIntentReceiverActivity extends BaseAppCompatActivity implement
             return localUri;
         }
 
+        // getExtensionForMimeType() never fails: when the MIME type is unknown to MimeTypeMap it
+        // returns the subtype, so "application/octet-stream" would name the file ".octet-stream".
+        // That reads as a real extension downstream and suppresses the image/jpeg fallback in
+        // FluxCUtils.mediaModelFromLocalUri() that would otherwise have made the upload work, so
+        // only rename when the extension maps back to a MIME type.
         String extension = MediaUtils.getExtensionForMimeType(mimeType);
-        if (TextUtils.isEmpty(extension)) {
+        if (TextUtils.isEmpty(extension)
+                || MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension) == null) {
             return localUri;
         }
 
