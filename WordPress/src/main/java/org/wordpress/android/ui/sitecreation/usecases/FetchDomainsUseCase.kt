@@ -48,14 +48,14 @@ class FetchDomainsUseCase @Inject constructor(
                 .request { it.domains().suggestions(params).data }
         ) {
             is WpRequestResult.Success ->
-                FetchDomainsResult.Success(query, result.response)
+                FetchDomainsResult.Success(result.response)
             is WpRequestResult.WpError ->
                 if (result.isInvalidQuery()) {
-                    FetchDomainsResult.InvalidQuery(query)
+                    FetchDomainsResult.InvalidQuery
                 } else {
-                    FetchDomainsResult.Error(query)
+                    FetchDomainsResult.Error
                 }
-            else -> FetchDomainsResult.Error(query)
+            else -> FetchDomainsResult.Error
         }
     }
 }
@@ -67,18 +67,11 @@ private fun WpRequestResult.WpError<*>.isInvalidQuery(): Boolean {
 }
 
 sealed interface FetchDomainsResult {
-    val query: String
-
     data class Success(
-        override val query: String,
         val suggestions: List<DomainSuggestion>,
     ) : FetchDomainsResult
 
-    data class InvalidQuery(
-        override val query: String,
-    ) : FetchDomainsResult
+    data object InvalidQuery : FetchDomainsResult
 
-    data class Error(
-        override val query: String,
-    ) : FetchDomainsResult
+    data object Error : FetchDomainsResult
 }

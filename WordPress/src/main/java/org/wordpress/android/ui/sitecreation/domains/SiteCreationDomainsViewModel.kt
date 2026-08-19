@@ -185,7 +185,7 @@ class SiteCreationDomainsViewModel @Inject constructor(
 
     private fun onDomainsFetched(query: DomainSuggestionsQuery, result: FetchDomainsResult) {
         when (result) {
-            is FetchDomainsResult.Error -> {
+            FetchDomainsResult.Error -> {
                 tracker.trackErrorShown(ERROR_CONTEXT, "GENERIC_ERROR", null)
                 updateUiStateToContent(
                     query,
@@ -195,7 +195,7 @@ class SiteCreationDomainsViewModel @Inject constructor(
                     )
                 )
             }
-            is FetchDomainsResult.InvalidQuery -> {
+            FetchDomainsResult.InvalidQuery -> {
                 val emptyListMessage = UiStringRes(
                     R.string.new_site_creation_empty_domain_list_message_invalid_query
                 )

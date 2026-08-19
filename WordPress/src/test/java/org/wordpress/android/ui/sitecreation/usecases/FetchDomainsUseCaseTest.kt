@@ -67,7 +67,6 @@ class FetchDomainsUseCaseTest : BaseUnitTest() {
 
             assertThat(result).isInstanceOf(FetchDomainsResult.Success::class.java)
             val success = result as FetchDomainsResult.Success
-            assertThat(success.query).isEqualTo(SEARCH_QUERY)
             assertThat(success.suggestions).hasSize(1)
         }
 
@@ -89,7 +88,6 @@ class FetchDomainsUseCaseTest : BaseUnitTest() {
                 SEARCH_QUERY, "vendor", onlyWordpressCom = false
             )
 
-            assertThat(result).isInstanceOf(FetchDomainsResult.Error::class.java)
-            assertThat(result.query).isEqualTo(SEARCH_QUERY)
+            assertThat(result).isEqualTo(FetchDomainsResult.Error)
         }
 }

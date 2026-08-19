@@ -224,7 +224,7 @@ class SiteCreationDomainsViewModelTest : BaseUnitTest() {
     fun verifyNonEmptyUpdateQueryUiStateAfterErrorResponse() = test {
         val errorQuery = "error_result_query"
         whenever(fetchDomainsUseCase.fetchDomains(eq(errorQuery), any(), any())).thenReturn(
-            FetchDomainsResult.Error(errorQuery)
+            FetchDomainsResult.Error
         )
 
         viewModel.start()
@@ -249,7 +249,7 @@ class SiteCreationDomainsViewModelTest : BaseUnitTest() {
     fun verifyNonEmptyUpdateQueryUiStateAfterErrorResponseOfTypeInvalidQuery() = test {
         val invalidQuery = "empty_result_query_invalid"
         whenever(fetchDomainsUseCase.fetchDomains(eq(invalidQuery), any(), any())).thenReturn(
-            FetchDomainsResult.InvalidQuery(invalidQuery)
+            FetchDomainsResult.InvalidQuery
         )
 
         viewModel.start()
@@ -413,7 +413,7 @@ class SiteCreationDomainsViewModelTest : BaseUnitTest() {
             }
         }
 
-        val result = FetchDomainsResult.Success(query, suggestions)
+        val result = FetchDomainsResult.Success(suggestions)
         whenever(fetchDomainsUseCase.fetchDomains(any(), any(), any()))
             .thenReturn(result)
         block(suggestions)
@@ -631,7 +631,7 @@ class SiteCreationDomainsViewModelTest : BaseUnitTest() {
                 )
             )
         }
-        return FetchDomainsResult.Success(queryResultSizePair.first, suggestions)
+        return FetchDomainsResult.Success(suggestions)
     }
 
     /**
