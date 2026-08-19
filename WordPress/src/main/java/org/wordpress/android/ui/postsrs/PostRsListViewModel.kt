@@ -136,10 +136,12 @@ class PostRsListViewModel @Inject constructor(
                         initTab(activeSearchTab)
                     }
             }
-            changeListener.start(site, isPages = false)
+            // Subscribe before starting the listener - its flow has no replay, so a change
+            // reported in between would be dropped.
             viewModelScope.launch {
                 changeListener.changes.collect { onRemoteChangeDetected() }
             }
+            changeListener.start(site, isPages = false)
         }
     }
 

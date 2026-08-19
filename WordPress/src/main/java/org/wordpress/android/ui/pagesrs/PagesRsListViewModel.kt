@@ -183,10 +183,12 @@ internal class PagesRsListViewModel @Inject constructor(
                     .distinctUntilChanged()
                     .collect { query -> onParentPickerQueryDebounced(query) }
             }
-            changeListener.start(site, isPages = true)
+            // Subscribe before starting the listener - its flow has no replay, so a change
+            // reported in between would be dropped.
             viewModelScope.launch {
                 changeListener.changes.collect { onRemoteChangeDetected() }
             }
+            changeListener.start(site, isPages = true)
         }
     }
 

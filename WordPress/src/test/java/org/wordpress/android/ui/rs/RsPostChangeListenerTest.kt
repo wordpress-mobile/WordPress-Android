@@ -7,6 +7,8 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
+import org.mockito.kotlin.never
+import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
@@ -41,6 +43,32 @@ class RsPostChangeListenerTest : BaseUnitTest(StandardTestDispatcher()) {
         listener.stop()
 
         verify(dispatcher).unregister(listener)
+    }
+
+    @Test
+    fun `stop without a start leaves the dispatcher alone`() {
+        listener.stop()
+
+        verify(dispatcher, never()).unregister(listener)
+    }
+
+    @Test
+    fun `starting twice registers once`() {
+        listener.start(site, isPages = false)
+        listener.start(site, isPages = false)
+
+        verify(dispatcher, times(1)).register(listener)
+    }
+
+    @Test
+    fun `a change reported after stop is not emitted`() {
+        val emissions = countEmissions {
+            listener.stop()
+
+            listener.onPostUploaded(OnPostUploaded(post(), false))
+        }
+
+        assertThat(emissions).isZero()
     }
 
     @Test

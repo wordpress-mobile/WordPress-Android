@@ -33,8 +33,12 @@ class RsPostChangeListener @Inject constructor(
     private val dispatcher: Dispatcher,
     private val postStore: PostStore,
 ) {
-    private var localSiteId: Int? = null
-    private var isPages: Boolean = false
+    // Written on the caller's thread but read by handlers that EventBus may deliver on a
+    // background one, so both have to be published safely.
+    @Volatile private var localSiteId: Int? = null
+    @Volatile private var isPages: Boolean = false
+
+    private var isStarted = false
 
     private val _changes = MutableSharedFlow<Unit>(
         extraBufferCapacity = 1,
@@ -53,16 +57,24 @@ class RsPostChangeListener @Inject constructor(
 
     /**
      * Starts listening for changes to [site]'s posts, or its pages when [isPages] is true.
+     *
+     * Collect [changes] before calling this: the flow has no replay, so an event arriving before
+     * the collector has subscribed is dropped.
      */
     fun start(site: SiteModel, isPages: Boolean) {
+        if (isStarted) return
         this.localSiteId = site.id
         this.isPages = isPages
+        isStarted = true
         dispatcher.register(this)
     }
 
+    /** Safe to call whether or not [start] was ever reached. */
     fun stop() {
-        dispatcher.unregister(this)
+        if (!isStarted) return
+        isStarted = false
         localSiteId = null
+        dispatcher.unregister(this)
     }
 
     /** Fired when UploadService finishes pushing a post or page to the server. */
@@ -78,9 +90,12 @@ class RsPostChangeListener @Inject constructor(
     /**
      * Fired for every write FluxC makes to its post table. Only the causes that mean the server
      * copy changed are of interest - the rs list renders the server copy and nothing else.
+     *
+     * Delivered on a background thread because deciding whether the post belongs to this list
+     * reads it back out of the database, and this fires on every write FluxC makes.
      */
     @Suppress("unused")
-    @Subscribe(threadMode = ThreadMode.MAIN)
+    @Subscribe(threadMode = ThreadMode.BACKGROUND)
     fun onPostChanged(event: OnPostChanged) {
         if (event.isError) return
         when (val cause = event.causeOfChange) {
