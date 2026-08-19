@@ -22,6 +22,7 @@ import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.util.MediaUtilsWrapper
+import org.wordpress.android.util.SiteUtilsWrapper
 import org.wordpress.gutenberg.ProcessedProxyFile
 import java.io.File
 
@@ -34,6 +35,7 @@ class GBKMediaUploadProcessorTest : BaseUnitTest() {
     private lateinit var appContext: Context
     private lateinit var mediaUtilsWrapper: MediaUtilsWrapper
     private lateinit var appPrefsWrapper: AppPrefsWrapper
+    private lateinit var siteUtilsWrapper: SiteUtilsWrapper
     private lateinit var stagedFile: File
 
     @Before
@@ -42,10 +44,12 @@ class GBKMediaUploadProcessorTest : BaseUnitTest() {
             on { getString(R.string.error_media_file_type_not_allowed) } doReturn FILE_TYPE_ERROR
             on { getString(R.string.error_media_video_duration_exceeds_limit) } doReturn VIDEO_LIMIT_ERROR
         }
-        mediaUtilsWrapper = mock {
-            on { isMimeTypeSupportedBySitePlan(anyOrNull(), any()) } doReturn true
-        }
+        mediaUtilsWrapper = mock()
         appPrefsWrapper = mock()
+        // Default to a paid plan: the free-plan rejection is opt-in per test.
+        siteUtilsWrapper = mock {
+            on { onFreePlan(any()) } doReturn false
+        }
         stagedFile = tempFolder.newFile("photo.jpg").apply { writeText("staged-bytes") }
     }
 
@@ -54,12 +58,18 @@ class GBKMediaUploadProcessorTest : BaseUnitTest() {
         appContext = appContext,
         mediaUtilsWrapper = mediaUtilsWrapper,
         appPrefsWrapper = appPrefsWrapper,
+        siteUtilsWrapper = siteUtilsWrapper,
         ioDispatcher = testDispatcher()
     )
 
     private fun wpComSite() = SiteModel().apply { setIsWPCom(true) }
 
     private fun selfHostedSite() = SiteModel().apply { setIsWPCom(false) }
+
+    /** Puts the site on a free WP.com plan, where audio/document uploads are plan-restricted. */
+    private fun onFreePlan() {
+        whenever(siteUtilsWrapper.onFreePlan(any())).thenReturn(true)
+    }
 
     @Test
     fun `image is optimized when optimization produces a new file`() = test {
@@ -226,7 +236,9 @@ class GBKMediaUploadProcessorTest : BaseUnitTest() {
     }
 
     @Test
-    fun `disallowed file type throws with localized message`() = test {
+    fun `document disallowed by a free plan throws with localized message`() = test {
+        onFreePlan()
+        whenever(mediaUtilsWrapper.isApplicationMimeType("application/zip")).thenReturn(true)
         whenever(mediaUtilsWrapper.isMimeTypeSupportedBySitePlan(anyOrNull(), any())).thenReturn(false)
         val zipStaged = tempFolder.newFile("archive.zip")
 
@@ -237,6 +249,63 @@ class GBKMediaUploadProcessorTest : BaseUnitTest() {
         assertThat(thrown)
             .isInstanceOf(GBKMediaUploadException::class.java)
             .hasMessage(FILE_TYPE_ERROR)
+    }
+
+    @Test
+    fun `audio disallowed by a free plan throws with localized message`() = test {
+        onFreePlan()
+        whenever(mediaUtilsWrapper.isAudioMimeType("audio/mpeg")).thenReturn(true)
+        whenever(mediaUtilsWrapper.isMimeTypeSupportedBySitePlan(anyOrNull(), any())).thenReturn(false)
+        val audioStaged = tempFolder.newFile("song.mp3")
+
+        val thrown = runCatching {
+            createProcessor().processFile(audioStaged, "audio/mpeg", "song.mp3")
+        }.exceptionOrNull()
+
+        assertThat(thrown)
+            .isInstanceOf(GBKMediaUploadException::class.java)
+            .hasMessage(FILE_TYPE_ERROR)
+    }
+
+    @Test
+    fun `document missing from the allowlist uploads on a paid plan`() = test {
+        // Paid and self-hosted sites are not plan-restricted, so the stale MimeTypes table must
+        // not reject for them — the server is authoritative. The allowlist is left unstubbed
+        // deliberately: reaching it at all would be the bug.
+        val zipStaged = tempFolder.newFile("archive.zip")
+
+        val result = createProcessor().processFile(zipStaged, "application/zip", "archive.zip")
+
+        assertThat(result).isEqualTo(ProcessedProxyFile.Original)
+        verify(mediaUtilsWrapper, never()).isMimeTypeSupportedBySitePlan(anyOrNull(), any())
+    }
+
+    @Test
+    fun `image missing from the allowlist uploads even on a free plan`() = test {
+        // AVIF is core-supported since WP 6.5 but absent from the app's MimeTypes table. Images
+        // are never plan-restricted, so the table must not be consulted for them at all.
+        onFreePlan()
+        whenever(mediaUtilsWrapper.getOptimizedMedia(any(), any())).thenReturn(null)
+        val avifStaged = tempFolder.newFile("photo.avif")
+
+        val result = createProcessor().processFile(avifStaged, "image/avif", "photo.avif")
+
+        assertThat(result).isEqualTo(ProcessedProxyFile.Original)
+        verify(mediaUtilsWrapper, never()).isMimeTypeSupportedBySitePlan(anyOrNull(), any())
+    }
+
+    @Test
+    fun `unresolvable type is not rejected as a plan-restricted document`() = test {
+        // resolveMimeType emits application/octet-stream for "unknown bytes". It would classify as
+        // an application type, so the exclusion has to short-circuit ahead of that classification —
+        // isApplicationMimeType is deliberately left unstubbed to pin that ordering.
+        onFreePlan()
+        val unknownStaged = tempFolder.newFile("mystery.bin")
+
+        val result = createProcessor().processFile(unknownStaged, "application/octet-stream", "mystery.bin")
+
+        assertThat(result).isEqualTo(ProcessedProxyFile.Original)
+        verify(mediaUtilsWrapper, never()).isMimeTypeSupportedBySitePlan(anyOrNull(), any())
     }
 
     @Test
@@ -350,10 +419,9 @@ class GBKMediaUploadProcessorTest : BaseUnitTest() {
     }
 
     @Test
-    fun `mime type parameters are stripped before the plan check`() = test {
-        // Content-Type may legitimately carry parameters. isMimeTypeSupportedBySitePlan is an
-        // exact match against a closed allowlist, so an unnormalized value hard-fails a valid
-        // image.
+    fun `mime type parameters are stripped before the type is routed`() = test {
+        // Content-Type may legitimately carry parameters. An unnormalized value would miss the
+        // image/ prefix test and fall through to the non-media passthrough.
         val optimized = tempFolder.newFile("optimized.jpg")
         val optimizedUri = fileUri(optimized)
         whenever(mediaUtilsWrapper.getOptimizedMedia(stagedFile.absolutePath, false))
@@ -361,50 +429,55 @@ class GBKMediaUploadProcessorTest : BaseUnitTest() {
 
         val result = createProcessor().processFile(stagedFile, "image/jpeg; charset=binary", "photo.jpg")
 
-        verify(mediaUtilsWrapper).isMimeTypeSupportedBySitePlan(anyOrNull(), eq("image/jpeg"))
         result as ProcessedProxyFile.Processed
         assertThat(result.mimeType).isEqualTo("image/jpeg")
     }
 
     @Test
-    fun `mime type casing is normalized before the plan check`() = test {
+    fun `mime type casing is normalized before the type is routed`() = test {
+        // An uppercase type must still route to the image path: getOptimizedMedia being consulted
+        // is what proves the normalization happened.
         whenever(mediaUtilsWrapper.getOptimizedMedia(stagedFile.absolutePath, false)).thenReturn(null)
         whenever(appPrefsWrapper.isStripImageLocation).thenReturn(false)
 
         val result = createProcessor(wpComSite()).processFile(stagedFile, "IMAGE/JPEG", "photo.jpg")
 
-        verify(mediaUtilsWrapper).isMimeTypeSupportedBySitePlan(anyOrNull(), eq("image/jpeg"))
+        verify(mediaUtilsWrapper).getOptimizedMedia(stagedFile.absolutePath, false)
         assertThat(result).isEqualTo(ProcessedProxyFile.Original)
     }
 
     @Test
-    fun `text plain is treated as a placeholder and resolved from the filename`() {
+    fun `text plain is treated as a placeholder and resolved from the filename`() = test {
         // GutenbergKit's multipart parser defaults a part with no Content-Type to text/plain
         // (RFC 7578), and picks the file part by its filename parameter rather than its type — so
         // a real image can arrive labeled text/plain and must not be rejected as a disallowed type.
         //
         // MimeTypeMap is a stub returning null under unit tests, so the extension lookup cannot
-        // resolve here; this asserts the surrounding contract instead — text/plain is not taken at
-        // face value, and an unresolvable lookup degrades to the declared type rather than "".
-        createProcessor().handlesFile("text/plain", "photo.jpg")
+        // resolve here; this asserts the surrounding contract instead — a free-plan site does not
+        // reject text/plain, which is neither audio nor an application type.
+        onFreePlan()
+        val staged = tempFolder.newFile("note.txt")
 
-        verify(mediaUtilsWrapper).isMimeTypeSupportedBySitePlan(anyOrNull(), eq("text/plain"))
+        val result = createProcessor().processFile(staged, "text/plain", "note.txt")
+
+        assertThat(result).isEqualTo(ProcessedProxyFile.Original)
+        verify(mediaUtilsWrapper, never()).isMimeTypeSupportedBySitePlan(anyOrNull(), any())
     }
 
     @Test
     fun `blank mime type never resolves to an empty string`() {
-        // An empty resolved type would be meaningless to the plan check; a placeholder it can
-        // reject coherently is the safe floor.
-        createProcessor().handlesFile("", "mystery")
-
-        verify(mediaUtilsWrapper).isMimeTypeSupportedBySitePlan(anyOrNull(), eq("application/octet-stream"))
+        // An empty resolved type would be meaningless to the type routing; a placeholder is the
+        // safe floor. octet-stream routes to neither image nor video, so the file is not claimed.
+        assertThat(createProcessor().handlesFile("", "mystery")).isFalse()
     }
 
     @Test
-    fun `handlesFile claims disallowed types so processFile can reject them locally`() {
+    fun `handlesFile claims plan-rejected types so processFile can reject them locally`() {
         // Declining would relay the file to WordPress instead, wasting a full upload and replacing
         // our localized message with the server's. Pairs with the processFile rejection test above,
         // which uses the same mime type.
+        onFreePlan()
+        whenever(mediaUtilsWrapper.isApplicationMimeType("application/zip")).thenReturn(true)
         whenever(mediaUtilsWrapper.isMimeTypeSupportedBySitePlan(anyOrNull(), any())).thenReturn(false)
 
         assertThat(createProcessor().handlesFile("application/zip", "archive.zip")).isTrue()

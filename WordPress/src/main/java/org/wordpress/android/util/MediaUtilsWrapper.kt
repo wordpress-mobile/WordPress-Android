@@ -36,6 +36,12 @@ class MediaUtilsWrapper @Inject constructor(private val appContext: Context) {
     fun isVideoMimeType(mimeType: String?): Boolean =
         org.wordpress.android.fluxc.utils.MediaUtils.isVideoMimeType(mimeType)
 
+    fun isAudioMimeType(mimeType: String?): Boolean =
+        org.wordpress.android.fluxc.utils.MediaUtils.isAudioMimeType(mimeType)
+
+    fun isApplicationMimeType(mimeType: String?): Boolean =
+        org.wordpress.android.fluxc.utils.MediaUtils.isApplicationMimeType(mimeType)
+
     fun stripImageLocation(imagePath: String) =
         org.wordpress.android.fluxc.utils.MediaUtils.stripLocation(imagePath)
 

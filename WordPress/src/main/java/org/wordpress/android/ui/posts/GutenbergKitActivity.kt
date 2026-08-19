@@ -196,6 +196,7 @@ import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.FluxCUtils
 import org.wordpress.android.util.MediaUtils
 import org.wordpress.android.util.MediaUtilsWrapper
+import org.wordpress.android.util.SiteUtilsWrapper
 import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.ReblogUtils
 import org.wordpress.android.util.ShortcutUtils
@@ -391,6 +392,7 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
     @Inject lateinit var gutenbergKitNetworkLogger: GutenbergKitNetworkLogger
     @Inject lateinit var gutenbergKitSettingsBuilder: GutenbergKitSettingsBuilder
     @Inject lateinit var mediaUtilsWrapper: MediaUtilsWrapper
+    @Inject lateinit var siteUtilsWrapper: SiteUtilsWrapper
     @Inject lateinit var appPrefsWrapper: AppPrefsWrapper
     private lateinit var editPostNavigationViewModel: EditPostNavigationViewModel
     private lateinit var editPostSettingsViewModel: EditPostSettingsViewModel
@@ -2273,6 +2275,7 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
                             appContext = applicationContext,
                             mediaUtilsWrapper = mediaUtilsWrapper,
                             appPrefsWrapper = appPrefsWrapper,
+                            siteUtilsWrapper = siteUtilsWrapper,
                         )
                     )
                 }

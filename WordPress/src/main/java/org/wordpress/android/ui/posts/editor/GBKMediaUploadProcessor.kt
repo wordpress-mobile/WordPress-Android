@@ -14,6 +14,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.MediaUtilsWrapper
+import org.wordpress.android.util.SiteUtilsWrapper
 import org.wordpress.android.util.WPVideoUtils
 import org.wordpress.gutenberg.MediaUploadDelegate
 import org.wordpress.gutenberg.ProcessedProxyFile
@@ -44,6 +45,7 @@ class GBKMediaUploadProcessor(
     private val appContext: Context,
     private val mediaUtilsWrapper: MediaUtilsWrapper,
     private val appPrefsWrapper: AppPrefsWrapper,
+    private val siteUtilsWrapper: SiteUtilsWrapper,
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) : MediaUploadDelegate {
     /**
@@ -53,17 +55,18 @@ class GBKMediaUploadProcessor(
      * and non-media, so today those pay a full byte-for-byte copy only to be passed through.
      *
      * This is an optimization hint, never the enforcement point. It sees only the client-supplied
-     * mime type and filename, which can disagree with the file's actual bytes, so the plan check
-     * inside [processFile] stays authoritative — the copy here is a fast path, not a replacement.
+     * mime type and filename, which can disagree with the file's actual bytes, so the free-plan
+     * check inside [processFile] stays authoritative — the copy here is a fast path, not a
+     * replacement.
      */
     @Suppress("ReturnCount")
     override fun handlesFile(mimeType: String, filename: String): Boolean {
         val resolvedMimeType = resolveMimeType(mimeType, filename)
 
-        // Claim disallowed types so processFile still runs and throws the localized rejection.
+        // Claim plan-rejected types so processFile still runs and throws the localized rejection.
         // Declining would forward them to WordPress instead, spending a full upload on a file the
         // site's plan won't accept and surfacing the server's untranslated error in place of ours.
-        if (!mediaUtilsWrapper.isMimeTypeSupportedBySitePlan(site, resolvedMimeType)) return true
+        if (isRejectedByFreePlan(resolvedMimeType)) return true
 
         return when {
             // Never re-encoded; processFile always returns Original.
@@ -83,15 +86,7 @@ class GBKMediaUploadProcessor(
     ): ProcessedProxyFile = withContext(ioDispatcher) {
         val resolvedMimeType = resolveMimeType(mimeType, filename)
 
-        // Fallback plan check. GutenbergKit's editor validates uploads in the WebView against the
-        // site's allowedMimeTypes (from /wp-block-editor/v1/settings) before the request reaches
-        // this delegate, so for most disallowed types the editor rejects with its own localized
-        // message first. Those settings are cached on disk and reused on later opens, so GB
-        // validates against whatever mime list was cached — not necessarily the site's current
-        // one. This check still fires when GB's list is absent (cache miss where editor settings
-        // resolve to undefined) or when the app's static MimeTypes table is stricter than the
-        // server's list — in which case it can over-reject a type the server would accept.
-        if (!mediaUtilsWrapper.isMimeTypeSupportedBySitePlan(site, resolvedMimeType)) {
+        if (isRejectedByFreePlan(resolvedMimeType)) {
             throw GBKMediaUploadException(appContext.getString(R.string.error_media_file_type_not_allowed))
         }
 
@@ -103,6 +98,39 @@ class GBKMediaUploadProcessor(
             // Non-media files (documents, archives, audio on paid plans) upload unchanged.
             else -> ProcessedProxyFile.Original
         }
+    }
+
+    /**
+     * Rejects the one upload class the app can judge better than the server: audio and documents
+     * on a free WordPress.com plan, where the restriction is a plan entitlement rather than a
+     * format question, so a localized message beats the server's untranslated error.
+     *
+     * Deliberately narrow. [MediaUtilsWrapper.isMimeTypeSupportedBySitePlan] matches against a
+     * closed, hand-maintained table ([org.wordpress.android.fluxc.utils.MimeTypes]) that has
+     * drifted from what WordPress accepts — it has no `image/avif` (core-supported since 6.5), no
+     * `image/svg+xml`, and no text types at all, and it maps self-hosted to the same document set
+     * as WP.com paid. Applying it to every upload therefore rejects files the server would store.
+     * GutenbergKit already validates against the site's real `allowedMimeTypes` from
+     * `/wp-block-editor/v1/settings` before this delegate runs, so images and videos are left to
+     * that check and to the server, which are both authoritative where this table is not.
+     *
+     * The free-plan test mirrors [WPMediaUtils.getSitePlanForMimeTypes], which selects
+     * `WP_COM_FREE` from [SiteUtilsWrapper.onFreePlan] — using `hasFreePlan` here instead would
+     * let the gate and the allowlist it guards disagree.
+     *
+     * [MIME_OCTET_STREAM] is excluded because [resolveMimeType] emits it for uploads whose type
+     * could not be resolved at all; it counts as an `application` type but means "unknown bytes",
+     * and rejecting it would answer "we could not identify this file" with "this file type is not
+     * allowed".
+     */
+    private fun isRejectedByFreePlan(resolvedMimeType: String): Boolean {
+        if (!site.isWPCom || !siteUtilsWrapper.onFreePlan(site)) return false
+
+        val isPlanRestrictedType = resolvedMimeType != MIME_OCTET_STREAM &&
+                (mediaUtilsWrapper.isAudioMimeType(resolvedMimeType) ||
+                        mediaUtilsWrapper.isApplicationMimeType(resolvedMimeType))
+
+        return isPlanRestrictedType && !mediaUtilsWrapper.isMimeTypeSupportedBySitePlan(site, resolvedMimeType)
     }
 
     @Suppress("ReturnCount")
@@ -284,9 +312,9 @@ class GBKMediaUploadProcessor(
      * Normalizes the client-supplied mime type, falling back to the filename extension when it
      * carries no usable information.
      *
-     * The result feeds [MediaUtilsWrapper.isMimeTypeSupportedBySitePlan], which is an exact,
-     * case-sensitive match against a closed allowlist, so anything but a bare lowercase
-     * `type/subtype` is rejected outright. Two shapes reach us that the allowlist would miss:
+     * The result feeds [isRejectedByFreePlan] and the type routing below. The plan check it
+     * performs is an exact, case-sensitive match against a closed allowlist, so anything but a
+     * bare lowercase `type/subtype` is rejected outright. Two shapes reach us that it would miss:
      * - Parameters and casing: `Content-Type` may legitimately carry parameters
      *   (`image/jpeg; charset=binary`) and its casing is not significant (RFC 9110 §8.3).
      * - Missing header: GutenbergKit's multipart parser defaults a part with no `Content-Type`
