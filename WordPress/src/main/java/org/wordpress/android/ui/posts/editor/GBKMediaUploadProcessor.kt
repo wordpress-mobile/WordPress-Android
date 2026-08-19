@@ -356,7 +356,13 @@ class GBKMediaUploadProcessor(
             // request body byte-for-byte, so stripping EXIF from the staged file in place would
             // silently upload the un-stripped bytes.
             val copy = File.createTempFile("gbk-media", ".${file.extension}", appContext.cacheDir)
-            file.copyTo(copy, overwrite = true)
+            // A failed copy (a full disk being the likely cause) would otherwise leave the
+            // just-created temp file behind in the cache dir: GutenbergKit only deletes the files
+            // it is handed back, and this one never gets returned.
+            runCatching { file.copyTo(copy, overwrite = true) }.onFailure {
+                copy.delete()
+                throw it
+            }
             mediaUtilsWrapper.stripImageLocation(copy.absolutePath)
             return ProcessedProxyFile.Processed(copy, mimeType, filename)
         }

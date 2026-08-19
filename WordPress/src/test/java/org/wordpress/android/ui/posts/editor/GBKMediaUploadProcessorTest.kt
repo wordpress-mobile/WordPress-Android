@@ -7,8 +7,6 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TemporaryFolder
-import org.junit.runner.RunWith
-import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.doReturn
@@ -28,8 +26,8 @@ import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
 import org.wordpress.gutenberg.ProcessedProxyFile
 import java.io.File
 
+// BaseUnitTest carries this too, but Kotlin's opt-in requirement is not inherited by subclasses.
 @ExperimentalCoroutinesApi
-@RunWith(MockitoJUnitRunner::class)
 class GBKMediaUploadProcessorTest : BaseUnitTest() {
     @get:Rule
     val tempFolder = TemporaryFolder()
@@ -41,12 +39,16 @@ class GBKMediaUploadProcessorTest : BaseUnitTest() {
     private lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
     private lateinit var analyticsUtilsWrapper: AnalyticsUtilsWrapper
     private lateinit var stagedFile: File
+    private lateinit var cacheDir: File
 
     @Before
     fun setUp() {
+        // A real directory so tests can assert on the temp files the processor writes there.
+        cacheDir = tempFolder.newFolder("cache")
         appContext = mock {
             on { getString(R.string.error_media_file_type_not_allowed) } doReturn FILE_TYPE_ERROR
             on { getString(R.string.error_media_video_duration_exceeds_limit) } doReturn VIDEO_LIMIT_ERROR
+            on { getCacheDir() } doReturn cacheDir
         }
         mediaUtilsWrapper = mock()
         appPrefsWrapper = mock()
@@ -133,6 +135,23 @@ class GBKMediaUploadProcessorTest : BaseUnitTest() {
         assertThat(result.filename).isEqualTo("photo.jpg")
         verify(mediaUtilsWrapper).stripImageLocation(result.file.absolutePath)
         result.file.delete()
+    }
+
+    @Test
+    fun `failed strip copy does not leak the temp file`() = test {
+        // GutenbergKit only deletes files handed back to it, so a temp file abandoned mid-copy
+        // (a full disk being the likely cause) would sit in the cache dir indefinitely.
+        val missing = File(tempFolder.root, "vanished.jpg")
+        whenever(mediaUtilsWrapper.getOptimizedMedia(missing.absolutePath, false)).thenReturn(null)
+        whenever(appPrefsWrapper.isStripImageLocation).thenReturn(true)
+        val cacheFilesBefore = cacheDir.listFiles()?.size ?: 0
+
+        val thrown = runCatching {
+            createProcessor(wpComSite()).processFile(missing, "image/jpeg", "vanished.jpg")
+        }.exceptionOrNull()
+
+        assertThat(thrown).isNotNull()
+        assertThat(cacheDir.listFiles()?.size ?: 0).isEqualTo(cacheFilesBefore)
     }
 
     @Test
