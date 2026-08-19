@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.posts.editor
 
 import android.content.Context
+import android.net.Uri
 import android.webkit.MimeTypeMap
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
@@ -331,23 +332,21 @@ class GBKMediaUploadProcessor(
         // return the *input* path unchanged (GIF-like skips, decode failures inside
         // ImageUtils.optimizeImage) — treat that as "not optimized" too, otherwise the original
         // file would be mislabeled with a corrected JPEG mime type below.
-        val optimizedPath = mediaUtilsWrapper.getOptimizedMedia(file.absolutePath, false)
-            ?.path
-            ?.takeIf { it != file.absolutePath }
+        val optimized = mediaUtilsWrapper.getOptimizedMedia(file.absolutePath, false)
+            .toDistinctExistingFile(file)
 
-        if (optimizedPath != null) {
-            return processedImage(File(optimizedPath), filename)
+        if (optimized != null) {
+            return processedImage(optimized, filename)
         }
 
         // With optimization off, WP.com rotates sideways-captured images server-side but
         // self-hosted sites don't, so rotate physically (legacy parity — see issue #5737).
         // Returns null when no rotation is needed.
         if (!site.isWPCom) {
-            val rotatedPath = mediaUtilsWrapper.fixOrientationIssue(file.absolutePath, false)
-                ?.path
-                ?.takeIf { it != file.absolutePath }
-            if (rotatedPath != null) {
-                return processedImage(File(rotatedPath), filename)
+            val rotated = mediaUtilsWrapper.fixOrientationIssue(file.absolutePath, false)
+                .toDistinctExistingFile(file)
+            if (rotated != null) {
+                return processedImage(rotated, filename)
             }
         }
 
@@ -370,6 +369,35 @@ class GBKMediaUploadProcessor(
         // No-op: optimization off/unneeded, no rotation, no location strip. Passing the original
         // through avoids the needless lossy re-encode the legacy pipeline never did either.
         return ProcessedProxyFile.Original
+    }
+
+    /**
+     * Resolves an image-processing result to a usable output file, or null to fall back to the
+     * original upload.
+     *
+     * Both [WPMediaUtils.getOptimizedMedia] and [WPMediaUtils.fixOrientationIssue] return the
+     * *input* path unchanged in their no-op cases (GIF-like skips, decode failures inside
+     * ImageUtils, no rotation needed), which must be read as "not processed" — otherwise the
+     * original file would be relabeled with a corrected JPEG mime type by [processedImage].
+     *
+     * The existence check is the backstop: GutenbergKit names the staged file after the
+     * client-supplied multipart filename, which is far less constrained than the MediaStore paths
+     * the legacy callers pass in, so a path that cannot be resolved degrades to a clean
+     * passthrough instead of an upload of a file that is not there.
+     */
+    private fun Uri?.toDistinctExistingFile(input: File): File? {
+        val resolvedPath = this?.path ?: return null
+        if (resolvedPath == input.absolutePath) return null
+
+        val output = File(resolvedPath)
+        if (!output.exists()) {
+            AppLog.w(
+                AppLog.T.MEDIA,
+                "GBKMediaUploadProcessor > processed image path does not exist, using the original"
+            )
+            return null
+        }
+        return output
     }
 
     /**

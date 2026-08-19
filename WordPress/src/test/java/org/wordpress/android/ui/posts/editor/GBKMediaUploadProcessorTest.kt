@@ -138,6 +138,36 @@ class GBKMediaUploadProcessorTest : BaseUnitTest() {
     }
 
     @Test
+    fun `optimized path that does not exist falls back to the original`() = test {
+        // GutenbergKit names the staged file after the client-supplied multipart filename, so a
+        // path that fails to resolve is reachable here in a way it never was for the MediaStore
+        // paths the legacy callers pass in. Uploading a File that is not there would send nothing.
+        val missing = mock<android.net.Uri> {
+            on { path } doReturn File(tempFolder.root, "never-written.jpg").absolutePath
+        }
+        whenever(mediaUtilsWrapper.getOptimizedMedia(stagedFile.absolutePath, false)).thenReturn(missing)
+
+        val result = createProcessor().processFile(stagedFile, "image/jpeg", "photo.jpg")
+
+        assertThat(result).isEqualTo(ProcessedProxyFile.Original)
+    }
+
+    @Test
+    fun `optimized path containing a percent sign is used verbatim`() = test {
+        // Uri.getPath is already decoded. Decoding it again reads "%_d" as an escape sequence and
+        // mangles the path, so a file whose name contains a literal '%' would fail to resolve.
+        val optimized = tempFolder.newFile("100%_done.jpg")
+        val optimizedUri = fileUri(optimized)
+        whenever(mediaUtilsWrapper.getOptimizedMedia(stagedFile.absolutePath, false))
+            .thenReturn(optimizedUri)
+
+        val result = createProcessor().processFile(stagedFile, "image/jpeg", "100%_done.jpg")
+
+        result as ProcessedProxyFile.Processed
+        assertThat(result.file.absolutePath).isEqualTo(optimized.absolutePath)
+    }
+
+    @Test
     fun `failed strip copy does not leak the temp file`() = test {
         // GutenbergKit only deletes files handed back to it, so a temp file abandoned mid-copy
         // (a full disk being the likely cause) would sit in the cache dir indefinitely.
@@ -588,6 +618,7 @@ class GBKMediaUploadProcessorTest : BaseUnitTest() {
         verify(mediaUtilsWrapper, never()).isMimeTypeSupportedBySitePlan(anyOrNull(), any())
     }
 
+    /** A Uri standing in for [android.net.Uri.fromFile], whose path resolves to the real file. */
     private fun fileUri(file: File): android.net.Uri = mock {
         on { path } doReturn file.absolutePath
     }

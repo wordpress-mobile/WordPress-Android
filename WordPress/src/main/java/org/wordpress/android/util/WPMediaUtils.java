@@ -92,7 +92,11 @@ public class WPMediaUtils {
             ExifUtils.writeExifData(exifData, optimizedPath);
 
             AnalyticsTracker.track(AnalyticsTracker.Stat.MEDIA_PHOTO_OPTIMIZED);
-            return Uri.parse(optimizedPath);
+            // fromFile, not parse: these are filesystem paths, and Uri.parse reads everything
+            // after a '#' as a fragment and after a '?' as a query, so a filename containing
+            // either (e.g. "IMG_#1.jpg") yields a Uri whose getPath() is truncated to a file that
+            // does not exist. fromFile encodes the path instead of parsing it.
+            return Uri.fromFile(new File(optimizedPath));
         }
         return null;
     }
@@ -104,7 +108,9 @@ public class WPMediaUtils {
 
         String rotatedPath = ImageUtils.rotateImageIfNecessary(context, path);
         if (rotatedPath != null) {
-            return Uri.parse(rotatedPath);
+            // See getOptimizedMedia above: fromFile encodes a filesystem path, Uri.parse would
+            // truncate it at a '#' or '?' in the filename.
+            return Uri.fromFile(new File(rotatedPath));
         }
 
         return null;
