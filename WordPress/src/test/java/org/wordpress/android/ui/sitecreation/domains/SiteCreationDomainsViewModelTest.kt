@@ -135,7 +135,7 @@ class SiteCreationDomainsViewModelTest : BaseUnitTest() {
             whenever(mSiteCreationDomainSanitizer.sanitizeDomainQuery(any())).thenReturn(
                 createSanitizedDomainResult(isDomainAvailableInSuggestions)
             )
-            whenever(fetchDomainsUseCase.fetchDomains(eq(queryResultSizePair.first), any(), any(), any())).thenReturn(
+            whenever(fetchDomainsUseCase.fetchDomains(eq(queryResultSizePair.first), any(), any())).thenReturn(
                 createSuccessfulFetchResult(queryResultSizePair)
             )
             block()
@@ -223,7 +223,7 @@ class SiteCreationDomainsViewModelTest : BaseUnitTest() {
     @Test
     fun verifyNonEmptyUpdateQueryUiStateAfterErrorResponse() = test {
         val errorQuery = "error_result_query"
-        whenever(fetchDomainsUseCase.fetchDomains(eq(errorQuery), any(), any(), any())).thenReturn(
+        whenever(fetchDomainsUseCase.fetchDomains(eq(errorQuery), any(), any())).thenReturn(
             FetchDomainsResult.Error(errorQuery)
         )
 
@@ -248,7 +248,7 @@ class SiteCreationDomainsViewModelTest : BaseUnitTest() {
     @Test
     fun verifyNonEmptyUpdateQueryUiStateAfterErrorResponseOfTypeInvalidQuery() = test {
         val invalidQuery = "empty_result_query_invalid"
-        whenever(fetchDomainsUseCase.fetchDomains(eq(invalidQuery), any(), any(), any())).thenReturn(
+        whenever(fetchDomainsUseCase.fetchDomains(eq(invalidQuery), any(), any())).thenReturn(
             FetchDomainsResult.InvalidQuery(invalidQuery)
         )
 
@@ -346,7 +346,6 @@ class SiteCreationDomainsViewModelTest : BaseUnitTest() {
             eq(MULTI_RESULT_DOMAIN_FETCH_QUERY.first),
             eq(FETCH_DOMAINS_VENDOR_DOT),
             eq(true),
-            eq(MULTI_RESULT_DOMAIN_FETCH_QUERY.second),
         )
     }
 
@@ -415,7 +414,7 @@ class SiteCreationDomainsViewModelTest : BaseUnitTest() {
         }
 
         val result = FetchDomainsResult.Success(query, suggestions)
-        whenever(fetchDomainsUseCase.fetchDomains(any(), any(), any(), any()))
+        whenever(fetchDomainsUseCase.fetchDomains(any(), any(), any()))
             .thenReturn(result)
         block(suggestions)
     }
@@ -424,7 +423,7 @@ class SiteCreationDomainsViewModelTest : BaseUnitTest() {
 
     @Test
     fun verifyFetchFreeAndPaidDomainsWhenPurchasingFeatureConfigIsEnabled() = testWithSuccessResultNewUi {
-        val (query, size) = MULTI_RESULT_DOMAIN_FETCH_QUERY
+        val query = MULTI_RESULT_DOMAIN_FETCH_QUERY.first
         viewModel.start()
 
         viewModel.onQueryChanged(query)
@@ -434,7 +433,6 @@ class SiteCreationDomainsViewModelTest : BaseUnitTest() {
             eq(query),
             eq(FETCH_DOMAINS_VENDOR_MOBILE),
             eq(false),
-            eq(size),
         )
     }
 

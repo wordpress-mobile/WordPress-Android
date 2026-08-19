@@ -34,7 +34,6 @@ class FetchDomainsUseCase @Inject constructor(
         query: String,
         vendor: String,
         onlyWordpressCom: Boolean,
-        @Suppress("UNUSED_PARAMETER") size: Int = FETCH_DOMAINS_SIZE.toInt()
     ): FetchDomainsResult {
         val params = DomainSuggestionsParams(
             query = query,
