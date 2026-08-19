@@ -128,9 +128,7 @@ public class DeepLinkingIntentReceiverActivity extends BaseAppCompatActivity {
     private void showOverlay() {
         JetpackFeatureFullScreenOverlayFragment
                 .newInstance(
-                        null,
                         true,
-                        false,
                         JetpackFeatureCollectionOverlaySource.UNSPECIFIED)
                 .show(getSupportFragmentManager(), JetpackFeatureFullScreenOverlayFragment.TAG);
     }

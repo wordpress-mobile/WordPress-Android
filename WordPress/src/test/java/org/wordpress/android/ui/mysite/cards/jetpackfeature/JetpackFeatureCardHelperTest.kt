@@ -8,8 +8,6 @@ import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.any
 import org.mockito.kotlin.whenever
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.DateTimeUtils
@@ -33,9 +31,6 @@ class JetpackFeatureCardHelperTest {
     lateinit var dateTimeUtilsWrapper: DateTimeUtilsWrapper
 
     @Mock
-    lateinit var jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper
-
-    @Mock
     lateinit var phaseThreeBlogPostLinkConfig: PhaseThreeBlogPostLinkConfig
 
     private lateinit var helper: JetpackFeatureCardHelper
@@ -47,7 +42,6 @@ class JetpackFeatureCardHelperTest {
             appPrefsWrapper,
             buildConfigWrapper,
             dateTimeUtilsWrapper,
-            jetpackFeatureRemovalPhaseHelper,
             phaseThreeBlogPostLinkConfig
         )
     }
@@ -59,24 +53,6 @@ class JetpackFeatureCardHelperTest {
         val result = helper.shouldShowJetpackFeatureCard()
 
         assertThat(result).isFalse
-    }
-
-    @Test
-    fun `when not third phase, then jetpack feature card should not show`() {
-        setTest(phase = JetpackFeatureRemovalPhase.PhaseTwo)
-
-        val result = helper.shouldShowJetpackFeatureCard()
-
-        assertThat(result).isFalse
-    }
-
-    @Test
-    fun `when phase three, then jetpack feature card should show`() {
-        setTest(phase = JetpackFeatureRemovalPhase.PhaseThree)
-
-        val result = helper.shouldShowJetpackFeatureCard()
-
-        assertThat(result).isTrue
     }
 
     @Test
@@ -107,33 +83,28 @@ class JetpackFeatureCardHelperTest {
     }
 
     private fun setTest(
-        phase: JetpackFeatureRemovalPhase = JetpackFeatureRemovalPhase.PhaseThree,
         isJetpackApp: Boolean = false,
         isCardHiddenByUser: Boolean = false,
         lastShownTimestamp: Long = 0L
     ) {
-        setPhase(phase)
         setIsJetpackApp(isJetpackApp)
-        setIsCardHiddenByUser(phase, isCardHiddenByUser)
-        setLastShownTimestamp(phase, lastShownTimestamp)
+        setIsCardHiddenByUser(isCardHiddenByUser)
+        setLastShownTimestamp(lastShownTimestamp)
         setDaysBetween(lastShownTimestamp)
     }
 
     // Helpers
-    private fun setPhase(value: JetpackFeatureRemovalPhase) {
-        whenever(jetpackFeatureRemovalPhaseHelper.getCurrentPhase()).thenReturn(value)
-    }
 
     private fun setIsJetpackApp(value: Boolean) {
         whenever(buildConfigWrapper.isJetpackApp).thenReturn(value)
     }
 
-    private fun setIsCardHiddenByUser(phase: JetpackFeatureRemovalPhase, value: Boolean) {
-        whenever(appPrefsWrapper.getShouldHideJetpackFeatureCard(phase)).thenReturn(value)
+    private fun setIsCardHiddenByUser(value: Boolean) {
+        whenever(appPrefsWrapper.getShouldHideJetpackFeatureCard()).thenReturn(value)
     }
 
-    private fun setLastShownTimestamp(phase: JetpackFeatureRemovalPhase, value: Long) {
-        whenever(appPrefsWrapper.getJetpackFeatureCardLastShownTimestamp(phase)).thenReturn(value)
+    private fun setLastShownTimestamp(value: Long) {
+        whenever(appPrefsWrapper.getJetpackFeatureCardLastShownTimestamp()).thenReturn(value)
     }
 
     private fun setDaysBetween(lastShownTimestamp: Long) {

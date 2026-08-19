@@ -5,7 +5,6 @@ import com.google.gson.Gson
 import org.wordpress.android.fluxc.model.JetpackCapability
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.models.ReaderTag
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase
 import org.wordpress.android.ui.posts.AuthorFilterSelection
 import org.wordpress.android.ui.prefs.AppPrefs.PrefKey
 import org.wordpress.android.ui.prefs.AppPrefs.getBoolean
@@ -357,35 +356,17 @@ class AppPrefsWrapper @Inject constructor(val buildConfigWrapper: BuildConfigWra
     fun setIsOpenWebLinksWithJetpack(isOpenWebLinksWithJetpack: Boolean) =
         AppPrefs.setIsOpenWebLinksWithJetpack(isOpenWebLinksWithJetpack)
 
-    fun getShouldHideJetpackFeatureCard(jetpackFeatureRemovalPhase: JetpackFeatureRemovalPhase): Boolean =
-        AppPrefs.getShouldHideJetpackFeatureCard(jetpackFeatureRemovalPhase)
+    fun getShouldHideJetpackFeatureCard(): Boolean =
+        AppPrefs.getShouldHideJetpackFeatureCard()
 
-    fun setShouldHideJetpackFeatureCard(jetpackFeatureRemovalPhase: JetpackFeatureRemovalPhase, isHidden: Boolean) =
-        AppPrefs.setShouldHideJetpackFeatureCard(jetpackFeatureRemovalPhase, isHidden)
+    fun setShouldHideJetpackFeatureCard(isHidden: Boolean) =
+        AppPrefs.setShouldHideJetpackFeatureCard(isHidden)
 
-    fun getJetpackFeatureCardLastShownTimestamp(jetpackFeatureRemovalPhase: JetpackFeatureRemovalPhase): Long =
-        AppPrefs.getJetpackFeatureCardLastShownTimestamp(jetpackFeatureRemovalPhase)
+    fun getJetpackFeatureCardLastShownTimestamp(): Long =
+        AppPrefs.getJetpackFeatureCardLastShownTimestamp()
 
-    fun setJetpackFeatureCardLastShownTimestamp(
-        jetpackFeatureRemovalPhase: JetpackFeatureRemovalPhase,
-        lastShownTimestamp: Long
-    ) {
-        AppPrefs.setJetpackFeatureCardLastShownTimestamp(jetpackFeatureRemovalPhase, lastShownTimestamp)
-    }
-
-    fun getSwitchToJetpackMenuCardLastShownTimestamp(): Long = AppPrefs.getSwitchToJetpackMenuCardLastShownTimestamp()
-
-    fun setSwitchToJetpackMenuCardLastShownTimestamp(lastShownTimestamp: Long) {
-        AppPrefs.setSwitchToJetpackMenuCardLastShownTimestamp(lastShownTimestamp)
-    }
-
-    fun getShouldHideSwitchToJetpackMenuCard(jetpackFeatureRemovalPhase: JetpackFeatureRemovalPhase): Boolean =
-        AppPrefs.getShouldHideSwitchToJetpackMenuCard(jetpackFeatureRemovalPhase)
-
-    fun setShouldHideSwitchToJetpackMenuCard(
-        jetpackFeatureRemovalPhase: JetpackFeatureRemovalPhase,
-        isHidden: Boolean
-    ) = AppPrefs.setShouldHideSwitchToJetpackMenuCard(jetpackFeatureRemovalPhase, isHidden)
+    fun setJetpackFeatureCardLastShownTimestamp(lastShownTimestamp: Long) =
+        AppPrefs.setJetpackFeatureCardLastShownTimestamp(lastShownTimestamp)
 
     fun getShouldHideJetpackInstallFullPluginCard(siteId: Int): Boolean =
         AppPrefs.getShouldHideJetpackInstallFullPluginCard(siteId)
