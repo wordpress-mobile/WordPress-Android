@@ -81,10 +81,10 @@ class RsPostChangeListener @Inject constructor(
     @Suppress("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onPostUploaded(event: OnPostUploaded) {
-        if (event.isError) return
         val post = event.post ?: return
-        if (post.localSiteId != localSiteId || post.isPage != isPages) return
-        notifyChanged()
+        if (!event.isError && post.localSiteId == localSiteId && post.isPage == isPages) {
+            notifyChanged()
+        }
     }
 
     /**
