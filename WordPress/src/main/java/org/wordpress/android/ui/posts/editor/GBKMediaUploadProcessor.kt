@@ -44,6 +44,7 @@ import kotlin.coroutines.resume
  * - Thrown exceptions are relayed to the editor as an error notice showing the exception message,
  *   so messages must be localized and user-facing.
  */
+@Suppress("LongParameterList")
 class GBKMediaUploadProcessor(
     private val site: SiteModel,
     private val appContext: Context,
@@ -385,6 +386,7 @@ class GBKMediaUploadProcessor(
      * the legacy callers pass in, so a path that cannot be resolved degrades to a clean
      * passthrough instead of an upload of a file that is not there.
      */
+    @Suppress("ReturnCount")
     private fun Uri?.toDistinctExistingFile(input: File): File? {
         val resolvedPath = this?.path ?: return null
         if (resolvedPath == input.absolutePath) return null
