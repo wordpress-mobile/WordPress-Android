@@ -77,7 +77,6 @@ class RsPostChangeListener @Inject constructor(
     }
 
     /** Fired when UploadService finishes pushing a post or page to the server. */
-    @Suppress("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onPostUploaded(event: OnPostUploaded) {
         val post = event.post ?: return
@@ -95,7 +94,6 @@ class RsPostChangeListener @Inject constructor(
      * here to that one lookup - EventBus runs every BACKGROUND subscriber of this bus on a single
      * shared queue, so anything slow here delays the rest of them.
      */
-    @Suppress("unused")
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
     fun onPostChanged(event: OnPostChanged) {
         if (event.isError) return

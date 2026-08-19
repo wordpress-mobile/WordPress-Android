@@ -154,7 +154,7 @@ class PostRsListViewModel @Inject constructor(
     @MainThread
     fun onScreenVisible() {
         isScreenVisible = true
-        if (hasDeferredChange) refreshForRemoteChange()
+        if (hasDeferredChange) onRemoteChangeDetected()
     }
 
     @MainThread
@@ -163,29 +163,18 @@ class PostRsListViewModel @Inject constructor(
     }
 
     /**
-     * Records a change FluxC reported that the rs collections can't see - a post saved in the
-     * editor, for instance.
+     * Refreshes the list after FluxC reported a change the rs collections can't see - a post saved
+     * in the editor, for instance - or remembers to.
      *
-     * Most of these arrive while the editor is covering the list, and refreshing a screen nobody
-     * is looking at spends a request per open tab for a result that may be superseded before it is
-     * seen. So a hidden list only remembers that it is out of date, however many changes arrive,
-     * and refreshes once in [onScreenVisible].
+     * Most of these arrive while the editor covers the list, and refreshing a screen nobody is
+     * looking at spends a request per open tab on a result that may be superseded before it is
+     * seen. A refresh while offline could only fail, and [refreshAllTabs] would then mark every
+     * tab with an error the user never asked for. Either way the change is remembered, however
+     * many arrive, and the list catches up with a single refresh in [onScreenVisible].
      */
     private fun onRemoteChangeDetected() {
-        if (!isScreenVisible) {
-            hasDeferredChange = true
-            return
-        }
-        refreshForRemoteChange()
-    }
-
-    /**
-     * Skipped when offline: the refresh could only fail, and [refreshAllTabs] would then mark every
-     * tab with an error for something the user never asked for. The change stays deferred so the
-     * list still catches up the next time it is shown with a connection.
-     */
-    private fun refreshForRemoteChange() {
-        if (!networkUtilsWrapper.isNetworkAvailable()) return
+        hasDeferredChange = true
+        if (!isScreenVisible || !networkUtilsWrapper.isNetworkAvailable()) return
         hasDeferredChange = false
         refreshAllTabs()
     }

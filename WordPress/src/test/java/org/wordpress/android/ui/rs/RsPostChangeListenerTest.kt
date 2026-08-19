@@ -61,207 +61,136 @@ class RsPostChangeListenerTest : BaseUnitTest(StandardTestDispatcher()) {
     }
 
     @Test
-    fun `a change reported after stop is not emitted`() {
-        val emissions = countEmissions {
-            listener.stop()
+    fun `a change reported after stop is not emitted`() = assertEmits(0) {
+        listener.stop()
 
-            listener.onPostUploaded(OnPostUploaded(post(), false))
-        }
-
-        assertThat(emissions).isZero()
+        listener.onPostUploaded(OnPostUploaded(post(), false))
     }
 
     @Test
-    fun `upload of a post of the observed site is reported`() {
-        val emissions = countEmissions {
-            listener.onPostUploaded(OnPostUploaded(post(), false))
-        }
-
-        assertThat(emissions).isEqualTo(1)
+    fun `upload of a post of the observed site is reported`() = assertEmits(1) {
+        listener.onPostUploaded(OnPostUploaded(post(), false))
     }
 
     @Test
-    fun `upload of a page is ignored by a post listener`() {
-        val emissions = countEmissions {
-            listener.onPostUploaded(OnPostUploaded(post(isPage = true), false))
-        }
-
-        assertThat(emissions).isZero()
+    fun `upload of a page is ignored by a post listener`() = assertEmits(0) {
+        listener.onPostUploaded(OnPostUploaded(post(isPage = true), false))
     }
 
     @Test
-    fun `upload of a page is reported to a page listener`() {
-        val emissions = countEmissions(isPages = true) {
-            listener.onPostUploaded(OnPostUploaded(post(isPage = true), false))
-        }
-
-        assertThat(emissions).isEqualTo(1)
+    fun `upload of a page is reported to a page listener`() = assertEmits(1, isPages = true) {
+        listener.onPostUploaded(OnPostUploaded(post(isPage = true), false))
     }
 
     @Test
-    fun `upload from another site is ignored`() {
-        val emissions = countEmissions {
-            listener.onPostUploaded(OnPostUploaded(post(localSiteId = OTHER_SITE_ID), false))
-        }
-
-        assertThat(emissions).isZero()
+    fun `upload from another site is ignored`() = assertEmits(0) {
+        listener.onPostUploaded(OnPostUploaded(post(localSiteId = OTHER_SITE_ID), false))
     }
 
     @Test
-    fun `failed upload is ignored`() {
-        val emissions = countEmissions {
-            listener.onPostUploaded(OnPostUploaded(post(), false).apply { error = genericError() })
-        }
-
-        assertThat(emissions).isZero()
+    fun `failed upload is ignored`() = assertEmits(0) {
+        listener.onPostUploaded(OnPostUploaded(post(), false).apply { error = genericError() })
     }
 
     @Test
-    fun `upload without a post is ignored`() {
-        val emissions = countEmissions {
-            listener.onPostUploaded(OnPostUploaded(null, false))
-        }
-
-        assertThat(emissions).isZero()
+    fun `upload without a post is ignored`() = assertEmits(0) {
+        listener.onPostUploaded(OnPostUploaded(null, false))
     }
 
     @Test
-    fun `remote update of a post of the observed site is reported`() {
-        val emissions = countEmissions {
-            whenever(postStore.getPostByLocalPostId(LOCAL_POST_ID)).thenReturn(post())
+    fun `remote update of a post of the observed site is reported`() = assertEmits(1) {
+        whenever(postStore.getPostByLocalPostId(LOCAL_POST_ID)).thenReturn(post())
 
-            listener.onPostChanged(changed(updatePost(isLocalUpdate = false)))
-        }
-
-        assertThat(emissions).isEqualTo(1)
+        listener.onPostChanged(changed(updatePost(isLocalUpdate = false)))
     }
 
     @Test
-    fun `local update is ignored`() {
-        val emissions = countEmissions {
-            listener.onPostChanged(changed(updatePost(isLocalUpdate = true)))
-        }
-
-        assertThat(emissions).isZero()
+    fun `local update is ignored`() = assertEmits(0) {
+        listener.onPostChanged(changed(updatePost(isLocalUpdate = true)))
     }
 
     @Test
-    fun `remote update of a page is ignored by a post listener`() {
-        val emissions = countEmissions {
-            whenever(postStore.getPostByLocalPostId(LOCAL_POST_ID)).thenReturn(post(isPage = true))
+    fun `remote update of a page is ignored by a post listener`() = assertEmits(0) {
+        whenever(postStore.getPostByLocalPostId(LOCAL_POST_ID)).thenReturn(post(isPage = true))
 
-            listener.onPostChanged(changed(updatePost(isLocalUpdate = false)))
-        }
-
-        assertThat(emissions).isZero()
+        listener.onPostChanged(changed(updatePost(isLocalUpdate = false)))
     }
 
     @Test
-    fun `remote update from another site is ignored`() {
-        val emissions = countEmissions {
-            whenever(postStore.getPostByLocalPostId(LOCAL_POST_ID))
-                .thenReturn(post(localSiteId = OTHER_SITE_ID))
+    fun `remote update from another site is ignored`() = assertEmits(0) {
+        whenever(postStore.getPostByLocalPostId(LOCAL_POST_ID))
+            .thenReturn(post(localSiteId = OTHER_SITE_ID))
 
-            listener.onPostChanged(changed(updatePost(isLocalUpdate = false)))
-        }
-
-        assertThat(emissions).isZero()
+        listener.onPostChanged(changed(updatePost(isLocalUpdate = false)))
     }
 
     @Test
-    fun `delete is reported even though the post is already gone from the store`() {
-        val emissions = countEmissions {
-            whenever(postStore.getPostByLocalPostId(LOCAL_POST_ID)).thenReturn(null)
+    fun `delete is reported even though the post is already gone from the store`() = assertEmits(1) {
+        whenever(postStore.getPostByLocalPostId(LOCAL_POST_ID)).thenReturn(null)
 
-            listener.onPostChanged(
-                changed(
-                    CauseOfOnPostChanged.DeletePost(
-                        LOCAL_POST_ID,
-                        REMOTE_POST_ID,
-                        PostDeleteActionType.TRASH
-                    )
+        listener.onPostChanged(
+            changed(
+                CauseOfOnPostChanged.DeletePost(
+                    LOCAL_POST_ID,
+                    REMOTE_POST_ID,
+                    PostDeleteActionType.TRASH
                 )
             )
-        }
-
-        assertThat(emissions).isEqualTo(1)
+        )
     }
 
     @Test
-    fun `restore is reported`() {
-        val emissions = countEmissions {
-            whenever(postStore.getPostByLocalPostId(LOCAL_POST_ID)).thenReturn(post())
+    fun `restore is reported`() = assertEmits(1) {
+        whenever(postStore.getPostByLocalPostId(LOCAL_POST_ID)).thenReturn(post())
 
-            listener.onPostChanged(
-                changed(CauseOfOnPostChanged.RestorePost(LOCAL_POST_ID, REMOTE_POST_ID))
-            )
-        }
-
-        assertThat(emissions).isEqualTo(1)
+        listener.onPostChanged(
+            changed(CauseOfOnPostChanged.RestorePost(LOCAL_POST_ID, REMOTE_POST_ID))
+        )
     }
 
     @Test
-    fun `remote autosave is ignored`() {
-        val emissions = countEmissions {
-            listener.onPostChanged(
-                changed(CauseOfOnPostChanged.RemoteAutoSavePost(LOCAL_POST_ID, REMOTE_POST_ID))
-            )
-        }
-
-        assertThat(emissions).isZero()
+    fun `remote autosave is ignored`() = assertEmits(0) {
+        listener.onPostChanged(
+            changed(CauseOfOnPostChanged.RemoteAutoSavePost(LOCAL_POST_ID, REMOTE_POST_ID))
+        )
     }
 
     @Test
-    fun `a removed post is ignored`() {
-        val emissions = countEmissions {
-            listener.onPostChanged(
-                changed(CauseOfOnPostChanged.RemovePost(LOCAL_POST_ID, REMOTE_POST_ID))
-            )
-        }
-
-        assertThat(emissions).isZero()
+    fun `a removed post is ignored`() = assertEmits(0) {
+        listener.onPostChanged(
+            changed(CauseOfOnPostChanged.RemovePost(LOCAL_POST_ID, REMOTE_POST_ID))
+        )
     }
 
     @Test
-    fun `a list fetch is ignored`() {
-        val emissions = countEmissions {
-            listener.onPostChanged(changed(CauseOfOnPostChanged.FetchPosts))
-        }
-
-        assertThat(emissions).isZero()
+    fun `a list fetch is ignored`() = assertEmits(0) {
+        listener.onPostChanged(changed(CauseOfOnPostChanged.FetchPosts))
     }
 
     @Test
-    fun `a failed change is ignored`() {
-        val emissions = countEmissions {
-            listener.onPostChanged(
-                changed(updatePost(isLocalUpdate = false)).apply { error = genericError() }
-            )
-        }
-
-        assertThat(emissions).isZero()
+    fun `a failed change is ignored`() = assertEmits(0) {
+        listener.onPostChanged(
+            changed(updatePost(isLocalUpdate = false)).apply { error = genericError() }
+        )
     }
 
     @Test
-    fun `the two events of a single publish are reported once`() {
-        val emissions = countEmissions {
-            whenever(postStore.getPostByLocalPostId(LOCAL_POST_ID)).thenReturn(post())
+    fun `the two events of a single publish are reported once`() = assertEmits(1) {
+        whenever(postStore.getPostByLocalPostId(LOCAL_POST_ID)).thenReturn(post())
 
-            listener.onPostChanged(changed(updatePost(isLocalUpdate = false)))
-            listener.onPostUploaded(OnPostUploaded(post(), false))
-        }
-
-        assertThat(emissions).isEqualTo(1)
+        listener.onPostChanged(changed(updatePost(isLocalUpdate = false)))
+        listener.onPostUploaded(OnPostUploaded(post(), false))
     }
 
     /**
-     * Runs [events] against a started listener and returns how many times `changes` fired.
+     * Asserts that running [events] against a started listener makes `changes` fire [expected]
+     * times.
      *
      * The collector has to be given a chance to subscribe before the events are posted - the flow
      * has no replay, so anything emitted beforehand is dropped - and time has to be advanced
      * afterwards to get past the debounce.
      */
-    private fun countEmissions(isPages: Boolean = false, events: () -> Unit): Int {
+    private fun assertEmits(expected: Int, isPages: Boolean = false, events: () -> Unit) {
         var emissions = 0
         test {
             listener.start(site, isPages)
@@ -273,7 +202,7 @@ class RsPostChangeListenerTest : BaseUnitTest(StandardTestDispatcher()) {
 
             job.cancel()
         }
-        return emissions
+        assertThat(emissions).isEqualTo(expected)
     }
 
     private fun post(isPage: Boolean = false, localSiteId: Int = SITE_ID) = PostModel().apply {
