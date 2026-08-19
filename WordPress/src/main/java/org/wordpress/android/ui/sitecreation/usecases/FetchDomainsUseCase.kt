@@ -13,6 +13,8 @@ const val FETCH_DOMAINS_VENDOR_DOT = "dot"
 const val FETCH_DOMAINS_VENDOR_MOBILE = "mobile"
 private const val FETCH_DOMAINS_SIZE = 20u
 private const val ERROR_CODE_INVALID_QUERY = "invalid_query"
+private const val ERROR_CODE_EMPTY_RESULTS = "empty_results"
+private const val ERROR_TYPE_GENERIC = "GENERIC_ERROR"
 
 class FetchDomainsUseCase @Inject constructor(
     private val wpComApiClientProvider: WpComApiClientProvider,
@@ -50,21 +52,28 @@ class FetchDomainsUseCase @Inject constructor(
             is WpRequestResult.Success ->
                 FetchDomainsResult.Success(result.response)
             is WpRequestResult.WpError ->
-                if (result.isInvalidQuery()) {
-                    FetchDomainsResult.InvalidQuery
-                } else {
-                    FetchDomainsResult.Error
+                when (val code = result.apiErrorCode()) {
+                    ERROR_CODE_INVALID_QUERY -> FetchDomainsResult.InvalidQuery
+                    // The API reports "no domains for that search" as an error,
+                    // but there is nothing wrong with the request.
+                    ERROR_CODE_EMPTY_RESULTS -> FetchDomainsResult.Success(emptyList())
+                    else -> FetchDomainsResult.Error(
+                        type = code ?: ERROR_TYPE_GENERIC,
+                        message = result.errorMessage,
+                    )
                 }
-            else -> FetchDomainsResult.Error
+            else -> FetchDomainsResult.Error(type = ERROR_TYPE_GENERIC, message = null)
         }
     }
 }
 
-private fun WpRequestResult.WpError<*>.isInvalidQuery(): Boolean {
-    val code = errorCode
-    return code is WpErrorCode.CustomException &&
-        code.v1 == ERROR_CODE_INVALID_QUERY
-}
+/**
+ * The API's own error code, for the codes this endpoint defines. Codes the
+ * WordPress REST API also uses are modelled as [WpErrorCode] variants and
+ * return null.
+ */
+private fun WpRequestResult.WpError<*>.apiErrorCode(): String? =
+    (errorCode as? WpErrorCode.CustomException)?.v1
 
 sealed interface FetchDomainsResult {
     data class Success(
@@ -73,5 +82,8 @@ sealed interface FetchDomainsResult {
 
     data object InvalidQuery : FetchDomainsResult
 
-    data object Error : FetchDomainsResult
+    data class Error(
+        val type: String,
+        val message: String?,
+    ) : FetchDomainsResult
 }

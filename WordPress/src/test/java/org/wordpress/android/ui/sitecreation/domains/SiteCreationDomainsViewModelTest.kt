@@ -224,7 +224,7 @@ class SiteCreationDomainsViewModelTest : BaseUnitTest() {
     fun verifyNonEmptyUpdateQueryUiStateAfterErrorResponse() = test {
         val errorQuery = "error_result_query"
         whenever(fetchDomainsUseCase.fetchDomains(eq(errorQuery), any(), any())).thenReturn(
-            FetchDomainsResult.Error
+            FetchDomainsResult.Error(type = "empty_query", message = "Query is empty")
         )
 
         viewModel.start()
@@ -240,6 +240,20 @@ class SiteCreationDomainsViewModelTest : BaseUnitTest() {
         )
         assertThat(captor.thirdValue.contentState.items[0])
             .isInstanceOf(Old.ErrorItemUiState::class.java)
+    }
+
+    @Test
+    fun `verify the api error type and message are tracked`() = test {
+        val errorQuery = "error_result_query"
+        whenever(fetchDomainsUseCase.fetchDomains(eq(errorQuery), any(), any())).thenReturn(
+            FetchDomainsResult.Error(type = "empty_query", message = "Query is empty")
+        )
+
+        viewModel.start()
+        viewModel.onQueryChanged(errorQuery)
+        advanceUntilIdle()
+
+        verify(tracker).trackErrorShown("domains", "empty_query", "Query is empty")
     }
 
     /**

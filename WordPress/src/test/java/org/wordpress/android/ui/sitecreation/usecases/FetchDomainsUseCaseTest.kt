@@ -17,6 +17,7 @@ import rs.wordpress.api.kotlin.WpRequestResult
 import uniffi.wp_api.DomainSuggestion
 import uniffi.wp_api.FreeDomainSuggestion
 import uniffi.wp_api.RequestMethod
+import uniffi.wp_api.WpErrorCode
 
 private const val SEARCH_QUERY = "test"
 
@@ -88,6 +89,62 @@ class FetchDomainsUseCaseTest : BaseUnitTest() {
                 SEARCH_QUERY, "vendor", onlyWordpressCom = false
             )
 
-            assertThat(result).isEqualTo(FetchDomainsResult.Error)
+            assertThat(result).isEqualTo(
+                FetchDomainsResult.Error(type = "GENERIC_ERROR", message = null)
+            )
         }
+
+    @Suppress("UNCHECKED_CAST")
+    @Test
+    fun `given invalid_query error, when fetchDomains, then return InvalidQuery`() =
+        test {
+            whenever(wpComApiClient.request<Any>(any()))
+                .thenReturn(wpError("invalid_query", "Domain searches must contain a word"))
+
+            val result = useCase.fetchDomains(
+                SEARCH_QUERY, "vendor", onlyWordpressCom = false
+            )
+
+            assertThat(result).isEqualTo(FetchDomainsResult.InvalidQuery)
+        }
+
+    @Suppress("UNCHECKED_CAST")
+    @Test
+    fun `given empty_results error, when fetchDomains, then return Success with no suggestions`() =
+        test {
+            whenever(wpComApiClient.request<Any>(any()))
+                .thenReturn(wpError("empty_results", "No available domains for that search."))
+
+            val result = useCase.fetchDomains(
+                SEARCH_QUERY, "vendor", onlyWordpressCom = false
+            )
+
+            assertThat(result).isEqualTo(FetchDomainsResult.Success(emptyList()))
+        }
+
+    @Suppress("UNCHECKED_CAST")
+    @Test
+    fun `given another api error, when fetchDomains, then return Error carrying its code`() =
+        test {
+            whenever(wpComApiClient.request<Any>(any()))
+                .thenReturn(wpError("empty_query", "Query is empty"))
+
+            val result = useCase.fetchDomains(
+                SEARCH_QUERY, "vendor", onlyWordpressCom = false
+            )
+
+            assertThat(result).isEqualTo(
+                FetchDomainsResult.Error(type = "empty_query", message = "Query is empty")
+            )
+        }
+
+    @Suppress("UNCHECKED_CAST")
+    private fun wpError(code: String, message: String) = WpRequestResult.WpError<Any>(
+        errorCode = WpErrorCode.CustomException(code),
+        errorMessage = message,
+        statusCode = 400.toUInt(),
+        response = "",
+        requestUrl = "",
+        requestMethod = RequestMethod.GET,
+    ) as WpRequestResult<Any>
 }

@@ -18,6 +18,7 @@ import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.networking.restapi.WpComApiClientProvider
 import rs.wordpress.api.kotlin.WpComApiClient
 import rs.wordpress.api.kotlin.WpRequestResult
+import rs.wordpress.api.kotlin.toLogErrorString
 import uniffi.wp_api.DomainSuggestion
 import uniffi.wp_api.Product
 import uniffi.wp_api.ProductTypeFilter
@@ -129,7 +130,7 @@ class SiteCreationDomainsViewModel @Inject constructor(
             } else {
                 AppLog.e(
                     AppLog.T.DOMAIN_REGISTRATION,
-                    "Error while fetching domain products"
+                    "Error while fetching domain products: ${result.toLogErrorString()}"
                 )
             }
         }
@@ -185,8 +186,8 @@ class SiteCreationDomainsViewModel @Inject constructor(
 
     private fun onDomainsFetched(query: DomainSuggestionsQuery, result: FetchDomainsResult) {
         when (result) {
-            FetchDomainsResult.Error -> {
-                tracker.trackErrorShown(ERROR_CONTEXT, "GENERIC_ERROR", null)
+            is FetchDomainsResult.Error -> {
+                tracker.trackErrorShown(ERROR_CONTEXT, result.type, result.message)
                 updateUiStateToContent(
                     query,
                     Error(
