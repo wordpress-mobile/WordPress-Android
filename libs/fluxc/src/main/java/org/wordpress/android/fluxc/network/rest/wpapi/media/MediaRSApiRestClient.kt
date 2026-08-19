@@ -154,7 +154,6 @@ class MediaRSApiRestClient @Inject constructor(
 
             // The file was readable when the multipart body was built, but could not be opened or
             // read once the upload started — deleted mid-upload, or a storage read failure.
-            // FS_READ_PERMISSION_DENIED would claim a permissions problem we have no evidence of.
             is WpRequestResult.MediaFileUnreadable<*> -> {
                 appLogWrapper.e(AppLog.T.MEDIA, "Media file unreadable: $mediaResponse")
                 MediaError(MediaErrorType.GENERIC_ERROR).apply {
@@ -266,9 +265,6 @@ class MediaRSApiRestClient @Inject constructor(
     private fun mediaErrorTypeFromExecutionReason(reason: RequestExecutionErrorReason): MediaErrorType =
         when (reason) {
             is RequestExecutionErrorReason.HttpTimeoutError -> MediaErrorType.TIMEOUT
-            // ConnectionError is the host resolving but refusing or being unreachable. It sits here
-            // rather than with the generic group to match MediaError.fromIOException, which already
-            // maps ConnectException to CONNECTION_ERROR on the non-RS path.
             is RequestExecutionErrorReason.DeviceIsOfflineError,
             is RequestExecutionErrorReason.ConnectionError,
             is RequestExecutionErrorReason.InvalidSslError -> MediaErrorType.CONNECTION_ERROR
