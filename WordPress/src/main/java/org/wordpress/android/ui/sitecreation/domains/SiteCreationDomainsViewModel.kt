@@ -14,7 +14,6 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
-import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.models.networkresource.ListState
 import org.wordpress.android.models.networkresource.ListState.Error
 import org.wordpress.android.models.networkresource.ListState.Loading
@@ -22,7 +21,6 @@ import org.wordpress.android.models.networkresource.ListState.Ready
 import org.wordpress.android.models.networkresource.ListState.Success
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
-import org.wordpress.android.networking.restapi.WpComApiClientProvider
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainSuggestionsQuery.UserQuery
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainsUiState.CreateSiteButtonState
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainsUiState.DomainsUiContentState
@@ -41,17 +39,10 @@ import org.wordpress.android.ui.sitecreation.usecases.FetchDomainsUseCase
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
-import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.config.PlansInSiteCreationFeatureConfig
 import org.wordpress.android.viewmodel.SingleLiveEvent
-import rs.wordpress.api.kotlin.WpComApiClient
-import rs.wordpress.api.kotlin.WpRequestResult
-import rs.wordpress.api.kotlin.toLogErrorString
 import uniffi.wp_api.DomainSuggestion
-import uniffi.wp_api.Product
-import uniffi.wp_api.ProductTypeFilter
-import uniffi.wp_api.ProductsParams
 import javax.inject.Inject
 import javax.inject.Named
 import kotlin.coroutines.CoroutineContext
@@ -65,8 +56,6 @@ class SiteCreationDomainsViewModel @Inject constructor(
     private val networkUtils: NetworkUtilsWrapper,
     private val domainSanitizer: SiteCreationDomainSanitizer,
     private val fetchDomainsUseCase: FetchDomainsUseCase,
-    private val wpComApiClientProvider: WpComApiClientProvider,
-    private val accountStore: AccountStore,
     private val plansInSiteCreationFeatureConfig: PlansInSiteCreationFeatureConfig,
     private val tracker: SiteCreationTracker,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
@@ -81,8 +70,6 @@ class SiteCreationDomainsViewModel @Inject constructor(
     private val _uiState: MutableLiveData<DomainsUiState> = MutableLiveData()
     val uiState: LiveData<DomainsUiState> = _uiState
 
-    private var wpComApiClient: WpComApiClient? = null
-    private var products: List<Product>? = null
     private var currentQuery: DomainSuggestionsQuery? = null
     private var listState: ListState<DomainModel> = ListState.Init()
     private var selectedDomain by Delegates.observable<DomainModel?>(null) { _, old, new ->
@@ -100,40 +87,11 @@ class SiteCreationDomainsViewModel @Inject constructor(
     private val _onHelpClicked = SingleLiveEvent<Unit?>()
     val onHelpClicked: LiveData<Unit?> = _onHelpClicked
 
-    @Synchronized
-    private fun getOrCreateClient(): WpComApiClient {
-        val token = requireNotNull(accountStore.accessToken) {
-            "WP.com access token is required"
-        }
-        return wpComApiClient
-            ?: wpComApiClientProvider.getWpComApiClient(token)
-                .also { wpComApiClient = it }
-    }
-
     fun start() {
         if (isStarted) return
         isStarted = true
         tracker.trackDomainsAccessed()
         resetUiState()
-        if (plansInSiteCreationFeatureConfig.isEnabled()) fetchAndCacheProducts()
-    }
-
-    private fun fetchAndCacheProducts() {
-        launch {
-            val params = ProductsParams(
-                productType = ProductTypeFilter.Domains
-            )
-            val result = getOrCreateClient()
-                .request { it.products().list(params).data }
-            if (result is WpRequestResult.Success) {
-                products = result.response.values.toList()
-            } else {
-                AppLog.e(
-                    AppLog.T.DOMAIN_REGISTRATION,
-                    "Error while fetching domain products: ${result.toLogErrorString()}"
-                )
-            }
-        }
     }
 
     fun onCreateSiteBtnClicked() {

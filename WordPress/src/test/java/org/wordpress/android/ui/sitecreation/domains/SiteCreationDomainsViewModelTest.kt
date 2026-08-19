@@ -5,7 +5,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
-import org.junit.Ignore
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.ArgumentCaptor
@@ -24,8 +23,6 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
-import org.wordpress.android.fluxc.store.AccountStore
-import org.wordpress.android.networking.restapi.WpComApiClientProvider
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainsUiState
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainsUiState.CreateSiteButtonState
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainsUiState.DomainsUiContentState
@@ -42,8 +39,6 @@ import org.wordpress.android.ui.sitecreation.usecases.FetchDomainsUseCase
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.config.PlansInSiteCreationFeatureConfig
-import rs.wordpress.api.kotlin.WpComApiClient
-import rs.wordpress.api.kotlin.WpRequestResult
 import uniffi.wp_api.DomainSuggestion
 import uniffi.wp_api.FreeDomainSuggestion
 import uniffi.wp_api.PaidDomainSuggestion
@@ -52,22 +47,12 @@ import kotlin.test.assertIs
 private const val MULTI_RESULT_DOMAIN_FETCH_RESULT_SIZE = 20
 private val MULTI_RESULT_DOMAIN_FETCH_QUERY = "multi_result_query" to MULTI_RESULT_DOMAIN_FETCH_RESULT_SIZE
 private val EMPTY_RESULT_DOMAIN_FETCH_QUERY = "empty_result_query" to 0
-private const val SALE_PRODUCTS_COUNT = 1
 
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class SiteCreationDomainsViewModelTest : BaseUnitTest() {
     @Mock
     lateinit var fetchDomainsUseCase: FetchDomainsUseCase
-
-    @Mock
-    private lateinit var wpComApiClientProvider: WpComApiClientProvider
-
-    @Mock
-    private lateinit var accountStore: AccountStore
-
-    @Mock
-    private lateinit var wpComApiClient: WpComApiClient
 
     @Mock
     lateinit var plansInSiteCreationFeatureConfig: PlansInSiteCreationFeatureConfig
@@ -97,15 +82,10 @@ class SiteCreationDomainsViewModelTest : BaseUnitTest() {
 
     @Before
     fun setUp() {
-        whenever(accountStore.accessToken).thenReturn("test-token")
-        whenever(wpComApiClientProvider.getWpComApiClient("test-token"))
-            .thenReturn(wpComApiClient)
         viewModel = SiteCreationDomainsViewModel(
             networkUtils = networkUtils,
             domainSanitizer = mSiteCreationDomainSanitizer,
             fetchDomainsUseCase = fetchDomainsUseCase,
-            wpComApiClientProvider = wpComApiClientProvider,
-            accountStore = accountStore,
             plansInSiteCreationFeatureConfig = plansInSiteCreationFeatureConfig,
             tracker = tracker,
             bgDispatcher = testDispatcher(),
@@ -372,14 +352,8 @@ class SiteCreationDomainsViewModelTest : BaseUnitTest() {
 
     // region New UI
 
-    @Suppress("UNCHECKED_CAST")
     private fun testNewUi(block: suspend CoroutineScope.() -> Unit) = test {
         whenever(plansInSiteCreationFeatureConfig.isEnabled()).thenReturn(true)
-        whenever(wpComApiClient.request<Any>(any()))
-            .thenReturn(
-                WpRequestResult.Success(emptyMap<String, Any>())
-                    as WpRequestResult<Any>
-            )
         block()
     }
 
@@ -449,14 +423,6 @@ class SiteCreationDomainsViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `verify domain products are fetched only at first start`() = testNewUi {
-        viewModel.start()
-        viewModel.start()
-
-        verify(wpComApiClient).request<Any>(any())
-    }
-
-    @Test
     fun `verify create site button text changes when selecting a free domain`() = testNewUi {
         viewModel.start()
 
@@ -507,28 +473,6 @@ class SiteCreationDomainsViewModelTest : BaseUnitTest() {
         advanceUntilIdle()
 
         assertThat(uiDomains).filteredOn { it.cost is Cost.Paid }.hasSameSizeAs(apiPaidDomains)
-    }
-
-    @Test @Ignore("It is removed from UI for now, for being Free with annual plan")
-    fun `verify cost of sale domain results from api is 'OnSale'`() = testWithSuccessResultNewUi {
-        val query = MULTI_RESULT_DOMAIN_FETCH_QUERY.first
-        viewModel.start()
-
-        viewModel.onQueryChanged(query)
-        advanceUntilIdle()
-
-        assertThat(uiDomains).filteredOn { it.cost is Cost.OnSale }.hasSize(SALE_PRODUCTS_COUNT)
-    }
-
-    @Test @Ignore("It is removed from UI for now, for being Free with annual plan")
-    fun `verify sale domain results from api have tag 'Sale'`() = testWithSuccessResultNewUi {
-        val query = MULTI_RESULT_DOMAIN_FETCH_QUERY.first
-        viewModel.start()
-
-        viewModel.onQueryChanged(query)
-        advanceUntilIdle()
-
-        assertThat(uiDomains.flatMap { it.tags }).filteredOn { it is Tag.Sale }.hasSize(SALE_PRODUCTS_COUNT)
     }
 
     @Test
