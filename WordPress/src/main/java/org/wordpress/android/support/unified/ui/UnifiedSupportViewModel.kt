@@ -141,6 +141,41 @@ class UnifiedSupportViewModel @Inject constructor(
     override suspend fun getConversation(conversationId: Long): UnifiedConversation? =
         repository.loadConversation(conversationId)
 
+    /**
+     * Silently reloads the currently open conversation from the server, without showing the
+     * full-screen loading indicator. Used by the detail screen's periodic auto-refresh so new
+     * replies from support show up while the screen stays open.
+     *
+     * No-ops for bot conversations (they have no server-side changes to poll and a not-yet-created
+     * new conversation has no id to fetch) and while a reply is in flight or the conversation is
+     * still loading (so we never clobber the optimistic message or the initial load).
+     */
+    @Suppress("TooGenericExceptionCaught")
+    fun refreshSelectedConversation() {
+        val conversation = _selectedConversation.value ?: return
+        if (conversation.isBot || conversation.id == NEW_CONVERSATION_ID) return
+        if (_isSendingReply.value || isLoadingConversation.value) return
+        viewModelScope.launch {
+            try {
+                if (!networkUtilsWrapper.isNetworkAvailable()) return@launch
+                val updated = repository.loadConversation(conversation.id)
+                // Re-check the state after the network call: only apply the update if the same
+                // conversation is still open and no reply started sending while we were fetching.
+                if (updated != null &&
+                    _selectedConversation.value?.id == updated.id &&
+                    !_isSendingReply.value
+                ) {
+                    _selectedConversation.value = updated
+                }
+            } catch (throwable: Throwable) {
+                appLogWrapper.e(
+                    AppLog.T.SUPPORT, "Error auto-refreshing conversation: " +
+                            "${throwable.message} - ${throwable.stackTraceToString()}"
+                )
+            }
+        }
+    }
+
     @Suppress("TooGenericExceptionCaught", "LongMethod")
     fun sendReply(message: String, includeAppLogs: Boolean = false) {
         val conversation = _selectedConversation.value ?: return

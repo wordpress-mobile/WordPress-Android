@@ -82,6 +82,7 @@ import kotlinx.coroutines.launch
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.ui.text.style.TextAlign
+import androidx.annotation.StringRes
 import org.wordpress.android.R
 import org.wordpress.android.util.WPUrlUtils
 import org.wordpress.android.support.unified.util.formatRelativeTime
@@ -114,6 +115,7 @@ fun UnifiedConversationDetailScreen(
     onReplyMessageChange: (String) -> Unit,
     onReplyIncludeAppLogsChange: (Boolean) -> Unit,
     onReplyBottomSheetVisibilityChange: (Boolean) -> Unit,
+    onAutoRefresh: () -> Unit,
     attachmentActionsListener: AttachmentActionsListener,
 ) {
     var previewAttachment by remember { mutableStateOf<UnifiedAttachment?>(null) }
@@ -123,6 +125,19 @@ fun UnifiedConversationDetailScreen(
     val resources = LocalResources.current
     val isBot = conversation.isBot
     val isBotTyping = isBot && isSendingReply
+    val ctaLabelRes = replyCtaLabelRes(conversation)
+
+    // Auto-refresh the open conversation every minute so replies from support appear without the
+    // user leaving the screen. Bots update locally, so we only poll HE conversations. Keying on the
+    // conversation id restarts the timer when a different conversation is opened.
+    if (!isBot) {
+        LaunchedEffect(conversation.id) {
+            while (true) {
+                kotlinx.coroutines.delay(CONVERSATION_AUTO_REFRESH_INTERVAL_MS)
+                onAutoRefresh()
+            }
+        }
+    }
 
     // Keep the conversation pinned to its last item whenever a message is added or the bot's typing
     // indicator appears/disappears. We scroll in reaction to layoutInfo.totalItemsCount rather than
@@ -164,6 +179,8 @@ fun UnifiedConversationDetailScreen(
             ConversationBottomBar(
                 isBot = isBot,
                 canAcceptReply = conversation.canAcceptReply,
+                replyLabelRes = ctaLabelRes,
+                isLoading = isLoading,
                 // The chat input is backed by the shared reply form state so the typed text is
                 // retained on send failure (the VM clears it only on success) and survives
                 // configuration changes via the ViewModel.
@@ -259,6 +276,7 @@ fun UnifiedConversationDetailScreen(
         }
         UnifiedReplyBottomSheet(
             sheetState = sheetState,
+            titleRes = ctaLabelRes,
             isSending = isSendingReply,
             messageText = replyFormState.message,
             includeAppLogs = replyFormState.includeAppLogs,
@@ -291,6 +309,8 @@ fun UnifiedConversationDetailScreen(
 private fun ConversationBottomBar(
     isBot: Boolean,
     canAcceptReply: Boolean,
+    @StringRes replyLabelRes: Int,
+    isLoading: Boolean,
     messageText: String,
     canSendMessage: Boolean,
     onMessageTextChange: (String) -> Unit,
@@ -316,6 +336,8 @@ private fun ConversationBottomBar(
         canAcceptReply -> {
             Box(modifier = Modifier.navigationBarsPadding()) {
                 ReplyButton(
+                    labelRes = replyLabelRes,
+                    isLoading = isLoading,
                     enabled = replyEnabled,
                     onClick = onReplyClick
                 )
@@ -532,6 +554,7 @@ private fun ChatInputBar(
 @Composable
 private fun UnifiedReplyBottomSheet(
     sheetState: SheetState,
+    @StringRes titleRes: Int,
     isSending: Boolean,
     messageText: String,
     includeAppLogs: Boolean,
@@ -572,7 +595,7 @@ private fun UnifiedReplyBottomSheet(
                 }
 
                 Text(
-                    text = stringResource(R.string.he_support_reply_button),
+                    text = stringResource(titleRes),
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.semantics { heading() }
@@ -611,10 +634,12 @@ private fun UnifiedReplyBottomSheet(
 
 @Composable
 private fun ReplyButton(
+    @StringRes labelRes: Int,
+    isLoading: Boolean,
     enabled: Boolean = true,
     onClick: () -> Unit
 ) {
-    val replyButtonLabel = stringResource(R.string.he_support_reply_button)
+    val replyButtonLabel = stringResource(labelRes)
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -622,23 +647,33 @@ private fun ReplyButton(
     ) {
         Button(
             onClick = onClick,
-            enabled = enabled,
+            enabled = enabled && !isLoading,
             modifier = Modifier
                 .fillMaxWidth()
                 .height(56.dp)
-                .semantics { contentDescription = replyButtonLabel },
+                // Only expose the label once the conversation has loaded, so neither TalkBack nor
+                // the button flashes a transient/incorrect action while it's still being resolved.
+                .semantics { if (!isLoading) contentDescription = replyButtonLabel },
             shape = RoundedCornerShape(28.dp)
         ) {
-            Icon(
-                imageVector = Icons.AutoMirrored.Filled.Reply,
-                contentDescription = null,
-                modifier = Modifier.size(20.dp)
-            )
-            Spacer(modifier = Modifier.size(8.dp))
-            Text(
-                text = replyButtonLabel,
-                style = MaterialTheme.typography.titleMedium
-            )
+            if (isLoading) {
+                CircularProgressIndicator(
+                    modifier = Modifier.size(24.dp),
+                    strokeWidth = 2.dp,
+                    color = MaterialTheme.colorScheme.onPrimary
+                )
+            } else {
+                Icon(
+                    imageVector = Icons.AutoMirrored.Filled.Reply,
+                    contentDescription = null,
+                    modifier = Modifier.size(20.dp)
+                )
+                Spacer(modifier = Modifier.size(8.dp))
+                Text(
+                    text = replyButtonLabel,
+                    style = MaterialTheme.typography.titleMedium
+                )
+            }
         }
     }
 }
@@ -692,13 +727,13 @@ private fun TypingIndicatorBubble() {
                         bottomEnd = 16.dp
                     )
                 )
-                .padding(16.dp)
+                .padding(horizontal = 12.dp, vertical = 10.dp)
                 .semantics {
                     contentDescription = typingDescription
                 }
         ) {
             Row(
-                horizontalArrangement = Arrangement.spacedBy(4.dp),
+                horizontalArrangement = Arrangement.spacedBy(3.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 TypingDot(delay = 0)
@@ -730,7 +765,7 @@ private fun TypingDot(delay: Int) {
                 color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = alpha),
                 shape = RoundedCornerShape(50)
             )
-            .padding(4.dp)
+            .size(6.dp)
     )
 }
 
@@ -1058,7 +1093,28 @@ private fun WelcomeHeader(userName: String) {
     }
 }
 
+/**
+ * Chooses the CTA label for an HE conversation:
+ *  - "Reply" when the last message is from support (not the user and not the bot) — it's the user's
+ *    turn to answer.
+ *  - "Add more info" when the last message is the user's own, or the bot's (a freshly created
+ *    ticket still shows the bot's opening message), i.e. the user is adding to an existing thread.
+ */
+@StringRes
+private fun replyCtaLabelRes(conversation: UnifiedConversation): Int {
+    val lastMessage = conversation.messages.lastOrNull()
+    val isSupportAwaitingReply = lastMessage != null &&
+            lastMessage.authorRole != UnifiedMessage.AUTHOR_ROLE_USER &&
+            lastMessage.authorRole != UnifiedMessage.AUTHOR_ROLE_BOT
+    return if (isSupportAwaitingReply) {
+        R.string.he_support_reply_button
+    } else {
+        R.string.he_support_add_more_info_button
+    }
+}
+
 private const val PERCENT_MULTIPLIER = 100
 private const val TYPING_DOT_DELAY_STEP = 150
 private const val TYPING_DOT_PULSE_MS = 600L
 private const val TYPING_DOT_MIN_ALPHA = 0.3f
+private const val CONVERSATION_AUTO_REFRESH_INTERVAL_MS = 60_000L

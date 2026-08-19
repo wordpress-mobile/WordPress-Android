@@ -132,6 +132,34 @@ abstract class ConversationsSupportViewModel<ConversationType: Conversation>(
         }
     }
 
+    /**
+     * Reloads the conversation list from the server without showing the pull-to-refresh spinner or a
+     * blocking loader. Used by the list screen's periodic auto-refresh and its refresh-on-resume so
+     * new or updated conversations appear while the screen stays open. Leaves the current list and
+     * error state untouched on failure (a background refresh should not surface an error).
+     */
+    @Suppress("TooGenericExceptionCaught")
+    fun refreshConversationsSilently() {
+        viewModelScope.launch {
+            try {
+                if (!networkUtilsWrapper.isNetworkAvailable()) return@launch
+                val conversations = getConversations()
+                if (conversations != null) {
+                    _conversations.value = conversations
+                    // Don't stomp on an in-progress initial load; let its own completion set the state.
+                    if (_conversationsState.value != ConversationsState.Loading) {
+                        _conversationsState.value = ConversationsState.Loaded
+                    }
+                }
+            } catch (throwable: Throwable) {
+                appLogWrapper.e(
+                    AppLog.T.SUPPORT, "Error silently refreshing support conversations: " +
+                            "${throwable.message} - ${throwable.stackTraceToString()}"
+                )
+            }
+        }
+    }
+
     fun clearError() {
         _errorMessage.value = null
     }

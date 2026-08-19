@@ -27,6 +27,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.utils.AppLogWrapper
@@ -51,6 +52,10 @@ class UnifiedSupportActivity : AppCompatActivity() {
 
     private lateinit var composeView: ComposeView
     private lateinit var navController: NavHostController
+
+    // Tracks whether onStart has already fired once, so the initial start (covered by init()'s load)
+    // doesn't trigger a redundant refresh. Reset when the Activity is recreated.
+    private var hasStarted = false
 
     @Suppress("TooGenericExceptionCaught")
     private val photoPickerLauncher = registerForActivityResult(
@@ -90,6 +95,19 @@ class UnifiedSupportActivity : AppCompatActivity() {
         if (savedInstanceState == null) {
             viewModel.init()
         }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        // Refresh both the list and the open conversation each time the screen returns to the
+        // foreground so support replies are up to date. Skip the very first onStart (right after
+        // onCreate's initial load) to avoid a redundant request. On config-change recreation the
+        // ViewModel keeps its data, so refreshing again here is harmless.
+        if (hasStarted) {
+            viewModel.refreshConversationsSilently()
+            viewModel.refreshSelectedConversation()
+        }
+        hasStarted = true
     }
 
     private fun observeNavigationEvents() {
@@ -148,6 +166,14 @@ class UnifiedSupportActivity : AppCompatActivity() {
                 composable(route = UnifiedScreen.List.name) {
                     val conversationsState by viewModel.conversationsState.collectAsState()
                     val conversations by viewModel.conversations.collectAsState()
+                    // Auto-refresh the list every minute while it's on screen so new or updated
+                    // conversations appear without the user pulling to refresh.
+                    LaunchedEffect(Unit) {
+                        while (true) {
+                            delay(CONVERSATIONS_LIST_AUTO_REFRESH_INTERVAL_MS)
+                            viewModel.refreshConversationsSilently()
+                        }
+                    }
                     UnifiedConversationsListScreen(
                         snackbarHostState = snackbarHostState,
                         conversations = conversations,
@@ -207,6 +233,7 @@ class UnifiedSupportActivity : AppCompatActivity() {
                             onReplyBottomSheetVisibilityChange = {
                                 viewModel.updateReplyBottomSheetVisibility(it)
                             },
+                            onAutoRefresh = { viewModel.refreshSelectedConversation() },
                             attachmentActionsListener = attachmentActionsListener,
                         )
                     }
@@ -247,6 +274,7 @@ class UnifiedSupportActivity : AppCompatActivity() {
 
     companion object {
         const val AUTHORIZATION_TAG = "Authorization"
+        private const val CONVERSATIONS_LIST_AUTO_REFRESH_INTERVAL_MS = 60_000L
 
         @JvmStatic
         fun createIntent(context: Context): Intent = Intent(context, UnifiedSupportActivity::class.java)
