@@ -20,12 +20,6 @@ Language: es_MX
     <string name="wp_jetpack_continue_without_jetpack">Continúe sin Jetpack</string>
     <string name="deep_linking_weblinks_alias_label">Enlances</string>
     <string name="deep_linking_urilinks_alias_label">Enlances URI</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_one_description_notifications">Cambia a la aplicación de Jetpack para continuar recibiendo las notificaciones actualizadas en su dispositivo.</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_one_description_reader">Cambia a la aplicación de Jetpack para encontrar, seguir y poner like en todos sus sitios favoritos y posts con el Lector.</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_one_description_stats">Cambiar a la aplicación de Jetpack para ver el tráfico de su sitio crece con estadísticas y detalles.</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_one_title_notifications">Recibir sus notificaciones en la aplicación de Jetpack.</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_one_title_reader">Seguir cualquier sitio con la aplicación de Jetpack.</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_one_title_stats">Recibir sus estadísticas de la aplicación nuevo Jetpack.</string>
     <string name="preference_open_links_in_jetpack_setting_change_disable_error">No se puede deshabilitar las ligas abiertas en Jetpack.</string>
     <string name="preference_open_links_in_jetpack_setting_change_enable_error">No se puede activar las ligas abiertas en Jetpack.</string>
     <string name="preference_open_links_in_jetpack">Abrir las ligas en Jetpack.</string>
