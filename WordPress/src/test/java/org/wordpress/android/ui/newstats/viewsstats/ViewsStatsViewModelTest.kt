@@ -9,7 +9,9 @@ import org.junit.Test
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.any
+import org.mockito.kotlin.argThat
 import org.mockito.kotlin.doSuspendableAnswer
+import org.mockito.kotlin.eq
 import org.mockito.kotlin.never
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
@@ -127,8 +129,8 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
         val state = viewModel.uiState.value
         assertThat(state).isInstanceOf(ViewsStatsCardUiState.Content::class.java)
         with(state.chartLoaded()) {
-            assertThat(currentPeriodViews).isEqualTo(TEST_CURRENT_PERIOD_VIEWS)
-            assertThat(previousPeriodViews).isEqualTo(TEST_PREVIOUS_PERIOD_VIEWS)
+            assertThat(currentPeriodTotal).isEqualTo(TEST_CURRENT_PERIOD_VIEWS)
+            assertThat(previousPeriodTotal).isEqualTo(TEST_PREVIOUS_PERIOD_VIEWS)
         }
     }
 
@@ -334,7 +336,7 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
         advanceUntilIdle()
 
         val state = viewModel.uiState.value.chartLoaded()
-        assertThat(state.viewsDifference).isEqualTo(-1000L)
+        assertThat(state.difference).isEqualTo(-1000L)
     }
 
     @Test
@@ -348,7 +350,7 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
         advanceUntilIdle()
 
         val state = viewModel.uiState.value.chartLoaded()
-        assertThat(state.viewsPercentageChange).isEqualTo(-10.0)
+        assertThat(state.percentageChange).isEqualTo(-10.0)
     }
 
     @Test
@@ -362,7 +364,7 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
         advanceUntilIdle()
 
         val state = viewModel.uiState.value.chartLoaded()
-        assertThat(state.viewsPercentageChange).isEqualTo(100.0)
+        assertThat(state.percentageChange).isEqualTo(100.0)
     }
 
     @Test
@@ -407,8 +409,8 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
 
         val stats = viewModel.uiState.value.bottomStatsOrNull()
         assertThat(stats).hasSize(5)
-        assertThat(stats!!.map { it.label }).containsExactly(
-            "Views", "Visitors", "Likes", "Comments", "Posts"
+        assertThat(stats!!.map { it.metric }).containsExactly(
+            StatsMetric.VIEWS, StatsMetric.VISITORS, StatsMetric.LIKES, StatsMetric.COMMENTS, StatsMetric.POSTS
         )
         verify(statsRepository, times(0)).fetchBottomStats(any(), any())
     }
@@ -431,8 +433,8 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
 
         val stats = viewModel.uiState.value.bottomStatsOrNull()
         assertThat(stats).hasSize(5)
-        assertThat(stats!!.map { it.label }).containsExactly(
-            "Views", "Visitors", "Likes", "Comments", "Posts"
+        assertThat(stats!!.map { it.metric }).containsExactly(
+            StatsMetric.VIEWS, StatsMetric.VISITORS, StatsMetric.LIKES, StatsMetric.COMMENTS, StatsMetric.POSTS
         )
         verify(statsRepository, times(0)).fetchBottomStats(any(), any())
     }
@@ -484,7 +486,7 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
 
         val state = viewModel.uiState.value as ViewsStatsCardUiState.Content
         assertThat(state.bottomStats).isEqualTo(BottomStatsUiState.Hidden)
-        assertThat((state.chart as ChartUiState.Loaded).currentPeriodViews).isEqualTo(TEST_CURRENT_PERIOD_VIEWS)
+        assertThat((state.chart as ChartUiState.Loaded).currentPeriodTotal).isEqualTo(TEST_CURRENT_PERIOD_VIEWS)
     }
 
     @Test
@@ -534,7 +536,7 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
         initViewModel()
         advanceUntilIdle()
 
-        val viewsStat = viewModel.uiState.value.bottomStatsOrNull()!!.first { it.label == "Views" }
+        val viewsStat = viewModel.uiState.value.bottomStatsOrNull()!!.first { it.metric == StatsMetric.VIEWS }
         assertThat(viewsStat.change).isInstanceOf(StatChange.Positive::class.java)
         assertThat((viewsStat.change as StatChange.Positive).percentage).isEqualTo(25.0)
     }
@@ -547,7 +549,7 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
         initViewModel()
         advanceUntilIdle()
 
-        val viewsStat = viewModel.uiState.value.bottomStatsOrNull()!!.first { it.label == "Views" }
+        val viewsStat = viewModel.uiState.value.bottomStatsOrNull()!!.first { it.metric == StatsMetric.VIEWS }
         assertThat(viewsStat.change).isInstanceOf(StatChange.Negative::class.java)
         assertThat((viewsStat.change as StatChange.Negative).percentage).isEqualTo(20.0)
     }
@@ -560,7 +562,7 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
         initViewModel()
         advanceUntilIdle()
 
-        val viewsStat = viewModel.uiState.value.bottomStatsOrNull()!!.first { it.label == "Views" }
+        val viewsStat = viewModel.uiState.value.bottomStatsOrNull()!!.first { it.metric == StatsMetric.VIEWS }
         assertThat(viewsStat.change).isInstanceOf(StatChange.NoChange::class.java)
     }
 
@@ -1064,6 +1066,184 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
         assertThat(viewModel.canNavigateBackward.value).isTrue()
         assertThat(viewModel.canNavigateForward.value).isFalse()
     }
+    // endregion
+
+    // region Metric selection
+
+    @Test
+    fun `given a multi-day period, when data loads, then views is charted`() = test {
+        whenever(statsRepository.fetchStatsForPeriod(any(), any()))
+            .thenReturn(createPeriodStatsResult())
+
+        initViewModel()
+        advanceUntilIdle()
+
+        val content = viewModel.uiState.value as ViewsStatsCardUiState.Content
+        assertThat(content.selectedMetric).isEqualTo(StatsMetric.VIEWS)
+        assertThat(content.chart).isInstanceOf(ChartUiState.Loaded::class.java)
+    }
+
+    @Test
+    fun `when a metric is selected, then the chart re-plots that metric without a new fetch`() = test {
+        whenever(statsRepository.fetchStatsForPeriod(any(), any()))
+            .thenReturn(
+                createPeriodStatsResult(
+                    currentVisitors = 700L,
+                    currentPeriodData = listOf(
+                        ViewsDataPoint(period = "2024-01-14", views = 1000L, visitors = 300L),
+                        ViewsDataPoint(period = "2024-01-15", views = 1500L, visitors = 400L)
+                    ),
+                    previousPeriodData = emptyList()
+                )
+            )
+
+        initViewModel()
+        advanceUntilIdle()
+
+        viewModel.onMetricSelected(StatsMetric.VISITORS)
+        advanceUntilIdle()
+
+        val content = viewModel.uiState.value as ViewsStatsCardUiState.Content
+        assertThat(content.selectedMetric).isEqualTo(StatsMetric.VISITORS)
+        // The chart series now carries the per-bucket visitors values.
+        assertThat(content.chartLoaded().chartData.currentPeriod.map { it.value })
+            .containsExactly(300L, 400L)
+        // The header total follows the selection.
+        assertThat(content.chartLoaded().currentPeriodTotal).isEqualTo(700L)
+        // No additional network call was made — the data was already in memory.
+        verify(statsRepository, times(1)).fetchStatsForPeriod(any(), any())
+    }
+
+    @Test
+    fun `when a metric is selected, then the choice is persisted to the site configuration`() = test {
+        whenever(statsRepository.fetchStatsForPeriod(any(), any()))
+            .thenReturn(createPeriodStatsResult())
+
+        initViewModel()
+        advanceUntilIdle()
+
+        viewModel.onMetricSelected(StatsMetric.LIKES)
+        advanceUntilIdle()
+
+        verify(cardsConfigurationRepository).saveConfiguration(
+            eq(TEST_SITE_ID),
+            argThat { selectedMetric == "likes" }
+        )
+    }
+
+    @Test
+    fun `given a persisted metric, when the view model initializes, then that metric is selected`() = test {
+        whenever(cardsConfigurationRepository.getConfiguration(any()))
+            .thenReturn(StatsCardsConfiguration(selectedMetric = "visitors"))
+        whenever(statsRepository.fetchStatsForPeriod(any(), any()))
+            .thenReturn(
+                createPeriodStatsResult(
+                    currentPeriodData = listOf(
+                        ViewsDataPoint(period = "2024-01-14", views = 1000L, visitors = 300L)
+                    ),
+                    previousPeriodData = emptyList()
+                )
+            )
+
+        viewModel = ViewsStatsViewModel(
+            selectedSiteRepository,
+            accountStore,
+            statsRepository,
+            resourceProvider,
+            SavedStateHandle(),
+            cardsConfigurationRepository
+        )
+        // Let the async preference restore complete before the first load.
+        advanceUntilIdle()
+        viewModel.loadDataIfNeeded()
+        advanceUntilIdle()
+
+        val content = viewModel.uiState.value as ViewsStatsCardUiState.Content
+        assertThat(content.selectedMetric).isEqualTo(StatsMetric.VISITORS)
+    }
+
+    @Test
+    fun `given a single-day period with a persisted non-views metric, then the chart is unavailable`() = test {
+        whenever(cardsConfigurationRepository.getConfiguration(any()))
+            .thenReturn(StatsCardsConfiguration(selectedMetric = "visitors"))
+        whenever(statsRepository.fetchStatsForPeriod(any(), any()))
+            .thenReturn(createPeriodStatsResult())
+        whenever(statsRepository.fetchBottomStats(any(), any()))
+            .thenReturn(createBottomStatsResult())
+
+        viewModel = ViewsStatsViewModel(
+            selectedSiteRepository,
+            accountStore,
+            statsRepository,
+            resourceProvider,
+            SavedStateHandle(mapOf("period_type" to "today")),
+            cardsConfigurationRepository
+        )
+        advanceUntilIdle()
+        viewModel.loadDataIfNeeded()
+        advanceUntilIdle()
+
+        // The user's preference is preserved (so it returns on a multi-day period) but the hourly
+        // response has no visitors series, so the chart region shows the unavailable state.
+        val content = viewModel.uiState.value as ViewsStatsCardUiState.Content
+        assertThat(content.selectedMetric).isEqualTo(StatsMetric.VISITORS)
+        assertThat(content.chart).isEqualTo(ChartUiState.Unavailable)
+    }
+
+    @Test
+    fun `given a single-day period with views selected, then views is charted normally`() = test {
+        whenever(statsRepository.fetchStatsForPeriod(any(), any()))
+            .thenReturn(createPeriodStatsResult())
+        whenever(statsRepository.fetchBottomStats(any(), any()))
+            .thenReturn(createBottomStatsResult())
+
+        initViewModel(periodType = "today")
+        advanceUntilIdle()
+
+        val content = viewModel.uiState.value as ViewsStatsCardUiState.Content
+        assertThat(content.selectedMetric).isEqualTo(StatsMetric.VIEWS)
+        assertThat(content.chart).isInstanceOf(ChartUiState.Loaded::class.java)
+    }
+
+    @Test
+    fun `when a non-views metric is selected on a single-day period, then the chart is unavailable`() = test {
+        whenever(statsRepository.fetchStatsForPeriod(any(), any()))
+            .thenReturn(createPeriodStatsResult())
+        whenever(statsRepository.fetchBottomStats(any(), any()))
+            .thenReturn(createBottomStatsResult())
+
+        initViewModel(periodType = "today")
+        advanceUntilIdle()
+
+        viewModel.onMetricSelected(StatsMetric.VISITORS)
+        advanceUntilIdle()
+
+        // The selection is honored (and persisted) but there is no hourly visitors series to plot.
+        val content = viewModel.uiState.value as ViewsStatsCardUiState.Content
+        assertThat(content.selectedMetric).isEqualTo(StatsMetric.VISITORS)
+        assertThat(content.chart).isEqualTo(ChartUiState.Unavailable)
+        verify(cardsConfigurationRepository)
+            .saveConfiguration(any(), argThat { selectedMetric == "visitors" })
+    }
+
+    @Test
+    fun `when bottom stats build, then each item carries its metric`() = test {
+        whenever(statsRepository.fetchStatsForPeriod(any(), any()))
+            .thenReturn(createPeriodStatsResult())
+
+        initViewModel()
+        advanceUntilIdle()
+
+        val stats = viewModel.uiState.value.bottomStatsOrNull()!!
+        assertThat(stats.map { it.metric }).containsExactly(
+            StatsMetric.VIEWS,
+            StatsMetric.VISITORS,
+            StatsMetric.LIKES,
+            StatsMetric.COMMENTS,
+            StatsMetric.POSTS
+        )
+    }
+
     // endregion
 
     private fun createPeriodStatsResult(
