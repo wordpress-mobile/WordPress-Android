@@ -315,8 +315,6 @@ Language: tr
     <string name="he_support_status_unknown">Bilinmiyor</string>
     <string name="he_support_status_closed">Kapalı</string>
     <string name="he_support_status_solved">Çözüldü</string>
-    <string name="he_support_status_waiting_for_user">Kullanıcı Bekleniyor</string>
-    <string name="he_support_status_waiting_for_support">Destek Bekleniyor</string>
     <string name="he_support_select_attachments">Ek seç</string>
     <string name="he_support_download_attachment">Eki indir</string>
     <string name="he_support_include_logs_description">Günlükleri dahil etmek, ekibimizin sorunları araştırmasına yardımcı olabilir. Günlükler son uygulama etkinliğini içerebilir.</string>

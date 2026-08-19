@@ -213,8 +213,6 @@ Language: sq_AL
     <string name="he_support_status_unknown">E panjohur</string>
     <string name="he_support_status_closed">E mbyllur</string>
     <string name="he_support_status_solved">E zgjidhur</string>
-    <string name="he_support_status_waiting_for_user">Po pritet për Përdorues</string>
-    <string name="he_support_status_waiting_for_support">Po pritet për Asistencën</string>
     <string name="he_support_select_attachments">Përzgjidhni bashkëngjitje</string>
     <string name="he_support_download_attachment">Shkarkoje bashkëngjitjen</string>
     <string name="he_support_include_logs_description">Përfshirja e regjistrave mund ta ndihmojë ekipin tonë të hetojë probleme. Regjistrat mund të përmbajnë veprimtari aplikacioni së fundi.</string>

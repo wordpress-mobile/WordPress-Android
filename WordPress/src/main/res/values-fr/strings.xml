@@ -302,8 +302,6 @@ Language: fr
     <string name="he_support_status_unknown">Inconnu</string>
     <string name="he_support_status_closed">Fermé</string>
     <string name="he_support_status_solved">Résolu</string>
-    <string name="he_support_status_waiting_for_user">En attente de l’utilisateur</string>
-    <string name="he_support_status_waiting_for_support">En attente d’assistance</string>
     <string name="he_support_select_attachments">Sélectionner les pièces jointes</string>
     <string name="he_support_download_attachment">Télécharger la pièce jointe</string>
     <string name="he_support_include_logs_description">Inclure des journaux peut aider notre équipe à examiner les problèmes. Les journaux peuvent contenir une activité récente de l’application.</string>

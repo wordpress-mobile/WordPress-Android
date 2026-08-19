@@ -315,8 +315,6 @@ Language: sv_SE
     <string name="he_support_status_unknown">Okänd</string>
     <string name="he_support_status_closed">Stängt</string>
     <string name="he_support_status_solved">Löst</string>
-    <string name="he_support_status_waiting_for_user">Väntar på användare</string>
-    <string name="he_support_status_waiting_for_support">Väntar på support</string>
     <string name="he_support_select_attachments">Välj bilagor</string>
     <string name="he_support_download_attachment">Ladda ner bilaga</string>
     <string name="he_support_include_logs_description">Att inkludera loggar kan hjälpa vårt team att undersöka problem. Loggar kan innehålla den senaste appaktiviteten.</string>

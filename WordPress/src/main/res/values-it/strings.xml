@@ -315,8 +315,6 @@ Language: it
     <string name="he_support_status_unknown">Sconosciuto</string>
     <string name="he_support_status_closed">Chiuso</string>
     <string name="he_support_status_solved">Risolto</string>
-    <string name="he_support_status_waiting_for_user">In attesa dell\'utente</string>
-    <string name="he_support_status_waiting_for_support">In attesa di supporto</string>
     <string name="he_support_select_attachments">Seleziona allegati</string>
     <string name="he_support_download_attachment">Scarica allegato</string>
     <string name="he_support_include_logs_description">Includere i log può aiutare il nostro team a investigare i problemi. I log potrebbero contenere attività recenti delle app.</string>

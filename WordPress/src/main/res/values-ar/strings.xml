@@ -313,8 +313,6 @@ Language: ar
     <string name="he_support_include_logs_description">يمكن أن يساعد تضمين السجلات فريقنا في التحقيق في المشكلات. قد تحتوي السجلات على نشاط التطبيق الأخير.</string>
     <string name="he_support_download_attachment">تنزيل المرفق</string>
     <string name="he_support_select_attachments">تحديد المرفقات</string>
-    <string name="he_support_status_waiting_for_support">في انتظار الدعم</string>
-    <string name="he_support_status_waiting_for_user">في انتظار المستخدم</string>
     <string name="he_support_status_solved">تم الحل</string>
     <string name="he_support_status_closed">مغلق</string>
     <string name="he_support_status_unknown">غير معروف</string>

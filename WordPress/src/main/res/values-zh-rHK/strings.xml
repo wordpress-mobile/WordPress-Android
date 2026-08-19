@@ -314,8 +314,6 @@ Language: zh_TW
     <string name="he_support_status_unknown">不明</string>
     <string name="he_support_status_closed">已關閉</string>
     <string name="he_support_status_solved">已解決</string>
-    <string name="he_support_status_waiting_for_user">正在等候使用者</string>
-    <string name="he_support_status_waiting_for_support">正在等候支援</string>
     <string name="he_support_select_attachments">選取附件</string>
     <string name="he_support_download_attachment">下載附件</string>
     <string name="he_support_include_logs_description">若包含記錄，就能協助我們的團隊調查問題。 記錄檔可能包含最近的應用程式活動。</string>
