@@ -26,12 +26,6 @@ import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.networking.restapi.WpComApiClientProvider
-import rs.wordpress.api.kotlin.WpComApiClient
-import rs.wordpress.api.kotlin.WpRequestResult
-import uniffi.wp_api.DomainSuggestion
-import uniffi.wp_api.FreeDomainSuggestion
-import uniffi.wp_api.PaidDomainSuggestion
-import org.wordpress.android.ui.sitecreation.usecases.FetchDomainsResult
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainsUiState
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainsUiState.CreateSiteButtonState
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainsUiState.DomainsUiContentState
@@ -43,18 +37,22 @@ import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewMode
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker
 import org.wordpress.android.ui.sitecreation.usecases.FETCH_DOMAINS_VENDOR_DOT
 import org.wordpress.android.ui.sitecreation.usecases.FETCH_DOMAINS_VENDOR_MOBILE
+import org.wordpress.android.ui.sitecreation.usecases.FetchDomainsResult
 import org.wordpress.android.ui.sitecreation.usecases.FetchDomainsUseCase
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.config.PlansInSiteCreationFeatureConfig
+import rs.wordpress.api.kotlin.WpComApiClient
+import rs.wordpress.api.kotlin.WpRequestResult
+import uniffi.wp_api.DomainSuggestion
+import uniffi.wp_api.FreeDomainSuggestion
+import uniffi.wp_api.PaidDomainSuggestion
 import kotlin.test.assertIs
 
 private const val MULTI_RESULT_DOMAIN_FETCH_RESULT_SIZE = 20
 private val MULTI_RESULT_DOMAIN_FETCH_QUERY = "multi_result_query" to MULTI_RESULT_DOMAIN_FETCH_RESULT_SIZE
 private val EMPTY_RESULT_DOMAIN_FETCH_QUERY = "empty_result_query" to 0
-// Sale products test is @Ignore'd — keeping placeholder for future use
-@Suppress("unused")
-private val SALE_PRODUCTS_COUNT = 1
+private const val SALE_PRODUCTS_COUNT = 1
 
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
@@ -450,7 +448,6 @@ class SiteCreationDomainsViewModelTest : BaseUnitTest() {
         )
     }
 
-    @Suppress("UNCHECKED_CAST")
     @Test
     fun `verify domain products are fetched only at first start`() = testNewUi {
         viewModel.start()
@@ -476,7 +473,6 @@ class SiteCreationDomainsViewModelTest : BaseUnitTest() {
 
         assertIs<CreateSiteButtonState.Paid>(viewModel.uiState.value?.createSiteButtonState)
     }
-
 
     @Test
     fun `verify all domain results from api are visible`() = testWithSuccessResultNewUi { suggestions ->

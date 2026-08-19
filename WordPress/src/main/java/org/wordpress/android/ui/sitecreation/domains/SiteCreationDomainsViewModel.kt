@@ -15,14 +15,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.store.AccountStore
-import org.wordpress.android.networking.restapi.WpComApiClientProvider
-import rs.wordpress.api.kotlin.WpComApiClient
-import rs.wordpress.api.kotlin.WpRequestResult
-import rs.wordpress.api.kotlin.toLogErrorString
-import uniffi.wp_api.DomainSuggestion
-import uniffi.wp_api.Product
-import uniffi.wp_api.ProductTypeFilter
-import uniffi.wp_api.ProductsParams
 import org.wordpress.android.models.networkresource.ListState
 import org.wordpress.android.models.networkresource.ListState.Error
 import org.wordpress.android.models.networkresource.ListState.Loading
@@ -30,6 +22,7 @@ import org.wordpress.android.models.networkresource.ListState.Ready
 import org.wordpress.android.models.networkresource.ListState.Success
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
+import org.wordpress.android.networking.restapi.WpComApiClientProvider
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainSuggestionsQuery.UserQuery
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainsUiState.CreateSiteButtonState
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainsUiState.DomainsUiContentState
@@ -52,6 +45,13 @@ import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.config.PlansInSiteCreationFeatureConfig
 import org.wordpress.android.viewmodel.SingleLiveEvent
+import rs.wordpress.api.kotlin.WpComApiClient
+import rs.wordpress.api.kotlin.WpRequestResult
+import rs.wordpress.api.kotlin.toLogErrorString
+import uniffi.wp_api.DomainSuggestion
+import uniffi.wp_api.Product
+import uniffi.wp_api.ProductTypeFilter
+import uniffi.wp_api.ProductsParams
 import javax.inject.Inject
 import javax.inject.Named
 import kotlin.coroutines.CoroutineContext
