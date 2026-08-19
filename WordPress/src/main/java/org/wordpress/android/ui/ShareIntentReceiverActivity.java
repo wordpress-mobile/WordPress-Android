@@ -39,6 +39,9 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
+import static org.wordpress.android.fluxc.utils.MediaUtils.isSupportedImageMimeType;
+import static org.wordpress.android.fluxc.utils.MediaUtils.isSupportedVideoMimeType;
+
 /**
  * An activity to handle share intents, since there are multiple actions possible.
  * If the user is not logged in, redirects the user to the LoginFlow. When the user is logged in,
@@ -100,28 +103,65 @@ public class ShareIntentReceiverActivity extends BaseAppCompatActivity implement
     }
 
     private void downloadExternalMedia() {
+        // This activity is singleTask, so a second share reuses the same instance via onNewIntent().
+        // Start from an empty list, otherwise media from a previous, abandoned share is sent instead.
+        mLocalMediaUris.clear();
+
+        boolean anyDownloadFailed = false;
         try {
             if (Intent.ACTION_SEND_MULTIPLE.equals(getIntent().getAction())) {
                 ArrayList<Uri> externalUris = getIntent().getParcelableArrayListExtra((Intent.EXTRA_STREAM));
                 for (Uri uri : externalUris) {
                     if (uri != null && isAllowedMediaType(uri)) {
-                        mLocalMediaUris.add(MediaUtils.downloadExternalMedia(this, uri));
+                        anyDownloadFailed |= !addLocalMediaUri(uri);
                     }
                 }
             } else if (Intent.ACTION_SEND.equals(getIntent().getAction())) {
                 Uri externalUri = getIntent().getParcelableExtra(Intent.EXTRA_STREAM);
                 if (externalUri != null && isAllowedMediaType(externalUri)) {
-                    mLocalMediaUris.add(MediaUtils.downloadExternalMedia(this, externalUri));
+                    anyDownloadFailed = !addLocalMediaUri(externalUri);
                 }
             }
         } catch (Exception e) {
             ToastUtils.showToast(this,
                     R.string.error_media_could_not_share_media_from_device, ToastUtils.Duration.LONG);
             AppLog.e(T.MEDIA, "ShareIntentReceiver failed to download media ", e);
+            return;
+        }
+
+        if (anyDownloadFailed) {
+            ToastUtils.showToast(this,
+                    R.string.error_media_could_not_share_media_from_device, ToastUtils.Duration.LONG);
         }
     }
 
+    /**
+     * Copies the shared media to local storage and queues it for sharing.
+     *
+     * @return false when the copy failed, so the caller can tell the user instead of silently
+     * dropping the media. A null entry would otherwise reach the target activity as a null
+     * EXTRA_STREAM and be skipped without any feedback.
+     */
+    private boolean addLocalMediaUri(@NonNull Uri uri) {
+        Uri localUri = MediaUtils.downloadExternalMedia(this, uri);
+        if (localUri == null) {
+            AppLog.e(T.MEDIA, "ShareIntentReceiver failed to download media " + uri);
+            return false;
+        }
+        mLocalMediaUris.add(localUri);
+        return true;
+    }
+
     private boolean isAllowedMediaType(@NonNull Uri uri) {
+        // Try the MIME type reported by the provider first: photo picker URIs have no file extension
+        // and no readable _data column, so the path-based check below can't recognize them. A provider
+        // may still report an unhelpful type (application/octet-stream), so treat this as an early
+        // accept rather than a rejection and fall through to the path check when it doesn't match.
+        String mimeType = getContentResolver().getType(uri);
+        if (mimeType != null && (isSupportedImageMimeType(mimeType) || isSupportedVideoMimeType(mimeType))) {
+            return true;
+        }
+
         String filePath = MediaUtils.getRealPathFromURI(this, uri);
         // For cases when getRealPathFromURI returns an empty string
         if (TextUtils.isEmpty(filePath)) {
