@@ -10,6 +10,8 @@
 * [*] Screen readers now announce the site picker's add site menu as an expandable menu and skip the content behind it. [https://github.com/wordpress-mobile/WordPress-Android/pull/23206]
 * [*] Restored the text selection highlight in the experimental block editor, kept the cursor from hiding behind the toolbar while typing, and stopped dropdown menus from running off screen.
 * [*] The experimental block editor now lays out right-to-left when the app language is a right-to-left language.
+* [*] Sharing content to the app now lists self-hosted sites connected with an application password.
+* [**] Images and videos shared to the app from the photo picker now upload instead of being silently dropped.
 
 26.9
 -----
