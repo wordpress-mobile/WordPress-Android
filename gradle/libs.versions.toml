@@ -103,7 +103,7 @@ wordpress-lint = '2.2.0'
 wordpress-persistent-edittext = '1.0.2'
 wordpress-rs = '0.6.0'
 # TODO: Restore to a tagged release once WordPress-Utils-Android#156 merges (PR-build snapshot)
-wordpress-utils = '156-2e542df55715dff22c21def058bea551ee9569d0'
+wordpress-utils = '156-f375205024780f54c4b6e4e834ae1bbace69322a'
 automattic-ucrop = '2.2.11'
 zendesk = '5.5.3'
 turbine = '1.2.1'
