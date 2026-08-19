@@ -32,6 +32,7 @@ import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -39,6 +40,7 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
+import static org.wordpress.android.fluxc.utils.MediaUtils.getExtension;
 import static org.wordpress.android.fluxc.utils.MediaUtils.isSupportedImageMimeType;
 import static org.wordpress.android.fluxc.utils.MediaUtils.isSupportedVideoMimeType;
 
@@ -148,8 +150,49 @@ public class ShareIntentReceiverActivity extends BaseAppCompatActivity implement
             AppLog.e(T.MEDIA, "ShareIntentReceiver failed to download media " + uri);
             return false;
         }
-        mLocalMediaUris.add(localUri);
+        mLocalMediaUris.add(withFileExtension(localUri, getContentResolver().getType(uri)));
         return true;
+    }
+
+    /**
+     * Renames the cached copy so its name carries a file extension, using the MIME type the provider
+     * reported for the shared URI.
+     *
+     * <p>downloadExternalMedia() names the copy after the provider's display name, falling back to a
+     * MIME type parsed out of the URI string - which a content:// URI never carries. A provider that
+     * reports no display name, or one without an extension, therefore leaves the copy with no
+     * extension at all. Every MIME check downstream reads the file name, so the media ends up
+     * uploaded as image/jpeg no matter what was actually shared.
+     *
+     * @return the renamed URI, or the original one when there is nothing to repair or the rename
+     * fails. This only ever improves on what we already have, so it must not introduce a failure.
+     */
+    @NonNull
+    private Uri withFileExtension(@NonNull Uri localUri, @Nullable String mimeType) {
+        String path = localUri.getPath();
+        if (path == null || mimeType == null) {
+            return localUri;
+        }
+
+        File localFile = new File(path);
+        if (getExtension(localFile.getName()) != null) {
+            return localUri;
+        }
+
+        String extension = MediaUtils.getExtensionForMimeType(mimeType);
+        if (TextUtils.isEmpty(extension)) {
+            return localUri;
+        }
+
+        // an extension-less name still ends in a dot when downloadExternalMedia() had none to append
+        String renamedPath = (path.endsWith(".") ? path.substring(0, path.length() - 1) : path) + "." + extension;
+        // renameTo() overwrites, and an earlier share may still be uploading from that name
+        File renamedFile = new File(renamedPath);
+        if (renamedFile.exists() || !localFile.renameTo(renamedFile)) {
+            AppLog.w(T.MEDIA, "ShareIntentReceiver could not rename " + path + " to " + renamedPath);
+            return localUri;
+        }
+        return Uri.fromFile(renamedFile);
     }
 
     private boolean isAllowedMediaType(@NonNull Uri uri) {
