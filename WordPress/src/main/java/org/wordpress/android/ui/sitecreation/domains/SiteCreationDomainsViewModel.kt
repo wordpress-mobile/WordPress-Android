@@ -480,10 +480,6 @@ private fun createSearchInputUiState(
                         UiStringRes(R.string.site_creation_domain_tag_best_alternative),
                     )
 
-                    object Sale : Tag(
-                        R.color.yellow_50,
-                        UiStringRes(R.string.site_creation_domain_tag_sale)
-                    )
                 }
 
                 sealed class Cost(val title: UiString) {
@@ -496,12 +492,6 @@ private fun createSearchInputUiState(
                         val subtitle = UiStringRes(R.string.site_creation_domain_free_with_annual_plan)
                     }
 
-                    data class OnSale(private val titleCost: String, private val strikeoutTitleCost: String) : Cost(
-                        UiStringText(titleCost)
-                    ) {
-                        val strikeoutTitle = UiStringText(strikeoutTitleCost)
-                        val subtitle = UiStringRes(R.string.site_creation_domain_cost_sale)
-                    }
                 }
             }
         }
