@@ -162,8 +162,12 @@ class UnifiedSupportViewModel @Inject constructor(
     @Suppress("TooGenericExceptionCaught")
     fun refreshSelectedConversation() {
         val conversation = _selectedConversation.value ?: return
-        if (conversation.isBot || conversation.id == NEW_CONVERSATION_ID) return
-        if (_isSendingReply.value || isLoadingConversation.value) return
+        // No-op for bots/new conversations and while a reply is in flight or the initial load runs.
+        val canRefresh = !conversation.isBot &&
+                conversation.id != NEW_CONVERSATION_ID &&
+                !_isSendingReply.value &&
+                !isLoadingConversation.value
+        if (!canRefresh) return
         viewModelScope.launch {
             try {
                 if (!networkUtilsWrapper.isNetworkAvailable()) return@launch
