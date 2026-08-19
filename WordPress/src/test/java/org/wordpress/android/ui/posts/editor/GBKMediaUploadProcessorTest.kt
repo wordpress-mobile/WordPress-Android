@@ -23,6 +23,8 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.util.MediaUtilsWrapper
 import org.wordpress.android.util.SiteUtilsWrapper
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
 import org.wordpress.gutenberg.ProcessedProxyFile
 import java.io.File
 
@@ -36,6 +38,8 @@ class GBKMediaUploadProcessorTest : BaseUnitTest() {
     private lateinit var mediaUtilsWrapper: MediaUtilsWrapper
     private lateinit var appPrefsWrapper: AppPrefsWrapper
     private lateinit var siteUtilsWrapper: SiteUtilsWrapper
+    private lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
+    private lateinit var analyticsUtilsWrapper: AnalyticsUtilsWrapper
     private lateinit var stagedFile: File
 
     @Before
@@ -50,6 +54,8 @@ class GBKMediaUploadProcessorTest : BaseUnitTest() {
         siteUtilsWrapper = mock {
             on { onFreePlan(any()) } doReturn false
         }
+        analyticsTrackerWrapper = mock()
+        analyticsUtilsWrapper = mock()
         stagedFile = tempFolder.newFile("photo.jpg").apply { writeText("staged-bytes") }
     }
 
@@ -59,6 +65,8 @@ class GBKMediaUploadProcessorTest : BaseUnitTest() {
         mediaUtilsWrapper = mediaUtilsWrapper,
         appPrefsWrapper = appPrefsWrapper,
         siteUtilsWrapper = siteUtilsWrapper,
+        analyticsTrackerWrapper = analyticsTrackerWrapper,
+        analyticsUtilsWrapper = analyticsUtilsWrapper,
         ioDispatcher = testDispatcher()
     )
 

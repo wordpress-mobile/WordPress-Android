@@ -13,9 +13,12 @@ import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.util.AppLog
+import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.util.MediaUtilsWrapper
 import org.wordpress.android.util.SiteUtilsWrapper
 import org.wordpress.android.util.WPVideoUtils
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
 import org.wordpress.gutenberg.MediaUploadDelegate
 import org.wordpress.gutenberg.ProcessedProxyFile
 import java.io.File
@@ -46,6 +49,8 @@ class GBKMediaUploadProcessor(
     private val mediaUtilsWrapper: MediaUtilsWrapper,
     private val appPrefsWrapper: AppPrefsWrapper,
     private val siteUtilsWrapper: SiteUtilsWrapper,
+    private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
+    private val analyticsUtilsWrapper: AnalyticsUtilsWrapper,
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) : MediaUploadDelegate {
     /**
@@ -206,6 +211,7 @@ class GBKMediaUploadProcessor(
         // "wp-{currentTimeMillis}.mp4" and collides for two transcodes started in the same
         // millisecond. Uniqueness comes from the filesystem, with no check-then-create race.
         val output = File.createTempFile("wp-", ".mp4", appContext.cacheDir)
+        val startTimeMs = System.currentTimeMillis()
         val listener = object : IProgressListener {
             override fun onMediaStart() = Unit
             override fun onMediaProgress(progress: Float) = Unit
@@ -216,16 +222,19 @@ class GBKMediaUploadProcessor(
             override fun onMediaStop() = Unit
 
             override fun onMediaDone() {
+                trackTranscodeFinished(input, output, startTimeMs, null)
                 if (continuation.isActive) continuation.resume(output)
             }
 
             override fun onError(exception: Exception) {
                 AppLog.e(AppLog.T.MEDIA, "GBKMediaUploadProcessor > video transcode failed", exception)
+                trackTranscodeFinished(input, output, startTimeMs, exception)
                 output.delete()
                 if (continuation.isActive) continuation.resume(null)
             }
         }
 
+        var wasNpeDetected = false
         val composer = try {
             WPVideoUtils.getVideoOptimizationComposer(
                 appContext,
@@ -238,10 +247,12 @@ class GBKMediaUploadProcessor(
         } catch (npe: NullPointerException) {
             // m4m throws NPEs on some malformed inputs; the legacy pipeline guards this too.
             AppLog.w(AppLog.T.MEDIA, "GBKMediaUploadProcessor > NPE getting composer: ${npe.message}")
+            wasNpeDetected = true
             null
         }
 
         if (composer == null) {
+            trackCantOptimize(input, wasNpeDetected)
             output.delete()
             continuation.resume(null)
             return@suspendCancellableCoroutine
@@ -268,6 +279,50 @@ class GBKMediaUploadProcessor(
             output.delete()
             if (continuation.isActive) continuation.resume(null)
         }
+    }
+
+    /**
+     * Mirrors [org.wordpress.android.ui.uploads.VideoOptimizer]'s null-composer event so a
+     * GutenbergKit transcode that never starts is as visible in telemetry as a legacy one.
+     */
+    private fun trackCantOptimize(input: File, wasNpeDetected: Boolean) {
+        val properties = analyticsUtilsWrapper.getMediaProperties(true, null, input.absolutePath)
+        properties["was_npe_detected"] = wasNpeDetected
+        properties[PROPERTY_OPTIMIZER_LIB] = OPTIMIZER_LIB_M4M
+        analyticsTrackerWrapper.track(AnalyticsTracker.Stat.MEDIA_VIDEO_CANT_OPTIMIZE, properties)
+    }
+
+    /**
+     * Mirrors [org.wordpress.android.ui.uploads.VideoOptimizer.trackVideoProcessingEvents],
+     * including its `input_video_`/`output_video_` property prefixes, so GutenbergKit transcodes
+     * are comparable with legacy ones while the rollout measures parity.
+     *
+     * Output properties are only attached on success: on failure the output file is deleted
+     * moments later and its size would be meaningless.
+     */
+    private fun trackTranscodeFinished(input: File, output: File, startTimeMs: Long, exception: Exception?) {
+        val properties = mutableMapOf<String, Any?>()
+        analyticsUtilsWrapper.getMediaProperties(true, null, input.absolutePath)
+            .forEach { (key, value) -> properties["input_video_$key"] = value }
+
+        if (exception == null) {
+            analyticsUtilsWrapper.getMediaProperties(true, null, output.absolutePath)
+                .forEach { (key, value) -> properties["output_video_$key"] = value }
+            properties["saved_megabytes"] = ((input.length() - output.length()) / BYTES_PER_MEGABYTE).toString()
+        } else {
+            properties["exception_name"] = exception.javaClass.canonicalName
+            properties["exception_message"] = exception.message
+        }
+
+        properties["elapsed_time_ms"] = System.currentTimeMillis() - startTimeMs
+        properties[PROPERTY_OPTIMIZER_LIB] = OPTIMIZER_LIB_M4M
+
+        val stat = if (exception == null) {
+            AnalyticsTracker.Stat.MEDIA_VIDEO_OPTIMIZED
+        } else {
+            AnalyticsTracker.Stat.MEDIA_VIDEO_OPTIMIZE_ERROR
+        }
+        analyticsTrackerWrapper.track(stat, properties)
     }
 
     @Suppress("ReturnCount")
@@ -383,6 +438,11 @@ class GBKMediaUploadProcessor(
 
         /** Site module that lifts the free-plan video duration limit. */
         private const val VIDEOPRESS_MODULE = "videopress"
+
+        /** Matches VideoOptimizer's analytics so GutenbergKit and legacy transcodes compare. */
+        private const val PROPERTY_OPTIMIZER_LIB = "optimizer_lib"
+        private const val OPTIMIZER_LIB_M4M = "m4m"
+        private const val BYTES_PER_MEGABYTE = 1024 * 1024
 
         private const val MIME_IMAGE_PREFIX = "image/"
         private const val MIME_GIF = "image/gif"

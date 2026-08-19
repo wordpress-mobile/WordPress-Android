@@ -209,6 +209,7 @@ import org.wordpress.android.util.WPMediaUtils
 import org.wordpress.android.util.WPPermissionUtils
 import org.wordpress.android.util.WPUrlUtils
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsUtils
 import org.wordpress.android.util.analytics.AnalyticsUtils.BlockEditorEnabledSource
 import org.wordpress.android.util.config.ContactSupportFeatureConfig
@@ -361,6 +362,7 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
     @Inject lateinit var reblogUtils: ReblogUtils
 
     @Inject lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
+    @Inject lateinit var analyticsUtilsWrapper: AnalyticsUtilsWrapper
 
     @Inject lateinit var publishPostImmediatelyUseCase: PublishPostImmediatelyUseCase
 
@@ -2276,6 +2278,8 @@ class GutenbergKitActivity : BaseAppCompatActivity(), EditorImageSettingsListene
                             mediaUtilsWrapper = mediaUtilsWrapper,
                             appPrefsWrapper = appPrefsWrapper,
                             siteUtilsWrapper = siteUtilsWrapper,
+                            analyticsTrackerWrapper = analyticsTrackerWrapper,
+                            analyticsUtilsWrapper = analyticsUtilsWrapper,
                         )
                     )
                 }
