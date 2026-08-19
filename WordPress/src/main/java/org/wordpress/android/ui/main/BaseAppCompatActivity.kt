@@ -13,7 +13,6 @@ import org.wordpress.android.ui.debug.preferences.DebugSharedPreferenceFlagsActi
 import org.wordpress.android.ui.domains.management.DomainManagementActivity
 import org.wordpress.android.ui.domains.management.newdomainsearch.NewDomainSearchActivity
 import org.wordpress.android.ui.domains.management.purchasedomain.PurchaseDomainActivity
-import org.wordpress.android.ui.jetpackoverlay.JetpackStaticPosterActivity
 import org.wordpress.android.ui.main.feedbackform.FeedbackFormActivity
 import org.wordpress.android.ui.media.MediaPreviewActivity
 import org.wordpress.android.ui.media.MediaSettingsActivity
@@ -90,7 +89,6 @@ private val excludedActivities = listOf(
     EditJetpackSocialShareMessageActivity::class.java.name,
     ExperimentalFeaturesActivity::class.java.name,
     FeedbackFormActivity::class.java.name,
-    JetpackStaticPosterActivity::class.java.name,
     MediaPreviewActivity::class.java.name,
     MenuActivity::class.java.name,
     NavMenusActivity::class.java.name,

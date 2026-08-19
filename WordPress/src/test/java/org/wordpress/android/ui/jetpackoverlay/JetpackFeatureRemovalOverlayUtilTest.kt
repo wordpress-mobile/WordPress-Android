@@ -1,189 +1,80 @@
 package org.wordpress.android.ui.jetpackoverlay
 
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import org.junit.Assert.assertFalse
-import org.junit.Assert.assertTrue
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
-import org.mockito.kotlin.any
+import org.mockito.kotlin.never
+import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
-import org.wordpress.android.BaseUnitTest
-import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayPhase.PHASE_ONE
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayPhase.PHASE_THREE
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseFour
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseOne
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseThree
-import org.wordpress.android.ui.jetpackoverlay.JetpackOverlayConnectedFeature.STATS
-import org.wordpress.android.ui.mysite.SelectedSiteRepository
-import org.wordpress.android.util.BuildConfigWrapper
-import org.wordpress.android.util.DateTimeUtilsWrapper
-import org.wordpress.android.util.SiteUtilsWrapper
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil.JetpackFeatureCollectionOverlaySource
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
-import java.util.Date
 
-private const val ONE_DAY_TIME_IN_MILLIS = 1000L * 60L * 60L * 24L
-
-@ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
-class JetpackFeatureRemovalOverlayUtilTest : BaseUnitTest() {
+class JetpackFeatureRemovalOverlayUtilTest {
     @Mock
-    private lateinit var jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper
+    private lateinit var jetpackFeatureRemovalHelper: JetpackFeatureRemovalHelper
 
     @Mock
-    private lateinit var jetpackFeatureOverlayShownTracker: JetpackFeatureOverlayShownTracker
-
-    @Mock
-    private lateinit var selectedSiteRepository: SelectedSiteRepository
-
-    @Mock
-    private lateinit var siteUtilsWrapper: SiteUtilsWrapper
-
-    @Mock
-    private lateinit var buildConfigWrapper: BuildConfigWrapper
-
-    @Mock
-    private lateinit var dateTimeUtilsWrapper: DateTimeUtilsWrapper
+    private lateinit var shownTracker: JetpackFeatureOverlayShownTracker
 
     @Mock
     private lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
 
-    private lateinit var jetpackFeatureRemovalOverlayUtil: JetpackFeatureRemovalOverlayUtil
-
-    private val currentMockedDate = Date(System.currentTimeMillis())
+    private lateinit var overlayUtil: JetpackFeatureRemovalOverlayUtil
 
     @Before
-    fun setup() {
-        jetpackFeatureRemovalOverlayUtil = JetpackFeatureRemovalOverlayUtil(
-            jetpackFeatureRemovalPhaseHelper,
-            jetpackFeatureOverlayShownTracker,
-            selectedSiteRepository,
-            siteUtilsWrapper,
-            buildConfigWrapper,
-            dateTimeUtilsWrapper,
+    fun setUp() {
+        overlayUtil = JetpackFeatureRemovalOverlayUtil(
+            jetpackFeatureRemovalHelper,
+            shownTracker,
             analyticsTrackerWrapper
         )
     }
 
-    // general phase tests
     @Test
-    fun `given jetpack app, shouldShowFeatureSpecificJetpackOverlay invoked, then return false`() {
-        whenever(buildConfigWrapper.isJetpackApp).thenReturn(true)
+    fun `given the Jetpack app, when checking the feature collection overlay, then it is not shown`() {
+        whenever(jetpackFeatureRemovalHelper.shouldRemoveJetpackFeatures()).thenReturn(false)
 
-        val shouldShowOverlay = jetpackFeatureRemovalOverlayUtil
-            .shouldShowFeatureSpecificJetpackOverlay(STATS)
-
-        assertFalse(shouldShowOverlay)
+        assertThat(overlayUtil.shouldShowFeatureCollectionJetpackOverlayForFirstTime()).isFalse
     }
 
     @Test
-    fun `given non wpcomSite, shouldShowFeatureSpecificJetpackOverlay invoked, then return false`() {
-        val fakeSiteModel = SiteModel()
-        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(fakeSiteModel)
-        whenever(siteUtilsWrapper.isAccessedViaWPComRest(fakeSiteModel)).thenReturn(false)
+    fun `given the WordPress app and the overlay was never shown, then it is shown`() {
+        whenever(jetpackFeatureRemovalHelper.shouldRemoveJetpackFeatures()).thenReturn(true)
+        whenever(shownTracker.getFeatureCollectionOverlayShown()).thenReturn(false)
 
-        val shouldShowOverlay = jetpackFeatureRemovalOverlayUtil
-            .shouldShowFeatureSpecificJetpackOverlay(STATS)
-
-        assertFalse(shouldShowOverlay)
+        assertThat(overlayUtil.shouldShowFeatureCollectionJetpackOverlayForFirstTime()).isTrue
     }
 
     @Test
-    @Suppress("MaxLineLength")
-    fun `given feature removal not started, when shouldShowFeatureSpecificJetpackOverlay invoked, then return false`() {
-        setupMockForWpComSite()
-        whenever(jetpackFeatureRemovalPhaseHelper.getCurrentPhase()).thenReturn(null)
+    fun `given the WordPress app and the overlay was already shown, then it is not shown again`() {
+        whenever(jetpackFeatureRemovalHelper.shouldRemoveJetpackFeatures()).thenReturn(true)
+        whenever(shownTracker.getFeatureCollectionOverlayShown()).thenReturn(true)
 
-        val shouldShowOverlay = jetpackFeatureRemovalOverlayUtil
-            .shouldShowFeatureSpecificJetpackOverlay(STATS)
-
-        assertFalse(shouldShowOverlay)
+        assertThat(overlayUtil.shouldShowFeatureCollectionJetpackOverlayForFirstTime()).isFalse
     }
 
     @Test
-    @Suppress("MaxLineLength")
-    fun `given feature removal in phase four, when shouldShowFeatureSpecificJetpackOverlay invoked, then return false`() {
-        setupMockForWpComSite()
-        whenever(jetpackFeatureRemovalPhaseHelper.getCurrentPhase()).thenReturn(PhaseFour)
+    fun `when the overlay is shown on app open, then it is recorded so it does not show again`() {
+        overlayUtil.onFeatureCollectionOverlayShown(JetpackFeatureCollectionOverlaySource.APP_OPEN)
 
-        val shouldShowOverlay = jetpackFeatureRemovalOverlayUtil
-            .shouldShowFeatureSpecificJetpackOverlay(STATS)
-
-        assertFalse(shouldShowOverlay)
+        verify(shownTracker).setFeatureCollectionOverlayShown()
     }
 
     @Test
-    @Suppress("MaxLineLength")
-    fun `given feature is never accessed, when shouldShowFeatureSpecificJetpackOverlay invoked, then return true`() {
-        setupMockForWpComSite()
-        whenever(jetpackFeatureRemovalPhaseHelper.getCurrentPhase()).thenReturn(PhaseThree)
-        whenever(
-            jetpackFeatureOverlayShownTracker.getFeatureOverlayShownTimeStamp(
-                STATS,
-                PHASE_THREE
-            )
-        ).thenReturn(null)
-        whenever(
-                jetpackFeatureOverlayShownTracker.getTheLastShownOverlayTimeStamp(
-                        PHASE_THREE
-                )
-        ).thenReturn(null)
+    fun `when the overlay is opened from the feature card, then it is not recorded as the app-open showing`() {
+        overlayUtil.onFeatureCollectionOverlayShown(JetpackFeatureCollectionOverlaySource.FEATURE_CARD)
 
-        val shouldShowOverlay = jetpackFeatureRemovalOverlayUtil
-            .shouldShowFeatureSpecificJetpackOverlay(STATS)
-
-        assertTrue(shouldShowOverlay)
+        verify(shownTracker, never()).setFeatureCollectionOverlayShown()
     }
 
     @Test
-    @Suppress("MaxLineLength")
-    fun `given feature is accessed after feature specific frequency, when shouldShowFeatureSpecificJetpackOverlay invoked, then return true`() {
-        setupMockForWpComSite()
-        // The passed number should exceed the feature specific overlay frequency
-        setUpMockForEarliestAccessedFeature(8)
+    fun `shouldHideJetpackFeatures follows the removal state`() {
+        whenever(jetpackFeatureRemovalHelper.shouldRemoveJetpackFeatures()).thenReturn(true)
 
-        val shouldShowOverlay = jetpackFeatureRemovalOverlayUtil
-            .shouldShowFeatureSpecificJetpackOverlay(STATS)
-
-        assertTrue(shouldShowOverlay)
-    }
-
-    private fun setupMockForWpComSite() {
-        val fakeSiteModel = SiteModel()
-        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(fakeSiteModel)
-        whenever(siteUtilsWrapper.isAccessedViaWPComRest(fakeSiteModel)).thenReturn(true)
-    }
-
-    private fun setupMockForFeatureAccessed(
-        noOfDaysPastFeatureAccessed: Long,
-    ) {
-        val featureAccessedMockedTimeinMillis = (System.currentTimeMillis() -
-                (noOfDaysPastFeatureAccessed * ONE_DAY_TIME_IN_MILLIS))
-        whenever(jetpackFeatureRemovalPhaseHelper.getCurrentPhase()).thenReturn(PhaseOne)
-        whenever(
-            jetpackFeatureOverlayShownTracker.getFeatureOverlayShownTimeStamp(
-                STATS,
-                PHASE_ONE
-            )
-        ).thenReturn(featureAccessedMockedTimeinMillis)
-        whenever(dateTimeUtilsWrapper.getTodaysDate()).thenReturn(currentMockedDate)
-        whenever(
-                dateTimeUtilsWrapper.daysBetween(
-                        any(), any()
-                )
-        ).thenReturn(noOfDaysPastFeatureAccessed.toInt())
-    }
-
-    private fun setUpMockForEarliestAccessedFeature(noOfDaysPastFeatureAccessed: Long) {
-        val featureAccessedMockedTimeinMillis = (System.currentTimeMillis() -
-                (noOfDaysPastFeatureAccessed * ONE_DAY_TIME_IN_MILLIS))
-
-        whenever(jetpackFeatureOverlayShownTracker.getTheLastShownOverlayTimeStamp(PHASE_ONE))
-                .thenReturn(featureAccessedMockedTimeinMillis)
-
-        setupMockForFeatureAccessed(noOfDaysPastFeatureAccessed)
+        assertThat(overlayUtil.shouldHideJetpackFeatures()).isTrue
     }
 }

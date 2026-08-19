@@ -482,7 +482,6 @@ platform :android do
     # Load Sentry properties
     sentry_path = File.join(PROJECT_ROOT_FOLDER, 'WordPress', 'src', app.downcase, 'sentry.properties')
     sentry_properties = JavaProperties.load(sentry_path)
-    sentry_token = sentry_properties[:'auth.token']
     project_slug = sentry_properties[:'defaults.project']
     org_slug = sentry_properties[:'defaults.org']
 
@@ -490,7 +489,7 @@ platform :android do
     bundle_source_map_path = File.join(PROJECT_ROOT_FOLDER, 'WordPress', 'build', 'react-native-bundle-source-map')
 
     sentry_upload_sourcemap(
-      auth_token: sentry_token,
+      auth_token: get_required_env('SENTRY_AUTH_TOKEN'),
       org_slug: org_slug,
       project_slug: project_slug,
       version: release_version,

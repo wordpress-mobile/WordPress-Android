@@ -17,6 +17,7 @@ import org.wordpress.android.fluxc.model.activity.ActivityTypeModel
 import org.wordpress.android.fluxc.store.ActivityLogStore
 import org.wordpress.android.fluxc.store.ActivityLogStore.OnActivityLogFetched
 import org.wordpress.android.ui.activitylog.ActivityLogNavigationEvents
+import org.wordpress.android.ui.activitylog.GetActivityLogHiddenGroupsUseCase
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem
 import org.wordpress.android.ui.jetpack.JetpackCapabilitiesUseCase
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadRequestState
@@ -69,7 +70,8 @@ class ActivityLogViewModel @Inject constructor(
     private val resourceProvider: ResourceProvider,
     private val statsDateUtils: StatsDateUtils,
     private val activityLogTracker: ActivityLogTracker,
-    private val jetpackCapabilitiesUseCase: JetpackCapabilitiesUseCase
+    private val jetpackCapabilitiesUseCase: JetpackCapabilitiesUseCase,
+    private val getActivityLogHiddenGroupsUseCase: GetActivityLogHiddenGroupsUseCase
 ) : ViewModel() {
     enum class ActivityLogListStatus {
         CAN_LOAD_MORE,
@@ -336,7 +338,9 @@ class ActivityLogViewModel @Inject constructor(
             loadMore,
             currentDateRangeFilter?.first?.let { Date(it) },
             currentDateRangeFilter?.second?.let { Date(it) },
-            currentActivityTypeFilter.map { it.key }
+            currentActivityTypeFilter.map { it.key },
+            // The Backup screen exists to show the rewind group, so never hide groups there
+            if (rewindableOnly) emptyList() else getActivityLogHiddenGroupsUseCase.getHiddenGroups(site)
         )
         fetchActivitiesJob = viewModelScope.launch {
             val result = activityLogStore.fetchActivities(payload)

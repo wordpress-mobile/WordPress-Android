@@ -15,10 +15,8 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.view.ViewGroup.MarginLayoutParams
 import android.view.animation.Animation
 import android.widget.ProgressBar
-import android.widget.TextView
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -64,7 +62,6 @@ import org.wordpress.android.fluxc.store.ReaderStore
 import org.wordpress.android.fluxc.store.ReaderStore.OnReaderSitesSearched
 import org.wordpress.android.fluxc.store.ReaderStore.ReaderSearchSitesPayload
 import org.wordpress.android.models.FilterCriteria
-import org.wordpress.android.models.JetpackPoweredScreen
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.models.ReaderPostDiscoverData
 import org.wordpress.android.models.ReaderTag
@@ -82,7 +79,6 @@ import org.wordpress.android.ui.main.ChooseSiteActivity
 import org.wordpress.android.ui.main.WPMainActivity.OnActivityBackPressedListener
 import org.wordpress.android.ui.main.WPMainActivity.OnScrollToTopListener
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
-import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredBottomSheetFragment
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.ui.reader.ReaderActivityLauncher.OpenUrlType
@@ -140,8 +136,6 @@ import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.AniUtils
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.DisplayUtils
-import org.wordpress.android.util.DisplayUtilsWrapper
-import org.wordpress.android.util.JetpackBrandingUtils
 import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.SnackbarItem
@@ -194,16 +188,10 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
     lateinit var seenUnseenWithCounterFeatureConfig: SeenUnseenWithCounterFeatureConfig
 
     @Inject
-    lateinit var jetpackBrandingUtils: JetpackBrandingUtils
-
-    @Inject
     lateinit var readerTracker: ReaderTracker
 
     @Inject
     lateinit var snackbarSequencer: SnackbarSequencer
-
-    @Inject
-    lateinit var displayUtilsWrapper: DisplayUtilsWrapper
 
     @Inject
     lateinit var networkConnectionMonitor: NetworkConnectionMonitor
@@ -221,7 +209,6 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
     private lateinit var newPostsBar: View
     private lateinit var progressBar: ProgressBar
     private lateinit var searchMenuItem: MenuItem
-    private lateinit var jetpackBanner: View
 
     private lateinit var postListViewModel: ReaderPostListViewModel
 
@@ -588,47 +575,6 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
             }
             lastConnected = connected
         }
-    }
-
-    private fun toggleJetpackBannerIfEnabled(showIfEnabled: Boolean, animateOnScroll: Boolean) {
-        if (!isAdded || view == null || !isSearching) return
-
-        if (jetpackBrandingUtils.shouldShowJetpackBranding()) {
-            if (animateOnScroll) {
-                val scrollView = recyclerView.internalRecyclerView
-                jetpackBrandingUtils.showJetpackBannerIfScrolledToTop(
-                    jetpackBanner,
-                    scrollView
-                )
-                // Return early since the banner visibility was handled by showJetpackBannerIfScrolledToTop
-                return
-            }
-
-            if (showIfEnabled && !displayUtilsWrapper.isPhoneLandscape()) {
-                showJetpackBanner()
-            } else {
-                hideJetpackBanner()
-            }
-        }
-    }
-
-    private fun showJetpackBanner() {
-        jetpackBanner.visibility = View.VISIBLE
-
-        // Add bottom margin to search suggestions list and empty view.
-        val jetpackBannerHeight = resources.getDimensionPixelSize(R.dimen.jetpack_banner_height)
-        (recyclerView.searchSuggestionsRecyclerView.layoutParams as MarginLayoutParams).bottomMargin
-        (actionableEmptyView!!.layoutParams as MarginLayoutParams).bottomMargin =
-            jetpackBannerHeight
-    }
-
-    private fun hideJetpackBanner() {
-        jetpackBanner.visibility = View.GONE
-
-        // Remove bottom margin from search suggestions list and empty view.
-        (recyclerView.searchSuggestionsRecyclerView.layoutParams as MarginLayoutParams).bottomMargin =
-            0
-        (actionableEmptyView!!.layoutParams as MarginLayoutParams).bottomMargin = 0
     }
 
     private fun setFollowStatusForBlog(readerData: FollowStatusChanged) {
@@ -1102,9 +1048,6 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
         progressBar = rootView.findViewById(R.id.progress_footer)
         progressBar.visibility = View.GONE
 
-        jetpackBanner = rootView.findViewById(R.id.jetpack_banner)
-        setupJetpackBanner()
-
         if (savedInstanceState?.containsKey(ReaderConstants.KEY_CURRENT_UPDATE_ACTIONS) == true) {
             val actions =
                 BundleCompat.getSerializable(
@@ -1292,35 +1235,9 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
         )
     }
 
-    private fun setupJetpackBanner() {
-        if (jetpackBrandingUtils.shouldShowJetpackBranding()) {
-            val screen: JetpackPoweredScreen = JetpackPoweredScreen.WithDynamicText.READER_SEARCH
-            jetpackBrandingUtils.initJetpackBannerAnimation(
-                jetpackBanner,
-                recyclerView.internalRecyclerView
-            )
-            val jetpackBannerTextView =
-                jetpackBanner.findViewById<TextView>(R.id.jetpack_banner_text)
-            jetpackBannerTextView.text = uiHelpers.getTextOfUiString(
-                requireContext(),
-                jetpackBrandingUtils.getBrandingTextForScreen(screen)
-            )
-
-            if (jetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()) {
-                jetpackBanner.setOnClickListener {
-                    jetpackBrandingUtils.trackBannerTapped(screen)
-                    JetpackPoweredBottomSheetFragment()
-                        .show(childFragmentManager, JetpackPoweredBottomSheetFragment.TAG)
-                }
-            }
-        }
-    }
-
     private fun showSearchMessageOrSuggestions() {
         val hasQuery = !isSearchViewEmpty
         val hasPerformedSearch = !TextUtils.isEmpty(currentSearchQuery)
-
-        toggleJetpackBannerIfEnabled(showIfEnabled = true, animateOnScroll = false)
 
         // prevents suggestions from being shown after the search view has been collapsed
         if (!isSearching) {
@@ -1412,8 +1329,6 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
         currentSearchQuery = trimQuery
         updatePostsInCurrentSearch(0)
         updateSitesInCurrentSearch(0)
-
-        toggleJetpackBannerIfEnabled(showIfEnabled = false, animateOnScroll = false)
 
         // track that the user performed a search
         if (trimQuery != "") {
@@ -2042,8 +1957,6 @@ class ReaderPostListFragment : ViewPagerFragment(), OnPostSelectedListener, OnFo
                 }
                 if (isSearching && !isSearchTabsShowing()) {
                     showSearchTabs()
-                } else if (isSearching) {
-                    toggleJetpackBannerIfEnabled(showIfEnabled = true, animateOnScroll = true)
                 }
             }
             restorePosition = 0
