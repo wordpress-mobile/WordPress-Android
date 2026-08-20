@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.newstats.poststats
 
+import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -45,21 +46,13 @@ class PostStatsDetailViewModel @Inject constructor(
                 AppLog.T.STATS,
                 "Post stats opened without a post id"
             )
-            _uiState.value = PostStatsDetailUiState.Error(
-                resourceProvider.getString(
-                    R.string.stats_error_unknown
-                )
-            )
+            showError(R.string.stats_error_unknown)
             return
         }
         val site = selectedSiteRepository.getSelectedSite()
         val token = accountStore.accessToken
         if (site == null || token.isNullOrEmpty()) {
-            _uiState.value = PostStatsDetailUiState.Error(
-                resourceProvider.getString(
-                    R.string.stats_error_no_site
-                )
-            )
+            showError(R.string.stats_error_no_site)
             return
         }
         statsRepository.init(token)
@@ -72,20 +65,17 @@ class PostStatsDetailViewModel @Inject constructor(
                         siteId = site.siteId,
                         postId = postId
                     )
-                _uiState.value = when (result) {
+                when (result) {
                     is PostViewsResult.Success ->
-                        PostStatsDetailUiState.Loaded(
-                            data = result.data,
-                            // The newest day is selected first, as the old stats screen does.
-                            selectedDayIndex = result.data
-                                .dailyViews.lastIndex
-                        )
-                    is PostViewsResult.Error ->
-                        PostStatsDetailUiState.Error(
-                            resourceProvider.getString(
-                                R.string.stats_error_api
+                        _uiState.value =
+                            PostStatsDetailUiState.Loaded(
+                                data = result.data,
+                                // The newest day is selected first, as the old screen does.
+                                selectedDayIndex = result.data
+                                    .dailyViews.lastIndex
                             )
-                        )
+                    is PostViewsResult.Error ->
+                        showError(R.string.stats_error_api)
                 }
             } catch (e: Exception) {
                 if (e is CancellationException) throw e
@@ -95,14 +85,15 @@ class PostStatsDetailViewModel @Inject constructor(
                         "${e.message}",
                     e
                 )
-                _uiState.value =
-                    PostStatsDetailUiState.Error(
-                        resourceProvider.getString(
-                            R.string.stats_error_unknown
-                        )
-                    )
+                showError(R.string.stats_error_unknown)
             }
         }
+    }
+
+    private fun showError(@StringRes messageResId: Int) {
+        _uiState.value = PostStatsDetailUiState.Error(
+            resourceProvider.getString(messageResId)
+        )
     }
 
     /** Moves the selected day one step towards the start of the history. */
