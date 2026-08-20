@@ -147,13 +147,16 @@ class SiteWPAPIRestClient @Inject constructor(
         apiRootUrl: String,
         payload: FetchWPAPISitePayload
     ): JetpackConnectionState? {
-        if (!hasJetpack || !payload.isApplicationPassword) return null
-
         val username = payload.username
         val password = payload.password
-        if (username.isNullOrEmpty() || password.isNullOrEmpty()) return null
+        val canFetch = hasJetpack && payload.isApplicationPassword &&
+                !username.isNullOrEmpty() && !password.isNullOrEmpty()
 
-        return jetpackConnectionStatusFetcher.fetch(apiRootUrl, username, password)
+        return if (canFetch) {
+            jetpackConnectionStatusFetcher.fetch(apiRootUrl, username, password)
+        } else {
+            null
+        }
     }
 
     private fun SiteModel.applyJetpackState(
