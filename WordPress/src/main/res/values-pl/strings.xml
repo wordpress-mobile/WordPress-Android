@@ -949,7 +949,6 @@ Language: pl
     <string name="site_creation_search_domain_example_title">NazwaTwojejDomeny.com</string>
     <string name="site_creation_domain_search_input_hint">Szukaj za pomocą słów kluczowych</string>
     <string name="site_creation_domain_header_subtitle">Szukaj krótkiej i zapadającej w pamięć nazwy domeny, żeby pomóc ludziom znaleźć i przejść na twoją witrynę.</string>
-    <string name="site_creation_domain_cost_sale">za pierwszy rok</string>
     <string name="site_creation_error_cart_subtitle">Twoja witryna internetowa została pomyślnie stworzona, ale napotkaliśmy problem podczas przygotowywania twojej własnej domeny do zakupu. Spróbuj ponownie lub skontaktuj się z pomocą techniczną w celu uzyskania pomocy.</string>
     <string name="new_site_creation_preview_caption_paid">Rozpoczęcie prawidłowego działania domeny może potrwać około 30 minut.</string>
     <string name="new_site_creation_preview_subtitle_paid">Wysłaliśmy tobie wiadomość email z paragonem. %s</string>
@@ -1013,7 +1012,6 @@ Language: pl
     <string name="blaze_promotional_text">Zwiększ ruch na swojej stronie dzięki Blaze</string>
     <string name="blaze_activity_title">Blaze</string>
     <string name="site_creation_domain_tag_unavailable">Ta domena jest już zarejestrowana</string>
-    <string name="site_creation_domain_tag_sale">Promocja</string>
     <string name="site_creation_domain_tag_recommended">Polecane</string>
     <string name="site_creation_domain_tag_best_alternative">Najlepsza alternatywa</string>
     <string name="support_faq_caption">Odpowiedzi na najczęstsze pytania znajdziesz w naszej sekcji FAQ.</string>

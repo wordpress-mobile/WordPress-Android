@@ -949,7 +949,6 @@ Language: tr
     <string name="site_creation_search_domain_example_title">SitenizinAdi.com</string>
     <string name="site_creation_domain_search_input_hint">Anahtar sözcük ile arayın</string>
     <string name="site_creation_domain_header_subtitle">Kişilerin sitenizi bulmasına ve ziyaret etmesine yardımcı olacak kısa ve akılda kalıcı bir etki alanı arayın.</string>
-    <string name="site_creation_domain_cost_sale">ilk yıl için</string>
     <string name="site_creation_error_cart_subtitle">Siteniz oluşturuldu, ancak özel etki alanınızın ödemesini hazırlarken bir sorunla karşılaştık. Lütfen yeniden deneyin ya da yardım almak için destek ekibine başvurun.</string>
     <string name="new_site_creation_preview_caption_paid">Özel etki alanınızın çalışmaya başlaması 30 dakika kadar sürebilir.</string>
     <string name="new_site_creation_preview_subtitle_paid">Alındınızı e-posta ile gönderdik. %s</string>
@@ -1013,7 +1012,6 @@ Language: tr
     <string name="blaze_promotional_text">Blaze ile sitenize daha fazla trafik çekin</string>
     <string name="blaze_activity_title">Blaze</string>
     <string name="site_creation_domain_tag_unavailable">Bu etki alanı zaten kaydedilmiş</string>
-    <string name="site_creation_domain_tag_sale">İndirim</string>
     <string name="site_creation_domain_tag_recommended">Önerilen</string>
     <string name="site_creation_domain_tag_best_alternative">En iyi alternatif</string>
     <string name="support_faq_caption">Sık sorulan soruların yanıtları için SSS bölümümüze bakın.</string>

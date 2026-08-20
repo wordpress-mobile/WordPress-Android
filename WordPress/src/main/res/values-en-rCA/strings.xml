@@ -573,7 +573,6 @@ Language: en_CA
     <string name="site_creation_search_domain_example_title">YourSiteName.com</string>
     <string name="site_creation_domain_search_input_hint">Search with keywords</string>
     <string name="site_creation_domain_header_subtitle">Search for a short and memorable domain to help people find and visit your site.</string>
-    <string name="site_creation_domain_cost_sale">for the first year</string>
     <string name="site_creation_error_cart_subtitle">Your website has been created successfully, but we encountered an issue while preparing your custom domain for checkout. Please try again or contact support for assistance.</string>
     <string name="new_site_creation_preview_caption_paid">It may take up to 30 minutes for your custom domain to start working.</string>
     <string name="new_site_creation_preview_subtitle_paid">We’ve emailed your receipt. %s</string>
@@ -635,7 +634,6 @@ Language: en_CA
     <string name="help_buttons_screen_title">Help</string>
     <string name="free">Free</string>
     <string name="logs_button">Logs</string>
-    <string name="site_creation_domain_tag_sale">Sale</string>
     <string name="blaze_activity_title">Blaze</string>
     <string name="tickets">Tickets</string>
     <string name="site_creation_domain_tag_recommended">Recommended</string>

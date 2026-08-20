@@ -940,7 +940,6 @@ Language: ko_KR
     <string name="site_creation_search_domain_example_title">YourSiteName.com</string>
     <string name="site_creation_domain_search_input_hint">키워드로 검색</string>
     <string name="site_creation_domain_header_subtitle">사용자가 사이트를 찾고 방문하는 데 도움이 되는 짧고 기억하기 쉬운 도메인을 검색하세요.</string>
-    <string name="site_creation_domain_cost_sale">첫해 동안</string>
     <string name="site_creation_error_cart_subtitle">웹사이트가 생성되었지만, 체크아웃용 사용자 정의 도메인을 준비하는 동안 문제가 발생했습니다. 다시 시도하거나 지원팀에 도움을 문의하세요.</string>
     <string name="new_site_creation_preview_caption_paid">사용자 정의 도메인이 작동하기 시작하려면 30분 정도 걸릴 수 있습니다.</string>
     <string name="new_site_creation_preview_subtitle_paid">영수증을 이메일로 보내드렸습니다. %s</string>
@@ -1004,7 +1003,6 @@ Language: ko_KR
     <string name="blaze_promotional_text">Blaze를 통해 사이트에 더 많은 트래픽 유도</string>
     <string name="blaze_activity_title">Blaze</string>
     <string name="site_creation_domain_tag_unavailable">이 도메인은 이미 등록되었습니다.</string>
-    <string name="site_creation_domain_tag_sale">세일</string>
     <string name="site_creation_domain_tag_recommended">권장</string>
     <string name="site_creation_domain_tag_best_alternative">최선의 대안</string>
     <string name="support_faq_caption">궁금할 수도 있는 일반적인 질문에 대한 답변은 FAQ를 참조하세요.</string>
