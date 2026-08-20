@@ -14,6 +14,7 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.SiteActionBuilder
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.network.discovery.DiscoveryUtils
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged
 import org.wordpress.android.fluxc.utils.AppLogWrapper
@@ -239,7 +240,10 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
             SiteStore.RefreshSitesXMLRPCApplicationPasswordCredentialsPayload(
                 username = username,
                 password = password,
-                url = buildXmlRpcEndpoint(siteUrl),
+                // Reuse the canonical discovery helpers: stripKnownPaths trims trailing slashes and known
+                // suffixes, and appendXMLRPCPath adds xmlrpc.php with a `contains` check (not endsWith) so a
+                // baseURL/xmlrpc.php?my-authcode=XXX endpoint isn't double-appended.
+                url = DiscoveryUtils.appendXMLRPCPath(DiscoveryUtils.stripKnownPaths(siteUrl)),
                 apiRootUrl = apiRootUrl,
             )
         dispatcher.dispatch(
@@ -248,17 +252,6 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
                     payload
                 )
         )
-    }
-
-    /** Builds the conventional xmlrpc.php endpoint for a site URL, tolerating a trailing slash or an
-     *  already-appended path. */
-    private fun buildXmlRpcEndpoint(siteUrl: String): String {
-        val trimmed = siteUrl.trimEnd('/')
-        return if (trimmed.endsWith("/xmlrpc.php", ignoreCase = true)) {
-            trimmed
-        } else {
-            "$trimmed/xmlrpc.php"
-        }
     }
 
     private suspend fun emitError(
