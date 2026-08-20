@@ -576,19 +576,26 @@ class JetpackRestConnectionViewModel @Inject constructor(
          * - Jetpack app
          * - Self-hosted site using REST API
          * - Application password has been set
-         * - Site isn't already connected to Jetpack
+         * - Site isn't already connected to Jetpack for the account signed in here
          * - Jetpack is not installed, its version is unknown, or the installed version is 14.2 or above
          *
          * The version is unknown for sites added with an application password: Jetpack is detected there
          * from the site's REST namespaces, which don't carry a version. Blocking on that would send them
          * to the web-view connection flow, which signs in through wp-login.php and so can't work with an
          * application password — this flow is the only one they have.
+         *
+         * @param hasWpComAccess whether the signed-in WordPress.com account can already reach the site,
+         * per [org.wordpress.android.util.WpComSiteAccessChecker]. A site connected to a *different*
+         * account still needs this flow: its ConnectUser step is what links the account signed in here.
+         * Defaults to true so callers with no reason to distinguish keep the plain "already connected"
+         * behaviour.
          */
-        fun canInitiateJetpackRestConnection(site: SiteModel): Boolean {
+        @JvmOverloads
+        fun canInitiateJetpackRestConnection(site: SiteModel, hasWpComAccess: Boolean = true): Boolean {
             return BuildConfig.IS_JETPACK_APP
                     && site.isUsingSelfHostedRestApi
                     && !site.wpApiRestUrl.isNullOrEmpty()
-                    && !site.isJetpackConnected
+                    && (!site.isJetpackConnected || !hasWpComAccess)
                     && (!site.isJetpackInstalled
                     || site.jetpackVersion.isNullOrEmpty()
                     || checkMinimalVersion(site.jetpackVersion, JETPACK_LIMIT_VERSION))

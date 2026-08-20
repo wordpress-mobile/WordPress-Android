@@ -16,6 +16,7 @@ import org.wordpress.android.ui.blaze.blazecampaigns.campaignlisting.CampaignLis
 import org.wordpress.android.ui.mysite.SiteNavigationAction
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction
 import org.wordpress.android.ui.newstats.NewStatsRouting
+import org.wordpress.android.util.WpComSiteAccessChecker
 import kotlin.test.assertEquals
 
 @ExperimentalCoroutinesApi
@@ -30,6 +31,9 @@ class ListItemActionHandlerTest: BaseUnitTest() {
     @Mock
     lateinit var newStatsRouting: NewStatsRouting
 
+    @Mock
+    lateinit var wpComSiteAccessChecker: WpComSiteAccessChecker
+
     private val site = SiteModel()
 
     private lateinit var  listItemActionHandler: ListItemActionHandler
@@ -39,7 +43,8 @@ class ListItemActionHandlerTest: BaseUnitTest() {
         listItemActionHandler = ListItemActionHandler(
             accountStore,
             blazeFeatureUtils,
-            newStatsRouting
+            newStatsRouting,
+            wpComSiteAccessChecker
         )
     }
 
@@ -146,6 +151,30 @@ class ListItemActionHandlerTest: BaseUnitTest() {
         assertEquals(navigationAction,SiteNavigationAction.OpenStats(site))
     }
 
+
+    @Test
+    fun `stats item click emits OpenStats if Jetpack site is connected to the signed-in account`() {
+        site.setIsJetpackInstalled(true)
+        site.setIsJetpackConnected(true)
+        whenever(accountStore.hasAccessToken()).thenReturn(true)
+        whenever(wpComSiteAccessChecker.hasWpComAccess(site)).thenReturn(true)
+
+        val navigationAction = invokeItemClickAction(action = ListItemAction.STATS)
+
+        assertEquals(SiteNavigationAction.OpenStats(site), navigationAction)
+    }
+
+    @Test
+    fun `stats item click emits ConnectJetpackForStats if Jetpack site belongs to another account`() {
+        site.setIsJetpackInstalled(true)
+        site.setIsJetpackConnected(true)
+        whenever(accountStore.hasAccessToken()).thenReturn(true)
+        whenever(wpComSiteAccessChecker.hasWpComAccess(site)).thenReturn(false)
+
+        val navigationAction = invokeItemClickAction(action = ListItemAction.STATS)
+
+        assertEquals(SiteNavigationAction.ConnectJetpackForStats(site), navigationAction)
+    }
 
     @Test
     fun `stats item click emits StartWPComLoginForJetpackStats if site is Jetpack and doesn't have access token`() {

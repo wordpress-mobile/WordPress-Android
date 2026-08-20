@@ -8,12 +8,14 @@ import org.wordpress.android.ui.blaze.blazecampaigns.campaignlisting.CampaignLis
 import org.wordpress.android.ui.mysite.SiteNavigationAction
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction
 import org.wordpress.android.ui.newstats.NewStatsRouting
+import org.wordpress.android.util.WpComSiteAccessChecker
 import javax.inject.Inject
 
 class ListItemActionHandler @Inject constructor(
     private val accountStore: AccountStore,
     private val blazeFeatureUtils: BlazeFeatureUtils,
-    private val newStatsRouting: NewStatsRouting
+    private val newStatsRouting: NewStatsRouting,
+    private val wpComSiteAccessChecker: WpComSiteAccessChecker
 ) {
     fun handleAction(
         action: ListItemAction,
@@ -51,8 +53,12 @@ class ListItemActionHandler @Inject constructor(
         // If the user is not logged in and the site is already connected to Jetpack, ask to login.
         !accountStore.hasAccessToken() && site.isJetpackConnected -> SiteNavigationAction.StartWPComLoginForJetpackStats
 
-        // If it's a WordPress.com or Jetpack site, show the Stats screen.
-        site.isWPCom || site.isJetpackInstalled && site.isJetpackConnected -> {
+        // If it's a WordPress.com or Jetpack site, show the Stats screen. Stats are served by
+        // WordPress.com, so a Jetpack site also has to be connected to the account signed in here —
+        // being connected to some other account reaches the right site and is still refused.
+        site.isWPCom ||
+                (site.isJetpackInstalled && site.isJetpackConnected &&
+                        wpComSiteAccessChecker.hasWpComAccess(site)) -> {
             if (newStatsRouting.isNewStatsEnabled()) {
                 SiteNavigationAction.OpenNewStats
             } else {

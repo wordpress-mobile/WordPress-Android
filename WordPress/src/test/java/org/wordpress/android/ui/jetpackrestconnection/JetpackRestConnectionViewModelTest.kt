@@ -395,6 +395,25 @@ class JetpackRestConnectionViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `canInitiateJetpackRestConnection returns true for site connected to another account`() {
+        if (BuildConfig.IS_JETPACK_APP) {
+            val site = mock<SiteModel> {
+                on { isUsingSelfHostedRestApi } doReturn true
+                on { wpApiRestUrl } doReturn "https://example.com/wp-json"
+                on { isJetpackConnected } doReturn true
+                on { isJetpackInstalled } doReturn true
+                on { jetpackVersion } doReturn VALID_JETPACK_VERSION
+            }
+
+            // the site is connected, but not to the account signed in here, so its ConnectUser step
+            // is still needed
+            assertThat(
+                JetpackRestConnectionViewModel.canInitiateJetpackRestConnection(site, hasWpComAccess = false)
+            ).isTrue
+        }
+    }
+
+    @Test
     fun `canInitiateJetpackRestConnection returns false for old Jetpack version`() {
         if (BuildConfig.IS_JETPACK_APP) {
             val site = mock<SiteModel> {
