@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2026-08-10 00:57:58+0000
+Translation-Revision-Date: 2026-08-16 20:20:07+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/4.0.3
+Generator: GlotPress/4.1.0
 Language: de
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
@@ -616,7 +616,7 @@ Language: de
     <string name="dialog_post_autosave_body_for_page">Du hast von einem anderen Gerät aus ungespeicherte Änderungen an dieser Seite vorgenommen. Bitte wähle die Version der Seite aus, die du behalten möchtest.</string>
     <string name="dialog_post_autosave_body">Du hast von einem anderen Gerät aus ungespeicherte Änderungen an diesem Beitrag vorgenommen. Bitte wähle die Version des Beitrags aus, die du behalten möchtest.</string>
     <string name="dialog_post_autosave_title">Automatische Speicherung verfügbar</string>
-    <string name="dialog_post_conflict_another_device">Ein anderes Gerät</string>
+    <string name="dialog_post_conflict_another_device">Anderes Gerät</string>
     <string name="dialog_post_conflict_current_device">Aktuelles Gerät</string>
     <string name="dialog_post_conflict_body_for_page">Die Seite wurde auf einem anderen Gerät geändert. Bitte wähle die Version der Seite aus, die du behalten möchtest.</string>
     <string name="dialog_post_conflict_body">Der Beitrag wurde auf einem anderen Gerät geändert. Bitte wähle die Version des Beitrags aus, die du behalten möchtest.</string>
@@ -876,7 +876,7 @@ Language: de
     <string name="jetpack_social_social_shares_title_single_account">Wird auf %1$s geteilt</string>
     <string name="jetpack_social_social_shares_title_not_sharing">Wird auf keinen Social-Media-Konten geteilt</string>
     <string name="post_settings_jetpack_social_share_message_description">Passe die Nachricht an, die du teilen möchtest. Wenn du hier keinen eigenen Text hinzufügst, verwenden wir den Beitragstitel als Nachricht.</string>
-    <string name="post_settings_jetpack_social_share_message_title">Nachrichten anpassen</string>
+    <string name="post_settings_jetpack_social_share_message_title">Nachricht anpassen</string>
     <string name="post_settings_jetpack_social_connect_not_now_button">Jetzt nicht</string>
     <string name="post_settings_jetpack_social_connect_social_profiles_button">Konten verbinden</string>
     <string name="gutenberg_native_insert_video_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Videoblock einfügen</string>
@@ -1064,7 +1064,7 @@ Language: de
     <string name="site_settings_blogging_reminders_notification_title">Blog-Erinnerungen</string>
     <string name="site_settings_blogging_prompts_title">Schreibanregungen anzeigen</string>
     <string name="site_settings_blogging">Bloggen</string>
-    <string name="install_play_store_to_get_jetpack">Bitte installiere Google Play Store, um die Jetpack-App zu erhalten</string>
+    <string name="install_play_store_to_get_jetpack">Bitte installiere den Google Play Store, um die Jetpack-App zu erhalten</string>
     <string name="my_site_blogging_prompt_card_view_answers">Alle Antworten anzeigen</string>
     <string name="stats_insights_total_stats_seven_days_negative">%1$s niedriger als in den vorherigen 7 Tagen</string>
     <string name="stats_insights_total_stats_seven_days_positive">%1$s höher als in den vorherigen 7 Tagen</string>
@@ -1452,7 +1452,7 @@ Language: de
     <string name="comment_edit_cancel_dialog_title">Es sind nicht gespeicherte Änderungen vorhanden</string>
     <string name="comment_edit_comment_error">Kommentar darf nicht leer sein</string>
     <string name="comment_edit_user_email_error">E-Mail-Adresse des Benutzers ist ungültig</string>
-    <string name="comment_edit_web_address_error">Web-Adresse ist ungültig</string>
+    <string name="comment_edit_web_address_error">Webadresse ist ungültig</string>
     <string name="comment_edit_user_name_error">Benutzername darf nicht leer sein</string>
     <string name="comment_edit_email_address">E-Mail-Adresse</string>
     <string name="comment_edit_web_address">Webadresse</string>
@@ -1500,7 +1500,7 @@ Language: de
     <string name="gutenberg_native_blocks_allow_you_to_focus_on_writing_your_content_knowing_that_al" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Mit Blöcken kannst du dich ganz auf das Verfassen deiner Inhalte konzentrieren, da du weißt, dass dir alle Formatierungswerkzeuge zur Verfügung stehen, die du brauchst, um deine Botschaft zu vermitteln.</string>
     <string name="gutenberg_native_arrange_your_content_into_columns_add_call_to_action_buttons_and" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Ordne deinen Inhalt in Spalten an und füge Buttons mit Handlungsaufrufen sowie überlagerte Texte auf Bildern hinzu.</string>
     <string name="gutenberg_native_add_a_new_block_at_any_time_by_tapping_on_the_icon_in_the_toolbar" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Du kannst jederzeit einen neuen Block hinzufügen, indem du auf das Icon „+“ in der Werkzeugleiste unten links tippst.</string>
-    <string name="comment_batch_moderation_error">Das Moderieren von einem oder mehrerer Kommentare ist fehlgeschlagen</string>
+    <string name="comment_batch_moderation_error">Ein oder mehrere Kommentare konnten nicht moderiert werden</string>
     <string name="create_site_notification_create_site_action">Website erstellen</string>
     <string name="create_site_notification_text">Richte deine Website mit wenigen schnellen Schritten ein</string>
     <string name="create_site_notification_title">Erstelle deine WordPress-Website</string>
@@ -1776,7 +1776,7 @@ Language: de
     <string name="restore_details_header">Website wiederherstellen</string>
     <string name="restore_details_choose_items_header">Auswahl der Elemente zur Wiederherstellung:</string>
     <string name="restore">Wiederherstellen</string>
-    <string name="backup_download_complete_failed_icon_content_description">Button für Wolke mit X</string>
+    <string name="backup_download_complete_failed_icon_content_description">Wolke-mit-X-Icon</string>
     <string name="backup_download_complete_failed_action_button_content_description">Fertig-Button</string>
     <string name="backup_download_complete_failed_action_button">Fertig</string>
     <string name="backup_download_complete_failed_title">Download fehlgeschlagen</string>
@@ -1827,13 +1827,13 @@ Language: de
     <string name="backup_download_complete_header">Du kannst dein Backup nun herunterladen</string>
     <string name="backup_download_complete_page_title">Dein Backup</string>
     <string name="backup_download_progress_footnote">Du brauchst nicht zu warten. Wir teilen dir mit, wenn dein Backup fertig ist.</string>
-    <string name="backup_download_progress_icon_content_description">Herunterladbares Backup-Icon erstellen</string>
+    <string name="backup_download_progress_icon_content_description">Icon „Herunterladbares Backup wird erstellt“</string>
     <string name="backup_download_progress_description_with_two_parameters">Wir erstellen ein herunterladbares Backup deiner Website vom %1$s %2$s.</string>
     <string name="backup_download_progress_header">Wir erstellen momentan ein herunterladbares Backup deiner Website</string>
     <string name="backup_download_progress_page_title">Backup herunterladen</string>
     <string name="backup_download_another_download_running">Ein anderer Download läuft gerade.</string>
     <string name="backup_download_generic_failure">Bei der Bearbeitung der Anfrage ist ein Problem aufgetreten. Bitte versuche es später erneut.</string>
-    <string name="backup_download_details_action_button_content_description">Herunterladbares Backup-Button erstellen</string>
+    <string name="backup_download_details_action_button_content_description">Button „Herunterladbares Backup erstellen“</string>
     <string name="backup_download_details_description_with_two_parameters">%1$s %2$s ist der ausgewählte Punkt, um ein herunterladbares Backup zu erstellen.</string>
     <string name="pages_item_date_author_subtitle">%1$s · %2$s ·</string>
     <string name="pages_item_date_author">%1$s · %2$s</string>
@@ -1868,7 +1868,7 @@ Language: de
     <string name="threat_item_header_vulnerable_theme">Gefährdetes Theme: %1$s (Version %2$s)</string>
     <string name="threat_item_header_vulnerable_plugin">Gefährdetes Plugin: %1$s (Version %2$s)</string>
     <string name="threat_item_header_file_malicious_code_pattern">%s: bösartiges Codemuster</string>
-    <string name="threat_item_header_database_threat">Datenbankbedrohung %s</string>
+    <string name="threat_item_header_database_threat">Datenbankbedrohungen %s</string>
     <string name="threat_item_header_infected_core_file">%s: infizierte Core-Datei</string>
     <string name="threat_item_header_threat_found">Bedrohung gefunden</string>
     <string name="threats_fix_all">Alle beheben</string>
@@ -1899,7 +1899,7 @@ Language: de
     <string name="backup_item_media_uploads">Medien-Uploads</string>
     <string name="backup_item_plugins">WordPress-Plugins</string>
     <string name="backup_item_themes">WordPress-Themes</string>
-    <string name="backup_download_details_icon_content_description">Herunterladbares Backup-Icon erstellen</string>
+    <string name="backup_download_details_icon_content_description">Icon „Herunterladbares Backup erstellen“</string>
     <string name="backup_download_details_action_button">Herunterladbare Datei erstellen</string>
     <string name="backup_download_details_header">Herunterladbares Backup erstellen</string>
     <string name="backup_download_details_page_title">Backup herunterladen</string>
@@ -2262,7 +2262,7 @@ Language: de
     <string name="post_signup_interstitial_title">Willkommen bei WordPress</string>
     <string name="stock_media_picker_list_content_description">Foto-Bibliothek</string>
     <string name="photo_picker_image_thumbnail_unselected">Bild nicht ausgewählt</string>
-    <string name="photo_picker_image_selected">Ausgewählt</string>
+    <string name="photo_picker_image_selected">,Ausgewählt</string>
     <string name="photo_picker_image_thumbnail_selected">Bild ausgewählt</string>
     <string name="photo_picker_image_thumbnail_content_description">Vorschaubild</string>
     <string name="my_site_bottom_sheet_add_post">Blogbeitrag</string>
@@ -2378,7 +2378,7 @@ Language: de
     <string name="post_waiting_for_connection_draft_cancel">Wir werden die letzten Änderungen an deinem Entwurf nicht speichern.</string>
     <string name="post_waiting_for_connection_scheduled_cancel">Wir werden diese Änderungen nicht planen.</string>
     <string name="post_waiting_for_connection_pending_cancel">Wir werden diese Änderungen nicht zur Überprüfung einreichen.</string>
-    <string name="post_waiting_for_connection_publish_cancel">Wir werden diese Änderungen nicht veröffentlichen.</string>
+    <string name="post_waiting_for_connection_publish_cancel"> Wir werden diese Änderungen nicht veröffentlichen.</string>
     <string name="post_waiting_for_connection_draft">Wir werden deinen Entwurf speichern, wenn dein Gerät wieder online ist</string>
     <string name="post_waiting_for_connection_private">Wir werden deinen privaten Beitrag veröffentlichen, wenn dein Gerät wieder online ist.</string>
     <string name="post_waiting_for_connection_scheduled">Wir werden deinen Beitrag planen, wenn dein Gerät wieder online ist.</string>
