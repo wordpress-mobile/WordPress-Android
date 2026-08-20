@@ -100,12 +100,7 @@ class StatsLatestPostUseCaseTest : BaseUnitTest() {
     fun `when the stats fetch fails, then the result is an error`() =
         test {
             givenLookupSucceeds()
-            whenever(
-                statsRepository.fetchPostViews(
-                    TEST_SITE_ID,
-                    TEST_POST_ID
-                )
-            ).thenReturn(PostViewsResult.Error("boom"))
+            givenStatsReturn(PostViewsResult.Error("boom"))
 
             val result = useCase(site)
 
@@ -119,12 +114,7 @@ class StatsLatestPostUseCaseTest : BaseUnitTest() {
         test {
             givenLookupSucceeds()
             val data = createPostViewsData()
-            whenever(
-                statsRepository.fetchPostViews(
-                    TEST_SITE_ID,
-                    TEST_POST_ID
-                )
-            ).thenReturn(PostViewsResult.Success(data))
+            givenStatsReturn(PostViewsResult.Success(data))
 
             val result = useCase(site)
 
@@ -139,21 +129,8 @@ class StatsLatestPostUseCaseTest : BaseUnitTest() {
     @Test
     fun `when the post has no featured image, then the url is null`() =
         test {
-            whenever(
-                latestPostDataSource
-                    .fetchLatestPublishedPost(site)
-            ).thenReturn(
-                LatestPostLookupResult.Success(
-                    postId = TEST_POST_ID,
-                    featuredImageUrl = null
-                )
-            )
-            whenever(
-                statsRepository.fetchPostViews(
-                    TEST_SITE_ID,
-                    TEST_POST_ID
-                )
-            ).thenReturn(
+            givenLookupSucceeds(imageUrl = null)
+            givenStatsReturn(
                 PostViewsResult.Success(
                     createPostViewsData()
                 )
@@ -165,16 +142,29 @@ class StatsLatestPostUseCaseTest : BaseUnitTest() {
             assertThat(result.featuredImageUrl).isNull()
         }
 
-    private suspend fun givenLookupSucceeds() {
+    private suspend fun givenLookupSucceeds(
+        imageUrl: String? = TEST_IMAGE_URL
+    ) {
         whenever(
             latestPostDataSource
                 .fetchLatestPublishedPost(site)
         ).thenReturn(
             LatestPostLookupResult.Success(
                 postId = TEST_POST_ID,
-                featuredImageUrl = TEST_IMAGE_URL
+                featuredImageUrl = imageUrl
             )
         )
+    }
+
+    private suspend fun givenStatsReturn(
+        result: PostViewsResult
+    ) {
+        whenever(
+            statsRepository.fetchPostViews(
+                TEST_SITE_ID,
+                TEST_POST_ID
+            )
+        ).thenReturn(result)
     }
 
     private fun createPostViewsData() = PostViewsData(
