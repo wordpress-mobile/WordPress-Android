@@ -37,8 +37,9 @@ class FetchAllDomainsUseCase @Inject constructor(
      *
      * `DefaultAddress` is the exact equivalent rather than an approximation:
      * the server assigns that subtype to precisely the domains `no_wpcom`
-     * removed — free `*.wordpress.com` addresses along with staging, garden,
-     * managed, and partner subdomains.
+     * removed — the free `*.wordpress.com` address, along with the staging
+     * (`*.wpcomstaging.com`) and garden subdomains it also surfaces as a site
+     * address.
      */
     suspend fun execute(): AllDomains {
         val client = getOrCreateClient() ?: run {

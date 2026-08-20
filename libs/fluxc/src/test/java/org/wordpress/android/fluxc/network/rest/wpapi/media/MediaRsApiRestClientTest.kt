@@ -392,7 +392,7 @@ class MediaRsApiRestClientTest {
     }
 
     @Test
-    fun `uploadMedia with unreadable file dispatches error action immediately`() = runTest {
+    fun `uploadMedia failing the pre-flight read check dispatches error action immediately`() = runTest {
         val testSite = createTestSite()
         val testMedia = createTestMedia().apply {
             filePath = ""  // Empty file path will fail MediaUtils.canReadFile
