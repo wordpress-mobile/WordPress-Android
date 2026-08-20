@@ -52,6 +52,9 @@ class StatsConnectJetpackActivity : BaseAppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initDagger()
+        if (savedInstanceState == null && skipInstallPitchForInstalledSite()) {
+            return
+        }
         with(StatsJetpackConnectionActivityBinding.inflate(layoutInflater)) {
             setContentView(root)
             initActionBar()
@@ -73,6 +76,23 @@ class StatsConnectJetpackActivity : BaseAppCompatActivity() {
             actionBar.setDisplayShowTitleEnabled(true)
             actionBar.setDisplayHomeAsUpEnabled(true)
         }
+    }
+
+    /**
+     * This screen pitches installing Jetpack, which is wrong for a site that already has it. Such a
+     * site is here because its Jetpack connection belongs to another WordPress.com account (or to no
+     * account yet), so what it needs is the connection flow, whose install step recognises Jetpack is
+     * present and moves on. Skip straight to it.
+     *
+     * @return true if the flow was started, in which case this screen must not be built.
+     */
+    private fun skipInstallPitchForInstalledSite(): Boolean {
+        val site = intent.getSerializableExtraCompat<SiteModel>(WordPress.SITE)
+        val skip = site != null && site.isJetpackInstalled && startJetpackRestConnectionFlow(site)
+        if (skip) {
+            finish()
+        }
+        return skip
     }
 
     /**
