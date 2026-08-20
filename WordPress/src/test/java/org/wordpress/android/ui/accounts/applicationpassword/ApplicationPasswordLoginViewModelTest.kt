@@ -557,7 +557,7 @@ class ApplicationPasswordLoginViewModelTest : BaseUnitTest() {
     @Test
     fun `given fetchSites with IOException cause, then no Sentry report is sent`() = runTest {
         // Given — a network failure during the fetch dispatch surfaces as an unchecked exception with an
-        // IOException cause; this exercises the cause-chain traversal in isRecoverableNetworkOrDiscoveryError.
+        // IOException cause; this exercises the cause-chain traversal in isRecoverableNetworkError.
         whenever(
             applicationPasswordLoginHelper
                 .storeApplicationPasswordCredentialsFrom(eq(urlLogin), any())

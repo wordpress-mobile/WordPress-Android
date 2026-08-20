@@ -14,7 +14,6 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.SiteActionBuilder
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.network.discovery.SelfHostedEndpointFinder
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged
 import org.wordpress.android.fluxc.utils.AppLogWrapper
@@ -212,14 +211,17 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
                 siteUrl = siteUrl,
                 errorMessage = e.message,
                 cause = e,
-                reportToSentry = !e.isRecoverableNetworkOrDiscoveryError(),
+                reportToSentry = !e.isRecoverableNetworkError(),
             )
         }
     }
 
-    private fun Throwable.isRecoverableNetworkOrDiscoveryError(): Boolean =
+    // The XML-RPC fetch is dispatched to the SiteStore and resolves asynchronously, so its network
+    // failures never surface here — this catch only sees a synchronous error while building/dispatching
+    // the action. We still de-noise Sentry for a network cause (e.g. offline) rather than a real bug.
+    private fun Throwable.isRecoverableNetworkError(): Boolean =
         generateSequence(this as Throwable?) { it.cause }
-            .any { it is IOException || it is SelfHostedEndpointFinder.DiscoveryException }
+            .any { it is IOException }
 
     private fun discoverAndDispatchFetchSite(
         username: String,

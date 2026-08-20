@@ -69,7 +69,7 @@ class SiteXMLRPCClient @Inject constructor(
         username: String,
         password: String
     ): SitesModel {
-        val sites = fetchSites(xmlrpcUrl, username, password)
+        val sites = fetchSites(xmlrpcUrl, username, password, retryOnRateLimit = true)
         // If fetched from Application Password, we need to be sure we are not storing the regular credentials
         sites.sites.forEach { site ->
             site.username = ""
@@ -80,7 +80,12 @@ class SiteXMLRPCClient @Inject constructor(
         }
         return sites
     }
-    suspend fun fetchSites(xmlrpcUrl: String, username: String, password: String): SitesModel {
+    suspend fun fetchSites(
+        xmlrpcUrl: String,
+        username: String,
+        password: String,
+        retryOnRateLimit: Boolean = false
+    ): SitesModel {
         val params = listOf(username, password)
         var attempt = 0
         while (true) {
@@ -99,8 +104,9 @@ class SiteXMLRPCClient @Inject constructor(
             val statusCode = networkError.volleyError?.networkResponse?.statusCode ?: -1
             // Retry a transient 429 (rate-limited) with exponential backoff before giving up. These edge
             // throttles send no Retry-After, so we use our own fixed-base backoff; a short pause is usually
-            // enough to clear the tight per-endpoint window.
-            if (statusCode != RATE_LIMITED_STATUS_CODE || attempt >= MAX_RATE_LIMIT_RETRIES) {
+            // enough to clear the tight per-endpoint window. Only opted into by the app-password fetch, which
+            // is the flow that triggers the tight per-endpoint throttle by hitting xmlrpc.php back-to-back.
+            if (!retryOnRateLimit || statusCode != RATE_LIMITED_STATUS_CODE || attempt >= MAX_RATE_LIMIT_RETRIES) {
                 return SitesModel().apply { error = networkError }
             }
             val delayMs = RATE_LIMIT_RETRY_BASE_DELAY_MS shl attempt
