@@ -10,8 +10,8 @@ import org.mockito.Mock
 import org.mockito.MockitoAnnotations
 import org.mockito.kotlin.any
 import org.mockito.kotlin.argThat
+import org.mockito.kotlin.doThrow
 import org.mockito.kotlin.eq
-import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
@@ -20,7 +20,6 @@ import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.action.SiteAction
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.network.discovery.SelfHostedEndpointFinder
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.ui.accounts.login.ApplicationPasswordLoginHelper
@@ -39,9 +38,6 @@ class ApplicationPasswordLoginViewModelTest : BaseUnitTest() {
 
     @Mock
     lateinit var applicationPasswordLoginHelper: ApplicationPasswordLoginHelper
-
-    @Mock
-    lateinit var selfHostedEndpointFinder: SelfHostedEndpointFinder
 
     @Mock
     lateinit var siteStore: SiteStore
@@ -74,7 +70,6 @@ class ApplicationPasswordLoginViewModelTest : BaseUnitTest() {
             testDispatcher(),
             dispatcher,
             applicationPasswordLoginHelper,
-            selfHostedEndpointFinder,
             siteStore,
             appLogWrapper,
             crashLogging
@@ -111,7 +106,6 @@ class ApplicationPasswordLoginViewModelTest : BaseUnitTest() {
             assertEquals(expectedResult, finishedEvent)
             verify(applicationPasswordLoginHelper, times(0))
                 .storeApplicationPasswordCredentialsFrom(eq(urlLogin), any())
-            verify(selfHostedEndpointFinder, times(0)).verifyOrDiscoverXMLRPCEndpoint(any())
             cancelAndIgnoreRemainingEvents()
         }
     }
@@ -183,8 +177,6 @@ class ApplicationPasswordLoginViewModelTest : BaseUnitTest() {
                 // Then
                 val finishedEvent = awaitItem()
                 assertEquals(expectedResult, finishedEvent)
-                verify(selfHostedEndpointFinder, times(0))
-                    .verifyOrDiscoverXMLRPCEndpoint(any())
                 cancelAndIgnoreRemainingEvents()
             }
         }
@@ -202,7 +194,7 @@ class ApplicationPasswordLoginViewModelTest : BaseUnitTest() {
             )
             whenever(applicationPasswordLoginHelper.storeApplicationPasswordCredentialsFrom(eq(urlLogin), any()))
                 .thenReturn(StoreCredentialsResult.SiteNotFound(urlLogin))
-            whenever(selfHostedEndpointFinder.verifyOrDiscoverXMLRPCEndpoint(any())).thenThrow(RuntimeException())
+            doThrow(RuntimeException()).whenever(dispatcher).dispatch(any())
 
             // When
             viewModel.onFinishedEvent.test {
@@ -211,7 +203,6 @@ class ApplicationPasswordLoginViewModelTest : BaseUnitTest() {
                 // Then
                 val finishedEvent = awaitItem()
                 assertEquals(expectedResult, finishedEvent)
-                verify(selfHostedEndpointFinder, times(1)).verifyOrDiscoverXMLRPCEndpoint(eq(urlLogin.siteUrl!!))
                 cancelAndIgnoreRemainingEvents()
             }
         }
@@ -220,15 +211,10 @@ class ApplicationPasswordLoginViewModelTest : BaseUnitTest() {
     fun `given intent rawData, when setup site and not able to store credentials nor store fetch, then emit error`() =
         runTest {
             // Given
-            val xmlRpcEndpoint = "https://example.com/xmlrpc.php"
             whenever(
                 applicationPasswordLoginHelper
                     .storeApplicationPasswordCredentialsFrom(eq(urlLogin), any())
             ).thenReturn(StoreCredentialsResult.SiteNotFound(urlLogin))
-            whenever(
-                selfHostedEndpointFinder
-                    .verifyOrDiscoverXMLRPCEndpoint(urlLogin.siteUrl!!)
-            ).thenReturn(xmlRpcEndpoint)
 
             // When
             viewModel.onFinishedEvent.test {
@@ -244,8 +230,6 @@ class ApplicationPasswordLoginViewModelTest : BaseUnitTest() {
                 assertEquals(
                     "site_not_found", finishedEvent.errorMessage
                 )
-                verify(selfHostedEndpointFinder, times(1))
-                    .verifyOrDiscoverXMLRPCEndpoint(urlLogin.siteUrl)
                 verify(siteStore, times(1)).sites
                 cancelAndIgnoreRemainingEvents()
             }
@@ -255,7 +239,6 @@ class ApplicationPasswordLoginViewModelTest : BaseUnitTest() {
     fun `given intent rawData, when setup site and not able to store credentials but store fetch, then emit ok with site selector`() =
         runTest {
             // Given
-            val xmlRpcEndpoint = "https://example.com/xmlrpc.php"
             val expectedResult = ApplicationPasswordLoginViewModel.NavigationActionData(
                 showSiteSelector = true,
                 siteUrl = urlLogin.siteUrl,
@@ -267,8 +250,6 @@ class ApplicationPasswordLoginViewModelTest : BaseUnitTest() {
             whenever(siteStore.sites).thenReturn(listOf(testSite))
             whenever(applicationPasswordLoginHelper.storeApplicationPasswordCredentialsFrom(eq(urlLogin), any()))
                 .thenReturn(StoreCredentialsResult.SiteNotFound(urlLogin))
-            whenever(selfHostedEndpointFinder.verifyOrDiscoverXMLRPCEndpoint(urlLogin.siteUrl!!))
-                .thenReturn(xmlRpcEndpoint)
 
             // When
             viewModel.onFinishedEvent.test {
@@ -284,7 +265,6 @@ class ApplicationPasswordLoginViewModelTest : BaseUnitTest() {
                 // Then
                 val finishedEvent = awaitItem()
                 assertEquals(expectedResult, finishedEvent)
-                verify(selfHostedEndpointFinder, times(1)).verifyOrDiscoverXMLRPCEndpoint(urlLogin.siteUrl)
                 cancelAndIgnoreRemainingEvents()
             }
         }
@@ -293,7 +273,6 @@ class ApplicationPasswordLoginViewModelTest : BaseUnitTest() {
     fun `given intent rawData, when setup site and not able to store credentials but store fetch and no sites, then emit ok without site selector`() =
         runTest {
             // Given
-            val xmlRpcEndpoint = "https://example.com/xmlrpc.php"
             val expectedResult = ApplicationPasswordLoginViewModel.NavigationActionData(
                 showSiteSelector = false,
                 siteUrl = urlLogin.siteUrl,
@@ -305,8 +284,6 @@ class ApplicationPasswordLoginViewModelTest : BaseUnitTest() {
             whenever(siteStore.sites).thenReturn(listOf(testSite))
             whenever(applicationPasswordLoginHelper.storeApplicationPasswordCredentialsFrom(eq(urlLogin), any()))
                 .thenReturn(StoreCredentialsResult.SiteNotFound(urlLogin))
-            whenever(selfHostedEndpointFinder.verifyOrDiscoverXMLRPCEndpoint(urlLogin.siteUrl!!))
-                .thenReturn(xmlRpcEndpoint)
 
             // When
             viewModel.onFinishedEvent.test {
@@ -322,7 +299,6 @@ class ApplicationPasswordLoginViewModelTest : BaseUnitTest() {
                 // Then
                 val finishedEvent = awaitItem()
                 assertEquals(expectedResult, finishedEvent)
-                verify(selfHostedEndpointFinder, times(1)).verifyOrDiscoverXMLRPCEndpoint(urlLogin.siteUrl)
                 cancelAndIgnoreRemainingEvents()
             }
         }
@@ -331,7 +307,6 @@ class ApplicationPasswordLoginViewModelTest : BaseUnitTest() {
     fun `given intent rawData, when setup site and not able to store credentials but store fetch with sites, then emit ok with site selector`() =
         runTest {
             // Given
-            val xmlRpcEndpoint = "https://example.com/xmlrpc.php"
             val expectedResult = ApplicationPasswordLoginViewModel.NavigationActionData(
                 showSiteSelector = true,
                 siteUrl = urlLogin.siteUrl,
@@ -345,10 +320,6 @@ class ApplicationPasswordLoginViewModelTest : BaseUnitTest() {
                 applicationPasswordLoginHelper
                     .storeApplicationPasswordCredentialsFrom(eq(urlLogin), any())
             ).thenReturn(StoreCredentialsResult.SiteNotFound(urlLogin))
-            whenever(
-                selfHostedEndpointFinder
-                    .verifyOrDiscoverXMLRPCEndpoint(urlLogin.siteUrl!!)
-            ).thenReturn(xmlRpcEndpoint)
 
             // When
             viewModel.onFinishedEvent.test {
@@ -364,8 +335,6 @@ class ApplicationPasswordLoginViewModelTest : BaseUnitTest() {
                 // Then
                 val finishedEvent = awaitItem()
                 assertEquals(expectedResult, finishedEvent)
-                verify(selfHostedEndpointFinder, times(1))
-                    .verifyOrDiscoverXMLRPCEndpoint(urlLogin.siteUrl)
                 cancelAndIgnoreRemainingEvents()
             }
         }
@@ -507,8 +476,6 @@ class ApplicationPasswordLoginViewModelTest : BaseUnitTest() {
                 // Then
                 val finishedEvent = awaitItem()
                 assertEquals(expectedResult, finishedEvent)
-                verify(selfHostedEndpointFinder, times(0))
-                    .verifyOrDiscoverXMLRPCEndpoint(any())
                 cancelAndIgnoreRemainingEvents()
             }
         }
@@ -588,15 +555,14 @@ class ApplicationPasswordLoginViewModelTest : BaseUnitTest() {
 
     @Test
     fun `given fetchSites with IOException cause, then no Sentry report is sent`() = runTest {
-        // Given — verifyOrDiscoverXMLRPCEndpoint only declares DiscoveryException,
-        // so use an unchecked exception with an IOException cause to exercise the
-        // cause-chain traversal in isRecoverableNetworkOrDiscoveryError.
+        // Given — a network failure during the fetch dispatch surfaces as an unchecked exception with an
+        // IOException cause; this exercises the cause-chain traversal in isRecoverableNetworkOrDiscoveryError.
         whenever(
             applicationPasswordLoginHelper
                 .storeApplicationPasswordCredentialsFrom(eq(urlLogin), any())
         ).thenReturn(StoreCredentialsResult.SiteNotFound(urlLogin))
-        whenever(selfHostedEndpointFinder.verifyOrDiscoverXMLRPCEndpoint(any()))
-            .thenThrow(RuntimeException("wrapped", IOException("offline")))
+        doThrow(RuntimeException("wrapped", IOException("offline")))
+            .whenever(dispatcher).dispatch(any())
 
         // When
         viewModel.onFinishedEvent.test {
@@ -627,8 +593,6 @@ class ApplicationPasswordLoginViewModelTest : BaseUnitTest() {
             applicationPasswordLoginHelper
                 .storeApplicationPasswordCredentialsFrom(eq(urlLogin), any())
         ).thenReturn(StoreCredentialsResult.SiteNotFound(urlLogin))
-        whenever(selfHostedEndpointFinder.verifyOrDiscoverXMLRPCEndpoint(any()))
-            .thenReturn("https://example.com/xmlrpc.php")
 
         // When
         viewModel.onFinishedEvent.test {
@@ -648,31 +612,28 @@ class ApplicationPasswordLoginViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given DiscoveryException, when fetchSites, then dispatch WPAPI fallback`() =
+    fun `given SiteNotFound, when fetchSites, then dispatch XML-RPC fetch with conventional xmlrpc endpoint`() =
         runTest {
-            // Given
+            // Given — no client-side discovery: the login flow goes straight to the XML-RPC fetch (getUsersBlogs)
+            // against the conventional {siteUrl}/xmlrpc.php endpoint. The SiteStore handles any WPAPI fallback.
             whenever(
                 applicationPasswordLoginHelper
                     .storeApplicationPasswordCredentialsFrom(
                         eq(urlLogin), any()
                     )
             ).thenReturn(StoreCredentialsResult.SiteNotFound(urlLogin))
-            whenever(
-                selfHostedEndpointFinder
-                    .verifyOrDiscoverXMLRPCEndpoint(any())
-            ).thenThrow(
-                mock<SelfHostedEndpointFinder.DiscoveryException>()
-            )
 
             // When
             viewModel.onFinishedEvent.test {
                 viewModel.setupSite(rawData)
 
-                // Then - no error emitted, WPAPI action dispatched
+                // Then - no error emitted, XML-RPC action dispatched with the conventional endpoint
                 expectNoEvents()
                 verify(dispatcher, times(1)).dispatch(
                     argThat {
-                        type == SiteAction.FETCH_SITE_WP_API_FROM_APPLICATION_PASSWORD
+                        type == SiteAction.FETCH_SITES_XML_RPC_FROM_APPLICATION_PASSWORD &&
+                            (payload as SiteStore.RefreshSitesXMLRPCApplicationPasswordCredentialsPayload)
+                                .url == "https://example.com/xmlrpc.php"
                     }
                 )
                 cancelAndIgnoreRemainingEvents()
@@ -693,8 +654,6 @@ class ApplicationPasswordLoginViewModelTest : BaseUnitTest() {
                 applicationPasswordLoginHelper
                     .storeApplicationPasswordCredentialsFrom(eq(parsedLogin), any())
             ).thenReturn(StoreCredentialsResult.SiteNotFound(recoveredLogin))
-            whenever(selfHostedEndpointFinder.verifyOrDiscoverXMLRPCEndpoint(any()))
-                .thenReturn("https://example.com/xmlrpc.php")
 
             // When
             viewModel.onFinishedEvent.test {
@@ -735,20 +694,14 @@ class ApplicationPasswordLoginViewModelTest : BaseUnitTest() {
                 assertTrue(result.isError)
                 assertEquals("empty_fetch_params", result.errorMessage)
                 verify(crashLogging, never()).sendReport(any(), any(), any())
-                verify(selfHostedEndpointFinder, never()).verifyOrDiscoverXMLRPCEndpoint(any())
                 cancelAndIgnoreRemainingEvents()
             }
         }
 
     private suspend fun setupFetchSitesFlow() {
-        val xmlRpcEndpoint = "https://example.com/xmlrpc.php"
         whenever(
             applicationPasswordLoginHelper
                 .storeApplicationPasswordCredentialsFrom(eq(urlLogin), any())
         ).thenReturn(StoreCredentialsResult.SiteNotFound(urlLogin))
-        whenever(
-            selfHostedEndpointFinder
-                .verifyOrDiscoverXMLRPCEndpoint(urlLogin.siteUrl!!)
-        ).thenReturn(xmlRpcEndpoint)
     }
 }

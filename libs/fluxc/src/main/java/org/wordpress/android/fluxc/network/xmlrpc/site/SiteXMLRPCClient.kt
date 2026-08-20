@@ -1,6 +1,7 @@
 package org.wordpress.android.fluxc.network.xmlrpc.site
 
 import com.android.volley.RequestQueue
+import kotlinx.coroutines.delay
 import org.apache.commons.text.StringEscapeUtils
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.SiteActionBuilder
@@ -27,6 +28,8 @@ import org.wordpress.android.fluxc.store.SiteStore.PostFormatsErrorType.GENERIC_
 import org.wordpress.android.fluxc.utils.SiteUtils
 import org.wordpress.android.fluxc.utils.extensions.getPasswordProcessed
 import org.wordpress.android.fluxc.utils.extensions.getUserNameProcessed
+import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.MapUtils
 import java.util.ArrayList
 import org.wordpress.android.fluxc.module.OkHttpClientQualifiers
@@ -79,28 +82,38 @@ class SiteXMLRPCClient @Inject constructor(
     }
     suspend fun fetchSites(xmlrpcUrl: String, username: String, password: String): SitesModel {
         val params = listOf(username, password)
-        val response = xmlrpcRequestBuilder.syncGetRequest(
-                this,
-                xmlrpcUrl,
-                GET_USERS_SITES,
-                params,
-                Array<Any>::class.java
-        )
-        return when (response) {
-            is Success -> {
-                val sites = sitesResponseToSitesModel(response.data, username, password)
-                if (sites != null) {
-                    sites
-                } else {
-                    val result = SitesModel()
-                    result.error = BaseNetworkError(INVALID_RESPONSE)
-                    result
+        var attempt = 0
+        while (true) {
+            val response = xmlrpcRequestBuilder.syncGetRequest(
+                    this,
+                    xmlrpcUrl,
+                    GET_USERS_SITES,
+                    params,
+                    Array<Any>::class.java
+            )
+            when (response) {
+                is Success -> {
+                    val sites = sitesResponseToSitesModel(response.data, username, password)
+                    return sites ?: SitesModel().apply { error = BaseNetworkError(INVALID_RESPONSE) }
                 }
-            }
-            is Error -> {
-                val sites = SitesModel()
-                sites.error = response.error
-                sites
+                is Error -> {
+                    val statusCode = response.error.volleyError?.networkResponse?.statusCode ?: -1
+                    // Retry a transient 429 (rate-limited) with exponential backoff before giving up. These edge
+                    // throttles send no Retry-After, so we use our own fixed-base backoff; a short pause is
+                    // usually enough to clear the tight per-endpoint window.
+                    if (statusCode == 429 && attempt < MAX_RATE_LIMIT_RETRIES) {
+                        val delayMs = RATE_LIMIT_RETRY_BASE_DELAY_MS shl attempt
+                        attempt++
+                        AppLog.w(
+                            T.API,
+                            "A_P: wp.getUsersBlogs rate-limited (429) by $xmlrpcUrl, backing off" +
+                                " ${delayMs}ms then retry (attempt $attempt/$MAX_RATE_LIMIT_RETRIES)"
+                        )
+                        delay(delayMs)
+                    } else {
+                        return SitesModel().apply { error = response.error }
+                    }
+                }
             }
         }
     }
@@ -307,5 +320,11 @@ class SiteXMLRPCClient @Inject constructor(
 
     private fun responseToPostFormats(response: Map<*, *>): List<PostFormatModel>? {
         return SiteUtils.getValidPostFormatsOrNull(response)
+    }
+
+    companion object {
+        // Backoff for transient 429s on xmlrpc.php: base delay shifted left per attempt (1s, 2s, 4s).
+        private const val MAX_RATE_LIMIT_RETRIES = 3
+        private const val RATE_LIMIT_RETRY_BASE_DELAY_MS = 1000L
     }
 }

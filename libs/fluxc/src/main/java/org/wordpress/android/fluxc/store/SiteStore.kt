@@ -1417,23 +1417,27 @@ open class SiteStore @Inject constructor(
                         payload.password
                     )
                 if (sites.isError) {
+                    val statusCode = sites.error?.volleyError?.networkResponse?.statusCode ?: -1
+                    // getUsersBlogs both probes and fetches, against the conventional xmlrpc.php endpoint. Only a
+                    // transient 429 (edge rate-limit, no Retry-After — already retried with backoff upstream)
+                    // falls through here as "XML-RPC is there but throttled": optimistically keep that endpoint
+                    // so XML-RPC features work and the "XML-RPC Disabled" card isn't shown, and let the My Site
+                    // card's rediscovery confirm it later. Any other error (e.g. XML-RPC genuinely disabled)
+                    // must NOT persist an xmlRpcUrl.
+                    val optimisticXmlRpcUrl = if (statusCode == 429) payload.url else null
                     AppLog.w(
                         T.API,
-                        "XML-RPC fetch failed" +
-                            " (${sites.error?.message})," +
-                            " falling back to WPAPI"
+                        "XML-RPC fetch failed (status=$statusCode, ${sites.error?.message})," +
+                            " falling back to WPAPI" +
+                            (optimisticXmlRpcUrl?.let { " (optimistically keeping xmlRpcUrl=$it)" } ?: "")
                     )
                     // Use apiRootUrl as the base URL for WPAPI discovery since payload.url is the xmlrpc.php
-                    // endpoint. This action is only dispatched after verifyOrDiscoverXMLRPCEndpoint already
-                    // confirmed payload.url is a working xmlrpc.php endpoint, so this fetch failure is transient
-                    // (e.g. a 429 rate-limit) or auth-only — XML-RPC itself is enabled. Pass the verified
-                    // endpoint through so it's recorded on the WPAPI-stored site and the "XML-RPC Disabled" card
-                    // isn't shown for a site that actually supports XML-RPC.
+                    // endpoint.
                     fetchSiteWPAPIFromApplicationPassword(
                         payload.copy(
                             url = payload.apiRootUrl
                         ),
-                        verifiedXmlRpcUrl = payload.url,
+                        verifiedXmlRpcUrl = optimisticXmlRpcUrl,
                     )
                 } else {
                     updateSites(sites)

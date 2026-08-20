@@ -1,5 +1,7 @@
 package org.wordpress.android.fluxc.store
 
+import com.android.volley.NetworkResponse
+import com.android.volley.VolleyError
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf
 import org.assertj.core.api.Assertions.assertThat
@@ -527,19 +529,65 @@ class SiteStoreTest {
         }
 
     @Test
-    fun `fetchSitesXmlRpc AP fallback persists verified xmlrpc endpoint on WPAPI site`() =
+    fun `fetchSitesXmlRpc AP fallback optimistically persists xmlrpc endpoint on a 429`() =
         test {
             org.mockito.Mockito.mockStatic(
                 org.wordpress.android.util.AppLog::class.java
             ).use {
-                // Given: XML-RPC discovery already verified this endpoint (that's the only reason this action
-                // is dispatched), but the authenticated XML-RPC fetch fails transiently (e.g. a 429 rate-limit).
+                // Given: getUsersBlogs against the conventional xmlrpc.php endpoint fails with a transient 429
+                // (rate-limited at the edge). XML-RPC is there, just throttled, so the endpoint is kept.
                 val xmlRpcEndpoint = "https://example.com/xmlrpc.php"
                 val payload =
                     SiteStore.RefreshSitesXMLRPCApplicationPasswordCredentialsPayload(
                         username = "appUser",
                         password = "appPass",
                         url = xmlRpcEndpoint,
+                        apiRootUrl = "https://example.com/wp-json/",
+                    )
+                val erroredSites = SitesModel().apply { error = rateLimitedError() }
+                whenever(
+                    siteXMLRPCClient.fetchSitesFromApplicationPassword(
+                        payload.url,
+                        payload.apiRootUrl,
+                        payload.username,
+                        payload.password
+                    )
+                ).thenReturn(erroredSites)
+                val fetchedSite = SiteModel().apply {
+                    name = "Test Site"
+                    origin = SiteModel.ORIGIN_WPAPI
+                    url = "https://example.com"
+                }
+                whenever(siteWPAPIClient.fetchWPAPISite(any<SiteStore.FetchWPAPISitePayload>()))
+                    .thenReturn(fetchedSite)
+                whenever(siteSqlUtils.insertOrUpdateSite(fetchedSite)).thenReturn(1)
+
+                // When
+                val result = siteStore.fetchSitesXmlRpcFromApplicationPassword(payload)
+
+                // Then: the WPAPI fallback stored the site, and the xmlrpc endpoint is recorded so the
+                // "XML-RPC Disabled" card isn't shown for a site that actually supports XML-RPC.
+                assertThat(result.isError).isFalse()
+                verify(siteSqlUtils).updateXmlRpcUrlForWPAPISite(
+                    "https://example.com",
+                    xmlRpcEndpoint
+                )
+            }
+        }
+
+    @Test
+    fun `fetchSitesXmlRpc AP fallback does NOT persist xmlrpc endpoint on a non-429 error`() =
+        test {
+            org.mockito.Mockito.mockStatic(
+                org.wordpress.android.util.AppLog::class.java
+            ).use {
+                // Given: getUsersBlogs reaches the server and returns a definitive error (not a 429) — e.g.
+                // XML-RPC is genuinely disabled. We must NOT persist an xmlRpcUrl in that case.
+                val payload =
+                    SiteStore.RefreshSitesXMLRPCApplicationPasswordCredentialsPayload(
+                        username = "appUser",
+                        password = "appPass",
+                        url = "https://example.com/xmlrpc.php",
                         apiRootUrl = "https://example.com/wp-json/",
                     )
                 val erroredSites = SitesModel().apply { error = BaseNetworkError(PARSE_ERROR) }
@@ -563,15 +611,16 @@ class SiteStoreTest {
                 // When
                 val result = siteStore.fetchSitesXmlRpcFromApplicationPassword(payload)
 
-                // Then: the WPAPI fallback stored the site, and the verified xmlrpc endpoint is recorded so the
-                // "XML-RPC Disabled" card isn't shown for a site that actually supports XML-RPC.
+                // Then: the site is still stored via WPAPI, but no xmlrpc endpoint is recorded.
                 assertThat(result.isError).isFalse()
-                verify(siteSqlUtils).updateXmlRpcUrlForWPAPISite(
-                    "https://example.com",
-                    xmlRpcEndpoint
-                )
+                verify(siteSqlUtils, never()).updateXmlRpcUrlForWPAPISite(any(), any())
             }
         }
+
+    private fun rateLimitedError(): BaseNetworkError {
+        val networkResponse = NetworkResponse(429, byteArrayOf(), false, System.currentTimeMillis(), listOf())
+        return BaseNetworkError(VolleyError(networkResponse))
+    }
 
     @Test
     fun `updateApplicationPassword persists credentials and wpApiRestUrl via targeted writers`() {

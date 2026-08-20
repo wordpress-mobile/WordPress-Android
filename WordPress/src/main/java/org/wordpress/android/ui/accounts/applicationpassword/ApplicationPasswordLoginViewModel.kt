@@ -36,7 +36,6 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
     // Dispatcher is the way to dispatch actions to Flux. It will call siteStore.onAction()
     private val dispatcher: Dispatcher,
     private val applicationPasswordLoginHelper: ApplicationPasswordLoginHelper,
-    private val selfHostedEndpointFinder: SelfHostedEndpointFinder,
     private val siteStore: SiteStore,
     private val appLogWrapper: AppLogWrapper,
     private val crashLogging: CrashLogging,
@@ -222,46 +221,41 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
         generateSequence(this as Throwable?) { it.cause }
             .any { it is IOException || it is SelfHostedEndpointFinder.DiscoveryException }
 
-    private suspend fun discoverAndDispatchFetchSite(
+    private fun discoverAndDispatchFetchSite(
         username: String,
         password: String,
         siteUrl: String,
         apiRootUrl: String
     ) {
-        val xmlRpcEndpoint = try {
-            selfHostedEndpointFinder
-                .verifyOrDiscoverXMLRPCEndpoint(siteUrl)
-        } catch (e: SelfHostedEndpointFinder.DiscoveryException) {
-            appLogWrapper.w(
-                AppLog.T.API,
-                "A_P: XML-RPC discovery failed" +
-                    " (${e.message}). Falling back to" +
-                    " WPAPI fetch using" +
-                    " apiRootUrl=$apiRootUrl"
-            )
-            null
-        }
+        // Merge XML-RPC discovery and fetch into a single round-trip: skip the separate system.listMethods
+        // probe and call wp.getUsersBlogs directly against the conventional xmlrpc.php endpoint. A successful
+        // getUsersBlogs both proves XML-RPC is available and returns the site info, halving the xmlrpc.php
+        // requests — which matters on hosts that rate-limit that endpoint (429). If it fails, the SiteStore
+        // handler falls back to WPAPI; the My Site card's rediscovery later heals a non-standard or
+        // temporarily-throttled endpoint.
         val payload =
             SiteStore.RefreshSitesXMLRPCApplicationPasswordCredentialsPayload(
                 username = username,
                 password = password,
-                url = xmlRpcEndpoint ?: siteUrl,
+                url = buildXmlRpcEndpoint(siteUrl),
                 apiRootUrl = apiRootUrl,
             )
-        if (xmlRpcEndpoint != null) {
-            dispatcher.dispatch(
-                SiteActionBuilder
-                    .newFetchSitesXmlRpcFromApplicationPasswordAction(
-                        payload
-                    )
-            )
+        dispatcher.dispatch(
+            SiteActionBuilder
+                .newFetchSitesXmlRpcFromApplicationPasswordAction(
+                    payload
+                )
+        )
+    }
+
+    /** Builds the conventional xmlrpc.php endpoint for a site URL, tolerating a trailing slash or an
+     *  already-appended path. */
+    private fun buildXmlRpcEndpoint(siteUrl: String): String {
+        val trimmed = siteUrl.trimEnd('/')
+        return if (trimmed.endsWith("/xmlrpc.php", ignoreCase = true)) {
+            trimmed
         } else {
-            dispatcher.dispatch(
-                SiteActionBuilder
-                    .newFetchSiteWpApiFromApplicationPasswordAction(
-                        payload
-                    )
-            )
+            "$trimmed/xmlrpc.php"
         }
     }
 
