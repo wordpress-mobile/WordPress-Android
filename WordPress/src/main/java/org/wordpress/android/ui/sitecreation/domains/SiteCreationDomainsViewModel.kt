@@ -479,7 +479,6 @@ private fun createSearchInputUiState(
                         R.color.purple_50,
                         UiStringRes(R.string.site_creation_domain_tag_best_alternative),
                     )
-
                 }
 
                 sealed class Cost(val title: UiString) {
@@ -491,7 +490,6 @@ private fun createSearchInputUiState(
                         val strikeoutTitle = UiStringText(titleCost)
                         val subtitle = UiStringRes(R.string.site_creation_domain_free_with_annual_plan)
                     }
-
                 }
             }
         }
