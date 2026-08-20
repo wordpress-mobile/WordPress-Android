@@ -61,6 +61,11 @@ object EditorUnitFunctions {
 
     /**
      * Checks if an intent contains media (image or video) content.
+     *
+     * Falls back to the intent's own type when the URI yields nothing, because
+     * getFileExtensionFromUrl() returns an empty string for names containing a space
+     * ("Screenshot 2026-08-19.jpg") and for names left without an extension by the provider that
+     * shared them. Without the fallback those items are dropped with no feedback at all.
      */
     fun isMediaTypeIntent(intent: Intent, uri: Uri?): Boolean {
         var type: String? = null
@@ -69,7 +74,8 @@ object EditorUnitFunctions {
             if (extension != null) {
                 type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension)
             }
-        } else {
+        }
+        if (type == null) {
             type = intent.type
         }
         return type != null && (type.startsWith("image") || type.startsWith("video"))
