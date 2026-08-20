@@ -21,6 +21,7 @@ import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.action.SiteAction
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.SiteStore
+import org.wordpress.android.fluxc.store.SiteStore.RefreshSitesXMLRPCApplicationPasswordCredentialsPayload
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.ui.accounts.login.ApplicationPasswordLoginHelper
 import org.wordpress.android.ui.accounts.login.ApplicationPasswordLoginHelper.StoreCredentialsResult
@@ -632,7 +633,7 @@ class ApplicationPasswordLoginViewModelTest : BaseUnitTest() {
                 verify(dispatcher, times(1)).dispatch(
                     argThat {
                         type == SiteAction.FETCH_SITES_XML_RPC_FROM_APPLICATION_PASSWORD &&
-                            (payload as SiteStore.RefreshSitesXMLRPCApplicationPasswordCredentialsPayload)
+                            (payload as RefreshSitesXMLRPCApplicationPasswordCredentialsPayload)
                                 .url == "https://example.com/xmlrpc.php"
                     }
                 )

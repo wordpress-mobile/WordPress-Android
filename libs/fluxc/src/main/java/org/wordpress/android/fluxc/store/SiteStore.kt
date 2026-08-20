@@ -1424,7 +1424,7 @@ open class SiteStore @Inject constructor(
                     // so XML-RPC features work and the "XML-RPC Disabled" card isn't shown, and let the My Site
                     // card's rediscovery confirm it later. Any other error (e.g. XML-RPC genuinely disabled)
                     // must NOT persist an xmlRpcUrl.
-                    val optimisticXmlRpcUrl = if (statusCode == 429) payload.url else null
+                    val optimisticXmlRpcUrl = if (statusCode == RATE_LIMITED_STATUS_CODE) payload.url else null
                     AppLog.w(
                         T.API,
                         "XML-RPC fetch failed (status=$statusCode, ${sites.error?.message})," +
@@ -2382,5 +2382,9 @@ open class SiteStore @Inject constructor(
                 }
             }
         }
+    }
+
+    companion object {
+        private const val RATE_LIMITED_STATUS_CODE = 429
     }
 }

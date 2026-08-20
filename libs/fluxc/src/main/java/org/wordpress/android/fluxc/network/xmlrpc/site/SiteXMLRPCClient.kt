@@ -91,30 +91,26 @@ class SiteXMLRPCClient @Inject constructor(
                     params,
                     Array<Any>::class.java
             )
-            when (response) {
-                is Success -> {
-                    val sites = sitesResponseToSitesModel(response.data, username, password)
-                    return sites ?: SitesModel().apply { error = BaseNetworkError(INVALID_RESPONSE) }
-                }
-                is Error -> {
-                    val statusCode = response.error.volleyError?.networkResponse?.statusCode ?: -1
-                    // Retry a transient 429 (rate-limited) with exponential backoff before giving up. These edge
-                    // throttles send no Retry-After, so we use our own fixed-base backoff; a short pause is
-                    // usually enough to clear the tight per-endpoint window.
-                    if (statusCode == 429 && attempt < MAX_RATE_LIMIT_RETRIES) {
-                        val delayMs = RATE_LIMIT_RETRY_BASE_DELAY_MS shl attempt
-                        attempt++
-                        AppLog.w(
-                            T.API,
-                            "A_P: wp.getUsersBlogs rate-limited (429) by $xmlrpcUrl, backing off" +
-                                " ${delayMs}ms then retry (attempt $attempt/$MAX_RATE_LIMIT_RETRIES)"
-                        )
-                        delay(delayMs)
-                    } else {
-                        return SitesModel().apply { error = response.error }
-                    }
-                }
+            if (response is Success) {
+                val sites = sitesResponseToSitesModel(response.data, username, password)
+                return sites ?: SitesModel().apply { error = BaseNetworkError(INVALID_RESPONSE) }
             }
+            val networkError = (response as Error).error
+            val statusCode = networkError.volleyError?.networkResponse?.statusCode ?: -1
+            // Retry a transient 429 (rate-limited) with exponential backoff before giving up. These edge
+            // throttles send no Retry-After, so we use our own fixed-base backoff; a short pause is usually
+            // enough to clear the tight per-endpoint window.
+            if (statusCode != RATE_LIMITED_STATUS_CODE || attempt >= MAX_RATE_LIMIT_RETRIES) {
+                return SitesModel().apply { error = networkError }
+            }
+            val delayMs = RATE_LIMIT_RETRY_BASE_DELAY_MS shl attempt
+            attempt++
+            AppLog.w(
+                T.API,
+                "A_P: wp.getUsersBlogs rate-limited (429) by $xmlrpcUrl, backing off" +
+                    " ${delayMs}ms then retry (attempt $attempt/$MAX_RATE_LIMIT_RETRIES)"
+            )
+            delay(delayMs)
         }
     }
 
@@ -323,6 +319,7 @@ class SiteXMLRPCClient @Inject constructor(
     }
 
     companion object {
+        private const val RATE_LIMITED_STATUS_CODE = 429
         // Backoff for transient 429s on xmlrpc.php: base delay shifted left per attempt (1s, 2s, 4s).
         private const val MAX_RATE_LIMIT_RETRIES = 3
         private const val RATE_LIMIT_RETRY_BASE_DELAY_MS = 1000L
