@@ -40,6 +40,18 @@ class PostStatsDetailViewModel @Inject constructor(
         "InstanceOfCheckForException"
     )
     fun loadData(postId: Long) {
+        if (postId == NO_POST_ID) {
+            AppLog.w(
+                AppLog.T.STATS,
+                "Post stats opened without a post id"
+            )
+            _uiState.value = PostStatsDetailUiState.Error(
+                resourceProvider.getString(
+                    R.string.stats_error_unknown
+                )
+            )
+            return
+        }
         val site = selectedSiteRepository.getSelectedSite()
         val token = accountStore.accessToken
         if (site == null || token.isNullOrEmpty()) {
@@ -161,3 +173,8 @@ sealed class PostStatsDetailUiState {
 
 // Two weeks of bars, matching the old stats post detail chart.
 private const val CHART_DAYS = 14
+
+/**
+ * Stands in for a missing post id. Post 0 is the site's home page, so it can't double as "absent".
+ */
+internal const val NO_POST_ID = -1L

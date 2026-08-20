@@ -218,6 +218,7 @@ class NewStatsActivity : BaseAppCompatActivity() {
                         activityNavigator.openInCustomTab(this, url)
                     },
                     onPostItemClick = ::openPostDetailStats,
+                    onLatestPostClick = ::openLatestPostStats,
                     onCreatePostClick = ::createNewPost
                 )
             }
@@ -250,6 +251,13 @@ class NewStatsActivity : BaseAppCompatActivity() {
     private fun openPostDetailStats(item: MostViewedItem) {
         analyticsTracker.track(Stat.STATS_POSTS_AND_PAGES_ITEM_TAPPED)
         PostStatsDetailActivity.start(this, item.id, item.title)
+    }
+
+    private fun openLatestPostStats(postId: Long, title: String) {
+        analyticsTracker.track(
+            Stat.STATS_LATEST_POST_SUMMARY_VIEW_POST_DETAILS_TAPPED
+        )
+        PostStatsDetailActivity.start(this, postId, title)
     }
 
     private fun createNewPost() {
@@ -385,6 +393,7 @@ private fun NewStatsScreen(
     onIntroDismissed: () -> Unit = {},
     onStatsUrlClick: (String) -> Unit = {},
     onPostItemClick: (MostViewedItem) -> Unit = {},
+    onLatestPostClick: (Long, String) -> Unit = { _, _ -> },
     onCreatePostClick: () -> Unit = {}
 ) {
     val viewsStatsViewModel: ViewsStatsViewModel = viewModel()
@@ -568,6 +577,7 @@ private fun NewStatsScreen(
                     viewsStatsViewModel = viewsStatsViewModel,
                     onStatsUrlClick = onStatsUrlClick,
                     onPostItemClick = onPostItemClick,
+                    onLatestPostClick = onLatestPostClick,
                     onCreatePostClick = onCreatePostClick
                 )
             }
@@ -581,6 +591,7 @@ private fun StatsTabContent(
     viewsStatsViewModel: ViewsStatsViewModel,
     onStatsUrlClick: (String) -> Unit = {},
     onPostItemClick: (MostViewedItem) -> Unit = {},
+    onLatestPostClick: (Long, String) -> Unit = { _, _ -> },
     onCreatePostClick: () -> Unit = {}
 ) {
     when (tab) {
@@ -591,6 +602,7 @@ private fun StatsTabContent(
         )
         StatsTab.INSIGHTS -> InsightsTabContent(
             onStatsUrlClick = onStatsUrlClick,
+            onLatestPostClick = onLatestPostClick,
             onCreatePostClick = onCreatePostClick
         )
         StatsTab.SUBSCRIBERS -> SubscribersTabContent()
@@ -1247,6 +1259,7 @@ private fun InsightsTabContent(
     latestPostViewModel: LatestPostViewModel = viewModel(),
     insightsViewModel: InsightsViewModel = viewModel(),
     onStatsUrlClick: (String) -> Unit = {},
+    onLatestPostClick: (Long, String) -> Unit = { _, _ -> },
     onCreatePostClick: () -> Unit = {}
 ) {
     val context = LocalContext.current
@@ -1407,13 +1420,7 @@ private fun InsightsTabContent(
                             uiState = latestPostUiState,
                             onRemoveCard = { insightsViewModel.removeCard(cardType) },
                             onRetry = { latestPostViewModel.refresh() },
-                            onPostClick = { postId, title ->
-                                PostStatsDetailActivity.start(
-                                    context,
-                                    postId,
-                                    title
-                                )
-                            },
+                            onPostClick = onLatestPostClick,
                             onCreatePostClick = onCreatePostClick,
                             cardPosition = pos,
                             onMoveUp = { insightsViewModel.moveCardUp(cardType) },

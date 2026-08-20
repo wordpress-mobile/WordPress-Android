@@ -6,6 +6,9 @@ import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
 import org.mockito.Mockito.lenient
+import org.mockito.kotlin.any
+import org.mockito.kotlin.never
+import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
@@ -56,6 +59,11 @@ class PostStatsDetailViewModelTest : BaseUnitTest() {
                 R.string.stats_error_no_site
             )
         ).thenReturn(ERROR)
+        lenient().`when`(
+            resourceProvider.getString(
+                R.string.stats_error_unknown
+            )
+        ).thenReturn(ERROR)
         viewModel = PostStatsDetailViewModel(
             selectedSiteRepository,
             statsRepository,
@@ -63,6 +71,19 @@ class PostStatsDetailViewModelTest : BaseUnitTest() {
             resourceProvider
         )
     }
+
+    @Test
+    fun `when there is no post id, then nothing is fetched`() =
+        test {
+            viewModel.loadData(NO_POST_ID)
+
+            assertThat(viewModel.uiState.value)
+                .isInstanceOf(
+                    PostStatsDetailUiState.Error::class.java
+                )
+            verify(statsRepository, never())
+                .fetchPostViews(any(), any())
+        }
 
     @Test
     fun `when no site is selected, then the state is an error`() =

@@ -74,7 +74,6 @@ class PostStatsDetailActivity : BaseAppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // 0 is a real id (the home page), so it can't stand in for a missing extra.
         val postId = intent.getLongExtra(ARG_POST_ID, NO_POST_ID)
         val postTitle = intent
             .getStringExtra(ARG_POST_TITLE).orEmpty()
@@ -104,7 +103,6 @@ class PostStatsDetailActivity : BaseAppCompatActivity() {
 
     companion object {
         private const val ARG_POST_ID = "post_id"
-        private const val NO_POST_ID = -1L
         private const val ARG_POST_TITLE = "post_title"
 
         /**
