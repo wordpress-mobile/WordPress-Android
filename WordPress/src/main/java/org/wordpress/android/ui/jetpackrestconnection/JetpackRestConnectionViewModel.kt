@@ -577,14 +577,21 @@ class JetpackRestConnectionViewModel @Inject constructor(
          * - Self-hosted site using REST API
          * - Application password has been set
          * - Site isn't already connected to Jetpack
-         * - Jetpack is not installed or the installed jetpack version is 14.2 or above
+         * - Jetpack is not installed, its version is unknown, or the installed version is 14.2 or above
+         *
+         * The version is unknown for sites added with an application password: Jetpack is detected there
+         * from the site's REST namespaces, which don't carry a version. Blocking on that would send them
+         * to the web-view connection flow, which signs in through wp-login.php and so can't work with an
+         * application password — this flow is the only one they have.
          */
         fun canInitiateJetpackRestConnection(site: SiteModel): Boolean {
             return BuildConfig.IS_JETPACK_APP
                     && site.isUsingSelfHostedRestApi
                     && !site.wpApiRestUrl.isNullOrEmpty()
                     && !site.isJetpackConnected
-                    && (!site.isJetpackInstalled || checkMinimalVersion(site.jetpackVersion, JETPACK_LIMIT_VERSION))
+                    && (!site.isJetpackInstalled
+                    || site.jetpackVersion.isNullOrEmpty()
+                    || checkMinimalVersion(site.jetpackVersion, JETPACK_LIMIT_VERSION))
         }
     }
 }

@@ -135,6 +135,12 @@ class MenuActivity : BaseAppCompatActivity() {
 
             is SiteNavigationAction.OpenNewStats -> NewStatsActivity.start(this, StatsLaunchedFrom.ROW)
 
+            is SiteNavigationAction.ConnectJetpackForStats ->
+                ActivityLauncher.viewConnectJetpackForStats(this, action.site)
+
+            is SiteNavigationAction.StartWPComLoginForJetpackStats ->
+                ActivityLauncher.loginForJetpackStats(this)
+
             is SiteNavigationAction.OpenDomains -> ActivityLauncher.viewDomainsDashboardActivity(
                 this,
                 action.site

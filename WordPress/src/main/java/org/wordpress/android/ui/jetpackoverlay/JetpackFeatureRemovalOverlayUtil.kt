@@ -1,8 +1,10 @@
 package org.wordpress.android.ui.jetpackoverlay
 
 import org.wordpress.android.analytics.AnalyticsTracker
+import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil.JetpackFeatureCollectionOverlaySource.APP_OPEN
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.util.extensions.canUseJetpackApp
 import javax.inject.Inject
 
 private const val CURRENT_PHASE_KEY = "phase"
@@ -18,8 +20,14 @@ class JetpackFeatureRemovalOverlayUtil @Inject constructor(
         return jetpackFeatureRemovalHelper.shouldRemoveJetpackFeatures()
     }
 
-    fun shouldShowFeatureCollectionJetpackOverlayForFirstTime(): Boolean {
+    /**
+     * The app-open overlay tells the user their site has the Jetpack plugin and that its features moved
+     * to the Jetpack app, so it's only shown for a site that can actually use that app. Sites without
+     * Jetpack don't mark the overlay as seen, so it still appears the first time one that can is selected.
+     */
+    fun shouldShowFeatureCollectionJetpackOverlayForFirstTime(site: SiteModel?): Boolean {
         return jetpackFeatureRemovalHelper.shouldRemoveJetpackFeatures() &&
+                site.canUseJetpackApp() &&
                 !jetpackFeatureOverlayShownTracker.getFeatureCollectionOverlayShown()
     }
 

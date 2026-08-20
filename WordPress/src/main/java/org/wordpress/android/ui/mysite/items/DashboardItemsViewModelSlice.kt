@@ -78,7 +78,7 @@ class DashboardItemsViewModelSlice @Inject constructor(
         job?.cancel()
         job = scope.launch(bgDispatcher) {
             _isRefreshing.postValue(true)
-            jetpackFeatureCardViewModelSlice.buildJetpackFeatureCard()
+            jetpackFeatureCardViewModelSlice.buildJetpackFeatureCard(site)
             siteItemsViewModelSlice.buildSiteItems(site)
             sotw2023NudgeCardViewModelSlice.buildCard()
             _isRefreshing.postValue(false)

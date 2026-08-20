@@ -94,7 +94,7 @@ class DashboardItemsViewModelSliceTest: BaseUnitTest() {
         dashboardItemsViewModelSlice.buildItems(mockSite)
 
         verify(siteItemsViewModelSlice, atLeastOnce()).buildSiteItems(any())
-        verify(jetpackFeatureCardViewModelSlice, atMost(1)).buildJetpackFeatureCard()
+        verify(jetpackFeatureCardViewModelSlice, atMost(1)).buildJetpackFeatureCard(mockSite)
         verify(siteItemsViewModelSlice, atMost(1)).buildSiteItems(mockSite)
         verify(sotw2023NudgeCardViewModelSlice, atMost(1)).buildCard()
     }

@@ -8,6 +8,7 @@ import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.any
 import org.mockito.kotlin.whenever
+import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.DateTimeUtils
@@ -50,7 +51,7 @@ class JetpackFeatureCardHelperTest {
     fun `when jetpack app, then jetpack feature card should not show`() {
         setTest(isJetpackApp = true)
 
-        val result = helper.shouldShowJetpackFeatureCard()
+        val result = helper.shouldShowJetpackFeatureCard(jetpackSite())
 
         assertThat(result).isFalse
     }
@@ -59,7 +60,7 @@ class JetpackFeatureCardHelperTest {
     fun `when hide card has been set, then jetpack feature card should not shown`() {
         setTest(isCardHiddenByUser = true)
 
-        val result = helper.shouldShowJetpackFeatureCard()
+        val result = helper.shouldShowJetpackFeatureCard(jetpackSite())
 
         assertThat(result).isFalse
     }
@@ -68,7 +69,7 @@ class JetpackFeatureCardHelperTest {
     fun `given remind later is set, when shown frequency is not exceeded, then jetpack feature card is not shown`() {
         setTest(lastShownTimestamp = getDateXDaysAgoInMilliseconds(1))
 
-        val result = helper.shouldShowJetpackFeatureCard()
+        val result = helper.shouldShowJetpackFeatureCard(jetpackSite())
 
         assertThat(result).isFalse
     }
@@ -77,9 +78,27 @@ class JetpackFeatureCardHelperTest {
     fun `given remind later is set, when shown frequency is exceeded, then jetpack feature card is shown`() {
         setTest(lastShownTimestamp = getDateXDaysAgoInMilliseconds(9))
 
-        val result = helper.shouldShowJetpackFeatureCard()
+        val result = helper.shouldShowJetpackFeatureCard(jetpackSite())
 
         assertThat(result).isTrue
+    }
+
+    @Test
+    fun `when the site has no Jetpack, then jetpack feature card should not show`() {
+        setTest()
+
+        val result = helper.shouldShowJetpackFeatureCard(SiteModel())
+
+        assertThat(result).isFalse
+    }
+
+    @Test
+    fun `when there is no selected site, then jetpack feature card should not show`() {
+        setTest()
+
+        val result = helper.shouldShowJetpackFeatureCard(null)
+
+        assertThat(result).isFalse
     }
 
     private fun setTest(
@@ -116,6 +135,11 @@ class JetpackFeatureCardHelperTest {
 
     private fun getDateXDaysAgoInMilliseconds(daysAgo: Int) =
         System.currentTimeMillis().minus(DAY_IN_MILLISECONDS * daysAgo)
+
+    private fun jetpackSite() = SiteModel().apply {
+        setIsJetpackInstalled(true)
+        setIsJetpackConnected(true)
+    }
 
     companion object {
         private const val DAY_IN_MILLISECONDS = 86400000

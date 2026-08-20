@@ -1635,6 +1635,12 @@ public class ActivityLauncher {
         fragment.startActivityForResult(intent, RequestCodes.DO_LOGIN);
     }
 
+    public static void loginForJetpackStats(Activity activity) {
+        Intent intent = new Intent(activity, LoginActivity.class);
+        LoginFlow.JETPACK_STATS.putInto(intent);
+        activity.startActivityForResult(intent, RequestCodes.DO_LOGIN);
+    }
+
     /*
      * open the passed url in the device's external browser
      */
