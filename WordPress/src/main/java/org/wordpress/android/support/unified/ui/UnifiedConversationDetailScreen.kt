@@ -665,10 +665,14 @@ private fun ReplyButton(
             shape = RoundedCornerShape(28.dp)
         ) {
             if (isLoading) {
+                // The button is disabled while loading, so its container is greyed
+                // (onSurface @ 12%). Tint the spinner with the Material 3 disabled content
+                // color (onSurface @ 38%) so it stays visible in both light and dark themes,
+                // matching the greyed-out label the button shows when disabled.
                 CircularProgressIndicator(
                     modifier = Modifier.size(24.dp),
                     strokeWidth = 2.dp,
-                    color = MaterialTheme.colorScheme.onPrimary
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
                 )
             } else {
                 Icon(
