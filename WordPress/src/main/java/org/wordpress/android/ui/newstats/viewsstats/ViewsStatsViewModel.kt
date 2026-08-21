@@ -24,6 +24,7 @@ import org.wordpress.android.ui.newstats.repository.PeriodAggregates
 import org.wordpress.android.ui.newstats.repository.PeriodStatsResult
 import org.wordpress.android.ui.newstats.repository.StatsCardsConfigurationRepository
 import org.wordpress.android.ui.newstats.repository.StatsRepository
+import org.wordpress.android.ui.newstats.repository.ViewsDataPoint
 import org.wordpress.android.ui.newstats.util.RangeYearPlacement
 import org.wordpress.android.ui.newstats.util.rangeYearPlacement
 import org.wordpress.android.util.AppLog
@@ -46,6 +47,7 @@ private val DAILY_FORMAT_REGEX = Regex("""\d{4}-\d{2}-\d{2}""")
 private val MONTHLY_FORMAT_REGEX = Regex("""\d{4}-\d{2}""")
 
 private const val KEY_CHART_TYPE = "chart_type"
+private const val KEY_SELECTED_METRIC = "selected_metric"
 
 @HiltViewModel
 class ViewsStatsViewModel @Inject constructor(
@@ -66,6 +68,16 @@ class ViewsStatsViewModel @Inject constructor(
     val selectedPeriod: StateFlow<StatsPeriod> = _selectedPeriod.asStateFlow()
 
     private var currentChartType: ChartType = restoreChartTypeFromSavedState()
+
+    // The user's persisted metric preference. On single-day periods a non-views selection shows the
+    // "hourly data not available" empty state instead of a chart (see [chartAvailableFor]); the
+    // preference is kept so the chart returns when the user goes back to a multi-day period.
+    private var currentSelectedMetric: StatsMetric = restoreMetricFromSavedState()
+
+    // The last successful chart result for the current period, cached so a metric switch can re-plot
+    // the chart from data already in memory, without a new network call.
+    private var lastChartResult: PeriodStatsResult.Success? = null
+
     private var currentPeriod: StatsPeriod = _selectedPeriod.value
     private var loadingPeriod: StatsPeriod? = null
     private var loadedPeriod: StatsPeriod? = null
@@ -108,6 +120,13 @@ class ViewsStatsViewModel @Inject constructor(
                     currentChartType = restoredChartType
                 }
             }
+            val savedMetric = savedStateHandle.get<String>(KEY_SELECTED_METRIC)
+            if (savedMetric == null) {
+                val restoredMetric = restoreMetricFromPreferences()
+                if (restoredMetric != null) {
+                    currentSelectedMetric = restoredMetric
+                }
+            }
             _isPeriodInitialized.value = true
         }
     }
@@ -127,6 +146,9 @@ class ViewsStatsViewModel @Inject constructor(
     fun onPeriodChanged(period: StatsPeriod) {
         if (period == currentPeriod) return
         currentPeriod = period
+        // Drop the previous period's cached chart result so a metric switch mid-load can't re-plot from
+        // stale data or evaluate availability against the wrong period; it is repopulated on next load.
+        lastChartResult = null
         _selectedPeriod.value = period
         updateNavigationState()
         savePeriod(period)
@@ -268,6 +290,90 @@ class ViewsStatsViewModel @Inject constructor(
         }
     }
 
+    private fun restoreMetricFromSavedState(): StatsMetric {
+        return StatsMetric.fromStorageKey(
+            savedStateHandle.get<String>(KEY_SELECTED_METRIC)
+        ) ?: StatsMetric.DEFAULT
+    }
+
+    private suspend fun restoreMetricFromPreferences(): StatsMetric? {
+        val siteId = selectedSiteRepository.getSelectedSite()?.siteId
+            ?: return null
+        val config = cardsConfigurationRepository.getConfiguration(siteId)
+        return StatsMetric.fromStorageKey(config.selectedMetric)
+    }
+
+    private fun saveMetric(metric: StatsMetric) {
+        savedStateHandle[KEY_SELECTED_METRIC] = metric.storageKey
+
+        val siteId = selectedSiteRepository.getSelectedSite()?.siteId
+            ?: return
+        viewModelScope.launch {
+            val config =
+                cardsConfigurationRepository.getConfiguration(siteId)
+            cardsConfigurationRepository.saveConfiguration(
+                siteId,
+                config.copy(
+                    selectedMetric = metric.storageKey
+                )
+            )
+        }
+    }
+
+    /**
+     * Selects a metric to chart and list. Re-plots the chart from the cached period result (no network
+     * call) and persists the choice. On single-day (hourly) periods only [StatsMetric.VIEWS] has a
+     * series, so selecting another metric shows the "hourly data not available" empty state rather than
+     * a chart — see [chartAvailableFor].
+     */
+    fun onMetricSelected(metric: StatsMetric) {
+        if (metric == currentSelectedMetric) return
+        currentSelectedMetric = metric
+        saveMetric(metric)
+        val cached = lastChartResult
+        _uiState.update { current ->
+            if (current !is ViewsStatsCardUiState.Content) return@update current
+            // Re-plot from the cached result when the chart is showing plotted content; otherwise keep
+            // the current chart region (loading/error) but still reflect the new selection so the title,
+            // header dot and icons update — the tap always has a visible effect, matching what was
+            // persisted.
+            val chart = if (current.chart.isPlotted() && cached != null) {
+                buildChartState(cached)
+            } else {
+                current.chart
+            }
+            current.copy(chart = chart, selectedMetric = metric)
+        }
+    }
+
+    /** Whether the chart region currently shows plotted content (as opposed to loading/error). */
+    private fun ChartUiState.isPlotted(): Boolean =
+        this is ChartUiState.Loaded || this is ChartUiState.Unavailable
+
+    /**
+     * Whether [metric] has a chartable series for [currentPeriod]. Every metric is chartable on
+     * multi-day periods; on single-day (hourly) periods the response only carries a views series, so
+     * only [StatsMetric.VIEWS] is chartable there.
+     */
+    private fun chartAvailableFor(metric: StatsMetric): Boolean =
+        metric == StatsMetric.VIEWS || fillsBottomFromChart(currentPeriod)
+
+    private fun PeriodAggregates.valueFor(metric: StatsMetric): Long = when (metric) {
+        StatsMetric.VIEWS -> views
+        StatsMetric.VISITORS -> visitors
+        StatsMetric.LIKES -> likes
+        StatsMetric.COMMENTS -> comments
+        StatsMetric.POSTS -> posts
+    }
+
+    private fun ViewsDataPoint.valueFor(metric: StatsMetric): Long = when (metric) {
+        StatsMetric.VIEWS -> views
+        StatsMetric.VISITORS -> visitors
+        StatsMetric.LIKES -> likes
+        StatsMetric.COMMENTS -> comments
+        StatsMetric.POSTS -> posts
+    }
+
     @Suppress("ReturnCount")
     fun onBarTapped(index: Int) {
         val content = _uiState.value as? ViewsStatsCardUiState.Content ?: return
@@ -373,7 +479,8 @@ class ViewsStatsViewModel @Inject constructor(
         if (current !is ViewsStatsCardUiState.Content || !current.isLoadingNewPeriod) {
             _uiState.value = ViewsStatsCardUiState.Content(
                 chart = ChartUiState.Loading,
-                bottomStats = BottomStatsUiState.Loading
+                bottomStats = BottomStatsUiState.Loading,
+                selectedMetric = currentSelectedMetric
             )
         }
 
@@ -455,10 +562,11 @@ class ViewsStatsViewModel @Inject constructor(
             when (val result = statsRepository.fetchStatsForPeriod(site.siteId, currentPeriod)) {
                 is PeriodStatsResult.Success -> {
                     success = true
+                    lastChartResult = result
                     if (fillBottomFromChart) {
                         updateBottom(BottomStatsUiState.Loaded(result.toBottomStatItems()))
                     }
-                    buildChartLoaded(result)
+                    buildChartState(result)
                 }
                 is PeriodStatsResult.Error -> {
                     if (fillBottomFromChart) updateBottom(BottomStatsUiState.Hidden)
@@ -542,8 +650,13 @@ class ViewsStatsViewModel @Inject constructor(
     private fun updateChart(chart: ChartUiState) {
         _uiState.update { current ->
             when (current) {
-                is ViewsStatsCardUiState.Content -> current.copy(chart = chart)
-                else -> ViewsStatsCardUiState.Content(chart = chart, bottomStats = BottomStatsUiState.Loading)
+                is ViewsStatsCardUiState.Content ->
+                    current.copy(chart = chart, selectedMetric = currentSelectedMetric)
+                else -> ViewsStatsCardUiState.Content(
+                    chart = chart,
+                    bottomStats = BottomStatsUiState.Loading,
+                    selectedMetric = currentSelectedMetric
+                )
             }
         }
     }
@@ -552,20 +665,36 @@ class ViewsStatsViewModel @Inject constructor(
     private fun updateBottom(bottom: BottomStatsUiState) {
         _uiState.update { current ->
             when (current) {
-                is ViewsStatsCardUiState.Content -> current.copy(bottomStats = bottom)
-                else -> ViewsStatsCardUiState.Content(chart = ChartUiState.Loading, bottomStats = bottom)
+                is ViewsStatsCardUiState.Content ->
+                    current.copy(bottomStats = bottom, selectedMetric = currentSelectedMetric)
+                else -> ViewsStatsCardUiState.Content(
+                    chart = ChartUiState.Loading,
+                    bottomStats = bottom,
+                    selectedMetric = currentSelectedMetric
+                )
             }
         }
     }
 
+    /**
+     * Builds the chart-region state for [result] and the current selection: the plotted chart when the
+     * selected metric has a series for this period, or [ChartUiState.Unavailable] when it doesn't (a
+     * non-views metric on a single-day/hourly period) — see [chartAvailableFor].
+     */
+    private fun buildChartState(result: PeriodStatsResult.Success): ChartUiState =
+        if (chartAvailableFor(currentSelectedMetric)) buildChartLoaded(result) else ChartUiState.Unavailable
+
     private fun buildChartLoaded(result: PeriodStatsResult.Success): ChartUiState.Loaded {
+        val metric = currentSelectedMetric
         val currentStats = result.currentAggregates
         val previousStats = result.previousAggregates
+        val currentValue = currentStats.valueFor(metric)
+        val previousValue = previousStats.valueFor(metric)
         val currentDataPoints = result.currentPeriodData
             .map {
                 ChartDataPoint(
                     formatDataPointLabel(it.period, result.unit),
-                    it.views,
+                    it.valueFor(metric),
                     it.period
                 )
             }
@@ -573,28 +702,28 @@ class ViewsStatsViewModel @Inject constructor(
             .map {
                 ChartDataPoint(
                     formatDataPointLabel(it.period, result.unit),
-                    it.views,
+                    it.valueFor(metric),
                     it.period
                 )
             }
 
         val average = if (currentDataPoints.isNotEmpty()) {
-            currentStats.views / currentDataPoints.size
+            currentValue / currentDataPoints.size
         } else {
-            if (currentStats.views > 0) {
+            if (currentValue > 0) {
                 AppLog.w(
                     AppLog.T.STATS,
-                    "Data inconsistency: no data points but views=${currentStats.views}"
+                    "Data inconsistency: no data points but value=$currentValue"
                 )
             }
             0L
         }
 
         return ChartUiState.Loaded(
-            currentPeriodViews = currentStats.views,
-            previousPeriodViews = previousStats.views,
-            viewsDifference = currentStats.views - previousStats.views,
-            viewsPercentageChange = calculatePercentageChange(currentStats.views, previousStats.views),
+            currentPeriodTotal = currentValue,
+            previousPeriodTotal = previousValue,
+            difference = currentValue - previousValue,
+            percentageChange = calculatePercentageChange(currentValue, previousValue),
             currentPeriodDateRange = formatDateRangeForPeriod(
                 currentStats.startDate,
                 currentStats.endDate,
@@ -619,27 +748,27 @@ class ViewsStatsViewModel @Inject constructor(
     ): List<StatItem> {
         return listOf(
             StatItem(
-                label = resourceProvider.getString(R.string.stats_views),
+                metric = StatsMetric.VIEWS,
                 value = currentPeriod.views,
                 change = calculateStatChange(currentPeriod.views, previousPeriod.views)
             ),
             StatItem(
-                label = resourceProvider.getString(R.string.stats_visitors),
+                metric = StatsMetric.VISITORS,
                 value = currentPeriod.visitors,
                 change = calculateStatChange(currentPeriod.visitors, previousPeriod.visitors)
             ),
             StatItem(
-                label = resourceProvider.getString(R.string.stats_likes),
+                metric = StatsMetric.LIKES,
                 value = currentPeriod.likes,
                 change = calculateStatChange(currentPeriod.likes, previousPeriod.likes)
             ),
             StatItem(
-                label = resourceProvider.getString(R.string.stats_comments),
+                metric = StatsMetric.COMMENTS,
                 value = currentPeriod.comments,
                 change = calculateStatChange(currentPeriod.comments, previousPeriod.comments)
             ),
             StatItem(
-                label = resourceProvider.getString(R.string.posts),
+                metric = StatsMetric.POSTS,
                 value = currentPeriod.posts,
                 change = calculateStatChange(currentPeriod.posts, previousPeriod.posts)
             )

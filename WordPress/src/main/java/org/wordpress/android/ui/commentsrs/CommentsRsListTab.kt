@@ -7,10 +7,9 @@ import uniffi.wp_api.WpApiParamCommentsStatus
 /**
  * Filter tabs for the rs comments list, matching the legacy unified list.
  *
- * [queryStatus] is the `status` query param for `/wp/v2/comments`. [WpApiParamCommentsStatus.All]
- * means approved+hold, matching the legacy ALL filter (APPROVED+UNAPPROVED). The dedicated
- * [WpApiParamCommentsStatus] variants serialise to the literal values `WP_Comment_Query` expects
- * (`all`, `approve`, `hold`, `spam`, `trash`).
+ * [queryStatus] is the `status` query param for `/wp/v2/comments`.
+ * [WpApiParamCommentsStatus.All] is approved+hold, matching the legacy ALL filter
+ * (APPROVED+UNAPPROVED); [WpApiParamCommentsStatus.Any] additionally returns spam and trash.
  *
  * [UNREPLIED] has no server status: it queries [WpApiParamCommentsStatus.All] (like [ALL]) and is
  * threaded client-side by [filterUnreplied] to keep only top-level comments the user hasn't

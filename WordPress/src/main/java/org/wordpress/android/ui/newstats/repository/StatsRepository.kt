@@ -354,9 +354,7 @@ class StatsRepository @Inject constructor(
 
             when (result) {
                 is StatsVisitsDataResult.Success -> {
-                    val dataPoints = result.data.visits.map { dataPoint ->
-                        ViewsDataPoint(period = dataPoint.period, views = dataPoint.visits)
-                    }
+                    val dataPoints = result.data.toMetricDataPoints()
                     DailyViewsResult.Success(dataPoints)
                 }
 
@@ -415,9 +413,7 @@ class StatsRepository @Inject constructor(
                 )
 
                 // Build daily data points
-                val dailyDataPoints = data.visits.map { dataPoint ->
-                    ViewsDataPoint(period = dataPoint.period, views = dataPoint.visits)
-                }
+                val dailyDataPoints = data.toMetricDataPoints()
 
                 WeeklyStatsWithDailyDataResult.Success(aggregates, dailyDataPoints)
             }
@@ -629,12 +625,8 @@ class StatsRepository @Inject constructor(
             periodRange.previousStart.format(dateFormatter),
             previousDisplayDateString
         )
-        val currentPeriodData = currentData.visits.map { dataPoint ->
-            ViewsDataPoint(period = dataPoint.period, views = dataPoint.visits)
-        }
-        val previousPeriodData = previousData.visits.map { dataPoint ->
-            ViewsDataPoint(period = dataPoint.period, views = dataPoint.visits)
-        }
+        val currentPeriodData = currentData.toMetricDataPoints()
+        val previousPeriodData = previousData.toMetricDataPoints()
 
         return PeriodStatsResult.Success(
             currentAggregates = currentAggregates,
@@ -680,6 +672,30 @@ class StatsRepository @Inject constructor(
             "API Error fetching period stats: $errorType"
         )
         return PeriodStatsResult.Error(errorType.name)
+    }
+
+    /**
+     * Combines the parallel per-bucket lists in [StatsVisitsData] into one [ViewsDataPoint] per
+     * bucket, so the chart can plot any of the five metrics from a single response. The metrics are
+     * matched by their `period` key (rather than by list position) to stay correct even if a metric
+     * omits a bucket; a metric with no entry for a bucket defaults to 0. The [visits] list drives the
+     * bucket set, mirroring how it drives the chart's views series today.
+     */
+    private fun StatsVisitsData.toMetricDataPoints(): List<ViewsDataPoint> {
+        val visitorsByPeriod = visitors.associate { it.period to it.visitors }
+        val likesByPeriod = likes.associate { it.period to it.likes }
+        val commentsByPeriod = comments.associate { it.period to it.comments }
+        val postsByPeriod = posts.associate { it.period to it.posts }
+        return visits.map { dataPoint ->
+            ViewsDataPoint(
+                period = dataPoint.period,
+                views = dataPoint.visits,
+                visitors = visitorsByPeriod[dataPoint.period] ?: 0L,
+                likes = likesByPeriod[dataPoint.period] ?: 0L,
+                comments = commentsByPeriod[dataPoint.period] ?: 0L,
+                posts = postsByPeriod[dataPoint.period] ?: 0L
+            )
+        }
     }
 
     private fun buildPeriodAggregates(
@@ -2232,11 +2248,20 @@ sealed class DailyViewsResult {
 }
 
 /**
- * A data point from the stats API representing views for a time unit (hour, day, or month).
+ * A data point from the stats API representing one time bucket (hour, day, or month).
+ *
+ * Carries all five card metrics for that bucket. A non-hourly `stats/visits` response provides every
+ * metric per bucket, so the chart can plot any of them without a new network call. An hourly
+ * (single-day) response only populates [views]; the other four default to 0 and are never charted
+ * (the ViewModel disables non-views selection on single-day periods).
  */
 data class ViewsDataPoint(
     val period: String,
-    val views: Long
+    val views: Long,
+    val visitors: Long = 0L,
+    val likes: Long = 0L,
+    val comments: Long = 0L,
+    val posts: Long = 0L
 )
 
 /**

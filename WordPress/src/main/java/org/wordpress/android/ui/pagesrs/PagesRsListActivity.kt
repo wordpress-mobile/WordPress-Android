@@ -94,6 +94,16 @@ class PagesRsListActivity : BaseAppCompatActivity() {
         }
     }
 
+    override fun onStart() {
+        super.onStart()
+        viewModel.onScreenVisible()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        viewModel.onScreenHidden()
+    }
+
     private fun observeEvents() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
