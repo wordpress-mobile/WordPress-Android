@@ -15,6 +15,8 @@ import org.wordpress.android.analytics.AnalyticsTracker.JETPACK_REST_CONNECT_STA
 import org.wordpress.android.analytics.AnalyticsTracker.JETPACK_REST_CONNECT_STATE_KEY
 import org.wordpress.android.analytics.AnalyticsTracker.JETPACK_REST_CONNECT_STATE_STARTED
 import org.wordpress.android.analytics.AnalyticsTracker.JETPACK_REST_CONNECT_STATE_STEP_KEY
+import org.wordpress.android.fluxc.Dispatcher
+import org.wordpress.android.fluxc.generated.SiteActionBuilder
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.rest.wpapi.applicationpasswords.WpAppNotifierHandler
 import org.wordpress.android.fluxc.store.AccountStore
@@ -42,6 +44,7 @@ class JetpackRestConnectionViewModel @Inject constructor(
     private val appLogWrapper: AppLogWrapper,
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
     private val wpAppNotifierHandler: WpAppNotifierHandler,
+    private val dispatcher: Dispatcher,
 ) : ScopedViewModel(mainDispatcher), WpAppNotifierHandler.NotifierListener {
     // Internal variables that can be overridden for testing
     internal var uiDelayMs: Long = UI_DELAY_MS
@@ -63,6 +66,11 @@ class JetpackRestConnectionViewModel @Inject constructor(
 
     private var connectionSource: ConnectionSource = DEFAULT_CONNECTION_SOURCE
     private var site: SiteModel = selectedSiteRepository.getSelectedSite() ?: error("No site selected")
+
+    /**
+     * True when the site already has Jetpack, in which case the install step only has to activate it.
+     */
+    val isJetpackAlreadyInstalled: Boolean = site.isJetpackInstalled
 
     /**
      * This will be used for analytics tracking
@@ -88,6 +96,7 @@ class JetpackRestConnectionViewModel @Inject constructor(
     private fun onFlowCompleted(wasSuccessful: Boolean) {
         if (wasSuccessful) {
             appLogWrapper.d(AppLog.T.API, "$TAG: Jetpack connection flow completed successfully")
+            persistJetpackConnection()
             _buttonType.value = ButtonType.Done
             analyticsTrackerWrapper.track(AnalyticsTracker.Stat.JETPACK_REST_CONNECT_COMPLETED)
         } else {
@@ -97,6 +106,18 @@ class JetpackRestConnectionViewModel @Inject constructor(
 
         wpAppNotifierHandler.removeListener(this)
         _currentStep.value = null
+    }
+
+    /**
+     * The connection state and the WP.com blog ID assigned by [connectSite] live only on the in-memory site
+     * until they're written back. Nothing else can supply them for an application-password site: its refresh
+     * goes through the WPAPI site fetch, which reads Jetpack's presence from the REST namespaces but has no
+     * view of WordPress.com, and carries these two fields forward from the stored row.
+     */
+    private fun persistJetpackConnection() {
+        site.setIsJetpackInstalled(true)
+        site.setIsJetpackConnected(true)
+        dispatcher.dispatch(SiteActionBuilder.newUpdateSiteAction(site))
     }
 
     private fun getNextStep(): ConnectionStep? = when (currentStep.value) {
@@ -577,14 +598,21 @@ class JetpackRestConnectionViewModel @Inject constructor(
          * - Self-hosted site using REST API
          * - Application password has been set
          * - Site isn't already connected to Jetpack
-         * - Jetpack is not installed or the installed jetpack version is 14.2 or above
+         * - Jetpack is not installed, its version is unknown, or the installed version is 14.2 or above
+         *
+         * The version is unknown for sites added with an application password: Jetpack is detected there from
+         * the site's REST namespaces, which don't carry a version. Blocking on that would send them to the
+         * WebView connection flow, which signs in through wp-login.php and so can't work with an application
+         * password -- this flow is the only one they have.
          */
         fun canInitiateJetpackRestConnection(site: SiteModel): Boolean {
             return BuildConfig.IS_JETPACK_APP
                     && site.isUsingSelfHostedRestApi
                     && !site.wpApiRestUrl.isNullOrEmpty()
                     && !site.isJetpackConnected
-                    && (!site.isJetpackInstalled || checkMinimalVersion(site.jetpackVersion, JETPACK_LIMIT_VERSION))
+                    && (!site.isJetpackInstalled
+                    || site.jetpackVersion.isNullOrEmpty()
+                    || checkMinimalVersion(site.jetpackVersion, JETPACK_LIMIT_VERSION))
         }
     }
 }

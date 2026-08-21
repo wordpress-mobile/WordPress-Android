@@ -15,10 +15,12 @@ import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.doSuspendableAnswer
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
+import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.BuildConfig
+import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.rest.wpapi.applicationpasswords.WpAppNotifierHandler
 import org.wordpress.android.fluxc.store.AccountStore
@@ -62,6 +64,9 @@ class JetpackRestConnectionViewModelTest : BaseUnitTest() {
     @Mock
     lateinit var siteModel: SiteModel
 
+    @Mock
+    lateinit var dispatcher: Dispatcher
+
     private lateinit var viewModel: JetpackRestConnectionViewModel
 
     companion object {
@@ -95,6 +100,7 @@ class JetpackRestConnectionViewModelTest : BaseUnitTest() {
             appLogWrapper = appLogWrapper,
             analyticsTrackerWrapper = analyticsTrackerWrapper,
             wpAppNotifierHandler = wpAppNotifierHandler,
+            dispatcher = dispatcher,
         )
 
         // Override delays for faster tests
@@ -395,6 +401,23 @@ class JetpackRestConnectionViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `canInitiateJetpackRestConnection returns true when the Jetpack version is unknown`() {
+        if (BuildConfig.IS_JETPACK_APP) {
+            // this is the application-password case: Jetpack is detected from the site's REST namespaces,
+            // which carry no version
+            val site = mock<SiteModel> {
+                on { isUsingSelfHostedRestApi } doReturn true
+                on { wpApiRestUrl } doReturn "https://example.com/wp-json"
+                on { isJetpackConnected } doReturn false
+                on { isJetpackInstalled } doReturn true
+                on { jetpackVersion } doReturn null
+            }
+
+            assertThat(JetpackRestConnectionViewModel.canInitiateJetpackRestConnection(site)).isTrue
+        }
+    }
+
+    @Test
     fun `canInitiateJetpackRestConnection returns false for old Jetpack version`() {
         if (BuildConfig.IS_JETPACK_APP) {
             val site = mock<SiteModel> {
@@ -423,6 +446,35 @@ class JetpackRestConnectionViewModelTest : BaseUnitTest() {
 
         assertThat(viewModel.buttonType.value).isEqualTo(ButtonType.Done)
         verify(wpAppNotifierHandler).removeListener(viewModel)
+    }
+
+    @Test
+    fun `successful flow completion persists the Jetpack connection`() = runTest {
+        whenever(accountStore.hasAccessToken()).thenReturn(true)
+        whenever(accountStore.accessToken).thenReturn(TEST_ACCESS_TOKEN)
+        whenever(jetpackInstaller.installJetpack(any())).thenReturn(Result.success(PluginStatus.ACTIVE))
+        whenever(jetpackConnector.connectSite(any())).thenReturn(Result.success(TEST_SITE_ID))
+        whenever(jetpackConnector.connectUser(any(), any())).thenReturn(Result.success(TEST_USER_ID))
+        whenever(jetpackModuleHelper.activateStatsModule(any())).thenReturn(Result.success(Unit))
+
+        viewModel.onStartClick()
+        advanceTimeBy(TEST_ADVANCE_TIME_MS)
+
+        verify(siteModel).siteId = TEST_SITE_ID.toLong()
+        verify(siteModel).setIsJetpackInstalled(true)
+        verify(siteModel).setIsJetpackConnected(true)
+        verify(dispatcher).dispatch(any())
+    }
+
+    @Test
+    fun `failed flow completion does not persist a Jetpack connection`() = runTest {
+        whenever(accountStore.hasAccessToken()).thenReturn(true)
+        whenever(jetpackInstaller.installJetpack(any())).thenReturn(Result.failure(Exception("Failed")))
+
+        viewModel.onStartClick()
+        advanceTimeBy(TEST_ADVANCE_TIME_MS)
+
+        verify(dispatcher, never()).dispatch(any())
     }
 
     @Test

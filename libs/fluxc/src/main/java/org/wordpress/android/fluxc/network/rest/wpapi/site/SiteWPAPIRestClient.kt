@@ -32,13 +32,20 @@ class SiteWPAPIRestClient @Inject constructor(
 ) : BaseWPAPIRestClient(dispatcher, requestQueue, userAgent) {
     companion object {
         private const val WOO_API_NAMESPACE_PREFIX = "wc/"
+        private const val JETPACK_API_NAMESPACE_PREFIX = "jetpack/"
         private const val FETCH_API_CALL_FIELDS =
             "name,description,gmt_offset,url,authentication,namespaces"
         private const val APPLICATION_PASSWORDS_URL_SUFFIX = "authorize-application.php"
     }
 
+    /**
+     * @param previousSite the site this fetch is refreshing, when there is one. The model returned here
+     * replaces the stored row wholesale, so fields this fetch can't determine are carried forward from it
+     * rather than reset.
+     */
     suspend fun fetchWPAPISite(
-        payload: FetchWPAPISitePayload
+        payload: FetchWPAPISitePayload,
+        previousSite: SiteModel? = null
     ): SiteModel {
         val cleanedUrl = UrlUtils.addUrlSchemeIfNeeded(payload.url, false).let { urlWithScheme ->
             DiscoveryUtils.stripKnownPaths(urlWithScheme)
@@ -65,6 +72,7 @@ class SiteWPAPIRestClient @Inject constructor(
                     hasWooCommerce = response?.namespaces?.any {
                         it.startsWith(WOO_API_NAMESPACE_PREFIX)
                     } ?: false
+                    applyJetpackState(response?.namespaces, previousSite)
 
                     applicationPasswordsAuthorizeUrl = response?.authentication?.applicationPasswords
                         ?.endpoints?.authorization
@@ -97,15 +105,42 @@ class SiteWPAPIRestClient @Inject constructor(
     suspend fun fetchWPAPISite(
         site: SiteModel
     ): SiteModel {
-        return fetchWPAPISite(
+        val fetchedSite = fetchWPAPISite(
             payload = FetchWPAPISitePayload(
                 url = site.url,
                 username = site.getUserNameProcessed(),
                 password = site.getPasswordProcessed(),
                 isApplicationPassword =
                     site.hasApplicationPassword(),
-            )
+            ),
+            previousSite = site
         )
+
+        if (!fetchedSite.isError) {
+            // Carry the local id so SiteStore.updateSite finds the stored row and preserves the editor
+            // preferences, and so SiteSqlUtils matches the row by local id rather than by SITE_ID + URL --
+            // that match misses, and inserts a duplicate site, as soon as a real WP.com blog id is stored.
+            fetchedSite.id = site.id
+        }
+        return fetchedSite
+    }
+
+    /**
+     * Jetpack registers its REST namespace only while the plugin is active, which is exactly what
+     * [SiteModel.isJetpackInstalled] documents. The connection to WordPress.com isn't visible in the REST
+     * root at all -- it's established by the in-app connection flow, which persists it directly -- so it's
+     * carried forward here rather than reset, and cleared only when Jetpack itself is gone.
+     */
+    private fun SiteModel.applyJetpackState(namespaces: List<String>?, previousSite: SiteModel?) {
+        val hasJetpack = namespaces?.any { it.startsWith(JETPACK_API_NAMESPACE_PREFIX) } ?: false
+        setIsJetpackInstalled(hasJetpack)
+        if (hasJetpack) {
+            setIsJetpackConnected(previousSite?.isJetpackConnected ?: false)
+            siteId = previousSite?.siteId ?: 0L
+        } else {
+            setIsJetpackConnected(false)
+            siteId = 0L
+        }
     }
 
     private fun discoverApiEndpoint(

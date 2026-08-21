@@ -1114,6 +1114,7 @@
     <string name="jetpack_rest_connection_setup_title">Setting up Jetpack</string>
     <string name="jetpack_rest_connection_step_login_wpcom">Login to WordPress.com</string>
     <string name="jetpack_rest_connection_step_install_jetpack">Install Jetpack plugin</string>
+    <string name="jetpack_rest_connection_step_activate_jetpack">Activate Jetpack plugin</string>
     <string name="jetpack_rest_connection_step_connect_site">Connect site to WordPress.com</string>
     <string name="jetpack_rest_connection_step_connect_user">Connect user to WordPress.com</string>
     <string name="jetpack_rest_connection_step_finalize">Finalize setup</string>

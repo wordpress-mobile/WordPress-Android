@@ -2,12 +2,14 @@ package org.wordpress.android.ui.mysite.cards.jetpackfeature
 
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
+import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.jetpackoverlay.JETPACK_REMOVAL_TRACKING_NAME
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.DateTimeUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.util.extensions.canUseJetpackApp
 import org.wordpress.android.util.config.PhaseThreeBlogPostLinkConfig
 import java.util.Date
 import javax.inject.Inject
@@ -19,10 +21,14 @@ class JetpackFeatureCardHelper @Inject constructor(
     private val dateTimeUtilsWrapper: DateTimeUtilsWrapper,
     private val phaseThreeBlogPostLinkConfig: PhaseThreeBlogPostLinkConfig
 ) {
-    fun shouldShowJetpackFeatureCard(): Boolean {
+    /**
+     * The card promotes the Jetpack app for the site the user is looking at, so it's only shown for a site
+     * that can actually use it -- see [canUseJetpackApp].
+     */
+    fun shouldShowJetpackFeatureCard(site: SiteModel?): Boolean {
         val isWordPressApp = !buildConfigWrapper.isJetpackApp
         val exceedsShowFrequency = exceedsShowFrequencyAndResetJetpackFeatureCardLastShownTimestampIfNeeded()
-        return isWordPressApp && !isJetpackCardHiddenByUser() && exceedsShowFrequency
+        return isWordPressApp && site.canUseJetpackApp() && !isJetpackCardHiddenByUser() && exceedsShowFrequency
     }
 
     private fun isJetpackCardHiddenByUser(): Boolean = appPrefsWrapper.getShouldHideJetpackFeatureCard()

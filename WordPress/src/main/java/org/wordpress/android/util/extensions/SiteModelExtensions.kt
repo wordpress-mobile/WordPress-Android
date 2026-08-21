@@ -31,3 +31,11 @@ val SiteModel.stateLogInformation: String
  */
 fun SiteModel.activeJetpackConnectionPluginValues(): List<String>? =
     activeJetpackConnectionPlugins?.split(",")
+
+/**
+ * @return true if the Jetpack app has anything to offer this site. The Jetpack-powered features live behind
+ * WordPress.com, so a self-hosted site without Jetpack gets nothing out of switching apps -- and telling its
+ * owner that their site has the Jetpack plugin is simply wrong.
+ */
+fun SiteModel?.canUseJetpackApp(): Boolean =
+    this != null && (isWPCom || isJetpackInstalled || isJetpackConnected)

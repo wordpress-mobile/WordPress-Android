@@ -572,7 +572,8 @@ public class WPMainActivity extends BaseAppCompatActivity implements
     }
 
     private void displayJetpackFeatureCollectionOverlayIfNeeded() {
-        if (mJetpackFeatureRemovalOverlayUtil.shouldShowFeatureCollectionJetpackOverlayForFirstTime()) {
+        if (mJetpackFeatureRemovalOverlayUtil.shouldShowFeatureCollectionJetpackOverlayForFirstTime(
+                mSelectedSiteRepository.getSelectedSite())) {
             JetpackFeatureFullScreenOverlayFragment.newInstance(
                     false,
                     JetpackFeatureCollectionOverlaySource.APP_OPEN

@@ -9,6 +9,7 @@ import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
+import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil.JetpackFeatureCollectionOverlaySource
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 
@@ -38,7 +39,7 @@ class JetpackFeatureRemovalOverlayUtilTest {
     fun `given the Jetpack app, when checking the feature collection overlay, then it is not shown`() {
         whenever(jetpackFeatureRemovalHelper.shouldRemoveJetpackFeatures()).thenReturn(false)
 
-        assertThat(overlayUtil.shouldShowFeatureCollectionJetpackOverlayForFirstTime()).isFalse
+        assertThat(overlayUtil.shouldShowFeatureCollectionJetpackOverlayForFirstTime(jetpackSite())).isFalse
     }
 
     @Test
@@ -46,7 +47,7 @@ class JetpackFeatureRemovalOverlayUtilTest {
         whenever(jetpackFeatureRemovalHelper.shouldRemoveJetpackFeatures()).thenReturn(true)
         whenever(shownTracker.getFeatureCollectionOverlayShown()).thenReturn(false)
 
-        assertThat(overlayUtil.shouldShowFeatureCollectionJetpackOverlayForFirstTime()).isTrue
+        assertThat(overlayUtil.shouldShowFeatureCollectionJetpackOverlayForFirstTime(jetpackSite())).isTrue
     }
 
     @Test
@@ -54,8 +55,24 @@ class JetpackFeatureRemovalOverlayUtilTest {
         whenever(jetpackFeatureRemovalHelper.shouldRemoveJetpackFeatures()).thenReturn(true)
         whenever(shownTracker.getFeatureCollectionOverlayShown()).thenReturn(true)
 
-        assertThat(overlayUtil.shouldShowFeatureCollectionJetpackOverlayForFirstTime()).isFalse
+        assertThat(overlayUtil.shouldShowFeatureCollectionJetpackOverlayForFirstTime(jetpackSite())).isFalse
     }
+
+    @Test
+    fun `given a self-hosted site without Jetpack, then the feature collection overlay is not shown`() {
+        whenever(jetpackFeatureRemovalHelper.shouldRemoveJetpackFeatures()).thenReturn(true)
+
+        assertThat(overlayUtil.shouldShowFeatureCollectionJetpackOverlayForFirstTime(SiteModel())).isFalse
+    }
+
+    @Test
+    fun `given no selected site, then the feature collection overlay is not shown`() {
+        whenever(jetpackFeatureRemovalHelper.shouldRemoveJetpackFeatures()).thenReturn(true)
+
+        assertThat(overlayUtil.shouldShowFeatureCollectionJetpackOverlayForFirstTime(null)).isFalse
+    }
+
+    private fun jetpackSite() = SiteModel().apply { setIsJetpackInstalled(true) }
 
     @Test
     fun `when the overlay is shown on app open, then it is recorded so it does not show again`() {

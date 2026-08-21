@@ -49,6 +49,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.ActivityNavigator
+import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.compose.utils.uiStringText
 import org.wordpress.android.ui.main.BaseAppCompatActivity
@@ -94,6 +95,10 @@ class MenuActivity : BaseAppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == SiteSettingsFragment.RESULT_BLOG_REMOVED) {
             viewModel.handleSiteRemoved()
+        } else if (requestCode == RequestCodes.DO_LOGIN && resultCode == RESULT_OK) {
+            // Close the menu so the user lands back on My Site, which handles the successful sign-in and
+            // reloads the site the new Stats destination depends on.
+            finish()
         }
     }
 
@@ -154,6 +159,12 @@ class MenuActivity : BaseAppCompatActivity() {
             is SiteNavigationAction.OpenMenus -> {
                 ActivityLauncher.viewNavigationMenus(this, action.site)
             }
+
+            is SiteNavigationAction.ConnectJetpackForStats ->
+                ActivityLauncher.viewConnectJetpackForStats(this, action.site)
+
+            is SiteNavigationAction.StartWPComLoginForJetpackStats ->
+                ActivityLauncher.loginForJetpackStats(this)
 
             else -> {}
         }

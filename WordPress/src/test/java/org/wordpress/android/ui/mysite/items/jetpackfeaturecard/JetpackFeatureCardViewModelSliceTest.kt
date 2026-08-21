@@ -8,11 +8,13 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.any
+import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.analytics.AnalyticsTracker
+import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.mysite.MySiteCardAndItem
 import org.wordpress.android.ui.mysite.SiteNavigationAction
 import org.wordpress.android.ui.mysite.cards.jetpackfeature.JetpackFeatureCardHelper
@@ -35,6 +37,8 @@ class JetpackFeatureCardViewModelSliceTest: BaseUnitTest() {
 
     private lateinit var navigationEvents: MutableList<SiteNavigationAction>
 
+    private val site = SiteModel().apply { setIsJetpackInstalled(true) }
+
     @Before
     fun setUp() {
         viewModelSlice = JetpackFeatureCardViewModelSlice(
@@ -56,10 +60,10 @@ class JetpackFeatureCardViewModelSliceTest: BaseUnitTest() {
     @Test
     fun `given jetpack feature card should not be shown, ui model is null`() = test {
         // given
-        whenever(jetpackFeatureCardHelper.shouldShowJetpackFeatureCard()).thenReturn(false)
+        whenever(jetpackFeatureCardHelper.shouldShowJetpackFeatureCard(anyOrNull())).thenReturn(false)
 
         // when
-        viewModelSlice.buildJetpackFeatureCard()
+        viewModelSlice.buildJetpackFeatureCard(site)
 
         // then
         assertNull(uiModels.last())
@@ -68,10 +72,10 @@ class JetpackFeatureCardViewModelSliceTest: BaseUnitTest() {
     @Test
     fun `given jetpack feature card should be shown, ui model is not null`() = test {
         // given
-        whenever(jetpackFeatureCardHelper.shouldShowJetpackFeatureCard()).thenReturn(true)
+        whenever(jetpackFeatureCardHelper.shouldShowJetpackFeatureCard(anyOrNull())).thenReturn(true)
 
         // when
-        viewModelSlice.buildJetpackFeatureCard()
+        viewModelSlice.buildJetpackFeatureCard(site)
 
         // then
         assertNotNull(uiModels.last())
@@ -80,10 +84,10 @@ class JetpackFeatureCardViewModelSliceTest: BaseUnitTest() {
     @Test
     fun `given jetpack feature card should be shown, onJetpackFeatureCardClick is called`() = test {
         // given
-        whenever(jetpackFeatureCardHelper.shouldShowJetpackFeatureCard()).thenReturn(true)
+        whenever(jetpackFeatureCardHelper.shouldShowJetpackFeatureCard(anyOrNull())).thenReturn(true)
 
         // when
-        viewModelSlice.buildJetpackFeatureCard()
+        viewModelSlice.buildJetpackFeatureCard(site)
         uiModels.last()?.onClick?.click()
         advanceUntilIdle()
 
@@ -95,10 +99,10 @@ class JetpackFeatureCardViewModelSliceTest: BaseUnitTest() {
     @Test
     fun `given jetpack feature card should be shown, onJetpackFeatureCardHideMenuItemClick is called`() = test {
         // given
-        whenever(jetpackFeatureCardHelper.shouldShowJetpackFeatureCard()).thenReturn(true)
+        whenever(jetpackFeatureCardHelper.shouldShowJetpackFeatureCard(anyOrNull())).thenReturn(true)
 
         // when
-        viewModelSlice.buildJetpackFeatureCard()
+        viewModelSlice.buildJetpackFeatureCard(site)
         uiModels.last()?.onHideMenuItemClick?.click()
         advanceUntilIdle()
 
@@ -110,10 +114,10 @@ class JetpackFeatureCardViewModelSliceTest: BaseUnitTest() {
     @Test
     fun `given jetpack feature card should be shown, onJetpackFeatureCardLearnMoreClick is called`() = test {
         // given
-        whenever(jetpackFeatureCardHelper.shouldShowJetpackFeatureCard()).thenReturn(true)
+        whenever(jetpackFeatureCardHelper.shouldShowJetpackFeatureCard(anyOrNull())).thenReturn(true)
 
         // when
-        viewModelSlice.buildJetpackFeatureCard()
+        viewModelSlice.buildJetpackFeatureCard(site)
         uiModels.last()?.onLearnMoreClick?.click()
         advanceUntilIdle()
 
@@ -125,10 +129,10 @@ class JetpackFeatureCardViewModelSliceTest: BaseUnitTest() {
     @Test
     fun `given jetpack feature card should be shown, onJetpackFeatureCardRemindMeLaterClick is called`() = test {
         // given
-        whenever(jetpackFeatureCardHelper.shouldShowJetpackFeatureCard()).thenReturn(true)
+        whenever(jetpackFeatureCardHelper.shouldShowJetpackFeatureCard(anyOrNull())).thenReturn(true)
 
         // when
-        viewModelSlice.buildJetpackFeatureCard()
+        viewModelSlice.buildJetpackFeatureCard(site)
         uiModels.last()?.onRemindMeLaterItemClick?.click()
         advanceUntilIdle()
 
@@ -140,10 +144,10 @@ class JetpackFeatureCardViewModelSliceTest: BaseUnitTest() {
     @Test
     fun `given jetpack feature card should be shown, onJetpackFeatureCardMoreMenuClick is called`() = test {
         // given
-        whenever(jetpackFeatureCardHelper.shouldShowJetpackFeatureCard()).thenReturn(true)
+        whenever(jetpackFeatureCardHelper.shouldShowJetpackFeatureCard(anyOrNull())).thenReturn(true)
 
         // when
-        viewModelSlice.buildJetpackFeatureCard()
+        viewModelSlice.buildJetpackFeatureCard(site)
         uiModels.last()?.onMoreMenuClick?.click()
         advanceUntilIdle()
 
