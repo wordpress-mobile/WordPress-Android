@@ -133,14 +133,10 @@ class SiteWPAPIRestClient @Inject constructor(
      */
     private fun SiteModel.applyJetpackState(namespaces: List<String>?, previousSite: SiteModel?) {
         val hasJetpack = namespaces?.any { it.startsWith(JETPACK_API_NAMESPACE_PREFIX) } ?: false
+        val carriedForward = previousSite?.takeIf { hasJetpack }
         setIsJetpackInstalled(hasJetpack)
-        if (hasJetpack) {
-            setIsJetpackConnected(previousSite?.isJetpackConnected ?: false)
-            siteId = previousSite?.siteId ?: 0L
-        } else {
-            setIsJetpackConnected(false)
-            siteId = 0L
-        }
+        setIsJetpackConnected(carriedForward?.isJetpackConnected == true)
+        siteId = carriedForward?.siteId ?: 0L
     }
 
     private fun discoverApiEndpoint(
