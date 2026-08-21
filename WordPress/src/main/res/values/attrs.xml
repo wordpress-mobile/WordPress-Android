@@ -54,6 +54,7 @@
         <attr name="iconTint" format="color|reference" />
         <attr name="switchThumbTint" format="integer" />
         <attr name="startOffset" format="dimension|reference" />
+        <attr name="alignSwitchWithTitle" format="boolean" />
     </declare-styleable>
 
     <!-- DetailListPreference attributes -->
