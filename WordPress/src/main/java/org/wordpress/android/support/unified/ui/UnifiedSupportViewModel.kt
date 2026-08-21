@@ -55,6 +55,14 @@ class UnifiedSupportViewModel @Inject constructor(
     private val _replySentEvents = Channel<Unit>(Channel.CONFLATED)
     val replySentEvents: Flow<Unit> = _replySentEvents.receiveAsFlow()
 
+    // Auto-refresh race guards (all touched only on the main thread):
+    // [conversationMutationGeneration] is bumped synchronously the moment a reply send begins, so an
+    // auto-refresh poll that started before the send discards its now-stale result instead of
+    // restoring a pre-reply snapshot over the just-sent reply. [isRefreshingSelectedConversation]
+    // serialises polls so overlapping responses can't land out of order.
+    private var conversationMutationGeneration = 0L
+    private var isRefreshingSelectedConversation = false
+
     // Reply form state for HE-style conversations (survives configuration changes)
     private val _replyFormState = MutableStateFlow(ConversationReplyFormState())
     val replyFormState: StateFlow<ConversationReplyFormState> = _replyFormState.asStateFlow()
@@ -158,28 +166,34 @@ class UnifiedSupportViewModel @Inject constructor(
      * replies from support show up while the screen stays open.
      *
      * No-ops for bot conversations (they have no server-side changes to poll and a not-yet-created
-     * new conversation has no id to fetch) and while a reply is in flight or the conversation is
-     * still loading (so we never clobber the optimistic message or the initial load).
+     * new conversation has no id to fetch), while a reply is in flight or the conversation is still
+     * loading (so we never clobber the optimistic message or the initial load), and while another
+     * poll is already running (so overlapping responses can't land out of order).
      */
     @Suppress("TooGenericExceptionCaught")
     fun refreshSelectedConversation() {
         val conversation = _selectedConversation.value ?: return
-        // No-op for bots/new conversations and while a reply is in flight or the initial load runs.
         val canRefresh = !conversation.isBot &&
                 conversation.id != NEW_CONVERSATION_ID &&
                 !_isSendingReply.value &&
-                !isLoadingConversation.value
+                !isLoadingConversation.value &&
+                !isRefreshingSelectedConversation
         if (!canRefresh) return
+        // Snapshot the generation before fetching; if a send bumps it while we're on the network,
+        // this poll's result is stale and must be dropped (see conversationMutationGeneration).
+        val generationAtStart = conversationMutationGeneration
+        isRefreshingSelectedConversation = true
         viewModelScope.launch {
             try {
                 if (!networkUtilsWrapper.isNetworkAvailable()) return@launch
                 val updated = repository.loadConversation(conversation.id)
-                // Re-check the state after the network call: only apply the update if the same
-                // conversation is still open and no reply started sending while we were fetching.
-                if (updated != null &&
-                    _selectedConversation.value?.id == updated.id &&
-                    !_isSendingReply.value
-                ) {
+                // Apply only if nothing changed the open conversation while we were fetching: same
+                // conversation still open, no reply sending, and no send began since we started.
+                val stillCurrent = updated != null &&
+                        _selectedConversation.value?.id == updated.id &&
+                        !_isSendingReply.value &&
+                        conversationMutationGeneration == generationAtStart
+                if (stillCurrent) {
                     _selectedConversation.value = updated
                 }
             } catch (throwable: Throwable) {
@@ -187,6 +201,8 @@ class UnifiedSupportViewModel @Inject constructor(
                     AppLog.T.SUPPORT, "Error auto-refreshing conversation: " +
                             "${throwable.message} - ${throwable.stackTraceToString()}"
                 )
+            } finally {
+                isRefreshingSelectedConversation = false
             }
         }
     }
@@ -199,6 +215,9 @@ class UnifiedSupportViewModel @Inject constructor(
         // gets to set it.
         if (_isSendingReply.value) return
         _isSendingReply.value = true
+        // Invalidate any auto-refresh poll already in flight: its response predates this send, so it
+        // must not overwrite the reply we're about to add.
+        conversationMutationGeneration++
 
         viewModelScope.launch {
             if (!networkUtilsWrapper.isNetworkAvailable()) {
