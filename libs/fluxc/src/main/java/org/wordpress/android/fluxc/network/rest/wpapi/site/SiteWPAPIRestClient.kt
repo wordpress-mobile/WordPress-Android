@@ -164,8 +164,18 @@ class SiteWPAPIRestClient @Inject constructor(
 
         val username = payload.username
         val password = payload.password
-        if (!payload.isApplicationPassword || username.isNullOrEmpty() || password.isNullOrEmpty()) return null
+        return if (payload.isApplicationPassword && !username.isNullOrEmpty() && !password.isNullOrEmpty()) {
+            requestJetpackPlugin(apiRootUrl, username, password)
+        } else {
+            null
+        }
+    }
 
+    private suspend fun requestJetpackPlugin(
+        apiRootUrl: String,
+        username: String,
+        password: String
+    ): JetpackPluginState? {
         val result = wpapiGsonRequestBuilder.syncGetRequest<List<PluginResponseModel>>(
             restClient = this,
             url = apiRootUrl.trimEnd('/') + "/" + PLUGINS_PATH,
