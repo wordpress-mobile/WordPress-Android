@@ -152,6 +152,13 @@ class MediaRSApiRestClient @Inject constructor(
                 }
             }
 
+            is WpRequestResult.MediaFileUnreadable<*> -> {
+                appLogWrapper.e(AppLog.T.MEDIA, "Media file unreadable: $mediaResponse")
+                MediaError(MediaErrorType.FS_READ_PERMISSION_DENIED).apply {
+                    message = "Media file could not be read"
+                }
+            }
+
             is WpRequestResult.ResponseParsingError<*> -> {
                 appLogWrapper.e(AppLog.T.MEDIA, "Response parsing error: $mediaResponse")
                 MediaError(MediaErrorType.PARSE_ERROR).apply {
@@ -257,7 +264,8 @@ class MediaRSApiRestClient @Inject constructor(
         when (reason) {
             is RequestExecutionErrorReason.HttpTimeoutError -> MediaErrorType.TIMEOUT
             is RequestExecutionErrorReason.DeviceIsOfflineError,
-            is RequestExecutionErrorReason.InvalidSslError -> MediaErrorType.CONNECTION_ERROR
+            is RequestExecutionErrorReason.InvalidSslError,
+            is RequestExecutionErrorReason.ConnectionError -> MediaErrorType.CONNECTION_ERROR
             is RequestExecutionErrorReason.NonExistentSiteError -> MediaErrorType.NOT_FOUND
             // Keep this aligned with MediaErrorType.fromHttpStatusCode: a 403 (forbidden) maps to
             // NOT_AUTHENTICATED, while a 401 (auth required/rejected/misconfigured) maps to
