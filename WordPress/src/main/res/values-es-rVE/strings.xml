@@ -27,7 +27,6 @@ Language: es_VE
     <string name="stats_insights_like_guide_card">⭐️ Tu última entrada %1$s ha recibido %2$s Me gusta.</string>
     <string name="weekly_roundup_notification_text_all">La semana pasada tuviste %1$s visitas, %2$s Me gusta y %3$s comentarios.</string>
     <string name="gutenberg_native_problem_displaying_block_tap_to_attempt_block_recovery" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Problema al mostrar el bloque. \nToca para intentar la recuperación del bloque.</string>
-    <string name="wp_jetpack_powered">Funciona gracias a Jetpack</string>
     <string name="qrcode_auth_flow_error_content_description">Imagen que señala un error</string>
     <string name="qrcode_auth_flow_content_description">Imagen que señala que el escaneo de código de acceso está en proceso</string>
     <string name="qrcode_auth_flow_dismiss">Descartar</string>
