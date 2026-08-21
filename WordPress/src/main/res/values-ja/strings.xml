@@ -416,6 +416,7 @@ Language: ja_JP
     <string name="jetpack_rest_connection_status_not_started">開始前</string>
     <string name="jetpack_rest_connection_step_finalize">設定を完了</string>
     <string name="jetpack_rest_connection_step_connect_user">ユーザーを WordPress.com に連携</string>
+    <string name="jetpack_rest_connection_step_install_jetpack">Jetpack プラグインをインストール</string>
     <string name="jetpack_rest_connection_step_login_wpcom">WordPress.com にログイン</string>
     <string name="start">開始</string>
     <string name="descending">降順</string>

@@ -140,7 +140,7 @@ private val stepConfigs = listOf(
     ),
     StepConfig(
         step = ConnectionStep.InstallJetpack,
-        titleRes = R.string.jetpack_rest_connection_step_setup_jetpack,
+        titleRes = R.string.jetpack_rest_connection_step_install_jetpack,
         icon = Icons.Default.Build
     ),
     StepConfig(

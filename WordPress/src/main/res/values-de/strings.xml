@@ -422,6 +422,7 @@ Language: de
     <string name="jetpack_rest_connection_status_not_started">Nicht gestartet</string>
     <string name="jetpack_rest_connection_step_finalize">Einrichtung abschließen</string>
     <string name="jetpack_rest_connection_step_connect_user">Benutzer mit WordPress.com verbinden</string>
+    <string name="jetpack_rest_connection_step_install_jetpack">Jetpack-Plugin installieren</string>
     <string name="jetpack_rest_connection_step_login_wpcom">Bei WordPress.com anmelden</string>
     <string name="start">Starten</string>
     <string name="descending">Absteigend</string>

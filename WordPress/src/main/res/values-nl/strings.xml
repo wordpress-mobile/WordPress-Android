@@ -422,6 +422,7 @@ Language: nl
     <string name="jetpack_rest_connection_status_not_started">Niet gestart</string>
     <string name="jetpack_rest_connection_step_finalize">Setup voltooien</string>
     <string name="jetpack_rest_connection_step_connect_user">Gebruiker aan WordPress.com koppelen</string>
+    <string name="jetpack_rest_connection_step_install_jetpack">Jetpack plugin installeren</string>
     <string name="jetpack_rest_connection_step_login_wpcom">Login bij WordPress.com</string>
     <string name="start">Starten</string>
     <string name="descending">Aflopend</string>

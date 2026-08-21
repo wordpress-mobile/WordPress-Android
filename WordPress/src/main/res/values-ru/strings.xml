@@ -422,6 +422,7 @@ Language: ru
     <string name="jetpack_rest_connection_status_not_started">Не начато</string>
     <string name="jetpack_rest_connection_step_finalize">Завершить настройку</string>
     <string name="jetpack_rest_connection_step_connect_user">Подключить пользователя к WordPress.com</string>
+    <string name="jetpack_rest_connection_step_install_jetpack">Установить плагин Jetpack</string>
     <string name="jetpack_rest_connection_step_login_wpcom">Вход на WordPress.com</string>
     <string name="start">Начало</string>
     <string name="descending">По убыванию</string>

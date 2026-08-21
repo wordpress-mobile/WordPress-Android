@@ -412,6 +412,7 @@ Language: id
     <string name="jetpack_rest_connection_status_not_started">Belum dimulai</string>
     <string name="jetpack_rest_connection_step_finalize">Selesaikan penyiapan</string>
     <string name="jetpack_rest_connection_step_connect_user">Hubungkan pengguna ke WordPress.com</string>
+    <string name="jetpack_rest_connection_step_install_jetpack">Pasang plugin Jetpack</string>
     <string name="jetpack_rest_connection_step_login_wpcom">Login ke WordPress.com</string>
     <string name="start">Mulai</string>
     <string name="descending">Menurun</string>

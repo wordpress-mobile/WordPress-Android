@@ -317,6 +317,7 @@ Language: sq_AL
     <string name="jetpack_rest_connection_status_not_started">S’është nisur</string>
     <string name="jetpack_rest_connection_step_finalize">Finalizoni ujdisjen</string>
     <string name="jetpack_rest_connection_step_connect_user">Lidheni përdoruesin te WordPress.com</string>
+    <string name="jetpack_rest_connection_step_install_jetpack">Instaloni shtojcën Jetpack</string>
     <string name="jetpack_rest_connection_step_login_wpcom">Hyni në WordPress.com</string>
     <string name="start">Fillo</string>
     <string name="descending">Zbritës</string>

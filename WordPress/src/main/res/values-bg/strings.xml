@@ -118,6 +118,7 @@ Language: bg
     <string name="jetpack_rest_connection_status_not_started">Не е започнато</string>
     <string name="jetpack_rest_connection_step_finalize">Приключване на настройката</string>
     <string name="jetpack_rest_connection_step_connect_user">Свързване на потребител с WordPress.com</string>
+    <string name="jetpack_rest_connection_step_install_jetpack">Инсталиране на разширението Jetpack</string>
     <string name="jetpack_rest_connection_step_login_wpcom">Вход в WordPress.com</string>
     <string name="start">Начало</string>
     <string name="descending">Низходящ ред</string>

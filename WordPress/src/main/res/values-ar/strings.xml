@@ -402,6 +402,7 @@ Language: ar
     <string name="jetpack_rest_connection_status_in_progress">قيد التنفيذ…</string>
     <string name="jetpack_rest_connection_step_finalize">إنهاء الإعداد</string>
     <string name="jetpack_rest_connection_step_connect_user">ربط المستخدم بووردبريس.كوم</string>
+    <string name="jetpack_rest_connection_step_install_jetpack">تثبيت إضافة Jetpack.</string>
     <string name="jetpack_rest_connection_step_login_wpcom">تسجيل الدخول إلى WordPress.com</string>
     <string name="start">بداية</string>
     <string name="application_password_invalid">كلمة مرور التطبيق غير صالحة</string>

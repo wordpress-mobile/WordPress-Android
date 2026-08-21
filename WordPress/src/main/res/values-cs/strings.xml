@@ -422,6 +422,7 @@ Language: cs_CZ
     <string name="jetpack_rest_connection_status_not_started">Nezahájeno</string>
     <string name="jetpack_rest_connection_step_finalize">Dokončit nastavení</string>
     <string name="jetpack_rest_connection_step_connect_user">Připojit uživatele k WordPress.com</string>
+    <string name="jetpack_rest_connection_step_install_jetpack">Nainstalovat zásuvný modul Jetpack</string>
     <string name="jetpack_rest_connection_step_login_wpcom">Přihlásit se na WordPress.com</string>
     <string name="start">Spustit</string>
     <string name="descending">Sestupně</string>

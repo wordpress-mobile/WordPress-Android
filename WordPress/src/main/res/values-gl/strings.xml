@@ -80,6 +80,7 @@ Language: gl_ES
     <string name="start">Empezar</string>
     <string name="ascending">Ascendente</string>
     <string name="descending">Descendente</string>
+    <string name="jetpack_rest_connection_step_install_jetpack">Instala o plugin Jetpack</string>
     <string name="jetpack_rest_connection_step_login_wpcom">Accede a WordPress.com</string>
     <string name="subscribers_gift_content_description">Regalo</string>
     <string name="subscribers_add_subscribers">Engadir susbcritores</string>
