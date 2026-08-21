@@ -418,7 +418,6 @@ Language: zh_CN
     <string name="jetpack_rest_connection_status_not_started">未开始</string>
     <string name="jetpack_rest_connection_step_finalize">完成设置</string>
     <string name="jetpack_rest_connection_step_connect_user">将用户关联到 WordPress.com</string>
-    <string name="jetpack_rest_connection_step_install_jetpack">安装 Jetpack 插件</string>
     <string name="jetpack_rest_connection_step_login_wpcom">登录 WordPress.com</string>
     <string name="start">开始</string>
     <string name="descending">降序</string>

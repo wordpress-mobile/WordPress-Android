@@ -422,7 +422,6 @@ Language: tr
     <string name="jetpack_rest_connection_status_not_started">Başlamamış</string>
     <string name="jetpack_rest_connection_step_finalize">Kurulumu sonlandır</string>
     <string name="jetpack_rest_connection_step_connect_user">Kullanıcıyı WordPress.com\'a bağlayın</string>
-    <string name="jetpack_rest_connection_step_install_jetpack">Jetpack eklentisini yükleyin</string>
     <string name="jetpack_rest_connection_step_login_wpcom">WordPress.com’da oturum açın</string>
     <string name="start">Başlat</string>
     <string name="descending">Azalan</string>

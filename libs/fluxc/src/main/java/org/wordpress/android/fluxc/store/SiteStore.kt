@@ -1456,6 +1456,19 @@ open class SiteStore @Inject constructor(
         }
     }
 
+    /**
+     * This fetch builds a brand-new model, so it carries neither the local id nor the WordPress.com identity
+     * of the row it is refreshing. Without the local id, [SiteSqlUtils.insertOrUpdateSiteReturningId] has to
+     * fall back to matching on SITE_ID + URL, which stops matching the moment a real blog id is stored by the
+     * Jetpack connection flow -- and then inserts a duplicate site instead of updating the existing one.
+     */
+    private fun carryForwardStoredWPAPIFields(fetchedSite: SiteModel) {
+        val storedSite = siteSqlUtils.getWPAPISiteByUrl(fetchedSite.url) ?: return
+        fetchedSite.id = storedSite.id
+        fetchedSite.siteId = storedSite.siteId
+        fetchedSite.setIsJetpackConnected(storedSite.isJetpackConnected)
+    }
+
     suspend fun fetchWPAPISite(payload: FetchWPAPISitePayload): OnSiteChanged {
         return coroutineEngine.withDefaultContext(T.MAIN, this, "Fetch WPAPI Site") {
             updateSite(siteWPAPIRestClient.fetchWPAPISite(payload))
@@ -1483,6 +1496,7 @@ open class SiteStore @Inject constructor(
                 )
                 if (!siteModel.isError) {
                     siteModel.wpApiRestUrl = payload.apiRootUrl
+                    carryForwardStoredWPAPIFields(siteModel)
                 }
                 val result = updateSite(siteModel)
                 // updateSite's full-row write skips WP_API_REST_URL and the credential columns, and this fresh

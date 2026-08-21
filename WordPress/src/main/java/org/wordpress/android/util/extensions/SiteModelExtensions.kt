@@ -34,8 +34,12 @@ fun SiteModel.activeJetpackConnectionPluginValues(): List<String>? =
 
 /**
  * @return true if the Jetpack app has anything to offer this site. The Jetpack-powered features live behind
- * WordPress.com, so a self-hosted site without Jetpack gets nothing out of switching apps -- and telling its
- * owner that their site has the Jetpack plugin is simply wrong.
+ * WordPress.com, so a self-hosted site with no link to it at all gets nothing out of switching apps -- and
+ * telling its owner that their site has the Jetpack plugin is simply wrong.
+ *
+ * [SiteModel.isJetpackCPConnected] counts: those sites reach WordPress.com through the Jetpack Connection
+ * Package shipped in Boost, Protect, Social and VaultPress Backup, so the Jetpack app still works for them
+ * even though the Jetpack plugin itself isn't installed.
  */
 fun SiteModel?.canUseJetpackApp(): Boolean =
-    this != null && (isWPCom || isJetpackInstalled || isJetpackConnected)
+    this != null && (isWPCom || isJetpackInstalled || isJetpackConnected || isJetpackCPConnected)

@@ -51,7 +51,6 @@ Language: en_CA
     <string name="start">Start</string>
     <string name="descending">Descending</string>
     <string name="ascending">Ascending</string>
-    <string name="jetpack_rest_connection_step_install_jetpack">Install Jetpack plugin</string>
     <string name="subscribers_renewal_interval">Renewal interval</string>
     <string name="subscribers_gift_content_description">Gift</string>
     <string name="application_password_invalid">Invalid Application Password</string>

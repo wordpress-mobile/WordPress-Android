@@ -425,7 +425,6 @@ Language: es_CO
     <string name="start">Empezar</string>
     <string name="descending">Descendente</string>
     <string name="ascending">Ascendente</string>
-    <string name="jetpack_rest_connection_step_install_jetpack">Instalar el plugin de Jetpack</string>
     <string name="jetpack_rest_connection_step_login_wpcom">Acceder a WordPress.com</string>
     <string name="subscribers_add_email_hint">nombre@ejemplo.com</string>
     <string name="subscribers_gift_content_description">Regalo</string>

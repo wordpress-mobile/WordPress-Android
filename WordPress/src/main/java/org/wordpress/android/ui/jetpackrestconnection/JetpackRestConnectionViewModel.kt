@@ -68,11 +68,6 @@ class JetpackRestConnectionViewModel @Inject constructor(
     private var site: SiteModel = selectedSiteRepository.getSelectedSite() ?: error("No site selected")
 
     /**
-     * True when the site already has Jetpack, in which case the install step only has to activate it.
-     */
-    val isJetpackAlreadyInstalled: Boolean = site.isJetpackInstalled
-
-    /**
      * This will be used for analytics tracking
      */
     fun setConnectionSource(source: ConnectionSource) {
@@ -600,10 +595,10 @@ class JetpackRestConnectionViewModel @Inject constructor(
          * - Site isn't already connected to Jetpack
          * - Jetpack is not installed, its version is unknown, or the installed version is 14.2 or above
          *
-         * The version is unknown for sites added with an application password: Jetpack is detected there from
-         * the site's REST namespaces, which don't carry a version. Blocking on that would send them to the
-         * WebView connection flow, which signs in through wp-login.php and so can't work with an application
-         * password -- this flow is the only one they have.
+         * The version is unknown when the site's plugin list couldn't be read -- it needs the activate_plugins
+         * capability, so an application-password user who isn't an administrator never sees it. Blocking on
+         * that would send those sites to the WebView connection flow, which signs in through wp-login.php and
+         * so can't work with an application password; this flow is the only one they have.
          */
         fun canInitiateJetpackRestConnection(site: SiteModel): Boolean {
             return BuildConfig.IS_JETPACK_APP

@@ -27,6 +27,13 @@ class SiteModelExtensionsKtTest {
     }
 
     @Test
+    fun `given a Jetpack-CP connected site, then it can use the Jetpack app`() {
+        val site = SiteModel().apply { setIsJetpackCPConnected(true) }
+
+        assertThat(site.canUseJetpackApp()).isTrue
+    }
+
+    @Test
     fun `given a self-hosted site without Jetpack, then it cannot use the Jetpack app`() {
         assertThat(SiteModel().canUseJetpackApp()).isFalse
     }

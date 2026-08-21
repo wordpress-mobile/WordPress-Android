@@ -415,7 +415,6 @@ Language: ko_KR
     <string name="jetpack_rest_connection_status_not_started">시작 전</string>
     <string name="jetpack_rest_connection_step_finalize">설정 마무리 단계</string>
     <string name="jetpack_rest_connection_step_connect_user">워드프레스닷컴에 사용자 연결</string>
-    <string name="jetpack_rest_connection_step_install_jetpack">젯팩 플러그인을 설치하세요</string>
     <string name="jetpack_rest_connection_step_login_wpcom">워드프레스닷컴에 로그인</string>
     <string name="start">시작</string>
     <string name="descending">내림차순</string>

@@ -96,9 +96,7 @@ class MenuActivity : BaseAppCompatActivity() {
         if (resultCode == SiteSettingsFragment.RESULT_BLOG_REMOVED) {
             viewModel.handleSiteRemoved()
         } else if (requestCode == RequestCodes.DO_LOGIN && resultCode == RESULT_OK) {
-            // Close the menu so the user lands back on My Site, which handles the successful sign-in and
-            // reloads the site the new Stats destination depends on.
-            finish()
+            viewModel.handleSuccessfulLoginResult()
         }
     }
 

@@ -165,6 +165,17 @@ class MenuViewModel @Inject constructor(
         super.onCleared()
     }
 
+    /**
+     * The WordPress.com sign-in offered for Stats was started from this screen, so its result lands here
+     * rather than in MySiteFragment, and nothing else will act on it. Re-resolve the Stats destination now
+     * that an account is signed in -- the routing depends on it, so the answer may differ from last time.
+     */
+    fun handleSuccessfulLoginResult() {
+        selectedSiteRepository.getSelectedSite()?.let { site ->
+            _onNavigation.postValue(Event(listItemActionHandler.handleAction(ListItemAction.STATS, site)))
+        }
+    }
+
     fun handleSiteRemoved() {
         selectedSiteRepository.removeSite()
         _onSelectedSiteMissing.value = Unit

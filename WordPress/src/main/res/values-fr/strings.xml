@@ -404,7 +404,6 @@ Language: fr
     <string name="jetpack_rest_connection_status_not_started">Non démarrée</string>
     <string name="jetpack_rest_connection_step_finalize">Finaliser la configuration</string>
     <string name="jetpack_rest_connection_step_connect_user">Connecter l’utilisateur à WordPress.com</string>
-    <string name="jetpack_rest_connection_step_install_jetpack">Installer l’extension Jetpack</string>
     <string name="jetpack_rest_connection_step_login_wpcom">Connexion à WordPress.com</string>
     <string name="start">Démarrer</string>
     <string name="descending">Décroissant</string>

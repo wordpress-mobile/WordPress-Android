@@ -64,7 +64,6 @@ fun JetpackRestConnectionScreen(
     currentStep: State<ConnectionStep?>,
     stepStates: State<Map<ConnectionStep, StepState>>,
     buttonType: State<ButtonType?>,
-    isJetpackAlreadyInstalled: Boolean = false,
     onStartClick: () -> Unit = {},
     onDoneClick: () -> Unit = {},
     onCloseClick: () -> Unit = {},
@@ -78,7 +77,6 @@ fun JetpackRestConnectionScreen(
                 JetpackConnectionSteps(
                     currentStep = currentStep.value,
                     stepStates = stepStates.value,
-                    isJetpackAlreadyInstalled = isJetpackAlreadyInstalled,
                     modifier = Modifier
                         .weight(1f)
                         .verticalScroll(rememberScrollState())
@@ -142,7 +140,7 @@ private val stepConfigs = listOf(
     ),
     StepConfig(
         step = ConnectionStep.InstallJetpack,
-        titleRes = R.string.jetpack_rest_connection_step_install_jetpack,
+        titleRes = R.string.jetpack_rest_connection_step_setup_jetpack,
         icon = Icons.Default.Build
     ),
     StepConfig(
@@ -162,24 +160,10 @@ private val stepConfigs = listOf(
     )
 )
 
-/**
- * The install step only has to activate Jetpack when the site already has it, which is the case for sites
- * added with an application password: the connection flow is offered to them precisely because Jetpack is
- * present but not connected to the account signed in here.
- */
-@StringRes
-private fun stepTitleRes(config: StepConfig, isJetpackAlreadyInstalled: Boolean): Int =
-    if (config.step == ConnectionStep.InstallJetpack && isJetpackAlreadyInstalled) {
-        R.string.jetpack_rest_connection_step_activate_jetpack
-    } else {
-        config.titleRes
-    }
-
 @Composable
 private fun JetpackConnectionSteps(
     currentStep: ConnectionStep?,
     stepStates: Map<ConnectionStep, StepState>,
-    isJetpackAlreadyInstalled: Boolean,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -190,7 +174,7 @@ private fun JetpackConnectionSteps(
     ) {
         stepConfigs.forEach { config ->
             ConnectionStepItem(
-                title = stringResource(stepTitleRes(config, isJetpackAlreadyInstalled)),
+                title = stringResource(config.titleRes),
                 icon = config.icon,
                 stepState = stepStates[config.step] ?: StepState(),
                 isCurrentStep = currentStep == config.step
