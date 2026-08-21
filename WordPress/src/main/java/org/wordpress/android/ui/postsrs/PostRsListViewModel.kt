@@ -32,6 +32,8 @@ import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.rs.RsPostChangeListener
 import org.wordpress.android.ui.rs.RsTabLoading
 import org.wordpress.android.ui.rs.RsTabRefreshJobs
+import org.wordpress.android.ui.rs.RsUploadedPost
+import org.wordpress.android.ui.rs.toRsPostStatus
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.SiteUtils
@@ -84,6 +86,7 @@ class PostRsListViewModel @Inject constructor(
 
     private var isScreenVisible = false
     private var hasDeferredChange = false
+    private var pendingReveal: PostRsReveal? = null
 
     /** Tabs whose collection has completed at least one fetch, so an empty list means empty. */
     private val fetchedTabs = mutableSetOf<PostRsListTab>()
@@ -96,6 +99,9 @@ class PostRsListViewModel @Inject constructor(
 
     private val _snackbarMessages = Channel<SnackbarMessage>(Channel.BUFFERED)
     val snackbarMessages = _snackbarMessages.receiveAsFlow()
+
+    private val _revealRequests = Channel<PostRsReveal>(Channel.BUFFERED)
+    val revealRequests = _revealRequests.receiveAsFlow()
 
     private val _pendingConfirmation = MutableStateFlow<PendingConfirmation?>(null)
     val pendingConfirmation: StateFlow<PendingConfirmation?> = _pendingConfirmation.asStateFlow()
@@ -146,6 +152,9 @@ class PostRsListViewModel @Inject constructor(
             viewModelScope.launch {
                 changeListener.changes.collect { onRemoteChangeDetected() }
             }
+            viewModelScope.launch {
+                changeListener.uploads.collect { onPostUploaded(it) }
+            }
             changeListener.start(site, isPages = false)
         }
     }
@@ -155,6 +164,7 @@ class PostRsListViewModel @Inject constructor(
     fun onScreenVisible() {
         isScreenVisible = true
         if (hasDeferredChange) onRemoteChangeDetected()
+        emitPendingReveal()
     }
 
     @MainThread
@@ -177,6 +187,31 @@ class PostRsListViewModel @Inject constructor(
         if (!isScreenVisible || !networkUtilsWrapper.isNetworkAvailable()) return
         hasDeferredChange = false
         refreshAllTabs()
+    }
+
+    /**
+     * Remembers to point the user at a post the editor just saved, because the list gives no other
+     * sign that it arrived: a new post lands on whichever tab its status belongs to - not
+     * necessarily the one being looked at - and even on the right tab a prepended row sits above
+     * the current scroll position.
+     *
+     * The reveal waits for [onScreenVisible] rather than firing here, since the upload almost
+     * always completes while the editor still covers the list. The refresh that brings the post
+     * into the tab is triggered separately by [onRemoteChangeDetected]; the screen waits for the
+     * post to show up before scrolling.
+     */
+    private fun onPostUploaded(upload: RsUploadedPost) {
+        val status = upload.status.toRsPostStatus() ?: return
+        val tab = PostRsListTab.entries.firstOrNull { status in it.statuses } ?: return
+        pendingReveal = PostRsReveal(tab, upload.remotePostId)
+        emitPendingReveal()
+    }
+
+    private fun emitPendingReveal() {
+        if (!isScreenVisible) return
+        val reveal = pendingReveal ?: return
+        pendingReveal = null
+        _revealRequests.trySend(reveal)
     }
 
     /**
@@ -245,6 +280,8 @@ class PostRsListViewModel @Inject constructor(
     /** Tracks a tab change event when the user swipes or taps a tab. */
     @MainThread
     fun onTabChanged(tab: PostRsListTab) {
+        // The user chose a tab; moving them off it to reveal an upload would be hostile.
+        pendingReveal = null
         if (tab == lastTrackedTab) return
         lastTrackedTab = tab
         analyticsTracker.track(
@@ -272,6 +309,7 @@ class PostRsListViewModel @Inject constructor(
     @MainThread
     fun onSearchOpen() {
         analyticsTracker.track(Stat.POST_LIST_SEARCH_ACCESSED, site)
+        pendingReveal = null
         _isSearchActive.value = true
         clearCollections()
     }

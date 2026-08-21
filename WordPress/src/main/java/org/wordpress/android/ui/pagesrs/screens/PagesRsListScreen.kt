@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
@@ -58,6 +59,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
@@ -75,6 +77,7 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.withIndex
 import kotlinx.coroutines.launch
@@ -84,10 +87,12 @@ import org.wordpress.android.ui.pagesrs.PageRsListConfirmation
 import org.wordpress.android.ui.pagesrs.PageRsListTab
 import org.wordpress.android.ui.pagesrs.PageRsMenuAction
 import org.wordpress.android.ui.pagesrs.PageRsParentPickerState
+import org.wordpress.android.ui.pagesrs.PageRsReveal
 import org.wordpress.android.ui.pagesrs.PageTabUiState
 import org.wordpress.android.ui.pagesrs.PagesRsListViewModel.Companion.MIN_SEARCH_QUERY_LENGTH
 import org.wordpress.android.ui.posts.AuthorFilterSelection
 import org.wordpress.android.ui.postsrs.SnackbarMessage
+import org.wordpress.android.ui.rs.revealListItem
 
 @Suppress("CyclomaticComplexMethod", "LongMethod")
 @OptIn(ExperimentalMaterial3Api::class)
@@ -103,6 +108,7 @@ internal fun PagesRsListScreen(
     confirmationDialog: PageRsConfirmationDialogState,
     parentPicker: PageRsParentPickerState?,
     snackbarMessages: Flow<SnackbarMessage> = emptyFlow(),
+    revealRequests: Flow<PageRsReveal> = emptyFlow(),
     onSearchOpen: () -> Unit,
     onSearchQueryChanged: (String, PageRsListTab) -> Unit,
     onSearchClose: (PageRsListTab) -> Unit,
@@ -127,6 +133,60 @@ internal fun PagesRsListScreen(
     val focusManager = LocalFocusManager.current
     val activeTab = tabs[pagerState.settledPage]
     val snackbarHostState = remember { SnackbarHostState() }
+    // Hoisted so a reveal can scroll a tab to the page the user just saved. Listed explicitly
+    // (rememberLazyListState can't be called in an associateWith lambda) so each state is saveable
+    // and scroll positions survive rotation; keep in sync with the enum.
+    val listStates = mapOf(
+        PageRsListTab.PUBLISHED to rememberLazyListState(),
+        PageRsListTab.DRAFTS to rememberLazyListState(),
+        PageRsListTab.SCHEDULED to rememberLazyListState(),
+        PageRsListTab.TRASHED to rememberLazyListState()
+    )
+    val currentTabStates by rememberUpdatedState(tabStates)
+    val currentSearchActive by rememberUpdatedState(isSearchActive)
+    val currentQuery by rememberUpdatedState(searchQuery)
+
+    // Search opening, closing, or changing the trimmed query replaces each tab's content
+    // wholesale; reset the scroll so page 1 renders at the top. The hoisted list states otherwise
+    // keep their old deep offsets, clamping the short new list to its end and tripping the
+    // load-more trigger. drop(1) skips the initial emission: an Activity recreation must not
+    // discard the scroll positions the saveable list states just restored. The at-top check
+    // avoids scrollToItem's forced remeasure (and fling cancellation) when there's nothing to do.
+    LaunchedEffect(Unit) {
+        snapshotFlow { currentSearchActive to currentQuery.trim() }
+            .drop(1)
+            .collect {
+                listStates.values.forEach { state ->
+                    if (state.firstVisibleItemIndex > 0 || state.firstVisibleItemScrollOffset > 0) {
+                        state.scrollToItem(0)
+                    }
+                }
+            }
+    }
+
+    // Brings a page the user just saved in the editor into view: its status decides the tab, which
+    // may not be the one on screen, and the published and draft tabs sort by title, so it can land
+    // anywhere in them. Switching pages initializes a tab that was never opened; the refresh that
+    // adds the page may still be in flight, which revealListItem waits out.
+    LaunchedEffect(revealRequests) {
+        revealRequests.collect { reveal ->
+            if (currentSearchActive) return@collect
+            val page = tabs.indexOf(reveal.tab)
+            if (pagerState.settledPage != page) pagerState.animateScrollToPage(page)
+            val pages = { currentTabStates[reveal.tab]?.pages.orEmpty() }
+            revealListItem(
+                listState = listStates.getValue(reveal.tab),
+                indexOfTarget = {
+                    pages().indexOfFirst { it.remotePageId == reveal.remotePageId }
+                },
+                // Rows are keyed by stableKey, and the row holding the page can be a virtual one
+                // (the homepage, say), so the key has to come from the row rather than the id.
+                targetKey = {
+                    pages().firstOrNull { it.remotePageId == reveal.remotePageId }?.stableKey
+                }
+            )
+        }
+    }
 
     BackHandler(enabled = isSearchActive) { onSearchClose(activeTab) }
 
@@ -259,6 +319,7 @@ internal fun PagesRsListScreen(
                 PageRsTabListScreen(
                     state = tabState,
                     emptyMessageResId = tab.emptyMessageResId,
+                    listState = listStates.getValue(tab),
                     isSearchIdle = isSearchActive && searchQuery.length < MIN_SEARCH_QUERY_LENGTH,
                     isSearching = isSearchActive && searchQuery.length >= MIN_SEARCH_QUERY_LENGTH,
                     onRefresh = { onRefreshTab(tab) },

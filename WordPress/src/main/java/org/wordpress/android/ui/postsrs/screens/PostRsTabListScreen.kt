@@ -11,8 +11,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -40,6 +40,7 @@ import org.wordpress.android.ui.postsrs.PostTabUiState
 fun PostRsTabListScreen(
     state: PostTabUiState,
     emptyMessageResId: Int,
+    listState: LazyListState,
     onRefresh: () -> Unit,
     onLoadMore: () -> Unit,
     onPostClick: (Long) -> Unit,
@@ -91,6 +92,7 @@ fun PostRsTabListScreen(
             }
             else -> PostListContent(
                 posts = state.posts,
+                listState = listState,
                 isLoadingMore = state.isLoadingMore,
                 canLoadMore = state.canLoadMore,
                 onLoadMore = onLoadMore,
@@ -104,14 +106,13 @@ fun PostRsTabListScreen(
 @Composable
 private fun PostListContent(
     posts: List<PostRsUiModel>,
+    listState: LazyListState,
     isLoadingMore: Boolean,
     canLoadMore: Boolean,
     onLoadMore: () -> Unit,
     onPostClick: (Long) -> Unit,
     onPostMenuAction: (Long, PostRsMenuAction) -> Unit
 ) {
-    val listState = rememberLazyListState()
-
     LaunchedEffect(canLoadMore) {
         if (!canLoadMore) return@LaunchedEffect
         snapshotFlow {

@@ -433,6 +433,90 @@ internal class PagesRsListViewModelTest : BaseUnitTest(StandardTestDispatcher())
         setLocalSiteId(site.id)
     }
 
+    private fun pageUpload(status: String, remotePageId: Long = UPLOADED_PAGE_ID) =
+        pageUpload().apply {
+            setStatus(status)
+            setRemotePostId(remotePageId)
+        }
+
+    @Test
+    fun `a published page is revealed on the published tab`() = test {
+        val viewModel = createViewModel()
+        viewModel.onScreenVisible()
+        advanceUntilIdle()
+
+        changeListener.onPostUploaded(OnPostUploaded(pageUpload("publish"), false))
+        advanceUntilIdle()
+
+        viewModel.revealRequests.test {
+            assertThat(awaitItem())
+                .isEqualTo(PageRsReveal(PageRsListTab.PUBLISHED, UPLOADED_PAGE_ID))
+        }
+    }
+
+    @Test
+    fun `a new draft page is revealed on the drafts tab`() = test {
+        val viewModel = createViewModel()
+        viewModel.onScreenVisible()
+        advanceUntilIdle()
+
+        changeListener.onPostUploaded(OnPostUploaded(pageUpload("draft"), false))
+        advanceUntilIdle()
+
+        viewModel.revealRequests.test {
+            assertThat(awaitItem())
+                .isEqualTo(PageRsReveal(PageRsListTab.DRAFTS, UPLOADED_PAGE_ID))
+        }
+    }
+
+    @Test
+    fun `an upload while the screen is hidden is revealed when it is shown`() = test {
+        val viewModel = createViewModel()
+        viewModel.onScreenVisible()
+        viewModel.onScreenHidden()
+        advanceUntilIdle()
+
+        changeListener.onPostUploaded(OnPostUploaded(pageUpload("publish"), false))
+        advanceUntilIdle()
+
+        viewModel.revealRequests.test {
+            expectNoEvents()
+
+            viewModel.onScreenVisible()
+
+            assertThat(awaitItem())
+                .isEqualTo(PageRsReveal(PageRsListTab.PUBLISHED, UPLOADED_PAGE_ID))
+        }
+    }
+
+    @Test
+    fun `a reveal is dropped once the user picks a tab`() = test {
+        val viewModel = createViewModel()
+        viewModel.onScreenVisible()
+        viewModel.onScreenHidden()
+        advanceUntilIdle()
+
+        changeListener.onPostUploaded(OnPostUploaded(pageUpload("publish"), false))
+        advanceUntilIdle()
+        viewModel.onTabChanged(PageRsListTab.DRAFTS)
+        viewModel.onScreenVisible()
+        advanceUntilIdle()
+
+        viewModel.revealRequests.test { expectNoEvents() }
+    }
+
+    @Test
+    fun `an upload with an unrecognized status is not revealed`() = test {
+        val viewModel = createViewModel()
+        viewModel.onScreenVisible()
+        advanceUntilIdle()
+
+        changeListener.onPostUploaded(OnPostUploaded(pageUpload("gibberish"), false))
+        advanceUntilIdle()
+
+        viewModel.revealRequests.test { expectNoEvents() }
+    }
+
     @Test
     fun `onPageMenuAction TRASH sets Trash confirmation`() {
         val viewModel = createViewModel()
@@ -636,3 +720,5 @@ internal class PagesRsListViewModelTest : BaseUnitTest(StandardTestDispatcher())
         assertThat(state?.isRefreshing ?: false).isFalse
     }
 }
+
+private const val UPLOADED_PAGE_ID = 4242L

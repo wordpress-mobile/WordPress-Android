@@ -50,6 +50,8 @@ import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.rs.RsPostChangeListener
 import org.wordpress.android.ui.rs.RsTabLoading
 import org.wordpress.android.ui.rs.RsTabRefreshJobs
+import org.wordpress.android.ui.rs.RsUploadedPost
+import org.wordpress.android.ui.rs.toRsPostStatus
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
@@ -108,6 +110,7 @@ internal class PagesRsListViewModel @Inject constructor(
 
     private var isScreenVisible = false
     private var hasDeferredChange = false
+    private var pendingReveal: PageRsReveal? = null
 
     /** Tabs whose collection has completed at least one fetch, so an empty list means empty. */
     private val fetchedTabs = mutableSetOf<PageRsListTab>()
@@ -120,6 +123,9 @@ internal class PagesRsListViewModel @Inject constructor(
 
     private val _snackbarMessages = Channel<SnackbarMessage>(Channel.BUFFERED)
     val snackbarMessages = _snackbarMessages.receiveAsFlow()
+
+    private val _revealRequests = Channel<PageRsReveal>(Channel.BUFFERED)
+    val revealRequests = _revealRequests.receiveAsFlow()
 
     private val _pendingConfirmation = MutableStateFlow<PageRsListConfirmation?>(null)
     val pendingConfirmation: StateFlow<PageRsListConfirmation?> = _pendingConfirmation.asStateFlow()
@@ -193,6 +199,9 @@ internal class PagesRsListViewModel @Inject constructor(
             viewModelScope.launch {
                 changeListener.changes.collect { onRemoteChangeDetected() }
             }
+            viewModelScope.launch {
+                changeListener.uploads.collect { onPageUploaded(it) }
+            }
             changeListener.start(site, isPages = true)
         }
     }
@@ -202,6 +211,7 @@ internal class PagesRsListViewModel @Inject constructor(
     fun onScreenVisible() {
         isScreenVisible = true
         if (hasDeferredChange) onRemoteChangeDetected()
+        emitPendingReveal()
     }
 
     @MainThread
@@ -227,6 +237,31 @@ internal class PagesRsListViewModel @Inject constructor(
     }
 
     /**
+     * Remembers to point the user at a page the editor just saved, because the list gives no other
+     * sign that it arrived: a new page lands on whichever tab its status belongs to - not
+     * necessarily the one being looked at - and the published and draft tabs sort by title, so it
+     * can land anywhere in them.
+     *
+     * The reveal waits for [onScreenVisible] rather than firing here, since the upload almost
+     * always completes while the editor still covers the list. The refresh that brings the page
+     * into the tab is triggered separately by [onRemoteChangeDetected]; the screen waits for the
+     * page to show up before scrolling.
+     */
+    private fun onPageUploaded(upload: RsUploadedPost) {
+        val status = upload.status.toRsPostStatus() ?: return
+        val tab = PageRsListTab.entries.firstOrNull { status in it.statuses } ?: return
+        pendingReveal = PageRsReveal(tab, upload.remotePostId)
+        emitPendingReveal()
+    }
+
+    private fun emitPendingReveal() {
+        if (!isScreenVisible) return
+        val reveal = pendingReveal ?: return
+        pendingReveal = null
+        _revealRequests.trySend(reveal)
+    }
+
+    /**
      * Rebuilds the parent picker's collection for a (debounced) search query. Queries shorter
      * than [MIN_SEARCH_QUERY_LENGTH] are treated as blank so the full list is shown. No-ops if
      * the picker has been dismissed while the debounce was pending.
@@ -242,6 +277,8 @@ internal class PagesRsListViewModel @Inject constructor(
 
     @MainThread
     fun onTabChanged(tab: PageRsListTab) {
+        // The user chose a tab; moving them off it to reveal an upload would be hostile.
+        pendingReveal = null
         val site = this.site ?: return
         if (tab == lastTrackedTab) return
         lastTrackedTab = tab
@@ -260,6 +297,7 @@ internal class PagesRsListViewModel @Inject constructor(
     fun onSearchOpen() {
         val site = this.site ?: return
         analyticsTracker.track(Stat.PAGES_LIST_SEARCH_ACCESSED, site)
+        pendingReveal = null
         _isSearchActive.value = true
         clearCollections()
     }

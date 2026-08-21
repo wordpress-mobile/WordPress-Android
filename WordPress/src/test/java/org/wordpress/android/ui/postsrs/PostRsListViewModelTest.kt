@@ -161,6 +161,90 @@ class PostRsListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
         setLocalSiteId(site.id)
     }
 
+    private fun postUpload(status: String, remotePostId: Long = UPLOADED_POST_ID) =
+        postUpload().apply {
+            setStatus(status)
+            setRemotePostId(remotePostId)
+        }
+
+    @Test
+    fun `a published post is revealed on the published tab`() = test {
+        val viewModel = createViewModel()
+        viewModel.onScreenVisible()
+        advanceUntilIdle()
+
+        changeListener.onPostUploaded(OnPostUploaded(postUpload("publish"), false))
+        advanceUntilIdle()
+
+        viewModel.revealRequests.test {
+            assertThat(awaitItem())
+                .isEqualTo(PostRsReveal(PostRsListTab.PUBLISHED, UPLOADED_POST_ID))
+        }
+    }
+
+    @Test
+    fun `a new draft is revealed on the drafts tab`() = test {
+        val viewModel = createViewModel()
+        viewModel.onScreenVisible()
+        advanceUntilIdle()
+
+        changeListener.onPostUploaded(OnPostUploaded(postUpload("draft"), false))
+        advanceUntilIdle()
+
+        viewModel.revealRequests.test {
+            assertThat(awaitItem())
+                .isEqualTo(PostRsReveal(PostRsListTab.DRAFTS, UPLOADED_POST_ID))
+        }
+    }
+
+    @Test
+    fun `an upload while the screen is hidden is revealed when it is shown`() = test {
+        val viewModel = createViewModel()
+        viewModel.onScreenVisible()
+        viewModel.onScreenHidden()
+        advanceUntilIdle()
+
+        changeListener.onPostUploaded(OnPostUploaded(postUpload("publish"), false))
+        advanceUntilIdle()
+
+        viewModel.revealRequests.test {
+            expectNoEvents()
+
+            viewModel.onScreenVisible()
+
+            assertThat(awaitItem())
+                .isEqualTo(PostRsReveal(PostRsListTab.PUBLISHED, UPLOADED_POST_ID))
+        }
+    }
+
+    @Test
+    fun `a reveal is dropped once the user picks a tab`() = test {
+        val viewModel = createViewModel()
+        viewModel.onScreenVisible()
+        viewModel.onScreenHidden()
+        advanceUntilIdle()
+
+        changeListener.onPostUploaded(OnPostUploaded(postUpload("publish"), false))
+        advanceUntilIdle()
+        viewModel.onTabChanged(PostRsListTab.DRAFTS)
+        viewModel.onScreenVisible()
+        advanceUntilIdle()
+
+        viewModel.revealRequests.test { expectNoEvents() }
+    }
+
+    @Test
+    fun `an upload with an unrecognized status is not revealed`() = test {
+        val viewModel = createViewModel()
+        viewModel.onScreenVisible()
+        advanceUntilIdle()
+
+        changeListener.onPostUploaded(OnPostUploaded(postUpload("gibberish"), false))
+        advanceUntilIdle()
+
+        viewModel.revealRequests.test { expectNoEvents() }
+    }
+
     @Test
     fun `when no site selected, emits ShowToast and Finish`() = test {
         whenever(selectedSiteRepository.getSelectedSite())
@@ -536,3 +620,5 @@ class PostRsListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
             }
         }
 }
+
+private const val UPLOADED_POST_ID = 4242L

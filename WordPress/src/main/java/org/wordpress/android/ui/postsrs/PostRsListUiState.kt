@@ -24,6 +24,15 @@ sealed interface PendingConfirmation {
     data class MoveToDraft(val postId: Long) : PendingConfirmation
 }
 
+/**
+ * A request to bring [remotePostId] into view: select [tab], then scroll to the post within it.
+ * Sent after the list has learned about a post the user just saved in the editor.
+ */
+data class PostRsReveal(
+    val tab: PostRsListTab,
+    val remotePostId: Long
+)
+
 data class ConfirmationDialogState(
     val pending: PendingConfirmation? = null,
     val onConfirm: () -> Unit = {},
