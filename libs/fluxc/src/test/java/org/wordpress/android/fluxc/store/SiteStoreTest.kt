@@ -9,6 +9,7 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.any
+import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.argWhere
 import org.mockito.kotlin.inOrder
 import org.mockito.kotlin.mock
@@ -494,7 +495,7 @@ class SiteStoreTest {
                 apiRestUsernamePlain = "appUser"
                 apiRestPasswordPlain = "appPass"
             }
-            whenever(siteWPAPIClient.fetchWPAPISite(any<SiteStore.FetchWPAPISitePayload>()))
+            whenever(siteWPAPIClient.fetchWPAPISite(any<SiteStore.FetchWPAPISitePayload>(), anyOrNull()))
                 .thenReturn(fetchedSite)
             whenever(siteSqlUtils.insertOrUpdateSite(fetchedSite))
                 .thenReturn(1)
@@ -556,7 +557,7 @@ class SiteStoreTest {
                     origin = SiteModel.ORIGIN_WPAPI
                     url = "https://example.com"
                 }
-                whenever(siteWPAPIClient.fetchWPAPISite(any<SiteStore.FetchWPAPISitePayload>()))
+                whenever(siteWPAPIClient.fetchWPAPISite(any<SiteStore.FetchWPAPISitePayload>(), anyOrNull()))
                     .thenReturn(fetchedSite)
                 whenever(siteSqlUtils.insertOrUpdateSite(fetchedSite)).thenReturn(1)
 
