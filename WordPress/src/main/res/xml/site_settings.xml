@@ -136,13 +136,15 @@
             android:id="@+id/pref_use_theme_styles"
             android:key="@string/pref_key_use_theme_styles"
             android:summary="@string/site_settings_use_theme_styles_summary"
-            android:title="@string/site_settings_use_theme_styles" />
+            android:title="@string/site_settings_use_theme_styles"
+            app:alignSwitchWithTitle="true" />
 
         <org.wordpress.android.ui.prefs.WPSwitchPreference
             android:id="@+id/pref_use_third_party_blocks"
             android:key="@string/pref_key_use_third_party_blocks"
             android:summary="@string/site_settings_use_third_party_blocks_summary"
-            android:title="@string/site_settings_use_third_party_blocks" />
+            android:title="@string/site_settings_use_third_party_blocks"
+            app:alignSwitchWithTitle="true" />
 
         <org.wordpress.android.ui.prefs.WPSwitchPreference
             android:id="@+id/pref_gutenberg_kit_enabled"
@@ -237,7 +239,8 @@
             android:id="@+id/pref_toggle_amp"
             android:key="@string/pref_key_site_amp"
             android:summary="@string/site_settings_amp_summary"
-            android:title="@string/site_settings_amp_title" />
+            android:title="@string/site_settings_amp_title"
+            app:alignSwitchWithTitle="true" />
 
     </PreferenceCategory>
 
