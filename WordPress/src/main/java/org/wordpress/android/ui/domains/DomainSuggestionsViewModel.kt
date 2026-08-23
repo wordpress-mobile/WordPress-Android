@@ -1,21 +1,15 @@
 package org.wordpress.android.ui.domains
 
+import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.map
 import kotlinx.coroutines.CoroutineDispatcher
-import org.greenrobot.eventbus.Subscribe
-import org.greenrobot.eventbus.ThreadMode
-import org.wordpress.android.Constants.TYPE_DOMAINS_PRODUCT
-import org.wordpress.android.fluxc.Dispatcher
-import org.wordpress.android.fluxc.generated.SiteActionBuilder
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.model.products.Product
-import org.wordpress.android.fluxc.store.ProductsStore
-import org.wordpress.android.fluxc.store.SiteStore.OnSuggestedDomains
-import org.wordpress.android.fluxc.store.SiteStore.SuggestDomainsPayload
+import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.models.networkresource.ListState
 import org.wordpress.android.modules.BG_THREAD
+import org.wordpress.android.networking.restapi.WpComApiClientProvider
 import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose
 import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose.CTA_DOMAIN_CREDIT_REDEMPTION
 import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose.DOMAIN_PURCHASE
@@ -28,22 +22,33 @@ import org.wordpress.android.util.extensions.isOnSale
 import org.wordpress.android.util.helpers.Debouncer
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
+import rs.wordpress.api.kotlin.WpComApiClient
+import rs.wordpress.api.kotlin.WpRequestResult
+import rs.wordpress.api.kotlin.toLogErrorString
+import uniffi.wp_api.DomainSuggestion
+import uniffi.wp_api.DomainSuggestionsParams
+import uniffi.wp_api.Product
+import uniffi.wp_api.ProductTypeFilter
+import uniffi.wp_api.ProductsParams
+import uniffi.wp_api.WpErrorCode
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Named
 import kotlin.properties.Delegates
 
 class DomainSuggestionsViewModel @Inject constructor(
-    private val productsStore: ProductsStore,
+    private val wpComApiClientProvider: WpComApiClientProvider,
+    private val accountStore: AccountStore,
     private val domainsRegistrationTracker: DomainsRegistrationTracker,
-    private val dispatcher: Dispatcher,
     private val debouncer: Debouncer,
     private val createCartUseCase: CreateCartUseCase,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(bgDispatcher) {
     lateinit var site: SiteModel
     lateinit var domainRegistrationPurpose: DomainRegistrationPurpose
-    var products: List<Product>? = null
+
+    private var wpComApiClient: WpComApiClient? = null
+    private var products: List<Product>? = null
 
     private var isStarted = false
     private var isQueryTrackingCompleted = false
@@ -90,18 +95,22 @@ class DomainSuggestionsViewModel @Inject constructor(
 
     companion object {
         private const val SEARCH_QUERY_DELAY_MS = 250L
-        private const val SUGGESTIONS_REQUEST_COUNT = 20
+        private const val SUGGESTIONS_REQUEST_COUNT = 20u
         private const val BLOG_DOMAIN_TLDS = "blog"
+        private const val ERROR_CODE_EMPTY_RESULTS = "empty_results"
     }
 
-    // Bind Dispatcher to Lifecycle
-
-    init {
-        dispatcher.register(this)
+    @Synchronized
+    private fun getOrCreateClient(): WpComApiClient {
+        val token = requireNotNull(accountStore.accessToken) {
+            "WP.com access token is required"
+        }
+        return wpComApiClient
+            ?: wpComApiClientProvider.getWpComApiClient(token)
+                .also { wpComApiClient = it }
     }
 
     override fun onCleared() {
-        dispatcher.unregister(this)
         debouncer.shutdown()
         createCartUseCase.clear()
         super.onCleared()
@@ -132,69 +141,97 @@ class DomainSuggestionsViewModel @Inject constructor(
 
     private fun fetchProducts() {
         launch {
-            val result = productsStore.fetchProducts(TYPE_DOMAINS_PRODUCT)
-            when {
-                result.isError -> {
-                    AppLog.e(T.DOMAIN_REGISTRATION, "An error occurred while fetching site domains")
-                    initializeDefaultSuggestions()
-                }
-                else -> {
-                    AppLog.d(T.DOMAIN_REGISTRATION, result.products.toString())
-                    result.products?.let { products = it }
-                    initializeDefaultSuggestions()
-                }
+            val params = ProductsParams(productType = ProductTypeFilter.Domains)
+            val result = getOrCreateClient()
+                .request { it.products().list(params).data }
+            when (result) {
+                is WpRequestResult.Success -> products = result.response.values.toList()
+                else -> AppLog.e(
+                    T.DOMAIN_REGISTRATION,
+                    "An error occurred while fetching domain products: " +
+                        result.toLogErrorString()
+                )
             }
+            initializeDefaultSuggestions()
         }
     }
 
     private fun fetchSuggestions() {
         suggestions = ListState.Loading(suggestions)
 
-        val suggestDomainsPayload = if (SiteUtils.onBloggerPlan(site)) {
-            SuggestDomainsPayload(searchQuery, SUGGESTIONS_REQUEST_COUNT, BLOG_DOMAIN_TLDS)
-        } else {
-            SuggestDomainsPayload(searchQuery, false, false, true, SUGGESTIONS_REQUEST_COUNT)
-        }
+        val query = searchQuery
+        val params = buildSuggestionsParams(query, SiteUtils.onBloggerPlan(site))
 
-        dispatcher.dispatch(SiteActionBuilder.newSuggestDomainsAction(suggestDomainsPayload))
+        launch {
+            val result = getOrCreateClient()
+                .request { it.domains().suggestions(params).data }
+            onDomainSuggestionsFetched(query, result)
+        }
 
         // Reset the selected suggestion, if list is updated
         onDomainSuggestionSelected(null)
     }
 
+    /**
+     * A site on the Blogger plan can only register a `.blog` domain, so its
+     * search is restricted to that TLD and carries none of the other filters.
+     */
+    @VisibleForTesting
+    internal fun buildSuggestionsParams(query: String, isOnBloggerPlan: Boolean) =
+        if (isOnBloggerPlan) {
+            DomainSuggestionsParams(
+                query = query,
+                quantity = SUGGESTIONS_REQUEST_COUNT,
+                tlds = listOf(BLOG_DOMAIN_TLDS),
+            )
+        } else {
+            DomainSuggestionsParams(
+                query = query,
+                quantity = SUGGESTIONS_REQUEST_COUNT,
+                onlyWordpressdotcom = false, // checkstyle ignore
+                includeWordpressdotcom = false, // checkstyle ignore
+                includeDotblogsubdomain = true,
+            )
+        }
+
     // Network Callback
 
-    @Suppress("unused")
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onDomainSuggestionsFetched(event: OnSuggestedDomains) {
-        if (searchQuery != event.query) {
+    private fun onDomainSuggestionsFetched(
+        query: String,
+        result: WpRequestResult<List<DomainSuggestion>>
+    ) {
+        if (searchQuery != query) {
             return
         }
-        if (event.isError) {
-            AppLog.e(
-                T.DOMAIN_REGISTRATION,
-                "An error occurred while fetching the domain suggestions with type: " + event.error.type
-            )
-            suggestions = ListState.Error(suggestions, event.error.message)
-            return
+        when (result) {
+            is WpRequestResult.Success -> showSuggestions(result.response)
+            is WpRequestResult.WpError -> when (result.apiErrorCode()) {
+                // The API rejects a search that matches nothing rather than
+                // returning an empty list. The request itself is fine.
+                ERROR_CODE_EMPTY_RESULTS -> showSuggestions(emptyList())
+                else -> showSuggestionsError(result)
+            }
+            else -> showSuggestionsError(result)
         }
+    }
 
-        event.suggestions
-            .filter { !it.is_free }
-            .map {
-                val product = products?.firstOrNull { product -> product.productId == it.product_id }
+    private fun showSuggestions(fetched: List<DomainSuggestion>) {
+        fetched
+            .filterIsInstance<DomainSuggestion.Paid>()
+            .map { paid ->
+                val product = products?.firstOrNull { it.productId == paid.v1.productId }
                 DomainSuggestionItem(
-                    domainName = it.domain_name,
-                    cost = it.cost,
+                    domainName = paid.v1.domainName,
+                    cost = paid.v1.cost,
                     isOnSale = product.isOnSale(),
                     saleCost = product?.combinedSaleCostDisplay.orEmpty(),
-                    isFree = it.is_free,
-                    supportsPrivacy = it.supports_privacy,
-                    productId = it.product_id,
-                    productSlug = it.product_slug,
-                    vendor = it.vendor,
-                    relevance = it.relevance,
-                    isSelected = _selectedSuggestion.value?.domainName == it.domain_name,
+                    isFree = false,
+                    supportsPrivacy = paid.v1.supportsPrivacy,
+                    productId = paid.v1.productId.toInt(),
+                    productSlug = paid.v1.productSlug,
+                    vendor = paid.v1.vendor,
+                    relevance = paid.v1.relevance.toFloat(),
+                    isSelected = _selectedSuggestion.value?.domainName == paid.v1.domainName,
                     isCostVisible = true,
                     isFreeWithCredits = domainRegistrationPurpose(),
                     isEnabled = true
@@ -205,6 +242,18 @@ class DomainSuggestionsViewModel @Inject constructor(
             .let {
                 suggestions = ListState.Success(it)
             }
+    }
+
+    private fun showSuggestionsError(result: WpRequestResult<*>) {
+        AppLog.e(
+            T.DOMAIN_REGISTRATION,
+            "An error occurred while fetching the domain suggestions: " +
+                result.toLogErrorString()
+        )
+        suggestions = ListState.Error(
+            suggestions,
+            (result as? WpRequestResult.WpError)?.errorMessage
+        )
     }
 
     private fun domainRegistrationPurpose() = domainRegistrationPurpose == CTA_DOMAIN_CREDIT_REDEMPTION ||
@@ -286,3 +335,11 @@ class DomainSuggestionsViewModel @Inject constructor(
         }
     }
 }
+
+/**
+ * The API's own error code, for the codes this endpoint defines. Codes the
+ * WordPress REST API also uses are modelled as [WpErrorCode] variants and
+ * return null.
+ */
+private fun WpRequestResult.WpError<*>.apiErrorCode(): String? =
+    (errorCode as? WpErrorCode.CustomException)?.v1
