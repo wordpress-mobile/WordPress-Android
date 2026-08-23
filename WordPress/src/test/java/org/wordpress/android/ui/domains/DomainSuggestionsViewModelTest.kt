@@ -94,11 +94,16 @@ class DomainSuggestionsViewModelTest : BaseUnitTest() {
             dispatcher
         )
 
-        onDomainSelectedEvents = mutableListOf()
-        created.onDomainSelected.observeForever { onDomainSelectedEvents.add(it.peekContent()) }
+        // Each observer appends to the list it was created with rather than
+        // to whichever list the field holds when it fires, so a view model
+        // built later in a test cannot feed an earlier one's sink.
+        val selected = mutableListOf<DomainProductDetails>()
+        onDomainSelectedEvents = selected
+        created.onDomainSelected.observeForever { selected.add(it.peekContent()) }
 
-        suggestionStates = mutableListOf()
-        created.suggestionsLiveData.observeForever { suggestionStates.add(it) }
+        val states = mutableListOf<ListState<DomainSuggestionItem>>()
+        suggestionStates = states
+        created.suggestionsLiveData.observeForever { states.add(it) }
 
         return created
     }
