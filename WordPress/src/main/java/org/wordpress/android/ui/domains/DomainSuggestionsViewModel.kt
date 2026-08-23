@@ -141,7 +141,7 @@ class DomainSuggestionsViewModel @Inject constructor(
 
     private fun fetchProducts() {
         launch {
-            val params = ProductsParams(productType = ProductTypeFilter.Domains)
+            val params = buildProductsParams()
             val result = getOrCreateClient()
                 .request { it.products().list(params).data }
             when (result) {
@@ -155,6 +155,13 @@ class DomainSuggestionsViewModel @Inject constructor(
             initializeDefaultSuggestions()
         }
     }
+
+    /**
+     * Only the domain products carry the sale pricing the suggestion list
+     * reads, so the request is filtered to them.
+     */
+    @VisibleForTesting
+    internal fun buildProductsParams() = ProductsParams(productType = ProductTypeFilter.Domains)
 
     private fun fetchSuggestions() {
         suggestions = ListState.Loading(suggestions)

@@ -34,6 +34,7 @@ import uniffi.wp_api.FreeDomainSuggestion
 import uniffi.wp_api.PaidDomainSuggestion
 import uniffi.wp_api.Product
 import uniffi.wp_api.ProductTerm
+import uniffi.wp_api.ProductTypeFilter
 import uniffi.wp_api.RequestMethod
 import uniffi.wp_api.WpErrorCode
 
@@ -158,14 +159,21 @@ class DomainSuggestionsViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `domain products are fetched only at first start`() = test {
+    fun `only the domain products are requested`() {
+        assertThat(viewModel.buildProductsParams().productType)
+            .isEqualTo(ProductTypeFilter.Domains)
+    }
+
+    @Test
+    fun `starting a second time repeats neither request`() = test {
         mockResponses(productsResponse(), suggestionsResponse())
 
         viewModel.start(site, domainRegistrationPurpose)
         viewModel.start(site, domainRegistrationPurpose)
         advanceUntilIdle()
 
-        // One products request and one suggestions request, not two of each.
+        // `request` takes an opaque lambda, so the count is all this can pin
+        // down: two requests in total rather than four.
         verify(wpComApiClient, times(2)).request<Any>(any())
     }
 
