@@ -97,9 +97,10 @@ class DomainSuggestionsFragment : Fragment(R.layout.domain_suggestions_fragment)
             }
 
             if (listState is ListState.Error<*>) {
-                val errorMessage = listState.errorMessage.orEmpty().ifEmpty {
-                    getString(R.string.domain_suggestions_fetch_error)
-                }
+                val errorMessage = listState.errorMessageResId?.let { getString(it) }
+                    ?: listState.errorMessage.orEmpty().ifEmpty {
+                        getString(R.string.domain_suggestions_fetch_error)
+                    }
                 ToastUtils.showToast(context, errorMessage)
             }
         }

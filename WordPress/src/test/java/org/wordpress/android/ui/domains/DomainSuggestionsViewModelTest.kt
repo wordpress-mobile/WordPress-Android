@@ -16,6 +16,7 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.verifyNoInteractions
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
+import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.rest.wpcom.transactions.TransactionsRestClient.CreateShoppingCartResponse
 import org.wordpress.android.fluxc.store.AccountStore
@@ -35,6 +36,7 @@ import uniffi.wp_api.PaidDomainSuggestion
 import uniffi.wp_api.Product
 import uniffi.wp_api.ProductTerm
 import uniffi.wp_api.ProductTypeFilter
+import uniffi.wp_api.RequestExecutionErrorReason
 import uniffi.wp_api.RequestMethod
 import uniffi.wp_api.WpErrorCode
 
@@ -294,6 +296,28 @@ class DomainSuggestionsViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `an offline failure asks the view for the network message`() = test {
+        mockResponses(
+            productsResponse(),
+            WpRequestResult.RequestExecutionFailed<Any>(
+                null,
+                null,
+                RequestExecutionErrorReason.DeviceIsOfflineError("No internet connection"),
+                "",
+                RequestMethod.GET,
+            )
+        )
+
+        viewModel.start(site, domainRegistrationPurpose)
+        advanceUntilIdle()
+
+        val state = suggestionStates.last()
+        assertThat(state).isInstanceOf(ListState.Error::class.java)
+        assertThat((state as ListState.Error).errorMessageResId)
+            .isEqualTo(R.string.error_network_connection)
+    }
+
+    @Test
     fun `a non api failure carries no message`() = test {
         mockResponses(
             productsResponse(),
@@ -311,6 +335,7 @@ class DomainSuggestionsViewModelTest : BaseUnitTest() {
         val state = suggestionStates.last()
         assertThat(state).isInstanceOf(ListState.Error::class.java)
         assertThat((state as ListState.Error).errorMessage).isNull()
+        assertThat(state.errorMessageResId).isNull()
     }
 
     /**

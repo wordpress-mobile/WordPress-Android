@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.map
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
+import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.models.networkresource.ListState
@@ -32,6 +33,7 @@ import uniffi.wp_api.DomainSuggestionsParams
 import uniffi.wp_api.Product
 import uniffi.wp_api.ProductTypeFilter
 import uniffi.wp_api.ProductsParams
+import uniffi.wp_api.RequestExecutionErrorReason
 import uniffi.wp_api.WpErrorCode
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -267,7 +269,8 @@ class DomainSuggestionsViewModel @Inject constructor(
         )
         suggestions = ListState.Error(
             suggestions,
-            (result as? WpRequestResult.WpError)?.errorMessage
+            errorMessage = (result as? WpRequestResult.WpError)?.errorMessage,
+            errorMessageResId = R.string.error_network_connection.takeIf { result.isDeviceOffline() }
         )
     }
 
@@ -358,3 +361,11 @@ class DomainSuggestionsViewModel @Inject constructor(
  */
 private fun WpRequestResult.WpError<*>.apiErrorCode(): String? =
     (errorCode as? WpErrorCode.CustomException)?.v1
+
+/**
+ * True when the request never reached the network because the device has no
+ * connection, which is worth telling the user apart from a server refusal.
+ */
+private fun WpRequestResult<*>.isDeviceOffline(): Boolean =
+    this is WpRequestResult.RequestExecutionFailed &&
+            reason is RequestExecutionErrorReason.DeviceIsOfflineError
