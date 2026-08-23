@@ -5,10 +5,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.map
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.withContext
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.models.networkresource.ListState
 import org.wordpress.android.modules.BG_THREAD
+import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.networking.restapi.WpComApiClientProvider
 import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose
 import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose.CTA_DOMAIN_CREDIT_REDEMPTION
@@ -42,7 +44,8 @@ class DomainSuggestionsViewModel @Inject constructor(
     private val domainsRegistrationTracker: DomainsRegistrationTracker,
     private val debouncer: Debouncer,
     private val createCartUseCase: CreateCartUseCase,
-    @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
+    @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
+    @Named(UI_THREAD) private val uiDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(bgDispatcher) {
     lateinit var site: SiteModel
     lateinit var domainRegistrationPurpose: DomainRegistrationPurpose
@@ -172,7 +175,12 @@ class DomainSuggestionsViewModel @Inject constructor(
         launch {
             val result = getOrCreateClient()
                 .request { it.domains().suggestions(params).data }
-            onDomainSuggestionsFetched(query, result)
+            // `suggestions` is read and written from the search field, the
+            // debouncer and here. Handling the response on the main thread
+            // keeps those writes on one thread, so a response that lands
+            // while `fetchSuggestions` is still running cannot be overwritten
+            // by the stale state the other thread is holding.
+            withContext(uiDispatcher) { onDomainSuggestionsFetched(query, result) }
         }
 
         // Reset the selected suggestion, if list is updated

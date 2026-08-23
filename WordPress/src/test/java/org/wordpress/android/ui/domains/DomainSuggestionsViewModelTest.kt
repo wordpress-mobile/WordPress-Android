@@ -91,6 +91,7 @@ class DomainSuggestionsViewModelTest : BaseUnitTest() {
             tracker,
             debouncer,
             createCartUseCase,
+            dispatcher,
             dispatcher
         )
 
