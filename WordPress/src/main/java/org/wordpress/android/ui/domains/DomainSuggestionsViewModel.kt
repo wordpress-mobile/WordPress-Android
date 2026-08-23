@@ -267,8 +267,11 @@ class DomainSuggestionsViewModel @Inject constructor(
             "An error occurred while fetching the domain suggestions: " +
                 result.toLogErrorString()
         )
+        // The list answers the query in the search field. A search that failed
+        // has no results, so carrying the previous ones over would leave the
+        // screen answering a query the user has already replaced.
         suggestions = ListState.Error(
-            suggestions,
+            suggestions.transform { emptyList() },
             errorMessage = (result as? WpRequestResult.WpError)?.errorMessage,
             errorMessageResId = R.string.error_network_connection.takeIf { result.isDeviceOffline() }
         )

@@ -17,7 +17,6 @@ import org.wordpress.android.models.networkresource.ListState
 import org.wordpress.android.ui.ScrollableViewInitializedListener
 import org.wordpress.android.ui.domains.DomainRegistrationActivity.Companion.DOMAIN_REGISTRATION_PURPOSE_KEY
 import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose
-import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.extensions.getSerializableExtraCompat
 import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
@@ -97,7 +96,11 @@ class DomainSuggestionsFragment : Fragment(R.layout.domain_suggestions_fragment)
             }
 
             if (listState is ListState.Error<*>) {
-                reportSuggestionsError(listState)
+                val detail = listState.errorMessageResId?.let { getString(it) }
+                    ?: listState.errorMessage?.ifEmpty { null }
+                actionableEmptyView.title.setText(R.string.domain_suggestions_fetch_error)
+                actionableEmptyView.subtitle.text = detail
+                actionableEmptyView.subtitle.isVisible = detail != null
             } else {
                 actionableEmptyView.title.setText(R.string.domains_suggestions_empty_list)
                 actionableEmptyView.subtitle.isVisible = false
@@ -106,24 +109,6 @@ class DomainSuggestionsFragment : Fragment(R.layout.domain_suggestions_fragment)
         viewModel.selectDomainButtonEnabledState.observe(viewLifecycleOwner) { selectDomainButton.isEnabled = it }
         viewModel.onDomainSelected.observeEvent(viewLifecycleOwner, mainViewModel::selectDomain)
         viewModel.onFreeDomainSelected.observeEvent(viewLifecycleOwner, mainViewModel::selectDomain)
-    }
-
-    /**
-     * An empty list already puts the empty view on screen, so the failure goes
-     * there rather than into a toast that would contradict it. With results
-     * still showing there is nowhere to put it but a toast.
-     */
-    private fun DomainSuggestionsFragmentBinding.reportSuggestionsError(state: ListState.Error<*>) {
-        val detail = state.errorMessageResId?.let { getString(it) }
-            ?: state.errorMessage.orEmpty().ifEmpty { null }
-
-        if (state.data.isEmpty()) {
-            actionableEmptyView.title.setText(R.string.domain_suggestions_fetch_error)
-            actionableEmptyView.subtitle.text = detail
-            actionableEmptyView.subtitle.isVisible = detail != null
-        } else {
-            ToastUtils.showToast(context, detail ?: getString(R.string.domain_suggestions_fetch_error))
-        }
     }
 
     override fun onResume() {

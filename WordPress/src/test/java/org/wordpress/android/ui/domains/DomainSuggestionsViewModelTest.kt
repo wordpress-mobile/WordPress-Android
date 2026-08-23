@@ -296,6 +296,24 @@ class DomainSuggestionsViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `a failed search drops the results of the one before it`() = test {
+        mockResponses(
+            productsResponse(),
+            suggestionsResponse(DomainSuggestion.Paid(paidSuggestion("found.com"))),
+            wpError("invalid_query", "Domain searches must contain a word"),
+        )
+
+        viewModel.start(site, domainRegistrationPurpose)
+        advanceUntilIdle()
+        assertThat(lastSuccess().map { it.domainName }).containsExactly("found.com")
+
+        viewModel.updateSearchQuery("...")
+        advanceUntilIdle()
+
+        assertThat(suggestionStates.last().data).isEmpty()
+    }
+
+    @Test
     fun `an offline failure asks the view for the network message`() = test {
         mockResponses(
             productsResponse(),
