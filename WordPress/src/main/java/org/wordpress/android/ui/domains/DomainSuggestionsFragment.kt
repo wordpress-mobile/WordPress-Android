@@ -97,16 +97,33 @@ class DomainSuggestionsFragment : Fragment(R.layout.domain_suggestions_fragment)
             }
 
             if (listState is ListState.Error<*>) {
-                val errorMessage = listState.errorMessageResId?.let { getString(it) }
-                    ?: listState.errorMessage.orEmpty().ifEmpty {
-                        getString(R.string.domain_suggestions_fetch_error)
-                    }
-                ToastUtils.showToast(context, errorMessage)
+                reportSuggestionsError(listState)
+            } else {
+                actionableEmptyView.title.setText(R.string.domains_suggestions_empty_list)
+                actionableEmptyView.subtitle.isVisible = false
             }
         }
         viewModel.selectDomainButtonEnabledState.observe(viewLifecycleOwner) { selectDomainButton.isEnabled = it }
         viewModel.onDomainSelected.observeEvent(viewLifecycleOwner, mainViewModel::selectDomain)
         viewModel.onFreeDomainSelected.observeEvent(viewLifecycleOwner, mainViewModel::selectDomain)
+    }
+
+    /**
+     * An empty list already puts the empty view on screen, so the failure goes
+     * there rather than into a toast that would contradict it. With results
+     * still showing there is nowhere to put it but a toast.
+     */
+    private fun DomainSuggestionsFragmentBinding.reportSuggestionsError(state: ListState.Error<*>) {
+        val detail = state.errorMessageResId?.let { getString(it) }
+            ?: state.errorMessage.orEmpty().ifEmpty { null }
+
+        if (state.data.isEmpty()) {
+            actionableEmptyView.title.setText(R.string.domain_suggestions_fetch_error)
+            actionableEmptyView.subtitle.text = detail
+            actionableEmptyView.subtitle.isVisible = detail != null
+        } else {
+            ToastUtils.showToast(context, detail ?: getString(R.string.domain_suggestions_fetch_error))
+        }
     }
 
     override fun onResume() {
