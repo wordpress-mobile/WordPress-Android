@@ -293,7 +293,7 @@ class DomainSuggestionsViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `a non api failure leaves the message empty so the view shows its own`() = test {
+    fun `a non api failure carries no message`() = test {
         mockResponses(
             productsResponse(),
             WpRequestResult.UnknownError<Any>(
