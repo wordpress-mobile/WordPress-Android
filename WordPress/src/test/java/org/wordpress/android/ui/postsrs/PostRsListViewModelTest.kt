@@ -218,22 +218,6 @@ class PostRsListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
     }
 
     @Test
-    fun `a reveal is dropped once the user picks a tab`() = test {
-        val viewModel = createViewModel()
-        viewModel.onScreenVisible()
-        viewModel.onScreenHidden()
-        advanceUntilIdle()
-
-        changeListener.onPostUploaded(OnPostUploaded(postUpload("publish"), false))
-        advanceUntilIdle()
-        viewModel.onTabChanged(PostRsListTab.DRAFTS)
-        viewModel.onScreenVisible()
-        advanceUntilIdle()
-
-        viewModel.revealRequests.test { expectNoEvents() }
-    }
-
-    @Test
     fun `an upload with an unrecognized status is not revealed`() = test {
         val viewModel = createViewModel()
         viewModel.onScreenVisible()

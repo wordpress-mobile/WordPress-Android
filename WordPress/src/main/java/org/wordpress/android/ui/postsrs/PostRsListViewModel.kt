@@ -273,8 +273,6 @@ class PostRsListViewModel @Inject constructor(
     /** Tracks a tab change event when the user swipes or taps a tab. */
     @MainThread
     fun onTabChanged(tab: PostRsListTab) {
-        // The user chose a tab; moving them off it to reveal an upload would be hostile.
-        pendingReveal = null
         if (tab == lastTrackedTab) return
         lastTrackedTab = tab
         analyticsTracker.track(
@@ -302,7 +300,6 @@ class PostRsListViewModel @Inject constructor(
     @MainThread
     fun onSearchOpen() {
         analyticsTracker.track(Stat.POST_LIST_SEARCH_ACCESSED, site)
-        pendingReveal = null
         _isSearchActive.value = true
         clearCollections()
     }

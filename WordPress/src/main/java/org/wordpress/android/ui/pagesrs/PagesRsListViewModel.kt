@@ -271,8 +271,6 @@ internal class PagesRsListViewModel @Inject constructor(
 
     @MainThread
     fun onTabChanged(tab: PageRsListTab) {
-        // The user chose a tab; moving them off it to reveal an upload would be hostile.
-        pendingReveal = null
         val site = this.site ?: return
         if (tab == lastTrackedTab) return
         lastTrackedTab = tab
@@ -291,7 +289,6 @@ internal class PagesRsListViewModel @Inject constructor(
     fun onSearchOpen() {
         val site = this.site ?: return
         analyticsTracker.track(Stat.PAGES_LIST_SEARCH_ACCESSED, site)
-        pendingReveal = null
         _isSearchActive.value = true
         clearCollections()
     }

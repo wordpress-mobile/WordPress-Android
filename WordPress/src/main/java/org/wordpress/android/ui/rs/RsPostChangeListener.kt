@@ -94,9 +94,10 @@ class RsPostChangeListener @Inject constructor(
         val post = event.post ?: return
         if (event.isError || post.localSiteId != localSiteId || post.isPage != isPages) return
         notifyChanged()
-        // fromPost reads the date as well as the status, so a post published with a future date is
-        // reported as SCHEDULED - which is the tab the list will show it on.
+        // A post that never got an id is nothing a list can point at.
         if (post.remotePostId != 0L) {
+            // fromPost reads the date as well as the status, so a post published with a future
+            // date is reported as SCHEDULED - which is the tab the list will show it on.
             _uploads.tryEmit(RsUploadedPost(post.remotePostId, PostStatus.fromPost(post)))
         }
     }

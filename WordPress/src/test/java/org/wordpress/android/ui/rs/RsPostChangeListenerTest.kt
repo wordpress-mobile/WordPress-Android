@@ -278,10 +278,10 @@ class RsPostChangeListenerTest : BaseUnitTest(StandardTestDispatcher()) {
     }
 
     /** Runs [events] against a started listener and returns everything `uploads` reported. */
-    private fun collectUploads(isPages: Boolean = false, events: () -> Unit): List<RsUploadedPost> {
+    private fun collectUploads(events: () -> Unit): List<RsUploadedPost> {
         val uploads = mutableListOf<RsUploadedPost>()
         test {
-            listener.start(site, isPages)
+            listener.start(site, isPages = false)
             val job = launch { listener.uploads.collect { uploads.add(it) } }
             advanceUntilIdle()
 
