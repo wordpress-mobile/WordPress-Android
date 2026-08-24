@@ -334,6 +334,29 @@ class DomainSuggestionsViewModelTest : BaseUnitTest() {
         assertThat(suggestionStates.first()).isInstanceOf(ListState.Init::class.java)
     }
 
+    /**
+     * A configuration change restores the field empty and the restore reports
+     * itself as a text change, so the view model is told the query was cleared
+     * when the user did nothing. The retained suggestions have to survive it.
+     */
+    @Test
+    fun `emptying a field that never moved off the default changes nothing`() = test {
+        mockResponses(
+            productsResponse(),
+            suggestionsResponse(DomainSuggestion.Paid(paidSuggestion("found.com"))),
+        )
+
+        viewModel.start(site, domainRegistrationPurpose)
+        advanceUntilIdle()
+        assertThat(lastSuccess().map { it.domainName }).containsExactly("found.com")
+
+        suggestionStates.clear()
+        viewModel.updateSearchQuery("")
+        advanceUntilIdle()
+
+        assertThat(suggestionStates).isEmpty()
+    }
+
     @Test
     fun `emptying the field of a site with no name searches for nothing`() = test {
         site.name = ""
