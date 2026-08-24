@@ -193,8 +193,7 @@ class DomainSuggestionsViewModel @Inject constructor(
         launch {
             val result = getOrCreateClient()
                 .request { it.domains().suggestions(params).data }
-            // Applied on the main thread, as FluxC's `ThreadMode.MAIN`
-            // subscription was, so the response shares a thread with the row
+            // Applied on the main thread, so the response shares a thread with the row
             // taps and the search field that read the same state.
             withContext(uiDispatcher) { onDomainSuggestionsFetched(query, result) }
         }
