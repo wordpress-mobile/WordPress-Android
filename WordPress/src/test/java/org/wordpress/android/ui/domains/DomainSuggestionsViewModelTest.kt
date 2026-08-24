@@ -335,6 +335,29 @@ class DomainSuggestionsViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `emptying the field of a site with no name searches for nothing`() = test {
+        site.name = ""
+        mockResponses(
+            productsResponse(),
+            wpError("invalid_query", "Domain searches must contain a word"),
+        )
+
+        viewModel.start(site, domainRegistrationPurpose)
+        advanceUntilIdle()
+        viewModel.updateSearchQuery("...")
+        advanceUntilIdle()
+        assertThat(suggestionStates.last()).isInstanceOf(ListState.Error::class.java)
+
+        viewModel.updateSearchQuery("")
+        advanceUntilIdle()
+
+        assertThat(suggestionStates.last()).isInstanceOf(ListState.Init::class.java)
+        // The products request and the one real search, and nothing for the
+        // blank query the emptied field falls back to.
+        verify(wpComApiClient, times(2)).request<Any>(any())
+    }
+
+    @Test
     fun `an offline failure asks the view for the network message`() = test {
         mockResponses(
             productsResponse(),

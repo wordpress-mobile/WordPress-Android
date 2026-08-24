@@ -169,9 +169,18 @@ class DomainSuggestionsViewModel @Inject constructor(
     internal fun buildProductsParams() = ProductsParams(productType = ProductTypeFilter.Domains)
 
     private fun fetchSuggestions() {
+        val query = searchQuery
+        if (query.isBlank()) {
+            // A site with no name leaves nothing to search for on open, and
+            // nothing to fall back to when the field is emptied. The API
+            // rejects a blank query, and reporting that is not useful when the
+            // field is showing its placeholder.
+            suggestions = ListState.Init()
+            return
+        }
+
         suggestions = ListState.Loading(suggestions)
 
-        val query = searchQuery
         val params = buildSuggestionsParams(query, SiteUtils.onBloggerPlan(site))
 
         launch {
