@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
@@ -48,7 +47,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
@@ -65,7 +63,6 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
@@ -78,7 +75,6 @@ import org.wordpress.android.ui.postsrs.SnackbarMessage
 import org.wordpress.android.ui.postsrs.PostRsListViewModel.Companion.MIN_SEARCH_QUERY_LENGTH
 import org.wordpress.android.ui.postsrs.PostRsMenuAction
 import org.wordpress.android.ui.postsrs.PostTabUiState
-import org.wordpress.android.ui.rs.revealListItem
 
 @Suppress("CyclomaticComplexMethod")
 @OptIn(ExperimentalMaterial3Api::class)
@@ -114,54 +110,25 @@ fun PostRsListScreen(
     val focusManager = LocalFocusManager.current
     val activeTab = tabs[pagerState.settledPage]
     val snackbarHostState = remember { SnackbarHostState() }
-    // Hoisted so a reveal can scroll a tab to the post the user just saved. Listed explicitly
-    // (rememberLazyListState can't be called in an associateWith lambda) so each state is saveable
-    // and scroll positions survive rotation; keep in sync with the enum.
-    val listStates = mapOf(
-        PostRsListTab.PUBLISHED to rememberLazyListState(),
-        PostRsListTab.DRAFTS to rememberLazyListState(),
-        PostRsListTab.SCHEDULED to rememberLazyListState(),
-        PostRsListTab.TRASHED to rememberLazyListState()
-    )
-    val currentTabStates by rememberUpdatedState(tabStates)
-    val currentSearchActive by rememberUpdatedState(isSearchActive)
+    // A post the user just saved, to be scrolled to once the tab showing it has it. Held here
+    // rather than acted on in the collector below so that the tab switch, which the user can win,
+    // can be cancelled without taking the collector down with it.
+    var pendingReveal by remember { mutableStateOf<PostRsReveal?>(null) }
 
-    // Search opening, closing, or changing the trimmed query replaces each tab's content
-    // wholesale; reset the scroll so page 1 renders at the top. The hoisted list states otherwise
-    // keep their old deep offsets, clamping the short new list to its end and tripping the
-    // load-more trigger. drop(1) skips the initial emission: an Activity recreation must not
-    // discard the scroll positions the saveable list states just restored. The at-top check
-    // avoids scrollToItem's forced remeasure (and fling cancellation) when there's nothing to do.
-    val currentQuery by rememberUpdatedState(searchQuery)
-    LaunchedEffect(Unit) {
-        snapshotFlow { currentSearchActive to currentQuery.trim() }
-            .drop(1)
-            .collect {
-                listStates.values.forEach { state ->
-                    if (state.firstVisibleItemIndex > 0 || state.firstVisibleItemScrollOffset > 0) {
-                        state.scrollToItem(0)
-                    }
-                }
-            }
+    LaunchedEffect(revealRequests) {
+        revealRequests.collect { pendingReveal = it }
     }
 
-    // Brings a post the user just saved in the editor into view: its status decides the tab, which
-    // may not be the one on screen. Switching pages initializes a tab that was never opened; the
-    // refresh that adds the post may still be in flight, which revealListItem waits out.
-    LaunchedEffect(revealRequests) {
-        revealRequests.collect { reveal ->
-            if (currentSearchActive) return@collect
-            val page = tabs.indexOf(reveal.tab)
-            if (pagerState.settledPage != page) pagerState.animateScrollToPage(page)
-            revealListItem(
-                listState = listStates.getValue(reveal.tab),
-                indexOfTarget = {
-                    currentTabStates[reveal.tab]?.posts.orEmpty()
-                        .indexOfFirst { it.remotePostId == reveal.remotePostId }
-                },
-                targetKey = { reveal.remotePostId }
-            )
+    // The post's status decides the tab, which may not be the one on screen. Switching to it also
+    // initializes a tab that was never opened, so its first fetch brings the post in.
+    LaunchedEffect(pendingReveal) {
+        val reveal = pendingReveal ?: return@LaunchedEffect
+        if (isSearchActive) {
+            pendingReveal = null
+            return@LaunchedEffect
         }
+        val page = tabs.indexOf(reveal.tab)
+        if (pagerState.settledPage != page) pagerState.animateScrollToPage(page)
     }
 
     LaunchedEffect(snackbarMessages) {
@@ -304,7 +271,8 @@ fun PostRsListScreen(
                 PostRsTabListScreen(
                     state = tabState,
                     emptyMessageResId = tab.emptyMessageResId,
-                    listState = listStates.getValue(tab),
+                    revealPostId = pendingReveal?.takeIf { it.tab == tab }?.remotePostId,
+                    onRevealHandled = { pendingReveal = null },
                     isSearchIdle = isSearchActive && searchQuery.length < MIN_SEARCH_QUERY_LENGTH,
                     isSearching = isSearchActive && searchQuery.length >= MIN_SEARCH_QUERY_LENGTH,
                     onRefresh = { onRefreshTab(tab) },

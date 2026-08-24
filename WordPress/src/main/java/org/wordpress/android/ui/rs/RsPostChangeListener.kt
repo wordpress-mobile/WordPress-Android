@@ -61,11 +61,8 @@ class RsPostChangeListener @Inject constructor(
     )
 
     /**
-     * Emits once for every post (or page, per [start]) of the observed site that this device
-     * finished uploading.
-     *
-     * Unlike [changes] this identifies what was written, so a list can reveal it. It isn't
-     * debounced: an upload completes once, and collapsing two of them would lose one.
+     * Emits once for every post (or page, per [start]) this device finished uploading. Unlike
+     * [changes] it identifies what was written, so a list can reveal it, and it isn't debounced.
      */
     val uploads: Flow<RsUploadedPost> = _uploads
 
@@ -97,9 +94,8 @@ class RsPostChangeListener @Inject constructor(
         val post = event.post ?: return
         if (event.isError || post.localSiteId != localSiteId || post.isPage != isPages) return
         notifyChanged()
-        // A post that failed to get an id isn't something a list can point at. PostStatus.fromPost
-        // reads the date as well as the status, so a post published with a future date is reported
-        // as SCHEDULED rather than PUBLISHED - which is where the list will show it.
+        // fromPost reads the date as well as the status, so a post published with a future date is
+        // reported as SCHEDULED - which is the tab the list will show it on.
         if (post.remotePostId != 0L) {
             _uploads.tryEmit(RsUploadedPost(post.remotePostId, PostStatus.fromPost(post)))
         }
@@ -152,7 +148,7 @@ class RsPostChangeListener @Inject constructor(
     }
 }
 
-/** A post or page this device just finished uploading, and where its status puts it in a list. */
+/** A post or page this device just finished uploading. */
 data class RsUploadedPost(
     val remotePostId: Long,
     val status: PostStatus

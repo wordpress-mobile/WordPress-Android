@@ -237,15 +237,9 @@ internal class PagesRsListViewModel @Inject constructor(
     }
 
     /**
-     * Remembers to point the user at a page the editor just saved, because the list gives no other
-     * sign that it arrived: a new page lands on whichever tab its status belongs to - not
-     * necessarily the one being looked at - and the published and draft tabs sort by title, so it
-     * can land anywhere in them.
-     *
-     * The reveal waits for [onScreenVisible] rather than firing here, since the upload almost
-     * always completes while the editor still covers the list. The refresh that brings the page
-     * into the tab is triggered separately by [onRemoteChangeDetected]; the screen waits for the
-     * page to show up before scrolling.
+     * Remembers to point the user at a page the editor just saved: it lands on whichever tab its
+     * status belongs to, not necessarily the one being looked at. Held until [onScreenVisible],
+     * because the upload usually finishes while the editor still covers the list.
      */
     private fun onPageUploaded(upload: RsUploadedPost) {
         val status = upload.status.toRsPostStatus() ?: return

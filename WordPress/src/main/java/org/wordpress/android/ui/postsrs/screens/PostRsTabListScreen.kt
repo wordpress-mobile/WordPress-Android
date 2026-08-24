@@ -11,8 +11,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -40,7 +40,8 @@ import org.wordpress.android.ui.postsrs.PostTabUiState
 fun PostRsTabListScreen(
     state: PostTabUiState,
     emptyMessageResId: Int,
-    listState: LazyListState,
+    revealPostId: Long?,
+    onRevealHandled: () -> Unit,
     onRefresh: () -> Unit,
     onLoadMore: () -> Unit,
     onPostClick: (Long) -> Unit,
@@ -92,7 +93,8 @@ fun PostRsTabListScreen(
             }
             else -> PostListContent(
                 posts = state.posts,
-                listState = listState,
+                revealPostId = revealPostId,
+                onRevealHandled = onRevealHandled,
                 isLoadingMore = state.isLoadingMore,
                 canLoadMore = state.canLoadMore,
                 onLoadMore = onLoadMore,
@@ -106,13 +108,30 @@ fun PostRsTabListScreen(
 @Composable
 private fun PostListContent(
     posts: List<PostRsUiModel>,
-    listState: LazyListState,
+    revealPostId: Long?,
+    onRevealHandled: () -> Unit,
     isLoadingMore: Boolean,
     canLoadMore: Boolean,
     onLoadMore: () -> Unit,
     onPostClick: (Long) -> Unit,
     onPostMenuAction: (Long, PostRsMenuAction) -> Unit
 ) {
+    val listState = rememberLazyListState()
+
+    // Scrolls to a post the user just saved, once the refresh carrying it lands - until then this
+    // list either isn't composed or doesn't contain it yet. requestScrollToItem applies at the next
+    // measurement rather than to the content currently laid out, which matters because a keyed
+    // LazyColumn re-anchors on its old first item when one is prepended: a plain scrollToItem here
+    // would leave a newly published post just above the viewport.
+    LaunchedEffect(revealPostId, posts) {
+        if (revealPostId == null) return@LaunchedEffect
+        val index = posts.indexOfFirst { it.remotePostId == revealPostId }
+        if (index >= 0) {
+            listState.requestScrollToItem(index)
+            onRevealHandled()
+        }
+    }
+
     LaunchedEffect(canLoadMore) {
         if (!canLoadMore) return@LaunchedEffect
         snapshotFlow {

@@ -190,20 +190,13 @@ class PostRsListViewModel @Inject constructor(
     }
 
     /**
-     * Remembers to point the user at a post the editor just saved, because the list gives no other
-     * sign that it arrived: a new post lands on whichever tab its status belongs to - not
-     * necessarily the one being looked at - and even on the right tab a prepended row sits above
-     * the current scroll position.
-     *
-     * The reveal waits for [onScreenVisible] rather than firing here, since the upload almost
-     * always completes while the editor still covers the list. The refresh that brings the post
-     * into the tab is triggered separately by [onRemoteChangeDetected]; the screen waits for the
-     * post to show up before scrolling.
+     * Remembers to point the user at a post the editor just saved: it lands on whichever tab its
+     * status belongs to, not necessarily the one being looked at. Held until [onScreenVisible],
+     * because the upload usually finishes while the editor still covers the list.
      */
     private fun onPostUploaded(upload: RsUploadedPost) {
         val status = upload.status.toRsPostStatus() ?: return
-        val tab = PostRsListTab.entries.firstOrNull { status in it.statuses } ?: return
-        pendingReveal = PostRsReveal(tab, upload.remotePostId)
+        pendingReveal = PostRsReveal(tabForStatus(status), upload.remotePostId)
         emitPendingReveal()
     }
 

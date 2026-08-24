@@ -9,8 +9,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
@@ -42,7 +42,8 @@ import org.wordpress.android.ui.postsrs.screens.PlaceholderItem
 internal fun PageRsTabListScreen(
     state: PageTabUiState,
     emptyMessageResId: Int,
-    listState: LazyListState,
+    revealPageId: Long?,
+    onRevealHandled: () -> Unit,
     onRefresh: () -> Unit,
     onLoadMore: () -> Unit,
     onPageClick: (Long) -> Unit,
@@ -87,7 +88,8 @@ internal fun PageRsTabListScreen(
             }
             else -> PageListContent(
                 pages = state.pages,
-                listState = listState,
+                revealPageId = revealPageId,
+                onRevealHandled = onRevealHandled,
                 isLoadingMore = state.isLoadingMore,
                 canLoadMore = state.canLoadMore,
                 onLoadMore = onLoadMore,
@@ -101,13 +103,29 @@ internal fun PageRsTabListScreen(
 @Composable
 private fun PageListContent(
     pages: List<PageRsListItem>,
-    listState: LazyListState,
+    revealPageId: Long?,
+    onRevealHandled: () -> Unit,
     isLoadingMore: Boolean,
     canLoadMore: Boolean,
     onLoadMore: () -> Unit,
     onPageClick: (Long) -> Unit,
     onPageMenuAction: (Long, PageRsMenuAction) -> Unit
 ) {
+    val listState = rememberLazyListState()
+
+    // Scrolls to a page the user just saved, once the refresh carrying it lands. The published and
+    // draft tabs sort by title, so it can be anywhere in the list. requestScrollToItem applies at
+    // the next measurement rather than to the content currently laid out, which a plain
+    // scrollToItem would, leaving a just-added row short of the viewport.
+    LaunchedEffect(revealPageId, pages) {
+        if (revealPageId == null) return@LaunchedEffect
+        val index = pages.indexOfFirst { it.remotePageId == revealPageId }
+        if (index >= 0) {
+            listState.requestScrollToItem(index)
+            onRevealHandled()
+        }
+    }
+
     LaunchedEffect(canLoadMore) {
         if (!canLoadMore) return@LaunchedEffect
         snapshotFlow {

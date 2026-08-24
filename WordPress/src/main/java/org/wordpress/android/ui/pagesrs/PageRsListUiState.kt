@@ -19,10 +19,7 @@ internal sealed interface PageRsListConfirmation {
     data class MoveToDraft(val pageId: Long) : PageRsListConfirmation
 }
 
-/**
- * A request to bring [remotePageId] into view: select [tab], then scroll to the page within it.
- * Sent after the list has learned about a page the user just saved in the editor.
- */
+/** A request to select [tab] and scroll to [remotePageId] within it. */
 internal data class PageRsReveal(
     val tab: PageRsListTab,
     val remotePageId: Long
