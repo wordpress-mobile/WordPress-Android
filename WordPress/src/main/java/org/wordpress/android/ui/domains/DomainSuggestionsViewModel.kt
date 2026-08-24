@@ -176,26 +176,28 @@ class DomainSuggestionsViewModel @Inject constructor(
             // rejects a blank query, and reporting that is not useful when the
             // field is showing its placeholder.
             suggestions = ListState.Init()
+            onDomainSuggestionSelected(null)
             return
         }
 
         suggestions = ListState.Loading(suggestions)
+
+        // Reset the selected suggestion, if list is updated. Both writes to
+        // `suggestions` are made before the request is dispatched, so a
+        // response arriving on another thread cannot be overwritten by the
+        // state this one is still holding.
+        onDomainSuggestionSelected(null)
 
         val params = buildSuggestionsParams(query, SiteUtils.onBloggerPlan(site))
 
         launch {
             val result = getOrCreateClient()
                 .request { it.domains().suggestions(params).data }
-            // `suggestions` is read and written from the search field, the
-            // debouncer and here. Handling the response on the main thread
-            // keeps those writes on one thread, so a response that lands
-            // while `fetchSuggestions` is still running cannot be overwritten
-            // by the stale state the other thread is holding.
+            // Applied on the main thread, as FluxC's `ThreadMode.MAIN`
+            // subscription was, so the response shares a thread with the row
+            // taps and the search field that read the same state.
             withContext(uiDispatcher) { onDomainSuggestionsFetched(query, result) }
         }
-
-        // Reset the selected suggestion, if list is updated
-        onDomainSuggestionSelected(null)
     }
 
     /**

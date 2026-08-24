@@ -358,6 +358,28 @@ class DomainSuggestionsViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `emptying the field disarms the select button`() = test {
+        site.name = ""
+        mockResponses(
+            productsResponse(),
+            suggestionsResponse(DomainSuggestion.Paid(paidSuggestion("found.com"))),
+        )
+        val selectEnabled = mutableListOf<Boolean>()
+        viewModel.selectDomainButtonEnabledState.observeForever { selectEnabled.add(it) }
+
+        viewModel.start(site, domainRegistrationPurpose)
+        viewModel.updateSearchQuery("coolsite")
+        advanceUntilIdle()
+        viewModel.onDomainSuggestionSelected(dummySelectedDomainSuggestionItem)
+        assertThat(selectEnabled.last()).isTrue()
+
+        viewModel.updateSearchQuery("")
+        advanceUntilIdle()
+
+        assertThat(selectEnabled.last()).isFalse()
+    }
+
+    @Test
     fun `emptying the field of a site with no name searches for nothing`() = test {
         site.name = ""
         mockResponses(
