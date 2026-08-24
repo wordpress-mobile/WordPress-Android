@@ -87,7 +87,9 @@ class DomainSuggestionsFragment : Fragment(R.layout.domain_suggestions_fragment)
         viewModel.suggestionsLiveData.observe(viewLifecycleOwner) { listState ->
             val isLoading = listState is ListState.Loading<*>
 
-            domainSuggestionsContainer.isInvisible = isLoading
+            // Nothing has been searched for in the `Init` state, so the list
+            // and its empty view have nothing to say either way.
+            domainSuggestionsContainer.isInvisible = isLoading || listState is ListState.Init<*>
             suggestionSearchIcon.isVisible = !isLoading
             suggestionProgressBar.isVisible = isLoading
 

@@ -314,6 +314,27 @@ class DomainSuggestionsViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `clearing the search field drops the error it was showing`() = test {
+        mockResponses(
+            productsResponse(),
+            suggestionsResponse(),
+            wpError("invalid_query", "Domain searches must contain a word"),
+            suggestionsResponse(),
+        )
+
+        viewModel.start(site, domainRegistrationPurpose)
+        advanceUntilIdle()
+        viewModel.updateSearchQuery("...")
+        advanceUntilIdle()
+        assertThat(suggestionStates.last()).isInstanceOf(ListState.Error::class.java)
+
+        suggestionStates.clear()
+        viewModel.updateSearchQuery("")
+
+        assertThat(suggestionStates.first()).isInstanceOf(ListState.Init::class.java)
+    }
+
+    @Test
     fun `an offline failure asks the view for the network message`() = test {
         mockResponses(
             productsResponse(),

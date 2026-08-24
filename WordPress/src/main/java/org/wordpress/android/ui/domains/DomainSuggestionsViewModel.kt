@@ -303,9 +303,14 @@ class DomainSuggestionsViewModel @Inject constructor(
 
         if (query.isNotBlank()) {
             searchQuery = query
-        } else if (searchQuery != site.name) {
-            // Only reinitialize the search query, if it has changed.
-            initializeDefaultSuggestions()
+        } else {
+            // Whatever is on screen answers a query that is no longer in the
+            // field, including an error describing how it was written.
+            suggestions = ListState.Init()
+            if (searchQuery != site.name) {
+                // Only reinitialize the search query, if it has changed.
+                initializeDefaultSuggestions()
+            }
         }
     }
 
