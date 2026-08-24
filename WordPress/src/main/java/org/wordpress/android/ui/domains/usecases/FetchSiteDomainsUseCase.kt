@@ -7,12 +7,10 @@ import org.wordpress.android.util.AppLog
 import rs.wordpress.api.kotlin.WpComApiClient
 import rs.wordpress.api.kotlin.WpRequestResult
 import rs.wordpress.api.kotlin.toLogErrorString
-import uniffi.wp_api.ProductId
-import uniffi.wp_api.SitePlan
-import uniffi.wp_api.SitePlansParams
+import uniffi.wp_api.SiteDomain
 import javax.inject.Inject
 
-class FetchPlansUseCase @Inject constructor(
+class FetchSiteDomainsUseCase @Inject constructor(
     private val wpComApiClientProvider: WpComApiClientProvider,
     private val accountStore: AccountStore,
 ) {
@@ -27,49 +25,37 @@ class FetchPlansUseCase @Inject constructor(
     }
 
     /**
-     * Fetches the plans available to a site, keyed by product ID.
+     * Fetches the domains attached to a single site, free WordPress.com address
+     * included.
      */
-    suspend fun execute(site: SiteModel): SitePlansResult {
+    suspend fun execute(site: SiteModel): SiteDomainsResult {
         val client = getOrCreateClient() ?: run {
             AppLog.e(
                 AppLog.T.API,
-                "Cannot fetch site plans without a WP.com access token"
+                "Cannot fetch site domains without a WP.com access token"
             )
-            return SitePlansResult.Error
+            return SiteDomainsResult.Error
         }
         val result = client
-            .request { it.sitePlans().list(site.siteId.toULong(), SitePlansParams()).data }
+            .request { it.domains().siteDomains(site.siteId.toULong()).data }
         return when (result) {
-            is WpRequestResult.Success -> SitePlansResult.Success(result.response)
+            is WpRequestResult.Success -> SiteDomainsResult.Success(result.response.domains)
             else -> {
                 AppLog.e(
                     AppLog.T.API,
-                    "An error occurred while fetching site plans: " +
+                    "An error occurred while fetching site domains: " +
                         result.toLogErrorString()
                 )
-                SitePlansResult.Error
+                SiteDomainsResult.Error
             }
         }
     }
 }
 
-sealed interface SitePlansResult {
+sealed interface SiteDomainsResult {
     data class Success(
-        val plans: Map<ProductId, SitePlan>,
-    ) : SitePlansResult
+        val domains: List<SiteDomain>,
+    ) : SiteDomainsResult
 
-    data object Error : SitePlansResult
-}
-
-/**
- * Whether the site's current plan still carries an unclaimed free-domain credit.
- *
- * [SitePlan.currentPlan] is set on the plan the site is currently on, and holds
- * the credit flag. A failed fetch reports no credit, which is what the FluxC
- * path did with a null plan list.
- */
-fun SitePlansResult.hasDomainCredit(): Boolean = when (this) {
-    is SitePlansResult.Success ->
-        plans.values.firstNotNullOfOrNull { it.currentPlan }?.hasDomainCredit == true
-    is SitePlansResult.Error -> false
+    data object Error : SiteDomainsResult
 }

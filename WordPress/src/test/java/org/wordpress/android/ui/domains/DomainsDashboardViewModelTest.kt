@@ -4,16 +4,12 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
+import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
-import org.wordpress.android.fluxc.model.PlanModel
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.network.rest.wpcom.site.Domain
-import org.wordpress.android.fluxc.store.SiteStore
-import org.wordpress.android.fluxc.store.SiteStore.FetchedDomainsPayload
-import org.wordpress.android.fluxc.store.SiteStore.OnPlansFetched
 import org.wordpress.android.ui.domains.DomainsDashboardItem.AddDomain
 import org.wordpress.android.ui.domains.DomainsDashboardItem.PurchaseDomain
 import org.wordpress.android.ui.domains.DomainsDashboardItem.PurchasePlan
@@ -23,18 +19,23 @@ import org.wordpress.android.ui.domains.management.testDomainItem
 import org.wordpress.android.ui.domains.usecases.AllDomains
 import org.wordpress.android.ui.domains.usecases.FetchAllDomainsUseCase
 import org.wordpress.android.ui.domains.usecases.FetchPlansUseCase
+import org.wordpress.android.ui.domains.usecases.FetchSiteDomainsUseCase
+import org.wordpress.android.ui.domains.usecases.SiteDomainsResult
+import org.wordpress.android.ui.domains.usecases.SitePlansResult
 import org.wordpress.android.util.PlansConstants.FREE_PLAN_ID
 import org.wordpress.android.util.PlansConstants.PREMIUM_PLAN_ID
 import org.wordpress.android.ui.utils.HtmlMessageUtils
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import uniffi.wp_api.SitePlan
+import uniffi.wp_api.SitePlanCurrentPlanInfo
 
 @ExperimentalCoroutinesApi
 class DomainsDashboardViewModelTest : BaseUnitTest() {
-    private val siteStore: SiteStore = mock()
     private val analyticsTracker: AnalyticsTrackerWrapper = mock()
     private val htmlMessageUtils: HtmlMessageUtils = mock()
     private val fetchPlansUseCase: FetchPlansUseCase = mock()
+    private val fetchSiteDomainsUseCase: FetchSiteDomainsUseCase = mock()
     private val fetchAllDomainsUseCase: FetchAllDomainsUseCase = mock()
 
     private lateinit var viewModel: DomainsDashboardViewModel
@@ -44,10 +45,10 @@ class DomainsDashboardViewModelTest : BaseUnitTest() {
     @Before
     fun setUp() {
         viewModel = DomainsDashboardViewModel(
-            siteStore,
             analyticsTracker,
             htmlMessageUtils,
             fetchPlansUseCase,
+            fetchSiteDomainsUseCase,
             fetchAllDomainsUseCase,
             testDispatcher()
         )
@@ -172,24 +173,33 @@ class DomainsDashboardViewModelTest : BaseUnitTest() {
     private suspend fun setupWith(hasPaidPlan: Boolean, hasCustomDomains: Boolean, hasDomainCredits: Boolean) {
         val site = if (hasPaidPlan) siteWithPaidPlan else siteWithFreePlan
         val domains = if (hasCustomDomains) listOf(customDomain) else emptyList()
-        whenever(siteStore.fetchSiteDomains(site)).thenReturn(FetchedDomainsPayload(site, domains))
+        whenever(fetchSiteDomainsUseCase.execute(site)).thenReturn(SiteDomainsResult.Success(domains))
 
-        val plan = if (hasDomainCredits) planWithCredits else planWithNoCredits
-        whenever(fetchPlansUseCase.execute(site)).thenReturn(OnPlansFetched(site, listOf(plan)))
+        val plan = planWithCredit(hasDomainCredits)
+        whenever(fetchPlansUseCase.execute(site))
+            .thenReturn(SitePlansResult.Success(mapOf(TEST_PRODUCT_ID to plan)))
         val allDomains = if (hasCustomDomains) listOf(allDomainsDomain) else emptyList()
         whenever(fetchAllDomainsUseCase.execute()).thenReturn(AllDomains.Success(allDomains))
 
         viewModel.start(site)
     }
 
+    private fun planWithCredit(hasDomainCredit: Boolean): SitePlan = mock {
+        on { currentPlan } doReturn SitePlanCurrentPlanInfo(
+            purchaseId = null,
+            userIsOwner = null,
+            hasDomainCredit = hasDomainCredit
+        )
+    }
+
     companion object {
         private const val TEST_SITE_ID = 1234L
         private const val TEST_DOMAIN_NAME = "testdomain.blog"
         private const val TEST_SITE_NAME = "Test Site"
+        private const val TEST_PRODUCT_ID = 1uL
 
-        private val customDomain = Domain(
+        private val customDomain = testSiteDomain(
             domain = "henna.tattoo",
-            expired = false,
             expiry = "June 8, 2022",
             expirySoon = false,
             primaryDomain = false,
@@ -213,20 +223,5 @@ class DomainsDashboardViewModelTest : BaseUnitTest() {
             unmappedUrl = TEST_DOMAIN_NAME
             planId = PREMIUM_PLAN_ID
         }
-
-        private val planWithNoCredits = PlanModel(
-            productId = 1,
-            productSlug = "plan-1",
-            productName = "Plan 1",
-            isCurrentPlan = true,
-            hasDomainCredit = false
-        )
-        private val planWithCredits = PlanModel(
-            productId = 2,
-            productSlug = "plan-2",
-            productName = "Plan 2",
-            isCurrentPlan = true,
-            hasDomainCredit = true
-        )
     }
 }
