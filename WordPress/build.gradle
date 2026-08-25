@@ -280,10 +280,12 @@ android {
     }
 
     signingConfigs {
-        if (["uploadStoreFile", "uploadStorePassword", "uploadKeyAlias", "uploadKeyPassword"].count { !gradle.ext.secretProperties.containsKey(it) } == 0) {
-            logger.info("App signing properties found in secrets.properties, configuring signing for release builds.")
+        def uploadKeystore = new File(gradle.ext.decryptedSecretsDir, "upload.keystore")
+        def uploadCredentials = ["uploadStorePassword", "uploadKeyAlias", "uploadKeyPassword"]
+        if (uploadKeystore.exists() && uploadCredentials.every { gradle.ext.secretProperties.containsKey(it) }) {
+            logger.info("Upload keystore found, configuring signing for release builds.")
             release {
-                storeFile = rootProject.file(gradle.ext.secretProperties.get("uploadStoreFile"))
+                storeFile = uploadKeystore
                 storePassword = gradle.ext.secretProperties.get("uploadStorePassword")
                 keyAlias = gradle.ext.secretProperties.get("uploadKeyAlias")
                 keyPassword = gradle.ext.secretProperties.get("uploadKeyPassword")
@@ -291,13 +293,11 @@ android {
             android.buildTypes.release.signingConfig = android.signingConfigs.release
         }
 
-        if (gradle.ext.secretProperties.containsKey("debugStoreFile")) {
-            logger.info("Debug signing properties found in secrets.properties, configuring signing for debug builds.")
-            def sharedDebugStore = file(gradle.ext.secretProperties.get("debugStoreFile").replaceFirst("^~", System.getProperty("user.home")))
-            if (sharedDebugStore.exists()) {
-                debug {
-                    storeFile sharedDebugStore
-                }
+        def debugKeystore = new File(gradle.ext.decryptedSecretsDir, "debug.keystore")
+        if (debugKeystore.exists()) {
+            logger.info("Shared debug keystore found, configuring signing for debug builds.")
+            debug {
+                storeFile debugKeystore
             }
         }
     }
