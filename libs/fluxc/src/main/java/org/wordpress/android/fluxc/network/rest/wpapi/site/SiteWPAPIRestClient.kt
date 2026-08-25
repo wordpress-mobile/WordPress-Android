@@ -1,6 +1,8 @@
 package org.wordpress.android.fluxc.network.rest.wpapi.site
 
 import com.android.volley.RequestQueue
+import com.google.gson.reflect.TypeToken
+import okhttp3.Credentials
 import okhttp3.HttpUrl.Companion.toHttpUrl
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.SiteModel
@@ -13,6 +15,9 @@ import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIDiscoveryUtils
 import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIGsonRequestBuilder
 import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIResponse.Error
 import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIResponse.Success
+import org.wordpress.android.fluxc.network.rest.wpapi.jetpack.JetpackConnectionState
+import org.wordpress.android.fluxc.network.rest.wpapi.jetpack.JetpackConnectionStatusFetcher
+import org.wordpress.android.fluxc.network.rest.wpapi.plugin.PluginResponseModel
 import org.wordpress.android.fluxc.store.SiteStore.FetchWPAPISitePayload
 import org.wordpress.android.fluxc.utils.extensions.getPasswordProcessed
 import org.wordpress.android.fluxc.utils.extensions.getUserNameProcessed
@@ -26,19 +31,33 @@ import javax.inject.Singleton
 class SiteWPAPIRestClient @Inject constructor(
     private val wpapiGsonRequestBuilder: WPAPIGsonRequestBuilder,
     private val discoveryWPAPIRestClient: DiscoveryWPAPIRestClient,
+    private val jetpackConnectionStatusFetcher: JetpackConnectionStatusFetcher,
     dispatcher: Dispatcher,
     @Named(OkHttpClientQualifiers.CUSTOM_SSL) requestQueue: RequestQueue,
     userAgent: UserAgent
 ) : BaseWPAPIRestClient(dispatcher, requestQueue, userAgent) {
     companion object {
         private const val WOO_API_NAMESPACE_PREFIX = "wc/"
+        private const val JETPACK_API_NAMESPACE_PREFIX = "jetpack/"
         private const val FETCH_API_CALL_FIELDS =
             "name,description,gmt_offset,url,authentication,namespaces"
         private const val APPLICATION_PASSWORDS_URL_SUFFIX = "authorize-application.php"
+        private const val PLUGINS_PATH = "wp/v2/plugins"
+        private const val PLUGINS_FIELDS = "plugin,status,version"
+        private const val JETPACK_PLUGIN_SEARCH = "jetpack"
+        private const val JETPACK_PLUGIN_ID = "jetpack/jetpack"
+        private const val PLUGIN_STATUS_ACTIVE = "active"
+        private const val PLUGIN_STATUS_NETWORK_ACTIVE = "network-active"
     }
 
+    /**
+     * @param previousSite the site this fetch is refreshing, when there is one. The model returned here
+     * replaces the stored row wholesale, so fields this fetch can't determine are carried forward from it
+     * rather than reset.
+     */
     suspend fun fetchWPAPISite(
-        payload: FetchWPAPISitePayload
+        payload: FetchWPAPISitePayload,
+        previousSite: SiteModel? = null
     ): SiteModel {
         val cleanedUrl = UrlUtils.addUrlSchemeIfNeeded(payload.url, false).let { urlWithScheme ->
             DiscoveryUtils.stripKnownPaths(urlWithScheme)
@@ -57,6 +76,8 @@ class SiteWPAPIRestClient @Inject constructor(
         return when (result) {
             is Success -> {
                 val response = result.data
+                val jetpackPlugin = fetchJetpackPluginState(response?.namespaces, discoveredWpApiUrl, payload)
+                val jetpackConnection = fetchJetpackConnectionState(jetpackPlugin, discoveredWpApiUrl, payload)
                 SiteModel().apply {
                     name = response?.name
                     description = response?.description
@@ -65,6 +86,7 @@ class SiteWPAPIRestClient @Inject constructor(
                     hasWooCommerce = response?.namespaces?.any {
                         it.startsWith(WOO_API_NAMESPACE_PREFIX)
                     } ?: false
+                    applyJetpackState(jetpackPlugin, jetpackConnection, previousSite)
 
                     applicationPasswordsAuthorizeUrl = response?.authentication?.applicationPasswords
                         ?.endpoints?.authorization
@@ -97,15 +119,128 @@ class SiteWPAPIRestClient @Inject constructor(
     suspend fun fetchWPAPISite(
         site: SiteModel
     ): SiteModel {
-        return fetchWPAPISite(
+        val fetchedSite = fetchWPAPISite(
             payload = FetchWPAPISitePayload(
                 url = site.url,
                 username = site.getUserNameProcessed(),
                 password = site.getPasswordProcessed(),
                 isApplicationPassword =
                     site.hasApplicationPassword(),
-            )
+            ),
+            previousSite = site
         )
+
+        if (!fetchedSite.isError) {
+            // Carry the local id so SiteStore.updateSite finds the stored row and preserves the editor
+            // preferences, and so SiteSqlUtils matches the row by local id rather than by SITE_ID + URL --
+            // that match misses, and inserts a duplicate site, as soon as a real WP.com blog id is stored.
+            fetchedSite.id = site.id
+        }
+        return fetchedSite
+    }
+
+    /**
+     * The Jetpack plugin, as reported by the site itself. [isActive] is what
+     * [SiteModel.isJetpackInstalled] documents -- installed *and* activated.
+     */
+    private data class JetpackPluginState(val isActive: Boolean, val version: String?)
+
+    /**
+     * Determines whether the site is running the Jetpack plugin, or null when it can't be determined.
+     *
+     * The `jetpack/` REST namespace is only a first filter: it's registered by the shared
+     * `automattic/jetpack-connection` package, which also ships inside Jetpack Boost, Protect, Social and
+     * VaultPress Backup, so its presence does *not* mean the Jetpack plugin is installed. What it does give
+     * us for free is a reliable negative -- no namespace, no active Jetpack -- which keeps the plugin lookup
+     * off the refresh path for the sites that have nothing to do with Jetpack.
+     *
+     * Reading the plugin list needs credentials and the `activate_plugins` capability, so it returns null for
+     * sites without an application password and for users who aren't administrators. Callers must read null
+     * as "unchanged", not as "not installed".
+     */
+    private suspend fun fetchJetpackPluginState(
+        namespaces: List<String>?,
+        apiRootUrl: String,
+        payload: FetchWPAPISitePayload
+    ): JetpackPluginState? {
+        val hasJetpackNamespace = namespaces?.any { it.startsWith(JETPACK_API_NAMESPACE_PREFIX) } ?: false
+        if (!hasJetpackNamespace) return JetpackPluginState(isActive = false, version = null)
+
+        val username = payload.username
+        val password = payload.password
+        return if (payload.isApplicationPassword && !username.isNullOrEmpty() && !password.isNullOrEmpty()) {
+            requestJetpackPlugin(apiRootUrl, username, password)
+        } else {
+            null
+        }
+    }
+
+    private suspend fun requestJetpackPlugin(
+        apiRootUrl: String,
+        username: String,
+        password: String
+    ): JetpackPluginState? {
+        val result = wpapiGsonRequestBuilder.syncGetRequest<List<PluginResponseModel>>(
+            restClient = this,
+            url = apiRootUrl.trimEnd('/') + "/" + PLUGINS_PATH,
+            params = mapOf("search" to JETPACK_PLUGIN_SEARCH, "_fields" to PLUGINS_FIELDS),
+            type = object : TypeToken<List<PluginResponseModel>>() {}.type,
+            headers = mapOf("Authorization" to Credentials.basic(username, password))
+        )
+
+        return when (result) {
+            is Success -> {
+                val jetpack = result.data?.firstOrNull { it.plugin == JETPACK_PLUGIN_ID }
+                JetpackPluginState(
+                    isActive = jetpack?.status == PLUGIN_STATUS_ACTIVE ||
+                            jetpack?.status == PLUGIN_STATUS_NETWORK_ACTIVE,
+                    version = jetpack?.version
+                )
+            }
+
+            is Error -> null
+        }
+    }
+
+    /**
+     * Reads the site's Jetpack connection to WordPress.com, or null when it can't be determined. Only the
+     * Jetpack plugin knows the blog ID WordPress.com assigned the site, and without it the row keeps
+     * SITE_ID = 0 -- which is what makes a later /me/sites sync insert a duplicate site instead of matching
+     * and upgrading this one. Skipped entirely when the plugin isn't there to ask.
+     */
+    private suspend fun fetchJetpackConnectionState(
+        plugin: JetpackPluginState?,
+        apiRootUrl: String,
+        payload: FetchWPAPISitePayload
+    ): JetpackConnectionState? {
+        if (plugin?.isActive != true) return null
+
+        val username = payload.username
+        val password = payload.password
+        return if (payload.isApplicationPassword && !username.isNullOrEmpty() && !password.isNullOrEmpty()) {
+            jetpackConnectionStatusFetcher.fetch(apiRootUrl, username, password)
+        } else {
+            null
+        }
+    }
+
+    /**
+     * A null [plugin] or [connection] means that state couldn't be read on this run, in which case the
+     * stored value is carried forward rather than reset.
+     *
+     * Note that [SiteModel.isJetpackConnected] only says the site is connected to *some* WordPress.com
+     * account, not necessarily the one signed in here -- callers that need the stronger claim have to check
+     * account access separately. See CMM-2344.
+     */
+    private fun SiteModel.applyJetpackState(
+        plugin: JetpackPluginState?,
+        connection: JetpackConnectionState?,
+        previousSite: SiteModel?
+    ) {
+        setIsJetpackInstalled(plugin?.isActive ?: previousSite?.isJetpackInstalled ?: false)
+        jetpackVersion = plugin?.version ?: previousSite?.jetpackVersion
+        setIsJetpackConnected(connection?.isConnected ?: previousSite?.isJetpackConnected ?: false)
+        siteId = connection?.wpComSiteId ?: previousSite?.siteId ?: 0L
     }
 
     private fun discoverApiEndpoint(

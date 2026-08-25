@@ -13,6 +13,7 @@
 * [*] Sharing content to the app now lists self-hosted sites connected with an application password.
 * [**] Images and videos shared to the app from the photo picker now upload instead of being silently dropped.
 * [**] Media shared from apps that generate it on the fly, such as an "Enhanced" photo from Google Photos, now keeps its correct file type instead of always uploading as a JPEG, and sharing several photos at once no longer drops some of them. [https://github.com/wordpress-mobile/WordPress-Android/issues/23047]
+* [**] Self-hosted sites added with an application password now have their Jetpack status detected, so opening Stats in the Jetpack app no longer asks you to install a plugin your site already has.
 
 26.9
 -----
