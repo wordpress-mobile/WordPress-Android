@@ -62,14 +62,17 @@ sealed interface SitePlansResult {
 }
 
 /**
- * Whether the site's current plan still carries an unclaimed free-domain credit.
+ * Whether the site holds an unclaimed free-domain credit.
  *
- * [SitePlan.currentPlan] is set on the plan the site is currently on, and holds
- * the credit flag. A failed fetch reports no credit, which is what the FluxC
- * path did with a null plan list.
+ * [SitePlan.currentPlan] is present on a plan when the response carries the
+ * credit group for it, which the API sends for the plan the site is on. The
+ * check does not depend on which plan that is: the response is a map, and its
+ * iteration order is not stable across calls.
+ *
+ * A failed fetch reports no credit.
  */
 fun SitePlansResult.hasDomainCredit(): Boolean = when (this) {
     is SitePlansResult.Success ->
-        plans.values.firstNotNullOfOrNull { it.currentPlan }?.hasDomainCredit == true
+        plans.values.any { it.currentPlan?.hasDomainCredit == true }
     is SitePlansResult.Error -> false
 }

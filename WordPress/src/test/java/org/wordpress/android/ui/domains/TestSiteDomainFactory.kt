@@ -5,8 +5,7 @@ import uniffi.wp_api.SiteDomainType
 
 /**
  * Builds a [SiteDomain] for tests, exposing the fields the domains dashboard
- * reads. Everything else is null, which is what the API sends for a domain that
- * does not carry the feature.
+ * reads. The rest are left unset because the dashboard does not read them.
  */
 @Suppress("LongParameterList", "LongMethod")
 fun testSiteDomain(
