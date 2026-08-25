@@ -251,8 +251,7 @@ private fun LoadedContent(
             item {
                 DaySelector(
                     day = selectedDay,
-                    hasPreviousDay =
-                        state.previousDay != null,
+                    hasPreviousDay = state.hasPreviousDay,
                     hasNextDay = state.hasNextDay,
                     onPreviousDay = onPreviousDay,
                     onNextDay = onNextDay

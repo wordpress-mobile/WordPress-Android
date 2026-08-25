@@ -153,6 +153,13 @@ sealed class PostStatsDetailUiState {
         val previousDay: PostViewsDailyView? =
             data.dailyViews.getOrNull(selectedDayIndex - 1)
 
+        /**
+         * The arrows move within [chartRange], so they are bounded by the chart window rather than
+         * by whether [previousDay]/the next day exist in the whole history.
+         */
+        val hasPreviousDay: Boolean =
+            selectedDayIndex > chartRange.first
+
         val hasNextDay: Boolean =
             selectedDayIndex < chartRange.last
     }

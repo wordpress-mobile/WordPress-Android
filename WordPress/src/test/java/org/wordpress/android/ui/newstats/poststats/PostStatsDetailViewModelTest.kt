@@ -164,6 +164,7 @@ class PostStatsDetailViewModelTest : BaseUnitTest() {
             assertThat(state.selectedDay?.day)
                 .isEqualTo(dayLabel(27))
             assertThat(state.hasNextDay).isTrue()
+            assertThat(state.hasPreviousDay).isTrue()
         }
 
     @Test
@@ -189,6 +190,9 @@ class PostStatsDetailViewModelTest : BaseUnitTest() {
             assertThat(state.selectedChartIndex).isEqualTo(0)
             assertThat(state.selectedDay?.day)
                 .isEqualTo(dayLabel(30 - CHART_DAYS))
+            // History continues past the window, so a previous day exists but is out of reach.
+            assertThat(state.previousDay).isNotNull
+            assertThat(state.hasPreviousDay).isFalse()
         }
 
     @Test
@@ -213,6 +217,8 @@ class PostStatsDetailViewModelTest : BaseUnitTest() {
 
             assertThat(state.selectedDay).isNotNull
             assertThat(state.previousDay).isNull()
+            assertThat(state.hasPreviousDay).isFalse()
+            assertThat(state.hasNextDay).isFalse()
         }
 
     private fun loadedState() =
