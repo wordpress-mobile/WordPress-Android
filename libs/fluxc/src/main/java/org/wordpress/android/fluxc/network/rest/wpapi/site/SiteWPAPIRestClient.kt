@@ -15,6 +15,8 @@ import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIDiscoveryUtils
 import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIGsonRequestBuilder
 import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIResponse.Error
 import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIResponse.Success
+import org.wordpress.android.fluxc.network.rest.wpapi.jetpack.JetpackConnectionState
+import org.wordpress.android.fluxc.network.rest.wpapi.jetpack.JetpackConnectionStatusFetcher
 import org.wordpress.android.fluxc.network.rest.wpapi.plugin.PluginResponseModel
 import org.wordpress.android.fluxc.store.SiteStore.FetchWPAPISitePayload
 import org.wordpress.android.fluxc.utils.extensions.getPasswordProcessed
@@ -29,6 +31,7 @@ import javax.inject.Singleton
 class SiteWPAPIRestClient @Inject constructor(
     private val wpapiGsonRequestBuilder: WPAPIGsonRequestBuilder,
     private val discoveryWPAPIRestClient: DiscoveryWPAPIRestClient,
+    private val jetpackConnectionStatusFetcher: JetpackConnectionStatusFetcher,
     dispatcher: Dispatcher,
     @Named(OkHttpClientQualifiers.CUSTOM_SSL) requestQueue: RequestQueue,
     userAgent: UserAgent
@@ -74,6 +77,7 @@ class SiteWPAPIRestClient @Inject constructor(
             is Success -> {
                 val response = result.data
                 val jetpackPlugin = fetchJetpackPluginState(response?.namespaces, discoveredWpApiUrl, payload)
+                val jetpackConnection = fetchJetpackConnectionState(jetpackPlugin, discoveredWpApiUrl, payload)
                 SiteModel().apply {
                     name = response?.name
                     description = response?.description
@@ -82,7 +86,7 @@ class SiteWPAPIRestClient @Inject constructor(
                     hasWooCommerce = response?.namespaces?.any {
                         it.startsWith(WOO_API_NAMESPACE_PREFIX)
                     } ?: false
-                    applyJetpackState(jetpackPlugin, previousSite)
+                    applyJetpackState(jetpackPlugin, jetpackConnection, previousSite)
 
                     applicationPasswordsAuthorizeUrl = response?.authentication?.applicationPasswords
                         ?.endpoints?.authorization
@@ -199,16 +203,44 @@ class SiteWPAPIRestClient @Inject constructor(
     }
 
     /**
-     * The connection to WordPress.com isn't visible from the site's own REST API, so it is never written
-     * here -- only the in-app connection flow establishes it, and it persists the result directly. Both it
-     * and the blog ID are carried forward so this refresh doesn't reset them. A [plugin] of null means the
-     * plugin state couldn't be read on this run, in which case that is carried forward too.
+     * Reads the site's Jetpack connection to WordPress.com, or null when it can't be determined. Only the
+     * Jetpack plugin knows the blog ID WordPress.com assigned the site, and without it the row keeps
+     * SITE_ID = 0 -- which is what makes a later /me/sites sync insert a duplicate site instead of matching
+     * and upgrading this one. Skipped entirely when the plugin isn't there to ask.
      */
-    private fun SiteModel.applyJetpackState(plugin: JetpackPluginState?, previousSite: SiteModel?) {
+    private suspend fun fetchJetpackConnectionState(
+        plugin: JetpackPluginState?,
+        apiRootUrl: String,
+        payload: FetchWPAPISitePayload
+    ): JetpackConnectionState? {
+        if (plugin?.isActive != true) return null
+
+        val username = payload.username
+        val password = payload.password
+        return if (payload.isApplicationPassword && !username.isNullOrEmpty() && !password.isNullOrEmpty()) {
+            jetpackConnectionStatusFetcher.fetch(apiRootUrl, username, password)
+        } else {
+            null
+        }
+    }
+
+    /**
+     * A null [plugin] or [connection] means that state couldn't be read on this run, in which case the
+     * stored value is carried forward rather than reset.
+     *
+     * Note that [SiteModel.isJetpackConnected] only says the site is connected to *some* WordPress.com
+     * account, not necessarily the one signed in here -- callers that need the stronger claim have to check
+     * account access separately. See CMM-2344.
+     */
+    private fun SiteModel.applyJetpackState(
+        plugin: JetpackPluginState?,
+        connection: JetpackConnectionState?,
+        previousSite: SiteModel?
+    ) {
         setIsJetpackInstalled(plugin?.isActive ?: previousSite?.isJetpackInstalled ?: false)
         jetpackVersion = plugin?.version ?: previousSite?.jetpackVersion
-        setIsJetpackConnected(previousSite?.isJetpackConnected == true)
-        siteId = previousSite?.siteId ?: 0L
+        setIsJetpackConnected(connection?.isConnected ?: previousSite?.isJetpackConnected ?: false)
+        siteId = connection?.wpComSiteId ?: previousSite?.siteId ?: 0L
     }
 
     private fun discoverApiEndpoint(

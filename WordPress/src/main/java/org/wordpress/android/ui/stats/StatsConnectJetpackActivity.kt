@@ -26,6 +26,7 @@ import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.API
 import org.wordpress.android.util.WPUrlUtils
+import org.wordpress.android.util.WpComSiteAccessChecker
 import org.wordpress.android.util.extensions.getSerializableExtraCompat
 import javax.inject.Inject
 import android.R as AndroidR
@@ -48,6 +49,9 @@ class StatsConnectJetpackActivity : BaseAppCompatActivity() {
 
     @Inject
     lateinit var mSiteStore: SiteStore
+
+    @Inject
+    lateinit var mWpComSiteAccessChecker: WpComSiteAccessChecker
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -174,7 +178,8 @@ class StatsConnectJetpackActivity : BaseAppCompatActivity() {
      * so we skip the old WebView-based flow
      */
     private fun startJetpackRestConnectionFlow(site: SiteModel): Boolean {
-        if (JetpackRestConnectionViewModel.canInitiateJetpackRestConnection(site)) {
+        val hasWpComAccess = mWpComSiteAccessChecker.hasWpComAccess(site)
+        if (JetpackRestConnectionViewModel.canInitiateJetpackRestConnection(site, hasWpComAccess)) {
             JetpackRestConnectionActivity.startJetpackRestConnectionFlow(
                 this,
                 JetpackRestConnectionViewModel.ConnectionSource.STATS

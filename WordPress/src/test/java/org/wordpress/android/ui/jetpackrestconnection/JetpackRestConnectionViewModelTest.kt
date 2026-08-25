@@ -85,8 +85,6 @@ class JetpackRestConnectionViewModelTest : BaseUnitTest() {
 
     @Before
     fun setup() {
-        // Configure the site model to be using WpCom REST API
-        whenever(siteModel.isUsingWpComRestApi).thenReturn(true)
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(siteModel)
 
         viewModel = JetpackRestConnectionViewModel(

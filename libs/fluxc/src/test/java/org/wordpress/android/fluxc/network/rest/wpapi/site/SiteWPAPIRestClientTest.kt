@@ -19,6 +19,8 @@ import org.wordpress.android.fluxc.network.UserAgent
 import org.wordpress.android.fluxc.network.discovery.DiscoveryWPAPIRestClient
 import org.wordpress.android.fluxc.network.discovery.RootWPAPIRestResponse
 import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIGsonRequestBuilder
+import org.wordpress.android.fluxc.network.rest.wpapi.jetpack.JetpackConnectionState
+import org.wordpress.android.fluxc.network.rest.wpapi.jetpack.JetpackConnectionStatusFetcher
 import org.wordpress.android.fluxc.network.rest.wpapi.WPAPINetworkError
 import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIResponse.Error
 import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIResponse.Success
@@ -35,6 +37,7 @@ import java.lang.reflect.Type
 class SiteWPAPIRestClientTest {
     private val wpapiGsonRequestBuilder: WPAPIGsonRequestBuilder = mock()
     private val discoveryWPAPIRestClient: DiscoveryWPAPIRestClient = mock()
+    private val jetpackConnectionStatusFetcher: JetpackConnectionStatusFetcher = mock()
     private val dispatcher: Dispatcher = mock()
     private val requestQueue: RequestQueue = mock()
     private val userAgent: UserAgent = mock()
@@ -46,6 +49,7 @@ class SiteWPAPIRestClientTest {
         restClient = SiteWPAPIRestClient(
             wpapiGsonRequestBuilder,
             discoveryWPAPIRestClient,
+            jetpackConnectionStatusFetcher,
             dispatcher,
             requestQueue,
             userAgent
@@ -143,6 +147,33 @@ class SiteWPAPIRestClientTest {
         val result = restClient.fetchWPAPISite(storedSite)
 
         assertThat(result.isJetpackInstalled).isFalse
+        assertThat(result.isJetpackConnected).isTrue
+        assertThat(result.siteId).isEqualTo(WPCOM_BLOG_ID)
+    }
+
+    @Test
+    fun `given the site reports a Jetpack connection, then the blog id is stored`() = test {
+        initResponse(namespaces = JETPACK_NAMESPACES, plugins = listOf(jetpackPlugin()))
+        whenever(jetpackConnectionStatusFetcher.fetch(any(), any(), any()))
+            .thenReturn(JetpackConnectionState(isConnected = true, wpComSiteId = WPCOM_BLOG_ID))
+
+        val result = restClient.fetchWPAPISite(storedSite())
+
+        assertThat(result.isJetpackConnected).isTrue
+        assertThat(result.siteId).isEqualTo(WPCOM_BLOG_ID)
+    }
+
+    @Test
+    fun `given the connection state can't be read, then the stored connection is left alone`() = test {
+        initResponse(namespaces = JETPACK_NAMESPACES, plugins = listOf(jetpackPlugin()))
+        whenever(jetpackConnectionStatusFetcher.fetch(any(), any(), any())).thenReturn(null)
+        val storedSite = storedSite().apply {
+            setIsJetpackConnected(true)
+            siteId = WPCOM_BLOG_ID
+        }
+
+        val result = restClient.fetchWPAPISite(storedSite)
+
         assertThat(result.isJetpackConnected).isTrue
         assertThat(result.siteId).isEqualTo(WPCOM_BLOG_ID)
     }

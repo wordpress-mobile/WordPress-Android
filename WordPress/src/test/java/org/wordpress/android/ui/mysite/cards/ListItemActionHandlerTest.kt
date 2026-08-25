@@ -15,6 +15,7 @@ import org.wordpress.android.ui.blaze.BlazeFlowSource
 import org.wordpress.android.ui.blaze.blazecampaigns.campaignlisting.CampaignListingPageSource
 import org.wordpress.android.ui.mysite.SiteNavigationAction
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction
+import org.wordpress.android.util.WpComSiteAccessChecker
 import org.wordpress.android.ui.newstats.NewStatsRouting
 import kotlin.test.assertEquals
 
@@ -30,6 +31,9 @@ class ListItemActionHandlerTest: BaseUnitTest() {
     @Mock
     lateinit var newStatsRouting: NewStatsRouting
 
+    @Mock
+    lateinit var wpComSiteAccessChecker: WpComSiteAccessChecker
+
     private val site = SiteModel()
 
     private lateinit var  listItemActionHandler: ListItemActionHandler
@@ -39,7 +43,8 @@ class ListItemActionHandlerTest: BaseUnitTest() {
         listItemActionHandler = ListItemActionHandler(
             accountStore,
             blazeFeatureUtils,
-            newStatsRouting
+            newStatsRouting,
+            wpComSiteAccessChecker
         )
     }
 

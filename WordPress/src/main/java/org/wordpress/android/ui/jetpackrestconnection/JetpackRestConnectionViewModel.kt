@@ -603,7 +603,8 @@ class JetpackRestConnectionViewModel @Inject constructor(
          * - Jetpack app
          * - Self-hosted site using REST API
          * - Application password has been set
-         * - Site isn't already connected to Jetpack
+         * - Site isn't already connected to Jetpack for the account signed in here. A site connected to a
+         *   *different* account still needs this flow: its ConnectUser step is what links this account.
          * - Jetpack is not installed, its version is unknown, or the installed version is 14.2 or above
          *
          * The version is unknown when the site's plugin list couldn't be read -- it needs the activate_plugins
@@ -611,11 +612,12 @@ class JetpackRestConnectionViewModel @Inject constructor(
          * that would send those sites to the WebView connection flow, which signs in through wp-login.php and
          * so can't work with an application password; this flow is the only one they have.
          */
-        fun canInitiateJetpackRestConnection(site: SiteModel): Boolean {
+        @JvmOverloads
+        fun canInitiateJetpackRestConnection(site: SiteModel, hasWpComAccess: Boolean = true): Boolean {
             return BuildConfig.IS_JETPACK_APP
                     && site.isUsingSelfHostedRestApi
                     && !site.wpApiRestUrl.isNullOrEmpty()
-                    && !site.isJetpackConnected
+                    && (!site.isJetpackConnected || !hasWpComAccess)
                     && (!site.isJetpackInstalled
                     || site.jetpackVersion.isNullOrEmpty()
                     || checkMinimalVersion(site.jetpackVersion, JETPACK_LIMIT_VERSION))
