@@ -35,10 +35,17 @@ data class JetpackConnectionState(
  */
 @Singleton
 class JetpackConnectionStatusFetcher @Inject constructor(
-    @Named(OkHttpClientQualifiers.INTERCEPTORS) private val interceptors: Set<@JvmSuppressWildcards Interceptor>,
-    private val networkAvailabilityProvider: WpNetworkAvailabilityProvider,
+    @Named(OkHttpClientQualifiers.INTERCEPTORS) interceptors: Set<@JvmSuppressWildcards Interceptor>,
+    networkAvailabilityProvider: WpNetworkAvailabilityProvider,
     private val appLogWrapper: AppLogWrapper
 ) {
+    // One executor for the singleton: each WpRequestExecutor builds its own OkHttpClient (with its own
+    // connection pool), and the executor is site-independent -- auth lives in the per-call delegate.
+    private val requestExecutor = WpRequestExecutor(
+        interceptors = interceptors.toList(),
+        networkAvailabilityProvider = networkAvailabilityProvider
+    )
+
     /**
      * Returns the site's Jetpack connection state, or null when it can't be determined — the site is
      * unreachable, the endpoint isn't there, or Jetpack is older than 14.2, which is where these
@@ -81,10 +88,7 @@ class JetpackConnectionStatusFetcher @Inject constructor(
         apiRootUrl = ParsedUrl.parse(apiRootUrl),
         delegate = WpApiClientDelegate(
             authProvider = WpAuthenticationProvider.staticWithUsernameAndPassword(username, password),
-            requestExecutor = WpRequestExecutor(
-                interceptors = interceptors.toList(),
-                networkAvailabilityProvider = networkAvailabilityProvider
-            ),
+            requestExecutor = requestExecutor,
             middlewarePipeline = WpApiMiddlewarePipeline(emptyList()),
             // Reading the status is a passive check made during a site refresh, so a rejected
             // credential shouldn't raise the app-wide "re-authenticate" prompt on its own.

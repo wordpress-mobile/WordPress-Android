@@ -429,14 +429,7 @@ class SiteSqlUtils
                 .asModel
                 .firstOrNull()
 
-    private fun wpApiSiteLocalIdByUrl(siteUrl: String): Int? =
-        WellSql.select(SiteModel::class.java)
-                .where().beginGroup()
-                .equals(SiteModelTable.URL, siteUrl)
-                .equals(SiteModelTable.ORIGIN, SiteModel.ORIGIN_WPAPI)
-                .endGroup().endWhere()
-                .asModel
-                .firstOrNull()?.id
+    private fun wpApiSiteLocalIdByUrl(siteUrl: String): Int? = getWPAPISiteByUrl(siteUrl)?.id
 
     val wPComSites: SelectQuery<SiteModel>
         get() = WellSql.select(SiteModel::class.java)

@@ -79,6 +79,11 @@ class SiteWPAPIRestClient @Inject constructor(
                 val jetpackPlugin = fetchJetpackPluginState(response?.namespaces, discoveredWpApiUrl, payload)
                 val jetpackConnection = fetchJetpackConnectionState(jetpackPlugin, discoveredWpApiUrl, payload)
                 SiteModel().apply {
+                    // Carry the local id so SiteStore.updateSite finds the stored row and preserves the
+                    // editor preferences, and so SiteSqlUtils matches the row by local id rather than by
+                    // SITE_ID + URL -- that match misses, and inserts a duplicate site, as soon as a real
+                    // WP.com blog id is stored.
+                    id = previousSite?.id ?: 0
                     name = response?.name
                     description = response?.description
                     timezone = response?.gmtOffset
@@ -119,7 +124,7 @@ class SiteWPAPIRestClient @Inject constructor(
     suspend fun fetchWPAPISite(
         site: SiteModel
     ): SiteModel {
-        val fetchedSite = fetchWPAPISite(
+        return fetchWPAPISite(
             payload = FetchWPAPISitePayload(
                 url = site.url,
                 username = site.getUserNameProcessed(),
@@ -129,14 +134,6 @@ class SiteWPAPIRestClient @Inject constructor(
             ),
             previousSite = site
         )
-
-        if (!fetchedSite.isError) {
-            // Carry the local id so SiteStore.updateSite finds the stored row and preserves the editor
-            // preferences, and so SiteSqlUtils matches the row by local id rather than by SITE_ID + URL --
-            // that match misses, and inserts a duplicate site, as soon as a real WP.com blog id is stored.
-            fetchedSite.id = site.id
-        }
-        return fetchedSite
     }
 
     /**
@@ -213,20 +210,18 @@ class SiteWPAPIRestClient @Inject constructor(
         apiRootUrl: String,
         payload: FetchWPAPISitePayload
     ): JetpackConnectionState? {
+        // isActive = true is only ever produced by requestJetpackPlugin, which already required the
+        // application-password credentials, so no separate credential check is needed here.
         if (plugin?.isActive != true) return null
-
-        val username = payload.username
-        val password = payload.password
-        return if (payload.isApplicationPassword && !username.isNullOrEmpty() && !password.isNullOrEmpty()) {
-            jetpackConnectionStatusFetcher.fetch(apiRootUrl, username, password)
-        } else {
-            null
-        }
+        val username = payload.username ?: return null
+        val password = payload.password ?: return null
+        return jetpackConnectionStatusFetcher.fetch(apiRootUrl, username, password)
     }
 
     /**
      * A null [plugin] or [connection] means that state couldn't be read on this run, in which case the
-     * stored value is carried forward rather than reset.
+     * stored values are carried forward rather than reset. A non-null result is definitive, including
+     * its null fields -- a disconnected site clears the blog id rather than keeping a stale one.
      *
      * Note that [SiteModel.isJetpackConnected] only says the site is connected to *some* WordPress.com
      * account, not necessarily the one signed in here -- callers that need the stronger claim have to check
@@ -237,10 +232,28 @@ class SiteWPAPIRestClient @Inject constructor(
         connection: JetpackConnectionState?,
         previousSite: SiteModel?
     ) {
-        setIsJetpackInstalled(plugin?.isActive ?: previousSite?.isJetpackInstalled ?: false)
-        jetpackVersion = plugin?.version ?: previousSite?.jetpackVersion
-        setIsJetpackConnected(connection?.isConnected ?: previousSite?.isJetpackConnected ?: false)
-        siteId = connection?.wpComSiteId ?: previousSite?.siteId ?: 0L
+        if (plugin != null) {
+            setIsJetpackInstalled(plugin.isActive)
+            jetpackVersion = plugin.version
+        } else {
+            setIsJetpackInstalled(previousSite?.isJetpackInstalled ?: false)
+            jetpackVersion = previousSite?.jetpackVersion
+        }
+        when {
+            // The plugin is definitively gone, so its WordPress.com connection is too.
+            plugin != null && !plugin.isActive -> {
+                setIsJetpackConnected(false)
+                siteId = 0
+            }
+            connection != null -> {
+                setIsJetpackConnected(connection.isConnected)
+                siteId = connection.wpComSiteId ?: 0L
+            }
+            else -> {
+                setIsJetpackConnected(previousSite?.isJetpackConnected ?: false)
+                siteId = previousSite?.siteId ?: 0L
+            }
+        }
     }
 
     private fun discoverApiEndpoint(

@@ -128,6 +128,7 @@ import org.wordpress.android.fluxc.tools.CoroutineEngine
 import org.wordpress.android.fluxc.utils.SiteErrorUtils
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
+import org.wordpress.android.util.UrlUtils
 import java.util.Locale
 import javax.inject.Inject
 import javax.inject.Provider
@@ -1380,15 +1381,15 @@ open class SiteStore @Inject constructor(
 
     suspend fun fetchSite(site: SiteModel): OnSiteChanged {
         return coroutineEngine.withDefaultContext(T.API, this, "Fetch site") {
-            val updatedSite = when (site.origin) {
-                SiteModel.ORIGIN_WPCOM_REST -> siteRestClient.fetchSite(site)
-                // Refresh from the stored row rather than the caller's copy. The fetch carries the
-                // WordPress.com connection and blog id forward from what it's given, and an in-memory
-                // SiteModel can predate the connection flow's write -- carrying those stale zeroes back
-                // would undo it, and then /me/sites no longer matches this row and inserts a duplicate.
-                SiteModel.ORIGIN_WPAPI ->
-                    siteWPAPIRestClient.fetchWPAPISite(getSiteByLocalId(site.id) ?: site)
-                else -> siteXMLRPCClient.fetchSite(site)
+            // Refresh from the stored row rather than the caller's copy. An in-memory SiteModel can
+            // predate later writes -- carrying stale identity or connection state back would undo
+            // them -- and its origin can predate an upgrade of the row (e.g. WPAPI -> WPCOM_REST by
+            // /me/sites), which would re-fetch through the wrong client and downgrade the row again.
+            val storedSite = getSiteByLocalId(site.id) ?: site
+            val updatedSite = when (storedSite.origin) {
+                SiteModel.ORIGIN_WPCOM_REST -> siteRestClient.fetchSite(storedSite)
+                SiteModel.ORIGIN_WPAPI -> siteWPAPIRestClient.fetchWPAPISite(storedSite)
+                else -> siteXMLRPCClient.fetchSite(storedSite)
             }
 
             updateSite(updatedSite)
@@ -1461,21 +1462,21 @@ open class SiteStore @Inject constructor(
     }
 
     /**
-     * This fetch builds a brand-new model, so it carries neither the local id nor the WordPress.com identity
-     * of the row it is refreshing. Without the local id, [SiteSqlUtils.insertOrUpdateSiteReturningId] has to
-     * fall back to matching on SITE_ID + URL, which stops matching the moment a real blog id is stored by the
-     * Jetpack connection flow -- and then inserts a duplicate site instead of updating the existing one.
+     * The stored row a WPAPI fetch is refreshing, when there is one. Passed to the fetch as its
+     * `previousSite` so the fields the fetch can't determine -- and the local id, which keeps
+     * [SiteSqlUtils.insertOrUpdateSiteReturningId] matching the row once it stores a real blog id --
+     * carry forward instead of resetting. The lookup tries both schemes because the stored URL
+     * carries the scheme discovery resolved, not necessarily the one the caller supplied.
      */
-    private fun carryForwardStoredWPAPIFields(fetchedSite: SiteModel) {
-        val storedSite = siteSqlUtils.getWPAPISiteByUrl(fetchedSite.url) ?: return
-        fetchedSite.id = storedSite.id
-        fetchedSite.siteId = storedSite.siteId
-        fetchedSite.setIsJetpackConnected(storedSite.isJetpackConnected)
+    private fun storedWPAPISite(url: String?): SiteModel? {
+        if (url.isNullOrEmpty()) return null
+        return siteSqlUtils.getWPAPISiteByUrl(UrlUtils.addUrlSchemeIfNeeded(url, false))
+            ?: siteSqlUtils.getWPAPISiteByUrl(UrlUtils.addUrlSchemeIfNeeded(url, true))
     }
 
     suspend fun fetchWPAPISite(payload: FetchWPAPISitePayload): OnSiteChanged {
         return coroutineEngine.withDefaultContext(T.MAIN, this, "Fetch WPAPI Site") {
-            updateSite(siteWPAPIRestClient.fetchWPAPISite(payload))
+            updateSite(siteWPAPIRestClient.fetchWPAPISite(payload, storedWPAPISite(payload.url)))
         }
     }
 
@@ -1495,11 +1496,11 @@ open class SiteStore @Inject constructor(
                         username = payload.username,
                         password = payload.password,
                         isApplicationPassword = true,
-                    )
+                    ),
+                    previousSite = storedWPAPISite(payload.url)
                 )
                 if (!siteModel.isError) {
                     siteModel.wpApiRestUrl = payload.apiRootUrl
-                    carryForwardStoredWPAPIFields(siteModel)
                 }
                 val result = updateSite(siteModel)
                 // updateSite's full-row write skips WP_API_REST_URL and the credential columns, and this fresh
@@ -1561,29 +1562,25 @@ open class SiteStore @Inject constructor(
                     siteModel.mobileEditor = freshSiteFromDB.mobileEditor
                     siteModel.webEditor = freshSiteFromDB.webEditor
                 }
+                yieldBlogIdIfOwnedElsewhere(siteModel)
                 OnSiteChanged(siteSqlUtils.insertOrUpdateSite(siteModel))
             } catch (e: DuplicateSiteException) {
-                retryWithoutBlogId(siteModel) ?: OnSiteChanged(SiteError(DUPLICATE_SITE))
+                OnSiteChanged(SiteError(DUPLICATE_SITE))
             }
         }
     }
 
     /**
-     * An application-password row can discover a WordPress.com blog id that a /me/sites copy of the same
-     * site already owns, and (SITE_ID, URL) is unique -- so the write is rejected. Losing the whole update
-     * would also lose the Jetpack state, the name and everything else the fetch just learned, so retry
-     * without the blog id and leave the WordPress.com copy owning it.
-     *
-     * @return the result of the retry, or null when this isn't that case (or the retry also fails).
+     * An application-password site can discover the WordPress.com blog id of a site that another row --
+     * typically a /me/sites copy of the same site -- already owns. Persisting it would either trip the
+     * UNIQUE (SITE_ID, URL) constraint (discarding the whole update) or, when the URLs differ, make
+     * [SiteSqlUtils.insertOrUpdateSiteReturningId]'s bare-SITE_ID match target the other row and
+     * overwrite it. Leave the blog id with the row that already owns it.
      */
-    @Suppress("SwallowedException")
-    private fun retryWithoutBlogId(siteModel: SiteModel): OnSiteChanged? {
-        if (siteModel.origin != SiteModel.ORIGIN_WPAPI || siteModel.siteId == 0L) return null
-        siteModel.siteId = 0
-        return try {
-            OnSiteChanged(siteSqlUtils.insertOrUpdateSite(siteModel))
-        } catch (retryFailure: DuplicateSiteException) {
-            null
+    private fun yieldBlogIdIfOwnedElsewhere(siteModel: SiteModel) {
+        if (siteModel.origin != SiteModel.ORIGIN_WPAPI || siteModel.siteId == 0L) return
+        if (siteSqlUtils.getSitesWithRemoteId(siteModel.siteId).any { it.id != siteModel.id }) {
+            siteModel.siteId = 0
         }
     }
 
