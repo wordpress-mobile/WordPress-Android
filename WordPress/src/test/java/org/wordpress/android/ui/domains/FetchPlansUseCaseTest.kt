@@ -115,6 +115,32 @@ class FetchPlansUseCaseTest : BaseUnitTest() {
         assertThat(useCase.execute(site).hasDomainCredit()).isFalse()
     }
 
+    /**
+     * The response is a map and its iteration order is not stable, so a credit
+     * has to be found wherever it sits rather than on whichever plan comes out
+     * of the map first.
+     */
+    @Test
+    fun `given two plans carry the credit group, the one with the credit decides`() = test {
+        stubPlans(
+            mapOf(
+                FREE_PLAN to currentPlan(hasDomainCredit = false),
+                PREMIUM_PLAN to currentPlan(hasDomainCredit = true),
+            )
+        )
+
+        assertThat(useCase.execute(site).hasDomainCredit()).isTrue()
+    }
+
+    @Test
+    fun `given a blank access token, when execute, returns error`() = test {
+        whenever(accountStore.accessToken).thenReturn("")
+
+        val result = useCase.execute(site)
+
+        assertThat(result).isInstanceOf(SitePlansResult.Error::class.java)
+    }
+
     @Test
     fun `given the fetch failed, hasDomainCredit is false`() {
         assertThat(SitePlansResult.Error.hasDomainCredit()).isFalse()
