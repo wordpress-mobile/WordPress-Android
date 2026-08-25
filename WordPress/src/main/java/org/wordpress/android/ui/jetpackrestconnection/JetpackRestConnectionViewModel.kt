@@ -344,8 +344,12 @@ class JetpackRestConnectionViewModel @Inject constructor(
      * Step 1: Starts the wp.com login flow if the user isn't logged into wp.com
      */
     private fun loginWpCom() {
-        if (accountStore.hasAccessToken() && site.isUsingWpComRestApi) {
-            // User is already logged in with an app password, add a short delay before marking the step completed
+        // Only whether we hold a WordPress.com token matters here. Pairing this with isUsingWpComRestApi
+        // made the branch unreachable: this flow is only offered to sites that are neither WordPress.com
+        // nor already Jetpack-connected, and isUsingWpComRestApi requires one of those, so every site that
+        // gets here failed the check and was sent to a browser sign-in even when already signed in.
+        if (accountStore.hasAccessToken()) {
+            // Already signed in, add a short delay before marking the step completed
             appLogWrapper.d(AppLog.T.API, "$TAG: WordPress.com access token already exists")
             launch {
                 delay(uiDelayMs)

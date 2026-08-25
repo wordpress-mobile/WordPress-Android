@@ -1382,7 +1382,12 @@ open class SiteStore @Inject constructor(
         return coroutineEngine.withDefaultContext(T.API, this, "Fetch site") {
             val updatedSite = when (site.origin) {
                 SiteModel.ORIGIN_WPCOM_REST -> siteRestClient.fetchSite(site)
-                SiteModel.ORIGIN_WPAPI -> siteWPAPIRestClient.fetchWPAPISite(site)
+                // Refresh from the stored row rather than the caller's copy. The fetch carries the
+                // WordPress.com connection and blog id forward from what it's given, and an in-memory
+                // SiteModel can predate the connection flow's write -- carrying those stale zeroes back
+                // would undo it, and then /me/sites no longer matches this row and inserts a duplicate.
+                SiteModel.ORIGIN_WPAPI ->
+                    siteWPAPIRestClient.fetchWPAPISite(getSiteByLocalId(site.id) ?: site)
                 else -> siteXMLRPCClient.fetchSite(site)
             }
 
