@@ -16,6 +16,7 @@ import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.CauseOfOnPostChanged
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.fluxc.store.PostStore.OnPostChanged
 import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded
@@ -182,6 +183,77 @@ class RsPostChangeListenerTest : BaseUnitTest(StandardTestDispatcher()) {
         listener.onPostUploaded(OnPostUploaded(post(), false))
     }
 
+    @Test
+    fun `upload of a post of the observed site reports the post it wrote`() {
+        val uploads = collectUploads {
+            listener.onPostUploaded(OnPostUploaded(uploadedPost(), false))
+        }
+
+        assertThat(uploads).containsExactly(RsUploadedPost(REMOTE_POST_ID, PostStatus.PUBLISHED))
+    }
+
+    @Test
+    fun `a post published with a future date is reported as scheduled`() {
+        val uploads = collectUploads {
+            listener.onPostUploaded(
+                OnPostUploaded(uploadedPost(status = "future"), false)
+            )
+        }
+
+        assertThat(uploads).containsExactly(RsUploadedPost(REMOTE_POST_ID, PostStatus.SCHEDULED))
+    }
+
+    @Test
+    fun `an upload that produced no remote id is not reported`() {
+        val uploads = collectUploads {
+            listener.onPostUploaded(OnPostUploaded(uploadedPost(remotePostId = 0L), false))
+        }
+
+        assertThat(uploads).isEmpty()
+    }
+
+    @Test
+    fun `a failed upload is not reported`() {
+        val uploads = collectUploads {
+            listener.onPostUploaded(
+                OnPostUploaded(uploadedPost(), false).apply { error = genericError() }
+            )
+        }
+
+        assertThat(uploads).isEmpty()
+    }
+
+    @Test
+    fun `an upload from another site is not reported`() {
+        val uploads = collectUploads {
+            listener.onPostUploaded(
+                OnPostUploaded(uploadedPost(localSiteId = OTHER_SITE_ID), false)
+            )
+        }
+
+        assertThat(uploads).isEmpty()
+    }
+
+    @Test
+    fun `an uploaded page is not reported to a post listener`() {
+        val uploads = collectUploads {
+            listener.onPostUploaded(OnPostUploaded(uploadedPost(isPage = true), false))
+        }
+
+        assertThat(uploads).isEmpty()
+    }
+
+    @Test
+    fun `a remote update is not reported as an upload`() {
+        val uploads = collectUploads {
+            whenever(postStore.getPostByLocalPostId(LOCAL_POST_ID)).thenReturn(uploadedPost())
+
+            listener.onPostChanged(changed(updatePost(isLocalUpdate = false)))
+        }
+
+        assertThat(uploads).isEmpty()
+    }
+
     /**
      * Asserts that running [events] against a started listener makes `changes` fire [expected]
      * times.
@@ -203,6 +275,32 @@ class RsPostChangeListenerTest : BaseUnitTest(StandardTestDispatcher()) {
             job.cancel()
         }
         assertThat(emissions).isEqualTo(expected)
+    }
+
+    /** Runs [events] against a started listener and returns everything `uploads` reported. */
+    private fun collectUploads(events: () -> Unit): List<RsUploadedPost> {
+        val uploads = mutableListOf<RsUploadedPost>()
+        test {
+            listener.start(site, isPages = false)
+            val job = launch { listener.uploads.collect { uploads.add(it) } }
+            advanceUntilIdle()
+
+            events()
+            advanceUntilIdle()
+
+            job.cancel()
+        }
+        return uploads
+    }
+
+    private fun uploadedPost(
+        isPage: Boolean = false,
+        localSiteId: Int = SITE_ID,
+        remotePostId: Long = REMOTE_POST_ID,
+        status: String = "publish"
+    ) = post(isPage, localSiteId).apply {
+        setRemotePostId(remotePostId)
+        setStatus(status)
     }
 
     private fun post(isPage: Boolean = false, localSiteId: Int = SITE_ID) = PostModel().apply {

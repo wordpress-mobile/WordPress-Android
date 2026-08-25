@@ -349,10 +349,11 @@ class InsightsViewModel @Inject constructor(
     }
 
     companion object {
-        // TAGS_AND_CATEGORIES is intentionally absent
-        // from both checks: it has its own dedicated
-        // fetch path via StatsTagsUseCase in
-        // TagsAndCategoriesViewModel.
+        // TAGS_AND_CATEGORIES and LATEST_POST are
+        // intentionally absent from both checks: each
+        // fetches on its own, from
+        // TagsAndCategoriesViewModel and
+        // LatestPostViewModel respectively.
         private fun List<InsightsCardType>.needsSummary():
             Boolean = any {
             it == InsightsCardType.ALL_TIME_STATS ||
