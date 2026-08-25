@@ -84,6 +84,7 @@ import org.wordpress.android.ui.pagesrs.PageRsListConfirmation
 import org.wordpress.android.ui.pagesrs.PageRsListTab
 import org.wordpress.android.ui.pagesrs.PageRsMenuAction
 import org.wordpress.android.ui.pagesrs.PageRsParentPickerState
+import org.wordpress.android.ui.pagesrs.PageRsReveal
 import org.wordpress.android.ui.pagesrs.PageTabUiState
 import org.wordpress.android.ui.pagesrs.PagesRsListViewModel.Companion.MIN_SEARCH_QUERY_LENGTH
 import org.wordpress.android.ui.posts.AuthorFilterSelection
@@ -103,6 +104,7 @@ internal fun PagesRsListScreen(
     confirmationDialog: PageRsConfirmationDialogState,
     parentPicker: PageRsParentPickerState?,
     snackbarMessages: Flow<SnackbarMessage> = emptyFlow(),
+    revealRequests: Flow<PageRsReveal> = emptyFlow(),
     onSearchOpen: () -> Unit,
     onSearchQueryChanged: (String, PageRsListTab) -> Unit,
     onSearchClose: (PageRsListTab) -> Unit,
@@ -127,6 +129,26 @@ internal fun PagesRsListScreen(
     val focusManager = LocalFocusManager.current
     val activeTab = tabs[pagerState.settledPage]
     val snackbarHostState = remember { SnackbarHostState() }
+    // A page the user just saved, to be scrolled to once the tab showing it has it. Held here
+    // rather than acted on in the collector below so that the tab switch, which the user can win,
+    // can be cancelled without taking the collector down with it.
+    var pendingReveal by remember { mutableStateOf<PageRsReveal?>(null) }
+
+    LaunchedEffect(revealRequests) {
+        revealRequests.collect { pendingReveal = it }
+    }
+
+    // The page's status decides the tab, which may not be the one on screen. Switching to it also
+    // initializes a tab that was never opened, so its first fetch brings the page in.
+    LaunchedEffect(pendingReveal) {
+        val reveal = pendingReveal ?: return@LaunchedEffect
+        if (isSearchActive) {
+            pendingReveal = null
+            return@LaunchedEffect
+        }
+        val page = tabs.indexOf(reveal.tab)
+        if (pagerState.settledPage != page) pagerState.animateScrollToPage(page)
+    }
 
     BackHandler(enabled = isSearchActive) { onSearchClose(activeTab) }
 
@@ -259,6 +281,8 @@ internal fun PagesRsListScreen(
                 PageRsTabListScreen(
                     state = tabState,
                     emptyMessageResId = tab.emptyMessageResId,
+                    revealPageId = pendingReveal?.takeIf { it.tab == tab }?.remotePageId,
+                    onRevealHandled = { pendingReveal = null },
                     isSearchIdle = isSearchActive && searchQuery.length < MIN_SEARCH_QUERY_LENGTH,
                     isSearching = isSearchActive && searchQuery.length >= MIN_SEARCH_QUERY_LENGTH,
                     onRefresh = { onRefreshTab(tab) },

@@ -21,6 +21,10 @@ import uniffi.wp_api.StatsRegionViewsPeriod
 import uniffi.wp_api.StatsDevicesParams
 import uniffi.wp_api.StatsDevicesPeriod
 import uniffi.wp_api.StatsInsightsParams
+import uniffi.wp_api.StatsPostChange
+import uniffi.wp_api.StatsPostResponse
+import uniffi.wp_api.StatsPostTarget
+import uniffi.wp_api.StatsPostWeek
 import uniffi.wp_api.StatsTagsParams
 import uniffi.wp_api.StatsSearchTermsParams
 import uniffi.wp_api.StatsSearchTermsPeriod
@@ -206,8 +210,7 @@ class StatsDataSourceImpl @Inject constructor(
                             id = post.id.toLong(),
                             title = post.title.orEmpty(),
                             views = post.views?.toLong() ?: 0L,
-                            url = post.href,
-                            postType = post.postType
+                            url = post.href
                         )
                     }
                 )
@@ -1243,6 +1246,113 @@ class StatsDataSourceImpl @Inject constructor(
         }
     }
 
+    override suspend fun fetchPostViews(
+        siteId: Long,
+        postId: Long
+    ): PostViewsDataResult {
+        // The endpoint takes no query params -- num, date and period are silently ignored.
+        // The API addresses the home page as post 0, which the target models explicitly.
+        val target = if (postId == HOME_PAGE_POST_ID) {
+            StatsPostTarget.HomePage
+        } else {
+            StatsPostTarget.Post(postId)
+        }
+        val result = getOrCreateClient()
+            .request { requestBuilder ->
+                requestBuilder.statsPost()
+                    .getStatsPost(
+                        wpComSiteId = siteId.toULong(),
+                        statsPostTarget = target
+                    )
+            }
+
+        logResultType("fetchPostViews", result)
+
+        return when (result) {
+            is WpRequestResult.Success -> {
+                AppLog.d(
+                    T.STATS,
+                    "StatsDataSourceImpl: " +
+                        "fetchPostViews success"
+                )
+                PostViewsDataResult.Success(
+                    mapToPostViewsData(
+                        result.response.data,
+                        postId
+                    )
+                )
+            }
+            else -> logErrorAndReturn(
+                "fetchPostViews",
+                result
+            ) {
+                PostViewsDataResult.Error(it)
+            }
+        }
+    }
+
+    private fun mapToPostViewsData(
+        response: StatsPostResponse,
+        postId: Long
+    ): PostViewsData = PostViewsData(
+        // The home page has no post row to read an id from, so the requested id is authoritative.
+        postId = response.post?.id ?: postId,
+        totalViews = response.views.toLong(),
+        dailyViews = response.dailyViews
+            .map {
+                PostViewsDailyView(
+                    day = it.period,
+                    views = it.views.toLong()
+                )
+            },
+        // The API sends weeks oldest first; the UI lists
+        // the most recent week at the top.
+        weeks = response.weeks
+            .map { it.toPostViewsWeek() }
+            .reversed(),
+        years = response.years
+            .map { (year, value) ->
+                PostViewsYear(
+                    year = year,
+                    total = value.total.toLong()
+                )
+            }
+            .sortedByDescending { it.year },
+        averages = response.averages
+            .map { (year, value) ->
+                PostViewsYearAverage(
+                    year = year,
+                    overall = value.overall.toLong()
+                )
+            }
+            .sortedByDescending { it.year },
+        // Null for the home page, which has view stats but no post metadata, likes or comments.
+        post = response.post?.let { post ->
+            PostViewsPost(
+                title = post.title,
+                date = post.date,
+                likeCount = response.likeCount
+                    ?.toLong() ?: 0L,
+                commentCount = response.discussion
+                    ?.commentCount?.toLong() ?: 0L
+            )
+        }
+    )
+
+    private fun StatsPostWeek.toPostViewsWeek() =
+        PostViewsWeek(
+            startDay = days.firstOrNull()?.day.orEmpty(),
+            endDay = days.lastOrNull()?.day.orEmpty(),
+            total = total.toLong(),
+            change = when (val change = change) {
+                is StatsPostChange.Percentage ->
+                    PostViewsChange.Percentage(change.value)
+                is StatsPostChange.Infinite ->
+                    PostViewsChange.Infinite
+                null -> PostViewsChange.None
+            }
+        )
+
     override suspend fun fetchStatsSubscribers(
         siteId: Long,
         quantity: Int,
@@ -1483,6 +1593,8 @@ class StatsDataSourceImpl @Inject constructor(
         }
 
     companion object {
+        // The API addresses the site's home page as post 0.
+        private const val HOME_PAGE_POST_ID = 0L
         private const val HTTP_UNAUTHORIZED = 401
         private const val HTTP_FORBIDDEN = 403
     }

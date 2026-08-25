@@ -19,6 +19,12 @@ internal sealed interface PageRsListConfirmation {
     data class MoveToDraft(val pageId: Long) : PageRsListConfirmation
 }
 
+/** A request to select [tab] and scroll to [remotePageId] within it. */
+internal data class PageRsReveal(
+    val tab: PageRsListTab,
+    val remotePageId: Long
+)
+
 internal data class PageRsConfirmationDialogState(
     val pending: PageRsListConfirmation? = null,
     val onConfirm: () -> Unit = {},

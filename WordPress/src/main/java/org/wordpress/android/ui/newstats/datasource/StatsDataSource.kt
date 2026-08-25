@@ -246,6 +246,18 @@ interface StatsDataSource {
     ): StatsTagsDataResult
 
     /**
+     * Fetches view stats for a single post.
+     *
+     * @param siteId The WordPress.com site ID
+     * @param postId The post ID; 0 is the site's home page
+     * @return Result containing the post's view data or an error
+     */
+    suspend fun fetchPostViews(
+        siteId: Long,
+        postId: Long
+    ): PostViewsDataResult
+
+    /**
      * Fetches subscriber count stats for a specific site.
      *
      * @param siteId The WordPress.com site ID
@@ -422,8 +434,7 @@ data class TopPostDataItem(
     val id: Long,
     val title: String,
     val views: Long,
-    val url: String? = null,
-    val postType: String? = null
+    val url: String? = null
 )
 
 /**
@@ -762,6 +773,103 @@ data class TagData(
     val tagType: String,
     val name: String,
     val link: String? = null
+)
+
+/**
+ * Result wrapper for the per-post views fetch operation.
+ */
+sealed class PostViewsDataResult {
+    data class Success(
+        val data: PostViewsData
+    ) : PostViewsDataResult()
+    data class Error(
+        val errorType: StatsErrorType
+    ) : PostViewsDataResult()
+}
+
+/**
+ * View stats for a single post, along with the post's own metadata. The API returns both in one
+ * response, so no separate post fetch is needed.
+ *
+ * Post ID 0 is the site's home page, which isn't a post -- it has view stats but no [post].
+ */
+data class PostViewsData(
+    val postId: Long,
+    val totalViews: Long,
+    /** The post's complete daily view history, oldest first. */
+    val dailyViews: List<PostViewsDailyView>,
+    /** The most recent weeks of daily views, most recent first. */
+    val weeks: List<PostViewsWeek>,
+    /** Yearly totals, most recent year first. */
+    val years: List<PostViewsYear>,
+    /** Yearly averages, most recent year first. */
+    val averages: List<PostViewsYearAverage>,
+    /** The post these stats belong to, or null for the site's home page. */
+    val post: PostViewsPost?
+)
+
+/**
+ * A single day's view count. The day is kept so the chart can label its range.
+ */
+data class PostViewsDailyView(
+    /** The day the views were recorded on (format: yyyy-MM-dd). */
+    val day: String,
+    val views: Long
+)
+
+/**
+ * The editorial metadata of the post whose stats were fetched.
+ */
+data class PostViewsPost(
+    val title: String,
+    /** Publication date in the site's timezone (format: yyyy-MM-dd HH:mm:ss). */
+    val date: String,
+    val likeCount: Long,
+    val commentCount: Long
+)
+
+/**
+ * A week's view total and how it compares with the week before.
+ *
+ * [startDay] and [endDay] bound the week (format: yyyy-MM-dd); the final week may be partial. The
+ * API also breaks the week down per day, which nothing displays yet.
+ */
+data class PostViewsWeek(
+    val startDay: String,
+    val endDay: String,
+    val total: Long,
+    val change: PostViewsChange
+)
+
+/**
+ * How a week's views compare with the week before.
+ */
+sealed class PostViewsChange {
+    data class Percentage(
+        val value: Double
+    ) : PostViewsChange()
+
+    /** The previous week had no views, so the API reports an unbounded change. */
+    data object Infinite : PostViewsChange()
+
+    /** The week has no predecessor to compare against. */
+    data object None : PostViewsChange()
+}
+
+/**
+ * A year's view total. The API also breaks this down by month, which nothing displays yet.
+ */
+data class PostViewsYear(
+    val year: String,
+    val total: Long
+)
+
+/**
+ * A year's average daily views. The API also breaks this down by month, which nothing displays yet.
+ */
+data class PostViewsYearAverage(
+    val year: String,
+    val overall: Long
 )
 
 /**
