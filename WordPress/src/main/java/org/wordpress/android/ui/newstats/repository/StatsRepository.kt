@@ -9,6 +9,8 @@ import org.wordpress.android.ui.newstats.datasource.ClicksDataResult
 import org.wordpress.android.ui.newstats.datasource.CountryViewsDataResult
 import org.wordpress.android.ui.newstats.datasource.DevicesDataResult
 import org.wordpress.android.ui.newstats.datasource.FileDownloadsDataResult
+import org.wordpress.android.ui.newstats.datasource.PostViewsData
+import org.wordpress.android.ui.newstats.datasource.PostViewsDataResult
 import org.wordpress.android.ui.newstats.datasource.ReferrersDataResult
 import org.wordpress.android.ui.newstats.datasource.RegionViewsDataResult
 import org.wordpress.android.ui.newstats.datasource.SearchTermsDataResult
@@ -1047,8 +1049,7 @@ class StatsRepository @Inject constructor(
                         views = item.views,
                         previousViews = previousViews,
                         isFirst = index == 0,
-                        url = item.url,
-                        postType = item.postType
+                        url = item.url
                     )
                 },
                 totalViews = totalViews,
@@ -1941,6 +1942,35 @@ class StatsRepository @Inject constructor(
     }
 
     /**
+     * Fetches view stats for a single post, or for the site's home page when [postId] is 0.
+     */
+    suspend fun fetchPostViews(
+        siteId: Long,
+        postId: Long
+    ): PostViewsResult = withContext(ioDispatcher) {
+        val result = statsDataSource.fetchPostViews(
+            siteId = siteId,
+            postId = postId
+        )
+        when (result) {
+            is PostViewsDataResult.Success ->
+                PostViewsResult.Success(
+                    data = result.data
+                )
+            is PostViewsDataResult.Error -> {
+                appLogWrapper.e(
+                    AppLog.T.STATS,
+                    "Error fetching post views: " +
+                        "${result.errorType}"
+                )
+                PostViewsResult.Error(
+                    result.errorType.name
+                )
+            }
+        }
+    }
+
+    /**
      * Fetches all-time subscriber counts: current, 30d ago,
      * 60d ago, 90d ago. Makes 4 parallel API calls.
      */
@@ -2343,8 +2373,7 @@ data class MostViewedItemData(
     val previousViews: Long,
     val isFirst: Boolean,
     val children: List<MostViewedChildData> = emptyList(),
-    val url: String? = null,
-    val postType: String? = null
+    val url: String? = null
 ) {
     val viewsChange: Long get() = views - previousViews
     val viewsChangePercent: Double
@@ -2643,6 +2672,18 @@ sealed class TagsResult {
     data class Error(
         val message: String
     ) : TagsResult()
+}
+
+/**
+ * Result of fetching a single post's view stats.
+ */
+sealed class PostViewsResult {
+    data class Success(
+        val data: PostViewsData
+    ) : PostViewsResult()
+    data class Error(
+        val message: String
+    ) : PostViewsResult()
 }
 
 /**

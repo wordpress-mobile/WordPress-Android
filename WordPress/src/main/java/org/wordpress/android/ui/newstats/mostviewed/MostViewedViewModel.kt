@@ -228,8 +228,7 @@ class MostViewedViewModel @Inject constructor(
                     views = item.views,
                     change = item.change,
                     children = item.children,
-                    url = item.url,
-                    postType = item.postType
+                    url = item.url
                 )
             },
             maxViewsForBar = cardItems.firstOrNull()?.views ?: 1L
@@ -341,7 +340,6 @@ internal fun MostViewedItemData.toDetailItem(): MostViewedDetailItem {
         children = children.map { child ->
             MostViewedChildItem(name = child.name, url = child.url, views = child.views)
         },
-        url = url,
-        postType = postType
+        url = url
     )
 }

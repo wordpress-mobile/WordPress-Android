@@ -41,6 +41,8 @@ import androidx.compose.ui.unit.dp
 import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
 import org.wordpress.android.ui.ActivityLauncher
+import org.wordpress.android.analytics.AnalyticsTracker.Stat
+import org.wordpress.android.ui.newstats.poststats.PostStatsDetailActivity
 import org.wordpress.android.ui.ActivityNavigator
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.main.BaseAppCompatActivity
@@ -49,6 +51,7 @@ import org.wordpress.android.ui.newstats.StatsPeriod
 import org.wordpress.android.ui.newstats.components.StatsSummaryCard
 import org.wordpress.android.util.extensions.getParcelableArrayListCompat
 import org.wordpress.android.util.extensions.getSerializableCompat
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import javax.inject.Inject
 
 private const val EXTRA_CARD_TYPE = "extra_card_type"
@@ -71,6 +74,8 @@ private const val NO_EPOCH_DAY = -1L
 @AndroidEntryPoint
 class MostViewedDetailActivity : BaseAppCompatActivity() {
     @Inject lateinit var activityNavigator: ActivityNavigator
+
+    @Inject lateinit var analyticsTracker: AnalyticsTrackerWrapper
 
     private val viewModel: MostViewedDetailViewModel by viewModels()
 
@@ -114,7 +119,8 @@ class MostViewedDetailActivity : BaseAppCompatActivity() {
     }
 
     private fun openPostDetailStats(item: MostViewedDetailItem) {
-        activityNavigator.openPostDetailStats(this, item.id, item.postType, item.title, item.url)
+        analyticsTracker.track(Stat.STATS_POSTS_AND_PAGES_ITEM_TAPPED)
+        PostStatsDetailActivity.start(this, item.id, item.title)
     }
 
     /**
