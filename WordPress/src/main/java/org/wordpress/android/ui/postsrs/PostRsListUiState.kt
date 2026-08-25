@@ -24,6 +24,12 @@ sealed interface PendingConfirmation {
     data class MoveToDraft(val postId: Long) : PendingConfirmation
 }
 
+/** A request to select [tab] and scroll to [remotePostId] within it. */
+data class PostRsReveal(
+    val tab: PostRsListTab,
+    val remotePostId: Long
+)
+
 data class ConfirmationDialogState(
     val pending: PendingConfirmation? = null,
     val onConfirm: () -> Unit = {},
