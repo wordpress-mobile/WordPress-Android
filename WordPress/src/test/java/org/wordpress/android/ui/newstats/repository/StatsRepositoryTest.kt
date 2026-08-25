@@ -421,6 +421,41 @@ class StatsRepositoryTest : BaseUnitTest() {
         }
 
     @Test
+    fun `given successful response, when fetchStatsForPeriod, then each bucket carries all five metrics`() =
+        test {
+            whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any(), anyOrNull(), anyOrNull()))
+                .thenReturn(StatsVisitsDataResult.Success(createWeeklyStatsVisitsData()))
+
+            val result = repository.fetchStatsForPeriod(TEST_SITE_ID, StatsPeriod.Last7Days)
+
+            val success = result as PeriodStatsResult.Success
+            val firstBucket = success.currentPeriodData[0]
+            assertThat(firstBucket.views).isEqualTo(TEST_VIEWS_1)
+            assertThat(firstBucket.visitors).isEqualTo(TEST_VISITORS_1)
+            assertThat(firstBucket.likes).isEqualTo(TEST_LIKES_1)
+            assertThat(firstBucket.comments).isEqualTo(TEST_COMMENTS_1)
+            assertThat(firstBucket.posts).isEqualTo(TEST_POSTS_1)
+        }
+
+    @Test
+    fun `given a metric with no per-bucket data, when fetchStatsForPeriod, then that metric defaults to zero`() =
+        test {
+            // The hourly fixture leaves likes, comments and posts empty (an hourly response populates
+            // views and visitors only), so those buckets should default to zero rather than crash.
+            whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any(), anyOrNull(), anyOrNull()))
+                .thenReturn(StatsVisitsDataResult.Success(createHourlyStatsVisitsData()))
+
+            val result = repository.fetchStatsForPeriod(TEST_SITE_ID, StatsPeriod.Today)
+
+            val success = result as PeriodStatsResult.Success
+            val firstBucket = success.currentPeriodData[0]
+            assertThat(firstBucket.views).isEqualTo(TEST_VIEWS_1)
+            assertThat(firstBucket.likes).isEqualTo(0L)
+            assertThat(firstBucket.comments).isEqualTo(0L)
+            assertThat(firstBucket.posts).isEqualTo(0L)
+        }
+
+    @Test
     fun `given successful response, when fetchStatsForPeriod with Last7Days, then data source called with DAY unit`() =
         test {
             whenever(statsDataSource.fetchStatsVisits(any(), any(), any(), any(), anyOrNull(), anyOrNull()))

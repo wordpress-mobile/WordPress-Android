@@ -10,7 +10,7 @@ import org.mockito.kotlin.whenever
 import org.wordpress.android.fluxc.model.AccountModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalHelper
 import org.wordpress.android.ui.mysite.items.ACTIVITY_ITEM
 import org.wordpress.android.ui.mysite.items.ADMIN_ITEM
 import org.wordpress.android.ui.mysite.items.BACKUP_ITEM
@@ -51,7 +51,7 @@ class SiteListItemBuilderTest {
     lateinit var siteModel: SiteModel
 
     @Mock
-    lateinit var jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper
+    lateinit var jetpackFeatureRemovalHelper: JetpackFeatureRemovalHelper
 
     @Mock
     lateinit var siteMonitoringFeatureConfig: SiteMonitoringFeatureConfig
@@ -72,7 +72,7 @@ class SiteListItemBuilderTest {
             siteUtilsWrapper,
             buildConfigWrapper,
             themeBrowserUtils,
-            jetpackFeatureRemovalPhaseHelper,
+            jetpackFeatureRemovalHelper,
             siteMonitoringFeatureConfig,
             selfHostedUsersFeatureConfig,
             siteCapabilityChecker
@@ -342,7 +342,7 @@ class SiteListItemBuilderTest {
     // for every site regardless of capabilities.
     @Test
     fun `me item built when jetpack features are removed, regardless of site capabilities`() {
-        whenever(jetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures()).thenReturn(true)
+        whenever(jetpackFeatureRemovalHelper.shouldRemoveJetpackFeatures()).thenReturn(true)
 
         val item = siteListItemBuilder.buildMeItemIfAvailable(SITE_ITEM_ACTION)
 
@@ -351,7 +351,7 @@ class SiteListItemBuilderTest {
 
     @Test
     fun `me item not built when jetpack features are not removed`() {
-        whenever(jetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures()).thenReturn(false)
+        whenever(jetpackFeatureRemovalHelper.shouldRemoveJetpackFeatures()).thenReturn(false)
 
         val item = siteListItemBuilder.buildMeItemIfAvailable(SITE_ITEM_ACTION)
 

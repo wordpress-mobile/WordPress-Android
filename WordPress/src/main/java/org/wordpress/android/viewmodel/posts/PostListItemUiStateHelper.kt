@@ -19,7 +19,7 @@ import org.wordpress.android.fluxc.model.post.PostStatus.SCHEDULED
 import org.wordpress.android.fluxc.model.post.PostStatus.TRASHED
 import org.wordpress.android.fluxc.model.post.PostStatus.UNKNOWN
 import org.wordpress.android.ui.blaze.BlazeFeatureUtils
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalHelper
 import org.wordpress.android.ui.posts.AuthorFilterSelection
 import org.wordpress.android.ui.posts.AuthorFilterSelection.EVERYONE
 import org.wordpress.android.ui.posts.PostModelUploadStatusTracker
@@ -75,7 +75,7 @@ class PostListItemUiStateHelper @Inject constructor(
     private val appPrefsWrapper: AppPrefsWrapper,
     private val uploadUiStateUseCase: PostModelUploadUiStateUseCase,
     private val labelColorUseCase: PostPageListLabelColorUseCase,
-    private val jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper,
+    private val jetpackFeatureRemovalHelper: JetpackFeatureRemovalHelper,
     private val blazeFeatureUtils: BlazeFeatureUtils,
     private val buildConfigWrapper: BuildConfigWrapper
 ) {
@@ -109,7 +109,7 @@ class PostListItemUiStateHelper @Inject constructor(
             siteHasCapabilitiesToPublish = capabilitiesToPublish,
             statsSupported = statsSupported,
             shouldShowStatsInJetpackRemovalPhase =
-            jetpackFeatureRemovalPhaseHelper.shouldShowPublishedPostStatsButton(),
+            jetpackFeatureRemovalHelper.shouldShowPublishedPostStatsButton(),
             shouldShowPromoteWithBlaze = blazeFeatureUtils.isPostBlazeEligible(
                 site,
                 postStatus,

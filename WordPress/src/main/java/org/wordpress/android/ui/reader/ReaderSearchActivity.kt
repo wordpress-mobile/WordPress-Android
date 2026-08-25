@@ -8,7 +8,6 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.ui.main.BaseAppCompatActivity
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.tracker.ReaderTrackerType.MAIN_READER
-import org.wordpress.android.util.JetpackBrandingUtils
 import javax.inject.Inject
 
 /**
@@ -20,9 +19,6 @@ import javax.inject.Inject
 class ReaderSearchActivity : BaseAppCompatActivity() {
     @Inject
     lateinit var readerTracker: ReaderTracker
-
-    @Inject
-    lateinit var jetpackBrandingUtils: JetpackBrandingUtils
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

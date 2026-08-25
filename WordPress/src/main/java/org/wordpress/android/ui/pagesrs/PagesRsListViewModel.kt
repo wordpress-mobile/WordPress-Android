@@ -38,7 +38,6 @@ import org.wordpress.android.fluxc.store.EditorThemeStore
 import org.wordpress.android.fluxc.store.EditorThemeStore.FetchEditorThemePayload
 import org.wordpress.android.fluxc.store.EditorThemeStore.OnEditorThemeChanged
 import org.wordpress.android.fluxc.store.PostStore
-import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded
 import org.wordpress.android.ui.blaze.BlazeFeatureUtils
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.pages.PageItem
@@ -48,7 +47,9 @@ import org.wordpress.android.ui.postsrs.SnackbarMessage
 import org.wordpress.android.ui.postsrs.data.PostRsRestClient
 import org.wordpress.android.ui.postsrs.data.WpServiceProvider
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.ui.rs.RsPostChangeListener
 import org.wordpress.android.ui.rs.RsTabLoading
+import org.wordpress.android.ui.rs.RsTabRefreshJobs
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
@@ -84,6 +85,7 @@ internal class PagesRsListViewModel @Inject constructor(
     private val analyticsTracker: AnalyticsTrackerWrapper,
     private val editorThemeStore: EditorThemeStore,
     private val siteEditorMVPFeatureConfig: SiteEditorMVPFeatureConfig,
+    private val changeListener: RsPostChangeListener,
 ) : ViewModel() {
     private val _tabStates = MutableStateFlow<Map<PageRsListTab, PageTabUiState>>(emptyMap())
     val tabStates: StateFlow<Map<PageRsListTab, PageTabUiState>> = _tabStates.asStateFlow()
@@ -102,6 +104,10 @@ internal class PagesRsListViewModel @Inject constructor(
     private var collectionsScope = createCollectionsScope()
     private val initializingTabs = mutableSetOf<PageRsListTab>()
     private val userRefreshingTabs = mutableSetOf<PageRsListTab>()
+    private val refreshJobs = RsTabRefreshJobs<PageRsListTab>()
+
+    private var isScreenVisible = false
+    private var hasDeferredChange = false
 
     /** Tabs whose collection has completed at least one fetch, so an empty list means empty. */
     private val fetchedTabs = mutableSetOf<PageRsListTab>()
@@ -182,7 +188,42 @@ internal class PagesRsListViewModel @Inject constructor(
                     .distinctUntilChanged()
                     .collect { query -> onParentPickerQueryDebounced(query) }
             }
+            // Subscribe before starting the listener - its flow has no replay, so a change
+            // reported in between would be dropped.
+            viewModelScope.launch {
+                changeListener.changes.collect { onRemoteChangeDetected() }
+            }
+            changeListener.start(site, isPages = true)
         }
+    }
+
+    /** Called when the screen becomes visible, and again whenever it returns from the background. */
+    @MainThread
+    fun onScreenVisible() {
+        isScreenVisible = true
+        if (hasDeferredChange) onRemoteChangeDetected()
+    }
+
+    @MainThread
+    fun onScreenHidden() {
+        isScreenVisible = false
+    }
+
+    /**
+     * Refreshes the list after FluxC reported a change the rs collections can't see - a page saved
+     * in the editor, or a duplicated page that publishes after the editor closes - or remembers to.
+     *
+     * Most of these arrive while the editor covers the list, and refreshing a screen nobody is
+     * looking at spends a request per open tab on a result that may be superseded before it is
+     * seen. A refresh while offline could only fail, and [refreshAllTabs] would then mark every
+     * tab with an error the user never asked for. Either way the change is remembered, however
+     * many arrive, and the list catches up with a single refresh in [onScreenVisible].
+     */
+    private fun onRemoteChangeDetected() {
+        hasDeferredChange = true
+        if (!isScreenVisible || !networkUtilsWrapper.isNetworkAvailable()) return
+        hasDeferredChange = false
+        refreshAllTabs()
     }
 
     /**
@@ -362,20 +403,6 @@ internal class PagesRsListViewModel @Inject constructor(
         viewModelScope.coroutineContext + SupervisorJob(viewModelScope.coroutineContext.job)
     )
 
-    /**
-     * Fired by FluxC when UploadService finishes uploading a post/page — e.g. publishing a
-     * duplicated page from the editor, which happens in the background after the editor
-     * closes. The wordpress-rs collections don't see FluxC uploads, so refresh the tabs to
-     * pick up the change.
-     */
-    @Suppress("unused")
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onPostUploaded(event: OnPostUploaded) {
-        val post = event.post ?: return
-        if (!post.isPage || post.localSiteId != site?.id || event.isError) return
-        refreshAllTabs()
-    }
-
     /** Seeds [isBlockBasedTheme] from the local cache and dispatches a remote refresh. */
     private fun refreshEditorTheme(site: SiteModel) {
         isBlockBasedTheme = editorThemeStore.getIsBlockBasedTheme(site)
@@ -454,13 +481,26 @@ internal class PagesRsListViewModel @Inject constructor(
             }
         }
 
-        // A refresh with no connection can only fail, so report it without the round trip.
-        if (!networkUtilsWrapper.isNetworkAvailable()) {
-            onRefreshFailed(tab, e = null, showSnackbar = isUserRefresh)
-            return
-        }
+        when {
+            // A refresh with no connection can only fail, so report it without the round trip.
+            !networkUtilsWrapper.isNetworkAvailable() ->
+                onRefreshFailed(tab, e = null, showSnackbar = isUserRefresh)
 
-        launchCollectionJob {
+            // The tab is already refreshing. Its progress state is set above either way, and
+            // the request is replayed by [startRefresh] once the running one finishes.
+            refreshJobs.deferIfRunning(tab) -> Unit
+
+            else -> startRefresh(tab, collection, isUserRefresh)
+        }
+    }
+
+    /** Runs the one refresh a tab is allowed at a time, then replays any request it deferred. */
+    private fun startRefresh(
+        tab: PageRsListTab,
+        collection: ObservableMetadataCollection,
+        isUserRefresh: Boolean
+    ) {
+        val job = launchCollectionJob {
             @Suppress("TooGenericExceptionCaught")
             try {
                 withContext(Dispatchers.IO) { collection.refresh() }
@@ -475,7 +515,9 @@ internal class PagesRsListViewModel @Inject constructor(
             } catch (e: Exception) {
                 onRefreshFailed(tab, e, showSnackbar = isUserRefresh)
             }
+            if (refreshJobs.onFinished(tab)) refreshTab(tab)
         }
+        refreshJobs.onStarted(tab, job)
     }
 
     /**
@@ -1482,6 +1524,7 @@ internal class PagesRsListViewModel @Inject constructor(
         collections.clear()
         initializingTabs.clear()
         userRefreshingTabs.clear()
+        refreshJobs.clear()
         fetchedTabs.clear()
         resolveImageJobs.values.forEach { it.cancel() }
         resolveImageJobs.clear()
@@ -1496,6 +1539,7 @@ internal class PagesRsListViewModel @Inject constructor(
 
     public override fun onCleared() {
         super.onCleared()
+        changeListener.stop()
         dispatcher.unregister(this)
         clearCollections()
     }

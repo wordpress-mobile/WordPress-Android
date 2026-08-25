@@ -10,6 +10,7 @@ import uniffi.wp_api.CommentWithViewContext
 import uniffi.wp_api.UserAvatarSize
 import uniffi.wp_api.WpAdditionalFields
 import uniffi.wp_api.WpApiParamCommentsOrderBy
+import uniffi.wp_api.WpApiParamCommentsStatus
 import uniffi.wp_api.WpApiParamOrder
 import java.util.Date
 import uniffi.wp_api.CommentStatus as RsCommentStatus
@@ -69,10 +70,10 @@ class CommentsRsListMappingTest {
     fun `firstPageParams requests newest comments with the given status and search`() {
         val dataSource = CommentsRsDataSource(mock())
 
-        val params = dataSource.firstPageParams(RsCommentStatus.Spam, search = "query")
+        val params = dataSource.firstPageParams(WpApiParamCommentsStatus.Spam, search = "query")
 
         assertThat(params.perPage).isEqualTo(CommentsRsDataSource.COMMENTS_PAGE_SIZE)
-        assertThat(params.status).isEqualTo(RsCommentStatus.Spam)
+        assertThat(params.status).isEqualTo(WpApiParamCommentsStatus.Spam)
         assertThat(params.search).isEqualTo("query")
         assertThat(params.orderby).isEqualTo(WpApiParamCommentsOrderBy.DATE_GMT)
         assertThat(params.order).isEqualTo(WpApiParamOrder.DESC)

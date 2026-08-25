@@ -21,6 +21,7 @@ import uniffi.wp_api.UniffiWpApiClient
 import uniffi.wp_api.UserAvatarSize
 import uniffi.wp_api.WpErrorCode
 import uniffi.wp_api.WpApiParamCommentsOrderBy
+import uniffi.wp_api.WpApiParamCommentsStatus
 import uniffi.wp_api.WpApiParamOrder
 import java.util.Date
 import java.util.concurrent.ConcurrentHashMap
@@ -143,7 +144,7 @@ class CommentsRsDataSource @Inject constructor(
             }
         }
 
-    fun firstPageParams(status: RsCommentStatus?, search: String? = null): CommentListParams =
+    fun firstPageParams(status: WpApiParamCommentsStatus?, search: String? = null): CommentListParams =
         CommentListParams(
             perPage = COMMENTS_PAGE_SIZE,
             search = search,

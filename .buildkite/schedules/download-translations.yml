@@ -17,12 +17,11 @@ steps:
     plugins: [$CI_TOOLKIT]
 
 # Slack backstop for a failed sync — its unique value is failures that abort before the lane runs
-# (gems/secrets) and can't self-report. Channel intentionally stays the test channel while this flow
-# is validated (mirrors promote-beta.yml + the Fastfile `send_slack_message` default); moves to
-# #wpmobile once it ships to real use.
+# (gems/secrets) and can't self-report. This is a translations PR rather than part of the release
+# flow, so it reports to #build-and-ship instead of the release channel.
 notify:
   - slack:
       channels:
-        - "#test-wpmobile-slack-integration"
+        - "#build-and-ship"
       message: "Failed to sync translations from GlotPress."
     if: build.state == "failed"
