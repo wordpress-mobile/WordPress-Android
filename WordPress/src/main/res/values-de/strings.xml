@@ -93,7 +93,6 @@ Language: de
     <string name="gutenberg_kit_announcement_learn_more">Mehr erfahren</string>
     <string name="gutenberg_kit_announcement_maybe_later">Vielleicht später</string>
     <string name="gutenberg_kit_announcement_activate">Aktivieren</string>
-    <string name="gutenberg_kit_announcement_body_deadline">Bis Ende Juni 2026 wird er für alle zum Standard-Editor. %1$s</string>
     <string name="gutenberg_kit_announcement_body_intro">Der Block-Editor der nächsten Generation ist verfügbar und bietet zahlreiche neue Funktionen.</string>
     <string name="gutenberg_kit_announcement_title">Ein besserer Block-Editor ist in Vorbereitung</string>
     <string name="site_settings_gutenberg_kit_enabled_unsupported">Wechsle zunächst zum Block-Editor, um den neuen Editor auszuprobieren.</string>

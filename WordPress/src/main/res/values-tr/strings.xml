@@ -93,7 +93,6 @@ Language: tr
     <string name="gutenberg_kit_announcement_learn_more">Daha fazla bilgi edinin</string>
     <string name="gutenberg_kit_announcement_maybe_later">Belki daha sonra</string>
     <string name="gutenberg_kit_announcement_activate">Etkinleştir</string>
-    <string name="gutenberg_kit_announcement_body_deadline">Haziran 2026\'nın sonuna kadar herkes için varsayılan düzenleyici olacak. %1$s</string>
     <string name="gutenberg_kit_announcement_body_intro">Yeni nesil blok düzenleyici hazır, daha fazla yeni özellik getiriyor.</string>
     <string name="gutenberg_kit_announcement_title">Daha iyi bir blok düzenleyici geliyor</string>
     <string name="site_settings_gutenberg_kit_enabled_unsupported">Yeni düzenleyiciyi denemek için önce blok düzenleyiciye geçin.</string>

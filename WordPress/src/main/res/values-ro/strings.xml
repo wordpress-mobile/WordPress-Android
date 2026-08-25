@@ -93,7 +93,6 @@ Language: ro
     <string name="gutenberg_kit_announcement_learn_more">Află mai multe</string>
     <string name="gutenberg_kit_announcement_maybe_later">Poate mai târziu</string>
     <string name="gutenberg_kit_announcement_activate">Activează</string>
-    <string name="gutenberg_kit_announcement_body_deadline">Până la sfârșitul lunii iunie 2026, va deveni editorul implicit pentru toți. %1$s</string>
     <string name="gutenberg_kit_announcement_body_intro">Noul editor de blocuri modern este pregătit și aduce mai multe funcționalități noi.</string>
     <string name="gutenberg_kit_announcement_title">În curând, un editor de blocuri mai bun</string>
     <string name="site_settings_gutenberg_kit_enabled_unsupported">Pentru a încerca noul editor, comută mai întâi la editorul de blocuri.</string>

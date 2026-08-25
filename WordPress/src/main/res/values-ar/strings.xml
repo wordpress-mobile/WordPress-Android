@@ -89,7 +89,6 @@ Language: ar
     <string name="site_settings_gutenberg_kit_enabled_unsupported">انتقل أولاً إلى محرر المكوّنات لتجربة المحرر الجديد.</string>
     <string name="gutenberg_kit_announcement_title">نسخة أفضل من محرر المكوّنات قادمة قريبًا</string>
     <string name="gutenberg_kit_announcement_body_intro">أصبح محرر المكوّنات من الجيل الجديد جاهزًا، ويأتي مع المزيد من الميزات الجديدة.</string>
-    <string name="gutenberg_kit_announcement_body_deadline">وسيصبح المحرر الافتراضي للجميع بحلول نهاية يونيو 2026. %1$s</string>
     <string name="gutenberg_kit_announcement_activate">تفعيل</string>
     <string name="gutenberg_kit_announcement_maybe_later">ربما لاحقًا</string>
     <string name="gutenberg_kit_announcement_learn_more">معرفة المزيد</string>

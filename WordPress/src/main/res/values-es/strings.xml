@@ -93,7 +93,6 @@ Language: es
     <string name="gutenberg_kit_announcement_learn_more">Más información</string>
     <string name="gutenberg_kit_announcement_maybe_later">Quizás más tarde</string>
     <string name="gutenberg_kit_announcement_activate">Activar</string>
-    <string name="gutenberg_kit_announcement_body_deadline">A finales de junio de 2026, se convertirá en el editor predeterminado para todos. %1$s</string>
     <string name="gutenberg_kit_announcement_body_intro">El editor de bloques de última generación ya está listo y trae consigo más funciones nuevas.</string>
     <string name="gutenberg_kit_announcement_title">Pronto tendremos un editor de bloques mejorado</string>
     <string name="site_settings_gutenberg_kit_enabled_unsupported">Cambia primero al editor de bloques para probar el nuevo editor.</string>

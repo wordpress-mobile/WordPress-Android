@@ -93,7 +93,6 @@ Language: cs_CZ
     <string name="gutenberg_kit_announcement_learn_more">Další informace</string>
     <string name="gutenberg_kit_announcement_maybe_later">Možná později</string>
     <string name="gutenberg_kit_announcement_activate">Aktivovat</string>
-    <string name="gutenberg_kit_announcement_body_deadline">Do konce června 2026 se stane výchozím editorem pro všechny. %1$s</string>
     <string name="gutenberg_kit_announcement_body_intro">Blokový editor nové generace je připraven a přináší řadu nových funkcí.</string>
     <string name="gutenberg_kit_announcement_title">Připravuje se vylepšený blokový editor</string>
     <string name="site_settings_gutenberg_kit_enabled_unsupported">Nejprve přepněte do blokového editoru, abyste si nový editor vyzkoušeli.</string>

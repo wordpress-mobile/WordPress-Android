@@ -93,7 +93,6 @@ Language: nl
     <string name="gutenberg_kit_announcement_learn_more">Lees verder</string>
     <string name="gutenberg_kit_announcement_maybe_later">Misschien later</string>
     <string name="gutenberg_kit_announcement_activate">Activeren</string>
-    <string name="gutenberg_kit_announcement_body_deadline">Tegen het einde van juni 2026 wordt het de standaard-editor voor iedereen. %1$s</string>
     <string name="gutenberg_kit_announcement_body_intro">De volgende generatie blok-editor is klaar en brengt meer nieuwe functies.</string>
     <string name="gutenberg_kit_announcement_title">Een betere blok-editor komt eraan</string>
     <string name="site_settings_gutenberg_kit_enabled_unsupported">Schakel eerst over naar de blok-editor om de nieuwe editor te proberen.</string>

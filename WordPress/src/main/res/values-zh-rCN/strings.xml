@@ -92,7 +92,6 @@ Language: zh_CN
     <string name="gutenberg_kit_announcement_learn_more">了解更多</string>
     <string name="gutenberg_kit_announcement_maybe_later">稍后再说</string>
     <string name="gutenberg_kit_announcement_activate">激活</string>
-    <string name="gutenberg_kit_announcement_body_deadline">到 2026 年 6 月底，它将成为所有用户的默认编辑器。 %1$s</string>
     <string name="gutenberg_kit_announcement_body_intro">新一代区块编辑器已准备就绪，并带来了更多新功能。</string>
     <string name="gutenberg_kit_announcement_title">更出色的区块编辑器即将上线</string>
     <string name="site_settings_gutenberg_kit_enabled_unsupported">请先切换到区块编辑器，试用新的编辑器。</string>
