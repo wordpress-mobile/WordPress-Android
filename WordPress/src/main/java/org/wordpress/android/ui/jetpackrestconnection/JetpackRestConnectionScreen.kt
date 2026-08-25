@@ -64,6 +64,7 @@ fun JetpackRestConnectionScreen(
     currentStep: State<ConnectionStep?>,
     stepStates: State<Map<ConnectionStep, StepState>>,
     buttonType: State<ButtonType?>,
+    isJetpackAlreadyInstalled: Boolean = false,
     onStartClick: () -> Unit = {},
     onDoneClick: () -> Unit = {},
     onCloseClick: () -> Unit = {},
@@ -77,6 +78,7 @@ fun JetpackRestConnectionScreen(
                 JetpackConnectionSteps(
                     currentStep = currentStep.value,
                     stepStates = stepStates.value,
+                    isJetpackAlreadyInstalled = isJetpackAlreadyInstalled,
                     modifier = Modifier
                         .weight(1f)
                         .verticalScroll(rememberScrollState())
@@ -164,6 +166,7 @@ private val stepConfigs = listOf(
 private fun JetpackConnectionSteps(
     currentStep: ConnectionStep?,
     stepStates: Map<ConnectionStep, StepState>,
+    isJetpackAlreadyInstalled: Boolean,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -172,7 +175,9 @@ private fun JetpackConnectionSteps(
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        stepConfigs.forEach { config ->
+        stepConfigs.filterNot {
+            it.step == ConnectionStep.InstallJetpack && isJetpackAlreadyInstalled
+        }.forEach { config ->
             ConnectionStepItem(
                 title = stringResource(config.titleRes),
                 icon = config.icon,

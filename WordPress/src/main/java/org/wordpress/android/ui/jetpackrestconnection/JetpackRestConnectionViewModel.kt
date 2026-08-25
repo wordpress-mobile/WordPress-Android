@@ -68,6 +68,13 @@ class JetpackRestConnectionViewModel @Inject constructor(
     private var site: SiteModel = selectedSiteRepository.getSelectedSite() ?: error("No site selected")
 
     /**
+     * True when the site already has Jetpack. The install step still runs -- it verifies the plugin and
+     * activates it if needed -- but it has nothing to install, so the checklist doesn't show it and the
+     * user isn't told to install something they already have.
+     */
+    val isJetpackAlreadyInstalled: Boolean = site.isJetpackInstalled
+
+    /**
      * This will be used for analytics tracking
      */
     fun setConnectionSource(source: ConnectionSource) {

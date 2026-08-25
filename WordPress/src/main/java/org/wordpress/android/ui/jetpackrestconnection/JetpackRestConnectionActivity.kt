@@ -53,6 +53,7 @@ class JetpackRestConnectionActivity : BaseAppCompatActivity() {
                 currentStep = viewModel.currentStep.collectAsState(),
                 stepStates = viewModel.stepStates.collectAsState(),
                 buttonType = viewModel.buttonType.collectAsState(),
+                isJetpackAlreadyInstalled = viewModel.isJetpackAlreadyInstalled,
                 onStartClick = viewModel::onStartClick,
                 onDoneClick = viewModel::onDoneClick,
                 onCloseClick = viewModel::onCloseClick,
