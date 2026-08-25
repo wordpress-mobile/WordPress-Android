@@ -144,7 +144,9 @@ class SiteStoreTest {
 
         assertThat(onSiteChanged.rowsAffected).isEqualTo(0)
         assertThat(onSiteChanged.error).isEqualTo(SiteError(GENERIC_ERROR, null))
-        verifyNoInteractions(siteSqlUtils)
+        // fetchSite reads the stored row to decide which client refreshes it, but an errored
+        // fetch must write nothing.
+        verify(siteSqlUtils, never()).insertOrUpdateSite(any())
     }
 
     private suspend fun assertSiteFetched(

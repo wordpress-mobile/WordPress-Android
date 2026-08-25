@@ -128,7 +128,6 @@ import org.wordpress.android.fluxc.tools.CoroutineEngine
 import org.wordpress.android.fluxc.utils.SiteErrorUtils
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
-import org.wordpress.android.util.UrlUtils
 import java.util.Locale
 import javax.inject.Inject
 import javax.inject.Provider
@@ -1470,8 +1469,11 @@ open class SiteStore @Inject constructor(
      */
     private fun storedWPAPISite(url: String?): SiteModel? {
         if (url.isNullOrEmpty()) return null
-        return siteSqlUtils.getWPAPISiteByUrl(UrlUtils.addUrlSchemeIfNeeded(url, false))
-            ?: siteSqlUtils.getWPAPISiteByUrl(UrlUtils.addUrlSchemeIfNeeded(url, true))
+        return if (url.contains("://")) {
+            siteSqlUtils.getWPAPISiteByUrl(url)
+        } else {
+            siteSqlUtils.getWPAPISiteByUrl("http://$url") ?: siteSqlUtils.getWPAPISiteByUrl("https://$url")
+        }
     }
 
     suspend fun fetchWPAPISite(payload: FetchWPAPISitePayload): OnSiteChanged {
