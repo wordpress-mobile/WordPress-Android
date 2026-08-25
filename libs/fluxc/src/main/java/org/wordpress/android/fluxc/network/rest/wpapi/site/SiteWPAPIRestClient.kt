@@ -213,9 +213,13 @@ class SiteWPAPIRestClient @Inject constructor(
         // isActive = true is only ever produced by requestJetpackPlugin, which already required the
         // application-password credentials, so no separate credential check is needed here.
         if (plugin?.isActive != true) return null
-        val username = payload.username ?: return null
-        val password = payload.password ?: return null
-        return jetpackConnectionStatusFetcher.fetch(apiRootUrl, username, password)
+        val username = payload.username
+        val password = payload.password
+        return if (username != null && password != null) {
+            jetpackConnectionStatusFetcher.fetch(apiRootUrl, username, password)
+        } else {
+            null
+        }
     }
 
     /**
