@@ -403,6 +403,29 @@ class DomainSuggestionsViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `a signed out account reports an error instead of searching`() = test {
+        // What `AccountStore` returns when signed out, despite its nullable type.
+        whenever(accountStore.accessToken).thenReturn("")
+
+        viewModel.start(site, domainRegistrationPurpose)
+        advanceUntilIdle()
+
+        assertThat(suggestionStates.last()).isInstanceOf(ListState.Error::class.java)
+        verifyNoInteractions(wpComApiClient)
+    }
+
+    @Test
+    fun `a null access token reports an error instead of crashing`() = test {
+        whenever(accountStore.accessToken).thenReturn(null)
+
+        viewModel.start(site, domainRegistrationPurpose)
+        advanceUntilIdle()
+
+        assertThat(suggestionStates.last()).isInstanceOf(ListState.Error::class.java)
+        verifyNoInteractions(wpComApiClient)
+    }
+
+    @Test
     fun `an offline failure asks the view for the network message`() = test {
         mockResponses(
             productsResponse(),
