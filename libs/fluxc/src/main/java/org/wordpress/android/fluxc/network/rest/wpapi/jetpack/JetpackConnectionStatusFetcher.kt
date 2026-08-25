@@ -19,12 +19,11 @@ import javax.inject.Singleton
 
 /**
  * A self-hosted site's Jetpack connection to WordPress.com. [wpComSiteId] is the blog ID WordPress.com
- * assigned the site when it connected, and is null whenever [isConnected] is false.
+ * assigned the site when it connected, and is null when it isn't connected.
  */
-data class JetpackConnectionState(
-    val isConnected: Boolean,
-    val wpComSiteId: Long?
-)
+data class JetpackConnectionState(val wpComSiteId: Long?) {
+    val isConnected: Boolean get() = wpComSiteId != null
+}
 
 /**
  * Reads a self-hosted site's Jetpack connection state over wordpress-rs.
@@ -58,22 +57,12 @@ class JetpackConnectionStatusFetcher @Inject constructor(
         password: String
     ): JetpackConnectionState? = try {
         buildClient(apiRootUrl, username, password).use { client ->
-            when (val status = client.status()) {
-                is JetpackConnectionStatus.NotConnected -> JetpackConnectionState(
-                    isConnected = false,
-                    wpComSiteId = null
-                )
-
-                is JetpackConnectionStatus.Site -> JetpackConnectionState(
-                    isConnected = true,
-                    wpComSiteId = status.blogId.toLong()
-                )
-
-                is JetpackConnectionStatus.User -> JetpackConnectionState(
-                    isConnected = true,
-                    wpComSiteId = status.blogId.toLong()
-                )
+            val blogId = when (val status = client.status()) {
+                is JetpackConnectionStatus.NotConnected -> null
+                is JetpackConnectionStatus.Site -> status.blogId
+                is JetpackConnectionStatus.User -> status.blogId
             }
+            JetpackConnectionState(wpComSiteId = blogId?.toLong())
         }
     } catch (e: Exception) {
         appLogWrapper.d(AppLog.T.API, "$TAG: couldn't read the Jetpack connection status: ${e.message}")
