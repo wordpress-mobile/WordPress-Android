@@ -246,7 +246,7 @@ class MySiteViewModel @Inject constructor(
         selectedSiteRepository.getSelectedSite()?.let { site ->
             _onNavigation.value = Event(
                 if (newStatsRouting.isNewStatsEnabled()) {
-                    SiteNavigationAction.OpenNewStats
+                    SiteNavigationAction.OpenNewStats()
                 } else {
                     SiteNavigationAction.OpenStats(site)
                 }

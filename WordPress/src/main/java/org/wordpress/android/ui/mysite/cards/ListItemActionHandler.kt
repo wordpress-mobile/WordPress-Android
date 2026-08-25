@@ -61,7 +61,7 @@ class ListItemActionHandler @Inject constructor(
                 (site.isJetpackInstalled && site.isJetpackConnected &&
                         wpComSiteAccessChecker.hasWpComAccess(site)) -> {
             if (newStatsRouting.isNewStatsEnabled()) {
-                SiteNavigationAction.OpenNewStats
+                SiteNavigationAction.OpenNewStats()
             } else {
                 SiteNavigationAction.OpenStats(site)
             }
@@ -76,14 +76,16 @@ class ListItemActionHandler @Inject constructor(
      * The same site can be stored twice, once from an application password and once from /me/sites, because
      * the application-password row can't take the blog id the WordPress.com row already owns. Stats work
      * through that copy, so prefer it over offering to connect a site that already is connected.
-     *
-     * New Stats always targets the selected site, so this deliberately uses the existing Stats screen,
-     * which can be pointed at another site.
      */
-    private fun statsViaWpComCopyOrConnect(site: SiteModel): SiteNavigationAction =
-        wpComSiteAccessChecker.wpComCounterpart(site)
-            ?.let { SiteNavigationAction.OpenStats(it) }
-            ?: SiteNavigationAction.ConnectJetpackForStats(site)
+    private fun statsViaWpComCopyOrConnect(site: SiteModel): SiteNavigationAction {
+        val wpComCopy = wpComSiteAccessChecker.wpComCounterpart(site)
+            ?: return SiteNavigationAction.ConnectJetpackForStats(site)
+        return if (newStatsRouting.isNewStatsEnabled()) {
+            SiteNavigationAction.OpenNewStats(wpComCopy.id)
+        } else {
+            SiteNavigationAction.OpenStats(wpComCopy)
+        }
+    }
 
     private fun onBlazeMenuItemClick(): SiteNavigationAction {
         if (blazeFeatureUtils.shouldShowBlazeCampaigns()) {

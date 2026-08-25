@@ -41,7 +41,11 @@ sealed class SiteNavigationAction {
     data class OpenUnifiedComments(val site: SiteModel) : SiteNavigationAction()
     object StartWPComLoginForJetpackStats : SiteNavigationAction()
     data class OpenStats(val site: SiteModel) : SiteNavigationAction()
-    object OpenNewStats : SiteNavigationAction()
+    /**
+     * New Stats always renders the *selected* site, so [localSiteId] names the row to select first -- the
+     * same LOCAL_SITE_ID extra the stats widgets use. Null keeps the current selection.
+     */
+    data class OpenNewStats(val localSiteId: Int? = null) : SiteNavigationAction()
     data class ConnectJetpackForStats(val site: SiteModel) : SiteNavigationAction()
     data class OpenDomainRegistration(val site: SiteModel) : SiteNavigationAction()
     data class OpenPaidDomainSearch(val site: SiteModel) : SiteNavigationAction()

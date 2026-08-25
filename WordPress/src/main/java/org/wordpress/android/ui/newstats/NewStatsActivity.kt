@@ -316,6 +316,15 @@ class NewStatsActivity : BaseAppCompatActivity() {
         }
 
         /**
+         * As [start], but selects [localSiteId] first when given. Used where Stats has to be served from a
+         * different row than the selected one -- an application-password site whose WordPress.com copy owns
+         * the blog id.
+         */
+        fun startForSite(context: Context, launchedFrom: StatsLaunchedFrom, localSiteId: Int?) {
+            context.startActivity(buildIntent(context, launchedFrom, localSiteId = localSiteId))
+        }
+
+        /**
          * [launchedFrom] is required rather than defaulted so a new entry point can't quietly ship
          * without a tap source - New Stats reports STATS_ACCESSED the same way old Stats does.
          *

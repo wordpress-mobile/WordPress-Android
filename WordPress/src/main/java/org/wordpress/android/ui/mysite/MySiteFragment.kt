@@ -603,7 +603,11 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         )
 
         is SiteNavigationAction.OpenNewStats ->
-            NewStatsActivity.start(requireContext(), StatsLaunchedFrom.QUICK_ACTIONS)
+            NewStatsActivity.startForSite(
+                requireContext(),
+                StatsLaunchedFrom.QUICK_ACTIONS,
+                action.localSiteId
+            )
 
         is SiteNavigationAction.ConnectJetpackForStats ->
             ActivityLauncher.viewConnectJetpackForStats(activity, action.site)

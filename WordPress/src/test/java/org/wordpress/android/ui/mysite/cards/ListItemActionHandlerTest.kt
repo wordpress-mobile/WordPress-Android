@@ -168,7 +168,29 @@ class ListItemActionHandlerTest: BaseUnitTest() {
 
         val navigationAction = invokeItemClickAction(action = ListItemAction.STATS)
 
-        assertEquals(SiteNavigationAction.OpenNewStats, navigationAction)
+        assertEquals(SiteNavigationAction.OpenNewStats(), navigationAction)
+    }
+
+    @Test
+    fun `given a WordPress-com copy exists, stats item click opens New Stats for that copy`() {
+        val wpComCopy = SiteModel().apply { id = 42 }
+        whenever(wpComSiteAccessChecker.wpComCounterpart(site)).thenReturn(wpComCopy)
+        whenever(newStatsRouting.isNewStatsEnabled()).thenReturn(true)
+
+        val navigationAction = invokeItemClickAction(action = ListItemAction.STATS)
+
+        assertEquals(SiteNavigationAction.OpenNewStats(wpComCopy.id), navigationAction)
+    }
+
+    @Test
+    fun `given a WordPress-com copy exists, stats item click opens Stats for that copy`() {
+        val wpComCopy = SiteModel().apply { id = 42 }
+        whenever(wpComSiteAccessChecker.wpComCounterpart(site)).thenReturn(wpComCopy)
+        whenever(newStatsRouting.isNewStatsEnabled()).thenReturn(false)
+
+        val navigationAction = invokeItemClickAction(action = ListItemAction.STATS)
+
+        assertEquals(SiteNavigationAction.OpenStats(wpComCopy), navigationAction)
     }
 
     @Test
