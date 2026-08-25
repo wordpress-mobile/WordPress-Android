@@ -89,7 +89,6 @@ Language: fr
     <string name="gutenberg_kit_announcement_learn_more">En savoir plus</string>
     <string name="gutenberg_kit_announcement_maybe_later">Peut-être plus tard</string>
     <string name="gutenberg_kit_announcement_activate">Activer</string>
-    <string name="gutenberg_kit_announcement_body_deadline">D’ici la fin du mois de juin 2026, il deviendra l’éditeur par défaut pour tous. %1$s</string>
     <string name="gutenberg_kit_announcement_body_intro">L’éditeur de blocs de nouvelle génération est prêt et offre de nouvelles fonctionnalités.</string>
     <string name="gutenberg_kit_announcement_title">Un meilleur éditeur de blocs arrive</string>
     <string name="site_settings_gutenberg_kit_enabled_unsupported">Commencez par passer à l’éditeur de blocs pour essayer le nouvel éditeur.</string>

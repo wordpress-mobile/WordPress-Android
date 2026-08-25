@@ -91,7 +91,6 @@ Language: he_IL
     <string name="gutenberg_kit_announcement_learn_more">למידע נוסף</string>
     <string name="gutenberg_kit_announcement_maybe_later">אולי מאוחר יותר</string>
     <string name="gutenberg_kit_announcement_activate">הפעלה</string>
-    <string name="gutenberg_kit_announcement_body_deadline">עד סוף יוני 2026, הוא יהפוך לעורך ברירת המחדל עבור כולם. %1$s</string>
     <string name="gutenberg_kit_announcement_body_intro">עורך הבלוקים מהדור הבא מוכן, והוא מביא איתו תכונות חדשות.</string>
     <string name="gutenberg_kit_announcement_title">עורך בלוקים משופר בדרך</string>
     <string name="site_settings_gutenberg_kit_enabled_unsupported">יש לעבור לעורך הבלוקים כדי לנסות את העורך החדש.</string>

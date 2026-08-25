@@ -93,7 +93,6 @@ Language: ru
     <string name="gutenberg_kit_announcement_learn_more">Узнать больше</string>
     <string name="gutenberg_kit_announcement_maybe_later">Возможно позже</string>
     <string name="gutenberg_kit_announcement_activate">Активировать</string>
-    <string name="gutenberg_kit_announcement_body_deadline">К концу июня 2026 года он станет редактором по умолчанию. %1$s</string>
     <string name="gutenberg_kit_announcement_body_intro">Редактор блоков нового поколения готов к работе, и вас ждёт множество новых функций.</string>
     <string name="gutenberg_kit_announcement_title">Совсем скоро: улучшенный редактор блоков</string>
     <string name="site_settings_gutenberg_kit_enabled_unsupported">Переключитесь на новый блочный редактор одним из первых.</string>

@@ -93,7 +93,6 @@ Language: zh_TW
     <string name="gutenberg_kit_announcement_learn_more">深入了解</string>
     <string name="gutenberg_kit_announcement_maybe_later">稍後再說</string>
     <string name="gutenberg_kit_announcement_activate">啟用</string>
-    <string name="gutenberg_kit_announcement_body_deadline">2026 年 6 月底，此編輯器將成為所有使用者的預設編輯器。 %1$s</string>
     <string name="gutenberg_kit_announcement_body_intro">新一代區塊編輯器已準備就緒，且提供更多新功能。</string>
     <string name="gutenberg_kit_announcement_title">更完善的區塊編輯器即將推出</string>
     <string name="site_settings_gutenberg_kit_enabled_unsupported">請先切換至區塊編輯器，以嘗試使用新的編輯器。</string>

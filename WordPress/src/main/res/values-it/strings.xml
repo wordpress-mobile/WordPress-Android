@@ -93,7 +93,6 @@ Language: it
     <string name="gutenberg_kit_announcement_learn_more">Scopri di più</string>
     <string name="gutenberg_kit_announcement_maybe_later">Forse dopo</string>
     <string name="gutenberg_kit_announcement_activate">Attiva</string>
-    <string name="gutenberg_kit_announcement_body_deadline">Entro la fine di giugno 2026 diventerà l\'editor predefinito per tutti. %1$s</string>
     <string name="gutenberg_kit_announcement_body_intro">L\'editor a blocchi di nuova generazione è pronto e offre nuove funzionalità.</string>
     <string name="gutenberg_kit_announcement_title">Sta arrivando un editor a blocchi migliore</string>
     <string name="site_settings_gutenberg_kit_enabled_unsupported">Per provare il nuovo editor, passa prima all\'editor a blocchi.</string>
