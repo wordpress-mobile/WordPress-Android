@@ -14,6 +14,7 @@ import org.wordpress.android.fluxc.action.AccountAction.FETCH_ACCOUNT
 import org.wordpress.android.fluxc.generated.AccountActionBuilder
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
+import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged
 import org.wordpress.android.ui.JetpackConnectionSource.STATS
 import org.wordpress.android.ui.JetpackConnectionWebViewActivity
@@ -44,6 +45,9 @@ class StatsConnectJetpackActivity : BaseAppCompatActivity() {
 
     @Inject
     lateinit var mSelectedSiteRepository: SelectedSiteRepository
+
+    @Inject
+    lateinit var mSiteStore: SiteStore
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -83,12 +87,24 @@ class StatsConnectJetpackActivity : BaseAppCompatActivity() {
      * @return true if the flow was started, in which case this screen must not be built.
      */
     private fun skipInstallPitchForInstalledSite(): Boolean {
-        val site = intent.getSerializableExtraCompat<SiteModel>(WordPress.SITE)
+        val site = resolvedSite()
         val skip = site != null && site.isJetpackInstalled && startJetpackRestConnectionFlow(site)
         if (skip) {
             finish()
         }
         return skip
+    }
+
+    /**
+     * The site travels here as a serialized copy of the in-memory selected site, which loses
+     * [SiteModel.wpApiRestUrl] once that site has been through a refresh: the column is excluded from the
+     * generic full-row write, so only the stored row keeps it. [JetpackRestConnectionViewModel
+     * .canInitiateJetpackRestConnection] requires it, and without it an application-password site with
+     * Jetpack already installed falls through to the install pitch. Prefer the stored row.
+     */
+    private fun resolvedSite(): SiteModel? {
+        val intentSite = intent.getSerializableExtraCompat<SiteModel>(WordPress.SITE) ?: return null
+        return mSiteStore.getSiteByLocalId(intentSite.id) ?: intentSite
     }
 
     /**
@@ -100,18 +116,14 @@ class StatsConnectJetpackActivity : BaseAppCompatActivity() {
             if (TextUtils.isEmpty(mAccountStore.account.userName)) {
                 mDispatcher.dispatch(AccountActionBuilder.newFetchAccountAction())
             } else {
-                startJetpackConnectionFlow(
-                    requireNotNull(intent.getSerializableExtraCompat(WordPress.SITE))
-                )
+                startJetpackConnectionFlow(requireNotNull(resolvedSite()))
             }
         }
     }
 
     private fun StatsJetpackConnectionActivityBinding.initViews() {
         jetpackSetup.setOnClickListener {
-            startJetpackConnectionFlow(
-                requireNotNull(intent.getSerializableExtraCompat(WordPress.SITE))
-            )
+            startJetpackConnectionFlow(requireNotNull(resolvedSite()))
         }
         jetpackFaq.setOnClickListener {
             WPWebViewActivity.openURL(this@StatsConnectJetpackActivity, FAQ_URL)
@@ -182,7 +194,7 @@ class StatsConnectJetpackActivity : BaseAppCompatActivity() {
                 event.causeOfChange == FETCH_ACCOUNT &&
                 !TextUtils.isEmpty(mAccountStore.account.userName)
             ) {
-                startJetpackConnectionFlow(requireNotNull(intent.getSerializableExtraCompat(WordPress.SITE)))
+                startJetpackConnectionFlow(requireNotNull(resolvedSite()))
             }
         }
     }
