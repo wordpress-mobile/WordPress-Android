@@ -713,7 +713,7 @@
     <!-- GutenbergKit announcement -->
     <string name="gutenberg_kit_announcement_title">A better block editor is coming</string>
     <string name="gutenberg_kit_announcement_body_intro">The next-generation block editor is ready, and it brings more new features.</string>
-    <string name="gutenberg_kit_announcement_body_deadline">By the end of June 2026, it will become the default editor for everyone. %1$s</string>
+    <string name="gutenberg_kit_announcement_body_deadline_v2">By the end of 2026, it will become the default editor for everyone. %1$s</string>
     <string name="gutenberg_kit_announcement_activate">Activate</string>
     <string name="gutenberg_kit_announcement_maybe_later">Maybe later</string>
     <string name="gutenberg_kit_announcement_learn_more">Learn more</string>
