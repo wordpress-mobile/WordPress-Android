@@ -92,8 +92,13 @@ class DomainSuggestionsViewModel @Inject constructor(
                 domainsRegistrationTracker.trackDomainCreditSuggestionQueried()
             }
 
+            // The debouncer runs on its own scheduler thread. The query is read
+            // there, so it is the one the search was scheduled for, and the
+            // rest hops to the main thread, where the row taps and the response
+            // handler already write the same state.
             debouncer.debounce(Void::class.java, {
-                fetchSuggestions()
+                val query = searchQuery
+                launch(uiDispatcher) { fetchSuggestions(query) }
             }, SEARCH_QUERY_DELAY_MS, TimeUnit.MILLISECONDS)
         }
     }
@@ -181,8 +186,7 @@ class DomainSuggestionsViewModel @Inject constructor(
     @VisibleForTesting
     internal fun buildProductsParams() = ProductsParams(productType = ProductTypeFilter.Domains)
 
-    private fun fetchSuggestions() {
-        val query = searchQuery
+    private fun fetchSuggestions(query: String) {
         if (query.isBlank()) {
             // A site with no name leaves nothing to search for on open, and
             // nothing to fall back to when the field is emptied. The API
@@ -206,18 +210,15 @@ class DomainSuggestionsViewModel @Inject constructor(
 
         suggestions = ListState.Loading(suggestions)
 
-        // Reset the selected suggestion, if list is updated. Both writes to
-        // `suggestions` are made before the request is dispatched, so a
-        // response arriving on another thread cannot be overwritten by the
-        // state this one is still holding.
+        // Reset the selected suggestion, if list is updated
         onDomainSuggestionSelected(null)
 
         val params = buildSuggestionsParams(query, SiteUtils.onBloggerPlan(site))
 
         launch {
             val result = client.request { it.domains().suggestions(params).data }
-            // Applied on the main thread, so the response shares a thread with the row
-            // taps and the search field that read the same state.
+            // Back onto the thread the rest of the state is written from, as
+            // FluxC's `ThreadMode.MAIN` subscription did.
             withContext(uiDispatcher) { onDomainSuggestionsFetched(query, result) }
         }
     }
@@ -388,8 +389,8 @@ class DomainSuggestionsViewModel @Inject constructor(
         domainsRegistrationTracker.trackDomainsPurchaseWebviewViewed(site, isSiteCreation = false)
     }
 
-    private fun showLoadingButton(isLoading: Boolean) {
-        _isButtonProgressBarVisible.postValue(isLoading)
+    private suspend fun showLoadingButton(isLoading: Boolean) = withContext(uiDispatcher) {
+        _isButtonProgressBarVisible.value = isLoading
         suggestions = suggestions.transform { list ->
             list.map { it.copy(isEnabled = !isLoading) }
         }
