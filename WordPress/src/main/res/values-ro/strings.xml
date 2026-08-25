@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2026-08-04 18:08:25+0000
+Translation-Revision-Date: 2026-08-21 16:08:10+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n == 0 || n % 100 >= 2 && n % 100 <= 19) ? 1 : 2);
 Generator: GlotPress/4.1.0
 Language: ro
@@ -51,7 +51,6 @@ Language: ro
     <string name="stats_utm_campaign">Campanie</string>
     <string name="stats_utm_medium">Medie</string>
     <string name="stats_utm_source">Sursă</string>
-    <string name="stats_utm_campaign_source_medium">Campanie/sursă/medie</string>
     <string name="stats_utm_title">UTM</string>
     <string name="stats_error_not_authenticated">Neautentificat</string>
     <string name="stats_collapse_group">Restrânge</string>
@@ -60,6 +59,7 @@ Language: ro
     <string name="stats_tag_type_category">Categorie</string>
     <string name="stats_insights_tags_empty">Nu am găsit nicio etichetă sau categorie</string>
     <string name="stats_utm_source_medium">Sursă/mediu</string>
+    <string name="stats_utm_campaign_source_medium">Campanie/sursă/mediu</string>
     <string name="stats_insights_views_percent">%1$s%% din vizualizări</string>
     <string name="stats_insights_most_popular_day_label">Zi</string>
     <string name="stats_insights_all_time_stats_title">Total general statistici</string>

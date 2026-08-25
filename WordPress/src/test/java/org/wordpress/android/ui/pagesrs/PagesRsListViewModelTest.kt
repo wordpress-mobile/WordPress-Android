@@ -32,6 +32,7 @@ import org.wordpress.android.ui.posts.AuthorFilterSelection
 import org.wordpress.android.ui.postsrs.data.PostRsRestClient
 import org.wordpress.android.ui.postsrs.data.WpServiceProvider
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.ui.rs.RsPostChangeListener
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.config.SiteEditorMVPFeatureConfig
@@ -56,6 +57,7 @@ internal class PagesRsListViewModelTest : BaseUnitTest(StandardTestDispatcher())
     @Mock lateinit var siteEditorMVPFeatureConfig: SiteEditorMVPFeatureConfig
 
     private lateinit var site: SiteModel
+    private lateinit var changeListener: RsPostChangeListener
     private var activeViewModel: PagesRsListViewModel? = null
 
     @Before
@@ -64,6 +66,7 @@ internal class PagesRsListViewModelTest : BaseUnitTest(StandardTestDispatcher())
             id = 1
             siteId = 123L
         }
+        changeListener = RsPostChangeListener(dispatcher, postStore)
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
     }
@@ -90,6 +93,7 @@ internal class PagesRsListViewModelTest : BaseUnitTest(StandardTestDispatcher())
         analyticsTracker = analyticsTracker,
         editorThemeStore = editorThemeStore,
         siteEditorMVPFeatureConfig = siteEditorMVPFeatureConfig,
+        changeListener = changeListener,
     ).also { activeViewModel = it }
 
     @Test
@@ -357,42 +361,71 @@ internal class PagesRsListViewModelTest : BaseUnitTest(StandardTestDispatcher())
     }
 
     @Test
-    fun `onPostUploaded for a page of the selected site refreshes the tabs`() {
+    fun `a page changed through FluxC refreshes the list`() = test {
         val viewModel = createViewModel()
+        viewModel.onScreenVisible()
+        advanceUntilIdle()
 
-        viewModel.onPostUploaded(OnPostUploaded(pageUpload(), false))
+        changeListener.onPostUploaded(OnPostUploaded(pageUpload(), false))
+        advanceUntilIdle()
 
         verify(restClient).clearCaches()
     }
 
     @Test
-    fun `onPostUploaded ignores posts`() {
+    fun `a page changed through FluxC does not refresh the list while offline`() = test {
+        whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(false)
         val viewModel = createViewModel()
+        viewModel.onScreenVisible()
+        advanceUntilIdle()
 
-        viewModel.onPostUploaded(OnPostUploaded(pageUpload().apply { setIsPage(false) }, false))
+        changeListener.onPostUploaded(OnPostUploaded(pageUpload(), false))
+        advanceUntilIdle()
 
         verify(restClient, never()).clearCaches()
     }
 
     @Test
-    fun `onPostUploaded ignores pages from other sites`() {
+    fun `changes while the screen is hidden are refreshed once when it is shown`() = test {
         val viewModel = createViewModel()
+        viewModel.onScreenVisible()
+        viewModel.onScreenHidden()
+        advanceUntilIdle()
 
-        viewModel.onPostUploaded(OnPostUploaded(pageUpload().apply { setLocalSiteId(99) }, false))
-
+        changeListener.onPostUploaded(OnPostUploaded(pageUpload(), false))
+        advanceUntilIdle()
+        changeListener.onPostUploaded(OnPostUploaded(pageUpload(), false))
+        advanceUntilIdle()
         verify(restClient, never()).clearCaches()
+
+        viewModel.onScreenVisible()
+
+        verify(restClient).clearCaches()
     }
 
     @Test
-    fun `onPostUploaded ignores failed uploads`() {
+    fun `a change that arrived offline is refreshed when the screen is next shown`() = test {
+        whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(false)
         val viewModel = createViewModel()
-        val event = OnPostUploaded(pageUpload(), false).apply {
-            error = PostStore.PostError(PostStore.PostErrorType.GENERIC_ERROR)
-        }
+        viewModel.onScreenVisible()
+        advanceUntilIdle()
 
-        viewModel.onPostUploaded(event)
-
+        changeListener.onPostUploaded(OnPostUploaded(pageUpload(), false))
+        advanceUntilIdle()
         verify(restClient, never()).clearCaches()
+
+        whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
+        viewModel.onScreenHidden()
+        viewModel.onScreenVisible()
+
+        verify(restClient).clearCaches()
+    }
+
+    @Test
+    fun `clearing the view model stops the change listener`() {
+        createViewModel().onCleared()
+
+        verify(dispatcher).unregister(changeListener)
     }
 
     private fun pageUpload() = PostModel().apply {

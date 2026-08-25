@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2026-08-18 13:29:17+0000
+Translation-Revision-Date: 2026-08-20 06:49:55+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.1.0
 Language: hu
@@ -265,9 +265,26 @@ Language: hu
     <string name="new_media">Új média</string>
     <string name="file_not_found">Nem található a feltöltendő fájl. Törölve vagy áthelyezve lett?</string>
     <string name="plugin_not_found">Hiba történt a bővítmény elérése közben</string>
+    <string name="dlg_confirm_trash_comments">Lomtárba küldeni?</string>
+    <string name="trash">Lomtár</string>
+    <string name="saving_changes">A módosítások mentése</string>
+    <string name="remove_account">Webhely eltávolítása</string>
+    <string name="view_in_browser">Megtekintés böngészőben</string>
+    <string name="category_name">Kategória név</string>
+    <string name="file_error_create">Nem sikerült ideiglenes fájlt létrehozni a médiafeltöltéshez. Győződjön meg róla, hogy elegendő szabad hely van a készüléken.</string>
+    <string name="invalid_site_url_message">Ellenőrizze, hogy a megadott webhely URL-je érvényes-e</string>
+    <string name="http_authorization_required" a8c-src-lib="module:login">Hitelesítés szükséges</string>
+    <string name="notifications_empty_all">Nincsenek értesítések… egyelőre!</string>
     <string name="share_link">Hivatkozás megosztása</string>
     <string name="reader_empty_posts_in_tag_updating">Bejegyzések betöltése…</string>
     <string name="comment_spammed">A megjegyzés kéretlenként jelölve</string>
+    <string name="comment_unapproved">A hozzászólás nem lett jóváhagyva</string>
+    <string name="reader_likes_multi">%,d embernek tetszik ez</string>
+    <string name="reader_likes_you_and_multi">Önnek és %,d másik felhasználónak tetszik ez</string>
+    <string name="pick_photo">Fotó kijelölése</string>
+    <string name="pick_video">Videó kijelölése</string>
+    <string name="reader_likes_you_and_one">Önnek és még egy másik felhasználónak tetszik ez</string>
+    <string name="reader_toast_err_get_post">Nem sikerült letölteni ezt a bejegyzést</string>
     <string name="comments_empty_list">Nincs hozzászólás</string>
     <string name="reader_btn_follow">Követés</string>
     <string name="empty_list_default">Ez a lista üres</string>
@@ -277,6 +294,13 @@ Language: hu
     <string name="reader_likes_one">Egy személy kedveli</string>
     <string name="reader_likes_only_you">Ön kedveli</string>
     <string name="reader_hint_comment_on_comment">Válasz hozzászóláshoz…</string>
+    <string name="reader_view_reblog">Reblog</string>
+    <string name="reader_label_added_tag">Hozzáadva %s</string>
+    <string name="reader_toast_err_comment_failed">Nem sikerült posztolni a bejegyzését</string>
+    <string name="reader_toast_err_tag_not_valid">Ez nem érvényes címke</string>
+    <string name="reader_toast_err_view_image">A kép nem jeleníthető meg</string>
+    <string name="reader_toast_err_url_intent">A(z) %s fájl nem nyitható meg</string>
+    <string name="sign_up_label" a8c-src-lib="module:login">Regisztráció</string>
     <string name="themes">Sablonok</string>
     <string name="media_edit_caption_text">Felirat</string>
     <string name="media_edit_description_text">Leírás</string>

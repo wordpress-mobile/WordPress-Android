@@ -16,16 +16,19 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
+import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.PostStore
+import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded
 import org.wordpress.android.ui.blaze.BlazeFeatureUtils
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.posts.AuthorFilterSelection
 import org.wordpress.android.ui.postsrs.data.PostRsRestClient
 import org.wordpress.android.ui.postsrs.data.WpServiceProvider
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.ui.rs.RsPostChangeListener
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
@@ -44,8 +47,10 @@ class PostRsListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
     @Mock lateinit var accountStore: AccountStore
     @Mock lateinit var appPrefsWrapper: AppPrefsWrapper
     @Mock lateinit var analyticsTracker: AnalyticsTrackerWrapper
+    @Mock lateinit var dispatcher: Dispatcher
 
     private lateinit var site: SiteModel
+    private lateinit var changeListener: RsPostChangeListener
     private var activeViewModel: PostRsListViewModel? = null
 
     @Before
@@ -54,6 +59,7 @@ class PostRsListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
             id = 1
             siteId = 123L
         }
+        changeListener = RsPostChangeListener(dispatcher, postStore)
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
         whenever(appPrefsWrapper.postListAuthorSelection)
             .thenReturn(AuthorFilterSelection.EVERYONE)
@@ -79,7 +85,81 @@ class PostRsListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
         accountStore = accountStore,
         appPrefsWrapper = appPrefsWrapper,
         analyticsTracker = analyticsTracker,
+        changeListener = changeListener,
     ).also { activeViewModel = it }
+
+    @Test
+    fun `a post changed through FluxC refreshes the list`() = test {
+        val viewModel = createViewModel()
+        viewModel.onScreenVisible()
+        advanceUntilIdle()
+
+        changeListener.onPostUploaded(OnPostUploaded(postUpload(), false))
+        advanceUntilIdle()
+
+        verify(restClient).clearCaches()
+    }
+
+    @Test
+    fun `a post changed through FluxC does not refresh the list while offline`() = test {
+        whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(false)
+        val viewModel = createViewModel()
+        viewModel.onScreenVisible()
+        advanceUntilIdle()
+
+        changeListener.onPostUploaded(OnPostUploaded(postUpload(), false))
+        advanceUntilIdle()
+
+        verify(restClient, never()).clearCaches()
+    }
+
+    @Test
+    fun `changes while the screen is hidden are refreshed once when it is shown`() = test {
+        val viewModel = createViewModel()
+        viewModel.onScreenVisible()
+        viewModel.onScreenHidden()
+        advanceUntilIdle()
+
+        changeListener.onPostUploaded(OnPostUploaded(postUpload(), false))
+        advanceUntilIdle()
+        changeListener.onPostUploaded(OnPostUploaded(postUpload(), false))
+        advanceUntilIdle()
+        verify(restClient, never()).clearCaches()
+
+        viewModel.onScreenVisible()
+
+        verify(restClient).clearCaches()
+    }
+
+    @Test
+    fun `a change that arrived offline is refreshed when the screen is next shown`() = test {
+        whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(false)
+        val viewModel = createViewModel()
+        viewModel.onScreenVisible()
+        advanceUntilIdle()
+
+        changeListener.onPostUploaded(OnPostUploaded(postUpload(), false))
+        advanceUntilIdle()
+        verify(restClient, never()).clearCaches()
+
+        whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
+        viewModel.onScreenHidden()
+        viewModel.onScreenVisible()
+
+        verify(restClient).clearCaches()
+    }
+
+    @Test
+    fun `clearing the view model stops the change listener`() {
+        createViewModel().onCleared()
+
+        verify(dispatcher).unregister(changeListener)
+    }
+
+    private fun postUpload() = PostModel().apply {
+        setIsPage(false)
+        setLocalSiteId(site.id)
+    }
 
     @Test
     fun `when no site selected, emits ShowToast and Finish`() = test {

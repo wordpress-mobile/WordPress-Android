@@ -92,7 +92,6 @@ default.profraw
 /fastlane/promo_screenshots
 /fastlane/metadata/tmp
 
-WordPress/release.jks
 WordPress/debug.keystore
 WordPress/*.jks
 
