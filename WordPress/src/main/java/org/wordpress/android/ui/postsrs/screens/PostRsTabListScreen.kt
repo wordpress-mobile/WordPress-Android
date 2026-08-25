@@ -23,8 +23,12 @@ import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.snapshotFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.withTimeoutOrNull
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -118,18 +122,24 @@ private fun PostListContent(
 ) {
     val listState = rememberLazyListState()
 
+    val currentPosts by rememberUpdatedState(posts)
+
     // Scrolls to a post the user just saved, once the refresh carrying it lands - until then this
     // list either isn't composed or doesn't contain it yet. requestScrollToItem applies at the next
     // measurement rather than to the content currently laid out, which matters because a keyed
     // LazyColumn re-anchors on its old first item when one is prepended: a plain scrollToItem here
     // would leave a newly published post just above the viewport.
-    LaunchedEffect(revealPostId, posts) {
+    LaunchedEffect(revealPostId) {
         if (revealPostId == null) return@LaunchedEffect
-        val index = posts.indexOfFirst { it.remotePostId == revealPostId }
-        if (index >= 0) {
-            listState.requestScrollToItem(index)
-            onRevealHandled()
+        val index = withTimeoutOrNull(REVEAL_TIMEOUT_MS) {
+            snapshotFlow { currentPosts.indexOfFirst { it.remotePostId == revealPostId } }
+                .first { it >= 0 }
         }
+        if (index != null) listState.requestScrollToItem(index)
+        // Disarm either way. A refresh replaces the list with page 1 only, so a post that sorts
+        // beyond it never arrives here; leaving the request armed would fire it much later, when
+        // load-more finally paged the post in and the user was reading something else.
+        onRevealHandled()
     }
 
     LaunchedEffect(canLoadMore) {
@@ -256,3 +266,8 @@ private fun EmptyContent(
 
 private const val LOAD_MORE_THRESHOLD = 5
 private const val SHIMMER_ITEM_COUNT = 8
+
+/**
+ * How long a reveal waits for the refresh carrying the post to land before giving up.
+ */
+private const val REVEAL_TIMEOUT_MS = 15_000L
