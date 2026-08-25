@@ -135,6 +135,9 @@ platform :android do
       UI.user_error!('Aborted by user request') unless skip_confirm || UI.confirm('Do you want to continue?')
     end
 
+    # THROW AWAY: prove the prechecks block still runs after `android_build_preflight` is gone.
+    UI.success('VALIDATION: prechecks block completed without android_build_preflight')
+
     build_number = ENV.fetch('BUILDKITE_BUILD_NUMBER') do
       UI.user_error!('BUILDKITE_BUILD_NUMBER is not set; the versionCode derives from it (Buildkite only).')
     end
@@ -151,13 +154,12 @@ platform :android do
     # Set the version for this build only. We deliberately do not commit this change.
     VERSION_FILE.write_version(version_name: version_name, version_code: build_code)
 
-    %i[wordpress jetpack].each do |app|
-      build_bundle(app: app, version_name: version_name, build_code: build_code, buildType: 'Release')
-      upload_build_to_play_store(app: app, version_name: version_name, track: 'internal', release_status: 'completed')
-      # `upload_gutenberg_sourcemaps` builds a file path from the app name, so it needs a String
-      # (a Symbol can't be passed to `File.join`).
-      upload_gutenberg_sourcemaps(app: app.to_s, release_version: version_name)
-    end
+    # THROW AWAY: build one bundle and stop. The uploads that normally follow are deleted on this branch.
+    build_bundle(app: :wordpress, version_name: version_name, build_code: build_code, buildType: 'Release')
+    aab = bundle_file_path(:wordpress, version_name)
+    UI.user_error!("VALIDATION: expected AAB at #{aab}") unless File.exist?(aab)
+    UI.user_error!("VALIDATION: AAB at #{aab} is empty") if File.empty?(aab)
+    UI.success("VALIDATION: bundle built (#{File.size(aab)} bytes at #{aab}); stopping before Play Store upload")
   end
 
   #####################################################################################
