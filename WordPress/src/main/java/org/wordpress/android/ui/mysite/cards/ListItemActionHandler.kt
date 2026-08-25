@@ -67,9 +67,23 @@ class ListItemActionHandler @Inject constructor(
             }
         }
 
-        // If it's a self-hosted site, ask to connect to Jetpack.
-        else -> SiteNavigationAction.ConnectJetpackForStats(site)
+        // If it's a self-hosted site, ask to connect to Jetpack -- unless we already hold a WordPress.com
+        // copy of it that can serve Stats.
+        else -> statsViaWpComCopyOrConnect(site)
     }
+
+    /**
+     * The same site can be stored twice, once from an application password and once from /me/sites, because
+     * the application-password row can't take the blog id the WordPress.com row already owns. Stats work
+     * through that copy, so prefer it over offering to connect a site that already is connected.
+     *
+     * New Stats always targets the selected site, so this deliberately uses the existing Stats screen,
+     * which can be pointed at another site.
+     */
+    private fun statsViaWpComCopyOrConnect(site: SiteModel): SiteNavigationAction =
+        wpComSiteAccessChecker.wpComCounterpart(site)
+            ?.let { SiteNavigationAction.OpenStats(it) }
+            ?: SiteNavigationAction.ConnectJetpackForStats(site)
 
     private fun onBlazeMenuItemClick(): SiteNavigationAction {
         if (blazeFeatureUtils.shouldShowBlazeCampaigns()) {

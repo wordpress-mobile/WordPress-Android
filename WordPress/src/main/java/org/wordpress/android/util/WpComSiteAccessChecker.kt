@@ -25,6 +25,21 @@ class WpComSiteAccessChecker @Inject constructor(
      * site list is the record of what it can reach, so the site qualifies when the same blog ID also
      * arrived from `/me/sites`.
      */
+    /**
+     * @return the caller's own WordPress.com copy of [site], when the account has one. The same site can be
+     * stored twice -- once from an application password and once from /me/sites -- because the
+     * application-password row can't take the blog id the WordPress.com row already owns. The
+     * WordPress.com copy is the one that can actually reach WordPress.com-backed features.
+     */
+    fun wpComCounterpart(site: SiteModel): SiteModel? {
+        if (site.isUsingWpComRestApi) return null
+        val siteHost = UrlUtils.removeScheme(site.url).orEmpty().trimEnd('/')
+        return siteStore.sitesAccessedViaWPComRest.firstOrNull {
+            (site.siteId != 0L && it.siteId == site.siteId) ||
+                    UrlUtils.removeScheme(it.url).orEmpty().trimEnd('/') == siteHost
+        }
+    }
+
     fun hasWpComAccess(site: SiteModel): Boolean =
         site.isUsingWpComRestApi ||
                 (site.siteId != 0L && siteStore.sitesAccessedViaWPComRest.any { it.siteId == site.siteId })

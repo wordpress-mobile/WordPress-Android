@@ -1563,8 +1563,27 @@ open class SiteStore @Inject constructor(
                 }
                 OnSiteChanged(siteSqlUtils.insertOrUpdateSite(siteModel))
             } catch (e: DuplicateSiteException) {
-                OnSiteChanged(SiteError(DUPLICATE_SITE))
+                retryWithoutBlogId(siteModel) ?: OnSiteChanged(SiteError(DUPLICATE_SITE))
             }
+        }
+    }
+
+    /**
+     * An application-password row can discover a WordPress.com blog id that a /me/sites copy of the same
+     * site already owns, and (SITE_ID, URL) is unique -- so the write is rejected. Losing the whole update
+     * would also lose the Jetpack state, the name and everything else the fetch just learned, so retry
+     * without the blog id and leave the WordPress.com copy owning it.
+     *
+     * @return the result of the retry, or null when this isn't that case (or the retry also fails).
+     */
+    @Suppress("SwallowedException")
+    private fun retryWithoutBlogId(siteModel: SiteModel): OnSiteChanged? {
+        if (siteModel.origin != SiteModel.ORIGIN_WPAPI || siteModel.siteId == 0L) return null
+        siteModel.siteId = 0
+        return try {
+            OnSiteChanged(siteSqlUtils.insertOrUpdateSite(siteModel))
+        } catch (retryFailure: DuplicateSiteException) {
+            null
         }
     }
 
