@@ -29,6 +29,9 @@ class GutenbergKitAnnouncementController @Inject constructor(
         // The per-site override/deferral prefs are keyed by URL, so a site without one would
         // loop the announcement on every resume (writes would no-op via TextUtils.isEmpty).
         if (site.url.isNullOrEmpty()) return false
+        // TEMP LOCAL TESTING ONLY - REVERT BEFORE COMMITTING (CMM-2353)
+        @Suppress("KotlinConstantConditions")
+        if (true) return true
         if (!gutenbergKitFeatureChecker.isGutenbergKitRemoteFeatureEnabled()) return false
         if (!siteSettingsProvider.isBlockEditorDefault(site)) return false
         if (appPrefsWrapper.getGutenbergKitSiteOverride(site.url) != null) return false
