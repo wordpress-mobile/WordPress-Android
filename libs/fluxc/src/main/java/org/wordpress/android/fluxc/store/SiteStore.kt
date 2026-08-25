@@ -1417,23 +1417,22 @@ open class SiteStore @Inject constructor(
                         payload.password
                     )
                 if (sites.isError) {
+                    // payload.url is now an unverified guess at the conventional xmlrpc.php endpoint (no
+                    // client-side discovery runs before this fetch), so don't persist it here. Fall back to
+                    // WPAPI and leave xmlRpcUrl empty: the My Site card's rediscovery only runs while it's
+                    // empty, and it verifies and persists a real endpoint (staying hidden on a transient 429,
+                    // warning only on a definitive "XML-RPC disabled"). Persisting the guess would gate that
+                    // self-heal off and could pin a wrong endpoint permanently.
                     AppLog.w(
                         T.API,
-                        "XML-RPC fetch failed" +
-                            " (${sites.error?.message})," +
-                            " falling back to WPAPI"
+                        "XML-RPC fetch failed (${sites.error?.message}), falling back to WPAPI"
                     )
                     // Use apiRootUrl as the base URL for WPAPI discovery since payload.url is the xmlrpc.php
-                    // endpoint. This action is only dispatched after verifyOrDiscoverXMLRPCEndpoint already
-                    // confirmed payload.url is a working xmlrpc.php endpoint, so this fetch failure is transient
-                    // (e.g. a 429 rate-limit) or auth-only — XML-RPC itself is enabled. Pass the verified
-                    // endpoint through so it's recorded on the WPAPI-stored site and the "XML-RPC Disabled" card
-                    // isn't shown for a site that actually supports XML-RPC.
+                    // endpoint.
                     fetchSiteWPAPIFromApplicationPassword(
                         payload.copy(
                             url = payload.apiRootUrl
-                        ),
-                        verifiedXmlRpcUrl = payload.url,
+                        )
                     )
                 } else {
                     updateSites(sites)
@@ -1465,7 +1464,6 @@ open class SiteStore @Inject constructor(
     @Suppress("TooGenericExceptionCaught")
     internal suspend fun fetchSiteWPAPIFromApplicationPassword(
         payload: RefreshSitesXMLRPCApplicationPasswordCredentialsPayload,
-        verifiedXmlRpcUrl: String? = null,
     ): OnSiteChanged {
         return coroutineEngine.withDefaultContext(
             T.API,
@@ -1497,13 +1495,6 @@ open class SiteStore @Inject constructor(
                         },
                         { siteSqlUtils.updateWpApiRestUrlForWPAPISite(siteModel.url, it) }
                     )
-                    // When XML-RPC discovery already verified an endpoint but the XML-RPC fetch fell back to
-                    // WPAPI, record the verified endpoint (keyed by siteModel.url, since the fresh site has no
-                    // local id) so XML-RPC-dependent features stay available and the "XML-RPC Disabled" card
-                    // isn't shown.
-                    if (!verifiedXmlRpcUrl.isNullOrEmpty()) {
-                        siteSqlUtils.updateXmlRpcUrlForWPAPISite(siteModel.url, verifiedXmlRpcUrl)
-                    }
                 }
                 result
             } catch (e: Exception) {
