@@ -2,6 +2,7 @@ package org.wordpress.android.ui.sitecreation.usecases
 
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.networking.restapi.WpComApiClientProvider
+import org.wordpress.android.util.AppLog
 import rs.wordpress.api.kotlin.WpComApiClient
 import rs.wordpress.api.kotlin.WpRequestResult
 import uniffi.wp_api.DomainSuggestion
@@ -15,6 +16,7 @@ private const val FETCH_DOMAINS_SIZE = 20u
 private const val ERROR_CODE_INVALID_QUERY = "invalid_query"
 private const val ERROR_CODE_EMPTY_RESULTS = "empty_results"
 private const val ERROR_TYPE_GENERIC = "GENERIC_ERROR"
+private const val ERROR_TYPE_NO_ACCESS_TOKEN = "NO_ACCESS_TOKEN"
 
 class FetchDomainsUseCase @Inject constructor(
     private val wpComApiClientProvider: WpComApiClientProvider,
@@ -22,11 +24,16 @@ class FetchDomainsUseCase @Inject constructor(
 ) {
     private var wpComApiClient: WpComApiClient? = null
 
+    /**
+     * Null when there is no WordPress.com account to make the request as.
+     *
+     * `AccountStore.accessToken` is typed nullable but reads `""` when signed
+     * out, and is only null between an in-process sign out and the next
+     * launch, so both have to be treated as no token.
+     */
     @Synchronized
-    private fun getOrCreateClient(): WpComApiClient {
-        val token = requireNotNull(accountStore.accessToken) {
-            "WP.com access token is required"
-        }
+    private fun getOrCreateClient(): WpComApiClient? {
+        val token = accountStore.accessToken?.takeIf { it.isNotEmpty() } ?: return null
         return wpComApiClient
             ?: wpComApiClientProvider.getWpComApiClient(token)
                 .also { wpComApiClient = it }
@@ -37,6 +44,13 @@ class FetchDomainsUseCase @Inject constructor(
         vendor: String,
         onlyWordpressCom: Boolean,
     ): FetchDomainsResult {
+        val client = getOrCreateClient() ?: run {
+            AppLog.e(
+                AppLog.T.DOMAIN_REGISTRATION,
+                "Cannot fetch domain suggestions without a WP.com access token"
+            )
+            return FetchDomainsResult.Error(type = ERROR_TYPE_NO_ACCESS_TOKEN, message = null)
+        }
         val params = DomainSuggestionsParams(
             query = query,
             quantity = FETCH_DOMAINS_SIZE,
@@ -46,7 +60,7 @@ class FetchDomainsUseCase @Inject constructor(
             includeDotblogsubdomain = false,
         )
         return when (
-            val result = getOrCreateClient()
+            val result = client
                 .request { it.domains().suggestions(params).data }
         ) {
             is WpRequestResult.Success ->
