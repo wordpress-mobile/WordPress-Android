@@ -23,6 +23,15 @@ steps:
   - wait
 
   #################
+  # [DO NOT MERGE] Signing config validation, removed with this branch
+  #################
+  - label: "🔐 Validate signing config"
+    command: .buildkite/commands/validate-signing-config.sh
+    plugins: [$CI_TOOLKIT]
+    artifact_paths:
+      - "build/signing-validation/*.txt"
+
+  #################
   # Linters
   #################
   - group: "🕵️‍♂️ Linters"
