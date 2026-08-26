@@ -142,17 +142,22 @@ class GBKMediaUploadProcessor(
 
     /**
      * Rejects the one upload class the app can judge better than the server: audio and documents
-     * on a free WordPress.com plan, where the restriction is a plan entitlement rather than a
-     * format question, so a localized message beats the server's untranslated error.
+     * on a free WordPress.com plan, where the restriction is a plan entitlement the app knows
+     * reliably rather than a format question. Rejecting here spares an upload certain to fail and
+     * reports it in the app's locale — the server's own message is localized too, but to the
+     * site's locale, which need not match.
      *
      * Deliberately narrow. [MediaUtilsWrapper.isMimeTypeSupportedBySitePlan] matches against a
      * closed, hand-maintained table ([org.wordpress.android.fluxc.utils.MimeTypes]) that has
      * drifted from what WordPress accepts — it has no `image/avif` (core-supported since 6.5), no
      * `image/svg+xml`, and no text types at all, and it maps self-hosted to the same document set
      * as WP.com paid. Applying it to every upload therefore rejects files the server would store.
-     * GutenbergKit already validates against the site's real `allowedMimeTypes` from
-     * `/wp-block-editor/v1/settings` before this delegate runs, so images and videos are left to
-     * that check and to the server, which are both authoritative where this table is not.
+     * Images and videos are left to the server, which is authoritative where this table is not.
+     *
+     * Nothing screens them before that. GutenbergKit validates uploads against
+     * `allowedMimeTypes`, but that value reaches it only from `/wp-block-editor/v1/settings`, a
+     * route the Gutenberg plugin provides and WordPress core does not; without it the setting
+     * stays null and the check passes everything through.
      *
      * The free-plan test mirrors [WPMediaUtils.getSitePlanForMimeTypes], which selects
      * `WP_COM_FREE` from [SiteUtilsWrapper.onFreePlan] — using `hasFreePlan` here instead would
