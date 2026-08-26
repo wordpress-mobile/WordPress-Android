@@ -7,27 +7,24 @@ platform :android do
   # This lane builds the final release of the app and uploads it
   # -----------------------------------------------------------------------------------
   # Usage:
-  # bundle exec fastlane build_and_upload_release app:<wordpress|jetpack> [skip_confirm:<skip confirm>] [skip_prechecks:<skip prechecks>] [create_release:<Create release on GH> ]
+  # bundle exec fastlane build_and_upload_release app:<wordpress|jetpack> [skip_confirm:<skip confirm>] [create_release:<Create release on GH> ]
   #
   # Example:
   # bundle exec fastlane build_and_upload_release app:wordpress
   # bundle exec fastlane build_and_upload_release app:wordpress skip_confirm:true
-  # bundle exec fastlane build_and_upload_release app:jetpack skip_prechecks:true
   # bundle exec fastlane build_and_upload_release app:wordpress create_release:true
   #####################################################################################
   desc 'Builds and updates for distribution'
   lane :build_and_upload_release do |options|
-    unless options[:skip_prechecks]
-      ensure_git_branch(branch: '^release/') unless is_ci
+    ensure_git_branch(branch: '^release/') unless is_ci
 
-      UI.user_error!("Can't build a final release out of this branch because it's configured as a beta release!") if current_version_name.include? '-rc-'
+    UI.user_error!("Can't build a final release out of this branch because it's configured as a beta release!") if current_version_name.include? '-rc-'
 
-      ensure_git_status_clean unless is_ci
+    ensure_git_status_clean unless is_ci
 
-      UI.important("Building version #{current_release_version} (#{current_build_code}) for upload to Release Channel")
+    UI.important("Building version #{current_release_version} (#{current_build_code}) for upload to Release Channel")
 
-      UI.user_error!('Aborted by user request') unless options[:skip_confirm] || UI.confirm('Do you want to continue?')
-    end
+    UI.user_error!('Aborted by user request') unless options[:skip_confirm] || UI.confirm('Do you want to continue?')
 
     # Create the file names
     app = get_app_name_option!(options)
@@ -46,7 +43,7 @@ platform :android do
   # This lane builds the app for both internal and external distribution and uploads them
   # -----------------------------------------------------------------------------------
   # Usage:
-  # bundle exec fastlane build_and_upload_pre_releases app:<wordpress|jetpack> [skip_confirm:<true|false>] [skip_prechecks:<true|false>] <[create_release:<true|false>]
+  # bundle exec fastlane build_and_upload_pre_releases app:<wordpress|jetpack> [skip_confirm:<true|false>] <[create_release:<true|false>]
   #
   # Example:
   # bundle exec fastlane build_and_upload_pre_releases
@@ -55,18 +52,8 @@ platform :android do
   #####################################################################################
   desc 'Builds and updates for distribution'
   lane :build_and_upload_pre_releases do |options|
-    unless options[:skip_prechecks]
-      ensure_git_branch(branch: '^release/') unless is_ci
-
-      ensure_git_status_clean unless is_ci
-
-      UI.important("Building version #{current_version_name} (#{current_build_code}) for upload to Beta Channel")
-
-      UI.user_error!('Aborted by user request') unless options[:skip_confirm] || UI.confirm('Do you want to continue?')
-    end
-
     app = get_app_name_option!(options)
-    build_beta(app: app, skip_prechecks: true, skip_confirm: options[:skip_confirm], upload_to_play_store: true, create_release: options[:create_release])
+    build_beta(app: app, skip_confirm: options[:skip_confirm], upload_to_play_store: true, create_release: options[:create_release])
   end
 
   #####################################################################################
@@ -84,15 +71,13 @@ platform :android do
   #####################################################################################
   desc 'Builds and updates for distribution'
   lane :build_beta do |options|
-    unless options[:skip_prechecks]
-      ensure_git_branch(branch: '^release/') unless is_ci
+    ensure_git_branch(branch: '^release/') unless is_ci
 
-      ensure_git_status_clean unless is_ci
+    ensure_git_status_clean unless is_ci
 
-      UI.important("Building version #{current_version_name} (#{current_build_code}) for upload to Beta Channel")
+    UI.important("Building version #{current_version_name} (#{current_build_code}) for upload to Beta Channel")
 
-      UI.user_error!('Aborted by user request') unless options[:skip_confirm] || UI.confirm('Do you want to continue?')
-    end
+    UI.user_error!('Aborted by user request') unless options[:skip_confirm] || UI.confirm('Do you want to continue?')
 
     # Create the file names
     app = get_app_name_option!(options)
@@ -119,21 +104,19 @@ platform :android do
   #                  i.e. `(major * 10 + minor) * 1_000_000 + BUILDKITE_BUILD_NUMBER`
   # -----------------------------------------------------------------------------------
   # Usage:
-  # bundle exec fastlane build_and_upload_trunk_internal [skip_confirm:<true|false>] [skip_prechecks:<true|false>]
+  # bundle exec fastlane build_and_upload_trunk_internal [skip_confirm:<true|false>]
   #####################################################################################
   desc 'Build WordPress & Jetpack from trunk and upload them to the Play Store internal track'
-  lane :build_and_upload_trunk_internal do |skip_prechecks: false, skip_confirm: false|
+  lane :build_and_upload_trunk_internal do |skip_confirm: false|
     version_name = current_release_version
 
-    unless skip_prechecks
-      ensure_git_branch(branch: DEFAULT_BRANCH) unless is_ci
+    ensure_git_branch(branch: DEFAULT_BRANCH) unless is_ci
 
-      ensure_git_status_clean unless is_ci
+    ensure_git_status_clean unless is_ci
 
-      UI.important("Building #{version_name} for upload to the Play Store internal track")
+    UI.important("Building #{version_name} for upload to the Play Store internal track")
 
-      UI.user_error!('Aborted by user request') unless skip_confirm || UI.confirm('Do you want to continue?')
-    end
+    UI.user_error!('Aborted by user request') unless skip_confirm || UI.confirm('Do you want to continue?')
 
     # THROW AWAY: prove the prechecks block still runs after `android_build_preflight` is gone.
     UI.success('VALIDATION: prechecks block completed without android_build_preflight')
