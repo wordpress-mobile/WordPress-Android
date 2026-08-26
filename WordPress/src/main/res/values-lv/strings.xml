@@ -489,7 +489,6 @@ Language: lv
     <string name="new_site_creation_preview_subtitle_paid">Mēs nosūtījām jūsu kvīti pa e-pastu. %s</string>
     <string name="new_site_creation_preview_caption_paid">Var paiet līdz 30 minūtēm, līdz jūsu pielāgotais domēns sāks darboties.</string>
     <string name="site_creation_error_cart_subtitle">Jūsu vietne ir veiksmīgi izveidota, taču, sagatavojot jūsu pielāgoto domēnu norēķiniem, radās problēma. Lūdzu, mēģiniet vēlreiz vai sazinieties ar atbalsta dienestu, lai saņemtu palīdzību.</string>
-    <string name="site_creation_domain_cost_sale">pirmo gadu</string>
     <string name="site_creation_domain_header_subtitle">Meklējiet īsu un neaizmirstamu domēnu, lai palīdzētu cilvēkiem atrast un apmeklēt jūsu vietni.</string>
     <string name="site_creation_domain_search_input_hint">Meklējiet ar atslēgvārdiem</string>
     <string name="notifications_disabled_permission_dialog">Lietotņu paziņojumi ir atspējoti. Pieskarieties šeit, lai tos iespējotu.</string>
@@ -555,7 +554,6 @@ Language: lv
     <string name="support_faq_caption">Atbildes uz bieži uzdotajiem jautājumiem skatiet mūsu BUJ.</string>
     <string name="site_creation_domain_tag_best_alternative">Labākā alternatīva</string>
     <string name="site_creation_domain_tag_recommended">Ieteicams</string>
-    <string name="site_creation_domain_tag_sale">Izpārdošana</string>
     <string name="site_creation_domain_tag_unavailable">Šis domēns jau ir reģistrēts</string>
     <string name="blaze_activity_title">Blaze</string>
     <string name="blaze_promotional_text">Palieliniet datplūsmu uz savu vietni, izmantojot Blaze</string>

@@ -947,7 +947,6 @@ Language: ro
     <string name="site_creation_search_domain_example_body">La fel ca în exemplul de mai sus, un domeniu le permite oamenilor să-ți găsească și să-ți viziteze site-ul din navigatoarele lor web.</string>
     <string name="dashboard_activity_card_title">Activitate recentă</string>
     <string name="gutenberg_native_unlabeled_color_s" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Culoare fără etichetă. %s</string>
-    <string name="site_creation_domain_cost_sale">în primul an</string>
     <string name="new_site_creation_preview_caption_paid">Poate să dureze până la 30 de minute până când domeniul tău personalizat va începe să funcționeze.</string>
     <string name="site_creation_domain_search_input_hint">Caută după cuvinte cheie</string>
     <string name="new_site_creation_preview_subtitle_paid">Ți-am trimis chitanța prin email. %s</string>
@@ -1016,7 +1015,6 @@ Language: ro
     <string name="support_faq_caption">Vezi întrebările frecvente pentru răspunsuri la întrebările pe care le ai.</string>
     <string name="site_creation_domain_tag_best_alternative">Cea mai bună alternativă</string>
     <string name="site_creation_domain_tag_recommended">Recomandat</string>
-    <string name="site_creation_domain_tag_sale">Reducere</string>
     <string name="site_creation_domain_tag_unavailable">Acest domeniu este deja înregistrat</string>
     <string name="blaze_activity_title">Blaze</string>
     <string name="blaze_promotional_text">Cu Blaze, aduci mai mult trafic pe site</string>
