@@ -2,7 +2,6 @@ package org.wordpress.android.fluxc.store
 
 import android.text.TextUtils
 import androidx.annotation.VisibleForTesting
-import kotlinx.coroutines.flow.map
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode.ASYNC
 import org.wordpress.android.fluxc.Dispatcher
