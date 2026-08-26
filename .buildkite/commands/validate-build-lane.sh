@@ -10,7 +10,8 @@ bundle exec fastlane run configure_apply
 
 echo "--- :hammer_and_wrench: Running build_and_upload_trunk_internal with prechecks ON (stop before Play Store upload)"
 LOG="$(mktemp)"
-# Deliberately no `skip_prechecks:true`: the prechecks block is the code this PR changed.
+# The prechecks are unconditional now that #23259 has dropped `skip_prechecks`, so this
+# invocation runs them on CI, where they previously never ran.
 bundle exec fastlane build_and_upload_trunk_internal skip_confirm:true | tee "${LOG}"
 
 if ! grep -F 'VALIDATION: prechecks block completed' "${LOG}"; then
