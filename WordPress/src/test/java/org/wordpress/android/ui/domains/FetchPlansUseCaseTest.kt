@@ -116,13 +116,12 @@ class FetchPlansUseCaseTest : BaseUnitTest() {
     }
 
     /**
-     * Pins what this code does when more than one plan carries the credit
-     * group, which is not known to happen: the credit is found wherever it
-     * sits. The alternative, reading the first group-carrying plan out of the
-     * map, would answer differently depending on iteration order.
+     * A site is expected to have one current plan. This pins the deliberate
+     * choice for the case where it does not, which is to report the credit
+     * rather than hide it.
      */
     @Test
-    fun `given two plans carry the credit group, the one with the credit decides`() = test {
+    fun `given more than one plan reports itself current, a credit on either counts`() = test {
         stubPlans(
             mapOf(
                 FREE_PLAN to currentPlan(hasDomainCredit = false),

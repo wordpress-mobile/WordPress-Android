@@ -69,13 +69,17 @@ sealed interface SitePlansResult {
 }
 
 /**
- * Whether the site holds an unclaimed free-domain credit.
+ * Whether the site's current plan holds an unclaimed free-domain credit.
  *
- * The API marks the plan a site is on with a `current_plan` boolean, which the
- * binding does not surface. What it does surface is [SitePlan.currentPlan], the
- * group of fields the API sends alongside that marker, so the credit is read
- * from whichever plan carries the group rather than from the plan the site is
- * known to be on.
+ * [SitePlan.currentPlan] is set on the plan the site is on and carries the
+ * credit flag.
+ *
+ * This assumes a site has one current plan. Nothing here can enforce that, so
+ * if it ever stops holding, this answer should be discarded along with it. In
+ * that case a credit on any plan reporting itself as current counts. The
+ * server decides whether a credit can actually be claimed, so reporting one
+ * that is not there costs a call to action the purchase flow refuses, while
+ * missing one that is there would leave the user no way to reach it.
  *
  * A failed fetch reports no credit.
  */
