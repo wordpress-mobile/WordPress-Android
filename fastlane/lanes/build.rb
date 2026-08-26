@@ -55,18 +55,8 @@ platform :android do
   #####################################################################################
   desc 'Builds and updates for distribution'
   lane :build_and_upload_pre_releases do |options|
-    unless options[:skip_prechecks]
-      ensure_git_branch(branch: '^release/') unless is_ci
-
-      ensure_git_status_clean unless is_ci
-
-      UI.important("Building version #{current_version_name} (#{current_build_code}) for upload to Beta Channel")
-
-      UI.user_error!('Aborted by user request') unless options[:skip_confirm] || UI.confirm('Do you want to continue?')
-    end
-
     app = get_app_name_option!(options)
-    build_beta(app: app, skip_prechecks: true, skip_confirm: options[:skip_confirm], upload_to_play_store: true, create_release: options[:create_release])
+    build_beta(app: app, skip_confirm: options[:skip_confirm], upload_to_play_store: true, create_release: options[:create_release])
   end
 
   #####################################################################################
