@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2026-08-21 16:08:10+0000
+Translation-Revision-Date: 2026-08-25 17:56:31+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n == 0 || n % 100 >= 2 && n % 100 <= 19) ? 1 : 2);
 Generator: GlotPress/4.1.0
 Language: ro
@@ -2903,7 +2903,6 @@ Language: ro
     <string name="menu_save_as_draft">Salvează ca ciornă</string>
     <string name="file_size_in_terabytes">%s TO</string>
     <string name="menu_visual_mode">Editor vizual</string>
-    <string name="file_size_in_gigabytes">%s GO</string>
     <string name="file_size_in_bytes">%s O</string>
     <string name="site_settings_quota_space_value">%1$s din %2$s</string>
     <string name="site_settings_quota_space_hint">Dacă ai nevoie de mai mult spațiu, ia în considerare actualizarea planul tău WordPress.</string>
@@ -2924,6 +2923,7 @@ Language: ro
     <string name="comment_untrash_talkback">Am restaurat comentariul</string>
     <string name="comment_unspam_talkback">Comentariu marcat ca Nu este spam</string>
     <string name="file_size_in_kilobytes">%s Ko</string>
+    <string name="file_size_in_gigabytes">%s Go</string>
     <string name="person_detail_screen_title">Detalii personale</string>
     <string name="media_settings_screen_title">Detalii fișier</string>
     <string name="publicize_buttons_screen_title">Butoane de partajare</string>
