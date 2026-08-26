@@ -116,9 +116,10 @@ class FetchPlansUseCaseTest : BaseUnitTest() {
     }
 
     /**
-     * The response is a map and its iteration order is not stable, so a credit
-     * has to be found wherever it sits rather than on whichever plan comes out
-     * of the map first.
+     * Pins what this code does when more than one plan carries the credit
+     * group, which is not known to happen: the credit is found wherever it
+     * sits. The alternative, reading the first group-carrying plan out of the
+     * map, would answer differently depending on iteration order.
      */
     @Test
     fun `given two plans carry the credit group, the one with the credit decides`() = test {

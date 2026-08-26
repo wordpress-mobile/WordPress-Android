@@ -71,10 +71,11 @@ sealed interface SitePlansResult {
 /**
  * Whether the site holds an unclaimed free-domain credit.
  *
- * [SitePlan.currentPlan] is present on a plan when the response carries the
- * credit group for it, which the API sends for the plan the site is on. The
- * check does not depend on which plan that is: the response is a map, and its
- * iteration order is not stable across calls.
+ * The API marks the plan a site is on with a `current_plan` boolean, which the
+ * binding does not surface. What it does surface is [SitePlan.currentPlan], the
+ * group of fields the API sends alongside that marker, so the credit is read
+ * from whichever plan carries the group rather than from the plan the site is
+ * known to be on.
  *
  * A failed fetch reports no credit.
  */
