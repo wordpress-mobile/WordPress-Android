@@ -13,7 +13,7 @@ import javax.inject.Inject
 
 class WpComApiClientProvider @Inject constructor(
     private val networkAvailabilityProvider: WpNetworkAvailabilityProvider,
-    private val languageProvider: DeviceWpComLanguageProvider,
+    private val languageProvider: AppWpComLanguageProvider,
     private val trackNetworkRequestsInterceptor: TrackNetworkRequestsInterceptor,
 ) {
     fun getWpComApiClient(accessToken: String): WpComApiClient {
