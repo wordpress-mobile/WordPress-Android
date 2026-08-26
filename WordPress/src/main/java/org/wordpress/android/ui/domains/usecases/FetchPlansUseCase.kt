@@ -18,6 +18,13 @@ class FetchPlansUseCase @Inject constructor(
 ) {
     private var wpComApiClient: WpComApiClient? = null
 
+    /**
+     * Null when there is no WordPress.com account to make the request as.
+     *
+     * `AccountStore.accessToken` is typed nullable but reads `""` when signed
+     * out, and is only null between an in-process sign out and the next
+     * launch, so both have to be treated as no token.
+     */
     @Synchronized
     private fun getOrCreateClient(): WpComApiClient? {
         val token = accountStore.accessToken?.takeIf { it.isNotEmpty() } ?: return null
