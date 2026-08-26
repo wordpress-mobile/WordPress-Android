@@ -936,7 +936,6 @@ Language: he_IL
     <string name="site_creation_search_domain_example_title">YourSiteName.com</string>
     <string name="site_creation_domain_search_input_hint">לחפש באמצעות מילות מפתח</string>
     <string name="site_creation_domain_header_subtitle">כדאי לחפש דומיין קצר וקליט כדי לעזור לאנשים למצוא את האתר שלך ולבקר בו.</string>
-    <string name="site_creation_domain_cost_sale">בשנה הראשונה</string>
     <string name="site_creation_error_cart_subtitle">האתר שלך נוצר בהצלחה, אבל נתקלנו בבעיה במהלך ההכנה של הדומיין האישי שלך לתשלום בקופה. יש לנסות שוב או לפנות לתמיכה לעזרה.</string>
     <string name="new_site_creation_preview_caption_paid">יידרשו עד 30 דקות להתחלת הפעילות של הדומיין האישי.</string>
     <string name="new_site_creation_preview_subtitle_paid">שלחנו את הקבלה שלך באימייל. %s</string>
@@ -1000,7 +999,6 @@ Language: he_IL
     <string name="blaze_promotional_text">לקבל תעבודה גדולה יותר לאתר שלך בעזרת Blaze</string>
     <string name="blaze_activity_title">Blaze</string>
     <string name="site_creation_domain_tag_unavailable">הדומיין הזה כבר רשום.</string>
-    <string name="site_creation_domain_tag_sale">מבצע</string>
     <string name="site_creation_domain_tag_recommended">מומלץ</string>
     <string name="site_creation_domain_tag_best_alternative">החלופה הטובה ביותר</string>
     <string name="support_faq_caption">כדאי לעיין בשאלות הנפוצות שלנו כדי למצוא מענה על כמה מהשאלות הרגילות שאולי יהיו לך.</string>

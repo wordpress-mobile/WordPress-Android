@@ -949,7 +949,6 @@ Language: nl
     <string name="site_creation_search_domain_example_title">JeSiteNaam.com</string>
     <string name="site_creation_domain_search_input_hint">Zoeken met keywords</string>
     <string name="site_creation_domain_header_subtitle">Zoek een kort en gedenkwaardig domein om mensen te helpen je site te vinden en te bezoeken.</string>
-    <string name="site_creation_domain_cost_sale">voor het eerste jaar</string>
     <string name="site_creation_error_cart_subtitle">Je site is aangemaakt, maar er is een probleem opgetreden bij het afrekenen van je aangepaste domein. Probeer het nog eens of neem contact met ons op voor hulp.</string>
     <string name="new_site_creation_preview_caption_paid">Het kan tot 30 minuten duren voor je aangepaste domein werkt.</string>
     <string name="new_site_creation_preview_subtitle_paid">We hebben je betalingsbewijs naar je gemaild. %s</string>
@@ -1013,7 +1012,6 @@ Language: nl
     <string name="blaze_promotional_text">Zorg dat meer mensen je site bezoeken met Blaze</string>
     <string name="blaze_activity_title">Blaze</string>
     <string name="site_creation_domain_tag_unavailable">Dit domein is al geregistreerd</string>
-    <string name="site_creation_domain_tag_sale">Aanbieding!</string>
     <string name="site_creation_domain_tag_recommended">Aanbevolen</string>
     <string name="site_creation_domain_tag_best_alternative">Beste alternatief</string>
     <string name="support_faq_caption">Bekijk onze FAQ voor antwoorden op veelgestelde vragen die je misschien hebt.</string>
