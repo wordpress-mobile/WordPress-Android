@@ -93,7 +93,6 @@ Language: pl
     <string name="gutenberg_kit_announcement_learn_more">Dowiedz się więcej</string>
     <string name="gutenberg_kit_announcement_maybe_later">Może później</string>
     <string name="gutenberg_kit_announcement_activate">Włącz</string>
-    <string name="gutenberg_kit_announcement_body_deadline">Do końca czerwca 2026 roku stanie się domyślnym edytorem dla wszystkich. %1$s</string>
     <string name="gutenberg_kit_announcement_body_intro">Edytor blokowy nowej generacji jest gotowy i oferuje więcej nowych funkcji.</string>
     <string name="gutenberg_kit_announcement_title">Nadchodzi lepszy edytor blokowy</string>
     <string name="site_settings_gutenberg_kit_enabled_unsupported">Aby przetestować nowy edytor, najpierw przełącz się na edytor blokowy.</string>

@@ -99,7 +99,7 @@ fun GutenbergKitAnnouncementScreen(
 @Composable
 private fun buildDeadlineWithLearnMore(onLearnMore: () -> Unit) = buildAnnotatedString {
     val learnMoreText = stringResource(R.string.gutenberg_kit_announcement_learn_more)
-    val body = stringResource(R.string.gutenberg_kit_announcement_body_deadline, learnMoreText)
+    val body = stringResource(R.string.gutenberg_kit_announcement_body_deadline_v2, learnMoreText)
     val linkStart = body.indexOf(learnMoreText)
     val link = LinkAnnotation.Clickable(
         tag = "learn_more",

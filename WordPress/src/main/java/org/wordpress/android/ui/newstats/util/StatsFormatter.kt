@@ -2,27 +2,98 @@ package org.wordpress.android.ui.newstats.util
 
 import org.wordpress.android.R
 import org.wordpress.android.ui.newstats.StatsPeriod
+import org.wordpress.android.util.AppLog
 import org.wordpress.android.viewmodel.ResourceProvider
+import java.text.NumberFormat
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 
-private const val THOUSAND = 1_000
+const val THOUSAND = 1_000
 private const val MILLION = 1_000_000
 private const val FORMAT_MILLION = "%.1fM"
 private const val FORMAT_THOUSAND = "%.1fK"
 
+private const val DISPLAY_DATE_PATTERN = "MMM d, yyyy"
+private val API_DATE_TIME_FORMAT = DateTimeFormatter
+    .ofPattern("yyyy-MM-dd HH:mm:ss", Locale.US)
+
 /**
- * Formats a stat value for display, using K/M suffixes for large numbers.
- * Examples: 1500 -> "1.5K", 2500000 -> "2.5M", 500 -> "500"
+ * Formats an API timestamp ("yyyy-MM-dd HH:mm:ss", site timezone) for display, e.g. "Aug 4, 2026".
+ * Returns the input unchanged if it can't be parsed.
  */
-fun formatStatValue(value: Long): String {
-    return when {
-        value >= MILLION -> String.format(Locale.getDefault(), FORMAT_MILLION, value / MILLION.toDouble())
-        value >= THOUSAND -> String.format(Locale.getDefault(), FORMAT_THOUSAND, value / THOUSAND.toDouble())
-        else -> value.toString()
-    }
+fun formatStatsDateTime(dateTime: String): String = parseOrLog(dateTime) {
+    LocalDateTime.parse(it, API_DATE_TIME_FORMAT)
+        .format(displayDateFormat())
 }
+
+/**
+ * Formats an API day ("yyyy-MM-dd") for display, e.g. "Aug 4, 2026". Returns the input unchanged
+ * if it can't be parsed.
+ */
+fun formatStatsDate(date: String): String = parseOrLog(date) {
+    LocalDate.parse(it, DateTimeFormatter.ISO_LOCAL_DATE)
+        .format(displayDateFormat())
+}
+
+private fun displayDateFormat() = DateTimeFormatter.ofPattern(
+    DISPLAY_DATE_PATTERN,
+    Locale.getDefault()
+)
+
+@Suppress("TooGenericExceptionCaught")
+private inline fun parseOrLog(
+    value: String,
+    format: (String) -> String
+): String = try {
+    format(value)
+} catch (e: Exception) {
+    AppLog.w(
+        AppLog.T.STATS,
+        "Failed to parse stats date '$value': ${e.message}"
+    )
+    value
+}
+
+/**
+ * Formats a stat value for display, grouped in full below [abbreviateFrom] and with a K/M suffix
+ * at or above it. Examples at the default threshold: 500 -> "500", 1500 -> "1.5K",
+ * 2500000 -> "2.5M"; at [TEN_THOUSAND]: 1986 -> "1,986".
+ *
+ * Cards are width-constrained and abbreviate early; detail screens pass [TEN_THOUSAND] so figures
+ * stay exact for longer, which is the threshold the old stats screens use.
+ */
+fun formatStatValue(
+    value: Long,
+    abbreviateFrom: Int = THOUSAND
+): String = when {
+    value >= MILLION -> String.format(
+        Locale.getDefault(),
+        FORMAT_MILLION,
+        value / MILLION.toDouble()
+    )
+    value >= abbreviateFrom.coerceAtLeast(THOUSAND) ->
+        String.format(
+            Locale.getDefault(),
+            FORMAT_THOUSAND,
+            value / THOUSAND.toDouble()
+        )
+    else -> NumberFormat
+        .getIntegerInstance(Locale.getDefault())
+        .format(value)
+}
+
+/** Threshold for detail screens, which favour exact figures over width. */
+const val TEN_THOUSAND = 10_000
+
+/**
+ * Formats a fractional change as a percentage, e.g. -0.25 -> "-25%".
+ */
+fun formatChangePercentage(fraction: Double): String =
+    NumberFormat.getPercentInstance(Locale.getDefault())
+        .apply { maximumFractionDigits = 0 }
+        .format(fraction)
 
 private const val FORMAT_DECIMAL = "%.1f"
 

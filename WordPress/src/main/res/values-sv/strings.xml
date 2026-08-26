@@ -93,7 +93,6 @@ Language: sv_SE
     <string name="gutenberg_kit_announcement_learn_more">Lär dig mer</string>
     <string name="gutenberg_kit_announcement_maybe_later">Kanske senare</string>
     <string name="gutenberg_kit_announcement_activate">Aktivera</string>
-    <string name="gutenberg_kit_announcement_body_deadline">I slutet av juni 2026 kommer det att bli standardredigeraren för alla. %1$s</string>
     <string name="gutenberg_kit_announcement_body_intro">Nästa generations blockredigerare är redo och ger fler nya funktioner.</string>
     <string name="gutenberg_kit_announcement_title">En bättre blockredigerare är på väg</string>
     <string name="site_settings_gutenberg_kit_enabled_unsupported">Byt till blockredigeraren först för att testa den nya redigeraren.</string>

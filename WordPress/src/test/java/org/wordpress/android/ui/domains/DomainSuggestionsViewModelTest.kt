@@ -1,42 +1,55 @@
 package org.wordpress.android.ui.domains
 
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.test.StandardTestDispatcher
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotNull
 import org.junit.Before
 import org.junit.Test
-import org.mockito.ArgumentCaptor
 import org.mockito.Mock
 import org.mockito.kotlin.any
-import org.mockito.kotlin.doReturn
-import org.mockito.kotlin.eq
-import org.mockito.kotlin.mock
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.verifyNoInteractions
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
-import org.wordpress.android.Constants.TYPE_DOMAINS_PRODUCT
-import org.wordpress.android.fluxc.Dispatcher
-import org.wordpress.android.fluxc.action.SiteAction
-import org.wordpress.android.fluxc.annotations.action.Action
+import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.rest.wpcom.transactions.TransactionsRestClient.CreateShoppingCartResponse
-import org.wordpress.android.fluxc.store.ProductsStore
-import org.wordpress.android.fluxc.store.SiteStore.SuggestDomainsPayload
+import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.TransactionsStore.OnShoppingCartCreated
+import org.wordpress.android.models.networkresource.ListState
+import org.wordpress.android.networking.restapi.WpComApiClientProvider
 import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose
 import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose.CTA_DOMAIN_CREDIT_REDEMPTION
 import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose.DOMAIN_PURCHASE
 import org.wordpress.android.ui.domains.usecases.CreateCartUseCase
-import org.wordpress.android.util.PlansConstants
 import org.wordpress.android.util.helpers.Debouncer
+import rs.wordpress.api.kotlin.WpComApiClient
+import rs.wordpress.api.kotlin.WpRequestResult
+import uniffi.wp_api.DomainSuggestion
+import uniffi.wp_api.FreeDomainSuggestion
+import uniffi.wp_api.PaidDomainSuggestion
+import uniffi.wp_api.Product
+import uniffi.wp_api.ProductTerm
+import uniffi.wp_api.ProductTypeFilter
+import uniffi.wp_api.RequestExecutionErrorReason
+import uniffi.wp_api.RequestMethod
+import uniffi.wp_api.WpErrorCode
 
 @ExperimentalCoroutinesApi
 class DomainSuggestionsViewModelTest : BaseUnitTest() {
     @Mock
-    lateinit var dispatcher: Dispatcher
+    lateinit var wpComApiClientProvider: WpComApiClientProvider
+
+    @Mock
+    lateinit var accountStore: AccountStore
+
+    @Mock
+    lateinit var wpComApiClient: WpComApiClient
 
     @Mock
     lateinit var debouncer: Debouncer
@@ -47,31 +60,68 @@ class DomainSuggestionsViewModelTest : BaseUnitTest() {
     @Mock
     lateinit var createCartUseCase: CreateCartUseCase
 
-    private val productsStore = mock<ProductsStore> { on { fetchProducts(any()) } doReturn mock() }
     private lateinit var site: SiteModel
     private lateinit var domainRegistrationPurpose: DomainRegistrationPurpose
     private lateinit var viewModel: DomainSuggestionsViewModel
     private lateinit var onDomainSelectedEvents: MutableList<DomainProductDetails>
+    private lateinit var suggestionStates: MutableList<ListState<DomainSuggestionItem>>
 
     @Before
     fun setUp() {
         site = SiteModel().also { it.name = "Test Site" }
         domainRegistrationPurpose = CTA_DOMAIN_CREDIT_REDEMPTION
-        viewModel = DomainSuggestionsViewModel(
-            productsStore,
-            tracker,
-            dispatcher,
-            debouncer,
-            createCartUseCase,
-            testDispatcher()
-        )
+
+        whenever(accountStore.accessToken).thenReturn("test-token")
+        whenever(wpComApiClientProvider.getWpComApiClient("test-token"))
+            .thenReturn(wpComApiClient)
+
         whenever(debouncer.debounce(any(), any(), any(), any())).thenAnswer { invocation ->
             val delayedRunnable = invocation.arguments[1] as Runnable
             delayedRunnable.run()
         }
+        // Every request has to resolve to something: the view model logs the
+        // result, and an unstubbed mock hands back null for a non-null type.
+        runBlocking { mockResponses(productsResponse(), suggestionsResponse()) }
 
-        onDomainSelectedEvents = mutableListOf()
-        viewModel.onDomainSelected.observeForever { onDomainSelectedEvents.add(it.peekContent()) }
+        viewModel = createViewModel(testDispatcher())
+    }
+
+    private fun createViewModel(dispatcher: CoroutineDispatcher): DomainSuggestionsViewModel {
+        val created = DomainSuggestionsViewModel(
+            wpComApiClientProvider,
+            accountStore,
+            tracker,
+            debouncer,
+            createCartUseCase,
+            dispatcher,
+            dispatcher
+        )
+
+        // Each observer appends to the list it was created with rather than
+        // to whichever list the field holds when it fires, so a view model
+        // built later in a test cannot feed an earlier one's sink.
+        val selected = mutableListOf<DomainProductDetails>()
+        onDomainSelectedEvents = selected
+        created.onDomainSelected.observeForever { selected.add(it.peekContent()) }
+
+        val states = mutableListOf<ListState<DomainSuggestionItem>>()
+        suggestionStates = states
+        created.suggestionsLiveData.observeForever { states.add(it) }
+
+        return created
+    }
+
+    /**
+     * The view model issues the products request first and the suggestions
+     * request second, so responses are stubbed in that order.
+     */
+    @Suppress("UNCHECKED_CAST")
+    private suspend fun mockResponses(vararg responses: WpRequestResult<*>) {
+        whenever(wpComApiClient.request<Any>(any()))
+            .thenReturn(
+                responses.first() as WpRequestResult<Any>,
+                *responses.drop(1).map { it as WpRequestResult<Any> }.toTypedArray()
+            )
     }
 
     @Test
@@ -117,63 +167,337 @@ class DomainSuggestionsViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `domain products are fetched only at first start`() = test {
+    fun `only the domain products are requested`() {
+        assertThat(viewModel.buildProductsParams().productType)
+            .isEqualTo(ProductTypeFilter.Domains)
+    }
+
+    @Test
+    fun `starting a second time repeats neither request`() = test {
+        mockResponses(productsResponse(), suggestionsResponse())
+
         viewModel.start(site, domainRegistrationPurpose)
         viewModel.start(site, domainRegistrationPurpose)
         advanceUntilIdle()
 
-        verify(productsStore).fetchProducts(eq(TYPE_DOMAINS_PRODUCT))
+        // `request` takes an opaque lambda, so the count is all this can pin
+        // down: two requests in total rather than four.
+        verify(wpComApiClient, times(2)).request<Any>(any())
     }
 
     @Test
-    fun `site on blogger plan is requesting only dot blog domain suggestions`() = test {
-        site.planId = PlansConstants.BLOGGER_PLAN_ONE_YEAR_ID
-        viewModel.start(site, domainRegistrationPurpose)
-        viewModel.updateSearchQuery("test")
+    fun `site on blogger plan is requesting only dot blog domain suggestions`() {
+        val params = viewModel.buildSuggestionsParams("test", isOnBloggerPlan = true)
 
-        val captor = ArgumentCaptor.forClass(Action::class.java)
-        verify(dispatcher, times(2)).dispatch(captor.capture())
-
-        val lastAction = captor.value
-
-        assertThat(lastAction.type).isEqualTo(SiteAction.SUGGEST_DOMAINS)
-        assertThat(lastAction.payload).isNotNull
-        assertThat(lastAction.payload).isInstanceOf(SuggestDomainsPayload::class.java)
-
-        val payload = lastAction.payload as SuggestDomainsPayload
-        assertThat(payload.tlds).isNotNull()
-        assertThat(payload.tlds).isEqualTo("blog")
-        assertThat(payload.onlyWordpressCom).isNull()
-        assertThat(payload.includeWordpressCom).isNull()
-        assertThat(payload.includeDotBlogSubdomain).isNull()
-        assertThat(payload.vendor).isNull()
+        assertThat(params.query).isEqualTo("test")
+        assertThat(params.tlds).isEqualTo(listOf("blog"))
+        assertThat(params.onlyWordpressdotcom).isNull() // checkstyle ignore
+        assertThat(params.includeWordpressdotcom).isNull() // checkstyle ignore
+        assertThat(params.includeDotblogsubdomain).isNull()
+        assertThat(params.vendor).isNull()
     }
 
     @Test
-    fun `site on non blogger plan is requesting all possible domain suggestions`() = test {
-        site.planId = PlansConstants.PREMIUM_PLAN_ID
+    fun `site on non blogger plan is requesting all possible domain suggestions`() {
+        val params = viewModel.buildSuggestionsParams("test", isOnBloggerPlan = false)
+
+        assertThat(params.query).isEqualTo("test")
+        assertThat(params.onlyWordpressdotcom).isFalse() // checkstyle ignore
+        assertThat(params.includeWordpressdotcom).isFalse() // checkstyle ignore
+        assertThat(params.includeDotblogsubdomain).isTrue()
+        assertThat(params.vendor).isNull()
+        assertThat(params.tlds).isNull()
+    }
+
+    @Test
+    fun `free suggestions are dropped and paid ones are sorted by relevance`() = test {
+        mockResponses(
+            productsResponse(),
+            suggestionsResponse(
+                DomainSuggestion.Free(
+                    FreeDomainSuggestion("test.wordpress.com", "Free", isFree = true)
+                ),
+                DomainSuggestion.Paid(paidSuggestion("low.com", relevance = 0.2)),
+                DomainSuggestion.Paid(paidSuggestion("high.com", relevance = 0.9)),
+            )
+        )
+
         viewModel.start(site, domainRegistrationPurpose)
-        viewModel.updateSearchQuery("test")
+        advanceUntilIdle()
 
-        val captor = ArgumentCaptor.forClass(Action::class.java)
-        verify(dispatcher, times(2)).dispatch(captor.capture())
+        assertThat(lastSuccess().map { it.domainName })
+            .containsExactly("high.com", "low.com")
+    }
 
-        val lastAction = captor.value
+    @Test
+    fun `a product on sale is mapped to its server formatted sale cost`() = test {
+        mockResponses(
+            productsResponse(
+                "domain_reg" to testProduct(
+                    productId = 6u,
+                    saleCost = 600L,
+                    combinedSaleCostDisplay = "$6"
+                )
+            ),
+            suggestionsResponse(DomainSuggestion.Paid(paidSuggestion(productId = 6u)))
+        )
 
-        assertThat(lastAction.type).isEqualTo(SiteAction.SUGGEST_DOMAINS)
-        assertThat(lastAction.payload).isNotNull()
-        assertThat(lastAction.payload).isInstanceOf(SuggestDomainsPayload::class.java)
+        viewModel.start(site, domainRegistrationPurpose)
+        advanceUntilIdle()
 
-        val payload = lastAction.payload as SuggestDomainsPayload
-        assertThat(payload.onlyWordpressCom).isFalse()
-        assertThat(payload.includeWordpressCom).isFalse()
-        assertThat(payload.includeDotBlogSubdomain).isTrue()
-        assertThat(payload.vendor).isNull()
-        assertThat(payload.tlds).isNull()
+        val item = lastSuccess().single()
+        assertThat(item.isOnSale).isTrue()
+        assertThat(item.saleCost).isEqualTo("$6")
+    }
+
+    @Test
+    fun `a product with a zero sale cost is not on sale`() = test {
+        mockResponses(
+            productsResponse(
+                "domain_reg" to testProduct(productId = 6u, saleCost = 0L)
+            ),
+            suggestionsResponse(DomainSuggestion.Paid(paidSuggestion(productId = 6u)))
+        )
+
+        viewModel.start(site, domainRegistrationPurpose)
+        advanceUntilIdle()
+
+        assertThat(lastSuccess().single().isOnSale).isFalse()
+    }
+
+    @Test
+    fun `empty_results is shown as an empty list rather than an error`() = test {
+        mockResponses(
+            productsResponse(),
+            wpError("empty_results", "No available domains for that search.")
+        )
+
+        viewModel.start(site, domainRegistrationPurpose)
+        advanceUntilIdle()
+
+        assertThat(suggestionStates.last()).isInstanceOf(ListState.Success::class.java)
+        assertThat(lastSuccess()).isEmpty()
+    }
+
+    @Test
+    fun `an api error surfaces its message to the view`() = test {
+        mockResponses(
+            productsResponse(),
+            wpError("invalid_query", "Domain searches must contain a word")
+        )
+
+        viewModel.start(site, domainRegistrationPurpose)
+        advanceUntilIdle()
+
+        val state = suggestionStates.last()
+        assertThat(state).isInstanceOf(ListState.Error::class.java)
+        assertThat((state as ListState.Error).errorMessage)
+            .isEqualTo("Domain searches must contain a word")
+    }
+
+    @Test
+    fun `a failed search drops the results of the one before it`() = test {
+        mockResponses(
+            productsResponse(),
+            suggestionsResponse(DomainSuggestion.Paid(paidSuggestion("found.com"))),
+            wpError("invalid_query", "Domain searches must contain a word"),
+        )
+
+        viewModel.start(site, domainRegistrationPurpose)
+        advanceUntilIdle()
+        assertThat(lastSuccess().map { it.domainName }).containsExactly("found.com")
+
+        viewModel.updateSearchQuery("...")
+        advanceUntilIdle()
+
+        assertThat(suggestionStates.last().data).isEmpty()
+    }
+
+    @Test
+    fun `clearing the search field drops the error it was showing`() = test {
+        mockResponses(
+            productsResponse(),
+            suggestionsResponse(),
+            wpError("invalid_query", "Domain searches must contain a word"),
+            suggestionsResponse(),
+        )
+
+        viewModel.start(site, domainRegistrationPurpose)
+        advanceUntilIdle()
+        viewModel.updateSearchQuery("...")
+        advanceUntilIdle()
+        assertThat(suggestionStates.last()).isInstanceOf(ListState.Error::class.java)
+
+        suggestionStates.clear()
+        viewModel.updateSearchQuery("")
+
+        assertThat(suggestionStates.first()).isInstanceOf(ListState.Init::class.java)
+    }
+
+    /**
+     * A configuration change restores the field empty and the restore reports
+     * itself as a text change, so the view model is told the query was cleared
+     * when the user did nothing. The retained suggestions have to survive it.
+     */
+    @Test
+    fun `emptying a field that never moved off the default changes nothing`() = test {
+        mockResponses(
+            productsResponse(),
+            suggestionsResponse(DomainSuggestion.Paid(paidSuggestion("found.com"))),
+        )
+
+        viewModel.start(site, domainRegistrationPurpose)
+        advanceUntilIdle()
+        assertThat(lastSuccess().map { it.domainName }).containsExactly("found.com")
+
+        suggestionStates.clear()
+        viewModel.updateSearchQuery("")
+        advanceUntilIdle()
+
+        assertThat(suggestionStates).isEmpty()
+    }
+
+    @Test
+    fun `emptying the field disarms the select button`() = test {
+        site.name = ""
+        mockResponses(
+            productsResponse(),
+            suggestionsResponse(DomainSuggestion.Paid(paidSuggestion("found.com"))),
+        )
+        val selectEnabled = mutableListOf<Boolean>()
+        viewModel.selectDomainButtonEnabledState.observeForever { selectEnabled.add(it) }
+
+        viewModel.start(site, domainRegistrationPurpose)
+        viewModel.updateSearchQuery("coolsite")
+        advanceUntilIdle()
+        viewModel.onDomainSuggestionSelected(dummySelectedDomainSuggestionItem)
+        assertThat(selectEnabled.last()).isTrue()
+
+        viewModel.updateSearchQuery("")
+        advanceUntilIdle()
+
+        assertThat(selectEnabled.last()).isFalse()
+    }
+
+    @Test
+    fun `emptying the field of a site with no name searches for nothing`() = test {
+        site.name = ""
+        mockResponses(
+            productsResponse(),
+            wpError("invalid_query", "Domain searches must contain a word"),
+        )
+
+        viewModel.start(site, domainRegistrationPurpose)
+        advanceUntilIdle()
+        viewModel.updateSearchQuery("...")
+        advanceUntilIdle()
+        assertThat(suggestionStates.last()).isInstanceOf(ListState.Error::class.java)
+
+        viewModel.updateSearchQuery("")
+        advanceUntilIdle()
+
+        assertThat(suggestionStates.last()).isInstanceOf(ListState.Init::class.java)
+        // The products request and the one real search, and nothing for the
+        // blank query the emptied field falls back to.
+        verify(wpComApiClient, times(2)).request<Any>(any())
+    }
+
+    @Test
+    fun `a signed out account reports an error instead of searching`() = test {
+        // What `AccountStore` returns when signed out, despite its nullable type.
+        whenever(accountStore.accessToken).thenReturn("")
+
+        viewModel.start(site, domainRegistrationPurpose)
+        advanceUntilIdle()
+
+        assertThat(suggestionStates.last()).isInstanceOf(ListState.Error::class.java)
+        verifyNoInteractions(wpComApiClient)
+    }
+
+    @Test
+    fun `a null access token reports an error instead of crashing`() = test {
+        whenever(accountStore.accessToken).thenReturn(null)
+
+        viewModel.start(site, domainRegistrationPurpose)
+        advanceUntilIdle()
+
+        assertThat(suggestionStates.last()).isInstanceOf(ListState.Error::class.java)
+        verifyNoInteractions(wpComApiClient)
+    }
+
+    @Test
+    fun `an offline failure asks the view for the network message`() = test {
+        mockResponses(
+            productsResponse(),
+            WpRequestResult.RequestExecutionFailed<Any>(
+                null,
+                null,
+                RequestExecutionErrorReason.DeviceIsOfflineError("No internet connection"),
+                "",
+                RequestMethod.GET,
+            )
+        )
+
+        viewModel.start(site, domainRegistrationPurpose)
+        advanceUntilIdle()
+
+        val state = suggestionStates.last()
+        assertThat(state).isInstanceOf(ListState.Error::class.java)
+        assertThat((state as ListState.Error).errorMessageResId)
+            .isEqualTo(R.string.error_network_connection)
+    }
+
+    @Test
+    fun `a non api failure carries no message`() = test {
+        mockResponses(
+            productsResponse(),
+            WpRequestResult.UnknownError<Any>(
+                500.toUInt(),
+                "Internal Server Error",
+                "",
+                RequestMethod.GET,
+            )
+        )
+
+        viewModel.start(site, domainRegistrationPurpose)
+        advanceUntilIdle()
+
+        val state = suggestionStates.last()
+        assertThat(state).isInstanceOf(ListState.Error::class.java)
+        assertThat((state as ListState.Error).errorMessage).isNull()
+        assertThat(state.errorMessageResId).isNull()
+    }
+
+    /**
+     * A response that arrives after the search has moved on must not replace
+     * the list. The requests are queued on a [StandardTestDispatcher] so both
+     * are in flight before either resolves, which an unconfined dispatcher
+     * cannot reproduce. `start()` is skipped so the products request does not
+     * reset the query to the site name partway through.
+     */
+    @Test
+    fun `suggestions for a superseded query are discarded`() = test {
+        mockResponses(
+            suggestionsResponse(DomainSuggestion.Paid(paidSuggestion("stale.com"))),
+            suggestionsResponse(DomainSuggestion.Paid(paidSuggestion("fresh.com"))),
+        )
+        viewModel = createViewModel(StandardTestDispatcher(testDispatcher().scheduler))
+        viewModel.site = site
+        viewModel.domainRegistrationPurpose = domainRegistrationPurpose
+
+        viewModel.updateSearchQuery("stale")
+        viewModel.updateSearchQuery("fresh")
+        advanceUntilIdle()
+
+        val emitted = suggestionStates.filterIsInstance<ListState.Success<DomainSuggestionItem>>()
+        assertThat(emitted).hasSize(1)
+        assertThat(emitted.single().data.map { it.domainName }).containsExactly("fresh.com")
     }
 
     @Test
     fun `clicking select domain button for credit redemption emits selected domain`() = test {
+        mockResponses(productsResponse(), suggestionsResponse())
+
         viewModel.start(site, CTA_DOMAIN_CREDIT_REDEMPTION)
         viewModel.onDomainSuggestionSelected(dummySelectedDomainSuggestionItem)
         viewModel.onSelectDomainButtonClicked()
@@ -185,6 +509,7 @@ class DomainSuggestionsViewModelTest : BaseUnitTest() {
 
     @Test
     fun `clicking select domain button for purchase calls cart creation use case and emits selected domain`() = test {
+        mockResponses(productsResponse(), suggestionsResponse())
         whenever(createCartUseCase.execute(site, DUMMY_PRODUCT_ID, DUMMY_DOMAIN_NAME, true, false))
             .thenReturn(dummySuccessfulOnShoppingCartCreated)
 
@@ -194,6 +519,9 @@ class DomainSuggestionsViewModelTest : BaseUnitTest() {
 
         assertThat(onDomainSelectedEvents.last()).isEqualTo(DomainProductDetails(DUMMY_PRODUCT_ID, DUMMY_DOMAIN_NAME))
     }
+
+    private fun lastSuccess(): List<DomainSuggestionItem> =
+        suggestionStates.filterIsInstance<ListState.Success<DomainSuggestionItem>>().last().data
 
     companion object {
         const val DUMMY_PRODUCT_ID = 1
@@ -222,6 +550,75 @@ class DomainSuggestionsViewModelTest : BaseUnitTest() {
             isCostVisible = true,
             isFreeWithCredits = false,
             isEnabled = true
+        )
+
+        private fun productsResponse(vararg products: Pair<String, Product>) =
+            WpRequestResult.Success(products.toMap())
+
+        private fun suggestionsResponse(vararg suggestions: DomainSuggestion) =
+            WpRequestResult.Success(suggestions.toList())
+
+        private fun wpError(code: String, message: String) = WpRequestResult.WpError<Any>(
+            errorCode = WpErrorCode.CustomException(code),
+            errorMessage = message,
+            statusCode = 400.toUInt(),
+            response = "",
+            requestUrl = "",
+            requestMethod = RequestMethod.GET,
+        )
+
+        private fun paidSuggestion(
+            domainName: String = "example.com",
+            relevance: Double = 0.0,
+            productId: ULong = 6u,
+        ) = PaidDomainSuggestion(
+            domainName = domainName,
+            relevance = relevance,
+            supportsPrivacy = true,
+            vendor = "donuts",
+            matchReasons = listOf("tld-common"),
+            maxRegYears = 10u,
+            multiYearRegAllowed = true,
+            productId = productId,
+            productSlug = "domain_reg",
+            cost = "\$18.00",
+            renewCost = "\$18.00",
+            renewRawPrice = 1800L,
+            rawPrice = 1800L,
+            currencyCode = "USD",
+            saleCost = null,
+            hstsRequired = null,
+            policyNotices = emptyList(),
+        )
+
+        private fun testProduct(
+            productId: ULong = 6u,
+            saleCost: Long? = null,
+            combinedSaleCostDisplay: String? = null,
+        ) = Product(
+            productId = productId,
+            productName = "Domain Registration",
+            productSlug = "domain_reg",
+            description = "Register a domain",
+            productType = "domains",
+            available = true,
+            billingProductSlug = "domain_reg",
+            isDomainRegistration = true,
+            costDisplay = "$18.00",
+            combinedCostDisplay = "$18",
+            cost = 1800L,
+            costSmallestUnit = 1800u,
+            currencyCode = "USD",
+            productTerm = ProductTerm.Year,
+            productTermLocalized = "year",
+            priceTierSlug = "",
+            priceTierList = emptyList(),
+            domainInfo = null,
+            costPerMonthDisplay = null,
+            saleCost = saleCost,
+            combinedSaleCostDisplay = combinedSaleCostDisplay,
+            saleCoupon = null,
+            introductoryOffer = null,
         )
     }
 }

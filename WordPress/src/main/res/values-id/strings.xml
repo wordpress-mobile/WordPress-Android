@@ -90,7 +90,6 @@ Language: id
     <string name="gutenberg_kit_announcement_learn_more">Baca selengkapnya</string>
     <string name="gutenberg_kit_announcement_maybe_later">Mungkin nanti</string>
     <string name="gutenberg_kit_announcement_activate">Aktifkan</string>
-    <string name="gutenberg_kit_announcement_body_deadline">Pada akhir Juni 2026, editor ini akan menjadi editor default untuk semua pengguna. %1$s</string>
     <string name="gutenberg_kit_announcement_body_intro">Editor blok generasi baru telah siap dan menghadirkan lebih banyak fitur baru.</string>
     <string name="gutenberg_kit_announcement_title">Editor blok yang lebih baik akan segera hadir</string>
     <string name="site_settings_gutenberg_kit_enabled_unsupported">Beralih ke editor blok terlebih dahulu untuk mencoba editor baru.</string>

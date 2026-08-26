@@ -387,7 +387,7 @@ class ApplicationPasswordViewModelSliceTest : BaseUnitTest() {
             ).thenReturn(xmlRpcUrl)
             whenever(
                 siteXMLRPCClient.fetchSites(
-                    eq(xmlRpcUrl), any(), any()
+                    eq(xmlRpcUrl), any(), any(), any()
                 )
             ).thenReturn(SitesModel(listOf(SiteModel())))
             whenever(siteStore.persistXmlRpcUrl(any(), any())).thenReturn(SiteStore.OnSiteChanged(0))
@@ -413,7 +413,7 @@ class ApplicationPasswordViewModelSliceTest : BaseUnitTest() {
             }
             whenever(
                 siteXMLRPCClient.fetchSites(
-                    eq(xmlRpcUrl), any(), any()
+                    eq(xmlRpcUrl), any(), any(), any()
                 )
             ).thenReturn(errorResult)
 

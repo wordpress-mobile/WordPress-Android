@@ -90,7 +90,6 @@ Language: ko_KR
     <string name="gutenberg_kit_announcement_learn_more">더 알아보기</string>
     <string name="gutenberg_kit_announcement_maybe_later">나중에</string>
     <string name="gutenberg_kit_announcement_activate">활성화</string>
-    <string name="gutenberg_kit_announcement_body_deadline">2026년 6월 말까지 모든 사람의 기본 편집기가 될 것입니다. %1$s</string>
     <string name="gutenberg_kit_announcement_body_intro">차세대 블록 편집기가 준비되었으며, 추가 새 기능이 제공됩니다.</string>
     <string name="gutenberg_kit_announcement_title">더 나은 블록 편집기 공개 예정</string>
     <string name="site_settings_gutenberg_kit_enabled_unsupported">새 편집기를 사용해 보려면 먼저 블록 편집기로 전환하세요.</string>
