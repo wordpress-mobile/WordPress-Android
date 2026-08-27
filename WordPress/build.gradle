@@ -280,7 +280,7 @@ android {
     }
 
     signingConfigs {
-        def uploadKeystore = new File(gradle.ext.decryptedSecretsDir, "upload.keystore")
+        def uploadKeystore = new File(gradle.ext.decryptedSecretsDir, "upload.jks")
         def uploadCredentials = ["uploadStorePassword", "uploadKeyAlias", "uploadKeyPassword"]
         if (uploadKeystore.exists() && uploadCredentials.every { gradle.ext.secretProperties.containsKey(it) }) {
             logger.info("Upload keystore found, configuring signing for release builds.")

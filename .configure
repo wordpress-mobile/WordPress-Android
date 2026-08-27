@@ -25,7 +25,7 @@
     },
     {
       "file": "android/automattic_upload.jks",
-      "destination": "~/.configure/wordpress-android/secrets/upload.keystore",
+      "destination": "~/.configure/wordpress-android/secrets/upload.jks",
       "encrypt": true
     },
     {
