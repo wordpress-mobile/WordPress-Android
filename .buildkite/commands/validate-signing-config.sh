@@ -5,7 +5,7 @@ set -euo pipefail
 # [DO NOT MERGE] Validation-only step, deleted with the branch it lives on.
 
 SECRETS_DIR="$HOME/.configure/wordpress-android/secrets"
-UPLOAD_KEYSTORE="$SECRETS_DIR/upload.keystore"
+UPLOAD_KEYSTORE="$SECRETS_DIR/upload.jks"
 DEBUG_KEYSTORE="$SECRETS_DIR/debug.keystore"
 SECRET_PROPERTIES="$SECRETS_DIR/secrets.properties"
 REPORT_DIR="build/signing-validation"
@@ -134,7 +134,7 @@ for variant in wordpressRelease jetpackRelease; do
   block=$(variant_block "$variant" "$REPORT_DIR/without-upload-keystore.txt")
   config=$(printf '%s\n' "$block" | field Config)
 
-  if printf '%s\n' "$block" | grep -q "upload.keystore"; then
+  if printf '%s\n' "$block" | grep -q "upload.jks"; then
     fail "$variant still points at an upload keystore that is not there"
   elif [ "$config" = "none" ]; then
     pass "$variant drops to 'Config: none' with the credentials still readable, so the keystore file is what gates signing"
