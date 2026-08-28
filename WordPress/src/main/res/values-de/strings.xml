@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2026-08-22 00:14:21+0000
+Translation-Revision-Date: 2026-08-27 20:25:25+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.1.0
 Language: de
@@ -1550,7 +1550,7 @@ Language: de
     <string name="site_settings_categories_hint">Kategorien deiner Website verwalten</string>
     <string name="site_settings_categories_title">Kategorien</string>
     <string name="site_settings_blogging_reminders_title">Erinnerungen</string>
-    <string name="page_is_posts_page_warning">Der Inhalt der Seite mit deinen letzten Beiträgen wird automatisch generiert und kann nicht bearbeitet werden.</string>
+    <string name="page_is_posts_page_warning">Der Inhalt der Seite mit deinen neuesten Beiträgen wird automatisch generiert und kann nicht bearbeitet werden.</string>
     <string name="gutenberg_native_border_settings" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Rand-Einstellungen</string>
     <string name="storage_utils_dialog_dont_show_button">Nicht erneut anzeigen</string>
     <string name="storage_utils_dialog_ok_button">Speicher anzeigen</string>
@@ -3715,7 +3715,7 @@ Language: de
     <string name="email">E-Mail</string>
     <string name="notifications_tab">Benachrichtigungen-Tab</string>
     <string name="notification_settings_item_other_account_emails_summary">Wichtige E-Mails bezüglich deines Kontos werden immer versandt, aber du kannst auch zusätzliche Benachrichtigungen erhalten.</string>
-    <string name="stats_insights_latest_post_summary">Übersicht des letzten Beitrags</string>
+    <string name="stats_insights_latest_post_summary">Übersicht des neuesten Beitrags</string>
     <string name="connectionbar_no_connection">Keine Verbindung</string>
     <string name="post_trashed">Beitrag in den Papierkorb verschoben</string>
     <string name="button_trash">Papierkorb</string>
