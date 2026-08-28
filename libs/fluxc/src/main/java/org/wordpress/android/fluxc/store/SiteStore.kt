@@ -1469,11 +1469,9 @@ open class SiteStore @Inject constructor(
      */
     private fun storedWPAPISite(url: String?): SiteModel? {
         if (url.isNullOrEmpty()) return null
-        return if (url.contains("://")) {
-            siteSqlUtils.getWPAPISiteByUrl(url)
-        } else {
-            siteSqlUtils.getWPAPISiteByUrl("http://$url") ?: siteSqlUtils.getWPAPISiteByUrl("https://$url")
-        }
+        val bareUrl = url.substringAfter("://")
+        return siteSqlUtils.getWPAPISiteByUrl("https://$bareUrl")
+            ?: siteSqlUtils.getWPAPISiteByUrl("http://$bareUrl")
     }
 
     suspend fun fetchWPAPISite(payload: FetchWPAPISitePayload): OnSiteChanged {

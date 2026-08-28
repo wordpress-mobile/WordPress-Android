@@ -148,8 +148,9 @@ class SiteWPAPIRestClient @Inject constructor(
      * The `jetpack/` REST namespace is only a first filter: it's registered by the shared
      * `automattic/jetpack-connection` package, which also ships inside Jetpack Boost, Protect, Social and
      * VaultPress Backup, so its presence does *not* mean the Jetpack plugin is installed. What it does give
-     * us for free is a reliable negative -- no namespace, no active Jetpack -- which keeps the plugin lookup
-     * off the refresh path for the sites that have nothing to do with Jetpack.
+     * us for free is a reliable negative -- a namespace list without `jetpack/` means no active Jetpack --
+     * which keeps the plugin lookup off the refresh path for the sites that have nothing to do with Jetpack.
+     * That only holds when the list is present: an absent field is "couldn't read", not "no Jetpack".
      *
      * Reading the plugin list needs credentials and the `activate_plugins` capability, so it returns null for
      * sites without an application password and for users who aren't administrators. Callers must read null
@@ -159,17 +160,14 @@ class SiteWPAPIRestClient @Inject constructor(
         namespaces: List<String>?,
         apiRootUrl: String,
         payload: FetchWPAPISitePayload
-    ): JetpackPluginState? {
-        val hasJetpackNamespace = namespaces?.any { it.startsWith(JETPACK_API_NAMESPACE_PREFIX) } ?: false
-        if (!hasJetpackNamespace) return JetpackPluginState(isActive = false, version = null)
-
-        val username = payload.username
-        val password = payload.password
-        return if (payload.isApplicationPassword && !username.isNullOrEmpty() && !password.isNullOrEmpty()) {
-            requestJetpackPlugin(apiRootUrl, username, password)
-        } else {
-            null
-        }
+    ): JetpackPluginState? = when {
+        namespaces == null -> null
+        namespaces.none { it.startsWith(JETPACK_API_NAMESPACE_PREFIX) } ->
+            JetpackPluginState(isActive = false, version = null)
+        payload.isApplicationPassword &&
+            !payload.username.isNullOrEmpty() && !payload.password.isNullOrEmpty() ->
+            requestJetpackPlugin(apiRootUrl, payload.username.orEmpty(), payload.password.orEmpty())
+        else -> null
     }
 
     private suspend fun requestJetpackPlugin(
