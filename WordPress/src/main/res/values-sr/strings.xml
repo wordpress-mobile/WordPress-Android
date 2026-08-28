@@ -56,12 +56,9 @@ Language: sr_RS
     <string name="my_site_blogging_prompt_card_menu_remove">Искључи обавештења</string>
     <string name="support_forum_title">Форуми заједнице</string>
     <string name="site_settings_blogging_prompts_title">Прикажи обавештења</string>
-    <string name="wp_jetpack_feature_removal_phase_four_secondary_text">Уради ово касније</string>
     <string name="my_site_blogging_prompt_card_view_answers">Види све одговоре</string>
     <string name="stats_timeframe_last_seven_days">Последњих 7 дана</string>
     <string name="stats_timeframe_previous_seven_days">Претходних 7 дана</string>
-    <string name="weeks_quantity_other">%d седмица</string>
-    <string name="weeks_quantity_one">1 седмица</string>
     <string name="jetpack_feature_card_menu_item_remind_me_later">Подсети ме касније</string>
     <string name="blogging_prompts_list_error_fetch_title">Упс</string>
     <string name="post_settings_parent">Надређена страна</string>
