@@ -603,7 +603,6 @@ Language: gl_ES
     <string name="site_creation_search_domain_example_title">ONomeDaTuaWeb.com</string>
     <string name="gutenberg_native_unlabeled_color_s" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Cor sen etiquetar. %s</string>
     <string name="site_creation_search_domain_example_body">Como no exemplo superior, un dominio permítelle á xente encontrar e visitar o teu sitio desde o seu navegador.</string>
-    <string name="site_creation_domain_cost_sale">o primeiro ano</string>
     <string name="site_creation_domain_search_input_hint">Buscar con palabras clave</string>
     <string name="new_site_creation_preview_subtitle_paid">Enviámosche o teu recibo por correo electrónico. %s</string>
     <string name="new_site_creation_preview_caption_paid">Pode tardar ata 30 minutos en que o teu dominio personalizado empece a funcionar.</string>
@@ -664,7 +663,6 @@ Language: gl_ES
     <string name="blaze_overlay_site_promotional_button">Promover unha entrada con Blaze agora</string>
     <string name="blaze_overlay_page_promotional_button">Promover esta páxina con Blaze</string>
     <string name="blaze_overlay_post_promotional_button">Promover esta entrada con Blaze</string>
-    <string name="site_creation_domain_tag_sale">Oferta</string>
     <string name="site_creation_domain_tag_recommended">Recomendado</string>
     <string name="site_creation_domain_tag_best_alternative">Mellor alternativa</string>
     <string name="blaze_promotional_subtitle_2">O teu contido aparecerá en millóns de sitios de WordPress e Tumblr.</string>

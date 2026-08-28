@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2026-08-22 00:14:21+0000
+Translation-Revision-Date: 2026-08-27 20:25:25+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.1.0
 Language: de
@@ -949,7 +949,6 @@ Language: de
     <string name="site_creation_search_domain_example_title">YourSiteName.com</string>
     <string name="site_creation_domain_search_input_hint">Mit Stichwörtern suchen</string>
     <string name="site_creation_domain_header_subtitle">Suche nach einer kurzen und einprägsamen Domain, damit Personen deine Website leicht finden und besuchen können.</string>
-    <string name="site_creation_domain_cost_sale">für das erste Jahr</string>
     <string name="site_creation_error_cart_subtitle">Deine Website wurde erfolgreich erstellt. Wir haben jedoch ein Problem festgestellt, als wir deine individuelle Domain für den Bezahlvorgang vorbereitet haben. Bitte versuche es erneut oder kontaktiere den Support, um Hilfe zu erhalten.</string>
     <string name="new_site_creation_preview_caption_paid">Es kann bis zu 30 Minuten dauern, bis deine individuelle Domain vollständig erreichbar ist.</string>
     <string name="new_site_creation_preview_subtitle_paid">Wir haben dir deinen Beleg per E-Mail gesendet. %s</string>
@@ -1013,7 +1012,6 @@ Language: de
     <string name="blaze_promotional_text">Leite mit Blaze mehr Traffic auf deine Website</string>
     <string name="blaze_activity_title">Blaze</string>
     <string name="site_creation_domain_tag_unavailable">Diese Domain ist bereits registriert</string>
-    <string name="site_creation_domain_tag_sale">Angebot</string>
     <string name="site_creation_domain_tag_recommended">Empfohlen</string>
     <string name="site_creation_domain_tag_best_alternative">Beste Alternative</string>
     <string name="support_faq_caption">In unseren FAQ findest du Antworten auf häufig gestellte Fragen.</string>
@@ -1552,7 +1550,7 @@ Language: de
     <string name="site_settings_categories_hint">Kategorien deiner Website verwalten</string>
     <string name="site_settings_categories_title">Kategorien</string>
     <string name="site_settings_blogging_reminders_title">Erinnerungen</string>
-    <string name="page_is_posts_page_warning">Der Inhalt der Seite mit deinen letzten Beiträgen wird automatisch generiert und kann nicht bearbeitet werden.</string>
+    <string name="page_is_posts_page_warning">Der Inhalt der Seite mit deinen neuesten Beiträgen wird automatisch generiert und kann nicht bearbeitet werden.</string>
     <string name="gutenberg_native_border_settings" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Rand-Einstellungen</string>
     <string name="storage_utils_dialog_dont_show_button">Nicht erneut anzeigen</string>
     <string name="storage_utils_dialog_ok_button">Speicher anzeigen</string>
@@ -3717,7 +3715,7 @@ Language: de
     <string name="email">E-Mail</string>
     <string name="notifications_tab">Benachrichtigungen-Tab</string>
     <string name="notification_settings_item_other_account_emails_summary">Wichtige E-Mails bezüglich deines Kontos werden immer versandt, aber du kannst auch zusätzliche Benachrichtigungen erhalten.</string>
-    <string name="stats_insights_latest_post_summary">Übersicht des letzten Beitrags</string>
+    <string name="stats_insights_latest_post_summary">Übersicht des neuesten Beitrags</string>
     <string name="connectionbar_no_connection">Keine Verbindung</string>
     <string name="post_trashed">Beitrag in den Papierkorb verschoben</string>
     <string name="button_trash">Papierkorb</string>

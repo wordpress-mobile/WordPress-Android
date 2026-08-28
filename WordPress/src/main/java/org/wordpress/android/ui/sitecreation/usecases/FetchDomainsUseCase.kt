@@ -1,66 +1,103 @@
 package org.wordpress.android.ui.sitecreation.usecases
 
-import kotlinx.coroutines.suspendCancellableCoroutine
-import org.greenrobot.eventbus.Subscribe
-import org.greenrobot.eventbus.ThreadMode
-import org.wordpress.android.fluxc.Dispatcher
-import org.wordpress.android.fluxc.generated.SiteActionBuilder
-import org.wordpress.android.fluxc.store.SiteStore
-import org.wordpress.android.fluxc.store.SiteStore.OnSuggestedDomains
-import org.wordpress.android.fluxc.store.SiteStore.SuggestDomainsPayload
+import org.wordpress.android.fluxc.store.AccountStore
+import org.wordpress.android.networking.restapi.WpComApiClientProvider
+import org.wordpress.android.util.AppLog
+import rs.wordpress.api.kotlin.WpComApiClient
+import rs.wordpress.api.kotlin.WpRequestResult
+import uniffi.wp_api.DomainSuggestion
+import uniffi.wp_api.DomainSuggestionsParams
+import uniffi.wp_api.WpErrorCode
 import javax.inject.Inject
-import kotlin.coroutines.Continuation
-import kotlin.coroutines.resume
 
 const val FETCH_DOMAINS_VENDOR_DOT = "dot"
 const val FETCH_DOMAINS_VENDOR_MOBILE = "mobile"
-private const val FETCH_DOMAINS_SIZE = 20
+private const val FETCH_DOMAINS_SIZE = 20u
+private const val ERROR_CODE_INVALID_QUERY = "invalid_query"
+private const val ERROR_CODE_EMPTY_RESULTS = "empty_results"
+private const val ERROR_TYPE_GENERIC = "GENERIC_ERROR"
+private const val ERROR_TYPE_NO_ACCESS_TOKEN = "NO_ACCESS_TOKEN"
 
-/**
- * Transforms newSuggestDomainsAction EventBus event to a coroutine.
- *
- * The client may dispatch multiple requests, but we want to accept only the latest one and ignore all others.
- * We can't rely just on job.cancel() as the OnSuggestedDomains may have already been dispatched and FluxC will
- * return a result.
- */
 class FetchDomainsUseCase @Inject constructor(
-    val dispatcher: Dispatcher,
-    @Suppress("unused") val siteStore: SiteStore
+    private val wpComApiClientProvider: WpComApiClientProvider,
+    private val accountStore: AccountStore,
 ) {
+    private var wpComApiClient: WpComApiClient? = null
+
     /**
-     * Query - Continuation pair
+     * Null when there is no WordPress.com account to make the request as.
+     *
+     * `AccountStore.accessToken` is typed nullable but reads `""` when signed
+     * out, and is only null between an in-process sign out and the next
+     * launch, so both have to be treated as no token.
      */
-    private var pair: Pair<String, Continuation<OnSuggestedDomains>>? = null
+    @Synchronized
+    private fun getOrCreateClient(): WpComApiClient? {
+        val token = accountStore.accessToken?.takeIf { it.isNotEmpty() } ?: return null
+        return wpComApiClient
+            ?: wpComApiClientProvider.getWpComApiClient(token)
+                .also { wpComApiClient = it }
+    }
 
     suspend fun fetchDomains(
         query: String,
         vendor: String,
         onlyWordpressCom: Boolean,
-        size: Int = FETCH_DOMAINS_SIZE
-    ): OnSuggestedDomains {
-        val payload = SuggestDomainsPayload(
-            query,
-            size,
-            vendor,
-            onlyWordpressCom,
-            includeWordpressCom = true,
-            includeDotBlogSubdomain = false
+    ): FetchDomainsResult {
+        val client = getOrCreateClient() ?: run {
+            AppLog.e(
+                AppLog.T.DOMAIN_REGISTRATION,
+                "Cannot fetch domain suggestions without a WP.com access token"
+            )
+            return FetchDomainsResult.Error(type = ERROR_TYPE_NO_ACCESS_TOKEN, message = null)
+        }
+        val params = DomainSuggestionsParams(
+            query = query,
+            quantity = FETCH_DOMAINS_SIZE,
+            vendor = vendor,
+            onlyWordpressdotcom = onlyWordpressCom, // checkstyle ignore
+            includeWordpressdotcom = true, // checkstyle ignore
+            includeDotblogsubdomain = false,
         )
-
-        return suspendCancellableCoroutine { cont ->
-            pair = Pair(payload.query, cont)
-            dispatcher.dispatch(SiteActionBuilder.newSuggestDomainsAction(payload))
+        return when (
+            val result = client
+                .request { it.domains().suggestions(params).data }
+        ) {
+            is WpRequestResult.Success ->
+                FetchDomainsResult.Success(result.response)
+            is WpRequestResult.WpError ->
+                when (val code = result.apiErrorCode()) {
+                    ERROR_CODE_INVALID_QUERY -> FetchDomainsResult.InvalidQuery
+                    // The API reports "no domains for that search" as an error,
+                    // but there is nothing wrong with the request.
+                    ERROR_CODE_EMPTY_RESULTS -> FetchDomainsResult.Success(emptyList())
+                    else -> FetchDomainsResult.Error(
+                        type = code ?: ERROR_TYPE_GENERIC,
+                        message = result.errorMessage,
+                    )
+                }
+            else -> FetchDomainsResult.Error(type = ERROR_TYPE_GENERIC, message = null)
         }
     }
+}
 
-    @Subscribe(threadMode = ThreadMode.BACKGROUND)
-    @Suppress("unused")
-    fun onSuggestedDomains(event: OnSuggestedDomains) {
-        pair?.let {
-            if (event.query == it.first) {
-                it.second.resume(event)
-                pair = null
-            }
-        }
-    }
+/**
+ * The API's own error code, for the codes this endpoint defines. Codes the
+ * WordPress REST API also uses are modelled as [WpErrorCode] variants and
+ * return null.
+ */
+private fun WpRequestResult.WpError<*>.apiErrorCode(): String? =
+    (errorCode as? WpErrorCode.CustomException)?.v1
+
+sealed interface FetchDomainsResult {
+    data class Success(
+        val suggestions: List<DomainSuggestion>,
+    ) : FetchDomainsResult
+
+    data object InvalidQuery : FetchDomainsResult
+
+    data class Error(
+        val type: String,
+        val message: String?,
+    ) : FetchDomainsResult
 }

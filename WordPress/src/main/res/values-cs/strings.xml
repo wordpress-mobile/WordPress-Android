@@ -949,7 +949,6 @@ Language: cs_CZ
     <string name="site_creation_search_domain_example_title">NazevVasehoWebu.cz</string>
     <string name="site_creation_domain_search_input_hint">Hledat pomocí klíčových slov</string>
     <string name="site_creation_domain_header_subtitle">Hledejte krátkou a zapamatovatelnou doménu, která pomůže lidem najít a navštívit váš web.</string>
-    <string name="site_creation_domain_cost_sale">za první rok</string>
     <string name="site_creation_error_cart_subtitle">Váš web byl úspěšně vytvořen, ale při přípravě vaší vlastní domény k pokladně jsme narazili na problém. Zkuste to prosím znovu nebo kontaktujte podporu.</string>
     <string name="new_site_creation_preview_caption_paid">Správné fungování vaší vlastní domény může trvat až 30 minut.</string>
     <string name="new_site_creation_preview_subtitle_paid">Zaslali jsme vám e-mailem účtenku. %s</string>
@@ -1013,7 +1012,6 @@ Language: cs_CZ
     <string name="blaze_promotional_text">Přiveďte na svůj web větší návštěvnost se zvýrazněním</string>
     <string name="blaze_activity_title">Zvýraznění</string>
     <string name="site_creation_domain_tag_unavailable">Tato doména je již registrována</string>
-    <string name="site_creation_domain_tag_sale">Prodej</string>
     <string name="site_creation_domain_tag_recommended">Doporučeno</string>
     <string name="site_creation_domain_tag_best_alternative">Nejlepší alternativa</string>
     <string name="support_faq_caption">Odpovědi na běžné otázky, které můžete mít, najdete v našich FAQ.</string>
