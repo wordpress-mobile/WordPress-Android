@@ -9,6 +9,7 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.any
+import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.argWhere
 import org.mockito.kotlin.inOrder
 import org.mockito.kotlin.mock
@@ -143,7 +144,9 @@ class SiteStoreTest {
 
         assertThat(onSiteChanged.rowsAffected).isEqualTo(0)
         assertThat(onSiteChanged.error).isEqualTo(SiteError(GENERIC_ERROR, null))
-        verifyNoInteractions(siteSqlUtils)
+        // fetchSite reads the stored row to decide which client refreshes it, but an errored
+        // fetch must write nothing.
+        verify(siteSqlUtils, never()).insertOrUpdateSite(any())
     }
 
     private suspend fun assertSiteFetched(
@@ -494,7 +497,7 @@ class SiteStoreTest {
                 apiRestUsernamePlain = "appUser"
                 apiRestPasswordPlain = "appPass"
             }
-            whenever(siteWPAPIClient.fetchWPAPISite(any<SiteStore.FetchWPAPISitePayload>()))
+            whenever(siteWPAPIClient.fetchWPAPISite(any<SiteStore.FetchWPAPISitePayload>(), anyOrNull()))
                 .thenReturn(fetchedSite)
             whenever(siteSqlUtils.insertOrUpdateSite(fetchedSite))
                 .thenReturn(1)
@@ -557,7 +560,7 @@ class SiteStoreTest {
                     origin = SiteModel.ORIGIN_WPAPI
                     url = "https://example.com"
                 }
-                whenever(siteWPAPIClient.fetchWPAPISite(any<SiteStore.FetchWPAPISitePayload>()))
+                whenever(siteWPAPIClient.fetchWPAPISite(any<SiteStore.FetchWPAPISitePayload>(), anyOrNull()))
                     .thenReturn(fetchedSite)
                 whenever(siteSqlUtils.insertOrUpdateSite(fetchedSite)).thenReturn(1)
 

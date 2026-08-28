@@ -1380,10 +1380,15 @@ open class SiteStore @Inject constructor(
 
     suspend fun fetchSite(site: SiteModel): OnSiteChanged {
         return coroutineEngine.withDefaultContext(T.API, this, "Fetch site") {
-            val updatedSite = when (site.origin) {
-                SiteModel.ORIGIN_WPCOM_REST -> siteRestClient.fetchSite(site)
-                SiteModel.ORIGIN_WPAPI -> siteWPAPIRestClient.fetchWPAPISite(site)
-                else -> siteXMLRPCClient.fetchSite(site)
+            // Refresh from the stored row rather than the caller's copy. An in-memory SiteModel can
+            // predate later writes -- carrying stale identity or connection state back would undo
+            // them -- and its origin can predate an upgrade of the row (e.g. WPAPI -> WPCOM_REST by
+            // /me/sites), which would re-fetch through the wrong client and downgrade the row again.
+            val storedSite = getSiteByLocalId(site.id) ?: site
+            val updatedSite = when (storedSite.origin) {
+                SiteModel.ORIGIN_WPCOM_REST -> siteRestClient.fetchSite(storedSite)
+                SiteModel.ORIGIN_WPAPI -> siteWPAPIRestClient.fetchWPAPISite(storedSite)
+                else -> siteXMLRPCClient.fetchSite(storedSite)
             }
 
             updateSite(updatedSite)
@@ -1455,9 +1460,23 @@ open class SiteStore @Inject constructor(
         }
     }
 
+    /**
+     * The stored row a WPAPI fetch is refreshing, when there is one. Passed to the fetch as its
+     * `previousSite` so the fields the fetch can't determine -- and the local id, which keeps
+     * [SiteSqlUtils.insertOrUpdateSiteReturningId] matching the row once it stores a real blog id --
+     * carry forward instead of resetting. The lookup tries both schemes because the stored URL
+     * carries the scheme discovery resolved, not necessarily the one the caller supplied.
+     */
+    private fun storedWPAPISite(url: String?): SiteModel? {
+        if (url.isNullOrEmpty()) return null
+        val bareUrl = url.substringAfter("://")
+        return siteSqlUtils.getWPAPISiteByUrl("https://$bareUrl")
+            ?: siteSqlUtils.getWPAPISiteByUrl("http://$bareUrl")
+    }
+
     suspend fun fetchWPAPISite(payload: FetchWPAPISitePayload): OnSiteChanged {
         return coroutineEngine.withDefaultContext(T.MAIN, this, "Fetch WPAPI Site") {
-            updateSite(siteWPAPIRestClient.fetchWPAPISite(payload))
+            updateSite(siteWPAPIRestClient.fetchWPAPISite(payload, storedWPAPISite(payload.url)))
         }
     }
 
@@ -1477,7 +1496,8 @@ open class SiteStore @Inject constructor(
                         username = payload.username,
                         password = payload.password,
                         isApplicationPassword = true,
-                    )
+                    ),
+                    previousSite = storedWPAPISite(payload.url)
                 )
                 if (!siteModel.isError) {
                     siteModel.wpApiRestUrl = payload.apiRootUrl
@@ -1542,10 +1562,25 @@ open class SiteStore @Inject constructor(
                     siteModel.mobileEditor = freshSiteFromDB.mobileEditor
                     siteModel.webEditor = freshSiteFromDB.webEditor
                 }
+                yieldBlogIdIfOwnedElsewhere(siteModel)
                 OnSiteChanged(siteSqlUtils.insertOrUpdateSite(siteModel))
             } catch (e: DuplicateSiteException) {
                 OnSiteChanged(SiteError(DUPLICATE_SITE))
             }
+        }
+    }
+
+    /**
+     * An application-password site can discover the WordPress.com blog id of a site that another row --
+     * typically a /me/sites copy of the same site -- already owns. Persisting it would either trip the
+     * UNIQUE (SITE_ID, URL) constraint (discarding the whole update) or, when the URLs differ, make
+     * [SiteSqlUtils.insertOrUpdateSiteReturningId]'s bare-SITE_ID match target the other row and
+     * overwrite it. Leave the blog id with the row that already owns it.
+     */
+    private fun yieldBlogIdIfOwnedElsewhere(siteModel: SiteModel) {
+        if (siteModel.origin != SiteModel.ORIGIN_WPAPI || siteModel.siteId == 0L) return
+        if (siteSqlUtils.getSitesWithRemoteId(siteModel.siteId).any { it.id != siteModel.id }) {
+            siteModel.siteId = 0
         }
     }
 
