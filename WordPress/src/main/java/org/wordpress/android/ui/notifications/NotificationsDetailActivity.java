@@ -56,10 +56,10 @@ import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.ReaderPostDetailFragment;
 import org.wordpress.android.ui.reader.comments.ThreadedCommentsActionSource;
 import org.wordpress.android.ui.reader.tracker.ReaderTracker;
+import org.wordpress.android.ui.rs.WpRsRouting;
 import org.wordpress.android.ui.stats.StatsViewType;
 import org.wordpress.android.ui.stats.refresh.utils.StatsLaunchedFrom;
 import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
@@ -102,6 +102,7 @@ public class NotificationsDetailActivity extends BaseAppCompatActivity implement
     @Inject ReaderTracker mReaderTracker;
     @Inject LikesEnhancementsFeatureConfig mLikesEnhancementsFeatureConfig;
     @Inject ListScenarioUtils mListScenarioUtils;
+    @Inject WpRsRouting mWpRsRouting;
 
     @Nullable private String mNoteId;
     private boolean mIsTappedOnNotification;
@@ -408,7 +409,7 @@ public class NotificationsDetailActivity extends BaseAppCompatActivity implement
             SiteModel site = mSiteStore.getSiteBySiteId(note.getSiteId());
             // The rs detail needs a real site from the SiteStore; the legacy fragment can fall
             // back to a dummy WP.com site built from the note, so it stays the catch-all.
-            if (site != null && note.getCommentId() != 0 && SiteUtils.canUseWpRs(site)) {
+            if (site != null && note.getCommentId() != 0 && mWpRsRouting.canUseWpRs(site)) {
                 fragment = UnifiedCommentDetailsFragment.newInstance(
                         site,
                         note.getCommentId(),

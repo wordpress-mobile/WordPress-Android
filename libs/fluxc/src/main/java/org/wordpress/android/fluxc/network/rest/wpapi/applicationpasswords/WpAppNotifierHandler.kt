@@ -15,6 +15,10 @@ class WpAppNotifierHandler @Inject constructor() {
 
     @Synchronized
     fun notifyRequestedWithInvalidAuthentication(site: SiteModel) {
+        // Listeners answer this by sending the user through application-password reauthentication,
+        // which makes no sense for a site that doesn't use one. A 401 there means an expired WP.com
+        // bearer token, and the app handles that elsewhere.
+        if (!site.hasApplicationPassword()) return
         cleanupDeadReferences()
         listeners.forEach {
             val listener = it.value.get()

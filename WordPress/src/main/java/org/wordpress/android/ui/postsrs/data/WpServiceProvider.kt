@@ -49,9 +49,10 @@ class WpServiceProvider @Inject constructor(
     }
 
     private fun createService(site: SiteModel): WpService {
-        val delegate = createDelegate(site)
+        val useWpCom = site.useWpCom()
+        val delegate = createDelegate(site, useWpCom)
         val wpApiCache = getOrCreateCache()
-        val siteInfo = if (site.isWPCom) {
+        val siteInfo = if (useWpCom) {
             SiteInfo.WordPressCom(siteId = site.siteId.toULong())
         } else {
             val apiRoot = site.wpApiRestUrl?.takeIf { it.isNotEmpty() }
@@ -64,8 +65,16 @@ class WpServiceProvider @Inject constructor(
         return WpService(siteInfo, delegate, wpApiCache.cache)
     }
 
-    private fun createDelegate(site: SiteModel): WpApiClientDelegate {
-        val authProvider = if (site.isWPCom) {
+    /**
+     * Whether the site is served over the WP.com REST API with an OAuth bearer token rather than
+     * directly with an application password. Deliberately the same rule as
+     * [org.wordpress.android.fluxc.network.rest.wpapi.rs.WpApiClientProvider.getWpApiClient] so the
+     * list and the edit-time fetch that follows it can't disagree about the transport.
+     */
+    private fun SiteModel.useWpCom(): Boolean = isWPCom || isUsingWpComRestApi
+
+    private fun createDelegate(site: SiteModel, useWpCom: Boolean): WpApiClientDelegate {
+        val authProvider = if (useWpCom) {
             createWpComAuthProvider(accountStore)
         } else {
             val username = site.apiRestUsernamePlain
