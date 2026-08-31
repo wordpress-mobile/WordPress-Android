@@ -2,16 +2,12 @@ package org.wordpress.android.ui.media;
 
 import android.Manifest;
 import android.app.Activity;
-import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.ServiceConnection;
-import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Build;
-import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.text.TextUtils;
@@ -37,6 +33,7 @@ import androidx.core.view.ViewCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentManager.OnBackStackChangedListener;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.LiveData;
 
 import com.google.android.material.tabs.TabLayout;
 
@@ -91,6 +88,7 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPMediaUtils;
 import org.wordpress.android.util.WPPermissionUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
+import org.wordpress.android.viewmodel.helpers.ConnectionStatus;
 import org.wordpress.android.widgets.AppReviewManager;
 
 import java.util.ArrayList;
@@ -130,6 +128,7 @@ public class MediaBrowserActivity extends BaseAppCompatActivity implements Media
     @Inject JetpackFeatureRemovalHelper mJetpackFeatureRemovalHelper;
     @Inject ActivityNavigator mActivityNavigator;
     @Inject WpAppNotifierHandler mWpAppNotifierHandler;
+    @Inject LiveData<ConnectionStatus> mConnectionStatus;
 
     private SiteModel mSite;
 
@@ -247,6 +246,20 @@ public class MediaBrowserActivity extends BaseAppCompatActivity implements Media
             doAddMediaItemClicked(AddMenuItem.ITEM_CHOOSE_FILE);
             mLaunchPhotoPicker = false;
         }
+
+        observeConnectionStatus();
+    }
+
+    /**
+     * Continue any pending deletes once the connection comes back. The observer is scoped to this Activity, so
+     * it's only active between onStart and onStop.
+     */
+    private void observeConnectionStatus() {
+        mConnectionStatus.observe(this, status -> {
+            if (status == ConnectionStatus.AVAILABLE && mMediaStore.hasSiteMediaToDelete(mSite)) {
+                startMediaDeleteService(null);
+            }
+        });
     }
 
     @Override
@@ -427,15 +440,6 @@ public class MediaBrowserActivity extends BaseAppCompatActivity implements Media
 
         mWpAppNotifierHandler.addListener(this);
 
-        if (Build.VERSION.SDK_INT >= VERSION_CODES.UPSIDE_DOWN_CAKE) {
-            registerReceiver(
-                    mReceiver,
-                    new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION),
-                    RECEIVER_EXPORTED
-            );
-        } else {
-            registerReceiver(mReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
-        }
         mDispatcher.register(this);
         EventBus.getDefault().register(this);
     }
@@ -461,7 +465,6 @@ public class MediaBrowserActivity extends BaseAppCompatActivity implements Media
     public void onStop() {
         mWpAppNotifierHandler.removeListener(this);
         EventBus.getDefault().unregister(this);
-        unregisterReceiver(mReceiver);
         mDispatcher.unregister(this);
         super.onStop();
     }
@@ -950,18 +953,6 @@ public class MediaBrowserActivity extends BaseAppCompatActivity implements Media
         @Override
         public void onServiceDisconnected(ComponentName arg0) {
             mDeleteService = null;
-        }
-    };
-
-    private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (ConnectivityManager.CONNECTIVITY_ACTION.equals(intent.getAction())) {
-                // Coming from zero connection. Continue what's pending for delete
-                if (mMediaStore.hasSiteMediaToDelete(mSite)) {
-                    startMediaDeleteService(null);
-                }
-            }
         }
     };
 
