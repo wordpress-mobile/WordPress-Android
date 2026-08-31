@@ -144,9 +144,10 @@ class SiteProvisioningSourceTest : BaseUnitTest(StandardTestDispatcher()) {
     }
 
     @Test
-    fun `given a transient validation error, then provisioning and no mint or probe`() = test {
+    fun `given a transient validation error while offline, then provisioning and no mint or probe`() = test {
         stubHasStoredCredentials(true)
         stubValidate(ApplicationPasswordValidator.Outcome.NetworkUnavailable)
+        whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(false)
 
         val result = source.await(site)
 
@@ -463,6 +464,125 @@ class SiteProvisioningSourceTest : BaseUnitTest(StandardTestDispatcher()) {
         source.await(site) // not 401-triggered, so the failure must not pop re-auth
 
         verify(applicationPasswordReauthNotifier, never()).notifyReauthRequired(any())
+    }
+
+    @Test
+    fun `given the site is unreachable while online, then unreachable rather than provisioning`() = test {
+        // The validator collapses DNS / timeout / refused / 5xx into NetworkUnavailable so it never
+        // wipes credentials on a guess. With the device online that means the *site* is down, which is
+        // the connectivity banner's case — reporting Provisioning here hides the banner entirely and
+        // loses the one state it was written for (#22944 c2).
+        stubHasStoredCredentials(true)
+        stubValidate(ApplicationPasswordValidator.Outcome.NetworkUnavailable)
+        whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
+
+        val result = source.await(site)
+
+        assertThat(result).isEqualTo(SiteReadiness.Unreachable)
+        verify(siteStore, never()).createApplicationPassword(any())
+        verify(editorSettingsRepository, never()).fetchEditorCapabilitiesForSite(any())
+    }
+
+    @Test
+    fun `given the pipeline's own request 401s every run, then healing stops instead of looping`() = test {
+        // The WP.com bearer client used for capability detection raises the same invalid-auth
+        // notification as a revoked application password. With a rejected bearer token the app password
+        // validates fine every run, so an unguarded heal relaunches the pipeline forever (#22944 c1).
+        stubHasStoredCredentials(true)
+        stubValidate(ApplicationPasswordValidator.Outcome.Valid)
+        whenever(editorSettingsRepository.fetchEditorCapabilitiesForSite(any())).thenAnswer {
+            source.onRequestedWithInvalidAuthentication(site)
+            true
+        }
+
+        source.await(site)
+        testScheduler.advanceUntilIdle()
+
+        // One routine run plus exactly one heal; the heal proved re-provisioning changes nothing.
+        verify(applicationPasswordValidator, times(2)).validate(any())
+        verify(siteStore, never()).createApplicationPassword(any())
+    }
+
+    @Test
+    fun `given a heal changed no credentials, then later 401s are ignored`() = test {
+        stubHasStoredCredentials(true)
+        stubValidate(ApplicationPasswordValidator.Outcome.Valid)
+        stubCapabilityProbe(ok = true)
+
+        source.onRequestedWithInvalidAuthentication(site) // heal #1: validates Valid, changes nothing
+        source.await(site)
+        source.onRequestedWithInvalidAuthentication(site) // must be dropped, not healed again
+        testScheduler.advanceUntilIdle()
+
+        verify(applicationPasswordValidator, times(1)).validate(any())
+    }
+
+    @Test
+    fun `given an explicit retry after a futile heal, then 401s are honoured again`() = test {
+        stubHasStoredCredentials(true)
+        stubValidate(ApplicationPasswordValidator.Outcome.Valid)
+        stubCapabilityProbe(ok = true)
+
+        source.onRequestedWithInvalidAuthentication(site)
+        source.await(site)
+        source.invalidate(site) // pull-to-refresh clears the futile verdict
+        testScheduler.advanceUntilIdle()
+        source.onRequestedWithInvalidAuthentication(site)
+        testScheduler.advanceUntilIdle()
+
+        // Futile heal, then the invalidate run, then the re-enabled heal.
+        verify(applicationPasswordValidator, times(3)).validate(any())
+    }
+
+    @Test
+    fun `given a heal re-minted the credentials, then later 401s still heal`() = test {
+        // A heal that actually replaced the password did something, so it must not be recorded as
+        // futile — otherwise one genuine revocation permanently disables healing for the site.
+        stubHasStoredCredentials(true)
+        stubValidate(ApplicationPasswordValidator.Outcome.Invalid)
+        stubMintSuccess()
+        stubCapabilityProbe(ok = true)
+
+        source.onRequestedWithInvalidAuthentication(site)
+        source.await(site)
+        source.onRequestedWithInvalidAuthentication(site)
+        testScheduler.advanceUntilIdle()
+
+        verify(siteStore, times(2)).createApplicationPassword(any())
+    }
+
+    @Test
+    fun `given an unreachable site during a heal, then the heal is not recorded as futile`() = test {
+        // The heal never got far enough to confirm the credentials, so it's inconclusive rather than
+        // proof that re-provisioning can't help.
+        stubHasStoredCredentials(true)
+        stubValidate(ApplicationPasswordValidator.Outcome.NetworkUnavailable)
+        whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
+
+        source.onRequestedWithInvalidAuthentication(site)
+        source.await(site)
+        source.onRequestedWithInvalidAuthentication(site)
+        testScheduler.advanceUntilIdle()
+
+        verify(applicationPasswordValidator, times(2)).validate(any())
+    }
+
+    @Test
+    fun `given a routine run settles unprovisionable with a 401 pending, then it escalates once`() = test {
+        // A routine run never arms the heal flag, so its own tail skips escalation. The deferred handler
+        // used to return "already escalated" on that outcome and swallow the 401 entirely, leaving no
+        // interactive re-auth and dropping every later 401 via the Unprovisionable guard (#22944 c3).
+        stubHasStoredCredentials(true)
+        stubValidate(ApplicationPasswordValidator.Outcome.Invalid)
+        stubMintFailure()
+
+        source.stateFor(site)                            // routine run, still active
+        source.onRequestedWithInvalidAuthentication(site) // 401 mid-run -> deferred
+        testScheduler.advanceUntilIdle()
+
+        verify(applicationPasswordReauthNotifier, times(1)).notifyReauthRequired(site.url)
+        // The run already made a terminal mint attempt; relaunching would only re-fail it.
+        verify(siteStore, times(1)).createApplicationPassword(any())
     }
 
     // endregion

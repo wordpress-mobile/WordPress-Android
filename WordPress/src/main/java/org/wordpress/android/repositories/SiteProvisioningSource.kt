@@ -95,6 +95,18 @@ class SiteProvisioningSource @Inject constructor(
     // licenses the application-password card to show the XML-RPC-disabled warning.
     private val xmlRpcUnavailable = ConcurrentHashMap.newKeySet<Int>()
 
+    // Sites whose last heal ran to completion without changing the credentials. Their 401s aren't an
+    // application-password problem (a WP.com bearer token rejected on the proxy raises the same
+    // notification), so re-running ensureAuth can only re-validate the same good password. Without this
+    // the pipeline's own detection calls feed their 401 back into healForInvalidAuth and relaunch
+    // forever. Cleared by invalidate / clear, so a user-initiated retry re-enables healing.
+    private val healFutile = ConcurrentHashMap.newKeySet<Int>()
+
+    // Sites already escalated to interactive re-auth for their current Unprovisionable state. Both
+    // escalation paths funnel through escalateReauth, which uses this for idempotency; a run settling
+    // anything else clears it, so a later revocation escalates again.
+    private val escalated = ConcurrentHashMap.newKeySet<Int>()
+
     init {
         // Re-provision when wordpress-rs reports a request was rejected for invalid auth (the app
         // password was revoked / rotated server-side). Without this, a site latched Ready keeps its
@@ -140,6 +152,10 @@ class SiteProvisioningSource @Inject constructor(
         // No-op while running — see KDoc: don't pre-empt an in-flight mint.
         if (jobs[site.id]?.isActive == true) return
         ready.remove(site.id)
+        // An explicit retry is the user asking us to try everything again, so drop the futile-heal and
+        // already-escalated verdicts that would otherwise suppress a 401 heal / re-auth prompt.
+        healFutile.remove(site.id)
+        escalated.remove(site.id)
         launchPipeline(site.id)
     }
 
@@ -152,6 +168,8 @@ class SiteProvisioningSource @Inject constructor(
         ready.clear()
         reauthOnFailure.clear()
         xmlRpcUnavailable.clear()
+        healFutile.clear()
+        escalated.clear()
     }
 
     /**
@@ -181,6 +199,9 @@ class SiteProvisioningSource @Inject constructor(
         if (site.isWPComSimpleSite) return
         val auth = (states[site.id]?.value as? SiteReadiness.NeedsAuth)?.auth
         if (auth is SiteAuthState.Unprovisionable) return
+        // A previous heal already proved re-provisioning doesn't fix this site's 401s — healing again
+        // would just re-validate the same working password and re-raise the same 401.
+        if (site.id in healFutile) return
         healForInvalidAuth(site)
     }
 
@@ -189,9 +210,14 @@ class SiteProvisioningSource @Inject constructor(
      * heal escalates to interactive re-auth. If a run is already in flight we must not pre-empt a
      * possibly mid-mint stage — but the 401 must not be swallowed either: that run may have validated the
      * credential *before* it was revoked and will settle Ready, consuming nothing and healing nothing. So
-     * defer a fresh heal until the active run finishes, unless it settled [SiteAuthState.Unprovisionable]
-     * (in which case it already escalated on its own). The flag is armed only when the heal actually
+     * defer a fresh heal until the active run finishes. The flag is armed only when the heal actually
      * launches, so the in-flight run's tail can't consume it for an outcome it never serviced.
+     *
+     * Two cases end the deferral instead of relaunching. A run that settled
+     * [SiteAuthState.Unprovisionable] has already made a terminal mint attempt, so relaunching would
+     * only re-fail it — escalate to interactive re-auth instead (a *routine* run never armed
+     * [reauthOnFailure], so it never escalated on its own). And a site in [healFutile] has already had
+     * a heal change nothing, so its 401 is not an application-password problem.
      */
     @Synchronized
     private fun healForInvalidAuth(site: SiteModel) {
@@ -207,8 +233,16 @@ class SiteProvisioningSource @Inject constructor(
             if (cause != null) return@invokeOnCompletion // cancelled / relaunched — a fresh run is coming
             synchronized(this@SiteProvisioningSource) {
                 if (jobs[siteLocalId]?.isActive == true) return@synchronized // a newer run is already underway
+                // Re-checked here, not just at registration time: the run we were waiting on may itself
+                // have been the heal that proved healing futile.
+                if (siteLocalId in healFutile) return@synchronized
                 val settledAuth = (states[siteLocalId]?.value as? SiteReadiness.NeedsAuth)?.auth
-                if (settledAuth is SiteAuthState.Unprovisionable) return@synchronized // already escalated
+                if (settledAuth is SiteAuthState.Unprovisionable) {
+                    // Terminal mint failure — a relaunch would just re-fail it. Escalate instead, which
+                    // a routine run's tail skipped because it never armed reauthOnFailure.
+                    escalateReauth(siteLocalId, settledAuth)
+                    return@synchronized
+                }
                 reauthOnFailure.add(siteLocalId)
                 ready.remove(siteLocalId)
                 launchPipeline(siteLocalId)
@@ -217,17 +251,40 @@ class SiteProvisioningSource @Inject constructor(
     }
 
     /**
-     * After a 401-triggered run settles, escalate to interactive re-auth only if the heal couldn't
-     * recover a previously-working credential. Consuming the flag bounds this to one prompt per heal;
-     * a routine (non-401) run never set the flag, so it never prompts.
+     * Records what a settled run means for future 401s, and escalates to interactive re-auth when a
+     * heal couldn't recover a previously-working credential.
+     *
+     * [wasHeal] is the consumed [reauthOnFailure] flag: only a 401-triggered run may prompt, so a
+     * routine run that happens to settle [SiteAuthState.Unprovisionable] leaves the prompt to the
+     * application-password card. A heal that settled without changing the credentials is recorded in
+     * [healFutile] — the 401 came from something re-provisioning can't fix.
      */
-    private fun maybeRequestReauth(siteLocalId: Int, readiness: SiteReadiness) {
-        if (!reauthOnFailure.remove(siteLocalId)) return
-        val auth = (readiness as? SiteReadiness.NeedsAuth)?.auth
-        if (auth is SiteAuthState.Unprovisionable && auth.hadCredentials) {
-            siteStore.getSiteByLocalId(siteLocalId)?.let {
-                applicationPasswordReauthNotifier.notifyReauthRequired(it.url)
-            }
+    private fun settleHealState(siteLocalId: Int, result: PipelineResult, wasHeal: Boolean) {
+        val auth = (result.readiness as? SiteReadiness.NeedsAuth)?.auth
+        if (auth is SiteAuthState.Unprovisionable) {
+            if (wasHeal) escalateReauth(siteLocalId, auth)
+            return
+        }
+        // Not stuck on auth any more, so a future revocation should be able to prompt again.
+        escalated.remove(siteLocalId)
+        // The heal confirmed the stored password works and replaced nothing, yet a 401 still prompted
+        // it — so re-provisioning cannot be the fix. Stop honouring this site's 401s until an explicit
+        // retry. A run that never got that far (site unreachable, offline) is inconclusive, not futile.
+        if (wasHeal && result.authConfirmed && !result.credentialsChanged) {
+            appLogWrapper.w(
+                AppLog.T.MAIN,
+                "A_P: Heal for $siteLocalId changed no credentials - suppressing further 401 heals"
+            )
+            healFutile.add(siteLocalId)
+        }
+    }
+
+    /** Prompts for interactive re-auth at most once per [SiteAuthState.Unprovisionable] episode. */
+    private fun escalateReauth(siteLocalId: Int, auth: SiteAuthState.Unprovisionable) {
+        if (!auth.hadCredentials) return
+        if (!escalated.add(siteLocalId)) return
+        siteStore.getSiteByLocalId(siteLocalId)?.let {
+            applicationPasswordReauthNotifier.notifyReauthRequired(it.url)
         }
     }
 
@@ -255,11 +312,12 @@ class SiteProvisioningSource @Inject constructor(
             // Latch the dedup gate only on a freshly live-probed Ready; a Ready served from stale cache
             // (latch = false) is left to re-probe on the next run instead of sticking for the process.
             if (result.latch) ready.add(siteLocalId)
-            // maybeRequestReauth reads the DB and drives the reauth notifier, and runs after the flow has
+            // settleHealState reads the DB and drives the reauth notifier, and runs after the flow has
             // already settled. Contain its throws too: on this non-supervisor appScope an escaping throw
-            // here would cancel the scope and wedge provisioning for every other site.
+            // here would cancel the scope and wedge provisioning for every other site. It must run
+            // before this job completes so the deferred heal handler sees the verdicts it records.
             try {
-                maybeRequestReauth(siteLocalId, result.readiness)
+                settleHealState(siteLocalId, result, wasHeal = reauthOnFailure.remove(siteLocalId))
             } catch (e: CancellationException) {
                 throw e
             } catch (@Suppress("TooGenericExceptionCaught") e: Exception) {
@@ -278,7 +336,7 @@ class SiteProvisioningSource @Inject constructor(
         jobs[siteLocalId]?.isActive != true && siteLocalId !in ready
 
     private suspend fun runPipeline(siteLocalId: Int): PipelineResult {
-        val auth = ensureAuth(siteLocalId)
+        val (auth, credentialsChanged) = ensureAuth(siteLocalId)
         return when (auth) {
             SiteAuthState.Provisioned, SiteAuthState.NotApplicable -> coroutineScope {
                 // Post-auth, the REST-capability chain and the XML-RPC recovery are independent — each
@@ -293,9 +351,21 @@ class SiteProvisioningSource @Inject constructor(
                 }
                 val xmlRpc = async { recoverXmlRpcIfNeeded(siteLocalId) }
                 xmlRpc.await()
-                capabilities.await()
+                capabilities.await().copy(
+                    credentialsChanged = credentialsChanged,
+                    authConfirmed = true,
+                )
             }
-            else -> PipelineResult(SiteReadiness.NeedsAuth(auth), latch = false)
+            // The site itself couldn't be reached, so nothing downstream can run. This is the
+            // connectivity banner's case, not the application-password card's — validation never got
+            // far enough to say anything about the credentials.
+            SiteAuthState.SiteUnreachable ->
+                PipelineResult(SiteReadiness.Unreachable, latch = false, credentialsChanged = false)
+            else -> PipelineResult(
+                SiteReadiness.NeedsAuth(auth),
+                latch = false,
+                credentialsChanged = credentialsChanged,
+            )
         }
     }
 
@@ -305,23 +375,34 @@ class SiteProvisioningSource @Inject constructor(
      * ones via the FluxC Jetpack tunnel. The mint persists the credentials (single-writer, #22947), so
      * the downstream stages read them back from a fresh [SiteModel] rather than having them threaded.
      */
-    // Each return is a distinct auth outcome (missing site, valid, transient, minted, failed);
-    // collapsing to one return would thread a result through nested branches and read worse.
+    // Each return is a distinct auth outcome (missing site, valid, unreachable, transient, minted,
+    // failed); collapsing to one return would thread a result through nested branches and read worse.
     @Suppress("ReturnCount")
-    private suspend fun ensureAuth(siteLocalId: Int): SiteAuthState {
+    private suspend fun ensureAuth(siteLocalId: Int): AuthOutcome {
         val site = siteStore.getSiteByLocalId(siteLocalId)
-            ?: return SiteAuthState.Unprovisionable(hadCredentials = false)
+            ?: return AuthOutcome(SiteAuthState.Unprovisionable(hadCredentials = false))
         // WP.com Simple sites are fully proxied and OAuth-bearer-authed — no application password
         // applies (the mint returns NotSupported). Capability detection works through the proxy, so
         // treat them as ready instead of blocking detection behind a mint that can never run.
-        if (site.isWPComSimpleSite) return SiteAuthState.NotApplicable
+        if (site.isWPComSimpleSite) return AuthOutcome(SiteAuthState.NotApplicable)
         val hadCredentials = !applicationPasswordLoginHelper.siteHasBadCredentials(site)
         if (hadCredentials) {
             when (applicationPasswordValidator.validate(site)) {
-                ApplicationPasswordValidator.Outcome.Valid -> return SiteAuthState.Provisioned
+                // Credentials confirmed working, and untouched — nothing was re-minted.
+                ApplicationPasswordValidator.Outcome.Valid ->
+                    return AuthOutcome(SiteAuthState.Provisioned)
                 ApplicationPasswordValidator.Outcome.NetworkUnavailable -> {
-                    appLogWrapper.d(AppLog.T.MAIN, "A_P: Validation network error for ${site.url}")
-                    return SiteAuthState.Provisioning
+                    // The validator maps everything ambiguous — DNS, timeout, refused, 5xx — to this
+                    // outcome so it never wipes credentials on a guess. That conflates two very
+                    // different situations, and only the device-offline one should stay quiet: the
+                    // global offline banner already covers it. If the device is online, the *site* is
+                    // what we couldn't reach, which is exactly the connectivity banner's case (#22944).
+                    if (networkUtilsWrapper.isNetworkAvailable()) {
+                        appLogWrapper.d(AppLog.T.MAIN, "A_P: Site unreachable during validation: ${site.url}")
+                        return AuthOutcome(SiteAuthState.SiteUnreachable)
+                    }
+                    appLogWrapper.d(AppLog.T.MAIN, "A_P: Device offline during validation for ${site.url}")
+                    return AuthOutcome(SiteAuthState.Provisioning)
                 }
                 ApplicationPasswordValidator.Outcome.Invalid -> {
                     appLogWrapper.d(AppLog.T.MAIN, "A_P: Stored creds invalid for ${site.url}, clearing")
@@ -336,13 +417,15 @@ class SiteProvisioningSource @Inject constructor(
         if (!createResult.isError && createResult.credentials != null) {
             wpApiClientProvider.clearSelfHostedClient(site.id)
             appLogWrapper.d(AppLog.T.MAIN, "A_P: Headless mint succeeded for ${site.url}")
-            return SiteAuthState.Provisioned
+            // A fresh mint replaced the credentials, so a 401 that prompted this run may genuinely be
+            // healed by it — this is the one path that marks the heal as having done something.
+            return AuthOutcome(SiteAuthState.Provisioned, credentialsChanged = true)
         }
         appLogWrapper.d(
             AppLog.T.MAIN,
             "A_P: Headless mint failed for ${site.url} (notSupported=${createResult.error?.notSupported})"
         )
-        return SiteAuthState.Unprovisionable(hadCredentials = hadCredentials)
+        return AuthOutcome(SiteAuthState.Unprovisionable(hadCredentials = hadCredentials))
     }
 
     /**
@@ -409,9 +492,24 @@ class SiteProvisioningSource @Inject constructor(
     /**
      * A settled pipeline result plus whether it should latch the per-site dedup gate ([ready]). Only a
      * freshly live-probed [SiteReadiness.Ready] latches; a Ready served from stale cache does not, so it
-     * re-probes on the next run. Internal to the pipeline — consumers only ever see [readiness].
+     * re-probes on the next run. [credentialsChanged] is true only when this run actually re-minted the
+     * application password, which is how a heal proves it did something; [authConfirmed] is true when
+     * the run got far enough to establish the credentials are usable, which is what makes an unchanged
+     * heal conclusively futile rather than merely inconclusive. Internal to the pipeline — consumers
+     * only ever see [readiness].
      */
-    private data class PipelineResult(val readiness: SiteReadiness, val latch: Boolean)
+    private data class PipelineResult(
+        val readiness: SiteReadiness,
+        val latch: Boolean,
+        val credentialsChanged: Boolean = false,
+        val authConfirmed: Boolean = false,
+    )
+
+    /** What [ensureAuth] settled on, plus whether it replaced the stored credentials. */
+    private data class AuthOutcome(
+        val state: SiteAuthState,
+        val credentialsChanged: Boolean = false,
+    )
 }
 
 /**
@@ -429,6 +527,11 @@ sealed interface SiteAuthState {
     /** Not usable yet, but not a terminal failure — a mint is implied / a transient
      *  validation error occurred. The card stays hidden; the next run retries. */
     data object Provisioning : SiteAuthState
+
+    /** The site couldn't be reached at all while the device was online, so validation says nothing
+     *  about the credentials. Mapped to [SiteReadiness.Unreachable] rather than wrapped in
+     *  [SiteReadiness.NeedsAuth]: it's the connectivity banner's case, not the card's. */
+    data object SiteUnreachable : SiteAuthState
 
     /** Terminal: the mint failed. [hadCredentials] distinguishes a re-authentication
      *  (creds went bad) from a first-time authentication prompt. */

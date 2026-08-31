@@ -28,11 +28,12 @@ class SiteConnectivityBannerViewModelSlice @Inject constructor(
 
     /**
      * Subscribes the banner to [site]'s readiness. The banner is a thin view over
-     * that state — it surfaces only when the site is provisioned but the capability
-     * probe failed ([SiteReadiness.Unreachable]). Every other state (probing, needs
-     * auth, offline, ready) leaves it hidden: when credentials are the problem the
-     * application-password card owns it, and the banner stays out of the way.
-     * [isUserInitiated] (pull-to-refresh, retry) forces a fresh run.
+     * that state — it surfaces only on [SiteReadiness.Unreachable], which the pipeline
+     * reports both when the capability probe failed and when the site couldn't be
+     * reached at the auth stage while the device was online. Every other state
+     * (probing, needs auth, offline, ready) leaves it hidden: when credentials are the
+     * problem the application-password card owns it, and the banner stays out of the
+     * way. [isUserInitiated] (pull-to-refresh, retry) forces a fresh run.
      */
     fun fetchCapabilities(site: SiteModel, isUserInitiated: Boolean) {
         collectJob?.cancel()
