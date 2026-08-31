@@ -524,11 +524,11 @@ class ViewsStatsViewModel @Inject constructor(
      */
     private fun buildSelectedBarBottom(index: Int): BottomStatsUiState? {
         val result = lastChartResult ?: return null
-        val current = result.currentPeriodData.getOrNull(index) ?: return null
-        val previous = result.previousPeriodData.getOrNull(index)
-        return BottomStatsUiState.Loaded(
-            buildStatItems(current.toBottomAggregates(), previous?.toBottomAggregates() ?: EMPTY_BOTTOM_AGGREGATES)
-        )
+        return result.currentPeriodData.getOrNull(index)?.let { current ->
+            val previous = result.previousPeriodData.getOrNull(index)?.toBottomAggregates()
+                ?: EMPTY_BOTTOM_AGGREGATES
+            BottomStatsUiState.Loaded(buildStatItems(current.toBottomAggregates(), previous))
+        }
     }
 
     private fun ViewsDataPoint.toBottomAggregates() = BottomStatsAggregates(
@@ -590,6 +590,10 @@ class ViewsStatsViewModel @Inject constructor(
 
     fun refresh() {
         val site = selectedSiteRepository.getSelectedSite() ?: return
+        // A refresh reloads the committed period, so drop any soft bar selection first: otherwise the
+        // rebuilt whole-period header/bottom would sit alongside a still-highlighted bar and an
+        // effectivePeriod stuck on the drilled sub-period, drifting the cards out of sync.
+        clearSoftSelection()
         viewModelScope.launch {
             try {
                 _isRefreshing.value = true

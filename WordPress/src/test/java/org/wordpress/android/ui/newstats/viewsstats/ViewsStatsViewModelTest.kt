@@ -1081,6 +1081,29 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `when refreshing while a bar is selected, then the selection is cleared`() = test {
+        whenever(statsRepository.fetchStatsForPeriod(any(), any()))
+            .thenReturn(createPeriodStatsResult())
+
+        initViewModel()
+        advanceUntilIdle()
+
+        viewModel.onChartTypeChanged(ChartType.BAR)
+        viewModel.onBarTapped(0)
+        advanceUntilIdle()
+        assertThat(viewModel.uiState.value.selectedBar()).isNotNull
+
+        viewModel.refresh()
+        advanceUntilIdle()
+
+        assertThat(viewModel.uiState.value.selectedBar()).isNull()
+        assertThat(viewModel.effectivePeriod.value).isEqualTo(viewModel.selectedPeriod.value)
+        // The header is the whole-period total again, not the tapped bar's value.
+        assertThat(viewModel.uiState.value.chartLoaded().currentPeriodTotal)
+            .isEqualTo(TEST_CURRENT_PERIOD_VIEWS)
+    }
+
+    @Test
     fun `when the chart type changes while a bar is selected, then the selection is cleared`() = test {
         whenever(statsRepository.fetchStatsForPeriod(any(), any()))
             .thenReturn(createPeriodStatsResult())

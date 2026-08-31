@@ -107,9 +107,9 @@ private val ChartBarThickness = 24.dp
 // row's bodyMedium line height (20dp). Reserved in the Unavailable state so a metric switch on a
 // single-day period doesn't resize the card.
 private val ChartHeaderHeight = 64.dp
-// Constant height reserved at the top of the card for the soft-selected bar's date + drill-down
-// arrow, so toggling a selection never resizes the card. Sized to fit the arrow IconButton.
-private val SelectedBarSlotHeight = 28.dp
+// Size of the drill-down arrow shown inline next to the title for a soft-selected bar. Kept compact
+// so it fits on the title row without growing it.
+private val SelectedBarArrowSize = 28.dp
 private val StatItemWidth = 100.dp
 private val StatItemIndicatorHeight = 3.dp
 private val BadgeCornerRadius = 4.dp
@@ -261,16 +261,13 @@ private fun ContentCard(
                 .padding(CardPadding)
                 .alpha(if (state.isLoadingNewPeriod) 0.5f else 1f)
         ) {
-            // The selected-bar row sits at the very top in a fixed-height slot (empty when no bar is
-            // selected) so selecting/clearing a bar never changes the card's height.
-            SelectedBarSlot(
-                selectedBar = state.selectedBar,
-                onDrillIn = onDrillIntoSelectedBar
-            )
             // Title + menu are always shown so the card controls stay reachable in every state.
-            // Chart-type options only make sense once the chart has loaded.
+            // Chart-type options only make sense once the chart has loaded. The soft-selected bar's
+            // date sits inline next to the title, so selecting a bar doesn't add a row or resize card.
             CardTitleRow(
                 title = stringResource(state.selectedMetric.labelRes),
+                selectedBar = state.selectedBar,
+                onDrillIntoSelectedBar = onDrillIntoSelectedBar,
                 chartTypeMenu = if (chart is ChartUiState.Loaded) {
                     { ChartTypeMenuItems(chart.chartType, onChartTypeChanged) }
                 } else {
@@ -337,6 +334,8 @@ private fun ContentCard(
 @Composable
 private fun CardTitleRow(
     title: String,
+    selectedBar: SelectedBar?,
+    onDrillIntoSelectedBar: () -> Unit,
     chartTypeMenu: @Composable (() -> Unit)?,
     onRemoveCard: () -> Unit,
     cardPosition: CardPosition?,
@@ -350,11 +349,38 @@ private fun CardTitleRow(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Text(
-            text = title,
-            style = MaterialTheme.typography.titleMedium,
-            fontWeight = FontWeight.Bold
-        )
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Text(
+                text = title,
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.Bold
+            )
+            // The soft-selected bar's date is shown inline after the title (plus a drill-down arrow,
+            // hidden for hourly buckets that have no narrower period). Inline placement avoids adding
+            // a row, so selecting/clearing a bar never changes the card height.
+            if (selectedBar != null) {
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(
+                    text = selectedBar.label,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+                if (selectedBar.canDrillDown) {
+                    IconButton(
+                        onClick = onDrillIntoSelectedBar,
+                        modifier = Modifier.size(SelectedBarArrowSize)
+                    ) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                            contentDescription = stringResource(
+                                R.string.stats_view_selected_period_content_description
+                            ),
+                            tint = MaterialTheme.colorScheme.primary
+                        )
+                    }
+                }
+            }
+        }
         StatsCardMenu(
             onRemoveClick = onRemoveCard,
             cardPosition = cardPosition,
@@ -364,48 +390,6 @@ private fun CardTitleRow(
             onMoveToBottom = onMoveToBottom,
             additionalContent = chartTypeMenu
         )
-    }
-}
-
-/**
- * Fixed-height slot at the top of the card that shows the soft-selected bucket's date (plus an arrow
- * that commits the drill-down) when a bar is selected, and stays empty otherwise. Rendering it
- * unconditionally at a constant height keeps the card from resizing as the selection toggles. The
- * arrow is hidden for hourly buckets ([SelectedBar.canDrillDown] false), which have no narrower
- * period to drill into.
- */
-@Composable
-private fun SelectedBarSlot(
-    selectedBar: SelectedBar?,
-    onDrillIn: () -> Unit
-) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(SelectedBarSlotHeight),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        if (selectedBar != null) {
-            Text(
-                text = selectedBar.label,
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
-            if (selectedBar.canDrillDown) {
-                IconButton(
-                    onClick = onDrillIn,
-                    modifier = Modifier.size(SelectedBarSlotHeight)
-                ) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
-                        contentDescription = stringResource(
-                            R.string.stats_view_selected_period_content_description
-                        ),
-                        tint = MaterialTheme.colorScheme.primary
-                    )
-                }
-            }
-        }
     }
 }
 
@@ -841,20 +825,23 @@ private fun ViewsStatsChart(
                     }
                 }
             }
-            val roundedTop = RoundedCornerShape(topStartPercent = 20, topEndPercent = 20)
-            // Base (full-color) columns for the 3 stacked series, plus dimmed variants used for the
-            // non-selected bars while a bar is soft-selected. See [HighlightColumnProvider].
-            val baseColumns = listOf(
-                LineComponent(fill = Fill(primaryColor), thickness = ChartBarThickness, shape = roundedTop),
-                LineComponent(fill = Fill(primaryColor), thickness = ChartBarThickness),
-                LineComponent(fill = Fill(secondaryColor), thickness = ChartBarThickness, shape = roundedTop)
-            )
-            val dimmedColumns = listOf(
-                LineComponent(fill = Fill(dimColor(primaryColor)), thickness = ChartBarThickness, shape = roundedTop),
-                LineComponent(fill = Fill(dimColor(primaryColor)), thickness = ChartBarThickness),
-                LineComponent(fill = Fill(dimColor(secondaryColor)), thickness = ChartBarThickness, shape = roundedTop)
-            )
-            val columnProvider = remember(baseColumns, dimmedColumns, selectedBarIndex) {
+            // Build the base (full-color) and dimmed columns inside remember, keyed on the stable
+            // inputs. LineComponent/List aren't stable keys, so keying on the freshly-allocated lists
+            // would miss every recomposition and rebuild the provider on this hot path.
+            val columnProvider = remember(primaryColor, secondaryColor, selectedBarIndex) {
+                val roundedTop = RoundedCornerShape(topStartPercent = 20, topEndPercent = 20)
+                val baseColumns = listOf(
+                    LineComponent(fill = Fill(primaryColor), thickness = ChartBarThickness, shape = roundedTop),
+                    LineComponent(fill = Fill(primaryColor), thickness = ChartBarThickness),
+                    LineComponent(fill = Fill(secondaryColor), thickness = ChartBarThickness, shape = roundedTop)
+                )
+                val dimPrimary = dimColor(primaryColor)
+                val dimSecondary = dimColor(secondaryColor)
+                val dimmedColumns = listOf(
+                    LineComponent(fill = Fill(dimPrimary), thickness = ChartBarThickness, shape = roundedTop),
+                    LineComponent(fill = Fill(dimPrimary), thickness = ChartBarThickness),
+                    LineComponent(fill = Fill(dimSecondary), thickness = ChartBarThickness, shape = roundedTop)
+                )
                 HighlightColumnProvider(baseColumns, dimmedColumns, selectedBarIndex)
             }
             CartesianChartHost(
