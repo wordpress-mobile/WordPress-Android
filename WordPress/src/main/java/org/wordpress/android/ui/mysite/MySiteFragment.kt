@@ -55,6 +55,7 @@ import org.wordpress.android.ui.posts.PostUtils
 import org.wordpress.android.ui.reader.ReaderActivityLauncher
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.newstats.NewStatsActivity
+import org.wordpress.android.ui.newstats.StatsPeriod
 import org.wordpress.android.ui.stats.StatsTimeframe
 import org.wordpress.android.ui.stats.refresh.utils.StatsLaunchedFrom
 import org.wordpress.android.ui.uploads.UploadService
@@ -601,7 +602,8 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
             StatsLaunchedFrom.QUICK_ACTIONS
         )
 
-        is SiteNavigationAction.OpenNewStats -> NewStatsActivity.start(requireContext())
+        is SiteNavigationAction.OpenNewStats ->
+            NewStatsActivity.start(requireContext(), StatsLaunchedFrom.QUICK_ACTIONS)
 
         is SiteNavigationAction.ConnectJetpackForStats ->
             ActivityLauncher.viewConnectJetpackForStats(activity, action.site)
@@ -648,6 +650,9 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
             StatsLaunchedFrom.TODAY_STATS_CARD
         )
 
+        is SiteNavigationAction.OpenNewStatsForToday ->
+            NewStatsActivity.start(requireContext(), StatsLaunchedFrom.TODAY_STATS_CARD, StatsPeriod.Today)
+
         is SiteNavigationAction.OpenExternalUrl ->
             ActivityLauncher.openUrlExternal(requireActivity(), action.url)
         is SiteNavigationAction.OpenUrlInWebView ->
@@ -668,9 +673,6 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
             action.source,
             action.shouldShowBlazeOverlay
         )
-        is SiteNavigationAction.ShowJetpackRemovalStaticPostersView -> {
-            ActivityLauncher.showJetpackStaticPoster(requireActivity())
-        }
         is SiteNavigationAction.OpenActivityLogDetail -> ActivityLauncher.viewActivityLogDetailFromDashboardCard(
             activity,
             action.site,
@@ -797,10 +799,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         source: JetpackFeatureRemovalOverlayUtil.JetpackFeatureCollectionOverlaySource
     ) {
         JetpackFeatureFullScreenOverlayFragment
-            .newInstance(
-                isFeatureCollectionOverlay = true,
-                featureCollectionOverlaySource = source
-            )
+            .newInstance(featureCollectionOverlaySource = source)
             .show(requireActivity().supportFragmentManager, JetpackFeatureFullScreenOverlayFragment.TAG)
     }
 

@@ -9,7 +9,6 @@ import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.any
 import org.mockito.kotlin.eq
-import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
@@ -57,37 +56,59 @@ class SiteXmlRpcUrlRecovererTest : BaseUnitTest() {
     fun `given discovery and authenticated verify succeed, then returns the endpoint`() = test {
         whenever(selfHostedEndpointFinder.verifyOrDiscoverXMLRPCEndpoint(site.url)).thenReturn(ENDPOINT)
         // The site's stored credentials are forwarded to the authenticated verify call.
-        whenever(siteXMLRPCClient.fetchSites(eq(ENDPOINT), eq("user"), eq("pass")))
+        whenever(siteXMLRPCClient.fetchSites(eq(ENDPOINT), eq("user"), eq("pass"), any()))
             .thenReturn(SitesModel(listOf(SiteModel())))
 
-        assertThat(recoverer.discoverAndVerifyXmlRpcUrl(site)).isEqualTo(ENDPOINT)
+        assertThat(recoverer.discoverAndVerifyXmlRpcUrl(site))
+            .isEqualTo(XmlRpcRecovery.Recovered(ENDPOINT))
     }
 
     @Test
-    fun `given discovery throws, then returns null`() = test {
+    fun `given discovery fails with a definitive negative, then returns Unavailable`() = test {
         whenever(selfHostedEndpointFinder.verifyOrDiscoverXMLRPCEndpoint(site.url))
-            .thenThrow(mock<SelfHostedEndpointFinder.DiscoveryException>())
+            .thenThrow(discoveryException(SelfHostedEndpointFinder.DiscoveryError.XMLRPC_BLOCKED))
 
-        assertThat(recoverer.discoverAndVerifyXmlRpcUrl(site)).isNull()
+        assertThat(recoverer.discoverAndVerifyXmlRpcUrl(site)).isEqualTo(XmlRpcRecovery.Unavailable)
     }
 
     @Test
-    fun `given discovery throws an unexpected exception, then returns null`() = test {
+    fun `given discovery fails transiently with rate limiting, then returns Inconclusive`() = test {
+        // A 429 says nothing about whether XML-RPC is enabled — reporting Unavailable here would
+        // surface a false "XML-RPC Disabled" warning on a throttled site.
+        whenever(selfHostedEndpointFinder.verifyOrDiscoverXMLRPCEndpoint(site.url))
+            .thenThrow(discoveryException(SelfHostedEndpointFinder.DiscoveryError.RATE_LIMITED))
+
+        assertThat(recoverer.discoverAndVerifyXmlRpcUrl(site)).isEqualTo(XmlRpcRecovery.Inconclusive)
+    }
+
+    @Test
+    fun `given discovery fails for an unrelated reason, then returns Inconclusive`() = test {
+        // HTTP auth / SSL / invalid-URL failures are about reaching the site at all, not about XML-RPC.
+        whenever(selfHostedEndpointFinder.verifyOrDiscoverXMLRPCEndpoint(site.url))
+            .thenThrow(discoveryException(SelfHostedEndpointFinder.DiscoveryError.HTTP_AUTH_REQUIRED))
+
+        assertThat(recoverer.discoverAndVerifyXmlRpcUrl(site)).isEqualTo(XmlRpcRecovery.Inconclusive)
+    }
+
+    @Test
+    fun `given discovery throws an unexpected exception, then returns Inconclusive`() = test {
         // A non-DiscoveryException (e.g. a RuntimeException from the network/parse path) must be
         // contained, not propagated — otherwise it cancels the whole provisioning pipeline.
         whenever(selfHostedEndpointFinder.verifyOrDiscoverXMLRPCEndpoint(site.url))
             .thenThrow(RuntimeException("unexpected"))
 
-        assertThat(recoverer.discoverAndVerifyXmlRpcUrl(site)).isNull()
+        assertThat(recoverer.discoverAndVerifyXmlRpcUrl(site)).isEqualTo(XmlRpcRecovery.Inconclusive)
     }
 
     @Test
-    fun `given the authenticated verify errors, then returns null`() = test {
+    fun `given the authenticated verify errors, then returns Inconclusive`() = test {
+        // Discovery already proved xmlrpc.php works, so a failed verify is a credential/transport
+        // problem — never a reason to claim XML-RPC is off.
         whenever(selfHostedEndpointFinder.verifyOrDiscoverXMLRPCEndpoint(site.url)).thenReturn(ENDPOINT)
-        whenever(siteXMLRPCClient.fetchSites(eq(ENDPOINT), any(), any()))
+        whenever(siteXMLRPCClient.fetchSites(eq(ENDPOINT), any(), any(), any()))
             .thenReturn(SitesModel().apply { error = BaseNetworkError(GenericErrorType.UNKNOWN, "x") })
 
-        assertThat(recoverer.discoverAndVerifyXmlRpcUrl(site)).isNull()
+        assertThat(recoverer.discoverAndVerifyXmlRpcUrl(site)).isEqualTo(XmlRpcRecovery.Inconclusive)
     }
 
     @Test
@@ -104,4 +125,9 @@ class SiteXmlRpcUrlRecovererTest : BaseUnitTest() {
 
         assertThat(recoverer.persistXmlRpcUrl(SITE_LOCAL_ID, ENDPOINT)).isFalse
     }
+
+    // DiscoveryException exposes discoveryError as a public final field, so a Mockito mock can't
+    // carry one — construct the real exception.
+    private fun discoveryException(error: SelfHostedEndpointFinder.DiscoveryError) =
+        SelfHostedEndpointFinder.DiscoveryException(error, site.url)
 }

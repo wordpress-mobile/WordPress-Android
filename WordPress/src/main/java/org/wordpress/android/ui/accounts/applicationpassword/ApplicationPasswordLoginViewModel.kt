@@ -14,7 +14,7 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.SiteActionBuilder
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.network.discovery.SelfHostedEndpointFinder
+import org.wordpress.android.fluxc.network.discovery.DiscoveryUtils
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged
 import org.wordpress.android.fluxc.utils.AppLogWrapper
@@ -36,7 +36,6 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
     // Dispatcher is the way to dispatch actions to Flux. It will call siteStore.onAction()
     private val dispatcher: Dispatcher,
     private val applicationPasswordLoginHelper: ApplicationPasswordLoginHelper,
-    private val selfHostedEndpointFinder: SelfHostedEndpointFinder,
     private val siteStore: SiteStore,
     private val appLogWrapper: AppLogWrapper,
     private val crashLogging: CrashLogging,
@@ -89,7 +88,7 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
             val urlLogin = applicationPasswordLoginHelper.getSiteUrlLoginFromRawData(rawData)
             currentUrlLogin = urlLogin
             // Store credentials if the site already exists
-            when (storeCredentials(urlLogin)) {
+            when (val storeResult = storeCredentials(urlLogin)) {
                 is StoreCredentialsResult.Success -> {
                     _onFinishedEvent.emit(
                         NavigationActionData(
@@ -102,11 +101,14 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
                 }
                 is StoreCredentialsResult.SiteNotFound -> {
                     waitingForFetchedSite = true
+                    // Use the effective login returned by the helper: it carries any apiRootUrl
+                    // recovered via fallback discovery, which the original urlLogin may still lack.
+                    val effectiveLogin = storeResult.urlLogin
                     fetchSites(
-                        urlLogin.user.orEmpty(),
-                        urlLogin.password.orEmpty(),
-                        urlLogin.siteUrl.orEmpty(),
-                        urlLogin.apiRootUrl.orEmpty()
+                        effectiveLogin.user.orEmpty(),
+                        effectiveLogin.password.orEmpty(),
+                        effectiveLogin.siteUrl.orEmpty(),
+                        effectiveLogin.apiRootUrl.orEmpty()
                     )
                 }
                 is StoreCredentialsResult.BadData -> {
@@ -186,9 +188,12 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
                 applicationPasswordLoginHelper.trackStoringFailed(
                     siteUrl, "empty_fetch_params", creationSource
                 )
+                // User-recoverable data condition (missing callback params), not a bug — the
+                // reason is preserved in analytics + AppLog above, so don't report it to Sentry.
                 emitError(
                     siteUrl = siteUrl,
-                    errorMessage = "empty_fetch_params"
+                    errorMessage = "empty_fetch_params",
+                    reportToSentry = false,
                 )
             } else {
                 discoverAndDispatchFetchSite(
@@ -207,56 +212,46 @@ class ApplicationPasswordLoginViewModel @Inject constructor(
                 siteUrl = siteUrl,
                 errorMessage = e.message,
                 cause = e,
-                reportToSentry = !e.isRecoverableNetworkOrDiscoveryError(),
+                reportToSentry = !e.isRecoverableNetworkError(),
             )
         }
     }
 
-    private fun Throwable.isRecoverableNetworkOrDiscoveryError(): Boolean =
+    // The XML-RPC fetch is dispatched to the SiteStore and resolves asynchronously, so its network
+    // failures never surface here — this catch only sees a synchronous error while building/dispatching
+    // the action. We still de-noise Sentry for a network cause (e.g. offline) rather than a real bug.
+    private fun Throwable.isRecoverableNetworkError(): Boolean =
         generateSequence(this as Throwable?) { it.cause }
-            .any { it is IOException || it is SelfHostedEndpointFinder.DiscoveryException }
+            .any { it is IOException }
 
-    private suspend fun discoverAndDispatchFetchSite(
+    private fun discoverAndDispatchFetchSite(
         username: String,
         password: String,
         siteUrl: String,
         apiRootUrl: String
     ) {
-        val xmlRpcEndpoint = try {
-            selfHostedEndpointFinder
-                .verifyOrDiscoverXMLRPCEndpoint(siteUrl)
-        } catch (e: SelfHostedEndpointFinder.DiscoveryException) {
-            appLogWrapper.w(
-                AppLog.T.API,
-                "A_P: XML-RPC discovery failed" +
-                    " (${e.message}). Falling back to" +
-                    " WPAPI fetch using" +
-                    " apiRootUrl=$apiRootUrl"
-            )
-            null
-        }
+        // Merge XML-RPC discovery and fetch into a single round-trip: skip the separate system.listMethods
+        // probe and call wp.getUsersBlogs directly against the conventional xmlrpc.php endpoint. A successful
+        // getUsersBlogs both proves XML-RPC is available and returns the site info, halving the xmlrpc.php
+        // requests — which matters on hosts that rate-limit that endpoint (429). If it fails, the SiteStore
+        // handler falls back to WPAPI; the My Site card's rediscovery later heals a non-standard or
+        // temporarily-throttled endpoint.
         val payload =
             SiteStore.RefreshSitesXMLRPCApplicationPasswordCredentialsPayload(
                 username = username,
                 password = password,
-                url = xmlRpcEndpoint ?: siteUrl,
+                // Reuse the canonical discovery helpers: stripKnownPaths trims trailing slashes and known
+                // suffixes, and appendXMLRPCPath adds xmlrpc.php with a `contains` check (not endsWith) so a
+                // baseURL/xmlrpc.php?my-authcode=XXX endpoint isn't double-appended.
+                url = DiscoveryUtils.appendXMLRPCPath(DiscoveryUtils.stripKnownPaths(siteUrl)),
                 apiRootUrl = apiRootUrl,
             )
-        if (xmlRpcEndpoint != null) {
-            dispatcher.dispatch(
-                SiteActionBuilder
-                    .newFetchSitesXmlRpcFromApplicationPasswordAction(
-                        payload
-                    )
-            )
-        } else {
-            dispatcher.dispatch(
-                SiteActionBuilder
-                    .newFetchSiteWpApiFromApplicationPasswordAction(
-                        payload
-                    )
-            )
-        }
+        dispatcher.dispatch(
+            SiteActionBuilder
+                .newFetchSitesXmlRpcFromApplicationPasswordAction(
+                    payload
+                )
+        )
     }
 
     private suspend fun emitError(

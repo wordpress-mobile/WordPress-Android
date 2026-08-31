@@ -20,7 +20,7 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagType;
 import org.wordpress.android.ui.ActivityId;
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase;
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalHelperKt;
 import org.wordpress.android.ui.mysite.SelectedSiteRepository;
 import org.wordpress.android.ui.mysite.tabs.MySiteTabType;
 import org.wordpress.android.ui.posts.AuthorFilterSelection;
@@ -43,6 +43,9 @@ public class AppPrefs {
 
     private static final int THEME_IMAGE_SIZE_WIDTH_DEFAULT = 400;
 
+    // Legacy experimental-features pref key for New Stats, kept only for one-time opt-in migration.
+    private static final String LEGACY_NEW_STATS_EXPERIMENTAL_KEY = "new_stats";
+
     // store twice as many recent sites as we show
     private static final int MAX_RECENTLY_PICKED_SITES_TO_SHOW = 8;
     private static final int MAX_RECENTLY_PICKED_SITES_TO_SAVE = MAX_RECENTLY_PICKED_SITES_TO_SHOW * 2;
@@ -63,6 +66,8 @@ public class AppPrefs {
         LAST_ACTIVITY_STR,
 
         NEW_STATS_INTRO_SHOWN,
+
+        NEW_STATS_USER_OPTED_IN,
 
         STATS_NEW_STATS_SUGGESTION_SHOWN,
 
@@ -174,8 +179,6 @@ public class AppPrefs {
         OPEN_WEB_LINKS_WITH_JETPACK,
         SHOULD_HIDE_JETPACK_FEATURE_CARD,
         JETPACK_FEATURE_CARD_LAST_SHOWN_TIMESTAMP,
-        SWITCH_TO_JETPACK_MENU_CARD_SHOWN_TIMESTAMP,
-        SHOULD_HIDE_SWITCH_TO_JETPACK_MENU_CARD,
         SHOULD_HIDE_JETPACK_INSTALL_FULL_PLUGIN_CARD,
         SHOULD_SHOW_JETPACK_FULL_PLUGIN_INSTALL_ONBOARDING,
         SHOULD_HIDE_PROMOTE_WITH_BLAZE_CARD,
@@ -212,6 +215,9 @@ public class AppPrefs {
         SITE_SUPPORTS_EDITOR_SETTINGS,
         SITE_SUPPORTS_EDITOR_ASSETS,
         SITE_THEME_IS_BLOCK_THEME,
+        // Timestamp (millis) of the last time we confirmed a site has no xposts, used to throttle
+        // re-checks so a site that later enables xposts (o2) is eventually picked up.
+        XPOSTS_NO_RESULT_CHECKED_TIMESTAMP,
 
         // Login flow preserved across OAuth Custom Tabs redirect
         PENDING_LOGIN_FLOW,
@@ -238,11 +244,19 @@ public class AppPrefs {
 
         BOOKMARKS_SAVED_LOCALLY_DIALOG_SHOWN,
 
+        // Set when the user explicitly turns New Stats off. Undeletable so the choice survives
+        // sign-out - it is the only thing that can override the android_new_stats rollout flag,
+        // so erasing it would silently push the user back into New Stats.
+        NEW_STATS_USER_OPTED_OUT,
+
         // When we need to show the snackbar indicating how notifications can be navigated through
         SWIPE_TO_NAVIGATE_NOTIFICATIONS,
 
         // Same as above but for the reader
         SWIPE_TO_NAVIGATE_READER,
+
+        // Same as above but for the comment detail
+        SWIPE_TO_NAVIGATE_COMMENTS,
 
         // smart toast counters
         SMART_TOAST_COMMENTS_LONG_PRESS_USAGE_COUNTER,
@@ -658,6 +672,14 @@ public class AppPrefs {
 
     public static void setReaderSwipeToNavigateShown(boolean alreadyShown) {
         setBoolean(UndeletablePrefKey.SWIPE_TO_NAVIGATE_READER, alreadyShown);
+    }
+
+    public static boolean isCommentsSwipeToNavigateShown() {
+        return getBoolean(UndeletablePrefKey.SWIPE_TO_NAVIGATE_COMMENTS, false);
+    }
+
+    public static void setCommentsSwipeToNavigateShown(boolean alreadyShown) {
+        setBoolean(UndeletablePrefKey.SWIPE_TO_NAVIGATE_COMMENTS, alreadyShown);
     }
 
     public static boolean isImageOptimize() {
@@ -1617,51 +1639,31 @@ public class AppPrefs {
         setBoolean(DeletablePrefKey.OPEN_WEB_LINKS_WITH_JETPACK, isOpenWebLinksWithJetpack);
     }
 
-    public static Boolean getShouldHideJetpackFeatureCard(JetpackFeatureRemovalPhase phase) {
-        return prefs().getBoolean(getHideJetpackFeatureCardWithPhaseKey(phase), false);
+    public static Boolean getShouldHideJetpackFeatureCard() {
+        return prefs().getBoolean(getHideJetpackFeatureCardWithPhaseKey(), false);
     }
 
-    public static void setShouldHideJetpackFeatureCard(JetpackFeatureRemovalPhase phase, final boolean isHidden) {
-        prefs().edit().putBoolean(getHideJetpackFeatureCardWithPhaseKey(phase), isHidden).apply();
+    public static void setShouldHideJetpackFeatureCard(final boolean isHidden) {
+        prefs().edit().putBoolean(getHideJetpackFeatureCardWithPhaseKey(), isHidden).apply();
     }
 
-    public static Long getJetpackFeatureCardLastShownTimestamp(JetpackFeatureRemovalPhase jetpackFeatureRemovalPhase) {
-        return prefs().getLong(getJetpackFeatureCardLastShownTimeStampWithPhaseKey(jetpackFeatureRemovalPhase), 0L);
+    public static Long getJetpackFeatureCardLastShownTimestamp() {
+        return prefs().getLong(getJetpackFeatureCardLastShownTimeStampWithPhaseKey(), 0L);
     }
 
-    public static void setJetpackFeatureCardLastShownTimestamp(JetpackFeatureRemovalPhase jetpackFeatureRemovalPhase,
-                                                               final Long lastShownTimestamp) {
-        prefs().edit().putLong(getJetpackFeatureCardLastShownTimeStampWithPhaseKey(jetpackFeatureRemovalPhase),
-                lastShownTimestamp).apply();
+    public static void setJetpackFeatureCardLastShownTimestamp(final Long lastShownTimestamp) {
+        prefs().edit().putLong(getJetpackFeatureCardLastShownTimeStampWithPhaseKey(), lastShownTimestamp).apply();
     }
 
-    @NonNull private static String getHideJetpackFeatureCardWithPhaseKey(JetpackFeatureRemovalPhase phase) {
-        return DeletablePrefKey.SHOULD_HIDE_JETPACK_FEATURE_CARD.name() + phase.getTrackingName();
+    @NonNull private static String getHideJetpackFeatureCardWithPhaseKey() {
+        return DeletablePrefKey.SHOULD_HIDE_JETPACK_FEATURE_CARD.name()
+               + JetpackFeatureRemovalHelperKt.JETPACK_REMOVAL_TRACKING_NAME;
     }
 
     @NonNull
-    private static String getJetpackFeatureCardLastShownTimeStampWithPhaseKey(JetpackFeatureRemovalPhase phase) {
-        return DeletablePrefKey.JETPACK_FEATURE_CARD_LAST_SHOWN_TIMESTAMP.name() + phase.getTrackingName();
-    }
-
-    public static Long getSwitchToJetpackMenuCardLastShownTimestamp() {
-        return getLong(DeletablePrefKey.SWITCH_TO_JETPACK_MENU_CARD_SHOWN_TIMESTAMP, 0L);
-    }
-
-    public static void setSwitchToJetpackMenuCardLastShownTimestamp(final Long lastShownTimestamp) {
-        setLong(DeletablePrefKey.SWITCH_TO_JETPACK_MENU_CARD_SHOWN_TIMESTAMP, lastShownTimestamp);
-    }
-
-    public static Boolean getShouldHideSwitchToJetpackMenuCard(JetpackFeatureRemovalPhase phase) {
-        return prefs().getBoolean(getHideSwitchToJetpackMenuCardWithPhaseKey(phase), false);
-    }
-
-    public static void setShouldHideSwitchToJetpackMenuCard(JetpackFeatureRemovalPhase phase, final boolean isHidden) {
-        prefs().edit().putBoolean(getHideSwitchToJetpackMenuCardWithPhaseKey(phase), isHidden).apply();
-    }
-
-    @NonNull private static String getHideSwitchToJetpackMenuCardWithPhaseKey(JetpackFeatureRemovalPhase phase) {
-        return DeletablePrefKey.SHOULD_HIDE_SWITCH_TO_JETPACK_MENU_CARD.name() + phase.getTrackingName();
+    private static String getJetpackFeatureCardLastShownTimeStampWithPhaseKey() {
+        return DeletablePrefKey.JETPACK_FEATURE_CARD_LAST_SHOWN_TIMESTAMP.name()
+               + JetpackFeatureRemovalHelperKt.JETPACK_REMOVAL_TRACKING_NAME;
     }
 
     public static Boolean getShouldHideJetpackInstallFullPluginCard(int siteId) {
@@ -2060,6 +2062,18 @@ public class AppPrefs {
         ).apply();
     }
 
+    private static String xPostsNoResultCheckedTimestampKey(@NonNull SiteModel site) {
+        return DeletablePrefKey.XPOSTS_NO_RESULT_CHECKED_TIMESTAMP.name() + site.getId();
+    }
+
+    public static long getXPostsNoResultCheckedTimestamp(@NonNull SiteModel site) {
+        return prefs().getLong(xPostsNoResultCheckedTimestampKey(site), 0);
+    }
+
+    public static void setXPostsNoResultCheckedTimestamp(@NonNull SiteModel site, long timestamp) {
+        prefs().edit().putLong(xPostsNoResultCheckedTimestampKey(site), timestamp).apply();
+    }
+
     /**
      * Returns whether network request tracking (Chucker) is enabled.
      * This is a device-level preference that persists across logout/login cycles
@@ -2114,6 +2128,40 @@ public class AppPrefs {
 
     public static void setNewStatsIntroShown(boolean shown) {
         setBoolean(DeletablePrefKey.NEW_STATS_INTRO_SHOWN, shown);
+    }
+
+    public static boolean getNewStatsUserOptedIn() {
+        migrateLegacyNewStatsOptIn();
+        return getBoolean(DeletablePrefKey.NEW_STATS_USER_OPTED_IN, false);
+    }
+
+    public static void setNewStatsUserOptedIn(boolean optedIn) {
+        setBoolean(DeletablePrefKey.NEW_STATS_USER_OPTED_IN, optedIn);
+    }
+
+    public static boolean getNewStatsUserOptedOut() {
+        return getBoolean(UndeletablePrefKey.NEW_STATS_USER_OPTED_OUT, false);
+    }
+
+    public static void setNewStatsUserOptedOut(boolean optedOut) {
+        setBoolean(UndeletablePrefKey.NEW_STATS_USER_OPTED_OUT, optedOut);
+    }
+
+    /**
+     * One-time migration for users who enabled New Stats via the old experimental-features toggle,
+     * before it was replaced by the remote flag + local opt-in preference. Without this, those users
+     * would be silently reverted to old Stats. Runs once: after the new key is written the legacy
+     * value is dropped, so this is a no-op on every subsequent read.
+     */
+    private static void migrateLegacyNewStatsOptIn() {
+        if (keyExists(DeletablePrefKey.NEW_STATS_USER_OPTED_IN)) {
+            return;
+        }
+        String legacyKey = getExperimentalFeatureConfigKey(LEGACY_NEW_STATS_EXPERIMENTAL_KEY);
+        if (prefs().contains(legacyKey)) {
+            setNewStatsUserOptedIn(prefs().getBoolean(legacyKey, false));
+            prefs().edit().remove(legacyKey).apply();
+        }
     }
 
     public static boolean getStatsNewStatsSuggestionShown() {

@@ -1,0 +1,7 @@
+26.9:
+- Nieuwe pagina's lijst ingeschakeld met geüpdatete functies
+- Nieuwe berichten lijst ingesteld als standaard voor sites met applicatie wachtwoord
+- WordPress.com login versneld
+- Gecombineerde bot/Happiness Engineer chats in ondersteuning
+- Opgelost crash bij het openen van media terwijl de editor wordt verlaten
+- Verwijderd bèta badge uit Menu's in mijn site

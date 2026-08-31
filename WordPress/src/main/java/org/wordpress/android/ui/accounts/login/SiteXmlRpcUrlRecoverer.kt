@@ -20,9 +20,13 @@ import kotlin.coroutines.cancellation.CancellationException
  * follows the same shape so callers never hold a mutated [SiteModel]:
  *
  * - [discoverAndVerifyXmlRpcUrl] discovers the endpoint and confirms it works with an authenticated
- *   call using the site's application-password credentials, returning the verified URL (or `null`
- *   if discovery/verification fails).
+ *   call using the site's application-password credentials, returning an [XmlRpcRecovery] that
+ *   separates a verified URL from a *definitive* "XML-RPC is off" from an inconclusive failure.
  * - [persistXmlRpcUrl] writes only that one column to the DB row for `localId`.
+ *
+ * The three-way outcome matters because a missing `xmlRpcUrl` is not evidence that XML-RPC is
+ * disabled: discovery can also fail transiently (e.g. a 429 rate-limit). Only a definitive negative
+ * may surface the "XML-RPC Disabled" card, or throttled sites get a false warning.
  */
 @Singleton
 class SiteXmlRpcUrlRecoverer @Inject constructor(
@@ -33,7 +37,7 @@ class SiteXmlRpcUrlRecoverer @Inject constructor(
     @param:Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
 ) {
     @Suppress("SwallowedException", "TooGenericExceptionCaught")
-    suspend fun discoverAndVerifyXmlRpcUrl(site: SiteModel): String? = withContext(bgDispatcher) {
+    suspend fun discoverAndVerifyXmlRpcUrl(site: SiteModel): XmlRpcRecovery = withContext(bgDispatcher) {
         try {
             val endpoint = selfHostedEndpointFinder.verifyOrDiscoverXMLRPCEndpoint(site.url)
             val result = siteXMLRPCClient.fetchSites(
@@ -42,26 +46,35 @@ class SiteXmlRpcUrlRecoverer @Inject constructor(
                 site.apiRestPasswordPlain,
             )
             if (result.isError) {
+                // Discovery found a working xmlrpc.php, so XML-RPC is *enabled* — the credentials or the
+                // transport are what failed. Don't persist, and don't claim XML-RPC is off.
                 appLogWrapper.w(AppLog.T.API, "XML-RPC verification failed for ${site.url}")
-                null
+                XmlRpcRecovery.Inconclusive
             } else {
-                endpoint
+                XmlRpcRecovery.Recovered(endpoint)
             }
         } catch (e: CancellationException) {
             throw e
         } catch (e: SelfHostedEndpointFinder.DiscoveryException) {
-            // Expected when the site has no reachable XML-RPC endpoint — surfaces as the
-            // XML-RPC-disabled card (xmlRpcUrl stays empty) and retries on the next run.
-            appLogWrapper.w(AppLog.T.API, "XML-RPC discovery failed for ${site.url}")
-            null
+            if (e.discoveryError.indicatesXmlRpcUnavailable()) {
+                appLogWrapper.w(AppLog.T.API, "XML-RPC unavailable for ${site.url} (${e.discoveryError})")
+                XmlRpcRecovery.Unavailable
+            } else {
+                appLogWrapper.w(
+                    AppLog.T.API,
+                    "XML-RPC discovery inconclusive for ${site.url} (${e.discoveryError})"
+                )
+                XmlRpcRecovery.Inconclusive
+            }
         } catch (e: Exception) {
             // Best-effort recovery must never let an unexpected throw escape and cancel the
-            // provisioning pipeline (mirrors SiteApiRestUrlRecoverer). Same null -> disabled-card surface.
+            // provisioning pipeline (mirrors SiteApiRestUrlRecoverer). An unexpected throw says nothing
+            // about the endpoint, so it's inconclusive rather than a negative.
             appLogWrapper.e(
                 AppLog.T.API,
                 "XML-RPC discovery threw for ${site.url}: ${e::class.simpleName}: ${e.message}"
             )
-            null
+            XmlRpcRecovery.Inconclusive
         }
     }
 
@@ -75,4 +88,26 @@ class SiteXmlRpcUrlRecoverer @Inject constructor(
             true
         }
     }
+
+    // A failed discovery is only a genuine "disabled" signal when it reached a definitive conclusion.
+    // Transient errors (RATE_LIMITED, GENERIC_ERROR) and unrelated conditions (auth/SSL/invalid URL)
+    // must not surface the warning, to avoid false positives on throttled sites.
+    private fun SelfHostedEndpointFinder.DiscoveryError.indicatesXmlRpcUnavailable(): Boolean =
+        this == SelfHostedEndpointFinder.DiscoveryError.NO_SITE_ERROR ||
+            this == SelfHostedEndpointFinder.DiscoveryError.MISSING_XMLRPC_METHOD ||
+            this == SelfHostedEndpointFinder.DiscoveryError.XMLRPC_BLOCKED ||
+            this == SelfHostedEndpointFinder.DiscoveryError.XMLRPC_FORBIDDEN
+}
+
+/** The outcome of an XML-RPC endpoint recovery attempt. See [SiteXmlRpcUrlRecoverer]. */
+sealed interface XmlRpcRecovery {
+    /** Discovered and authenticated against [endpoint] — safe to persist. */
+    data class Recovered(val endpoint: String) : XmlRpcRecovery
+
+    /** Discovery reached a definitive negative: the site really has XML-RPC off. */
+    data object Unavailable : XmlRpcRecovery
+
+    /** The attempt failed without settling the question (transient error, bad credentials,
+     *  unexpected throw). Claim nothing; the next run retries. */
+    data object Inconclusive : XmlRpcRecovery
 }

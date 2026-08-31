@@ -19,30 +19,45 @@ import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
+import org.wordpress.android.fluxc.Dispatcher
+import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
+import org.wordpress.android.fluxc.store.EditorThemeStore
+import org.wordpress.android.fluxc.store.PostStore
+import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded
+import org.wordpress.android.ui.blaze.BlazeFeatureUtils
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.posts.AuthorFilterSelection
 import org.wordpress.android.ui.postsrs.data.PostRsRestClient
 import org.wordpress.android.ui.postsrs.data.WpServiceProvider
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.ui.rs.RsPostChangeListener
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.util.config.SiteEditorMVPFeatureConfig
 import org.wordpress.android.viewmodel.ResourceProvider
 
 @ExperimentalCoroutinesApi
 internal class PagesRsListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
     @Mock lateinit var selectedSiteRepository: SelectedSiteRepository
     @Mock lateinit var serviceProvider: WpServiceProvider
+    @Mock lateinit var dispatcher: Dispatcher
     @Mock lateinit var restClient: PostRsRestClient
     @Mock lateinit var resourceProvider: ResourceProvider
+    @Mock lateinit var postStore: PostStore
+    @Mock lateinit var homepageSettings: PageRsHomepageSettings
+    @Mock lateinit var blazeFeatureUtils: BlazeFeatureUtils
     @Mock lateinit var fluxCBridge: PageRsFluxCBridge
     @Mock lateinit var networkUtilsWrapper: NetworkUtilsWrapper
     @Mock lateinit var accountStore: AccountStore
     @Mock lateinit var appPrefsWrapper: AppPrefsWrapper
     @Mock lateinit var analyticsTracker: AnalyticsTrackerWrapper
+    @Mock lateinit var editorThemeStore: EditorThemeStore
+    @Mock lateinit var siteEditorMVPFeatureConfig: SiteEditorMVPFeatureConfig
 
     private lateinit var site: SiteModel
+    private lateinit var changeListener: RsPostChangeListener
     private var activeViewModel: PagesRsListViewModel? = null
 
     @Before
@@ -51,6 +66,7 @@ internal class PagesRsListViewModelTest : BaseUnitTest(StandardTestDispatcher())
             id = 1
             siteId = 123L
         }
+        changeListener = RsPostChangeListener(dispatcher, postStore)
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
     }
@@ -64,13 +80,20 @@ internal class PagesRsListViewModelTest : BaseUnitTest(StandardTestDispatcher())
     private fun createViewModel() = PagesRsListViewModel(
         selectedSiteRepository = selectedSiteRepository,
         serviceProvider = serviceProvider,
+        dispatcher = dispatcher,
         restClient = restClient,
         resourceProvider = resourceProvider,
+        postStore = postStore,
+        homepageSettings = homepageSettings,
+        blazeFeatureUtils = blazeFeatureUtils,
         fluxCBridge = fluxCBridge,
         networkUtilsWrapper = networkUtilsWrapper,
         accountStore = accountStore,
         appPrefsWrapper = appPrefsWrapper,
         analyticsTracker = analyticsTracker,
+        editorThemeStore = editorThemeStore,
+        siteEditorMVPFeatureConfig = siteEditorMVPFeatureConfig,
+        changeListener = changeListener,
     ).also { activeViewModel = it }
 
     @Test
@@ -260,23 +283,403 @@ internal class PagesRsListViewModelTest : BaseUnitTest(StandardTestDispatcher())
     }
 
     @Test
-    fun `openPage on trashed tab emits trashed toast and does not track edit`() = test {
+    fun `openPage on trashed tab asks to move the page to draft`() {
         val viewModel = createViewModel()
 
-        viewModel.events.test {
-            viewModel.openPage(remotePageId = 42L, tab = PageRsListTab.TRASHED)
+        viewModel.openPage(remotePageId = 42L, tab = PageRsListTab.TRASHED)
 
-            assertThat(awaitItem()).isEqualTo(
-                PageRsListEvent.ShowToast(R.string.pages_list_item_trashed)
-            )
-            cancelAndIgnoreRemainingEvents()
-        }
+        assertThat(viewModel.pendingConfirmation.value)
+            .isEqualTo(PageRsListConfirmation.MoveToDraft(42L))
         assertThat(viewModel.isOpeningPage.value).isFalse()
+    }
+
+    @Test
+    fun `dismissing the move to draft confirmation does not track item selected`() {
+        val viewModel = createViewModel()
+        viewModel.openPage(remotePageId = 42L, tab = PageRsListTab.TRASHED)
+
+        viewModel.onDismissPendingAction()
+
         verify(analyticsTracker, never()).track(
             eq(Stat.PAGES_LIST_ITEM_SELECTED),
             any<SiteModel>(),
             any<Map<String, *>>()
         )
+    }
+
+    @Test
+    fun `openPage on the site editor row emits OpenSiteEditor`() = test {
+        site.setIsWPCom(true)
+        val viewModel = createViewModel()
+
+        viewModel.events.test {
+            viewModel.openPage(SITE_EDITOR_PAGE_ID, PageRsListTab.PUBLISHED)
+
+            val event = awaitItem()
+            assertThat(event).isInstanceOf(PageRsListEvent.OpenSiteEditor::class.java)
+            event as PageRsListEvent.OpenSiteEditor
+            assertThat(event.url).endsWith("site-editor.php?canvas=edit")
+            assertThat(event.useWpComCredentials).isTrue()
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
+    fun `openPage on the site editor row tracks PAGES_EDIT_HOMEPAGE_ITEM_PRESSED`() {
+        val viewModel = createViewModel()
+
+        viewModel.openPage(SITE_EDITOR_PAGE_ID, PageRsListTab.PUBLISHED)
+
+        verify(analyticsTracker).track(
+            eq(Stat.PAGES_EDIT_HOMEPAGE_ITEM_PRESSED),
+            eq(site),
+            anyOrNull<Map<String, *>>()
+        )
+    }
+
+    @Test
+    fun `openPage on the site editor row does not track PAGES_LIST_ITEM_SELECTED`() {
+        val viewModel = createViewModel()
+
+        viewModel.openPage(SITE_EDITOR_PAGE_ID, PageRsListTab.PUBLISHED)
+
+        verify(analyticsTracker, never()).track(
+            eq(Stat.PAGES_LIST_ITEM_SELECTED),
+            any<SiteModel>(),
+            any<Map<String, *>>()
+        )
+    }
+
+    @Test
+    fun `registers with the dispatcher on init and unregisters on clear`() {
+        val viewModel = createViewModel()
+        verify(dispatcher).register(viewModel)
+
+        viewModel.onCleared()
+
+        verify(dispatcher).unregister(viewModel)
+    }
+
+    @Test
+    fun `a page changed through FluxC refreshes the list`() = test {
+        val viewModel = createViewModel()
+        viewModel.onScreenVisible()
+        advanceUntilIdle()
+
+        changeListener.onPostUploaded(OnPostUploaded(pageUpload(), false))
+        advanceUntilIdle()
+
+        verify(restClient).clearCaches()
+    }
+
+    @Test
+    fun `a page changed through FluxC does not refresh the list while offline`() = test {
+        whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(false)
+        val viewModel = createViewModel()
+        viewModel.onScreenVisible()
+        advanceUntilIdle()
+
+        changeListener.onPostUploaded(OnPostUploaded(pageUpload(), false))
+        advanceUntilIdle()
+
+        verify(restClient, never()).clearCaches()
+    }
+
+    @Test
+    fun `changes while the screen is hidden are refreshed once when it is shown`() = test {
+        val viewModel = createViewModel()
+        viewModel.onScreenVisible()
+        viewModel.onScreenHidden()
+        advanceUntilIdle()
+
+        changeListener.onPostUploaded(OnPostUploaded(pageUpload(), false))
+        advanceUntilIdle()
+        changeListener.onPostUploaded(OnPostUploaded(pageUpload(), false))
+        advanceUntilIdle()
+        verify(restClient, never()).clearCaches()
+
+        viewModel.onScreenVisible()
+
+        verify(restClient).clearCaches()
+    }
+
+    @Test
+    fun `a change that arrived offline is refreshed when the screen is next shown`() = test {
+        whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(false)
+        val viewModel = createViewModel()
+        viewModel.onScreenVisible()
+        advanceUntilIdle()
+
+        changeListener.onPostUploaded(OnPostUploaded(pageUpload(), false))
+        advanceUntilIdle()
+        verify(restClient, never()).clearCaches()
+
+        whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
+        viewModel.onScreenHidden()
+        viewModel.onScreenVisible()
+
+        verify(restClient).clearCaches()
+    }
+
+    @Test
+    fun `clearing the view model stops the change listener`() {
+        createViewModel().onCleared()
+
+        verify(dispatcher).unregister(changeListener)
+    }
+
+    private fun pageUpload() = PostModel().apply {
+        setIsPage(true)
+        setLocalSiteId(site.id)
+    }
+
+    private fun pageUpload(status: String, remotePageId: Long = UPLOADED_PAGE_ID) =
+        pageUpload().apply {
+            setStatus(status)
+            setRemotePostId(remotePageId)
+        }
+
+    @Test
+    fun `a published page is revealed on the published tab`() = test {
+        val viewModel = createViewModel()
+        viewModel.onScreenVisible()
+        advanceUntilIdle()
+
+        changeListener.onPostUploaded(OnPostUploaded(pageUpload("publish"), false))
+        advanceUntilIdle()
+
+        viewModel.revealRequests.test {
+            assertThat(awaitItem())
+                .isEqualTo(PageRsReveal(PageRsListTab.PUBLISHED, UPLOADED_PAGE_ID))
+        }
+    }
+
+    @Test
+    fun `a new draft page is revealed on the drafts tab`() = test {
+        val viewModel = createViewModel()
+        viewModel.onScreenVisible()
+        advanceUntilIdle()
+
+        changeListener.onPostUploaded(OnPostUploaded(pageUpload("draft"), false))
+        advanceUntilIdle()
+
+        viewModel.revealRequests.test {
+            assertThat(awaitItem())
+                .isEqualTo(PageRsReveal(PageRsListTab.DRAFTS, UPLOADED_PAGE_ID))
+        }
+    }
+
+    @Test
+    fun `an upload while the screen is hidden is revealed when it is shown`() = test {
+        val viewModel = createViewModel()
+        viewModel.onScreenVisible()
+        viewModel.onScreenHidden()
+        advanceUntilIdle()
+
+        changeListener.onPostUploaded(OnPostUploaded(pageUpload("publish"), false))
+        advanceUntilIdle()
+
+        viewModel.revealRequests.test {
+            expectNoEvents()
+
+            viewModel.onScreenVisible()
+
+            assertThat(awaitItem())
+                .isEqualTo(PageRsReveal(PageRsListTab.PUBLISHED, UPLOADED_PAGE_ID))
+        }
+    }
+
+    @Test
+    fun `an upload with an unrecognized status is not revealed`() = test {
+        val viewModel = createViewModel()
+        viewModel.onScreenVisible()
+        advanceUntilIdle()
+
+        changeListener.onPostUploaded(OnPostUploaded(pageUpload("gibberish"), false))
+        advanceUntilIdle()
+
+        viewModel.revealRequests.test { expectNoEvents() }
+    }
+
+    @Test
+    fun `onPageMenuAction TRASH sets Trash confirmation`() {
+        val viewModel = createViewModel()
+
+        viewModel.onPageMenuAction(42L, PageRsMenuAction.TRASH)
+
+        assertThat(viewModel.pendingConfirmation.value)
+            .isEqualTo(PageRsListConfirmation.Trash(42L))
+    }
+
+    @Test
+    fun `onPageMenuAction DELETE_PERMANENTLY sets Delete confirmation`() {
+        val viewModel = createViewModel()
+
+        viewModel.onPageMenuAction(42L, PageRsMenuAction.DELETE_PERMANENTLY)
+
+        assertThat(viewModel.pendingConfirmation.value)
+            .isEqualTo(PageRsListConfirmation.Delete(42L, ""))
+    }
+
+    @Test
+    fun `onPageMenuAction tracks PAGES_OPTIONS_PRESSED`() {
+        val viewModel = createViewModel()
+
+        viewModel.onPageMenuAction(42L, PageRsMenuAction.TRASH)
+
+        verify(analyticsTracker).track(
+            eq(Stat.PAGES_OPTIONS_PRESSED),
+            eq(site),
+            eq(mapOf("option_name" to "move_to_bin"))
+        )
+    }
+
+    @Test
+    fun `onDismissPendingAction clears pending confirmation`() {
+        val viewModel = createViewModel()
+        viewModel.onPageMenuAction(42L, PageRsMenuAction.TRASH)
+
+        viewModel.onDismissPendingAction()
+
+        assertThat(viewModel.pendingConfirmation.value).isNull()
+    }
+
+    @Test
+    fun `onConfirmPendingAction clears pending confirmation`() {
+        val viewModel = createViewModel()
+        viewModel.onPageMenuAction(42L, PageRsMenuAction.TRASH)
+
+        viewModel.onConfirmPendingAction()
+
+        assertThat(viewModel.pendingConfirmation.value).isNull()
+    }
+
+    @Test
+    fun `onConfirmPendingAction shows snackbar when offline`() = test {
+        whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(false)
+        whenever(resourceProvider.getString(R.string.no_network_message))
+            .thenReturn("No network")
+        val viewModel = createViewModel()
+        viewModel.onPageMenuAction(42L, PageRsMenuAction.TRASH)
+
+        viewModel.snackbarMessages.test {
+            viewModel.onConfirmPendingAction()
+
+            assertThat(awaitItem().message).isEqualTo("No network")
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
+    fun `onPageMenuAction VIEW with no loaded page emits nothing`() = test {
+        val viewModel = createViewModel()
+
+        viewModel.events.test {
+            viewModel.onPageMenuAction(42L, PageRsMenuAction.VIEW)
+
+            expectNoEvents()
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
+    fun `onPageMenuAction SET_AS_HOMEPAGE without static homepage shows snackbar`() = test {
+        whenever(homepageSettings.setHomepage(site, 42L))
+            .thenReturn(PageRsHomepageSettings.Result.StaticHomepageDisabled)
+        whenever(resourceProvider.getString(R.string.page_cannot_set_homepage))
+            .thenReturn("Cannot set homepage")
+        val viewModel = createViewModel()
+
+        viewModel.snackbarMessages.test {
+            viewModel.onPageMenuAction(42L, PageRsMenuAction.SET_AS_HOMEPAGE)
+
+            assertThat(awaitItem().message).isEqualTo("Cannot set homepage")
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
+    fun `onPageMenuAction SET_AS_POSTS_PAGE without static homepage shows snackbar`() = test {
+        whenever(homepageSettings.setPostsPage(site, 42L))
+            .thenReturn(PageRsHomepageSettings.Result.StaticHomepageDisabled)
+        whenever(resourceProvider.getString(R.string.page_cannot_set_posts_page))
+            .thenReturn("Cannot set posts page")
+        val viewModel = createViewModel()
+
+        viewModel.snackbarMessages.test {
+            viewModel.onPageMenuAction(42L, PageRsMenuAction.SET_AS_POSTS_PAGE)
+
+            assertThat(awaitItem().message).isEqualTo("Cannot set posts page")
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
+    fun `onPageMenuAction SET_AS_HOMEPAGE success shows confirmation snackbar`() = test {
+        whenever(homepageSettings.setHomepage(site, 42L))
+            .thenReturn(PageRsHomepageSettings.Result.Success)
+        whenever(resourceProvider.getString(R.string.page_homepage_successfully_updated))
+            .thenReturn("Homepage updated")
+        val viewModel = createViewModel()
+
+        viewModel.snackbarMessages.test {
+            viewModel.onPageMenuAction(42L, PageRsMenuAction.SET_AS_HOMEPAGE)
+
+            assertThat(awaitItem().message).isEqualTo("Homepage updated")
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
+    fun `onPageMenuAction SET_AS_HOMEPAGE failure shows error snackbar`() = test {
+        whenever(homepageSettings.setHomepage(site, 42L))
+            .thenReturn(PageRsHomepageSettings.Result.Error("403"))
+        whenever(resourceProvider.getString(R.string.page_homepage_update_failed))
+            .thenReturn("Homepage update failed")
+        val viewModel = createViewModel()
+
+        viewModel.snackbarMessages.test {
+            viewModel.onPageMenuAction(42L, PageRsMenuAction.SET_AS_HOMEPAGE)
+
+            assertThat(awaitItem().message).isEqualTo("Homepage update failed")
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
+    fun `openParentPicker without loaded page does nothing`() {
+        val viewModel = createViewModel()
+
+        viewModel.openParentPicker(42L)
+
+        assertThat(viewModel.parentPicker.value).isNull()
+    }
+
+    @Test
+    fun `onParentPickerDismissed clears picker state`() {
+        val viewModel = createViewModel()
+
+        viewModel.onParentPickerDismissed()
+
+        assertThat(viewModel.parentPicker.value).isNull()
+    }
+
+    @Test
+    fun `onParentSearchChanged no-ops when picker not open`() {
+        val viewModel = createViewModel()
+
+        viewModel.onParentSearchChanged("home")
+
+        assertThat(viewModel.parentPicker.value).isNull()
+    }
+
+    @Test
+    fun `onLoadMoreParents no-ops when picker not open`() {
+        val viewModel = createViewModel()
+
+        viewModel.onLoadMoreParents()
+
+        assertThat(viewModel.parentPicker.value).isNull()
     }
 
     @Test
@@ -301,3 +704,5 @@ internal class PagesRsListViewModelTest : BaseUnitTest(StandardTestDispatcher())
         assertThat(state?.isRefreshing ?: false).isFalse
     }
 }
+
+private const val UPLOADED_PAGE_ID = 4242L

@@ -26,6 +26,7 @@ import org.wordpress.android.ui.accounts.login.ApplicationPasswordLoginHelper
 import org.wordpress.android.ui.accounts.login.ApplicationPasswordReauthNotifier
 import org.wordpress.android.ui.accounts.login.SiteApiRestUrlRecoverer
 import org.wordpress.android.ui.accounts.login.SiteXmlRpcUrlRecoverer
+import org.wordpress.android.ui.accounts.login.XmlRpcRecovery
 import org.wordpress.android.ui.mysite.cards.applicationpassword.ApplicationPasswordValidator
 import org.wordpress.android.util.NetworkUtilsWrapper
 
@@ -211,12 +212,52 @@ class SiteProvisioningSourceTest : BaseUnitTest(StandardTestDispatcher()) {
         stubValidate(ApplicationPasswordValidator.Outcome.Valid)
         stubCapabilityProbe(ok = true)
         whenever(siteXmlRpcUrlRecoverer.discoverAndVerifyXmlRpcUrl(selfHosted))
-            .thenReturn("https://selfhosted.example.com/xmlrpc.php")
+            .thenReturn(XmlRpcRecovery.Recovered("https://selfhosted.example.com/xmlrpc.php"))
 
         source.await(selfHosted)
 
         verify(siteXmlRpcUrlRecoverer)
             .persistXmlRpcUrl(eq(TEST_SITE_LOCAL_ID), eq("https://selfhosted.example.com/xmlrpc.php"))
+        assertThat(source.isXmlRpcUnavailable(TEST_SITE_LOCAL_ID)).isFalse
+    }
+
+    @Test
+    fun `given XML-RPC recovery reaches a definitive negative, then the site is flagged unavailable`() = test {
+        val selfHosted = selfHostedWithoutXmlRpc()
+        whenever(siteXmlRpcUrlRecoverer.discoverAndVerifyXmlRpcUrl(selfHosted))
+            .thenReturn(XmlRpcRecovery.Unavailable)
+
+        source.await(selfHosted)
+
+        verify(siteXmlRpcUrlRecoverer, never()).persistXmlRpcUrl(any(), any())
+        assertThat(source.isXmlRpcUnavailable(TEST_SITE_LOCAL_ID)).isTrue
+    }
+
+    @Test
+    fun `given XML-RPC recovery is inconclusive, then the site is not flagged unavailable`() = test {
+        // A transient discovery failure (e.g. a 429) must not license the XML-RPC-disabled card.
+        val selfHosted = selfHostedWithoutXmlRpc()
+        whenever(siteXmlRpcUrlRecoverer.discoverAndVerifyXmlRpcUrl(selfHosted))
+            .thenReturn(XmlRpcRecovery.Inconclusive)
+
+        source.await(selfHosted)
+
+        verify(siteXmlRpcUrlRecoverer, never()).persistXmlRpcUrl(any(), any())
+        assertThat(source.isXmlRpcUnavailable(TEST_SITE_LOCAL_ID)).isFalse
+    }
+
+    private suspend fun selfHostedWithoutXmlRpc(): SiteModel {
+        val selfHosted = SiteModel().apply {
+            id = TEST_SITE_LOCAL_ID
+            url = "https://selfhosted.example.com"
+            wpApiRestUrl = "https://selfhosted.example.com/wp-json" // REST branch short-circuits
+            // not WP.com and no xmlRpcUrl → the XML-RPC branch runs
+        }
+        whenever(siteStore.getSiteByLocalId(TEST_SITE_LOCAL_ID)).thenReturn(selfHosted)
+        stubHasStoredCredentials(true)
+        stubValidate(ApplicationPasswordValidator.Outcome.Valid)
+        stubCapabilityProbe(ok = true)
+        return selfHosted
     }
 
     @Test

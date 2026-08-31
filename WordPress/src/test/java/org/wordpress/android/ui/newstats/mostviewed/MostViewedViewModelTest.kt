@@ -191,6 +191,23 @@ class MostViewedViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `when data loads, then url is passed to card and detail items`() = test {
+        whenever(statsRepository.fetchMostViewed(any(), any(), any()))
+            .thenReturn(createSuccessResult())
+        whenever(resourceProvider.getString(R.string.stats_period_last_7_days))
+            .thenReturn("Last 7 days")
+
+        initViewModel()
+        advanceUntilIdle()
+
+        val state = viewModel.postsUiState.value as MostViewedCardUiState.Loaded
+        assertThat(state.items[0].url).isEqualTo(TEST_POST_URL_1)
+
+        val detailItems = viewModel.getPostsDetailData().items
+        assertThat(detailItems[0].url).isEqualTo(TEST_POST_URL_1)
+    }
+
+    @Test
     fun `when data loads with more than 10 items, then only 10 are shown in card`() = test {
         val manyItems = (1..15).mapIndexed { idx, index ->
             MostViewedItemData(
@@ -216,6 +233,26 @@ class MostViewedViewModelTest : BaseUnitTest() {
 
         val state = viewModel.postsUiState.value as MostViewedCardUiState.Loaded
         assertThat(state.items).hasSize(10)
+    }
+
+    @Test
+    fun `given a referrer with a url, when data loads, then the url reaches the card item`() = test {
+        val referrer = MostViewedItemData(
+            id = 1,
+            title = "google.com",
+            views = TEST_POST_VIEWS_1,
+            previousViews = TEST_POST_PREVIOUS_VIEWS_1,
+            isFirst = true,
+            url = TEST_REFERRER_URL
+        )
+        whenever(statsRepository.fetchMostViewed(any(), any(), any()))
+            .thenReturn(createSuccessResult().copy(items = listOf(referrer)))
+
+        initViewModel()
+        advanceUntilIdle()
+
+        val state = viewModel.referrersUiState.value as MostViewedCardUiState.Loaded
+        assertThat(state.items[0].url).isEqualTo(TEST_REFERRER_URL)
     }
 
     @Test
@@ -510,22 +547,6 @@ class MostViewedViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `when getReferrersDetailData is called, then returns cached referrers data`() = test {
-        whenever(statsRepository.fetchMostViewed(any(), any(), any()))
-            .thenReturn(createSuccessResult())
-        whenever(resourceProvider.getString(R.string.stats_period_last_7_days))
-            .thenReturn("Last 7 days")
-
-        initViewModel()
-        advanceUntilIdle()
-
-        val detailData = viewModel.getReferrersDetailData()
-
-        assertThat(detailData.cardType).isEqualTo(StatsCardType.MOST_VIEWED_REFERRERS)
-        assertThat(detailData.items).hasSize(2)
-    }
-
-    @Test
     fun `when getPostsDetailData is called, then all items are returned not just card items`() = test {
         val manyItems = (1..15).mapIndexed { idx, index ->
             MostViewedItemData(
@@ -657,7 +678,8 @@ class MostViewedViewModelTest : BaseUnitTest() {
                 title = TEST_POST_TITLE_1,
                 views = TEST_POST_VIEWS_1,
                 previousViews = TEST_POST_PREVIOUS_VIEWS_1,
-                isFirst = true
+                isFirst = true,
+                url = TEST_POST_URL_1
             ),
             MostViewedItemData(
                 id = 2,
@@ -681,8 +703,11 @@ class MostViewedViewModelTest : BaseUnitTest() {
 
         private const val TEST_POST_TITLE_1 = "Test Post 1"
         private const val TEST_POST_TITLE_2 = "Test Post 2"
+        private const val TEST_POST_URL_1 = "https://example.com/test-post-1"
         private const val TEST_POST_VIEWS_1 = 500L
         private const val TEST_POST_VIEWS_2 = 300L
+        private const val TEST_REFERRER_URL = "https://google.com/"
+
         private const val TEST_POST_PREVIOUS_VIEWS_1 = 400L
         private const val TEST_POST_PREVIOUS_VIEWS_2 = 250L
 

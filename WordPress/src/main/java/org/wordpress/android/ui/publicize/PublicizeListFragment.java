@@ -17,11 +17,9 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
-import org.wordpress.android.models.JetpackPoweredScreen;
 import org.wordpress.android.models.PublicizeService;
 import org.wordpress.android.ui.ScrollableViewInitializedListener;
 import org.wordpress.android.ui.WPWebViewActivity;
-import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredBottomSheetFragment;
 import org.wordpress.android.ui.publicize.PublicizeListViewModel.ActionEvent;
 import org.wordpress.android.ui.publicize.PublicizeListViewModel.ActionEvent.OpenServiceDetails;
 import org.wordpress.android.ui.publicize.PublicizeListViewModel.UIState;
@@ -30,8 +28,6 @@ import org.wordpress.android.ui.publicize.PublicizeTwitterDeprecationNoticeAnaly
 import org.wordpress.android.ui.publicize.adapters.PublicizeServiceAdapter;
 import org.wordpress.android.ui.publicize.adapters.PublicizeServiceAdapter.OnAdapterLoadedListener;
 import org.wordpress.android.ui.publicize.adapters.PublicizeServiceAdapter.OnServiceClickListener;
-import org.wordpress.android.ui.utils.UiHelpers;
-import org.wordpress.android.util.JetpackBrandingUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -57,8 +53,6 @@ public class PublicizeListFragment extends PublicizeBaseFragment {
     private View mNestedScrollView;
 
     @Inject AccountStore mAccountStore;
-    @Inject JetpackBrandingUtils mJetpackBrandingUtils;
-    @Inject UiHelpers mUiHelpers;
     @Inject ImageManager mImageManager;
     @Inject ViewModelProvider.Factory mViewModelFactory;
     @Inject PublicizeTwitterDeprecationNoticeAnalyticsTracker mPublicizeTwitterDeprecationNoticeAnalyticsTracker;
@@ -124,26 +118,6 @@ public class PublicizeListFragment extends PublicizeBaseFragment {
             });
         } else {
             manageContainer.setVisibility(View.GONE);
-        }
-
-        if (mJetpackBrandingUtils.shouldShowJetpackBranding()) {
-            final JetpackPoweredScreen screen = JetpackPoweredScreen.WithDynamicText.SHARE;
-            TextView jetpackBadge = rootView.findViewById(R.id.jetpack_powered_badge);
-            jetpackBadge.setVisibility(View.VISIBLE);
-            jetpackBadge.setText(
-                    mUiHelpers.getTextOfUiString(
-                            requireContext(),
-                            mJetpackBrandingUtils.getBrandingTextForScreen(screen)
-                    )
-            );
-
-            if (mJetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()) {
-                jetpackBadge.setOnClickListener(v -> {
-                    mJetpackBrandingUtils.trackBadgeTapped(screen);
-                    new JetpackPoweredBottomSheetFragment()
-                            .show(requireActivity().getSupportFragmentManager(), JetpackPoweredBottomSheetFragment.TAG);
-                });
-            }
         }
 
         return rootView;

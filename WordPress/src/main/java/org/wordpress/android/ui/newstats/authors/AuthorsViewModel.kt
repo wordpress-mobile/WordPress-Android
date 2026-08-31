@@ -17,8 +17,6 @@ import org.wordpress.android.ui.newstats.repository.TopAuthorItemData
 import org.wordpress.android.R
 import org.wordpress.android.ui.newstats.repository.TopAuthorsResult
 import org.wordpress.android.util.AppLog
-import org.wordpress.android.ui.newstats.util.toDateRangeString
-import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
 import kotlin.math.abs
 
@@ -28,8 +26,7 @@ private const val CARD_MAX_ITEMS = 10
 class AuthorsViewModel @Inject constructor(
     private val selectedSiteRepository: SelectedSiteRepository,
     private val accountStore: AccountStore,
-    private val statsRepository: StatsRepository,
-    private val resourceProvider: ResourceProvider
+    private val statsRepository: StatsRepository
 ) : ViewModel() {
     private val _uiState = MutableStateFlow<AuthorsCardUiState>(AuthorsCardUiState.Loading)
     val uiState: StateFlow<AuthorsCardUiState> = _uiState.asStateFlow()
@@ -40,11 +37,6 @@ class AuthorsViewModel @Inject constructor(
     private var currentPeriod: StatsPeriod = StatsPeriod.Last7Days
     private var loadingPeriod: StatsPeriod? = null
     private var loadedPeriod: StatsPeriod? = null
-
-    private var allAuthors: List<AuthorUiItem> = emptyList()
-    private var cachedTotalViews: Long = 0L
-    private var cachedTotalViewsChange: Long = 0L
-    private var cachedTotalViewsChangePercent: Double = 0.0
 
     fun loadData() {
         val site = selectedSiteRepository.getSelectedSite()
@@ -107,15 +99,11 @@ class AuthorsViewModel @Inject constructor(
         loadData()
     }
 
-    fun getDetailData(): AuthorsDetailData {
-        return AuthorsDetailData(
-            authors = allAuthors,
-            totalViews = cachedTotalViews,
-            totalViewsChange = cachedTotalViewsChange,
-            totalViewsChangePercent = cachedTotalViewsChangePercent,
-            dateRange = currentPeriod.toDateRangeString(resourceProvider)
-        )
-    }
+    /**
+     * The period currently selected for the authors card. The authors detail screen self-fetches its
+     * own (unbounded) data for this period rather than receiving the full list via the Intent.
+     */
+    fun getCurrentPeriod(): StatsPeriod = currentPeriod
 
     @Suppress("TooGenericExceptionCaught")
     private suspend fun fetchTopAuthors(site: SiteModel) {
@@ -127,29 +115,15 @@ class AuthorsViewModel @Inject constructor(
             )) {
                 is TopAuthorsResult.Success -> {
                     loadedPeriod = currentPeriod
-                    cachedTotalViews = result.totalViews
-                    cachedTotalViewsChange = result.totalViewsChange
-                    cachedTotalViewsChangePercent =
-                        result.totalViewsChangePercent
 
                     if (result.authors.isEmpty()) {
-                        allAuthors = emptyList()
                         _uiState.value = AuthorsCardUiState.Loaded(
                             authors = emptyList(),
                             maxViewsForBar = 0,
                             hasMoreItems = false
                         )
                     } else {
-                        val authors = result.authors.map { author ->
-                            AuthorUiItem(
-                                name = author.name,
-                                avatarUrl = author.avatarUrl,
-                                views = author.views,
-                                change = author.toStatsViewChange()
-                            )
-                        }
-
-                        allAuthors = authors
+                        val authors = result.authors.map { it.toAuthorUiItem() }
 
                         val cardAuthors = authors.take(CARD_MAX_ITEMS)
                         val maxViewsForBar =
@@ -177,20 +151,19 @@ class AuthorsViewModel @Inject constructor(
             )
         }
     }
-
-    private fun TopAuthorItemData.toStatsViewChange(): StatsViewChange {
-        return when {
-            viewsChange > 0 -> StatsViewChange.Positive(viewsChange, abs(viewsChangePercent))
-            viewsChange < 0 -> StatsViewChange.Negative(abs(viewsChange), abs(viewsChangePercent))
-            else -> StatsViewChange.NoChange
-        }
-    }
 }
 
-data class AuthorsDetailData(
-    val authors: List<AuthorUiItem>,
-    val totalViews: Long,
-    val totalViewsChange: Long,
-    val totalViewsChangePercent: Double,
-    val dateRange: String
+/**
+ * Maps a repository [TopAuthorItemData] to the parcelable [AuthorUiItem] shown by the card and the
+ * detail screen. Shared by [AuthorsViewModel] and [AuthorsDetailViewModel].
+ */
+internal fun TopAuthorItemData.toAuthorUiItem() = AuthorUiItem(
+    name = name,
+    avatarUrl = avatarUrl,
+    views = views,
+    change = when {
+        viewsChange > 0 -> StatsViewChange.Positive(viewsChange, abs(viewsChangePercent))
+        viewsChange < 0 -> StatsViewChange.Negative(abs(viewsChange), abs(viewsChangePercent))
+        else -> StatsViewChange.NoChange
+    }
 )

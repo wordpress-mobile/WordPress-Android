@@ -1,0 +1,27 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/buildkite/pipeline-schema/main/schema.json
+---
+
+# Runs on a daily schedule (configured in the Buildkite UI, ~06:00 UTC) to sync the latest
+# translations from GlotPress into a single rolling `translations/daily-update` PR.
+#
+# Runs on `mac-metal` (like the release code-freeze/finalize lanes) because this job commits,
+# pushes and opens a PR, which needs the bot git identity from `use-bot-for-git` — that command
+# is only available on those agents.
+
+agents:
+  queue: "mac-metal"
+
+steps:
+  - label: ":globe_with_meridians: Download Translations"
+    command: .buildkite/commands/download-translations.sh
+    plugins: [$CI_TOOLKIT]
+
+# Slack backstop for a failed sync — its unique value is failures that abort before the lane runs
+# (gems/secrets) and can't self-report. This is a translations PR rather than part of the release
+# flow, so it reports to #build-and-ship instead of the release channel.
+notify:
+  - slack:
+      channels:
+        - "#build-and-ship"
+      message: "Failed to sync translations from GlotPress."
+    if: build.state == "failed"

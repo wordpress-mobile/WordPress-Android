@@ -13,10 +13,9 @@ import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.ui.blaze.BlazeFeatureUtils
 import org.wordpress.android.ui.blaze.BlazeFlowSource
 import org.wordpress.android.ui.blaze.blazecampaigns.campaignlisting.CampaignListingPageSource
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
 import org.wordpress.android.ui.mysite.SiteNavigationAction
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction
-import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures
+import org.wordpress.android.ui.newstats.NewStatsRouting
 import kotlin.test.assertEquals
 
 @ExperimentalCoroutinesApi
@@ -26,13 +25,10 @@ class ListItemActionHandlerTest: BaseUnitTest() {
     lateinit var accountStore: AccountStore
 
     @Mock
-    lateinit var jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper
-
-    @Mock
     lateinit var blazeFeatureUtils: BlazeFeatureUtils
 
     @Mock
-    lateinit var experimentalFeatures: ExperimentalFeatures
+    lateinit var newStatsRouting: NewStatsRouting
 
     private val site = SiteModel()
 
@@ -42,9 +38,8 @@ class ListItemActionHandlerTest: BaseUnitTest() {
     fun setup() {
         listItemActionHandler = ListItemActionHandler(
             accountStore,
-            jetpackFeatureRemovalPhaseHelper,
             blazeFeatureUtils,
-            experimentalFeatures
+            newStatsRouting
         )
     }
 
@@ -162,9 +157,9 @@ class ListItemActionHandlerTest: BaseUnitTest() {
     }
 
     @Test
-    fun `stats item click emits OpenNewStats when NEW_STATS feature is enabled and site is WPCom`() {
+    fun `stats item click emits OpenNewStats when New Stats is enabled`() {
         site.setIsWPCom(true)
-        whenever(experimentalFeatures.isEnabled(ExperimentalFeatures.Feature.NEW_STATS)).thenReturn(true)
+        whenever(newStatsRouting.isNewStatsEnabled()).thenReturn(true)
 
         val navigationAction = invokeItemClickAction(action = ListItemAction.STATS)
 
@@ -172,15 +167,13 @@ class ListItemActionHandlerTest: BaseUnitTest() {
     }
 
     @Test
-    fun `stats item click emits OpenNewStats when NEW_STATS feature is enabled and site is Jetpack`() {
-        site.setIsJetpackConnected(true)
+    fun `stats item click emits OpenStats when New Stats is disabled`() {
         site.setIsWPCom(true)
-        whenever(accountStore.hasAccessToken()).thenReturn(true)
-        whenever(experimentalFeatures.isEnabled(ExperimentalFeatures.Feature.NEW_STATS)).thenReturn(true)
+        whenever(newStatsRouting.isNewStatsEnabled()).thenReturn(false)
 
         val navigationAction = invokeItemClickAction(action = ListItemAction.STATS)
 
-        assertEquals(SiteNavigationAction.OpenNewStats, navigationAction)
+        assertEquals(SiteNavigationAction.OpenStats(site), navigationAction)
     }
 
     @Test

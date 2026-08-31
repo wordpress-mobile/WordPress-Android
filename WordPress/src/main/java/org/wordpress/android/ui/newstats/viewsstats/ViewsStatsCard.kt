@@ -1,17 +1,13 @@
 package org.wordpress.android.ui.newstats.viewsstats
 
-import androidx.compose.animation.core.LinearEasing
-import androidx.compose.animation.core.RepeatMode
-import androidx.compose.animation.core.animateFloat
-import androidx.compose.animation.core.infiniteRepeatable
-import androidx.compose.animation.core.rememberInfiniteTransition
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -19,8 +15,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -47,12 +42,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
 import org.wordpress.android.ui.newstats.StatsColors
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.role
+import androidx.compose.ui.semantics.selected
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -84,9 +83,12 @@ import com.patrykandpatrick.vico.compose.common.component.rememberShapeComponent
 import com.patrykandpatrick.vico.compose.common.component.rememberTextComponent
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.theme.AppThemeM3
+import org.wordpress.android.ui.compose.utils.horizontalFadingEdges
 import org.wordpress.android.ui.newstats.components.CardPosition
 import org.wordpress.android.ui.newstats.components.StatsCardMenu
 import org.wordpress.android.ui.newstats.util.formatStatValue
+import org.wordpress.android.ui.newstats.util.ShimmerBox
+import org.wordpress.android.ui.newstats.util.rememberShimmerBrush
 import java.util.Locale
 import kotlin.math.abs
 
@@ -94,7 +96,12 @@ private val CardCornerRadius = 10.dp
 private val CardPadding = 16.dp
 private val CardMargin = 16.dp
 private val ChartHeight = 180.dp
+// Vertical space the loaded header occupies: headlineLarge line height (40dp) + 4dp + the difference
+// row's bodyMedium line height (20dp). Reserved in the Unavailable state so a metric switch on a
+// single-day period doesn't resize the card.
+private val ChartHeaderHeight = 64.dp
 private val StatItemWidth = 100.dp
+private val StatItemIndicatorHeight = 3.dp
 private val BadgeCornerRadius = 4.dp
 
 // Preview sample data constants
@@ -114,6 +121,7 @@ private val SAMPLE_PREVIOUS_PERIOD_DATA = listOf(1000L, 1400L, 1150L, 1200L, 135
 fun ViewsStatsCard(
     uiState: ViewsStatsCardUiState,
     onChartTypeChanged: (ChartType) -> Unit,
+    onMetricSelected: (StatsMetric) -> Unit,
     onBarTapped: (Int) -> Unit,
     onRetry: () -> Unit,
     onRemoveCard: () -> Unit,
@@ -140,8 +148,8 @@ fun ViewsStatsCard(
     ) {
         when (uiState) {
             is ViewsStatsCardUiState.Loading -> LoadingContent()
-            is ViewsStatsCardUiState.Loaded -> LoadedContent(
-                uiState, onChartTypeChanged, onBarTapped, onRemoveCard,
+            is ViewsStatsCardUiState.Content -> ContentCard(
+                uiState, onChartTypeChanged, onMetricSelected, onBarTapped, onRetry, onRemoveCard,
                 cardPosition, onMoveUp, onMoveToTop, onMoveDown, onMoveToBottom
             )
             is ViewsStatsCardUiState.Error -> ErrorContent(
@@ -154,113 +162,78 @@ fun ViewsStatsCard(
 
 @Composable
 private fun LoadingContent() {
-    val shimmerColors = listOf(
-        MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f),
-        MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.6f),
-        MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f)
-    )
-
-    val transition = rememberInfiniteTransition(label = "shimmer")
-    val translateAnimation = transition.animateFloat(
-        initialValue = 0f,
-        targetValue = 1000f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(durationMillis = 1200, easing = LinearEasing),
-            repeatMode = RepeatMode.Restart
-        ),
-        label = "shimmer_translate"
-    )
-
-    val shimmerBrush = Brush.linearGradient(
-        colors = shimmerColors,
-        start = Offset(translateAnimation.value - 500f, 0f),
-        end = Offset(translateAnimation.value, 0f)
-    )
-
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .padding(CardPadding)
     ) {
         // Header shimmer
-        Box(
+        ShimmerBox(
             modifier = Modifier
                 .width(60.dp)
                 .height(24.dp)
-                .clip(RoundedCornerShape(4.dp))
-                .background(shimmerBrush)
         )
         Spacer(modifier = Modifier.height(12.dp))
+        ChartRegionPlaceholder()
+        Spacer(modifier = Modifier.height(16.dp))
+        BottomStatsPlaceholder()
+    }
+}
+
+/**
+ * Placeholder for the chart region (totals row + chart area) while the chart calls are in flight.
+ */
+@Composable
+private fun ChartRegionPlaceholder() {
+    Column(modifier = Modifier.fillMaxWidth()) {
         Row(modifier = Modifier.fillMaxWidth()) {
             Column {
-                Box(
-                    modifier = Modifier
-                        .width(80.dp)
-                        .height(32.dp)
-                        .clip(RoundedCornerShape(4.dp))
-                        .background(shimmerBrush)
-                )
+                ShimmerBox(modifier = Modifier.width(80.dp).height(32.dp))
                 Spacer(modifier = Modifier.height(4.dp))
-                Box(
-                    modifier = Modifier
-                        .width(100.dp)
-                        .height(16.dp)
-                        .clip(RoundedCornerShape(4.dp))
-                        .background(shimmerBrush)
-                )
+                ShimmerBox(modifier = Modifier.width(100.dp).height(16.dp))
             }
             Spacer(modifier = Modifier.weight(1f))
             Column(horizontalAlignment = Alignment.End) {
-                Box(
-                    modifier = Modifier
-                        .width(80.dp)
-                        .height(16.dp)
-                        .clip(RoundedCornerShape(4.dp))
-                        .background(shimmerBrush)
-                )
+                ShimmerBox(modifier = Modifier.width(80.dp).height(16.dp))
                 Spacer(modifier = Modifier.height(4.dp))
-                Box(
-                    modifier = Modifier
-                        .width(80.dp)
-                        .height(16.dp)
-                        .clip(RoundedCornerShape(4.dp))
-                        .background(shimmerBrush)
-                )
+                ShimmerBox(modifier = Modifier.width(80.dp).height(16.dp))
             }
         }
         Spacer(modifier = Modifier.height(16.dp))
-        // Chart shimmer
         Box(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(ChartHeight)
                 .clip(RoundedCornerShape(8.dp))
-                .background(shimmerBrush)
+                .background(rememberShimmerBrush())
         )
-        Spacer(modifier = Modifier.height(16.dp))
-        // Bottom stats shimmer
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(16.dp)
-        ) {
-            repeat(4) {
-                Box(
-                    modifier = Modifier
-                        .width(70.dp)
-                        .height(60.dp)
-                        .clip(RoundedCornerShape(4.dp))
-                        .background(shimmerBrush)
-                )
-            }
+    }
+}
+
+/** Placeholder for the bottom-stats row while the dedicated bottom call is in flight. */
+@Composable
+private fun BottomStatsPlaceholder() {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+        repeat(4) {
+            ShimmerBox(
+                modifier = Modifier
+                    .width(70.dp)
+                    .height(60.dp)
+            )
         }
     }
 }
 
 @Composable
-private fun LoadedContent(
-    state: ViewsStatsCardUiState.Loaded,
+private fun ContentCard(
+    state: ViewsStatsCardUiState.Content,
     onChartTypeChanged: (ChartType) -> Unit,
+    onMetricSelected: (StatsMetric) -> Unit,
     onBarTapped: (Int) -> Unit,
+    onRetry: () -> Unit,
     onRemoveCard: () -> Unit,
     cardPosition: CardPosition?,
     onMoveUp: (() -> Unit)?,
@@ -268,6 +241,7 @@ private fun LoadedContent(
     onMoveDown: (() -> Unit)?,
     onMoveToBottom: (() -> Unit)?
 ) {
+    val chart = state.chart
     Box(modifier = Modifier.fillMaxWidth()) {
         Column(
             modifier = Modifier
@@ -275,10 +249,15 @@ private fun LoadedContent(
                 .padding(CardPadding)
                 .alpha(if (state.isLoadingNewPeriod) 0.5f else 1f)
         ) {
-            // Header Section
-            HeaderSection(
-                state = state,
-                onChartTypeChanged = onChartTypeChanged,
+            // Title + menu are always shown so the card controls stay reachable in every state.
+            // Chart-type options only make sense once the chart has loaded.
+            CardTitleRow(
+                title = stringResource(state.selectedMetric.labelRes),
+                chartTypeMenu = if (chart is ChartUiState.Loaded) {
+                    { ChartTypeMenuItems(chart.chartType, onChartTypeChanged) }
+                } else {
+                    null
+                },
                 onRemoveCard = onRemoveCard,
                 cardPosition = cardPosition,
                 onMoveUp = onMoveUp,
@@ -287,16 +266,45 @@ private fun LoadedContent(
                 onMoveToBottom = onMoveToBottom
             )
             Spacer(modifier = Modifier.height(8.dp))
-            // Chart Section
-            ViewsStatsChart(
-                chartData = state.chartData,
-                periodAverage = state.periodAverage,
-                chartType = state.chartType,
-                onBarTapped = onBarTapped
-            )
-            Spacer(modifier = Modifier.height(16.dp))
-            // Bottom Stats Row
-            BottomStatsRow(stats = state.bottomStats)
+            // Chart region — loads independently of the bottom row
+            when (chart) {
+                is ChartUiState.Loading -> ChartRegionPlaceholder()
+                is ChartUiState.Loaded -> {
+                    HeaderStats(chart, selectedMetric = state.selectedMetric)
+                    Spacer(modifier = Modifier.height(8.dp))
+                    ViewsStatsChart(
+                        chartData = chart.chartData,
+                        periodAverage = chart.periodAverage,
+                        chartType = chart.chartType,
+                        selectedMetric = state.selectedMetric,
+                        onBarTapped = onBarTapped
+                    )
+                }
+                is ChartUiState.Unavailable -> {
+                    // Reserve the header's height (kept empty — an hourly response has no totals to
+                    // summarise) so switching to an unavailable metric doesn't resize the card.
+                    Spacer(modifier = Modifier.height(ChartHeaderHeight))
+                    Spacer(modifier = Modifier.height(8.dp))
+                    ChartUnavailableBox(onShowViews = { onMetricSelected(StatsMetric.VIEWS) })
+                }
+                is ChartUiState.Error -> ChartErrorBox(onRetry = onRetry)
+            }
+            // Bottom Stats Row — loads independently; hidden when its dedicated call failed
+            when (val bottom = state.bottomStats) {
+                is BottomStatsUiState.Loading -> {
+                    Spacer(modifier = Modifier.height(16.dp))
+                    BottomStatsPlaceholder()
+                }
+                is BottomStatsUiState.Loaded -> {
+                    Spacer(modifier = Modifier.height(16.dp))
+                    BottomStatsRow(
+                        stats = bottom.stats,
+                        selectedMetric = state.selectedMetric,
+                        onMetricSelected = onMetricSelected
+                    )
+                }
+                is BottomStatsUiState.Hidden -> Unit
+            }
         }
         if (state.isLoadingNewPeriod) {
             CircularProgressIndicator(
@@ -308,9 +316,9 @@ private fun LoadedContent(
 }
 
 @Composable
-private fun HeaderSection(
-    state: ViewsStatsCardUiState.Loaded,
-    onChartTypeChanged: (ChartType) -> Unit,
+private fun CardTitleRow(
+    title: String,
+    chartTypeMenu: @Composable (() -> Unit)?,
     onRemoveCard: () -> Unit,
     cardPosition: CardPosition?,
     onMoveUp: (() -> Unit)?,
@@ -318,75 +326,138 @@ private fun HeaderSection(
     onMoveDown: (() -> Unit)?,
     onMoveToBottom: (() -> Unit)?
 ) {
-    Column(modifier = Modifier.fillMaxWidth()) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                text = stringResource(R.string.stats_views),
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Bold
-            )
-            StatsCardMenu(
-                onRemoveClick = onRemoveCard,
-                cardPosition = cardPosition,
-                onMoveUp = onMoveUp,
-                onMoveToTop = onMoveToTop,
-                onMoveDown = onMoveDown,
-                onMoveToBottom = onMoveToBottom,
-                additionalContent = {
-                    ChartTypeMenuItems(
-                        currentChartType = state.chartType,
-                        onChartTypeSelected = onChartTypeChanged
-                    )
-                }
-            )
-        }
-        Spacer(modifier = Modifier.height(4.dp))
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.Top
-        ) {
-            // Left: Current and previous period totals with difference
-            Column {
-                Row {
-                    Text(
-                        text = formatStatValue(state.currentPeriodViews),
-                        style = MaterialTheme.typography.headlineLarge,
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.onSurface,
-                        modifier = Modifier.alignByBaseline()
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text(
-                        text = formatStatValue(state.previousPeriodViews),
-                        style = MaterialTheme.typography.titleMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        modifier = Modifier.alignByBaseline()
-                    )
-                }
-                Spacer(modifier = Modifier.height(4.dp))
-                DifferenceRow(
-                    difference = state.viewsDifference,
-                    percentageChange = state.viewsPercentageChange
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            text = title,
+            style = MaterialTheme.typography.titleMedium,
+            fontWeight = FontWeight.Bold
+        )
+        StatsCardMenu(
+            onRemoveClick = onRemoveCard,
+            cardPosition = cardPosition,
+            onMoveUp = onMoveUp,
+            onMoveToTop = onMoveToTop,
+            onMoveDown = onMoveDown,
+            onMoveToBottom = onMoveToBottom,
+            additionalContent = chartTypeMenu
+        )
+    }
+}
+
+/**
+ * Resolves a metric's chart accent color, falling back to the theme primary for Views so the default
+ * chart keeps its familiar blue in both light and dark themes.
+ */
+@Composable
+private fun metricColor(metric: StatsMetric): Color = metric.color ?: MaterialTheme.colorScheme.primary
+
+@Composable
+private fun HeaderStats(chart: ChartUiState.Loaded, selectedMetric: StatsMetric) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.Top
+    ) {
+        // Left: Current and previous period totals with difference
+        Column {
+            Row {
+                Text(
+                    text = formatStatValue(chart.currentPeriodTotal),
+                    style = MaterialTheme.typography.headlineLarge,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onSurface,
+                    modifier = Modifier.alignByBaseline()
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(
+                    text = formatStatValue(chart.previousPeriodTotal),
+                    style = MaterialTheme.typography.titleMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.alignByBaseline()
                 )
             }
-            // Right: Date ranges with colored dots and average
-            Column(horizontalAlignment = Alignment.End) {
-                DateRangeWithDot(
-                    dateRange = state.currentPeriodDateRange,
-                    dotColor = MaterialTheme.colorScheme.primary
-                )
-                Spacer(modifier = Modifier.height(4.dp))
-                DateRangeWithDot(
-                    dateRange = state.previousPeriodDateRange,
-                    dotColor = MaterialTheme.colorScheme.outline
-                )
-                Spacer(modifier = Modifier.height(4.dp))
-                AverageRow(average = state.periodAverage)
+            Spacer(modifier = Modifier.height(4.dp))
+            DifferenceRow(
+                difference = chart.difference,
+                percentageChange = chart.percentageChange
+            )
+        }
+        // Right: Date ranges with colored dots and average
+        Column(horizontalAlignment = Alignment.End) {
+            DateRangeWithDot(
+                dateRange = chart.currentPeriodDateRange,
+                dotColor = metricColor(selectedMetric)
+            )
+            Spacer(modifier = Modifier.height(4.dp))
+            DateRangeWithDot(
+                dateRange = chart.previousPeriodDateRange,
+                dotColor = MaterialTheme.colorScheme.outline
+            )
+            Spacer(modifier = Modifier.height(4.dp))
+            AverageRow(average = chart.periodAverage)
+        }
+    }
+}
+
+/**
+ * Compact error shown in place of the header + chart when the chart calls fail. The bottom-stats
+ * row is rendered separately, so it stays visible even while this is shown.
+ */
+@Composable
+private fun ChartErrorBox(onRetry: () -> Unit) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(ChartHeight)
+            .clip(RoundedCornerShape(8.dp))
+            .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f)),
+        contentAlignment = Alignment.Center
+    ) {
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            Text(
+                text = stringResource(R.string.stats_error_api),
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.error
+            )
+            Spacer(modifier = Modifier.height(12.dp))
+            Button(onClick = onRetry) {
+                Text(text = stringResource(R.string.retry))
+            }
+        }
+    }
+}
+
+/**
+ * Shown in place of the chart when the selected metric has no series for the current period (a
+ * single-day/hourly response only carries views). The header is dropped too — there is nothing to
+ * summarise — but its height is reserved by the caller so the card keeps the same size, while the
+ * bottom row keeps showing all five values from its dedicated call.
+ */
+@Composable
+private fun ChartUnavailableBox(onShowViews: () -> Unit) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(ChartHeight)
+            .clip(RoundedCornerShape(8.dp))
+            .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f)),
+        contentAlignment = Alignment.Center
+    ) {
+        // Text + CTA both sit inside the fixed-height box, so the card size is unaffected. The CTA is a
+        // one-tap escape back to Views, the one metric with an hourly series.
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            Text(
+                text = stringResource(R.string.stats_hourly_data_not_available),
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+            Spacer(modifier = Modifier.height(12.dp))
+            Button(onClick = onShowViews) {
+                Text(text = stringResource(R.string.stats_show_views))
             }
         }
     }
@@ -497,6 +568,7 @@ private fun ViewsStatsChart(
     chartData: ViewsStatsChartData,
     periodAverage: Long,
     chartType: ChartType,
+    selectedMetric: StatsMetric,
     onBarTapped: (Int) -> Unit = {}
 ) {
     // Key the model producer on chartType so it gets recreated when chart type changes
@@ -510,9 +582,9 @@ private fun ViewsStatsChart(
             when (chartType) {
                 ChartType.LINE -> modelProducer.runTransaction {
                     lineModel {
-                        series(chartData.currentPeriod.map { it.views })
+                        series(chartData.currentPeriod.map { it.value })
                         if (hasPreviousPeriod) {
-                            series(chartData.previousPeriod.map { it.views })
+                            series(chartData.previousPeriod.map { it.value })
                         }
                     }
                 }
@@ -525,8 +597,8 @@ private fun ViewsStatsChart(
                                 chartData.currentPeriod.zip(
                                     chartData.previousPeriod
                                 ) { current, previous ->
-                                    if (previous.views <= current.views)
-                                        current.views
+                                    if (previous.value <= current.value)
+                                        current.value
                                     else 0L
                                 }
                             )
@@ -536,8 +608,8 @@ private fun ViewsStatsChart(
                                 chartData.currentPeriod.zip(
                                     chartData.previousPeriod
                                 ) { current, previous ->
-                                    if (previous.views > current.views)
-                                        current.views
+                                    if (previous.value > current.value)
+                                        current.value
                                     else 0L
                                 }
                             )
@@ -548,14 +620,14 @@ private fun ViewsStatsChart(
                                 ) { current, previous ->
                                     maxOf(
                                         0L,
-                                        previous.views - current.views
+                                        previous.value - current.value
                                     )
                                 }
                             )
                         } else {
                             series(
                                 chartData.currentPeriod.map {
-                                    it.views
+                                    it.value
                                 }
                             )
                         }
@@ -583,7 +655,8 @@ private fun ViewsStatsChart(
         return
     }
 
-    val primaryColor = MaterialTheme.colorScheme.primary
+    // The current-period series recolours to the selected metric; the previous period stays muted.
+    val primaryColor = metricColor(selectedMetric)
     val secondaryColor = MaterialTheme.colorScheme.outline.copy(alpha = 0.5f)
 
     // X-axis labels from both series so the formatter covers the
@@ -678,25 +751,31 @@ private fun ViewsStatsChart(
             )
         }
         ChartType.BAR -> {
-            var lastShownIndex by remember { mutableIntStateOf(-1) }
-            val barTapListener = remember(onBarTapped) {
+            // The marker shows on pointer-down and hides on pointer-up, so its visibility
+            // callbacks cannot tell a tap from the start of a scroll. Track which bar the
+            // pointer is over here, and drill down only once detectTapGestures confirms the
+            // gesture was a tap -- an enclosing scroll consumes the drag, which cancels it.
+            // Hit-testing is horizontal only, so a tap anywhere in this box selects the
+            // nearest bar, matching the marker's existing behavior.
+            var pressedIndex by remember { mutableIntStateOf(-1) }
+            val barTapListener = remember {
                 object : CartesianMarkerVisibilityListener {
                     override fun onShown(
                         marker: CartesianMarker,
                         targets: List<CartesianMarker.Target>
                     ) {
-                        lastShownIndex = targets.firstOrNull()
-                            ?.x?.toInt() ?: -1
+                        pressedIndex = targets.firstOrNull()?.x?.toInt() ?: -1
                     }
 
-                    override fun onHidden(
-                        marker: CartesianMarker
+                    override fun onUpdated(
+                        marker: CartesianMarker,
+                        targets: List<CartesianMarker.Target>
                     ) {
-                        val index = lastShownIndex
-                        if (index >= 0) {
-                            lastShownIndex = -1
-                            onBarTapped(index)
-                        }
+                        pressedIndex = targets.firstOrNull()?.x?.toInt() ?: -1
+                    }
+
+                    override fun onHidden(marker: CartesianMarker) {
+                        pressedIndex = -1
                     }
                 }
             }
@@ -747,37 +826,68 @@ private fun ViewsStatsChart(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(ChartHeight)
+                    .pointerInput(onBarTapped) {
+                        detectTapGestures {
+                            if (pressedIndex >= 0) onBarTapped(pressedIndex)
+                        }
+                    }
             )
         }
     }
 }
 
 @Composable
-private fun BottomStatsRow(stats: List<StatItem>) {
-    LazyRow(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
-        contentPadding = PaddingValues(horizontal = 0.dp)
+private fun BottomStatsRow(
+    stats: List<StatItem>,
+    selectedMetric: StatsMetric,
+    onMetricSelected: (StatsMetric) -> Unit
+) {
+    // A plain scrollable Row plus the shared fading-edges modifier hints at off-screen items. The
+    // modifier erases content with BlendMode.DstOut (background-agnostic) and is already RTL-aware,
+    // and it grows/shrinks the fade with the actual scroll offset. The items act like a tab strip:
+    // each is a metric selector (tapping it re-plots the chart, or shows the hourly-unavailable
+    // state), and the selected one shows a bottom indicator line.
+    val scrollState = rememberScrollState()
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .horizontalScroll(scrollState)
+            .horizontalFadingEdges(scrollState),
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        items(stats) { stat ->
-            StatItemCard(stat)
+        stats.forEach { stat ->
+            StatItemCard(
+                stat = stat,
+                isSelected = stat.metric == selectedMetric,
+                onClick = { onMetricSelected(stat.metric) }
+            )
         }
     }
 }
 
+private fun iconForMetric(metric: StatsMetric) = when (metric) {
+    StatsMetric.VIEWS -> Icons.Outlined.Visibility
+    StatsMetric.VISITORS -> Icons.Default.PersonOutline
+    StatsMetric.LIKES -> Icons.Default.FavoriteBorder
+    StatsMetric.COMMENTS -> Icons.Default.ChatBubbleOutline
+    StatsMetric.POSTS -> Icons.Outlined.ModeEditOutline
+}
+
 @Composable
-private fun StatItemCard(stat: StatItem) {
-    val icon = when (stat.label) {
-        stringResource(R.string.stats_views) -> Icons.Outlined.Visibility
-        stringResource(R.string.stats_visitors) -> Icons.Default.PersonOutline
-        stringResource(R.string.stats_likes) -> Icons.Default.FavoriteBorder
-        stringResource(R.string.stats_comments) -> Icons.Default.ChatBubbleOutline
-        stringResource(R.string.posts) -> Icons.Outlined.ModeEditOutline
-        else -> Icons.Outlined.Visibility
-    }
+private fun StatItemCard(stat: StatItem, isSelected: Boolean, onClick: () -> Unit) {
+    val icon = iconForMetric(stat.metric)
+    val label = stringResource(stat.metric.labelRes)
+    // The selected tab's indicator uses the metric's accent color so it matches the recoloured chart.
+    val indicatorColor = if (isSelected) metricColor(stat.metric) else Color.Transparent
 
     Column(
-        modifier = Modifier.width(StatItemWidth),
+        modifier = Modifier
+            .width(StatItemWidth)
+            .clickable(onClick = onClick)
+            .semantics {
+                role = Role.Tab
+                selected = isSelected
+            },
         horizontalAlignment = Alignment.Start
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
@@ -789,7 +899,7 @@ private fun StatItemCard(stat: StatItem) {
             )
             Spacer(modifier = Modifier.width(4.dp))
             Text(
-                text = stat.label.uppercase(),
+                text = label.uppercase(),
                 style = MaterialTheme.typography.labelSmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
@@ -803,6 +913,16 @@ private fun StatItemCard(stat: StatItem) {
         )
         Spacer(modifier = Modifier.height(4.dp))
         ChangeBadge(change = stat.change)
+        // Tab-style bottom indicator; always laid out (transparent when unselected) so the row height
+        // stays constant as the selection moves.
+        Spacer(modifier = Modifier.height(6.dp))
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(StatItemIndicatorHeight)
+                .clip(RoundedCornerShape(percent = 50))
+                .background(indicatorColor)
+        )
     }
 }
 
@@ -922,6 +1042,7 @@ private fun ViewsStatsCardLoadingPreview() {
         ViewsStatsCard(
             uiState = ViewsStatsCardUiState.Loading,
             onChartTypeChanged = {},
+            onMetricSelected = {},
             onBarTapped = {},
             onRetry = {},
             onRemoveCard = {}
@@ -929,32 +1050,46 @@ private fun ViewsStatsCardLoadingPreview() {
     }
 }
 
-private fun sampleLoadedState(): ViewsStatsCardUiState.Loaded {
+private fun sampleLoadedState(chartType: ChartType): ViewsStatsCardUiState.Content {
     val currentPeriodLabels = listOf("Jan 14", "Jan 15", "Jan 16", "Jan 17", "Jan 18", "Jan 19", "Jan 20")
     val previousPeriodLabels = listOf("Jan 7", "Jan 8", "Jan 9", "Jan 10", "Jan 11", "Jan 12", "Jan 13")
 
-    return ViewsStatsCardUiState.Loaded(
-        currentPeriodViews = SAMPLE_CURRENT_VIEWS,
-        previousPeriodViews = SAMPLE_PREVIOUS_VIEWS,
-        viewsDifference = SAMPLE_VIEWS_DIFFERENCE,
-        viewsPercentageChange = SAMPLE_VIEWS_PERCENTAGE,
-        currentPeriodDateRange = "14-20 Jan",
-        previousPeriodDateRange = "7-13 Jan",
-        chartData = ViewsStatsChartData(
-            currentPeriod = currentPeriodLabels.zip(SAMPLE_CURRENT_PERIOD_DATA) { label, views ->
-                ChartDataPoint(label, views)
-            },
-            previousPeriod = previousPeriodLabels.zip(SAMPLE_PREVIOUS_PERIOD_DATA) { label, views ->
-                ChartDataPoint(label, views)
-            }
+    return ViewsStatsCardUiState.Content(
+        chart = ChartUiState.Loaded(
+            currentPeriodTotal = SAMPLE_CURRENT_VIEWS,
+            previousPeriodTotal = SAMPLE_PREVIOUS_VIEWS,
+            difference = SAMPLE_VIEWS_DIFFERENCE,
+            percentageChange = SAMPLE_VIEWS_PERCENTAGE,
+            currentPeriodDateRange = "14-20 Jan",
+            previousPeriodDateRange = "7-13 Jan",
+            chartData = ViewsStatsChartData(
+                currentPeriod = currentPeriodLabels.zip(SAMPLE_CURRENT_PERIOD_DATA) { label, views ->
+                    ChartDataPoint(label, views)
+                },
+                previousPeriod = previousPeriodLabels.zip(SAMPLE_PREVIOUS_PERIOD_DATA) { label, views ->
+                    ChartDataPoint(label, views)
+                }
+            ),
+            periodAverage = SAMPLE_PERIOD_AVERAGE,
+            chartType = chartType
         ),
-        periodAverage = SAMPLE_PERIOD_AVERAGE,
-        bottomStats = listOf(
-            StatItem("Views", SAMPLE_CURRENT_VIEWS, StatChange.Negative(SAMPLE_VIEWS_PERCENTAGE)),
-            StatItem("Visitors", SAMPLE_VISITORS, StatChange.Negative(SAMPLE_VISITORS_PERCENTAGE)),
-            StatItem("Likes", 0, StatChange.NoChange),
-            StatItem("Comments", 0, StatChange.NoChange),
-            StatItem("Posts", SAMPLE_POSTS, StatChange.Positive(SAMPLE_POSTS_PERCENTAGE))
+        bottomStats = BottomStatsUiState.Loaded(
+            listOf(
+                StatItem(
+                    StatsMetric.VIEWS, SAMPLE_CURRENT_VIEWS,
+                    StatChange.Negative(SAMPLE_VIEWS_PERCENTAGE)
+                ),
+                StatItem(
+                    StatsMetric.VISITORS, SAMPLE_VISITORS,
+                    StatChange.Negative(SAMPLE_VISITORS_PERCENTAGE)
+                ),
+                StatItem(StatsMetric.LIKES, 0, StatChange.NoChange),
+                StatItem(StatsMetric.COMMENTS, 0, StatChange.NoChange),
+                StatItem(
+                    StatsMetric.POSTS, SAMPLE_POSTS,
+                    StatChange.Positive(SAMPLE_POSTS_PERCENTAGE)
+                )
+            )
         )
     )
 }
@@ -964,8 +1099,24 @@ private fun sampleLoadedState(): ViewsStatsCardUiState.Loaded {
 private fun ViewsStatsCardLoadedPreview() {
     AppThemeM3 {
         ViewsStatsCard(
-            uiState = sampleLoadedState(),
+            uiState = sampleLoadedState(ChartType.BAR),
             onChartTypeChanged = {},
+            onMetricSelected = {},
+            onBarTapped = {},
+            onRetry = {},
+            onRemoveCard = {}
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun ViewsStatsCardLoadedLineChartPreview() {
+    AppThemeM3 {
+        ViewsStatsCard(
+            uiState = sampleLoadedState(ChartType.LINE),
+            onChartTypeChanged = {},
+            onMetricSelected = {},
             onBarTapped = {},
             onRetry = {},
             onRemoveCard = {}
@@ -982,6 +1133,7 @@ private fun ViewsStatsCardErrorPreview() {
                 message = stringResource(R.string.stats_error_api)
             ),
             onChartTypeChanged = {},
+            onMetricSelected = {},
             onBarTapped = {},
             onRetry = {},
             onRemoveCard = {}
@@ -994,8 +1146,25 @@ private fun ViewsStatsCardErrorPreview() {
 private fun ViewsStatsCardLoadedDarkPreview() {
     AppThemeM3 {
         ViewsStatsCard(
-            uiState = sampleLoadedState(),
+            uiState = sampleLoadedState(ChartType.BAR),
             onChartTypeChanged = {},
+            onMetricSelected = {},
+            onBarTapped = {},
+            onRetry = {},
+            onRemoveCard = {}
+        )
+    }
+}
+
+// RTL preview to verify the bottom-stats fading edges mirror correctly.
+@Preview(showBackground = true, locale = "ar")
+@Composable
+private fun ViewsStatsCardLoadedRtlPreview() {
+    AppThemeM3 {
+        ViewsStatsCard(
+            uiState = sampleLoadedState(ChartType.BAR),
+            onChartTypeChanged = {},
+            onMetricSelected = {},
             onBarTapped = {},
             onRetry = {},
             onRemoveCard = {}
@@ -1027,16 +1196,16 @@ private class ChartMarkerValueFormatter(
         if (!hasCurrent && !hasPrevious) return ""
 
         return buildString {
-            // Show current period with date and value
+            // Show current period with date and the selected metric's value
             if (hasCurrent) {
                 val current = currentPeriodData[x]
-                append("● ${current.label}: ${formatStatValue(current.views)}")
+                append("● ${current.label}: ${formatStatValue(current.value)}")
             }
-            // Show previous period with date and value
+            // Show previous period with date and the selected metric's value
             if (hasPrevious) {
                 if (hasCurrent) append("\n")
                 val previous = previousPeriodData[x]
-                append("○ ${previous.label}: ${formatStatValue(previous.views)}")
+                append("○ ${previous.label}: ${formatStatValue(previous.value)}")
             }
         }
     }

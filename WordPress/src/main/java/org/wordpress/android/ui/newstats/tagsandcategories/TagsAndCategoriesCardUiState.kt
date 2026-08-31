@@ -28,14 +28,21 @@ data class TagGroupUiItem(
     val displayType: TagGroupDisplayType
 ) {
     val isExpandable: Boolean get() = tags.size > 1
+
+    /**
+     * The link opened when this row is tapped. A group of several tags expands instead of
+     * navigating (matching old stats), so only a lone tag contributes a link.
+     */
+    val link: String? get() = tags.singleOrNull()?.link?.takeIf { it.isNotBlank() }
 }
 
 /**
- * A single tag within a tag group.
+ * A single tag within a tag group. [link] is the tag's archive page, null when it has none.
  */
 data class TagUiItem(
     val name: String,
-    val tagType: String
+    val tagType: String,
+    val link: String? = null
 )
 
 /**

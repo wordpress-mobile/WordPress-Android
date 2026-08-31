@@ -119,7 +119,7 @@ import org.wordpress.android.fluxc.store.bloggingprompts.BloggingPromptsStore
 import org.wordpress.android.fluxc.tools.FluxCImageLoader
 import org.wordpress.android.imageeditor.preview.PreviewImageFragment
 import org.wordpress.android.imageeditor.preview.PreviewImageFragment.Companion.EditImageData.InputData
-import org.wordpress.android.networking.ConnectionChangeReceiver.ConnectionChangeEvent
+import org.wordpress.android.networking.NetworkConnectionMonitor
 import org.wordpress.android.support.ZendeskHelper
 import org.wordpress.android.ui.ActivityId
 import org.wordpress.android.ui.ActivityLauncher
@@ -132,7 +132,7 @@ import org.wordpress.android.ui.Shortcut
 import org.wordpress.android.ui.WPWebViewActivity
 import org.wordpress.android.ui.history.HistoryDetailContainerFragment.KEY_REVISION
 import org.wordpress.android.ui.history.HistoryListItem.Revision
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalHelper
 import org.wordpress.android.ui.main.BaseAppCompatActivity
 import org.wordpress.android.ui.media.MediaBrowserActivity
 import org.wordpress.android.ui.media.MediaBrowserType
@@ -399,7 +399,7 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
 
     @Inject lateinit var bloggingPromptsStore: BloggingPromptsStore
 
-    @Inject lateinit var jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper
+    @Inject lateinit var jetpackFeatureRemovalHelper: JetpackFeatureRemovalHelper
 
     @Inject lateinit var contactSupportFeatureConfig: ContactSupportFeatureConfig
 
@@ -412,6 +412,8 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
     @Inject lateinit var storageUtilsViewModel: StorageUtilsViewModel
     @Inject lateinit var editorBloggingPromptsViewModel: EditorBloggingPromptsViewModel
     @Inject lateinit var editorJetpackSocialViewModel: EditorJetpackSocialViewModel
+
+    @Inject lateinit var networkConnectionMonitor: NetworkConnectionMonitor
     private lateinit var editPostNavigationViewModel: EditPostNavigationViewModel
     private lateinit var editPostSettingsViewModel: EditPostSettingsViewModel
     private lateinit var prepublishingViewModel: PrepublishingViewModel
@@ -558,6 +560,9 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
         }
         editorMedia.start(siteModel, this)
         startObserving()
+        networkConnectionMonitor.isConnected.observe(this) { connected ->
+            (editorFragment as? GutenbergNetworkConnectionListener)?.onConnectionStatusChange(connected)
+        }
         editorFragment?.let {
             hasSetPostContent = true
             it.setImageLoader(imageLoader)
@@ -1528,7 +1533,7 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
         if (helpMenuItem != null) {
             // Support section will be disabled in WordPress app when Jetpack-powered features are removed.
             // Therefore, we have to update the Help menu item accordingly.
-            val showHelpAndSupport = jetpackFeatureRemovalPhaseHelper.shouldShowHelpAndSupportOnEditor()
+            val showHelpAndSupport = jetpackFeatureRemovalHelper.shouldShowHelpAndSupportOnEditor()
             val helpMenuTitle = if (showHelpAndSupport) R.string.help_and_support else R.string.help
             helpMenuItem.setTitle(helpMenuTitle)
             if (editorFragment is GutenbergEditorFragment && showMenuItems) {
@@ -2437,7 +2442,7 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
                 isNewPost,
                 gutenbergWebViewAuthorizationData,
                 gutenbergPropsBuilder,
-                jetpackFeatureRemovalPhaseHelper.shouldShowJetpackPoweredEditorFeatures()
+                jetpackFeatureRemovalHelper.shouldShowJetpackPoweredEditorFeatures()
             )
         }
 
@@ -2498,7 +2503,7 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
             val hostAppNamespace = if (buildConfigWrapper.isJetpackApp) "Jetpack" else "WordPress"
 
             // Disable Jetpack-powered editor features in WordPress app based on Jetpack Features Removal Phase helper
-            val jetpackFeaturesRemoved = !jetpackFeatureRemovalPhaseHelper.shouldShowJetpackPoweredEditorFeatures()
+            val jetpackFeaturesRemoved = !jetpackFeatureRemovalHelper.shouldShowJetpackPoweredEditorFeatures()
             if (jetpackFeaturesRemoved) {
                 return GutenbergPropsBuilder(
                     enableContactInfoBlock = false,
@@ -3094,7 +3099,8 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
                     getString(R.string.error_media_insufficient_fs_permissions)
 
                 MediaErrorType.NOT_FOUND -> errorMessage = getString(R.string.error_media_not_found)
-                MediaErrorType.AUTHORIZATION_REQUIRED -> errorMessage = getString(R.string.error_media_unauthorized)
+                MediaErrorType.AUTHORIZATION_REQUIRED, MediaErrorType.NOT_AUTHENTICATED ->
+                    errorMessage = getString(R.string.error_media_unauthorized)
                 MediaErrorType.PARSE_ERROR -> errorMessage = getString(R.string.error_media_parse_error)
                 MediaErrorType.MALFORMED_MEDIA_ARG, MediaErrorType.NULL_MEDIA_ARG, MediaErrorType.GENERIC_ERROR ->
                     errorMessage = getString(R.string.error_refresh_media)
@@ -3855,11 +3861,6 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
                 editorMediaUploadListener?.onMediaUploadRetry(localMediaId, mediaType)
             }
         }
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onEventMainThread(event: ConnectionChangeEvent) {
-        (editorFragment as? GutenbergNetworkConnectionListener)?.onConnectionStatusChange(event.isConnected)
     }
 
     private fun refreshEditorTheme() {

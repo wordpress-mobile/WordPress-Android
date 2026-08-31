@@ -1,12 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2026-05-29 07:17:11+0000
+Translation-Revision-Date: 2026-07-29 19:54:44+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/4.0.3
+Generator: GlotPress/4.1.0
 Language: sv_SE
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="support_screen_unified_support_description">Få svar från vårt supportteam när som helst</string>
+    <string name="support_screen_unified_support_title">Skaffa hjälp</string>
+    <string name="unified_support_attachment_match_score">%1$d%% matcha</string>
+    <string name="unified_support_bot_typing_content_description">Supportroboten skriver</string>
+    <string name="unified_support_message_input_placeholder">Skriv ett meddelande …</string>
+    <string name="unified_support_conversations_title">Skaffa hjälp</string>
+    <string name="page_rs_move_trashed_page_to_draft_dialog_message">Borttagna sidor kan inte redigeras. Vill du ändra statusen för denna sida till “utkast“ så att du kan arbeta med det?</string>
+    <string name="page_rs_move_trashed_page_to_draft_dialog_title">Flytta sidan till utkast?</string>
+    <string name="page_rs_confirm_trash_message">Är det säkert att du vill lägga denna sida i papperskorgen?</string>
+    <string name="page_rs_copy_url">Kopiera URL</string>
+    <string name="page_rs_failed_to_load">Det gick inte att läsa in sidan</string>
+    <string name="page_not_found">Ett fel uppstod vid inläsningen av sidan. Uppdatera dina sidor och försök igen.</string>
+    <string name="xmlrpc_disabled_bottom_sheet_body">Vissa funktioner i appen kräver XML-RPC. Aktivera det på din webbplats för att lösa detta.</string>
     <string name="xmlrpc_disabled_bottom_sheet_title">XML-RPC inaktiverat</string>
+    <string name="xmlrpc_disabled_card_text">XML-RPC inaktiverat\nVissa funktioner kan vara begränsade</string>
+    <string name="application_password_reauthentication_banner">Dina webbplatsuppgifter är ogiltiga. Dags att återautentisera.</string>
+    <string name="application_password_app_name_wordpress">WordPress-appen för Android på %s</string>
+    <string name="application_password_app_name_jetpack">Jetpack Android-app på %s</string>
+    <string name="application_password_authorization_cancelled">Auktorisering avbruten</string>
     <string name="reader_label_view">Visa webbplats</string>
     <string name="reader_excerpt_view_more">Visa mer</string>
     <string name="reader_reading_time">%s min. läsning</string>
@@ -20,6 +38,7 @@ Language: sv_SE
     <string name="stats_subscribers_graph_days">Dagar</string>
     <string name="stats_emails_clicks_header">Klick</string>
     <string name="stats_emails_opens_header">Öppningar</string>
+    <string name="stats_emails_latest_header">Senaste e-postmeddelanden</string>
     <string name="stats_subscribers_since_header">Sedan</string>
     <string name="stats_subscribers_90_days_ago">90 dagar sedan</string>
     <string name="stats_subscribers_60_days_ago">60 dagar sedan</string>
@@ -27,9 +46,13 @@ Language: sv_SE
     <string name="stats_subscribers_current">Nuvarande</string>
     <string name="stats_subscribers_emails">E-post</string>
     <string name="stats_subscribers_list">Prenumeranter</string>
+    <string name="stats_subscribers_graph">Diagram över prenumeranter</string>
+    <string name="stats_subscribers_all_time">Prenumeranter sedan starten</string>
     <string name="stats_utm_campaign">Kampanj</string>
     <string name="stats_utm_medium">Medium</string>
     <string name="stats_utm_source">Källa</string>
+    <string name="stats_utm_campaign_source_medium">Kampanj / Källa / Medium</string>
+    <string name="stats_utm_source_medium">Källa / Medium</string>
     <string name="stats_utm_title">UTM</string>
     <string name="stats_error_not_authenticated">Inte autentiserad</string>
     <string name="stats_collapse_group">Minimera</string>
@@ -37,12 +60,24 @@ Language: sv_SE
     <string name="stats_tag_type_tag">Etikett</string>
     <string name="stats_tag_type_category">Kategori</string>
     <string name="stats_insights_tags_empty">Inga etiketter eller kategorier hittades</string>
+    <string name="stats_insights_views_percent">%1$s%% av visningarna</string>
     <string name="stats_insights_most_popular_day_label">Dag</string>
+    <string name="stats_insights_all_time_stats_title">Statistik sedan starten</string>
+    <string name="stats_insights_year_in_review_title">Återblick för %s</string>
+    <string name="stats_insights_year_in_review">Återblick för året</string>
+    <string name="stats_insights_avg_words_per_post">Genomsnittligt antal ord per inlägg</string>
+    <string name="stats_insights_avg_likes_per_post">Genomsnittligt antal gilla-markeringar per inlägg</string>
+    <string name="stats_insights_avg_comments_per_post">Genomsnittligt antal kommentarer per inlägg</string>
+    <string name="stats_insights_total_posts">Totalt antal inlägg</string>
+    <string name="stats_insights_likes">Gilla-markeringar</string>
     <string name="stats_insights_words">Ord</string>
     <string name="activity_log_mcp_agent_label">via %1$s</string>
     <string name="post_rs_settings_show_password">Visa lösenord</string>
     <string name="post_rs_settings_hide_password">Dölj lösenord</string>
+    <string name="post_rs_settings_saving">Sparar\u2026</string>
     <string name="post_rs_settings_search_no_results">Inga resultat hittades</string>
+    <string name="post_rs_settings_load_more">Ladda in fler\u2026</string>
+    <string name="post_rs_settings_term_create_error">Termen kunde inte skapas</string>
     <string name="post_rs_settings_search_authors">Sök författare</string>
     <string name="post_rs_settings_search_terms">Sök</string>
     <string name="post_rs_settings_no_parent">Ingen</string>
@@ -50,11 +85,26 @@ Language: sv_SE
     <string name="post_rs_settings_term_name_hint">Namn</string>
     <string name="post_rs_settings_add_term">Lägg till ny</string>
     <string name="post_rs_settings_choose_from_device">Välj från enhet</string>
+    <string name="post_rs_settings_choose_from_wp_media">Välj från WP-media</string>
     <string name="stats_new_stats_suggestion_negative">Kanske senare</string>
+    <string name="stats_new_stats_suggestion_positive">Prova den</string>
+    <string name="stats_new_stats_suggestion_message">Vi har byggt en helt ny statistikupplevelse. Vill du prova? Du kan alltid gå tillbaka till den gamla från statistikmenyn.</string>
+    <string name="stats_new_stats_suggestion_title">En ny statistikupplevelse</string>
     <string name="gutenberg_kit_announcement_learn_more">Lär dig mer</string>
     <string name="gutenberg_kit_announcement_maybe_later">Kanske senare</string>
     <string name="gutenberg_kit_announcement_activate">Aktivera</string>
+    <string name="gutenberg_kit_announcement_body_intro">Nästa generations blockredigerare är redo och ger fler nya funktioner.</string>
+    <string name="gutenberg_kit_announcement_title">En bättre blockredigerare är på väg</string>
+    <string name="site_settings_gutenberg_kit_enabled_unsupported">Byt till blockredigeraren först för att testa den nya redigeraren.</string>
+    <string name="site_settings_gutenberg_kit_enabled_summary">Tacka ja till nästa generations blockredigerare för denna webbplats</string>
     <string name="site_settings_gutenberg_kit_enabled">Prova den nya redigeraren</string>
+    <string name="site_connectivity_banner_text">Det gick inte att ansluta till din webbplats. Viss funktionalitet kan vara begränsad.</string>
+    <string name="site_settings_use_third_party_blocks_unsupported">Din webbplats stöder inte inladdning av block från tredje part i redigeraren.</string>
+    <string name="site_settings_use_third_party_blocks_summary">Ladda in block från tredje part från tillägg installerade på din webbplats.</string>
+    <string name="site_settings_use_third_party_blocks">Använd block från tredje part (beta)</string>
+    <string name="site_settings_use_theme_styles_not_block_theme">Din webbplats använder inte ett blocktema. Redigeraren kanske inte matchar ditt innehåll. Om saker och ting inte ser bra ut, inaktivera denna inställning.</string>
+    <string name="site_settings_use_theme_styles_unsupported">Installera Gutenberg-tillägget på din webbplats för att aktivera stöd för temastilar.</string>
+    <string name="new_stats_intro_footer">Du kan stänga av Ny statistik från spillmenyn på skärmen Statistik.</string>
     <string name="new_stats_intro_trends_desc">Varje mätvärde visar hur det trendar jämfört med föregående period, så att du alltid vet om antalet besökare växer.</string>
     <string name="new_stats_intro_trends_title">Trender i korthet</string>
     <string name="new_stats_intro_on_par_desc">Enheter, UTM, platser, WordAds (kommer) – samma data som du får på WordPress.com.</string>
@@ -225,6 +275,7 @@ Language: sv_SE
     <string name="error_browser_no_network">Kan inte ladda denna sida</string>
     <string name="history_empty_subtitle_post">Du ser historiken för det här inlägget när du gör ändringar i det</string>
     <string name="history_empty_subtitle_page">Du ser historiken för den här sidan när du gör ändringar i den</string>
+    <string name="reader_discover_tab_freshly_pressed">Freshly Pressed</string>
     <string name="notifications_empty_action_comments">Delta i ett samtal! Kommentera inlägg i Läsaren.</string>
     <string name="notifications_empty_action_all">Aktivera dig! Kommentera inlägg i Läsaren.</string>
     <string name="more_options">Fler alternativ</string>
@@ -232,8 +283,6 @@ Language: sv_SE
     <string name="stats_chart_type_bars">Staplar</string>
     <string name="stats_chart_type_lines">Rader</string>
     <string name="post_types_screen_title">Inläggstyper</string>
-    <string name="experimental_new_stats_description">Visa statistik i ett modernare och mer avancerat gränssnitt</string>
-    <string name="experimental_new_stats">Ny statistik</string>
     <string name="experimental_post_types_description">Aktivera skärmen för experimentella inläggstyper</string>
     <string name="experimental_post_types">Inläggstyper</string>
     <string name="network_requests_disable">Inaktivera</string>
@@ -258,23 +307,6 @@ Language: sv_SE
     <string name="media_empty_list_subtitle">Varför inte ladda upp något?</string>
     <string name="confirm_remove_site">Ta bort ”%s” från appen?</string>
     <string name="he_support_forbidden_error">Du har inte behörighet att utföra denna åtgärd.</string>
-    <string name="he_support_generic_error">Ett fel uppstod. Försök igen senare.</string>
-    <string name="he_support_send_ticket_button">Skicka</string>
-    <string name="he_support_contact_email_message">Vi skickar ett e-postmeddelande till den här adressen.</string>
-    <string name="he_support_contact_information">Kontaktinformation</string>
-    <string name="he_support_site_address_placeholder">https://yoursite.com</string>
-    <string name="he_support_site_address_label">Webbplatsadress (valfritt)</string>
-    <string name="he_support_subject_placeholder">Kort sammanfattning av ditt problem</string>
-    <string name="he_support_subject_label">Ämne</string>
-    <string name="he_support_issue_details">Probleminformation</string>
-    <string name="he_support_category_other">Annat</string>
-    <string name="he_support_category_technical_issues">Tekniska problem</string>
-    <string name="he_support_category_billing">Fakturering och prenumerationer</string>
-    <string name="he_support_category_site_management">Webbplatshantering</string>
-    <string name="he_support_category_jetpack_connection">Jetpack-anslutning</string>
-    <string name="he_support_category_application">Applikation</string>
-    <string name="he_support_need_help_with">Jag behöver hjälp med</string>
-    <string name="he_support_contact_support_title">Kontakta support</string>
     <string name="he_support_download_video_button">Ladda ner videoklipp</string>
     <string name="he_support_video_playback_error_message">Detta videoklipp kan inte spelas upp infogat. Ladda ner det för att se det.</string>
     <string name="he_support_video_playback_error_title">Det går inte att spela upp videoklippet</string>
@@ -307,19 +339,11 @@ Language: sv_SE
     <string name="he_support_empty_conversations_button">Starta konversation</string>
     <string name="he_support_empty_conversations_message">Starta en konversation med vårt supportteam för att få hjälp med dina frågor.</string>
     <string name="he_support_empty_conversations_title">Inga konversationer ännu</string>
-    <string name="he_support_new_conversation_content_description">Ny konversation</string>
-    <string name="he_support_conversations_title">Supportkonversationer</string>
+    <string name="unified_support_new_conversation_content_description">Ny konversation</string>
     <string name="ai_bot_time_just_now">Just nu</string>
     <string name="ai_bot_welcome_message">Jag är din personliga AI-assistent. Jag kan hjälpa till med frågor om din webbplats eller ditt konto.</string>
     <string name="ai_bot_welcome_greeting">Hej %1$s 👋</string>
-    <string name="ai_bot_message_input_placeholder">Skriv ett meddelande …</string>
-    <string name="ai_bot_send_button_content_description">Skicka</string>
-    <string name="ai_bot_support_bot">Supportrobot</string>
-    <string name="ai_bot_you">Du</string>
-    <string name="ai_bot_generic_error">Något gick fel. Försök igen senare.</string>
-    <string name="ai_bot_new_conversation_content_description">Ny konversation</string>
-    <string name="ai_bot_back_button_content_description">Tillbaka</string>
-    <string name="ai_bot_conversations_title">Konversationer</string>
+    <string name="unified_support_generic_error">Något gick fel. Försök igen senare.</string>
     <string name="create">Skapa</string>
     <string name="logs_screen_general_error">Något gick fel …</string>
     <string name="logs_screen_empty_state">Inga loggar tillgängliga</string>
@@ -327,10 +351,6 @@ Language: sv_SE
     <string name="support_screen_application_logs_description">Avancerat verktyg för att felsöka problem</string>
     <string name="support_screen_application_logs_title">Applikationsloggar</string>
     <string name="support_screen_diagnostics_section_title">Diagnostik</string>
-    <string name="support_screen_ask_happiness_engineers_description">För dina svåra frågor. Vi svarar via e-post</string>
-    <string name="support_screen_ask_happiness_engineers_title">Fråga våra supporttekniker</string>
-    <string name="support_screen_ask_bots_description">Få snabba svar på vanliga frågor</string>
-    <string name="support_screen_ask_bots_title">Fråga robotarna</string>
     <string name="support_screen_help_center_description">Dokumentation och handledningar som hjälper dig att komma igång</string>
     <string name="support_screen_help_center_title">Hjälpcenter</string>
     <string name="support_screen_how_can_we_help_title">Hur kan vi hjälpa till?</string>
@@ -338,6 +358,7 @@ Language: sv_SE
     <string name="support_screen_title">Support</string>
     <string name="modern_support_description">Aktivera den nya moderna supportupplevelsen</string>
     <string name="modern_support">Modern support</string>
+    <string name="site_settings_use_theme_styles_summary">Få blockredigeraren att se ut som ditt tema.</string>
     <string name="site_settings_use_theme_styles">Använd temastilar</string>
     <string name="error_deleting_term">Ett fel uppstod vid borttagningen av termen</string>
     <string name="error_saving_term">Ett fel uppstod när termen skulle sparas</string>
@@ -922,16 +943,12 @@ Language: sv_SE
     <string name="sharing_twitter_deprecation_notice_description">Automatisk delning på Twitter är inte längre tillgängligt på grund av Twitters ändringar i villkor och pris.</string>
     <string name="sharing_twitter_deprecation_notice_title">Automatisk delning på Twitter är inte längre tillgängligt</string>
     <string name="jp_migration_notifications_allow_title">Tillåt aviseringar för att hålla koll på din webbplats</string>
-    <string name="wp_jp_static_poster_message">Jetpack-appen har alla WordPress-appens funktionalitet och nu exklusiv åtkomst till statistik, Läsare, aviseringar och mer.</string>
-    <string name="wp_jp_static_poster_title_plural">Använd WordPress med %s i Jetpack-appen.</string>
-    <string name="wp_jp_static_poster_title">Använd WordPress med %s i Jetpack-appen.</string>
     <string name="gutenberg_native_unlabeled_color_s" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Omärkt färg. %s</string>
     <string name="dashboard_activity_card_title">Senaste aktivitet</string>
     <string name="site_creation_search_domain_example_body">Precis som i exemplet ovan så låter en domän människor hitta och besöka din webbplats från sina webbläsare.</string>
     <string name="site_creation_search_domain_example_title">YourSiteName.com</string>
     <string name="site_creation_domain_search_input_hint">Sök med nyckelord</string>
     <string name="site_creation_domain_header_subtitle">Leta efter en kort domän som är lätt att komma ihåg för att hjälpa människor hitta och besöka din webbplats.</string>
-    <string name="site_creation_domain_cost_sale">för första året</string>
     <string name="site_creation_error_cart_subtitle">Din webbplats har skapats, men vi stötte på ett problem när vi skulle förbereda din anpassade domän för betalning. Försök igen eller kontakta supporten för hjälp.</string>
     <string name="new_site_creation_preview_caption_paid">Det kan dröja upp till 30 minuter innan din anpassade domän börjar fungera.</string>
     <string name="new_site_creation_preview_subtitle_paid">Vi har skickat ditt kvitto via e-post. %s</string>
@@ -979,9 +996,6 @@ Language: sv_SE
     <string name="jetpack_full_plugin_install_onboarding_description_this_site">Denna webbplats</string>
     <string name="jetpack_full_plugin_install_concise_description_multiple">%1$sanvänder %2$s, som inte stöder alla funktioner i appen än. Installera %3$s.</string>
     <string name="jetpack_full_plugin_install_concise_description_single">%1$s använder %2$s, som inte stöder alla funktioner i appen än. Installera %3$s.</string>
-    <string name="wp_jp_static_poster_footnote">Att byta är gratis och tar bara en minut.</string>
-    <string name="wp_jp_static_poster_button_secondary">Lär dig mer på Jetpack.com</string>
-    <string name="wp_jp_static_poster_button_primary">Byt till Jetpack-appen</string>
     <string name="my_site_btn_wp_admin">WP-Adminpanel</string>
     <string name="my_site_header_manage">Hantera</string>
     <string name="my_site_header_traffic">Trafik</string>
@@ -998,7 +1012,6 @@ Language: sv_SE
     <string name="blaze_promotional_text">Få mer trafik till din webbplats med Blaze</string>
     <string name="blaze_activity_title">Blaze</string>
     <string name="site_creation_domain_tag_unavailable">Denna domän är redan registrerad</string>
-    <string name="site_creation_domain_tag_sale">Rea</string>
     <string name="site_creation_domain_tag_recommended">Rekommenderat</string>
     <string name="site_creation_domain_tag_best_alternative">Bästa alternativ</string>
     <string name="support_faq_caption">Se våra vanliga frågor för svar på vanliga frågor du kan ha.</string>
@@ -1038,12 +1051,6 @@ Language: sv_SE
     <string name="jetpack_feature_card_content_phase_self_hosted_and_new_users">Lås upp din webbplats fulla potential. Få statistik, aviseringar och mer med Jetpack.</string>
     <string name="wp_jetpack_feature_removal_phase_self_hosted_users_title">Din webbplats har Jetpack-tillägget</string>
     <string name="wp_jetpack_feature_removal_phase_self_hosted_users_description">Jetpacks mobilapp är designad för att fungera tillsammans med tillägget Jetpack. Byt nu för att få åtkomst till statistik, aviseringar, läsare och mer.</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_notifications_description">Få aviseringar för nya kommentarer, gilla-markeringar, visningar och mer.</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_reader_description">Hitta och följ dina favoritwebbplatser och -communities samt dela ditt innehåll.</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_description">Se din trafik öka med användbara insikter och omfattande statistik.</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_title">Statistik och insikter</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_description">Med Jetpack kan du göra mer med din WordPress-webbplats. Att byta är gratis och tar bara en minut.</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_title">Förbättra WordPress med Jetpack</string>
     <string name="blogging_prompts_onboarding_content_note_content">Du kan kontrollera bloggningsförslag och påminnelser när som helst i Min webbplats &gt; Inställningar &gt; Bloggande</string>
     <string name="blogging_reminders_prompt_subtitle">Aviseringen kommer att innehålla ett ord eller en kort fras för inspiration</string>
     <string name="my_site_blogging_prompt_card_removed_snackbar_subtitle">Gå till &lt;b&gt;Webbplatsinställningar&lt;/b&gt; för att aktivera igen</string>
@@ -1055,15 +1062,6 @@ Language: sv_SE
     <string name="site_settings_blogging_prompts_title">Visa förslag</string>
     <string name="site_settings_blogging">Bloggande</string>
     <string name="install_play_store_to_get_jetpack">Installera Google Play Store för att hämta Jetpack-appen</string>
-    <string name="wp_jetpack_feature_removal_phase_four_secondary_text">Gör detta senare</string>
-    <string name="wp_jetpack_feature_removal_switch_to_jetpack_app_menu_title">Byt till Jetpack </string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_four_all_features_description">Statistik, läsare, aviseringar och andra Jetpack-drivna funktioner har tagits bort från WordPress-appen.</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_four_title_all_features">Jetpack-funktioner har flyttat.</string>
-    <string name="wp_jetpack_powered_phase_3_feature_are_moving_in">%1$s flyttar om %2$s</string>
-    <string name="wp_jetpack_powered_phase_3_feature_is_moving_in">%1$s flyttar om %2$s</string>
-    <string name="wp_jetpack_powered_phase_3_feature_are_moving_soon">%1$s flyttar snart</string>
-    <string name="wp_jetpack_powered_phase_3_feature_is_moving_soon">%1$s flyttar snart</string>
-    <string name="wp_jetpack_powered_phase_2">Skaffa Jetpack-appen</string>
     <string name="my_site_blogging_prompt_card_view_answers">Visa alla svar</string>
     <string name="stats_insights_total_stats_seven_days_negative">%1$s lägre än under de föregående 7 dagarna</string>
     <string name="stats_insights_total_stats_seven_days_positive">%1$s högre än under de föregående 7 dagarna</string>
@@ -1073,21 +1071,10 @@ Language: sv_SE
     <string name="stats_insights_views_and_visitors_seven_days_views_positive">Antalet visningar under de senaste 7 dagarna är %1$s högre än under de föregående 7 dagarna.</string>
     <string name="stats_timeframe_previous_seven_days">De föregående 7 dagarna</string>
     <string name="stats_timeframe_last_seven_days">Senaste 7 dagarna</string>
-    <string name="weeks_quantity_other">%d veckor</string>
-    <string name="weeks_quantity_one">1 vecka</string>
     <string name="my_site_blogging_prompt_card_attribution_day_one">Från &lt;b&gt;Day One&lt;/b&gt;</string>
     <string name="jetpack_feature_card_menu_item_remind_me_later">Påminn mig senare</string>
-    <string name="jetpack_feature_card_content_phase_three">Statistik, läsare, aviseringar och andra funktioner kommer snart att flyttas till Jetpacks mobilapp.</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_the_jetpack_app">Byt till Jetpack-appen</string>
-    <string name="wp_jetpack_feature_removal_overlay_learn_more_migration_text">Läs mer på jetpack.com</string>
     <string name="wp_jetpack_feature_removal_overlay_migration_helper_text">Bytet är gratis och tar bara en minut.</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_description_without_deadline">Statistik, läsare, aviseringar och andra Jetpack-drivna funktioner kommer snart att tas bort från WordPress-appen.</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_description_with_deadline">Statistik, läsare, aviseringar och andra Jetpack-drivna funktioner kommer att tas bort från WordPress-appen den %s.</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_all_features">Jetpack-funktioner flyttas snart.</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_notifications">Aviseringar flyttar till Jetpack</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_reader">Läsaren flyttar till Jetpack-appen</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_stats">Din statistik flyttas till Jetpack-appen</string>
-    <string name="wp_jetpack_feature_removal_overlay_switch_to_new_jetpack_app">Byt till den nya Jetpack-appen</string>
     <string name="blogging_prompts_list_error_fetch_subtitle">Det var ett problem att ladda in förslag.</string>
     <string name="blogging_prompts_list_error_fetch_title">Hoppsan</string>
     <string name="blogging_prompts_list_no_prompts">Inga förslag än</string>
@@ -1113,12 +1100,6 @@ Language: sv_SE
     <string name="wp_jetpack_continue_without_jetpack">Fortsätt utan Jetpack</string>
     <string name="deep_linking_weblinks_alias_label">weblinks</string>
     <string name="deep_linking_urilinks_alias_label">urilinks</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_one_description_notifications">Byt till Jetpack-appen för att fortsätta ta emot aviseringar i realtid på din enhet.</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_one_description_reader">Byt till Jetpack-appen för att hitta, följa och gilla alla dina favoritwebbplatser och inlägg med läsare.</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_one_description_stats">Byt till Jetpack-appen för att se insikter och statistik över hur webbplatsens trafik ökar.</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_one_title_notifications">Få dina aviseringar med Jetpack-appen</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_one_title_reader">Följ vilken webbplats som helst med Jetpack-appen</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_one_title_stats">Få din statistik med den nya Jetpack-appen</string>
     <string name="preference_open_links_in_jetpack_setting_change_disable_error">Det gick inte att inaktivera öppning av länkar i Jetpack</string>
     <string name="preference_open_links_in_jetpack_setting_change_enable_error">Det gick inte att aktivera öppning av länkar i Jetpack</string>
     <string name="preference_open_links_in_jetpack">Öppna länkar i Jetpack</string>
@@ -1181,7 +1162,6 @@ Language: sv_SE
     <string name="weekly_roundup_notification_text_views_only">Förra veckan hade du %1$s visningar.</string>
     <string name="weekly_roundup_notification_text_all">Förra veckan hade du %1$s visningar, %2$s gillamarkeringar och %3$s kommentarer.</string>
     <string name="stats_insights_like_guide_card">⭐️ Ditt senaste inlägg %1$s har fått %2$s gillamarkering.</string>
-    <string name="wp_jetpack_powered">Drivs med Jetpack</string>
     <string name="qrcode_auth_flow_content_description">Bild som indikerar att avläsning av inloggningskod pågår</string>
     <string name="qrcode_auth_flow_error_content_description">Bild som indikerar ett fel</string>
     <string name="qrcode_auth_flow_error_auth_failed_title">Autentiseringen misslyckades</string>
@@ -3749,6 +3729,7 @@ Language: sv_SE
     <string name="push_auth_expired">Begäran har löpt ut. Logga in på WordPress.com för att försöka igen.</string>
     <string name="ignore">Ignorera </string>
     <string name="stats_insights_best_ever">Flest visningar någonsin</string>
+    <string name="stats_insights_most_popular_time">Den mest populära tiden</string>
     <string name="stats_insights_most_popular_day">Mest populära dag</string>
     <string name="stats_insights_today">Dagens statistik </string>
     <string name="stats_insights_all_time">Alla inlägg, visningar och besökare</string>

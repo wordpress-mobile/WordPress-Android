@@ -1,7 +1,9 @@
 package org.wordpress.android.ui.deeplinks
 
+import android.content.ActivityNotFoundException
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
+import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.ActivityNavigator
@@ -33,7 +35,9 @@ import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.ViewP
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationSource.DEEP_LINK
 import org.wordpress.android.ui.sitemonitor.SiteMonitorType
 import org.wordpress.android.ui.stats.StatsTimeframe
-import org.wordpress.android.ui.stats.refresh.utils.StatsLaunchedFrom
+import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.AppLog.T.UTILS
+import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.UriWrapper
 import javax.inject.Inject
 
@@ -52,11 +56,7 @@ class DeepLinkNavigator
                 activity,
                 navigateAction.site
             )
-            is OpenInBrowser -> {
-                @SuppressWarnings("UnsafeImplicitIntentLaunch")
-                val browserIntent = Intent(Intent.ACTION_VIEW, navigateAction.uri.uri)
-                activity.startActivity(browserIntent)
-            }
+            is OpenInBrowser -> openInBrowser(activity, navigateAction.uri)
             is OpenEditorForPost -> ActivityLauncher.openEditorForPostInNewStack(
                 activity,
                 navigateAction.site,
@@ -68,17 +68,12 @@ class DeepLinkNavigator
                 navigateAction.statsTimeframe
             )
 
-            is OpenStatsForSite -> ActivityLauncher.viewStatsInNewStack(
-                activity,
-                navigateAction.site,
-                StatsLaunchedFrom.LINK
-            )
+            is OpenStatsForSite -> activityNavigator.openStatsInNewStack(activity, navigateAction.site)
 
-            is OpenStatsForSiteAndTimeframe -> ActivityLauncher.viewStatsInNewStack(
+            is OpenStatsForSiteAndTimeframe -> activityNavigator.openStatsInNewStack(
                 activity,
                 navigateAction.site,
-                navigateAction.statsTimeframe,
-                StatsLaunchedFrom.LINK
+                navigateAction.statsTimeframe
             )
 
             OpenReader -> ActivityLauncher.viewReaderInNewStack(activity)
@@ -101,8 +96,6 @@ class DeepLinkNavigator
             OpenLoginPrologue -> ActivityLauncher.showLoginPrologue(activity)
             is OpenJetpackForDeepLink ->
                 ActivityLauncher.openJetpackForDeeplink(activity, navigateAction.action, navigateAction.uri)
-            is NavigateAction.OpenJetpackStaticPosterView ->
-                ActivityLauncher.showJetpackStaticPoster(activity)
             is NavigateAction.OpenMediaForSite -> activityNavigator.openMediaInNewStack(activity, navigateAction.site)
             NavigateAction.OpenMedia -> activityNavigator.openMediaInNewStack(activity)
             is NavigateAction.OpenMediaPickerForSite -> activityNavigator.openMediaPickerInNewStack(
@@ -121,6 +114,26 @@ class DeepLinkNavigator
             )
         }
         if (navigateAction != LoginForResult) {
+            activity.finish()
+        }
+    }
+
+    /**
+     * Opens the uri with an external browser. The device may have no app able to handle a web link (no browser
+     * installed, browser disabled or restricted by a work profile), so the missing handler is reported to the user
+     * instead of crashing the deep link entry point.
+     *
+     * The receiver activity has no UI of its own, so it is finished when the hand-off fails. Otherwise the user is
+     * left on an empty screen after the toast. The toast still shows, since it does not depend on the activity.
+     */
+    private fun openInBrowser(activity: AppCompatActivity, uri: UriWrapper) {
+        @SuppressWarnings("UnsafeImplicitIntentLaunch")
+        val browserIntent = Intent(Intent.ACTION_VIEW, uri.uri)
+        try {
+            activity.startActivity(browserIntent)
+        } catch (e: ActivityNotFoundException) {
+            ToastUtils.showToast(activity, R.string.cant_open_url, ToastUtils.Duration.LONG)
+            AppLog.e(UTILS, "No app available on the device to open the deep link: $uri", e)
             activity.finish()
         }
     }
@@ -153,7 +166,6 @@ class DeepLinkNavigator
         object OpenMySite : NavigateAction()
         object OpenLoginPrologue : NavigateAction()
         data class OpenJetpackForDeepLink(val action: String?, val uri: UriWrapper) : NavigateAction()
-        object OpenJetpackStaticPosterView : NavigateAction()
         data class OpenMediaForSite(val site: SiteModel) : NavigateAction()
         object OpenMedia : NavigateAction()
         data class OpenMediaPickerForSite(val site: SiteModel) : NavigateAction()

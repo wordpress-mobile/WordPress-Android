@@ -16,16 +16,19 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
+import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.PostStore
+import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded
 import org.wordpress.android.ui.blaze.BlazeFeatureUtils
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.posts.AuthorFilterSelection
 import org.wordpress.android.ui.postsrs.data.PostRsRestClient
 import org.wordpress.android.ui.postsrs.data.WpServiceProvider
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.ui.rs.RsPostChangeListener
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
@@ -44,8 +47,10 @@ class PostRsListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
     @Mock lateinit var accountStore: AccountStore
     @Mock lateinit var appPrefsWrapper: AppPrefsWrapper
     @Mock lateinit var analyticsTracker: AnalyticsTrackerWrapper
+    @Mock lateinit var dispatcher: Dispatcher
 
     private lateinit var site: SiteModel
+    private lateinit var changeListener: RsPostChangeListener
     private var activeViewModel: PostRsListViewModel? = null
 
     @Before
@@ -54,6 +59,7 @@ class PostRsListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
             id = 1
             siteId = 123L
         }
+        changeListener = RsPostChangeListener(dispatcher, postStore)
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
         whenever(appPrefsWrapper.postListAuthorSelection)
             .thenReturn(AuthorFilterSelection.EVERYONE)
@@ -79,7 +85,149 @@ class PostRsListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
         accountStore = accountStore,
         appPrefsWrapper = appPrefsWrapper,
         analyticsTracker = analyticsTracker,
+        changeListener = changeListener,
     ).also { activeViewModel = it }
+
+    @Test
+    fun `a post changed through FluxC refreshes the list`() = test {
+        val viewModel = createViewModel()
+        viewModel.onScreenVisible()
+        advanceUntilIdle()
+
+        changeListener.onPostUploaded(OnPostUploaded(postUpload(), false))
+        advanceUntilIdle()
+
+        verify(restClient).clearCaches()
+    }
+
+    @Test
+    fun `a post changed through FluxC does not refresh the list while offline`() = test {
+        whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(false)
+        val viewModel = createViewModel()
+        viewModel.onScreenVisible()
+        advanceUntilIdle()
+
+        changeListener.onPostUploaded(OnPostUploaded(postUpload(), false))
+        advanceUntilIdle()
+
+        verify(restClient, never()).clearCaches()
+    }
+
+    @Test
+    fun `changes while the screen is hidden are refreshed once when it is shown`() = test {
+        val viewModel = createViewModel()
+        viewModel.onScreenVisible()
+        viewModel.onScreenHidden()
+        advanceUntilIdle()
+
+        changeListener.onPostUploaded(OnPostUploaded(postUpload(), false))
+        advanceUntilIdle()
+        changeListener.onPostUploaded(OnPostUploaded(postUpload(), false))
+        advanceUntilIdle()
+        verify(restClient, never()).clearCaches()
+
+        viewModel.onScreenVisible()
+
+        verify(restClient).clearCaches()
+    }
+
+    @Test
+    fun `a change that arrived offline is refreshed when the screen is next shown`() = test {
+        whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(false)
+        val viewModel = createViewModel()
+        viewModel.onScreenVisible()
+        advanceUntilIdle()
+
+        changeListener.onPostUploaded(OnPostUploaded(postUpload(), false))
+        advanceUntilIdle()
+        verify(restClient, never()).clearCaches()
+
+        whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
+        viewModel.onScreenHidden()
+        viewModel.onScreenVisible()
+
+        verify(restClient).clearCaches()
+    }
+
+    @Test
+    fun `clearing the view model stops the change listener`() {
+        createViewModel().onCleared()
+
+        verify(dispatcher).unregister(changeListener)
+    }
+
+    private fun postUpload() = PostModel().apply {
+        setIsPage(false)
+        setLocalSiteId(site.id)
+    }
+
+    private fun postUpload(status: String, remotePostId: Long = UPLOADED_POST_ID) =
+        postUpload().apply {
+            setStatus(status)
+            setRemotePostId(remotePostId)
+        }
+
+    @Test
+    fun `a published post is revealed on the published tab`() = test {
+        val viewModel = createViewModel()
+        viewModel.onScreenVisible()
+        advanceUntilIdle()
+
+        changeListener.onPostUploaded(OnPostUploaded(postUpload("publish"), false))
+        advanceUntilIdle()
+
+        viewModel.revealRequests.test {
+            assertThat(awaitItem())
+                .isEqualTo(PostRsReveal(PostRsListTab.PUBLISHED, UPLOADED_POST_ID))
+        }
+    }
+
+    @Test
+    fun `a new draft is revealed on the drafts tab`() = test {
+        val viewModel = createViewModel()
+        viewModel.onScreenVisible()
+        advanceUntilIdle()
+
+        changeListener.onPostUploaded(OnPostUploaded(postUpload("draft"), false))
+        advanceUntilIdle()
+
+        viewModel.revealRequests.test {
+            assertThat(awaitItem())
+                .isEqualTo(PostRsReveal(PostRsListTab.DRAFTS, UPLOADED_POST_ID))
+        }
+    }
+
+    @Test
+    fun `an upload while the screen is hidden is revealed when it is shown`() = test {
+        val viewModel = createViewModel()
+        viewModel.onScreenVisible()
+        viewModel.onScreenHidden()
+        advanceUntilIdle()
+
+        changeListener.onPostUploaded(OnPostUploaded(postUpload("publish"), false))
+        advanceUntilIdle()
+
+        viewModel.revealRequests.test {
+            expectNoEvents()
+
+            viewModel.onScreenVisible()
+
+            assertThat(awaitItem())
+                .isEqualTo(PostRsReveal(PostRsListTab.PUBLISHED, UPLOADED_POST_ID))
+        }
+    }
+
+    @Test
+    fun `an upload with an unrecognized status is not revealed`() = test {
+        val viewModel = createViewModel()
+        viewModel.onScreenVisible()
+        advanceUntilIdle()
+
+        changeListener.onPostUploaded(OnPostUploaded(postUpload("gibberish"), false))
+        advanceUntilIdle()
+
+        viewModel.revealRequests.test { expectNoEvents() }
+    }
 
     @Test
     fun `when no site selected, emits ShowToast and Finish`() = test {
@@ -456,3 +604,5 @@ class PostRsListViewModelTest : BaseUnitTest(StandardTestDispatcher()) {
             }
         }
 }
+
+private const val UPLOADED_POST_ID = 4242L

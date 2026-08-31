@@ -5,18 +5,15 @@ import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.ui.blaze.BlazeFeatureUtils
 import org.wordpress.android.ui.blaze.BlazeFlowSource
 import org.wordpress.android.ui.blaze.blazecampaigns.campaignlisting.CampaignListingPageSource
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
 import org.wordpress.android.ui.mysite.SiteNavigationAction
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction
-import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures
-import org.wordpress.android.ui.prefs.experimentalfeatures.ExperimentalFeatures.Feature
+import org.wordpress.android.ui.newstats.NewStatsRouting
 import javax.inject.Inject
 
 class ListItemActionHandler @Inject constructor(
     private val accountStore: AccountStore,
-    private val jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper,
     private val blazeFeatureUtils: BlazeFeatureUtils,
-    private val experimentalFeatures: ExperimentalFeatures
+    private val newStatsRouting: NewStatsRouting
 ) {
     fun handleAction(
         action: ListItemAction,
@@ -51,16 +48,12 @@ class ListItemActionHandler @Inject constructor(
     }
 
     private fun getStatsNavigationActionForSite(site: SiteModel): SiteNavigationAction = when {
-        // if we are in static posters phase - we don't want to show any connection/login messages
-        jetpackFeatureRemovalPhaseHelper.shouldShowStaticPage() ->
-            SiteNavigationAction.ShowJetpackRemovalStaticPostersView
-
         // If the user is not logged in and the site is already connected to Jetpack, ask to login.
         !accountStore.hasAccessToken() && site.isJetpackConnected -> SiteNavigationAction.StartWPComLoginForJetpackStats
 
         // If it's a WordPress.com or Jetpack site, show the Stats screen.
         site.isWPCom || site.isJetpackInstalled && site.isJetpackConnected -> {
-            if (experimentalFeatures.isEnabled(Feature.NEW_STATS)) {
+            if (newStatsRouting.isNewStatsEnabled()) {
                 SiteNavigationAction.OpenNewStats
             } else {
                 SiteNavigationAction.OpenStats(site)

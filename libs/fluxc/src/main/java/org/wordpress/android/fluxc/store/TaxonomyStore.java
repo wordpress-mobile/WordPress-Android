@@ -16,6 +16,7 @@ import org.wordpress.android.fluxc.model.TaxonomyModel;
 import org.wordpress.android.fluxc.model.TermModel;
 import org.wordpress.android.fluxc.model.TermsModel;
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
+import org.wordpress.android.fluxc.network.rest.wpapi.taxonomy.TaxonomiesRestApiMigrationConfig;
 import org.wordpress.android.fluxc.network.rest.wpapi.taxonomy.TaxonomyRsApiRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.taxonomy.TaxonomyRestClient;
 import org.wordpress.android.fluxc.network.xmlrpc.taxonomy.TaxonomyXMLRPCClient;
@@ -47,11 +48,23 @@ public class TaxonomyStore extends Store {
         @NonNull public TermsModel terms;
         @NonNull public SiteModel site;
         @NonNull public String taxonomy; // This field is also included in error payload.
+        // True when the fetched list is exhaustive (all pages retrieved). When false, the list is
+        // partial (e.g. a mid-pagination failure) and existing cached terms must not be cleared.
+        public boolean complete = true;
 
         public FetchTermsResponsePayload(@NonNull TermsModel terms, @NonNull SiteModel site, @NonNull String taxonomy) {
             this.terms = terms;
             this.site = site;
             this.taxonomy = taxonomy;
+        }
+
+        public FetchTermsResponsePayload(
+                @NonNull TermsModel terms,
+                @NonNull SiteModel site,
+                @NonNull String taxonomy,
+                boolean complete) {
+            this(terms, site, taxonomy);
+            this.complete = complete;
         }
 
         public FetchTermsResponsePayload(@NonNull TaxonomyError error, @NonNull String taxonomy) {
@@ -155,14 +168,26 @@ public class TaxonomyStore extends Store {
     private final TaxonomyRestClient mTaxonomyRestClient;
     private final TaxonomyXMLRPCClient mTaxonomyXMLRPCClient;
     private final TaxonomyRsApiRestClient mTaxonomyRsApiRestClient;
+    private final TaxonomiesRestApiMigrationConfig mTaxonomiesRestApiMigrationConfig;
 
     @Inject public TaxonomyStore(Dispatcher dispatcher, TaxonomyRestClient taxonomyRestClient,
                                  TaxonomyXMLRPCClient taxonomyXMLRPCClient,
-                                 TaxonomyRsApiRestClient taxonomyRsApiRestClient) {
+                                 TaxonomyRsApiRestClient taxonomyRsApiRestClient,
+                                 TaxonomiesRestApiMigrationConfig taxonomiesRestApiMigrationConfig) {
         super(dispatcher);
         mTaxonomyRestClient = taxonomyRestClient;
         mTaxonomyXMLRPCClient = taxonomyXMLRPCClient;
         mTaxonomyRsApiRestClient = taxonomyRsApiRestClient;
+        mTaxonomiesRestApiMigrationConfig = taxonomiesRestApiMigrationConfig;
+    }
+
+    /**
+     * The self-hosted taxonomy wp-rs REST path is used only when the site exposes the REST API
+     * (Application Password) AND the taxonomies REST API migration feature flag is enabled.
+     * When the flag is off, self-hosted sites fall back to the legacy XML-RPC client.
+     */
+    private boolean shouldUseTaxonomyRsApiRestClient(@NonNull SiteModel site) {
+        return site.isUsingSelfHostedRestApi() && mTaxonomiesRestApiMigrationConfig.isEnabled();
     }
 
     @Override
@@ -328,7 +353,7 @@ public class TaxonomyStore extends Store {
     }
 
     private void fetchTerms(@NonNull SiteModel site, @NonNull String taxonomyName) {
-        if (site.isUsingSelfHostedRestApi()) {
+        if (shouldUseTaxonomyRsApiRestClient(site)) {
             mTaxonomyRsApiRestClient.fetchTerms(site, taxonomyName);
         } else if (site.isUsingWpComRestApi()) {
             mTaxonomyRestClient.fetchTerms(site, taxonomyName);
@@ -348,11 +373,14 @@ public class TaxonomyStore extends Store {
             onTaxonomyChanged = new OnTaxonomyChanged(0, payload.taxonomy);
             onTaxonomyChanged.error = payload.error;
         } else {
-            // Clear existing terms for this taxonomy
-            // This is the simplest way of keeping our local terms in sync with their remote versions
-            // (in case of deletions,or if the user manually changed some term IDs)
-            // TODO: This may have to change when we support large numbers of terms and require multiple requests
-            TaxonomySqlUtils.clearTaxonomyForSite(payload.site, payload.taxonomy);
+            // Clear existing terms for this taxonomy before inserting the fresh list. This is the
+            // simplest way of keeping our local terms in sync with their remote versions (in case of
+            // deletions, or if the user manually changed some term IDs). We only do this for a
+            // complete fetch: a partial list (e.g. a mid-pagination failure) would otherwise wipe
+            // terms we still have cached and shrink the list the user sees.
+            if (payload.complete) {
+                TaxonomySqlUtils.clearTaxonomyForSite(payload.site, payload.taxonomy);
+            }
 
             int rowsAffected = 0;
             for (TermModel term : payload.terms.getTerms()) {
@@ -408,7 +436,7 @@ public class TaxonomyStore extends Store {
             onTermUploaded.error = payload.error;
             emitChange(onTermUploaded);
         } else {
-            if (payload.site.isUsingWpComRestApi() || payload.site.isUsingSelfHostedRestApi()) {
+            if (payload.site.isUsingWpComRestApi() || shouldUseTaxonomyRsApiRestClient(payload.site)) {
                 // The WP.COM and REST API response contains the modified term, so we're already in sync with the server
                 // All we need to do is store it and emit OnTaxonomyChanged
                 updateTerm(payload.term);
@@ -423,7 +451,7 @@ public class TaxonomyStore extends Store {
     }
 
     private void pushTerm(@NonNull RemoteTermPayload payload) {
-        if (payload.site.isUsingSelfHostedRestApi()) {
+        if (shouldUseTaxonomyRsApiRestClient(payload.site)) {
             // FluxC pushTerm to update terms, so we need to make the distinction here
             if (payload.term.getRemoteTermId() > 0) {
                 mTaxonomyRsApiRestClient.updateTerm(payload.site, payload.term);
@@ -438,7 +466,9 @@ public class TaxonomyStore extends Store {
     }
 
     private void deleteTerm(@NonNull RemoteTermPayload payload) {
-        if (payload.site.isUsingWpComRestApi()) {
+        if (shouldUseTaxonomyRsApiRestClient(payload.site)) {
+            mTaxonomyRsApiRestClient.deleteTerm(payload.site, payload.term);
+        } else if (payload.site.isUsingWpComRestApi()) {
             mTaxonomyRestClient.deleteTerm(payload.term, payload.site);
         } else {
             mTaxonomyXMLRPCClient.deleteTerm(payload.term, payload.site);

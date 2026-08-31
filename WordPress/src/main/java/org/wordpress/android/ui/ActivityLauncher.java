@@ -46,7 +46,7 @@ import org.wordpress.android.ui.blaze.PostUIModel;
 import org.wordpress.android.ui.blaze.blazepromote.BlazePromoteParentActivity;
 import org.wordpress.android.ui.bloggingprompts.promptslist.BloggingPromptsListActivity;
 import org.wordpress.android.ui.comments.unified.UnifiedCommentsActivity;
-import org.wordpress.android.ui.comments.unified.UnifiedCommentsDetailsActivity;
+import org.wordpress.android.ui.commentsrs.CommentsRsListActivity;
 import org.wordpress.android.ui.debug.cookies.DebugCookiesActivity;
 import org.wordpress.android.ui.debug.preferences.DebugSharedPreferenceFlagsActivity;
 import org.wordpress.android.ui.domains.DomainRegistrationActivity;
@@ -67,7 +67,6 @@ import org.wordpress.android.ui.jetpack.restore.RestoreActivity;
 import org.wordpress.android.ui.jetpack.scan.ScanActivity;
 import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsActivity;
 import org.wordpress.android.ui.jetpack.scan.history.ScanHistoryActivity;
-import org.wordpress.android.ui.jetpackoverlay.JetpackStaticPosterActivity;
 import org.wordpress.android.ui.jetpackplugininstall.remoteplugin.JetpackRemoteInstallActivity;
 import org.wordpress.android.ui.main.ChooseSiteActivity;
 import org.wordpress.android.ui.main.MeActivity;
@@ -132,6 +131,7 @@ import org.wordpress.android.ui.themes.ThemeBrowserActivity;
 import org.wordpress.android.ui.utils.PreMigrationDeepLinkData;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UriWrapper;
 import org.wordpress.android.util.UrlUtils;
@@ -146,8 +146,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import dagger.hilt.android.EntryPointAccessors;
-
 import static org.wordpress.android.analytics.AnalyticsTracker.ACTIVITY_LOG_ACTIVITY_ID_KEY;
 import static org.wordpress.android.analytics.AnalyticsTracker.Stat.POST_LIST_ACCESS_ERROR;
 import static org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_ARTICLE_DETAIL_REBLOGGED;
@@ -156,6 +154,7 @@ import static org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_ACCESS
 import static org.wordpress.android.imageeditor.preview.PreviewImageFragment.ARG_EDIT_IMAGE_DATA;
 import static org.wordpress.android.ui.accounts.LoginFlow.PROLOGUE;
 import static org.wordpress.android.ui.accounts.LoginFlow.JETPACK_REST_CONNECT;
+import static org.wordpress.android.ui.accounts.LoginFlow.SUPPORT;
 import static org.wordpress.android.ui.accounts.LoginFlow.WPCOM_LOGIN;
 import static org.wordpress.android.push.NotificationsProcessingService.ARG_NOTIFICATION_TYPE;
 import static org.wordpress.android.ui.WPWebViewActivity.ENCODING_UTF8;
@@ -484,10 +483,6 @@ public class ActivityLauncher {
         addNewPostForResult(editorIntent, activity, site, false, reblogSource, -1, null);
     }
 
-    public static void viewStatsInNewStack(Context context, SiteModel site, @NonNull StatsLaunchedFrom launchedFrom) {
-        viewStatsInNewStack(context, site, null, launchedFrom);
-    }
-
     public static void viewStatsInNewStack(Context context, SiteModel site, @Nullable StatsTimeframe statsTimeframe,
                                            @NonNull StatsLaunchedFrom launchedFrom) {
         viewStatsInNewStack(context, site, statsTimeframe, null, launchedFrom);
@@ -646,12 +641,8 @@ public class ActivityLauncher {
         context.startActivity(intent);
     }
 
-    private static boolean shouldUseNewPostList(@Nullable SiteModel site) {
-        return site != null && site.hasApplicationPassword();
-    }
-
     public static void viewCurrentBlogPosts(Context context, SiteModel site) {
-        if (shouldUseNewPostList(site)) {
+        if (SiteUtils.canUseWpRs(site)) {
             context.startActivity(PostRsListActivity.Companion.createIntent(context));
             return;
         }
@@ -687,7 +678,7 @@ public class ActivityLauncher {
     }
 
     public static void viewCurrentBlogPages(@NonNull Context context, @NonNull SiteModel site) {
-        if (shouldUseNewPagesList(context, site)) {
+        if (SiteUtils.canUseWpRs(site)) {
             context.startActivity(PagesRsListActivity.Companion.createIntent(context));
             AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_PAGES, site);
             return;
@@ -696,17 +687,6 @@ public class ActivityLauncher {
         intent.putExtra(WordPress.SITE, site);
         context.startActivity(intent);
         AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_PAGES, site);
-    }
-
-    private static boolean shouldUseNewPagesList(@NonNull Context context, @NonNull SiteModel site) {
-        if (!site.hasApplicationPassword()) {
-            return false;
-        }
-        ActivityLauncherEntryPoint entryPoint = EntryPointAccessors.fromApplication(
-                context.getApplicationContext(),
-                ActivityLauncherEntryPoint.class
-        );
-        return entryPoint.experimentalFeatures().isEnabled(Feature.RS_PAGES_LIST);
     }
 
     public static void viewPostTypes(@NonNull Context context, @NonNull SiteModel site) {
@@ -744,16 +724,12 @@ public class ActivityLauncher {
     }
 
     public static void viewUnifiedComments(Context context, SiteModel site) {
-        Intent intent = new Intent(context, UnifiedCommentsActivity.class);
-        intent.putExtra(WordPress.SITE, site);
+        // Neither screen reads the site from the Intent; both resolve it from SelectedSiteRepository.
+        Intent intent = SiteUtils.canUseWpRs(site)
+                ? CommentsRsListActivity.Companion.createIntent(context)
+                : new Intent(context, UnifiedCommentsActivity.class);
         context.startActivity(intent);
         AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_COMMENTS, site);
-    }
-
-    public static void viewUnifiedCommentsDetails(Context context, SiteModel site) {
-        Intent intent = new Intent(context, UnifiedCommentsDetailsActivity.class);
-        intent.putExtra(WordPress.SITE, site);
-        context.startActivity(intent);
     }
 
     public static void viewCurrentBlogThemes(Context context, SiteModel site) {
@@ -1525,6 +1501,17 @@ public class ActivityLauncher {
     }
 
     /**
+     * Builds the intent for the WordPress.com login required to access support chat (Odie).
+     * Goes straight to WP.com OAuth and, once done, finishes back to the caller (the Support
+     * screen) instead of navigating to the main activity.
+     */
+    public static Intent createWpComSignInForSupportIntent(@NonNull Context context) {
+        Intent intent = new Intent(context, LoginActivity.class);
+        SUPPORT.putInto(intent);
+        return intent;
+    }
+
+    /**
      * Sign in to WordPress.com from the Jetpack REST connection flow.
      * This method is specifically for the Jetpack connection process where
      * we need to authenticate with WordPress.com to establish the connection
@@ -1871,11 +1858,6 @@ public class ActivityLauncher {
                 null);
         intent.putExtra(ARG_EXTRA_BLAZE_UI_MODEL, pageUIModel);
         intent.putExtra(ARG_BLAZE_FLOW_SOURCE, source);
-        context.startActivity(intent);
-    }
-
-    public static void showJetpackStaticPoster(@NonNull Context context) {
-        Intent intent = new Intent(context, JetpackStaticPosterActivity.class);
         context.startActivity(intent);
     }
 

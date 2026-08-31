@@ -28,11 +28,10 @@ class SupportViewModel @Inject constructor(
     private val experimentalFeatures: ExperimentalFeatures,
 ) : ViewModel() {
     sealed class NavigationEvent {
-        data object NavigateToAskTheBots : NavigationEvent()
         data object NavigateToLogin : NavigationEvent()
         data object NavigateToHelpCenter : NavigationEvent()
         data object NavigateToApplicationLogs : NavigationEvent()
-        data object NavigateToAskHappinessEngineers : NavigationEvent()
+        data object NavigateToUnifiedSupport : NavigationEvent()
         data object NavigateToNetworkRequests : NavigationEvent()
     }
 
@@ -46,8 +45,7 @@ class SupportViewModel @Inject constructor(
     }
 
     data class SupportOptionsVisibility(
-        val showAskTheBots: Boolean = true,
-        val showAskHappinessEngineers: Boolean = true
+        val showUnifiedSupport: Boolean = true,
     )
 
     data class NetworkTrackingState(
@@ -75,6 +73,15 @@ class SupportViewModel @Inject constructor(
     val networkTrackingState: StateFlow<NetworkTrackingState> = _networkTrackingState.asStateFlow()
 
     fun init() {
+        refreshLoginState()
+        initNetworkTrackingState()
+    }
+
+    /**
+     * Re-reads the account state so the screen reflects a login that happened after it was created
+     * (e.g. the user returning from the support login flow). See CMM-2297.
+     */
+    fun refreshLoginState() {
         val hasAccessToken = accountStore.hasAccessToken()
         _isLoggedIn.value = hasAccessToken
 
@@ -86,11 +93,8 @@ class SupportViewModel @Inject constructor(
         )
 
         _optionsVisibility.value = SupportOptionsVisibility(
-            showAskTheBots = hasAccessToken && BuildConfig.IS_JETPACK_APP,
-            showAskHappinessEngineers = hasAccessToken && BuildConfig.IS_JETPACK_APP
+            showUnifiedSupport = hasAccessToken && BuildConfig.IS_JETPACK_APP,
         )
-
-        initNetworkTrackingState()
     }
 
     private fun initNetworkTrackingState() {
@@ -113,26 +117,14 @@ class SupportViewModel @Inject constructor(
         }
     }
 
-    fun onAskTheBotsClick() {
+    fun onUnifiedSupportClick() {
         viewModelScope.launch {
             // hasAccessToken() checks if it exists and it's not empty, not only the nullability.
             // So, if it's true, then we are sure the token is not null
             if (!accountStore.hasAccessToken()) {
-                appLogWrapper.d(AppLog.T.SUPPORT, "Trying to open a bot conversation without access token")
+                appLogWrapper.d(AppLog.T.SUPPORT, "Trying to open unified support without access token")
             } else {
-                _navigationEvents.emit(NavigationEvent.NavigateToAskTheBots)
-            }
-        }
-    }
-
-    fun onAskHappinessEngineersClick() {
-        viewModelScope.launch {
-            // hasAccessToken() checks if it exists and it's not empty, not only the nullability.
-            // So, if it's true, then we are sure the token is not null
-            if (!accountStore.hasAccessToken()) {
-                appLogWrapper.d(AppLog.T.SUPPORT, "Trying to open a HE conversation without access token")
-            } else {
-                _navigationEvents.emit(NavigationEvent.NavigateToAskHappinessEngineers)
+                _navigationEvents.emit(NavigationEvent.NavigateToUnifiedSupport)
             }
         }
     }

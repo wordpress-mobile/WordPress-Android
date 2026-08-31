@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.OpenInNew
 import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
@@ -234,6 +235,19 @@ fun StatsListHeader(
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
     }
+}
+
+/**
+ * "Opens a link" affordance shown on a stats row that navigates to a URL when tapped.
+ */
+@Composable
+fun StatsOpenLinkIcon() {
+    Icon(
+        imageVector = Icons.AutoMirrored.Filled.OpenInNew,
+        contentDescription = stringResource(R.string.stats_open_link),
+        modifier = Modifier.size(16.dp),
+        tint = MaterialTheme.colorScheme.onSurfaceVariant
+    )
 }
 
 /**

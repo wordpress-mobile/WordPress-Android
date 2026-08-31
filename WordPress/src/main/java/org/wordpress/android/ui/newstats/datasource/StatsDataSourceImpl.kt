@@ -6,6 +6,7 @@ import rs.wordpress.api.kotlin.WpComApiClient
 import rs.wordpress.api.kotlin.WpRequestResult
 import uniffi.wp_api.StatsCityViewsParams
 import uniffi.wp_api.StatsCityViewsPeriod
+import uniffi.wp_api.StatsClicksChild
 import uniffi.wp_api.StatsClicksParams
 import uniffi.wp_api.StatsClicksPeriod
 import uniffi.wp_api.StatsCountryViewsParams
@@ -14,11 +15,16 @@ import uniffi.wp_api.StatsFileDownloadsParams
 import uniffi.wp_api.StatsFileDownloadsPeriod
 import uniffi.wp_api.StatsReferrersParams
 import uniffi.wp_api.StatsReferrersPeriod
+import uniffi.wp_api.StatsReferrersResults
 import uniffi.wp_api.StatsRegionViewsParams
 import uniffi.wp_api.StatsRegionViewsPeriod
 import uniffi.wp_api.StatsDevicesParams
 import uniffi.wp_api.StatsDevicesPeriod
 import uniffi.wp_api.StatsInsightsParams
+import uniffi.wp_api.StatsPostChange
+import uniffi.wp_api.StatsPostResponse
+import uniffi.wp_api.StatsPostTarget
+import uniffi.wp_api.StatsPostWeek
 import uniffi.wp_api.StatsTagsParams
 import uniffi.wp_api.StatsSearchTermsParams
 import uniffi.wp_api.StatsSearchTermsPeriod
@@ -28,6 +34,7 @@ import uniffi.wp_api.StatsTopPostsParams
 import uniffi.wp_api.StatsTopPostsPeriod
 import uniffi.wp_api.StatsVideoPlaysParams
 import uniffi.wp_api.StatsVideoPlaysPeriod
+import uniffi.wp_api.StatsVisitsField
 import uniffi.wp_api.StatsVisitsParams
 import uniffi.wp_api.StatsVisitsUnit
 import uniffi.wp_api.WpComLanguage
@@ -88,12 +95,16 @@ class StatsDataSourceImpl @Inject constructor(
         siteId: Long,
         unit: StatsUnit,
         quantity: Int,
-        endDate: String
+        endDate: String,
+        startDate: String?,
+        statFields: List<StatsVisitField>?
     ): StatsVisitsDataResult {
         val params = StatsVisitsParams(
             unit = unit.toApiUnit(),
             quantity = quantity.toUInt(),
             endDate = endDate,
+            startDate = startDate,
+            statFields = statFields?.map { it.toApiField() } ?: emptyList(),
         )
 
         val result = getOrCreateClient().request { requestBuilder ->
@@ -141,6 +152,16 @@ class StatsDataSourceImpl @Inject constructor(
         StatsUnit.DAY -> StatsVisitsUnit.DAY
         StatsUnit.WEEK -> StatsVisitsUnit.WEEK
         StatsUnit.MONTH -> StatsVisitsUnit.MONTH
+        StatsUnit.YEAR -> StatsVisitsUnit.YEAR
+    }
+
+    private fun StatsVisitField.toApiField(): StatsVisitsField = when (this) {
+        StatsVisitField.VIEWS -> StatsVisitsField.VIEWS
+        StatsVisitField.VISITORS -> StatsVisitsField.VISITORS
+        StatsVisitField.LIKES -> StatsVisitsField.LIKES
+        StatsVisitField.REBLOGS -> StatsVisitsField.REBLOGS
+        StatsVisitField.COMMENTS -> StatsVisitsField.COMMENTS
+        StatsVisitField.POSTS -> StatsVisitsField.POSTS
     }
 
     private val wpComLanguage: WpComLanguage?
@@ -188,7 +209,8 @@ class StatsDataSourceImpl @Inject constructor(
                         TopPostDataItem(
                             id = post.id.toLong(),
                             title = post.title.orEmpty(),
-                            views = post.views?.toLong() ?: 0L
+                            views = post.views?.toLong() ?: 0L,
+                            url = post.href
                         )
                     }
                 )
@@ -204,19 +226,22 @@ class StatsDataSourceImpl @Inject constructor(
         dateRange: StatsDateRange,
         max: Int
     ): ReferrersDataResult {
+        // Referrers-specific max semantics: the server treats max=0 as "all" but an unset max as
+        // "default 10", so 0 is sent explicitly (unlike other endpoints that map 0 -> null).
+        val maxParam = max.coerceAtLeast(0).toUInt()
         val params = when (dateRange) {
             is StatsDateRange.Preset -> StatsReferrersParams(
                 period = StatsReferrersPeriod.DAY,
                 date = dateRange.date,
                 num = dateRange.num.toUInt(),
-                max = max.coerceAtLeast(1).toUInt(),
+                max = maxParam,
                 locale = wpComLanguage
             )
             is StatsDateRange.Custom -> StatsReferrersParams(
                 period = StatsReferrersPeriod.DAY,
                 date = dateRange.date,
                 startDate = dateRange.startDate,
-                max = max.coerceAtLeast(1).toUInt(),
+                max = maxParam,
                 locale = wpComLanguage
             )
         }
@@ -238,7 +263,9 @@ class StatsDataSourceImpl @Inject constructor(
                     groups.map { group ->
                         ReferrerDataItem(
                             name = group.name.orEmpty(),
-                            views = group.total?.toLong() ?: 0L
+                            url = group.url,
+                            views = group.total?.toLong() ?: 0L,
+                            children = group.results.toChildren()
                         )
                     }
                 )
@@ -248,6 +275,18 @@ class StatsDataSourceImpl @Inject constructor(
             }
         }
     }
+
+    private fun StatsReferrersResults?.toChildren(): List<ReferrerChildDataItem> =
+        when (this) {
+            is StatsReferrersResults.Referrers -> v1.map { child ->
+                ReferrerChildDataItem(
+                    name = child.name.orEmpty(),
+                    url = child.url,
+                    views = child.views?.toLong() ?: 0L
+                )
+            }
+            else -> emptyList()
+        }
 
     private fun buildCountryViewsParams(dateRange: StatsDateRange, max: Int) = when (dateRange) {
         is StatsDateRange.Preset -> StatsCountryViewsParams(
@@ -598,8 +637,10 @@ class StatsDataSourceImpl @Inject constructor(
                     clicks.map { entry ->
                         ClickDataItem(
                             name = entry.name.orEmpty(),
+                            url = entry.url,
                             clicks = entry.views?.toLong()
-                                ?: 0L
+                                ?: 0L,
+                            children = entry.children.toClickChildren()
                         )
                     }
                 )
@@ -611,6 +652,15 @@ class StatsDataSourceImpl @Inject constructor(
             }
         }
     }
+
+    private fun List<StatsClicksChild>?.toClickChildren(): List<ClickChildDataItem> =
+        orEmpty().map { child ->
+            ClickChildDataItem(
+                name = child.name.orEmpty(),
+                url = child.url,
+                clicks = child.views?.toLong() ?: 0L
+            )
+        }
 
     override suspend fun fetchDevicesScreensize(
         siteId: Long,
@@ -954,13 +1004,13 @@ class StatsDataSourceImpl @Inject constructor(
     ): Pair<String, StatsErrorType> = when (result) {
         is WpRequestResult.WpError -> {
             val statusCode = result.statusCode.toInt()
-            val errorType = if (
+            val errorType = when {
+                isStatsUnavailableForSite(result.response) ->
+                    StatsErrorType.NOT_AVAILABLE
                 statusCode == HTTP_FORBIDDEN ||
-                statusCode == HTTP_UNAUTHORIZED
-            ) {
-                StatsErrorType.AUTH_ERROR
-            } else {
-                StatsErrorType.API_ERROR
+                    statusCode == HTTP_UNAUTHORIZED ->
+                    StatsErrorType.AUTH_ERROR
+                else -> StatsErrorType.API_ERROR
             }
             "StatsDataSourceImpl: $methodName WpError " +
                 "(status=$statusCode) - ${result.errorMessage}" to
@@ -990,6 +1040,18 @@ class StatsDataSourceImpl @Inject constructor(
             "StatsDataSourceImpl: $methodName " +
                 "InvalidHttpStatusCode - " +
                 "${result.statusCode}" to StatsErrorType.API_ERROR
+        }
+        is WpRequestResult.UnknownError<*> -> {
+            val errorType = if (
+                isStatsUnavailableForSite(result.response)
+            ) {
+                StatsErrorType.NOT_AVAILABLE
+            } else {
+                StatsErrorType.UNKNOWN
+            }
+            "StatsDataSourceImpl: $methodName UnknownError " +
+                "(status=${result.statusCode}) - " +
+                "${result.response}" to errorType
         }
         else -> {
             "StatsDataSourceImpl: $methodName " +
@@ -1131,7 +1193,8 @@ class StatsDataSourceImpl @Inject constructor(
                     tags = group.tags.map { tag ->
                         TagData(
                             tagType = tag.tagType,
-                            name = tag.name
+                            name = tag.name,
+                            link = tag.link
                         )
                     },
                     views = group.views.toLong()
@@ -1182,6 +1245,113 @@ class StatsDataSourceImpl @Inject constructor(
             }
         }
     }
+
+    override suspend fun fetchPostViews(
+        siteId: Long,
+        postId: Long
+    ): PostViewsDataResult {
+        // The endpoint takes no query params -- num, date and period are silently ignored.
+        // The API addresses the home page as post 0, which the target models explicitly.
+        val target = if (postId == HOME_PAGE_POST_ID) {
+            StatsPostTarget.HomePage
+        } else {
+            StatsPostTarget.Post(postId)
+        }
+        val result = getOrCreateClient()
+            .request { requestBuilder ->
+                requestBuilder.statsPost()
+                    .getStatsPost(
+                        wpComSiteId = siteId.toULong(),
+                        statsPostTarget = target
+                    )
+            }
+
+        logResultType("fetchPostViews", result)
+
+        return when (result) {
+            is WpRequestResult.Success -> {
+                AppLog.d(
+                    T.STATS,
+                    "StatsDataSourceImpl: " +
+                        "fetchPostViews success"
+                )
+                PostViewsDataResult.Success(
+                    mapToPostViewsData(
+                        result.response.data,
+                        postId
+                    )
+                )
+            }
+            else -> logErrorAndReturn(
+                "fetchPostViews",
+                result
+            ) {
+                PostViewsDataResult.Error(it)
+            }
+        }
+    }
+
+    private fun mapToPostViewsData(
+        response: StatsPostResponse,
+        postId: Long
+    ): PostViewsData = PostViewsData(
+        // The home page has no post row to read an id from, so the requested id is authoritative.
+        postId = response.post?.id ?: postId,
+        totalViews = response.views.toLong(),
+        dailyViews = response.dailyViews
+            .map {
+                PostViewsDailyView(
+                    day = it.period,
+                    views = it.views.toLong()
+                )
+            },
+        // The API sends weeks oldest first; the UI lists
+        // the most recent week at the top.
+        weeks = response.weeks
+            .map { it.toPostViewsWeek() }
+            .reversed(),
+        years = response.years
+            .map { (year, value) ->
+                PostViewsYear(
+                    year = year,
+                    total = value.total.toLong()
+                )
+            }
+            .sortedByDescending { it.year },
+        averages = response.averages
+            .map { (year, value) ->
+                PostViewsYearAverage(
+                    year = year,
+                    overall = value.overall.toLong()
+                )
+            }
+            .sortedByDescending { it.year },
+        // Null for the home page, which has view stats but no post metadata, likes or comments.
+        post = response.post?.let { post ->
+            PostViewsPost(
+                title = post.title,
+                date = post.date,
+                likeCount = response.likeCount
+                    ?.toLong() ?: 0L,
+                commentCount = response.discussion
+                    ?.commentCount?.toLong() ?: 0L
+            )
+        }
+    )
+
+    private fun StatsPostWeek.toPostViewsWeek() =
+        PostViewsWeek(
+            startDay = days.firstOrNull()?.day.orEmpty(),
+            endDay = days.lastOrNull()?.day.orEmpty(),
+            total = total.toLong(),
+            change = when (val change = change) {
+                is StatsPostChange.Percentage ->
+                    PostViewsChange.Percentage(change.value)
+                is StatsPostChange.Infinite ->
+                    PostViewsChange.Infinite
+                null -> PostViewsChange.None
+            }
+        )
 
     override suspend fun fetchStatsSubscribers(
         siteId: Long,
@@ -1307,9 +1477,9 @@ class StatsDataSourceImpl @Inject constructor(
         quantity: Int
     ): StatsEmailsSummaryDataResult {
         val params = StatsEmailsSummaryParams(
-            period = StatsEmailsSummaryPeriod.MONTH,
+            period = StatsEmailsSummaryPeriod.ALL_TIME,
             quantity = quantity.toUInt(),
-            sortField = StatsEmailsSummarySortField.OPENS,
+            sortField = StatsEmailsSummarySortField.POST_DATE,
             sortOrder = WpApiParamOrder.DESC
         )
         val result = getOrCreateClient().request { requestBuilder ->
@@ -1423,6 +1593,8 @@ class StatsDataSourceImpl @Inject constructor(
         }
 
     companion object {
+        // The API addresses the site's home page as post 0.
+        private const val HOME_PAGE_POST_ID = 0L
         private const val HTTP_UNAUTHORIZED = 401
         private const val HTTP_FORBIDDEN = 403
     }

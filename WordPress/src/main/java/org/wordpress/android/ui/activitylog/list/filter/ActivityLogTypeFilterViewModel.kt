@@ -9,8 +9,10 @@ import org.wordpress.android.fluxc.model.LocalOrRemoteId.RemoteId
 import org.wordpress.android.fluxc.model.activity.ActivityTypeModel
 import org.wordpress.android.fluxc.store.ActivityLogStore
 import org.wordpress.android.fluxc.store.ActivityLogStore.FetchActivityTypesPayload
+import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
+import org.wordpress.android.ui.activitylog.GetActivityLogHiddenGroupsUseCase
 import org.wordpress.android.ui.activitylog.list.filter.ActivityLogTypeFilterViewModel.UiState.Content
 import org.wordpress.android.ui.activitylog.list.filter.ActivityLogTypeFilterViewModel.UiState.Error
 import org.wordpress.android.ui.activitylog.list.filter.ActivityLogTypeFilterViewModel.UiState.FullscreenLoading
@@ -27,6 +29,8 @@ import javax.inject.Named
 
 class ActivityLogTypeFilterViewModel @Inject constructor(
     private val activityLogStore: ActivityLogStore,
+    private val siteStore: SiteStore,
+    private val getActivityLogHiddenGroupsUseCase: GetActivityLogHiddenGroupsUseCase,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(mainDispatcher) {
@@ -70,9 +74,19 @@ class ActivityLogTypeFilterViewModel @Inject constructor(
             if (response.isError) {
                 _uiState.value = buildErrorUiState()
             } else {
-                _uiState.value = buildContentUiState(response.activityTypeModels)
+                _uiState.value = buildContentUiState(filterOutHiddenGroups(response.activityTypeModels))
             }
         }
+    }
+
+    /**
+     * Groups hidden from the activity log list are removed from the filter too, so the user cannot select a
+     * filter that would always produce an empty list.
+     */
+    private fun filterOutHiddenGroups(activityTypes: List<ActivityTypeModel>): List<ActivityTypeModel> {
+        val site = siteStore.getSiteBySiteId(remoteSiteId.value) ?: return activityTypes
+        val hiddenGroups = getActivityLogHiddenGroupsUseCase.getHiddenGroups(site)
+        return activityTypes.filterNot { hiddenGroups.contains(it.key) }
     }
 
     private fun buildErrorUiState() =

@@ -30,6 +30,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
 import org.wordpress.android.ui.newstats.components.StatsListRowContainer
+import org.wordpress.android.ui.newstats.components.StatsOpenLinkIcon
 import org.wordpress.android.ui.newstats.util.formatStatValue
 
 private const val VERTICAL_LINE_ALPHA = 0.3f
@@ -63,22 +64,37 @@ fun TagTypeIcon(
     )
 }
 
+/**
+ * A tag group row, following the same expand-or-navigate rule as the Most Viewed rows (see
+ * `statsRowAction`): a group of several tags expands, a lone tag opens its archive page, never
+ * both.
+ *
+ * Which one applies is decided here from [item], not by the caller. [onExpandToggle] says *how*
+ * to toggle, not *whether* to — so the chevron and the tap action are guaranteed to agree.
+ */
 @Composable
-@Suppress("LongParameterList")
 fun TagGroupRow(
     item: TagGroupUiItem,
     percentage: Float,
-    isExpandable: Boolean,
     isExpanded: Boolean,
-    onClick: (() -> Unit)?,
+    onExpandToggle: () -> Unit,
+    onUrlClick: (String) -> Unit = {},
     position: Int? = null
 ) {
+    val isExpandable = item.isExpandable
+    val linkUrl = item.link
     StatsListRowContainer(
         percentage = percentage,
-        modifier = if (onClick != null) {
-            Modifier.clickable(onClick = onClick)
-        } else {
-            Modifier
+        modifier = when {
+            isExpandable ->
+                Modifier.clickable {
+                    onExpandToggle()
+                }
+            linkUrl != null ->
+                Modifier.clickable {
+                    onUrlClick(linkUrl)
+                }
+            else -> Modifier
         }
     ) {
         Row(
@@ -146,6 +162,12 @@ fun TagGroupRow(
                         modifier =
                             Modifier.width(4.dp)
                     )
+                } else if (linkUrl != null) {
+                    StatsOpenLinkIcon()
+                    Spacer(
+                        modifier =
+                            Modifier.width(4.dp)
+                    )
                 }
                 Text(
                     text = item.name,
@@ -175,6 +197,7 @@ fun TagGroupRow(
 @Composable
 fun ExpandedTagsSection(
     tags: List<TagUiItem>,
+    onUrlClick: (String) -> Unit = {},
     startPadding: Dp = 24.dp
 ) {
     val lineColor = MaterialTheme.colorScheme.primary
@@ -188,9 +211,20 @@ fun ExpandedTagsSection(
         )
     ) {
         tags.forEachIndexed { index, tag ->
+            val linkUrl = tag.link
+                ?.takeIf { it.isNotBlank() }
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
+                    .then(
+                        if (linkUrl != null) {
+                            Modifier.clickable {
+                                onUrlClick(linkUrl)
+                            }
+                        } else {
+                            Modifier
+                        }
+                    )
                     .padding(vertical = 4.dp),
                 verticalAlignment =
                     Alignment.CenterVertically
@@ -219,6 +253,13 @@ fun ExpandedTagsSection(
                     color = MaterialTheme.colorScheme
                         .onSurface
                 )
+                if (linkUrl != null) {
+                    Spacer(
+                        modifier =
+                            Modifier.width(4.dp)
+                    )
+                    StatsOpenLinkIcon()
+                }
             }
             if (index < tags.lastIndex) {
                 Spacer(

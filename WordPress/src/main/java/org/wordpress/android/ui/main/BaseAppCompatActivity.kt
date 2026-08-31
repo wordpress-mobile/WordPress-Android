@@ -13,10 +13,10 @@ import org.wordpress.android.ui.debug.preferences.DebugSharedPreferenceFlagsActi
 import org.wordpress.android.ui.domains.management.DomainManagementActivity
 import org.wordpress.android.ui.domains.management.newdomainsearch.NewDomainSearchActivity
 import org.wordpress.android.ui.domains.management.purchasedomain.PurchaseDomainActivity
-import org.wordpress.android.ui.jetpackoverlay.JetpackStaticPosterActivity
 import org.wordpress.android.ui.main.feedbackform.FeedbackFormActivity
 import org.wordpress.android.ui.media.MediaPreviewActivity
 import org.wordpress.android.ui.media.MediaSettingsActivity
+import org.wordpress.android.ui.commentsrs.CommentsRsListActivity
 import org.wordpress.android.ui.mysite.menu.MenuActivity
 import org.wordpress.android.ui.mysite.personalization.PersonalizationActivity
 import org.wordpress.android.ui.navmenus.NavMenusActivity
@@ -83,12 +83,12 @@ private fun isExcludedActivity(activity: BaseAppCompatActivity) =
 private val excludedActivities = listOf(
     BlazeCampaignParentActivity::class.java.name,
     BloggingPromptsListActivity::class.java.name,
+    CommentsRsListActivity::class.java.name,
     DebugSharedPreferenceFlagsActivity::class.java.name,
     DomainManagementActivity::class.java.name,
     EditJetpackSocialShareMessageActivity::class.java.name,
     ExperimentalFeaturesActivity::class.java.name,
     FeedbackFormActivity::class.java.name,
-    JetpackStaticPosterActivity::class.java.name,
     MediaPreviewActivity::class.java.name,
     MenuActivity::class.java.name,
     NavMenusActivity::class.java.name,

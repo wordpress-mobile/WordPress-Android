@@ -434,6 +434,10 @@
     <string name="comments_empty_list_filtered_unreplied">No unreplied comments</string>
     <string name="comments_empty_list_filtered_spam">No spam comments</string>
     <string name="comments_empty_list_filtered_trashed">No trashed comments</string>
+    <string name="comments_rs_search_prompt">Search comments</string>
+    <string name="comments_rs_search_nothing_found">No comments matching your search</string>
+    <string name="comments_rs_moderation_failed_single">The comment couldn\'t be updated</string>
+    <string name="comments_rs_moderation_failed_multiple">%1$d of %2$d comments couldn\'t be updated</string>
     <string name="comment_reply_to_user">Reply to %s</string>
     <string name="comment_trashed">Comment trashed</string>
     <string name="comment_spammed">Comment marked as spam</string>
@@ -620,8 +624,6 @@
     <string name="newest_first">Newest first</string>
     <string name="days_quantity_one">1 day</string>
     <string name="days_quantity_other">%d days</string>
-    <string name="weeks_quantity_one">1 week</string>
-    <string name="weeks_quantity_other">%d weeks</string>
     <string name="https" translatable="false">https:\/\/</string>
     <string name="close">Close</string>
     <string name="submit">Submit</string>
@@ -711,7 +713,7 @@
     <!-- GutenbergKit announcement -->
     <string name="gutenberg_kit_announcement_title">A better block editor is coming</string>
     <string name="gutenberg_kit_announcement_body_intro">The next-generation block editor is ready, and it brings more new features.</string>
-    <string name="gutenberg_kit_announcement_body_deadline">By the end of June 2026, it will become the default editor for everyone. %1$s</string>
+    <string name="gutenberg_kit_announcement_body_deadline_v2">By the end of 2026, it will become the default editor for everyone. %1$s</string>
     <string name="gutenberg_kit_announcement_activate">Activate</string>
     <string name="gutenberg_kit_announcement_maybe_later">Maybe later</string>
     <string name="gutenberg_kit_announcement_learn_more">Learn more</string>
@@ -1007,14 +1009,14 @@
     <string name="network_requests_disable">Disable</string>
     <string name="experimental_post_types">Post Types</string>
     <string name="experimental_post_types_description">Enable experimental post types screen</string>
-    <string name="experimental_new_stats">New Stats</string>
-    <string name="experimental_new_stats_description">Show stats in a more modern and advanced UI</string>
+    <!-- New Stats switch controls -->
     <string name="stats_try_new_stats">Try new stats</string>
     <string name="stats_switch_to_old_stats">Disable new stats</string>
     <string name="stats_new_stats_suggestion_title">A new Stats experience</string>
     <string name="stats_new_stats_suggestion_message">We\'ve built a brand new Stats experience. Want to give it a try? You can always go back to the old one from the Stats menu.</string>
     <string name="stats_new_stats_suggestion_positive">Try it out</string>
     <string name="stats_new_stats_suggestion_negative">Maybe later</string>
+    <string name="stats_new_stats_feedback_dialog_message">Are you willing to share feedback on the new Stats experience?</string>
     <!-- New Stats intro bottom sheet -->
     <string name="new_stats_intro_title">New Stats</string>
     <string name="new_stats_intro_subtitle">A better way to understand your site\'s performance.</string>
@@ -1025,10 +1027,14 @@
     <string name="new_stats_intro_trends_title">Trends at a Glance</string>
     <string name="new_stats_intro_trends_desc">Every metric shows how it\'s trending compared to the previous period, so you always know if you\'re growing.</string>
     <string name="new_stats_intro_footer">You can turn off New Stats from the overflow menu in the Stats screen.</string>
-    <string name="experimental_rs_pages_list">New Pages List</string>
-    <string name="experimental_rs_pages_list_description">Show pages list in a more modern UI for WordPress.com and self-hosted sites with application passwords</string>
+    <!-- Timespan shown in the rs posts, pages and comments lists for anything under a minute old -->
+    <string name="rs_date_now">Now</string>
     <string name="post_rs_failed_to_load">Failed to load post</string>
     <string name="page_rs_failed_to_load">Failed to load page</string>
+    <string name="page_rs_copy_url">Copy URL</string>
+    <string name="page_rs_confirm_trash_message">Are you sure you want to trash this page?</string>
+    <string name="page_rs_move_trashed_page_to_draft_dialog_title">Move page to Drafts?</string>
+    <string name="page_rs_move_trashed_page_to_draft_dialog_message">Trashed pages can\'t be edited. Do you want to change the status of this page to \"draft\" so you can work on it?</string>
     <string name="post_rs_confirm_trash_message">Are you sure you want to trash this post?</string>
     <string name="post_rs_confirm_delete_message">This will permanently delete this post. This action cannot be undone.</string>
     <string name="post_rs_trashed">Post moved to trash</string>
@@ -1131,6 +1137,8 @@
     <!-- Stats refresh -->
     <string name="stats_no_data_yet">No data yet</string>
     <string name="stats_no_data_for_period">No data for this period</string>
+    <string name="stats_hourly_data_not_available">Hourly data not available</string>
+    <string name="stats_show_views">Show Views</string>
     <string name="stats_empty_insights_title">No insights added yet</string>
     <string name="stats_manage_insights">Manage Insights</string>
     <string name="stats_followers_wordpress_com">WordPress.com</string>
@@ -1153,6 +1161,8 @@
     <string name="stats_from_to_dates_in_week_label">%1$s - %2$s</string>
     <string name="stats_item_settings">Stats item settings</string>
     <string name="stats_cannot_be_started">We cannot open the statistics at the moment. Please try again later</string>
+    <!-- Spoken date range for the Traffic period selector, e.g. "14 Jun 2025 to 14 Jun 2026". -->
+    <string name="stats_traffic_date_range_content_description">%1$s to %2$s</string>
     <string name="stats_traffic_increase">+%1$s (%2$s)</string>
     <string name="stats_traffic_change">%1$s (%2$s)</string>
     <string name="stats_value_percent">%1$s (%2$s%%)</string>
@@ -1581,6 +1591,7 @@
     <string name="stats_tag_type_tag">Tag</string>
     <string name="stats_expand_group">Expand</string>
     <string name="stats_collapse_group">Collapse</string>
+    <string name="stats_open_link">Open link</string>
     <string name="stats_insights_latest_post_empty">Check back when you\'ve published your first post!</string>
     <string name="stats_insights_latest_post_with_no_engagement">It\'s been %1$s since %2$s was published. Get the ball rolling and increase your post views by sharing your post:</string>
     <string name="stats_insights_latest_post_message">It’s been %1$s since %2$s was published. Here’s how the post performed so far:</string>
@@ -1622,6 +1633,9 @@
     <string name="stats_detail_average_views_per_day">Avg. Views Per Day</string>
     <string name="stats_detail_recent_weeks">Recent Weeks</string>
     <string name="stats_details_top_commentators">Top Commentators</string>
+    <string name="stats_post_detail_title">Post Stats</string>
+    <string name="stats_previous_day">Previous day</string>
+    <string name="stats_next_day">Next day</string>
 
     <string name="stats_posts_and_pages">Posts and Pages</string>
     <string name="stats_referrers">Referrers</string>
@@ -1665,6 +1679,7 @@
     <string name="stats_error_not_authenticated">Not authenticated</string>
     <string name="stats_error_network">Network error. Please check your connection and try again</string>
     <string name="stats_error_parsing">There was a problem loading the data. Please try again</string>
+    <string name="stats_error_not_available">These stats aren\'t available for this site</string>
     <string name="stats_error_admin_url_unavailable">Unable to open WP Admin for this site</string>
 
     <!-- stats ring chart accessibility -->
@@ -1678,6 +1693,8 @@
     <string name="stats_period_last_12_months">Last 12 months</string>
     <string name="stats_period_custom">Custom</string>
     <string name="stats_period_selector_content_description">Select stats period</string>
+    <string name="stats_period_previous_content_description">Previous period</string>
+    <string name="stats_period_next_content_description">Next period</string>
     <string name="stats_select_date_range">Select date range</string>
 
     <!-- Most Viewed Stats Card -->
@@ -2765,6 +2782,14 @@
     <!-- site picker -->
     <string name="site_picker_title">Choose site</string>
     <string name="site_picker_add_a_site">Add a site</string>
+    <!-- translators: this is the accessibility label for the add site button's tap action while the menu is open, and the verb should likely be translated in the infinitive, here's the usage context in English: "Double tap to 'close the add site menu'." -->
+    <string name="site_picker_add_a_site_collapse">Close the add site menu</string>
+    <!-- translators: this is the accessibility label for the add site button's tap action while the menu is closed, and the verb should likely be translated in the infinitive, here's the usage context in English: "Double tap to 'show ways to add a site'." -->
+    <string name="site_picker_add_a_site_expand">Show ways to add a site</string>
+    <!-- translators: spoken by a screen reader to describe the add site button's current state, not an action the user can take. Announced after the menu closes. -->
+    <string name="site_picker_add_site_menu_collapsed">Add site menu collapsed</string>
+    <!-- translators: spoken by a screen reader to describe the add site button's current state, not an action the user can take. Announced after the menu opens. -->
+    <string name="site_picker_add_site_menu_expanded">Add site menu expanded</string>
     <string name="site_picker_add_self_hosted">Add self-hosted site</string>
     <string name="site_picker_create_wpcom">Create WordPress.com site</string>
     <string name="site_picker_remove_site_empty">No sites matching your search</string>
@@ -2785,13 +2810,10 @@
     <string name="support_identity_input_dialog_name_label">Name</string>
     <string name="support_screen_title">Support</string>
     <string name="support_screen_login_button">Log into WordPress.com</string>
+    <string name="support_screen_login_description">Log into WordPress.com to access support chat.</string>
     <string name="support_screen_how_can_we_help_title">How can we help?</string>
     <string name="support_screen_help_center_title">Help Center</string>
     <string name="support_screen_help_center_description">Documentation and Tutorials to help you get started</string>
-    <string name="support_screen_ask_bots_title">Ask the Bots</string>
-    <string name="support_screen_ask_bots_description">Get quick answers to common questions</string>
-    <string name="support_screen_ask_happiness_engineers_title">Ask the Happiness Engineers</string>
-    <string name="support_screen_ask_happiness_engineers_description">For your tough questions. We\'ll reply via email</string>
     <string name="support_screen_diagnostics_section_title">Diagnostics</string>
     <string name="support_screen_application_logs_title">Application Logs</string>
     <string name="support_screen_application_logs_description">Advanced tool to debug issues</string>
@@ -3289,6 +3311,8 @@
     <string name="photo_picker_choose_photo">Choose photo from device</string>
     <string name="photo_picker_choose_video">Choose video from device</string>
     <string name="photo_picker_choose_file">Choose from device</string>
+    <string name="photo_picker_choose_photo_or_video">Photos and videos</string>
+    <string name="photo_picker_choose_other_files">Other files</string>
     <string name="photo_picker_choose_audio">Choose audio from device</string>
     <string name="photo_picker_capture_photo">Take photo</string>
     <string name="photo_picker_capture_video">Take video</string>
@@ -3593,7 +3617,6 @@
     <string name="pages_empty_scheduled">You don\'t have any scheduled pages</string>
     <string name="pages_empty_trashed">You don\'t have any trashed pages</string>
     <string name="pages_open_page_error">The selected page is not available</string>
-    <string name="pages_list_item_trashed">This page is in the trash</string>
     <string name="pages_and_posts_cancel_auto_upload">Cancel upload</string>
     <string name="pages_cannot_be_started">We cannot open pages at the moment. Please try again later</string>
     <string name="pages_item_date_subtitle">%1$s ·</string>
@@ -3690,11 +3713,9 @@
     <string name="new_site_creation_site_name_header_subtitle">A good name is short and memorable.\nYou can change it later.</string>
 
     <!-- Site Creation : Domains -->
-    <string name="site_creation_domain_cost_sale">for the first year</string>
     <string name="site_creation_domain_free_with_annual_plan">Free for the first year with annual paid plans</string>
     <string name="site_creation_domain_tag_best_alternative">Best Alternative</string>
     <string name="site_creation_domain_tag_recommended">Recommended</string>
-    <string name="site_creation_domain_tag_sale">Sale</string>
     <string name="site_creation_domain_tag_unavailable">This domain is already registered</string>
     <string name="site_creation_domain_button_purchase_domain">Purchase domain</string>
     <string name="site_creation_domain_button_continue_with_subdomain">Continue with subdomain</string>
@@ -4177,18 +4198,6 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="qrcode_auth_flow_content_description">Image indicating scan login code in process</string>
 
 
-    <!-- Jetpack Powered Banners and Badges -->
-    <string name="wp_jetpack_powered">Jetpack powered</string>
-    <string name="wp_jetpack_powered_phase_2">Get the Jetpack app</string>
-    <!-- translators: Jetpack branding text. %1$s: Feature Name, E.g.: Backup, Reader -->
-    <string name="wp_jetpack_powered_phase_3_feature_is_moving_soon">%1$s is moving soon</string>
-    <!-- translators: Jetpack branding text. %1$s: Plural Feature Name, E.g.: Stats, Themes -->
-    <string name="wp_jetpack_powered_phase_3_feature_are_moving_soon">%1$s are moving soon</string>
-    <!-- translators: Jetpack branding text. %1$s: Feature Name, E.g.: Backup, Reader; %2$s: "in n day(s) / week(s)"; Displayed as E.g.: "Reader is moving in 3 weeks" -->
-    <string name="wp_jetpack_powered_phase_3_feature_is_moving_in">%1$s is moving in %2$s</string>
-    <!-- translators: Jetpack branding text. %1$s: Plural Feature Name, E.g.: Stats, Themes; %2$s: "in n day(s) / week(s)"; Displayed as E.g.: "Stats are moving in 1 day" -->
-    <string name="wp_jetpack_powered_phase_3_feature_are_moving_in">%1$s are moving in %2$s</string>
-
     <!-- Jetpack awareness in WordPress App -->
     <string name="wp_jetpack_powered_better_with_jetpack">WordPress is better with Jetpack</string>
     <string name="wp_jetpack_powered_features">The new Jetpack app has Stats, Reader, Notifications, and more that make your WordPress better.</string>
@@ -4202,13 +4211,6 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="wp_jetpack_continue_to_reader">Continue to Reader</string>
     <string name="wp_jetpack_continue_to_stats">Continue to Stats</string>
     <string name="wp_jetpack_continue_to_notifications">Continue to Notifications</string>
-    <string name="wp_jp_static_poster_title">Use WordPress with %s in the Jetpack\u00A0app.</string>
-    <string name="wp_jp_static_poster_title_plural">Use WordPress with %s in the Jetpack\u00A0app.</string>
-    <string name="wp_jp_static_poster_button_primary">Switch to the Jetpack app</string>
-    <string name="wp_jp_static_poster_button_secondary">Learn more at Jetpack.com</string>
-    <string name="wp_jp_static_poster_message">The Jetpack app has all the WordPress app’s functionality, and now exclusive access to Stats, Reader, Notifications and more.</string>
-    <string name="wp_jp_static_poster_footnote">Switching is free and only takes a minute.</string>
-
     <!-- Jetpack Welcome Screen -->
     <string name="jp_migration_welcome_title">Welcome to Jetpack!</string>
     <string name="jp_migration_welcome_subtitle">It looks like you’re switching from the WordPress app.</string>
@@ -4241,36 +4243,9 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="preference_open_links_in_jetpack_setting_change_disable_error">Unable to disable open links in Jetpack</string>
 
     <!-- Jetpack feature overlay strings in WordPress App -->
-    <string name="wp_jetpack_feature_removal_overlay_phase_one_title_stats">Get your stats using the new Jetpack app</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_one_title_reader">Follow any site with the Jetpack app</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_one_title_notifications">Get your notifications with the Jetpack app</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_one_description_stats">Switch to the Jetpack app to watch your site’s traffic grow with stats and insights.</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_one_description_reader">Switch to the Jetpack app to find, follow, and like all your favorite sites and posts with Reader.</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_one_description_notifications">Switch to the Jetpack app to keep receiving  realtime notifications on your device.</string>
-    <string name="wp_jetpack_feature_removal_overlay_switch_to_new_jetpack_app">Switch to the new Jetpack app</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_stats">Your stats are moving to the Jetpack app</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_reader">Reader is moving to the Jetpack app</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_notifications">Notifications are moving to Jetpack</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_all_features">Jetpack features are moving soon.</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_four_title_all_features">Jetpack features have moved.</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_four_all_features_description">Stats, Reader, Notifications and other Jetpack powered features have been removed from the WordPress app.</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_description_with_deadline">Stats, Reader, Notifications and other Jetpack powered features will be removed from the WordPress app on %s.</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_description_without_deadline">Stats, Reader, Notifications and other Jetpack powered features will be removed from the WordPress app soon.</string>
     <string name="wp_jetpack_feature_removal_overlay_migration_helper_text">Switching is free and only takes a minute.</string>
-    <string name="wp_jetpack_feature_removal_overlay_learn_more_migration_text">Learn more at jetpack.com</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_the_jetpack_app">Switch to the Jetpack app</string>
     <string name="wp_jetpack_feature_removal_overlay_continue_without_jetpack" translatable="false">@string/wp_jetpack_continue_without_jetpack</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_three_all_features_description" translatable="false">@string/wp_jetpack_feature_removal_overlay_phase_two_and_three_description_without_deadline</string>
-    <string name="wp_jetpack_feature_removal_switch_to_jetpack_app_menu_title">Switch to Jetpack </string>
-    <string name="wp_jetpack_feature_removal_phase_four_secondary_text">Do this later</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_title">Give WordPress a boost with Jetpack</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_description">Jetpack lets you do more with your WordPress site. Switching is free and only takes a minute.</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_title">Stats &amp; Insights</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_description">Watch your traffic grow with helpful insights and comprehensive stats.</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_reader_title" translatable="false">@string/reader</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_reader_description">Find and follow your favorite sites and communities, and share you content.</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_notifications_title" translatable="false"> @string/notifications_screen_title</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_notifications_description">Get notifications for new comments, likes, views, and more.</string>
     <string name="wp_jetpack_feature_removal_phase_self_hosted_users_description">The Jetpack mobile app is designed to work in companion with the Jetpack plugin. Switch now to get access to stats, notifications, reader, and more.</string>
     <string name="wp_jetpack_feature_removal_phase_self_hosted_users_title">Your site has the Jetpack plugin</string>
 
@@ -4287,7 +4262,6 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="wp_jetpack_deep_link_open_in_wordpress">Open links in WordPress</string>
 
     <!-- Jetpack Feature Card -->
-    <string name="jetpack_feature_card_content_phase_three">Stats, Reader, Notifications and other features will soon move to the Jetpack mobile app.</string>
     <string name="jetpack_feature_card_content_phase_self_hosted_and_new_users">Unlock your site’s full potential. Get stats, notifications and more with Jetpack.</string>
     <string name="jetpack_feature_card_learn_more" translatable="false">@string/learn_more</string>
     <string name="jetpack_feature_card_menu_item_remind_me_later">Remind me later</string>
@@ -4718,16 +4692,8 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="menu_item_accessibility_description">Level %1$d, %2$s, %3$s</string>
 
     <!-- AI Bot Support - Conversations List Screen -->
-    <string name="ai_bot_conversations_title">Conversations</string>
-    <string name="ai_bot_back_button_content_description">Back</string>
-    <string name="ai_bot_new_conversation_content_description">New conversation</string>
-    <string name="ai_bot_generic_error">Something went wrong. Please try again later.</string>
-    <string name="ai_bot_you">You</string>
-    <string name="ai_bot_support_bot">Support Bot</string>
 
     <!-- AI Bot Support - Conversation Detail Screen -->
-    <string name="ai_bot_send_button_content_description">Send</string>
-    <string name="ai_bot_message_input_placeholder">Type a message…</string>
 
     <!-- AI Bot Support - Welcome Header -->
     <string name="ai_bot_welcome_greeting">Howdy %1$s 👋</string>
@@ -4737,8 +4703,6 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="ai_bot_time_just_now">Just now</string>
 
     <!-- HE Support - Conversations List Screen -->
-    <string name="he_support_conversations_title">Support Conversations</string>
-    <string name="he_support_new_conversation_content_description">New conversation</string>
     <string name="he_support_empty_conversations_title">No conversations yet</string>
     <string name="he_support_empty_conversations_message">Start a conversation with our support team to get help with your questions.</string>
     <string name="he_support_empty_conversations_button">Start Conversation</string>
@@ -4775,24 +4739,17 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="he_support_download_video_button">Download Video</string>
 
     <!-- HE Support - New Ticket Screen -->
-    <string name="he_support_contact_support_title">Contact Support</string>
-    <string name="he_support_need_help_with">I need help with</string>
-    <string name="he_support_category_application">Application</string>
-    <string name="he_support_category_jetpack_connection">Jetpack Connection</string>
-    <string name="he_support_category_site_management">Site Management</string>
-    <string name="he_support_category_billing">Billing &amp; Subscriptions</string>
-    <string name="he_support_category_technical_issues">Technical Issues</string>
-    <string name="he_support_category_other">Other</string>
-    <string name="he_support_issue_details">Issue Details</string>
-    <string name="he_support_subject_label">Subject</string>
-    <string name="he_support_subject_placeholder">Brief summary of your issue</string>
-    <string name="he_support_site_address_label">Site Address (Optional)</string>
-    <string name="he_support_site_address_placeholder">https://yoursite.com</string>
-    <string name="he_support_contact_information">Contact Information</string>
-    <string name="he_support_contact_email_message">We\'ll email you at this address.</string>
-    <string name="he_support_send_ticket_button">Send</string>
-    <string name="he_support_generic_error">An error occurred. Please try again later.</string>
     <string name="he_support_forbidden_error">Sorry, you are not allowed to perform this action.</string>
+    <string name="unified_support_conversations_title">Get help</string>
+    <string name="unified_support_generic_error">Something went wrong. Please try again later.</string>
+    <string name="unified_support_message_input_placeholder">Type a message…</string>
+    <string name="unified_support_bot_typing_content_description">Support bot is typing</string>
+    <string name="unified_support_new_conversation_content_description">New conversation</string>
+    <string name="unified_support_status_ai_assistant">AI Assistant</string>
+    <string name="unified_support_attachment_match_score">%1$d%% match</string>
+    <string name="unified_support_attachment_link_content_description">Open link: %1$s</string>
+    <string name="support_screen_unified_support_title">Get help</string>
+    <string name="support_screen_unified_support_description">Get answers from our support team, anytime</string>
     <string name="gutenberg_native_1_s_2_s_is_3_s_4_s" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">%1$s. %2$s is %3$s %4$s.</string>
     <string name="gutenberg_native_1_s_currently_selected_2_s" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">%1$s. Currently selected: %2$s</string>
     <string name="gutenberg_native_1_s_transformed_to_2_s" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">%1$s transformed to %2$s</string>

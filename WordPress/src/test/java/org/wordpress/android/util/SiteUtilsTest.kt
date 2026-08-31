@@ -192,4 +192,51 @@ class SiteUtilsTest {
         val circularSiteImage = SiteUtils.getSiteImageType(false, CIRCULAR)
         assertThat(circularSiteImage).isEqualTo(BLAVATAR_CIRCULAR)
     }
+
+    @Test
+    fun `canUseWpRs returns false for a null site`() {
+        assertThat(SiteUtils.canUseWpRs(null)).isFalse()
+    }
+
+    @Test
+    fun `canUseWpRs returns false when the site has no application password`() {
+        val site = SiteModel()
+
+        assertThat(SiteUtils.canUseWpRs(site)).isFalse()
+    }
+
+    @Test
+    fun `canUseWpRs returns false when only one half of the credentials is stored`() {
+        val site = SiteModel()
+        site.apiRestUsernamePlain = "user"
+
+        assertThat(SiteUtils.canUseWpRs(site)).isFalse()
+
+        site.apiRestUsernamePlain = null
+        site.apiRestPasswordPlain = "password"
+
+        assertThat(SiteUtils.canUseWpRs(site)).isFalse()
+    }
+
+    @Test
+    fun `canUseWpRs returns true when the site has an application password`() {
+        val site = SiteModel()
+        site.apiRestUsernamePlain = "user"
+        site.apiRestPasswordPlain = "password"
+
+        assertThat(SiteUtils.canUseWpRs(site)).isTrue()
+    }
+
+    @Test
+    fun `canUseWpRs returns true for a WPCom site with an application password`() {
+        val site = SiteModel()
+        site.setIsWPCom(true)
+        site.origin = SiteModel.ORIGIN_WPCOM_REST
+        site.apiRestUsernamePlain = "user"
+        site.apiRestPasswordPlain = "password"
+
+        // Atomic and Jetpack sites can hold an application password, so being reachable over the
+        // WP.com REST API does not keep a site on the legacy screens.
+        assertThat(SiteUtils.canUseWpRs(site)).isTrue()
+    }
 }

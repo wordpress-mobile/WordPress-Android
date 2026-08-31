@@ -78,7 +78,7 @@ import org.wordpress.android.ui.accounts.HelpActivity.Origin;
 import org.wordpress.android.ui.bloggingprompts.BloggingPromptsSettingsHelper;
 import org.wordpress.android.ui.bloggingreminders.BloggingReminderUtils;
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewModel;
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper;
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalHelper;
 import org.wordpress.android.util.PlansConstants;
 import org.wordpress.android.ui.posts.EditorCapabilityResolver;
 import org.wordpress.android.ui.posts.EditorCapabilityState;
@@ -195,7 +195,7 @@ public class SiteSettingsFragment extends PreferenceFragment
     @Inject BloggingPromptsFeature mBloggingPromptsFeature;
     @Inject ManageCategoriesFeatureConfig mManageCategoriesFeatureConfig;
     @Inject UiHelpers mUiHelpers;
-    @Inject JetpackFeatureRemovalPhaseHelper mJetpackFeatureRemovalPhaseHelper;
+    @Inject JetpackFeatureRemovalHelper mJetpackFeatureRemovalHelper;
     @Inject BloggingPromptsSettingsHelper mPromptsSettingsHelper;
     @Inject EditorCapabilityResolver mEditorCapabilityResolver;
     @Inject GutenbergKitFeatureChecker mGutenbergKitFeatureChecker;
@@ -1143,7 +1143,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         }
 
         // hide site accelerator jetpack settings if plugin version < 5.8
-        if (mJetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures() || (
+        if (mJetpackFeatureRemovalHelper.shouldRemoveJetpackFeatures() || (
                 !supportsJetpackSiteAcceleratorSettings(mSite)
                 && mSite.getPlanId() != PlansConstants.BUSINESS_PLAN_ID)) {
             removeJetpackSiteAcceleratorSettings();
@@ -1166,7 +1166,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         if (!mManageCategoriesFeatureConfig.isEnabled()) {
             removeCategoriesPreference();
         }
-        if (mJetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures()) {
+        if (mJetpackFeatureRemovalHelper.shouldRemoveJetpackFeatures()) {
             WPPrefUtils.removePreference(this, R.string.pref_key_site_writing,
                     R.string.pref_key_site_related_posts);
             WPPrefUtils.removePreference(this, R.string.pref_key_site_screen,
@@ -1191,7 +1191,7 @@ public class SiteSettingsFragment extends PreferenceFragment
      * posts" on this screen), not only at first inflation.
      */
     private void refreshGutenbergKitToggleAvailability() {
-        if (mGutenbergKitPref == null) return;
+        if (mGutenbergKitPref == null || mSite == null) return;
         if (mSiteSettingsProvider.isBlockEditorDefault(mSite)) {
             mGutenbergKitPref.setEnabled(true);
             mGutenbergKitPref.setSummary(R.string.site_settings_gutenberg_kit_enabled_summary);

@@ -26,7 +26,8 @@ sealed class MostViewedCardUiState {
 
     data class Error(
         val message: String,
-        val isAuthError: Boolean = false
+        val isAuthError: Boolean = false,
+        val isNotAvailable: Boolean = false
     ) : MostViewedCardUiState()
 }
 
@@ -37,13 +38,31 @@ sealed class MostViewedCardUiState {
  * @param title The title/name of the item (post title or referrer name)
  * @param views The number of views
  * @param change The percentage change compared to previous period
+ * @param url The item's URL. Posts open it as detail stats; referrers and clicks open it in a
+ * Custom Tab. Null when the item has no link of its own.
  */
 data class MostViewedItem(
     val id: Long,
     val title: String,
     val views: Long,
-    val change: MostViewedChange
+    val change: MostViewedChange,
+    val children: List<MostViewedChildItem> = emptyList(),
+    val url: String? = null
 )
+
+/**
+ * A child item nested under a Most Viewed item (e.g. a referrer under a referrer group).
+ *
+ * @param name The name of the child item
+ * @param url The URL opened when the child row is tapped (null if not linkable)
+ * @param views The number of views
+ */
+@Parcelize
+data class MostViewedChildItem(
+    val name: String,
+    val url: String?,
+    val views: Long
+) : Parcelable
 
 /**
  * Represents the change in views compared to the previous period.
@@ -84,5 +103,7 @@ data class MostViewedDetailItem(
     val id: Long,
     val title: String,
     val views: Long,
-    val change: MostViewedChange
+    val change: MostViewedChange,
+    val children: List<MostViewedChildItem> = emptyList(),
+    val url: String? = null
 ) : Parcelable

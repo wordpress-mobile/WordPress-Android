@@ -14,7 +14,6 @@ import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceScreen;
 import android.text.TextUtils;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -44,7 +43,6 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
-import org.wordpress.android.databinding.JetpackBadgeFooterBinding;
 import org.wordpress.android.datasets.ReaderBlogTable;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
@@ -58,14 +56,12 @@ import org.wordpress.android.fluxc.store.AccountStore.SubscriptionType;
 import org.wordpress.android.fluxc.store.AccountStore.UpdateSubscriptionPayload;
 import org.wordpress.android.fluxc.store.AccountStore.UpdateSubscriptionPayload.SubscriptionFrequency;
 import org.wordpress.android.fluxc.store.SiteStore;
-import org.wordpress.android.models.JetpackPoweredScreen;
 import org.wordpress.android.models.NotificationsSettings;
 import org.wordpress.android.models.NotificationsSettings.Channel;
 import org.wordpress.android.models.NotificationsSettings.Type;
 import org.wordpress.android.ui.WPLaunchActivity;
 import org.wordpress.android.ui.bloggingreminders.BloggingReminderUtils;
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewModel;
-import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredBottomSheetFragment;
 import org.wordpress.android.ui.notifications.NotificationEvents;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.ui.prefs.notifications.FollowedBlogsProvider.PreferenceModel;
@@ -76,7 +72,6 @@ import org.wordpress.android.ui.utils.UiString;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.BuildConfigWrapper;
-import org.wordpress.android.util.JetpackBrandingUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
@@ -138,7 +133,6 @@ public class NotificationsSettingsFragment extends PreferenceFragment
     @Inject FollowedBlogsProvider mFollowedBlogsProvider;
     @Inject BuildConfigWrapper mBuildConfigWrapper;
     @Inject ViewModelProvider.Factory mViewModelFactory;
-    @Inject JetpackBrandingUtils mJetpackBrandingUtils;
     @Inject UiHelpers mUiHelpers;
 
     private BloggingRemindersViewModel mBloggingRemindersViewModel;
@@ -218,7 +212,6 @@ public class NotificationsSettingsFragment extends PreferenceFragment
         final ListView lv = (ListView) view.findViewById(android.R.id.list);
         if (lv != null) {
             ViewCompat.setNestedScrollingEnabled(lv, true);
-            addJetpackBadgeAsFooterIfEnabled(lv);
         }
         initBloggingReminders();
     }
@@ -228,30 +221,6 @@ public class NotificationsSettingsFragment extends PreferenceFragment
         PreferenceScreen otherBlogsScreen = (PreferenceScreen) findPreference(
                 getString(R.string.pref_notification_other_blogs));
         addToolbarToDialog(otherBlogsScreen);
-    }
-
-    private void addJetpackBadgeAsFooterIfEnabled(ListView listView) {
-        if (mJetpackBrandingUtils.shouldShowJetpackBranding()) {
-            final JetpackPoweredScreen screen = JetpackPoweredScreen.WithDynamicText.NOTIFICATIONS_SETTINGS;
-            final Context context = getContext();
-            final LayoutInflater inflater = LayoutInflater.from(context);
-            final JetpackBadgeFooterBinding binding = JetpackBadgeFooterBinding.inflate(inflater);
-            binding.footerJetpackBadge.jetpackPoweredBadge.setText(
-                    mUiHelpers.getTextOfUiString(
-                            context,
-                            mJetpackBrandingUtils.getBrandingTextForScreen(screen)
-                    )
-            );
-            if (mJetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()) {
-                binding.footerJetpackBadge.jetpackPoweredBadge.setOnClickListener(v -> {
-                    mJetpackBrandingUtils.trackBadgeTapped(screen);
-                    new JetpackPoweredBottomSheetFragment().show(
-                            ((AppCompatActivity) getActivity()).getSupportFragmentManager(),
-                            JetpackPoweredBottomSheetFragment.TAG);
-                });
-            }
-            listView.addFooterView(binding.getRoot(), null, false);
-        }
     }
 
     @Override

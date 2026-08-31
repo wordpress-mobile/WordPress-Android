@@ -143,6 +143,11 @@
             android:exported="false" />
 
         <activity
+            android:name=".ui.newstats.poststats.PostStatsDetailActivity"
+            android:theme="@style/WordPress.NoActionBar"
+            android:exported="false" />
+
+        <activity
             android:name=".ui.newstats.subscribers.subscriberslist.SubscribersListDetailActivity"
             android:theme="@style/WordPress.NoActionBar"
             android:exported="false" />
@@ -314,6 +319,11 @@
             android:launchMode="singleTop"
             android:label="@string/comments"/>
         <activity
+            android:name=".ui.commentsrs.CommentsRsListActivity"
+            android:theme="@style/WordPress.NoActionBar"
+            android:launchMode="singleTop"
+            android:label="@string/comments"/>
+        <activity
             android:name=".ui.comments.unified.UnifiedCommentsEditActivity"
             android:theme="@style/WordPress.NoActionBar"
             android:label="@string/edit_comment"/>
@@ -479,11 +489,6 @@
             android:theme="@style/WordPress.NoActionBar"
             android:label="@string/subscribers"/>
 
-        <activity android:name="org.wordpress.android.support.aibot.ui.AIBotSupportActivity"
-            android:theme="@style/WordPress.NoActionBar"
-            android:label="@string/ai_bot_conversations_title"
-            android:windowSoftInputMode="adjustResize"/>
-
         <activity android:name="org.wordpress.android.support.main.ui.SupportActivity"
             android:theme="@style/WordPress.NoActionBar"
             android:label="@string/support_screen_title"/>
@@ -492,9 +497,9 @@
             android:theme="@style/WordPress.NoActionBar"
             android:label="@string/support_screen_application_logs_title"/>
 
-        <activity android:name="org.wordpress.android.support.he.ui.HESupportActivity"
+        <activity android:name="org.wordpress.android.support.unified.ui.UnifiedSupportActivity"
             android:theme="@style/WordPress.NoActionBar"
-            android:label="@string/support_screen_title"
+            android:label="@string/unified_support_conversations_title"
             android:windowSoftInputMode="adjustResize"/>
 
         <!-- Deep Linking Activity -->
@@ -1395,11 +1400,6 @@
             android:exported="false"
             android:label="@string/blaze_campaigns_page_title"
             android:theme="@style/WordPress.NoActionBar" />
-
-        <activity android:name=".ui.jetpackoverlay.JetpackStaticPosterActivity"
-            android:exported="false"
-            android:label="@string/stats"
-            android:theme="@style/WordPress.NoActionBar"/>
 
         <activity android:name=".ui.mysite.personalization.PersonalizationActivity"
             android:exported="false"

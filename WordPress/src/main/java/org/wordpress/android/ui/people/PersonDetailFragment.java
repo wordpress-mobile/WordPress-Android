@@ -25,14 +25,10 @@ import org.wordpress.android.datasets.PeopleTable;
 import org.wordpress.android.fluxc.model.RoleModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.SiteStore;
-import org.wordpress.android.models.JetpackPoweredScreen;
 import org.wordpress.android.models.Person;
 import org.wordpress.android.models.RoleUtils;
-import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredBottomSheetFragment;
-import org.wordpress.android.ui.utils.UiHelpers;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.WPAvatarUtils;
-import org.wordpress.android.util.JetpackBrandingUtils;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageType;
 
@@ -65,8 +61,6 @@ public class PersonDetailFragment extends Fragment {
 
     @Inject SiteStore mSiteStore;
     @Inject ImageManager mImageManager;
-    @Inject JetpackBrandingUtils mJetpackBrandingUtils;
-    @Inject UiHelpers mUiHelpers;
 
     public static PersonDetailFragment newInstance(long currentUserId, long personId, int localTableBlogId,
                                                    Person.PersonType personType) {
@@ -142,27 +136,6 @@ public class PersonDetailFragment extends Fragment {
         SiteModel site = mSiteStore.getSiteByLocalId(mLocalTableBlogId);
         if (!isCurrentUser && site != null && site.getHasCapabilityRemoveUsers()) {
             setHasOptionsMenu(true);
-        }
-
-        if (mJetpackBrandingUtils.shouldShowJetpackBrandingForPhaseTwo()) {
-            final JetpackPoweredScreen screen = JetpackPoweredScreen.WithStaticText.PERSON;
-            View jetpackBadgeContainer = rootView.findViewById(R.id.jetpack_badge);
-            TextView jetpackBadge = jetpackBadgeContainer.findViewById(R.id.jetpack_powered_badge);
-            jetpackBadge.setText(
-                    mUiHelpers.getTextOfUiString(
-                            requireContext(),
-                            mJetpackBrandingUtils.getBrandingTextForScreen(screen))
-            );
-
-            jetpackBadgeContainer.setVisibility(View.VISIBLE);
-
-            if (mJetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()) {
-                jetpackBadge.setOnClickListener(v -> {
-                    mJetpackBrandingUtils.trackBadgeTapped(screen);
-                    new JetpackPoweredBottomSheetFragment()
-                            .show(requireActivity().getSupportFragmentManager(), JetpackPoweredBottomSheetFragment.TAG);
-                });
-            }
         }
 
         return rootView;

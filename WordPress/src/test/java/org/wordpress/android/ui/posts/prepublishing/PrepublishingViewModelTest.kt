@@ -35,7 +35,7 @@ class PrepublishingViewModelTest : BaseUnitTest() {
             event = it
         }
 
-        viewModel.start(mock(), null)
+        viewModel.start(mock(), null, hasPost = true)
 
         assertThat(event?.peekContent()?.targetScreen).isEqualTo(expectedScreen)
     }
@@ -49,9 +49,33 @@ class PrepublishingViewModelTest : BaseUnitTest() {
             event = it
         }
 
-        viewModel.start(mock(), expectedScreen)
+        viewModel.start(mock(), expectedScreen, hasPost = true)
 
         assertThat(event?.peekContent()?.targetScreen).isEqualTo(expectedScreen)
+    }
+
+    @Test
+    fun `when viewModel start is called without a post, dismiss the sheet instead of navigating`() {
+        var dismissEvent: Event<Unit>? = null
+        var navigationEvent: Event<PrepublishingNavigationTarget>? = null
+        viewModel.dismissBottomSheet.observeForever { dismissEvent = it }
+        viewModel.navigationTarget.observeForever { navigationEvent = it }
+
+        // TAGS rather than HOME because a restored sheet can land on any screen
+        viewModel.start(mock(), TAGS, hasPost = false)
+
+        assertThat(dismissEvent).isNotNull
+        assertThat(navigationEvent).isNull()
+    }
+
+    @Test
+    fun `when viewModel start is called with a post, don't dismiss the sheet`() {
+        var dismissEvent: Event<Unit>? = null
+        viewModel.dismissBottomSheet.observeForever { dismissEvent = it }
+
+        viewModel.start(mock(), TAGS, hasPost = true)
+
+        assertThat(dismissEvent).isNull()
     }
 
     @Test
@@ -63,7 +87,7 @@ class PrepublishingViewModelTest : BaseUnitTest() {
             event = it
         }
 
-        viewModel.start(mock(), TAGS)
+        viewModel.start(mock(), TAGS, hasPost = true)
         viewModel.onBackClicked()
 
         assertThat(event?.peekContent()?.targetScreen).isEqualTo(expectedScreen)
@@ -76,7 +100,7 @@ class PrepublishingViewModelTest : BaseUnitTest() {
             event = it
         }
 
-        viewModel.start(mock(), HOME)
+        viewModel.start(mock(), HOME, hasPost = true)
         viewModel.onBackClicked()
 
         assertThat(event).isNotNull
@@ -103,7 +127,7 @@ class PrepublishingViewModelTest : BaseUnitTest() {
             event = it
         }
 
-        viewModel.start(mock(), mock())
+        viewModel.start(mock(), mock(), hasPost = true)
         viewModel.onActionClicked(PrepublishingScreenNavigation.Tags)
 
         assertThat(event?.peekContent()?.targetScreen).isEqualTo(expectedScreen)
@@ -118,7 +142,7 @@ class PrepublishingViewModelTest : BaseUnitTest() {
             event = it
         }
 
-        viewModel.start(mock(), mock())
+        viewModel.start(mock(), mock(), hasPost = true)
         viewModel.onActionClicked(PrepublishingScreenNavigation.Publish)
 
         assertThat(event?.peekContent()?.targetScreen).isEqualTo(expectedScreen)
@@ -133,7 +157,7 @@ class PrepublishingViewModelTest : BaseUnitTest() {
             event = it
         }
 
-        viewModel.start(mock(), mock())
+        viewModel.start(mock(), mock(), hasPost = true)
         viewModel.onActionClicked(PrepublishingScreenNavigation.Categories)
 
         assertThat(event?.peekContent()?.targetScreen).isEqualTo(expectedScreen)
@@ -148,7 +172,7 @@ class PrepublishingViewModelTest : BaseUnitTest() {
             event = it
         }
 
-        viewModel.start(mock(), mock())
+        viewModel.start(mock(), mock(), hasPost = true)
         viewModel.onActionClicked(PrepublishingScreenNavigation.AddCategory)
 
         assertThat(event?.peekContent()?.targetScreen).isEqualTo(expectedScreen)
@@ -163,7 +187,7 @@ class PrepublishingViewModelTest : BaseUnitTest() {
             event = it
         }
 
-        viewModel.start(mock(), mock())
+        viewModel.start(mock(), mock(), hasPost = true)
         viewModel.onActionClicked(PrepublishingScreenNavigation.Social)
 
         assertThat(event?.peekContent()?.targetScreen).isEqualTo(expectedScreen)
@@ -177,7 +201,7 @@ class PrepublishingViewModelTest : BaseUnitTest() {
             event = it
         }
 
-        viewModel.start(mockSite, mock())
+        viewModel.start(mockSite, mock(), hasPost = true)
         viewModel.onActionClicked(Action.NavigateToSharingSettings)
 
         assertThat(event?.peekContent()).isEqualTo(mockSite)
@@ -185,7 +209,7 @@ class PrepublishingViewModelTest : BaseUnitTest() {
 
     @Test
     fun `when onSubmitButtonClicked is triggered then bottom sheet should close and listener is triggered`() {
-        viewModel.start(mock(), mock())
+        viewModel.start(mock(), mock(), hasPost = true)
 
         viewModel.onSubmitButtonClicked(true)
 

@@ -1,0 +1,7 @@
+26.9:
+- Aktiverade ny sidlista med uppdaterade funktioner
+- Ställ in ny inläggslista till standard för webbplatser med applikationslösenord
+- Uppsnabbad WordPress.com-inloggning
+- Kombinerad bot-/supporttekniker-chatt i support
+- Åtgärdade krasch när media öppnades medan redigeraren avslutades
+- Tog bort betatecken från menyer på min webbplats

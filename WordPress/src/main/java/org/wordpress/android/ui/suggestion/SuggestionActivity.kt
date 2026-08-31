@@ -10,13 +10,11 @@ import android.text.TextWatcher
 import android.view.KeyEvent
 import android.view.inputmethod.EditorInfo
 import androidx.activity.addCallback
-import org.greenrobot.eventbus.EventBus
-import org.greenrobot.eventbus.Subscribe
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.SuggestUsersActivityBinding
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.networking.ConnectionChangeReceiver.ConnectionChangeEvent
+import org.wordpress.android.networking.NetworkConnectionMonitor
 import org.wordpress.android.ui.main.BaseAppCompatActivity
 import org.wordpress.android.ui.suggestion.FinishAttempt.NotExactlyOneAvailable
 import org.wordpress.android.ui.suggestion.FinishAttempt.OnlyOneAvailable
@@ -35,7 +33,12 @@ class SuggestionActivity : BaseAppCompatActivity() {
 
     @Inject
     lateinit var viewModel: SuggestionViewModel
+
+    @Inject
+    lateinit var networkConnectionMonitor: NetworkConnectionMonitor
     private lateinit var binding: SuggestUsersActivityBinding
+
+    private var lastConnected = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -177,6 +180,16 @@ class SuggestionActivity : BaseAppCompatActivity() {
 
             updateEmptyView()
         })
+
+        networkConnectionMonitor.isConnected.observe(this) { connected ->
+            // Only refresh on a genuine offline->online transition; the initial LiveData replay would
+            // otherwise trigger a redundant fetch on top of the one already started in viewModel.init().
+            if (connected && !lastConnected) {
+                viewModel.onConnectionChanged(connected)
+            }
+            lastConnected = connected
+            updateEmptyView()
+        }
     }
 
     private fun exitIfOnlyOneMatchingUser() {
@@ -249,21 +262,9 @@ class SuggestionActivity : BaseAppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        EventBus.getDefault().register(this)
         if (binding.autocompleteText.isAttachedToWindow) {
             binding.autocompleteText.showDropDown()
         }
-    }
-
-    override fun onPause() {
-        EventBus.getDefault().unregister(this)
-        super.onPause()
-    }
-
-    @Subscribe
-    fun onEventMainThread(event: ConnectionChangeEvent) {
-        viewModel.onConnectionChanged(event)
-        updateEmptyView()
     }
 
     companion object {

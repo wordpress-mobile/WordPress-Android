@@ -28,6 +28,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.site.GutenbergLayoutCatego
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.DB
 import org.wordpress.android.util.UrlUtils
+import java.security.GeneralSecurityException
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -403,14 +404,32 @@ class SiteSqlUtils
         return updateApplicationPasswordCredentials(localId, usernamePlain, passwordPlain)
     }
 
-    private fun wpApiSiteLocalIdByUrl(siteUrl: String): Int? =
+    /**
+     * URL-keyed variant of [updateXmlRpcUrl] for ORIGIN_WPAPI sites fetched without a local id. Used when an
+     * application-password site falls back to the WPAPI fetch even though XML-RPC discovery already verified a
+     * working xmlrpc.php endpoint, so the verified endpoint is recorded rather than lost. See
+     * [updateWpApiRestUrlForWPAPISite].
+     */
+    fun updateXmlRpcUrlForWPAPISite(siteUrl: String, xmlRpcUrl: String): Int {
+        val localId = wpApiSiteLocalIdByUrl(siteUrl) ?: return 0
+        return updateXmlRpcUrl(localId, xmlRpcUrl)
+    }
+
+    /**
+     * The stored ORIGIN_WPAPI row for [siteUrl], for fetches that build a fresh model with no local id and
+     * need the identity and the columns the response can't carry. Keyed by URL for the same reason as
+     * [updateWpApiRestUrlForWPAPISite].
+     */
+    fun getWPAPISiteByUrl(siteUrl: String): SiteModel? =
         WellSql.select(SiteModel::class.java)
                 .where().beginGroup()
                 .equals(SiteModelTable.URL, siteUrl)
                 .equals(SiteModelTable.ORIGIN, SiteModel.ORIGIN_WPAPI)
                 .endGroup().endWhere()
                 .asModel
-                .firstOrNull()?.id
+                .firstOrNull()
+
+    private fun wpApiSiteLocalIdByUrl(siteUrl: String): Int? = getWPAPISiteByUrl(siteUrl)?.id
 
     val wPComSites: SelectQuery<SiteModel>
         get() = WellSql.select(SiteModel::class.java)
@@ -728,8 +747,18 @@ class SiteSqlUtils
             apiRestUsernameIV.isNullOrEmpty() || apiRestPasswordIV.isNullOrEmpty()) {
             return this
         }
-        apiRestUsernamePlain = encryptionUtils.decrypt(apiRestUsernameEncrypted, apiRestUsernameIV)
-        apiRestPasswordPlain = encryptionUtils.decrypt(apiRestPasswordEncrypted, apiRestPasswordIV)
+        // Decryption relies on the AndroidKeyStore, which can fail on some devices (e.g. an invalidated
+        // key or an unavailable secure element). Because this runs inside the hot getSites() path, a
+        // thrown KeyStoreException would crash the whole app, so we swallow it and leave the credentials
+        // unset — the site simply behaves as if it has no stored REST credentials and can re-fetch them.
+        try {
+            apiRestUsernamePlain = encryptionUtils.decrypt(apiRestUsernameEncrypted, apiRestUsernameIV)
+            apiRestPasswordPlain = encryptionUtils.decrypt(apiRestPasswordEncrypted, apiRestPasswordIV)
+        } catch (e: GeneralSecurityException) {
+            AppLog.e(DB, "Failed to decrypt API REST credentials for site $id", e)
+            apiRestUsernamePlain = null
+            apiRestPasswordPlain = null
+        }
         return this
     }
 }

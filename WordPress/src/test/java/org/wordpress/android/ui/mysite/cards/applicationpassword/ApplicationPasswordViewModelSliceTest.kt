@@ -124,16 +124,32 @@ class ApplicationPasswordViewModelSliceTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given ready on a self-hosted site whose XML-RPC stayed unrecovered, then show the disabled card`() = test {
+    fun `given ready on a self-hosted site with XML-RPC definitively off, then show the disabled card`() = test {
         stubReadiness(SiteReadiness.Ready)
         // Not WP.com-REST and still no XML-RPC endpoint after the pipeline's recovery attempt.
         whenever(siteStore.getSiteByLocalId(TEST_SITE_ID)).thenReturn(
             SiteModel().apply { id = TEST_SITE_ID; url = TEST_URL }
         )
+        whenever(siteProvisioningSource.isXmlRpcUnavailable(TEST_SITE_ID)).thenReturn(true)
 
         slice.buildCard(siteTest)
 
         val xmlRpcCard = card as MySiteCardAndItem.Item.SingleActionCard
         assertThat(xmlRpcCard.textResource).isEqualTo(R.string.xmlrpc_disabled_card_text)
+    }
+
+    @Test
+    fun `given XML-RPC recovery was inconclusive, then keep the card hidden`() = test {
+        // A missing xmlRpcUrl is not evidence XML-RPC is off — recovery also fails transiently (e.g. a
+        // 429), and warning then would be a false positive on a throttled site.
+        stubReadiness(SiteReadiness.Ready)
+        whenever(siteStore.getSiteByLocalId(TEST_SITE_ID)).thenReturn(
+            SiteModel().apply { id = TEST_SITE_ID; url = TEST_URL }
+        )
+        whenever(siteProvisioningSource.isXmlRpcUnavailable(TEST_SITE_ID)).thenReturn(false)
+
+        slice.buildCard(siteTest)
+
+        assertNull(card)
     }
 }

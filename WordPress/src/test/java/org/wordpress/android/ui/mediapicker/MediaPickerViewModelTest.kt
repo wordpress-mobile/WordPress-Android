@@ -13,6 +13,7 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.doAnswer
 import org.mockito.kotlin.inOrder
+import org.mockito.kotlin.never
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
@@ -25,6 +26,7 @@ import org.wordpress.android.ui.mediapicker.MediaItem.Identifier.LocalUri
 import org.wordpress.android.ui.mediapicker.MediaNavigationEvent.IconClickEvent
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.ChooserContext
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerAction.OpenSystemPicker
+import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerAction.ShowSystemPickerTypeMenu
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerAction.SwitchMediaPicker
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerIcon.ChooseFromAndroidDevice
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerIcon.SwitchSource
@@ -160,7 +162,8 @@ class MediaPickerViewModelTest : BaseUnitTest() {
             localeManagerWrapper,
             mediaUtilsWrapper,
             mediaStore,
-            resourceProvider
+            resourceProvider,
+            SystemPickerResolver(mediaUtilsWrapper)
         )
         uiStates.clear()
         val identifier1 = LocalUri(uriWrapper1)
@@ -525,7 +528,9 @@ class MediaPickerViewModelTest : BaseUnitTest() {
         )
         assertThat(iconClickEvents).hasSize(1)
         assertThat(iconClickEvents[0].action is OpenSystemPicker).isTrue()
-        assertThat((iconClickEvents[0].action as OpenSystemPicker).chooserContext).isEqualTo(ChooserContext.PHOTO)
+        val action = iconClickEvents[0].action as OpenSystemPicker
+        assertThat(action.chooserContext).isEqualTo(ChooserContext.PHOTO)
+        assertThat(action.mimeTypes).containsExactly("image/*")
     }
 
     @Test
@@ -593,7 +598,7 @@ class MediaPickerViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `system picker opened for all supported files when is browser picker`() = test {
+    fun `type disambiguation menu shown for all supported files when is browser picker`() = test {
         setupViewModel(listOf(), multiSelectFilePickerSetup, true)
 
         val iconClickEvents = mutableListOf<IconClickEvent>()
@@ -608,9 +613,72 @@ class MediaPickerViewModelTest : BaseUnitTest() {
 
         viewModel.onMenuItemClicked(SYSTEM_PICKER)
 
+        // A mixed visual + non-visual selection cannot open a single picker directly; the user is
+        // asked to choose a category first.
+        assertThat(iconClickEvents).hasSize(1)
+        assertThat(iconClickEvents[0].action).isEqualTo(ShowSystemPickerTypeMenu)
+    }
+
+    @Test
+    fun `choosing photos and videos from the disambiguation menu opens the photo or video picker`() = test {
+        setupViewModel(listOf(), multiSelectFilePickerSetup, true)
+
+        val iconClickEvents = mutableListOf<IconClickEvent>()
+
+        viewModel.onNavigate.observeForever {
+            it.peekContent().let { clickEvent ->
+                if (clickEvent is IconClickEvent) {
+                    iconClickEvents.add(clickEvent)
+                }
+            }
+        }
+
+        viewModel.onSystemPickerTypeChosen(setOf(IMAGE, VIDEO))
+
         assertThat(iconClickEvents).hasSize(1)
         assertThat(iconClickEvents[0].action is OpenSystemPicker).isTrue()
-        assertThat((iconClickEvents[0].action as OpenSystemPicker).chooserContext).isEqualTo(ChooserContext.MEDIA_FILE)
+        val action = iconClickEvents[0].action as OpenSystemPicker
+        assertThat(action.chooserContext).isEqualTo(ChooserContext.PHOTO_OR_VIDEO)
+        // Visual-media contexts use broad wildcards so the system Photo Picker shows all album/cloud
+        // media rather than filtering by an explicit accepted-subtype list.
+        assertThat(action.mimeTypes).containsExactly("image/*", "video/*")
+    }
+
+    @Test
+    fun `choosing other files from the disambiguation menu opens the file picker for all accepted types`() = test {
+        setupViewModel(listOf(), multiSelectFilePickerSetup, true)
+
+        val iconClickEvents = mutableListOf<IconClickEvent>()
+
+        viewModel.onNavigate.observeForever {
+            it.peekContent().let { clickEvent ->
+                if (clickEvent is IconClickEvent) {
+                    iconClickEvents.add(clickEvent)
+                }
+            }
+        }
+
+        // "Other files" opens the document browser with all accepted types, so an image or video can
+        // still be selected by browsing the filesystem (matching the pre-disambiguation file picker).
+        viewModel.onSystemPickerTypeChosen(setOf(IMAGE, VIDEO, AUDIO, DOCUMENT))
+
+        assertThat(iconClickEvents).hasSize(1)
+        assertThat(iconClickEvents[0].action is OpenSystemPicker).isTrue()
+        assertThat((iconClickEvents[0].action as OpenSystemPicker).chooserContext)
+            .isEqualTo(ChooserContext.MEDIA_FILE)
+    }
+
+    @Test
+    fun `device library open is tracked when a category is chosen, not when the menu is shown`() = test {
+        setupViewModel(listOf(), multiSelectFilePickerSetup, true)
+
+        // Showing the disambiguation menu must not count as opening the device library.
+        viewModel.onMenuItemClicked(SYSTEM_PICKER)
+        verify(mediaPickerTracker, never()).trackIconClick(any(), any())
+
+        // Picking a category actually opens the library, so it is tracked exactly once.
+        viewModel.onSystemPickerTypeChosen(setOf(IMAGE, VIDEO))
+        verify(mediaPickerTracker, times(1)).trackIconClick(any(), any())
     }
 
     @Test

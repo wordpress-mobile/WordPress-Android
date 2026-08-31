@@ -17,7 +17,7 @@ import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalHelper
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.uploads.UploadStarter
 import org.wordpress.android.viewmodel.Event
@@ -41,7 +41,7 @@ class PostListMainViewModelTest : BaseUnitTest() {
     lateinit var savePostToDbUseCase: SavePostToDbUseCase
 
     @Mock
-    lateinit var jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper
+    lateinit var jetpackFeatureRemovalHelper: JetpackFeatureRemovalHelper
 
     private lateinit var viewModel: PostListMainViewModel
 
@@ -157,6 +157,33 @@ class PostListMainViewModelTest : BaseUnitTest() {
 
         // assert
         verify(editPostRepository, times(0)).loadPostByLocalPostId(any())
+    }
+
+    @Test
+    fun `when the activity is recreated, then the new EditPostRepository is rebound and reloaded`() {
+        // arrange - the activity is recreated on rotation with a freshly injected repository
+        val bottomSheetPostId = LocalId(2)
+        viewModel.start(site, PostListRemotePreviewState.NONE, bottomSheetPostId, editPostRepository)
+        val recreatedRepository = mock<EditPostRepository>()
+        whenever(recreatedRepository.postChanged).thenReturn(MutableLiveData(Event(PostModel())))
+
+        // act - start() runs again on the surviving ViewModel
+        viewModel.start(site, PostListRemotePreviewState.NONE, bottomSheetPostId, recreatedRepository)
+
+        // assert - the second repository must be loaded too, or the restored sheet reads an empty one
+        verify(recreatedRepository, times(1)).loadPostByLocalPostId(bottomSheetPostId.value)
+    }
+
+    @Test
+    fun `given a restored bottom sheet post id, when started, then the id is kept for the next save`() {
+        // arrange
+        val bottomSheetPostId = LocalId(2)
+
+        // act
+        viewModel.start(site, PostListRemotePreviewState.NONE, bottomSheetPostId, editPostRepository)
+
+        // assert - onSaveInstanceState reads this field, so it has to survive a restore round-trip
+        assertThat(viewModel.currentBottomSheetPostId).isEqualTo(bottomSheetPostId)
     }
 
     @Test

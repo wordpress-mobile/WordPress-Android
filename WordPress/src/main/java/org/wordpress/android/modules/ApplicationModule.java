@@ -16,7 +16,6 @@ import org.wordpress.android.inappupdate.IInAppUpdateManager;
 import org.wordpress.android.inappupdate.InAppUpdateAnalyticsTracker;
 import org.wordpress.android.inappupdate.InAppUpdateManagerImpl;
 import org.wordpress.android.inappupdate.InAppUpdateManagerNoop;
-import org.wordpress.android.ui.ActivityNavigator;
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadStep;
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadStepsProvider;
 import org.wordpress.android.ui.jetpack.restore.RestoreStep;
@@ -34,6 +33,7 @@ import org.wordpress.android.util.config.RemoteConfigWrapper;
 import org.wordpress.android.util.wizard.WizardManager;
 import org.wordpress.android.fluxc.network.TrackNetworkRequestsInterceptor;
 import org.wordpress.android.fluxc.network.rest.wpapi.rs.WpNetworkAvailabilityProvider;
+import org.wordpress.android.networking.NetworkConnectionMonitor;
 import org.wordpress.android.viewmodel.helpers.ConnectionStatus;
 import org.wordpress.android.viewmodel.helpers.ConnectionStatusLiveData;
 
@@ -72,8 +72,8 @@ public abstract class ApplicationModule {
     }
 
     @Provides
-    static LiveData<ConnectionStatus> provideConnectionStatusLiveData(@ApplicationContext Context context) {
-        return new ConnectionStatusLiveData.Factory(context).create();
+    static LiveData<ConnectionStatus> provideConnectionStatusLiveData(NetworkConnectionMonitor monitor) {
+        return new ConnectionStatusLiveData(monitor.isConnected());
     }
 
     @Provides
@@ -115,11 +115,6 @@ public abstract class ApplicationModule {
                 System::currentTimeMillis
         )
                 : new InAppUpdateManagerNoop();
-    }
-
-    @Provides
-    public static ActivityNavigator provideActivityNavigator(@ApplicationContext Context context) {
-        return new ActivityNavigator();
     }
 
     @Provides

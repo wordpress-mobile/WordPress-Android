@@ -2,6 +2,7 @@ package org.wordpress.android.ui.newstats.utm
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -120,8 +121,10 @@ fun UtmExpandableRow(
         AnimatedVisibility(visible = expanded) {
             Column(
                 modifier = Modifier.padding(
-                    start = 24.dp
-                )
+                    start = 24.dp,
+                    top = 4.dp
+                ),
+                verticalArrangement = Arrangement.spacedBy(4.dp)
             ) {
                 item.topPosts.forEach { post ->
                     val postPct =

@@ -477,6 +477,15 @@ class CommentsStore @Inject constructor(
     suspend fun getCommentByLocalSiteAndRemoteId(localSiteId: Int, remoteCommentId: Long) =
             commentsDao.getCommentsByLocalSiteAndRemoteCommentId(localSiteId, remoteCommentId)
 
+    /**
+     * Removes a comment from the local cache by its remote id, without a network request. Useful
+     * when the comment has already been deleted server-side through another client (e.g. wordpress-rs).
+     */
+    suspend fun removeCommentByRemoteId(site: SiteModel, remoteCommentId: Long): Int {
+        val comment = commentsDao.getCommentsByLocalSiteAndRemoteCommentId(site.id, remoteCommentId).firstOrNull()
+        return comment?.let { commentsDao.deleteComment(it) } ?: 0
+    }
+
     suspend fun pushLocalCommentByRemoteId(
         site: SiteModel,
         remoteCommentId: Long

@@ -39,6 +39,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.fluxc.Dispatcher;
+import org.wordpress.android.fluxc.action.AccountAction;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.model.PostModel;
@@ -61,7 +62,7 @@ import org.wordpress.android.inappupdate.IInAppUpdateManager;
 import org.wordpress.android.inappupdate.InAppUpdateListener;
 import org.wordpress.android.ui.accounts.login.ApplicationPasswordReauthNotifier;
 import org.wordpress.android.ui.accounts.login.LoginAnalyticsListener;
-import org.wordpress.android.networking.ConnectionChangeReceiver;
+import org.wordpress.android.networking.NetworkConnectionMonitor;
 import org.wordpress.android.push.GCMMessageHandler;
 import org.wordpress.android.push.GCMMessageService;
 import org.wordpress.android.push.GCMRegistrationScheduler;
@@ -87,7 +88,7 @@ import org.wordpress.android.ui.deeplinks.DeepLinkOpenWebLinksWithJetpackHelper;
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureFullScreenOverlayFragment;
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil;
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil.JetpackFeatureCollectionOverlaySource;
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper;
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalHelper;
 import org.wordpress.android.ui.main.MainActionListItem.ActionType;
 import org.wordpress.android.ui.main.WPMainNavigationView.OnPageListener;
 import org.wordpress.android.ui.main.WPMainNavigationView.PageType;
@@ -121,7 +122,6 @@ import org.wordpress.android.ui.reader.services.update.ReaderUpdateServiceStarte
 import org.wordpress.android.ui.reader.tracker.ReaderTracker;
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationSource;
 import org.wordpress.android.ui.stats.StatsTimeframe;
-import org.wordpress.android.ui.stats.refresh.utils.StatsLaunchedFrom;
 import org.wordpress.android.ui.uploads.UploadActionUseCase;
 import org.wordpress.android.ui.uploads.UploadUtils;
 import org.wordpress.android.ui.uploads.UploadUtilsWrapper;
@@ -262,7 +262,7 @@ public class WPMainActivity extends BaseAppCompatActivity implements
     @Inject OpenWebLinksWithJetpackFlowFeatureConfig mOpenWebLinksWithJetpackFlowFeatureConfig;
     @Inject QRCodeAuthFlowFeatureConfig mQrCodeAuthFlowFeatureConfig;
     @Inject JetpackFeatureRemovalOverlayUtil mJetpackFeatureRemovalOverlayUtil;
-    @Inject JetpackFeatureRemovalPhaseHelper mJetpackFeatureRemovalPhaseHelper;
+    @Inject JetpackFeatureRemovalHelper mJetpackFeatureRemovalHelper;
 
     @Inject BuildConfigWrapper mBuildConfigWrapper;
 
@@ -277,6 +277,8 @@ public class WPMainActivity extends BaseAppCompatActivity implements
     @Inject PerAppLocaleManager mPerAppLocaleManager;
 
     @Inject ApplicationPasswordReauthNotifier mReauthNotifier;
+
+    @Inject NetworkConnectionMonitor mNetworkConnectionMonitor;
 
     /*
      * fragments implement this if their contents can be scrolled, called when user
@@ -321,7 +323,7 @@ public class WPMainActivity extends BaseAppCompatActivity implements
         String authTokenToSet = null;
 
         mBottomNav = findViewById(R.id.bottom_navigation);
-        mBottomNav.init(getSupportFragmentManager(), this, mJetpackFeatureRemovalPhaseHelper);
+        mBottomNav.init(getSupportFragmentManager(), this, mJetpackFeatureRemovalHelper);
 
         if (savedInstanceState == null) {
             if (!AppPrefs.isInstallationReferrerObtained()) {
@@ -412,6 +414,8 @@ public class WPMainActivity extends BaseAppCompatActivity implements
         // We need to register the dispatcher here otherwise it won't trigger if for example Site Picker is present
         mDispatcher.register(this);
         EventBus.getDefault().register(this);
+
+        mNetworkConnectionMonitor.isConnected().observe(this, this::updateConnectionBar);
 
         if (authTokenToSet != null) {
             // Save Token to the AccountStore. This will trigger a onAuthenticationChanged.
@@ -517,9 +521,7 @@ public class WPMainActivity extends BaseAppCompatActivity implements
         mAnalyticsTrackerWrapper.track(
                 Stat.JETPACK_FEATURE_INCORRECTLY_ACCESSED, trackingProperties);
         JetpackFeatureFullScreenOverlayFragment.newInstance(
-                null,
                 false,
-                true,
                 JetpackFeatureCollectionOverlaySource.DISABLED_ENTRY_POINT
         ).show(getSupportFragmentManager(), JetpackFeatureFullScreenOverlayFragment.TAG);
     }
@@ -572,9 +574,7 @@ public class WPMainActivity extends BaseAppCompatActivity implements
     private void displayJetpackFeatureCollectionOverlayIfNeeded() {
         if (mJetpackFeatureRemovalOverlayUtil.shouldShowFeatureCollectionJetpackOverlayForFirstTime()) {
             JetpackFeatureFullScreenOverlayFragment.newInstance(
-                    null,
                     false,
-                    true,
                     JetpackFeatureCollectionOverlaySource.APP_OPEN
             ).show(getSupportFragmentManager(), JetpackFeatureFullScreenOverlayFragment.TAG);
         }
@@ -759,7 +759,7 @@ public class WPMainActivity extends BaseAppCompatActivity implements
 
     private void triggerCreatePageFlow(ActionType actionType) {
         if (mMLPViewModel.canShowModalLayoutPicker()
-            && mJetpackFeatureRemovalPhaseHelper.shouldShowTemplateSelectionInPages()) {
+            && mJetpackFeatureRemovalHelper.shouldShowTemplateSelectionInPages()) {
             mMLPViewModel.createPageFlowTriggered(getCreatePageDashboardSourceFromActionType(actionType));
         } else {
             if (actionType == ActionType.CREATE_NEW_PAGE_FROM_PAGES_CARD) {
@@ -808,7 +808,7 @@ public class WPMainActivity extends BaseAppCompatActivity implements
                     break;
                 case ARG_NOTIFICATIONS:
                     setUpMainView();
-                    if (mJetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures()) {
+                    if (mJetpackFeatureRemovalHelper.shouldRemoveJetpackFeatures()) {
                         Map<String, String> trackingProperties = new HashMap<>();
                         trackingProperties.put("calling_function", "deeplink_notifications");
                         showJetpackFeatureOverlayAccessedInCorrectly(trackingProperties);
@@ -818,7 +818,7 @@ public class WPMainActivity extends BaseAppCompatActivity implements
                     break;
                 case ARG_READER:
                     setUpMainView();
-                    if (mJetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures()) {
+                    if (mJetpackFeatureRemovalHelper.shouldRemoveJetpackFeatures()) {
                         Map<String, String> trackingProperties = new HashMap<>();
                         trackingProperties.put("calling_function", "deeplink_reader");
                         showJetpackFeatureOverlayAccessedInCorrectly(trackingProperties);
@@ -845,23 +845,14 @@ public class WPMainActivity extends BaseAppCompatActivity implements
                     if (!mSelectedSiteRepository.hasSelectedSite()) {
                         initSelectedSite();
                     }
-                    if (mJetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures()) {
+                    if (mJetpackFeatureRemovalHelper.shouldRemoveJetpackFeatures()) {
                         Map<String, String> trackingProperties = new HashMap<>();
                         trackingProperties.put("calling_function", "deeplink_stats");
                         showJetpackFeatureOverlayAccessedInCorrectly(trackingProperties);
                         break;
                     }
-                    if (mJetpackFeatureRemovalPhaseHelper.shouldShowStaticPage()) {
-                        ActivityLauncher.showJetpackStaticPoster(this);
-                        break;
-                    }
-                    if (intent.hasExtra(ARG_STATS_TIMEFRAME)) {
-                        ActivityLauncher.viewBlogStatsForTimeframe(this, getSelectedSite(),
-                                (StatsTimeframe) intent.getSerializableExtra(ARG_STATS_TIMEFRAME),
-                                StatsLaunchedFrom.LINK);
-                    } else {
-                        ActivityLauncher.viewBlogStats(this, getSelectedSite(), StatsLaunchedFrom.LINK);
-                    }
+                    mActivityNavigator.openStats(this, getSelectedSite(),
+                            (StatsTimeframe) intent.getSerializableExtra(ARG_STATS_TIMEFRAME));
                     break;
                 case ARG_PAGES:
                     if (!mSelectedSiteRepository.hasSelectedSite()) {
@@ -1219,19 +1210,19 @@ public class WPMainActivity extends BaseAppCompatActivity implements
         switch (pageType) {
             case MY_SITE:
                 ActivityId.trackLastActivity(ActivityId.MY_SITE);
-                mJetpackFeatureRemovalPhaseHelper.trackPageAccessedEventIfNeeded(PageType.MY_SITE, getSelectedSite());
+                mJetpackFeatureRemovalHelper.trackPageAccessedEventIfNeeded(PageType.MY_SITE, getSelectedSite());
                 break;
             case READER:
                 ActivityId.trackLastActivity(ActivityId.READER);
-                mJetpackFeatureRemovalPhaseHelper.trackPageAccessedEventIfNeeded(PageType.READER);
+                mJetpackFeatureRemovalHelper.trackPageAccessedEventIfNeeded(PageType.READER);
                 break;
             case NOTIFS:
                 ActivityId.trackLastActivity(ActivityId.NOTIFICATIONS);
-                mJetpackFeatureRemovalPhaseHelper.trackPageAccessedEventIfNeeded(PageType.NOTIFS);
+                mJetpackFeatureRemovalHelper.trackPageAccessedEventIfNeeded(PageType.NOTIFS);
                 break;
             case ME:
                 ActivityId.trackLastActivity(ActivityId.ME);
-                mJetpackFeatureRemovalPhaseHelper.trackPageAccessedEventIfNeeded(PageType.ME);
+                mJetpackFeatureRemovalHelper.trackPageAccessedEventIfNeeded(PageType.ME);
                 break;
             default:
                 break;
@@ -1466,7 +1457,12 @@ public class WPMainActivity extends BaseAppCompatActivity implements
     public void onAccountChanged(OnAccountChanged event) {
         // Sign-out is handled in `handleSiteRemoved`, no need to show the signup flow here
         if (mAccountStore.hasAccessToken()) {
-            if (mBottomNav != null) mBottomNav.showNoteBadge(mAccountStore.getAccount().getHasUnseenNotes());
+            if (mBottomNav != null) {
+                mBottomNav.showNoteBadge(mAccountStore.getAccount().getHasUnseenNotes());
+                if (event.causeOfChange == AccountAction.FETCH_ACCOUNT) {
+                    mBottomNav.refreshGravatar();
+                }
+            }
         }
     }
 
@@ -1480,12 +1476,6 @@ public class WPMainActivity extends BaseAppCompatActivity implements
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventMainThread(NotificationEvents.NotificationsUnseenStatus event) {
         if (mBottomNav != null) mBottomNav.showNoteBadge(event.hasUnseenNotes);
-    }
-
-    @SuppressWarnings("unused")
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEventMainThread(ConnectionChangeReceiver.ConnectionChangeEvent event) {
-        updateConnectionBar(event.isConnected());
     }
 
     private void checkConnection() {

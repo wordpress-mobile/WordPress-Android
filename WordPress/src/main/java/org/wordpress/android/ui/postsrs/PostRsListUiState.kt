@@ -3,6 +3,7 @@ package org.wordpress.android.ui.postsrs
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import org.wordpress.android.R
+import org.wordpress.android.ui.rs.RsDateFormatter
 import org.wordpress.android.util.DateTimeUtils
 import org.wordpress.android.util.HtmlUtils
 import uniffi.wp_api.AnyPostWithEditContext
@@ -22,6 +23,12 @@ sealed interface PendingConfirmation {
     data class Delete(val postId: Long) : PendingConfirmation
     data class MoveToDraft(val postId: Long) : PendingConfirmation
 }
+
+/** A request to select [tab] and scroll to [remotePostId] within it. */
+data class PostRsReveal(
+    val tab: PostRsListTab,
+    val remotePostId: Long
+)
 
 data class ConfirmationDialogState(
     val pending: PendingConfirmation? = null,
@@ -115,23 +122,18 @@ enum class PostRsMenuAction(
 
 fun PostItemState.toUiModel(
     postId: Long,
+    nowLabel: String,
     showStatus: Boolean = false
 ): PostRsUiModel {
     return when (this) {
         is PostItemState.Fresh ->
-            data.toUiModel(showStatus)
+            data.toUiModel(showStatus, nowLabel)
         is PostItemState.Stale ->
-            data.toUiModel(showStatus)
+            data.toUiModel(showStatus, nowLabel)
         is PostItemState.FetchingWithData ->
-            data.toUiModel(
-                showStatus,
-                PostDisplayState.FETCHING_WITH_DATA
-            )
+            data.toUiModel(showStatus, nowLabel, PostDisplayState.FETCHING_WITH_DATA)
         is PostItemState.FailedWithData ->
-            data.toUiModel(
-                showStatus,
-                PostDisplayState.FAILED_WITH_DATA
-            )
+            data.toUiModel(showStatus, nowLabel, PostDisplayState.FAILED_WITH_DATA)
         is PostItemState.Missing,
         is PostItemState.Fetching -> PostRsUiModel(
             remotePostId = postId,
@@ -152,6 +154,7 @@ fun PostItemState.toUiModel(
 
 private fun FullEntityAnyPostWithEditContext.toUiModel(
     showStatus: Boolean,
+    nowLabel: String,
     displayState: PostDisplayState = PostDisplayState.NORMAL
 ): PostRsUiModel {
     val post: AnyPostWithEditContext = data
@@ -165,9 +168,7 @@ private fun FullEntityAnyPostWithEditContext.toUiModel(
                 ?: post.excerpt?.rendered
                 ?: ""
             ).let { HtmlUtils.fastStripHtml(it).trim() },
-        date = PostRsDateFormatter.format(
-            post.dateGmt, post.status
-        ),
+        date = RsDateFormatter.format(post.dateGmt, nowLabel, isScheduled = post.status is PostStatus.Future),
         lastModified = DateTimeUtils.iso8601UTCFromDate(
             post.modifiedGmt
         ),

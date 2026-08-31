@@ -32,14 +32,12 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.datasets.ReaderDatabase
 import org.wordpress.android.fluxc.store.AccountStore
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalHelper
 import org.wordpress.android.ui.main.WPMainActivity.OnScrollToTopListener
 import org.wordpress.android.ui.main.WPMainNavigationView.PageType.ME
 import org.wordpress.android.ui.main.WPMainNavigationView.PageType.MY_SITE
 import org.wordpress.android.ui.main.WPMainNavigationView.PageType.NOTIFS
 import org.wordpress.android.ui.main.WPMainNavigationView.PageType.READER
-import org.wordpress.android.ui.main.jetpack.staticposter.JetpackStaticPosterFragment
-import org.wordpress.android.ui.main.jetpack.staticposter.UiData
 import org.wordpress.android.ui.main.utils.MeGravatarLoader
 import org.wordpress.android.ui.mysite.MySiteFragment
 import org.wordpress.android.ui.notifications.NotificationsListFragment
@@ -72,7 +70,7 @@ class WPMainNavigationView @JvmOverloads constructor(
     private var fragmentManager: FragmentManager? = null
     private lateinit var pageListener: OnPageListener
     private var prevPosition = -1
-    private lateinit var jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper
+    private lateinit var jetpackFeatureRemovalHelper: JetpackFeatureRemovalHelper
     private val unselectedButtonAlpha = ResourcesCompat.getFloat(
         resources,
         MaterialR.dimen.material_emphasis_disabled
@@ -109,10 +107,10 @@ class WPMainNavigationView @JvmOverloads constructor(
         fun onNewPostButtonClicked(promptId: Int, origin: EntryPoint)
     }
 
-    fun init(fm: FragmentManager, listener: OnPageListener, helper: JetpackFeatureRemovalPhaseHelper) {
+    fun init(fm: FragmentManager, listener: OnPageListener, helper: JetpackFeatureRemovalHelper) {
         fragmentManager = fm
         pageListener = listener
-        jetpackFeatureRemovalPhaseHelper = helper
+        jetpackFeatureRemovalHelper = helper
 
         val inflater = LayoutInflater.from(context)
         inflater.inflate(R.layout.main_navigation_view, this, true)
@@ -124,33 +122,35 @@ class WPMainNavigationView @JvmOverloads constructor(
         assignNavigationListeners(true)
         disableShiftMode()
 
-        // This is a restricted NavigationBarMenuView
-        val menuView = navigationBarView.getChildAt(0) as ViewGroup
         if (!BuildConfig.ENABLE_READER) hideReaderTab()
 
-        // overlay each item with our custom view
+        // Overlay each item with our custom view. We resolve the item view by its menu item id
+        // rather than walking getChildAt(), because the NavigationRailView used on tablets nests
+        // its item container one level deeper than the phone's BottomNavigationView, which would
+        // otherwise leave the rail items blank.
         for (i in 0 until navigationBarView.menu.size) {
-            // This is a restricted NavigationBarItemView
-            (menuView.getChildAt(i) as? ViewGroup)?.let { itemView ->
-                val customView: View = inflater.inflate(R.layout.navbar_item, menuView, false)
-
-                val txtLabel = customView.findViewById<TextView>(R.id.nav_label)
-                val imgIcon = customView.findViewById<ImageView>(R.id.nav_icon)
-                txtLabel.text = getTitleForPosition(i)
-                customView.contentDescription = getContentDescriptionForPosition(i)
-                imgIcon.setImageResource(getDrawableResForPosition(i))
-                if (i == getPosition(READER)) {
-                    customView.id = R.id.bottom_nav_reader_button // identify view for QuickStart
-                }
-                if (i == getPosition(NOTIFS)) {
-                    customView.id = R.id.bottom_nav_notifications_button // identify view for QuickStart
-                }
-
-                if (i == getPosition(ME)) {
-                    loadGravatar(imgIcon, accountStore.account?.avatarUrl.orEmpty())
-                }
-                itemView.addView(customView)
+            val itemView = navigationBarView.findViewById<ViewGroup>(getItemIdForPosition(i))
+            if (itemView == null) {
+                AppLog.w(AppLog.T.MAIN, "Nav item view not found for position $i; skipping overlay")
+                continue
             }
+            val customView: View = inflater.inflate(R.layout.navbar_item, itemView, false)
+
+            val txtLabel = customView.findViewById<TextView>(R.id.nav_label)
+            val imgIcon = customView.findViewById<ImageView>(R.id.nav_icon)
+            txtLabel.text = getTitleForPosition(i)
+            customView.contentDescription = getContentDescriptionForPosition(i)
+            imgIcon.setImageResource(getDrawableResForPosition(i))
+            if (i == getPosition(READER)) {
+                customView.id = R.id.bottom_nav_reader_button // identify view for QuickStart
+            }
+            if (i == getPosition(NOTIFS)) {
+                customView.id = R.id.bottom_nav_notifications_button // identify view for QuickStart
+            }
+            if (i == getPosition(ME)) {
+                loadGravatar(imgIcon, accountStore.account?.avatarUrl.orEmpty())
+            }
+            itemView.addView(customView)
         }
 
         if (getMainPageIndex() != getPosition(ME)) {
@@ -213,7 +213,7 @@ class WPMainNavigationView @JvmOverloads constructor(
     }
 
     private fun getMainPageIndex(): Int {
-        return if (jetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures()) 0
+        return if (jetpackFeatureRemovalHelper.shouldRemoveJetpackFeatures()) 0
         else AppPrefs.getMainPageIndex(numPages() - 1)
     }
 
@@ -330,7 +330,7 @@ class WPMainNavigationView @JvmOverloads constructor(
 
         setImageViewSelected(position, true)
 
-        if (jetpackFeatureRemovalPhaseHelper.shouldRemoveJetpackFeatures())
+        if (jetpackFeatureRemovalHelper.shouldRemoveJetpackFeatures())
             AppPrefs.setMainPageIndex(0)
         else AppPrefs.setMainPageIndex(position)
 
@@ -438,16 +438,23 @@ class WPMainNavigationView @JvmOverloads constructor(
 
     private fun getItemView(position: Int): View? {
         if (isValidPosition(position)) {
-            // This is a restricted NavigationBarMenuView
-            val menuView = navigationBarView.getChildAt(0) as? ViewGroup
-            // This is a restricted NavigationBarItemView
-            return menuView?.getChildAt(position)
+            // Resolve the item view by its menu item id; the NavigationRailView used on tablets
+            // nests its item container one level deeper than the phone's BottomNavigationView, so
+            // walking getChildAt() would return the wrong view there.
+            return navigationBarView.findViewById(getItemIdForPosition(position))
         }
         return null
     }
 
     fun showNoteBadge(showBadge: Boolean) {
         showBadge(getPosition(NOTIFS), showBadge)
+    }
+
+    fun refreshGravatar() {
+        val imgIcon = getImageViewForPosition(getPosition(ME))
+        if (imgIcon != null) {
+            loadGravatar(imgIcon, accountStore.account?.avatarUrl.orEmpty())
+        }
     }
 
     /*
@@ -474,18 +481,11 @@ class WPMainNavigationView @JvmOverloads constructor(
     }
 
     private inner class NavAdapter {
-        private fun createFragment(pageType: PageType, helper: JetpackFeatureRemovalPhaseHelper): Fragment {
-            val shouldUseStaticPostersFragment = helper.shouldShowStaticPage()
+        private fun createFragment(pageType: PageType): Fragment {
             val fragment = when (pageType) {
                 MY_SITE -> MySiteFragment.newInstance()
-                READER -> if (shouldUseStaticPostersFragment)
-                    JetpackStaticPosterFragment.newInstance(UiData.READER)
-                else ReaderFragment()
-
-                NOTIFS -> if (shouldUseStaticPostersFragment)
-                    JetpackStaticPosterFragment.newInstance(UiData.NOTIFICATIONS)
-                else NotificationsListFragment.newInstance()
-
+                READER -> ReaderFragment()
+                NOTIFS -> NotificationsListFragment.newInstance()
                 ME -> MeFragment.newInstance()
             }
             fragmentManager?.beginTransaction()
@@ -497,32 +497,7 @@ class WPMainNavigationView @JvmOverloads constructor(
 
         fun getFragment(position: Int): Fragment? {
             return pages().getOrNull(position)?.let { pageType ->
-                val currentFragment = fragmentManager?.findFragmentByTag(getTagForPageType(pageType))
-                return currentFragment?.let {
-                    when (it) {
-                        is ReaderFragment, is NotificationsListFragment -> checkAndCreateForStaticPage(it, pageType)
-                        is JetpackStaticPosterFragment -> checkAndCreateForNonStaticPage(it, pageType)
-                        else -> it
-                    }
-                } ?: createFragment(pageType, jetpackFeatureRemovalPhaseHelper)
-            }
-        }
-
-        private fun checkAndCreateForStaticPage(fragment: Fragment, pageType: PageType): Fragment {
-            return if (jetpackFeatureRemovalPhaseHelper.shouldShowStaticPage()) {
-                fragmentManager?.beginTransaction()?.remove(fragment)?.commitNow()
-                createFragment(pageType, jetpackFeatureRemovalPhaseHelper)
-            } else {
-                fragment
-            }
-        }
-
-        private fun checkAndCreateForNonStaticPage(fragment: Fragment, pageType: PageType): Fragment {
-            return if (!jetpackFeatureRemovalPhaseHelper.shouldShowStaticPage()) {
-                fragmentManager?.beginTransaction()?.remove(fragment)?.commitNow()
-                createFragment(pageType, jetpackFeatureRemovalPhaseHelper)
-            } else {
-                fragment
+                fragmentManager?.findFragmentByTag(getTagForPageType(pageType)) ?: createFragment(pageType)
             }
         }
 

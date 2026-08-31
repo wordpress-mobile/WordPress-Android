@@ -18,7 +18,6 @@ import org.mockito.kotlin.whenever
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.networking.ConnectionChangeReceiver.ConnectionChangeEvent
 import org.wordpress.android.ui.suggestion.FinishAttempt.NotExactlyOneAvailable
 import org.wordpress.android.ui.suggestion.FinishAttempt.OnlyOneAvailable
 import org.wordpress.android.ui.suggestion.SuggestionType.Users
@@ -88,14 +87,14 @@ class SuggestionViewModelTest {
     @Test
     fun `onConnectionChanged not connected`() {
         initViewModel()
-        viewModel.onConnectionChanged(ConnectionChangeEvent(false))
+        viewModel.onConnectionChanged(false)
         verify(mockSuggestionSource, never()).refreshSuggestions()
     }
 
     @Test
     fun `onConnectionChanged connected`() {
         initViewModel()
-        viewModel.onConnectionChanged(ConnectionChangeEvent(true))
+        viewModel.onConnectionChanged(true)
         verify(mockSuggestionSource).refreshSuggestions()
     }
 

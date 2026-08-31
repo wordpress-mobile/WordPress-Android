@@ -115,8 +115,7 @@ class TodaysStatsViewModel @Inject constructor(
                     visitors = todayStats.visitors,
                     likes = todayStats.likes,
                     comments = todayStats.comments,
-                    chartData = chartData,
-                    onCardClick = { onCardClicked() }
+                    chartData = chartData
                 )
             } else {
                 _uiState.value = TodaysStatsCardUiState.Error(
@@ -227,10 +226,6 @@ class TodaysStatsViewModel @Inject constructor(
                 period
             }
         }
-    }
-
-    private fun onCardClicked() {
-        // Navigation will be handled by the parent
     }
 
     fun onRetry() {

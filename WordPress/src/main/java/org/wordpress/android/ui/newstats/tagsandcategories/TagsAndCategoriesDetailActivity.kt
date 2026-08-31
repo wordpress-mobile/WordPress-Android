@@ -41,10 +41,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
+import org.wordpress.android.ui.ActivityNavigator
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.main.BaseAppCompatActivity
 import org.wordpress.android.ui.newstats.components.StatsListHeader
 import org.wordpress.android.ui.newstats.util.ShimmerBox
+import javax.inject.Inject
 
 private const val DETAIL_EXPANDED_START_PADDING = 52
 private const val LOADING_SHIMMER_ITEM_COUNT = 10
@@ -55,6 +57,9 @@ class TagsAndCategoriesDetailActivity :
     private val viewModel:
         TagsAndCategoriesDetailViewModel
             by viewModels()
+
+    @Inject
+    lateinit var activityNavigator: ActivityNavigator
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -70,7 +75,11 @@ class TagsAndCategoriesDetailActivity :
                     onBackPressed =
                         onBackPressedDispatcher
                             ::onBackPressed,
-                    onRetry = { viewModel.loadData() }
+                    onRetry = { viewModel.loadData() },
+                    onUrlClick = { url ->
+                        activityNavigator
+                            .openInCustomTab(this, url)
+                    }
                 )
             }
         }
@@ -93,7 +102,8 @@ class TagsAndCategoriesDetailActivity :
 private fun TagsAndCategoriesDetailScreen(
     uiState: TagsAndCategoriesCardUiState,
     onBackPressed: () -> Unit,
-    onRetry: () -> Unit
+    onRetry: () -> Unit,
+    onUrlClick: (String) -> Unit = {}
 ) {
     Scaffold(
         topBar = {
@@ -138,6 +148,7 @@ private fun TagsAndCategoriesDetailScreen(
                 DetailLoadedContent(
                     items = uiState.items,
                     maxViews = uiState.maxViewsForBar,
+                    onUrlClick = onUrlClick,
                     modifier = Modifier
                         .padding(contentPadding)
                 )
@@ -209,6 +220,7 @@ private fun DetailEmptyContent(
 private fun DetailLoadedContent(
     items: List<TagGroupUiItem>,
     maxViews: Long,
+    onUrlClick: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     if (items.isEmpty()) {
@@ -271,16 +283,11 @@ private fun DetailLoadedContent(
                 item = item,
                 percentage = percentage,
                 position = index + 1,
-                isExpandable = item.isExpandable,
                 isExpanded = isExpanded,
-                onClick = if (item.isExpandable) {
-                    {
-                        expandedGroups[index] =
-                            !isExpanded
-                    }
-                } else {
-                    null
-                }
+                onExpandToggle = {
+                    expandedGroups[index] = !isExpanded
+                },
+                onUrlClick = onUrlClick
             )
             if (item.isExpandable) {
                 AnimatedVisibility(
@@ -290,6 +297,7 @@ private fun DetailLoadedContent(
                 ) {
                     ExpandedTagsSection(
                         tags = item.tags,
+                        onUrlClick = onUrlClick,
                         startPadding =
                             DETAIL_EXPANDED_START_PADDING
                                 .dp

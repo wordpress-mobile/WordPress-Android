@@ -1,11 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2026-05-29 07:39:43+0000
+Translation-Revision-Date: 2026-06-18 10:19:42+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/4.0.3
+Generator: GlotPress/4.1.0
 Language: nl
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="support_screen_unified_support_description">Je kunt altijd antwoorden krijgen van ons ondersteuningsteam</string>
+    <string name="support_screen_unified_support_title">Krijg hulp</string>
+    <string name="unified_support_attachment_match_score">%1$d%% overeenkomst</string>
+    <string name="unified_support_bot_typing_content_description">De ondersteuningsbot is aan het typen</string>
+    <string name="unified_support_message_input_placeholder">Typ een bericht in…</string>
+    <string name="unified_support_conversations_title">Krijg hulp</string>
+    <string name="page_rs_move_trashed_page_to_draft_dialog_message">Berichten in prullenbak kunnen niet bewerkt worden. Wil je de status van dit bericht wijzigen naar \"concept\" zodat je er aan kan werken?</string>
+    <string name="page_rs_move_trashed_page_to_draft_dialog_title">Pagina naar ‘Concepten’ verplaatsen?</string>
+    <string name="page_rs_confirm_trash_message">Weet je zeker dat je deze pagina naar de prullenbak wil verplaatsen?</string>
+    <string name="page_rs_copy_url">URL kopiëren</string>
+    <string name="page_rs_failed_to_load">De pagina kon niet worden geladen</string>
+    <string name="page_not_found">Er is een fout opgetreden bij het laden van de pagina. Ververs de pagina en probeer het nog eens.</string>
     <string name="xmlrpc_disabled_bottom_sheet_body">Sommige functies in de app hebben XML RPC nodig. Schakel het in op je site om dit op te lossen.</string>
     <string name="xmlrpc_disabled_bottom_sheet_title">XML RPC uitgeschakeld</string>
     <string name="xmlrpc_disabled_card_text">XML RPC uitgeschakeld\nSommige functies zijn mogelijk beperkt</string>
@@ -81,7 +93,6 @@ Language: nl
     <string name="gutenberg_kit_announcement_learn_more">Lees verder</string>
     <string name="gutenberg_kit_announcement_maybe_later">Misschien later</string>
     <string name="gutenberg_kit_announcement_activate">Activeren</string>
-    <string name="gutenberg_kit_announcement_body_deadline">Tegen het einde van juni 2026 wordt het de standaard-editor voor iedereen. %1$s</string>
     <string name="gutenberg_kit_announcement_body_intro">De volgende generatie blok-editor is klaar en brengt meer nieuwe functies.</string>
     <string name="gutenberg_kit_announcement_title">Een betere blok-editor komt eraan</string>
     <string name="site_settings_gutenberg_kit_enabled_unsupported">Schakel eerst over naar de blok-editor om de nieuwe editor te proberen.</string>
@@ -272,8 +283,6 @@ Language: nl
     <string name="stats_chart_type_bars">Balken</string>
     <string name="stats_chart_type_lines">Lijnen</string>
     <string name="post_types_screen_title">Berichttypen</string>
-    <string name="experimental_new_stats_description">Statistieken weergeven in een modernere en geavanceerdere UI</string>
-    <string name="experimental_new_stats">Nieuwe statistieken</string>
     <string name="experimental_post_types_description">Experimentele berichttypes scherm inschakelen</string>
     <string name="experimental_post_types">Berichttypen</string>
     <string name="network_requests_disable">Uitschakelen</string>
@@ -291,30 +300,13 @@ Language: nl
     <string name="track_network_requests">Netwerkaanvragen volgen</string>
     <string name="experimental_network_debugging_disable_error_message">Netwerk volging is momenteel ingeschakeld. Ga naar Hulp en schakel \"Netwerk aanvragen volgen\" uit voordat je deze functie uitschakelt.</string>
     <string name="experimental_network_debugging_disable_error_title">Tracking First uitschakelen</string>
-    <string name="experimental_network_debugging_description">Netwerkaanvraag volging gereedschap weergeven in het hulpscherm</string>
+    <string name="experimental_network_debugging_description">Netwerkaanvraag volgingstools weergeven in het hulpscherm</string>
     <string name="experimental_network_debugging">Netwerk debuggen</string>
     <string name="site_settings_tags_empty_subtitle">Waarom maak je er niet één om het makkelijker te maken om een bericht te taggen?</string>
     <string name="posts_published_empty_subtitle">Waarom niet een maken?</string>
     <string name="media_empty_list_subtitle">Waarom upload je niet iets?</string>
     <string name="confirm_remove_site">\"%s\" uit de app verwijderen?</string>
     <string name="he_support_forbidden_error">Je hebt geen toestemming om deze actie uit te voeren.</string>
-    <string name="he_support_generic_error">Er heeft zich een fout voorgedaan. Probeer het later opnieuw.</string>
-    <string name="he_support_send_ticket_button">Verzenden</string>
-    <string name="he_support_contact_email_message">We e-mailen je op dit adres.</string>
-    <string name="he_support_contact_information">Contactgegevens</string>
-    <string name="he_support_site_address_placeholder">https://yoursite.com</string>
-    <string name="he_support_site_address_label">Site adres (optioneel)</string>
-    <string name="he_support_subject_placeholder">Korte samenvatting van je probleem</string>
-    <string name="he_support_subject_label">Onderwerp</string>
-    <string name="he_support_issue_details">Probleem details</string>
-    <string name="he_support_category_other">Andere</string>
-    <string name="he_support_category_technical_issues">Technische problemen</string>
-    <string name="he_support_category_billing">Facturering &amp; aanmeldingen</string>
-    <string name="he_support_category_site_management">Site beheer</string>
-    <string name="he_support_category_jetpack_connection">Jetpack verbinding</string>
-    <string name="he_support_category_application">Applicatie</string>
-    <string name="he_support_need_help_with">Ik heb hulp nodig met</string>
-    <string name="he_support_contact_support_title">Neem contact op met ondersteuning</string>
     <string name="he_support_download_video_button">Download video</string>
     <string name="he_support_video_playback_error_message">Deze video kan niet inline worden afgespeeld. Download hem om te bekijken.</string>
     <string name="he_support_video_playback_error_title">Niet mogelijk video af te spelen</string>
@@ -347,30 +339,18 @@ Language: nl
     <string name="he_support_empty_conversations_button">Start conversatie</string>
     <string name="he_support_empty_conversations_message">Begin een conversatie met ons ondersteuningsteam om hulp te krijgen bij je vragen.</string>
     <string name="he_support_empty_conversations_title">Nog geen conversaties</string>
-    <string name="he_support_new_conversation_content_description">Nieuwe conversatie</string>
-    <string name="he_support_conversations_title">Conversaties ondersteunen</string>
+    <string name="unified_support_new_conversation_content_description">Nieuwe conversatie</string>
     <string name="ai_bot_time_just_now">Net</string>
     <string name="ai_bot_welcome_message">Ik ben je persoonlijke AI assistent. Ik kan je helpen met al je vragen over je site of account.</string>
     <string name="ai_bot_welcome_greeting">Hallo %1$s 👋</string>
-    <string name="ai_bot_message_input_placeholder">Typ een bericht…</string>
-    <string name="ai_bot_send_button_content_description">Verzenden</string>
-    <string name="ai_bot_support_bot">Ondersteuning bot</string>
-    <string name="ai_bot_you">Je</string>
-    <string name="ai_bot_generic_error">Er is iets fout gegaan. Probeer het later nog eens.</string>
-    <string name="ai_bot_new_conversation_content_description">Nieuwe conversatie</string>
-    <string name="ai_bot_back_button_content_description">Terug</string>
-    <string name="ai_bot_conversations_title">Conversaties</string>
+    <string name="unified_support_generic_error">Er is iets fout gegaan. Probeer het later nog eens.</string>
     <string name="create">Maken</string>
     <string name="logs_screen_general_error">Er is iets fout gegaan…</string>
     <string name="logs_screen_empty_state">Geen logs beschikbaar</string>
     <string name="support_screen_user_avatar_content_description">Gebruiker avatar</string>
-    <string name="support_screen_application_logs_description">Geavanceerd gereedschap om problemen op te lossen</string>
+    <string name="support_screen_application_logs_description">Geavanceerde tool om problemen op te lossen</string>
     <string name="support_screen_application_logs_title">Applicatielogs</string>
     <string name="support_screen_diagnostics_section_title">Diagnostiek</string>
-    <string name="support_screen_ask_happiness_engineers_description">Voor je moeilijke vragen. We zullen antwoorden via e-mail</string>
-    <string name="support_screen_ask_happiness_engineers_title">Vraag het de geluksingenieurs</string>
-    <string name="support_screen_ask_bots_description">Verkrijg snel antwoorden op veelgestelde vragen</string>
-    <string name="support_screen_ask_bots_title">Vraag het de bots</string>
     <string name="support_screen_help_center_description">Documentatie en handleidingen om je op weg te helpen</string>
     <string name="support_screen_help_center_title">Hulpcentrum</string>
     <string name="support_screen_how_can_we_help_title">Hoe kunnen we helpen?</string>
@@ -963,16 +943,12 @@ Language: nl
     <string name="sharing_twitter_deprecation_notice_description">Automatisch delen op Twitter is niet langer beschikbaar vanwege wijzigingen van de voorwaarden en prijzen van Twitter.</string>
     <string name="sharing_twitter_deprecation_notice_title">Automatisch delen op Twitter is niet langer beschikbaar</string>
     <string name="jp_migration_notifications_allow_title">Sta meldingen toe om op de hoogte te blijven van je site</string>
-    <string name="wp_jp_static_poster_message">De Jetpack app heeft alle functies van de WordPress app, en nu ook exclusieve toegang tot Statistieken, Reader, Meldingen en meer.</string>
-    <string name="wp_jp_static_poster_title_plural">Gebruik WordPress met %s in de Jetpack\u00A0app.</string>
-    <string name="wp_jp_static_poster_title">Gebruik WordPress met %s in de Jetpack\u00A0app.</string>
     <string name="gutenberg_native_unlabeled_color_s" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Niet-gelabelde kleur. %s</string>
     <string name="dashboard_activity_card_title">Recente activiteit</string>
     <string name="site_creation_search_domain_example_body">Net als in het voorbeeld hierboven kunnen mensen met een domein je site vinden en bezoeken vanuit hun webbrowser.</string>
     <string name="site_creation_search_domain_example_title">JeSiteNaam.com</string>
     <string name="site_creation_domain_search_input_hint">Zoeken met keywords</string>
     <string name="site_creation_domain_header_subtitle">Zoek een kort en gedenkwaardig domein om mensen te helpen je site te vinden en te bezoeken.</string>
-    <string name="site_creation_domain_cost_sale">voor het eerste jaar</string>
     <string name="site_creation_error_cart_subtitle">Je site is aangemaakt, maar er is een probleem opgetreden bij het afrekenen van je aangepaste domein. Probeer het nog eens of neem contact met ons op voor hulp.</string>
     <string name="new_site_creation_preview_caption_paid">Het kan tot 30 minuten duren voor je aangepaste domein werkt.</string>
     <string name="new_site_creation_preview_subtitle_paid">We hebben je betalingsbewijs naar je gemaild. %s</string>
@@ -1020,9 +996,6 @@ Language: nl
     <string name="jetpack_full_plugin_install_onboarding_description_this_site">Deze site</string>
     <string name="jetpack_full_plugin_install_concise_description_multiple">%1$s gebruikt %2$s. Deze ondersteunen nog niet alle functies van de app. Installeer de %3$s.</string>
     <string name="jetpack_full_plugin_install_concise_description_single">%1$s gebruikt %2$s. Deze ondersteunt nog niet alle functies van de app. Installeer de %3$s.</string>
-    <string name="wp_jp_static_poster_footnote">Overstappen is gratis en duurt maar een minuut.</string>
-    <string name="wp_jp_static_poster_button_secondary">Lees verder op Jetpack.com</string>
-    <string name="wp_jp_static_poster_button_primary">Schakel over naar de Jetpack-app</string>
     <string name="my_site_btn_wp_admin">WP Admin</string>
     <string name="my_site_header_manage">Beheren</string>
     <string name="my_site_header_traffic">Bezoekersaantallen</string>
@@ -1039,7 +1012,6 @@ Language: nl
     <string name="blaze_promotional_text">Zorg dat meer mensen je site bezoeken met Blaze</string>
     <string name="blaze_activity_title">Blaze</string>
     <string name="site_creation_domain_tag_unavailable">Dit domein is al geregistreerd</string>
-    <string name="site_creation_domain_tag_sale">Aanbieding!</string>
     <string name="site_creation_domain_tag_recommended">Aanbevolen</string>
     <string name="site_creation_domain_tag_best_alternative">Beste alternatief</string>
     <string name="support_faq_caption">Bekijk onze FAQ voor antwoorden op veelgestelde vragen die je misschien hebt.</string>
@@ -1079,12 +1051,6 @@ Language: nl
     <string name="jetpack_feature_card_content_phase_self_hosted_and_new_users">Ontgrendel de volledige functionaliteit van je site. Krijg Statistieken, Lezer, Meldingen en meer met Jetpack.</string>
     <string name="wp_jetpack_feature_removal_phase_self_hosted_users_title">Je site heeft de Jetpack plugin</string>
     <string name="wp_jetpack_feature_removal_phase_self_hosted_users_description">De Jetpack mobiele app is ontworpen om samen met de Jetpack plugin te werken. Stap nu over om toegang te krijgen tot Statistieken, Meldingen, Reader en meer.</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_notifications_description">Verkrijg meldingen over nieuwe reacties, vind-ik-leuks, weergaven en meer.</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_reader_description">Vind en volg je favoriete sites en community’s, en deel je content.</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_description">Laat het aantal bezoekers van je site groeien via waardevolle inzichten en uitgebreide statistieken.</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_stats_and_insights_title">Statistieken en inzichten</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_description">Met Jetpack kun je meer doen met je WordPress site. Overstappen is gratis en duurt maar een minuut.</string>
-    <string name="wp_jetpack_feature_removal_phase_new_users_title">Geef WordPress een boost met Jetpack</string>
     <string name="blogging_prompts_onboarding_content_note_content">Je kunt blogmeldingen en -herinneringen te allen tijde beheren via Mijn site &gt; Instellingen &gt; Bloggen</string>
     <string name="blogging_reminders_prompt_subtitle">Meldingen bevatten een woord of korte zin ter inspiratie</string>
     <string name="my_site_blogging_prompt_card_removed_snackbar_subtitle">Ga naar &lt;b&gt;Site-instellingen&lt;/b&gt; om weer in te schakelen</string>
@@ -1096,15 +1062,6 @@ Language: nl
     <string name="site_settings_blogging_prompts_title">Meldingen weergeven</string>
     <string name="site_settings_blogging">Bloggen</string>
     <string name="install_play_store_to_get_jetpack">Installeer Google Play Store om de Jetpack-app te downloaden</string>
-    <string name="wp_jetpack_feature_removal_phase_four_secondary_text">Doe dit later</string>
-    <string name="wp_jetpack_feature_removal_switch_to_jetpack_app_menu_title">Overstappen naar Jetpack </string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_four_all_features_description">Statistieken, Reader, meldingen en andere functies die door Jetpack aangedreven worden, zijn verwijderd uit de WordPress-app.</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_four_title_all_features">Jetpack functies zijn verplaatst.</string>
-    <string name="wp_jetpack_powered_phase_3_feature_are_moving_in">%1$s worden over %2$s verplaatst</string>
-    <string name="wp_jetpack_powered_phase_3_feature_is_moving_in">%1$s wordt over %2$s verplaatst</string>
-    <string name="wp_jetpack_powered_phase_3_feature_are_moving_soon">%1$s worden binnenkort verplaatst</string>
-    <string name="wp_jetpack_powered_phase_3_feature_is_moving_soon">%1$s wordt binnenkort verplaatst</string>
-    <string name="wp_jetpack_powered_phase_2">Verkrijg de Jetpack app</string>
     <string name="my_site_blogging_prompt_card_view_answers">Alle reacties bekijken</string>
     <string name="stats_insights_total_stats_seven_days_negative">%1$s minder dan de vorige 7 dagen</string>
     <string name="stats_insights_total_stats_seven_days_positive">%1$s meer dan de vorige 7 dagen</string>
@@ -1114,21 +1071,10 @@ Language: nl
     <string name="stats_insights_views_and_visitors_seven_days_views_positive">Je hebt de afgelopen 7 dagen %1$s meer weergaven gehad dan de vorige 7 dagen.</string>
     <string name="stats_timeframe_previous_seven_days">Vorige 7 dagen</string>
     <string name="stats_timeframe_last_seven_days">Afgelopen 7 dagen</string>
-    <string name="weeks_quantity_other">%d weken</string>
-    <string name="weeks_quantity_one">1 week</string>
     <string name="my_site_blogging_prompt_card_attribution_day_one">Van &lt;b&gt;Day One&lt;/b&gt;</string>
     <string name="jetpack_feature_card_menu_item_remind_me_later">Herinner mij hier later aan</string>
-    <string name="jetpack_feature_card_content_phase_three">Statistieken, Lezer, Meldingen en andere functies worden binnenkort verplaatst naar de mobiele Jetpack-app.</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_the_jetpack_app">Schakel over naar de Jetpack-app</string>
-    <string name="wp_jetpack_feature_removal_overlay_learn_more_migration_text">Lees verder op jetpack.com</string>
     <string name="wp_jetpack_feature_removal_overlay_migration_helper_text">Overstappen is gratis en duurt maar een minuut.</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_description_without_deadline">Statistieken, Reader, Meldingen en andere functies die door Jetpack aangedreven worden, zullen binnenkort uit de WordPress-app worden verwijderd.</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_description_with_deadline">Statistieken, Reader, Meldingen en andere functies die door Jetpack aangedreven worden op %s uit de WordPress-app worden verwijderd.</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_all_features">Jetpack functies worden binnenkort verplaatst.</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_notifications">Meldingen zullen naar Jetpack worden verplaatst</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_reader">Reader zal naar de Jetpack app worden verplaatst</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_stats">Je statistieken zullen naar de Jetpack app worden verplaatst</string>
-    <string name="wp_jetpack_feature_removal_overlay_switch_to_new_jetpack_app">Schakel over naar de nieuwe Jetpack app</string>
     <string name="blogging_prompts_list_error_fetch_subtitle">Er is een fout opgetreden bij het laden van opdrachten.</string>
     <string name="blogging_prompts_list_error_fetch_title">Oeps</string>
     <string name="blogging_prompts_list_no_prompts">Er zijn nog geen opdrachten</string>
@@ -1154,12 +1100,6 @@ Language: nl
     <string name="wp_jetpack_continue_without_jetpack">Doorgaan zonder Jetpack</string>
     <string name="deep_linking_weblinks_alias_label">weblinks</string>
     <string name="deep_linking_urilinks_alias_label">urilinks</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_one_description_notifications">Schakel over naar de Jetpack-app om  realtime meldingen te blijven ontvangen op je apparaat.</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_one_description_reader">Schakel over naar de Jetpack-app om je favoriete sites en berichten te vinden, te volgen en een like te geven met Reader.</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_one_description_stats">Ga naar de Jetpack app om het verkeer op je site te zien groeien met statistieken en inzichten.</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_one_title_notifications">Verkrijg je meldingen met de Jetpack app</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_one_title_reader">Sites met de Jetpack app volgen</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_one_title_stats">Verkrijg je stats met de nieuwe Jetpack app</string>
     <string name="preference_open_links_in_jetpack_setting_change_disable_error">Kan links openen in Jetpack niet uitschakelen</string>
     <string name="preference_open_links_in_jetpack_setting_change_enable_error">Kan links openen in Jetpack niet inschakelen</string>
     <string name="preference_open_links_in_jetpack">Links in Jetpack openen</string>
@@ -1222,7 +1162,6 @@ Language: nl
     <string name="weekly_roundup_notification_text_views_only">Vorige week had je %1$s weergaven.</string>
     <string name="weekly_roundup_notification_text_all">Vorige week had je %1$s weergaven, %2$s vind-ik-leuks, en %3$s reacties.</string>
     <string name="stats_insights_like_guide_card">⭐️ Je nieuwste bericht %1$s heeft %2$s likes gekregen.</string>
-    <string name="wp_jetpack_powered">Door Jetpack aangedreven</string>
     <string name="qrcode_auth_flow_content_description">Afbeelding met vermelding van scan login code in proces</string>
     <string name="qrcode_auth_flow_error_content_description">Afbeelding waarop een fout staat weergegeven</string>
     <string name="qrcode_auth_flow_error_auth_failed_title">Authenticatie mislukt</string>
@@ -1555,7 +1494,7 @@ Language: nl
     <string name="gutenberg_native_each_block_has_its_own_settings_to_find_them_tap_on_a_block_its_s" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Elk blok heeft zijn eigen instellingen. Om ze te vinden, tik je op een blok. De instellingen zullen verschijnen in de toolbar onderaan het scherm.</string>
     <string name="gutenberg_native_build_layouts" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Bouw lay-outs</string>
     <string name="gutenberg_native_blocks_are_pieces_of_content_that_you_can_insert_rearrange_and_st" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Blokken zijn stukjes inhoud die je kunt invoegen, herschikken en stylen zonder dat je hoeft te weten hoe je moet coderen. Blokken zijn een gemakkelijke en moderne manier voor je om mooie lay-outs te maken.</string>
-    <string name="gutenberg_native_blocks_allow_you_to_focus_on_writing_your_content_knowing_that_al" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Blokken stellen je in staat je te concentreren op het schrijven van je inhoud, in de wetenschap dat alle opmaakhulpmiddelen die je nodig hebt aanwezig zijn om je te helpen je boodschap over te brengen.</string>
+    <string name="gutenberg_native_blocks_allow_you_to_focus_on_writing_your_content_knowing_that_al" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Blokken stellen je in staat je te concentreren op het schrijven van je inhoud, in de wetenschap dat alle opmaaktools die je nodig hebt aanwezig zijn om je te helpen je bericht over te brengen.</string>
     <string name="gutenberg_native_arrange_your_content_into_columns_add_call_to_action_buttons_and" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Rangschik je inhoud in kolommen, voeg Call To Action knoppen toe, en overlap afbeeldingen met tekst.</string>
     <string name="gutenberg_native_add_a_new_block_at_any_time_by_tapping_on_the_icon_in_the_toolbar" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Voeg op elk moment een nieuw blok toe, door te tikken op het + icoon in de toolbar links onderaan.</string>
     <string name="comment_batch_moderation_error">Eén of meer reacties modereren is mislukt</string>
@@ -2881,7 +2820,7 @@ Language: nl
     <string name="activity_log_icon">Activiteiten icoon</string>
     <string name="activity_log">Activiteitenlog</string>
     <string name="privacy_policy_read">Privacybeleid lezen</string>
-    <string name="third_party_policy_learn_more_caption">We gebruiken ook andere volgings gereedschap, waaronder een aantal van derden. Bekijk meer informatie over deze gereedschappen en hoe je ze kunt beheren.</string>
+    <string name="third_party_policy_learn_more_caption">We gebruiken ook andere volgingstools, waaronder een aantal van derden. Bekijk meer informatie over deze tools en hoe je ze kunt beheren.</string>
     <string name="third_party_policy_learn_more_header">Beleid van derden</string>
     <string name="privacy_policy_learn_more_caption">Deze informatie helpt ons om onze producten te verbeteren, marketing naar je relevanter te maken, je WordPress.com ervaring te personaliseren, en meer zoals gedetailleerd in ons privacybeleid.</string>
     <string name="privacy_policy_learn_more_header">Privacybeleid</string>

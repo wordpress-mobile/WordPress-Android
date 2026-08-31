@@ -3,7 +3,6 @@ package org.wordpress.android.ui.newstats.videoplays
 import dagger.hilt.android.lifecycle.HiltViewModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
-import org.wordpress.android.ui.newstats.StatsCardType
 import org.wordpress.android.ui.newstats.StatsPeriod
 import org.wordpress.android.ui.newstats.mostviewed.BaseStatsCardViewModel
 import org.wordpress.android.ui.newstats.mostviewed.MostViewedChange
@@ -25,7 +24,6 @@ class VideoPlaysViewModel @Inject constructor(
     selectedSiteRepository, accountStore,
     statsRepository, resourceProvider
 ) {
-    override val cardType = StatsCardType.VIDEO_PLAYS
     override val logTag = "video plays"
 
     override suspend fun fetchStats(
@@ -51,7 +49,8 @@ class VideoPlaysViewModel @Inject constructor(
             is VideoPlaysResult.Error -> {
                 StatsCardFetchResult.Error(
                     messageResId = result.messageResId,
-                    isAuthError = result.isAuthError
+                    isAuthError = result.isAuthError,
+                    isNotAvailable = result.isNotAvailable
                 )
             }
         }

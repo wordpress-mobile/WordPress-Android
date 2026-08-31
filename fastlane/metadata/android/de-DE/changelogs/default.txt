@@ -1,0 +1,7 @@
+26.9:
+- Neue Seitenliste mit aktualisierten Funktionen aktiviert
+- Neue Beitragsliste für Websites mit Anwendungspasswort auf Standard setzen
+- Anmeldung auf WordPress.com beschleunigt
+- Kombinierte Bot-/Support-Mitarbeiter-Chats im Support
+- Absturz beim Öffnen von Medien behoben, wenn der Editor verlassen wurde
+- Beta-Badge aus Menüs auf „Meine Website“ entfernt

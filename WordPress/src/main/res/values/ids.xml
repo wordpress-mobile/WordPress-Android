@@ -23,4 +23,6 @@
     <item type="id" name="posts_search_recycler_view_id" />
     <item type="id" name="posts_non_search_recycler_view_id_tag_key" />
     <item type="id" name="appbar_layout_original_animator_tag_key" />
+    <item type="id" name="comment_detail_compose_view" />
+    <item type="id" name="comment_edit_compose_view" />
 </resources>

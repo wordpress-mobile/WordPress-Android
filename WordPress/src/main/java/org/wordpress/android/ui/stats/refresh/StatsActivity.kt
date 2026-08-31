@@ -11,13 +11,11 @@ import org.wordpress.android.databinding.StatsListActivityBinding
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.push.NotificationType
 import org.wordpress.android.push.NotificationsProcessingService.ARG_NOTIFICATION_TYPE
-import org.wordpress.android.ui.ActivityLauncher
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalHelper
 import org.wordpress.android.ui.main.BaseAppCompatActivity
 import org.wordpress.android.ui.stats.StatsTimeframe
 import org.wordpress.android.ui.stats.refresh.utils.StatsLaunchedFrom
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
-import org.wordpress.android.util.JetpackBrandingUtils
 import javax.inject.Inject
 import android.R as AndroidR
 
@@ -27,20 +25,12 @@ class StatsActivity : BaseAppCompatActivity() {
     lateinit var statsSiteProvider: StatsSiteProvider
 
     @Inject
-    lateinit var jetpackBrandingUtils: JetpackBrandingUtils
-
-    @Inject
-    lateinit var jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper
+    lateinit var jetpackFeatureRemovalHelper: JetpackFeatureRemovalHelper
     private val viewModel: StatsViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        if (jetpackFeatureRemovalPhaseHelper.shouldShowStaticPage()) {
-            ActivityLauncher.showJetpackStaticPoster(this)
-            finish()
-        } else {
-            setContentView(StatsListActivityBinding.inflate(layoutInflater).root)
-        }
+        setContentView(StatsListActivityBinding.inflate(layoutInflater).root)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

@@ -10,7 +10,8 @@ class TagsAndCategoriesMapper @Inject constructor() {
         val tagUiItems = group.tags.map { tag ->
             TagUiItem(
                 name = tag.name,
-                tagType = tag.tagType
+                tagType = tag.tagType,
+                link = tag.link
             )
         }
         TagGroupUiItem(

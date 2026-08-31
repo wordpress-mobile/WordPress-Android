@@ -10,7 +10,6 @@ import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.PlanModel
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.network.rest.wpcom.site.AllDomainsDomain
 import org.wordpress.android.fluxc.network.rest.wpcom.site.Domain
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.SiteStore.FetchedDomainsPayload
@@ -20,6 +19,7 @@ import org.wordpress.android.ui.domains.DomainsDashboardItem.PurchaseDomain
 import org.wordpress.android.ui.domains.DomainsDashboardItem.PurchasePlan
 import org.wordpress.android.ui.domains.DomainsDashboardItem.SiteDomains
 import org.wordpress.android.ui.domains.DomainsDashboardItem.SiteDomainsHeader
+import org.wordpress.android.ui.domains.management.testDomainItem
 import org.wordpress.android.ui.domains.usecases.AllDomains
 import org.wordpress.android.ui.domains.usecases.FetchAllDomainsUseCase
 import org.wordpress.android.ui.domains.usecases.FetchPlansUseCase
@@ -196,7 +196,7 @@ class DomainsDashboardViewModelTest : BaseUnitTest() {
             wpcomDomain = false
         )
 
-        private val allDomainsDomain = AllDomainsDomain(domain = "henna.tattoo")
+        private val allDomainsDomain = testDomainItem(domain = "henna.tattoo")
 
         private val siteWithFreePlan = SiteModel().apply {
             siteId = TEST_SITE_ID

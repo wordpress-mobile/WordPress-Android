@@ -19,6 +19,9 @@ class LoginSiteApplicationPasswordViewModel @Inject constructor(
     private val _discoveryURL = Channel<String>(Channel.BUFFERED)
     val discoveryURL = _discoveryURL.receiveAsFlow()
 
+    private val _wpComDetected = Channel<String>(Channel.BUFFERED)
+    val wpComDetected = _wpComDetected.receiveAsFlow()
+
     private val _loadingStateFlow = MutableStateFlow(false)
     val loadingStateFlow = _loadingStateFlow.asStateFlow()
 
@@ -34,6 +37,8 @@ class LoginSiteApplicationPasswordViewModel @Inject constructor(
             when (val result = applicationPasswordLoginHelper.getAuthorizationUrlComplete(siteUrl)) {
                 is ApplicationPasswordLoginHelper.DiscoveryResult.Authorized ->
                     _discoveryURL.send(result.authorizationUrl)
+                is ApplicationPasswordLoginHelper.DiscoveryResult.WpComSite ->
+                    _wpComDetected.send(siteUrl)
                 is ApplicationPasswordLoginHelper.DiscoveryResult.Failed -> {
                     _errorMessage.value = result.userFacingMessage
                     _discoveryURL.send("")

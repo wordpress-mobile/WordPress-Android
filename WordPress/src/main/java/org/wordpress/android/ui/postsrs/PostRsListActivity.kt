@@ -65,6 +65,7 @@ class PostRsListActivity : BaseAppCompatActivity() {
                         onDismiss = viewModel::onDismissPendingAction
                     ),
                     snackbarMessages = viewModel.snackbarMessages,
+                    revealRequests = viewModel.revealRequests,
                     onSearchOpen = viewModel::onSearchOpen,
                     onSearchQueryChanged = viewModel::onSearchQueryChanged,
                     onSearchClose = viewModel::onSearchClose,
@@ -80,6 +81,16 @@ class PostRsListActivity : BaseAppCompatActivity() {
                 )
             }
         }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        viewModel.onScreenVisible()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        viewModel.onScreenHidden()
     }
 
     private fun observeEvents() {

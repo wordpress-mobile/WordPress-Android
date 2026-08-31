@@ -212,6 +212,14 @@ class StatsListFragment : ViewPagerFragment(R.layout.stats_list_fragment), PullT
         @Suppress("DEPRECATION")
         setHasOptionsMenu(statsSection == StatsSection.INSIGHTS)
         (parentFragment as? StatsPullToRefreshListener.PullToRefreshReceiverListener)?.setPullToRefreshReceiver(this)
+        // Re-fetch when the user returns to the screen so newly-available (or previously stale) stats
+        // appear without a manual pull-to-refresh. The stats use cases are process-lifetime singletons
+        // that otherwise keep serving their last in-memory result. This uses the non-forced refresh
+        // path, so StatsRequestSqlUtils.STALE_PERIOD throttles it to at most one network request per
+        // 5 minutes; resumes within that window are served from cache.
+        if (::viewModel.isInitialized) {
+            viewModel.onRefresh()
+        }
     }
 
     override fun onDestroyView() {

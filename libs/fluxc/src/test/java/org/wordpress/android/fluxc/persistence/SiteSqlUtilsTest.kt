@@ -5,12 +5,14 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.mockito.kotlin.any
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.RuntimeEnvironment
 import org.wordpress.android.fluxc.encryption.EncryptionUtils
 import org.wordpress.android.fluxc.model.SiteModel
+import java.security.GeneralSecurityException
 
 @RunWith(RobolectricTestRunner::class)
 class SiteSqlUtilsTest {
@@ -134,6 +136,41 @@ class SiteSqlUtilsTest {
     }
 
     @Test
+    fun `updateXmlRpcUrlForWPAPISite updates the matching WPAPI site by url`() {
+        WellSql.insert(SiteModel().apply {
+            url = "https://selfhosted.test"
+            origin = SiteModel.ORIGIN_WPAPI
+            xmlRpcUrl = null
+        }).execute()
+
+        val rows = siteSqlUtils.updateXmlRpcUrlForWPAPISite(
+                siteUrl = "https://selfhosted.test",
+                xmlRpcUrl = "https://selfhosted.test/xmlrpc.php"
+        )
+
+        assertThat(rows).isEqualTo(1)
+        assertThat(siteSqlUtils.getSites().single().xmlRpcUrl)
+                .isEqualTo("https://selfhosted.test/xmlrpc.php")
+    }
+
+    @Test
+    fun `updateXmlRpcUrlForWPAPISite leaves a non-WPAPI site with the same url untouched`() {
+        WellSql.insert(SiteModel().apply {
+            url = "https://shared.test"
+            origin = SiteModel.ORIGIN_WPCOM_REST
+            xmlRpcUrl = null
+        }).execute()
+
+        val rows = siteSqlUtils.updateXmlRpcUrlForWPAPISite(
+                siteUrl = "https://shared.test",
+                xmlRpcUrl = "https://shared.test/xmlrpc.php"
+        )
+
+        assertThat(rows).isEqualTo(0)
+        assertThat(siteSqlUtils.getSites().single().xmlRpcUrl).isNull()
+    }
+
+    @Test
     fun `updateWpApiRestUrlForWPAPISite leaves a non-WPAPI site with the same url untouched`() {
         WellSql.insert(SiteModel().apply {
             url = "https://shared.test"
@@ -214,6 +251,28 @@ class SiteSqlUtilsTest {
         }).execute()
 
         val stored = siteSqlUtils.getSites().single()
+
+        assertThat(stored.apiRestUsernamePlain).isNullOrEmpty()
+        assertThat(stored.apiRestPasswordPlain).isNullOrEmpty()
+    }
+
+    @Test
+    fun `reading a site whose credentials fail to decrypt does not crash and yields no plaintext`() {
+        // A keystore failure during decryption (seen in production as InvalidKeyException/KeyStoreException)
+        // must not propagate out of the hot getSites() path — it would crash the app. The site is returned
+        // without plaintext credentials instead.
+        whenever(fakeEncryptionUtils.decrypt(any(), any())).thenAnswer {
+            throw GeneralSecurityException("keystore failure")
+        }
+        WellSql.insert(SiteModel().apply {
+            url = "https://example.test"
+            apiRestUsernameEncrypted = "enc_user"
+            apiRestUsernameIV = "iv_user"
+            apiRestPasswordEncrypted = "enc_pass"
+            apiRestPasswordIV = "iv_pass"
+        }).execute()
+
+        val stored = encryptingSiteSqlUtils.getSites().single()
 
         assertThat(stored.apiRestUsernamePlain).isNullOrEmpty()
         assertThat(stored.apiRestPasswordPlain).isNullOrEmpty()

@@ -17,6 +17,7 @@ import org.wordpress.android.ui.accounts.login.ApplicationPasswordLoginHelper
 import org.wordpress.android.ui.accounts.login.ApplicationPasswordReauthNotifier
 import org.wordpress.android.ui.accounts.login.SiteApiRestUrlRecoverer
 import org.wordpress.android.ui.accounts.login.SiteXmlRpcUrlRecoverer
+import org.wordpress.android.ui.accounts.login.XmlRpcRecovery
 import org.wordpress.android.ui.mysite.cards.applicationpassword.ApplicationPasswordValidator
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.NetworkUtilsWrapper
@@ -56,6 +57,7 @@ import kotlin.coroutines.cancellation.CancellationException
  * - [stateFor] — reactive: returns a shared [StateFlow]; first access runs the
  *   pipeline, later accesses reuse a [SiteReadiness.Ready] result.
  * - [await] — one-shot: runs the pipeline (if needed) and returns the result.
+ * - [isXmlRpcUnavailable] — whether XML-RPC recovery settled on a definitive negative.
  * - [invalidate] — forces a re-run (pull-to-refresh, retry).
  * - [clear] — cancels all work and drops all state; wire into sign-out.
  */
@@ -87,6 +89,11 @@ class SiteProvisioningSource @Inject constructor(
     // run settles Unprovisionable(hadCredentials), the headless heal failed, so we escalate to the
     // interactive re-auth UI. A routine run (onResume) never sets this, so it never pops re-auth.
     private val reauthOnFailure = ConcurrentHashMap.newKeySet<Int>()
+
+    // Sites whose XML-RPC discovery reached a *definitive* negative. A missing xmlRpcUrl alone isn't
+    // evidence XML-RPC is off (discovery also fails transiently, e.g. a 429), so only membership here
+    // licenses the application-password card to show the XML-RPC-disabled warning.
+    private val xmlRpcUnavailable = ConcurrentHashMap.newKeySet<Int>()
 
     init {
         // Re-provision when wordpress-rs reports a request was rejected for invalid auth (the app
@@ -144,7 +151,15 @@ class SiteProvisioningSource @Inject constructor(
         states.clear()
         ready.clear()
         reauthOnFailure.clear()
+        xmlRpcUnavailable.clear()
     }
+
+    /**
+     * Whether [recoverXmlRpcIfNeeded] concluded that [siteLocalId] genuinely has XML-RPC disabled, as
+     * opposed to merely failing to recover the endpoint. Only the definitive case may surface the
+     * XML-RPC-disabled card; a transient discovery failure (e.g. a 429 rate-limit) must not.
+     */
+    fun isXmlRpcUnavailable(siteLocalId: Int): Boolean = siteLocalId in xmlRpcUnavailable
 
     /**
      * [WpAppNotifierHandler.NotifierListener] — wordpress-rs rejected a request for [site] with invalid
@@ -356,8 +371,15 @@ class SiteProvisioningSource @Inject constructor(
         val site = siteStore.getSiteByLocalId(siteLocalId) ?: return
         // WP.com / Atomic / Jetpack-WPCom-REST sites talk REST end-to-end and don't use XML-RPC.
         if (site.isUsingWpComRestApi || !site.xmlRpcUrl.isNullOrEmpty()) return
-        siteXmlRpcUrlRecoverer.discoverAndVerifyXmlRpcUrl(site)?.let { endpoint ->
-            siteXmlRpcUrlRecoverer.persistXmlRpcUrl(siteLocalId, endpoint)
+        when (val recovery = siteXmlRpcUrlRecoverer.discoverAndVerifyXmlRpcUrl(site)) {
+            is XmlRpcRecovery.Recovered -> {
+                xmlRpcUnavailable.remove(siteLocalId)
+                siteXmlRpcUrlRecoverer.persistXmlRpcUrl(siteLocalId, recovery.endpoint)
+            }
+            // Definitive negative — license the card. Inconclusive settles nothing, so clear any stale
+            // verdict and leave the card hidden until a later run reaches a conclusion.
+            XmlRpcRecovery.Unavailable -> xmlRpcUnavailable.add(siteLocalId)
+            XmlRpcRecovery.Inconclusive -> xmlRpcUnavailable.remove(siteLocalId)
         }
     }
 

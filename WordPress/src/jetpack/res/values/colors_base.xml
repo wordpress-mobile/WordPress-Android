@@ -19,6 +19,6 @@
 
     <color name="nav_bar">@color/black</color>
 
-    <color name="fab_container">#EADDFF</color>
-    <color name="fab_on_container">#21005D</color>
+    <color name="fab_container">@color/jetpack_green_5</color>
+    <color name="fab_on_container">@color/jetpack_green_90</color>
 </resources>

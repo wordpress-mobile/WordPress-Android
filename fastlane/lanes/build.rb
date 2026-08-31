@@ -7,29 +7,24 @@ platform :android do
   # This lane builds the final release of the app and uploads it
   # -----------------------------------------------------------------------------------
   # Usage:
-  # bundle exec fastlane build_and_upload_release app:<wordpress|jetpack> [skip_confirm:<skip confirm>] [skip_prechecks:<skip prechecks>] [create_release:<Create release on GH> ]
+  # bundle exec fastlane build_and_upload_release app:<wordpress|jetpack> [skip_confirm:<skip confirm>] [create_release:<Create release on GH> ]
   #
   # Example:
   # bundle exec fastlane build_and_upload_release app:wordpress
   # bundle exec fastlane build_and_upload_release app:wordpress skip_confirm:true
-  # bundle exec fastlane build_and_upload_release app:jetpack skip_prechecks:true
   # bundle exec fastlane build_and_upload_release app:wordpress create_release:true
   #####################################################################################
   desc 'Builds and updates for distribution'
   lane :build_and_upload_release do |options|
-    unless options[:skip_prechecks]
-      ensure_git_branch(branch: '^release/') unless is_ci
+    ensure_git_branch(branch: '^release/') unless is_ci
 
-      UI.user_error!("Can't build a final release out of this branch because it's configured as a beta release!") if current_version_name.include? '-rc-'
+    UI.user_error!("Can't build a final release out of this branch because it's configured as a beta release!") if current_version_name.include? '-rc-'
 
-      ensure_git_status_clean unless is_ci
+    ensure_git_status_clean unless is_ci
 
-      UI.important("Building version #{current_release_version} (#{current_build_code}) for upload to Release Channel")
+    UI.important("Building version #{current_release_version} (#{current_build_code}) for upload to Release Channel")
 
-      UI.user_error!('Aborted by user request') unless options[:skip_confirm] || UI.confirm('Do you want to continue?')
-
-      android_build_preflight
-    end
+    UI.user_error!('Aborted by user request') unless options[:skip_confirm] || UI.confirm('Do you want to continue?')
 
     # Create the file names
     app = get_app_name_option!(options)
@@ -48,7 +43,7 @@ platform :android do
   # This lane builds the app for both internal and external distribution and uploads them
   # -----------------------------------------------------------------------------------
   # Usage:
-  # bundle exec fastlane build_and_upload_pre_releases app:<wordpress|jetpack> [skip_confirm:<true|false>] [skip_prechecks:<true|false>] <[create_release:<true|false>]
+  # bundle exec fastlane build_and_upload_pre_releases app:<wordpress|jetpack> [skip_confirm:<true|false>] <[create_release:<true|false>]
   #
   # Example:
   # bundle exec fastlane build_and_upload_pre_releases
@@ -57,20 +52,8 @@ platform :android do
   #####################################################################################
   desc 'Builds and updates for distribution'
   lane :build_and_upload_pre_releases do |options|
-    unless options[:skip_prechecks]
-      ensure_git_branch(branch: '^release/') unless is_ci
-
-      ensure_git_status_clean unless is_ci
-
-      UI.important("Building version #{current_version_name} (#{current_build_code}) for upload to Beta Channel")
-
-      UI.user_error!('Aborted by user request') unless options[:skip_confirm] || UI.confirm('Do you want to continue?')
-
-      android_build_preflight
-    end
-
     app = get_app_name_option!(options)
-    build_beta(app: app, skip_prechecks: true, skip_confirm: options[:skip_confirm], upload_to_play_store: true, create_release: options[:create_release])
+    build_beta(app: app, skip_confirm: options[:skip_confirm], upload_to_play_store: true, create_release: options[:create_release])
   end
 
   #####################################################################################
@@ -88,17 +71,13 @@ platform :android do
   #####################################################################################
   desc 'Builds and updates for distribution'
   lane :build_beta do |options|
-    unless options[:skip_prechecks]
-      ensure_git_branch(branch: '^release/') unless is_ci
+    ensure_git_branch(branch: '^release/') unless is_ci
 
-      ensure_git_status_clean unless is_ci
+    ensure_git_status_clean unless is_ci
 
-      UI.important("Building version #{current_version_name} (#{current_build_code}) for upload to Beta Channel")
+    UI.important("Building version #{current_version_name} (#{current_build_code}) for upload to Beta Channel")
 
-      UI.user_error!('Aborted by user request') unless options[:skip_confirm] || UI.confirm('Do you want to continue?')
-
-      android_build_preflight
-    end
+    UI.user_error!('Aborted by user request') unless options[:skip_confirm] || UI.confirm('Do you want to continue?')
 
     # Create the file names
     app = get_app_name_option!(options)
@@ -109,6 +88,59 @@ platform :android do
     upload_gutenberg_sourcemaps(app: app, release_version: version_name)
 
     create_gh_release(app: app, version_name: version_name, prerelease: true) if options[:create_release]
+  end
+
+  #####################################################################################
+  # build_and_upload_trunk_internal
+  # -----------------------------------------------------------------------------------
+  # Builds WordPress & Jetpack from the current commit and uploads them to the Play Store
+  # `internal` testing track. Intended to run from `trunk` (manually or on a schedule) to
+  # validate the "release from trunk" model.
+  #
+  # The version is computed on the fly and written to `version.properties` for the build
+  # only — it is NOT committed:
+  #   - versionName: the planned release version (without the `-rc-N` suffix)
+  #   - versionCode: via release-toolkit's `ContinuousBuildCodeFormatter`,
+  #                  i.e. `(major * 10 + minor) * 1_000_000 + BUILDKITE_BUILD_NUMBER`
+  # -----------------------------------------------------------------------------------
+  # Usage:
+  # bundle exec fastlane build_and_upload_trunk_internal [skip_confirm:<true|false>]
+  #####################################################################################
+  desc 'Build WordPress & Jetpack from trunk and upload them to the Play Store internal track'
+  lane :build_and_upload_trunk_internal do |skip_confirm: false|
+    version_name = current_release_version
+
+    ensure_git_branch(branch: DEFAULT_BRANCH) unless is_ci
+
+    ensure_git_status_clean unless is_ci
+
+    UI.important("Building #{version_name} for upload to the Play Store internal track")
+
+    UI.user_error!('Aborted by user request') unless skip_confirm || UI.confirm('Do you want to continue?')
+
+    build_number = ENV.fetch('BUILDKITE_BUILD_NUMBER') do
+      UI.user_error!('BUILDKITE_BUILD_NUMBER is not set; the versionCode derives from it (Buildkite only).')
+    end
+
+    version = VERSION_FORMATTER.parse(version_name)
+    build_code = Fastlane::Wpmreleasetoolkit::Versioning::ContinuousBuildCodeFormatter.new.build_code(
+      major: version.major,
+      minor: version.minor,
+      build_number: Integer(build_number)
+    )
+
+    UI.important("Building #{DEFAULT_BRANCH} internal build: #{version_name} (#{build_code})")
+
+    # Set the version for this build only. We deliberately do not commit this change.
+    VERSION_FILE.write_version(version_name: version_name, version_code: build_code)
+
+    %i[wordpress jetpack].each do |app|
+      build_bundle(app: app, version_name: version_name, build_code: build_code, buildType: 'Release')
+      upload_build_to_play_store(app: app, version_name: version_name, track: 'internal', release_status: 'completed')
+      # `upload_gutenberg_sourcemaps` builds a file path from the app name, so it needs a String
+      # (a Symbol can't be passed to `File.join`).
+      upload_gutenberg_sourcemaps(app: app.to_s, release_version: version_name)
+    end
   end
 
   #####################################################################################
@@ -145,14 +177,14 @@ platform :android do
           package_name: package_name,
           aab: aab_file_path,
           track: options[:track],
-          release_status: 'draft',
+          release_status: options[:release_status] || 'draft',
           metadata_path: metadata_dir,
           skip_upload_metadata: (options[:track] != 'production'), # Only update app title/description/etc. if uploading for Production, skip for beta tracks
           skip_upload_changelogs: false,
           skip_upload_images: true,
           skip_upload_screenshots: true,
           json_key: UPLOAD_TO_PLAY_STORE_JSON_KEY,
-          version_codes_to_retain: [1440]
+          version_codes_to_retain: PLAY_STORE_VERSION_CODES_TO_RETAIN
         )
       rescue FastlaneCore::Interface::FastlaneError => e
         # Sometimes the upload fails randomly with a "Google Api Error: Invalid request - This Edit has been deleted.".
@@ -425,7 +457,6 @@ platform :android do
     # Load Sentry properties
     sentry_path = File.join(PROJECT_ROOT_FOLDER, 'WordPress', 'src', app.downcase, 'sentry.properties')
     sentry_properties = JavaProperties.load(sentry_path)
-    sentry_token = sentry_properties[:'auth.token']
     project_slug = sentry_properties[:'defaults.project']
     org_slug = sentry_properties[:'defaults.org']
 
@@ -433,7 +464,7 @@ platform :android do
     bundle_source_map_path = File.join(PROJECT_ROOT_FOLDER, 'WordPress', 'build', 'react-native-bundle-source-map')
 
     sentry_upload_sourcemap(
-      auth_token: sentry_token,
+      auth_token: get_required_env('SENTRY_AUTH_TOKEN'),
       org_slug: org_slug,
       project_slug: project_slug,
       version: release_version,

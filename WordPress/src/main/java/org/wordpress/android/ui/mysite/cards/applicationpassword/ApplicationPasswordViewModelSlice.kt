@@ -98,8 +98,13 @@ class ApplicationPasswordViewModelSlice @Inject constructor(
     private fun handleProvisioned(site: SiteModel) {
         // Read fresh: the pipeline's parallel XML-RPC branch may have just recovered the endpoint.
         val storedSite = siteStore.getSiteByLocalId(site.id) ?: site
-        // Only true self-hosted sites need XML-RPC; if the pipeline couldn't recover it, surface it.
-        if (!storedSite.isUsingWpComRestApi && storedSite.xmlRpcUrl.isNullOrEmpty()) {
+        // Only true self-hosted sites need XML-RPC, and a missing endpoint alone isn't proof it's off —
+        // recovery also fails transiently (e.g. a 429). Warn only when the pipeline reached a definitive
+        // negative, so a throttled site doesn't get a false "XML-RPC Disabled".
+        if (!storedSite.isUsingWpComRestApi &&
+            storedSite.xmlRpcUrl.isNullOrEmpty() &&
+            siteProvisioningSource.isXmlRpcUnavailable(storedSite.id)
+        ) {
             buildXmlRpcDisabledCard(storedSite)
         } else {
             uiModelMutable.postValue(null)
@@ -119,6 +124,13 @@ class ApplicationPasswordViewModelSlice @Inject constructor(
                 )
                 appLogWrapper.d(AppLog.T.MAIN, "A_P: Showing reauthentication card for ${site.url}")
             }
+            is ApplicationPasswordLoginHelper.DiscoveryResult.WpComSite -> {
+                uiModelMutable.postValue(null)
+                appLogWrapper.d(
+                    AppLog.T.MAIN,
+                    "A_P: Hiding reauthentication card for ${site.url} - WordPress.com site"
+                )
+            }
             is ApplicationPasswordLoginHelper.DiscoveryResult.Failed -> {
                 // TODO follow-up: surface result.userFacingMessage in the card (issue #22884).
                 uiModelMutable.postValue(null)
@@ -134,6 +146,10 @@ class ApplicationPasswordViewModelSlice @Inject constructor(
         when (val result = applicationPasswordLoginHelper.getAuthorizationUrlComplete(site.url)) {
             is ApplicationPasswordLoginHelper.DiscoveryResult.Authorized -> {
                 showApplicationPasswordCreateCard(site, result.authorizationUrl)
+            }
+            is ApplicationPasswordLoginHelper.DiscoveryResult.WpComSite -> {
+                uiModelMutable.postValue(null)
+                appLogWrapper.d(AppLog.T.MAIN, "A_P: Hiding card for ${site.url} - WordPress.com site")
             }
             is ApplicationPasswordLoginHelper.DiscoveryResult.Failed -> {
                 // TODO follow-up: surface result.userFacingMessage in the card (issue #22884).

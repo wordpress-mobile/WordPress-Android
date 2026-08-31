@@ -66,10 +66,12 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
+import org.wordpress.android.ui.compose.utils.rsDebugTitle
 import org.wordpress.android.ui.posts.AuthorFilterSelection
 import org.wordpress.android.ui.postsrs.ConfirmationDialogState
 import org.wordpress.android.ui.postsrs.PendingConfirmation
 import org.wordpress.android.ui.postsrs.PostRsListTab
+import org.wordpress.android.ui.postsrs.PostRsReveal
 import org.wordpress.android.ui.postsrs.SnackbarMessage
 import org.wordpress.android.ui.postsrs.PostRsListViewModel.Companion.MIN_SEARCH_QUERY_LENGTH
 import org.wordpress.android.ui.postsrs.PostRsMenuAction
@@ -88,6 +90,7 @@ fun PostRsListScreen(
     avatarUrl: String?,
     confirmationDialog: ConfirmationDialogState,
     snackbarMessages: Flow<SnackbarMessage> = emptyFlow(),
+    revealRequests: Flow<PostRsReveal> = emptyFlow(),
     onSearchOpen: () -> Unit,
     onSearchQueryChanged: (String, PostRsListTab) -> Unit,
     onSearchClose: (PostRsListTab) -> Unit,
@@ -108,6 +111,26 @@ fun PostRsListScreen(
     val focusManager = LocalFocusManager.current
     val activeTab = tabs[pagerState.settledPage]
     val snackbarHostState = remember { SnackbarHostState() }
+    // A post the user just saved, to be scrolled to once the tab showing it has it. Held here
+    // rather than acted on in the collector below so that the tab switch, which the user can win,
+    // can be cancelled without taking the collector down with it.
+    var pendingReveal by remember { mutableStateOf<PostRsReveal?>(null) }
+
+    LaunchedEffect(revealRequests) {
+        revealRequests.collect { pendingReveal = it }
+    }
+
+    // The post's status decides the tab, which may not be the one on screen. Switching to it also
+    // initializes a tab that was never opened, so its first fetch brings the post in.
+    LaunchedEffect(pendingReveal) {
+        val reveal = pendingReveal ?: return@LaunchedEffect
+        if (isSearchActive) {
+            pendingReveal = null
+            return@LaunchedEffect
+        }
+        val page = tabs.indexOf(reveal.tab)
+        if (pagerState.settledPage != page) pagerState.animateScrollToPage(page)
+    }
 
     LaunchedEffect(snackbarMessages) {
         snackbarMessages.collect { msg ->
@@ -149,7 +172,7 @@ fun PostRsListScreen(
                             modifier = Modifier.fillMaxWidth().focusRequester(focusRequester)
                         )
                     } else {
-                        Text(text = stringResource(R.string.my_site_btn_blog_posts))
+                        Text(text = rsDebugTitle(R.string.my_site_btn_blog_posts))
                     }
                 },
                 navigationIcon = {
@@ -249,6 +272,8 @@ fun PostRsListScreen(
                 PostRsTabListScreen(
                     state = tabState,
                     emptyMessageResId = tab.emptyMessageResId,
+                    revealPostId = pendingReveal?.takeIf { it.tab == tab }?.remotePostId,
+                    onRevealHandled = { pendingReveal = null },
                     isSearchIdle = isSearchActive && searchQuery.length < MIN_SEARCH_QUERY_LENGTH,
                     isSearching = isSearchActive && searchQuery.length >= MIN_SEARCH_QUERY_LENGTH,
                     onRefresh = { onRefreshTab(tab) },

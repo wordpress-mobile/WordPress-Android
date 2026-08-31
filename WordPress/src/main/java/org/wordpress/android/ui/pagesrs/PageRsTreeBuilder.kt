@@ -10,6 +10,10 @@ internal const val MAX_INDENT_LEVEL = 3
  *  - When hierarchy is on, the pages identified by [pageOnFront] and [pageForPosts]
  *    (when set and present in [pages]) are prepended as Virtual rows and hidden from
  *    their normal sorted position.
+ *  - When [showSiteEditorHomepage] is true (block-based theme + Site Editor MVP), a single
+ *    SITE_EDITOR virtual row is prepended in place of the static HOMEPAGE row, and the
+ *    [pageOnFront] page (if any) is still hidden from the tree. This mirrors the legacy list,
+ *    where a block-theme homepage opens the Site Editor instead of the block editor.
  *  - When [applyHierarchy] is false, [pages] are wrapped as flat Real rows with
  *    indentLevel = 0 and no virtuals.
  */
@@ -17,7 +21,8 @@ internal fun buildRows(
     pages: List<PageRsUiModel>,
     applyHierarchy: Boolean,
     pageOnFront: Long,
-    pageForPosts: Long
+    pageForPosts: Long,
+    showSiteEditorHomepage: Boolean = false
 ): List<PageRsListItem> {
     if (!applyHierarchy) {
         return pages.map { PageRsListItem.Real(it) }
@@ -29,11 +34,29 @@ internal fun buildRows(
     val visible = pages.filterNot { it.remotePageId in hiddenIds }
     val tree = flattenToTree(visible)
     return buildList {
-        homepage?.let { add(PageRsListItem.Virtual(PageRsListItem.Virtual.Kind.HOMEPAGE, it)) }
+        if (showSiteEditorHomepage) {
+            add(siteEditorHomepageRow())
+        } else {
+            homepage?.let { add(PageRsListItem.Virtual(PageRsListItem.Virtual.Kind.HOMEPAGE, it)) }
+        }
         postsPage?.let { add(PageRsListItem.Virtual(PageRsListItem.Virtual.Kind.POSTS_PAGE, it)) }
         addAll(tree)
     }
 }
+
+/**
+ * The synthetic SITE_EDITOR virtual row. It has no real page, so its visible text is rendered from
+ * string resources in the composable; the sentinel id lets the tap handler recognize it.
+ */
+private fun siteEditorHomepageRow() = PageRsListItem.Virtual(
+    kind = PageRsListItem.Virtual.Kind.SITE_EDITOR,
+    page = PageRsUiModel(
+        remotePageId = SITE_EDITOR_PAGE_ID,
+        title = "",
+        excerpt = "",
+        date = ""
+    )
+)
 
 internal fun flattenToTree(pages: List<PageRsUiModel>): List<PageRsListItem.Real> {
     val byId = pages.associateBy { it.remotePageId }
