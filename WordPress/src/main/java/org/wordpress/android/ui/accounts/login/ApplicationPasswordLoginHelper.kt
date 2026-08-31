@@ -25,6 +25,8 @@ import org.wordpress.android.util.crashlogging.sendReportWithTag
 import rs.wordpress.api.kotlin.ApiDiscoveryResult
 import rs.wordpress.api.kotlin.WpLoginClient
 import uniffi.wp_api.DiscoveredAuthenticationMechanism
+import uniffi.wp_api.FetchAndParseApiRootFailure
+import uniffi.wp_api.WpErrorCode
 import uniffi.wp_api.applicationPasswordsUrl
 import java.net.URI
 import javax.inject.Inject
@@ -35,6 +37,11 @@ private const val SUCCESS_TAG = "success"
 private const val REASON_TAG = "reason"
 private const val SOURCE_TAG = "source"
 private const val ERROR_TAG = "error"
+
+// WordPress.com returns this error code from the REST root of a site whose Privacy setting is
+// Private (or Coming Soon). The gate sits in front of WordPress, so discovery never reaches the
+// API — the site's Application Password support is irrelevant to the failure.
+private const val PRIVATE_SITE_ERROR_CODE = "private_site"
 
 class ApplicationPasswordLoginHelper @Inject constructor(
     @param:Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
@@ -53,13 +60,35 @@ class ApplicationPasswordLoginHelper @Inject constructor(
 
     sealed class DiscoveryResult {
         data class Authorized(val authorizationUrl: String) : DiscoveryResult()
-        data class Failed(val userFacingMessage: String) : DiscoveryResult()
+
+        /**
+         * Discovery couldn't reach or read the site's REST API. [userFacingMessage] is the library's
+         * description of what went wrong; [reason] narrows it when we can recognise the cause, so the
+         * UI can explain it rather than guess.
+         */
+        data class Failed(
+            val userFacingMessage: String,
+            val reason: FailureReason = FailureReason.Unknown,
+        ) : DiscoveryResult()
 
         /**
          * The site is hosted on WordPress.com: API discovery reported OAuth2 as the authentication
          * mechanism, so it can't use Application Passwords and should log in via WordPress.com.
          */
         object WpComSite : DiscoveryResult()
+
+        /** A recognised cause for a [Failed] discovery. */
+        enum class FailureReason {
+            /** Nothing more specific than the library's message. */
+            Unknown,
+
+            /**
+             * The site's Privacy setting blocks anonymous requests, so discovery got a 403 instead of
+             * the REST root. Nothing is wrong with the site's Application Password support — it just
+             * has to be publicly reachable for the login flow to read its API.
+             */
+            PrivateSite,
+        }
     }
 
     @Suppress("TooGenericExceptionCaught")
@@ -104,15 +133,39 @@ class ApplicationPasswordLoginHelper @Inject constructor(
                 is ApiDiscoveryResult.FailureParseSiteUrl ->
                     handleAuthenticationDiscoveryError(
                         siteUrl,
-                        urlDiscoveryResult.userFacingErrorMessage(siteUrl).orEmpty()
+                        urlDiscoveryResult.userFacingErrorMessage(siteUrl).orEmpty(),
+                        urlDiscoveryResult.failureReason(),
                     )
             }
         }
 
-    private fun handleAuthenticationDiscoveryError(siteUrl: String, message: String): DiscoveryResult {
-        appLogWrapper.e(AppLog.T.API, "A_P: Error during API discovery for $siteUrl - $message")
+    /**
+     * Recognise causes worth naming to the user. A [FetchAndParseApiRootFailure.WpError] means we
+     * reached the site and it answered with a REST error envelope, so its `code` is a reliable
+     * signal — WordPress.com sends `private_site` from a site whose Privacy setting hides it.
+     */
+    private fun ApiDiscoveryResult.failureReason(): DiscoveryResult.FailureReason {
+        val wpError = (this as? ApiDiscoveryResult.FailureFetchAndParseApiRoot)
+            ?.fetchAndParseApiRootFailure as? FetchAndParseApiRootFailure.WpError
+            ?: return DiscoveryResult.FailureReason.Unknown
+        // `private_site` has no dedicated WpErrorCode, so the library surfaces it as a CustomException
+        // carrying the raw code string.
+        val rawCode = (wpError.errorCode as? WpErrorCode.CustomException)?.v1
+        return if (rawCode == PRIVATE_SITE_ERROR_CODE) {
+            DiscoveryResult.FailureReason.PrivateSite
+        } else {
+            DiscoveryResult.FailureReason.Unknown
+        }
+    }
+
+    private fun handleAuthenticationDiscoveryError(
+        siteUrl: String,
+        message: String,
+        reason: DiscoveryResult.FailureReason = DiscoveryResult.FailureReason.Unknown,
+    ): DiscoveryResult {
+        appLogWrapper.e(AppLog.T.API, "A_P: Error during API discovery for $siteUrl - $message ($reason)")
         AnalyticsTracker.track(Stat.BACKGROUND_REST_AUTODISCOVERY_FAILED)
-        return DiscoveryResult.Failed(message)
+        return DiscoveryResult.Failed(message, reason)
     }
 
     sealed class StoreCredentialsResult {
