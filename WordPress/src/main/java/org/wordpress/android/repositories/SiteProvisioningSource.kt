@@ -269,8 +269,8 @@ class SiteProvisioningSource @Inject constructor(
         escalated.remove(siteLocalId)
         // The heal confirmed the stored password works and replaced nothing, yet a 401 still prompted
         // it — so re-provisioning cannot be the fix. Stop honouring this site's 401s until an explicit
-        // retry. A run that never got that far (site unreachable, offline) is inconclusive, not futile.
-        if (wasHeal && result.authConfirmed && !result.credentialsChanged) {
+        // retry. Inconclusive runs (site unreachable, offline, no password applies) prove nothing.
+        if (wasHeal && result.evidence == HealEvidence.ConfirmedUnchanged) {
             appLogWrapper.w(
                 AppLog.T.MAIN,
                 "A_P: Heal for $siteLocalId changed no credentials - suppressing further 401 heals"
@@ -336,9 +336,8 @@ class SiteProvisioningSource @Inject constructor(
         jobs[siteLocalId]?.isActive != true && siteLocalId !in ready
 
     private suspend fun runPipeline(siteLocalId: Int): PipelineResult {
-        val (auth, credentialsChanged) = ensureAuth(siteLocalId)
-        return when (auth) {
-            SiteAuthState.Provisioned, SiteAuthState.NotApplicable -> coroutineScope {
+        return when (val stage = ensureAuth(siteLocalId)) {
+            is AuthStage.Proceed -> coroutineScope {
                 // Post-auth, the REST-capability chain and the XML-RPC recovery are independent — each
                 // reads the site fresh and writes only its own column — so run them in parallel.
                 // recoverRestUrlIfNeeded precedes detectCapabilities within its branch because the probe
@@ -351,21 +350,13 @@ class SiteProvisioningSource @Inject constructor(
                 }
                 val xmlRpc = async { recoverXmlRpcIfNeeded(siteLocalId) }
                 xmlRpc.await()
-                capabilities.await().copy(
-                    credentialsChanged = credentialsChanged,
-                    authConfirmed = true,
-                )
+                capabilities.await().copy(evidence = stage.evidence)
             }
             // The site itself couldn't be reached, so nothing downstream can run. This is the
             // connectivity banner's case, not the application-password card's — validation never got
             // far enough to say anything about the credentials.
-            SiteAuthState.SiteUnreachable ->
-                PipelineResult(SiteReadiness.Unreachable, latch = false, credentialsChanged = false)
-            else -> PipelineResult(
-                SiteReadiness.NeedsAuth(auth),
-                latch = false,
-                credentialsChanged = credentialsChanged,
-            )
+            AuthStage.SiteUnreachable -> PipelineResult(SiteReadiness.Unreachable, latch = false)
+            is AuthStage.Stop -> PipelineResult(SiteReadiness.NeedsAuth(stage.auth), latch = false)
         }
     }
 
@@ -378,19 +369,19 @@ class SiteProvisioningSource @Inject constructor(
     // Each return is a distinct auth outcome (missing site, valid, unreachable, transient, minted,
     // failed); collapsing to one return would thread a result through nested branches and read worse.
     @Suppress("ReturnCount")
-    private suspend fun ensureAuth(siteLocalId: Int): AuthOutcome {
+    private suspend fun ensureAuth(siteLocalId: Int): AuthStage {
         val site = siteStore.getSiteByLocalId(siteLocalId)
-            ?: return AuthOutcome(SiteAuthState.Unprovisionable(hadCredentials = false))
+            ?: return AuthStage.Stop(SiteAuthState.Unprovisionable(hadCredentials = false))
         // WP.com Simple sites are fully proxied and OAuth-bearer-authed — no application password
         // applies (the mint returns NotSupported). Capability detection works through the proxy, so
-        // treat them as ready instead of blocking detection behind a mint that can never run.
-        if (site.isWPComSimpleSite) return AuthOutcome(SiteAuthState.NotApplicable)
+        // treat them as ready instead of blocking detection behind a mint that can never run. No
+        // password is involved, so there is nothing for a heal to confirm.
+        if (site.isWPComSimpleSite) return AuthStage.Proceed(HealEvidence.Inconclusive)
         val hadCredentials = !applicationPasswordLoginHelper.siteHasBadCredentials(site)
         if (hadCredentials) {
             when (applicationPasswordValidator.validate(site)) {
-                // Credentials confirmed working, and untouched — nothing was re-minted.
                 ApplicationPasswordValidator.Outcome.Valid ->
-                    return AuthOutcome(SiteAuthState.Provisioned)
+                    return AuthStage.Proceed(HealEvidence.ConfirmedUnchanged)
                 ApplicationPasswordValidator.Outcome.NetworkUnavailable -> {
                     // The validator maps everything ambiguous — DNS, timeout, refused, 5xx — to this
                     // outcome so it never wipes credentials on a guess. That conflates two very
@@ -399,10 +390,10 @@ class SiteProvisioningSource @Inject constructor(
                     // what we couldn't reach, which is exactly the connectivity banner's case (#22944).
                     if (networkUtilsWrapper.isNetworkAvailable()) {
                         appLogWrapper.d(AppLog.T.MAIN, "A_P: Site unreachable during validation: ${site.url}")
-                        return AuthOutcome(SiteAuthState.SiteUnreachable)
+                        return AuthStage.SiteUnreachable
                     }
                     appLogWrapper.d(AppLog.T.MAIN, "A_P: Device offline during validation for ${site.url}")
-                    return AuthOutcome(SiteAuthState.Provisioning)
+                    return AuthStage.Stop(SiteAuthState.Provisioning)
                 }
                 ApplicationPasswordValidator.Outcome.Invalid -> {
                     appLogWrapper.d(AppLog.T.MAIN, "A_P: Stored creds invalid for ${site.url}, clearing")
@@ -419,13 +410,13 @@ class SiteProvisioningSource @Inject constructor(
             appLogWrapper.d(AppLog.T.MAIN, "A_P: Headless mint succeeded for ${site.url}")
             // A fresh mint replaced the credentials, so a 401 that prompted this run may genuinely be
             // healed by it — this is the one path that marks the heal as having done something.
-            return AuthOutcome(SiteAuthState.Provisioned, credentialsChanged = true)
+            return AuthStage.Proceed(HealEvidence.Replaced)
         }
         appLogWrapper.d(
             AppLog.T.MAIN,
             "A_P: Headless mint failed for ${site.url} (notSupported=${createResult.error?.notSupported})"
         )
-        return AuthOutcome(SiteAuthState.Unprovisionable(hadCredentials = hadCredentials))
+        return AuthStage.Stop(SiteAuthState.Unprovisionable(hadCredentials = hadCredentials))
     }
 
     /**
@@ -468,7 +459,7 @@ class SiteProvisioningSource @Inject constructor(
 
     /**
      * Stage 3 — probe the REST API for editor-capability support and persist it.
-     * Reached only once auth is [SiteAuthState.Provisioned] / [SiteAuthState.NotApplicable].
+     * Reached only once [ensureAuth] returned [AuthStage.Proceed].
      * Reads the site fresh: the mint has already persisted the credentials (single-writer, #22947),
      * so a probe failure here is a real transport problem, not a pending mint.
      */
@@ -492,46 +483,60 @@ class SiteProvisioningSource @Inject constructor(
     /**
      * A settled pipeline result plus whether it should latch the per-site dedup gate ([ready]). Only a
      * freshly live-probed [SiteReadiness.Ready] latches; a Ready served from stale cache does not, so it
-     * re-probes on the next run. [credentialsChanged] is true only when this run actually re-minted the
-     * application password, which is how a heal proves it did something; [authConfirmed] is true when
-     * the run got far enough to establish the credentials are usable, which is what makes an unchanged
-     * heal conclusively futile rather than merely inconclusive. Internal to the pipeline — consumers
-     * only ever see [readiness].
+     * re-probes on the next run. [evidence] is what the run established about the credentials, which is
+     * how [settleHealState] judges whether a heal accomplished anything. Internal to the pipeline —
+     * consumers only ever see [readiness].
      */
     private data class PipelineResult(
         val readiness: SiteReadiness,
         val latch: Boolean,
-        val credentialsChanged: Boolean = false,
-        val authConfirmed: Boolean = false,
+        val evidence: HealEvidence = HealEvidence.Inconclusive,
     )
 
-    /** What [ensureAuth] settled on, plus whether it replaced the stored credentials. */
-    private data class AuthOutcome(
-        val state: SiteAuthState,
-        val credentialsChanged: Boolean = false,
-    )
+    /**
+     * What [ensureAuth] settled on. Only [Stop] escapes the pipeline, as a
+     * [SiteReadiness.NeedsAuth] the application-password card renders.
+     */
+    private sealed interface AuthStage {
+        /** The credentials are usable — run the rest of the pipeline. */
+        data class Proceed(val evidence: HealEvidence) : AuthStage
+
+        /** The site couldn't be reached while the device was online, so validation says nothing about
+         *  the credentials. Surfaces as [SiteReadiness.Unreachable] for the connectivity banner. */
+        data object SiteUnreachable : AuthStage
+
+        /** Stopped at the auth stage; [auth] is what the card should show. */
+        data class Stop(val auth: SiteAuthState) : AuthStage
+    }
+
+    /**
+     * What a run established about the site's application password — the basis for deciding whether a
+     * 401-triggered heal did anything, and so whether repeating it could ever help.
+     */
+    private enum class HealEvidence {
+        /** Nothing was established: the site was unreachable, the device was offline, the mint failed,
+         *  or no application password applies to the site at all. */
+        Inconclusive,
+
+        /** The stored credentials were confirmed working and left untouched. A heal that ends here
+         *  cannot be the fix for the 401 that prompted it. */
+        ConfirmedUnchanged,
+
+        /** The credentials were replaced by a fresh mint, so the heal may genuinely have healed. */
+        Replaced,
+    }
 }
 
 /**
- * Whether a site's application password is usable. Owned by [SiteProvisioningSource];
- * rendered by the application-password card.
+ * Why a site's application password isn't usable yet. Owned by [SiteProvisioningSource] and rendered
+ * by the application-password card — these are the only two auth outcomes a consumer ever observes.
+ * Everything else the auth stage can settle on (usable credentials, an unreachable site) stays inside
+ * the pipeline as `AuthStage`, so a `when` over this type has no unreachable branches.
  */
 sealed interface SiteAuthState {
-    /** Credentials are usable (validated, or freshly minted). */
-    data object Provisioned : SiteAuthState
-
-    /** No application password applies — a WP.com Simple site, which is proxy-served and
-     *  OAuth-bearer-authed. Treated like [Provisioned]: capability detection runs via the proxy. */
-    data object NotApplicable : SiteAuthState
-
     /** Not usable yet, but not a terminal failure — a mint is implied / a transient
      *  validation error occurred. The card stays hidden; the next run retries. */
     data object Provisioning : SiteAuthState
-
-    /** The site couldn't be reached at all while the device was online, so validation says nothing
-     *  about the credentials. Mapped to [SiteReadiness.Unreachable] rather than wrapped in
-     *  [SiteReadiness.NeedsAuth]: it's the connectivity banner's case, not the card's. */
-    data object SiteUnreachable : SiteAuthState
 
     /** Terminal: the mint failed. [hadCredentials] distinguishes a re-authentication
      *  (creds went bad) from a first-time authentication prompt. */
@@ -549,7 +554,7 @@ sealed interface SiteReadiness {
     data object Probing : SiteReadiness
 
     /** Stopped at the auth stage — credentials aren't usable. Carries the
-     *  [SiteAuthState] so the card can pick re-auth vs. first-auth. */
+     *  [SiteAuthState] so the card can pick re-auth vs. first-auth vs. hidden. */
     data class NeedsAuth(val auth: SiteAuthState) : SiteReadiness
 
     /** Provisioned and editor capabilities are known (detected or cached). */

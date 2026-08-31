@@ -82,10 +82,6 @@ class ApplicationPasswordViewModelSlice @Inject constructor(
                     uiModelMutable.postValue(null)
                     appLogWrapper.d(AppLog.T.MAIN, "A_P: Provisioning in progress for ${site.url}")
                 }
-                SiteAuthState.Provisioned, SiteAuthState.NotApplicable ->
-                    Unit // never wrap in NeedsAuth — they proceed to detection
-                SiteAuthState.SiteUnreachable ->
-                    Unit // never wrap in NeedsAuth — surfaces as Unreachable for the connectivity banner
             }
             // Any terminal provisioned state — the credentials are usable, so the only card left to
             // show is the self-hosted XML-RPC fallback. Capability outcome (Ready/Unreachable) is the
