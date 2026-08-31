@@ -34,12 +34,16 @@ class WpServiceProvider @Inject constructor(
     private val accountStore: AccountStore,
     private val networkAvailabilityProvider: WpNetworkAvailabilityProvider,
 ) {
-    private val services = mutableMapOf<Int, WpService>()
+    private val services = mutableMapOf<Int, CachedService>()
     private var cache: WordPressApiCache? = null
 
     @Synchronized
     fun getService(site: SiteModel): WpService {
-        return services.getOrPut(site.id) { createService(site) }
+        val key = ServiceKey.from(site)
+        services[site.id]?.takeIf { it.key == key }?.let { return it.service }
+        return CachedService(key, createService(site))
+            .also { services[site.id] = it }
+            .service
     }
 
     /** Removes all cached services. */
@@ -49,8 +53,10 @@ class WpServiceProvider @Inject constructor(
     }
 
     private fun createService(site: SiteModel): WpService {
-        val useWpCom = site.useWpCom()
-        val delegate = createDelegate(site, useWpCom)
+        // Same transport rule as WpApiClientProvider.getWpApiClient, so the list and the
+        // edit-time fetch that follows it can't disagree about the transport.
+        val useWpCom = site.isUsingWpComRestApi
+        val delegate = createDelegate(site)
         val wpApiCache = getOrCreateCache()
         val siteInfo = if (useWpCom) {
             SiteInfo.WordPressCom(siteId = site.siteId.toULong())
@@ -65,16 +71,8 @@ class WpServiceProvider @Inject constructor(
         return WpService(siteInfo, delegate, wpApiCache.cache)
     }
 
-    /**
-     * Whether the site is served over the WP.com REST API with an OAuth bearer token rather than
-     * directly with an application password. Deliberately the same rule as
-     * [org.wordpress.android.fluxc.network.rest.wpapi.rs.WpApiClientProvider.getWpApiClient] so the
-     * list and the edit-time fetch that follows it can't disagree about the transport.
-     */
-    private fun SiteModel.useWpCom(): Boolean = isWPCom || isUsingWpComRestApi
-
-    private fun createDelegate(site: SiteModel, useWpCom: Boolean): WpApiClientDelegate {
-        val authProvider = if (useWpCom) {
+    private fun createDelegate(site: SiteModel): WpApiClientDelegate {
+        val authProvider = if (site.isUsingWpComRestApi) {
             createWpComAuthProvider(accountStore)
         } else {
             val username = site.apiRestUsernamePlain
@@ -92,12 +90,26 @@ class WpServiceProvider @Inject constructor(
                 networkAvailabilityProvider = networkAvailabilityProvider
             ),
             middlewarePipeline = WpApiMiddlewarePipeline(emptyList()),
-            appNotifier = object : WpAppNotifier {
-                override suspend fun requestedWithInvalidAuthentication(requestUrl: String) {
-                    wpAppNotifierHandler.notifyRequestedWithInvalidAuthentication(site)
-                }
-            }
+            appNotifier = createAppNotifier(site)
         )
+    }
+
+    /**
+     * [WpAppNotifierHandler] listeners respond by launching application-password
+     * reauthentication, which can only fix a Basic-auth failure. A 401 on the WP.com bearer
+     * transport means an expired or revoked OAuth token — the rs screens surface that error
+     * themselves — so bearer-authenticated services don't report to the handler at all.
+     */
+    private fun createAppNotifier(site: SiteModel): WpAppNotifier = if (site.isUsingWpComRestApi) {
+        object : WpAppNotifier {
+            override suspend fun requestedWithInvalidAuthentication(requestUrl: String) = Unit
+        }
+    } else {
+        object : WpAppNotifier {
+            override suspend fun requestedWithInvalidAuthentication(requestUrl: String) {
+                wpAppNotifierHandler.notifyRequestedWithInvalidAuthentication(site)
+            }
+        }
     }
 
     @Synchronized
@@ -111,6 +123,32 @@ class WpServiceProvider @Inject constructor(
             newCache.cache.startListeningForUpdates(DatabaseChangeNotifier)
             cache = newCache
             newCache
+        }
+    }
+
+    private class CachedService(val key: ServiceKey, val service: WpService)
+
+    /**
+     * The inputs a cached [WpService] was built from. An entry is only reused while these still
+     * match the site, so a service built with a revoked application password (reauthentication
+     * stores new credentials) or on the wrong transport (a site refresh can rewrite
+     * [SiteModel.getOrigin]) doesn't outlive the state it was built from. The WP.com bearer token
+     * is read per request (see [createWpComAuthProvider]) so it doesn't participate.
+     */
+    private data class ServiceKey(
+        val useWpCom: Boolean,
+        val username: String?,
+        val password: String?,
+    ) {
+        companion object {
+            fun from(site: SiteModel): ServiceKey {
+                val useWpCom = site.isUsingWpComRestApi
+                return ServiceKey(
+                    useWpCom = useWpCom,
+                    username = if (useWpCom) null else site.apiRestUsernamePlain,
+                    password = if (useWpCom) null else site.apiRestPasswordPlain,
+                )
+            }
         }
     }
 }

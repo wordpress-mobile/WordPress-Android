@@ -25,8 +25,6 @@ class WpAppNotifierHandlerTest {
         testSite = SiteModel().apply {
             url = testSiteUrl
             siteId = 123L
-            apiRestUsernamePlain = "user"
-            apiRestPasswordPlain = "password"
         }
     }
 
@@ -61,8 +59,6 @@ class WpAppNotifierHandlerTest {
         val customSite = SiteModel().apply {
             url = customSiteUrl
             siteId = 456L
-            apiRestUsernamePlain = "user"
-            apiRestPasswordPlain = "password"
         }
         wpAppNotifierHandler.addListener(mockListener1)
 
@@ -71,24 +67,6 @@ class WpAppNotifierHandlerTest {
 
         // Then
         verify(mockListener1, times(1)).onRequestedWithInvalidAuthentication(customSiteUrl)
-    }
-
-    @Test
-    fun `notifyRequestedWithInvalidAuthentication is skipped for a site with no app password`() {
-        // Given - a site authenticated with a WP.com bearer token, which listeners answer by
-        // launching application-password reauthentication that can't apply here
-        val bearerSite = SiteModel().apply {
-            url = testSiteUrl
-            siteId = 789L
-            setIsWPCom(true)
-        }
-        wpAppNotifierHandler.addListener(mockListener1)
-
-        // When
-        wpAppNotifierHandler.notifyRequestedWithInvalidAuthentication(bearerSite)
-
-        // Then
-        verifyNoInteractions(mockListener1)
     }
 
     @Test
