@@ -83,7 +83,7 @@ class ApplicationPasswordViewModelSlice @Inject constructor(
                 when (applicationPasswordValidator.validate(storedSite)) {
                     ApplicationPasswordValidator.Outcome.Valid -> {
                         // Heal in the background so the card hides immediately on a slow network.
-                        scope.launch { healApiRestUrlIfMissing(storedSite) }
+                        scope.launch { healApiRestUrlIfNeeded(storedSite) }
                         handleValidAuth(storedSite)
                         return@launch
                     }
@@ -115,7 +115,7 @@ class ApplicationPasswordViewModelSlice @Inject constructor(
                 // The mint goes through the Jetpack tunnel and never runs discovery — without this
                 // step, freshly minted Atomic sites end up with working creds but a NULL
                 // wpApiRestUrl in the local DB. Run in the background so the card hides immediately.
-                scope.launch { healApiRestUrlIfMissing(storedSite) }
+                scope.launch { healApiRestUrlIfNeeded(storedSite) }
                 handleValidAuth(storedSite)
                 return@launch
             }
@@ -135,13 +135,22 @@ class ApplicationPasswordViewModelSlice @Inject constructor(
         }
     }
 
-    private suspend fun healApiRestUrlIfMissing(site: SiteModel) {
-        if (!site.wpApiRestUrl.isNullOrEmpty()) return
+    private suspend fun healApiRestUrlIfNeeded(site: SiteModel) {
+        // Heal both a missing value and a wrong-but-present WP.com proxy URL. Migrated Atomic /
+        // Jetpack-WPCom-REST sites carry the proxy-form wpApiRestUrl
+        // (…/wp/v2/sites/{id}), which breaks the RS Posts/Pages lists with a doubled /wp/v2/ 404.
+        // Rediscovering against the direct host replaces it with the correct wp-json root.
+        val current = site.wpApiRestUrl
+        if (!current.isNullOrEmpty() && !isWpComProxyApiRestUrl(current)) return
         siteApiRestUrlRecoverer.discoverApiRootUrl(site.url)?.let { apiRootUrl ->
             site.wpApiRestUrl = apiRootUrl
             siteApiRestUrlRecoverer.persistApiRootUrl(site.id, apiRootUrl)
         }
     }
+
+    // The WP.com REST proxy root looks like https://public-api.wordpress.com/wp/v2/sites/{id}; a
+    // genuine self-hosted wp-json root never contains the /wp/v2/ route segment.
+    private fun isWpComProxyApiRestUrl(apiRestUrl: String): Boolean = apiRestUrl.contains("/wp/v2/")
 
     private fun handleValidAuth(site: SiteModel) {
         // Only true self-hosted sites need the XML-RPC fallback path — Atomic and Jetpack-WPCom-REST
@@ -282,7 +291,7 @@ class ApplicationPasswordViewModelSlice @Inject constructor(
             }
             if (!result.isError) {
                 site.xmlRpcUrl = xmlRpcEndpoint
-                // Persist only the rediscovered column — mirrors healApiRestUrlIfMissing. A full-row
+                // Persist only the rediscovered column — mirrors healApiRestUrlIfNeeded. A full-row
                 // updateSite would rewrite ~80 columns from this in-memory model for a one-field change
                 // (risking clobbering other out-of-band values), so write just xmlRpcUrl.
                 siteStore.persistXmlRpcUrl(site.id, xmlRpcEndpoint)

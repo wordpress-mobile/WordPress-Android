@@ -54,14 +54,30 @@ class WpServiceProvider @Inject constructor(
         val siteInfo = if (site.isWPCom) {
             SiteInfo.WordPressCom(siteId = site.siteId.toULong())
         } else {
-            val apiRoot = site.wpApiRestUrl?.takeIf { it.isNotEmpty() }
-                ?: "${site.url}/wp-json"
             SiteInfo.SelfHosted(
                 siteUrl = ParsedUrl.parse(site.url),
-                apiRoot = ParsedUrl.parse(apiRoot),
+                apiRoot = ParsedUrl.parse(resolveApiRoot(site)),
             )
         }
         return WpService(siteInfo, delegate, wpApiCache.cache)
+    }
+
+    /**
+     * Resolves the REST API root for a [SiteInfo.SelfHosted] service.
+     *
+     * Atomic / Jetpack-WPCom-REST app-password sites store the WordPress.com REST *proxy* URL
+     * (`https://public-api.wordpress.com/wp/v2/sites/{id}`) in [SiteModel.getWpApiRestUrl] — the
+     * same value simple `.wordpress.com` sites get. That URL already contains `/wp/v2/`, so letting
+     * wordpress-rs append the standard `/wp/v2/...` route onto it produces a doubled `/wp/v2/` and a
+     * 404 (`rest_no_route`). These sites reach their `wp-admin` directly, so derive the root from the
+     * site host instead of trusting the stored proxy URL. Genuine self-hosted sites keep their
+     * discovered [SiteModel.getWpApiRestUrl].
+     */
+    private fun resolveApiRoot(site: SiteModel): String {
+        if (site.isUsingWpComRestApi) {
+            return "${site.url}/wp-json"
+        }
+        return site.wpApiRestUrl?.takeIf { it.isNotEmpty() } ?: "${site.url}/wp-json"
     }
 
     private fun createDelegate(site: SiteModel): WpApiClientDelegate {

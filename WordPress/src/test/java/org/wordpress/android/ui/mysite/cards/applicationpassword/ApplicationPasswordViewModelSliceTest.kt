@@ -232,6 +232,55 @@ class ApplicationPasswordViewModelSliceTest : BaseUnitTest() {
     }
 
     @Test
+    fun `given valid stored creds with proxy-form apiRestUrl, then heal rediscovers the api root`() = runTest {
+        whenever(applicationPasswordLoginHelper.siteHasBadCredentials(any())).thenReturn(false)
+        whenever(siteStore.sites).thenReturn(
+            listOf(
+                SiteModel().apply {
+                    id = siteTest.id
+                    url = TEST_URL
+                    apiRestUsernamePlain = "user"
+                    apiRestPasswordPlain = "password"
+                    xmlRpcUrl = siteTest.xmlRpcUrl
+                    // Migrated Atomic sites carry the WP.com REST proxy URL, which breaks the RS lists.
+                    wpApiRestUrl = "https://public-api.wordpress.com/wp/v2/sites/256930037"
+                }
+            )
+        )
+        whenever(applicationPasswordValidator.validate(any()))
+            .thenReturn(ApplicationPasswordValidator.Outcome.Valid)
+        whenever(siteApiRestUrlRecoverer.discoverApiRootUrl(any())).thenReturn("$TEST_URL/wp-json")
+
+        applicationPasswordViewModelSlice.buildCard(siteTest)
+
+        verify(siteApiRestUrlRecoverer).discoverApiRootUrl(TEST_URL)
+        verify(siteApiRestUrlRecoverer).persistApiRootUrl(TEST_SITE_ID, "$TEST_URL/wp-json")
+    }
+
+    @Test
+    fun `given valid stored creds with direct-host apiRestUrl, then heal skips rediscovery`() = runTest {
+        whenever(applicationPasswordLoginHelper.siteHasBadCredentials(any())).thenReturn(false)
+        whenever(siteStore.sites).thenReturn(
+            listOf(
+                SiteModel().apply {
+                    id = siteTest.id
+                    url = TEST_URL
+                    apiRestUsernamePlain = "user"
+                    apiRestPasswordPlain = "password"
+                    xmlRpcUrl = siteTest.xmlRpcUrl
+                    wpApiRestUrl = "$TEST_URL/wp-json/"
+                }
+            )
+        )
+        whenever(applicationPasswordValidator.validate(any()))
+            .thenReturn(ApplicationPasswordValidator.Outcome.Valid)
+
+        applicationPasswordViewModelSlice.buildCard(siteTest)
+
+        verify(siteApiRestUrlRecoverer, never()).discoverApiRootUrl(any())
+    }
+
+    @Test
     fun `given headless mint returns NotSupported, then fall back to discovery`() = runTest {
         stubMintFailure(notSupported = true)
         whenever(applicationPasswordLoginHelper.getAuthorizationUrlComplete(eq(TEST_URL)))
