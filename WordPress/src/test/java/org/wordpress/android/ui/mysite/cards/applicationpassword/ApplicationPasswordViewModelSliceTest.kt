@@ -35,6 +35,7 @@ import org.wordpress.android.ui.accounts.login.ApplicationPasswordLoginHelper
 import org.wordpress.android.ui.accounts.login.CredentialsChangedNotifier
 import org.wordpress.android.ui.accounts.login.SiteApiRestUrlRecoverer
 import org.wordpress.android.ui.mysite.MySiteCardAndItem
+import org.wordpress.android.ui.postsrs.data.WpServiceProvider
 import kotlin.test.assertNotNull
 
 private const val TEST_URL = "https://www.test.com"
@@ -74,6 +75,9 @@ class ApplicationPasswordViewModelSliceTest : BaseUnitTest() {
     @Mock
     lateinit var credentialsChangedNotifier: CredentialsChangedNotifier
 
+    @Mock
+    lateinit var wpServiceProvider: WpServiceProvider
+
     private lateinit var siteTest: SiteModel
 
     private var applicationPasswordCard: MySiteCardAndItem? = null
@@ -94,6 +98,7 @@ class ApplicationPasswordViewModelSliceTest : BaseUnitTest() {
             siteXMLRPCClient,
             siteApiRestUrlRecoverer,
             credentialsChangedNotifier,
+            wpServiceProvider,
             testDispatcher()
         ).apply {
             initialize(testScope())
@@ -255,6 +260,8 @@ class ApplicationPasswordViewModelSliceTest : BaseUnitTest() {
 
         verify(siteApiRestUrlRecoverer).discoverApiRootUrl(TEST_URL)
         verify(siteApiRestUrlRecoverer).persistApiRootUrl(TEST_SITE_ID, "$TEST_URL/wp-json")
+        // The cached RS service was built with the stale proxy apiRoot, so it must be dropped.
+        verify(wpServiceProvider).clearService(TEST_SITE_ID)
     }
 
     @Test
@@ -278,6 +285,7 @@ class ApplicationPasswordViewModelSliceTest : BaseUnitTest() {
         applicationPasswordViewModelSlice.buildCard(siteTest)
 
         verify(siteApiRestUrlRecoverer, never()).discoverApiRootUrl(any())
+        verify(wpServiceProvider, never()).clearService(any())
     }
 
     @Test

@@ -48,6 +48,16 @@ class WpServiceProvider @Inject constructor(
         services.clear()
     }
 
+    /**
+     * Drops the cached service for a single site so the next [getService] rebuilds it. Call this
+     * after the site's stored [SiteModel.getWpApiRestUrl] changes (e.g. a background heal), otherwise
+     * a service built with the stale `apiRoot` keeps serving requests until the process restarts.
+     */
+    @Synchronized
+    fun clearService(siteId: Int) {
+        services.remove(siteId)
+    }
+
     private fun createService(site: SiteModel): WpService {
         val delegate = createDelegate(site)
         val wpApiCache = getOrCreateCache()
@@ -72,13 +82,22 @@ class WpServiceProvider @Inject constructor(
      * 404 (`rest_no_route`). These sites reach their `wp-admin` directly, so derive the root from the
      * site host instead of trusting the stored proxy URL. Genuine self-hosted sites keep their
      * discovered [SiteModel.getWpApiRestUrl].
+     *
+     * The proxy URL is detected two ways to stay robust: the [SiteModel.isUsingWpComRestApi] flag,
+     * and — for migrated sites that carry the proxy URL without being flagged — the `/wp/v2/` route
+     * segment in the stored value itself. Either match falls back to the direct host root.
      */
     private fun resolveApiRoot(site: SiteModel): String {
-        if (site.isUsingWpComRestApi) {
+        val stored = site.wpApiRestUrl?.takeIf { it.isNotEmpty() }
+        if (site.isUsingWpComRestApi || stored == null || isWpComProxyApiRestUrl(stored)) {
             return "${site.url}/wp-json"
         }
-        return site.wpApiRestUrl?.takeIf { it.isNotEmpty() } ?: "${site.url}/wp-json"
+        return stored
     }
+
+    // The WP.com REST proxy root looks like https://public-api.wordpress.com/wp/v2/sites/{id}; a
+    // genuine self-hosted wp-json root never contains the /wp/v2/ route segment.
+    private fun isWpComProxyApiRestUrl(apiRestUrl: String): Boolean = apiRestUrl.contains("/wp/v2/")
 
     private fun createDelegate(site: SiteModel): WpApiClientDelegate {
         val authProvider = if (site.isWPCom) {

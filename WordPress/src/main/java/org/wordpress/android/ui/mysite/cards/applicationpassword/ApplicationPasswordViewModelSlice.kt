@@ -22,6 +22,7 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickLinksItem.QuickLinkItem
 import org.wordpress.android.ui.mysite.SiteNavigationAction
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
+import org.wordpress.android.ui.postsrs.data.WpServiceProvider
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.AppLog
@@ -40,6 +41,7 @@ class ApplicationPasswordViewModelSlice @Inject constructor(
     private val siteXMLRPCClient: SiteXMLRPCClient,
     private val siteApiRestUrlRecoverer: SiteApiRestUrlRecoverer,
     private val credentialsChangedNotifier: CredentialsChangedNotifier,
+    private val wpServiceProvider: WpServiceProvider,
     @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher,
 ) {
     lateinit var scope: CoroutineScope
@@ -145,6 +147,9 @@ class ApplicationPasswordViewModelSlice @Inject constructor(
         siteApiRestUrlRecoverer.discoverApiRootUrl(site.url)?.let { apiRootUrl ->
             site.wpApiRestUrl = apiRootUrl
             siteApiRestUrlRecoverer.persistApiRootUrl(site.id, apiRootUrl)
+            // Drop the cached RS service — it was built with the stale (proxy/missing) apiRoot and
+            // would keep producing the doubled /wp/v2/ 404 until process restart otherwise.
+            wpServiceProvider.clearService(site.id)
         }
     }
 
