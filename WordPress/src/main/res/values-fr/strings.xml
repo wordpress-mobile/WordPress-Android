@@ -89,7 +89,6 @@ Language: fr
     <string name="gutenberg_kit_announcement_learn_more">En savoir plus</string>
     <string name="gutenberg_kit_announcement_maybe_later">Peut-être plus tard</string>
     <string name="gutenberg_kit_announcement_activate">Activer</string>
-    <string name="gutenberg_kit_announcement_body_deadline">D’ici la fin du mois de juin 2026, il deviendra l’éditeur par défaut pour tous. %1$s</string>
     <string name="gutenberg_kit_announcement_body_intro">L’éditeur de blocs de nouvelle génération est prêt et offre de nouvelles fonctionnalités.</string>
     <string name="gutenberg_kit_announcement_title">Un meilleur éditeur de blocs arrive</string>
     <string name="site_settings_gutenberg_kit_enabled_unsupported">Commencez par passer à l’éditeur de blocs pour essayer le nouvel éditeur.</string>
@@ -922,7 +921,6 @@ Language: fr
     <string name="site_creation_search_domain_example_title">NomDeVotreSite.com</string>
     <string name="site_creation_domain_search_input_hint">Effectuer une recherche à l’aide de mots-clés</string>
     <string name="site_creation_domain_header_subtitle">Recherchez un domaine court et facile à retenir pour aider les internautes à trouver et visiter votre site.</string>
-    <string name="site_creation_domain_cost_sale">la première année</string>
     <string name="site_creation_error_cart_subtitle">Votre site Web a été créé, mais nous avons rencontré un problème lors de la préparation de votre domaine personnalisé pour la validation de la commande. Réessayez ou contactez l’assistance pour obtenir de l’aide.</string>
     <string name="new_site_creation_preview_caption_paid">Un délai de 30 minutes peut être nécessaire pour que votre domaine personnalisé soit opérationnel.</string>
     <string name="new_site_creation_preview_subtitle_paid">Nous vous avons envoyé le reçu par e-mail. %s</string>
@@ -986,7 +984,6 @@ Language: fr
     <string name="blaze_promotional_text">Améliorer le trafic sur votre site avec Blaze</string>
     <string name="blaze_activity_title">Blaze</string>
     <string name="site_creation_domain_tag_unavailable">Ce nom de domaine est déjà enregistré.</string>
-    <string name="site_creation_domain_tag_sale">Promo</string>
     <string name="site_creation_domain_tag_recommended">Recommandé</string>
     <string name="site_creation_domain_tag_best_alternative">Meilleure alternative</string>
     <string name="support_faq_caption">Notre FAQ comporte les réponses aux questions fréquentes que vous vous posez peut-être.</string>

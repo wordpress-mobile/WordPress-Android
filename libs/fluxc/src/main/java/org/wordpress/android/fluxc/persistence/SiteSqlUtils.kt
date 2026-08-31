@@ -415,14 +415,21 @@ class SiteSqlUtils
         return updateXmlRpcUrl(localId, xmlRpcUrl)
     }
 
-    private fun wpApiSiteLocalIdByUrl(siteUrl: String): Int? =
+    /**
+     * The stored ORIGIN_WPAPI row for [siteUrl], for fetches that build a fresh model with no local id and
+     * need the identity and the columns the response can't carry. Keyed by URL for the same reason as
+     * [updateWpApiRestUrlForWPAPISite].
+     */
+    fun getWPAPISiteByUrl(siteUrl: String): SiteModel? =
         WellSql.select(SiteModel::class.java)
                 .where().beginGroup()
                 .equals(SiteModelTable.URL, siteUrl)
                 .equals(SiteModelTable.ORIGIN, SiteModel.ORIGIN_WPAPI)
                 .endGroup().endWhere()
                 .asModel
-                .firstOrNull()?.id
+                .firstOrNull()
+
+    private fun wpApiSiteLocalIdByUrl(siteUrl: String): Int? = getWPAPISiteByUrl(siteUrl)?.id
 
     val wPComSites: SelectQuery<SiteModel>
         get() = WellSql.select(SiteModel::class.java)

@@ -9,6 +9,7 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.any
+import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.argWhere
 import org.mockito.kotlin.inOrder
 import org.mockito.kotlin.mock
@@ -143,7 +144,9 @@ class SiteStoreTest {
 
         assertThat(onSiteChanged.rowsAffected).isEqualTo(0)
         assertThat(onSiteChanged.error).isEqualTo(SiteError(GENERIC_ERROR, null))
-        verifyNoInteractions(siteSqlUtils)
+        // fetchSite reads the stored row to decide which client refreshes it, but an errored
+        // fetch must write nothing.
+        verify(siteSqlUtils, never()).insertOrUpdateSite(any())
     }
 
     private suspend fun assertSiteFetched(
@@ -494,7 +497,7 @@ class SiteStoreTest {
                 apiRestUsernamePlain = "appUser"
                 apiRestPasswordPlain = "appPass"
             }
-            whenever(siteWPAPIClient.fetchWPAPISite(any<SiteStore.FetchWPAPISitePayload>()))
+            whenever(siteWPAPIClient.fetchWPAPISite(any<SiteStore.FetchWPAPISitePayload>(), anyOrNull()))
                 .thenReturn(fetchedSite)
             whenever(siteSqlUtils.insertOrUpdateSite(fetchedSite))
                 .thenReturn(1)
@@ -527,19 +530,20 @@ class SiteStoreTest {
         }
 
     @Test
-    fun `fetchSitesXmlRpc AP fallback persists verified xmlrpc endpoint on WPAPI site`() =
+    fun `fetchSitesXmlRpc AP fallback stores the site via WPAPI without persisting an xmlrpc endpoint`() =
         test {
             org.mockito.Mockito.mockStatic(
                 org.wordpress.android.util.AppLog::class.java
             ).use {
-                // Given: XML-RPC discovery already verified this endpoint (that's the only reason this action
-                // is dispatched), but the authenticated XML-RPC fetch fails transiently (e.g. a 429 rate-limit).
-                val xmlRpcEndpoint = "https://example.com/xmlrpc.php"
+                // Given: the XML-RPC fetch against the conventional (unverified) xmlrpc.php endpoint fails.
+                // Since payload.url is only a guess, the fallback must NOT persist it — the My Site card's
+                // rediscovery verifies and persists a real endpoint later, and it only runs while xmlRpcUrl
+                // is empty. This holds for any error, transient (429) or definitive.
                 val payload =
                     SiteStore.RefreshSitesXMLRPCApplicationPasswordCredentialsPayload(
                         username = "appUser",
                         password = "appPass",
-                        url = xmlRpcEndpoint,
+                        url = "https://example.com/xmlrpc.php",
                         apiRootUrl = "https://example.com/wp-json/",
                     )
                 val erroredSites = SitesModel().apply { error = BaseNetworkError(PARSE_ERROR) }
@@ -556,20 +560,16 @@ class SiteStoreTest {
                     origin = SiteModel.ORIGIN_WPAPI
                     url = "https://example.com"
                 }
-                whenever(siteWPAPIClient.fetchWPAPISite(any<SiteStore.FetchWPAPISitePayload>()))
+                whenever(siteWPAPIClient.fetchWPAPISite(any<SiteStore.FetchWPAPISitePayload>(), anyOrNull()))
                     .thenReturn(fetchedSite)
                 whenever(siteSqlUtils.insertOrUpdateSite(fetchedSite)).thenReturn(1)
 
                 // When
                 val result = siteStore.fetchSitesXmlRpcFromApplicationPassword(payload)
 
-                // Then: the WPAPI fallback stored the site, and the verified xmlrpc endpoint is recorded so the
-                // "XML-RPC Disabled" card isn't shown for a site that actually supports XML-RPC.
+                // Then: the site is stored via WPAPI, but no xmlrpc endpoint is recorded (rediscovery heals it).
                 assertThat(result.isError).isFalse()
-                verify(siteSqlUtils).updateXmlRpcUrlForWPAPISite(
-                    "https://example.com",
-                    xmlRpcEndpoint
-                )
+                verify(siteSqlUtils, never()).updateXmlRpcUrlForWPAPISite(any(), any())
             }
         }
 

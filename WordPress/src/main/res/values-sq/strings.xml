@@ -841,7 +841,6 @@ Language: sq_AL
     <string name="site_creation_search_domain_example_title">EmriiSajtitTuaj.com</string>
     <string name="site_creation_domain_search_input_hint">Kërkoni me fjalëkyçe</string>
     <string name="site_creation_domain_header_subtitle">Kërkoni për një përkatësi të shkurtër dhe që mund të mbahet mend, për t’i ndihmuar njerëzit të gjejnë dhe vizitojnë sajtin tuaj.</string>
-    <string name="site_creation_domain_cost_sale">për vitin e parë</string>
     <string name="site_creation_error_cart_subtitle">Sajti juaj është krijuar me sukses, por hasëm një problem, teksa përgatisnim përkatësinë tuaj vetjake për blerje. Ju lutemi, riprovoni, ose lidhuni me asistencën për ndihmë.</string>
     <string name="new_site_creation_preview_caption_paid">Mund të duhen deri në 30 minuta që përkatësia juaj vetjake të fillojë të funksionojë.</string>
     <string name="new_site_creation_preview_subtitle_paid">Ju dërguam faturën tuaj me email. %s</string>
@@ -904,7 +903,6 @@ Language: sq_AL
     <string name="blaze_promotional_subtitle_1">Promovoni çfarëdo postimi ose faqeje, brenda pak minutash, për vetëm pak dollarë në ditë.</string>
     <string name="blaze_promotional_text">Shpini më tepër trafik te sajti juaj, përmes Blaze-it</string>
     <string name="site_creation_domain_tag_unavailable">Kjo përkatësi është e regjistruar tashmë</string>
-    <string name="site_creation_domain_tag_sale">Ulje çmimesh</string>
     <string name="site_creation_domain_tag_recommended">E rekomanduar</string>
     <string name="site_creation_domain_tag_best_alternative">Alternativa Më e Mirë</string>
     <string name="support_faq_caption">Për përgjigje pyetjesh të rëndomta që mund të keni, shihni PBR-të tona.</string>

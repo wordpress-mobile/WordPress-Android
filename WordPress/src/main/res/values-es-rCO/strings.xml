@@ -93,7 +93,6 @@ Language: es_CO
     <string name="gutenberg_kit_announcement_learn_more">Más información</string>
     <string name="gutenberg_kit_announcement_maybe_later">Quizás más tarde</string>
     <string name="gutenberg_kit_announcement_activate">Activar</string>
-    <string name="gutenberg_kit_announcement_body_deadline">A finales de junio de 2026, se convertirá en el editor predeterminado para todos. %1$s</string>
     <string name="gutenberg_kit_announcement_body_intro">El editor de bloques de última generación ya está listo y trae consigo más funciones nuevas.</string>
     <string name="gutenberg_kit_announcement_title">Pronto tendremos un editor de bloques mejorado</string>
     <string name="site_settings_gutenberg_kit_enabled_unsupported">Cambia primero al editor de bloques para probar el nuevo editor.</string>
@@ -948,7 +947,6 @@ Language: es_CO
     <string name="site_creation_search_domain_example_title">Elnombredetuweb.com</string>
     <string name="site_creation_domain_search_input_hint">Buscar con palabras clave</string>
     <string name="site_creation_domain_header_subtitle">Busca una dominio corto y memorable para ayudar a la gente a encontrar y visitar tu sitio.</string>
-    <string name="site_creation_domain_cost_sale">el primer año</string>
     <string name="site_creation_error_cart_subtitle">Tu web ha sido creada con éxito, pero hemos encontrado un problema al preparar tu dominio personalizado al finalizar la compra. Por favor, inténtalo otra vez o contacta con nuestro soporte para obtener ayuda.</string>
     <string name="new_site_creation_preview_caption_paid">Puede tardar hasta 30 minutos en que tu dominio personalizado empiece a funcionar.</string>
     <string name="new_site_creation_preview_subtitle_paid">Te hemos mandado tu recibo por correo electrónico. %s</string>
@@ -1012,7 +1010,6 @@ Language: es_CO
     <string name="blaze_promotional_text">Genera más tráfico hacia tu sitio con Blaze</string>
     <string name="blaze_activity_title">Blaze</string>
     <string name="site_creation_domain_tag_unavailable">Este dominio ya está registrado</string>
-    <string name="site_creation_domain_tag_sale">Oferta</string>
     <string name="site_creation_domain_tag_recommended">Recomendado</string>
     <string name="site_creation_domain_tag_best_alternative">Mejor alternativa</string>
     <string name="support_faq_caption">Con nuestras preguntas frecuentes podrás resolver algunas de tus dudas.</string>

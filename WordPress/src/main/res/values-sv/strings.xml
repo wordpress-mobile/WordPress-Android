@@ -93,7 +93,6 @@ Language: sv_SE
     <string name="gutenberg_kit_announcement_learn_more">Lär dig mer</string>
     <string name="gutenberg_kit_announcement_maybe_later">Kanske senare</string>
     <string name="gutenberg_kit_announcement_activate">Aktivera</string>
-    <string name="gutenberg_kit_announcement_body_deadline">I slutet av juni 2026 kommer det att bli standardredigeraren för alla. %1$s</string>
     <string name="gutenberg_kit_announcement_body_intro">Nästa generations blockredigerare är redo och ger fler nya funktioner.</string>
     <string name="gutenberg_kit_announcement_title">En bättre blockredigerare är på väg</string>
     <string name="site_settings_gutenberg_kit_enabled_unsupported">Byt till blockredigeraren först för att testa den nya redigeraren.</string>
@@ -948,7 +947,6 @@ Language: sv_SE
     <string name="site_creation_search_domain_example_title">YourSiteName.com</string>
     <string name="site_creation_domain_search_input_hint">Sök med nyckelord</string>
     <string name="site_creation_domain_header_subtitle">Leta efter en kort domän som är lätt att komma ihåg för att hjälpa människor hitta och besöka din webbplats.</string>
-    <string name="site_creation_domain_cost_sale">för första året</string>
     <string name="site_creation_error_cart_subtitle">Din webbplats har skapats, men vi stötte på ett problem när vi skulle förbereda din anpassade domän för betalning. Försök igen eller kontakta supporten för hjälp.</string>
     <string name="new_site_creation_preview_caption_paid">Det kan dröja upp till 30 minuter innan din anpassade domän börjar fungera.</string>
     <string name="new_site_creation_preview_subtitle_paid">Vi har skickat ditt kvitto via e-post. %s</string>
@@ -1012,7 +1010,6 @@ Language: sv_SE
     <string name="blaze_promotional_text">Få mer trafik till din webbplats med Blaze</string>
     <string name="blaze_activity_title">Blaze</string>
     <string name="site_creation_domain_tag_unavailable">Denna domän är redan registrerad</string>
-    <string name="site_creation_domain_tag_sale">Rea</string>
     <string name="site_creation_domain_tag_recommended">Rekommenderat</string>
     <string name="site_creation_domain_tag_best_alternative">Bästa alternativ</string>
     <string name="support_faq_caption">Se våra vanliga frågor för svar på vanliga frågor du kan ha.</string>

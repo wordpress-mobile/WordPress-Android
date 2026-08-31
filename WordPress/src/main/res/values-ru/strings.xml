@@ -93,7 +93,6 @@ Language: ru
     <string name="gutenberg_kit_announcement_learn_more">Узнать больше</string>
     <string name="gutenberg_kit_announcement_maybe_later">Возможно позже</string>
     <string name="gutenberg_kit_announcement_activate">Активировать</string>
-    <string name="gutenberg_kit_announcement_body_deadline">К концу июня 2026 года он станет редактором по умолчанию. %1$s</string>
     <string name="gutenberg_kit_announcement_body_intro">Редактор блоков нового поколения готов к работе, и вас ждёт множество новых функций.</string>
     <string name="gutenberg_kit_announcement_title">Совсем скоро: улучшенный редактор блоков</string>
     <string name="site_settings_gutenberg_kit_enabled_unsupported">Переключитесь на новый блочный редактор одним из первых.</string>
@@ -948,7 +947,6 @@ Language: ru
     <string name="site_creation_search_domain_example_title">YourSiteName.com</string>
     <string name="site_creation_domain_search_input_hint">Поиск по ключевым словам</string>
     <string name="site_creation_domain_header_subtitle">Выберите короткий и запоминающийся домен, который поможет посетителям найти ваш сайт.</string>
-    <string name="site_creation_domain_cost_sale">на первый год</string>
     <string name="site_creation_error_cart_subtitle">Веб-сайт создан, но возникла проблема с подготовкой пользовательского домена для оформления заказа. Повторите попытку или обратитесь в службу поддержки.</string>
     <string name="new_site_creation_preview_caption_paid">Это может занять до 30 минут, после чего пользовательский домен начнёт работать.</string>
     <string name="new_site_creation_preview_subtitle_paid">Чек отправлен вам на почту. %s</string>
@@ -1012,7 +1010,6 @@ Language: ru
     <string name="blaze_promotional_text">Повысьте посещаемость своего сайта с помощью Blaze</string>
     <string name="blaze_activity_title">Blaze</string>
     <string name="site_creation_domain_tag_unavailable">Этот домен уже зарегистрирован</string>
-    <string name="site_creation_domain_tag_sale">Распродажа</string>
     <string name="site_creation_domain_tag_recommended">Рекомендуемые</string>
     <string name="site_creation_domain_tag_best_alternative">Лучшая альтернатива</string>
     <string name="support_faq_caption">Ищите ответы на типовые вопросы в разделе \"Часто задаваемые вопросы\".</string>

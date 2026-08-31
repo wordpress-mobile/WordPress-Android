@@ -10,6 +10,12 @@ object StatsColors {
     val ChangeBadgePositive = Color(0xFF2E7D32)
     val ChangeBadgeNegative = Color(0xFFE91E63)
 
+    /**
+     * The selected bar in a day-views chart. Shares the negative badge's hue, but it marks the
+     * user's selection, not a decline -- keep them separate so either can move independently.
+     */
+    val ChartSelectedBar = Color(0xFFE91E63)
+
     // Per-metric chart accent colors, used when a metric is selected as the charted series so the
     // chart recolours per selection (matching iOS's SiteMetric.primaryColor). Views intentionally
     // has no color here: it falls back to the theme primary for visual continuity with the previous

@@ -40,7 +40,6 @@ sealed class MostViewedCardUiState {
  * @param change The percentage change compared to previous period
  * @param url The item's URL. Posts open it as detail stats; referrers and clicks open it in a
  * Custom Tab. Null when the item has no link of its own.
- * @param postType The API post type, e.g. "post"/"page" (posts only)
  */
 data class MostViewedItem(
     val id: Long,
@@ -48,8 +47,7 @@ data class MostViewedItem(
     val views: Long,
     val change: MostViewedChange,
     val children: List<MostViewedChildItem> = emptyList(),
-    val url: String? = null,
-    val postType: String? = null
+    val url: String? = null
 )
 
 /**
@@ -107,6 +105,5 @@ data class MostViewedDetailItem(
     val views: Long,
     val change: MostViewedChange,
     val children: List<MostViewedChildItem> = emptyList(),
-    val url: String? = null,
-    val postType: String? = null
+    val url: String? = null
 ) : Parcelable

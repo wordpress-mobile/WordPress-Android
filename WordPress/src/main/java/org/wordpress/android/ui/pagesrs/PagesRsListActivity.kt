@@ -73,6 +73,7 @@ class PagesRsListActivity : BaseAppCompatActivity() {
                     ),
                     parentPicker = parentPicker,
                     snackbarMessages = viewModel.snackbarMessages,
+                    revealRequests = viewModel.revealRequests,
                     onSearchOpen = viewModel::onSearchOpen,
                     onSearchQueryChanged = viewModel::onSearchQueryChanged,
                     onSearchClose = viewModel::onSearchClose,

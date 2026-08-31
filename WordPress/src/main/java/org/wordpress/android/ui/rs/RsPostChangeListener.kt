@@ -10,6 +10,7 @@ import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.CauseOfOnPostChanged
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.fluxc.store.PostStore.OnPostChanged
 import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded
@@ -54,6 +55,17 @@ class RsPostChangeListener @Inject constructor(
     @OptIn(FlowPreview::class)
     val changes: Flow<Unit> = _changes.debounce(CHANGE_DEBOUNCE_MS)
 
+    private val _uploads = MutableSharedFlow<RsUploadedPost>(
+        extraBufferCapacity = 1,
+        onBufferOverflow = BufferOverflow.DROP_OLDEST
+    )
+
+    /**
+     * Emits once for every post (or page, per [start]) this device finished uploading. Unlike
+     * [changes] it identifies what was written, so a list can reveal it, and it isn't debounced.
+     */
+    val uploads: Flow<RsUploadedPost> = _uploads
+
     /**
      * Starts listening for changes to [site]'s posts, or its pages when [isPages] is true.
      *
@@ -80,8 +92,13 @@ class RsPostChangeListener @Inject constructor(
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onPostUploaded(event: OnPostUploaded) {
         val post = event.post ?: return
-        if (!event.isError && post.localSiteId == localSiteId && post.isPage == isPages) {
-            notifyChanged()
+        if (event.isError || post.localSiteId != localSiteId || post.isPage != isPages) return
+        notifyChanged()
+        // A post that never got an id is nothing a list can point at.
+        if (post.remotePostId != 0L) {
+            // fromPost reads the date as well as the status, so a post published with a future
+            // date is reported as SCHEDULED - which is the tab the list will show it on.
+            _uploads.tryEmit(RsUploadedPost(post.remotePostId, PostStatus.fromPost(post)))
         }
     }
 
@@ -131,3 +148,9 @@ class RsPostChangeListener @Inject constructor(
         private const val CHANGE_DEBOUNCE_MS = 500L
     }
 }
+
+/** A post or page this device just finished uploading. */
+data class RsUploadedPost(
+    val remotePostId: Long,
+    val status: PostStatus
+)

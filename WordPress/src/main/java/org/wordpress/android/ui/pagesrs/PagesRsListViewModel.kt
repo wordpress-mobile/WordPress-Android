@@ -50,6 +50,8 @@ import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.rs.RsPostChangeListener
 import org.wordpress.android.ui.rs.RsTabLoading
 import org.wordpress.android.ui.rs.RsTabRefreshJobs
+import org.wordpress.android.ui.rs.RsUploadedPost
+import org.wordpress.android.ui.rs.toRsPostStatus
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
@@ -108,6 +110,7 @@ internal class PagesRsListViewModel @Inject constructor(
 
     private var isScreenVisible = false
     private var hasDeferredChange = false
+    private var pendingReveal: PageRsReveal? = null
 
     /** Tabs whose collection has completed at least one fetch, so an empty list means empty. */
     private val fetchedTabs = mutableSetOf<PageRsListTab>()
@@ -120,6 +123,9 @@ internal class PagesRsListViewModel @Inject constructor(
 
     private val _snackbarMessages = Channel<SnackbarMessage>(Channel.BUFFERED)
     val snackbarMessages = _snackbarMessages.receiveAsFlow()
+
+    private val _revealRequests = Channel<PageRsReveal>(Channel.BUFFERED)
+    val revealRequests = _revealRequests.receiveAsFlow()
 
     private val _pendingConfirmation = MutableStateFlow<PageRsListConfirmation?>(null)
     val pendingConfirmation: StateFlow<PageRsListConfirmation?> = _pendingConfirmation.asStateFlow()
@@ -193,6 +199,9 @@ internal class PagesRsListViewModel @Inject constructor(
             viewModelScope.launch {
                 changeListener.changes.collect { onRemoteChangeDetected() }
             }
+            viewModelScope.launch {
+                changeListener.uploads.collect { onPageUploaded(it) }
+            }
             changeListener.start(site, isPages = true)
         }
     }
@@ -202,6 +211,7 @@ internal class PagesRsListViewModel @Inject constructor(
     fun onScreenVisible() {
         isScreenVisible = true
         if (hasDeferredChange) onRemoteChangeDetected()
+        emitPendingReveal()
     }
 
     @MainThread
@@ -224,6 +234,25 @@ internal class PagesRsListViewModel @Inject constructor(
         if (!isScreenVisible || !networkUtilsWrapper.isNetworkAvailable()) return
         hasDeferredChange = false
         refreshAllTabs()
+    }
+
+    /**
+     * Remembers to point the user at a page the editor just saved: it lands on whichever tab its
+     * status belongs to, not necessarily the one being looked at. Held until [onScreenVisible],
+     * because the upload usually finishes while the editor still covers the list.
+     */
+    private fun onPageUploaded(upload: RsUploadedPost) {
+        val status = upload.status.toRsPostStatus() ?: return
+        val tab = PageRsListTab.entries.firstOrNull { status in it.statuses } ?: return
+        pendingReveal = PageRsReveal(tab, upload.remotePostId)
+        emitPendingReveal()
+    }
+
+    private fun emitPendingReveal() {
+        if (!isScreenVisible) return
+        val reveal = pendingReveal ?: return
+        pendingReveal = null
+        _revealRequests.trySend(reveal)
     }
 
     /**

@@ -23,6 +23,8 @@ import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -30,6 +32,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.withTimeoutOrNull
 import org.wordpress.android.R
 import org.wordpress.android.ui.pagesrs.PageRsListItem
 import org.wordpress.android.ui.pagesrs.PageRsMenuAction
@@ -42,6 +46,8 @@ import org.wordpress.android.ui.postsrs.screens.PlaceholderItem
 internal fun PageRsTabListScreen(
     state: PageTabUiState,
     emptyMessageResId: Int,
+    revealPageId: Long?,
+    onRevealHandled: () -> Unit,
     onRefresh: () -> Unit,
     onLoadMore: () -> Unit,
     onPageClick: (Long) -> Unit,
@@ -86,6 +92,8 @@ internal fun PageRsTabListScreen(
             }
             else -> PageListContent(
                 pages = state.pages,
+                revealPageId = revealPageId,
+                onRevealHandled = onRevealHandled,
                 isLoadingMore = state.isLoadingMore,
                 canLoadMore = state.canLoadMore,
                 onLoadMore = onLoadMore,
@@ -99,6 +107,8 @@ internal fun PageRsTabListScreen(
 @Composable
 private fun PageListContent(
     pages: List<PageRsListItem>,
+    revealPageId: Long?,
+    onRevealHandled: () -> Unit,
     isLoadingMore: Boolean,
     canLoadMore: Boolean,
     onLoadMore: () -> Unit,
@@ -106,6 +116,25 @@ private fun PageListContent(
     onPageMenuAction: (Long, PageRsMenuAction) -> Unit
 ) {
     val listState = rememberLazyListState()
+
+    val currentPages by rememberUpdatedState(pages)
+
+    // Scrolls to a page the user just saved, once the refresh carrying it lands. The published and
+    // draft tabs sort by title, so it can be anywhere in the list. requestScrollToItem applies at
+    // the next measurement rather than to the content currently laid out, which a plain
+    // scrollToItem would, leaving a just-added row short of the viewport.
+    LaunchedEffect(revealPageId) {
+        if (revealPageId == null) return@LaunchedEffect
+        val index = withTimeoutOrNull(REVEAL_TIMEOUT_MS) {
+            snapshotFlow { currentPages.indexOfFirst { it.remotePageId == revealPageId } }
+                .first { it >= 0 }
+        }
+        if (index != null) listState.requestScrollToItem(index)
+        // Disarm either way. A refresh replaces the list with page 1 only, so a page that sorts
+        // beyond it never arrives here; leaving the request armed would fire it much later, when
+        // load-more finally paged the page in and the user was reading something else.
+        onRevealHandled()
+    }
 
     LaunchedEffect(canLoadMore) {
         if (!canLoadMore) return@LaunchedEffect
@@ -212,3 +241,8 @@ private fun EmptyContent(emptyMessageResId: Int) {
 
 private const val LOAD_MORE_THRESHOLD = 5
 private const val SHIMMER_ITEM_COUNT = 8
+
+/**
+ * How long a reveal waits for the refresh carrying the page to land before giving up.
+ */
+private const val REVEAL_TIMEOUT_MS = 15_000L

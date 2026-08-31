@@ -90,7 +90,6 @@ Language: id
     <string name="gutenberg_kit_announcement_learn_more">Baca selengkapnya</string>
     <string name="gutenberg_kit_announcement_maybe_later">Mungkin nanti</string>
     <string name="gutenberg_kit_announcement_activate">Aktifkan</string>
-    <string name="gutenberg_kit_announcement_body_deadline">Pada akhir Juni 2026, editor ini akan menjadi editor default untuk semua pengguna. %1$s</string>
     <string name="gutenberg_kit_announcement_body_intro">Editor blok generasi baru telah siap dan menghadirkan lebih banyak fitur baru.</string>
     <string name="gutenberg_kit_announcement_title">Editor blok yang lebih baik akan segera hadir</string>
     <string name="site_settings_gutenberg_kit_enabled_unsupported">Beralih ke editor blok terlebih dahulu untuk mencoba editor baru.</string>
@@ -937,7 +936,6 @@ Language: id
     <string name="site_creation_search_domain_example_title">NamaSitusAnda.com</string>
     <string name="site_creation_domain_search_input_hint">Cari dengan kata kunci</string>
     <string name="site_creation_domain_header_subtitle">Cari domain yang pendek dan mudah diingat agar siapa pun mudah menemukan dan mengunjungi situs Anda.</string>
-    <string name="site_creation_domain_cost_sale">untuk tahun pertama</string>
     <string name="site_creation_error_cart_subtitle">Situs web Anda berhasil dibuat, namun kami menemukan kendala saat menyiapkan domain khusus Anda selama checkout. Mohon coba lagi atau hubungi bantuan jika diperlukan.</string>
     <string name="new_site_creation_preview_caption_paid">Diperlukan 30 menit agar domain khusus Anda dapat berfungsi.</string>
     <string name="new_site_creation_preview_subtitle_paid">Kami telah mengirim e-mail resi Anda. %s</string>
@@ -1001,7 +999,6 @@ Language: id
     <string name="blaze_promotional_text">Tingkatkan jumlah pengunjung situs Anda dengan Blaze</string>
     <string name="blaze_activity_title">Blaze</string>
     <string name="site_creation_domain_tag_unavailable">Domain ini sudah terdaftar</string>
-    <string name="site_creation_domain_tag_sale">Obral</string>
     <string name="site_creation_domain_tag_recommended">Disarankan</string>
     <string name="site_creation_domain_tag_best_alternative">Alternatif Terbaik</string>
     <string name="support_faq_caption">Tanya Jawab Umum akan menjawab berbagai pertanyaan yang umum diajukan.</string>

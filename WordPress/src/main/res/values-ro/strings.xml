@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2026-08-04 18:08:25+0000
+Translation-Revision-Date: 2026-08-25 17:56:31+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n == 0 || n % 100 >= 2 && n % 100 <= 19) ? 1 : 2);
 Generator: GlotPress/4.1.0
 Language: ro
@@ -51,7 +51,6 @@ Language: ro
     <string name="stats_utm_campaign">Campanie</string>
     <string name="stats_utm_medium">Medie</string>
     <string name="stats_utm_source">Sursă</string>
-    <string name="stats_utm_campaign_source_medium">Campanie/sursă/medie</string>
     <string name="stats_utm_title">UTM</string>
     <string name="stats_error_not_authenticated">Neautentificat</string>
     <string name="stats_collapse_group">Restrânge</string>
@@ -60,6 +59,7 @@ Language: ro
     <string name="stats_tag_type_category">Categorie</string>
     <string name="stats_insights_tags_empty">Nu am găsit nicio etichetă sau categorie</string>
     <string name="stats_utm_source_medium">Sursă/mediu</string>
+    <string name="stats_utm_campaign_source_medium">Campanie/sursă/mediu</string>
     <string name="stats_insights_views_percent">%1$s%% din vizualizări</string>
     <string name="stats_insights_most_popular_day_label">Zi</string>
     <string name="stats_insights_all_time_stats_title">Total general statistici</string>
@@ -93,7 +93,6 @@ Language: ro
     <string name="gutenberg_kit_announcement_learn_more">Află mai multe</string>
     <string name="gutenberg_kit_announcement_maybe_later">Poate mai târziu</string>
     <string name="gutenberg_kit_announcement_activate">Activează</string>
-    <string name="gutenberg_kit_announcement_body_deadline">Până la sfârșitul lunii iunie 2026, va deveni editorul implicit pentru toți. %1$s</string>
     <string name="gutenberg_kit_announcement_body_intro">Noul editor de blocuri modern este pregătit și aduce mai multe funcționalități noi.</string>
     <string name="gutenberg_kit_announcement_title">În curând, un editor de blocuri mai bun</string>
     <string name="site_settings_gutenberg_kit_enabled_unsupported">Pentru a încerca noul editor, comută mai întâi la editorul de blocuri.</string>
@@ -946,7 +945,6 @@ Language: ro
     <string name="site_creation_search_domain_example_body">La fel ca în exemplul de mai sus, un domeniu le permite oamenilor să-ți găsească și să-ți viziteze site-ul din navigatoarele lor web.</string>
     <string name="dashboard_activity_card_title">Activitate recentă</string>
     <string name="gutenberg_native_unlabeled_color_s" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Culoare fără etichetă. %s</string>
-    <string name="site_creation_domain_cost_sale">în primul an</string>
     <string name="new_site_creation_preview_caption_paid">Poate să dureze până la 30 de minute până când domeniul tău personalizat va începe să funcționeze.</string>
     <string name="site_creation_domain_search_input_hint">Caută după cuvinte cheie</string>
     <string name="new_site_creation_preview_subtitle_paid">Ți-am trimis chitanța prin email. %s</string>
@@ -1015,7 +1013,6 @@ Language: ro
     <string name="support_faq_caption">Vezi întrebările frecvente pentru răspunsuri la întrebările pe care le ai.</string>
     <string name="site_creation_domain_tag_best_alternative">Cea mai bună alternativă</string>
     <string name="site_creation_domain_tag_recommended">Recomandat</string>
-    <string name="site_creation_domain_tag_sale">Reducere</string>
     <string name="site_creation_domain_tag_unavailable">Acest domeniu este deja înregistrat</string>
     <string name="blaze_activity_title">Blaze</string>
     <string name="blaze_promotional_text">Cu Blaze, aduci mai mult trafic pe site</string>
@@ -2902,7 +2899,6 @@ Language: ro
     <string name="menu_save_as_draft">Salvează ca ciornă</string>
     <string name="file_size_in_terabytes">%s TO</string>
     <string name="menu_visual_mode">Editor vizual</string>
-    <string name="file_size_in_gigabytes">%s GO</string>
     <string name="file_size_in_bytes">%s O</string>
     <string name="site_settings_quota_space_value">%1$s din %2$s</string>
     <string name="site_settings_quota_space_hint">Dacă ai nevoie de mai mult spațiu, ia în considerare actualizarea planul tău WordPress.</string>
@@ -2923,6 +2919,7 @@ Language: ro
     <string name="comment_untrash_talkback">Am restaurat comentariul</string>
     <string name="comment_unspam_talkback">Comentariu marcat ca Nu este spam</string>
     <string name="file_size_in_kilobytes">%s Ko</string>
+    <string name="file_size_in_gigabytes">%s Go</string>
     <string name="person_detail_screen_title">Detalii personale</string>
     <string name="media_settings_screen_title">Detalii fișier</string>
     <string name="publicize_buttons_screen_title">Butoane de partajare</string>
