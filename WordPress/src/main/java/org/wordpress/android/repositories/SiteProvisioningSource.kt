@@ -184,25 +184,33 @@ class SiteProvisioningSource @Inject constructor(
      * authentication (a revoked application password, or an expired WP.com bearer token). Re-provision it
      * so ensureAuth re-validates and heals: for a WP.com-connected site the headless re-mint succeeds and
      * recovery is silent; for one that can't be re-minted the run settles Unprovisionable and
-     * [maybeRequestReauth] escalates to interactive re-auth. WP.com Simple sites are bearer-only (no
-     * application password), so they're skipped here.
+     * [settleHealState] escalates to interactive re-auth.
      *
      * The notifier hands us the exact [SiteModel] whose client raised the 401, so we heal that one row by
      * id — no resolving back by URL (which isn't unique: the DB constraint is on SITE_ID+URL, so two rows
-     * can share a URL). Already-Unprovisionable sites are skipped — their re-auth is pending the user, and
-     * re-running would just re-fail the mint on every 401. When a run is already in flight,
-     * [healForInvalidAuth] defers the heal until it finishes rather than pre-empting a possibly mid-mint
-     * stage, and skips it if that run already settled Unprovisionable — so a validate that itself 401s
-     * can't spin this into a loop.
+     * can share a URL). When a run is already in flight, [healForInvalidAuth] defers the heal until it
+     * finishes rather than pre-empting a possibly mid-mint stage — so a validate that itself 401s can't
+     * spin this into a loop.
      */
     override fun onRequestedWithInvalidAuthentication(site: SiteModel) {
-        if (site.isWPComSimpleSite) return
+        if (canHeal(site)) healForInvalidAuth(site)
+    }
+
+    /**
+     * Whether re-provisioning could plausibly fix a 401 for [site]:
+     *
+     * - WP.com Simple sites are bearer-only — no application password applies, so there is nothing to
+     *   heal.
+     * - An already-[SiteAuthState.Unprovisionable] site has its re-auth pending the user; re-running
+     *   would just re-fail the mint on every 401.
+     * - A site in [healFutile] already had a heal confirm its stored password and replace nothing, so
+     *   its 401s come from something re-provisioning can't fix.
+     */
+    private fun canHeal(site: SiteModel): Boolean {
         val auth = (states[site.id]?.value as? SiteReadiness.NeedsAuth)?.auth
-        if (auth is SiteAuthState.Unprovisionable) return
-        // A previous heal already proved re-provisioning doesn't fix this site's 401s — healing again
-        // would just re-validate the same working password and re-raise the same 401.
-        if (site.id in healFutile) return
-        healForInvalidAuth(site)
+        return !site.isWPComSimpleSite &&
+            auth !is SiteAuthState.Unprovisionable &&
+            site.id !in healFutile
     }
 
     /**
