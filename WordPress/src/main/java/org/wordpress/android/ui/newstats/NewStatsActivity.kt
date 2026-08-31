@@ -398,6 +398,9 @@ private fun NewStatsScreen(
 ) {
     val viewsStatsViewModel: ViewsStatsViewModel = viewModel()
     val selectedPeriod by viewsStatsViewModel.selectedPeriod.collectAsState()
+    // The label reflects a soft bar selection (effectivePeriod) so the range shown matches the cards;
+    // the menu checkmark and paging arrows stay on the committed selectedPeriod.
+    val effectivePeriod by viewsStatsViewModel.effectivePeriod.collectAsState()
     val canNavigateBackward by viewsStatsViewModel.canNavigateBackward.collectAsState()
     val canNavigateForward by viewsStatsViewModel.canNavigateForward.collectAsState()
 
@@ -469,7 +472,7 @@ private fun NewStatsScreen(
                                         .padding(horizontal = 8.dp)
                                 ) {
                                     PeriodLabel(
-                                        label = selectedPeriod
+                                        label = effectivePeriod
                                             .getDisplayLabel()
                                     )
                                     Icon(
@@ -644,7 +647,9 @@ private fun TrafficTabContent(
     val selectedDeviceType by devicesViewModel.selectedDeviceType.collectAsState()
     val utmUiState by utmViewModel.uiState.collectAsState()
     val selectedUtmCategory by utmViewModel.selectedCategory.collectAsState()
-    val selectedPeriod by viewsStatsViewModel.selectedPeriod.collectAsState()
+    // The period the non-Views cards should reflect: the soft-selected bar's period when one is
+    // selected, otherwise the committed period. The Views chart itself stays bound to its own period.
+    val effectivePeriod by viewsStatsViewModel.effectivePeriod.collectAsState()
     val isTodaysStatsRefreshing by todaysStatsViewModel.isRefreshing.collectAsState()
     val isViewsStatsRefreshing by viewsStatsViewModel.isRefreshing.collectAsState()
     val isMostViewedPostsRefreshing by mostViewedViewModel
@@ -686,42 +691,44 @@ private fun TrafficTabContent(
     // preventing data fetches for the default card set before the real config is known.
     // isPeriodInitialized prevents fetching with a stale default period before the
     // persisted period is restored from preferences.
-    LaunchedEffect(selectedPeriod, cardsToLoad, isPeriodInitialized) {
+    LaunchedEffect(effectivePeriod, cardsToLoad, isPeriodInitialized) {
         if (!isPeriodInitialized) return@LaunchedEffect
         cardsToLoad.dispatchToVisibleCards(
             onTodaysStats = { todaysStatsViewModel.loadDataIfNeeded() },
+            // Views stays bound to its own committed period, so a soft bar selection (which only moves
+            // effectivePeriod) leaves the chart frozen; loadDataIfNeeded no-ops on an unchanged period.
             onViewsStats = { viewsStatsViewModel.loadDataIfNeeded() },
             onMostViewedPosts = {
-                mostViewedViewModel.onPeriodChangedPosts(selectedPeriod)
+                mostViewedViewModel.onPeriodChangedPosts(effectivePeriod)
             },
             onMostViewedReferrers = {
                 mostViewedViewModel.onPeriodChangedReferrers(
-                    selectedPeriod
+                    effectivePeriod
                 )
             },
             onLocations = {
-                locationsViewModel.onPeriodChanged(selectedPeriod)
+                locationsViewModel.onPeriodChanged(effectivePeriod)
             },
             onAuthors = {
-                authorsViewModel.onPeriodChanged(selectedPeriod)
+                authorsViewModel.onPeriodChanged(effectivePeriod)
             },
             onClicks = {
-                clicksViewModel.onPeriodChanged(selectedPeriod)
+                clicksViewModel.onPeriodChanged(effectivePeriod)
             },
             onSearchTerms = {
-                searchTermsViewModel.onPeriodChanged(selectedPeriod)
+                searchTermsViewModel.onPeriodChanged(effectivePeriod)
             },
             onVideoPlays = {
-                videoPlaysViewModel.onPeriodChanged(selectedPeriod)
+                videoPlaysViewModel.onPeriodChanged(effectivePeriod)
             },
             onFileDownloads = {
-                fileDownloadsViewModel.onPeriodChanged(selectedPeriod)
+                fileDownloadsViewModel.onPeriodChanged(effectivePeriod)
             },
             onDevices = {
-                devicesViewModel.onPeriodChanged(selectedPeriod)
+                devicesViewModel.onPeriodChanged(effectivePeriod)
             },
             onUtm = {
-                utmViewModel.onPeriodChanged(selectedPeriod)
+                utmViewModel.onPeriodChanged(effectivePeriod)
             }
         )
     }
@@ -865,6 +872,7 @@ private fun TrafficTabContent(
                         onChartTypeChanged = viewsStatsViewModel::onChartTypeChanged,
                         onMetricSelected = viewsStatsViewModel::onMetricSelected,
                         onBarTapped = viewsStatsViewModel::onBarTapped,
+                        onDrillIntoSelectedBar = viewsStatsViewModel::onDrillIntoSelectedBar,
                         onRetry = viewsStatsViewModel::onRetry,
                         onRemoveCard = { newStatsViewModel.removeCard(cardType) },
                         cardPosition = cardPosition,
@@ -987,7 +995,7 @@ private fun TrafficTabContent(
                                 context = context,
                                 category =
                                     selectedUtmCategory,
-                                period = selectedPeriod
+                                period = effectivePeriod
                             )
                         },
                         onRetry = utmViewModel::onRetry,
