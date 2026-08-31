@@ -823,8 +823,15 @@ class ViewsStatsViewModel @Inject constructor(
         wholePeriodBottom = bottom
         _uiState.update { current ->
             when (current) {
+                // When a bar is soft-selected the visible row holds that bar's overlaid totals. A
+                // late-arriving whole-period bottom load (single-day periods fetch it separately, and it
+                // can land after the chart) must not clobber the overlay and desync it from the header;
+                // it's kept in wholePeriodBottom above and restored on clear.
                 is ViewsStatsCardUiState.Content ->
-                    current.copy(bottomStats = bottom, selectedMetric = currentSelectedMetric)
+                    current.copy(
+                        bottomStats = if (current.selectedBar != null) current.bottomStats else bottom,
+                        selectedMetric = currentSelectedMetric
+                    )
                 else -> ViewsStatsCardUiState.Content(
                     chart = ChartUiState.Loading,
                     bottomStats = bottom,

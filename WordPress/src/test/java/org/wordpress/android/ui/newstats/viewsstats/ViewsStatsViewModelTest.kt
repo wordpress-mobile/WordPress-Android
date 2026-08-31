@@ -1081,6 +1081,39 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `when a late bottom load lands after a bar is selected, then it does not clobber the overlay`() = test {
+        val hourly = listOf(
+            ViewsDataPoint(period = "2024-01-14 10:00:00", views = 100L),
+            ViewsDataPoint(period = "2024-01-14 11:00:00", views = 150L)
+        )
+        whenever(statsRepository.fetchStatsForPeriod(any(), any()))
+            .thenReturn(createPeriodStatsResult(currentPeriodData = hourly, previousPeriodData = hourly))
+        // Single-day periods fetch the bottom row from a dedicated call; gate it so the chart resolves
+        // first, leaving a window where the card is chart=Loaded, bottom=Loading, not dimmed.
+        val bottomGate = CompletableDeferred<Unit>()
+        whenever(statsRepository.fetchBottomStats(any(), any())).doSuspendableAnswer {
+            bottomGate.await()
+            createBottomStatsResult()
+        }
+
+        initViewModel(periodType = "today")
+        advanceUntilIdle()
+        assertThat(viewModel.uiState.value.chartLoaded()).isNotNull
+
+        viewModel.onChartTypeChanged(ChartType.BAR)
+        viewModel.onBarTapped(0)
+        advanceUntilIdle()
+        assertThat(viewModel.uiState.value.bottomStatsOrNull()!!.first { it.metric == StatsMetric.VIEWS }.value)
+            .isEqualTo(100L)
+
+        // The whole-period bottom load lands late; it must not overwrite the selected bar's overlay.
+        bottomGate.complete(Unit)
+        advanceUntilIdle()
+        assertThat(viewModel.uiState.value.bottomStatsOrNull()!!.first { it.metric == StatsMetric.VIEWS }.value)
+            .isEqualTo(100L)
+    }
+
+    @Test
     fun `when refreshing while a bar is selected, then the selection is cleared`() = test {
         whenever(statsRepository.fetchStatsForPeriod(any(), any()))
             .thenReturn(createPeriodStatsResult())
