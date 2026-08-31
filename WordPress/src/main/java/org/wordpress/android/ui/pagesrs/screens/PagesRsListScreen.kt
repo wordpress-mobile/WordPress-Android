@@ -79,6 +79,7 @@ import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.withIndex
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
+import org.wordpress.android.ui.compose.utils.rsDebugTitle
 import org.wordpress.android.ui.pagesrs.PageRsConfirmationDialogState
 import org.wordpress.android.ui.pagesrs.PageRsListConfirmation
 import org.wordpress.android.ui.pagesrs.PageRsListTab
@@ -197,7 +198,7 @@ internal fun PagesRsListScreen(
                             modifier = Modifier.fillMaxWidth().focusRequester(focusRequester)
                         )
                     } else {
-                        Text(text = stringResource(R.string.my_site_btn_site_pages))
+                        Text(text = rsDebugTitle(R.string.my_site_btn_site_pages))
                     }
                 },
                 navigationIcon = {
