@@ -119,6 +119,11 @@ class SiteProvisioningSource @Inject constructor(
     // anything else clears it, so a later revocation escalates again.
     private val escalated = ConcurrentHashMap.newKeySet<Int>()
 
+    // Sites that earned an escalation while nothing was listening — the heal settled with the app
+    // backgrounded. Retried by the next run that settles Unprovisionable, which in practice is the
+    // onResume run, by which time an activity has registered its listener.
+    private val escalationPending = ConcurrentHashMap.newKeySet<Int>()
+
     init {
         // Re-provision when wordpress-rs reports a request was rejected for invalid auth (the app
         // password was revoked / rotated server-side). Without this, a site latched Ready keeps its
@@ -186,6 +191,7 @@ class SiteProvisioningSource @Inject constructor(
         healBudgetSpent.clear()
         lastEvidence.clear()
         escalated.clear()
+        escalationPending.clear()
     }
 
     /**
@@ -307,11 +313,14 @@ class SiteProvisioningSource @Inject constructor(
         lastEvidence[siteLocalId] = result.evidence
         val auth = (result.readiness as? SiteReadiness.NeedsAuth)?.auth
         if (auth is SiteAuthState.Unprovisionable) {
-            if (wasHeal) escalateReauth(siteLocalId, auth)
+            // A routine run normally leaves the prompt to the card, but it must still deliver an
+            // escalation that an earlier heal earned and couldn't hand to anyone.
+            if (wasHeal || siteLocalId in escalationPending) escalateReauth(siteLocalId, auth)
             return
         }
         // Not stuck on auth any more, so a future revocation should be able to prompt again.
         escalated.remove(siteLocalId)
+        escalationPending.remove(siteLocalId)
         when {
             wasHeal -> {
                 // A heal that only re-confirmed the stored password can never be the fix, so it
@@ -333,12 +342,28 @@ class SiteProvisioningSource @Inject constructor(
         }
     }
 
-    /** Prompts for interactive re-auth at most once per [SiteAuthState.Unprovisionable] episode. */
+    /**
+     * Prompts for interactive re-auth at most once per [SiteAuthState.Unprovisionable] episode.
+     *
+     * The episode is only recorded once a live listener has taken the prompt. Activities register
+     * theirs in onResume and drop it in onPause, so a heal that settles while the app is backgrounded
+     * would otherwise burn the one prompt on an empty listener map — and nothing would ask again,
+     * because further 401s are blocked by the Unprovisionable state. An undelivered prompt is
+     * held in [escalationPending] and retried by the next run instead.
+     */
     private fun escalateReauth(siteLocalId: Int, auth: SiteAuthState.Unprovisionable) {
-        if (!auth.hadCredentials) return
-        if (!escalated.add(siteLocalId)) return
-        siteStore.getSiteByLocalId(siteLocalId)?.let {
-            applicationPasswordReauthNotifier.notifyReauthRequired(it.url)
+        val alreadyHandled = !auth.hadCredentials || siteLocalId in escalated
+        val site = if (alreadyHandled) null else siteStore.getSiteByLocalId(siteLocalId)
+        if (site == null) return
+        if (applicationPasswordReauthNotifier.notifyReauthRequired(site.url)) {
+            escalated.add(siteLocalId)
+            escalationPending.remove(siteLocalId)
+        } else {
+            escalationPending.add(siteLocalId)
+            appLogWrapper.d(
+                AppLog.T.MAIN,
+                "A_P: Nobody listening for re-auth on ${site.url} - will retry on the next run"
+            )
         }
     }
 
@@ -360,7 +385,10 @@ class SiteProvisioningSource @Inject constructor(
                     AppLog.T.MAIN,
                     "Provisioning pipeline failed for $siteLocalId: ${e::class.simpleName}: ${e.message}"
                 )
-                PipelineResult(SiteReadiness.Unreachable, latch = false)
+                // Same offline distinction detectCapabilities makes: with no network this isn't the
+                // site's fault, and the connectivity banner would just stack on the global
+                // no-connection one.
+                PipelineResult(unreachableOrTransient(), latch = false)
             }
             flow.value = result.readiness
             // Latch the dedup gate only on a freshly live-probed Ready; a Ready served from stale cache
@@ -382,6 +410,14 @@ class SiteProvisioningSource @Inject constructor(
             }
         }
     }
+
+    /** [SiteReadiness.Unreachable] only when the device has a network; otherwise it's just offline. */
+    private fun unreachableOrTransient(): SiteReadiness =
+        if (networkUtilsWrapper.isNetworkAvailable()) {
+            SiteReadiness.Unreachable
+        } else {
+            SiteReadiness.TransientError
+        }
 
     private fun flowFor(siteLocalId: Int): MutableStateFlow<SiteReadiness> =
         states.getOrPut(siteLocalId) { MutableStateFlow(SiteReadiness.Probing) }

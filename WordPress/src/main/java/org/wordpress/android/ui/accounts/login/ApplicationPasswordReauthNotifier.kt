@@ -18,11 +18,18 @@ import javax.inject.Singleton
 class ApplicationPasswordReauthNotifier @Inject constructor() {
     private val listeners = mutableMapOf<String, WeakReference<Listener>>()
 
-    /** Asks any listening UI to navigate to interactive re-auth for [siteUrl]. */
+    /**
+     * Asks any listening UI to navigate to interactive re-auth for [siteUrl], returning whether a
+     * live listener actually took it. Listeners are registered per activity onResume/onPause, so a
+     * heal that settles while the app is backgrounded has nobody to tell — the caller needs to know
+     * that so it doesn't record the prompt as delivered.
+     */
     @Synchronized
-    fun notifyReauthRequired(siteUrl: String) {
+    fun notifyReauthRequired(siteUrl: String): Boolean {
         cleanupDeadReferences()
-        listeners.values.forEach { it.get()?.onReauthRequired(siteUrl) }
+        val live = listeners.values.mapNotNull { it.get() }
+        live.forEach { it.onReauthRequired(siteUrl) }
+        return live.isNotEmpty()
     }
 
     @Synchronized

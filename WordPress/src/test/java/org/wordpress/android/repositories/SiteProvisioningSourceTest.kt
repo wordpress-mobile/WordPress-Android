@@ -7,6 +7,7 @@ import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
 import org.mockito.kotlin.any
+import org.mockito.kotlin.atLeast
 import org.mockito.kotlin.atMost
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.mockingDetails
@@ -105,6 +106,10 @@ class SiteProvisioningSourceTest : BaseUnitTest(StandardTestDispatcher()) {
         whenever(siteStore.createApplicationPassword(any())).thenReturn(
             OnApplicationPasswordCreated(site, ApplicationPasswordCredentials("user", "pass", uuid = "u"))
         )
+
+    /** A listener is registered (an activity is in the foreground), so prompts are delivered. */
+    private fun stubReauthListenerPresent() =
+        whenever(applicationPasswordReauthNotifier.notifyReauthRequired(any())).thenReturn(true)
 
     private suspend fun stubMintFailure() =
         whenever(siteStore.createApplicationPassword(any())).thenReturn(
@@ -403,6 +408,7 @@ class SiteProvisioningSourceTest : BaseUnitTest(StandardTestDispatcher()) {
 
     @Test
     fun `given a 401-triggered heal fails, then reauth is requested`() = test {
+        stubReauthListenerPresent()
         stubHasStoredCredentials(true)
         stubValidate(ApplicationPasswordValidator.Outcome.Invalid)
         stubMintFailure()
@@ -432,6 +438,7 @@ class SiteProvisioningSourceTest : BaseUnitTest(StandardTestDispatcher()) {
 
     @Test
     fun `given a 401 during an active run, the deferred heal still escalates a dead credential`() = test {
+        stubReauthListenerPresent()
         stubHasStoredCredentials(true)
         // The active run validates the not-yet-revoked credential (Valid -> Ready); the deferred re-heal
         // then sees it revoked (Invalid) and can't re-mint, so it must escalate rather than be swallowed
@@ -447,6 +454,47 @@ class SiteProvisioningSourceTest : BaseUnitTest(StandardTestDispatcher()) {
         testScheduler.advanceUntilIdle()                      // run the active run, then the deferred heal
 
         verify(applicationPasswordReauthNotifier).notifyReauthRequired(site.url)
+    }
+
+    @Test
+    fun `given no listener for the re-auth prompt, then the episode is not consumed`() = test {
+        // Activities register their listener in onResume, so a heal settling while the app is
+        // backgrounded has nobody to tell. Recording it as prompted would burn the single
+        // per-episode escalation on an empty listener map (#22944 review).
+        stubHasStoredCredentials(true)
+        stubValidate(ApplicationPasswordValidator.Outcome.Invalid)
+        stubMintFailure()
+        whenever(applicationPasswordReauthNotifier.notifyReauthRequired(any())).thenReturn(false)
+
+        source.onRequestedWithInvalidAuthentication(site) // heal settles while nothing is listening
+        source.await(site)
+
+        // The app comes back to the foreground: an activity registers, and the onResume run retries
+        // the prompt even though it is a routine run.
+        stubReauthListenerPresent()
+        source.invalidate(site)
+        testScheduler.advanceUntilIdle()
+
+        verify(applicationPasswordReauthNotifier, atLeast(2)).notifyReauthRequired(site.url)
+    }
+
+    @Test
+    fun `given the pipeline throws while offline, then transient rather than unreachable`() = test {
+        // The connectivity banner would otherwise stack on the global no-connection banner.
+        stubHasStoredCredentials(true)
+        whenever(applicationPasswordValidator.validate(any())).thenThrow(RuntimeException("boom"))
+        whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(false)
+
+        assertThat(source.await(site)).isEqualTo(SiteReadiness.TransientError)
+    }
+
+    @Test
+    fun `given the pipeline throws while online, then unreachable`() = test {
+        stubHasStoredCredentials(true)
+        whenever(applicationPasswordValidator.validate(any())).thenThrow(RuntimeException("boom"))
+        whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
+
+        assertThat(source.await(site)).isEqualTo(SiteReadiness.Unreachable)
     }
 
     @Test
@@ -672,6 +720,7 @@ class SiteProvisioningSourceTest : BaseUnitTest(StandardTestDispatcher()) {
         // A routine run never arms the heal flag, so its own tail skips escalation. The deferred handler
         // used to return "already escalated" on that outcome and swallow the 401 entirely, leaving no
         // interactive re-auth and dropping every later 401 via the Unprovisionable guard (#22944 c3).
+        stubReauthListenerPresent()
         stubHasStoredCredentials(true)
         stubValidate(ApplicationPasswordValidator.Outcome.Invalid)
         stubMintFailure()

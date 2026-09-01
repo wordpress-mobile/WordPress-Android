@@ -7,7 +7,7 @@ import org.wordpress.android.fluxc.network.discovery.SelfHostedEndpointFinder
 import org.wordpress.android.fluxc.network.xmlrpc.site.SiteXMLRPCClient
 import org.wordpress.android.fluxc.persistence.SiteSqlUtils
 import org.wordpress.android.fluxc.utils.AppLogWrapper
-import org.wordpress.android.modules.BG_THREAD
+import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.util.AppLog
 import javax.inject.Inject
 import javax.inject.Named
@@ -34,10 +34,14 @@ class SiteXmlRpcUrlRecoverer @Inject constructor(
     private val siteXMLRPCClient: SiteXMLRPCClient,
     private val siteSqlUtils: SiteSqlUtils,
     private val appLogWrapper: AppLogWrapper,
-    @param:Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
+    // IO, not BG: verifyOrDiscoverXMLRPCEndpoint is a blocking chain of HTTP calls that can take
+    // tens of seconds against a dead host, and BG_THREAD is Dispatchers.Default — the same
+    // CPU-sized pool APPLICATION_SCOPE runs every site's pipeline on. This is the dispatcher the
+    // code in ApplicationPasswordViewModelSlice used before the move.
+    @param:Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher,
 ) {
     @Suppress("SwallowedException", "TooGenericExceptionCaught")
-    suspend fun discoverAndVerifyXmlRpcUrl(site: SiteModel): XmlRpcRecovery = withContext(bgDispatcher) {
+    suspend fun discoverAndVerifyXmlRpcUrl(site: SiteModel): XmlRpcRecovery = withContext(ioDispatcher) {
         try {
             val endpoint = selfHostedEndpointFinder.verifyOrDiscoverXMLRPCEndpoint(site.url)
             val result = siteXMLRPCClient.fetchSites(
@@ -78,7 +82,7 @@ class SiteXmlRpcUrlRecoverer @Inject constructor(
         }
     }
 
-    suspend fun persistXmlRpcUrl(localId: Int, xmlRpcUrl: String): Boolean = withContext(bgDispatcher) {
+    suspend fun persistXmlRpcUrl(localId: Int, xmlRpcUrl: String): Boolean = withContext(ioDispatcher) {
         val rowsUpdated = siteSqlUtils.updateXmlRpcUrl(localId, xmlRpcUrl)
         if (rowsUpdated == 0) {
             appLogWrapper.w(AppLog.T.API, "Cannot persist xmlRpcUrl: no site with localId=$localId")
