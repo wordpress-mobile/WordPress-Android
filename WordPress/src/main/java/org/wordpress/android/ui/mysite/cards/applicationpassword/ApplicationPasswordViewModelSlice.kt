@@ -129,14 +129,7 @@ class ApplicationPasswordViewModelSlice @Inject constructor(
                     "A_P: Hiding reauthentication card for ${site.url} - WordPress.com site"
                 )
             }
-            is ApplicationPasswordLoginHelper.DiscoveryResult.Failed -> {
-                // TODO follow-up: surface result.userFacingMessage in the card (issue #22884).
-                uiModelMutable.postValue(null)
-                appLogWrapper.d(
-                    AppLog.T.MAIN,
-                    "A_P: Hiding reauthentication card for ${site.url} - bad discovery: ${result.userFacingMessage}"
-                )
-            }
+            is ApplicationPasswordLoginHelper.DiscoveryResult.Failed -> handleFailedDiscovery(site, result)
         }
     }
 
@@ -149,15 +142,39 @@ class ApplicationPasswordViewModelSlice @Inject constructor(
                 uiModelMutable.postValue(null)
                 appLogWrapper.d(AppLog.T.MAIN, "A_P: Hiding card for ${site.url} - WordPress.com site")
             }
-            is ApplicationPasswordLoginHelper.DiscoveryResult.Failed -> {
-                // TODO follow-up: surface result.userFacingMessage in the card (issue #22884).
-                uiModelMutable.postValue(null)
-                appLogWrapper.d(
-                    AppLog.T.MAIN,
-                    "A_P: Hiding card for ${site.url} - bad discovery: ${result.userFacingMessage}"
-                )
-            }
+            is ApplicationPasswordLoginHelper.DiscoveryResult.Failed -> handleFailedDiscovery(site, result)
         }
+    }
+
+    /**
+     * Discovery couldn't produce an authorization URL, so neither the create nor the re-authenticate
+     * card can be built. A private site is the one cause we can name: its Privacy gate answers the
+     * anonymous discovery request with a 403, and without saying so the user sees nothing at all
+     * while their credentials stay broken. Every other cause still hides the card pending #22884.
+     */
+    private fun handleFailedDiscovery(
+        site: SiteModel,
+        result: ApplicationPasswordLoginHelper.DiscoveryResult.Failed,
+    ) {
+        if (result.reason == ApplicationPasswordLoginHelper.DiscoveryResult.FailureReason.PrivateSite) {
+            uiModelMutable.postValue(
+                MySiteCardAndItem.Item.SingleActionCard(
+                    textResource = R.string.application_password_private_site_card,
+                    imageResource = R.drawable.ic_notice_white_24dp,
+                    onActionClick = { },
+                    centerImageVertically = true,
+                    showLearnMore = false,
+                )
+            )
+            appLogWrapper.d(AppLog.T.MAIN, "A_P: Showing private-site card for ${site.url}")
+            return
+        }
+        // TODO follow-up: surface result.userFacingMessage in the card (issue #22884).
+        uiModelMutable.postValue(null)
+        appLogWrapper.d(
+            AppLog.T.MAIN,
+            "A_P: Hiding card for ${site.url} - bad discovery: ${result.userFacingMessage}"
+        )
     }
 
     private fun showApplicationPasswordCreateCard(site: SiteModel, alternativeUrl: String) {

@@ -158,6 +158,37 @@ class ApplicationPasswordViewModelSliceTest : BaseUnitTest() {
     }
 
     @Test
+    fun `given a private site with revoked credentials, then the private-site card explains it`() = test {
+        // Discovery can't produce an authorization URL through the Privacy gate, so the re-auth card
+        // can't be built. Hiding it leaves the user with broken credentials and no explanation at all.
+        stubReadiness(SiteReadiness.NeedsAuth(SiteAuthState.Unprovisionable(hadCredentials = true)))
+        whenever(applicationPasswordLoginHelper.getAuthorizationUrlComplete(eq(TEST_URL)))
+            .thenReturn(
+                ApplicationPasswordLoginHelper.DiscoveryResult.Failed(
+                    userFacingMessage = "Found a site but failed to read its API configuration.",
+                    reason = ApplicationPasswordLoginHelper.DiscoveryResult.FailureReason.PrivateSite,
+                )
+            )
+
+        slice.buildCard(siteTest)
+
+        val privateCard = card as MySiteCardAndItem.Item.SingleActionCard
+        assertThat(privateCard.textResource).isEqualTo(R.string.application_password_private_site_card)
+    }
+
+    @Test
+    fun `given discovery fails for any other reason, then the card stays hidden`() = test {
+        // Only a private site is named; everything else still hides pending #22884.
+        stubReadiness(SiteReadiness.NeedsAuth(SiteAuthState.Unprovisionable(hadCredentials = true)))
+        whenever(applicationPasswordLoginHelper.getAuthorizationUrlComplete(eq(TEST_URL)))
+            .thenReturn(ApplicationPasswordLoginHelper.DiscoveryResult.Failed("connection reset"))
+
+        slice.buildCard(siteTest)
+
+        assertNull(card)
+    }
+
+    @Test
     fun `given the create card is showing, when tapped, then auto-authentication is launched`() = test {
         stubReadiness(SiteReadiness.NeedsAuth(SiteAuthState.Unprovisionable(hadCredentials = false)))
         stubAuthorized()
