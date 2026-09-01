@@ -25,6 +25,7 @@ import org.wordpress.android.repositories.SiteProvisioningSource
 import org.wordpress.android.repositories.SiteReadiness
 import org.wordpress.android.ui.accounts.login.ApplicationPasswordLoginHelper
 import org.wordpress.android.ui.mysite.MySiteCardAndItem
+import org.wordpress.android.ui.mysite.SiteNavigationAction
 
 private const val TEST_URL = "https://www.test.com"
 private const val TEST_SITE_ID = 1
@@ -40,6 +41,7 @@ class ApplicationPasswordViewModelSliceTest : BaseUnitTest() {
 
     private lateinit var siteTest: SiteModel
     private var card: MySiteCardAndItem? = null
+    private var navigation: SiteNavigationAction? = null
     private lateinit var slice: ApplicationPasswordViewModelSlice
 
     @Before
@@ -56,7 +58,9 @@ class ApplicationPasswordViewModelSliceTest : BaseUnitTest() {
             url = TEST_URL
         }
         card = null
+        navigation = null
         slice.uiModel.observeForever { card = it }
+        slice.onNavigation.observeForever { navigation = it.peekContent() }
     }
 
     private fun stubReadiness(readiness: SiteReadiness): MutableStateFlow<SiteReadiness> {
@@ -151,5 +155,43 @@ class ApplicationPasswordViewModelSliceTest : BaseUnitTest() {
         slice.buildCard(siteTest)
 
         assertNull(card)
+    }
+
+    @Test
+    fun `given the create card is showing, when tapped, then auto-authentication is launched`() = test {
+        stubReadiness(SiteReadiness.NeedsAuth(SiteAuthState.Unprovisionable(hadCredentials = false)))
+        stubAuthorized()
+        slice.buildCard(siteTest)
+
+        (card as MySiteCardAndItem.Card.QuickLinksItem).quickLinkItems.first().onClick.click()
+
+        assertThat(navigation)
+            .isEqualTo(SiteNavigationAction.OpenApplicationPasswordAutoAuthentication(siteTest, TEST_AUTH_URL))
+    }
+
+    @Test
+    fun `given the reauthentication card is showing, when tapped, then auto-authentication is launched`() = test {
+        stubReadiness(SiteReadiness.NeedsAuth(SiteAuthState.Unprovisionable(hadCredentials = true)))
+        stubAuthorized()
+        slice.buildCard(siteTest)
+
+        (card as MySiteCardAndItem.Item.SingleActionCard).onActionClick()
+
+        assertThat(navigation)
+            .isEqualTo(SiteNavigationAction.OpenApplicationPasswordAutoAuthentication(siteTest, TEST_AUTH_URL))
+    }
+
+    @Test
+    fun `given the XML-RPC disabled card is showing, when tapped, then the bottom sheet opens`() = test {
+        stubReadiness(SiteReadiness.Ready)
+        whenever(siteStore.getSiteByLocalId(TEST_SITE_ID)).thenReturn(
+            SiteModel().apply { id = TEST_SITE_ID; url = TEST_URL }
+        )
+        whenever(siteProvisioningSource.isXmlRpcUnavailable(TEST_SITE_ID)).thenReturn(true)
+        slice.buildCard(siteTest)
+
+        (card as MySiteCardAndItem.Item.SingleActionCard).onActionClick()
+
+        assertThat(navigation).isEqualTo(SiteNavigationAction.OpenXmlRpcDisabledBottomSheet)
     }
 }
