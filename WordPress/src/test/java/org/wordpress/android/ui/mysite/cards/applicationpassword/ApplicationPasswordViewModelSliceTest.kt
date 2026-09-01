@@ -183,5 +183,4 @@ class ApplicationPasswordViewModelSliceTest : BaseUnitTest() {
 
         assertNull(card)
     }
-
 }
