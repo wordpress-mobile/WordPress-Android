@@ -93,8 +93,11 @@ class JetpackConnectionHelper @Inject constructor(
         }
     }
 
+    // takeIf: wpApiRestUrl can be an empty string as well as null (the column is cleared, not
+    // dropped), and ParsedUrl.parse("") throws. Mirrors WpApiClientProvider.buildUrl, which the
+    // install client used before it got its own notifier-free client.
     private fun resolveRestApiUrl(site: SiteModel) =
-        site.wpApiRestUrl ?: "${site.url}/wp-json"
+        site.wpApiRestUrl?.takeIf { it.isNotEmpty() } ?: "${site.url}/wp-json"
 
     private inner class InvalidAuthNotifier : WpAppNotifier {
         override suspend fun requestedWithInvalidAuthentication(requestUrl: String) {

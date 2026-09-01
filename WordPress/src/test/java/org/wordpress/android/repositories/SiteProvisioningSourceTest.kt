@@ -7,7 +7,9 @@ import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
 import org.mockito.kotlin.any
+import org.mockito.kotlin.atMost
 import org.mockito.kotlin.eq
+import org.mockito.kotlin.mockingDetails
 import org.mockito.kotlin.never
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
@@ -81,6 +83,23 @@ class SiteProvisioningSourceTest : BaseUnitTest(StandardTestDispatcher()) {
 
     private suspend fun stubValidate(outcome: ApplicationPasswordValidator.Outcome) =
         whenever(applicationPasswordValidator.validate(any())).thenReturn(outcome)
+
+    /**
+     * The real validator talks through `getApplicationPasswordClient`, whose notifier reports a 401
+     * back to the source — so a revoked credential fires onRequestedWithInvalidAuthentication during
+     * the very heal that is fixing it. Plain `thenReturn` stubs hide that feedback entirely.
+     */
+    private suspend fun stubValidateFiringNotifierOn401(vararg outcomes: ApplicationPasswordValidator.Outcome) {
+        var call = 0
+        whenever(applicationPasswordValidator.validate(any())).thenAnswer {
+            val outcome = outcomes[minOf(call, outcomes.lastIndex)]
+            call++
+            if (outcome == ApplicationPasswordValidator.Outcome.Invalid) {
+                source.onRequestedWithInvalidAuthentication(site)
+            }
+            outcome
+        }
+    }
 
     private suspend fun stubMintSuccess() =
         whenever(siteStore.createApplicationPassword(any())).thenReturn(
@@ -501,6 +520,87 @@ class SiteProvisioningSourceTest : BaseUnitTest(StandardTestDispatcher()) {
         // One routine run plus exactly one heal; the heal proved re-provisioning changes nothing.
         verify(applicationPasswordValidator, times(2)).validate(any())
         verify(siteStore, never()).createApplicationPassword(any())
+    }
+
+    @Test
+    fun `given validation's own 401 during a successful heal, then no redundant re-heal and healing stays enabled`() =
+        test {
+            // The heal's validate sees the revoked credential (Invalid) and its notifier fires mid-run;
+            // the mint then succeeds. The deferred heal must notice the run already re-minted and stand
+            // down, or it re-validates the fresh password, records "changed nothing", and permanently
+            // disables healing for the site (#22944 review c2).
+            val selfHosted = SiteModel().apply {
+                id = TEST_SITE_LOCAL_ID
+                url = "https://test.example.com"
+                wpApiRestUrl = "https://test.example.com/wp-json"
+                xmlRpcUrl = "https://test.example.com/xmlrpc.php"
+            }
+            whenever(siteStore.getSiteByLocalId(TEST_SITE_LOCAL_ID)).thenReturn(selfHosted)
+            stubHasStoredCredentials(true)
+            stubValidateFiringNotifierOn401(ApplicationPasswordValidator.Outcome.Invalid)
+            stubMintSuccess()
+            stubCapabilityProbe(ok = true)
+
+            source.onRequestedWithInvalidAuthentication(site)
+            source.await(site)
+            testScheduler.advanceUntilIdle()
+
+            // Exactly one heal: the deferred one stood down because the run had already re-minted.
+            verify(siteStore, times(1)).createApplicationPassword(any())
+            verify(applicationPasswordReauthNotifier, never()).notifyReauthRequired(any())
+        }
+
+    @Test
+    fun `given a mint that never sticks, then heals stop after the budget is spent`() = test {
+        // A host that mints happily but never accepts the result would otherwise re-mint on every
+        // 401 forever, accumulating application passwords on the user's account (#22944 review c1).
+        stubHasStoredCredentials(true)
+        stubValidateFiringNotifierOn401(ApplicationPasswordValidator.Outcome.Invalid)
+        stubMintSuccess()
+        stubCapabilityProbe(ok = true)
+
+        source.onRequestedWithInvalidAuthentication(site)
+        source.await(site)
+        repeat(5) {
+            source.onRequestedWithInvalidAuthentication(site)
+            testScheduler.advanceUntilIdle()
+        }
+
+        // Bounded by MAX_CONSECUTIVE_HEALS rather than growing with the number of 401s.
+        verify(siteStore, atMost(2)).createApplicationPassword(any())
+    }
+
+    @Test
+    fun `given an explicit retry while a run is active, then the heal budget is still cleared`() = test {
+        // MySiteViewModel.refresh builds the application-password card first, which starts a run
+        // synchronously on Main.immediate — so invalidate lands mid-run for exactly the sites that
+        // need clearing. The clears must sit above the in-flight guard (#22944 review c4).
+        //
+        // The site must settle Unreachable, not Ready: Ready latches (so stateFor wouldn't start a
+        // run at all) and also resets the budget on its own, either of which hides the bug.
+        stubHasStoredCredentials(true)
+        stubValidate(ApplicationPasswordValidator.Outcome.Valid)
+        stubCapabilityProbe(ok = false, cached = false)
+        whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
+
+        source.onRequestedWithInvalidAuthentication(site) // heal #1: ConfirmedUnchanged -> budget spent
+        source.await(site)
+        assertThat(source.await(site)).isEqualTo(SiteReadiness.Unreachable) // never latches
+        source.stateFor(site)                             // a run is now in flight, as after buildCard
+        source.invalidate(site)                           // pull-to-refresh lands mid-run
+        testScheduler.advanceUntilIdle()
+
+        val validationsBeforeRetry = mockingDetails(applicationPasswordValidator).invocations
+            .count { it.method.name == "validate" }
+
+        source.onRequestedWithInvalidAuthentication(site) // must be honoured again
+        testScheduler.advanceUntilIdle()
+
+        val validationsAfterRetry = mockingDetails(applicationPasswordValidator).invocations
+            .count { it.method.name == "validate" }
+        assertThat(validationsAfterRetry)
+            .describedAs("the 401 after an explicit retry should have started a fresh heal")
+            .isGreaterThan(validationsBeforeRetry)
     }
 
     @Test

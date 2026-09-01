@@ -88,6 +88,12 @@ class ApplicationPasswordLoginHelper @Inject constructor(
              * has to be publicly reachable for the login flow to read its API.
              */
             PrivateSite,
+
+            /**
+             * Discovery succeeded but the site advertises no application-passwords endpoint, so it
+             * genuinely can't be logged into this way.
+             */
+            NotSupported,
         }
     }
 
@@ -112,6 +118,15 @@ class ApplicationPasswordLoginHelper @Inject constructor(
                     } else {
                         val authorizationUrl =
                             discoverSuccessWrapper.getApplicationPasswordsAuthenticationUrl(urlDiscoveryResult)
+                        if (authorizationUrl == null) {
+                            // Discovery worked; the site just doesn't offer application passwords. This
+                            // is the one case the old blanket "not supported" message was right about.
+                            return@withContext handleAuthenticationDiscoveryError(
+                                siteUrl,
+                                "No application-passwords authentication URL advertised",
+                                DiscoveryResult.FailureReason.NotSupported,
+                            )
+                        }
                         val apiRootUrl = discoverSuccessWrapper.getApiRootUrl(urlDiscoveryResult)
                         if (apiRootUrl.isNotEmpty()) {
                             // Store the ApiRootUrl for use it after the login
@@ -489,12 +504,9 @@ class ApplicationPasswordLoginHelper @Inject constructor(
                     WPUrlUtils.isWordPressCom(authentication.endpoints.authorizationUrl)
         }
 
+        /** `null` when the site advertises no application-passwords endpoint. */
         fun getApplicationPasswordsAuthenticationUrl(
             successObject: ApiDiscoveryResult.Success
-        ): String = requireNotNull(
-            applicationPasswordsUrl(successObject.success.authentication)?.url()
-        ) {
-            "Application passwords authentication URL is required"
-        }
+        ): String? = applicationPasswordsUrl(successObject.success.authentication)?.url()
     }
 }

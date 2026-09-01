@@ -27,6 +27,10 @@ import javax.inject.Named
 import javax.inject.Singleton
 import kotlin.coroutines.cancellation.CancellationException
 
+// How many consecutive heals a site may attempt before we stop honouring its 401s. Two allows one
+// retry after a re-mint that didn't take, without letting a self-feeding 401 run unbounded.
+private const val MAX_CONSECUTIVE_HEALS = 2
+
 /**
  * The single source of truth for getting a site ready to use: it provisions
  * application-password credentials, recovers the REST API root, recovers the
@@ -95,12 +99,19 @@ class SiteProvisioningSource @Inject constructor(
     // licenses the application-password card to show the XML-RPC-disabled warning.
     private val xmlRpcUnavailable = ConcurrentHashMap.newKeySet<Int>()
 
-    // Sites whose last heal ran to completion without changing the credentials. Their 401s aren't an
-    // application-password problem (a WP.com bearer token rejected on the proxy raises the same
-    // notification), so re-running ensureAuth can only re-validate the same good password. Without this
-    // the pipeline's own detection calls feed their 401 back into healForInvalidAuth and relaunch
-    // forever. Cleared by invalidate / clear, so a user-initiated retry re-enables healing.
-    private val healFutile = ConcurrentHashMap.newKeySet<Int>()
+    // Heal budget spent per site. The pipeline's own requests can 401 (validation and the capability
+    // probe both go through notifier-wired clients), so an unbounded heal feeds itself. A heal that
+    // confirmed the stored password and replaced nothing can never be the fix — the 401 came from
+    // something re-provisioning can't touch — so it spends the whole budget at once; one that
+    // re-minted might have worked, so it only counts against it, which bounds a host that mints
+    // happily but never accepts the result. Reset when a run reaches Ready without needing a heal,
+    // and by invalidate / clear.
+    private val healBudgetSpent = ConcurrentHashMap<Int, Int>()
+
+    // What the most recent run established about each site's credentials. The deferred heal reads it
+    // to avoid re-running after a run that already re-minted — validation's own 401 fires the notifier
+    // during the very heal that is fixing it, which would otherwise schedule a redundant second run.
+    private val lastEvidence = ConcurrentHashMap<Int, HealEvidence>()
 
     // Sites already escalated to interactive re-auth for their current Unprovisionable state. Both
     // escalation paths funnel through escalateReauth, which uses this for idempotency; a run settling
@@ -149,13 +160,16 @@ class SiteProvisioningSource @Inject constructor(
      */
     @Synchronized
     fun invalidate(site: SiteModel) {
+        // Clear the suppression verdicts first, above the in-flight guard. Only the *relaunch* must not
+        // pre-empt a mid-mint run; dropping these sets pre-empts nothing. It has to happen here because
+        // MySiteViewModel.refresh builds the application-password card before it reaches this call, and
+        // that card's buildCard starts a run synchronously on Main.immediate — so by the time an
+        // explicit retry lands, a run is already active for exactly the sites that need clearing.
+        healBudgetSpent.remove(site.id)
+        escalated.remove(site.id)
         // No-op while running — see KDoc: don't pre-empt an in-flight mint.
         if (jobs[site.id]?.isActive == true) return
         ready.remove(site.id)
-        // An explicit retry is the user asking us to try everything again, so drop the futile-heal and
-        // already-escalated verdicts that would otherwise suppress a 401 heal / re-auth prompt.
-        healFutile.remove(site.id)
-        escalated.remove(site.id)
         launchPipeline(site.id)
     }
 
@@ -168,7 +182,8 @@ class SiteProvisioningSource @Inject constructor(
         ready.clear()
         reauthOnFailure.clear()
         xmlRpcUnavailable.clear()
-        healFutile.clear()
+        healBudgetSpent.clear()
+        lastEvidence.clear()
         escalated.clear()
     }
 
@@ -203,14 +218,20 @@ class SiteProvisioningSource @Inject constructor(
      *   heal.
      * - An already-[SiteAuthState.Unprovisionable] site has its re-auth pending the user; re-running
      *   would just re-fail the mint on every 401.
-     * - A site in [healFutile] already had a heal confirm its stored password and replace nothing, so
-     *   its 401s come from something re-provisioning can't fix.
+     * - A site that has spent its heal budget ([healBudgetSpent]) has already had attempts that
+     *   changed nothing, so its 401s come from something re-provisioning can't fix.
      */
-    private fun canHeal(site: SiteModel): Boolean {
-        val auth = (states[site.id]?.value as? SiteReadiness.NeedsAuth)?.auth
-        return !site.isWPComSimpleSite &&
-            auth !is SiteAuthState.Unprovisionable &&
-            site.id !in healFutile
+    private fun canHeal(site: SiteModel): Boolean =
+        !site.isWPComSimpleSite && hasHealBudget(site.id)
+
+    /**
+     * Whether [siteLocalId] may still be healed: its re-auth isn't already pending the user, and it
+     * hasn't spent its heal budget on attempts that changed nothing.
+     */
+    private fun hasHealBudget(siteLocalId: Int): Boolean {
+        val auth = (states[siteLocalId]?.value as? SiteReadiness.NeedsAuth)?.auth
+        return auth !is SiteAuthState.Unprovisionable &&
+            (healBudgetSpent[siteLocalId] ?: 0) < MAX_CONSECUTIVE_HEALS
     }
 
     /**
@@ -224,8 +245,8 @@ class SiteProvisioningSource @Inject constructor(
      * Two cases end the deferral instead of relaunching. A run that settled
      * [SiteAuthState.Unprovisionable] has already made a terminal mint attempt, so relaunching would
      * only re-fail it — escalate to interactive re-auth instead (a *routine* run never armed
-     * [reauthOnFailure], so it never escalated on its own). And a site in [healFutile] has already had
-     * a heal change nothing, so its 401 is not an application-password problem.
+     * [reauthOnFailure], so it never escalated on its own). And a site that has spent its heal budget
+     * has already had attempts change nothing, so its 401 is not an application-password problem.
      */
     @Synchronized
     private fun healForInvalidAuth(site: SiteModel) {
@@ -239,22 +260,36 @@ class SiteProvisioningSource @Inject constructor(
         }
         active.invokeOnCompletion { cause ->
             if (cause != null) return@invokeOnCompletion // cancelled / relaunched — a fresh run is coming
-            synchronized(this@SiteProvisioningSource) {
-                if (jobs[siteLocalId]?.isActive == true) return@synchronized // a newer run is already underway
-                // Re-checked here, not just at registration time: the run we were waiting on may itself
-                // have been the heal that proved healing futile.
-                if (siteLocalId in healFutile) return@synchronized
-                val settledAuth = (states[siteLocalId]?.value as? SiteReadiness.NeedsAuth)?.auth
-                if (settledAuth is SiteAuthState.Unprovisionable) {
-                    // Terminal mint failure — a relaunch would just re-fail it. Escalate instead, which
-                    // a routine run's tail skipped because it never armed reauthOnFailure.
-                    escalateReauth(siteLocalId, settledAuth)
-                    return@synchronized
-                }
-                reauthOnFailure.add(siteLocalId)
-                ready.remove(siteLocalId)
-                launchPipeline(siteLocalId)
-            }
+            // Decide under the lock, act outside it: escalateReauth reads the DB and starts an
+            // Activity, and the main thread takes this same monitor on every stateFor / invalidate.
+            val escalation = synchronized(this@SiteProvisioningSource) { resumeDeferredHeal(siteLocalId) }
+            escalation?.let { escalateReauth(siteLocalId, it) }
+        }
+    }
+
+    /**
+     * The deferred half of [healForInvalidAuth], run once the in-flight pipeline finishes. Returns the
+     * [SiteAuthState.Unprovisionable] to escalate for, or `null` when there's nothing to do — the
+     * caller performs the escalation outside the lock.
+     */
+    private fun resumeDeferredHeal(siteLocalId: Int): SiteAuthState.Unprovisionable? = when {
+        // Superseded: a newer run is underway, or the run we waited on itself re-minted. Validation's
+        // own 401 goes through a notifier-wired client, so the heal that fixes a revoked password also
+        // schedules this deferral — re-running would re-validate the fresh credential for nothing.
+        jobs[siteLocalId]?.isActive == true ||
+            lastEvidence[siteLocalId] == HealEvidence.Replaced -> null
+
+        // Budget re-checked here, not just at registration time: that run may have spent it. A
+        // terminal mint failure escalates instead of relaunching — a routine run's tail skipped that
+        // because it never armed reauthOnFailure.
+        !hasHealBudget(siteLocalId) ->
+            (states[siteLocalId]?.value as? SiteReadiness.NeedsAuth)?.auth as? SiteAuthState.Unprovisionable
+
+        else -> {
+            reauthOnFailure.add(siteLocalId)
+            ready.remove(siteLocalId)
+            launchPipeline(siteLocalId)
+            null
         }
     }
 
@@ -265,9 +300,10 @@ class SiteProvisioningSource @Inject constructor(
      * [wasHeal] is the consumed [reauthOnFailure] flag: only a 401-triggered run may prompt, so a
      * routine run that happens to settle [SiteAuthState.Unprovisionable] leaves the prompt to the
      * application-password card. A heal that settled without changing the credentials is recorded in
-     * [healFutile] — the 401 came from something re-provisioning can't fix.
+     * [healBudgetSpent] — the 401 came from something re-provisioning can't fix.
      */
     private fun settleHealState(siteLocalId: Int, result: PipelineResult, wasHeal: Boolean) {
+        lastEvidence[siteLocalId] = result.evidence
         val auth = (result.readiness as? SiteReadiness.NeedsAuth)?.auth
         if (auth is SiteAuthState.Unprovisionable) {
             if (wasHeal) escalateReauth(siteLocalId, auth)
@@ -275,15 +311,24 @@ class SiteProvisioningSource @Inject constructor(
         }
         // Not stuck on auth any more, so a future revocation should be able to prompt again.
         escalated.remove(siteLocalId)
-        // The heal confirmed the stored password works and replaced nothing, yet a 401 still prompted
-        // it — so re-provisioning cannot be the fix. Stop honouring this site's 401s until an explicit
-        // retry. Inconclusive runs (site unreachable, offline, no password applies) prove nothing.
-        if (wasHeal && result.evidence == HealEvidence.ConfirmedUnchanged) {
-            appLogWrapper.w(
-                AppLog.T.MAIN,
-                "A_P: Heal for $siteLocalId changed no credentials - suppressing further 401 heals"
-            )
-            healFutile.add(siteLocalId)
+        when {
+            wasHeal -> {
+                // A heal that only re-confirmed the stored password can never be the fix, so it
+                // exhausts the budget outright; one that re-minted might have worked, so it costs one.
+                val cost = if (result.evidence == HealEvidence.ConfirmedUnchanged) {
+                    MAX_CONSECUTIVE_HEALS
+                } else {
+                    1
+                }
+                val spent = healBudgetSpent.merge(siteLocalId, cost, Int::plus)
+                appLogWrapper.w(
+                    AppLog.T.MAIN,
+                    "A_P: Heal for $siteLocalId spent $cost (${spent}/$MAX_CONSECUTIVE_HEALS)"
+                )
+            }
+            // A run that reached Ready without needing a heal means whatever was failing has cleared,
+            // so a later revocation gets a full budget again.
+            result.readiness == SiteReadiness.Ready -> healBudgetSpent.remove(siteLocalId)
         }
     }
 

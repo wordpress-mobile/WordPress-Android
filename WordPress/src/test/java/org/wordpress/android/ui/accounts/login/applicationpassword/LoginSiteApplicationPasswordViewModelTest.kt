@@ -147,4 +147,27 @@ class LoginSiteApplicationPasswordViewModelTest : BaseUnitTest() {
         assertEquals(privateSiteMessage, viewModel.errorMessage.value)
         assertEquals(false, viewModel.loadingStateFlow.value)
     }
+
+    @Test
+    fun `Given a site without application passwords, then the not-supported message is shown`() = test {
+        // Discovery succeeded but advertised no application-passwords endpoint. Removing the
+        // fragment's blanket overwrite took this message's only producer with it, leaving the raw
+        // untranslated exception text on screen (#22944 review c3).
+        val siteUrl = "https://example.com"
+        val notSupportedMessage = "The provided site does not support Application Password authentication."
+        whenever(resourceProvider.getString(R.string.application_password_not_supported_error))
+            .thenReturn(notSupportedMessage)
+        whenever(applicationPasswordLoginHelper.getAuthorizationUrlComplete(siteUrl))
+            .thenReturn(
+                ApplicationPasswordLoginHelper.DiscoveryResult.Failed(
+                    userFacingMessage = "No application-passwords authentication URL advertised",
+                    reason = ApplicationPasswordLoginHelper.DiscoveryResult.FailureReason.NotSupported,
+                )
+            )
+
+        viewModel.runApiDiscovery(siteUrl)
+        advanceUntilIdle()
+
+        assertEquals(notSupportedMessage, viewModel.errorMessage.value)
+    }
 }

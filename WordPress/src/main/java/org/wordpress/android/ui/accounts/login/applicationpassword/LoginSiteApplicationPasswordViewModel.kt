@@ -62,6 +62,8 @@ class LoginSiteApplicationPasswordViewModel @Inject constructor(
         when (result.reason) {
             ApplicationPasswordLoginHelper.DiscoveryResult.FailureReason.PrivateSite ->
                 resourceProvider.getString(R.string.application_password_private_site_error)
+            ApplicationPasswordLoginHelper.DiscoveryResult.FailureReason.NotSupported ->
+                resourceProvider.getString(R.string.application_password_not_supported_error)
             ApplicationPasswordLoginHelper.DiscoveryResult.FailureReason.Unknown ->
                 result.userFacingMessage
         }
