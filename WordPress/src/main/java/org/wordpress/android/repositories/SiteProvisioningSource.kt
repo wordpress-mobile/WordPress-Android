@@ -99,8 +99,9 @@ class SiteProvisioningSource @Inject constructor(
     // licenses the application-password card to show the XML-RPC-disabled warning.
     private val xmlRpcUnavailable = ConcurrentHashMap.newKeySet<Int>()
 
-    // Heal budget spent per site. The pipeline's own requests can 401 (validation and the capability
-    // probe both go through notifier-wired clients), so an unbounded heal feeds itself. A heal that
+    // Heal budget spent per site. The pipeline's own requests can 401 — validation always goes through
+    // a notifier-wired client, as does the capability probe on self-hosted sites — so an unbounded
+    // heal feeds itself. A heal that
     // confirmed the stored password and replaced nothing can never be the fix — the 401 came from
     // something re-provisioning can't touch — so it spends the whole budget at once; one that
     // re-minted might have worked, so it only counts against it, which bounds a host that mints
@@ -196,7 +197,7 @@ class SiteProvisioningSource @Inject constructor(
 
     /**
      * [WpAppNotifierHandler.NotifierListener] — wordpress-rs rejected a request for [site] with invalid
-     * authentication (a revoked application password, or an expired WP.com bearer token). Re-provision it
+     * authentication — a revoked application password; bearer clients no longer report here. Re-provision it
      * so ensureAuth re-validates and heals: for a WP.com-connected site the headless re-mint succeeds and
      * recovery is silent; for one that can't be re-minted the run settles Unprovisionable and
      * [settleHealState] escalates to interactive re-auth.
