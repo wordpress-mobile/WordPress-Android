@@ -1114,6 +1114,59 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `when loadData reloads while a bar is selected, then the selection and effective period reset`() = test {
+        whenever(statsRepository.fetchStatsForPeriod(any(), any()))
+            .thenReturn(createPeriodStatsResult())
+
+        initViewModel()
+        advanceUntilIdle()
+        val committed = viewModel.selectedPeriod.value
+
+        viewModel.onChartTypeChanged(ChartType.BAR)
+        viewModel.onBarTapped(0)
+        advanceUntilIdle()
+        assertThat(viewModel.uiState.value.selectedBar()).isNotNull
+        assertThat(viewModel.effectivePeriod.value).isNotEqualTo(committed)
+
+        // loadVisibleCards()/Retry call loadData() directly; it must not leave effectivePeriod stuck.
+        viewModel.loadData()
+        advanceUntilIdle()
+
+        assertThat(viewModel.uiState.value.selectedBar()).isNull()
+        assertThat(viewModel.effectivePeriod.value).isEqualTo(committed)
+    }
+
+    @Test
+    fun `when a refresh chart reload lands after a bar is tapped, then the overlaid header survives`() = test {
+        whenever(statsRepository.fetchStatsForPeriod(any(), any()))
+            .thenReturn(createPeriodStatsResult())
+        whenever(statsRepository.fetchBottomStats(any(), any()))
+            .thenReturn(createBottomStatsResult())
+
+        initViewModel()
+        advanceUntilIdle()
+        viewModel.onChartTypeChanged(ChartType.BAR)
+
+        // Gate the refresh's chart fetch so we can tap a bar while it is in flight.
+        val gate = CompletableDeferred<Unit>()
+        whenever(statsRepository.fetchStatsForPeriod(any(), any())).doSuspendableAnswer {
+            gate.await()
+            createPeriodStatsResult(currentViews = 9999L)
+        }
+        viewModel.refresh()
+        viewModel.onBarTapped(0)
+        advanceUntilIdle()
+        val overlaidTotal = viewModel.uiState.value.chartLoaded().currentPeriodTotal
+
+        gate.complete(Unit)
+        advanceUntilIdle()
+
+        // The landing refresh must not clobber the bar overlay with the fresh whole-period total.
+        assertThat(viewModel.uiState.value.selectedBar()).isNotNull
+        assertThat(viewModel.uiState.value.chartLoaded().currentPeriodTotal).isEqualTo(overlaidTotal)
+    }
+
+    @Test
     fun `when refreshing while a bar is selected, then the selection is cleared`() = test {
         whenever(statsRepository.fetchStatsForPeriod(any(), any()))
             .thenReturn(createPeriodStatsResult())
@@ -1132,6 +1185,32 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
         assertThat(viewModel.uiState.value.selectedBar()).isNull()
         assertThat(viewModel.effectivePeriod.value).isEqualTo(viewModel.selectedPeriod.value)
         // The header is the whole-period total again, not the tapped bar's value.
+        assertThat(viewModel.uiState.value.chartLoaded().currentPeriodTotal)
+            .isEqualTo(TEST_CURRENT_PERIOD_VIEWS)
+    }
+
+    @Test
+    fun `when the committed range is re-selected while a bar is selected, then the selection clears`() = test {
+        whenever(statsRepository.fetchStatsForPeriod(any(), any()))
+            .thenReturn(createPeriodStatsResult())
+
+        initViewModel()
+        advanceUntilIdle()
+        val committed = viewModel.selectedPeriod.value
+
+        viewModel.onChartTypeChanged(ChartType.BAR)
+        viewModel.onBarTapped(0)
+        advanceUntilIdle()
+        assertThat(viewModel.uiState.value.selectedBar()).isNotNull
+        assertThat(viewModel.effectivePeriod.value).isNotEqualTo(committed)
+
+        // Tapping the already-committed range (its label showed the bar's date) restores the full view.
+        viewModel.onPeriodChanged(committed)
+        advanceUntilIdle()
+
+        assertThat(viewModel.uiState.value.selectedBar()).isNull()
+        assertThat(viewModel.selectedPeriod.value).isEqualTo(committed)
+        assertThat(viewModel.effectivePeriod.value).isEqualTo(committed)
         assertThat(viewModel.uiState.value.chartLoaded().currentPeriodTotal)
             .isEqualTo(TEST_CURRENT_PERIOD_VIEWS)
     }

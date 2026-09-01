@@ -489,7 +489,11 @@ private fun NewStatsScreen(
                                 }
                                 StatsPeriodMenu(
                                     expanded = showPeriodMenu,
-                                    selectedPeriod = selectedPeriod,
+                                    // While a bar is soft-selected effectivePeriod differs from the
+                                    // committed range, so show no item as selected (the label shows
+                                    // the bar's date instead).
+                                    selectedPeriod = selectedPeriod
+                                        .takeIf { effectivePeriod == it },
                                     onDismiss = {
                                         showPeriodMenu = false
                                     },
@@ -1496,7 +1500,9 @@ private fun InsightsTabContent(
 @Composable
 private fun StatsPeriodMenu(
     expanded: Boolean,
-    selectedPeriod: StatsPeriod,
+    // Null while a bar is soft-selected: the effective range is a single bucket that matches no
+    // preset, so no item is checked and tapping any preset reloads the whole screen.
+    selectedPeriod: StatsPeriod?,
     onDismiss: () -> Unit,
     onPresetSelected: (StatsPeriod) -> Unit,
     onCustomSelected: () -> Unit

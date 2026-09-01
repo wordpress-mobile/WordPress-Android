@@ -167,14 +167,19 @@ class ViewsStatsViewModel @Inject constructor(
     }
 
     fun onPeriodChanged(period: StatsPeriod) {
-        if (period == currentPeriod) return
-        // A real period change supersedes any soft bar selection. Reset it here so a stale highlight
-        // or arrow row can't survive the reload (loadData rebuilds Content fresh, but menu/custom
-        // callers reach this without an immediate rebuild).
-        _selectedBarPeriod.value = null
-        (_uiState.value as? ViewsStatsCardUiState.Content)?.let { content ->
-            if (content.selectedBar != null) _uiState.value = content.copy(selectedBar = null)
+        val hasSoftSelection = _selectedBarPeriod.value != null ||
+            (_uiState.value as? ViewsStatsCardUiState.Content)?.selectedBar != null
+        if (period == currentPeriod) {
+            // Re-selecting the committed range while a bar is soft-selected returns the whole screen
+            // to the full period: clearing the selection reverts effectivePeriod (reloading the other
+            // cards) and restores this card's whole-period header/bottom. The range label showed the
+            // bar's date, so this is the way back. A plain no-op when nothing is selected.
+            if (hasSoftSelection) clearSoftSelection()
+            return
         }
+        // A real period change supersedes any soft bar selection; clear it first (restoring the
+        // whole-period header/bottom) so no stale overlay survives into the reload.
+        clearSoftSelection()
         currentPeriod = period
         // Drop the previous period's cached chart result so a metric switch mid-load can't re-plot from
         // stale data or evaluate availability against the wrong period; it is repopulated on next load.
@@ -632,6 +637,10 @@ class ViewsStatsViewModel @Inject constructor(
         // While switching to a new period we keep the previous content on screen (dimmed, with a
         // spinner) instead of resetting to placeholders; otherwise show per-region placeholders.
         if (current !is ViewsStatsCardUiState.Content || !current.isLoadingNewPeriod) {
+            // A fresh (re)load supersedes any soft bar selection (e.g. loadVisibleCards on network
+            // regain, or a no-connection Retry). Clear its effective period in lockstep with dropping
+            // selectedBar below, so effectivePeriod can't stay stuck on the bar's sub-period.
+            _selectedBarPeriod.value = null
             _uiState.value = ViewsStatsCardUiState.Content(
                 chart = ChartUiState.Loading,
                 bottomStats = BottomStatsUiState.Loading,
@@ -805,8 +814,15 @@ class ViewsStatsViewModel @Inject constructor(
     private fun updateChart(chart: ChartUiState) {
         _uiState.update { current ->
             when (current) {
+                // Mirror updateBottom: while a bar is soft-selected the visible chart holds the bar's
+                // overlaid header. A late reload (a background refresh landing after the user tapped a
+                // bar) must not drop it while the highlight/date/arrow/effectivePeriod still point at
+                // the bar; lastChartResult already holds the fresh data for the eventual clear.
                 is ViewsStatsCardUiState.Content ->
-                    current.copy(chart = chart, selectedMetric = currentSelectedMetric)
+                    current.copy(
+                        chart = if (current.selectedBar != null) current.chart else chart,
+                        selectedMetric = currentSelectedMetric
+                    )
                 else -> ViewsStatsCardUiState.Content(
                     chart = chart,
                     bottomStats = BottomStatsUiState.Loading,
