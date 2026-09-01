@@ -160,10 +160,11 @@ class ApplicationPasswordViewModelSlice @Inject constructor(
             uiModelMutable.postValue(
                 MySiteCardAndItem.Item.SingleActionCard(
                     textResource = R.string.application_password_private_site_card,
+                    // Hidden by centerText — the card is a notice with nothing to tap.
                     imageResource = R.drawable.ic_notice_white_24dp,
                     onActionClick = { },
-                    centerImageVertically = true,
                     showLearnMore = false,
+                    centerText = true,
                 )
             )
             appLogWrapper.d(AppLog.T.MAIN, "A_P: Showing private-site card for ${site.url}")
