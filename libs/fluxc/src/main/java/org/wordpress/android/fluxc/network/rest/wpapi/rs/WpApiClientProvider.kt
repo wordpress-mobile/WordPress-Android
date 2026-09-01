@@ -172,10 +172,11 @@ class WpApiClientProvider @Inject constructor(
                 apiUrlResolver = urlResolver,
                 authProvider = createWpComAuthProvider(accountStore),
                 requestExecutor = WpRequestExecutor(emptyList(), networkAvailabilityProvider),
+                // WpAppNotifierHandler listeners respond with application-password
+                // reauthentication, which can't fix a bearer-token 401; the screens surface
+                // WP.com auth errors themselves. So bearer clients don't report to the handler.
                 appNotifier = object : WpAppNotifier {
-                    override suspend fun requestedWithInvalidAuthentication(requestUrl: String) {
-                        wpAppNotifierHandler.notifyRequestedWithInvalidAuthentication(site)
-                    }
+                    override suspend fun requestedWithInvalidAuthentication(requestUrl: String) = Unit
                 }
             )
         }
