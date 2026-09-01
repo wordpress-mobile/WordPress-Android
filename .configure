@@ -15,7 +15,7 @@
     },
     {
       "file": "android/debug.keystore",
-      "destination": "~/.configure/wordpress-android/secrets/debug_a8c.keystore",
+      "destination": "~/.configure/wordpress-android/secrets/debug.keystore",
       "encrypt": true
     },
     {
@@ -25,7 +25,7 @@
     },
     {
       "file": "android/automattic_upload.jks",
-      "destination": "WordPress/upload.jks",
+      "destination": "~/.configure/wordpress-android/secrets/upload.jks",
       "encrypt": true
     },
     {
