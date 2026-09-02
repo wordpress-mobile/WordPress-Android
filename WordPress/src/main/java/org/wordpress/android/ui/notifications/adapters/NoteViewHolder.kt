@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import android.view.ViewTreeObserver
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.annotation.StringRes
 import androidx.core.text.BidiFormatter
 import androidx.core.text.trimmedLength
 import androidx.core.view.isVisible
@@ -26,11 +25,15 @@ import org.wordpress.android.ui.comments.CommentUtils
 import org.wordpress.android.ui.notifications.NotificationsListViewModel
 import org.wordpress.android.ui.notifications.blocks.NoteBlockClickableSpan
 import org.wordpress.android.ui.notifications.utils.NotificationsUtilsWrapper
+import org.wordpress.android.util.DateUtils.isSameDay
 import org.wordpress.android.util.GravatarUtils
 import org.wordpress.android.util.RtlUtils
 import org.wordpress.android.util.extensions.getColorFromAttribute
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType
+import java.text.DateFormat
+import java.util.Calendar
+import java.util.Date
 import javax.inject.Inject
 import kotlin.math.roundToInt
 
@@ -141,24 +144,26 @@ class NoteViewHolder(
             binding.root.context.getString(if (liked) R.string.mnu_comment_liked else R.string.reader_label_like)
     }
 
-    @StringRes
-    private fun timeGroupHeaderText(note: Note, previousNote: Note?) =
-        previousNote?.timeGroup.let { previousTimeGroup ->
-            val timeGroup = note.timeGroup
-            if (previousTimeGroup?.let { it == timeGroup } == true) {
-                // If the previous time group exists and is the same, we don't need a new one
-                null
-            } else {
-                // Otherwise, we create a new one
-                when (timeGroup) {
-                    Note.NoteTimeGroup.GROUP_TODAY -> R.string.stats_timeframe_today
-                    Note.NoteTimeGroup.GROUP_YESTERDAY -> R.string.stats_timeframe_yesterday
-                    Note.NoteTimeGroup.GROUP_OLDER_TWO_DAYS -> R.string.older_two_days
-                    Note.NoteTimeGroup.GROUP_OLDER_WEEK -> R.string.older_last_week
-                    Note.NoteTimeGroup.GROUP_OLDER_MONTH -> R.string.older_month
-                }
+    private fun timeGroupHeaderText(note: Note, previousNote: Note?): String? {
+        val noteDate = Date(note.timestamp * MILLISECOND)
+
+        // If we have a previous note, check if it's from the same calendar day
+        previousNote?.let { prevNote ->
+            val prevNoteDate = Date(prevNote.timestamp * MILLISECOND)
+            if (isSameDay(noteDate, prevNoteDate)) {
+                // Same day as previous note, don't show a header
+                return null
             }
         }
+
+        return when (note.timeGroup) {
+            Note.NoteTimeGroup.GROUP_TODAY -> binding.root.context.getString(R.string.stats_timeframe_today)
+            Note.NoteTimeGroup.GROUP_YESTERDAY -> binding.root.context.getString(R.string.stats_timeframe_yesterday)
+            Note.NoteTimeGroup.GROUP_OLDER_TWO_DAYS,
+            Note.NoteTimeGroup.GROUP_OLDER_WEEK,
+            Note.NoteTimeGroup.GROUP_OLDER_MONTH -> timeGroupHeaderDate(noteDate)
+        }
+    }
 
     fun bindSubject(note: Note) {
         // Subject is stored in db as html to preserve text formatting
@@ -269,4 +274,22 @@ class NoteViewHolder(
 
     private val Note.timeGroup
         get() = Note.getTimeGroupForTimestamp(timestamp)
+}
+
+private const val MILLISECOND = 1000
+
+/**
+ * Get formatted date string for display in notification headers
+ */
+private fun timeGroupHeaderDate(date: Date): String {
+    val calendar = Calendar.getInstance()
+    val currentYear = calendar[Calendar.YEAR]
+    calendar.time = date
+    val noteYear = calendar[Calendar.YEAR]
+
+    val text = DateFormat.getDateInstance(DateFormat.MEDIUM).format(date)
+    return when (noteYear) {
+        currentYear -> text.replace(", $noteYear", "")
+        else -> text
+    }
 }
