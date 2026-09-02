@@ -3837,7 +3837,6 @@ Language: pl
     <string name="reader_toast_err_removing_tag">Nie udało się usunąć tagu</string>
     <string name="reader_toast_err_adding_tag">Nie udało się dodać tagu</string>
     <string name="reader_title_applog">Dziennik aplikacji</string>
-    <string name="fatal_db_error">Wystąpił błąd podczas tworzenia bazy danych. Spróbuj przeinstalować aplikacje.</string>
     <string name="error_refresh_media">Nie można było odświeżyć mediów w tym momencie</string>
     <string name="wordpress_blog">WordPress blog</string>
     <string name="local_changes">Zmiany lokalne</string>

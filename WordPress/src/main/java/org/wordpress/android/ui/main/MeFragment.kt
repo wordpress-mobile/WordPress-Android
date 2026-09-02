@@ -16,6 +16,8 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
+import androidx.startup.AppInitializer
+import androidx.startup.Initializer
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import com.gravatar.quickeditor.GravatarQuickEditor
@@ -257,6 +259,7 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
     ) {
         try {
             appLogWrapper.d(AppLog.T.MAIN, "Gravatar: Showing Gravatar quick editor: ${page.value}")
+            initGravatarQuickEditor()
             GravatarQuickEditor.show(
                 fragment = this@MeFragment,
                 gravatarQuickEditorParams = GravatarQuickEditorParams {
@@ -292,6 +295,18 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
         } catch (exception: Exception) {
             appLogWrapper.d(AppLog.T.MAIN, "Gravatar: Error opening Gravatar quick editor: ${exception.message}")
         }
+    }
+
+    /**
+     * The Gravatar library's androidx.startup initializer is removed from the manifest because it does
+     * AndroidKeyStore work on the main thread at process start (a source of background ANRs). Initialize it on
+     * demand instead; [AppInitializer.initializeComponent] is idempotent, so repeated opens are safe. The
+     * initializer class is internal to the library, hence the lookup by name (R8 keeps every Initializer).
+     */
+    @Suppress("UNCHECKED_CAST")
+    private fun initGravatarQuickEditor() {
+        val initializer = Class.forName(GRAVATAR_QUICK_EDITOR_INITIALIZER) as Class<out Initializer<Any>>
+        AppInitializer.getInstance(requireContext()).initializeComponent(initializer)
     }
 
     private fun withVeryfiedEmail(
@@ -631,6 +646,8 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
     companion object {
         private const val IS_DISCONNECTING = "IS_DISCONNECTING"
         private const val GRAVATAR_URL = "https://www.gravatar.com"
+        private const val GRAVATAR_QUICK_EDITOR_INITIALIZER =
+            "com.gravatar.quickeditor.initializer.QuickEditorContainerInitializer"
         fun newInstance(): MeFragment {
             return MeFragment()
         }

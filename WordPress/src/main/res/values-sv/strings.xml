@@ -3837,7 +3837,6 @@ Language: sv_SE
     <string name="reader_toast_err_removing_tag">Kan inte ta bort denna etikett</string>
     <string name="reader_toast_err_adding_tag">Kan inte lägga till denna etikett</string>
     <string name="reader_title_applog">Programlogg</string>
-    <string name="fatal_db_error">Ett fel uppstod vid skapandet av app-databasen. Försök återinstallera appen.</string>
     <string name="error_refresh_media">Det gick inte att förnya medialistan just nu</string>
     <string name="wordpress_blog">WordPress-blogg</string>
     <string name="local_changes">Lokala ändringar</string>

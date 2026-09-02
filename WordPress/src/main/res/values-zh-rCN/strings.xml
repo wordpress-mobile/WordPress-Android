@@ -3830,7 +3830,6 @@ Language: zh_CN
     <string name="reader_toast_err_removing_tag">无法删除此标签</string>
     <string name="reader_toast_err_adding_tag">无法添加此标签</string>
     <string name="reader_title_applog">程序日志</string>
-    <string name="fatal_db_error">创建程序数据库时出错，请重新安装程序.</string>
     <string name="error_refresh_media">此时无法刷新媒体</string>
     <string name="wordpress_blog">WordPress 博客</string>
     <string name="local_changes">本地修改</string>

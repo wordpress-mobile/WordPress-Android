@@ -3833,7 +3833,6 @@ Language: ar
     <string name="new_media">وسائط جديدة</string>
     <string name="local_changes">التغيرات المحلية</string>
     <string name="post_settings">إعدادات المقالة</string>
-    <string name="fatal_db_error">حدث خطأ اثناء إنشاء قاعدة بيانات التطبيق. حاول إعادة تنصيب التطبيق.</string>
     <string name="horizontal_alignment" tools:ignore="UnusedResources" a8c-src-lib="module:editor">المحاذاة الأفقية</string>
     <string name="trash">سلة المهملات</string>
     <string name="comment_status_spam">مزعج</string>

@@ -3837,7 +3837,6 @@ Language: tr
     <string name="reader_toast_err_removing_tag">Bu etiket kaldırılamıyor</string>
     <string name="reader_toast_err_adding_tag">Bu etiket eklenemiyor</string>
     <string name="reader_title_applog">Uygulama günlüğü</string>
-    <string name="fatal_db_error">Uygulama veri tabanı oluşturulurken sorun çıktı. Uygulamayı yeniden kurmayı deneyin.</string>
     <string name="error_refresh_media">Ortam dosyaları şu anda yenilenemedi</string>
     <string name="wordpress_blog">WordPress blog</string>
     <string name="local_changes">Yerel değişiklikler</string>

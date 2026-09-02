@@ -1389,6 +1389,13 @@
                 android:name="androidx.work.WorkManagerInitializer"
                 android:value="androidx.startup"
                 tools:node="remove" />
+            <!-- The Gravatar Quick Editor initializer builds an encrypted DataStore (AndroidKeyStore + Tink
+                 self-test) on the main thread before Application.onCreate, which shows up as background ANRs.
+                 It is initialized on demand from MeFragment instead. -->
+            <meta-data
+                android:name="com.gravatar.quickeditor.initializer.QuickEditorContainerInitializer"
+                android:value="androidx.startup"
+                tools:node="remove" />
         </provider>
 
         <activity android:name=".ui.blaze.blazepromote.BlazePromoteParentActivity"

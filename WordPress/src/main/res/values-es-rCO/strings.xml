@@ -3873,7 +3873,6 @@ Language: es_CO
     <string name="file_not_found">No ha sido posible encontrar el archivo a cargar. ¿Se ha borrado o cambiado de ubicación?</string>
     <string name="media_gallery_type_thumbnail_grid">Cuadrícula de miniaturas</string>
     <string name="plugin_not_found">Ocurrió un error al acceder a este plugin</string>
-    <string name="fatal_db_error">Ha ocurrido un error al crear la base de datos de la aplicación. Por favor, intenta reinstalar la aplicación. </string>
     <string name="cannot_delete_multi_media_items">Algunos medios no se han podido borrar en este momento. Inténtalo de nuevo más tarde.</string>
     <string name="post_settings">Ajustes de entrada</string>
     <string name="reader_toast_err_removing_tag">No se ha podido eliminar esta etiqueta</string>

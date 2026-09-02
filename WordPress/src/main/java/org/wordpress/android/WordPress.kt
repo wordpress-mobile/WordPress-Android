@@ -1,7 +1,12 @@
 package org.wordpress.android
 
 import android.app.Application
+import android.content.Context
+import android.database.SQLException
+import android.database.sqlite.SQLiteException
 import android.os.Build
+import android.util.Log
+import androidx.work.Configuration
 import coil.decode.VideoFrameDecoder
 import com.android.volley.RequestQueue
 import dagger.hilt.EntryPoints
@@ -9,13 +14,26 @@ import okhttp3.OkHttpClient
 import org.wordpress.android.fluxc.tools.FluxCImageLoader
 import org.wordpress.android.modules.AppComponent
 import org.wordpress.android.ui.main.EdgeToEdgeActivityLifecycleCallbacks
+import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.AppLog.T
 
 /**
  * An abstract class to be extended by {@link WordPressApp} for real application and WordPressTest for UI test
  * application. Containing public static variables and methods to be accessed by other classes.
  */
-abstract class WordPress : Application(), coil.ImageLoaderFactory {
+abstract class WordPress : Application(), coil.ImageLoaderFactory, Configuration.Provider {
     abstract fun initializer(): AppInitializer
+
+    /**
+     * WorkManager is initialized on demand (the default initializer is removed in the manifest) so that
+     * process starts which never touch WorkManager don't pay for its Room database on the main thread.
+     */
+    override val workManagerConfiguration: Configuration
+        get() = Configuration.Builder()
+            .setWorkerFactory(component().wordPressWorkersFactory())
+            .setJobSchedulerJobIdRange(WORK_MANAGER_ID_RANGE_MIN, WORK_MANAGER_ID_RANGE_MAX)
+            .apply { if (BuildConfig.DEBUG) setMinimumLoggingLevel(Log.DEBUG) }
+            .build()
 
     override fun onCreate() {
         super.onCreate()
@@ -63,18 +81,49 @@ abstract class WordPress : Application(), coil.ImageLoaderFactory {
         const val REMOTE_SITE_ID = "REMOTE_SITE_ID"
         const val USER_AGENT_APPNAME = "wp-android"
 
+        // Use service ids near the int max to avoid collisions with existing JobService ids
+        // The minimum range size is 1000, but we can easily give 10000.
+        private const val WORK_MANAGER_ID_RANGE_MAX = Int.MAX_VALUE
+        private const val WORK_MANAGER_ID_RANGE_MIN = WORK_MANAGER_ID_RANGE_MAX - 10000
+
         lateinit var versionName: String
-        lateinit var wpDB: WordPressDB
         var appIsInTheBackground = true
+
+        @Volatile
+        private var wpDBInstance: WordPressDB? = null
+
+        /**
+         * The legacy app database. Opened lazily (and warmed up off the main thread by [AppInitializer]) so
+         * that background process starts don't run the SQLite open + migrations on the main thread.
+         */
+        @JvmStatic
+        val wpDB: WordPressDB
+            get() = wpDBInstance ?: synchronized(this) {
+                wpDBInstance ?: openWpDb(getContext()).also { wpDBInstance = it }
+            }
+
+        private fun openWpDb(context: Context): WordPressDB {
+            return try {
+                WordPressDB(context)
+            } catch (e: SQLiteException) {
+                recreateWpDb(context, e)
+            } catch (e: SQLException) {
+                recreateWpDb(context, e)
+            }
+        }
+
+        private fun recreateWpDb(context: Context, e: Exception): WordPressDB {
+            AppLog.e(T.DB, e)
+            AppLog.e(T.DB, "Invalid database, sign out user and delete database")
+            WordPressDB.deleteDatabase(context)
+            return WordPressDB(context)
+        }
 
         @JvmField
         var requestQueue: RequestQueue? = null
 
         @JvmField
         var imageLoader: FluxCImageLoader? = null
-
-        val isWpDBInitialized
-            get() = ::wpDB.isInitialized
 
         @JvmStatic
         fun getBitmapCache() = AppInitializer.getBitmapCache()

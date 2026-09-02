@@ -3815,7 +3815,6 @@ Language: ja_JP
     <string name="reader_toast_err_removing_tag">このタグを削除できません</string>
     <string name="reader_toast_err_adding_tag">このタグを追加できません</string>
     <string name="reader_title_applog">アプリケーションログ</string>
-    <string name="fatal_db_error">アプリのデータベースを作成する際にエラーが発生しました。アプリをもう一度インストールしてみてください。</string>
     <string name="error_refresh_media">メディアファイルを再読み込みできませんでした</string>
     <string name="wordpress_blog">WordPress ブログ</string>
     <string name="local_changes">ローカルの変更</string>

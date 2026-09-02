@@ -53,6 +53,22 @@ public class NotificationsPendingDraftsReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         ((WordPress) context.getApplicationContext()).component().inject(this);
 
+        // Both branches read posts from the database. Doing that on the main thread inside a broadcast
+        // (in particular BOOT_COMPLETED, which starts the process in the background) shows up as ANRs, so
+        // the work is moved to a background thread and the broadcast is kept alive with goAsync().
+        final PendingResult pendingResult = goAsync();
+        new Thread(() -> {
+            try {
+                handleIntent(context, intent);
+            } catch (Throwable t) {
+                AppLog.e(AppLog.T.NOTIFS, "Pending Drafts Receiver failed", t);
+            } finally {
+                pendingResult.finish();
+            }
+        }, "PendingDraftsReceiver").start();
+    }
+
+    private void handleIntent(Context context, Intent intent) {
         // for the case of being spanned after device restarts, get the latest drafts
         // and check the lastUpdated
         String action = intent.getAction();
