@@ -102,8 +102,11 @@ class PrepublishingHomeFragment : Fragment(R.layout.post_prepublishing_home_frag
             actionClickedListener?.onSubmitButtonClicked(publishPost)
         }
 
-        viewModel.start(getEditPostRepository(), getSite())
+        viewModel.start(getEditPostRepository(), getSite(), isFeaturedImageEditingSupported())
     }
+
+    private fun isFeaturedImageEditingSupported(): Boolean =
+        getEditorDataProvider()?.supportsFeaturedImageEditing() ?: false
 
     private fun setupJetpackSocialViewModel() {
         jetpackSocialViewModel = (parentFragment as PrepublishingSocialViewModelProvider)

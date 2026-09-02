@@ -48,9 +48,11 @@ class PrepublishingFeaturedImageViewModel @Inject constructor(
     }
 
     fun onSetOrChangeClicked() {
-        val postId = editPostRepository.getPost()?.id ?: return
-        featuredImageHelper.trackFeaturedImageEvent(TrackableEvent.IMAGE_SET_CLICKED, postId)
-        _launchFeaturedImagePicker.postValue(Event(postId))
+        val post = editPostRepository.getPost() ?: return
+        // Replacing an image mid-upload would otherwise leave two uploads marked as featured.
+        featuredImageHelper.cancelFeaturedImageUpload(siteModel, post, false)
+        featuredImageHelper.trackFeaturedImageEvent(TrackableEvent.IMAGE_SET_CLICKED, post.id)
+        _launchFeaturedImagePicker.postValue(Event(post.id))
     }
 
     fun onRemoveClicked() {

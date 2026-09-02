@@ -131,6 +131,8 @@ class PostsListActivity : BaseAppCompatActivity(),
     override fun syncFeaturedImageIdToEditor() {
         // No editor is hosted here, so there is nothing to keep in sync.
     }
+    // The quick-publish flow has no editor, so it can't fully support featured-image editing.
+    override fun supportsFeaturedImageEditing() = false
 
     private lateinit var viewModel: PostListMainViewModel
 

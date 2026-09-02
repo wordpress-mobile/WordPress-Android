@@ -14,6 +14,8 @@ import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.post.PostStatus
+import org.wordpress.android.ui.posts.FeaturedImageHelper.FeaturedImageData
+import org.wordpress.android.ui.posts.FeaturedImageHelper.FeaturedImageState
 import org.wordpress.android.fluxc.model.post.PostStatus.PRIVATE
 import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.ActionType
 import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.ActionType.PrepublishingScreenNavigation
@@ -49,6 +51,9 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
     lateinit var getCategoriesUseCase: GetCategoriesUseCase
 
     @Mock
+    lateinit var featuredImageHelper: FeaturedImageHelper
+
+    @Mock
     lateinit var site: SiteModel
 
     @Before
@@ -60,6 +65,7 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
             getButtonUiStateUseCase,
             mock(),
             getCategoriesUseCase,
+            featuredImageHelper,
             testDispatcher()
         )
         whenever(
@@ -76,6 +82,9 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
         whenever(postSettingsUtils.getPublishDateLabel(any())).thenReturn((""))
         whenever(site.name).thenReturn("")
         whenever(getCategoriesUseCase.getPostCategoriesString(any(), any())).thenReturn("")
+        whenever(editPostRepository.getPost()).thenReturn(mock())
+        whenever(featuredImageHelper.createCurrentFeaturedImageState(any(), any()))
+            .thenReturn(FeaturedImageData(FeaturedImageState.IMAGE_EMPTY, null))
 
         // need to observe forever to be able to access `value` since it's a MediatorLiveData
         viewModel.uiState.observeForever(mock())
@@ -177,6 +186,18 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
 
         // act
         viewModel.start(editPostRepository, site)
+
+        // assert
+        assertThat(getHomeUiState(PrepublishingScreenNavigation.FeaturedImage)).isNull()
+    }
+
+    @Test
+    fun `verify featured image action is not propagated when the host cannot edit featured images`() {
+        // arrange
+        whenever(editPostRepository.isPage).thenReturn(false)
+
+        // act
+        viewModel.start(editPostRepository, site, isFeaturedImageEditingSupported = false)
 
         // assert
         assertThat(getHomeUiState(PrepublishingScreenNavigation.FeaturedImage)).isNull()

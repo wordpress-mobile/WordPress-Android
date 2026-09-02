@@ -11,6 +11,8 @@ import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.posts.EditPostRepository
 import org.wordpress.android.ui.posts.EditorJetpackSocialViewModel
+import org.wordpress.android.ui.posts.FeaturedImageHelper
+import org.wordpress.android.ui.posts.FeaturedImageHelper.FeaturedImageState
 import org.wordpress.android.ui.posts.GetCategoriesUseCase
 import org.wordpress.android.ui.posts.GetPostTagsUseCase
 import org.wordpress.android.ui.posts.PostSettingsUtils
@@ -38,11 +40,13 @@ class PrepublishingHomeViewModel @Inject constructor(
     private val getButtonUiStateUseCase: GetButtonUiStateUseCase,
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
     private val getCategoriesUseCase: GetCategoriesUseCase,
+    private val featuredImageHelper: FeaturedImageHelper,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(bgDispatcher) {
     private var isStarted = false
     private var updateStoryTitleJob: Job? = null
     private lateinit var editPostRepository: EditPostRepository
+    private var isFeaturedImageEditingSupported = false
 
     private val _onActionClicked = MutableLiveData<Event<ActionType>>()
     val onActionClicked: LiveData<Event<ActionType>> = _onActionClicked
@@ -66,8 +70,13 @@ class PrepublishingHomeViewModel @Inject constructor(
         }
     }
 
-    fun start(editPostRepository: EditPostRepository, site: SiteModel) {
+    fun start(
+        editPostRepository: EditPostRepository,
+        site: SiteModel,
+        isFeaturedImageEditingSupported: Boolean = true
+    ) {
         this.editPostRepository = editPostRepository
+        this.isFeaturedImageEditingSupported = isFeaturedImageEditingSupported
         if (isStarted) return
         // PrepublishingViewModel already dismisses the sheet when the host has no post, but that
         // dismissal is asynchronous and the FragmentManager can restore this fragment and create its
@@ -123,10 +132,10 @@ class PrepublishingHomeViewModel @Inject constructor(
                 ))
             }
 
-            if (!editPostRepository.isPage) {
+            if (!editPostRepository.isPage && isFeaturedImageEditingSupported) {
                 add(HomeUiState(
                     navigationAction = PrepublishingScreenNavigation.FeaturedImage,
-                    actionResult = if (editPostRepository.featuredImageId != 0L) {
+                    actionResult = if (hasFeaturedImage(editPostRepository, site)) {
                         UiStringRes(R.string.prepublishing_nudges_home_featured_image_set)
                     } else {
                         UiStringRes(R.string.prepublishing_nudges_home_featured_image_not_set)
@@ -223,6 +232,14 @@ class PrepublishingHomeViewModel @Inject constructor(
     override fun onCleared() {
         super.onCleared()
         updateStoryTitleJob?.cancel()
+    }
+
+    // Reflects an in-progress upload as "set" too, rather than checking the raw id, so a device
+    // image that is still uploading doesn't briefly read as "Not set".
+    private fun hasFeaturedImage(editPostRepository: EditPostRepository, site: SiteModel): Boolean {
+        val post = editPostRepository.getPost() ?: return false
+        return featuredImageHelper.createCurrentFeaturedImageState(site, post).uiState !=
+                FeaturedImageState.IMAGE_EMPTY
     }
 
     private fun onActionClicked(actionType: ActionType) {

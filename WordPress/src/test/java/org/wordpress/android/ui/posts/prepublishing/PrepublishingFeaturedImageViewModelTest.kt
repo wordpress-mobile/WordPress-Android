@@ -96,6 +96,7 @@ class PrepublishingFeaturedImageViewModelTest : BaseUnitTest() {
         viewModel.onSetOrChangeClicked()
 
         assertThat(event?.peekContent()).isEqualTo(POST_ID)
+        verify(featuredImageHelper).cancelFeaturedImageUpload(site, post, false)
         verify(featuredImageHelper).trackFeaturedImageEvent(TrackableEvent.IMAGE_SET_CLICKED, POST_ID)
     }
 
