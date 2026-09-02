@@ -44,7 +44,6 @@ import org.wordpress.android.fluxc.generated.AccountActionBuilder;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
-import org.wordpress.android.fluxc.network.rest.wpapi.applicationpasswords.WpAppNotifierHandler;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.PrivateAtomicCookie;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.AccountStore.AuthenticationErrorType;
@@ -61,6 +60,7 @@ import org.wordpress.android.fluxc.store.SiteStore.OnSiteEditorsChanged;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteRemoved;
 import org.wordpress.android.inappupdate.IInAppUpdateManager;
 import org.wordpress.android.inappupdate.InAppUpdateListener;
+import org.wordpress.android.ui.accounts.login.ApplicationPasswordReauthNotifier;
 import org.wordpress.android.ui.accounts.login.LoginAnalyticsListener;
 import org.wordpress.android.networking.NetworkConnectionMonitor;
 import org.wordpress.android.push.GCMMessageHandler;
@@ -187,7 +187,7 @@ public class WPMainActivity extends BaseAppCompatActivity implements
         BloggingPromptsReminderSchedulerListener,
         BloggingPromptsOnboardingListener,
         UpdateSelectedSiteListener,
-        WpAppNotifierHandler.NotifierListener {
+        ApplicationPasswordReauthNotifier.Listener {
     public static final String ARG_CONTINUE_JETPACK_CONNECT = "ARG_CONTINUE_JETPACK_CONNECT";
     public static final String ARG_CREATE_SITE = "ARG_CREATE_SITE";
     public static final String ARG_IS_MAGIC_LINK_LOGIN = "ARG_IS_MAGIC_LINK_LOGIN";
@@ -276,7 +276,7 @@ public class WPMainActivity extends BaseAppCompatActivity implements
 
     @Inject PerAppLocaleManager mPerAppLocaleManager;
 
-    @Inject WpAppNotifierHandler mWpAppNotifierHandler;
+    @Inject ApplicationPasswordReauthNotifier mReauthNotifier;
 
     @Inject NetworkConnectionMonitor mNetworkConnectionMonitor;
 
@@ -1052,7 +1052,7 @@ public class WPMainActivity extends BaseAppCompatActivity implements
 
         setUpMainView();
 
-        mWpAppNotifierHandler.addListener(this);
+        mReauthNotifier.addListener(this);
 
         // Load selected site
         initSelectedSite();
@@ -1702,7 +1702,7 @@ public class WPMainActivity extends BaseAppCompatActivity implements
     protected void onPause() {
         super.onPause();
 
-        mWpAppNotifierHandler.removeListener(this);
+        mReauthNotifier.removeListener(this);
     }
 
     private void enableDeepLinkingComponentsIfNeeded() {
@@ -1760,7 +1760,7 @@ public class WPMainActivity extends BaseAppCompatActivity implements
         }
     }
 
-    @Override public void onRequestedWithInvalidAuthentication(@NonNull String siteUrl) {
+    @Override public void onReauthRequired(@NonNull String siteUrl) {
         showApplicationPasswordOffReauthenticateDialog(siteUrl);
     }
 

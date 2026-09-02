@@ -38,8 +38,8 @@ class WpAppNotifierHandlerTest {
         wpAppNotifierHandler.notifyRequestedWithInvalidAuthentication(testSite)
 
         // Then
-        verify(mockListener1, times(1)).onRequestedWithInvalidAuthentication(testSiteUrl)
-        verify(mockListener2, times(1)).onRequestedWithInvalidAuthentication(testSiteUrl)
+        verify(mockListener1, times(1)).onRequestedWithInvalidAuthentication(testSite)
+        verify(mockListener2, times(1)).onRequestedWithInvalidAuthentication(testSite)
     }
 
     @Test
@@ -53,7 +53,7 @@ class WpAppNotifierHandlerTest {
     }
 
     @Test
-    fun `notifyRequestedWithInvalidAuthentication passes correct site URL to listeners`() {
+    fun `notifyRequestedWithInvalidAuthentication passes the site to listeners`() {
         // Given
         val customSiteUrl = "https://custom-site.example.org"
         val customSite = SiteModel().apply {
@@ -66,7 +66,7 @@ class WpAppNotifierHandlerTest {
         wpAppNotifierHandler.notifyRequestedWithInvalidAuthentication(customSite)
 
         // Then
-        verify(mockListener1, times(1)).onRequestedWithInvalidAuthentication(customSiteUrl)
+        verify(mockListener1, times(1)).onRequestedWithInvalidAuthentication(customSite)
     }
 
     @Test
@@ -80,8 +80,8 @@ class WpAppNotifierHandlerTest {
         wpAppNotifierHandler.notifyRequestedWithInvalidAuthentication(testSite)
 
         // Then - only remaining listener should be called
-        verify(mockListener1, never()).onRequestedWithInvalidAuthentication(testSiteUrl)
-        verify(mockListener2, times(1)).onRequestedWithInvalidAuthentication(testSiteUrl)
+        verify(mockListener1, never()).onRequestedWithInvalidAuthentication(testSite)
+        verify(mockListener2, times(1)).onRequestedWithInvalidAuthentication(testSite)
     }
 
     @Test
@@ -104,7 +104,7 @@ class WpAppNotifierHandlerTest {
         wpAppNotifierHandler.notifyRequestedWithInvalidAuthentication(testSite)
 
         // Then - original listener should still be called
-        verify(mockListener1, times(1)).onRequestedWithInvalidAuthentication(testSiteUrl)
+        verify(mockListener1, times(1)).onRequestedWithInvalidAuthentication(testSite)
     }
 
     @Test
@@ -117,6 +117,6 @@ class WpAppNotifierHandlerTest {
         wpAppNotifierHandler.notifyRequestedWithInvalidAuthentication(testSite)
 
         // Then - should only be called once (overwrites previous entry)
-        verify(mockListener1, times(1)).onRequestedWithInvalidAuthentication(testSiteUrl)
+        verify(mockListener1, times(1)).onRequestedWithInvalidAuthentication(testSite)
     }
 }

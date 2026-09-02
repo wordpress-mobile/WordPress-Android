@@ -372,12 +372,18 @@ sealed class MySiteCardAndItem(open val type: Type) {
     ) : MySiteCardAndItem(type) {
         data class InfoItem(val title: UiString) : Item(INFO_ITEM)
 
+        /**
+         * [centerText] presents the card as a plain notice: the image is hidden and the text is
+         * centred across the whole card rather than sitting in the column beside the icon. Use it
+         * when the card only explains something and has nothing to tap.
+         */
         data class SingleActionCard(
             @StringRes val textResource: Int,
             @DrawableRes val imageResource: Int,
             val onActionClick: () -> Unit,
             val centerImageVertically: Boolean = false,
-            val showLearnMore: Boolean = true
+            val showLearnMore: Boolean = true,
+            val centerText: Boolean = false
         ) : Item(SINGLE_ACTION_CARD)
 
         data class CategoryHeaderItem(val title: UiString) : Item(CATEGORY_HEADER_ITEM)
