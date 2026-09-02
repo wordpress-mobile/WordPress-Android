@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.mysite.cards.connectivity
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -10,17 +11,32 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.repositories.SiteProvisioningSource
 import org.wordpress.android.repositories.SiteReadiness
 import org.wordpress.android.ui.mysite.MySiteCardAndItem
+import org.wordpress.android.util.NetworkUtilsWrapper
+import org.wordpress.android.viewmodel.helpers.ConnectionStatus
 import javax.inject.Inject
 
 class SiteConnectivityBannerViewModelSlice @Inject constructor(
     private val siteProvisioningSource: SiteProvisioningSource,
+    private val networkUtilsWrapper: NetworkUtilsWrapper,
+    connectionStatus: LiveData<ConnectionStatus>,
 ) {
     private lateinit var scope: CoroutineScope
     private var collectJob: Job? = null
     private var currentSite: SiteModel? = null
 
-    private val _uiModel = MutableLiveData<MySiteCardAndItem?>()
+    private val readiness = MutableLiveData<SiteReadiness?>()
+
+    private val _uiModel = MediatorLiveData<MySiteCardAndItem?>()
     val uiModel: LiveData<MySiteCardAndItem?> = _uiModel
+
+    init {
+        _uiModel.addSource(readiness) { render() }
+        // Losing the network doesn't re-run the pipeline, so the readiness we hold stays Unreachable
+        // and the banner would sit there stacked on the global "no connection" bar. This source is a
+        // change trigger only — it emits on transitions and swallows its initial value — so the
+        // decision reads the live availability rather than the emitted status.
+        _uiModel.addSource(connectionStatus) { render() }
+    }
 
     fun initialize(scope: CoroutineScope) {
         this.scope = scope
@@ -40,12 +56,11 @@ class SiteConnectivityBannerViewModelSlice @Inject constructor(
         currentSite = site
         if (isUserInitiated) siteProvisioningSource.invalidate(site)
         collectJob = scope.launch {
-            siteProvisioningSource.stateFor(site).collect { readiness ->
+            siteProvisioningSource.stateFor(site).collect { state ->
                 // Bail if the user switched sites while suspended — postValue is
                 // not a suspension point, so cancellation alone won't catch this.
                 if (currentSite?.id != site.id) return@collect
-                val showBanner = readiness is SiteReadiness.Unreachable
-                _uiModel.postValue(if (showBanner) buildBanner() else null)
+                readiness.postValue(state)
             }
         }
     }
@@ -53,7 +68,13 @@ class SiteConnectivityBannerViewModelSlice @Inject constructor(
     fun clearBanner() {
         collectJob?.cancel()
         currentSite = null
-        _uiModel.postValue(null)
+        readiness.postValue(null)
+    }
+
+    private fun render() {
+        val showBanner = readiness.value is SiteReadiness.Unreachable &&
+            networkUtilsWrapper.isNetworkAvailable()
+        _uiModel.value = if (showBanner) buildBanner() else null
     }
 
     private fun buildBanner(): MySiteCardAndItem.Item.SingleActionCard =

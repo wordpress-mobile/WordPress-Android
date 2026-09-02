@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.mysite.cards.connectivity
 
+import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.test.advanceUntilIdle
@@ -20,6 +21,8 @@ import org.wordpress.android.repositories.SiteAuthState
 import org.wordpress.android.repositories.SiteProvisioningSource
 import org.wordpress.android.repositories.SiteReadiness
 import org.wordpress.android.ui.mysite.MySiteCardAndItem
+import org.wordpress.android.util.NetworkUtilsWrapper
+import org.wordpress.android.viewmodel.helpers.ConnectionStatus
 
 private const val TEST_SITE_LOCAL_ID = 42
 
@@ -29,6 +32,11 @@ class SiteConnectivityBannerViewModelSliceTest : BaseUnitTest() {
     @Mock
     lateinit var siteProvisioningSource: SiteProvisioningSource
 
+    @Mock
+    lateinit var networkUtilsWrapper: NetworkUtilsWrapper
+
+    private val connectionStatus = MutableLiveData<ConnectionStatus>()
+
     private lateinit var siteTest: SiteModel
     private lateinit var slice: SiteConnectivityBannerViewModelSlice
     private val emittedBanners = mutableListOf<MySiteCardAndItem?>()
@@ -36,7 +44,12 @@ class SiteConnectivityBannerViewModelSliceTest : BaseUnitTest() {
     @Before
     fun setUp() {
         siteTest = SiteModel().apply { id = TEST_SITE_LOCAL_ID }
-        slice = SiteConnectivityBannerViewModelSlice(siteProvisioningSource)
+        whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
+        slice = SiteConnectivityBannerViewModelSlice(
+            siteProvisioningSource,
+            networkUtilsWrapper,
+            connectionStatus,
+        )
         slice.initialize(testScope())
         slice.uiModel.observeForever { emittedBanners.add(it) }
     }
@@ -60,6 +73,37 @@ class SiteConnectivityBannerViewModelSliceTest : BaseUnitTest() {
         val banner = emittedBanners.last() as MySiteCardAndItem.Item.SingleActionCard
         assertThat(banner.textResource).isEqualTo(R.string.site_connectivity_banner_text)
         assertThat(banner.showLearnMore).isFalse
+    }
+
+    @Test
+    fun `given the banner is showing, when the device goes offline, then it is hidden`() = test {
+        // Losing the network doesn't re-run the pipeline, so readiness stays Unreachable. Without
+        // reacting to connectivity the banner sits stacked on the global "no connection" bar.
+        stubReadiness(siteTest, SiteReadiness.Unreachable)
+        slice.fetchCapabilities(siteTest, isUserInitiated = false)
+        advanceUntilIdle()
+        assertThat(emittedBanners.last()).isNotNull
+
+        whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(false)
+        connectionStatus.value = ConnectionStatus.UNAVAILABLE
+        advanceUntilIdle()
+
+        assertThat(emittedBanners.last()).isNull()
+    }
+
+    @Test
+    fun `given hidden while offline, when the network returns, then the banner comes back`() = test {
+        stubReadiness(siteTest, SiteReadiness.Unreachable)
+        whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(false)
+        slice.fetchCapabilities(siteTest, isUserInitiated = false)
+        advanceUntilIdle()
+        assertThat(emittedBanners.last()).isNull()
+
+        whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
+        connectionStatus.value = ConnectionStatus.AVAILABLE
+        advanceUntilIdle()
+
+        assertThat(emittedBanners.last()).isNotNull
     }
 
     @Test
