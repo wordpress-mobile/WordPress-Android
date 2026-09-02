@@ -14,8 +14,6 @@ import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.post.PostStatus
-import org.wordpress.android.ui.posts.FeaturedImageHelper.FeaturedImageData
-import org.wordpress.android.ui.posts.FeaturedImageHelper.FeaturedImageState
 import org.wordpress.android.fluxc.model.post.PostStatus.PRIVATE
 import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.ActionType
 import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.ActionType.PrepublishingScreenNavigation
@@ -83,8 +81,7 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
         whenever(site.name).thenReturn("")
         whenever(getCategoriesUseCase.getPostCategoriesString(any(), any())).thenReturn("")
         whenever(editPostRepository.getPost()).thenReturn(mock())
-        whenever(featuredImageHelper.createCurrentFeaturedImageState(any(), any()))
-            .thenReturn(FeaturedImageData(FeaturedImageState.IMAGE_EMPTY, null))
+        whenever(featuredImageHelper.hasFeaturedImageOrPendingUpload(any())).thenReturn(false)
 
         // need to observe forever to be able to access `value` since it's a MediatorLiveData
         viewModel.uiState.observeForever(mock())

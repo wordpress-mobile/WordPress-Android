@@ -12,7 +12,6 @@ import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.posts.EditPostRepository
 import org.wordpress.android.ui.posts.EditorJetpackSocialViewModel
 import org.wordpress.android.ui.posts.FeaturedImageHelper
-import org.wordpress.android.ui.posts.FeaturedImageHelper.FeaturedImageState
 import org.wordpress.android.ui.posts.GetCategoriesUseCase
 import org.wordpress.android.ui.posts.GetPostTagsUseCase
 import org.wordpress.android.ui.posts.PostSettingsUtils
@@ -135,7 +134,7 @@ class PrepublishingHomeViewModel @Inject constructor(
             if (!editPostRepository.isPage && isFeaturedImageEditingSupported) {
                 add(HomeUiState(
                     navigationAction = PrepublishingScreenNavigation.FeaturedImage,
-                    actionResult = if (hasFeaturedImage(editPostRepository, site)) {
+                    actionResult = if (hasFeaturedImage(editPostRepository)) {
                         UiStringRes(R.string.prepublishing_nudges_home_featured_image_set)
                     } else {
                         UiStringRes(R.string.prepublishing_nudges_home_featured_image_not_set)
@@ -235,11 +234,11 @@ class PrepublishingHomeViewModel @Inject constructor(
     }
 
     // Reflects an in-progress upload as "set" too, rather than checking the raw id, so a device
-    // image that is still uploading doesn't briefly read as "Not set".
-    private fun hasFeaturedImage(editPostRepository: EditPostRepository, site: SiteModel): Boolean {
+    // image that is still uploading doesn't briefly read as "Not set". Uses the cheap check because
+    // setupHomeUiState runs on the main thread.
+    private fun hasFeaturedImage(editPostRepository: EditPostRepository): Boolean {
         val post = editPostRepository.getPost() ?: return false
-        return featuredImageHelper.createCurrentFeaturedImageState(site, post).uiState !=
-                FeaturedImageState.IMAGE_EMPTY
+        return featuredImageHelper.hasFeaturedImageOrPendingUpload(post)
     }
 
     private fun onActionClicked(actionType: ActionType) {

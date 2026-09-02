@@ -134,6 +134,16 @@ class FeaturedImageHelper @Inject constructor(
         }
     }
 
+    /**
+     * Cheap check for whether the post has a featured image set or one being uploaded. Unlike
+     * [createCurrentFeaturedImageState] it avoids the media-store lookup and Photon URL work, so it
+     * is safe to call on the main thread when only a boolean is needed.
+     */
+    fun hasFeaturedImageOrPendingUpload(post: PostImmutableModel): Boolean =
+        post.hasFeaturedImage() ||
+                getFailedFeaturedImageUpload(post) != null ||
+                uploadServiceFacade.getPendingOrInProgressFeaturedImageUploadForPost(post) != null
+
     fun createCurrentFeaturedImageState(site: SiteModel, post: PostImmutableModel): FeaturedImageData {
         var uploadModel: MediaModel? = uploadServiceFacade.getPendingOrInProgressFeaturedImageUploadForPost(post)
         if (uploadModel != null) {
