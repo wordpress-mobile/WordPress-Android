@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.posts.prepublishing.featuredimage
 
 import android.content.Context
-import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.View
 import android.widget.ImageView.ScaleType
@@ -26,7 +25,6 @@ import org.wordpress.android.ui.posts.prepublishing.listeners.PrepublishingScree
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.extensions.getSerializableCompat
 import org.wordpress.android.util.image.ImageManager
-import org.wordpress.android.util.image.ImageManager.RequestListener
 import org.wordpress.android.util.image.ImageType
 import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
@@ -124,8 +122,10 @@ class PrepublishingFeaturedImageFragment : Fragment(R.layout.prepublishing_featu
         }
 
         // updateAsync mutates the shared post and fires postChanged, so this catches an image set
-        // from the media library, an upload that just completed, and a removal.
-        getEditPostRepository().postChanged.observeEvent(viewLifecycleOwner) {
+        // from the media library, an upload that just completed, and a removal. Observe it raw
+        // (not observeEvent): postChanged is a single-consumption Event with other observers, so
+        // observeEvent would miss it whenever another observer handles it first.
+        getEditPostRepository().postChanged.observe(viewLifecycleOwner) {
             viewModel.refreshFeaturedImageState()
         }
 
@@ -134,42 +134,37 @@ class PrepublishingFeaturedImageFragment : Fragment(R.layout.prepublishing_featu
 
     private fun PrepublishingFeaturedImageFragmentBinding.renderUiState(uiState: UiState) {
         val state = uiState.featuredImageData.uiState
+        // A remote image (already on the server) uses postFeaturedImage; a local image being
+        // uploaded uses postFeaturedImageLocal. Only ever show one so an empty view can't cover the
+        // other in the FrameLayout.
+        val isRemote = state == FeaturedImageState.REMOTE_IMAGE_LOADING ||
+                state == FeaturedImageState.REMOTE_IMAGE_SET
+        val isLocalUpload = state == FeaturedImageState.IMAGE_UPLOAD_IN_PROGRESS ||
+                state == FeaturedImageState.IMAGE_UPLOAD_FAILED
         val hasImage = state != FeaturedImageState.IMAGE_EMPTY
         with(uiHelpers) {
             updateVisibility(featuredImageEmptyText, !hasImage)
             updateVisibility(postFeaturedImageContainer, hasImage)
-            updateVisibility(postFeaturedImage, state.imageViewVisible)
-            updateVisibility(postFeaturedImageLocal, state.localImageViewVisible)
+            updateVisibility(postFeaturedImage, isRemote)
+            updateVisibility(postFeaturedImageLocal, isLocalUpload)
             updateVisibility(featuredImageRetryOverlay, state.retryOverlayVisible)
             updateVisibility(featuredImageProgressOverlay, state.progressOverlayVisible)
             updateVisibility(buttonRemoveFeaturedImage, uiState.isRemoveButtonVisible)
         }
         buttonSetFeaturedImage.text = uiHelpers.getTextOfUiString(requireContext(), uiState.setButtonText)
-        if (!state.localImageViewVisible) {
-            imageManager.cancelRequestAndClearImageView(postFeaturedImageLocal)
-        }
-        loadFeaturedImage(uiState)
-    }
 
-    private fun PrepublishingFeaturedImageFragmentBinding.loadFeaturedImage(uiState: UiState) {
-        val mediaUri = uiState.featuredImageData.mediaUri ?: return
-        if (uiState.featuredImageData.uiState == FeaturedImageState.REMOTE_IMAGE_LOADING) {
-            // Keep the local image (if any) visible until the remote image is ready to avoid a flash
-            // of an empty view when the local image is swapped for the remote one.
-            imageManager.loadWithResultListener(
-                postFeaturedImage, ImageType.IMAGE, mediaUri, ScaleType.FIT_CENTER, null,
-                object : RequestListener<Drawable> {
-                    override fun onLoadFailed(e: Exception?, model: Any?) {}
-                    override fun onResourceReady(resource: Drawable, model: Any?) {
-                        with(uiHelpers) {
-                            updateVisibility(postFeaturedImage, true)
-                            updateVisibility(postFeaturedImageLocal, false)
-                        }
-                    }
-                }
-            )
-        } else {
-            imageManager.load(postFeaturedImageLocal, ImageType.IMAGE, mediaUri, ScaleType.FIT_CENTER)
+        val mediaUri = uiState.featuredImageData.mediaUri
+        when {
+            isRemote && !mediaUri.isNullOrEmpty() -> {
+                imageManager.cancelRequestAndClearImageView(postFeaturedImageLocal)
+                imageManager.load(postFeaturedImage, ImageType.IMAGE, mediaUri, ScaleType.FIT_CENTER)
+            }
+            isLocalUpload && !mediaUri.isNullOrEmpty() ->
+                imageManager.load(postFeaturedImageLocal, ImageType.IMAGE, mediaUri, ScaleType.FIT_CENTER)
+            else -> {
+                imageManager.cancelRequestAndClearImageView(postFeaturedImage)
+                imageManager.cancelRequestAndClearImageView(postFeaturedImageLocal)
+            }
         }
     }
 
