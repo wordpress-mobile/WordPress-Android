@@ -7,7 +7,6 @@ import org.junit.Test
 import org.mockito.Mock
 import org.mockito.kotlin.any
 import org.mockito.kotlin.eq
-import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
@@ -107,6 +106,22 @@ class PrepublishingFeaturedImageViewModelTest : BaseUnitTest() {
 
         verify(featuredImageHelper).cancelFeaturedImageUpload(site, post, false)
         verify(updateFeaturedImageUseCase).updateFeaturedImage(eq(0L), eq(editPostRepository), any())
+    }
+
+    @Test
+    fun `when remove completes the editor is asked to sync`() {
+        whenever(updateFeaturedImageUseCase.updateFeaturedImage(eq(0L), eq(editPostRepository), any()))
+            .thenAnswer { invocation ->
+                @Suppress("UNCHECKED_CAST")
+                (invocation.arguments[2] as (PostImmutableModel) -> Unit).invoke(post)
+            }
+        var event: Event<Unit>? = null
+        viewModel.syncFeaturedImageToEditor.observeForever { event = it }
+
+        viewModel.start(editPostRepository, site)
+        viewModel.onRemoveClicked()
+
+        assertThat(event).isNotNull
     }
 
     @Test

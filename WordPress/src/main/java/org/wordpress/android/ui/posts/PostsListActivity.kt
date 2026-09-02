@@ -128,6 +128,9 @@ class PostsListActivity : BaseAppCompatActivity(),
 
     override fun getSite() = site
     override fun getEditPostRepository() = editPostRepository
+    override fun syncFeaturedImageIdToEditor() {
+        // No editor is hosted here, so there is nothing to keep in sync.
+    }
 
     private lateinit var viewModel: PostListMainViewModel
 

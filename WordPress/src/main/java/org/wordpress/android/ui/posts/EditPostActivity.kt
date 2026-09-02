@@ -3886,6 +3886,9 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
     // EditorDataProvider methods
     override fun getEditPostRepository() = editPostRepository
     override fun getSite() = siteModel
+    override fun syncFeaturedImageIdToEditor() {
+        editorFragment?.setFeaturedImageId(editPostRepository.featuredImageId)
+    }
 
     override fun onMenuOpened(featureId: Int, menu: Menu): Boolean {
         // This is a workaround for bag discovered on Chromebooks, where Enter key will not work in the toolbar menu

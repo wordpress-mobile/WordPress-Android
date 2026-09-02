@@ -19,7 +19,6 @@ import org.wordpress.android.ui.photopicker.MediaPickerLauncher
 import org.wordpress.android.ui.posts.EditPostRepository
 import org.wordpress.android.ui.posts.EditPostSettingsFragment.EditorDataProvider
 import org.wordpress.android.ui.posts.FeaturedImageHelper.FeaturedImageState
-import org.wordpress.android.ui.posts.prepublishing.PrepublishingViewModel
 import org.wordpress.android.ui.posts.prepublishing.featuredimage.PrepublishingFeaturedImageViewModel.UiState
 import org.wordpress.android.ui.posts.prepublishing.listeners.PrepublishingScreenClosedListener
 import org.wordpress.android.ui.utils.UiHelpers
@@ -121,6 +120,10 @@ class PrepublishingFeaturedImageFragment : Fragment(R.layout.prepublishing_featu
             mediaPickerLauncher.showFeaturedImagePicker(requireActivity(), getSite(), postId)
         }
 
+        viewModel.syncFeaturedImageToEditor.observeEvent(viewLifecycleOwner) {
+            getEditorDataProvider().syncFeaturedImageIdToEditor()
+        }
+
         // updateAsync mutates the shared post and fires postChanged, so this catches an image set
         // from the media library, an upload that just completed, and a removal. Observe it raw
         // (not observeEvent): postChanged is a single-consumption Event with other observers, so
@@ -132,6 +135,9 @@ class PrepublishingFeaturedImageFragment : Fragment(R.layout.prepublishing_featu
         viewModel.start(getEditPostRepository(), getSite())
     }
 
+    // TODO CMM-2376 follow-up: this featured-image rendering (state->visibility, overlays, remote vs
+    // local image) mirrors EditPostSettingsFragment.updateFeaturedImageView. Extract a shared
+    // component so the two don't drift.
     private fun PrepublishingFeaturedImageFragmentBinding.renderUiState(uiState: UiState) {
         val state = uiState.featuredImageData.uiState
         // A remote image (already on the server) uses postFeaturedImage; a local image being
@@ -171,14 +177,15 @@ class PrepublishingFeaturedImageFragment : Fragment(R.layout.prepublishing_featu
     private fun getSite(): SiteModel =
         requireNotNull(arguments?.getSerializableCompat<SiteModel>(WordPress.SITE))
 
-    private fun getEditPostRepository(): EditPostRepository {
+    private fun getEditPostRepository(): EditPostRepository = getEditorDataProvider().editPostRepository
+
+    private fun getEditorDataProvider(): EditorDataProvider {
         val activity = activity
-        val editorDataProvider = if (activity is EditorDataProvider) {
+        return if (activity is EditorDataProvider) {
             activity
         } else {
-            throw RuntimeException("$activity must implement EditorDataProvider")
+            error("$activity must implement EditorDataProvider")
         }
-        return editorDataProvider.editPostRepository
     }
 
     @Suppress("unused")

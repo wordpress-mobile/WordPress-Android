@@ -175,6 +175,12 @@ public class EditPostSettingsFragment extends Fragment {
         EditPostRepository getEditPostRepository();
 
         SiteModel getSite();
+
+        /**
+         * Pushes the post's current featured image id to the editor. Used by the pre-publish sheet
+         * after it changes the featured image, so the editor doesn't keep showing a stale image.
+         */
+        void syncFeaturedImageIdToEditor();
     }
 
     public static EditPostSettingsFragment newInstance() {

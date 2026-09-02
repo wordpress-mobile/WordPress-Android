@@ -36,6 +36,9 @@ class PrepublishingFeaturedImageViewModel @Inject constructor(
     private val _launchFeaturedImagePicker = MutableLiveData<Event<Int>>()
     val launchFeaturedImagePicker: LiveData<Event<Int>> = _launchFeaturedImagePicker
 
+    private val _syncFeaturedImageToEditor = MutableLiveData<Event<Unit>>()
+    val syncFeaturedImageToEditor: LiveData<Event<Unit>> = _syncFeaturedImageToEditor
+
     fun start(editPostRepository: EditPostRepository, siteModel: SiteModel) {
         this.editPostRepository = editPostRepository
         this.siteModel = siteModel
@@ -56,6 +59,9 @@ class PrepublishingFeaturedImageViewModel @Inject constructor(
         featuredImageHelper.trackFeaturedImageEvent(TrackableEvent.IMAGE_REMOVE_CLICKED, post.id)
         updateFeaturedImageUseCase.updateFeaturedImage(NO_FEATURED_IMAGE_ID, editPostRepository) {
             refreshFeaturedImageState()
+            // The model is the source of truth, but the editor caches the featured image separately,
+            // so tell the host to push the now-cleared id to the editor.
+            _syncFeaturedImageToEditor.postValue(Event(Unit))
         }
     }
 
