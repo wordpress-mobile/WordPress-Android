@@ -435,10 +435,10 @@ class SiteProvisioningSource @Inject constructor(
                 // the mint persists them via a single writer that the generic full-row update can no
                 // longer clobber (#22947), so the re-read is now trustworthy (#22905).
                 val capabilities = async {
-                    recoverRestUrlIfNeeded(siteLocalId)
+                    recoverQuietly("REST root recovery") { recoverRestUrlIfNeeded(siteLocalId) }
                     detectCapabilities(siteLocalId)
                 }
-                val xmlRpc = async { recoverXmlRpcIfNeeded(siteLocalId) }
+                val xmlRpc = async { recoverQuietly("XML-RPC recovery") { recoverXmlRpcIfNeeded(siteLocalId) } }
                 xmlRpc.await()
                 capabilities.await().copy(evidence = stage.evidence)
             }
@@ -507,6 +507,27 @@ class SiteProvisioningSource @Inject constructor(
             "A_P: Headless mint failed for ${site.url} (notSupported=${createResult.error?.notSupported})"
         )
         return AuthStage.Stop(SiteAuthState.Unprovisionable(hadCredentials = hadCredentials))
+    }
+
+    /**
+     * Runs a best-effort recovery stage so its failure can't decide the site's readiness.
+     *
+     * Both stages heal a column when they can, and both end in an unguarded DB write — `WellSql`
+     * update calls that can throw. Left to propagate, that throw would cancel the sibling through
+     * the enclosing `coroutineScope` and settle the whole site `Unreachable`, discarding a
+     * capability probe that had already succeeded. Cancellation still propagates normally.
+     */
+    private suspend fun recoverQuietly(label: String, recover: suspend () -> Unit) {
+        try {
+            recover()
+        } catch (e: CancellationException) {
+            throw e
+        } catch (@Suppress("TooGenericExceptionCaught") e: Exception) {
+            appLogWrapper.e(
+                AppLog.T.MAIN,
+                "A_P: $label failed, continuing: ${e::class.simpleName}: ${e.message}"
+            )
+        }
     }
 
     /**

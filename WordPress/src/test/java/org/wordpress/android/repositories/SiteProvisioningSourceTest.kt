@@ -247,6 +247,41 @@ class SiteProvisioningSourceTest : BaseUnitTest(StandardTestDispatcher()) {
     }
 
     @Test
+    fun `given the XML-RPC column write throws, then a successful probe still settles Ready`() = test {
+        // Recovery is best effort and ends in an unguarded WellSql update. Left to propagate, that
+        // throw cancels the sibling capability probe through the enclosing coroutineScope and the
+        // whole site settles Unreachable — discarding a probe that already succeeded (#22944 review).
+        val selfHosted = selfHostedWithoutXmlRpc()
+        whenever(siteXmlRpcUrlRecoverer.discoverAndVerifyXmlRpcUrl(selfHosted))
+            .thenReturn(XmlRpcRecovery.Recovered("https://selfhosted.example.com/xmlrpc.php"))
+        whenever(siteXmlRpcUrlRecoverer.persistXmlRpcUrl(any(), any()))
+            .thenThrow(RuntimeException("database is locked"))
+
+        assertThat(source.await(selfHosted)).isEqualTo(SiteReadiness.Ready)
+    }
+
+    @Test
+    fun `given the REST root write throws, then a successful probe still settles Ready`() = test {
+        // Same hole on the other branch, where the write runs before detectCapabilities.
+        val site = SiteModel().apply {
+            id = TEST_SITE_LOCAL_ID
+            url = "https://test.example.com"
+            xmlRpcUrl = "https://test.example.com/xmlrpc.php" // XML-RPC branch short-circuits
+            // no wpApiRestUrl -> the REST recovery branch runs
+        }
+        whenever(siteStore.getSiteByLocalId(TEST_SITE_LOCAL_ID)).thenReturn(site)
+        stubHasStoredCredentials(true)
+        stubValidate(ApplicationPasswordValidator.Outcome.Valid)
+        stubCapabilityProbe(ok = true)
+        whenever(siteApiRestUrlRecoverer.discoverApiRootUrl(any()))
+            .thenReturn("https://test.example.com/custom-rest")
+        whenever(siteApiRestUrlRecoverer.persistApiRootUrl(any(), any()))
+            .thenThrow(RuntimeException("database is locked"))
+
+        assertThat(source.await(site)).isEqualTo(SiteReadiness.Ready)
+    }
+
+    @Test
     fun `given XML-RPC recovery reaches a definitive negative, then the site is flagged unavailable`() = test {
         val selfHosted = selfHostedWithoutXmlRpc()
         whenever(siteXmlRpcUrlRecoverer.discoverAndVerifyXmlRpcUrl(selfHosted))
