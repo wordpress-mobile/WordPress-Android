@@ -32,12 +32,14 @@ import org.wordpress.android.ui.posts.EditorJetpackSocialViewModel.ActionEvent.O
 import org.wordpress.android.ui.posts.EditorJetpackSocialViewModel.ActionEvent.OpenSubscribeJetpackSocial
 import org.wordpress.android.ui.posts.prepublishing.PrepublishingScreen.ADD_CATEGORY
 import org.wordpress.android.ui.posts.prepublishing.PrepublishingScreen.CATEGORIES
+import org.wordpress.android.ui.posts.prepublishing.PrepublishingScreen.FEATURED_IMAGE
 import org.wordpress.android.ui.posts.prepublishing.PrepublishingScreen.HOME
 import org.wordpress.android.ui.posts.prepublishing.PrepublishingScreen.PUBLISH
 import org.wordpress.android.ui.posts.prepublishing.PrepublishingScreen.SOCIAL
 import org.wordpress.android.ui.posts.prepublishing.PrepublishingScreen.TAGS
 import org.wordpress.android.ui.posts.prepublishing.categories.PrepublishingCategoriesFragment
 import org.wordpress.android.ui.posts.prepublishing.categories.addcategory.PrepublishingAddCategoryFragment
+import org.wordpress.android.ui.posts.prepublishing.featuredimage.PrepublishingFeaturedImageFragment
 import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeFragment
 import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.ActionType
 import org.wordpress.android.ui.posts.prepublishing.home.PublishPost
@@ -239,6 +241,13 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
                 Pair(
                     PrepublishingSocialFragment.newInstance(),
                     PrepublishingSocialFragment.TAG
+                )
+            }
+
+            FEATURED_IMAGE -> {
+                Pair(
+                    PrepublishingFeaturedImageFragment.newInstance(navigationTarget.site),
+                    PrepublishingFeaturedImageFragment.TAG
                 )
             }
         }

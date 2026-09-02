@@ -123,6 +123,19 @@ class PrepublishingHomeViewModel @Inject constructor(
                 ))
             }
 
+            if (!editPostRepository.isPage) {
+                add(HomeUiState(
+                    navigationAction = PrepublishingScreenNavigation.FeaturedImage,
+                    actionResult = if (editPostRepository.featuredImageId != 0L) {
+                        UiStringRes(R.string.prepublishing_nudges_home_featured_image_set)
+                    } else {
+                        UiStringRes(R.string.prepublishing_nudges_home_featured_image_not_set)
+                    },
+                    actionClickable = true,
+                    onNavigationActionClicked = ::onActionClicked
+                ))
+            }
+
             add(SocialUiState.Hidden)
 
             add(getButtonUiStateUseCase.getUiState(editPostRepository, site) { publishPost ->

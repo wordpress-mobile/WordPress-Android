@@ -15,6 +15,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.TaxonomyStore.OnTaxonomyChanged
 import org.wordpress.android.ui.posts.prepublishing.PrepublishingScreen.ADD_CATEGORY
 import org.wordpress.android.ui.posts.prepublishing.PrepublishingScreen.CATEGORIES
+import org.wordpress.android.ui.posts.prepublishing.PrepublishingScreen.FEATURED_IMAGE
 import org.wordpress.android.ui.posts.prepublishing.PrepublishingScreen.HOME
 import org.wordpress.android.ui.posts.prepublishing.PrepublishingScreen.PUBLISH
 import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.ActionType
@@ -101,7 +102,8 @@ class PrepublishingViewModel @Inject constructor(private val dispatcher: Dispatc
         // For the case where this is not a story and hence there's no EditText in the HOME screen, we're ok too,
         // because there wouldn't have been a keyboard up anyway.
         if (prepublishingScreen == PUBLISH ||
-            prepublishingScreen == CATEGORIES
+            prepublishingScreen == CATEGORIES ||
+            prepublishingScreen == FEATURED_IMAGE
         ) {
             _dismissKeyboard.postValue(Event(Unit))
         }
@@ -198,6 +200,7 @@ enum class PrepublishingScreen : Parcelable {
     CATEGORIES,
     ADD_CATEGORY,
     SOCIAL,
+    FEATURED_IMAGE,
 }
 
 data class PrepublishingNavigationTarget(

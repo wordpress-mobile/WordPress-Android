@@ -99,6 +99,10 @@ sealed class PrepublishingHomeItemUiState(
                 UiStringRes(R.string.prepublishing_nudges_categories_action),
                 PrepublishingScreen.CATEGORIES,
             )
+            object FeaturedImage : PrepublishingScreenNavigation(
+                UiStringRes(R.string.prepublishing_nudges_featured_image_action),
+                PrepublishingScreen.FEATURED_IMAGE,
+            )
             object AddCategory : PrepublishingScreenNavigation(
                 UiStringRes(R.string.prepublishing_nudges_categories_action),
                 PrepublishingScreen.ADD_CATEGORY,

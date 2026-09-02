@@ -99,6 +99,7 @@ import org.wordpress.android.ui.posts.adapters.AuthorSelectionAdapter;
 import org.wordpress.android.ui.posts.prepublishing.PrepublishingBottomSheetFragment;
 import org.wordpress.android.ui.posts.prepublishing.categories.PrepublishingCategoriesFragment;
 import org.wordpress.android.ui.posts.prepublishing.categories.addcategory.PrepublishingAddCategoryFragment;
+import org.wordpress.android.ui.posts.prepublishing.featuredimage.PrepublishingFeaturedImageFragment;
 import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeAdapter;
 import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeFragment;
 import org.wordpress.android.ui.posts.EditorLauncher;
@@ -455,6 +456,8 @@ public interface AppComponent {
     void inject(MediaUploadReadyProcessor object);
 
     void inject(PrepublishingCategoriesFragment object);
+
+    void inject(PrepublishingFeaturedImageFragment object);
 
     void inject(PrepublishingAddCategoryFragment object);
 

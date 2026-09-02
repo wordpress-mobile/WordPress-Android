@@ -2757,6 +2757,10 @@ class EditPostActivity : BaseAppCompatActivity(), EditorFragmentActivity, Editor
              }
         } else if (editPostSettingsFragment != null) {
             editPostSettingsFragment?.updateFeaturedImage(mediaId, imagePicked)
+        } else {
+            // The post settings screen isn't shown (e.g. the featured image is being set from the
+            // pre-publish sheet), so write the id straight to the post ourselves.
+            updateFeaturedImageUseCase.updateFeaturedImage(mediaId, editPostRepository) { }
         }
         if (editorFragment is GutenbergEditorFragment) {
             (editorFragment as GutenbergEditorFragment).sendToJSFeaturedImageId(mediaId.toInt())
