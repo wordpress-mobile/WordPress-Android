@@ -95,12 +95,9 @@ class LoginSiteApplicationPasswordFragment : Fragment() {
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                // Only ever a URL to navigate to; a failed discovery surfaces through errorMessage.
                 viewModel.discoveryURL.collect { url ->
-                    if (url.isEmpty()) {
-                        viewModel.setError(getString(R.string.application_password_not_supported_error))
-                    } else {
-                        activityNavigator.openApplicationPasswordLogin(requireActivity(), url)
-                    }
+                    activityNavigator.openApplicationPasswordLogin(requireActivity(), url)
                 }
             }
         }
