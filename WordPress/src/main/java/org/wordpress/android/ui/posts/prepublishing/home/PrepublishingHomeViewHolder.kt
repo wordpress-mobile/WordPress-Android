@@ -3,7 +3,6 @@ package org.wordpress.android.ui.posts.prepublishing.home
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.ImageView
 import android.widget.ImageView.ScaleType
 import android.widget.PopupMenu
@@ -25,7 +24,6 @@ import org.wordpress.android.R
 import org.wordpress.android.ui.compose.theme.AppThemeM3
 import org.wordpress.android.ui.posts.EditorJetpackSocialViewModel.JetpackSocialUiState
 import org.wordpress.android.ui.posts.FeaturedImageHelper.FeaturedImageState
-import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.ButtonUiState
 import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.FeaturedImageUiState
 import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.HeaderUiState
 import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.HomeUiState
@@ -91,23 +89,6 @@ sealed class PrepublishingHomeViewHolder(
             siteName.text = uiHelpers.getTextOfUiString(itemView.context, uiState.siteName)
 
             imageManager.load(siteIcon, ImageType.BLAVATAR, uiState.siteIconUrl)
-        }
-    }
-
-    class PrepublishingSubmitButtonViewHolder(parentView: ViewGroup, val uiHelpers: UiHelpers) :
-        PrepublishingHomeViewHolder(
-            parentView,
-            R.layout.prepublishing_home_publish_button_list_item
-        ) {
-        private val button: Button = itemView.findViewById(R.id.publish_button)
-
-        override fun onBind(uiState: PrepublishingHomeItemUiState) {
-            uiState as ButtonUiState
-
-            button.text = uiHelpers.getTextOfUiString(itemView.context, uiState.buttonText)
-            button.setOnClickListener {
-                uiState.onButtonClicked?.invoke(uiState.publishPost)
-            }
         }
     }
 
