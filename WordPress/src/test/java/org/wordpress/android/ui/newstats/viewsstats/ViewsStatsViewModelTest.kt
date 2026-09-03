@@ -245,6 +245,42 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `given ThisYear with DAY unit, when chart loads, then the legend shows a day range`() = test {
+        // Early-January ThisYear is charted in day buckets, so its legend must show the day span, not
+        // a coarser month label. Default aggregates span 2024-01-14..2024-01-20.
+        val result = createPeriodStatsResult(unit = StatsUnit.DAY)
+        whenever(statsRepository.fetchStatsForPeriod(any(), any())).thenReturn(result)
+
+        initViewModel()
+        advanceUntilIdle()
+
+        viewModel.onPeriodChanged(StatsPeriod.ThisYear)
+        viewModel.loadDataIfNeeded()
+        advanceUntilIdle()
+
+        assertThat(viewModel.uiState.value.chartLoaded().currentPeriodDateRange).isEqualTo("14-20 Jan 2024")
+    }
+
+    @Test
+    fun `given ThisYear with MONTH unit, when chart loads, then the legend shows a month range`() = test {
+        val result = createPeriodStatsResult(
+            unit = StatsUnit.MONTH,
+            currentStartDate = "2024-01-01",
+            currentEndDate = "2024-06-01"
+        )
+        whenever(statsRepository.fetchStatsForPeriod(any(), any())).thenReturn(result)
+
+        initViewModel()
+        advanceUntilIdle()
+
+        viewModel.onPeriodChanged(StatsPeriod.ThisYear)
+        viewModel.loadDataIfNeeded()
+        advanceUntilIdle()
+
+        assertThat(viewModel.uiState.value.chartLoaded().currentPeriodDateRange).isEqualTo("Jan - Jun 2024")
+    }
+
+    @Test
     fun `given DAY unit, when chart loads, then labels are not coarsened to the year`() = test {
         val result = createPeriodStatsResult(unit = StatsUnit.DAY)
         whenever(statsRepository.fetchStatsForPeriod(any(), any())).thenReturn(result)
@@ -846,7 +882,13 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
             ViewsDataPoint(period = "2024-02-01", views = 6000L)
         )
         whenever(statsRepository.fetchStatsForPeriod(any(), any()))
-            .thenReturn(createPeriodStatsResult(currentPeriodData = monthlyData, previousPeriodData = monthlyData))
+            .thenReturn(
+                createPeriodStatsResult(
+                    currentPeriodData = monthlyData,
+                    previousPeriodData = monthlyData,
+                    unit = StatsUnit.MONTH
+                )
+            )
 
         initViewModel()
         advanceUntilIdle()
@@ -868,6 +910,78 @@ class ViewsStatsViewModelTest : BaseUnitTest() {
             assertThat(endDate).isEqualTo(LocalDate.of(2024, 1, 31))
         }
         assertThat(viewModel.uiState.value.selectedBar()?.canDrillDown).isTrue
+    }
+
+    @Test
+    fun `when a ThisYear bar is tapped and the chart is day-granular, then it drills to a single day`() = test {
+        // Early in January the ThisYear window is short enough to be charted in day buckets, so a bar
+        // must drill to that single day, not to the whole month (as month-granular ThisYear does).
+        val dailyData = listOf(
+            ViewsDataPoint(period = "2024-01-14", views = 1000L),
+            ViewsDataPoint(period = "2024-01-15", views = 1500L)
+        )
+        whenever(statsRepository.fetchStatsForPeriod(any(), any()))
+            .thenReturn(
+                createPeriodStatsResult(
+                    currentPeriodData = dailyData,
+                    previousPeriodData = dailyData,
+                    unit = StatsUnit.DAY
+                )
+            )
+
+        initViewModel()
+        advanceUntilIdle()
+
+        viewModel.onPeriodChanged(StatsPeriod.ThisYear)
+        viewModel.loadData()
+        advanceUntilIdle()
+
+        viewModel.onChartTypeChanged(ChartType.BAR)
+        viewModel.onBarTapped(0)
+        advanceUntilIdle()
+
+        assertThat(viewModel.selectedPeriod.value).isEqualTo(StatsPeriod.ThisYear)
+        val effective = viewModel.effectivePeriod.value
+        assertThat(effective).isInstanceOf(StatsPeriod.Custom::class.java)
+        with(effective as StatsPeriod.Custom) {
+            assertThat(startDate).isEqualTo(LocalDate.of(2024, 1, 14))
+            assertThat(endDate).isEqualTo(LocalDate.of(2024, 1, 14))
+        }
+        assertThat(viewModel.uiState.value.selectedBar()?.canDrillDown).isTrue
+    }
+
+    @Test
+    fun `when a ThisYear bar is tapped and the chart is month-granular, then it drills to a full month`() = test {
+        val monthlyData = listOf(
+            ViewsDataPoint(period = "2024-01-01", views = 5000L),
+            ViewsDataPoint(period = "2024-02-01", views = 6000L)
+        )
+        whenever(statsRepository.fetchStatsForPeriod(any(), any()))
+            .thenReturn(
+                createPeriodStatsResult(
+                    currentPeriodData = monthlyData,
+                    previousPeriodData = monthlyData,
+                    unit = StatsUnit.MONTH
+                )
+            )
+
+        initViewModel()
+        advanceUntilIdle()
+
+        viewModel.onPeriodChanged(StatsPeriod.ThisYear)
+        viewModel.loadData()
+        advanceUntilIdle()
+
+        viewModel.onChartTypeChanged(ChartType.BAR)
+        viewModel.onBarTapped(0)
+        advanceUntilIdle()
+
+        val effective = viewModel.effectivePeriod.value
+        assertThat(effective).isInstanceOf(StatsPeriod.Custom::class.java)
+        with(effective as StatsPeriod.Custom) {
+            assertThat(startDate).isEqualTo(LocalDate.of(2024, 1, 1))
+            assertThat(endDate).isEqualTo(LocalDate.of(2024, 1, 31))
+        }
     }
 
     @Test

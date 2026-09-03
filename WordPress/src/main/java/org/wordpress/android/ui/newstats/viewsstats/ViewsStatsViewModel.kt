@@ -546,11 +546,13 @@ class ViewsStatsViewModel @Inject constructor(
 
     @Suppress("ReturnCount", "TooGenericExceptionCaught")
     private fun drillDownPeriod(rawPeriod: String): StatsPeriod? {
-        val period = currentPeriod
-        val isMonthlyGranularity = period is StatsPeriod.Last12Months ||
-            period is StatsPeriod.ThisYear ||
-            (period is StatsPeriod.Custom &&
-                isCustomPeriodMonthly(period))
+        // The chart's actual bucket unit is the source of truth for granularity: a period like
+        // ThisYear renders month buckets for most of the year but day buckets early in January (when
+        // its window is short), and the rawPeriod string alone can't tell a day bucket from a month
+        // one. Falling back to day-level drill when no chart is loaded is the safe default.
+        val isMonthlyGranularity = lastChartResult?.unit?.let {
+            it == StatsUnit.MONTH || it == StatsUnit.YEAR
+        } ?: false
 
         // Hourly data — no smaller period available
         if (rawPeriod.matches(HOURLY_FORMAT_REGEX)) return null
@@ -1029,7 +1031,12 @@ class ViewsStatsViewModel @Inject constructor(
         if (unit == StatsUnit.YEAR) return formatYearRange(startDate, endDate)
         return when (period) {
             is StatsPeriod.Today -> formatSingleDayRange(endDate)
-            is StatsPeriod.Last12Months, is StatsPeriod.ThisYear -> formatMonthRange(startDate, endDate)
+            is StatsPeriod.Last12Months -> formatMonthRange(startDate, endDate)
+            // ThisYear renders day buckets early in January and month buckets otherwise, so let the
+            // actual unit decide the label rather than assuming a month range.
+            is StatsPeriod.ThisYear ->
+                if (unit == StatsUnit.MONTH) formatMonthRange(startDate, endDate)
+                else formatDayRange(startDate, endDate)
             is StatsPeriod.Custom -> {
                 if (isCustomPeriodMonthly(period)) formatMonthRange(startDate, endDate)
                 else formatDayRange(startDate, endDate)
